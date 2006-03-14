@@ -123,21 +123,6 @@ CREATE TABLE config (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table `employee`
---
-
-CREATE TABLE employee (
-  employeeID int(11) NOT NULL auto_increment,
-  firstName varchar(255) default NULL,
-  surname varchar(255) default NULL,
-  availability text,
-  areasOfInterest text,
-  comments text,
-  managementComments text,
-  PRIMARY KEY  (employeeID)
-) TYPE=ISAM PACK_KEYS=1;
-
---
 -- Table structure for table `eventFilter`
 --
 
@@ -284,20 +269,6 @@ CREATE TABLE person (
   personActive tinyint(1) default '1',
   PRIMARY KEY  (personID),
   KEY username (username)
-) TYPE=ISAM PACK_KEYS=1;
-
---
--- Table structure for table `position`
---
-
-CREATE TABLE position (
-  positionID int(11) NOT NULL auto_increment,
-  positionName varchar(255) default NULL,
-  timeRequirement text,
-  skillRequirement text,
-  positionComments text,
-  personID int(11) NOT NULL default '0',
-  PRIMARY KEY  (positionID)
 ) TYPE=ISAM PACK_KEYS=1;
 
 --
