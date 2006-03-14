@@ -1,5 +1,5 @@
-*/5 * * * * /var/www/html/alloc/logs/cron_sendReminders.sh
-0 2 * * * /home/alla/bin/alloc_DB_backup.sh
-0 2 * * * /var/www/html/alloc/logs/cron_sendEmail.sh
-0 2 * * * /var/www/html/alloc/logs/cron_checkRepeatExpenses.sh
+*/5 * * * * /var/www/virtuals/alloc/logs/cron_sendReminders.sh
+0   4 * * * /var/local/home/alloc/alloc_DB_backup.sh
+5   4 * * * /var/www/virtuals/alloc/logs/cron_sendEmail.sh
+10   4 * * * /var/www/virtuals/alloc/logs/cron_checkRepeatExpenses.sh
 
