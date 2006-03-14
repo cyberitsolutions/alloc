@@ -31,8 +31,9 @@ where username = 'alla'
 update person set password = '/.lBw./3lMC2Q' where username = 'anonymous';
 " >> ${FILE}
 
-cat db_changelog.sql >> ${FILE}
-[ "${?}" -ne "0" ] && quit "Trouble concatenating db_changelog.sql file"
+
+#cat db_changelog.sql >> ${FILE}
+#[ "${?}" -ne "0" ] && quit "Trouble concatenating db_changelog.sql file"
 
 
 
