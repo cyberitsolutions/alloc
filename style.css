@@ -1,0 +1,65 @@
+
+body                    { (BODY_BACKGROUND); font-family:arial,helvetica,sans-serif; color:(BODY_COLOR);}
+a:link                  { color:(A_COLOR); }
+a:visited               { color:(A_COLOR); }
+a:hover                 { color:(A_HOVER); }
+h1                      { font-weight:bold; }
+h2                      { font-weight:bold; }
+h3                      { font-weight:bold; }
+form                    { display:inline; }
+div.message             { border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); padding:10px; margin-bottom:7px; background-color:(TR_ODD_BACKGROUND_COLOR); }
+.bad                 { color: (TRANSACTION_REJECTED); font-weight:bold; }
+.good                { color: (TRANSACTION_APPROVED); font-weight:bold; }
+.help                { color: (TRANSACTION_PENDING);  font-weight:bold; }
+
+table.box               { border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); background-color:(TABLE_BOX_BACKGROUND_COLOR); margin-bottom:7px;} 
+table.box th            { border-bottom:1px solid (TABLE_BOX_BORDER);  (TABLE_BOX_TH_BACKGROUND); color:(TABLE_BOX_TH_COLOR);} 
+table.box th a:link     { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); }
+table.box th a:visited  { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); }
+table.box th a:hover    { font-weight:bold; color:(TABLE_BOX_TH_A_HOVER_COLOR); }
+table.box th.right      { text-align:right; } 
+table.box th.center     { text-align:center; } 
+table.box th.right table{ width:40%; } 
+
+table.toolbar           { border:1px solid (TABLE_TOOLBAR_BORDER); color:(BODY_COLOR); background-color:(TABLE_TOOLBAR_BACKGROUND_COLOR); margin-bottom:7px;}
+table.toolbar a:link    { color:(TABLE_TOOLBAR_A_COLOR); font-weight:bolder;        }
+table.toolbar a:visited { color:(TABLE_TOOLBAR_A_COLOR); font-weight:bolder;        }
+table.toolbar a:hover   { color:(TABLE_TOOLBAR_A_HOVER_COLOR); font-weight:bolder;  }
+table.toolbar a.active  { color:(TABLE_TOOLBAR_A_ACTIVE_COLOR); }
+table.toolbar th        { color:(TABLE_TOOLBAR_TH_COLOR); padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER);}
+td.logout               { text-align:right; padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER);}
+
+table.calendar th       { background-color:(TABLE_CALENDAR_TH_BACKGROUND_COLOR); color:(TABLE_CALENDAR_TH_COLOR); border:0px; font-weight:normal; }
+table.calendar td       { background-color:(TR_ODD_BACKGROUND_COLOR); }
+table.calendar td.today { background-color:(TABLE_BOX_BACKGROUND_COLOR); }
+
+table.filter            { border:3px dashed (TABLE_CALENDAR_TH_BACKGROUND_COLOR); background-color:(TABLE_FILTER_BACKGROUND_COLOR); padding:4px; margin:4px;}
+table.filter th         { font-weight:bold; background-color:(TABLE_FILTER_BACKGROUND_COLOR); color:(TD_COLOR); border-bottom:0px solid #ffffff; text-align:center; }
+td                      { color:(TD_COLOR);  }
+th                      { color:(TD_COLOR);  text-align:left; }
+tr.odd                  { background-color:(TR_ODD_BACKGROUND_COLOR); }
+tr.even                 { background-color:(TR_EVEN_BACKGROUND_COLOR); }
+.really_overdue         { font-weight:bold; color: (TRANSACTION_REJECTED)}
+.overdue                { color: (TRANSACTION_REJECTED); }
+td.print-label          { vertical-align:middle; text-align:right; }
+.print-label            { font-weight:bold; }
+.behind-target          { color: (BEHIND_TARGET); }
+.transaction-approved   { color: (TRANSACTION_APPROVED); }
+.transaction-pending    { color: (TRANSACTION_PENDING); }
+.transaction-rejected   { color: (TRANSACTION_REJECTED); }
+.highlighted            { font-weight:bold;}
+      
+ul                      { display:inline; list-style:circle inside; }
+td.tasks                { background-color: (TR_ODD_BACKGROUND_COLOR); }
+td.tasks_r              { background-color: (TR_ODD_BACKGROUND_COLOR); text-align:right; }
+td.grand_total          { border-top:1px solid black;}
+textarea                { font-size:12px; }
+input                   { font-size:12px; }
+select                  { font-size:12px; }
+textarea.timesheetcomm  { font-size:12px; }
+#shrink_ts_note         { display:none; }
+#shrink_tsi_note        { display:none; }
+#ts_note                { height:22px; }
+#tsi_note               { height:22px; }
+
+

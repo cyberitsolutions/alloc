@@ -1,0 +1,118 @@
+#!/usr/bin/php
+<?php
+
+function error($severity=1,$msg="") {
+  echo $msg."\n";
+  if ($severity == 1) {
+    echo "Exiting!\n";
+    exit;
+  } 
+}
+
+
+// Make sure file exists
+$file = $argv[1];
+if (!$file) {
+  error(1, "Please enter a php script filename.");
+} else if (!is_readable($file)){ 
+  error(1, "File does not exist: ". $file);
+} else if (!is_writeable($file)){ 
+  error(1, "File is not writeable: ". $file);
+} else if (shell_exec("which indent") == "") {
+  error(1, "You do not have 'indent' installed.");
+}
+
+
+# manual tidying up 
+$str = implode("",file($file));
+
+# Fixes "if():"      # swap )\s: with ) {
+$str = preg_replace("/(if\s?\(.*\))\s*:/","\$1 {",$str); 
+
+# Fixes "while():"      # swap )\s: with ) {
+$str = preg_replace("/(while\s?\(.*\))\s*:/","\$1 {",$str); 
+
+# Fixes "else\s:"    # swap else followed by space/newlines/etc followed by : with } else {
+$str = preg_replace("/else\s*:/","else:\n",$str); 
+
+# Fixes "else:"      # swap else: with } else {
+$str = preg_replace("/else:/","} else {",$str); 
+
+# Fixes "}\s*else"   # swap }\s*else with } else
+$str = preg_replace("/}\s*else/","} else",$str); 
+
+# Fixes "else\s*{"   # swap else\s*{ with else {
+$str = preg_replace("/else\s*{/","else {",$str); 
+
+# Fixes "endwhile;"  # swap endwhile; with }
+$str = str_replace("endwhile;","}",$str);   
+
+# Fixes "endif;"     # swap endif; with }
+$str = str_replace("endif;","}",$str);      
+
+# write file to original
+$fp = fopen($file, "w");
+fputs($fp,$str);
+fclose($fp);
+
+
+/* run "indent" on code
+ indent 
+# -st    == to standard out
+ -br    == braces go on same line as if/while/etc (note doesn't work for "function" lines) 
+# -nfca  == don't format any comments
+ -nbad  == do not force blank lines after declarations 
+ -ce    == cuddle } else if they are on separate lines
+ -npsl  == snuggles fcuntion with it's arguments on same line
+ -npcs  == dont put space after function name in function call
+ -nut   == no tabs
+ -i2    == indentation is 2 spaces
+ -l300  == long lines break at 300 character
+ -fc1   == format comments that begin in column one
+ -fca   == format all comments
+*/
+
+shell_exec("indent -br -nbad -ce -npsl -npcs -nut -i2 -l300 -fc1 -fca ".$file." -o ".$file);
+
+# manual tidying up of issues indent just created
+$str = implode("",file($file));
+
+# Fixes "if()\n{"    # shrink space/nl/etc between ) and { to one space 
+$str = preg_replace("/\)\s*{/",") {",$str); 
+
+# Fixes "< ? php "   # indent mucks up the php tags so this fixes the opening one 
+$str = preg_replace("/< \? php\s+/","<?php\n",$str); 
+
+# Fixes "? >"        # this fixes the close tag 
+$str = str_replace("? >","\n?>",$str);               
+
+# Fixes broken . =   # swap . = with .= 
+$str = str_replace(". =",".=",$str);      
+
+# Fixes broken = >   # swap = > with => 
+$str = str_replace("= >","=>",$str);      
+
+# Fixes \s=>         # swap \s=> with => 
+$str = str_replace(" =>","=>",$str);      
+
+# Fixes broken == =  # swap == = with ===
+$str = str_replace("== =","===",$str);      
+
+# Fixes ^M           # swap ^M with \n 
+$str = str_replace("\r","",$str);      
+
+# Fixes "}\s*else"   # swap }\s*else with } else
+$str = preg_replace("/}\s*else/","} else",$str); 
+# Header PHPDOC      # swaps ^<?php with <?php\n\n$phpdocheader
+
+# Function PHPDOC    # swaps function(dsadsa) with \n$phpdocfunctionheader\nfunction(fdsf)
+
+
+# write file to original
+$fp = fopen($file, "w");
+fputs($fp,$str);
+fclose($fp);
+
+
+
+?>

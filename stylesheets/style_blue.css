@@ -1,0 +1,65 @@
+
+body                    { background-color: #e0e0e0; font-family:arial,helvetica,sans-serif; color:#000090;}
+a:link                  { color:#000090; }
+a:visited               { color:#000090; }
+a:hover                 { color:#6262b8; }
+h1                      { font-weight:bold; }
+h2                      { font-weight:bold; }
+h3                      { font-weight:bold; }
+form                    { display:inline; }
+div.message             { border:1px solid #8d8dc6; padding:10px; margin-bottom:7px; background-color:#e9efff; }
+.bad                 { color: #880000; font-weight:bold; }
+.good                { color: #008800; font-weight:bold; }
+.help                { color: #000000;  font-weight:bold; }
+
+table.box               { border:1px solid #8d8dc6; background-color:#ffffff; margin-bottom:7px;} 
+table.box th            { border-bottom:1px solid #8d8dc6;  background-color: #6262c9; color:#ffffff;} 
+table.box th a:link     { font-weight:bold; color:#ffffff; }
+table.box th a:visited  { font-weight:bold; color:#ffffff; }
+table.box th a:hover    { font-weight:bold; color:#bfd8ff; }
+table.box th.right      { text-align:right; } 
+table.box th.center     { text-align:center; } 
+table.box th.right table{ width:40%; } 
+
+table.toolbar           { border:1px solid #6262c9; color:#000090; background-color:#6262c9; margin-bottom:7px;}
+table.toolbar a:link    { color:#ffffff; font-weight:bolder;        }
+table.toolbar a:visited { color:#ffffff; font-weight:bolder;        }
+table.toolbar a:hover   { color:#bfd8ff; font-weight:bolder;  }
+table.toolbar a.active  { color:#bfd8ff; }
+table.toolbar th        { color:#ffffff; padding:3px 2px; font-weight:bold; background-color: #6262c9; border-bottom:1px solid #6262c9;}
+td.logout               { text-align:right; padding:3px 2px; font-weight:bold; background-color: #6262c9; border-bottom:1px solid #6262c9;}
+
+table.calendar th       { background-color:#d2dfff; color:#6262c9; border:0px; font-weight:normal; }
+table.calendar td       { background-color:#e9efff; }
+table.calendar td.today { background-color:#ffffff; }
+
+table.filter            { border:3px dashed #d2dfff; background-color:#e9efff; padding:4px; margin:4px;}
+table.filter th         { font-weight:bold; background-color:#e9efff; color:#000090; border-bottom:0px solid #ffffff; text-align:center; }
+td                      { color:#000090;  }
+th                      { color:#000090;  text-align:left; }
+tr.odd                  { background-color:#e9efff; }
+tr.even                 { background-color:#e9efff; }
+.really_overdue         { font-weight:bold; color: #880000}
+.overdue                { color: #880000; }
+td.print-label          { vertical-align:middle; text-align:right; }
+.print-label            { font-weight:bold; }
+.behind-target          { color: #ccaa00; }
+.transaction-approved   { color: #008800; }
+.transaction-pending    { color: #000000; }
+.transaction-rejected   { color: #880000; }
+.highlighted            { font-weight:bold;}
+      
+ul                      { display:inline; list-style:circle inside; }
+td.tasks                { background-color: #e9efff; }
+td.tasks_r              { background-color: #e9efff; text-align:right; }
+td.grand_total          { border-top:1px solid black;}
+textarea                { font-size:12px; }
+input                   { font-size:12px; }
+select                  { font-size:12px; }
+textarea.timesheetcomm  { font-size:12px; }
+#shrink_ts_note         { display:none; }
+#shrink_tsi_note        { display:none; }
+#ts_note                { height:22px; }
+#tsi_note               { height:22px; }
+
+

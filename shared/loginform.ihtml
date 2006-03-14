@@ -1,0 +1,126 @@
+<html>
+  <head>
+    <title>alloc Login</title>
+    <style type="text/css">
+      <!--
+
+      body.login              { background-color:#eeeeee; font-family:arial,helvetica,sans-serif; color:(BODY_COLOR); }
+      table.toolbar_logo      { border:2px solid #444444; color:(BODY_COLOR); background-color:#000000}
+      table.login             { background-color:#ffffff; border:1px solid #888888; padding:5px;}
+      table.login a           { color:#183c6d;  }
+      table.login td.link     { color:#888888; text-align:right; font-size:10px; font-weight:bold;}
+      table.login td.message  { color:#333333; border-top:0px solid #c0c0c0; font-size:12px; font-weight:bold;}
+      table.login td.right    { color:333333; text-align:right;  font-weight:bold; font-size:12px; }
+      table.login td.center   { color:#888888; text-align:center; font-weight:bold; font-size:10px; }
+      table.login td.header   { color:#38629b; text-align:left;   font-weight:bold; font-size:18px; border-bottom:2px solid #e0e0e0; padding-left:10px;}
+      table.outer             { border:3px solid #ffffff; }
+
+      -->
+    </style>
+  </head>
+  <body class="login">
+
+  <?php global $WEB_DIR, $username, $account, $error, $DB_NAME; ?>
+  <br><br><br>
+
+  <form action="<?php print $this->url()?>" method="post">
+
+  <?=ALLOC_SHOOER?>
+  
+  <table width="30%" align="center" class="outer">
+    <tr>
+      <td>
+
+        <table class="login" align="center" cellspacing="0" cellpadding="0" width="100%">
+          <tr>
+            <td valign="top">
+  
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td><img src="images/icon_alloc.png"/></td> 
+                  <td class="link" valign="top">
+                    <nobr>
+                    <?php 
+                    if (!isset($account)) { 
+                      echo "Login | <a href=\"".$this->url()."&account=true\">New Password</a>";
+                    } else { 
+                      echo "<a href=\"/".$WEB_DIR."\"><nobr>Login</nobr></a> | New Password";
+                    } 
+                    ?>
+                    &nbsp;</nobr>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="header" colspan="2"><nobr></nobr></td>
+                </tr>
+              </table>
+              <br>      
+              <br>      
+              <table align="center" cellspacing="0" cellpadding="6">
+                <tr>   
+                  <td colspan="2" class="message" valign="top">
+                    <nobr>
+                    <?php 
+                    if (!$error && !$account) {
+                      echo "Please enter your Username and Password:";
+                    } else if (!$error && $account) {
+                      echo "Please enter your Username and Email Address:";
+                    } else {
+                      echo $error; 
+                    }
+                    ?>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr><br>&nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td class="right" width="100%">Username</td>
+                  <td class="right">
+                    <input type="text" name="username" value="<?php echo $this->auth["uname"]?>" size="25" maxlength="32">
+                  </td>
+                </tr>
+                <tr>
+                <?php if (!isset($account)) { ?>
+                  <td class="right">Password</td>
+                  <td class="right"><input type="password" name="password" size="25" maxlength="32"></td>
+                <?php } else { ?>
+                  <td class="right"><nobr>Email</nobr></td>
+                  <td class="right"><input type="text" name="email" size="25" maxlength="32"></td>
+                <?php } ?>
+                </tr>
+                <tr><td colspan="2">&nbsp;</td></tr>
+                <tr>
+                  <td></td>
+                  <td class="right">
+                  <?php if (!isset($account)) { ?>
+                    <input type="submit" name="login" value="&nbsp;&nbsp;Login&nbsp;&nbsp;">
+                  <?php } else { ?>
+                    <input type="submit" name="new_pass" value="Send Password">
+                  <?php } ?>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="center" colspan="2"><nobr><?=ALLOC_TITLE?> <?=ALLOC_VERSION?> on <?=$_SERVER["SERVER_NAME"]?> <?=$DB_NAME?> database at <?=date("g:ia dS M")?></nobr></td>
+                  <td></td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</form>
+
+</body>
+<script language="JavaScript">
+<!--
+  if (document.forms[0][0].value != '') {
+      document.forms[0][1].focus();
+  } else {
+      document.forms[0][0].focus();
+  }
+// -->
+</script>
+</html>
