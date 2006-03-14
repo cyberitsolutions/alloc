@@ -41,3 +41,4 @@ echo "NOW INSTALL THE CRON JOBS";
 cat cron_jobs.txt
 
 echo "hey"
+echo "hey"
