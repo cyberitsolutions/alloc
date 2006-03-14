@@ -5,17 +5,18 @@ include("alloc.inc");
 
 
 $f = array(
-"blah" => 0,
+"ActivityID" => 0,
 "taskName" => 1,
 "taskDescription" => 2,
-"wtf1" => 3,
-"wtf2" => 4,
-"wtf3" => 5,
-"wtf4_rate" => 6,
-"wtf8 Activity Rate" => 7,
-"wtf9 income account" => 8,
-"wtf10 tax code" => 9,
-"wtf11 unit of measure" => 10,
+"Use Desc. On Sale" => 3,
+"Non-Hourly" => 4,
+"Non-Chargeable" => 5,
+"Use Rate" => 6,
+"Activity Rate" => 7,
+"Income Account" => 8,
+"Tax Code When Sold" => 9,
+"Unit of Measure" => 10,
+"Inactive Activity" => 11,
 );
 
 $db = new db_alloc;
@@ -23,12 +24,12 @@ $db = new db_alloc;
 $file = file("./ACTIVITY.csv");
 
 /*
-$projectID = 620;
-$creatorID = 68;
-*/
-
 $projectID = 596;
 $creatorID = 60;
+*/
+
+$projectID = 620;
+$creatorID = 68;
 $dateCreated = date("Y-m-d");
 $taskTypeID = 1;
 
@@ -40,6 +41,16 @@ foreach ($file as $line) {
 
   $taskName = $b[$f["taskName"]];
   $taskDescription = $b[$f["taskDescription"]];
+  $b[$f["ActivityID"]]         and $taskDescription.= "\nActivityID: ".$b[$f["ActivityID"]];
+  $b[$f["Use Desc. On Sale"]]  and $taskDescription.= "\nUse Desc. On Sale: ".$b[$f["Use Desc. On SaleActivityID"]];
+  $b[$f["Non-Hourly"]]         and $taskDescription.= "\nNon-Hourly: ".$b[$f["Non-Hourly"]];
+  $b[$f["Non-Chargeable"]]     and $taskDescription.= "\nNon-Chargeable: ".$b[$f["Non-Chargeable"]];
+  $b[$f["Use Rate"]]           and $taskDescription.= "\nUse Rate: ".$b[$f["Use Rate"]];
+  $b[$f["Activity Rate"]]      and $taskDescription.= "\nActivity Rate: ".$b[$f["Activity Rate"]];
+  $b[$f["Income Account"]]     and $taskDescription.= "\nIncome Account".$b[$f["Income Account"]];
+  $b[$f["Tax Code When Sold"]] and $taskDescription.= "\nTax Code When Sold: ".$b[$f["Tax Code When Sold"]];
+  $b[$f["Unit of Measure"]]    and $taskDescription.= "\nUnit of Measure: ".$b[$f["Unit of Measure"]];
+  $b[$f["Inactive Activity"]]  and $taskDescription.= "\nInactive Activity: ".$b[$f["Inactive Activity"]];
 
   $q = "INSERT INTO task (taskName, taskDescription,projectID,creatorID,dateCreated,taskTypeID) VALUES ";
   $q.= sprintf("('%s','%s','%s','%s','%s','%s')

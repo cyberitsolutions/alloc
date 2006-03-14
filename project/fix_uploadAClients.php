@@ -68,6 +68,10 @@ foreach ($file as $line) {
   $db->query($q);
   echo "<br><br>".$q;
 
+	$db->query("select max(clientID) as cid from client");
+	$db->next_record();
+    $cid = $db->f("cid");
+
   $b[$f["clientContactOther1"]] and $clientContactOther = "Card ID: ".$b[$f["clientContactOther1"]];
   $b[$f["clientContactOther2"]] and $clientContactOther.= "\nCard Status: ".$b[$f["clientContactOther2"]];
   $b[$f["clientContactOther3"]] and $clientContactOther.= "\n".$b[$f["clientContactOther3"]];
@@ -93,6 +97,13 @@ foreach ($file as $line) {
 
     $db->query($q);
     echo "<br>".$q;
+		
+	$db->query("select max(clientContactID) as ccid FROM clientContact");
+ 	$db->next_record();
+	$ccid = $db->f("ccid");
+
+
+	$db->query("update client set clientPrimaryContactID = ".$ccid." WHERE clientID = ".$cid);
 
 
   }
