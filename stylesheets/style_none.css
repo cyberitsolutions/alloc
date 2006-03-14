@@ -1,0 +1,65 @@
+
+body                    { ; font-family:arial,helvetica,sans-serif; color:;}
+a:link                  { color:; }
+a:visited               { color:; }
+a:hover                 { color:; }
+h1                      { font-weight:bold; }
+h2                      { font-weight:bold; }
+h3                      { font-weight:bold; }
+form                    { display:inline; }
+div.message             { border:1px solid #cccccc; padding:10px; margin-bottom:7px; background-color:; }
+.bad                 { color: ; font-weight:bold; }
+.good                { color: ; font-weight:bold; }
+.help                { color: ;  font-weight:bold; }
+
+table.box               { border:1px solid #cccccc; background-color:; margin-bottom:7px;} 
+table.box th            { border-bottom:1px solid #cccccc;  ; color:;} 
+table.box th a:link     { font-weight:bold; color:; }
+table.box th a:visited  { font-weight:bold; color:; }
+table.box th a:hover    { font-weight:bold; color:; }
+table.box th.right      { text-align:right; } 
+table.box th.center     { text-align:center; } 
+table.box th.right table{ width:40%; } 
+
+table.toolbar           { border:1px solid #cccccc; color:; background-color:; margin-bottom:7px;}
+table.toolbar a:link    { color:; font-weight:bolder;        }
+table.toolbar a:visited { color:; font-weight:bolder;        }
+table.toolbar a:hover   { color:; font-weight:bolder;  }
+table.toolbar a.active  { color:; }
+table.toolbar th        { color:; padding:3px 2px; font-weight:bold; ; border-bottom:1px solid #cccccc;}
+td.logout               { text-align:right; padding:3px 2px; font-weight:bold; ; border-bottom:1px solid #cccccc;}
+
+table.calendar th       { background-color:; color:; border:0px; font-weight:normal; }
+table.calendar td       { background-color:; }
+table.calendar td.today { background-color:; }
+
+table.filter            { border:3px dashed ; background-color:; padding:4px; margin:4px;}
+table.filter th         { font-weight:bold; background-color:; color:; border-bottom:0px solid #ffffff; text-align:center; }
+td                      { color:;  }
+th                      { color:;  text-align:left; }
+tr.odd                  { background-color:; }
+tr.even                 { background-color:; }
+.really_overdue         { font-weight:bold; color: }
+.overdue                { color: ; }
+td.print-label          { vertical-align:middle; text-align:right; }
+.print-label            { font-weight:bold; }
+.behind-target          { color: ; }
+.transaction-approved   { color: ; }
+.transaction-pending    { color: ; }
+.transaction-rejected   { color: ; }
+.highlighted            { font-weight:bold;}
+      
+ul                      { display:inline; list-style:circle inside; }
+td.tasks                { background-color: ; }
+td.tasks_r              { background-color: ; text-align:right; }
+td.grand_total          { border-top:1px solid black;}
+textarea                { font-size:12px; }
+input                   { font-size:12px; }
+select                  { font-size:12px; }
+textarea.timesheetcomm  { font-size:12px; }
+#shrink_ts_note         { display:none; }
+#shrink_tsi_note        { display:none; }
+#ts_note                { height:22px; }
+#tsi_note               { height:22px; }
+
+

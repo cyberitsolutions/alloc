@@ -1,0 +1,65 @@
+
+body                    { background-color: #ffffff; font-family:arial,helvetica,sans-serif; color:#666666;}
+a:link                  { color:#003d76; }
+a:visited               { color:#003d76; }
+a:hover                 { color:#688db0; }
+h1                      { font-weight:bold; }
+h2                      { font-weight:bold; }
+h3                      { font-weight:bold; }
+form                    { display:inline; }
+div.message             { border:1px solid #81a2c1; padding:10px; margin-bottom:7px; background-color:#e4e4e4; }
+.bad                 { color: red; font-weight:bold; }
+.good                { color: green; font-weight:bold; }
+.help                { color: black;  font-weight:bold; }
+
+table.box               { border:1px solid #81a2c1; background-color:#f4f4f4; margin-bottom:7px;} 
+table.box th            { border-bottom:1px solid #81a2c1;  background: url(../images/bg_classic.jpg) repeat-x; color:#003d76;} 
+table.box th a:link     { font-weight:bold; color:#003d76; }
+table.box th a:visited  { font-weight:bold; color:#003d76; }
+table.box th a:hover    { font-weight:bold; color:#000090; }
+table.box th.right      { text-align:right; } 
+table.box th.center     { text-align:center; } 
+table.box th.right table{ width:40%; } 
+
+table.toolbar           { border:1px solid #81a2c1; color:#666666; background-color:#f4f4f4; margin-bottom:7px;}
+table.toolbar a:link    { color:#003d76; font-weight:bolder;        }
+table.toolbar a:visited { color:#003d76; font-weight:bolder;        }
+table.toolbar a:hover   { color:#688db0; font-weight:bolder;  }
+table.toolbar a.active  { color:#688db0; }
+table.toolbar th        { color:#003d76; padding:3px 2px; font-weight:bold; background: url(../images/bg_classic.jpg) repeat-x; border-bottom:1px solid #81a2c1;}
+td.logout               { text-align:right; padding:3px 2px; font-weight:bold; background: url(../images/bg_classic.jpg) repeat-x; border-bottom:1px solid #81a2c1;}
+
+table.calendar th       { background-color:#d4e0ec; color:#333333; border:0px; font-weight:normal; }
+table.calendar td       { background-color:#e4e4e4; }
+table.calendar td.today { background-color:#f4f4f4; }
+
+table.filter            { border:3px dashed #d4e0ec; background-color:#f9f9f9; padding:4px; margin:4px;}
+table.filter th         { font-weight:bold; background-color:#f9f9f9; color:#333333; border-bottom:0px solid #ffffff; text-align:center; }
+td                      { color:#333333;  }
+th                      { color:#333333;  text-align:left; }
+tr.odd                  { background-color:#e4e4e4; }
+tr.even                 { background-color:#f4f4f4; }
+.really_overdue         { font-weight:bold; color: red}
+.overdue                { color: red; }
+td.print-label          { vertical-align:middle; text-align:right; }
+.print-label            { font-weight:bold; }
+.behind-target          { color: #ccaa00; }
+.transaction-approved   { color: green; }
+.transaction-pending    { color: black; }
+.transaction-rejected   { color: red; }
+.highlighted            { font-weight:bold;}
+      
+ul                      { display:inline; list-style:circle inside; }
+td.tasks                { background-color: #e4e4e4; }
+td.tasks_r              { background-color: #e4e4e4; text-align:right; }
+td.grand_total          { border-top:1px solid black;}
+textarea                { font-size:12px; }
+input                   { font-size:12px; }
+select                  { font-size:12px; }
+textarea.timesheetcomm  { font-size:12px; }
+#shrink_ts_note         { display:none; }
+#shrink_tsi_note        { display:none; }
+#ts_note                { height:22px; }
+#tsi_note               { height:22px; }
+
+
