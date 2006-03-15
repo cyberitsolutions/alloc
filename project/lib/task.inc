@@ -39,6 +39,8 @@ class task extends db_entity {
                                  , "projectID"=>new db_text_field("projectID")
                                  , "percentComplete"=>new db_text_field("percentComplete")
                                  , "parentTaskID"=>new db_text_field("parentTaskID")
+                                 , "leftID"=>new db_text_field("leftID")
+                                 , "rightID"=>new db_text_field("rightID")
                                  , "taskTypeID"=>new db_text_field("taskTypeID")
                                  , "personID"=>new db_text_field("personID")
                                  , "taskCommentTemplateID"=>new db_text_field("taskCommentTemplateID")

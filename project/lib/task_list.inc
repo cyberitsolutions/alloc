@@ -99,6 +99,7 @@ class task_filter extends db_filter {
                            ,"project"=>new foreign_key_filter_element("project", "Project", "task.projectID")
                            ,"projects"=>new foreign_key_filter_array("projects", "Projects", "task.projectID")
                            ,"all_pm"=>new boolean_sql_filter_element("all_pm", "")
+                           ,"all_tsm"=>new boolean_sql_filter_element("all_tsm", "")
                            ,"parent_task"=>new foreign_key_filter_element("parent_task", "Parent Task", "parentTaskID")
                            ,"person"=>new foreign_key_filter_element("person", "Person Responsible", "personID")
                            ,"dateActualCompletion"=>new field_filter_element("dateActualCompletion", "Date Completed", "task.dateActualCompletion")
@@ -120,98 +121,6 @@ class task_filter extends db_filter {
     return $criteria;
   }
 
-
-
-
-// function get_form() {{{
-  function get_form() {
-    global $MOD_DIR, $TPL, $current_user, $show_details, $projectID, $taskView;
-
-    if ($this->get_element("in_progress")) {
-      $taskStatus = "in_progress";
-    } else if ($this->get_element("overdue")) {
-      $taskStatus = "overdue";
-    } else if ($this->get_element("completed")) {
-      $taskStatus = "completed";
-    } else if ($this->get_element("not_completed")) {
-      $taskStatus = "not_completed";
-    } 
-
-    if ($this->get_element("phase")) {
-      $taskType = "phase";
-    } else if ($this->get_element("top")) {
-      $taskType = "top";
-    } else if ($this->get_element("fault")) {
-      $taskType = "fault";
-    } else if ($this->get_element("message")) {
-      $taskType = "message";
-    }
-
-    if ($show_details) {
-      $TPL["show_details_checked"] = " checked";
-    }
-    $person = $this->get_element("person");
-    $projects = $this->get_element("projects");
-
-    // This is tricky, it set the project dropdown
-    if (is_array($projects) && !$projectID && !$this->get_element("all_pm")) {
-      $projectID = $projects[0]; 
-    } else if ($this->get_element("all_pm")) {
-      $projectID = "ALL_PM";
-    }
-
-    // Construct template values to generate dynamic drop-down options (people and projects) 
-    // and select the entered values from the drop-down menus
-    $TPL["taskStatusOptions"] = get_options_from_array(array("completed"=>"Completed"
-                                                            ,"not_completed"=>"Not Completed"
-                                                            ,"in_progress"=>"In Progress"
-                                                            ,"overdue"=>"Overdue"), $taskStatus);
-
-    $taskTypes = array("phase"=>"Phases", "fault"=>"Fault","message"=>"Message");
-    $TPL["taskTypeOptions"] = get_options_from_array($taskTypes, $taskType);
-
-    $taskViews = array("byProject"=>"By Project", "prioritised"=>"By Priority");
-    $TPL["taskViewOptions"] = get_options_from_array($taskViews, $taskView);
-
-
-    $selectDb = new db_alloc;
-    if (have_entity_perm("task", PERM_READ, $current_user, false)) {
-
-      // User dropdown
-      $selectDb->query("SELECT personID, username FROM person ORDER BY username");
-      $personSelect = "<select name=\"personID\">";
-      $personSelect.= "<option value=\"\"> -- ALL -- ";
-      $personSelect.= get_options_from_db($selectDb, "username", "personID", is_object($person) ? $person->get_id() : 0);
-      $personSelect.= "</select>";
-
-      // Selects all projects for project drop down, but places this user's projects at the top of the list
-      $query = "SELECT project.projectID, projectName 
-				          FROM project LEFT JOIN projectPerson 
-				               ON project.projectID = projectPerson.projectID AND personID=".$current_user->get_id()."
-				          ORDER BY projectPersonID IS NULL, projectName";
-
-    // Else if they don't have perm to read (all) tasks 
-    } else {
-      $personSelect = $current_user->get_value("username")."<input type=\"hidden\" name=\"personID\" value=\"".$current_user->get_id()."\">";
-
-      $query = "SELECT project.projectID, projectName 
-				          FROM project, projectPerson 
-				          WHERE project.projectID = projectPerson.projectID AND personID=".$current_user->get_id()."
-				          ORDER BY projectName";
-    }
-
-    // Project dropdown
-    $selectDb->query($query);
-    $all_pm_label = " -- ALL Projects Managed by ".$current_user->get_value("username")." -- ";
-    $projectOptions = get_option($all_pm_label,"ALL_PM",$this->get_element("all_pm"))."\n";
-    $projectOptions.= get_options_from_db($selectDb, "projectName", "projectID", $projectID);
-
-    $TPL["personSelect"] = $personSelect;
-    $TPL["projectOptions"] = $projectOptions;
-
-    return get_template_string($MOD_DIR."/project/templates/taskFilterS.tpl");
-  }
-// }}}
 
 
 //   function read_form() {{{ should be called **SET** form duh!!!
@@ -246,7 +155,7 @@ class task_filter extends db_filter {
     }
 
     // we're using the 'projects' element here instead of the 'project' element for consistency
-    if ($projectID && $projectID != "ALL_PM") {
+    if ($projectID && $projectID != "ALL_PM" && $projectID != "ALL_TSM") {
       $this->set_element("projects", array($projectID));
 
     // Add a project filter to restrict the list to projects for which the user is manager.
@@ -265,6 +174,22 @@ class task_filter extends db_filter {
         $this->set_element("projects", $user_projects);
       }
       $this->set_element("all_pm",true);
+
+    } else if ($projectID == "ALL_TSM") {
+      $db = new db_alloc;
+      $q = sprintf("SELECT projectID 
+                      FROM projectPerson 
+                 LEFT JOIN projectPersonRole on projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
+                     WHERE personID = '%d' AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' GROUP BY projectID"
+                  ,$current_user->get_id());
+      $db->query($q);
+      while($db->next_record()) {
+        $user_projects[] = $db->f("projectID");
+      }
+      if (is_array($user_projects)) {
+        $this->set_element("projects", $user_projects);
+      }
+      $this->set_element("all_tsm",true);
     }
 
   }

@@ -1,5 +1,16 @@
 <?php
 
+// Load up $_FORM with $_GET and $_POST
+function get_all_form_data($array=array()) {
+  $_FORM = array();
+  foreach ($array as $name) {
+    $_FORM[$name] = $_POST[$name] or $_FORM[$name] = urldecode($_GET[$name]);
+  } 
+  return $_FORM;
+} 
+
+
+
 function timetook($start, $text="Duration: ") {
   $end = microtime();
   list($start_micro,$start_epoch,$end_micro,$end_epoch) = explode(" ",$start." ".$end);
@@ -15,7 +26,7 @@ function timetook($start, $text="Duration: ") {
 function get_cached_table($table) {
   static $cache;
   if (!$cache) {
-    $cache = new alloc_cache(array("person"));
+    $cache = new alloc_cache(array("person","taskType"));
     $cache->load_cache();
 
     // Special processing for person table
@@ -85,7 +96,7 @@ function show_style_sheet() {
                    , "H3_FONT_SIZE"               =>16 + $weight
                    , "TABLE_BOX_TH_FONT_SIZE"     =>14 + $weight
                    , "TABLE_BOX_TH_A_FONT_SIZE"   =>14 + $weight
-                   , "TABLE_TOOLBAR_TH_FONT_SIZE" =>17 + $weight
+                   , "TABLE_TOOLBAR_TH_FONT_SIZE" =>18 + $weight
                    , "TABLE_TOOLBAR_TD_FONT_SIZE" =>14 + $weight
                    , "TABLE_CALENDAR_TH_FONT_SIZE"=>13 + $weight
                    , "TD_FONT_SIZE"               =>13 + $weight

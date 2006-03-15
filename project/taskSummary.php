@@ -1,127 +1,99 @@
 <?php
 include("alloc.inc");
 
-function show_task_summary() {
-  global $current_user, $task_filter, $taskView, $current_user, $TPL, $show_details;
+$page_vars = array("projectID","taskStatus","taskTypeID","personID","taskView", "showDetails","projectType","applyFilter");
+$_FORM = get_all_form_data($page_vars);
 
-  // By Priority View
-  if ($taskView == "prioritised") {
+if (!$_FORM["applyFilter"]) {
+  $_FORM = &$user_FORM;
+} else if ($_FORM["applyFilter"]) {
+  $user_FORM = &$_FORM;
+  $user->register("user_FORM");
+}
 
-    $task_list = new prioritised_task_list($task_filter);
-    $task_options = array("show_project_short"=>!is_object($task_filter->get_element("project"))
-                         ,"show_person"=>!is_object($task_filter->get_element("person"))
-                         ,"show_links"=>true
-                         ,"skip_indent"=>true
-                         ,"show_priorities"=>true
-                         ,"column_headings"=>true);
-    $summary = $task_list->get_task_summary($task_options, false);
+$db = new db_alloc;
 
-  // By Project View
-  } else {
-    $task_options = array("show_links"=>true
-                         ,"show_new_children_links"=>true
-                         ,"nobr_taskName"=>true
-                         ,"status_type"=>"none");
 
-    if (!is_object($task_filter->get_element("person"))) {
-      $task_options["show_person"] = true;
-    }
+// They want to search on all projects that belong to the projectType they've radio selected
+if ($_FORM["projectType"] && !$_FORM["projectID"]) {
 
-    if ($show_details) {
-      $task_options["show_details"] = true;
-    }
-  
-
-    if (is_array($task_filter->get_element("projects"))) {
-      $project_ids = $task_filter->get_element("projects");
-      foreach($project_ids as $pid) {
-        $p = new project;
-        $p->set_id($pid);
-        $p->select();
-        $projects[] = $p;
-      } 
-      
-    } else {
-      // Irrespective of whether the project list has a filter, load up the projects.
-      $project_list = new project_list();
-      $projects = $project_list->get_entity_array();
-    }
-
-    $summary = "";
-    reset($projects);
-    while (list(, $project) = each($projects)) {
-  
-      // if top-level is selected then only show the tasks at top level - note the deliberate reset of top -> true 
-      if ($task_filter->get_element("top") == true) {
-        $project_summary = $project->get_task_summary($task_filter, $task_options, false, "html");
-        $task_filter->set_element("top", true);
-      
-      // normal hierarchal view 
-      } else {
-        $project_summary = $project->get_task_summary($task_filter, $task_options, true, "html");
-      }
-
-      if ($project_summary) {
-        $summary.= "\n<tr>";
-        $summary.= "\n<td class=\"tasks\"><a href=\"".$project->get_url()."\"><strong>".$project->get_value("projectName")."</strong></a></td>";
-        $summary.= "\n<td class=\"tasks_r\" colspan=\"2\"><strong>". $project->get_navigation_links(). "</strong></td>\n</tr>";
-        $summary.= $project_summary;
-        $summary.= "\n<tr><td colspan=\"3\">&nbsp;</td></tr>";
-      }
+  if ($_FORM["projectType"] != "all") {
+    $q = project::get_project_type_query($_FORM["projectType"]);
+    $db->query($q);
+    while ($db->next_record) {
+      $user_projects[] = $db->f("projectID");
     }
   }
 
-  echo stripslashes($summary);
+// Else if they've selected projects
+} else if ($_FORM["projectID"] && is_array($_FORM["projectID"])) {
+  $user_projects = $_FORM["projectID"];
+
+// Else a project has been specified in the url
+} else if ($_FORM["projectID"]) {
+  $user_projects[] = $_FORM["projectID"];
 }
 
 
-#global $user_taskSummary_filter, $user_taskSummary_view, $task_filter;
-
-// If they have clicked the "Filter" button
-if (isset($applyFilter)) {
-  // Create a new filter for the user based on form values
-  $task_filter = new task_filter();
-  $task_filter->read_form();
-  $user_taskSummary_filter = &$task_filter;
-  $user->register("user_taskSummary_filter");
-
-  // Set session variable to track view
-  $user_taskSummary_view = $taskView or $user_taskSummary_view = "byProject";
-  $user->register("user_taskSummary_view");
-
-  //Ditto for details
-  $user_taskSummary_showDetails = $show_details;
-  $user->register("user_taskSummary_showDetails");
-} 
-
-// Else use previous session settings
-if (!is_object($task_filter)) {
-  $task_filter = &$user_taskSummary_filter;
-  $taskView = $user_taskSummary_view;
-  $show_details = $user_taskSummary_showDetails;
+// Join them up with commars and add a restrictive sql clause subset
+if (is_array($user_projects) && count($user_projects)) {
+  $extra_sql = "WHERE projectID IN (".implode(",",$user_projects).")";
 }
 
-// Else create a new filter for the user based on default values
-if (!is_object($task_filter)) {
-  $task_filter = new task_filter();
-  $task_filter->set_element("not_completed", true);
-  $task_filter->set_element("person", $current_user);
-  $user_taskSummary_filter = $task_filter;
-}
 
-// If we're passed a personID on the URL then filter for that users tasks
-if ($_GET["personID"]) {
-  $p = new person;
-  $p->set_id($_GET["personID"]);
-  $p->select();
-  $task_filter->set_element("person", $p);
-  $user_taskSummary_filter = $task_filter;
+if ($_FORM["taskView"] == "byProject") {
+  $q = "SELECT projectID, projectName, clientID FROM project ".$extra_sql. " ORDER BY projectName";
+  $db = new db_alloc;
+  $db->query($q);
+  while ($db->next_record()) {
+    
+    $project = new project;
+    $project->read_db_record($db);
+
+    $summary.= "\n<tr>";
+    $summary.= "\n<td class=\"tasks\"><a href=\"".$project->get_url()."\"><strong>".$project->get_value("projectName")."</strong></a></td>";
+    $summary.= "\n<td class=\"tasks_r\" colspan=\"2\"><strong>". $project->get_navigation_links(). "</strong></td>\n</tr>";
+
+    // Pass filter elements!!: personID, taskTypeID, the status of the task
+    $summary.= "\n".$project->get_hierarchical_task_summary();
+    $summary.= "\n<tr><td colspan=\"3\">&nbsp;</td></tr>";
+  }
+
+  $TPL["task_summary"] = stripslashes($summary);
+  
+
+} else if ($_FORM["taskView"] == "prioritised") {
+  
+
 }
 
 
 
-$TPL["filter_form"] = $task_filter->get_form();
-$TPL["person_username"] = "All Users";
+
+
+
+
+// Load up the filter bits
+$TPL["projectOptions"] = project::get_project_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
+$_FORM["projectType"] and $TPL["projectType_checked_".$_FORM["projectType"]] = " checked"; 
+
+$TPL["personOptions"] = "<option value=\"\"> -- ALL -- ";
+$TPL["personOptions"].= get_select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
+
+$taskType = new taskType;
+$TPL["taskTypeOptions"] = $taskType->get_dropdown_options("taskTypeID","taskTypeName",$_FORM["taskTypeID"]);
+
+$taskViews = array("byProject"=>"View By Project", "prioritised"=>"View By Priority");
+$TPL["taskViewOptions"] = get_options_from_array($taskViews, $_FORM["taskView"]);
+
+$taskStatii = array("completed"=>"Completed","not_completed"=>"Not Completed","in_progress"=>"In Progress","overdue"=>"Overdue");
+$TPL["taskStatusOptions"] = get_options_from_array($taskStatii, $_FORM["taskStatus"]);
+
+if ($_FORM["showDetails"]) {
+  $TPL["show_details_checked"] = " checked";
+}
+
+
 
 include_template("templates/taskSummaryM.tpl");
 page_close();
