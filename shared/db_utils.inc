@@ -80,7 +80,7 @@ function get_mysql_date_stamp($db_date) {
  * @param   $selected_value   string  The current selected element
  * @return                    string  The string of options
  */
-function get_select_options($options,$selected_value=NULL) {
+function get_select_options($options,$selected_value=NULL,$maxlength=45) {
 
   // Build options from an SQL query: "SELECT name,value FROM"
   if (is_string($options)) {
@@ -110,8 +110,8 @@ function get_select_options($options,$selected_value=NULL) {
       }
 
       $label = stripslashes($label);
-      if (strlen($label) > 45) {
-        $label = substr($label, 0, 45 - 3)."...";
+      if (strlen($label) > $maxlength) {
+        $label = substr($label, 0, $maxlength - 3)."...";
       } 
 
       $str.= "\n<option value=\"".$value."\"".$sel.">".$label."</option>";

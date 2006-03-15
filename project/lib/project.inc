@@ -85,6 +85,50 @@ class project extends db_entity
     return $sess->email_url(get_url_path()."project.php?projectID=".$this->get_id());
   }
 
+  function get_hierarchical_task_summary($root_taskID=0) {
+
+    $db = new db_alloc;
+    $q = sprintf("SELECT leftID, rightID FROM task WHERE taskID=%d",$root_taskID); 
+    $db->query($q);
+    $row = $db->next_record();
+
+    // start with an empty $right stack 
+    $right = array(); 
+
+    // now, retrieve all descendants of the $root node 
+    $q = sprintf("SELECT taskID, leftID, rightID, taskName
+                    FROM task 
+                   WHERE leftID BETWEEN %d AND %d 
+                     AND projectID = %d
+                ORDER BY leftID ASC", $row["leftID"],$row["rightID"],$this->get_id()); 
+    $db->query($q);
+
+    while ($row = $db->next_record()) {
+
+      if (count($right) > 0) { 
+        while ($right[count($right)-1] < $row['rightID']) { 
+          array_pop($right); 
+        } 
+      } 
+
+
+      $task = new task;
+      $task->read_db_record($db);
+      // display indented node title 
+      $padding = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",count($right));
+      #$rtn.= "<tr><td colspan=3>".$padding.$task->get_task_link()."</td></tr>"; 
+
+      // add this node to the stack 
+      $right[] = $row['rightID']; 
+
+    }  
+
+    return $rtn;
+
+  }
+
+
+
   function get_task_summary($existing_filter = "", $task_options = "", $hierarchical = true, $format = "html") {
     global $default_task_options;
     if ($existing_filter == "") {
@@ -194,16 +238,71 @@ class project extends db_entity
       return "<nobr>&nbsp;&nbsp;".implode("</nobr><nobr>&nbsp;&nbsp;",$links)."</nobr>";
     }
   }
-}
 
+  function get_project_type_query($type="mine") {
+    $type or $type = "mine";
+    global $current_user;
 
+    if ($type == "mine") {
+      $q = sprintf("SELECT project.projectID, project.projectName
+                      FROM project
+                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
+                 LEFT JOIN projectPersonRole ON projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
+                     WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
+                  GROUP BY projectID 
+                  ORDER BY project.projectName"
+                  ,$current_user->get_id());
 
-class project_filter extends db_filter {
-  var $classname = "project_filter";
-  function project_filter($filter_values = "") {
-    $this->elements = array("all_pm_projects"=>new boolean_sql_filter_element("project", "Project", "projectID in (".$filter_values["all_pm_projects"].")"));
+    } else if ($type == "pm") {
+      $q = sprintf("SELECT project.projectID, project.projectName
+                      FROM project
+                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
+                 LEFT JOIN projectPersonRole ON projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
+                     WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
+                       AND projectPersonRole.projectPersonRoleHandle = 'isManager' 
+                  GROUP BY projectID 
+                  ORDER BY project.projectName"
+                  ,$current_user->get_id());
+
+    } else if ($type == "tsm") {
+      $q = sprintf("SELECT project.projectID, project.projectName
+                      FROM project
+                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
+                 LEFT JOIN projectPersonRole ON projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
+                     WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
+                       AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' 
+                  GROUP BY projectID 
+                  ORDER BY project.projectName"
+                  ,$current_user->get_id());
+
+    } else if ($type == "curr") {
+      $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = 'current' ORDER BY projectName");
+
+    } else if ($type == "all") {
+      $q = sprintf("SELECT projectID,projectName FROM project ORDER BY projectName");
+    }
+    return $q;
   }
+
+  function get_project_list_dropdown($type="mine",$projectIDs=array()) {
+    $db = new db_alloc;
+    $q = project::get_project_type_query($type);
+    // Project dropdown
+    $db->query($q);
+    while ($db->next_record()) {
+      $ops[$db->f("projectID")] = $db->f("projectName");
+    }
+
+    $options = get_select_options($ops, $projectIDs, 35);
+
+    return "<select name=\"projectID[]\" size=\"5\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
+  }
+
+
+
 }
+
+
 
 
 class project_list extends db_list

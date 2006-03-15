@@ -138,7 +138,7 @@
     if (!$stat && $this->Auto_Free) {
       $this->free();
     }
-    return $stat;
+    return $this->Record;
   }
 
   /* public: position in result set */

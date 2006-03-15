@@ -252,13 +252,17 @@ alter table transaction change transactionID transactionID int(11) AUTO_INCREMEN
 alter table transactionRepeat change transactionRepeatID transactionRepeatID int(11) AUTO_INCREMENT;
 
 
-
-
-
-
 drop table db_sequence;
 drop table employee;
 drop table position;
+
+
+-- Run script to change parentTaskID way of doing thing to Modified Preorder Tree Traversal way
+-- project/mptt.php
+
+alter table task add leftID int(11) NOT NULL AFTER taskID;
+alter table task add rightID int(11) NOT NULL AFTER leftID;
+alter table task drop parentTaskID;
 
 
 
