@@ -55,11 +55,11 @@ if ($_FORM["taskView"] == "byProject") {
     $summary.= "\n<td class=\"tasks_r\" colspan=\"2\"><strong>". $project->get_navigation_links(). "</strong></td>\n</tr>";
 
     // Pass filter elements!!: personID, taskTypeID, the status of the task
-    $summary.= "\n".$project->get_hierarchical_task_summary();
+    $summary.= "\n".$project->get_hierarchical_task_summary(0);
     $summary.= "\n<tr><td colspan=\"3\">&nbsp;</td></tr>";
   }
 
-  $TPL["task_summary"] = stripslashes($summary);
+  $TPL["task_summary"] = $summary;
   
 
 } else if ($_FORM["taskView"] == "prioritised") {

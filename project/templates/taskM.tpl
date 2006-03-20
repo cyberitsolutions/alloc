@@ -36,13 +36,22 @@ function updateTaskCommentTemplate(number) {
     <td colspan="5">&nbsp;</td>
   </tr>  
   <tr>
-    <td valign="top" colspan="3" rowspan="2" style="padding-left:15px;">{project_projectName}{hierarchy_links}<br/>{task_taskDescription}</td>
+    <td valign="top" colspan="3" rowspan="2" style="padding-left:15px;">
+
+      <table border="0" cellspacing="0" cellpadding="5" class="panel">
+        <tr>
+          <td>{project_projectName}{hierarchy_links}<br/>{task_taskDescription}</td>
+        </tr>
+      </table>
+
+
+    </td>
     <td width="20%" valign="top" rowspan="2">
     
-      <table border="0" cellspacing="0" cellpadding="5">
+      <table border="0" cellspacing="0" cellpadding="5" class="panel">
         <tr> 
           <td>Task Created By</td>
-          <td><b>{task_createdBy}</b> {task_dateCreated}<td/> 
+          <td><b>{task_createdBy}</b> {task_dateCreated}</td> 
         </tr>
         <tr>
           <td>Task Assigned To</td> 
