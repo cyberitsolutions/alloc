@@ -85,7 +85,7 @@ class project extends db_entity
     return $sess->email_url(get_url_path()."project.php?projectID=".$this->get_id());
   }
 
-  function get_hierarchical_task_summary($root_taskID=0) {
+  function get_hierarchical_task_summary($root_taskID=0, $extra_sql="") {
 
     $db = new db_alloc;
     $q = sprintf("SELECT leftID, rightID FROM task WHERE taskID=%d",$root_taskID); 
@@ -98,33 +98,62 @@ class project extends db_entity
     // now, retrieve all descendants of the $root node 
     $q = sprintf("SELECT taskID, leftID, rightID, taskName
                     FROM task 
-                   WHERE leftID BETWEEN %d AND %d 
+                   WHERE leftID BETWEEN %d AND %d and dateActualCompletion = '' or dateActualCompletion is null
                      AND projectID = %d
-                ORDER BY leftID ASC", $row["leftID"],$row["rightID"],$this->get_id()); 
+                         %s 
+                ORDER BY leftID ASC", $row["leftID"],$row["rightID"],$this->get_id(), $extra_sql); 
     $db->query($q);
 
-    while ($row = $db->next_record()) {
+    while ($db->next_record()) {
 
-      if (count($right) > 0) { 
-        while ($right[count($right)-1] < $row['rightID']) { 
+
+/*
+echo "<br/>Tally:".count($right) . " innards: <pre>".print_r($right,1)."</pre>";
+echo "<br/>rightcountrigh: ".$right[count($right)-1];
+echo "<br/><br/>";
+$k++;
+$k>10 && exit;
+        $test = $right[count($right)-1];
+        while ($test < $db->f("rightID") && count($right)) {
+
+          $test = $right[count($right)-1];
           array_pop($right); 
         } 
-      } 
+*/
+
+
+      if (count($right)) {
+        
+        if ($db->f("leftID") == $prev_left+1) {
+          $padding++;
+        } 
+
+        foreach ($right as $rightID => $p) {
+          if ($db->f("right")+1 == $rightID && $p>0) {
+            $padding = $p;
+          }
+        }
+
+      }
+
+
+      $right[$prev_right] = $padding;
+
+      $prev_right = $db->f("rightID");
+      $prev_left = $db->f("leftID");
 
 
       $task = new task;
       $task->read_db_record($db);
       // display indented node title 
-      $padding = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",count($right));
-      #$rtn.= "<tr><td colspan=3>".$padding.$task->get_task_link()."</td></tr>"; 
+      $space = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$padding);
+      $rtn.= "<tr><td colspan=2>".$padding.$space.$task->get_value("leftID").$task->get_task_link().$task->get_value("rightID")."</td></tr>"; 
 
-      // add this node to the stack 
-      $right[] = $row['rightID']; 
+
 
     }  
 
     return $rtn;
-
   }
 
 

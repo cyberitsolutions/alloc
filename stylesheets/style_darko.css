@@ -35,6 +35,8 @@ table.calendar td.today { background-color:#999999; }
 
 table.filter            { border:3px dashed #888888; background-color:#dddddd; padding:4px; margin:4px;}
 table.filter th         { font-weight:bold; background-color:#dddddd; color:#000000; border-bottom:0px solid #ffffff; text-align:center; }
+table.panel             { background-color:#aaaaaa; height:100%; }
+
 td                      { color:#000000;  }
 th                      { color:#000000;  text-align:left; }
 tr.odd                  { background-color:#aaaaaa; }
