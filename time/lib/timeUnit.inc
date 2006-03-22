@@ -19,11 +19,6 @@ class timeUnit extends db_entity
   }
 
 
-  function get_dropdown_options($key,$label,$sel=false) {
-    $arr = $this->get_assoc_array($key,$label);
-    return get_options_from_array($arr,$sel);
-  }   
-
   function seconds_to_display_time_unit($seconds) {
     $q = "SELECT * FROM timeUnit";
     $db = new db_alloc;

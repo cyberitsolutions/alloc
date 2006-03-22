@@ -570,7 +570,14 @@ class db_entity
     $q = sprintf('SELECT %s, %s FROM %s'
                 ,$key,$value,$this->data_table);
 
-    $sel and $extra = " OR ".$this->key_field->name." = ".$sel;
+
+    $pkey_sql = " OR ".$this->key_field->name." = ";
+    if (is_array($sel) && count($sel)) {
+      $extra = $pkey_sql.implode($pkey_sql,$sel);
+    } else if ($sel) {
+      $extra = $pkey_sql.$sel;
+    }
+
     is_object($this->data_fields[$this->data_table."Active"])   and $q.= " WHERE (".$this->data_table."Active = 1 ".$extra.")";
     is_object($this->data_fields[$this->data_table."Sequence"]) and $q.= " ORDER BY ".$this->data_table."Sequence";
 
@@ -588,8 +595,8 @@ class db_entity
   function get_dropdown_options($key,$label,$sel=false,$blank=false) {
     $arr = $this->get_assoc_array($key,$label,$sel);
 
-    $blank and $options = get_option("None", "0", !$sel)."\n";
-    $options.= get_options_from_array($arr,$sel);
+    $blank and $options = get_option("", "0", !$sel)."\n";
+    $options.= get_select_options($arr,$sel);
     return $options;
   }
 

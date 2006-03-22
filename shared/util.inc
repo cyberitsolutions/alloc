@@ -26,7 +26,7 @@ function timetook($start, $text="Duration: ") {
 function get_cached_table($table) {
   static $cache;
   if (!$cache) {
-    $cache = new alloc_cache(array("person","taskType"));
+    $cache = new alloc_cache(array("person","taskType","timeUnit"));
     $cache->load_cache();
 
     // Special processing for person table

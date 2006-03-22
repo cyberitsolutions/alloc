@@ -128,6 +128,7 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
 // Start stuff here
 $task->set_tpl_values(DST_HTML_ATTRIBUTE, "task_");
 
+
 $person = new person;
 $person->set_id($task->get_value("creatorID"));
 $person->select();
@@ -153,54 +154,9 @@ if (!$taskID && $tasktype) {
 // Set options for the dropdown boxen
 $task->set_option_tpl_values();
 
+$TPL["task_timeActual"] = $task->get_time_billed();
+$TPL["task_timeEstimate"] or $TPL["task_timeEstimate"] = "";
 
-
-function get_children_taskIDs($taskID) {
-  $q = sprintf("SELECT taskID FROM task WHERE parentTaskID = %d",$taskID);
-  $db = new db_alloc;
-  $db->query($q);
-  
-  while($db->next_record()) {
-    $rtn[] = $db->f("taskID");
-    $rtn = array_merge($rtn, get_children_taskIDs($db->f("taskID")));
-  }
-  return $rtn;
-}
-
-// Get hours worked for this task (including task children if any)
-$db = new db_alloc;
-if ($task->get_id())
-$taskIDs = get_children_taskIDs($task->get_id());
-$taskIDs[] = $task->get_id();
-$taskIDs = implode(",",$taskIDs);
-
-#echo $taskIDs;
-
-if ($task->get_id()) {
-  // Get tally from timeSheetItem table
-  $q = sprintf("SELECT sum(timeSheetItemDuration) as duration,timeSheetItemDurationUnitID
-                  FROM timeSheetItem
-                 WHERE taskID IN (%s)
-              GROUP BY timeSheetItemDurationUnitID
-              ORDER BY timeSheetItemDurationUnitID DESC"
-              ,$taskIDs);
-  $db->query($q);
-  while ($db->next_record()) {
-    $actual_tallys[$db->f("timeSheetItemDurationUnitID")] = $db->f("duration");
-  }
-  $actual_tallys or $actual_tallys = array();
-
-  $timeUnit = new timeUnit;
-  $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
-  $TPL["task_timeEstimateUnitID_label"] = $units[$task->get_value("timeEstimateUnitID")];
-
-  foreach ($actual_tallys as $unit => $tally) {
-    $TPL["task_timeActual"] .= $br.sprintf("%0.2f",$tally)." ".$units[$unit];
-    $br = ", ";
-  }
-  $TPL["task_timeEstimate"] = sprintf("%0.2f",$task->get_value("timeEstimate"));
-  $TPL["task_timeActual"] or $TPL["task_timeActual"] = "0.00";
-}
 
 // Generate navigation links
 $project = $task->get_foreign_object("project");
