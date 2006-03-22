@@ -55,7 +55,7 @@ if ($_FORM["taskView"] == "byProject") {
     $summary.= "\n<td class=\"tasks_r\" colspan=\"2\"><strong>". $project->get_navigation_links(). "</strong></td>\n</tr>";
 
     // Pass filter elements!!: personID, taskTypeID, the status of the task
-    $summary.= "\n".$project->get_hierarchical_task_summary(0);
+    $summary.= "\n".$project->get_hierarchical_task_summary();
     $summary.= "\n<tr><td colspan=\"3\">&nbsp;</td></tr>";
   }
 
@@ -77,16 +77,17 @@ if ($_FORM["taskView"] == "byProject") {
 $TPL["projectOptions"] = project::get_project_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
 $_FORM["projectType"] and $TPL["projectType_checked_".$_FORM["projectType"]] = " checked"; 
 
-$TPL["personOptions"] = "<option value=\"\"> -- ALL -- ";
+$TPL["personOptions"] = "\n<option value=\"\"> ";
 $TPL["personOptions"].= get_select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
 
 $taskType = new taskType;
-$TPL["taskTypeOptions"] = $taskType->get_dropdown_options("taskTypeID","taskTypeName",$_FORM["taskTypeID"]);
+$TPL["taskTypeOptions"] = "\n<option value=\"\"> ";
+$TPL["taskTypeOptions"].= $taskType->get_dropdown_options("taskTypeID","taskTypeName",$_FORM["taskTypeID"]);
 
 $taskViews = array("byProject"=>"View By Project", "prioritised"=>"View By Priority");
 $TPL["taskViewOptions"] = get_options_from_array($taskViews, $_FORM["taskView"]);
 
-$taskStatii = array("completed"=>"Completed","not_completed"=>"Not Completed","in_progress"=>"In Progress","overdue"=>"Overdue");
+$taskStatii = array(""=>"","completed"=>"Completed","not_completed"=>"Not Completed","in_progress"=>"In Progress","overdue"=>"Overdue");
 $TPL["taskStatusOptions"] = get_options_from_array($taskStatii, $_FORM["taskStatus"]);
 
 if ($_FORM["showDetails"]) {

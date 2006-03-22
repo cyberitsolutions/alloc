@@ -44,7 +44,6 @@ class alloc_Session extends Session {
   var $that_class = "alloc_Session_sql";
 
   ## Name of data storage container
-  #var $auto_init = $MOD_SHARED_DIR . "/session_init.inc";
   var $allowcache = "no";
 
   // Add a session ID to a URL, unless we have been called from the automatic email cron job

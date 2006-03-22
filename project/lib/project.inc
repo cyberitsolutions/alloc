@@ -85,73 +85,44 @@ class project extends db_entity
     return $sess->email_url(get_url_path()."project.php?projectID=".$this->get_id());
   }
 
-  function get_hierarchical_task_summary($root_taskID=0, $extra_sql="") {
+  function get_hierarchical_task_summary($extra_filter=array()) {
 
     $db = new db_alloc;
-    $q = sprintf("SELECT leftID, rightID FROM task WHERE taskID=%d",$root_taskID); 
+    #$extra
+    $q = sprintf("SELECT taskName,taskID,parentTaskID FROM task WHERE taskTypeID = %d AND projectID = %d ORDER by taskName",TT_PHASE,$this->get_id()); 
     $db->query($q);
-    $row = $db->next_record();
+    while($row = $db->next_record()) {
+      #$hierarchy[$db->f("taskID")] = $db->f("parentTaskID");
+  #echo "<br/>First: ".$db->f("taskID");
+  #echo " Parent: ".$db->f("parentTaskID");
 
-    // start with an empty $right stack 
-    $right = array(); 
+      $hierarchy[$row["parentTaskID"]][] = $row;
+    }
+ 
+    foreach ($hierarchy as $parentTaskID => $arr) {
+  
+    echo "<br/>pid: ".$parentTaskID;
 
-    // now, retrieve all descendants of the $root node 
-    $q = sprintf("SELECT taskID, leftID, rightID, taskName
-                    FROM task 
-                   WHERE leftID BETWEEN %d AND %d and dateActualCompletion = '' or dateActualCompletion is null
-                     AND projectID = %d
-                         %s 
-                ORDER BY leftID ASC", $row["leftID"],$row["rightID"],$this->get_id(), $extra_sql); 
-    $db->query($q);
-
-    while ($db->next_record()) {
-
-
-/*
-echo "<br/>Tally:".count($right) . " innards: <pre>".print_r($right,1)."</pre>";
-echo "<br/>rightcountrigh: ".$right[count($right)-1];
-echo "<br/><br/>";
-$k++;
-$k>10 && exit;
-        $test = $right[count($right)-1];
-        while ($test < $db->f("rightID") && count($right)) {
-
-          $test = $right[count($right)-1];
-          array_pop($right); 
-        } 
-*/
-
-
-      if (count($right)) {
-        
-        if ($db->f("leftID") == $prev_left+1) {
-          $padding++;
-        } 
-
-        foreach ($right as $rightID => $p) {
-          if ($db->f("right")+1 == $rightID && $p>0) {
-            $padding = $p;
-          }
-        }
+      foreach ($arr as $row) {
+        #echo "<br/>here: ".$row["taskID"]." ".$row["taskName"];
+        #echo " : ".$row["parentTaskID"];
+      
 
       }
 
 
-      $right[$prev_right] = $padding;
-
-      $prev_right = $db->f("rightID");
-      $prev_left = $db->f("leftID");
-
+    }
+ 
+ /* 
 
       $task = new task;
       $task->read_db_record($db);
       // display indented node title 
       $space = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$padding);
       $rtn.= "<tr><td colspan=2>".$padding.$space.$task->get_value("leftID").$task->get_task_link().$task->get_value("rightID")."</td></tr>"; 
+*/
 
 
-
-    }  
 
     return $rtn;
   }
@@ -324,7 +295,7 @@ $k>10 && exit;
 
     $options = get_select_options($ops, $projectIDs, 35);
 
-    return "<select name=\"projectID[]\" size=\"5\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
+    return "<select name=\"projectID[]\" size=\"7\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
   }
 
 
