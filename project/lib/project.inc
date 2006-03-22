@@ -85,48 +85,35 @@ class project extends db_entity
     return $sess->email_url(get_url_path()."project.php?projectID=".$this->get_id());
   }
 
-  function get_hierarchical_task_summary($extra_filter=array()) {
+
+  function get_task_children($parentTaskID=0, $filter=array(),$padding=0) {
+
+    if (is_array($filter) && count($filter)) {
+      $f = " AND ".implode(" AND ",$filter);
+    }
 
     $db = new db_alloc;
-    #$extra
-    $q = sprintf("SELECT taskName,taskID,parentTaskID FROM task WHERE taskTypeID = %d AND projectID = %d ORDER by taskName",TT_PHASE,$this->get_id()); 
+    $q = sprintf("SELECT * FROM task WHERE parentTaskID = %d AND projectID = %d %s ORDER BY taskName",$parentTaskID,$this->get_id(),$f);
     $db->query($q);
-    while($row = $db->next_record()) {
-      #$hierarchy[$db->f("taskID")] = $db->f("parentTaskID");
-  #echo "<br/>First: ".$db->f("taskID");
-  #echo " Parent: ".$db->f("parentTaskID");
 
-      $hierarchy[$row["parentTaskID"]][] = $row;
-    }
- 
-    foreach ($hierarchy as $parentTaskID => $arr) {
-  
-    echo "<br/>pid: ".$parentTaskID;
-
-      foreach ($arr as $row) {
-        #echo "<br/>here: ".$row["taskID"]." ".$row["taskName"];
-        #echo " : ".$row["parentTaskID"];
-      
-
-      }
-
-
-    }
- 
- /* 
+    while ($row = $db->next_record()) {
 
       $task = new task;
       $task->read_db_record($db);
-      // display indented node title 
-      $space = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$padding);
-      $rtn.= "<tr><td colspan=2>".$padding.$space.$task->get_value("leftID").$task->get_task_link().$task->get_value("rightID")."</td></tr>"; 
-*/
 
+      $row["taskLink"] = $task->get_task_link();
+      $row["padding"] = $padding;
+      $tasks[$row["taskID"]] = $row;
+      
 
-
-    return $rtn;
-  }
-
+      if ($row["taskTypeID"] == TT_PHASE) {
+        $padding+=1;
+        $tasks = array_merge($tasks,$this->get_task_children($row["taskID"],$filter,$padding));
+        $padding-=1;
+      } 
+    }
+    return $tasks;
+  } 
 
 
   function get_task_summary($existing_filter = "", $task_options = "", $hierarchical = true, $format = "html") {
@@ -295,7 +282,7 @@ class project extends db_entity
 
     $options = get_select_options($ops, $projectIDs, 35);
 
-    return "<select name=\"projectID[]\" size=\"7\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
+    return "<select name=\"projectID[]\" size=\"8\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
   }
 
 

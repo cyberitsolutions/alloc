@@ -260,15 +260,6 @@ drop table position;
 -- Run script to change parentTaskID way of doing thing to Modified Preorder Tree Traversal way
 -- project/mptt.php
 
-alter table task add leftID int(11) NOT NULL AFTER taskID;
-alter table task add rightID int(11) NOT NULL AFTER leftID;
-alter table task drop parentTaskID;
-
-alter table task drop taskCommentTemplateID;
-
-
-alter table task drop leftID ;
-alter table task drop rightID;
 
 
 

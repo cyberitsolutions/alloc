@@ -27,7 +27,7 @@ class task extends db_entity {
                                  , "taskDescription"=>new db_text_field("taskDescription")
                                  , "creatorID"=>new db_text_field("creatorID")
                                  , "priority"=>new db_text_field("priority")
-                                 , "timeEstimate"=>new db_text_field("timeEstimate", "Time Estimate", 0, array("allow_null"=>false))
+                                 , "timeEstimate"=>new db_text_field("timeEstimate", "Time Estimate", 0, array("empty_to_null"=>true))
                                  , "timeEstimateUnitID"=>new db_text_field("timeEstimateUnitID")
                                  , "dateCreated"=>new db_text_field("dateCreated")
                                  , "dateAssigned"=>new db_text_field("dateAssigned")
@@ -39,11 +39,8 @@ class task extends db_entity {
                                  , "projectID"=>new db_text_field("projectID")
                                  , "percentComplete"=>new db_text_field("percentComplete")
                                  , "parentTaskID"=>new db_text_field("parentTaskID")
-                                 , "leftID"=>new db_text_field("leftID")
-                                 , "rightID"=>new db_text_field("rightID")
                                  , "taskTypeID"=>new db_text_field("taskTypeID")
                                  , "personID"=>new db_text_field("personID")
-                                 , "taskCommentTemplateID"=>new db_text_field("taskCommentTemplateID")
                                  
       );
 
@@ -315,9 +312,8 @@ class task extends db_entity {
     // TaskCommentTemplateOptions - Select all task comment templates
     $query = sprintf("SELECT * FROM taskCommentTemplate ORDER BY taskCommentTemplateName");
     $db->query($query);
-    $TPL["taskCommentTemplateOptions"] = get_option("Comment Templates", "0", $this->get_value("taskCommentTemplateID") == 0)."\n";
-    $TPL["taskCommentTemplateOptions"].= 
-      get_options_from_db($db, "taskCommentTemplateName", "taskCommentTemplateID", $this->get_value("taskCommentTemplateID"));
+    $TPL["taskCommentTemplateOptions"] = get_option("Comment Templates", "0")."\n";
+    $TPL["taskCommentTemplateOptions"].= get_options_from_db($db, "taskCommentTemplateName", "taskCommentTemplateID",false);
 
     if ($timeSheetID) {
       $ts_query = "select personID from timeSheet where timeSheetID = ".$timeSheetID;
@@ -356,7 +352,7 @@ class task extends db_entity {
     
 
     $timeUnit = new timeUnit;
-    $TPL["task_timeEstimateUnitID_options"] = $timeUnit->get_dropdown_options("timeUnitID","timeUnitLabelA",$this->get_value("timeEstimateUnitID"));
+    $TPL["task_timeEstimateUnitID_options"] = $timeUnit->get_dropdown_options("timeUnitID","timeUnitLabelA",$this->get_value("timeEstimateUnitID"),1);
 
   
     // The options for the email dropdown boxes
@@ -934,6 +930,64 @@ class task extends db_entity {
   function calculate_projects() {
     return true;
   }
+
+  
+  function get_children_taskIDs($taskID) {
+    $q = sprintf("SELECT taskID FROM task WHERE parentTaskID = %d",$taskID);
+    $db = new db_alloc;
+    $db->query($q);
+
+    while($db->next_record()) {
+      $rtn[] = $db->f("taskID");
+      $rtn = array_merge($rtn, task::get_children_taskIDs($db->f("taskID")));
+    }
+    return $rtn;
+  }
+
+
+
+  function get_time_billed($taskID="") {
+
+    if (is_object($this) && !$taskID) {
+      $taskID = $this->get_id();
+    }
+
+
+    if ($taskID) {
+      $db = new db_alloc;
+
+      $taskIDs = task::get_children_taskIDs($taskID);
+      $taskIDs[] = $taskID;
+      $taskIDs = implode(",",$taskIDs);
+
+      // Get tally from timeSheetItem table
+      $q = sprintf("SELECT sum(timeSheetItemDuration) as duration,timeSheetItemDurationUnitID
+                      FROM timeSheetItem
+                     WHERE taskID IN (%s)
+                  GROUP BY timeSheetItemDurationUnitID
+                  ORDER BY timeSheetItemDurationUnitID DESC"
+                  ,$taskIDs);
+      $db->query($q);
+      while ($db->next_record()) {
+        $actual_tallys[$db->f("timeSheetItemDurationUnitID")] += $db->f("duration");
+      }
+      $actual_tallys or $actual_tallys = array();
+
+      $timeUnit = new timeUnit;
+      $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
+
+      foreach ($actual_tallys as $unit => $tally) {
+        $rtn .= $br.sprintf("%0.2f",$tally)." ".$units[$unit];
+        $br = ", ";
+      }
+      $rtn or $rtn = "0.00";
+      return $rtn;
+    }
+  }
+
+
+
+
 }
 
 

@@ -37,29 +37,55 @@ function updateProjectList(number) {
                 <td>Project</td>
                 <td>Task Type</td>
                 <td>Task Status</td>
-                <td>Allocated To</td>
+                <td>Assigned To</td>
                 <!-- <td rowspan="2">{:help_button taskSummaryFilter}</td> -->
                 <td></td>
               </tr>
+
               <tr>
-            
-                <td valign="bottom" align="right">
+                <td valign="bottom" align="right" rowspan="2">
                   My Projects <input type="radio" name="projectType" value="mine" onClick="refreshProjectList(this)"{projectType_checked_mine}><br/>
                   <nobr>My Project Managed <input type="radio" name="projectType" value="pm" onClick="refreshProjectList(this)"{projectType_checked_pm}></nobr><br/>
                   My Time Sheet Rec. <input type="radio" name="projectType" value="tsm" onClick="refreshProjectList(this)"{projectType_checked_tsm}><br/>
                   Current <input type="radio" name="projectType" value="curr" onClick="refreshProjectList(this)"{projectType_checked_curr}><br/>
                   All Projects <input type="radio" name="projectType" value="all" onClick="refreshProjectList(this)"{projectType_checked_all}>
                 </td>
-                <td valign="top"><div id="projectListDropdown">{projectOptions}</div></td>
-                <td valign="top"><select name="taskTypeID[]" size="6" multiple="true">{taskTypeOptions}</select></td>
+                <td valign="top" rowspan="2"><div id="projectListDropdown">{projectOptions}</div></td>
+                <td valign="top" rowspan="2"><select name="taskTypeID[]" size="6" multiple="true">{taskTypeOptions}</select></td>
                 <td valign="top"><select name="taskStatus" size="1">{taskStatusOptions}</select></td>
                 <td valign="top"><select name="personID">{personOptions}</select>
-                  <br/><select name="taskView" size="1">{taskViewOptions}</select>
-                  <br/>Show Descriptions
-                  <input type="checkbox" name="showDetails"{show_details_checked}>
                 </td>
                 <td valign="top"><input type="submit" name="applyFilter" value="Filter"></td>
               </tr>
+              <tr>
+                <td colspan="3">
+          
+                  <table class="filter" align="center" width="95%">
+                    <tr>
+                      <td><b>Display</b></td>
+                      <td colspan="3" align="right">View By 
+                          Priority <input type="radio" name="taskView" value="prioritised"{taskView_checked_prioritised}>
+                          Project <input type="radio" name="taskView" value="byProject"{taskView_checked_byProject}> 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="right">Description</td><td><input type="checkbox" name="showDescription"{showDescription_checked}></td>
+                      <td align="right">Task Dates</td><td><input type="checkbox" name="showDates"{showDates_checked}></td>
+                    </tr>
+                    <tr>
+                      <td align="right">Task Creator</td><td><input type="checkbox" name="showCreator"{showCreator_checked}></td>
+                      <td align="right">Assigned To</td><td><input type="checkbox" name="showAssigned"{showAssigned_checked}></td>
+                    </tr>
+                    <tr>
+                      <td align="right">Estimate/Actual</td><td><input type="checkbox" name="showTimes"{showTimes_checked}></td>
+                      <td align="right">Percent Complete</td><td><input type="checkbox" name="showPercent"{showPercent_checked}></td>
+                    </tr>
+                      
+                  </table>
+
+                </td>
+              </tr>
+
             </table>
 
           </td>
