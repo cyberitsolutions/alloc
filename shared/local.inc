@@ -23,7 +23,7 @@ if ((!isset($modules[$MODULE_NAME])) && $MODULE_NAME != "") {
 $SCRIPT_PATH = $SCRIPT_NAME;
 $SCRIPT_FILENAME_SHORT and $SCRIPT_PATH = eregi_replace($SCRIPT_FILENAME_SHORT, "", $SCRIPT_NAME);
 include($MOD_SHARED_DIR."/alloc_phplib.inc");
-include($MOD_SHARED_DIR."/php_template2.php");
+include($MOD_SHARED_DIR."/template.php");
 include($MOD_SHARED_DIR."/util.inc");
 include($MOD_SHARED_DIR."/home.inc");
 include($MOD_SHARED_DIR."/toolbar.inc");

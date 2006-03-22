@@ -47,12 +47,12 @@ function updateProjectList(number) {
                   My Projects <input type="radio" name="projectType" value="mine" onClick="refreshProjectList(this)"{projectType_checked_mine}><br/>
                   <nobr>My Project Managed <input type="radio" name="projectType" value="pm" onClick="refreshProjectList(this)"{projectType_checked_pm}></nobr><br/>
                   My Time Sheet Rec. <input type="radio" name="projectType" value="tsm" onClick="refreshProjectList(this)"{projectType_checked_tsm}><br/>
-                  All Current <input type="radio" name="projectType" value="curr" onClick="refreshProjectList(this)"{projectType_checked_curr}><br/>
+                  Current <input type="radio" name="projectType" value="curr" onClick="refreshProjectList(this)"{projectType_checked_curr}><br/>
                   All Projects <input type="radio" name="projectType" value="all" onClick="refreshProjectList(this)"{projectType_checked_all}>
                 </td>
                 <td valign="top"><div id="projectListDropdown">{projectOptions}</div></td>
-                <td valign="top"><select name="taskTypeID" size="5">{taskTypeOptions}</select></td>
-                <td valign="top"><select name="taskStatus" size="4" multiple="true">{taskStatusOptions}</select></td>
+                <td valign="top"><select name="taskTypeID[]" size="6" multiple="true">{taskTypeOptions}</select></td>
+                <td valign="top"><select name="taskStatus" size="1">{taskStatusOptions}</select></td>
                 <td valign="top"><select name="personID">{personOptions}</select>
                   <br/><select name="taskView" size="1">{taskViewOptions}</select>
                   <br/>Show Descriptions

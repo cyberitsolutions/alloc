@@ -130,14 +130,11 @@ function get_options_from_array($options, $selected_value, $use_values = true, $
     $options = array_reverse($options, TRUE);
   }
   while (list($value, $label) = each($options)) {
-    if ($rtn) {
-      $rtn.= "\n";
-    }
-    $rtn.= "<option";
+
+    $rtn.= "\n<option";
     if ($use_values) {
       $rtn.= " value=\"$value\"";
 
-#echo "($value == $selected_value || ($bitwise_values && (($selected_value & $value) == $value)))<br>";
       if ($value == $selected_value || ($bitwise_values && (($selected_value & $value) == $value))) {
         $rtn.= " selected";
       }
