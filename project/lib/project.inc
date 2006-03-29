@@ -117,6 +117,7 @@ class project extends db_entity
   } 
 
 
+/*
   function get_task_summary($existing_filter = "", $task_options = "", $hierarchical = true, $format = "html") {
     global $default_task_options;
     if ($existing_filter == "") {
@@ -141,6 +142,8 @@ class project extends db_entity
     $summary = $list->get_task_summary($task_options, $hierarchical, $format);
     return $summary;
   }
+
+*/
 
   function is_owner($person = "") {
     global $current_user;
@@ -266,6 +269,12 @@ class project extends db_entity
     } else if ($type == "curr") {
       $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = 'current' ORDER BY projectName");
 
+    } else if ($type == "pote") {
+      $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = 'potential' ORDER BY projectName");
+
+    } else if ($type == "arch") {
+      $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = 'archived' ORDER BY projectName");
+
     } else if ($type == "all") {
       $q = sprintf("SELECT projectID,projectName FROM project ORDER BY projectName");
     }
@@ -292,14 +301,6 @@ class project extends db_entity
 
 
 
-
-class project_list extends db_list
-{
-  var $table = "project";
-  var $entity_class = "project";
-  var $fields = "project.*";
-  var $order_by = "projectName";
-}
 
 
 ?>

@@ -48,6 +48,8 @@ function updateProjectList(number) {
                   <nobr>My Project Managed <input type="radio" name="projectType" value="pm" onClick="refreshProjectList(this)"{projectType_checked_pm}></nobr><br/>
                   My Time Sheet Rec. <input type="radio" name="projectType" value="tsm" onClick="refreshProjectList(this)"{projectType_checked_tsm}><br/>
                   Current <input type="radio" name="projectType" value="curr" onClick="refreshProjectList(this)"{projectType_checked_curr}><br/>
+                  Potential <input type="radio" name="projectType" value="pote" onClick="refreshProjectList(this)"{projectType_checked_pote}><br/>
+                  Archived <input type="radio" name="projectType" value="arch" onClick="refreshProjectList(this)"{projectType_checked_arch}><br/>
                   All Projects <input type="radio" name="projectType" value="all" onClick="refreshProjectList(this)"{projectType_checked_all}><br/>
                   &nbsp;
                 </td>

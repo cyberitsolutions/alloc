@@ -3,24 +3,6 @@
 
 <form name="costForm" action="{url_alloc_expOneOff}" method="post">
 
-{optional:allow_edit}
-{table_box}
-  <tr>
-    <th colspan="2">Instructions</th>
-  </tr>
-  <tr>
-    <td>1. Create as many Expense Form Line Items as necessary, by filling 
-        in the details and clicking the Add Expense Form Line Item button.</td> 
-  </tr>
-  <tr>
-    <td>2. Select the Payment Method and then click the Save Expense Form button.</td>
-  </tr>
-  <tr>
-    <td>3. Print out the Expense Form using the "Printer Friendly Version" link, attach your receipts and hand in to office admin.</td>
-  </tr>
-</table>
-{/optional}
-
 <strong style="color: red; text-align:center; ">{error}</strong>
 
 {table_box}
@@ -60,6 +42,7 @@
           </td>
 		    </tr>
       </table>
+      <input type="hidden" name="transactionID" value="{transactionID}">
     </td>
   </tr>
   <tr>

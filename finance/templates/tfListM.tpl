@@ -9,7 +9,7 @@
       <form action="{url_alloc_tfList}" method="post">
       <table class="filter" align="center">
         <tr>
-          <td>{filter_form}</td>
+          <td><input type="checkbox" name="owner"{owner_checked}> Owner</td>
           <td><input type="submit" name="apply_filter" value="Filter"></td>
         </tr>
       </table>

@@ -2,7 +2,6 @@
 include("$MOD_DIR/time/lib/timeUnit.inc");
 include("$MOD_DIR/time/lib/timeSheet.inc");
 include("$MOD_DIR/time/lib/timeSheetItem.inc");
-include("$MOD_DIR/time/lib/timeSheetFilter.inc");
 include("$MOD_DIR/time/lib/pendingApprovalTimeSheetListHomeItem.inc");
 
 class time_module extends module

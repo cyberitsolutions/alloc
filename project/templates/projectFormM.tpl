@@ -6,7 +6,7 @@
 {table_box}
   <tr>
     <th>Project Details</th>
-    <th class="right" colspan="3"><a href="{url_alloc_projectList}">Return to Project List</a>{navigation_links}</th>
+    <th class="right" colspan="3"><a href="{url_alloc_projectList}">Return to Project List</a>&nbsp;&nbsp;{navigation_links}</th>
   </tr>
   <tr>
     <td colspan="4">&nbsp;</td>

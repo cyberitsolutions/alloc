@@ -3,29 +3,34 @@ include("alloc.inc");
 
 $current_user->check_employee();
 
-$tf_filter = new tf_filter();
-if (isset($apply_filter)) {
-  // Read filter values from form
-  $tf_filter->read_form();
+if ($_POST["owner"]) {
+  $TPL["owner_checked"] = " checked";
+  $filter[] = sprintf("tfPerson.personID = %d",$current_user->get_id());
 } else {
-  // Default filter values
-  $tf_filter->set_element("owner", $current_user);
+  $TPL["owner_checked"] = "";
 }
 
-$TPL["filter_form"] = $tf_filter->get_form();
-
-// global $grand_total;
-// echo "hey" .$grand_total;
 
 include_template("templates/tfListM.tpl");
 
 function show_tf($template_name) {
-  global $TPL, $tf_filter;
+  global $TPL, $filter;
 
-  $tf_list = new tf_list($tf_filter);
-  $tfs = $tf_list->get_entity_array();
 
-  while (list(, $tf) = each($tfs)) {
+
+  if (is_array($filter) && count($filter)) {
+    $f = " WHERE ".implode(" AND ",$filter);
+  }
+
+
+  $db = new db_alloc;
+  $q = sprintf("SELECT tf.* FROM tfPerson LEFT JOIN tf ON tf.tfID = tfPerson.tfID %s GROUP BY tf.tfID ORDER BY tf.tfName",$f);  
+  $db->query($q);
+
+  while ($db->next_record()) {
+
+    $tf = new tf;
+    $tf->read_db_record($db);
     $tf->set_tpl_values();
 
     if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {

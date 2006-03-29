@@ -3,6 +3,11 @@ include("alloc.inc");
 
 $current_user->check_employee();
 
+
+$TPL["message_help"][] = "1. Create as many Expense Form Line Items as necessary by filling in the details and clicking the Add Expense Form Line Item button.";
+$TPL["message_help"][] = "2. Select the Payment Method and then click the Save Expense Form button.";
+$TPL["message_help"][] = "3. Print out the Expense Form using the \"Printer Friendly Version\" link, attach your receipts and hand in to office admin.";
+
 global $reimbursementRequired, $expenseFormID;
 
 $expenseForm = new expenseForm;
@@ -42,33 +47,34 @@ if ($reject) {
 
 if ($add) {
 
-  $error = "";
-  $product        or $error.= "You must enter a product.<br>";
-  $companyDetails or $error.= "You must enter the company details.<br>";
-  $tfID           or $error.= "You must enter the TF.<br>";
+  $product        or $TPL["message"][] = "You must enter a product.";
+  $companyDetails or $TPL["message"][] = "You must enter the company details.";
+  $tfID           or $TPL["message"][] = "You must enter the TF.";
   $quantity       or $quantity = 1;
 
-  if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $transactionDate)) {
-    $error.= "You must enter the date incurred in the format yyyy-mm-dd (date entered '$transactionDate').<br>";
+  if (!ereg("^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$", $transactionDate)) {
+    $TPL["message"][] = "You must enter the date incurred in the format yyyy-mm-dd (date entered '$transactionDate').";
   }
 
 
   $amount = -$amount * $quantity;
 
   if ($amount == "") {
-    $error.= "You must enter the price.<br>";
+    $TPL["message"][] = "You must enter the price.";
   } else if (!(is_float($amount) || is_int($amount))) {
-    $error.= "You must enter a number for the price.<br>";
+    $TPL["message"][] = "You must enter a number for the price.";
   } else if ($amount >= 0) {
-    $error.= "You must enter a price greater than 0.<br>";
+    $TPL["message"][] = "You must enter a price greater than 0.";
   }
 
 
-  if (!$error) {
-    $transaction = new transaction;
-    $transaction->read_globals();
-    $transaction->set_value("transactionType", "expense");
+  $transaction = new transaction;
+  $transactionID && $transaction->set_id($transactionID);
+  $transaction->read_globals();
+  $transaction->set_value("transactionType", "expense");
+  #$transaction->set_value("product", $product);
 
+  if (!count($TPL["message"])) {
     if (!$expenseFormID) {
       $expenseForm->save();
       $transaction->set_value("expenseFormID", $expenseForm->get_id());
@@ -77,17 +83,17 @@ if ($add) {
     }
 
     $transaction->save();
+    $TPL["message_good"][] = "Expense Form Line Item saved.";
 
   } else {
-    $TPL["error"] = $error;
     $transaction_to_edit = $transaction;
   }
 }
 
 if ($edit) {
-  $editFlag = true;
   $transaction_to_edit->set_id($transactionID);
   $transaction_to_edit->select();
+  $TPL["transactionID"] = $transactionID;
 }
 
 $transaction_to_edit->set_tpl_values();
@@ -98,10 +104,16 @@ if ($transaction_to_edit->get_value("quantity")) {
 
 $db = new db_alloc;
 
-if ($delete || $editFlag) {
-  $query = sprintf("DELETE FROM transaction where transactionID=%d", $transactionID);
+if ($delete) {
+
+  $query = sprintf("SELECT * FROM transaction WHERE transactionID=%d", $transactionID);
   $db->query($query);
-  $editFlag = false;
+  $db->next_record();
+  if ($db->f("expenseFormID") == $expenseFormID) {
+    $query = sprintf("DELETE FROM transaction WHERE transactionID=%d", $transactionID);
+    $db->query($query);
+    $TPL["message_good"][] = "Expense Form Line Item deleted.";
+  }
   $expenseForm->set_id($expenseFormID);
   $expenseForm->select();
 }
@@ -128,7 +140,7 @@ $TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $selectedTfID);
 
 $db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'current' ORDER BY projectName");
 $TPL["projectOptions"] = get_option("", "0", false)."\n";
-$TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $selectProject);
+$TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $selectedProjectID);
 
 $expenseForm->set_tpl_values();
 
@@ -180,18 +192,18 @@ if ($printVersion) {
 
 function show_all_exp($template) {
 
-  global $TPL, $expenseForm, $db, $transactionID, $formTotal;
+  global $TPL, $expenseForm, $db, $transactionID, $formTotal, $edit;
 
   if ($expenseForm->get_id()) {
 
     $transaction = new transaction;
     $tf = new tf;
 
-    if ($transactionID && !$delete) {   // if edit is clicked
-      $query = sprintf("SELECT * from transaction where expenseFormID=%d"." and transactionID<>%d"." order by transactionID desc", $expenseForm->get_id()
+    if ($transactionID && $edit) {   // if edit is clicked
+      $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d AND transactionID<>%d ORDER BY transactionID DESC", $expenseForm->get_id()
                        , $transactionID);
     } else {
-      $query = sprintf("SELECT * from transaction where expenseFormID=%d"." order by transactionID desc", $expenseForm->get_id());
+      $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d ORDER BY transactionID DESC", $expenseForm->get_id());
     }
 
     $db->query($query);
