@@ -14,7 +14,6 @@ class task extends db_entity {
   var $classname = "task";
   var $data_table = "task";
   var $fire_events = true;
-  var $filter_class = "task_filter";
   var $display_field_name = "taskName";
 
   // Constructor - set creatorID to current user ID
