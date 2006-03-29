@@ -545,10 +545,12 @@ $TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $TPL[
 $client = $project->get_foreign_object("client");
 $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
-$task_filter = new task_filter();
-$task_filter->set_element("completed", false);
-
-$project->get_id()and $TPL["task_summary"] = $project->get_task_summary($task_filter);
+$options["taskView"] = "byProject";
+$options["projectIDs"] = array($project->get_id());   
+$options["taskStatus"] = "not_completed";
+$options["showAssigned"] = true;
+    
+$project->get_id() and $TPL["task_summary"] = task::get_task_list($options);
 
 $TPL["navigation_links"] = $project->get_navigation_links();
 

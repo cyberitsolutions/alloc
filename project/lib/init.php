@@ -1,7 +1,6 @@
 <?php
 include("$MOD_DIR/project/lib/project.inc");
 include("$MOD_DIR/project/lib/task.inc");
-include("$MOD_DIR/project/lib/task_list.inc");
 include("$MOD_DIR/project/lib/projectPerson.inc");
 include("$MOD_DIR/project/lib/projectPersonRole.inc");
 include("$MOD_DIR/project/lib/projectModificationNote.inc");

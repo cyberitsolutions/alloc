@@ -8,17 +8,14 @@ class tfList_home_item extends home_item {
   function show_tfList($template_name) {
     global $TPL, $current_user;
 
-    $tf_filter = new tf_filter();
-    $tf_filter->set_element("owner", $current_user);
+    $db = new db_alloc;
+    $q = sprintf("SELECT * FROM tfPerson WHERE personID = %d",$current_user->get_id());
+    $db->query($q);
 
-
-
-
-
-    $tf_list = new tf_list($tf_filter);
-    $tfs = $tf_list->get_entity_array();
-
-    while (list(, $tf) = each($tfs)) {
+    while ($db->next_record()) {
+      $tf = new tf;
+      $tf->set_id($db->f("tfID"));
+      $tf->select();
       $tf->set_tpl_values();
 
       if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {

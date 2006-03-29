@@ -71,8 +71,8 @@ function show_messages() {
   } 
 
   if ($str) {
-    echo "<div class=\"message ".$type."\"><table><tr><td width=\"1%\" valign=\"top\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".gif\"/><td/>";
-    echo "<td class=\"".$type."\">".$str."</td></tr></table></div>";
+    echo "<div class=\"message ".$type."\"><table cellspacing=\"0\" cellpadding=\"3\"><tr><td width=\"1%\" valign=\"top\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".gif\"/><td/>";
+    echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".$str."</td></tr></table></div>";
   }
 
 }

@@ -100,6 +100,8 @@ class tf extends db_entity {
   }
 }
 
+
+/*
 class tf_filter extends db_filter
 {
   var $classname = "tf_filter";
@@ -130,6 +132,8 @@ class tf_filter extends db_filter
   }
 }
 
+*/
+/*
 class owner_filter_element extends field_filter_element
 {
   var $classname = "owner_filter_element";
@@ -155,6 +159,6 @@ class tf_list extends db_list
   var $fields = "tf.*";
   var $order_by = "tfName";
 }
-
+*/
 
 ?>

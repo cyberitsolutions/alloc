@@ -12,8 +12,6 @@ define("DST_VARIABLE", 2);      // For use within the PHP script itself
 define("DST_HTML_ATTRIBUTE", 3);        // For use in a HTML elements attribute - e.g. a form input's value or a link's href
 define("DST_HTML_DISPLAY", 4);  // For display to the user as non-editable HTML text
 include($MOD_SHARED_DIR."/db_field.inc");
-include($MOD_SHARED_DIR."/db_filter.inc");
-include($MOD_SHARED_DIR."/db_list.inc");
 include($MOD_SHARED_DIR."/db_entity.inc");
 
   // Make a where clause from arrays of the form field_name=> field_value

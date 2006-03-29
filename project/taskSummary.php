@@ -29,7 +29,6 @@ if (!$_FORM["applyFilter"]) {
 }
 
 $db = new db_alloc;
-$filter = array();
 
 
 // They want to search on all projects that belong to the projectType they've radio selected
@@ -53,48 +52,13 @@ if ($_FORM["projectType"] && !$_FORM["projectID"]) {
 }
 
 
-// Join them up with commars and add a restrictive sql clause subset
-if (is_array($user_projects) && count($user_projects)) {
-  $_FORM["extra_sql"] = "WHERE project.projectID IN (".implode(",",$user_projects).")";
-} else {
-  $_FORM["extra_sql"] = "WHERE 1";
-}
-
-
-// Task level filtering
-if ($_FORM["taskStatus"]) {
-
-  $taskStatusFilter = array("completed"=>"(task.dateActualCompletion IS NOT NULL AND task.dateActualCompletion != '')"
-                           ,"not_completed"=>"(task.dateActualCompletion IS NULL OR task.dateActualCompletion = '')"
-                           ,"in_progress"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') AND (task.dateActualStart IS NOT NULL AND task.dateActualStart != ''))"
-                           ,"overdue"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') 
-                                         AND 
-                                         (task.dateTargetCompletion IS NOT NULL AND task.dateTargetCompletion != '' AND '".date("Y-m-d")."' > task.dateTargetCompletion))"
-                           );
-  $filter[] = $taskStatusFilter[$_FORM["taskStatus"]];
-}
-
-
-if (count($_FORM["taskTypeID"]==1) && !$_FORM["taskTypeID"][0]) {
-  $_FORM["taskTypeID"] = "";
-}
-
-if (is_array($_FORM["taskTypeID"]) && count($_FORM["taskTypeID"])) {
-  $filter[] = "(taskTypeID in (".implode(",",$_FORM["taskTypeID"])."))";
-
-} else if ($_FORM["taskTypeID"]) {
-  $filter[] = sprintf("(taskTypeID = %d)",$_FORM["taskTypeID"]);
-}
-
-if ($_FORM["personID"]) {
-  $filter[] = sprintf("(personID = %d)",$_FORM["personID"]);
-}
-
+$_FORM["projectIDs"] = $user_projects;
+$_FORM["showHeader"] = true;
+$_FORM["showProject"] = true;
+$_FORM["padding"] = 1;
 
 // Get task list
-$_FORM["filter"] = $filter;
 $TPL["task_summary"] = task::get_task_list($_FORM);
-
 
 
 // Load up the filter bits
