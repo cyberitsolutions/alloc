@@ -17,6 +17,7 @@ if (isset($taskID)) {
   $task->set_id($taskID);
   $task->select();
   $orig_personID = $task->get_value("personID");
+  $orig_percentComplete = $task->get_value("percentComplete");
 
 // Creating a new record
 } else {
@@ -85,7 +86,7 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
 
 
   global $taskEmail;
-  if ($task->get_value("percentComplete") == "100") {
+  if ($task->get_value("percentComplete") == "100" && $orig_percentComplete != "100") {
     $successful_recipients = $task->send_emails(array("creator"),$task,"Task Closed");
     $successful_recipients and $msg[] = "Emailed ".$successful_recipients;
 
@@ -224,7 +225,7 @@ if (isset($commentID) && $taskComment_edit) {
 
 
 if ($task->get_id()) {
-  $TPL["task_children_summary"] = $task->get_children_summary("", true);
+  #$TPL["task_children_summary"] = $task->get_children_summary("", true);
   $taskType = $task->get_foreign_object("taskType");
   $TPL["task_taskType"] = $taskType->get_value("taskTypeName");
 } else {

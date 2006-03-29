@@ -26,10 +26,10 @@ function updateTaskCommentTemplate(number) {
   <tr>
     <th colspan="2"><nobr>{task_taskType}</nobr></th>
     <th class="right" colspan="3">
-      &nbsp;&nbsp;<a href="{url_alloc_task}&taskID={task_taskID}&view=detail">Edit</a>
-      &nbsp;&nbsp;<a target="_BLANK" href="{url_alloc_task}&taskID={task_taskID}&view=printer">Printer</a>
-      &nbsp;&nbsp;<a href="{url_alloc_project}&projectID={task_projectID}">Project</a>
-      {navigation_links}
+&nbsp;<a href="{url_alloc_task}&taskID={task_taskID}&view=detail">Edit</a>
+&nbsp;<a target="_BLANK" href="{url_alloc_task}&taskID={task_taskID}&view=printer">Printer</a>
+&nbsp;<a href="{url_alloc_project}&projectID={task_projectID}">Project</a>
+&nbsp;{navigation_links}
     </th>
   </tr>
   <tr>

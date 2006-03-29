@@ -101,6 +101,7 @@ class project extends db_entity
       $task = new task;
       $task->read_db_record($db);
 
+      $row["taskStatus"] = $task->get_status();
       $row["taskLink"] = $task->get_task_link();
       $row["padding"] = $padding;
       $tasks[$row["taskID"]] = $row;
@@ -222,7 +223,7 @@ class project extends db_entity
 
     // Join links up with space and html no-breaks
     if (is_array($links)) {
-      return "<nobr>&nbsp;&nbsp;".implode("</nobr><nobr>&nbsp;&nbsp;",$links)."</nobr>";
+      return "<nobr>".implode("</nobr><nobr>&nbsp;&nbsp;",$links)."</nobr>";
     }
   }
 
@@ -282,7 +283,7 @@ class project extends db_entity
 
     $options = get_select_options($ops, $projectIDs, 35);
 
-    return "<select name=\"projectID[]\" size=\"8\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
+    return "<select name=\"projectID[]\" size=\"9\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
   }
 
 
