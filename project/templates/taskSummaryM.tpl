@@ -48,7 +48,8 @@ function updateProjectList(number) {
                   <nobr>My Project Managed <input type="radio" name="projectType" value="pm" onClick="refreshProjectList(this)"{projectType_checked_pm}></nobr><br/>
                   My Time Sheet Rec. <input type="radio" name="projectType" value="tsm" onClick="refreshProjectList(this)"{projectType_checked_tsm}><br/>
                   Current <input type="radio" name="projectType" value="curr" onClick="refreshProjectList(this)"{projectType_checked_curr}><br/>
-                  All Projects <input type="radio" name="projectType" value="all" onClick="refreshProjectList(this)"{projectType_checked_all}>
+                  All Projects <input type="radio" name="projectType" value="all" onClick="refreshProjectList(this)"{projectType_checked_all}><br/>
+                  &nbsp;
                 </td>
                 <td valign="top" rowspan="2"><div id="projectListDropdown">{projectOptions}</div></td>
                 <td valign="top" rowspan="2"><select name="taskTypeID[]" size="6" multiple="true">{taskTypeOptions}</select></td>
@@ -80,6 +81,10 @@ function updateProjectList(number) {
                       <td align="right">Estimate/Actual</td><td><input type="checkbox" name="showTimes"{showTimes_checked}></td>
                       <td align="right">Percent Complete</td><td><input type="checkbox" name="showPercent"{showPercent_checked}></td>
                     </tr>
+                    <tr>
+                      <td align="right">Priority Info</td><td><input type="checkbox" name="showPriority"{showPriority_checked}></td>
+                      <td align="right">Task Status</td><td><input type="checkbox" name="showStatus"{showStatus_checked}></td>
+                    </tr>
                       
                   </table>
 
@@ -96,9 +101,7 @@ function updateProjectList(number) {
   </tr>
   <tr>
     <td colspan="2">
-      <table border="0" cellspacing="0" cellpadding="3" width="100%">
       {task_summary}
-      </table>
     </td>
   </tr>
 </table>

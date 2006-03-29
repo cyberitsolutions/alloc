@@ -16,7 +16,7 @@ table.box               { border:1px solid #81a2c1; background-color:#f4f4f4; ma
 table.box th            { border-bottom:1px solid #81a2c1;  background: url(../images/bg_classic.jpg) repeat-x; color:#003d76;} 
 table.box th a:link     { font-weight:bold; color:#003d76; }
 table.box th a:visited  { font-weight:bold; color:#003d76; }
-table.box th a:hover    { font-weight:bold; color:#000090; }
+table.box th a:hover    { font-weight:bold; color:#688db0; }
 table.box th.right      { text-align:right; } 
 table.box th.center     { text-align:center; } 
 table.box th.right table{ width:40%; } 
@@ -55,6 +55,7 @@ ul                      { display:inline; list-style:circle inside; }
 td.tasks                { background-color: #e4e4e4; }
 td.tasks_r              { background-color: #e4e4e4; text-align:right; }
 td.grand_total          { border-top:1px solid black;}
+td.col                  { border-left:2px solid #e4e4e4;  border-top:2px solid #e4e4e4;}
 textarea                { font-size:12px; }
 input                   { font-size:12px; }
 select                  { font-size:12px; }

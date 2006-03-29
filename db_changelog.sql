@@ -261,7 +261,8 @@ drop table position;
 -- project/mptt.php
 
 
-
+update task set timeEstimateUnitID = null where timeEstimate = 0;
+update task set timeEstimate = null where timeEstimate = 0;
 
 
 

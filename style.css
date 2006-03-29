@@ -55,6 +55,7 @@ ul                      { display:inline; list-style:circle inside; }
 td.tasks                { background-color: (TR_ODD_BACKGROUND_COLOR); }
 td.tasks_r              { background-color: (TR_ODD_BACKGROUND_COLOR); text-align:right; }
 td.grand_total          { border-top:1px solid black;}
+td.col                  { border-left:2px solid (TR_ODD_BACKGROUND_COLOR);  border-top:2px solid (TR_ODD_BACKGROUND_COLOR);}
 textarea                { font-size:12px; }
 input                   { font-size:12px; }
 select                  { font-size:12px; }
