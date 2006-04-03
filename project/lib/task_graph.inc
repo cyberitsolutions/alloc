@@ -9,7 +9,6 @@ function echo_debug($s) {
 
         // Outputs an image with an error message given by $s and then terminates the script
 function image_die($s) {
-  global $GD_IMAGE_TYPE;
 
   $image = imageCreate(950, 40);
 
@@ -23,7 +22,7 @@ function image_die($s) {
   imageString($image, 5, 3, 10, $s, $color_text);
 
 
-  if ($GD_IMAGE_TYPE == "PNG") {
+  if (ALLOC_GD_IMAGE_TYPE == "PNG") {
     header("Content-type: image/png");
     imagePNG($image);
   } else {
@@ -340,9 +339,8 @@ class task_graph
 
   // Output the image
   function output() {
-    global $GD_IMAGE_TYPE;
 
-    if ($GD_IMAGE_TYPE == "PNG") {
+    if (ALLOC_GD_IMAGE_TYPE == "PNG") {
       header("Content-type: image/png");
       imagePNG($this->image);
     } else {

@@ -11,8 +11,8 @@ class item_module extends module {
   }
 }
 
-include("$MOD_DIR/item/lib/item.inc");
-include("$MOD_DIR/item/lib/loan.inc");
+include(ALLOC_MOD_DIR."/item/lib/item.inc");
+include(ALLOC_MOD_DIR."/item/lib/loan.inc");
 
 
 

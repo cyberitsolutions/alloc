@@ -12,13 +12,13 @@ class finance_module extends module {
 
 }
 
-include("$MOD_DIR/finance/lib/tf.inc");
-include("$MOD_DIR/finance/lib/transaction.inc");
-include("$MOD_DIR/finance/lib/expenseForm.inc");
-include("$MOD_DIR/finance/lib/invoice.inc");
-include("$MOD_DIR/finance/lib/invoiceItem.inc");
-include("$MOD_DIR/finance/lib/tfPerson.inc");
-include("$MOD_DIR/finance/lib/transactionRepeat.inc");
+include(ALLOC_MOD_DIR."/finance/lib/tf.inc");
+include(ALLOC_MOD_DIR."/finance/lib/transaction.inc");
+include(ALLOC_MOD_DIR."/finance/lib/expenseForm.inc");
+include(ALLOC_MOD_DIR."/finance/lib/invoice.inc");
+include(ALLOC_MOD_DIR."/finance/lib/invoiceItem.inc");
+include(ALLOC_MOD_DIR."/finance/lib/tfPerson.inc");
+include(ALLOC_MOD_DIR."/finance/lib/transactionRepeat.inc");
 
 
 

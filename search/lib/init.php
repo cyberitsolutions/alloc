@@ -1,5 +1,5 @@
 <?php
-// include("$MOD_DIR/project/lib/projectDocs.inc");
+// include(ALLOC_MOD_DIR."/project/lib/projectDocs.inc");
   class search_module extends module {
   // var $db_entities = array("project", "task");
   /* 

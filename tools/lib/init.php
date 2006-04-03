@@ -9,7 +9,7 @@ class tools_module extends module {
   }
 }
 
-include("$MOD_DIR/tools/lib/stats.inc");
+include(ALLOC_MOD_DIR."/tools/lib/stats.inc");
 
 
 

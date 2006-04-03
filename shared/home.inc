@@ -17,8 +17,7 @@ class home_item {
   }
 
   function get_template_dir() {
-    global $MOD_DIR;
-    return $MOD_DIR."/".$this->module."/templates/";
+    return ALLOC_MOD_DIR."/".$this->module."/templates/";
   }
 
   function show() {

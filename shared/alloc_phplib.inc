@@ -1,15 +1,10 @@
 <?php
 class db_alloc extends DB_Sql {
   function db_alloc() {
-    global $DB_HOST, $DB_NAME, $DB_USER, $DB_PASSWD;
-    $this->Host = $DB_HOST;
-    ## host database is stored on
-    $this->Database = $DB_NAME;
-    ## database name
-    $this->User = $DB_USER;
-    ## database user
-    $this->Password = $DB_PASSWD;
-    ## database password
+    $this->Host = ALLOC_DB_HOST;
+    $this->Database = ALLOC_DB_NAME;
+    $this->User = ALLOC_DB_USER;
+    $this->Password = ALLOC_DB_PASS;
   }
 } 
 
@@ -68,13 +63,9 @@ class alloc_Session extends Session {
 class alloc_User extends User {
   var $classname = "alloc_User";
   var $magic = "Abracadabra";
-  ## ID seed
   var $database_class = "db_alloc";
-  ## Which database to connect...
   var $database_table = "active_sessions";
-  ## and find our session data in this table.
   var $that_class = "alloc_Session_sql";
-  ## Name of data storage container
 }
 
 class alloc_Auth extends Auth {
@@ -84,9 +75,11 @@ class alloc_Auth extends Auth {
   var $database_table = "person";
   var $clientno;
   function auth_loginform() {
-    global $sess, $MOD_DIR, $MOD_SHARED_DIR;
-      include($MOD_SHARED_DIR."/loginform.ihtml");
-  } function auth_validatelogin() {
+    global $sess;
+      include(ALLOC_MOD_DIR."/shared/loginform.ihtml");
+  } 
+
+  function auth_validatelogin() {
     global $error, $new_pass, $login, $email, $username, $password, $current_user, $sess;
 
     // provides access for loginform.ihtml
@@ -151,16 +144,19 @@ class alloc_Challenge_Auth extends Auth {
   var $classname = "alloc_Challenge_Auth";
   var $lifetime = 1;
   var $magic = "Simsalabim";
-  ## Challenge seed
   var $database_class = "db_alloc";
   var $database_table = "person";
+
   function auth_loginform() {
     global $sess;
     global $challenge;
       $challenge = md5(uniqid($this->magic));
       $sess->register ("challenge");
       include("crloginform.ihtml");
-  } function auth_validatelogin() {
+  } 
+
+
+  function auth_validatelogin() {
     global $username, $password, $challenge, $response;
     $this->auth["uname"] = $username;
     ## This provides access for "loginform.ihtml"
@@ -199,8 +195,8 @@ class alloc_Perm extends Perm {
                            "employee" =>8   // Employees
                            );
   function perm_invalid($does_have, $must_have) {
-    global $perm, $auth, $sess, $MOD_SHARED_DIR;
-      include($MOD_SHARED_DIR."/perminvalid.ihtml");
+    global $perm, $auth, $sess;
+      include(ALLOC_MOD_DIR."/shared/perminvalid.ihtml");
   }
 }
 

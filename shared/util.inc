@@ -74,8 +74,7 @@ function get_url_path() {
 }
 
 function show_header() {
-  global $MOD_SHARED_DIR;
-  include_template("$MOD_SHARED_DIR/templates/headerS.tpl");
+  include_template(ALLOC_MOD_DIR."/shared/templates/headerS.tpl");
 }
 
 function get_stylesheet_name() {
@@ -87,7 +86,7 @@ function get_stylesheet_name() {
 
 
 function show_style_sheet() {
-  global $MOD_DIR, $TPL, $customizedFont;
+  global $TPL, $customizedFont;
 
   $weight = $customizedFont;
 
@@ -103,7 +102,7 @@ function show_style_sheet() {
                    );
 
 
-  $str = implode("", file($MOD_DIR."/stylesheets/font_sizes.css"));
+  $str = implode("", file(ALLOC_MOD_DIR."/stylesheets/font_sizes.css"));
   foreach($font_size as $search=>$replace) {
     $str = str_replace("(".$search.")", $replace, $str);
   }
@@ -111,12 +110,11 @@ function show_style_sheet() {
 }
 
 function show_footer() {
-  global $MOD_SHARED_DIR;
-  include_template("$MOD_SHARED_DIR/templates/footerS.tpl");
+  include_template(ALLOC_MOD_DIR."/shared/templates/footerS.tpl");
 }
 
 function show_toolbar() {
-  global $MOD_SHARED_DIR, $TPL, $modules;
+  global $TPL, $modules;
 
   $toolbar_items = show_toolbar_items();
 
@@ -168,7 +166,7 @@ function show_toolbar() {
 
 
 
-  include_template("$MOD_SHARED_DIR/templates/toolbarS.tpl");
+  include_template(ALLOC_MOD_DIR."/shared/templates/toolbarS.tpl");
 }
 
 
