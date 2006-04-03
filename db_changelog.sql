@@ -265,3 +265,7 @@ update task set timeEstimate = null where timeEstimate = 0;
 -- In other words the script will add a new projectPersonCommission entry for each project
 
 
+-- WHen Deploying live, don't forget that you moved the cron scripts, so you'll need to change the cron jobs!!
+
+
+

@@ -42,7 +42,7 @@ run "chmod 755 ../logs/cron_checkRepeatExpenses.sh" # rwxr-xr-x
 
 
 echo "NOW INSTALL THE CRON JOBS";
-sed -e "s/REPLACEME/${PWD//\//\\/}/" < cron_jobs.txt
+sed -e "s/REPLACEME/${PWD//\//\\/}/" < cronjobs.txt
 
 
 
