@@ -29,7 +29,7 @@ function updateProjectList(number) {
       <form action="{url_alloc_taskSummary}" method="post">
       <table border="0" cellspacing="0" cellpadding="3" width="100%">
         <tr>
-          <td>
+          <td align="center">
 
             <table class="filter" align="center">
               <tr>

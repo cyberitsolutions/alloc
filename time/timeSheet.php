@@ -129,6 +129,12 @@ function show_main_list() {
   global $timeSheet, $current_user;
 
   if (!$timeSheet->get_id()) return;
+  
+  $db = new db_alloc;
+  $q = sprintf("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d",$timeSheet->get_id());
+  $db->query($q);
+  $db->next_record();
+  if (!$db->f("tally")) return;
 
   include_template("templates/timeSheetItemM.tpl");
 }
@@ -378,7 +384,7 @@ if (isset($save)
 
   } else {
     $save_error=true;
-    $TPL["message_help"][] = "Select a Project and click the Create Time Sheet button.";
+    $TPL["message_help"][] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
   }
 
 
@@ -599,7 +605,7 @@ if (isset($save)
   $timeSheet->read_globals();
   $timeSheet->read_globals("timeSheet_");
   $timeSheet->set_value("status", "edit");
-  $TPL["message_help"] = "Select a Project and click the Create Time Sheet button.";
+  $TPL["message_help"] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
 }
 
 // THAT'S THE END OF THE BIG SAVE.  

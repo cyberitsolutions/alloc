@@ -573,7 +573,9 @@ class db_entity
 
     $pkey_sql = " OR ".$this->key_field->name." = ";
     if (is_array($sel) && count($sel)) {
-      $extra = $pkey_sql.implode($pkey_sql,$sel);
+      foreach ($sel as $s) {
+        $extra.= $pkey_sql.sprintf("%d",$s);
+      }
     } else if ($sel) {
       $extra = $pkey_sql.$sel;
     }

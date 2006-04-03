@@ -19,7 +19,11 @@ function updateTimeSheetTaskList(number) {
 
 <form action="{url_alloc_timeSheet}" method="post">
 
- <table cellpadding="0" cellspacing="2" border="0" class="panel" align="center">
+
+{table_box}
+  <tr>
+    <th colspan="5">Create Time Sheet Item</th>
+  </tr>
   <tr>
     <td>&nbsp;</td>
     <td colspan="4">
