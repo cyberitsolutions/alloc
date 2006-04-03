@@ -299,6 +299,7 @@ function check_optional_step_3() {
         if (isset($fields[$k + 1]) || !$generate_file) {
           $TPL["result_row"].= $end_field_separator;
         }
+        $TPL["counter"]++;
       }
       $TPL["result_row"].= $end_row_separator;
     }

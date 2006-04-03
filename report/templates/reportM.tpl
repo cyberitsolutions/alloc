@@ -36,6 +36,7 @@
 
 {optional:step_3}
 <b>{filelink}</b>
+Found {counter} Row(s).
 <table border="1" cellpadding="4" cellspacing="0">
 {result_row}
 </table>
