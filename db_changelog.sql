@@ -257,13 +257,11 @@ drop table employee;
 drop table position;
 
 
--- Run script to change parentTaskID way of doing thing to Modified Preorder Tree Traversal way
--- project/mptt.php
-
-
 update task set timeEstimateUnitID = null where timeEstimate = 0;
 update task set timeEstimate = null where timeEstimate = 0;
 
 
+-- Run script to update the time sheet commission thing where a zero commission thing gets the remainder of time sheet funds.
+-- In other words the script will add a new projectPersonCommission entry for each project
 
 

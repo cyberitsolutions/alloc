@@ -1,10 +1,6 @@
 <?php
 include("alloc.inc");
 
-function show_task_summary() {
-  global $project, $task_filter;
-  echo $project->get_task_summary($task_filter);
-}
 
 if ($graph_type == "phases") {
   $TPL["alt_graph_link"] = "<a href=\"".$TPL["url_alloc_projectSummary"]."&projectID=$projectID&graph_type=all\">Show All Tasks</a>";
@@ -20,10 +16,12 @@ $project->check_perm();
 $project->select();
 $TPL["navigation_links"] = $project->get_navigation_links();
 
-$task_filter = new task_filter();
 if ($graph_type == "phases") {
-  $task_filter->set_element("phase", true);
+  $options["taskTypeID"][] = TT_PHASE;
 }
+$options["taskView"] = "byProject";
+$options["projectIDs"][] = $project->get_id();
+$TPL["task_summary"] = task::get_task_list($options);
 
 $TPL["projectID"] = $projectID;
 include_template("templates/projectSummaryM.tpl");

@@ -1,7 +1,4 @@
 <tr>
-  <td colspan="5"><hr width="100%"></td>
-</tr>
-<tr>
   <td valign="top" width="1%"><nobr>{timeSheetItem_dateTimeSheetItem}</nobr></td>
   <td valign="top" width="1%"><nobr>${timeSheetItem_unit_times_rate}  ({timeSheetItem_timeSheetItemDuration} * ${timeSheetItem_rate})</nobr></td>
   <td valign="top">{timeSheetItem_description}{timeSheetItem_comment}</td>

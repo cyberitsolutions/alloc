@@ -1,6 +1,6 @@
 
 <tr>
-  <td colspan="6">{companyDetails}</td>
+  <td colspan="7">{companyDetails}</td>
 </tr>
 <tr>
   <td>{transactionDate}</td> 
@@ -15,9 +15,7 @@
    	<a href="{url_alloc_expOneOff}&transactionID={transactionID}&delete=true&expenseFormID={expenseFormID}">delete</a>
     {/optional}
   </td>
-</tr>
-<tr>
-  <td colspan="6"><hr></td>
+  <td>{status}</td>
 </tr>
 
 

@@ -124,6 +124,9 @@
 </table>
 </form>
 
+
+{:show_new_timeSheet templates/timeSheetItemForm.tpl}
+
 {:show_main_list}
 
 {:show_transaction_list templates/timeSheetTransactionListR.tpl}

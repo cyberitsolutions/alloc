@@ -14,16 +14,7 @@
  <td colspan="6"><h2><u>Cybersource Expense Form</u></h2></td>
 </tr>
 
-
-
-
-<!--************THE SUPPOSED CONTENT ARENA******************-->
-
  {:show_all_exp templates/exp-one-off-printableR.tpl}
-
-
-<!--************THE SUPPOSED CONTENT ARENA******************-->
-
 
 <tr>
   <td colspan="3">Expense form ID: <b>{expenseFormID}</b></td>
@@ -39,7 +30,7 @@
 </tr>
 
 <tr valign="bottom">
-  <td colspan="3">Reimbursement Required:____ (tick)</td>
+  <td colspan="3">Reimbursement Required: <b>{reimbursementRequiredOption}</b></td>
   <td colspan="3" rowspan="2" align="right">Signature:_______________________</td>
 </tr>
 

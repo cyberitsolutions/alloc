@@ -10,9 +10,7 @@
   </tr>
   <tr>
     <td colspan="2">
-      <table>
-        {:show_task_summary}
-      </table>
+        {task_summary}
     </td>
   </tr>
 </table>

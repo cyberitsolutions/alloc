@@ -57,8 +57,19 @@ if ($save) {
   if ($tf->get_value("tfName") == "") {
     $TPL["message"][] = "You must enter a name.";
   } else {
-    $tf->save();
-    $TPL["message_good"][] = "Your TF has been saved.";
+
+    $db = new db_alloc;
+    $q = sprintf("SELECT count(*) AS tally FROM tf WHERE tfName = '%s'",db_esc($tf->get_value("tfName")));
+    $db->query($q);
+    $db->next_record();
+
+    if ($db->f("tally")) {
+      $TPL["message"][] = "That TF name is taken, please choose another.";
+    } else {
+      $tf->save();
+      $TPL["message_good"][] = "Your TF has been saved.";
+    }
+  
   }
 
 

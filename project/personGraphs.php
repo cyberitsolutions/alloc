@@ -11,13 +11,17 @@ function show_people($template_name) {
     $person->read_db_record($db);
     $person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
 
-    $task_filter = new task_filter();
-    $task_filter->set_element("person", $person);
+    $options = array();
+    $options["taskView"] = "prioritised";
+    $options["personID"] = $person->get_id();
+    $options["taskStatus"] = "not_completed";
+    $options["showHeader"] = true;
+    $options["showProject"] = true;
+
     if (isset($project)) {
-      $task_filter->set_element("project", $project);
+      $options["projectIDs"] = array($project->get_id());
     }
-    $task_list = new task_list($task_filter);
-    $TPL["person_task_summary"] = $task_list->get_task_summary("", false);
+    $TPL["person_task_summary"] = task::get_task_list($options);
 
     include_template($template_name);
   }
