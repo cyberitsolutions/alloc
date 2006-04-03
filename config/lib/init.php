@@ -6,7 +6,7 @@ class config_module extends module {
      function register_toolbar_items() { $config = new config; if ($config->have_perm(PERM_UPDATE)) { register_toolbar_item("config", "Config"); } } */
 }
 
-include("$MOD_DIR/config/lib/config.inc");
+include(ALLOC_MOD_DIR."/config/lib/config.inc");
 
 
 

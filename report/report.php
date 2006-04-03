@@ -304,12 +304,10 @@ function check_optional_step_3() {
       $TPL["counter"]++;
     }
 
-    global $MOD_DIR;
-
     if ($generate_file) {
       // write to file
       $filename = substr(mktime(), -2, 2).".txt";
-      $path_and_file = $MOD_DIR."/report/files/".$filename;
+      $path_and_file = ALLOC_MOD_DIR."/report/files/".$filename;
       $fp = fopen($path_and_file, "w+");
       fputs($fp, $TPL["result_row"]);
       fclose($fp);

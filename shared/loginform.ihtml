@@ -20,13 +20,14 @@
   </head>
   <body class="login">
 
-  <?php global $WEB_DIR, $username, $account, $error, $DB_NAME; ?>
+  <?php global $username, $account, $error, $DB_NAME; ?>
   <br><br><br>
+
 
   <form action="<?php print $this->url()?>" method="post">
 
   <?=ALLOC_SHOOER?>
-  
+
   <table width="30%" align="center" class="outer">
     <tr>
       <td>
@@ -37,14 +38,14 @@
   
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td><img src="/<?=$WEB_DIR?>/images/icon_alloc.png"/></td> 
+                  <td><img src="/<?=ALLOC_WEB_DIR?>/images/icon_alloc.png"/></td> 
                   <td class="link" valign="top">
                     <nobr>
                     <?php 
                     if (!isset($account)) { 
-                      echo "Login | <a href=\"".$this->url()."&account=true\">New Password</a>";
+                      echo "Login | <a href=\"".ALLOC_WEB_DIR."/index.php?account=true\">New Password</a>";
                     } else { 
-                      echo "<a href=\"/".$WEB_DIR."\"><nobr>Login</nobr></a> | New Password";
+                      echo "<a href=\"/".ALLOC_WEB_DIR."\"><nobr>Login</nobr></a> | New Password";
                     } 
                     ?>
                     &nbsp;</nobr>
@@ -99,7 +100,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="center" colspan="2"><nobr><?=ALLOC_TITLE?> <?=ALLOC_VERSION?> on <?=$_SERVER["SERVER_NAME"]?> <?=$DB_NAME?> database at <?=date("g:ia dS M")?></nobr></td>
+                  <td class="center" colspan="2"><nobr><?=ALLOC_TITLE?> <?=ALLOC_VERSION?> on <?=$_SERVER["SERVER_NAME"]?> <?=ALLOC_DB_NAME?> database at <?=date("g:ia dS M")?></nobr></td>
                   <td></td>
                 </tr>
               </table>

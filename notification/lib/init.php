@@ -12,8 +12,8 @@ class notification_module extends module {
   }
 }
 
-include("$MOD_DIR/notification/lib/notification.inc");
-include("$MOD_DIR/notification/lib/reminder.inc");
+include(ALLOC_MOD_DIR."/notification/lib/notification.inc");
+include(ALLOC_MOD_DIR."/notification/lib/reminder.inc");
 
 
 
