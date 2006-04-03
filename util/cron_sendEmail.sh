@@ -5,7 +5,7 @@
 #
 
 # path to cron and log files
-PREFIX=`dirname $0`"/"
+PREFIX=`dirname $0`"/../logs/"
 
 # wget the php script
 wget -q -O ${PREFIX}sendEmail_log.new -P ${PREFIX} http://alloc/person/sendEmail.php

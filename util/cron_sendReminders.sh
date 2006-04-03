@@ -5,7 +5,7 @@
 #
 
 # path to cron and log files
-PREFIX=`dirname $0`"/"
+PREFIX=`dirname $0`"/../logs/"
 
 # execute the sendreminder php script and save the results
 wget -q -O ${PREFIX}sendReminders_log.new -P ${PREFIX} http://alloc/notification/sendReminders.php
