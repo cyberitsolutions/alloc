@@ -1,9 +1,9 @@
 <?php
 function get_help_button($topic, $module = "") {
-  global $sess, $MODULE_NAME, $TPL;
+  global $sess, $TPL;
 
   if ($module == "") {
-    $module = $MODULE_NAME;
+    $module = ALLOC_MODULE_NAME;
   }
 
   if ($topic) {

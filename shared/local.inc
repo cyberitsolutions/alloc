@@ -1,25 +1,28 @@
 <?php
 
-$_PHPLIB["libdir"] = ALLOC_MOD_DIR."/shared/";
+# PHPLIB Stuff
+require(ALLOC_MOD_DIR."/shared/phplib_db_mysql.inc");  
+require(ALLOC_MOD_DIR."/shared/phplib_ct_sql.inc");    
+require(ALLOC_MOD_DIR."/shared/phplib_session.inc");   
+require(ALLOC_MOD_DIR."/shared/phplib_auth.inc");      
+require(ALLOC_MOD_DIR."/shared/phplib_perm.inc");       
+require(ALLOC_MOD_DIR."/shared/phplib_user.inc");    
+require(ALLOC_MOD_DIR."/shared/phplib_page.inc");
 
-require($_PHPLIB["libdir"]."phplib_db_mysql.inc");  
-require($_PHPLIB["libdir"]."phplib_ct_sql.inc");    
-require($_PHPLIB["libdir"]."phplib_session.inc");   
-require($_PHPLIB["libdir"]."phplib_auth.inc");      
-require($_PHPLIB["libdir"]."phplib_perm.inc");       
-require($_PHPLIB["libdir"]."phplib_user.inc");    
-require($_PHPLIB["libdir"]."phplib_page.inc");
 
+eregi("^".ALLOC_MOD_DIR."/(.*)$", $SCRIPT_FILENAME, $match) && $script_filename_short = $match[1];
+eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
 
-define("REWRITE_TEMPLATE_URLS", false);
-eregi("^".ALLOC_MOD_DIR."/(.*)$", $SCRIPT_FILENAME, $match) && $SCRIPT_FILENAME_SHORT = $match[1];
-$MODULE_NAME = "";
-eregi("^([^/]*)/", $SCRIPT_FILENAME_SHORT, $match) && $MODULE_NAME = $match[1];
-if ((!isset($modules[$MODULE_NAME])) && $MODULE_NAME != "") {
-  die("Invalid module: $MODULE_NAME");
+if ((!isset($modules[$module_name])) && $module_name != "") {
+  die("Invalid module: $module_name");
+} else {
+  define("ALLOC_MODULE_NAME",$module_name);
 }
+
 $SCRIPT_PATH = $SCRIPT_NAME;
-$SCRIPT_FILENAME_SHORT and $SCRIPT_PATH = eregi_replace($SCRIPT_FILENAME_SHORT, "", $SCRIPT_NAME);
+$script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $SCRIPT_NAME);
+
+
 include(ALLOC_MOD_DIR."/shared/alloc_phplib.inc");
 include(ALLOC_MOD_DIR."/shared/template.php");
 include(ALLOC_MOD_DIR."/shared/util.inc");
@@ -31,6 +34,7 @@ include(ALLOC_MOD_DIR."/shared/module.inc");
 include(ALLOC_MOD_DIR."/shared/event.inc");
 include(ALLOC_MOD_DIR."/shared/alloc_email.inc");
 include(ALLOC_MOD_DIR."/shared/alloc_cache.inc");
+
 $orig_module = $module;
 reset($modules);
 while (list($module_name,) = each($modules)) {

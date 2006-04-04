@@ -9,15 +9,14 @@
    *
    */
   function page_open($feature) {
-  global $_PHPLIB;
 
-# enable sess and all dependent features.
+  # enable sess and all dependent features.
   if (isset($feature["sess"])) {
     global $sess;
     $sess = new $feature["sess"];
     $sess->start();
 
-# the auth feature depends on sess
+    # the auth feature depends on sess
     if (isset($feature["auth"])) {
       global $auth;
 
@@ -27,7 +26,7 @@
       $auth->start();
 
 
-# the perm feature depends on auth and sess
+      # the perm feature depends on auth and sess
       if (isset($feature["perm"])) {
         global $perm;
 
@@ -35,7 +34,8 @@
           $perm = new $feature["perm"];
         }
       }
-# the user feature depends on auth and sess
+      
+      # the user feature depends on auth and sess
       if (isset($feature["user"])) {
         global $user;
 
@@ -45,10 +45,10 @@
         $user->start($auth->auth["uid"]);
       }
     }
-## Load the auto_init-File, if one is specified.
+    # Load the auto_init-File, if one is specified.
     if (($sess->auto_init != "") && ($sess->in == "")) {
       $sess->in = 1;
-      include($_PHPLIB["libdir"].$sess->auto_init);
+      include(ALLOC_MOD_DIR."/shared/".$sess->auto_init);
       if ($sess->secure_auto_init != "") {
         $sess->freeze();
       }
