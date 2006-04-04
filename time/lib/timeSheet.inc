@@ -438,7 +438,7 @@ class timeSheet extends db_entity
 
     $options = get_option(" ", "0", true)."\n";
     $options.= get_options_from_db($db, "taskName", "taskID", $taskID, 70);
-    return "<select name=\"timeSheetItem_taskID\" style=\"width:300px\">".$options."</select>";
+    return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\">".$options."</select>";
   }
 
 

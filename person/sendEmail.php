@@ -1,6 +1,6 @@
 <?php
-$NO_AUTH = true;
-define(SENDMAIL, true);         // shoot out emails 
+define("NO_AUTH",true);
+define("SENDMAIL", true);         // shoot out emails 
 
 include("alloc.inc");
 

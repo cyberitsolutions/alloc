@@ -32,22 +32,27 @@ function updateTimeSheetTaskList(number) {
         <tr>
           <td valign="bottom">Date</td>
           <td valign="bottom">Duration</td>
-          <td valign="bottom"><a href="{url_alloc_task}&projectID={projectID}&timeSheetID={timeSheet_timeSheetID}">New Task</a></td>
-          <td valign="bottom" align="right"> 
-            <input type="radio" name="task_type" value="my_open" onClick="refreshTaskList(this)" checked>My Open&nbsp;
-            <input type="radio" name="task_type" value="my_closed" onClick="refreshTaskList(this)">My Closed&nbsp;
-            <input type="radio" name="task_type" value="all" onClick="refreshTaskList(this)">All Tasks&nbsp;
-          </td>
         </tr>
+   
         <tr>
           <td>
-            <input type="text" size="11" name="timeSheetItem_dateTimeSheetItem" value="{timeSheetItem_dateTimeSheetItem}">
+            <input type="text" size="11" name="timeSheetItem_dateTimeSheetItem" value="{timeSheetItem_dateTimeSheetItem}"><input type="button" value="Today" onClick="timeSheetItem_dateTimeSheetItem.value='{today}'">
           </td>
           <td>
             <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{timeSheetItem_timeSheetItemDuration}">
             <select name="timeSheetItem_timeSheetItemDurationUnitID">{timeSheetItem_unit_options}</select>
             &nbsp;x&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{timeSheetItem_rate}">
           </td>
+        </tr>
+        <tr>
+          <td valign="bottom" colspan="2"><a href="{url_alloc_task}&projectID={projectID}&timeSheetID={timeSheet_timeSheetID}">New Task</a></td>
+          <td valign="bottom" rowspan="2"> 
+            <input type="radio" name="task_type" value="my_open" onClick="refreshTaskList(this)" checked>My Open&nbsp;
+            <input type="radio" name="task_type" value="my_closed" onClick="refreshTaskList(this)">My Closed&nbsp;
+            <input type="radio" name="task_type" value="all" onClick="refreshTaskList(this)">All Tasks&nbsp;
+          </td>
+        </tr>
+        <tr>
           <td colspan="2">
             <div id="taskListDropdown">
               {taskListDropdown}

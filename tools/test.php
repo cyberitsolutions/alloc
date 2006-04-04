@@ -1,5 +1,5 @@
 <?php
-$NO_AUTH = true;
+define("NO_AUTH",true);
 include("alloc.inc");
 
   // stats

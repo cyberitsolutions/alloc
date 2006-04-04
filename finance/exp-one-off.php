@@ -3,46 +3,41 @@ include("alloc.inc");
 
 $current_user->check_employee();
 
-
-
-global $reimbursementRequired, $expenseFormID;
-
 $expenseForm = new expenseForm;
 $transaction_to_edit = new transaction;
 
+$db = new db_alloc;
 
 if ($expenseFormID) {
   $expenseForm->read_globals();
   $expenseForm->set_id($expenseFormID);
-  $expenseForm->select();
+  if (!$expenseForm->select()) {
+    $TPL["message"][] = "Bad Expense Form ID";
+    $expenseForm = new expenseForm;
+  }
 } 
-
-if (!isset($reimbursementRequired)) {
-  $reimbursementRequired = 0;
-}
 
 
 
 if ($add) {
 
-  $product        or $TPL["message"][] = "You must enter a product.";
-  $companyDetails or $TPL["message"][] = "You must enter the company details.";
+  $product        or $TPL["message"][] = "You must enter a Product.";
+  $companyDetails or $TPL["message"][] = "You must enter the Company Details.";
   $tfID           or $TPL["message"][] = "You must enter the TF.";
   $quantity       or $quantity = 1;
 
   if (!ereg("^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$", $transactionDate)) {
-    $TPL["message"][] = "You must enter the date incurred in the format yyyy-mm-dd (date entered '$transactionDate').";
+    $TPL["message"][] = "You must enter the Date Incurred in the format yyyy-mm-dd.";
   }
-
 
   $amount = -$amount * $quantity;
 
   if ($amount == "") {
-    $TPL["message"][] = "You must enter the price.";
+    $TPL["message"][] = "You must enter the Price.";
   } else if (!(is_float($amount) || is_int($amount))) {
-    $TPL["message"][] = "You must enter a number for the price.";
+    $TPL["message"][] = "You must enter a number for the Price.";
   } else if ($amount >= 0) {
-    $TPL["message"][] = "You must enter a price greater than 0.";
+    $TPL["message"][] = "You must enter a Price greater than 0.";
   }
 
 
@@ -51,21 +46,19 @@ if ($add) {
   $transaction->read_globals();
 
   if (!count($TPL["message"])) {
-
     $transaction->set_value("transactionType", "expense");
     $transaction->set_value("expenseFormID", $expenseForm->get_id());
     $transaction->save();
-    #$TPL["message_good"][] = "Expense Form Line Item saved.";
 
   } else {
     $transaction_to_edit = $transaction;
   }
 }
 
-if ($edit) {
-  $transaction_to_edit->set_id($transactionID);
+if ($_POST["edit"] && $_POST["expenseFormID"] && $_POST["transactionID"]) {
+  $transaction_to_edit->set_id($_POST["transactionID"]);
   $transaction_to_edit->select();
-  $TPL["transactionID"] = $transactionID;
+  $TPL["transactionID"] = $_POST["transactionID"];
 }
 
 $transaction_to_edit->set_tpl_values();
@@ -74,26 +67,16 @@ if ($transaction_to_edit->get_value("quantity")) {
   $TPL["amount"] = -$transaction_to_edit->get_value("amount") / $transaction_to_edit->get_value("quantity");
 }
 
-$db = new db_alloc;
-
-if ($delete) {
-
-  $query = sprintf("SELECT * FROM transaction WHERE transactionID=%d", $transactionID);
-  $db->query($query);
-  $db->next_record();
-  if ($db->f("expenseFormID") == $expenseFormID) {
-    $query = sprintf("DELETE FROM transaction WHERE transactionID=%d", $transactionID);
-    $db->query($query);
-    $TPL["message_good"][] = "Expense Form Line Item deleted.";
-  }
-  $expenseForm->set_id($expenseFormID);
+if ($_POST["delete"] && $_POST["expenseFormID"] && $_POST["transactionID"]) {
+  $expenseForm->delete_transactions($_POST["transactionID"]);
+  $expenseForm->set_id($_POST["expenseFormID"]);
   $expenseForm->select();
 }
-
 
 if ($transaction_to_edit->get_value("tfID")) {
   $selectedTfID = $transaction_to_edit->get_value("tfID");
   $selectedProjectID = $transaction_to_edit->get_value("projectID");
+
 } else {
   $query = "SELECT tfID FROM tfPerson WHERE personID=".$current_user->get_id()." LIMIT 1";
   $db->query($query);
@@ -114,31 +97,27 @@ $db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'cu
 $TPL["projectOptions"] = get_option("", "0", false)."\n";
 $TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $selectedProjectID);
 
-$expenseForm->set_tpl_values();
+if (is_object($expenseForm)) { 
+  $expenseForm->set_tpl_values();
+  $TPL["expenseFormID"] = $expenseForm->get_id();
+}
 
-$TPL["expenseFormID"] = $expenseForm->get_id();
-
-
-if ($expenseForm->get_value("expenseFormModifiedUser")) {
+if (is_object($expenseForm) && $expenseForm->get_value("expenseFormModifiedUser")) {
   $p = new person;
   $p->set_id($expenseForm->get_value("expenseFormModifiedUser"));
   $p->select();
   $TPL["user"] = $p->get_username(1);
 }
 
-
-$formTotal = 0;
-
-
 if ($cancel) {
-  if ($expenseFormID) {
-    $query = sprintf("DELETE FROM expenseForm where expenseFormID=%d", $expenseFormID);
-    $db->query($query);
-
-    $query = sprintf("DELETE FROM transaction where expenseFormID=%d AND status='pending'", $expenseFormID);
-    $db->query($query);
+  if (is_object($expenseForm)) {
+    $expenseForm->delete_transactions();
+    $expenseForm->delete();
+  
+    header("location:".$TPL["url_alloc_expenseFormList"]);
+  } else {
+    $TPL["message"][] = "Unable to delete Expense Form";
   }
-  header("location:".$TPL["url_alloc_expenseFormList"]);
 
 } else if ($approve) {
   $expenseForm->save();
@@ -175,8 +154,8 @@ if ($cancel) {
   exit();
 }
 
-if ($expenseForm->get_value("expenseFormFinalised")) {
-  $TPL["message_help"][] = "Step 4/4: Print out the Expense Form using the \"Printer Friendly Version\" link, attach receipts and hand in to office admin.";
+if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised")) {
+  $TPL["message_help"][] = "Step 4/4: Print out the Expense Form using the Printer Friendly Version link, attach receipts and hand in to office admin.";
 
 } else if (check_optional_has_line_items() && !$expenseForm->get_value("expenseFormFinalised")) {  
   $TPL["message_help"][] = "Step 3/4: When finished adding Expense Form Line Items, click the To Admin button to finalise the Expense Form (it will no longer be editable).";
@@ -195,11 +174,13 @@ $reimbursementRequired_label   = $expenseForm->get_value("reimbursementRequired"
 
 $TPL["paymentMethodOptions"] = $expenseForm->get_value("paymentMethod");
 $TPL["reimbursementRequiredOption"] = $reimbursementRequired_label;
+$TPL["chequeNumberInput"] = $TPL["chequeNumber"];
+$TPL["chequeDateInput"]   = $TPL["chequeDate"];
 
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
 
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save Expense Form\">";
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"cancel\" value=\"Delete\" onClick=\"return confirm('Delete this record?')\">";
+  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"cancel\" value=\"Delete\" onClick=\"return confirm('Delete this Expense Form?')\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"finalise\" value=\"To Admin -&gt;\">";
 
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
@@ -209,6 +190,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
 } else if (is_object($expenseForm) && $expenseForm->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
   
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"unfinalise\" value=\"&lt;- Edit\">";
+  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"approve\" value=\"Approve\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"reject\" value=\"Reject\">";
   $TPL["expenseFormButtons"].= "&nbsp;<a href=\"".$TPL["url_alloc_expenseFormList"]."\">Return To Pending Expense Forms</a>";
@@ -217,14 +199,18 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["chequeDateInput"]   = "<input type=\"text\" size=\"10\" name=\"chequeDate\" value=\"".$TPL["chequeDate"]."\">";
   $TPL["chequeDateInput"]  .= "<input type=\"button\" onClick=\"chequeDate.value='".$TPL["today"]."'\" value=\"Today\">";
 
-} else {
+} else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Create Expense Form\">";
-
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
   $TPL["reimbursementRequiredOption"] = "<input type=\"checkbox\" name=\"reimbursementRequired\" value=\"1\"".$reimbursementRequired_checked.">";
 }
 
-
+if (is_object($expenseForm) && $expenseForm->get_id()) {
+  $db = new db_alloc;
+  $db->query(sprintf("SELECT SUM(amount) AS sum FROM transaction WHERE expenseFormID = %d",$expenseForm->get_id()));
+  $db->next_record();
+  $TPL["formTotal"] = abs($db->f("sum"));
+}
 
 
 if ($printVersion) {
@@ -235,7 +221,7 @@ if ($printVersion) {
 
 function show_all_exp($template) {
 
-  global $TPL, $expenseForm, $db, $transactionID, $formTotal, $edit;
+  global $TPL, $expenseForm, $db, $transactionID, $edit;
 
   if ($expenseForm->get_id()) {
 
@@ -253,13 +239,12 @@ function show_all_exp($template) {
 
     while ($db->next_record()) {
 
-      $transaction->read_db_record($db);
+      $transaction->read_db_record($db,false);
       $transaction->set_tpl_values();
 
-      $TPL["amount"] = -$transaction->get_value("amount") / $transaction->get_value("quantity");
+      $transaction->get_value("quantity") and $TPL["amount"] = -$transaction->get_value("amount") / $transaction->get_value("quantity");
       $TPL["amount"] = number_format($TPL["amount"], 2);
 
-      $TPL["formTotal"] -= $transaction->get_value("amount");
 
       $tf->set_id($transaction->get_value("tfID"));
       $tf->select();
@@ -279,20 +264,14 @@ function show_all_exp($template) {
 }
 
 function check_editable() {
-  global $auth, $db, $expenseForm, $allow_edit;
+  global $auth, $db, $expenseForm, $allow_edit, $current_user;
 
   $permissions = explode(",", $auth->auth["perm"]);
 
-    #echo "<br/>1: ".is_object($expenseForm);
-    #echo "<br/>2: ".($expenseForm->get_value("expenseFormFinalised"));
-    #echo "<br/>3: ".$expenseForm->get_id();
-    #echo "<br/>4: ".$expenseForm->is_owner();
-  if (is_object($expenseForm) && !$expenseForm->get_id()) { // New
+  if (is_object($expenseForm) && !$expenseForm->get_id()) { // New Expense Form
     $allow_edit = true;
 
   } else if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") != 1 && $expenseForm->get_id() && $expenseForm->is_owner()) {
-    
-
     $allow_edit = true;
 
   } else {
@@ -339,8 +318,4 @@ function check_optional_show_line_item_add() {
 
 
 page_close();
-
-
-
-
 ?>

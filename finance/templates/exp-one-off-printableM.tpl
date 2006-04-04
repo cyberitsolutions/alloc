@@ -18,7 +18,7 @@
 
 <tr>
   <td colspan="3">Expense form ID: <b>{expenseFormID}</b></td>
-  <td colspan="3" align="right"><strong style="font-size: large">TOTAL: &nbsp;${formTotal}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
+  <td colspan="3" align="right"><strong style="font-size: large">TOTAL: &nbsp;${formTotal}</strong></td>
 </tr>
 
 <tr>

@@ -19,9 +19,7 @@
   </tr>
 </table>
   
-<br>
 {:show_attachments templates/project_attachmentsM.tpl}
-<br>
 
 {table_box}
   <tr>
@@ -32,9 +30,8 @@
   </tr>
 </table>
 
-<br>
 {:show_time_sheets templates/projectTimeSheetS.tpl}
-<br>
+
 {:show_transactions templates/projectTransactionS.tpl}
 
 {:show_footer}

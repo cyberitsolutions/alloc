@@ -1,7 +1,9 @@
 <?php
-$NO_AUTH = true;
-if ($_GET["web"])
-  unset($NO_AUTH);
+if ($_GET["web"]) {
+  define("NO_AUTH",false);
+} else {
+  define("NO_AUTH",true);
+}
 include("alloc.inc");
 
 $db = new db_alloc;

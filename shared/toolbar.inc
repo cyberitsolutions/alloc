@@ -45,34 +45,42 @@ class toolbar_item {
 
 function show_messages() {
   global $TPL;
+
   if ($TPL["message"] && is_string($TPL["message"])) {
-    $str = $TPL["message"];
-    $type = "bad";
+    $t = $TPL["message"];
+    unset($TPL["message"]);
+    $TPL["message"][] = $t;
+  } 
+  if ($TPL["message_good"] && is_string($TPL["message_good"])) {
+    $t = $TPL["message_good"];
+    unset($TPL["message_good"]);
+    $TPL["message_good"][] = $t;
+  }
+  if ($TPL["message_help"] && is_string($TPL["message_help"])) {
+    $t = $TPL["message_help"];
+    unset($TPL["message_help"]);
+    $TPL["message_help"][] = $t;
+  }
 
-  } else if (is_array($TPL["message"]) && count($TPL["message"])) {
-    $str = implode("<br/>",$TPL["message"]);
-    $type = "bad";
-
-  } else  if ($TPL["message_good"] && is_string($TPL["message_good"])) {
-    $str = $TPL["message_good"];
-    $type = "good";
-
-  } else if (is_array($TPL["message_good"]) && count($TPL["message_good"])) {
-    $str = implode("<br/>",$TPL["message_good"]);
-    $type = "good";
-
-  } else  if ($TPL["message_help"] && is_string($TPL["message_help"])) {
-    $str = $TPL["message_help"];
-    $type = "help";
-
-  } else if (is_array($TPL["message_help"]) && count($TPL["message_help"])) {
-    $str = implode("<br/>",$TPL["message_help"]);
-    $type = "help";
+  
+  if (is_array($TPL["message"]) && count($TPL["message"])) {
+    $arr["bad"] = implode("<br/>",$TPL["message"]);
+  }
+  if (is_array($TPL["message_good"]) && count($TPL["message_good"])) {
+    $arr["good"] = implode("<br/>",$TPL["message_good"]);
+  }
+  if (is_array($TPL["message_help"]) && count($TPL["message_help"])) {
+    $arr["help"] = implode("<br/>",$TPL["message_help"]);
   } 
 
-  if ($str) {
-    echo "<div class=\"message ".$type."\"><table cellspacing=\"0\" cellpadding=\"3\"><tr><td width=\"1%\" valign=\"top\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".gif\"/><td/>";
-    echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".$str."</td></tr></table></div>";
+  if (is_array($arr) && count($arr)) {
+    echo "<div class=\"message\">";
+
+    foreach ($arr as $type => $str) {
+      echo "<table cellspacing=\"0\" cellpadding=\"3\"><tr><td width=\"1%\" valign=\"top\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".gif\"/><td/>";
+      echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".$str."</td></tr></table>";
+    }
+    echo "</div>";
   }
 
 }

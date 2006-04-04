@@ -39,6 +39,11 @@ class expenseForm extends db_entity {
         return true;
       }
     }
+
+    if ($current_user->have_role("admin") || $current_user->have_role("god")) {
+      return true;
+    }
+
     return false;
   }
 
@@ -60,6 +65,20 @@ class expenseForm extends db_entity {
     db_entity::insert();
   }
 
+  function delete_transactions($transactionID="") {
+    global $TPL;
+
+    $transactionID and $extra_sql = sprintf("AND transactionID = %d",$transactionID);
+
+    $db = new db_alloc;
+    if ($this->is_owner()) {
+      $db->query(sprintf("DELETE FROM transaction WHERE expenseFormID = %d %s",$this->get_id(),$extra_sql));
+      $transactionID and $TPL["message_good"][] = "Expense Form Line Item deleted.";
+    }
+  }
+
+
+  
 }
 
 

@@ -7,8 +7,8 @@
     <th colspan="2">Files</th>
   </tr>
   <tr>
+    <td width="3%">Size</td>
     <td>File</td>
-    <td>Size in bytes</td>
   </tr>
   {:list_attachments templates/clientAttachmentsR.tpl}
   <tr>

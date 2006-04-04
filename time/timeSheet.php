@@ -310,7 +310,7 @@ function show_new_timeSheet($template) {
     $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
     $TPL["timeSheetItem_unit_options"] = get_options_from_array($unit_array, $timeSheetItemDurationUnitID);
 
-    $TPL["timeSheetItem_dateTimeSheetItem"] or $TPL["timeSheetItem_dateTimeSheetItem"] = date("Y-m-d");
+    #$TPL["timeSheetItem_dateTimeSheetItem"] or $TPL["timeSheetItem_dateTimeSheetItem"] = date("Y-m-d");
 
     include_template($template);
   }
@@ -384,7 +384,7 @@ if (isset($save)
 
   } else {
     $save_error=true;
-    $TPL["message_help"][] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
+    $TPL["message_help"][] = "Step 1/3: Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
   }
 
 
@@ -605,7 +605,7 @@ if (isset($save)
   $timeSheet->read_globals();
   $timeSheet->read_globals("timeSheet_");
   $timeSheet->set_value("status", "edit");
-  $TPL["message_help"] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
+  $TPL["message_help"] = "Step 1/3: Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
 }
 
 // THAT'S THE END OF THE BIG SAVE.  
@@ -905,7 +905,7 @@ if ($grab_project_pay_values) {
 
 
 if ($timeSheetID) {
-  $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate 
+  $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) as count
         FROM timeSheetItem WHERE timeSheetID=%d ", $timeSheetID));
   $db->next_record();
   $timeSheet->set_id($timeSheetID);
@@ -917,8 +917,11 @@ if ($timeSheetID) {
     $TPL["period"] = $db->f("minDate")." to ".$db->f("maxDate");
   }
 
-  if ($timeSheet->get_value("status") == "edit") {
-    $TPL["message_help"][] = "Enter line items by inputting the Duration, Amount and Task and clicking the Add Time Sheet Item Button.";
+  if ($timeSheet->get_value("status") == "edit" && $db->f("count") == 0) {
+    $TPL["message_help"][] = "Step 2/3: Enter line items by inputting the Duration, Amount and Task and clicking the Add Time Sheet Item Button.";
+
+  } else if ($timeSheet->get_value("status") == "edit" && $db->f("count") > 0) {
+    $TPL["message_help"][] = "Step 3/3: When finished adding Time Sheet Line Items, click the To Manager/Admin button to submit this Time Sheet (it will no longer be editable).";
   }
 
 }

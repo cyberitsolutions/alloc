@@ -1,1 +1,1 @@
-<tr><td>{filename}</td><td>{size}</td></tr>
+<tr><td>{size}</td><td>{filename}</td></tr>
