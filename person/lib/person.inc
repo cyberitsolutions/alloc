@@ -233,7 +233,6 @@ class person extends db_entity
   function have_role($perm_name) {
     $p = $this->get_value("perms");
     $p = ",$p,";
-#echo $this->get_value("username") . "->have_role($perm_name) = " . ereg(",$perm_name,", $p) . "<br>";
     return ereg(",$perm_name,", $p);
   }
 

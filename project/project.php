@@ -16,15 +16,15 @@ function show_attachments($template_name) {
 function list_attachments($template_name) {
   global $TPL, $projectID;
 
-  if (is_dir($TPL["url_alloc_projectDocs_docs"].$projectID)) {
-    $handle = opendir($TPL["url_alloc_projectDocs_docs"].$projectID);
+  if (is_dir($TPL["url_alloc_projectDocs_dir"].$projectID)) {
+    $handle = opendir($TPL["url_alloc_projectDocs_dir"].$projectID);
 
     while (false !== ($file = readdir($handle))) {
 
-      if ($file != "." && $file != ".." && $file != "CVS") {
-        $size = filesize($TPL["url_alloc_projectDocs_docs"].$projectID."/".$file);
-        $TPL["filename"] = "<a href=\"".$TPL["url_alloc_projectDocs_docs"].$projectID."/".$file."\">".$file."</a>";
-        $TPL["size"] = "$size";
+      if ($file != "." && $file != "..") {
+        $size = filesize($TPL["url_alloc_projectDocs_dir"].$projectID."/".$file);
+        $TPL["filename"] = "<a href=\"".$TPL["url_alloc_projectDoc"]."&projectID=".$projectID."&file=".urlencode($file)."\">".$file."</a>";
+        $TPL["size"] = sprintf("%dk",$size/1024);
         include_template($template_name);
       }
     }
@@ -518,14 +518,14 @@ if ($save_attachment) {
   if ($attachment != "none") {
     is_uploaded_file($attachment) || die("Uploaded document error.  Please try again.");
 
-    if (!is_dir($TPL["url_alloc_projectDocs_docs"].$projectID)) {
-      mkdir($TPL["url_alloc_projectDocs_docs"].$projectID, 0777);
+    if (!is_dir($TPL["url_alloc_projectDocs_dir"].$projectID)) {
+      mkdir($TPL["url_alloc_projectDocs_dir"].$projectID, 0777);
     }
 
-    if (!move_uploaded_file($attachment, $TPL["url_alloc_projectDocs_docs"].$projectID."/".$attachment_name)) {
-      die("could not move attachment to: ".$TPL["url_alloc_projectDocs_docs"].$projectID."/".$attachment_name);
+    if (!move_uploaded_file($attachment, $TPL["url_alloc_projectDocs_dir"].$projectID."/".$attachment_name)) {
+      die("could not move attachment to: ".$TPL["url_alloc_projectDocs_dir"].$projectID."/".$attachment_name);
     } else {
-      chmod($TPL["url_alloc_projectDocs_docs"].$projectID."/".$attachment_name, 0777);
+      chmod($TPL["url_alloc_projectDocs_dir"].$projectID."/".$attachment_name, 0777);
       header("Location: ".$TPL["url_alloc_project"]."&projectID=".$projectID);
     }
   }

@@ -8,8 +8,8 @@
     <th colspan="2">Project Files</th>
   </tr>
   <tr>
+    <td width="3%">Size</td>
     <td>File</td>
-    <td>Size in bytes</td>
   </tr>
 {:list_attachments templates/project_attachmentsR.tpl}
   <tr>

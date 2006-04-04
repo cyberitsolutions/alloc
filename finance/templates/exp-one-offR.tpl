@@ -8,14 +8,17 @@
   <td>TF: {tfID}</td>
   <td>Project: {projectID}</td>
   <td>{quantity}pcs. @ ${amount} each</td>
-  <td>
+  <td>{status}</td>
+  <td align="right">
 	  &nbsp;&nbsp;{optional:allow_edit}
-   	<a href="{url_alloc_expOneOff}&transactionID={transactionID}&expenseFormID={expenseFormID}&edit=true">edit</a>  
-   	&nbsp;|&nbsp;  
-   	<a href="{url_alloc_expOneOff}&transactionID={transactionID}&delete=true&expenseFormID={expenseFormID}">delete</a>
+    <form method="post" action="{url_alloc_expOneOff}">
+    <input type="hidden" name="expenseFormID" value="{expenseFormID}">
+    <input type="hidden" name="transactionID" value="{transactionID}">
+    <input type="submit" name="edit" value="Edit">
+    <input type="submit" name="delete" value="Delete">
+    </form>
     {/optional}
   </td>
-  <td>{status}</td>
 </tr>
 
 

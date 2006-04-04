@@ -43,22 +43,23 @@ if (isset($save)) {
   }    
   
 } else if (isset($save_attachment)) {
+
   if ($attachment != "none") {
     is_uploaded_file($attachment) || die("Uploaded document error.  Please try again.");
 
-    if (!is_dir($TPL["url_alloc_clientDocs"].$clientID)) {
-      mkdir($TPL["url_alloc_clientDocs"].$clientID, 0777);
+    if (!is_dir($TPL["url_alloc_clientDocs_dir"].$clientID)) {
+      mkdir($TPL["url_alloc_clientDocs_dir"].$clientID, 0777);
     }
 
-    if (!move_uploaded_file($attachment, $TPL["url_alloc_clientDocs"]
-                            .$clientID."/".$attachment_name)) {
-      die("could not move attachment to: ".$TPL["url_alloc_clientDocs"]
-          .$clientID."/".$attachment_name);
+    if (!move_uploaded_file($attachment, $TPL["url_alloc_clientDocs_dir"].$clientID."/".$attachment_name)) {
+      die("could not move attachment to: ".$TPL["url_alloc_clientDocs_dir"].$clientID."/".$attachment_name);
     } else {
-      chmod($TPL["url_alloc_clientDocs"].$clientID."/".$attachment_name, 0777);
+      chmod($TPL["url_alloc_clientDocs_dir"].$clientID."/".$attachment_name, 0777);
       header("Location: ".$TPL["url_alloc_client"]."&clientID=".$clientID);
     }
   }
+
+
 } else {
 
   if (isset($delete)) {
@@ -355,18 +356,18 @@ function show_attachments($template) {
 }
 
 function list_attachments($template) {
+
   global $TPL, $clientID;
 
-  if (is_dir($TPL["url_alloc_clientDocs"].$clientID)) {
-    $handle = opendir($TPL["url_alloc_clientDocs"].$clientID);
+  if (is_dir($TPL["url_alloc_clientDocs_dir"].$clientID)) {
+    $handle = opendir($TPL["url_alloc_clientDocs_dir"].$clientID);
 
     while (false !== ($file = readdir($handle))) {
 
-      if ($file != "." && $file != ".." && $file != "CVS") {
-        $size = filesize($TPL["url_alloc_clientDocs"].$clientID."/".$file);
-        $TPL["filename"] = "<a href=\"".$TPL["url_alloc_clientDocs"]
-          .$clientID."/".$file."\">".$file."</a>";
-        $TPL["size"] = "$size";
+      if ($file != "." && $file != "..") {
+        $size = filesize($TPL["url_alloc_clientDocs_dir"].$clientID."/".$file);
+        $TPL["filename"] = "<a href=\"".$TPL["url_alloc_clientDoc"]."&clientID=".$clientID."&file=".urlencode($file)."\">".$file."</a>";
+        $TPL["size"] = sprintf("%dk",$size/1024);
         include_template($template);
       }
     }

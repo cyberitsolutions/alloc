@@ -1,6 +1,5 @@
 <?php
-global $NO_AUTH;
-$NO_AUTH = true;
+define("NO_AUTH",true);
 include("alloc.inc");
 
 

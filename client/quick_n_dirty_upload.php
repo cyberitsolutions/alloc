@@ -14,7 +14,7 @@
 | Lvl 2,575 Bourke St  Melbourne  (03) 8623-5000					|
 |																	|
 \*******************************************************************/
-  $NO_AUTH = true;
+define("NO_AUTH",true);
 include("alloc.inc");
 
 

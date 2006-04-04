@@ -13,7 +13,7 @@ require(ALLOC_MOD_DIR."/shared/phplib_page.inc");
 eregi("^".ALLOC_MOD_DIR."/(.*)$", $SCRIPT_FILENAME, $match) && $script_filename_short = $match[1];
 eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
 
-if ((!isset($modules[$module_name])) && $module_name != "") {
+if ((!isset($modules[$module_name])) && $module_name != "" && $module_name != "util") {
   die("Invalid module: $module_name");
 } else {
   define("ALLOC_MODULE_NAME",$module_name);
@@ -38,14 +38,16 @@ include(ALLOC_MOD_DIR."/shared/alloc_cache.inc");
 $orig_module = $module;
 reset($modules);
 while (list($module_name,) = each($modules)) {
-  include(ALLOC_MOD_DIR."/$module_name/lib/init.php");
-  $module_class = $module_name."_module";
-  $module = new $module_class;
-  $modules[$module_name] = $module;
+  if ($module_name != "util") {
+    include(ALLOC_MOD_DIR."/$module_name/lib/init.php");
+    $module_class = $module_name."_module";
+    $module = new $module_class;
+    $modules[$module_name] = $module;
+  }
 }
 
 $module = $orig_module;
-if (isset($NO_AUTH) && (!isset($HTTP_GET_VARS["NO_AUTH"])) && (!isset($HTTP_POST_VARS["NO_AUTH"]))) {
+if (defined("NO_AUTH") && NO_AUTH) {
   page_open(array("sess"=>"alloc_Session"));
 } else {
   page_open(array("sess"=>"alloc_Session", "auth"=>"alloc_Auth", "perm"=>"alloc_Perm", "user"=>"alloc_User"));

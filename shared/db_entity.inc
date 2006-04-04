@@ -52,8 +52,7 @@ class db_entity
 
   // Check if user has permission to access this entity
   function have_perm($action = 0, $person = "", $assume_owner = false) {
-    global $NO_AUTH;
-    if ((isset($NO_AUTH) && (!isset($HTTP_GET_VARS["NO_AUTH"])) && (!isset($HTTP_POST_VARS["NO_AUTH"]))) || $this->is_god()) {
+    if ((defined("NO_AUTH") && NO_AUTH) || $this->is_god()) {
       return true;
     }
     #echo $this->data_table . "->have_perm($action, " . (is_object($person) ? $person->get_id() : $person) . ", $assume_owner)<br>";

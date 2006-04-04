@@ -89,6 +89,9 @@
 </table>
 {/optional}
 
+<input type="hidden" name="status" value="pending">
+<input type="hidden" name="expenseFormID" value="{expenseFormID}">
+</form>
 
 {optional:has_line_items}
 {table_box}
@@ -99,11 +102,6 @@
 </table>
 {/optional}
 
-<input type="hidden" name="status" value="pending">
-<input type="hidden" name="expenseFormID" value="{expenseFormID}">
-
-
-</form>
 
 {:show_footer}
 
