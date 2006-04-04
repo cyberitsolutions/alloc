@@ -66,9 +66,12 @@ function updateProjectList(number) {
                   <table class="filter" align="center" width="95%">
                     <tr>
                       <td><b>Display</b></td>
-                      <td colspan="3" align="right">View By 
+                      <td colspan="3" align="right">
+                        <nobr>
+                          View By
                           Priority <input type="radio" name="taskView" value="prioritised"{taskView_checked_prioritised}>
                           Project <input type="radio" name="taskView" value="byProject"{taskView_checked_byProject}> 
+                        </nobr>
                       </td>
                     </tr>
                     <tr>
@@ -80,8 +83,8 @@ function updateProjectList(number) {
                       <td align="right">Assigned To</td><td><input type="checkbox" name="showAssigned"{showAssigned_checked}></td>
                     </tr>
                     <tr>
-                      <td align="right">Estimate/Actual</td><td><input type="checkbox" name="showTimes"{showTimes_checked}></td>
-                      <td align="right">Percent Complete</td><td><input type="checkbox" name="showPercent"{showPercent_checked}></td>
+                      <td align="right"><nobr>Estimate/Actual</nobr></td><td><input type="checkbox" name="showTimes"{showTimes_checked}></td>
+                      <td align="right">% Complete</td><td><input type="checkbox" name="showPercent"{showPercent_checked}></td>
                     </tr>
                     <tr>
                       <td align="right">Priority Info</td><td><input type="checkbox" name="showPriority"{showPriority_checked}></td>
