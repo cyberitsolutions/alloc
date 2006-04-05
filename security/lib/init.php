@@ -9,7 +9,7 @@ class security_module extends module {
   }
 }
 
-include(ALLOC_MOD_DIR."/security/lib/permission.inc");
+include(ALLOC_MOD_DIR."/security/lib/permission.inc.php");
 
 
 

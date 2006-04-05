@@ -76,12 +76,12 @@ FIXME: Describe contents of alloc.inc here
     function register_home_items() {
       global $MOD_DIR;
 
-      include("$MOD_DIR/announcement/lib/announcements_home_item.inc");
+      include("$MOD_DIR/announcement/lib/announcements_home_item.inc.php");
       register_home_item(new announcements_home_item());
     }
   }
 
-  include("$MOD_DIR/announcement/lib/announcement.inc");
+  include("$MOD_DIR/announcement/lib/announcement.inc.php");
 ?&gt;
     </pre>
 
@@ -180,7 +180,7 @@ FIXME: Describe contents of alloc.inc here
 ?&gt;
     </pre>
 
-    <p>Note that it is assumed that the entity class has the same name as the database table.  Also, it is convention to store this script using the file module_name/lib/entity_name.inc.</p>
+    <p>Note that it is assumed that the entity class has the same name as the database table.  Also, it is convention to store this script using the file module_name/lib/entity_name.inc.php</p>
 
     <p>Useful methods of the db_entity class include:</p>
     <ul>
@@ -269,14 +269,14 @@ FIXME: Describe contents of alloc.inc here
 
     <p>Once you have set the template variables, you can process a template using the include_template($template_file_name) function.</p>
 
-    <p>The file shared/global_tpl_values.inc defines some template variables that are available throughout the Alloc.  These include variables for all URLs used by Alloc.</p>
+    <p>The file shared/global_tpl_values.inc.php defines some template variables that are available throughout the Alloc.  These include variables for all URLs used by Alloc.</p>
 
 
     <h3>Toolbar Items</h3>
 
     <p>Modules can register one or more links for the toolbar.  When Alloc is generating the toolbar it calls the register_toolbar_items() method of each of the modules.  The module classes should override this method and call the register_toolbar_item() function for each link the module wants to display on the toolbar.  The syntax of the register_toolbar_item() function is as follows:<br>
     <code>function register_toolbar_item($tool_name, $label, $url_parameters = "")</code><br>
-    The $tool_name parameter is the name of the page to link to.  This should correspond to one of the URLs set in the shared/global_tpl_values.inc file without the <code>url_alloc_</code> prefix.  The $label parameter provides the text to be displayed to the user.  The optional $url_parameters parameter specifies any extra data to be added to the parameters of the URL.  This data should only contain valid URL characters.</p>
+    The $tool_name parameter is the name of the page to link to.  This should correspond to one of the URLs set in the shared/global_tpl_values.inc.php file without the <code>url_alloc_</code> prefix.  The $label parameter provides the text to be displayed to the user.  The optional $url_parameters parameter specifies any extra data to be added to the parameters of the URL.  This data should only contain valid URL characters.</p>
     <p>The announcement module registers a toolbar item to manage announcements if the user has appropriate permissions.  The code to perform this is shown below.</p>
 
 &lt;?php
@@ -341,7 +341,7 @@ Today's date is {:show_date}
 
     function register_home_items() {
       global $MOD_DIR;
-      include("$MOD_DIR/home/lib/date_home_item.inc");
+      include("$MOD_DIR/home/lib/date_home_item.inc.php");
       register_home_item(new date_home_item);
       //..
     }

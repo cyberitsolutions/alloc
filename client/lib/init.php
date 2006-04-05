@@ -9,9 +9,9 @@ class client_module extends module {
   }
 }
 
-include(ALLOC_MOD_DIR."/client/lib/client.inc");
-include(ALLOC_MOD_DIR."/client/lib/clientContact.inc");
-include(ALLOC_MOD_DIR."/client/lib/comment.inc");
+include(ALLOC_MOD_DIR."/client/lib/client.inc.php");
+include(ALLOC_MOD_DIR."/client/lib/clientContact.inc.php");
+include(ALLOC_MOD_DIR."/client/lib/comment.inc.php");
 
 
 

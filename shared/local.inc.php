@@ -1,13 +1,13 @@
 <?php
 
 # PHPLIB Stuff
-require(ALLOC_MOD_DIR."/shared/phplib_db_mysql.inc");  
-require(ALLOC_MOD_DIR."/shared/phplib_ct_sql.inc");    
-require(ALLOC_MOD_DIR."/shared/phplib_session.inc");   
-require(ALLOC_MOD_DIR."/shared/phplib_auth.inc");      
-require(ALLOC_MOD_DIR."/shared/phplib_perm.inc");       
-require(ALLOC_MOD_DIR."/shared/phplib_user.inc");    
-require(ALLOC_MOD_DIR."/shared/phplib_page.inc");
+require(ALLOC_MOD_DIR."/shared/phplib_db_mysql.inc.php");  
+require(ALLOC_MOD_DIR."/shared/phplib_ct_sql.inc.php");    
+require(ALLOC_MOD_DIR."/shared/phplib_session.inc.php");   
+require(ALLOC_MOD_DIR."/shared/phplib_auth.inc.php");      
+require(ALLOC_MOD_DIR."/shared/phplib_perm.inc.php");       
+require(ALLOC_MOD_DIR."/shared/phplib_user.inc.php");    
+require(ALLOC_MOD_DIR."/shared/phplib_page.inc.php");
 
 
 eregi("^".ALLOC_MOD_DIR."/(.*)$", $SCRIPT_FILENAME, $match) && $script_filename_short = $match[1];
@@ -23,17 +23,17 @@ $SCRIPT_PATH = $SCRIPT_NAME;
 $script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $SCRIPT_NAME);
 
 
-include(ALLOC_MOD_DIR."/shared/alloc_phplib.inc");
-include(ALLOC_MOD_DIR."/shared/template.php");
-include(ALLOC_MOD_DIR."/shared/util.inc");
-include(ALLOC_MOD_DIR."/shared/home.inc");
-include(ALLOC_MOD_DIR."/shared/toolbar.inc");
-include(ALLOC_MOD_DIR."/shared/help.inc");
-include(ALLOC_MOD_DIR."/shared/db_utils.inc");
-include(ALLOC_MOD_DIR."/shared/module.inc");
-include(ALLOC_MOD_DIR."/shared/event.inc");
-include(ALLOC_MOD_DIR."/shared/alloc_email.inc");
-include(ALLOC_MOD_DIR."/shared/alloc_cache.inc");
+include(ALLOC_MOD_DIR."/shared/alloc_phplib.inc.php");
+include(ALLOC_MOD_DIR."/shared/template.inc.php");
+include(ALLOC_MOD_DIR."/shared/util.inc.php");
+include(ALLOC_MOD_DIR."/shared/home.inc.php");
+include(ALLOC_MOD_DIR."/shared/toolbar.inc.php");
+include(ALLOC_MOD_DIR."/shared/help.inc.php");
+include(ALLOC_MOD_DIR."/shared/db_utils.inc.php");
+include(ALLOC_MOD_DIR."/shared/module.inc.php");
+include(ALLOC_MOD_DIR."/shared/event.inc.php");
+include(ALLOC_MOD_DIR."/shared/alloc_email.inc.php");
+include(ALLOC_MOD_DIR."/shared/alloc_cache.inc.php");
 
 $orig_module = $module;
 reset($modules);
@@ -53,8 +53,8 @@ if (defined("NO_AUTH") && NO_AUTH) {
   page_open(array("sess"=>"alloc_Session", "auth"=>"alloc_Auth", "perm"=>"alloc_Perm", "user"=>"alloc_User"));
 }
 
-include(ALLOC_MOD_DIR."/shared/global_tpl_values.inc");
-include(ALLOC_MOD_DIR."/shared/history.inc");
+include(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
+include(ALLOC_MOD_DIR."/shared/history.inc.php");
 
 register_toolbar_items();
 ?>

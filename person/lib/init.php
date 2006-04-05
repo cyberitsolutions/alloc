@@ -15,10 +15,10 @@ class person_module extends module {
   }
 }
 
-include(ALLOC_MOD_DIR."/person/lib/person.inc");
-include(ALLOC_MOD_DIR."/person/lib/absence.inc");
-include(ALLOC_MOD_DIR."/person/lib/skillList.inc");
-include(ALLOC_MOD_DIR."/person/lib/skillProficiencys.inc");
+include(ALLOC_MOD_DIR."/person/lib/person.inc.php");
+include(ALLOC_MOD_DIR."/person/lib/absence.inc.php");
+include(ALLOC_MOD_DIR."/person/lib/skillList.inc.php");
+include(ALLOC_MOD_DIR."/person/lib/skillProficiencys.inc.php");
 
 
 

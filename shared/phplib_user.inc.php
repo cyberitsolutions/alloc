@@ -5,8 +5,6 @@
    * Copyright (c) 1998,1999 SH Online Dienst GmbH
    *                    Boris Erdmann, Kristian Koehntopp
    *
-   * $Id: user.inc,v 1.1.1.1 2004/12/15 19:37:02 alla Exp $
-   *
    */
   class User extends Session {
   var $classname = "User";

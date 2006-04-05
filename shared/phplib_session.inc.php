@@ -5,8 +5,6 @@
    * Copyright (c) 1998,1999 SH Online Dienst GmbH
    *                    Boris Erdmann, Kristian Koehntopp
    *
-   * $Id: session.inc,v 1.2 2006/02/24 04:01:12 alla Exp $
-   *
    */
   class Session {
   var $classname = "Session";

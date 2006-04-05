@@ -5,8 +5,6 @@
 ##
 ## Copyright (c) 1998,1999 Sascha Schumann <sascha@schumann.cx>
 ##
-## $Id: ct_sql.inc,v 1.1.1.1 2004/12/15 19:37:00 alla Exp $
-##
 ## PHPLIB Data Storage Container using a SQL database
 ##
   class CT_Sql {

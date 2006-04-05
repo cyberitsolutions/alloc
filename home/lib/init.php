@@ -9,20 +9,20 @@ class home_module extends module {
     global $modules;
 
     if (isset($modules["finance"]) && $modules["finance"]) {
-      include(ALLOC_MOD_DIR."/home/lib/tfList_home_item.inc");
+      include(ALLOC_MOD_DIR."/home/lib/tfList_home_item.inc.php");
       register_home_item(new tfList_home_item);
     } else {
-      include(ALLOC_MOD_DIR."/home/lib/date_home_item.inc");
+      include(ALLOC_MOD_DIR."/home/lib/date_home_item.inc.php");
       register_home_item(new date_home_item);
     }
 
-    include(ALLOC_MOD_DIR."/home/lib/customize_alloc_home_item.inc");
+    include(ALLOC_MOD_DIR."/home/lib/customize_alloc_home_item.inc.php");
     register_home_item(new customize_alloc_home_item);
 
 
-    // include(ALLOC_MOD_DIR."/home/lib/quick_links_home_item.inc");
+    // include(ALLOC_MOD_DIR."/home/lib/quick_links_home_item.inc.php");
     // register_home_item(new quick_links_home_item);
-    // include(ALLOC_MOD_DIR."/home/lib/history_home_item.inc");
+    // include(ALLOC_MOD_DIR."/home/lib/history_home_item.inc.php");
     // register_home_item(new history_home_item);
   }
 }

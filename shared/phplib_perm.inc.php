@@ -5,8 +5,6 @@
    * Copyright (c) 1998,1999 SH Online Dienst GmbH
    *                    Boris Erdmann, Kristian Koehntopp
    *
-   * $Id: perm.inc,v 1.1.1.1 2004/12/15 19:37:01 alla Exp $
-   *
    */
   class Perm {
   var $classname = "Perm";

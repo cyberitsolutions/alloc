@@ -12,12 +12,12 @@ class announcement_module extends module {
   // before the massive list of projects....
   // function register_home_items() {
   // 
-  // include(ALLOC_MOD_DIR."/announcement/lib/announcements_home_item.inc");
+  // include(ALLOC_MOD_DIR."/announcement/lib/announcements_home_item.inc.php");
   // register_home_item(new announcements_home_item());
   // }
 }
 
-include(ALLOC_MOD_DIR."/announcement/lib/announcement.inc");
+include(ALLOC_MOD_DIR."/announcement/lib/announcement.inc.php");
 
 
 
