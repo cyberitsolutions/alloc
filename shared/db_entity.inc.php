@@ -77,13 +77,13 @@ class db_entity {
     }
 
     $db = new db_alloc;
-    $query = "SELECT * 
-                FROM permission 
-                WHERE (tableName = '".$this->data_table."' OR tableName='')
-                     AND (entityID = $entity_id OR entityID = 0 OR entityID = -1)
-                     AND (personID = $person_id OR personID = 0)
-                     AND (actions & $action = $action OR actions = 0)
-                ORDER BY sortKey";
+    $query = sprintf("SELECT * 
+                        FROM permission 
+                        WHERE (tableName = '".$this->data_table."' OR tableName='')
+                         AND (entityID = %d OR entityID = 0 OR entityID = -1)
+                         AND (personID = %d OR personID = 0)
+                         AND (actions & $action = $action OR actions = 0)
+                    ORDER BY sortKey",$entity_id,$person_id);
     $db->query($query);
     #$action == 4 and print $query;
 

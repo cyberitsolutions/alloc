@@ -268,4 +268,19 @@ update task set timeEstimate = null where timeEstimate = 0;
 -- WHen Deploying live, don't forget that you moved the cron scripts, so you'll need to change the cron jobs!!
 
 
+drop table active_sessions;
+
+
+CREATE TABLE sess (
+  sessID varchar(32) NOT NULL default '',
+  personID int(11) NOT NULL default '0',
+  sessData text,
+  PRIMARY KEY  (sessID)
+) TYPE=MyISAM;
+
+
+alter table person add sessData text default "";
+
+
+
 

@@ -16,8 +16,10 @@ class customize_alloc_home_item extends home_item {
     }
 
     if ($customize_save) {
-      $user->register ("customizedFont");
-      $user->register ("customizedTheme");
+      #$user->register ("customizedFont");
+      #$user->register ("customizedTheme");
+      $current_user->prefs["customizedFont"] = $customizedFont;
+      $current_user->prefs["customizedTheme"] = $customizedTheme;
     }
 
 

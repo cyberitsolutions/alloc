@@ -29,6 +29,7 @@ class person extends db_entity
                                , "preferred_tfID"=>new db_text_field("preferred_tfID", "Preferred Payment TF", "")
                                , "dailyTaskEmail"=>new db_text_field("dailyTaskEmail", "Daily Task Email", "")
                                , "personActive"=>new db_text_field("personActive", "Active", "")
+                               , "sessData"=>new db_text_field("sessData", "Session Data", "")
       );
 
     $this->permissions[PERM_PERSON_READ_DETAILS] = "Read details";
