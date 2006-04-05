@@ -10,6 +10,7 @@ class person extends db_entity
   var $classname = "person";
   var $data_table = "person";
   var $display_field_name = "username";
+  var $prefs = array();
 
   function person() {
     $this->db_entity();         // Call constructor of parent class
@@ -49,6 +50,7 @@ class person extends db_entity
     $list = new task_list($filter);
     return $list->get_entity_array();
   }
+
 
 /*
   function get_task_summary($existing_filter = "", $format = "html", $task_options = "", $applyDateRegex = true) {

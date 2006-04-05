@@ -25,7 +25,7 @@ if (!$_FORM["applyFilter"]) {
   $_FORM = &$user_FORM;
 } else if ($_FORM["applyFilter"]) {
   $user_FORM = &$_FORM;
-  $user->register("user_FORM");
+  is_object($current_user) and $current_user->prefs["user_FORM"] = &$user_FORM;
 }
 
 $db = new db_alloc;
@@ -72,6 +72,7 @@ $taskType = new taskType;
 $TPL["taskTypeOptions"] = "\n<option value=\"\"> ";
 $TPL["taskTypeOptions"].= $taskType->get_dropdown_options("taskTypeID","taskTypeName",$_FORM["taskTypeID"]);
 
+$_FORM["taskView"] or $_FORM["taskView"] = "byProject";
 $_FORM["taskView"] and $TPL["taskView_checked_".$_FORM["taskView"]] = " checked";
 
 $taskStatii = array(""=>"","not_completed"=>"Not Completed","in_progress"=>"In Progress","overdue"=>"Overdue","completed"=>"Completed");

@@ -17,7 +17,7 @@ $valid_orders_by = array("transactionDate","lastModified");
 in_array($sortTransactions,$valid_orders_by) or $sortTransactions = "transactionDate";
 
 // Store a user variable to record the users preference.
-$user->register("sortTransactions");
+is_object($current_user) and $current_user->prefs["sortTransactions"] = $sortTransactions;
 
 
 // Check perm of requested tf

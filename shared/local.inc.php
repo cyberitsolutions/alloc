@@ -80,6 +80,13 @@ if (defined("NO_AUTH") && NO_AUTH) {
     $current_user->set_id($sess->Get("personID"));
     $current_user->select();
     $current_user->prefs = unserialize($current_user->get_value("sessData"));
+    if (is_array($current_user->prefs)) {
+      foreach ($current_user->prefs as $n=>$v) {
+        ${$n} = $v;
+        global ${$n};
+      }
+      unset($n,$v);
+    }
   }
 }
 

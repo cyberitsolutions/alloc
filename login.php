@@ -101,68 +101,7 @@ $TPL["ALLOC_SHOOER"] = ALLOC_SHOOER;
 
 
 include_template("login.tpl");
-exit;
 
-  function auth_validatelogin() {
-    global $new_pass, $login, $email, $username, $password, $current_user, $sess;
-
-    // provides access for loginform.inc.php
-    isset($username) and $this->auth["uname"] = $username;
-
-    // Sending a new password to user
-    if (isset($new_pass) && isset($username) && $username != "" && isset($email) && $email != "") {
-      $this->db->query(sprintf("SELECT * FROM %s WHERE username = '%s' AND emailAddress = '%s'", $this->database_table, db_esc($username), db_esc($email)));
-      if ($this->db->next_record()) {
-        $current_user = new person;
-        $current_user->read_db_record($this->db);
-
-        // generate new random password
-        $password = "";
-        $pwSource = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!?";
-        srand((float) microtime() * 1000000);
-        for ($i = 0; $i < 8; $i++) {
-          $password.= substr($pwSource, rand(0, strlen($pwSource)), 1);
-        }
-        $current_user->set_value('password', db_esc(crypt(trim($password), trim($password))));
-        $current_user->save();
-        $mail = mail($email, "New Alloc password request", "Your new temporary password: ".$password, "From: Alloc <alloc-admin@cyber.com.au>");
-        $error = "New password sent to: ".$email;
-        define("LOGIN_ERROR",$error);
-      } else {
-        $error = "Invalid username or email address.";
-        define("LOGIN_ERROR",$error);
-      }
-
-      // Login attempt
-    } else 
-
-
-if (isset($login) && isset($username) && $username != "" && isset($password) && $password != "") {
-      $q = sprintf("SELECT * FROM %s WHERE username = '%s'", $this->database_table, db_esc($username));
-      $this->db->query($q);
-      $this->db->next_record();
-      $salt = $this->db->f("password");
-      $q = sprintf("SELECT * FROM %s WHERE username = '%s' AND password = '%s'", $this->database_table, db_esc($username), db_esc(crypt(trim($password), $salt)));
-      $this->db->query($q);
-      if ($this->db->next_record()) {
-        if ($this->db->f("personActive")) {
-          $uid = $this->db->f("personID");
-          $this->auth["perm"] = $this->db->f("perms");
-          $current_user = new person;
-          $current_user->read_db_record($this->db);
-          $sess->register ("current_user");
-          $query = "UPDATE person SET lastLoginDate='".date("Y-m-d H:i:s")."' WHERE personID=".$this->db->f("personID");
-          $this->db->query($query);
-          return $uid;
-        } else {
-          $error = "Account deactivated. Please see an alloc admin.";
-          define("LOGIN_ERROR",$error);
-        }
-      } else {
-        $error = "Invalid username or password.";
-        define("LOGIN_ERROR",$error);
-      }
-    }
-  }
+page_close();
 
 ?>

@@ -4,7 +4,7 @@ class customize_alloc_home_item extends home_item {
     global $TPL, $user, $current_user, $font, $theme, $customize_save, $customizedFont, $customizedTheme;
     home_item::home_item("", "Preferences", "home", "customizeH.tpl", "narrow");
 
-    if (!is_object($current_user) || !is_object($user)) {
+    if (!is_object($current_user)) {
       return false;
     }
 
@@ -16,12 +16,9 @@ class customize_alloc_home_item extends home_item {
     }
 
     if ($customize_save) {
-      #$user->register ("customizedFont");
-      #$user->register ("customizedTheme");
       $current_user->prefs["customizedFont"] = $customizedFont;
       $current_user->prefs["customizedTheme"] = $customizedTheme;
     }
-
 
     $options = array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"Default", "1"=>5, "3"=>6, "4"=>7, "5"=>8, "6"=>9, "7"=>10);
     $TPL["customizeFontOptions"] = get_options_from_array($options, $customizedFont);
