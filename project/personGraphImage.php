@@ -1,6 +1,6 @@
 <?php
 include("alloc.inc");
-include("lib/task_graph.inc");
+include("lib/task_graph.inc.php");
 
 if ($projectID) {
   $project = new project;

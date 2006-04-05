@@ -1,6 +1,6 @@
 <?php
 // This file provides basically static template values that are used throughout the application
-  // Called by local.inc
+  // Called by local.inc.php
 global $auth;
 $TPL =array("url_alloc_index"=>$SCRIPT_PATH."index.php",
  "url_alloc_logout"=>$sess->url($SCRIPT_PATH."logout.php"),

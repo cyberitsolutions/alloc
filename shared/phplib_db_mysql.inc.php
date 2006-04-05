@@ -5,8 +5,6 @@
    * Copyright (c) 1998,1999 SH Online Dienst GmbH
    *                    Boris Erdmann, Kristian Koehntopp
    *
-   * $Id: db_mysql.inc,v 1.1.1.1 2004/12/15 19:37:00 alla Exp $
-   *
    */
   class DB_Sql {
 

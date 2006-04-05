@@ -5,8 +5,6 @@
    * Copyright (c) 1998,1999 SH Online Dienst GmbH
    *                    Boris Erdmann, Kristian Koehntopp
    *
-   * $Id: page.inc,v 1.1.1.1 2004/12/15 19:37:01 alla Exp $
-   *
    */
   function page_open($feature) {
 

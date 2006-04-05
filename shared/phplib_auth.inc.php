@@ -7,8 +7,6 @@
    * Copyright (c) 1999 Internet Images srl
    *                    Massimiliano Masserelli
    *
-   * $Id: auth.inc,v 1.1.1.1 2004/12/15 19:36:59 alla Exp $
-   *
    */
   class Auth {
   var $classname = "Auth";
