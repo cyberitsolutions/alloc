@@ -5,8 +5,7 @@ define("PERM_DELETE", 4);
 define("PERM_CREATE", 8);
 define("PERM_MONITOR_EVENTS", 16);
 define("PERM_READ_WRITE", PERM_READ + PERM_UPDATE + PERM_DELETE + PERM_CREATE);
-class db_entity
-{
+class db_entity {
   var $classname = "db_entity"; // Support phplib session variables
   var $persistent_slots = array("key_field", "data_fields");    // Support phplib session variables - only save key fields by default
   var $data_table = "";         // Set this to the name of the data base table

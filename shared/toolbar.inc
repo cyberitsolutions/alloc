@@ -35,8 +35,6 @@ class toolbar_item {
     return $url;
   }
 
-
-
   function get_label() {
     return $this->label;
   }
