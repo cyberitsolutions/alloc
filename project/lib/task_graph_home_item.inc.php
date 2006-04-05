@@ -9,9 +9,9 @@ class task_graph_home_item extends home_item {
 
 
   function show_task_calendar() {
-    global $TPL, $plot_weeks, $user, $tasksGraphPlotHome, $plot_weeks_back, $tasksGraphPlotHomeStart, $current_user;
+    global $TPL, $plot_weeks, $tasksGraphPlotHome, $plot_weeks_back, $tasksGraphPlotHomeStart, $current_user;
 
-    if (!is_object($current_user) || !is_object($user)) {
+    if (!is_object($current_user)) {
       return false;
     }
 
@@ -23,8 +23,9 @@ class task_graph_home_item extends home_item {
       $tasksGraphPlotHomeStart = $plot_weeks_back;
     }
 
-    $user->register ("tasksGraphPlotHome");
-    $user->register ("tasksGraphPlotHomeStart");
+    is_object($current_user) and $current_user->prefs["tasksGraphPlotHome"] = $tasksGraphPlotHome;
+    is_object($current_user) and $current_user->prefs["tasksGraphPlotHomeStart"] = $tasksGraphPlotHomeStart;
+
 
     $week_links = array("0", 1, 2, 3, 4, 8, 12, 30, 52);
 
