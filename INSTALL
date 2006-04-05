@@ -4,4 +4,12 @@ AllocPSA
 Installation Guide
 
 
+Unpack the alloc source code into a webroot.
+
+With a web browser hit
+
+alloc/installer.php
+
+
+
 TODO

@@ -1,15 +1,5 @@
 <?php
 
-# PHPLIB Stuff
-require(ALLOC_MOD_DIR."/shared/phplib_db_mysql.inc.php");  
-require(ALLOC_MOD_DIR."/shared/phplib_ct_sql.inc.php");    
-require(ALLOC_MOD_DIR."/shared/phplib_session.inc.php");   
-require(ALLOC_MOD_DIR."/shared/phplib_auth.inc.php");      
-require(ALLOC_MOD_DIR."/shared/phplib_perm.inc.php");       
-require(ALLOC_MOD_DIR."/shared/phplib_user.inc.php");    
-require(ALLOC_MOD_DIR."/shared/phplib_page.inc.php");
-
-
 eregi("^".ALLOC_MOD_DIR."/(.*)$", $SCRIPT_FILENAME, $match) && $script_filename_short = $match[1];
 eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
 
@@ -23,8 +13,9 @@ $SCRIPT_PATH = $SCRIPT_NAME;
 $script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $SCRIPT_NAME);
 
 
-include(ALLOC_MOD_DIR."/shared/alloc_phplib.inc.php");
-include(ALLOC_MOD_DIR."/shared/template.inc.php");
+include(ALLOC_MOD_DIR."/shared/db.inc.php");
+include(ALLOC_MOD_DIR."/shared/alloc_template.inc.php");
+include(ALLOC_MOD_DIR."/shared/alloc_session.inc.php");
 include(ALLOC_MOD_DIR."/shared/util.inc.php");
 include(ALLOC_MOD_DIR."/shared/home.inc.php");
 include(ALLOC_MOD_DIR."/shared/toolbar.inc.php");
@@ -46,14 +37,52 @@ while (list($module_name,) = each($modules)) {
   }
 }
 
-$module = $orig_module;
-if (defined("NO_AUTH") && NO_AUTH) {
-  page_open(array("sess"=>"alloc_Session"));
-} else {
-  page_open(array("sess"=>"alloc_Session", "auth"=>"alloc_Auth", "perm"=>"alloc_Perm", "user"=>"alloc_User"));
+$current_user = new person;
+
+class db_alloc {
+  function db_alloc() {
+    $this = db::get_db(ALLOC_DB_USER,ALLOC_DB_PASS,ALLOC_DB_HOST,ALLOC_DB_NAME);
+  }
 }
 
+
+function page_close() {
+  $sess = Session::GetSession();
+  $sess->Save();
+
+  global $current_user;
+  if (is_object($current_user) && $current_user->get_id()) {
+    if (is_array($current_user->prefs)) {
+      $arr = serialize($current_user->prefs);
+      $current_user->set_value("sessData",$arr);
+    }
+    $current_user->save();
+  }
+}
+
+
 include(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
+
+
+if (defined("NO_AUTH") && NO_AUTH) {
+
+
+} else {
+
+  // Check for existing session..
+  $sess = Session::GetSession();
+
+  if (!$sess->Started() && !defined("IN_LOGIN_RIGHT_NOW")) { 
+    header("Location: ". $TPL["url_alloc_login"]);
+    exit();
+  } else {
+    $current_user = new person;
+    $current_user->set_id($sess->Get("personID"));
+    $current_user->select();
+    $current_user->prefs = unserialize($current_user->get_value("sessData"));
+  }
+}
+
 include(ALLOC_MOD_DIR."/shared/history.inc.php");
 
 register_toolbar_items();

@@ -1,9 +1,8 @@
 <?php
 include("alloc.inc");
 
-$auth->logout();
+$sess->Destroy();
 $url = $TPL["url_alloc_index"];
-
 page_close();
 header("Location: $url");
 
