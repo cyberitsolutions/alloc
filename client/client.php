@@ -163,93 +163,110 @@ if (isset($commentID) && $clientComment_edit) {
 
 include_template("templates/clientM.tpl");
 
-  // only show contacts and comments if client exists
-function check_optional_client_exists() {
-  global $clientID;
-  return isset($clientID);
-}
+  function check_optional_client_exists() {
+    global $clientID;
+    return isset($clientID);
+  }
 
-  // show client details edit boxes if new client or edit button pressed
-function show_client_details_edit($template) {
-  global $TPL, $clientID, $client_edit;
+  function show_client_details_edit($template) {
+    global $TPL, $clientID, $client_edit;
 
-  $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
+    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
 
-  if (!isset($clientID) || isset($client_edit)) {
-    // if new client
-    if (!isset($clientID)) {
-      $TPL["clientDetails_buttons"] = "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;\">";
-      // new support project text box should be visible.
-      $TPL["createGeneralSupportProject"] = "<tr> <td colspan=\"2\"><b>Don't Create General Support Project</b></td>
-              <td><input type=\"checkbox\" name=\"dontCreateProject\" checked=\"yes\"/></td></tr>";
-	      
-      // else if just editing
+    if (!isset($clientID) || isset($client_edit)) {
+      // if new client
+      if (!isset($clientID)) {
+        $TPL["clientDetails_buttons"] = "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;\">";
+        // new support project text box should be visible.
+        $TPL["createGeneralSupportProject"] = "<tr> <td colspan=\"2\"><b>Don't Create General Support Project</b></td>
+                <td><input type=\"checkbox\" name=\"dontCreateProject\" checked=\"yes\"/></td></tr>";
+          
+        // else if just editing
+      } else {
+        $TPL["clientDetails_buttons"] =
+          "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">".
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".
+          "<input type=\"submit\" name=\"cancel\" value=\"&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;\">"."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Are you sure you want to delete this record?')\">";
+        // new support project check box should NOT be visible.
+        $TPL["createGeneralSupportProject"] = "";
+      
+      }
+      include_template($template);
+    }
+  }
+
+  function show_client_details($template) {
+    global $TPL, $client, $clientID, $client_edit;
+    if (isset($clientID) && !isset($client_edit)) {
+      // setup formatted address output
+
+      // postal address
+      $TPL["client_clientPostalAddress"] = $client->get_value('clientName')."<br>".format_address($client->get_value('clientStreetAddressOne'), $client->get_value('clientSuburbOne'), $client->get_value('clientStateOne'), $client->get_value('clientPostcodeOne'), $client->get_value('clientCountryOne'));
+      // street address
+      $TPL["client_clientStreetAddress"] = $client->get_value('clientName')."<br>".format_address($client->get_value('clientStreetAddressTwo'), $client->get_value('clientSuburbTwo'), $client->get_value('clientStateTwo'), $client->get_value('clientPostcodeTwo'), $client->get_value('clientCountryTwo'));
+      include_template($template);
+    }
+  }
+
+  function format_address($address, $suburb, $state, $postcode, $country) {
+    if ($address != "") {
+      $a = $address;
+      if ($suburb != "") {
+        $a.= "<br>".$suburb;
+      }
+      if ($state != "") {
+        $a.= "<br>".$state;
+        if ($postcode != "") {
+          $a.= ", ".$postcode;
+        }
+      }
+      if ($country != "") {
+        $a.= "<br>".$country;
+      }
     } else {
-      $TPL["clientDetails_buttons"] =
-        "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">".
-        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".
-        "<input type=\"submit\" name=\"cancel\" value=\"&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;\">"."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Are you sure you want to delete this record?')\">";
-      // new support project check box should NOT be visible.
-      $TPL["createGeneralSupportProject"] = "";
-		
+      $a = "(no address)";
     }
-    include_template($template);
+    return $a;
   }
-}
 
-  // show formated output (rather than editable boxes) if client now new and not edit
-function show_client_details($template) {
-  global $TPL, $client, $clientID, $client_edit;
-  if (isset($clientID) && !isset($client_edit)) {
-    // setup formatted address output
+  function show_client_contacts($template) {
+    global $TPL, $clientID;
 
-    // postal address
-    $TPL["client_clientPostalAddress"] = $client->get_value('clientName')."<br>".format_address($client->get_value('clientStreetAddressOne'), $client->get_value('clientSuburbOne'), $client->get_value('clientStateOne'), $client->get_value('clientPostcodeOne'), $client->get_value('clientCountryOne'));
-    // street address
-    $TPL["client_clientStreetAddress"] = $client->get_value('clientName')."<br>".format_address($client->get_value('clientStreetAddressTwo'), $client->get_value('clientSuburbTwo'), $client->get_value('clientStateTwo'), $client->get_value('clientPostcodeTwo'), $client->get_value('clientCountryTwo'));
-    include_template($template);
-  }
-}
+    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
 
-  // format address
-function format_address($address, $suburb, $state, $postcode, $country) {
-  if ($address != "") {
-    $a = $address;
-    if ($suburb != "") {
-      $a.= "<br>".$suburb;
-    }
-    if ($state != "") {
-      $a.= "<br>".$state;
-      if ($postcode != "") {
-        $a.= ", ".$postcode;
+    // get primary contact first
+    $client = new client;
+    $client->set_id($clientID);
+    $client->select();
+    if ($client->get_id('clientPrimaryContactID') != "NULL") {
+      $clientContact = new clientContact;
+      $clientContact->set_id($client->get_value('clientPrimaryContactID'));
+      $clientContact->select();
+      if ($clientContact->get_value('clientContactName') != "") {
+        $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+        $TPL["client_clientTitle"] = "Primary: ".$clientContact->get_value('clientContactName');
+        if ($TPL["client_clientContactEmail"]) {
+          $TPL["client_clientTitle"] .= "&nbsp;&nbsp;<a href=\"mailto:".$TPL["client_clientContactEmail"]."\">".$TPL["client_clientContactEmail"]."</a>";
+        }
+        $TPL["client_clientContactID"] = $clientContact->get_id();
+
+        include_template($template);
       }
     }
-    if ($country != "") {
-      $a.= "<br>".$country;
-    }
-  } else {
-    $a = "(no address)";
-  }
-  return $a;
-}
 
-  // show client contact information
-function show_client_contacts($template) {
-  global $TPL, $clientID;
+    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_makepc\" value=\"Make Primary Contact\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
 
-  $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
-
-  // get primary contact first
-  $client = new client;
-  $client->set_id($clientID);
-  $client->select();
-  if ($client->get_id('clientPrimaryContactID') != "NULL") {
-    $clientContact = new clientContact;
-    $clientContact->set_id($client->get_value('clientPrimaryContactID'));
-    $clientContact->select();
-    if ($clientContact->get_value('clientContactName') != "") {
+    // other contacts
+    $query = "SELECT * FROM clientContact";
+    $query.= sprintf(" WHERE clientID=%d AND clientContactID!=%d", $clientID, $client->get_value('clientPrimaryContactID'));
+    $query.= " ORDER BY clientContactName";
+    $db = new db_alloc;
+    $db->query($query);
+    while ($db->next_record()) {
+      $clientContact = new clientContact;
+      $clientContact->read_db_record($db);
       $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-      $TPL["client_clientTitle"] = "Primary: ".$clientContact->get_value('clientContactName');
+      $TPL["client_clientTitle"] = $clientContact->get_value('clientContactName');
       if ($TPL["client_clientContactEmail"]) {
         $TPL["client_clientTitle"] .= "&nbsp;&nbsp;<a href=\"mailto:".$TPL["client_clientContactEmail"]."\">".$TPL["client_clientContactEmail"]."</a>";
       }
@@ -257,175 +274,146 @@ function show_client_contacts($template) {
 
       include_template($template);
     }
-  }
 
-  $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_makepc\" value=\"Make Primary Contact\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
+    // place blank client contact form at the end with add button for adding new contacts
 
-  // other contacts
-  $query = "SELECT * FROM clientContact";
-  $query.= sprintf(" WHERE clientID=%d AND clientContactID!=%d", $clientID, $client->get_value('clientPrimaryContactID'));
-  $query.= " ORDER BY clientContactName";
-  $db = new db_alloc;
-  $db->query($query);
-  while ($db->next_record()) {
+    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_addpc\" value=\"Add as Primary Contact\">"."<input type=\"submit\" name=\"clientContact_add\" value=\"Add\">";
+
     $clientContact = new clientContact;
-    $clientContact->read_db_record($db);
     $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-    $TPL["client_clientTitle"] = $clientContact->get_value('clientContactName');
-    if ($TPL["client_clientContactEmail"]) {
-      $TPL["client_clientTitle"] .= "&nbsp;&nbsp;<a href=\"mailto:".$TPL["client_clientContactEmail"]."\">".$TPL["client_clientContactEmail"]."</a>";
-    }
-    $TPL["client_clientContactID"] = $clientContact->get_id();
-
+    $TPL["client_clientID"] = $clientID;
+    $TPL["client_clientTitle"] = "Add New Contact";
     include_template($template);
   }
 
-  // place blank client contact form at the end with add button for adding new contacts
+  function show_reminders($template) {
+    global $TPL, $clientID, $reminderID, $auth;
 
-  $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_addpc\" value=\"Add as Primary Contact\">"."<input type=\"submit\" name=\"clientContact_add\" value=\"Add\">";
-
-  $clientContact = new clientContact;
-  $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-  $TPL["client_clientID"] = $clientID;
-  $TPL["client_clientTitle"] = "Add New Contact";
-  include_template($template);
-}
-
-
-function show_reminders($template) {
-  global $TPL, $clientID, $reminderID, $auth;
-
-  // show all reminders for this project
-  $reminder = new reminder;
-  $db = new db_alloc;
-  $permissions = explode(",", $auth->auth["perm"]);
-  if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
-    $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d", $clientID);
-  } else {
-    $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d AND personID='%s'", $clientID, $auth->auth["uid"]);
-  }
-  $db->query($query);
-  while ($db->next_record()) {
-    $reminder->read_db_record($db);
-    $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
-    if ($reminder->get_value('reminderRecuringInterval') == "No") {
-      $TPL["reminder_reminderRecurence"] = "&nbsp;";
+    // show all reminders for this project
+    $reminder = new reminder;
+    $db = new db_alloc;
+    $permissions = explode(",", $auth->auth["perm"]);
+    if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
+      $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d", $clientID);
     } else {
-      $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
-        ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
+      $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d AND personID='%s'", $clientID, $auth->auth["uid"]);
     }
-    $person = new person;
-    $person->set_id($reminder->get_value('personID'));
-    $person->select();
-    $TPL["reminder_reminderRecipient"] = $person->get_value('username');
-    $TPL["returnToParent"] = "t";
+    $db->query($query);
+    while ($db->next_record()) {
+      $reminder->read_db_record($db);
+      $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
+      if ($reminder->get_value('reminderRecuringInterval') == "No") {
+        $TPL["reminder_reminderRecurence"] = "&nbsp;";
+      } else {
+        $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
+          ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
+      }
+      $person = new person;
+      $person->set_id($reminder->get_value('personID'));
+      $person->select();
+      $TPL["reminder_reminderRecipient"] = $person->get_value('username');
+      $TPL["returnToParent"] = "t";
 
+      include_template($template);
+    }
+  }
+
+  function show_projects() {
+
+    global $clientID;
+
+    if (!isset($clientID)) {
+      return;
+    }
+
+    $db_projects = new db_alloc;
+    $query = sprintf("SELECT * from project where clientID=%d", $clientID);
+    $db_projects->query($query);
+
+    while ($db_projects->next_record()) {
+
+      $project = new project;
+      $project->read_db_record($db_projects);
+      $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
+
+      include_template("templates/projectListR.tpl");
+
+    }
+  }
+
+  function show_attachments($template) {
+    global $TPL, $clientID;
+    $TPL["clientID"] = $clientID;
     include_template($template);
   }
-}
 
-function show_projects() {
+  function list_attachments($template) {
 
-  global $clientID;
+    global $TPL, $clientID;
 
-  if (!isset($clientID)) {
-    return;
+    if (is_dir($TPL["url_alloc_clientDocs_dir"].$clientID)) {
+      $handle = opendir($TPL["url_alloc_clientDocs_dir"].$clientID);
+
+      while (false !== ($file = readdir($handle))) {
+
+        if ($file != "." && $file != "..") {
+          $size = filesize($TPL["url_alloc_clientDocs_dir"].$clientID."/".$file);
+          $TPL["filename"] = "<a href=\"".$TPL["url_alloc_clientDoc"]."&clientID=".$clientID."&file=".urlencode($file)."\">".$file."</a>";
+          $TPL["size"] = sprintf("%dk",$size/1024);
+          include_template($template);
+        }
+      }
+    }
   }
 
-  $db_projects = new db_alloc;
-  $query = sprintf("SELECT * from project where clientID=%d", $clientID);
-  $db_projects->query($query);
+  function show_comments($template) {
+    global $TPL, $clientID, $commentID, $view, $clientCommentTemplateID, $current_user, $auth;
 
-  while ($db_projects->next_record()) {
+    
+    // setup add/edit comment section values
+    $TPL["client_clientID"] = $clientID;
+    $TPL["client_clientComment"] = "";
 
-    $project = new project;
-    $project->read_db_record($db_projects);
-    $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
+    // Init
+    $rows = array();
 
-    include_template("templates/projectListR.tpl");
 
-  }
-}
+    // Get list of comments
+    $query = sprintf("SELECT commentID, commentLinkID, commentModifiedTime AS date, comment, commentModifiedUser AS personID
+                        FROM comment 
+                       WHERE comment.commentType = 'client' AND comment.commentLinkID = %d
+                    ORDER BY comment.commentModifiedTime", $clientID);
+    $db = new db_alloc;
+    $db->query($query);
+    while ($db->next_record()) {
+      $comment = new comment;
+      $comment->read_db_record($db);
+      $comment->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+      $person = new person;
+      $person->set_id($db->f("personID"));
+      $person->select();
+      $person->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
-  /* attachments */
+      $TPL["comment_buttons"] = "";
+      if ($db->f("personID") == $auth->auth["uid"]) {
+        $TPL["comment_buttons"] = "<nobr><input type=\"submit\" name=\"clientComment_edit\" value=\"Edit\">
+                                         <input type=\"submit\" name=\"clientComment_delete\" value=\"Delete\"></nobr>";
+      }
 
-function show_attachments($template) {
-  global $TPL, $clientID;
-  $TPL["clientID"] = $clientID;
-  include_template($template);
-}
+      $TPL["client_username"] = $person->get_username(1);
 
-function list_attachments($template) {
+      // trim comment to 128 characters
+      if (strlen($comment->get_value("comment")) > 3000 && $view != "printer") {
+        $TPL["client_comment_trimmed"] = nl2br(sprintf("%s...", substr($comment->get_value("comment"), 0, 3000)));
+      } else {
+        $TPL["client_comment_trimmed"] = str_replace("\n", "<br>", htmlentities($comment->get_value("comment")));
+      }
 
-  global $TPL, $clientID;
-
-  if (is_dir($TPL["url_alloc_clientDocs_dir"].$clientID)) {
-    $handle = opendir($TPL["url_alloc_clientDocs_dir"].$clientID);
-
-    while (false !== ($file = readdir($handle))) {
-
-      if ($file != "." && $file != "..") {
-        $size = filesize($TPL["url_alloc_clientDocs_dir"].$clientID."/".$file);
-        $TPL["filename"] = "<a href=\"".$TPL["url_alloc_clientDoc"]."&clientID=".$clientID."&file=".urlencode($file)."\">".$file."</a>";
-        $TPL["size"] = sprintf("%dk",$size/1024);
+      if (!$commentID || $commentID != $comment->get_id()) {
         include_template($template);
       }
     }
   }
-}
-
-
-
-
-
-function show_comments($template) {
-  global $TPL, $clientID, $commentID, $view, $clientCommentTemplateID, $current_user, $auth;
-
-  
-  // setup add/edit comment section values
-  $TPL["client_clientID"] = $clientID;
-  $TPL["client_clientComment"] = "";
-
-  // Init
-  $rows = array();
-
-
-  // Get list of comments
-  $query = sprintf("SELECT commentID, commentLinkID, commentModifiedTime AS date, comment, commentModifiedUser AS personID
-                      FROM comment 
-                     WHERE comment.commentType = 'client' AND comment.commentLinkID = %d
-                  ORDER BY comment.commentModifiedTime", $clientID);
-  $db = new db_alloc;
-  $db->query($query);
-  while ($db->next_record()) {
-    $comment = new comment;
-    $comment->read_db_record($db);
-    $comment->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-    $person = new person;
-    $person->set_id($db->f("personID"));
-    $person->select();
-    $person->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-
-    $TPL["comment_buttons"] = "";
-    if ($db->f("personID") == $auth->auth["uid"]) {
-      $TPL["comment_buttons"] = "<nobr><input type=\"submit\" name=\"clientComment_edit\" value=\"Edit\">
-                                       <input type=\"submit\" name=\"clientComment_delete\" value=\"Delete\"></nobr>";
-    }
-
-    $TPL["client_username"] = $person->get_username(1);
-
-    // trim comment to 128 characters
-    if (strlen($comment->get_value("comment")) > 3000 && $view != "printer") {
-      $TPL["client_comment_trimmed"] = nl2br(sprintf("%s...", substr($comment->get_value("comment"), 0, 3000)));
-    } else {
-      $TPL["client_comment_trimmed"] = str_replace("\n", "<br>", htmlentities($comment->get_value("comment")));
-    }
-
-    if (!$commentID || $commentID != $comment->get_id()) {
-      include_template($template);
-    }
-  }
-}
 
 page_close();
 
