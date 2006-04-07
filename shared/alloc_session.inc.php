@@ -64,9 +64,7 @@ class Session {
     if ($this->Started() && $this->key) {
       $this->db->query("DELETE FROM sess WHERE sessID = %s",$this->key);
     }
-    if ($this->mode == "cookie") {
-      SetCookie("alloc_cookie",false,time()-3600,"/",$_SERVER["HTTP_HOST"]);
-    }
+    $this->DestroyCookies();
     $this->key = "";
   }
 
@@ -86,7 +84,7 @@ class Session {
   }
 
   // Use cookies
-  function UseCookies() {
+  function MakeCookie() {
     // Set a cookie.
     $this->mode = "cookie";
     $rtn = SetCookie("alloc_cookie",$this->key,0,"/",$_SERVER["HTTP_HOST"]);
@@ -97,6 +95,15 @@ class Session {
       $_COOKIE["alloc_cookie"] = $this->key;
     }
   }
+
+  // Destroy cookies
+  function DestroyCookie() {
+    if ($this->mode == "cookie") {
+      SetCookie("alloc_cookie",false,time()-3600,"/",$_SERVER["HTTP_HOST"]);
+    }
+    unset($_COOKIE["alloc_cookie"]);
+  }
+
 
   // Wrapper
   function GetUrl($url="") {

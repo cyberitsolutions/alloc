@@ -25,14 +25,17 @@ if ($_POST["login"]) {
       $sess->Put("perms" ,$row["perms"]);
       $sess->Put("personID" ,$row["personID"]);
 
-      if ($_POST["use_cookies"]) {
-        $sess->UseCookies();
-      } 
 
+      if ($_POST["use_cookies"]) {
+        $sess->MakeCookie();
+      } else {
+        $sess->DestroyCookie();
+      }
+#die("mode: ".$sess->mode);
       $url = $sess->GetUrl($TPL["url_alloc_home"]);
       $sess->Save();
-#echo $url;
-      header("Location:".$url);
+die($url);
+      header("Location: ".$url);
     }
   } 
   $error = "Username or Password incorrect.";
