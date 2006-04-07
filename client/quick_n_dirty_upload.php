@@ -15,7 +15,7 @@
 |																	|
 \*******************************************************************/
 define("NO_AUTH",true);
-include("alloc.inc");
+require_once("alloc.inc");
 
 
 

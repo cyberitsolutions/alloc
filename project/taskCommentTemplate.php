@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 // Create an object to hold a taskCommentTemplate
 $taskCommentTemplate = new taskCommentTemplate();

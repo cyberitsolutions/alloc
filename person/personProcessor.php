@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 check_entity_perm("person", PERM_PERSON_SEND_EMAIL);
 
 $email_to = "";

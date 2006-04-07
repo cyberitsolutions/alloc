@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 function showEventFilterList($template) {
   global $TPL, $current_user;

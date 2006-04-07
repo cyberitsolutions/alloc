@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 $sess->Destroy();
 $url = $TPL["url_alloc_index"];

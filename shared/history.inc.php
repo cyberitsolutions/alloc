@@ -1,5 +1,5 @@
 <?php
-// include("alloc.inc"); <- nope
+// require_once("alloc.inc"); <- nope
   class history extends db_entity {
   var $data_table = "history";
   var $total_to_display = 30;

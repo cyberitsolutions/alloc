@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 check_entity_perm("permission", PERM_READ_WRITE);
 

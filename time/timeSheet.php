@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 if (!$current_user->is_employee()) {
   die("You do not have permission to access time sheets");

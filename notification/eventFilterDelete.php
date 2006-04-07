@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 $eventFilter = new eventFilter();
 $eventFilter->set_id($eventFilterID);
