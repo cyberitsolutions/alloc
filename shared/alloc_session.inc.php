@@ -23,7 +23,8 @@ class Session {
     $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
     $this->session_life  = (60*60*24); 
-    $this->session_data = $this->UnEncode($this->GetSessionData());
+    $this->session_data  = $this->UnEncode($this->GetSessionData());
+    $this->mode          = $this->Get("session_mode"); 
   }
 
   // Singleton 
@@ -64,7 +65,7 @@ class Session {
     if ($this->Started() && $this->key) {
       $this->db->query("DELETE FROM sess WHERE sessID = %s",$this->key);
     }
-    $this->DestroyCookies();
+    $this->DestroyCookie();
     $this->key = "";
   }
 
@@ -86,7 +87,6 @@ class Session {
   // Use cookies
   function MakeCookie() {
     // Set a cookie.
-    $this->mode = "cookie";
     $rtn = SetCookie("alloc_cookie",$this->key,0,"/",$_SERVER["HTTP_HOST"]);
     if (!$rtn) {
       echo "Unable to set cookie";
@@ -94,7 +94,7 @@ class Session {
     } else if (!isset($_COOKIE["alloc_cookie"])) {
       $_COOKIE["alloc_cookie"] = $this->key;
     }
-  }
+  } 
 
   // Destroy cookies
   function DestroyCookie() {
@@ -114,11 +114,28 @@ class Session {
   function url($url="") {
    $url = ereg_replace("[&?]+$", "", $url);
 
-    if ($this->mode != "cookie") {
-      $url.= (strpos($url, "?") != false ? "&" : "?")."sess=".$this->key;
+    if ($this->mode == "get") {
+      $this->key and $extra = "sess=".$this->key;
+      $url.= (strpos($url, "?") != false ? "&" : "?").$extra;
+
     }
+// else if ($this->mode == "cookie" && !strpos($url, "?")) {
+//      $url.= "?";
+//    }
     return $url;
   }
+
+
+  function UseGet() {
+    $this->mode = "get";
+    $this->Put("session_mode",$this->mode);
+  }
+  function UseCookie() {
+    $this->mode = "cookie";
+    $this->MakeCookie();
+    $this->Put("session_mode",$this->mode);
+  }
+
 
   // Add a session ID to a URL, unless we have been called from the automatic email cron job
   function email_url($url) {
