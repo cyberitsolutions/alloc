@@ -21,11 +21,11 @@ class comment extends db_entity {
 
 
   function send_email($recipient, $subject, $body) {
-    global $auth;
+    global $current_user;
 
     // New email object wrapper takes care of logging etc.
     $email = new alloc_email;
-    $email->set_from($auth->auth["uid"]);
+    $email->set_from($current_user->get_id());
 
     // REMOVE ME!!
     $email->ignore_no_email_urls = true;

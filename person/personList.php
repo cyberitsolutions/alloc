@@ -2,7 +2,7 @@
 include("alloc.inc");
 
 function show_people($template_name) {
-  global $db, $current_user, $auth, $TPL, $skill, $skill_class, $expertise;
+  global $db, $current_user, $TPL, $skill, $skill_class, $expertise;
 
   // Get averages for hours worked over the past fortnight and year
   $t = new timeSheetItem;

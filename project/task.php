@@ -274,7 +274,7 @@ if ($view == "detail" || !$task->get_id()) {
 
 
 function show_reminders($template) {
-  global $TPL, $taskID, $reminderID, $auth;
+  global $TPL, $taskID, $reminderID;
 
   // show all reminders for this project
   $reminder = new reminder;

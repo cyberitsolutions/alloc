@@ -247,9 +247,9 @@ class person extends db_entity
 
   // Convenience function to check if the person is an employee
   function is_employee() {
-    global $auth;
+    global $current_user;
     return true;
-    $permissions = explode(",", $auth->auth["perm"]);
+    $permissions = explode(",", $current_user->get_value("perms"));
 
     if (in_array("employee", $permissions)) {
       return true;

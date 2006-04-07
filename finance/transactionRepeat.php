@@ -105,7 +105,7 @@ if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
   $db->query("SELECT * FROM tf ORDER BY tfName");
 } else if (have_entity_perm("tf", PERM_READ, $current_user, true)) {
   // Person can only read TF records that they own
-  $db->query("select  * from tf,tfPerson where tfPerson.personID=".$auth->auth["uid"]." and tf.tfID=tfPerson.tfID order by tfName");
+  $db->query("select  * from tf,tfPerson where tfPerson.personID=".$current_user->get_id()." and tf.tfID=tfPerson.tfID order by tfName");
 } else {
   die("No permissions to generate TF list");
 }

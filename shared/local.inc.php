@@ -37,6 +37,7 @@ while (list($module_name,) = each($modules)) {
   }
 }
 
+global $current_user;
 $current_user = new person;
 
 class db_alloc {
@@ -87,6 +88,7 @@ if (defined("NO_AUTH") && NO_AUTH) {
       }
       unset($n,$v);
     }
+    if ($sess->mode=="cookie") session_start();
   }
 }
 

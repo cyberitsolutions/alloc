@@ -12,7 +12,7 @@ function sort_comments_callback_func($a, $b) {
 
 // show table of comments
 function show_taskCommentsR($template) {
-  global $TPL, $taskID, $commentID, $view, $taskCommentTemplateID, $current_user, $auth;
+  global $TPL, $taskID, $commentID, $view, $taskCommentTemplateID, $current_user;
   
   // setup add/edit comment section values
   $TPL["task_taskID"] = $taskID;
@@ -63,7 +63,7 @@ function show_taskCommentsR($template) {
     if ($v["timeSheetID"]) {
       $TPL["ts_label"] = "(Time Sheet Comment)";
 
-    } else if ($v["personID"] == $auth->auth["uid"]) {
+    } else if ($v["personID"] == $current_user->get_id()) {
       $TPL["comment_buttons"] = "<nobr><input type=\"submit\" name=\"taskComment_edit\" value=\"Edit\">
                                        <input type=\"submit\" name=\"taskComment_delete\" value=\"Delete\"></nobr>";
     }

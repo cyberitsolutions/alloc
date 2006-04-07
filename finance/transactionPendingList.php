@@ -4,7 +4,7 @@ include("alloc.inc");
 $typeOptions = array("salary", "commission", "timesheet", "adjustment", "insurance");
 $TPL["typeOptions"] = get_options_from_array($typeOptions, $type, false);
 
-$permissions = explode(",", $auth->auth["perm"]);
+$permissions = explode(",", $current_user->get_value("perms"));
 if (!in_array("admin", $permissions) && !in_array("manage", $permissions)) {
   $tfID = $current_user->get_id();
   $transactionModifiedUser = $current_user->get_id();

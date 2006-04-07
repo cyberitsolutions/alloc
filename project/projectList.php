@@ -2,7 +2,7 @@
 include("alloc.inc");
 
 function show_project($template_name) {
-  global $current_user, $auth, $TPL, $personID, $projectName, $projectStatus, $projectType;
+  global $current_user, $TPL, $personID, $projectName, $projectStatus, $projectType;
 
   // Construct query based on any filter conditions
   $from = "project LEFT JOIN client ON project.clientID = client.clientID";
@@ -71,7 +71,7 @@ function show_filter($template_name) {
 
   // Set default filter parameters
 if (!isset($personID)) {
-  $personID = $auth->auth["uid"];
+  $personID = $current_user->get_id();
 }
 if (!isset($projectStatus)) {
   $projectStatus = "Current";

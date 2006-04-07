@@ -14,7 +14,7 @@ $item->read_db_record($db);
 $item->set_tpl_values();
 
   // new crap
-$permissions = explode(",", $auth->auth["perm"]);
+$permissions = explode(",", $current_user->get_value("perms"));
 if (in_array("admin", $permissions) || in_array("manager", $permissions)) {
   $users = array();
   $_db = new db_alloc;
@@ -24,7 +24,7 @@ if (in_array("admin", $permissions) || in_array("manager", $permissions)) {
     $person->read_db_record($_db);
     $users[$person->get_id()] = $person->get_value('username');
   }
-  $TPL["userSelect"] = "<select name=\"userID\">".get_options_from_array($users, $auth->auth["uid"], true)
+  $TPL["userSelect"] = "<select name=\"userID\">".get_options_from_array($users, $current_user->get_id(), true)
     ."</select><br>\n";
 } else {
   $TPL["userSelect"] = "";
@@ -56,7 +56,7 @@ if ($borrowItem) {
 
     // if admin/manager then check to see if an alternate user was selected
     if (isset($userID) && $userID != "" && (in_array("admin", $permissions) || in_array("manage", $permissions))) {
-      if ($userID != $auth->auth["uid"]) {
+      if ($userID != $current_user->get_id()) {
         $person = new person;
         $person->set_id($userID);
         $person->select();
@@ -66,7 +66,7 @@ if ($borrowItem) {
           $subject = "Item Loan";
 
           $person = new person;
-          $person->set_id($auth->auth["uid"]);
+          $person->set_id($current_user->get_id());
           $person->select();
 
           $message.= "admin/manager: \"".$person->get_value("username")."\" "."has borrowed item: \"".$item->get_value("itemName")."\" for you\n";
@@ -76,13 +76,13 @@ if ($borrowItem) {
           } else {
             $from = "From: Alloc Loans <alloc-admin@cyber.com.au>";
           }
-          // email userID saying that admin/manager: $auth->auth["uid"] has borrowed item for them
+          // email userID saying that admin/manager: $current_user->get_id() has borrowed item for them
           mail($to, $subject, $message, $from);
         }
       }
       $loan->set_value("personID", $userID);
     } else {
-      $loan->set_value("personID", $auth->auth["uid"]);
+      $loan->set_value("personID", $current_user->get_id());
     }
 
     $loan->set_value("dateBorrowed", $today);
@@ -108,7 +108,7 @@ if ($returnItem) {
   $loan->set_value("dateReturned", $today);
 
   // check to see if admin/manager returning someone elses item, and sent email
-  if ($loan->get_value("personID") != $auth->auth["uid"]) {
+  if ($loan->get_value("personID") != $current_user->get_id()) {
     if (in_array("admin", $permissions) || in_array("manager", $permissions)) {
       $person = new person;
       $person->set_id($loan->get_value("personID"));
@@ -119,7 +119,7 @@ if ($returnItem) {
         $subject = "Item Loan";
 
         $person = new person;
-        $person->set_id($auth->auth["uid"]);
+        $person->set_id($current_user->get_id());
         $person->select();
 
         $message.= "admin/manager: \"".$person->get_value("username")."\" "."has returned item: \"".$item->get_value("itemName")."\" for you\n";
@@ -129,12 +129,12 @@ if ($returnItem) {
         } else {
           $from = "From: Alloc Loans <alloc-admin@cyber.com.au>";
         }
-        // email userID saying that admin/manager: $auth->auth["uid"] has returned item for them
+        // email userID saying that admin/manager: $current_user->get_id() has returned item for them
         mail($to, $subject, $message, $from);
       }
       $loan->save();
     }
-    // if personID != $auth->auth["uid"] and not an admin/manager then shouldnt be able to return
+    // if personID != $current_user->get_id() and not an admin/manager then shouldnt be able to return
   } else {
     $loan->save();
   }

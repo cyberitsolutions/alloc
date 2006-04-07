@@ -326,17 +326,17 @@ function show_comments($template) {
 
 
 function show_reminders($template) {
-  global $TPL, $projectID, $reminderID, $auth;
+  global $TPL, $projectID, $reminderID, $current_user;
 
   // show all reminders for this project
   $reminder = new reminder;
   $db = new db_alloc;
-  $permissions = explode(",", $auth->auth["perm"]);
+  $permissions = explode(",", $current_user->get_value("perms"));
 
   if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
     $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d", $projectID);
   } else {
-    $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d AND personID='%s'", $projectID, $auth->auth["uid"]);
+    $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d AND personID='%s'", $projectID, $current_user->get_id());
   }
 
   $db->query($query);
@@ -402,7 +402,7 @@ if (isset($save)) {
   }
   // Automaticall created phases in projects
   if ($new_project && $project->get_value("projectType") == "project") {
-    $creatorID = $auth->auth["uid"];
+    $creatorID = $current_user->get_id();
     $dateCreated = date("Y-m-d H:i:s");
     $taskNames = array(1=>"Phase 1: Discussion & Legal", 2=>"Phase 2: Planning & Documentation", 3=>"Phase 3: Development", 4=>"Phase 4: Testing", 5=>"Phase 5: Handover & Deployment");
     $phasePercentageTimes = array(1=>0.10, 2=>0.16, 3=>0.32, 4=>0.32, 5=>0.10);
@@ -489,7 +489,7 @@ if (isset($projectComment_save) || isset($projectComment_update)) {
   $comment->set_value('commentType', 'project');
   $comment->set_value('commentLinkID', $projectID);
   $comment->set_modified_time();
-  $comment->set_value('commentModifiedUser', $auth->auth["uid"]);
+  $comment->set_value('commentModifiedUser', $current_user->get_id());
 
   if (isset($projectComment_update)) {
     $comment->set_id($projectComment_id);

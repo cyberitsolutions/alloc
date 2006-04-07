@@ -119,6 +119,13 @@ if ($cancel) {
     $TPL["message"][] = "Unable to delete Expense Form";
   }
 
+} else if ($pend) {
+  $expenseForm->save();
+  $expenseForm->set_status("pending");
+  page_close();
+  header("Location: ".$TPL["url_alloc_expOneOff"]."&expenseFormID=".$expenseForm->get_id());
+  exit();
+
 } else if ($approve) {
   $expenseForm->save();
   $expenseForm->set_status("approved");
@@ -191,6 +198,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"unfinalise\" value=\"&lt;- Edit\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save\">";
+  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"pend\" value=\"Pending\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"approve\" value=\"Approve\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"reject\" value=\"Reject\">";
   $TPL["expenseFormButtons"].= "&nbsp;<a href=\"".$TPL["url_alloc_expenseFormList"]."\">Return To Pending Expense Forms</a>";
@@ -264,9 +272,9 @@ function show_all_exp($template) {
 }
 
 function check_editable() {
-  global $auth, $db, $expenseForm, $allow_edit, $current_user;
+  global $db, $expenseForm, $allow_edit, $current_user;
 
-  $permissions = explode(",", $auth->auth["perm"]);
+  $permissions = explode(",", $current_user->get_value("perms"));
 
   if (is_object($expenseForm) && !$expenseForm->get_id()) { // New Expense Form
     $allow_edit = true;

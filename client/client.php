@@ -34,7 +34,7 @@ if (isset($save)) {
 
     //now, add current user as a projectperson
     $projectperson = new projectperson;
-    $projectperson->set_value("personID", $auth->auth['uid']);
+    $projectperson->set_value("personID", $current_user->get_id());
     $projectperson->set_value("projectID", $project->get_id());
     $projectperson->set_value("emailEmptyTaskList", true);
     $projectperson->set_value_role("isManager");
@@ -129,7 +129,7 @@ if (isset($clientComment_save) || isset($clientComment_update)) {
   $comment->set_value('commentType', 'client');
   $comment->set_value('commentLinkID', $clientID);
   $comment->set_modified_time();
-  $comment->set_value('commentModifiedUser', $auth->auth["uid"]);
+  $comment->set_value('commentModifiedUser', $current_user->get_id());
 
   if (isset($clientComment_update)) {
     $comment->set_id($clientComment_id);
@@ -287,16 +287,16 @@ include_template("templates/clientM.tpl");
   }
 
   function show_reminders($template) {
-    global $TPL, $clientID, $reminderID, $auth;
+    global $TPL, $clientID, $reminderID, $current_user;
 
     // show all reminders for this project
     $reminder = new reminder;
     $db = new db_alloc;
-    $permissions = explode(",", $auth->auth["perm"]);
+    $permissions = explode(",", $current_user->get_value("perms"));
     if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
       $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d", $clientID);
     } else {
-      $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d AND personID='%s'", $clientID, $auth->auth["uid"]);
+      $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d AND personID='%s'", $clientID, $current_user->get_id());
     }
     $db->query($query);
     while ($db->next_record()) {
@@ -367,7 +367,7 @@ include_template("templates/clientM.tpl");
   }
 
   function show_comments($template) {
-    global $TPL, $clientID, $commentID, $view, $clientCommentTemplateID, $current_user, $auth;
+    global $TPL, $clientID, $commentID, $view, $clientCommentTemplateID, $current_user;
 
     
     // setup add/edit comment section values
@@ -395,7 +395,7 @@ include_template("templates/clientM.tpl");
       $person->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
       $TPL["comment_buttons"] = "";
-      if ($db->f("personID") == $auth->auth["uid"]) {
+      if ($db->f("personID") == $current_user->get_id()) {
         $TPL["comment_buttons"] = "<nobr><input type=\"submit\" name=\"clientComment_edit\" value=\"Edit\">
                                          <input type=\"submit\" name=\"clientComment_delete\" value=\"Delete\"></nobr>";
       }
