@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 $client = new client;
 if (isset($save)) {

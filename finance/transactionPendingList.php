@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 $typeOptions = array("salary", "commission", "timesheet", "adjustment", "insurance");
 $TPL["typeOptions"] = get_options_from_array($typeOptions, $type, false);

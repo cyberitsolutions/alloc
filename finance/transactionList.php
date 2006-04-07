@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 global $sortBy, $month, $year, $tfID, $status, $transactionType;
 $current_user->check_employee();

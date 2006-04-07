@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 global $SCRIPT_PATH, $SERVER_NAME;
 

@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 $current_user->check_employee();
 
 global $current_user, $TPL, $db, $save, $saveAndNew, $saveGoTf;

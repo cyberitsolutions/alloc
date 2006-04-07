@@ -2,7 +2,7 @@
 define("NO_AUTH",true);
 define("SENDMAIL", true);         // shoot out emails 
 
-include("alloc.inc");
+require_once("alloc.inc");
 
 
 if (date(D) == "Sat" || date(D) == "Sun") {

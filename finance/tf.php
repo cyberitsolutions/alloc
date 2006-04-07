@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 function show_person_list($template) {
   global $db, $TPL, $tf;

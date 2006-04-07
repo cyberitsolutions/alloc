@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 include("lib/task_graph.inc.php");
 
 if ($projectID) {

@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 $options = array(array("url"=>"tfList",
                        "text"=>"TF List",

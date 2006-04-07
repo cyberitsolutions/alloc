@@ -1,6 +1,6 @@
 <?php
 
-include("alloc.inc");
+require_once("alloc.inc");
 
 echo "<style>body {font-size:10px; font-family:Arial,fixed;}</style>";
 

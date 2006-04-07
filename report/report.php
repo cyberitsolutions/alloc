@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 if (!has_report_perm()) {
   die("you don't have permission to generate reports.");

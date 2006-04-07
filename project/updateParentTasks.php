@@ -1,6 +1,6 @@
 <?php
 
-include("alloc.inc");
+require_once("alloc.inc");
 
 
 if ($projectID) {

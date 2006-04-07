@@ -4,7 +4,7 @@ if ($_GET["web"]) {
 } else {
   define("NO_AUTH",true);
 }
-include("alloc.inc");
+require_once("alloc.inc");
 
 $db = new db_alloc;
 $db_sub = new db_alloc;

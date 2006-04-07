@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 function show_days($template_name) {
   global $date_to_view, $TPL;

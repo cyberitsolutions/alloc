@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 include("lib/task_graph.inc.php");
 
 global $current_user, $show_weeks, $for_home_item, $projectID;

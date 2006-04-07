@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 function show_home_items($width) {
   global $home_items, $current_home_item, $TPL;

@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 
 function show_people($template_name) {
   global $db, $current_user, $TPL, $skill, $skill_class, $expertise;

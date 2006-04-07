@@ -1,6 +1,6 @@
 <?php
 // initialise the request
-include("alloc.inc");
+require_once("alloc.inc");
 
   // create an object to hold an announcement
 $announcement = new announcement;

@@ -1,5 +1,5 @@
 <?php
-include("alloc.inc");
+require_once("alloc.inc");
 $elements = array(12, 25, 60, 120);
 $element_titles = array("10p2d", "20p5d", "50p10d", "100p20d");
 $complexities = array(10, 25, 50);

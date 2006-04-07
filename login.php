@@ -1,7 +1,7 @@
 <?php
 
 define("IN_LOGIN_RIGHT_NOW",true);
-include("alloc.inc");
+require_once("alloc.inc");
 
 // Log the user in
 if ($_POST["login"]) {
