@@ -10,6 +10,7 @@
       table.login td.link     { color:#888888; text-align:right; font-size:10px; font-weight:bold;}
       table.login td.message  { color:#333333; border-top:0px solid #c0c0c0; font-size:12px; font-weight:bold;}
       table.login td.right    { color:333333; text-align:right;  font-weight:bold; font-size:12px; }
+      table.login td.left     { color:333333; text-align:left;   font-size:12px; }
       table.login td.center   { color:#888888; text-align:center; font-weight:bold; font-size:10px; }
       table.login td.header   { color:#38629b; text-align:left;   font-weight:bold; font-size:18px; border-bottom:2px solid #e0e0e0; padding-left:10px;}
       table.outer             { border:3px solid #ffffff; }
@@ -64,7 +65,7 @@
                 </tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr>
-                  <td></td>
+                  <td class="left">{use_cookies}</td>
                   <td class="right">{login_or_send_pass_button}</td>
                 </tr>
                 <tr>

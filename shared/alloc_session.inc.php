@@ -19,7 +19,7 @@ class Session {
 
   // Constructor
   function Session() {
-    $this->key           = $_GET["sess"];
+    $this->key           = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"];
     $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
     $this->session_life  = (60*60*24); 
@@ -64,6 +64,9 @@ class Session {
     if ($this->Started() && $this->key) {
       $this->db->query("DELETE FROM sess WHERE sessID = %s",$this->key);
     }
+    if ($this->mode == "cookie") {
+      SetCookie("alloc_cookie",false,time()-3600,"/",$_SERVER["HTTP_HOST"]);
+    }
     $this->key = "";
   }
 
@@ -83,9 +86,16 @@ class Session {
   }
 
   // Use cookies
-  function UseCookies($domain="") {
+  function UseCookies() {
     // Set a cookie.
     $this->mode = "cookie";
+    $rtn = SetCookie("alloc_cookie",$this->key,0,"/",$_SERVER["HTTP_HOST"]);
+    if (!$rtn) {
+      echo "Unable to set cookie";
+      $this->mode = "get";
+    } else if (!isset($_COOKIE["alloc_cookie"])) {
+      $_COOKIE["alloc_cookie"] = $this->key;
+    }
   }
 
   // Wrapper
@@ -108,7 +118,7 @@ class Session {
 
     // This is a bit of a hack.  When we are sending emails we don't want to put session ID's on the URL.
     // However, we have a session set when sending email, but no authentication has occurred
-    // So if we don't have an $auth object we add a session ID
+    // So if we don't have an $current_user object we add a session ID
     $sess = Session::GetSession();
 
     global  $SERVER_NAME;

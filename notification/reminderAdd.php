@@ -25,8 +25,8 @@ case 2:
   // Which project,task,client. (skip for general)
 
   // get personID
-  $personID = $auth->auth["uid"];
-  $permissions = explode(",", $auth->auth["perm"]);
+  $personID = $current_user->get_id();
+  $permissions = explode(",", $current_user->get_value("perms"));
   $parent_names = array();
 
   $db = new db_alloc;
@@ -196,7 +196,7 @@ case 4:
       $reminder->set_value('reminderType', $parentType);
       $reminder->set_value('reminderLinkID', $parentID);
       $reminder->set_value('personID', $recipient_keys[$i]);
-      $reminder->set_value('reminderModifiedUser', $auth->auth["uid"]);
+      $reminder->set_value('reminderModifiedUser', $current_user->get_id());
       $reminder->set_modified_time();
 
       $reminder->set_value('reminderTime', date("Y-m-d H:i:s", mktime($reminder_hour, $reminder_minute, 0, $reminder_month, $reminder_day, $reminder_year)));

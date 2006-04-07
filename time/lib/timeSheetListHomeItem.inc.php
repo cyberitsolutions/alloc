@@ -1,17 +1,17 @@
 <?php
 class timeSheetListHomeItem extends home_item {
   function timeSheetListHomeItem() {
-    global $auth, $TPL;
+    global $current_user, $TPL;
     home_item::home_item("time_list", "Time Sheets", "time", "timeSheetListH.tpl", "narrow");
 
     // Get averages for hours worked over the past fortnight and year
     $t = new timeSheetItem;
-    list($hours_sum,$dollars_sum) = $t->get_averages(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y"))),$auth->auth["uid"]);
-    list($hours_avg,$dollars_avg) = $t->get_fortnightly_average($auth->auth["uid"]);
-    $TPL["hours_sum"] = sprintf("%d",$hours_sum[$auth->auth["uid"]]);
-    $TPL["hours_avg"] = sprintf("%d",$hours_avg[$auth->auth["uid"]]);
-    $TPL["dollars_sum"] = sprintf("%d",$dollars_sum[$auth->auth["uid"]]);
-    $TPL["dollars_avg"] = sprintf("%d",$dollars_avg[$auth->auth["uid"]]);
+    list($hours_sum,$dollars_sum) = $t->get_averages(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y"))),$current_user->get_id());
+    list($hours_avg,$dollars_avg) = $t->get_fortnightly_average($current_user->get_id());
+    $TPL["hours_sum"] = sprintf("%d",$hours_sum[$current_user->get_id()]);
+    $TPL["hours_avg"] = sprintf("%d",$hours_avg[$current_user->get_id()]);
+    $TPL["dollars_sum"] = sprintf("%d",$dollars_sum[$current_user->get_id()]);
+    $TPL["dollars_avg"] = sprintf("%d",$dollars_avg[$current_user->get_id()]);
   }
 
   function show_time_sheets($template_name) {

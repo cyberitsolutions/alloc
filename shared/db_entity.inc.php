@@ -40,8 +40,8 @@ class db_entity {
 
   // Quick and dirty - use with caution.
   function is_god() {
-    global $auth;
-    $perms = explode(",", $auth->auth["perm"]);
+    global $current_user;
+    $perms = explode(",", $current_user->get_value("perms"));
     if (in_array("god", $perms)) {
       return true;
     } else {
@@ -166,10 +166,10 @@ class db_entity {
 
   // Insert a record in to the database
   function insert() {
-    global $auth;
+    global $current_user;
     $this->check_perm(PERM_CREATE);
     if (isset($this->data_fields[$this->data_table."ModifiedUser"])) {
-      $this->set_value($this->data_table."ModifiedUser", $auth->auth["uid"]);
+      $this->set_value($this->data_table."ModifiedUser", $current_user->get_id());
     }
     $query = "INSERT INTO $this->data_table (";
     $query.= $this->get_insert_fields($this->data_fields);

@@ -10,7 +10,7 @@ include_template("templates/loanAndReturnM.tpl");
 function show_items($template_name) {
 
 
-  global $TPL, $db, $db2, $current_user, $auth;
+  global $TPL, $db, $db2, $current_user;
 
   $today = date("Y")."-".date("m")."-".date("d");
 

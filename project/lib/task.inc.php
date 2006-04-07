@@ -18,7 +18,7 @@ class task extends db_entity {
 
   // Constructor - set creatorID to current user ID
   function task() {
-    global $auth;
+    global $current_user;
 
       $this->db_entity();       // Call constructor of parent class
       $this->key_field = new db_text_field("taskID");
@@ -43,8 +43,8 @@ class task extends db_entity {
                                  
       );
 
-    if (isset($auth)) {
-      $this->set_value("creatorID", $auth->auth["uid"]);
+    if (isset($current_user)) {
+      $this->set_value("creatorID", $current_user->get_id());
     }
 
     $this->permissions[PERM_PROJECT_READ_TASK_DETAIL] = "Read details";
@@ -293,7 +293,7 @@ class task extends db_entity {
 
   // Set template values to provide options for edit selects
   function set_option_tpl_values() {
-    global $TPL, $timeSheetID, $auth, $current_user, $isMessage;
+    global $TPL, $timeSheetID, $current_user, $isMessage;
 
     $projectID = $this->get_value("projectID");
     $db = new db_alloc;
@@ -322,7 +322,7 @@ class task extends db_entity {
     } else if ($this->get_value("personID")) {
       $owner = $this->get_value("personID");
     } else {
-      $owner = $auth->auth["uid"];
+      $owner = $current_user->get_id();
     }
 
     $TPL["personOptions"] = get_option("None", "0", $owner == 0)."\n";
@@ -358,8 +358,8 @@ class task extends db_entity {
     #$TPL["task_createdBy"] and $creator_extra = " (".$TPL["task_createdBy"].")";
     #$TPL["person_username"] and $person_extra = " (".$TPL["person_username"].")";
     #$emailOptions[] = "Email Sending Options";
-    #$TPL["task_createdBy_personID"] != $auth->auth["uid"] and $emailOptions["creator"] = "Email Task Creator".$creator_extra;
-    #$TPL["person_username_personID"] != $auth->auth["uid"] and $emailOptions["assignee"] = "Email Task Assignee".$person_extra;
+    #$TPL["task_createdBy_personID"] != $current_user->get_id() and $emailOptions["creator"] = "Email Task Creator".$creator_extra;
+    #$TPL["person_username_personID"] != $current_user->get_id() and $emailOptions["assignee"] = "Email Task Assignee".$person_extra;
     #$emailOptions["isManager"] = "Email Project Managers";
     #$emailOptions["canEditTasks"] = "Email Project Engineers";
     #$emailOptions["all"] = "Email Project Managers & Engineers";
@@ -463,7 +463,7 @@ class task extends db_entity {
 
 
   function send_emails($selected_option, $object, $extra="") {
-    global $auth;
+    global $current_user;
     $recipients = $this->get_email_recipients($selected_option);
 
     $extra or $extra = "Task";
@@ -481,7 +481,7 @@ class task extends db_entity {
     }
 
     foreach ($recipients as $recipient) {
-      if ($auth->auth["uid"] != $recipient["personID"] && $object->send_email($recipient, $subject, $body)) {
+      if ($current_user->get_id() != $recipient["personID"] && $object->send_email($recipient, $subject, $body)) {
         $successful_recipients.= $commar.$recipient["fullName"];
         $commar = ", ";
       }
@@ -490,11 +490,11 @@ class task extends db_entity {
   }
 
   function send_email($recipient, $subject, $body) {
-    global $auth;
+    global $current_user;
 
     // New email object wrapper takes care of logging etc.
     $email = new alloc_email;
-    $email->set_from($auth->auth["uid"]);
+    $email->set_from($current_user->get_id());
 
     // REMOVE ME!!
     $email->ignore_no_email_urls = true;

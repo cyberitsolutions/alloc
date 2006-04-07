@@ -59,7 +59,7 @@ if ($remove_items) {
 }
 
 //so that the user can edit the item later
-$TPL["personID"] = $auth->auth["uid"]; 
+$TPL["personID"] = $current_user->get_id(); 
 
 // item types
 $TPL["itemTypes"] = get_options_from_array(array("Book", "CD", "Other"), $item->get_value("itemType"), false);

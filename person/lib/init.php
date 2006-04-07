@@ -3,13 +3,13 @@ class person_module extends module {
   var $db_entities = array("person", "absence", "skillList", "skillProficiencys");
 
   function register_toolbar_items() {
-    global $current_user, $auth;
+    global $current_user;
 
     // Note: $current_user will not be set if we are sending email
     if (have_entity_perm("person", PERM_READ_WRITE)) {
       register_toolbar_item("personList", "Personnel");
     } else {
-      register_toolbar_item("person", "Personal", "personID=".$auth->auth["uid"]);
+      register_toolbar_item("person", "Personal", "personID=".$current_user->get_id());
     }
 
   }

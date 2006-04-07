@@ -27,7 +27,7 @@ class toolbar_item {
   }
 
   function get_url() {
-    global $TPL;
+    global $TPL, $sess;
     $url = $TPL["url_alloc_".$this->name];
     if ($this->url_parameters) {
       $url.= "&".$this->url_parameters;

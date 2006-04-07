@@ -61,7 +61,7 @@ class reminder extends db_entity {
   }
 
   function get_recipient_options() {
-    global $auth;
+    global $current_user;
     $fail = false;
 
     $recipients = $this->get_recipients();
@@ -84,7 +84,7 @@ class reminder extends db_entity {
       if ($this->get_value('personID')) {
         $recipient = $this->get_value('personID');
       } else {
-        $recipient = $auth->auth["uid"];
+        $recipient = $current_user->get_id();
       }
     }
     return get_options_from_array($recipients, $recipient, true);

@@ -15,10 +15,6 @@ while (list(, $person_id) = each($selected_persons)) {
   $email_to.= $person->get_value("emailAddress");
 }
 
-$current_user = new person;
-$current_user->set_id($auth->auth["uid"]);
-$current_user->select();
-
 $TPL["email_from"] = $current_user->get_value("emailAddress");
 $TPL["email_to"] = $email_to;
 include_template("templates/personsEmail.tpl");

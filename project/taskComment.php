@@ -24,7 +24,7 @@ if (isset($taskComment_save) || isset($taskComment_update)) {
   $comment->set_value('commentType', 'task');
   $comment->set_value('commentLinkID', $taskID);
   $comment->set_modified_time();
-  $comment->set_value('commentModifiedUser', $auth->auth["uid"]);
+  $comment->set_value('commentModifiedUser', $current_user->get_id());
 
   if (isset($taskComment_update)) {
     $comment->set_id($taskComment_id);

@@ -19,18 +19,19 @@ if ($_POST["login"]) {
     $db->query($q);
 
     if ($row = $db->row()) {
+
       $sess->Start($row["personID"]);
       $sess->Put("username" ,strtolower($row["username"]));
       $sess->Put("perms" ,$row["perms"]);
       $sess->Put("personID" ,$row["personID"]);
 
       if ($_POST["use_cookies"]) {
-        echo "implement cookies!";
         $sess->UseCookies();
       } 
 
-      $url = $sess->GetUrl($TPL["url_alloc_index"]);
+      $url = $sess->GetUrl($TPL["url_alloc_home"]);
       $sess->Save();
+#echo $url;
       header("Location:".$url);
     }
   } 
@@ -87,8 +88,8 @@ $TPL["username"] = $_POST["username"];
 if (!isset($account)) { 
   $TPL["password_or_email_address_field"] = "<td class=\"right\">Password</td>";
   $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"password\" name=\"password\" size=\"25\" maxlength=\"32\"></td>";
-  $TPL["login_or_send_pass_button"] = "Use Cookies <input type=\"checkbox\" name=\"use_cookies\" value=\"1\">";
-  $TPL["login_or_send_pass_button"].= "<input type=\"submit\" name=\"login\" value=\"&nbsp;&nbsp;Login&nbsp;&nbsp;\">";
+  $TPL["use_cookies"] = "Use Cookies <input type=\"checkbox\" name=\"use_cookies\" value=\"1\">";
+  $TPL["login_or_send_pass_button"] = "<input type=\"submit\" name=\"login\" value=\"&nbsp;&nbsp;Login&nbsp;&nbsp;\">";
 } else { 
   $TPL["password_or_email_address_field"] = "<td class=\"right\"><nobr>Email</nobr></td>";
   $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"text\" name=\"email\" size=\"25\" maxlength=\"32\"></td>";

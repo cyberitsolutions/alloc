@@ -1,10 +1,6 @@
 <?php
-// This file provides basically static template values that are used throughout the application
-  // Called by local.inc.php
-global $auth;
-
+// This file provides basically static template values that are used throughout the application and is called by local.inc.php
 $sess = Session::GetSession();
-
 
 $TPL =array("url_alloc_index"=>$SCRIPT_PATH."index.php",
  "url_alloc_login"=>$SCRIPT_PATH."login.php",

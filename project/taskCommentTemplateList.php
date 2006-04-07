@@ -2,7 +2,7 @@
 include ("alloc.inc");
 
 function show_taskCommentTemplate($template_name) {
-  global $current_user, $auth, $TPL;
+  global $TPL;
   
 // Run query and loop through the records
   $db = new db_alloc;

@@ -11,7 +11,7 @@ include_template("templates/itemLoanM.tpl");
 
 function show_overdue($template_name) {
 
-  global $db, $TPL, $current_user, $auth;
+  global $db, $TPL, $current_user;
 
   $db = new db_alloc;
   $temp = mktime(0, 0, 0, date("m"), date("d"), date("Y"));

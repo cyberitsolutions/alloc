@@ -143,7 +143,7 @@ function show_main_list() {
 
 
 function show_invoice_details() {
-  global $timeSheet, $TPL, $db, $timeSheetID, $projectID, $auth, $current_user;
+  global $timeSheet, $TPL, $db, $timeSheetID, $projectID, $current_user;
 
   if (($timeSheet->get_value("status") == 'admin' || $timeSheet->get_value("status") == 'invoiced')
       && $timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
@@ -433,8 +433,8 @@ if (isset($save)
     break;
 
     case 'manager':
-      if (is_array($projectManagers) && (in_array($auth->auth["uid"],$projectManagers)) || ($timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
-        $timeSheet->set_value("approvedByManagerPersonID", $auth->auth["uid"]);
+      if (is_array($projectManagers) && (in_array($current_user->get_id(),$projectManagers)) || ($timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
+        $timeSheet->set_value("approvedByManagerPersonID", $current_user->get_id());
         $timeSheet->set_value("dateSubmittedToAdmin", date("y-m-d"));
         $timeSheet->set_value("status", "admin");
         $approvedByManagerPersonID_email = $people_cache[$timeSheet->get_value("approvedByManagerPersonID")]["emailAddress"];
@@ -458,9 +458,9 @@ if (isset($save)
 
     case 'admin':
       if ($projectManagers && !$timeSheet->get_value("approvedByManagerPersonID")) {
-        $timeSheet->set_value("approvedByManagerPersonID", $auth->auth["uid"]);
+        $timeSheet->set_value("approvedByManagerPersonID", $current_user->get_id());
       }
-      $timeSheet->set_value("approvedByAdminPersonID", $auth->auth["uid"]);
+      $timeSheet->set_value("approvedByAdminPersonID", $current_user->get_id());
 
       if (!$save_and_invoice) {
         $db->query("select dateFrom from timeSheet where timeSheetID = ".$timeSheet->get_id());
@@ -496,7 +496,7 @@ if (isset($save)
         $body.= "\n  Time Sheet: ".$url;
         $body.= "\nSubmitted By: ".$timeSheet_personID_name;
         $body.= "\n For Project: ".$projectName;
-        $body.= "\n Rejected By: ".$people_cache[$auth->auth["uid"]]["name"];
+        $body.= "\n Rejected By: ".$people_cache[$current_user->get_id()]["name"];
         $body.= "\n";
         $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
         $msg.= $timeSheet->shootEmail($address, $body, $subject, $dont_send_email);
@@ -510,7 +510,7 @@ if (isset($save)
         $body = "\n          To: ".$timeSheet_personID_name;
         $body.= "\n  Time Sheet: ".$url;
         $body.= "\n For Project: ".$projectName;
-        $body.= "\n Rejected By: ".$people_cache[$auth->auth["uid"]]["name"];
+        $body.= "\n Rejected By: ".$people_cache[$current_user->get_id()]["name"];
         $body.= "\n";
         $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
         $msg.= $timeSheet->shootEmail($address, $body, $subject, $dont_send_email);
@@ -530,7 +530,7 @@ if (isset($save)
       $body = "\n          To: ".$timeSheet_personID_name;
       $body.= "\n  Time Sheet: ".$url;
       $body.= "\n For Project: ".$projectName;
-      $body.= "\n Rejected By: ".$people_cache[$auth->auth["uid"]]["name"];
+      $body.= "\n Rejected By: ".$people_cache[$current_user->get_id()]["name"];
       $body.= "\n";
       $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
       $msg.= $timeSheet->shootEmail($address, $body, $subject, $dont_send_email);
@@ -676,7 +676,7 @@ if ($timeSheet->get_value("approvedByAdminPersonID")) {
 if ($timeSheet->get_value("status") == 'edit' && !$timeSheet->get_value("projectID")) {
   $query = sprintf("SELECT * FROM project WHERE projectStatus = 'current' ORDER by projectName");
     #.sprintf("  LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ")
-    #.sprintf("WHERE projectPerson.personID = '%d' ORDER BY projectName", $auth->auth["uid"]);
+    #.sprintf("WHERE projectPerson.personID = '%d' ORDER BY projectName", $current_user->get_id());
 } else {
   $query = sprintf("SELECT * FROM project WHERE projectStatus = 'current' ORDER by projectName");
 }
@@ -763,7 +763,7 @@ case '':
   break;
 
 case 'edit':
-  if (($timeSheet->get_value("personID") == $auth->auth["uid"] || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) && ($timeSheetID)) {
+  if (($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) && ($timeSheetID)) {
     if ($projectManagers) {
           #<input type=\"submit\" name=\"grab_project_pay_values\" value=\"Re-Grab Pay Details\">
       $TPL["timeSheet_ChangeStatusButton"] = "
@@ -781,7 +781,7 @@ case 'edit':
   break;
 
 case 'manager':
-  if (in_array($auth->auth["uid"],$projectManagers)
+  if (in_array($current_user->get_id(),$projectManagers)
       || ($timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
 
     $TPL["timeSheet_ChangeStatusButton"] = "
