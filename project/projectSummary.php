@@ -3,9 +3,9 @@ require_once("alloc.inc");
 
 
 if ($graph_type == "phases") {
-  $TPL["alt_graph_link"] = "<a href=\"".$TPL["url_alloc_projectSummary"]."&projectID=$projectID&graph_type=all\">Show All Tasks</a>";
+  $TPL["alt_graph_link"] = "<a href=\"".$TPL["url_alloc_projectSummary"]."projectID=$projectID&graph_type=all\">Show All Tasks</a>";
 } else {
-  $TPL["alt_graph_link"] = "<a href=\"".$TPL["url_alloc_projectSummary"]."&projectID=$projectID&graph_type=phases\">Only Show Phases</a>";
+  $TPL["alt_graph_link"] = "<a href=\"".$TPL["url_alloc_projectSummary"]."projectID=$projectID&graph_type=phases\">Only Show Phases</a>";
 }
 
 $TPL["graph_type"] = $graph_type;

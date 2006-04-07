@@ -131,14 +131,14 @@ function show_toolbar() {
   $db->next_record();
   $tasktype->read_db_record($db);
   
-  $TPL["default_history_item_10"] = "<option value=\"".$TPL["url_alloc_task"]."&tasktype=".$tasktype->get_id()."\">New Fault</option>";
+  $TPL["default_history_item_10"] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".$tasktype->get_id()."\">New Fault</option>";
 
   $query = "SELECT * FROM taskType WHERE taskTypeName=\"Message\"";
   $db->query($query);
   $db->next_record();
   $tasktype->read_db_record($db);
   
-  $TPL["default_history_item_11"] = "<option value=\"".$TPL["url_alloc_task"]."&tasktype=".$tasktype->get_id()."\">New Message</option>";
+  $TPL["default_history_item_11"] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".$tasktype->get_id()."\">New Message</option>";
   
   if (have_entity_perm("project", PERM_CREATE, $current_user)) {
     $TPL["default_history_item_2"] = "<option value=\"".$TPL["url_alloc_project"]."\">New Project</option>";

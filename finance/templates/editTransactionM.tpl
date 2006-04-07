@@ -8,7 +8,7 @@
 {table_box}
   <tr>
     <th colspan="2">Transaction {transactionID}</th>
-    <th class="right"><a href="{url_alloc_transactionList}&tfID={tfID}">Back to Transaction List</a></th>
+    <th class="right"><a href="{url_alloc_transactionList}tfID={tfID}">Back to Transaction List</a></th>
   </tr>
   <tr>
     <td width="15%">Transaction ID</td>

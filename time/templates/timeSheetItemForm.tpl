@@ -2,7 +2,7 @@
 
 // Make the XML request thing, specify the callback function 
 function refreshTaskList(radiobutton) {
-  url = '{url_alloc_updateTimeSheetTaskList}&task_type='+radiobutton.value+'&timeSheetID={timeSheet_timeSheetID}&taskID={taskListDropdown_taskID}'
+  url = '{url_alloc_updateTimeSheetTaskList}task_type='+radiobutton.value+'&timeSheetID={timeSheet_timeSheetID}&taskID={taskListDropdown_taskID}'
   makeAjaxRequest(url,'updateTimeSheetTaskList',1)
 }
 
@@ -45,7 +45,7 @@ function updateTimeSheetTaskList(number) {
           </td>
         </tr>
         <tr>
-          <td valign="bottom" colspan="2"><a href="{url_alloc_task}&projectID={projectID}&timeSheetID={timeSheet_timeSheetID}">New Task</a></td>
+          <td valign="bottom" colspan="2"><a href="{url_alloc_task}projectID={projectID}&timeSheetID={timeSheet_timeSheetID}">New Task</a></td>
           <td valign="bottom" rowspan="2"> 
             <input type="radio" name="task_type" value="my_open" onClick="refreshTaskList(this)" checked>My Open&nbsp;
             <input type="radio" name="task_type" value="my_closed" onClick="refreshTaskList(this)">My Closed&nbsp;

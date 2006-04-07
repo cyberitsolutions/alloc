@@ -311,7 +311,7 @@ function check_optional_step_3() {
       $fp = fopen($path_and_file, "w+");
       fputs($fp, $TPL["result_row"]);
       fclose($fp);
-      $file = $SCRIPT_PATH."files/".$filename;
+      $file = SCRIPT_PATH."files/".$filename;
       // exit;
       // header("Location: www.yahoo.com");
       // header("Content-type: application/octet-stream");

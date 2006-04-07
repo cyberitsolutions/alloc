@@ -4,7 +4,7 @@
 
 // Make the XML request thing, specify the callback function 
 function refreshProjectList(radiobutton) {
-  url = '{url_alloc_updateProjectList}&projectType='+radiobutton.value
+  url = '{url_alloc_updateProjectList}projectType='+radiobutton.value
   makeAjaxRequest(url,'updateProjectList',1)
 }
 

@@ -46,11 +46,11 @@ if ($save || $saveAndNew || $saveGoTf) {
     $TPL["message_good"][] = "Transaction Saved";
 
     if ($saveAndNew) {
-      header("Location: ".$TPL["url_alloc_transaction"]."&new=true");
+      header("Location: ".$TPL["url_alloc_transaction"]."new=true");
     }
 
     if ($saveGoTf) {
-      header("Location: ".$TPL["url_alloc_transactionList"]."&tfID=".$transaction->get_value("tfID"));
+      header("Location: ".$TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
     }
     $transaction->set_tpl_values();
 
@@ -58,7 +58,7 @@ if ($save || $saveAndNew || $saveGoTf) {
     
 } else if ($delete) {
   $transaction->delete();
-  header("location:".$TPL["url_alloc_transactionList"]."&tfID=".$transaction->get_value("tfID"));
+  header("location:".$TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
 }
 
 $transaction->set_tpl_values();

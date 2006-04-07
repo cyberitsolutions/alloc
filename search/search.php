@@ -334,9 +334,7 @@ function search_items($template) {
             $ret = "Return";
           }
 
-          $TPL["loan_status"] = $status." <a href=\"".$TPL["url_alloc_item"]
-            ."&itemID=".$TPL["item_itemID"]
-            ."&return=true\">$ret</a>";
+          $TPL["loan_status"] = $status." <a href=\"".$TPL["url_alloc_item"]."itemID=".$TPL["item_itemID"]."&return=true\">$ret</a>";
         } else {
           // you dont have permission to loan or return so just show status
           // get username
@@ -353,8 +351,7 @@ function search_items($template) {
           }
         }
       } else {
-        $TPL["loan_status"] = "Available <a href=\"".$TPL["url_alloc_item"]
-          ."&itemID=".$TPL["item_itemID"]."&borrow=true\">Borrow</a>";
+        $TPL["loan_status"] = "Available <a href=\"".$TPL["url_alloc_item"]."itemID=".$TPL["item_itemID"]."&borrow=true\">Borrow</a>";
       }
 
       include_template($template);

@@ -3,7 +3,7 @@
 
 <br>
 
-<form action="{url_alloc_transactionRepeat}&john={john}" method="post">
+<form action="{url_alloc_transactionRepeat}john={john}" method="post">
 
 <h1>Create an Expense that Repeats on a Fixed Basis</h1>
 
@@ -113,7 +113,7 @@
 </table>
 
 <br>
-<a href="{url_alloc_transactionRepeatList}&tfID={tfID}">Return to Repeating Expenses List</a>
+<a href="{url_alloc_transactionRepeatList}tfID={tfID}">Return to Repeating Expenses List</a>
 
 <input type="hidden" name="status" value="pending">
 <input type="hidden" name="transactionRepeatID" value="{transactionRepeatID}">

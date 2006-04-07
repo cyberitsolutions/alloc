@@ -54,7 +54,7 @@ if (isset($taskComment_save) || isset($taskComment_update)) {
 
 if ($task->get_id()) {
   $taskComment_edit and $extra = "&taskComment_edit=true&commentID=".$taskComment_id;
-  header("Location: ".$TPL["url_alloc_task"]."&taskID=".$task->get_id().$extra);
+  header("Location: ".$TPL["url_alloc_task"]."taskID=".$task->get_id().$extra);
 }
 
 

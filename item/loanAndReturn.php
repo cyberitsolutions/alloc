@@ -50,7 +50,7 @@ function show_items($template_name) {
 
 
         $TPL["itemAction"] = "<td><a href=\"".$TPL["url_alloc_item"]
-          ."&itemID=".$TPL["itemID"]
+          ."itemID=".$TPL["itemID"]
           ."&return=true\">$ret</a></td>";
 
       } else {                  // if you don't have permission to borrow or return item.
@@ -67,7 +67,7 @@ function show_items($template_name) {
 
       $TPL["status"] = "Available";
       $TPL["person"] = "";
-      $TPL["itemAction"] = "<td><a href=\"".$TPL["url_alloc_item"]."&itemID=".$TPL["itemID"]."&borrow=true\">Borrow</a></td>";
+      $TPL["itemAction"] = "<td><a href=\"".$TPL["url_alloc_item"]."itemID=".$TPL["itemID"]."&borrow=true\">Borrow</a></td>";
       $TPL["dueBack"] = "";
     }
 

@@ -50,7 +50,7 @@ function show_filter($template_name) {
     if ($clientLetter == $letter) {
       $TPL["alphabet_filter"].= "&nbsp;&nbsp;".$letter;
     } else {
-      $TPL["alphabet_filter"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_clientList"]."&clientLetter=".$letter."\">".$letter."</a>";
+      $TPL["alphabet_filter"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_clientList"]."clientLetter=".$letter."\">".$letter."</a>";
     }
   }
 

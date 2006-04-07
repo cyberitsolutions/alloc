@@ -138,13 +138,13 @@ $invoice_item = new invoiceItem;
 $invoice_item->read_db_record($db);
 $invoice_item->set_tpl_values();
 $next_item_id = get_next_item_id($mode);
-     $next_item_id and $TPL["next_link"] = "<a href=\"".$TPL["url_alloc_invoiceItem"]."&invoiceItemID=".$next_item_id."&mode=".$mode."\">Next Invoice Item</a>&nbsp;";
+     $next_item_id and $TPL["next_link"] = "<a href=\"".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$next_item_id."&mode=".$mode."\">Next Invoice Item</a>&nbsp;";
 
 if ($mark_allocated || $mark_paid && is_Object($invoice_item)) {
 $mark_allocated and $invoice_item->set_value("status", "allocated");
 $mark_paid and $invoice_item->set_value("status", "paid");
 $invoice_item->save();
-header("Location: ".$TPL["url_alloc_invoiceItem"]."&invoiceItemID=".$invoice_item->get_id()."&mode=$mode");
+header("Location: ".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$invoice_item->get_id()."&mode=$mode");
 exit;
 }
 

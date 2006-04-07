@@ -70,7 +70,7 @@
     // File name without .php extension
     $CLASS_NAME = str_replace(".php", "", $file);
     // Directory that file is in
-    $dir = $script_name_array[sizeof(script_name_array) - 2];
+    $dir = $script_name_array[sizeof($script_name_array) - 2];
     // Nuke the leading question mark of the query string attached 
     // to end of url eg: ?tfID=23&anal=true
     $qs = preg_replace("[^\?]", "", $qs);
@@ -126,8 +126,8 @@
                   $rtn = $ID;
                 }
               }
-              $rtn = " -> ".$rtn;
-              return addslashes(strtoupper($CLASS_NAME).$rtn);
+              $rtn = ": ".$rtn;
+              return addslashes(ucwords($CLASS_NAME).$rtn);
             }
           }
         }
@@ -137,18 +137,7 @@
   }
 
 
-
-
-
-
-
-
-
 }
-
-// SCHOOLS OUT - END CLASS
-
-
 
 
 // Take care of saving the actual history entries
@@ -181,12 +170,12 @@ $file = end(explode("/", $SCRIPT_NAME)).$qs;
 if (is_object($current_user) && !in_array($file, $ignored_files)
     && !$historyID && $the_label = $history->get_history_label($SCRIPT_NAME, $qs)) {
 
-$the_place = $SCRIPT_NAME.$qs;
-$history = new history;
-$history->set_value("personID", $current_user->get_id());
-$history->set_value("the_place", $the_place);
-$history->set_value("the_label", $the_label);
-$history->save();
+  $the_place = $SCRIPT_NAME.$qs;
+  $history = new history;
+  $history->set_value("personID", $current_user->get_id());
+  $history->set_value("the_place", $the_place);
+  $history->set_value("the_label", $the_label);
+  $history->save();
 }
 
 

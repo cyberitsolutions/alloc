@@ -4,7 +4,7 @@
 {table_box}
   <tr>
     <th>Repeating Transactions</th>
-    <th class="right"><a href="{url_alloc_transactionRepeat}&john={tfID}">New Repeating Expense</a></th>
+    <th class="right"><a href="{url_alloc_transactionRepeat}john={tfID}">New Repeating Expense</a></th>
   </tr>
     <tr>
       <td colspan="2">Name</td>

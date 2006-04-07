@@ -23,7 +23,7 @@ function list_attachments($template_name) {
 
       if ($file != "." && $file != "..") {
         $size = filesize($TPL["url_alloc_projectDocs_dir"].$projectID."/".$file);
-        $TPL["filename"] = "<a href=\"".$TPL["url_alloc_projectDoc"]."&projectID=".$projectID."&file=".urlencode($file)."\">".$file."</a>";
+        $TPL["filename"] = "<a href=\"".$TPL["url_alloc_projectDoc"]."projectID=".$projectID."&file=".urlencode($file)."\">".$file."</a>";
         $TPL["size"] = sprintf("%dk",$size/1024);
         include_template($template_name);
       }
@@ -220,7 +220,7 @@ function show_person_list($template) {
       $TPL["person_buttons"] = "
         <input type=\"submit\" name=\"person_save\" value=\"Save\">
         <input type=\"submit\" name=\"person_delete\" value=\"Delete\">";
-      // <a href=\"".$TPL["url_alloc_projectPerson"]."&projectPersonID=".$projectPerson->get_id()."\">Details</a>"
+      // <a href=\"".$TPL["url_alloc_projectPerson"]."projectPersonID=".$projectPerson->get_id()."\">Details</a>"
       include_template($template);
     }
   }
@@ -526,7 +526,7 @@ if ($save_attachment) {
       die("could not move attachment to: ".$TPL["url_alloc_projectDocs_dir"].$projectID."/".$attachment_name);
     } else {
       chmod($TPL["url_alloc_projectDocs_dir"].$projectID."/".$attachment_name, 0777);
-      header("Location: ".$TPL["url_alloc_project"]."&projectID=".$projectID);
+      header("Location: ".$TPL["url_alloc_project"]."projectID=".$projectID);
     }
   }
 }

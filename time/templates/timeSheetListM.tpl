@@ -5,7 +5,7 @@
     <th>Time Sheets</th>
     <th class="right" colspan="6">
 <!-- <a href="{url_alloc_weeklyTime}">Weekly Time View</a>&nbsp;&nbsp; -->
-     <a href="{url_alloc_timeSheet}&userID={userID}">New Time Sheet</a></th>
+     <a href="{url_alloc_timeSheet}userID={userID}">New Time Sheet</a></th>
   </tr>
   <tr>
     <td colspan="6" align="center">

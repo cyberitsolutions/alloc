@@ -47,7 +47,7 @@ if ($borrowItem) {
   $db->query("select * from loan where itemID=$itemID and dateReturned='0000-00-00'");
 
   if ($db->next_record()) {     // if the item is already borrowed
-    header("location:".$TPL["url_alloc_item"]."&itemID=$itemID&badBorrow=true&error=already_borrowed");
+    header("location:".$TPL["url_alloc_item"]."itemID=$itemID&badBorrow=true&error=already_borrowed");
     exit();
   } else {                      // else lets make a new loan!
     $loan = new loan;

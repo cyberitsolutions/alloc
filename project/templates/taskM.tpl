@@ -6,7 +6,7 @@
 function updateStuffWithAjax() {
   obj = document.getElementById("taskCommentForm").taskCommentTemplateID;
   id = obj.options[obj.selectedIndex].value;
-  url = '{url_alloc_updateTaskCommentTemplate}&taskCommentTemplateID='+id+'&taskID={task_taskID}'
+  url = '{url_alloc_updateTaskCommentTemplate}taskCommentTemplateID='+id+'&taskID={task_taskID}'
   makeAjaxRequest(url,'updateTaskCommentTemplate',1)
 }
 
@@ -26,9 +26,9 @@ function updateTaskCommentTemplate(number) {
   <tr>
     <th colspan="2"><nobr>{task_taskType}</nobr></th>
     <th class="right" colspan="3">
-&nbsp;<a href="{url_alloc_task}&taskID={task_taskID}&view=detail">Edit</a>
-&nbsp;<a target="_BLANK" href="{url_alloc_task}&taskID={task_taskID}&view=printer">Printer</a>
-&nbsp;<a href="{url_alloc_project}&projectID={task_projectID}">Project</a>
+&nbsp;<a href="{url_alloc_task}taskID={task_taskID}&view=detail">Edit</a>
+&nbsp;<a target="_BLANK" href="{url_alloc_task}taskID={task_taskID}&view=printer">Printer</a>
+&nbsp;<a href="{url_alloc_project}projectID={task_projectID}">Project</a>
 &nbsp;{navigation_links}
     </th>
   </tr>
@@ -129,7 +129,7 @@ function updateTaskCommentTemplate(number) {
 {table_box}
   <tr>
     <th>Reminders</th>
-    <th class="right" colspan="3"><a href="{url_alloc_reminderAdd}&&step=3&parentType=task&parentID={task_taskID}&returnToParent=t">Add Reminder</a></th>
+    <th class="right" colspan="3"><a href="{url_alloc_reminderAdd}step=3&parentType=task&parentID={task_taskID}&returnToParent=t">Add Reminder</a></th>
   </tr>
   <tr>
     <td>Recipient</td>

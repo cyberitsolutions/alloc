@@ -25,20 +25,18 @@ if ($_POST["login"]) {
       $sess->Put("perms" ,$row["perms"]);
       $sess->Put("personID" ,$row["personID"]);
 
-
       if ($_POST["use_cookies"]) {
         $sess->UseCookie();
       } else {
         $sess->UseGet();
       }
-#die("mode: ".$sess->mode);
       $url = $sess->GetUrl($TPL["url_alloc_home"]);
       $sess->Save();
-#die($url);
       header("Location: ".$url);
     }
   } 
   $error = "Username or Password incorrect.";
+
 } else if ($_POST["new_pass"] && $_POST["username"] && $_POST["email"]) {
 
   $db = new db_alloc;

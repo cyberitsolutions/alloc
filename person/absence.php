@@ -51,7 +51,7 @@ if (isset($save)) {
 
   if ($success) {
     // save
-    $url = $TPL["url_alloc_person"]."&personID=".$personID;
+    $url = $TPL["url_alloc_person"]."personID=".$personID;
   }
   header("Location: $url");
   page_close();
@@ -60,7 +60,7 @@ if (isset($save)) {
   // Deleting a record
   $absence->read_globals();
   $absence->delete();
-  header("location: ".$TPL["url_alloc_person"]."&personID=".$personID);
+  header("location: ".$TPL["url_alloc_person"]."personID=".$personID);
 } else if (isset($mailTo)) {
   EMailForm();
 } else if (isset($absenceID)) {

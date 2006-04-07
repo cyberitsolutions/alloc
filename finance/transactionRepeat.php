@@ -82,10 +82,10 @@ if ($delete) {
 
     $transactionRepeat->set_id($transactionRepeatID);
     $transactionRepeat->delete();
-    header("Location: ".$TPL["url_alloc_transactionRepeatList"]."&tfID=$tfID");
+    header("Location: ".$TPL["url_alloc_transactionRepeatList"]."tfID=$tfID");
 
   } else {
-    header("Location: ".$TPL["url_alloc_tfList"]."&tfID=$tfID");
+    header("Location: ".$TPL["url_alloc_tfList"]."tfID=$tfID");
   }
 }
 

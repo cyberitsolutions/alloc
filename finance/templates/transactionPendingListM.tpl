@@ -24,13 +24,13 @@
     </td>
   </tr>
   <tr>
-    <td align="center"><b><a href="{url_alloc_transactionPendingList}&sort=transactionID">ID</a></b></td>
-    <td align="center"><b><a href="{url_alloc_transactionPendingList}&sort=transactionType">Type</a></b></td>
-    <td align="center"><b><a href="{url_alloc_transactionPendingList}&sort=tfName">Owner</b></a></td>
-    <td align="center"><b><a href="{url_alloc_transactionPendingList}&sort=projectName">Project</b></a></td>
-    <td align="center"><b><a href="{url_alloc_transactionPendingList}&sort=lastModified">Last Modified</a></b></td>
-    <td align="center"><b><a href="{url_alloc_transactionPendingList}&sort=username">Modified By</b></a></td>
-    <td align="right"><b><a href="{url_alloc_transactionPendingList}&sort=amount">Amount</a></b></td>
+    <td align="center"><b><a href="{url_alloc_transactionPendingList}sort=transactionID">ID</a></b></td>
+    <td align="center"><b><a href="{url_alloc_transactionPendingList}sort=transactionType">Type</a></b></td>
+    <td align="center"><b><a href="{url_alloc_transactionPendingList}sort=tfName">Owner</b></a></td>
+    <td align="center"><b><a href="{url_alloc_transactionPendingList}sort=projectName">Project</b></a></td>
+    <td align="center"><b><a href="{url_alloc_transactionPendingList}sort=lastModified">Last Modified</a></b></td>
+    <td align="center"><b><a href="{url_alloc_transactionPendingList}sort=username">Modified By</b></a></td>
+    <td align="right"><b><a href="{url_alloc_transactionPendingList}sort=amount">Amount</a></b></td>
   </tr>
   {:show_transaction_list templates/transactionPendingListR.tpl}
 </table>

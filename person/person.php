@@ -222,7 +222,7 @@ if ($person->get_value("emailFormat") == "html") {
 
 $TPL["email_format_options"] = $email_format_options;
 
-$TPL["absence_url"] = $TPL["url_alloc_absence"]."&personID=".$personID;
+$TPL["absence_url"] = $TPL["url_alloc_absence"]."personID=".$personID;
 $TPL["personActive"] = (!$person->get_id() || $person->get_value("personActive")) ? " checked" : "";
 
 include_template("templates/personM.tpl");

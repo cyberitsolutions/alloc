@@ -55,7 +55,7 @@ if (isset($save)) {
       die("could not move attachment to: ".$TPL["url_alloc_clientDocs_dir"].$clientID."/".$attachment_name);
     } else {
       chmod($TPL["url_alloc_clientDocs_dir"].$clientID."/".$attachment_name, 0777);
-      header("Location: ".$TPL["url_alloc_client"]."&clientID=".$clientID);
+      header("Location: ".$TPL["url_alloc_client"]."clientID=".$clientID);
     }
   }
 
@@ -358,7 +358,7 @@ include_template("templates/clientM.tpl");
 
         if ($file != "." && $file != "..") {
           $size = filesize($TPL["url_alloc_clientDocs_dir"].$clientID."/".$file);
-          $TPL["filename"] = "<a href=\"".$TPL["url_alloc_clientDoc"]."&clientID=".$clientID."&file=".urlencode($file)."\">".$file."</a>";
+          $TPL["filename"] = "<a href=\"".$TPL["url_alloc_clientDoc"]."clientID=".$clientID."&file=".urlencode($file)."\">".$file."</a>";
           $TPL["size"] = sprintf("%dk",$size/1024);
           include_template($template);
         }

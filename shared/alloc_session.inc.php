@@ -104,7 +104,6 @@ class Session {
     unset($_COOKIE["alloc_cookie"]);
   }
 
-
   // Wrapper
   function GetUrl($url="") {
     return $this->url($url);
@@ -115,21 +114,19 @@ class Session {
    $url = ereg_replace("[&?]+$", "", $url);
 
     if ($this->mode == "get") {
-      $this->key and $extra = "sess=".$this->key;
-      $url.= (strpos($url, "?") != false ? "&" : "?").$extra;
-
+       (strpos($url, "sess=") == false) && $this->key and $extra = "sess=".$this->key."&";
     }
-// else if ($this->mode == "cookie" && !strpos($url, "?")) {
-//      $url.= "?";
-//    }
+
+    $url.= (strpos($url, "?") != false ? "&" : "?").$extra;
+
     return $url;
   }
-
 
   function UseGet() {
     $this->mode = "get";
     $this->Put("session_mode",$this->mode);
   }
+ 
   function UseCookie() {
     $this->mode = "cookie";
     $this->MakeCookie();

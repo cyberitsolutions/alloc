@@ -763,7 +763,7 @@ class task extends db_entity {
       }
 
       if ($options["show_new_children_links"] && $this->get_value("taskTypeID") == TT_PHASE) {
-        $rtn.= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_task"]."&projectID=".$this->get_value("projectID");
+        $rtn.= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_task"]."projectID=".$this->get_value("projectID");
         $rtn.= "&parentTaskID=".$this->get_id()."\">New Subtask</a>";
       }
 
@@ -899,9 +899,8 @@ class task extends db_entity {
 */
 
   function get_url() {
-    global $sess, $SCRIPT_PATH, $SERVER_NAME;
-    $url = $SCRIPT_PATH."project/task.php?taskID=".$this->get_id();
-    // $url = "http://$SERVER_NAME$SCRIPT_PATH" . "project/task.php?taskID=" . $this->get_id();
+    global $sess;
+    $url = SCRIPT_PATH."project/task.php?taskID=".$this->get_id();
     $url = $sess->email_url($url);
     return $url;
   }
