@@ -1,8 +1,8 @@
 <div align="center">
 
-  <a href="{url_alloc_invoiceItemList}&mode=approve">Approve Invoices</a>
+  <a href="{url_alloc_invoiceItemList}mode=approve">Approve Invoices</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_invoiceItemList}&mode=allocate">Allocate Invoices to TFs</a>
+  <a href="{url_alloc_invoiceItemList}mode=allocate">Allocate Invoices to TFs</a>
    &nbsp; | &nbsp;
   <a href="{url_alloc_invoicesUpload}">Upload Invoices File</a>
    &nbsp; | &nbsp;
@@ -12,7 +12,7 @@
 
   <a href="{url_alloc_transaction}">New Transaction</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_expenseFormList}&view=true">View Pending Expense Forms</a>
+  <a href="{url_alloc_expenseFormList}view=true">View Pending Expense Forms</a>
    &nbsp; | &nbsp;
   <a href="{url_alloc_expenseUpload}">Upload Expenses File</a>
    &nbsp; | &nbsp;

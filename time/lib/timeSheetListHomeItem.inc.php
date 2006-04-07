@@ -32,7 +32,7 @@ class timeSheetListHomeItem extends home_item {
       $timeSheet->set_tpl_values();
 
       if ($timeSheet->get_value("status") == "edit") {
-        $TPL["status"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."&timeSheetID=".$timeSheet->get_id()."\">".$timeSheet->get_value("status")."</a>";
+        $TPL["status"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".$timeSheet->get_value("status")."</a>";
       } else {
         $TPL["status"] = $timeSheet->get_value("status");
       }

@@ -45,7 +45,7 @@ function show_overdue($template_name) {
     $person->set_id($loan->get_value("personID"));
     $person->select();
     $TPL["person"] = $person->get_username(1);
-    $TPL["overdue"] = "<a href=\"".$TPL["url_alloc_item"]."&itemID=".$item->get_id()."&return=true\">Overdue!</a>";
+    $TPL["overdue"] = "<a href=\"".$TPL["url_alloc_item"]."itemID=".$item->get_id()."&return=true\">Overdue!</a>";
 
     include_template($template_name);
   }

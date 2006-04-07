@@ -7,5 +7,5 @@
   <td>{sortKey}</td>
   <td>{allow}</td>
   <td>{comment}</td>
-  <td><a href="{url_alloc_permission}&permissionID={permissionID}">Edit</a></td>
+  <td><a href="{url_alloc_permission}permissionID={permissionID}">Edit</a></td>
 </tr>

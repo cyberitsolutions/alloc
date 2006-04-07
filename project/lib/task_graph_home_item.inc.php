@@ -35,12 +35,12 @@ class task_graph_home_item extends home_item {
       if ($week == $tasksGraphPlotHome) {
         $TPL["forward_week_links"].= $week;
       } else {
-        $TPL["forward_week_links"].= "<a href=\"".$TPL["url_alloc_home"]."&plot_weeks=".$week."\">".$week."</a>";
+        $TPL["forward_week_links"].= "<a href=\"".$TPL["url_alloc_home"]."plot_weeks=".$week."\">".$week."</a>";
       }
       if ($week == $tasksGraphPlotHomeStart) {
         $TPL["back_week_links"].= $week;
       } else {
-        $TPL["back_week_links"].= "<a href=\"".$TPL["url_alloc_home"]."&plot_weeks_back=".$week."\">".$week."</a>";
+        $TPL["back_week_links"].= "<a href=\"".$TPL["url_alloc_home"]."plot_weeks_back=".$week."\">".$week."</a>";
       }
     }
   }

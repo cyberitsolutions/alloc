@@ -8,7 +8,7 @@
 {table_box}
   <tr> 
     <th>Expense Form</th>
-    <th class="right"><a href="{url_alloc_expOneOff}&expenseFormID={expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>
+    <th class="right"><a href="{url_alloc_expOneOff}expenseFormID={expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>
   </tr>
   <tr>
     <td align="right">Total:</td><td>${formTotal}</td>

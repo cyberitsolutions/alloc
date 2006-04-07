@@ -47,7 +47,7 @@ function include_template($filename, $function_object = "") {
   global $TPL;
   echo "<!-- start $filename -->\n";
   $template = get_template($filename, is_object($function_object));
-   echo htmlspecialchars($template); // GOOD PLACE TO DEBUG
+#   echo htmlspecialchars($template); // GOOD PLACE TO DEBUG
 #die();
   eval($template);
   echo "<!-- end $filename -->\n";

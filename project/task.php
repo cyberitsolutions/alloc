@@ -99,15 +99,15 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
 
   if ($success) {
     if (isset($save)) {
-      $url = $TPL["url_alloc_task"]."&taskID=".$task->get_id();
+      $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
     } else if (isset($save_and_back)) {
-      $url = $TPL["url_alloc_project"]."&projectID=".$task->get_value("projectID");
+      $url = $TPL["url_alloc_project"]."projectID=".$task->get_value("projectID");
     } else if (isset($save_and_summary)) {
       $url = $TPL["url_alloc_taskSummary"];
     } else if (isset($save_and_new)) {
-      $url = $TPL["url_alloc_task"]."&projectID=".$task->get_value("projectID")."&parentTaskID=".$task->get_value("parentTaskID");
+      $url = $TPL["url_alloc_task"]."projectID=".$task->get_value("projectID")."&parentTaskID=".$task->get_value("parentTaskID");
     } else if (isset($timeSheet_save)) {
-      $url = $TPL["url_alloc_timeSheet"]."&timeSheetID=".$timeSheetID;
+      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID;
     } else {
       die("Unexpected save button");
     }
@@ -121,7 +121,7 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
   $task->read_globals();
   $projectID or $projectID = $task->get_value("projectID");
   $task->delete();
-  header("location: ".$TPL["url_alloc_project"]."&projectID=$projectID");
+  header("location: ".$TPL["url_alloc_project"]."projectID=$projectID");
 }
 
 
@@ -176,7 +176,7 @@ $q = sprintf("SELECT clientID FROM project LEFT JOIN task ON task.projectID = pr
 $db->query($q);
 $db->next_record();
 if ($db->f("clientID")) {
-  $TPL["new_client_contact_link"] = "<a href=\"".$TPL["url_alloc_client"]."&clientID=".$db->f("clientID")."\">";
+  $TPL["new_client_contact_link"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$db->f("clientID")."\">";
   $TPL["new_client_contact_link"].= "New Client Contact</a>";
 }
 
@@ -198,7 +198,7 @@ if (is_array($parentTaskIDs)) {
 
   foreach ($parentTaskIDs as $tName => $tID) {
     $spaces.="&nbsp;&nbsp;&nbsp;&nbsp;";
-    $TPL["hierarchy_links"] .= "<br/>".$spaces."<a href=\"".$TPL["url_alloc_task"]."&taskID=".$tID."\">".$tName."</a>";
+    $TPL["hierarchy_links"] .= "<br/>".$spaces."<a href=\"".$TPL["url_alloc_task"]."taskID=".$tID."\">".$tName."</a>";
     #$br = "<br/>";
   }
 }

@@ -1,4 +1,4 @@
-<form action="{url_alloc_timeSheet}&timeSheetID={timeSheetID}" method="post">
+<form action="{url_alloc_timeSheet}timeSheetID={timeSheetID}" method="post">
 <tr>
   <td><input type="text" name="transaction_transactionDate" value="{transaction_transactionDate}" size="10"></td>
   <td><input type="text" name="transaction_product" value="{transaction_product}" size="20"></td>

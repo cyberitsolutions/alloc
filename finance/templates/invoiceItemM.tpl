@@ -4,7 +4,7 @@
   <tr>
     <th>Allocate Invoice Item</th>
     <th class="right">{next_link}
-                      <a href="{url_alloc_invoiceItemList}&mode={mode}">Invoice Item List</a>
+                      <a href="{url_alloc_invoiceItemList}mode={mode}">Invoice Item List</a>
     </th>
     
   </tr>  
@@ -82,7 +82,7 @@
     <td>Date</td>
     <td>TF</td>
     <td>Amount</td>
-    <td><form method="post" action="{url_alloc_invoiceItem}&mode={mode}">
+    <td><form method="post" action="{url_alloc_invoiceItem}mode={mode}">
     <input type="hidden" name="invoiceItemID" value="{invoiceItemID}">
     {p_button}{a_button}{r_button}&nbsp;</form></td>
     <td>Action</td>

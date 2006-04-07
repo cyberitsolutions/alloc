@@ -31,7 +31,7 @@ class pendingApprovalTimeSheetListHomeItem extends home_item {
         $TPL["class"] = " class=\"overdue\"";
       } 
       
-      $TPL["date"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."&timeSheetID=".$timeSheet->get_id()."\">".$date."</a>";
+      $TPL["date"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".$date."</a>";
       
       $person = new person;
       $person->set_id($timeSheet->get_value("personID"));

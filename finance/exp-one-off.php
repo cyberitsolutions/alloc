@@ -123,41 +123,41 @@ if ($cancel) {
   $expenseForm->save();
   $expenseForm->set_status("pending");
   page_close();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."&expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($approve) {
   $expenseForm->save();
   $expenseForm->set_status("approved");
   page_close();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."&expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($reject) {
   $expenseForm->save();
   $expenseForm->set_status("rejected");
   page_close();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."&expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($save) {
   $expenseForm->read_globals();
   $expenseForm->save();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."&expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($finalise) {
   $expenseForm->read_globals();
   $expenseForm->set_value("expenseFormFinalised", 1);
   $expenseForm->save();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."&expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($unfinalise) {
   $expenseForm->read_globals();
   $expenseForm->set_value("expenseFormFinalised", 0);
   $expenseForm->save();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."&expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 }
 

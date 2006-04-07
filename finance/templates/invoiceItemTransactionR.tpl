@@ -1,6 +1,6 @@
-<form action="{url_alloc_invoiceItem}&mode={mode}" method="post">
+<form action="{url_alloc_invoiceItem}mode={mode}" method="post">
 <tr>
-<td align="center"><a href="{url_alloc_timeSheet}&timeSheetID={transaction_timeSheetID}">{transaction_timeSheetID}</a>&nbsp;</td>
+<td align="center"><a href="{url_alloc_timeSheet}timeSheetID={transaction_timeSheetID}">{transaction_timeSheetID}</a>&nbsp;</td>
   <td><input type="text" name="transaction_transactionDate" value="{transaction_transactionDate}" size="10"></td>
   <td>
     <select name="transaction_tfID">

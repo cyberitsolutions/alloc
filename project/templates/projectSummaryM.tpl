@@ -6,7 +6,7 @@
     <th class="right">{alt_graph_link}&nbsp;&nbsp;{navigation_links}</th>
   </tr>
   <tr>
-    <td colspan="2"><img src="{url_alloc_projectGraph}&projectID={projectID}&graph_type={graph_type}" alt="Project Graph"></td>
+    <td colspan="2"><img src="{url_alloc_projectGraph}projectID={projectID}&graph_type={graph_type}" alt="Project Graph"></td>
   </tr>
   <tr>
     <td colspan="2">

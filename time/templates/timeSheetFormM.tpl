@@ -18,7 +18,7 @@
   <tr>
     <th colspan="3">Time Sheet - {timeSheet_status_label}</th>  
     <th class="right" colspan="2"> 
-      <a href="{url_alloc_timeSheet}&timeSheetID={timeSheet_timeSheetID}&printVersion=true" TARGET="_blank">Client Printout</a>
+      <a href="{url_alloc_timeSheet}timeSheetID={timeSheet_timeSheetID}&printVersion=true" TARGET="_blank">Client Printout</a>
     </th>
   </tr>
 

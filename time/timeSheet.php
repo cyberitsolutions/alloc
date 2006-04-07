@@ -40,7 +40,7 @@ function show_transaction_list($template_name) {
       echo "<td></td><td>&nbsp;</td></tr>";
       echo "<tr><td>Date</td><td>Product</td>";
       echo "<td>TF</td><td>Amount ".$msg."</td><td>Type</td>";
-      echo "<td><form action=\"".$TPL["url_alloc_timeSheet"]."&timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button."</form></td>";
+      echo "<td><form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button."</form></td>";
       echo "<td>&nbsp;</td></tr>";
 
       $db->query("SELECT * from transaction where timeSheetID = ".$timeSheet->get_id()." order by transactionID");
@@ -183,7 +183,7 @@ function show_invoice_details() {
 
     if ($timeSheet->get_value("invoiceItemID") && $timeSheet->get_value("status") == 'invoiced') {
       if ($db->next_record()) {
-        $TPL["invoiceItem_options"] = "<a href=\"".$TPL["url_alloc_invoiceItem"]."&invoiceItemID=".$db->f("iiiiID")."\">";
+        $TPL["invoiceItem_options"] = "<a href=\"".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$db->f("iiiiID")."\">";
         $TPL["invoiceItem_options"].= $db->f("iiiNum").",  $".$db->f("iiAmount")." ".$db->f("iiiiMemo")."</a>";
       }
     } else if ($timeSheet->get_value("status") == 'admin') {
@@ -251,7 +251,7 @@ function show_timeSheet_list($template) {
     $TPL["timeSheetItem_comment_printer_version"] = "";
     !$timeSheetItem->get_value("commentPrivate") and $TPL["timeSheetItem_comment_printer_version"] = $timeSheetItem->get_value("comment");
     
-    $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."&taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
+    $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
     $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = "<br/>".$timeSheetItem->get_value("comment");
     $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f",$timeSheetItem->get_value('timeSheetItemDuration') * $timeSheetItem->get_value('rate'));
 
@@ -551,10 +551,10 @@ if (isset($save)
     } else if (isset($save_and_returnToList)) {
       $url = $TPL["url_alloc_timeSheetList"];
     } else if (isset($save_and_returnToProject)) {
-      $url = $TPL["url_alloc_project"]."&projectID=".$timeSheet->get_value("projectID");
+      $url = $TPL["url_alloc_project"]."projectID=".$timeSheet->get_value("projectID");
     } else {
       $msg = htmlentities(urlencode($msg));
-      $url = $TPL["url_alloc_timeSheet"]."&timeSheetID=".$timeSheet->get_id()."&msg=".$msg."&dont_send_email=".$dont_send_email;
+      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."&msg=".$msg."&dont_send_email=".$dont_send_email;
     }
     page_close();
     header("Location: $url");
@@ -587,14 +587,14 @@ if (isset($save)
       $timeSheetItem->set_value("description", $taskName);
       $timeSheetItem_commentPrivate and $timeSheetItem->set_value("commentPrivate", 1);
       $timeSheetItem->save();
-      header("Location: ".$TPL["url_alloc_timeSheet"]."&timeSheetID=".$timeSheetItem->get_value("timeSheetID"));
+      header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetItem->get_value("timeSheetID"));
 
     } else if ($timeSheetItem_edit) {
       // Hmph. Nothing needs to go here?
 
     } else if ($timeSheetItem_delete) {
       $timeSheetItem->delete();
-      header("Location: ".$TPL["url_alloc_timeSheet"]."&timeSheetID=".$timeSheetID);
+      header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
     }
   }
   // Displaying a record
@@ -707,9 +707,9 @@ if ($projectID != 0) {
 
   $client = $project->get_foreign_object("client");
   $TPL["clientName"] = $client->get_value("clientName");
-  $TPL["cost_centre_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."&tfID=".$project->get_value("cost_centre_tfID")."\">";
+  $TPL["cost_centre_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$project->get_value("cost_centre_tfID")."\">";
   $TPL["cost_centre_link"].= get_tf_name($project->get_value("cost_centre_tfID"))."</a>";
-  $TPL["client_link"] = "<a href=\"".$TPL["url_alloc_client"]."&clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
+  $TPL["client_link"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
 }
 // THIS IS A GOOD PLACE TO PUT STUFF 
 
@@ -892,7 +892,7 @@ if (!$TPL["timeSheet_projectName"]) {
   $TPL["show_project_options"] = "<select size=\"1\" name =\"timeSheet_projectID\"><option></option>";
   $TPL["show_project_options"].= get_options_from_array($project_array, $projectID)."</Select>";
 } else {
-  $TPL["show_project_options"] = "<a href=\"".$TPL["url_alloc_project"]."&projectID=".$TPL["timeSheet_projectID"]."\">".$TPL["timeSheet_projectName"]."</a>";
+  $TPL["show_project_options"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["timeSheet_projectID"]."\">".$TPL["timeSheet_projectName"]."</a>";
 }
 
 

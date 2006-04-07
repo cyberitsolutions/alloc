@@ -6,9 +6,9 @@
 function updateStuffWithAjax() {
   obj = document.getElementById("taskform").projectID;
   id = obj.options[obj.selectedIndex].value;
-  url = '{url_alloc_updateParentTasks}&projectID='+id
+  url = '{url_alloc_updateParentTasks}projectID='+id
   makeAjaxRequest(url,'updateParentTasks',1)
-  url = '{url_alloc_updateTaskCCList}&projectID='+id
+  url = '{url_alloc_updateTaskCCList}projectID='+id
   makeAjaxRequest(url,'updateTaskCCList',2)
 }
 
@@ -41,9 +41,9 @@ function updateTaskCCList(number) {
   <tr>
     <th colspan="1"><nobr>{task_taskType}</nobr></th>
     <th class="right" colspan="4">
-&nbsp;<a href="{url_alloc_task}&taskID={task_taskID}&view=brief">View</a>
-&nbsp;<a target="_BLANK" href="{url_alloc_task}&taskID={task_taskID}&view=printer">Printer</a>
-&nbsp;<a href="{url_alloc_project}&projectID={task_projectID}">Project</a>
+&nbsp;<a href="{url_alloc_task}taskID={task_taskID}&view=brief">View</a>
+&nbsp;<a target="_BLANK" href="{url_alloc_task}taskID={task_taskID}&view=printer">Printer</a>
+&nbsp;<a href="{url_alloc_project}projectID={task_projectID}">Project</a>
 &nbsp;{navigation_links}
     </th>
   </tr>

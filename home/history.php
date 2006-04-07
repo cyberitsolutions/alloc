@@ -10,7 +10,7 @@ if ($historyID) {
     $query = sprintf("select * from history where historyID = %d", $historyID);
     $db->query($query);
     $db->next_record();
-    header("Location: ".$sess->url($db->f("the_place"))."&historyID=".$historyID);
+    header("Location: ".$sess->url($db->f("the_place"))."historyID=".$historyID);
   } else {
     header("Location: ".$sess->url($historyID));
   }

@@ -196,31 +196,31 @@ class project extends db_entity
  
     // Client 
     if ($this->get_value("clientID")) {  
-      $url = $TPL["url_alloc_client"]."&clientID=".$this->get_value("clientID");
+      $url = $TPL["url_alloc_client"]."clientID=".$this->get_value("clientID");
       $links[] = "<a href=\"$url\">Client</a>";
     }
 
     // Tasks
     if ($this->have_perm()) {
-      $url = $TPL["url_alloc_taskSummary"]."&applyFilter=1&taskStatus=not_completed&view=byProject&projectID=".$this->get_id();
+      $url = $TPL["url_alloc_taskSummary"]."applyFilter=1&taskStatus=not_completed&view=byProject&projectID=".$this->get_id();
       $links[] = "<a href=\"$url\">Tasks</a>";
     } 
 
     // Graph
     if ($this->have_perm()) {
-      $url = $TPL["url_alloc_projectSummary"]."&projectID=".$this->get_id();
+      $url = $TPL["url_alloc_projectSummary"]."projectID=".$this->get_id();
       $links[] = "<a href=\"$url\">Graph</a>";
     }
 
     // Allocation
     if ($this->have_perm(PERM_PROJECT_VIEW_TASK_ALLOCS)) {
-      $url = $TPL["url_alloc_personGraphs"]."&projectID=".$this->get_id();
+      $url = $TPL["url_alloc_personGraphs"]."projectID=".$this->get_id();
       $links[] = "<a href=\"$url\">Allocation</a>";
     } 
 
     // New Task
     if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
-      $url = $TPL["url_alloc_task"]."&projectID=".$this->get_id();
+      $url = $TPL["url_alloc_task"]."projectID=".$this->get_id();
       $links[] = "<a href=\"$url\">New Task</a>";
     }
 

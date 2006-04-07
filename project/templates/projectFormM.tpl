@@ -165,7 +165,7 @@
 {table_box}
   <tr>
     <th>Uncompleted Tasks</th>
-    <th class="right" colspan="3"><a href="{url_alloc_task}&projectID={project_projectID}">New Task</a></th>
+    <th class="right" colspan="3"><a href="{url_alloc_task}projectID={project_projectID}">New Task</a></th>
   </tr>
   <tr>
     <td colspan="2">
@@ -179,7 +179,7 @@
   <tr>
     <th colspan="4">Reminders</th>
     <th class="right">
-      <a href="{url_alloc_reminderAdd}&step=3&parentType=project&parentID={project_projectID}&returnToParent=t">
+      <a href="{url_alloc_reminderAdd}step=3&parentType=project&parentID={project_projectID}&returnToParent=t">
       New Reminder</a>
     </th>
   </tr>

@@ -1,7 +1,7 @@
 <?php
 require_once("alloc.inc");
 
-global $SCRIPT_PATH, $SERVER_NAME;
+global $SERVER_NAME;
 
 
 if (!isset($step)) {
@@ -94,13 +94,13 @@ case 3:
 
   // link to parent
   if ($parentType == "client") {
-    $TPL["return_address"] = $TPL["url_alloc_client"]."&clientID=".$parentID;
+    $TPL["return_address"] = $TPL["url_alloc_client"]."clientID=".$parentID;
     $TPL["reminder_goto_parent"] = "<a href=\"".$TPL["return_address"]."\">Goto Client</a>";
   } else if ($parentType == "project") {
-    $TPL["return_address"] = $TPL["url_alloc_project"]."&projectID=".$parentID;
+    $TPL["return_address"] = $TPL["url_alloc_project"]."projectID=".$parentID;
     $TPL["reminder_goto_parent"] = "<a href=\"".$TPL["return_address"]."\">Goto Project</a>";
   } else if ($parentType == "task") {
-    $TPL["return_address"] = $TPL["url_alloc_task"]."&taskID=".$parentID;
+    $TPL["return_address"] = $TPL["url_alloc_task"]."taskID=".$parentID;
     $TPL["reminder_goto_parent"] = "<a href=\"".$TPL["return_address"]."\">Goto Task</a>";
   }
   // recipients
@@ -133,21 +133,21 @@ case 3:
       $client->set_id($parentID);
       $client->select();
       $TPL["reminder_default_subject"] = sprintf("[Client: %s]", $client->get_value('clientName'));
-      $TPL["reminder_default_content"] = "http://".$SERVER_NAME.$SCRIPT_PATH."client/client.php?clientID=".$parentID;
+      $TPL["reminder_default_content"] = "http://".$SERVER_NAME.SCRIPT_PATH."client/client.php?clientID=".$parentID;
 
     } else if ($parentType == "project") {
       $project = new project;
       $project->set_id($parentID);
       $project->select();
       $TPL["reminder_default_subject"] = sprintf("[Project: %s]", $project->get_value('projectName'));
-      $TPL["reminder_default_content"] = "http://".$SERVER_NAME.$SCRIPT_PATH."project/project.php?projectID=".$parentID;
+      $TPL["reminder_default_content"] = "http://".$SERVER_NAME.SCRIPT_PATH."project/project.php?projectID=".$parentID;
 
     } else if ($parentType == "task") {
       $task = new task;
       $task->set_id($parentID);
       $task->select();
       $TPL["reminder_default_subject"] = sprintf("[Task: %s]", $task->get_value('taskName'));
-      $TPL["reminder_default_content"] = "http://".$SERVER_NAME.$SCRIPT_PATH."project/task.php?taskID=".$parentID;
+      $TPL["reminder_default_content"] = "http://".$SERVER_NAME.SCRIPT_PATH."project/task.php?taskID=".$parentID;
 
     } else if ($parentType == "general") {
       $TPL["reminder_default_subject"] = "[General Reminder]";
@@ -239,11 +239,11 @@ case 4:
   header("Location: ".$TPL["url_alloc_eventFilterList"]);
   if ($returnToParent == "t") {
     if ($parentType == "client") {
-      header("Location: ".$TPL["url_alloc_client"]."&clientID=".$parentID);
+      header("Location: ".$TPL["url_alloc_client"]."clientID=".$parentID);
     } else if ($parentType == "project") {
-      header("Location: ".$TPL["url_alloc_project"]."&projectID=".$parentID);
+      header("Location: ".$TPL["url_alloc_project"]."projectID=".$parentID);
     } else if ($parentType == "task") {
-      header("Location: ".$TPL["url_alloc_task"]."&taskID=".$parentID);
+      header("Location: ".$TPL["url_alloc_task"]."taskID=".$parentID);
     }
   }
 

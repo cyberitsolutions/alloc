@@ -37,7 +37,7 @@
   
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td><img src="/images/icon_alloc.png"/></td> 
+                  <td><img src="{script_path}images/icon_alloc.png"/></td> 
                   <td class="link" valign="top">
                     <nobr>{links}&nbsp;</nobr>
                   </td>
