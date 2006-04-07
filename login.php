@@ -27,14 +27,14 @@ if ($_POST["login"]) {
 
 
       if ($_POST["use_cookies"]) {
-        $sess->MakeCookie();
+        $sess->UseCookie();
       } else {
-        $sess->DestroyCookie();
+        $sess->UseGet();
       }
 #die("mode: ".$sess->mode);
       $url = $sess->GetUrl($TPL["url_alloc_home"]);
       $sess->Save();
-die($url);
+#die($url);
       header("Location: ".$url);
     }
   } 

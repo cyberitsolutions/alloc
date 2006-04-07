@@ -34,22 +34,22 @@ function get_template($filename, $use_function_object = false) {
   $replace = '<?php } ?>';
   $template = preg_replace($pattern,$replace,$template);
 
+  $pattern = '.php&';
+  $replace = '.php?';
+  $template = str_replace($pattern,$replace,$template);
+
   return "?>$template<?php ";
 }
 
 
-// Output a template to the user
-function print_template($template, $function_object = "") {
-  global $TPL;
-  // echo htmlspecialchars($template); // GOOD PLACE TO DEBUG
-  eval($template);
-} 
-
 // This is the publically callable function, used to include template files
 function include_template($filename, $function_object = "") {
+  global $TPL;
   echo "<!-- start $filename -->\n";
   $template = get_template($filename, is_object($function_object));
-  print_template($template, $function_object);
+   echo htmlspecialchars($template); // GOOD PLACE TO DEBUG
+die();
+  eval($template);
   echo "<!-- end $filename -->\n";
 } 
 
