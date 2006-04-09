@@ -11,14 +11,14 @@
 
 
 <tr>
- <td colspan="6"><h2><u>Cybersource Expense Form</u></h2></td>
+  <td colspan="5"><h2><u>Cybersource Expense Form</u></h2></td>
+  <td align="right">ID: <b>{expenseFormID}</b></td>
 </tr>
 
  {:show_all_exp templates/exp-one-off-printableR.tpl}
 
 <tr>
-  <td colspan="3">Expense form ID: <b>{expenseFormID}</b></td>
-  <td colspan="3" align="right"><strong style="font-size: large">TOTAL: &nbsp;${formTotal}</strong></td>
+  <td colspan="6" align="right"><b>${formTotal}</b></td>
 </tr>
 
 <tr>

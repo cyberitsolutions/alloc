@@ -186,7 +186,7 @@ insert into projectPersonRole (projectPersonRoleID,projectPersonRoleName,project
 
 
 alter table project drop managerUserID;
-alter table project drop timesheets_to_manager;
+-- alter table project drop timesheets_to_manager;
 
 alter table projectCommissionPerson change commissionPrecent commissionPercent decimal(5,3) default 0;
 

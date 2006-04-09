@@ -19,12 +19,16 @@ mysqldump -u alloc -p alloc | grep -v "INSERT INTO active_sessions" >> ${FILE}
 # append updates to the SQL file.
 echo "\
 update person set personActive = '0';
-update person set personActive = '1'
+update person set personActive = '1', password ='/.iTV2iP8pLgs'
 where username = 'alla'
    or username = 'clancy'
    or username = 'conz'
+   or username = 'ron'
    or username = 'djk'
    or username = 'steve'
+   or username = 'andrew'
+   or username = 'arik'
+   or username = 'manju'
    or username = 'jeremyc'
    or username = 'anonymous'
 ;

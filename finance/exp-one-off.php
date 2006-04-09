@@ -217,7 +217,7 @@ if (is_object($expenseForm) && $expenseForm->get_id()) {
   $db = new db_alloc;
   $db->query(sprintf("SELECT SUM(amount) AS sum FROM transaction WHERE expenseFormID = %d",$expenseForm->get_id()));
   $db->next_record();
-  $TPL["formTotal"] = abs($db->f("sum"));
+  $TPL["formTotal"] = sprintf("%0.2f",abs($db->f("sum")));
 }
 
 
@@ -253,7 +253,7 @@ function show_all_exp($template) {
       $transaction->get_value("quantity") and $TPL["amount"] = -$transaction->get_value("amount") / $transaction->get_value("quantity");
       $TPL["amount"] = number_format($TPL["amount"], 2);
 
-
+      $TPL["lineTotal"] = sprintf("%0.2f",$TPL["amount"] * $transaction->get_value("quantity"));
       $tf->set_id($transaction->get_value("tfID"));
       $tf->select();
       $TPL["tfID"] = $tf->get_value("tfName");
