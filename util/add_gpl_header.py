@@ -2,9 +2,11 @@
 
 import os, sys
 
-d = os.getcwd()
 # Remove this many lines from the top of the file ${1}
 num_of_lines_to_remove = 1
+
+
+d = os.path.dirname(sys.argv[0])
 header_file = d + "/gpl_header"
 
 # Read the gpl file into a string
