@@ -29,314 +29,307 @@ if (!$current_user->is_employee()) {
 
 
 
-function show_transaction_list($template_name) {
-  global $timeSheet, $TPL, $current_user, $percent_array;
-  $db = new db_alloc;
+  function show_transaction_list($template_name) {
+    global $timeSheet, $TPL, $current_user, $percent_array;
+    $db = new db_alloc;
 
-  if ($timeSheet->get_value("status") == "invoiced") {
+    if ($timeSheet->get_value("status") == "invoiced") {
 
-    $db->query("SELECT * FROM tf ORDER BY tfName");
-    $tf_array = get_array_from_db($db, "tfID", "tfName");
-    $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
-    $transactionType_options = array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance");
+      $db->query("SELECT * FROM tf ORDER BY tfName");
+      $tf_array = get_array_from_db($db, "tfID", "tfName");
+      $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
+      $transactionType_options = array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance");
 
 
-    if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+      if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
 
-      $p_button = "<input type=\"submit\" name=\"p_button\" value=\"P\">";
-      $a_button = "<input type=\"submit\" name=\"a_button\" value=\"A\">";
-      $r_button = "<input type=\"submit\" name=\"r_button\" value=\"R\">";
+        $p_button = "<input type=\"submit\" name=\"p_button\" value=\"P\">";
+        $a_button = "<input type=\"submit\" name=\"a_button\" value=\"A\">";
+        $r_button = "<input type=\"submit\" name=\"r_button\" value=\"R\">";
 
-      $db->query("SELECT SUM(amount) as total FROM transaction WHERE timeSheetID = ".$timeSheet->get_id());
-      $db->next_record();
-      $total = $db->f("total");
+        $db->query("SELECT SUM(amount) as total FROM transaction WHERE timeSheetID = ".$timeSheet->get_id());
+        $db->next_record();
+        $total = $db->f("total");
 
-      if (sprintf("%0.2f",$total) == 0) {
-        $msg = "(balanced!)";
+        if (sprintf("%0.2f",$total) == 0) {
+          $msg = "(balanced!)";
+        } else {
+          $total = -$total;
+          $msg = "(allocate: ".sprintf("\$%0.2f)",$total);
+        }
+        echo $TPL["table_box"];
+        echo "<th colspan=\"7\">Transactions</th></tr><tr><td colspan=\"5\"></td>";
+        echo "<td></td><td>&nbsp;</td></tr>";
+        echo "<tr><td>Date</td><td>Product</td>";
+        echo "<td>TF</td><td>Amount ".$msg."</td><td>Type</td>";
+        echo "<td><form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button."</form></td>";
+        echo "<td>&nbsp;</td></tr>";
+
+        $db->query("SELECT * from transaction where timeSheetID = ".$timeSheet->get_id()." order by transactionID");
+
+        while ($db->next_record()) {
+          $transaction = new transaction;
+          $transaction->read_db_record($db);
+          $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
+          $TPL["tf_options"] = get_options_from_array($tf_array, $TPL["transaction_tfID"], true, 35);
+          $TPL["status_options"] = get_options_from_array($status_options, $transaction->get_value("status"));
+          $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
+          $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $transaction->get_value("transactionType"), false);
+          $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
+          $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Save\">
+                                                <input type=\"submit\" name=\"transaction_delete\" value=\"Delete\">";
+          include_template($template_name);
+        }
+
       } else {
-        $total = -$total;
-        $msg = "(allocate: ".sprintf("\$%0.2f)",$total);
+
+        echo $TPL["table_box"];
+        echo "<tr><th colspan=\"7\">Transactions</th></tr><tr><td>Date</td><td>Product</td>";
+        echo "<td>TF</td><td>Amount</td><td>Type</td><td>Status</td><td>&nbsp;</td></tr>";
+
+        // If you don't have perm INVOICE TIMESHEETS then only select 
+        // transactions which you have permissions to see. 
+
+        $query = sprintf("SELECT * FROM transaction, tfPerson 
+            WHERE transaction.tfID = tfPerson.tfID 
+            AND tfPerson.personID = %d 
+            ORDER BY transactionID", $current_user->get_id());
+
+        $db->query($query);
+
+        while ($db->next_record()) {
+          $transaction = new transaction;
+          $transaction->read_db_record($db);
+          $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
+          $TPL["transaction_amount"] = "$".number_format($TPL["transaction_amount"], 2);
+          $TPL["transaction_tfID"] = get_tf_name($transaction->get_value("tfID"));
+          include_template("templates/timeSheetTransactionListViewR.tpl");
+        }
+
+        // Have to finish table here because normally the table would get
+        // finished in the show new transaction function, but that won't be
+        // called if you don't have perm INVOICE_TIMESHEETS. 
+
+        echo "</table><br>";
       }
-      echo $TPL["table_box"];
-      echo "<th colspan=\"7\">Transactions</th></tr><tr><td colspan=\"5\"></td>";
-      echo "<td></td><td>&nbsp;</td></tr>";
-      echo "<tr><td>Date</td><td>Product</td>";
-      echo "<td>TF</td><td>Amount ".$msg."</td><td>Type</td>";
-      echo "<td><form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button."</form></td>";
-      echo "<td>&nbsp;</td></tr>";
+    }
+  }
 
-      $db->query("SELECT * from transaction where timeSheetID = ".$timeSheet->get_id()." order by transactionID");
 
-      while ($db->next_record()) {
-        $transaction = new transaction;
-        $transaction->read_db_record($db);
-        $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
-        $TPL["tf_options"] = get_options_from_array($tf_array, $TPL["transaction_tfID"], true, 35);
-        $TPL["status_options"] = get_options_from_array($status_options, $transaction->get_value("status"));
-        $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
-        $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $transaction->get_value("transactionType"), false);
-        $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
-        $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Save\">
-                                              <input type=\"submit\" name=\"transaction_delete\" value=\"Delete\">";
-        include_template($template_name);
-      }
+  function show_new_transaction($template) {
+    global $timeSheet, $TPL, $db, $percent_array;
 
-    } else {
+    if ($timeSheet->get_value("status") == "invoiced" && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+      $db->query("SELECT * FROM tf ORDER BY tfName");
+      $tf_array = get_array_from_db($db, "tfID", "tfName");
+      $TPL["tf_options"] = get_options_from_array($tf_array, $none, true, 35);
 
-      echo $TPL["table_box"];
-      echo "<tr><th colspan=\"7\">Transactions</th></tr><tr><td>Date</td><td>Product</td>";
-      echo "<td>TF</td><td>Amount</td><td>Type</td><td>Status</td><td>&nbsp;</td></tr>";
+      $transactionType_options = array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance");
+      $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $none, false);
 
-      // If you don't have perm INVOICE TIMESHEETS then only select 
-      // transactions which you have permissions to see. 
+      $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
+      $TPL["status_options"] = get_options_from_array($status_options, $none);
 
-      $query = sprintf("SELECT * FROM transaction, tfPerson 
-          WHERE transaction.tfID = tfPerson.tfID 
-          AND tfPerson.personID = %d 
-          ORDER BY transactionID", $current_user->get_id());
+      $TPL["invoiceItemID"] = $timeSheet->get_value("invoiceItemID");
 
-      $db->query($query);
+      $TPL["transaction_timeSheetID"] = $timeSheet->get_id();
+      $TPL["transaction_transactionDate"] = date("Y-m-d");
+      $TPL["transaction_product"] = "";
+      $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Add\">";
+      $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
 
-      while ($db->next_record()) {
-        $transaction = new transaction;
-        $transaction->read_db_record($db);
-        $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
-        $TPL["transaction_amount"] = "$".number_format($TPL["transaction_amount"], 2);
-        $TPL["transaction_tfID"] = get_tf_name($transaction->get_value("tfID"));
-        include_template("templates/timeSheetTransactionListViewR.tpl");
-      }
-
-      // Have to finish table here because normally the table would get
-      // finished in the show new transaction function, but that won't be
-      // called if you don't have perm INVOICE_TIMESHEETS. 
-
+      include_template($template);
       echo "</table><br>";
     }
   }
-}
 
 
-function show_new_transaction($template) {
-  global $timeSheet, $TPL, $db, $percent_array;
+  function show_main_list() {
+    global $timeSheet, $current_user, $timeSheetItem_timeSheetItemID;
 
-  if ($timeSheet->get_value("status") == "invoiced" && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-    $db->query("SELECT * FROM tf ORDER BY tfName");
-    $tf_array = get_array_from_db($db, "tfID", "tfName");
-    $TPL["tf_options"] = get_options_from_array($tf_array, $none, true, 35);
-
-    $transactionType_options = array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance");
-    $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $none, false);
-
-    $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
-    $TPL["status_options"] = get_options_from_array($status_options, $none);
-
-    $TPL["invoiceItemID"] = $timeSheet->get_value("invoiceItemID");
-
-    $TPL["transaction_timeSheetID"] = $timeSheet->get_id();
-    $TPL["transaction_transactionDate"] = date("Y-m-d");
-    $TPL["transaction_product"] = "";
-    $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Add\">";
-    $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
-
-    include_template($template);
-    echo "</table><br>";
-  }
-}
-
-
-
-
-
-function show_main_list() {
-  global $timeSheet, $current_user;
-
-  if (!$timeSheet->get_id()) return;
-  
-  $db = new db_alloc;
-  $q = sprintf("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d",$timeSheet->get_id());
-  $db->query($q);
-  $db->next_record();
-  if (!$db->f("tally")) return;
-
-  include_template("templates/timeSheetItemM.tpl");
-}
-
-
-
-
-function show_invoice_details() {
-  global $timeSheet, $TPL, $db, $timeSheetID, $projectID, $current_user;
-
-  if (($timeSheet->get_value("status") == 'admin' || $timeSheet->get_value("status") == 'invoiced')
-      && $timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
-
-    $timeSheet->load_pay_info();
-    $totalPrice = $timeSheet->pay_info["total_dollars"];
-
-    // this is a just-in-case clause. So entries that are close 
-    // but for some reason or another aren't coming up.  Just making
-    // it a teeny bit flexible.
-    $upperTotalPrice = ceil($totalPrice) + 1;
-    $lowerTotalPrice = floor($totalPrice) - 1;
-
-
-    // iiQuantity * iiUnitPrice == iiAmount
-    // get invoice drop down list;
-    $query = "SELECT invoiceItem.*, 
-      invoiceItem.invoiceItemID as iiiiID, 
-    invoiceItem.iiMemo 	   as iiiiMemo, 
-    invoice.invoiceNum 	   as iiiNum, 	
-    invoice.invoiceName	   as iiName, 
-    timeSheet.invoiceItemID
-      FROM invoiceItem, invoice, timeSheet
-      WHERE invoiceItem.invoiceID = invoice.invoiceID
-      AND invoiceItem.iiAmount >= ".$lowerTotalPrice."
-      AND invoiceItem.iiAmount <= ".$upperTotalPrice."
-      AND invoiceItem.invoiceItemID != timeSheet.invoiceItemID";
-
-    if ($timeSheet->get_value("invoiceItemID") && $timeSheet->get_value("status") == "invoiced") {
-      $query.= " AND invoiceItem.invoiceItemID = ".$timeSheet->get_value("invoiceItemID");
-    }
-
-    $query.= " GROUP BY invoiceItem.invoiceItemID";
-
-    $db->query($query);
-
-
-    if ($timeSheet->get_value("invoiceItemID") && $timeSheet->get_value("status") == 'invoiced') {
-      if ($db->next_record()) {
-        $TPL["invoiceItem_options"] = "<a href=\"".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$db->f("iiiiID")."\">";
-        $TPL["invoiceItem_options"].= $db->f("iiiNum").",  $".$db->f("iiAmount")." ".$db->f("iiiiMemo")."</a>";
-      }
-    } else if ($timeSheet->get_value("status") == 'admin') {
-
-      // Every second array element is a string separator.  YEA!
-      $display_fields = array("", "iiiNum", ",  $", "iiAmount", " ", "iiName", " - ", "iiiiMemo");
-      $TPL["invoiceItem_options"] = "<select name=\"timeSheet_invoiceItemID\"><option value=\"\">Potential Invoices</option>";
-      $TPL["invoiceItem_options"].= get_options_from_db($db, $display_fields, "iiiiID", $timeSheet->get_value("invoiceItemID"), 100);
-      $TPL["invoiceItem_options"].= "</select>";
-
-    }
-
-    include_template("templates/timeSheetInvoiceForm.tpl");
-  }
-}
-
-
-function task_exists($taskID) {
-
-  $db = new db_alloc;
-
-  // its not zero is it
-  $taskID == 0 ? $rtn = false : $rtn = true;
-
-  // is task in DB
-  $query = sprintf("SELECT * FROM task WHERE taskID = %d", $taskID);
-  $db->query($query);
-  $db->next_record()? $rtn = true : $rtn = false;
-  return $rtn;
-}
-
-
-function show_timeSheet_list($template) {
-  global $TPL, $timeSheet, $db, $tskDesc;
-  global $timeSheetItem, $timeSheetItem_timeSheetItemID, $timeSheetID;
-
-  $db_task = new db_alloc;
-
-  if (is_object($timeSheet) && $timeSheet->get_value("status") == "edit") {
-    $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_edit\" value=\"Edit\">";
-    $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
-  }
-
-  $timeUnit = new timeUnit;
-  $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
-  
-  $item_query = sprintf("SELECT * from timeSheetItem WHERE timeSheetID=%d ", $timeSheetID);
-  $item_query.= sprintf("GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
-  $db->query($item_query);
-
-  while ($db->next_record()) {
-    $timeSheetItem = new timeSheetItem;
-    $timeSheetItem->read_db_record($db);
-    $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
-
-    // If editing a timeSheetItem then don't display it in the list
-    if ($timeSheetItem_timeSheetItemID == $timeSheetItem->get_id()) {
-      continue;
-    }  
-   
-    $TPL["timeSheet_totalHours"] += $timeSheetItem->get_value("timeSheetItemDuration");
-
-
-    $text = $TPL["timeSheetItem_description_printer_version"] = stripslashes($timeSheetItem->get_value('description'));
-    $TPL["timeSheetItem_comment_printer_version"] = "";
-    !$timeSheetItem->get_value("commentPrivate") and $TPL["timeSheetItem_comment_printer_version"] = $timeSheetItem->get_value("comment");
+    if (!$timeSheet->get_id()) return;
     
-    $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
-    $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = "<br/>".$timeSheetItem->get_value("comment");
-    $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f",$timeSheetItem->get_value('timeSheetItemDuration') * $timeSheetItem->get_value('rate'));
-
-    include_template($template);
-
+    $db = new db_alloc;
+    $q = sprintf("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d and timeSheetItemID != %d",$timeSheet->get_id(),$timeSheetItem_timeSheetItemID);
+    $db->query($q);
+    $db->next_record();
+    if ($db->f("tally")) {
+      include_template("templates/timeSheetItemM.tpl");
+    }
   }
 
-  $TPL["summary_totals"] = $timeSheet->pay_info["summary_unit_totals"];
 
-}
+  function show_invoice_details() {
+    global $timeSheet, $TPL, $db, $timeSheetID, $projectID, $current_user;
 
+    if (($timeSheet->get_value("status") == 'admin' || $timeSheet->get_value("status") == 'invoiced')
+        && $timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
 
-
-
-function show_new_timeSheet($template) {
-  global $TPL, $timeSheet, $timeSheetID, $db, $current_user, $timeSheetItem_timeSheetItemID;
-
-  // Don't show entry form for new timeSheet.
-  if (!$timeSheetID) {
-    return;
-  } 
-
-
-  if (is_object($timeSheet) && $timeSheet->get_value("status") == 'edit' 
-  && ($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
-
-    // If we are editing an existing timeSheetItem
-    if ($timeSheetItem_timeSheetItemID) {
-      $timeSheetItem = new timeSheetItem;
-      $timeSheetItem->set_id($timeSheetItem_timeSheetItemID);
-      $timeSheetItem->select();
-      $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
-      $taskID = $timeSheetItem->get_value("taskID");
-      $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Save Time Sheet Item\">";
-      $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
-
-      $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
-      $TPL["timeSheetItem_commentPrivate"] and $TPL["commentPrivateChecked"] = " checked";
-
-    // Else default values for creating a new timeSheetItem
-    } else {
-      $timeSheetItem = new timeSheetItem;
-      $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
-      $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Add Time Sheet Item\">";
-      $TPL["timeSheetItem_personID"] = $current_user->get_id();
       $timeSheet->load_pay_info();
-      $TPL["timeSheetItem_rate"] = $timeSheet->pay_info["project_rate"];
-      $timeSheetItemDurationUnitID = $timeSheet->pay_info["project_rateUnitID"];
-    }
+      $totalPrice = $timeSheet->pay_info["total_dollars"];
 
-    $TPL["taskListDropdown_taskID"] = $taskID;
-    $TPL["taskListDropdown"] = $timeSheet->get_task_list_dropdown("my_open",$timeSheet->get_id(),$taskID);
-    $TPL["timeSheetItem_timeSheetID"] = $timeSheet->get_id();
+      // this is a just-in-case clause. So entries that are close 
+      // but for some reason or another aren't coming up.  Just making
+      // it a teeny bit flexible.
+      $upperTotalPrice = ceil($totalPrice) + 1;
+      $lowerTotalPrice = floor($totalPrice) - 1;
+
+
+      // iiQuantity * iiUnitPrice == iiAmount
+      // get invoice drop down list;
+      $query = "SELECT invoiceItem.*, 
+        invoiceItem.invoiceItemID as iiiiID, 
+      invoiceItem.iiMemo 	   as iiiiMemo, 
+      invoice.invoiceNum 	   as iiiNum, 	
+      invoice.invoiceName	   as iiName, 
+      timeSheet.invoiceItemID
+        FROM invoiceItem, invoice, timeSheet
+        WHERE invoiceItem.invoiceID = invoice.invoiceID
+        AND invoiceItem.iiAmount >= ".$lowerTotalPrice."
+        AND invoiceItem.iiAmount <= ".$upperTotalPrice."
+        AND invoiceItem.invoiceItemID != timeSheet.invoiceItemID";
+
+      if ($timeSheet->get_value("invoiceItemID") && $timeSheet->get_value("status") == "invoiced") {
+        $query.= " AND invoiceItem.invoiceItemID = ".$timeSheet->get_value("invoiceItemID");
+      }
+
+      $query.= " GROUP BY invoiceItem.invoiceItemID";
+
+      $db->query($query);
+
+
+      if ($timeSheet->get_value("invoiceItemID") && $timeSheet->get_value("status") == 'invoiced') {
+        if ($db->next_record()) {
+          $TPL["invoiceItem_options"] = "<a href=\"".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$db->f("iiiiID")."\">";
+          $TPL["invoiceItem_options"].= $db->f("iiiNum").",  $".$db->f("iiAmount")." ".$db->f("iiiiMemo")."</a>";
+        }
+      } else if ($timeSheet->get_value("status") == 'admin') {
+
+        // Every second array element is a string separator.  YEA!
+        $display_fields = array("", "iiiNum", ",  $", "iiAmount", " ", "iiName", " - ", "iiiiMemo");
+        $TPL["invoiceItem_options"] = "<select name=\"timeSheet_invoiceItemID\"><option value=\"\">Potential Invoices</option>";
+        $TPL["invoiceItem_options"].= get_options_from_db($db, $display_fields, "iiiiID", $timeSheet->get_value("invoiceItemID"), 100);
+        $TPL["invoiceItem_options"].= "</select>";
+
+      }
+
+      include_template("templates/timeSheetInvoiceForm.tpl");
+    }
+  }
+
+
+  function task_exists($taskID) {
+
+    $db = new db_alloc;
+
+    // its not zero is it
+    $taskID == 0 ? $rtn = false : $rtn = true;
+
+    // is task in DB
+    $query = sprintf("SELECT * FROM task WHERE taskID = %d", $taskID);
+    $db->query($query);
+    $db->next_record()? $rtn = true : $rtn = false;
+    return $rtn;
+  }
+
+
+  function show_timeSheet_list($template) {
+    global $TPL, $timeSheet, $db, $tskDesc;
+    global $timeSheetItem, $timeSheetItem_timeSheetItemID, $timeSheetID;
+
+    $db_task = new db_alloc;
+
+    if (is_object($timeSheet) && $timeSheet->get_value("status") == "edit") {
+      $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_edit\" value=\"Edit\">";
+      $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
+    }
 
     $timeUnit = new timeUnit;
-    $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
-    $TPL["timeSheetItem_unit_options"] = get_options_from_array($unit_array, $timeSheetItemDurationUnitID);
+    $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
+    
+    $item_query = sprintf("SELECT * from timeSheetItem WHERE timeSheetID=%d ", $timeSheetID);
+    $item_query.= sprintf("GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
+    $db->query($item_query);
 
-    #$TPL["timeSheetItem_dateTimeSheetItem"] or $TPL["timeSheetItem_dateTimeSheetItem"] = date("Y-m-d");
+    while ($db->next_record()) {
+      $timeSheetItem = new timeSheetItem;
+      $timeSheetItem->read_db_record($db);
+      $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
 
-    include_template($template);
+      // If editing a timeSheetItem then don't display it in the list
+      if ($timeSheetItem_timeSheetItemID == $timeSheetItem->get_id()) {
+        continue;
+      }  
+     
+      $TPL["timeSheet_totalHours"] += $timeSheetItem->get_value("timeSheetItemDuration");
+
+
+      $text = $TPL["timeSheetItem_description_printer_version"] = stripslashes($timeSheetItem->get_value('description'));
+      $TPL["timeSheetItem_comment_printer_version"] = "";
+      !$timeSheetItem->get_value("commentPrivate") and $TPL["timeSheetItem_comment_printer_version"] = $timeSheetItem->get_value("comment");
+      
+      $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
+      $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = "<br/>".$timeSheetItem->get_value("comment");
+      $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f",$timeSheetItem->get_value('timeSheetItemDuration') * $timeSheetItem->get_value('rate'));
+
+      include_template($template);
+
+    }
+
+    $TPL["summary_totals"] = $timeSheet->pay_info["summary_unit_totals"];
+
   }
-}
+
+
+  function show_new_timeSheet($template) {
+    global $TPL, $timeSheet, $timeSheetID, $db, $current_user, $timeSheetItem_timeSheetItemID;
+
+    // Don't show entry form for new timeSheet.
+    if (!$timeSheetID) {
+      return;
+    } 
+
+
+    if (is_object($timeSheet) && $timeSheet->get_value("status") == 'edit' 
+    && ($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
+
+      // If we are editing an existing timeSheetItem
+      if ($timeSheetItem_timeSheetItemID) {
+        $timeSheetItem = new timeSheetItem;
+        $timeSheetItem->set_id($timeSheetItem_timeSheetItemID);
+        $timeSheetItem->select();
+        $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
+        $taskID = $timeSheetItem->get_value("taskID");
+        $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Save Time Sheet Item\">";
+        $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
+
+        $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
+        $TPL["timeSheetItem_commentPrivate"] and $TPL["commentPrivateChecked"] = " checked";
+
+      // Else default values for creating a new timeSheetItem
+      } else {
+        $timeSheetItem = new timeSheetItem;
+        $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
+        $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Add Time Sheet Item\">";
+        $TPL["timeSheetItem_personID"] = $current_user->get_id();
+        $timeSheet->load_pay_info();
+        $TPL["timeSheetItem_rate"] = $timeSheet->pay_info["project_rate"];
+        $timeSheetItemDurationUnitID = $timeSheet->pay_info["project_rateUnitID"];
+      }
+
+      $TPL["taskListDropdown_taskID"] = $taskID;
+      $TPL["taskListDropdown"] = $timeSheet->get_task_list_dropdown("my_open",$timeSheet->get_id(),$taskID);
+      $TPL["timeSheetItem_timeSheetID"] = $timeSheet->get_id();
+
+      $timeUnit = new timeUnit;
+      $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
+      $TPL["timeSheetItem_unit_options"] = get_options_from_array($unit_array, $timeSheetItemDurationUnitID);
+
+      #$TPL["timeSheetItem_dateTimeSheetItem"] or $TPL["timeSheetItem_dateTimeSheetItem"] = date("Y-m-d");
+
+      include_template($template);
+    }
+  }
 
 
 
@@ -415,7 +408,7 @@ if (isset($save)
     switch ($timeSheet->get_value("status")) {
     case 'edit':
 
-      if (is_array($projectManagers)) {
+      if (is_array($projectManagers) && count($projectManagers)) {
         $timeSheet->set_value("status", "manager");
         $timeSheet->set_value("dateSubmittedToManager", date("y-m-d"));
    
@@ -455,7 +448,7 @@ if (isset($save)
     break;
 
     case 'manager':
-      if (is_array($projectManagers) && (in_array($current_user->get_id(),$projectManagers)) || ($timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
+      if (is_array($projectManagers) && count($projectManagers) && (in_array($current_user->get_id(),$projectManagers)) || ($timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
         $timeSheet->set_value("approvedByManagerPersonID", $current_user->get_id());
         $timeSheet->set_value("dateSubmittedToAdmin", date("y-m-d"));
         $timeSheet->set_value("status", "admin");
@@ -940,7 +933,7 @@ if ($timeSheetID) {
   }
 
   if ($timeSheet->get_value("status") == "edit" && $db->f("count") == 0) {
-    $TPL["message_help"][] = "Step 2/3: Enter line items by inputting the Duration, Amount and Task and clicking the Add Time Sheet Item Button.";
+    $TPL["message_help"][] = "Step 2/3: Enter Time Sheet Items by inputting the Duration, Amount and Task and clicking the Add Time Sheet Item Button.";
 
   } else if ($timeSheet->get_value("status") == "edit" && $db->f("count") > 0) {
     $TPL["message_help"][] = "Step 3/3: When finished adding Time Sheet Line Items, click the To Manager/Admin button to submit this Time Sheet (it will no longer be editable).";

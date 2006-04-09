@@ -23,24 +23,28 @@
 
 require_once("alloc.inc");
 
-function show_help_body() {
-  global $topic, $module, $modules;
+$modules = get_alloc_modules();
+
+$_GET["module"] or $_GET["module"] = ALLOC_CURRENT_MODULE;
+
+$file = "../".$_GET["module"]."/help/".$_GET["topic"].".html";
+
+if (file_exists($file)) {
 
   // Security checks - do not allow arbitrary file access
-  if (!(eregi("^[a-z0-9_]+$", $topic))) {
+  if (!(eregi("^[a-z0-9_]+$", $_GET["topic"]))) {
     echo "Invalid topic";
     return;
   }
 
-  if (!isset($modules[$module])) {
+  if (!isset($modules[$_GET["module"]])) {
     echo "Invalid module";
     return;
   }
 
-  include_template("../$module/help/$topic.html");
+  include_template($file);
 }
 
-include_template("templates/helpM.tpl");
 
 page_close();
 
