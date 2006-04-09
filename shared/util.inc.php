@@ -32,7 +32,6 @@ function get_all_form_data($array=array()) {
 } 
 
 
-
 function timetook($start, $text="Duration: ") {
   $end = microtime();
   list($start_micro,$start_epoch,$end_micro,$end_epoch) = explode(" ",$start." ".$end);

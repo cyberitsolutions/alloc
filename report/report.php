@@ -29,7 +29,7 @@ if (!has_report_perm()) {
 
 
 
-global $modules, $TPL, $mod, $do_step_2, $do_step_3;
+global $TPL, $mod, $do_step_2, $do_step_3;
 $TPL["mod"] = $mod;
 $TPL["do_step_2"] = $do_step_2;
 $TPL["do_step_3"] = $do_step_3;

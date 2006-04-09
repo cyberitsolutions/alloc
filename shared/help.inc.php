@@ -25,7 +25,7 @@ function get_help_button($topic, $module = "") {
   global $sess, $TPL;
 
   if ($module == "") {
-    $module = ALLOC_MODULE_NAME;
+    $module = ALLOC_CURRENT_MODULE;
   }
 
   if ($topic) {

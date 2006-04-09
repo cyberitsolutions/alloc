@@ -28,7 +28,8 @@ class home_module extends module {
   }
 
   function register_home_items() {
-    global $modules;
+
+    $modules = get_alloc_modules();
 
     if (isset($modules["finance"]) && $modules["finance"]) {
       include(ALLOC_MOD_DIR."/home/lib/tfList_home_item.inc.php");
