@@ -39,5 +39,5 @@ if [ ! -z "${1}" ] && [ -f "${1}" ]; then
   } < ${1}
 
   # Copy file over onto original
-  cp -f ${d}/temp.txt ${1} && echo "Yay."
+  mv -f ${d}/temp.txt ${1} && echo "Yay."
 fi
