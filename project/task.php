@@ -79,7 +79,7 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
   if (is_array($taskCCList)) {
     foreach ($taskCCList as $encoded_name_and_email) {
       $name_and_email = unserialize(base64_decode(urldecode($encoded_name_and_email)));
-      $q = sprintf("INSERT INTO taskCCList (fullName,emailAddress,taskID) VALUES ('%s','%s',%d)",$name_and_email["name"],$name_and_email["email"],$task->get_id());
+      $q = sprintf("INSERT INTO taskCCList (fullName,emailAddress,taskID) VALUES ('%s','%s',%d)",addslashes($name_and_email["name"]),$name_and_email["email"],$task->get_id());
       $db->query($q);
     }
   }

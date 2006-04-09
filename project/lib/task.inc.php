@@ -236,10 +236,10 @@ class task extends db_entity {
       $q = sprintf("SELECT fullName,emailAddress FROM taskCCList WHERE taskID = %d",$this->get_id());
       $db->query($q);  
       while ($db->next_record()) {
-        $taskCCList[] = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$db->f("fullName")),"email"=>$db->f("emailAddress")))));
+        $taskCCList[] = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",stripslashes($db->f("fullName"))),"email"=>$db->f("emailAddress")))));
         // And add the list of people who are already in the taskCCList for this task, just in case they get deleted from the client pages
         // This email address will be overwritten by later entries
-        $taskCCListOptions[$db->f("emailAddress")] = $db->f("fullName");
+        $taskCCListOptions[$db->f("emailAddress")] = stripslashes($db->f("fullName"));
       }
     }
 
@@ -250,7 +250,7 @@ class task extends db_entity {
       $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
       $db->query($q);
       $db->next_record();
-      $taskCCListOptions[$db->f("projectClientEMail")] = $db->f("projectClientName");
+      $taskCCListOptions[$db->f("projectClientEMail")] = stripslashes($db->f("projectClientName"));
   
       // Get all other client contacts from the Client pages for this Project
       $q = sprintf("SELECT clientID FROM project WHERE projectID = %d",$projectID);
@@ -260,7 +260,7 @@ class task extends db_entity {
       $q = sprintf("SELECT clientContactName, clientContactEmail FROM clientContact WHERE clientID = %d",$clientID);
       $db->query($q);
       while ($db->next_record()) {
-        $taskCCListOptions[$db->f("clientContactEmail")] = $db->f("clientContactName");
+        $taskCCListOptions[$db->f("clientContactEmail")] = stripslashes($db->f("clientContactName"));
       }
 
       // Get all the project people for this tasks project
@@ -269,7 +269,7 @@ class task extends db_entity {
                     WHERE projectPerson.projectID = %d",$projectID);
       $db->query($q);
       while ($db->next_record()) {
-        $taskCCListOptions[$db->f("emailAddress")] = $db->f("firstName")." ".$db->f("surname");
+        $taskCCListOptions[$db->f("emailAddress")] = stripslashes($db->f("firstName")." ".$db->f("surname"));
       }
       
 
