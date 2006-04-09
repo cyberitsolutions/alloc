@@ -20,12 +20,7 @@
   </tr>
   <tr>
     <td>
-      {:search_projects templates/searchProjectR.tpl}
-      {:search_clients templates/searchClientR.tpl}
-      {:search_tasks templates/searchTaskR.tpl}
-      {:search_taskID templates/searchTaskR.tpl}
-      {:search_announcements templates/searchAnnouncementR.tpl}
-      {:search_items templates/searchItemR.tpl}
+      {search_results}
     </td>
   </tr>
   </table>

@@ -147,7 +147,7 @@ function show_history() {
 
 function get_category_options() {
   global $category;
-  $category_options = array("Tasks"=>"Tasks", "TaskID"=>"Task ID", "Announcements"=>"Announcements", "Clients"=>"Clients", "Items"=>"Items", "Projects"=>"Projects");
+  $category_options = array("Tasks"=>"Tasks", "Announcements"=>"Announcements", "Clients"=>"Clients", "Items"=>"Items", "Projects"=>"Projects");
   echo get_options_from_array($category_options, $category, true, 10);
 }
 
