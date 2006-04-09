@@ -83,13 +83,13 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 
 INSERT INTO config (configID, name, value) VALUES (1,'cybersourceTfID','7');
 INSERT INTO config (configID, name, value) VALUES (2,'timeSheetAdminEmail','69');
-INSERT INTO config (configID, name, value) VALUES (3,'companyName','Cybersource');
+INSERT INTO config (configID, name, value) VALUES (3,'companyName','Cybersource Pty Ltd');
 INSERT INTO config (configID, name, value) VALUES (4,'companyContactPhone','+61 3 9621 2377');
 INSERT INTO config (configID, name, value) VALUES (5,'companyContactFax','+61 3 9621 2477');
 INSERT INTO config (configID, name, value) VALUES (6,'companyContactEmail','info@cyber.com.au');
 INSERT INTO config (configID, name, value) VALUES (7,'companyContactHomePage','http://www.cyber.com.au');
 INSERT INTO config (configID, name, value) VALUES (8,'companyContactAddress','Level 4, 10-16 Queen St, Melbourne Vic. 3000 Australia');
-INSERT INTO config (configID, name, value) VALUES (10,'allocURL','http://alloc_dev/');
+INSERT INTO config (configID, name, value) VALUES (9,'allocURL','http://alloc/');
 
 --
 -- Dumping data for table `taskType`
@@ -122,4 +122,4 @@ INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, proje
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (2,'Engineer (edit tasks)','canEditTasks',20);
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (3,'Project Manager + Time Sheet Recipient','timeSheetRecipient',40);
 
-insert into person (username,password,personActive) values ('alloc','/.N0BifPoPoZg',1) 
+insert into person (username,password,personActive) values ('alloc','/.N0BifPoPoZg',1); 

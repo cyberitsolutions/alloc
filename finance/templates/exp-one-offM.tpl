@@ -26,12 +26,6 @@
     <td align="right">Reimbursement Required:</td><td>{reimbursementRequiredOption}</td>
   </tr>
   <tr>
-    <td align="right">Cheque Number:</td><td>{chequeNumberInput}</td>
-  </tr>
-  <tr>
-    <td align="right">Cheque Date:</td><td>{chequeDateInput}</td>
-  </tr>
-  <tr>
     <td colspan="2" align="center">
       {expenseFormButtons}
     </td>

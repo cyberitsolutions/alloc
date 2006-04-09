@@ -181,8 +181,6 @@ $reimbursementRequired_label   = $expenseForm->get_value("reimbursementRequired"
 
 $TPL["paymentMethodOptions"] = $expenseForm->get_value("paymentMethod");
 $TPL["reimbursementRequiredOption"] = $reimbursementRequired_label;
-$TPL["chequeNumberInput"] = $TPL["chequeNumber"];
-$TPL["chequeDateInput"]   = $TPL["chequeDate"];
 
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
 
@@ -202,10 +200,6 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"approve\" value=\"Approve\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"reject\" value=\"Reject\">";
   $TPL["expenseFormButtons"].= "&nbsp;<a href=\"".$TPL["url_alloc_expenseFormList"]."\">Return To Pending Expense Forms</a>";
-
-  $TPL["chequeNumberInput"] = "<input type=\"text\" size=\"15\" name=\"chequeNumber\" value=\"".$TPL["chequeNumber"]."\">";
-  $TPL["chequeDateInput"]   = "<input type=\"text\" size=\"10\" name=\"chequeDate\" value=\"".$TPL["chequeDate"]."\">";
-  $TPL["chequeDateInput"]  .= "<input type=\"button\" onClick=\"chequeDate.value='".$TPL["today"]."'\" value=\"Today\">";
 
 } else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Create Expense Form\">";

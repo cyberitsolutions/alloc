@@ -19,19 +19,6 @@ CREATE TABLE absence (
 ) TYPE=ISAM PACK_KEYS=1;
 
 --
--- Table structure for table `active_sessions`
---
-
-CREATE TABLE active_sessions (
-  sid varchar(32) NOT NULL default '',
-  name varchar(32) NOT NULL default '',
-  val text,
-  changed varchar(14) NOT NULL default '',
-  PRIMARY KEY  (name,sid),
-  KEY changed (changed)
-) TYPE=ISAM PACK_KEYS=1;
-
---
 -- Table structure for table `announcement`
 --
 
@@ -147,8 +134,6 @@ CREATE TABLE expenseForm (
   lastModified timestamp(14) NOT NULL,
   paymentMethod varchar(255) default NULL,
   reimbursementRequired tinyint(4) NOT NULL default '0',
-  chequeNumber varchar(255) default NULL,
-  chequeDate date default NULL,
   enteredBy int(11) NOT NULL default '0',
   transactionRepeatID int(11) NOT NULL default '0',
   expenseFormFinalised tinyint(4) NOT NULL default '0',
@@ -267,6 +252,7 @@ CREATE TABLE person (
   preferred_tfID int(11) default NULL,
   dailyTaskEmail varchar(255) default 'yes',
   personActive tinyint(1) default '1',
+  sessData text,
   PRIMARY KEY  (personID),
   KEY username (username)
 ) TYPE=ISAM PACK_KEYS=1;
@@ -280,7 +266,6 @@ CREATE TABLE project (
   projectName varchar(255) NOT NULL default '',
   projectComments text,
   clientID int(11) NOT NULL default '0',
-  managerUserID varchar(32) default NULL,
   projectModifiedUser int(11) NOT NULL default '0',
   projectType enum('contract','job','project') default NULL,
   projectClientName varchar(255) default NULL,
@@ -294,7 +279,6 @@ CREATE TABLE project (
   dateActualCompletion date default NULL,
   projectBudget decimal(10,0) default NULL,
   currencyType enum('AUD','USD','NZD','CAD') default NULL,
-  timesheets_to_manager tinyint(4) default NULL,
   projectShortName varchar(255) default NULL,
   projectStatus enum('current','potential','archived') NOT NULL default 'current',
   projectPriority int(11) default NULL,
@@ -383,6 +367,17 @@ CREATE TABLE reminder (
   reminderModifiedUser int(11) NOT NULL default '0',
   PRIMARY KEY  (reminderID)
 ) TYPE=ISAM PACK_KEYS=1;
+
+--
+-- Table structure for table `sess`
+--
+
+CREATE TABLE sess (
+  sessID varchar(32) NOT NULL default '',
+  personID int(11) NOT NULL default '0',
+  sessData text,
+  PRIMARY KEY  (sessID)
+) TYPE=MyISAM;
 
 --
 -- Table structure for table `skillList`
