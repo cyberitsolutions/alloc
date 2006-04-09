@@ -55,7 +55,7 @@ while ($db->next_record()) {
   if ($person->get_value("emailFormat") == "html") {
     $headers = "MIME-Version: 1.0\r\n";
     $headers.= "Content-type: text/html; charset=iso-8859-1\r\n";
-    $msg.= "<html><head><title>Alloc Daily Digest</title></head><body>";
+    $msg.= "<html><head><title>AllocPSA Daily Digest</title></head><body>";
 
     if ($announcement["heading"]) {
       $msg.= "<br><h4>".$announcement["heading"]."</h4>";
@@ -75,8 +75,8 @@ while ($db->next_record()) {
 
     $msg.= $stats->get_stats_for_email($person->get_value("emailFormat"));
 
-    $headers.= "From: alloc-admin@cyber.com.au";
-    $subject = "Alloc Daily Digest";
+    $headers.= "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
+    $subject = "AllocPSA Daily Digest";
     $to = $person->get_value("emailAddress");
 
 

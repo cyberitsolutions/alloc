@@ -57,7 +57,7 @@ function EMailForm() {
   $to = $toPerson->get_value("emailAddress");
 
   // Set FROM field
-  $header = "FROM:  alloc-admin@cyber.com.au";
+  $header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
   return mail($to, $subject, $msg, $header);
 }
 
