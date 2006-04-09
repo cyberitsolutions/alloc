@@ -281,6 +281,7 @@ CREATE TABLE sess (
 
 alter table person add sessData text default "";
 
-
+alter table expenseForm drop chequeDate;
+alter table expenseForm drop chequeNumber;
 
 
