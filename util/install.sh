@@ -25,8 +25,9 @@ run "chmod 755 ./dump_clean_db.sh"                  # rwxr-xr-x
 run "chmod 755 ./alloc_DB_backup.sh"                # rwxr-xr-x
 run "chmod 700 ./install.sh"                        # rwxr-----
 run "chmod 777 ../stylesheets/*"                    # rwxrwxrwx
-run "chmod 754 ./style_regen.py"                    # rwxr-xr-x
-run "chmod 754 ./update_alloc_dev_database.sh"      # rwxr-xr-x
+run "chmod 754 ./style_regen.py"                    # rwxr-xr--
+run "chmod 754 ./update_alloc_dev_database.sh"      # rwxr-xr--
+run "chmod 754 ./add_gpl_header.sh"                 # rwxr-xr--
 run "chmod 777 ./INSTALLER_LOCK"                    # rwxrwxrwx
 
 run "chown alloc ../logs"                           # gonna be run by user alloc
