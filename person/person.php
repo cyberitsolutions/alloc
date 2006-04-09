@@ -2,9 +2,13 @@
 require_once("alloc.inc");
 
 function show_perm_select() {
-  global $perm, $person;
+  global $person;
   if ($person->have_perm(PERM_PERSON_WRITE_ROLES)) {
-    echo $perm->perm_sel("perm_select", $person->get_value("perms"));
+    $selected = explode(",",$person->get_value("perms"));
+    $ops = array("god","admin","manage");
+    echo sprintf("<select size=\"3\" multiple name=\"perm_select[]\">\n");
+    echo get_select_options($ops,$selected);
+    echo "</select>";
   } else {
     echo $person->get_value("perms");
   }

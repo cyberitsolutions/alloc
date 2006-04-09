@@ -263,6 +263,7 @@ class task extends db_entity {
         $taskCCListOptions[$db->f("clientContactEmail")] = $db->f("clientContactName");
       }
 
+      // Get all the project people for this tasks project
       $q = sprintf("SELECT emailAddress, firstName, surname 
                      FROM projectPerson LEFT JOIN person on projectPerson.personID = person.personID 
                     WHERE projectPerson.projectID = %d",$projectID);
@@ -885,6 +886,7 @@ class task extends db_entity {
     return $rtn;
   }
 
+
   function get_children_summary($options = "", $include_grandchildren = true, $child_filter = "", $format = "html", $indent = 0, $user_id = "") {
     $rtn = "";
     $children = $this->get_children($child_filter);
@@ -904,40 +906,6 @@ class task extends db_entity {
     $url = $sess->email_url($url);
     return $url;
   }
-
-
-/*
-  function calculate_current() {
-    return true;
-#	$this->get_current_element_sql();
-# $t = new task_filter;
-# $t = get_current_element_sql();
-  }
-
-  function calculate_completed() {
-    return $this->get_value("dateActualCompletion") != "";
-  }
-
-  function calculate_in_progress() {
-    return $this->get_value("dateActualCompletion") == "" && $this->get_value("dateActualStart") != "";
-  }
-
-  function calculate_phase() {
-    return $this->get_value("taskTypeID") == TT_PHASE;
-  }
-
-  function calculate_fault() {
-    return $this->get_value("taskTypeID") == TT_FAULT;
-  }
-
-  function calculate_top() {
-    return $this->get_value("parentTaskID") == 0;
-  }
-  function calculate_projects() {
-    return true;
-  }
-*/
-
 
   // The definitive method of getting a list of tasks
   function get_task_list($_FORM) {
@@ -1088,7 +1056,6 @@ class task extends db_entity {
     } 
   }
 
-
   function get_task_list_tr($task,$_FORM) {
 
     $people_cache = $_FORM["people_cache"];
@@ -1127,8 +1094,6 @@ class task extends db_entity {
     $summary = "\n".implode("\n",$summary);
     return $summary;
   }
-
-
  
   function get_children_taskIDs($taskID) {
     $q = sprintf("SELECT taskID,taskTypeID FROM task WHERE parentTaskID = %d",$taskID);
@@ -1143,8 +1108,6 @@ class task extends db_entity {
     }
     return $rtn;
   }
-
-
 
   function get_time_billed($taskID="") {
 

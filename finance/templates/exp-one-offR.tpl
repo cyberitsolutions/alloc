@@ -7,7 +7,7 @@
   <td>{product}</td>
   <td>TF: {tfID}</td>
   <td>Project: {projectID}</td>
-  <td>{quantity}pcs. @ ${amount} each</td>
+  <td>{quantity}pcs. @ ${amount} each  &nbsp;&nbsp;&nbsp;<b>${lineTotal}</b></td>
   <td>{status}</td>
   <td align="right">
 	  &nbsp;&nbsp;{optional:allow_edit}
