@@ -88,7 +88,7 @@ if ($upload && is_uploaded_file($wages_file)) {
     $transaction->set_value("tfID", $tfID);
     $transaction->set_value("transactionDate", $transactionDate);
     $transaction->set_value("amount", $amount);
-    $transaction->set_value("companyDetails", "Cybersource");
+    $transaction->set_value("companyDetails", "");
     $transaction->set_value("product", "Wages");
     $transaction->set_value("status", "approved");
     $transaction->set_value("expenseFormID", "0");

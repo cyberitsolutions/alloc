@@ -60,8 +60,8 @@ $whenToReturn = date("Y", $temp)."-".date("m", $temp)."-".date("d", $temp);
 $today = date("Y")."-".date("m")."-".date("d");
 
 if ($loanID) {
-$loan->set_id($loanID);
-$loan->select();
+  $loan->set_id($loanID);
+  $loan->select();
 }
 
 
@@ -94,9 +94,9 @@ if ($borrowItem) {
           $message.= "admin/manager: \"".$person->get_value("username")."\" "."has borrowed item: \"".$item->get_value("itemName")."\" for you\n";
 
           if ($person->get_value("emailAddress") != "") {
-            $from = "From: Alloc Loans <".$person->get_value("emailAddress").">";
+            $from = "From: AllocPSA <".$person->get_value("emailAddress").">";
           } else {
-            $from = "From: Alloc Loans <alloc-admin@cyber.com.au>";
+            $from = "From: AllocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
           }
           // email userID saying that admin/manager: $current_user->get_id() has borrowed item for them
           mail($to, $subject, $message, $from);
@@ -147,9 +147,9 @@ if ($returnItem) {
         $message.= "admin/manager: \"".$person->get_value("username")."\" "."has returned item: \"".$item->get_value("itemName")."\" for you\n";
 
         if ($person->get_value("emailAddress") != "") {
-          $from = "From: Alloc Loans <".$person->get_value("emailAddress").">";
+          $from = "From: AllocPSA <".$person->get_value("emailAddress").">";
         } else {
-          $from = "From: Alloc Loans <alloc-admin@cyber.com.au>";
+          $from = "From: AllocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
         }
         // email userID saying that admin/manager: $current_user->get_id() has returned item for them
         mail($to, $subject, $message, $from);
@@ -166,10 +166,10 @@ if ($returnItem) {
 
 
 
-if ($borrow) {
-  include_template("templates/itemBorrowM.tpl");
-} else if ($return) {
+if ($return) {
   include_template("templates/itemReturnM.tpl");
+} else {
+  include_template("templates/itemBorrowM.tpl");
 }
 
 

@@ -45,7 +45,7 @@ class notification {
           && ((!is_object($object_filter)) || $object_filter->check_object($object))) {
         $person = $eventFilter->get_foreign_object("person");
         $email_address = $person->get_value("emailAddress");
-        $headers = "From: alloc-admin@cyber.com.au";
+        $headers = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
         if ($email_address) {
           $subject = "Alloc Notification";
 

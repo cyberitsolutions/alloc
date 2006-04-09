@@ -47,31 +47,34 @@ class alloc_email {
 
   // Actual email variables
   var $to_address = "";
-  var $header = "From: alloc-admin@cyber.com.au";
+  var $header = "";
   var $subject = "";
   var $body = ""; 
 
   // Initializer
   function alloc_email($to_address="",$subject="",$message="",$header="",$logfile="") {
-    $to_address and $this->to_address = $to_address;
-    $subject    and $this->subject    = $subject;
-    $message    and $this->message    = $message;
-    $header     and $this->header     = $header;
-    $logfile    and $this->logfile    = $logfile;
+
+    $to_address  and $this->to_address = $to_address;
+    $subject     and $this->subject    = $subject;
+    $message     and $this->message    = $message;
+    $header      and $this->header     = $header;
+    $this->header or $this->header     = "From: AllocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
+    $logfile     and $this->logfile    = $logfile;
   }
 
   // Send and log the email
   function send($to_address="",$subject="",$message="",$header="") {
-    $to_address and $this->to_address = $to_address;
-    $subject    and $this->subject    = $subject;
-    $message    and $this->message    = $message;
-    $header     and $this->header     = $header;
+    $to_address  and $this->to_address = $to_address;
+    $subject     and $this->subject    = $subject;
+    $message     and $this->message    = $message;
+    $header      and $this->header     = $header;
+    $this->header or $this->header     = "From: AllocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
 
     if ($this->is_valid_to_address() && $this->is_valid_url()) {
       $this->log("Sending: ".$this->subject." to ".$this->to_address);
       return mail($this->to_address, stripslashes($this->subject), stripslashes($this->message), $this->header);
     } else {
-      $this->log("Not sending: ".stripslashes($this->subject)." to ".$this->to_address);
+      $this->log("Not sending: '".stripslashes($this->subject)."' to ".$this->to_address);
     }
   }
 
@@ -80,9 +83,9 @@ class alloc_email {
     $person->set_id($personID);
     $person->select();
     if ($person->get_value("emailAddress")) {
-      $this->header = "From: ".$person->get_username(1)." <".$person->get_value("emailAddress").">";
+      $this->header = "From: AllocPSA '".$person->get_username(1)."' <".$person->get_value("emailAddress").">";
     } else {
-      $this->header = "From: ".$person->get_username(1)." <alloc-admin@cyber.com.au>";
+      $this->header = "From: AllocPSA '".$person->get_username(1)."' <".ALLOC_DEFAULT_FROM_ADDRESS.">";
     }
   }
 

@@ -6,11 +6,15 @@
     <th colspan="2">Configuration</th>
   </tr>
   <tr>
+    <td width="20%"><nobr>Alloc Email From Address</nobr></td>
+    <td><input type="text" size="70" value="{AllocFromEmailAddress}" name="AllocFromEmailAddress"></td> 
+  </tr>
+  <tr>
     <td width="20%"><nobr>Main TF as used by timesheets and upload wages/invoices</nobr></td>
     <td><select name="cybersourceTfID">{tfOptions}</select></td>
   </tr>
   <tr>
-    <td>Time Sheet admin, emails get sent to this person</td>
+    <td>Main Time Sheet Admin, emails get sent to this person</td>
     <td><select name="timeSheetAdminEmail">{timeSheetAdminEmailOptions}</select></td> 
   </tr>
   <tr>
@@ -36,6 +40,10 @@
   <tr>
     <td>Company Address</td>
     <td><input type="text" size="70" value="{companyContactAddress}" name="companyContactAddress"></td> 
+  </tr>
+  <tr>
+    <td>Company ACN</td>
+    <td><input type="text" size="70" value="{companyACN}" name="companyACN"></td> 
   </tr>
   <tr>  
     <td colspan="2" align="center"><input type="submit" name="save" value="Save"></td>

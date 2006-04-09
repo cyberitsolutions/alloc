@@ -5,7 +5,7 @@
   <body>
   <div align="center">
     <img src="../images/cyberLogo.png">
-    <h2>CYBERSOURCE TIME SHEET </h2>  
+    <h2>{companyName}<br/>Time Sheet </h2>  
   </div>
 
     <table border="0" cellspacing="3" width="100%">
@@ -50,10 +50,10 @@
       </tr>
     </table>
     <div align="center">
-      <p><i>Cybersource Pty. Ltd.  ACN:053 904 082 Level 4, 10-16 Queen Street Melbourne, Vic. 3000 Australia.</i></p>
-      <p><i>Phone: + 61 3 9621 2377 FAX: + 61 3 9621 2477 Email: info@cybersource.com.au Web: http://www.cybersource.com.au</i></p>
+      <p><i>{companyInfoLine1}</i></p>
+      <p><i>{companyInfoLine2}</i></p>
     </div>
-
+      
 {:show_footer}
 
 

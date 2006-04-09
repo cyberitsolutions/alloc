@@ -218,7 +218,7 @@ class timeSheet extends db_entity
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
         $percent = 28.5 - $agency_percentage;
-        $product = "Credit: Cybersource ".$percent."% of $".$this->pay_info["total_dollars_minus_gst"]." for timesheet id: ".$this->get_id();
+        $product = "Credit: ".$percent."% of $".$this->pay_info["total_dollars_minus_gst"]." for timesheet id: ".$this->get_id();
         $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
 
 
@@ -293,7 +293,7 @@ class timeSheet extends db_entity
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
         $percent = 28.5 - $agency_percentage;
-        $product = "Credit: Cybersource ".$percent."% of $".$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet id: ".$this->get_id();
+        $product = "Credit: ".$percent."% of $".$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet id: ".$this->get_id();
         $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
 
 

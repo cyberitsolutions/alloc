@@ -339,6 +339,9 @@ if (!$current_user->is_employee()) {
 global $timeSheetID, $timeSheet, $timeSheetItem, $timeSheetItemID, $db, $current_user, $personID, $TPL;
 global $transaction_save, $transaction_delete, $p_button, $a_button, $r_button;
 
+
+
+
 $db = new db_alloc;
 
 if ($timeSheetID) {
@@ -728,10 +731,21 @@ if ($projectID != 0) {
 }
 // THIS IS A GOOD PLACE TO PUT STUFF 
 
+
+// These variables populate the time sheet printer friendly version
+$TPL["companyName"] = config::get_config_item("companyName");
+$acn = config::get_config_item("companyACN");
+$acn and $acn = "ACN:".$acn;
+$TPL["companyInfoLine1"] = $TPL["companyName"]." ".$acn." ".config::get_config_item("companyContactAddress");
+$TPL["companyInfoLine2"] = "Phone: ".config::get_config_item("companyContactPhone")." Fax: ".config::get_config_item("companyContactFax")." Email: ".config::get_config_item("companyContactEmail");
+$TPL["companyInfoLine2"].= " Web: ".config::get_config_item("companyContactHomePage");
+
+
+// msg passed in url and print it out pretty..
 $msg and $TPL["message_good"][] = $msg;
 
-global $dont_send_email, $percent_array;
 
+global $dont_send_email, $percent_array;
 if ($dont_send_email) {
   $TPL["dont_send_email_checked"] = " checked";
 } else {
@@ -756,7 +770,10 @@ $percent_array = array(""=>"",
                        "C"=>"Commission",
                        sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 0.050)=>"5.0%",
                        sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 0.025)=>"2.5%",
-                       "D"=>"Old Rates", sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 0.772)=>"77.2%", sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 0.722)=>"72.2%", sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 0.228)=>"22.8%");
+                       "D"=>"Old Rates", 
+                       sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 0.772)=>"77.2%", 
+                       sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 0.722)=>"72.2%",
+                       sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 0.228)=>"22.8%");
 
 
 

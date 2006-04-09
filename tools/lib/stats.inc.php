@@ -223,13 +223,13 @@ class stats {
 
     if ($format == "html") {
       $msg = "<br><br><h4>Alloc Stats For Today</h4>";
-      $msg.= sprintf("Cybersource has %d New and %d Active Projects<br><br>", $this->projects["new"]["total"], $this->projects["current"]["total"]);
+      $msg.= sprintf("%d New and %d Active Projects<br><br>", $this->projects["new"]["total"], $this->projects["current"]["total"]);
       $msg.= "<table >";
     } else {
       $msg = "\n- - - - - - - - - -\n";
       $msg.= "Alloc Stats For Today\n";
       $msg.= "\n";
-      $msg.= sprintf("Cybersource has %d New and %d Active Projects\n", $this->projects["new"]["total"], $this->projects["current"]["total"]);
+      $msg.= sprintf("%d New and %d Active Projects\n", $this->projects["new"]["total"], $this->projects["current"]["total"]);
       $msg.= "\n";
       $msg.= "Top Users:\n";
     }

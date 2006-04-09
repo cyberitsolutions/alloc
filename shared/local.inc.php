@@ -91,6 +91,7 @@ while (list($module_name,) = each($modules)) {
   }
 }
 
+define("ALLOC_DEFAULT_FROM_ADDRESS",config::get_config_item("AllocFromEmailAddress"));
 
 include(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
 global $current_user;
