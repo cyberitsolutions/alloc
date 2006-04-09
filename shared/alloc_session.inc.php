@@ -109,7 +109,7 @@ class Session {
   // Use cookies
   function MakeCookie() {
     // Set a cookie.
-    $rtn = SetCookie("alloc_cookie",$this->key,0,"/",$_SERVER["HTTP_HOST"]);
+    $rtn = SetCookie("alloc_cookie",$this->key,0,"","");
     if (!$rtn) {
       echo "Unable to set cookie";
       $this->mode = "get";
@@ -121,7 +121,7 @@ class Session {
   // Destroy cookies
   function DestroyCookie() {
     if ($this->mode == "cookie") {
-      SetCookie("alloc_cookie",false,time()-3600,"/",$_SERVER["HTTP_HOST"]);
+      SetCookie("alloc_cookie",false,time()-3600,"","");
     }
     unset($_COOKIE["alloc_cookie"]);
   }
