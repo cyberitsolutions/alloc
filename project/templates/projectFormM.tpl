@@ -112,6 +112,21 @@
   </tr>
 </table>
 
+{table_box}
+  <tr>
+    <th align="left" colspan="11">Project People</th>
+  </tr>
+  <tr>
+    <td>Person</td>
+    <td>Role</td>
+    <td>Email Type</td>
+    <td>Rate Type</td>
+    <td>Rate</td>
+    <td>Action</td>
+  </tr>
+{:show_person_list templates/projectPersonListR.tpl}
+{:show_new_person templates/projectPersonListR.tpl}
+</table>
 
 {table_box}
   <tr>
@@ -139,23 +154,6 @@
   </tr>
 {:show_commission_list templates/commissionListR.tpl}
 {:show_new_commission templates/commissionListR.tpl}
-</table>
-
-
-{table_box}
-  <tr>
-    <th align="left" colspan="11">Project People</th>
-  </tr>
-  <tr>
-    <td>Person</td>
-    <td>Role</td>
-    <td>Email Type</td>
-    <td>Rate Type</td>
-    <td>Rate</td>
-    <td>Action</td>
-  </tr>
-{:show_person_list templates/projectPersonListR.tpl}
-{:show_new_person templates/projectPersonListR.tpl}
 </table>
 
 

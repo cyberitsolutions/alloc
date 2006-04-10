@@ -21,11 +21,11 @@
  *
  */
 
-if ($_GET["web"]) {
-  define("NO_AUTH",false);
-} else {
-  define("NO_AUTH",true);
-}
+#if ($_GET["web"]) {
+  #define("NO_AUTH",false);
+#} else {
+  #define("NO_AUTH",true);
+#}
 require_once("alloc.inc");
 
 $db = new db_alloc;
