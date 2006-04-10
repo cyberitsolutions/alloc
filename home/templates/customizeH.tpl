@@ -2,7 +2,7 @@
 <table align="center">
   <tr>
     <td>Font Size</td>
-    <td>Colours</td>
+    <td>Theme</td>
     <td></td>
   </tr>
   <tr>

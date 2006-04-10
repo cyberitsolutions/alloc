@@ -67,12 +67,12 @@ function get_template($filename, $use_function_object = false) {
 // This is the publically callable function, used to include template files
 function include_template($filename, $function_object = "") {
   global $TPL;
-  echo "<!-- start $filename -->\n";
+  echo "\n<!-- start $filename -->\n";
   $template = get_template($filename, is_object($function_object));
 #   echo htmlspecialchars($template); // GOOD PLACE TO DEBUG
 #die();
   eval($template);
-  echo "<!-- end $filename -->\n";
+  echo "\n<!-- end $filename -->\n";
 } 
 
 

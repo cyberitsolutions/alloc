@@ -1,0 +1,68 @@
+
+body                    { background-color: #303030; font-family:arial,helvetica,sans-serif; color:#ffffff;}
+a:link                  { color:#053d77; }
+a:visited               { color:#053d77; }
+a:hover                 { color:#376a9e; }
+h1                      { font-weight:bold; font-size:22px; }
+h2                      { font-weight:bold; font-size:22px; }
+h3                      { font-weight:bold; font-size:21px; }
+form                    { display:inline; }
+div.message             { border:1px solid #bfbaba; padding:10px; margin-bottom:7px; background-color:#aaaaaa; }
+.bad                    { color:#880000; font-weight:bold; font-size:19px; }
+.good                   { color:#006340; font-weight:bold; font-size:19px; }
+.help                   { color:#000000;  font-weight:bold; font-size:19px; }
+
+table.box               { border:1px solid #bfbaba; background-color:#999999; margin-bottom:7px;} 
+table.box th            { border-bottom:1px solid #bfbaba;  background: url(../images/bg_darko.jpg) repeat-x; color:#ffffff; font-size:19px; } 
+table.box th a:link     { font-weight:bold; color:#ffffff; font-size:19px; }
+table.box th a:visited  { font-weight:bold; color:#ffffff; font-size:19px; }
+table.box th a:hover    { font-weight:bold; color:#e0e0e0; font-size:19px; }
+table.box th.right      { text-align:right; } 
+table.box th.center     { text-align:center; } 
+table.box th.right table{ width:40%; } 
+
+table.toolbar           { border:1px solid #bfbaba; color:#ffffff; background-color:#666666; margin-bottom:7px;}
+table.toolbar a:link    { color:#ffffff; font-weight:bolder;        }
+table.toolbar a:visited { color:#ffffff; font-weight:bolder;        }
+table.toolbar a:hover   { color:#d0f900; font-weight:bolder;  }
+table.toolbar a.active  { color:#d0f900; }
+table.toolbar th        { color:#ffffff; padding:3px 2px; font-weight:bold; background: url(../images/bg_darko.jpg) repeat-x; border-bottom:1px solid #bfbaba; font-size:23px; }
+table.toolbar td        { font-size:19px; }
+td.logout               { text-align:right; padding:3px 2px; font-weight:bold; background: url(../images/bg_darko.jpg) repeat-x; border-bottom:1px solid #bfbaba;}
+
+table.calendar th       { background-color:#888888; color:#bbbbbb; border:0px; font-weight:normal; font-size:18px; }
+table.calendar td       { background-color:#aaaaaa; }
+table.calendar td.today { background-color:#999999; }
+
+table.filter            { border:3px dashed #888888; background-color:#dddddd; padding:4px; margin:4px;}
+table.filter th         { font-weight:bold; background-color:#dddddd; color:#000000; border-bottom:0px solid #ffffff; text-align:center; }
+table.panel             { background-color:#aaaaaa; height:100%; }
+
+td                      { color:#000000; font-size:18px; }
+th                      { color:#000000;  text-align:left; }
+tr.odd                  { background-color:#aaaaaa; }
+tr.even                 { background-color:#999999; }
+.really_overdue         { font-weight:bold; color: #880000}
+.overdue                { color: #880000; }
+td.print-label          { vertical-align:middle; text-align:right; }
+.print-label            { font-weight:bold; }
+.behind-target          { color: #b56200; }
+.transaction-approved   { color: #006340; }
+.transaction-pending    { color: #000000; }
+.transaction-rejected   { color: #880000; }
+.highlighted            { font-weight:bold;}
+      
+ul                      { display:inline; list-style:circle inside; }
+td.tasks                { background-color: #aaaaaa; }
+td.tasks_r              { background-color: #aaaaaa; text-align:right; }
+td.grand_total          { border-top:1px solid black;}
+td.col                  { border-left:2px solid #aaaaaa;  border-top:2px solid #aaaaaa;}
+textarea                { font-size:12px; }
+input                   { font-size:12px; }
+select                  { font-size:12px; }
+textarea.timesheetcomm  { font-size:12px; }
+#shrink_ts_note         { display:none; }
+#shrink_tsi_note        { display:none; }
+#ts_note                { height:22px; }
+#tsi_note               { height:22px; }
+

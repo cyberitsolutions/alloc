@@ -16,17 +16,32 @@ fd = open(d+'../style.css')
 str_orig = fd.read();
 fd.close();
 
-# Get list of default options from the style_classic section
-default_options = config.options('style_classic')
+# Get list of default options from the style_icy section
+default_options = config.options('style_icy')
 
 # Build up a defaults dictionary
 dict_default = {}
 for option in default_options:
-  dict_default[option] = config.get('style_classic',option)
+  dict_default[option] = config.get('style_icy',option)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Loop through each section
 for section in sections:
+  filename_suffix = 0;
   dict = {}
   str = str_orig
 
@@ -40,11 +55,33 @@ for section in sections:
   # Do a search and replace for each key/value in the template string 
   for k, v in dict.items():
     str = str.replace('('+k.upper()+')', v)
+
+
+  # Create matrix of stylesheets, themes vs font sizes 
+  for weight in range(-3,7):
+    filename_suffix += 1
+    str2 = str;
+
+    font_sizes = {}
+    font_sizes['H1_FONT_SIZE']                = (16 + weight)
+    font_sizes['H2_FONT_SIZE']                = (16 + weight)
+    font_sizes['H3_FONT_SIZE']                = (15 + weight)
+    font_sizes['TABLE_BOX_TH_FONT_SIZE']      = (13 + weight)
+    font_sizes['TABLE_BOX_TH_A_FONT_SIZE']    = (13 + weight)
+    font_sizes['TABLE_TOOLBAR_TH_FONT_SIZE']  = (17 + weight)
+    font_sizes['TABLE_TOOLBAR_TD_FONT_SIZE']  = (13 + weight)
+    font_sizes['TABLE_CALENDAR_TH_FONT_SIZE'] = (12 + weight)   
+    font_sizes['TD_FONT_SIZE']                = (12 + weight)   
+
   
-  # Write it out to a file
-  fd = open(d+'../stylesheets/'+section+'.css','w')
-  fd.write(str) 
-  fd.close()
+    for k, v in font_sizes.items():
+      str2 = str2.replace('('+k.upper()+')', repr(v))
+
+    
+    # Write it out to a file
+    fd = open(d+'../stylesheets/'+section+'_'+repr(filename_suffix)+'.css','w')
+    fd.write(str2) 
+    fd.close()
 
 
 

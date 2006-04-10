@@ -2,11 +2,6 @@
   <head>
     <title>{ALLOC_TITLE}: {main_alloc_title}</title>
     <link rel="StyleSheet" href="{url_alloc_stylesheets}{:get_stylesheet_name}" type="text/css" media="screen"/>
-    <style type="text/css">
-    <!--
-{:show_style_sheet}
-    -->
-    </style>
 
     <script type="text/javascript" language="javascript">
 
