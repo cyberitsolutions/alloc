@@ -8,9 +8,9 @@ h2                      { font-weight:bold; }
 h3                      { font-weight:bold; }
 form                    { display:inline; }
 div.message             { border:1px solid #cccccc; padding:10px; margin-bottom:7px; background-color:; }
-.bad                 { color: ; font-weight:bold; }
-.good                { color: ; font-weight:bold; }
-.help                { color: ;  font-weight:bold; }
+.bad                    { color:; font-weight:bold; }
+.good                   { color:; font-weight:bold; }
+.help                   { color:;  font-weight:bold; }
 
 table.box               { border:1px solid #cccccc; background-color:; margin-bottom:7px;} 
 table.box th            { border-bottom:1px solid #cccccc;  ; color:;} 
