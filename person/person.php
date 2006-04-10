@@ -23,139 +23,139 @@
 
 require_once("alloc.inc");
 
-function show_perm_select() {
-  global $person;
-  if ($person->have_perm(PERM_PERSON_WRITE_ROLES)) {
-    $selected = explode(",",$person->get_value("perms"));
-    $ops = array("god","admin","manage");
-    echo sprintf("<select size=\"3\" multiple name=\"perm_select[]\">\n");
-    echo get_select_options($ops,$selected);
-    echo "</select>";
-  } else {
-    echo $person->get_value("perms");
+  function show_perm_select() {
+    global $person;
+    if ($person->have_perm(PERM_PERSON_WRITE_ROLES)) {
+      $selected = explode(",",$person->get_value("perms"));
+      $ops = array("god"=>"Super User","admin"=>"Finance Admin","manage"=>"Project Manager");
+      echo sprintf("<select size=\"3\" multiple name=\"perm_select[]\">\n");
+      echo get_select_options($ops,$selected);
+      echo "</select>";
+    } else {
+      echo $person->get_value("perms");
+    }
   }
-}
 
-function show_absence_forms($template) {
-  global $personID;
+  function show_absence_forms($template) {
+    global $personID;
 
-  $db = new db_alloc;
-  $query = sprintf("SELECT * FROM absence WHERE personID=%d", $personID);
-  $db->query($query);
-  $absence = new absence;
-  while ($db->next_record()) {
-    $absence->read_db_record($db);
-    $absence->set_tpl_values(DST_HTML_ATTRIBUTE, "absence_");
-    include_template($template);
+    $db = new db_alloc;
+    $query = sprintf("SELECT * FROM absence WHERE personID=%d", $personID);
+    $db->query($query);
+    $absence = new absence;
+    while ($db->next_record()) {
+      $absence->read_db_record($db);
+      $absence->set_tpl_values(DST_HTML_ATTRIBUTE, "absence_");
+      include_template($template);
+    }
   }
-}
 
-function show_action_buttons() {
-  global $person, $TPL;
+  function show_action_buttons() {
+    global $person, $TPL;
 
-  echo "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">";
+    echo "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">";
 
-  if ($person->have_perm(PERM_DELETE)) {
+    if ($person->have_perm(PERM_DELETE)) {
+      echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+      echo "<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Are you sure you want to delete this record?')\">"; 
+    } 
+
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    echo "<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Are you sure you want to delete this record?')\">"; 
-  } 
+    echo "<a href=\"".$TPL["url_alloc_personList"]."\">Return to Person List</a>"; 
+  }
 
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-  echo "<a href=\"".$TPL["url_alloc_personList"]."\">Return to Person List</a>"; 
-}
+  function include_employee_fields() {
+    global $person;
+    show_skills_list();
+    include_template("templates/personEmployeeFieldsS.tpl");
+  }
 
-function include_employee_fields() {
-  global $person;
-  show_skills_list();
-  include_template("templates/personEmployeeFieldsS.tpl");
-}
+  function include_employee_skill_fields() {
+    global $person;
+    include_template("templates/personEmployeeSkillFieldsS.tpl");
+  }
 
-function include_employee_skill_fields() {
-  global $person;
-  include_template("templates/personEmployeeSkillFieldsS.tpl");
-}
+  function show_person_areasOfExpertise($template) {
+    global $TPL, $personID, $skill_header, $skill_prof, $skills_got;
+
+    $TPL["personExpertiseItem_buttons"] = "<input type=\"submit\" name=\"personExpertiseItem_save\" value=\"Save\">
+            <input type=\"submit\" name=\"personExpertiseItem_delete\" value=\"Delete\">";
+    $proficiencys = array("Novice"=>"Novice", "Junior"=>"Junior", "Intermediate"=>"Intermediate", "Advanced"=>"Advanced", "Senior"=>"Senior");
+
+    # step through the list of skills ordered by skillclass
+    $db = new db_alloc;
+    // $query = "SELECT * FROM skillList ORDER BY skillClass,skillName";
+    $query = "SELECT * FROM skillList LEFT JOIN skillProficiencys ON skillList.skillID=skillProficiencys.skillID";
+    $query.= sprintf(" WHERE skillProficiencys.personID=%d", $personID);
+    $query.= " ORDER BY skillClass,skillName";
+    $db->query($query);
+    $currSkillClass = null;
+    while ($db->next_record()) {
+      $skillList = new skillList;
+      $skillList->read_db_record($db);
+      $skillList->set_tpl_values();
+
+      $skillPrificiencys = new skillProficiencys;
+      $skillPrificiencys->read_db_record($db);
+      $skillPrificiencys->set_tpl_values();
+
+      # if tey do and there is no heading for this segment put a heading
+      $thisSkillClass = $skillList->get_value('skillClass');
+      if ($currSkillClass != $thisSkillClass) {
+        $currSkillClass = $thisSkillClass;
+        $skill_header = true;
+      } else {
+        $skill_header = false;
+      }
+      $skill_prof = $skillPrificiencys->get_value('skillProficiency');
+      $TPL["skill_proficiencys"] = get_options_from_array($proficiencys, $skill_prof, true);
+
+      # display rating if there is one
+      include_template($template);
+    }
+  }
+
+  function show_skills_list() {
+    global $TPL, $personID, $skills;
+
+    $db = new db_alloc;
+    $query = sprintf("SELECT * FROM skillProficiencys WHERE personID=%d", $personID);
+    $db->query($query);
+    $skills_got = array();
+    while ($db->next_record()) {
+      $skillList = new skillList;
+      $skillList->read_db_record($db);
+      array_push($skills_got, $skillList->get_id());
+    }
+    $query = "SELECT * FROM skillList ORDER BY skillClass";
+    $db->query($query);
+    while ($db->next_record()) {
+      $skillList = new skillList;
+      $skillList->read_db_record($db);
+      if (in_array($skillList->get_id(), $skills_got)) {
+        // dont show this item
+      } else {
+        $skills[$skillList->get_id()] = sprintf("%s - %s", $skillList->get_value('skillClass'), $skillList->get_value('skillName'));
+      }
+    }
+    if (count($skills) > 0) {
+      $TPL["skills"] = get_options_from_array($skills, "", true);
+    }
+  }
+
+  function check_optional_person_skills_header() {
+    global $skill_header;
+    return $skill_header;
+  }
+
+  function include_management_fields() {
+    global $person;
+    if ($person->have_perm(PERM_PERSON_READ_MANAGEMENT)) {
+      include_template("templates/personManagementFieldsS.tpl");
+    }
+  }
 
 $skill_header = false;
-function show_person_areasOfExpertise($template) {
-  global $TPL, $personID, $skill_header, $skill_prof, $skills_got;
-
-  $TPL["personExpertiseItem_buttons"] = "<input type=\"submit\" name=\"personExpertiseItem_save\" value=\"Save\">
-          <input type=\"submit\" name=\"personExpertiseItem_delete\" value=\"Delete\">";
-  $proficiencys = array("Novice"=>"Novice", "Junior"=>"Junior", "Intermediate"=>"Intermediate", "Advanced"=>"Advanced", "Senior"=>"Senior");
-
-# step through the list of skills ordered by skillclass
-  $db = new db_alloc;
-  // $query = "SELECT * FROM skillList ORDER BY skillClass,skillName";
-  $query = "SELECT * FROM skillList LEFT JOIN skillProficiencys ON skillList.skillID=skillProficiencys.skillID";
-  $query.= sprintf(" WHERE skillProficiencys.personID=%d", $personID);
-  $query.= " ORDER BY skillClass,skillName";
-  $db->query($query);
-  $currSkillClass = null;
-  while ($db->next_record()) {
-    $skillList = new skillList;
-    $skillList->read_db_record($db);
-    $skillList->set_tpl_values();
-
-    $skillPrificiencys = new skillProficiencys;
-    $skillPrificiencys->read_db_record($db);
-    $skillPrificiencys->set_tpl_values();
-
-# if tey do and there is no heading for this segment put a heading
-    $thisSkillClass = $skillList->get_value('skillClass');
-    if ($currSkillClass != $thisSkillClass) {
-      $currSkillClass = $thisSkillClass;
-      $skill_header = true;
-    } else {
-      $skill_header = false;
-    }
-    $skill_prof = $skillPrificiencys->get_value('skillProficiency');
-    $TPL["skill_proficiencys"] = get_options_from_array($proficiencys, $skill_prof, true);
-
-# display rating if there is one
-    include_template($template);
-  }
-}
-
-function show_skills_list() {
-  global $TPL, $personID, $skills;
-
-  $db = new db_alloc;
-  $query = sprintf("SELECT * FROM skillProficiencys WHERE personID=%d", $personID);
-  $db->query($query);
-  $skills_got = array();
-  while ($db->next_record()) {
-    $skillList = new skillList;
-    $skillList->read_db_record($db);
-    array_push($skills_got, $skillList->get_id());
-  }
-  $query = "SELECT * FROM skillList ORDER BY skillClass";
-  $db->query($query);
-  while ($db->next_record()) {
-    $skillList = new skillList;
-    $skillList->read_db_record($db);
-    if (in_array($skillList->get_id(), $skills_got)) {
-      // dont show this item
-    } else {
-      $skills[$skillList->get_id()] = sprintf("%s - %s", $skillList->get_value('skillClass'), $skillList->get_value('skillName'));
-    }
-  }
-  if (count($skills) > 0) {
-    $TPL["skills"] = get_options_from_array($skills, "", true);
-  }
-}
-
-function check_optional_person_skills_header() {
-  global $skill_header;
-  return $skill_header;
-}
-
-function include_management_fields() {
-  global $person;
-  if ($person->have_perm(PERM_PERSON_READ_MANAGEMENT)) {
-    include_template("templates/personManagementFieldsS.tpl");
-  }
-}
-
 $person = new person;
 
 if (isset($personID)) {
