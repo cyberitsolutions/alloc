@@ -407,7 +407,7 @@ class timeSheet extends db_entity
     $email = new alloc_email($addr,$sub,$msg);
 
     // REMOVE ME!!
-    $email->ignore_no_email_urls = true;
+    #$email->ignore_no_email_urls = true;
 
 
     if ($dummy) {

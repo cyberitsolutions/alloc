@@ -8,9 +8,9 @@ h2                      { font-weight:bold; }
 h3                      { font-weight:bold; }
 form                    { display:inline; }
 div.message             { border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); padding:10px; margin-bottom:7px; background-color:(TR_ODD_BACKGROUND_COLOR); }
-.bad                 { color: (TRANSACTION_REJECTED); font-weight:bold; }
-.good                { color: (TRANSACTION_APPROVED); font-weight:bold; }
-.help                { color: (TRANSACTION_PENDING);  font-weight:bold; }
+.bad                    { color:(TRANSACTION_REJECTED); font-weight:bold; }
+.good                   { color:(TRANSACTION_APPROVED); font-weight:bold; }
+.help                   { color:(TRANSACTION_PENDING);  font-weight:bold; }
 
 table.box               { border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); background-color:(TABLE_BOX_BACKGROUND_COLOR); margin-bottom:7px;} 
 table.box th            { border-bottom:1px solid (TABLE_BOX_BORDER);  (TABLE_BOX_TH_BACKGROUND); color:(TABLE_BOX_TH_COLOR);} 
@@ -21,7 +21,7 @@ table.box th.right      { text-align:right; }
 table.box th.center     { text-align:center; } 
 table.box th.right table{ width:40%; } 
 
-table.toolbar           { border:1px solid (TABLE_TOOLBAR_BORDER); color:(BODY_COLOR); background-color:(TABLE_TOOLBAR_BACKGROUND_COLOR); margin-bottom:7px;}
+table.toolbar           { border:(TABLE_BOX_BORDER_PX) solid (TABLE_TOOLBAR_BORDER); color:(BODY_COLOR); background-color:(TABLE_TOOLBAR_BACKGROUND_COLOR); margin-bottom:7px;}
 table.toolbar a:link    { color:(TABLE_TOOLBAR_A_COLOR); font-weight:bolder;        }
 table.toolbar a:visited { color:(TABLE_TOOLBAR_A_COLOR); font-weight:bolder;        }
 table.toolbar a:hover   { color:(TABLE_TOOLBAR_A_HOVER_COLOR); font-weight:bolder;  }

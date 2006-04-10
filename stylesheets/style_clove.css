@@ -8,9 +8,9 @@ h2                      { font-weight:bold; }
 h3                      { font-weight:bold; }
 form                    { display:inline; }
 div.message             { border:0px solid #ffffff; padding:10px; margin-bottom:7px; background-color:#afb8b1; }
-.bad                 { color: #880000; font-weight:bold; }
-.good                { color: #000000; font-weight:bold; }
-.help                { color: #ffffff;  font-weight:bold; }
+.bad                    { color:#880000; font-weight:bold; }
+.good                   { color:#000000; font-weight:bold; }
+.help                   { color:#ffffff;  font-weight:bold; }
 
 table.box               { border:0px solid #ffffff; background-color:#cccccc; margin-bottom:7px;} 
 table.box th            { border-bottom:1px solid #ffffff;  background: url(../images/bg_clove.jpg) repeat-x; color:#ffffff;} 
@@ -21,13 +21,13 @@ table.box th.right      { text-align:right; }
 table.box th.center     { text-align:center; } 
 table.box th.right table{ width:40%; } 
 
-table.toolbar           { border:1px solid #999999; color:#ffffff; background-color:#cccccc; margin-bottom:7px;}
+table.toolbar           { border:0px solid #ffffff; color:#ffffff; background-color:#cccccc; margin-bottom:7px;}
 table.toolbar a:link    { color:#000000; font-weight:bolder;        }
 table.toolbar a:visited { color:#000000; font-weight:bolder;        }
 table.toolbar a:hover   { color:#425749; font-weight:bolder;  }
 table.toolbar a.active  { color:#425749; }
-table.toolbar th        { color:#ffffff; padding:3px 2px; font-weight:bold; background: url(../images/bg_clove.jpg) repeat-x; border-bottom:1px solid #999999;}
-td.logout               { text-align:right; padding:3px 2px; font-weight:bold; background: url(../images/bg_clove.jpg) repeat-x; border-bottom:1px solid #999999;}
+table.toolbar th        { color:#ffffff; padding:3px 2px; font-weight:bold; background: url(../images/bg_clove.jpg) repeat-x; border-bottom:1px solid #ffffff;}
+td.logout               { text-align:right; padding:3px 2px; font-weight:bold; background: url(../images/bg_clove.jpg) repeat-x; border-bottom:1px solid #ffffff;}
 
 table.calendar th       { background-color:#8ca695; color:#333333; border:0px; font-weight:normal; }
 table.calendar td       { background-color:#afb8b1; }

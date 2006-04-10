@@ -1,16 +1,18 @@
 #!/bin/env python
 
-import ConfigParser, os
+import ConfigParser, os, sys
 
 # Read the style.ini file with all the config key/values
 config = ConfigParser.ConfigParser()
-config.read(['../style.ini'])
+
+d = os.path.dirname(sys.argv[0])+'/'
+config.read([d+'../style.ini'])
 
 # Get a list of sections from the config file
 sections = config.sections()
 
 # Convert the style template into a string
-fd = open('../style.css')
+fd = open(d+'../style.css')
 str_orig = fd.read();
 fd.close();
 
@@ -40,7 +42,7 @@ for section in sections:
     str = str.replace('('+k.upper()+')', v)
   
   # Write it out to a file
-  fd = open('../stylesheets/'+section+'.css','w')
+  fd = open(d+'../stylesheets/'+section+'.css','w')
   fd.write(str) 
   fd.close()
 
