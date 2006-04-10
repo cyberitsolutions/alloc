@@ -57,9 +57,9 @@
         </tr>
         <tr>
           <td>Special Permissions
-		          <br>Admin: access to finance, TF's etc..
-		          <br>Manage: project, tasks etc..
-		          <br>(leave blank for regular employees)
+		          <br>Super User: Access everything
+		          <br>Finance Admin: Access all transactions, TF's
+		          <br>Project Manager: Access all projects
 		      </td>
           <td>{:show_perm_select}</td>
         </tr>

@@ -287,3 +287,7 @@ alter table expenseForm drop chequeDate;
 alter table expenseForm drop chequeNumber;
 
 
+
+-- Add a permission record for table item, so that -1 owners can read,update,delete,create items
+
+
