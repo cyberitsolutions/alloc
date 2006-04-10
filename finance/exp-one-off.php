@@ -183,7 +183,7 @@ if ($cancel) {
   exit();
 }
 
-if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised")) {
+if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") && $current_user->get_id() == $expenseForm->get_value("enteredBy")) {
   $TPL["message_help"][] = "Step 4/4: Print out the Expense Form using the Printer Friendly Version link, attach receipts and hand in to office admin.";
 
 } else if (check_optional_has_line_items() && !$expenseForm->get_value("expenseFormFinalised")) {  
@@ -191,7 +191,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised")) 
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["message_help"][] = "Step 2/4: Add Expense Form Line Items by filling in the details and clicking the Add Expense Form Line Item button.";
-} else {
+} else if (!is_object($expenseForm) || !$expenseForm->get_id()) {
   $TPL["message_help"][] = "Step 1/4: Begin an Expense Form by choosing the Payment Method and Reimbursement option, then clicking the Create Expense Form button.";
 }
 
