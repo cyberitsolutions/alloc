@@ -3,20 +3,20 @@ body                    { (BODY_BACKGROUND); font-family:arial,helvetica,sans-se
 a:link                  { color:(A_COLOR); }
 a:visited               { color:(A_COLOR); }
 a:hover                 { color:(A_HOVER); }
-h1                      { font-weight:bold; }
-h2                      { font-weight:bold; }
-h3                      { font-weight:bold; }
+h1                      { font-weight:bold; font-size:(H1_FONT_SIZE)px; }
+h2                      { font-weight:bold; font-size:(H2_FONT_SIZE)px; }
+h3                      { font-weight:bold; font-size:(H3_FONT_SIZE)px; }
 form                    { display:inline; }
 div.message             { border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); padding:10px; margin-bottom:7px; background-color:(TR_ODD_BACKGROUND_COLOR); }
-.bad                    { color:(TRANSACTION_REJECTED); font-weight:bold; }
-.good                   { color:(TRANSACTION_APPROVED); font-weight:bold; }
-.help                   { color:(TRANSACTION_PENDING);  font-weight:bold; }
+.bad                    { color:(TRANSACTION_REJECTED); font-weight:bold; font-size:(TABLE_BOX_TH_FONT_SIZE)px; }
+.good                   { color:(TRANSACTION_APPROVED); font-weight:bold; font-size:(TABLE_BOX_TH_FONT_SIZE)px; }
+.help                   { color:(TRANSACTION_PENDING);  font-weight:bold; font-size:(TABLE_BOX_TH_FONT_SIZE)px; }
 
 table.box               { border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); background-color:(TABLE_BOX_BACKGROUND_COLOR); margin-bottom:7px;} 
-table.box th            { border-bottom:1px solid (TABLE_BOX_BORDER);  (TABLE_BOX_TH_BACKGROUND); color:(TABLE_BOX_TH_COLOR);} 
-table.box th a:link     { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); }
-table.box th a:visited  { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); }
-table.box th a:hover    { font-weight:bold; color:(TABLE_BOX_TH_A_HOVER_COLOR); }
+table.box th            { border-bottom:1px solid (TABLE_BOX_BORDER);  (TABLE_BOX_TH_BACKGROUND); color:(TABLE_BOX_TH_COLOR); font-size:(TABLE_BOX_TH_FONT_SIZE)px; } 
+table.box th a:link     { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; }
+table.box th a:visited  { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; }
+table.box th a:hover    { font-weight:bold; color:(TABLE_BOX_TH_A_HOVER_COLOR); font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; }
 table.box th.right      { text-align:right; } 
 table.box th.center     { text-align:center; } 
 table.box th.right table{ width:40%; } 
@@ -26,10 +26,11 @@ table.toolbar a:link    { color:(TABLE_TOOLBAR_A_COLOR); font-weight:bolder;    
 table.toolbar a:visited { color:(TABLE_TOOLBAR_A_COLOR); font-weight:bolder;        }
 table.toolbar a:hover   { color:(TABLE_TOOLBAR_A_HOVER_COLOR); font-weight:bolder;  }
 table.toolbar a.active  { color:(TABLE_TOOLBAR_A_ACTIVE_COLOR); }
-table.toolbar th        { color:(TABLE_TOOLBAR_TH_COLOR); padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER);}
+table.toolbar th        { color:(TABLE_TOOLBAR_TH_COLOR); padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER); font-size:(TABLE_TOOLBAR_TH_FONT_SIZE)px; }
+table.toolbar td        { font-size:(TABLE_TOOLBAR_TD_FONT_SIZE)px; }
 td.logout               { text-align:right; padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER);}
 
-table.calendar th       { background-color:(TABLE_CALENDAR_TH_BACKGROUND_COLOR); color:(TABLE_CALENDAR_TH_COLOR); border:0px; font-weight:normal; }
+table.calendar th       { background-color:(TABLE_CALENDAR_TH_BACKGROUND_COLOR); color:(TABLE_CALENDAR_TH_COLOR); border:0px; font-weight:normal; font-size:(TABLE_CALENDAR_TH_FONT_SIZE)px; }
 table.calendar td       { background-color:(TR_ODD_BACKGROUND_COLOR); }
 table.calendar td.today { background-color:(TABLE_BOX_BACKGROUND_COLOR); }
 
@@ -37,7 +38,7 @@ table.filter            { border:3px dashed (TABLE_CALENDAR_TH_BACKGROUND_COLOR)
 table.filter th         { font-weight:bold; background-color:(TABLE_FILTER_BACKGROUND_COLOR); color:(TD_COLOR); border-bottom:0px solid #ffffff; text-align:center; }
 table.panel             { background-color:(TR_ODD_BACKGROUND_COLOR); height:100%; }
 
-td                      { color:(TD_COLOR);  }
+td                      { color:(TD_COLOR); font-size:(TD_FONT_SIZE)px; }
 th                      { color:(TD_COLOR);  text-align:left; }
 tr.odd                  { background-color:(TR_ODD_BACKGROUND_COLOR); }
 tr.even                 { background-color:(TR_EVEN_BACKGROUND_COLOR); }
@@ -64,5 +65,4 @@ textarea.timesheetcomm  { font-size:12px; }
 #shrink_tsi_note        { display:none; }
 #ts_note                { height:22px; }
 #tsi_note               { height:22px; }
-
 

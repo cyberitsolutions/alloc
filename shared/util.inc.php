@@ -99,36 +99,14 @@ function show_header() {
 }
 
 function get_stylesheet_name() {
-  global $customizedTheme;
-  $themes = array("Classic", "Darko", "Aneurism", "Clove", "None");
-  $stylesheet = "style_".strtolower($themes[sprintf("%d", $customizedTheme)]).".css";
+  global $customizedTheme, $customizedFont;
+  $themes = customize_alloc_home_item::get_customizedTheme_array();
+  $fonts  = customize_alloc_home_item::get_customizedFont_array();
+
+  $stylesheet = "style_".strtolower($themes[sprintf("%d", $customizedTheme)])."_".$fonts[sprintf("%d",$customizedFont)].".css";
   echo $stylesheet;
 }
 
-
-function show_style_sheet() {
-  global $TPL, $customizedFont;
-
-  $weight = $customizedFont;
-
-  $font_size = array("H1_FONT_SIZE"               =>17 + $weight
-                   , "H2_FONT_SIZE"               =>17 + $weight
-                   , "H3_FONT_SIZE"               =>16 + $weight
-                   , "TABLE_BOX_TH_FONT_SIZE"     =>14 + $weight
-                   , "TABLE_BOX_TH_A_FONT_SIZE"   =>14 + $weight
-                   , "TABLE_TOOLBAR_TH_FONT_SIZE" =>18 + $weight
-                   , "TABLE_TOOLBAR_TD_FONT_SIZE" =>14 + $weight
-                   , "TABLE_CALENDAR_TH_FONT_SIZE"=>13 + $weight
-                   , "TD_FONT_SIZE"               =>13 + $weight
-                   );
-
-
-  $str = implode("", file(ALLOC_MOD_DIR."/stylesheets/font_sizes.css"));
-  foreach($font_size as $search=>$replace) {
-    $str = str_replace("(".$search.")", $replace, $str);
-  }
-  echo $str;
-}
 
 function show_footer() {
   include_template(ALLOC_MOD_DIR."/shared/templates/footerS.tpl");

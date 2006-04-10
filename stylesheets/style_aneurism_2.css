@@ -1,0 +1,68 @@
+
+body                    { background-color: #eeeeee; font-family:arial,helvetica,sans-serif; color:#666666;}
+a:link                  { color:#003d76; }
+a:visited               { color:#003d76; }
+a:hover                 { color:#688db0; }
+h1                      { font-weight:bold; font-size:14px; }
+h2                      { font-weight:bold; font-size:14px; }
+h3                      { font-weight:bold; font-size:13px; }
+form                    { display:inline; }
+div.message             { border:1px solid #81a2c1; padding:10px; margin-bottom:7px; background-color:#e8eff9; }
+.bad                    { color:red; font-weight:bold; font-size:11px; }
+.good                   { color:green; font-weight:bold; font-size:11px; }
+.help                   { color:black;  font-weight:bold; font-size:11px; }
+
+table.box               { border:1px solid #81a2c1; background-color:#f9f9f9; margin-bottom:7px;} 
+table.box th            { border-bottom:1px solid #81a2c1;  background: url(../images/bg_aneurism.jpg) repeat-x; color:#ffffff; font-size:11px; } 
+table.box th a:link     { font-weight:bold; color:#ffffff; font-size:11px; }
+table.box th a:visited  { font-weight:bold; color:#ffffff; font-size:11px; }
+table.box th a:hover    { font-weight:bold; color:#eeeeee; font-size:11px; }
+table.box th.right      { text-align:right; } 
+table.box th.center     { text-align:center; } 
+table.box th.right table{ width:40%; } 
+
+table.toolbar           { border:1px solid #81a2c1; color:#666666; background-color:#f9f9f9; margin-bottom:7px;}
+table.toolbar a:link    { color:#003d76; font-weight:bolder;        }
+table.toolbar a:visited { color:#003d76; font-weight:bolder;        }
+table.toolbar a:hover   { color:#688db0; font-weight:bolder;  }
+table.toolbar a.active  { color:#688db0; }
+table.toolbar th        { color:#ffffff; padding:3px 2px; font-weight:bold; background: url(../images/bg_aneurism.jpg) repeat-x; border-bottom:1px solid #81a2c1; font-size:15px; }
+table.toolbar td        { font-size:11px; }
+td.logout               { text-align:right; padding:3px 2px; font-weight:bold; background: url(../images/bg_aneurism.jpg) repeat-x; border-bottom:1px solid #81a2c1;}
+
+table.calendar th       { background-color:#d4e0ec; color:#ffffff; border:0px; font-weight:normal; font-size:10px; }
+table.calendar td       { background-color:#e8eff9; }
+table.calendar td.today { background-color:#f9f9f9; }
+
+table.filter            { border:3px dashed #d4e0ec; background-color:#e8eff9; padding:4px; margin:4px;}
+table.filter th         { font-weight:bold; background-color:#e8eff9; color:#333333; border-bottom:0px solid #ffffff; text-align:center; }
+table.panel             { background-color:#e8eff9; height:100%; }
+
+td                      { color:#333333; font-size:10px; }
+th                      { color:#333333;  text-align:left; }
+tr.odd                  { background-color:#e8eff9; }
+tr.even                 { background-color:#f9f9f9; }
+.really_overdue         { font-weight:bold; color: red}
+.overdue                { color: red; }
+td.print-label          { vertical-align:middle; text-align:right; }
+.print-label            { font-weight:bold; }
+.behind-target          { color: #ccaa00; }
+.transaction-approved   { color: green; }
+.transaction-pending    { color: black; }
+.transaction-rejected   { color: red; }
+.highlighted            { font-weight:bold;}
+      
+ul                      { display:inline; list-style:circle inside; }
+td.tasks                { background-color: #e8eff9; }
+td.tasks_r              { background-color: #e8eff9; text-align:right; }
+td.grand_total          { border-top:1px solid black;}
+td.col                  { border-left:2px solid #e8eff9;  border-top:2px solid #e8eff9;}
+textarea                { font-size:12px; }
+input                   { font-size:12px; }
+select                  { font-size:12px; }
+textarea.timesheetcomm  { font-size:12px; }
+#shrink_ts_note         { display:none; }
+#shrink_tsi_note        { display:none; }
+#ts_note                { height:22px; }
+#tsi_note               { height:22px; }
+

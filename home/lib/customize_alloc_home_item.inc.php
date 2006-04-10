@@ -42,12 +42,8 @@ class customize_alloc_home_item extends home_item {
       $current_user->prefs["customizedTheme"] = $customizedTheme;
     }
 
-    $options = array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"Default", "1"=>5, "3"=>6, "4"=>7, "5"=>8, "6"=>9, "7"=>10);
-    $TPL["customizeFontOptions"] = get_options_from_array($options, $customizedFont);
-
-    $options = array("Default", "Darko", "Aneurism", "Clove", "None");
-    $TPL["customizeThemeOptions"] = get_options_from_array($options, $customizedTheme);
-
+    $TPL["customizeFontOptions"] = get_options_from_array($this->get_customizedFont_array(), $customizedFont);
+    $TPL["customizeThemeOptions"] = get_options_from_array($this->get_customizedTheme_array(), $customizedTheme);
   }
 
 
@@ -56,6 +52,12 @@ class customize_alloc_home_item extends home_item {
     include_template($template_name);
   }
 
+  function get_customizedFont_array() {
+    return array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"4", "1"=>5, "2"=>6, "3"=>7, "4"=>8, "5"=>9, "6"=>10);
+  }
+  function get_customizedTheme_array() {
+    return array("Icy", "Darko", "Aneurism", "Clove", "None");
+  }
 
 }
 
