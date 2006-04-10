@@ -23,6 +23,53 @@
 
 require_once("alloc.inc");
 
+  function show_reminders($template) {
+    global $TPL, $taskID, $reminderID;
+
+    // show all reminders for this project
+    $reminder = new reminder;
+    $db = new db_alloc;
+    $query = sprintf("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d", $taskID);
+    $db->query($query);
+    while ($db->next_record()) {
+      $reminder->read_db_record($db);
+      $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
+      if ($reminder->get_value('reminderRecuringInterval') == "No") {
+        $TPL["reminder_reminderRecurence"] = "&nbsp;";
+      } else {
+        $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
+          ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
+      }
+      $person = new person;
+      $person->set_id($reminder->get_value('personID'));
+      $person->select();
+      $TPL["reminder_reminderRecipient"] = $person->get_username(1);
+      $TPL["returnToParent"] = "t";
+
+      include_template($template);
+    }
+  }
+
+  function show_task_children($template) {
+    global $TPL, $task;
+    if ($TPL["task_children_summary"] || $task->get_value("taskTypeID") == 2) {
+      include_template($template);
+    }
+  }
+
+  function get_parent_taskIDs($taskID) {
+    $q = sprintf("SELECT taskID,taskName,parentTaskID FROM task WHERE taskID = %d",$taskID);
+    $db = new db_alloc;
+    $db->query($q);
+    
+    while($db->next_record()) {
+      $rtn[$db->f("taskName")] = stripslashes($db->f("taskID")); 
+      $rtn = array_merge($rtn, get_parent_taskIDs($db->f("parentTaskID")));
+    }
+    return $rtn;
+  }
+
+
 global $timeSheetID;
 
 if ($timeSheetID) {
@@ -108,11 +155,11 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
 
 
   global $taskEmail;
-  if ($task->get_value("percentComplete") == "100" && $orig_percentComplete != "100") {
+  if ($task->get_value("percentComplete") == "100" && $orig_percentComplete != "100" && $current_user->get_id() != $task->get_value("creatorID")) {
     $successful_recipients = $task->send_emails(array("creator"),$task,"Task Closed");
     $successful_recipients and $msg[] = "Emailed ".$successful_recipients;
 
-  } else if ($task_is_new) {
+  } else if ($task_is_new && $current_user->get_id() != $task->get_value("personID")) {
     $successful_recipients = $task->send_emails(array("assignee"),$task,"Task Created");
     $successful_recipients and $msg[] = "Emailed ".$successful_recipients;
   }
@@ -202,17 +249,6 @@ if ($db->f("clientID")) {
   $TPL["new_client_contact_link"].= "New Client Contact</a>";
 }
 
-function get_parent_taskIDs($taskID) {
-  $q = sprintf("SELECT taskID,taskName,parentTaskID FROM task WHERE taskID = %d",$taskID);
-  $db = new db_alloc;
-  $db->query($q);
-  
-  while($db->next_record()) {
-    $rtn[$db->f("taskName")] = stripslashes($db->f("taskID")); 
-    $rtn = array_merge($rtn, get_parent_taskIDs($db->f("parentTaskID")));
-  }
-  return $rtn;
-}
 
 $parentTaskIDs = get_parent_taskIDs($task->get_value("parentTaskID"));
 if (is_array($parentTaskIDs)) {
@@ -243,6 +279,15 @@ if (isset($commentID) && $taskComment_edit) {
            ."<input type=\"submit\" name=\"taskComment_update\" value=\"Save Comment\">";
 } else {
   $TPL["task_taskComment_buttons"] = "<input type=\"submit\" name=\"taskComment_save\" value=\"Save Comment\">";
+  if ($task->get_id()) {
+
+    if ($current_user->get_id() != $task->get_value("creatorID")) {
+      $TPL["email_comment_creator_checked"] = " checked";
+    } 
+    if ($current_user->get_id() != $task->get_value("personID")) {
+      $TPL["email_comment_assignee_checked"] = " checked";
+    } 
+  }
 }
 
 
@@ -293,41 +338,6 @@ if ($view == "detail" || !$task->get_id()) {
 }
 
 
-
-
-function show_reminders($template) {
-  global $TPL, $taskID, $reminderID;
-
-  // show all reminders for this project
-  $reminder = new reminder;
-  $db = new db_alloc;
-  $query = sprintf("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d", $taskID);
-  $db->query($query);
-  while ($db->next_record()) {
-    $reminder->read_db_record($db);
-    $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
-    if ($reminder->get_value('reminderRecuringInterval') == "No") {
-      $TPL["reminder_reminderRecurence"] = "&nbsp;";
-    } else {
-      $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
-        ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
-    }
-    $person = new person;
-    $person->set_id($reminder->get_value('personID'));
-    $person->select();
-    $TPL["reminder_reminderRecipient"] = $person->get_username(1);
-    $TPL["returnToParent"] = "t";
-
-    include_template($template);
-  }
-}
-
-function show_task_children($template) {
-  global $TPL, $task;
-  if ($TPL["task_children_summary"] || $task->get_value("taskTypeID") == 2) {
-    include_template($template);
-  }
-}
 
 
 page_close();

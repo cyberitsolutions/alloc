@@ -100,11 +100,18 @@ function show_header() {
 
 function get_stylesheet_name() {
   global $customizedTheme, $customizedFont;
-  $themes = customize_alloc_home_item::get_customizedTheme_array();
-  $fonts  = customize_alloc_home_item::get_customizedFont_array();
+  $themes = get_customizedTheme_array();
+  $fonts  = get_customizedFont_array();
 
   $stylesheet = "style_".strtolower($themes[sprintf("%d", $customizedTheme)])."_".$fonts[sprintf("%d",$customizedFont)].".css";
   echo $stylesheet;
+}
+
+function get_customizedFont_array() {
+  return array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"4", "1"=>5, "2"=>6, "3"=>7, "4"=>8, "5"=>9, "6"=>10);
+}
+function get_customizedTheme_array() {
+  return array("Icy", "Darko", "Aneurism", "Clove", "None");
 }
 
 
@@ -113,7 +120,10 @@ function show_footer() {
 }
 
 function show_toolbar() {
-  global $TPL, $modules;
+  global $TPL, $modules, $category;
+
+  $TPL["category_options"] = get_category_options($_POST["category"]);
+  $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Enter A Search...";
 
   $toolbar_items = show_toolbar_items();
 

@@ -3,13 +3,13 @@
 </tr>
 <tr>
   <td>Availability</td>
-  <td><textarea rows="5" cols="50" name="availability">{person_availability}</textarea></td>
+  <td><textarea rows="3" cols="50" name="availability">{person_availability}</textarea></td>
 </tr>
 <tr>
   <td>Areas of interest</td>
-  <td><textarea rows="5" cols="50" name="areasOfInterest">{person_areasOfInterest}</textarea></td>
+  <td><textarea rows="3" cols="50" name="areasOfInterest">{person_areasOfInterest}</textarea></td>
 </tr>
 <tr>
   <td>Comments</td>
-  <td><textarea rows="5" cols="50" name="comments">{person_comments}</textarea></td>
+  <td><textarea rows="3" cols="50" name="comments">{person_comments}</textarea></td>
 </tr>

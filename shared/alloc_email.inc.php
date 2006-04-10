@@ -69,6 +69,7 @@ class alloc_email {
     $message     and $this->message    = $message;
     $header      and $this->header     = $header;
     $this->header or $this->header     = "From: AllocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
+    $this->subject                     = "AllocPSA ".$this->subject;
 
     if ($this->is_valid_to_address() && $this->is_valid_url()) {
       $this->log("Sending: ".$this->subject." to ".$this->to_address);
@@ -83,9 +84,9 @@ class alloc_email {
     $person->set_id($personID);
     $person->select();
     if ($person->get_value("emailAddress")) {
-      $this->header = "From: AllocPSA '".$person->get_username(1)."' <".$person->get_value("emailAddress").">";
+      $this->header = "From: ".$person->get_username(1)." <".$person->get_value("emailAddress").">";
     } else {
-      $this->header = "From: AllocPSA '".$person->get_username(1)."' <".ALLOC_DEFAULT_FROM_ADDRESS.">";
+      $this->header = "From: ".$person->get_username(1)." <".ALLOC_DEFAULT_FROM_ADDRESS.">";
     }
   }
 

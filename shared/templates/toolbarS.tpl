@@ -34,8 +34,8 @@
 	      <tr>
 	        <td align="right">
 	          <form action="{url_alloc_search}" method="post" id="form_search">
-	          &nbsp;<nobr><input size="18" name="needle" value="Enter A Search.." onFocus="document.forms['form_search'].needle.value='';">
-            <select size="1" name="category">{:get_category_options}</select>
+	          &nbsp;<nobr><input size="18" name="needle" value="{needle}" onFocus="document.forms['form_search'].needle.value='';">
+            <select size="1" name="category">{category_options}</select>
 	            <input type="submit" name="search" value="Go">&nbsp;</nobr>
 	          </form>
           </td>  
