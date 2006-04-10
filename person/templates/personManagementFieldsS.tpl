@@ -3,5 +3,5 @@
 </tr>
 <tr>
   <td>Comments for management viewing only</td>
-  <td><textarea name="managementComments" rows="5" cols="50">{person_managementComments}</textarea></td>
+  <td><textarea name="managementComments" rows="3" cols="50">{person_managementComments}</textarea></td>
 </tr>

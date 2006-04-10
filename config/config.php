@@ -45,6 +45,7 @@ if ($save) {
       $c->set_value("value",$_POST[$name]);
       $c->save();
       $TPL[$name] = $_POST[$name];
+      $TPL["message_good"] = "Saved configuration.";
     }
   }
 }

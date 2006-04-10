@@ -10,13 +10,13 @@
         <tr>
           <td>
             <input type="hidden" name="taskID" value="{task_taskID}">
-            <textarea name="taskComment" cols="85" rows="5" wrap="virtual" id="taskComment">{task_taskComment}</textarea>&nbsp;
+            <textarea name="taskComment" cols="85" rows="7" wrap="virtual" id="taskComment">{task_taskComment}</textarea>&nbsp;
           </td>
           <td align="right" valign="top">
             <select name="taskCommentTemplateID" onChange="updateStuffWithAjax()">{taskCommentTemplateOptions}</select>
-            <br/>Email Task Creator <input type="checkbox" name="commentEmailCheckboxes[]" value="creator">
-            <br/>Email Task Assignee <input type="checkbox" name="commentEmailCheckboxes[]" value="assignee">
-            <br/>Email Interested Parties <input type="checkbox" name="commentEmailCheckboxes[]" value="CCList">
+            <br/>Email Task Creator <input type="checkbox" name="commentEmailCheckboxes[]" value="creator"{email_comment_creator_checked}>
+            <br/>Email Task Assignee <input type="checkbox" name="commentEmailCheckboxes[]" value="assignee"{email_comment_assignee_checked}>
+            <br/>Email Interested Parties <input type="checkbox" name="commentEmailCheckboxes[]" value="CCList"{email_comment_CCList_checked}>
             <br/>
             <br/>
             {task_taskComment_buttons}

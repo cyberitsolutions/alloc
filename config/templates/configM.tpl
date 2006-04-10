@@ -6,6 +6,10 @@
     <th colspan="2">Configuration</th>
   </tr>
   <tr>
+    <td width="20%"><nobr>Alloc Base URL</nobr></td>
+    <td><input type="text" size="70" value="{allocURL}" name="allocURL"></td> 
+  </tr>
+  <tr>
     <td width="20%"><nobr>Alloc Email From Address</nobr></td>
     <td><input type="text" size="70" value="{AllocFromEmailAddress}" name="AllocFromEmailAddress"></td> 
   </tr>

@@ -58,7 +58,7 @@ if (isset($taskComment_save) || isset($taskComment_update)) {
 
     // Email new comment?
     if ($commentEmailCheckboxes) {
-      $successful_recipients = $task->send_emails($commentEmailCheckboxes, $comment, "New Task Comments");
+      $successful_recipients = $task->send_emails($commentEmailCheckboxes, $comment, "Task Comments");
  
       // Append success to end of the comment
       if ($successful_recipients && is_object($comment)) {

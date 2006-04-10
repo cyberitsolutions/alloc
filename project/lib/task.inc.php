@@ -91,7 +91,6 @@ class task extends db_entity {
     }
   }
 
-
   function new_message_task() {
     // Create a reminder with its regularity being based upon what the task priority is
 
@@ -112,7 +111,6 @@ class task extends db_entity {
     $people[] = $this->get_value("personID");
     $this->create_reminders($people, $message, $reminderInterval, $intervalValue);
   }
-
 
   function new_fault_task() {
     // Create a reminder with its regularity being based upon what the task priority is
@@ -154,9 +152,6 @@ class task extends db_entity {
     $this->create_reminders($people, $message, $reminderInterval, $intervalValue);
   }
 
-
-
-  // 'internal' function used to create reminders for an array of people
   function create_reminders($people, $message, $reminderInterval, $intervalValue) {
     if (is_array($people)) {
       foreach($people as $personID) {
@@ -169,7 +164,6 @@ class task extends db_entity {
       }
     }
   }
-
 
   function create_reminder($personID, $message, $reminderInterval, $intervalValue) {
     global $current_user;
@@ -193,8 +187,6 @@ class task extends db_entity {
 
     $reminder->save();
   }
-
-
 
   function is_owner($person = "") {
     // A user owns a task if the 'own' the project
@@ -246,8 +238,6 @@ class task extends db_entity {
     }
     return "<select name=\"parentTaskID\">".$options."</select>";
   }
-
-
 
   function get_task_cc_list_select($projectID="") {
     global $TPL;
@@ -311,11 +301,8 @@ class task extends db_entity {
     return $str;
   }
 
-
-
-
-  // Set template values to provide options for edit selects
   function set_option_tpl_values() {
+    // Set template values to provide options for edit selects
     global $TPL, $timeSheetID, $current_user, $isMessage;
 
     $projectID = $this->get_value("projectID");
@@ -431,7 +418,6 @@ class task extends db_entity {
 
   }
 
-
   function get_email_recipients($options=array()) {
     static $people;
     $recipients = array();
@@ -464,8 +450,10 @@ class task extends db_entity {
         }
       } else if ($selected_option == "creator") {
         $recipients[] = $people[$this->get_value("creatorID")];
+
       } else if ($selected_option == "assignee") {
         $recipients[] = $people[$this->get_value("personID")];
+
       } else if ($selected_option == "isManager" || $selected_option == "canEditTasks" || $selected_option == "all") {
         $q = sprintf("SELECT personID,projectPersonRoleHandle 
                         FROM projectPerson 
@@ -484,7 +472,6 @@ class task extends db_entity {
     return $recipients;
   }
 
-
   function send_emails($selected_option, $object, $extra="") {
     global $current_user;
     $recipients = $this->get_email_recipients($selected_option);
@@ -499,12 +486,13 @@ class task extends db_entity {
     if (get_class($object) == "task") {
       $body = "Project: ".stripslashes($p->get_value("projectName"));
       $body.= "\nTask: ".stripslashes($this->get_value("taskName"));
-      $body.= "\nhttp://alloc/project/task.php?taskID=".$this->get_id();
+      $body.= "\n".config::get_config_item("allocURL")."project/task.php?taskID=".$this->get_id();
       $body.= "\n\n".stripslashes(wordwrap($this->get_value("taskDescription")));
     }
 
     foreach ($recipients as $recipient) {
-      if ($current_user->get_id() != $recipient["personID"] && $object->send_email($recipient, $subject, $body)) {
+      #$current_user->get_id() != $recipient["personID"] # to skip current_user
+      if ($object->send_email($recipient, $subject, $body)) {
         $successful_recipients.= $commar.$recipient["fullName"];
         $commar = ", ";
       }

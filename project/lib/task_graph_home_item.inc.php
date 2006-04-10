@@ -126,17 +126,15 @@ class task_graph_home_item extends home_item {
         foreach($dates_of_week as $day=>$date) {
 
           if ($db->f("dateTargetStart") == $date) {
-            ${"to_be_started_".$day}
-            = "<br><br>To be started:";
-            $TPL["calendar_".$day."_started"].= '<tr><td>-</td><td width="99%"><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
+            ${"to_be_started_".$day} = "<br><br>To be started:";
+            $TPL["calendar_".$day."_started"].= '<tr><td valign=\"top\">*</td><td width="99%"><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
             $TPL["calendar_".$day."_started"].= $db->f("taskName")."</a></td></tr>";
           }
 
           if ($db->f("dateTargetCompletion") == $date) {
             $TPL["calendar_".$day."_started"] or $br = "<br>";
-            ${"to_be_completed_".$day}
-            = $br."<br>To be completed:";
-            $TPL["calendar_".$day."_completed"].= '<tr><td>-</td><td width="99%"><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
+            ${"to_be_completed_".$day} = $br."<br>To be completed:";
+            $TPL["calendar_".$day."_completed"].= '<tr><td valign=\"top\">*</td><td width="99%"><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
             $TPL["calendar_".$day."_completed"].= $db->f("taskName")."</a></td></tr>";
           }
 
@@ -153,18 +151,17 @@ class task_graph_home_item extends home_item {
       while ($db->next_record()) {
         foreach($dates_of_week as $day=>$date) {
           $reminder->read_db_record($db);
-	  if ($reminder->is_alive()) {
+	        if ($reminder->is_alive()) {
             if (date("Y-m-d", strtotime($db->f("reminderTime"))) == $date) {
-              ${"reminders_".$day}
-              = "<br><br>Reminders:";
-              $TPL["calendar_".$day."_reminders"].= '<tr><td>-</td><td width="99%"><a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$db->f("reminderID").'">';
+              ${"reminders_".$day} = "<br><br>Reminders:";
+              $TPL["calendar_".$day."_reminders"].= '<tr><td valign=\"top\">*</td><td width="99%"><a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$db->f("reminderID").'">';
               $TPL["calendar_".$day."_reminders"].= $db->f("reminderSubject")."</a></td></tr>";
             }
           }
         }
       }
 
-      $table = "<table width=\"100%\" cellpadding=\"0\">";
+      $table = "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">";
 
       // Draw day numbers and Today square.
       foreach($days_of_week as $k=>$day) {

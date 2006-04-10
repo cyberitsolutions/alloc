@@ -372,9 +372,8 @@ if (!$search) {
 
 
 // setup generic values
-$category_options = array("Tasks"=>"Tasks", "Announcements"=>"Announcements", "Clients"=>"Clients", "Items"=>"Items", "Projects"=>"Projects");
-$TPL["category_options"] = get_options_from_array($category_options, $category);
-$TPL["needle"] = $needle;
+$TPL["category_options"] = get_category_options($_POST["category"]);
+$TPL["needle"] = $_POST["needle"];
 $TPL["search_results"] or $TPL["search_results"] = "No records found.";
 
 include_template("templates/searchM.tpl");

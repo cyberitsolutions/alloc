@@ -145,10 +145,9 @@ function show_history() {
 }
 
 
-function get_category_options() {
-  global $category;
-  $category_options = array("Tasks"=>"Tasks", "Announcements"=>"Announcements", "Clients"=>"Clients", "Items"=>"Items", "Projects"=>"Projects");
-  echo get_options_from_array($category_options, $category, true, 10);
+function get_category_options($category="") {
+  $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Items"=>"Items", "Clients"=>"Clients", "Announcements"=>"Announcements");
+  return get_options_from_array($category_options, $category, true);
 }
 
 
