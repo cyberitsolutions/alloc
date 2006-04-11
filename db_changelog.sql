@@ -158,7 +158,7 @@ insert into config (name,value) values ('companyContactFax','+61 3 9621 2477');
 insert into config (name,value) values ('companyContactEmail','info@cyber.com.au');
 insert into config (name,value) values ('companyContactHomePage','http://www.cyber.com.au');
 insert into config (name,value) values ('companyContactAddress','Level 4, 10-16 Queen St, Melbourne Vic. 3000 Australia');
-insert into config (name,value) values ('companyACN','');
+insert into config (name,value) values ('companyACN','053 904 082');
 insert into config (name,value) values ('allocURL','http://alloc/');
 
 
