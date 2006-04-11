@@ -148,7 +148,6 @@ class timeSheet extends db_entity
     $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_customerBilledDollars"] / 1.1;
   }
 
-
   function destroyTransactions() {
     $db = new db_alloc;
     $query = sprintf("DELETE FROM transaction where timeSheetID = %d", $this->get_id());
@@ -167,8 +166,6 @@ class timeSheet extends db_entity
     }
     return false;
   }
-
-
 
   function createTransactions() {
 
@@ -364,7 +361,6 @@ class timeSheet extends db_entity
     }
   }
 
-
   function get_positive_amount_so_far_minus_insurance() {
     // This is for getting the amount the manager gets. There is probably a better way to do this.
     $db = new db_alloc;
@@ -375,7 +371,6 @@ class timeSheet extends db_entity
     }
     return $amount_so_far;
   }
-
 
   function createTransaction($product, $amount, $tfID, $transactionType, $status="") {
 
@@ -398,8 +393,6 @@ class timeSheet extends db_entity
       return 1;
     }
   }
-
-
 
   function shootEmail($addr, $msg, $sub, $dummy) {
     

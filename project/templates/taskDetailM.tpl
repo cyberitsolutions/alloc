@@ -35,6 +35,7 @@ function updateTaskCCList(number) {
 <form action="{url_alloc_task}" method="post" id="taskform">
 <input type="hidden" name="taskID" value="{task_taskID}">
 <input type="hidden" name="creatorID" value="{task_creatorID}">
+<input type="hidden" name="closerID" value="{task_closerID}">
 <input type="hidden" name="timeSheetID" value="{timeSheetID}">
 
 {table_box}
@@ -84,6 +85,7 @@ function updateTaskCCList(number) {
 
 <input type="hidden" name="dateAssigned" value="{task_dateAssigned}">
 <input type="hidden" name="dateCreated" value="{task_dateCreated}">
+<input type="hidden" name="dateClosed" value="{task_dateClosed}">
 <input type="hidden" name="timeEstimate" value="{task_timeEstimate}">
 <input type="hidden" name="percentComplete" value="{task_percentComplete}">
 </td>

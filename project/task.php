@@ -52,7 +52,7 @@ require_once("alloc.inc");
 
   function show_task_children($template) {
     global $TPL, $task;
-    if ($TPL["task_children_summary"] || $task->get_value("taskTypeID") == 2) {
+    if ($task->get_value("taskTypeID") == TT_PHASE) {
       include_template($template);
     }
   }
@@ -124,9 +124,21 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
 
   // mark all children as complete
   if ($task->get_value("percentComplete") == "100") {
-    $task->close_off_children_recursive();
+    if ($task->get_value("closerID") == "" && !$task->get_value("dateClosed")) {
+      $task->set_value("closerID",$current_user->get_id());
+      $task->set_value("dateClosed",date("Y-m-d H:i:s"));
+    }
+    if ($orig_percentComplete != "100") {
+      $msg[] = $task->email_task_closed();
+    }
+
+    $msg = array_merge($msg,$task->close_off_children_recursive());
+
+  } else if ($orig_percentComplete == "100" && $task->get_value("percentComplete") != "100") {
+    $task->set_value("closerID",0);
+    $task->set_value("dateClosed","");
   }
-  
+
   if ($task_is_new || $task->get_value("personID") != $orig_personID) {
     $task->set_value("dateAssigned",date("Y-m-d H:i:s"));
   }
@@ -155,16 +167,14 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
 
 
   global $taskEmail;
-  if ($task->get_value("percentComplete") == "100" && $orig_percentComplete != "100" && $current_user->get_id() != $task->get_value("creatorID")) {
-    $successful_recipients = $task->send_emails(array("creator"),$task,"Task Closed");
-    $successful_recipients and $msg[] = "Emailed ".$successful_recipients;
 
-  } else if ($task_is_new && $current_user->get_id() != $task->get_value("personID")) {
+  if ($task_is_new && $current_user->get_id() != $task->get_value("personID")) {
     $successful_recipients = $task->send_emails(array("assignee"),$task,"Task Created");
     $successful_recipients and $msg[] = "Emailed ".$successful_recipients;
   }
-  
-  count($msg) and $msg = "&msg=".urlencode(implode("<br/>",$msg));
+ 
+ 
+  count($msg) and $msg = "&message_good=".urlencode(implode("<br/>",$msg));
 
   if ($success) {
     if (isset($save)) {
@@ -205,6 +215,9 @@ $person->select();
 $TPL["task_createdBy"] = $person->get_username(1);
 $TPL["task_createdBy_personID"] = $person->get_id();
 
+if ($task->get_value("closerID") && $task->get_value("dateClosed")) {
+  $TPL["task_closed_info"] = "<tr><td>Task Closed By</td><td><b>".person::get_fullname($task->get_value("closerID"))."</b> ".$task->get_value("dateClosed")."</td></tr>";
+}
 
 $person = new person;
 $person->set_id($task->get_value("personID"));
@@ -212,7 +225,7 @@ $person->select();
 $TPL["person_username"] = $person->get_username(1);
 $TPL["person_username_personID"] = $person->get_id();
 
-$TPL["message_good"] = urldecode($_GET["msg"]);
+$_GET["message_good"] and $TPL["message_good"][] = urldecode($_GET["message_good"]);
 
 
 
@@ -292,7 +305,16 @@ if (isset($commentID) && $taskComment_edit) {
 
 
 if ($task->get_id()) {
-  #$TPL["task_children_summary"] = $task->get_children_summary("", true);
+  $options["parentTaskID"] = $task->get_id();
+  $options["taskView"] = "byProject";
+  $options["projectIDs"][] = $task->get_value("projectID");
+  $options["showDates"] = true;
+  #$options["showCreator"] = true;
+  $options["showAssigned"] = true;
+  $options["showPercent"] = true;
+  $options["showHeader"] = true;
+  $TPL["task_children_summary"] = task::get_task_list($options);
+
   $taskType = $task->get_foreign_object("taskType");
   $TPL["task_taskType"] = $taskType->get_value("taskTypeName");
 } else {

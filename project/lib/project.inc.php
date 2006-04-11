@@ -224,7 +224,7 @@ class project extends db_entity
 
     // Tasks
     if ($this->have_perm()) {
-      $url = $TPL["url_alloc_taskSummary"]."applyFilter=1&taskStatus=not_completed&view=byProject&projectID=".$this->get_id();
+      $url = $TPL["url_alloc_taskSummary"]."applyFilter=1&taskStatus=not_completed&taskView=byProject&projectID=".$this->get_id();
       $links[] = "<a href=\"$url\">Tasks</a>";
     } 
 

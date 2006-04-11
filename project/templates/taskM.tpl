@@ -57,6 +57,7 @@ function updateTaskCommentTemplate(number) {
           <td>Task Assigned To</td> 
           <td><b>{person_username}</b> {task_dateAssigned}</td>
         </tr>
+        {task_closed_info}
         <tr>
           <td valign="top">Interested Parties</td>
           <td valign="top">{taskCCList_hidden}</td>

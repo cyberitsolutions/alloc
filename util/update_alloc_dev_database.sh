@@ -5,6 +5,7 @@ function quit {
   exit;
 }
 
+[ -f /tmp/person.sql ] && quit "Pls remove /tmp/person.sql"
 
 FILE="alloc_dev.sql"
 rm -f ${FILE}
@@ -33,6 +34,7 @@ where username = 'alla'
    or username = 'anonymous'
 ;
 update person set password = '/.lBw./3lMC2Q' where username = 'anonymous';
+delete from eventFilter;
 " >> ${FILE}
 
 

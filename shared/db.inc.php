@@ -88,7 +88,6 @@ class db {
     return $this->row();
   }
 
-  // Run query
   function query() {
     $this->connect();
     $args = func_get_args();
@@ -98,21 +97,19 @@ class db {
     return $id;
   } 
 
-  // Get count of rows
   function num($query_id="") {
     $id = $query_id or $id = $this->query_id;
     if (is_resource($id)) return mysql_num_rows($id);
   } 
 
-  // Wrapper
   function num_rows($query_id="") {
     return $this->num($query_id);
   } 
 
-  // Get associative array of row
-  function row($query_id="",$method=MYSQL_BOTH) { 
+  function row($query_id="",$method=MYSQL_ASSOC) { 
     $id = $query_id or $id = $this->query_id;
     if (is_resource($id)) {
+      unset($this->row);
       $this->row =  mysql_fetch_array($id,$method);
       $this->Record = $this->row;
       return $this->row;
