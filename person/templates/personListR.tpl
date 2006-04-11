@@ -11,7 +11,7 @@
 {/optional}
   <td>
     <nobr>
-		<a href="{url_alloc_taskSummary}personID={person_personID}">Task Summary</a>&nbsp;&nbsp;
+		<a href="{url_alloc_taskSummary}personID={person_personID}&taskView=byProject&applyFilter=1&taskStatus=not_completed">Task Summary</a>&nbsp;&nbsp;
 		<a href="{url_alloc_personGraphs}personID={person_personID}">Graph</a>
     </nobr>
   </td>
