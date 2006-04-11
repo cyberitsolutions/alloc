@@ -47,11 +47,13 @@ class task extends db_entity {
       $this->data_fields = array("taskName"=>new db_text_field("taskName", "Name", "", array("allow_null"=>false))
                                  , "taskDescription"=>new db_text_field("taskDescription")
                                  , "creatorID"=>new db_text_field("creatorID")
+                                 , "closerID"=>new db_text_field("closerID")
                                  , "priority"=>new db_text_field("priority")
                                  , "timeEstimate"=>new db_text_field("timeEstimate", "Time Estimate", 0, array("empty_to_null"=>true))
                                  , "timeEstimateUnitID"=>new db_text_field("timeEstimateUnitID")
                                  , "dateCreated"=>new db_text_field("dateCreated")
                                  , "dateAssigned"=>new db_text_field("dateAssigned")
+                                 , "dateClosed"=>new db_text_field("dateClosed")
                                  , "dateTargetStart"=>new db_text_field("dateTargetStart")
                                  , "dateTargetCompletion"=>new db_text_field("dateTargetCompletion")
                                  , "dateActualStart"=>new db_text_field("dateActualStart")
@@ -74,21 +76,34 @@ class task extends db_entity {
 
   function close_off_children_recursive() {
     // mark all children as complete
-    $task = new task;
     $db = new db_alloc;
     if ($this->get_id()) {
       $query = "SELECT * FROM task WHERE parentTaskID = ".$this->get_id();
       $db->query($query);
                                                                                                                                
       while ($db->next_record()) {
+        $task = new task;
         $task->read_db_record($db);
         $task->get_value("percentComplete")      != "100" && $task->set_value("percentComplete", "100");
-        $task->get_value("dateActualStart")      == ""    && $task->set_value("dateActualStart", date("Y-m-d"));
-        $task->get_value("dateActualCompletion") == ""    && $task->set_value("dateActualCompletion", date("Y-m-d"));
+        $task->get_value("dateActualStart")      || $task->set_value("dateActualStart", date("Y-m-d"));
+        $task->get_value("dateActualCompletion") || $task->set_value("dateActualCompletion", date("Y-m-d"));
+        $task->get_value("closerID")             || $task->set_value("closerID", $current_user->get_id());
+        $task->get_value("dateClosed")           || $task->set_value("dateClosed",date("Y-m-d H:i:s"));           
         $task->save();
-        $task->close_off_children_recursive();
+        $msg[] = $task->email_task_closed();
+        $msg = array_merge($msg,$task->close_off_children_recursive());
       }
     }
+    return $msg;
+  }
+
+  function email_task_closed() {
+    global $current_user;
+    if ($current_user->get_id() != $this->get_value("creatorID")) {
+      $successful_recipients = $this->send_emails(array("creator"),$this,"Task Closed");
+      $successful_recipients and $msg = "Emailed: ".$successful_recipients.", Task Closed: ".stripslashes($this->get_value("taskName"));
+    }
+    return $msg; 
   }
 
   function new_message_task() {
@@ -524,6 +539,271 @@ class task extends db_entity {
     }
   }
 
+  function get_task_link() {
+    $rtn = "<a href=\"".$this->get_url()."\">";
+    $rtn.= $this->get_task_name();
+    $rtn.= "</a>";
+    return $rtn;
+  }
+
+  function get_task_name() {
+    if ($this->get_value("taskTypeID") == TT_PHASE) {
+      $rtn = "<strong>".stripslashes($this->get_value("taskName"))."</strong>";
+    } else {
+      substr($this->get_value("taskName"),0,140) != $this->get_value("taskName") and $dotdotdot = "...";
+      $rtn = substr(stripslashes($this->get_value("taskName")),0,140).$dotdotdot;
+    }
+    return $rtn;
+  }
+
+  function get_url() {
+    global $sess;
+    $url = SCRIPT_PATH."project/task.php?taskID=".$this->get_id();
+    $url = $sess->email_url($url);
+    return $url;
+  }
+
+  // The definitive method of getting a list of tasks
+  function get_task_list($_FORM) {
+
+    
+    // Join them up with commars and add a restrictive sql clause subset
+    if (is_array($_FORM["projectIDs"]) && count($_FORM["projectIDs"])) {
+      $_FORM["projectIDs"] = "project.projectID IN (".implode(",",$_FORM["projectIDs"]).")";
+    } else {
+      $_FORM["projectIDs"] = "1";
+    }
+
+    // Task level filtering
+    if ($_FORM["taskStatus"]) {
+
+      $taskStatusFilter = array("completed"=>"(task.dateActualCompletion IS NOT NULL AND task.dateActualCompletion != '')"
+                               ,"not_completed"=>"(task.dateActualCompletion IS NULL OR task.dateActualCompletion = '')"
+                               ,"in_progress"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') AND (task.dateActualStart IS NOT NULL AND task.dateActualStart != ''))"
+                               ,"overdue"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') 
+                                             AND 
+                                             (task.dateTargetCompletion IS NOT NULL AND task.dateTargetCompletion != '' AND '".date("Y-m-d")."' > task.dateTargetCompletion))"
+                               );
+      $filter[] = $taskStatusFilter[$_FORM["taskStatus"]];
+    }
+
+    if (count($_FORM["taskTypeID"]==1) && !$_FORM["taskTypeID"][0]) {
+      $_FORM["taskTypeID"] = "";
+    }
+
+    if (is_array($_FORM["taskTypeID"]) && count($_FORM["taskTypeID"])) {
+      $filter[] = "(taskTypeID in (".implode(",",$_FORM["taskTypeID"])."))";
+
+    } else if ($_FORM["taskTypeID"]) {
+      $filter[] = sprintf("(taskTypeID = %d)",$_FORM["taskTypeID"]);
+    }
+
+    $_FORM["personID"]     and $filter[] = sprintf("(personID = %d)",$_FORM["personID"]);
+    $_FORM["limit"]        and $limit = sprintf("limit %d",$_FORM["limit"]);
+    $_FORM["parentTaskID"] or  $_FORM["parentTaskID"] = 0;
+
+    if ($_FORM["showDates"]) {
+      $_FORM["showDate1"] = true;
+      $_FORM["showDate2"] = true;
+      $_FORM["showDate3"] = true;
+      $_FORM["showDate4"] = true;
+    }
+
+    $_FORM["people_cache"] = get_cached_table("person");
+    $_FORM["timeUnit_cache"] = get_cached_table("timeUnit");
+
+    // A header row
+
+    if ($_FORM["showHeader"]) {
+
+      $summary.= "\n<tr>";
+      $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
+                             and $summary.= "\n<td>&nbsp;</td>";
+      $summary.= "\n<td>&nbsp;</td>";
+      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Priority</nobr></b></td>"; 
+      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Task Pri</nobr></b></td>"; 
+      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Proj Pri</nobr></b></td>"; 
+      $_FORM["showStatus"]   and $summary.= "\n<td class=\"col\"><b><nobr>Status</nobr></b></td>"; 
+      $_FORM["showCreator"]  and $summary.= "\n<td class=\"col\"><b><nobr>Task Creator</nobr></b></td>";
+      $_FORM["showAssigned"] and $summary.= "\n<td class=\"col\"><b><nobr>Assigned To</nobr></b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Estimate</nobr></b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Actual</nobr></b></td>";
+      $_FORM["showDate1"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Start</nobr></b></td>";
+      $_FORM["showDate2"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Compl</nobr></b></td>";
+      $_FORM["showDate3"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Start</nobr></b></td>";
+      $_FORM["showDate4"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Compl</nobr></b></td>";
+      $_FORM["showPercent"]  and $summary.= "\n<td class=\"col\"><b><nobr>%</nobr></b></td>";
+      $summary.="\n</tr>";
+    }
+
+
+    if ($_FORM["taskView"] == "byProject") {
+
+
+      $q = "SELECT projectID, projectName, clientID, projectPriority FROM project WHERE ".$_FORM["projectIDs"]. " ORDER BY projectName";
+      $db = new db_alloc;
+      $db->query($q);
+      
+      while ($db->next_record()) {
+        
+        $project = new project;
+        $project->read_db_record($db);
+        $tasks = $project->get_task_children($_FORM["parentTaskID"],$filter,$_FORM["padding"]);
+
+        if (count($tasks)) {
+          $print = true;
+
+          $_FORM["showProject"] and $summary.= "\n<tr>";
+          $_FORM["showProject"] and $summary.= "\n  <td class=\"tasks\" colspan=\"21\">";
+          $_FORM["showProject"] and $summary.= "\n    <strong><a href=\"".$project->get_url()."\">".$project->get_value("projectName")."</a></strong>&nbsp;&nbsp;".$project->get_navigation_links();
+          $_FORM["showProject"] and $summary.= "\n  </td>";
+          $_FORM["showProject"] and $summary.= "\n</tr>";
+
+          foreach ($tasks as $task) {
+            $task["projectPriority"] = $db->f("projectPriority");
+            $summary.= task::get_task_list_tr($task,$_FORM);
+          }
+          $summary.= "<td class=\"col\" colspan=\"21\">&nbsp;</td>";
+        }
+      }
+
+    } else if ($_FORM["taskView"] == "prioritised") {
+          
+      if (is_array($filter) && count($filter)) {
+        $f = " AND ".implode(" AND ",$filter);
+      }
+          
+      $q = "SELECT task.*, projectName, projectShortName, clientID, projectPriority, 
+                   IF(task.dateTargetCompletion IS NULL, \"-\",
+                     TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) as daysUntilDue,
+                     priority * POWER(projectPriority, 2) * 
+                       IF(task.dateTargetCompletion IS NULL, 
+                         8,
+                         ATAN(
+                           (
+                             TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())
+                           ) / 20
+                         ) / 3.14 * 8 + 4
+                       ) / 10 as priorityFactor
+             FROM task LEFT JOIN project on task.projectID = project.projectID WHERE ".$_FORM["projectIDs"].$f." ORDER BY priorityFactor ".$limit;
+      $db = new db_alloc;
+      $db->query($q);
+      while ($task = $db->next_record()) {
+        $print = true;
+        $task["project_name"] = $task["projectShortName"]  or  $task["project_name"] = $task["projectName"];
+        $t = new task;
+        $t->read_db_record($db);
+        $task["taskLink"] = $t->get_task_link();
+        $task["taskStatus"] = $t->get_status();
+        $summary.= task::get_task_list_tr($task,$_FORM);
+      }
+    } 
+
+    if ($print) {
+      return "<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" width=\"100%\">".$summary."</table>";
+    } else {
+      return "<table align=\"center\"><tr><td colspan=\"10\" align=\"center\"><b>No Tasks Found</b></td></tr></table>";
+    } 
+  }
+
+  function get_task_list_tr($task,$_FORM) {
+
+    $today = date("Y-m-d");
+    $task["dateTargetStart"]      == $today and $task["dateTargetStart"]      = "<b>".$task["dateTargetStart"]."</b>";
+    $task["dateTargetCompletion"] == $today and $task["dateTargetCompletion"] = "<b>".$task["dateTargetCompletion"]."</b>";
+    $task["dateActualStart"]      == $today and $task["dateActualStart"]      = "<b>".$task["dateActualStart"]."</b>";
+    $task["dateActualCompletion"] == $today and $task["dateActualCompletion"] = "<b>".$task["dateActualCompletion"]."</b>";
+
+    $people_cache = $_FORM["people_cache"];
+    $timeUnit_cache = $_FORM["timeUnit_cache"];
+
+    $estime = $task["timeEstimate"]; $task["timeEstimateUnitID"] and $estime.= " ".$timeUnit_cache[$task["timeEstimateUnitID"]]["timeUnitLabelA"];
+    $actual = task::get_time_billed($task["taskID"]); 
+
+                                  $summary[] = "<tr>";
+    $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
+                              and $summary[] = "  <td class=\"col\">".$task["project_name"]."&nbsp;</td>";
+                                  $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."\">".$task["taskLink"]."</td>";
+    $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
+    $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["priority"])."&nbsp;</td>"; 
+    $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["projectPriority"])."&nbsp;</td>"; 
+    $_FORM["showStatus"]      and $summary[] = "  <td class=\"col\">".$task["taskStatus"]."&nbsp;</td>"; 
+    $_FORM["showCreator"]     and $summary[] = "  <td class=\"col\">".$people_cache[$task["creatorID"]]["name"]."&nbsp;</td>";
+    $_FORM["showAssigned"]    and $summary[] = "  <td class=\"col\">".$people_cache[$task["personID"]]["name"]."&nbsp;</td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$estime."&nbsp;</nobr></td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$actual."&nbsp;</nobr></td>";
+    $_FORM["showDate1"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateTargetStart"]."&nbsp;</nobr></td>";
+    $_FORM["showDate2"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateTargetCompletion"]."&nbsp;</nobr></td>";
+    $_FORM["showDate3"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualStart"]."&nbsp;</nobr></td>";
+    $_FORM["showDate4"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualCompletion"]."&nbsp;</nobr></td>";
+    $_FORM["showPercent"]     and $summary[] = "  <td class=\"col\"><nobr>".sprintf("%d",$task["percentComplete"])."%&nbsp;</nobr></td>";
+                                  $summary[] = "</tr>";
+
+    if ($_FORM["showDescription"] && $task["taskDescription"]) {
+                                  $summary[] = "<tr>";
+       $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
+                              and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+                                  $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."\" colspan=\"21\" class=\"col\">".$task["taskDescription"]."</td>";
+                                  $summary[] = "</tr>";
+    }
+
+    $summary = "\n".implode("\n",$summary);
+    return $summary;
+  }
+ 
+  function get_children_taskIDs($taskID) {
+    $q = sprintf("SELECT taskID,taskTypeID FROM task WHERE parentTaskID = %d",$taskID);
+    $db = new db_alloc;
+    $db->query($q);
+
+    while($db->next_record()) {
+      $rtn[] = $db->f("taskID");
+      if ($db->f("taskTypeID") == TT_PHASE) {
+        $rtn = array_merge($rtn, task::get_children_taskIDs($db->f("taskID")));
+      }
+    }
+    return $rtn;
+  }
+
+  function get_time_billed($taskID="") {
+
+    if (is_object($this) && !$taskID) {
+      $taskID = $this->get_id();
+    }
+
+
+    if ($taskID) {
+      $db = new db_alloc;
+
+      $taskIDs = task::get_children_taskIDs($taskID);
+      $taskIDs[] = $taskID;
+      $taskIDs = implode(",",$taskIDs);
+
+      // Get tally from timeSheetItem table
+      $q = sprintf("SELECT sum(timeSheetItemDuration) as duration,timeSheetItemDurationUnitID
+                      FROM timeSheetItem
+                     WHERE taskID IN (%s)
+                  GROUP BY timeSheetItemDurationUnitID
+                  ORDER BY timeSheetItemDurationUnitID DESC"
+                  ,$taskIDs);
+      $db->query($q);
+      while ($db->next_record()) {
+        $actual_tallys[$db->f("timeSheetItemDurationUnitID")] += $db->f("duration");
+      }
+      $actual_tallys or $actual_tallys = array();
+
+      $timeUnit = new timeUnit;
+      $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
+
+      foreach ($actual_tallys as $unit => $tally) {
+        $rtn .= $br.sprintf("%0.2f",$tally)." ".$units[$unit];
+        $br = ", ";
+      }
+      $rtn or $rtn = "0.00";
+      return $rtn;
+    }
+  }
+
 
   // Get the date the task is forecast to be completed given an actual start 
   // date and percent complete
@@ -545,7 +825,6 @@ class task extends db_entity {
     return $date_forecast_completion;
   }
 
-// function get_status() {{{
   function get_status($format = "html", $type = "standard") {
     $today = date("Y-m-d");
     define("UNKNOWN", 0);
@@ -660,7 +939,6 @@ class task extends db_entity {
     // $status .= " ($target/$actual)";
     return $status;
   }
-// }}}
 
 /*
   function get_parent() {
@@ -716,22 +994,6 @@ class task extends db_entity {
   }
 */
 
-  function get_task_link() {
-    $rtn = "<a href=\"".$this->get_url()."\">";
-    $rtn.= $this->get_task_name();
-    $rtn.= "</a>";
-    return $rtn;
-  }
-
-  function get_task_name() {
-    if ($this->get_value("taskTypeID") == TT_PHASE) {
-      $rtn = "<strong>".stripslashes($this->get_value("taskName"))."</strong>";
-    } else {
-      substr($this->get_value("taskName"),0,140) != $this->get_value("taskName") and $dotdotdot = "...";
-      $rtn = substr(stripslashes($this->get_value("taskName")),0,140).$dotdotdot;
-    }
-    return $rtn;
-  }
 
 /*
   function get_summary($options = "", $include_children = true, $child_filter = "", $format = "html", $indent = 0, $user_id = "") {
@@ -909,255 +1171,6 @@ class task extends db_entity {
     return $rtn;
   }
 */
-
-  function get_url() {
-    global $sess;
-    $url = SCRIPT_PATH."project/task.php?taskID=".$this->get_id();
-    $url = $sess->email_url($url);
-    return $url;
-  }
-
-  // The definitive method of getting a list of tasks
-  function get_task_list($_FORM) {
-
-    
-    // Join them up with commars and add a restrictive sql clause subset
-    if (is_array($_FORM["projectIDs"]) && count($_FORM["projectIDs"])) {
-      $_FORM["projectIDs"] = "project.projectID IN (".implode(",",$_FORM["projectIDs"]).")";
-    } else {
-      $_FORM["projectIDs"] = "1";
-    }
-
-    // Task level filtering
-    if ($_FORM["taskStatus"]) {
-
-      $taskStatusFilter = array("completed"=>"(task.dateActualCompletion IS NOT NULL AND task.dateActualCompletion != '')"
-                               ,"not_completed"=>"(task.dateActualCompletion IS NULL OR task.dateActualCompletion = '')"
-                               ,"in_progress"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') AND (task.dateActualStart IS NOT NULL AND task.dateActualStart != ''))"
-                               ,"overdue"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') 
-                                             AND 
-                                             (task.dateTargetCompletion IS NOT NULL AND task.dateTargetCompletion != '' AND '".date("Y-m-d")."' > task.dateTargetCompletion))"
-                               );
-      $filter[] = $taskStatusFilter[$_FORM["taskStatus"]];
-    }
-
-    if (count($_FORM["taskTypeID"]==1) && !$_FORM["taskTypeID"][0]) {
-      $_FORM["taskTypeID"] = "";
-    }
-
-    if (is_array($_FORM["taskTypeID"]) && count($_FORM["taskTypeID"])) {
-      $filter[] = "(taskTypeID in (".implode(",",$_FORM["taskTypeID"])."))";
-
-    } else if ($_FORM["taskTypeID"]) {
-      $filter[] = sprintf("(taskTypeID = %d)",$_FORM["taskTypeID"]);
-    }
-
-    if ($_FORM["personID"]) {
-      $filter[] = sprintf("(personID = %d)",$_FORM["personID"]);
-    }
-
-    if ($_FORM["limit"]) {
-      $limit = sprintf("limit %d",$_FORM["limit"]);
-    }
-
-
-
-    if ($_FORM["showDates"]) {
-      $_FORM["showDate1"] = true;
-      $_FORM["showDate2"] = true;
-      $_FORM["showDate3"] = true;
-      $_FORM["showDate4"] = true;
-    }
-
-    $_FORM["people_cache"] = get_cached_table("person");
-    $_FORM["timeUnit_cache"] = get_cached_table("timeUnit");
-
-    // A header row
-
-    if ($_FORM["showHeader"]) {
-
-      $summary.= "\n<tr>";
-      $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                             and $summary.= "\n<td>&nbsp;</td>";
-      $summary.= "\n<td>&nbsp;</td>";
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Priority</nobr></b></td>"; 
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Task Pri</nobr></b></td>"; 
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Proj Pri</nobr></b></td>"; 
-      $_FORM["showStatus"]   and $summary.= "\n<td class=\"col\"><b><nobr>Status</nobr></b></td>"; 
-      $_FORM["showCreator"]  and $summary.= "\n<td class=\"col\"><b><nobr>Task Creator</nobr></b></td>";
-      $_FORM["showAssigned"] and $summary.= "\n<td class=\"col\"><b><nobr>Assigned To</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Estimate</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Actual</nobr></b></td>";
-      $_FORM["showDate1"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Start</nobr></b></td>";
-      $_FORM["showDate2"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Compl</nobr></b></td>";
-      $_FORM["showDate3"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Start</nobr></b></td>";
-      $_FORM["showDate4"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Compl</nobr></b></td>";
-      $_FORM["showPercent"]  and $summary.= "\n<td class=\"col\"><b><nobr>%</nobr></b></td>";
-      $summary.="\n</tr>";
-    }
-
-
-    if ($_FORM["taskView"] == "byProject") {
-
-
-      $q = "SELECT projectID, projectName, clientID, projectPriority FROM project WHERE ".$_FORM["projectIDs"]. " ORDER BY projectName";
-      $db = new db_alloc;
-      $db->query($q);
-      
-      while ($db->next_record()) {
-        
-        $project = new project;
-        $project->read_db_record($db);
-        $tasks = $project->get_task_children(0,$filter,$_FORM["padding"]);
-
-        if (count($tasks)) {
-          $print = true;
-
-          $_FORM["showProject"] and $summary.= "\n<tr>";
-          $_FORM["showProject"] and $summary.= "\n  <td class=\"tasks\" colspan=\"21\">";
-          $_FORM["showProject"] and $summary.= "\n    <strong><a href=\"".$project->get_url()."\">".$project->get_value("projectName")."</a></strong>&nbsp;&nbsp;".$project->get_navigation_links();
-          $_FORM["showProject"] and $summary.= "\n  </td>";
-          $_FORM["showProject"] and $summary.= "\n</tr>";
-
-          foreach ($tasks as $task) {
-            $task["projectPriority"] = $db->f("projectPriority");
-            $summary.= task::get_task_list_tr($task,$_FORM);
-          }
-          $summary.= "<td class=\"col\" colspan=\"21\">&nbsp;</td>";
-        }
-      }
-
-    } else if ($_FORM["taskView"] == "prioritised") {
-          
-      if (is_array($filter) && count($filter)) {
-        $f = " AND ".implode(" AND ",$filter);
-      }
-          
-      $q = "SELECT task.*, projectName, projectShortName, clientID, projectPriority, 
-                   IF(task.dateTargetCompletion IS NULL, \"-\",
-                     TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) as daysUntilDue,
-                     priority * POWER(projectPriority, 2) * 
-                       IF(task.dateTargetCompletion IS NULL, 
-                         8,
-                         ATAN(
-                           (
-                             TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())
-                           ) / 20
-                         ) / 3.14 * 8 + 4
-                       ) / 10 as priorityFactor
-             FROM task LEFT JOIN project on task.projectID = project.projectID WHERE ".$_FORM["projectIDs"].$f." ORDER BY priorityFactor ".$limit;
-      $db = new db_alloc;
-      $db->query($q);
-      while ($task = $db->next_record()) {
-        $print = true;
-        $task["project_name"] = $task["projectShortName"]  or  $task["project_name"] = $task["projectName"];
-        $t = new task;
-        $t->read_db_record($db);
-        $task["taskLink"] = $t->get_task_link();
-        $task["taskStatus"] = $t->get_status();
-        $summary.= task::get_task_list_tr($task,$_FORM);
-      }
-    } 
-
-    if ($print) {
-      return "<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" width=\"100%\">".$summary."</table>";
-    } else {
-      return "<table align=\"center\"><tr><td colspan=\"10\" align=\"center\"><b>No Tasks Found</b></td></tr></table>";
-    } 
-  }
-
-  function get_task_list_tr($task,$_FORM) {
-
-    $people_cache = $_FORM["people_cache"];
-    $timeUnit_cache = $_FORM["timeUnit_cache"];
-
-    $estime = $task["timeEstimate"]; $task["timeEstimateUnitID"] and $estime.= " ".$timeUnit_cache[$task["timeEstimateUnitID"]]["timeUnitLabelA"];
-    $actual = task::get_time_billed($task["taskID"]); 
-
-                                  $summary[] = "<tr>";
-    $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                              and $summary[] = "  <td class=\"col\">".$task["project_name"]."&nbsp;</td>";
-                                  $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."\">".$task["taskLink"]."</td>";
-    $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
-    $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["priority"])."&nbsp;</td>"; 
-    $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["projectPriority"])."&nbsp;</td>"; 
-    $_FORM["showStatus"]      and $summary[] = "  <td class=\"col\">".$task["taskStatus"]."&nbsp;</td>"; 
-    $_FORM["showCreator"]     and $summary[] = "  <td class=\"col\">".$people_cache[$task["creatorID"]]["name"]."&nbsp;</td>";
-    $_FORM["showAssigned"]    and $summary[] = "  <td class=\"col\">".$people_cache[$task["personID"]]["name"]."&nbsp;</td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$estime."&nbsp;</nobr></td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$actual."&nbsp;</nobr></td>";
-    $_FORM["showDate1"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateTargetStart"]."&nbsp;</nobr></td>";
-    $_FORM["showDate2"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateTargetCompletion"]."&nbsp;</nobr></td>";
-    $_FORM["showDate3"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualStart"]."&nbsp;</nobr></td>";
-    $_FORM["showDate4"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualCompletion"]."&nbsp;</nobr></td>";
-    $_FORM["showPercent"]     and $summary[] = "  <td class=\"col\"><nobr>".sprintf("%d",$task["percentComplete"])."%&nbsp;</nobr></td>";
-                                  $summary[] = "</tr>";
-
-    if ($_FORM["showDescription"] && $task["taskDescription"]) {
-                                  $summary[] = "<tr>";
-       $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                              and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-                                  $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."\" colspan=\"21\" class=\"col\">".$task["taskDescription"]."</td>";
-                                  $summary[] = "</tr>";
-    }
-
-    $summary = "\n".implode("\n",$summary);
-    return $summary;
-  }
- 
-  function get_children_taskIDs($taskID) {
-    $q = sprintf("SELECT taskID,taskTypeID FROM task WHERE parentTaskID = %d",$taskID);
-    $db = new db_alloc;
-    $db->query($q);
-
-    while($db->next_record()) {
-      $rtn[] = $db->f("taskID");
-      if ($db->f("taskTypeID") == TT_PHASE) {
-        $rtn = array_merge($rtn, task::get_children_taskIDs($db->f("taskID")));
-      }
-    }
-    return $rtn;
-  }
-
-  function get_time_billed($taskID="") {
-
-    if (is_object($this) && !$taskID) {
-      $taskID = $this->get_id();
-    }
-
-
-    if ($taskID) {
-      $db = new db_alloc;
-
-      $taskIDs = task::get_children_taskIDs($taskID);
-      $taskIDs[] = $taskID;
-      $taskIDs = implode(",",$taskIDs);
-
-      // Get tally from timeSheetItem table
-      $q = sprintf("SELECT sum(timeSheetItemDuration) as duration,timeSheetItemDurationUnitID
-                      FROM timeSheetItem
-                     WHERE taskID IN (%s)
-                  GROUP BY timeSheetItemDurationUnitID
-                  ORDER BY timeSheetItemDurationUnitID DESC"
-                  ,$taskIDs);
-      $db->query($q);
-      while ($db->next_record()) {
-        $actual_tallys[$db->f("timeSheetItemDurationUnitID")] += $db->f("duration");
-      }
-      $actual_tallys or $actual_tallys = array();
-
-      $timeUnit = new timeUnit;
-      $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
-
-      foreach ($actual_tallys as $unit => $tally) {
-        $rtn .= $br.sprintf("%0.2f",$tally)." ".$units[$unit];
-        $br = ", ";
-      }
-      $rtn or $rtn = "0.00";
-      return $rtn;
-    }
-  }
-
 
 
 

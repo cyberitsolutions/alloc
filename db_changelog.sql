@@ -286,6 +286,9 @@ alter table person add sessData text default "";
 alter table expenseForm drop chequeDate;
 alter table expenseForm drop chequeNumber;
 
+alter table task change creatorID creatorID int(11) NOT NULL;
+alter table task add closerID int(11) default NULL after creatorID;
+alter table task add dateClosed datetime default NULL after dateAssigned;
 
 
 -- Add a permission record for table item, so that -1 owners can read,update,delete,create items
