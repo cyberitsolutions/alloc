@@ -416,7 +416,6 @@ class timeSheet extends db_entity
     }
   }
 
-
   function get_task_list_dropdown($status,$timeSheetID,$taskID="") {
 
     if (is_object($this)) {
@@ -445,7 +444,8 @@ class timeSheet extends db_entity
     $q = sprintf("SELECT taskName,taskID 
                     FROM task 
                    WHERE projectID=%d 
-                     AND (%s) OR (taskID = %d)"
+                     AND (%s) OR (taskID = %d)
+                ORDER BY taskName"
                   ,$projectID
                   ,$extra_sql
                   ,$taskID);
@@ -455,8 +455,6 @@ class timeSheet extends db_entity
     $options.= get_options_from_db($db, "taskName", "taskID", $taskID, 70);
     return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\">".$options."</select>";
   }
-
-
 
 }  
 
