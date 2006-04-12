@@ -1,5 +1,7 @@
 #!/bin/bash
 
+PASS=""
+
 BACKUP_DIR=/cyber/backup/alloc/alloc_new
 TODAY=`date +%a`;
 
@@ -9,7 +11,8 @@ TODAY=`date +%a`;
 
 BACKUP_FILE=$BACKUP_DIR/allocdump.sql.$TODAY
 
-mysqldump -d -u alloc -pget1td0ne alloc > $BACKUP_FILE
-mysqldump -t -u alloc -pget1td0ne alloc >> $BACKUP_FILE
+
+mysqldump -d -u alloc -p${PASS} alloc > $BACKUP_FILE
+mysqldump -t -u alloc -p${PASS} alloc >> $BACKUP_FILE
 gzip -f $BACKUP_FILE
 
