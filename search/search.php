@@ -51,9 +51,12 @@ global $sel, $TPL, $search, $needle, $category;
       preg_match("/".$needle."/i",$haystack,$matches); // This gets the actual casse insensive match for search and replace
 
       $str = substr($haystack,$position,strlen($needle)+100);
-      $str = str_replace($matches[0],"<em class=\"highlighted\">".$matches[0]."</em>",$str);
+      #$str = str_replace($matches[0],"<em class=\"highlighted\">".$matches[0]."</em>",$str);
+      $str = str_replace($matches[0],"[[[".$matches[0]."]]]",$str);
       $str = $prefix.$str.$suffix;
       return $str;
+    } else {
+      $haystack = substr($haystack,0,100);
     }
 
     return $haystack;
@@ -100,13 +103,13 @@ if (!$search) {
       $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
       $projectName = get_trimmed_description($project->get_value('projectName'), $needle);
-      $projectName and $details.= "<b>Project Name:</b> ".$projectName."<br>\n";
+      $projectName and $details.= "<b>Project Name:</b> ".htmlentities($projectName)."<br>\n";
 
       $projectComments = get_trimmed_description($project->get_value('projectComments'), $needle);
-      $projectComments and $details.= "<b>Project Comments:</b> ".$projectComments."<br>\n";
+      $projectComments and $details.= "<b>Project Comments:</b> ".htmlentities($projectComments)."<br>\n";
 
       $projectClientName = get_trimmed_description($project->get_value('projectClientName'), $needle);
-      $projectClientName and $details.= "<b>Project Client Name:</b> ".$projectClientName."<br>\n";
+      $projectClientName and $details.= "<b>Project Client Name:</b> ".htmlentities($projectClientName)."<br>\n";
 
       // Recursively search comments
       if ($project->get_id() != "") {
@@ -121,10 +124,10 @@ if (!$search) {
           $comment = new comment;
           $comment->read_db_record($db2);
           $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
-          $commentText and $details.= "<b>Modification History:</b> ".$commentText."<br>\n";
+          $commentText and $details.= "<b>Modification History:</b> ".htmlentities($commentText)."<br>\n";
         }
 
-        $TPL["search_results"] .= "<b><a href=\"".$TPl["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".$TPL["project_projectName"]."</b></a><br>".$details."<br>";
+        $TPL["search_results"] .= "<b><a href=\"".$TPl["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</b></a><br>".$details."<br>";
       }
     }
   }
@@ -161,7 +164,7 @@ if (!$search) {
       $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
       $clientName = get_trimmed_description($client->get_value('clientName'), $needle);
-      $clientName and $details[] = "<b>Client Name: </b>".$clientName;
+      $clientName and $details[] = "<b>Client Name: </b>".htmlentities($clientName);
 
       $db2 = new db_alloc;
       $query = sprintf("SELECT * FROM clientContact WHERE clientID = %d",$client->get_id());
@@ -175,14 +178,14 @@ if (!$search) {
         $clientContactName = get_trimmed_description($clientContact->get_value('clientContactName'), $needle);
         #$clientContactName = $clientContact->get_value('clientContactName');
         if ($clientContactName != "") {
-          $str = "<b>Contact Name: </b>".$clientContactName;
+          $str = "<b>Contact Name: </b>".htmlentities($clientContactName);
           if ($clientContact->get_value("clientContactEmail")) {
-            $str .= "&nbsp;&nbsp;<a href=\"mailto:".$clientContact->get_value("clientContactEmail")."\">".$clientContact->get_value("clientContactEmail")."</a>";
+            $str .= "&nbsp;&nbsp;<a href=\"mailto:".$clientContact->get_value("clientContactEmail")."\">".htmlentities($clientContact->get_value("clientContactEmail"))."</a>";
           }
         }
         $clientContactOther = get_trimmed_description($clientContact->get_value('clientContactOther'), $needle);
         if ($clientContactOther != "") {
-          $str.= "&nbsp;&nbsp;".$clientContactOther;
+          $str.= "&nbsp;&nbsp;".htmlentities($clientContactOther);
         }
         $details[] = $str;
       }
@@ -196,11 +199,12 @@ if (!$search) {
           $comment->read_db_record($db2);
           $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
           if ($commentText != "") {
-            $details[] = "<b>Comment: </b>".$commentText;
+            $details[] = "<b>Comment: </b>".htmlentities($commentText);
           }
         }
         if (count($details)) {
-          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_client"]."clientID=".$TPL["client_clientID"]."\">".$TPL["client_clientName"]."</a></b><br>".implode("<br/>",$details)."<br/>"."<br>";
+          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_client"]."clientID=".$TPL["client_clientID"]."\">".htmlentities($TPL["client_clientName"]);
+          $TPL["search_results"] .= "</a></b><br>".implode("<br/>",$details)."<br/>"."<br>";
         }
 
       }
@@ -240,10 +244,10 @@ if (!$search) {
       $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
       $taskName = get_trimmed_description($task->get_value('taskName'), $needle);
-      $taskName and $details.= "<b>Task Name:</b> ".$taskName."<br>\n";
+      $taskName and $details.= "<b>Task Name:</b> ".htmlentities($taskName)."<br>\n";
 
       $taskDescription = get_trimmed_description($task->get_value('taskDescription'), $needle);
-      $taskDescription and $details.= "<b>Task Description:</b> ".$taskDescription."<br>\n";
+      $taskDescription and $details.= "<b>Task Description:</b> ".htmlentities($taskDescription)."<br>\n";
 
       if ($task->get_id() != "") {
         $db2 = new db_alloc;
@@ -253,11 +257,11 @@ if (!$search) {
           $comment = new comment;
           $comment->read_db_record($db2);
           $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
-          $commentText and $details.= "<b>Comment:</b> ".$commentText."<br>\n";
+          $commentText and $details.= "<b>Comment:</b> ".htmlentities($commentText)."<br>\n";
         }
 
-        $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_task"]."taskID=".$TPL["task_taskID"]."\">".$TPL["task_taskName"]."</b></a>(belongs to project: ";
-        $TPL["search_results"] .= "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".$TPL["project_projectName"]."</a>)<br>".$details."<br>";
+        $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_task"]."taskID=".$TPL["task_taskID"]."\">".htmlentities($TPL["task_taskName"])."</b></a>(belongs to project: ";
+        $TPL["search_results"] .= "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</a>)<br>".$details."<br>";
       }
     }
   }
@@ -288,7 +292,7 @@ if (!$search) {
       $body = get_trimmed_description($announcement->get_value('body'), $needle);
 
       if ($announcement->get_id() != "") {
-        $TPL["search_results"] .=  "<b>".$heading."</b><br>".$body."<br><br>";
+        $TPL["search_results"] .=  "<b>".htmlentities($heading)."</b><br>".htmlentities($body)."<br><br>";
       }
     }
   }
@@ -318,10 +322,10 @@ if (!$search) {
       $item->set_tpl_values(DST_HTML_ATTRIBUTE, "item_");
 
       $itemName = get_trimmed_description($item->get_value('itemName'), $needle);
-      $itemName and $details.= "<b>Item Name:</b> ".$itemName."<br>\n";
+      $itemName and $details.= "<b>Item Name:</b> ".htmlentities($itemName)."<br>\n";
 
       $itemNotes = get_trimmed_description($item->get_value('itemNotes'), $needle);
-      $itemNotes and $details.= "<b>Item Notes:</b> ".$itemNotes."<br>\n";
+      $itemNotes and $details.= "<b>Item Notes:</b> ".htmlentities($itemNotes)."<br>\n";
 
       $TPL["item_searchDetails"] = $details;
 
@@ -364,7 +368,7 @@ if (!$search) {
         $TPL["loan_status"] = "Available <a href=\"".$TPL["url_alloc_item"]."itemID=".$TPL["item_itemID"]."&borrow=true\">Borrow</a>";
       }
     
-      $TPL["search_results"] .=  "<b>".$TPL["item_itemName"]."</b> (".$TPL["loan_status"].")<br>".$TPL["item_searchDetails"]."<br>";
+      $TPL["search_results"] .=  "<b>".htmlentities($TPL["item_itemName"])."</b> (".$TPL["loan_status"].")<br>".$TPL["item_searchDetails"]."<br>";
     }
   }
 
@@ -374,7 +378,14 @@ if (!$search) {
 // setup generic values
 $TPL["category_options"] = get_category_options($_POST["category"]);
 $TPL["needle"] = $_POST["needle"];
-$TPL["search_results"] or $TPL["search_results"] = "No records found.";
+
+
+if ($TPL["search_results"]) {
+  $TPL["search_results"] = str_replace("[[[","<em class=\"highlighted\">",$TPL["search_results"]);
+  $TPL["search_results"] = str_replace("]]]","</em>",$TPL["search_results"]);
+} else { 
+  $TPL["search_results"] = "No records found.";
+}
 
 include_template("templates/searchM.tpl");
 page_close();
