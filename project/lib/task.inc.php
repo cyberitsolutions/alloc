@@ -73,6 +73,7 @@ class task extends db_entity {
 
   function close_off_children_recursive() {
     // mark all children as complete
+    global $current_user;
     $db = new db_alloc;
     if ($this->get_id()) {
       $query = "SELECT * FROM task WHERE parentTaskID = ".$this->get_id();
