@@ -33,7 +33,7 @@ class top_ten_tasks_home_item extends home_item {
 
     $options["taskView"] = "prioritised";
     $options["projectType"] = "mine";
-    $options["personID"] = $current_user->get_id();
+    $options["personIDonly"] = $current_user->get_id();
     $options["taskStatus"] = "not_completed";
     $options["limit"] = 5;
     $options["showDate1"] = true;
