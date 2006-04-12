@@ -65,7 +65,7 @@
                 </tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr>
-                  <td class="left">{use_cookies}</td>
+                  <td class="left"><nobr>{use_cookies}</nobr></td>
                   <td class="right">{login_or_send_pass_button}</td>
                 </tr>
                 <tr>
