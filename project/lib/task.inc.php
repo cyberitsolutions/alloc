@@ -364,11 +364,11 @@ class task extends db_entity {
     $TPL["taskCCListOptions"] = $this->get_task_cc_list_select();
     
 
-    $db->query(sprintf("SELECT fullName,emailAddress FROM taskCCList WHERE taskID = %d",$this->get_id()));
+    $db->query(sprintf("SELECT fullName,emailAddress FROM taskCCList WHERE taskID = %d ORDER BY fullName",$this->get_id()));
     while ($db->next_record()) {
       $str = trim(htmlentities($db->f("fullName")." <".$db->f("emailAddress").">"));
       $value = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$db->f("fullName")),"email"=>$db->f("emailAddress")))));
-      $TPL["taskCCList_hidden"].= $commar.$str."<input type=\"hidden\" name=\"taskCCList[".$value."]\" value=\"".$db->f("emailAddress")."\">";
+      $TPL["taskCCList_hidden"].= $commar.$str."<input type=\"hidden\" name=\"taskCCList[]\" value=\"".$value."\">";
       $commar = "<br/>";
     }
     
