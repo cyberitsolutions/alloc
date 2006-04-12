@@ -81,15 +81,17 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 --
 
 
-INSERT INTO config (configID, name, value) VALUES (1,'cybersourceTfID','7');
-INSERT INTO config (configID, name, value) VALUES (2,'timeSheetAdminEmail','69');
-INSERT INTO config (configID, name, value) VALUES (3,'companyName','Cybersource Pty Ltd');
-INSERT INTO config (configID, name, value) VALUES (4,'companyContactPhone','+61 3 9621 2377');
-INSERT INTO config (configID, name, value) VALUES (5,'companyContactFax','+61 3 9621 2477');
-INSERT INTO config (configID, name, value) VALUES (6,'companyContactEmail','info@cyber.com.au');
-INSERT INTO config (configID, name, value) VALUES (7,'companyContactHomePage','http://www.cyber.com.au');
-INSERT INTO config (configID, name, value) VALUES (8,'companyContactAddress','Level 4, 10-16 Queen St, Melbourne Vic. 3000 Australia');
-INSERT INTO config (configID, name, value) VALUES (9,'allocURL','http://alloc/');
+INSERT INTO config (configID, name, value) VALUES (1,'AllocFromEmailAddress','alloc-admin@cyber.com.au');
+INSERT INTO config (configID, name, value) VALUES (2,'cybersourceTfID','7');
+INSERT INTO config (configID, name, value) VALUES (3,'timeSheetAdminEmail','69');
+INSERT INTO config (configID, name, value) VALUES (4,'companyName','Cybersource Pty Ltd');
+INSERT INTO config (configID, name, value) VALUES (5,'companyContactPhone','+61 3 9621 2377');
+INSERT INTO config (configID, name, value) VALUES (6,'companyContactFax','+61 3 9621 2477');
+INSERT INTO config (configID, name, value) VALUES (7,'companyContactEmail','info@cyber.com.au');
+INSERT INTO config (configID, name, value) VALUES (8,'companyContactHomePage','http://www.cyber.com.au');
+INSERT INTO config (configID, name, value) VALUES (9,'companyContactAddress','Level 4, 10-16 Queen St, Melbourne Vic. 3000 Australia');
+INSERT INTO config (configID, name, value) VALUES (10,'companyACN','053 904 082');
+INSERT INTO config (configID, name, value) VALUES (11,'allocURL','http://alloc/');
 
 --
 -- Dumping data for table `taskType`
