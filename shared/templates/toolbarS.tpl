@@ -34,8 +34,8 @@
 	      <tr>
 	        <td align="right">
 	          <form action="{url_alloc_search}" method="post" id="form_search">
-	          &nbsp;<nobr><input size="18" name="needle" value="{needle}" onFocus="document.forms['form_search'].needle.value='';">
-            <select size="1" name="category">{category_options}</select>
+	          &nbsp;<nobr><input size="18" name="needle" value="{needle}" onFocus="document.forms['form_search'].needle.value='';" style="width:200px;">
+            <select size="1" name="category" style="width:100px;">{category_options}</select>
 	            <input type="submit" name="search" value="Go">&nbsp;</nobr>
 	          </form>
           </td>  
@@ -43,7 +43,7 @@
   	    <tr>
    	      <td align="right">
 	          <form action="{url_alloc_history}" method="post" name="history">
-	          &nbsp;<nobr><select name="historyID" onChange="this.form.submit();">
+	          &nbsp;<nobr><select name="historyID" onChange="this.form.submit();" style="width:304;"> 
             <option value="">Quick List</option>
             {default_history_item_1}
 	          {default_history_item_10}

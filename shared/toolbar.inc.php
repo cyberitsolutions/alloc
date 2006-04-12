@@ -141,7 +141,7 @@ function show_toolbar_items() {
 function show_history() {
   global $historyID;
   $history = new history;
-  echo get_options_from_db($history->get_history_db(), "the_label", "historyID", $historyID, 30, $reverse_results = true);
+  echo get_options_from_db($history->get_history_db(), "the_label", "historyID", $historyID, 43, $reverse_results = true);
 }
 
 
