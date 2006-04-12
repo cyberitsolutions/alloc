@@ -26,363 +26,341 @@ require_once("alloc.inc");
 
 
 
-function show_attachments($template_name) {
-  global $projectID;
-  $project = new project;
-  $project->set_id($projectID);
-  $project->set_tpl_values();
-  include_template($template_name);
-}
+  function show_attachments($template_name) {
+    global $projectID;
+    $project = new project;
+    $project->set_id($projectID);
+    $project->set_tpl_values();
+    include_template($template_name);
+  }
 
+  function list_attachments($template_name) {
+    global $TPL, $projectID;
 
-function list_attachments($template_name) {
-  global $TPL, $projectID;
+    if (is_dir($TPL["url_alloc_projectDocs_dir"].$projectID)) {
+      $handle = opendir($TPL["url_alloc_projectDocs_dir"].$projectID);
 
-  if (is_dir($TPL["url_alloc_projectDocs_dir"].$projectID)) {
-    $handle = opendir($TPL["url_alloc_projectDocs_dir"].$projectID);
+      while (false !== ($file = readdir($handle))) {
 
-    while (false !== ($file = readdir($handle))) {
+        if ($file != "." && $file != "..") {
+          $size = filesize($TPL["url_alloc_projectDocs_dir"].$projectID."/".$file);
+          $TPL["filename"] = "<a href=\"".$TPL["url_alloc_projectDoc"]."projectID=".$projectID."&file=".urlencode($file)."\">".$file."</a>";
+          $TPL["size"] = sprintf("%dk",$size/1024);
+          include_template($template_name);
+        }
+      }
+    }
+  }
 
-      if ($file != "." && $file != "..") {
-        $size = filesize($TPL["url_alloc_projectDocs_dir"].$projectID."/".$file);
-        $TPL["filename"] = "<a href=\"".$TPL["url_alloc_projectDoc"]."projectID=".$projectID."&file=".urlencode($file)."\">".$file."</a>";
-        $TPL["size"] = sprintf("%dk",$size/1024);
+$grand_total = 0;
+
+  function show_timeSheet($template) {
+    global $db, $TPL, $project, $current_user, $projectBudget, $grand_total;
+
+    $projectID = $project->get_id();
+    $timeSheet = new timeSheet;
+
+    $db2 = new db_alloc;
+
+    if (isset($projectID)) {
+
+      $query = sprintf("SELECT timeSheet.*, username
+                          FROM timeSheet
+                     LEFT JOIN person on timeSheet.personID = person.personID 
+                         WHERE timeSheet.projectID = %d 
+                      GROUP BY timeSheetID
+                      ORDER BY dateFrom, username",$projectID);
+      $db->query($query);
+
+      while ($db->next_record()) {
+        $timeSheet = new timeSheet;
+        $timeSheet->read_db_record($db,false);
+        $timeSheet->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheet_");
+        $TPL["timeSheet_username"] = $db->f("username");
+        $timeSheet->load_pay_info();
+
+        $q = sprintf("SELECT SUM(amount) AS amount 
+                        FROM transaction 
+                       WHERE timeSheetID = %d 
+                         AND amount>0 
+                         AND status = 'approved'
+                     ",$timeSheet->get_id());
+        $db2->query($q);
+        $db2->next_record(); 
+
+        $TPL["amount"] = sprintf("$%0.2f", $db2->f("amount"));
+        $grand_total += $db2->f("amount");
+
+        include_template($template);
+      }
+    }
+  }
+
+  function show_transaction($template) {
+    global $db, $TPL, $project, $current_user, $projectBudget, $grand_total;
+
+    $projectID = $project->get_id();
+    $transaction = new transaction;
+
+    if (isset($projectID) && $projectID) {
+      if (have_entity_perm("transaction", PERM_READ, $current_user, false)) {
+        $query = sprintf("SELECT transaction.* ")
+          .sprintf("FROM transaction ")
+          .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
+          .sprintf("ORDER BY lastModified desc");
+      } else {
+        $query = sprintf("SELECT transaction.* ")
+          .sprintf("FROM transaction ")
+          .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
+          .sprintf(" AND transaction.tfID = %d ", $current_user->get_id())
+          .sprintf("ORDER BY lastModified desc");
+      }
+      $db->query($query);
+      while ($db->next_record()) {
+        $transaction = new transaction;
+        $transaction->read_db_record($db);
+        $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
+
+        $tf = $transaction->get_foreign_object("tf");
+        $tf->set_tpl_values();
+        $tf->set_tpl_values(DST_HTML_ATTRIBUTE, "tf_");
+
+        $TPL["transaction_username"] = $db->f("username");
+        $TPL["transaction_amount"] = number_format(($TPL["transaction_amount"]), 2);
+        include_template($template);
+
+        $grand_total += $TPL["transaction_amount"];
+      }
+
+      $gt = $TPL["grand_total"] = sprintf("%0.2f", $grand_total);
+      $pb = $TPL["project_projectBudget"] = sprintf("%0.2f", $TPL["project_projectBudget"]);
+
+      // calculate percentage from grand total (gt) and project budget (pb)
+      if ($gt > 0 && $pb > 0) {
+        $p = sprintf("%0.1f", $gt / $pb * 100);
+      } else {
+        $p = "0";
+      }
+      $TPL["percentage"] = $p;
+    }
+  }
+
+  function show_commission_list($template_name) {
+    global $TPL, $db, $project;
+
+    $TPL["commission_list_buttons"] = "
+      <input type=\"submit\" name=\"commission_save\" value=\"Save\">
+      <input type=\"submit\" name=\"commission_delete\" value=\"Delete\">";
+
+    $projectID = $project->get_id();
+
+    if ($projectID) {
+      $query = sprintf("SELECT * from projectCommissionPerson WHERE projectID= %d", $projectID);
+      $db->query($query);
+
+      while ($db->next_record()) {
+        $commission_item = new projectCommissionPerson;
+        $commission_item->read_db_record($db);
+        $commission_item->set_tpl_values(DST_HTML_ATTRIBUTE, "commission_");
+        $tf = $commission_item->get_foreign_object("tf");
         include_template($template_name);
       }
     }
   }
-}
 
+  function show_new_commission($template_name) {
+    global $TPL, $project, $projectID;
 
-$grand_total = 0;
+    // Don't show entry form for new projects
+    if (!$projectID) {
+      return;
+    }
 
-function show_timeSheet($template) {
-  global $db, $TPL, $project, $current_user, $projectBudget, $grand_total;
+    $TPL["commission_list_buttons"] = "<input type=\"submit\" name=\"commission_save\" value=\"Add\">";
+    $commission_item = new projectCommissionPerson;
+    $commission_item->set_tpl_values(DST_HTML_ATTRIBUTE, "commission_");
+    $TPL["commission_projectID"] = $project->get_id();
+    include_template($template_name);
+  }
 
-  $projectID = $project->get_id();
-  $timeSheet = new timeSheet;
+  function show_modification_history($template) {
+    global $TPL, $project, $db;
+    $projectID = $project->get_id();
 
-  $db2 = new db_alloc;
+    if ($projectID) {
+      $query = sprintf("SELECT * from projectModificationNote WHERE projectID= %d", $projectID);
+      $db->query($query);
 
-  if (isset($projectID)) {
-
-    $query = sprintf("SELECT timeSheet.*, username
-                        FROM timeSheet
-                   LEFT JOIN person on timeSheet.personID = person.personID 
-                       WHERE timeSheet.projectID = %d 
-                    GROUP BY timeSheetID
-                    ORDER BY dateFrom, username",$projectID);
-    $db->query($query);
-
-    while ($db->next_record()) {
-      $timeSheet = new timeSheet;
-      $timeSheet->read_db_record($db,false);
-      $timeSheet->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheet_");
-      $TPL["timeSheet_username"] = $db->f("username");
-      $timeSheet->load_pay_info();
-
-      $q = sprintf("SELECT SUM(amount) AS amount 
-                      FROM transaction 
-                     WHERE timeSheetID = %d 
-                       AND amount>0 
-                       AND status = 'approved'
-                   ",$timeSheet->get_id());
-      $db2->query($q);
-      $db2->next_record(); 
-
-      $TPL["amount"] = sprintf("$%0.2f", $db2->f("amount"));
-      $grand_total += $db2->f("amount");
-
-      include_template($template);
+      while ($db->next_record()) {
+        $projectModification = new projectModificationNote;
+        $projectModification->read_db_record($db);
+        $projectModification->set_tpl_values(DST_HTML_ATTRIBUTE, "mod_");
+        // Display the user who made modification.
+        $person = new person;
+        $person->set_id($projectModification->get_value("personID"));
+        $person->select();
+        $TPL["mod_personName"] = $person->get_value("username");
+        include_template($template);
+      }
     }
   }
-}
+
+  function show_person_list($template) {
+    global $db, $TPL, $project;
+    global $email_type_array, $rate_type_array, $project_person_role_array;
 
 
-function show_transaction($template) {
-  global $db, $TPL, $project, $current_user, $projectBudget, $grand_total;
 
-  $projectID = $project->get_id();
-  $transaction = new transaction;
 
-  if (isset($projectID) && $projectID) {
-    if (have_entity_perm("transaction", PERM_READ, $current_user, false)) {
-      $query = sprintf("SELECT transaction.* ")
-        .sprintf("FROM transaction ")
-        .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
-        .sprintf("ORDER BY lastModified desc");
-    } else {
-      $query = sprintf("SELECT transaction.* ")
-        .sprintf("FROM transaction ")
-        .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
-        .sprintf(" AND transaction.tfID = %d ", $current_user->get_id())
-        .sprintf("ORDER BY lastModified desc");
+    $projectID = $project->get_id();
+
+    if ($projectID) {
+      $query = sprintf("SELECT * from projectPerson WHERE projectID=%d", $projectID);
+      $db->query($query);
+
+      while ($db->next_record()) {
+        $projectPerson = new projectPerson;
+        $projectPerson->read_db_record($db);
+        $projectPerson->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
+        $person = $projectPerson->get_foreign_object("person");
+        $TPL["person_username"] = $person->get_value("username");
+        $TPL["person_emailType_options"] = get_options_from_array($email_type_array, $TPL["person_emailType"]);
+        $TPL["person_projectPersonRole_options"] = get_options_from_array($project_person_role_array, $TPL["person_projectPersonRoleID"]);
+        $TPL["rateType_options"] = get_options_from_array($rate_type_array, $TPL["person_rateUnitID"]);
+        $TPL["person_buttons"] = "
+          <input type=\"submit\" name=\"person_save\" value=\"Save\">
+          <input type=\"submit\" name=\"person_delete\" value=\"Delete\">";
+        // <a href=\"".$TPL["url_alloc_projectPerson"]."projectPersonID=".$projectPerson->get_id()."\">Details</a>"
+        include_template($template);
+      }
     }
-    $db->query($query);
-    while ($db->next_record()) {
-      $transaction = new transaction;
-      $transaction->read_db_record($db);
-      $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
-
-      $tf = $transaction->get_foreign_object("tf");
-      $tf->set_tpl_values();
-      $tf->set_tpl_values(DST_HTML_ATTRIBUTE, "tf_");
-
-      $TPL["transaction_username"] = $db->f("username");
-      $TPL["transaction_amount"] = number_format(($TPL["transaction_amount"]), 2);
-      include_template($template);
-
-      $grand_total += $TPL["transaction_amount"];
-    }
-
-    $gt = $TPL["grand_total"] = sprintf("%0.2f", $grand_total);
-    $pb = $TPL["project_projectBudget"] = sprintf("%0.2f", $TPL["project_projectBudget"]);
-
-    // calculate percentage from grand total (gt) and project budget (pb)
-    if ($gt > 0 && $pb > 0) {
-      $p = sprintf("%0.1f", $gt / $pb * 100);
-    } else {
-      $p = "0";
-    }
-    $TPL["percentage"] = $p;
   }
-}
 
+  function show_new_person($template) {
+    global $TPL, $email_type_array, $rate_type_array, $project, $project_person_role_array;
 
-function show_commission_list($template_name) {
-  global $TPL, $db, $project;
+    // Don't show entry form for new projects
+    if (!$project->get_id()) {
+      return;
+    }
 
-  $TPL["commission_list_buttons"] = "
-    <input type=\"submit\" name=\"commission_save\" value=\"Save\">
-    <input type=\"submit\" name=\"commission_delete\" value=\"Delete\">";
+    $TPL["person_buttons"] = "<input type=\"submit\" name=\"person_save\" value=\"Add\">";
+    $project_person = new projectPerson;
+    $project_person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
+    $TPL["person_emailType_options"] = get_options_from_array($email_type_array, $TPL["person_emailType"]);
+    $TPL["person_projectPersonRole_options"] = get_options_from_array($project_person_role_array,false);
+    $TPL["rateType_options"] = get_options_from_array($rate_type_array, $TPL["person_rateUnitID"]);
+    include_template($template);
+  }
 
-  $projectID = $project->get_id();
+  function show_time_sheets($template_name) {
+    global $current_user;
 
-  if ($projectID) {
-    $query = sprintf("SELECT * from projectCommissionPerson WHERE projectID= %d", $projectID);
-    $db->query($query);
-
-    while ($db->next_record()) {
-      $commission_item = new projectCommissionPerson;
-      $commission_item->read_db_record($db);
-      $commission_item->set_tpl_values(DST_HTML_ATTRIBUTE, "commission_");
-      $tf = $commission_item->get_foreign_object("tf");
+    if ($current_user->is_employee()) {
       include_template($template_name);
     }
   }
-}
 
+  function show_transactions($template_name) {
+    global $current_user;
 
-
-function show_new_commission($template_name) {
-  global $TPL, $project, $projectID;
-
-  // Don't show entry form for new projects
-  if (!$projectID) {
-    return;
+    if ($current_user->is_employee()) {
+      include_template($template_name);
+    }
   }
 
-  $TPL["commission_list_buttons"] = "<input type=\"submit\" name=\"commission_save\" value=\"Add\">";
-  $commission_item = new projectCommissionPerson;
-  $commission_item->set_tpl_values(DST_HTML_ATTRIBUTE, "commission_");
-  $TPL["commission_projectID"] = $project->get_id();
-  include_template($template_name);
-}
+  function show_person_options() {
+    global $TPL;
+    echo get_select_options(person::get_username_list($TPL["person_personID"]),$TPL["person_personID"]);
+  }
 
+  function show_tf_options($commission_tfID) {
+    global $tf_array, $TPL;
+    echo get_options_from_array($tf_array, $TPL[$commission_tfID]);
+  }
 
+  // show table of comments
+  function show_comments($template) {
+    global $TPL, $projectID, $commentID;
 
-function show_modification_history($template) {
-  global $TPL, $project, $db;
-  $projectID = $project->get_id();
+    // setup add/edit comment section values
+    $TPL["project_projectID"] = $projectID;
+    $TPL["project_projectComment_title"] = "New comment:";
+    $TPL["project_projectComment"] = "";
+    $TPL["project_projectComment_buttons"] = "<input type=\"submit\" name=\"projectComment_save\" value=\"Save Comment\">";
 
-  if ($projectID) {
-    $query = sprintf("SELECT * from projectModificationNote WHERE projectID= %d", $projectID);
+    $query = "SELECT * FROM comment LEFT JOIN person ON comment.commentModifiedUser=person.personID";
+    $query.= sprintf(" WHERE comment.commentType='project' AND comment.commentLinkID=%d", $projectID);
+    $query.= " ORDER BY comment.commentModifiedTime DESC";
+    $db = new db_alloc;
     $db->query($query);
 
     while ($db->next_record()) {
-      $projectModification = new projectModificationNote;
-      $projectModification->read_db_record($db);
-      $projectModification->set_tpl_values(DST_HTML_ATTRIBUTE, "mod_");
-      // Display the user who made modification.
+      $comment = new comment;
+      $comment->read_db_record($db);
+      $comment->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
       $person = new person;
-      $person->set_id($projectModification->get_value("personID"));
-      $person->select();
-      $TPL["mod_personName"] = $person->get_value("username");
+      $person->read_db_record($db);
+      $person->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
+
+      // if a commentID was posted and it is equal to this one then setup values for editing
+      if (isset($commentID) && $commentID == $comment->get_id()) {
+        $TPL["project_projectComment_title"] = "Edit comment:";
+        $TPL["project_projectComment"] = $comment->get_value('comment');
+        $TPL["project_projectComment_buttons"] =
+          sprintf("<input type=\"hidden\" name=\"projectComment_id\" value=\"%d\">", $commentID).
+          "<input type=\"submit\" name=\"projectComment_update\" value=\"Update\">"."<input type=\"submit\" name=\"projectComment_delete\" value=\"Delete\">"."<input type=\"submit\" name=\"projectComment_cancel\" value=\"Cancel\">";
+      }
+
+      $TPL["project_commentModifiedDate"] = $comment->get_modified_date();
+
+      // trim comment to 128 characters
+      if (strlen($comment->get_value('comment')) > 128) {
+        $TPL["project_comment_trimmed"] = sprintf("%s...", substr($comment->get_value('comment'), 0, 128));
+      } else {
+        $TPL["project_comment_trimmed"] = $comment->get_value('comment');
+      }
+
       include_template($template);
     }
   }
-}
 
+  function show_reminders($template) {
+    global $TPL, $projectID, $reminderID, $current_user;
 
+    // show all reminders for this project
+    $reminder = new reminder;
+    $db = new db_alloc;
+    $permissions = explode(",", $current_user->get_value("perms"));
 
+    if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
+      $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d", $projectID);
+    } else {
+      $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d AND personID='%s'", $projectID, $current_user->get_id());
+    }
 
-
-function show_person_list($template) {
-  global $db, $TPL, $project;
-  global $email_type_array, $rate_type_array, $project_person_role_array;
-
-
-
-
-  $projectID = $project->get_id();
-
-  if ($projectID) {
-    $query = sprintf("SELECT * from projectPerson WHERE projectID=%d", $projectID);
     $db->query($query);
 
     while ($db->next_record()) {
-      $projectPerson = new projectPerson;
-      $projectPerson->read_db_record($db);
-      $projectPerson->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
-      $person = $projectPerson->get_foreign_object("person");
-      $TPL["person_username"] = $person->get_value("username");
-      $TPL["person_emailType_options"] = get_options_from_array($email_type_array, $TPL["person_emailType"]);
-      $TPL["person_projectPersonRole_options"] = get_options_from_array($project_person_role_array, $TPL["person_projectPersonRoleID"]);
-      $TPL["rateType_options"] = get_options_from_array($rate_type_array, $TPL["person_rateUnitID"]);
-      $TPL["person_buttons"] = "
-        <input type=\"submit\" name=\"person_save\" value=\"Save\">
-        <input type=\"submit\" name=\"person_delete\" value=\"Delete\">";
-      // <a href=\"".$TPL["url_alloc_projectPerson"]."projectPersonID=".$projectPerson->get_id()."\">Details</a>"
+      $reminder->read_db_record($db);
+      $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
+
+      if ($reminder->get_value('reminderRecuringInterval') == "No") {
+        $TPL["reminder_reminderRecurence"] = "&nbsp;";
+      } else {
+        $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
+          ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
+      }
+
+      $person = new person;
+      $person->set_id($reminder->get_value('personID'));
+      $person->select();
+      $TPL["reminder_reminderRecipient"] = $person->get_value('username');
+      $TPL["returnToParent"] = "t";
+
       include_template($template);
     }
   }
-}
-
-
-
-function show_new_person($template) {
-  global $TPL, $email_type_array, $rate_type_array, $project, $project_person_role_array;
-
-  // Don't show entry form for new projects
-  if (!$project->get_id()) {
-    return;
-  }
-
-  $TPL["person_buttons"] = "<input type=\"submit\" name=\"person_save\" value=\"Add\">";
-  $project_person = new projectPerson;
-  $project_person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
-  $TPL["person_emailType_options"] = get_options_from_array($email_type_array, $TPL["person_emailType"]);
-  $TPL["person_projectPersonRole_options"] = get_options_from_array($project_person_role_array,false);
-  $TPL["rateType_options"] = get_options_from_array($rate_type_array, $TPL["person_rateUnitID"]);
-  include_template($template);
-}
-
-
-
-function show_time_sheets($template_name) {
-  global $current_user;
-
-  if ($current_user->is_employee()) {
-    include_template($template_name);
-  }
-}
-
-
-function show_transactions($template_name) {
-  global $current_user;
-
-  if ($current_user->is_employee()) {
-    include_template($template_name);
-  }
-}
-
-
-function show_person_options() {
-  global $TPL;
-  echo get_select_options(person::get_username_list($TPL["person_personID"]),$TPL["person_personID"]);
-}
-
-
-function show_tf_options($commission_tfID) {
-  global $tf_array, $TPL;
-  echo get_options_from_array($tf_array, $TPL[$commission_tfID]);
-}
-
-// show table of comments
-function show_comments($template) {
-  global $TPL, $projectID, $commentID;
-
-  // setup add/edit comment section values
-  $TPL["project_projectID"] = $projectID;
-  $TPL["project_projectComment_title"] = "New comment:";
-  $TPL["project_projectComment"] = "";
-  $TPL["project_projectComment_buttons"] = "<input type=\"submit\" name=\"projectComment_save\" value=\"Save Comment\">";
-
-  $query = "SELECT * FROM comment LEFT JOIN person ON comment.commentModifiedUser=person.personID";
-  $query.= sprintf(" WHERE comment.commentType='project' AND comment.commentLinkID=%d", $projectID);
-  $query.= " ORDER BY comment.commentModifiedTime DESC";
-  $db = new db_alloc;
-  $db->query($query);
-
-  while ($db->next_record()) {
-    $comment = new comment;
-    $comment->read_db_record($db);
-    $comment->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
-    $person = new person;
-    $person->read_db_record($db);
-    $person->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
-
-    // if a commentID was posted and it is equal to this one then setup values for editing
-    if (isset($commentID) && $commentID == $comment->get_id()) {
-      $TPL["project_projectComment_title"] = "Edit comment:";
-      $TPL["project_projectComment"] = $comment->get_value('comment');
-      $TPL["project_projectComment_buttons"] =
-        sprintf("<input type=\"hidden\" name=\"projectComment_id\" value=\"%d\">", $commentID).
-        "<input type=\"submit\" name=\"projectComment_update\" value=\"Update\">"."<input type=\"submit\" name=\"projectComment_delete\" value=\"Delete\">"."<input type=\"submit\" name=\"projectComment_cancel\" value=\"Cancel\">";
-    }
-
-    $TPL["project_commentModifiedDate"] = $comment->get_modified_date();
-
-    // trim comment to 128 characters
-    if (strlen($comment->get_value('comment')) > 128) {
-      $TPL["project_comment_trimmed"] = sprintf("%s...", substr($comment->get_value('comment'), 0, 128));
-    } else {
-      $TPL["project_comment_trimmed"] = $comment->get_value('comment');
-    }
-
-    include_template($template);
-  }
-}
-
-
-
-
-function show_reminders($template) {
-  global $TPL, $projectID, $reminderID, $current_user;
-
-  // show all reminders for this project
-  $reminder = new reminder;
-  $db = new db_alloc;
-  $permissions = explode(",", $current_user->get_value("perms"));
-
-  if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
-    $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d", $projectID);
-  } else {
-    $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d AND personID='%s'", $projectID, $current_user->get_id());
-  }
-
-  $db->query($query);
-
-  while ($db->next_record()) {
-    $reminder->read_db_record($db);
-    $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
-
-    if ($reminder->get_value('reminderRecuringInterval') == "No") {
-      $TPL["reminder_reminderRecurence"] = "&nbsp;";
-    } else {
-      $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
-        ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
-    }
-
-    $person = new person;
-    $person->set_id($reminder->get_value('personID'));
-    $person->select();
-    $TPL["reminder_reminderRecipient"] = $person->get_value('username');
-    $TPL["returnToParent"] = "t";
-
-    include_template($template);
-  }
-}
 
 
 // END FUNCTIONS
@@ -451,7 +429,7 @@ if (isset($save)) {
       $task->set_value("dateTargetCompletion", date("Y-m-d", $time_end));
       $task->set_value("percentComplete", "0");
       $task->set_value("parentTaskID", "0");
-      $task->set_value("taskTypeID", "2");
+      $task->set_value("taskTypeID", TT_PHASE);
       $task->save();
       $time_start = $time_end;
     }

@@ -237,7 +237,7 @@ if (!$taskID && $tasktype) {
 // Set options for the dropdown boxen
 $task->set_option_tpl_values();
 
-$TPL["task_timeActual"] = $task->get_time_billed();
+$TPL["task_timeActual"] = $task->get_time_billed(false,true);
 $TPL["task_timeEstimate"] or $TPL["task_timeEstimate"] = "";
 
 
@@ -313,6 +313,7 @@ if ($task->get_id()) {
   $options["showAssigned"] = true;
   $options["showPercent"] = true;
   $options["showHeader"] = true;
+  $options["showTimes"] = true;
   $TPL["task_children_summary"] = task::get_task_list($options);
 
   $taskType = $task->get_foreign_object("taskType");

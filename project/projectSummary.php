@@ -41,7 +41,8 @@ $TPL["navigation_links"] = $project->get_navigation_links();
 if ($graph_type == "phases") {
   $options["taskTypeID"][] = TT_PHASE;
 }
-$options["taskView"] = "byProject";
+$options["taskView"] = "prioritised";
+$options["taskStatus"] = "in_progress";
 $options["projectIDs"][] = $project->get_id();
 $TPL["task_summary"] = task::get_task_list($options);
 

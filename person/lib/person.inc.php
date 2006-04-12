@@ -62,17 +62,6 @@ class person extends db_entity
     $this->permissions[PERM_PERSON_SEND_EMAIL] = "Send mail-outs";
   }
 
-  function get_tasks($existing_filter = "") {
-    if ($existing_filter == "") {
-      $filter = new task_filter();
-    } else {
-      $filter = $existing_filter;
-    }
-    $filter->set_element("person", $this);
-    $list = new task_list($filter);
-    return $list->get_entity_array();
-  }
-
 
 /*
   function get_task_summary($existing_filter = "", $format = "html", $task_options = "", $applyDateRegex = true) {
