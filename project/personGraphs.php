@@ -35,13 +35,13 @@ function show_people($template_name) {
 
     $options = array();
     $options["taskView"] = "prioritised";
-    $options["personID"] = $person->get_id();
-    $options["taskStatus"] = "not_completed";
+    $options["personIDonly"] = $person->get_id();
+    $options["taskStatus"] = "in_progress";
     $options["showHeader"] = true;
     $options["showProject"] = true;
 
     if (isset($project)) {
-      $options["projectIDs"] = array($project->get_id());
+      $options["projectIDs"][] = $project->get_id();
     }
     $TPL["person_task_summary"] = task::get_task_list($options);
 

@@ -27,9 +27,7 @@ define("TT_PHASE", 2);
 define("TT_MESSAGE", 3);
 define("TT_FAULT", 4);
 define("TT_MILESTONE", 5);
-
 define("PERM_PROJECT_READ_TASK_DETAIL", 256);
-
 $default_task_options = array("show_links"=>true);
 
 class task extends db_entity {
@@ -38,7 +36,6 @@ class task extends db_entity {
   var $fire_events = true;
   var $display_field_name = "taskName";
 
-  // Constructor - set creatorID to current user ID
   function task() {
     global $current_user;
 
@@ -563,15 +560,12 @@ class task extends db_entity {
     return $url;
   }
 
-  // The definitive method of getting a list of tasks
-  function get_task_list($_FORM) {
-
-    
+  function get_task_list_filter($_FORM=array()) {
     // Join them up with commars and add a restrictive sql clause subset
     if (is_array($_FORM["projectIDs"]) && count($_FORM["projectIDs"])) {
-      $_FORM["projectIDs"] = "project.projectID IN (".implode(",",$_FORM["projectIDs"]).")";
+      $filter["projectIDs"] = "(project.projectID IN (".implode(",",$_FORM["projectIDs"])."))";
     } else {
-      $_FORM["projectIDs"] = "1";
+      $filter["projectIDs"] = "1";
     }
 
     // Task level filtering
@@ -587,8 +581,8 @@ class task extends db_entity {
       $filter[] = $taskStatusFilter[$_FORM["taskStatus"]];
     }
 
-    if (count($_FORM["taskTypeID"]==1) && !$_FORM["taskTypeID"][0]) {
-      $_FORM["taskTypeID"] = "";
+    if (count($_FORM["taskTypeID"])>=1 && !$_FORM["taskTypeID"][0]) {
+      unset($_FORM["taskTypeID"][0]);
     }
 
     if (is_array($_FORM["taskTypeID"]) && count($_FORM["taskTypeID"])) {
@@ -598,9 +592,27 @@ class task extends db_entity {
       $filter[] = sprintf("(taskTypeID = %d)",$_FORM["taskTypeID"]);
     }
 
-    $_FORM["personID"]     and $filter[] = sprintf("(personID = %d)",$_FORM["personID"]);
-    $_FORM["limit"]        and $limit = sprintf("limit %d",$_FORM["limit"]);
-    $_FORM["parentTaskID"] or  $_FORM["parentTaskID"] = 0;
+    // Exclude tasks assigned to noone
+    if ($_FORM["personIDonly"]) {
+      $filter[] = sprintf("(personID = %d)",$_FORM["personIDonly"]);
+
+    // Include tasks assigned to noone
+    } else if ($_FORM["personID"]) { 
+      $filter[] = sprintf("(personID = %d or personID IS NULL or personID = '')",$_FORM["personID"]);
+    } 
+
+
+    $filter["parentTaskID"] = sprintf("(parentTaskID = %d)",$_FORM["parentTaskID"]);
+
+    return $filter;
+  }
+
+  // The definitive method of getting a list of tasks
+  function get_task_list($_FORM) {
+    
+    $filter = task::get_task_list_filter($_FORM);
+
+    $_FORM["limit"] and $limit = sprintf("limit %d",$_FORM["limit"]);
 
     if ($_FORM["showDates"]) {
       $_FORM["showDate1"] = true;
@@ -613,7 +625,6 @@ class task extends db_entity {
     $_FORM["timeUnit_cache"] = get_cached_table("timeUnit");
 
     // A header row
-
     if ($_FORM["showHeader"]) {
 
       $summary.= "\n<tr>";
@@ -636,11 +647,11 @@ class task extends db_entity {
       $summary.="\n</tr>";
     }
 
-
+    // Get a hierarchical list of tasks
     if ($_FORM["taskView"] == "byProject") {
 
 
-      $q = "SELECT projectID, projectName, clientID, projectPriority FROM project WHERE ".$_FORM["projectIDs"]. " ORDER BY projectName";
+      $q = "SELECT projectID, projectName, clientID, projectPriority FROM project WHERE ".$filter["projectIDs"]. " ORDER BY projectName";
       $db = new db_alloc;
       $db->query($q);
       
@@ -648,7 +659,7 @@ class task extends db_entity {
         
         $project = new project;
         $project->read_db_record($db);
-        $tasks = $project->get_task_children($_FORM["parentTaskID"],$filter,$_FORM["padding"]);
+        $tasks = $project->get_task_children($filter,$_FORM["padding"]);
 
         if (count($tasks)) {
           $print = true;
@@ -667,12 +678,14 @@ class task extends db_entity {
         }
       }
 
+    // Get a prioritised list of tasks
     } else if ($_FORM["taskView"] == "prioritised") {
           
+      unset($filter["parentTaskID"]);
       if (is_array($filter) && count($filter)) {
-        $f = " AND ".implode(" AND ",$filter);
+        $filter = " WHERE ".implode(" AND ",$filter);
       }
-          
+
       $q = "SELECT task.*, projectName, projectShortName, clientID, projectPriority, 
                    IF(task.dateTargetCompletion IS NULL, \"-\",
                      TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) as daysUntilDue,
@@ -680,12 +693,11 @@ class task extends db_entity {
                        IF(task.dateTargetCompletion IS NULL, 
                          8,
                          ATAN(
-                           (
-                             TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())
-                           ) / 20
-                         ) / 3.14 * 8 + 4
-                       ) / 10 as priorityFactor
-             FROM task LEFT JOIN project on task.projectID = project.projectID WHERE ".$_FORM["projectIDs"].$f." ORDER BY priorityFactor ".$limit;
+                              (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
+                             ) / 3.14 * 8 + 4
+                         ) / 10 as priorityFactor
+              FROM task LEFT JOIN project ON task.projectID = project.projectID 
+             ".$filter." ORDER BY priorityFactor ".$limit;
       $db = new db_alloc;
       $db->query($q);
       while ($task = $db->next_record()) {
@@ -696,15 +708,18 @@ class task extends db_entity {
         $task["taskLink"] = $t->get_task_link();
         $task["taskStatus"] = $t->get_status();
         $summary.= task::get_task_list_tr($task,$_FORM);
+        $_FORM["return"] == "objects" and $tasks[$t->get_id()] = $t;
       }
     } 
 
-    if ($print) {
+    if ($_FORM["taskView"] == "prioritised" && $_FORM["return"] == "objects") {
+      return $tasks;
+    } else if ($print) {
       return "<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" width=\"100%\">".$summary."</table>";
     } else {
       return "<table align=\"center\"><tr><td colspan=\"10\" align=\"center\"><b>No Tasks Found</b></td></tr></table>";
     } 
-  }
+  } 
 
   function get_task_list_tr($task,$_FORM) {
 
@@ -750,32 +765,57 @@ class task extends db_entity {
     $summary = "\n".implode("\n",$summary);
     return $summary;
   }
- 
-  function get_children_taskIDs($taskID) {
-    $q = sprintf("SELECT taskID,taskTypeID FROM task WHERE parentTaskID = %d",$taskID);
+
+  function get_task_children($filter="",$padding=0) {
+    if (is_array($filter) && count($filter)) {
+      $f = " WHERE ".implode(" AND ",$filter);
+    }
+    # The str_replace lets us use this same filter from above. 
     $db = new db_alloc;
+    $q = sprintf("SELECT * FROM task %s ORDER BY taskName",str_replace("project.projectID","projectID",$f));
     $db->query($q);
 
-    while($db->next_record()) {
-      $rtn[] = $db->f("taskID");
-      if ($db->f("taskTypeID") == TT_PHASE) {
-        $rtn = array_merge($rtn, task::get_children_taskIDs($db->f("taskID")));
+    while ($row = $db->next_record()) {
+
+      $task = new task;
+      $task->read_db_record($db);
+
+      $row["taskStatus"] = $task->get_status();
+      $row["taskLink"] = $task->get_task_link();
+      $row["padding"] = $padding;
+      $row["object"] = $task;
+      $tasks[$row["taskID"]] = $row;
+
+      if ($row["taskTypeID"] == TT_PHASE) {
+        $padding+=1;
+        $filter["parentTaskID"] = sprintf("(parentTaskID = %d)",$row["taskID"]);
+        $tasks = array_merge($tasks,task::get_task_children($filter,$padding));
+        $padding-=1;
       }
     }
-    return $rtn;
+    return $tasks;
   }
 
-  function get_time_billed($taskID="") {
+  function get_time_billed($taskID="", $recurse=false) {
 
     if (is_object($this) && !$taskID) {
       $taskID = $this->get_id();
     }
 
-
     if ($taskID) {
       $db = new db_alloc;
 
-      $taskIDs = task::get_children_taskIDs($taskID);
+
+      if ($recurse) {
+        $options["parentTaskID"] = $taskID;
+        $filter = task::get_task_list_filter($options);
+        $tasks = task::get_task_children($filter);
+
+        foreach ($tasks as $id => $t) {
+          $taskIDs[] = $t["taskID"];;
+        }
+      }
+
       $taskIDs[] = $taskID;
       $taskIDs = implode(",",$taskIDs);
 
@@ -804,10 +844,9 @@ class task extends db_entity {
     }
   }
 
-
-  // Get the date the task is forecast to be completed given an actual start 
-  // date and percent complete
   function get_forecast_completion() {
+    // Get the date the task is forecast to be completed given an actual start 
+    // date and percent complete
     $date_actual_start = $this->get_value("dateActualStart");
     $percent_complete = $this->get_value("percentComplete");
 
@@ -939,239 +978,6 @@ class task extends db_entity {
     // $status .= " ($target/$actual)";
     return $status;
   }
-
-/*
-  function get_parent() {
-    $parent = new task;
-    $parent->set_id($this->get_value("parentTaskID"));
-    if ($parent->select()) {
-      return $parent;
-    } else {
-      return;
-    }
-  }
-  function get_children($existing_filter = "") {
-    if ($existing_filter == "") {
-      $filter = new task_filter();
-    } else {
-      $filter = $existing_filter;
-    }
-
-    $filter->set_element("parent_task", $this);
-    $list = new task_list($filter);
-    $children = $list->get_entity_array();
-    return $children;
-  }
-*/
-
-
-/*
-  function recalculate() {
-    $children = $this->get_children();
-
-    if (count($children) > 0) {
-      // Calculate time estimate as a total of childrens' time estimates
-      $total_time = 0;
-      reset($children);
-      while (list(, $child) = each($children)) {
-        $total_time += $child->get_value("timeEstimate");
-      }
-
-      // Calculate percent complete as a weighted average of childrens' % complete
-      $percent_complete = 0;
-      reset($children);
-      while (list(, $child) = each($children)) {
-        $percent_complete += $child->get_value("percentComplete") * $child->get_value("timeEstimate");
-      }
-
-      if ($total_time != 0) {
-        $percent_complete = $percent_complete / $total_time;
-        $percent_complete = ceil($percent_complete);
-        $this->set_value("timeEstimate", $total_time);
-        $this->set_value("percentComplete", $percent_complete);
-      }
-    }
-  }
-*/
-
-
-/*
-  function get_summary($options = "", $include_children = true, $child_filter = "", $format = "html", $indent = 0, $user_id = "") {
-    global $default_task_options, $current_user, $TPL;
-    if ($options == "")
-      $options = $default_task_options;
-    if ($child_filter == "") {
-      $child_filter = new task_filter;
-    }
-  
-    $show_links = $options["show_links"] && $this->have_perm(PERM_PROJECT_READ_TASK_DETAIL);
-
-    if (isset($options["status_type"])) {
-      $status_type = $options["status_type"];
-    } else {
-      $status_type = "standard";
-    }
-
-// if ($format == "html") {{{
-    if ($format == "html") {
-      // HTML format
-
-      if (!$options["skip_indent"]) {
-        while ($i <= $indent) {
-          $indent_space.= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-          $i++;
-        }
-      }
-
-      $rtn.= "<tr>\n";
-      $options["nobr_taskName"] and $colspan=" colspan=\"2\"";
-      $rtn.= "  <td valign=\"top\"".$colspan.">";
-      $options["nobr_taskName"] and $rtn .= "<nobr>";
-      $rtn.= $indent_space;
-
-      if ($show_links) {
-        $rtn.= $this->get_task_link();
-      } else {
-        $rtn.= $this->get_task_name();
-      }
-
-      if ($options["show_new_children_links"] && $this->get_value("taskTypeID") == TT_PHASE) {
-        $rtn.= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_task"]."projectID=".$this->get_value("projectID");
-        $rtn.= "&parentTaskID=".$this->get_id()."\">New Subtask</a>";
-      }
-
-      $options["nobr_taskName"] and $rtn .= "</nobr>";
-      
- 
-      if ($show_links && $options["show_details"] && $this->get_value("taskDescription")) {
-        $d = $this->get_value("taskDescription");
-        $d = preg_replace("/\s+/"," ",$d);
-        $d = nl2br(trim($d));
-        $d = str_replace("&nbsp;"," ",$d);
-        $d = preg_replace("/\s+/"," ",$d);
-        $d = wordwrap($d,150,"<br />");
-        $d = str_replace("<br />","<br />&nbsp;".$indent_space,$d);
-        $d = preg_replace("/<br \/>$/","",$d);
-        $rtn.="<br />&nbsp;".$indent_space.$d;
-      }
-      $rtn.= "</td>";
-
-      if ($options["show_person"]) {
-        $rtn.= "  <td valign=\"top\" width=\"10%\">";
-        $person = $this->get_foreign_object("person");
-        $rtn.= $person->get_value("username");
-        $rtn.= "  </td>";
-      }
-
-      if ($options["show_project"]) {
-        $rtn.= "  <td valign=\"top\">";
-        $project = $this->get_foreign_object("project");
-        $rtn.= $project->get_value("projectName");
-        $rtn.= "  </td>";
-      }
-
-      if ($options["show_project_short"]) {
-        $rtn.= "  <td valign=\"top\">";
-        $project = $this->get_foreign_object("project");
-        $n = $project->get_value("projectShortName") or $n = $project->get_value("projectName");
-        $rtn.= $n;
-        $rtn.= "  </td>";
-      }
-
-
-      if ($options["show_priorities"]) {
-        $rtn.= "  <td valign=\"top\">";
-        $rtn.= $this->get_value("priority");
-        $rtn.= "  </td>";
-
-        // The projectPriority field will only be present if we loaded from a query that 
-        // joined the task table with the project table
-        $rtn.= "  <td valign=\"top\">";
-        $rtn.= $this->get_row_value("projectPriority");
-        $rtn.= "  </td>";
-
-        // The daysUntilDue field will only be present if we loaded from a query that 
-        // calculates this field
-        $rtn.= "  <td valign=\"top\" align=\"center\">";
-        $rtn.= $this->get_row_value("daysUntilDue");
-        $rtn.= "  </td>";
-
-        // The priorityFactor field will only be present if we loaded from a query that 
-        // calculates this field
-        $rtn.= "  <td valign=\"top\" align=\"center\">";
-        $rtn.= number_format($this->get_row_value("priorityFactor"), 0);
-        $rtn.= "  </td>";
-      }
-
-      if ($status_type != "none") {
-        $rtn.= "  <td valign=\"top\">";
-        $rtn.= $this->get_status($format, $status_type)."\n";
-        $rtn.= "  </td>";
-      }
-      $rtn.= "\n</tr>\n";
-      // end
-
-// }}}
-// else text format {{{
-    } else {
-      // Text format
-
-      if ($options["show_project"]) {
-        $project = $this->get_foreign_object("project");
-        $rtn.= "\n";
-        $rtn.= $project->get_value("projectName");
-        $rtn.= " -> ";
-      }
-
-      if ($options["show_project_short"]) {
-        $project = $this->get_foreign_object("project");
-        $rtn.= "\n";
-        $n = $project->get_value("projectShortName") or $n = $project->get_value("projectName");
-        $rtn.= $n;
-        $rtn.= " -> ";
-      }
-
-
-      $rtn.= $this->get_value("taskName");
-
-      if ($options["show_person"]) {
-        $person = $this->get_foreign_object("person");
-        $rtn.= " (".$person->get_value("username").")";
-      }
-
-      $rtn.= "\n";
-      $rtn.= $this->get_status($format, $status_type)."\n";
-
-      if ($show_links) {
-        $rtn.= $this->get_url();
-      }
-      $rtn.= "\n";
-
-
-    }
-// }}}
-
-    if ($include_children) {
-      $rtn.= $this->get_children_summary($options, $include_children, $child_filter, $format, $indent + 1);
-    }
-
-    return $rtn;
-  }
-
-
-  function get_children_summary($options = "", $include_grandchildren = true, $child_filter = "", $format = "html", $indent = 0, $user_id = "") {
-    $rtn = "";
-    $children = $this->get_children($child_filter);
-    if (count($children)) {
-      reset($children);
-      while (list(, $child) = each($children)) {
-        $rtn.= $child->get_summary($options, $include_grandchildren, $child_filter, $format, $indent);
-      }
-    }
-    return $rtn;
-  }
-*/
-
 
 
 }

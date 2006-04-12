@@ -59,113 +59,15 @@ class project extends db_entity
     $this->permissions[PERM_PROJECT_ADD_TASKS] = "Add tasks";
   }
 
-  function get_tasks($existing_filter = "") {
-    if ($existing_filter == "") {
-      $filter = new task_filter();
-    } else {
-      $filter = $existing_filter;
-    }
-    $filter->set_element("project", $this);
-    $list = new task_list($filter);
-    return $list->get_entity_array();
-  }
-
-  function get_task_filter($show_weeks = 0) {
-    $filter = new task_filter($show_weeks);
-    $filter->set_element("project", $this);
-    return $filter;
-  }
-
-  function get_top_tasks($existing_filter = "") {
-    if ($existing_filter == "") {
-      $filter = new task_filter();
-    } else {
-      $filter = $existing_filter;
-    }
-    $filter->set_element("top", true);
-    return $this->get_tasks($filter);
-  }
-
-  function get_current_top_tasks($extra_criteria = "") {
-    if ($extra_criteria) {
-      $extra_criteria.= " AND ";
-    }
-    $extra_criteria.= " parentTaskID = 0";
-    return $this->get_current_tasks($extra_criteria);
-  }
-
-  function get_current_tasks($extra_criteria = "") {
-
-    if ($extra_criteria) {
-      $criteria.= " AND ($extra_criteria)";
-    }
-    return $this->get_tasks($criteria);
-  }
-
   function get_url() {
     global $sess;
     return $sess->email_url(get_url_path()."project.php?projectID=".$this->get_id());
   }
 
-
-  function get_task_children($parentTaskID=0, $filter=array(),$padding=0) {
-
-    if (is_array($filter) && count($filter)) {
-      $f = " AND ".implode(" AND ",$filter);
-    }
-
-    $db = new db_alloc;
-    $q = sprintf("SELECT * FROM task WHERE parentTaskID = %d AND projectID = %d %s ORDER BY taskName",$parentTaskID,$this->get_id(),$f);
-    $db->query($q);
-
-    while ($row = $db->next_record()) {
-
-      $task = new task;
-      $task->read_db_record($db);
-
-      $row["taskStatus"] = $task->get_status();
-      $row["taskLink"] = $task->get_task_link();
-      $row["padding"] = $padding;
-      $tasks[$row["taskID"]] = $row;
-      
-
-      if ($row["taskTypeID"] == TT_PHASE) {
-        $padding+=1;
-        $tasks = array_merge($tasks,$this->get_task_children($row["taskID"],$filter,$padding));
-        $padding-=1;
-      } 
-    }
-    return $tasks;
+  function get_task_children($filter="",$padding=0) {
+    $filter[] = sprintf("(projectID = %d)",$this->get_id()); 
+    return task::get_task_children($filter,$padding);
   } 
-
-
-/*
-  function get_task_summary($existing_filter = "", $task_options = "", $hierarchical = true, $format = "html") {
-    global $default_task_options;
-    if ($existing_filter == "") {
-      $filter = new task_filter();
-    } else {
-      $filter = $existing_filter;
-    }
-    $filter->set_element("project", $this);
-    if ($hierarchical) {
-      $filter->set_element("top", true);
-    }
-    if ($task_options == "") {
-      $task_options = $default_task_options;
-    }
-    #if ($this->have_perm(PERM_PROJECT_VIEW_TASK_ALLOCS) && !is_object($filter->get_element("person"))) {
-      #$task_options["show_person"] = true;
-    #} else {
-      $task_options["show_person"] = false;
-    #}
-
-    $list = new task_list($filter);
-    $summary = $list->get_task_summary($task_options, $hierarchical, $format);
-    return $summary;
-  }
-
-*/
 
   function is_owner($person = "") {
     global $current_user;
@@ -210,8 +112,6 @@ class project extends db_entity
     }
     return $rows;
   }
-
-
 
   function get_navigation_links() {
     global $taskID, $TPL, $current_user;
@@ -316,8 +216,6 @@ class project extends db_entity
 
     return "<select name=\"projectID[]\" size=\"9\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
   }
-
-
 
 }
 

@@ -25,27 +25,24 @@ require_once("alloc.inc");
 include("lib/task_graph.inc.php");
 
 if ($projectID) {
-  $project = new project;
-  $project->set_id($projectID);
-  $project->select();
+  $options["projectIDs"][] = $projectID;
 }
 
-$person = new person;
-$person->set_id($personID);
-$task_filter = new task_filter();
-$task_filter->set_element("person", $person);
-if ($projectID) {
-  $task_filter->set_element("project", $project);
-}
+$options["personIDonly"] = $personID;
+$options["taskView"] = "prioritised";
+$options["return"] = "objects";
+$options["taskStatus"] = "in_progress";
 
+if ($graph_type == "phases") {
+  $options["taskTypeID"] = TT_PHASE;
+}
 
 $task_graph = new task_graph;
 $task_graph->bottom_margin = 20;
-$task_graph->init($task_filter);
 
+$top_tasks = task::get_task_list($options);
+$task_graph->init($options,$top_tasks);
 $task_graph->draw_grid();
-
-$top_tasks = $person->get_tasks($task_filter);
 
 reset($top_tasks);
 while (list(, $task) = each($top_tasks)) {
