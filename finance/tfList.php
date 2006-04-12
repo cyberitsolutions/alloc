@@ -56,7 +56,7 @@ function show_tf($template_name) {
     $tf->set_tpl_values();
 
     if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {
-      $TPL["tfBalance"] = number_format($tf->get_balance(), 2);
+      $TPL["tfBalance"] = sprintf("%0.2f",$tf->get_balance());
       $grand_total += $tf->get_balance();
     } else {
       $TPL["tfBalance"] = "not available";
@@ -68,7 +68,7 @@ function show_tf($template_name) {
     include_template($template_name);
   }
 
-  $TPL["grand_total"] = number_format($grand_total, 2);
+  $TPL["grand_total"] = sprintf("%0.2f",$grand_total);
 
 }
 

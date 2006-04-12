@@ -108,15 +108,15 @@ $where[$sortTransactions] = array(" <= ",$statement_end_date);
 
 // Add pending transactions filter to get pending amount balance
 $where["status"] = "pending";
-$TPL["pending_amount"] = number_format($tf->get_balance(array("status"=>"pending")), 2);
+$TPL["pending_amount"] = sprintf("%0.2f",$tf->get_balance(array("status"=>"pending")));
 
 // Determine opening balance
 $opening_balance_where[$sortTransactions] = array(" < ", $statement_start_date);
 $opening_balance = $tf->get_balance($opening_balance_where);
-$TPL["opening_balance"] = number_format($opening_balance, 2);
+$TPL["opening_balance"] = sprintf("%0.2f",$opening_balance);
 
 // Overall balance
-$TPL["balance"] = number_format($tf->get_balance(), 2);
+$TPL["balance"] = sprintf("%0.2f",$tf->get_balance());
 
 // Setup the info for the href linking to the alternate sort
 if ($sortTransactions == "lastModified") {
@@ -216,17 +216,17 @@ function show_transaction($template_name) {
     $TPL["amount_negative"] = "";
  
     if ($transaction->get_value("amount") > 0) {
-      $TPL["amount_positive"] = number_format($transaction->get_value("amount"), 2);
-      $TPL["total_amount_positive"] += $transaction->get_value("amount");
+      $TPL["amount_positive"] = sprintf("%0.2f",$transaction->get_value("amount"));
+      $TPL["total_amount_positive"] += sprintf("%0.2f",$transaction->get_value("amount"));
     } else {
-      $TPL["amount_negative"] = number_format($transaction->get_value("amount"), 2);
+      $TPL["amount_negative"] = sprintf("%0.2f",$transaction->get_value("amount"));
       $TPL["total_amount_negative"] += $transaction->get_value("amount");
     }
 
 
-    $TPL["total_amount_positive"] = number_format($TPL["total_amount_positive"], 2);
-    $TPL["total_amount_negative"] = number_format($TPL["total_amount_negative"], 2);
-    $TPL["running_balance"] = number_format($running_balance, 2);
+    $TPL["total_amount_positive"] = sprintf("%0.2f",$TPL["total_amount_positive"]);
+    $TPL["total_amount_negative"] = sprintf("%0.2f",$TPL["total_amount_negative"]);
+    $TPL["running_balance"] = sprintf("%0.2f",$running_balance);
     $TPL["closing_balance"] = $TPL["running_balance"];
 
     $TPL["lastModified"] = get_mysql_date_stamp($TPL["lastModified"]);
