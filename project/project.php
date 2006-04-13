@@ -63,7 +63,7 @@ $grand_total = 0;
 
     $db2 = new db_alloc;
 
-    if (isset($projectID)) {
+    if ($projectID) {
 
       $query = sprintf("SELECT timeSheet.*, username
                           FROM timeSheet
