@@ -127,7 +127,7 @@ if (!$search) {
           $commentText and $details.= "<b>Modification History:</b> ".htmlentities($commentText)."<br>\n";
         }
 
-        $TPL["search_results"] .= "<b><a href=\"".$TPl["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</b></a><br>".$details."<br>";
+        $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</b></a><br>".$details."<br>";
       }
     }
   }
