@@ -36,17 +36,18 @@ require_once("alloc.inc");
 
   function list_attachments($template_name) {
     global $TPL, $projectID;
+    if ($projectID) {
+      if (is_dir($TPL["url_alloc_projectDocs_dir"].$projectID)) {
+        $handle = opendir($TPL["url_alloc_projectDocs_dir"].$projectID);
 
-    if (is_dir($TPL["url_alloc_projectDocs_dir"].$projectID)) {
-      $handle = opendir($TPL["url_alloc_projectDocs_dir"].$projectID);
+        while (false !== ($file = readdir($handle))) {
 
-      while (false !== ($file = readdir($handle))) {
-
-        if ($file != "." && $file != "..") {
-          $size = filesize($TPL["url_alloc_projectDocs_dir"].$projectID."/".$file);
-          $TPL["filename"] = "<a href=\"".$TPL["url_alloc_projectDoc"]."projectID=".$projectID."&file=".urlencode($file)."\">".$file."</a>";
-          $TPL["size"] = sprintf("%dk",$size/1024);
-          include_template($template_name);
+          if ($file != "." && $file != "..") {
+            $size = filesize($TPL["url_alloc_projectDocs_dir"].$projectID."/".$file);
+            $TPL["filename"] = "<a href=\"".$TPL["url_alloc_projectDoc"]."projectID=".$projectID."&file=".urlencode($file)."\">".$file."</a>";
+            $TPL["size"] = sprintf("%dk",$size/1024);
+            include_template($template_name);
+          }
         }
       }
     }
