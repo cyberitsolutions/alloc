@@ -37,9 +37,10 @@ function updateProjectList(number) {
                 <td>Project</td>
                 <td>Task Type</td>
                 <td>Task Status</td>
-                <td>Assigned To</td>
+                <td>Assigned To</td> 
+                <td>&nbsp;</td>
                 <!-- <td rowspan="2">{:help_button taskSummaryFilter}</td> -->
-                <td></td>
+                <td>&nbsp;</td>
               </tr>
 
               <tr>
@@ -56,9 +57,8 @@ function updateProjectList(number) {
                 <td valign="top" rowspan="2"><div id="projectListDropdown">{projectOptions}</div></td>
                 <td valign="top" rowspan="2"><select name="taskTypeID[]" size="6" multiple="true">{taskTypeOptions}</select></td>
                 <td valign="top"><select name="taskStatus" size="1">{taskStatusOptions}</select></td>
-                <td valign="top"><select name="personID">{personOptions}</select>
-                </td>
-                <td valign="top"><input type="submit" name="applyFilter" value="Filter"></td>
+                <td valign="top"><select name="personID">{personOptions}</select></td>  
+                <td valign="top" colspan="2"><input type="checkbox" name="personIDonly"{personIDonly_checked}>Only</td>
               </tr>
               <tr>
                 <td colspan="3">
@@ -94,6 +94,7 @@ function updateProjectList(number) {
                   </table>
 
                 </td>
+                <td valign="bottom" align="right"><input type="submit" name="applyFilter" value="Filter"></td>
               </tr>
 
             </table>
