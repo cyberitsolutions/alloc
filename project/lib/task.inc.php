@@ -88,7 +88,8 @@ class task extends db_entity {
         $task->get_value("closerID")             || $task->set_value("closerID", $current_user->get_id());
         $task->get_value("dateClosed")           || $task->set_value("dateClosed",date("Y-m-d H:i:s"));           
         $task->save();
-        $msg[] = $task->email_task_closed();
+        $m = $task->email_task_closed();
+        $m and $msg[] = $m;
         $msg = array_merge($msg,$task->close_off_children_recursive());
       }
     }
