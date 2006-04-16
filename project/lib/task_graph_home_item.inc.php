@@ -127,14 +127,14 @@ class task_graph_home_item extends home_item {
 
           if ($db->f("dateTargetStart") == $date) {
             ${"to_be_started_".$day} = "<br><br>To be started:";
-            $TPL["calendar_".$day."_started"].= '<tr><td valign=\"top\">*</td><td width="99%"><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
+            $TPL["calendar_".$day."_started"].= '<tr><td><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
             $TPL["calendar_".$day."_started"].= $db->f("taskName")."</a></td></tr>";
           }
 
           if ($db->f("dateTargetCompletion") == $date) {
             $TPL["calendar_".$day."_started"] or $br = "<br>";
             ${"to_be_completed_".$day} = $br."<br>To be completed:";
-            $TPL["calendar_".$day."_completed"].= '<tr><td valign=\"top\">*</td><td width="99%"><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
+            $TPL["calendar_".$day."_completed"].= '<tr><td><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
             $TPL["calendar_".$day."_completed"].= $db->f("taskName")."</a></td></tr>";
           }
 
@@ -154,7 +154,7 @@ class task_graph_home_item extends home_item {
 	        if ($reminder->is_alive()) {
             if (date("Y-m-d", strtotime($db->f("reminderTime"))) == $date) {
               ${"reminders_".$day} = "<br><br>Reminders:";
-              $TPL["calendar_".$day."_reminders"].= '<tr><td valign=\"top\">*</td><td width="99%"><a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$db->f("reminderID").'">';
+              $TPL["calendar_".$day."_reminders"].= '<tr><td><a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$db->f("reminderID").'">';
               $TPL["calendar_".$day."_reminders"].= $db->f("reminderSubject")."</a></td></tr>";
             }
           }

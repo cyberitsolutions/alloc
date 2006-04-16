@@ -162,10 +162,12 @@ if (isset($personID)) {
   $person->set_id($personID);
   $person->select();
 }
+    
 
 if (isset($personExpertiseItem_add) || isset($personExpertiseItem_save) || isset($personExpertiseItem_delete)) {
   $skillProficiencys = new skillProficiencys;
   $skillProficiencys->read_globals();
+
 
   if ($skillID != null) {
     if (isset($personExpertiseItem_delete)) {
@@ -196,7 +198,9 @@ if (isset($personExpertiseItem_add) || isset($personExpertiseItem_save) || isset
 
 if (isset($save)) {
   $person->read_globals();
+
   if ($password1 == $password2) {
+
     if ($person->can_write_field("perms")) {
       if (is_array($perm_select)) {
         $person->set_value("perms", implode(",", $perm_select).",employee");
@@ -216,16 +220,20 @@ if (isset($save)) {
     } else {
       $person->set_value('password', addslashes(crypt(trim($password1), trim($current_user->get_value('password')))));
     }
+
     $person->save();
-    $person->select();          // This is necessary to read any fields not written back from the original record
+    $personID = $person->get_id();
   } else {
-    echo "Please re-type the passwords<br>";
+    $TPL["message"][] = "Please re-type the passwords";
   }
 } else if (isset($delete)) {
   $person->delete();
-  header("location: ".$TPL["url_alloc_personList"]);
+  header("Location: ".$TPL["url_alloc_personList"]);
 }
 
+$person = new person;
+$person->set_id($personID);
+$person->select();
 $person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
 
 if ($person->get_id()) {

@@ -79,20 +79,6 @@ function get_option($label, $value = "{label}", $selected = false) {
   return $rtn;
 }
 
-function get_url_path() {
-  global $SERVER_NAME, $SCRIPT_NAME;
-
-  eregi("^(.*[/\\])[^/\\]*$", $SCRIPT_NAME, $matches);
-  $script_dir = $matches[1];
-  // $url_path = "http://$SERVER_NAME$script_dir";
-  $url_path = $script_dir;
-
-#$script_file = ereg_replace("^(.*)/([^/\\]*)$", "\\2", $SCRIPT_FILENAME);
-#$script_file = $match[0];
-#$url_path = eregi_replace($script_file, "", $SCRIPT_NAME);
-
-  return $url_path;
-}
 
 function show_header() {
   include_template(ALLOC_MOD_DIR."/shared/templates/headerS.tpl");
@@ -111,7 +97,7 @@ function get_customizedFont_array() {
   return array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"4", "1"=>5, "2"=>6, "3"=>7, "4"=>8, "5"=>9, "6"=>10);
 }
 function get_customizedTheme_array() {
-  return array("Icy", "Darko", "Aneurism", "Clove", "None");
+  return array("Icy", "Darko", "Aneurism", "Clove", "Janet", "None");
 }
 
 

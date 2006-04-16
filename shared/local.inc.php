@@ -36,6 +36,7 @@ function page_close() {
   global $current_user;
   if (is_object($current_user) && $current_user->get_id()) {
     if (is_array($current_user->prefs)) {
+      $current_user->select();
       $arr = serialize($current_user->prefs);
       $current_user->set_value("sessData",$arr);
     }

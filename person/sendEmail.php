@@ -23,22 +23,23 @@
 
 define("NO_AUTH",true);
 define("SENDMAIL", true);         // shoot out emails 
-
 require_once("alloc.inc");
 
 
-if (date(D) == "Sat" || date(D) == "Sun") {
+if (date("D") == "Sat" || date("D") == "Sun") {
   die("IT'S THE WEEKEND - GET OUTTA HERE");
 }
+
 // stats
-$stats = new stats;
+#$stats = new stats;
+#die("nowhere");
 
 
 // Do announcements ONCE up here.
 $announcement = person::get_announcements_for_email();
 $db = new db_alloc;
 $db->query("SELECT * FROM person");
-// where username=\"clancy\""); // or username=\"ashridah\"");
+// WHERE username='alla'"); // or username=\"ashridah\"");
 
 
 while ($db->next_record()) {
@@ -73,28 +74,30 @@ while ($db->next_record()) {
     $tasks = $person->get_tasks_for_email();
     $msg.= $tasks;
 
-    $msg.= $stats->get_stats_for_email($person->get_value("emailFormat"));
+    #$msg.= $stats->get_stats_for_email($person->get_value("emailFormat"));
 
-    $headers.= "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
-    $subject = "AllocPSA Daily Digest";
+    $headers.= "From: AllocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
+    $subject = "Daily Digest";
     $to = $person->get_value("emailAddress");
+    if ($person->get_value("firstName") && $person->get_value("surname") && $to) {
+      $to = $person->get_value("firstName")." ".$person->get_value("surname")." <".$to.">";  
+    }
 
-
-    // FINISH OFF HTML - MUSTN'T SEND BROKEN HTML 
+    // Finish off HTML 
     if ($person->get_value("emailFormat") == "html") {
       $msg.= "</body></html>";
     }
 
+    if ($tasks != "" && SENDMAIL == true && $to) {
+      $email = new alloc_email;
 
-    if ($tasks != "" && SENDMAIL == true) {
-      // They have Tasks and we are not debugging!
-      mail($to, $subject, stripslashes($msg), $headers);
-      echo "Email sent to ".$person->get_value("username")."\r\n";
+      if ($email->send($to, $subject, stripslashes($msg), $headers)) {
+        echo "Email sent to: ".$person->get_value("username")."\r\n";
+      } else {
+        echo "NOT sent ".$subject." to: ".$person->get_value("username");
+      }
     } else {
       echo $msg;
-      // echo "No Tasks or SENDMAIL was false\n";
-      // echo "Email NOT sent to " . $person->get_value("username") . "\n";
-      // echo "START MSG->" . $msg . "<-END MSG\n"; 
     }
   } else {
     echo "NO EMAIL ADDRESS FOR: ".$person->get_value("username")."\n";

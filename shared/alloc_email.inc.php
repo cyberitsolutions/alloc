@@ -71,11 +71,15 @@ class alloc_email {
     $this->header or $this->header     = "From: AllocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
     $this->subject                     = "AllocPSA ".$this->subject;
 
-    if ($this->is_valid_to_address() && $this->is_valid_url()) {
+    if (!$this->is_valid_to_address()) {
+      $this->log("Not sending: '".stripslashes($this->subject)."' to ".$this->to_address." -> To Address is bad!");
+
+    } else if (!$this->is_valid_url()) {
+      $this->log("Not sending: '".stripslashes($this->subject)."' to ".$this->to_address." -> Invalid url. SERVER_NAME: ".$_SERVER["SERVER_NAME"]." and SCRIPT_FILENAME: ".$_SERVER["SCRIPT_FILENAME"]);
+
+    } else {
       $this->log("Sending: ".$this->subject." to ".$this->to_address);
       return mail($this->to_address, stripslashes($this->subject), stripslashes($this->message), $this->header);
-    } else {
-      $this->log("Not sending: '".stripslashes($this->subject)."' to ".$this->to_address);
     }
   }
 

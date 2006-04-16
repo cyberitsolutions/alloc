@@ -555,9 +555,18 @@ class task extends db_entity {
   }
 
   function get_url() {
-    global $sess;
-    $url = SCRIPT_PATH."project/task.php?taskID=".$this->get_id();
-    $url = $sess->email_url($url);
+    $sess = Session::GetSession();
+    $url = "project/task.php?taskID=".$this->get_id();
+
+    if ($sess->Started()) {
+      $url = $sess->url(SCRIPT_PATH.$url);
+
+    // This for urls that are emailed
+    } else {
+      static $prefix;
+      $prefix or $prefix = config::get_config_item("allocURL");
+      $url = $prefix.$url;
+    }
     return $url;
   }
 
@@ -571,10 +580,17 @@ class task extends db_entity {
 
     // Task level filtering
     if ($_FORM["taskStatus"]) {
+      
+      $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+      if (date("D") == "Mon") {
+        $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")));
+      } 
 
       $taskStatusFilter = array("completed"=>"(task.dateActualCompletion IS NOT NULL AND task.dateActualCompletion != '')"
                                ,"not_completed"=>"(task.dateActualCompletion IS NULL OR task.dateActualCompletion = '')"
                                ,"in_progress"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') AND (task.dateActualStart IS NOT NULL AND task.dateActualStart != ''))"
+                               ,"due_today"=>"(task.dateActualCompletion IS NULL AND task.dateTargetCompletion = '".date("Y-m-d")."')"
+                               ,"new"=>"(task.dateActualCompletion IS NULL AND task.dateCreated >= '".$past."')"
                                ,"overdue"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') 
                                              AND 
                                              (task.dateTargetCompletion IS NOT NULL AND task.dateTargetCompletion != '' AND '".date("Y-m-d")."' > task.dateTargetCompletion))"
@@ -614,6 +630,7 @@ class task extends db_entity {
     $filter = task::get_task_list_filter($_FORM);
 
     $_FORM["limit"] and $limit = sprintf("limit %d",$_FORM["limit"]);
+    $_FORM["return"] or $_FORM["return"] = "html";
 
     if ($_FORM["showDates"]) {
       $_FORM["showDate1"] = true;
@@ -701,26 +718,51 @@ class task extends db_entity {
              ".$filter." ORDER BY priorityFactor ".$limit;
       $db = new db_alloc;
       $db->query($q);
-      while ($task = $db->next_record()) {
+      while ($row = $db->next_record()) {
         $print = true;
-        $task["project_name"] = $task["projectShortName"]  or  $task["project_name"] = $task["projectName"];
+        $row["project_name"] = $row["projectShortName"]  or  $row["project_name"] = $row["projectName"];
         $t = new task;
         $t->read_db_record($db);
-        $task["taskLink"] = $t->get_task_link();
-        $task["taskStatus"] = $t->get_status();
-        $summary.= task::get_task_list_tr($task,$_FORM);
-        $_FORM["return"] == "objects" and $tasks[$t->get_id()] = $t;
+        $row["taskURL"] = $t->get_url();
+        $row["taskName"] = $t->get_task_name();
+        $row["taskLink"] = $t->get_task_link();
+        $row["taskStatus"] = $t->get_status();
+
+        if ($_FORM["return"] == "objects") {
+          $tasks[$t->get_id()] = $t; 
+
+        } else if ($_FORM["return"] == "text"){
+          $summary.= task::get_task_list_tr_text($row,$_FORM);
+
+        } else {
+          $summary.= task::get_task_list_tr($row,$_FORM);
+        }
       }
     } 
 
     if ($_FORM["taskView"] == "prioritised" && $_FORM["return"] == "objects") {
       return $tasks;
-    } else if ($print) {
+
+    } else if ($print && $_FORM["return"] == "html") {
       return "<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" width=\"100%\">".$summary."</table>";
-    } else {
+
+    } else if ($print && $_FORM["return"] == "text") {
+      return $summary;
+
+    } else if (!$print && $_FORM["return"] == "html") {
       return "<table align=\"center\"><tr><td colspan=\"10\" align=\"center\"><b>No Tasks Found</b></td></tr></table>";
     } 
   } 
+
+  function get_task_list_tr_text($task,$_FORM) {
+    $summary[] = "";
+    $summary[] = "";
+    $summary[] = "Project: ".$task["project_name"];
+    $summary[] = "Task: ".$task["taskName"];
+    $summary[] = $task["taskStatus"];
+    $summary[] = $task["taskURL"];
+    return implode("\n",$summary);
+  }
 
   function get_task_list_tr($task,$_FORM) {
 
@@ -765,7 +807,7 @@ class task extends db_entity {
 
     $summary = "\n".implode("\n",$summary);
     return $summary;
-  }
+  } 
 
   function get_task_children($filter="",$padding=0) {
     if (is_array($filter) && count($filter)) {
@@ -781,8 +823,10 @@ class task extends db_entity {
       $task = new task;
       $task->read_db_record($db);
 
-      $row["taskStatus"] = $task->get_status();
+      $row["taskURL"] = $task->get_url();
+      $row["taskName"] = $task->get_task_name();
       $row["taskLink"] = $task->get_task_link();
+      $row["taskStatus"] = $task->get_status();
       $row["padding"] = $padding;
       $row["object"] = $task;
       $tasks[$row["taskID"]] = $row;
