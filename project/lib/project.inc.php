@@ -60,8 +60,19 @@ class project extends db_entity
   }
 
   function get_url() {
-    global $sess;
-    return $sess->email_url(get_url_path()."project.php?projectID=".$this->get_id());
+    $sess = Session::GetSession();
+    $url = "project/project.php?projectID=".$this->get_id();
+
+    if ($sess->Started()) {
+      $url = $sess->url(SCRIPT_PATH.$url);
+
+    // This for urls that are emailed
+    } else {
+      static $prefix;
+      $prefix or $prefix = config::get_config_item("allocURL");
+      $url = $prefix.$url;
+    }
+    return $url;
   }
 
   function get_task_children($filter="",$padding=0) {

@@ -27,8 +27,8 @@ table.toolbar a:visited { color:(TABLE_TOOLBAR_A_COLOR); font-weight:bolder;    
 table.toolbar a:hover   { color:(TABLE_TOOLBAR_A_HOVER_COLOR); font-weight:bolder;  }
 table.toolbar a.active  { color:(TABLE_TOOLBAR_A_ACTIVE_COLOR); }
 table.toolbar th        { color:(TABLE_TOOLBAR_TH_COLOR); padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER); font-size:(TABLE_TOOLBAR_TH_FONT_SIZE)px; }
-table.toolbar td        { font-size:(TABLE_TOOLBAR_TD_FONT_SIZE)px; }
-td.logout               { text-align:right; padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER);}
+table.toolbar td        { font-size:(TABLE_TOOLBAR_TD_FONT_SIZE)px; (TABLE_TOOLBAR_TD_BACKGROUND)}
+table.toolbar th.logout { text-align:right; padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER); font-size:(TABLE_TOOLBAR_TD_FONT_SIZE)px;}
 
 table.calendar th       { background-color:(TABLE_CALENDAR_TH_BACKGROUND_COLOR); color:(TABLE_CALENDAR_TH_COLOR); border:0px; font-weight:normal; font-size:(TABLE_CALENDAR_TH_FONT_SIZE)px; }
 table.calendar td       { background-color:(TR_ODD_BACKGROUND_COLOR); }

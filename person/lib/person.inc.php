@@ -37,8 +37,8 @@ class person extends db_entity
   function person() {
     $this->db_entity();         // Call constructor of parent class
     $this->key_field = new db_text_field("personID");
-    $this->data_fields = array("username"=>new db_text_field("username", "User name", "")
-                               , "lastLoginDate"=>new db_text_field("lastLoginDate", "Last login date", "".array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
+    $this->data_fields = array("username"=>new db_text_field("username")
+                               , "lastLoginDate"=>new db_text_field("lastLoginDate", "Last login date", "",array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
                                , "password"=>new db_text_field("password", "Password", "", array("allow_null"=>false, "read_perm_name"=>PERM_PERSON_READ_DETAILS))
                                , "perms"=>new db_text_field("perms", "Permissions", "", array("write_perm_name"=>PERM_PERSON_WRITE_ROLES))
                                , "emailAddress"=>new db_text_field("emailAddress", "Email address", "")
@@ -62,80 +62,23 @@ class person extends db_entity
     $this->permissions[PERM_PERSON_SEND_EMAIL] = "Send mail-outs";
   }
 
-
-/*
-  function get_task_summary($existing_filter = "", $format = "html", $task_options = "", $applyDateRegex = true) {
-    if ($existing_filter == "") {
-      $filter = new task_filter();
-    } else {
-      $filter = $existing_filter;
-    }
-
-    $summary = "";
-    $project_persons = $this->get_project_persons();
-
-    reset($project_persons);
-    while (list(, $project_person) = each($project_persons)) {
-      $project = $project_person->get_foreign_object("project");
-
-      if ($applyDateRegex && !$project_person->date_regex_matches()) {
-        continue;
-      }
-
-      if ($project_person->get_value("emailType") == "Assigned Tasks") {
-        $filter->set_element("person", $this);
-      } else if ($project_person->get_value("emailType") == "All Tasks") {
-        $filter->set_element("person", "");
-      } else if ($project_person->get_value("emailType") == "None") {
-        continue;
-      } else {
-        echo "Unexpected emailType value: ".$project_person->get_value("emailType")."\n";
-      }
-      $project_summary = $project->get_task_summary($filter, $task_options, false, $format, $this->get_id());
-      if ($project_summary == "" && $project_person->get_value("emailEmptyTaskList")) {
-        $project_summary = "No matching tasks\n";
-      }
-
-      if ($project_summary == "") {
-        continue;
-      }
-
-      if ($format == "html") {
-        $summary.= "<a href=\"".$project->get_url()."\"><strong>".$project->get_value("projectName")."</strong></a><br>\n";
-      } else {
-        $summary.= strtoupper($project->get_value("projectName"))." (".$project->get_url().")\n";
-      }
-      $summary.= $project_summary;
-      if ($format == "html") {
-        $summary.= "<br><br>";
-      } else {
-        $summary.= "\n";
-      }
-    }
-
-    return $summary;
-  }
-*/
-
-
-
   function get_tasks_for_email() {
     global $person, $db;
 
     $format = $this->get_value("emailFormat");
-    $task_filter = new task_filter();
-    $task_filter->set_element("person", $person);
-    $task_filter->set_element("in_progress", true);
-    $task_filter->set_element("completed", false);
-    $task_filter->set_element("project", true);
-    $task_list = new prioritised_task_list($task_filter, 3);
-    $summary = $task_list->get_task_summary(array("show_project"=>true, "status_type"=>"brief", "show_links"=>true), false, $format);
-    if ($summary) {
 
+    $options["limit"] = 3;
+    $options["personIDonly"] = $person->get_id();
+    $options["taskView"] = "prioritised";
+    $options["return"] = $format;
+    $options["taskStatus"] = "in_progress";
+    $summary = task::get_task_list($options);
+
+    if ($summary) {
       if ($format == "html") {
-        $topThree = "<br><br><h4>TOP THREE TASKS</h4>";
+        $topThree = "<br><br><h4>Top Three Tasks</h4>";
       } else {
-        $topThree = "\nTOP THREE TASKS";
+        $topThree = "\nTop Three Tasks";
       }
       $topThree.= $summary;
 
@@ -144,23 +87,16 @@ class person extends db_entity
     }
 
     unset($summary);
-    unset($task_filter);
-    unset($task_list);
 
-    $task_filter = new task_filter();
-    $task_filter->set_element("person", $person);
-    $task_filter->set_element("in_progress", true);
-    $task_filter->set_element("completed", false);
-    $task_filter->set_element("project", true);
-    $task_filter->set_element("due_today", true);
-    $task_list = new task_list($task_filter);
-    $summary = $task_list->get_task_summary(array("show_project"=>true, "status_type"=>"brief", "show_links"=>true), false, $format);
+    unset($options["limit"]);
+    $options["taskStatus"] = "due_today";
+    $summary = task::get_task_list($options);
+
     if ($summary) {
-
       if ($format == "html") {
-        $dueToday = "<br><br><h4>TASKS DUE TODAY</h4>";
+        $dueToday = "<br><br><h4>Tasks Due Today</h4>";
       } else {
-        $dueToday = "\n\n- - - - - - - - - -\n\nTASKS DUE TODAY";
+        $dueToday = "\n\n- - - - - - - - - -\n\nTasks Due Today";
       }
       $dueToday.= $summary;
 
@@ -169,24 +105,16 @@ class person extends db_entity
     }
 
     unset($summary);
-    unset($task_filter);
-    unset($task_list);
 
+    unset($options["limit"]);
+    $options["taskStatus"] = "new";
+    $summary = task::get_task_list($options);
 
-    $task_filter = new task_filter();
-    $task_filter->set_element("person", $person);
-    $task_filter->set_element("in_progress", true);
-    $task_filter->set_element("completed", false);
-    $task_filter->set_element("project", true);
-    $task_filter->set_element("new", true);
-    $task_list = new task_list($task_filter);
-    $summary = $task_list->get_task_summary(array("show_project"=>true, "status_type"=>"brief", "show_links"=>true), false, $format);
     if ($summary) {
-
       if ($format == "html") {
-        $newTasks = "<br><br><h4>NEW TASKS</h4>";
+        $newTasks = "<br><br><h4>New Tasks</h4>";
       } else {
-        $newTasks = "\n\n- - - - - - - - - -\n\nNEW TASKS";
+        $newTasks = "\n\n- - - - - - - - - -\n\nNew Tasks";
       }
 
       $newTasks.= $summary;
@@ -201,7 +129,6 @@ class person extends db_entity
 
   }
 
-
   function get_announcements_for_email() {
     $today = mktime(0, 0, 0, date(m), date(d), date(Y));
     $db = new db_alloc;
@@ -210,24 +137,18 @@ class person extends db_entity
     while ($db->next_record()) {
 
       if ($today >= strtotime($db->f("displayFromDate")) && $today <= strtotime($db->f("displayToDate"))) {
-        $announcement["heading"] = "ANNOUNCEMENT\n".$db->f("heading");
+        $announcement["heading"] = "Announcement\n".$db->f("heading");
         $announcement["body"] = $db->f("body");
       } else {
         $announcement = false;
       }
     }
-    // Return it in an array so that getting txt or html version can be decided in sendEmail.php 
-    // rather than hitting this function 60 times (and thus DB). 
     return $announcement;
   }
 
-
-
-
-
-  // Return an array of project_person objects that this user is associated with
-  // $extra_condition: A SQL expression added to the WHERE clause of the query
   function get_project_persons($extra_condition = "") {
+    // Return an array of project_person objects that this user is associated with
+    // $extra_condition: A SQL expression added to the WHERE clause of the query
     $query = "SELECT * FROM projectPerson WHERE projectPerson.personID=".$this->get_id();
     if ($extra_condition) {
       $query.= " AND (".$extra_condition.")";
@@ -256,8 +177,8 @@ class person extends db_entity
     }
   }
 
-  // Convenience function to check if the person is an employee
   function is_employee() {
+    // Function to check if the person is an employee
     global $current_user;
     return true;
     $permissions = explode(",", $current_user->get_value("perms"));
@@ -269,15 +190,15 @@ class person extends db_entity
     }
   }
 
-  // Ensure the current user is an employee
   function check_employee() {
+    // Ensure the current user is an employee
     if (!$this->is_employee()) {
       die("You must be an employee to access this function");
     }
   }
 
-  // Return a string of skills with a given proficiency
   function get_skills($proficiency) {
+    // Return a string of skills with a given proficiency
     $query = "SELECT * FROM skillProficiencys LEFT JOIN skillList on skillProficiencys.skillID=skillList.skillID";
     $query.= sprintf(" WHERE personID=%d AND skillProficiency='%s' ORDER BY skillName", $this->get_id(), $proficiency);
 

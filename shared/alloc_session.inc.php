@@ -155,28 +155,6 @@ class Session {
     $this->Put("session_mode",$this->mode);
   }
 
-
-  // Add a session ID to a URL, unless we have been called from the automatic email cron job
-  function email_url($url) {
-
-    // This is a bit of a hack.  When we are sending emails we don't want to put session ID's on the URL.
-    // However, we have a session set when sending email, but no authentication has occurred
-    // So if we don't have an $current_user object we add a session ID
-    $sess = Session::GetSession();
-
-    global  $SERVER_NAME;
-    if ($sess->Started()) { 
-      $url = $this->url($url);
-  
-    } else {
-      // but we do want the servername to be added when sending emails as there is no host
-      // to attach the relative address to
-      $url = "http://$SERVER_NAME$url";
-    } 
-    return $url;
-  } 
-
-
   // * * * * * * * * * * * * * * * * *//
   //                                  //
   //         Private Methods          //

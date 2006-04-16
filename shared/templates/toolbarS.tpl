@@ -1,7 +1,7 @@
 <table class="toolbar" width="100%" cellpadding="0" border="0" cellspacing="0" align="center">
   <tr>
     <th><nobr>{ALLOC_TITLE}&nbsp;{ALLOC_VERSION}</nobr></th>
-    <td class="logout">{toolbar_item11}&nbsp;</td>
+    <th class="logout">{toolbar_item11}&nbsp;</th>
   </tr>
   <tr>
     <td>

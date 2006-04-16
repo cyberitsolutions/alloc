@@ -8,5 +8,5 @@
 PREFIX=`dirname $0`"/../logs/"
 
 # wget the php script
-wget -q -O ${PREFIX}sendEmail_log.new -P ${PREFIX} http://alloc/person/sendEmail.php
+wget -q -O ${PREFIX}sendEmail.log -P ${PREFIX} http://alloc/person/sendEmail.php
 

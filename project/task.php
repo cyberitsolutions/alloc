@@ -258,7 +258,7 @@ $q = sprintf("SELECT clientID FROM project LEFT JOIN task ON task.projectID = pr
 $db->query($q);
 $db->next_record();
 if ($db->f("clientID")) {
-  $TPL["new_client_contact_link"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$db->f("clientID")."\">";
+  $TPL["new_client_contact_link"] = "<br/><br/><a href=\"".$TPL["url_alloc_client"]."clientID=".$db->f("clientID")."\">";
   $TPL["new_client_contact_link"].= "New Client Contact</a>";
 }
 

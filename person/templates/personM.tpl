@@ -1,14 +1,14 @@
 {:show_header}
-  {:show_toolbar}
+{:show_toolbar}
 
 {table_box}
-<tr>
-  <th>Person Details</th>
-</tr>
-<tr>
-  <td>
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    <form action="{url_alloc_person}" method=post>
+  <tr>
+    <th>Person Details</th>
+  </tr>
+  <tr>
+    <td>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <form action="{url_alloc_person}" method="post">
       <input type="hidden" name="personID" value="{person_personID}">
       <table border="0" cellspacing=0 cellpadding=5>
         <tr>
@@ -36,16 +36,16 @@
           <td>{person_lastLoginDate}</td>
         </tr>
         <tr>
+          <td>Preferred Payment TF</td>
+          <td><select name="preferred_tfID"><option value="">&nbsp;</option>{preferred_tfID_options}</select></td>
+        </tr>       
+        <tr>
           <td>Email Address</td>
           <td><input type="text" name="emailAddress" value="{person_emailAddress}"></td>
         </tr>
         <tr>
           <td>Email Format</td>
           <td><select name="emailFormat">{email_format_options}</select></td>
-        </tr>
-        <tr>
-          <td>Preferred Payment TF</td>
-          <td><select name="preferred_tfID"><option value="">&nbsp;</option>{preferred_tfID_options}</select></td>
         </tr>
         <tr>
 		      <td>Daily Email</td>
@@ -70,23 +70,23 @@
             {:show_action_buttons}
           </td>
         </tr>
-        </form>
-
-      </td></tr>
       </table>
-      <br />
-    </table>
-  {:include_employee_skill_fields}
+      </form>
+    </td>
+  </tr>
+</table>
+
+{:include_employee_skill_fields}
   
-  {table_box}
-      <tr>
-        <th colspan="2">Absence Forms</th>
-        <th class="right"><a href="{absence_url}">New absence form</a></th>
-      </tr>
-      <tr>
-        <td>Start Date</td>
-        <td>End Date</td>
-      </tr>
-      {:show_absence_forms templates/personAbsenceR.tpl}
-    </table>
+{table_box}
+  <tr>
+    <th colspan="2">Absence Forms</th>
+    <th class="right"><a href="{absence_url}">New absence form</a></th>
+  </tr>
+  <tr>
+    <td>Start Date</td>
+    <td>End Date</td>
+  </tr>
+  {:show_absence_forms templates/personAbsenceR.tpl}
+</table>
 {:show_footer}

@@ -3,20 +3,20 @@ body                    { background-color: #ffffff; font-family:arial,helvetica
 a:link                  { color:#003d76; }
 a:visited               { color:#003d76; }
 a:hover                 { color:#688db0; }
-h1                      { font-weight:bold; font-size:13px; }
-h2                      { font-weight:bold; font-size:13px; }
-h3                      { font-weight:bold; font-size:12px; }
+h1                      { font-weight:bold; font-size:15px; }
+h2                      { font-weight:bold; font-size:15px; }
+h3                      { font-weight:bold; font-size:14px; }
 form                    { display:inline; }
 div.message             { border:1px solid #81a2c1; padding:10px; margin-bottom:7px; background-color:#e4e4e4; }
-.bad                    { color:red; font-weight:bold; font-size:10px; }
-.good                   { color:green; font-weight:bold; font-size:10px; }
-.help                   { color:black;  font-weight:bold; font-size:10px; }
+.bad                    { color:red; font-weight:bold; font-size:12px; }
+.good                   { color:green; font-weight:bold; font-size:12px; }
+.help                   { color:black;  font-weight:bold; font-size:12px; }
 
 table.box               { border:1px solid #81a2c1; background-color:#f4f4f4; margin-bottom:7px;} 
-table.box th            { border-bottom:1px solid #81a2c1;  background: url(../images/bg_classic.jpg) repeat-x; color:#003d76; font-size:10px; } 
-table.box th a:link     { font-weight:bold; color:#003d76; font-size:10px; }
-table.box th a:visited  { font-weight:bold; color:#003d76; font-size:10px; }
-table.box th a:hover    { font-weight:bold; color:#688db0; font-size:10px; }
+table.box th            { border-bottom:1px solid #81a2c1;  background: url(../images/bg_janet.jpg) repeat-x; color:#ffffff; font-size:12px; } 
+table.box th a:link     { font-weight:bold; color:#003d76; font-size:12px; }
+table.box th a:visited  { font-weight:bold; color:#003d76; font-size:12px; }
+table.box th a:hover    { font-weight:bold; color:#688db0; font-size:12px; }
 table.box th.right      { text-align:right; } 
 table.box th.center     { text-align:center; } 
 table.box th.right table{ width:40%; } 
@@ -26,11 +26,11 @@ table.toolbar a:link    { color:#003d76; font-weight:bolder;        }
 table.toolbar a:visited { color:#003d76; font-weight:bolder;        }
 table.toolbar a:hover   { color:#688db0; font-weight:bolder;  }
 table.toolbar a.active  { color:#688db0; }
-table.toolbar th        { color:#003d76; padding:3px 2px; font-weight:bold; background: url(../images/bg_classic.jpg) repeat-x; border-bottom:1px solid #81a2c1; font-size:14px; }
-table.toolbar td        { font-size:10px; }
-table.toolbar th.logout { text-align:right; padding:3px 2px; font-weight:bold; background: url(../images/bg_classic.jpg) repeat-x; border-bottom:1px solid #81a2c1; font-size:10px;}
+table.toolbar th        { color:#ffffff; padding:3px 2px; font-weight:bold; background: url(../images/bg_janet.jpg) repeat-x; border-bottom:1px solid #81a2c1; font-size:16px; }
+table.toolbar td        { font-size:12px; }
+table.toolbar th.logout { text-align:right; padding:3px 2px; font-weight:bold; background: url(../images/bg_janet.jpg) repeat-x; border-bottom:1px solid #81a2c1; font-size:12px;}
 
-table.calendar th       { background-color:#d4e0ec; color:#333333; border:0px; font-weight:normal; font-size:9px; }
+table.calendar th       { background-color:#d4e0ec; color:#ffffff; border:0px; font-weight:normal; font-size:11px; }
 table.calendar td       { background-color:#e4e4e4; }
 table.calendar td.today { background-color:#f4f4f4; }
 
@@ -38,7 +38,7 @@ table.filter            { border:3px dashed #d4e0ec; background-color:#f9f9f9; p
 table.filter th         { font-weight:bold; background-color:#f9f9f9; color:#333333; border-bottom:0px solid #ffffff; text-align:center; }
 table.panel             { background-color:#e4e4e4; height:100%; }
 
-td                      { color:#333333; font-size:9px; }
+td                      { color:#333333; font-size:11px; }
 th                      { color:#333333;  text-align:left; }
 tr.odd                  { background-color:#e4e4e4; }
 tr.even                 { background-color:#f4f4f4; }
