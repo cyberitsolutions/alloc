@@ -124,7 +124,9 @@ if (defined("NO_AUTH") && NO_AUTH) {
       }
       unset($n,$v);
     }
-    if ($sess->mode=="cookie") session_start();
+    if ($sess->mode=="cookie") {
+      session_start();
+    }
   }
 }
 
