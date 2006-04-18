@@ -572,9 +572,11 @@ class task extends db_entity {
   }
 
   function get_task_list_filter($_FORM=array()) {
-    // Join them up with commars and add a restrictive sql clause subset
+    // If passed array projectIDs then join them up with commars and put them in an sql subset
     if (is_array($_FORM["projectIDs"]) && count($_FORM["projectIDs"])) {
       $filter["projectIDs"] = "(project.projectID IN (".implode(",",$_FORM["projectIDs"])."))";
+
+    // Else: WHERE 1
     } else {
       $filter["projectIDs"] = "1";
     }
@@ -599,13 +601,16 @@ class task extends db_entity {
       $filter[] = $taskStatusFilter[$_FORM["taskStatus"]];
     }
 
+    // Unset if they've only selected the topmost empty task type
     if (count($_FORM["taskTypeID"])>=1 && !$_FORM["taskTypeID"][0]) {
       unset($_FORM["taskTypeID"][0]);
     }
 
+    // If many create an SQL taskTypeID in (set) 
     if (is_array($_FORM["taskTypeID"]) && count($_FORM["taskTypeID"])) {
       $filter[] = "(taskTypeID in (".implode(",",$_FORM["taskTypeID"])."))";
-
+    
+    // Else if only one taskTypeID
     } else if ($_FORM["taskTypeID"]) {
       $filter[] = sprintf("(taskTypeID = %d)",$_FORM["taskTypeID"]);
     }
@@ -619,14 +624,52 @@ class task extends db_entity {
       $filter[] = sprintf("(personID = %d or personID IS NULL or personID = '')",$_FORM["personID"]);
     } 
 
-
+    // This will be zero if not set. Which is fine since all top level tasks have a parentID of zero
+    // This filter is unset for returning a prioritised list of tasks.
     $filter["parentTaskID"] = sprintf("(parentTaskID = %d)",$_FORM["parentTaskID"]);
 
     return $filter;
   }
 
-  // The definitive method of getting a list of tasks
   function get_task_list($_FORM) {
+
+    /*
+     * This is the definitive method of getting a list of tasks
+     *
+     # Display Options:
+     *   showDates        = Show dates 1-4
+     *   showDate1        = Date Target Start
+     *   showDate2        = Date Target Completion
+     *   showDate3        = Date Actual Start
+     *   showDate4        = Date Actual Completion
+     *   showProject      = The tasks Project (has different layout when prioritised vs byProject)
+     *   showPriority     = The calculated overall priority, then the tasks, then the projects priority
+     *   showStatus       = A colour coded textual description of the status of the task
+     *   showCreator      = The tasks creator
+     *   showAssigned     = The person assigned to the task
+     *   showTimes        = The original estimate and the time billed 
+     *   showPercent      = The percent complete
+     *   showHeader       = A descriptive header row
+     *   showDescription  = The tasks description
+     *
+     *
+     * Filter Options:
+     *   taskView         = byProject | prioritised
+     *   return           = html | text | objects
+     *   limit            = appends an SQL limit (only for prioritised and objects views)
+     *   projectIDs       = an array of projectIDs
+     *   taskStatus       = completed | not_completed | in_progress | due_today | new | overdue
+     *   taskTypeID       = the task type
+     *   personIDonly     = person assigned excluding non-assigned tasks
+     *   personID         = person assigned including non-assigned tasks
+     *   parentTaskID     = id of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0
+     *  
+     *
+     * Other:
+     *   padding          = Initial indentation level (useful for byProject lists)
+     *
+     */
+  
     
     $filter = task::get_task_list_filter($_FORM);
 
