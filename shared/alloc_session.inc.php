@@ -44,7 +44,8 @@ class Session {
     $this->key           = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"];
     $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
-    $this->session_life  = (60*60*24); 
+    #$this->session_life  = (8); 
+    $this->session_life  = (60*60*9); 
     $this->session_data  = $this->UnEncode($this->GetSessionData());
     $this->mode          = $this->Get("session_mode"); 
   }
@@ -53,6 +54,9 @@ class Session {
   function GetSession() {
     static $s;
     is_object($s) or $s = new Session();
+    if ($s->Expired()) {
+      $s->Destroy();
+    }
     return $s;
   } 
 
@@ -76,7 +80,8 @@ class Session {
   function Save() {
     if ($this->Expired()) {
       $this->Destroy();
-    } else if ($this->Started() && $this->SessionHasChanged()) {
+    } else if ($this->Started()) {
+      $this->Put("session_started",mktime());
       $this->db->query("UPDATE sess SET sessData = %s WHERE sessID = %s"
                   , $this->Encode($this->session_data), $this->key);
     }
@@ -121,7 +126,8 @@ class Session {
   // Destroy cookies
   function DestroyCookie() {
     if ($this->mode == "cookie") {
-      SetCookie("alloc_cookie",false,time()-3600,"","");
+      # This seems to not be needed?
+      #SetCookie("alloc_cookie",false,time()-3600,"","");
     }
     unset($_COOKIE["alloc_cookie"]);
   }
@@ -167,13 +173,6 @@ class Session {
       $row = $this->db->qr("SELECT sessData FROM sess WHERE sessID = %s", $this->key);
       return $row["sessData"];
     }
-  }
-
-  // see if session has changed
-  function SessionHasChanged(){
-    $data_in_db = $this->GetSessionData();
-    $data_in_object = $this->Encode($this->session_data); 
-    return $data_in_db != $data_in_object;
   }
 
   // if $this->session_life seconds have passed then session has expired
