@@ -546,6 +546,7 @@ $TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $TPL[
 $client = $project->get_foreign_object("client");
 $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
+$options["showHeader"] = true;
 $options["taskView"] = "byProject";
 $options["projectIDs"] = array($project->get_id());   
 $options["taskStatus"] = "not_completed";
