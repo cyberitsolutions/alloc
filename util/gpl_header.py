@@ -3,7 +3,7 @@
 import os, sys
 
 # Remove this many lines from the top of the file ${1}
-num_of_lines_to_remove = 1
+num_of_lines_to_remove = 23
 
 
 d = os.path.dirname(sys.argv[0])
