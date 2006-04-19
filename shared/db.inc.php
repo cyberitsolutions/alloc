@@ -29,10 +29,9 @@ class db {
   var $hostname;
   var $database;
   var $query_id;
-  var $row;
+  var $row = array();
 
   function db($username="",$password="",$hostname="",$database="") { // Constructor
-    $this->row = array();
     $this->username = $username;
     $this->password = $password;
     $this->hostname = $hostname;

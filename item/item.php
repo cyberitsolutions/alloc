@@ -94,9 +94,9 @@ if ($borrowItem) {
           $message.= "admin/manager: \"".$person->get_value("username")."\" "."has borrowed item: \"".$item->get_value("itemName")."\" for you\n";
 
           if ($person->get_value("emailAddress") != "") {
-            $from = "From: AllocPSA <".$person->get_value("emailAddress").">";
+            $from = "From: allocPSA <".$person->get_value("emailAddress").">";
           } else {
-            $from = "From: AllocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
+            $from = "From: allocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
           }
           // email userID saying that admin/manager: $current_user->get_id() has borrowed item for them
           mail($to, $subject, $message, $from);
@@ -147,9 +147,9 @@ if ($returnItem) {
         $message.= "admin/manager: \"".$person->get_value("username")."\" "."has returned item: \"".$item->get_value("itemName")."\" for you\n";
 
         if ($person->get_value("emailAddress") != "") {
-          $from = "From: AllocPSA <".$person->get_value("emailAddress").">";
+          $from = "From: allocPSA <".$person->get_value("emailAddress").">";
         } else {
-          $from = "From: AllocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
+          $from = "From: allocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
         }
         // email userID saying that admin/manager: $current_user->get_id() has returned item for them
         mail($to, $subject, $message, $from);

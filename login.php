@@ -78,7 +78,7 @@ if ($_POST["login"]) {
     }
     $current_user->set_value('password', db_esc(crypt(trim($password), trim($password))));
     $current_user->save();
-    $mail = mail($email, "New Alloc password request", "Your new temporary password: ".$password, "From: AllocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">");
+    $mail = mail($email, "New Alloc password request", "Your new temporary password: ".$password, "From: allocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">");
     $error = "New password sent to: ".$_POST["email"];
   } else {
     $error = "Invalid Username or Email Address.";
