@@ -22,9 +22,11 @@
  */
 
 
-class db_alloc {
+include(ALLOC_MOD_DIR."/shared/db.inc.php");
+
+class db_alloc extends db {
   function db_alloc() {
-    $this = db::get_db(ALLOC_DB_USER,ALLOC_DB_PASS,ALLOC_DB_HOST,ALLOC_DB_NAME);
+    parent::db(ALLOC_DB_USER,ALLOC_DB_PASS,ALLOC_DB_HOST,ALLOC_DB_NAME);
   }
 }
 
@@ -69,7 +71,6 @@ $script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, 
 
 define("SCRIPT_PATH",$SCRIPT_PATH);
 
-include(ALLOC_MOD_DIR."/shared/db.inc.php");
 include(ALLOC_MOD_DIR."/shared/alloc_template.inc.php");
 include(ALLOC_MOD_DIR."/shared/alloc_session.inc.php");
 include(ALLOC_MOD_DIR."/shared/util.inc.php");

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>AllocPSA Login</title>
+    <title>allocPSA Login</title>
     <style type="text/css">
       <!--
       body.login              { background-color:#eeeeee; font-family:arial,helvetica,sans-serif;  }

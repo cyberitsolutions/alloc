@@ -44,7 +44,7 @@ if ($lines[0] == "1") {
   exit();
 }
 
-echo "<br/><h3>AllocPSA Installer</h3>";
+echo "<br/><h3>allocPSA Installer</h3>";
 
 // Check we aren't using an old version of PHP
 $version = phpversion();

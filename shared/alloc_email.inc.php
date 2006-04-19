@@ -58,7 +58,7 @@ class alloc_email {
     $subject     and $this->subject    = $subject;
     $message     and $this->message    = $message;
     $header      and $this->header     = $header;
-    $this->header or $this->header     = "From: AllocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
+    $this->header or $this->header     = "From: allocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
     $logfile     and $this->logfile    = $logfile;
   }
 
@@ -68,8 +68,8 @@ class alloc_email {
     $subject     and $this->subject    = $subject;
     $message     and $this->message    = $message;
     $header      and $this->header     = $header;
-    $this->header or $this->header     = "From: AllocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
-    $this->subject                     = "AllocPSA ".$this->subject;
+    $this->header or $this->header     = "From: allocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
+    $this->subject                     = "allocPSA ".$this->subject;
 
     if (!$this->is_valid_to_address()) {
       $this->log("Not sending: '".stripslashes($this->subject)."' to ".$this->to_address." -> To Address is bad!");
