@@ -4,12 +4,19 @@ allocPSA
 Installation Guide
 
 
-Unpack the alloc source code into a webroot.
+The manual prodecure
 
-With a web browser hit
+ - Ensure correct PHP settings
+ - Ensure mysql > 3.23
+ - Get apache document root 
+ - Get php include_path 
+ - Put source in document root
+ - run installer script /webroot/alloc/util/install.sh
+ - Install database structure and meta data
+ - Install cron jobs
+ - Put alloc.inc into include path
 
-alloc/installer.php
 
 
 
-TODO
+

@@ -4,19 +4,19 @@
  *
  * Copyright 2006, Alex Lance, Clancy Malcolm, Cybersource Pty. Ltd.
  * 
- * This file is part of AllocPSA <info@cyber.com.au>.
+ * This file is part of allocPSA <info@cyber.com.au>.
  * 
- * AllocPSA is free software; you can redistribute it and/or modify it under the
+ * allocPSA is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
  * 
- * AllocPSA is distributed in the hope that it will be useful, but WITHOUT ANY
+ * allocPSA is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with
- * AllocPSA; if not, write to the Free Software Foundation, Inc., 51 Franklin
+ * allocPSA; if not, write to the Free Software Foundation, Inc., 51 Franklin
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  *
  */
@@ -100,7 +100,7 @@ class task extends db_entity {
     global $current_user;
     if ($current_user->get_id() != $this->get_value("creatorID")) {
       $successful_recipients = $this->send_emails(array("creator"),$this,"Task Closed");
-      $successful_recipients and $msg = "Emailed: ".$successful_recipients.", Task Closed: ".stripslashes($this->get_value("taskName"));
+      $successful_recipients and $msg = "Emailed: ".stripslashes($successful_recipients).", Task Closed: ".stripslashes($this->get_value("taskName"));
     }
     return $msg; 
   }
