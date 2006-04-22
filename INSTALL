@@ -9,12 +9,15 @@ The manual prodecure
  - Ensure correct PHP settings
  - Ensure mysql > 3.23
  - Get apache document root 
- - Get php include_path 
  - Put source in document root
+
+ - Get php include_path 
  - Run installer script /webroot/alloc/util/install.sh
  - Install database structure and meta data
  - Install cron jobs
- - Put alloc.inc into include path
+ - Put db info into alloc.inc
+ - Gather other info that alloc.inc needs
+ - Compile alloc.inc and put it into include path
 
 
 
