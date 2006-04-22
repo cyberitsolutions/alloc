@@ -74,14 +74,12 @@ FIXME: Describe contents of alloc.inc here
     }
 
     function register_home_items() {
-      global $MOD_DIR;
-
-      include("$MOD_DIR/announcement/lib/announcements_home_item.inc.php");
+      include(ALLOC_MOD_DIR."/announcement/lib/announcements_home_item.inc.php");
       register_home_item(new announcements_home_item());
     }
   }
 
-  include("$MOD_DIR/announcement/lib/announcement.inc.php");
+  include(ALLOC_MOD_DIR."/announcement/lib/announcement.inc.php");
 ?&gt;
     </pre>
 
@@ -340,8 +338,7 @@ Today's date is {:show_date}
     //...
 
     function register_home_items() {
-      global $MOD_DIR;
-      include("$MOD_DIR/home/lib/date_home_item.inc.php");
+      include(ALLOC_MOD_DIR."/home/lib/date_home_item.inc.php");
       register_home_item(new date_home_item);
       //..
     }

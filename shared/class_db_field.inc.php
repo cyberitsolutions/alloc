@@ -87,13 +87,11 @@ class db_field {
   }
 }
 
-class db_text_field extends db_field
-{
+class db_text_field extends db_field {
   var $classname = "db_text_field";
 }
 
-class db_object_field extends db_field
-{
+class db_object_field extends db_field {
   var $classname = "db_object_field";
   var $object_value;
 

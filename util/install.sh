@@ -12,6 +12,7 @@ function run {
 
 DIR=`dirname ${0}`/
 
+
 find .. -type f -exec chmod 664 {} \;
 find .. -type d -exec chmod 775 {} \;
 find .. -type f -exec chgrp alloc {} \;
@@ -46,8 +47,16 @@ run "chmod 777 ../logs/alloc_email.log"             # gonna need to write and de
 [ -f ../logs/checkRepeatingExpenses_log.new ] && run "rm -f ../logs/checkRepeatingExpenses_log.new"
 
 
-echo "NOW INSTALL THE CRON JOBS";
-sed -e "s/REPLACEME/${PWD//\//\\/}/" < cronjobs.txt
+#sed -e "s/REPLACEME/${PWD//\//\\/}/" < cronjobs.txt
+
+echo "Now install the cron jobs:";
+cat <<EOF
+*/5 * * * * ${PWD}/cron_sendReminders.sh
+0   4 * * * ${PWD}/alloc_DB_backup.sh
+5   4 * * * ${PWD}/cron_sendEmail.sh
+10  4 * * * ${PWD}/cron_checkRepeatExpenses.sh
+EOF
+
 
 
 

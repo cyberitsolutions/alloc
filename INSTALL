@@ -11,7 +11,7 @@ The manual prodecure
  - Get apache document root 
  - Get php include_path 
  - Put source in document root
- - run installer script /webroot/alloc/util/install.sh
+ - Run installer script /webroot/alloc/util/install.sh
  - Install database structure and meta data
  - Install cron jobs
  - Put alloc.inc into include path

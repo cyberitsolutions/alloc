@@ -22,13 +22,6 @@
  */
 
 
-include(ALLOC_MOD_DIR."/shared/db.inc.php");
-
-class db_alloc extends db {
-  function db_alloc() {
-    parent::db(ALLOC_DB_USER,ALLOC_DB_PASS,ALLOC_DB_HOST,ALLOC_DB_NAME);
-  }
-}
 
 
 function page_close() {
@@ -56,7 +49,7 @@ function get_alloc_modules() {
 
 $modules = get_alloc_modules();
 
-eregi("^".ALLOC_MOD_DIR."/(.*)$", $SCRIPT_FILENAME, $match) && $script_filename_short = $match[1];
+eregi("^".ALLOC_MOD_DIR."/(.*)$", $_SERVER["SCRIPT_FILENAME"], $match) && $script_filename_short = $match[1];
 eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
 
 
@@ -66,22 +59,26 @@ if ((!isset($modules[$module_name])) && $module_name != "" && $module_name != "u
   define("ALLOC_CURRENT_MODULE",$module_name);
 }
 
-$SCRIPT_PATH = $SCRIPT_NAME;
-$script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $SCRIPT_NAME);
-
+$SCRIPT_PATH = $_SERVER["SCRIPT_NAME"];
+$script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $_SERVER["SCRIPT_NAME"]);
 define("SCRIPT_PATH",$SCRIPT_PATH);
 
-include(ALLOC_MOD_DIR."/shared/alloc_template.inc.php");
-include(ALLOC_MOD_DIR."/shared/alloc_session.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_db.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_db_alloc.inc.php");
+include(ALLOC_MOD_DIR."/shared/template.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_session.inc.php");
 include(ALLOC_MOD_DIR."/shared/util.inc.php");
-include(ALLOC_MOD_DIR."/shared/home.inc.php");
-include(ALLOC_MOD_DIR."/shared/toolbar.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_home_item.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_toolbar_item.inc.php");
 include(ALLOC_MOD_DIR."/shared/help.inc.php");
 include(ALLOC_MOD_DIR."/shared/db_utils.inc.php");
-include(ALLOC_MOD_DIR."/shared/module.inc.php");
-include(ALLOC_MOD_DIR."/shared/event.inc.php");
-include(ALLOC_MOD_DIR."/shared/alloc_email.inc.php");
-include(ALLOC_MOD_DIR."/shared/alloc_cache.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_db_field.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_db_entity.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_module.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_event.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_alloc_email.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_alloc_cache.inc.php");
+include(ALLOC_MOD_DIR."/shared/class_history.inc.php");
 
 reset($modules);
 while (list($module_name,) = each($modules)) {
@@ -94,18 +91,12 @@ while (list($module_name,) = each($modules)) {
 }
 
 define("ALLOC_DEFAULT_FROM_ADDRESS",config::get_config_item("AllocFromEmailAddress"));
-
 include(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
 global $current_user;
 $current_user = new person;
 
 
-
-
-if (defined("NO_AUTH") && NO_AUTH) {
-
-
-} else {
+if (!defined("NO_AUTH") || !NO_AUTH) {
 
   // Check for existing session..
   $sess = Session::GetSession();
@@ -113,6 +104,7 @@ if (defined("NO_AUTH") && NO_AUTH) {
   if (!$sess->Started() && !defined("IN_LOGIN_RIGHT_NOW")) { 
     header("Location: ". $TPL["url_alloc_login"]);
     exit();
+
   } else {
     $current_user = new person;
     $current_user->set_id($sess->Get("personID"));
@@ -131,7 +123,41 @@ if (defined("NO_AUTH") && NO_AUTH) {
   }
 }
 
-include(ALLOC_MOD_DIR."/shared/history.inc.php");
+
+// Take care of saving history entries
+global $historyID;
+$history = new history;
+$ignored_files = $history->get_ignored_files();
+$ignored_files[] = "index.php";
+$ignored_files[] = "home.php";
+$ignored_files[] = "taskSummary.php";
+$ignored_files[] = "projectList.php";
+$ignored_files[] = "timeSheetList.php";
+$ignored_files[] = "menu.php";
+$ignored_files[] = "clientList.php";
+$ignored_files[] = "itemLoan.php";
+$ignored_files[] = "personList.php";
+$ignored_files[] = "eventFilterList.php";
+$ignored_files[] = "search.php";
+$ignored_files[] = "person.php";
+
+if ($_SERVER["QUERY_STRING"]) {
+  $qs = preg_replace("[&$]", "", $_SERVER["QUERY_STRING"]);
+  $qs = "?".$qs;
+}
+
+$file = end(explode("/", $_SERVER["SCRIPT_NAME"])).$qs;
+
+if (is_object($current_user) && !in_array($file, $ignored_files)
+    && !$historyID && $the_label = $history->get_history_label($_SERVER["SCRIPT_NAME"], $qs)) {
+
+  $the_place = $_SERVER["SCRIPT_NAME"].$qs;
+  $history = new history;
+  $history->set_value("personID", $current_user->get_id());
+  $history->set_value("the_place", $the_place);
+  $history->set_value("the_label", $the_label);
+  $history->save();
+}
 
 register_toolbar_items();
 ?>

@@ -1,9 +1,0 @@
-#*/5 * * * * /var/www/virtuals/alloc/logs/cron_sendReminders.sh
-#0   4 * * * /var/local/home/alloc/alloc_DB_backup.sh
-#5   4 * * * /var/www/virtuals/alloc/logs/cron_sendEmail.sh
-#10  4 * * * /var/www/virtuals/alloc/logs/cron_checkRepeatExpenses.sh
-
-*/5 * * * * REPLACEME/cron_sendReminders.sh
-0   4 * * * REPLACEME/alloc_DB_backup.sh
-5   4 * * * REPLACEME/cron_sendEmail.sh
-10  4 * * * REPLACEME/cron_checkRepeatExpenses.sh
