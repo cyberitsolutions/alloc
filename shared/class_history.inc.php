@@ -21,8 +21,7 @@
  *
  */
 
-// require_once("alloc.inc"); <- nope
-  class history extends db_entity {
+class history extends db_entity {
   var $data_table = "history";
   var $total_to_display = 30;
 
@@ -35,9 +34,6 @@
                                , "personID"=>new db_text_field("personID")
       );
   }
-
-
-
 
   // Get $db object which is set to 
   // correct spot in db for that user
@@ -63,8 +59,6 @@
     return $db;
   }
 
-
-
   // Returns an array of files which 
   // will be used to determine whether 
   // or not to save a history entry. 
@@ -77,8 +71,6 @@
     }
     return $ignored_files;
   }
-
-
 
   function get_history_label($SCRIPT_NAME, $qs) {
 
@@ -158,48 +150,7 @@
     return false;
   }
 
-
 }
-
-
-// Take care of saving the actual history entries
-
-global $current_user, $historyID;
-
-$history = new history;
-$ignored_files = $history->get_ignored_files();
-$ignored_files[] = "index.php";
-$ignored_files[] = "home.php";
-$ignored_files[] = "taskSummary.php";
-$ignored_files[] = "projectList.php";
-$ignored_files[] = "timeSheetList.php";
-$ignored_files[] = "menu.php";
-$ignored_files[] = "clientList.php";
-$ignored_files[] = "itemLoan.php";
-$ignored_files[] = "personList.php";
-$ignored_files[] = "eventFilterList.php";
-$ignored_files[] = "search.php";
-$ignored_files[] = "person.php";
-
-
-if ($QUERY_STRING) {
-  $qs = preg_replace("[&$]", "", $QUERY_STRING);
-  $qs = "?".$qs;
-}
-
-$file = end(explode("/", $SCRIPT_NAME)).$qs;
-
-if (is_object($current_user) && !in_array($file, $ignored_files)
-    && !$historyID && $the_label = $history->get_history_label($SCRIPT_NAME, $qs)) {
-
-  $the_place = $SCRIPT_NAME.$qs;
-  $history = new history;
-  $history->set_value("personID", $current_user->get_id());
-  $history->set_value("the_place", $the_place);
-  $history->set_value("the_label", $the_label);
-  $history->save();
-}
-
 
 
 ?>

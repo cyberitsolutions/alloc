@@ -1,6 +1,6 @@
 -- MySQL dump 8.23
 --
--- Host: localhost    Database: alloc_dev
+-- Host: localhost    Database: alloc
 ---------------------------------------------------------
 -- Server version	3.23.58
 
@@ -75,6 +75,7 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('taskCommentTemplate',0,0,'manage','Y',NULL,'To let project managers manipulate task comment templates.',15,99);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('projectPerson',-1,0,'employee','Y',NULL,'To allow employees who are \\\"Project Managers\\\" on a project to add other people etc.',15,104);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('project',-1,0,'employee','Y',99,'This will hopefully allow projects to administrated by employees with Project Manager perms for a project.',271,103);
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('item',-1,0,'','Y',NULL,'Allow people to do what they like with items they own/have created.',15,105);
 
 --
 -- Dumping data for table `config`
