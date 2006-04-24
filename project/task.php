@@ -329,6 +329,7 @@ if ($task->get_id()) {
 
 // Detailed editable view
 if ($view == "detail" || !$task->get_id()) {
+  $TPL["task_taskName"] = htmlentities($task->get_value("taskName"));
   include_template("templates/taskDetailM.tpl");
 
 // Printer friendly view
