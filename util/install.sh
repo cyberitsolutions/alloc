@@ -17,8 +17,6 @@ find .. -type f -exec chmod 664 {} \;
 find .. -type d -exec chmod 775 {} \;
 find .. -type f -exec chgrp alloc {} \;
 
-run "chmod 777 ../project/docs"                     # uploaded files
-run "chmod 777 ../client/docs"                      # uploaded files
 run "chmod 777 ../images/"                          # php created images
 run "chmod 777 ../images/big*"                      # php created images
 run "chmod 777 ../images/user*"                     # php created images
@@ -48,6 +46,9 @@ run "chmod 777 ../logs/alloc_email.log"             # gonna need to write and de
 
 
 #sed -e "s/REPLACEME/${PWD//\//\\/}/" < cronjobs.txt
+
+
+
 
 echo "Now install the cron jobs:";
 cat <<EOF
