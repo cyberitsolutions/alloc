@@ -65,7 +65,7 @@ function show_client($template_name) {
 
 function show_filter($template_name) {
   global $clientStatus, $TPL, $clientN, $clientLetter;
-  $TPL["clientStatusOptions"] = get_options_from_array(array("Current", "Potential", "Archived"), $clientStatus, false);
+  $TPL["clientStatusOptions"] = get_select_options(array("Current", "Potential", "Archived"), $clientStatus);
   $TPL["clientN"] = $clientN;
   $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ALL");
   foreach($letters as $letter) {

@@ -73,11 +73,12 @@ define("DST_HTML_DISPLAY",   4);  // For display to the user as non-editable HTM
  */
   function get_select_options($options,$selected_value=NULL,$max_length=45) {
 
-    // Build options from an SQL query: "SELECT name,value FROM"
+    // Build options from an SQL query: "SELECT col_a as name, col_b as value FROM"
     if (is_string($options)) {
-      $db = run_query($options);
+      $db = new db_alloc;
+      $db->query($options);
       while ($row = $db->row()) {
-        $rows[current($row)] = end($row);
+        $rows[$row["name"]] = $row["value"];
       }
 
     // Build options from an array: array(array("name1","value1"),array("name2","value2"))
@@ -90,6 +91,9 @@ define("DST_HTML_DISPLAY",   4);  // For display to the user as non-editable HTM
     if (is_array($rows)) {
       foreach ($rows as $value=>$label) {
         $sel = "";
+
+        !$value && $label and $value = $label; 
+        !$label && $value and $label = $value;
 
         // If an array of selected values!
         if (is_array($selected_value)) {

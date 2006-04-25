@@ -395,7 +395,7 @@ class task extends db_entity {
     #if ($current_user->get_id() == $this->get_value("personID")) {
       #$taskCommentEmailSelected = "creator";
     #}   
-    #$TPL["taskCommentEmailOptions"] = get_options_from_array($emailOptions,$taskCommentEmailSelected);
+    #$TPL["taskCommentEmailOptions"] = get_select_options($emailOptions,$taskCommentEmailSelected);
 
 
 

@@ -72,7 +72,7 @@ if (!$current_user->is_employee()) {
           $transaction->read_db_record($db);
           $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
           $TPL["tf_options"] = get_options_from_array($tf_array, $TPL["transaction_tfID"], true, 35);
-          $TPL["status_options"] = get_options_from_array($status_options, $transaction->get_value("status"));
+          $TPL["status_options"] = get_select_options($status_options, $transaction->get_value("status"));
           $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
           $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $transaction->get_value("transactionType"), false);
           $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
@@ -128,7 +128,7 @@ if (!$current_user->is_employee()) {
       $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $none, false);
 
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
-      $TPL["status_options"] = get_options_from_array($status_options, $none);
+      $TPL["status_options"] = get_select_options($status_options, $none);
 
       $TPL["invoiceItemID"] = $timeSheet->get_value("invoiceItemID");
 
@@ -323,7 +323,7 @@ if (!$current_user->is_employee()) {
 
       $timeUnit = new timeUnit;
       $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
-      $TPL["timeSheetItem_unit_options"] = get_options_from_array($unit_array, $timeSheetItemDurationUnitID);
+      $TPL["timeSheetItem_unit_options"] = get_select_options($unit_array, $timeSheetItemDurationUnitID);
 
       #$TPL["timeSheetItem_dateTimeSheetItem"] or $TPL["timeSheetItem_dateTimeSheetItem"] = date("Y-m-d");
 
@@ -922,7 +922,7 @@ if ($newTimeSheet_projectID && !$projectID) {
 // Set up arrays for the forms.
 if (!$TPL["timeSheet_projectName"]) {
   $TPL["show_project_options"] = "<select size=\"1\" name =\"timeSheet_projectID\"><option></option>";
-  $TPL["show_project_options"].= get_options_from_array($project_array, $projectID)."</Select>";
+  $TPL["show_project_options"].= get_select_options($project_array, $projectID)."</Select>";
 } else {
   $TPL["show_project_options"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["timeSheet_projectID"]."\">".$TPL["timeSheet_projectName"]."</a>";
 }

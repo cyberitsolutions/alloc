@@ -67,9 +67,9 @@ function show_transaction_list($template) {
       $tf = $transaction->get_foreign_object("tf");
       $TPL["transaction_tfName"] = $tf->get_value("tfName");
       $previousTransactionDate = $transaction->get_value("transactionDate");
-      $TPL["status_options"] = get_options_from_array($status_options, $transaction->get_value("status"));
+      $TPL["status_options"] = get_select_options($status_options, $transaction->get_value("status"));
       $TPL["all_approved"] = $TPL["all_approved"] && ($transaction->get_value("status") == "approved");
-      $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty);
+      $TPL["percent_dropdown"] = get_select_options($percent_array, $empty);
 
       include_template($template);
     }
@@ -87,14 +87,14 @@ function show_new_transaction($template) {
     $TPL["transaction_transactionDate"] = $previousTransactionDate;
   }
 
-  $TPL["status_options"] = get_options_from_array($status_options, "pending");
+  $TPL["status_options"] = get_select_options($status_options, "pending");
   include_template($template);
 }
 
 
 function show_tf_options() {
   global $tf_array, $TPL;
-  echo get_options_from_array($tf_array, $TPL["transaction_tfID"]);
+  echo get_select_options($tf_array, $TPL["transaction_tfID"]);
 }
 
 
