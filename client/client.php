@@ -113,7 +113,7 @@ if (isset($save)) {
 }
 
 $clientStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
-$TPL["clientStatusOptions"] = get_options_from_array($clientStatus_array, $client->get_value("clientStatus"));
+$TPL["clientStatusOptions"] = get_select_options($clientStatus_array, $client->get_value("clientStatus"));
 
   // client contacts
 if (isset($clientContact_save) || isset($clientContact_add) || isset($clientContact_addpc)

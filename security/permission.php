@@ -61,7 +61,7 @@ if (isset($save)) {
 
 $TPL["personOptions"] = get_options_from_query("SELECT personID, username FROM person ORDER BY username", "username", "personID", $permission->get_value("personID"));
 $TPL["roleNameOptions"] = get_options_from_array(array("god", "admin", "manage", "employee"), $permission->get_value("roleName"), false);
-$TPL["allowOptions"] = get_options_from_array(array("Y"=>"Yes", "N"=>"No"), $permission->get_value("allow"));
+$TPL["allowOptions"] = get_select_options(array("Y"=>"Yes", "N"=>"No"), $permission->get_value("allow"));
 
 $table_name = $permission->get_value("tableName");
 $entity = new $table_name;

@@ -225,9 +225,9 @@ $grand_total = 0;
         $projectPerson->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
         $person = $projectPerson->get_foreign_object("person");
         $TPL["person_username"] = $person->get_value("username");
-        $TPL["person_emailType_options"] = get_options_from_array($email_type_array, $TPL["person_emailType"]);
-        $TPL["person_projectPersonRole_options"] = get_options_from_array($project_person_role_array, $TPL["person_projectPersonRoleID"]);
-        $TPL["rateType_options"] = get_options_from_array($rate_type_array, $TPL["person_rateUnitID"]);
+        $TPL["person_emailType_options"] = get_select_options($email_type_array, $TPL["person_emailType"]);
+        $TPL["person_projectPersonRole_options"] = get_select_options($project_person_role_array, $TPL["person_projectPersonRoleID"]);
+        $TPL["rateType_options"] = get_select_options($rate_type_array, $TPL["person_rateUnitID"]);
         $TPL["person_buttons"] = "
           <input type=\"submit\" name=\"person_save\" value=\"Save\">
           <input type=\"submit\" name=\"person_delete\" value=\"Delete\">";
@@ -248,9 +248,9 @@ $grand_total = 0;
     $TPL["person_buttons"] = "<input type=\"submit\" name=\"person_save\" value=\"Add\">";
     $project_person = new projectPerson;
     $project_person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
-    $TPL["person_emailType_options"] = get_options_from_array($email_type_array, $TPL["person_emailType"]);
-    $TPL["person_projectPersonRole_options"] = get_options_from_array($project_person_role_array,false);
-    $TPL["rateType_options"] = get_options_from_array($rate_type_array, $TPL["person_rateUnitID"]);
+    $TPL["person_emailType_options"] = get_select_options($email_type_array, $TPL["person_emailType"]);
+    $TPL["person_projectPersonRole_options"] = get_select_options($project_person_role_array,false);
+    $TPL["rateType_options"] = get_select_options($rate_type_array, $TPL["person_rateUnitID"]);
     include_template($template);
   }
 
@@ -277,7 +277,7 @@ $grand_total = 0;
 
   function show_tf_options($commission_tfID) {
     global $tf_array, $TPL;
-    echo get_options_from_array($tf_array, $TPL[$commission_tfID]);
+    echo get_select_options($tf_array, $TPL[$commission_tfID]);
   }
 
   // show table of comments
@@ -560,7 +560,7 @@ $TPL["navigation_links"] = $project->get_navigation_links();
 $query = sprintf("SELECT * FROM tf ORDER BY tfName");
 $db->query($query);
 $tf_array = get_array_from_db($db, "tfID", "tfName");
-$TPL["commission_tf_options"] = get_options_from_array($tf_array, $TPL["commission_tfID"]);
+$TPL["commission_tf_options"] = get_select_options($tf_array, $TPL["commission_tfID"]);
 
 
 
@@ -594,11 +594,11 @@ $projectType_array = array("contract"=>"Contract", "job"=>"Job", "project"=>"Pro
 $projectStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
 $timeUnit = new timeUnit;
 $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
-$TPL["projectType_options"] = get_options_from_array($projectType_array, $TPL["project_projectType"]);
-$TPL["projectStatus_options"] = get_options_from_array($projectStatus_array, $TPL["project_projectStatus"]);
+$TPL["projectType_options"] = get_select_options($projectType_array, $TPL["project_projectType"]);
+$TPL["projectStatus_options"] = get_select_options($projectStatus_array, $TPL["project_projectStatus"]);
 $TPL["project_projectPriority"] or $TPL["project_projectPriority"] = 3;
 $TPL["projectPriority_options"] = get_options_from_array(array(1, 2, 3, 4, 5), $TPL["project_projectPriority"], false);
-$TPL["currencyType_options"] = get_options_from_array($currency_array, $TPL["project_currencyType"]);
+$TPL["currencyType_options"] = get_select_options($currency_array, $TPL["project_currencyType"]);
 
 
 if ($project->have_perm(PERM_READ_WRITE)) {

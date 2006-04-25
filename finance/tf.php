@@ -56,7 +56,7 @@ function show_new_person($template) {
 
 function show_person_options() {
   global $person_array, $TPL;
-  echo get_options_from_array($person_array, $TPL["person_personID"]);
+  echo get_select_options($person_array, $TPL["person_personID"]);
 }
 
 $db = new db_alloc;

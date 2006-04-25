@@ -84,7 +84,7 @@ list($statement_start_date, $statement_end_date) = get_statement_start_and_end_d
 if ($status && $status != "ALL") {
   $where["status"] = $status;
 }
-$TPL["statusOptions"] = get_options_from_array(array("pending"=>"Pending","approved"=>"Approved","rejected"=>"Rejected"),$status);
+$TPL["statusOptions"] = get_select_options(array("pending"=>"Pending","approved"=>"Approved","rejected"=>"Rejected"),$status);
 
 
 // Transaction status filter
@@ -98,7 +98,7 @@ $transactionTypeOptions = array('invoice'=>'Invoice'
                                ,'timesheet'=>'Timesheet'
                                ,'adjustment'=>'Adjustment'
                                ,'insurance'=>'Insurance');
-$TPL["transactionTypeOptions"] = get_options_from_array($transactionTypeOptions,$transactionType);
+$TPL["transactionTypeOptions"] = get_select_options($transactionTypeOptions,$transactionType);
 
 
 

@@ -108,11 +108,11 @@ $TPL["personName"] = $person->get_value("username");
 $query = sprintf("SELECT * FROM person ORDER by username");
 $db->query($query);
 $person_array = get_array_from_db($db, "personID", "username");
-$TPL["person_options"] = get_options_from_array($person_array, $personID);
+$TPL["person_options"] = get_select_options($person_array, $personID);
 
   // Set up the options for the absence type.
 $absenceType_array = array("conference"=>"conference", "holiday"=>"holiday", "sick"=>"sick");
-$TPL["absenceType_options"] = get_options_from_array($absenceType_array, $absence->get_value("absenceType"));
+$TPL["absenceType_options"] = get_select_options($absenceType_array, $absence->get_value("absenceType"));
 
 include_template("templates/absenceFormM.tpl");
 

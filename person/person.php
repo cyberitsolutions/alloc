@@ -242,7 +242,7 @@ if ($person->get_id()) {
   				 WHERE tf.tfID = tfPerson.tfID AND tfPerson.personID = ".$person->get_id());
   $TPL["preferred_tfID_options"] = get_options_from_db($db_tf, "name", "id", $person->get_value("preferred_tfID"));
   $dailyTEO = array("yes"=>"Yes", "no"=>"No");
-  $TPL["dailyTaskEmailOptions"] = get_options_from_array($dailyTEO, $person->get_value("dailyTaskEmail"));
+  $TPL["dailyTaskEmailOptions"] = get_select_options($dailyTEO, $person->get_value("dailyTaskEmail"));
 }
 
 

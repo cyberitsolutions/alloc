@@ -42,8 +42,8 @@ class customize_alloc_home_item extends home_item {
       $current_user->prefs["customizedTheme"] = $customizedTheme;
     }
 
-    $TPL["customizeFontOptions"] = get_options_from_array(get_customizedFont_array(), $customizedFont);
-    $TPL["customizeThemeOptions"] = get_options_from_array(get_customizedTheme_array(), $customizedTheme);
+    $TPL["customizeFontOptions"] = get_select_options(get_customizedFont_array(), $customizedFont);
+    $TPL["customizeThemeOptions"] = get_select_options(get_customizedTheme_array(), $customizedTheme);
   }
 
 

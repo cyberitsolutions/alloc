@@ -92,7 +92,7 @@ function show_reminder_filter($template) {
     while ($db->next_record()) {
       $recipientOptions[$db->f("personID")] = $db->f("username");
     }
-    $TPL["recipientOptions"] = get_options_from_array($recipientOptions, $filter_recipient);
+    $TPL["recipientOptions"] = get_select_options($recipientOptions, $filter_recipient);
     include_template($template);
   }
 }
