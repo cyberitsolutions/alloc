@@ -71,7 +71,7 @@ class person extends db_entity
     $options["personIDonly"] = $person->get_id();
     $options["taskView"] = "prioritised";
     $options["return"] = $format;
-    $options["taskStatus"] = "in_progress";
+    $options["taskStatus"] = "not_completed";
     $summary = task::get_task_list($options);
 
     if ($summary) {
