@@ -35,41 +35,12 @@ define("DST_HTML_ATTRIBUTE", 3);  // For use in a HTML elements attribute - e.g.
 define("DST_HTML_DISPLAY",   4);  // For display to the user as non-editable HTML text
 
 
-  // Make a where clause from arrays of the form field_name=> field_value
-  // For each array item in where fields the where clause is constructed as follows:
-  // field_name value_prefix field_value value_suffix
-  // Items are 'and'd together
-  // An existing where clause can be past as the where_clause parameter in which case additional criteria are added to it
-  function make_where_clause($where_fields, $value_prefix, $value_suffix, $where_clause = "", $include_empty_values = false) {
-    reset($where_fields);
-    while (list($field_name, $field_value) = each($where_fields)) {
-      if ($field_value || $include_empty_values) {
-        if ($where_clause) {
-          $where_clause.= " AND ";
-        }
-        $where_clause.= $field_name." ".$value_prefix.addslashes($field_value).$value_suffix." ";
-      }
-    }
-    return $where_clause;
-  }
-
-
   // Convert date from database format (yyyy-mm-dd) to display format (d/m/yyyy)
   function get_display_date($db_date) {
     if ($db_date == "0000-00-00 00:00:00") {
       return "";
     } else if (ereg("([0-9]{4})-?([0-9]{2})-?([0-9]{2})", $db_date, $matches)) {
       return sprintf("%d/%d/%d", $matches[3], $matches[2], $matches[1]);
-    } else {
-      return "";
-    }
-  }
-
-
-  // Convert date from database format (yyyy-mm-dd) to display format (d/m/yyyy)
-  function get_db_date($display_date) {
-    if (ereg("([0-9]*)/([0-9]*)/([0-9]*)", $display_date, $matches)) {
-      return sprintf("%d-%02d-%02d", $matches[3], $matches[2], $matches[1]);
     } else {
       return "";
     }
@@ -93,13 +64,14 @@ define("DST_HTML_DISPLAY",   4);  // For display to the user as non-editable HTM
   }
 
  /**
- * Builds up options for use in a html select widget (works with multiple selected)
+ * Builds up options for use in a html select widget (works with multiple selected too)
  *
  * @param   $options          mixed   An sql query or an array of options
  * @param   $selected_value   string  The current selected element
+ * @param   $max_length       int     The maximum string length of the label
  * @return                    string  The string of options
  */
-  function get_select_options($options,$selected_value=NULL,$maxlength=45) {
+  function get_select_options($options,$selected_value=NULL,$max_length=45) {
 
     // Build options from an SQL query: "SELECT name,value FROM"
     if (is_string($options)) {
@@ -129,8 +101,8 @@ define("DST_HTML_DISPLAY",   4);  // For display to the user as non-editable HTM
         }
 
         $label = stripslashes($label);
-        if (strlen($label) > $maxlength) {
-          $label = substr($label, 0, $maxlength - 3)."...";
+        if (strlen($label) > $max_length) {
+          $label = substr($label, 0, $max_length - 3)."...";
         } 
 
         $str.= "\n<option value=\"".$value."\"".$sel.">".$label."</option>";
