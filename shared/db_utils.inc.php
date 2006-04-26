@@ -92,7 +92,9 @@ define("DST_HTML_DISPLAY",   4);  // For display to the user as non-editable HTM
       foreach ($rows as $value=>$label) {
         $sel = "";
 
-        !$value && $label and $value = $label; 
+        if (!$value && $value!==0 && !$value!=="0" && $label) {
+          $value = $label; 
+        }
         !$label && $value and $label = $value;
 
         // If an array of selected values!
