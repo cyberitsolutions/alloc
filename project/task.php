@@ -198,9 +198,8 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
 // If deleting a record
 } else if (isset($delete)) {
   $task->read_globals();
-  $projectID or $projectID = $task->get_value("projectID");
   $task->delete();
-  header("location: ".$TPL["url_alloc_project"]."projectID=$projectID");
+  header("location: ".$TPL["url_alloc_taskSummary"]);
 }
 
 
