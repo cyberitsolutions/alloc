@@ -38,7 +38,7 @@ class customize_alloc_home_item extends home_item {
     }
 
     if ($customize_save) {
-      $current_user->prefs["customizedFont"] = $customizedFont;
+      $current_user->prefs["customizedFont"] = sprintf("%d",$customizedFont);
       $current_user->prefs["customizedTheme"] = $customizedTheme;
     }
 
