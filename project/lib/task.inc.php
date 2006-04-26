@@ -82,14 +82,19 @@ class task extends db_entity {
       while ($db->next_record()) {
         $task = new task;
         $task->read_db_record($db);
+        $orig_dateActualCompletion = $task->get_value("dateActualCompletion");
         $task->get_value("percentComplete")      != "100" && $task->set_value("percentComplete", "100");
         $task->get_value("dateActualStart")      || $task->set_value("dateActualStart", date("Y-m-d"));
         $task->get_value("dateActualCompletion") || $task->set_value("dateActualCompletion", date("Y-m-d"));
         $task->get_value("closerID")             || $task->set_value("closerID", $current_user->get_id());
         $task->get_value("dateClosed")           || $task->set_value("dateClosed",date("Y-m-d H:i:s"));           
         $task->save();
-        $m = $task->email_task_closed();
-        $m and $msg[] = $m;
+
+        // If it isn't already closed, then send emails..
+        if (!$orig_dateActualCompletion) {
+          $m = $task->email_task_closed();
+          $m and $msg[] = $m;
+        }
         $msg = array_merge($msg,$task->close_off_children_recursive());
       }
     }
