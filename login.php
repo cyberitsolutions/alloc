@@ -27,7 +27,13 @@ require_once("alloc.inc");
 
 // Log the user in
 if ($_POST["login"]) {
-  if (!$sess->Started()) {
+
+  if ($sess->Started()) {
+      $url = $sess->GetUrl($TPL["url_alloc_home"]);
+      header("Location: ".$url);
+
+  // Session not started yet!
+  } else {
     $db = new db_alloc;
 
     $q = sprintf("SELECT * FROM person WHERE username = '%s'",db_esc($_POST["username"]));

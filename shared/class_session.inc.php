@@ -44,7 +44,7 @@ class Session {
     $this->key           = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"];
     $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
-    #$this->session_life  = (8); 
+    #$this->session_life  = (20); 
     $this->session_life  = (60*60*9); 
     $this->session_data  = $this->UnEncode($this->GetSessionData());
     $this->mode          = $this->Get("session_mode"); 
@@ -62,7 +62,7 @@ class Session {
 
   // Call this in a login page to start session 
   function Start($personID) {
-    $this->key = md5($personID."mix it up#@!".md5(mktime()));
+    $this->key = md5($personID."mix it up#@!".md5(mktime().md5(microtime())));
     $this->Put("key2", $this->key2);
     $this->Put("session_started", mktime());
     $this->db->query("DELETE FROM sess WHERE personID = %s",$personID);
@@ -72,7 +72,7 @@ class Session {
 
   // Test whether session has started 
   function Started() {
-    if ($this->Get("session_started") && $this->Get("key2") == $this->key2)
+    if ($this->Get("session_started") && $this->Get("key2") == $this->key2 && !$this->Expired())
       return true;
   }
 
@@ -180,7 +180,7 @@ class Session {
     if ($this->Get("session_started") && (mktime() > ($this->Get("session_started")+$this->session_life))) {
       return true;
     }
-  }
+  } 
   // add encryption for session_data here 
   function Encode($data){
     return serialize($data);
