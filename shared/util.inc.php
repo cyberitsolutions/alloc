@@ -97,7 +97,7 @@ function get_customizedFont_array() {
   return array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"4", "1"=>5, "2"=>6, "3"=>7, "4"=>8, "5"=>9, "6"=>10);
 }
 function get_customizedTheme_array() {
-  return array("Icy", "Darko", "Aneurism", "Clove", "WIP", "None");
+  return array("Icy", "Darko", "Aneurism", "Clove", "Puddle", "None");
 }
 
 
