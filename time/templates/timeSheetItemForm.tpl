@@ -48,6 +48,7 @@ function updateTimeSheetTaskList(number) {
           <td valign="bottom" colspan="2"><a href="{url_alloc_task}projectID={projectID}&timeSheetID={timeSheet_timeSheetID}">New Task</a></td>
           <td valign="bottom" rowspan="2"> 
             <input type="radio" name="task_type" value="my_open" onClick="refreshTaskList(this)" checked>My Open&nbsp;
+            <input type="radio" name="task_type" value="not_assigned" onClick="refreshTaskList(this)">Unassigned&nbsp;
             <input type="radio" name="task_type" value="my_closed" onClick="refreshTaskList(this)">My Closed&nbsp;
             <input type="radio" name="task_type" value="all" onClick="refreshTaskList(this)">All Tasks&nbsp;
           </td>
@@ -85,7 +86,7 @@ function updateTimeSheetTaskList(number) {
                 onFocus="document.getElementById('tsi_note').style.height=150;
                          document.getElementById('grow_tsi_note').style.display='none'
                          document.getElementById('shrink_tsi_note').style.display='inline'">{timeSheetItem_comment}</textarea>
-      Private <input type="checkbox" name="timeSheetItem_commentPrivate"{commentPrivateChecked}>
+      Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{commentPrivateChecked}>
     </td>
     <td colspan="1" valign="top" align="right"><br/>{timeSheetItem_buttons}</td>
   </tr>
