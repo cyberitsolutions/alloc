@@ -67,6 +67,7 @@ class person extends db_entity
 
     $format = $this->get_value("emailFormat");
 
+    $options["projectType"] = "mine";
     $options["limit"] = 3;
     $options["personIDonly"] = $person->get_id();
     $options["taskView"] = "prioritised";
