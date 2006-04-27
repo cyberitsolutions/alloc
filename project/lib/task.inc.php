@@ -577,6 +577,26 @@ class task extends db_entity {
   }
 
   function get_task_list_filter($_FORM=array()) {
+
+
+    if (!$_FORM["projectIDs"] && $_FORM["projectType"] && $_FORM["projectType"] != "all") {
+      $db = new db_alloc;
+      $q = project::get_project_type_query($_FORM["projectType"]);
+      $db->query($q);
+      while ($db->next_record()) {
+        $_FORM["projectIDs"][] = $db->f("projectID");
+      }
+
+    // If projectID is an array
+    } else if ($_FORM["projectID"] && is_array($_FORM["projectID"])) {
+      $_FORM["projectIDs"] = $_FORM["projectID"];
+
+    // Else a project has been specified in the url
+    } else if ($_FORM["projectID"] && is_numeric($_FORM["projectID"])) {
+      $_FORM["projectIDs"][] = $_FORM["projectID"];
+    }
+
+
     // If passed array projectIDs then join them up with commars and put them in an sql subset
     if (is_array($_FORM["projectIDs"]) && count($_FORM["projectIDs"])) {
       $filter["projectIDs"] = "(project.projectID IN (".implode(",",$_FORM["projectIDs"])."))";
