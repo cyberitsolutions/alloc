@@ -1,7 +1,7 @@
 #!/bin/sh 
 #
 #
-# Script to setup website permissions and generate an alloc.inc file.
+## Script to setup website permissions and generate an alloc.inc file.
 
 
 function e_bl     { echo -en " \x1b[34;01m [\x1b[0m"; }                               # Echo bracket left
