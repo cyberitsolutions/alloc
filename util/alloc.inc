@@ -1,16 +1,17 @@
 <?php
 ini_set("error_reporting", E_ALL & ~E_NOTICE);
 
-define("ALLOC_DB_USER",""); // Database username
-define("ALLOC_DB_PASS",""); // Database password
-define("ALLOC_DB_NAME",""); // Database name
-define("ALLOC_DB_HOST",""); // Database hostname (can be left blank or set to localhost)
+define("ALLOC_DB_NAME","CONFIG_VAR_ALLOC_DB_NAME"); // Database name
+define("ALLOC_DB_USER","CONFIG_VAR_ALLOC_DB_USER"); // Database username
+define("ALLOC_DB_PASS","CONFIG_VAR_ALLOC_DB_PASS"); // Database password
+define("ALLOC_DB_HOST","CONFIG_VAR_ALLOC_DB_HOST"); // Database hostname (can be left blank or set to localhost)
 
-define("ALLOC_TITLE", "AllocPSA");
+define("ALLOC_TITLE", "allocPSA");
 define("ALLOC_VERSION", "v1.20");
 define("ALLOC_SHOOER","");
 define("ALLOC_GD_IMAGE_TYPE","PNG");
-define("ATTACHMENTS_DIR","/var/local/home/alloc/alloc_uploaded_files/");
+
+define("ATTACHMENTS_DIR","CONFIG_VAR_ALLOC_DOCS_DIR");
 
 if (preg_match("/^(.*alloc[^\/]*)/",$_SERVER["SCRIPT_FILENAME"],$m)) {
   define("ALLOC_MOD_DIR",$m[1]);
