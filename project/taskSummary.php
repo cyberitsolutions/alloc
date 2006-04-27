@@ -61,10 +61,8 @@ if ($_FORM["personIDonly"] && $_FORM["personID"]) {
   $_FORM["personIDonly"] = $_FORM["personID"];
 }
 
-
 // Get task list
 $TPL["task_summary"] = task::get_task_list($_FORM);
-
 
 // Load up the filter bits
 $TPL["projectOptions"] = project::get_project_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);

@@ -579,7 +579,7 @@ class task extends db_entity {
   function get_task_list_filter($_FORM=array()) {
 
 
-    if (!$_FORM["projectIDs"] && $_FORM["projectType"] && $_FORM["projectType"] != "all") {
+    if (!$_FORM["projectID"] && $_FORM["projectType"] && $_FORM["projectType"] != "all") {
       $db = new db_alloc;
       $q = project::get_project_type_query($_FORM["projectType"]);
       $db->query($q);
