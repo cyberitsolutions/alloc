@@ -1,20 +1,34 @@
 
 allocPSA
 
-Installation Guide
+Installation Guide 
 
 
-The manual prodecure
+1) System Requirements 
+      MySQL >= 4 (although it _may_ work on 3.23) (Use /usr/sbin/mysqld -V for version)
+      PHP   >= 4.3.0 (Try writing a php script with phpinfo(); in it to determine version)
+      Ensure PHP register_globals enabled (/etc/php.ini)
+      Ensure PHP memory_limit >= 64 meg (/etc/php.ini)
+      Determine PHP include_path (/etc/php.ini)
 
- - Ensure correct PHP settings
- - Ensure mysql > 3.23
- - Get apache document root 
- - Put source in document root
+2) Put the source code in the webserver document root 
+      To determine the document root for Apache you could try something like 
+      looking for the string DocumentRoot:
+        find /etc/apache -iname "*.conf" -exec grep DocumentRoot {} \; | grep -v '#'
+        find /etc/httpd -iname "*.conf" -exec grep DocumentRoot {} \; | grep -v '#'
+      
+      Alternatively determine the apache conf file from 
+        apache2 -V | grep SERVER_CONFIG_FILE
+        httpd -V | grep SERVER_CONFIG_FILE
+      and then grep for DocumentRoot in the file
 
- - Get php include_path 
- - Run installer script /webroot/alloc/util/install.sh
- - Install database structure and meta data
- - Install cron jobs
+
+3) Run installer script /webroot/alloc/util/install.sh
+
+4) Run database installer script
+
+5) Edit /webroot/alloc/util/alloc.inc
+
  - Put db info into alloc.inc
  - Gather other info that alloc.inc needs
  - Compile alloc.inc and put it into include path
