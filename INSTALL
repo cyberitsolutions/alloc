@@ -22,17 +22,9 @@ Installation Guide
         httpd -V | grep SERVER_CONFIG_FILE
       and then grep for DocumentRoot in the file
 
+3) Fill in the values in /webroot/alloc/util/install.cfg
 
-3) Run installer script /webroot/alloc/util/install.sh
-
-4) Run database installer script
-
-5) Edit /webroot/alloc/util/alloc.inc
-
- - Put db info into alloc.inc
- - Gather other info that alloc.inc needs
- - Compile alloc.inc and put it into include path
-
+4) Run installer script /webroot/alloc/util/install.sh
 
 
 
