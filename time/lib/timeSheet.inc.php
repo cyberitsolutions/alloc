@@ -432,6 +432,9 @@ class timeSheet extends db_entity
     if ($status == "my_open") {
       $extra_sql = sprintf("personID=%d AND dateActualCompletion IS NULL OR dateActualCompletion = ''",$personID);
 
+    } else if ($status == "not_assigned"){
+      $extra_sql = sprintf("(personID IS NULL or personID=\"\" or personID=0) AND dateActualCompletion IS NOT NULL AND dateActualCompletion != ''",$personID);
+
     } else if ($status == "my_closed"){
       $extra_sql = sprintf("personID=%d AND dateActualCompletion IS NOT NULL AND dateActualCompletion != ''",$personID);
 
