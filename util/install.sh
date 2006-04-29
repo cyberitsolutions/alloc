@@ -160,9 +160,9 @@ fi
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}clients"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}projects"
-run "chmod 755 ${ALLOC_DOCS_DIR}"
-run "chmod 755 ${ALLOC_DOCS_DIR}clients"
-run "chmod 755 ${ALLOC_DOCS_DIR}projects"
+run "chmod 775 ${ALLOC_DOCS_DIR}"
+run "chmod 775 ${ALLOC_DOCS_DIR}clients"
+run "chmod 775 ${ALLOC_DOCS_DIR}projects"
 
 find ${DIR}.. -type f -path ${DIR}../.bzr -prune -exec chmod 664 {} \; # Files to rw-rw-r--
 find ${DIR}.. -type d -path ${DIR}../.bzr -prune -exec chmod 775 {} \; # Dirs  to rwxrwxr-x
