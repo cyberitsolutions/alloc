@@ -627,7 +627,7 @@ class task extends db_entity {
     }
 
     // Unset if they've only selected the topmost empty task type
-    if (count($_FORM["taskTypeID"])>=1 && !$_FORM["taskTypeID"][0]) {
+    if (is_array($_FORM["taskTypeID"]) && count($_FORM["taskTypeID"])>=1 && !$_FORM["taskTypeID"][0]) {
       unset($_FORM["taskTypeID"][0]);
     }
 
@@ -924,9 +924,10 @@ class task extends db_entity {
         $options["parentTaskID"] = $taskID;
         $filter = task::get_task_list_filter($options);
         $tasks = task::get_task_children($filter);
-
-        foreach ($tasks as $id => $t) {
-          $taskIDs[] = $t["taskID"];;
+        if (is_array($tasks)) {
+          foreach ($tasks as $id => $t) {
+            $taskIDs[] = $t["taskID"];;
+          }
         }
       }
 
