@@ -1,19 +1,24 @@
 
-allocPSA Installation Guide 
+allocPSA Quick Installation Guide 
 
 1) System Requirements 
-      MySQL >= 4 (although it _may_ work on 3.23) (Use /usr/sbin/mysqld -V for version)
-      PHP   >= 4.3.0 (Try writing a php script with <?php phpinfo();?> in it to determine version)
-      Ensure PHP register_globals enabled (/etc/php.ini) Ps: sorry
-      Ensure PHP memory_limit >= 64 meg (/etc/php.ini)
-      Determine PHP include_path (/etc/php.ini)
+   (The PHP settings for your system may generally be determined by hitting 
+    a phpinfo script with your webbrowser see http://php.net/phpinfo) 
 
-2) Put the source code in a directory called alloc in the webserver document root 
+      * PHP >= 4.3.0 
+      * Ensure PHP register_globals enabled 
+      * Ensure PHP memory_limit >= 64 meg 
+      * Determine PHP include_path 
+      * Ensure the GD image library is installed and PHP knows about it
+      * MySQL >= 4 (although it _may_ work on 3.23) (See /usr/sbin/mysqld -V)
+      
 
-3) Fill in the values in /webroot/alloc/util/install.cfg
+2) Put the source code in a directory called allocPSA in the webserver document root 
 
-4) Run installer script /webroot/alloc/util/install.sh
+3) Fill in the values in /webroot/allocPSA/util/install.cfg
 
-5) Remove the file /webroot/alloc/util/install.cfg
+4) Run installer script /webroot/allocPSA/util/install.sh
+
+5) Remove or chmod a-r the file /webroot/allocPSA/util/install.cfg
 
 
