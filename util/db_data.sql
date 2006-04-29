@@ -125,4 +125,4 @@ INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, proje
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (2,'Engineer (edit tasks)','canEditTasks',20);
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (3,'Project Manager + Time Sheet Recipient','timeSheetRecipient',40);
 
-insert into person (username,password,personActive) values ('alloc','/.N0BifPoPoZg',1); 
+insert into person (username,password,personActive,perms) values ('alloc','/.N0BifPoPoZg',1,"god,admin,manage,employee"); 

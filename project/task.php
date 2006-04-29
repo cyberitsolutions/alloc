@@ -131,8 +131,10 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
     if ($orig_percentComplete != "100") {
       $msg[] = $task->email_task_closed();
     }
-
-    $msg = array_merge($msg,$task->close_off_children_recursive());
+    $arr = $task->close_off_children_recursive();
+    if (is_array($arr)) {
+      $msg = array_merge($msg,$arr);
+    }
 
   } else if ($orig_percentComplete == "100" && $task->get_value("percentComplete") != "100") {
     $task->set_value("closerID",0);
