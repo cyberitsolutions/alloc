@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-
+bzr push
 cd /cyber/devel/bzr/alloc/ && bzr push ~/allocPSA
 cd ~
 tar czvf allocPSA.tgz allocPSA
