@@ -5,20 +5,23 @@
 #
 
 
-function e_bl     { echo -en " \x1b[34;01m [\x1b[0m"; }                               # Echo bracket left
-function e_br     { echo -en "\x1b[34;01m] \x1b[0m"; }                                # Echo bracket right
-function e_ok     { e_bl; echo -en "\x1b[32;01m  OK  \x1b[0m"; e_br; echo -e ${1}; }  # Echo [  OK  ] $msg
-function e_skip   { e_bl; echo -en "\x1b[33;01m SKIP \x1b[0m"; e_br; echo -e ${1}; }  # Echo [ SKIP ] $msg
-function e_failed { e_bl; echo -en "\x1b[31;01mFAILED\x1b[0m"; e_br; echo -e ${1}; }  # Echo [FAILED] $msg
-function e_dead   { e_bl; echo -en "\x1b[31;01m DEAD \x1b[0m"; e_br; echo -e ${1}; }  # Echo [ DEAD ] $msg
+# Functions to help display messages 
+# 
+function e_bl     { echo -en " \x1b[34;01m [\x1b[0m"; }                                         # Echo bracket left
+function e_br     { echo -en "\x1b[34;01m] \x1b[0m"; }                                          # Echo bracket right
+function e_ok     { e_bl; echo -en "\x1b[32;01m  OK  \x1b[0m"; e_br; echo -e ${1}; }            # Echo [  OK  ] $msg
+function e_skip   { e_bl; echo -en "\x1b[33;01m SKIP \x1b[0m"; e_br; echo -e ${1}; }            # Echo [ SKIP ] $msg
+function e_failed { e_bl; echo -en "\x1b[31;01mFAILED\x1b[0m"; e_br; echo -e ${1}; FAILED=1; }   # Echo [FAILED] $msg
+function e_dead   { e_bl; echo -en "\x1b[31;01m DEAD \x1b[0m"; e_br; echo -e ${1}; }            # Echo [ DEAD ] $msg
 function e        { echo -en "\n\x1b[34;01m* \x1b[0m"; echo -e ${1}; }
 function e_n      { echo -en "\n\x1b[34;01m* \x1b[0m"; echo -en ${1}; }
 
 
-# Execute command, trap errors.
+# Execute command, catch errors.
 #
 function run {
-  local ERR="`$1 2>&1`"
+  ERR="" # Can't make ERR a local var cause that operation sets the $? var
+  ERR="`$1 2>&1`"
   if [ "${?}" -ne 0 ]; then
     e_failed "${1} -> ${ERR}"
     return 1 # This will set the $? variable
@@ -33,10 +36,10 @@ function run {
 # Function to retrieve user input or plugin a default value for a VAR.
 #
 function get_user_var {
-  # ${1} "NAME_OF_VAR"
-  # ${2} "Please enter this var, text..."
-  # ${3} "Default value"
-  # ${4} "If >0 chars long, does a read -s = silent mode (for passwords)"
+  # ${1} NAME_OF_VAR
+  # ${2} Please enter this var, text...
+  # ${3} Default value
+  # ${4} If true, does a read -s = silent mode (for passwords)
 
   local NAME="${1}"
   [ -n "${4}" ] && local READ_SWITCH=" -s "
@@ -63,13 +66,12 @@ function get_user_var {
 # Get confirmation from user before executing command
 #
 function confirm_run {
-  # $1 "Are you sure you want to do this?"
-  # $2 "rm -rf /" (command)
-  # $3 "no" (default)
+  # $1 Are you sure you want to do this?
+  # $2 rm -rf / (a command to run)
+  # $3 no (default)
 
   get_user_var "USER_INPUT" "${1} ($2)" "${3}"
   local USER_INPUT="${USER_INPUT:0:1}"
-
 
   if [ "${USER_INPUT}" = "y" ] || [ "${USER_INPUT}" = "Y" ]; then
     run "${2}"
@@ -91,8 +93,7 @@ function die {
 
 ###########################
 #
-#
-# Begin Installation
+e "Beginning allocPSA Installation\n"
 #
 
 if [ "0" != "$(id -u)" ]; then
@@ -104,6 +105,7 @@ DIR="${0%/*}/"
 
 
 # Source the config file
+[ ! -r "${DIR}install.cfg" ] && die "${DIR}install.cfg does not exist"
 . ${DIR}install.cfg
 
 # Quick check all the values are in the config file
@@ -113,7 +115,7 @@ for i in ${CONFIG_VARS}; do if [ -z "${!i}" ]; then die "Missing ${i} from confi
 for i in ${CONFIG_VARS}; do echo "${i}: ${!i}"; done
 
 # Determine whether to continue
-get_user_var DO_INSTALL "Does the config in ${DIR}install.cfg look alright to you?" "yes"
+get_user_var DO_INSTALL "Does the config in ${DIR}install.cfg look correct to you?" "yes"
 
 # Bail out
 [ "${DO_INSTALL:0:1}" != "y" ] && die
@@ -142,11 +144,9 @@ EOMYSQL
   mysql -u root -p${DB_PASS} ${ALLOC_DB_NAME} < ${DIR}db_data.sql
  
   e "If there were no errors printed above then the database should now be installed." 
+  echo
 fi
 
-
-# If uploaded docs directory not set, then die
-[ -z "${ALLOC_DOCS_DIR}" ] && die "Please set ALLOC_DOCS_DIR in ${DIR}install.cfg"; 
 
 # Append a slash if need be
 [ "${ALLOC_DOCS_DIR:(-1):1}" != "/" ] && ALLOC_DOCS_DIR=${ALLOC_DOCS_DIR}/; 
@@ -172,7 +172,6 @@ run "chmod 777 ${DIR}../images/*"                         # php created images
 run "chmod 777 ${DIR}../report/files/"                    # uploaded files
 run "chmod 777 ${DIR}../stylesheets/*"                    # rwxrwxrwx
 run "chmod 755 ${DIR}dump_clean_db.sh"                    # rwxr-xr-x
-run "chmod 755 ${DIR}alloc_DB_backup.sh"                  # rwxr-xr-x
 run "chmod 754 ${DIR}stylesheet_regen.py"                 # rwxr-xr--
 run "chmod 754 ${DIR}update_alloc_dev_database.sh"        # rwxr-xr--
 run "chmod 754 ${DIR}gpl_header.py"                       # rwxr-xr--
@@ -181,45 +180,71 @@ run "chmod 755 ${DIR}cron_sendEmail.sh"                   # rwxr-xr-x
 run "chmod 755 ${DIR}cron_checkRepeatExpenses.sh"         # rwxr-xr-x
 run "chmod 600 ${DIR}install.cfg"                         # rw-------
 run "chmod 700 ${DIR}install.sh"                          # rwx------
-run "chmod 640 ${DIR}alloc.inc"                           # rw-r-----
-run "chgrp ${ALLOC_WEB_USER} ${DIR}alloc.inc"             # chgrp apache alloc.inc
 
-[ ! -f "${DIR}../logs/alloc_email.log" ] && run "touch ../logs/alloc_email.log"
+[ ! -f "${DIR}../logs/alloc_email.log" ] && run "touch ${DIR}../logs/alloc_email.log"
 run "chmod 777 ${DIR}../logs"                             # gonna need to write and delete
 run "chmod 777 ${DIR}../logs/alloc_email.log"             # gonna need to write and delete
 
 
-# Determine include_path
+# Make the alloc.inc file
+e "Creating alloc.inc file"
+cat ${DIR}alloc.inc.tpl \
+| sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_DB_HOST/${ALLOC_DB_HOST}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
+> ${DIR}alloc.inc
 
-# Need to put db info and file upload location into alloc.inc
+if [ -f "${DIR}alloc.inc" ]; then 
+  e_ok "Created alloc.inc"
+  run "chmod 640 ${DIR}alloc.inc"                           
+  run "chgrp ${ALLOC_WEB_USER} ${DIR}alloc.inc"             
+else 
+  e_failed "Could not create alloc.inc"; 
+fi
 
-#if []
-#cat ${DIR}alloc.inc \
-#| sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
-#| sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
-#| sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
-#| sed -e "s/CONFIG_VAR_ALLOC_DB_HOST/${ALLOC_DB_HOST}/" \
-#| sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
-#> a.inc.finit
+e "Creating alloc_DB_backup.sh file"
+cat ${DIR}alloc_DB_backup.sh.tpl \
+| sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_DB_HOST/${ALLOC_DB_HOST}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
+> ${DIR}alloc_DB_backup.sh
 
+if [ -f "${DIR}alloc_DB_backup.sh" ]; then 
+  e_ok "Created alloc_DB_backup.sh"
+  run "chmod 755 ${DIR}alloc_DB_backup.sh"            
+  run "mv ${DIR}alloc_DB_backup.sh ${ALLOC_DOCS_DIR}"
+else 
+  e_failed "Could not create alloc_DB_backup.sh"; 
+fi
 
-# Need to put alloc.inc into include_path
-
-# Need to put database info into alloc_DB_backup.sh
-
-e "To use all of allocPSA features you will need to install these into cron:";
- 
+if [ -z "${FAILED}" ]; then
+  e "Installation Successful."
+else 
+  e "Installation has not completed successfully!"
+fi
 
 DIR_FULL=${PWD}/${DIR}
 DIR_FULL=${DIR_FULL/\.\//}
 
-cat <<EOF
-*/5 * * * * ${DIR_FULL}cron_sendReminders.sh
-25  4 * * * ${DIR_FULL}alloc_DB_backup.sh
-35  4 * * * ${DIR_FULL}cron_sendEmail.sh
-45  4 * * * ${DIR_FULL}cron_checkRepeatExpenses.sh
-EOF
+echo
+echo " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
+echo "                                                                          " 
+echo " Two more things you need to do:                                          " 
+echo "                                                                          " 
+echo "   1) Move ${DIR}alloc.inc into your PHP include_path. Do not store it in "
+echo "      the web root, as it contains your database password.                " 
+echo "                                                                          "
+echo "   2) Install these into cron to be run as root:                          "
+echo "                                                                          "
+echo "     25  4 * * * ${ALLOC_DOCS_DIR}alloc_DB_backup.sh                      "
+echo "     */5 * * * * ${DIR_FULL}cron_sendReminders.sh                         "
+echo "     35  4 * * * ${DIR_FULL}cron_sendEmail.sh                             "
+echo "     45  4 * * * ${DIR_FULL}cron_checkRepeatExpenses.sh                   "
+echo "                                                                          " 
+echo " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
 
-
-e "Installation Complete"
 
