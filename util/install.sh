@@ -1,4 +1,4 @@
-#!/bin/sh --posix
+#!/bin/sh
 #
 #
 # Script to setup database, website permissions, cronjobs and generate an alloc.inc file.
