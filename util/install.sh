@@ -1,7 +1,7 @@
 #!/bin/sh --posix
 #
 #
-# Script to setup website permissions and generate an alloc.inc file.
+# Script to setup database, website permissions, cronjobs and generate an alloc.inc file.
 #
 
 
@@ -11,7 +11,7 @@ function e_bl     { echo -en " \x1b[34;01m [\x1b[0m"; }                         
 function e_br     { echo -en "\x1b[34;01m] \x1b[0m"; }                                          # Echo bracket right
 function e_ok     { e_bl; echo -en "\x1b[32;01m  OK  \x1b[0m"; e_br; echo -e ${1}; }            # Echo [  OK  ] $msg
 function e_skip   { e_bl; echo -en "\x1b[33;01m SKIP \x1b[0m"; e_br; echo -e ${1}; }            # Echo [ SKIP ] $msg
-function e_failed { e_bl; echo -en "\x1b[31;01mFAILED\x1b[0m"; e_br; echo -e ${1}; FAILED=1; }   # Echo [FAILED] $msg
+function e_failed { e_bl; echo -en "\x1b[31;01mFAILED\x1b[0m"; e_br; echo -e ${1}; FAILED=1; }  # Echo [FAILED] $msg
 function e_dead   { e_bl; echo -en "\x1b[31;01m DEAD \x1b[0m"; e_br; echo -e ${1}; }            # Echo [ DEAD ] $msg
 function e        { echo -en "\n\x1b[34;01m* \x1b[0m"; echo -e ${1}; }
 function e_n      { echo -en "\n\x1b[34;01m* \x1b[0m"; echo -en ${1}; }
