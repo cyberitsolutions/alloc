@@ -611,6 +611,7 @@ if (isset($save)
       // Hmph. Nothing needs to go here?
 
     } else if ($timeSheetItem_delete) {
+      $timeSheetItem->select();
       $timeSheetItem->delete();
       header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
     }
