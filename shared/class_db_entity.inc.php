@@ -76,11 +76,11 @@ class db_entity {
     if ((defined("NO_AUTH") && NO_AUTH) || $this->is_god()) {
       return true;
     }
-    #echo $this->data_table . "->have_perm($action, " . (is_object($person) ? $person->get_id() : $person) . ", $assume_owner)<br>";
     global $current_user, $permission_cache;
     if ($person == "") {
       $person = $current_user;
     }
+    #echo "<br/>1.".$this->data_table . "->have_perm($action, " . (is_object($person) ? $person->get_id() : $person) . ", $assume_owner)";
     $entity_id = $this->get_id();
     if (!$entity_id) {
       $entity_id = 0;
@@ -107,17 +107,20 @@ class db_entity {
                          AND (actions & $action = $action OR actions = 0)
                     ORDER BY sortKey",$entity_id,$person_id);
     $db->query($query);
-    #$action == 4 and print $query;
+    
+#$action == 4 and print $query;
 
     while ($db->next_record()) {
 
       // Ignore this record if it specifies a role the user doesn't have
       $required_role = $db->f("roleName");
-      if ($required_role != "" && !$person->have_role($required_role)) {
+      if ($required_role && !$person->have_role($required_role)) {
+#echo "<br/>here $required_role";
         continue;
       }
       // Ignore this record if it specifies that the user must be the record's owner and they are not
       if ($db->f("entityID") == -1 && !$assume_owner && !$this->is_owner($person)) {
+#echo "<br/>also here: ";
         continue;
       }
       // Read the value of the allow field to determine whether to grant the permission
@@ -471,6 +474,7 @@ class db_entity {
     if (isset($this->data_fields["personID"])) {
 
 #echo "data_table: " .$this->data_table. ",  data field: " .$this->get_value("personID") . " == " . $person->get_id() . "<br>";
+#echo "HERE: ".$this->get_value("personID"). " - ".$person->get_id();
       return $this->get_value("personID") == $person->get_id();
     } else if ($this->key_field->get_name() == "personID") {
 
