@@ -2,10 +2,8 @@
 
 revno=$(bzr revno)
 bzr push
-cd /cyber/devel/bzr/alloc/ && bzr push ~/allocPSA
+cd /cyber/devel/bzr/alloc/ && bzr export --format tgz ~/allocPSA.${revno}.tgz 
 cd ~
-tar czvf allocPSA.${revno}.tgz allocPSA
-\rm -rf allocPSA
 mv allocPSA.${revno}.tgz html/
 
 
