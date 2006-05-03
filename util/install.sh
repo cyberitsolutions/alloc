@@ -105,7 +105,7 @@ DIR="${0%/*}/"
 
 
 CONFIG_FILE="${DIR}install.cfg"
-if [ -f "${1}" ]; then 
+if [ -n "${1}" ]; then 
   CONFIG_FILE="${1}"
 fi
 
@@ -135,9 +135,11 @@ if [ "${DO_DB:0:1}" = "y" ]; then
 
   get_user_var DB_PASS "Enter the MySQL root password" "" "1"
   echo ""
+
+  [ -n "${DB_PASS}" ] && DB_PASS=" -p${DB_PASS} "
  
   # MySQL administrative tables 
-  mysql -v -u root -p${DB_PASS} mysql <<EOMYSQL
+  mysql -v -u root ${DB_PASS} mysql <<EOMYSQL
   DROP DATABASE IF EXISTS ${ALLOC_DB_NAME};
   CREATE DATABASE ${ALLOC_DB_NAME};
   DELETE FROM user WHERE User = "${ALLOC_DB_USER}";
@@ -147,8 +149,8 @@ if [ "${DO_DB:0:1}" = "y" ]; then
   FLUSH PRIVILEGES;
 EOMYSQL
 
-  mysql -u root -p${DB_PASS} ${ALLOC_DB_NAME} < ${DIR}db_structure.sql
-  mysql -u root -p${DB_PASS} ${ALLOC_DB_NAME} < ${DIR}db_data.sql
+  mysql -u root ${DB_PASS} ${ALLOC_DB_NAME} < ${DIR}db_structure.sql
+  mysql -u root ${DB_PASS} ${ALLOC_DB_NAME} < ${DIR}db_data.sql
  
   e "If there were no errors printed above then the database should now be installed." 
   echo
@@ -182,8 +184,6 @@ run "chmod 755 ${DIR}dump_clean_db.sh"                    # rwxr-xr-x
 run "chmod 754 ${DIR}stylesheet_regen.py"                 # rwxr-xr--
 run "chmod 754 ${DIR}update_alloc_dev_database.sh"        # rwxr-xr--
 run "chmod 754 ${DIR}gpl_header.py"                       # rwxr-xr--
-run "chmod 755 ${DIR}cron_sendReminders.sh"               # rwxr-xr-x 
-run "chmod 755 ${DIR}cron_sendEmail.sh"                   # rwxr-xr-x
 run "chmod 600 ${CONFIG_FILE}"                            # rw-------
 run "chmod 700 ${DIR}install.sh"                          # rwx------
 
@@ -277,10 +277,18 @@ fi
 
 if [ -z "${FAILED}" ]; then
   e "Installation Successful."
-  confirm_run "Move ${CONFIG_FILE} to ${ALLOC_DOCS_DIR}?" "mv -i ${CONFIG_FILE} ${ALLOC_DOCS_DIR}" "yes"
+  get_user_var MOVE_FILE "Move ${CONFIG_FILE} to ${ALLOC_DOCS_DIR}?" "yes"
+
+  if [ "${MOVE_FILE:0:1}" = "y" ]; then
+    run "mv -i ${CONFIG_FILE} ${ALLOC_DOCS_DIR}" "yes"
+    CONFIG_FILE="${ALLOC_DOCS_DIR}${CONFIG_FILE}"
+  fi
+  e "To repeat this installation run ${0} ${CONFIG_FILE}"
+
 else 
   e "Installation has not completed successfully!"
 fi
+
 
 DIR_FULL=${PWD}/${DIR}
 DIR_FULL=${DIR_FULL/\.\//}
@@ -299,9 +307,6 @@ echo "     25  4 * * * ${ALLOC_DOCS_DIR}alloc_DB_backup.sh                      
 echo "     */5 * * * * ${DIR_FULL}cron_sendReminders.sh                         "
 echo "     35  4 * * * ${DIR_FULL}cron_sendEmail.sh                             "
 echo "     45  4 * * * ${DIR_FULL}cron_checkRepeatExpenses.sh                   "
-echo "                                                                          " 
-echo "   3) Lastly, ensure ${CONFIG_FILE} is not in the web root, it contains   "
-echo "      your database password too.                                         " 
 echo "                                                                          " 
 echo " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
 
