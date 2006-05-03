@@ -7,14 +7,21 @@
 
 # Functions to help display messages 
 # 
-function e_bl     { echo -en " \x1b[34;01m [\x1b[0m"; }                                         # Echo bracket left
-function e_br     { echo -en "\x1b[34;01m] \x1b[0m"; }                                          # Echo bracket right
-function e_ok     { e_bl; echo -en "\x1b[32;01m  OK  \x1b[0m"; e_br; echo -e ${1}; }            # Echo [  OK  ] $msg
-function e_skip   { e_bl; echo -en "\x1b[33;01m SKIP \x1b[0m"; e_br; echo -e ${1}; }            # Echo [ SKIP ] $msg
-function e_failed { e_bl; echo -en "\x1b[31;01mFAILED\x1b[0m"; e_br; echo -e ${1}; FAILED=1; }  # Echo [FAILED] $msg
-function e_dead   { e_bl; echo -en "\x1b[31;01m DEAD \x1b[0m"; e_br; echo -e ${1}; }            # Echo [ DEAD ] $msg
-function e        { echo -en "\n\x1b[34;01m* \x1b[0m"; echo -e ${1}; }
-function e_n      { echo -en "\n\x1b[34;01m* \x1b[0m"; echo -en ${1}; }
+
+function e_red      { echo -en "\x1b[31;01m${1}\x1b[0m"; }
+function e_green    { echo -en "\x1b[32;01m${1}\x1b[0m"; }
+function e_yellow   { echo -en "\x1b[33;01m${1}\x1b[0m"; }
+function e_blue     { echo -en "\x1b[34;01m${1}\x1b[0m"; }
+function e_white_b  { echo -en "\x1b[1;37m${1}\x1b[0m"; }
+
+function e_ok       { e_blue "  ["; e_green "  OK  "; e_blue "] "; echo -e ${1}; }           # Echo [  OK  ] $msg
+function e_skip     { e_blue "  ["; e_yellow " SKIP "; e_blue "] "; echo -e ${1}; }          # Echo [ SKIP  ] $msg
+function e_failed   { e_blue "  ["; e_red "FAILED"; e_blue "] "; echo -e ${1}; FAILED=1; }   # Echo [FAILED] $msg
+function e_dead     { e_blue "  ["; e_red " DEAD "; e_blue "] "; echo -e ${1}; FAILED=1; }   # Echo [ DEAD ] $msg
+function e          { e_blue "\n* "; e_white_b "${1}\n"; }
+function e_n        { e_blue "\n* "; e_white_b "${1}"; }
+
+
 
 
 # Execute command, catch errors.
@@ -48,7 +55,7 @@ function get_user_var {
   if [ -z "${!NAME}" ]; then
   
     # Print default
-    [ -n "${3}" ] && local default=" [Default:${3}]"
+    [ -n "${3}" ] && local default=" "$(e_blue "[")${3}$(e_blue "]")
     e_n "${2}${default}: "
 
     # Read user input into variable 
@@ -193,7 +200,7 @@ run "chmod 777 ${DIR}../logs/alloc_email.log"             # gonna need to write 
 
 
 # Make the alloc.inc file
-e "Creating alloc.inc file"
+e "Creating alloc.inc"
 cat ${DIR}templates/alloc.inc.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
@@ -210,7 +217,7 @@ else
   e_failed "Could not create alloc.inc"; 
 fi
 
-e "Creating alloc_DB_backup.sh file"
+e "Creating alloc_DB_backup.sh"
 cat ${DIR}templates/alloc_DB_backup.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
@@ -231,7 +238,7 @@ fi
 [ "${ALLOC_WEB_URL_PREFIX:(-1):1}" != "/" ] && ALLOC_WEB_URL_PREFIX="${ALLOC_WEB_URL_PREFIX}/"
 
 
-e "Creating cron_checkRepeatExpenses.sh file"
+e "Creating cron_checkRepeatExpenses.sh"
 cat ${DIR}templates/cron_checkRepeatExpenses.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
 > ${DIR}cron_checkRepeatExpenses.sh
@@ -244,7 +251,7 @@ else
 fi
 
 
-e "Creating cron_sendEmail.sh file"
+e "Creating cron_sendEmail.sh"
 cat ${DIR}templates/cron_sendEmail.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
 > ${DIR}cron_sendEmail.sh
@@ -257,7 +264,7 @@ else
 fi
 
 
-e "Creating cron_sendReminders.sh file"
+e "Creating cron_sendReminders.sh"
 cat ${DIR}templates/cron_sendReminders.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
 > ${DIR}cron_sendReminders.sh
@@ -277,13 +284,20 @@ fi
 
 if [ -z "${FAILED}" ]; then
   e "Installation Successful."
-  get_user_var MOVE_FILE "Move ${CONFIG_FILE} to ${ALLOC_DOCS_DIR}?" "yes"
+  
+  f="$(basename ${CONFIG_FILE})"
+  if [ ! -f "${ALLOC_DOCS_DIR}${f}" ] || ([ -f "${ALLOC_DOCS_DIR}${f}" ] && [ -n "$(diff ${CONFIG_FILE} ${ALLOC_DOCS_DIR}${f})" ]); then
 
-  if [ "${MOVE_FILE:0:1}" = "y" ]; then
-    run "mv -i ${CONFIG_FILE} ${ALLOC_DOCS_DIR}" "yes"
-    CONFIG_FILE="${ALLOC_DOCS_DIR}${CONFIG_FILE}"
+    get_user_var MOVE_FILE "Move ${CONFIG_FILE} to ${ALLOC_DOCS_DIR}?" "yes"
+
+    if [ "${MOVE_FILE:0:1}" = "y" ]; then
+      run "mv ${ALLOC_DOCS_DIR}${f} ${ALLOC_DOCS_DIR}${f}.bak"
+      run "mv ${CONFIG_FILE} ${ALLOC_DOCS_DIR}" "yes"
+      CONFIG_FILE="${ALLOC_DOCS_DIR}${CONFIG_FILE}"
+    fi
+
   fi
-  e "To repeat this installation run ${0} ${CONFIG_FILE}"
+  e "To repeat this installation run ${0} ${CONFIG_FILE/\.\//}"
 
 else 
   e "Installation has not completed successfully!"
