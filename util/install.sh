@@ -107,7 +107,7 @@ DIR="${0%/*}/"
 CONFIG_FILE="${DIR}install.cfg"
 if [ -f "${1}" ]; then 
   CONFIG_FILE="${1}"
-di
+fi
 
 
 
