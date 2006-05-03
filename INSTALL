@@ -13,14 +13,14 @@ and unexpected errors and warnings. Follow the instructions below.
       * Ensure PHP register_globals enabled 
       * Ensure PHP memory_limit >= 64 meg 
       * Ensure the GD image library is installed and PHP knows about it
-      * MySQL >= 4 (although it _may_ work on 3.23) (See /usr/sbin/mysqld -V)
+      * MySQL >= 3.23 (See /usr/sbin/mysqld -V)
       
 
 2) Put the source code in a directory called allocPSA in the webserver document root 
 
 3) Fill in the values in /webroot/allocPSA/util/install.cfg
 
-4) Determine the PHP include_path 
+4) Determine the PHP include_path (ususally from /etc/php.ini)
 
 5) Run installer script /webroot/allocPSA/util/install.sh
 
