@@ -1,7 +1,6 @@
 #!/bin/sh
 #
 # This script will trigger allocs emailed reminder system.
-# Alex Lance <alla@cyber.com.au>
 #
 
 # path to cron and log files

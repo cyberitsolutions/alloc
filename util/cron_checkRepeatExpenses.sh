@@ -1,7 +1,6 @@
 #!/bin/sh
 #
 # This script will trigger the php script which checks for repeating allocexpenses.
-# Alex Lance <alla@cyber.com.au>
 #
 
 # path to cron and log files

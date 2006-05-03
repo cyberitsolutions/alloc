@@ -531,7 +531,7 @@ class task extends db_entity {
 
     $message = "\n".wordwrap($body);
 
-    // Convert plain old recipient address alla@cyber.com.au to Alex Lance <alla@cyber.com.au>
+    // Convert plain old recipient address blah@cyber.com.au to Alex Lance <blah@cyber.com.au>
     if ($recipient["firstName"] && $recipient["surname"] && $recipient["emailAddress"]) {
       $recipient["emailAddress"] = $recipient["firstName"]." ".$recipient["surname"]." <".$recipient["emailAddress"].">";
     } else if ($recipient["fullName"] && $recipient["emailAddress"]) {
