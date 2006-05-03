@@ -1,7 +1,6 @@
 #!/bin/sh
 #
 # This script will trigger allocs daily task email summaries.
-# Alex Lance <alla@cyber.com.au>
 #
 
 # path to cron and log files
