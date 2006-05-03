@@ -104,18 +104,25 @@ fi
 DIR="${0%/*}/"
 
 
+CONFIG_FILE="${DIR}install.cfg"
+if [ -f "${1}" ]; then 
+  CONFIG_FILE="${1}"
+di
+
+
+
 # Source the config file
-[ ! -r "${DIR}install.cfg" ] && die "${DIR}install.cfg does not exist"
-. ${DIR}install.cfg
+[ ! -r "${CONFIG_FILE}" ] && die "${CONFIG_FILE} does not exist"
+. ${CONFIG_FILE}
 
 # Quick check all the values are in the config file
-for i in ${CONFIG_VARS}; do if [ -z "${!i}" ]; then die "Missing ${i} from config file ${DIR}install.cfg"; fi; done
+for i in ${CONFIG_VARS}; do if [ -z "${!i}" ]; then die "Missing ${i} from config file ${CONFIG_FILE}"; fi; done
 
 # Print out config values
 for i in ${CONFIG_VARS}; do echo "${i}: ${!i}"; done
 
 # Determine whether to continue
-get_user_var DO_INSTALL "Does the config in ${DIR}install.cfg look correct to you?" "yes"
+get_user_var DO_INSTALL "Does the config in ${CONFIG_FILE} look correct to you?" "yes"
 
 # Bail out
 [ "${DO_INSTALL:0:1}" != "y" ] && die
@@ -177,8 +184,7 @@ run "chmod 754 ${DIR}update_alloc_dev_database.sh"        # rwxr-xr--
 run "chmod 754 ${DIR}gpl_header.py"                       # rwxr-xr--
 run "chmod 755 ${DIR}cron_sendReminders.sh"               # rwxr-xr-x 
 run "chmod 755 ${DIR}cron_sendEmail.sh"                   # rwxr-xr-x
-run "chmod 755 ${DIR}cron_checkRepeatExpenses.sh"         # rwxr-xr-x
-run "chmod 600 ${DIR}install.cfg"                         # rw-------
+run "chmod 600 ${CONFIG_FILE}"                            # rw-------
 run "chmod 700 ${DIR}install.sh"                          # rwx------
 
 [ ! -f "${DIR}../logs/alloc_email.log" ] && run "touch ${DIR}../logs/alloc_email.log"
@@ -188,7 +194,7 @@ run "chmod 777 ${DIR}../logs/alloc_email.log"             # gonna need to write 
 
 # Make the alloc.inc file
 e "Creating alloc.inc file"
-cat ${DIR}alloc.inc.tpl \
+cat ${DIR}templates/alloc.inc.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
@@ -205,7 +211,7 @@ else
 fi
 
 e "Creating alloc_DB_backup.sh file"
-cat ${DIR}alloc_DB_backup.sh.tpl \
+cat ${DIR}templates/alloc_DB_backup.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
@@ -221,8 +227,57 @@ else
   e_failed "Could not create alloc_DB_backup.sh"; 
 fi
 
+# Append a slash if need be
+[ "${ALLOC_WEB_URL_PREFIX:(-1):1}" != "/" ] && ALLOC_WEB_URL_PREFIX="${ALLOC_WEB_URL_PREFIX}/"
+
+
+e "Creating cron_checkRepeatExpenses.sh file"
+cat ${DIR}templates/cron_checkRepeatExpenses.sh.tpl \
+| sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
+> ${DIR}cron_checkRepeatExpenses.sh
+
+if [ -f "${DIR}cron_checkRepeatExpenses.sh" ]; then 
+  e_ok "Created cron_checkRepeatExpenses.sh"
+  run "chmod 755 ${DIR}cron_checkRepeatExpenses.sh"     
+else 
+  e_failed "Could not create cron_checkRepeatExpenses.sh"; 
+fi
+
+
+e "Creating cron_sendEmail.sh file"
+cat ${DIR}templates/cron_sendEmail.sh.tpl \
+| sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
+> ${DIR}cron_sendEmail.sh
+
+if [ -f "${DIR}cron_sendEmail.sh" ]; then 
+  e_ok "Created cron_sendEmail.sh"
+  run "chmod 755 ${DIR}cron_sendEmail.sh"     
+else 
+  e_failed "Could not create cron_sendEmail.sh"; 
+fi
+
+
+e "Creating cron_sendReminders.sh file"
+cat ${DIR}templates/cron_sendReminders.sh.tpl \
+| sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
+> ${DIR}cron_sendReminders.sh
+
+if [ -f "${DIR}cron_sendReminders.sh" ]; then 
+  e_ok "Created cron_sendReminders.sh"
+  run "chmod 755 ${DIR}cron_sendReminders.sh"     
+else 
+  e_failed "Could not create cron_sendReminders.sh"; 
+fi
+
+
+
+
+
+
+
 if [ -z "${FAILED}" ]; then
   e "Installation Successful."
+  confirm_run "Move ${CONFIG_FILE} to ${ALLOC_DOCS_DIR}?" "mv -i ${CONFIG_FILE} ${ALLOC_DOCS_DIR}" "yes"
 else 
   e "Installation has not completed successfully!"
 fi
@@ -233,9 +288,9 @@ DIR_FULL=${DIR_FULL/\.\//}
 echo
 echo " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
 echo "                                                                          " 
-echo " Two more things you need to do:                                          " 
+echo " To complete the installation:                                            " 
 echo "                                                                          " 
-echo "   1) Move ${DIR}alloc.inc into your PHP include_path. Do not store it in "
+echo "   1) Move ${DIR}alloc.inc into the PHP include_path. Do not store it in  "
 echo "      the web root, as it contains your database password.                " 
 echo "                                                                          "
 echo "   2) Install these into cron to be run as root:                          "
@@ -244,6 +299,9 @@ echo "     25  4 * * * ${ALLOC_DOCS_DIR}alloc_DB_backup.sh                      
 echo "     */5 * * * * ${DIR_FULL}cron_sendReminders.sh                         "
 echo "     35  4 * * * ${DIR_FULL}cron_sendEmail.sh                             "
 echo "     45  4 * * * ${DIR_FULL}cron_checkRepeatExpenses.sh                   "
+echo "                                                                          " 
+echo "   3) Lastly, ensure ${CONFIG_FILE} is not in the web root, it contains   "
+echo "      your database password too.                                         " 
 echo "                                                                          " 
 echo " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
 

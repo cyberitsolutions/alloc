@@ -7,7 +7,7 @@
 PREFIX=`dirname $0`"/../logs/"
 
 # execute the sendreminder php script and save the results
-wget -q -O ${PREFIX}sendReminders_log.new -P ${PREFIX} http://alloc/notification/sendReminders.php
+wget -q -O ${PREFIX}sendReminders_log.new -P ${PREFIX} CONFIG_VAR_ALLOC_WEB_URL_PREFIXnotification/sendReminders.php
 
 # if there were reminders sent (sendReminders_log.new > 0bytes) then log the date
 [ -s ${PREFIX}sendReminders_log.new ] && echo `date` >> ${PREFIX}sendReminders_log.txt
