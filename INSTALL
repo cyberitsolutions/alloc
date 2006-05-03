@@ -16,17 +16,15 @@ and unexpected errors and warnings. Follow the instructions below.
       * MySQL >= 3.23 (See /usr/sbin/mysqld -V)
       
 
-2) Put the source code in a directory called allocPSA in the webserver document root 
+2) Put the source code in a directory called allocpsa in the webserver document root 
 
-3) Fill in the values in /webroot/allocPSA/util/install.cfg
+3) Fill in the values in /webroot/allocpsa/util/install.cfg
 
 4) Determine the PHP include_path (ususally from /etc/php.ini)
 
-5) Run installer script /webroot/allocPSA/util/install.sh
+5) Run installer script /webroot/allocpsa/util/install.sh
 
-6) Remove or chmod a-r the file /webroot/allocPSA/util/install.cfg
-
-7) Go to the url in your web browser. Login with username and password: alloc
+6) Go to the url in your web browser. Login with username and password: alloc
    There is a help document to be found within allocPSA just follow the Help
    link in the menu.
 

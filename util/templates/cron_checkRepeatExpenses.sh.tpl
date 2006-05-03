@@ -7,5 +7,5 @@
 PREFIX=`dirname $0`"/../logs/"
 
 # wget the php script
-wget -q -O ${PREFIX}checkRepeatingExpenses_log.new -P ${PREFIX} http://alloc/finance/checkRepeat.php
+wget -q -O ${PREFIX}checkRepeatingExpenses_log.new -P ${PREFIX} CONFIG_VAR_ALLOC_WEB_URL_PREFIXfinance/checkRepeat.php
 
