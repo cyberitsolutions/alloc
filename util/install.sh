@@ -291,7 +291,7 @@ if [ -z "${FAILED}" ]; then
     get_user_var MOVE_FILE "Move ${CONFIG_FILE} to ${ALLOC_DOCS_DIR}?" "yes"
 
     if [ "${MOVE_FILE:0:1}" = "y" ]; then
-      run "mv ${ALLOC_DOCS_DIR}${f} ${ALLOC_DOCS_DIR}${f}.bak"
+      [ -f "${ALLOC_DOCS_DIR}${f}" ] && run "mv ${ALLOC_DOCS_DIR}${f} ${ALLOC_DOCS_DIR}${f}.bak"
       run "mv ${CONFIG_FILE} ${ALLOC_DOCS_DIR}" "yes"
       CONFIG_FILE="${ALLOC_DOCS_DIR}${CONFIG_FILE}"
     fi
