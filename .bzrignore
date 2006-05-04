@@ -1,3 +1,5 @@
 images/user*.png
 images/big_user*.png
 logs/*
+report/files/*.txt
+util/cron_*.sh
