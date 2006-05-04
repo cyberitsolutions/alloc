@@ -609,9 +609,9 @@ class task extends db_entity {
     // Task level filtering
     if ($_FORM["taskStatus"]) {
       
-      $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+      $past = date("Y-m-d 00:00:00", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
       if (date("D") == "Mon") {
-        $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")));
+        $past = date("Y-m-d 00:00:00", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")));
       } 
 
       $taskStatusFilter = array("completed"=>"(task.dateActualCompletion IS NOT NULL AND task.dateActualCompletion != '')"
