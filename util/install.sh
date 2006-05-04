@@ -166,17 +166,21 @@ fi
 
 # Append a slash if need be
 [ "${ALLOC_DOCS_DIR:(-1):1}" != "/" ] && ALLOC_DOCS_DIR=${ALLOC_DOCS_DIR}/; 
+[ "${ALLOC_BACKUP_DIR:(-1):1}" != "/" ] && ALLOC_BACKUP_DIR=${ALLOC_BACKUP_DIR}/; 
 
 # Create the directories if need be
 [ ! -d "${ALLOC_DOCS_DIR}" ]         && run "mkdir -p ${ALLOC_DOCS_DIR}"
+[ ! -d "${ALLOC_BACKUP_DIR}" ]       && run "mkdir -p ${ALLOC_BACKUP_DIR}"
 [ ! -d "${ALLOC_DOCS_DIR}clients" ]  && run "mkdir ${ALLOC_DOCS_DIR}clients"
 [ ! -d "${ALLOC_DOCS_DIR}projects" ] && run "mkdir ${ALLOC_DOCS_DIR}projects"
 
 # Fix group and perms
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}"
+run "chgrp ${ALLOC_WEB_USER} ${ALLOC_BACKUP_DIR}"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}clients"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}projects"
 run "chmod 775 ${ALLOC_DOCS_DIR}"
+run "chmod 775 ${ALLOC_BACKUP_DIR}"
 run "chmod 775 ${ALLOC_DOCS_DIR}clients"
 run "chmod 775 ${ALLOC_DOCS_DIR}projects"
 
@@ -224,12 +228,13 @@ cat ${DIR}templates/alloc_DB_backup.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_HOST/${ALLOC_DB_HOST}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_BACKUP_DIR/${ALLOC_BACKUP_DIR//\//\/}/" \
 > ${DIR}alloc_DB_backup.sh
 
 if [ -f "${DIR}alloc_DB_backup.sh" ]; then 
   e_ok "Created alloc_DB_backup.sh"
   run "chmod 755 ${DIR}alloc_DB_backup.sh"            
-  run "mv ${DIR}alloc_DB_backup.sh ${ALLOC_DOCS_DIR}"
+  run "mv ${DIR}alloc_DB_backup.sh ${ALLOC_BACKUP_DIR}"
 else 
   e_failed "Could not create alloc_DB_backup.sh"; 
 fi
@@ -286,14 +291,14 @@ if [ -z "${FAILED}" ]; then
   e "Installation Successful."
   
   f="$(basename ${CONFIG_FILE})"
-  if [ ! -f "${ALLOC_DOCS_DIR}${f}" ] || ([ -f "${ALLOC_DOCS_DIR}${f}" ] && [ -n "$(diff ${CONFIG_FILE} ${ALLOC_DOCS_DIR}${f})" ]); then
+  if [ ! -f "${ALLOC_BACKUP_DIR}${f}" ] || ([ -f "${ALLOC_BACKUP_DIR}${f}" ] && [ -n "$(diff ${CONFIG_FILE} ${ALLOC_BACKUP_DIR}${f})" ]); then
 
-    get_user_var MOVE_FILE "Move ${CONFIG_FILE} to ${ALLOC_DOCS_DIR}?" "yes"
+    get_user_var MOVE_FILE "Move ${CONFIG_FILE} to ${ALLOC_BACKUP_DIR}?" "yes"
 
     if [ "${MOVE_FILE:0:1}" = "y" ]; then
-      [ -f "${ALLOC_DOCS_DIR}${f}" ] && run "mv ${ALLOC_DOCS_DIR}${f} ${ALLOC_DOCS_DIR}${f}.bak"
-      run "mv ${CONFIG_FILE} ${ALLOC_DOCS_DIR}" "yes"
-      CONFIG_FILE="${ALLOC_DOCS_DIR}${CONFIG_FILE}"
+      [ -f "${ALLOC_BACKUP_DIR}${f}" ] && run "mv ${ALLOC_BACKUP_DIR}${f} ${ALLOC_BACKUP_DIR}${f}.bak"
+      run "mv ${CONFIG_FILE} ${ALLOC_BACKUP_DIR}" "yes"
+      CONFIG_FILE="${ALLOC_BACKUP_DIR}${CONFIG_FILE}"
     fi
 
   fi
@@ -317,7 +322,7 @@ echo "      the web root, as it contains your database password.                
 echo "                                                                          "
 echo "   2) Install these into cron to be run as root:                          "
 echo "                                                                          "
-echo "     25  4 * * * ${ALLOC_DOCS_DIR}alloc_DB_backup.sh                      "
+echo "     25  4 * * * ${ALLOC_BACKUP_DIR}alloc_DB_backup.sh                    "
 echo "     */5 * * * * ${DIR_FULL}cron_sendReminders.sh                         "
 echo "     35  4 * * * ${DIR_FULL}cron_sendEmail.sh                             "
 echo "     45  4 * * * ${DIR_FULL}cron_checkRepeatExpenses.sh                   "
