@@ -11,7 +11,7 @@ TODAY=`date +%a`;
   	TODAY=week`date +%U`;
 	fi
 
-BACKUP_FILE="${BACKUP_DIR}/allocdump.sql.${TODAY}"
+BACKUP_FILE="${BACKUP_DIR}allocdump.sql.${TODAY}"
 
 
 mysqldump -d -u ${ALLOC_DB_USER} -p${ALLOC_DB_PASS} ${ALLOC_DB_NAME} > ${BACKUP_FILE}

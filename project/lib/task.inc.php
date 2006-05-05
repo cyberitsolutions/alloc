@@ -550,9 +550,11 @@ class task extends db_entity {
     return $rtn;
   }
 
-  function get_task_name() {
-    if ($this->get_value("taskTypeID") == TT_PHASE) {
+  function get_task_name($format="html") {
+    if ($this->get_value("taskTypeID") == TT_PHASE && $format == "html") {
       $rtn = "<strong>".stripslashes($this->get_value("taskName"))."</strong>";
+    } else if ($this->get_value("taskTypeID") == TT_PHASE) {
+      $rtn = stripslashes($this->get_value("taskName"));
     } else {
       substr($this->get_value("taskName"),0,140) != $this->get_value("taskName") and $dotdotdot = "...";
       $rtn = substr(stripslashes($this->get_value("taskName")),0,140).$dotdotdot;
@@ -793,7 +795,7 @@ class task extends db_entity {
         $t = new task;
         $t->read_db_record($db);
         $row["taskURL"] = $t->get_url();
-        $row["taskName"] = $t->get_task_name();
+        $row["taskName"] = $t->get_task_name($_FORM["return"]);
         $row["taskLink"] = $t->get_task_link();
         $row["taskStatus"] = $t->get_status();
 
@@ -885,6 +887,7 @@ class task extends db_entity {
     # The str_replace lets us use this same filter from above. 
     $db = new db_alloc;
     $q = sprintf("SELECT * FROM task %s ORDER BY taskName",str_replace("project.projectID","projectID",$f));
+echo "<br/>".$q;
     $db->query($q);
 
     while ($row = $db->next_record()) {
