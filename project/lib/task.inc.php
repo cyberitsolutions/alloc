@@ -887,7 +887,6 @@ class task extends db_entity {
     # The str_replace lets us use this same filter from above. 
     $db = new db_alloc;
     $q = sprintf("SELECT * FROM task %s ORDER BY taskName",str_replace("project.projectID","projectID",$f));
-echo "<br/>".$q;
     $db->query($q);
 
     while ($row = $db->next_record()) {
