@@ -176,7 +176,6 @@ fi
 
 # Fix group and perms
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}"
-run "chgrp ${ALLOC_WEB_USER} ${ALLOC_BACKUP_DIR}"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}clients"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}projects"
 run "chmod 775 ${ALLOC_DOCS_DIR}"
