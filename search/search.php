@@ -23,7 +23,7 @@
 
 require_once("alloc.inc");
 
-global $sel, $TPL, $search, $needle, $category;
+global $TPL;
 
   function get_trimmed_description($haystack, $needle) {
 
@@ -63,7 +63,10 @@ global $sel, $TPL, $search, $needle, $category;
 
   }
 
-$needle = db_esc($needle);
+
+$search = $_POST["search"];
+$category = $_POST["category"];
+$needle = db_esc($_POST["needle"]);
 
 if (!$search) {
   $str = "<br><br><b>Searching Announcements</b> looks for a match in each <br>Announcement's Heading and Body.<br><br>";

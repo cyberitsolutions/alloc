@@ -25,6 +25,7 @@ require_once("alloc.inc");
 
 global $sess;
 
+$historyID = $_POST["historyID"];
 
 if ($historyID) {
   if (is_numeric($historyID)) {

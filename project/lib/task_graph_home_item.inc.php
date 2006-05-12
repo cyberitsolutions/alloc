@@ -29,48 +29,13 @@ class task_graph_home_item extends home_item {
   }
 
 
-
-  function show_task_calendar() {
-    global $TPL, $plot_weeks, $tasksGraphPlotHome, $plot_weeks_back, $tasksGraphPlotHomeStart, $current_user;
-
-    if (!is_object($current_user)) {
-      return false;
-    }
-
-    if (isset($plot_weeks)) {
-      $tasksGraphPlotHome = $plot_weeks;
-    }
-
-    if (isset($plot_weeks_back)) {
-      $tasksGraphPlotHomeStart = $plot_weeks_back;
-    }
-
-    is_object($current_user) and $current_user->prefs["tasksGraphPlotHome"] = $tasksGraphPlotHome;
-    is_object($current_user) and $current_user->prefs["tasksGraphPlotHomeStart"] = $tasksGraphPlotHomeStart;
-
-
-    $week_links = array("0", 1, 2, 3, 4, 8, 12, 30, 52);
-
-    foreach($week_links as $week) {
-      $TPL["forward_week_links"].= "&nbsp;";
-      $TPL["back_week_links"].= "&nbsp;";
-      if ($week == $tasksGraphPlotHome) {
-        $TPL["forward_week_links"].= $week;
-      } else {
-        $TPL["forward_week_links"].= "<a href=\"".$TPL["url_alloc_home"]."plot_weeks=".$week."\">".$week."</a>";
-      }
-      if ($week == $tasksGraphPlotHomeStart) {
-        $TPL["back_week_links"].= $week;
-      } else {
-        $TPL["back_week_links"].= "<a href=\"".$TPL["url_alloc_home"]."plot_weeks_back=".$week."\">".$week."</a>";
-      }
-    }
-  }
-
-
-
   function show_task_calendar_recursive($template) {
-    global $tasksGraphPlotHome, $current_user, $TPL, $tasksGraphPlotHomeStart;
+    global $current_user, $TPL;
+
+ 
+    $tasksGraphPlotHome = $current_user->prefs["tasksGraphPlotHome"];
+    $tasksGraphPlotHomeStart = $current_user->prefs["tasksGraphPlotHomeStart"];
+  
 
     if (!$tasksGraphPlotHome && !isset($tasksGraphPlotHome)) {
       $tasksGraphPlotHome = 2;

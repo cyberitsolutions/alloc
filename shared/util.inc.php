@@ -85,12 +85,14 @@ function show_header() {
 }
 
 function get_stylesheet_name() {
-  global $customizedTheme, $customizedFont;
+  global $current_user;
+
   $themes = get_customizedTheme_array();
   $fonts  = get_customizedFont_array();
 
-  $stylesheet = "style_".strtolower($themes[sprintf("%d", $customizedTheme)])."_".$fonts[sprintf("%d",$customizedFont)].".css";
-  echo $stylesheet;
+  $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme"])]);
+  $font = $fonts[sprintf("%d",$current_user->prefs["customizedFont"])];
+  echo "style_".$style."_".$font.".css";
 }
 
 function get_customizedFont_array() {
