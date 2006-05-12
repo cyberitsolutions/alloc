@@ -23,27 +23,28 @@
 
 class customize_alloc_home_item extends home_item {
   function customize_alloc_home_item() {
-    global $TPL, $current_user, $font, $theme, $customize_save, $customizedFont, $customizedTheme;
+    global $TPL, $current_user, $customizedFont, $customizedTheme;
+
     home_item::home_item("", "Preferences", "home", "customizeH.tpl", "narrow");
 
     if (!is_object($current_user)) {
       return false;
     }
 
-    if (isset($font)) {
-      $customizedFont = $font;
-    }
-    if (isset($theme)) {
-      $customizedTheme = $theme;
+    if ($_POST["customize_save"]) {
+      $current_user->prefs["customizedFont"] = sprintf("%d",$_POST["font"]);
+      $current_user->prefs["customizedTheme"] = $_POST["theme"];
+
+      $current_user->prefs["tasksGraphPlotHome"] = $_POST["weeks"];
+      $current_user->prefs["tasksGraphPlotHomeStart"] = $_POST["weeksBack"];
     }
 
-    if ($customize_save) {
-      $current_user->prefs["customizedFont"] = sprintf("%d",$customizedFont);
-      $current_user->prefs["customizedTheme"] = $customizedTheme;
-    }
+    $TPL["fontOptions"] = get_select_options(get_customizedFont_array(), $current_user->prefs["customizedFont"]);
+    $TPL["themeOptions"] = get_select_options(get_customizedTheme_array(), $current_user->prefs["customizedTheme"]);
 
-    $TPL["customizeFontOptions"] = get_select_options(get_customizedFont_array(), $customizedFont);
-    $TPL["customizeThemeOptions"] = get_select_options(get_customizedTheme_array(), $customizedTheme);
+    $week_ops = array("0"=>0, 1=>1, 2=>2, 3=>3, 4=>4, 8=>8, 12=>12, 30=>30, 52=>52);
+    $TPL["weeksOptions"] = get_select_options($week_ops, $current_user->prefs["tasksGraphPlotHome"]);
+    $TPL["weeksBackOptions"] = get_select_options($week_ops, $current_user->prefs["tasksGraphPlotHomeStart"]);
   }
 
 
