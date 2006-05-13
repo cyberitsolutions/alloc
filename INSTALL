@@ -9,7 +9,7 @@ and unexpected errors and warnings. Follow the instructions below.
     a phpinfo script with your webbrowser see http://php.net/phpinfo) 
 
     allocPSA will NOT work correctly unless these conditions are met:
-      * PHP >= 4.3.0 && < PHP 5
+      * PHP >= 4.3.0
       * Ensure PHP register_globals enabled 
       * Ensure PHP memory_limit >= 64 meg 
       * Ensure the GD image library is installed and PHP knows about it
