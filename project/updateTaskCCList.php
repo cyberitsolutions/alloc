@@ -24,8 +24,8 @@
 
 require_once("alloc.inc");
 
-if ($projectID) {
-  echo task::get_task_cc_list_select($projectID);
+if ($_GET["projectID"]) {
+  echo task::get_task_cc_list_select($_GET["projectID"]);
 }
 
 

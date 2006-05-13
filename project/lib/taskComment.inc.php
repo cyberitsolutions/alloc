@@ -34,7 +34,7 @@ function sort_comments_callback_func($a, $b) {
 
 // show table of comments
 function show_taskCommentsR($template) {
-  global $TPL, $taskID, $commentID, $view, $taskCommentTemplateID, $current_user;
+  global $TPL, $taskID, $current_user;
   
   // setup add/edit comment section values
   $TPL["task_taskID"] = $taskID;
@@ -96,13 +96,13 @@ function show_taskCommentsR($template) {
     $TPL["task_username"] = $person->get_username(1);
 
     // trim comment to 128 characters
-    if (strlen($v["comment"]) > 3000 && $view != "printer") {
+    if (strlen($v["comment"]) > 3000 && $_GET["view"] != "printer") {
       $TPL["task_comment_trimmed"] = nl2br(sprintf("%s...", substr($v["comment"], 0, 3000)));
     } else {
       $TPL["task_comment_trimmed"] = str_replace("\n", "<br>", htmlentities($v["comment"]));
     }
 
-    if (!$commentID || $commentID != $v["commentID"]) {
+    if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
       include_template($template);
     }
   }

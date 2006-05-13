@@ -24,7 +24,8 @@
 require_once("alloc.inc");
 
 function show_person_list($template) {
-  global $db, $TPL, $tf;
+  global $TPL, $tf;
+  $db = new db_alloc;
 
   $TPL["person_buttons"] = "
           <input type=\"submit\" name=\"person_save\" value=\"Save\">
@@ -65,7 +66,7 @@ $tf = new tf;
 $db->query("SELECT * FROM person ORDER BY username");
 $person_array = get_array_from_db($db, "personID", "username");
 
-
+$tfID = $_GET["tfID"] or $tfID = $_POST["tfID"];
 if ($tfID) {
   $tf->set_id($tfID);
   $tf->select();
@@ -73,48 +74,52 @@ if ($tfID) {
 
 
 
-if ($save) {
+if ($_POST["save"]) {
   $tf->read_globals();
 
   if ($tf->get_value("tfName") == "") {
     $TPL["message"][] = "You must enter a name.";
   } else {
 
-    $db = new db_alloc;
-    $q = sprintf("SELECT count(*) AS tally FROM tf WHERE tfName = '%s'",db_esc($tf->get_value("tfName")));
-    $db->query($q);
-    $db->next_record();
 
-    if ($db->f("tally")) {
+    if (!$tf->get_id()) {
+      $db = new db_alloc;
+      $q = sprintf("SELECT count(*) AS tally FROM tf WHERE tfName = '%s'",db_esc($tf->get_value("tfName")));
+      $db->query($q);
+      $db->next_record();
+      $tf_is_taken = $db->f("tally");
+    }
+
+    if ($tf_is_taken) {
       $TPL["message"][] = "That TF name is taken, please choose another.";
     } else {
       $tf->save();
       $TPL["message_good"][] = "Your TF has been saved.";
     }
-  
+    
   }
 
 
 } else {
 
-  if ($delete) {
+  if ($_POST["delete"]) {
     $tf->delete();
     header("location:".$TPL["url_alloc_tfList"]);
     exit();
   }
 }
 
-if ($person_save || $person_delete) {
+if ($_POST["person_save"] || $_POST["person_delete"]) {
 
   $tfPerson = new tfPerson;
   $tfPerson->read_globals();
   $tfPerson->read_globals("person_");
   if (!$_POST["person_personID"]) {
     $TPL["message"][] = "Please select a person from the dropdown list." ;
-  } else if ($person_save) {
+  } else if ($_POST["person_save"]) {
     $tfPerson->save();
     $TPL["message_good"][] = "Person added to TF.";
-  } else if ($person_delete) {
+  } else if ($_POST["person_delete"]) {
     $tfPerson->delete();
   }
 }

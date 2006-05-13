@@ -25,11 +25,11 @@
 require_once("alloc.inc");
 
 
-if ($taskCommentTemplateID && $taskID) {
+if ($_GET["taskCommentTemplateID"] && $_GET["taskID"]) {
   $taskCommentTemplate = new taskCommentTemplate;
-  $taskCommentTemplate->set_id($taskCommentTemplateID);
+  $taskCommentTemplate->set_id($_GET["taskCommentTemplateID"]);
   $taskCommentTemplate->select();
-  echo stripslashes($taskCommentTemplate->get_populated_template($taskID));
+  echo stripslashes($taskCommentTemplate->get_populated_template($_GET["taskID"]));
 }
 
 

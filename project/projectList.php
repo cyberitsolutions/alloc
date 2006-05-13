@@ -24,23 +24,23 @@
 require_once("alloc.inc");
 
 function show_project($template_name) {
-  global $current_user, $TPL, $personID, $projectName, $projectStatus, $projectType;
+  global $current_user, $TPL;
 
   // Construct query based on any filter conditions
   $from = "project LEFT JOIN client ON project.clientID = client.clientID";
   $where = "1=1";
-  if ($projectName) {
-    $where.= sprintf(" AND projectName LIKE '%%%s%%'", addslashes($projectName));
+  if ($_POST["projectName"]) {
+    $where.= sprintf(" AND projectName LIKE '%%%s%%'", addslashes($_POST["projectName"]));
   }
-  if ($personID) {
+  if ($_POST["personID"]) {
     $from.= ", projectPerson";
-    $where.= sprintf(" AND projectPerson.projectID = project.projectID AND personID=%d", $personID);
+    $where.= sprintf(" AND projectPerson.projectID = project.projectID AND personID=%d", $_POST["personID"]);
   }
-  if ($projectStatus) {
-    $where.= sprintf(" AND projectStatus = '%s'", $projectStatus);
+  if ($_POST["projectStatus"]) {
+    $where.= sprintf(" AND projectStatus = '%s'", $_POST["projectStatus"]);
   }
-  if ($projectType) {
-    $where.= sprintf(" AND projectType = '%s'", $projectType);
+  if ($_POST["projectType"]) {
+    $where.= sprintf(" AND projectType = '%s'", $_POST["projectType"]);
   }
   $query = "SELECT project.*, clientName
              FROM $from 
@@ -65,7 +65,7 @@ function show_project($template_name) {
 }
 
 function show_filter($template_name) {
-  global $current_user, $TPL, $current_user, $personID, $projectName, $projectStatus, $projectType;
+  global $TPL, $current_user;
 
   if (!$current_user->is_employee()) {
     return;
@@ -78,25 +78,22 @@ function show_filter($template_name) {
 
     $personSelect= "<select name=\"personID\">";
     $personSelect.= "<option value=\"\"> -- ALL -- ";
-    $personSelect.= get_options_from_db($personDb, "username", "personID", $personID);
+    $personSelect.= get_options_from_db($personDb, "username", "personID", $_POST["personID"]);
     $personSelect.= "</select>";
   } else {
     $personSelect = $current_user->get_value("username");
   }
   $TPL["personSelect"] = $personSelect;
-  $TPL["projectStatusOptions"] = get_options_from_array(array("Current", "Potential", "Archived"), $projectStatus, false);
-  $TPL["projectTypeOptions"] = get_options_from_array(array("Project", "Job", "Contract"), $projectType, false);
-  $TPL["projectName"] = $projectName;
+  $TPL["projectStatusOptions"] = get_options_from_array(array("Current", "Potential", "Archived"), $_POST["projectStatus"], false);
+  $TPL["projectTypeOptions"] = get_options_from_array(array("Project", "Job", "Contract"), $_POST["projectType"], false);
+  $TPL["projectName"] = $_POST["projectName"];
 
   include_template($template_name);
 }
 
-  // Set default filter parameters
-if (!isset($personID)) {
-  $personID = $current_user->get_id();
-}
-if (!isset($projectStatus)) {
-  $projectStatus = "Current";
+// Set default filter parameters
+if (!isset($_POST["projectStatus"])) {
+  $_POST["projectStatus"] = "Current";
 }
 
 include_template("templates/projectListM.tpl");

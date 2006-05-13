@@ -64,19 +64,19 @@ if (isset($save)) {
 
   }    
   
-} else if (isset($save_attachment)) {
+} else if ($_POST["save_attachment"]) {
 
-  if ($attachment != "none") {
-    is_uploaded_file($attachment) || die("Uploaded document error.  Please try again.");
+  if ($_FILES["attachment"]) {
+    is_uploaded_file($_FILES["attachment"]["tmp_name"]) || die("Uploaded document error.  Please try again.");
 
     if (!is_dir($TPL["url_alloc_clientDocs_dir"].$clientID)) {
       mkdir($TPL["url_alloc_clientDocs_dir"].$clientID, 0777);
     }
 
-    if (!move_uploaded_file($attachment, $TPL["url_alloc_clientDocs_dir"].$clientID."/".$attachment_name)) {
-      die("could not move attachment to: ".$TPL["url_alloc_clientDocs_dir"].$clientID."/".$attachment_name);
+    if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $TPL["url_alloc_clientDocs_dir"].$clientID."/".$_FILES["attachment"]["name"])) {
+      die("could not move attachment to: ".$TPL["url_alloc_clientDocs_dir"].$clientID."/".$_FILES["attachment"]["name"]);
     } else {
-      chmod($TPL["url_alloc_clientDocs_dir"].$clientID."/".$attachment_name, 0777);
+      chmod($TPL["url_alloc_clientDocs_dir"].$clientID."/".$_FILES["attachment"]["name"], 0777);
       header("Location: ".$TPL["url_alloc_client"]."clientID=".$clientID);
     }
   }

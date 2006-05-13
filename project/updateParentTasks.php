@@ -25,8 +25,9 @@
 require_once("alloc.inc");
 
 
-if ($projectID) {
-  echo task::get_parent_task_select($projectID);
+
+if ($_GET["projectID"]) {
+  echo task::get_parent_task_select($_GET["projectID"]);
 }
 
 
