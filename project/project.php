@@ -37,6 +37,10 @@ require_once("alloc.inc");
   function list_attachments($template_name) {
     global $TPL, $projectID;
     if ($projectID) {
+      if (!is_dir($TPL["url_alloc_projectDocs_dir"].$projectID)) {
+        mkdir($TPL["url_alloc_projectDocs_dir"].$projectID, 0777);
+      }
+
       if (is_dir($TPL["url_alloc_projectDocs_dir"].$projectID)) {
         $handle = opendir($TPL["url_alloc_projectDocs_dir"].$projectID);
 
@@ -56,9 +60,8 @@ require_once("alloc.inc");
 $grand_total = 0;
 
   function show_timeSheet($template) {
-    global $db, $TPL, $project, $current_user, $projectBudget, $grand_total;
+    global $db, $TPL, $projectID, $current_user, $projectBudget, $grand_total;
 
-    $projectID = $project->get_id();
     $timeSheet = new timeSheet;
 
     $db2 = new db_alloc;
@@ -98,9 +101,8 @@ $grand_total = 0;
   }
 
   function show_transaction($template) {
-    global $db, $TPL, $project, $current_user, $projectBudget, $grand_total;
+    global $db, $TPL, $projectID, $current_user, $projectBudget, $grand_total;
 
-    $projectID = $project->get_id();
     $transaction = new transaction;
 
     if (isset($projectID) && $projectID) {
@@ -147,13 +149,11 @@ $grand_total = 0;
   }
 
   function show_commission_list($template_name) {
-    global $TPL, $db, $project;
+    global $TPL, $db, $projectID;
 
     $TPL["commission_list_buttons"] = "
       <input type=\"submit\" name=\"commission_save\" value=\"Save\">
       <input type=\"submit\" name=\"commission_delete\" value=\"Delete\">";
-
-    $projectID = $project->get_id();
 
     if ($projectID) {
       $query = sprintf("SELECT * from projectCommissionPerson WHERE projectID= %d", $projectID);
@@ -170,7 +170,7 @@ $grand_total = 0;
   }
 
   function show_new_commission($template_name) {
-    global $TPL, $project, $projectID;
+    global $TPL, $projectID;
 
     // Don't show entry form for new projects
     if (!$projectID) {
@@ -180,13 +180,12 @@ $grand_total = 0;
     $TPL["commission_list_buttons"] = "<input type=\"submit\" name=\"commission_save\" value=\"Add\">";
     $commission_item = new projectCommissionPerson;
     $commission_item->set_tpl_values(DST_HTML_ATTRIBUTE, "commission_");
-    $TPL["commission_projectID"] = $project->get_id();
+    $TPL["commission_projectID"] = $projectID;
     include_template($template_name);
   }
 
   function show_modification_history($template) {
-    global $TPL, $project, $db;
-    $projectID = $project->get_id();
+    global $TPL, $projectID, $db;
 
     if ($projectID) {
       $query = sprintf("SELECT * from projectModificationNote WHERE projectID= %d", $projectID);
@@ -207,13 +206,8 @@ $grand_total = 0;
   }
 
   function show_person_list($template) {
-    global $db, $TPL, $project;
+    global $db, $TPL, $projectID;
     global $email_type_array, $rate_type_array, $project_person_role_array;
-
-
-
-
-    $projectID = $project->get_id();
 
     if ($projectID) {
       $query = sprintf("SELECT * from projectPerson WHERE projectID=%d", $projectID);
@@ -231,17 +225,16 @@ $grand_total = 0;
         $TPL["person_buttons"] = "
           <input type=\"submit\" name=\"person_save\" value=\"Save\">
           <input type=\"submit\" name=\"person_delete\" value=\"Delete\">";
-        // <a href=\"".$TPL["url_alloc_projectPerson"]."projectPersonID=".$projectPerson->get_id()."\">Details</a>"
         include_template($template);
       }
     }
   }
 
   function show_new_person($template) {
-    global $TPL, $email_type_array, $rate_type_array, $project, $project_person_role_array;
+    global $TPL, $email_type_array, $rate_type_array, $projectID, $project_person_role_array;
 
     // Don't show entry form for new projects
-    if (!$project->get_id()) {
+    if (!$projectID) {
       return;
     }
 
@@ -282,7 +275,7 @@ $grand_total = 0;
 
   // show table of comments
   function show_comments($template) {
-    global $TPL, $projectID, $commentID;
+    global $TPL, $projectID;
 
     // setup add/edit comment section values
     $TPL["project_projectID"] = $projectID;
@@ -305,12 +298,14 @@ $grand_total = 0;
       $person->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
       // if a commentID was posted and it is equal to this one then setup values for editing
-      if (isset($commentID) && $commentID == $comment->get_id()) {
+      if ($_GET["commentID"] && $_GET["commentID"] == $comment->get_id()) {
         $TPL["project_projectComment_title"] = "Edit comment:";
         $TPL["project_projectComment"] = $comment->get_value('comment');
         $TPL["project_projectComment_buttons"] =
-          sprintf("<input type=\"hidden\" name=\"projectComment_id\" value=\"%d\">", $commentID).
-          "<input type=\"submit\" name=\"projectComment_update\" value=\"Update\">"."<input type=\"submit\" name=\"projectComment_delete\" value=\"Delete\">"."<input type=\"submit\" name=\"projectComment_cancel\" value=\"Cancel\">";
+          sprintf("<input type=\"hidden\" name=\"projectComment_id\" value=\"%d\">", $_GET["commentID"])
+                 ."<input type=\"submit\" name=\"projectComment_update\" value=\"Update\">"
+                 ."<input type=\"submit\" name=\"projectComment_delete\" value=\"Delete\">"
+                 ."<input type=\"submit\" name=\"projectComment_cancel\" value=\"Cancel\">";
       }
 
       $TPL["project_commentModifiedDate"] = $comment->get_modified_date();
@@ -367,10 +362,13 @@ $grand_total = 0;
 // END FUNCTIONS
 
 
+
+
+global $current_user;
+
+$projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
+
 $project = new project;
-
-
-global $projectID, $current_user;
 
 if ($projectID) {
   $project->set_id($projectID);
@@ -381,9 +379,9 @@ if ($projectID) {
 }
 
 
-if (isset($save)) {
+if ($_POST["save"]) {
   $project->read_globals();
-  $project->set_value("is_agency", $project_is_agency ? 1 : 0);
+  $project->set_value("is_agency", $_POST["project_is_agency"] ? 1 : 0);
 
   if (!$project->get_id()) {    // brand new project
     $definately_new_project = true;
@@ -436,7 +434,7 @@ if (isset($save)) {
     }
 
   }
-} else if (isset($delete)) {
+} else if ($_POST["delete"]) {
   $project->read_globals();
   $project->delete();
   header("location: ".$TPL["url_alloc_projectList"]);
@@ -445,32 +443,32 @@ if (isset($save)) {
 
 if ($projectID) {
 
-  if ($person_save || $person_delete) {
+  if ($_POST["person_save"] || $_POST["person_delete"]) {
     $project_person = new projectPerson;
 
-    if ($person_projectPersonID) {
+    if ($_POST["person_projectPersonID"]) {
       // Read current values from database so we don't loose any fields that are not set by the form
-      $project_person->set_id($person_projectPersonID);
+      $project_person->set_id($_POST["person_projectPersonID"]);
       $project_person->select();
     }
 
     $project_person->read_globals();
     $project_person->read_globals("person_");
 
-    if ($person_save) {
+    if ($_POST["person_save"]) {
       $project_person->save();
-    } else if ($person_delete) {
+    } else if ($_POST["person_delete"]) {
       $project_person->delete();
     }
 
-  } else if ($commission_save || $commission_delete) {
+  } else if ($_POST["commission_save"] || $_POST["commission_delete"]) {
     $commission_item = new projectCommissionPerson;
     $commission_item->read_globals();
     $commission_item->read_globals("commission_");
 
-    if ($commission_save) {
+    if ($_POST["commission_save"]) {
       $commission_item->save();
-    } else if ($commission_delete) {
+    } else if ($_POST["commission_delete"]) {
       $commission_item->delete();
     }
   }
@@ -485,48 +483,44 @@ if ($projectID) {
 }
 
 // Comments
-if (isset($projectComment_save) || isset($projectComment_update)) {
+if ($_POST["projectComment_save"] || $_POST["projectComment_update"]) {
   $comment = new comment;
   $comment->set_value('commentType', 'project');
   $comment->set_value('commentLinkID', $projectID);
   $comment->set_modified_time();
   $comment->set_value('commentModifiedUser', $current_user->get_id());
 
-  if (isset($projectComment_update)) {
-    $comment->set_id($projectComment_id);
+  if ($_POST["projectComment_update"]) {
+    $comment->set_id($_POST["projectComment_id"]);
   }
 
-  if (isset($projectComment)) {
-    $comment->set_value('comment', $projectComment);
+  if ($_POST["projectComment"]) {
+    $comment->set_value('comment', $_POST["projectComment"]);
     $comment->save();
   }
 }
 
 
-if (isset($projectComment_delete) && isset($projectComment_id)) {
+if ($_POST["projectComment_delete"] && $_POST["projectComment_id"]) {
   $comment = new comment;
-  $comment->set_id($projectComment_id);
+  $comment->set_id($_POST["projectComment_id"]);
   $comment->delete();
 }
 
-if (isset($projectComment_cancel)) {
-  unset($commentID);
-}
 // if someone uploads an attachment
+if ($_POST["save_attachment"]) {
 
-if ($save_attachment) {
-
-  if ($attachment != "none") {
-    is_uploaded_file($attachment) || die("Uploaded document error.  Please try again.");
+  if ($_FILES["attachment"]) {
+    is_uploaded_file($_FILES["attachment"]["tmp_name"]) || die("Uploaded document error.  Please try again.");
 
     if (!is_dir($TPL["url_alloc_projectDocs_dir"].$projectID)) {
       mkdir($TPL["url_alloc_projectDocs_dir"].$projectID, 0777);
     }
 
-    if (!move_uploaded_file($attachment, $TPL["url_alloc_projectDocs_dir"].$projectID."/".$attachment_name)) {
-      die("could not move attachment to: ".$TPL["url_alloc_projectDocs_dir"].$projectID."/".$attachment_name);
+    if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $TPL["url_alloc_projectDocs_dir"].$projectID."/".$_FILES["attachment"]["name"])) {
+      die("could not move attachment to: ".$TPL["url_alloc_projectDocs_dir"].$projectID."/".$_FILES["attachment"]["name"]);
     } else {
-      chmod($TPL["url_alloc_projectDocs_dir"].$projectID."/".$attachment_name, 0777);
+      chmod($TPL["url_alloc_projectDocs_dir"].$projectID."/".$_FILES["attachment"]["name"], 0777);
       header("Location: ".$TPL["url_alloc_project"]."projectID=".$projectID);
     }
   }

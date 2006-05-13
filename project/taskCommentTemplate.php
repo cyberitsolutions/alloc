@@ -27,19 +27,22 @@ require_once("alloc.inc");
 $taskCommentTemplate = new taskCommentTemplate();
 
 // Load the taskCommentTemplate from the database
-if (isset($taskCommentTemplate)){
+
+$taskCommentTemplateID = $_POST["taskCommentTemplateID"] or $taskCommentTemplateID = $_GET["taskCommentTemplateID"];
+
+if ($taskCommentTemplateID){
  $taskCommentTemplate->set_id($taskCommentTemplateID);
  $taskCommentTemplate->select();
 }
 
 // Process submission of the form using the save button
-if (isset($_POST["save"])) {
+if ($_POST["save"]) {
   $taskCommentTemplate->read_globals();
   $taskCommentTemplate->save();
   header("Location: ".$TPL["url_alloc_taskCommentTemplateList"]);
 
 // Process submission of the form using the delete button
-} else if (isset($_POST["delete"])) {
+} else if ($_POST["delete"]) {
   header("Location: ".$TPL["url_alloc_taskCommentTemplateList"]);
   $taskCommentTemplate->delete();
   page_close();

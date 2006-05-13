@@ -322,7 +322,7 @@ class task extends db_entity {
 
   function set_option_tpl_values() {
     // Set template values to provide options for edit selects
-    global $TPL, $timeSheetID, $current_user, $isMessage;
+    global $TPL, $current_user, $isMessage;
 
     $projectID = $this->get_value("projectID");
     $db = new db_alloc;
@@ -343,8 +343,8 @@ class task extends db_entity {
     $TPL["taskCommentTemplateOptions"] = get_option("Comment Templates", "0")."\n";
     $TPL["taskCommentTemplateOptions"].= get_options_from_db($db, "taskCommentTemplateName", "taskCommentTemplateID",false);
 
-    if ($timeSheetID) {
-      $ts_query = "select personID from timeSheet where timeSheetID = ".$timeSheetID;
+    if ($_GET["timeSheetID"]) {
+      $ts_query = "select personID from timeSheet where timeSheetID = ".$_GET["timeSheetID"];
       $db->query($ts_query);
       $db->next_record();
       $owner = $db->f("personID");
@@ -905,7 +905,10 @@ class task extends db_entity {
       if ($row["taskTypeID"] == TT_PHASE) {
         $padding+=1;
         $filter["parentTaskID"] = sprintf("(parentTaskID = %d)",$row["taskID"]);
-        $tasks = array_merge($tasks,task::get_task_children($filter,$padding));
+        $arr = task::get_task_children($filter,$padding);
+        if (is_array($arr)) {
+          $tasks = array_merge($tasks,$arr);
+        }
         $padding-=1;
       }
     }

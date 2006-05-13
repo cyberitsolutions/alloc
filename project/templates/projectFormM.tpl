@@ -18,7 +18,7 @@
     <td><input type="text" name="projectShortName" value="{project_projectShortName}" size="10"></td>
   </tr>
   <tr>
-    <td align="right" rowspan="4" valign="top">Comments</td>
+    <td align="right" rowspan="4" valign="top">Description</td>
     <td rowspan="4">
       <textarea name="projectComments" rows="7" wrap="virtual" cols="55">{project_projectComments}</textarea>
     </td>
@@ -140,10 +140,14 @@
   {:show_comments templates/projectCommentsR.tpl}
   <tr>
     <td valign="top">{project_projectComment_title}</td>
-    <td colspan="2"><textarea name="projectComment" cols="70" rows="4" wrap="virtual">{project_projectComment}</textarea><br>{project_projectComment_buttons}</td>
+    <td colspan="2">
+      <form action="{url_alloc_project}" method=post>
+      <input type="hidden" name="projectID" value="{project_projectID}">
+      <textarea name="projectComment" cols="70" rows="4" wrap="virtual">{project_projectComment}</textarea><br>{project_projectComment_buttons}
+      </form>
+    </td>
   </tr>
 </table>
-</form>
 
 {table_box}
   <tr>

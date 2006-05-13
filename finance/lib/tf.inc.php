@@ -67,10 +67,13 @@ class tf extends db_entity {
 
 
   function delete() {
-    $query = "DELETE FROM transaction WHERE tfID='".$this->get_id()."'";
     $db = new db_alloc;
+
+    $query = "DELETE FROM transaction WHERE tfID='".$this->get_id()."'";
     $db->query($query);
 
+    $query = "DELETE FROM tfPerson WHERE tfID='".$this->get_id()."'";
+    $db->query($query);
     db_entity::delete();
   }
 

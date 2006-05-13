@@ -322,9 +322,9 @@ class db_entity {
 
   // Copies values from global variables in to any items in the key_field or data_fields data members that have the same
   // name
-  // If prefix is set, then $GLOBALS[$prefix . $var] gets copied to field[$var]
+  // If prefix is set, then $_POST[$prefix.$var] gets copied to field[$var]
   function read_globals($prefix = "", $source = SRC_VARIABLE) {
-    $this->read_array($GLOBALS, $prefix, $source);
+    $this->read_array($_POST, $prefix, $source);
   }
 
   // Set global variables with field values.  Variable names are field names prefixed with the variable_name_prefix param

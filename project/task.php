@@ -72,15 +72,18 @@ require_once("alloc.inc");
 
 global $timeSheetID;
 
-if ($timeSheetID) {
+if ($_GET["timeSheetID"]) {
   $TPL["timeSheet_save"] = "<input type=\"submit\" name=\"timeSheet_save\" value=\"Save and Return to Time Sheet\">";
-  $TPL["timeSheetID"] = $timeSheetID;
+  $TPL["timeSheetID"] = $_GET["timeSheetID"];
 }
 
 $db = new db_alloc;
 $task = new task;
 
 // If taskID
+
+$taskID = $_POST["taskID"] or $taskID = $_GET["taskID"];
+
 if (isset($taskID)) {
   // Displaying a record
   $task->set_id($taskID);
@@ -90,7 +93,7 @@ if (isset($taskID)) {
 
 // Creating a new record
 } else {
-  $dateCreated = date("Y-m-d H:i:s");
+  $_POST["dateCreated"] = date("Y-m-d H:i:s");
   $task->read_globals();
   $taskID = $task->get_id();
   if ($task->get_value("projectID")) {
@@ -100,7 +103,7 @@ if (isset($taskID)) {
 
 
 // If saving a record
-if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save_and_summary) || isset($timeSheet_save)) {
+if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POST["save_and_summary"] || $_POST["timeSheet_save"]) {
 
   $task->read_globals();
   $task_is_new = !$task->get_id();
@@ -155,20 +158,16 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
   }
 
   // Add entries to taskCCList
-  global $taskCCList;
   $q = sprintf("DELETE FROM taskCCList WHERE taskID = %d",$task->get_id());
   $db->query($q);
   
-  if (is_array($taskCCList)) {
-    foreach ($taskCCList as $encoded_name_and_email) {
+  if (is_array($_POST["taskCCList"])) {
+    foreach ($_POST["taskCCList"] as $encoded_name_and_email) {
       $name_and_email = unserialize(base64_decode(urldecode($encoded_name_and_email)));
       $q = sprintf("INSERT INTO taskCCList (fullName,emailAddress,taskID) VALUES ('%s','%s',%d)",addslashes($name_and_email["name"]),$name_and_email["email"],$task->get_id());
       $db->query($q);
     }
   }
-
-
-  global $taskEmail;
 
   if ($task_is_new && $current_user->get_id() != $task->get_value("personID")) {
     $successful_recipients = $task->send_emails(array("assignee"),$task,"Task Created");
@@ -179,16 +178,16 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
   count($msg) and $msg = "&message_good=".urlencode(implode("<br/>",$msg));
 
   if ($success) {
-    if (isset($save)) {
+    if ($_POST["save"]) {
       $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
-    } else if (isset($save_and_back)) {
+    } else if ($_POST["save_and_back"]) {
       $url = $TPL["url_alloc_project"]."projectID=".$task->get_value("projectID");
-    } else if (isset($save_and_summary)) {
+    } else if ($_POST["save_and_summary"]) {
       $url = $TPL["url_alloc_taskSummary"];
-    } else if (isset($save_and_new)) {
+    } else if ($_POST["save_and_new"]) {
       $url = $TPL["url_alloc_task"]."projectID=".$task->get_value("projectID")."&parentTaskID=".$task->get_value("parentTaskID");
-    } else if (isset($timeSheet_save)) {
-      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID;
+    } else if ($_POST["timeSheet_save"]) {
+      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$_POST["timeSheetID"];
     } else {
       die("Unexpected save button");
     }
@@ -198,7 +197,7 @@ if (isset($save) || isset($save_and_back) || isset($save_and_new) || isset($save
   }
 
 // If deleting a record
-} else if (isset($delete)) {
+} else if ($_POST["delete"]) {
   $task->read_globals();
   $task->delete();
   header("location: ".$TPL["url_alloc_taskSummary"]);
@@ -231,8 +230,8 @@ $_GET["message_good"] and $TPL["message_good"][] = urldecode($_GET["message_good
 
 
 // If we've been sent here by a "New Message" or "New Fault" option in the Quick List dropdown
-if (!$taskID && $tasktype) {
-  $task->set_value("taskTypeID", $tasktype);
+if (!$taskID && $_GET["tasktype"]) {
+  $task->set_value("taskTypeID", $_GET["tasktype"]);
 }
 
 // Set options for the dropdown boxen
@@ -271,7 +270,6 @@ if (is_array($parentTaskIDs)) {
   foreach ($parentTaskIDs as $tName => $tID) {
     $spaces.="&nbsp;&nbsp;&nbsp;&nbsp;";
     $TPL["hierarchy_links"] .= "<br/>".$spaces."<a href=\"".$TPL["url_alloc_task"]."taskID=".$tID."\">".$tName."</a>";
-    #$br = "<br/>";
   }
 }
 
@@ -282,14 +280,13 @@ $TPL["hierarchy_links"].= "</br><br/><b>".$TPL["task_taskName"]."</b>";
 
 
 
-global $taskComment_edit;
-if (isset($commentID) && $taskComment_edit) {
+if ($_GET["commentID"] && $_GET["taskComment_edit"]) {
   $comment = new comment();
-  $comment->set_id($commentID);
+  $comment->set_id($_GET["commentID"]);
   $comment->select();
   $TPL["task_taskComment"] = $comment->get_value('comment');
   $TPL["task_taskComment_buttons"] =
-    sprintf("<input type=\"hidden\" name=\"taskComment_id\" value=\"%d\">", $commentID)
+    sprintf("<input type=\"hidden\" name=\"taskComment_id\" value=\"%d\">", $_GET["commentID"])
            ."<input type=\"submit\" name=\"taskComment_update\" value=\"Save Comment\">";
 } else {
   $TPL["task_taskComment_buttons"] = "<input type=\"submit\" name=\"taskComment_save\" value=\"Save Comment\">";
@@ -329,12 +326,12 @@ if ($task->get_id()) {
 
 
 // Detailed editable view
-if ($view == "detail" || !$task->get_id()) {
+if ($_GET["view"] == "detail" || !$task->get_id()) {
   $TPL["task_taskName"] = htmlentities($task->get_value("taskName"));
   include_template("templates/taskDetailM.tpl");
 
 // Printer friendly view
-} else if ($view == "printer") {
+} else if ($_GET["view"] == "printer") {
 
   $client = new client;
   $client->set_id($project->get_value("clientID"));

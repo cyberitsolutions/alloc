@@ -26,10 +26,10 @@ require_once("alloc.inc");
 check_entity_perm("permission", PERM_READ_WRITE);
 
 function show_permission_list($template_name) {
-  global $TPL, $submit, $filter;
+  global $TPL;
 
-  if ($submit || $filter != "") {
-    $where = " where tableName like '".$filter."%' ";   // TODO: Add filtering to permission list
+  if ($_POST["submit"] || $_POST["filter"] != "") {
+    $where = " where tableName like '".$_POST["filter"]."%' ";   // TODO: Add filtering to permission list
   }
   $db = new db_alloc;
   $db->query("SELECT * FROM permission $where ORDER BY tableName, sortKey");
