@@ -76,7 +76,6 @@ class Session {
       return true;
   }
 
-  // Save $this->session_data to $this->session_file
   function Save() {
     if ($this->Expired()) {
       $this->Destroy();
@@ -87,7 +86,6 @@ class Session {
     }
   } 
 
-  // end session
   function Destroy() {
     if ($this->Started() && $this->key) {
       $this->db->query("DELETE FROM sess WHERE sessID = %s",$this->key);
@@ -96,39 +94,34 @@ class Session {
     $this->key = "";
   }
 
-  // Save sessions data
   function Put($name,$value) {
     $this->session_data[$name] = $value;
   }
 
-  // Fetch session data
   function Get($name) {
     return $this->session_data[$name];
   }
 
-  // Get unique key
   function GetKey() {
     return $this->key;
   }
 
-  // Use cookies
   function MakeCookie() {
     // Set a cookie.
     $rtn = SetCookie("alloc_cookie",$this->key,0,"","");
     if (!$rtn) {
-      echo "Unable to set cookie";
       $this->mode = "get";
     } else if (!isset($_COOKIE["alloc_cookie"])) {
       $_COOKIE["alloc_cookie"] = $this->key;
     }
   } 
 
-  // Destroy cookies
   function DestroyCookie() {
     if ($this->mode == "cookie") {
       # This seems to not be needed?
       #SetCookie("alloc_cookie",false,time()-3600,"","");
     }
+    SetCookie("alloc_cookie",FALSE,0,"","");
     unset($_COOKIE["alloc_cookie"]);
   }
 
@@ -152,6 +145,7 @@ class Session {
 
   function UseGet() {
     $this->mode = "get";
+    $this->DestroyCookie();
     $this->Put("session_mode",$this->mode);
   }
  

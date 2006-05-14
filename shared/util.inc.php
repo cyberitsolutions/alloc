@@ -22,15 +22,37 @@
  */
 
 
-// Load up $_FORM with $_GET and $_POST
+function get_alloc_modules() {
+  if (defined("ALLOC_MODULES")) {
+    return unserialize(ALLOC_MODULES);
+  } else {
+    echo "ALLOC_MODULES is not defined!";
+  }
+}
+
+function page_close() {
+  $sess = Session::GetSession();
+  $sess->Save();
+
+  global $current_user;
+  if (is_object($current_user) && $current_user->get_id()) {
+    if (is_array($current_user->prefs)) {
+      $current_user->select();
+      $arr = serialize($current_user->prefs);
+      $current_user->set_value("sessData",$arr);
+    }
+    $current_user->save();
+  }
+}
+
 function get_all_form_data($array=array()) {
+// Load up $_FORM with $_GET and $_POST
   $_FORM = array();
   foreach ($array as $name) {
     $_FORM[$name] = $_POST[$name] or $_FORM[$name] = urldecode($_GET[$name]);
   } 
   return $_FORM;
 } 
-
 
 function timetook($start, $text="Duration: ") {
   $end = microtime();
@@ -60,25 +82,19 @@ function get_cached_table($table) {
       }
     }
     $cache->set_cached_table("person",$people);
-  
-
   }
   return $cache->get_cached_table($table);
 }
 
-
-function get_option($label, $value = "{label}", $selected = false) {
+function get_option($label, $value = "", $selected = false) {
   $rtn = "<option";
-  if ($value != "{label}") {
-    $rtn.= " value=\"$value\"";
-  }
+  $rtn.= " value=\"$value\"";
   if ($selected) {
     $rtn.= " selected";
   }
   $rtn.= ">".$label."</option>";
   return $rtn;
 }
-
 
 function show_header() {
   include_template(ALLOC_MOD_DIR."/shared/templates/headerS.tpl");
@@ -98,10 +114,10 @@ function get_stylesheet_name() {
 function get_customizedFont_array() {
   return array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"4", "1"=>5, "2"=>6, "3"=>7, "4"=>8, "5"=>9, "6"=>10);
 }
+
 function get_customizedTheme_array() {
   return array("Icy", "Darko", "Aneurism", "Clove", "Puddle", "None");
 }
-
 
 function show_footer() {
   include_template(ALLOC_MOD_DIR."/shared/templates/footerS.tpl");
