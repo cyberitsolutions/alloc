@@ -65,8 +65,8 @@ class Session {
     $this->key = md5($personID."mix it up#@!".md5(mktime().md5(microtime())));
     $this->Put("key2", $this->key2);
     $this->Put("session_started", mktime());
-    $this->db->query("DELETE FROM sess WHERE personID = %s",$personID);
-    $this->db->query("INSERT INTO sess (sessID,sessData,personID) VALUES (%s,%s,%s)"
+    $this->db->query("DELETE FROM sess WHERE personID = %d",$personID);
+    $this->db->query("INSERT INTO sess (sessID,sessData,personID) VALUES (%s,%s,%d)"
                              ,$this->key, $this->Encode($this->session_data), $personID);
   }
 

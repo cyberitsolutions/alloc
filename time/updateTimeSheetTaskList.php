@@ -24,8 +24,8 @@
 
 require_once("alloc.inc");
 
-if ($task_type && $timeSheetID) {
-  echo timeSheet::get_task_list_dropdown($task_type, $timeSheetID, $taskID);
+if ($_GET["task_type"] && $_GET["timeSheetID"]) {
+  echo timeSheet::get_task_list_dropdown($_GET["task_type"], $_GET["timeSheetID"], $_GET["taskID"]);
 }
 
 

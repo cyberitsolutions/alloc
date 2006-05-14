@@ -115,7 +115,6 @@ if (!$current_user->is_employee()) {
     }
   }
 
-
   function show_new_transaction($template) {
     global $timeSheet, $TPL, $db, $percent_array;
 
@@ -143,21 +142,19 @@ if (!$current_user->is_employee()) {
     }
   }
 
-
   function show_main_list() {
-    global $timeSheet, $current_user, $timeSheetItem_timeSheetItemID;
+    global $timeSheet, $current_user;
 
     if (!$timeSheet->get_id()) return;
     
     $db = new db_alloc;
-    $q = sprintf("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d and timeSheetItemID != %d",$timeSheet->get_id(),$timeSheetItem_timeSheetItemID);
+    $q = sprintf("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d and timeSheetItemID != %d",$timeSheet->get_id(),$_POST["timeSheetItem_timeSheetItemID"]);
     $db->query($q);
     $db->next_record();
     if ($db->f("tally")) {
       include_template("templates/timeSheetItemM.tpl");
     }
   }
-
 
   function show_invoice_details() {
     global $timeSheet, $TPL, $db, $timeSheetID, $projectID, $current_user;
@@ -217,7 +214,6 @@ if (!$current_user->is_employee()) {
     }
   }
 
-
   function task_exists($taskID) {
 
     $db = new db_alloc;
@@ -232,10 +228,9 @@ if (!$current_user->is_employee()) {
     return $rtn;
   }
 
-
   function show_timeSheet_list($template) {
     global $TPL, $timeSheet, $db, $tskDesc;
-    global $timeSheetItem, $timeSheetItem_timeSheetItemID, $timeSheetID;
+    global $timeSheetItem, $timeSheetID;
 
     $db_task = new db_alloc;
 
@@ -257,7 +252,7 @@ if (!$current_user->is_employee()) {
       $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
 
       // If editing a timeSheetItem then don't display it in the list
-      if ($timeSheetItem_timeSheetItemID == $timeSheetItem->get_id()) {
+      if ($_POST["timeSheetItem_timeSheetItemID"] == $timeSheetItem->get_id()) {
         continue;
       }  
      
@@ -280,9 +275,8 @@ if (!$current_user->is_employee()) {
 
   }
 
-
   function show_new_timeSheet($template) {
-    global $TPL, $timeSheet, $timeSheetID, $db, $current_user, $timeSheetItem_timeSheetItemID;
+    global $TPL, $timeSheet, $timeSheetID, $db, $current_user;
 
     // Don't show entry form for new timeSheet.
     if (!$timeSheetID) {
@@ -294,9 +288,9 @@ if (!$current_user->is_employee()) {
     && ($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
 
       // If we are editing an existing timeSheetItem
-      if ($timeSheetItem_timeSheetItemID) {
+      if ($_POST["timeSheetItem_timeSheetItemID"]) {
         $timeSheetItem = new timeSheetItem;
-        $timeSheetItem->set_id($timeSheetItem_timeSheetItemID);
+        $timeSheetItem->set_id($_POST["timeSheetItem_timeSheetItemID"]);
         $timeSheetItem->select();
         $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
         $taskID = $timeSheetItem->get_value("taskID");
@@ -336,10 +330,9 @@ if (!$current_user->is_employee()) {
 
 // ============ END FUNCTIONS 
 
-global $timeSheetID, $timeSheet, $timeSheetItem, $timeSheetItemID, $db, $current_user, $personID, $TPL;
-global $transaction_save, $transaction_delete, $p_button, $a_button, $r_button;
+global $timeSheet, $timeSheetItem, $timeSheetItemID, $db, $current_user, $TPL;
 
-
+$timeSheetID = $_POST["timeSheetID"] or $timeSheetID = $_GET["timeSheetID"];
 
 
 $db = new db_alloc;
@@ -354,25 +347,25 @@ if ($timeSheetID) {
 $timeSheet = new timeSheet;
 
 
-if (isset($save)
-    || isset($save_and_new)
-    || isset($save_and_returnToList)
-    || isset($save_and_returnToProject)
-    || isset($save_and_MoveForward)
-    || isset($save_and_invoice)
-    || isset($save_and_MoveBack)) {
+if ($_POST["save"]
+|| $_POST["save_and_new"]
+|| $_POST["save_and_returnToList"]
+|| $_POST["save_and_returnToProject"]
+|| $_POST["save_and_MoveForward"]
+|| $_POST["save_and_invoice"]
+|| $_POST["save_and_MoveBack"]) {
 
-  if ($save_and_invoice) {
-    $save_and_MoveForward = true;
+  if ($_POST["save_and_invoice"]) {
+    $_POST["save_and_MoveForward"] = true;
   }
   // Saving a record
   $timeSheet->read_globals();
   $timeSheet->read_globals("timeSheet_");
 
-  if ($invoiceItemID) {
+  if ($_POST["invoiceItemID"]) {
     $invoiceItem = new invoiceItem;
-    $invoiceItem->set_id($invoiceItemID);
-    $invoiceItem->select() || die("invoiceItemID was a bogey: ".$invoiceItemID);
+    $invoiceItem->set_id($_POST["invoiceItemID"]);
+    $invoiceItem->select() || die("invoiceItemID was a bogey: ".$_POST["invoiceItemID"]);
 
     $db->query("select invoiceNum from invoice where invoiceID = ".$invoiceItem->get_value("invoiceID"));
     $db->next_record();
@@ -403,10 +396,11 @@ if (isset($save)
   } else {
     $save_error=true;
     $TPL["message_help"][] = "Step 1/3: Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
+    $TPL["message"][] = "Please select a Project and then click the Create Time Sheet button.";
   }
 
 
-  if (isset($save_and_MoveForward)) {
+  if ($_POST["save_and_MoveForward"]) {
 
     switch ($timeSheet->get_value("status")) {
     case 'edit':
@@ -480,7 +474,7 @@ if (isset($save)
       }
       $timeSheet->set_value("approvedByAdminPersonID", $current_user->get_id());
 
-      if (!$save_and_invoice) {
+      if (!$_POST["save_and_invoice"]) {
         $db->query("select dateFrom from timeSheet where timeSheetID = ".$timeSheet->get_id());
         $db->next_record();
         $msg.= $timeSheet->createTransactions();
@@ -493,7 +487,7 @@ if (isset($save)
 
 
   // They've clicked the <- Back Submit button
-  } else if (isset($save_and_MoveBack)) {
+  } else if ($_POST["save_and_MoveBack"]) {
 
     if ($timeSheet->get_value("status") == "invoiced") {
       $timeSheet->destroyTransactions();
@@ -564,11 +558,11 @@ if (isset($save)
     // don't save or sql will complain
     $url = $TPL["url_alloc_timeSheet"];
   } else if ($timeSheet->save()) {
-    if (isset($save_and_new)) {
+    if ($_POST["save_and_new"]) {
       $url = $TPL["url_alloc_timeSheet"];
-    } else if (isset($save_and_returnToList)) {
+    } else if ($_POST["save_and_returnToList"]) {
       $url = $TPL["url_alloc_timeSheetList"];
-    } else if (isset($save_and_returnToProject)) {
+    } else if ($_POST["save_and_returnToProject"]) {
       $url = $TPL["url_alloc_project"]."projectID=".$timeSheet->get_value("projectID");
     } else {
       $msg = htmlentities(urlencode($msg));
@@ -578,39 +572,39 @@ if (isset($save)
     header("Location: $url");
     exit();
   }
-} else if (isset($delete)) {
+} else if ($_POST["delete"]) {
   // Deleting a record
   $timeSheet->read_globals();
   $timeSheet->select();
   $timeSheet->delete();
   header("location: ".$TPL["url_alloc_timeSheetList"]);
-} else if (isset($timeSheetID)) {
+} else if ($timeSheetID) {
 
-  if ($timeSheetItem_save || $timeSheetItem_edit || $timeSheetItem_delete) {
+  if ($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["timeSheetItem_delete"]) {
     $timeSheetItem = new timeSheetItem;
     $timeSheetItem->read_globals();
     $timeSheetItem->read_globals("timeSheetItem_");
     $timeSheet->set_id($timeSheetID);
     $timeSheet->select();
 
-    if ($timeSheetItem_save) {
+    if ($_POST["timeSheetItem_save"]) {
       // SAVE INDIVIDUAL TIME SHEET ITEM
 
-      if ($timeSheetItem_taskID != 0 && $timeSheetItem_taskID) {
-        $db->query("select taskName from task where taskID = ".$timeSheetItem_taskID);
+      if ($_POST["timeSheetItem_taskID"] != 0 && $_POST["timeSheetItem_taskID"]) {
+        $db->query("select taskName from task where taskID = %d",$_POST["timeSheetItem_taskID"]);
         $db->next_record();
         $taskName = $db->f("taskName");
       }
 
       $timeSheetItem->set_value("description", $taskName);
-      $timeSheetItem_commentPrivate and $timeSheetItem->set_value("commentPrivate", 1);
+      $_POST["timeSheetItem_commentPrivate"] and $timeSheetItem->set_value("commentPrivate", 1);
       $timeSheetItem->save();
       header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetItem->get_value("timeSheetID"));
 
-    } else if ($timeSheetItem_edit) {
+    } else if ($_POST["timeSheetItem_edit"]) {
       // Hmph. Nothing needs to go here?
 
-    } else if ($timeSheetItem_delete) {
+    } else if ($_POST["timeSheetItem_delete"]) {
       $timeSheetItem->select();
       $timeSheetItem->delete();
       header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
@@ -629,7 +623,7 @@ if (isset($save)
 
 // THAT'S THE END OF THE BIG SAVE.  
 
-if (!isset($timeSheetID)) {
+if (!$timeSheetID) {
   $timeSheet->set_value("personID", $current_user->get_id());
 }
 
@@ -642,13 +636,13 @@ $TPL["timeSheet_status_label"] = ucwords($TPL["timeSheet_status"]);
 
 // Take care of the P A R buttons
 
-if (($p_button || $a_button || $r_button) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
 
-  if ($p_button) {
+  if ($_POST["p_button"]) {
     $status = "pending";
-  } else if ($a_button) {
+  } else if ($_POST["a_button"]) {
     $status = "approved";
-  } else if ($r_button) {
+  } else if ($_POST["r_button"]) {
     $status = "rejected";
   }
 
@@ -658,17 +652,17 @@ if (($p_button || $a_button || $r_button) && $timeSheet->have_perm(PERM_TIME_INV
 }
 // Take care of the transaction line items on an invoiced timesheet created by admin
 
-if (($transaction_save || $transaction_delete) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+if (($_POST["transaction_save"] || $_POST["transaction_delete"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
   $transaction = new transaction;
   $transaction->read_globals();
   $transaction->read_globals("transaction_");
-  if ($transaction_save) {
-    if (is_numeric($percent_dropdown)) {
-      $transaction->set_value("amount", $percent_dropdown);
+  if ($_POST["transaction_save"]) {
+    if (is_numeric($_POST["percent_dropdown"])) {
+      $transaction->set_value("amount", $_POST["percent_dropdown"]);
     }
 
     $transaction->save();
-  } else if ($transaction_delete) {
+  } else if ($_POST["transaction_delete"]) {
     $transaction->delete();
   }
 }
@@ -709,8 +703,6 @@ $TPL["projectID"] = $projectID;
 
 
 // Get the project record to determine which button for the edit status.
-// Get client name
-
 if ($projectID != 0) {
   $project = new project;
   $project->set_id($projectID);
@@ -721,17 +713,15 @@ if ($projectID != 0) {
   if (!$projectManagers) {
     $TPL["timeSheet_dateSubmittedToManager"] = "N/A";
     $TPL["timeSheet_approvedByManagerPersonID_username"] = "N/A";
-    
   }
 
+  // Get client name
   $client = $project->get_foreign_object("client");
   $TPL["clientName"] = $client->get_value("clientName");
   $TPL["cost_centre_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$project->get_value("cost_centre_tfID")."\">";
   $TPL["cost_centre_link"].= get_tf_name($project->get_value("cost_centre_tfID"))."</a>";
   $TPL["client_link"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
 }
-// THIS IS A GOOD PLACE TO PUT STUFF 
-
 
 // These variables populate the time sheet printer friendly version
 $TPL["companyName"] = config::get_config_item("companyName");
@@ -746,8 +736,8 @@ $TPL["companyInfoLine2"].= " Web: ".config::get_config_item("companyContactHomeP
 $msg and $TPL["message_good"][] = $msg;
 
 
-global $dont_send_email, $percent_array;
-if ($dont_send_email) {
+global $percent_array;
+if ($_POST["dont_send_email"]) {
   $TPL["dont_send_email_checked"] = " checked";
 } else {
   $TPL["dont_send_email_checked"] = "";
@@ -781,9 +771,7 @@ $percent_array = array(""=>"",
 // display the buttons to move timesheet forward and backward.
 
 if (!$timeSheet->get_id()) {
-#<input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
-  $TPL["timeSheet_ChangeStatusButton"] = "
-    <input type=\"submit\" name=\"save\" value=\"Create Time Sheet\"> ";
+  $TPL["timeSheet_ChangeStatusButton"] = "<input type=\"submit\" name=\"save\" value=\"Create Time Sheet\"> ";
 }
 
 
@@ -798,13 +786,11 @@ case '':
 case 'edit':
   if (($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) && ($timeSheetID)) {
     if ($projectManagers) {
-          #<input type=\"submit\" name=\"grab_project_pay_values\" value=\"Re-Grab Pay Details\">
       $TPL["timeSheet_ChangeStatusButton"] = "
           <input type=\"submit\" name=\"save\" value=\"Save\"> 
           <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
           <input type=\"submit\" name=\"save_and_MoveForward\" value=\"To Manager -->\"> ";
     } else {
-          #<input type=\"submit\" name=\"grab_project_pay_values\" value=\"Re-Grab Pay Details\">
       $TPL["timeSheet_ChangeStatusButton"] = "
           <input type=\"submit\" name=\"save\" value=\"Save\"> 
           <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
@@ -917,8 +903,8 @@ $TPL["insurance"] = "Yes";
 }
 
 // If we are entering the page from a project link: New time sheet
-if ($newTimeSheet_projectID && !$projectID) {
-  $projectID = $newTimeSheet_projectID;
+if ($_GET["newTimeSheet_projectID"] && !$projectID) {
+  $projectID = $_GET["newTimeSheet_projectID"];
 }
 // Set up arrays for the forms.
 if (!$TPL["timeSheet_projectName"]) {
@@ -928,12 +914,6 @@ if (!$TPL["timeSheet_projectName"]) {
   $TPL["show_project_options"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["timeSheet_projectID"]."\">".$TPL["timeSheet_projectName"]."</a>";
 }
 
-
-if ($grab_project_pay_values) {
-  $query = sprintf("update timeSheetItem set rate = '".$timeSheet->pay_info["project_rate"]."',unit = '".$timeSheet->pay_info["project_rateUnitID"]."' where timeSheetID = %d", $timeSheet->get_id());
-  $db->query($query);
-  $db->next_record();
-}
 
 
 
@@ -959,7 +939,7 @@ if ($timeSheetID) {
 
 }
 
-if ($printVersion) {
+if ($_GET["printVersion"]) {
   include_template("templates/timeSheetPrintM.tpl");
 } else {
   include_template("templates/timeSheetFormM.tpl");

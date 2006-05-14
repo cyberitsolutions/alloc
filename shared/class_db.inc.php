@@ -65,6 +65,10 @@ class db {
     if (version_compare(phpversion(), "4.3.0", ">")) {
       $esc_function = "mysql_real_escape_string";
     }
+    
+    if (is_numeric($str)) {
+      return $str;
+    }
     return "'".$esc_function($str)."'";
   }
 

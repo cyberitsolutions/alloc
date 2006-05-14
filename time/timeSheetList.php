@@ -28,8 +28,7 @@ if (!$current_user->is_employee()) {
 }
 
 function show_timeSheets($template_name) {
-  global $db, $current_user, $current_user, $TPL, $timeSheet;
-  global $projectID, $status, $personID, $dateFrom;
+  global $db, $current_user, $TPL, $timeSheet;
 
   $query = sprintf("SELECT timeSheet.*, username, projectName ")
     .sprintf("FROM timeSheet ")
@@ -38,17 +37,17 @@ function show_timeSheets($template_name) {
     .sprintf("  LEFT JOIN project on timeSheet.projectID = project.projectID ")
     .sprintf("WHERE 1 ");
 
-  if ($projectID) {
-    $query.= sprintf(" AND timeSheet.projectID = '%d'", $projectID);
+  if ($_POST["projectID"]) {
+    $query.= sprintf(" AND timeSheet.projectID = '%d'", $_POST["projectID"]);
   }
-  if ($personID) {
-    $query.= sprintf(" AND timeSheet.personID = '%d'", $personID);
+  if ($_POST["personID"]) {
+    $query.= sprintf(" AND timeSheet.personID = '%d'", $_POST["personID"]);
   }
-  if ($status) {
-    $query.= sprintf(" AND timeSheet.status = '%s'", $status);
+  if ($_POST["status"]) {
+    $query.= sprintf(" AND timeSheet.status = '%s'", $_POST["status"]);
   }
-  if ($dateFrom) {
-    $query.= sprintf(" AND timeSheet.dateFrom >= '%s'", $dateFrom);
+  if ($_POST["dateFrom"]) {
+    $query.= sprintf(" AND timeSheet.dateFrom >= '%s'", $_POST["dateFrom"]);
   }
   $query.= "GROUP BY timeSheet.timeSheetID";
   $query.= sprintf(" ORDER BY dateFrom,projectName, username, dateFrom ");
@@ -75,29 +74,19 @@ function show_timeSheets($template_name) {
 
 
 
-  // Set default filter values
-if (!isset($projectID)) {
-  $projectID = "";
-}
-if (!isset($personID)) {
-  $personID = $current_user->get_id();
-}
-if (!isset($status)) {
-  $status = "edit";
-}
-if (!isset($dateFrom)) {
-  $dateFrom = "";
+if (!$_POST["status"]) {
+  $_POST["status"] = "edit";
 }
 
 $db = new db_alloc;
 
-  // display the list of project name.
+// display the list of project name.
 $query = sprintf("SELECT * FROM project ORDER by projectName");
 $db->query($query);
 $project_array = get_array_from_db($db, "projectID", "projectName");
-$TPL["show_project_options"] = get_options_from_array($project_array, $projectID, true);
+$TPL["show_project_options"] = get_options_from_array($project_array, $_POST["projectID"], true);
 
-  // display the list of user name.
+// display the list of user name.
 if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
   $query = sprintf("SELECT * FROM person ORDER by username");
   $db->query($query);
@@ -110,15 +99,14 @@ if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
   $person_array = array($current_user->get_id()=>$person->get_value("username"));
 }
 
-$TPL["show_userID_options"] = get_options_from_array($person_array, $personID, true);
+$TPL["show_userID_options"] = get_options_from_array($person_array, $_POST["personID"], true);
 
-  // display a list of status
+// display a list of status
 $status_array = array("edit"=>"edit", "manager"=>"manager", "admin"=>"admin", "invoiced"=>"invoiced");
-$TPL["show_status_options"] = get_options_from_array($status_array, $status, false);
+$TPL["show_status_options"] = get_options_from_array($status_array, $_POST["status"], false);
 
-  // display the date from filter value
-$TPL["dateFrom"] = $dateFrom;
-
+// display the date from filter value
+$TPL["dateFrom"] = $_POST["dateFrom"];
 $TPL["userID"] = $current_user->get_id();
 
 include_template("templates/timeSheetListM.tpl");
