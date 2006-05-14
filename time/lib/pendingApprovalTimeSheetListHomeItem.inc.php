@@ -23,7 +23,7 @@
 
 class pendingApprovalTimeSheetListHomeItem extends home_item {
   function pendingApprovalTimeSheetListHomeItem() {
-    home_item::home_item("pending_time_list", "Time Sheets Pending Approval", "time", "pendingApprovalTimeSheetListH.tpl", "narrow");
+    home_item::home_item("pending_time_list", "Time Sheets Pending Approval", "time", "pendingApprovalTimeSheetHomeM.tpl", "narrow");
   }
 
   function show_pending_time_sheets($template_name) {

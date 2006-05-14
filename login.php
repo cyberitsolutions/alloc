@@ -25,44 +25,44 @@
 define("IN_LOGIN_RIGHT_NOW",true);
 require_once("alloc.inc");
 
-// Log the user in
-if ($_POST["login"]) {
+// If we already have a session
+if ($sess->Started()) {
+  $url = $sess->GetUrl($TPL["url_alloc_home"]);
+  header("Location: ".$url);
+  exit();
 
-  if ($sess->Started()) {
-      $url = $sess->GetUrl($TPL["url_alloc_home"]);
-      header("Location: ".$url);
+// Else log the user in
+} else if ($_POST["login"]) {
 
   // Session not started yet!
-  } else {
-    $db = new db_alloc;
+  $db = new db_alloc;
 
-    $q = sprintf("SELECT * FROM person WHERE username = '%s'",db_esc($_POST["username"]));
-    $db->query($q);
-    $db->next_record();
-    $salt = $db->f("password");
+  $q = sprintf("SELECT * FROM person WHERE username = '%s'",db_esc($_POST["username"]));
+  $db->query($q);
+  $db->next_record();
+  $salt = $db->f("password");
 
-    $q = sprintf("SELECT * FROM person WHERE username = '%s' and password = '%s'"
-                ,db_esc($_POST["username"]),db_esc(crypt(trim($_POST["password"]), $salt)));
+  $q = sprintf("SELECT * FROM person WHERE username = '%s' and password = '%s'"
+              ,db_esc($_POST["username"]),db_esc(crypt(trim($_POST["password"]), $salt)));
 
-    $db->query($q);
+  $db->query($q);
 
-    if ($row = $db->row()) {
+  if ($row = $db->row()) {
 
-      $sess->Start($row["personID"]);
-      $sess->Put("username" ,strtolower($row["username"]));
-      $sess->Put("perms" ,$row["perms"]);
-      $sess->Put("personID" ,$row["personID"]);
+    $sess->Start($row["personID"]);
+    $sess->Put("username" ,strtolower($row["username"]));
+    $sess->Put("perms" ,$row["perms"]);
+    $sess->Put("personID" ,$row["personID"]);
 
-      if ($_POST["use_cookies"]) {
-        $sess->UseCookie();
-      } else {
-        $sess->UseGet();
-      }
-      $url = $sess->GetUrl($TPL["url_alloc_home"]);
-      $sess->Save();
-      header("Location: ".$url);
+    if ($_POST["use_cookies"]) {
+      $sess->UseCookie();
+    } else {
+      $sess->UseGet();
     }
-  } 
+    $url = $sess->GetUrl($TPL["url_alloc_home"]);
+    $sess->Save();
+    header("Location: ".$url);
+  }
   $error = "Username or Password incorrect.";
 
 } else if ($_POST["new_pass"] && $_POST["username"] && $_POST["email"]) {

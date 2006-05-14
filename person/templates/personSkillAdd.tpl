@@ -1,4 +1,7 @@
-<form action="{url_alloc_personList}" method="post">
+{:show_header}
+{:show_toolbar}
+
+<form action="{url_alloc_personSkillAdd}" method="post">
 {table_box}
   <tr>
     <th colspan="3">Add/Delete New Skill</th>
@@ -24,3 +27,5 @@
   </tr>
 </table>
 </form>
+
+{:show_footer}

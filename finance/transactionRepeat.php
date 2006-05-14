@@ -31,11 +31,13 @@ $current_user->check_employee();
 $transactionRepeat = new transactionRepeat;
 $db = new db_alloc;
 
-global $TPL, $transactionRepeat, $reimbursementRequired, $transactionStartDate;
+global $TPL;
 global $transactionFinishDate, $amount, $product, $tfID, $companyDetails, $transactionRepeatModifiedUser;
 global $john, $transactionRepeatID;
 
 $TPL["john"] = $john;
+
+$transactionRepeatID = $_POST["transactionRepeatID"] or $transactionRepeatID = $_GET["transactionRepeatID"];
 
 if ($transactionRepeatID) {
   $transactionRepeat->set_id($transactionRepeatID);
@@ -46,68 +48,62 @@ if ($transactionRepeatID) {
 
 
 
-if (!isset($reimbursementRequired)) {
-  $reimbursementRequired = 0;
+if (!isset($_POST["reimbursementRequired"])) {
+  $_POST["reimbursementRequired"] = 0;
 }
 
 
-if ($save) {
+if ($_POST["save"]) {
 
   $transactionRepeat = new transactionRepeat;
   $transactionRepeat->read_globals();
 
-  $error = '';
-
-
   // have lots of error checking between here=============================================
 
-  if ($product == "") {
-    $error.= "You must enter a 'Product' <br>";
+  if ($_POST["product"] == "") {
+    $TPL["message"][].= "You must enter a Product";
   }
-  if ($amount == "") {
-    $error.= "You must enter a 'Amount'. <br>";
+  if ($_POST["amount"] == "") {
+    $TPL["message"][].= "You must enter an Amount";
   }
-  if ($tfID == 0) {
-    $error.= "You must select a 'TF'. <br>";
+  if ($_POST["tfID"] == 0) {
+    $TPL["message"][].= "You must select a TF";
   }
-  if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $transactionStartDate)) {
-    $error.= "You must enter the Start date in the format yyyy-mm-dd ";
-    $error.= "(date entered '$transactionStartDate').<br>";
+  if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $_POST["transactionStartDate"])) {
+    $TPL["message"][].= "You must enter the Start date in the format yyyy-mm-dd ";
+    $TPL["message"][].= "(date entered '".$_POST["transactionStartDate"]."')";
   }
-  if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $transactionFinishDate)) {
-    $error.= "You must enter the Finish date in the format yyyy-mm-dd ";
-    $error.= "(date entered '$transactionFinishDate').<br>";
+  if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $_POST["transactionFinishDate"])) {
+    $TPL["message"][].= "You must enter the Finish date in the format yyyy-mm-dd ";
+    $TPL["message"][].= "(date entered '".$_POST["transactionFinishDate"]."')";
   }
-  if ($companyDetails == "") {
-    $error.= "You must provide 'Company Details'. <br>";
+  if ($_POST["companyDetails"] == "") {
+    $TPL["message"][].= "You must provide Company Details";
   }
-  if ($dateEntered == "") {
-    $error.= "You must enter a 'Date Incurred'. <br>";
+  if ($_POST["dateEntered"] == "") {
+    $TPL["message"][].= "You must enter a Date Incurred";
   }
   // And here...===========================================================================
 
 
-  if (!$error) {
+  if (!$TPL["message"]) {
     $transactionRepeat->set_value("transactionType", "expense");
     $transactionRepeat->save();
+    header("Location: ".$TPL["url_alloc_transactionRepeatList"]."tfID=".$_POST["tfID"]);
   }
-
-
-
-  $TPL["error"] = $error;
   $transactionRepeat->set_tpl_values();
-}                               // END OF IF-SAVE
+}                       
 
-if ($delete) {
+if ($_POST["delete"]) {
 
   if ($transactionRepeatID) {
 
     $transactionRepeat->set_id($transactionRepeatID);
     $transactionRepeat->delete();
-    header("Location: ".$TPL["url_alloc_transactionRepeatList"]."tfID=$tfID");
+    header("Location: ".$TPL["url_alloc_transactionRepeatList"]."tfID=".$_POST["tfID"]);
 
   } else {
-    header("Location: ".$TPL["url_alloc_tfList"]."tfID=$tfID");
+    header("Location: ".$TPL["url_alloc_tfList"]."tfID=".$_POST["tfID"]);
   }
 }
 
@@ -116,9 +112,9 @@ if ($delete) {
 $TPL["reimbursementRequired_checked"] = $transactionRepeat->get_value("reimbursementRequired") ? " checked" : "";
 
 if ($transactionRepeat->get_value("transactionRepeatModifiedUser")) {
-$db->query("select username from person where personID=".$transactionRepeat->get_value("transactionRepeatModifiedUser"));
-$db->next_record();
-$TPL["user"] = $db->f("username");
+  $db->query("select username from person where personID=".$transactionRepeat->get_value("transactionRepeatModifiedUser"));
+  $db->next_record();
+  $TPL["user"] = $db->f("username");
 }
 
 

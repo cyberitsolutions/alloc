@@ -158,35 +158,37 @@ require_once("alloc.inc");
 $skill_header = false;
 $person = new person;
 
-if (isset($personID)) {
+$personID = $_POST["personID"] or $personID = $_GET["personID"];
+
+if ($personID) {
   $person->set_id($personID);
   $person->select();
 }
     
 
-if (isset($personExpertiseItem_add) || isset($personExpertiseItem_save) || isset($personExpertiseItem_delete)) {
+if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $_POST["personExpertiseItem_delete"]) {
   $skillProficiencys = new skillProficiencys;
   $skillProficiencys->read_globals();
 
 
-  if ($skillID != null) {
-    if (isset($personExpertiseItem_delete)) {
+  if ($_POST["skillID"] != null) {
+    if ($_POST["personExpertiseItem_delete"]) {
       $skillProficiencys->delete();
-    } else if (isset($personExpertiseItem_save)) {
+    } else if ($_POST["personExpertiseItem_save"]) {
       $skillProficiencys->save();
-    } else if (isset($personExpertiseItem_add)) {
+    } else if ($_POST["personExpertiseItem_add"]) {
       // skillID is an array if when adding but not when saving or deleting
       $skillProficiency = $skillProficiencys->get_value('skillProficiency');
-      for ($i = 0; $i < count($skillID); $i++) {
+      for ($i = 0; $i < count($_POST["skillID"]); $i++) {
         $skillProficiencys = new skillProficiencys;
 
-        $skillProficiencys->set_value('skillID', $skillID[$i]);
-        $skillProficiencys->set_value('skillProficiency', $skillProficiency);
+        $skillProficiencys->set_value('skillID', $_POST["skillID"][$i]);
+        $skillProficiencys->set_value('skillProficiency', $_POST["skillProficiency"]);
         $skillProficiencys->set_value('personID', $personID);
 
         $db = new db_alloc;
         $query = "SELECT * FROM skillProficiencys WHERE personID = $personID";
-        $query.= sprintf(" AND skillID = %d", $skillID[$i]);
+        $query.= sprintf(" AND skillID = %d", $_POST["skillID"][$i]);
         $db->query($query);
         if (!$db->next_record()) {
           $skillProficiencys->save();
@@ -196,37 +198,38 @@ if (isset($personExpertiseItem_add) || isset($personExpertiseItem_save) || isset
   }
 }
 
-if (isset($save)) {
+if ($_POST["save"]) {
   $person->read_globals();
 
-  if ($password1 == $password2) {
+  if ($_POST["password1"] == $_POST["password2"]) {
 
     if ($person->can_write_field("perms")) {
-      if (is_array($perm_select)) {
-        $person->set_value("perms", implode(",", $perm_select).",employee");
+      if (is_array($_POST["perm_select"])) {
+        $person->set_value("perms", implode(",", $_POST["perm_select"]).",employee");
       } else {
         $person->set_value("perms", "employee");
       }
     }
 
-    $person->set_value("personActive", $personActive ? 1 : "0");
+    $person->set_value("personActive", $_POST["personActive"] ? 1 : "0");
 
 
-    if ($password1 == "") {
+    if ($_POST["password1"] == "") {
       $person_check = new person;
       $person_check->set_id($person->get_id());
       $person_check->select();
       $person->set_value('password', $person_check->get_value('password'));
     } else {
-      $person->set_value('password', addslashes(crypt(trim($password1), trim($current_user->get_value('password')))));
+      $person->set_value('password', addslashes(crypt(trim($_POST["password1"]), trim($current_user->get_value('password')))));
     }
 
     $person->save();
+    header("Location: ".$TPL["url_alloc_personList"]);
     $personID = $person->get_id();
   } else {
     $TPL["message"][] = "Please re-type the passwords";
   }
-} else if (isset($delete)) {
+} else if ($_POST["delete"]) {
   $person->delete();
   header("Location: ".$TPL["url_alloc_personList"]);
 }

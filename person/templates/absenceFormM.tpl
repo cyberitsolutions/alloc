@@ -39,15 +39,6 @@
           <td><textarea name="absence_contactDetails" rows="4" wrap="virtual" cols = "50">{absence_contactDetails}</textarea></td>
         </tr>
         <tr>
-          <td>Email a copy of this form to:</td>
-          <td>
-            <select size="1" name="mailToPerson">
-              <option selected></option>
-              {person_options}
-            </select>
-            <input type = "submit" name="mailTo" value="Send"></td>
-        </tr>
-        <tr>
           <td colspan="2" align="center">
             <input type="submit" name="save" value="Save">
             <input type="submit" name="delete" value="Delete">
