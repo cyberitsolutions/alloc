@@ -21,31 +21,7 @@
  *
  */
 
-
-
-
-function page_close() {
-  $sess = Session::GetSession();
-  $sess->Save();
-
-  global $current_user;
-  if (is_object($current_user) && $current_user->get_id()) {
-    if (is_array($current_user->prefs)) {
-      $current_user->select();
-      $arr = serialize($current_user->prefs);
-      $current_user->set_value("sessData",$arr);
-    }
-    $current_user->save();
-  }
-}
-
-function get_alloc_modules() {
-  if (defined("ALLOC_MODULES")) {
-    return unserialize(ALLOC_MODULES);
-  } else {
-    echo "ALLOC_MODULES is not defined!";
-  }
-}
+require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
 
 $modules = get_alloc_modules();
 
@@ -63,27 +39,26 @@ $SCRIPT_PATH = $_SERVER["SCRIPT_NAME"];
 $script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $_SERVER["SCRIPT_NAME"]);
 define("SCRIPT_PATH",$SCRIPT_PATH);
 
-include(ALLOC_MOD_DIR."/shared/class_db.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_db_alloc.inc.php");
-include(ALLOC_MOD_DIR."/shared/template.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_session.inc.php");
-include(ALLOC_MOD_DIR."/shared/util.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_home_item.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_toolbar_item.inc.php");
-include(ALLOC_MOD_DIR."/shared/help.inc.php");
-include(ALLOC_MOD_DIR."/shared/db_utils.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_db_field.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_db_entity.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_module.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_event.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_alloc_email.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_alloc_cache.inc.php");
-include(ALLOC_MOD_DIR."/shared/class_history.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/template.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/help.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/db_utils.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_db.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_db_alloc.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_session.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_home_item.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_toolbar_item.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_db_field.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_db_entity.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_module.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_event.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_alloc_email.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_alloc_cache.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/class_history.inc.php");
 
 reset($modules);
 while (list($module_name,) = each($modules)) {
   if ($module_name != "util") {
-    include(ALLOC_MOD_DIR."/$module_name/lib/init.php");
+    require_once(ALLOC_MOD_DIR."/$module_name/lib/init.php");
     $module_class = $module_name."_module";
     $module = new $module_class;
     $modules[$module_name] = $module;
@@ -91,7 +66,7 @@ while (list($module_name,) = each($modules)) {
 }
 
 define("ALLOC_DEFAULT_FROM_ADDRESS",config::get_config_item("AllocFromEmailAddress"));
-include(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
+require_once(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
 global $current_user;
 $current_user = new person;
 
@@ -116,9 +91,6 @@ if (!defined("NO_AUTH") || !NO_AUTH) {
         global ${$n};
       }
       unset($n,$v);
-    }
-    if ($sess->mode=="cookie") {
-      session_start();
     }
   }
 }

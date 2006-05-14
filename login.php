@@ -117,7 +117,8 @@ $TPL["username"] = $_POST["username"];
 if (!isset($account)) { 
   $TPL["password_or_email_address_field"] = "<td class=\"right\">Password</td>";
   $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"password\" name=\"password\" size=\"25\" maxlength=\"32\"></td>";
-  $TPL["use_cookies"] = "Use Cookies <input type=\"checkbox\" name=\"use_cookies\" value=\"1\">";
+  $_COOKIE["alloc_cookie"] and $checked = " checked";
+  $TPL["use_cookies"] = "Use Cookie <input type=\"checkbox\" name=\"use_cookies\" value=\"1\"".$checked.">";
   $TPL["login_or_send_pass_button"] = "<input type=\"submit\" name=\"login\" value=\"&nbsp;&nbsp;Login&nbsp;&nbsp;\">";
 } else { 
   $TPL["password_or_email_address_field"] = "<td class=\"right\"><nobr>Email</nobr></td>";
