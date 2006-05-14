@@ -31,7 +31,7 @@
               {show_userID_options}
             </select>
           </td>
-          <td><input type="text" size="10" name="dateFrom" value=""></td>
+          <td><input type="text" size="10" name="dateFrom" value="{dateFrom}"></td>
           <td><input type="button" value="Today" onClick="dateFrom.value='{today}'"></td>
           <td>
             <select name="status">
