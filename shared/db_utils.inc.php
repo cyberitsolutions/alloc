@@ -121,13 +121,12 @@ define("DST_HTML_DISPLAY",   4);  // For display to the user as non-editable HTM
 
   // Get options for a <select> using an array of the form value=>label
   function get_options_from_array($options, $selected_value, $use_values = true, $max_label_length = 40, $bitwise_values = false, $reverse_results = false) {
-    $rtn = "";
-    reset($options);
+    is_array($options) or $options = array();
+
     if ($reverse_results) {
       $options = array_reverse($options, TRUE);
     }
-    while (list($value, $label) = each($options)) {
-
+    foreach ($options as $value => $label) {
       $rtn.= "\n<option";
       if ($use_values) {
         $rtn.= " value=\"$value\"";

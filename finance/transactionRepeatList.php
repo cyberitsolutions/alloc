@@ -23,11 +23,11 @@
 
 require_once("alloc.inc");
 
-global $tfID, $TPL, $transactionRepeat, $db;
+global $TPL;
 
 $db = new db_alloc;
-$TPL["tfID"] = $tfID;
-$db->query("select * from tf where tfID=$tfID");
+$TPL["tfID"] = $_GET["tfID"];
+$db->query("select * from tf where tfID=%d",$_GET["tfID"]);
 $db->next_record();
 $TPL["user"] = $db->f("tfName");
 
@@ -37,17 +37,13 @@ include_template("templates/transactionRepeatListM.tpl");
 
 function show_expenseFormList($template_name) {
 
-  global $db, $TPL, $tfID, $john, $transactionRepeat;
+  global $db, $TPL, $john, $transactionRepeat;
 
   $db = new db_alloc;
   $transactionRepeat = new transactionRepeat;
 
-  if ($tfID) {
-    $db->query("select * from transactionRepeat where tfID=$tfID");
-  }
-
-  if ($john) {
-    $db->query("select * from transactionRepeat where tfID=$john");
+  if ($_GET["tfID"]) {
+    $db->query("select * from transactionRepeat where tfID=%d",$_GET["tfID"]);
   }
 
   while ($db->next_record()) {

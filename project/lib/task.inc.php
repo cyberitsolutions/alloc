@@ -243,6 +243,8 @@ class task extends db_entity {
       $parentTaskID = $this->get_value("parentTaskID");
     }
 
+    $projectID or $projectID = $_GET["projectID"];
+
     $db = new db_alloc;
     if ($projectID) {
       $query = sprintf("SELECT * 
@@ -263,7 +265,7 @@ class task extends db_entity {
     $db = new db_alloc;
     
     if (is_object($this)) {
-      $projectID = $this->get_value("projectID");
+      $projectID = $this->get_value("projectID") or $projectID = $_GET["projectID"];
       $q = sprintf("SELECT fullName,emailAddress FROM taskCCList WHERE taskID = %d",$this->get_id());
       $db->query($q);  
       while ($db->next_record()) {
@@ -324,8 +326,25 @@ class task extends db_entity {
     // Set template values to provide options for edit selects
     global $TPL, $current_user, $isMessage;
 
-    $projectID = $this->get_value("projectID");
     $db = new db_alloc;
+
+    if ($_GET["timeSheetID"]) {
+      $ts_query = sprintf("select * from timeSheet where timeSheetID = %d",$_GET["timeSheetID"]);
+      $db->query($ts_query);
+      $db->next_record();
+      $owner = $db->f("personID");
+      $projectID = $db->f("projectID");
+    } else if ($this->get_value("personID")) {
+      $owner = $this->get_value("personID");
+    } else {
+      $owner = $current_user->get_id();
+    }
+
+    $TPL["personOptions"] = get_option("None", "0", $owner == 0)."\n";
+    $TPL["personOptions"].= get_select_options(person::get_username_list($owner), $owner);
+
+
+    $projectID or $projectID = $this->get_value("projectID");
 
     // TaskType Options
     $taskType = new taskType;
@@ -342,21 +361,6 @@ class task extends db_entity {
     $db->query($query);
     $TPL["taskCommentTemplateOptions"] = get_option("Comment Templates", "0")."\n";
     $TPL["taskCommentTemplateOptions"].= get_options_from_db($db, "taskCommentTemplateName", "taskCommentTemplateID",false);
-
-    if ($_GET["timeSheetID"]) {
-      $ts_query = "select personID from timeSheet where timeSheetID = ".$_GET["timeSheetID"];
-      $db->query($ts_query);
-      $db->next_record();
-      $owner = $db->f("personID");
-    } else if ($this->get_value("personID")) {
-      $owner = $this->get_value("personID");
-    } else {
-      $owner = $current_user->get_id();
-    }
-
-    $TPL["personOptions"] = get_option("None", "0", $owner == 0)."\n";
-    $TPL["personOptions"].= get_select_options(person::get_username_list($owner), $owner);
-
     $percentCompleteOptions = array(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
     $TPL["percentCompleteOptions"] = get_options_from_array($percentCompleteOptions, $this->get_value("percentComplete"), false);
 

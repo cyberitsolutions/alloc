@@ -25,6 +25,9 @@ require_once("alloc.inc");
 
 $person = new person;
 
+$personID = $_POST["personID"] or $personID = $_GET["personID"];
+$absenceID = $_POST["absenceID"] or $absenceID = $_GET["absenceID"];
+
 if (isset($personID)) {
   $person->set_id($personID);
 } else {
@@ -36,56 +39,27 @@ if (!$current_user->is_employee() || !$person->is_employee()) {
   die("You do not have permission to access absence form.");
 }
 
-function EMailForm() {
-  global $mailToPerson, $absence, $TPL, $db;
-  $absence->read_globals();
-  $absence->read_globals("absence_");
-
-  // Set subject field
-  $subject = "Alloc - Away notices";
-
-  // Fill the message.
-  $person = $absence->get_foreign_object("person");
-  $msg = $person->get_value("username")." will be away on ".$absence->get_value("absenceType")." leave from ".$absence->get_value("dateFrom")." to ".$absence->get_value("dateTo")
-    .".  Emergency contact details are as follows:  \n";
-  $msg.= $absence->get_value("contactDetails");
-
-  // Set to TO field.
-  $toPerson = new person;
-  $toPerson->set_id($mailToPerson);
-  $toPerson->select();
-  $to = $toPerson->get_value("emailAddress");
-
-  // Set FROM field
-  $header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
-  return mail($to, $subject, $msg, $header);
-}
 
 $absence = new absence;
 $db = new db_alloc;
 
-if (isset($save)) {
+if ($_POST["save"]) {
   // Saving a record
   $absence->read_globals();
   $absence->read_globals("absence_");
   $success = $absence->save();
-
-
   if ($success) {
-    // save
     $url = $TPL["url_alloc_person"]."personID=".$personID;
+    header("Location: $url");
   }
-  header("Location: $url");
   page_close();
   exit();
-} else if (isset($delete)) {
+} else if ($_POST["delete"]) {
   // Deleting a record
   $absence->read_globals();
   $absence->delete();
   header("location: ".$TPL["url_alloc_person"]."personID=".$personID);
-} else if (isset($mailTo)) {
-  EMailForm();
-} else if (isset($absenceID)) {
+} else if ($absenceID) {
   // Displaying a record
   $absence->set_id($absenceID);
   $absence->select();
@@ -98,13 +72,9 @@ if (isset($save)) {
 
 $absence->set_tpl_values(DST_HTML_ATTRIBUTE, "absence_");
 
-  // Set up the person name;
-# $person = $absence->get_foreign_object("person");
-
-
 $TPL["personName"] = $person->get_value("username");
 
-  // Set up the options for a list of user.
+// Set up the options for a list of user.
 $query = sprintf("SELECT * FROM person ORDER by username");
 $db->query($query);
 $person_array = get_array_from_db($db, "personID", "username");

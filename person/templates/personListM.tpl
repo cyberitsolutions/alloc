@@ -3,14 +3,27 @@
 {table_box}
   <tr>
     <th>Personnel</th> 
-    <th class="right" colspan="7">
-      &nbsp;&nbsp;<a href="{url_alloc_person}">New Person</a>
+    <th class="right" colspan="9">
       &nbsp;&nbsp;<a href={url_alloc_personSkillMatrix}>Full Skill Matrix</a>
       &nbsp;&nbsp;<a href={url_alloc_personGraphs}>Person Graphs</a></td>
+      {personAddSkill_link}
+      &nbsp;&nbsp;<a href="{url_alloc_person}">New Person</a>
     </th>
   </tr>
   <tr>
-    <td colspan="7" align="center">{:show_filter templates/personFilterS.tpl}</td>
+    <td colspan="9" align="center">
+      <form action="{url_alloc_personList}" method="post">
+      <table class="filter" align="center">
+        <tr>
+          <td><select name="skill_class">{skill_classes}</select></td>
+          <td><select name="skill">{skills}</select></td>
+          <td><select name="expertise">{employee_expertise}</select></td>
+          <td><input type="checkbox" name="show_skills" {show_skills_checked}>Show Skills List</td>
+          <td><input type="submit" value="Filter"></td>
+        </tr>
+      </table>
+      </form>
+    </td>
   </tr>
   <tr>
     <!-- <th>Select</th> -->
@@ -18,21 +31,22 @@
     <td>Enabled</td>
     <td>Last Login</td>
     <td>Availability</td>
+    <td>Actions</th>
+    <td><nobr>On Leave</nobr></td>
+    <td>Sum Prev Fort.</td>
+    <td>Avg Per Fort.</td>
 {optional:show_skills_list}
-        <th>Areas of Expertise
-          (<img src="../images/skill_senior.jpg" alt="S" width=18 height=18 align="absmiddle"> Senior.
-          <img src="../images/skill_advanced.jpg" alt="A" width=18 height=18 align="absmiddle">.
-          <img src="../images/skill_intermediate.jpg" alt="I" width=18 height=18 align="absmiddle">.
-          <img src="../images/skill_junior.jpg" alt="J" width=18 height=18 align="absmiddle">.
-          <img src="../images/skill_novice.jpg" alt="N" width=18 height=18 align="absmiddle"> Novice)
-        </th>
+    <td>
+      Senior
+      <img src="../images/skill_senior.png" alt="S" align="absmiddle">
+      <img src="../images/skill_advanced.png" alt="A" align="absmiddle">
+      <img src="../images/skill_intermediate.png" alt="I" align="absmiddle">
+      <img src="../images/skill_junior.png" alt="J" align="absmiddle">
+      <img src="../images/skill_novice.png" alt="N" align="absmiddle"> Novice
+    </td>
 {/optional}
-        <td>Actions</th>
-        <td><nobr>On Leave</nobr></td>
-        <td>Hours Worked for the Last 14 Days</td>
-        <td>Avg per Fortnight</td>
-      </tr>
-      {:show_people templates/personListR.tpl}
-    </table>
-    {:show_add_skill templates/personSkillAdd.tpl}
+
+  </tr>
+  {:show_people templates/personListR.tpl}
+</table>
 {:show_footer}

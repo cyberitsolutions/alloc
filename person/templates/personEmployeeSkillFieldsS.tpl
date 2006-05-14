@@ -1,4 +1,3 @@
-<form action="{url_alloc_person}" method=post>
 {table_box}
 <tr>
   <th colspan="2">Areas of expertise</th>
@@ -15,8 +14,9 @@
 </tr>
 <tr>
   <td>
+    <form action="{url_alloc_person}" method=post>
     <input type="hidden" name="personID" value="{person_personID}">
-    <select name="skillID[]" multiple size="8">{skills}</select>
+    <select name="skillID[]">{skills}</select>
   </td>
   <td>
     <select name="skillProficiency">

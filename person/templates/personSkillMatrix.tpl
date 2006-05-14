@@ -11,11 +11,11 @@
   </tr>
   <tr>
     <td colspan="200">Key:
-      <img src="../images/skill_senior.jpg" alt="S" width=18 height=18 align="absmiddle"> Senior,
-      <img src="../images/skill_advanced.jpg" alt="A" width=18 height=18 align="absmiddle"> Advanced,
-      <img src="../images/skill_intermediate.jpg" alt="I" width=18 height=18 align="absmiddle"> Intermediate,
-      <img src="../images/skill_junior.jpg" alt="J" width=18 height=18 align="absmiddle"> Junior,
-      <img src="../images/skill_novice.jpg" alt="N" width=18 height=18 align="absmiddle"> Novice
+      <img src="../images/skill_senior.png" alt="S" align="absmiddle"> Senior,
+      <img src="../images/skill_advanced.png" alt="A" align="absmiddle"> Advanced,
+      <img src="../images/skill_intermediate.png" alt="I" align="absmiddle"> Intermediate,
+      <img src="../images/skill_junior.png" alt="J" align="absmiddle"> Junior,
+      <img src="../images/skill_novice.png" alt="N" align="absmiddle"> Novice
     </td>
   </tr>
   {:show_skill_expertise}

@@ -23,130 +23,6 @@
 
 require_once("alloc.inc");
 
-global $sortBy, $month, $year, $tfID, $status, $transactionType;
-$current_user->check_employee();
-
-
-// If they want to sort
-if ($sortBy) {
-  $sortTransactions = $sortBy;
-} else if (!$sortTransactions) {
-  $sortTransactions = "transactionDate";
-}
-
-// List may only be sorted by one of these.
-$valid_orders_by = array("transactionDate","lastModified");
-in_array($sortTransactions,$valid_orders_by) or $sortTransactions = "transactionDate";
-
-// Store a user variable to record the users preference.
-is_object($current_user) and $current_user->prefs["sortTransactions"] = $sortTransactions;
-
-
-// Check perm of requested tf
-$tf = new tf;
-$tf->set_id($tfID);
-$tf->select();
-$tf->check_perm();
-$TPL["tfID"] = $tfID;
-
-// Defaults
-$month or $month = date("m");
-$year  or $year = date("Y");
-$base_url = $TPL["url_alloc_transactionList"]."tfID=$tfID";
-
-
-// Build month dropdown
-while ($i < 12) {
-  $i++;
-  $m = date("m", mktime(0,0,0,$i,1,1981)); # a fine year, to be sure, to be sure
-  $M = date("F", mktime(0,0,0,$i,1,1981)); # a fine year, to be sure, to be sure
-  $mSel = "";
-  $m == $month and $mSel = " selected";
-  $TPL["monthOptions"].= "<option value=\"".$m."\"".$mSel.">".$M;
-}
-
-// Build year dropdown
-$i = 0;
-while ($i < 10) {
-  $i++;
-  $Y = date("Y", mktime(0,0,0,1,1,$year+$i-5));
-  $ySel = "";
-  $Y == $year and $ySel = " selected";
-  $TPL["yearOptions"].= "<option value=\"".$Y."\"".$ySel.">".$Y;
-}
-
-// Get the start and end dates from the month and year dropdown selections
-list($statement_start_date, $statement_end_date) = get_statement_start_and_end_dates($month,$year);
-
-
-
-// Transaction status filter
-if ($status && $status != "ALL") {
-  $where["status"] = $status;
-}
-$TPL["statusOptions"] = get_select_options(array("pending"=>"Pending","approved"=>"Approved","rejected"=>"Rejected"),$status);
-
-
-// Transaction status filter
-if ($transactionType && $transactionType != "ALL") {
-  $where["transactionType"] = $transactionType;
-}
-$transactionTypeOptions = array('invoice'=>'Invoice'
-                               ,'expense'=>'Expense'
-                               ,'salary'=>'Salary'
-                               ,'commission'=>'Commission'
-                               ,'timesheet'=>'Timesheet'
-                               ,'adjustment'=>'Adjustment'
-                               ,'insurance'=>'Insurance');
-$TPL["transactionTypeOptions"] = get_select_options($transactionTypeOptions,$transactionType);
-
-
-
-
-// WHERE lastModified or transactionDate is <= end date
-$where[$sortTransactions] = array(" <= ",$statement_end_date);
-
-// Add pending transactions filter to get pending amount balance
-$where["status"] = "pending";
-$TPL["pending_amount"] = sprintf("%0.2f",$tf->get_balance(array("status"=>"pending")));
-
-// Determine opening balance
-$opening_balance_where[$sortTransactions] = array(" < ", $statement_start_date);
-$opening_balance = $tf->get_balance($opening_balance_where);
-$TPL["opening_balance"] = sprintf("%0.2f",$opening_balance);
-
-// Overall balance
-$TPL["balance"] = sprintf("%0.2f",$tf->get_balance());
-
-// Setup the info for the href linking to the alternate sort
-if ($sortTransactions == "lastModified") {
-  $sortBy = "transactionDate";
-  $link_text = "Sort By Transaction Date";
-} else {
-  $sortBy = "lastModified";
-  $link_text = "Sort By Date Last Modified";
-}
-
-$TPL["switch_sort_views"].= "<a href=\"".$base_url."&month=".$month."&year=".$year."&sortBy=".$sortBy."&status=".$status."\">";
-$TPL["switch_sort_views"].= $link_text;
-$TPL["switch_sort_views"].= "</a>";
-$TPL["title"] = "Statement for TF ".$tf->get_value("tfName")." from ".$statement_start_date." to ".$statement_end_date;
-
-list($prev_month, $prev_month_year) = add_month_to_date($month, $year, -1);
-$TPL["month_prev_link"] = $base_url."&month=".$prev_month."&year=".$prev_month_year."&sortBy=".$sortTransactions;
-$TPL["month_prev_link"].= "&status=".$status."&transactionType=".$transactionType;
-
-list($next_month, $next_month_year) = add_month_to_date($month, $year, 1);
-$TPL["month_next_link"] = $base_url."&month=".$next_month."&year=".$next_month_year."&sortBy=".$sortTransactions;
-$TPL["month_next_link"].= "&status=".$status."&transactionType=".$transactionType;
-
-$TPL["month_curr_link"] = $base_url."&month=".date("m")."&year=".date("Y")."&sortBy=".$sortTransactions;
-$TPL["month_curr_link"].= "&status=".$status."&transactionType=".$transactionType;
-$TPL["now"] = date("M y");
-
-include_template("templates/transactionListM.tpl");
-
-
 function get_statement_start_and_end_dates($month,$year) {
 
   if ($month == "ALL") {
@@ -172,7 +48,6 @@ function add_month_to_date($month, $year, $month_increm)
 		return array(date("m", $new_ts), date("Y", $new_ts));
 	}
 }
-	
 
 function show_transaction($template_name) {
 
@@ -268,6 +143,135 @@ function show_transaction($template_name) {
 
 
 }
+
+
+global $status, $transactionType;
+$current_user->check_employee();
+
+$year = $_POST["year"] or $year = $_GET["year"];
+$month = $_POST["month"] or $month = $_GET["month"];
+$tfID = $_POST["tfID"] or $tfID = $_GET["tfID"];
+$status = $_POST["status"] or $status = $_GET["status"];
+$transactionType = $_POST["transactionType"] or $transactionType = $_GET["transactionType"];
+
+// If they want to sort
+if ($_GET["sortBy"]) {
+  $sortTransactions = $_GET["sortBy"];
+} else if (!$sortTransactions) {
+  $sortTransactions = "transactionDate";
+}
+
+// List may only be sorted by one of these.
+$valid_orders_by = array("transactionDate","lastModified");
+in_array($sortTransactions,$valid_orders_by) or $sortTransactions = "transactionDate";
+
+// Store a user variable to record the users preference.
+is_object($current_user) and $current_user->prefs["sortTransactions"] = $sortTransactions;
+
+
+// Check perm of requested tf
+$tf = new tf;
+$tf->set_id($tfID);
+$tf->select();
+$tf->check_perm();
+$TPL["tfID"] = $tfID;
+
+// Defaults
+$month or $month = date("m");
+$year  or $year = date("Y");
+$base_url = $TPL["url_alloc_transactionList"]."tfID=$tfID";
+
+
+// Build month dropdown
+while ($i < 12) {
+  $i++;
+  $m = date("m", mktime(0,0,0,$i,1,1981)); # a fine year, to be sure, to be sure
+  $M = date("F", mktime(0,0,0,$i,1,1981)); # a fine year, to be sure, to be sure
+  $mSel = "";
+  $m == $month and $mSel = " selected";
+  $TPL["monthOptions"].= "<option value=\"".$m."\"".$mSel.">".$M;
+}
+
+// Build year dropdown
+$i = 0;
+while ($i < 10) {
+  $i++;
+  $Y = date("Y", mktime(0,0,0,1,1,$year+$i-5));
+  $ySel = "";
+  $Y == $year and $ySel = " selected";
+  $TPL["yearOptions"].= "<option value=\"".$Y."\"".$ySel.">".$Y;
+}
+
+// Get the start and end dates from the month and year dropdown selections
+list($statement_start_date, $statement_end_date) = get_statement_start_and_end_dates($month,$year);
+
+
+
+// Transaction status filter
+if ($status && $status != "ALL") {
+  $where["status"] = $status;
+}
+$TPL["statusOptions"] = get_select_options(array("pending"=>"Pending","approved"=>"Approved","rejected"=>"Rejected"),$status);
+
+
+// Transaction status filter
+if ($transactionType && $transactionType != "ALL") {
+  $where["transactionType"] = $transactionType;
+}
+$transactionTypeOptions = array('invoice'=>'Invoice'
+                               ,'expense'=>'Expense'
+                               ,'salary'=>'Salary'
+                               ,'commission'=>'Commission'
+                               ,'timesheet'=>'Timesheet'
+                               ,'adjustment'=>'Adjustment'
+                               ,'insurance'=>'Insurance');
+$TPL["transactionTypeOptions"] = get_select_options($transactionTypeOptions,$transactionType);
+
+
+
+
+// WHERE lastModified or transactionDate is <= end date
+$where[$sortTransactions] = array(" <= ",$statement_end_date);
+
+// Add pending transactions filter to get pending amount balance
+$where["status"] = "pending";
+$TPL["pending_amount"] = sprintf("%0.2f",$tf->get_balance(array("status"=>"pending")));
+
+// Determine opening balance
+$opening_balance_where[$sortTransactions] = array(" < ", $statement_start_date);
+$opening_balance = $tf->get_balance($opening_balance_where);
+$TPL["opening_balance"] = sprintf("%0.2f",$opening_balance);
+
+// Overall balance
+$TPL["balance"] = sprintf("%0.2f",$tf->get_balance());
+
+// Setup the info for the href linking to the alternate sort
+if ($sortTransactions == "lastModified") {
+  $_GET["sortBy"] = "transactionDate";
+  $link_text = "Sort By Transaction Date";
+} else {
+  $_GET["sortBy"] = "lastModified";
+  $link_text = "Sort By Date Last Modified";
+}
+
+$TPL["switch_sort_views"].= "<a href=\"".$base_url."&month=".$month."&year=".$year."&sortBy=".$_GET["sortBy"]."&status=".$status."\">";
+$TPL["switch_sort_views"].= $link_text;
+$TPL["switch_sort_views"].= "</a>";
+$TPL["title"] = "Statement for TF ".$tf->get_value("tfName")." from ".$statement_start_date." to ".$statement_end_date;
+
+list($prev_month, $prev_month_year) = add_month_to_date($month, $year, -1);
+$TPL["month_prev_link"] = $base_url."&month=".$prev_month."&year=".$prev_month_year."&sortBy=".$sortTransactions;
+$TPL["month_prev_link"].= "&status=".$status."&transactionType=".$transactionType;
+
+list($next_month, $next_month_year) = add_month_to_date($month, $year, 1);
+$TPL["month_next_link"] = $base_url."&month=".$next_month."&year=".$next_month_year."&sortBy=".$sortTransactions;
+$TPL["month_next_link"].= "&status=".$status."&transactionType=".$transactionType;
+
+$TPL["month_curr_link"] = $base_url."&month=".date("m")."&year=".date("Y")."&sortBy=".$sortTransactions;
+$TPL["month_curr_link"].= "&status=".$status."&transactionType=".$transactionType;
+$TPL["now"] = date("M y");
+
+include_template("templates/transactionListM.tpl");
 
 
 
