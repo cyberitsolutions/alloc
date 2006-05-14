@@ -15,7 +15,6 @@
                 <td><b>Fax</b></td>
                 <td><input type="text" name="clientFaxOne" value="{client_clientFaxOne}" tabindex="4"></td>
               </tr>
-	      {createGeneralSupportProject}
             </table>
           </td>
         </tr>
@@ -76,11 +75,8 @@
           </td>
         </tr>
         <tr>
-          <td colspan="3">
-            <div>
-              {clientDetails_buttons}
-            </div>
-          </td>
+          <td>{createGeneralSupportProject}</td>
+          <td colspan="2" align="right">{clientDetails_buttons}</td>
         </tr>
       </table>
     </form>

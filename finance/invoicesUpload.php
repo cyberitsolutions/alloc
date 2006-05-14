@@ -25,10 +25,10 @@ require_once("alloc.inc");
 
 $field_map = array(""=>0, "type"=>1, "date"=>2, "num"=>3, "name"=>4, "memo"=>5, "quantity"=>6, "sales_price"=>7, "amount"=>8, ""=>9,);
 
-if ($upload) {
+if ($_POST["upload"]) {
   $db = new db_alloc;
-  is_uploaded_file($invoices_file) || die("File referred to was not an uploaded file"); // Prevent attacks by setting $invoices_file in URL
-  $lines = file($invoices_file);
+  is_uploaded_file($_FILES["invoices_file"]["tmp_name"]) || die("File referred to was not an uploaded file"); // Prevent attacks by setting $invoices_file in URL
+  $lines = file($_FILES["invoices_file"]["tmp_name"]);
 
   reset($lines);
   while (list(, $line) = each($lines)) {

@@ -41,7 +41,8 @@ class tfList_home_item extends home_item {
       $tf->set_tpl_values();
 
       if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {
-        $TPL["tfBalance"] = number_format($tf->get_balance(), 2);
+        $TPL["tfBalance"] = sprintf("%0.2f",$tf->get_balance());
+        $TPL["pending_amount"] = sprintf("%0.2f",$tf->get_balance(array("status"=>"pending")));
         $grand_total += $tf->get_balance();
       } else {
         $TPL["tfBalance"] = "not available";

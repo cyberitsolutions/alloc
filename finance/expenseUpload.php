@@ -27,10 +27,10 @@ check_entity_perm("transaction", PERM_FINANCE_UPLOAD_EXPENSES_FILE);
 
 $field_map = array("date"=>0, "account"=>1, "num"=>2, "description"=>3, "memo"=>4, "category"=>5, "clr"=>6, "amount"=>7);
 
-if ($upload) {
+if ($_POST["upload"]) {
   $db = new db_alloc;
-  is_uploaded_file($expenses_file) || die("File referred to was not an uploaded file"); // Prevent attacks by setting $expenses_file in URL
-  $lines = file($expenses_file);
+  is_uploaded_file($_FILES["expenses_file"]["tmp_name"]) || die("File referred to was not an uploaded file"); // Prevent attacks by setting $expenses_file in URL
+  $lines = file($_FILES["expenses_file"]["tmp_name"]);
 
   reset($lines);
   while (list(, $line) = each($lines)) {

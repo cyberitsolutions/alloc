@@ -1,12 +1,12 @@
-<table class="toolbar" width="100%" cellpadding="0" border="0" cellspacing="0" align="center">
+{table_box}
   <tr>
     <th><nobr>{ALLOC_TITLE}&nbsp;{ALLOC_VERSION}</nobr></th>
-    <th class="logout">{toolbar_item11}&nbsp;</th>
+    <th class="right">{toolbar_item11}&nbsp;</th>
   </tr>
   <tr>
-    <td>
+    <td class="menu">
 
-	    <table width="100%" align="center" cellpadding="3" cellspacing="0" border="0">
+	    <table class="menu" width="100%" align="center" cellpadding="3" cellspacing="0" border="0">
   	    <tr>
           <td width="23%"><nobr>{toolbar_item0}</nobr></td>
           <td width="23%"><nobr>{toolbar_item2}</nobr></td>
@@ -28,7 +28,7 @@
 	    </table>
 
     </td>
-    <td>
+    <td class="menu">
 
 	    <table cellpadding="2" align="right" cellspacing="0" border="0">
 	      <tr>

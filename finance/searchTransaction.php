@@ -23,7 +23,42 @@
 
 require_once("alloc.inc");
 
-global $search;
+  function startSearch($template) {
+    global $TPL, $db, $transaction, $current_user;
+
+    if ($_POST["search"]) {
+      $where.= " where 1=1";
+      $_POST["tfID"] && $_POST["tfID"] != 0 and $where.= sprintf(" AND tfID=%d",db_esc($_POST["tfID"]));
+      $_POST["status"] != "All"             and $where.= sprintf(" AND status=\"%s\"",db_esc($_POST["status"]));
+      $_POST["dateOne"] != ""               and $where.= sprintf(" AND transactionDate>=\"%s\"",db_esc($_POST["dateOne"]));
+      $_POST["dateTwo"] != ""               and $where.= sprintf(" AND transactionDate<=\"%s\"",db_esc($_POST["dateTwo"]));
+      $_POST["expenseFormID"] != ""         and $where.= sprintf(" AND expenseFormID=%d",db_esc($_POST["expenseFormID"]));
+      $_POST["transactionID"] != ""         and $where.= sprintf(" AND transactionID=%d",db_esc($_POST["transactionID"]));
+
+      if (!$current_user->have_role("god") || !$current_user->have_role("admin")) {
+        $tfIDs = $current_user->get_tfIDs();
+        if (is_array($tfIDs)) {
+          $where.= " AND transaction.tfID in (".implode(",",$tfIDs).")";
+        } 
+      }
+      
+      $query = "select * from transaction ".$where;
+      $db->query($query);
+    }
+
+    while ($db->next_record()) {
+      $i++;
+      $TPL["row_class"] = "odd";
+      $i % 2 == 0 and $TPL["row_class"] = "even";
+
+      $transaction->read_db_record($db);
+      $transaction->set_tpl_values();
+      $tf = $transaction->get_foreign_object("tf");
+      $tf->set_tpl_values();
+      $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);
+      include_template($template);
+    }
+  }
 
 
 $db = new db_alloc;
@@ -31,52 +66,19 @@ $transaction = new transaction;
 
 $db->query("SELECT * FROM tf ORDER BY tfName");
 $TPL["tfOptions"] = get_option("", "0", false)."\n";
-$TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $tfID);
+$TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $_POST["tfID"]);
 
-$TPL["statusOptions"] = get_options_from_array(array("All", "Pending", "Rejected", "Approved",), $status, false);
+$TPL["statusOptions"] = get_options_from_array(array("All", "Pending", "Rejected", "Approved",), $_POST["status"], false);
 
-$TPL["status"] = $status;
-$TPL["tfID"] = $tfID;
-$TPL["dateOne"] = $dateOne;
-$TPL["dateTwo"] = $dateTwo;
-$TPL["transactionID"] = $transactionID;
-$TPL["expenseFormID"] = $expenseFormID;
+$TPL["status"] = $_POST["status"];
+$TPL["tfID"] = $_POST["tfID"];
+$TPL["dateOne"] = $_POST["dateOne"];
+$TPL["dateTwo"] = $_POST["dateTwo"];
+$TPL["transactionID"] = $_POST["transactionID"];
+$TPL["expenseFormID"] = $_POST["expenseFormID"];
 
 include_template("templates/searchTransactionM.tpl");
 
-     function startSearch($template) {
-  global $TPL, $db, $search, $transactionID, $transaction, $status, $tfID, $dateOne, $dateTwo, $expenseFormID;
-
-  if ($search) {
-    $where.= " where 1=1";
-    isset($tfID) && $tfID != 0 and $where.= " and tfID=".db_esc($tfID);
-    $status != "All" and $where.= " and status=\"".db_esc($status)."\"";
-    $dateOne != "" and $where.= " and transactionDate>=\"".db_esc($dateOne)."\"";
-    $dateTwo != "" and $where.= " and transactionDate<=\"".db_esc($dateTwo)."\"";
-    $expenseFormID != "" and $where.= " and expenseFormID=".db_esc($expenseFormID);
-    $transactionID != "" and $where.= " and transactionID=".db_esc($transactionID);
-    $query = "select * from transaction ".$where;
-    $db->query($query);
-  }
-
-  while ($db->next_record()) {
-    $i++;
-    $TPL["row_class"] = "odd";
-    $i % 2 == 0 and $TPL["row_class"] = "even";
-
-    $transaction->read_db_record($db);
-    $transaction->set_tpl_values();
-    $tf = $transaction->get_foreign_object("tf");
-    $tf->set_tpl_values();
-    $TPL["amount"] = number_format(($TPL["amount"]), 2);
-    include_template($template);
-  }
-}
-
 
 page_close();
-
-
-
-
 ?>

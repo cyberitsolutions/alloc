@@ -6,9 +6,6 @@
     <th class="right">{month_links}</th>
   </tr>
   <tr>
-    <th colspan="6">TF Balances</th>
-  </tr>
-  <tr>
     <td>TF</td>
     <td align="right">Opening balance</td>
     <td align="right">Expenses</td>

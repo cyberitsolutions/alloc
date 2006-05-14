@@ -167,9 +167,8 @@ class person extends db_entity
   }
 
   function have_role($perm_name) {
-    $p = $this->get_value("perms");
-    $p = ",$p,";
-    return ereg(",$perm_name,", $p);
+    $perms = explode(",",$this->get_value("perms"));
+    return (in_array("god",$perms) || in_array($perm_name,$perms));
   }
 
   function check_role($perm_name) {
@@ -268,6 +267,15 @@ class person extends db_entity
       return $username;
     }
   }
+
+function get_tfIDs() {
+  $db = new db_alloc;
+  $db->query("SELECT tfID FROM tfPerson WHERE personID = %d",$this->get_id());
+  while ($row = $db->row()) {
+    $tfIDs[] = $row["tfID"];
+  }
+  return $tfIDs;
+}
 
 }
 

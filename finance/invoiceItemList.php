@@ -23,18 +23,18 @@
 
 require_once("alloc.inc");
 
-$mode or $mode = "allocate";
+$_GET["mode"] or $_GET["mode"] = "allocate";
 
 function show_invoices($template) {
-  global $TPL, $mode, $HTTP_GET_VARS, $id, $invoiceID;
+  global $TPL, $id, $invoiceID;
   $db = new db_alloc;
-  $sort = $HTTP_GET_VARS["sort"];       // there is a stray cookie running about with this name. I'll get you gadget.
+  $sort = $_GET["sort"];       // there is a stray cookie running about with this name. I'll get you gadget.
 
   if (!$sort) {
     $sort = invoiceItemID;
   }
 
-  if ($mode == "approve") {
+  if ($_GET["mode"] == "approve") {
     $query = "SELECT invoiceItem.*, invoice.invoiceNum, invoice.invoiceDate, invoice.invoiceName 
       FROM invoiceItem, invoice 
       WHERE status='allocated' AND invoiceItem.invoiceID = invoice.invoiceID
@@ -69,8 +69,8 @@ function show_invoices($template) {
 
 
 
-$TPL["mode"] = $mode;
-$TPL["mode_desc"] = ucwords($mode)."d"; // teehee
+$TPL["mode"] = $_GET["mode"];
+$TPL["mode_desc"] = ucwords($_GET["mode"])."d"; // teehee
 
 
 

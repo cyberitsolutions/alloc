@@ -30,6 +30,8 @@ $transaction_to_edit = new transaction;
 
 $db = new db_alloc;
 
+$expenseFormID = $_POST["expenseFormID"] or $expenseFormID = $_GET["expenseFormID"];
+
 if ($expenseFormID) {
   $expenseForm->read_globals();
   $expenseForm->set_id($expenseFormID);
@@ -41,30 +43,30 @@ if ($expenseFormID) {
 
 
 
-if ($add) {
+if ($_POST["add"]) {
 
-  $product        or $TPL["message"][] = "You must enter a Product.";
-  $companyDetails or $TPL["message"][] = "You must enter the Company Details.";
-  $tfID           or $TPL["message"][] = "You must enter the TF.";
-  $quantity       or $quantity = 1;
+  $_POST["product"]        or $TPL["message"][] = "You must enter a Product.";
+  $_POST["companyDetails"] or $TPL["message"][] = "You must enter the Company Details.";
+  $_POST["tfID"]           or $TPL["message"][] = "You must enter the TF.";
+  $_POST["quantity"]       or $_POST["quantity"] = 1;
 
-  if (!ereg("^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$", $transactionDate)) {
+  if (!ereg("^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$", $_POST["transactionDate"])) {
     $TPL["message"][] = "You must enter the Date Incurred in the format yyyy-mm-dd.";
   }
 
-  $amount = -$amount * $quantity;
+  $_POST["amount"] = -$_POST["amount"] * $_POST["quantity"];
 
-  if ($amount == "") {
+  if ($_POST["amount"] == "") {
     $TPL["message"][] = "You must enter the Price.";
-  } else if (!(is_float($amount) || is_int($amount))) {
+  } else if (!(is_float($_POST["amount"]) || is_int($_POST["amount"]))) {
     $TPL["message"][] = "You must enter a number for the Price.";
-  } else if ($amount >= 0) {
+  } else if ($_POST["amount"] >= 0) {
     $TPL["message"][] = "You must enter a Price greater than 0.";
   }
 
 
   $transaction = new transaction;
-  $transactionID && $transaction->set_id($transactionID);
+  $transactionID && $transaction->set_id($_POST["transactionID"]);
   $transaction->read_globals();
 
   if (!count($TPL["message"])) {
@@ -131,7 +133,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormModifiedUser"
   $TPL["user"] = $p->get_username(1);
 }
 
-if ($cancel) {
+if ($_POST["cancel"]) {
   if (is_object($expenseForm)) {
     $expenseForm->delete_transactions();
     $expenseForm->delete();
@@ -141,41 +143,41 @@ if ($cancel) {
     $TPL["message"][] = "Unable to delete Expense Form";
   }
 
-} else if ($pend) {
+} else if ($_POST["pend"]) {
   $expenseForm->save();
   $expenseForm->set_status("pending");
   page_close();
   header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
-} else if ($approve) {
+} else if ($_POST["approve"]) {
   $expenseForm->save();
   $expenseForm->set_status("approved");
   page_close();
   header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
-} else if ($reject) {
+} else if ($_POST["reject"]) {
   $expenseForm->save();
   $expenseForm->set_status("rejected");
   page_close();
   header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
-} else if ($save) {
+} else if ($_POST["save"]) {
   $expenseForm->read_globals();
   $expenseForm->save();
   header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
-} else if ($finalise) {
+} else if ($_POST["finalise"]) {
   $expenseForm->read_globals();
   $expenseForm->set_value("expenseFormFinalised", 1);
   $expenseForm->save();
   header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
-} else if ($unfinalise) {
+} else if ($_POST["unfinalise"]) {
   $expenseForm->read_globals();
   $expenseForm->set_value("expenseFormFinalised", 0);
   $expenseForm->save();
@@ -237,7 +239,7 @@ if (is_object($expenseForm) && $expenseForm->get_id()) {
 }
 
 
-if ($printVersion) {
+if ($_GET["printVersion"]) {
   include_template("templates/exp-one-off-printableM.tpl");
 } else {
   include_template("templates/exp-one-offM.tpl");
@@ -245,16 +247,16 @@ if ($printVersion) {
 
 function show_all_exp($template) {
 
-  global $TPL, $expenseForm, $db, $transactionID, $edit;
+  global $TPL, $expenseForm, $db;
 
   if ($expenseForm->get_id()) {
 
     $transaction = new transaction;
     $tf = new tf;
 
-    if ($transactionID && $edit) {   // if edit is clicked
+    if ($_POST["transactionID"] && $_POST["edit"]) {   // if edit is clicked
       $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d AND transactionID<>%d ORDER BY transactionID DESC", $expenseForm->get_id()
-                       , $transactionID);
+                       , $_POST["transactionID"]);
     } else {
       $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d ORDER BY transactionID DESC", $expenseForm->get_id());
     }
@@ -267,7 +269,7 @@ function show_all_exp($template) {
       $transaction->set_tpl_values();
 
       $transaction->get_value("quantity") and $TPL["amount"] = -$transaction->get_value("amount") / $transaction->get_value("quantity");
-      $TPL["amount"] = number_format($TPL["amount"], 2);
+      $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);
 
       $TPL["lineTotal"] = sprintf("%0.2f",$TPL["amount"] * $transaction->get_value("quantity"));
       $tf->set_id($transaction->get_value("tfID"));
@@ -275,7 +277,7 @@ function show_all_exp($template) {
       $TPL["tfID"] = $tf->get_value("tfName");
 
       $projectID = $transaction->get_value("projectID");
-      if (isset($projectID) && $projectID != "") {
+      if (isset($_POST["projectID"]) && $_POST["projectID"] != "") {
         $project = new project;
         $project->set_id($transaction->get_value("projectID"));
         $project->select();
@@ -287,8 +289,8 @@ function show_all_exp($template) {
   }
 }
 
-function check_editable() {
-  global $db, $expenseForm, $allow_edit, $current_user;
+function check_optional_allow_edit() {
+  global $db, $expenseForm, $current_user;
 
   $permissions = explode(",", $current_user->get_value("perms"));
 
@@ -305,22 +307,9 @@ function check_editable() {
   return $allow_edit;
 }
 
-function check_optional_allow_edit() {
-  global $allow_edit;
-
-  if (!isset($allow_edit)) {
-    $allow_edit = check_editable();
-  }
-  return $allow_edit;
-}
-
 function check_optional_no_edit() {
-  global $allow_edit;
-
-  if (!isset($allow_edit)) {
-    $allow_edit = check_editable();
-  }
-  return ($allow_edit == true) ? false : true;
+  $allow_edit = check_optional_allow_edit();
+  return !$allow_edit;
 }
 
 
