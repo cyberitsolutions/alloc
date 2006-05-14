@@ -14,21 +14,19 @@ div.message             { border:1px solid #095853; padding:10px; margin-bottom:
 
 table.box               { border:1px solid #095853; background-color:#cccccc; margin-bottom:7px;} 
 table.box th            { border-bottom:1px solid #095853;  background: url(../images/bg_clove.jpg) repeat-x; color:#ffffff; font-size:18px; } 
-table.box th a:link     { font-weight:bold; color:#dddddd; font-size:18px; }
-table.box th a:visited  { font-weight:bold; color:#dddddd; font-size:18px; }
-table.box th a:hover    { font-weight:bold; color:#ffffff; font-size:18px; }
-table.box th.right      { text-align:right; } 
+table.box th a:link     { font-weight:bold; color:#ffffff; font-size:18px; }
+table.box th a:visited  { font-weight:bold; color:#ffffff; font-size:18px; }
+table.box th a:hover    { font-weight:bold; color:#dddddd; font-size:18px; }
+th.right                { text-align:right; } 
 table.box th.center     { text-align:center; } 
 table.box th.right table{ width:40%; } 
 
-table.toolbar           { border:1px solid #095853; color:#ffffff; background-color:#cccccc; margin-bottom:7px;}
-table.toolbar a:link    { color:#000000; font-weight:bolder;        }
-table.toolbar a:visited { color:#000000; font-weight:bolder;        }
-table.toolbar a:hover   { color:#425749; font-weight:bolder;  }
-table.toolbar a.active  { color:#425749; }
-table.toolbar th        { color:#ffffff; padding:3px 2px; font-weight:bold; background: url(../images/bg_clove.jpg) repeat-x; border-bottom:1px solid #095853; font-size:22px; }
-table.toolbar td        { font-size:18px; }
-table.toolbar th.logout { text-align:right; padding:3px 2px; font-weight:bold; background: url(../images/bg_clove.jpg) repeat-x; border-bottom:1px solid #095853; font-size:18px;}
+td.menu                 { background-color:#cccccc;}
+table.menu a:link       { color:#000000; font-weight:bolder;        }
+table.menu a:visited    { color:#000000; font-weight:bolder;        }
+table.menu a:hover      { color:#425749; font-weight:bolder;  }
+table.menu a.active     { color:#425749; }
+table.menu td           { font-size:17px; }
 
 table.calendar th       { background-color:#8ca695; color:#333333; border:0px; font-weight:normal; font-size:17px; }
 table.calendar td       { background-color:#afb8b1; }

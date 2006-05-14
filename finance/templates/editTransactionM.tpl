@@ -7,8 +7,7 @@
 <input type="hidden" name="transactionID" value={transactionID}>
 {table_box}
   <tr>
-    <th colspan="2">Transaction {transactionID}</th>
-    <th class="right"><a href="{url_alloc_transactionList}tfID={tfID}">Back to Transaction List</a></th>
+    <th colspan="3">Transaction {transactionID}</th>
   </tr>
   <tr>
     <td width="15%">Transaction ID</td>

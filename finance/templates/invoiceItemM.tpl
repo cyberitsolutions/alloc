@@ -48,8 +48,10 @@
     <input type="hidden" name="mode" value="{mode}">
         <table width="100%" align="center">
           <tr>
-            <td align="center"><input type="submit" name="mark_allocated" value="Invoice Item Allocated" onClick="return checkAllocated()">&nbsp;
-                               <input type="submit" name="mark_paid" value="Invoice Item Paid" onClick="return checkPaid()"></td>
+            <td align="center">
+              <input type="submit" name="mark_pending" value="Invoice Item Pending">&nbsp;
+              <input type="submit" name="mark_allocated" value="Invoice Item Allocated" onClick="return checkAllocated()">&nbsp;
+              <input type="submit" name="mark_paid" value="Invoice Item Paid" onClick="return checkPaid()"></td>
           </tr>
         </table>
     </form>

@@ -1,7 +1,7 @@
 <form action="{url_alloc_home}" method="post">
 <table align="center" width="100%">
   <tr>
-    <th colspan="2">Sitewide</th>
+    <td colspan="2"><b>Look and Feel</b></td>
   </tr>
   <tr>
     <td>Font Size</td>
@@ -20,8 +20,13 @@
       </select>
     </td>
   </tr>
+  
   <tr>
-    <th colspan="2">Homepage Calendar</th>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td colspan="2"><b>Task Calendar</b></td>
   </tr>
   <tr>
     <td>Num Weeks</td>

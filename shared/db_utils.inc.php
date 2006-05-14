@@ -229,7 +229,20 @@ define("DST_HTML_DISPLAY",   4);  // For display to the user as non-editable HTM
 
   // wrapper
   function db_esc($str = "") {
-    return mysql_escape_string($str);
+    // If they're using magic_quotes_gpc then we gotta strip the 
+    // automatically added backslashes otherwise they'll be added again..
+    if (get_magic_quotes_gpc()) {
+      $str = stripslashes($str);
+    }
+    $esc_function = "mysql_escape_string";
+    if (version_compare(phpversion(), "4.3.0", ">")) {
+      $esc_function = "mysql_real_escape_string";
+    }
+    
+    if (is_numeric($str)) {
+      return $str;
+    }
+    return $esc_function($str);
   }
 
 // Okay so $value can be like eg: $where["status"] = array(" LIKE ","hey")

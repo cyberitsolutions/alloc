@@ -63,7 +63,7 @@ function show_items($template_name) {
 
       if ($loan->have_perm(PERM_READ_WRITE)) {
 
-        // if item is OVERDUE!!
+        // if item is overdue
         if ($loan->get_value("dateToBeReturned") < $today) {
           $ret = "Return Now!";
         } else {
@@ -85,7 +85,7 @@ function show_items($template_name) {
       $dbUsername->next_record();
       $TPL["person"] = "from ".$dbUsername->f("username");
 
-    } else {                    // if the item is AVAILABLE
+    } else {                    // if the item is available
 
       $TPL["status"] = "Available";
       $TPL["person"] = "";

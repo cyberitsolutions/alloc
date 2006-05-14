@@ -1,18 +1,16 @@
 {:show_header}
   {:show_toolbar}
 {table_box}
-<th>
-  <h2>Add Single Item</h2>
-</th>
+<th>Add Single Item</th>
 <tr>
 <td>
   <form method="post" action="{url_alloc_addItem}">
   <table>
   <input type="hidden" name="personID" value="{personID}" />
     <tr>
-      <th>Item Name</th>
-      <th>Notes</th>
-      <th>Type</th>
+      <td>Item Name</td>
+      <td>Notes</td>
+      <td>Type</td>
       <td>&nbsp;</td>
     </tr>
     <tr>
@@ -39,8 +37,8 @@
   <form enctype="multipart/form-data" method="post" action="{url_alloc_addItem}">
   <table>
     <tr>
-      <th>File</th>
-      <th>Type</th>
+      <td>File</td>
+      <td>Type</td>
       <td>&nbsp;</td>
     </tr>
     <tr>
@@ -61,7 +59,7 @@
   <form method="post" action="{url_alloc_addItem}">
   <table>
     <tr>
-      <th>Items</th>
+      <td>Items</td>
       <td>&nbsp;</td>
     <tr>
       <td><select name="itemID[]" multiple size="8">{item_list}</select></td>

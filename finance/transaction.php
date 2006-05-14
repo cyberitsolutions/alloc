@@ -29,7 +29,9 @@ global $current_user, $TPL, $db, $save, $saveAndNew, $saveGoTf;
 $db = new db_alloc;
 $transaction = new transaction;
 
-if ($transactionID && !$new) {
+$transactionID = $_POST["transactionID"] or $transactionID = $_GET["transactionID"];
+
+if ($transactionID && !$_GET["new"]) {
   $transaction->set_id($transactionID);
   $transaction->select();
 }
@@ -46,7 +48,7 @@ $transaction->set_tpl_values();
 
 
 
-if ($save || $saveAndNew || $saveGoTf) {
+if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 
   $transaction->read_globals();
 
@@ -67,18 +69,18 @@ if ($save || $saveAndNew || $saveGoTf) {
     $transaction->save();
     $TPL["message_good"][] = "Transaction Saved";
 
-    if ($saveAndNew) {
+    if ($_POST["saveAndNew"]) {
       header("Location: ".$TPL["url_alloc_transaction"]."new=true");
     }
 
-    if ($saveGoTf) {
+    if ($_POST["saveGoTf"]) {
       header("Location: ".$TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
     }
     $transaction->set_tpl_values();
 
   }
     
-} else if ($delete) {
+} else if ($_POST["delete"]) {
   $transaction->delete();
   header("location:".$TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
 }

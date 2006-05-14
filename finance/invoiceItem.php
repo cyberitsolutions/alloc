@@ -49,7 +49,6 @@ function show_timeSheets($template) {
 
 }
 
-
 function show_transaction_list($template) {
   global $db, $TPL, $invoice_item, $status_options, $previousTransactionDate, $percent_array;
 
@@ -91,12 +90,10 @@ function show_new_transaction($template) {
   include_template($template);
 }
 
-
 function show_tf_options() {
   global $tf_array, $TPL;
   echo get_select_options($tf_array, $TPL["transaction_tfID"]);
 }
-
 
 function get_next_item_id($mode) {
   global $invoice_item;
@@ -120,28 +117,25 @@ function get_next_item_id($mode) {
 
 // END FUNCTIONS
 
-
-/* 
-   $TPL["mode"] = $mode; if ($mode == "allocate") { $invoice_status_filter = "status = 'pending'"; } else if ($mode == "approve") { $invoice_status_filter = "status = 'allocated'"; } else { $invoice_status_filter = "1=1"; } */
-
-if ($transaction_save || $transaction_delete) {
+if ($_POST["transaction_save"] || $_POST["transaction_delete"]) {
   $transaction = new transaction;
   $transaction->read_globals();
   $transaction->read_globals("transaction_");
-  if ($transaction_save) {
+  if ($_POST["transaction_save"]) {
     $transaction->set_value("transactionType", "invoice");
-    if (is_numeric($percent_dropdown)) {
-      $transaction->set_value("amount", $percent_dropdown);
+    if (is_numeric($_POST["percent_dropdown"])) {
+      $transaction->set_value("amount", $_POST["percent_dropdown"]);
     }
 
     $transaction->save();
-  } else if ($transaction_delete) {
+  } else if ($_POST["transaction_delete"]) {
     $transaction->delete();
   }
 }
 
 
 $invoiceItemID = $_POST["invoiceItemID"] or $invoiceItemID = $_GET["invoiceItemID"];
+$mode = $_POST["mode"] or $mode = $_GET["mode"];
 
 $db = new db_alloc;
 $query = "SELECT invoiceItem.*, invoice.invoiceNum, invoice.invoiceDate, invoice.invoiceName 
@@ -162,12 +156,13 @@ $invoice_item->set_tpl_values();
 $next_item_id = get_next_item_id($mode);
      $next_item_id and $TPL["next_link"] = "<a href=\"".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$next_item_id."&mode=".$mode."\">Next Invoice Item</a>&nbsp;";
 
-if ($mark_allocated || $mark_paid && is_Object($invoice_item)) {
-$mark_allocated and $invoice_item->set_value("status", "allocated");
-$mark_paid and $invoice_item->set_value("status", "paid");
-$invoice_item->save();
-header("Location: ".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$invoice_item->get_id()."&mode=$mode");
-exit;
+if ($_POST["mark_pending"] || $_POST["mark_allocated"] || $_POST["mark_paid"] && is_object($invoice_item)) {
+  $_POST["mark_pending"] and $invoice_item->set_value("status", "pending");
+  $_POST["mark_allocated"] and $invoice_item->set_value("status", "allocated");
+  $_POST["mark_paid"] and $invoice_item->set_value("status", "paid");
+  $invoice_item->save();
+  header("Location: ".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$invoice_item->get_id()."&mode=$mode");
+  exit;
 }
 
 
@@ -203,12 +198,12 @@ $TPL["a_button"] = "<input type=\"submit\" name=\"approved_button\" value=\"A\">
 $TPL["p_button"] = "<input type=\"submit\" name=\"pending_button\" value=\"P\">";
 $TPL["r_button"] = "<input type=\"submit\" name=\"rejected_button\" value=\"R\">";
 
-if ($approved_button || $pending_button || $rejected_button) {
-  if ($approved_button) {
+if ($_POST["approved_button"] || $_POST["pending_button"] || $_POST["rejected_button"]) {
+  if ($_POST["approved_button"]) {
     $status = "approved";
-  } else if ($pending_button) {
+  } else if ($_POST["pending_button"]) {
     $status = "pending";
-  } else if ($rejected_button) {
+  } else if ($_POST["rejected_button"]) {
     $status = "rejected";
   }
   $db->query("update transaction set status = '".$status."' where invoiceItemID = ".$invoice_item->get_id());
@@ -230,7 +225,6 @@ if (is_object($invoice_item) && $invoice_item->get_id()) {
   $TPL["iiAmount"] = sprintf("%0.2f", $invoice_item->get_value("iiAmount"));
   $TPL["allocated_amount"] = sprintf("%0.2f", $db->f("allocated_amount"));
   $TPL["unallocated_amount"] = sprintf("%0.2f", $invoice_item->get_value("iiAmount") - $TPL["allocated_amount"]);
-#$TPL[""];
 }
 
 

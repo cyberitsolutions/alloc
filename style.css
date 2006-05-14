@@ -17,18 +17,16 @@ table.box th            { border-bottom:1px solid (TABLE_BOX_BORDER);  (TABLE_BO
 table.box th a:link     { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; }
 table.box th a:visited  { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; }
 table.box th a:hover    { font-weight:bold; color:(TABLE_BOX_TH_A_HOVER_COLOR); font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; }
-table.box th.right      { text-align:right; } 
+th.right                { text-align:right; } 
 table.box th.center     { text-align:center; } 
 table.box th.right table{ width:40%; } 
 
-table.toolbar           { border:(TABLE_BOX_BORDER_PX) solid (TABLE_TOOLBAR_BORDER); color:(BODY_COLOR); background-color:(TABLE_TOOLBAR_BACKGROUND_COLOR); margin-bottom:7px;}
-table.toolbar a:link    { color:(TABLE_TOOLBAR_A_COLOR); font-weight:bolder;        }
-table.toolbar a:visited { color:(TABLE_TOOLBAR_A_COLOR); font-weight:bolder;        }
-table.toolbar a:hover   { color:(TABLE_TOOLBAR_A_HOVER_COLOR); font-weight:bolder;  }
-table.toolbar a.active  { color:(TABLE_TOOLBAR_A_ACTIVE_COLOR); }
-table.toolbar th        { color:(TABLE_TOOLBAR_TH_COLOR); padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER); font-size:(TABLE_TOOLBAR_TH_FONT_SIZE)px; }
-table.toolbar td        { font-size:(TABLE_TOOLBAR_TD_FONT_SIZE)px; (TABLE_TOOLBAR_TD_BACKGROUND)}
-table.toolbar th.logout { text-align:right; padding:3px 2px; font-weight:bold; (TABLE_TOOLBAR_TH_BACKGROUND); border-bottom:1px solid (TABLE_TOOLBAR_BORDER); font-size:(TABLE_TOOLBAR_TD_FONT_SIZE)px;}
+td.menu                 { background-color:(TD_MENU_BACKGROUND_COLOR);}
+table.menu a:link       { color:(TABLE_MENU_A_COLOR); font-weight:bolder;        }
+table.menu a:visited    { color:(TABLE_MENU_A_COLOR); font-weight:bolder;        }
+table.menu a:hover      { color:(TABLE_MENU_A_HOVER_COLOR); font-weight:bolder;  }
+table.menu a.active     { color:(TABLE_MENU_A_ACTIVE_COLOR); }
+table.menu td           { font-size:(TD_FONT_SIZE)px; }
 
 table.calendar th       { background-color:(TABLE_CALENDAR_TH_BACKGROUND_COLOR); color:(TABLE_CALENDAR_TH_COLOR); border:0px; font-weight:normal; font-size:(TABLE_CALENDAR_TH_FONT_SIZE)px; }
 table.calendar td       { background-color:(TR_ODD_BACKGROUND_COLOR); }

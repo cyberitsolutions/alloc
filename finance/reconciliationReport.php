@@ -25,7 +25,7 @@ require_once("alloc.inc");
 check_entity_perm("transaction", PERM_FINANCE_RECONCILIATION_REPORT);
 
 function load_transaction_total($info_field, $transaction_type) {
-  global $tf_info, $month, $year;
+  global $tf_info;
 
   $query = sprintf("SELECT tf.tfID, tf.tfName, sum(transaction.amount) as total_amount
                       FROM tf 
@@ -33,7 +33,7 @@ function load_transaction_total($info_field, $transaction_type) {
                                             AND transactionType='%s' 
                                             AND transactionDate LIKE '%02d-%02d-%%'
                                             AND transaction.status <> 'rejected'
-                      GROUP BY tfID", addslashes($transaction_type), $year, $month);
+                      GROUP BY tfID", addslashes($transaction_type), $_GET["year"], $_GET["month"]);
   $db = new db_alloc;
   $db->query($query);
 
@@ -98,14 +98,14 @@ function show_tf_balances($template) {
 }
 
 function show_transaction_list($transactionType) {
-  global $month, $year, $TPL;
+  global $TPL;
 
   $TPL["total_amount"] = 0;
 
   $query = sprintf("SELECT transaction.*, tf.tfName  
                       FROM transaction LEFT JOIN tf ON transaction.tfID = tf.tfID
                       WHERE transactionDate LIKE '%04d-%02d-%%' AND transactionType='%s'
-                      ORDER BY transactionDate", $year, $month, addslashes($transactionType));
+                      ORDER BY transactionDate", $_GET["year"], $_GET["month"], addslashes($transactionType));
   $db = new db_alloc;
   $db->query($query);
 
@@ -129,32 +129,32 @@ function show_transaction_list($transactionType) {
   $TPL["total_amount"] = number_format($TPL["total_amount"], 2);
 }
 
-if (!isset($month)) {
-  $month = date("m");
+if (!isset($_GET["month"])) {
+  $_GET["month"] = date("m");
 }
-if (!isset($year)) {
-  $year = date("Y");
+if (!isset($_GET["year"])) {
+  $_GET["year"] = date("Y");
 }
 
-$start_date = mktime(0, 0, 0, $month, 1, $year);
+$start_date = mktime(0, 0, 0, $_GET["month"], 1, $_GET["year"]);
 $days_in_month = date("t", $start_date);
-$end_date = mktime(0, 0, 0, $month, $days_in_month, $year);
+$end_date = mktime(0, 0, 0, $_GET["month"], $days_in_month, $_GET["year"]);
 
-if ($month == 1) {
+if ($_GET["month"] == 1) {
   $prev_month = 12;
   $next_month = 2;
-  $prev_year = $year - 1;
-  $next_year = $year;
-} else if ($month == 12) {
+  $prev_year = $_GET["year"] - 1;
+  $next_year = $_GET["year"];
+} else if ($_GET["month"] == 12) {
   $prev_month = 11;
   $next_month = 1;
-  $prev_year = $year;
-  $next_year = $year + 1;
+  $prev_year = $_GET["year"];
+  $next_year = $_GET["year"] + 1;
 } else {
-  $prev_month = $month - 1;
-  $next_month = $month + 1;
-  $prev_year = $year;
-  $next_year = $year;
+  $prev_month = $_GET["month"] - 1;
+  $next_month = $_GET["month"] + 1;
+  $prev_year = $_GET["year"];
+  $next_year = $_GET["year"];
 }
 
 $base_url = $TPL["url_alloc_reconciliationReport"];

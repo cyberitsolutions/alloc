@@ -29,23 +29,38 @@ global $search;
 
 function startSearch($template) {
 
-  global $TPL, $db, $search, $invoiceNum, $invoice, $invoiceItem_status, $dateOne, $dateTwo, $invoiceName, $invoiceItemID;
+  global $TPL, $current_user;
+
+  $db = new db_alloc;
+
+  if ($_POST["search"]) {
 
 
+    $_POST["invoiceItemID"]      and $str.= sprintf(" and invoiceItem.invoiceItemID = %d",$_POST["invoiceItemID"]);
+    $_POST["invoiceNum"]         and $str.= sprintf(" and invoice.invoiceNum like %d",$_POST["invoiceNum"]);
+    $_POST["dateOne"]            and $str.= sprintf(" and invoice.invoiceDate>=\"%s\"",$_POST["dateOne"]);
+    $_POST["dateTwo"]            and $str.= sprintf(" and invoice.invoiceDate<=\"%s\"",$_POST["dateTwo"]);
+    $_POST["invoiceName"]        and $str.= sprintf(" and invoice.invoiceName like '%%%s%%'",$_POST["invoiceName"]);
+    $_POST["invoiceItem_status"] and $str.= sprintf(" and invoiceItem.status = '%s'",$_POST["invoiceItem_status"]);
 
-  if ($search) {
+    if ($current_user->have_role("admin")) {
 
+      $query = "SELECT invoiceItem.*, invoice.invoiceNum, invoice.invoiceDate, invoice.invoiceName
+                  FROM invoiceItem, invoice
+                 WHERE invoiceItem.invoiceID = invoice.invoiceID $str";
 
-    $invoiceItemID and $str.= "and invoiceItem.invoiceItemID = '$invoiceItemID'";
-    $invoiceNum and $str.= "and invoice.invoiceNum like '$invoiceNum%'";
-    $dateOne and $str.= "and invoice.invoiceDate>=\"$dateOne\"";
-    $dateTwo and $str.= "and invoice.invoiceDate<=\"$dateTwo\"";
-    $invoiceName and $str.= "and invoice.invoiceName like '%$invoiceName%'";
-    $invoiceItem_status and $str.= "and invoiceItem.status = '$invoiceItem_status'";
+    // Rsstrict the results to invoices that have invoiceItems on them for TF's that this user can view
+    } else {
+      $tfIDs = $current_user->get_tfIDs();
+      if (is_array($tfIDs)) {
+        $tfIDs = " AND transaction.tfID in (".implode(",",$tfIDs).")";
+      }
+      $query = "SELECT invoiceItem.*, invoice.invoiceNum, invoice.invoiceDate, invoice.invoiceName
+                  FROM invoiceItem, invoice
+             LEFT JOIN transaction on transaction.invoiceItemID = invoiceItem.invoiceItemID 
+                 WHERE invoiceItem.invoiceID = invoice.invoiceID $str $tfIDs";
 
-    $query = "SELECT invoiceItem.*, invoice.invoiceNum, invoice.invoiceDate, invoice.invoiceName
-      FROM invoiceItem, invoice
-      WHERE invoiceItem.invoiceID = invoice.invoiceID $str";
+    }
 
     $db->query($query);
 
@@ -77,14 +92,14 @@ function startSearch($template) {
 
 $db = new db_alloc;
 
-$TPL["statusOptions"] = get_options_from_array(array("pending"=>"Pending", "allocated"=>"Allocated", "paid"=>"Paid",), $invoiceItem_status, false);
-$TPL["status"] = $status;
-$TPL["dateOne"] = $dateOne;
-$TPL["dateTwo"] = $dateTwo;
-$TPL["invoiceID"] = $invoiceID;
-$TPL["invoiceName"] = $invoiceName;
-$TPL["invoiceNum"] = $invoiceNum;
-$TPL["invoiceItemID"] = $invoiceItemID;
+$TPL["statusOptions"] = get_options_from_array(array("pending"=>"Pending", "allocated"=>"Allocated", "paid"=>"Paid",), $_POST["invoiceItem_status"], false);
+$TPL["status"] = $_POST["status"];
+$TPL["dateOne"] = $_POST["dateOne"];
+$TPL["dateTwo"] = $_POST["dateTwo"];
+$TPL["invoiceID"] = $_POST["invoiceID"];
+$TPL["invoiceName"] = $_POST["invoiceName"];
+$TPL["invoiceNum"] = $_POST["invoiceNum"];
+$TPL["invoiceItemID"] = $_POST["invoiceItemID"];
 
 
 include_template("templates/searchInvoiceM.tpl");

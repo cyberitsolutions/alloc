@@ -24,8 +24,9 @@
 require_once("alloc.inc");
 
 $client = new client;
-if (isset($save)) {
-  if ($clientName == "") {
+$clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];
+if ($_POST["save"]) {
+  if ($_POST["clientName"] == "") {
     $TPL["error"] = "Please enter a company name.";
   }
   $client->read_globals();
@@ -39,29 +40,28 @@ if (isset($save)) {
     
     $client->set_value("clientCreatedTime", date("Y-m-d"));
     $new_client = true;
- }
+  }
+
   $client->save();
   $clientID = $client->get_id();
   $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
   
-  if ($new_client == true && $dontCreateProject != "on") {
-     // Create the <Client Name> - General Support
+  if ($new_client == true && $_POST["createProject"]) {
+     // Create Project: <Client Name> - General Support 
     $project = new project;
     $project->set_value("projectName", $client->get_value("clientName")." - General Support");
     $project->set_value("clientID", $clientID);
     $project->set_value("projectType", "contract");
     $project->set_value("projectStatus", "current");
-    //TODO: Find out what other stuff to add.
     $project->save();
 
-    //now, add current user as a projectperson
+    // Now add current_user as a projectPerson
     $projectperson = new projectperson;
     $projectperson->set_value("personID", $current_user->get_id());
     $projectperson->set_value("projectID", $project->get_id());
-    $projectperson->set_value("emailEmptyTaskList", true);
+    $projectperson->set_value("emailEmptyTaskList", "None");
     $projectperson->set_value_role("isManager");
     $projectperson->save();
-
   }    
   
 } else if ($_POST["save_attachment"]) {
@@ -84,7 +84,7 @@ if (isset($save)) {
 
 } else {
 
-  if (isset($delete)) {
+  if ($_POST["delete"]) {
     $client->read_globals();
     // delete all contacts and comments linked with this client as well
     $db = new db_alloc;
@@ -116,11 +116,11 @@ $clientStatus_array = array("current"=>"Current", "potential"=>"Potential", "arc
 $TPL["clientStatusOptions"] = get_select_options($clientStatus_array, $client->get_value("clientStatus"));
 
   // client contacts
-if (isset($clientContact_save) || isset($clientContact_add) || isset($clientContact_addpc)
-    || isset($clientContact_makepc) || isset($clientContact_delete)) {
+if ($_POST["clientContact_save"] || $_POST["clientContact_add"] || $_POST["clientContact_addpc"]
+    || $_POST["clientContact_makepc"] || $_POST["clientContact_delete"]) {
   $clientContact = new clientContact;
   $clientContact->read_globals();
-  if (isset($clientContact_add) || isset($clientContact_addpc)) {
+  if ($_POST["clientContact_add"] || $_POST["clientContact_addpc"]) {
     $clientContact->set_value('clientID', $clientID);
 
 
@@ -129,55 +129,54 @@ if (isset($clientContact_save) || isset($clientContact_add) || isset($clientCont
     }
 
     $clientContact->save();
-    if (isset($clientContact_addpc)) {
+    if ($_POST["clientContact_addpc"]) {
       $client->set_value('clientPrimaryContactID', $clientContact->get_id());
       $client->save();
     }
   }
-  if (isset($clientContact_save)) {
+  if ($_POST["clientContact_save"]) {
     $clientContact->save();
   }
-  if (isset($clientContact_delete)) {
+  if ($_POST["clientContact_delete"]) {
     $clientContact->delete();
   }
-  if (isset($clientContact_makepc)) {
+  if ($_POST["clientContact_makepc"]) {
     $client->set_value('clientPrimaryContactID', $clientContact->get_id());
     $client->save();
   }
 }
   // client comments
-if (isset($clientComment_save) || isset($clientComment_update)) {
+if ($_POST["clientComment_save"] || $_POST["clientComment_update"]) {
   $comment = new comment;
   $comment->set_value('commentType', 'client');
   $comment->set_value('commentLinkID', $clientID);
   $comment->set_modified_time();
   $comment->set_value('commentModifiedUser', $current_user->get_id());
 
-  if (isset($clientComment_update)) {
-    $comment->set_id($clientComment_id);
+  if ($_POST["clientComment_update"]) {
+    $comment->set_id($_POST["clientComment_id"]);
   }
-  if (isset($clientComment)) {
-    $comment->set_value('comment', $clientComment);
+  if ($_POST["clientComment"]) {
+    $comment->set_value('comment', $_POST["clientComment"]);
     $comment->save();
   }
 }
-if (isset($clientComment_delete) && isset($clientComment_id)) {
+if ($_POST["clientComment_delete"] && $_POST["clientComment_id"]) {
   $comment = new comment;
-  $comment->set_id($clientComment_id);
+  $comment->set_id($_POST["clientComment_id"]);
   $comment->delete();
 }
-if (isset($clientComment_cancel)) {
+if ($_POST["clientComment_cancel"]) {
   unset($commentID);
 }
 
-global $clientComment_edit;
-if (isset($commentID) && $clientComment_edit) {
+if ($_POST["commentID"] && $_POST["clientComment_edit"]) {
   $comment = new comment();
-  $comment->set_id($commentID);
+  $comment->set_id($_POST["commentID"]);
   $comment->select();
   $TPL["client_clientComment"] = $comment->get_value('comment');
   $TPL["client_clientComment_buttons"] =
-    sprintf("<input type=\"hidden\" name=\"clientComment_id\" value=\"%d\">", $commentID)
+    sprintf("<input type=\"hidden\" name=\"clientComment_id\" value=\"%d\">", $_POST["commentID"])
            ."<input type=\"submit\" name=\"clientComment_update\" value=\"Save Comment\">";
 } else {
   $TPL["client_clientComment_buttons"] = "<input type=\"submit\" name=\"clientComment_save\" value=\"Save Comment\">";
@@ -191,19 +190,18 @@ include_template("templates/clientM.tpl");
   }
 
   function show_client_details_edit($template) {
-    global $TPL, $clientID, $client_edit;
+    global $TPL, $clientID;
 
     $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
 
-    if (!isset($clientID) || isset($client_edit)) {
-      // if new client
+    if (!isset($clientID) || $_POST["client_edit"]) {
+
+      // If new client
       if (!isset($clientID)) {
-        $TPL["clientDetails_buttons"] = "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;\">";
-        // new support project text box should be visible.
-        $TPL["createGeneralSupportProject"] = "<tr> <td colspan=\"2\"><b>Don't Create General Support Project</b></td>
-                <td><input type=\"checkbox\" name=\"dontCreateProject\" checked=\"yes\"/></td></tr>";
+        $TPL["clientDetails_buttons"] = "<input type=\"submit\" name=\"save\" value=\"Create New Client\">";
+        $TPL["createGeneralSupportProject"] = "<b>Create General Support Project</b> <input type=\"checkbox\" name=\"createProject\"/>";
           
-        // else if just editing
+      // Else just editing
       } else {
         $TPL["clientDetails_buttons"] =
           "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">".
@@ -218,8 +216,8 @@ include_template("templates/clientM.tpl");
   }
 
   function show_client_details($template) {
-    global $TPL, $client, $clientID, $client_edit;
-    if (isset($clientID) && !isset($client_edit)) {
+    global $TPL, $client, $clientID;
+    if (isset($clientID) && !$_POST["client_edit"]) {
       // setup formatted address output
 
       // postal address
@@ -314,8 +312,7 @@ include_template("templates/clientM.tpl");
     // show all reminders for this project
     $reminder = new reminder;
     $db = new db_alloc;
-    $permissions = explode(",", $current_user->get_value("perms"));
-    if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
+    if ($current_user->have_role("manage") || $current_user->have_role("admin") || $current_user->have_role("god")) {
       $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d", $clientID);
     } else {
       $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d AND personID='%s'", $clientID, $current_user->get_id());
@@ -389,7 +386,7 @@ include_template("templates/clientM.tpl");
   }
 
   function show_comments($template) {
-    global $TPL, $clientID, $commentID, $view, $clientCommentTemplateID, $current_user;
+    global $TPL, $clientID, $current_user;
 
     
     // setup add/edit comment section values
@@ -425,13 +422,13 @@ include_template("templates/clientM.tpl");
       $TPL["client_username"] = $person->get_username(1);
 
       // trim comment to 128 characters
-      if (strlen($comment->get_value("comment")) > 3000 && $view != "printer") {
+      if (strlen($comment->get_value("comment")) > 3000 && $_GET["view"] != "printer") {
         $TPL["client_comment_trimmed"] = nl2br(sprintf("%s...", substr($comment->get_value("comment"), 0, 3000)));
       } else {
         $TPL["client_comment_trimmed"] = str_replace("\n", "<br>", htmlentities($comment->get_value("comment")));
       }
 
-      if (!$commentID || $commentID != $comment->get_id()) {
+      if (!$_POST["commentID"] || $_POST["commentID"] != $comment->get_id()) {
         include_template($template);
       }
     }

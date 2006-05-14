@@ -17,18 +17,16 @@ table.box th            { border-bottom:1px solid #cccccc;  ; color:; font-size:
 table.box th a:link     { font-weight:bold; color:; font-size:15px; }
 table.box th a:visited  { font-weight:bold; color:; font-size:15px; }
 table.box th a:hover    { font-weight:bold; color:; font-size:15px; }
-table.box th.right      { text-align:right; } 
+th.right                { text-align:right; } 
 table.box th.center     { text-align:center; } 
 table.box th.right table{ width:40%; } 
 
-table.toolbar           { border:1px solid #cccccc; color:; background-color:; margin-bottom:7px;}
-table.toolbar a:link    { color:; font-weight:bolder;        }
-table.toolbar a:visited { color:; font-weight:bolder;        }
-table.toolbar a:hover   { color:; font-weight:bolder;  }
-table.toolbar a.active  { color:; }
-table.toolbar th        { color:; padding:3px 2px; font-weight:bold; ; border-bottom:1px solid #cccccc; font-size:19px; }
-table.toolbar td        { font-size:15px; }
-table.toolbar th.logout { text-align:right; padding:3px 2px; font-weight:bold; ; border-bottom:1px solid #cccccc; font-size:15px;}
+td.menu                 { background-color:;}
+table.menu a:link       { color:; font-weight:bolder;        }
+table.menu a:visited    { color:; font-weight:bolder;        }
+table.menu a:hover      { color:; font-weight:bolder;  }
+table.menu a.active     { color:; }
+table.menu td           { font-size:14px; }
 
 table.calendar th       { background-color:; color:; border:0px; font-weight:normal; font-size:14px; }
 table.calendar td       { background-color:; }

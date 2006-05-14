@@ -25,7 +25,10 @@ require_once("alloc.inc");
 
 $current_user->check_employee();
 
-global $db, $itemID, $borrow, $today, $timePeriod;
+global $db, $today;
+
+$itemID = $_POST["itemID"] or $itemID = $_GET["itemID"];
+$loanID = $_POST["loanID"] or $loanID = $_GET["loanID"];
 
 $item = new item;
 $loan = new loan;
@@ -35,9 +38,8 @@ $db->next_record();
 $item->read_db_record($db);
 $item->set_tpl_values();
 
-  // new crap
-$permissions = explode(",", $current_user->get_value("perms"));
-if (in_array("admin", $permissions) || in_array("manager", $permissions)) {
+// new crap
+if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
   $users = array();
   $_db = new db_alloc;
   $_db->query("SELECT * FROM person ORDER BY username");
@@ -52,7 +54,7 @@ if (in_array("admin", $permissions) || in_array("manager", $permissions)) {
   $TPL["userSelect"] = "";
 }
 
-$temp = mktime(0, 0, 0, date("m") + $timePeriod, date("d"), date("Y"));
+$temp = mktime(0, 0, 0, date("m") + $_POST["timePeriod"], date("d"), date("Y"));
 $whenToReturn = date("Y", $temp)."-".date("m", $temp)."-".date("d", $temp);
 
 
@@ -65,7 +67,7 @@ if ($loanID) {
 }
 
 
-if ($borrowItem) {
+if ($_POST["borrowItem"]) {
   $db->query("select * from loan where itemID=$itemID and dateReturned='0000-00-00'");
 
   if ($db->next_record()) {     // if the item is already borrowed
@@ -77,32 +79,13 @@ if ($borrowItem) {
     $loan->set_value("dateToBeReturned", $whenToReturn);
 
     // if admin/manager then check to see if an alternate user was selected
-    if (isset($userID) && $userID != "" && (in_array("admin", $permissions) || in_array("manage", $permissions))) {
-      if ($userID != $current_user->get_id()) {
+    if ($_POST["userID"] && ($current_user->have_role("admin") || $current_user->have_role("manage"))) {
+      if ($_POST["userID"] != $current_user->get_id()) {
         $person = new person;
-        $person->set_id($userID);
+        $person->set_id($_POST["userID"]);
         $person->select();
-
-        if ($person->get_value("emailAddress") != "") {
-          $to = sprintf("%s %s <%s>", $person->get_value("firstName"), $person->get_value("surname"), $person->get_value("emailAddress"));
-          $subject = "Item Loan";
-
-          $person = new person;
-          $person->set_id($current_user->get_id());
-          $person->select();
-
-          $message.= "admin/manager: \"".$person->get_value("username")."\" "."has borrowed item: \"".$item->get_value("itemName")."\" for you\n";
-
-          if ($person->get_value("emailAddress") != "") {
-            $from = "From: allocPSA <".$person->get_value("emailAddress").">";
-          } else {
-            $from = "From: allocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
-          }
-          // email userID saying that admin/manager: $current_user->get_id() has borrowed item for them
-          mail($to, $subject, $message, $from);
-        }
       }
-      $loan->set_value("personID", $userID);
+      $loan->set_value("personID", $_POST["userID"]);
     } else {
       $loan->set_value("personID", $current_user->get_id());
     }
@@ -117,7 +100,7 @@ if ($borrowItem) {
 
 
 
-if ($returnItem) {
+if ($_POST["returnItem"]) {
 
   $dbTemp = new db_alloc;
   $dbTemp->query("select * from loan where itemID=$itemID and dateReturned='0000-00-00'");
@@ -131,32 +114,12 @@ if ($returnItem) {
 
   // check to see if admin/manager returning someone elses item, and sent email
   if ($loan->get_value("personID") != $current_user->get_id()) {
-    if (in_array("admin", $permissions) || in_array("manager", $permissions)) {
+    if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
       $person = new person;
       $person->set_id($loan->get_value("personID"));
       $person->select();
-
-      if ($person->get_value("emailAddress") != "") {
-        $to = sprintf("%s %s <%s>", $person->get_value("firstName"), $person->get_value("surname"), $person->get_value("emailAddress"));
-        $subject = "Item Loan";
-
-        $person = new person;
-        $person->set_id($current_user->get_id());
-        $person->select();
-
-        $message.= "admin/manager: \"".$person->get_value("username")."\" "."has returned item: \"".$item->get_value("itemName")."\" for you\n";
-
-        if ($person->get_value("emailAddress") != "") {
-          $from = "From: allocPSA <".$person->get_value("emailAddress").">";
-        } else {
-          $from = "From: allocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
-        }
-        // email userID saying that admin/manager: $current_user->get_id() has returned item for them
-        mail($to, $subject, $message, $from);
-      }
       $loan->save();
     }
-    // if personID != $current_user->get_id() and not an admin/manager then shouldnt be able to return
   } else {
     $loan->save();
   }
@@ -166,7 +129,7 @@ if ($returnItem) {
 
 
 
-if ($return) {
+if ($_GET["return"]) {
   include_template("templates/itemReturnM.tpl");
 } else {
   include_template("templates/itemBorrowM.tpl");

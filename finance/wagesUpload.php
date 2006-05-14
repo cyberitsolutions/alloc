@@ -25,10 +25,10 @@ require_once("alloc.inc");
 
 $field_map = array("transactionDate"=>0, "employeeNum"=>1, "name"=>2, ""=>3, ""=>4, ""=>5, ""=>6, ""=>7, ""=>8, ""=>9, "amount"=>10, ""=>11, ""=>12);
 
-if ($upload && is_uploaded_file($wages_file)) {
+if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
   $db = new db_alloc;
 
-  $lines = file($wages_file);
+  $lines = file($_FILES["wages_file"]["tmp_name"]);
 
   reset($lines);
   while (list(, $line) = each($lines)) {
