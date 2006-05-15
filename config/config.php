@@ -35,7 +35,7 @@ while ($db->next_record()) {
 }
 
 
-if ($save) {
+if ($_POST["save"]) {
   foreach ($fields_to_save as $name) {
     if ($_POST[$name]) {
       $id = $config->get_config_item_id($name);

@@ -130,7 +130,7 @@ function show_skill_expertise() {
       if (!isset($people_header)) {
         get_people_header();
       }
-      $class_header = sprintf("<tr class=\"highlighted\">\n<th>%s&nbsp;&nbsp;&nbsp;</th>\n", $skillList->get_value('skillClass'));
+      $class_header = sprintf("<tr class=\"highlighted\">\n<th width=\"5%%\">%s&nbsp;&nbsp;&nbsp;</th>\n", $skillList->get_value('skillClass'));
       print $class_header.$people_header."</tr>\n";
     }
     print sprintf("<tr>\n<th>%s</th>\n", $skillList->get_value('skillName'));
