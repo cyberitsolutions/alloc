@@ -77,8 +77,12 @@ function confirm_run {
   # $2 rm -rf / (a command to run)
   # $3 no (default)
 
-  get_user_var "USER_INPUT" "${1} ($2)" "${3}"
-  local USER_INPUT="${USER_INPUT:0:1}"
+  if [ -z "${DO_BATCH}" ]; then
+    get_user_var "USER_INPUT" "${1} ($2)" "${3}"
+    local USER_INPUT="${USER_INPUT:0:1}"
+  else
+    local USER_INPUT="y"
+  fi
 
   if [ "${USER_INPUT}" = "y" ] || [ "${USER_INPUT}" = "Y" ]; then
     run "${2}"
@@ -110,11 +114,20 @@ fi
 # Directory of this file
 DIR="${0%/*}/"
 
-
 CONFIG_FILE="${DIR}install.cfg"
-if [ -n "${1}" ]; then 
+
+if [ -f "${1}" ]; then
   CONFIG_FILE="${1}"
+elif [ -f "${2}" ]; then
+  CONFIG_FILE="${2}"
 fi
+
+if [ "${1}" = "-B" ] || [ "${2}" = "-B" ]; then
+  DO_BATCH=1
+fi
+
+
+
 
 
 
