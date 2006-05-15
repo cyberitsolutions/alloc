@@ -11,7 +11,7 @@
 
       <table class="filter" align="center">
         <tr>
-          <td><input size="30" name="needle" value="{needle}"></td>
+          <td><input size="30" name="needle" value="{needle2}"></td>
           <td><select size="1" name="category">{category_options}</select></td>
           <td><input type="submit" name="search" value="Search"></td>
         </tr>

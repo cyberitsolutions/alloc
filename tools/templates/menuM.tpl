@@ -2,7 +2,7 @@
 {:show_toolbar}
 {table_box_norm}
   <tr>
-    <th>Miscellaneous Alloc Tools</th>
+    <th>Tools</th>
   </tr>
   <tr>
     <td>

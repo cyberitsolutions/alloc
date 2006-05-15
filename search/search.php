@@ -381,6 +381,7 @@ if (!$search) {
 // setup generic values
 $TPL["category_options"] = get_category_options($_POST["category"]);
 $TPL["needle"] = $_POST["needle"];
+$TPL["needle2"] = $_POST["needle"];
 
 
 if ($TPL["search_results"]) {

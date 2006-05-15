@@ -28,19 +28,20 @@ $complexities = array(10, 25, 50);
 $complexity_titles = array("Small", "Medium", "Large");
 $times = array(array(3, 4, 6), array(5, 7, 10), array(8, 10, 15), array(12, 15, 25));
 $costs = array(array(6000, 10000, 17000), array(12000, 20000, 34000), array(30000, 50000, 100000), array(70000, 100000, 150000));
+
 function makeEstimate() {
-  global $TPL, $pages, $databases, $complexity, $multiplier;
+  global $TPL;
   global $times, $costs, $elements, $element_titles, $complexities, $complexity_titles;
-  if (isset($pages) && isset($databases) && isset($complexity) && isset($multiplier)) {
+  if ($_POST["pages"] && $_POST["databases"] && $_POST["complexity"] && $_POST["multiplier"]) {
 
     // figure out where we fit in table of set complexities
     $col_match = 0;
     $col = -1;
     for ($i = 0; $i < count($complexities) && $col < 0; $i++) {
-      if ($complexity == $complexities[$i]) {
+      if ($_POST["complexity"] == $complexities[$i]) {
         $col_match = TRUE;
       }
-      if ($complexity <= $complexities[$i]) {
+      if ($_POST["complexity"] <= $complexities[$i]) {
         $col = $i;
       }
     }
@@ -51,10 +52,10 @@ function makeEstimate() {
     $row_match = 0;
     $row = -1;
     for ($i = 0; $i < count($elements) && $row < 0; $i++) {
-      if (($pages + $databases) == $elements[$i]) {
+      if (($_POST["pages"] + $_POST["databases"]) == $elements[$i]) {
         $row_match = TRUE;
       }
-      if (($pages + $databases) <= $elements[$i]) {
+      if (($_POST["pages"] + $_POST["databases"]) <= $elements[$i]) {
         $row = $i;
       }
     }
@@ -66,11 +67,11 @@ function makeEstimate() {
       $cost = $costs[$row][$col];
       $time = $times[$row][$col];
     } else if ($row_match == TRUE) {
-      $cost = (($costs[$row][$col] - $costs[$row][$col - 1]) / ($complexities[$col] - $complexities[$col - 1])) * ($complexity - $complexities[$col - 1]) + $costs[$row][$col - 1];
+      $cost = (($costs[$row][$col] - $costs[$row][$col - 1]) / ($complexities[$col] - $complexities[$col - 1])) * ($_POST["complexity"] - $complexities[$col - 1]) + $costs[$row][$col - 1];
       $time = (($times[$row][$col] - $times[$row][$col - 1]) / ($complexities[$col] - $complexities[$col - 1])) * ($costsomplexity - $complexities[$col - 1]) + $times[$row][$col - 1];
     } else if ($col_match == 1) {
-      $cost = (($costs[$row][$col] - $costs[$row - 1][$col]) / ($elements[$row] - $elements[$row - 1])) * ($databases + $pages - $elements[$row - 1]) + $costs[$row - 1][$col];
-      $time = (($times[$row][$col] - $times[$row - 1][$col]) / ($elements[$row] - $elements[$row - 1])) * ($databases + $pages - $elements[$row - 1]) + $times[$row - 1][$col];
+      $cost = (($costs[$row][$col] - $costs[$row - 1][$col]) / ($elements[$row] - $elements[$row - 1])) * ($_POST["databases"] + $_POST["pages"] - $elements[$row - 1]) + $costs[$row - 1][$col];
+      $time = (($times[$row][$col] - $times[$row - 1][$col]) / ($elements[$row] - $elements[$row - 1])) * ($_POST["databases"] + $_POST["pages"] - $elements[$row - 1]) + $times[$row - 1][$col];
     } else {
 
       // merge row1
@@ -82,8 +83,8 @@ function makeEstimate() {
       $temp_time2 = (($times[$row - 1][$col] - $times[$row - 1][$col - 1]) / ($complexities[$col] - $complexities[$col - 1])) * ($costsomplexity - $complexities[$col - 1]) + $times[$row - 1][$col - 1];
 
       // merge results
-      $cost = (($temp_cost1 - $temp_cost2) / ($elements[$row] - $elements[$row - 1])) * ($databases + $pages - $elements[$row - 1]) + $temp_cost2;
-      $time = (($temp_time1 - $temp_time2) / ($elements[$row] - $elements[$row - 1])) * ($databases + $pages - $elements[$row - 1]) + $temp_time2;
+      $cost = (($temp_cost1 - $temp_cost2) / ($elements[$row] - $elements[$row - 1])) * ($_POST["databases"] + $_POST["pages"] - $elements[$row - 1]) + $temp_cost2;
+      $time = (($temp_time1 - $temp_time2) / ($elements[$row] - $elements[$row - 1])) * ($_POST["databases"] + $_POST["pages"] - $elements[$row - 1]) + $temp_time2;
     }
 
     // print table
@@ -98,7 +99,7 @@ function makeEstimate() {
           } else if ($j == $col + 1) {
             if ($col_match == 0) {
               $incx = 1;
-              print "  <td bgcolor=\"#EEEEEE\"><b>This (".$complexity.")</b></td>\n";
+              print "  <td bgcolor=\"#EEEEEE\"><b>This (".$_POST["complexity"].")</b></td>\n";
             } else {
               print "  <td bgcolor=\"#EEEEEE\"><b>".$complexity_titles[$j - 1 - $incx]." (".$costsomplexity.")</b></t>\n";
             }
@@ -112,7 +113,7 @@ function makeEstimate() {
             if ($row_match == 0) {
               $ince = 1;
             }
-            print "  <td bgcolor=\"#EEEEEE\"><b>".$pages."p".$databases."d</b></td>\n";
+            print "  <td bgcolor=\"#EEEEEE\"><b>".$_POST["pages"]."p".$_POST["databases"]."d</b></td>\n";
           } else {
             print "  <td><b>".$element_titles[$i - 1 - $ince]."</b></td>\n";
           }
@@ -121,8 +122,8 @@ function makeEstimate() {
         else if ($i == $row + 1 && $row_match == 0) {
           $ince = 1;
           if ($j == $col + 1) {
-            print "<td bgcolor=\"#DDDDDD\"><b>".round($time * $multiplier)."weeks<br>\n";
-            print "$".round(($cost * $multiplier), -3)."</b></td>\n";
+            print "<td bgcolor=\"#DDDDDD\"><b>".round($time * $_POST["multiplier"])."weeks<br>\n";
+            print "$".round(($cost * $_POST["multiplier"]), -3)."</b></td>\n";
           } else {
             print "<td bgcolor=\"#EEEEEE\">&nbsp;</td>\n";
           }
@@ -131,8 +132,8 @@ function makeEstimate() {
         else if ($j == $col + 1 && $col_match == 0) {
           $incx = 1;
           if ($i == $row + 1) {
-            print "<td bgcolor=\"#DDDDDD\"><b>".round($time * $multiplier)."weeks<br>\n";
-            print "$".round(($cost * $multiplier), -3)."</b></td>\n";
+            print "<td bgcolor=\"#DDDDDD\"><b>".round($time * $_POST["multiplier"])."weeks<br>\n";
+            print "$".round(($cost * $_POST["multiplier"]), -3)."</b></td>\n";
           } else {
             print "<td bgcolor=\"#EEEEEE\">&nbsp;</td>\n";
           }
@@ -147,11 +148,11 @@ function makeEstimate() {
             print "<td>";
           }
           if ($i == $row + 1 && $j == $col + 1) {
-            print "<b>".round($time * $multiplier)."weeks<br>\n";
-            print "$".round(($cost * $multiplier), -3)."</b></td>\n";
+            print "<b>".round($time * $_POST["multiplier"])."weeks<br>\n";
+            print "$".round(($cost * $_POST["multiplier"]), -3)."</b></td>\n";
           } else {
-            print round($times[$i - 1 - $ince][$j - 1 - $incx] * $multiplier)." weeks<br>\n";
-            print "$".round(($costs[$i - 1 - $ince][$j - 1 - $incx] * $multiplier), -3)."</td>\n";
+            print round($times[$i - 1 - $ince][$j - 1 - $incx] * $_POST["multiplier"])." weeks<br>\n";
+            print "$".round(($costs[$i - 1 - $ince][$j - 1 - $incx] * $_POST["multiplier"]), -3)."</td>\n";
           }
         }
       }
@@ -160,11 +161,11 @@ function makeEstimate() {
   }
 }
 
-if (isset($multiplier) && $multiplier == -1) {
+if ($_POST["multiplier"] && $_POST["multiplier"] == -1) {
   if (isset($custom)) {
-    $multiplier = $custom;
+    $_POST["multiplier"] = $custom;
   } else {
-    unset($multiplier);
+    unset($_POST["multiplier"]);
   }
 }
 $multiplier_options = array(0=>"-- Select One --", 3=>"Java Frontend Client/Server", 2=>"Java Servlet/JSP", 2=>"Java Servlet/PHP", 1.2=>"PHP/Oracle", 1=>"PHP/SQL", 1=>"Python Frontend Client/Server", -1=>"(Custom Multiplier)");

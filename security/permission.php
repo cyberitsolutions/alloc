@@ -25,7 +25,8 @@ require_once("alloc.inc");
 
 $permission = new permission;
 
-if (isset($permissionID)) {
+$permissionID = $_POST["permissionID"] or $permissionID = $_GET["permissionID"];
+if ($permissionID) {
   $permission->set_id($permissionID);
   $permission->select();
 }
@@ -50,9 +51,10 @@ if (!$permission->get_value("tableName")) {
   exit();
 }
 
-if (isset($save)) {
+if ($_POST["save"]) {
   $permission->save();
-} else if (isset($delete)) {
+  header("Location: ".$TPL["url_alloc_permissionList"]);
+} else if ($_POST["delete"]) {
   $permission->delete();
   page_close();
   header("Location: ".$TPL["url_alloc_permissionList"]);

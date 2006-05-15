@@ -34,7 +34,7 @@
 	      <tr>
 	        <td align="right">
 	          <form action="{url_alloc_search}" method="post" id="form_search">
-	          &nbsp;<nobr><input size="18" name="needle" value="{needle}" onFocus="document.forms['form_search'].needle.value='';" style="width:200px;">
+	          &nbsp;<nobr><input size="18" name="needle" value="{needle}" onFocus="document.getElementById('form_search').needle.value='';" style="width:200px;">
             <select size="1" name="category" style="width:100px;">{category_options}</select>
 	            <input type="submit" name="search" value="Go">&nbsp;</nobr>
 	          </form>
