@@ -16,19 +16,6 @@
   </tr>
   {:show_reminders ../notification/templates/reminderR.tpl}
 </table>
-{table_box}
-  <tr>
-    <th colspan="3">Notification Filters</th>
-    <th class="right"><a href="{url_alloc_eventFilterAdd}">Add Notification Filter</a></th>
-  </tr>
-  <tr>
-    <td>Entity</td>
-    <td>Event</td>
-    <td>Object filter</td>
-    <td>Action</td>
-  </tr>
-  {:showEventFilterList templates/eventFilterListR.tpl}
-</table>
 
 
 {:show_footer}

@@ -49,6 +49,8 @@ function show_people($template_name) {
   }
 }
 
+$projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
+
 if ($projectID) {
   $project = new project;
   $project->set_id($projectID);
@@ -62,8 +64,8 @@ if ($projectID) {
     .sprintf("WHERE person.personID = projectPerson.personID ")
     .sprintf(" AND projectPerson.projectID='%d'", addslashes($project->get_id()));
 
-} else if ($personID) {
-  $person_query = sprintf("SELECT * FROM person where personID = ".$personID." ORDER BY username");
+} else if ($_GET["personID"]) {
+  $person_query = sprintf("SELECT * FROM person where personID = ".$_GET["personID"]." ORDER BY username");
 } else {
   $person_query = sprintf("SELECT * FROM person ORDER BY username");
 }
