@@ -51,6 +51,7 @@ function get_user_var {
   local NAME="${1}"
   [ -n "${4}" ] && local READ_SWITCH=" -s "
 
+
   # if variable hasn't already been set
   if [ -z "${!NAME}" ]; then
   
@@ -59,7 +60,9 @@ function get_user_var {
     e_n "${2}${default}: "
 
     # Read user input into variable 
-    read ${READ_SWITCH} "${NAME}"
+    if [ -z "${DO_BATCH}" ]; then
+      read ${READ_SWITCH} "${NAME}"
+    fi
 
     # If no input then use default
     if [ -z "${!NAME}" ] && [ -n "${3}" ] ; then
@@ -102,10 +105,13 @@ function die {
 }
 
 
-###########################
+###############################################################################################
 #
 e "Beginning allocPSA Installation\n"
 #
+
+USAGE="Usage: ${0} [-B] FILE\n\n\t-B\tbatch mode, no prompting\n\tFILE\tconfiguration file\n"
+
 
 if [ "0" != "$(id -u)" ]; then
   die "Please run this script as user root."
@@ -114,25 +120,19 @@ fi
 # Directory of this file
 DIR="${0%/*}/"
 
-CONFIG_FILE="${DIR}install.cfg"
-
 if [ -f "${1}" ]; then
   CONFIG_FILE="${1}"
 elif [ -f "${2}" ]; then
   CONFIG_FILE="${2}"
 fi
 
+# If -B is passed on the command line, skip the prompts and just install
 if [ "${1}" = "-B" ] || [ "${2}" = "-B" ]; then
   DO_BATCH=1
 fi
 
-
-
-
-
-
 # Source the config file
-[ ! -r "${CONFIG_FILE}" ] && die "${CONFIG_FILE} does not exist"
+[ ! -r "${CONFIG_FILE}" ] && die "${USAGE}"
 . ${CONFIG_FILE}
 
 # A list of all the variable set in this file, as a form of internal checking in the install.sh script
