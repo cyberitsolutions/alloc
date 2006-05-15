@@ -142,11 +142,12 @@ function show_skill_expertise() {
       if ($db2->next_record()) {
         $skillProficiencys = new skillProficiencys;
         $skillProficiencys->read_db_record($db2);
-        $proficiency = sprintf("<td align=\"center\"><img src=\"../images/skill_%s.jpg\" alt=\"%s\" width=18 height=18></td>\n", strtolower($skillProficiencys->get_value('skillProficiency')), substr($skillProficiencys->get_value('skillProficiency'), 0, 1));
+        $proficiency = sprintf("<td align=\"center\"><img src=\"../images/skill_%s.png\" alt=\"%s\"/></td>\n"
+                              ,strtolower($skillProficiencys->get_value('skillProficiency'))
+                              ,substr($skillProficiencys->get_value('skillProficiency'), 0, 1));
         print $proficiency;
       } else {
         print "<td align=\"center\">-</td>\n";
-        // print "<td align=\"center\"><img src=\"../images/none.jpg\" alt=\"-\" width=18 height=18></td>\n";
       }
     }
     print "</tr>\n";
