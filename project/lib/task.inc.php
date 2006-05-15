@@ -244,6 +244,7 @@ class task extends db_entity {
     }
 
     $projectID or $projectID = $_GET["projectID"];
+    $parentTaskID or $parentTaskID = $_GET["parentTaskID"];
 
     $db = new db_alloc;
     if ($projectID) {
@@ -344,7 +345,7 @@ class task extends db_entity {
     $TPL["personOptions"].= get_select_options(person::get_username_list($owner), $owner);
 
 
-    $projectID or $projectID = $this->get_value("projectID");
+    $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
 
     // TaskType Options
     $taskType = new taskType;
