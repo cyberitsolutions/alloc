@@ -122,6 +122,9 @@ fi
 [ ! -r "${CONFIG_FILE}" ] && die "${CONFIG_FILE} does not exist"
 . ${CONFIG_FILE}
 
+# A list of all the variable set in this file, as a form of internal checking in the install.sh script
+CONFIG_VARS="ALLOC_DB_NAME ALLOC_DB_USER ALLOC_DB_PASS ALLOC_DB_HOST ALLOC_WEB_USER ALLOC_DOCS_DIR ALLOC_WEB_URL_PREFIX ALLOC_BACKUP_DIR"
+
 # Quick check all the values are in the config file
 for i in ${CONFIG_VARS}; do if [ -z "${!i}" ]; then die "Missing ${i} from config file ${CONFIG_FILE}"; fi; done
 
