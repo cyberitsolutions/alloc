@@ -40,14 +40,13 @@ function showEventFilterList($template) {
 }
 
 function show_reminders($template) {
-  global $TPL, $current_user, $filter_recipient;
+  global $TPL, $current_user;
 
   // show all reminders for this project
   $reminder = new reminder;
   $db = new db_alloc;
-  $permissions = explode(",", $current_user->get_value("perms"));
-  if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
-    $query = sprintf("SELECT * FROM reminder WHERE personID like '%s' ORDER BY reminderTime,reminderType", $filter_recipient);
+  if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
+    $query = sprintf("SELECT * FROM reminder WHERE personID like '%s' ORDER BY reminderTime,reminderType", $_POST["filter_recipient"]);
   } else {
     $query = sprintf("SELECT * FROM reminder WHERE personID = '%s' ORDER BY reminderType,reminderTime", $current_user->get_id());
   }
@@ -78,13 +77,12 @@ function show_reminders($template) {
 }
 
 function show_reminder_filter($template) {
-  global $current_user, $TPL, $filter_recipient;
-  $permissions = explode(",", $current_user->get_value("perms"));
-  if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
+  global $current_user, $TPL;
+  if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
 
     // Set default filter parameter
-    if (!isset($filter_recipient)) {
-      $filter_recipient = $current_user->get_id();
+    if (!$_POST["filter_recipient"]) {
+      $_POST["filter_recipient"] = $current_user->get_id();
     }
 
     $db = new db_alloc;
@@ -92,7 +90,7 @@ function show_reminder_filter($template) {
     while ($db->next_record()) {
       $recipientOptions[$db->f("personID")] = $db->f("username");
     }
-    $TPL["recipientOptions"] = get_select_options($recipientOptions, $filter_recipient);
+    $TPL["recipientOptions"] = get_select_options($recipientOptions, $_POST["filter_recipient"]);
     include_template($template);
   }
 }
