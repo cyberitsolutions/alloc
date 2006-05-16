@@ -22,7 +22,6 @@
  */
 
 define("NO_AUTH",true);
-define("SENDMAIL", true);         // shoot out emails 
 require_once("alloc.inc");
 
 
@@ -30,9 +29,6 @@ if (date("D") == "Sat" || date("D") == "Sun") {
   die("IT'S THE WEEKEND - GET OUTTA HERE");
 }
 
-// stats
-#$stats = new stats;
-#die("nowhere");
 
 
 // Do announcements ONCE up here.
@@ -74,8 +70,6 @@ while ($db->next_record()) {
     $tasks = $person->get_tasks_for_email();
     $msg.= $tasks;
 
-    #$msg.= $stats->get_stats_for_email($person->get_value("emailFormat"));
-
     $headers.= "From: allocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
     $subject = "Daily Digest";
     $to = $person->get_value("emailAddress");
@@ -88,19 +82,19 @@ while ($db->next_record()) {
       $msg.= "</body></html>";
     }
 
-    if ($tasks != "" && SENDMAIL == true && $to) {
+    if ($tasks != "" && $to) {
       $email = new alloc_email;
 
       if ($email->send($to, $subject, stripslashes($msg), $headers)) {
         echo "Email sent to: ".$person->get_value("username")."\r\n";
       } else {
-        echo "NOT sent ".$subject." to: ".$person->get_value("username");
+        echo "Not sent email: ".$subject." to: ".$person->get_value("username");
       }
     } else {
       echo $msg;
     }
   } else {
-    echo "NO EMAIL ADDRESS FOR: ".$person->get_value("username")."\n";
+    echo "No Email Address For: ".$person->get_value("username")."\n";
   }
 }
 

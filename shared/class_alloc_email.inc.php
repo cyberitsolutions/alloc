@@ -27,9 +27,6 @@
 // 
 class alloc_email {
   
-  // Log sending of emails
-  var $logfile = "../logs/alloc_email.log";
-
   // If URL has any of these strings in it then the email won't be sent.
   var $no_email_urls = array("alloc_dev");
 
@@ -59,7 +56,7 @@ class alloc_email {
     $message     and $this->message    = $message;
     $header      and $this->header     = $header;
     $this->header or $this->header     = "From: allocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
-    $logfile     and $this->logfile    = $logfile;
+    $this->logfile                     = ALLOC_LOG_DIR."alloc_email.log";
   }
 
   // Send and log the email

@@ -1,1 +1,1 @@
-<li><a href="{url}{params}">{text}</a>
+<li><a href="{url}{params}">{text}</a>{br}

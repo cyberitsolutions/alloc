@@ -27,32 +27,35 @@ global $TPL;
 
 $db = new db_alloc;
 $TPL["tfID"] = $_GET["tfID"];
-$db->query("select * from tf where tfID=%d",$_GET["tfID"]);
-$db->next_record();
-$TPL["user"] = $db->f("tfName");
+
+
 
 include_template("templates/transactionRepeatListM.tpl");
 
-
-
 function show_expenseFormList($template_name) {
 
-  global $db, $TPL, $john, $transactionRepeat;
+  global $db, $TPL, $transactionRepeat, $current_user;
 
   $db = new db_alloc;
   $transactionRepeat = new transactionRepeat;
 
-  if ($_GET["tfID"]) {
-    $db->query("select * from transactionRepeat where tfID=%d",$_GET["tfID"]);
+  if (!$_GET["tfID"] && !have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
+    $tfIDs = $current_user->get_tfIDs();
+    $tfIDs and $sql = "WHERE tfID in (".implode(",",$tfIDs).")";
+
+  } else if ($_GET["tfID"]) {
+    $sql = sprintf("WHERE tfID = %d",$_GET["tfID"]);
   }
+
+  $db->query("select * FROM transactionRepeat ".$sql);
 
   while ($db->next_record()) {
     $i++;
     $TPL["row_class"] = "odd";
     $i % 2 == 0 and $TPL["row_class"] = "even";
-
     $transactionRepeat->read_db_record($db);
     $transactionRepeat->set_tpl_values();
+    $TPL["tfName"] = get_tf_name($transactionRepeat->get_value("tfID"));
     include_template($template_name);
   }
   $TPL["tfID"] = $tfID;

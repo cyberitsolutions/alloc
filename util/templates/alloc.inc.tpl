@@ -12,6 +12,7 @@ define("ALLOC_SHOOER","");
 define("ALLOC_GD_IMAGE_TYPE","PNG");
 
 define("ATTACHMENTS_DIR","CONFIG_VAR_ALLOC_DOCS_DIR");
+define("ALLOC_LOG_DIR","CONFIG_VAR_ALLOC_LOG_DIR");
 
 if (preg_match("/^(.*alloc[^\/]*)/",$_SERVER["SCRIPT_FILENAME"],$m)) {
   define("ALLOC_MOD_DIR",$m[1]);

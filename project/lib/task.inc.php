@@ -802,7 +802,7 @@ class task extends db_entity {
         $row["taskURL"] = $t->get_url();
         $row["taskName"] = $t->get_task_name($_FORM["return"]);
         $row["taskLink"] = $t->get_task_link();
-        $row["taskStatus"] = $t->get_status();
+        $row["taskStatus"] = $t->get_status($_FORM["return"]);
 
         if ($_FORM["return"] == "objects") {
           $tasks[$t->get_id()] = $t; 

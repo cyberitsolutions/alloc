@@ -4,16 +4,17 @@
 #
 
 # path to cron and log files
-PREFIX=`dirname $0`"/../logs/"
+PREFIX="CONFIG_VAR_ALLOC_LOG_DIR"
 
 # execute the sendreminder php script and save the results
-wget -q -O ${PREFIX}sendReminders_log.new -P ${PREFIX} CONFIG_VAR_ALLOC_WEB_URL_PREFIXnotification/sendReminders.php
+wget -q -O ${PREFIX}temp.txt -P ${PREFIX} CONFIG_VAR_ALLOC_WEB_URL_PREFIXnotification/sendReminders.php
 
-# if there were reminders sent (sendReminders_log.new > 0bytes) then log the date
-[ -s ${PREFIX}sendReminders_log.new ] && echo `date` >> ${PREFIX}sendReminders_log.txt
+# if there were reminders sent (temp.txt > 0bytes) then log the date
+[ -s ${PREFIX}temp.txt ] && echo "$(date)" >> ${PREFIX}sendReminders.log
 
 # log results
-cat ${PREFIX}sendReminders_log.new >> ${PREFIX}sendReminders_log.txt
+cat ${PREFIX}temp.txt >> ${PREFIX}sendReminders.log
 
 # nuke temporary log file
-[ -f ${PREFIX}sendReminders_log.new ] && rm -f ${PREFIX}sendReminders_log.new
+[ -f ${PREFIX}temp.txt ] && rm -f ${PREFIX}temp.txt
+

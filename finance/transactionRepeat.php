@@ -32,7 +32,6 @@ $transactionRepeat = new transactionRepeat;
 $db = new db_alloc;
 
 global $TPL;
-global $transactionFinishDate, $amount, $product, $tfID, $companyDetails, $transactionRepeatModifiedUser;
 global $john, $transactionRepeatID;
 
 $TPL["john"] = $john;
@@ -44,8 +43,10 @@ if ($transactionRepeatID) {
   $transactionRepeat->select();
   $transactionRepeat->set_tpl_values();
   $TPL["john"] = $tfID;
+} else {
+  $transactionRepeat = new transactionRepeat;
+  $TPL["message_help"][] = "Complete all the details and click the Save button to create an automatically Repeating Expense";
 }
-
 
 
 if (!isset($_POST["reimbursementRequired"])) {
@@ -53,12 +54,37 @@ if (!isset($_POST["reimbursementRequired"])) {
 }
 
 
-if ($_POST["save"]) {
+if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"] || $_POST["rejected"]) {
 
-  $transactionRepeat = new transactionRepeat;
   $transactionRepeat->read_globals();
 
-  // have lots of error checking between here=============================================
+  if (have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) { 
+    if ($_POST["pending"]) {
+      $transactionRepeat->set_value("status","pending");
+      $TPL["message_good"][] = "Repeating Expense form Pending.";
+    } else if ($_POST["approved"]) {
+      $transactionRepeat->set_value("status","approved");
+      $TPL["message_good"][] = "Repeating Expense form Approved!";
+    } else if ($_POST["rejected"]) {
+      $transactionRepeat->set_value("status","rejected");
+      $TPL["message_good"][] = "Repeating Expense form  Rejected.";
+    }
+
+  } else {
+    $extra_get = "tfID=".$_POST["tfID"];
+  }
+
+  if ($_POST["delete"]) {
+
+    if ($transactionRepeatID) {
+      $transactionRepeat->set_id($transactionRepeatID);
+      $transactionRepeat->delete();
+      header("Location: ".$TPL["url_alloc_transactionRepeatList"].$extra_get);
+
+    } else {
+      header("Location: ".$TPL["url_alloc_tfList"]."tfID=".$extra_get);
+    }
+  }
 
   if ($_POST["product"] == "") {
     $TPL["message"][].= "You must enter a Product";
@@ -71,11 +97,9 @@ if ($_POST["save"]) {
   }
   if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $_POST["transactionStartDate"])) {
     $TPL["message"][].= "You must enter the Start date in the format yyyy-mm-dd ";
-    $TPL["message"][].= "(date entered '".$_POST["transactionStartDate"]."')";
   }
   if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $_POST["transactionFinishDate"])) {
     $TPL["message"][].= "You must enter the Finish date in the format yyyy-mm-dd ";
-    $TPL["message"][].= "(date entered '".$_POST["transactionFinishDate"]."')";
   }
   if ($_POST["companyDetails"] == "") {
     $TPL["message"][].= "You must provide Company Details";
@@ -83,29 +107,22 @@ if ($_POST["save"]) {
   if ($_POST["dateEntered"] == "") {
     $TPL["message"][].= "You must enter a Date Incurred";
   }
-  // And here...===========================================================================
 
 
   if (!$TPL["message"]) {
     $transactionRepeat->set_value("transactionType", "expense");
+    !$transactionRepeat->get_value("status") && $transactionRepeat->set_value("status","pending"); 
+
     $transactionRepeat->save();
-    header("Location: ".$TPL["url_alloc_transactionRepeatList"]."tfID=".$_POST["tfID"]);
+
+    if ($_POST["save"]) {
+      header("Location: ".$TPL["url_alloc_transactionRepeatList"].$extra_get);
+    } 
   }
   $transactionRepeat->set_tpl_values();
 }                       
 
-if ($_POST["delete"]) {
 
-  if ($transactionRepeatID) {
-
-    $transactionRepeat->set_id($transactionRepeatID);
-    $transactionRepeat->delete();
-    header("Location: ".$TPL["url_alloc_transactionRepeatList"]."tfID=".$_POST["tfID"]);
-
-  } else {
-    header("Location: ".$TPL["url_alloc_tfList"]."tfID=".$_POST["tfID"]);
-  }
-}
 
 
 
@@ -132,6 +149,17 @@ $TPL["tfOptions"] = get_option("", "0", false)."\n";
 $TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $transactionRepeat->get_value("tfID"));
 $TPL["basisOptions"] = get_options_from_array(array("weekly", "fortnightly", "monthly", "quarterly", "yearly"), $transactionRepeat->get_value("paymentBasis"), false);
 
+if (is_object($transactionRepeat) && $transactionRepeat->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
+  $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"pending\" value=\"Pending\">";
+  $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"approved\" value=\"Approve\">";
+  $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"rejected\" value=\"Reject\">";
+}
+
+if (is_object($transactionRepeat) && $transactionRepeat->get_id() && $transactionRepeat->get_value("status") == "pending") {
+  $TPL["message_help"][] = "This Repeating Expense will only create Transactions once its status is Approved.";
+}
+
+$transactionRepeat->get_value("status") and $TPL["statusLabel"] = " - ".ucwords($transactionRepeat->get_value("status"));
 
 include_template("templates/transactionRepeatM.tpl");
 

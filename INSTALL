@@ -1,32 +1,56 @@
+/*
+ * Copyright 2006, Alex Lance, Clancy Malcolm, Cybersource Pty. Ltd.
+ * 
+ * This file is part of allocPSA <info@cyber.com.au>.
+ * 
+ * allocPSA is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * allocPSA is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * allocPSA; if not, write to the Free Software Foundation, Inc., 51 Franklin
+ * St, Fifth Floor, Boston, MA 02110-1301 USA
+ *
+ */
 
-allocPSA Quick Installation Guide 
 
-The allocPSA source code is quite stable. However different PHP setups may produce interesting
-and unexpected errors and warnings. Follow the instructions below.
+The allocPSA Installation Guide 
+
+The source code for this project is quite stable. However different PHP setups may 
+produce interesting and unexpected errors and warnings. Please follow the directions
+carefully.
+
 
 1) System Requirements 
-   (The PHP settings for your system may generally be determined by hitting 
-    a phpinfo script with your webbrowser see http://php.net/phpinfo) 
+    * Ensure PHP >= 4.3.0
+    * Ensure PHP memory_limit >= 32 meg 
+    * Ensure the GD image library is installed and PHP knows about it
+    * Ensure MySQL >= 3.23 (See /usr/sbin/mysqld -V)
 
-    allocPSA will NOT work correctly unless these conditions are met:
-      * PHP >= 4.3.0
-      * Ensure PHP register_globals enabled 
-      * Ensure PHP memory_limit >= 64 meg 
-      * Ensure the GD image library is installed and PHP knows about it
-      * MySQL >= 3.23 (See /usr/sbin/mysqld -V)
-      
+2) Put the source code in a directory called allocPSA in the webserver document root 
 
-2) Put the source code in a directory called allocpsa in the webserver document root 
+3) Fill in ALL the values in /WEBROOT/allocPSA/util/install.cfg
 
-3) Fill in the values in /webroot/allocpsa/util/install.cfg
+4) Determine the PHP include_path 
 
-4) Determine the PHP include_path (ususally from /etc/php.ini)
+5) Run installer script /WEBROOT/allocPSA/util/install.sh
+    * The script should run without any FAILED messages.
+    * When the script finishes it will tell you to do stuff. Do that stuff.
 
-5) Run installer script /webroot/allocpsa/util/install.sh
-
-6) Go to the url in your web browser. Login with username and password: alloc
-   There is a help document to be found within allocPSA just follow the Help
-   link in the menu.
+6) Go to the allocPSA url in your web browser. Login with user and pass: alloc/alloc
 
 
+The PHP settings for your system may generally be determined by examining 
+/etc/php.ini or alternatively by putting a php script called blah.php in your 
+webroot whose contents are:
+<?php echo phpinfo(); ?>
+Hit the script with your webbrowser eg: http://localhost/blah.php
 
+
+Please feel free to contact me with any bugs you run into.
+Alex Lance <info@cyber.com.au>

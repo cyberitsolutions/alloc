@@ -117,7 +117,7 @@ class tf extends db_entity {
       // if (have_entity_perm("transactionRepeat", PERM_READ, $current_user, $this->is_owner())) {
       $repeating_url = $TPL["url_alloc_transactionRepeatList"]."tfID=".$this->get_id();
       $repeating_link = "<a href=\"$repeating_url\">Repeating Expenses</a>";
-      $nav_links[] = $repeating_link;
+  #    $nav_links[] = $repeating_link;
     }
 
     if ($this->have_perm(PERM_UPDATE)) {
