@@ -39,9 +39,21 @@ $options = array(array("url"=>"tf",
                  array("url"=>"tfList",
                        "text"=>"TF List",
                        "entity"=>"tf",
-                       "action"=>PERM_READ),
+                       "action"=>PERM_READ,
+                       "br"=>true),
 
-                 array("url"=>"separator"),
+                 array("url"=>"transaction",
+                       "params"=>"",
+                       "text"=>"New Transaction",
+                       "entity"=>"transaction",
+                       "action"=>PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION),
+
+                 array("url"=>"searchTransaction",
+                       "params"=>"",
+                       "text"=>"Search Transactions",
+                       "entity"=>"transaction",
+                       "action"=>PERM_READ,
+                       "br"=>true),
 
                  array("url"=>"invoicesUpload",
                        "params"=>"",
@@ -65,9 +77,8 @@ $options = array(array("url"=>"tf",
                        "params"=>"",
                        "text"=>"Search Invoices",
                        "entity"=>"invoice",
-                       "action"=>PERM_READ),
-
-                 array("url"=>"separator"),
+                       "action"=>PERM_READ,
+                       "br"=>true),
 
                  array("url"=>"expOneOff",
                        "text"=>"New Expense Form",
@@ -78,24 +89,9 @@ $options = array(array("url"=>"tf",
                        "params"=>"&view=true",
                        "text"=>"View Pending Expense Forms",
                        "entity"=>"expenseForm",
-                       "action"=>PERM_READ),
+                       "action"=>PERM_READ,
+                       "br"=>true),
                        
-                 array("url"=>"separator"),
-                 
-                 array("url"=>"transaction",
-                       "params"=>"",
-                       "text"=>"New Transaction",
-                       "entity"=>"transaction",
-                       "action"=>PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION),
-
-                 array("url"=>"searchTransaction",
-                       "params"=>"",
-                       "text"=>"Search Transactions",
-                       "entity"=>"transaction",
-                       "action"=>PERM_READ),
-
-                 array("url"=>"separator"),
-
                  array("url"=>"reconciliationReport",
                        "params"=>"",
                        "text"=>"Reconciliation Report",
@@ -105,10 +101,22 @@ $options = array(array("url"=>"tf",
                        "params"=>"", 
                        "text"=>"Upload Wages File", 
                        "entity"=>"transaction", 
-                       "action"=>PERM_FINANCE_WRITE_WAGE_TRANSACTION), 
+                       "action"=>PERM_FINANCE_WRITE_WAGE_TRANSACTION,
+                       "br"=>true), 
 
-                 array("url"=>"separator"),
+               array("url"=>"transactionRepeat",
+                       "params"=>"",
+                       "text"=>"New Repeating Expense",
+                       "entity"=>"transaction",
+                       "action"=>PERM_READ),
+ 
 
+                 array("url"=>"transactionRepeatList",
+                       "params"=>"",
+                       "text"=>"Repeating Expense List",
+                       "entity"=>"transaction",
+                       "action"=>PERM_READ),
+ 
                  array("url"=>"checkRepeat",
                        "params"=>"",
                        "text"=>"Push Repeating Expenses Through",
@@ -120,15 +128,15 @@ $options = array(array("url"=>"tf",
 
 function show_options($template) {
   global $options, $TPL;
-
-  reset($options);
-  while (list(, $option) = each($options)) {
-    if ($option["url"] == "separator") {
-      print "<br><br>\n";
-    } else if (have_entity_perm($option["entity"], $option["action"], $current_user, true)) {
+  foreach ($options as $option) {
+    if (have_entity_perm($option["entity"], $option["action"], $current_user, true)) {
       $TPL["url"] = $TPL["url_alloc_".$option["url"]];
       $TPL["params"] = $option["params"];
       $TPL["text"] = $option["text"];
+      $TPL["br"] = "";
+      if ($option["br"]) {
+        $TPL["br"] = "<br><br>\n";
+      }
       include_template($template);
     }
   }

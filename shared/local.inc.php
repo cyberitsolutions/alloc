@@ -71,7 +71,7 @@ global $current_user;
 $current_user = new person;
 
 
-if (!defined("NO_AUTH") || !NO_AUTH) {
+if (!defined("NO_AUTH")) {
 
   // Check for existing session..
   $sess = Session::GetSession();

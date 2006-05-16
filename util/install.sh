@@ -1,5 +1,23 @@
 #!/bin/sh
 #
+#  Copyright 2006, Alex Lance, Clancy Malcolm, Cybersource Pty. Ltd.
+#  
+#  This file is part of allocPSA <info@cyber.com.au>.
+#  
+#  allocPSA is free software; you can redistribute it and/or modify it under the
+#  terms of the GNU General Public License as published by the Free Software
+#  Foundation; either version 2 of the License, or (at your option) any later
+#  version.
+#  
+#  allocPSA is distributed in the hope that it will be useful, but WITHOUT ANY
+#  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+#  A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License along with
+#  allocPSA; if not, write to the Free Software Foundation, Inc., 51 Franklin
+#  St, Fifth Floor, Boston, MA 02110-1301 USA
+# 
+#
 #
 # Script to setup database, website permissions, cronjobs and generate an alloc.inc file.
 #
@@ -136,7 +154,7 @@ fi
 . ${CONFIG_FILE}
 
 # A list of all the variable set in this file, as a form of internal checking in the install.sh script
-CONFIG_VARS="ALLOC_DB_NAME ALLOC_DB_USER ALLOC_DB_PASS ALLOC_DB_HOST ALLOC_WEB_USER ALLOC_DOCS_DIR ALLOC_WEB_URL_PREFIX ALLOC_BACKUP_DIR"
+CONFIG_VARS="ALLOC_DB_NAME ALLOC_DB_USER ALLOC_DB_PASS ALLOC_DB_HOST ALLOC_WEB_USER ALLOC_DOCS_DIR ALLOC_BACKUP_DIR ALLOC_LOG_DIR ALLOC_WEB_URL_PREFIX"
 
 # Quick check all the values are in the config file
 for i in ${CONFIG_VARS}; do if [ -z "${!i}" ]; then die "Missing ${i} from config file ${CONFIG_FILE}"; fi; done
@@ -183,10 +201,12 @@ fi
 # Append a slash if need be
 [ "${ALLOC_DOCS_DIR:(-1):1}" != "/" ] && ALLOC_DOCS_DIR=${ALLOC_DOCS_DIR}/; 
 [ "${ALLOC_BACKUP_DIR:(-1):1}" != "/" ] && ALLOC_BACKUP_DIR=${ALLOC_BACKUP_DIR}/; 
+[ "${ALLOC_LOG_DIR:(-1):1}" != "/" ] && ALLOC_LOG_DIR=${ALLOC_LOG_DIR}/; 
 
 # Create the directories if need be
 [ ! -d "${ALLOC_DOCS_DIR}" ]         && run "mkdir -p ${ALLOC_DOCS_DIR}"
 [ ! -d "${ALLOC_BACKUP_DIR}" ]       && run "mkdir -p ${ALLOC_BACKUP_DIR}"
+[ ! -d "${ALLOC_LOG_DIR}" ]          && run "mkdir -p ${ALLOC_LOG_DIR}"
 [ ! -d "${ALLOC_DOCS_DIR}clients" ]  && run "mkdir ${ALLOC_DOCS_DIR}clients"
 [ ! -d "${ALLOC_DOCS_DIR}projects" ] && run "mkdir ${ALLOC_DOCS_DIR}projects"
 
@@ -194,17 +214,21 @@ fi
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}clients"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}projects"
-run "chmod 775 ${ALLOC_DOCS_DIR}"
+run "chgrp ${ALLOC_WEB_USER} ${ALLOC_LOG_DIR}"
 run "chmod 775 ${ALLOC_BACKUP_DIR}"
+run "chmod 775 ${ALLOC_DOCS_DIR}"
 run "chmod 775 ${ALLOC_DOCS_DIR}clients"
 run "chmod 775 ${ALLOC_DOCS_DIR}projects"
+run "chmod 775 ${ALLOC_LOG_DIR}"
+[ ! -f "${ALLOC_LOG_DIR}alloc_email.log" ] && run "touch ${ALLOC_LOG_DIR}alloc_email.log"
+run "chgrp ${ALLOC_WEB_USER} ${ALLOC_LOG_DIR}alloc_email.log"
+run "chmod 775 ${ALLOC_LOG_DIR}alloc_email.log"
 
 find ${DIR}.. -type f -path ${DIR}../.bzr -prune -exec chmod 664 {} \; # Files to rw-rw-r--
 find ${DIR}.. -type d -path ${DIR}../.bzr -prune -exec chmod 775 {} \; # Dirs  to rwxrwxr-x
 
 run "chmod 777 ${DIR}../images/"                          # php created images
 run "chmod 777 ${DIR}../images/*"                         # php created images
-run "chmod 777 ${DIR}../report/files/"                    # uploaded files
 run "chmod 777 ${DIR}../stylesheets/*"                    # rwxrwxrwx
 run "chmod 755 ${DIR}dump_clean_db.sh"                    # rwxr-xr-x
 run "chmod 754 ${DIR}stylesheet_regen.py"                 # rwxr-xr--
@@ -213,9 +237,6 @@ run "chmod 754 ${DIR}gpl_header.py"                       # rwxr-xr--
 run "chmod 600 ${CONFIG_FILE}"                            # rw-------
 run "chmod 700 ${DIR}install.sh"                          # rwx------
 
-[ ! -f "${DIR}../logs/alloc_email.log" ] && run "touch ${DIR}../logs/alloc_email.log"
-run "chmod 777 ${DIR}../logs"                             # gonna need to write and delete
-run "chmod 777 ${DIR}../logs/alloc_email.log"             # gonna need to write and delete
 
 
 # Make the alloc.inc file
@@ -226,6 +247,7 @@ cat ${DIR}templates/alloc.inc.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_HOST/${ALLOC_DB_HOST}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
 > ${DIR}alloc.inc
 
 if [ -f "${DIR}alloc.inc" ]; then 
@@ -261,6 +283,7 @@ fi
 e "Creating cron_checkRepeatExpenses.sh"
 cat ${DIR}templates/cron_checkRepeatExpenses.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
 > ${DIR}cron_checkRepeatExpenses.sh
 
 if [ -f "${DIR}cron_checkRepeatExpenses.sh" ]; then 
@@ -274,6 +297,7 @@ fi
 e "Creating cron_sendEmail.sh"
 cat ${DIR}templates/cron_sendEmail.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
 > ${DIR}cron_sendEmail.sh
 
 if [ -f "${DIR}cron_sendEmail.sh" ]; then 
@@ -287,6 +311,7 @@ fi
 e "Creating cron_sendReminders.sh"
 cat ${DIR}templates/cron_sendReminders.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
 > ${DIR}cron_sendReminders.sh
 
 if [ -f "${DIR}cron_sendReminders.sh" ]; then 

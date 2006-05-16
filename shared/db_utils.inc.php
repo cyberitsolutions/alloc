@@ -281,9 +281,11 @@ define("DST_HTML_DISPLAY",   4);  // For display to the user as non-editable HTM
     } else {
       return "Date unrecognized: ".$date;
     }
-
     list($y,$m,$d) = explode("-", $d);
     list($h,$i,$s) = explode(":", $t);
+    list($y,$m,$d,$h,$i,$s) = array(sprintf("%d",$y),sprintf("%d",$m),sprintf("%d",$d)
+                                   ,sprintf("%d",$h),sprintf("%d",$i),sprintf("%d",$s)
+                                   );
     return date($format, mktime(date($h),date($i),date($s),date($m),date($d),date($y)));
   }
 

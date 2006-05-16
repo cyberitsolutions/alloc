@@ -290,9 +290,7 @@ function show_all_exp($template) {
 }
 
 function check_optional_allow_edit() {
-  global $db, $expenseForm, $current_user;
-
-  $permissions = explode(",", $current_user->get_value("perms"));
+  global $db, $expenseForm;
 
   if (is_object($expenseForm) && !$expenseForm->get_id()) { // New Expense Form
     $allow_edit = true;

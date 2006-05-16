@@ -25,71 +25,6 @@ define("NO_AUTH",true);
 require_once("alloc.inc");
 
 
-
-include_template("templates/checkRepeatM.tpl");
-
-
-
-
-$dbTransactionRepeat = new db_alloc;
-$dbMaxDate = new db_alloc;
-$transactionRepeat = new transactionRepeat;
-$expenseForm = new expenseForm;
-
-$today = mktime(0, 0, 0, date(m), date(d), date(Y));
-
-
-
-atomicSwing();
-
-
-
-
-function atomicSwing() {
-
-  global $today, $dbTransactionRepeat, $dbMaxDate, $transactionRepeat, $expenseForm;
-
-  echo("<br>");
-  echo("<br><b>Today = <b>".strftime("%Y-%m-%d", $today)."<br><br>");
-
-  $dbTransactionRepeat->query("select * from transactionRepeat");
-
-  while ($dbTransactionRepeat->next_record()) {
-    $transactionRepeat->read_db_record($dbTransactionRepeat);
-
-    $startDate = get_date_stamp($transactionRepeat->get_value("transactionStartDate"));
-    $finishDate = get_date_stamp($transactionRepeat->get_value("transactionFinishDate"));
-    $timeBasisString = $transactionRepeat->get_value("paymentBasis");
-
-    $maxDateQuery = "SELECT max(transactionDate) AS latestDate 
-		FROM transaction,expenseForm 
-		WHERE expenseForm.transactionRepeatID=".$transactionRepeat->get_id()."
-		AND expenseForm.expenseFormID=transaction.expenseFormID";
-
-    $dbMaxDate->query($maxDateQuery);
-    $dbMaxDate->next_record();
-    $mostRecentTransactionDate = get_date_stamp($dbMaxDate->f("latestDate"));
-
-    if ($mostRecentTransactionDate != -1) {
-      $nextScheduled = timeWarp($mostRecentTransactionDate, $timeBasisString);
-    } else {
-      $nextScheduled = get_date_stamp($transactionRepeat->get_value("transactionStartDate"));
-    }
-
-
-    while ($nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate) {
-      // echo $nextScheduled . " should be smaller or equal than " . $today . " AND greater than or equal to " 
-      // . $startDate . " AND smaller than or equal to " . $finishDate . "<br>"; 
-      createTransaction($nextScheduled);
-      $nextScheduled = timeWarp($nextScheduled, $timeBasisString);
-    }
-  }
-}
-
-
-
-
-
 function timeWarp($mostRecent, $basis) {
 
   if ($basis == "weekly") {
@@ -111,49 +46,60 @@ function timeWarp($mostRecent, $basis) {
 
 
 
+global $current_user;
 
+$db = new db_alloc;
+$dbMaxDate = new db_alloc;
+$today = mktime(0, 0, 0, date(m), date(d), date(Y));
 
-function createTransaction($nextScheduled) {
+echo("<br/>".date("Y-m-d")."<br/>");
 
-  global $transactionRepeat, $dbTransactionRepeat, $expenseForm, $transaction;
-  echo $nextScheduled;
+$db->query("select * from transactionRepeat WHERE status = 'approved'");
 
-  $transactionRepeat->read_db_record($dbTransactionRepeat);
+while ($db->next_record()) {
+  $transactionRepeat = new transactionRepeat;
+  $transactionRepeat->read_db_record($db);
 
-  $expenseForm = new expenseForm;
-  $expenseForm->set_value("transactionRepeatID", $transactionRepeat->get_id("transactionRepeatID"));
-  $expenseForm->set_value("reimbursementRequired", $transactionRepeat->get_value("reimbursementRequired"));
-  $expenseForm->save();
+  $startDate = get_date_stamp($transactionRepeat->get_value("transactionStartDate"));
+  $finishDate = get_date_stamp($transactionRepeat->get_value("transactionFinishDate"));
+  $timeBasisString = $transactionRepeat->get_value("paymentBasis");
 
-  $transaction = new transaction;
-  $transaction->set_value("tfID", $transactionRepeat->get_value("tfID"));
-  $transaction->set_value("companyDetails", $transactionRepeat->get_value("companyDetails"));
-  $transaction->set_value("amount", -$transactionRepeat->get_value("amount"));
-  $transaction->set_value("product", $transactionRepeat->get_value("product"));
-  $transaction->set_value("transactionType", $transactionRepeat->get_value("transactionType"));
-  $transaction->set_value("status", $transactionRepeat->get_value("status"));
-  $transaction->set_value("expenseFormID", $expenseForm->get_id("expenseFormID"));
-  $transaction->set_value("transactionDate", date("Y-m-d", $nextScheduled));
-  $transaction->save();
+  $query = "SELECT max(transactionDate) AS latestDate FROM transaction WHERE transactionRepeatID=".$transactionRepeat->get_id();
 
-  echo("<b><u><br>PRODUCT = ".$transactionRepeat->get_value("product"));
-  echo("<br>COMPANY = ".$transactionRepeat->get_value("companyDetails"));
-  echo("<br>TRANSACTIONDATE = ".$transaction->get_value("transactionDate"));
-  echo("<br>AMOUNT = ".$transaction->get_value("amount"));
-  echo("<br>Payment Basis = ".$transactionRepeat->get_value("paymentBasis"));
-  echo("<br>TF = ".get_tf_name($transaction->get_value("tfID"))."</u>");
-  echo("<br>amount = ".$transactionRepeat->get_value("amount"));
-  echo("<br>");
-  echo("<br><u>IF ".$expenseForm->get_id()." == ".$transaction->get_value("expenseFormID"));
-  echo(" AND ".$expenseForm->get_value("transactionRepeatID")." == ".$transactionRepeat->get_id()." ...then all is good</u>");
-  echo("<br>");
-  echo("<br>");
-  echo("<hr width='50%' align='left'>");
+  $dbMaxDate->query($query);
+  $dbMaxDate->next_record();
 
+  if (!$dbMaxDate->f("latestDate")) {
+    $nextScheduled = timeWarp($startDate, $timeBasisString);
+  } else {
+    $mostRecentTransactionDate = format_date("U",$dbMaxDate->f("latestDate"));
+    $nextScheduled = timeWarp($mostRecentTransactionDate, $timeBasisString);
+  }
+
+  //echo '<br/><br/>$nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate';
+  //echo "<br/>".$nextScheduled." <= ".$today." && ".$nextScheduled." >= ".$startDate." && ".$nextScheduled." <= ".$finishDate;
+  while ($nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate) {
+
+    $transaction = new transaction;
+    $transaction->set_value("tfID", $transactionRepeat->get_value("tfID"));
+    $transaction->set_value("companyDetails", $transactionRepeat->get_value("companyDetails"));
+    $transaction->set_value("amount", -$transactionRepeat->get_value("amount"));
+    $transaction->set_value("product", $transactionRepeat->get_value("product"));
+    $transaction->set_value("transactionType", $transactionRepeat->get_value("transactionType"));
+    $transaction->set_value("status", "pending");
+    $transaction->set_value("transactionRepeatID", $transactionRepeat->get_id());
+    $transaction->set_value("transactionDate", date("Y-m-d", $nextScheduled));
+    $transaction->save();
+
+    echo "\n<br>".$transaction->get_value("transactionDate");
+    echo " ".$transactionRepeat->get_value("paymentBasis")." $".$transaction->get_value("amount")." for TF: ".get_tf_name($transaction->get_value("tfID"));
+    echo " (transactionID: ".$transaction->get_id()." transactionRepeatID:".$transactionRepeat->get_id()." name:".$transactionRepeat->get_value("product").")";
+
+    $nextScheduled = timeWarp($nextScheduled, $timeBasisString);
+  }
 }
 
 
-
-
+include_template("templates/checkRepeatM.tpl");
 
 ?>

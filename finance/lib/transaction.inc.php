@@ -52,6 +52,7 @@ class transaction extends db_entity
                                , "transactionDate"=>new db_text_field("transactionDate")
                                , "transactionType"=>new db_text_field("transactionType")
                                , "timeSheetID"=>new db_text_field("timeSheetID")
+                               , "transactionRepeatID"=>new db_text_field("transactionRepeatID")
       );
 
     $this->permissions[PERM_FINANCE_WRITE_INVOICE_TRANSACTION] = "Add/update/delete invoice transaction";

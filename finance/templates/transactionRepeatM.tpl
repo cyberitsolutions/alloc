@@ -7,11 +7,12 @@
 
 {table_box}
   <tr>
-    <th colspan="5">Create Repeating Expense</th>
+    <th colspan="6">Create Repeating Expense{statusLabel}</th>
     <th class="right"><a href="{url_alloc_transactionRepeatList}tfID={tfID}">Return to Repeating Expenses List</a></th>
   </tr>
 	<tr>
-	  <td><b>Product / Service</b></td>
+	  <td><b>Date Incurred</b></td>
+	  <td><b>Product/Service</b></td>
  	  <td><b>Amount</b></td>
     <td><b>TF</b></td>
     <td><b>Basis</b></td>
@@ -19,27 +20,26 @@
     <td><b>Finish Date</b></td>
 	</tr>
 	<tr>
+    <td><input type="text" size="11" name="dateEntered" value="{dateEntered}"><input type="button" onClick="dateEntered.value='{today}'" value="Today"></td>
  	  <td><input type="text" size="20" name="product" value="{product}"></td>
  	  <td><input type="text" size="9" name="amount" value="{amount}"></td>
    	<td><select name="tfID" value="{tfID}">{tfOptions}</select></td>
     <td><select name="paymentBasis" value="{paymentBasis}">{basisOptions}</select></td>
-    <td><input type="text" name="transactionStartDate" size="11" value="{transactionStartDate}"></td>
-    <td><input type="text" name="transactionFinishDate" size="11" value="{transactionFinishDate}"></td>
+    <td><input type="text" name="transactionStartDate" size="11" value="{transactionStartDate}"><input type="button" onClick="transactionStartDate.value='{today}'" value="Today"></td>
+    <td><input type="text" name="transactionFinishDate" size="11" value="{transactionFinishDate}"><input type="button" onClick="transactionFinishDate.value='{today}'" value="Today"></td>
  	</tr>
 
   <tr>
     <td rowspan="3"><b>Company Details</b></td>
-    <td colspan="2" rowspan="3"><textarea rows="4" cols="30" name="companyDetails" wrap="virtual">{companyDetails}</textarea></td>
-    <td rowspan="3">
-      <nobr><b>Reminder email</b> <input type="text" size="30" name="emailOne" value="{emailOne}"></nobr><br>
-      <nobr><b>Reminder email</b> <input type="text" size="30" name="emailTwo" value="{emailTwo}"></nobr>
+    <td colspan="2" rowspan="3"><textarea rows="4" cols="40" name="companyDetails" wrap="virtual">{companyDetails}</textarea></td>
+    <td rowspan="3" colspan="3">
+      <nobr><b>Reminder email</b><br/><input type="text" size="40" name="emailOne" value="{emailOne}"></nobr><br>
+      <nobr><b>Reminder email</b><br/><input type="text" size="40" name="emailTwo" value="{emailTwo}"></nobr>
     </td> 
   </tr>
   <tr><td>&nbsp;</td></tr>
   <tr><td>&nbsp;</td></tr>
   <tr>
-    <td><b>Date Incurred</b></td>
-    <td colspan="3"><input type="text" size="11" name="dateEntered" value="{dateEntered}"><input type="button" onClick="dateEntered.value='{today}'" value="Today"></td>
   </tr>
   <tr>
     <td colspan="4"><b>Form ID:</b> {transactionRepeatID}</td>
@@ -48,20 +48,21 @@
     <td colspan="4"><b>Created By:</b> {user}</td>
   </tr>
   <tr>
+    <td colspan="4"><b>Status:</b> {status}</td>
+  </tr>
+  <tr>
     <td colspan="4"><b>Reimbursement required?</b>
     <input type="checkbox" name="reimbursementRequired" value="1"{reimbursementRequired_checked}></td>
   </tr>
   <tr>
-    <td align="right" colspan="3"><input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;"></td>
-    <td colspan="3"><input type="submit" name="delete" value="Delete Record" onClick="return confirm('Are you sure you want to delete this record?')"></td>
+    <td align="center" colspan="6">
+    {adminButtons}
+    <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
+    <input type="submit" name="delete" value="Delete Record" onClick="return confirm('Are you sure you want to delete this record?')"></td>
   </tr>
 </table>
 
-
-<input type="hidden" name="status" value="pending">
 <input type="hidden" name="transactionRepeatID" value="{transactionRepeatID}">
-
-
-<br><br>
 </form>
+
 {:show_footer}

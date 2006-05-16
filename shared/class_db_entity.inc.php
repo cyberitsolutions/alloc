@@ -192,9 +192,14 @@ class db_entity {
   // Insert a record in to the database
   function insert() {
     global $current_user;
+    if (is_object($current_user) && $current_user->get_id()) {
+      $current_user_id = $current_user->get_id();
+    } else {
+      $current_user_id = "0";
+    }
     $this->check_perm(PERM_CREATE);
     if (isset($this->data_fields[$this->data_table."ModifiedUser"])) {
-      $this->set_value($this->data_table."ModifiedUser", $current_user->get_id());
+      $this->set_value($this->data_table."ModifiedUser", $current_user_id);
     }
     $query = "INSERT INTO $this->data_table (";
     $query.= $this->get_insert_fields($this->data_fields);
