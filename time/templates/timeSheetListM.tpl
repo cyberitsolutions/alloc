@@ -27,7 +27,6 @@
           </td>
           <td>
             <select name="personID">
-              {show_empty_option}
               {show_userID_options}
             </select>
           </td>

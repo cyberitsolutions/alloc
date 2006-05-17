@@ -78,6 +78,10 @@ if (!$_POST["status"]) {
   $_POST["status"] = "edit";
 }
 
+if (!$_POST["personID"] && is_object($current_user)) {
+  $_POST["personID"] = $current_user->get_id();
+}
+
 $db = new db_alloc;
 
 // display the list of project name.
@@ -91,7 +95,6 @@ if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
   $query = sprintf("SELECT * FROM person ORDER by username");
   $db->query($query);
   $person_array = get_array_from_db($db, "personID", "username");
-  $TPL["show_empty_option"] = "<option value=\"\"> -- ALL -- </option>";
 } else {
   $person = new person;
   $person->set_id($current_user->get_id());
