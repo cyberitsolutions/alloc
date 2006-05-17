@@ -1,7 +1,7 @@
 #!/bin/bash
 
 while [ -z "${db}" ]; do
-  select db in alloc alloc_dev; do break; done;
+  select db in alloc alloc_dev allocPSA; do break; done;
 done;
 
 mysqldump -d -u root -p ${db} > db_structure.sql 
@@ -15,7 +15,7 @@ mysqldump -c -t -u root -p ${db} ${tables} > db_data.sql
 
 
 
-echo "insert into person (username,password,personActive) values ('alloc','/.N0BifPoPoZg',1); " >> db_data.sql
+echo "INSERT INTO person (username,password,personActive,perms) VALUES ('alloc','/.N0BifPoPoZg',1,'god,admin,manage,employee');" >> db_data.sql
 
 
 
