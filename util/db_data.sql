@@ -47,7 +47,7 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('person',-1,0,'','Y',100,'Allow users to read and write their own details',259,47);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('timeSheet',0,0,'admin','Y',100,'Allow admin staff to read, write, invoice and monitor all time sheets',783,48);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('timeSheet',0,0,'manage','Y',100,'Allow managers to read, write, approve and monitor all time sheets',287,49);
-INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('timeSheetItem',-1,0,'employee','Y',100,NULL,15,50);
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('timeSheetItem',-1,0,'','Y',100,NULL,15,50);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('timeSheetItem',0,0,'admin','Y',100,'Allow admin staff to read and write all time sheet items',15,51);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('transaction',-1,0,'employee','Y',100,'Allow employees to read and write their own transaction records',15,54);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('transaction',0,0,'admin','Y',100,'Allow admin staff to read, write and monitor all transaction records',65295,55);
@@ -125,4 +125,4 @@ INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, proje
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (2,'Engineer (edit tasks)','canEditTasks',20);
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (3,'Project Manager + Time Sheet Recipient','timeSheetRecipient',40);
 
-insert into person (username,password,personActive,perms) values ('alloc','/.N0BifPoPoZg',1,"god,admin,manage,employee"); 
+INSERT INTO person (username,password,personActive,perms) VALUES ('alloc','/.N0BifPoPoZg',1,'god,admin,manage,employee');
