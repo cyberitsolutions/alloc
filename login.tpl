@@ -21,7 +21,7 @@
 
   <br><br><br>
 
-  <form action="{url_alloc_login}" method="post">
+  <form action="{url_alloc_login}" method="post" id="login_form">
 
   {ALLOC_SHOOER}
 
@@ -86,10 +86,10 @@
 </body>
 <script language="JavaScript">
 <!--
-  if (document.forms[0][0].value != '') {
-      document.forms[0][1].focus();
+  if (document.getElementById("login_form").username.value != '') {
+      document.getElementById("login_form").password.focus();
   } else {
-      document.forms[0][0].focus();
+      document.getElementById("login_form").username.focus();
   }
 // -->
 </script>
