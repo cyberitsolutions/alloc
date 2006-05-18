@@ -103,6 +103,18 @@ class transaction extends db_entity
     $tf = $this->get_foreign_object("tf");
     return $tf->is_owner($person);
   }
+
+  function get_transactionTypes() {
+    return array('invoice'   => 'invoice'    
+                ,'expense'   => 'expense'
+                ,'salary'    => 'salary'
+                ,'commission'=> 'commission'
+                ,'timesheet' => 'timesheet'
+                ,'adjustment'=> 'adjustment'
+                ,'insurance' => 'insurance'
+                );
+  }
+
 }
 
 

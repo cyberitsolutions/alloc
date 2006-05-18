@@ -87,7 +87,7 @@ $options = array(array("url"=>"tf",
 
                  array("url"=>"expenseFormList",
                        "params"=>"&view=true",
-                       "text"=>"View Pending Expense Forms",
+                       "text"=>"View Pending Expenses",
                        "entity"=>"expenseForm",
                        "action"=>PERM_READ,
                        "br"=>true),
@@ -119,7 +119,7 @@ $options = array(array("url"=>"tf",
  
                  array("url"=>"checkRepeat",
                        "params"=>"",
-                       "text"=>"Push Repeating Expenses Through",
+                       "text"=>"Execute Repeating Expenses",
                        "entity"=>"transaction",
                        "action"=>PERM_FINANCE_CREATE_TRANSACTION_FROM_REPEAT)
                        

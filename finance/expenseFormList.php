@@ -50,7 +50,7 @@ function show_expense_form_list($template_name) {
       $i % 2 == 0 and $TPL["row_class"] = "even";
 
       $expenseForm->set_tpl_values();
-      $TPL["formTotal"] = number_format(-$db->f("formTotal"), 2);
+      $TPL["formTotal"] = sprintf("%0.2f", -$db->f("formTotal"));
       $dbTwo->query("select username from person where personID=".$expenseForm->get_value("expenseFormModifiedUser"));
       $dbTwo->next_record();
       $TPL["expenseFormModifiedUser"] = $dbTwo->f("username");
@@ -59,6 +59,29 @@ function show_expense_form_list($template_name) {
     }
   }
 
+}
+
+function show_pending_transaction_list($template_name) {
+  global $TPL;
+  $q = "SELECT * FROM transaction 
+            LEFT JOIN transactionRepeat on transactionRepeat.transactionRepeatID = transaction.transactionRepeatID 
+                WHERE transaction.transactionRepeatID IS NOT NULL AND transaction.status = 'pending'";
+  $db = new db_alloc;
+  $db->query($q);
+  while ($db->next_record()) {
+    $i++;
+    $TPL["row_class"] = "odd";
+    $i % 2 == 0 and $TPL["row_class"] = "even";
+    $transaction = new transaction;
+    $transaction->read_db_record($db);
+    $transaction->set_tpl_values();
+    $transactionRepeat = new transactionRepeat;
+    $transactionRepeat->read_db_record($db);
+    $transactionRepeat->set_tpl_values();
+    $TPL["formTotal"] = sprintf("%0.2f", -$db->f("amount"));
+    $TPL["lastModified"] = get_mysql_date_stamp($transaction->get_value("lastModified"));
+    include_template($template_name);
+  }
 }
 
 page_close();

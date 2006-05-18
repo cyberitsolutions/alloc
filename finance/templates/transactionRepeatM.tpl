@@ -10,23 +10,32 @@
     <th colspan="6">Create Repeating Expense{statusLabel}</th>
     <th class="right"><a href="{url_alloc_transactionRepeatList}tfID={tfID}">Return to Repeating Expenses List</a></th>
   </tr>
+  <tr>
+    <td><b>Basis</b></td>
+    <td><b>Start Date</b></td>
+    <td><b>Finish Date</b></td>
+  </tr>
+  <tr>
+    <td><select name="paymentBasis" value="{paymentBasis}">{basisOptions}</select></td>
+    <td><input type="text" name="transactionStartDate" size="11" value="{transactionStartDate}"><input type="button" onClick="transactionStartDate.value='{today}'" value="Today"></td>
+    <td><input type="text" name="transactionFinishDate" size="11" value="{transactionFinishDate}"><input type="button" onClick="transactionFinishDate.value='{today}'" value="Today"></td>
+
+  </tr>
+
+
 	<tr>
 	  <td><b>Date Incurred</b></td>
 	  <td><b>Product/Service</b></td>
  	  <td><b>Amount</b></td>
+ 	  <td><b>Type</b></td>
     <td><b>TF</b></td>
-    <td><b>Basis</b></td>
-    <td><b>Start Date</b></td>
-    <td><b>Finish Date</b></td>
 	</tr>
 	<tr>
     <td><input type="text" size="11" name="dateEntered" value="{dateEntered}"><input type="button" onClick="dateEntered.value='{today}'" value="Today"></td>
  	  <td><input type="text" size="20" name="product" value="{product}"></td>
  	  <td><input type="text" size="9" name="amount" value="{amount}"></td>
-   	<td><select name="tfID" value="{tfID}">{tfOptions}</select></td>
-    <td><select name="paymentBasis" value="{paymentBasis}">{basisOptions}</select></td>
-    <td><input type="text" name="transactionStartDate" size="11" value="{transactionStartDate}"><input type="button" onClick="transactionStartDate.value='{today}'" value="Today"></td>
-    <td><input type="text" name="transactionFinishDate" size="11" value="{transactionFinishDate}"><input type="button" onClick="transactionFinishDate.value='{today}'" value="Today"></td>
+   	<td><select name="transactionType">{transactionTypeOptions}</select></td>
+   	<td><select name="tfID">{tfOptions}</select></td>
  	</tr>
 
   <tr>

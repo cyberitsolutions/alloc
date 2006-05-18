@@ -86,33 +86,22 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
     }
   }
 
-  if ($_POST["product"] == "") {
-    $TPL["message"][].= "You must enter a Product";
-  }
-  if ($_POST["amount"] == "") {
-    $TPL["message"][].= "You must enter an Amount";
-  }
-  if ($_POST["tfID"] == 0) {
-    $TPL["message"][].= "You must select a TF";
-  }
+  $_POST["product"] or $TPL["message"][].= "Please enter a Product";
+  $_POST["amount"]  or $TPL["message"][].= "Please enter an Amount";
+  $_POST["tfID"]    or $TPL["message"][].= "Please select a TF";
+  $_POST["companyDetails"]  or $TPL["message"][].= "Please provide Company Details";
+  $_POST["dateEntered"]     or $TPL["message"][].= "Please enter a Date Incurred";
+  $_POST["transactionType"] or $TPL["message"][].= "Please select a Transaction Type";
+
   if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $_POST["transactionStartDate"])) {
     $TPL["message"][].= "You must enter the Start date in the format yyyy-mm-dd ";
   }
   if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $_POST["transactionFinishDate"])) {
     $TPL["message"][].= "You must enter the Finish date in the format yyyy-mm-dd ";
   }
-  if ($_POST["companyDetails"] == "") {
-    $TPL["message"][].= "You must provide Company Details";
-  }
-  if ($_POST["dateEntered"] == "") {
-    $TPL["message"][].= "You must enter a Date Incurred";
-  }
-
 
   if (!$TPL["message"]) {
-    $transactionRepeat->set_value("transactionType", "expense");
     !$transactionRepeat->get_value("status") && $transactionRepeat->set_value("status","pending"); 
-
     $transactionRepeat->save();
 
     if ($_POST["save"]) {
@@ -148,6 +137,7 @@ if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
 $TPL["tfOptions"] = get_option("", "0", false)."\n";
 $TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $transactionRepeat->get_value("tfID"));
 $TPL["basisOptions"] = get_options_from_array(array("weekly", "fortnightly", "monthly", "quarterly", "yearly"), $transactionRepeat->get_value("paymentBasis"), false);
+$TPL["transactionTypeOptions"] = get_select_options(transaction::get_transactionTypes(), $transactionRepeat->get_value("transactionType"));
 
 if (is_object($transactionRepeat) && $transactionRepeat->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
   $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"pending\" value=\"Pending\">";
