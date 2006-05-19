@@ -1,9 +1,8 @@
 #!/bin/bash
 #
-# Script to patch alloc with the latest updates
-# Mostly to do DB structure updates without losing data
+# Script to patch alloc with the latest updates.
+# Mostly to do DB structure updates without losing data.
 #
-# Welcome..
 
 
 
@@ -14,17 +13,27 @@ DIR="${0%/*}/"
 .${DIR}functions.sh
 
 
-e "Beginning DB Patch script"
+e "Beginning patch script"
 
 
 # Running this file will 
 # - Back up the database
-# - Go through the db_changelog directory and for each file
-# - Check whether there is a corresponding patch file in eg /var/local/allocPSA/db_changelog/
+# - Go through the patches/ directory and for each file
+# - Check whether there is a corresponding patch file in eg /var/local/allocPSA/applied_patches/
 # - If not then apply any patches in order, be they shell scripts or sql
-# - Copy or move file from /webroot/allocPSA/changelog to /var/local/allocPSA/db_changelog/
+# - Copy or move file from /webroot/allocPSA/patches/ to /var/local/allocPSA/applied_patches/
 
 # Need vars: ALLOC_LOG_DIR, ALLOC_BACKUP_DIR, ALLOC_PATCH_DIR, The root DB pass, ALLOC_DB_NAME, 
+
+ALLOC_DB_NAME="CONFIG_VAR_ALLOC_DB_NAME"
+ALLOC_LOG_DIR="CONFIG_VAR_ALLOC_LOG_DIR"
+ALLOC_BACKUP_DIR="CONFIG_VAR_ALLOC_BACKUP_DIR"
+ALLOC_PATCH_DIR="CONFIG_VAR_ALLOC_PATCH_DIR"
+ROOT_DB_PASS="CONFIG_VAR_ROOT_DB_PASS"
+
+${ALLOC_BACKUP_DIR}cron_allocBackup.sh 
+
+
 
 ## to be completed 
 exit

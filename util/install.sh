@@ -79,13 +79,13 @@ get_user_var DO_DB "Install the database?" "yes"
 # Install the db
 if [ "${DO_DB:0:1}" = "y" ]; then
 
-  get_user_var DB_PASS "Enter the MySQL root password" "" "1"
+  get_user_var ROOT_DB_PASS "Enter the MySQL root password" "" "1"
   echo ""
 
-  [ -n "${DB_PASS}" ] && DB_PASS=" -p${DB_PASS} "
+  [ -n "${ROOT_DB_PASS}" ] && ROOT_DB_PASS=" -p${ROOT_DB_PASS} "
  
   # MySQL administrative tables 
-  mysql -v -u root ${DB_PASS} mysql <<EOMYSQL
+  mysql -v -u root ${ROOT_DB_PASS} mysql <<EOMYSQL
   DROP DATABASE IF EXISTS ${ALLOC_DB_NAME};
   CREATE DATABASE ${ALLOC_DB_NAME};
   DELETE FROM user WHERE User = "${ALLOC_DB_USER}";
@@ -95,9 +95,9 @@ if [ "${DO_DB:0:1}" = "y" ]; then
   FLUSH PRIVILEGES;
 EOMYSQL
   [ "${?}" -ne "0" ] && fucked=1
-  mysql -u root ${DB_PASS} ${ALLOC_DB_NAME} < ${DIR}db_structure.sql
+  mysql -u root ${ROOT_DB_PASS} ${ALLOC_DB_NAME} < ${DIR}sql/db_structure.sql
   [ "${?}" -ne "0" ] && fucked=1
-  mysql -u root ${DB_PASS} ${ALLOC_DB_NAME} < ${DIR}db_data.sql
+  mysql -u root ${ROOT_DB_PASS} ${ALLOC_DB_NAME} < ${DIR}sql/db_data.sql
   [ "${?}" -ne "0" ] && fucked=1
 
   if [ "${fucked}" = 1 ]; then
@@ -109,10 +109,11 @@ fi
 
 
 # Append a slash if need be
-[ "${ALLOC_DOCS_DIR:(-1):1}" != "/" ] && ALLOC_DOCS_DIR=${ALLOC_DOCS_DIR}/; 
-[ "${ALLOC_BACKUP_DIR:(-1):1}" != "/" ] && ALLOC_BACKUP_DIR=${ALLOC_BACKUP_DIR}/; 
-[ "${ALLOC_LOG_DIR:(-1):1}" != "/" ] && ALLOC_LOG_DIR=${ALLOC_LOG_DIR}/; 
-[ "${ALLOC_PATCH_DIR:(-1):1}" != "/" ] && ALLOC_PATCH_DIR=${ALLOC_PATCH_DIR}/; 
+[ "${ALLOC_DOCS_DIR:(-1):1}" != "/" ] && ALLOC_DOCS_DIR="${ALLOC_DOCS_DIR}/"
+[ "${ALLOC_BACKUP_DIR:(-1):1}" != "/" ] && ALLOC_BACKUP_DIR="${ALLOC_BACKUP_DIR}/"
+[ "${ALLOC_LOG_DIR:(-1):1}" != "/" ] && ALLOC_LOG_DIR="${ALLOC_LOG_DIR}/"
+[ "${ALLOC_PATCH_DIR:(-1):1}" != "/" ] && ALLOC_PATCH_DIR="${ALLOC_PATCH_DIR}/"
+[ "${ALLOC_WEB_URL_PREFIX:(-1):1}" != "/" ] && ALLOC_WEB_URL_PREFIX="${ALLOC_WEB_URL_PREFIX}/"
 
 # Create the directories if need be
 [ ! -d "${ALLOC_BACKUP_DIR}" ]       && run "mkdir -p ${ALLOC_BACKUP_DIR}"
@@ -127,7 +128,8 @@ run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}clients"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}projects"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_LOG_DIR}"
-run "chmod 775 ${ALLOC_BACKUP_DIR}"
+run "chmod 700 ${ALLOC_BACKUP_DIR}"
+run "chown root ${ALLOC_BACKUP_DIR}"
 run "chmod 775 ${ALLOC_DOCS_DIR}"
 run "chmod 775 ${ALLOC_DOCS_DIR}clients"
 run "chmod 775 ${ALLOC_DOCS_DIR}projects"
@@ -141,102 +143,15 @@ find ${DIR}.. -type d -path ${DIR}../.bzr -prune -exec chmod 775 {} \; # Dirs  t
 
 run "chmod 777 ${DIR}../images/"                          # php created images
 run "chmod 777 ${DIR}../images/*"                         # php created images
-run "chmod 777 ${DIR}../stylesheets/*"                    # rwxrwxrwx
-run "chmod 755 ${DIR}dump_clean_db.sh"                    # rwxr-xr-x
+run "chmod 755 ${DIR}sql/dump_clean_db.sh"                # rwxr-xr-x
 run "chmod 754 ${DIR}stylesheet_regen.py"                 # rwxr-xr--
-run "chmod 754 ${DIR}gpl_header.py"                       # rwxr-xr--
+run "chmod 754 ${DIR}misc/gpl_header.py"                  # rwxr-xr--
 run "chmod 600 ${CONFIG_FILE}"                            # rw-------
 run "chmod 700 ${DIR}install.sh"                          # rwx------
 
-run "chmod 600 ${DIR}patch.sh"                            # rwxr-xr--
-run "chown root ${DIR}patch.sh"                           # chown root
 
-
-# Make the alloc.inc file
-e "Creating alloc.inc"
-cat ${DIR}templates/alloc.inc.tpl \
-| sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_DB_HOST/${ALLOC_DB_HOST}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
-> ${DIR}alloc.inc
-
-if [ -f "${DIR}alloc.inc" ]; then 
-  e_ok "Created alloc.inc"
-  run "chmod 640 ${DIR}alloc.inc"                           
-  run "chgrp ${ALLOC_WEB_USER} ${DIR}alloc.inc"             
-else 
-  e_failed "Could not create alloc.inc"; 
-fi
-
-e "Creating alloc_DB_backup.sh"
-cat ${DIR}templates/alloc_DB_backup.sh.tpl \
-| sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_DB_HOST/${ALLOC_DB_HOST}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_BACKUP_DIR/${ALLOC_BACKUP_DIR//\//\/}/" \
-> ${DIR}alloc_DB_backup.sh
-
-if [ -f "${DIR}alloc_DB_backup.sh" ]; then 
-  e_ok "Created alloc_DB_backup.sh"
-  run "chmod 755 ${DIR}alloc_DB_backup.sh"            
-  run "mv ${DIR}alloc_DB_backup.sh ${ALLOC_BACKUP_DIR}"
-else 
-  e_failed "Could not create alloc_DB_backup.sh"; 
-fi
-
-# Append a slash if need be
-[ "${ALLOC_WEB_URL_PREFIX:(-1):1}" != "/" ] && ALLOC_WEB_URL_PREFIX="${ALLOC_WEB_URL_PREFIX}/"
-
-
-e "Creating cron_checkRepeatExpenses.sh"
-cat ${DIR}templates/cron_checkRepeatExpenses.sh.tpl \
-| sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
-> ${DIR}cron_checkRepeatExpenses.sh
-
-if [ -f "${DIR}cron_checkRepeatExpenses.sh" ]; then 
-  e_ok "Created cron_checkRepeatExpenses.sh"
-  run "chmod 755 ${DIR}cron_checkRepeatExpenses.sh"     
-else 
-  e_failed "Could not create cron_checkRepeatExpenses.sh"; 
-fi
-
-
-e "Creating cron_sendEmail.sh"
-cat ${DIR}templates/cron_sendEmail.sh.tpl \
-| sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
-> ${DIR}cron_sendEmail.sh
-
-if [ -f "${DIR}cron_sendEmail.sh" ]; then 
-  e_ok "Created cron_sendEmail.sh"
-  run "chmod 755 ${DIR}cron_sendEmail.sh"     
-else 
-  e_failed "Could not create cron_sendEmail.sh"; 
-fi
-
-
-e "Creating cron_sendReminders.sh"
-cat ${DIR}templates/cron_sendReminders.sh.tpl \
-| sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
-> ${DIR}cron_sendReminders.sh
-
-if [ -f "${DIR}cron_sendReminders.sh" ]; then 
-  e_ok "Created cron_sendReminders.sh"
-  run "chmod 755 ${DIR}cron_sendReminders.sh"     
-else 
-  e_failed "Could not create cron_sendReminders.sh"; 
-fi
-
-
-
-
+# Create executables from templates
+. ${DIR}make_executables.sh
 
 
 
@@ -268,7 +183,7 @@ if [ -z "${FAILED}" ]; then
   echo "                                                                "
   echo "   2) Install these into cron to be run as root:                "
   echo "                                                                "
-  echo "     25  4 * * * ${ALLOC_BACKUP_DIR}alloc_DB_backup.sh          "
+  echo "     25  4 * * * ${ALLOC_BACKUP_DIR}cron_allocBackup.sh         "
   echo "     */5 * * * * ${DIR_FULL}cron_sendReminders.sh               "
   echo "     35  4 * * * ${DIR_FULL}cron_sendEmail.sh                   "
   echo "     45  4 * * * ${DIR_FULL}cron_checkRepeatExpenses.sh         "
