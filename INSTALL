@@ -21,28 +21,35 @@
 
 The allocPSA Installation Guide 
 
-The source code for this project is quite stable. However different PHP setups may 
-produce interesting and unexpected errors and warnings. Please follow the directions
-carefully.
+Different PHP setups may produce interesting and unexpected errors and warnings. 
+Please follow the directions carefully.
 
 
 1) System Requirements 
+
     * Ensure PHP >= 4.3.0
     * Ensure PHP memory_limit >= 32 meg 
     * Ensure the GD image library is installed and PHP knows about it
     * Ensure MySQL >= 3.23 (See /usr/sbin/mysqld -V)
 
+
 2) Put the source code in a directory called allocPSA in the webserver document root 
 
-3) Fill in ALL the values in /WEBROOT/allocPSA/util/install.cfg
+3) Fill in the values in /WEBROOT/allocPSA/util/install.cfg
 
 4) Determine the PHP include_path 
 
-5) Run installer script /WEBROOT/allocPSA/util/install.sh
+5) As root, run the installer script 
+
+    $ cd /WEBROOT/allocPSA/util/ 
+    $ ./install.sh ./install.cfg
+
+   Note:
     * The script should run without any FAILED messages.
     * When the script finishes it will tell you to do stuff. Do that stuff.
 
-6) Go to the allocPSA url in your web browser. Login with user and pass: alloc/alloc
+6) Go to the just installed allocPSA url in your web browser. Login with user and
+    pass: alloc/alloc
 
 
 The PHP settings for your system may generally be determined by examining 
