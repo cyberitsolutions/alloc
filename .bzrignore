@@ -3,3 +3,4 @@ images/big_user*.png
 logs/*
 report/files/*.txt
 util/cron_*.sh
+util/alloc.inc
