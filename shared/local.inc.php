@@ -25,11 +25,13 @@ require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
 
 $modules = get_alloc_modules();
 
+$fake_modules = array("util","login");
+
 eregi("^".ALLOC_MOD_DIR."/(.*)$", $_SERVER["SCRIPT_FILENAME"], $match) && $script_filename_short = $match[1];
 eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
 
 
-if ((!isset($modules[$module_name])) && $module_name != "" && $module_name != "util") {
+if ((!isset($modules[$module_name])) && $module_name != "" && !in_array($module_name,$fake_modules)) {
   die("Invalid module: $module_name");
 } else {
   define("ALLOC_CURRENT_MODULE",$module_name);
@@ -55,9 +57,8 @@ require_once(ALLOC_MOD_DIR."/shared/class_alloc_email.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/class_alloc_cache.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/class_history.inc.php");
 
-reset($modules);
-while (list($module_name,) = each($modules)) {
-  if ($module_name != "util") {
+foreach ($modules as $module_name => $v) {
+  if (!in_array($module_name,$fake_modules)) {
     require_once(ALLOC_MOD_DIR."/$module_name/lib/init.php");
     $module_class = $module_name."_module";
     $module = new $module_class;
