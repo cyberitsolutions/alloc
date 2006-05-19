@@ -25,8 +25,8 @@
 $sess = Session::GetSession();
 
 $TPL =array("url_alloc_index"=>SCRIPT_PATH."index.php",
- "url_alloc_login"=>SCRIPT_PATH."login.php",
- "url_alloc_logout"=>$sess->url(SCRIPT_PATH."logout.php"),
+ "url_alloc_login"=>SCRIPT_PATH."login/login.php",
+ "url_alloc_logout"=>$sess->url(SCRIPT_PATH."login/logout.php"),
  "url_alloc_home"=>$sess->url(SCRIPT_PATH."home/home.php"),
  "url_alloc_history"=>$sess->url(SCRIPT_PATH."home/history.php"),
  "url_alloc_project" =>$sess->url(SCRIPT_PATH."project/project.php"),

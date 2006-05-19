@@ -108,7 +108,7 @@ class Session {
 
   function MakeCookie() {
     // Set a cookie.
-    $rtn = SetCookie("alloc_cookie",$this->key,0,"","");
+    $rtn = SetCookie("alloc_cookie",$this->key,0,"/","");
     if (!$rtn) {
       $this->mode = "get";
     } else if (!isset($_COOKIE["alloc_cookie"])) {
@@ -117,11 +117,7 @@ class Session {
   } 
 
   function DestroyCookie() {
-    if ($this->mode == "cookie") {
-      # This seems to not be needed?
-      #SetCookie("alloc_cookie",false,time()-3600,"","");
-    }
-    SetCookie("alloc_cookie",FALSE,0,"","");
+    SetCookie("alloc_cookie",FALSE,0,"/","");
     unset($_COOKIE["alloc_cookie"]);
   }
 

@@ -131,7 +131,7 @@ $TPL["status_line"] = ALLOC_TITLE." ".ALLOC_VERSION." on ".$_SERVER["SERVER_NAME
 $TPL["ALLOC_SHOOER"] = ALLOC_SHOOER; 
 
 
-include_template("login.tpl");
+include_template("templates/login.tpl");
 
 page_close();
 
