@@ -4,3 +4,4 @@ logs/*
 report/files/*.txt
 util/cron_*.sh
 util/alloc.inc
+util/patch.sh
