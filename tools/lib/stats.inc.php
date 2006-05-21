@@ -47,10 +47,6 @@ class stats {
   var $persons = array();
 
   function stats() {
-    $this->project_stats();
-    $this->task_stats();
-    $this->comment_stats();
-    $this->order_by_most_frequent_use();
   }
 
   function project_stats() {
@@ -111,48 +107,72 @@ class stats {
         }
       }
     }
+    return $this->projects;
   }
 
   function task_stats() {
+    $db = new db_alloc;
+
+    // Get total amount of current tasks for every person
+    $q = "SELECT person.personID, person.username, count(taskID) as tally
+            FROM task 
+       LEFT JOIN person ON task.personID = person.personID 
+           WHERE (task.dateActualCompletion IS NULL or task.dateActualCompletion = '')
+        GROUP BY person.personID";
+
+    $db->query($q);
+    while ($db->next_record()) {
+      $this->tasks["current"][$db->f("personID")] = $db->f("tally");
+      $this->tasks["current"]["total"] += $db->f("tally");
+    }
+    
+    // Get total amount of completed tasks for every person
+    $q = "SELECT person.personID, person.username, count(taskID) as tally
+            FROM task 
+       LEFT JOIN person ON task.personID = person.personID 
+           WHERE (task.dateActualCompletion IS NOT NULL AND task.dateActualCompletion != '')
+        GROUP BY person.personID";
+
+    $db->query($q);
+    while ($db->next_record()) {
+      $this->tasks["completed"][$db->f("personID")] = $db->f("tally");
+      $this->tasks["completed"]["total"] += $db->f("tally");
+    }
+
+
+    // Get total amount of all tasks for every person
+    $q = "SELECT person.personID, person.username, count(taskID) as tally
+            FROM task 
+       LEFT JOIN person ON task.personID = person.personID 
+        GROUP BY person.personID";
+
+    $db->query($q);
+    while ($db->next_record()) {
+      $this->tasks["total"][$db->f("personID")] = $db->f("tally");
+      $this->tasks["total"]["total"] += $db->f("tally");
+    }
+
     // date from which a task is counted as being new. if monday then date back to friday, else the previous day
     $days = date("w") == 1 ? 3 : 1;
     $date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $days, date("Y")));
+    // Get total amount of completed tasks for every person
+    $q = sprintf("SELECT person.personID, person.username, count(taskID) as tally, task.dateCreated
+            FROM task 
+       LEFT JOIN person ON task.personID = person.personID 
+           WHERE ('%s' <= task.dateCreated)
+        GROUP BY person.personID",$date);
 
-    $query = "SELECT * FROM task";
-    $db = new db_alloc;
-    $db->query($query);
+    $db->query($q);
     while ($db->next_record()) {
-      $task = new task;
-      $task->read_db_record($db);
-
-      if (!$task->get_value("dateActualCompletion")) {
-        $this->tasks["current"][$task->get_value("personID")]++;
-        $this->tasks["current"]["total"]++;
-      } else {
-        $this->tasks["completed"][$task->get_value("personID")]++;
-        $this->tasks["completed"]["total"]++;
-      }
-
-      if ($task->get_value("dateActualStart") != "") {
-        if (!isset($this->tasks["all"][$task->get_value("personID")])) {
-          $this->tasks["all"][$task->get_value("personID")] = array();
-        }
-        $this->tasks["all"][$task->get_value("personID")][$task->get_value("dateActualStart")]++;
-        $this->tasks["all"][$task->get_value("personID")]["total"]++;
-        $this->tasks["all"]["total"][$task->get_value("dateActualStart")]++;
-
-        if (strcmp($date, $task->get_value("dateActualStart")) <= 0) {
-          if (!isset($this->tasks["new"][$task->get_value("personID")])) {
-            $this->tasks["new"][$task->get_value("personID")] = array();
-          }
-          $this->tasks["new"][$task->get_value("personID")][$task->get_value("dateActualStart")]++;
-          $this->tasks["new"][$task->get_value("personID")]["total"]++;
-          $this->tasks["new"]["total"][$task->get_value("dateActualStart")]++;
-        }
-      }
-      $this->tasks["total"][$task->get_value("personID")]++;
-      $this->tasks["total"]["total"]++;
+      $d = format_date("Y-m-d", $db->f("dateCreated"));
+      $this->tasks["new"][$db->f("personID")][$d] = $db->f("tally");
+      $v += $db->f("tally");  
+      $this->tasks["new"]["total"][$d] = $v;
     }
+   
+                
+
+    return $this->tasks;
   }
 
   function comment_stats() {
@@ -186,6 +206,7 @@ class stats {
         }
       }
     }
+    return $this->comments;
   }
 
   function compare($a, $b) {

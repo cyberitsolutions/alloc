@@ -9,25 +9,25 @@
     <td>
       <table border="1" cellspacing="0" cellpadding="2">
         <tr>
-          <td rowspan="2">username</td>
-          <td colspan="2">projects</td>
-          <td colspan="2">tasks</td>
-          <td rowspan="2">comments</td>
-          <td>usage graph for the last month</td>
+          <td rowspan="2">User</td>
+          <td colspan="2">Projects</td>
+          <td colspan="2">Tasks</td>
+          <td rowspan="2">Comments</td>
+          <td>Usage Graph For The Last Month</td>
         </tr>
         <tr>
-          <td align="center">current</td>
-          <td align="center">total</td>
+          <td align="center">Current</td>
+          <td align="center">Total</td>
 
-          <td align="center">current</td>
-          <td align="center">total</td>
+          <td align="center">Current</td>
+          <td align="center">Total</td>
 
-          <td align="center"><font color="#0000FF">projects</font>,
-            <font color="#007700">tasks</font>,
-            <font color="#FF0000">comments</font></td>
+          <td align="center"><font color="#0000FF">Projects</font>,
+            <font color="#007700">Tasks</font>,
+            <font color="#FF0000">Comments</font></td>
         </tr>
         <tr>
-          <td align="left"><a href="{global_graph_big}">total</a></td>
+          <td align="left">total</td>
           <td align="center">{global_projects_current}</td>
           <td align="center">{global_projects_total}</td>
           <td align="center">{global_tasks_current}</td>
