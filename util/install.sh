@@ -103,7 +103,7 @@ EOMYSQL
   if [ "${fucked}" = 1 ]; then
     e_failed "There was a problem installing the database".
   else
-    e_ok "Installed the database.".
+    e_ok "Installed the database."
   fi
 fi
 
