@@ -33,7 +33,7 @@
           <td align="center">{global_tasks_current}</td>
           <td align="center">{global_tasks_total}</td>
           <td align="center">{global_comments_total}</td>
-          <td align="center" valign="bottom"><a href="{global_graph_big}"><img src="{global_graph}" border=0></a></td>
+          <td align="center" valign="bottom">{global_graph}</td>
         </tr>
         {:show_users_stats templates/statsR.tpl}
       </table>

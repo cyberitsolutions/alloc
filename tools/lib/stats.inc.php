@@ -65,21 +65,31 @@ class stats {
     while ($db->next_record()) {
       $project = new project;
       $project->read_db_record($db);
+      $this->projects["total"]["total"]++;
+
+      switch ($project->get_value("projectStatus")) {
+      case ("current"):
+      case ("overdue"):
+        $this->projects["current"]["total"]++;
+        break;
+      case ("archived"):
+        $this->projects["archived"]["total"]++;
+        break;
+      }
 
       $query = sprintf("SELECT * FROM projectPerson WHERE projectID='%d'", $project->get_id());
       $db_sub->query($query);
       while ($db_sub->next_record()) {
         $projectPerson = new projectPerson;
         $projectPerson->read_db_record($db_sub);
+        $this->projects["total"][$projectPerson->get_value("personID")]++;
         switch ($project->get_value("projectStatus")) {
-        case ("current"):
-        case ("overdue"):
-          $this->projects["current"][$projectPerson->get_value("personID")]++;
-          $this->projects["current"]["total"]++;
+          case ("current"):
+          case ("overdue"):
+            $this->projects["current"][$projectPerson->get_value("personID")]++;
           break;
-        case ("archived"):
-          $this->projects["archived"][$projectPerson->get_value("personID")]++;
-          $this->projects["archived"]["total"]++;
+          case ("archived"):
+            $this->projects["archived"][$projectPerson->get_value("personID")]++;
           break;
         }
         if ($project->get_value("dateActualStart") != "") {
@@ -99,8 +109,6 @@ class stats {
             $this->projects["new"]["total"][$project->get_value("dateActualStart")]++;
           }
         }
-        $this->projects["total"][$projectPerson->get_value("personID")]++;
-        $this->projects["total"]["total"]++;
       }
     }
   }
@@ -116,16 +124,15 @@ class stats {
     while ($db->next_record()) {
       $task = new task;
       $task->read_db_record($db);
-      switch ($task->get_value("dateActualCompletion")) {
-      case (""):
+
+      if (!$task->get_value("dateActualCompletion")) {
         $this->tasks["current"][$task->get_value("personID")]++;
         $this->tasks["current"]["total"]++;
-        break;
-      default:
+      } else {
         $this->tasks["completed"][$task->get_value("personID")]++;
         $this->tasks["completed"]["total"]++;
-        break;
       }
+
       if ($task->get_value("dateActualStart") != "") {
         if (!isset($this->tasks["all"][$task->get_value("personID")])) {
           $this->tasks["all"][$task->get_value("personID")] = array();
