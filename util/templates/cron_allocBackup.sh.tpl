@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# The reason we are using the root pass instead of the allocPSA user/pass,
+# Is because different versions of mysql support different user permissions.
+# With newer versions you need LOCK TABLES permission to dump out db. The allocPSA
+# user doesn't (and can't have it, in order to be backward compatible), so we're
+# stuck using user root.  This script should be chmod 700.
+
 ROOT_DB_PASS="CONFIG_VAR_ROOT_DB_PASS"
 ALLOC_DB_NAME="CONFIG_VAR_ALLOC_DB_NAME"
 BACKUP_DIR="CONFIG_VAR_ALLOC_BACKUP_DIR"
