@@ -4,7 +4,6 @@
   <tr>
     <th>Personnel</th> 
     <th class="right" colspan="9">
-      &nbsp;&nbsp;<a href={url_alloc_personSkillMatrix}>Full Skill Matrix</a>
       &nbsp;&nbsp;<a href={url_alloc_personGraphs}>Person Graphs</a></td>
       {personAddSkill_link}
       &nbsp;&nbsp;<a href="{url_alloc_person}">New Person</a>
