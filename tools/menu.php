@@ -26,13 +26,13 @@ require_once("alloc.inc");
 $options = array(
   array("url"=>"announcementList"        ,"text"=>"Announcements"         ,"entity"=>"announcement"       ,"action"=>PERM_READ_WRITE),
   array("url"=>"permissionList"          ,"text"=>"allocPSA Security"     ,"entity"=>"permission"         ,"action"=>PERM_READ_WRITE),
-  array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE),
   array("url"=>"costtime"                ,"text"=>"Cost & Time Estimater" ,"entity"=>"project"            ,"action"=>true),
   array("url"=>"personSkillMatrix"       ,"text"=>"Company Skill Matrix"  ,"entity"=>"person"             ,"action"=>true), 
   array("url"=>"config"                  ,"text"=>"allocPSA Configuration","entity"=>"config"             ,"action"=>PERM_UPDATE),
   array("url"=>"taskCommentTemplateList" ,"text"=>"Task Comment Templates","entity"=>"taskCommentTemplate","action"=>PERM_READ_WRITE)
 );
 
+  //array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE),
 
 
 

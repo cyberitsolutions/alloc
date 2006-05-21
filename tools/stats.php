@@ -21,28 +21,20 @@
  *
  */
 
-#if ($_GET["web"]) {
-  #define("NO_AUTH",false);
-#} else {
-  #define("NO_AUTH",true);
-#}
 require_once("alloc.inc");
 
 $db = new db_alloc;
 $db_sub = new db_alloc;
 
 $stats = new stats;
-$stats->project_stats();
-$stats->task_stats();
-$stats->comment_stats();
-$projects = $stats->projects;
-$tasks = $stats->tasks;
-$comments = $stats->comments;
+$projects = $stats->project_stats();
+$tasks = $stats->task_stats();
+$comments = $stats->comment_stats();
 
 $TPL["global_projects_current"] = $projects["current"]["total"];
 $TPL["global_projects_total"] = $projects["current"]["total"] + $projects["archived"]["total"];
 $TPL["global_tasks_current"] = $tasks["current"]["total"];
-$TPL["global_tasks_total"] = $tasks["current"]["total"] + $tasks["completed"]["total"];
+$TPL["global_tasks_total"] = $tasks["total"]["total"];
 $TPL["global_comments_total"] = $comments["total"]["total"];
 
 $TPL["global_graph"] = "<a href=\"".$TPL["url_alloc_statsImage"]."id=total&width=640&multiplier=8&labels=true\"><img src=\"".$TPL["url_alloc_statsImage"]."id=total&width=400&multiplier=2\"></a>";
@@ -68,7 +60,11 @@ function compare($a, $b) {
 }
 
 function show_users_stats($template) {
-  global $TPL, $projects, $tasks, $comments, $db;
+  global $TPL, $db;
+  $stats = new stats;
+  $projects = $stats->project_stats();
+  $tasks = $stats->task_stats();
+  $comments = $stats->comment_stats();
 
   $persons = array();
 
@@ -90,21 +86,17 @@ function show_users_stats($template) {
     $TPL["user_username"] = $person->get_value("username");
 
     $TPL["user_projects_current"] = $projects["current"][$person->get_id()] + 0;
-    /* +0 makes sure that it is always a number and not just NULL */
-    $TPL["user_projects_total"] = $projects["current"][$person->get_id()]
-      + $projects["archived"][$person->get_id()];
+    $TPL["user_projects_total"] = $projects["current"][$person->get_id()] + $projects["archived"][$person->get_id()];
 
     $TPL["user_tasks_current"] = $tasks["current"][$person->get_id()] + 0;
-    $TPL["user_tasks_total"] = $tasks["current"][$person->get_id()]
-      + $tasks["completed"][$person->get_id()];
+    $TPL["user_tasks_total"] = $tasks["current"][$person->get_id()] + $tasks["completed"][$person->get_id()];
 
     $TPL["user_comments_total"] = $comments["total"][$person->get_id()] + 0;
 
     $TPL["user_graph"] = "<a href=\"".$TPL["url_alloc_statsImage"]."id=".$person->get_id()."&width=640&multiplier=8&labels=true\">";
     $TPL["user_graph"].= "<img src=\"".$TPL["url_alloc_statsImage"]."id=".$person->get_id()."&width=400&multiplier=2\"></a>";
 
-    if ($TPL["user_projects_total"] + $TPL["user_tasks_total"]
-        + $TPL["user_comments_total"] > 0) {
+    if ($TPL["user_projects_total"] + $TPL["user_tasks_total"] + $TPL["user_comments_total"] > 0) {
       $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
       include_template($template);
     }

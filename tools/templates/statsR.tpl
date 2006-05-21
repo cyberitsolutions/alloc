@@ -1,5 +1,5 @@
     <tr class="{odd_even}">
-      <td align="left"><a href="{user_graph_big}">{user_username}</a></td>
+      <td align="left">{user_username}</td>
       <td align="center">{user_projects_current}</td>
       <td align="center">{user_projects_total}</td>
       <td align="center">{user_tasks_current}</td>

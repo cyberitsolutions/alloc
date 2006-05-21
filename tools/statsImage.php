@@ -25,12 +25,9 @@
 require_once("alloc.inc");
 
 $stats = new stats;
-$stats->project_stats();
-$stats->task_stats();
-$stats->comment_stats();
-$projects = $stats->projects;
-$tasks = $stats->tasks;
-$comments = $stats->comments;
+$projects = $stats->project_stats();
+$tasks = $stats->task_stats();
+$comments = $stats->comment_stats();
 
 
 $id = $_GET["id"];
