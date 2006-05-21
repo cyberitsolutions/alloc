@@ -141,8 +141,6 @@ run "chmod 775 ${ALLOC_LOG_DIR}alloc_email.log"
 find ${DIR}.. -type f -path ${DIR}../.bzr -prune -exec chmod 664 {} \; # Files to rw-rw-r--
 find ${DIR}.. -type d -path ${DIR}../.bzr -prune -exec chmod 775 {} \; # Dirs  to rwxrwxr-x
 
-run "chmod 777 ${DIR}../images/"                          # php created images
-run "chmod 777 ${DIR}../images/*"                         # php created images
 run "chmod 755 ${DIR}sql/dump_clean_db.sh"                # rwxr-xr-x
 run "chmod 754 ${DIR}stylesheet_regen.py"                 # rwxr-xr--
 run "chmod 754 ${DIR}misc/gpl_header.py"                  # rwxr-xr--
