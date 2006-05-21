@@ -24,8 +24,9 @@
 require_once("alloc.inc");
 include("lib/task_graph.inc.php");
 
-global $current_user, $show_weeks, $for_home_item, $projectID;
+global $current_user, $show_weeks, $for_home_item;
 
+$projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
 $project = new project;
 $project->set_id($projectID);
 $project->check_perm();
