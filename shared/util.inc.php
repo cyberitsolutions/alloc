@@ -36,12 +36,15 @@ function page_close() {
 
   global $current_user;
   if (is_object($current_user) && $current_user->get_id()) {
+    $p = new person;
+    $p->set_id($current_user->get_id());
+    $p->select();
+
     if (is_array($current_user->prefs)) {
-      $current_user->select();
       $arr = serialize($current_user->prefs);
-      $current_user->set_value("sessData",$arr);
+      $p->set_value("sessData",$arr);
     }
-    $current_user->save();
+    $p->save();
   }
 }
 
