@@ -95,6 +95,9 @@ function show_filter($template_name) {
 if (!isset($_POST["projectStatus"])) {
   $_POST["projectStatus"] = "Current";
 }
+if (!isset($_POST["personID"]) && is_object($current_user)) {
+  $_POST["personID"] = $current_user->get_id();
+}
 
 include_template("templates/projectListM.tpl");
 page_close();
