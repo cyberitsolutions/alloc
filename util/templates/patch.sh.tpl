@@ -1,142 +1,118 @@
 #!/bin/bash
 #
-# Script to patch alloc with the latest updates.
-# Mostly to do DB structure updates without losing data.
-#
+# 
+#  Copyright 2006, Alex Lance, Clancy Malcolm, Cybersource Pty. Ltd.
+#  
+#  This file is part of allocPSA <info@cyber.com.au>.
+#  
+#  allocPSA is free software; you can redistribute it and/or modify it under the
+#  terms of the GNU General Public License as published by the Free Software
+#  Foundation; either version 2 of the License, or (at your option) any later
+#  version.
+#  
+#  allocPSA is distributed in the hope that it will be useful, but WITHOUT ANY
+#  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+#  A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License along with
+#  allocPSA; if not, write to the Free Software Foundation, Inc., 51 Franklin
+#  St, Fifth Floor, Boston, MA 02110-1301 USA
 
+
+# 
+# To update database structure for db's which already have data in them.
+#
 
 
 # Directory of this file
 DIR="${0%/*}/"
 
 # Source functions
-.${DIR}functions.sh
+. ${DIR}functions.sh
 
-
+# Welcome
 e "Beginning patch script"
 
-
-# Running this file will 
-# - Back up the database
-# - Go through the patches/ directory and for each file
-# - Check whether there is a corresponding patch file in eg /var/local/allocPSA/applied_patches/
-# - If not then apply any patches in order, be they shell scripts or sql
-# - Copy or move file from /webroot/allocPSA/patches/ to /var/local/allocPSA/applied_patches/
-
-# Need vars: ALLOC_LOG_DIR, ALLOC_BACKUP_DIR, ALLOC_PATCH_DIR, The root DB pass, ALLOC_DB_NAME, 
-
+# Compiled in vars
 ALLOC_DB_NAME="CONFIG_VAR_ALLOC_DB_NAME"
 ALLOC_LOG_DIR="CONFIG_VAR_ALLOC_LOG_DIR"
 ALLOC_BACKUP_DIR="CONFIG_VAR_ALLOC_BACKUP_DIR"
 ALLOC_PATCH_DIR="CONFIG_VAR_ALLOC_PATCH_DIR"
 ROOT_DB_PASS="CONFIG_VAR_ROOT_DB_PASS"
 
-${ALLOC_BACKUP_DIR}cron_allocBackup.sh 
 
+# Whack a -p in front of db password for mysql command line
+[ -n "${ROOT_DB_PASS}" ] && p="-p${ROOT_DB_PASS}"
 
+# Back up database
+SUFFIX=$(date "+%F_%R")
+BACKUP_FILE="${ALLOC_BACKUP_DIR}allocdump.sql.${SUFFIX}.gz"
+${ALLOC_BACKUP_DIR}cron_allocBackup.sh ${SUFFIX}
 
-## to be completed 
-exit
+# Check DB backed up ok
+if [ -f "${BACKUP_FILE}" ]; then
+  e_ok "Created backup file: ${BACKUP_FILE}"
 
-
-
-
-
-
-
-
-# Check the config file has the database info we need
-if [ -z "${DATABASE}" ] || [ -z "${USERNAME}" ]; then
-  echo "Fatal Error: ${DIR_HOME}${CONFIG_FILE} does not contain all the required variables!"
-  exit;
-fi
-
-# Backup filename
-DIR_BACKUPS="${DIR_HOME}../db_backups/"
-BACKUP_FILE="${DIR_BACKUPS}${DATABASE}_struc_and_data_$(date '+%F_%H%M').tar"
-
-# Check we have a backups directory
-if [ ! -d "${DIR_BACKUPS}" ]; then
-  echo "No db_backups directory found!(${DIR_BACKUPS})"
-  exit;
-fi
-
-# Back up the database
-pg_dump -U ${USERNAME} ${DATABASE} -F t > ${BACKUP_FILE}
-
-# Comment out pg_dump line above and uncomment this to speed up debug time..
-# touch ${BACKUP_FILE}
-
-# Compress
-gzip ${BACKUP_FILE}
-
-# Sanity check
-if [ -f ${BACKUP_FILE}.gz ]; then 
-  echo "Created database backup file: ${BACKUP_FILE}.gz"
+# Else bail out
 else
-  echo "Problem creating database backup file: ${BACKUP_FILE}.gz"
-  exit;
+  e_failed "Couldn't create backup file: ${BACKUP_FILE}"
+  get_user_var "CONTINUE" "Unable to back up database. Continue anyway?" "no"
+  [ "${CONTINUE:0:1}" = "n" ] && die "Bailing out."
 fi
 
-# Get most recent successfully applied patch
-MOST_RECENT_PATCH=$(psql -U ${USERNAME} ${DATABASE} -A -t -c "SELECT patch_name FROM patch_log ORDER BY patch_name DESC LIMIT 1;")
-if [ -z "${MOST_RECENT_PATCH}" ]; then
-  echo "No MOST_RECENT_PATCH!: ${MOST_RECENT_PATCH}"
-  exit
-fi
 
-# Echo the previous patch that was applied.
-echo "Most recent successful patch: ${MOST_RECENT_PATCH}"
+# Loop through all possible patches
+i=0; 
+while [ "${i}" -lt 10000 ]; do 
+  i=$((${i}+1)); 
+  
+  PATCH_SCRIPT="${DIR}../patches/patch-${i}.sh"
+  PATCH_SQL="${DIR}../patches/patch-${i}.sql"
 
-# iterator
-i=0
-# flag
-start=0
-
-# Loop through the patch-XXX.sql files
-while [ ${i} -lt 2000 ]; do
+  PATCH_SCRIPT_OLD="${ALLOC_PATCH_DIR}patch-${i}.sh"
+  PATCH_SQL_OLD="${ALLOC_PATCH_DIR}patch-${i}.sql"
  
-  # Filename
-  file="${DIR_HOME}changelog/patch-${i}.sql"
-
-  # If file exists and we have moved past the previously applied patch
-  if [ -f "${file}" ] && [ "${start}" -eq 1 ]; then
-
-    # Log this patch's date and comment
-    datetime=$(date "+%F %X")
-    comment="$(grep \\-\\- ${file} | sed -e 's/-- /+ /g')"
-    comment="$(echo ${comment//\'/})"
-    insert="INSERT INTO patch_log (patch_name,patch_desc,patch_date) VALUES ('patch-${i}.sql','${comment}','${datetime}')"
-
-    # Apply patch file to database in a single transaction
-    patch="$(cat ${file})"
-    str="START TRANSACTION;\n${patch};\n${insert};\nCOMMIT;"
-    echo -e "\nExecuting: ${file}"
-    echo -e "${comment}"
-
-    # Run patch
-    psql -U ${USERNAME} ${DATABASE} -c "$(echo -e ${str})"
-
-    # Check return value for problems
-    rtn=${?}
-    echo "Returns: '${rtn}'"
-    if [ "${rtn}" -eq 1 ]; then
-      echo "!!! Problem applying file: ${file} !!!"
-      exit;
+  # If there's an executable and it hasn't already been applied (and thus moved to applied_patches/) 
+  if [ -x "${PATCH_SCRIPT}" ] && [ ! -f "${PATCH_SCRIPT_OLD}" ]; then
+    e "Running: ${PATCH_SCRIPT}"
+    . ${PATCH_SCRIPT}
+    if [ "${?}" -ne "0" ]; then
+      e_failed "${PATCH_SCRIPT}"
+    else
+      e_ok "${PATCH_SCRIPT}"
+      run "cp ${PATCH_SCRIPT} ${ALLOC_PATCH_DIR}"
+    fi
+    
+  # If there's an SQL file and it hasn't already been applied (and thus moved to applied_patches/) 
+  elif [ -f "${PATCH_SQL}" ] && [ ! -f "${PATCH_SQL_OLD}" ]; then
+    e "Running: ${PATCH_SQL}"
+    mysql -u root ${ROOT_DB_PASS} ${ALLOC_DB_NAME} < ${PATCH_SQL}
+    if [ "${?}" -ne "0" ]; then
+      e_failed "${PATCH_SQL}"
+    else
+      e_ok "${PATCH_SQL}"
+      run "cp ${PATCH_SQL} ${ALLOC_PATCH_DIR}"
     fi
   fi
- 
-  # This patch file was applied previously, so we can start examining new patch files from now on.
-  if [ "patch-${i}.sql" = "${MOST_RECENT_PATCH}" ]; then 
-    start=1;
+
+done;
+
+
+# If any patch failed then prompt the user whether they want to restore the DB to the way it originally was
+if [ -n "${FAILED}" ]; then
+  get_user_var "UNDO_DB" "It looks like not all of the patches were successfully applied. Revert the database to its former state?" "yes"
+  if [ "${UNDO_DB:0:1}" = "y" ]; then
+    mysql -v -u root ${ROOT_DB_PASS} ${ALLOC_DB_NAME} <<EOMYSQL
+    DROP DATABASE IF EXISTS ${ALLOC_DB_NAME};
+    CREATE DATABASE ${ALLOC_DB_NAME};
+EOMYSQL
+    zcat ${BACKUP_FILE} | mysql -u root ${ROOT_DB_PASS} ${ALLOC_DB_NAME}
   fi
-  
-  let i++;
-done
+fi
 
-# Finit.
-echo "Post-installation complete.";
 
+e "Post-installation complete.";
+echo
 
 
 
