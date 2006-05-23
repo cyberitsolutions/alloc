@@ -53,19 +53,16 @@ fi
 [ ! -r "${CONFIG_FILE}" ] && die "${USAGE}"
 . ${CONFIG_FILE}
 
-# A list of all the variable set in this file, as a form of checking the install.cfg file
-CONFIG_VARS="ALLOC_DB_NAME ALLOC_DB_USER ALLOC_DB_PASS ALLOC_DB_HOST ALLOC_WEB_USER \
-             ALLOC_DOCS_DIR ALLOC_BACKUP_DIR ALLOC_LOG_DIR ALLOC_PATCH_DIR ALLOC_WEB_URL_PREFIX"
-
 # Get config vars
 while [ "${DO_INSTALL:0:1}" != "y" ]; do
   DO_INSTALL=""
 
-  # Quick check all the values are in the config file
-  for i in ${CONFIG_VARS}; do 
-    get_user_var "${i}" "Please enter ${i}" "${!i}"; done
+  # Quick check all the values are in the config file (CONFIG_VARS is specifed in functions.sh)
+  for i in ${CONFIG_VARS}; do get_user_var "${i}" "Please enter ${i}" "${!i}"; done
 
   # Print out config values
+  echo
+  echo
   for i in ${CONFIG_VARS}; do echo "  ${i}: ${!i}"; done
 
   # Determine whether to continue
@@ -108,12 +105,9 @@ EOMYSQL
 fi
 
 
-# Append a slash if need be
-[ "${ALLOC_DOCS_DIR:(-1):1}" != "/" ] && ALLOC_DOCS_DIR="${ALLOC_DOCS_DIR}/"
-[ "${ALLOC_BACKUP_DIR:(-1):1}" != "/" ] && ALLOC_BACKUP_DIR="${ALLOC_BACKUP_DIR}/"
-[ "${ALLOC_LOG_DIR:(-1):1}" != "/" ] && ALLOC_LOG_DIR="${ALLOC_LOG_DIR}/"
-[ "${ALLOC_PATCH_DIR:(-1):1}" != "/" ] && ALLOC_PATCH_DIR="${ALLOC_PATCH_DIR}/"
-[ "${ALLOC_WEB_URL_PREFIX:(-1):1}" != "/" ] && ALLOC_WEB_URL_PREFIX="${ALLOC_WEB_URL_PREFIX}/"
+# If need be, suffix the config dirs with a slash
+make_config_dirs_end_in_slashes
+
 
 # Create the directories if need be
 [ ! -d "${ALLOC_BACKUP_DIR}" ]       && run "mkdir -p ${ALLOC_BACKUP_DIR}"
@@ -146,6 +140,8 @@ run "chmod 754 ${DIR}stylesheet_regen.py"                 # rwxr-xr--
 run "chmod 754 ${DIR}misc/gpl_header.py"                  # rwxr-xr--
 run "chmod 600 ${CONFIG_FILE}"                            # rw-------
 run "chmod 700 ${DIR}install.sh"                          # rwx------
+run "chmod 700 ${DIR}make_executables.sh"                 # rwx------
+run "chmod 700 ${DIR}make_clean.sh"                       # rwx------
 
 
 # Create executables from templates

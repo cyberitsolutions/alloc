@@ -37,6 +37,15 @@ if [ "0" != "$(id -u)" ]; then
 fi
 
 
+if [ -r "${1}" ]; then
+  CONFIG_FILE="${1}"
+  . ${CONFIG_FILE}
+fi
+
+# If need be, suffix the config dirs with a slash
+make_config_dirs_end_in_slashes
+
+
 # Make the alloc.inc file
 e "Creating alloc.inc"
 cat ${DIR}templates/alloc.inc.tpl \
