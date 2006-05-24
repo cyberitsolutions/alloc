@@ -29,10 +29,14 @@ class project_list_home_item extends home_item {
   function show_projects($template_name) {
     global $current_user, $TPL;
 
+    if (isset($current_user->prefs["projectListNum"]) && $current_user->prefs["projectListNum"] != "all") {
+      $limit = sprintf("LIMIT %d",$current_user->prefs["projectListNum"]);
+    }
+
     $query = sprintf("SELECT project.*, clientName
              FROM project LEFT JOIN client ON project.clientID = client.clientID, projectPerson
              WHERE projectPerson.projectID = project.projectID AND personID=%d AND projectStatus = 'current'
-             ORDER BY projectName,projectPriority LIMIT 15", $current_user->get_id());
+             ORDER BY projectName,projectPriority %s", $current_user->get_id(), $limit);
     $db = new db_alloc;
     $db->query($query);
     while ($db->next_record()) {

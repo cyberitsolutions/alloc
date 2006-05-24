@@ -40,6 +40,8 @@ class customize_alloc_home_item extends home_item {
 
       $current_user->prefs["topTasksNum"] = $_POST["topTasksNum"];
       $current_user->prefs["topTasksStatus"] = $_POST["topTasksStatus"];
+
+      $current_user->prefs["projectListNum"] = $_POST["projectListNum"];
     }
 
     $TPL["fontOptions"] = get_select_options(get_customizedFont_array(), $current_user->prefs["customizedFont"]);
@@ -49,9 +51,12 @@ class customize_alloc_home_item extends home_item {
     $TPL["weeksOptions"] = get_select_options($week_ops, $current_user->prefs["tasksGraphPlotHome"]);
     $TPL["weeksBackOptions"] = get_select_options($week_ops, $current_user->prefs["tasksGraphPlotHomeStart"]);
 
-    $task_num_ops = array("0"=>0,1=>1,2=>2,3=>3,4=>4,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50,"all"=>"All");
+    $task_num_ops = array("0"=>0,1=>1,2=>2,3=>3,4=>4,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50,"all"=>"All User Tasks");
     $TPL["topTasksNumOptions"] = get_select_options($task_num_ops, $current_user->prefs["topTasksNum"]);
     $TPL["topTasksStatusOptions"] = get_select_options(task::get_task_statii_array(), $current_user->prefs["topTasksStatus"]);
+
+    $project_list_ops = array("0"=>0,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50,"all"=>"All User Projects");
+    $TPL["projectListNumOptions"] = get_select_options($project_list_ops, $current_user->prefs["projectListNum"]);
   }
 
 
