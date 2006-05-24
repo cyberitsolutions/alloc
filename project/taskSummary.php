@@ -81,7 +81,7 @@ $TPL["taskTypeOptions"].= $taskType->get_dropdown_options("taskTypeID","taskType
 $_FORM["taskView"] or $_FORM["taskView"] = "byProject";
 $_FORM["taskView"] and $TPL["taskView_checked_".$_FORM["taskView"]] = " checked";
 
-$taskStatii = array(""=>"","not_completed"=>"Not Completed","in_progress"=>"In Progress","new"=>"New Tasks","due_today"=>"Due Today","overdue"=>"Overdue","completed"=>"Completed");
+$taskStatii = task::get_task_statii_array();
 $TPL["taskStatusOptions"] = get_options_from_array($taskStatii, $_FORM["taskStatus"]);
 
 $_FORM["showDescription"] and $TPL["showDescription_checked"] = " checked";

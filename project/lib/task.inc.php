@@ -583,6 +583,39 @@ class task extends db_entity {
     return $url;
   }
 
+function get_task_statii_array() {
+  $taskStatii = task::get_task_statii();
+  $taskStatiiArray[""] = "";
+  foreach($taskStatii as $key => $arr) {
+    $taskStatiiArray[$key] = $arr["label"];
+  }
+  return $taskStatiiArray;
+}
+
+  function get_task_statii() {
+    $past = date("Y-m-d 00:00:00", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+    if (date("D") == "Mon") {
+      $past = date("Y-m-d 00:00:00", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")));
+    } 
+
+    $taskStatusFilter = array("not_completed" =>array("label"=>"Not Completed"
+                                                     ,"sql"  =>"(task.dateActualCompletion IS NULL OR task.dateActualCompletion = '')")
+                             ,"in_progress"   =>array("label"=>"Started"
+                                                     ,"sql"  =>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') AND (task.dateActualStart IS NOT NULL AND task.dateActualStart != ''))")
+                             ,"new"           =>array("label"=>"New Tasks"
+                                                     ,"sql"  =>"(task.dateActualCompletion IS NULL AND task.dateCreated >= '".$past."')")
+                             ,"due_today"     =>array("label"=>"Due Today"
+                                                     ,"sql"  =>"(task.dateActualCompletion IS NULL AND task.dateTargetCompletion = '".date("Y-m-d")."')")
+                             ,"overdue"       =>array("label"=>"Overdue"
+                                                     ,"sql"  =>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') 
+                                                                AND 
+                                                                (task.dateTargetCompletion IS NOT NULL AND task.dateTargetCompletion != '' AND '".date("Y-m-d")."' > task.dateTargetCompletion))")
+                             ,"completed"     =>array("label"=>"Completed"
+                                                     ,"sql"  =>"(task.dateActualCompletion IS NOT NULL AND task.dateActualCompletion != '')")
+                             );
+    return $taskStatusFilter;
+  }
+
   function get_task_list_filter($_FORM=array()) {
 
 
@@ -615,22 +648,8 @@ class task extends db_entity {
 
     // Task level filtering
     if ($_FORM["taskStatus"]) {
-      
-      $past = date("Y-m-d 00:00:00", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
-      if (date("D") == "Mon") {
-        $past = date("Y-m-d 00:00:00", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")));
-      } 
-
-      $taskStatusFilter = array("completed"=>"(task.dateActualCompletion IS NOT NULL AND task.dateActualCompletion != '')"
-                               ,"not_completed"=>"(task.dateActualCompletion IS NULL OR task.dateActualCompletion = '')"
-                               ,"in_progress"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') AND (task.dateActualStart IS NOT NULL AND task.dateActualStart != ''))"
-                               ,"due_today"=>"(task.dateActualCompletion IS NULL AND task.dateTargetCompletion = '".date("Y-m-d")."')"
-                               ,"new"=>"(task.dateActualCompletion IS NULL AND task.dateCreated >= '".$past."')"
-                               ,"overdue"=>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') 
-                                             AND 
-                                             (task.dateTargetCompletion IS NOT NULL AND task.dateTargetCompletion != '' AND '".date("Y-m-d")."' > task.dateTargetCompletion))"
-                               );
-      $filter[] = $taskStatusFilter[$_FORM["taskStatus"]];
+      $taskStatusFilter = task::get_task_statii();
+      $filter[] = $taskStatusFilter[$_FORM["taskStatus"]]["sql"];
     }
 
     // Unset if they've only selected the topmost empty task type
@@ -705,7 +724,7 @@ class task extends db_entity {
     
     $filter = task::get_task_list_filter($_FORM);
 
-    $_FORM["limit"] and $limit = sprintf("limit %d",$_FORM["limit"]);
+    isset($_FORM["limit"]) and $limit = sprintf("limit %d",$_FORM["limit"]); # needs to use isset cause of zeroes is a valid number 
     $_FORM["return"] or $_FORM["return"] = "html";
 
     if ($_FORM["showDates"]) {

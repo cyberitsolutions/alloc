@@ -93,6 +93,8 @@ if (!defined("NO_AUTH")) {
       }
       unset($n,$v);
     }
+    isset($current_user->prefs["topTasksNum"]) or $current_user->prefs["topTasksNum"] = 5;
+    $current_user->prefs["topTasksStatus"] or $current_user->prefs["topTasksStatus"] = "not_completed";
   }
 }
 
