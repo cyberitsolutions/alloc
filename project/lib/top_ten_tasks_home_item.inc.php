@@ -25,17 +25,18 @@ class top_ten_tasks_home_item extends home_item {
   var $date;
 
   function top_ten_tasks_home_item() {
-    home_item::home_item("top_ten_tasks", "Top Five Tasks", "project", "topTenTasksH.tpl");
+    home_item::home_item("top_ten_tasks", "Top Tasks", "project", "topTenTasksH.tpl");
   }
 
   function show_tasks() {
     global $current_user, $tasks_date;
+    
+    $options["taskStatus"] = $current_user->prefs["topTasksStatus"];
+    $options["limit"] = sprintf("%d",$current_user->prefs["topTasksNum"]);
 
     $options["taskView"] = "prioritised";
     $options["projectType"] = "mine";
     $options["personIDonly"] = $current_user->get_id();
-    $options["taskStatus"] = "not_completed";
-    $options["limit"] = 5;
     $options["showDate1"] = true;
     $options["showDate2"] = true;
     $options["showDate3"] = true;
