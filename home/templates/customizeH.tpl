@@ -69,7 +69,28 @@
       {weeksBackOptions}
       </select>
     </td>
-    
+  </tr>
+ 
+  <tr>
+    <td colspan="3">&nbsp;</td>
+  </tr>
+        
+  <tr>
+    <td colspan="3"><b>Project List</b></td>
+  </tr>
+  <tr>
+    <td>Num Projects</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>
+      <select name="projectListNum">
+      {projectListNumOptions}
+      </select>
+    </td>
+    <td></td>
+   
     <td ><input type="submit" name="customize_save" value="Save"></td>
   </tr>
 </table>

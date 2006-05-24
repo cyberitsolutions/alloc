@@ -95,6 +95,7 @@ if (!defined("NO_AUTH")) {
     }
     isset($current_user->prefs["topTasksNum"]) or $current_user->prefs["topTasksNum"] = 5;
     $current_user->prefs["topTasksStatus"] or $current_user->prefs["topTasksStatus"] = "not_completed";
+    $current_user->prefs["projectListNum"] or $current_user->prefs["projectListNum"] = "10";
   }
 }
 
