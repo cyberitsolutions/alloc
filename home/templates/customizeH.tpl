@@ -26,30 +26,7 @@
   </tr>
 
   <tr>
-    <td colspan="3"><b>Home Task Calendar</b></td>
-  </tr>
-  <tr>
-    <td>Num Weeks</td>
-    <td>Weeks Back</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>
-      <select name="weeks">
-      {weeksOptions}
-      </select>
-    </td>
-    <td>
-      <select name="weeksBack">
-      {weeksBackOptions}
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="3">&nbsp;</td>
-  </tr>
-  <tr>
-    <td colspan="3"><b>Home Top Tasks</b></td>
+    <td colspan="3"><b>Top Tasks</b></td>
   </tr>
   <tr>
     <td>Num Tasks</td>
@@ -67,10 +44,31 @@
       {topTasksStatusOptions}
       </select>
     </td>
+  </tr>
 
-
-
-
+  <tr>
+    <td colspan="3">&nbsp;</td>
+  </tr>
+        
+  <tr>
+    <td colspan="3"><b>Task Calendar</b></td>
+  </tr>
+  <tr>
+    <td>Num Weeks</td>
+    <td>Weeks Back</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>
+      <select name="weeks">
+      {weeksOptions}
+      </select>
+    </td>
+    <td>
+      <select name="weeksBack">
+      {weeksBackOptions}
+      </select>
+    </td>
     
     <td ><input type="submit" name="customize_save" value="Save"></td>
   </tr>
