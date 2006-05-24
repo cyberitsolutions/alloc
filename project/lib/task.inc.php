@@ -724,7 +724,7 @@ function get_task_statii_array() {
     
     $filter = task::get_task_list_filter($_FORM);
 
-    isset($_FORM["limit"]) and $limit = sprintf("limit %d",$_FORM["limit"]); # needs to use isset cause of zeroes is a valid number 
+    isset($_FORM["limit"]) && $_FORM["limit"] != "all" and $limit = sprintf("limit %d",$_FORM["limit"]); # needs to use isset cause of zeroes is a valid number 
     $_FORM["return"] or $_FORM["return"] = "html";
 
     if ($_FORM["showDates"]) {

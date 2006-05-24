@@ -49,7 +49,7 @@ class customize_alloc_home_item extends home_item {
     $TPL["weeksOptions"] = get_select_options($week_ops, $current_user->prefs["tasksGraphPlotHome"]);
     $TPL["weeksBackOptions"] = get_select_options($week_ops, $current_user->prefs["tasksGraphPlotHomeStart"]);
 
-    $task_num_ops = array("0"=>0,1=>1,2=>2,3=>3,4=>4,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50);
+    $task_num_ops = array("0"=>0,1=>1,2=>2,3=>3,4=>4,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50,"all"=>"All");
     $TPL["topTasksNumOptions"] = get_select_options($task_num_ops, $current_user->prefs["topTasksNum"]);
     $TPL["topTasksStatusOptions"] = get_select_options(task::get_task_statii_array(), $current_user->prefs["topTasksStatus"]);
   }
