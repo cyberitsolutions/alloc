@@ -1,12 +1,11 @@
 <form action="{url_alloc_home}" method="post">
 <table align="center" width="100%">
   <tr>
-    <td colspan="3"><b>Look and Feel</b></td>
+    <td colspan="2"><b>Look and Feel</b></td>
   </tr>
   <tr>
     <td>Font Size</td>
     <td>Theme</td>
-    <td></td>
   </tr>
   <tr>
     <td>
@@ -26,12 +25,11 @@
   </tr>
 
   <tr>
-    <td colspan="3"><b>Top Tasks</b></td>
+    <td colspan="2"><b>Top Tasks</b></td>
   </tr>
   <tr>
-    <td>Num Tasks</td>
+    <td>Number Tasks</td>
     <td>Status</td>
-    <td></td>
   </tr>
   <tr>
     <td>
@@ -47,16 +45,15 @@
   </tr>
 
   <tr>
-    <td colspan="3">&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
   </tr>
         
   <tr>
-    <td colspan="3"><b>Task Calendar</b></td>
+    <td colspan="2"><b>Task Calendar</b></td>
   </tr>
   <tr>
-    <td>Num Weeks</td>
+    <td>Number Weeks</td>
     <td>Weeks Back</td>
-    <td></td>
   </tr>
   <tr>
     <td>
@@ -72,15 +69,14 @@
   </tr>
  
   <tr>
-    <td colspan="3">&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
   </tr>
         
   <tr>
-    <td colspan="3"><b>Project List</b></td>
+    <td colspan="2"><b>Project List</b></td>
   </tr>
   <tr>
-    <td>Num Projects</td>
-    <td></td>
+    <td>Number Projects</td>
     <td></td>
   </tr>
   <tr>
@@ -89,9 +85,7 @@
       {projectListNumOptions}
       </select>
     </td>
-    <td></td>
-   
-    <td ><input type="submit" name="customize_save" value="Save"></td>
+    <td align="right"><input type="submit" name="customize_save" value="Save"></td>
   </tr>
 </table>
 
