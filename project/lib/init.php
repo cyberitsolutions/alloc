@@ -65,14 +65,14 @@ class project_module extends module
     include(ALLOC_MOD_DIR."/announcement/lib/announcements_home_item.inc.php");
     include(ALLOC_MOD_DIR."/project/lib/project_list_home_item.inc.php");
     include(ALLOC_MOD_DIR."/project/lib/top_ten_tasks_home_item.inc.php");
+    $announcement = new announcement;
+    if ($announcement->has_announcements()) {
+      register_home_item(new announcements_home_item());
+    }
 
     if (have_entity_perm("task", PERM_READ_WRITE, $current_user, true)) {
       register_home_item(new top_ten_tasks_home_item());
       flush();
-    }
-    $announcement = new announcement;
-    if ($announcement->has_announcements()) {
-      register_home_item(new announcements_home_item());
     }
     include(ALLOC_MOD_DIR."/project/lib/task_graph_home_item.inc.php");
     register_home_item(new task_graph_home_item());
