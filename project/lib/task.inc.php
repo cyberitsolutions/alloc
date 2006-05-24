@@ -802,6 +802,7 @@ class task extends db_entity {
         $row["taskURL"] = $t->get_url();
         $row["taskName"] = $t->get_task_name($_FORM["return"]);
         $row["taskLink"] = $t->get_task_link();
+        $row["newSubTask"] = $t->get_new_subtask_link();
         $row["taskStatus"] = $t->get_status($_FORM["return"]);
 
         if ($_FORM["return"] == "objects") {
@@ -857,7 +858,7 @@ class task extends db_entity {
                                   $summary[] = "<tr>";
     $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
                               and $summary[] = "  <td class=\"col\">".$task["project_name"]."&nbsp;</td>";
-                                  $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."\">".$task["taskLink"]."</td>";
+                                  $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"]."</td>";
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["priority"])."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["projectPriority"])."&nbsp;</td>"; 
@@ -902,6 +903,7 @@ class task extends db_entity {
       $row["taskURL"] = $task->get_url();
       $row["taskName"] = $task->get_task_name();
       $row["taskLink"] = $task->get_task_link();
+      $row["newSubTask"] = $task->get_new_subtask_link();
       $row["taskStatus"] = $task->get_status();
       $row["padding"] = $padding;
       $row["object"] = $task;
@@ -918,6 +920,13 @@ class task extends db_entity {
       }
     }
     return $tasks;
+  }
+
+  function get_new_subtask_link() {
+    global $TPL;
+    if (is_object($this) && $this->get_value("taskTypeID") == TT_PHASE) {
+      return "<a href=\"".$TPL["url_alloc_task"]."projectID=".$this->get_value("projectID")."&parentTaskID=".$this->get_id()."\">New Subtask</a>";
+    }
   }
 
   function get_time_billed($taskID="", $recurse=false) {
