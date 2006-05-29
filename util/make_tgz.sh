@@ -4,6 +4,7 @@
 DIR="${0%/*}/"
 
 . ${DIR}make_version.sh
+ALLOC_VERSION="$(cat ${DIR}alloc_version)"
 
 revno=$(bzr revno)
 
@@ -30,9 +31,10 @@ mv images ${dir1}/help/
 
 \rm -rf ${dir2}
 
+
 cd ${d}
 
-cp ${DIR}alloc_version ./${f1}/util/
+echo "${ALLOC_VERSION}" > ${f1}/util/alloc_version
 
 tar czvf ${f1}.tgz ${f1}
 
