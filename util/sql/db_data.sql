@@ -1,6 +1,6 @@
 -- MySQL dump 8.23
 --
--- Host: localhost    Database: alloc
+-- Host: localhost    Database: alloc_dev
 ---------------------------------------------------------
 -- Server version	3.23.58
 
