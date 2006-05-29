@@ -148,6 +148,26 @@ run "chmod 700 ${DIR}../patches/*.sh"                     # rwx------
 # Create executables from templates
 . ${DIR}make_executables.sh
 
+# Loop through all possible patches and move all patches to applied_patches
+# We are presuming that fresh installations already have all patches applied.
+i=0;
+while [ "${i}" -lt 10000 ]; do
+  i=$((${i}+1));
+
+  PATCH_SCRIPT="${DIR}../patches/patch-${i}.sh"
+  PATCH_SQL="${DIR}../patches/patch-${i}.sql"
+
+  PATCH_SCRIPT_OLD="${ALLOC_PATCH_DIR}patch-${i}.sh"
+  PATCH_SQL_OLD="${ALLOC_PATCH_DIR}patch-${i}.sql"
+
+  if [ -x "${PATCH_SCRIPT}" ] && [ ! -f "${PATCH_SCRIPT_OLD}" ]; then
+    run "cp ${PATCH_SCRIPT} ${ALLOC_PATCH_DIR}"
+  elif [ -f "${PATCH_SQL}" ] && [ ! -f "${PATCH_SQL_OLD}" ]; then
+    run "cp ${PATCH_SQL} ${ALLOC_PATCH_DIR}"
+  fi
+done
+
+
 
 
 if [ -z "${FAILED}" ]; then

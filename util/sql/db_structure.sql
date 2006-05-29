@@ -1,6 +1,6 @@
 -- MySQL dump 8.23
 --
--- Host: localhost    Database: alloc
+-- Host: localhost    Database: alloc_dev
 ---------------------------------------------------------
 -- Server version	3.23.58
 
@@ -608,7 +608,7 @@ CREATE TABLE transactionRepeat (
   amount float NOT NULL default '0',
   product varchar(255) NOT NULL default '',
   status varchar(255) NOT NULL default 'pending',
-  transactionType enum('invoice','expense','salary') NOT NULL default 'invoice',
+  transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance') NOT NULL default 'invoice',
   reimbursementRequired tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (transactionRepeatID)
 ) TYPE=MyISAM;
