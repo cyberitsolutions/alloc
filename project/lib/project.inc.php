@@ -75,11 +75,6 @@ class project extends db_entity
     return $url;
   }
 
-  function get_task_children($filter="",$padding=0) {
-    $filter[] = sprintf("(projectID = %d)",$this->get_id()); 
-    return task::get_task_children($filter,$padding);
-  } 
-
   function is_owner($person = "") {
     global $current_user;
     $person or $person = $current_user;
