@@ -51,7 +51,7 @@ function updateProjectList(number) {
                   Current <input type="radio" name="projectType" value="curr" onClick="refreshProjectList(this)"{projectType_checked_curr}><br/>
                   Potential <input type="radio" name="projectType" value="pote" onClick="refreshProjectList(this)"{projectType_checked_pote}><br/>
                   Archived <input type="radio" name="projectType" value="arch" onClick="refreshProjectList(this)"{projectType_checked_arch}><br/>
-                  All Projects <input type="radio" name="projectType" value="all" onClick="refreshProjectList(this)"{projectType_checked_all}><br/>
+                  Everything <input type="radio" name="projectType" value="all" onClick="refreshProjectList(this)"{projectType_checked_all}><br/>
                   &nbsp;
                 </td>
                 <td valign="top" rowspan="2"><div id="projectListDropdown">{projectOptions}</div></td>

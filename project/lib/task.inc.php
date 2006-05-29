@@ -593,9 +593,9 @@ function get_task_statii_array() {
 }
 
   function get_task_statii() {
-    $past = date("Y-m-d 00:00:00", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+    $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 2, date("Y")))." 00:00:00";
     if (date("D") == "Mon") {
-      $past = date("Y-m-d 00:00:00", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")));
+      $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")))." 00:00:00";
     } 
 
     $taskStatusFilter = array("not_completed" =>array("label"=>"Not Completed"
@@ -627,6 +627,9 @@ function get_task_statii_array() {
         $_FORM["projectIDs"][] = $db->f("projectID");
       }
 
+      // Oi! What a pickle. Need this flag for when someone doesn't have entries loaded in the above while loop.
+      $firstOption = true;
+
     // If projectID is an array
     } else if ($_FORM["projectID"] && is_array($_FORM["projectID"])) {
       $_FORM["projectIDs"] = $_FORM["projectID"];
@@ -641,9 +644,9 @@ function get_task_statii_array() {
     if (is_array($_FORM["projectIDs"]) && count($_FORM["projectIDs"])) {
       $filter["projectIDs"] = "(project.projectID IN (".implode(",",$_FORM["projectIDs"])."))";
 
-    // Else: WHERE 1
-    } else {
-      $filter["projectIDs"] = "1";
+    // If there are no projects in $_FORM["projectIDs"][] and we're attempting the first option..
+    } else if ($firstOption) {
+      $filter["projectIDs"] = "(project.projectID IN (0))";
     }
 
     // Task level filtering
@@ -724,6 +727,7 @@ function get_task_statii_array() {
     
     $filter = task::get_task_list_filter($_FORM);
 
+
     isset($_FORM["limit"]) && $_FORM["limit"] != "all" and $limit = sprintf("limit %d",$_FORM["limit"]); # needs to use isset cause of zeroes is a valid number 
     $_FORM["return"] or $_FORM["return"] = "html";
 
@@ -764,32 +768,53 @@ function get_task_statii_array() {
     if ($_FORM["taskView"] == "byProject") {
 
 
-      $q = "SELECT projectID, projectName, clientID, projectPriority FROM project WHERE ".$filter["projectIDs"]. " ORDER BY projectName";
+      // If selected projects, build up an array of selected projects
+      $filter["projectIDs"] and $projectIDs = " WHERE ".$filter["projectIDs"];
+      $q = "SELECT projectID, projectName, clientID, projectPriority FROM project ".$projectIDs. " ORDER BY projectName";
       $db = new db_alloc;
       $db->query($q);
       
-      while ($db->next_record()) {
-        
-        $project = new project;
-        $project->read_db_record($db);
-        $tasks = $project->get_task_children($filter,$_FORM["padding"]);
+      while ($project = $db->next_record()) {
+        $p = new project;
+        $p->read_db_record($db);
+        $project["link"] = "<strong><a href=\"".$p->get_url()."\">".$p->get_value("projectName")."</a></strong>&nbsp;&nbsp;".$p->get_navigation_links();
+        $projects[] = $project;
+      }
+    
+  
+      // This will add a dummy row for tasks that don't have a project
+      $_FORM["projectType"] == "all" and $projects[] = array("link"=>"<strong>Miscellaneous Tasks</strong>");
+
+      $projects or $projects = array();
+
+      // Loop through all projects
+      foreach ($projects as $project) {
+
+        if ($project["projectID"]) {
+          $filter["projectID"] = sprintf("(projectID = %d)",$project["projectID"]);
+        } else {
+          $filter["projectID"] = sprintf("(projectID IS NULL OR projectID = 0)");
+        }
+
+        $tasks = task::get_task_children($filter,$_FORM["padding"]);
 
         if (count($tasks)) {
           $print = true;
 
           $_FORM["showProject"] and $summary.= "\n<tr>";
-          $_FORM["showProject"] and $summary.= "\n  <td class=\"tasks\" colspan=\"21\">";
-          $_FORM["showProject"] and $summary.= "\n    <strong><a href=\"".$project->get_url()."\">".$project->get_value("projectName")."</a></strong>&nbsp;&nbsp;".$project->get_navigation_links();
-          $_FORM["showProject"] and $summary.= "\n  </td>";
+          $_FORM["showProject"] and $summary.= "\n  <td class=\"tasks\" colspan=\"21\">".$project["link"]."</td>";
           $_FORM["showProject"] and $summary.= "\n</tr>";
 
           foreach ($tasks as $task) {
-            $task["projectPriority"] = $db->f("projectPriority");
+            $task["projectPriority"] = $project["projectPriority"];
             $summary.= task::get_task_list_tr($task,$_FORM);
           }
           $summary.= "<td class=\"col\" colspan=\"21\">&nbsp;</td>";
         }
       }
+
+      
+      
 
     // Get a prioritised list of tasks
     } else if ($_FORM["taskView"] == "prioritised") {
