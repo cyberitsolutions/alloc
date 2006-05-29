@@ -82,10 +82,10 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 --
 
 
-INSERT INTO config (configID, name, value) VALUES (1,'AllocFromEmailAddress','alloc-admin@cyber.com.au');
-INSERT INTO config (configID, name, value) VALUES (2,'cybersourceTfID','7');
-INSERT INTO config (configID, name, value) VALUES (3,'timeSheetAdminEmail','69');
-INSERT INTO config (configID, name, value) VALUES (4,'companyName','Cybersource Pty Ltd');
+INSERT INTO config (configID, name, value) VALUES (1,'AllocFromEmailAddress','allocPSA@somewhere.com');
+INSERT INTO config (configID, name, value) VALUES (2,'cybersourceTfID','');
+INSERT INTO config (configID, name, value) VALUES (3,'timeSheetAdminEmail','');
+INSERT INTO config (configID, name, value) VALUES (4,'companyName','Cybersource');
 INSERT INTO config (configID, name, value) VALUES (5,'companyContactPhone','+61 3 9621 2377');
 INSERT INTO config (configID, name, value) VALUES (6,'companyContactFax','+61 3 9621 2477');
 INSERT INTO config (configID, name, value) VALUES (7,'companyContactEmail','info@cyber.com.au');
