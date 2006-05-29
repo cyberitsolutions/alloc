@@ -30,8 +30,34 @@ DIR="${0%/*}/"
 # Source functions
 . ${DIR}functions.sh
 
-# Welcome
-e "Beginning patch script"
+
+function backup_db {
+
+  if [ -z "${DONE_PATCHES}" ]; then
+
+    # Welcome
+    e "Beginning allocPSA update"
+
+    # Back up database
+    SUFFIX=$(date "+%F_%R")
+    BACKUP_FILE="${ALLOC_BACKUP_DIR}allocdump.sql.${SUFFIX}.gz"
+    ${ALLOC_BACKUP_DIR}cron_allocBackup.sh ${SUFFIX}
+
+    # Check DB backed up ok
+    if [ -f "${BACKUP_FILE}" ]; then
+      e_ok "Created backup file: ${BACKUP_FILE}"
+
+    # Else bail out
+    else
+      e_failed "Couldn't create backup file: ${BACKUP_FILE}"
+      get_user_var "CONTINUE" "Unable to back up database. Continue anyway?" "no"
+      [ "${CONTINUE:0:1}" = "n" ] && die "Bailing out."
+    fi
+
+    DONE_PATCHES=1;
+  fi
+}
+
 
 # Compiled in vars
 ALLOC_DB_NAME="CONFIG_VAR_ALLOC_DB_NAME"
@@ -40,26 +66,8 @@ ALLOC_BACKUP_DIR="CONFIG_VAR_ALLOC_BACKUP_DIR"
 ALLOC_PATCH_DIR="CONFIG_VAR_ALLOC_PATCH_DIR"
 ROOT_DB_PASS="CONFIG_VAR_ROOT_DB_PASS"
 
-
 # Whack a -p in front of db password for mysql command line
 [ -n "${ROOT_DB_PASS}" ] && p="-p${ROOT_DB_PASS}"
-
-# Back up database
-SUFFIX=$(date "+%F_%R")
-BACKUP_FILE="${ALLOC_BACKUP_DIR}allocdump.sql.${SUFFIX}.gz"
-${ALLOC_BACKUP_DIR}cron_allocBackup.sh ${SUFFIX}
-
-# Check DB backed up ok
-if [ -f "${BACKUP_FILE}" ]; then
-  e_ok "Created backup file: ${BACKUP_FILE}"
-
-# Else bail out
-else
-  e_failed "Couldn't create backup file: ${BACKUP_FILE}"
-  get_user_var "CONTINUE" "Unable to back up database. Continue anyway?" "no"
-  [ "${CONTINUE:0:1}" = "n" ] && die "Bailing out."
-fi
-
 
 # Loop through all possible patches
 i=0; 
@@ -74,6 +82,7 @@ while [ "${i}" -lt 10000 ]; do
  
   # If there's an executable and it hasn't already been applied (and thus moved to applied_patches/) 
   if [ -x "${PATCH_SCRIPT}" ] && [ ! -f "${PATCH_SCRIPT_OLD}" ]; then
+    backup_db
     e "Running: ${PATCH_SCRIPT}"
     . ${PATCH_SCRIPT}
     if [ "${?}" -ne "0" ]; then
@@ -85,6 +94,7 @@ while [ "${i}" -lt 10000 ]; do
     
   # If there's an SQL file and it hasn't already been applied (and thus moved to applied_patches/) 
   elif [ -f "${PATCH_SQL}" ] && [ ! -f "${PATCH_SQL_OLD}" ]; then
+    backup_db
     e "Running: ${PATCH_SQL}"
     mysql -u root ${ROOT_DB_PASS} ${ALLOC_DB_NAME} < ${PATCH_SQL}
     if [ "${?}" -ne "0" ]; then
@@ -111,8 +121,6 @@ EOMYSQL
 fi
 
 
-e "Post-installation complete.";
-echo
 
 
 
