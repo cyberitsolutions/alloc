@@ -1,12 +1,17 @@
 #!/bin/bash
 
+
+DIR="${0%/*}/"
+
+. ${DIR}make_version.sh
+
 revno=$(bzr revno)
 
-dir="/home/${USER}/html"
+d="/home/${USER}/html"
 f1="allocPSA-1.2.${revno}"
 f2="allocPSA_doc-1.2.${revno}"
-dir1="${dir}/${f1}"
-dir2="${dir}/${f2}"
+dir1="${d}/${f1}"
+dir2="${d}/${f2}"
 
 [ -d "${dir1}" ] && \rm -rf ${dir1}
 
@@ -25,7 +30,10 @@ mv images ${dir1}/help/
 
 \rm -rf ${dir2}
 
-cd ${dir}
+cd ${d}
+
+cp ${DIR}alloc_version ./${f1}/util/
+
 tar czvf ${f1}.tgz ${f1}
 
 
