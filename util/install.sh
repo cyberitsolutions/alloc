@@ -142,6 +142,7 @@ run "chmod 600 ${CONFIG_FILE}"                            # rw-------
 run "chmod 700 ${DIR}install.sh"                          # rwx------
 run "chmod 700 ${DIR}make_executables.sh"                 # rwx------
 run "chmod 700 ${DIR}make_clean.sh"                       # rwx------
+run "chmod 755 ${DIR}make_version.sh"                     # rwx------
 run "chmod 700 ${DIR}../patches/*.sh"                     # rwx------
 
 

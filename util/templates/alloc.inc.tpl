@@ -7,7 +7,7 @@ define("ALLOC_DB_PASS","CONFIG_VAR_ALLOC_DB_PASS"); // Database password
 define("ALLOC_DB_HOST","CONFIG_VAR_ALLOC_DB_HOST"); // Database hostname (can be left blank or set to localhost)
 
 define("ALLOC_TITLE", "allocPSA");
-define("ALLOC_VERSION", "v1.20");
+define("ALLOC_VERSION", "CONFIG_VAR_ALLOC_VERSION");
 define("ALLOC_SHOOER","");
 define("ALLOC_GD_IMAGE_TYPE","PNG");
 
