@@ -25,14 +25,17 @@ require_once("alloc.inc");
 
 $reminderID = $_POST["reminderID"] or $reminderID = $_GET["reminderID"];
 $step = $_POST["step"] or $step = $_GET["step"];
+$parentType = $_POST["parentType"] or $parentType = $_GET["parentType"];
+$parentID = $_POST["parentID"] or $parentID = $_GET["parentID"];
+$returnToParent = $_POST["returnToParent"] or $returnToParent = $_GET["returnToParent"];
 
 if (!$step) {
   $step = 1;
 }
 
-if ($_POST["parentType"] == "general" && $step == 2) {
+if ($parentType == "general" && $step == 2) {
   $step++;
-  $_POST["parentID"] = "0";
+  $parentID = "0";
 }
 
 switch ($step) {
@@ -51,7 +54,7 @@ case 2:
   $parent_names = array();
 
   $db = new db_alloc;
-  if ($_POST["parentType"] == "client") {
+  if ($parentType == "client") {
     $query = "SELECT * FROM client WHERE clientStatus!='archived' ORDER BY clientName";
     $db->query($query);
     while ($db->next_record()) {
@@ -59,7 +62,7 @@ case 2:
       $client->read_db_record($db);
       $parent_names[$client->get_id()] = $client->get_value('clientName');
     }
-  } else if ($_POST["parentType"] == "project") {
+  } else if ($parentType == "project") {
     if ($current_user->have_role("admin")) {
       $query = "SELECT * FROM project order by projectName";
     } else {
@@ -74,7 +77,7 @@ case 2:
         $parent_names[$project->get_id()] = $project->get_value('projectName');
       }
     }
-  } else if ($_POST["parentType"] == "task") {
+  } else if ($parentType == "task") {
     if ($current_user->have_role("admin")) {
       $query = "SELECT * FROM task";
     } else {
@@ -89,7 +92,7 @@ case 2:
       }
     }
   }
-  $TPL["parentType"] = $_POST["parentType"];
+  $TPL["parentType"] = $parentType;
   $TPL["parentNameOptions"] = get_options_from_array($parent_names, "", true);
   include_template("templates/reminderSelectParentM.tpl");
   break;
@@ -101,27 +104,27 @@ case 3:
     $reminder->set_id($reminderID);
     $reminder->select();
     $parentType = $reminder->get_value('reminderType');
-    $_POST["parentID"] = $reminder->get_value('reminderLinkID');
+    $parentID = $reminder->get_value('reminderLinkID');
     $TPL["reminder_title"] = "Edit Reminder:";
     $TPL["reminder_buttons"] =
       sprintf("<input type=\"hidden\" name=\"reminder_id\" value=\"%d\">", $reminderID).
       "<input type=\"submit\" name=\"reminder_update\" value=\"Update\">&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"reminder_delete\" value=\"Delete\">&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"reminder_cancel\" value=\"Cancel\">";
   } else {
-    $reminder->set_value('reminderType', $_POST["parentType"]);
-    $reminder->set_value('reminderLinkID', $_POST["parentID"]);
+    $reminder->set_value('reminderType', $parentType);
+    $reminder->set_value('reminderLinkID', $parentID);
     $TPL["reminder_title"] = "New Reminder:";
     $TPL["reminder_buttons"] = "<input type=\"submit\" name=\"reminder_save\" value=\"Save\">"."<input type=\"submit\" name=\"reminder_cancel\" value=\"Cancel\">";
   }
 
   // link to parent
-  if ($_POST["parentType"] == "client") {
-    $TPL["return_address"] = $TPL["url_alloc_client"]."clientID=".$_POST["parentID"];
+  if ($parentType == "client") {
+    $TPL["return_address"] = $TPL["url_alloc_client"]."clientID=".$parentID;
     $TPL["reminder_goto_parent"] = "<a href=\"".$TPL["return_address"]."\">Goto Client</a>";
-  } else if ($_POST["parentType"] == "project") {
-    $TPL["return_address"] = $TPL["url_alloc_project"]."projectID=".$_POST["parentID"];
+  } else if ($parentType == "project") {
+    $TPL["return_address"] = $TPL["url_alloc_project"]."projectID=".$parentID;
     $TPL["reminder_goto_parent"] = "<a href=\"".$TPL["return_address"]."\">Goto Project</a>";
-  } else if ($_POST["parentType"] == "task") {
-    $TPL["return_address"] = $TPL["url_alloc_task"]."taskID=".$_POST["parentID"];
+  } else if ($parentType == "task") {
+    $TPL["return_address"] = $TPL["url_alloc_task"]."taskID=".$parentID;
     $TPL["reminder_goto_parent"] = "<a href=\"".$TPL["return_address"]."\">Goto Task</a>";
   }
   // recipients
@@ -149,37 +152,37 @@ case 3:
   if ($reminder->get_value('reminderSubject') != "") {
     $TPL["reminder_default_subject"] = $reminder->get_value('reminderSubject');
   } else {
-    if ($_POST["parentType"] == "client") {
+    if ($parentType == "client") {
       $client = new client;
-      $client->set_id($_POST["parentID"]);
+      $client->set_id($parentID);
       $client->select();
       $TPL["reminder_default_subject"] = sprintf("[Client: %s]", $client->get_value('clientName'));
-      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."client/client.php?clientID=".$_POST["parentID"];
+      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."client/client.php?clientID=".$parentID;
 
-    } else if ($_POST["parentType"] == "project") {
+    } else if ($parentType == "project") {
       $project = new project;
-      $project->set_id($_POST["parentID"]);
+      $project->set_id($parentID);
       $project->select();
       $TPL["reminder_default_subject"] = sprintf("[Project: %s]", $project->get_value('projectName'));
-      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/project.php?projectID=".$_POST["parentID"];
+      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/project.php?projectID=".$parentID;
 
-    } else if ($_POST["parentType"] == "task") {
+    } else if ($parentType == "task") {
       $task = new task;
-      $task->set_id($_POST["parentID"]);
+      $task->set_id($parentID);
       $task->select();
       $TPL["reminder_default_subject"] = sprintf("[Task: %s]", $task->get_value('taskName'));
-      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/task.php?taskID=".$_POST["parentID"];
+      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/task.php?taskID=".$parentID;
 
-    } else if ($_POST["parentType"] == "general") {
+    } else if ($parentType == "general") {
       $TPL["reminder_default_subject"] = "[General Reminder]";
     }
   }
   $TPL["reminder_default_content"].= "\n".$reminder->get_value('reminderContent');
-  $TPL["parentType"] = $_POST["parentType"];
-  $TPL["parentID"] = $_POST["parentID"];
+  $TPL["parentType"] = $parentType;
+  $TPL["parentID"] = $parentID;
 
   // return to parent
-  if ($_POST["returnToParent"] && $_POST["returnToParent"] == "t") {
+  if ($returnToParent && $returnToParent == "t") {
     $TPL["returnToParent"] = "t";
   } else {
     $TPL["returnToParent"] = "f";
@@ -195,8 +198,8 @@ case 4:
     // -- all -- option
     if ($_POST["reminder_recipient"] == -1) {
       $reminder = new reminder;
-      $reminder->set_value('reminderType', $_POST["parentType"]);
-      $reminder->set_value('reminderLinkID', $_POST["parentID"]);
+      $reminder->set_value('reminderType', $parentType);
+      $reminder->set_value('reminderLinkID', $parentID);
       $recipients = $reminder->get_recipients();
       $recipient_keys = array_keys($recipients);
       array_shift($recipient_keys);
@@ -214,8 +217,8 @@ case 4:
     // process list of all or list of one
     for ($i = 0; $i < count($recipient_keys); $i++) {
       $reminder = new reminder;
-      $reminder->set_value('reminderType', $_POST["parentType"]);
-      $reminder->set_value('reminderLinkID', $_POST["parentID"]);
+      $reminder->set_value('reminderType', $parentType);
+      $reminder->set_value('reminderLinkID', $parentID);
       $reminder->set_value('personID', $recipient_keys[$i]);
       $reminder->set_value('reminderModifiedUser', $current_user->get_id());
       $reminder->set_modified_time();
@@ -254,13 +257,13 @@ case 4:
   }
 
   header("Location: ".$TPL["url_alloc_eventFilterList"]);
-  if ($_POST["returnToParent"] == "t") {
-    if ($_POST["parentType"] == "client") {
-      header("Location: ".$TPL["url_alloc_client"]."clientID=".$_POST["parentID"]);
-    } else if ($_POST["parentType"] == "project") {
-      header("Location: ".$TPL["url_alloc_project"]."projectID=".$_POST["parentID"]);
-    } else if ($_POST["parentType"] == "task") {
-      header("Location: ".$TPL["url_alloc_task"]."taskID=".$_POST["parentID"]);
+  if ($returnToParent == "t") {
+    if ($parentType == "client") {
+      header("Location: ".$TPL["url_alloc_client"]."clientID=".$parentID);
+    } else if ($parentType == "project") {
+      header("Location: ".$TPL["url_alloc_project"]."projectID=".$parentID);
+    } else if ($parentType == "task") {
+      header("Location: ".$TPL["url_alloc_task"]."taskID=".$parentID);
     }
   }
 
