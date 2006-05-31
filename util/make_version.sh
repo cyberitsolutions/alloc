@@ -3,6 +3,9 @@
 # Directory of this file
 DIR="${0%/*}/"
 
-echo "1.2.$(bzr revno)" > ${DIR}alloc_version
+v="$(bzr revno)"
+v=$((${v}+1))
+
+echo "1.2.${v}" > ${DIR}alloc_version
 
 

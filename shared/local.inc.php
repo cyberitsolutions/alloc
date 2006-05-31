@@ -21,10 +21,18 @@
  *
  */
 
+
+// Get alloc version
+if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DIR."/util/alloc_version")) {
+  $v = file(ALLOC_MOD_DIR."/util/alloc_version");
+  define("ALLOC_VERSION", $v[0]);
+  unset($v);
+}
+
+// Include the util functions
 require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
 
 $modules = get_alloc_modules();
-
 $fake_modules = array("util","login");
 
 eregi("^".ALLOC_MOD_DIR."/(.*)$", $_SERVER["SCRIPT_FILENAME"], $match) && $script_filename_short = $match[1];
