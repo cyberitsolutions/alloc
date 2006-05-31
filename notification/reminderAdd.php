@@ -23,8 +23,6 @@
 
 require_once("alloc.inc");
 
-global $SERVER_NAME;
-
 $reminderID = $_POST["reminderID"] or $reminderID = $_GET["reminderID"];
 $step = $_POST["step"] or $step = $_GET["step"];
 
@@ -156,21 +154,21 @@ case 3:
       $client->set_id($_POST["parentID"]);
       $client->select();
       $TPL["reminder_default_subject"] = sprintf("[Client: %s]", $client->get_value('clientName'));
-      $TPL["reminder_default_content"] = "http://".$SERVER_NAME.SCRIPT_PATH."client/client.php?clientID=".$_POST["parentID"];
+      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."client/client.php?clientID=".$_POST["parentID"];
 
     } else if ($_POST["parentType"] == "project") {
       $project = new project;
       $project->set_id($_POST["parentID"]);
       $project->select();
       $TPL["reminder_default_subject"] = sprintf("[Project: %s]", $project->get_value('projectName'));
-      $TPL["reminder_default_content"] = "http://".$SERVER_NAME.SCRIPT_PATH."project/project.php?projectID=".$_POST["parentID"];
+      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/project.php?projectID=".$_POST["parentID"];
 
     } else if ($_POST["parentType"] == "task") {
       $task = new task;
       $task->set_id($_POST["parentID"]);
       $task->select();
       $TPL["reminder_default_subject"] = sprintf("[Task: %s]", $task->get_value('taskName'));
-      $TPL["reminder_default_content"] = "http://".$SERVER_NAME.SCRIPT_PATH."project/task.php?taskID=".$_POST["parentID"];
+      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/task.php?taskID=".$_POST["parentID"];
 
     } else if ($_POST["parentType"] == "general") {
       $TPL["reminder_default_subject"] = "[General Reminder]";
