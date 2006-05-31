@@ -3,9 +3,6 @@
 
 DIR="${0%/*}/"
 
-. ${DIR}make_version.sh
-ALLOC_VERSION="$(cat ${DIR}alloc_version)"
-
 revno=$(bzr revno)
 
 d="/home/${USER}/html"
@@ -34,10 +31,7 @@ mv images ${dir1}/help/
 
 cd ${d}
 
-echo "${ALLOC_VERSION}" > ${f1}/util/alloc_version
-
 tar czvf ${f1}.tgz ${f1}
-
 
 if [ -f "${f1}.tgz" ]; then
   echo "Created: ${f1}.tgz"

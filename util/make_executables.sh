@@ -29,9 +29,6 @@ DIR="${0%/*}/"
 # Source functions
 . ${DIR}functions.sh
 
-# Get the version/revision number
-[ -f "${DIR}alloc_version" ] && ALLOC_VERSION=$(cat ${DIR}alloc_version)
-
 
 e "Creating Executables"
 
@@ -52,7 +49,6 @@ make_config_dirs_end_in_slashes
 # Make the alloc.inc file
 e "Creating alloc.inc"
 cat ${DIR}templates/alloc.inc.tpl \
-| sed -e "s/CONFIG_VAR_ALLOC_VERSION/${ALLOC_VERSION}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
