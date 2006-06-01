@@ -1,42 +1,38 @@
 <form action="{url_alloc_home}" method="post">
-<table align="center" width="100%">
+<table align="center" width="100%" cellspacing="0">
   <tr>
-    <td colspan="2"><b>Look and Feel</b></td>
+    <td colspan="4"><b>Look and Feel</b></td>
   </tr>
   <tr>
     <td>Font Size</td>
-    <td>Theme</td>
-  </tr>
-  <tr>
     <td>
       <select name="font">
       {fontOptions}
       </select>
     </td>
+    <td>Theme</td>
     <td>
       <select name="theme">
       {themeOptions}
       </select>
     </td>
   </tr>
-  
+
   <tr>
-    <td colspan="2">&nbsp;</td>
+    <td colspan="4">&nbsp;</td>
   </tr>
 
   <tr>
-    <td colspan="2"><b>Top Tasks</b></td>
+    <td colspan="4"><b>Top Tasks</b></td>
   </tr>
   <tr>
-    <td>Number Tasks</td>
-    <td>Status</td>
-  </tr>
-  <tr>
+    <td>No. Tasks</td>
     <td>
       <select name="topTasksNum">
       {topTasksNumOptions}
       </select>
     </td>
+    <td>Status</td>
     <td>
       <select name="topTasksStatus">
       {topTasksStatusOptions}
@@ -45,47 +41,43 @@
   </tr>
 
   <tr>
-    <td colspan="2">&nbsp;</td>
+    <td colspan="4">&nbsp;</td>
   </tr>
-        
+
   <tr>
-    <td colspan="2"><b>Task Calendar</b></td>
-  </tr>
-  <tr>
-    <td>Number Weeks</td>
-    <td>Weeks Back</td>
+    <td colspan="4"><b>Task Calendar</b></td>
   </tr>
   <tr>
+    <td>No. Weeks</td>
     <td>
       <select name="weeks">
       {weeksOptions}
       </select>
     </td>
+    <td>Back</td>
     <td>
       <select name="weeksBack">
       {weeksBackOptions}
       </select>
     </td>
   </tr>
+
+  <tr>
+    <td colspan="4">&nbsp;</td>
+  </tr>
  
   <tr>
-    <td colspan="2">&nbsp;</td>
-  </tr>
-        
-  <tr>
-    <td colspan="2"><b>Project List</b></td>
+    <td colspan="4"><b>Project List</b></td>
   </tr>
   <tr>
-    <td>Number Projects</td>
-    <td></td>
-  </tr>
-  <tr>
+    <td><nobr>No. Projects</nobr></td>
     <td>
       <select name="projectListNum">
       {projectListNumOptions}
       </select>
     </td>
-    <td align="right"><input type="submit" name="customize_save" value="Save"></td>
+    <td></td>
+    <td align="center"><input type="submit" name="customize_save" value="Save"></td>
   </tr>
 </table>
 
