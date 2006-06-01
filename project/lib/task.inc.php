@@ -598,7 +598,7 @@ function get_task_statii_array() {
       $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")))." 00:00:00";
     } 
 
-    $taskStatusFilter = array("not_completed" =>array("label"=>"Not Completed"
+    $taskStatusFilter = array("not_completed" =>array("label"=>"Incomplete"
                                                      ,"sql"  =>"(task.dateActualCompletion IS NULL OR task.dateActualCompletion = '')")
                              ,"in_progress"   =>array("label"=>"Started"
                                                      ,"sql"  =>"((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') AND (task.dateActualStart IS NOT NULL AND task.dateActualStart != ''))")
