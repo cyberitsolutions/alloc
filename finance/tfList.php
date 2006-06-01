@@ -46,7 +46,7 @@ function show_tf($template_name) {
 
 
   $db = new db_alloc;
-  $q = sprintf("SELECT tf.* FROM tfPerson LEFT JOIN tf ON tf.tfID = tfPerson.tfID %s GROUP BY tf.tfID ORDER BY tf.tfName",$f);  
+  $q = sprintf("SELECT tf.* FROM tf LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID %s GROUP BY tf.tfID ORDER BY tf.tfName",$f);  
   $db->query($q);
 
   while ($db->next_record()) {
