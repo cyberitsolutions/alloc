@@ -733,6 +733,7 @@ $TPL["companyInfoLine2"].= " Web: ".config::get_config_item("companyContactHomeP
 
 
 // msg passed in url and print it out pretty..
+$msg = $msg or $msg = $_GET["msg"] or $msg = $_POST["msg"];
 $msg and $TPL["message_good"][] = $msg;
 
 
