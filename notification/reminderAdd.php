@@ -28,6 +28,7 @@ $step = $_POST["step"] or $step = $_GET["step"];
 $parentType = $_POST["parentType"] or $parentType = $_GET["parentType"];
 $parentID = $_POST["parentID"] or $parentID = $_GET["parentID"];
 $returnToParent = $_POST["returnToParent"] or $returnToParent = $_GET["returnToParent"];
+$parentID = sprintf("%d",$parentID);
 
 if (!$step) {
   $step = 1;

@@ -64,7 +64,10 @@ require_once("alloc.inc");
     
     while($db->next_record()) {
       $rtn[$db->f("taskName")] = stripslashes($db->f("taskID")); 
-      $rtn = array_merge($rtn, get_parent_taskIDs($db->f("parentTaskID")));
+      $arr = get_parent_taskIDs($db->f("parentTaskID"));
+      if (is_array($arr)) {
+        $rtn = array_merge($rtn, $arr);
+      }
     }
     return $rtn;
   }
