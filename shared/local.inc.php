@@ -23,7 +23,7 @@
 
 
 // Get alloc version
-if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DIR."/util/alloc_version")) {
+if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DIR."/util/alloc_version") && !defined("ALLOC_VERSION")) {
   $v = file(ALLOC_MOD_DIR."/util/alloc_version");
   define("ALLOC_VERSION", $v[0]);
   unset($v);
