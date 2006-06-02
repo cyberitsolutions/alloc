@@ -1,6 +1,6 @@
 -- MySQL dump 8.23
 --
--- Host: localhost    Database: alloc_dev
+-- Host: localhost    Database: alloc
 ---------------------------------------------------------
 -- Server version	3.23.58
 
@@ -82,9 +82,9 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 --
 
 
-INSERT INTO config (configID, name, value) VALUES (1,'AllocFromEmailAddress','allocPSA@somewhere.com');
-INSERT INTO config (configID, name, value) VALUES (2,'cybersourceTfID','');
-INSERT INTO config (configID, name, value) VALUES (3,'timeSheetAdminEmail','');
+INSERT INTO config (configID, name, value) VALUES (1,'AllocFromEmailAddress','example@example.com');
+INSERT INTO config (configID, name, value) VALUES (2,'cybersourceTfID','0');
+INSERT INTO config (configID, name, value) VALUES (3,'timeSheetAdminEmail','0');
 INSERT INTO config (configID, name, value) VALUES (4,'companyName','Cybersource');
 INSERT INTO config (configID, name, value) VALUES (5,'companyContactPhone','+61 3 9621 2377');
 INSERT INTO config (configID, name, value) VALUES (6,'companyContactFax','+61 3 9621 2477');
@@ -92,7 +92,7 @@ INSERT INTO config (configID, name, value) VALUES (7,'companyContactEmail','info
 INSERT INTO config (configID, name, value) VALUES (8,'companyContactHomePage','http://www.cyber.com.au');
 INSERT INTO config (configID, name, value) VALUES (9,'companyContactAddress','Level 4, 10-16 Queen St, Melbourne Vic. 3000 Australia');
 INSERT INTO config (configID, name, value) VALUES (10,'companyACN','053 904 082');
-INSERT INTO config (configID, name, value) VALUES (11,'allocURL','http://alloc/');
+INSERT INTO config (configID, name, value) VALUES (11,'allocURL','http://changeMeToYourURLForAllocPSA/');
 
 --
 -- Dumping data for table `taskType`
