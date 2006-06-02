@@ -67,7 +67,7 @@ ALLOC_PATCH_DIR="CONFIG_VAR_ALLOC_PATCH_DIR"
 ROOT_DB_PASS="CONFIG_VAR_ROOT_DB_PASS"
 
 # Whack a -p in front of db password for mysql command line
-[ -n "${ROOT_DB_PASS}" ] && p="-p${ROOT_DB_PASS}"
+[ -n "${ROOT_DB_PASS}" ] && ROOT_DB_PASS="-p${ROOT_DB_PASS}"
 
 # Loop through all possible patches
 i=0; 
