@@ -25,7 +25,17 @@ BACKUP_FILE="${BACKUP_DIR}allocdump.sql.${SUFFIX}"
 
 
 mysqldump -d -u root ${p} ${ALLOC_DB_NAME} > ${BACKUP_FILE}
+[ "${?}" -ne "0" ] && fucked=1
 mysqldump -t -u root ${p} ${ALLOC_DB_NAME} >> ${BACKUP_FILE}
-gzip -f ${BACKUP_FILE}
-chmod 600 ${BACKUP_FILE}.gz
+[ "${?}" -ne "0" ] && fucked=1
+
+
+if [ "${fucked}" = 1 ]; then
+  e_failed "There was a problem backing up the ${ALLOC_DB_NAME} database".
+else
+  gzip -f ${BACKUP_FILE}
+  chmod 600 ${BACKUP_FILE}.gz
+fi
+
+
 
