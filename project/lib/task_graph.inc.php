@@ -151,7 +151,7 @@ class task_graph
     $y += $this->bar_height;
 
     // actual bar
-    if ($date_actual_completion == "" && $date_actual_start != "" && $task->get_value("percentComplete") > 0) {
+    if ($date_actual_completion == "" && $date_actual_start != "") {
       // Task isn't complete but we can forecast comlpetion using percent complete and start date - show forecast
       $date_forecast_completion = date("Y-m-d", $task->get_forecast_completion());
       $color = $this->task_colors[$task->get_value("taskTypeID")]["actual"];

@@ -426,7 +426,6 @@ if ($_POST["save"]) {
       $task->set_value("projectID", $projectID);
       $task->set_value("dateTargetStart", date("Y-m-d", $time_start));
       $task->set_value("dateTargetCompletion", date("Y-m-d", $time_end));
-      $task->set_value("percentComplete", "0");
       $task->set_value("parentTaskID", "0");
       $task->set_value("taskTypeID", TT_PHASE);
       $task->save();

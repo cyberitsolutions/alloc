@@ -39,6 +39,7 @@ $options["projectIDs"][] = $projectID;
 $options["taskView"] = "prioritised";
 $options["return"] = "objects";
 $options["taskStatus"] = "in_progress";
+$options["showTimes"] = "in_progress";
 
 $top_tasks = task::get_task_list($options);
 $task_graph = new task_graph;

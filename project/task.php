@@ -92,7 +92,7 @@ if (isset($taskID)) {
   $task->set_id($taskID);
   $task->select();
   $orig_personID = $task->get_value("personID");
-  $orig_percentComplete = $task->get_value("percentComplete");
+  $orig_dateActualCompletion = $task->get_value("dateActualCompletion");
 
 // Creating a new record
 } else {
@@ -111,30 +111,18 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   $task->read_globals();
   $task_is_new = !$task->get_id();
 
-  $task->get_value("percentComplete") || $task->set_value("percentComplete", "0"); 
-
-  // If there's a date in dateActualCompletion then push percentComplete up to 100%
-  if ($task->get_value("dateActualCompletion") != "") {
-    $task->set_value("percentComplete", "100");
-  }
-  
-  // If percentComplete is at 100% and there's no dateActualCompletion then default today 
-  if ($task->get_value("percentComplete") == "100" && $task->get_value("dateActualCompletion") == "") {
-    $task->set_value("dateActualCompletion", date("Y-m-d"));
-  }
-  
-  // If percentComplete is at 100% and there's no dateActualStart then default today
-  if ($task->get_value("percentComplete") == "100" && $task->get_value("dateActualStart") == "") {
+  // If dateActualCompletion and there's no dateActualStart then default today
+  if ($task->get_value("dateActualCompletion") && $task->get_value("dateActualStart") == "") {
     $task->set_value("dateActualStart", date("Y-m-d"));
   }
 
   // mark all children as complete
-  if ($task->get_value("percentComplete") == "100") {
+  if (!$orig_dateActualCompletion && $task->get_value("dateActualCompletion")) {
     if ($task->get_value("closerID") == "" && !$task->get_value("dateClosed")) {
       $task->set_value("closerID",$current_user->get_id());
       $task->set_value("dateClosed",date("Y-m-d H:i:s"));
     }
-    if ($orig_percentComplete != "100") {
+    if (!$orig_dateActualCompletion) {
       $msg[] = $task->email_task_closed();
     }
     $arr = $task->close_off_children_recursive();
@@ -142,7 +130,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
       $msg = array_merge($msg,$arr);
     }
 
-  } else if ($orig_percentComplete == "100" && $task->get_value("percentComplete") != "100") {
+  } else if ($orig_dateActualCompletion && !$task->get_value("dateActualCompletion")) {
     $task->set_value("closerID",0);
     $task->set_value("dateClosed","");
   }
@@ -240,8 +228,9 @@ if (!$taskID && $_GET["tasktype"]) {
 // Set options for the dropdown boxen
 $task->set_option_tpl_values();
 
-$TPL["task_timeActual"] = $task->get_time_billed(false,true);
+$TPL["task_timeActual"] = seconds_to_display_format($task->get_time_billed(false));
 $TPL["task_timeEstimate"] or $TPL["task_timeEstimate"] = "";
+$TPL["percentComplete"] = $task->get_percentComplete();
 
 
 // Generate navigation links

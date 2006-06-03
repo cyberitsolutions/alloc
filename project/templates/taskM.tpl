@@ -66,20 +66,15 @@ function updateTaskCommentTemplate(number) {
           <td colspan="2">&nbsp;</td>
         </tr> 
         <tr>
-          <td>Time Estimate</td>
+          <td>Estimated Hours</td>
           <td><input type="text" name="timeEstimate" value="{task_timeEstimate}" size="5">
-            <select name="timeEstimateUnitID">
-              {task_timeEstimateUnitID_options}
-            </select>
-            &nbsp;&nbsp;(Time Billed {task_timeActual})
+            &nbsp;&nbsp;Actual Billed {task_timeActual}
           </td>
         </tr>  
         <tr>
           <td>Percent Complete</td>
           <td>
-            <select name="percentComplete">
-              {percentCompleteOptions}
-            </select>
+            {percentComplete}
           </td>
         </tr>
         <tr>

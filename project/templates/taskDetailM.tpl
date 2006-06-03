@@ -87,7 +87,6 @@ function updateTaskCCList(number) {
 <input type="hidden" name="dateCreated" value="{task_dateCreated}">
 <input type="hidden" name="dateClosed" value="{task_dateClosed}">
 <input type="hidden" name="timeEstimate" value="{task_timeEstimate}">
-<input type="hidden" name="percentComplete" value="{task_percentComplete}">
 </td>
   </tr>
   <tr>
