@@ -39,6 +39,7 @@ $page_vars = array("projectID"
                   ,"showPercent"
                   ,"showPriority"
                   ,"showStatus"
+                  ,"showTaskID"
                   ,"personIDonly"
                   );
 
@@ -93,6 +94,7 @@ $_FORM["showPercent"]     and $TPL["showPercent_checked"]     = " checked";
 $_FORM["showPriority"]    and $TPL["showPriority_checked"]    = " checked";
 $_FORM["showStatus"]      and $TPL["showStatus_checked"]      = " checked";
 $_FORM["personIDonly"]    and $TPL["personIDonly_checked"]    = " checked";
+$_FORM["showTaskID"]      and $TPL["showTaskID_checked"]      = " checked";
 
 
 

@@ -84,7 +84,7 @@ function updateProjectList(number) {
                     </tr>
                     <tr>
                       <td align="right"><nobr>Est / Act / %</nobr></td><td><input type="checkbox" name="showTimes"{showTimes_checked}></td>
-                      <td align="right"> </td><td><input type="checkbox" name=""{_checked}></td>
+                      <td align="right">Task ID </td><td><input type="checkbox" name="showTaskID"{showTaskID_checked}></td>
                     </tr>
                     <tr>
                       <td align="right">Priority Info</td><td><input type="checkbox" name="showPriority"{showPriority_checked}></td>
