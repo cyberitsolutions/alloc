@@ -541,8 +541,9 @@ class task extends db_entity {
     }
   }
 
-  function get_task_link() {
+  function get_task_link($_FORM=array()) {
     $rtn = "<a href=\"".$this->get_url()."\">";
+    $_FORM["showTaskID"] and $rtn.= $this->get_id()." ";
     $rtn.= $this->get_task_name();
     $rtn.= "</a>";
     return $rtn;
@@ -837,7 +838,7 @@ function get_task_statii_array() {
         $t->read_db_record($db);
         $row["taskURL"] = $t->get_url();
         $row["taskName"] = $t->get_task_name($_FORM["return"]);
-        $row["taskLink"] = $t->get_task_link();
+        $row["taskLink"] = $t->get_task_link($_FORM);
         $row["newSubTask"] = $t->get_new_subtask_link();
         $row["taskStatus"] = $t->get_status($_FORM["return"]);
         $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
@@ -940,7 +941,7 @@ function get_task_statii_array() {
 
       $row["taskURL"] = $task->get_url();
       $row["taskName"] = $task->get_task_name();
-      $row["taskLink"] = $task->get_task_link();
+      $row["taskLink"] = $task->get_task_link($_FORM);
       $row["newSubTask"] = $task->get_new_subtask_link();
       $row["taskStatus"] = $task->get_status();
       $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
