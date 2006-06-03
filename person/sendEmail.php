@@ -34,8 +34,8 @@ if (date("D") == "Sat" || date("D") == "Sun") {
 // Do announcements ONCE up here.
 $announcement = person::get_announcements_for_email();
 $db = new db_alloc;
-$db->query("SELECT * FROM person");
-// WHERE username='alla'"); // or username=\"ashridah\"");
+$db->query("SELECT * FROM person WHERE dailyTaskEmail = 'yes' AND personActive = '1'");
+// AND username='alla'"); // or username=\"ashridah\"");
 
 
 while ($db->next_record()) {
@@ -43,11 +43,6 @@ while ($db->next_record()) {
   $person->read_db_record($db);
   $msg = "";
   $headers = "";
-
-  if ($person->get_value("dailyTaskEmail") != "yes") {
-    // skip person
-    continue;
-  }
 
   if ($person->get_value("emailFormat") == "html") {
     $headers = "MIME-Version: 1.0\r\n";
