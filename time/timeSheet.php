@@ -591,9 +591,13 @@ if ($_POST["save"]
       // SAVE INDIVIDUAL TIME SHEET ITEM
 
       if ($_POST["timeSheetItem_taskID"] != 0 && $_POST["timeSheetItem_taskID"]) {
-        $db->query("select taskName from task where taskID = %d",$_POST["timeSheetItem_taskID"]);
+        $db->query("select taskName,dateActualStart from task where taskID = %d",$_POST["timeSheetItem_taskID"]);
         $db->next_record();
         $taskName = $db->f("taskName");
+        if (!$db->f("dateActualStart")) {
+          $q = sprintf("UPDATE task SET dateActualStart = '%s' WHERE taskID = %d",date("Y-m-d"),$_POST["timeSheetItem_taskID"]);
+          $db->query($q);
+        }
       }
 
       $timeSheetItem->set_value("description", $taskName);

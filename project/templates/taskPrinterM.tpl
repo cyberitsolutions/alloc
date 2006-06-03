@@ -62,7 +62,7 @@
     <td class="overline">Time Estimate</td>
     <td class="overline">{task_timeEstimate}&nbsp;</td>
     <td class="overline">Percent Complete</td>
-    <td class="overline">{task_percentComplete}&nbsp;</td>
+    <td class="overline">{percentComplete}&nbsp;</td>
   </tr>
   <tr>
     <td class="overline">Target Start</td>

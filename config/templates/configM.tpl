@@ -14,12 +14,16 @@
     <td><input type="text" size="70" value="{AllocFromEmailAddress}" name="AllocFromEmailAddress"></td> 
   </tr>
   <tr>
-    <td width="20%"><nobr>Main TF as used by timesheets and upload wages/invoices</nobr></td>
+    <td width="20%"><nobr>Main TF (as used by time sheets and upload wages/invoices)</nobr></td>
     <td><select name="cybersourceTfID">{tfOptions}</select></td>
   </tr>
   <tr>
-    <td>Main Time Sheet Admin, emails get sent to this person</td>
+    <td>Main Time Sheet Admin (emails get sent to this person)</td>
     <td><select name="timeSheetAdminEmail">{timeSheetAdminEmailOptions}</select></td> 
+  </tr>
+  <tr>
+    <td>Hours In A Day (as used by time sheets)</td>
+    <td><input type="text" size="70" value="{hoursInDay}" name="hoursInDay"></td> 
   </tr>
   <tr>
     <td>Company Name</td>

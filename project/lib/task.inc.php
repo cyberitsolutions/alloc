@@ -47,7 +47,6 @@ class task extends db_entity {
                                  , "closerID"=>new db_text_field("closerID")
                                  , "priority"=>new db_text_field("priority")
                                  , "timeEstimate"=>new db_text_field("timeEstimate", "Time Estimate", 0, array("empty_to_null"=>true))
-                                 , "timeEstimateUnitID"=>new db_text_field("timeEstimateUnitID")
                                  , "dateCreated"=>new db_text_field("dateCreated")
                                  , "dateAssigned"=>new db_text_field("dateAssigned")
                                  , "dateClosed"=>new db_text_field("dateClosed")
@@ -57,7 +56,6 @@ class task extends db_entity {
                                  , "dateActualCompletion"=>new db_text_field("dateActualCompletion")
                                  , "taskComments"=>new db_text_field("taskComments")
                                  , "projectID"=>new db_text_field("projectID")
-                                 , "percentComplete"=>new db_text_field("percentComplete")
                                  , "parentTaskID"=>new db_text_field("parentTaskID")
                                  , "taskTypeID"=>new db_text_field("taskTypeID")
                                  , "personID"=>new db_text_field("personID")
@@ -83,7 +81,6 @@ class task extends db_entity {
         $task = new task;
         $task->read_db_record($db);
         $orig_dateActualCompletion = $task->get_value("dateActualCompletion");
-        $task->get_value("percentComplete")      != "100" && $task->set_value("percentComplete", "100");
         $task->get_value("dateActualStart")      || $task->set_value("dateActualStart", date("Y-m-d"));
         $task->get_value("dateActualCompletion") || $task->set_value("dateActualCompletion", date("Y-m-d"));
         $task->get_value("closerID")             || $task->set_value("closerID", $current_user->get_id());
@@ -95,7 +92,10 @@ class task extends db_entity {
           $m = $task->email_task_closed();
           $m and $msg[] = $m;
         }
-        $msg = array_merge($msg,$task->close_off_children_recursive());
+        $arr = $task->close_off_children_recursive();
+        if (is_array($arr)) {
+          $msg = array_merge($msg,$arr);
+        }
       }
     }
     return $msg;
@@ -362,9 +362,6 @@ class task extends db_entity {
     $db->query($query);
     $TPL["taskCommentTemplateOptions"] = get_option("Comment Templates", "0")."\n";
     $TPL["taskCommentTemplateOptions"].= get_options_from_db($db, "taskCommentTemplateName", "taskCommentTemplateID",false);
-    $percentCompleteOptions = array(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
-    $TPL["percentCompleteOptions"] = get_options_from_array($percentCompleteOptions, $this->get_value("percentComplete"), false);
-
 
     $priority = $this->get_value("priority") or $priority = 3;
     $TPL["priorityOptions"] = get_select_options(array(1=>"Priority 1", 2=>"Priority 2", 3=>"Priority 3", 4=>"Priority 4", 5=>"Priority 5"), $priority);
@@ -384,10 +381,6 @@ class task extends db_entity {
     }
     
 
-    $timeUnit = new timeUnit;
-    $TPL["task_timeEstimateUnitID_options"] = $timeUnit->get_dropdown_options("timeUnitID","timeUnitLabelA",$this->get_value("timeEstimateUnitID"),1);
-
-  
     // The options for the email dropdown boxes
     #$TPL["task_createdBy"] and $creator_extra = " (".$TPL["task_createdBy"].")";
     #$TPL["person_username"] and $person_extra = " (".$TPL["person_username"].")";
@@ -701,8 +694,7 @@ function get_task_statii_array() {
      *   showStatus       = A colour coded textual description of the status of the task
      *   showCreator      = The tasks creator
      *   showAssigned     = The person assigned to the task
-     *   showTimes        = The original estimate and the time billed 
-     *   showPercent      = The percent complete
+     *   showTimes        = The original estimate and the time billed and percentage
      *   showHeader       = A descriptive header row
      *   showDescription  = The tasks description
      *
@@ -754,13 +746,13 @@ function get_task_statii_array() {
       $_FORM["showStatus"]   and $summary.= "\n<td class=\"col\"><b><nobr>Status</nobr></b></td>"; 
       $_FORM["showCreator"]  and $summary.= "\n<td class=\"col\"><b><nobr>Task Creator</nobr></b></td>";
       $_FORM["showAssigned"] and $summary.= "\n<td class=\"col\"><b><nobr>Assigned To</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Estimate</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Actual</nobr></b></td>";
       $_FORM["showDate1"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Start</nobr></b></td>";
       $_FORM["showDate2"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Compl</nobr></b></td>";
       $_FORM["showDate3"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Start</nobr></b></td>";
       $_FORM["showDate4"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Compl</nobr></b></td>";
-      $_FORM["showPercent"]  and $summary.= "\n<td class=\"col\"><b><nobr>%</nobr></b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Estimate</nobr></b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Actual</nobr></b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>%</nobr></b></td>";
       $summary.="\n</tr>";
     }
 
@@ -796,7 +788,7 @@ function get_task_statii_array() {
           $filter["projectID"] = sprintf("(projectID IS NULL OR projectID = 0)");
         }
 
-        $tasks = task::get_task_children($filter,$_FORM["padding"]);
+        $tasks = task::get_task_children($filter,$_FORM);
 
         if (count($tasks)) {
           $print = true;
@@ -848,6 +840,7 @@ function get_task_statii_array() {
         $row["taskLink"] = $t->get_task_link();
         $row["newSubTask"] = $t->get_new_subtask_link();
         $row["taskStatus"] = $t->get_status($_FORM["return"]);
+        $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
 
         if ($_FORM["return"] == "objects") {
           $tasks[$t->get_id()] = $t; 
@@ -896,8 +889,8 @@ function get_task_statii_array() {
     $people_cache = $_FORM["people_cache"];
     $timeUnit_cache = $_FORM["timeUnit_cache"];
 
-    $estime = $task["timeEstimate"]; $task["timeEstimateUnitID"] and $estime.= " ".$timeUnit_cache[$task["timeEstimateUnitID"]]["timeUnitLabelA"];
-    $actual = task::get_time_billed($task["taskID"]); 
+    $estime = seconds_to_display_format($task["timeEstimate"]*60*60); 
+    $actual = seconds_to_display_format(task::get_time_billed($task["taskID"])); 
 
                                   $summary[] = "<tr>";
     $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
@@ -909,13 +902,13 @@ function get_task_statii_array() {
     $_FORM["showStatus"]      and $summary[] = "  <td class=\"col\">".$task["taskStatus"]."&nbsp;</td>"; 
     $_FORM["showCreator"]     and $summary[] = "  <td class=\"col\">".$people_cache[$task["creatorID"]]["name"]."&nbsp;</td>";
     $_FORM["showAssigned"]    and $summary[] = "  <td class=\"col\">".$people_cache[$task["personID"]]["name"]."&nbsp;</td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$estime."&nbsp;</nobr></td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$actual."&nbsp;</nobr></td>";
     $_FORM["showDate1"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateTargetStart"]."&nbsp;</nobr></td>";
     $_FORM["showDate2"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateTargetCompletion"]."&nbsp;</nobr></td>";
     $_FORM["showDate3"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualStart"]."&nbsp;</nobr></td>";
     $_FORM["showDate4"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualCompletion"]."&nbsp;</nobr></td>";
-    $_FORM["showPercent"]     and $summary[] = "  <td class=\"col\"><nobr>".sprintf("%d",$task["percentComplete"])."%&nbsp;</nobr></td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$estime."&nbsp;</nobr></td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$actual."&nbsp;</nobr></td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["percentComplete"]."&nbsp;</nobr></td>";
                                   $summary[] = "</tr>";
 
     if ($_FORM["showDescription"] && $task["taskDescription"]) {
@@ -928,9 +921,10 @@ function get_task_statii_array() {
 
     $summary = "\n".implode("\n",$summary);
     return $summary;
-  } 
+  }  
 
-  function get_task_children($filter="",$padding=0) {
+  function get_task_children($filter="",$_FORM=array()) {
+
     if (is_array($filter) && count($filter)) {
       $f = " WHERE ".implode(" AND ",$filter);
     }
@@ -949,18 +943,19 @@ function get_task_statii_array() {
       $row["taskLink"] = $task->get_task_link();
       $row["newSubTask"] = $task->get_new_subtask_link();
       $row["taskStatus"] = $task->get_status();
-      $row["padding"] = $padding;
+      $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
+      $row["padding"] = $_FORM["padding"];
       $row["object"] = $task;
       $tasks[$row["taskID"]] = $row;
 
       if ($row["taskTypeID"] == TT_PHASE) {
-        $padding+=1;
+        $_FORM["padding"]+=1;
         $filter["parentTaskID"] = sprintf("(parentTaskID = %d)",$row["taskID"]);
-        $arr = task::get_task_children($filter,$padding);
+        $arr = task::get_task_children($filter, $_FORM);
         if (is_array($arr)) {
           $tasks = array_merge($tasks,$arr);
         }
-        $padding-=1;
+        $_FORM["padding"]-=1;
       }
     }
     return $tasks;
@@ -974,51 +969,55 @@ function get_task_statii_array() {
   }
 
   function get_time_billed($taskID="", $recurse=false) {
-
+    static $results;
     if (is_object($this) && !$taskID) {
       $taskID = $this->get_id();
     }
-
+    if ($results[$taskID]) {
+      return $results[$taskID];
+    }
     if ($taskID) {
       $db = new db_alloc;
-
-
-      if ($recurse) {
-        $options["parentTaskID"] = $taskID;
-        $filter = task::get_task_list_filter($options);
-        $tasks = task::get_task_children($filter);
-        if (is_array($tasks)) {
-          foreach ($tasks as $id => $t) {
-            $taskIDs[] = $t["taskID"];;
-          }
-        }
-      }
-
-      $taskIDs[] = $taskID;
-      $taskIDs = implode(",",$taskIDs);
-
       // Get tally from timeSheetItem table
-      $q = sprintf("SELECT sum(timeSheetItemDuration) as duration,timeSheetItemDurationUnitID
-                      FROM timeSheetItem
-                     WHERE taskID IN (%s)
-                  GROUP BY timeSheetItemDurationUnitID
-                  ORDER BY timeSheetItemDurationUnitID DESC"
-                  ,$taskIDs);
-      $db->query($q);
+      $db->query("SELECT sum(timeSheetItemDuration*timeUnitSeconds) as sum_of_time
+                    FROM timeSheetItem 
+               LEFT JOIN timeUnit ON timeSheetItemDurationUnitID = timeUnitID 
+                   WHERE taskID = %d
+               GROUP BY taskID",$taskID);
       while ($db->next_record()) {
-        $actual_tallys[$db->f("timeSheetItemDurationUnitID")] += $db->f("duration");
+        $results[$taskID] = $db->f("sum_of_time");
+        return $db->f("sum_of_time");
       }
-      $actual_tallys or $actual_tallys = array();
+      return "0.00";
+    }
+  }
 
-      $timeUnit = new timeUnit;
-      $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
+  function get_percentComplete($get_num=false) {
 
-      foreach ($actual_tallys as $unit => $tally) {
-        $rtn .= $br.sprintf("%0.2f",$tally)." ".$units[$unit];
-        $br = ", ";
+    $timeActual = sprintf("%0.2f",$this->get_time_billed());
+    $timeEstimate = sprintf("%0.2f",$this->get_value("timeEstimate")*60*60);
+
+    if ($timeEstimate>0 && is_object($this)) {
+
+      $percent = $timeActual / $timeEstimate * 100;
+ 
+      // Return number
+      if ($get_num) {
+        $this->get_value("dateActualCompletion") || $percent>100 and $percent = 100;
+        return $percent;
+        
+      // If Not Complete and >100%, return percent in RED
+      } else if (!$this->get_value("dateActualCompletion") && $percent>100) {
+        return "<div class='bad'>".sprintf("%d",$percent)."%</div>";
+
+      // Else <100% return in normal colour
+      } else if (!$this->get_value("dateActualCompletion")) {
+        return sprintf("%d",$percent)."%";
+
+      // Else task is complete, return - 
+      } else if ($this->get_value("dateActualCompletion")) {
+        return "<div class='good'>".sprintf("%d",$percent)."%</div>";
       }
-      $rtn or $rtn = "0.00";
-      return $rtn;
     }
   }
 
@@ -1026,9 +1025,9 @@ function get_task_statii_array() {
     // Get the date the task is forecast to be completed given an actual start 
     // date and percent complete
     $date_actual_start = $this->get_value("dateActualStart");
-    $percent_complete = $this->get_value("percentComplete");
+    $percent_complete = $this->get_percentComplete(true);
 
-    if (!($date_actual_start and $percent_complete)) {
+    if (!($date_actual_start && $percent_complete)) {
       // Can't calculate forecast date without date_actual_start and % complete
       return 0;
     }
@@ -1083,7 +1082,6 @@ function get_task_statii_array() {
       }
     } else if ($actual == STARTED) {
       $date_forecast_completion = $this->get_forecast_completion();
-      #$percent_complete = $this->get_value("percentComplete");
 
       $status = "Started ".$date_actual_start.", ";
 

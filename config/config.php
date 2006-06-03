@@ -36,6 +36,18 @@ while ($db->next_record()) {
 
 
 if ($_POST["save"]) {
+
+  if ($_POST["hoursInDay"]) {
+    $db = new db_alloc;
+    $day = $_POST["hoursInDay"]*60*60;
+    $q = sprintf("UPDATE timeUnit SET timeUnitSeconds = '%d' WHERE timeUnitName = 'day'",$day);
+    $db->query($q);
+    $q = sprintf("UPDATE timeUnit SET timeUnitSeconds = '%d' WHERE timeUnitName = 'week'",($day*5));
+    $db->query($q);
+    $q = sprintf("UPDATE timeUnit SET timeUnitSeconds = '%d' WHERE timeUnitName = 'month'",(($day*5)*4));
+    $db->query($q);
+  }
+
   foreach ($fields_to_save as $name) {
     if ($_POST[$name]) {
       $id = $config->get_config_item_id($name);

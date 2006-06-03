@@ -21,6 +21,22 @@
  *
  */
 
+function seconds_to_display_format($seconds) {
+  $day = config::get_config_item("hoursInDay");
+
+  $day_in_seconds = $day * 60 * 60;
+  $hours = $seconds / 60 / 60;
+  
+  if ($seconds < $day_in_seconds) {
+    return sprintf("%0.2f hrs",$hours);
+  } else {
+    $days = $seconds / $day_in_seconds;
+    #return sprintf("%0.1f days", $days);
+    return sprintf("%0.2f hrs (~%0.1f days)",$hours, $days);
+     
+  }
+  
+}
 
 function get_alloc_modules() {
   if (defined("ALLOC_MODULES")) {
