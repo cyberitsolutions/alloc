@@ -1,25 +1,24 @@
-/*
- * Copyright 2006, Alex Lance, Clancy Malcolm, Cybersource Pty. Ltd.
- * 
- * This file is part of allocPSA <info@cyber.com.au>.
- * 
- * allocPSA is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- * 
- * allocPSA is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * allocPSA; if not, write to the Free Software Foundation, Inc., 51 Franklin
- * St, Fifth Floor, Boston, MA 02110-1301 USA
- *
- */
+
+Copyright 2006, Alex Lance, Clancy Malcolm, Cybersource Pty. Ltd.
+
+This file is part of allocPSA <info@cyber.com.au>.
+
+allocPSA is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+allocPSA is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+allocPSA; if not, write to the Free Software Foundation, Inc., 51 Franklin
+St, Fifth Floor, Boston, MA 02110-1301 USA
 
 
 The allocPSA Installation Guide 
+===============================
 
 Different PHP setups may produce interesting and unexpected errors and warnings. 
 Please follow the directions carefully.
@@ -37,11 +36,13 @@ Please follow the directions carefully.
 
 3) Fill in the values in /WEBROOT/allocPSA/util/install.cfg
 
-4) Determine the PHP include_path 
+4) Determine the PHP configuration setting for include_path 
 
-5) As root, run the installer script 
+5) As root, run the installer script by:
 
+    $ su
     $ cd /WEBROOT/allocPSA/util/ 
+    $ chmod a+x ./install.sh
     $ ./install.sh ./install.cfg
 
    Note:
@@ -54,10 +55,14 @@ Please follow the directions carefully.
 
 The PHP settings for your system may generally be determined by examining 
 /etc/php.ini or alternatively by putting a php script called blah.php in your 
-webroot whose contents are:
-<?php echo phpinfo(); ?>
+webroot whose contents are: <?php echo phpinfo(); ?>
 Hit the script with your webbrowser eg: http://localhost/blah.php
 
 
-Please feel free to contact me with any bugs you run into.
-Alex Lance <info@cyber.com.au>
+Please feel free to contact us at Cybersource <info@cyber.com.au> or just use the 
+forums at http://sourceforge.net/projects/allocpsa/ if you have any difficulties.
+
+Alex Lance
+
+
+
