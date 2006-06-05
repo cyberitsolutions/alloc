@@ -65,7 +65,11 @@ class alloc_email {
     $subject     and $this->subject    = $subject;
     $message     and $this->message    = $message;
     $header      and $this->header     = $header;
-    $this->header or $this->header     = "From: allocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
+
+    if (!$this->header || !preg_match("/\\\@/",$this->header)) {
+      $this->header = "From: allocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
+    }
+    
     $this->subject                     = "allocPSA ".$this->subject;
 
     if (!$this->is_valid_to_address()) {
