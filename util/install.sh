@@ -200,7 +200,7 @@ if [ -z "${FAILED}" ]; then
   echo "   2) Install these into cron to be run as root:                "
   echo "                                                                "
   echo "     25  4 * * * ${ALLOC_BACKUP_DIR}cron_allocBackup.sh         "
-  echo "     */5 * * * * ${DIR_FULL}cron_sendReminders.sh               "
+  echo "     */10 * * * * ${DIR_FULL}cron_sendReminders.sh               "
   echo "     35  4 * * * ${DIR_FULL}cron_sendEmail.sh                   "
   echo "     45  4 * * * ${DIR_FULL}cron_checkRepeatExpenses.sh         "
   echo
