@@ -74,9 +74,16 @@ foreach ($modules as $module_name => $v) {
   }
 }
 
-define("ALLOC_DEFAULT_FROM_ADDRESS",config::get_config_item("AllocFromEmailAddress"));
+// Wrap angle brackets around the default From: email address 
+$f = config::get_config_item("AllocFromEmailAddress");
+$l = strpos($f, "<");
+$r = strpos($f, ">");
+$l === false and $f = "<".$f;
+$r === false and $f .= ">";
+define("ALLOC_DEFAULT_FROM_ADDRESS",$f);
+unset($f, $l, $r);
+
 require_once(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
-global $current_user;
 $current_user = new person;
 
 
@@ -109,7 +116,6 @@ if (!defined("NO_AUTH")) {
 
 
 // Take care of saving history entries
-global $historyID;
 $history = new history;
 $ignored_files = $history->get_ignored_files();
 $ignored_files[] = "index.php";
@@ -133,7 +139,7 @@ if ($_SERVER["QUERY_STRING"]) {
 $file = end(explode("/", $_SERVER["SCRIPT_NAME"])).$qs;
 
 if (is_object($current_user) && !in_array($file, $ignored_files)
-    && !$historyID && $the_label = $history->get_history_label($_SERVER["SCRIPT_NAME"], $qs)) {
+    && !$_GET["historyID"] && !$_POST["historyID"] && $the_label = $history->get_history_label($_SERVER["SCRIPT_NAME"], $qs)) {
 
   $the_place = $_SERVER["SCRIPT_NAME"].$qs;
   $history = new history;
