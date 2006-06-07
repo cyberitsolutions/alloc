@@ -156,7 +156,7 @@ class timeSheet extends db_entity
   }
 
   function transactions_are_complex() {
-    global $simple_or_complex_transaction;
+    $simple_or_complex_transaction = $_POST["simple_or_complex_transaction"];
     $project = $this->get_foreign_object("project");
 
     if ($simple_or_complex_transaction == "simple") {
