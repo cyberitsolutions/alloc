@@ -39,7 +39,6 @@ class top_ten_tasks_home_item extends home_item {
     $options["personIDonly"] = $current_user->get_id();
     $options["showTimes"] = true;
     $options["showDate1"] = true;
-    $options["showDate2"] = true;
     $options["showDate3"] = true;
     $options["showHeader"] = true;
     $options["showProject"] = true;
