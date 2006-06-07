@@ -32,7 +32,7 @@ function seconds_to_display_format($seconds) {
   } else {
     $days = $seconds / $day_in_seconds;
     #return sprintf("%0.1f days", $days);
-    return sprintf("%0.2f hrs (~%0.1f days)",$hours, $days);
+    return sprintf("%0.2f hrs (%0.1f days)",$hours, $days);
      
   }
   

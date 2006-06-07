@@ -1001,23 +1001,21 @@ function get_task_statii_array() {
     if ($timeEstimate>0 && is_object($this)) {
 
       $percent = $timeActual / $timeEstimate * 100;
+      $this->get_value("dateActualCompletion") and $closed_text = "<del>" and $closed_text_end = "</del> (Closed)";
  
       // Return number
       if ($get_num) {
         $this->get_value("dateActualCompletion") || $percent>100 and $percent = 100;
         return $percent;
-        
-      // If Not Complete and >100%, return percent in RED
-      } else if (!$this->get_value("dateActualCompletion") && $percent>100) {
-        return "<div class='bad'>".sprintf("%d",$percent)."%</div>";
-
-      // Else <100% return in normal colour
-      } else if (!$this->get_value("dateActualCompletion")) {
-        return sprintf("%d",$percent)."%";
-
-      // Else task is complete, return - 
-      } else if ($this->get_value("dateActualCompletion")) {
-        return "<div class='good'>".sprintf("%d",$percent)."%</div>";
+       
+      // Else if task <= 100%
+      } else if ($percent <= 100) {
+        return $closed_text.sprintf("%d%%",$percent).$closed_text_end;
+                    
+       
+      // Else if task > 100%
+      } else if ($percent > 100) {
+        return "<span class='bad'>".$closed_text.sprintf("%d%%",$percent).$closed_text_end."</span>";
       }
     }
   }
