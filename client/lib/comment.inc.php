@@ -42,7 +42,7 @@ class comment extends db_entity {
   }
 
 
-  function send_email($recipient, $subject, $body) {
+  function send_email($recipient, $subject) {
     global $current_user;
 
     // New email object wrapper takes care of logging etc.
@@ -52,13 +52,12 @@ class comment extends db_entity {
     // REMOVE ME!!
     $email->ignore_no_email_urls = true;
 
-    $person_commentModifiedUser = new person;
-    $person_commentModifiedUser->set_id($this->get_value("commentModifiedUser"));
-    $person_commentModifiedUser->select();
-
-    $message = "\n".$body;
+    #$person_commentModifiedUser = new person;
+    #$person_commentModifiedUser->set_id($this->get_value("commentModifiedUser"));
+    #$person_commentModifiedUser->select();
     #$message.= "\n\nNew comments by ".$person_commentModifiedUser->get_username(1)." ".$this->get_value("commentModifiedTime");
-    $message.= "\n".wordwrap($this->get_value("comment"));
+
+    $message = "\n".wordwrap($this->get_value("comment"));
 
     // Convert plain old recipient address blah@cyber.com.au to Alex Lance <blah@cyber.com.au>
     if ($recipient["firstName"] && $recipient["surname"] && $recipient["emailAddress"]) {

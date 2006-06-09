@@ -80,7 +80,7 @@ $l = strpos($f, "<");
 $r = strpos($f, ">");
 $l === false and $f = "<".$f;
 $r === false and $f .= ">";
-define("ALLOC_DEFAULT_FROM_ADDRESS",$f);
+define("ALLOC_DEFAULT_FROM_ADDRESS","allocPSA ".$f);
 unset($f, $l, $r);
 
 require_once(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
