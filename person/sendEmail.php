@@ -65,7 +65,7 @@ while ($db->next_record()) {
     $tasks = $person->get_tasks_for_email();
     $msg.= $tasks;
 
-    $headers.= "From: allocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
+    $headers.= "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
     $subject = "Daily Digest";
     $to = $person->get_value("emailAddress");
     if ($person->get_value("firstName") && $person->get_value("surname") && $to) {

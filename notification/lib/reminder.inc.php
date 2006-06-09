@@ -256,7 +256,7 @@ class reminder extends db_entity {
           $personSender->set_id($this->get_value('reminderModifiedUser'));
           $personSender->select();
 
-          $from = "From: allocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
+          $from = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = $this->get_value('reminderSubject');
           $content = $this->get_value('reminderContent');
 
@@ -358,7 +358,7 @@ class reminder extends db_entity {
           $personSender->set_id($this->get_value('reminderModifiedUser'));
           $personSender->select();
 
-          $from = "From: allocPSA <".ALLOC_DEFAULT_FROM_ADDRESS.">";
+          $from = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = sprintf("Adv Notice: %s"
                             ,$this->get_value('reminderSubject'));
           $content = $this->get_value('reminderContent');

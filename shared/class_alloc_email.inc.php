@@ -55,7 +55,6 @@ class alloc_email {
     $subject     and $this->subject    = $subject;
     $message     and $this->message    = $message;
     $header      and $this->header     = $header;
-    $this->header or $this->header     = "From: allocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
     $this->logfile                     = ALLOC_LOG_DIR."alloc_email.log";
   }
 
@@ -66,8 +65,8 @@ class alloc_email {
     $message     and $this->message    = $message;
     $header      and $this->header     = $header;
 
-    if (!$this->header || !preg_match("/\\\@/",$this->header)) {
-      $this->header = "From: allocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
+    if (!$this->header || !preg_match('/@/',$this->header)) {
+      $this->header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
     }
     
     $this->subject                     = "allocPSA ".$this->subject;
@@ -85,13 +84,17 @@ class alloc_email {
   }
 
   function set_from($personID="") {
-    $person = new person;
-    $person->set_id($personID);
-    $person->select();
-    if ($person->get_value("emailAddress")) {
-      $this->header = "From: ".$person->get_username(1)." <".$person->get_value("emailAddress").">";
+    if ($personID) {
+      $person = new person;
+      $person->set_id($personID);
+      $person->select();
+      if ($person->get_value("emailAddress")) {
+        $this->header = "From: ".$person->get_username(1)." <".$person->get_value("emailAddress").">";
+      } else {
+        $this->header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
+      }
     } else {
-      $this->header = "From: ".$person->get_username(1)." <".ALLOC_DEFAULT_FROM_ADDRESS.">";
+      $this->header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
     }
   }
 

@@ -494,22 +494,10 @@ class task extends db_entity {
     $recipients = $this->get_email_recipients($selected_option);
 
     $extra or $extra = "Task";
-
     $subject = $extra.": ".$this->get_id()." ".$this->get_value("taskName");
-    $p = new project;
-    $p->set_id($this->get_value("projectID"));
-    $p->select();
-
-    if (get_class($object) == "task") {
-      $body = "Project: ".stripslashes($p->get_value("projectName"));
-      $body.= "\nTask: ".stripslashes($this->get_value("taskName"));
-      $body.= "\n".config::get_config_item("allocURL")."project/task.php?taskID=".$this->get_id();
-      $body.= "\n\n".stripslashes(wordwrap($this->get_value("taskDescription")));
-    }
 
     foreach ($recipients as $recipient) {
-      #$current_user->get_id() != $recipient["personID"] # to skip current_user
-      if ($object->send_email($recipient, $subject, $body)) {
+      if ($object->send_email($recipient, $subject)) {
         $successful_recipients.= $commar.$recipient["fullName"];
         $commar = ", ";
       }
@@ -517,7 +505,7 @@ class task extends db_entity {
     return $successful_recipients;
   }
 
-  function send_email($recipient, $subject, $body) {
+  function send_email($recipient, $subject) {
     global $current_user;
 
     // New email object wrapper takes care of logging etc.
@@ -526,6 +514,14 @@ class task extends db_entity {
 
     // REMOVE ME!!
     $email->ignore_no_email_urls = true;
+
+    $p = new project;
+    $p->set_id($this->get_value("projectID"));
+    $p->select();
+    $body = "Project: ".stripslashes($p->get_value("projectName"));
+    $body.= "\nTask: ".stripslashes($this->get_value("taskName"));
+    $body.= "\n".config::get_config_item("allocURL")."project/task.php?taskID=".$this->get_id();
+    $body.= "\n\n".stripslashes(wordwrap($this->get_value("taskDescription")));
 
     $message = "\n".wordwrap($body);
 
