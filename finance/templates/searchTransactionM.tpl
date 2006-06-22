@@ -11,6 +11,7 @@
     <td align="center" colspan="7">
       <table align="center" class="filter">
         <tr align="center">
+          <td align="center"><b>Transaction Desc</td>
           <td align="center"><b>Which TF</td>
           <td align="center"><b>Status</td>
           <td align="center"><b>Date in YYYY-MM-DD format</td>
@@ -20,6 +21,7 @@
           <td align="center"><b>Expense Form ID</td>
         </tr>
         <tr align="center">
+          <td><input type="text" size="20" name="product" value="{product}"></td>
           <td><select name="tfID" value={tfID}>{tfOptions}</select></td>
           <td><select name="status" value={status}>{statusOptions}</select></td>
           <td>&nbsp;&nbsp;  
@@ -29,8 +31,8 @@
             <input type="text" size="11" name="dateTwo" value="{dateTwo}">
             <input type="button" onClick="dateTwo.value='{today}'" value="Today">
           </td>
-          <td><input type="text" size="10" name="transactionID" value="{transactionID}"></td>
-          <td><input type="text" size="10" name="expenseFormID" value="{expenseFormID}"></td>
+          <td><input type="text" size="5" name="transactionID" value="{transactionID}"></td>
+          <td><input type="text" size="5" name="expenseFormID" value="{expenseFormID}"></td>
           <td colspan="5"><input type="submit" name="search" value="Filter"></td>
         </tr>
         <tr>

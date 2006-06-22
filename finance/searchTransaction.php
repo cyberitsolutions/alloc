@@ -34,6 +34,7 @@ require_once("alloc.inc");
       $_POST["dateTwo"] != ""               and $where.= sprintf(" AND transactionDate<=\"%s\"",db_esc($_POST["dateTwo"]));
       $_POST["expenseFormID"] != ""         and $where.= sprintf(" AND expenseFormID=%d",db_esc($_POST["expenseFormID"]));
       $_POST["transactionID"] != ""         and $where.= sprintf(" AND transactionID=%d",db_esc($_POST["transactionID"]));
+      $_POST["product"]                     and $where.= sprintf(" AND product like \"%%%s%%\"",db_esc($_POST["product"]));
 
       if (!$current_user->have_role("god") || !$current_user->have_role("admin")) {
         $tfIDs = $current_user->get_tfIDs();
@@ -76,6 +77,7 @@ $TPL["dateOne"] = $_POST["dateOne"];
 $TPL["dateTwo"] = $_POST["dateTwo"];
 $TPL["transactionID"] = $_POST["transactionID"];
 $TPL["expenseFormID"] = $_POST["expenseFormID"];
+$TPL["product"] = $_POST["product"];
 
 include_template("templates/searchTransactionM.tpl");
 
