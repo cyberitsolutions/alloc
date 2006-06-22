@@ -53,16 +53,13 @@ if ($_POST["add"]) {
   if (!ereg("^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$", $_POST["transactionDate"])) {
     $TPL["message"][] = "You must enter the Date Incurred in the format yyyy-mm-dd.";
   }
-
-  $_POST["amount"] = -$_POST["amount"] * $_POST["quantity"];
-
-  if ($_POST["amount"] == "") {
+  
+  if ($_POST["amount"] === "") {
     $TPL["message"][] = "You must enter the Price.";
-  } else if (!(is_float($_POST["amount"]) || is_int($_POST["amount"]))) {
-    $TPL["message"][] = "You must enter a number for the Price.";
-  } else if ($_POST["amount"] >= 0) {
-    $TPL["message"][] = "You must enter a Price greater than 0.";
   }
+  $_POST["amount"] = sprintf("%0.2f",$_POST["amount"]);
+  $_POST["amount"] = -$_POST["amount"] * $_POST["quantity"];
+  $_POST["amount"] = sprintf("%0.2f",$_POST["amount"]);
 
 
   $transaction = new transaction;
