@@ -97,12 +97,12 @@ function get_pending_timesheet_db() {
   $timeSheetAdminEmailPersonID = $c->get_config_item("timeSheetAdminEmail");
 
   $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars 
-                      FROM timeSheet, timeSheetItem 
+                      FROM timeSheet
+                           LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
                            LEFT JOIN project on project.projectID = timeSheet.projectID
                            LEFT JOIN projectPerson on project.projectID = projectPerson.projectID 
                            LEFT JOIN projectPersonRole on projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
-                     WHERE timeSheet.timeSheetID = timeSheetItem.timeSheetID
-                       AND ((projectPerson.personID = %d AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' AND timeSheet.status='manager') 
+                     WHERE ((projectPerson.personID = %d AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' AND timeSheet.status='manager') 
                              OR 
                             (%d = %d and timeSheet.status='admin'))
                   GROUP BY timeSheet.timeSheetID 
