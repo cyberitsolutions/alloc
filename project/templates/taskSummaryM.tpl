@@ -58,7 +58,6 @@ function updateProjectList(number) {
                 <td valign="top" rowspan="2"><select name="taskTypeID[]" size="6" multiple="true">{taskTypeOptions}</select></td>
                 <td valign="top"><select name="taskStatus" size="1">{taskStatusOptions}</select></td>
                 <td valign="top"><select name="personID">{personOptions}</select></td>  
-                <td valign="top" colspan="2"><input type="checkbox" name="personIDonly"{personIDonly_checked}>Only</td>
               </tr>
               <tr>
                 <td colspan="3">

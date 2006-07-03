@@ -69,7 +69,7 @@ class person extends db_entity
 
     $options["projectType"] = "mine";
     $options["limit"] = 3;
-    $options["personIDonly"] = $person->get_id();
+    $options["personID"] = $person->get_id();
     $options["taskView"] = "prioritised";
     $options["return"] = $format;
     $options["taskStatus"] = "not_completed";
