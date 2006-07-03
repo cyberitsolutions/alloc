@@ -789,6 +789,8 @@ function get_task_statii_array() {
         if (count($tasks)) {
           $print = true;
 
+          #$tasks = task::remove_dead_branches($tasks,$filter,$_FORM);
+
           $_FORM["showProject"] and $summary.= "\n<tr>";
           $_FORM["showProject"] and $summary.= "\n  <td class=\"tasks\" colspan=\"21\">".$project["link"]."</td>";
           $_FORM["showProject"] and $summary.= "\n</tr>";
@@ -942,20 +944,50 @@ function get_task_statii_array() {
       $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
       $row["padding"] = $_FORM["padding"];
       $row["object"] = $task;
-      $tasks[$row["taskID"]] = $row;
+
 
       if ($row["taskTypeID"] == TT_PHASE) {
         $_FORM["padding"]+=1;
         $filter["parentTaskID"] = sprintf("(parentTaskID = %d)",$row["taskID"]);
         $arr = task::get_task_children($filter, $_FORM);
-        if (is_array($arr)) {
+        if ((is_array($arr) && count($arr)) || ($row["personID"] == $_FORM["personID"])) {
+          $tasks[$row["taskID"]] = $row;
+        }
+        if (is_array($arr) && count($arr)) {
           $tasks = array_merge($tasks,$arr);
         }
         $_FORM["padding"]-=1;
+
+      } else {
+       $tasks[$row["taskID"]] = $row;
       }
     }
+
     return $tasks;
   }
+
+  function remove_dead_branches($tasks,$filter,$_FORM) {
+    if (!$_FORM["personID"]) return $tasks;
+  
+    foreach($tasks as $task) {
+      $parentTaskIDs[$task["parentTaskID"]]; 
+    }
+
+// if BACKwards
+    foreach($tasks as $task) {
+      if ($task["personID"] == $_FORM["personID"]) {
+        $good[] = $task;
+      }
+    }
+
+    
+    
+
+    $branches = $tasks; 
+    return $branches;
+  }
+
+
 
   function get_new_subtask_link() {
     global $TPL;
