@@ -40,7 +40,6 @@ $page_vars = array("projectID"
                   ,"showPriority"
                   ,"showStatus"
                   ,"showTaskID"
-                  ,"personIDonly"
                   );
 
 $_FORM = get_all_form_data($page_vars);
@@ -57,10 +56,6 @@ $db = new db_alloc;
 $_FORM["showHeader"] = true;
 $_FORM["showProject"] = true;
 $_FORM["padding"] = 1;
-
-if ($_FORM["personIDonly"] && $_FORM["personID"]) {
-  $_FORM["personIDonly"] = $_FORM["personID"];
-}
 
 // Get task list
 $TPL["task_summary"] = task::get_task_list($_FORM);
@@ -93,7 +88,6 @@ $_FORM["showTimes"]       and $TPL["showTimes_checked"]       = " checked";
 $_FORM["showPercent"]     and $TPL["showPercent_checked"]     = " checked";
 $_FORM["showPriority"]    and $TPL["showPriority_checked"]    = " checked";
 $_FORM["showStatus"]      and $TPL["showStatus_checked"]      = " checked";
-$_FORM["personIDonly"]    and $TPL["personIDonly_checked"]    = " checked";
 $_FORM["showTaskID"]      and $TPL["showTaskID_checked"]      = " checked";
 
 

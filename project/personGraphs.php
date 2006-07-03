@@ -35,7 +35,7 @@ function show_people($template_name) {
 
     $options = array();
     $options["taskView"] = "prioritised";
-    $options["personIDonly"] = $person->get_id();
+    $options["personID"] = $person->get_id();
     $options["taskStatus"] = "in_progress";
     $options["showHeader"] = true;
     $options["showProject"] = true;

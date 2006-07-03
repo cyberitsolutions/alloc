@@ -36,7 +36,7 @@ class top_ten_tasks_home_item extends home_item {
 
     $options["taskView"] = "prioritised";
     $options["projectType"] = "mine";
-    $options["personIDonly"] = $current_user->get_id();
+    $options["personID"] = $current_user->get_id();
     $options["showTimes"] = true;
     $options["showDate1"] = true;
     $options["showDate3"] = true;

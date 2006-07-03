@@ -32,7 +32,7 @@ $project->set_id($projectID);
 $project->check_perm();
 
 if ($for_home_item) {
-  $options["personIDonly"] = $current_user->get_id();
+  $options["personID"] = $current_user->get_id();
 }
 
 $options["projectIDs"][] = $projectID;

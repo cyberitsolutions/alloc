@@ -28,7 +28,7 @@ if ($projectID) {
   $options["projectIDs"][] = $projectID;
 }
 
-$options["personIDonly"] = $personID;
+$options["personID"] = $personID;
 $options["taskView"] = "prioritised";
 $options["return"] = "objects";
 $options["taskStatus"] = "in_progress";

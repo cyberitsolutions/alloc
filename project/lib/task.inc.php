@@ -659,14 +659,14 @@ function get_task_statii_array() {
       $filter[] = sprintf("(taskTypeID = %d)",$_FORM["taskTypeID"]);
     }
 
-    // Exclude tasks assigned to noone
-    if ($_FORM["personIDonly"]) {
-      $filter[] = sprintf("(personID = %d)",$_FORM["personIDonly"]);
-
-    // Include tasks assigned to noone
-    } else if ($_FORM["personID"]) { 
-      $filter[] = sprintf("(personID = %d or personID IS NULL or personID = '')",$_FORM["personID"]);
-    } 
+    // If personID filter and the view is byProject, then allow unassigned phases into the results 
+    if ($_FORM["personID"] && $_FORM["taskView"] == "byProject") {
+      $filter[] = sprintf("(personID = %d or (taskTypeID = %d and (personID IS NULL or personID = '' or personID = 0)))",$_FORM["personID"],TT_PHASE);
+    
+    // If personID filter and the view is prioritised, then do a strict by personID query
+    } else if ($_FORM["personID"] && $_FORM["taskView"] == "prioritised") {
+      $filter[] = sprintf("(personID = %d)",$_FORM["personID"]);
+    }
 
     // This will be zero if not set. Which is fine since all top level tasks have a parentID of zero
     // This filter is unset for returning a prioritised list of tasks.
@@ -703,8 +703,7 @@ function get_task_statii_array() {
      *   projectIDs       = an array of projectIDs
      *   taskStatus       = completed | not_completed | in_progress | due_today | new | overdue
      *   taskTypeID       = the task type
-     *   personIDonly     = person assigned excluding non-assigned tasks
-     *   personID         = person assigned including non-assigned tasks
+     *   personID         = person assigned 
      *   parentTaskID     = id of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0
      *  
      *
