@@ -147,7 +147,12 @@ class db {
     if ($fields[$table]) {
       return $fields[$table];
     }
-    $list = mysql_list_fields($this->database, $table);
+    $database = $this->database;
+    if (strstr($table,".")) {
+      list($database,$table) = explode(".",$table);
+    }
+
+    $list = mysql_list_fields($database, $table);
     $cols = mysql_num_fields($list);
     $i = 0;
     while ($i < $cols) {
@@ -166,7 +171,9 @@ class db {
     
     $this->query(sprintf("SHOW KEYS FROM %s",$table));
     while ($row = $this->row()) {
-      $keys[$table][] = $row["Column_name"]; 
+      if (!$row["Non_unique"]) {
+        $keys[$table][] = $row["Column_name"]; 
+      }
     }
     return $keys[$table];
   }
@@ -182,18 +189,18 @@ class db {
     if ($do_insert) {
       $q = sprintf("INSERT INTO %s (%s) VALUES (%s)"
                   , $table, $this->get_insert_str_fields($row), $this->get_insert_str_values($row));
-      $debug &&  sizeof($row) and print ("<br>SAVE -> INSERT -> WILL execute this query: <br>".$q);
-      $debug && !sizeof($row) and print ("<br>SAVE -> INSERT -> WONT execute this query: <br>".$q);
-      sizeof($row) and $this->query($q);
+      $debug &&  sizeof($row) and print ("<br>SAVE -> INSERT -> Would have executed this query: <br>".$q);
+      $debug && !sizeof($row) and print ("<br>SAVE -> INSERT -> Would NOT have executed this query: <br>".$q);
+      !$debug && sizeof($row) and $this->query($q);
       if (mysql_affected_rows() != 0) { 
         return mysql_insert_id(); // The primary key needs to be of type AUTO_INCREMENT for this to work.
       }
     } else {
       $q = sprintf("UPDATE %s SET %s WHERE %s"
                   , $table, $this->get_update_str($row), $this->get_update_str($keys, " AND "));
-      $debug &&  sizeof($row) and print ("<br>SAVE -> UPDATE -> WILL execute this query: <br>".$q);
-      $debug && !sizeof($row) and print ("<br>SAVE -> UPDATE -> WONT execute this query: <br>".$q);
-      sizeof($row) and $this->query($q);
+      $debug &&  sizeof($row) and print ("<br>SAVE -> UPDATE -> Would have executed this query: <br>".$q);
+      $debug && !sizeof($row) and print ("<br>SAVE -> UPDATE -> Would NOT have executed this query: <br>".$q);
+      !$debug && sizeof($row) and $this->query($q);
       return current($keys);
     }
   }
