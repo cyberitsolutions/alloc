@@ -337,7 +337,7 @@ class task extends db_entity {
       $projectID = $db->f("projectID");
     } else if ($this->get_value("personID")) {
       $owner = $this->get_value("personID");
-    } else {
+    } else if (!$this->get_id()) {
       $owner = $current_user->get_id();
     }
 
