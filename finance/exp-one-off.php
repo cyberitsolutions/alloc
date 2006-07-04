@@ -194,7 +194,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") &
   $TPL["message_help"][] = "Step 1/4: Begin an Expense Form by choosing the Payment Method and Reimbursement option, then clicking the Create Expense Form button.";
 }
 
-$paymentOptions = array("COD", "Cheque", "Company Amex Charge", "Company Amex Blue", "Other Credit Card", "Account", "Direct Deposit");
+$paymentOptions = array("COD", "Cheque", "Company Amex Charge", "Company Amex Blue", "Company Virgin MasterCard", "Other Credit Card", "Account", "Direct Deposit");
 $paymentOptions = get_options_from_array($paymentOptions, $expenseForm->get_value("paymentMethod"), false);
 
 $reimbursementRequired_checked = $expenseForm->get_value("reimbursementRequired") ? " checked" : "";
