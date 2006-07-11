@@ -43,6 +43,12 @@ if ($_POST["upload"]) {
     $sales_price = trim($fields[$field_map["sales_price"]]);
     $amount = trim($fields[$field_map["amount"]]);
 
+
+    // Newer versions of Quick Books use different labels
+    $type == "Tax Invoice" and $type = "Invoice";
+    $type == "Adjustment Note" and $type = "Credit Memo";
+
+
     // Lline number
     $line_number++;
     $msg[] = "<br><b>Line: ".$line_number."</b>";
