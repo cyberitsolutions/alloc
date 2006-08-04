@@ -53,6 +53,8 @@ class person extends db_entity
                                , "dailyTaskEmail"=>new db_text_field("dailyTaskEmail", "Daily Task Email", "")
                                , "personActive"=>new db_text_field("personActive", "Active", "")
                                , "sessData"=>new db_text_field("sessData", "Session Data", "")
+                               , "phoneNo1"=>new db_text_field("phoneNo1", "Phone No", "")
+                               , "phoneNo2"=>new db_text_field("phoneNo2", "Mobile No", "")
       );
 
     $this->permissions[PERM_PERSON_READ_DETAILS] = "Read details";

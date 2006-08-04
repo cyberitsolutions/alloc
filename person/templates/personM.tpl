@@ -14,26 +14,20 @@
         <tr>
           <td>Username</td>
           <td><input type="text" name="username" value="{person_username}"></td>
+		      <td>Enabled</td>
+		      <td><input type="checkbox" name="personActive" value="1"{personActive}></td>
         </tr>
         <tr>
           <td>Password</td>
           <td><input type="password" name="password1" value=""></td>
-        </tr>
-        <tr>
           <td>Confirm Password</td>
           <td><input type="password" name="password2" value=""></td>
         </tr>
         <tr>
           <td>First Name</td>
           <td><input type="text" name="firstName" value="{person_firstName}"></td>
-        </tr>
-        <tr>
           <td>Surname</td>
           <td><input type="text" name="surname" value="{person_surname}"></td>
-        </tr>
-        <tr>
-          <td>Last Login Date</td>
-          <td>{person_lastLoginDate}</td>
         </tr>
         <tr>
           <td>Preferred Payment TF</td>
@@ -44,16 +38,16 @@
           <td><input type="text" name="emailAddress" value="{person_emailAddress}"></td>
         </tr>
         <tr>
+		      <td>Daily Email</td>
+		      <td><select name="dailyTaskEmail">{dailyTaskEmailOptions}</select></td>
           <td>Email Format</td>
           <td><select name="emailFormat">{email_format_options}</select></td>
         </tr>
         <tr>
-		      <td>Daily Email</td>
-		      <td><select name="dailyTaskEmail">{dailyTaskEmailOptions}</select></td>
-        </tr>
-        <tr>
-		      <td>Enabled</td>
-		      <td><input type="checkbox" name="personActive" value="1"{personActive}></td>
+          <td>Phone No</td>
+          <td><input type="text" name="phoneNo1" value="{person_phoneNo1}"></td>
+          <td>Mobile No</td>
+          <td><input type="text" name="phoneNo2" value="{person_phoneNo2}"></td>
         </tr>
         <tr>
           <td>Special Permissions
