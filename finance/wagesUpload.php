@@ -27,7 +27,7 @@ require_once("alloc.inc");
 
 $field_map = array(""                =>0
                   ,"transactionDate" =>1
-                  ,""                =>2
+                  ,"name"            =>2
                   ,"memo"            =>3
                   ,"account"         =>4
                   ,"amount"          =>5
@@ -49,6 +49,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $amount = trim($fields[$field_map["amount"]]);
     $memo = trim($fields[$field_map["memo"]]);
     $account = trim($fields[$field_map["account"]]);
+    $name = trim($fields[$field_map["name"]]);
 
     // Skip tax lines
     if (stristr($account,"Payroll Liabilities")) {
@@ -59,12 +60,12 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $memo and $account.= " - ".$memo;
 
 
-    echo "<br/>";
-    echo "<br/>date: ".$transactionDate;
-    echo "<br/>memo: ".$memo;
-    echo "<br/>account: ".$account;
-    echo "<br/>amount: ".$amount;
-    echo "<br/>employeeNum: ".$employeeNum;
+    #echo "<br/>";
+    #echo "<br/>date: ".$transactionDate;
+    #echo "<br/>memo: ".$memo;
+    #echo "<br/>account: ".$account;
+    #echo "<br/>amount: ".$amount;
+    #echo "<br/>employeeNum: ".$employeeNum;
 
     // Ignore heading row, dividing lines and total rows
     if ($transactionDate == "Date" || !$transactionDate || eregi("_____", $transactionDate) || eregi("¯¯¯", $transactionDate) || eregi("total", $transactionDate)) {
@@ -80,7 +81,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $query = sprintf("SELECT * FROM tf WHERE qpEmployeeNum=%d", $employeeNum);
     $db->query($query);
     if (!$db->next_record()) {
-      $msg.= "<b>Warning: Could not find TF for employee number '$employeeNum'</b><br>";
+      $msg.= "<b>Warning: Could not find TF for employee number '$employeeNum' $name</b><br>";
       continue;
     }
     $tfID = $db->f("tfID");
@@ -108,7 +109,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
                         WHERE tfID=%d AND transactionDate='%s' AND amount>%0.3f AND amount < %0.3f", $tfID, addslashes($transactionDate), $amount - 0.001, $amount + 0.001);
     $db->query($query);
     if ($db->next_record()) {
-      $msg.= "Warning: Salary for employee #$employeeNum on $transactionDate already exists as transaction #".$db->f("transactionID")."<br>";
+      $msg.= "Warning: Salary for employee #$employeeNum $name on $transactionDate already exists as transaction #".$db->f("transactionID")."<br>";
       continue;
     }
     // Create a transaction object and then save it
@@ -124,7 +125,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $transaction->set_value("transactionType", "salary");
     $transaction->save();
 
-    $msg.= "\$$amount for employee $employeeNum on $transactionDate saved<br>";
+    $msg.= "\$$amount for employee $employeeNum $name on $transactionDate saved<br/>";
   }
   $TPL["msg"] = $msg;
 }
