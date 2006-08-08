@@ -107,6 +107,8 @@ function show_people($template_name) {
     #$TPL["ts_dollars_col_1"] = sprintf("%0.2f",$ts_dollars_col_1[$db->f("pid")]);
     #$TPL["ts_dollars_col_2"] = sprintf("%0.2f",$ts_dollars_col_2[$db->f("pid")]);
 
+    $TPL["person_phoneNo1"] && $TPL["person_phoneNo2"] and $TPL["person_phoneNo1"].= "&nbsp;&nbsp;/&nbsp;&nbsp;";
+
     $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
 
     include_template($template_name);
