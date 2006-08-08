@@ -23,7 +23,16 @@
 
 require_once("alloc.inc");
 
-$field_map = array("transactionDate"=>0, "employeeNum"=>1, "name"=>2, ""=>3, ""=>4, ""=>5, ""=>6, ""=>7, ""=>8, ""=>9, "amount"=>10, ""=>11, ""=>12);
+#$field_map = array("transactionDate"=>0, "employeeNum"=>1, "name"=>2, ""=>3, ""=>4, ""=>5, ""=>6, ""=>7, ""=>8, ""=>9, "amount"=>10, ""=>11, ""=>12);
+
+$field_map = array(""                =>0
+                  ,"transactionDate" =>1
+                  ,""                =>2
+                  ,"memo"            =>3
+                  ,"account"         =>4
+                  ,"amount"          =>5
+                  ,"employeeNum"     =>7
+                  );
 
 if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
   $db = new db_alloc;
@@ -31,22 +40,41 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
   $lines = file($_FILES["wages_file"]["tmp_name"]);
 
   reset($lines);
-  while (list(, $line) = each($lines)) {
+  foreach ($lines as $line) {
+  
     // Read field values from the line
     $fields = explode("\t", $line);
     $transactionDate = trim($fields[$field_map["transactionDate"]]);
     $employeeNum = trim($fields[$field_map["employeeNum"]]);
     $amount = trim($fields[$field_map["amount"]]);
+    $memo = trim($fields[$field_map["memo"]]);
+    $account = trim($fields[$field_map["account"]]);
+
+    // Skip tax lines
+    if (stristr($account,"Payroll Liabilities")) {
+      continue;
+    }
+   
+    // If there's a memo field then append it to account
+    $memo and $account.= " - ".$memo;
+
+
+    echo "<br/>";
+    echo "<br/>date: ".$transactionDate;
+    echo "<br/>memo: ".$memo;
+    echo "<br/>account: ".$account;
+    echo "<br/>amount: ".$amount;
+    echo "<br/>employeeNum: ".$employeeNum;
 
     // Ignore heading row, dividing lines and total rows
-    if ($transactionDate == "Date Paid" || $transactionDate == "" || eregi("_____", $transactionDate) || eregi("¯¯¯", $transactionDate) || eregi("total", $transactionDate)) {
+    if ($transactionDate == "Date" || !$transactionDate || eregi("_____", $transactionDate) || eregi("¯¯¯", $transactionDate) || eregi("total", $transactionDate)) {
       continue;
     }
     // If the employeeNum field is blank use the previous employeeNum
-    if (!$employeeNum) {
-      $employeeNum = $prev_employeeNum;
-    }
-    $prev_employeeNum = $employeeNum;
+    #if (!$employeeNum) {
+     # $employeeNum = $prev_employeeNum;
+    #}
+    #$prev_employeeNum = $employeeNum;
 
     // Find the TF for the wage
     $query = sprintf("SELECT * FROM tf WHERE qpEmployeeNum=%d", $employeeNum);
@@ -67,12 +95,12 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
 
     // Strip $ and , from amount
     $amount = ereg_replace("[\$,]", "", $amount);
-    if (!ereg("^[0-9]+(\\.[0-9]+)?$", $amount)) {
+    if (!ereg("^[-]?[0-9]+(\\.[0-9]+)?$", $amount)) {
       $msg.= "<b>Warning: Could not convert amount '$amount'</b><br>";
       continue;
     }
     // Negate the amount - Wages are a debit from TF's
-    $amount = -$amount;
+    #$amount = -$amount;
 
     // Check for an existing transaction for this wage - note we have to use a range or amount because it is floating point
     $query = sprintf("SELECT transactionID
@@ -89,7 +117,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $transaction->set_value("transactionDate", $transactionDate);
     $transaction->set_value("amount", $amount);
     $transaction->set_value("companyDetails", "");
-    $transaction->set_value("product", "Wages");
+    $transaction->set_value("product", $account);
     $transaction->set_value("status", "approved");
     $transaction->set_value("expenseFormID", "0");
     $transaction->set_value("quantity", 1);
