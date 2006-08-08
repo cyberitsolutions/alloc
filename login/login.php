@@ -54,6 +54,11 @@ if ($sess->Started()) {
     $sess->Put("perms" ,$row["perms"]);
     $sess->Put("personID" ,$row["personID"]);
 
+    $q = sprintf("UPDATE person SET lastLoginDate = '%s' WHERE personID = %d"
+                 ,date("Y-m-d H:i:s"),$row["personID"]);
+    $db->query($q);
+                   
+
     if ($_POST["use_cookies"]) {
       $sess->UseCookie();
     } else {
