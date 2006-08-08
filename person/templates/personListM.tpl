@@ -29,7 +29,7 @@
     <td>Name</td>
     <td>Enabled</td>
     <td>Last Login</td>
-    <td>Availability</td>
+    <td>Contact</td>
     <td>Actions</th>
     <td><nobr>On Leave</nobr></td>
     <td>Sum Prev Fort.</td>

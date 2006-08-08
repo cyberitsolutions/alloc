@@ -2,7 +2,7 @@
   <td><a href="{url_alloc_person}personID={person_personID}">{person_username}</a></td>
   <td>{person_personActive}</td>
   <td><nobr>&nbsp;{person_lastLoginDate}&nbsp;</nobr></td>
-  <td>{person_availability}&nbsp;</td>
+  <td>{person_phoneNo1}{person_phoneNo2}&nbsp;</td>
   <td>
     <nobr>
 		<a href="{url_alloc_taskSummary}personID={person_personID}&taskView=byProject&applyFilter=1&taskStatus=not_completed">Task Summary</a>&nbsp;&nbsp;
