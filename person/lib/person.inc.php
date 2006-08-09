@@ -65,13 +65,13 @@ class person extends db_entity
   }
 
   function get_tasks_for_email() {
-    global $person, $db;
 
     $format = $this->get_value("emailFormat");
 
+    $options = array();
     $options["projectType"] = "mine";
     $options["limit"] = 3;
-    $options["personID"] = $person->get_id();
+    $options["personID"] = $this->get_id();
     $options["taskView"] = "prioritised";
     $options["return"] = $format;
     $options["taskStatus"] = "not_completed";
@@ -79,18 +79,14 @@ class person extends db_entity
 
     if ($summary) {
       if ($format == "html") {
-        $topThree = "<br><br><h4>Top Three Tasks</h4>";
+        $topThree = "<br/><br><h4>Top Three Tasks</h4>";
       } else {
-        $topThree = "\nTop Three Tasks";
+        $topThree = "\n\nTop Three Tasks";
       }
       $topThree.= $summary;
-
-    } else {
-      $topThree = false;
-    }
+    } 
 
     unset($summary);
-
     unset($options["limit"]);
     $options["taskStatus"] = "due_today";
     $summary = task::get_task_list($options);
@@ -99,16 +95,12 @@ class person extends db_entity
       if ($format == "html") {
         $dueToday = "<br><br><h4>Tasks Due Today</h4>";
       } else {
-        $dueToday = "\n\n- - - - - - - - - -\n\nTasks Due Today";
+        $dueToday = "\n\nTasks Due Today";
       }
       $dueToday.= $summary;
-
-    } else {
-      $dueToday = false;
-    }
+    } 
 
     unset($summary);
-
     unset($options["limit"]);
     $options["taskStatus"] = "new";
     $summary = task::get_task_list($options);
@@ -117,19 +109,12 @@ class person extends db_entity
       if ($format == "html") {
         $newTasks = "<br><br><h4>New Tasks</h4>";
       } else {
-        $newTasks = "\n\n- - - - - - - - - -\n\nNew Tasks";
+        $newTasks = "\n\nNew Tasks";
       }
-
       $newTasks.= $summary;
-
-    } else {
-      $newTasks = false;
-    }
-
+    } 
 
     return $topThree.$dueToday.$newTasks;
-
-
   }
 
   function get_announcements_for_email() {

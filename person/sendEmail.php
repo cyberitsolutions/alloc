@@ -39,8 +39,10 @@ $db->query("SELECT * FROM person WHERE dailyTaskEmail = 'yes' AND personActive =
 
 
 while ($db->next_record()) {
+
   $person = new person;
   $person->read_db_record($db);
+  $person->set_id($db->f("personID"));
   $msg = "";
   $headers = "";
 
@@ -77,13 +79,15 @@ while ($db->next_record()) {
       $msg.= "</body></html>";
     }
 
-    if ($tasks != "" && $to) {
+    if ($tasks && $to) {
       $email = new alloc_email;
+      #$email->ignore_no_email_hosts = true;
+      #$email->ignore_no_email_urls = true;
 
       if ($email->send($to, $subject, stripslashes($msg), $headers)) {
         echo "Email sent to: ".$person->get_value("username")."\r\n";
       } else {
-        echo "Not sent email: ".$subject." to: ".$person->get_value("username");
+        echo "Not sent email: ".$subject." to: ".$person->get_value("username").". ";
       }
     } else {
       echo $msg;

@@ -611,7 +611,7 @@ function get_task_statii_array() {
 
     if (!$_FORM["projectID"] && $_FORM["projectType"] && $_FORM["projectType"] != "all") {
       $db = new db_alloc;
-      $q = project::get_project_type_query($_FORM["projectType"]);
+      $q = project::get_project_type_query($_FORM["projectType"],$_FORM["personID"]);
       $db->query($q);
       while ($db->next_record()) {
         $_FORM["projectIDs"][] = $db->f("projectID");
@@ -694,6 +694,7 @@ function get_task_statii_array() {
      *   showTimes        = The original estimate and the time billed and percentage
      *   showHeader       = A descriptive header row
      *   showDescription  = The tasks description
+     *   debug            = print out some debug info
      *
      *
      * Filter Options:
@@ -712,9 +713,11 @@ function get_task_statii_array() {
      *
      */
   
-    
+    $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
+   
     $filter = task::get_task_list_filter($_FORM);
 
+    $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
 
     isset($_FORM["limit"]) && $_FORM["limit"] != "all" and $limit = sprintf("limit %d",$_FORM["limit"]); # needs to use isset cause of zeroes is a valid number 
     $_FORM["return"] or $_FORM["return"] = "html";
