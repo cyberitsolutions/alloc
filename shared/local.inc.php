@@ -21,6 +21,9 @@
  *
  */
 
+// The order of file processing goes: 
+// requested_script.php -> /php/include/path/alloc.inc -> ./local.inc.php (this) -> more includes -> back to requested_script.php
+
 
 // Get alloc version
 if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DIR."/util/alloc_version") && !defined("ALLOC_VERSION")) {
@@ -49,6 +52,15 @@ $SCRIPT_PATH = $_SERVER["SCRIPT_NAME"];
 $script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $_SERVER["SCRIPT_NAME"]);
 define("SCRIPT_PATH",$SCRIPT_PATH);
 
+// Task type definitions, these are shared across modules, so we're specifying them here
+define("TT_TASK"     , 1);
+define("TT_PHASE"    , 2);
+define("TT_MESSAGE"  , 3);
+define("TT_FAULT"    , 4);
+define("TT_MILESTONE", 5);
+
+
+// Include stuff from shared/ 
 require_once(ALLOC_MOD_DIR."/shared/template.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/help.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/db_utils.inc.php");

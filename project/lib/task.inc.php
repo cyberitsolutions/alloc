@@ -21,12 +21,6 @@
  *
  */
 
-// Task types
-define("TT_TASK", 1);
-define("TT_PHASE", 2);
-define("TT_MESSAGE", 3);
-define("TT_FAULT", 4);
-define("TT_MILESTONE", 5);
 define("PERM_PROJECT_READ_TASK_DETAIL", 256);
 $default_task_options = array("show_links"=>true);
 
