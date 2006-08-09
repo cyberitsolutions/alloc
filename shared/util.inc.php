@@ -201,7 +201,66 @@ function show_toolbar() {
   include_template(ALLOC_MOD_DIR."/shared/templates/toolbarS.tpl");
 }
 
+function move_attachment($entity, $id) {
+  global $TPL;
 
+  if ($_FILES["attachment"]) {
+    is_uploaded_file($_FILES["attachment"]["tmp_name"]) || die("Uploaded document error.  Please try again.");
+
+    $dir = $TPL["url_alloc_attachments_dir"].$entity."/".$id;
+    if (!is_dir($dir)) {
+      mkdir($dir, 0777);
+    }
+
+    if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $dir."/".$_FILES["attachment"]["name"])) {
+      die("could not move attachment to: ".$dir."/".$_FILES["attachment"]["name"]);
+    } else {
+      chmod($dir."/".$_FILES["attachment"]["name"], 0777);
+    }
+  }
+}
+
+function get_attachments($entity, $id) {
+  
+  global $TPL;
+  $rows = array();
+  $dir = $TPL["url_alloc_attachments_dir"].$entity."/".$id;
+
+  if ($id) {
+    if (!is_dir($dir)) {
+      mkdir($dir, 0777);
+    }
+
+    if (is_dir($dir)) {
+      $handle = opendir($dir);
+
+      while (false !== ($file = readdir($handle))) {
+
+        if ($file != "." && $file != "..") {
+          $size = filesize($dir."/".$file);
+          $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".htmlentities($file)."</a>";
+          $row["size"] = sprintf("%dk",$size/1024);
+          $rows[] = $row;    
+        }
+      }
+    }
+    return $rows;
+  }
+}
+
+function util_show_attachments($entity, $id) {
+  global $TPL;
+  $TPL["entity_url"] = $TPL["url_alloc_".$entity];
+  $TPL["entity_key_name"] = $entity."ID";
+  $TPL["entity_key_value"] = $id;
+
+  $rows = get_attachments($entity, $id);
+  foreach ($rows as $row) {
+    $TPL["attachments"].= "<tr><td>".$row["size"]."</td><td>".$row["file"]."</td></tr>";
+  }
+
+  include_template("../shared/templates/attachmentM.tpl");
+}
 
 
 

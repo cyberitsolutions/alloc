@@ -161,7 +161,7 @@
 </table>
 
 
-{:show_attachments templates/project_attachmentsM.tpl}
+{:show_attachments}
 
 
 {table_box}

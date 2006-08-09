@@ -131,6 +131,9 @@ cat ${DIR}templates/patch.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME//\//\/}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_BACKUP_DIR/${ALLOC_BACKUP_DIR//\//\/}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_PATCH_DIR/${ALLOC_PATCH_DIR//\//\/}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_WEB_USER/${ALLOC_WEB_USER//\//\/}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
+| sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
 | sed -e "s/CONFIG_VAR_ROOT_DB_PASS/${ROOT_DB_PASS//\//\/}/" \
 > ${DIR}patch.sh
 

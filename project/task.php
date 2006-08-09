@@ -72,6 +72,11 @@ require_once("alloc.inc");
     return $rtn;
   }
 
+  function show_attachments() {
+    global $taskID;
+    util_show_attachments("task",$taskID);
+  }
+
 
 global $timeSheetID;
 
@@ -104,6 +109,12 @@ if (isset($taskID)) {
   }
 }
 
+// if someone uploads an attachment
+if ($_POST["save_attachment"]) {
+  move_attachment("task",$taskID);
+  header("Location: ".$TPL["url_alloc_task"]."taskID=".$taskID);
+} 
+  
 
 // If saving a record
 if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POST["save_and_summary"] || $_POST["timeSheet_save"]) {

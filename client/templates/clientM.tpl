@@ -56,7 +56,7 @@
 </table>
  
 
-    {:show_attachments templates/clientAttachmentsM.tpl}
+{:show_attachments}
 
     {table_box}
       <tr>

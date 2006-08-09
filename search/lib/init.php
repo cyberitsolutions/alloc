@@ -21,7 +21,6 @@
  *
  */
 
-// include(ALLOC_MOD_DIR."/project/lib/projectDocs.inc.php");
   class search_module extends module {
   // var $db_entities = array("project", "task");
   /* 
