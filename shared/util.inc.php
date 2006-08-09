@@ -239,7 +239,7 @@ function get_attachments($entity, $id) {
         if ($file != "." && $file != "..") {
           $size = filesize($dir."/".$file);
           $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".htmlentities($file)."</a>";
-          $row["size"] = sprintf("%dk",$size/1024);
+          $row["size"] = sprintf("%dkb",$size/1024);
           $rows[] = $row;    
         }
       }

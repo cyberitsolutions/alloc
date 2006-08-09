@@ -13,7 +13,7 @@
       <table align="right" cellpadding="0" cellspacing="0">
         <tr>
           <td><input type="file" name="attachment"></td>
-          <td><input type="submit" value="Save Document" name="save_attachment"></td>
+          <td><input type="submit" value="Upload Attachment" name="save_attachment"></td>
         </tr>
       </table>
     </td>
