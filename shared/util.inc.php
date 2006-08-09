@@ -255,6 +255,7 @@ function util_show_attachments($entity, $id) {
   $TPL["entity_key_value"] = $id;
 
   $rows = get_attachments($entity, $id);
+  $rows or $rows = array();
   foreach ($rows as $row) {
     $TPL["attachments"].= "<tr><td>".$row["size"]."</td><td>".$row["file"]."</td></tr>";
   }
