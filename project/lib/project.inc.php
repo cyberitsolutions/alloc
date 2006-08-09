@@ -158,9 +158,13 @@ class project extends db_entity
     }
   }
 
-  function get_project_type_query($type="mine") {
-    $type or $type = "mine";
+  function get_project_type_query($type="mine",$personID=false) {
     global $current_user;
+    $type or $type = "mine";
+    $personID or $personID = $current_user->get_id();
+
+    
+
 
     if ($type == "mine") {
       $q = sprintf("SELECT project.projectID, project.projectName
@@ -170,7 +174,7 @@ class project extends db_entity
                      WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$current_user->get_id());
+                  ,$personID);
 
     } else if ($type == "pm") {
       $q = sprintf("SELECT project.projectID, project.projectName
@@ -181,7 +185,7 @@ class project extends db_entity
                        AND projectPersonRole.projectPersonRoleHandle = 'isManager' 
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$current_user->get_id());
+                  ,$personID);
 
     } else if ($type == "tsm") {
       $q = sprintf("SELECT project.projectID, project.projectName
@@ -192,7 +196,7 @@ class project extends db_entity
                        AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' 
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$current_user->get_id());
+                  ,$personID);
 
     } else if ($type == "curr") {
       $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = 'current' ORDER BY projectName");
