@@ -65,22 +65,8 @@ if ($_POST["save"]) {
   }    
   
 } else if ($_POST["save_attachment"]) {
-
-  if ($_FILES["attachment"]) {
-    is_uploaded_file($_FILES["attachment"]["tmp_name"]) || die("Uploaded document error.  Please try again.");
-
-    if (!is_dir($TPL["url_alloc_clientDocs_dir"].$clientID)) {
-      mkdir($TPL["url_alloc_clientDocs_dir"].$clientID, 0777);
-    }
-
-    if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $TPL["url_alloc_clientDocs_dir"].$clientID."/".$_FILES["attachment"]["name"])) {
-      die("could not move attachment to: ".$TPL["url_alloc_clientDocs_dir"].$clientID."/".$_FILES["attachment"]["name"]);
-    } else {
-      chmod($TPL["url_alloc_clientDocs_dir"].$clientID."/".$_FILES["attachment"]["name"], 0777);
-      header("Location: ".$TPL["url_alloc_client"]."clientID=".$clientID);
-    }
-  }
-
+  move_attachment("client",$clientID);
+  header("Location: ".$TPL["url_alloc_client"]."clientID=".$clientID);
 
 } else {
 
@@ -360,30 +346,12 @@ include_template("templates/clientM.tpl");
     }
   }
 
-  function show_attachments($template) {
-    global $TPL, $clientID;
-    $TPL["clientID"] = $clientID;
-    include_template($template);
+
+  function show_attachments() {
+    global $clientID;
+    util_show_attachments("client",$clientID);
   }
-
-  function list_attachments($template) {
-
-    global $TPL, $clientID;
-
-    if (is_dir($TPL["url_alloc_clientDocs_dir"].$clientID)) {
-      $handle = opendir($TPL["url_alloc_clientDocs_dir"].$clientID);
-
-      while (false !== ($file = readdir($handle))) {
-
-        if ($file != "." && $file != "..") {
-          $size = filesize($TPL["url_alloc_clientDocs_dir"].$clientID."/".$file);
-          $TPL["filename"] = "<a href=\"".$TPL["url_alloc_clientDoc"]."clientID=".$clientID."&file=".urlencode($file)."\">".$file."</a>";
-          $TPL["size"] = sprintf("%dk",$size/1024);
-          include_template($template);
-        }
-      }
-    }
-  }
+  
 
   function show_comments($template) {
     global $TPL, $clientID, $current_user;

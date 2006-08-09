@@ -227,6 +227,10 @@ class project extends db_entity
     return "<select name=\"projectID[]\" size=\"9\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
   }
 
+  function has_attachment_permission($person) {
+    return $this->has_project_permission($person);
+  }
+
 }
 
 

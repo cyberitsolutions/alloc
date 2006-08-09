@@ -228,6 +228,10 @@ class task extends db_entity {
     }
   }
 
+  function has_attachment_permission() {
+    return $this->is_owner();
+  }
+
   function get_parent_task_select($projectID="") {
     global $TPL;
     

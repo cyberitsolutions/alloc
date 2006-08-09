@@ -66,6 +66,11 @@ ALLOC_BACKUP_DIR="CONFIG_VAR_ALLOC_BACKUP_DIR"
 ALLOC_PATCH_DIR="CONFIG_VAR_ALLOC_PATCH_DIR"
 ROOT_DB_PASS="CONFIG_VAR_ROOT_DB_PASS"
 
+# Extra vars, just in case the patch.sh script needs to do internal patches sometime..
+ALLOC_WEB_USER="CONFIG_VAR_ALLOC_WEB_USER"
+ALLOC_DOCS_DIR="CONFIG_VAR_ALLOC_DOCS_DIR"
+ALLOC_WEB_URL_PREFIX="CONFIG_VAR_ALLOC_WEB_URL_PREFIX"
+
 # Whack a -p in front of db password for mysql command line
 [ -n "${ROOT_DB_PASS}" ] && ROOT_DB_PASS="-p${ROOT_DB_PASS}"
 

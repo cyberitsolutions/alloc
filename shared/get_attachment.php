@@ -21,20 +21,21 @@
  *
  */
 
+// For use like get_attachment.php?entity=project&id=5&file=foo.bar
 
 require_once("alloc.inc");
 
 $file = urldecode($_GET["file"]);
 
-if ($_GET["projectID"] && is_numeric($_GET["projectID"]) && $file && !preg_match("/\.\./",$file)) {
+if ($_GET["id"] && is_numeric($_GET["id"]) && $file && !preg_match("/\.\./",$file)) {
 
-  $p = new project;
-  $p->set_id($_GET["projectID"]);
-  $p->select();
+  $entity = new $_GET["entity"];
+  $entity->set_id($_GET["id"]);
+  $entity->select();
 
-  $file = $TPL["url_alloc_projectDocs_dir"].$_GET["projectID"]."/".$file;
+  $file = $TPL["url_alloc_attachments_dir"].$_GET["entity"]."/".$_GET["id"]."/".$file;
 
-  if ($p->has_project_permission($current_user) && file_exists($file) && is_writeable($file)) {
+  if ($entity->has_attachment_permission($current_user) && file_exists($file)) {
     $fp = fopen($file, "rb");
     header('Content-Type: application/octet-stream');
     header("Content-Length: ".filesize($file));
