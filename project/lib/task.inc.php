@@ -789,8 +789,6 @@ function get_task_statii_array() {
         if (count($tasks)) {
           $print = true;
 
-          #$tasks = task::remove_dead_branches($tasks,$filter,$_FORM);
-
           $_FORM["showProject"] and $summary.= "\n<tr>";
           $_FORM["showProject"] and $summary.= "\n  <td class=\"tasks\" colspan=\"21\">".$project["link"]."</td>";
           $_FORM["showProject"] and $summary.= "\n</tr>";
@@ -965,29 +963,6 @@ function get_task_statii_array() {
 
     return $tasks;
   }
-
-  function remove_dead_branches($tasks,$filter,$_FORM) {
-    if (!$_FORM["personID"]) return $tasks;
-  
-    foreach($tasks as $task) {
-      $parentTaskIDs[$task["parentTaskID"]]; 
-    }
-
-// if BACKwards
-    foreach($tasks as $task) {
-      if ($task["personID"] == $_FORM["personID"]) {
-        $good[] = $task;
-      }
-    }
-
-    
-    
-
-    $branches = $tasks; 
-    return $branches;
-  }
-
-
 
   function get_new_subtask_link() {
     global $TPL;
