@@ -34,68 +34,54 @@
     <td><select name="projectType">{projectType_options}</select></td>
   </tr>
   <tr>
-    <td align="right">Phone</td>
-    <td><input type="text" size="20" name="projectClientPhone" value="{project_projectClientPhone}"></td>
+    <td align="right">Project Budget $</td>
+    <td>
+      <input type="text" name="projectBudget" value="{project_projectBudget}" size="10">
+      <select name="currencyType">{currencyType_options}</select>
+    </td>
   </tr>
   <tr>
     <td align="right">Client</td>
     <td colspan="1">
       <select name="clientID">{clientOptions}</select>&nbsp; &nbsp;<a href="{url_alloc_client}">New Client</a>
     </td>
-    <td align="right">E-mail</td>
-    <td><input type="text" size="20" name="projectClientEMail" value="{project_projectClientEMail}"></td>
-  </tr>
-  <tr>
-    <td align="right">Contact name</td>
-    <td><input type="text" size="20" name="projectClientName" value="{project_projectClientName}"></td>
-    <td align="right">Mobile</td>
-    <td><input type="text" size="20" name="projectClientMobile" value="{project_projectClientMobile}"></td>
-  </tr>
-  <tr>
-    <td align="right">Address</td>
-    <td colspan="1">
-      <input type="text" size="40" name="projectClientAddress" value="{project_projectClientAddress}">
-    </td>
-    <td align="right">Actual Start</td>
-    <td>
-      <input type="text" size="11" name="dateActualStart" value="{project_dateActualStart}">
-      <input type="button" value="Today" onClick="dateActualStart.value='{today}'">
-    </td>
-  </tr>
-  <tr>
-    <td align="right">Target Start</td>
-    <td>
-      <input type="text" size="11" name="dateTargetStart" value="{project_dateTargetStart}">
-      <input type="button" value="Today" onClick="dateTargetStart.value='{today}'">
-    </td>
-    <td align="right">Actual Completion</td>
-    <td>
-      <input type="text" size="11" name="dateActualCompletion" value="{project_dateActualCompletion}">
-      <input type="button" value="Today" onClick="dateActualCompletion.value='{today}'">
-    </td>
-  </tr>
-  <tr>
-    <td align="right">Target Completion</td>
-    <td>
-      <input type="text" size="11" name="dateTargetCompletion" value="{project_dateTargetCompletion}">
-      <input type="button" value="Today" onClick="dateTargetCompletion.value='{today}'">
-    </td>
     <td align="right">Customer Billed At $</td>
     <td><input type="text" name="customerBilledDollars" value="{project_customerBilledDollars}"></td>
   </tr>
   <tr>
-    <td align="right">Project Budget $</td>
-    <td>
-      <input type="text" name="projectBudget" value="{project_projectBudget}">
-      <select name="currencyType">{currencyType_options}</select>
-    </td>
+    <td align="right"></td>
+    <td rowspan="3">{project_projectClientName} {project_projectClientPhone} {project_projectClientEMail} {project_projectClientMobile} {project_projectClientAddress} {clientDetails}</td>
+    <td align="right">{cost_centre_label}&nbsp;</td>
+    <td>{cost_centre_bit}&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right"></td>
     <td align="right">Through an Agency<br>(Payroll Tax Exempt)</td>
     <td><input type="checkbox" name="project_is_agency" value="1"{project_is_agency}></td>
   </tr>
   <tr>
-    <td align="right">{cost_centre_label}&nbsp;</td>
-    <td>{cost_centre_bit}&nbsp;</td>
+    <td align="right"></td>
+    <td align="right">Target Start/Completion</td>
+    <td>
+      <input type="text" size="11" name="dateTargetStart" value="{project_dateTargetStart}">
+      <input type="button" value="Today" onClick="dateTargetStart.value='{today}'">
+      <input type="text" size="11" name="dateTargetCompletion" value="{project_dateTargetCompletion}">
+      <input type="button" value="Today" onClick="dateTargetCompletion.value='{today}'">
+    </td>
   </tr>
+
+  <tr>
+    <td align="right"></td>
+    <td></td>
+    <td align="right">Actual Starts/Completion</td>
+    <td>
+      <input type="text" size="11" name="dateActualStart" value="{project_dateActualStart}">
+      <input type="button" value="Today" onClick="dateActualStart.value='{today}'">
+      <input type="text" size="11" name="dateActualCompletion" value="{project_dateActualCompletion}">
+      <input type="button" value="Today" onClick="dateActualCompletion.value='{today}'">
+    </td>
+  </tr>
+
   <tr>
     <td colspan="5">&nbsp;</td>
   </tr>
