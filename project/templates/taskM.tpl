@@ -72,7 +72,7 @@ function updateTaskCommentTemplate(number) {
           </td>
         </tr>  
         <tr>
-          <td>Percent Complete</td>
+          <td>Percent</td>
           <td>
             {percentComplete}
           </td>
