@@ -98,7 +98,7 @@ class task extends db_entity {
   function email_task_closed() {
     global $current_user;
     if ($current_user->get_id() != $this->get_value("creatorID")) {
-      $successful_recipients = $this->send_emails(array("creator"),$this,"Task Closed");
+      $successful_recipients = $this->send_emails(array("creator"),"Task Closed");
       $successful_recipients and $msg = "Emailed: ".stripslashes($successful_recipients).", Task Closed: ".stripslashes($this->get_value("taskName"));
     }
     return $msg; 
@@ -460,8 +460,9 @@ class task extends db_entity {
         $db = new db_alloc;
         $q = sprintf("SELECT * FROM taskCCList WHERE taskID = %d",$this->get_id()); 
         $db->query($q);
-        while($db->next_record()) {
-          $recipients[] = $db->Record;
+        while($row = $db->next_record()) {
+          $row["isCC"] = true;
+          $recipients[] = $row;
         }
       } else if ($selected_option == "creator") {
         $recipients[] = $people[$this->get_value("creatorID")];
@@ -487,15 +488,13 @@ class task extends db_entity {
     return $recipients;
   }
 
-  function send_emails($selected_option, $object, $extra="") {
+  function send_emails($selected_option, $extra="", $body="") {
     global $current_user;
     $recipients = $this->get_email_recipients($selected_option);
 
-    $extra or $extra = "Task";
-    $subject = $extra.": ".$this->get_id()." ".$this->get_value("taskName");
 
     foreach ($recipients as $recipient) {
-      if ($object->send_email($recipient, $subject)) {
+      if ($this->send_email($recipient, $extra, $body)) {
         $successful_recipients.= $commar.$recipient["fullName"];
         $commar = ", ";
       }
@@ -503,8 +502,10 @@ class task extends db_entity {
     return $successful_recipients;
   }
 
-  function send_email($recipient, $subject) {
+  function send_email($recipient, $subject, $body) {
     global $current_user;
+
+    $subject or $subject = "Task";
 
     // New email object wrapper takes care of logging etc.
     $email = new alloc_email;
@@ -512,16 +513,33 @@ class task extends db_entity {
 
     // REMOVE ME!!
     $email->ignore_no_email_urls = true;
+    $email->ignore_no_email_hosts = true;
 
     $p = new project;
     $p->set_id($this->get_value("projectID"));
     $p->select();
-    $body = "Project: ".stripslashes($p->get_value("projectName"));
-    $body.= "\nTask: ".stripslashes($this->get_value("taskName"));
-    $body.= "\n".config::get_config_item("allocURL")."project/task.php?taskID=".$this->get_id();
-    $body.= "\n\n".stripslashes(wordwrap($this->get_value("taskDescription")));
 
-    $message = "\n".wordwrap($body);
+    $recipient["isCC"] and $message.= "[Note: this email is sent to you from the allocPSA services management ";
+    $recipient["isCC"] and $message.= "system. You are receiving this email because you are nominated as an ";
+    $recipient["isCC"] and $message.= "interested party on the project, task or activity detailed below.]\n";
+    
+    $message.= "\n\n".$subject." by ".$current_user->get_username(1);
+    $message.= "\n\n".stripslashes(wordwrap($body));
+    $message.= "\n\n".config::get_config_item("allocURL")."project/task.php?taskID=".$this->get_id();
+    $message.= "\n\nProject: ".stripslashes($p->get_value("projectName"));
+    $message.= "\n   Task: ".stripslashes($this->get_value("taskName"));
+    $message.= "\n   Desc: ".stripslashes($this->get_value("taskDescription"));
+
+
+    $recipient["isCC"] and $message.= "\n\n\nIf you have any questions, please reply to this email or contact: ";
+    $recipient["isCC"] and $message.= "\n\n".config::get_config_item("companyName");
+    $recipient["isCC"] and $message.= "\n".config::get_config_item("companyContactAddress");
+    $recipient["isCC"] and $message.= "\n\nE: ".config::get_config_item("companyContactEmail");
+    $recipient["isCC"] and $message.= "\nP: ".config::get_config_item("companyContactPhone");
+    $recipient["isCC"] and $message.= "\nF: ".config::get_config_item("companyContactFax");
+    $recipient["isCC"] and $message.= "\nW: ".config::get_config_item("companyContactHomePage");
+
+    $message = "\n".wordwrap($message)."\n\n";
 
     // Convert plain old recipient address blah@cyber.com.au to Alex Lance <blah@cyber.com.au>
     if ($recipient["firstName"] && $recipient["surname"] && $recipient["emailAddress"]) {
@@ -531,6 +549,7 @@ class task extends db_entity {
     }
 
     if ($recipient["emailAddress"]) {
+      $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName");
       return $email->send($recipient["emailAddress"], $subject, $message);
     }
   }
