@@ -172,7 +172,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   }
 
   if ($task_is_new && $current_user->get_id() != $task->get_value("personID")) {
-    $successful_recipients = $task->send_emails(array("assignee"),$task,"Task Created");
+    $successful_recipients = $task->send_emails(array("assignee"),"Task Created");
     $successful_recipients and $msg[] = "Emailed ".$successful_recipients;
   }
  

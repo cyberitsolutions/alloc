@@ -42,6 +42,7 @@ class comment extends db_entity {
   }
 
 
+/* nope
   function send_email($recipient, $subject) {
     global $current_user;
 
@@ -70,6 +71,8 @@ class comment extends db_entity {
       return $email->send($recipient["emailAddress"], $subject, $message);
     }
   }
+*/
+
 }
 
 

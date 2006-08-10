@@ -24,6 +24,7 @@
 
 require_once("alloc.inc");
 
+global $TPL;
 $taskID = $_POST["taskID"] or $taskID = $_GET["taskID"];
 
 if ($taskID) {
@@ -60,11 +61,13 @@ if ($_POST["taskComment_save"] || $_POST["taskComment_update"]) {
 
     // Email new comment?
     if ($_POST["commentEmailCheckboxes"]) {
-      $successful_recipients = $task->send_emails($_POST["commentEmailCheckboxes"], $comment, "Task Comments");
+      
+      $successful_recipients = $task->send_emails($_POST["commentEmailCheckboxes"], "Task Comments", $comment->get_value("comment"));
  
       // Append success to end of the comment
       if ($successful_recipients && is_object($comment)) {
         $append_comment_text = "Emailed: ".$successful_recipients." at ".date("Y-m-d H:i:s")."\n".$comment->get_value("comment");
+        $message_good.= $append_comment_text;
         $comment->set_value("comment",$append_comment_text);
         $comment->save();
       }
@@ -78,6 +81,7 @@ if ($_POST["taskComment_save"] || $_POST["taskComment_update"]) {
 
 if ($task->get_id()) {
   $_POST["taskComment_edit"] and $extra = "&taskComment_edit=true&commentID=".$_POST["taskComment_id"];
+  $message_good and $extra.="&message_good=".urlencode($message_good);
   header("Location: ".$TPL["url_alloc_task"]."taskID=".$task->get_id().$extra);
 }
 
