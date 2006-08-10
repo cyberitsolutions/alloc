@@ -509,7 +509,7 @@ $project->get_value("clientID") and $clientID_sql = sprintf(" OR clientID = %d",
 $query = sprintf("SELECT * FROM client WHERE clientStatus = 'current' ".$clientID_sql." ORDER BY clientName");
 $db->query($query);
 $TPL["clientOptions"] = get_option("None", "0", $TPL["project_clientID"] == 0)."\n";
-$TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $TPL["project_clientID"]);
+$TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $TPL["project_clientID"],55);
 $client = $project->get_foreign_object("client");
 $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
@@ -522,26 +522,39 @@ if ($clientID_sql) {
 
   $db->query($query);
   $row = $db->next_record();
-  $row["clientStreetAddressOne"] and $one.= $row["clientStreetAddressOne"]."</br>";
-  $row["clientSuburbOne"]        and $one.= $row["clientSuburbOne"]."</br>";
-  $row["clientStateOne"]         and $one.= $row["clientStateOne"]."</br>";
-  $row["clientPostcodeOne"]      and $one.= $row["clientPostcodeOne"]."</br>";
-  $row["clientCountryOne"]       and $one.= $row["clientCountryOne"]."</br>";
 
-  $row["clientStreetAddressTwo"] and $two.= $row["clientStreetAddressTwo"]."</br>";
-  $row["clientSuburbTwo"]        and $two.= $row["clientSuburbTwo"]."</br>";
-  $row["clientStateTwo"]         and $two.= $row["clientStateTwo"]."</br>";
-  $row["clientPostcodeTwo"]      and $two.= $row["clientPostcodeTwo"]."</br>";
-  $row["clientCountryTwo"]       and $two.= $row["clientCountryTwo"]."</br>";
+  
+  $row["clientStreetAddressOne"] and $one.= $row["clientStreetAddressOne"]."<br/>";
+  $row["clientSuburbOne"]        and $one.= $row["clientSuburbOne"]."<br/>";
+  $row["clientStateOne"]         and $one.= $row["clientStateOne"]."<br/>";
+  $row["clientPostcodeOne"]      and $one.= $row["clientPostcodeOne"]."<br/>";
+  $row["clientCountryOne"]       and $one.= $row["clientCountryOne"]."<br/>";
 
-  $row["clientContactName"]      and $thr.= $row["clientContactName"]."</br>";
-  $row["clientContactPhone"]     and $thr.= $row["clientContactPhone"]."</br>";
-  $row["clientContactMobile"]    and $thr.= $row["clientContactMobile"]."</br>";
-  $row["clientContactFax"]       and $thr.= $row["clientContactFax"]."</br>";
-  $row["clientContactEmail"]     and $thr.= $row["clientContactEmail"]."</br>";
+  $row["clientStreetAddressTwo"] and $two.= $row["clientStreetAddressTwo"]."<br/>";
+  $row["clientSuburbTwo"]        and $two.= $row["clientSuburbTwo"]."<br/>";
+  $row["clientStateTwo"]         and $two.= $row["clientStateTwo"]."<br/>";
+  $row["clientPostcodeTwo"]      and $two.= $row["clientPostcodeTwo"]."<br/>";
+  $row["clientCountryTwo"]       and $two.= $row["clientCountryTwo"]."<br/>";
 
-  $TPL["clientDetails"] = "<table><tr><td><b>Postal Address</b></td><td><b>Street Address</b></td><td><b>Primary Contact</b></td></tr>";
-  $TPL["clientDetails"].= "<tr><td valign=\"top\">".$one."</td><td valign=\"top\">".$two."</td><td valign=\"top\">".$thr."</td></tr></table>";
+  $row["clientContactName"]      and $thr.= $row["clientContactName"]."<br/>";
+  $row["clientContactPhone"]     and $thr.= $row["clientContactPhone"]."<br/>";
+  $row["clientContactMobile"]    and $thr.= $row["clientContactMobile"]."<br/>";
+  $row["clientContactFax"]       and $thr.= $row["clientContactFax"]."<br/>";
+  $row["clientContactEmail"]     and $thr.= $row["clientContactEmail"]."<br/>";
+
+  $project->get_value("projectClientName")    and $fou.= $project->get_value("projectClientName")."<br/>";
+  $project->get_value("projectClientAddress") and $fou.= $project->get_value("projectClientAddress")."<br/>";
+  $project->get_value("projectClientPhone")   and $fou.= $project->get_value("projectClientPhone")."<br/>";
+  $project->get_value("projectClientMobile")  and $fou.= $project->get_value("projectClientMobile")."<br/>";
+  $project->get_value("projectClientEMail")   and $fou.= $project->get_value("projectClientEMail")."<br/>";
+
+  $temp = str_replace("<br/>","",$fou);
+  $temp and $thr = $fou;
+
+  $TPL["clientDetails"] = "<table>";
+  $TPL["clientDetails"].= "<tr><td><b>Postal Address</b></td><td><b>Street Address</b></td><td><b>Contact</b></td></tr>";
+  $TPL["clientDetails"].= "<tr><td valign=\"top\">".$one."</td><td valign=\"top\">".$two."</td><td valign=\"top\">".$thr."</td></tr>";
+  $TPL["clientDetails"].= "</table>";
 }
 
 
