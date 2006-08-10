@@ -505,12 +505,45 @@ $TPL["project_is_agency"] = $project->get_value("is_agency") ? " checked" : "";
 
 
 $db = new db_alloc;
-$query = sprintf("SELECT * FROM client ORDER BY clientName");
+$project->get_value("clientID") and $clientID_sql = sprintf(" OR clientID = %d",$project->get_value("clientID"));
+$query = sprintf("SELECT * FROM client WHERE clientStatus = 'current' ".$clientID_sql." ORDER BY clientName");
 $db->query($query);
 $TPL["clientOptions"] = get_option("None", "0", $TPL["project_clientID"] == 0)."\n";
 $TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $TPL["project_clientID"]);
 $client = $project->get_foreign_object("client");
 $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+
+if ($clientID_sql) {
+  $query = sprintf("SELECT * 
+                      FROM client 
+                 LEFT JOIN clientContact ON client.clientPrimaryContactID = clientContact.clientContactID 
+                     WHERE client.clientID = %d "
+                   ,$project->get_value("clientID"));
+
+  $db->query($query);
+  $row = $db->next_record();
+  $row["clientStreetAddressOne"] and $one.= $row["clientStreetAddressOne"]."</br>";
+  $row["clientSuburbOne"]        and $one.= $row["clientSuburbOne"]."</br>";
+  $row["clientStateOne"]         and $one.= $row["clientStateOne"]."</br>";
+  $row["clientPostcodeOne"]      and $one.= $row["clientPostcodeOne"]."</br>";
+  $row["clientCountryOne"]       and $one.= $row["clientCountryOne"]."</br>";
+
+  $row["clientStreetAddressTwo"] and $two.= $row["clientStreetAddressTwo"]."</br>";
+  $row["clientSuburbTwo"]        and $two.= $row["clientSuburbTwo"]."</br>";
+  $row["clientStateTwo"]         and $two.= $row["clientStateTwo"]."</br>";
+  $row["clientPostcodeTwo"]      and $two.= $row["clientPostcodeTwo"]."</br>";
+  $row["clientCountryTwo"]       and $two.= $row["clientCountryTwo"]."</br>";
+
+  $row["clientContactName"]      and $thr.= $row["clientContactName"]."</br>";
+  $row["clientContactPhone"]     and $thr.= $row["clientContactPhone"]."</br>";
+  $row["clientContactMobile"]    and $thr.= $row["clientContactMobile"]."</br>";
+  $row["clientContactFax"]       and $thr.= $row["clientContactFax"]."</br>";
+  $row["clientContactEmail"]     and $thr.= $row["clientContactEmail"]."</br>";
+
+  $TPL["clientDetails"] = "<table><tr><td><b>Postal Address</b></td><td><b>Street Address</b></td><td><b>Primary Contact</b></td></tr>";
+  $TPL["clientDetails"].= "<tr><td valign=\"top\">".$one."</td><td valign=\"top\">".$two."</td><td valign=\"top\">".$thr."</td></tr></table>";
+}
+
 
 $options["showHeader"] = true;
 $options["taskView"] = "byProject";
