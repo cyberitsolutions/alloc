@@ -38,7 +38,7 @@ class person extends db_entity
     $this->db_entity();         // Call constructor of parent class
     $this->key_field = new db_text_field("personID");
     $this->data_fields = array("username"=>new db_text_field("username")
-                               , "lastLoginDate"=>new db_text_field("lastLoginDate", "Last login date", "",array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
+                               , "lastLoginDate"=>new db_text_field("lastLoginDate", "Last login date", "")
                                , "password"=>new db_text_field("password", "Password", "", array("allow_null"=>false, "read_perm_name"=>PERM_PERSON_READ_DETAILS))
                                , "perms"=>new db_text_field("perms", "Permissions", "", array("write_perm_name"=>PERM_PERSON_WRITE_ROLES))
                                , "emailAddress"=>new db_text_field("emailAddress", "Email address", "")
