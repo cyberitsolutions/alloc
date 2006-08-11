@@ -100,8 +100,10 @@ function show_people($template_name) {
     $novice_skills = $person->get_skills('Novice');
     $TPL["novice_skills"] = ($novice_skills ? "<img src=\"../images/skill_novice.png\" alt=\"Novice\">$novice_skills; " : "");
 
-    $TPL["ts_hrs_col_1"] = sprintf("%d",$ts_hrs_col_1[$db->f("pid")]);
-    $TPL["ts_hrs_col_2"] = sprintf("%d",$ts_hrs_col_2[$db->f("pid")]);
+    if ($person->have_perm(PERM_PERSON_READ_MANAGEMENT)) {
+      $TPL["ts_hrs_col_1"] = sprintf("%d",$ts_hrs_col_1[$db->f("pid")]);
+      $TPL["ts_hrs_col_2"] = sprintf("%d",$ts_hrs_col_2[$db->f("pid")]);
+    }
 
     # Might want to consider privacy issues before putting this in.
     #$TPL["ts_dollars_col_1"] = sprintf("%0.2f",$ts_dollars_col_1[$db->f("pid")]);
