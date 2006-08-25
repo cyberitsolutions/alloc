@@ -268,6 +268,7 @@ CREATE TABLE project (
   projectName varchar(255) NOT NULL default '',
   projectComments text,
   clientID int(11) NOT NULL default '0',
+  clientContactID int(11) default '0',
   projectModifiedUser int(11) NOT NULL default '0',
   projectType enum('contract','job','project') default NULL,
   projectClientName varchar(255) default NULL,

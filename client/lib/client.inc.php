@@ -63,7 +63,16 @@ class client extends db_entity {
     // Placeholder for security check in shared/get_attchment.php
     return true;
   }
-  
+ 
+
+  function get_client_contact_select($clientID="",$clientContactID="") {
+    $db = new db_alloc;
+    $q = sprintf("SELECT clientContactName as value, clientContactID as name FROM clientContact WHERE clientID = %d",$clientID);
+    $options = get_option("None", "")."\n";
+    $options.= get_select_options($q,$clientContactID);
+    return "<select name=\"clientContactID\" style=\"width:300px\">".$options."</select>";
+  }
+ 
 }
 
 

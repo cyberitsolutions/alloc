@@ -513,6 +513,7 @@ $TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $TPL[
 $client = $project->get_foreign_object("client");
 $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
+// If a client has been chosen
 if ($clientID_sql) {
   $query = sprintf("SELECT * 
                       FROM client 
@@ -551,11 +552,29 @@ if ($clientID_sql) {
   $temp = str_replace("<br/>","",$fou);
   $temp and $thr = $fou;
 
-  $TPL["clientDetails"] = "<table>";
+  if ($project->get_value("clientContactID")) {
+    $q = sprintf("SELECT * FROM clientContact WHERE clientContactID = %d",$project->get_value("clientContactID"));  
+    $db->query($q);
+    $db->next_record();
+    $db->f("clientContactName")          and $fiv .= $db->f("clientContactName")."<br/>";
+    $db->f("clientContactStreetAddress") and $fiv .= $db->f("clientContactStreetAddress")."<br/>";
+    $db->f("clientContactSuburb")        and $fiv .= $db->f("clientContactSuburb")."<br/>";
+    $db->f("clientContactPostcode")      and $fiv .= $db->f("clientContactPostcode")."<br/>";
+    $db->f("clientContactPhone")         and $fiv .= $db->f("clientContactPhone")."<br/>";
+    $db->f("clientContactMobile")        and $fiv .= $db->f("clientContactMobile")."<br/>";
+    $db->f("clientContactEmail")         and $fiv .= $db->f("clientContactEmail")."<br/>";
+    $temp = str_replace("<br/>","",$fiv);
+    $temp and $thr = $fiv;
+  }
+
+  $TPL["clientDetails"] = "<table width=\"70%\">";
   $TPL["clientDetails"].= "<tr><td><b>Postal Address</b></td><td><b>Street Address</b></td><td><b>Contact</b></td></tr>";
   $TPL["clientDetails"].= "<tr><td valign=\"top\">".$one."</td><td valign=\"top\">".$two."</td><td valign=\"top\">".$thr."</td></tr>";
   $TPL["clientDetails"].= "</table>";
 }
+
+
+$TPL["clientContactDropdown"] = client::get_client_contact_select($project->get_value("clientID"),$project->get_value("clientContactID"));
 
 
 $options["showHeader"] = true;
