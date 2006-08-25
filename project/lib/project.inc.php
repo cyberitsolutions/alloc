@@ -54,6 +54,7 @@ class project extends db_entity
                                , "is_agency"=>new db_text_field("is_agency")
                                , "cost_centre_tfID"=>new db_text_field("cost_centre_tfID")
                                , "customerBilledDollars"=>new db_text_field("customerBilledDollars")
+                               , "clientContactID"=>new db_text_field("clientContactID")
       );
     $this->permissions[PERM_PROJECT_VIEW_TASK_ALLOCS] = "View task allocations";
     $this->permissions[PERM_PROJECT_ADD_TASKS] = "Add tasks";
