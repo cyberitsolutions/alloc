@@ -56,6 +56,9 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
       continue;
     }
    
+    // Remove leading guff "789 - " 
+    $account = preg_replace("/^\d+\s.\s/","",$account);
+
     // If there's a memo field then append it to account
     $memo and $account.= " - ".$memo;
 
