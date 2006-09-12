@@ -140,6 +140,6 @@ function updateTaskCommentTemplate(number) {
 
 {:show_attachments}
 
-{:show_taskComments templates/taskCommentM.tpl}
+{:show_taskComments}
 
 {:show_footer}

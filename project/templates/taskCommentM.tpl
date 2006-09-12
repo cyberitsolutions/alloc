@@ -26,6 +26,9 @@
       </form>
     </td>
   </tr>
-  {:show_taskCommentsR templates/taskCommentR.tpl}
+  <tr>
+    <td colspan="2">
+      {commentsR}
+    </td>
 </table>
 

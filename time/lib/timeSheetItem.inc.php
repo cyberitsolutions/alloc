@@ -123,6 +123,27 @@ class timeSheetItem extends db_entity {
     return array($rows,$rows_dollars);
   }
 
+  function get_timeSheetItemComments($taskID="") {
+    // Init
+    $rows = array();
+
+    // Get list of comments from timeSheetItem table
+    $query = sprintf("SELECT timeSheetID, dateTimeSheetItem AS date, comment, personID
+                        FROM timeSheetItem
+                       WHERE timeSheetItem.taskID = %d AND (commentPrivate != 1 OR commentPrivate IS NULL)
+                    ORDER BY dateTimeSheetItem,timeSheetItemID
+                     ",$taskID);
+
+    $db = new db_alloc;
+    $db->query($query);
+    while ($row = $db->row()) {
+      $rows[] = $row;
+    }
+
+    is_array($rows) or $rows = array();
+    return $rows;
+  }
+
 }
 
 
