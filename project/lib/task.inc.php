@@ -22,7 +22,6 @@
  */
 
 define("PERM_PROJECT_READ_TASK_DETAIL", 256);
-$default_task_options = array("show_links"=>true);
 
 class task extends db_entity {
   var $classname = "task";
@@ -711,7 +710,7 @@ function get_task_statii_array() {
      *   showTimes        = The original estimate and the time billed and percentage
      *   showHeader       = A descriptive header row
      *   showDescription  = The tasks description
-     *   debug            = print out some debug info
+     *   showComments     = The tasks comments
      *
      *
      * Filter Options:
@@ -729,11 +728,10 @@ function get_task_statii_array() {
      *   padding          = Initial indentation level (useful for byProject lists)
      *
      */
-  
+ 
+    //$debug = true;
     $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
-   
     $filter = task::get_task_list_filter($_FORM);
-
     $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
 
     isset($_FORM["limit"]) && $_FORM["limit"] != "all" and $limit = sprintf("limit %d",$_FORM["limit"]); # needs to use isset cause of zeroes is a valid number 
@@ -870,6 +868,7 @@ function get_task_statii_array() {
       }
     } 
 
+    // Decide what to actually return
     if ($_FORM["taskView"] == "prioritised" && $_FORM["return"] == "objects") {
       return $tasks;
 
@@ -905,8 +904,6 @@ function get_task_statii_array() {
     $people_cache = $_FORM["people_cache"];
     $timeUnit_cache = $_FORM["timeUnit_cache"];
 
-    $estime = seconds_to_display_format($task["timeEstimate"]*60*60); 
-    $actual = seconds_to_display_format(task::get_time_billed($task["taskID"])); 
 
                                   $summary[] = "<tr>";
     $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
@@ -922,8 +919,8 @@ function get_task_statii_array() {
     $_FORM["showDate2"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateTargetCompletion"]."&nbsp;</nobr></td>";
     $_FORM["showDate3"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualStart"]."&nbsp;</nobr></td>";
     $_FORM["showDate4"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualCompletion"]."&nbsp;</nobr></td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$estime."&nbsp;</nobr></td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$actual."&nbsp;</nobr></td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".seconds_to_display_format($task["timeEstimate"]*60*60)."&nbsp;</nobr></td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</nobr></td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["percentComplete"]."&nbsp;</nobr></td>";
                                   $summary[] = "</tr>";
 
@@ -933,6 +930,20 @@ function get_task_statii_array() {
                               and $summary[] = "  <td class=\"col\">&nbsp;</td>";
                                   $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."\" colspan=\"21\" class=\"col\">".$task["taskDescription"]."</td>";
                                   $summary[] = "</tr>";
+    }
+
+    if ($_FORM["showComments"]) {
+      $comments = util_get_comments("task",$task["taskID"]);
+      if ($comments) {
+                                  $summary[] = "<tr>";
+       $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
+                              and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+                                  $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."\" colspan=\"21\" class=\"col\">";
+                                  $summary[] = $comments;
+                                  $summary[] = "  </td>";
+                                  $summary[] = "</tr>";
+      }
+
     }
 
     $summary = "\n".implode("\n",$summary);

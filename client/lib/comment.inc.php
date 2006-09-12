@@ -27,8 +27,12 @@ class comment extends db_entity {
   function comment() {
     $this->db_entity();
     $this->key_field = new db_text_field("commentID");
-    $this->data_fields = array("commentType"=>new db_text_field("commentType"),
-                               "commentLinkID"=>new db_text_field("commentLinkID"), "commentModifiedTime"=>new db_text_field("commentModifiedTime"), "commentModifiedUser"=>new db_text_field("commentModifiedUser"), "comment"=>new db_text_field("comment"));
+    $this->data_fields = array("commentType"=>new db_text_field("commentType")
+                              ,"commentLinkID"=>new db_text_field("commentLinkID")
+                              ,"commentModifiedTime"=>new db_text_field("commentModifiedTime")
+                              ,"commentModifiedUser"=>new db_text_field("commentModifiedUser")
+                              ,"comment"=>new db_text_field("comment")
+                              );
   }
 
   // set the modified time to now
@@ -72,6 +76,23 @@ class comment extends db_entity {
     }
   }
 */
+
+  function get_comments($commentType="",$commentLinkID="") {
+    if ($commentType && $commentLinkID) {
+      $q = sprintf("SELECT commentID, commentLinkID, commentModifiedTime AS date, comment, commentModifiedUser AS personID 
+                      FROM comment 
+                     WHERE commentType = '%s' AND commentLinkID = %d 
+                  ORDER BY commentModifiedTime"
+                  ,$commentType, $commentLinkID);
+      $db = new db_alloc;
+      $db->query($q);
+      while ($row = $db->row()) {
+        $rows[] = $row;
+      }
+      return $rows;
+    }
+  }
+
 
 }
 

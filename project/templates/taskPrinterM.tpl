@@ -2,7 +2,8 @@
 <style>
   td.overline { border-top:1px solid #666666; }
 </style>
-<table cellspacing="0" cellpadding="4"> 
+
+<table width="100%" cellspacing="0" cellpadding="4"> 
  <tr>
     <td class="overline">Project</td>
     <td class="overline">{projectName}&nbsp;</td>
@@ -88,9 +89,6 @@
     <td class="overline" valign="top">Child Tasks</td>
     <td class="overline" colspan="3">{task_children_summary}&nbsp;</td>
   </tr>
-  <tr>
-    <td class="overline" valign="top">Comments</td>
-    <td class="overline" colspan="3">{:show_taskCommentsR templates/taskPrinterCommentsR.tpl}&nbsp;</td>
-  </tr>
 </table>
+{:show_taskCommentsPrinter}
 {:show_footer}

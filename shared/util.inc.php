@@ -263,6 +263,71 @@ function util_show_attachments($entity, $id) {
   include_template("../shared/templates/attachmentM.tpl");
 }
 
+function sort_task_comments_callback_func($a, $b) {
+  return $a["date"] > $b["date"];
+}
+
+function util_get_comments($entity, $id, $options=array()) {
+  global $TPL, $current_user;
+
+  // Need to get timeSheet comments too for task comments
+  if ($entity == "task") {
+    $rows = comment::get_comments($entity,$id);
+    $rows2 = timeSheetItem::get_timeSheetItemComments($id);
+
+    if (is_array($rows2) && is_array($rows)) {
+      $rows = array_merge($rows,$rows2);
+    }
+    if (is_array($rows)) {
+      usort($rows, "sort_task_comments_callback_func");
+    }
+
+  } else {
+    $rows = comment::get_comments($entity,$id);
+  }
+  $rows or $rows = array();
+
+  foreach ($rows as $v) {
+
+    if (!$v["comment"]) continue ;
+      $person = new person;
+      $person->set_id($v["personID"]);
+      $person->select();
+
+      $comment_buttons = "";
+      $ts_label = "";
+      if ($v["timeSheetID"]) {
+        $ts_label = "(Time Sheet Comment)";
+
+      } else if ($v["personID"] == $current_user->get_id() && $options["showEditButtons"]) {
+        $comment_buttons = "<nobr><input type=\"submit\" name=\"taskComment_edit\" value=\"Edit\">
+                                         <input type=\"submit\" name=\"taskComment_delete\" value=\"Delete\"></nobr>";
+      }
+
+      if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
+
+        $edit = false;
+        if ($options["showEditButtons"]) {
+          $edit = true;
+        } 
+
+        $edit and $rtn[] =  '<form action="'.$TPL["url_alloc_taskComment"].'" method="post">';
+        $edit and $rtn[] =  '<input type="hidden" name="'.$entity.'ID" value="'.$v["commentLinkID"].'">';
+        $edit and $rtn[] =  '<input type="hidden" name="commentID" value="'.$v["commentID"].'">';
+        $edit and $rtn[] =  '<input type="hidden" name="taskComment_id" value="'.$v["commentID"].'">';
+        $rtn[] =  '<table width="100%" border="0">';
+        $rtn[] =  '<tr>';
+        $rtn[] =  '<td valign="top">Comment by <b>'.$person->get_username(1).'</b> '.$v["date"].' '.$ts_label.'<br/>'.nl2br(htmlentities($v["comment"])).'</td>';
+        $rtn[] =  '<td valign="top" align="right">'.$comment_buttons.'</td>';
+        $rtn[] =  '</tr>';
+        $rtn[] =  '</table>';
+        $edit and $rtn[] =  '</form>';
+
+      }
+    }
+    if (is_array($rtn))
+    return implode("\n",$rtn);
+  }
 
 
 ?>

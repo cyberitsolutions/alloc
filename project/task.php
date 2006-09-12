@@ -77,6 +77,19 @@ require_once("alloc.inc");
     util_show_attachments("task",$taskID);
   }
 
+  function show_taskComments() {
+    global $taskID, $TPL;
+    $options["showEditButtons"] = true;
+    $TPL["commentsR"] = util_get_comments("task",$taskID,$options);
+    include_template("templates/taskCommentM.tpl");
+  }
+
+  function show_taskCommentsPrinter() {
+    global $taskID, $TPL;
+    $TPL["commentsR"] = util_get_comments("task",$taskID,$options);
+    include_template("templates/taskPrinterCommentsM.tpl");
+  }
+
 
 global $timeSheetID;
 
@@ -315,6 +328,9 @@ if ($task->get_id()) {
   $options["showPercent"] = true;
   $options["showHeader"] = true;
   $options["showTimes"] = true;
+
+  $_GET["view"] == "printer" and $options["showDescription"] = true;
+  $_GET["view"] == "printer" and $options["showComments"] = true;
   $TPL["task_children_summary"] = task::get_task_list($options);
 
   $taskType = $task->get_foreign_object("taskType");

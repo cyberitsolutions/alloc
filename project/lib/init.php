@@ -29,7 +29,6 @@ include(ALLOC_MOD_DIR."/project/lib/projectPersonRole.inc.php");
 include(ALLOC_MOD_DIR."/project/lib/projectModificationNote.inc.php");
 include(ALLOC_MOD_DIR."/project/lib/projectCommissionPerson.inc.php");
 include(ALLOC_MOD_DIR."/project/lib/taskType.inc.php");
-include(ALLOC_MOD_DIR."/project/lib/taskComment.inc.php");
 include(ALLOC_MOD_DIR."/project/lib/taskCommentTemplate.inc.php");
 
 
