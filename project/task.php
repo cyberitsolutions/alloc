@@ -193,7 +193,10 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   count($msg) and $msg = "&message_good=".urlencode(implode("<br/>",$msg));
 
   if ($success) {
-    if ($_POST["save"]) {
+  
+    if ($_POST["save"] && $_POST["view"] == "brief") {
+      $url = $TPL["url_alloc_taskSummary"];
+    } else if ($_POST["save"]) {
       $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
     } else if ($_POST["save_and_back"]) {
       $url = $TPL["url_alloc_project"]."projectID=".$task->get_value("projectID");
@@ -240,7 +243,6 @@ $person->select();
 $TPL["person_username"] = $person->get_username(1);
 $TPL["person_username_personID"] = $person->get_id();
 
-$_GET["message_good"] and $TPL["message_good"][] = urldecode($_GET["message_good"]);
 
 
 

@@ -66,21 +66,27 @@ class toolbar_item {
 function show_messages() {
   global $TPL;
 
+
   if ($TPL["message"] && is_string($TPL["message"])) {
     $t = $TPL["message"];
     unset($TPL["message"]);
     $TPL["message"][] = $t;
   } 
+  $_GET["message"] and $TPL["message"][] = urldecode($_GET["message"]);
+  
   if ($TPL["message_good"] && is_string($TPL["message_good"])) {
     $t = $TPL["message_good"];
     unset($TPL["message_good"]);
     $TPL["message_good"][] = $t;
   }
+  $_GET["message_good"] and $TPL["message_good"][] = urldecode($_GET["message_good"]);
+
   if ($TPL["message_help"] && is_string($TPL["message_help"])) {
     $t = $TPL["message_help"];
     unset($TPL["message_help"]);
     $TPL["message_help"][] = $t;
   }
+  $_GET["message_help"] and $TPL["message_help"][] = urldecode($_GET["message_help"]);
 
   
   if (is_array($TPL["message"]) && count($TPL["message"])) {
