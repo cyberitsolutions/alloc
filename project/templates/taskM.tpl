@@ -106,11 +106,13 @@ function updateTaskCommentTemplate(number) {
   <tr>
     <td colspan="5" align="center">
       {timeSheet_save}
+      
       <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
     <!--  <input type="submit" name="save_and_back" value="Save and Return to Project"> -->
     <!--  <input type="submit" name="save_and_summary" value="Save and Return to Task Summary"> -->
       <input type="submit" name="save_and_new" value="Save &amp; New">
       <input type="submit" name="delete" value="Delete" onClick="return confirm('Are you sure you want to delete this record?')">
+      <input type='hidden' name='view' value='brief'>
 
     </td>
   </tr>
