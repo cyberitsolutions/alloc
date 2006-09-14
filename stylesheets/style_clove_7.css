@@ -54,7 +54,8 @@ ul                      { display:inline; list-style:circle inside; }
 td.tasks                { background-color: #afb8b1; }
 td.tasks_r              { background-color: #afb8b1; text-align:right; }
 td.grand_total          { border-top:1px solid black;}
-td.col                  { border-left:2px solid #afb8b1;  border-top:2px solid #afb8b1;}
+td.col                  { border-left:2px solid #8ea493;  border-top:2px solid #8ea493;}
+td.com                  { border:2px solid #8ea493;}
 textarea                { font-size:12px; }
 input                   { font-size:12px; }
 select                  { font-size:12px; }

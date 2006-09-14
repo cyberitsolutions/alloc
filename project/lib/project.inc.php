@@ -225,7 +225,7 @@ class project extends db_entity
 
     $options = get_select_options($ops, $projectIDs, 35);
 
-    return "<select name=\"projectID[]\" size=\"9\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
+    return "<select name=\"projectID[]\" size=\"10\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
   }
 
   function has_attachment_permission($person) {
