@@ -924,27 +924,28 @@ function get_task_statii_array() {
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["percentComplete"]."&nbsp;</nobr></td>";
                                   $summary[] = "</tr>";
 
-    if ($_FORM["showDescription"] && $task["taskDescription"]) {
-                                  $summary[] = "<tr>";
-       $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                              and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-                                  $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."\" colspan=\"21\" class=\"col\">".$task["taskDescription"]."</td>";
-                                  $summary[] = "</tr>";
-    }
+    if ($_FORM["showDescription"] || $_FORM["showComments"]) {
 
-    if ($_FORM["showComments"]) {
-      $comments = util_get_comments("task",$task["taskID"]);
-      if ($comments) {
-                                  $summary[] = "<tr>";
-       $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                              and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-                                  $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."\" colspan=\"21\" class=\"col\">";
-                                  $summary[] = $comments;
-                                  $summary[] = "  </td>";
-                                  $summary[] = "</tr>";
+      if ($task["taskDescription"]) {
+        $str[] = $task["taskDescription"];
       }
 
+      if ($_FORM["showComments"]) {
+        $comments = util_get_comments("task",$task["taskID"]);
+        if ($comments) {
+          $str[] = $comments;
+        }
+      }
+
+      if (is_array($str) && count($str)) {
+                                    $summary[] = "<tr>";
+         $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
+                                and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+                                    $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."\" colspan=\"21\" class=\"col\">".implode("<br/>",$str)."</td>";
+                                    $summary[] = "</tr>";
+      }
     }
+
 
     $summary = "\n".implode("\n",$summary);
     return $summary;

@@ -64,25 +64,24 @@ function updateProjectList(number) {
           
                   <table class="filter" align="center" width="95%">
                     <tr>
-                      <td><b>Display</b></td>
+                      <td valign="top"><b><nobr>Display Options</nobr></b></td>
                       <td colspan="3" align="right">
                         <nobr>
-                          View By
-                          Priority <input type="radio" name="taskView" value="prioritised"{taskView_checked_prioritised}>
-                          Project <input type="radio" name="taskView" value="byProject"{taskView_checked_byProject}> 
+                          List by Priority <input type="radio" name="taskView" value="prioritised"{taskView_checked_prioritised}>
+                     <br/>List by Project <input type="radio" name="taskView" value="byProject"{taskView_checked_byProject}> 
                         </nobr>
                       </td>
                     </tr>
                     <tr>
-                      <td align="right">Description</td><td><input type="checkbox" name="showDescription"{showDescription_checked}></td>
+                      <td align="right"><nobr>Desc &amp; Comments</nobr></td><td><input type="checkbox" name="showDescription"{showDescription_checked}></td>
                       <td align="right">Task Dates</td><td><input type="checkbox" name="showDates"{showDates_checked}></td>
                     </tr>
                     <tr>
                       <td align="right"><nobr>Task Creator</nobr></td><td><input type="checkbox" name="showCreator"{showCreator_checked}></td>
-                      <td align="right">Assigned To</td><td><input type="checkbox" name="showAssigned"{showAssigned_checked}></td>
+                      <td align="right"><nobr>Assigned To</nobr></td><td><input type="checkbox" name="showAssigned"{showAssigned_checked}></td>
                     </tr>
                     <tr>
-                      <td align="right"><nobr>Est / Act / %</nobr></td><td><input type="checkbox" name="showTimes"{showTimes_checked}></td>
+                      <td align="right"><nobr>Est, Act &amp; Percent</nobr></td><td><input type="checkbox" name="showTimes"{showTimes_checked}></td>
                       <td align="right">Task ID </td><td><input type="checkbox" name="showTaskID"{showTaskID_checked}></td>
                     </tr>
                     <tr>

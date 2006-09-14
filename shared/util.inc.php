@@ -317,8 +317,12 @@ function util_get_comments($entity, $id, $options=array()) {
         $edit and $rtn[] =  '<input type="hidden" name="taskComment_id" value="'.$v["commentID"].'">';
         $rtn[] =  '<table width="100%" border="0">';
         $rtn[] =  '<tr>';
-        $rtn[] =  '<td valign="top">Comment by <b>'.$person->get_username(1).'</b> '.$v["date"].' '.$ts_label.'<br/>'.nl2br(htmlentities($v["comment"])).'</td>';
-        $rtn[] =  '<td valign="top" align="right">'.$comment_buttons.'</td>';
+        $rtn[] =  '<td valign="top" class="com">';
+        $rtn[] =  '<table width="100%"><tr><td>Comment by <b>'.$person->get_username(1).'</b> '.$v["date"].' '.$ts_label;
+        $rtn[] =  '<br/>'.nl2br(htmlentities($v["comment"])).'</td>';
+        $edit and $rtn[] =  '<td valign="top" align="right" width="2%">'.$comment_buttons.'</td>';
+        $rtn[] =  '</tr></table>';
+        $rtn[] =  '</td>';
         $rtn[] =  '</tr>';
         $rtn[] =  '</table>';
         $edit and $rtn[] =  '</form>';

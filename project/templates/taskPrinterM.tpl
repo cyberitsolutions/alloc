@@ -1,5 +1,6 @@
 {:show_header}
 <style>
+  body {background-color:white; color:black; }
   td.overline { border-top:1px solid #666666; }
 </style>
 

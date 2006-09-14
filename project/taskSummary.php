@@ -44,6 +44,13 @@ $page_vars = array("projectID"
 
 $_FORM = get_all_form_data($page_vars);
 
+// If have check Show Description checkbox then display the Long Description and the Comments
+if ($_FORM["showDescription"]) {
+  $_FORM["showComments"] = true;
+} else {
+  unset($_FORM["showComments"]);
+}
+
 if (!$_FORM["applyFilter"]) {
   $_FORM = &$user_FORM;
 } else if ($_FORM["applyFilter"]) {
