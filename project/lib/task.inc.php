@@ -627,7 +627,7 @@ function get_task_statii_array() {
 
     if (!$_FORM["projectID"] && $_FORM["projectType"] && $_FORM["projectType"] != "all") {
       $db = new db_alloc;
-      $q = project::get_project_type_query($_FORM["projectType"],$_FORM["personID"]);
+      $q = project::get_project_type_query($_FORM["projectType"],$_FORM["current_user"]);
       $db->query($q);
       while ($db->next_record()) {
         $_FORM["projectIDs"][] = $db->f("projectID");
@@ -694,7 +694,7 @@ function get_task_statii_array() {
   function get_task_list($_FORM) {
 
     /*
-     * This is the definitive method of getting a list of tasks
+     * This is the definitive method of getting a list of tasks that need a sophisticated level of filtering
      *
      # Display Options:
      *   showDates        = Show dates 1-4
@@ -720,7 +720,8 @@ function get_task_statii_array() {
      *   projectIDs       = an array of projectIDs
      *   taskStatus       = completed | not_completed | in_progress | due_today | new | overdue
      *   taskTypeID       = the task type
-     *   personID         = person assigned 
+     *   current_user     = lets us set and fake a current_user id for when generating task emails and there is no $current_user object
+     *   personID         = person assigned to the task
      *   parentTaskID     = id of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0
      *  
      *
