@@ -91,7 +91,7 @@ function updateTaskCCList(number) {
   </tr>
   <tr>
     <td valign="top">Description</td>
-    <td colspan="4"><textarea name="taskDescription" rows="7" cols="100" wrap="hard">{task_taskDescription}</textarea></td>
+    <td colspan="4"><textarea name="taskDescription" rows="7" cols="100" wrap="virtual">{task_taskDescription}</textarea></td>
 
   </tr>  
   <tr>
