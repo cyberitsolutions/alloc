@@ -9,8 +9,8 @@ h3                      { font-weight:bold; font-size:16px; }
 form                    { display:inline; }
 div.message             { border:1px solid #095853; padding:10px; margin-bottom:7px; background-color:#afb8b1; }
 .bad                    { color:#880000; font-weight:bold; font-size:14px; }
-.good                   { color:#000000; font-weight:bold; font-size:14px; }
-.help                   { color:#ffffff;  font-weight:bold; font-size:14px; }
+.good                   { color:#009910; font-weight:bold; font-size:14px; }
+.help                   { color:#555555;  font-weight:bold; font-size:14px; }
 
 table.box               { border:1px solid #095853; background-color:#cccccc; margin-bottom:7px;} 
 table.box th            { border-bottom:1px solid #095853;  background: url(../images/bg_clove.jpg) repeat-x; color:#ffffff; font-size:14px; } 
@@ -45,8 +45,8 @@ tr.even                 { background-color:#cccccc; }
 td.print-label          { vertical-align:middle; text-align:right; }
 .print-label            { font-weight:bold; }
 .behind-target          { color: #a6671d; }
-.transaction-approved   { color: #000000; }
-.transaction-pending    { color: #ffffff; }
+.transaction-approved   { color: #009910; }
+.transaction-pending    { color: #555555; }
 .transaction-rejected   { color: #880000; }
 .highlighted            { font-weight:normal; font-style:normal; background-color:#fffeb7; padding:0px 3px;}
       
