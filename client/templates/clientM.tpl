@@ -3,7 +3,7 @@
 {table_box}
   <tr>
     <th>Client Details</th>
-    <th class="right"><a href="{url_alloc_clientList}">Return to Client List</a></th>
+    <th class="right"><nobr><a href="{url_alloc_clientList}">Return to Client List</a></nobr></th>
   </tr>
   <tr>
     <td>
