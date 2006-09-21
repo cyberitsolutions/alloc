@@ -68,7 +68,7 @@ if ($sess->Started()) {
     $sess->Save();
     header("Location: ".$url);
   }
-  $error = "Username or Password incorrect.";
+  $error = "<p class='error'>Username or Password incorrect.</p>";
 
 } else if ($_POST["new_pass"] && $_POST["username"] && $_POST["email"]) {
 
@@ -92,7 +92,7 @@ if ($sess->Started()) {
     $mail = mail($email, "New Alloc password request", "Your new temporary password: ".$password, "From: ".ALLOC_DEFAULT_FROM_ADDRESS);
     $error = "New password sent to: ".$_POST["email"];
   } else {
-    $error = "Invalid Username or Email Address.";
+    $error = "<p class='error'>Invalid Username or Email Address.</p>";
   }
 
 
