@@ -2,7 +2,7 @@
   <tr>
     <th colspan="5">Time Sheets</th>
     <th class="right">
-      <a href="{url_alloc_timeSheet}newTimeSheet_projectID={project_projectID}">New Time Sheet</a>
+      <a href="{url_alloc_timeSheet}newTimeSheet_projectID={project_projectID}">Time Sheet</a>
     </th>
   </tr>
   <tr>
