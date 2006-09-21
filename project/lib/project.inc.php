@@ -147,6 +147,12 @@ class project extends db_entity
       $links[] = "<a href=\"$url\">Allocation</a>";
     } 
 
+    // New Time Sheet
+    if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
+      $url = $TPL["url_alloc_timeSheet"]."newTimeSheet_projectID=".$this->get_id();
+      $links[] = "<a href=\"$url\">New Time Sheet</a>";
+    }
+
     // New Task
     if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
       $url = $TPL["url_alloc_task"]."projectID=".$this->get_id();
