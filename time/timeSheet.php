@@ -261,12 +261,12 @@ if (!$current_user->is_employee()) {
 
       $text = $TPL["timeSheetItem_description_printer_version"] = stripslashes($timeSheetItem->get_value('description'));
       $TPL["timeSheetItem_comment_printer_version"] = "";
-      !$timeSheetItem->get_value("commentPrivate") and $TPL["timeSheetItem_comment_printer_version"] = $timeSheetItem->get_value("comment");
+      !$timeSheetItem->get_value("commentPrivate") and $TPL["timeSheetItem_comment_printer_version"] = nl2br($timeSheetItem->get_value("comment"));
       
       $text and $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
       $br = "";
       $text && $timeSheetItem->get_value("comment") and $br = "<br/>";
-      $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$timeSheetItem->get_value("comment");
+      $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.nl2br($timeSheetItem->get_value("comment"));
       $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f",$timeSheetItem->get_value('timeSheetItemDuration') * $timeSheetItem->get_value('rate'));
 
       include_template($template);
