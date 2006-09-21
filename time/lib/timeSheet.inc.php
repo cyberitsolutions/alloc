@@ -58,25 +58,23 @@ class timeSheet extends db_entity
     db_entity::delete();
   }
 
-
-  /***************************************************************************
-   *                                                                         *
-   * load_pay_info() loads these vars:                                       *
-   * $this->pay_info["project_rate"];	    according to projectPerson table   *
-   * $this->pay_info["project_rateUnitID"];	according to projectPerson table *
-   * $this->pay_info["duration"][time sheet ITEM ID];                        *
-   * $this->pay_info["total_duration"]; of a timesheet                       *
-   * $this->pay_info["total_dollars"];  of a timesheet                       *
-   * $this->pay_info["total_customerBilledDollars"]                          *
-   * $this->pay_info["total_dollars_minus_gst"]                              *
-   * $this->pay_info["total_customerBilledDollars_minus_gst"]                *
-   * $this->pay_info["unit"]                                                 *
-   * $this->pay_info["summary_unit_totals"]                                  *
-   *                                                                         *
-   ***************************************************************************/
-
-  
   function load_pay_info() {
+
+    /***************************************************************************
+     *                                                                         *
+     * load_pay_info() loads these vars:                                       *
+     * $this->pay_info["project_rate"];	    according to projectPerson table   *
+     * $this->pay_info["project_rateUnitID"];	according to projectPerson table *
+     * $this->pay_info["duration"][time sheet ITEM ID];                        *
+     * $this->pay_info["total_duration"]; of a timesheet                       *
+     * $this->pay_info["total_dollars"];  of a timesheet                       *
+     * $this->pay_info["total_customerBilledDollars"]                          *
+     * $this->pay_info["total_dollars_minus_gst"]                              *
+     * $this->pay_info["total_customerBilledDollars_minus_gst"]                *
+     * $this->pay_info["unit"]                                                 *
+     * $this->pay_info["summary_unit_totals"]                                  *
+     *                                                                         *
+     ***************************************************************************/
 
     unset($this->pay_info);
     $db = new db_alloc;
@@ -428,35 +426,15 @@ class timeSheet extends db_entity
       $personID = $t->get_value('personID');
       $projectID = $t->get_value('projectID');
     }
- 
-    if ($status == "my_open") {
-      $extra_sql = sprintf("personID=%d AND dateActualCompletion IS NULL OR dateActualCompletion = ''",$personID);
 
-    } else if ($status == "not_assigned"){
-      $extra_sql = sprintf("(personID IS NULL or personID=\"\" or personID=0) AND (dateActualCompletion IS NULL OR dateActualCompletion = '')",$personID);
-
-    } else if ($status == "my_closed"){
-      $extra_sql = sprintf("personID=%d AND dateActualCompletion IS NOT NULL AND dateActualCompletion != ''",$personID);
-
-    } else if ($status == "all") {
-      $extra_sql = "1";
-    }
-
-    // Get list of tasks for task dropdown
-    $db = new db_alloc;
-    $q = sprintf("SELECT taskName,taskID 
-                    FROM task 
-                   WHERE projectID=%d 
-                     AND (%s) OR (taskID = %d)
-                ORDER BY taskName"
-                  ,$projectID
-                  ,$extra_sql
-                  ,$taskID);
-    $db->query($q);
-
-    $options = get_option(" ", "0", true)."\n";
-    $options.= get_options_from_db($db, "taskName", "taskID", $taskID, 70);
-    return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\">".$options."</select>";
+    $options["projectID"] = $projectID;
+    $options["personID"] = $personID;
+    $options["taskView"] = "byProject";
+    $options["return"] = "dropdown_options";
+    $options["taskTimeSheetStatus"] = $status;
+    $tasks = task::get_task_list($options);
+    $dropdown_options = get_select_options($tasks, $taskID, 100);
+    return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\">".$dropdown_options."</select>";
   }
 
 }  
