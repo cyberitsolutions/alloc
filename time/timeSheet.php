@@ -909,7 +909,15 @@ $TPL["insurance"] = "Yes";
 
 // If we are entering the page from a project link: New time sheet
 if ($_GET["newTimeSheet_projectID"] && !$projectID) {
+ 
   $projectID = $_GET["newTimeSheet_projectID"];
+  $db = new db_alloc;
+  $q = sprintf("SELECT * FROM timeSheet WHERE status = 'edit' AND personID = %d AND projectID = %d",$current_user->get_id(),$projectID);
+  $db->query($q);
+  if ($db->next_record()) {
+    header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID"));
+  }
+  
 }
 // Set up arrays for the forms.
 if (!$TPL["timeSheet_projectName"]) {
