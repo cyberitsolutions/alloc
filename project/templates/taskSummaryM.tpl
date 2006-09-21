@@ -45,13 +45,13 @@ function updateProjectList(number) {
 
               <tr>
                 <td valign="bottom" align="right" rowspan="2">
-                  My Projects <input type="radio" name="projectType" value="mine" onClick="refreshProjectList(this)"{projectType_checked_mine}><br/>
-                  <nobr>My Project Managed <input type="radio" name="projectType" value="pm" onClick="refreshProjectList(this)"{projectType_checked_pm}></nobr><br/>
-                  My Time Sheet Rec. <input type="radio" name="projectType" value="tsm" onClick="refreshProjectList(this)"{projectType_checked_tsm}><br/>
-                  Current <input type="radio" name="projectType" value="curr" onClick="refreshProjectList(this)"{projectType_checked_curr}><br/>
-                  Potential <input type="radio" name="projectType" value="pote" onClick="refreshProjectList(this)"{projectType_checked_pote}><br/>
-                  Archived <input type="radio" name="projectType" value="arch" onClick="refreshProjectList(this)"{projectType_checked_arch}><br/>
-                  Everything <input type="radio" name="projectType" value="all" onClick="refreshProjectList(this)"{projectType_checked_all}><br/>
+                  <label for="pt_mine">My Projects</label><input type="radio" id="pt_mine" name="projectType" value="mine" onClick="refreshProjectList(this)"{projectType_checked_mine}><br/>
+                  <label for="pt_pm"><nobr>My Project Managed</label><input type="radio" id="pt_pm" name="projectType" value="pm" onClick="refreshProjectList(this)"{projectType_checked_pm}></nobr><br/>
+                  <label for="pt_tsm">My Time Sheet Rec.</label><input type="radio" id="pt_tsm" name="projectType" value="tsm" onClick="refreshProjectList(this)"{projectType_checked_tsm}><br/>
+                  <label for="pt_curr">Current</label><input type="radio" id="pt_curr" name="projectType" value="curr" onClick="refreshProjectList(this)"{projectType_checked_curr}><br/>
+                  <label for="pt_pote">Potential</label><input type="radio" id="pt_pote" name="projectType" value="pote" onClick="refreshProjectList(this)"{projectType_checked_pote}><br/>
+                  <label for="pt_arch">Archived</label><input type="radio" id="pt_arch" name="projectType" value="arch" onClick="refreshProjectList(this)"{projectType_checked_arch}><br/>
+                  <label for="pt_all">Everything</label><input type="radio" id="pt_all" name="projectType" value="all" onClick="refreshProjectList(this)"{projectType_checked_all}><br/>
                   &nbsp;
                 </td>
                 <td valign="top" rowspan="2"><div id="projectListDropdown">{projectOptions}</div></td>
