@@ -312,7 +312,7 @@ if (!$current_user->is_employee()) {
       }
 
       $TPL["taskListDropdown_taskID"] = $taskID;
-      $TPL["taskListDropdown"] = $timeSheet->get_task_list_dropdown("my_open",$timeSheet->get_id(),$taskID);
+      $TPL["taskListDropdown"] = $timeSheet->get_task_list_dropdown("open",$timeSheet->get_id(),$taskID);
       $TPL["timeSheetItem_timeSheetID"] = $timeSheet->get_id();
 
       $timeUnit = new timeUnit;
@@ -939,7 +939,7 @@ if ($timeSheetID) {
     $TPL["message_help"][] = "Step 2/3: Enter Time Sheet Items by inputting the Duration, Amount and Task and clicking the Add Time Sheet Item Button.";
 
   } else if ($timeSheet->get_value("status") == "edit" && $db->f("count") > 0) {
-    $TPL["message_help"][] = "Step 3/3: When finished adding Time Sheet Line Items, click the To Manager/Admin button to submit this Time Sheet (it will no longer be editable).";
+    $TPL["message_help"][] = "Step 3/3: When finished adding Time Sheet Line Items, click the To Manager/Admin button to submit this Time Sheet.";
   }
 
 }
