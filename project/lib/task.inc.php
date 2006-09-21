@@ -622,73 +622,92 @@ function get_task_statii_array() {
     return $taskStatusFilter;
   }
 
-  function get_task_list_filter($_FORM=array()) {
+  function get_task_list_filter($filter=array()) {
 
 
-    if (!$_FORM["projectID"] && $_FORM["projectType"] && $_FORM["projectType"] != "all") {
+    if (!$filter["projectID"] && $filter["projectType"] && $filter["projectType"] != "all") {
       $db = new db_alloc;
-      $q = project::get_project_type_query($_FORM["projectType"],$_FORM["current_user"]);
+      $q = project::get_project_type_query($filter["projectType"],$filter["current_user"]);
       $db->query($q);
       while ($db->next_record()) {
-        $_FORM["projectIDs"][] = $db->f("projectID");
+        $filter["projectIDs"][] = $db->f("projectID");
       }
 
       // Oi! What a pickle. Need this flag for when someone doesn't have entries loaded in the above while loop.
       $firstOption = true;
 
     // If projectID is an array
-    } else if ($_FORM["projectID"] && is_array($_FORM["projectID"])) {
-      $_FORM["projectIDs"] = $_FORM["projectID"];
+    } else if ($filter["projectID"] && is_array($filter["projectID"])) {
+      $filter["projectIDs"] = $filter["projectID"];
 
     // Else a project has been specified in the url
-    } else if ($_FORM["projectID"] && is_numeric($_FORM["projectID"])) {
-      $_FORM["projectIDs"][] = $_FORM["projectID"];
+    } else if ($filter["projectID"] && is_numeric($filter["projectID"])) {
+      $filter["projectIDs"][] = $filter["projectID"];
     }
 
 
     // If passed array projectIDs then join them up with commars and put them in an sql subset
-    if (is_array($_FORM["projectIDs"]) && count($_FORM["projectIDs"])) {
-      $filter["projectIDs"] = "(project.projectID IN (".implode(",",$_FORM["projectIDs"])."))";
+    if (is_array($filter["projectIDs"]) && count($filter["projectIDs"])) {
+      $sql["projectIDs"] = "(project.projectID IN (".implode(",",$filter["projectIDs"])."))";
 
-    // If there are no projects in $_FORM["projectIDs"][] and we're attempting the first option..
+    // If there are no projects in $filter["projectIDs"][] and we're attempting the first option..
     } else if ($firstOption) {
-      $filter["projectIDs"] = "(project.projectID IN (0))";
+      $sql["projectIDs"] = "(project.projectID IN (0))";
     }
 
     // Task level filtering
-    if ($_FORM["taskStatus"]) {
+    if ($filter["taskStatus"]) {
       $taskStatusFilter = task::get_task_statii();
-      $filter[] = $taskStatusFilter[$_FORM["taskStatus"]]["sql"];
+      $sql[] = $taskStatusFilter[$filter["taskStatus"]]["sql"];
     }
 
     // Unset if they've only selected the topmost empty task type
-    if (is_array($_FORM["taskTypeID"]) && count($_FORM["taskTypeID"])>=1 && !$_FORM["taskTypeID"][0]) {
-      unset($_FORM["taskTypeID"][0]);
+    if (is_array($filter["taskTypeID"]) && count($filter["taskTypeID"])>=1 && !$filter["taskTypeID"][0]) {
+      unset($filter["taskTypeID"][0]);
     }
 
     // If many create an SQL taskTypeID in (set) 
-    if (is_array($_FORM["taskTypeID"]) && count($_FORM["taskTypeID"])) {
-      $filter[] = "(taskTypeID in (".implode(",",$_FORM["taskTypeID"])."))";
+    if (is_array($filter["taskTypeID"]) && count($filter["taskTypeID"])) {
+      $sql[] = "(taskTypeID in (".implode(",",$filter["taskTypeID"])."))";
     
     // Else if only one taskTypeID
-    } else if ($_FORM["taskTypeID"]) {
-      $filter[] = sprintf("(taskTypeID = %d)",$_FORM["taskTypeID"]);
+    } else if ($filter["taskTypeID"]) {
+      $sql[] = sprintf("(taskTypeID = %d)",$filter["taskTypeID"]);
     }
 
     // If personID filter and the view is byProject, then allow unassigned phases into the results 
-    if ($_FORM["personID"] && $_FORM["taskView"] == "byProject") {
-      $filter[] = sprintf("(personID = %d or (taskTypeID = %d and (personID IS NULL or personID = '' or personID = 0)))",$_FORM["personID"],TT_PHASE);
+    if ($filter["personID"] && $filter["taskView"] == "byProject") {
+      $sql["personID"] = sprintf("(personID = %d or (taskTypeID = %d and (personID IS NULL or personID = '' or personID = 0)))",$filter["personID"],TT_PHASE);
     
     // If personID filter and the view is prioritised, then do a strict by personID query
-    } else if ($_FORM["personID"] && $_FORM["taskView"] == "prioritised") {
-      $filter[] = sprintf("(personID = %d)",$_FORM["personID"]);
+    } else if ($filter["personID"] && $filter["taskView"] == "prioritised") {
+      $sql["personID"] = sprintf("(personID = %d)",$filter["personID"]);
     }
+
+
+    if ($filter["taskTimeSheetStatus"] == "open") {
+      unset($sql["personID"]);
+      $sql[] = sprintf("(dateActualCompletion IS NULL OR dateActualCompletion = '')");
+
+    // Needs to override the personID setting from above
+    } else if ($filter["taskTimeSheetStatus"] == "not_assigned"){ 
+      unset($sql["personID"]);
+      $sql[] = sprintf("((dateActualCompletion IS NULL OR dateActualCompletion = '') AND personID != %d)",$filter["personID"]);
+
+    } else if ($filter["taskTimeSheetStatus"] == "recent_closed"){
+      unset($sql["personID"]);
+      $sql[] = sprintf("(taskTypeID = %d OR dateActualCompletion >= DATE_SUB(CURDATE(),INTERVAL 14 DAY))",TT_PHASE);
+
+    } else if ($filter["taskTimeSheetStatus"] == "all") {
+    }
+
 
     // This will be zero if not set. Which is fine since all top level tasks have a parentID of zero
     // This filter is unset for returning a prioritised list of tasks.
-    $filter["parentTaskID"] = sprintf("(parentTaskID = %d)",$_FORM["parentTaskID"]);
+    $sql["parentTaskID"] = sprintf("(parentTaskID = %d)",$filter["parentTaskID"]);
 
-    return $filter;
+    #die("<pre>".print_r($sql,1)."</pre>");
+    return $sql;
   }
 
   function get_task_list($_FORM) {
@@ -697,42 +716,44 @@ function get_task_statii_array() {
      * This is the definitive method of getting a list of tasks that need a sophisticated level of filtering
      *
      # Display Options:
-     *   showDates        = Show dates 1-4
-     *   showDate1        = Date Target Start
-     *   showDate2        = Date Target Completion
-     *   showDate3        = Date Actual Start
-     *   showDate4        = Date Actual Completion
-     *   showProject      = The tasks Project (has different layout when prioritised vs byProject)
-     *   showPriority     = The calculated overall priority, then the tasks, then the projects priority
-     *   showStatus       = A colour coded textual description of the status of the task
-     *   showCreator      = The tasks creator
-     *   showAssigned     = The person assigned to the task
-     *   showTimes        = The original estimate and the time billed and percentage
-     *   showHeader       = A descriptive header row
-     *   showDescription  = The tasks description
-     *   showComments     = The tasks comments
+     *   showDates            = Show dates 1-4
+     *   showDate1            = Date Target Start
+     *   showDate2            = Date Target Completion
+     *   showDate3            = Date Actual Start
+     *   showDate4            = Date Actual Completion
+     *   showProject          = The tasks Project (has different layout when prioritised vs byProject)
+     *   showPriority         = The calculated overall priority, then the tasks, then the projects priority
+     *   showStatus           = A colour coded textual description of the status of the task
+     *   showCreator          = The tasks creator
+     *   showAssigned         = The person assigned to the task
+     *   showTimes            = The original estimate and the time billed and percentage
+     *   showHeader           = A descriptive header row
+     *   showDescription      = The tasks description
+     *   showComments         = The tasks comments
      *
      *
      * Filter Options:
-     *   taskView         = byProject | prioritised
-     *   return           = html | text | objects
-     *   limit            = appends an SQL limit (only for prioritised and objects views)
-     *   projectIDs       = an array of projectIDs
-     *   taskStatus       = completed | not_completed | in_progress | due_today | new | overdue
-     *   taskTypeID       = the task type
-     *   current_user     = lets us set and fake a current_user id for when generating task emails and there is no $current_user object
-     *   personID         = person assigned to the task
-     *   parentTaskID     = id of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0
+     *   taskView             = byProject | prioritised
+     *   return               = html | text | objects | dropdown_options
+     *   limit                = appends an SQL limit (only for prioritised and objects views)
+     *   projectIDs           = an array of projectIDs
+     *   taskStatus           = completed | not_completed | in_progress | due_today | new | overdue
+     *   taskTimeSheetStatus  = my_open | not_assigned | my_closed | my_recently_closed | all
+     *   taskTypeID           = the task type
+     *   current_user         = lets us set and fake a current_user id for when generating task emails and there is no $current_user object
+     *   personID             = person assigned to the task
+     *   parentTaskID         = id of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0
      *  
      *
      * Other:
-     *   padding          = Initial indentation level (useful for byProject lists)
+     *   padding              = Initial indentation level (useful for byProject lists)
      *
      */
  
+    $filter = task::get_task_list_filter($_FORM);
+
     //$debug = true;
     $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
-    $filter = task::get_task_list_filter($_FORM);
     $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
 
     isset($_FORM["limit"]) && $_FORM["limit"] != "all" and $limit = sprintf("limit %d",$_FORM["limit"]); # needs to use isset cause of zeroes is a valid number 
@@ -749,31 +770,11 @@ function get_task_statii_array() {
     $_FORM["timeUnit_cache"] = get_cached_table("timeUnit");
 
     // A header row
-    if ($_FORM["showHeader"]) {
+    $summary.= task::get_task_list_tr_header($_FORM);
 
-      $summary.= "\n<tr>";
-      $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                             and $summary.= "\n<td>&nbsp;</td>";
-      $summary.= "\n<td>&nbsp;</td>";
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Priority</nobr></b></td>"; 
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Task Pri</nobr></b></td>"; 
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Proj Pri</nobr></b></td>"; 
-      $_FORM["showStatus"]   and $summary.= "\n<td class=\"col\"><b><nobr>Status</nobr></b></td>"; 
-      $_FORM["showCreator"]  and $summary.= "\n<td class=\"col\"><b><nobr>Task Creator</nobr></b></td>";
-      $_FORM["showAssigned"] and $summary.= "\n<td class=\"col\"><b><nobr>Assigned To</nobr></b></td>";
-      $_FORM["showDate1"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Start</nobr></b></td>";
-      $_FORM["showDate2"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Compl</nobr></b></td>";
-      $_FORM["showDate3"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Start</nobr></b></td>";
-      $_FORM["showDate4"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Compl</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Estimate</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Actual</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>%</nobr></b></td>";
-      $summary.="\n</tr>";
-    }
 
     // Get a hierarchical list of tasks
     if ($_FORM["taskView"] == "byProject") {
-
 
       // If selected projects, build up an array of selected projects
       $filter["projectIDs"] and $projectIDs = " WHERE ".$filter["projectIDs"];
@@ -804,6 +805,7 @@ function get_task_statii_array() {
         }
 
         $tasks = task::get_task_children($filter,$_FORM);
+        $debug and print "<br/><b>Found ".count($tasks)." tasks.<b/>";
 
         if (count($tasks)) {
           $print = true;
@@ -814,16 +816,18 @@ function get_task_statii_array() {
 
           foreach ($tasks as $task) {
             $task["projectPriority"] = $project["projectPriority"];
-            $summary.= task::get_task_list_tr($task,$_FORM);
+            if ($_FORM["return"] == "dropdown_options"){
+              $summary_ops[$task["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;",$task["padding"]).$task["taskName"];
+            } else {
+              $summary.= task::get_task_list_tr($task,$_FORM);
+            }
           }
           $summary.= "<td class=\"col\" colspan=\"21\">&nbsp;</td>";
         }
       }
 
-      
-      
 
-    // Get a prioritised list of tasks
+    // If they don't want a hierarichal list, get a prioritised list of tasks..
     } else if ($_FORM["taskView"] == "prioritised") {
           
       unset($filter["parentTaskID"]);
@@ -869,6 +873,8 @@ function get_task_statii_array() {
       }
     } 
 
+
+
     // Decide what to actually return
     if ($_FORM["taskView"] == "prioritised" && $_FORM["return"] == "objects") {
       return $tasks;
@@ -879,10 +885,37 @@ function get_task_statii_array() {
     } else if ($print && $_FORM["return"] == "text") {
       return $summary;
 
+    } else if ($print && $_FORM["return"] == "dropdown_options") {
+      return $summary_ops;
+
     } else if (!$print && $_FORM["return"] == "html") {
       return "<table align=\"center\"><tr><td colspan=\"10\" align=\"center\"><b>No Tasks Found</b></td></tr></table>";
     } 
   } 
+
+  function get_task_list_tr_header($_FORM) {
+    if ($_FORM["showHeader"]) {
+      $summary = "\n<tr>";
+      $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
+                             and $summary.= "\n<td>&nbsp;</td>";
+      $summary.= "\n<td>&nbsp;</td>";
+      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Priority</nobr></b></td>"; 
+      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Task Pri</nobr></b></td>"; 
+      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Proj Pri</nobr></b></td>"; 
+      $_FORM["showStatus"]   and $summary.= "\n<td class=\"col\"><b><nobr>Status</nobr></b></td>"; 
+      $_FORM["showCreator"]  and $summary.= "\n<td class=\"col\"><b><nobr>Task Creator</nobr></b></td>";
+      $_FORM["showAssigned"] and $summary.= "\n<td class=\"col\"><b><nobr>Assigned To</nobr></b></td>";
+      $_FORM["showDate1"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Start</nobr></b></td>";
+      $_FORM["showDate2"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Compl</nobr></b></td>";
+      $_FORM["showDate3"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Start</nobr></b></td>";
+      $_FORM["showDate4"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Compl</nobr></b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Estimate</nobr></b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Actual</nobr></b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>%</nobr></b></td>";
+      $summary.="\n</tr>";
+      return $summary;
+    }
+  }
 
   function get_task_list_tr_text($task,$_FORM) {
     $summary[] = "";
@@ -961,6 +994,7 @@ function get_task_statii_array() {
     $db = new db_alloc;
     $q = sprintf("SELECT * FROM task %s ORDER BY taskName",str_replace("project.projectID","projectID",$f));
     $db->query($q);
+    #echo "<br/>q: ".$q;
 
     while ($row = $db->next_record()) {
 
