@@ -14,6 +14,7 @@
       table.login td.center   { color:#888888; text-align:center; font-weight:bold; font-size:10px; }
       table.login td.header   { color:#38629b; text-align:left;   font-weight:bold; font-size:18px; border-bottom:2px solid #e0e0e0; padding-left:10px;}
       table.outer             { border:3px solid #ffffff; }
+      p.error                 { color: red; display:inline; }
       -->
     </style>
   </head>
