@@ -47,10 +47,9 @@ function updateTimeSheetTaskList(number) {
         <tr>
           <td valign="bottom" colspan="2"><a href="{url_alloc_task}projectID={projectID}&timeSheetID={timeSheet_timeSheetID}">New Task</a></td>
           <td valign="bottom" rowspan="2"> 
-            <input type="radio" name="task_type" value="my_open" onClick="refreshTaskList(this)" checked>My Open&nbsp;
-            <input type="radio" name="task_type" value="not_assigned" onClick="refreshTaskList(this)">Unassigned&nbsp;
-            <input type="radio" name="task_type" value="my_closed" onClick="refreshTaskList(this)">My Closed&nbsp;
-            <input type="radio" name="task_type" value="all" onClick="refreshTaskList(this)">All Tasks&nbsp;
+            <label for="task_type_open">Open Tasks</label><input id="task_type_open" type="radio" name="task_type" value="open" onClick="refreshTaskList(this)" checked>
+            <label for="task_type_recent_closed">Recently Closed</label><input id="task_type_recent_closed" type="radio" name="task_type" value="recent_closed" onClick="refreshTaskList(this)">
+            <label for="task_type_all">All Tasks</label><input id="task_type_all" type="radio" name="task_type" value="all" onClick="refreshTaskList(this)">
           </td>
         </tr>
         <tr>
