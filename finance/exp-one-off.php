@@ -186,7 +186,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") &
   $TPL["message_help"][] = "Step 4/4: Print out the Expense Form using the Printer Friendly Version link, attach receipts and hand in to office admin.";
 
 } else if (check_optional_has_line_items() && !$expenseForm->get_value("expenseFormFinalised")) {  
-  $TPL["message_help"][] = "Step 3/4: When finished adding Expense Form Line Items, click the To Admin button to finalise the Expense Form (it will no longer be editable).";
+  $TPL["message_help"][] = "Step 3/4: When finished adding Expense Form Line Items, click the To Admin button to finalise the Expense Form.";
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["message_help"][] = "Step 2/4: Add Expense Form Line Items by filling in the details and clicking the Add Expense Form Line Item button.";
