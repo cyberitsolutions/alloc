@@ -7,7 +7,7 @@ h1                      { font-weight:bold; font-size:(H1_FONT_SIZE)px; }
 h2                      { font-weight:bold; font-size:(H2_FONT_SIZE)px; }
 h3                      { font-weight:bold; font-size:(H3_FONT_SIZE)px; }
 form                    { display:inline; }
-div.message             { border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); padding:10px; margin-bottom:7px; background-color:(TR_ODD_BACKGROUND_COLOR); }
+div.message             { border:(TABLE_BOX_BORDER_PX) solid (DIV_MESSAGE_BORDER_COLOR); padding:10px; margin-bottom:7px; background-color:(DIV_MESSAGE_BACKGROUND_COLOR); }
 .bad                    { color:(TRANSACTION_REJECTED); font-weight:bold; font-size:(TABLE_BOX_TH_FONT_SIZE)px; }
 .good                   { color:(TRANSACTION_APPROVED); font-weight:bold; font-size:(TABLE_BOX_TH_FONT_SIZE)px; }
 .help                   { color:(TRANSACTION_PENDING);  font-weight:bold; font-size:(TABLE_BOX_TH_FONT_SIZE)px; }
@@ -64,4 +64,5 @@ textarea.timesheetcomm  { font-size:12px; }
 #shrink_tsi_note        { display:none; }
 #ts_note                { height:22px; }
 #tsi_note               { height:22px; }
+
 

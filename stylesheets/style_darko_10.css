@@ -7,7 +7,7 @@ h1                      { font-weight:bold; font-size:22px; }
 h2                      { font-weight:bold; font-size:22px; }
 h3                      { font-weight:bold; font-size:21px; }
 form                    { display:inline; }
-div.message             { border:1px solid #bfbaba; padding:10px; margin-bottom:7px; background-color:#aaaaaa; }
+div.message             { border:1px solid #cccccc; padding:10px; margin-bottom:7px; background-color:#cccccc; }
 .bad                    { color:#880000; font-weight:bold; font-size:19px; }
 .good                   { color:#006340; font-weight:bold; font-size:19px; }
 .help                   { color:#000000;  font-weight:bold; font-size:19px; }
@@ -64,4 +64,5 @@ textarea.timesheetcomm  { font-size:12px; }
 #shrink_tsi_note        { display:none; }
 #ts_note                { height:22px; }
 #tsi_note               { height:22px; }
+
 
