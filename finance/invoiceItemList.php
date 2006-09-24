@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $_GET["mode"] or $_GET["mode"] = "allocate";
 

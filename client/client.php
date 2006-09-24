@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $client = new client;
 $clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];

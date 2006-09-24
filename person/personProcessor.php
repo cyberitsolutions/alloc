@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 check_entity_perm("person", PERM_PERSON_SEND_EMAIL);
 
 $email_to = "";

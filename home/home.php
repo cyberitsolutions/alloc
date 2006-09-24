@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 function show_home_items($width) {
   global $home_items, $current_home_item, $TPL;

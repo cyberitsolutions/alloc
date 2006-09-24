@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $reminderID = $_POST["reminderID"] or $reminderID = $_GET["reminderID"];
 $step = $_POST["step"] or $step = $_GET["step"];

@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
   function startSearch($template) {
     global $TPL, $db, $transaction, $current_user;

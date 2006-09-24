@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 function show_days($template_name) {
   global $date_to_view, $TPL;

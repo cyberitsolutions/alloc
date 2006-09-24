@@ -18,7 +18,7 @@
 #  St, Fifth Floor, Boston, MA 02110-1301 USA
 # 
 #
-#  Script to setup database, website permissions, cronjobs and generate alloc.inc
+#  Script to setup database, website permissions, cronjobs and generate alloc.php
 #
 
 
@@ -198,9 +198,7 @@ if [ -z "${FAILED}" ]; then
   echo
   echo " To complete the installation:                                  " 
   echo "                                                                " 
-  echo "   1) Move the ${DIR}alloc.inc file into the PHP include_path.  "
-  echo "                                                                "
-  echo "   2) Install these into cron to be run as root:                "
+  echo "   Install these into cron to be run as root:                "
   echo "                                                                "
   echo "     25  4 * * * ${ALLOC_BACKUP_DIR}cron_allocBackup.sh         "
   echo "     */10 * * * * ${DIR_FULL}cron_sendReminders.sh               "

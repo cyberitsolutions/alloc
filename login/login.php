@@ -23,7 +23,7 @@
 
 
 define("IN_LOGIN_RIGHT_NOW",true);
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 // If we already have a session
 if ($sess->Started()) {

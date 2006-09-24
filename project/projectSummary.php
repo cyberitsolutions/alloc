@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
 

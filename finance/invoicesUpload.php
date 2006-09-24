@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $field_map = array(""=>0, "type"=>1, "date"=>2, "num"=>3, "name"=>4, "memo"=>5, "quantity"=>6, "sales_price"=>7, "amount"=>8, ""=>9,);
 

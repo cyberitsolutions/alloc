@@ -23,7 +23,7 @@
 
 // For use like get_attachment.php?entity=project&id=5&file=foo.bar
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $file = urldecode($_GET["file"]);
 

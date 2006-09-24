@@ -22,7 +22,7 @@
  */
 
 // The order of file processing goes: 
-// requested_script.php -> /php/include/path/alloc.inc -> ./local.inc.php (this) -> more includes -> back to requested_script.php
+// requested_script.php -> /php/include/path/../alloc.php -> ./local.inc.php (this) -> more includes -> back to requested_script.php
 
 
 // Get alloc version

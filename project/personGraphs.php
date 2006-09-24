@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 function show_people($template_name) {
   global $person_query, $project, $TPL;

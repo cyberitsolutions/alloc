@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 include("lib/task_graph.inc.php");
 
 if ($projectID) {

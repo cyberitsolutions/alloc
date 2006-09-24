@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 check_entity_perm("permission", PERM_READ_WRITE);
 

@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 $current_user->check_employee();
 
 global $current_user, $TPL, $db, $save, $saveAndNew, $saveGoTf;

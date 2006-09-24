@@ -22,7 +22,7 @@
  */
 
 define("NO_AUTH",true);
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $db = new db_alloc;
 

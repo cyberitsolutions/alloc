@@ -33,7 +33,7 @@ than zero in the "Customer Billed At" and there is a timesheet manager for
 that project, add a zero percent line item in the commission box for that
 manager.
 */
-require_once("alloc.inc");
+require_once("alloc.php");
 
 function get_preferred_tfID($personID) {
 
