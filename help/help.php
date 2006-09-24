@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $modules = get_alloc_modules();
 

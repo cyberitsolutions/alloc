@@ -22,7 +22,7 @@
  */
 
 // initialise the request
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 // create an object to hold an announcement
 $announcement = new announcement;

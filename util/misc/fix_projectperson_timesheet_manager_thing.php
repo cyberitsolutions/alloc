@@ -23,7 +23,7 @@
 
 
 
-require_once("alloc.inc");
+require_once("alloc.php");
 
 // This file will get all te managerUserID from qall the projects and change the person Role to 
 // Project Manager + Time Sheet Recipient for that project.

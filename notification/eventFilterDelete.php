@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $eventFilter = new eventFilter();
 $eventFilter->set_id($eventFilterID);

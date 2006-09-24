@@ -22,7 +22,7 @@
  */
 
 
-require_once("alloc.inc");
+require_once("alloc.php");
 
 echo "<style>body {font-size:10px; font-family:Arial,fixed;}</style>";
 

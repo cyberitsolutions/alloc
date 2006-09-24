@@ -18,7 +18,7 @@
 #  St, Fifth Floor, Boston, MA 02110-1301 USA
 # 
 #
-#  Script to setup database, website permissions, cronjobs and generate alloc.inc
+#  Script to setup database, website permissions, cronjobs and generate alloc.php
 #
 
 
@@ -36,12 +36,12 @@ if [ "0" != "$(id -u)" ]; then
   die "Please run this script as user root."
 fi
 
-# Make the alloc.inc file
-e "Removing alloc.inc"
-run "rm -f ${DIR}alloc.inc"
+# Make the alloc.php file
+e "Removing alloc.php"
+run "rm -f ${DIR}alloc.php"
 
-if [ -f "${DIR}alloc.inc" ]; then 
-  e_failed "Could not remove alloc.inc"; 
+if [ -f "${DIR}alloc.php" ]; then 
+  e_failed "Could not remove alloc.php"; 
 fi
 
 

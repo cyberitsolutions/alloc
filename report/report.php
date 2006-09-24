@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 if (!has_report_perm()) {
   die("you don't have permission to generate reports.");

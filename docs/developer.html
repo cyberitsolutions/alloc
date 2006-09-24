@@ -38,13 +38,13 @@
 
     <h2>Code Architecture</h2>
 
-    <h3>alloc.inc</h3>
-    <p>The alloc.inc file is a core file of alloc.  The file contains installation specific parameters including database settings and information on which modules should be enabled.  Its location is installation specific, but it must be located somewhere in your PHP include_path (see the PHP documentation for more information on the include_path configuration variable).</p>
-    <p>A sample alloc.inc file is shown below:</p>
+    <h3>../alloc.php</h3>
+    <p>The ../alloc.php file is a core file of alloc.  The file contains installation specific parameters including database settings and information on which modules should be enabled.  Its location is installation specific, but it must be located somewhere in your PHP include_path (see the PHP documentation for more information on the include_path configuration variable).</p>
+    <p>A sample ../alloc.php file is shown below:</p>
     <pre>
-FIXME: put alloc.inc here
+FIXME: put ../alloc.php here
     </pre>
-FIXME: Describe contents of alloc.inc here
+FIXME: Describe contents of ../alloc.php here
 
     <h3>Modules</h3>
     <p>Alloc consists of a number of modules.  Modules are groups of functionality that can be deployed independently.  For example, the finance module can be deployed on a intranet server while the project module can be deployed on an Internet server.  Modules may rely on other modules (e.g. the project module requires the person module).</p>
@@ -87,7 +87,7 @@ FIXME: Describe contents of alloc.inc here
 
     <h4>Module Registration</h4>
 
-    <p>Modules are registered using the alloc.inc file.  See the separate section on alloc.inc for more information.</p>
+    <p>Modules are registered using the ../alloc.php file.  See the separate section on ../alloc.php for more information.</p>
     
     <h3>Page Files</h3>
     <p>Page files are those files that can be invoked directly by the web server.  A separate file is used for each different page that a module can present to the user.  For example, the announcement module has two page files - announcement.php and announcementList.php.  The announcement.php file shows a form for editing or creating new announcements.  The announcementList.php page file shows a list of all the announcements in the system so that the user can select which announcement they would like to edit.</p>
@@ -104,7 +104,7 @@ FIXME: Describe contents of alloc.inc here
     <pre>
 &lt;?php
   // initialise the request
-  include("alloc.inc");
+  include("../alloc.php");
 
   // create an object to hold an announcement
   $announcement = new announcement;

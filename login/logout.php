@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $sess->Destroy();
 $url = $TPL["url_alloc_index"];

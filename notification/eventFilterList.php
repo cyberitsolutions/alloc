@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 function showEventFilterList($template) {
   global $TPL, $current_user;

@@ -22,7 +22,7 @@
  */
 
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 if ($_GET["task_type"] && $_GET["timeSheetID"]) {
   echo timeSheet::get_task_list_dropdown($_GET["task_type"], $_GET["timeSheetID"], $_GET["taskID"]);

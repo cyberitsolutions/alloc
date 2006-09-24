@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 // Create an object to hold a taskCommentTemplate
 $taskCommentTemplate = new taskCommentTemplate();

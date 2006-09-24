@@ -22,7 +22,7 @@
  */
 
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 
 

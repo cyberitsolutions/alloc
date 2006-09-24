@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 check_entity_perm("transaction", PERM_FINANCE_UPLOAD_EXPENSES_FILE);
 

@@ -22,7 +22,7 @@
  */
 
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 if ($_GET["projectID"]) {
   echo task::get_task_cc_list_select($_GET["projectID"]);

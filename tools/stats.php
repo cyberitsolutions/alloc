@@ -21,7 +21,7 @@
  *
  */
 
-require_once("alloc.inc");
+require_once("../alloc.php");
 
 $db = new db_alloc;
 $db_sub = new db_alloc;
