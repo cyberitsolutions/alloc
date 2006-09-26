@@ -139,7 +139,7 @@ find ${DIR}.. -type f -path ${DIR}../.bzr -prune -exec chmod 664 {} \; # Files t
 find ${DIR}.. -type d -path ${DIR}../.bzr -prune -exec chmod 775 {} \; # Dirs  to rwxrwxr-x
 
 run "chmod 755 ${DIR}sql/dump_clean_db.sh"                # rwxr-xr-x
-run "chmod 754 ${DIR}stylesheet_regen.py"                 # rwxr-xr--
+run "chmod 754 ${DIR}make_stylesheets.py"                 # rwxr-xr--
 run "chmod 754 ${DIR}misc/gpl_header.py"                  # rwxr-xr--
 run "chmod 600 ${CONFIG_FILE}"                            # rw-------
 run "chmod 700 ${DIR}install.sh"                          # rwx------
