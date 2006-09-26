@@ -32,16 +32,14 @@ Please follow the directions carefully.
     * Ensure MySQL >= 3.23 (See /usr/sbin/mysqld -V)
 
 
-2) Put the source code in a directory called allocPSA in the webserver document root 
+2) Put the source code in a directory called "alloc" in the webserver document root 
 
-3) Fill in the values in /WEBROOT/allocPSA/util/install.cfg
+3) Fill in the values in /WEBROOT/alloc/util/install.cfg
 
-4) Determine the PHP configuration setting for include_path 
-
-5) As root, run the installer script by:
+4) As root, run the installer script by:
 
     $ su
-    $ cd /WEBROOT/allocPSA/util/ 
+    $ cd /WEBROOT/alloc/util/ 
     $ chmod a+x ./install.sh
     $ ./install.sh ./install.cfg
 
@@ -49,20 +47,17 @@ Please follow the directions carefully.
     * The script should run without any FAILED messages.
     * When the script finishes it will tell you to do stuff. Do that stuff.
 
-6) Go to the just installed allocPSA url in your web browser. Login with user and
-    pass: alloc/alloc
+5) Go to the just installed alloc url in your web browser. Login with user and
+   pass: alloc/alloc
 
 
 The PHP settings for your system may generally be determined by examining 
-/etc/php.ini or alternatively by putting a php script called blah.php in your 
+/etc/php.ini or alternatively by putting a php script called info.php in your 
 webroot whose contents are: <?php echo phpinfo(); ?>
-Hit the script with your webbrowser eg: http://localhost/blah.php
+Hit the script with your webbrowser eg: http://localhost/info.php
 
 
 Please feel free to contact us at Cybersource <info@cyber.com.au> or just use the 
 forums at http://sourceforge.net/projects/allocpsa/ if you have any difficulties.
 
 Alex Lance
-
-
-
