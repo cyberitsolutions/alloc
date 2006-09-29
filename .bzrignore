@@ -1,10 +1,9 @@
 images/user*.png
 images/big_user*.png
-logs/*
 report/files/*.txt
 util/cron_*.sh
-util/alloc.inc
 util/patch.sh
 help/help.css
 help/help.html
 help/images
+alloc.php
