@@ -38,10 +38,10 @@ fi
 
 # Make the alloc.php file
 e "Removing alloc.php"
-run "rm -f ${DIR}alloc.php"
+run "rm -f ${DIR}../alloc.php"
 
-if [ -f "${DIR}alloc.php" ]; then 
-  e_failed "Could not remove alloc.php"; 
+if [ -f "${DIR}../alloc.php" ]; then 
+  e_failed "Could not remove ../alloc.php"; 
 fi
 
 
