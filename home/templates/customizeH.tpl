@@ -1,5 +1,5 @@
 <form action="{url_alloc_home}" method="post">
-<table align="center" width="100%" cellspacing="0">
+<table cellspacing="0" style="width:100%">
   <tr>
     <td colspan="4"><b>Look and Feel</b></td>
   </tr>
@@ -70,7 +70,7 @@
     <td colspan="4"><b>Project List</b></td>
   </tr>
   <tr>
-    <td><nobr>No. Projects</nobr></td>
+    <td class="nobr">No. Projects</td>
     <td>
       <select name="projectListNum">
       {projectListNumOptions}

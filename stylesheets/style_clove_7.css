@@ -11,8 +11,9 @@ div.message             { border:1px solid #095853; padding:10px; margin-bottom:
 .bad                    { color:#880000; font-weight:bold; font-size:16px; }
 .good                   { color:#005e03; font-weight:bold; font-size:16px; }
 .help                   { color:#444444;  font-weight:bold; font-size:16px; }
+.nobr                   { white-space:nowrap }
 
-table.box               { border:1px solid #095853; background-color:#cccccc; margin-bottom:7px;} 
+table.box               { border:1px solid #095853; background-color:#cccccc; margin-bottom:7px; vertical-align:top; width:100%; } 
 table.box th            { border-bottom:1px solid #095853;  background: url(../images/bg_clove.jpg) repeat-x; color:#ffffff; font-size:16px; } 
 table.box th a:link     { font-weight:bold; color:#ffffff; font-size:16px; }
 table.box th a:visited  { font-weight:bold; color:#ffffff; font-size:16px; }
@@ -27,10 +28,16 @@ table.menu a:visited    { color:#000000; font-weight:bolder;        }
 table.menu a:hover      { color:#425749; font-weight:bolder;  }
 table.menu a.active     { color:#425749; }
 table.menu td           { font-size:15px; }
+td.menu_pane_left       { text-align:left; width:55%;}
+td.menu_pane_right      { text-align:right; width:45%;}
+td.menu_pane_left table { width:100%;}
+td.menu_pane_right table { width:100%;}
 
+table.calendar          { width:100%; } 
 table.calendar th       { background-color:#7f9492; color:#333333; border:0px; font-weight:normal; font-size:15px; }
-table.calendar td       { background-color:#a1b7b6; }
-table.calendar td.today { background-color:#cccccc; }
+table.calendar td       { background-color:#a1b7b6; width:14%; vertical-align:top;}
+table.calendar td.today { background-color:#cccccc; width:14%;}
+table.calendar td.header { text-align:center; font-weight:bold; width:14%;}
 
 table.filter            { border:3px dashed #7f9492; background-color:#91aba8; padding:4px; margin:4px;}
 table.filter th         { font-weight:bold; background-color:#91aba8; color:#333333; border-bottom:0px solid #ffffff; text-align:center; }

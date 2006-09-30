@@ -574,7 +574,7 @@ class task extends db_entity {
   }
 
   function get_url() {
-    $sess = Session::GetSession();
+    $sess = new Session;
     $url = "project/task.php?taskID=".$this->get_id();
 
     if ($sess->Started()) {
@@ -889,7 +889,7 @@ function get_task_statii_array() {
       return $summary_ops;
 
     } else if (!$print && $_FORM["return"] == "html") {
-      return "<table align=\"center\"><tr><td colspan=\"10\" align=\"center\"><b>No Tasks Found</b></td></tr></table>";
+      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Tasks Found</b></td></tr></table>";
     } 
   } 
 
@@ -899,19 +899,19 @@ function get_task_statii_array() {
       $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
                              and $summary.= "\n<td>&nbsp;</td>";
       $summary.= "\n<td>&nbsp;</td>";
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Priority</nobr></b></td>"; 
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Task Pri</nobr></b></td>"; 
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b><nobr>Proj Pri</nobr></b></td>"; 
-      $_FORM["showStatus"]   and $summary.= "\n<td class=\"col\"><b><nobr>Status</nobr></b></td>"; 
-      $_FORM["showCreator"]  and $summary.= "\n<td class=\"col\"><b><nobr>Task Creator</nobr></b></td>";
-      $_FORM["showAssigned"] and $summary.= "\n<td class=\"col\"><b><nobr>Assigned To</nobr></b></td>";
-      $_FORM["showDate1"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Start</nobr></b></td>";
-      $_FORM["showDate2"]    and $summary.= "\n<td class=\"col\"><b><nobr>Targ Compl</nobr></b></td>";
-      $_FORM["showDate3"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Start</nobr></b></td>";
-      $_FORM["showDate4"]    and $summary.= "\n<td class=\"col\"><b><nobr>Act Compl</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Estimate</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>Actual</nobr></b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b><nobr>%</nobr></b></td>";
+      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Priority</b></td>"; 
+      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Task Pri</b></td>"; 
+      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Proj Pri</b></td>"; 
+      $_FORM["showStatus"]   and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Status</b></td>"; 
+      $_FORM["showCreator"]  and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Task Creator</b></td>";
+      $_FORM["showAssigned"] and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Assigned To</b></td>";
+      $_FORM["showDate1"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Targ Start</b></td>";
+      $_FORM["showDate2"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Targ Compl</b></td>";
+      $_FORM["showDate3"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Act Start</b></td>";
+      $_FORM["showDate4"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Act Compl</b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Estimate</b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Actual</b></td>";
+      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">%</b></td>";
       $summary.="\n</tr>";
       return $summary;
     }
@@ -949,13 +949,13 @@ function get_task_statii_array() {
     $_FORM["showStatus"]      and $summary[] = "  <td class=\"col\">".$task["taskStatus"]."&nbsp;</td>"; 
     $_FORM["showCreator"]     and $summary[] = "  <td class=\"col\">".$people_cache[$task["creatorID"]]["name"]."&nbsp;</td>";
     $_FORM["showAssigned"]    and $summary[] = "  <td class=\"col\">".$people_cache[$task["personID"]]["name"]."&nbsp;</td>";
-    $_FORM["showDate1"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateTargetStart"]."&nbsp;</nobr></td>";
-    $_FORM["showDate2"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateTargetCompletion"]."&nbsp;</nobr></td>";
-    $_FORM["showDate3"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualStart"]."&nbsp;</nobr></td>";
-    $_FORM["showDate4"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["dateActualCompletion"]."&nbsp;</nobr></td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".seconds_to_display_format($task["timeEstimate"]*60*60)."&nbsp;</nobr></td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</nobr></td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col\"><nobr>".$task["percentComplete"]."&nbsp;</nobr></td>";
+    $_FORM["showDate1"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateTargetStart"]."&nbsp;</td>";
+    $_FORM["showDate2"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateTargetCompletion"]."&nbsp;</td>";
+    $_FORM["showDate3"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateActualStart"]."&nbsp;</td>";
+    $_FORM["showDate4"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateActualCompletion"]."&nbsp;</td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".seconds_to_display_format($task["timeEstimate"]*60*60)."&nbsp;</td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".$task["percentComplete"]."&nbsp;</td>";
                                   $summary[] = "</tr>";
 
     if ($_FORM["showDescription"] || $_FORM["showComments"]) {
