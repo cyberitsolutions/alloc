@@ -22,7 +22,7 @@
  */
 
 // This file provides basically static template values that are used throughout the application and is called by local.inc.php
-$sess = Session::GetSession();
+$sess = new Session;
 
 $TPL =array("url_alloc_index"=>SCRIPT_PATH."index.php",
  "url_alloc_login"=>SCRIPT_PATH."login/login.php",
@@ -105,13 +105,10 @@ $TPL =array("url_alloc_index"=>SCRIPT_PATH."index.php",
  "today"=>date("Y-m-d"),
  "alloc_help_link_name"=>end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1)),
  "script_path"=>SCRIPT_PATH,
- "table_box" =>"<table align=\"center\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\" valign=\"top\" width=\"100%\">",
- "table_box_border" =>"<table align=\"center\" border=\"1\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\" valign=\"top\" width=\"100%\">",
- "table_box_home"=>"<table align=\"center\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\" valign=\"top\" width=\"100%\">",
- "table_box_norm" =>"<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\" valign=\"top\">",
- "table_box_norm_r"=>"<table align=\"right\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\" valign=\"top\">",
- "table_box_norm_c" =>"<table align=\"center\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\" valign=\"top\">",
- "table_box_norm_c_border" =>"<table align=\"center\" border=\"1\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\" valign=\"top\">",
+ "table_box" =>"<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">",
+ "table_box_border" =>"<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">",
+ "table_box_home"=>"<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">",
+ "table_box_norm" =>"<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">",
  "main_alloc_title"=>end(explode("/", $_SERVER["SCRIPT_NAME"])),
  "ALLOC_TITLE"=>config::get_config_item("companyName")." ".ALLOC_TITLE,
  "ALLOC_VERSION"=>ALLOC_VERSION,

@@ -11,8 +11,9 @@ div.message             { border:(TABLE_BOX_BORDER_PX) solid (DIV_MESSAGE_BORDER
 .bad                    { color:(TRANSACTION_REJECTED); font-weight:bold; font-size:(TABLE_BOX_TH_FONT_SIZE)px; }
 .good                   { color:(TRANSACTION_APPROVED); font-weight:bold; font-size:(TABLE_BOX_TH_FONT_SIZE)px; }
 .help                   { color:(TRANSACTION_PENDING);  font-weight:bold; font-size:(TABLE_BOX_TH_FONT_SIZE)px; }
+.nobr                   { white-space:nowrap }
 
-table.box               { border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); background-color:(TABLE_BOX_BACKGROUND_COLOR); margin-bottom:7px;} 
+table.box               { border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); background-color:(TABLE_BOX_BACKGROUND_COLOR); margin-bottom:7px; vertical-align:top; width:100%; } 
 table.box th            { border-bottom:1px solid (TABLE_BOX_BORDER);  (TABLE_BOX_TH_BACKGROUND); color:(TABLE_BOX_TH_COLOR); font-size:(TABLE_BOX_TH_FONT_SIZE)px; } 
 table.box th a:link     { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; }
 table.box th a:visited  { font-weight:bold; color:(TABLE_BOX_TH_A_LINK_COLOR); font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; }
@@ -27,10 +28,16 @@ table.menu a:visited    { color:(TABLE_MENU_A_COLOR); font-weight:bolder;       
 table.menu a:hover      { color:(TABLE_MENU_A_HOVER_COLOR); font-weight:bolder;  }
 table.menu a.active     { color:(TABLE_MENU_A_ACTIVE_COLOR); }
 table.menu td           { font-size:(TD_FONT_SIZE)px; }
+td.menu_pane_left       { text-align:left; width:55%;}
+td.menu_pane_right      { text-align:right; width:45%;}
+td.menu_pane_left table { width:100%;}
+td.menu_pane_right table { width:100%;}
 
+table.calendar          { width:100%; } 
 table.calendar th       { background-color:(TABLE_CALENDAR_TH_BACKGROUND_COLOR); color:(TABLE_CALENDAR_TH_COLOR); border:0px; font-weight:normal; font-size:(TABLE_CALENDAR_TH_FONT_SIZE)px; }
-table.calendar td       { background-color:(TR_ODD_BACKGROUND_COLOR); }
-table.calendar td.today { background-color:(TABLE_BOX_BACKGROUND_COLOR); }
+table.calendar td       { background-color:(TR_ODD_BACKGROUND_COLOR); width:14%; vertical-align:top;}
+table.calendar td.today { background-color:(TABLE_BOX_BACKGROUND_COLOR); width:14%;}
+table.calendar td.header { text-align:center; font-weight:bold; width:14%;}
 
 table.filter            { border:3px dashed (TABLE_CALENDAR_TH_BACKGROUND_COLOR); background-color:(TABLE_FILTER_BACKGROUND_COLOR); padding:4px; margin:4px;}
 table.filter th         { font-weight:bold; background-color:(TABLE_FILTER_BACKGROUND_COLOR); color:(TD_COLOR); border-bottom:0px solid #ffffff; text-align:center; }

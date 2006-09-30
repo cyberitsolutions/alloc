@@ -61,7 +61,7 @@ class project extends db_entity
   }
 
   function get_url() {
-    $sess = Session::GetSession();
+    $sess = new Session;
     $url = "project/project.php?projectID=".$this->get_id();
 
     if ($sess->Started()) {
@@ -126,42 +126,42 @@ class project extends db_entity
     // Client 
     if ($this->get_value("clientID")) {  
       $url = $TPL["url_alloc_client"]."clientID=".$this->get_value("clientID");
-      $links[] = "<a href=\"$url\">Client</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr\">Client</a>";
     }
 
     // Tasks
     if ($this->have_perm()) {
-      $url = $TPL["url_alloc_taskSummary"]."applyFilter=1&taskStatus=not_completed&taskView=byProject&projectID=".$this->get_id();
-      $links[] = "<a href=\"$url\">Tasks</a>";
+      $url = $TPL["url_alloc_taskSummary"]."applyFilter=1&amp;taskStatus=not_completed&amp;taskView=byProject&amp;projectID=".$this->get_id();
+      $links[] = "<a href=\"$url\" class=\"nobr\">Tasks</a>";
     } 
 
     // Graph
     if ($this->have_perm()) {
       $url = $TPL["url_alloc_projectSummary"]."projectID=".$this->get_id();
-      $links[] = "<a href=\"$url\">Graph</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr\">Graph</a>";
     }
 
     // Allocation
     if ($this->have_perm(PERM_PROJECT_VIEW_TASK_ALLOCS)) {
       $url = $TPL["url_alloc_personGraphs"]."projectID=".$this->get_id();
-      $links[] = "<a href=\"$url\">Allocation</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr\">Allocation</a>";
     } 
 
     // To Time Sheet
     if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
       $url = $TPL["url_alloc_timeSheet"]."newTimeSheet_projectID=".$this->get_id();
-      $links[] = "<a href=\"$url\">Time Sheet</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr\">Time Sheet</a>";
     }
 
     // New Task
     if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
       $url = $TPL["url_alloc_task"]."projectID=".$this->get_id();
-      $links[] = "<a href=\"$url\">New Task</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr\">New Task</a>";
     }
 
-    // Join links up with space and html no-breaks
+    // Join links up with space
     if (is_array($links)) {
-      return "<nobr>".implode("</nobr><nobr>&nbsp;&nbsp;",$links)."</nobr>";
+      return implode("&nbsp;&nbsp;",$links);
     }
   }
 

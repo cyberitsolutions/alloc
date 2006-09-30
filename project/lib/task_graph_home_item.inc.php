@@ -92,14 +92,14 @@ class task_graph_home_item extends home_item {
 
           if ($db->f("dateTargetStart") == $date) {
             ${"to_be_started_".$day} = "<br><br/>To be started:";
-            $TPL["calendar_".$day."_started"].= '<br/><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
+            $TPL["calendar_".$day."_started"].= '<br/><a href="'.$TPL["url_alloc_task"].'taskID='.$db->f("taskID").'">';
             $TPL["calendar_".$day."_started"].= $db->f("taskName")."</a>";
           }
 
           if ($db->f("dateTargetCompletion") == $date) {
             $TPL["calendar_".$day."_started"] or $br = "<br/>";
             ${"to_be_completed_".$day} = $br."<br/>To be completed:";
-            $TPL["calendar_".$day."_completed"].= '<br/><a href="'.$TPL["url_alloc_task"].'&taskID='.$db->f("taskID").'">';
+            $TPL["calendar_".$day."_completed"].= '<br/><a href="'.$TPL["url_alloc_task"].'taskID='.$db->f("taskID").'">';
             $TPL["calendar_".$day."_completed"].= $db->f("taskName")."</a>";
           }
 

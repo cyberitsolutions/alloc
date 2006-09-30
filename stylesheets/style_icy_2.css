@@ -11,8 +11,9 @@ div.message             { border:1px solid #ff6a86; padding:10px; margin-bottom:
 .bad                    { color:red; font-weight:bold; font-size:11px; }
 .good                   { color:green; font-weight:bold; font-size:11px; }
 .help                   { color:black;  font-weight:bold; font-size:11px; }
+.nobr                   { white-space:nowrap }
 
-table.box               { border:1px solid #81a2c1; background-color:#f4f4f4; margin-bottom:7px;} 
+table.box               { border:1px solid #81a2c1; background-color:#f4f4f4; margin-bottom:7px; vertical-align:top; width:100%; } 
 table.box th            { border-bottom:1px solid #81a2c1;  background: url(../images/bg_classic.jpg) repeat-x; color:#003d76; font-size:11px; } 
 table.box th a:link     { font-weight:bold; color:#003d76; font-size:11px; }
 table.box th a:visited  { font-weight:bold; color:#003d76; font-size:11px; }
@@ -27,10 +28,16 @@ table.menu a:visited    { color:#003d76; font-weight:bolder;        }
 table.menu a:hover      { color:#688db0; font-weight:bolder;  }
 table.menu a.active     { color:#688db0; }
 table.menu td           { font-size:10px; }
+td.menu_pane_left       { text-align:left; width:55%;}
+td.menu_pane_right      { text-align:right; width:45%;}
+td.menu_pane_left table { width:100%;}
+td.menu_pane_right table { width:100%;}
 
+table.calendar          { width:100%; } 
 table.calendar th       { background-color:#d4e0ec; color:#333333; border:0px; font-weight:normal; font-size:10px; }
-table.calendar td       { background-color:#e4e4e4; }
-table.calendar td.today { background-color:#f4f4f4; }
+table.calendar td       { background-color:#e4e4e4; width:14%; vertical-align:top;}
+table.calendar td.today { background-color:#f4f4f4; width:14%;}
+table.calendar td.header { text-align:center; font-weight:bold; width:14%;}
 
 table.filter            { border:3px dashed #d4e0ec; background-color:#f9f9f9; padding:4px; margin:4px;}
 table.filter th         { font-weight:bold; background-color:#f9f9f9; color:#333333; border-bottom:0px solid #ffffff; text-align:center; }

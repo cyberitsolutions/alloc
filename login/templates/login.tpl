@@ -1,5 +1,9 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/transitional.dtd">
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta name="language" content="English-AU">
+
     <title>allocPSA Login</title>
     <style type="text/css">
       <!--
@@ -13,50 +17,63 @@
       table.login td.left     { color:333333; text-align:left;   font-size:12px; }
       table.login td.center   { color:#888888; text-align:center; font-weight:bold; font-size:10px; }
       table.login td.header   { color:#38629b; text-align:left;   font-weight:bold; font-size:18px; border-bottom:2px solid #e0e0e0; padding-left:10px;}
-      table.outer             { border:3px solid #ffffff; }
+      table.outer             { border:3px solid #ffffff; margin-top:50px; margin-left:auto; margin-right:auto;}
       p.error                 { color: red; display:inline; }
+      form                    { display:inline;}
       -->
     </style>
-  </head>
-  <body class="login">
+  
+    <script type="text/javascript">
+    <!--
+      function focus_field() {
+        if (document.getElementById("login_form").username.value != '') {
+            document.getElementById("login_form").password.focus();
+        } else {
+            document.getElementById("login_form").username.focus();
+        }
+      }
+    // -->
+    </script>
 
-  <br><br><br>
+
+  </head>
+  <body class="login" onLoad="javascript:focus_field();">
+
 
   <form action="{url_alloc_login}" method="post" id="login_form">
 
   {ALLOC_SHOOER}
 
-  <input type="hidden" name="account" value="{account}">
 
-  <table width="30%" align="center" class="outer">
+  <table width="30%" class="outer">
     <tr>
       <td>
 
-        <table class="login" align="center" cellspacing="0" cellpadding="0" width="100%">
+        <table class="login" cellspacing="0" cellpadding="0" width="100%">
           <tr>
             <td valign="top">
   
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td><img src="{script_path}images/icon_alloc.png"/></td> 
+                  <td><img src="{script_path}images/icon_alloc.png" alt="AllocPSA Icon"/></td> 
                   <td class="link" valign="top">
-                    <nobr>{links}&nbsp;</nobr>
+                    {links}&nbsp;
                   </td>
                 </tr>
                 <tr>
-                  <td class="header" colspan="2"><nobr></nobr></td>
+                  <td class="header" colspan="2"></td>
                 </tr>
               </table>
               <br>      
               <br>      
-              <table align="center" cellspacing="0" cellpadding="6">
+              <table cellspacing="0" cellpadding="6">
                 <tr>   
                   <td colspan="2" class="message" valign="top">
-                    <nobr>{error}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr><br>&nbsp;
+                    {error}<br>&nbsp;
                   </td>
                 </tr>
                 <tr>
-                  <td class="right" width="100%">Username</td>
+                  <td class="right" style="width:100%">Username</td>
                   <td class="right">
                     <input type="text" name="username" value="{username}" size="25" maxlength="32">
                   </td>
@@ -66,12 +83,12 @@
                 </tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr>
-                  <td class="left"><nobr>{use_cookies}</nobr></td>
+                  <td class="left">{use_cookies}</td>
                   <td class="right">{login_or_send_pass_button}</td>
                 </tr>
                 <tr>
-                  <td class="center" colspan="2"><nobr>{status_line}</nobr></td>
-                  <td></td>
+                  <td class="center" colspan="2">{status_line}</td>
+                  <td><input type="hidden" name="account" value="{account}"></td>
                 </tr>
               </table>
 
@@ -85,13 +102,4 @@
 </form>
 
 </body>
-<script language="JavaScript">
-<!--
-  if (document.getElementById("login_form").username.value != '') {
-      document.getElementById("login_form").password.focus();
-  } else {
-      document.getElementById("login_form").username.focus();
-  }
-// -->
-</script>
 </html>
