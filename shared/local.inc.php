@@ -36,7 +36,7 @@ if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DI
 require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
 
 $modules = get_alloc_modules();
-$fake_modules = array("util","login","shared");
+$fake_modules = array("util","login","shared","soap");
 
 eregi("^".ALLOC_MOD_DIR."/(.*)$", $_SERVER["SCRIPT_FILENAME"], $match) && $script_filename_short = $match[1];
 eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
@@ -102,27 +102,15 @@ $current_user = new person;
 if (!defined("NO_AUTH")) {
 
   // Check for existing session..
-  $sess = Session::GetSession();
+  $sess = new Session;
 
   if (!$sess->Started() && !defined("IN_LOGIN_RIGHT_NOW")) { 
     header("Location: ". $TPL["url_alloc_login"]);
     exit();
 
   } else {
-    $current_user = new person;
-    $current_user->set_id($sess->Get("personID"));
-    $current_user->select();
-    $current_user->prefs = unserialize($current_user->get_value("sessData"));
-    if (is_array($current_user->prefs)) {
-      foreach ($current_user->prefs as $n=>$v) {
-        ${$n} = $v;
-        global ${$n};
-      }
-      unset($n,$v);
-    }
-    isset($current_user->prefs["topTasksNum"]) or $current_user->prefs["topTasksNum"] = 5;
-    $current_user->prefs["topTasksStatus"] or $current_user->prefs["topTasksStatus"] = "not_completed";
-    isset($current_user->prefs["projectListNum"]) or $current_user->prefs["projectListNum"] = "10";
+    $person = new person;
+    $current_user = $person->load_get_current_user($sess->Get("personID"));
   }
 }
 

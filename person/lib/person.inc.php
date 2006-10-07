@@ -27,8 +27,7 @@ define("PERM_PERSON_WRITE_MANAGEMENT", 1024);
 define("PERM_PERSON_WRITE_ROLES", 2048);
 define("PERM_PERSON_SEND_EMAIL", 4096);
 
-class person extends db_entity
-{
+class person extends db_entity {
   var $classname = "person";
   var $data_table = "person";
   var $display_field_name = "username";
@@ -258,14 +257,52 @@ class person extends db_entity
     }
   }
 
-function get_tfIDs() {
-  $db = new db_alloc;
-  $db->query("SELECT tfID FROM tfPerson WHERE personID = %d",$this->get_id());
-  while ($row = $db->row()) {
-    $tfIDs[] = $row["tfID"];
+  function get_tfIDs() {
+    $db = new db_alloc;
+    $db->query("SELECT tfID FROM tfPerson WHERE personID = %d",$this->get_id());
+    while ($row = $db->row()) {
+      $tfIDs[] = $row["tfID"];
+    }
+    return $tfIDs;
   }
-  return $tfIDs;
-}
+
+
+
+  function get_valid_login_row($username, $password="") {
+    $q = sprintf("SELECT * FROM person WHERE username = '%s'",db_esc($username));
+    $db = new db_alloc;
+    $db->query($q);
+    $db->next_record();
+    $salt = $db->f("password");
+
+    $q = sprintf("SELECT * FROM person WHERE username = '%s' AND password = '%s'"
+                ,db_esc($username),db_esc(crypt(trim($password), $salt)));
+
+    $db->query($q);
+    return $db->row();
+  }
+
+  function load_get_current_user($personID) {
+    $current_user = new person;
+    $current_user->set_id($personID);
+    $current_user->select();
+    $current_user->prefs = unserialize($current_user->get_value("sessData"));
+    if (is_array($current_user->prefs)) {
+      foreach ($current_user->prefs as $n=>$v) {
+        ${$n} = $v;
+        global ${$n};
+      } 
+      unset($n,$v);
+    } 
+    isset($current_user->prefs["topTasksNum"]) or $current_user->prefs["topTasksNum"] = 5;
+    $current_user->prefs["topTasksStatus"] or $current_user->prefs["topTasksStatus"] = "not_completed";
+    isset($current_user->prefs["projectListNum"]) or $current_user->prefs["projectListNum"] = "10";
+    return $current_user;
+  }
+
+
+
+
 
 }
 
