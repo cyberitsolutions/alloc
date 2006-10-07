@@ -34,28 +34,16 @@ if ($sess->Started()) {
 // Else log the user in
 } else if ($_POST["login"]) {
 
-  // Session not started yet!
-  $db = new db_alloc;
+  $person = new person;
+  $row = $person->get_valid_login_row($_POST["username"],$_POST["password"]);
 
-  $q = sprintf("SELECT * FROM person WHERE username = '%s'",db_esc($_POST["username"]));
-  $db->query($q);
-  $db->next_record();
-  $salt = $db->f("password");
+  if ($row) {
 
-  $q = sprintf("SELECT * FROM person WHERE username = '%s' and password = '%s'"
-              ,db_esc($_POST["username"]),db_esc(crypt(trim($_POST["password"]), $salt)));
-
-  $db->query($q);
-
-  if ($row = $db->row()) {
-
-    $sess->Start($row["personID"]);
-    $sess->Put("username" ,strtolower($row["username"]));
-    $sess->Put("perms" ,$row["perms"]);
-    $sess->Put("personID" ,$row["personID"]);
+    $sess->Start($row);
 
     $q = sprintf("UPDATE person SET lastLoginDate = '%s' WHERE personID = %d"
                  ,date("Y-m-d H:i:s"),$row["personID"]);
+    $db = new db_alloc;
     $db->query($q);
                    
 
@@ -64,13 +52,14 @@ if ($sess->Started()) {
     } else {
       $sess->UseGet();
     }
+
     $url = $sess->GetUrl($TPL["url_alloc_home"]);
     $sess->Save();
     header("Location: ".$url);
   }
   $error = "<p class='error'>Username or Password incorrect.</p>";
 
-} else if ($_POST["new_pass"] && $_POST["username"] && $_POST["email"]) {
+} else if ($_POST["new_pass"]) {
 
   $db = new db_alloc;
   $db->query(sprintf("SELECT * FROM person WHERE username = '%s' AND emailAddress = '%s'"
@@ -103,36 +92,34 @@ $TPL["account"] = $account;
 
 if ($error) {
   $TPL["error"] = $error; 
-} else if ($account) {
-  $TPL["error"] = "Please enter your Username and Email Address:";
-} else if (!$account) {
-  $TPL["error"] = "Please enter your Username and Password:";
+} else {
+  $TPL["error"] = "Please enter your:";
 }
 
 
 if (!isset($account)) { 
   $TPL["links"] = "Login | <a href=\"".$TPL["url_alloc_login"]."?account=true\">New Password</a>";
 } else {
-  $TPL["links"] = "<a href=\"".$TPL["url_alloc_login"]."\"><nobr>Login</nobr></a> | New Password";
+  $TPL["links"] = "<a href=\"".$TPL["url_alloc_login"]."\">Login</a> | New Password";
 }
 
 $TPL["username"] = $_POST["username"];
 
 
 if (!isset($account)) { 
-  $TPL["password_or_email_address_field"] = "<td class=\"right\">Password</td>";
-  $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"password\" name=\"password\" size=\"25\" maxlength=\"32\"></td>";
+  $TPL["password_or_email_address_field"] = "<td class=\"right\">Password&nbsp;&nbsp;</td>";
+  $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"password\" name=\"password\" size=\"20\" maxlength=\"32\"></td>";
   $_COOKIE["alloc_cookie"] and $checked = " checked";
   $TPL["use_cookies"] = "Use Cookie <input type=\"checkbox\" name=\"use_cookies\" value=\"1\"".$checked.">";
   $TPL["login_or_send_pass_button"] = "<input type=\"submit\" name=\"login\" value=\"&nbsp;&nbsp;Login&nbsp;&nbsp;\">";
 } else { 
-  $TPL["password_or_email_address_field"] = "<td class=\"right\"><nobr>Email</nobr></td>";
-  $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"text\" name=\"email\" size=\"25\" maxlength=\"32\"></td>";
+  $TPL["password_or_email_address_field"] = "<td class=\"right\">Email Address&nbsp;&nbsp;</td>";
+  $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"text\" name=\"email\" size=\"20\" maxlength=\"32\"></td>";
   $TPL["login_or_send_pass_button"] = "<input type=\"submit\" name=\"new_pass\" value=\"Send Password\">";
 }
 
 
-$TPL["status_line"] = ALLOC_TITLE." ".ALLOC_VERSION." on ".$_SERVER["SERVER_NAME"]." ".ALLOC_DB_NAME." database at ".date("g:ia dS M"); 
+$TPL["status_line"] = ALLOC_TITLE." ".ALLOC_VERSION." &copy; 2006 <a href=\"http://www.cybersource.com.au\">Cybersource</a>"; 
 $TPL["ALLOC_SHOOER"] = ALLOC_SHOOER; 
 
 
