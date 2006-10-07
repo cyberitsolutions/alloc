@@ -40,34 +40,33 @@ class Session {
 
 
   // Constructor
-  function Session() {
-    $this->key           = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"];
+  function Session($key="") {
+    $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"];
     $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
     #$this->session_life  = (20); 
     $this->session_life  = (60*60*9); 
     $this->session_data  = $this->UnEncode($this->GetSessionData());
     $this->mode          = $this->Get("session_mode"); 
+
+    if ($this->Expired()) {
+      $this->Destroy();
+    }
+    return $this;
   }
 
-  // Singleton 
-  function GetSession() {
-    static $s;
-    is_object($s) or $s = new Session();
-    if ($s->Expired()) {
-      $s->Destroy();
-    }
-    return $s;
-  } 
 
   // Call this in a login page to start session 
-  function Start($personID) {
-    $this->key = md5($personID."mix it up#@!".md5(mktime().md5(microtime())));
+  function Start($row) {
+    $this->key = md5($row["personID"]."mix it up#@!".md5(mktime().md5(microtime())));
     $this->Put("key2", $this->key2);
     $this->Put("session_started", mktime());
-    $this->db->query("DELETE FROM sess WHERE personID = %d",$personID);
+    $this->db->query("DELETE FROM sess WHERE personID = %d",$row["personID"]);
     $this->db->query("INSERT INTO sess (sessID,sessData,personID) VALUES (%s,%s,%d)"
-                             ,$this->key, $this->Encode($this->session_data), $personID);
+                             ,$this->key, $this->Encode($this->session_data), $row["personID"]);
+    $this->Put("username" ,strtolower($row["username"]));
+    $this->Put("perms" ,$row["perms"]);
+    $this->Put("personID" ,$row["personID"]);
   }
 
   // Test whether session has started 
@@ -131,10 +130,10 @@ class Session {
    $url = ereg_replace("[&?]+$", "", $url);
 
     if ($this->mode == "get") {
-       (strpos($url, "sess=") == false) && $this->key and $extra = "sess=".$this->key."&";
+       (strpos($url, "sess=") == false) && $this->key and $extra = "sess=".$this->key."&amp;";
     }
 
-    $url.= (strpos($url, "?") != false ? "&" : "?").$extra;
+    $url.= (strpos($url, "?") != false ? "&amp;" : "?").$extra;
 
     return $url;
   }
@@ -150,6 +149,7 @@ class Session {
     $this->MakeCookie();
     $this->Put("session_mode",$this->mode);
   }
+
 
   // * * * * * * * * * * * * * * * * *//
   //                                  //

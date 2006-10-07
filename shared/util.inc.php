@@ -47,7 +47,7 @@ function get_alloc_modules() {
 }
 
 function page_close() {
-  $sess = Session::GetSession();
+  $sess = new Session;
   $sess->Save();
 
   global $current_user;
