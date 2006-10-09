@@ -12,7 +12,7 @@
       table.login td          { padding:6px 0px; }
 
       table.login td.message  { vertical-align:top; letter-spacing: 0.00em; }
-      table.login td.right    { text-align:right; letter-spacing: 0.00em;}
+      table.login td.right    { text-align:right; letter-spacing: 0.00em; white-space:nowrap;}
       table.login td.left     { text-align:left;  letter-spacing: 0.00em;}
       table.login td.center   { color:#ffffff; text-align:center; font-size:10px; }
       table.login td.center a { color:#eeeeee; font-size:10px; }
