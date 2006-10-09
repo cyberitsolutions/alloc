@@ -244,6 +244,7 @@ class task extends db_entity {
     $parentTaskID or $parentTaskID = $_GET["parentTaskID"];
 
     $db = new db_alloc;
+    $options = get_option("None", "0");
     if ($projectID) {
       $query = sprintf("SELECT * 
                         FROM task 
@@ -252,7 +253,6 @@ class task extends db_entity {
                         AND (dateActualCompletion IS NULL or dateActualCompletion = '') 
                         ORDER BY taskName", $projectID);
       $db->query($query);
-      $options = get_option("None", "0");
       $options.= get_options_from_db($db, "taskName", "taskID", $parentTaskID,70);
     }
     return "<select name=\"parentTaskID\">".$options."</select>";

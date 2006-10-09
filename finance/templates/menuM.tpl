@@ -1,6 +1,7 @@
 {:show_header}
 {:show_toolbar}
-{table_box_norm}
+
+{table_box}
   <tr>
     <th>Finance Menu</th>
   </tr>

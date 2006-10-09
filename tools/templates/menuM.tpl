@@ -1,6 +1,7 @@
 {:show_header}
 {:show_toolbar}
-{table_box_norm}
+
+{table_box}
   <tr>
     <th>Tools</th>
   </tr>
@@ -12,4 +13,5 @@
     </td>
   </tr>
 </table>
+
 {:show_footer}
