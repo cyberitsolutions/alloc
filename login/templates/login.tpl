@@ -33,6 +33,7 @@
           width: 380px; 
           padding-right: 15px; 
           margin: 20px auto; 
+          text-align:left;
       } 
       .cssbox_head { 
           background-position: top right; margin-right: -15px;
@@ -72,44 +73,48 @@
 
   <form action="{url_alloc_login}" method="post" id="login_form">
 
-  {ALLOC_SHOOER}
+  <div style="text-align:center">
 
-  <div class="cssbox">
-    <div class="cssbox_head">
-      <h2 class="link"><img src="{script_path}images/icon_alloc.png" alt="AllocPSA Icon"/>{links}</h2>
-    </div>
-    <div class="cssbox_body">
+    {ALLOC_SHOOER}
 
-      <table cellpadding="0" cellspacing="0" class="login">
-        <tr><td colspan="2">&nbsp;</td></tr>
-        <tr>   
-          <td colspan="2" class="message">
-            {error}<br>&nbsp;
-          </td>
-        </tr>
-        <tr>
-          <td class="right" style="width:100%">Username&nbsp;&nbsp;</td>
-          <td class="right">
-            <input type="text" name="username" value="{username}" size="20" maxlength="32">
-          </td>
-        </tr>
-        <tr>
-          {password_or_email_address_field}
-        </tr>
-        <tr><td colspan="2">&nbsp;</td></tr>
-        <tr>
-          <td class="options">{use_cookies}</td>
-          <td style="text-align:right;">{login_or_send_pass_button}</td>
-        </tr>
-        <tr><td colspan="2" style="border-bottom:0px solid #e0e0e0;">&nbsp;</td></tr>
-        <tr>
-          <td class="center" colspan="2">{status_line}</td>
-          <td><input type="hidden" name="account" value="{account}"></td>
-        </tr>
-      </table>
+    <div class="cssbox">
+      <div class="cssbox_head">
+        <h2 class="link"><img src="{script_path}images/icon_alloc.png" alt="AllocPSA Icon"/>{links}</h2>
+      </div>
+      <div class="cssbox_body">
 
-    </div>
-  </div> 
+        <table cellpadding="0" cellspacing="0" class="login">
+          <tr><td colspan="2">&nbsp;</td></tr>
+          <tr>   
+            <td colspan="2" class="message">
+              {error}<br>&nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td class="right" style="width:100%">Username&nbsp;&nbsp;</td>
+            <td class="right">
+              <input type="text" name="username" value="{username}" size="20" maxlength="32">
+            </td>
+          </tr>
+          <tr>
+            {password_or_email_address_field}
+          </tr>
+          <tr><td colspan="2">&nbsp;</td></tr>
+          <tr>
+            <td class="options">{use_cookies}</td>
+            <td style="text-align:right;">{login_or_send_pass_button}</td>
+          </tr>
+          <tr><td colspan="2" style="border-bottom:0px solid #e0e0e0;">&nbsp;</td></tr>
+          <tr>
+            <td class="center" colspan="2">{status_line}</td>
+            <td><input type="hidden" name="account" value="{account}"></td>
+          </tr>
+        </table>
+
+      </div>
+    </div> 
+
+  </div>
 
   </form>
 
