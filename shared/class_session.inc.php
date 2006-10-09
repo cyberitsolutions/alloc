@@ -44,8 +44,8 @@ class Session {
     $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"];
     $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
-    #$this->session_life  = (20); 
-    $this->session_life  = (60*60*9); 
+    $this->session_life  = (5); 
+    #$this->session_life  = (60*60*9); 
     $this->session_data  = $this->UnEncode($this->GetSessionData());
     $this->mode          = $this->Get("session_mode"); 
 
@@ -106,7 +106,11 @@ class Session {
   }
 
   function MakeCookie() {
-    // Set a cookie.
+
+    // Attempt to unset the test cookie
+    SetCookie("alloc_test_cookie",FALSE,0,"/","");
+
+    // Set the session cookie
     $rtn = SetCookie("alloc_cookie",$this->key,0,"/","");
     if (!$rtn) {
       $this->mode = "get";
@@ -120,12 +124,19 @@ class Session {
     unset($_COOKIE["alloc_cookie"]);
   }
 
-  // Wrapper
+  function SetTestCookie() {
+    SetCookie("alloc_test_cookie","test",0,"/","");
+  }
+
+  function TestCookie() {
+    return $_COOKIE["alloc_test_cookie"];
+  }
+
+
   function GetUrl($url="") {
     return $this->url($url);
   }
 
-  // Wrapper to return url with a session id on them
   function url($url="") {
    $url = ereg_replace("[&?]+$", "", $url);
 

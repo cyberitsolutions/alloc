@@ -47,7 +47,7 @@ if ($sess->Started()) {
     $db->query($q);
                    
 
-    if ($_POST["use_cookies"]) {
+    if ($sess->TestCookie()) {
       $sess->UseCookie();
     } else {
       $sess->UseGet();
@@ -85,6 +85,9 @@ if ($sess->Started()) {
   }
 
 
+// Else if just visiting the page
+} else {
+  $sess->SetTestCookie();
 }
 
 $account = $_POST["account"] or $account = $_GET["account"];
@@ -109,8 +112,6 @@ $TPL["username"] = $_POST["username"];
 if (!isset($account)) { 
   $TPL["password_or_email_address_field"] = "<td class=\"right\">Password&nbsp;&nbsp;</td>";
   $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"password\" name=\"password\" size=\"20\" maxlength=\"32\"></td>";
-  $_COOKIE["alloc_cookie"] and $checked = " checked";
-  $TPL["use_cookies"] = "Use Cookie <input type=\"checkbox\" name=\"use_cookies\" value=\"1\"".$checked.">";
   $TPL["login_or_send_pass_button"] = "<input type=\"submit\" name=\"login\" value=\"&nbsp;&nbsp;Login&nbsp;&nbsp;\">";
 } else { 
   $TPL["password_or_email_address_field"] = "<td class=\"right\">Email Address&nbsp;&nbsp;</td>";

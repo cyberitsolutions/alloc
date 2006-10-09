@@ -11,7 +11,6 @@
       table.login             { position:relative; background: transparent; font-size:15px; font-weight:bold; clear:left; color:#ffffff; }
       table.login td          { padding:6px 0px; }
 
-      table.login td.options  { font-weight:normal; font-size:12px;}
       table.login td.message  { vertical-align:top; letter-spacing: 0.00em; }
       table.login td.right    { text-align:right; letter-spacing: 0.00em;}
       table.login td.left     { text-align:left;  letter-spacing: 0.00em;}
@@ -101,7 +100,7 @@
           </tr>
           <tr><td colspan="2">&nbsp;</td></tr>
           <tr>
-            <td class="options">{use_cookies}</td>
+            <td></td>
             <td style="text-align:right;">{login_or_send_pass_button}</td>
           </tr>
           <tr><td colspan="2" style="border-bottom:0px solid #e0e0e0;">&nbsp;</td></tr>
