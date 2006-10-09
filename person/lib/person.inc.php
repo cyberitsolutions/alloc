@@ -287,13 +287,7 @@ class person extends db_entity {
     $current_user->set_id($personID);
     $current_user->select();
     $current_user->prefs = unserialize($current_user->get_value("sessData"));
-    if (is_array($current_user->prefs)) {
-      foreach ($current_user->prefs as $n=>$v) {
-        ${$n} = $v;
-        global ${$n};
-      } 
-      unset($n,$v);
-    } 
+
     isset($current_user->prefs["topTasksNum"]) or $current_user->prefs["topTasksNum"] = 5;
     $current_user->prefs["topTasksStatus"] or $current_user->prefs["topTasksStatus"] = "not_completed";
     isset($current_user->prefs["projectListNum"]) or $current_user->prefs["projectListNum"] = "10";
@@ -302,8 +296,8 @@ class person extends db_entity {
 
 
 
-
-
 }
+
+
 
 ?>

@@ -52,10 +52,9 @@ if ($_FORM["showDescription"]) {
 }
 
 if (!$_FORM["applyFilter"]) {
-  $_FORM = &$user_FORM;
+  $_FORM = $current_user->prefs["user_FORM"];
 } else if ($_FORM["applyFilter"]) {
-  $user_FORM = &$_FORM;
-  is_object($current_user) and $current_user->prefs["user_FORM"] = &$user_FORM;
+  is_object($current_user) and $current_user->prefs["user_FORM"] = $_FORM;
 }
 
 $db = new db_alloc;
