@@ -79,7 +79,7 @@
 
     <div class="cssbox">
       <div class="cssbox_head">
-        <h2 class="link"><img src="{script_path}images/icon_alloc.png" alt="AllocPSA Icon"/>{links}</h2>
+        <h2 class="link"><img src="{script_path}images/alloc.png" alt="AllocPSA Icon"/>{links}</h2>
       </div>
       <div class="cssbox_body">
 
