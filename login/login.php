@@ -57,7 +57,7 @@ if ($sess->Started()) {
     $sess->Save();
     header("Location: ".$url);
   }
-  $error = "<p class='error'>Username or Password incorrect.</p>";
+  $error = "<p class='error'>Invalid Username or Password.</p>";
 
 } else if ($_POST["new_pass"]) {
 
