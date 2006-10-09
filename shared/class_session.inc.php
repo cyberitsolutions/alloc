@@ -44,8 +44,8 @@ class Session {
     $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"];
     $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
-    $this->session_life  = (5); 
-    #$this->session_life  = (60*60*9); 
+    #$this->session_life  = (5); 
+    $this->session_life  = (60*60*9); 
     $this->session_data  = $this->UnEncode($this->GetSessionData());
     $this->mode          = $this->Get("session_mode"); 
 
