@@ -19,10 +19,10 @@
       table.login td.center a { color:#eeeeee; font-size:10px; }
 
       form                    { display:inline;}
-      a                       { color:#183c6d; white-space:nowrap; }
-      .link                   { color:#5276a7; text-align:right; font-size:12px;  white-space:nowrap; vertical-align:top;}
+      a                       { color:#eeeeee; white-space:nowrap; text-decoration:underline; }
+      .link                   { color:#cccccc; text-align:right; font-size:12px;  white-space:nowrap; vertical-align:top;}
       img                     { position:relative; float:left; left:-14px;}
-      p.error                 { color: red; display:inline; font-weight:bold; } 
+      p.error                 { color: #ffcccc; display:inline; font-weight:bold; } 
       .right input            { border:1px solid #0f4287; }
 
       .cssbox, .cssbox_body, .cssbox_head, .cssbox_head h2 {
