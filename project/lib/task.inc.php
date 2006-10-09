@@ -942,7 +942,7 @@ function get_task_statii_array() {
                                   $summary[] = "<tr>";
     $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
                               and $summary[] = "  <td class=\"col\">".$task["project_name"]."&nbsp;</td>";
-                                  $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"]."</td>";
+                                  $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"]."</td>";
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["priority"])."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["projectPriority"])."&nbsp;</td>"; 
@@ -975,7 +975,7 @@ function get_task_statii_array() {
                                     $summary[] = "<tr>";
          $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
                                 and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-                                    $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."\" colspan=\"21\" class=\"col\">".implode("<br/>",$str)."</td>";
+                                    $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."px\" colspan=\"21\" class=\"col\">".implode("<br/>",$str)."</td>";
                                     $summary[] = "</tr>";
       }
     }
