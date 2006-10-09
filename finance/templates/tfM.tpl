@@ -4,7 +4,7 @@
 <input type="hidden" name="tfBalance" value="{tfBalance}">
 <input type="hidden" name="tfID" value="{tfID}">
 
-{table_box_norm}
+{table_box}
   <tr>
     <th colspan="2">Tagged Fund</th>
   </tr>
@@ -36,7 +36,7 @@
 </form>
 
 
-{table_box_norm}
+{table_box}
   <tr>
     <th colspan="2">TF Owner(s)</th>
   </tr>

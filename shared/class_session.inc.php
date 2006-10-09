@@ -130,10 +130,10 @@ class Session {
    $url = ereg_replace("[&?]+$", "", $url);
 
     if ($this->mode == "get") {
-       (strpos($url, "sess=") == false) && $this->key and $extra = "sess=".$this->key."&amp;";
+       (strpos($url, "sess=") == false) && $this->key and $extra = "sess=".$this->key."&";
     }
 
-    $url.= (strpos($url, "?") != false ? "&amp;" : "?").$extra;
+    $url.= (strpos($url, "?") != false ? "&" : "?").$extra;
 
     return $url;
   }

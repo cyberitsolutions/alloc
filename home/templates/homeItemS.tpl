@@ -1,4 +1,4 @@
-{table_box_home}
+{table_box}
   <tr>
     <th colspan="3">{item_title}</th>
   </tr>
