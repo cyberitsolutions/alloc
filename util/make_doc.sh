@@ -21,6 +21,7 @@ PATH=/usr/bin/:${PATH}
 make help.html
 mv help.html ${DIR_FULL}/help/
 mv help.css ${DIR_FULL}/help/
+[ -d "${DIR_FULL}/help/images/" ] && rm -rf ${DIR_FULL}/help/images/
 mv images ${DIR_FULL}/help/
 
 \rm -rf ${dest}
