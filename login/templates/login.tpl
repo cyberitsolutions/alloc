@@ -91,9 +91,7 @@
           </tr>
           <tr>
             <td class="right" style="width:100%">Username&nbsp;&nbsp;</td>
-            <td class="right">
-              <input type="text" name="username" value="{username}" size="20" maxlength="32">
-            </td>
+            <td class="right"><input type="text" name="username" value="{username}" size="20" maxlength="32"></td>
           </tr>
           <tr>
             {password_or_email_address_field}
