@@ -42,6 +42,8 @@ require_once(ALLOC_MOD_DIR."/shared/lib/class_history.inc.php");
 
 class shared_module extends module
 {
+  var $db_entities = array("sentEmailLog");
+
   function register_toolbar_items() {
   }
   function register_home_items() {
