@@ -33,10 +33,10 @@ class alloc_email {
   // If alloc is running on any of these boxes then no emails will be sent!
   var $no_email_hosts = array("garlic.office.cyber.com.au"
                              ,"spectrum.lancewood.net"
-                             ,"mint.lancewood.net"
-                             ,"mint"
                              ,"peach.office.cyber.com.au"
                              );
+                             #,"mint.lancewood.net"
+                             #,"mint"
 
   // Set to true to skip host and url checking
   var $ignore_no_email_hosts = false; 
@@ -48,22 +48,24 @@ class alloc_email {
   var $subject = "";
   var $body = ""; 
 
-  // Initializer
-  function alloc_email($to_address="",$subject="",$message="",$header="",$logfile="") {
 
-    $to_address  and $this->to_address = $to_address;
-    $subject     and $this->subject    = $subject;
-    $message     and $this->message    = $message;
-    $header      and $this->header     = $header;
-    $this->logfile                     = ALLOC_LOG_DIR."alloc_email.log";
+  // Initializer
+  function alloc_email($to_address="",$subject="",$message="",$message_type="",$header="") {
+
+    $to_address   and $this->to_address   = $to_address;
+    $subject      and $this->subject      = $subject;
+    $message      and $this->message      = $message;
+    $message_type and $this->message_type = $message_type;
+    $header       and $this->header       = $header;
   }
 
   // Send and log the email
-  function send($to_address="",$subject="",$message="",$header="") {
-    $to_address  and $this->to_address = $to_address;
-    $subject     and $this->subject    = $subject;
-    $message     and $this->message    = $message;
-    $header      and $this->header     = $header;
+  function send($to_address="",$subject="",$message="",$message_type="",$header="") {
+    $to_address   and $this->to_address   = $to_address;
+    $subject      and $this->subject      = $subject;
+    $message      and $this->message      = $message;
+    $message_type and $this->message_type = $message_type;
+    $header       and $this->header       = $header;
 
     if (!$this->header || !preg_match('/@/',$this->header)) {
       $this->header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
@@ -72,13 +74,11 @@ class alloc_email {
     $this->subject                     = "allocPSA ".$this->subject;
 
     if (!$this->is_valid_to_address()) {
-      $this->log("Not sending: '".stripslashes($this->subject)."' to ".$this->to_address." -> To Address is bad!");
 
     } else if (!$this->is_valid_url()) {
-      $this->log("Not sending: '".stripslashes($this->subject)."' to ".$this->to_address." -> Invalid url. SERVER_NAME: ".$_SERVER["SERVER_NAME"]." and SCRIPT_FILENAME: ".$_SERVER["SCRIPT_FILENAME"]);
 
     } else {
-      $this->log("Sending: ".$this->subject." to ".$this->to_address);
+      $this->log();
       return mail($this->to_address, stripslashes($this->subject), stripslashes($this->message), $this->header);
     }
   }
@@ -126,15 +126,15 @@ class alloc_email {
 
   // Log
   function log($message="") {
-
-    $fp = @fopen($this->logfile, "a+");
-
-    if (!$this->logfile || !is_resource($fp)) {
-      die("Unable to write to logfile: ".$this->logfile);
-    } else {
-      fputs($fp, date("Y-m-d H:i:s ").$message."\n");
-      fclose($fp);
-    }
+    global $current_user;
+    $sentEmailLog = new sentEmailLog();
+    $sentEmailLog->set_value("sentEmailTo",$this->to_address);
+    $sentEmailLog->set_value("sentEmailSubject",$this->subject);
+    $sentEmailLog->set_value("sentEmailBody",$this->message);
+    $sentEmailLog->set_value("sentEmailHeader",$this->header);
+    $sentEmailLog->set_value("sentEmailType",$this->message_type);
+    !is_object($current_user) || !$current_user->get_id() and $sentEmailLog->set_value("sentEmailLogModifiedUser",0);
+    $sentEmailLog->save();
   }
 
 }

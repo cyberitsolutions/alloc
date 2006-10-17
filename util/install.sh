@@ -111,7 +111,6 @@ make_config_dirs_end_in_slashes
 
 # Create the directories if need be
 [ ! -d "${ALLOC_BACKUP_DIR}" ]       && run "mkdir -p ${ALLOC_BACKUP_DIR}"
-[ ! -d "${ALLOC_LOG_DIR}" ]          && run "mkdir -p ${ALLOC_LOG_DIR}"
 [ ! -d "${ALLOC_PATCH_DIR}" ]        && run "mkdir -p ${ALLOC_PATCH_DIR}"
 [ ! -d "${ALLOC_DOCS_DIR}" ]         && run "mkdir -p ${ALLOC_DOCS_DIR}"
 [ ! -d "${ALLOC_DOCS_DIR}task" ]     && run "mkdir ${ALLOC_DOCS_DIR}task"
@@ -123,17 +122,12 @@ run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}task"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}client"
 run "chgrp ${ALLOC_WEB_USER} ${ALLOC_DOCS_DIR}project"
-run "chgrp ${ALLOC_WEB_USER} ${ALLOC_LOG_DIR}"
 run "chmod 700 ${ALLOC_BACKUP_DIR}"
 run "chown root ${ALLOC_BACKUP_DIR}"
 run "chmod 775 ${ALLOC_DOCS_DIR}"
 run "chmod 775 ${ALLOC_DOCS_DIR}task"
 run "chmod 775 ${ALLOC_DOCS_DIR}client"
 run "chmod 775 ${ALLOC_DOCS_DIR}project"
-run "chmod 775 ${ALLOC_LOG_DIR}"
-[ ! -f "${ALLOC_LOG_DIR}alloc_email.log" ] && run "touch ${ALLOC_LOG_DIR}alloc_email.log"
-run "chgrp ${ALLOC_WEB_USER} ${ALLOC_LOG_DIR}alloc_email.log"
-run "chmod 775 ${ALLOC_LOG_DIR}alloc_email.log"
 
 find ${DIR}.. -type f -path ${DIR}../.bzr -prune -exec chmod 664 {} \; # Files to rw-rw-r--
 find ${DIR}.. -type d -path ${DIR}../.bzr -prune -exec chmod 775 {} \; # Dirs  to rwxrwxr-x

@@ -97,7 +97,7 @@ class task extends db_entity {
   function email_task_closed() {
     global $current_user;
     if ($current_user->get_id() != $this->get_value("creatorID")) {
-      $successful_recipients = $this->send_emails(array("creator"),"Task Closed");
+      $successful_recipients = $this->send_emails(array("creator"),"task_closed");
       $successful_recipients and $msg = "Emailed: ".stripslashes($successful_recipients).", Task Closed: ".stripslashes($this->get_value("taskName"));
     }
     return $msg; 
@@ -487,13 +487,12 @@ class task extends db_entity {
     return $recipients;
   }
 
-  function send_emails($selected_option, $extra="", $body="") {
+  function send_emails($selected_option, $type="", $body="") {
     global $current_user;
     $recipients = $this->get_email_recipients($selected_option);
 
-
     foreach ($recipients as $recipient) {
-      if ($this->send_email($recipient, $extra, $body)) {
+      if ($this->send_email($recipient, $type, $body)) {
         $successful_recipients.= $commar.$recipient["fullName"];
         $commar = ", ";
       }
@@ -501,10 +500,16 @@ class task extends db_entity {
     return $successful_recipients;
   }
 
-  function send_email($recipient, $subject, $body) {
+  function send_email($recipient, $type, $body) {
     global $current_user;
 
-    $subject or $subject = "Task";
+    $types = array('task_created'  => "Task Created"
+                  ,'task_closed'   => "Task Closed"
+                  ,'task_comments' => "Task Comments"
+                  );
+  
+    $subject = $types[$type];
+                  
 
     // New email object wrapper takes care of logging etc.
     $email = new alloc_email;
@@ -549,7 +554,7 @@ class task extends db_entity {
 
     if ($recipient["emailAddress"]) {
       $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName");
-      return $email->send($recipient["emailAddress"], $subject, $message);
+      return $email->send($recipient["emailAddress"], $subject, $message, $type);
     }
   }
 

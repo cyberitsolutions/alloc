@@ -54,7 +54,6 @@ cat ${DIR}templates/alloc_config.php.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_HOST/${ALLOC_DB_HOST}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
 > ${DIR}../alloc_config.php
 
 if [ -f "${DIR}../alloc_config.php" ]; then 
@@ -86,7 +85,6 @@ fi
 e "Creating cron_checkRepeatExpenses.sh"
 cat ${DIR}templates/cron_checkRepeatExpenses.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
 > ${DIR}cron_checkRepeatExpenses.sh
 
 if [ -f "${DIR}cron_checkRepeatExpenses.sh" ]; then 
@@ -100,7 +98,6 @@ fi
 e "Creating cron_sendEmail.sh"
 cat ${DIR}templates/cron_sendEmail.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
 > ${DIR}cron_sendEmail.sh
 
 if [ -f "${DIR}cron_sendEmail.sh" ]; then 
@@ -114,7 +111,6 @@ fi
 e "Creating cron_sendReminders.sh"
 cat ${DIR}templates/cron_sendReminders.sh.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_WEB_URL_PREFIX/${ALLOC_WEB_URL_PREFIX//\//\/}/" \
-| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
 > ${DIR}cron_sendReminders.sh
 
 if [ -f "${DIR}cron_sendReminders.sh" ]; then 
@@ -127,7 +123,6 @@ fi
 
 e "Creating patch.sh"
 cat ${DIR}templates/patch.sh.tpl \
-| sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME//\//\/}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_BACKUP_DIR/${ALLOC_BACKUP_DIR//\//\/}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_PATCH_DIR/${ALLOC_PATCH_DIR//\//\/}/" \
