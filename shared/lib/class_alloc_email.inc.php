@@ -28,7 +28,8 @@
 class alloc_email {
   
   // If URL has any of these strings in it then the email won't be sent.
-  var $no_email_urls = array("alloc_dev");
+  #var $no_email_urls = array("alloc_dev");
+  var $no_email_urls = array();
 
   // If alloc is running on any of these boxes then no emails will be sent!
   var $no_email_hosts = array("garlic.office.cyber.com.au"
@@ -73,9 +74,11 @@ class alloc_email {
     
     $this->subject                     = "allocPSA ".$this->subject;
 
+
     if (!$this->is_valid_to_address()) {
 
     } else if (!$this->is_valid_url()) {
+      echo "alloc_email: invalid url.";
 
     } else {
       $this->log();
@@ -133,7 +136,6 @@ class alloc_email {
     $sentEmailLog->set_value("sentEmailBody",$this->message);
     $sentEmailLog->set_value("sentEmailHeader",$this->header);
     $sentEmailLog->set_value("sentEmailType",$this->message_type);
-    !is_object($current_user) || !$current_user->get_id() and $sentEmailLog->set_value("sentEmailLogModifiedUser",0);
     $sentEmailLog->save();
   }
 
