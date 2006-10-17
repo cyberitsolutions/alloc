@@ -18,7 +18,7 @@
 #  St, Fifth Floor, Boston, MA 02110-1301 USA
 # 
 #
-#  Script to setup database, website permissions, cronjobs and generate alloc.php
+#  Script to setup database, website permissions, cronjobs and generate alloc_config.php
 #
 
 
@@ -46,23 +46,23 @@ fi
 make_config_dirs_end_in_slashes
 
 
-# Make the alloc.php file
-e "Creating alloc.php"
-cat ${DIR}templates/alloc.php.tpl \
+# Make the alloc_config.php file
+e "Creating alloc_config.php"
+cat ${DIR}templates/alloc_config.php.tpl \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_NAME/${ALLOC_DB_NAME}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_USER/${ALLOC_DB_USER}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_PASS/${ALLOC_DB_PASS}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DB_HOST/${ALLOC_DB_HOST}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_DOCS_DIR/${ALLOC_DOCS_DIR//\//\/}/" \
 | sed -e "s/CONFIG_VAR_ALLOC_LOG_DIR/${ALLOC_LOG_DIR//\//\/}/" \
-> ${DIR}../alloc.php
+> ${DIR}../alloc_config.php
 
-if [ -f "${DIR}../alloc.php" ]; then 
-  e_ok "Created ../alloc.php"
-  run "chmod 640 ${DIR}../alloc.php"                           
-  run "chgrp ${ALLOC_WEB_USER} ${DIR}../alloc.php"             
+if [ -f "${DIR}../alloc_config.php" ]; then 
+  e_ok "Created ../alloc_config.php"
+  run "chmod 640 ${DIR}../alloc_config.php"                           
+  run "chgrp ${ALLOC_WEB_USER} ${DIR}../alloc_config.php"             
 else 
-  e_failed "Could not create ../alloc.php"; 
+  e_failed "Could not create ../alloc_config.php"; 
 fi
 
 

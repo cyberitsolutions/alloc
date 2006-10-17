@@ -4,6 +4,20 @@
 ---------------------------------------------------------
 -- Server version	3.23.58
 
+CREATE TABLE sentEmailLog (
+  sentEmailLogID int(11) NOT NULL auto_increment,
+  sentEmailTo text NOT NULL,
+  sentEmailSubject varchar(255),
+  sentEmailBody text,
+  sentEmailHeader varchar(255),
+  sentEmailType enum('reminder','reminder_advnotice','task_new','task_closed','task_comments'),
+  sentEmailModifiedTime timestamp(14) NOT NULL,
+  sentEmailModifiedUser int(11) NOT NULL default '0',
+  PRIMARY KEY  (sentEmailLogID)
+) TYPE=ISAM PACK_KEYS=1;
+
+
+
 --
 -- Table structure for table `absence`
 --
