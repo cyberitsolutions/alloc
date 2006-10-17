@@ -21,9 +21,50 @@
  *
  */
 
-// The order of file processing goes: 
-// requested_script.php -> /php/include/path/../alloc.php -> ./local.inc.php (this) -> more includes -> back to requested_script.php
+// The order of file processing usually goes: 
+// requested_script.php -> alloc.php -> alloc_config.php -> more includes -> back to requested_script.php
 
+
+// Can't call this script directly..
+if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
+  die();
+}
+
+ini_set("error_reporting", E_ALL & ~E_NOTICE);
+
+define("ALLOC_TITLE", "allocPSA");
+define("ALLOC_SHOOER","");
+define("ALLOC_GD_IMAGE_TYPE","PNG");
+
+if (preg_match("/^(.*alloc[^\/]*)/",$_SERVER["SCRIPT_FILENAME"],$m)) {
+  define("ALLOC_MOD_DIR",$m[1]);
+} else {
+  die("Fatal Error: No MOD_DIR defined.");
+}
+
+$modules = array("shared"       => true
+                ,"home"         => true
+                ,"project"      => true
+                ,"time"         => true
+                ,"finance"      => true
+                ,"client"       => true
+                ,"item"         => true
+                ,"person"       => true
+                ,"announcement" => true
+                ,"notification" => true
+                ,"security"     => true
+                ,"config"       => true
+                ,"help"         => true
+                ,"search"       => true
+                ,"tools"        => true
+                ,"report"       => true
+                );
+
+define("ALLOC_MODULES",serialize($modules));
+unset($modules);
+
+require_once(ALLOC_MOD_DIR."/alloc_config.php");
+require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
 
 // Get alloc version
 if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DIR."/util/alloc_version") && !defined("ALLOC_VERSION")) {
@@ -32,15 +73,12 @@ if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DI
   unset($v);
 }
 
-// Include the util functions
-require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
 
 $modules = get_alloc_modules();
-$fake_modules = array("util","login","shared","soap");
+$fake_modules = array("util","login","soap");
 
 eregi("^".ALLOC_MOD_DIR."/(.*)$", $_SERVER["SCRIPT_FILENAME"], $match) && $script_filename_short = $match[1];
 eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
-
 
 if ((!isset($modules[$module_name])) && $module_name != "" && !in_array($module_name,$fake_modules)) {
   die("Invalid module: $module_name");
@@ -58,24 +96,6 @@ define("TT_PHASE"    , 2);
 define("TT_MESSAGE"  , 3);
 define("TT_FAULT"    , 4);
 define("TT_MILESTONE", 5);
-
-
-// Include stuff from shared/ 
-require_once(ALLOC_MOD_DIR."/shared/template.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/help.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/db_utils.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_db.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_db_alloc.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_session.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_home_item.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_toolbar_item.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_db_field.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_db_entity.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_module.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_event.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_alloc_email.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_alloc_cache.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/class_history.inc.php");
 
 foreach ($modules as $module_name => $v) {
   if (!in_array($module_name,$fake_modules)) {
