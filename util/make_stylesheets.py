@@ -70,8 +70,7 @@ for section in sections:
     font_sizes['TABLE_BOX_TH_A_FONT_SIZE']    = (13 + weight)
     font_sizes['TABLE_TOOLBAR_TH_FONT_SIZE']  = (17 + weight)
     font_sizes['TABLE_TOOLBAR_TD_FONT_SIZE']  = (13 + weight)
-    font_sizes['TABLE_CALENDAR_TH_FONT_SIZE'] = (12 + weight)   
-    font_sizes['TD_FONT_SIZE']                = (12 + weight)   
+    font_sizes['DEFAULT_FONT_SIZE']           = (12 + weight)   
 
   
     for k, v in font_sizes.items():

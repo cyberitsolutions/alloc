@@ -1,74 +1,83 @@
-
 body                    { background-color: #303030; font-family:arial,helvetica,sans-serif; color:#ffffff;}
-a:link                  { color:#053d77; }
-a:visited               { color:#053d77; }
+
+a:link, a:visited       { color:#053d77; }
 a:hover                 { color:#376a9e; }
+
 h1                      { font-weight:bold; font-size:16px; }
 h2                      { font-weight:bold; font-size:16px; }
 h3                      { font-weight:bold; font-size:15px; }
+
+textarea, input, select, textarea { font-size:12px; }
+
+th                      { color:#000000; text-align:left; }
+th.right                { text-align:right; } 
+td                      { color:#000000; font-size:12px; }
+ul                      { display:inline; list-style:circle inside; }
+
 form                    { display:inline; }
+.nobr                   { white-space:nowrap }
+
 div.message             { border:1px solid #cccccc; padding:10px; margin-bottom:7px; background-color:#cccccc; }
 .bad                    { color:#880000; font-weight:bold; font-size:13px; }
 .good                   { color:#006340; font-weight:bold; font-size:13px; }
 .help                   { color:#000000;  font-weight:bold; font-size:13px; }
-.nobr                   { white-space:nowrap }
 
 table.box               { border:1px solid #bfbaba; background-color:#999999; margin-bottom:7px; vertical-align:top; width:100%; } 
 table.box th            { border-bottom:1px solid #bfbaba;  background: url(../images/bg_darko.jpg) repeat-x; color:#ffffff; font-size:13px; } 
 table.box th a:link     { font-weight:bold; color:#ffffff; font-size:13px; }
 table.box th a:visited  { font-weight:bold; color:#ffffff; font-size:13px; }
 table.box th a:hover    { font-weight:bold; color:#e0e0e0; font-size:13px; }
-th.right                { text-align:right; } 
 table.box th.center     { text-align:center; } 
-table.box th.right table{ width:40%; } 
+table.box th.right table { width:40%; } 
 
-td.menu                 { background-color:#666666;}
 table.menu a:link       { color:#ffffff; font-weight:bolder;        }
 table.menu a:visited    { color:#ffffff; font-weight:bolder;        }
 table.menu a:hover      { color:#d0f900; font-weight:bolder;  }
 table.menu a.active     { color:#d0f900; }
-table.menu td           { font-size:12px; }
+td.menu                 { background-color:#666666;}
 td.menu_pane_left       { text-align:left; width:55%;}
 td.menu_pane_right      { text-align:right; width:45%;}
 td.menu_pane_left table { width:100%;}
 
-table.calendar          { width:100%; } 
-table.calendar th       { background-color:#888888; color:#bbbbbb; border:0px; font-weight:normal; font-size:12px; }
-table.calendar td       { background-color:#aaaaaa; width:14%; vertical-align:top;}
+table.calendar          { width:100%; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc;} 
+table.calendar td       { background-color:#aaaaaa; border-left:1px solid #cccccc;  border-top:1px solid #cccccc; width:14%; vertical-align:top;}
 table.calendar td.today { background-color:#999999; width:14%;}
-table.calendar td.header { text-align:center; font-weight:bold; width:14%;}
 
-table.filter            { border:3px dashed #888888; background-color:#dddddd; padding:4px; margin:4px;}
-table.filter th         { font-weight:bold; background-color:#dddddd; color:#000000; border-bottom:0px solid #ffffff; text-align:center; }
-table.panel             { background-color:#aaaaaa; height:100%; }
+table.filter            { border:2px dashed #cccccc; background-color:#aaaaaa; padding:4px; margin:4px;}
+table.filter th         { font-weight:bold; background-color:#aaaaaa; color:#000000; border-bottom:0px solid #ffffff; text-align:center; }
 
-td                      { color:#000000; font-size:12px; }
-th                      { color:#000000;  text-align:left; }
+table.panel             { background-color:#aaaaaa; height:100%; border:1px solid #cccccc; }
+
 tr.odd                  { background-color:#aaaaaa; }
 tr.even                 { background-color:#999999; }
-.really_overdue         { font-weight:bold; color: #880000}
+
 .overdue                { color: #880000; }
-td.print-label          { vertical-align:middle; text-align:right; }
-.print-label            { font-weight:bold; }
+.really_overdue         { font-weight:bold; color: #880000}
 .behind-target          { color: #b56200; }
+
 .transaction-approved   { color: #006340; }
 .transaction-pending    { color: #000000; }
 .transaction-rejected   { color: #880000; }
+
 .highlighted            { font-weight:normal; font-style:normal; background-color:#e0e0e0; padding:0px 3px;}
-      
-ul                      { display:inline; list-style:circle inside; }
-td.tasks                { background-color: #aaaaaa; }
-td.tasks_r              { background-color: #aaaaaa; text-align:right; }
+
+table.tasks             { width:100%; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc;}
+td.tasks                { background-color: #aaaaaa; padding:4px; }
+
+table.tasks th, table.calendar th { 
+  border-bottom:0px; 
+  font-weight:bold; 
+  white-space:nowrap; 
+  background:#aaaaaa; 
+  color:#000000; 
+}
+
+.col                    { border-left:1px solid #cccccc; border-top:1px solid #cccccc; padding:4px;}
+
 td.grand_total          { border-top:1px solid black;}
-td.col                  { border-left:2px solid #cccccc;  border-top:2px solid #cccccc;}
-td.com                  { border:2px solid #cccccc;}
-textarea                { font-size:12px; }
-input                   { font-size:12px; }
-select                  { font-size:12px; }
-textarea.timesheetcomm  { font-size:12px; }
-#shrink_ts_note         { display:none; }
-#shrink_tsi_note        { display:none; }
-#ts_note                { height:22px; }
-#tsi_note               { height:22px; }
+
+table.comments          { border:1px solid #cccccc; margin-bottom:4px; margin-top:2px; }
+table.comments th       { text-align:left; background:#aaaaaa; vertical-align:top; color:#000000; border-bottom:1px solid #cccccc; font-weight:normal; padding:4px; }
+table.comments td       { padding:4px; }
 
 
