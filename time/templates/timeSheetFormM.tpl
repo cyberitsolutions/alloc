@@ -80,15 +80,15 @@
 
   <tr>
     <td valign="top">
-          <div id="shrink_ts_note">
+          <div id="shrink_ts_note" style="display:none;">
             <img src="../images/shrink.gif"
-                   onMouseUp="document.getElementById('ts_note').style.height=22;
+                   onMouseUp="document.getElementById('ts_note').style.height='22px';
                               document.getElementById('shrink_ts_note').style.display='none'
                               document.getElementById('grow_ts_note').style.display='inline'" alt="Restore">
           </div>
           <div id="grow_ts_note">
             <img src="../images/grow.gif"
-                   onMouseUp="document.getElementById('ts_note').style.height=150;
+                   onMouseUp="document.getElementById('ts_note').style.height='150px';
                               document.getElementById('grow_ts_note').style.display='none'
                               document.getElementById('shrink_ts_note').style.display='inline'" alt="Expand">
           </div>
@@ -98,8 +98,8 @@
     <td align="right" valign="top">Billing Note:</td>
     <td colspan="3" valign="top">
 
-          <textarea rows="3" cols="70" wrap="virtual" id="ts_note" name="timeSheet_billingNote"
-                    onFocus="document.getElementById('ts_note').style.height=150;
+          <textarea rows="3" cols="70" wrap="virtual" id="ts_note" style="height:22px;" name="timeSheet_billingNote"
+                    onFocus="document.getElementById('ts_note').style.height='150px';
                              document.getElementById('grow_ts_note').style.display='none'
                              document.getElementById('shrink_ts_note').style.display='inline'">{timeSheet_billingNote}</textarea>
 </td>

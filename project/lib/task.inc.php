@@ -827,7 +827,6 @@ function get_task_statii_array() {
               $summary.= task::get_task_list_tr($task,$_FORM);
             }
           }
-          $summary.= "<td class=\"col\" colspan=\"21\">&nbsp;</td>";
         }
       }
 
@@ -885,7 +884,7 @@ function get_task_statii_array() {
       return $tasks;
 
     } else if ($print && $_FORM["return"] == "html") {
-      return "<table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" width=\"100%\">".$summary."</table>";
+      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
 
     } else if ($print && $_FORM["return"] == "text") {
       return $summary;
@@ -904,19 +903,19 @@ function get_task_statii_array() {
       $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
                              and $summary.= "\n<td>&nbsp;</td>";
       $summary.= "\n<td>&nbsp;</td>";
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Priority</b></td>"; 
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Task Pri</b></td>"; 
-      $_FORM["showPriority"] and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Proj Pri</b></td>"; 
-      $_FORM["showStatus"]   and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Status</b></td>"; 
-      $_FORM["showCreator"]  and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Task Creator</b></td>";
-      $_FORM["showAssigned"] and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Assigned To</b></td>";
-      $_FORM["showDate1"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Targ Start</b></td>";
-      $_FORM["showDate2"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Targ Compl</b></td>";
-      $_FORM["showDate3"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Act Start</b></td>";
-      $_FORM["showDate4"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Act Compl</b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Estimate</b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">Actual</b></td>";
-      $_FORM["showTimes"]    and $summary.= "\n<td class=\"col\"><b style=\"white-space:nowrap\">%</b></td>";
+      $_FORM["showPriority"] and $summary.= "\n<th class=\"col\">Priority</th>";
+      $_FORM["showPriority"] and $summary.= "\n<th class=\"col\">Task Pri</th>";
+      $_FORM["showPriority"] and $summary.= "\n<th class=\"col\">Proj Pri</th>";
+      $_FORM["showStatus"]   and $summary.= "\n<th class=\"col\">Status</th>";
+      $_FORM["showCreator"]  and $summary.= "\n<th class=\"col\">Task Creator</th>";
+      $_FORM["showAssigned"] and $summary.= "\n<th class=\"col\">Assigned To</th>";
+      $_FORM["showDate1"]    and $summary.= "\n<th class=\"col\">Targ Start</th>";
+      $_FORM["showDate2"]    and $summary.= "\n<th class=\"col\">Targ Compl</th>";
+      $_FORM["showDate3"]    and $summary.= "\n<th class=\"col\">Act Start</th>";
+      $_FORM["showDate4"]    and $summary.= "\n<th class=\"col\">Act Compl</th>";
+      $_FORM["showTimes"]    and $summary.= "\n<th class=\"col\">Estimate</th>";
+      $_FORM["showTimes"]    and $summary.= "\n<th class=\"col\">Actual</th>";
+      $_FORM["showTimes"]    and $summary.= "\n<th class=\"col\">%</th>";
       $summary.="\n</tr>";
       return $summary;
     }

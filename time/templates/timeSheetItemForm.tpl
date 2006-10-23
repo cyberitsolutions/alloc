@@ -66,23 +66,23 @@ function updateTimeSheetTaskList(number) {
   <tr>
     <td valign="top">
           <br/>
-          <div id="shrink_tsi_note">
+          <div id="shrink_tsi_note" style="display:none;">
             <img src="../images/shrink.gif"
-                   onMouseUp="document.getElementById('tsi_note').style.height=22;
+                   onMouseUp="document.getElementById('tsi_note').style.height='22px';
                               document.getElementById('shrink_tsi_note').style.display='none'
                               document.getElementById('grow_tsi_note').style.display='inline'">
           </div>
           <div id="grow_tsi_note">
             <img src="../images/grow.gif"
-                   onMouseUp="document.getElementById('tsi_note').style.height=150;
+                   onMouseUp="document.getElementById('tsi_note').style.height='150px';
                               document.getElementById('grow_tsi_note').style.display='none'
                               document.getElementById('shrink_tsi_note').style.display='inline'">
           </div>
     </td>
     <td colspan="3">
       Task Comments<br/>
-      <textarea rows="3" cols="70" name="timeSheetItem_comment" class="timesheetcomm" id="tsi_note"
-                onFocus="document.getElementById('tsi_note').style.height=150;
+      <textarea rows="3" cols="70" name="timeSheetItem_comment" id="tsi_note" style="height:22px;"
+                onFocus="document.getElementById('tsi_note').style.height='150px';
                          document.getElementById('grow_tsi_note').style.display='none'
                          document.getElementById('shrink_tsi_note').style.display='inline'">{timeSheetItem_comment}</textarea>
       Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{commentPrivateChecked}>
