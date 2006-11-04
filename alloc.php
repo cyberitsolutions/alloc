@@ -83,7 +83,6 @@ foreach ($m as $module_name => $v) {
 $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.php"
             ,"url_alloc_login"                          => SCRIPT_PATH."login/login.php"
             ,"url_alloc_installation"                   => SCRIPT_PATH."installation/install.php"
-            ,"url_alloc_attachments_dir"                => ATTACHMENTS_DIR
             ,"current_date"                             => date("Y-m-d H:i:s")
             ,"today"                                    => date("Y-m-d")
             ,"alloc_help_link_name"                     => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
@@ -93,6 +92,7 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"main_alloc_title"                         => end(explode("/", $_SERVER["SCRIPT_NAME"]))
             ,"ALLOC_VERSION"                            => ALLOC_VERSION
             ,"url_alloc_stylesheets"                    => SCRIPT_PATH."stylesheets/"
+            ,"url_alloc_javascript"                     => SCRIPT_PATH."javascript/"
             ,"url_alloc_images"                         => SCRIPT_PATH."images/"
             );
 
