@@ -23,12 +23,10 @@
 
 
 
-// This file basically provides static template values that are used throughout the application and is included by local.inc.php
+// This file basically provides static template values that are used throughout the application and is included by alloc.php
 $sess = new Session;
 
-$TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.php"
-            ,"url_alloc_login"                          => SCRIPT_PATH."login/login.php"
-            ,"url_alloc_logout"                         => $sess->url(SCRIPT_PATH."login/logout.php")
+$TPL2 = array("url_alloc_logout"                        => $sess->url(SCRIPT_PATH."login/logout.php")
             ,"url_alloc_home"                           => $sess->url(SCRIPT_PATH."home/home.php")
             ,"url_alloc_history"                        => $sess->url(SCRIPT_PATH."home/history.php")
             ,"url_alloc_project"                        => $sess->url(SCRIPT_PATH."project/project.php")
@@ -42,7 +40,6 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"url_alloc_updateProjectList"              => $sess->url(SCRIPT_PATH."project/updateProjectList.php")
             ,"url_alloc_updateProjectClientContactList" => $sess->url(SCRIPT_PATH."project/updateProjectClientContactList.php")
             ,"url_alloc_getDoc"                         => $sess->url(SCRIPT_PATH."shared/get_attachment.php")
-            ,"url_alloc_attachments_dir"                => ATTACHMENTS_DIR
             ,"url_alloc_taskSummary"                    => $sess->url(SCRIPT_PATH."project/taskSummary.php")
             ,"url_alloc_saveProjectPerson"              => $sess->url(SCRIPT_PATH."project/saveProjectPerson.php")
             ,"url_alloc_projectPerson"                  => $sess->url(SCRIPT_PATH."project/projectPerson.php")
@@ -103,20 +100,10 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"url_alloc_stats"                          => $sess->url(SCRIPT_PATH."tools/stats.php")
             ,"url_alloc_statsImage"                     => $sess->url(SCRIPT_PATH."tools/statsImage.php")
             ,"url_alloc_costtime"                       => $sess->url(SCRIPT_PATH."tools/costtime.php")
-            ,"current_date"                             => date("Y-m-d H:i:s")
-            ,"today"                                    => date("Y-m-d")
-            ,"alloc_help_link_name"                     => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
-            ,"script_path"                              => SCRIPT_PATH
-            ,"table_box"                                => "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">"
-            ,"table_box_border"                         => "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">"
-            ,"main_alloc_title"                         => end(explode("/", $_SERVER["SCRIPT_NAME"]))
             ,"ALLOC_TITLE"                              => config::get_config_item("companyName")." ".ALLOC_TITLE
-            ,"ALLOC_VERSION"                            => ALLOC_VERSION
-            ,"url_alloc_stylesheets"                    => SCRIPT_PATH."stylesheets/"
-            ,"url_alloc_images"                         => SCRIPT_PATH."images/"
             );
 
-
+$TPL = array_merge($TPL,$TPL2);
 
 
 

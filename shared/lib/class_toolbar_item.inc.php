@@ -60,7 +60,7 @@ class toolbar_item {
   function get_label() {
     return $this->label;
   }
-}
+} 
 
 
 function show_messages() {
@@ -118,8 +118,8 @@ function register_toolbar_item($tool_name, $label, $url_parameters = "") {
   $toolbar_items[] = new toolbar_item($tool_name, $label, $url_parameters);
 }
 
-function register_toolbar_items() {
-  global $modules, $toolbar_items;
+function register_toolbar_items($modules) {
+  global $toolbar_items;
 
   $toolbar_items = array();
 
