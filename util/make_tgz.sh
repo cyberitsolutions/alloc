@@ -18,6 +18,8 @@ cd /cyber/devel/bzr/alloc/ && bzr export --format dir ${dir1}
 
 PATH=/usr/bin/:${PATH}
 
+touch ${dir1}/alloc_config.php
+
 cd ${dir1}/util/
 ./make_doc.sh
 
@@ -32,7 +34,7 @@ if [ -f "${f1}.tgz" ]; then
   echo "Created: ${d}/${f1}.tgz"
   rm -rf ${f1}
 else 
-  echo "Problem creating: ${f1}.tgz"
+  echo "Problem creating: ${d}/${f1}.tgz"
 fi
 
 

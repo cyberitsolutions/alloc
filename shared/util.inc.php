@@ -21,6 +21,42 @@
  *
  */
 
+function get_default_from_address() {
+  // Wrap angle brackets around the default From: email address 
+  $f = config::get_config_item("AllocFromEmailAddress");
+  $l = strpos($f, "<");
+  $r = strpos($f, ">");
+  $l === false and $f = "<".$f;
+  $r === false and $f .= ">";
+  return "allocPSA ".$f;
+}
+
+function get_alloc_version() {
+  if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DIR."/util/alloc_version")) {
+    $v = file(ALLOC_MOD_DIR."/util/alloc_version");
+    return $v[0];
+  } else {
+    die("No alloc_version file found.");
+  }
+}
+
+function get_script_path() {
+  $modules = get_alloc_modules();
+
+  eregi("^".ALLOC_MOD_DIR."/(.*)$", $_SERVER["SCRIPT_FILENAME"], $match) && $script_filename_short = $match[1];
+  eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
+
+  if ((!isset($modules[$module_name])) && $module_name != "") {
+    die("Invalid module: $module_name");
+  }
+
+  $SCRIPT_PATH = $_SERVER["SCRIPT_NAME"];
+  $script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $_SERVER["SCRIPT_NAME"]);
+  $SCRIPT_PATH = eregi_replace("[/]*$", "", $SCRIPT_PATH);
+
+  return $SCRIPT_PATH."/";
+}
+
 function seconds_to_display_format($seconds) {
   $day = config::get_config_item("hoursInDay");
 

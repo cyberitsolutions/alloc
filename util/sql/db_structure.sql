@@ -1,12 +1,3 @@
--- MySQL dump 8.23
---
--- Host: localhost    Database: alloc
----------------------------------------------------------
--- Server version	3.23.58
-
---
--- Table structure for table `absence`
---
 
 CREATE TABLE absence (
   absenceID int(11) NOT NULL auto_increment,
@@ -18,9 +9,6 @@ CREATE TABLE absence (
   PRIMARY KEY  (absenceID)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `announcement`
---
 
 CREATE TABLE announcement (
   announcementID int(11) NOT NULL auto_increment,
@@ -32,9 +20,6 @@ CREATE TABLE announcement (
   PRIMARY KEY  (announcementID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `client`
---
 
 CREATE TABLE client (
   clientID int(11) NOT NULL auto_increment,
@@ -61,9 +46,6 @@ CREATE TABLE client (
   KEY clientName (clientName)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `clientContact`
---
 
 CREATE TABLE clientContact (
   clientContactID int(11) NOT NULL auto_increment,
@@ -82,9 +64,6 @@ CREATE TABLE clientContact (
   KEY clientID (clientID)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `comment`
---
 
 CREATE TABLE comment (
   commentID int(11) NOT NULL auto_increment,
@@ -98,9 +77,6 @@ CREATE TABLE comment (
   KEY commentType (commentType)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `config`
---
 
 CREATE TABLE config (
   configID int(11) NOT NULL auto_increment,
@@ -109,9 +85,6 @@ CREATE TABLE config (
   PRIMARY KEY  (configID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `eventFilter`
---
 
 CREATE TABLE eventFilter (
   eventFilterID int(11) NOT NULL auto_increment,
@@ -124,9 +97,6 @@ CREATE TABLE eventFilter (
   KEY personID (personID,action)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `expenseForm`
---
 
 CREATE TABLE expenseForm (
   expenseFormID int(11) NOT NULL auto_increment,
@@ -140,9 +110,6 @@ CREATE TABLE expenseForm (
   PRIMARY KEY  (expenseFormID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `history`
---
 
 CREATE TABLE history (
   historyID int(11) NOT NULL auto_increment,
@@ -153,9 +120,6 @@ CREATE TABLE history (
   PRIMARY KEY  (historyID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `invoice`
---
 
 CREATE TABLE invoice (
   invoiceID int(11) NOT NULL auto_increment,
@@ -165,9 +129,6 @@ CREATE TABLE invoice (
   PRIMARY KEY  (invoiceID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `invoiceItem`
---
 
 CREATE TABLE invoiceItem (
   invoiceItemID int(11) NOT NULL auto_increment,
@@ -180,9 +141,6 @@ CREATE TABLE invoiceItem (
   PRIMARY KEY  (invoiceItemID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `item`
---
 
 CREATE TABLE item (
   itemID int(11) NOT NULL auto_increment,
@@ -196,9 +154,6 @@ CREATE TABLE item (
   PRIMARY KEY  (itemID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `loan`
---
 
 CREATE TABLE loan (
   loanID int(11) NOT NULL auto_increment,
@@ -212,9 +167,6 @@ CREATE TABLE loan (
   PRIMARY KEY  (loanID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `permission`
---
 
 CREATE TABLE permission (
   tableName varchar(255) default NULL,
@@ -230,9 +182,6 @@ CREATE TABLE permission (
   KEY tableName (tableName)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `person`
---
 
 CREATE TABLE person (
   username varchar(32) NOT NULL default '',
@@ -259,9 +208,6 @@ CREATE TABLE person (
   KEY username (username)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `project`
---
 
 CREATE TABLE project (
   projectID int(11) NOT NULL auto_increment,
@@ -293,9 +239,6 @@ CREATE TABLE project (
   KEY clientID (clientID)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `projectCommissionPerson`
---
 
 CREATE TABLE projectCommissionPerson (
   projectCommissionPersonID int(11) NOT NULL auto_increment,
@@ -306,9 +249,6 @@ CREATE TABLE projectCommissionPerson (
   PRIMARY KEY  (projectCommissionPersonID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `projectModificationNote`
---
 
 CREATE TABLE projectModificationNote (
   projectModNoteID int(11) NOT NULL auto_increment,
@@ -319,9 +259,6 @@ CREATE TABLE projectModificationNote (
   PRIMARY KEY  (projectModNoteID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `projectPerson`
---
 
 CREATE TABLE projectPerson (
   projectPersonID int(11) NOT NULL auto_increment,
@@ -337,9 +274,6 @@ CREATE TABLE projectPerson (
   PRIMARY KEY  (projectPersonID)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `projectPersonRole`
---
 
 CREATE TABLE projectPersonRole (
   projectPersonRoleID int(11) NOT NULL auto_increment,
@@ -349,9 +283,6 @@ CREATE TABLE projectPersonRole (
   PRIMARY KEY  (projectPersonRoleID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `reminder`
---
 
 CREATE TABLE reminder (
   reminderID int(11) NOT NULL auto_increment,
@@ -386,9 +317,6 @@ CREATE TABLE sentEmailLog (
 
 
 
---
--- Table structure for table `sess`
---
 
 CREATE TABLE sess (
   sessID varchar(32) NOT NULL default '',
@@ -397,9 +325,6 @@ CREATE TABLE sess (
   PRIMARY KEY  (sessID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `skillList`
---
 
 CREATE TABLE skillList (
   skillID int(11) NOT NULL auto_increment,
@@ -409,9 +334,6 @@ CREATE TABLE skillList (
   PRIMARY KEY  (skillID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `skillProficiencys`
---
 
 CREATE TABLE skillProficiencys (
   proficiencyID int(11) NOT NULL auto_increment,
@@ -421,9 +343,6 @@ CREATE TABLE skillProficiencys (
   PRIMARY KEY  (proficiencyID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `task`
---
 
 CREATE TABLE task (
   taskID int(11) NOT NULL auto_increment,
@@ -456,9 +375,6 @@ CREATE TABLE task (
   KEY parentTaskID_2 (parentTaskID)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `taskCCList`
---
 
 CREATE TABLE taskCCList (
   taskCCListID int(11) NOT NULL auto_increment,
@@ -468,9 +384,6 @@ CREATE TABLE taskCCList (
   PRIMARY KEY  (taskCCListID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `taskCommentTemplate`
---
 
 CREATE TABLE taskCommentTemplate (
   taskCommentTemplateID int(11) NOT NULL auto_increment,
@@ -480,9 +393,6 @@ CREATE TABLE taskCommentTemplate (
   PRIMARY KEY  (taskCommentTemplateID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `taskType`
---
 
 CREATE TABLE taskType (
   taskTypeID int(11) NOT NULL auto_increment,
@@ -492,9 +402,6 @@ CREATE TABLE taskType (
   PRIMARY KEY  (taskTypeID)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `tf`
---
 
 CREATE TABLE tf (
   tfID int(11) NOT NULL auto_increment,
@@ -508,9 +415,6 @@ CREATE TABLE tf (
   PRIMARY KEY  (tfID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `tfPerson`
---
 
 CREATE TABLE tfPerson (
   tfPersonID int(11) NOT NULL auto_increment,
@@ -519,9 +423,6 @@ CREATE TABLE tfPerson (
   PRIMARY KEY  (tfPersonID)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `timeSheet`
---
 
 CREATE TABLE timeSheet (
   timeSheetID int(11) NOT NULL auto_increment,
@@ -543,9 +444,6 @@ CREATE TABLE timeSheet (
   PRIMARY KEY  (timeSheetID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `timeSheetItem`
---
 
 CREATE TABLE timeSheetItem (
   timeSheetItemID int(11) NOT NULL auto_increment,
@@ -563,9 +461,6 @@ CREATE TABLE timeSheetItem (
   PRIMARY KEY  (timeSheetItemID)
 ) TYPE=ISAM PACK_KEYS=1;
 
---
--- Table structure for table `timeUnit`
---
 
 CREATE TABLE timeUnit (
   timeUnitID int(11) NOT NULL auto_increment,
@@ -578,9 +473,6 @@ CREATE TABLE timeUnit (
   PRIMARY KEY  (timeUnitID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `transaction`
---
 
 CREATE TABLE transaction (
   transactionID int(11) NOT NULL auto_increment,
@@ -603,9 +495,6 @@ CREATE TABLE transaction (
   PRIMARY KEY  (transactionID)
 ) TYPE=MyISAM;
 
---
--- Table structure for table `transactionRepeat`
---
 
 CREATE TABLE transactionRepeat (
   transactionRepeatID int(11) NOT NULL auto_increment,

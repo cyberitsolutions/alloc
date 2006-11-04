@@ -69,6 +69,19 @@ class history extends db_entity {
     while (is_object($db) && $db->next_record()) {
       $ignored_files[] = end(explode("/", $db->f("the_place")));
     }
+    $ignored_files[] = "index.php";
+    $ignored_files[] = "home.php";
+    $ignored_files[] = "taskSummary.php";
+    $ignored_files[] = "projectList.php";
+    $ignored_files[] = "timeSheetList.php";
+    $ignored_files[] = "menu.php";
+    $ignored_files[] = "clientList.php";
+    $ignored_files[] = "itemLoan.php";
+    $ignored_files[] = "personList.php";
+    $ignored_files[] = "eventFilterList.php";
+    $ignored_files[] = "search.php";
+    $ignored_files[] = "person.php";
+
     return $ignored_files;
   }
 
@@ -149,6 +162,30 @@ class history extends db_entity {
     }
     return false;
   }
+
+  function save_history() {
+    global $current_user;
+    $ignored_files = $this->get_ignored_files();
+
+    if ($_SERVER["QUERY_STRING"]) {
+      $qs = preg_replace("[&$]", "", $_SERVER["QUERY_STRING"]);
+      $qs = "?".$qs;
+    }
+
+    $file = end(explode("/", $_SERVER["SCRIPT_NAME"])).$qs;
+
+    if (is_object($current_user) && !in_array($file, $ignored_files)
+        && !$_GET["historyID"] && !$_POST["historyID"] && $the_label = $this->get_history_label($_SERVER["SCRIPT_NAME"], $qs)) {
+
+      $the_place = $_SERVER["SCRIPT_NAME"].$qs;
+      $this->set_value("personID", $current_user->get_id());
+      $this->set_value("the_place", $the_place);
+      $this->set_value("the_label", $the_label);
+      $this->save();
+    }
+  }
+
+
 
 }
 

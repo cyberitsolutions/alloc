@@ -25,70 +25,16 @@
 // requested_script.php -> alloc.php -> alloc_config.php -> more includes -> back to requested_script.php
 
 
+ini_set("error_reporting", E_ALL & ~E_NOTICE);
+
 // Can't call this script directly..
 if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
   die();
-}
-
-ini_set("error_reporting", E_ALL & ~E_NOTICE);
-
+} 
+define("ALLOC_MOD_DIR",dirname(__FILE__));
 define("ALLOC_TITLE", "allocPSA");
 define("ALLOC_SHOOER","");
 define("ALLOC_GD_IMAGE_TYPE","PNG");
-
-if (preg_match("/^(.*alloc[^\/]*)/",$_SERVER["SCRIPT_FILENAME"],$m)) {
-  define("ALLOC_MOD_DIR",$m[1]);
-} else {
-  die("Fatal Error: No MOD_DIR defined.");
-}
-
-$modules = array("shared"       => true
-                ,"home"         => true
-                ,"project"      => true
-                ,"time"         => true
-                ,"finance"      => true
-                ,"client"       => true
-                ,"item"         => true
-                ,"person"       => true
-                ,"announcement" => true
-                ,"notification" => true
-                ,"security"     => true
-                ,"config"       => true
-                ,"help"         => true
-                ,"search"       => true
-                ,"tools"        => true
-                ,"report"       => true
-                );
-
-define("ALLOC_MODULES",serialize($modules));
-unset($modules);
-
-require_once(ALLOC_MOD_DIR."/alloc_config.php");
-require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
-
-// Get alloc version
-if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DIR."/util/alloc_version") && !defined("ALLOC_VERSION")) {
-  $v = file(ALLOC_MOD_DIR."/util/alloc_version");
-  define("ALLOC_VERSION", $v[0]);
-  unset($v);
-}
-
-
-$modules = get_alloc_modules();
-$fake_modules = array("util","login","soap");
-
-eregi("^".ALLOC_MOD_DIR."/(.*)$", $_SERVER["SCRIPT_FILENAME"], $match) && $script_filename_short = $match[1];
-eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
-
-if ((!isset($modules[$module_name])) && $module_name != "" && !in_array($module_name,$fake_modules)) {
-  die("Invalid module: $module_name");
-} else {
-  define("ALLOC_CURRENT_MODULE",$module_name);
-}
-
-$SCRIPT_PATH = $_SERVER["SCRIPT_NAME"];
-$script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $_SERVER["SCRIPT_NAME"]);
-define("SCRIPT_PATH",$SCRIPT_PATH);
 
 // Task type definitions, these are shared across modules, so we're specifying them here
 define("TT_TASK"     , 1);
@@ -97,8 +43,36 @@ define("TT_MESSAGE"  , 3);
 define("TT_FAULT"    , 4);
 define("TT_MILESTONE", 5);
 
-foreach ($modules as $module_name => $v) {
-  if (!in_array($module_name,$fake_modules)) {
+define("ALLOC_MODULES",serialize(array("shared"       => true
+                                      ,"home"         => true
+                                      ,"project"      => true
+                                      ,"time"         => true
+                                      ,"finance"      => true
+                                      ,"client"       => true
+                                      ,"item"         => true
+                                      ,"person"       => true
+                                      ,"announcement" => true
+                                      ,"notification" => true
+                                      ,"security"     => true
+                                      ,"config"       => true
+                                      ,"search"       => true
+                                      ,"tools"        => true
+                                      ,"report"       => true
+                                      ,"login"        => true
+                                      ,"soap"         => true
+                                      ,"history"      => true
+                                      ,"installation" => true
+                                      )));
+                                     #,"util"         => true
+
+
+require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
+define("SCRIPT_PATH",get_script_path()); // Needs ALLOC_MOD_DIR to be defined, and get_script_path() is defined in shared/util.inc.php
+define("ALLOC_VERSION", get_alloc_version());
+
+$m = get_alloc_modules();
+foreach ($m as $module_name => $v) {
+  if (file_exists(ALLOC_MOD_DIR."/$module_name/lib/init.php")) {
     require_once(ALLOC_MOD_DIR."/$module_name/lib/init.php");
     $module_class = $module_name."_module";
     $module = new $module_class;
@@ -106,68 +80,67 @@ foreach ($modules as $module_name => $v) {
   }
 }
 
-// Wrap angle brackets around the default From: email address 
-$f = config::get_config_item("AllocFromEmailAddress");
-$l = strpos($f, "<");
-$r = strpos($f, ">");
-$l === false and $f = "<".$f;
-$r === false and $f .= ">";
-define("ALLOC_DEFAULT_FROM_ADDRESS","allocPSA ".$f);
-unset($f, $l, $r);
+$TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.php"
+            ,"url_alloc_login"                          => SCRIPT_PATH."login/login.php"
+            ,"url_alloc_installation"                   => SCRIPT_PATH."installation/install.php"
+            ,"url_alloc_attachments_dir"                => ATTACHMENTS_DIR
+            ,"current_date"                             => date("Y-m-d H:i:s")
+            ,"today"                                    => date("Y-m-d")
+            ,"alloc_help_link_name"                     => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
+            ,"script_path"                              => SCRIPT_PATH
+            ,"table_box"                                => "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">"
+            ,"table_box_border"                         => "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">"
+            ,"main_alloc_title"                         => end(explode("/", $_SERVER["SCRIPT_NAME"]))
+            ,"ALLOC_VERSION"                            => ALLOC_VERSION
+            ,"url_alloc_stylesheets"                    => SCRIPT_PATH."stylesheets/"
+            ,"url_alloc_images"                         => SCRIPT_PATH."images/"
+            );
 
-require_once(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
-$current_user = new person;
 
+// If we're inside the installation process
+if (defined("IN_INSTALL_RIGHT_NOW")) {
 
-if (!defined("NO_AUTH")) {
-
-  // Check for existing session..
-  $sess = new Session;
-
-  if (!$sess->Started() && !defined("IN_LOGIN_RIGHT_NOW")) { 
-    header("Location: ". $TPL["url_alloc_login"]);
+  // Re-direct home if an alloc_config.php already exists
+  if (file_exists(ALLOC_MOD_DIR."/alloc_config.php") && is_readable(ALLOC_MOD_DIR."/alloc_config.php") && filesize(ALLOC_MOD_DIR."/alloc_config.php") >0) {
+    header("Location: ".$TPL["url_alloc_login"]);
     exit();
-
-  } else {
-    $person = new person;
-    $current_user = $person->load_get_current_user($sess->Get("personID"));
   }
-}
 
 
-// Take care of saving history entries
-$history = new history;
-$ignored_files = $history->get_ignored_files();
-$ignored_files[] = "index.php";
-$ignored_files[] = "home.php";
-$ignored_files[] = "taskSummary.php";
-$ignored_files[] = "projectList.php";
-$ignored_files[] = "timeSheetList.php";
-$ignored_files[] = "menu.php";
-$ignored_files[] = "clientList.php";
-$ignored_files[] = "itemLoan.php";
-$ignored_files[] = "personList.php";
-$ignored_files[] = "eventFilterList.php";
-$ignored_files[] = "search.php";
-$ignored_files[] = "person.php";
+// Else if were not in the installation process and there's no alloc_config.php file then redirect to the installation directory
+} else if (!file_exists(ALLOC_MOD_DIR."/alloc_config.php") || !is_readable(ALLOC_MOD_DIR."/alloc_config.php") || filesize(ALLOC_MOD_DIR."/alloc_config.php") == 0) {
+  header("Location: ".$TPL["url_alloc_installation"]);
+  exit();
 
-if ($_SERVER["QUERY_STRING"]) {
-  $qs = preg_replace("[&$]", "", $_SERVER["QUERY_STRING"]);
-  $qs = "?".$qs;
-}
+// Else include the alloc_config.php file and begin with proceedings..
+} else {
+  require_once(ALLOC_MOD_DIR."/alloc_config.php");
 
-$file = end(explode("/", $_SERVER["SCRIPT_NAME"])).$qs;
+  define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
+  require_once(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
 
-if (is_object($current_user) && !in_array($file, $ignored_files)
-    && !$_GET["historyID"] && !$_POST["historyID"] && $the_label = $history->get_history_label($_SERVER["SCRIPT_NAME"], $qs)) {
+  $current_user = new person;
 
-  $the_place = $_SERVER["SCRIPT_NAME"].$qs;
+  if (!defined("NO_AUTH")) {
+
+    // Check for existing session..
+    $sess = new Session;
+
+    if (!$sess->Started() && !defined("IN_LOGIN_RIGHT_NOW")) { 
+      header("Location: ". $TPL["url_alloc_login"]);
+      exit();
+
+    } else {
+      $current_user = person::load_get_current_user($sess->Get("personID"));
+    }
+  }
+
+  // Save history entry
   $history = new history;
-  $history->set_value("personID", $current_user->get_id());
-  $history->set_value("the_place", $the_place);
-  $history->set_value("the_label", $the_label);
-  $history->save();
+  $history->save_history();
+
+  register_toolbar_items($modules);
 }
 
-register_toolbar_items();
+
 ?>

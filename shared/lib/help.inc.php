@@ -24,10 +24,6 @@
 function get_help_button($topic, $module = "") {
   global $sess, $TPL;
 
-  if ($module == "") {
-    $module = ALLOC_CURRENT_MODULE;
-  }
-
   if ($topic) {
     $url = $sess->url("../help/help.php?topic=$topic&module=$module");
   } else {

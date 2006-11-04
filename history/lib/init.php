@@ -21,32 +21,15 @@
  *
  */
 
-require_once("../alloc.php");
+class history_module extends module {
+  var $db_entities = array("history");
 
-$modules = get_alloc_modules();
-
-$_GET["module"] or $_GET["module"] = ALLOC_CURRENT_MODULE;
-
-$file = "../".$_GET["module"]."/help/".$_GET["topic"].".html";
-
-if (file_exists($file)) {
-
-  // Security checks - do not allow arbitrary file access
-  if (!(eregi("^[a-z0-9_]+$", $_GET["topic"]))) {
-    echo "Invalid topic";
-    return;
+  function register_toolbar_items() {
+    return true;
   }
-
-  if (!isset($modules[$_GET["module"]])) {
-    echo "Invalid module";
-    return;
-  }
-
-  include_template($file);
 }
 
-
-page_close();
+include(ALLOC_MOD_DIR."/history/lib/history.inc.php");
 
 
 

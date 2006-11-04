@@ -48,8 +48,8 @@ function get_template($filename, $use_function_object = false) {
     $template = preg_replace($pattern,$replace,$template);
   }
 
-  $pattern = '/{optional:([\w]+) ?([^}]*)}/i';
-  $replace = '<?php if (check_optional_${1}("${3}")) { ?>';
+  $pattern = '/{optional:([\w]+) ?}/i';
+  $replace = '<?php if (check_optional_${1}()) { ?>';
   $template = preg_replace($pattern,$replace,$template);
 
   $pattern = '/{\/optional}/i';
