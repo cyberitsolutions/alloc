@@ -5,53 +5,7 @@
     <meta name="language" content="English-AU">
 
     <title>allocPSA Login</title>
-    <style type="text/css">
-      <!--
-      body                    { background-color:#eeeeee; font-family:arial,helvetica,sans-serif;  }
-      table.login             { position:relative; background: transparent; font-size:15px; font-weight:bold; clear:left; color:#ffffff; }
-      table.login td          { padding:6px 0px; }
-
-      table.login td.message  { vertical-align:top; letter-spacing: 0.00em; }
-      table.login td.right    { text-align:right; letter-spacing: 0.00em; white-space:nowrap;}
-      table.login td.left     { text-align:left;  letter-spacing: 0.00em;}
-      table.login td.center   { color:#ffffff; text-align:center; font-size:10px; }
-      table.login td.center a { color:#eeeeee; font-size:10px; }
-
-      form                    { display:inline;}
-      a                       { color:#eeeeee; white-space:nowrap; text-decoration:underline; }
-      .link                   { color:#cccccc; text-align:right; font-size:12px;  white-space:nowrap; vertical-align:top;}
-      img                     { position:relative; float:left; left:-14px;}
-      p.error                 { color: #ffcccc; display:inline; font-weight:bold; } 
-      .right input            { border:1px solid #0f4287; }
-
-      .cssbox, .cssbox_body, .cssbox_head, .cssbox_head h2 {
-          background: transparent url(../images/roundbg.png) no-repeat bottom right; 
-      } 
-      .cssbox { 
-          width: 395px !important; 
-          width: 380px; 
-          padding-right: 15px; 
-          margin: 20px auto; 
-          text-align:left;
-      } 
-      .cssbox_head { 
-          background-position: top right; margin-right: -15px;
-          padding-right: 40px; 
-      } 
-      .cssbox_head h2 { 
-          background-position: top left; 
-          margin: 0; 
-          border: 0; 
-          padding: 25px 0 15px 40px; 
-          height: auto !important; height: 1%; 
-      } 
-      .cssbox_body { 
-          background-position: bottom left; 
-          margin-right: 25px; 
-          padding: 15px 0 15px 40px; 
-      } 
-      -->
-    </style>
+    <link rel="stylesheet" href="{url_alloc_stylesheets}login.css" type="text/css" />
   
     <script type="text/javascript">
     <!--
