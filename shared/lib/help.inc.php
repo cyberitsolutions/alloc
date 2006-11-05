@@ -21,19 +21,6 @@
  *
  */
 
-/*
-function get_help_button($topic, $module = "") {AA
-  global $sess, $TPL;
-
-  if ($topic) {
-    $url = $sess->url("../help/help.php?topic=$topic&module=$module");
-  } else {
-    $url = "../help/help.html#".$TPL["alloc_help_link_name"];
-  }
-  return "<a href=\"$url\" target=\"_blank\"><img src=\"../images/help.gif\" alt=\"help\" border=\"0\"></a>";
-}
-*/
-
 function get_help_button($id,$str) {
   global $TPL;
   $str = htmlentities(addslashes($str));
@@ -42,7 +29,6 @@ function get_help_button($id,$str) {
   $img.= $TPL["url_alloc_images"]."help.gif\" style=\"position:relative; top:4px\">";
   return $img;
 }
-
 
 function help_button($topic = "") {
   global $TPL;
