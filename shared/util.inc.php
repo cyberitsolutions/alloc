@@ -171,7 +171,7 @@ function get_customizedFont_array() {
 }
 
 function get_customizedTheme_array() {
-  return array("Icy", "Darko", "Aneurism", "Clove", "Puddle", "None");
+  return array("Default", "Darko", "Icy", "Clove", "Puddle", "None");
 }
 
 function show_footer() {
