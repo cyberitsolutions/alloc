@@ -61,7 +61,7 @@ class home_item {
 
   function help_button() {
     if ($this->help_topic) {
-      help_button($this->help_topic, $this->module);
+      help_button($this->help_topic);
     }
   }
 }
