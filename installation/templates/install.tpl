@@ -40,7 +40,12 @@
 
 {optional:step_1}
 <br/>
-Fill in the fields below and click the Save Settings button.
+
+Fill in the fields below and click the Save Settings button. If you have an
+existing database and database user, then enter those credentials, otherwise
+this installer will guide you through the creation of a database and database
+user.
+
 <table class="nice" cellspacing="0" border="0">
 <tr>
   <th>Settings</th><th>Values</th>
@@ -57,7 +62,16 @@ Fill in the fields below and click the Save Settings button.
 
 {optional:step_2}
 <br/>
-Run the following commands on your MySQL server, ensure they are run as a privileged MySQL administrator user.
+
+If you need to create the allocPSA database and database user, run the
+following commands on your MySQL server, ensure you are logged in as a
+MySQL administrator user when you run them.
+
+<br/><br/>
+
+Note, you do not need to run these commands if the database and user
+permissions are already setup like eg: in a hosted environment.
+
 <br/>
 <table class="nice" cellspacing="0" border="0">
 <tr>
@@ -94,10 +108,10 @@ Once that is done, you should test that everything worked ok by clicking the Tes
 
 {optional:step_3}
 <br/>
-Install a new allocPSA database, or patch an existing one.
+Click the Install Database button to install the tables into the allocPSA database.
 <div class="buttons">
   <input type='submit' name='install_db' value='Install Database'>&nbsp;&nbsp;
-  <input type='submit' name='patch_db' value='Patch Existing Database'>
+  <!-- <input type='submit' name='patch_db' value='Patch Existing Database'> -->
   <input type='submit' name='submit_stage_3' value='Next &gt;'>
 </div>
 
@@ -181,6 +195,10 @@ Verify that all the tests succeeded below, and click the Complete Installation b
 
 
       </div>
+    </div>
+
+    <div style="text-align:center; font-size:70%; color:#666666;">
+      allocPSA {ALLOC_VERSION} &copy; 2006 <a style="color:#666666" href="http://www.cybersource.com.au">Cybersource</a>
     </div>
 
   </body>
