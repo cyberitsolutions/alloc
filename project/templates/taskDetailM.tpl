@@ -63,7 +63,7 @@ function updateTaskCCList(number) {
       <select name="taskTypeID">
         {taskTypeOptions}
       </select>
-{:help_button taskType}
+      {:help_button taskType}
     </td>
   </tr>
 

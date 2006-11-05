@@ -21,7 +21,8 @@
  *
  */
 
-function get_help_button($topic, $module = "") {
+/*
+function get_help_button($topic, $module = "") {AA
   global $sess, $TPL;
 
   if ($topic) {
@@ -31,9 +32,25 @@ function get_help_button($topic, $module = "") {
   }
   return "<a href=\"$url\" target=\"_blank\"><img src=\"../images/help.gif\" alt=\"help\" border=\"0\"></a>";
 }
+*/
 
-function help_button($topic = "", $module = "") {
-  echo get_help_button($topic, $module);
+function get_help_button($id,$str) {
+  global $TPL;
+  $str = htmlentities(addslashes($str));
+  $str = str_replace("\n"," ",$str);
+  $img = "<img id=\"".$id."\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
+  $img.= $TPL["url_alloc_images"]."help.gif\" style=\"position:relative; top:4px\">";
+  return $img;
+}
+
+
+function help_button($topic = "") {
+  global $TPL;
+  $file = $TPL["url_alloc_help"].$topic.".html";
+  if (file_exists($file)) {
+    $str = file_get_contents($file);
+    echo get_help_button($topic, $str);
+  }
 }
 
 function get_help_link() {

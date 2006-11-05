@@ -3,6 +3,9 @@ body                    { background-color: #303030; font-family:arial,helvetica
 a:link, a:visited       { color:#053d77; }
 a:hover                 { color:#376a9e; }
 
+#helper                 { position:absolute; visibility:hidden; z-index:200;  }
+table.helper_table      { background-color:white; color:#666666; border:1px solid #999999; width:400px; font-size:10px;}
+
 h1                      { font-weight:bold; font-size:18px; }
 h2                      { font-weight:bold; font-size:18px; }
 h3                      { font-weight:bold; font-size:17px; }
