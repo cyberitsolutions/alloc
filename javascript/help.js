@@ -7,7 +7,7 @@ function help_text_on(img, str) {
     x = x + 380;
   }
   helper.style.left=x+'px';
-  y = findPosY(document.getElementById(img.id)) +25 + yyy;
+  y = findPosY(document.getElementById(img.id)) +22 + yyy;
   helper.style.top=y+'px';
   toggleCombos("hidden"); 
 }
