@@ -580,7 +580,7 @@ class task extends db_entity {
 
   function get_url() {
     $sess = new Session;
-    $url = "project/task.php?taskID=".$this->get_id();
+    $url = "task/task.php?taskID=".$this->get_id();
 
     if ($sess->Started()) {
       $url = $sess->url(SCRIPT_PATH.$url);

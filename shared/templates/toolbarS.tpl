@@ -1,63 +1,31 @@
-{table_box}
-  <tr>
-    <th>{ALLOC_TITLE}&nbsp;{ALLOC_VERSION}</th>
-    <th class="right">{toolbar_item11}&nbsp;</th>
-  </tr>
-  <tr>
-    <td class="menu_pane_left">
+  <div style="text-align:center">
 
-	    <table class="menu" cellpadding="3" cellspacing="0" border="0">
-  	    <tr>
-          <td>{toolbar_item0}</td>
-          <td>{toolbar_item2}</td>
-          <td>{toolbar_item1}</td>
-          <td>{toolbar_item3}</td>
-  	    </tr>
-  	    <tr>
-          <td>{toolbar_item4}</td>
-          <td>{toolbar_item5}</td>
-          <td>{toolbar_item6}</td>
-          <td>{toolbar_item7}</td>
-  	    </tr>
-  	    <tr>
-          <td>{toolbar_item8}</td>
-          <td>{toolbar_item10}</td>
-          <td>{toolbar_item9}</td>
-          <td>{:get_help_link}</td>
-  	    </tr>
-	    </table>
+    <div id="header">
+      <img src="{url_alloc_images}alloc_tiny.png">
+      <p>{ALLOC_TITLE}</p>
+    </div>
 
-    </td>
-    <td class="menu_pane_right">
-      
-	    <form action="{url_alloc_search}" method="post" id="form_search">
-        <div>
-          <input size="18" name="needle" value="{needle}" onFocus="document.getElementById('form_search').needle.value='';" style="width:200px;">
-          <select size="1" name="category" style="width:100px;">{category_options}</select>
-          <input type="submit" name="search" value="Go">
-        </div>
-      </form>
+    <div id="menu_top_right">
       <form action="{url_alloc_history}" method="post" name="history">
-        <div>
-          <select name="historyID" onChange="this.form.submit();" style="width:304px;"> 
-          <option value="">Quick List</option>
-          {default_history_item_1}
-          {default_history_item_10}
-          {default_history_item_11}
-          {default_history_item_9} 
-          {default_history_item_2}
-          {default_history_item_3}
-          {default_history_item_4}
-          {default_history_item_5}
-          {default_history_item_6}
-          {default_history_item_7}
-          {default_history_item_8} 
-          {:show_history}</select>
-          <input type="submit" value="Go">
-        </div>
+        <select name="historyID" onChange="this.form.submit();">{:show_history}</select>&nbsp;&nbsp;or&nbsp;
       </form>
+      <form action="{url_alloc_search}" method="post" id="form_search">
+        <input size="14" name="needle" value="{needle}" onFocus="document.getElementById('form_search').needle.value='';">
+        <select size="1" name="category">{category_options}</select>
+        <input type="submit" name="search" value="Go">&nbsp;&nbsp;
+      </form>
+    </div>
 
-    </td>
-  </tr>
-</table>
+
+    <div id="main">
+
+      <!-- Tabs -->
+      <div class="tab_line_bg">
+        {:show_tabs}
+        <div id="blocker"><img src="../images/tab_line_bg_white_corners.gif" width="11px" height="27px" alt="Filler image, ignore this."></div>
+        <p id="extra_links">{:get_help_link}&nbsp;&nbsp;<a href="{url_alloc_logout}">Logout</a></p>
+      </div>
+
+
+
 {:show_messages}

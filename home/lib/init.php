@@ -23,9 +23,11 @@
 
 class home_module extends module {
   var $db_entities = array("history");
+  /*
   function register_toolbar_items() {
     register_toolbar_item("home", "Home");
   }
+  */
 
   function register_home_items() {
 

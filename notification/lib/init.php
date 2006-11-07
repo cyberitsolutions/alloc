@@ -30,7 +30,9 @@ class notification_module extends module {
   }
 
   function register_toolbar_items() {
+    /*
     register_toolbar_item("eventFilterList", "Reminders");
+    */
   }
 }
 

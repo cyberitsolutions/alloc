@@ -23,12 +23,14 @@
 
 class report_module extends module {
   function register_toolbar_items() {
+  /*
     global $current_user;
     if (isset($current_user) && $current_user->is_employee() && has_report_perm()) {
       register_toolbar_item("report", "Reports");
     } else {
       register_toolbar_item("search", "Search");
     }
+  */
   }
 }
 

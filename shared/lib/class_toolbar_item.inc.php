@@ -145,13 +145,46 @@ function show_toolbar_items() {
 
 
 function show_history() {
+  global $TPL, $current_user, $modules;
+  $db = new db_alloc;
+
+  $str[] = "<option value=\"\">Quick List</option>";
+  $str[] = "<option value=\"".$TPL["url_alloc_task"]."\">New Task</option>";
+  $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".TT_FAULT."\">New Fault</option>";
+  $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".TT_MESSAGE."\">New Message</option>";
+
+  if (have_entity_perm("project", PERM_CREATE, $current_user)) {
+    $str[] = "<option value=\"".$TPL["url_alloc_project"]."\">New Project</option>";
+  }
+
+  if (isset($modules["time"]) && $modules["time"]) {
+    $str[] = "<option value=\"".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
+  }
+
+  if (isset($modules["client"]) && $modules["client"]) {
+    $str[] = "<option value=\"".$TPL["url_alloc_client"]."\">New Client</option>";
+  }
+
+  if (isset($modules["finance"]) && $modules["finance"]) {
+    $str[] = "<option value=\"".$TPL["url_alloc_expOneOff"]."\">New Expense Form</option>";
+  }
+
+  $str[] = "<option value=\"".$TPL["url_alloc_reminderAdd"]."\">New Reminder</option>";
+
+  if (have_entity_perm("person", PERM_CREATE, $current_user)) {
+    $str[] = "<option value=\"".$TPL["url_alloc_person"]."\">New Person</option>";
+  }
+
+  $str[] = "<option value=\"".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
+
   $history = new history;
-  echo get_options_from_db($history->get_history_db(), "the_label", "historyID", $_GET["historyID"], 43, $reverse_results = true);
+  $str[] = get_options_from_db($history->get_history_db(), "the_label", "historyID", $_GET["historyID"], 43, $reverse_results = true);
+  echo implode("\n",$str);
 }
 
 
 function get_category_options($category="") {
-  $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Items"=>"Items", "Clients"=>"Clients", "Announcements"=>"Announcements");
+  $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Items"=>"Items", "Clients"=>"Clients");
   return get_options_from_array($category_options, $category, true);
 }
 
