@@ -7,7 +7,7 @@
   <div style="text-align:center">
 
   <div id="header_image">
-    <img style="float:right; right:0px; top:7px; position:absolute;" src="{url_alloc_images}/alloc_med.png">
+    <img style="float:right; right:0px; top:7px; position:absolute;" src="{url_alloc_images}/alloc_med.png" alt="allocPSA logo">
     <br/>
     <h1>allocPSA Installation Helper</h1>
   </div>
@@ -30,7 +30,7 @@
     </div>
  
     <div style="display:inline; position:absolute; right:-5px;">
-      <img src="../images/tab_line_bg_white_corners.gif" width="11px" height="27px" alt="Filler image, ignore this.">
+      <img src="../images/tab_line_bg_white_corners.gif" width="11px" height="27px" alt="-">
     </div>
   </div>
 
