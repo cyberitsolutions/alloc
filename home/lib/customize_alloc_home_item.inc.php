@@ -33,7 +33,7 @@ class customize_alloc_home_item extends home_item {
 
     if ($_POST["customize_save"]) {
       $current_user->prefs["customizedFont"] = sprintf("%d",$_POST["font"]);
-      $current_user->prefs["customizedTheme"] = $_POST["theme"];
+      $current_user->prefs["customizedTheme2"] = $_POST["theme"];
 
       $current_user->prefs["tasksGraphPlotHome"] = $_POST["weeks"];
       $current_user->prefs["tasksGraphPlotHomeStart"] = $_POST["weeksBack"];
@@ -45,7 +45,7 @@ class customize_alloc_home_item extends home_item {
     }
 
     $TPL["fontOptions"] = get_select_options(get_customizedFont_array(), $current_user->prefs["customizedFont"]);
-    $TPL["themeOptions"] = get_select_options(get_customizedTheme_array(), $current_user->prefs["customizedTheme"]);
+    $TPL["themeOptions"] = get_select_options(get_customizedTheme_array(), $current_user->prefs["customizedTheme2"]);
 
     $week_ops = array("0"=>0, 1=>1, 2=>2, 3=>3, 4=>4, 8=>8, 12=>12, 30=>30, 52=>52);
     $TPL["weeksOptions"] = get_select_options($week_ops, $current_user->prefs["tasksGraphPlotHome"]);

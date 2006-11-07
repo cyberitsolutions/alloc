@@ -161,7 +161,7 @@ function get_stylesheet_name() {
   $themes = get_customizedTheme_array();
   $fonts  = get_customizedFont_array();
 
-  $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme"])]);
+  $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme2"])]);
   $font = $fonts[sprintf("%d",$current_user->prefs["customizedFont"])];
   echo "style_".$style."_".$font.".css";
 }
