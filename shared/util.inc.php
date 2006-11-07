@@ -41,20 +41,24 @@ function get_alloc_version() {
 }
 
 function get_script_path() {
+  // Has to return something like
+  // /alloc_dev/
+  // /
+
   $modules = get_alloc_modules();
+  $path = dirname($_SERVER["SCRIPT_NAME"]);
+  $bits = explode("/",$path);
+  $last_bit = end($bits);
 
-  eregi("^".ALLOC_MOD_DIR."/(.*)$", $_SERVER["SCRIPT_FILENAME"], $match) && $script_filename_short = $match[1];
-  eregi("^([^/]*)/", $script_filename_short, $match) && $module_name = $match[1];
-
-  if ((!isset($modules[$module_name])) && $module_name != "") {
-    die("Invalid module: $module_name");
+  if ($modules[$last_bit]) {
+    array_pop($bits);
   }
+  is_array($bits) and $path = implode("/",$bits);
 
-  $SCRIPT_PATH = $_SERVER["SCRIPT_NAME"];
-  $script_filename_short and $SCRIPT_PATH = eregi_replace($script_filename_short, "", $_SERVER["SCRIPT_NAME"]);
-  $SCRIPT_PATH = eregi_replace("[/]*$", "", $SCRIPT_PATH);
+  $path[0] != "/" and $path = "/".$path;
+  $path[strlen($path)-1] != "/" and $path.="/";
+  return $path;
 
-  return $SCRIPT_PATH."/";
 }
 
 function seconds_to_display_format($seconds) {
