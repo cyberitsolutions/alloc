@@ -432,7 +432,15 @@ class timeSheet extends db_entity
     $options["taskView"] = "byProject";
     $options["return"] = "dropdown_options";
     $options["taskTimeSheetStatus"] = $status;
-    $tasks = task::get_task_list($options);
+    $tasks = task::get_task_list($options) or $tasks = array();
+
+    if ($taskID) {
+      $t = new task;
+      $t->set_id($taskID);
+      $t->select();
+      $tasks[$taskID] = $t->get_task_name();
+    }
+
     $dropdown_options = get_option("",0);
     $dropdown_options.= get_select_options($tasks, $taskID, 100);
     return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\">".$dropdown_options."</select>";
