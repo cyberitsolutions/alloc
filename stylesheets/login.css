@@ -15,7 +15,8 @@ table.login td {
 }
 
 table.login td.message { 
-  vertical-align:top; 
+  padding-top:20px;
+  padding-bottom:15px;
   letter-spacing: 0.00em; 
 }
 table.login td.right { 
@@ -73,7 +74,7 @@ p.error {
     width: 395px !important;
     width: 380px;
     padding-right: 15px;
-    margin: 20px auto;
+    margin: 40px auto;
     text-align:left;
 }
 .cssbox_head {
