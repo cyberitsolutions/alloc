@@ -3,26 +3,12 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <meta name="language" content="English-AU">
-
     <title>allocPSA Login</title>
     <link rel="stylesheet" href="{url_alloc_stylesheets}login.css" type="text/css" />
-  
-    <script type="text/javascript">
-    <!--
-      function focus_field() {
-        if (document.getElementById("login_form").username.value != '') {
-            document.getElementById("login_form").password.focus();
-        } else {
-            document.getElementById("login_form").username.focus();
-        }
-      }
-    // -->
-    </script>
-
-
+    <script language="javascript" type="text/javascript" src="{url_alloc_javascript}login.js"></script>
   </head>
-  <body onLoad="javascript:focus_field();">
 
+  <body onLoad="javascript:focus_field();">
 
   <form action="{url_alloc_login}" method="post" id="login_form">
 
@@ -32,15 +18,14 @@
 
     <div class="cssbox">
       <div class="cssbox_head">
-        <h2 class="link"><img src="{script_path}images/alloc.png" alt="AllocPSA Icon"/>{links}</h2>
+        <h2 class="link"><img src="{script_path}images/alloc_small.png" alt="AllocPSA Icon"/>{links}</h2>
       </div>
       <div class="cssbox_body">
 
         <table cellpadding="0" cellspacing="0" class="login">
-          <tr><td colspan="2">&nbsp;</td></tr>
           <tr>   
             <td colspan="2" class="message">
-              {error}<br>&nbsp;
+              {error}
             </td>
           </tr>
           <tr>
@@ -50,7 +35,6 @@
           <tr>
             {password_or_email_address_field}
           </tr>
-          <tr><td colspan="2">&nbsp;</td></tr>
           <tr>
             <td></td>
             <td style="text-align:right;">{login_or_send_pass_button}</td>
