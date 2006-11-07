@@ -24,8 +24,8 @@
 define("IN_INSTALL_RIGHT_NOW",1);
 require_once("../alloc.php");
 
-define("IMG_TICK","<img src=\"".$TPL["url_alloc_images"]."tick.gif\">");
-define("IMG_CROSS","<img src=\"".$TPL["url_alloc_images"]."cross.gif\">");
+define("IMG_TICK","<img src=\"".$TPL["url_alloc_images"]."tick.gif\" alt=\"Good\">");
+define("IMG_CROSS","<img src=\"".$TPL["url_alloc_images"]."cross.gif\" alt=\"Bad\">");
 
 function check_optional_step_1() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];

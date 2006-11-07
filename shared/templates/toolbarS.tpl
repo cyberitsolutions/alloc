@@ -1,7 +1,7 @@
   <div style="text-align:center">
 
     <div id="header">
-      <img src="{url_alloc_images}alloc_tiny.png">
+      <img src="{url_alloc_images}alloc_tiny.png" alt="allocPSA">
       <p>{ALLOC_TITLE}</p>
     </div>
 
@@ -22,7 +22,7 @@
       <!-- Tabs -->
       <div class="tab_line_bg">
         {:show_tabs}
-        <div id="blocker"><img src="../images/tab_line_bg_white_corners.gif" width="11px" height="27px" alt="Filler image, ignore this."></div>
+        <div id="blocker"><img src="../images/tab_line_bg_white_corners.gif" width="11px" height="27px" alt="-"></div>
         <p id="extra_links">{:get_help_link}&nbsp;&nbsp;<a href="{url_alloc_logout}">Logout</a></p>
       </div>
 
