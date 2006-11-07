@@ -51,20 +51,23 @@ function check_optional_step_4b() {
 }
 
 
+$default_allocURL = "http://".$_SERVER["SERVER_NAME"].SCRIPT_PATH;
 
-$config_vars = array("ALLOC_DB_NAME"   => array("default"=>"alloc","info"=>"Enter a name for the new allocPSA MySQL database")
-                    ,"ALLOC_DB_USER"   => array("default"=>"",     "info"=>"Enter the name of the database user that will access the database")
-                    ,"ALLOC_DB_PASS"   => array("default"=>"",     "info"=>"Enter that users database password")
-                    ,"ALLOC_DB_HOST"   => array("default"=>"",     "info"=>"Enter the name of the host that the database resides on")
-                    ,"ATTACHMENTS_DIR" => array("default"=>"",     "info"=>"Enter the full path to a directory that can be used for file upload storage, 
-                                                                            (The path must be outside the web document root)")
+$config_vars = array("ALLOC_DB_NAME"   => array("default"=>"alloc",              "info"=>"Enter a name for the new allocPSA MySQL database")
+                    ,"ALLOC_DB_USER"   => array("default"=>"alloc",              "info"=>"Enter the name of the database user that will access the database")
+                    ,"ALLOC_DB_PASS"   => array("default"=>"changeme",           "info"=>"Enter that users database password")
+                    ,"ALLOC_DB_HOST"   => array("default"=>"localhost",          "info"=>"Enter the name of the host that the database resides on")
+                    ,"ATTACHMENTS_DIR" => array("default"=>"/var/local/alloc/",  "info"=>"Enter the full path to a directory that can be used for file upload storage, 
+                                                                                          (The path must be outside the web document root)")
+                    ,"allocURL"        => array("default"=>$default_allocURL,    "info"=>"Enter the base URL that people will use to access allocPSA, eg: http://example.com/alloc/")
                     );
 
 
 foreach($config_vars as $name => $arr) {
   $val = $_POST[$name] or $val = $_GET[$name];
+  $val == "" and $val = $arr["default"];
   $name == "ATTACHMENTS_DIR" && $val && !preg_match("/\/$/",$val) and $val.= "/";
-  $name == "ALLOC_DB_HOST" && $val == "" and $val = "localhost";
+  $name == "allocURL" && $val && !preg_match("/\/$/",$val) and $val.= "/";
   $_FORM[$name] = $val;
   $get[] = $name."=".urlencode($val);
   $hidden[] = "<input type='hidden' name='".$name."' value='".$val."'>";
@@ -227,6 +230,14 @@ if ($_POST["install_db"]) {
       } 
     }   
   }    
+  
+  // Insert config data
+  $query = "INSERT INTO config (name, value) VALUES ('allocURL','".$_FORM["allocURL"]."')";
+  if (!@mysql_query($query,$link)) {
+    $errors[] = "Error! (".mysql_error().").";
+  }
+
+
   if (!is_array($errors) && !count($errors)) {
     $text_tab_3[] = "Database import successful!";
     $res = mysql_query("SELECT username FROM person",$link);
