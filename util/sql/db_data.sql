@@ -89,11 +89,12 @@ INSERT INTO config (configID, name, value) VALUES (4,'companyName','Cybersource'
 INSERT INTO config (configID, name, value) VALUES (5,'companyContactPhone','+61 3 9621 2377');
 INSERT INTO config (configID, name, value) VALUES (6,'companyContactFax','+61 3 9621 2477');
 INSERT INTO config (configID, name, value) VALUES (7,'companyContactEmail','info@cyber.com.au');
-INSERT INTO config (configID, name, value) VALUES (8,'companyContactHomePage','http://www.cyber.com.au');
+INSERT INTO config (configID, name, value) VALUES (8,'companyContactHomePage','http://www.cybersource.com.au');
 INSERT INTO config (configID, name, value) VALUES (9,'companyContactAddress','Level 4, 10-16 Queen St, Melbourne Vic. 3000 Australia');
 INSERT INTO config (configID, name, value) VALUES (10,'companyACN','053 904 082');
-INSERT INTO config (configID, name, value) VALUES (11,'allocURL','http://changeMeToYourURLForAllocPSA/');
-INSERT INTO config (configID, name, value) VALUES (12,'hoursInDay','7.5');
+INSERT INTO config (configID, name, value) VALUES (11,'hoursInDay','7.5');
+-- This line has been moved into the install program. Don't use ID 12 here. 
+-- INSERT INTO config (configID, name, value) VALUES (12,'allocURL','http://change_me_to_your_URL_for_allocPSA/');
 
 
 --
@@ -127,7 +128,5 @@ INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, proje
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (2,'Engineer (edit tasks)','canEditTasks',20);
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (3,'Project Manager + Time Sheet Recipient','timeSheetRecipient',40);
 
-START TRANSACTION;
 INSERT INTO person (username,password,personActive,perms) VALUES ('alloc','/.N0BifPoPoZg',1,'god,admin,manage,employee');
-COMMIT;
 
