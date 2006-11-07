@@ -17,6 +17,4 @@
     helper.style.visibility = "visible";
     helper.style.display = "none";
   </script>
-  <table width="99%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td style="vertical-align:top;">
+

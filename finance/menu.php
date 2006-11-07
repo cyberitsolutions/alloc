@@ -32,12 +32,12 @@ require_once("../alloc.php");
 
 $options = array(array("url"=>"tf", 
                        "params"=>"", 
-                       "text"=>"New TF", 
+                       "text"=>"New Tagged Fund", 
                        "entity"=>"tf", 
                        "action"=>PERM_CREATE),
 
                  array("url"=>"tfList",
-                       "text"=>"TF List",
+                       "text"=>"List of Tagged Funds",
                        "entity"=>"tf",
                        "action"=>PERM_READ,
                        "br"=>true),
@@ -136,7 +136,10 @@ function show_options($template) {
       $TPL["br"] = "";
       if ($option["br"]) {
         $TPL["br"] = "<br><br>\n";
+      } else {
+        $TPL["br"] = "<br>\n";
       }
+
       include_template($template);
     }
   }

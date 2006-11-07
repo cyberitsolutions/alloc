@@ -46,6 +46,7 @@ define("TT_MILESTONE", 5);
 define("ALLOC_MODULES",serialize(array("shared"       => true
                                       ,"home"         => true
                                       ,"project"      => true
+                                      ,"task"         => true
                                       ,"time"         => true
                                       ,"finance"      => true
                                       ,"client"       => true

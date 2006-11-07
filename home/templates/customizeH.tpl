@@ -19,10 +19,6 @@
   </tr>
 
   <tr>
-    <td colspan="4">&nbsp;</td>
-  </tr>
-
-  <tr>
     <td colspan="4"><b>Top Tasks</b></td>
   </tr>
   <tr>
@@ -41,10 +37,6 @@
   </tr>
 
   <tr>
-    <td colspan="4">&nbsp;</td>
-  </tr>
-
-  <tr>
     <td colspan="4"><b>Task Calendar</b></td>
   </tr>
   <tr>
@@ -60,10 +52,6 @@
       {weeksBackOptions}
       </select>
     </td>
-  </tr>
-
-  <tr>
-    <td colspan="4">&nbsp;</td>
   </tr>
  
   <tr>

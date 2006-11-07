@@ -1,6 +1,5 @@
             <span id="completed"></span>
-          </td>
-        </tr>
-      </table>
+      </div>
+    </div>
   </body>
 </html>

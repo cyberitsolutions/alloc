@@ -2,7 +2,7 @@
 {:show_toolbar}
 {table_box}
   <tr>
-    <th>Personnel</th> 
+    <th>People</th> 
     <th class="right" colspan="9">
       &nbsp;&nbsp;<a href={url_alloc_personGraphs}>Person Graphs</a></td>
       {personAddSkill_link}

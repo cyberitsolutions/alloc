@@ -171,68 +171,45 @@ function get_customizedFont_array() {
 }
 
 function get_customizedTheme_array() {
-  return array("Default", "Darko", "Icy", "Clove", "Puddle", "None");
+  return array("Default","Leaf", "Icy", "Clove", "Puddle", "None");
 }
 
 function show_footer() {
   include_template(ALLOC_MOD_DIR."/shared/templates/footerS.tpl");
 }
 
+function show_tabs() {
+  global $TPL;
+
+  $menu_links = array("Home"     =>array("url"=>$TPL["url_alloc_home"],"module"=>"home")
+                     ,"Clients"  =>array("url"=>$TPL["url_alloc_clientList"],"module"=>"client")
+                     ,"Projects" =>array("url"=>$TPL["url_alloc_projectList"],"module"=>"project")
+                     ,"Tasks"    =>array("url"=>$TPL["url_alloc_taskSummary"],"module"=>"task")
+                     ,"Time"     =>array("url"=>$TPL["url_alloc_timeSheetList"],"module"=>"time")
+                     ,"Finance"  =>array("url"=>$TPL["url_alloc_financeMenu"],"module"=>"finance")
+                     ,"People"   =>array("url"=>$TPL["url_alloc_personList"],"module"=>"person")
+                     ,"Tools"    =>array("url"=>$TPL["url_alloc_tools"],"module"=>"tools")
+                     );
+
+  $x = -1;
+  foreach ($menu_links as $name => $arr) {
+    $TPL["x"] = $x;
+    $x+=81;
+    $TPL["url"] = $arr["url"];
+    $TPL["name"] = $name;
+    unset($TPL["active"]);
+    if (preg_match("/".str_replace("/", "\\/", $_SERVER["PHP_SELF"])."/", $url) || preg_match("/".$arr["module"]."/",$_SERVER["PHP_SELF"])) {
+       $TPL["active"] = " active";
+    }
+    include_template(ALLOC_MOD_DIR."/shared/templates/tabR.tpl");
+  }
+}
+
 function show_toolbar() {
   global $TPL, $modules, $category;
 
   $TPL["category_options"] = get_category_options($_POST["category"]);
-  $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Enter A Search...";
-
-  $toolbar_items = show_toolbar_items();
-
-  foreach($toolbar_items as $number=>$item) {
-    $TPL["toolbar_item".$number] = $item;
-  }
-
-  $TPL["default_history_item_1"] = "<option value=\"".$TPL["url_alloc_task"]."\">New Task</option>";
-
-  $db = new db_alloc;
-  $tasktype = new taskType;
-  $query = "SELECT * FROM taskType WHERE taskTypeName=\"Fault\"";
-  $db->query($query);
-  $db->next_record();
-  $tasktype->read_db_record($db);
-  
-  $TPL["default_history_item_10"] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".$tasktype->get_id()."\">New Fault</option>";
-
-  $query = "SELECT * FROM taskType WHERE taskTypeName=\"Message\"";
-  $db->query($query);
-  $db->next_record();
-  $tasktype->read_db_record($db);
-  
-  $TPL["default_history_item_11"] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".$tasktype->get_id()."\">New Message</option>";
-  
-  if (have_entity_perm("project", PERM_CREATE, $current_user)) {
-    $TPL["default_history_item_2"] = "<option value=\"".$TPL["url_alloc_project"]."\">New Project</option>";
-  }
-
-  if (isset($modules["time"]) && $modules["time"]) {
-    $TPL["default_history_item_3"] = "<option value=\"".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
-  }
-
-  if (isset($modules["client"]) && $modules["client"]) {
-    $TPL["default_history_item_4"] = "<option value=\"".$TPL["url_alloc_client"]."\">New Client</option>";
-  }
-
-  if (isset($modules["finance"]) && $modules["finance"]) {
-    $TPL["default_history_item_5"] = "<option value=\"".$TPL["url_alloc_expOneOff"]."\">New Expense Form</option>";
-  }
-
-  $TPL["default_history_item_6"] = "<option value=\"".$TPL["url_alloc_reminderAdd"]."\">New Reminder</option>";
-
-  if (have_entity_perm("person", PERM_CREATE, $current_user)) {
-    $TPL["default_history_item_7"] = "<option value=\"".$TPL["url_alloc_person"]."\">New Person</option>";
-  }
-
-  $TPL["default_history_item_8"] = "<option value=\"".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
-
-
+  $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Search...";
 
   include_template(ALLOC_MOD_DIR."/shared/templates/toolbarS.tpl");
 }

@@ -23,16 +23,18 @@
 
 require_once("../alloc.php");
 
-$options = array(
-  array("url"=>"announcementList"        ,"text"=>"Announcements"         ,"entity"=>"announcement"       ,"action"=>PERM_READ_WRITE),
-  array("url"=>"permissionList"          ,"text"=>"allocPSA Security"     ,"entity"=>"permission"         ,"action"=>PERM_READ_WRITE),
-  array("url"=>"costtime"                ,"text"=>"Cost & Time Estimater" ,"entity"=>"project"            ,"action"=>true),
-  array("url"=>"personSkillMatrix"       ,"text"=>"Company Skill Matrix"  ,"entity"=>"person"             ,"action"=>true), 
-  array("url"=>"config"                  ,"text"=>"allocPSA Configuration","entity"=>"config"             ,"action"=>PERM_UPDATE),
-  array("url"=>"taskCommentTemplateList" ,"text"=>"Task Comment Templates","entity"=>"taskCommentTemplate","action"=>PERM_READ_WRITE)
+$options = array(array("url"=>"config"                  ,"text"=>"Configuration"         ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
+                ,array("url"=>"eventFilterList"         ,"text"=>"Reminders"             ,"entity"=>""                   ,"action"=>true)
+                ,array("url"=>"announcementList"        ,"text"=>"Announcements"         ,"entity"=>"announcement"       ,"action"=>PERM_READ_WRITE)
+                ,array("url"=>"permissionList"          ,"text"=>"Security"              ,"entity"=>"permission"         ,"action"=>PERM_READ_WRITE)
+                ,array("url"=>"costtime"                ,"text"=>"Cost & Time Estimater" ,"entity"=>"project"            ,"action"=>true)
+                ,array("url"=>"personSkillMatrix"       ,"text"=>"Company Skill Matrix"  ,"entity"=>"person"             ,"action"=>true)
+                ,array("url"=>"taskCommentTemplateList" ,"text"=>"Task Comment Templates","entity"=>"taskCommentTemplate","action"=>PERM_READ_WRITE)
+                ,array("url"=>"loans"                   ,"text"=>"Item Loans"            ,"entity"=>"loan"               ,"action"=>true)
+                ,array("url"=>"report"                  ,"text"=>"Reports"               ,"entity"=>""                   ,"action"=>true, "function"=>"has_report_perm")
 );
 
-  //array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE),
+  //,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
 
 
 
@@ -49,6 +51,14 @@ function show_options($template) {
         $TPL["text"] = $option["text"];
         include_template($template);
       }
+    } else if ($option["function"]){
+      $f = $option["function"];
+      if ($f()) {
+        $TPL["url"] = $TPL["url_alloc_".$option["url"]];
+        $TPL["params"] = $option["params"];
+        $TPL["text"] = $option["text"];
+        include_template($template);
+      }
     } else {
       $TPL["url"] = $TPL["url_alloc_".$option["url"]];
       $TPL["params"] = $option["params"];
@@ -56,9 +66,11 @@ function show_options($template) {
       include_template($template);
     }
   }
-
-
 }
+
+
+
+
 
 include_template("templates/menuM.tpl");
 
