@@ -114,7 +114,7 @@ if ($_POST["submit_stage_4"]) {
       if (!$_FORM[$name]) {
         $var_fail = true;
       }
-      $str[] = "define(\"".$name."\",\"".$_FORM[$name]."\");";
+      $name != "allocURL" and $str[] = "define(\"".$name."\",\"".$_FORM[$name]."\");";
     }
     $str[] = "?>";
     $str = implode("\n",$str);
