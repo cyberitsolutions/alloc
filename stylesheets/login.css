@@ -6,9 +6,9 @@ table.login {
   position:relative; 
   background: transparent; 
   font-size:15px; 
-  font-weight:bold; 
+  font-weight:normal; 
   clear:left; 
-  color:#ffffff; 
+  color:#666666; 
 }
 table.login td { 
   padding:6px 0px; 
@@ -29,12 +29,12 @@ table.login td.left {
   letter-spacing: 0.00em;
 }
 table.login td.center { 
-  color:#ffffff; 
+  color:#333333; 
   text-align:center; 
   font-size:10px; 
 }
 table.login td.center a { 
-  color:#eeeeee; 
+  color:#333333; 
   font-size:10px; 
 }
 
@@ -42,12 +42,12 @@ form {
   display:inline;
 }
 a { 
-  color:#eeeeee; 
+  color:#333333; 
   white-space:nowrap; 
   text-decoration:underline; 
 }
 .link { 
-  color:#cccccc; 
+  color:#999999; 
   text-align:right; 
   font-size:12px;  
   white-space:nowrap; 
@@ -59,7 +59,7 @@ img {
   left:-14px;
 }
 p.error { 
-  color: #ffcccc; 
+  color: #ff4d4d; 
   display:inline; 
   font-weight:bold; 
 }
