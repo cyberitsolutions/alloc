@@ -1,6 +1,7 @@
 {:show_header}
 {:show_toolbar}
   <form action="{url_alloc_permission}" method="post">
+
 {table_box}
   <tr>
     <th>Permission</th>
@@ -70,6 +71,11 @@
     </td>
     </tr>
   </table>
+
     <input type="hidden" name="permissionID" value="{permissionID}">
   </form>
+
+
 {:show_footer}
+
+

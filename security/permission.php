@@ -23,24 +23,26 @@
 
 require_once("../alloc.php");
 
-$permission = new permission;
 
+$permission = new permission;
 $permissionID = $_POST["permissionID"] or $permissionID = $_GET["permissionID"];
+
 if ($permissionID) {
   $permission->set_id($permissionID);
   $permission->select();
 }
 
+$actions_array = $_POST["actions_array"];
 if (is_array($actions_array)) {
   $actions = 0;
-  reset($actions_array);
-  while (list(, $a) = each($actions_array)) {
+  foreach($actions_array as $k => $a) {
     $actions = $actions | $a;
   }
 }
 
 $permission->read_globals();
 $permission->set_tpl_values();
+
 
 if (!$permission->get_value("tableName")) {
   $table_name_options = get_entity_table_names();
@@ -52,6 +54,7 @@ if (!$permission->get_value("tableName")) {
 }
 
 if ($_POST["save"]) {
+  $permission->set_value("actions",$actions);
   $permission->save();
   header("Location: ".$TPL["url_alloc_permissionList"]);
 } else if ($_POST["delete"]) {
@@ -67,12 +70,12 @@ $TPL["allowOptions"] = get_select_options(array("Y"=>"Yes", "N"=>"No"), $permiss
 
 $table_name = $permission->get_value("tableName");
 $entity = new $table_name;
+
 $TPL["actionOptions"] = get_options_from_array($entity->permissions, $permission->get_value("actions"), true, 40, true);
 
 include_template("templates/permissionM.tpl");
 
 page_close();
-
 
 
 ?>
