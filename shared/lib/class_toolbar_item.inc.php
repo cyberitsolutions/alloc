@@ -178,7 +178,7 @@ function show_history() {
   $str[] = "<option value=\"".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
 
   $history = new history;
-  $str[] = get_options_from_db($history->get_history_db(), "the_label", "historyID", $_GET["historyID"], 43, $reverse_results = true);
+  $str[] = get_options_from_db($history->get_history_db("DESC"), "the_label", "historyID", $_GET["historyID"], 43);
   echo implode("\n",$str);
 }
 

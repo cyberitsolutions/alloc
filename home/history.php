@@ -23,17 +23,17 @@
 
 require_once("../alloc.php");
 
-global $sess;
+global $sess, $TPL;
 
 $historyID = $_POST["historyID"];
 
 if ($historyID) {
   if (is_numeric($historyID)) {
     $db = new db_alloc;
-    $query = sprintf("select * from history where historyID = %d", $historyID);
+    $query = sprintf("SELECT * FROM history WHERE historyID = %d", $historyID);
     $db->query($query);
     $db->next_record();
-    header("Location: ".$sess->url($db->f("the_place"))."historyID=".$historyID);
+    header("Location: ".$sess->url($TPL[$db->f("the_place")]."historyID=".$historyID).$db->f("the_args"));
   } else {
     header("Location: ".$sess->url($historyID));
   }
