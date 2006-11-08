@@ -8,7 +8,6 @@
 -- Dumping data for table `permission`
 --
 
-
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('config',0,0,'','Y',100,'Allow all users to read the configuration',17,1);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('config',0,0,'admin','Y',100,'Allow admin users to update the configuration',15,2);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('person',0,0,'','Y',100,'Allow all users to read all person records.  Note that read permisssion for person entities only provides access to the username, first name and surname - all other fields require the \"read details\" permission',1,3);
@@ -76,6 +75,9 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('projectPerson',-1,0,'employee','Y',NULL,'To allow employees who are \\\"Project Managers\\\" on a project to add other people etc.',15,104);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('project',-1,0,'employee','Y',99,'This will hopefully allow projects to administrated by employees with Project Manager perms for a project.',271,103);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('item',-1,0,'','Y',NULL,'Allow people to do what they like with items they own/have created.',15,105);
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('sentEmailLog',0,0,'','Y',NULL,NULL,NULL,107);
+
+
 
 --
 -- Dumping data for table `config`
