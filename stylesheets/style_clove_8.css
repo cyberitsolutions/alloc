@@ -111,7 +111,6 @@ div#header p {
 
 /* A div that makes up the background line image for tabs */
 div.tab_line_bg {
-  border:0px solid red;
   white-space:nowrap;
   display:block;
   background:url(../images/tab_line_bg.gif) top right repeat-x;
@@ -160,9 +159,9 @@ div#blocker {
 
 div#menu_top_right {
   float:right;
-  position:absolute;
+  position:relative;
   right:0px;
-  top:0px;
+  top:-12px;
   display:inline;
   font-size:16px;
   font-weight:bold;
@@ -170,7 +169,10 @@ div#menu_top_right {
   background:#a1b7b6;
   border-bottom:1px solid #5d827e;
   border-left:1px solid #5d827e;
-  padding:4px;
+  border-right:1px solid #5d827e;
+  padding:6px;
+  padding-top:8px;
+  margin-top:0px;
 }
 
 
@@ -180,9 +182,11 @@ p#extra_links {
   display:inline; 
   float:right; 
   z-index:1; 
-  top:-2px; 
-  position:relative; 
-  clear:both;
+  top:-4px; 
+  right:0px; 
+  position:absolute; 
+  padding-top:14px;
+  margin-top:0px;
 }
 
 
