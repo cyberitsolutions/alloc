@@ -37,9 +37,9 @@
           </tr>
           <tr>
             <td></td>
-            <td style="text-align:right;">{login_or_send_pass_button}</td>
+            <td style="text-align:right; padding-top:30px;">{login_or_send_pass_button}</td>
           </tr>
-          <tr><td colspan="2" style="border-bottom:0px solid #e0e0e0;">&nbsp;</td></tr>
+          <tr><td colspan="2" style="border-bottom:1px solid #e0e0e0;">&nbsp;</td></tr>
           <tr>
             <td class="center" colspan="2">{status_line}</td>
             <td><input type="hidden" name="account" value="{account}"></td>
