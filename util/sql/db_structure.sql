@@ -115,6 +115,7 @@ CREATE TABLE history (
   historyID int(11) NOT NULL auto_increment,
   the_time timestamp(14) NOT NULL,
   the_place varchar(255) NOT NULL default '',
+  the_args varchar(255) default NULL,
   personID int(11) NOT NULL default '0',
   the_label varchar(255) default '',
   PRIMARY KEY  (historyID)

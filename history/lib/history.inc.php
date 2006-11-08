@@ -23,39 +23,38 @@
 
 class history extends db_entity {
   var $data_table = "history";
-  var $total_to_display = 30;
+
+  # Display the x most recent, but keep the 2x most recent
+  # once we hit 3x, delete back down to 2x
+  var $max_to_display = 40;
+
+
+
 
   function history() {
     $this->db_entity();
     $this->key_field = new db_text_field("historyID");
     $this->data_fields = array("the_time"=>new db_text_field("the_time")
                                , "the_place"=>new db_text_field("the_place")
+                               , "the_args"=>new db_text_field("the_args")
                                , "the_label"=>new db_text_field("the_label")
                                , "personID"=>new db_text_field("personID")
       );
   }
 
-  // Get $db object which is set to 
-  // correct spot in db for that user
-  // to show $this->total_to_display
-
-  function get_history_db() {
+  function get_history_db($order="") {
     global $current_user;
-    $db = new db_alloc;
-    $TOTAL = $this->total_to_display;   // Total to display
-
     if (is_object($current_user)) {
-      $query = sprintf("SELECT * FROM history WHERE personID = %d 
-						  GROUP BY the_label ORDER BY the_time", $current_user->get_id());
+      $db = new db_alloc;
+      $query = sprintf("SELECT * 
+                         FROM history 
+                        WHERE personID = %d 
+                     GROUP BY the_label 
+                     ORDER BY the_time %s
+                        LIMIT %d"
+                      ,$current_user->get_id(),$order,$this->max_to_display);
       $db->query($query);
-
-      if (($db->num_rows() > $TOTAL) && ($db->num_rows() != 0)) {
-        $start = $db->num_rows() - $TOTAL;
-        $db->seek($start);
-      }
-    } else {
-      $db = false;
-    }
+    } 
     return $db;
   }
 
@@ -65,9 +64,9 @@ class history extends db_entity {
 
   function get_ignored_files() {
     $ignored_files = array();
-    $db = $this->get_history_db();
+    $db = $this->get_history_db("ASC");
     while (is_object($db) && $db->next_record()) {
-      $ignored_files[] = end(explode("/", $db->f("the_place")));
+      $ignored_files[] = end(explode("/", $db->f("the_place").$db->f("the_args")));
     }
     $ignored_files[] = "index.php";
     $ignored_files[] = "home.php";
@@ -94,17 +93,13 @@ class history extends db_entity {
     $script_name_array = explode("/", $SCRIPT_NAME);
 
     $file = end($script_name_array);
-    // File name without .php extension
-    $CLASS_NAME = str_replace(".php", "", $file);
-    // Directory that file is in
-    $dir = $script_name_array[sizeof($script_name_array) - 2];
-    // Nuke the leading question mark of the query string attached 
-    // to end of url eg: ?tfID=23&anal=true
-    $qs = preg_replace("[^\?]", "", $qs);
+    $CLASS_NAME = str_replace(".php", "", $file);                         // File name without .php extension
+    $dir = $script_name_array[sizeof($script_name_array) - 2];            // Directory that file is in
+    $qs = preg_replace("[^\?]", "", $qs);                                 // Nuke the leading question mark of the query string attached to end of url eg: ?tfID=23&anal=true
 
+    // We can only get a descriptive history entry if there is a xxxID 
+    // on the url, that way we can get the specific records label.
     if ($qs) {
-      // We can only get a descriptive history entry if there is a xxxID 
-      // on the url, that way we can get the specific records label.
       $qs_array = explode("&", $qs);
 
       foreach($qs_array as $query_pair) {
@@ -119,7 +114,7 @@ class history extends db_entity {
           $ID = $key_and_value[1];
           $KEY_FIELD = $key_and_value[0];
 
-          if (class_exists($CLASS_NAME)) {
+          if (class_exists($CLASS_NAME) && $ID) {
             $newClass = new $CLASS_NAME;
             $display_field = $newClass->display_field_name;
 
@@ -164,27 +159,54 @@ class history extends db_entity {
   }
 
   function save_history() {
-    global $current_user;
-    $ignored_files = $this->get_ignored_files();
+    global $current_user, $TPL;
 
-    if ($_SERVER["QUERY_STRING"]) {
-      $qs = preg_replace("[&$]", "", $_SERVER["QUERY_STRING"]);
-      $qs = "?".$qs;
+
+    // Delete old items if they have too many.
+    $db = new db_alloc;
+    $query = sprintf("SELECT count(*) AS total FROM history WHERE personID = %d",$current_user->get_id());
+    $db->query($query);
+    $row = $db->row();
+    if ($row["total"] >= (3*$this->max_to_display)) {
+      $query  = sprintf("DELETE FROM history WHERE personID = %d ORDER BY the_time LIMIT %d",$current_user->get_id(),$this->max_to_display, (2*$this->max_to_display));
+      $db->query($query);
     }
 
-    $file = end(explode("/", $_SERVER["SCRIPT_NAME"])).$qs;
+    $ignored_files = $this->get_ignored_files();
+    if ($_SERVER["QUERY_STRING"]) {
+      $qs = $this->strip_get_session($_SERVER["QUERY_STRING"]);
+      $qs = preg_replace("[&$]", "", $qs);
+      $qs = preg_replace("[^&]", "", $qs);
+      $qs = preg_replace("[^\?]", "", $qs);
+    }
+
+    $file = end(explode("/", $_SERVER["SCRIPT_NAME"]))."?".$qs;
 
     if (is_object($current_user) && !in_array($file, $ignored_files)
         && !$_GET["historyID"] && !$_POST["historyID"] && $the_label = $this->get_history_label($_SERVER["SCRIPT_NAME"], $qs)) {
 
-      $the_place = $_SERVER["SCRIPT_NAME"].$qs;
-      $this->set_value("personID", $current_user->get_id());
-      $this->set_value("the_place", $the_place);
-      $this->set_value("the_label", $the_label);
-      $this->save();
+      $the_place = basename($_SERVER["SCRIPT_NAME"]);
+
+      foreach($TPL as $k => $v) {
+        $key = basename($this->strip_get_session($v));
+        $key = preg_replace("[&$]", "", $key);
+        $key = preg_replace("[\?$]", "", $key);
+        $arr[$key] = $k;
+      }
+
+      if ($arr[$the_place]) {
+        $this->set_value("personID", $current_user->get_id());
+        $this->set_value("the_place", $arr[$the_place]);
+        $this->set_value("the_args", $qs);
+        $this->set_value("the_label", $the_label);
+        $this->save();
+      }
     }
   }
 
+  function strip_get_session($str="") {
+    return preg_replace("/sess=[A-Za-z0-9]{32}/","",$str);
+  }
 
 
 }
