@@ -26,7 +26,7 @@ div.message             { padding:7px; margin:7px; margin-left:0px; padding-left
 .help                   { color:black;  font-weight:bold; font-size:15px; }
 
 table.box               { border:1px solid #c7cfb8; background-color:#f9f9f9; margin:7px; margin-top:14px; margin-bottom:0px; vertical-align:top; width:98%; } 
-table.box th            { background-color:#eeeeee; color:#829858; font-size:15px; } 
+table.box th            { background: url(../images/bg_default.jpg) repeat-x; color:#829858; font-size:15px; } 
 table.box th.center     { text-align:center; } 
 table.box th.right table { width:40%; } 
 
