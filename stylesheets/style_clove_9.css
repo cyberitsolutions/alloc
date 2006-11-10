@@ -20,7 +20,7 @@ ul                      { display:inline; list-style:circle inside; }
 form                    { display:inline; padding:0px; margin:0px;}
 .nobr                   { white-space:nowrap }
 
-div.message             { padding:7px; margin:7px; margin-left:0px; padding-left:0px; }
+div.message             { padding:7px; margin:7px; margin-left:5px; padding-left:0px; }
 .bad                    { color:#880000; font-weight:bold; font-size:18px; }
 .good                   { color:#005e03; font-weight:bold; font-size:18px; }
 .help                   { color:#444444;  font-weight:bold; font-size:18px; }
@@ -70,8 +70,8 @@ table.tasks th, table.calendar th {
 
 .grand_total            { border-top:1px solid black;}
 
-table.comments          { border:1px solid #5d827e; margin-bottom:4px; margin-top:2px; }
-table.comments th       { text-align:left; background:#a1b7b6; vertical-align:top; color:#333333; border-bottom:1px solid #5d827e; font-weight:normal; padding:4px; }
+table.comments          { border:1px solid #5d827e; background:#a1b7b6; margin-bottom:4px; margin-top:2px; }
+table.comments th       { text-align:left; background:#a1b7b6; vertical-align:top; color:#333333; font-weight:normal; padding:4px; }
 table.comments td       { padding:4px; }
 
 
