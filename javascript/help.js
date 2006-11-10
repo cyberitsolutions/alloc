@@ -1,5 +1,5 @@
 function help_text_on(img, str) {
-  delay(500);
+  delay(150);
   popup(str); 
   x = findPosX(document.getElementById(img.id)) +17 -400;
   //window.alert(x);
