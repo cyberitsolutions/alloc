@@ -1,14 +1,14 @@
-{:show_header}
-{:show_toolbar}
+{show_header()}
+{show_toolbar()}
 
-{table_box}
+{$table_box}
   <tr>
     <th>Permissions</th>
-    <th class="right" colspan="8"><a href="{url_alloc_permission}">New Permission</a></th>
+    <th class="right" colspan="8"><a href="{$url_alloc_permission}">New Permission</a></th>
   </tr>
   <tr>
     <td colspan="9" align="center">
-      <form action="{url_alloc_permissionList}" method="post">
+      <form action="{$url_alloc_permissionList}" method="post">
       <table class="filter" align="center">
         <tr>
           <td>Table Name</td>
@@ -33,6 +33,6 @@
     <td>Comments</td>
     <td>&nbsp;</td>
   </tr>
-  {:show_permission_list templates/permissionListR.tpl}
+  {show_permission_list("templates/permissionListR.tpl")}
 </table>
-{:show_footer}
+{show_footer()}

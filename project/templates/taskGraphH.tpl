@@ -8,5 +8,5 @@
   <th class="col">Friday</th>
   <th class="col">Saturday</th>
 </tr>
-{:show_task_calendar_recursive ../project/templates/taskGraphHR.tpl}
+{show_task_calendar_recursive("../project/templates/taskGraphHR.tpl")}
 </table>

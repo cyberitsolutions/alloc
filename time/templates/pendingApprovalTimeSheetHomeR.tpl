@@ -1,5 +1,5 @@
 <tr>
-  <td{class}>{projectName}</td>
-  <td{class}>{user}</td>
-  <td><nobr>{date}</nobr></td>
+  <td{$class}>{$projectName}</td>
+  <td{$class}>{$user}</td>
+  <td><nobr>{$date}</nobr></td>
 </tr>

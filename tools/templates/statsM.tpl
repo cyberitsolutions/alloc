@@ -1,7 +1,7 @@
-{:show_header}
-{:show_toolbar}
+{show_header()}
+{show_toolbar()}
 
-{table_box}
+{$table_box}
   <tr>
     <th>Alloc Statistics</th>
   </tr>
@@ -28,17 +28,17 @@
         </tr>
         <tr>
           <td align="left">total</td>
-          <td align="center">{global_projects_current}</td>
-          <td align="center">{global_projects_total}</td>
-          <td align="center">{global_tasks_current}</td>
-          <td align="center">{global_tasks_total}</td>
-          <td align="center">{global_comments_total}</td>
-          <td align="center" valign="bottom">{global_graph}</td>
+          <td align="center">{$global_projects_current}</td>
+          <td align="center">{$global_projects_total}</td>
+          <td align="center">{$global_tasks_current}</td>
+          <td align="center">{$global_tasks_total}</td>
+          <td align="center">{$global_comments_total}</td>
+          <td align="center" valign="bottom">{$global_graph}</td>
         </tr>
-        {:show_users_stats templates/statsR.tpl}
+        {show_users_stats("templates/statsR.tpl")}
       </table>
 
     </td>
   </tr>
 </table>
-{:show_footer}
+{show_footer()}

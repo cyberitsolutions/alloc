@@ -1,1 +1,1 @@
-{:show_announcements announcementListHomeR.tpl}
+{show_announcements("announcementListHomeR.tpl")}

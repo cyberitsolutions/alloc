@@ -1,4 +1,4 @@
-<form action="{url_alloc_home}" method="post">
+<form action="{$url_alloc_home}" method="post">
 <table cellspacing="0" style="width:100%">
   <tr>
     <td colspan="4"><b>Look and Feel</b></td>
@@ -7,13 +7,13 @@
     <td>Font Size</td>
     <td>
       <select name="font">
-      {fontOptions}
+      {$fontOptions}
       </select>
     </td>
     <td>Theme</td>
     <td>
       <select name="theme">
-      {themeOptions}
+      {$themeOptions}
       </select>
     </td>
   </tr>
@@ -25,13 +25,13 @@
     <td>No. Tasks</td>
     <td>
       <select name="topTasksNum">
-      {topTasksNumOptions}
+      {$topTasksNumOptions}
       </select>
     </td>
     <td>Status</td>
     <td>
       <select name="topTasksStatus">
-      {topTasksStatusOptions}
+      {$topTasksStatusOptions}
       </select>
     </td>
   </tr>
@@ -43,13 +43,13 @@
     <td>No. Weeks</td>
     <td>
       <select name="weeks">
-      {weeksOptions}
+      {$weeksOptions}
       </select>
     </td>
     <td>Back</td>
     <td>
       <select name="weeksBack">
-      {weeksBackOptions}
+      {$weeksBackOptions}
       </select>
     </td>
   </tr>
@@ -61,7 +61,7 @@
     <td class="nobr">No. Projects</td>
     <td>
       <select name="projectListNum">
-      {projectListNumOptions}
+      {$projectListNumOptions}
       </select>
     </td>
     <td></td>

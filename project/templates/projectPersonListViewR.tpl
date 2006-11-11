@@ -1,5 +1,5 @@
 <tr>
   <td>
-    {person_username}
+    {$person_username}
   </td>
 </tr>

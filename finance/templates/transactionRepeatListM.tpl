@@ -1,10 +1,10 @@
-{:show_header}
-{:show_toolbar}
+{show_header()}
+{show_toolbar()}
 
-{table_box}
+{$table_box}
   <tr>
     <th colspan="4">Repeating Transactions</th>
-    <th class="right"><a href="{url_alloc_transactionRepeat}">New Repeating Expense</a></th>
+    <th class="right"><a href="{$url_alloc_transactionRepeat}">New Repeating Expense</a></th>
   </tr>
     <tr>
       <td>Name</td>
@@ -13,6 +13,6 @@
       <td>TF</td>
       <td>Status</td>
     </tr>
-    {:show_expenseFormList templates/transactionRepeatListR.tpl}
+    {show_expenseFormList("templates/transactionRepeatListR.tpl")}
   </table>
-{:show_footer}
+{show_footer()}

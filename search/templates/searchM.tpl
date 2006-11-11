@@ -1,7 +1,7 @@
-{:show_header}
-{:show_toolbar}
-<form action="{url_alloc_search}" method="post">
-{table_box}
+{show_header()}
+{show_toolbar()}
+<form action="{$url_alloc_search}" method="post">
+{$table_box}
   <tr>
     <th>Global Search</th>
   </tr>
@@ -11,8 +11,8 @@
 
       <table class="filter" align="center">
         <tr>
-          <td><input size="30" name="needle" value="{needle2}"></td>
-          <td><select size="1" name="category">{category_options}</select></td>
+          <td><input size="30" name="needle" value="{$needle2}"></td>
+          <td><select size="1" name="category">{$category_options}</select></td>
           <td><input type="submit" name="search" value="Search"></td>
         </tr>
       </table>
@@ -20,7 +20,7 @@
   </tr>
   <tr>
     <td>
-      {search_results}
+      {$search_results}
     </td>
   </tr>
   </table>
@@ -29,5 +29,5 @@
 
 
 
-{:show_footer}
+{show_footer()}
 

@@ -24,4 +24,4 @@
 
 
 
-{:show_footer}
+{show_footer()}

@@ -1,21 +1,21 @@
-{:show_header}
-{:show_toolbar}
-{table_box}
+{show_header()}
+{show_toolbar()}
+{$table_box}
   <tr>
-    <th>Add Reminder - Select {parentType}</th>
+    <th>Add Reminder - Select {$parentType}</th>
   </tr>
   <tr>
     <td>
-      <form action="{url_alloc_reminderAdd}" method="post">
-      {parentType}:
+      <form action="{$url_alloc_reminderAdd}" method="post">
+      {$parentType}:
       <select name="parentID">
-        {parentNameOptions}
+        {$parentNameOptions}
       </select>
-      <input type="hidden" name="parentType" value="{parentType}">
+      <input type="hidden" name="parentType" value="{$parentType}">
       <input type="hidden" name="step" value="3">
       <input type="submit" name="submitParentName" value="Next">
       </form>
     </td>
   </tr>
 </table>
-{:show_footer}
+{show_footer()}

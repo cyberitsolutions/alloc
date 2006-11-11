@@ -1,28 +1,28 @@
-{:show_header}
-{:show_toolbar}
+{show_header()}
+{show_toolbar()}
 
-<form method="post" action="{url_alloc_item}">
-<input type="hidden" name="dateBorrowed" value="{dateBorrowed}">
-<input type="hidden" name="itemID" value="{itemID}">
-<input type="hidden" name="personID" value="{personID}">
-<input type="hidden" name="dateToBeReturned" value="{dateToBeReturned}">
+<form method="post" action="{$url_alloc_item}">
+<input type="hidden" name="dateBorrowed" value="{$dateBorrowed}">
+<input type="hidden" name="itemID" value="{$itemID}">
+<input type="hidden" name="personID" value="{$personID}">
+<input type="hidden" name="dateToBeReturned" value="{$dateToBeReturned}">
 
-{table_box}
+{$table_box}
   <tr>
     <th>Item</th>
-    <th class="right"><a href="{url_alloc_loanAndReturn}">Back to Loans and Returns</a></th>
+    <th class="right"><a href="{$url_alloc_loanAndReturn}">Back to Loans and Returns</a></th>
   </tr>
   <tr>
     <td>Item Name</td>
-    <td>{itemName}</td>
+    <td>{$itemName}</td>
   </tr>
   <tr>
     <td>Notes</td>
-    <td>{itemNotes}</td>
+    <td>{$itemNotes}</td>
   </tr>
   <tr>
     <td>Borrower</td>
-    <td>{userSelect}</td>
+    <td>{$userSelect}</td>
   </tr>
   <tr>
     <td>Loan Duration (months)</td>
@@ -37,5 +37,5 @@
 
 </form>
 
-{:show_footer}
+{show_footer()}
 

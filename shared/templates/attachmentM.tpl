@@ -1,8 +1,8 @@
-<form enctype="multipart/form-data" action="{entity_url}" method="post">
+<form enctype="multipart/form-data" action="{$entity_url}" method="post">
 <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
-<input type="hidden" name="{entity_key_name}" value="{entity_key_value}">
+<input type="hidden" name="{$entity_key_name}" value="{$entity_key_value}">
 
-{table_box}
+{$table_box}
   <tr>
     <th colspan="3">Attachments</th>
   </tr>
@@ -18,7 +18,7 @@
       </table>
     </td>
   </tr>
-{attachments}
+{$attachments}
   <tr>
     <td colspan="2" align="right" valign="middle">
     </td>
