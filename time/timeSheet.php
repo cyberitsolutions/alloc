@@ -423,7 +423,8 @@ if ($_POST["save"]
           $body.= "\nA timesheet has been submitted for your approval. If it is satisfactory, submit the";
           $body.= "\ntimesheet to the Administrator. If not, make it editable again for re-submission.";
           $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-          $rtn[] = $timeSheet->shootEmail($address, $body, $subject, $dont_send_email);
+          $type = "timesheet_submit";
+          $rtn[] = $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
         }
         is_array($rtn) and $msg.= implode("<br/>",$rtn);
 
@@ -442,7 +443,8 @@ if ($_POST["save"]
         $body.= "\nA timesheet has been submitted for your approval. If it is not satisfactory, make it";
         $body.= "\neditable again for re-submission.";
         $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-        $msg.= $timeSheet->shootEmail($address, $body, $subject, $dont_send_email);
+        $type = "timesheet_submit";
+        $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
       }
     break;
 
@@ -466,7 +468,8 @@ if ($_POST["save"]
         $body.= "\nA timesheet has been submitted for your approval. If it is not satisfactory, make it";
         $body.= "\neditable again for re-submission.";
         $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-        $msg.= $timeSheet->shootEmail($address, $body, $subject, $dont_send_email);
+        $type = "timesheet_submit";
+        $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
       }
     break;
 
@@ -513,7 +516,8 @@ if ($_POST["save"]
         $body.= "\n Rejected By: ".$people_cache[$current_user->get_id()]["name"];
         $body.= "\n";
         $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-        $msg.= $timeSheet->shootEmail($address, $body, $subject, $dont_send_email);
+        $type = "timesheet_reject";
+        $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
        
       } else {
         $timeSheet->set_value("status", "edit");
@@ -527,7 +531,8 @@ if ($_POST["save"]
         $body.= "\n Rejected By: ".$people_cache[$current_user->get_id()]["name"];
         $body.= "\n";
         $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-        $msg.= $timeSheet->shootEmail($address, $body, $subject, $dont_send_email);
+        $type = "timesheet_reject";
+        $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
       }
 
       $timeSheet->set_value("dateSubmittedToAdmin", "");        // unset 
@@ -547,7 +552,8 @@ if ($_POST["save"]
       $body.= "\n Rejected By: ".$people_cache[$current_user->get_id()]["name"];
       $body.= "\n";
       $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-      $msg.= $timeSheet->shootEmail($address, $body, $subject, $dont_send_email);
+      $type = "timesheet_reject";
+      $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
     }
   }
 
