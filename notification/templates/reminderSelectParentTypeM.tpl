@@ -1,15 +1,15 @@
-{:show_header}
-{:show_toolbar}
-{table_box}
+{show_header()}
+{show_toolbar()}
+{$table_box}
   <tr>
     <th>Add Reminder - Select Type</th>
   </tr>
   <tr>
     <td>
-      <form action="{url_alloc_reminderAdd}" method="post">
+      <form action="{$url_alloc_reminderAdd}" method="post">
         Type:
         <select name="parentType">
-          {parentTypeOptions}
+          {$parentTypeOptions}
         </select>
         
         <input type="hidden" name="step" value="2">
@@ -19,4 +19,4 @@
   </tr>
 </table>
 
-{:show_footer}
+{show_footer()}

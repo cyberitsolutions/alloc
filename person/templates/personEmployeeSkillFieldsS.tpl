@@ -1,22 +1,22 @@
-{table_box}
+{$table_box}
 <tr>
   <th colspan="2">Areas of expertise</th>
-  <th class="right"><a href={url_alloc_personSkillMatrix}>Full Skill Matrix </a></th>
+  <th class="right"><a href={$url_alloc_personSkillMatrix}>Full Skill Matrix </a></th>
 </tr>
 <tr>
   <td>Skill</td>
   <td>Proficiency</td>
   <td></td>
 </tr>
-  {:show_person_areasOfExpertise templates/personExpertiseItemView.tpl}
+  {show_person_areasOfExpertise("templates/personExpertiseItemView.tpl")}
 <tr>
   <td colspan="3"><hr></td>
 </tr>
 <tr>
   <td>
-    <form action="{url_alloc_person}" method=post>
-    <input type="hidden" name="personID" value="{person_personID}">
-    <select name="skillID[]">{skills}</select>
+    <form action="{$url_alloc_person}" method=post>
+    <input type="hidden" name="personID" value="{$person_personID}">
+    <select name="skillID[]">{$skills}</select>
   </td>
   <td>
     <select name="skillProficiency">

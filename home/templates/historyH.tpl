@@ -1,1 +1,1 @@
-{:show_links historyR.tpl}
+{show_links("historyR.tpl")}

@@ -1,11 +1,11 @@
-{:show_header}
-  {:show_toolbar}
+{show_header()}
+  {show_toolbar()}
 
 <br>
 <br>
 <br>
 <div align="center" style="font-size: 16pt; font-family: arial, helvetica, sans-serif; color: #aa0000; font-weight: bold">
-This function is under construction.  Please use the <a href="{url_alloc_expOneOff}">One Off Expense Function</a> for now.
+This function is under construction.  Please use the <a href="{$url_alloc_expOneOff}">One Off Expense Function</a> for now.
 </div>
 <br>
 <br>
@@ -122,4 +122,4 @@ This function is under construction.  Please use the <a href="{url_alloc_expOneO
 
 <br><br>
 </form>
-{:show_footer}
+{show_footer()}

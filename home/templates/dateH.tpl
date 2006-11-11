@@ -1,1 +1,1 @@
-<div align="center">{:show_date}</div>
+<div align="center">{show_date()}</div>

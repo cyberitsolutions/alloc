@@ -1,12 +1,12 @@
-{:show_header}
-{:show_toolbar}
-{table_box}
+{show_header()}
+{show_toolbar()}
+{$table_box}
   <tr>
     <th colspan="200">Skill Matrix</th>
   </tr> 
   <tr>
     <td colspan="200" align="center">
-    {:show_filter templates/personSkillFilterS.tpl}
+    {show_filter("templates/personSkillFilterS.tpl")}
     </td>
   </tr>
   <tr>
@@ -18,6 +18,6 @@
       <img src="../images/skill_novice.png" alt="N" align="absmiddle"> Novice
     </td>
   </tr>
-  {:show_skill_expertise}
+  {show_skill_expertise()}
 </table>
-{:show_footer}
+{show_footer()}

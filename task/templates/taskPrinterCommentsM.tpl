@@ -1,1 +1,1 @@
-{commentsR}
+{$commentsR}

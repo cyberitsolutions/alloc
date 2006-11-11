@@ -1,7 +1,7 @@
-{:show_header}
-{:show_toolbar}
-<form method="post" action="{url_alloc_costtime}">
-{table_box}
+{show_header()}
+{show_toolbar()}
+<form method="post" action="{$url_alloc_costtime}">
+{$table_box}
   <tr>
     <th>Simple Cost & Time Estimater</th>
   </tr>
@@ -36,7 +36,7 @@
         <option value=-1>(Custom Multiplier)
       </select>
 <!--
-      <select name="multiplier">{multiplier_options}</select>
+      <select name="multiplier">{$multiplier_options}</select>
 -->
       <input type="text" name="custom" size="4">
     </td>
@@ -55,10 +55,10 @@
   <tr>
     <td>
       <table>
-        {:makeEstimate}
+        {makeEstimate()}
       </table>
     </td>
   </tr>
 </table>
 </form>
-{:show_footer}
+{show_footer()}

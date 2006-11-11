@@ -1,32 +1,32 @@
 <div align="center">
 
-  <a href="{url_alloc_invoiceItemList}mode=approve">Approve Invoices</a>
+  <a href="{$url_alloc_invoiceItemList}mode=approve">Approve Invoices</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_invoiceItemList}mode=allocate">Allocate Invoices to TFs</a>
+  <a href="{$url_alloc_invoiceItemList}mode=allocate">Allocate Invoices to TFs</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_invoicesUpload}">Upload Invoices File</a>
+  <a href="{$url_alloc_invoicesUpload}">Upload Invoices File</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_searchInvoice}">Search Invoices</a>
+  <a href="{$url_alloc_searchInvoice}">Search Invoices</a>
 
 <br>
 
-  <a href="{url_alloc_transaction}">New Transaction</a>
+  <a href="{$url_alloc_transaction}">New Transaction</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_expenseFormList}view=true">View Pending Expense Forms</a>
+  <a href="{$url_alloc_expenseFormList}view=true">View Pending Expense Forms</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_expenseUpload}">Upload Expenses File</a>
+  <a href="{$url_alloc_expenseUpload}">Upload Expenses File</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_searchTransaction}">Search Transactions</a>
+  <a href="{$url_alloc_searchTransaction}">Search Transactions</a>
 
 <br>
 
-  <a href="{url_alloc_tf}">New TF</a>
+  <a href="{$url_alloc_tf}">New TF</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_checkRepeat}">Push Repeating Expenses Through</a>
+  <a href="{$url_alloc_checkRepeat}">Push Repeating Expenses Through</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_wagesUpload}">Upload Wages File</a>
+  <a href="{$url_alloc_wagesUpload}">Upload Wages File</a>
    &nbsp; | &nbsp;
-  <a href="{url_alloc_reconciliationReport}">Reconciliation Report</a>
+  <a href="{$url_alloc_reconciliationReport}">Reconciliation Report</a>
 
 <br>
 

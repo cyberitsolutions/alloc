@@ -1,3 +1,3 @@
-<strong>{heading}</strong><br>
-{body}<br>
+<strong>{$heading}</strong><br>
+{$body}<br>
 <br>

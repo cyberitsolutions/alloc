@@ -1,48 +1,48 @@
-{:show_header}
-{:show_toolbar}
-{table_box}
+{show_header()}
+{show_toolbar()}
+{$table_box}
   <tr>
-    <th colspan="2">Transaction {transactionID}</th>
+    <th colspan="2">Transaction {$transactionID}</th>
   </tr>
   <tr>
     <td>Transcation ID</td>
-    <td>{transactionID}</td>
+    <td>{$transactionID}</td>
   </tr>
   <tr>
     <td>Company Details</td>
-    <td>{companyDetails}</td>
+    <td>{$companyDetails}</td>
   </tr>
   <tr>
     <td>Product/Description</td>
-    <td>{product}</td>
+    <td>{$product}</td>
   </tr>
   <tr>
     <td>Amount</td>
-    <td>{amount}</td>
+    <td>{$amount}</td>
   </tr>
   <tr>
     <td>Status</td>
-    <td>{status}</td>
+    <td>{$status}</td>
   </tr>
   <tr>
     <td>Invoice</td>
-    <td>#{invoiceNum} {invoiceDate}</td>
+    <td>#{$invoiceNum} {$invoiceDate}</td>
   </tr>
   <tr>
     <td>Expense Form ID</td>
-    <td>{expenseFormID}</td>
+    <td>{$expenseFormID}</td>
   </tr>
   <tr>
     <td>Time Sheet ID</td>
-    <td>{timeSheetID}</td>
+    <td>{$timeSheetID}</td>
   </tr>
   <tr>
     <td>Last Modfied By User ID</td>
-    <td>{transactionModifiedUser}</td>
+    <td>{$transactionModifiedUser}</td>
   </tr>
   <tr>
     <td>Last Modfied On</td>
-    <td>{lastModified}</td>
+    <td>{$lastModified}</td>
   </tr>
 </table>
-{:show_footer}
+{show_footer()}

@@ -2,7 +2,7 @@
 
 // Make the XML request thing, specify the callback function 
 function refreshTaskList(radiobutton) {
-  url = '{url_alloc_updateTimeSheetTaskList}task_type='+radiobutton.value+'&timeSheetID={timeSheet_timeSheetID}&taskID={taskListDropdown_taskID}'
+  url = '{$url_alloc_updateTimeSheetTaskList}task_type='+radiobutton.value+'&timeSheetID={$timeSheet_timeSheetID}&taskID={$taskListDropdown_taskID}'
   makeAjaxRequest(url,'updateTimeSheetTaskList',1)
 }
 
@@ -11,16 +11,16 @@ function updateTimeSheetTaskList(number) {
   if (http_request[number].readyState == 4) {
     if (http_request[number].status == 200) {
       document.getElementById("taskListDropdown").innerHTML = http_request[number].responseText;
-    }
-  }
+}
+}
 }
 </script>
 
 
-<form action="{url_alloc_timeSheet}" method="post">
+<form action="{$url_alloc_timeSheet}" method="post">
 
 
-{table_box}
+{$table_box}
   <tr>
     <th colspan="5">Create Time Sheet Item</th>
   </tr>
@@ -36,16 +36,16 @@ function updateTimeSheetTaskList(number) {
    
         <tr>
           <td>
-            <input type="text" size="11" name="timeSheetItem_dateTimeSheetItem" value="{timeSheetItem_dateTimeSheetItem}"><input type="button" value="Today" onClick="timeSheetItem_dateTimeSheetItem.value='{today}'">
+            <input type="text" size="11" name="timeSheetItem_dateTimeSheetItem" value="{$timeSheetItem_dateTimeSheetItem}"><input type="button" value="Today" onClick="timeSheetItem_dateTimeSheetItem.value='{$today}'">
           </td>
           <td>
-            <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{timeSheetItem_timeSheetItemDuration}">
-            <select name="timeSheetItem_timeSheetItemDurationUnitID">{timeSheetItem_unit_options}</select>
-            &nbsp;x&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{timeSheetItem_rate}">
+            <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$timeSheetItem_timeSheetItemDuration}">
+            <select name="timeSheetItem_timeSheetItemDurationUnitID">{$timeSheetItem_unit_options}</select>
+            &nbsp;x&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$timeSheetItem_rate}">
           </td>
         </tr>
         <tr>
-          <td valign="bottom" colspan="2"><a href="{url_alloc_task}projectID={projectID}&timeSheetID={timeSheet_timeSheetID}">New Task</a></td>
+          <td valign="bottom" colspan="2"><a href="{$url_alloc_task}projectID={$projectID}&timeSheetID={$timeSheet_timeSheetID}">New Task</a></td>
           <td valign="bottom" rowspan="2"> 
             <label for="task_type_open">Open Tasks</label><input id="task_type_open" type="radio" name="task_type" value="open" onClick="refreshTaskList(this)" checked>
             <label for="task_type_recent_closed">Recently Closed</label><input id="task_type_recent_closed" type="radio" name="task_type" value="recent_closed" onClick="refreshTaskList(this)">
@@ -55,7 +55,7 @@ function updateTimeSheetTaskList(number) {
         <tr>
           <td colspan="2">
             <div id="taskListDropdown">
-              {taskListDropdown}
+              {$taskListDropdown}
             </div>
           </td>
         </tr>
@@ -84,16 +84,16 @@ function updateTimeSheetTaskList(number) {
       <textarea rows="3" cols="70" name="timeSheetItem_comment" id="tsi_note" style="height:22px;"
                 onFocus="document.getElementById('tsi_note').style.height='150px';
                          document.getElementById('grow_tsi_note').style.display='none'
-                         document.getElementById('shrink_tsi_note').style.display='inline'">{timeSheetItem_comment}</textarea>
-      Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{commentPrivateChecked}>
+                         document.getElementById('shrink_tsi_note').style.display='inline'">{$timeSheetItem_comment}</textarea>
+      Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{$commentPrivateChecked}>
     </td>
-    <td colspan="1" valign="top" align="right"><br/>{timeSheetItem_buttons}</td>
+    <td colspan="1" valign="top" align="right"><br/>{$timeSheetItem_buttons}</td>
   </tr>
 </table>
 
 
-<input type="hidden" name="timeSheetItem_timeSheetItemID" value="{timeSheetItem_timeSheetItemID}">
-<input type="hidden" name="timeSheetID" value="{timeSheetItem_timeSheetID}">
-<input type="hidden" name="timeSheetItem_personID" value="{timeSheetItem_personID}">
+<input type="hidden" name="timeSheetItem_timeSheetItemID" value="{$timeSheetItem_timeSheetItemID}">
+<input type="hidden" name="timeSheetID" value="{$timeSheetItem_timeSheetID}">
+<input type="hidden" name="timeSheetItem_personID" value="{$timeSheetItem_personID}">
 </form>
 

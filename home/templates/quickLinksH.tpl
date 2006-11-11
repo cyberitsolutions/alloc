@@ -1,3 +1,3 @@
 <ul>
-{:show_links quickLinksR.tpl}
+{show_links("quickLinksR.tpl")}
 </ul>

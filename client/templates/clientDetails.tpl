@@ -1,22 +1,22 @@
-    <form action="{url_alloc_client}" method=post>
-      <input type="hidden" name="clientID" value="{client_clientID}">
+    <form action="{$url_alloc_client}" method=post>
+      <input type="hidden" name="clientID" value="{$client_clientID}">
       <table>
         <tr>
           <td colspan="3">
-            <b>Company Name:</b> {client_clientName} ({client_clientStatus})<br>
-            <b>Phone:</b> {client_clientPhoneOne}<br>
-            <b>Fax:</b> {client_clientFaxOne}
+            <b>Company Name:</b> {$client_clientName} ({$client_clientStatus})<br>
+            <b>Phone:</b> {$client_clientPhoneOne}<br>
+            <b>Fax:</b> {$client_clientFaxOne}
           </td>
         </tr>
         <tr>
           <td width="48%">
             <b>Postal Address:</b><br>
-            {client_clientPostalAddress}
+            {$client_clientPostalAddress}
           </td>
           <td width="4%">&nbsp;</td>
           <td width="48%">
             <b>Street Address:</b><br>
-            {client_clientStreetAddress}
+            {$client_clientStreetAddress}
           </td>
         </tr>
         <tr>

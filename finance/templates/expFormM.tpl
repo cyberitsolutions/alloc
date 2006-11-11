@@ -1,5 +1,5 @@
-{:show_header}
-  {:show_toolbar}
+{show_header()}
+  {show_toolbar()}
     <h1>Expense Form Lists</h1>
 <br>
 
@@ -17,6 +17,6 @@
 
 
 
-{:show_expForm templates/expFormR.tpl}
+{show_expForm("templates/expFormR.tpl")}
 </table>
 

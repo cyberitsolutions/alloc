@@ -1,7 +1,7 @@
-{table_box}
+{$table_box}
   <tr>
     <th colspan="5">Transactions</th>
-    <th class="right"><a href="{url_alloc_expOneOff}">New Expense Form</a></th>
+    <th class="right"><a href="{$url_alloc_expOneOff}">New Expense Form</a></th>
   </tr>
   <tr>
     <td>User Name</td>
@@ -10,6 +10,6 @@
     <td>Status</td>
     <td>Amount</td>
   </tr>
-{:show_transaction templates/project_transactionItemR.tpl}
+{show_transaction("templates/project_transactionItemR.tpl")}
 </table>
 
