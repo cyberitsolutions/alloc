@@ -68,7 +68,7 @@ function get_template($filename, $use_function_object = false) {
   
   $sr = array("{/}"             => "<?php TPL_END_BRACE ?>"
              ,"{\n"             => "TPL_START_BRACE\n"      // Javascript brace workaround
-             ,"\n}"             => "\nTPL_END_BRACE\n"      // Javascript brace workaround
+             ,"\n}"             => "\nTPL_END_BRACE"        // Javascript brace workaround
              ,"{"               => "<?php "
              ,"}"               => " ?>"
              ,"TPL_END_BRACE"   => "}"
@@ -90,11 +90,11 @@ function get_template($filename, $use_function_object = false) {
 // This is the publically callable function, used to include template files
 function include_template($filename, $function_object = "") {
   global $TPL;
-  echo "\n<!-- Start $filename -->\n";
+  echo "<!-- Start $filename -->\n";
   $template = get_template($filename, is_object($function_object));
   #echo "<pre>".htmlspecialchars($template)."</pre>"; 
   eval($template);
-  echo "\n<!-- End $filename -->\n";
+  echo "<!-- End $filename -->\n";
 } 
 
 

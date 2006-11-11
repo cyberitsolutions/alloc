@@ -25,7 +25,4 @@
         <p id="extra_links">{get_help_link()}&nbsp;&nbsp;<a href="{$url_alloc_logout}">Logout</a></p>
         <div id="blocker"><img src="../images/tab_line_bg_white_corners.gif" width="11px" height="27px" alt="-"></div>
       </div>
-
-
-
 {show_messages()}
