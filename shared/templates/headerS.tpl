@@ -17,4 +17,3 @@
     helper.style.visibility = "visible";
     helper.style.display = "none";
   </script>
-
