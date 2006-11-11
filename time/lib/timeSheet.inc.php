@@ -392,10 +392,10 @@ class timeSheet extends db_entity
     }
   }
 
-  function shootEmail($addr, $msg, $sub, $dummy) {
+  function shootEmail($addr, $msg, $sub, $type, $dummy) {
     
     // New email object wrapper takes care of logging etc.
-    $email = new alloc_email($addr,$sub,$msg,"timesheet_submit");
+    $email = new alloc_email($addr,$sub,$msg,$type);
 
     // REMOVE ME!!
     #$email->ignore_no_email_urls = true;
