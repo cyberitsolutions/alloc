@@ -237,6 +237,13 @@ if ($_POST["install_db"]) {
     $errors[] = "Error! (".mysql_error().").";
   }
 
+  // Insert patch data
+  $files = get_patch_file_list();
+  $query = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('%s','','%s')",db_esc(end($files)), date("Y-m-d H:i:s"));
+  if (!@mysql_query($query)) {
+    $errors[] = "Error! (".mysql_error().").";
+  }
+
 
   if (!is_array($errors) && !count($errors)) {
     $text_tab_3[] = "Database import successful!";
@@ -341,7 +348,7 @@ $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "DELETE FROM db WHERE Use
 $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "";
 $text_tab_2a[] = "INSERT INTO user (Host, User, Password) values ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_USER"]."',PASSWORD('".$_FORM["ALLOC_DB_PASS"]."'));";
 $text_tab_2a[] = "";
-$text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y');";
+$text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y');";
 $text_tab_2a[] = "";
 $text_tab_2a[] = "FLUSH PRIVILEGES;";
 

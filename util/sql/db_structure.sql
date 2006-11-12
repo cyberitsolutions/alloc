@@ -169,6 +169,15 @@ CREATE TABLE loan (
 ) TYPE=MyISAM;
 
 
+CREATE TABLE patchLog (
+  patchLogID int(11) NOT NULL auto_increment,
+  patchName varchar(255) NOT NULL,
+  patchDesc text,
+  patchDate timestamp(14) NOT NULL,
+  PRIMARY KEY  (patchLogID)
+) TYPE=ISAM PACK_KEYS=1;
+
+
 CREATE TABLE permission (
   tableName varchar(255) default NULL,
   entityID int(11) default NULL,
