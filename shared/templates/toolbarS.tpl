@@ -1,5 +1,3 @@
-  <div style="text-align:center">
-
     <div id="header">
       <img src="{$url_alloc_images}alloc_tiny.png" alt="allocPSA">
       <p>{$ALLOC_TITLE}</p>
@@ -15,7 +13,6 @@
         <input type="submit" name="search" value="Go">&nbsp;&nbsp;
       </form>
     </div>
-
 
     <div id="main">
 

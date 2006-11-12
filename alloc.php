@@ -80,6 +80,7 @@ foreach ($m as $module_name => $v) {
     $modules[$module_name] = $module;
   }
 }
+unset($m);
 
 $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.php"
             ,"url_alloc_login"                          => SCRIPT_PATH."login/login.php"
