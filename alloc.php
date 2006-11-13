@@ -97,6 +97,7 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"url_alloc_javascript"                     => SCRIPT_PATH."javascript/"
             ,"url_alloc_images"                         => SCRIPT_PATH."images/"
             ,"url_alloc_help"                           => ALLOC_MOD_DIR."/help/"
+            ,"url_alloc_help_relative"                  => SCRIPT_PATH."/help/"
             );
 
 
