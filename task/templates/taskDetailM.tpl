@@ -107,11 +107,12 @@ function updateTaskCCList(number) {
   </tr>
 
   <tr>    
-    <td valign="top"><nobr>Interested Parties</nobr><br/>(For Task Comment email){$new_client_contact_link}</td>
-    <td>
-      <div id="taskCCListDropdown">
+    <td valign="top"><nobr>Interested Parties</nobr><br/>{$new_client_contact_link}</td>
+    <td valign="top">
+      <div id="taskCCListDropdown" style="display:inline">
         {$taskCCListOptions}
       </div>
+      {help_button("task_interested_parties")}
     </td>
     <td valign="bottom" colspan="3">
 
