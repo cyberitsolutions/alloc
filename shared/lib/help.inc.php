@@ -21,23 +21,21 @@
  *
  */
 
-function get_help_button($id,$str) {
+function help_button($topic) {
   global $TPL;
-  $str = htmlentities(addslashes($str));
-  $str = str_replace("\n"," ",$str);
-  $img = "<img id=\"".$id."\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
-  $img.= $TPL["url_alloc_images"]."help.gif\" style=\"position:relative; top:4px\">";
-  return $img;
-}
 
-function help_button($topic = "") {
-  global $TPL;
   $file = $TPL["url_alloc_help"].$topic.".html";
+  $file_relative = $TPL["url_alloc_help_relative"].$topic.".html";
   if (file_exists($file)) {
     $str = file_get_contents($file);
-    echo get_help_button($topic, $str);
+    $str = htmlentities(addslashes($str));
+    $str = str_replace("\n"," ",$str);
+    $img = "<a href=\"".$file_relative."\" target=\"_blank\"><img id=\"".$topic."\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
+    $img.= $TPL["url_alloc_images"]."help.gif\" style=\"position:relative; top:4px\"></a>";
   }
+  echo $img;
 }
+
 
 function get_help_link() {
   global $TPL;

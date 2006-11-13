@@ -886,7 +886,7 @@ if ($timeSheet->get_value("status") == "edit") {
       $TPL["recipient_tfID"] = $tf_db->f("tfID");
     }
   } else {
-    $TPL["recipient_tfID_name"] = "No Preferred Payment TF nominated.  Go to \"Personal\" and choose one.";
+    $TPL["recipient_tfID_name"] = "No Preferred Payment TF nominated.";
     $TPL["recipient_tfID"] = "";
   }
 
