@@ -45,7 +45,7 @@ function get_template($filename, $use_function_object = false) {
 
   // Replace {if hey}    with if (hey) { 
   // Replace {while hey} with while (hey) { 
-  $pattern = '/{(if|while)+ ([^}]*)}/i';
+  $pattern = '/{(if|while){1} ([^}]*)}/i';
   $replace = '<?php ${1} (${2}) TPL_START_BRACE ?>';
   $template = preg_replace($pattern,$replace,$template);
 
@@ -61,7 +61,7 @@ function get_template($filename, $use_function_object = false) {
   $template = str_replace($pattern,$replace,$template);
 
   // Replace {TPL_END_BRACE else if hey} with {TPL_END_BRACE else if (hey) TPL_START_BRACE}
-  $pattern = '/{TPL_END_BRACE else\s?if ([^}]+)}/i';
+  $pattern = '/{TPL_END_BRACE else\s?if\s?([^}]+)}/i';
   $replace = '{TPL_END_BRACE else if (${1}) TPL_START_BRACE}';
   $template = preg_replace($pattern,$replace,$template);
 
