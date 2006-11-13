@@ -165,7 +165,7 @@ div#menu_top_right {
   display:inline;
   font-size:(DEFAULT_FONT_SIZE)px;
   font-weight:bold;
-  color:(A_HOVER);
+  color:(TABLE_MENU_A_COLOR);
   background:(PANE_BG_COLOR_HEADER);
   border-bottom:1px solid (PANE_FRAME_COLOR);
   border-left:1px solid (PANE_FRAME_COLOR);

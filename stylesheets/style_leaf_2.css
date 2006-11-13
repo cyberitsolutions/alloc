@@ -1,7 +1,7 @@
 body                    { background-color: #eeeeee; font-family:arial,helvetica,sans-serif; color:#666666; }
 
-a:link, a:visited       { color:#5c7600; }
-a:hover                 { color:#829858; }
+a:link, a:visited       { color:#825703; }
+a:hover                 { color:#cb832f; }
 
 #helper                 { position:absolute; visibility:hidden; z-index:200;  }
 table.helper_table      { background-color:#fffdf2; color:#666666; border:1px solid #999999; width:400px; font-size:10px;}
@@ -30,8 +30,8 @@ table.box th            { background: url(../images/bg_default.jpg) repeat-x; co
 table.box th.center     { text-align:center; } 
 table.box th.right table { width:40%; } 
 
-table.box th a:link, table.box th a:visited { font-weight:bold; color:#5c7600; font-size:11px; }
-table.box th a:hover    { font-weight:bold; color:#829858; font-size:11px; }
+table.box th a:link, table.box th a:visited { font-weight:bold; color:#825703; font-size:11px; }
+table.box th a:hover    { font-weight:bold; color:#cb832f; font-size:11px; }
 
 table.calendar          { width:100%; border-right:1px solid #a2ba68; border-bottom:1px solid #a2ba68;} 
 table.calendar td       { background-color:#f9f9f9; border-left:1px solid #a2ba68;  border-top:1px solid #a2ba68; width:14%; vertical-align:top;}
@@ -165,7 +165,7 @@ div#menu_top_right {
   display:inline;
   font-size:10px;
   font-weight:bold;
-  color:#829858;
+  color:#5c7600;
   background:#e2e7cf;
   border-bottom:1px solid #a2ba68;
   border-left:1px solid #a2ba68;
