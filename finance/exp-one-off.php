@@ -163,12 +163,18 @@ if ($_POST["cancel"]) {
 
 } else if ($_POST["save"]) {
   $expenseForm->read_globals();
+  if ($expenseForm->get_value("reimbursementRequired") == 0 || $expenseForm->get_value("reimbursementRequired") == 1) {
+    $expenseForm->set_value("paymentMethod", "");
+  }
   $expenseForm->save();
   header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["finalise"]) {
   $expenseForm->read_globals();
+  if ($expenseForm->get_value("reimbursementRequired") == 0 || $expenseForm->get_value("reimbursementRequired") == 1) {
+    $expenseForm->set_value("paymentMethod", "");
+  }
   $expenseForm->set_value("expenseFormFinalised", 1);
   $expenseForm->save();
   header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
@@ -194,24 +200,41 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") &
   $TPL["message_help"][] = "Step 1/4: Begin an Expense Form by choosing the Payment Method and Reimbursement option, then clicking the Create Expense Form button.";
 }
 
-$paymentOptions = array("COD", "Cheque", "Company Amex Charge", "Company Amex Blue", "Company Virgin MasterCard", "Other Credit Card", "Account", "Direct Deposit");
+$paymentOptions = array("", "COD", "Cheque", "Company Amex Charge", "Company Amex Blue", "Company Virgin MasterCard", "Other Credit Card", "Account", "Direct Deposit");
 $paymentOptions = get_options_from_array($paymentOptions, $expenseForm->get_value("paymentMethod"), false);
 
-$reimbursementRequired_checked = $expenseForm->get_value("reimbursementRequired") ? " checked" : "";
-$reimbursementRequired_label   = $expenseForm->get_value("reimbursementRequired") ? "Yes" : "No";
+
+function get_reimbursementRequired_array() {
+  return array("0"=>"Expense hasn't been paid"
+              ,"1"=>"Expense has been paid by me"
+              ,"2"=>"Expense has been paid by company"
+              );
+}
+
+
+$rr_options = get_reimbursementRequired_array();
+$rr_checked[sprintf("%d",$expenseForm->get_value("reimbursementRequired"))] = " checked";
+$expenseForm->get_value("paymentMethod") and $extra = " (".$expenseForm->get_value("paymentMethod").")";
+$rr_label = "<tr><td align=\"right\">Payment:</td><td>".$rr_options[$expenseForm->get_value("reimbursementRequired")].$extra."</td></tr>";
+$TPL["rr_label"] = $rr_options[$expenseForm->get_value("reimbursementRequired")].$extra;
+
+foreach ($rr_options as $value => $label) {
+  unset($extra);
+  $value == 2 and $extra = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
+  $reimbursementRequiredRadios.= "<tr><td align=\"right\">".$label.":</td><td><input type=\"radio\" name=\"reimbursementRequired\" value=\"".$value."\"".$rr_checked[$value].">".$extra."</td></tr>";
+}
+
 
 $TPL["paymentMethodOptions"] = $expenseForm->get_value("paymentMethod");
-$TPL["reimbursementRequiredOption"] = $reimbursementRequired_label;
+$TPL["reimbursementRequiredOption"] = $rr_label;
 
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
 
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save Expense Form\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"cancel\" value=\"Delete\" onClick=\"return confirm('Delete this Expense Form?')\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"finalise\" value=\"To Admin -&gt;\">";
-
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
-  $TPL["reimbursementRequiredOption"] = "<input type=\"checkbox\" name=\"reimbursementRequired\" value=\"1\"".$reimbursementRequired_checked.">";
-
+  $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios; 
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
   
@@ -225,7 +248,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
 } else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Create Expense Form\">";
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
-  $TPL["reimbursementRequiredOption"] = "<input type=\"checkbox\" name=\"reimbursementRequired\" value=\"1\"".$reimbursementRequired_checked.">";
+  $TPL["reimbursementRequiredOption"]= $reimbursementRequiredRadios;
 }
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {

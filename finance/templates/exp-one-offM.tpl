@@ -19,12 +19,7 @@
   <tr>
     <td align="right">Expense Form ID:</td><td>{$expenseFormID}</td>
   </tr>
-  <tr>
-    <td align="right">Payment Method:</td><td>{$paymentMethodOptions}</td>
-  </tr>
-  <tr>
-    <td align="right">Reimbursement Required:</td><td>{$reimbursementRequiredOption}</td>
-  </tr>
+    {$reimbursementRequiredOption}
   <tr>
     <td colspan="2" align="center">
       {$expenseFormButtons}
