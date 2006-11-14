@@ -39,7 +39,7 @@ define("MAX_TICKS", 20);        // Days between tick marks along the axis
     $color_text = imageColorAllocate($image, 0, 0, 64);
 
     // clear the image space with the background color
-    imageFilledRectangle($image, 0, 0, 200 - 1, 50 - 1, $this->color_background);
+    imageFilledRectangle($image, 0, 0, 200 - 1, 50 - 1, $color_background);
 
     imageString($image, 5, 3, 10, $s, $color_text);
 
