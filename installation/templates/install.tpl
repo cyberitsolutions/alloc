@@ -43,6 +43,12 @@
 Verify that the system is configured correctly and has all the necessary components installed.
 
 
+{$tests = array("php_version"  =>"PHP &gt;= 4.3.0"           
+               ,"php_memory"   =>"PHP memory_limit &gt;= 32M"
+               ,"php_gd"       =>"PHP GD image library"      
+               ,"mysql_version"=>"MySQL &gt;= 3.23"          
+               ,"mail_exists"  =>"Mail")}
+
 <table class="nice" cellspacing="0" border="0">
 <tr>
   <th>Test</th>
@@ -50,36 +56,15 @@ Verify that the system is configured correctly and has all the necessary compone
   <th>Status</th>
   <th width="1%" align="center">&nbsp;</th>
 </tr>
-<tr>
-  <td>PHP &gt;= 4.3.0</td>
-  <td>{$php_version}&nbsp;</td>
-  <td>{$remedy_php_version}&nbsp;</td>
-  <td align="center">{$img_php_version}&nbsp;</td>
-</tr>
-<tr>
-  <td>PHP memory_limit &gt;= 32M</td>
-  <td>{$php_memory}&nbsp;</td>
-  <td>{$remedy_php_memory}&nbsp;</td>
-  <td align="center">{$img_php_memory}&nbsp;</td>
-</tr>
-<tr>
-  <td>PHP GD image library</td>
-  <td>{$php_gd}&nbsp;</td>
-  <td>{$remedy_php_gd}&nbsp;</td>
-  <td align="center">{$img_php_gd}&nbsp;</td>
-</tr>
-<tr>
-  <td>MySQL &gt;= 3.23</td>
-  <td>{$mysql_version}&nbsp;</td>
-  <td>{$remedy_mysql_version}&nbsp;</td>
-  <td align="center">{$img_mysql_version}&nbsp;</td>
-</tr>
-<tr>
-  <td>Mail</td>
-  <td>{$mail_exists}&nbsp;</td>
-  <td>{$remedy_mail_exists}&nbsp;</td>
-  <td align="center">{$img_mail_exists}&nbsp;</td>
-</tr>
+{foreach $tests as $test => $name}
+  {$t = perform_test($test)}
+  <tr>
+    <td>{$name}</td>
+    <td>{$t.value}&nbsp;</td>
+    <td>{$t.remedy}&nbsp;</td>
+    <td align="center">{$t.status}&nbsp;</td>
+  </tr>
+{/}
 </table>
 
 
@@ -138,14 +123,15 @@ Once that is done, you should test that everything worked ok by clicking the Tes
     {if show_tab_2b()}
     <table class="nice" cellspacing="0" border="0">
     <tr>
-      <th>Database Connection Status</th>
+      <th colspan="2">Database Connection Status</th>
     </tr>
     <tr>
-      <td>{$text_tab_2b}&nbsp;{$img_tab_2b}</td>
+      <td colspan="2">{$text_tab_2b}&nbsp;{$img_tab_2b}</td>
+    </tr>
+    <tr>
+      <td><b>{$msg_test_db_result}</b></td><td width="1%" align="center">{$img_test_db_result}</td>
     </tr>
     </table>
-    {$msg_test_db_result}
-    {$img_test_db_result}
     {/}
 
 {$hidden}
@@ -170,46 +156,32 @@ Click the Install Database button to install the tables into the allocPSA databa
 <br/>
 Verify that all the tests succeeded below, and click the Complete Installation button.
 <br/>
+
+{$tests = array("db_connect"     =>"DB Connect" 
+               ,"db_select"      =>"DB Install" 
+               ,"db_tables"      =>"DB Tables"  
+               ,"attachments_dir"=>"Upload Dir" 
+               ,"alloc_config"   =>"Config File")}
+
+
 <table class="nice" cellspacing="0" border="0">
 <tr>
   <th>Test</th>
   <th>Value</th>
   <th>Status</th>
-  <th>&nbsp;</th>
+  <th align="center" width="1%">&nbsp;</th>
 </tr>
-<tr>
-  <td width="10%"><nobr>DB Connect</nobr></td>
-  <td width="20%">{$db_connect}</td>
-  <td>{$remedy_db_connect}&nbsp;</td>
-  <td width="1%" align="center">{$img_db_connect}&nbsp;</td>
-</tr>
-<tr>
-  <td>DB Install</td>
-  <td>{$db_select}&nbsp;</td>
-  <td>{$remedy_db_select}&nbsp;</td>
-  <td align="center">{$img_db_select}&nbsp;</td>
-</tr>
-<tr>
-  <td>DB Tables</td>
-  <td>{$db_tables}&nbsp;</td>
-  <td>{$remedy_db_tables}&nbsp;</td>
-  <td align="center">{$img_db_tables}&nbsp;</td>
-</tr>
-<tr>
-  <td>Upload Dir</td>
-  <td>{$attachments_dir}&nbsp;</td>
-  <td>{$remedy_attachments_dir}&nbsp;</td>
-  <td align="center">{$img_attachments_dir}&nbsp;</td>
-</tr>
-<tr>
-  <td>Config File</td>
-  <td>{$alloc_config}&nbsp;</td>
-  <td>{$remedy_alloc_config}&nbsp;</td>
-  <td align="center">{$img_alloc_config}&nbsp;</td>
-</tr>
-
-
+{foreach $tests as $test => $name}
+  {$t = perform_test($test)}
+  <tr>
+    <td>{$name}</td>
+    <td>{$t.value}&nbsp;</td>
+    <td>{$t.remedy}&nbsp;</td>
+    <td align="center">{$t.status}&nbsp;</td>
+  </tr>
+{/}
 </table>
+
 <div class="buttons">
   <input type='submit' name='submit_stage_3' value='Refresh Page'>
   <input type='submit' name='submit_stage_4' value='Complete Installation'>

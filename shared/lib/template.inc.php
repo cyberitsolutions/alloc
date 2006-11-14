@@ -31,21 +31,28 @@ function get_template($filename, $use_function_object = false) {
     echo "get_template() failure: [$filename]";
   }
 
-  // Replace {:function_name param} with function("param"); - REMOVE THIS SOMETIME!
+  // Replace {function_name param} with function("param"); - Remove this sometime.
   if ($use_function_object) {
     $pattern = '/{(\w+)\s?([^}]*)}/i';
     $replace = '<?php $function_object->${1}${2}; ?>';
     $template = preg_replace($pattern,$replace,$template);
   }
 
+  // Replace {$arr.something} with echo stripslashes($arr["something"]); 
+  $pattern = '/{\$([\w|\d|_]+)\.([^}]+)}/i';
+  $replace = '<?php echo stripslashes($${1}["${2}"]); ?>';
+  $template = preg_replace($pattern,$replace,$template);
+
   // Replace {$var_name} with echo stripslashes($TPL["var_name"]); 
   $pattern = '/{\$([\w|\d|_]+)}/i';
-  $replace = '<?php echo stripslashes($TPL["${1}"]); ?>';
+  $replace = '<?php echo stripslashes($TPL["${1}"] ? $TPL["${1}"] : $${1}); ?>';
   $template = preg_replace($pattern,$replace,$template);
+
 
   // Replace {if hey}    with if (hey) { 
   // Replace {while hey} with while (hey) { 
-  $pattern = '/{(if|while){1} ([^}]*)}/i';
+  // Replace {foreach hey} with foreach (hey) { 
+  $pattern = '/{(if|while|foreach){1} ([^}]*)}/i';
   $replace = '<?php ${1} (${2}) TPL_START_BRACE ?>';
   $template = preg_replace($pattern,$replace,$template);
 
