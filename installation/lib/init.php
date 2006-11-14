@@ -86,7 +86,7 @@ function perform_test($test) {
     break;
     case "mail_exists":
       $arr["value"] = get_cfg_var("sendmail_path");
-      if (!function_exists("mail") || !file_exists(get_cfg_var("sendmail_path"))) {
+      if (!function_exists("mail") || !get_cfg_var("sendmail_path")) {
         $arr["remedy"] = "PHP doesn't know the path to sendmail, alloc may not be able to send out emails. Please check the sendmail_path option in the PHP config file: ".get_cfg_var("cfg_file_path");
       }
     break;
