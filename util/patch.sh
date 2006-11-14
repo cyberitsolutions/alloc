@@ -25,6 +25,6 @@
 
 # This script has been re-written so that livealloc can still use it
 
-wget http://localhost/alloc/installation/patch.php?apply_patches=true
+wget -q -O /dev/null http://localhost/alloc/installation/patch.php?apply_patches=true
 
 
