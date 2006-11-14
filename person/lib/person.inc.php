@@ -65,7 +65,7 @@ class person extends db_entity {
 
   function get_tasks_for_email() {
 
-    $format = $this->get_value("emailFormat");
+    $format = "text";
 
     $options = array();
     $options["projectType"] = "mine";
@@ -80,11 +80,7 @@ class person extends db_entity {
     $summary = task::get_task_list($options);
 
     if ($summary) {
-      if ($format == "html") {
-        $topThree = "<br/><br><h4>Top Three Tasks</h4>";
-      } else {
-        $topThree = "\n\nTop Three Tasks";
-      }
+      $topThree = "\n\nTop Three Tasks";
       $topThree.= $summary;
     } 
 
@@ -94,11 +90,7 @@ class person extends db_entity {
     $summary = task::get_task_list($options);
 
     if ($summary) {
-      if ($format == "html") {
-        $dueToday = "<br><br><h4>Tasks Due Today</h4>";
-      } else {
-        $dueToday = "\n\nTasks Due Today";
-      }
+      $dueToday = "\n\nTasks Due Today";
       $dueToday.= $summary;
     } 
 
@@ -108,11 +100,7 @@ class person extends db_entity {
     $summary = task::get_task_list($options);
 
     if ($summary) {
-      if ($format == "html") {
-        $newTasks = "<br><br><h4>New Tasks</h4>";
-      } else {
-        $newTasks = "\n\nNew Tasks";
-      }
+      $newTasks = "\n\nNew Tasks";
       $newTasks.= $summary;
     } 
 
@@ -120,18 +108,12 @@ class person extends db_entity {
   }
 
   function get_announcements_for_email() {
-    $today = mktime(0, 0, 0, date(m), date(d), date(Y));
     $db = new db_alloc;
-    $db->query("select * from announcement");
+    $db->query("SELECT * FROM announcement WHERE CURDATE() <= displayToDate AND CURDATE() >= displayFromDate");
 
     while ($db->next_record()) {
-
-      if ($today >= strtotime($db->f("displayFromDate")) && $today <= strtotime($db->f("displayToDate"))) {
-        $announcement["heading"] = "Announcement\n".$db->f("heading");
-        $announcement["body"] = $db->f("body");
-      } else {
-        $announcement = false;
-      }
+      $announcement["heading"] = "Announcement\n".$db->f("heading");
+      $announcement["body"] = $db->f("body");
     }
     return $announcement;
   }

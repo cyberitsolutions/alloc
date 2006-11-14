@@ -1,0 +1,2 @@
+-- Added daily_digest type to sentEmailLog table
+alter table sentEmailLog change sentEmailType sentEmailType enum('reminder','reminder_advnotice','task_created','task_closed','task_comments','timesheet_submit','timesheet_reject','daily_digest') default NULL;
