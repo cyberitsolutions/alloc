@@ -45,22 +45,13 @@ while ($db->next_record()) {
   $person->set_id($db->f("personID"));
   $msg = "";
   $headers = "";
+  $tasks = "";
+  $to = "";
 
-  if ($person->get_value("emailFormat") == "html") {
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers.= "Content-type: text/html; charset=iso-8859-1\r\n";
-    $msg.= "<html><head><title>allocPSA Daily Digest</title></head><body>";
-
-    if ($announcement["heading"]) {
-      $msg.= "<br><h4>".$announcement["heading"]."</h4>";
-      $msg.= $announcement["body"]."<br>";
-    }
-  } else {
-    if ($announcement["heading"]) {
-      $msg.= $announcement["heading"];
-      $msg.= "\n".$announcement["body"]."\n";
-      $msg.= "\n- - - - - - - - - -\n";
-    }
+  if ($announcement["heading"]) {
+    $msg.= $announcement["heading"];
+    $msg.= "\n".$announcement["body"]."\n";
+    $msg.= "\n- - - - - - - - - -\n";
   }
 
   if ($person->get_value("emailAddress")) {
@@ -74,26 +65,11 @@ while ($db->next_record()) {
       $to = $person->get_value("firstName")." ".$person->get_value("surname")." <".$to.">";  
     }
 
-    // Finish off HTML 
-    if ($person->get_value("emailFormat") == "html") {
-      $msg.= "</body></html>";
-    }
-
     if ($tasks && $to) {
       $email = new alloc_email;
-      #$email->ignore_no_email_hosts = true;
-      #$email->ignore_no_email_urls = true;
+      $email->send($to, $subject, $msg, "daily_digest", $headers);
+    } 
 
-      if ($email->send($to, $subject, stripslashes($msg), $headers)) {
-        echo "Email sent to: ".$person->get_value("username")."\r\n";
-      } else {
-        echo "Not sent email: ".$subject." to: ".$person->get_value("username").". ";
-      }
-    } else {
-      echo $msg;
-    }
-  } else {
-    echo "No Email Address For: ".$person->get_value("username")."\n";
   }
 }
 
