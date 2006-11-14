@@ -67,7 +67,7 @@ function perform_test($test) {
     break;
     case "php_memory":
       $arr["value"] = get_cfg_var("memory_limit");
-      if (str_ireplace("m","",$arr["value"]) < 32) {
+      if (str_replace(array("m","M"),"",$arr["value"]) < 32) {
         $arr["remedy"] = "PHP does not have enough memory enabled. It is recommended to change the memory limit in the PHP config file: ".get_cfg_var("cfg_file_path");
       }
     break;
