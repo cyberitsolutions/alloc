@@ -78,12 +78,15 @@ class alloc_email {
     if (!$this->is_valid_to_address()) {
 
     } else if (!$this->is_valid_url()) {
-      echo "alloc_email: invalid url.";
 
     } else {
-      $this->log();
-      return mail($this->to_address, stripslashes($this->subject), stripslashes($this->message), $this->header);
+      $result = mail($this->to_address, stripslashes($this->subject), stripslashes($this->message), $this->header);
+      if ($result) {
+        $this->log();
+        return true;
+      } 
     }
+    return false;
   }
 
   function set_from($personID="") {

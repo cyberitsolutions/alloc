@@ -104,7 +104,7 @@ function show_messages() {
 
     foreach ($arr as $type => $str) {
       echo "<table cellspacing=\"0\" cellpadding=\"3\"><tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".gif\"/><td/>";
-      echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".$str."</td></tr></table>";
+      echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".str_replace('\\','',$str)."</td></tr></table>";
     }
     echo "</div>";
   }
