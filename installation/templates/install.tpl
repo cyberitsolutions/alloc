@@ -38,8 +38,54 @@
 <form action="{$url_alloc_installation}" method="post">
   <div style="padding:10px;">
 
-{if check_optional_step_1()}
+{if show_tab_1()}
 <br/>
+Verify that the system is configured correctly and has all the necessary components installed.
+
+
+<table class="nice" cellspacing="0" border="0">
+<tr>
+  <th>Test</th>
+  <th>Value</th>
+  <th>Status</th>
+  <th width="1%" align="center">&nbsp;</th>
+</tr>
+<tr>
+  <td>PHP &gt;= 4.3.0</td>
+  <td>{$php_version}&nbsp;</td>
+  <td>{$remedy_php_version}&nbsp;</td>
+  <td align="center">{$img_php_version}&nbsp;</td>
+</tr>
+<tr>
+  <td>PHP memory_limit &gt;= 32M</td>
+  <td>{$php_memory}&nbsp;</td>
+  <td>{$remedy_php_memory}&nbsp;</td>
+  <td align="center">{$img_php_memory}&nbsp;</td>
+</tr>
+<tr>
+  <td>PHP GD image library</td>
+  <td>{$php_gd}&nbsp;</td>
+  <td>{$remedy_php_gd}&nbsp;</td>
+  <td align="center">{$img_php_gd}&nbsp;</td>
+</tr>
+<tr>
+  <td>MySQL &gt;= 3.23</td>
+  <td>{$mysql_version}&nbsp;</td>
+  <td>{$remedy_mysql_version}&nbsp;</td>
+  <td align="center">{$img_mysql_version}&nbsp;</td>
+</tr>
+<tr>
+  <td>Mail</td>
+  <td>{$mail_exists}&nbsp;</td>
+  <td>{$remedy_mail_exists}&nbsp;</td>
+  <td align="center">{$img_mail_exists}&nbsp;</td>
+</tr>
+</table>
+
+
+<div class="buttons">
+  <input type='submit' name='refresh_tab_1' value='Refresh Page'>
+</div>
 
 Fill in the fields below and click the Save Settings button. If you have an
 existing database and database user, then enter those credentials, otherwise
@@ -60,7 +106,7 @@ user.
 {/}
 
 
-{if check_optional_step_2()}
+{if show_tab_2()}
 <br/>
 
 If you need to create the allocPSA database and database user, run the
@@ -89,7 +135,7 @@ Once that is done, you should test that everything worked ok by clicking the Tes
   <input type='submit' name='submit_stage_2' value='Next &gt;'>
 </div>
 
-    {if check_optional_step_2b()}
+    {if show_tab_2b()}
     <table class="nice" cellspacing="0" border="0">
     <tr>
       <th>Database Connection Status</th>
@@ -106,7 +152,7 @@ Once that is done, you should test that everything worked ok by clicking the Tes
 {/}
 
 
-{if check_optional_step_3()}
+{if show_tab_3()}
 <br/>
 Click the Install Database button to install the tables into the allocPSA database.
 <div class="buttons">
@@ -120,7 +166,7 @@ Click the Install Database button to install the tables into the allocPSA databa
 {/}
 
 
-{if check_optional_step_4()}
+{if show_tab_4()}
 <br/>
 Verify that all the tests succeeded below, and click the Complete Installation button.
 <br/>
@@ -133,33 +179,33 @@ Verify that all the tests succeeded below, and click the Complete Installation b
 </tr>
 <tr>
   <td width="10%"><nobr>DB Connect</nobr></td>
-  <td width="20%">User:{$ALLOC_DB_USER}<br/>Password:{$ALLOC_DB_PASS}<br/>Host:{$ALLOC_DB_HOST}</td>
-  <td>{$remedy_DB_CONNECTIVITY}&nbsp;</td>
-  <td width="1%" align="center">{$img_result_DB_CONNECTIVITY}&nbsp;</td>
+  <td width="20%">{$db_connect}</td>
+  <td>{$remedy_db_connect}&nbsp;</td>
+  <td width="1%" align="center">{$img_db_connect}&nbsp;</td>
 </tr>
 <tr>
   <td>DB Install</td>
-  <td>{$ALLOC_DB_NAME}&nbsp;</td>
-  <td>{$remedy_DB_SELECT}&nbsp;</td>
-  <td align="center">{$img_result_DB_SELECT}&nbsp;</td>
+  <td>{$db_select}&nbsp;</td>
+  <td>{$remedy_db_select}&nbsp;</td>
+  <td align="center">{$img_db_select}&nbsp;</td>
 </tr>
 <tr>
   <td>DB Tables</td>
-  <td>{$num_tables}&nbsp;</td>
-  <td>{$remedy_DB_TABLES}&nbsp;</td>
-  <td align="center">{$img_result_DB_TABLES}&nbsp;</td>
+  <td>{$db_tables}&nbsp;</td>
+  <td>{$remedy_db_tables}&nbsp;</td>
+  <td align="center">{$img_db_tables}&nbsp;</td>
 </tr>
 <tr>
   <td>Upload Dir</td>
-  <td>{$ATTACHMENTS_DIR}&nbsp;</td>
-  <td>{$remedy_ATTACHMENTS_DIR}&nbsp;</td>
-  <td align="center">{$img_result_ATTACHMENTS_DIR}&nbsp;</td>
+  <td>{$attachments_dir}&nbsp;</td>
+  <td>{$remedy_attachments_dir}&nbsp;</td>
+  <td align="center">{$img_attachments_dir}&nbsp;</td>
 </tr>
 <tr>
   <td>Config File</td>
-  <td>alloc_config.php &nbsp;</td>
-  <td>{$remedy_ALLOC_CONFIG}&nbsp;</td>
-  <td align="center">{$img_result_ALLOC_CONFIG}&nbsp;</td>
+  <td>{$alloc_config}&nbsp;</td>
+  <td>{$remedy_alloc_config}&nbsp;</td>
+  <td align="center">{$img_alloc_config}&nbsp;</td>
 </tr>
 
 
@@ -169,20 +215,49 @@ Verify that all the tests succeeded below, and click the Complete Installation b
   <input type='submit' name='submit_stage_4' value='Complete Installation'>
 </div>
 
-    {if check_optional_step_4b()}
+    {if show_tab_4b()}
     <table class="nice" cellspacing="0" border="0">
       <tr>
-        <th>Installation Results</th>
+        <th colspan="2">Installation Results</th>
       </tr>
       <tr>
-        <td>
+        <td colspan="2">
           {$text_tab_4}
         </td>
       </tr>
+      <tr>
+        <td><b>{$msg_install_result}</b></td>
+        <td width="1%" align="center">{$img_install_result}</td>
+      </tr>
     </table>
-    <br/>
-    {$msg_install_result}
-    {$img_install_result}
+    {/}
+
+    {if show_tab_4c()}
+    <b>Once last thing...</b><br/>
+    You can enable further functionality of allocPSA by installing these
+    cronjobs onto the server:
+
+    <table class="nice" cellspacing="0" border="0">
+      <tr>
+        <th>Cronjobs</th>
+      </tr>
+      <tr>
+        <td>
+          <pre>
+# Check every 10 minutes for any allocPSA Reminders to send
+*/10 * * * * wget -q -O /dev/null {$allocURL}notification/sendReminders.php
+
+# Send allocPSA Daily Digest emails once a day at 4:35am
+35 4 * * * wget -q -O /dev/null {$allocURL}person/sendEmail.php
+
+# Check for allocPSA Repeating Expenses once a day at 4:45am
+40 4 * * * wget -q -O /dev/null {$allocURL}finance/checkRepeat.php</pre>
+        </td>
+      </tr>
+    </table>
+    These cronjobs will enable the Reminders, the Daily Task Digest
+    emails and the Repeating Expenses functionality to work. They rely on
+    you already having wget installed.
     {/}
 
 {$hidden}

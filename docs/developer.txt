@@ -1,0 +1,258 @@
+Developer Prerequisites
+
+In order to be able to develop Alloc, developers should have the following knowledge:
+    
+MySQL SQL queries (including table join syntax)
+PHP programming (including functions, objects and regular expressions)
+Common security holes in PHP applications and how to avoid them.
+HTML
+bazaar-ng
+    
+
+Code Architecture
+
+alloc.php
+    
+    
+The ../alloc.php file is a core file of alloc.  The file contains
+installation specific parameters including database settings and information on
+which modules should be enabled.  Its location is installation specific, but it
+must be located somewhere in your PHP include_path (see the PHP documentation
+for more information on the include_path configuration variable).
+
+
+Directory Structure 
+
+Each module has its own subdirectory under the main alloc directory with
+the same name as the module.  Each module's subdirectory contains the following
+subdirectories:
+      
+lib
+
+Library files used by the module.  Files in this directory typically define
+classes and functions available throughout the module.  This directory must
+also contain the module's init.php file discussed below.  
+
+templates
+
+HTML templates used by the module (see the templates section below).  
+
+
+      
+PHP scripts invoked by the web server are placed directly in the module's subdirectory.
+
+
+The Module Initialization File and Module Class
+
+A special file named init.php must be placed in the module's lib directory.
+Each module's init.php is loaded at the start of each request.  The file has
+two purposes.  Firstly it defines the module class - a special class that
+allows the core alloc code to enquire about a modules features.  Secondly it is
+responsible for including the module's other library files. 
+
+Module Registration
+
+Modules are registered using the alloc.php file.  
+    
+Page Files
+
+Page files are those files that can be invoked directly by the web server.
+A separate file is used for each different page that a module can present to
+the user.  For example, the announcement module has two page files -
+announcement.php and announcementList.php.  The announcement.php file shows a
+form for editing or creating new announcements.  The announcementList.php page
+file shows a list of all the announcements in the system so that the user can
+select which announcement they would like to edit.  Page files typically
+perform the following tasks:
+
+    
+Invoke shared code to initialise the request.  This code loads the
+libraries and checks that the user is authenticated.
+
+Process any data submitted from the previous page (e.g. if the user
+submitted an updated announcement then these updates must be saved to the
+database).  After processing the data the page may choose to redirect to a
+different page.
+
+Provide functions to load data for displaying on the page
+
+Invoke the page's main template.
+
+Invoke shared code to close the request.  This code performs clean-up
+functions like writing session data to the database.
+    
+
+While the body components of the page may be altered to suit the page's
+purpose, it is critical that the request initialization and closing statements
+are included in every page.  Without these statements the initialization and
+authentication procedures cannot operate properly.
+
+
+Library Files
+
+Library files are used by modules to provide shared classes, functions and
+constants.  Library files can be any PHP script providing that they do not
+output any content when they are first included.  If a library file outputs
+content (e.g. using the echo statement) then a page cannot output headers after
+the libraries have been included.  Additionally it is good practice for all
+content to be outputted using templates anyway.  Generally library files should
+be limitted to defining constants using the define function, defining functions
+and defining classes.
+
+
+Database Interfaces
+
+Alloc contains a number of classes for making database access easy, powerful and more secure.
+
+Database Entities
+
+Database entity classes define objects that represent a single record in the
+database.  Each table has its own database entity class that extends the
+db_entity class.  For example the announcement module defines an announcement
+entity. It is convention to store this script using the file
+module_name/lib/entity_name.inc.php
+
+Useful methods of the db_entity class include:
+    
+set_tpl_values() - sets template variables for the entities fields
+read_globals() - set the field values from global variables
+get_value($field_name) - get the value of a field
+set_value($field_name) - set the value of a field
+get_id() - get the entities unique identifier
+set_id() - set the entities unique identifier
+select() - read the record from the database
+save() - write the record to the database
+delete() - delete the record from the database
+    
+
+Direct Database Access
+
+While it is better to use the database interfaces discussed above it is
+also possible to write your own SQL statements and interact with the database
+directly.  Direct access is facilitated through a class called db_alloc.
+
+Security
+
+A separate document, Alloc's Security Design and Implementation, provides a
+more complete coverage of Alloc's security.  This section provides a brief
+coverage from a developer's perspective.
+
+Security Concepts
+
+Alloc's security model is based on users, roles, entities and permissions.
+
+A user is any external system or person who interacts with Alloc.  Each
+Alloc user is authenticated using a unique username and a password.  Users must
+be authenticated before accessing any of Alloc's functionality.
+
+Users may be assigned roles.  Each user can be assigned none, one or more
+than one role.  Initially Alloc has three roles: management staff,
+administration staff and employees.  Additional roles can be created by users
+who have been granted appropriate permissions.  It is important to remember
+that some users (e.g. clients) will have accounts that do not have any of these
+roles.
+
+
+Alloc's entities correspond to database tables.  Examples of entities in
+Alloc include person, tf, transaction, project and task.  Entities are
+individually identified by unique identifiers.  For example each person entity
+has a unique person identifier (personID).  Most entities also have a concept
+of ownership. For example Bob's TF may be 'owned' by himself.  Some entities
+can be owned by more than one person. For example, if Bob's wife also had an
+Alloc account she may be added as an owner of Bob's TF so that she can work
+with the TF in the same way that Bob can.
+
+Each entity uses a set of standard actions: create, update, read and
+delete.  If the entity supports the use of events a monitor events action is
+also automatically added.  Additionally entities can define their own actions,
+such as an 'approve' action for a timesheet entity.
+
+A permissions defines what actions a user or role can perform on an entity.
+Examples of possible permission definitions include:
+    
+Allow managers to create, update, read and delete any project entity.
+Allow employees to read and update any project entity that they own.  
+Do not allow Bob to read the "My Secret Project" project entity.
+    
+Permissions must be assigned a sort key to indicate which permissions have
+precedence.  If Bob was an manager then the above permissions would have to use
+a lower sort key for the third permission than the second.  Otherwise Alloc
+would read the first permission before the third permission and Bob would be
+able read the "My Secret Project" project.
+
+Entity Security Enforcement
+
+If you use Alloc's database interface libraries for all database access
+then entity security enforcement is largely implicit for the writers of pages.
+For example if you call the save() method for a new entity and the current user
+does not have permission to create the entity then an error message is
+automatically shown to the user and the script is aborted.  However, you may
+want to define your own permissions when you define your own entities.  
+
+Entity Security Checks
+
+While security is usually enforced implicitly, often you will want to be
+able to determine if the current user has a permission for reasons such as
+hiding navigation to inaccessible screens.  To check if a user has a permission
+you can call an entity object's have_perm() method or if you are not interested
+in a paticular entity you can use the have_entity_perm() function.
+
+Adding Your Own Permissions
+    
+Define permission constants in your entity's library file.
+Define the permission descriptions in your entity's constructor.
+Add code to call the check_perm method when the user performs the actions.
+    
+
+Templates
+
+Alloc includes a template engine.  The use of templates aims to seperate
+the application presentation from the application logic and storage.  The
+templates are fragments of standard HTML files with the following additions:
+    
+Dynamic template variables are specified using {$a_variable_name}.  This
+will get replaced with the value of the template variable.
+
+Functions can be called using the syntax {a_function_name(an_argument)}.
+This will not be displayed to the user and will cause the specified function to
+be invoked at this time instead.
+
+Template files are conventionally named with the .tpl suffix.  Additionally
+the last letter before the .tpl suffix is conventionally M, R, S representing a
+main, repeated or section template respectively.
+    
+
+To set template variables corresponding to an entity's field names use the
+entity's set_tpl_values() method.  Alternatively, template variables can be set
+directly using the $TPL global variable which is an associative array.  For
+example to set a variable named animal to cat use $TPL["animal"] = "cat";.
+
+Once you have set the template variables, you can process a template using
+the include_template($template_file_name) function.
+
+The file shared/global_tpl_values.inc.php defines some template variables
+that are available throughout the Alloc.  These include variables for all URLs
+used by Alloc.
+
+
+Home Page Items
+
+In order for the home page to provide quick access to information from a
+number of modules each module can register classes to display content on the
+home page.  To add a home page item to your module create a library file that
+contains a class that extends the home_item class.  Your class should have a
+constructor with no parameters.  This class should call the constructor for the
+home_item class.  The constructor for thee home_item_class has the following
+syntax:
+
+function home_item($name, $label, $module, $template, $width = "standard")
+The parameters are as follows:
+    
+$name - an identifier for this home item.  This is currently unused, but could be used in the future to record a users preferences for which home items are dispayed on their home page and in what order.
+$label - the text shown as the title of the home item
+$module - the name of the home item's module as a string.
+$template - the name of the template file for this home item.  This should not include the directory name - this is determined automatically.
+$width - either "standard" or "narrow".  Standard items are shown with approximately 75% of the windows width while narrow items use the remaining 25%.
+    
+
+

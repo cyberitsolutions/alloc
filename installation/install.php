@@ -27,27 +27,30 @@ require_once("../alloc.php");
 define("IMG_TICK","<img src=\"".$TPL["url_alloc_images"]."tick.gif\" alt=\"Good\">");
 define("IMG_CROSS","<img src=\"".$TPL["url_alloc_images"]."cross.gif\" alt=\"Bad\">");
 
-function check_optional_step_1() {
+function show_tab_1() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
   return $tab == 1 || !$tab;
 }
-function check_optional_step_2() {
+function show_tab_2() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
   return $tab == 2;
 }
-function check_optional_step_2b() {
+function show_tab_2b() {
   return $_POST["test_db_credentials"];
 }
-function check_optional_step_3() {
+function show_tab_3() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
   return $tab == 3;
 }
-function check_optional_step_4() {
+function show_tab_4() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
   return $tab == 4;
 }
-function check_optional_step_4b() {
+function show_tab_4b() {
   return $_POST["submit_stage_4"];
+}
+function show_tab_4c() {
+  return defined("INSTALL_SUCCESS");
 }
 
 
@@ -78,8 +81,12 @@ $TPL["hidden"] = implode("\n",$hidden);
  
 
 // Path to alloc_config.php
-$TPL["alloc_config_path"] = realpath(dirname(__FILE__)."/..")."/alloc_config.php";
+define("ALLOC_CONFIG_PATH", realpath(dirname(__FILE__)."/..")."/alloc_config.php");
 
+if ($_POST["refresh_tab_1"]) {
+  header("Location: ".$TPL["url_alloc_installation"]."?1=1".$TPL["get"]);
+  exit;
+}
 
 
 // Finish installation
@@ -108,7 +115,7 @@ if ($_POST["submit_stage_4"]) {
   }
 
   // Create alloc_config.php
-  if (file_exists($TPL["alloc_config_path"]) && is_writeable($TPL["alloc_config_path"]) && filesize($TPL["alloc_config_path"]) == 0) {
+  if (file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && filesize(ALLOC_CONFIG_PATH) == 0) {
     $str[] = "<?php";
     foreach ($config_vars as $name => $arr) {
       if (!$_FORM[$name]) {
@@ -119,7 +126,7 @@ if ($_POST["submit_stage_4"]) {
     $str[] = "?>";
     $str = implode("\n",$str);
     if (!$var_fail) {
-      $fh = fopen($TPL["alloc_config_path"],"w+");
+      $fh = fopen(ALLOC_CONFIG_PATH,"w+");
       fputs($fh,$str);
       fclose($fh);
     } else {
@@ -130,25 +137,26 @@ if ($_POST["submit_stage_4"]) {
     // Clear PHP file cache
     clearstatcache();
 
-    if (file_exists($TPL["alloc_config_path"]) && filesize($TPL["alloc_config_path"]) > 0) {
-      $text_tab_4[] = "Created ".$TPL["alloc_config_path"];
+    if (file_exists(ALLOC_CONFIG_PATH) && filesize(ALLOC_CONFIG_PATH) > 0) {
+      $text_tab_4[] = "Created ".ALLOC_CONFIG_PATH;
     } else {
-      $text_tab_4[] = "Unable to create(1): ".$TPL["alloc_config_path"];
+      $text_tab_4[] = "Unable to create(1): ".ALLOC_CONFIG_PATH;
       $failed = 1;
     }
 
   } else {
-    $text_tab_4[] = "Unable to create(2): ".$TPL["alloc_config_path"];
+    $text_tab_4[] = "Unable to create(2): ".ALLOC_CONFIG_PATH;
     $failed = 1;
   }
 
   if ($failed) {
-    file_exists($TPL["alloc_config_path"]) && is_writeable($TPL["alloc_config_path"]) && unlink($TPL["alloc_config_path"]);
+    file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && unlink(ALLOC_CONFIG_PATH);
     $TPL["img_install_result"] = IMG_CROSS;
-    $TPL["msg_install_result"] = "The install has not completed successfully.";
+    $TPL["msg_install_result"] = "The allocPSA installation has not completed successfully.";
   } else {
+    define("INSTALL_SUCCESS",1);
     $TPL["img_install_result"] = IMG_TICK;
-    $TPL["msg_install_result"] = "The install has completed successfully, <a href=\"".$TPL["url_alloc_login"]."\">click here</a> and you can login with the username and password of 'alloc'.";
+    $TPL["msg_install_result"] = "The allocPSA installation has completed successfully. <a href=\"".$TPL["url_alloc_login"]."\">Click here</a> and login with the username and password of 'alloc'.";
   }
 
   $_GET["tab"] = 4;
@@ -269,69 +277,12 @@ if ($_POST["install_db"]) {
 
 
 
-if ($_GET["tab"] == 4) {
-  // Tab 4 Text
-  // test for db connectivity
-  #$results["DB_CONNECTIVITY"] = 
-  $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
-  if (!$link || !$_FORM["ALLOC_DB_USER"]) {
-    $TPL["img_result_DB_CONNECTIVITY"] = IMG_CROSS;
-    $TPL["remedy_DB_CONNECTIVITY"] = "Unable to connect to the MySQL server. Check the credentials in the 'Input' step.";
-  } else {
-    $TPL["img_result_DB_CONNECTIVITY"] = IMG_TICK;
-    $TPL["remedy_DB_CONNECTIVITY"] = "Ok.";
-  }
-
-  if (@mysql_select_db($_FORM["ALLOC_DB_NAME"], $link)) {
-    $TPL["img_result_DB_SELECT"] = IMG_TICK;
-    $TPL["remedy_DB_SELECT"] = "Ok.";
-  } else {
-    $TPL["img_result_DB_SELECT"] = IMG_CROSS;
-    $TPL["remedy_DB_SELECT"] = "The database '".$_FORM["ALLOC_DB_NAME"]."' cannot be selected. It may not exist. Please repeat the 'DB Setup' step.";
-  }
-
-  $qid = @mysql_query("SHOW TABLES",$link);
-  if (is_resource($qid)) {
-    while ($row = mysql_fetch_array($qid)) {
-      $count++;
-    }
-  }
-
-  $TPL["num_tables"] = $count;
-
-  if ($count > 2) {
-    $TPL["img_result_DB_TABLES"] = IMG_TICK;
-    $TPL["remedy_DB_TABLES"] = "Ok.";
-  } else {
-    $TPL["img_result_DB_TABLES"] = IMG_CROSS;
-    $TPL["remedy_DB_TABLES"] = "The database tables don't appear to have imported correctly. Please repeat the 'DB Install' step.";
-  }
-  
-
-  // Test attachment directory
-  if ($_FORM["ATTACHMENTS_DIR"] == "" || !is_dir($_FORM["ATTACHMENTS_DIR"]) || !is_writeable($_FORM["ATTACHMENTS_DIR"])) {
-    $TPL["img_result_ATTACHMENTS_DIR"] = IMG_CROSS;
-    $TPL["remedy_ATTACHMENTS_DIR"] = "The directory specified for file uploads is either not defined or not writeable by the webserver process. Run:";
-    $TPL["remedy_ATTACHMENTS_DIR"].= "<br/>mkdir ".$_FORM["ATTACHMENTS_DIR"];
-    $TPL["remedy_ATTACHMENTS_DIR"].= "<br/>chmod a+w ".$_FORM["ATTACHMENTS_DIR"];
-  } else {
-    $TPL["img_result_ATTACHMENTS_DIR"] = IMG_TICK;
-    $TPL["remedy_ATTACHMENTS_DIR"] = "Ok.";
-  }
-
-  // Test alloc_config.php is writeable
-
-  if (!file_exists($TPL["alloc_config_path"]) || !is_writeable($TPL["alloc_config_path"])) {
-    $TPL["img_result_ALLOC_CONFIG"] = IMG_CROSS;
-    $TPL["remedy_ALLOC_CONFIG"] = "Please create an empty, webserver-writeable file: ";
-    $TPL["remedy_ALLOC_CONFIG"].= "<br/><nobr>touch ".$TPL["alloc_config_path"]."</nobr>";
-    $TPL["remedy_ALLOC_CONFIG"].= "<br/><nobr>chmod 600 ".$TPL["alloc_config_path"]."</nobr>";
-    $TPL["remedy_ALLOC_CONFIG"].= "<br/><nobr>chown apache ".$processUser['name']." ".$TPL["alloc_config_path"]."</nobr>";
-
-  } else {
-    $TPL["img_result_ALLOC_CONFIG"] = IMG_TICK;
-    $TPL["remedy_ALLOC_CONFIG"] = "Ok.";
-  } 
+if (show_tab_4()) {
+  $tests = array("db_connect","db_select","db_tables","attachments_dir","alloc_config");
+} else if (show_tab_1()) {
+  $tests = array("php_version","php_memory","php_gd","mysql_version","mail_exists");
+} else {
+  $tests = array();
 }
 
 
@@ -351,6 +302,26 @@ $text_tab_2a[] = "";
 $text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y');";
 $text_tab_2a[] = "";
 $text_tab_2a[] = "FLUSH PRIVILEGES;";
+
+
+
+
+// Do tests
+foreach ($tests as $test) {
+  $t = perform_test($test,$_FORM);
+
+  $TPL[$test] = $t["value"];
+
+  if (!$t["remedy"]) {
+    $TPL["remedy_".$test] = "Ok.";
+    $TPL["img_".$test] = IMG_TICK;
+  } else {
+    $TPL["remedy_".$test] = $t["remedy"];
+    $TPL["img_".$test] = IMG_CROSS;
+  }
+}
+
+
 
 
 

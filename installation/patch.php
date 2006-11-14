@@ -32,9 +32,10 @@ $files = get_patch_file_list();
 // Get the most recently applied patch
 $most_recent_patch = get_most_recent_patch();
 
+// This script can potentially be called via the livealloc patch system via GET
+$apply_patches = $_POST["apply_patches"] or $apply_patches = $_GET["apply_patches"];
 
-
-if ($_POST["apply_patches"] && $most_recent_patch != end($files)) {
+if ($apply_patches && $most_recent_patch != end($files)) {
 
 
   foreach ($files as $file) {
@@ -95,7 +96,7 @@ if ($msg) {
    $msg[$f] and $TPL["msg"].= "\n\n<br/><br/>".implode("\n<br/>",$msg[$f]);
   }
 } else if ($most_recent_patch == end($files)) {
-  $TPL["msg"] = "All patches applied up to patch ".end($files);
+  header("Location: ".$TPL["url_alloc_login"]);
 } else {
   $TPL["msg"] = "<input type='submit' name='apply_patches' value='Apply Patches'>";
 }
