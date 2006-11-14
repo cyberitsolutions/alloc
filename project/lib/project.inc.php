@@ -137,7 +137,7 @@ class project extends db_entity
 
     // Graph
     if ($this->have_perm()) {
-      $url = $TPL["url_alloc_projectSummary"]."projectID=".$this->get_id();
+      $url = $TPL["url_alloc_projectSummary"]."projectID=".$this->get_id()."&taskStatus=in_progress";
       $links[] = "<a href=\"$url\" class=\"nobr\">Graph</a>";
     }
 

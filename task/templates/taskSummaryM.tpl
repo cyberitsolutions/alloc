@@ -33,18 +33,20 @@ function updateProjectList(number) {
 
             <table class="filter" align="center">
               <tr>
-                <td>&nbsp;</td>
-                <td>Project</td>
-                <td>Task Type</td>
-                <td>Task Status</td>
-                <td>Assigned To</td> 
+                <td>{help_button("taskSummary_project_superset")}</td>
+                <td><b>Project Superset</b></td>
+                <td><b>Projects</b></td>
+                <td><b>Task Type</b></td>
+                <td><b>Task Status</b></td>
+                <td><b>Assigned To</b></td> 
                 <td>&nbsp;</td>
                 <!-- <td rowspan="2">{help_button("taskSummaryFilter")}</td> -->
                 <td>&nbsp;</td>
               </tr>
 
               <tr>
-                <td valign="bottom" align="right" rowspan="2">
+                <td></td>
+                <td valign="top" align="right" rowspan="2">
                   <label for="pt_mine">My Projects</label><input type="radio" id="pt_mine" name="projectType" value="mine" onClick="refreshProjectList(this)"{$projectType_checked_mine}><br/>
                   <label for="pt_pm"><nobr>My Project Managed</label><input type="radio" id="pt_pm" name="projectType" value="pm" onClick="refreshProjectList(this)"{$projectType_checked_pm}></nobr><br/>
                   <label for="pt_tsm">My Time Sheet Rec.</label><input type="radio" id="pt_tsm" name="projectType" value="tsm" onClick="refreshProjectList(this)"{$projectType_checked_tsm}><br/>
@@ -60,6 +62,7 @@ function updateProjectList(number) {
                 <td valign="top"><select name="personID">{$personOptions}</select></td>  
               </tr>
               <tr>
+                <td></td>
                 <td colspan="3">
           
                   <table class="filter" align="center" width="95%">
@@ -92,7 +95,7 @@ function updateProjectList(number) {
                   </table>
 
                 </td>
-                <td valign="bottom" align="right"><input type="submit" name="applyFilter" value="Filter"></td>
+                <td valign="bottom" align="right"><input type="submit" name="applyFilter" value="Filter"> {help_button("taskSummary_filter")}</td>
               </tr>
 
             </table>
