@@ -222,7 +222,7 @@ Verify that all the tests succeeded below, and click the Complete Installation b
 # Send allocPSA Daily Digest emails once a day at 4:35am
 35 4 * * * wget -q -O /dev/null {$allocURL}person/sendEmail.php
 
-# Check for allocPSA Repeating Expenses once a day at 4:45am
+# Check for allocPSA Repeating Expenses once a day at 4:40am
 40 4 * * * wget -q -O /dev/null {$allocURL}finance/checkRepeat.php</pre>
         </td>
       </tr>
