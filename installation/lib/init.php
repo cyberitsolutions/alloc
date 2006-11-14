@@ -53,7 +53,8 @@ function get_most_recent_patch() {
   return $row["patchName"];
 }
 
-function perform_test($test,$_FORM=array()) {
+function perform_test($test) {
+  global $_FORM;
   $arr = array();
   $extensions = get_loaded_extensions();
 
@@ -113,7 +114,7 @@ function perform_test($test,$_FORM=array()) {
           $count++;
         }
       }
-      $arr["value"] = $count;
+      $arr["value"] = sprintf("%d",$count);
       if (!$count || $count < 2) {
         $arr["remedy"] = "The database tables don't appear to have imported correctly. Please repeat the 'DB Install' step.";
       }
@@ -138,6 +139,12 @@ function perform_test($test,$_FORM=array()) {
       }
     break;
   }
+
+  $arr["status"] = IMG_TICK;
+  $arr["remedy"] and $arr["status"] = IMG_CROSS;
+  $arr["remedy"] or $arr["remedy"] = "Ok.";
+
+
   return $arr;
 }
 

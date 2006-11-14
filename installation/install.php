@@ -26,6 +26,8 @@ require_once("../alloc.php");
 
 define("IMG_TICK","<img src=\"".$TPL["url_alloc_images"]."tick.gif\" alt=\"Good\">");
 define("IMG_CROSS","<img src=\"".$TPL["url_alloc_images"]."cross.gif\" alt=\"Bad\">");
+$TPL["IMG_TICK"] = IMG_TICK;
+$TPL["IMG_CROSS"] = IMG_CROSS;
 
 function show_tab_1() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
@@ -276,16 +278,6 @@ if ($_POST["install_db"]) {
 }
 
 
-
-if (show_tab_4()) {
-  $tests = array("db_connect","db_select","db_tables","attachments_dir","alloc_config");
-} else if (show_tab_1()) {
-  $tests = array("php_version","php_memory","php_gd","mysql_version","mail_exists");
-} else {
-  $tests = array();
-}
-
-
 // Tab 2 Text
 $text_tab_2a[] = "DROP DATABASE IF EXISTS ".$_FORM["ALLOC_DB_NAME"].";";
 $text_tab_2a[] = "";
@@ -302,26 +294,6 @@ $text_tab_2a[] = "";
 $text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y');";
 $text_tab_2a[] = "";
 $text_tab_2a[] = "FLUSH PRIVILEGES;";
-
-
-
-
-// Do tests
-foreach ($tests as $test) {
-  $t = perform_test($test,$_FORM);
-
-  $TPL[$test] = $t["value"];
-
-  if (!$t["remedy"]) {
-    $TPL["remedy_".$test] = "Ok.";
-    $TPL["img_".$test] = IMG_TICK;
-  } else {
-    $TPL["remedy_".$test] = $t["remedy"];
-    $TPL["img_".$test] = IMG_CROSS;
-  }
-}
-
-
 
 
 
