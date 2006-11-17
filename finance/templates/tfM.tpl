@@ -1,7 +1,6 @@
 {show_header()}
   {show_toolbar()}
 <form action="{$url_alloc_tf}" method="post">
-<input type="hidden" name="tfBalance" value="{$tfBalance}">
 <input type="hidden" name="tfID" value="{$tfID}">
 
 {$table_box}

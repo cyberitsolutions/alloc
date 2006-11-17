@@ -30,7 +30,6 @@ class tf extends db_entity {
     $this->key_field = new db_text_field("tfID");
     $this->data_fields = array("tfName"=>new db_text_field("tfName")
                                , "tfComments"=>new db_text_field("tfComments")
-                               , "tfBalance"=>new db_text_field("tfBalance")
                                , "tfModifiedUser"=>new db_text_field("tfModifiedUser")
                                , "tfModifiedTime"=>new db_text_field("tfModifiedTime")
                                , "qpEmployeeNum"=>new db_text_field("qpEmployeeNum")

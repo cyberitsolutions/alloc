@@ -417,7 +417,6 @@ CREATE TABLE tf (
   tfID int(11) NOT NULL auto_increment,
   tfName varchar(255) NOT NULL default '',
   tfComments text,
-  tfBalance float NOT NULL default '0',
   tfModifiedTime timestamp(14) NOT NULL,
   tfModifiedUser int(11) NOT NULL default '0',
   qpEmployeeNum int(11) default NULL,
