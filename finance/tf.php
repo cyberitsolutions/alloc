@@ -93,6 +93,7 @@ if ($_POST["save"]) {
     if ($tf_is_taken) {
       $TPL["message"][] = "That TF name is taken, please choose another.";
     } else {
+      $tf->set_value("tfBalance","0.0");
       $tf->save();
       $TPL["message_good"][] = "Your TF has been saved.";
     }
