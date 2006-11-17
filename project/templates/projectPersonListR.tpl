@@ -10,5 +10,4 @@
 
 <input type="hidden" name="person_projectPersonID" value="{$person_projectPersonID}">
 <input type="hidden" name="projectID" value="{$project_projectID}">
-<input type="hidden" name="person_emailEmptyTaskList" value="{$person_emailEmptyTaskList}">
 </form>

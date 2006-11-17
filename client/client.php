@@ -59,7 +59,6 @@ if ($_POST["save"]) {
     $projectperson = new projectperson;
     $projectperson->set_value("personID", $current_user->get_id());
     $projectperson->set_value("projectID", $project->get_id());
-    $projectperson->set_value("emailEmptyTaskList", "None");
     $projectperson->set_value_role("isManager");
     $projectperson->save();
   }    

@@ -34,13 +34,11 @@ class projectPerson extends db_entity
     $this->data_fields = array("personID"=>new db_text_field("personID")
                               ,"projectID"=>new db_text_field("projectID")
                               ,"emailType"=>new db_text_field("emailType")
-                              ,"emailEmptyTaskList"=>new db_text_field("emailEmptyTaskList")
                               ,"emailDateRegex"=>new db_text_field("emailDateRegex")
                               ,"rate"=>new db_text_field("rate")
                               ,"rateUnitID"=>new db_text_field("rateUnitID")
                               ,"projectPersonRoleID"=>new db_text_field("projectPersonRoleID")
                               );
-    $this->set_value("emailEmptyTaskList", 0);
   }
 
   function date_regex_matches() {
