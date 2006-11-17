@@ -203,13 +203,14 @@ class db_entity {
     }
     $query = "INSERT INTO $this->data_table (";
     $query.= $this->get_insert_fields($this->data_fields);
-    #$query.= ",".$this->get_insert_fields(array($this->key_field));
     $query.= ") VALUES (";
     $query.= $this->get_insert_values($this->data_fields);
-    #$query.= ",".$this->get_insert_values(array($this->key_field));
     $query.= ")";
     $db = $this->get_db();
     $db->query($query);
+    if ($db->get_error()) {
+      echo die($db->get_error());
+    }
     $this->key_field->set_value(mysql_insert_id());
 
     if ($this->fire_events) {
