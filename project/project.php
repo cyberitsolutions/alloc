@@ -382,7 +382,6 @@ if ($_POST["save"]) {
     $projectPerson->set_value("projectID", $projectID);
     $projectPerson->set_value_role("isManager");
     $projectPerson->set_value("personID", $current_user->get_id());
-    $projectPerson->set_value("emailEmptyTaskList", "None");
     $projectPerson->save();
   }
   // Automaticall created phases in projects

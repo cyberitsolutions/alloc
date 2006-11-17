@@ -279,7 +279,6 @@ CREATE TABLE projectPerson (
   rate decimal(5,2) default '0.00',
   rateUnitID int(3) default NULL,
   projectPersonModifiedUser int(11) NOT NULL default '0',
-  emailEmptyTaskList tinyint(4) NOT NULL default '0',
   emailDateRegex varchar(255) default NULL,
   PRIMARY KEY  (projectPersonID)
 ) TYPE=ISAM PACK_KEYS=1;
