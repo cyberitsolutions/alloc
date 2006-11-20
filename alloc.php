@@ -64,11 +64,10 @@ define("ALLOC_MODULES",serialize(array("shared"       => true
                                       ,"history"      => true
                                       ,"installation" => true
                                       )));
-                                     #,"util"         => true
 
 
 require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
-define("SCRIPT_PATH",get_script_path()); // Needs ALLOC_MOD_DIR to be defined, and get_script_path() is defined in shared/util.inc.php
+define("SCRIPT_PATH",get_script_path()); 
 define("ALLOC_VERSION", get_alloc_version());
 
 $m = get_alloc_modules();
@@ -85,6 +84,11 @@ unset($m);
 $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.php"
             ,"url_alloc_login"                          => SCRIPT_PATH."login/login.php"
             ,"url_alloc_installation"                   => SCRIPT_PATH."installation/install.php"
+            ,"url_alloc_stylesheets"                    => SCRIPT_PATH."stylesheets/"
+            ,"url_alloc_javascript"                     => SCRIPT_PATH."javascript/"
+            ,"url_alloc_images"                         => SCRIPT_PATH."images/"
+            ,"url_alloc_help"                           => ALLOC_MOD_DIR."/help/"
+            ,"url_alloc_help_relative"                  => SCRIPT_PATH."/help/"
             ,"current_date"                             => date("Y-m-d H:i:s")
             ,"today"                                    => date("Y-m-d")
             ,"alloc_help_link_name"                     => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
@@ -93,11 +97,6 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"table_box_border"                         => "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">"
             ,"main_alloc_title"                         => end(explode("/", $_SERVER["SCRIPT_NAME"]))
             ,"ALLOC_VERSION"                            => ALLOC_VERSION
-            ,"url_alloc_stylesheets"                    => SCRIPT_PATH."stylesheets/"
-            ,"url_alloc_javascript"                     => SCRIPT_PATH."javascript/"
-            ,"url_alloc_images"                         => SCRIPT_PATH."images/"
-            ,"url_alloc_help"                           => ALLOC_MOD_DIR."/help/"
-            ,"url_alloc_help_relative"                  => SCRIPT_PATH."/help/"
             );
 
 
