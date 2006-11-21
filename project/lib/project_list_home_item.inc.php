@@ -45,6 +45,7 @@ class project_list_home_item extends home_item {
       $TPL["projectID"] = $project->get_id();
       $TPL["projectName"] = $project->get_value("projectName");
       $TPL["projectNav"] = $project->get_navigation_links();
+      $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
       include_template($this->get_template_dir().$template_name, $this);
     }
   }
