@@ -757,7 +757,7 @@ function get_task_statii_array() {
  
     $filter = task::get_task_list_filter($_FORM);
 
-    //$debug = true;
+    $debug = $_FORM["debug"];
     $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
     $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
 
@@ -809,19 +809,21 @@ function get_task_statii_array() {
           $filter["projectID"] = sprintf("(projectID IS NULL OR projectID = 0)");
         }
 
-        $tasks = task::get_task_children($filter,$_FORM);
-        $debug and print "<br/><b>Found ".count($tasks)." tasks.<b/>";
+        $t = task::get_task_children($filter,$_FORM);
+        $debug and print "<br/><b>Found ".count($t)." tasks.<b/>";
 
-        if (count($tasks)) {
+        if (count($t)) {
           $print = true;
 
           $_FORM["showProject"] and $summary.= "\n<tr>";
           $_FORM["showProject"] and $summary.= "\n  <td class=\"col tasks\" colspan=\"21\">".$project["link"]."</td>";
           $_FORM["showProject"] and $summary.= "\n</tr>";
 
-          foreach ($tasks as $task) {
+          foreach ($t as $task) {
             $task["projectPriority"] = $project["projectPriority"];
-            if ($_FORM["return"] == "dropdown_options"){
+            if ($_FORM["return"] == "objects"){
+              $tasks[$task["taskID"]] = $task;
+            } else if ($_FORM["return"] == "dropdown_options"){
               $summary_ops[$task["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;",$task["padding"]).$task["taskName"];
             } else {
               $summary.= task::get_task_list_tr($task,$_FORM);
@@ -863,10 +865,11 @@ function get_task_statii_array() {
         $row["taskLink"] = $t->get_task_link($_FORM);
         $row["newSubTask"] = $t->get_new_subtask_link();
         $row["taskStatus"] = $t->get_status($_FORM["return"]);
+        $row["object"] = $t;
         $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
 
         if ($_FORM["return"] == "objects") {
-          $tasks[$t->get_id()] = $t; 
+          $tasks[$row["taskID"]] = $row;
 
         } else if ($_FORM["return"] == "text"){
           $summary.= task::get_task_list_tr_text($row,$_FORM);
@@ -880,7 +883,7 @@ function get_task_statii_array() {
 
 
     // Decide what to actually return
-    if ($_FORM["taskView"] == "prioritised" && $_FORM["return"] == "objects") {
+    if ($_FORM["return"] == "objects") {
       return $tasks;
 
     } else if ($print && $_FORM["return"] == "html") {

@@ -24,38 +24,45 @@
 require_once("../alloc.php");
 include("lib/task_graph.inc.php");
 
-if ($projectID) {
-  $options["projectIDs"][] = $projectID;
+if ($_GET["projectID"]) {
+  $options["projectIDs"][] = $_GET["projectID"];
 }
 
-$options["personID"] = $personID;
+$options["personID"] = $_GET["personID"];
 $options["taskView"] = "prioritised";
 $options["return"] = "objects";
-$options["taskStatus"] = "in_progress";
+$options["taskStatus"] = "not_completed";
 
-if ($graph_type == "phases") {
+if ($_GET["graph_type"] == "phases") {
   $options["taskTypeID"] = TT_PHASE;
 }
 
 $task_graph = new task_graph;
 $task_graph->bottom_margin = 20;
 
-$top_tasks = task::get_task_list($options);
-$task_graph->init($options,$top_tasks);
-$task_graph->draw_grid();
+$tasks = task::get_task_list($options);
 
-reset($top_tasks);
-while (list(, $task) = each($top_tasks)) {
-  $task_graph->draw_task($task, false);
+if (is_array($tasks) && count($tasks)) {
+
+  foreach ($tasks as $task) {
+    $objects[$task["taskID"]] = $task["object"];
+  }
+
+  $task_graph->init($objects);
+  $task_graph->draw_grid();
+
+  foreach ($tasks as $task) {
+    $t = $task["object"];
+    $indent = $task["padding"];
+    $task_graph->draw_task($t,$indent);
+  }
+  $task_graph->draw_milestones();
+  $task_graph->draw_today();
+  $task_graph->output();
+
+} else {
+  image_die();
 }
 
-$task_graph->draw_milestones();
-$task_graph->draw_today();
-
-$task_graph->output();
-
 page_close();
-
-
-
 ?>

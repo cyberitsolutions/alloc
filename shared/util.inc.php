@@ -104,11 +104,11 @@ function page_close() {
   }
 }
 
-function get_all_form_data($array=array()) {
-// Load up $_FORM with $_GET and $_POST
+function get_all_form_data($array=array(),$defaults=array()) {
+  // Load up $_FORM with $_GET and $_POST
   $_FORM = array();
   foreach ($array as $name) {
-    $_FORM[$name] = $_POST[$name] or $_FORM[$name] = urldecode($_GET[$name]);
+    $_FORM[$name] = $defaults[$name] or $_FORM[$name] = $_POST[$name] or $_FORM[$name] = urldecode($_GET[$name]);
   } 
   return $_FORM;
 } 

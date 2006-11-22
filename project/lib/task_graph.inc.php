@@ -24,13 +24,18 @@
 define("TICK_SIZE", 7); // Days between tick marks along the axis
 define("LARGE_TICK_SIZE", 60);  // Days between tick marks along the axis
 define("MAX_TICKS", 20);        // Days between tick marks along the axis
+define("ALLOC_FONT","LucidaSansRegular.ttf");
+define("ALLOC_FONT_SIZE","8");
+
+// Set the enviroment variable for GD
+putenv('GDFONTPATH=' . realpath('../util'));
 
   function echo_debug($s) {
   #echo $s;
   }
 
         // Outputs an image with an error message given by $s and then terminates the script
-  function image_die($s) {
+  function image_die($s="") {
 
     $image = imageCreate(950, 40);
 
@@ -40,8 +45,7 @@ define("MAX_TICKS", 20);        // Days between tick marks along the axis
 
     // clear the image space with the background color
     imageFilledRectangle($image, 0, 0, 200 - 1, 50 - 1, $color_background);
-
-    imageString($image, 5, 3, 10, $s, $color_text);
+    imagettftext($image, ALLOC_FONT_SIZE, 0, 3, 10, $color_text, ALLOC_FONT, $s);
 
 
     if (ALLOC_GD_IMAGE_TYPE == "PNG") {
@@ -61,9 +65,9 @@ class task_graph
 
   // size parameters (all in pixels)
   var $width = 950;             // Width of the image
-  var $top_margin = 20;         // Distance of first bar from top of image
-  var $left_margin = 400;
-  var $right_margin = 10;
+  var $top_margin = 50;         // Distance of first bar from top of image
+  var $left_margin = 350;
+  var $right_margin = 30;
   var $bottom_margin = 100;
   var $task_padding = 4;        // Whitespace above and below each task bar
   var $bar_height = 8;          // Height of each task bar
@@ -81,10 +85,12 @@ class task_graph
   var $color_today;             // Colour of current date line
   var $milestones = array();    // Milestones are stored and then drawn over the top of the tasks
 
-  function init($options=array(), $tasks=array()) {
+  function init($tasks=array()) {
     global $graph_start_date, $graph_completion_date, $graph_type;
+    
+    // Set the enviroment variable for GD
+    putenv('GDFONTPATH=' . realpath('../util'));
   
-    $this->options = $options;
     $this->height = count($tasks) * ($this->bar_height + $this->task_padding) * 2 + $this->top_margin + $this->bottom_margin;
 
     get_date_range($tasks);
@@ -122,28 +128,27 @@ class task_graph
     $this->y = $this->top_margin;
   }
 
-  function draw_task($task, $show_children = true, $indent = 0) {
+  function draw_task($task, $indent = 0) {
     $y = $this->y;              // Store y in local variable for quick access
     $y += $this->task_padding;
 
     // Text
-    $text = $task->get_value("taskName");
+    $text = stripslashes($task->get_value("taskName"));
     echo_debug("task: $text<br>");
-    imageString($this->image, 3, 3 + $indent, $y, $text, $this->color_text);
+    imagettftext($this->image, ALLOC_FONT_SIZE, 0,  3 + ($indent * $this->indent_increment), $y + 13, $this->color_text, ALLOC_FONT, $text);
 
     // Get date values
     $date_target_start = $task->get_value("dateTargetStart");
-    if ($date_target_start == "0000-00-00")
-      $date_target_start = "";
+    $date_target_start == "0000-00-00" and $date_target_start = "";
+
     $date_target_completion = $task->get_value("dateTargetCompletion");
-    if ($date_target_completion == "0000-00-00")
-      $date_target_completion = "";
+    $date_target_completion == "0000-00-00" and $date_target_completion = "";
+
     $date_actual_start = $task->get_value("dateActualStart");
-    if ($date_actual_start == "0000-00-00")
-      $date_actual_start = "";
+    $date_actual_start == "0000-00-00" and $date_actual_start = "";
+
     $date_actual_completion = $task->get_value("dateActualCompletion");
-    if ($date_actual_completion == "0000-00-00")
-      $date_actual_completion = "";
+    $date_actual_completion == "0000-00-00" and $date_actual_completion = "";
 
     // target bar
     $color = $this->task_colors[$task->get_value("taskTypeID")]["target"];
@@ -153,9 +158,10 @@ class task_graph
     // actual bar
     if ($date_actual_completion == "" && $date_actual_start != "") {
       // Task isn't complete but we can forecast comlpetion using percent complete and start date - show forecast
-      $date_forecast_completion = date("Y-m-d", $task->get_forecast_completion());
+      $forecast = $task->get_forecast_completion();
+      $forecast and $date_forecast_completion = date("Y-m-d", $forecast);
       $color = $this->task_colors[$task->get_value("taskTypeID")]["actual"];
-      $this->draw_dates($date_actual_start, $date_forecast_completion, $y, $color, false);      // Forecast bar
+      $forecast and $this->draw_dates($date_actual_start, $date_forecast_completion, $y, $color, false);      // Forecast bar
       $this->draw_dates($date_actual_start, date("Y-m-d"), $y, $color, true);   // Solid bar for already completed portion
     } else {
       // Just show dates as usual
@@ -179,16 +185,7 @@ class task_graph
       }
       $this->register_milestone($date_milestone);
     }
-    // Draw child tasks
-    if ($show_children) {
-      # This seems to take a very long time.. -alex
-      #$filter = task::get_task_list_filter($this->options);
-      #$children = task::get_task_children($filter);
-      #reset($children);
-      #while (list(, $child) = each($children)) {
-        #$this->draw_task($child["object"], $show_children, $indent + $this->indent_increment);
-      #}
-    }
+
   }
 
   function register_milestone($date) {
@@ -213,6 +210,7 @@ class task_graph
 
   function draw_dates($date_start, $date_completion, $y, $color, $filled) {
     echo_debug("Drawing '$date_start' to '$date_completion'<br>");
+    #echo("Drawing '$date_start' to '$date_completion'<br>");
     if ($date_start && $date_completion) {
       // Task is complete - show full bar
       echo_debug("Drawing date range<br>");
@@ -247,11 +245,12 @@ class task_graph
     }
 
     $current_stamp = $start_stamp;
+    
 
     while ($current_stamp < $completion_stamp) {
       $x_pos = $this->date_stamp_to_x($current_stamp);
       imageLine($this->image, $x_pos, $this->top_margin - 5, $x_pos, $this->height - $this->bottom_margin, $this->color_grid);
-      imageString($this->image, 3, $x_pos - 20, $this->top_margin - 20, date("d/m", $current_stamp), $this->color_text);
+      imagettftext($this->image, ALLOC_FONT_SIZE - 2, 45, $x_pos, $this->top_margin - 7, $this->color_text, ALLOC_FONT, date("d-M", $current_stamp));
       $current_stamp += $time_increment;
     }
 
@@ -280,7 +279,7 @@ class task_graph
     $x2 = $x + $legend_bar_width;
     $this->draw_rectangle($x, $y, $x2, $y + 8, $color, $filled);
     $x = $x2 + $this->task_padding;
-    imageString($this->image, 3, $x, $y - 2, $text, $this->color_text);
+    imagettftext($this->image, ALLOC_FONT_SIZE, 0,  $x, $y + 10, $this->color_text, ALLOC_FONT, $text);
   }
 
   // If $start == true draws a starting triangle, otherwise draws an ending triangle
@@ -294,7 +293,7 @@ class task_graph
     }
     $this->draw_polygon($points, 3, $color, true);
     $x = $x2 + $this->task_padding;
-    imageString($this->image, 3, $x, $y - 2, $text, $this->color_text);
+    imagettftext($this->image, ALLOC_FONT_SIZE, 0, $x, $y +10, $this->color_text, ALLOC_FONT, $text);
   }
 
   function draw_legend() {
@@ -304,7 +303,7 @@ class task_graph
 
     $y = $this->height - $this->bottom_margin + 20;
 
-    imageString($this->image, 5, $this->task_padding, $y, "Legend:", $this->color_text);
+    imagettftext($this->image, ALLOC_FONT_SIZE, 0,  $this->task_padding, $y+10, $this->color_text, ALLOC_FONT, "Legend:");
     $y += 20;
 
     $this->draw_legend_bar($left_x, $y, "Target task period", $this->task_colors[TT_TASK]["target"], true);
@@ -337,19 +336,13 @@ class task_graph
   // Converts from a unix time stamp to an X coordinate
   function date_stamp_to_x($date) {
     global $graph_start_date, $graph_completion_date;
-    echo_debug("Converting ".date("Y-m-d", $date)."<br>");
 
     $graph_time_width = get_date_stamp($graph_completion_date) - get_date_stamp($graph_start_date);
-    echo_debug("graph_time_width = ".get_date_stamp($graph_completion_date)." - ".get_date_stamp($graph_start_date)."<br>");
-    echo_debug("graph_time_width=$graph_time_width<br>");
     $time_offset = $date - get_date_stamp($graph_start_date);
-    echo_debug("time_offset=$time_offset<br>");
     $decimal_pos = $time_offset / $graph_time_width;
-    echo_debug("decimal_pos=$decimal_pos<br>");
     $working_width = $this->width - $this->left_margin - $this->right_margin;
     $x_pos = $this->left_margin + $decimal_pos * $working_width;
 
-    echo_debug("Returning $x_pos<br>");
     return $x_pos;
   }
 
