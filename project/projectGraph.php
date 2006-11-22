@@ -26,36 +26,39 @@ include("lib/task_graph.inc.php");
 
 global $current_user, $show_weeks, $for_home_item;
 
-$projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
-$project = new project;
-$project->set_id($projectID);
-$project->check_perm();
 
-if ($for_home_item) {
-  $options["personID"] = $current_user->get_id();
-}
 
-$options["projectIDs"][] = $projectID;
-$options["taskView"] = "prioritised";
+$options = unserialize(urldecode(stripslashes($_GET["FORM"])));
 $options["return"] = "objects";
-$options["taskTypeID"] = unserialize(urldecode(stripslashes($_GET["taskTypeID"])));
-$options["taskStatus"] = $_GET["taskStatus"];
+$options["padding"] = 0;
+$options["debug"] = 0;
 
-$top_tasks = task::get_task_list($options);
-$task_graph = new task_graph;
-$task_graph->init($options,$top_tasks);
-$task_graph->draw_grid();
+$tasks = task::get_task_list($options);
 
-reset($top_tasks);
-while (list(, $task) = each($top_tasks)) {
-  $task_graph->draw_task($task);
+if (is_array($tasks) && count($tasks)) {
+
+  foreach ($tasks as $task) {
+    $objects[$task["taskID"]] = $task["object"];
+  }
+
+  $task_graph = new task_graph;
+  $task_graph->init($objects);
+  $task_graph->draw_grid();
+
+  foreach ($tasks as $task) {
+    $t = $task["object"];
+    $indent = $task["padding"];
+    $task_graph->draw_task($t,$indent);
+  }
+
+  $task_graph->draw_milestones();
+  $task_graph->draw_today();
+  $task_graph->draw_legend();
+  $task_graph->output();
+
+} else {
+  image_die();
 }
-
-$task_graph->draw_milestones();
-$task_graph->draw_today();
-$task_graph->draw_legend();
-
-$task_graph->output();
 
 page_close();
 

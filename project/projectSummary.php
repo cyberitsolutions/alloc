@@ -23,40 +23,31 @@
 
 require_once("../alloc.php");
 
-$page_vars = array("taskTypeID"
-                  ,"taskStatus"
-                  ,"projectID"
-                  );
+$defaults = array("showHeader"=>true
+                 ,"showProject"=>true
+                 ,"padding"=>1
+                 ,"url_form_action"=>$TPL["url_alloc_projectSummary"]
+                 ,"form_name"=>"projectSummary_filter"
+                 );
 
-$_FORM = get_all_form_data($page_vars);
+function show_filter() {
+  global $TPL,$defaults;
 
-$taskType = new taskType;
-$TPL["taskTypeOptions"] = "\n<option value=\"\"> ";
-$TPL["taskTypeOptions"].= $taskType->get_dropdown_options("taskTypeID","taskTypeName",$_FORM["taskTypeID"]);
+  $_FORM = load_form_data($defaults);
+  $arr = load_task_filter($_FORM);
+  is_array($arr) and $TPL = array_merge($TPL,$arr);
+  include_template("../task/templates/taskFilterS.tpl");
+}
 
-$taskStatii = task::get_task_statii_array();
-$TPL["taskStatusOptions"] = get_options_from_array($taskStatii, $_FORM["taskStatus"]);
+function show_task_list() {
+  global $defaults;
+
+  $_FORM = load_form_data($defaults);
+  #echo "<pre>".print_r($_FORM,1)."</pre>";
+  echo task::get_task_list($_FORM);
+}
 
 
-$TPL["graph_type"] = $_GET["graph_type"];
-$TPL["taskTypeID_url"] = urlencode(serialize($_FORM["taskTypeID"]));
-$TPL["taskStatus"] = $_FORM["taskStatus"];
-
-$project = new project;
-$project->set_id($_FORM["projectID"]);
-$project->check_perm();
-$project->select();
-$TPL["navigation_links"] = $project->get_navigation_links();
-
-$options["taskView"] = "prioritised";
-$options["projectIDs"][] = $project->get_id();
-$options = array_merge($_FORM,$options);
-$TPL["task_summary"] = task::get_task_list($options);
-$TPL["projectID"] = $_FORM["projectID"];
 include_template("templates/projectSummaryM.tpl");
-
 page_close();
-
-
-
 ?>
