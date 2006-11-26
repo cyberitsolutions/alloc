@@ -603,7 +603,7 @@ if ($_POST["save"]
         $db->next_record();
         $taskName = $db->f("taskName");
         if (!$db->f("dateActualStart")) {
-          $q = sprintf("UPDATE task SET dateActualStart = '%s' WHERE taskID = %d",date("Y-m-d"),$_POST["timeSheetItem_taskID"]);
+          $q = sprintf("UPDATE task SET dateActualStart = '%s' WHERE taskID = %d",$timeSheetItem->get_value("dateTimeSheetItem"),$_POST["timeSheetItem_taskID"]);
           $db->query($q);
         }
       }
