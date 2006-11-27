@@ -406,6 +406,7 @@ if (!$search) {
            LEFT JOIN project ON timeSheet.projectID=project.projectID
                WHERE (timeSheetItem.description LIKE '%".$needle."%')
                   OR (timeSheetItem.comment LIKE '%".$needle."%') 
+                  OR (timeSheet.billingNote LIKE '%".$needle."%') 
                   OR (project.projectName LIKE '%".$needle."%') 
                   OR (project.projectShortName LIKE '%".$needle."%') 
             GROUP BY timeSheet.timeSheetID";
@@ -426,11 +427,14 @@ if (!$search) {
         $projectShortName = get_trimmed_description($db->f('projectShortName'), $needle);
         $projectShortName and $details[] = "<b>Project Short Name: </b>".htmlentities($projectShortName);
 
+        $billingNote = get_trimmed_description($timeSheet->get_value('billingNote'), $needle);
+        $billingNote and $details[] = "<b>Billing Note: </b>".htmlentities($billingNote);
+
         $taskName = get_trimmed_description($db->f('description'), $needle);
         $taskName and $details[] = "<b>Task Name: </b>".htmlentities($taskName);
 
-        $billingNote = get_trimmed_description($timeSheet->get_value('billingNote'), $needle);
-        $billingNote and $details[] = "<b>Billing Note: </b>".htmlentities($billingNote);
+        $taskComment = get_trimmed_description($db->f('comment'), $needle);
+        $taskComment and $details[] = "<b>Task Comment: </b>".htmlentities($taskComment);
 
         if (count($details)) {
           $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$TPL["timeSheet_timeSheetID"]."\">Time Sheet: ".htmlentities($TPL["timeSheet_timeSheetID"]);
