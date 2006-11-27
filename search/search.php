@@ -29,7 +29,7 @@ global $TPL;
 
 
     $position = strpos(strtolower($haystack),strtolower($needle));
-    if ($position) {
+    if ($position !== false) {
       $prefix = "...";
       $suffix = "...";
 
@@ -103,34 +103,36 @@ if (!$search) {
       $details = "";
       $project = new project;
       $project->read_db_record($db);
-      $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
+      if ($project->have_perm(PERM_READ)) {
+        $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
-      $projectName = get_trimmed_description($project->get_value('projectName'), $needle);
-      $projectName and $details.= "<b>Project Name:</b> ".htmlentities($projectName)."<br>\n";
+        $projectName = get_trimmed_description($project->get_value('projectName'), $needle);
+        $projectName and $details.= "<b>Project Name:</b> ".htmlentities($projectName)."<br>\n";
 
-      $projectComments = get_trimmed_description($project->get_value('projectComments'), $needle);
-      $projectComments and $details.= "<b>Project Comments:</b> ".htmlentities($projectComments)."<br>\n";
+        $projectComments = get_trimmed_description($project->get_value('projectComments'), $needle);
+        $projectComments and $details.= "<b>Project Comments:</b> ".htmlentities($projectComments)."<br>\n";
 
-      $projectClientName = get_trimmed_description($project->get_value('projectClientName'), $needle);
-      $projectClientName and $details.= "<b>Project Client Name:</b> ".htmlentities($projectClientName)."<br>\n";
+        $projectClientName = get_trimmed_description($project->get_value('projectClientName'), $needle);
+        $projectClientName and $details.= "<b>Project Client Name:</b> ".htmlentities($projectClientName)."<br>\n";
 
-      // Recursively search comments
-      if ($project->get_id() != "") {
-        $db2 = new db_alloc;
-        $query = "SELECT * FROM comment 
-                   WHERE commentType = 'project' 
-                     AND commentLinkID = ".$project->get_id()."  
-                     AND comment LIKE '%".$needle."%'";
+        // Recursively search comments
+        if ($project->get_id() != "") {
+          $db2 = new db_alloc;
+          $query = "SELECT * FROM comment 
+                     WHERE commentType = 'project' 
+                       AND commentLinkID = ".$project->get_id()."  
+                       AND comment LIKE '%".$needle."%'";
 
-        $db2->query($query);
-        while ($db2->next_record()) {
-          $comment = new comment;
-          $comment->read_db_record($db2);
-          $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
-          $commentText and $details.= "<b>Modification History:</b> ".htmlentities($commentText)."<br>\n";
+          $db2->query($query);
+          while ($db2->next_record()) {
+            $comment = new comment;
+            $comment->read_db_record($db2);
+            $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
+            $commentText and $details.= "<b>Modification History:</b> ".htmlentities($commentText)."<br>\n";
+          }
+
+          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</b></a><br>".$details."<br>";
         }
-
-        $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</b></a><br>".$details."<br>";
       }
     }
   }
@@ -164,52 +166,55 @@ if (!$search) {
       $details = array();
       $client = new client;
       $client->read_db_record($db);
-      $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
-      $clientName = get_trimmed_description($client->get_value('clientName'), $needle);
-      $clientName and $details[] = "<b>Client Name: </b>".htmlentities($clientName);
+      if ($client->have_perm(PERM_READ)) {
+        $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
-      $db2 = new db_alloc;
-      $query = sprintf("SELECT * FROM clientContact WHERE clientID = %d",$client->get_id());
+        $clientName = get_trimmed_description($client->get_value('clientName'), $needle);
+        $clientName and $details[] = "<b>Client Name: </b>".htmlentities($clientName);
 
-      $db2->query($query);
-      while ($db2->next_record()) {
-        $str = "";
-        $clientContact = new clientContact;
-        $clientContact->read_db_record($db2);
+        $db2 = new db_alloc;
+        $query = sprintf("SELECT * FROM clientContact WHERE clientID = %d",$client->get_id());
 
-        $clientContactName = get_trimmed_description($clientContact->get_value('clientContactName'), $needle);
-        #$clientContactName = $clientContact->get_value('clientContactName');
-        if ($clientContactName != "") {
-          $str = "<b>Contact Name: </b>".htmlentities($clientContactName);
-          if ($clientContact->get_value("clientContactEmail")) {
-            $str .= "&nbsp;&nbsp;<a href=\"mailto:".$clientContact->get_value("clientContactEmail")."\">".htmlentities($clientContact->get_value("clientContactEmail"))."</a>";
-          }
-        }
-        $clientContactOther = get_trimmed_description($clientContact->get_value('clientContactOther'), $needle);
-        if ($clientContactOther != "") {
-          $str.= "&nbsp;&nbsp;".htmlentities($clientContactOther);
-        }
-        $details[] = $str;
-      }
-
-      if ($client->get_id() != "") {
-        // recursively search comments
-        $query = "SELECT * from comment WHERE commentType='client' AND commentLinkID = ".$client->get_id()." AND comment LIKE '%".$needle."%'";
         $db2->query($query);
         while ($db2->next_record()) {
-          $comment = new comment;
-          $comment->read_db_record($db2);
-          $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
-          if ($commentText != "") {
-            $details[] = "<b>Comment: </b>".htmlentities($commentText);
+          $str = "";
+          $clientContact = new clientContact;
+          $clientContact->read_db_record($db2);
+
+          $clientContactName = get_trimmed_description($clientContact->get_value('clientContactName'), $needle);
+          #$clientContactName = $clientContact->get_value('clientContactName');
+          if ($clientContactName != "") {
+            $str = "<b>Contact Name: </b>".htmlentities($clientContactName);
+            if ($clientContact->get_value("clientContactEmail")) {
+              $str .= "&nbsp;&nbsp;<a href=\"mailto:".$clientContact->get_value("clientContactEmail")."\">".htmlentities($clientContact->get_value("clientContactEmail"))."</a>";
+            }
           }
-        }
-        if (count($details)) {
-          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_client"]."clientID=".$TPL["client_clientID"]."\">".htmlentities($TPL["client_clientName"]);
-          $TPL["search_results"] .= "</a></b><br>".implode("<br/>",$details)."<br/>"."<br>";
+          $clientContactOther = get_trimmed_description($clientContact->get_value('clientContactOther'), $needle);
+          if ($clientContactOther != "") {
+            $str.= "&nbsp;&nbsp;".htmlentities($clientContactOther);
+          }
+          $details[] = $str;
         }
 
+        if ($client->get_id() != "") {
+          // recursively search comments
+          $query = "SELECT * from comment WHERE commentType='client' AND commentLinkID = ".$client->get_id()." AND comment LIKE '%".$needle."%'";
+          $db2->query($query);
+          while ($db2->next_record()) {
+            $comment = new comment;
+            $comment->read_db_record($db2);
+            $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
+            if ($commentText != "") {
+              $details[] = "<b>Comment: </b>".htmlentities($commentText);
+            }
+          }
+          if (count($details)) {
+            $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_client"]."clientID=".$TPL["client_clientID"]."\">".htmlentities($TPL["client_clientName"]);
+            $TPL["search_results"] .= "</a></b><br>".implode("<br/>",$details)."<br/>"."<br>";
+          }
+
+        }
       }
     }
   }
@@ -240,31 +245,33 @@ if (!$search) {
       $details = "";
       $task = new task;
       $task->read_db_record($db);
-      $task->set_tpl_values(DST_HTML_ATTRIBUTE, "task_");
-      $project = new project;
-      $project->set_id($task->get_value('projectID'));
-      $project->select();
-      $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
+      if ($task->have_perm(PERM_READ)) {
+        $task->set_tpl_values(DST_HTML_ATTRIBUTE, "task_");
+        $project = new project;
+        $project->set_id($task->get_value('projectID'));
+        $project->select();
+        $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
-      $taskName = get_trimmed_description($task->get_value('taskName'), $needle);
-      $taskName and $details.= "<b>Task Name:</b> ".htmlentities($taskName)."<br>\n";
+        $taskName = get_trimmed_description($task->get_value('taskName'), $needle);
+        $taskName and $details.= "<b>Task Name:</b> ".htmlentities($taskName)."<br>\n";
 
-      $taskDescription = get_trimmed_description($task->get_value('taskDescription'), $needle);
-      $taskDescription and $details.= "<b>Task Description:</b> ".htmlentities($taskDescription)."<br>\n";
+        $taskDescription = get_trimmed_description($task->get_value('taskDescription'), $needle);
+        $taskDescription and $details.= "<b>Task Description:</b> ".htmlentities($taskDescription)."<br>\n";
 
-      if ($task->get_id() != "") {
-        $db2 = new db_alloc;
-        $query = "SELECT * from comment WHERE commentType='task' AND commentLinkID = ".$task->get_id()." AND comment LIKE '%".$needle."%'";
-        $db2->query($query);
-        while ($db2->next_record()) {
-          $comment = new comment;
-          $comment->read_db_record($db2);
-          $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
-          $commentText and $details.= "<b>Comment:</b> ".htmlentities($commentText)."<br>\n";
+        if ($task->get_id() != "") {
+          $db2 = new db_alloc;
+          $query = "SELECT * from comment WHERE commentType='task' AND commentLinkID = ".$task->get_id()." AND comment LIKE '%".$needle."%'";
+          $db2->query($query);
+          while ($db2->next_record()) {
+            $comment = new comment;
+            $comment->read_db_record($db2);
+            $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
+            $commentText and $details.= "<b>Comment:</b> ".htmlentities($commentText)."<br>\n";
+          }
+
+          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_task"]."taskID=".$TPL["task_taskID"]."\">".htmlentities($TPL["task_taskName"])."</b></a>(belongs to project: ";
+          $TPL["search_results"] .= "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</a>)<br>".$details."<br>";
         }
-
-        $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_task"]."taskID=".$TPL["task_taskID"]."\">".htmlentities($TPL["task_taskName"])."</b></a>(belongs to project: ";
-        $TPL["search_results"] .= "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</a>)<br>".$details."<br>";
       }
     }
   }
@@ -289,13 +296,15 @@ if (!$search) {
     while ($db->next_record()) {
       $announcement = new announcement;
       $announcement->read_db_record($db);
-      $announcement->set_tpl_values(DST_HTML_ATTRIBUTE, "announcement_");
+      if ($announcement->have_perm(PERM_READ)) {
+        $announcement->set_tpl_values(DST_HTML_ATTRIBUTE, "announcement_");
 
-      $heading = get_trimmed_description($announcement->get_value('heading'), $needle);
-      $body = get_trimmed_description($announcement->get_value('body'), $needle);
+        $heading = get_trimmed_description($announcement->get_value('heading'), $needle);
+        $body = get_trimmed_description($announcement->get_value('body'), $needle);
 
-      if ($announcement->get_id() != "") {
-        $TPL["search_results"] .=  "<b>".htmlentities($heading)."</b><br>".htmlentities($body)."<br><br>";
+        if ($announcement->get_id() != "") {
+          $TPL["search_results"] .=  "<b>".htmlentities($heading)."</b><br>".htmlentities($body)."<br><br>";
+        }
       }
     }
   }
@@ -322,58 +331,115 @@ if (!$search) {
       $details = "";
       $item = new item;
       $item->read_db_record($db);
-      $item->set_tpl_values(DST_HTML_ATTRIBUTE, "item_");
 
-      $itemName = get_trimmed_description($item->get_value('itemName'), $needle);
-      $itemName and $details.= "<b>Item Name:</b> ".htmlentities($itemName)."<br>\n";
+      if ($item->have_perm(PERM_READ)) {
+        $item->set_tpl_values(DST_HTML_ATTRIBUTE, "item_");
 
-      $itemNotes = get_trimmed_description($item->get_value('itemNotes'), $needle);
-      $itemNotes and $details.= "<b>Item Notes:</b> ".htmlentities($itemNotes)."<br>\n";
+        $itemName = get_trimmed_description($item->get_value('itemName'), $needle);
+        $itemName and $details.= "<b>Item Name:</b> ".htmlentities($itemName)."<br>\n";
 
-      $TPL["item_searchDetails"] = $details;
+        $itemNotes = get_trimmed_description($item->get_value('itemNotes'), $needle);
+        $itemNotes and $details.= "<b>Item Notes:</b> ".htmlentities($itemNotes)."<br>\n";
 
-      // get availability of loan
-      $db2 = new db_alloc;
-      $query = "SELECT * FROM loan WHERE itemID=".$item->get_id()." AND dateReturned='0000-00-00'";
-      $db2->query($query);
-      if ($db2->next_record()) {
-        $loan = new loan;
-        $loan->read_db_record($db2);
+        $TPL["item_searchDetails"] = $details;
 
-        if ($loan->have_perm(PERM_READ_WRITE)) {
-          // if item is overdue
-          if ($loan->get_value("dateToBeReturned") < $today) {
-            $status = "Overdue";
-            $ret = "Return Now!";
+        // get availability of loan
+        $db2 = new db_alloc;
+        $query = "SELECT * FROM loan WHERE itemID=".$item->get_id()." AND dateReturned='0000-00-00'";
+        $db2->query($query);
+        if ($db2->next_record()) {
+          $loan = new loan;
+          $loan->read_db_record($db2);
+
+          if ($loan->have_perm(PERM_READ_WRITE)) {
+            // if item is overdue
+            if ($loan->get_value("dateToBeReturned") < $today) {
+              $status = "Overdue";
+              $ret = "Return Now!";
+            } else {
+              $status = "Due on ".$loan->get_value("dateToBeReturned");
+              $color = "yellow";
+              $ret = "Return";
+            }
+            $TPL["loan_status"] = $status." <a href=\"".$TPL["url_alloc_item"]."itemID=".$TPL["item_itemID"]."&return=true\">$ret</a>";
+
           } else {
-            $status = "Due on ".$loan->get_value("dateToBeReturned");
-            $color = "yellow";
-            $ret = "Return";
+            // you dont have permission to loan or return so just show status
+            // get username
+            $dbUsername = new db_alloc;
+            $query = "SELECT username FROM person WHERE personID=".$loan->get_value("personID");
+            $dbUsername->query($query);
+            $dbUsername->next_record();
+
+            if ($loan->get_value("dateToBeReturned") < $today) {
+              $TPL["loan_status"] = "Overdue from ".$dbUsername->f("username");
+            } else {
+              $TPL["loan_status"] = "Due from ".$dbUsername->f("username")." on ".$loan->get_value("dateToBeReturned");
+            }
           }
-          $TPL["loan_status"] = $status." <a href=\"".$TPL["url_alloc_item"]."itemID=".$TPL["item_itemID"]."&return=true\">$ret</a>";
 
         } else {
-          // you dont have permission to loan or return so just show status
-          // get username
-          $dbUsername = new db_alloc;
-          $query = "SELECT username FROM person WHERE personID=".$loan->get_value("personID");
-          $dbUsername->query($query);
-          $dbUsername->next_record();
-
-          if ($loan->get_value("dateToBeReturned") < $today) {
-            $TPL["loan_status"] = "Overdue from ".$dbUsername->f("username");
-          } else {
-            $TPL["loan_status"] = "Due from ".$dbUsername->f("username")." on ".$loan->get_value("dateToBeReturned");
-          }
+          $TPL["loan_status"] = "Available <a href=\"".$TPL["url_alloc_item"]."itemID=".$TPL["item_itemID"]."&borrow=true\">Borrow</a>";
         }
-
-      } else {
-        $TPL["loan_status"] = "Available <a href=\"".$TPL["url_alloc_item"]."itemID=".$TPL["item_itemID"]."&borrow=true\">Borrow</a>";
-      }
     
-      $TPL["search_results"] .=  "<b>".htmlentities($TPL["item_itemName"])."</b> (".$TPL["loan_status"].")<br>".$TPL["item_searchDetails"]."<br>";
+        $TPL["search_results"] .=  "<b>".htmlentities($TPL["item_itemName"])."</b> (".$TPL["loan_status"].")<br>".$TPL["item_searchDetails"]."<br>";
+      }
     }
   }
+
+} else if ($search && $needle && $category == "Time") {
+  
+
+  $db = new db_alloc;
+
+  if (is_numeric($needle)) {
+    $query = sprintf("SELECT timeSheetID FROM timeSheet WHERE timeSheetID = %d",$needle);
+    $db->query($query);
+    if ($db->next_record()) {
+      header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID"));
+    } 
+    
+  } else {
+    $query = "SELECT timeSheet.*,timeSheetItem.*, project.* 
+                FROM timeSheetItem
+           LEFT JOIN timeSheet ON timeSheetItem.timeSheetID=timeSheet.timeSheetID
+           LEFT JOIN project ON timeSheet.projectID=project.projectID
+               WHERE (timeSheetItem.description LIKE '%".$needle."%')
+                  OR (timeSheetItem.comment LIKE '%".$needle."%') 
+                  OR (project.projectName LIKE '%".$needle."%') 
+                  OR (project.projectShortName LIKE '%".$needle."%') 
+            GROUP BY timeSheet.timeSheetID";
+
+
+    $db->query($query);
+
+    while ($db->next_record()) {
+      $details = array();
+      $timeSheet = new timeSheet;
+      $timeSheet->read_db_record($db,false);
+      if ($timeSheet->have_perm(PERM_READ)) {
+        $timeSheet->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheet_");
+
+        $projectName = get_trimmed_description($db->f('projectName'), $needle);
+        $projectName and $details[] = "<b>Project Name: </b>".htmlentities($projectName);
+
+        $projectShortName = get_trimmed_description($db->f('projectShortName'), $needle);
+        $projectShortName and $details[] = "<b>Project Short Name: </b>".htmlentities($projectShortName);
+
+        $taskName = get_trimmed_description($db->f('description'), $needle);
+        $taskName and $details[] = "<b>Task Name: </b>".htmlentities($taskName);
+
+        $billingNote = get_trimmed_description($timeSheet->get_value('billingNote'), $needle);
+        $billingNote and $details[] = "<b>Billing Note: </b>".htmlentities($billingNote);
+
+        if (count($details)) {
+          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$TPL["timeSheet_timeSheetID"]."\">Time Sheet: ".htmlentities($TPL["timeSheet_timeSheetID"]);
+          $TPL["search_results"] .= "</a></b><br>".implode("<br/>",$details)."<br/>"."<br>";
+        }
+      }
+    }
+  }
+
 
 }
 
