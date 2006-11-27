@@ -201,7 +201,7 @@ if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $
 if ($_POST["save"]) {
   $person->read_globals();
 
-  if ($_POST["password1"] == $_POST["password2"]) {
+  if (($personID || $_POST["password1"]) && $_POST["password1"] == $_POST["password2"]) {
 
     if ($person->can_write_field("perms")) {
       if (is_array($_POST["perm_select"])) {
