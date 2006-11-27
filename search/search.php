@@ -55,11 +55,11 @@ global $TPL;
       $str = str_replace($matches[0],"[[[".$matches[0]."]]]",$str);
       $str = $prefix.$str.$suffix;
       return $str;
-    } else {
-      $haystack = substr($haystack,0,100);
-    }
+    } 
 
-    return $haystack;
+    if ($_POST["category"] == "Clients") {
+      return substr($haystack,0,100);
+    }
 
   }
 
@@ -194,7 +194,7 @@ if (!$search) {
           if ($clientContactOther != "") {
             $str.= "&nbsp;&nbsp;".htmlentities($clientContactOther);
           }
-          $details[] = $str;
+          $str and $details[] = $str;
         }
 
         if ($client->get_id() != "") {
@@ -269,7 +269,7 @@ if (!$search) {
             $commentText and $details.= "<b>Comment:</b> ".htmlentities($commentText)."<br>\n";
           }
 
-          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_task"]."taskID=".$TPL["task_taskID"]."\">".htmlentities($TPL["task_taskName"])."</b></a>(belongs to project: ";
+          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_task"]."taskID=".$TPL["task_taskID"]."\">".htmlentities($TPL["task_taskName"])."</b></a> (belongs to project: ";
           $TPL["search_results"] .= "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</a>)<br>".$details."<br>";
         }
       }
