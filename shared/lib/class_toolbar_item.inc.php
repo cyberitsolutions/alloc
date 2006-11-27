@@ -184,7 +184,7 @@ function show_history() {
 
 
 function get_category_options($category="") {
-  $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Items"=>"Items", "Clients"=>"Clients");
+  $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients");
   return get_options_from_array($category_options, $category, true);
 }
 
