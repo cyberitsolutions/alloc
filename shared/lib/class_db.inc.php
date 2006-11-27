@@ -290,7 +290,6 @@ class db {
     return $query;
   }
 
-
   function seek($pos = 0) {
     $status = @mysql_data_seek($this->query_id, $pos);
     if ($status) {
@@ -304,6 +303,11 @@ class db {
     return 1;
   }
 
+  function get_db_version() {
+    $a = mysql_get_server_info($this->link_id);
+    $b = substr($a, 0, strpos($a, "-"));
+    return $b;
+  }
 
 }
 
