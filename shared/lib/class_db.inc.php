@@ -29,6 +29,7 @@ class db {
   var $hostname;
   var $database;
   var $query_id;
+  var $link_id;
   var $row = array();
   var $error;
 
@@ -46,13 +47,18 @@ class db {
   }
 
   function connect() {
-    mysql_connect($this->hostname,$this->username,$this->password) 
-      || $this->error("Unable to connect to database: ".mysql_error()."<br>");
+    $this->link_id = mysql_connect($this->hostname,$this->username,$this->password);
+    if ($this->link_id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
+      $this->database && $this->select_db($this->database);
+    } else {
+      $this->error("Unable to connect to database: ".mysql_error()."<br>");
+      unset($this->link_id);
+    }
   
-    $this->database && $this->select_db($this->database);
-  }
+  } 
 
   function error($msg=false) {
+    $msg and print "<br/>".$msg;
     $this->error = $msg;
   }
 
@@ -100,13 +106,13 @@ class db {
     $this->connect();
     $args = func_get_args();
     $query = $this->get_escaped_query_str($args);
-    $id = @mysql_query($query);
-    if ($id) {
+    $id = mysql_query($query);
+    if ($id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
       $this->query_id = $id;
       $this->error();
     } else {
       $this->query_id = false;
-      $this->error("Query failed: ".mysql_error()."<br><pre>".$query."</pre>");
+      $this->error("Query failed: ".mysql_error($this->link_id)."<br><pre>".$query."</pre>");
     }
     return $this->query_id;
   } 
