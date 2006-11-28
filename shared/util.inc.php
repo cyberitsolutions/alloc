@@ -30,7 +30,6 @@ function get_default_from_address() {
   $r === false and $f .= ">";
   return "allocPSA ".$f;
 }
-
 function get_alloc_version() {
   if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DIR."/util/alloc_version")) {
     $v = file(ALLOC_MOD_DIR."/util/alloc_version");
@@ -39,7 +38,6 @@ function get_alloc_version() {
     die("No alloc_version file found.");
   }
 }
-
 function get_script_path() {
   // Has to return something like
   // /alloc_dev/
@@ -60,7 +58,6 @@ function get_script_path() {
   return $path;
 
 }
-
 function seconds_to_display_format($seconds) {
   $day = config::get_config_item("hoursInDay");
 
@@ -77,7 +74,6 @@ function seconds_to_display_format($seconds) {
   }
   
 }
-
 function get_alloc_modules() {
   if (defined("ALLOC_MODULES")) {
     return unserialize(ALLOC_MODULES);
@@ -85,7 +81,6 @@ function get_alloc_modules() {
     echo "ALLOC_MODULES is not defined!";
   }
 }
-
 function page_close() {
   $sess = new Session;
   $sess->Save();
@@ -103,7 +98,6 @@ function page_close() {
     $p->save();
   }
 }
-
 function get_all_form_data($array=array(),$defaults=array()) {
   // Load up $_FORM with $_GET and $_POST
   $_FORM = array();
@@ -112,7 +106,6 @@ function get_all_form_data($array=array(),$defaults=array()) {
   } 
   return $_FORM;
 } 
-
 function timetook($start, $text="Duration: ") {
   $end = microtime();
   list($start_micro,$start_epoch,$end_micro,$end_epoch) = explode(" ",$start." ".$end);
@@ -124,7 +117,6 @@ function timetook($start, $text="Duration: ") {
   $dur > 60 and $dur = $dur / 60;
   echo "<br>".$text.sprintf("%0.5f", $dur) . $unit;
 }
-
 function get_cached_table($table) {
   static $cache;
   if (!$cache) {
@@ -144,7 +136,6 @@ function get_cached_table($table) {
   }
   return $cache->get_cached_table($table);
 }
-
 function get_option($label, $value = "", $selected = false) {
   $rtn = "<option";
   $rtn.= " value=\"$value\"";
@@ -154,11 +145,9 @@ function get_option($label, $value = "", $selected = false) {
   $rtn.= ">".$label."</option>";
   return $rtn;
 }
-
 function show_header() {
   include_template(ALLOC_MOD_DIR."/shared/templates/headerS.tpl");
 }
-
 function get_stylesheet_name() {
   global $current_user;
 
@@ -169,19 +158,15 @@ function get_stylesheet_name() {
   $font = $fonts[sprintf("%d",$current_user->prefs["customizedFont"])];
   echo "style_".$style."_".$font.".css";
 }
-
 function get_customizedFont_array() {
   return array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"4", "1"=>5, "2"=>6, "3"=>7, "4"=>8, "5"=>9, "6"=>10);
 }
-
 function get_customizedTheme_array() {
   return array("Default","Leaf", "Icy", "Clove", "Puddle", "None");
 }
-
 function show_footer() {
   include_template(ALLOC_MOD_DIR."/shared/templates/footerS.tpl");
 }
-
 function show_tabs() {
   global $TPL;
 
@@ -208,7 +193,6 @@ function show_tabs() {
     include_template(ALLOC_MOD_DIR."/shared/templates/tabR.tpl");
   }
 }
-
 function show_toolbar() {
   global $TPL, $modules, $category;
 
@@ -217,7 +201,6 @@ function show_toolbar() {
 
   include_template(ALLOC_MOD_DIR."/shared/templates/toolbarS.tpl");
 }
-
 function move_attachment($entity, $id) {
   global $TPL;
 
@@ -236,7 +219,6 @@ function move_attachment($entity, $id) {
     }
   }
 }
-
 function get_attachments($entity, $id) {
   
   global $TPL;
@@ -264,7 +246,6 @@ function get_attachments($entity, $id) {
     return $rows;
   }
 }
-
 function util_show_attachments($entity, $id) {
   global $TPL;
   $TPL["entity_url"] = $TPL["url_alloc_".$entity];
@@ -279,11 +260,9 @@ function util_show_attachments($entity, $id) {
 
   include_template("../shared/templates/attachmentM.tpl");
 }
-
 function sort_task_comments_callback_func($a, $b) {
   return $a["date"] > $b["date"];
 }
-
 function util_get_comments($entity, $id, $options=array()) {
   global $TPL, $current_user;
 
@@ -306,49 +285,272 @@ function util_get_comments($entity, $id, $options=array()) {
 
   foreach ($rows as $v) {
 
-    if (!$v["comment"]) continue ;
-      $person = new person;
-      $person->set_id($v["personID"]);
-      $person->select();
+    if (!$v["comment"])
+      continue ;
 
-      $comment_buttons = "";
-      $ts_label = "";
-      if ($v["timeSheetID"]) {
-        $ts_label = "(Time Sheet Comment)";
+    $person = new person;
+    $person->set_id($v["personID"]);
+    $person->select();
 
-      } else if ($v["personID"] == $current_user->get_id() && $options["showEditButtons"]) {
-        $comment_buttons = "<nobr><input type=\"submit\" name=\"taskComment_edit\" value=\"Edit\">
-                                         <input type=\"submit\" name=\"taskComment_delete\" value=\"Delete\"></nobr>";
-      }
+    $comment_buttons = "";
+    $ts_label = "";
 
-      if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
+    if ($v["timeSheetID"]) {
+      $ts_label = "(Time Sheet Comment)";
 
-        $edit = false;
-        if ($options["showEditButtons"]) {
-          $edit = true;
-        } 
-
-        $edit and $rtn[] =  '<form action="'.$TPL["url_alloc_taskComment"].'" method="post">';
-        $edit and $rtn[] =  '<input type="hidden" name="'.$entity.'ID" value="'.$v["commentLinkID"].'">';
-        $edit and $rtn[] =  '<input type="hidden" name="commentID" value="'.$v["commentID"].'">';
-        $edit and $rtn[] =  '<input type="hidden" name="taskComment_id" value="'.$v["commentID"].'">';
-        $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="comments">';
-        $rtn[] =  '<tr>';
-        $rtn[] =  '<th>Comment by <b>'.$person->get_username(1).'</b> '.$v["date"].' '.$ts_label."</th>";
-        $edit and $rtn[] =  '<th align="right" width="2%">'.$comment_buttons.'</th>';
-        $rtn[] =  '</tr>';
-        $rtn[] =  '<tr>';
-        $rtn[] =  '<td>'.nl2br(htmlentities($v["comment"])).'</td>';
-        $edit and $rtn[] =  '<td>&nbsp;</td>';
-        $rtn[] =  '</tr>';
-        $rtn[] =  '</table>';
-        $edit and $rtn[] =  '</form>';
-
-      }
+    } else if ($v["personID"] == $current_user->get_id() && $options["showEditButtons"]) {
+      $comment_buttons = "<nobr><input type=\"submit\" name=\"taskComment_edit\" value=\"Edit\">
+                                <input type=\"submit\" name=\"taskComment_delete\" value=\"Delete\"></nobr>";
     }
-    if (is_array($rtn))
+
+    if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
+
+      $edit = false;
+      if ($options["showEditButtons"]) {
+        $edit = true;
+      } 
+
+      $edit and $rtn[] =  '<form action="'.$TPL["url_alloc_taskComment"].'" method="post">';
+      $edit and $rtn[] =  '<input type="hidden" name="'.$entity.'ID" value="'.$v["commentLinkID"].'">';
+      $edit and $rtn[] =  '<input type="hidden" name="commentID" value="'.$v["commentID"].'">';
+      $edit and $rtn[] =  '<input type="hidden" name="taskComment_id" value="'.$v["commentID"].'">';
+      $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="comments">';
+      $rtn[] =  '<tr>';
+      $rtn[] =  '<th>Comment by <b>'.$person->get_username(1).'</b> '.$v["date"].' '.$ts_label."</th>";
+      $edit and $rtn[] =  '<th align="right" width="2%">'.$comment_buttons.'</th>';
+      $rtn[] =  '</tr>';
+      $rtn[] =  '<tr>';
+      $rtn[] =  '<td>'.nl2br(htmlentities($v["comment"])).'</td>';
+      $edit and $rtn[] =  '<td>&nbsp;</td>';
+      $rtn[] =  '</tr>';
+      $rtn[] =  '</table>';
+      $edit and $rtn[] =  '</form>';
+
+    }
+  }
+  if (is_array($rtn)) {
     return implode("\n",$rtn);
   }
+}
+function get_display_date($db_date) {
+  // Convert date from database format (yyyy-mm-dd) to display format (d/m/yyyy)
+  if ($db_date == "0000-00-00 00:00:00") {
+    return "";
+  } else if (ereg("([0-9]{4})-?([0-9]{2})-?([0-9]{2})", $db_date, $matches)) {
+    return sprintf("%d/%d/%d", $matches[3], $matches[2], $matches[1]);
+  } else {
+    return "";
+  }
+}
+function get_date_stamp($db_date) {
+  // Converts from DB date string of YYYY-MM-DD to a Unix time stamp
+  ereg("^([0-9]{4})-([0-9]{2})-([0-9]{2})", $db_date, $matches);
+  $date_stamp = mktime(0, 0, 0, $matches[2], $matches[3], $matches[1]);
+  return $date_stamp;
+}
+function get_mysql_date_stamp($db_date) {
+  // Converts mysql timestamp 20011024161045 to YYYY-MM-DD - AL
+  ereg("^([0-9]{4})([0-9]{2})([0-9]{2})", $db_date, $matches);
+  $date_stamp = mktime(0, 0, 0, $matches[2], $matches[3], $matches[1]);
+  $date = date("Y", $date_stamp)."-".date("m", $date_stamp)."-".date("d", $date_stamp);
+  return $date;
+}
+function get_select_options($options,$selected_value=NULL,$max_length=45) {
+  /**
+  * Builds up options for use in a html select widget (works with multiple selected too)
+  *
+  * @param   $options          mixed   An sql query or an array of options
+  * @param   $selected_value   string  The current selected element
+  * @param   $max_length       int     The maximum string length of the label
+  * @return                    string  The string of options
+  */
 
+  // Build options from an SQL query: "SELECT col_a as name, col_b as value FROM"
+  if (is_string($options)) {
+    $db = new db_alloc;
+    $db->query($options);
+    while ($row = $db->row()) {
+      $rows[$row["name"]] = $row["value"];
+    }
+
+  // Build options from an array: array(array("name1","value1"),array("name2","value2"))
+  } else if (is_array($options)) {
+    foreach ($options as $k => $v) {
+      $rows[$k] = $v;
+    }
+  }
+
+  if (is_array($rows)) {
+    foreach ($rows as $value=>$label) {
+      $sel = "";
+
+      if (!$value && $value!==0 && !$value!=="0" && $label) {
+        $value = $label; 
+      }
+      !$label && $value and $label = $value;
+
+      // If an array of selected values!
+      if (is_array($selected_value)) {
+        foreach ($selected_value as $id) {
+          $id == $value and $sel = " selected";
+        }
+      } else {
+        $selected_value == $value and $sel = " selected";
+      }
+
+      $label = stripslashes($label);
+      if (strlen($label) > $max_length) {
+        $label = substr($label, 0, $max_length - 3)."...";
+      } 
+
+      $str.= "\n<option value=\"".$value."\"".$sel.">".$label."</option>";
+    }
+  }
+  return $str;
+}
+function get_options_from_array($options, $selected_value, $use_values = true, $max_label_length = 40, $bitwise_values = false, $reverse_results = false) {
+  // Get options for a <select> using an array of the form value=>label
+  is_array($options) or $options = array();
+
+  if ($reverse_results) {
+    $options = array_reverse($options, TRUE);
+  }
+  foreach ($options as $value => $label) {
+    $rtn.= "\n<option";
+    if ($use_values) {
+      $rtn.= " value=\"$value\"";
+
+      if ($value == $selected_value || ($bitwise_values && (($selected_value & $value) == $value))) {
+        $rtn.= " selected";
+      }
+    } else {
+      $rtn.= " value=\"$label\"";
+      if ($label == $selected_value) {
+        $rtn.= " selected";
+      }
+    }
+    $rtn.= ">";
+    $label = stripslashes($label);
+    if (strlen($label) > $max_label_length) {
+      $rtn.= substr($label, 0, $max_label_length - 3)."...";
+    } else {
+      $rtn.= $label;
+    }
+    $rtn.= "</option>";
+  }
+  return $rtn;
+}
+function get_array_from_db($db, $key_field, $label_field) {
+  // Constructs an array from a database containing 
+  // $key_field=>$label_field entries
+  // ALLA: Edited function so that an array of 
+  // label_field could be passed $return is the 
+  // _complete_ label string.
+  // TODO: Make this function SORT
+  $rtn = array();
+  while ($db->next_record()) {
+    if (is_array($label_field)) {
+      $return = "";
+      foreach($label_field as $key=>$label) {
+
+        // Every second array element (starting with zero) will 
+        // be the string separator. This really isn't quite as 
+        // lame as it seems.  Although it's close.
+        if (!is_int($key / 2)) {
+          $return.= $db->f($label);
+        } else {
+          $return.= $label;
+        }
+      }
+    } else {
+      $return = $db->f($label_field);
+    }
+    if ($key_field) {
+      $rtn[$db->f($key_field)] = stripslashes($return);
+    } else {
+      $rtn[] = stripslashes($return);
+    }
+  }
+  return $rtn;
+}
+function get_options_from_db($db, $label_field, $value_field = "", $selected_value, $max_label_length = 40, $reverse_results = false) {
+  // Get options for a <select> using a database object
+  $options = get_array_from_db($db, $value_field, $label_field);
+  return get_options_from_array($options, $selected_value, $value_field != "", $max_label_length, $bitwise_values = false, $reverse_results);
+}
+function get_options_from_query($query, $label_field, $value_field = "", $selected_value) {
+  $db = new db_alloc;
+  $db->query($query);
+  return get_options_from_db($db, $label_field, $value_field, $selected_value);
+}
+function format_nav_links($nav_links) {
+  return implode(" | ", $nav_links);
+}
+function get_tf_name($tfID) {
+  if (!$tfID) {
+    return false;
+  } else {
+    $db = new db_alloc;
+    $db->query("select tfName from tf where tfID= ".$tfID);
+    $db->next_record();
+    return $db->f("tfName");
+  }
+}
+function db_esc($str = "") {
+  // If they're using magic_quotes_gpc then we gotta strip the 
+  // automatically added backslashes otherwise they'll be added again..
+  if (get_magic_quotes_gpc()) {
+    $str = stripslashes($str);
+  }
+  $esc_function = "mysql_escape_string";
+  if (version_compare(phpversion(), "4.3.0", ">")) {
+    $esc_function = "mysql_real_escape_string";
+  }
+  
+  if (is_numeric($str)) {
+    return $str;
+  }
+  return $esc_function($str);
+}
+function db_get_where($where = array()) {
+  // Okay so $value can be like eg: $where["status"] = array(" LIKE ","hey")
+  // Or $where["status"] = "hey";
+  foreach($where as $column_name=>$value) {
+    $op = " = ";
+    if (is_array($value)) {
+      $op = $value[0];
+      $value = $value[1];
+    }
+    $rtn.= " ".$and.$column_name.$op." '".db_esc($value)."'";
+    $and = " AND ";
+  }
+  return $rtn;
+}
+function format_date($format="Y/m/d", $date="") {
+
+  // If looks like this: 2003-07-07 21:37:01
+  if (preg_match("/^[\d]{4}-[\d]{2}-[\d]{2} [\d]{2}:[\d]{2}:[\d]{2}$/",$date)) {
+    list($d,$t) = explode(" ", $date);
+
+  // If looks like this: 2003-07-07
+  } else if (preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/",$date)) {
+    $d = $date;
+
+  // If looks like this: 12:01:01
+  } else if (preg_match("/^[\d]{2}:[\d]{2}:[\d]{2}$/",$date)) {
+    $d = "2000-01-01";
+    $t = $date;
+
+  // Nasty hobbitses!
+  } else {
+    return "Date unrecognized: ".$date;
+  }
+  list($y,$m,$d) = explode("-", $d);
+  list($h,$i,$s) = explode(":", $t);
+  list($y,$m,$d,$h,$i,$s) = array(sprintf("%d",$y),sprintf("%d",$m),sprintf("%d",$d)
+                                 ,sprintf("%d",$h),sprintf("%d",$i),sprintf("%d",$s)
+                                 );
+  return date($format, mktime(date($h),date($i),date($s),date($m),date($d),date($y)));
+}
 
 ?>
