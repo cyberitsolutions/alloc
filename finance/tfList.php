@@ -64,7 +64,7 @@ function show_tf($template_name) {
     $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
 
     $nav_links = $tf->get_nav_links();
-    $TPL["nav_links"] = format_nav_links($nav_links);
+    $TPL["nav_links"] = implode(" | ", $nav_links);
     include_template($template_name);
   }
 
