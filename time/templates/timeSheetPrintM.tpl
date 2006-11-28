@@ -4,7 +4,7 @@
   </head>
   <body>
   <div align="center">
-    <img src="../images/cyberLogo.png">
+    <img src="{echo config::get_config_item("companyImage")}">
     <h2>{$companyName}<br/>Time Sheet </h2>  
   </div>
 
