@@ -43,6 +43,16 @@ define("TT_MESSAGE"  , 3);
 define("TT_FAULT"    , 4);
 define("TT_MILESTONE", 5);
 
+// Source and destination modifiers for various values
+define("SRC_DATABASE"       , 1);  // Reading the value from the database
+define("SRC_VARIABLE"       , 2);  // Reading the value from a PHP variable (except a form variable)
+define("SRC_REQUEST"        , 3);  // Reading the value from a get or post variable
+define("DST_DATABASE"       , 1);  // For writing to a database
+define("DST_VARIABLE"       , 2);  // For use within the PHP script itself
+define("DST_HTML_ATTRIBUTE" , 3);  // For use in a HTML elements attribute - e.g. a form input's value or a link's href
+define("DST_HTML_DISPLAY"   , 4);  // For display to the user as non-editable HTML text
+  
+
 define("ALLOC_MODULES",serialize(array("shared"       => true
                                       ,"home"         => true
                                       ,"project"      => true
