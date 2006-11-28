@@ -49,16 +49,14 @@ if ($_POST["save"]) {
   }
 
   foreach ($fields_to_save as $name) {
-    if ($_POST[$name]) {
-      $id = $config->get_config_item_id($name);
-      $c = new config;
-      $c->set_id($id);
-      $c->select();
-      $c->set_value("value",$_POST[$name]);
-      $c->save();
-      $TPL[$name] = $_POST[$name];
-      $TPL["message_good"] = "Saved configuration.";
-    }
+    $id = $config->get_config_item_id($name);
+    $c = new config;
+    $c->set_id($id);
+    $c->select();
+    $c->set_value("value",$_POST[$name]);
+    $c->save();
+    $TPL[$name] = $_POST[$name];
+    $TPL["message_good"] = "Saved configuration.";
   }
 }
 
