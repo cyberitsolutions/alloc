@@ -478,14 +478,6 @@ function get_options_from_db($db, $label_field, $value_field = "", $selected_val
   $options = get_array_from_db($db, $value_field, $label_field);
   return get_options_from_array($options, $selected_value, $value_field != "", $max_label_length, $bitwise_values = false, $reverse_results);
 }
-function get_options_from_query($query, $label_field, $value_field = "", $selected_value) {
-  $db = new db_alloc;
-  $db->query($query);
-  return get_options_from_db($db, $label_field, $value_field, $selected_value);
-}
-function format_nav_links($nav_links) {
-  return implode(" | ", $nav_links);
-}
 function get_tf_name($tfID) {
   if (!$tfID) {
     return false;

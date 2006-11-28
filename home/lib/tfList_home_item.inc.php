@@ -50,7 +50,7 @@ class tfList_home_item extends home_item {
       $TPL["odd_even"] = $TPL["odd_even"] == "even" ? "odd" : "even";
 
       $nav_links = $tf->get_nav_links();
-      $TPL["data"] = format_nav_links($nav_links);
+      $TPL["data"] = implode(" | ", $nav_links);
       include_template($template_name);
     }
 
