@@ -3,21 +3,21 @@
 <script type="text/javascript" language="javascript">
 
 // Make the XML request thing, specify the callback function 
-function updateStuffWithAjax() {
+function updateStuffWithAjax() \{
   obj = document.getElementById("taskCommentForm").taskCommentTemplateID;
   id = obj.options[obj.selectedIndex].value;
   url = '{$url_alloc_updateTaskCommentTemplate}taskCommentTemplateID='+id+'&taskID={$task_taskID}'
   makeAjaxRequest(url,'updateTaskCommentTemplate',1)
-}
+\}
 
 // Here's the callback function
-function updateTaskCommentTemplate(number) {
-  if (http_request[number].readyState == 4) {
-    if (http_request[number].status == 200) {
+function updateTaskCommentTemplate(number) \{
+  if (http_request[number].readyState == 4) \{
+    if (http_request[number].status == 200) \{
       document.getElementById("taskComment").value = http_request[number].responseText;
-}
-}
-}
+    \}
+  \}
+\}
 
 </script>
 <form action="{$url_alloc_task}" method="post">

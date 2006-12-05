@@ -96,24 +96,24 @@
 <br>
   <script>
     <!--
-    function checkAllocated() {
+    function checkAllocated() \{
       if ({$unallocated_amount} != 0)
         return confirm('There is still ${$unallocated_amount} unallocated.  Are you sure you want to mark this invoices as allocated?');
       else
         return true;
-    }
+    \}
 
-    function checkPaid() {
-      if (!checkAllocated()) {
+    function checkPaid() \{
+      if (!checkAllocated()) \{
         return false;
-      }
+      \}
 
-      if (!{$all_approved}) {
+      if (!{$all_approved}) \{
         return confirm('There are still transactions marked as pending.  Are you sure you want to mark this invoice as paid?');
-      } else {
+      \} else \{
         return true;
-      }
-    }
+      \}
+    \}
     // -->
   </script>
 {show_footer()}

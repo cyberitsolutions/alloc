@@ -3,32 +3,32 @@
 <script type="text/javascript" language="javascript">
 
 // Make the XML request thing, specify the callback function 
-function updateStuffWithAjax() {
+function updateStuffWithAjax() \{
   obj = document.getElementById("taskform").projectID;
   id = obj.options[obj.selectedIndex].value;
   url = '{$url_alloc_updateParentTasks}projectID='+id
   makeAjaxRequest(url,'updateParentTasks',1)
   url = '{$url_alloc_updateTaskCCList}projectID='+id
   makeAjaxRequest(url,'updateTaskCCList',2)
-}
+\}
 
 // Here's the callback function
-function updateParentTasks(number) {
-  if (http_request[number].readyState == 4) {
-    if (http_request[number].status == 200) {
+function updateParentTasks(number) \{
+  if (http_request[number].readyState == 4) \{
+    if (http_request[number].status == 200) \{
       document.getElementById("parenTaskDropdown").innerHTML = http_request[number].responseText;
-}
-}
-}
+    \}
+  \}
+\}
 
 // Another callback function
-function updateTaskCCList(number) {
-  if (http_request[number].readyState == 4) {
-    if (http_request[number].status == 200) {
+function updateTaskCCList(number) \{
+  if (http_request[number].readyState == 4) \{
+    if (http_request[number].status == 200) \{
       document.getElementById("taskCCListDropdown").innerHTML = http_request[number].responseText;
-}
-}
-}
+    \}
+  \}
+\}
 
 </script>
 

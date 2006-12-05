@@ -1,19 +1,19 @@
 <script type="text/javascript" language="javascript">
 
 // Make the XML request thing, specify the callback function 
-function refreshTaskList(radiobutton) {
+function refreshTaskList(radiobutton) \{
   url = '{$url_alloc_updateTimeSheetTaskList}task_type='+radiobutton.value+'&timeSheetID={$timeSheet_timeSheetID}&taskID={$taskListDropdown_taskID}'
   makeAjaxRequest(url,'updateTimeSheetTaskList',1)
-}
+\}
 
 // Here's the callback function
-function updateTimeSheetTaskList(number) {
-  if (http_request[number].readyState == 4) {
-    if (http_request[number].status == 200) {
+function updateTimeSheetTaskList(number) \{
+  if (http_request[number].readyState == 4) \{
+    if (http_request[number].status == 200) \{
       document.getElementById("taskListDropdown").innerHTML = http_request[number].responseText;
-}
-}
-}
+    \}
+  \}
+\}
 </script>
 
 
