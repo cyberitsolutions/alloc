@@ -93,15 +93,17 @@ INSERT INTO config (configID, name, value) VALUES (5,'companyContactPhone','+61 
 INSERT INTO config (configID, name, value) VALUES (6,'companyContactFax','+61 3 9621 2477');
 INSERT INTO config (configID, name, value) VALUES (7,'companyContactEmail','info@cyber.com.au');
 INSERT INTO config (configID, name, value) VALUES (8,'companyContactHomePage','http://www.cybersource.com.au');
-INSERT INTO config (configID, name, value) VALUES (9,'companyContactAddress','Level 4, 10-16 Queen St, Melbourne Vic. 3000 Australia');
+INSERT INTO config (configID, name, value) VALUES (9,'companyContactAddress','Level 4, 10-16 Queen St');
 INSERT INTO config (configID, name, value) VALUES (10,'companyACN','053 904 082');
 INSERT INTO config (configID, name, value) VALUES (11,'hoursInDay','7.5');
 -- This line has been moved into the install program. Don't use ID 12 here. 
 -- INSERT INTO config (configID, name, value) VALUES (12,'allocURL','http://change_me_to_your_URL_for_allocPSA/');
 INSERT INTO config (configID, name,value) VALUES (13,'companyImage','../images/cyberLogo.png');
 INSERT INTO config (configID, name, value) VALUES (14,'companyABN','13 053 904 082');
-INSERT INTO config (configID, name, value) VALUES (15,'companyContactAddress2','ADDRESS LINE 2');
+INSERT INTO config (configID, name, value) VALUES (15,'companyContactAddress2','Melbourne Vic. 3000');
 INSERT INTO config (configID, name, value) VALUES (16,'timeSheetPrintUnit','money');
+INSERT INTO config (configID, name, value) VALUES (17, 'companyContactAddress3','Australia');
+
 
 
 
