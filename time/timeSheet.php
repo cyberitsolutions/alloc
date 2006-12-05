@@ -735,14 +735,6 @@ if ($projectID != 0) {
   $TPL["client_link"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
 }
 
-// These variables populate the time sheet printer friendly version
-$TPL["companyName"] = config::get_config_item("companyName");
-$acn = config::get_config_item("companyACN");
-$acn and $acn = "ACN:".$acn;
-$TPL["companyInfoLine1"] = $TPL["companyName"]." ".$acn." ".config::get_config_item("companyContactAddress");
-$TPL["companyInfoLine2"] = "Phone: ".config::get_config_item("companyContactPhone")." Fax: ".config::get_config_item("companyContactFax")." Email: ".config::get_config_item("companyContactEmail");
-$TPL["companyInfoLine2"].= " Web: ".config::get_config_item("companyContactHomePage");
-
 
 // msg passed in url and print it out pretty..
 $msg = $msg or $msg = $_GET["msg"] or $msg = $_POST["msg"];
@@ -960,11 +952,7 @@ if ($timeSheetID) {
 
 }
 
-if ($_GET["printVersion"]) {
-  include_template("templates/timeSheetPrintM.tpl");
-} else {
-  include_template("templates/timeSheetFormM.tpl");
-} 
+include_template("templates/timeSheetFormM.tpl");
 
 
 page_close();
