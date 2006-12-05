@@ -77,6 +77,8 @@ if (!$current_user->is_employee()) {
 
     // If we are in dollar mode, then prefix the total with a dollar sign
     $timeSheetPrintUnit == "money" and $info["total"] = sprintf("$%0.2f",$info["total"]);
+    $rows or $rows = array();
+    $info or $info = array();
 
     return array($rows,$info);
 
