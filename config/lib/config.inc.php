@@ -47,7 +47,7 @@ class config extends db_entity {
   }
 
   function get_array_timeSheetPrintUnit() {
-    return array("money"=>"Charges","quantity"=>"Quantity");
+    return array("money"=>"Charges","quantity"=>"Units");
   }
 
 }

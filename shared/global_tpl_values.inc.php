@@ -62,6 +62,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_emailProcessor"                 => $sess->url(SCRIPT_PATH."person/emailProcessor.php")
             ,"url_alloc_personSkillMatrix"              => $sess->url(SCRIPT_PATH."person/personSkillMatrix.php")
             ,"url_alloc_timeSheet"                      => $sess->url(SCRIPT_PATH."time/timeSheet.php")
+            ,"url_alloc_timeSheetPrint"                 => $sess->url(SCRIPT_PATH."time/timeSheetPrint.php")
             ,"url_alloc_timeSheetList"                  => $sess->url(SCRIPT_PATH."time/timeSheetList.php")
             ,"url_alloc_updateTimeSheetTaskList"        => $sess->url(SCRIPT_PATH."time/updateTimeSheetTaskList.php")
             ,"url_alloc_weeklyTime"                     => $sess->url(SCRIPT_PATH."time/weeklyTime.php")
