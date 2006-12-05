@@ -46,8 +46,12 @@
     <td><input type="text" size="70" value="{$companyContactHomePage}" name="companyContactHomePage"></td> 
   </tr>
   <tr>
-    <td>Company Address</td>
+    <td>Company Address (line 1)</td>
     <td><input type="text" size="70" value="{$companyContactAddress}" name="companyContactAddress"></td> 
+  </tr>
+  <tr>
+    <td>Company Address (line 2)</td>
+    <td><input type="text" size="70" value="{$companyContactAddress2}" name="companyContactAddress2"></td> 
   </tr>
   <tr>
     <td>Company ACN</td>
