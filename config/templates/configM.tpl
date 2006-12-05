@@ -54,6 +54,10 @@
     <td><input type="text" size="70" value="{$companyACN}" name="companyACN"></td> 
   </tr>
   <tr>
+    <td>Company ABN</td>
+    <td><input type="text" size="70" value="{$companyABN}" name="companyABN"></td> 
+  </tr>
+  <tr>
     <td>Company Time Sheet Image</td>
     <td><input type="text" size="70" value="{$companyImage}" name="companyImage"></td> 
   </tr>
