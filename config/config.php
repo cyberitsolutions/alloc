@@ -74,6 +74,10 @@ $TPL["timeSheetAdminEmailOptions"] = get_option("Time Sheet Admin (email)", "0",
 $TPL["timeSheetAdminEmailOptions"].= get_options_from_db($db, $display, "personID", $config->get_config_item("timeSheetAdminEmail"));
 
 
+$timeSheetPrintUnitArray = config::get_array_timeSheetPrintUnit();
+$TPL["timeSheetPrintUnitOptions"] = get_select_options($timeSheetPrintUnitArray,$config->get_config_item("timeSheetPrintUnit"));
+
+
 
 include_template("templates/configM.tpl");
 

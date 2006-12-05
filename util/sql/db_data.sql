@@ -98,9 +98,11 @@ INSERT INTO config (configID, name, value) VALUES (10,'companyACN','053 904 082'
 INSERT INTO config (configID, name, value) VALUES (11,'hoursInDay','7.5');
 -- This line has been moved into the install program. Don't use ID 12 here. 
 -- INSERT INTO config (configID, name, value) VALUES (12,'allocURL','http://change_me_to_your_URL_for_allocPSA/');
-insert into config (configID, name,value) values (13,'companyImage','../images/cyberLogo.png');
+INSERT INTO config (configID, name,value) VALUES (13,'companyImage','../images/cyberLogo.png');
 INSERT INTO config (configID, name, value) VALUES (14,'companyABN','13 053 904 082');
 INSERT INTO config (configID, name, value) VALUES (15,'companyContactAddress2','ADDRESS LINE 2');
+INSERT INTO config (configID, name, value) VALUES (16,'timeSheetPrintUnit','money');
+
 
 
 
