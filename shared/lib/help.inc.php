@@ -30,7 +30,7 @@ function help_button($topic) {
     $str = file_get_contents($file);
     $str = htmlentities(addslashes($str));
     $str = str_replace("\n"," ",$str);
-    $img = "<a href=\"".$file_relative."\" target=\"_blank\"><img id=\"".$topic."\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
+    $img = "<a href=\"".$file_relative."\" target=\"_blank\"><img id=\"".$topic."\" border=\"0\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
     $img.= $TPL["url_alloc_images"]."help.gif\" style=\"position:relative; top:4px\"></a>";
   }
   echo $img;
