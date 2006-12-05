@@ -65,6 +65,10 @@
     <td>Company Time Sheet Image</td>
     <td><input type="text" size="70" value="{$companyImage}" name="companyImage"></td> 
   </tr>
+  <tr>
+    <td>Time Sheet Printout Display Unit</td>
+    <td><select name="timeSheetPrintUnit">{$timeSheetPrintUnitOptions}</select></td>
+  </tr>
   <tr>  
     <td colspan="2" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
