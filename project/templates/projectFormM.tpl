@@ -3,21 +3,21 @@
 <script type="text/javascript" language="javascript">
 
 // Make the XML request thing, specify the callback function 
-function updateStuffWithAjax() {
+function updateStuffWithAjax() \{
   obj = document.getElementById("projectForm").clientID;
   id = obj.options[obj.selectedIndex].value;
   url = '{$url_alloc_updateProjectClientContactList}clientID='+id
   makeAjaxRequest(url,'updateClientContact',1)
-}
+\}
 
 // Here's the callback function
-function updateClientContact(number) {
-  if (http_request[number].readyState == 4) {
-    if (http_request[number].status == 200) {
+function updateClientContact(number) \{
+  if (http_request[number].readyState == 4) \{
+    if (http_request[number].status == 200) \{
       document.getElementById("clientContactDropdown").innerHTML = http_request[number].responseText;
-}
-}
-}
+    \}
+  \}
+\}
 
 </script>
 

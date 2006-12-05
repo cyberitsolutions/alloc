@@ -31,6 +31,17 @@ function get_template($filename, $use_function_object = false) {
     echo "get_template() failure: [$filename]";
   }
 
+  // This allows us to use curly braces in our templates for javascript and CSS rules
+  // as long as we escape the curly brace using a backslash. The TPL_*_BRACE keyword
+  // gets replaces by an actual curly brace later on in this template function.
+  $pattern = '\}';
+  $replace = 'TPL_END_BRACE';
+  $template = str_replace($pattern,$replace,$template);
+  $pattern = '\{';
+  $replace = 'TPL_START_BRACE';
+  $template = str_replace($pattern,$replace,$template);
+
+
   // Replace {function_name param} with function("param"); - Remove this sometime.
   if ($use_function_object) {
     $pattern = '/{(\w+)\s?([^}]*)}/i';
@@ -74,8 +85,6 @@ function get_template($filename, $use_function_object = false) {
 
   
   $sr = array("{/}"             => "<?php TPL_END_BRACE ?>"
-             ,"{\n"             => "TPL_START_BRACE\n"      // Javascript brace workaround
-             ,"\n}"             => "\nTPL_END_BRACE"        // Javascript brace workaround
              ,"{"               => "<?php "
              ,"}"               => " ?>"
              ,"TPL_END_BRACE"   => "}"
