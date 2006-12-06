@@ -2,9 +2,8 @@
   <head>
     <title>{$main_alloc_title}</title>
     <style>
-      h2,h4 \{ 
+      h1,h2,h3,h4,h5,h6 \{ 
         display:inline; 
-        text-align:center; 
         font-weight:normal;
       \}
       div.container \{ 
