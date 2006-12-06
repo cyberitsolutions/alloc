@@ -103,6 +103,8 @@ INSERT INTO config (configID, name, value) VALUES (14,'companyABN','13 053 904 0
 INSERT INTO config (configID, name, value) VALUES (15,'companyContactAddress2','Melbourne Vic. 3000');
 INSERT INTO config (configID, name, value) VALUES (16,'timeSheetPrintUnit','money');
 INSERT INTO config (configID, name, value) VALUES (17, 'companyContactAddress3','Australia');
+INSERT INTO config (configID, name, value) VALUES (18, 'timeSheetPrintFooter','');
+
 
 
 

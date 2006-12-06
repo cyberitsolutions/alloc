@@ -94,6 +94,7 @@
       </div>
     </div>
 
+    {echo config::get_config_item("timeSheetPrintFooter")}
 
 
   </body>
