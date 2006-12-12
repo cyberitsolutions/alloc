@@ -72,7 +72,7 @@ if (!$current_user->is_employee()) {
       $c = nl2br($timeSheetItem->get_value("comment"));
       !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = $c;
 
-      $rows[$taskID]["desc"].= implode("<br/>",$str);
+      is_array($str) and $rows[$taskID]["desc"].= implode("<br/>",$str);
     }
 
     // If we are in dollar mode, then prefix the total with a dollar sign
