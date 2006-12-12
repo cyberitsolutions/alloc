@@ -9,6 +9,9 @@
       div.container \{ 
         clear:both; padding-top:20px;
       \}
+      .nobr \{ 
+        white-space:nowrap 
+      \}
     </style>
   </head>
   <body>
@@ -57,16 +60,17 @@
 
     <br/>
 
+    {if $_GET["timeSheetPrintMode"] == "money" || $_GET["timeSheetPrintMode"] == "units"}
     <table border="1" cellspacing="0" cellpadding="2" width="100%">
       <tr>
         <th>Description</th>
-        <th>{$timeSheetPrintUnitLabel}</th>
+        <th>{$timeSheetPrintModeLabel}</th>
       </tr>
-      {list($rows,$info) = get_timeSheetItem_info()}
+      {list($rows,$info) = get_timeSheetItem_list()}
       {foreach $rows as $r}
       <tr>
         <td>{$r.desc}</td>
-        <td align="right">{$r.unit}</td>
+        <td align="right" class="nobr">{$r.tally} {$r.unit}</td>
       </tr>
       {/}
       <tr>
@@ -75,26 +79,38 @@
       </tr>
     </table>
 
-    <br/><br/>
-
-    <table border="0" cellspacing="0" width="100%">
+    {else}
+     <table border="1" cellspacing="0" cellpadding="2" width="100%">
       <tr>
-        <td width="40%" style="border-bottom:1px solid black;">Authorisation:</td>
-        <td width="40%" style="border-bottom:1px solid black;">Signature: </td>
-        <td style="border-bottom:1px solid black;">Date: </td>
+        <th>Date</th>
+        <th>{$timeSheetPrintModeLabel}</th>
+        <th>Description</th>
+      </tr>
+      {list($rows,$info) = get_timeSheetItem_list()}
+      {foreach $rows as $r}
+      <tr>
+        <td>{$r.date}</td>
+        <td align="right" class="nobr">{$r.tally} {$r.unit}</td>
+        <td>{$r.desc}</td>
+      </tr>
+      {/}
+      <tr>
+        <th align="left">TOTAL</th>
+        <th align="right">{$info.total}</th>
+        <th>&nbsp;</th>
       </tr>
     </table>
+    {/}
  
     <br/><br/>
+
+    {echo stripslashes(config::get_config_item("timeSheetPrintFooter"))}
 
     <div class="container">
       <div style="float:right">
         ID: <b>{$timeSheetID}</b>
       </div>
     </div>
-
-    {echo config::get_config_item("timeSheetPrintFooter")}
-
 
   </body>
 </html>

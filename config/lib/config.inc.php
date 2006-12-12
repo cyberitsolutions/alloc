@@ -46,10 +46,6 @@ class config extends db_entity {
     return $db->f('configID');
   }
 
-  function get_array_timeSheetPrintUnit() {
-    return array("money"=>"Charges","quantity"=>"Units");
-  }
-
 }
 
 

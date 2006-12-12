@@ -85,25 +85,24 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 --
 
 
-INSERT INTO config (configID, name, value) VALUES (1,'AllocFromEmailAddress','example@example.com');
-INSERT INTO config (configID, name, value) VALUES (2,'cybersourceTfID','0');
-INSERT INTO config (configID, name, value) VALUES (3,'timeSheetAdminEmail','0');
-INSERT INTO config (configID, name, value) VALUES (4,'companyName','Cybersource');
-INSERT INTO config (configID, name, value) VALUES (5,'companyContactPhone','+61 3 9621 2377');
-INSERT INTO config (configID, name, value) VALUES (6,'companyContactFax','+61 3 9621 2477');
-INSERT INTO config (configID, name, value) VALUES (7,'companyContactEmail','info@cyber.com.au');
-INSERT INTO config (configID, name, value) VALUES (8,'companyContactHomePage','http://www.cybersource.com.au');
-INSERT INTO config (configID, name, value) VALUES (9,'companyContactAddress','Level 4, 10-16 Queen St');
-INSERT INTO config (configID, name, value) VALUES (10,'companyACN','053 904 082');
-INSERT INTO config (configID, name, value) VALUES (11,'hoursInDay','7.5');
--- This line has been moved into the install program. Don't use ID 12 here. 
--- INSERT INTO config (configID, name, value) VALUES (12,'allocURL','http://change_me_to_your_URL_for_allocPSA/');
-INSERT INTO config (configID, name,value) VALUES (13,'companyImage','../images/cyberLogo.png');
-INSERT INTO config (configID, name, value) VALUES (14,'companyABN','13 053 904 082');
-INSERT INTO config (configID, name, value) VALUES (15,'companyContactAddress2','Melbourne Vic. 3000');
-INSERT INTO config (configID, name, value) VALUES (16,'timeSheetPrintUnit','money');
-INSERT INTO config (configID, name, value) VALUES (17, 'companyContactAddress3','Australia');
-INSERT INTO config (configID, name, value) VALUES (18, 'timeSheetPrintFooter','');
+INSERT INTO config (configID, name, value) VALUES ('AllocFromEmailAddress','example@example.com');
+INSERT INTO config (configID, name, value) VALUES ('cybersourceTfID','0');
+INSERT INTO config (configID, name, value) VALUES ('timeSheetAdminEmail','0');
+INSERT INTO config (configID, name, value) VALUES ('companyName','Cybersource');
+INSERT INTO config (configID, name, value) VALUES ('companyContactPhone','+61 3 9621 2377');
+INSERT INTO config (configID, name, value) VALUES ('companyContactFax','+61 3 9621 2477');
+INSERT INTO config (configID, name, value) VALUES ('companyContactEmail','info@cyber.com.au');
+INSERT INTO config (configID, name, value) VALUES ('companyContactHomePage','http://www.cybersource.com.au');
+INSERT INTO config (configID, name, value) VALUES ('companyContactAddress','Level 4, 10-16 Queen St');
+INSERT INTO config (configID, name, value) VALUES ('companyACN','053 904 082');
+INSERT INTO config (configID, name, value) VALUES ('hoursInDay','7.5');
+-- This line has been moved into the install program. 
+-- INSERT INTO config (configID, name, value) VALUES ('allocURL','http://change_me_to_your_URL_for_allocPSA/');
+INSERT INTO config (configID, name,value) VALUES ('companyImage','../images/cyberLogo.png');
+INSERT INTO config (configID, name, value) VALUES ('companyABN','13 053 904 082');
+INSERT INTO config (configID, name, value) VALUES ('companyContactAddress2','Melbourne Vic. 3000');
+INSERT INTO config (configID, name, value) VALUES ('companyContactAddress3','Australia');
+INSERT INTO config (configID, name, value) VALUES ('timeSheetPrintFooter','');
 
 
 
