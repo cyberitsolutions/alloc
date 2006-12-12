@@ -67,12 +67,12 @@ if (!$current_user->is_employee()) {
 
       unset($str);
       $d = stripslashes($timeSheetItem->get_value('description'));
-      $d and $str[] = $d;
+      $d && !$rows[$taskID]["desc"] and $str[] = "<b>".$d."</b>";
 
       $c = nl2br($timeSheetItem->get_value("comment"));
       !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = $c;
 
-      $rows[$taskID]["desc"] = implode("<br/>",$str);
+      $rows[$taskID]["desc"].= implode("<br/>",$str);
     }
 
     // If we are in dollar mode, then prefix the total with a dollar sign
