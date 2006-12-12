@@ -70,10 +70,6 @@
     <td><input type="text" size="70" value="{$companyImage}" name="companyImage"></td> 
   </tr>
   <tr>
-    <td>Time Sheet Printout Display Unit</td>
-    <td><select name="timeSheetPrintUnit">{$timeSheetPrintUnitOptions}</select></td>
-  </tr>
-  <tr>
     <td>Time Sheet Printout Footer (html allowed)</td>
     <td><input type="text" size="70" value="{$timeSheetPrintFooter}" name="timeSheetPrintFooter"></td> 
   </tr>

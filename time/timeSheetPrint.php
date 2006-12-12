@@ -27,63 +27,79 @@ if (!$current_user->is_employee()) {
   die("You do not have permission to access time sheets");
 }
 
+  function get_array_timeSheetPrintMode() {
+    return array("money"=>"Charges","units"=>"Units","items"=>"Units");
+  }
 
+  function get_timeSheetItem_list() {
+    global $TPL, $timeSheet, $db, $timeSheetItem, $timeSheetID;
 
-  function get_timeSheetItem_info() {
-    global $TPL, $timeSheet, $db, $tskDesc;
-    global $timeSheetItem, $timeSheetID;
-
-    $db_task = new db_alloc;
     $timeUnit = new timeUnit;
-
+    $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
 
     $q = sprintf("SELECT * from timeSheetItem WHERE timeSheetID=%d ", $timeSheetID);
     $q.= sprintf("GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
     $db->query($q);
 
-    $timeSheetPrintUnit = config::get_config_item("timeSheetPrintUnit");
+    $mode = $_GET["timeSheetPrintMode"];
     $project = $timeSheet->get_foreign_object("project");
     $customerBilledDollars = $project->get_value("customerBilledDollars");
+
 
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
       $timeSheetItem->read_db_record($db);
+
+      $row_num++;
       $taskID = sprintf("%d",$timeSheetItem->get_value("taskID"));
 
-      if ($timeSheetPrintUnit == "money") {
+      if ($mode == "items") {
+        $counter = $row_num;
+      } else {
+        $counter = $taskID;
+      }
+
+      if ($mode == "money") {
         if ($customerBilledDollars > 0) {
           $num = sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration") * $customerBilledDollars);
         } else {
           $num = sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration") * $timeSheetItem->get_value('rate'));
         }
-      } else if ($timeSheetPrintUnit == "quantity") {
+      } else if ($mode == "units" || $mode == "items") {
         $num = sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration"));
       }
 
-
-      $rows[$taskID]["unit"] += $num;
       $info["total"] += $num;
-
+      $rows[$counter]["date"] = $timeSheetItem->get_value("dateTimeSheetItem");
+      $rows[$counter]["tally"] += $num;
+      $mode != "money" and $rows[$counter]["unit"] = $unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")]; 
 
       unset($str);
       $d = stripslashes($timeSheetItem->get_value('description'));
-      $d && !$rows[$taskID]["desc"] and $str[] = "<b>".$d."</b>";
-
+      $d && !$rows[$counter]["desc"] and $str[] = $d;
       $c = nl2br($timeSheetItem->get_value("comment"));
       !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = $c;
 
-      is_array($str) and $rows[$taskID]["desc"].= implode("<br/>",$str);
+      is_array($str) and $rows[$counter]["desc"].= implode("<br/>",$str);
     }
 
     // If we are in dollar mode, then prefix the total with a dollar sign
-    $timeSheetPrintUnit == "money" and $info["total"] = sprintf("$%0.2f",$info["total"]);
+    if ($mode == "money") {
+      $info["total"] = sprintf("$%0.2f",$info["total"]);
+    } else {
+      $timeSheet->load_pay_info();
+      $info["total"] = $timeSheet->pay_info["summary_unit_totals"];
+    }
+
     $rows or $rows = array();
     $info or $info = array();
 
     return array($rows,$info);
-
-
   }
+
+
+
+
 
 
 
@@ -147,18 +163,9 @@ $TPL["companyInfoLine2"].= " Web: ".config::get_config_item("companyContactHomeP
 
 $timeSheet->load_pay_info();
 
-$timeSheetPrintUnit = config::get_config_item("timeSheetPrintUnit");
-$tspu_arr = config::get_array_timeSheetPrintUnit();
-$TPL["timeSheetPrintUnitLabel"] = $tspu_arr[$timeSheetPrintUnit];
+$tspu_arr = get_array_timeSheetPrintMode();
+$TPL["timeSheetPrintModeLabel"] = $tspu_arr[$_GET["timeSheetPrintMode"]];
 
-
-if ($timeSheetPrintUnit == "money") {
-  $TPL["total"] = "$".sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars"]);
-  $TPL["total"].= " ($".sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars_minus_gst"])." excl GST )";
-
-} else if ($timeSheetPrintUnit == "quantity") {
-  $TPL["total"] = $timeSheet->pay_info["summary_unit_totals"];
-}
 
 
 
