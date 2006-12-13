@@ -28,7 +28,7 @@ if (!$current_user->is_employee()) {
 }
 
   function get_array_timeSheetPrintMode() {
-    return array("money"=>"Charges","units"=>"Units","items"=>"Units");
+    return array("money"=>"Charges","units"=>"Units","items"=>"Units", "items_desc"=>"Units");
   }
 
   function get_timeSheetItem_list() {
@@ -53,7 +53,7 @@ if (!$current_user->is_employee()) {
       $row_num++;
       $taskID = sprintf("%d",$timeSheetItem->get_value("taskID"));
 
-      if ($mode == "items") {
+      if ($mode == "items" || $mode == "items_desc") {
         $counter = $row_num;
       } else {
         $counter = $taskID;
@@ -65,7 +65,7 @@ if (!$current_user->is_employee()) {
         } else {
           $num = sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration") * $timeSheetItem->get_value('rate'));
         }
-      } else if ($mode == "units" || $mode == "items") {
+      } else if ($mode == "units" || $mode == "items" || $mode == "items_desc") {
         $num = sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration"));
       }
 
@@ -75,10 +75,21 @@ if (!$current_user->is_employee()) {
       $mode != "money" and $rows[$counter]["unit"] = $unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")]; 
 
       unset($str);
-      $d = stripslashes($timeSheetItem->get_value('description'));
-      $d && !$rows[$counter]["desc"] and $str[] = $d;
-      $c = nl2br($timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = $c;
+      $d = $timeSheetItem->get_value('description');
+      $d && !$rows[$counter]["desc"] and $str[] = nl2br(stripslashes($d));
+
+      // Get task description
+      if ($taskID && $mode == "items_desc") {
+        $t = new task;
+        $t->set_id($taskID);
+        $t->select();
+        $d2 = $t->get_value("taskDescription");
+        $d2 && !$d2s[$taskID] and $str[] = nl2br($d2);
+        $d2 and $d2s[$taskID] = true;
+      }
+
+      $c = $timeSheetItem->get_value("comment");
+      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = nl2br($c);
 
       is_array($str) and $rows[$counter]["desc"].= implode("<br/>",$str);
     }

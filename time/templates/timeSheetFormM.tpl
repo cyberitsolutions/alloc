@@ -19,7 +19,8 @@
     <th colspan="3">{help_button("timesheet_overview")}Time Sheet - {$timeSheet_status_label}</th>  
     <th class="right" colspan="2">Printer friendly: 
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items" TARGET="_blank">Default</a>
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=units" TARGET="_blank">Units</a>
+      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items_desc" TARGET="_blank">+</a> |
+      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=units" TARGET="_blank">Units</a> |
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=money" TARGET="_blank">Charges</a>
     </th>
   </tr>
