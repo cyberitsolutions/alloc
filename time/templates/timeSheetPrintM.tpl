@@ -79,7 +79,7 @@
       </tr>
     </table>
 
-    {else}
+    {else if $_GET["timeSheetPrintMode"] == "items" || $_GET["timeSheetPrintMode"] == "items_desc"}
      <table border="1" cellspacing="0" cellpadding="2" width="100%">
       <tr>
         <th>Date</th>
@@ -89,7 +89,7 @@
       {list($rows,$info) = get_timeSheetItem_list()}
       {foreach $rows as $r}
       <tr>
-        <td>{$r.date}</td>
+        <td class="nobr">{$r.date}</td>
         <td align="right" class="nobr">{$r.tally} {$r.unit}</td>
         <td>{$r.desc}</td>
       </tr>
