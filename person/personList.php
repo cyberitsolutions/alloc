@@ -64,6 +64,9 @@ function show_people($template_name) {
     }
     $where = TRUE;
   }
+  $w = " AND ";
+  $where or $w = " WHERE ";
+  $_POST["show_all_users"] or $query .= $w." personActive = 1 ";
   $query.= " GROUP BY username";
   $query.= " ORDER BY firstName,surname,username";
   $db->query($query);
@@ -126,7 +129,8 @@ function check_optional_show_skills_list() {
 
 
 $db = new db_alloc;
-$_POST["show_skills"] and $TPL["show_skills_checked"] = "checked";
+$_POST["show_skills"] and $TPL["show_skills_checked"] = " checked";
+$_POST["show_all_users"] and $TPL["show_all_users_checked"] = " checked";
  
 $employee_expertise = array(""=>"Any Expertise", "Novice"=>"Novice", "Junior"=>"Junior", "Intermediate"=>"Intermediate", "Advanced"=>"Advanced", "Senior"=>"Senior");
 $TPL["employee_expertise"] = get_options_from_array($employee_expertise, $_POST["expertise"], true);

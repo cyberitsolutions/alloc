@@ -56,6 +56,8 @@
 		          <br>Project Manager: Access all projects
 		      </td>
           <td>{show_perm_select()}</td>
+          <td>Last Login</td>
+          <td>{$person_lastLoginDate}</td>
         </tr>
         {include_employee_fields()}
         {include_management_fields()}
