@@ -109,6 +109,10 @@ function include_template($filename, $function_object = "") {
   echo "<!-- Start $filename -->\n";
   $template = get_template($filename, is_object($function_object));
   #echo "<pre>".htmlspecialchars($template)."</pre>"; 
+
+  // Make variable available via $TPL_var ... nah
+  #is_array($TPL) && extract($TPL, EXTR_PREFIX_ALL, "TPL_");
+
   eval($template);
   echo "<!-- End $filename -->\n";
 } 

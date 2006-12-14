@@ -36,6 +36,8 @@ define("ALLOC_TITLE", "allocPSA");
 define("ALLOC_SHOOER","");
 define("ALLOC_GD_IMAGE_TYPE","PNG");
 
+define("DATE_FORMAT","d/m/Y");
+
 // Task type definitions, these are shared across modules, so we're specifying them here
 define("TT_TASK"     , 1);
 define("TT_PHASE"    , 2);

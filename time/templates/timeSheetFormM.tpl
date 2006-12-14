@@ -17,11 +17,13 @@
 {$table_box}
   <tr>
     <th colspan="3">{help_button("timesheet_overview")}Time Sheet - {$timeSheet_status_label}</th>  
-    <th class="right" colspan="2">Printer friendly: 
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items" TARGET="_blank">Default</a>
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items_desc" TARGET="_blank">+</a> |
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=units" TARGET="_blank">Units</a> |
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=money" TARGET="_blank">Charges</a>
+    <th class="right" colspan="2"><img src="{$url_alloc_images}pdf_icon.png">
+      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items">Default</a>
+      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items&printDesc=1">+</a> |
+      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=units">Units</a>
+      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=units&printDesc=1">+</a> |
+      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=money">Charges</a>
+      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=money&printDesc=1">+</a>
     </th>
   </tr>
 
@@ -29,24 +31,24 @@
     <td>&nbsp;</td>
     <td width="20%" align="right">Created By:</td>
     <td>{$timeSheet_personName}</td>
-    <td align="right">Project:</td>
-	  <td width="30%">{$show_project_options}</td>
+    <td align="right">Client:</td>
+	  <td>{$client_link}</td>
   </tr>
 
   <tr>
     <td>&nbsp;</td>
     <td align="right">Amount:</td>
     <td>{$total_dollars}</td>
-    <td align="right">Project Cost Centre:</td>
-	  <td>{$cost_centre_link}</td>
+    <td align="right">Project:</td>
+	  <td width="30%">{$show_project_options}</td>
   </tr>
 
   <tr>
 	  <td>&nbsp;</td>
     <td align="right">Customer Billing:</td>
     <td><nobr>{$total_customerBilledDollars}{$ex_gst}</nobr></td>
-    <td align="right">Client:</td>
-	  <td>{$client_link}</td>
+    <td align="right">Project Cost Centre:</td>
+	  <td>{$cost_centre_link}</td>
   </tr>
 
 	<tr>
