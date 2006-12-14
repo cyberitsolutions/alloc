@@ -240,7 +240,7 @@ if (!$current_user->is_employee()) {
     }
 
     $timeUnit = new timeUnit;
-    $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
+    $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
     
     $item_query = sprintf("SELECT * from timeSheetItem WHERE timeSheetID=%d ", $timeSheetID);
     $item_query.= sprintf("GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
@@ -257,6 +257,8 @@ if (!$current_user->is_employee()) {
       }  
      
       $TPL["timeSheet_totalHours"] += $timeSheetItem->get_value("timeSheetItemDuration");
+
+      $TPL["unit"] = $unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")];
 
 
       $text = $TPL["timeSheetItem_description_printer_version"] = stripslashes($timeSheetItem->get_value('description'));

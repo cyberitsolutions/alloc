@@ -66,11 +66,7 @@
     <td><input type="text" size="70" value="{$companyABN}" name="companyABN"></td> 
   </tr>
   <tr>
-    <td>Company Time Sheet Image</td>
-    <td><input type="text" size="70" value="{$companyImage}" name="companyImage"></td> 
-  </tr>
-  <tr>
-    <td>Time Sheet Printout Footer (html allowed)</td>
+    <td>Time Sheet Printout Footer (basic html allowed)</td>
     <td><input type="text" size="70" value="{$timeSheetPrintFooter}" name="timeSheetPrintFooter"></td> 
   </tr>
   <tr>  
