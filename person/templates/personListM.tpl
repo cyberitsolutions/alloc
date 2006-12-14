@@ -3,7 +3,7 @@
 {$table_box}
   <tr>
     <th>People</th> 
-    <th class="right" colspan="9">
+    <th class="right" colspan="8">
       &nbsp;&nbsp;<a href={$url_alloc_personGraphs}>Person Graphs</a></td>
       {$personAddSkill_link}
       &nbsp;&nbsp;<a href="{$url_alloc_person}">New Person</a>
@@ -17,7 +17,8 @@
           <td><select name="skill_class">{$skill_classes}</select></td>
           <td><select name="skill">{$skills}</select></td>
           <td><select name="expertise">{$employee_expertise}</select></td>
-          <td><input type="checkbox" name="show_skills" {$show_skills_checked}>Show Skills List</td>
+          <td><input type="checkbox" name="show_all_users"{$show_all_users_checked}>Show All Users<br/>
+              <input type="checkbox" name="show_skills"{$show_skills_checked}>Show Skills List</td>
           <td><input type="submit" value="Filter"></td>
         </tr>
       </table>
@@ -28,7 +29,6 @@
     <!-- <th>Select</th> -->
     <td>Name</td>
     <td>Enabled</td>
-    <td>Last Login</td>
     <td>Contact</td>
     <td>Actions</th>
     <td><nobr>On Leave</nobr></td>
