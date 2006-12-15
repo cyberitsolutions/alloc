@@ -95,13 +95,13 @@ $grand_total = 0;
       if (have_entity_perm("transaction", PERM_READ, $current_user, false)) {
         $query = sprintf("SELECT transaction.* ")
           .sprintf("FROM transaction ")
-          .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
+          .sprintf("WHERE transaction.projectID = '%d' AND status='approved' ", $projectID)
           .sprintf("ORDER BY lastModified desc");
       } else {
         $query = sprintf("SELECT transaction.* ")
           .sprintf("FROM transaction ")
           .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
-          .sprintf(" AND transaction.tfID = %d ", $current_user->get_id())
+          .sprintf(" AND transaction.tfID = %d AND status='approved'", $current_user->get_id())
           .sprintf("ORDER BY lastModified desc");
       }
       $db->query($query);
@@ -126,11 +126,11 @@ $grand_total = 0;
 
       // calculate percentage from grand total (gt) and project budget (pb)
       if ($gt > 0 && $pb > 0) {
-        $p = sprintf("%0.1f", $gt / $pb * 100);
+        $p = $gt / $pb * 100;
       } else {
         $p = "0";
       }
-      $TPL["percentage"] = $p;
+      $TPL["percentage"] = sprintf("%0.1f",$p);
     }
   }
 
@@ -581,8 +581,57 @@ $options["taskView"] = "byProject";
 $options["projectIDs"] = array($project->get_id());   
 $options["taskStatus"] = "not_completed";
 $options["showAssigned"] = true;
-    
-$project->get_id() and $TPL["task_summary"] = task::get_task_list($options);
+$options["showTimes"] = true;
+
+// Gets $ per hour, even if user uses metric like $200 Daily
+function get_projectPerson_hourly_rate($personID,$projectID) {
+  $db = new db_alloc;
+  $q = sprintf("SELECT rate,rateUnitID FROM projectPerson WHERE personID = %d AND projectID = %d",$personID,$projectID);
+  $db->query($q);
+  $db->next_record();
+  $rate = $db->f("rate");
+  $unitID = $db->f("rateUnitID");
+  $t = new timeUnit;
+  $timeUnits = $t->get_assoc_array("timeUnitID","timeUnitSeconds",$unitID);
+  $rate and $hourly_rate = $rate / ($timeUnits[$unitID]/60/60);
+  return $hourly_rate;
+}
+
+
+if ($project->get_id()) { 
+  $TPL["task_summary"] = task::get_task_list($options);
+
+  $options["return"] = "objects";
+  $tasks = task::get_task_list($options);
+  if (is_array($tasks)) {
+    foreach ($tasks as $tid => $t) {
+      $hourly_rate = get_projectPerson_hourly_rate($t["personID"],$t["projectID"]);
+
+      $time_remaining = $t["timeEstimate"] - (task::get_time_billed($t["taskID"])/60/60);
+
+      #echo "<br/>TR: ".$t["timeEstimate"] ." - ". (task::get_time_billed($t["taskID"])/60/60);
+      #echo "<br>CR: ".$hourly_rate." * ".$time_remaining;
+
+      $cost_remaining = $hourly_rate * $time_remaining;
+
+      if ($cost_remaining > 0) {
+        #echo "<br/>Tally: ".$TPL["cost_remaining"] += $cost_remaining; 
+        $TPL["cost_remaining"] += $cost_remaining; 
+        $TPL["time_remaining"] += $time_remaining;
+      } 
+      $t["timeEstimate"] and $count_quoted_tasks++;
+    }
+    $TPL["cost_remaining"] = sprintf("%0.2f",$TPL["cost_remaining"]);
+    $TPL["time_remaining"] = sprintf("%0.1f",$TPL["time_remaining"]);
+
+    $TPL["count_incomplete_tasks"] = count($tasks);
+    $not_quoted = count($tasks) - $count_quoted_tasks;
+    $TPL["count_not_quoted_tasks"] = sprintf("%d",$not_quoted);
+  }
+}
+
+
+
 
 $TPL["navigation_links"] = $project->get_navigation_links();
 

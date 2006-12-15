@@ -2,12 +2,15 @@ function help_text_on(img, str) {
   delay(150);
   popup(str); 
   x = findPosX(document.getElementById(img.id)) +17 -400;
-  //window.alert(x);
   if (x < 0) {
     x = x + 380;
   }
   helper.style.left=x+'px';
   y = findPosY(document.getElementById(img.id)) +22 + yyy;
+  r = 1600;
+  if (y > r) {
+    y = y - document.getElementById("helper_table").offsetHeight-24;
+  }
   helper.style.top=y+'px';
   toggleCombos("hidden"); 
 }
@@ -18,7 +21,7 @@ function help_text_off(str) {
 }
 function popup(msg) {
   var content;
-  content ="<table width='150' border='0' cellpadding='4' cellspacing='0' class='helper_table'><tr><td>";
+  content ="<table width='150' border='0' cellpadding='4' cellspacing='0' id='helper_table' class='helper_table'><tr><td>";
   content += msg + "</td></tr></table>";
   yyy = 0;
   document.getElementById("helper").innerHTML=content;

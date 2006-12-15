@@ -133,9 +133,8 @@ function updateClientContact(number) \{
   <tr>
     <td>Person</td>
     <td>Role</td>
-    <td>Email Type</td>
-    <td>Rate Type</td>
     <td>Rate</td>
+    <td>Rate Type</td>
     <td>Action</td>
   </tr>
 {show_person_list("templates/projectPersonListR.tpl")}
@@ -216,13 +215,17 @@ function updateClientContact(number) \{
 
 {$table_box}
   <tr>
-    <th>Total of all time sheets and transactions: ${$grand_total}</th>
+    <th>Financial Summary</th>
+    <th class="right">{help_button("project_financial_summary")}</th>
   </tr>
   <tr>
-    <th>Project budget: ${$project_projectBudget}</th>
+    <td>Project Budget: ${$project_projectBudget}</td>
   </tr>
   <tr>
-    <th>Percentage used: {$percentage}%</th>
+    <td>Project Spend: ${$grand_total} ({$percentage}%)</td>
   </tr>
+  <tr>
+    <td>Task Estimate: ${$cost_remaining} / {$time_remaining} Hours ({$count_incomplete_tasks} incomplete, {$count_not_quoted_tasks} not included)</td>
+  </tr>            
 </table>
 {show_footer()}
