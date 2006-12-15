@@ -6,13 +6,9 @@
     <th class="right">{$navigation_links}</th>
   </tr>
   <tr>  
-    <td colspan="2">
-      <table>
+    <td colspan="2" align="center">
         {show_people("templates/personGraphR.tpl")}
-      </table>  
     </td>
   </tr>
 </table>
-
-  <small>Task Allocation Report produced by Alloc. {$current_date}</small> 
 {show_footer()}

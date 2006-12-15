@@ -560,20 +560,22 @@ class task extends db_entity {
 
   function get_task_link($_FORM=array()) {
     $rtn = "<a href=\"".$this->get_url()."\">";
-    $_FORM["showTaskID"] and $rtn.= $this->get_id()." ";
-    $rtn.= $this->get_task_name();
+    $rtn.= $this->get_task_name($_FORM);
     $rtn.= "</a>";
     return $rtn;
   }
 
-  function get_task_name($format="html") {
-    if ($this->get_value("taskTypeID") == TT_PHASE && $format == "html") {
-      $rtn = "<strong>".stripslashes($this->get_value("taskName"))."</strong>";
+  function get_task_name($_FORM=array()) {
+
+    $_FORM["showTaskID"] and $id = $this->get_id()." ";
+
+    if ($this->get_value("taskTypeID") == TT_PHASE && $_FORM["return"] == "html") {
+      $rtn = "<strong>".$id.stripslashes($this->get_value("taskName"))."</strong>";
     } else if ($this->get_value("taskTypeID") == TT_PHASE) {
-      $rtn = stripslashes($this->get_value("taskName"));
+      $rtn = $id.stripslashes($this->get_value("taskName"));
     } else {
       substr($this->get_value("taskName"),0,140) != $this->get_value("taskName") and $dotdotdot = "...";
-      $rtn = substr(stripslashes($this->get_value("taskName")),0,140).$dotdotdot;
+      $rtn = $id.substr(stripslashes($this->get_value("taskName")),0,140).$dotdotdot;
     }
     return $rtn;
   }
@@ -735,6 +737,7 @@ function get_task_statii_array() {
      *   showHeader           = A descriptive header row
      *   showDescription      = The tasks description
      *   showComments         = The tasks comments
+     *   showTaskID           = Prefix the taskName with the task ID
      *
      *
      * Filter Options:
@@ -861,7 +864,7 @@ function get_task_statii_array() {
         $t = new task;
         $t->read_db_record($db);
         $row["taskURL"] = $t->get_url();
-        $row["taskName"] = $t->get_task_name($_FORM["return"]);
+        $row["taskName"] = $t->get_task_name($_FORM);
         $row["taskLink"] = $t->get_task_link($_FORM);
         $row["newSubTask"] = $t->get_new_subtask_link();
         $row["taskStatus"] = $t->get_status($_FORM["return"]);
@@ -1009,7 +1012,7 @@ function get_task_statii_array() {
       $task->read_db_record($db);
 
       $row["taskURL"] = $task->get_url();
-      $row["taskName"] = $task->get_task_name();
+      $row["taskName"] = $task->get_task_name($_FORM);
       $row["taskLink"] = $task->get_task_link($_FORM);
       $row["newSubTask"] = $task->get_new_subtask_link();
       $row["taskStatus"] = $task->get_status();

@@ -35,12 +35,12 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
 
             ,"url_alloc_project"                        => $sess->url(SCRIPT_PATH."project/project.php")
             ,"url_alloc_projectList"                    => $sess->url(SCRIPT_PATH."project/projectList.php")
-            ,"url_alloc_projectSummary"                 => $sess->url(SCRIPT_PATH."project/projectSummary.php")
             ,"url_alloc_projectGraph"                   => $sess->url(SCRIPT_PATH."project/projectGraph.php")
+            ,"url_alloc_projectGraphImage"              => $sess->url(SCRIPT_PATH."project/projectGraphImage.php")
             ,"url_alloc_saveProjectPerson"              => $sess->url(SCRIPT_PATH."project/saveProjectPerson.php")
             ,"url_alloc_projectPerson"                  => $sess->url(SCRIPT_PATH."project/projectPerson.php")
             ,"url_alloc_updateProjectClientContactList" => $sess->url(SCRIPT_PATH."project/updateProjectClientContactList.php")
-            ,"url_alloc_personGraphs"                   => $sess->url(SCRIPT_PATH."project/personGraphs.php")
+            ,"url_alloc_personGraph"                    => $sess->url(SCRIPT_PATH."project/personGraph.php")
             ,"url_alloc_personGraphImage"               => $sess->url(SCRIPT_PATH."project/personGraphImage.php")
 
             ,"url_alloc_task"                           => $sess->url(SCRIPT_PATH."task/task.php")

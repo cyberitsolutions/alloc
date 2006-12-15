@@ -32,37 +32,35 @@ $options["personID"] = $_GET["personID"];
 $options["taskView"] = "prioritised";
 $options["return"] = "objects";
 $options["taskStatus"] = "not_completed";
+$options["showTaskID"] = true;
 
 if ($_GET["graph_type"] == "phases") {
   $options["taskTypeID"] = TT_PHASE;
 }
 
 $task_graph = new task_graph;
+$task_graph->set_title($_GET["graphTitle"]);
+$task_graph->set_width($_GET["graphWidth"]);
 $task_graph->bottom_margin = 20;
 
-$tasks = task::get_task_list($options);
+$tasks = task::get_task_list($options) or $tasks = array();
 
-if (is_array($tasks) && count($tasks)) {
-
-  foreach ($tasks as $task) {
-    $objects[$task["taskID"]] = $task["object"];
-  }
-
-  $task_graph->init($objects);
-  $task_graph->draw_grid();
-
-  foreach ($tasks as $task) {
-    $t = $task["object"];
-    $indent = $task["padding"];
-    $task_graph->draw_task($t,$indent);
-  }
-  $task_graph->draw_milestones();
-  $task_graph->draw_today();
-  $task_graph->output();
-
-} else {
-  image_die();
+foreach ($tasks as $task) {
+  $objects[$task["taskID"]] = $task["object"];
 }
+
+$task_graph->init($objects);
+$task_graph->draw_grid();
+
+foreach ($tasks as $task) {
+  $task_graph->draw_task($task);
+}
+
+$task_graph->draw_milestones();
+$task_graph->draw_today();
+$task_graph->output();
+
+
 
 page_close();
 ?>

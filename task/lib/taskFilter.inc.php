@@ -54,6 +54,17 @@ function load_form_data($defaults=array()) {
     $p = $_FORM["projectID"];
     unset($_FORM["projectID"]);
     $_FORM["projectID"][] = $p;
+
+  } else if (!$_FORM["projectID"] && $_FORM["projectType"]) {
+    $q = project::get_project_type_query($_FORM["projectType"]);
+    $db = new db_alloc;
+    $db->query($q);
+    while($row = $db->row()) {
+      $_FORM["projectID"][] = $row["projectID"];
+    }
+
+  } else if (!$_FORM["projectType"]){
+    $_FORM["projectType"] = "mine";
   }
   
   if (!$_FORM["applyFilter"]) {
@@ -68,7 +79,6 @@ function load_form_data($defaults=array()) {
   } else {
     unset($_FORM["showComments"]);
   }
-  $_FORM["projectType"] or $_FORM["projectType"] = "mine";
   $_FORM["taskView"] or $_FORM["taskView"] = "byProject";
   return $_FORM;
 }
