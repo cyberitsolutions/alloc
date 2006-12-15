@@ -22,46 +22,46 @@
  */
 
 require_once("../alloc.php");
-include("lib/task_graph.inc.php");
 
-global $current_user, $show_weeks, $for_home_item;
+$defaults = array("showHeader"=>true
+                 ,"showProject"=>true
+                 ,"padding"=>1
+                 ,"url_form_action"=>$TPL["url_alloc_projectGraph"]
+                 ,"form_name"=>"projectSummary_filter"
+                 );
 
+function show_filter() {
+  global $TPL,$defaults;
 
-
-$options = unserialize(urldecode(stripslashes($_GET["FORM"])));
-$options["return"] = "objects";
-$options["padding"] = 0;
-$options["debug"] = 0;
-
-$tasks = task::get_task_list($options);
-
-if (is_array($tasks) && count($tasks)) {
-
-  foreach ($tasks as $task) {
-    $objects[$task["taskID"]] = $task["object"];
-  }
-
-  $task_graph = new task_graph;
-  $task_graph->init($objects);
-  $task_graph->draw_grid();
-
-  foreach ($tasks as $task) {
-    $t = $task["object"];
-    $indent = $task["padding"];
-    $task_graph->draw_task($t,$indent);
-  }
-
-  $task_graph->draw_milestones();
-  $task_graph->draw_today();
-  $task_graph->draw_legend();
-  $task_graph->output();
-
-} else {
-  image_die();
+  $_FORM = load_form_data($defaults);
+  $arr = load_task_filter($_FORM);
+  is_array($arr) and $TPL = array_merge($TPL,$arr);
+  include_template("../task/templates/taskFilterS.tpl");
 }
 
+function show_projects($template_name) {
+  global $TPL, $default;
+  $_FORM = load_form_data($defaults);
+  $arr = load_task_filter($_FORM);
+  is_array($arr) and $TPL = array_merge($TPL,$arr);
+ 
+  if (is_array($_FORM["projectID"])) {
+    $projectIDs = $_FORM["projectID"];
+    foreach($projectIDs as $projectID) {
+      $project = new project;
+      $project->set_id($projectID);
+      $project->select();
+      $_FORM["projectID"] = array($projectID);
+      $TPL["graphTitle"] = urlencode($project->get_value("projectName"));
+      $arr = load_task_filter($_FORM);
+      is_array($arr) and $TPL = array_merge($TPL,$arr);
+      include_template($template_name);
+    }
+  }
+}
+
+
+
+include_template("templates/projectGraphM.tpl");
 page_close();
-
-
-
 ?>

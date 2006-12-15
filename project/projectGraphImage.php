@@ -22,32 +22,41 @@
  */
 
 require_once("../alloc.php");
+include("lib/task_graph.inc.php");
 
-$defaults = array("showHeader"=>true
-                 ,"showProject"=>true
-                 ,"padding"=>1
-                 ,"url_form_action"=>$TPL["url_alloc_projectSummary"]
-                 ,"form_name"=>"projectSummary_filter"
-                 );
+global $current_user, $show_weeks, $for_home_item;
 
-function show_filter() {
-  global $TPL,$defaults;
 
-  $_FORM = load_form_data($defaults);
-  $arr = load_task_filter($_FORM);
-  is_array($arr) and $TPL = array_merge($TPL,$arr);
-  include_template("../task/templates/taskFilterS.tpl");
+
+$options = unserialize(urldecode(stripslashes($_GET["FORM"])));
+$options["return"] = "objects";
+$options["padding"] = 0;
+$options["debug"] = 0;
+
+$tasks = task::get_task_list($options) or $tasks = array();
+
+foreach ($tasks as $task) {
+  $objects[$task["taskID"]] = $task["object"];
 }
 
-function show_task_list() {
-  global $defaults;
+$task_graph = new task_graph;
+$task_graph->set_title($_GET["graphTitle"]);
+$task_graph->set_width($_GET["graphWidth"]);
+$task_graph->init($objects);
+$task_graph->draw_grid();
 
-  $_FORM = load_form_data($defaults);
-  #echo "<pre>".print_r($_FORM,1)."</pre>";
-  echo task::get_task_list($_FORM);
+foreach ($tasks as $task) {
+  $task_graph->draw_task($task);
 }
 
+$task_graph->draw_milestones();
+$task_graph->draw_today();
+$task_graph->draw_legend();
+$task_graph->output();
 
-include_template("templates/projectSummaryM.tpl");
+
 page_close();
+
+
+
 ?>

@@ -137,13 +137,13 @@ class project extends db_entity
 
     // Graph
     if ($this->have_perm()) {
-      $url = $TPL["url_alloc_projectSummary"]."applyFilter=1&projectID=".$this->get_id()."&taskStatus=not_completed";
+      $url = $TPL["url_alloc_projectGraph"]."applyFilter=1&projectID=".$this->get_id()."&taskStatus=not_completed&showTaskID=true";
       $links[] = "<a href=\"$url\" class=\"nobr\">Graph</a>";
     }
 
     // Allocation
     if ($this->have_perm(PERM_PROJECT_VIEW_TASK_ALLOCS)) {
-      $url = $TPL["url_alloc_personGraphs"]."projectID=".$this->get_id();
+      $url = $TPL["url_alloc_personGraph"]."projectID=".$this->get_id();
       $links[] = "<a href=\"$url\" class=\"nobr\">Allocation</a>";
     } 
 

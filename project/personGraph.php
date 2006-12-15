@@ -32,19 +32,7 @@ function show_people($template_name) {
     $person = new person();
     $person->read_db_record($db);
     $person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
-
-    $options = array();
-    $options["taskView"] = "prioritised";
-    $options["personID"] = $person->get_id();
-    $options["taskStatus"] = "in_progress";
-    $options["showHeader"] = true;
-    $options["showProject"] = true;
-
-    if (isset($project)) {
-      $options["projectIDs"][] = $project->get_id();
-    }
-    $TPL["person_task_summary"] = task::get_task_list($options);
-
+    $TPL["graphTitle"] = urlencode($person->get_username(1));
     include_template($template_name);
   }
 }
@@ -71,7 +59,7 @@ if ($projectID) {
 }
 
 $TPL["projectID"] = $projectID;
-include_template("templates/personGraphsM.tpl");
+include_template("templates/personGraphM.tpl");
 
 page_close();
 
