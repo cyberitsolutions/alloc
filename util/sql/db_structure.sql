@@ -318,7 +318,7 @@ CREATE TABLE sentEmailLog (
   sentEmailSubject varchar(255),
   sentEmailBody text,
   sentEmailHeader varchar(255),
-  sentEmailType enum('reminder','reminder_advnotice','task_created','task_closed','task_comments','timesheet_submit','timesheet_reject'),
+  sentEmailType enum('reminder','reminder_advnotice','task_created','task_closed','task_comments','timesheet_submit','timesheet_reject','timesheet_paid','daily_digest'),
   sentEmailLogModifiedTime timestamp(14) NOT NULL,
   sentEmailLogModifiedUser int(11) NOT NULL default '0',
   PRIMARY KEY  (sentEmailLogID)
@@ -437,7 +437,7 @@ CREATE TABLE timeSheet (
   projectID int(11) NOT NULL default '0',
   dateFrom date default NULL,
   dateTo date default NULL,
-  status enum('edit','manager','admin','invoiced') default NULL,
+  status enum('edit','manager','admin','invoiced','paid') default NULL,
   personID int(11) NOT NULL default '0',
   approvedByManagerPersonID int(11) default NULL,
   approvedByAdminPersonID int(11) default NULL,

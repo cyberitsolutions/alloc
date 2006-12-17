@@ -55,6 +55,8 @@ function show_timeSheets($template_name) {
   $db = new db_alloc;
   $db->query($query);
 
+  $status_array = timeSheet::get_timeSheet_statii();
+
   while ($db->next_record()) {
     $timeSheet = new timeSheet;
     $timeSheet->read_db_record($db);
@@ -67,6 +69,7 @@ function show_timeSheets($template_name) {
     $TPL["timeSheet_projectName"] = $db->f("projectName");
     $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
     $TPL["grand_total"] += $TPL["timeSheet_total_dollars"];
+    $TPL["timeSheet_status"] = $status_array[$db->f("status")];
     include_template($template_name);
   }
   $TPL["grand_total"] = sprintf("%0.2f",$TPL["grand_total"]);
@@ -106,8 +109,10 @@ if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
 $TPL["show_userID_options"].= get_options_from_array($person_array, $_POST["personID"], true);
 
 // display a list of status
-$status_array = array("edit"=>"edit", "manager"=>"manager", "admin"=>"admin", "invoiced"=>"invoiced");
-$TPL["show_status_options"] = get_options_from_array($status_array, $_POST["status"], false);
+$status_array = timeSheet::get_timeSheet_statii();
+unset($status_array["create"]);
+
+$TPL["show_status_options"] = get_options_from_array($status_array, $_POST["status"]);
 
 // display the date from filter value
 $TPL["dateFrom"] = $_POST["dateFrom"];

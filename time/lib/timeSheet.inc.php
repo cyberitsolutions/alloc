@@ -52,6 +52,16 @@ class timeSheet extends db_entity
     $this->permissions[PERM_TIME_INVOICE_TIMESHEETS] = "Invoice";
   }
 
+  function get_timeSheet_statii() {
+    return array("create"    => "Create"
+                ,"edit"      => "Add Time"
+                ,"manager"   => "Project Manager"
+                ,"admin"     => "Administrator"
+                ,"invoiced"  => "Invoiced"
+                ,"paid"      => "Time Sheet Paid"
+                );
+  }
+
   function delete() {
     $db = new db_alloc;
     $db->query("DELETE FROM timeSheetItem where timeSheetID = ".$this->get_id());  
@@ -158,11 +168,16 @@ class timeSheet extends db_entity
     $project = $this->get_foreign_object("project");
 
     if ($simple_or_complex_transaction == "simple") {
-      return false;
+      return $simple_or_complex_transaction;
+    
+    } else if ($simple_or_complex_transaction == "none") {
+      return $simple_or_complex_transaction;
+
     } else if (($project->get_value("clientID") != 13) || $simple_or_complex_transaction == "complex") {
-      return true;
+      return "complex";
     }
-    return false;
+
+    return "none";
   }
 
   function createTransactions() {
@@ -198,7 +213,7 @@ class timeSheet extends db_entity
       $this->get_value("payment_insurance") and $insur_trans_status = "approved";
       $rtn = array();
 
-      if ($this->transactions_are_complex()) {
+      if ($this->transactions_are_complex() == "complex") {
 
         // 1. Debit Cost Centre
         $product = "Debit: Cost Centre for ".$projectName." for timesheet id: ".$this->get_id();
@@ -258,7 +273,7 @@ class timeSheet extends db_entity
 
         $rtnmsg = "Created Old Style Transactions. GST deducted.";
 
-      } else {
+      } else  if ($this->transactions_are_complex() == "simple") {
         /*  This was previously named "Simple" transactions. Ho ho.
             On the Project page we care about these following variables:
              - Customer Billed At $amount eg: $121

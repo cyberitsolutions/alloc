@@ -43,7 +43,7 @@ class timeSheetListHomeItem extends home_item {
                         FROM timeSheet
                         LEFT JOIN timeSheetItem on timeSheet.timeSheetID = timeSheetItem.timeSheetID
                       WHERE timeSheet.personID=%d 
-                         AND timeSheet.status != 'invoiced' 
+                         AND timeSheet.status != 'paid' 
                     GROUP BY timeSheet.timeSheetID
                     ORDER BY timeSheet.status", $current_user->get_id());
     $db = new db_alloc;
@@ -53,11 +53,11 @@ class timeSheetListHomeItem extends home_item {
       $timeSheet->read_db_record($db);
       $timeSheet->set_tpl_values();
 
-      if ($timeSheet->get_value("status") == "edit") {
-        $TPL["status"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".$timeSheet->get_value("status")."</a>";
-      } else {
-        $TPL["status"] = $timeSheet->get_value("status");
-      }
+      #if ($timeSheet->get_value("status") == "edit") {
+        $TPL["status"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".ucwords($timeSheet->get_value("status"))."</a>";
+      #} else {
+        #$TPL["status"] = $timeSheet->get_value("status");
+      #}
 
       $TPL["total_dollars"] = "\$0";
       $db->f("total_dollars") > 0 and $TPL["total_dollars"] = "\$".sprintf("%d", $db->f("total_dollars"));
