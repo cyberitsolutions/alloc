@@ -593,7 +593,7 @@ function get_projectPerson_hourly_rate($personID,$projectID) {
   $unitID = $db->f("rateUnitID");
   $t = new timeUnit;
   $timeUnits = $t->get_assoc_array("timeUnitID","timeUnitSeconds",$unitID);
-  $rate and $hourly_rate = $rate / ($timeUnits[$unitID]/60/60);
+  ($rate && $timeUnits[$unitID]) and $hourly_rate = $rate / ($timeUnits[$unitID]/60/60);
   return $hourly_rate;
 }
 
