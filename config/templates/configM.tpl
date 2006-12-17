@@ -3,30 +3,84 @@
 <form action="{$url_alloc_config}" method="post">
 {$table_box}
   <tr>
-    <th colspan="2">Configuration</th>
+    <th colspan="3">Basic Configuration</th>
   </tr>
   <tr>
-    <td width="20%"><nobr>Alloc Base URL</nobr></td>
+    <td width="20%"><nobr>allocPSA Base URL</nobr></td>
     <td><input type="text" size="70" value="{$allocURL}" name="allocURL"></td> 
+    <td width="1%">{help_button("config_allocURL")}</td>
   </tr>
   <tr>
-    <td width="20%"><nobr>Alloc Email From Address</nobr></td>
+    <td width="20%"><nobr>allocPSA Email From Address</nobr></td>
     <td><input type="text" size="70" value="{$AllocFromEmailAddress}" name="AllocFromEmailAddress"></td> 
+    <td width="1%">{help_button("config_AllocFromEmailAddress")}</td>
+  </tr>
+  <tr>  
+    <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
+  </tr>
+</table>
+
+{$table_box}
+  <tr>
+    <th colspan="3">Time Sheets Configuration</th>
   </tr>
   <tr>
-    <td width="20%"><nobr>Main TF (as used by time sheets and upload wages/invoices)</nobr></td>
+    <td width="20%"><nobr>Finance Tagged Fund</nobr></td>
     <td><select name="cybersourceTfID">{$tfOptions}</select></td>
+    <td width="1%">{help_button("config_cybersourceTfID")}</td>
   </tr>
   <tr>
-    <td>Main Time Sheet Admin (emails get sent to this person)</td>
+    <td>Time Sheet Administrator</td>
     <td><select name="timeSheetAdminEmail">{$timeSheetAdminEmailOptions}</select></td> 
+    <td width="1%">{help_button("config_timeSheetAdminEmail")}</td>
   </tr>
   <tr>
-    <td>Hours In A Day (as used by time sheets)</td>
+    <td>Hours in a Working Day</td>
     <td><input type="text" size="70" value="{$hoursInDay}" name="hoursInDay"></td> 
+    <td width="1%">{help_button("config_hoursInDay")}</td>
   </tr>
   <tr>
-    <td>Company Name</td>
+    <td>Time Sheet Printout Footer</td>
+    <td><input type="text" size="70" value="{$timeSheetPrintFooter}" name="timeSheetPrintFooter"></td> 
+    <td width="1%">{help_button("config_timeSheetPrintFooter")}</td>
+  </tr>
+  <tr>
+    <td>Services Tax Name</td>
+    <td><input type="text" size="70" value="{$taxName}" name="taxName"></td> 
+    <td width="1%">{help_button("config_taxName")}</td>
+  </tr>
+  <tr>
+    <td>Services Tax Percent</td>
+    <td><input type="text" size="70" value="{$taxPercent}" name="taxPercent"></td> 
+    <td width="1%">{help_button("config_taxPercent")}</td>
+  </tr>
+  <tr>
+    <td>Payroll Tax Percent</td>
+    <td><input type="text" size="70" value="{$payrollTaxPercent}" name="payrollTaxPercent"></td> 
+    <td width="1%">{help_button("config_payrollTaxPercent")}</td>
+  </tr>
+  <tr>
+    <td>Company Percent</td>
+    <td><input type="text" size="70" value="{$companyPercent}" name="companyPercent"></td> 
+    <td width="1%">{help_button("config_companyPercent")}</td>
+  </tr>
+  <tr>
+    <td>Time Sheet Payment Insurance Percent</td>
+    <td><input type="text" size="70" value="{$paymentInsurancePercent}" name="paymentInsurancePercent"></td> 
+    <td width="1%">{help_button("config_paymentInsurancePercent")}</td>
+  </tr>
+  <tr>  
+    <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
+  </tr>
+</table>
+
+{$table_box}
+  <tr>
+    <th colspan="2">Company Information</th>
+    <th width="1%">{help_button("config_companyInfo")}</th>
+  </tr>
+  <tr>
+    <td width="20%">Company Name</td>
     <td><input type="text" size="70" value="{$companyName}" name="companyName"></td> 
   </tr>
   <tr>
@@ -58,43 +112,18 @@
     <td><input type="text" size="70" value="{$companyContactAddress3}" name="companyContactAddress3"></td> 
   </tr>
   <tr>
-    <td>Company ACN</td>
+    <td>Time Sheet PDF (line 2)</td>
     <td><input type="text" size="70" value="{$companyACN}" name="companyACN"></td> 
   </tr>
   <tr>
-    <td>Company ABN</td>
+    <td>Time Sheet PDF (line 3)</td>
     <td><input type="text" size="70" value="{$companyABN}" name="companyABN"></td> 
   </tr>
-  <tr>
-    <td>Time Sheet Printout Footer (basic html allowed)</td>
-    <td><input type="text" size="70" value="{$timeSheetPrintFooter}" name="timeSheetPrintFooter"></td> 
-  </tr>
-  <tr>
-    <td>Tax Name (the name of your countries tax, eg: GST)</td>
-    <td><input type="text" size="70" value="{$taxName}" name="taxName"></td> 
-  </tr>
-  <tr>
-    <td>Tax Percent</td>
-    <td><input type="text" size="70" value="{$taxPercent}" name="taxPercent"></td> 
-  </tr>
-  <tr>
-    <td>Payroll Tax Percent</td>
-    <td><input type="text" size="70" value="{$payrollTaxPercent}" name="payrollTaxPercent"></td> 
-  </tr>
-  <tr>
-    <td>Company Percent</td>
-    <td><input type="text" size="70" value="{$companyPercent}" name="companyPercent"></td> 
-  </tr>
-  <tr>
-    <td>Time Sheet Payment Insurance Percent</td>
-    <td><input type="text" size="70" value="{$paymentInsurancePercent}" name="paymentInsurancePercent"></td> 
-  </tr>
   <tr>  
-    <td colspan="2" align="center"><input type="submit" name="save" value="Save"></td>
+    <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
+
 </table>
-
-
 
 
 
