@@ -16,7 +16,7 @@
 
 {$table_box}
   <tr>
-    <th colspan="3">{help_button("timesheet_overview")}Time Sheet - {$timeSheet_status_label}</th>  
+    <th colspan="3">{help_button("timesheet_overview")}Time Sheet</th>  
     <th class="right" colspan="2"><img src="{$url_alloc_images}pdf_icon.png">
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items">Default</a>
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items&printDesc=1">+</a> |
@@ -70,7 +70,7 @@
 	<tr>
     <td>{help_button("payment_insurance")}</td>
     <td align="right">Payment Insurance:</td>
-    <td><input type="checkbox" name="timeSheet_payment_insurance" value="1"{$timeSheet_payment_insurance_checked}></td>
+    <td>{$payment_insurance}</td>
     <td align="right">Date Submitted to Admin:</td>
     <td>{$timeSheet_dateSubmittedToAdmin}</td>
   </tr>
@@ -85,6 +85,7 @@
 
   <tr>
     <td valign="top">
+          {if $TPL["timeSheet_status"] != "paid"} 
           <div id="shrink_ts_note" style="display:none;">
             <img src="../images/shrink.gif"
                    onMouseUp="document.getElementById('ts_note').style.height='22px';
@@ -97,16 +98,22 @@
                               document.getElementById('grow_ts_note').style.display='none'
                               document.getElementById('shrink_ts_note').style.display='inline'" alt="Expand">
           </div>
+          {/}
 
 
-</td>
+    </td>
     <td align="right" valign="top">Billing Note:</td>
     <td colspan="3" valign="top">
 
+          {if $TPL["timeSheet_status"] != "paid"} 
           <textarea rows="3" cols="70" wrap="virtual" id="ts_note" style="height:22px;" name="timeSheet_billingNote"
                     onFocus="document.getElementById('ts_note').style.height='150px';
                              document.getElementById('grow_ts_note').style.display='none'
                              document.getElementById('shrink_ts_note').style.display='inline'">{$timeSheet_billingNote}</textarea>
+          {else}
+            <input type="hidden" name="timeSheet_billingNote" value="{$timeSheet_billingNote}">
+            {$timeSheet_billingNote}
+          {/}
 </td>
 
 
@@ -116,12 +123,12 @@
     <td colspan="5"><br/><br/>
       <table width="100%" align="center" cellpadding="0" cellspacing="0">
         <tr>
-          <td align="center" colspan="3">{$radio_email}</td>
+          <td align="center" colspan="3">{$radio_email}<br/><table><tr><td align="left">{$simple_or_complex_transaction}</td></tr></table></td>
         </tr>
         <tr>
           <td width="1%">{help_button("timesheet_buttons")}</td>
-          <td align="center">{$timeSheet_ChangeStatusButton}</td>
-          <td>{$simple_or_complex_transaction}&nbsp;&nbsp;&nbsp;</td>
+          <td align="center">{$timeSheet_ChangeStatusButton}<br/><br/>{$timeSheet_status_text}</td>
+          <td>&nbsp;</td>
         </tr>
       </table>
     </td>
