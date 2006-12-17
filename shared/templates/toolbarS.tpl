@@ -1,6 +1,6 @@
     <div id="header">
-      <img src="{$url_alloc_images}alloc_tiny.png" alt="allocPSA">
-      <p>{$ALLOC_TITLE}</p>
+      <a href="http://www.allocpsa.org"><img src="{$url_alloc_images}alloc_tiny.png" alt="allocPSA" border="0"></a>
+      <p>{echo config::get_config_item("companyName")}</p>
     </div>
 
     <div id="menu_top_right">
