@@ -230,11 +230,8 @@ if ($timeSheetID) {
   $TPL["clientName"] = $client->get_value("clientName");
   $TPL["companyName"] = config::get_config_item("companyName");
 
-  $acn = config::get_config_item("companyACN");
-  $abn = config::get_config_item("companyABN");
-  $acn && $abn and $br = DEFAULT_SEP;
-  $acn and $TPL["companyNos"] = "ACN ".$acn;
-  $abn and $TPL["companyNos"].= $br."ABN ".$abn;
+  $TPL["companyNos1"] = config::get_config_item("companyACN");
+  $TPL["companyNos2"] = config::get_config_item("companyABN");
 
   unset($br);
   $phone = config::get_config_item("companyContactPhone");
@@ -276,7 +273,8 @@ if ($timeSheetID) {
   $pdf->selectFont($font1);
   $pdf->ezText("ID: <b>".$TPL["timeSheetID"]."</b>",12, array("justification"=>"right"));
   $pdf->ezText("<b>".$TPL["companyName"]."</b>",17, array("justification"=>"center"));
-  $y = $pdf->ezText($TPL["companyNos"],12, array("justification"=>"center"));
+  $y = $pdf->ezText($TPL["companyNos1"],12, array("justification"=>"center"));
+  $y = $pdf->ezText($TPL["companyNos2"],12, array("justification"=>"center"));
   $pdf->ezSetY($y -20);
 
   $contact_info[] = array($TPL["companyName"],"Email: ".$TPL["companyContactEmail"]);

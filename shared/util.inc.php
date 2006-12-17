@@ -534,8 +534,10 @@ function format_date($format="Y/m/d", $date="") {
     $t = $date;
 
   // Nasty hobbitses!
-  } else {
+  } else if ($date) {
     return "Date unrecognized: ".$date;
+  } else {
+    return;
   }
   list($y,$m,$d) = explode("-", $d);
   list($h,$i,$s) = explode(":", $t);
