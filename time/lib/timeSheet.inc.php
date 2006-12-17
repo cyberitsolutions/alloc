@@ -152,8 +152,10 @@ class timeSheet extends db_entity
     if (!isset($this->pay_info["total_duration"])) {
       $this->pay_info["total_duration"] = 0;
     }
-    $this->pay_info["total_dollars_minus_gst"] = $this->pay_info["total_dollars"] / 1.1;
-    $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_customerBilledDollars"] / 1.1;
+    $taxPercent = config::get_config_item("taxPercent");
+    $taxPercentMult = (100 - $taxPercent)/100;
+    $this->pay_info["total_dollars_minus_gst"] = $this->pay_info["total_dollars"] * $taxPercentMult;
+    $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_customerBilledDollars"] * $taxPercentMult;
   }
 
   function destroyTransactions() {
@@ -201,12 +203,18 @@ class timeSheet extends db_entity
       return "ERROR: The dollar amount for this timesheet is ".$this->pay_info["total_dollars"];
     } else {
 
-      $config = new config;
+      $taxName = config::get_config_item("taxName");
+      $taxPercent = config::get_config_item("taxPercent");
+      $taxPercentMult = (100 - $taxPercent)/100;
+      $payrollTaxPercent = config::get_config_item("payrollTaxPercent");
+      $companyPercent = config::get_config_item("companyPercent");
+      $paymentInsurancePercent = config::get_config_item("paymentInsurancePercent");
+      $paymentInsurancePercentMult = (100 - $paymentInsurancePercent)/100;
 
       $cyberIsClient = $project->get_value("clientID") == 13;
       $cyberNotClient = $project->get_value("clientID") != 13;
       $recipient_tfID = $this->get_value("recipient_tfID");
-      $cyber_tfID = $config->get_config_item("cybersourceTfID");
+      $cyber_tfID = config::get_config_item("cybersourceTfID");
       $cyberIsCostCentre = $project->get_value("cost_centre_tfID") == $cyber_tfID;
       $cyberNotCostCentre = $project->get_value("cost_centre_tfID") != $cyber_tfID;
       $timeSheetRecipients = $project->get_timeSheetRecipients();
@@ -222,12 +230,12 @@ class timeSheet extends db_entity
 
         // 2. Credit Cyber Percentage and do agency percentage if necessary
         $agency_percentage = 0;
-        if ($project->get_value("is_agency")) {
-          $agency_percentage = 5;
+        if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
+          $agency_percentage = $payrollTaxPercent;
           $product = "Credit: Agency Percentage ".$agency_percentage."% of $".$this->pay_info["total_dollars_minus_gst"]." for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
-        $percent = 28.5 - $agency_percentage;
+        $percent = $companyPercent - $agency_percentage;
         $product = "Credit: ".$percent."% of $".$this->pay_info["total_dollars_minus_gst"]." for timesheet id: ".$this->get_id();
         $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
 
@@ -239,10 +247,10 @@ class timeSheet extends db_entity
 
         // 4. Payment Insurance
         if ($this->get_value("payment_insurance")) {
-          $product = "Debit: Payment Insurance 10% for timesheet id: ".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * -0.1, $recipient_tfID, "insurance", $insur_trans_status);
-          $product = "Credit: Payment Insurance 10% for timesheet id: ".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * 0.1, $cyber_tfID, "insurance", $insur_trans_status);
+          $product = "Debit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
+          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * -$paymentInsurancePercentMult, $recipient_tfID, "insurance", $insur_trans_status);
+          $product = "Credit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
+          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * $paymentInsurancePercentMult, $cyber_tfID, "insurance", $insur_trans_status);
         }
 
         
@@ -271,7 +279,7 @@ class timeSheet extends db_entity
                                                   , "commission");
         } 
 
-        $rtnmsg = "Created Old Style Transactions. GST deducted.";
+        $rtnmsg = "Created Old Style Transactions. ".$taxName." deducted.";
 
       } else  if ($this->transactions_are_complex() == "simple") {
         /*  This was previously named "Simple" transactions. Ho ho.
@@ -297,12 +305,12 @@ class timeSheet extends db_entity
 
         // 2. Credit Cyber Percentage and do agency percentage if necessary
         $agency_percentage = 0;
-        if ($project->get_value("is_agency")) {
-          $agency_percentage = 5;
+        if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
+          $agency_percentage = $payrollTaxPercent;
           $product = "Credit: Agency Percentage ".$agency_percentage."% of $".$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
-        $percent = 28.5 - $agency_percentage;
+        $percent = $companyPercent - $agency_percentage;
         $product = "Credit: ".$percent."% of $".$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet id: ".$this->get_id();
         $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
 
@@ -314,10 +322,10 @@ class timeSheet extends db_entity
 
         // 4. Payment Insurance
         if ($this->get_value("payment_insurance")) {
-          $product = "Debit: Payment Insurance 10% for timesheet id: ".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * -0.1, $recipient_tfID, "insurance", $insur_trans_status);
-          $product = "Credit: Payment Insurance 10% for timesheet id: ".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * 0.1, $cyber_tfID, "insurance", $insur_trans_status);
+          $product = "Debit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
+          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * -$paymentInsurancePercentMult, $recipient_tfID, "insurance", $insur_trans_status);
+          $product = "Credit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
+          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * $paymentInsurancePercentMult, $cyber_tfID, "insurance", $insur_trans_status);
         }
 
         
@@ -341,25 +349,6 @@ class timeSheet extends db_entity
         }
 
     
-        // 6. Credit Timesheet Manager 
-        #if ($timeSheetRecipients = array()) {
-      
-          #$p = new person;
-          #$p->set_id($recipient);
-          #$p->select();
-          #$preferred_tfID = $p->get_value("preferred_tfID");
-          #$preferred_tfID or $rtn["No preferred payment TFID for timesheet manager!"] = 0;
-          #$product = "Credit: Timesheet manager for Timesheet id: ".$this->get_id()." for ".$projectName;
-          #$this_p = new person;
-          #$this_p->set_id($this->get_value("personID"));
-          #$this_p->select();
-          #$product.= " (".$this->pay_info["summary_unit_totals"]." by ".$this_p->get_username(1).")";
-          #$rtn[$product] = $this->createTransaction($product
-                                                  #, $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_positive_amount_so_far_minus_insurance()
-                                                  #, $preferred_tfID
-                                                  #, "timesheet");
-        #}      
-
         $rtnmsg = "Created New Style Transactions.";
       }
 

@@ -943,7 +943,7 @@ if ($timeSheet->get_value("status") == "edit") {
 $timeSheet->load_pay_info();
 if ($timeSheet->pay_info["total_customerBilledDollars"]) {
   $TPL["total_customerBilledDollars"] = "$".sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars"]);
-  $TPL["ex_gst"] = " ($".sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars_minus_gst"])." excl GST )";
+  $TPL["ex_gst"] = " ($".sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars_minus_gst"])." excl ".config::get_config_item("taxName").")";
 }
 if ($timeSheet->pay_info["total_dollars"]) {
   $TPL["total_dollars"] = "$".sprintf("%0.2f",$timeSheet->pay_info["total_dollars"]);

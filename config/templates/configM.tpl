@@ -69,6 +69,26 @@
     <td>Time Sheet Printout Footer (basic html allowed)</td>
     <td><input type="text" size="70" value="{$timeSheetPrintFooter}" name="timeSheetPrintFooter"></td> 
   </tr>
+  <tr>
+    <td>Tax Name (the name of your countries tax, eg: GST)</td>
+    <td><input type="text" size="70" value="{$taxName}" name="taxName"></td> 
+  </tr>
+  <tr>
+    <td>Tax Percent</td>
+    <td><input type="text" size="70" value="{$taxPercent}" name="taxPercent"></td> 
+  </tr>
+  <tr>
+    <td>Payroll Tax Percent</td>
+    <td><input type="text" size="70" value="{$payrollTaxPercent}" name="payrollTaxPercent"></td> 
+  </tr>
+  <tr>
+    <td>Company Percent</td>
+    <td><input type="text" size="70" value="{$companyPercent}" name="companyPercent"></td> 
+  </tr>
+  <tr>
+    <td>Time Sheet Payment Insurance Percent</td>
+    <td><input type="text" size="70" value="{$paymentInsurancePercent}" name="paymentInsurancePercent"></td> 
+  </tr>
   <tr>  
     <td colspan="2" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
