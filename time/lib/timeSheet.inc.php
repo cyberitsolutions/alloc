@@ -237,7 +237,7 @@ class timeSheet extends db_entity
         }
         $percent = $companyPercent - $agency_percentage;
         $product = "Credit: ".$percent."% of $".$this->pay_info["total_dollars_minus_gst"]." for timesheet id: ".$this->get_id();
-        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
+        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
 
 
         // 3. Credit Employee TF
@@ -312,7 +312,7 @@ class timeSheet extends db_entity
         }
         $percent = $companyPercent - $agency_percentage;
         $product = "Credit: ".$percent."% of $".$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet id: ".$this->get_id();
-        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
+        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
 
 
         // 3. Credit Employee TF
