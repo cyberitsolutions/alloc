@@ -85,24 +85,28 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 --
 
 
-INSERT INTO config (configID, name, value) VALUES ('AllocFromEmailAddress','example@example.com');
-INSERT INTO config (configID, name, value) VALUES ('cybersourceTfID','0');
-INSERT INTO config (configID, name, value) VALUES ('timeSheetAdminEmail','0');
-INSERT INTO config (configID, name, value) VALUES ('companyName','Cybersource');
-INSERT INTO config (configID, name, value) VALUES ('companyContactPhone','+61 3 9621 2377');
-INSERT INTO config (configID, name, value) VALUES ('companyContactFax','+61 3 9621 2477');
-INSERT INTO config (configID, name, value) VALUES ('companyContactEmail','info@cyber.com.au');
-INSERT INTO config (configID, name, value) VALUES ('companyContactHomePage','http://www.cybersource.com.au');
-INSERT INTO config (configID, name, value) VALUES ('companyContactAddress','Level 4, 10-16 Queen St');
-INSERT INTO config (configID, name, value) VALUES ('companyACN','ACN 053 904 082');
-INSERT INTO config (configID, name, value) VALUES ('hoursInDay','7.5');
+INSERT INTO config (name, value) VALUES ('AllocFromEmailAddress','example@example.com');
+INSERT INTO config (name, value) VALUES ('cybersourceTfID','0');
+INSERT INTO config (name, value) VALUES ('timeSheetAdminEmail','0');
+INSERT INTO config (name, value) VALUES ('companyName','Cybersource');
+INSERT INTO config (name, value) VALUES ('companyContactPhone','+61 3 9621 2377');
+INSERT INTO config (name, value) VALUES ('companyContactFax','+61 3 9621 2477');
+INSERT INTO config (name, value) VALUES ('companyContactEmail','info@cyber.com.au');
+INSERT INTO config (name, value) VALUES ('companyContactHomePage','http://www.cybersource.com.au');
+INSERT INTO config (name, value) VALUES ('companyContactAddress','Level 4, 10-16 Queen St');
+INSERT INTO config (name, value) VALUES ('companyACN','ACN 053 904 082');
+INSERT INTO config (name, value) VALUES ('hoursInDay','7.5');
 -- This line has been moved into the install program. 
--- INSERT INTO config (configID, name, value) VALUES ('allocURL','http://change_me_to_your_URL_for_allocPSA/');
-INSERT INTO config (configID, name,value) VALUES ('companyImage','../images/cyberLogo.png');
-INSERT INTO config (configID, name, value) VALUES ('companyABN','ABN 13 053 904 082');
-INSERT INTO config (configID, name, value) VALUES ('companyContactAddress2','Melbourne Vic. 3000');
-INSERT INTO config (configID, name, value) VALUES ('companyContactAddress3','Australia');
-INSERT INTO config (configID, name, value) VALUES ('timeSheetPrintFooter','');
+-- INSERT INTO config (name, value) VALUES ('allocURL','http://change_me_to_your_URL_for_allocPSA/');
+INSERT INTO config (name, value) VALUES ('companyABN','ABN 13 053 904 082');
+INSERT INTO config (name, value) VALUES ('companyContactAddress2','Melbourne Vic. 3000');
+INSERT INTO config (name, value) VALUES ('companyContactAddress3','Australia');
+INSERT INTO config (name, value) VALUES ('timeSheetPrintFooter','Authorisation (please print):<br><br>Authorisation (signature):<br><br>Date:');
+INSERT INTO config (name, value) VALUES ('taxName','GST');
+INSERT INTO config (name, value) VALUES ('taxPercent','10');
+INSERT INTO config (name, value) VALUES ('companyPercent','28.5');
+INSERT INTO config (name, value) VALUES ('paymentInsurancePercent','10');
+INSERT INTO config (name, value) VALUES ('payrollTaxPercent','5');
 
 
 

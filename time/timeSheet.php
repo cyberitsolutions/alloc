@@ -902,9 +902,7 @@ case 'invoiced':
 
 case 'paid':
   if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-    $TPL["timeSheet_ChangeStatusButton"] = "
-        <input type=\"submit\" name=\"save_and_MoveBack\" value=\"<-- Back\">
-        <input type=\"submit\" name=\"save\" value=\"Save\">";
+    $TPL["timeSheet_ChangeStatusButton"] = "<input type=\"submit\" name=\"save_and_MoveBack\" value=\"<-- Back\">";
   }
   $TPL["payment_insurance"] = $payment_insurance_label;
   break;
