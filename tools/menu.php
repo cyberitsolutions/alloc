@@ -23,8 +23,7 @@
 
 require_once("../alloc.php");
 
-$options = array(array("url"=>"config"                  ,"text"=>"Configuration"         ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
-                ,array("url"=>"eventFilterList"         ,"text"=>"Reminders"             ,"entity"=>""                   ,"action"=>true)
+$options = array(array("url"=>"eventFilterList"         ,"text"=>"Reminders"             ,"entity"=>""                   ,"action"=>true)
                 ,array("url"=>"announcementList"        ,"text"=>"Announcements"         ,"entity"=>"announcement"       ,"action"=>PERM_READ_WRITE)
                 ,array("url"=>"permissionList"          ,"text"=>"Security"              ,"entity"=>"permission"         ,"action"=>PERM_READ_WRITE)
                 ,array("url"=>"costtime"                ,"text"=>"Cost & Time Estimater" ,"entity"=>"project"            ,"action"=>true)
