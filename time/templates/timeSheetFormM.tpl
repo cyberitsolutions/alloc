@@ -17,13 +17,14 @@
 {$table_box}
   <tr>
     <th colspan="3">{help_button("timesheet_overview")}Time Sheet</th>  
-    <th class="right" colspan="2"><img src="{$url_alloc_images}pdf_icon.png">
+    <th class="right" colspan="2">
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items">Default</a>
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items&printDesc=1">+</a> |
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=units">Units</a>
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=units&printDesc=1">+</a> |
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=money">Charges</a>
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=money&printDesc=1">+</a>
+      <img src="{$url_alloc_images}pdf_icon.png">
     </th>
   </tr>
 
