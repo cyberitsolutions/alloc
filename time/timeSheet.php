@@ -819,24 +819,18 @@ foreach ($statii as $s => $label) {
 
 
 switch ($timeSheet->get_value("status")) {
-case '':
-  $TPL["timeSheet_ChangeStatusButton"] = "
-      <input type=\"submit\" name=\"save\" value=\"Save\"> 
-      <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
-        ";
-  break;
 
 case 'edit':
   if (($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) && ($timeSheetID)) {
     if ($projectManagers) {
       $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"save\" value=\"Save\"> 
           <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
+          <input type=\"submit\" name=\"save\" value=\"Save\"> 
           <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Manager -->\"> ";
     } else {
       $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"save\" value=\"Save\"> 
           <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
+          <input type=\"submit\" name=\"save\" value=\"Save\"> 
           <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Admin -->\"> ";
     }
   }

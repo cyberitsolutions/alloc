@@ -546,5 +546,10 @@ function format_date($format="Y/m/d", $date="") {
                                  );
   return date($format, mktime(date($h),date($i),date($s),date($m),date($d),date($y)));
 }
-
+function get_config_link() {
+  global $current_user, $TPL;
+  if (have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
+    echo "<a href=\"".$TPL["url_alloc_config"]."\">Config</a>";
+  }
+}
 ?>
