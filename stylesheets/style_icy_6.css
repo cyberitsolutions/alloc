@@ -1,63 +1,211 @@
-body                    { background-color: #eeeeee; font-family:arial,helvetica,sans-serif; color:#666666; }
+body { 
+  background-color: #eeeeee; 
+  font-family:arial,helvetica,sans-serif; 
+  color:#666666; 
+}
+a:link, a:visited { 
+  color:#003d76;
+}
+a:hover { 
+  color:#688db0; 
+}
+h1 { 
+  font-weight:bold; 
+  font-size:18px; 
+}
+h2 { 
+  font-weight:bold; 
+  font-size:18px; 
+}
+h3 { 
+  font-weight:bold; 
+  font-size:17px; 
+}
+textarea, input, select, textarea { 
+  font-size:14px; 
+}
+th { 
+  color:#333333; 
+  text-align:left; 
+}
+td { 
+  color:#333333; 
+  font-size:14px; 
+}
+ul { 
+  display:inline; 
+  list-style:circle inside; 
+}
+form { 
+  display:inline; 
+  padding:0px; 
+  margin:0px;
+}
 
-a:link, a:visited       { color:#003d76; }
-a:hover                 { color:#688db0; }
+.right { 
+  text-align:right; 
+} 
+.left { 
+  text-align:left; 
+} 
+.center { 
+  text-align:center; 
+} 
+.nobr { 
+  white-space:nowrap 
+}
 
-#helper                 { position:absolute; visibility:hidden; z-index:200;  }
-table.helper_table      { background-color:#fffdf2; color:#666666; border:1px solid #999999; width:400px; font-size:10px;}
 
-h1                      { font-weight:bold; font-size:18px; }
-h2                      { font-weight:bold; font-size:18px; }
-h3                      { font-weight:bold; font-size:17px; }
 
-textarea, input, select, textarea { font-size:14px; }
 
-th                      { color:#333333; text-align:left; }
-th.right                { text-align:right; } 
-td                      { color:#333333; font-size:14px; }
-ul                      { display:inline; list-style:circle inside; }
+#helper { 
+  position:absolute; 
+  visibility:hidden; 
+  z-index:200;  
+}
+table.helper_table { 
+  background-color:#fffdf2; 
+  color:#666666; border:1px solid #999999; 
+  width:400px; 
+  font-size:10px;
+}
 
-form                    { display:inline; padding:0px; margin:0px;}
-.nobr                   { white-space:nowrap }
 
-div.message             { padding:7px; margin:7px; margin-left:5px; padding-left:0px; }
-.bad                    { color:red; font-weight:bold; font-size:15px; }
-.good                   { color:green; font-weight:bold; font-size:15px; }
-.help                   { color:black;  font-weight:bold; font-size:15px; }
 
-table.box               { border:1px solid #81a2c1; background-color:#f4f4f4; margin:7px; margin-top:14px; margin-bottom:0px; vertical-align:top; width:98%; } 
-table.box th            { background: url(../images/bg_classic.jpg) repeat-x; color:#003d76; font-size:15px; } 
-table.box th.center     { text-align:center; } 
-table.box th.right table { width:40%; } 
+div.message { 
+  padding:7px; 
+  margin:7px; 
+  margin-left:5px; 
+  padding-left:0px; 
+}
+.bad { 
+  color:red; 
+  font-weight:bold; 
+  font-size:15px; 
+}
+.good { 
+  color:green; 
+  font-weight:bold; 
+  font-size:15px; 
+}
+.help { 
+  color:black;  
+  font-weight:bold; 
+  font-size:15px;
+}
 
-table.box th a:link, table.box th a:visited { font-weight:bold; color:#003d76; font-size:15px; }
-table.box th a:hover    { font-weight:bold; color:#688db0; font-size:15px; }
+table.box { 
+  border:1px solid #81a2c1; 
+  background-color:#f4f4f4; 
+  margin:7px; 
+  margin-top:14px; 
+  margin-bottom:0px; 
+  vertical-align:top; 
+  width:98%; 
+} 
+table.box th { 
+  background: url(../images/bg_classic.jpg) repeat-x; 
+  color:#003d76; 
+  font-size:15px; 
+} 
+table.box th.center { 
+  text-align:center; 
+} 
+table.box th.right table { 
+  width:40%; 
+} 
 
-table.calendar          { width:100%; border-right:1px solid #aaaaaa; border-bottom:1px solid #aaaaaa;} 
-table.calendar td       { background-color:#f4f4f4; border-left:1px solid #aaaaaa;  border-top:1px solid #aaaaaa; width:14%; vertical-align:top;}
-table.calendar td.today { background-color:#e4e4e4; width:14%;}
+table.box th a:link, table.box th a:visited { 
+  font-weight:bold; 
+  color:#003d76; 
+  font-size:15px; 
+}
+table.box th a:hover { 
+  font-weight:bold; 
+  color:#688db0; 
+  font-size:15px; 
+}
 
-table.filter            { background-color:#e4e4e4; border:2px dashed #aaaaaa; padding:4px; margin:4px; margin-top:14px; text-align:left;}
-table.filter th         { font-weight:bold; background-color:#e4e4e4; color:#333333; border-bottom:0px solid #ffffff; text-align:center; }
+table.calendar { 
+  width:100%; 
+  border-right:1px solid #aaaaaa; 
+  border-bottom:1px solid #aaaaaa;
+} 
+table.calendar td { 
+  background-color:#f4f4f4; 
+  border-left:1px solid #aaaaaa;  
+  border-top:1px solid #aaaaaa; 
+  width:14%; vertical-align:top;
+}
+table.calendar td.today { 
+  background-color:#e4e4e4; 
+  width:14%;
+}
 
-table.panel             { background-color:#e4e4e4; height:100%; border:1px solid #aaaaaa; }
+table.filter { 
+  background-color:#e4e4e4; 
+  border:2px dashed #aaaaaa; 
+  padding:4px; 
+  margin:4px; 
+  margin-top:14px; 
+  text-align:left;
+}
+table.filter th { 
+  font-weight:bold; 
+  background-color:#e4e4e4; 
+  color:#333333; 
+  border-bottom:0px solid #ffffff; 
+  text-align:center; 
+}
 
-tr.odd                  { background-color:#e4e4e4; }
-tr.even                 { background-color:#f4f4f4; }
+table.panel { 
+  background-color:#e4e4e4; 
+  height:100%; 
+  border:1px solid #aaaaaa; 
+}
 
-.overdue                { color: red; }
-.really_overdue         { font-weight:bold; color: red}
-.behind-target          { color: #ccaa00; }
+tr.odd { 
+  background-color:#e4e4e4; 
+}
+tr.even { 
+  background-color:#f4f4f4; 
+}
 
-.transaction-approved   { color: green; }
-.transaction-pending    { color: black; }
-.transaction-rejected   { color: red; }
+.overdue { 
+  color: red; 
+}
+.really_overdue { 
+  font-weight:bold; 
+  color: red;
+}
+.behind-target { 
+  color: #ccaa00; 
+}
+.transaction-approved { 
+  color: green; 
+}
+.transaction-pending { 
+  color: black; 
+}
+.transaction-rejected { 
+  color: red; 
+}
+.highlighted { 
+  font-weight:normal; 
+  font-style:normal; 
+  background-color:#fffeb7; 
+  padding:0px 3px;
+}
 
-.highlighted            { font-weight:normal; font-style:normal; background-color:#fffeb7; padding:0px 3px;}
-
-table.tasks             { width:100%; border-right:1px solid #aaaaaa; border-bottom:1px solid #aaaaaa;}
-td.tasks                { background-color: #e4e4e4; padding:4px; }
-
+table.tasks { 
+  width:100%; 
+  border-right:1px solid #aaaaaa; 
+  border-bottom:1px solid #aaaaaa;
+}
+td.tasks { 
+  background-color: #e4e4e4; 
+  padding:4px; 
+}
 table.tasks th, table.calendar th { 
   border-bottom:0px; 
   font-weight:bold; 
@@ -65,14 +213,33 @@ table.tasks th, table.calendar th {
   background:#cccccc; 
   color:#333333; 
 }
+.col { 
+  border-left:1px solid #aaaaaa; 
+  border-top:1px solid #aaaaaa; 
+  padding:4px;
+}
 
-.col                    { border-left:1px solid #aaaaaa; border-top:1px solid #aaaaaa; padding:4px;}
+.grand_total { 
+  border-top:1px solid black;
+}
 
-.grand_total            { border-top:1px solid black;}
-
-table.comments          { border:1px solid #aaaaaa; background:#e4e4e4; margin-bottom:4px; margin-top:2px; }
-table.comments th       { text-align:left; background:#e4e4e4; vertical-align:top; color:#333333; font-weight:normal; padding:4px; }
-table.comments td       { padding:4px; }
+table.comments { 
+  border:1px solid #aaaaaa; 
+  background:#e4e4e4; 
+  margin-bottom:4px; 
+  margin-top:2px;
+}
+table.comments th { 
+  text-align:left; 
+  background:#e4e4e4; 
+  vertical-align:top; 
+  color:#333333; 
+  font-weight:normal; 
+  padding:4px; 
+}
+table.comments td { 
+  padding:4px; 
+}
 
 
 /* Setup the main content box that encapsulates everything */
@@ -134,7 +301,6 @@ div.active {
   background:url(../images/tab_selected.gif) top no-repeat;
 }
 
-
 div.tab a {
   font-weight:bold;
   text-decoration:none;
@@ -175,7 +341,6 @@ div#menu_top_right {
   padding-top:8px;
   margin-top:0px;
 }
-
 
 p#extra_links {
   font-size:14px;
