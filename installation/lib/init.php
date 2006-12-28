@@ -72,7 +72,12 @@ function perform_test($test) {
       }
     break;
     case "php_gd":
-      $gd_info = gd_info();
+
+      if (function_exists("gd_info")) {
+        $gd_info = gd_info();
+      } else {
+        $gd_info = array();
+      }
       $arr["value"] = $gd_info["GD Version"];
       if (!in_array("gd",$extensions)) {
         $arr["remedy"] = "PHP does not have the GD extension. It is recommended to install GD.";
