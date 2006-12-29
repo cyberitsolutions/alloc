@@ -97,7 +97,7 @@ INSERT INTO config (name, value) VALUES ('companyContactAddress','Level 4, 10-16
 INSERT INTO config (name, value) VALUES ('companyACN','ACN 053 904 082');
 INSERT INTO config (name, value) VALUES ('hoursInDay','7.5');
 -- This line has been moved into the install program. 
--- INSERT INTO config (name, value) VALUES ('allocURL','http://change_me_to_your_URL_for_allocPSA/');
+-- INSERT INTO config (name, value) VALUES ('allocURL','http://change_me_to_your_URL_for_allocPSA/')
 INSERT INTO config (name, value) VALUES ('companyABN','ABN 13 053 904 082');
 INSERT INTO config (name, value) VALUES ('companyContactAddress2','Melbourne Vic. 3000');
 INSERT INTO config (name, value) VALUES ('companyContactAddress3','Australia');

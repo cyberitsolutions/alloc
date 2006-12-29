@@ -44,6 +44,9 @@ function show_tab_3() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
   return $tab == 3;
 }
+function show_tab_3b() {
+  return $_POST["install_db"];
+}
 function show_tab_4() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
   return $tab == 4;
@@ -70,7 +73,7 @@ $config_vars = array("ALLOC_DB_NAME"   => array("default"=>"alloc",             
 
 foreach($config_vars as $name => $arr) {
   $val = $_POST[$name] or $val = $_GET[$name];
-  $val == "" and $val = $arr["default"];
+  $val == "" && !isset($_GET[$name]) && !isset($_POST[$name]) and $val = $arr["default"];
   $name == "ATTACHMENTS_DIR" && $val && !preg_match("/\/$/",$val) and $val.= "/";
   $name == "allocURL" && $val && !preg_match("/\/$/",$val) and $val.= "/";
   $_FORM[$name] = $val;
@@ -120,21 +123,13 @@ if ($_POST["submit_stage_4"]) {
   if (file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && filesize(ALLOC_CONFIG_PATH) == 0) {
     $str[] = "<?php";
     foreach ($config_vars as $name => $arr) {
-      if (!$_FORM[$name]) {
-        $var_fail = true;
-      }
       $name != "allocURL" and $str[] = "define(\"".$name."\",\"".$_FORM[$name]."\");";
     }
     $str[] = "?>";
     $str = implode("\n",$str);
-    if (!$var_fail) {
-      $fh = fopen(ALLOC_CONFIG_PATH,"w+");
-      fputs($fh,$str);
-      fclose($fh);
-    } else {
-      $text_tab_4[] = "Missing variables, unable to create alloc_config.php.";
-      $failed = 1;
-    }
+    $fh = fopen(ALLOC_CONFIG_PATH,"w+");
+    fputs($fh,$str);
+    fclose($fh);
 
     // Clear PHP file cache
     clearstatcache();
@@ -217,8 +212,9 @@ if ($_POST["test_db_credentials"]) {
 
 
 if ($_POST["install_db"]) {
+  unset($failed);
   $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
-   @mysql_select_db($_FORM["ALLOC_DB_NAME"], $link);
+  @mysql_select_db($_FORM["ALLOC_DB_NAME"], $link);
 
   $files = array("../util/sql/db_structure.sql","../util/sql/db_data.sql");
 
@@ -249,25 +245,36 @@ if ($_POST["install_db"]) {
 
   // Insert patch data
   $files = get_patch_file_list();
-  $query = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('%s','','%s')",db_esc(end($files)), date("Y-m-d H:i:s"));
-  if (!@mysql_query($query)) {
-    $errors[] = "Error! (".mysql_error().").";
+  foreach ($files as $f) {
+    $query = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('%s','','%s')",db_esc($f), date("Y-m-d H:i:s"));
+    if (!@mysql_query($query)) {
+      $errors[] = "Error! (".mysql_error().").";
+    }
   }
 
 
   if (!is_array($errors) && !count($errors)) {
-    $text_tab_3[] = "Database import successful!";
+    $text_tab_3b[] = "Database import successful!";
     $res = mysql_query("SELECT username FROM person",$link);
     $r = mysql_fetch_assoc($res);
     if (is_array($r)) {
-      $text_tab_3[] = "Admin user '".$r["username"]."' imported successfully!";
+      $text_tab_3b[] = "Admin user '".$r["username"]."' imported successfully!";
     } else {
-      $text_tab_3[] = "Problem importing data. Recommended to drop and create database and try again.";
+      $text_tab_3b[] = "Problem importing data. Recommended to manually drop database and try again.";
+      $failed = 1;
     }
   } else {
-    $text_tab_3 = $errors;
+    $text_tab_3b = $errors;
+    $failed = 1;
   }
 
+  if ($failed) {
+    $TPL["img_install_db_result"] = IMG_CROSS;
+    $TPL["msg_install_db_result"] = "Database installation unsuccessful!";
+  } else {
+    $TPL["img_install_db_result"] = IMG_TICK;
+    $TPL["msg_install_db_result"] = "Database installation successful.";
+  }
   $_GET["tab"] = 3;
 
 } else if ($_POST["patch_db"]) {
@@ -306,7 +313,7 @@ foreach ($config_vars as $name => $arr) {
 is_array($text_tab_1) and $TPL["text_tab_1"] = implode("\n",$text_tab_1);
 is_array($text_tab_2a) and $TPL["text_tab_2a"] = implode("<br/>",$text_tab_2a);
 is_array($text_tab_2b) and $TPL["text_tab_2b"] = implode("<br/>",$text_tab_2b);
-is_array($text_tab_3) and $TPL["text_tab_3"] = implode("<br/>",$text_tab_3);
+is_array($text_tab_3b) and $TPL["text_tab_3b"] = implode("<br/>",$text_tab_3b);
 is_array($text_tab_4) and $TPL["text_tab_4"] = implode("<br/>",$text_tab_4);
 
 

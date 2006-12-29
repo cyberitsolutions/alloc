@@ -46,11 +46,14 @@ function get_patch_file_list() {
   return $files;
 }
 
-function get_most_recent_patch() {
-  $db = new db_alloc;
-  $db->query("SELECT patchName FROM patchLog ORDER BY patchDate DESC,patchName DESC LIMIT 1;");
-  $row = $db->row();
-  return $row["patchName"];
+function get_applied_patches() {
+  $rows = array();
+  $db = new db_alloc();
+  $db->query("SELECT patchName FROM patchLog ORDER BY patchDate DESC,patchName DESC");
+  while ($row = $db->row()) {
+    $rows[] = $row["patchName"];
+  }
+  return $rows;
 }
 
 function perform_test($test) {
