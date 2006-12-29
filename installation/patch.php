@@ -30,62 +30,55 @@ $db = new db_alloc;
 $files = get_patch_file_list();
 
 // Get the most recently applied patch
-$most_recent_patch = get_most_recent_patch();
+$applied_patches = get_applied_patches();
 
 // This script can potentially be called via the livealloc patch system via GET
 $apply_patches = $_POST["apply_patches"] or $apply_patches = $_GET["apply_patches"];
 
-if ($apply_patches && $most_recent_patch != end($files)) {
+$_POST["patches_to_apply"] or $_POST["patches_to_apply"] = array();
+
+if ($apply_patches) {
 
 
   foreach ($files as $file) {
     $f = ALLOC_MOD_DIR."/patches/".$file;
 
-    if (!$most_recent_patch) {
+      
+    $go = false;
+    $go2 = false;
+
+    if (!in_array($file,$applied_patches)) {
       $go = true;
     }
 
-    if ($go && is_readable($f) && substr($f,-3) == strtolower("sql")) {
+    // The livealloc patch system doesn't use the interactive patching mechanism, so by default apply all patches that haven't been applied
+    if (in_array($file,$_POST["patches_to_apply"]) || $_GET["apply_patches"]) {
+      $go2 = true;
+    }
+
+    if ($go && $go2) {
 
       $msg[$f][] = "<b>Attempting:</b> ".$file."<br/>";
-      unset($comments);
-      unset($comments_html);
-      $mqr = @get_magic_quotes_runtime();
-      @set_magic_quotes_runtime(0);
-      $query = fread(fopen($f, 'r'), filesize($f));
-      @set_magic_quotes_runtime($mqr);
-      preg_match_all("/[\n]?(--[^\n]*)\n/", $query, $m);
-      if (is_array($m)) {
-        $comments = implode(" ",$m[1]);
-        $comments = str_replace("-- ","",$comments);
-        $comments_html[$f] = implode("<br/>",$m[1]);
-      }
-
-      $query = ereg_replace("\n--[^\n]*\n", "\n", $query);
-      $pieces = explode(";\n",$query.";\n");
-
-      for ($i=0; $i<count($pieces); $i++) {
-        $pieces[$i] = trim($pieces[$i]);
-        if(!empty($pieces[$i]) && $pieces[$i] != "-" && $pieces[$i] != ";\n") {
-          if (!$db->query($pieces[$i])) {
-            $msg[$f][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
-            $failed[$f] = true;
-          } 
-        }
+      list($sql,$comments,$comments_html) = parse_sql_file($f);
+      foreach ($sql as $query) {
+        if (!$db->query($query)) {
+          $msg[$f][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
+          $failed[$f] = true;
+        } 
       }
       if (!$failed[$f]) {
-        $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('%s','%s','%s')",db_esc($file), db_esc($comments), date("Y-m-d H:i:s"));
+        $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('%s','%s','%s')",db_esc($file), db_esc(implode(" ",$comments)), date("Y-m-d H:i:s"));
         $db->query($q);
-        $msg[$f][] = "<b style=\"color:green\">Success:</b> ".$f."<br/>".$comments_html[$f]."<br/>";
       } 
-
     }
+  }
+}
 
-    // If the last successfully applied patch is equal to the current file,
-    // then we want to start applying patches from the next iteration.
-    if ($most_recent_patch == $file) {
-      $go = true;
-    }
+
+$applied_patches = get_applied_patches();
+foreach ($files as $file) {
+  if (!in_array($file,$applied_patches)) {
+    $incomplete = true;
   }
 }
 
@@ -95,11 +88,9 @@ if ($msg) {
    $f = ALLOC_MOD_DIR."/patches/".$file;
    $msg[$f] and $TPL["msg"].= "\n\n<br/><br/>".implode("\n<br/>",$msg[$f]);
   }
-} else if ($most_recent_patch == end($files)) {
+} else if (!$incomplete) {
   header("Location: ".$TPL["url_alloc_login"]);
-} else {
-  $TPL["msg"] = "<input type='submit' name='apply_patches' value='Apply Patches'>";
-}
+} 
 
 
 include_template("templates/patch.tpl");

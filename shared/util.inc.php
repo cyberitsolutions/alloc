@@ -552,4 +552,46 @@ function get_config_link() {
     echo "<a href=\"".$TPL["url_alloc_config"]."\">Config</a>";
   }
 }
+function parse_sql_file($file) {
+  
+  // Filename must be readable and end in .sql
+  if (!is_readable($file) || substr($file,-3) != strtolower("sql")) {
+    return;
+  }
+
+  $sql = array();
+  
+  $mqr = @get_magic_quotes_runtime();
+  @set_magic_quotes_runtime(0);
+  $lines = file($file);
+  @set_magic_quotes_runtime($mqr);
+
+  foreach ($lines as $line) {
+    if (preg_match("/^[\s]*(--[^\n]*)$/", $line, $m)) {
+      $comments[] = str_replace("-- ","",$m[1]);
+      $comments_html[] = $m[1];
+    } else if (!empty($line) && substr($line,0,2) != "--" && $line) {
+      $queries[] = $line;
+    }
+  }
+
+  is_array($comments_html) and $comments_html = implode("<br/>",$comments_html);
+  $queries = implode(" ",$queries);
+  $queries = explode(";\n",$queries.";\n");
+
+  #echo "<br/><br/><br/>---------".$file."----------<br/><pre>";
+  #echo "<br/>NEW QUERY: ".implode("<br/>NEW QUERY: ",$sql)."</pre>";
+
+  foreach ($queries as $query) {
+    $query = trim($query);
+    if(!empty($query) && $query != ";\n") {
+      $sql[] = $query;
+    }
+  }
+  
+  return array($sql,$comments,$comments_html);
+}
+
+
+
 ?>

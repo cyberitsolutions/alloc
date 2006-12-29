@@ -101,7 +101,8 @@ MySQL administrator user when you run them.
 <br/><br/>
 
 Note, you do not need to run these commands if the database and user
-permissions are already setup like eg: in a hosted environment.
+credentials you entered on the previous page are already setup on the MySQL
+server.
 
 <br/>
 <table class="nice" cellspacing="0" border="0">
@@ -126,7 +127,7 @@ Once that is done, you should test that everything worked ok by clicking the Tes
       <th colspan="2">Database Connection Status</th>
     </tr>
     <tr>
-      <td colspan="2">{$text_tab_2b}&nbsp;{$img_tab_2b}</td>
+      <td colspan="2">{$text_tab_2b}&nbsp;</td>
     </tr>
     <tr>
       <td><b>{$msg_test_db_result}</b></td><td width="1%" align="center">{$img_test_db_result}</td>
@@ -147,7 +148,20 @@ Click the Install Database button to install the tables into the allocPSA databa
   <input type='submit' name='submit_stage_3' value='Next &gt;'>
 </div>
 
-{$text_tab_3}
+   {if show_tab_3b()}
+    <table class="nice" cellspacing="0" border="0">
+    <tr>
+      <th colspan="2">Database Installation</th>
+    </tr>
+    <tr>
+      <td colspan="2">{$text_tab_3b}&nbsp;</td>
+    </tr>
+    <tr>
+      <td><b>{$msg_install_db_result}</b></td><td width="1%" align="center">{$img_install_db_result}</td>
+    </tr>
+    </table>
+    {/}
+
 {$hidden}
 {/}
 
