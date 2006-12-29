@@ -57,7 +57,7 @@ require_once("../alloc.php");
 
     if ($person->have_perm(PERM_DELETE)) {
       echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-      echo "<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Are you sure you want to delete this record?')\">"; 
+      echo "<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Deleting users may have adverse affects on any projects/tasks/transactions/etc that the user was associated with. It may be preferable to simply disable the user account. Are you sure you want to delete this user?')\">"; 
     } 
 
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -223,9 +223,31 @@ if ($_POST["save"]) {
       $person->set_value('password', addslashes(crypt(trim($_POST["password1"]), trim($current_user->get_value('password')))));
     }
 
-    $person->save();
-    header("Location: ".$TPL["url_alloc_personList"]);
-    $personID = $person->get_id();
+    if ($_POST["username"]) {
+      $q = sprintf("SELECT personID FROM person WHERE username = '%s'",db_esc($_POST["username"]));
+      $db = new db_alloc();
+      $db->query($q);
+      $num_rows = $db->num_rows();
+      $row = $db->row();
+
+
+      #echo "<br/>personID: ".$person->get_id();
+      #echo "<br/>num_rows: ".$num_rows;
+      #echo "<br/>row_personID: ".$row["personID"];
+
+
+      if (($num_rows > 0 && !$person->get_id()) || ($num_rows > 0 && $person->get_id() != $row["personID"])){
+        $TPL["message"][] = "That username is already taken. Please select another.";
+      }
+    } else {
+      $TPL["message"][] = "Please enter a username.";
+    }
+
+    if (!$TPL["message"]) {
+      $person->save();
+      header("Location: ".$TPL["url_alloc_personList"]);
+      $personID = $person->get_id();
+    }
   } else {
     $TPL["message"][] = "Please re-type the passwords";
   }
