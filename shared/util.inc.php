@@ -591,6 +591,95 @@ function parse_sql_file($file) {
   
   return array($sql,$comments,$comments_html);
 }
+function show_messages() {
+  global $TPL;
+
+
+  if ($TPL["message"] && is_string($TPL["message"])) {
+    $t = $TPL["message"];
+    unset($TPL["message"]);
+    $TPL["message"][] = $t;
+  }
+  $_GET["message"] and $TPL["message"][] = urldecode($_GET["message"]);
+
+  if ($TPL["message_good"] && is_string($TPL["message_good"])) {
+    $t = $TPL["message_good"];
+    unset($TPL["message_good"]);
+    $TPL["message_good"][] = $t;
+  }
+  $_GET["message_good"] and $TPL["message_good"][] = urldecode($_GET["message_good"]);
+
+  if ($TPL["message_help"] && is_string($TPL["message_help"])) {
+    $t = $TPL["message_help"];
+    unset($TPL["message_help"]);
+    $TPL["message_help"][] = $t;
+  }
+  $_GET["message_help"] and $TPL["message_help"][] = urldecode($_GET["message_help"]);
+
+
+  if (is_array($TPL["message"]) && count($TPL["message"])) {
+    $arr["bad"] = implode("<br/>",$TPL["message"]);
+  }
+  if (is_array($TPL["message_good"]) && count($TPL["message_good"])) {
+    $arr["good"] = implode("<br/>",$TPL["message_good"]);
+  }
+  if (is_array($TPL["message_help"]) && count($TPL["message_help"])) {
+    $arr["help"] = implode("<br/>",$TPL["message_help"]);
+  }
+
+  if (is_array($arr) && count($arr)) {
+    echo "<div class=\"message\">";
+
+    foreach ($arr as $type => $str) {
+      echo "<table cellspacing=\"0\" cellpadding=\"3\"><tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".gif\"/><td/>";
+      echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".str_replace('\\','',$str)."</td></tr></table>";
+    }
+    echo "</div>";
+  }
+
+}
+function show_history() {
+  global $TPL, $current_user, $modules;
+  $db = new db_alloc; 
+
+  $str[] = "<option value=\"\">Quick List</option>";
+  $str[] = "<option value=\"".$TPL["url_alloc_task"]."\">New Task</option>";
+  $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".TT_FAULT."\">New Fault</option>";
+  $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".TT_MESSAGE."\">New Message</option>";
+
+  if (have_entity_perm("project", PERM_CREATE, $current_user)) {
+    $str[] = "<option value=\"".$TPL["url_alloc_project"]."\">New Project</option>";
+  } 
+  
+  if (isset($modules["time"]) && $modules["time"]) {
+    $str[] = "<option value=\"".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
+  }
+
+  if (isset($modules["client"]) && $modules["client"]) {
+    $str[] = "<option value=\"".$TPL["url_alloc_client"]."\">New Client</option>";
+  } 
+
+  if (isset($modules["finance"]) && $modules["finance"]) {
+    $str[] = "<option value=\"".$TPL["url_alloc_expOneOff"]."\">New Expense Form</option>";
+  }
+
+  $str[] = "<option value=\"".$TPL["url_alloc_reminderAdd"]."\">New Reminder</option>";
+
+  if (have_entity_perm("person", PERM_CREATE, $current_user)) {
+    $str[] = "<option value=\"".$TPL["url_alloc_person"]."\">New Person</option>";
+  }
+
+  $str[] = "<option value=\"".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
+
+  $history = new history;
+  $str[] = get_options_from_db($history->get_history_db("DESC"), "the_label", "historyID", $_GET["historyID"], 43);
+  echo implode("\n",$str);
+}   
+function get_category_options($category="") {
+  $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients");
+  return get_options_from_array($category_options, $category, true);
+} 
+
 
 
 

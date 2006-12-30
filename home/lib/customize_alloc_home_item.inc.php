@@ -25,7 +25,7 @@ class customize_alloc_home_item extends home_item {
   function customize_alloc_home_item() {
     global $TPL, $current_user;
 
-    home_item::home_item("", "Preferences", "home", "customizeH.tpl", "narrow");
+    home_item::home_item("", "Preferences", "home", "customizeH.tpl", "narrow",60);
 
     if (!is_object($current_user)) {
       return false;

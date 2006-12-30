@@ -276,6 +276,21 @@ class person extends db_entity {
     return $current_user;
   }
 
+  function has_messages() {
+    if (is_object($this)) {
+      $db = new db_alloc;
+      $query = "SELECT * 
+                  FROM task 
+                 WHERE taskTypeID = ".TT_MESSAGE." 
+                   AND personID = ".$this->get_id(). " 
+                   AND (dateActualCompletion = '' OR dateActualCompletion IS NULL)";
+      $db->query($query);
+      if ($db->next_record()) {
+        return true;
+      } 
+    } 
+    return false;
+  } 
 
 
 }

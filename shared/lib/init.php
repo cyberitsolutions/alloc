@@ -28,7 +28,6 @@ require_once(ALLOC_MOD_DIR."/shared/lib/class_db.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_db_alloc.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_session.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_home_item.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/lib/class_toolbar_item.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_db_field.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_db_entity.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_module.inc.php");
@@ -38,14 +37,8 @@ require_once(ALLOC_MOD_DIR."/shared/lib/class_alloc_email.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_alloc_cache.inc.php");
 
 
-class shared_module extends module
-{
+class shared_module extends module {
   var $db_entities = array("sentEmailLog");
-
-  function register_toolbar_items() {
-  }
-  function register_home_items() {
-  }
 }
 
 

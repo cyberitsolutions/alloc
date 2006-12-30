@@ -153,8 +153,6 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // Save history entry
   $history = new history;
   $history->save_history();
-
-  register_toolbar_items($modules);
 }
 
 

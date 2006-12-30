@@ -31,7 +31,6 @@
     <td>Enabled</td>
     <td>Contact</td>
     <td>Actions</th>
-    <td><nobr>On Leave</nobr></td>
     <td>Sum Prev Fort.</td>
     <td>Avg Per Fort.</td>
 {if check_optional_show_skills_list()}

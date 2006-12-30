@@ -23,7 +23,7 @@
 
 class project_list_home_item extends home_item {
   function project_list_home_item() {
-    home_item::home_item("project_list", "Project List", "project", "projectListH.tpl");
+    home_item::home_item("project_list", "Project List", "project", "projectListH.tpl", "standard", 40);
   }
 
   function show_projects($template_name) {

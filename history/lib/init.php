@@ -23,10 +23,6 @@
 
 class history_module extends module {
   var $db_entities = array("history");
-
-  function register_toolbar_items() {
-    return true;
-  }
 }
 
 include(ALLOC_MOD_DIR."/history/lib/history.inc.php");

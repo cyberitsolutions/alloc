@@ -26,14 +26,13 @@ require_once("../alloc.php");
 function show_home_items($width) {
   global $home_items, $current_home_item, $TPL;
 
-  $item_num = 0;
   reset($home_items);
-  while (list(, $current_home_item) = each($home_items)) {
-    if ($current_home_item->get_width() != $width) {
-      continue;
-    }
 
-    $item_num++;
+
+  $arr = $home_items[$width];
+  ksort($arr);
+
+  foreach ($arr as $current_home_item) {
     $TPL["item_title"] = $current_home_item->get_title();
     include_template("templates/homeItemS.tpl");
   }
