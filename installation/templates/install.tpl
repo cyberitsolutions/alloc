@@ -231,7 +231,7 @@ Verify that all the tests succeeded below, and click the Complete Installation b
         <td>
           <pre>
 # Check every 10 minutes for any allocPSA Reminders to send
-*/10 * * * * wget -q -O /dev/null {$allocURL}notification/sendReminders.php
+*/10 * * * * wget -q -O /dev/null {$allocURL}reminder/sendReminders.php
 
 # Send allocPSA Daily Digest emails once a day at 4:35am
 35 4 * * * wget -q -O /dev/null {$allocURL}person/sendEmail.php
@@ -259,7 +259,7 @@ Verify that all the tests succeeded below, and click the Complete Installation b
     </div>
 
     <div style="text-align:center; font-size:70%; color:#666666;">
-      allocPSA {$ALLOC_VERSION} &copy; 2006 <a style="color:#666666" href="http://www.cybersource.com.au">Cybersource</a>
+      allocPSA {get_alloc_version()} &copy; 2006 <a style="color:#666666" href="http://www.cybersource.com.au">Cybersource</a>
     </div>
 
   </body>

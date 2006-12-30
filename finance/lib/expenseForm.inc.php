@@ -23,7 +23,6 @@
 
 class expenseForm extends db_entity {
   var $data_table = "expenseForm";
-  var $fire_events = true;
 
   function expenseForm() {
     $this->db_entity();

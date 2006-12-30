@@ -10,7 +10,7 @@
           <th>Subject</th>
           <th>Repeat</th>
         </tr>
-        {show_reminders("../notification/templates/reminderR.tpl")}
+        {show_reminders("../reminder/templates/reminderR.tpl")}
       </table>
       <br>
       <table>

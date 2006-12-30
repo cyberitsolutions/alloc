@@ -135,7 +135,7 @@ function updateTaskCommentTemplate(number) \{
     <td>Subject</td>
     <td>Repeat</td>
   </tr>
-  {show_reminders("../notification/templates/reminderR.tpl")}
+  {show_reminders("../reminder/templates/reminderR.tpl")}
 </table>
 
 </form>

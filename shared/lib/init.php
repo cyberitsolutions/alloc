@@ -31,7 +31,6 @@ require_once(ALLOC_MOD_DIR."/shared/lib/class_home_item.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_db_field.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_db_entity.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_module.inc.php");
-require_once(ALLOC_MOD_DIR."/shared/lib/class_event.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_sentEmailLog.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_alloc_email.inc.php");
 require_once(ALLOC_MOD_DIR."/shared/lib/class_alloc_cache.inc.php");

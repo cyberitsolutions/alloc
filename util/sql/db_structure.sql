@@ -86,18 +86,6 @@ CREATE TABLE config (
 ) TYPE=MyISAM;
 
 
-CREATE TABLE eventFilter (
-  eventFilterID int(11) NOT NULL auto_increment,
-  className varchar(255) default NULL,
-  eventName varchar(255) default NULL,
-  action varchar(255) default NULL,
-  personID int(11) NOT NULL default '0',
-  objectFilter text,
-  PRIMARY KEY  (eventFilterID),
-  KEY personID (personID,action)
-) TYPE=MyISAM;
-
-
 CREATE TABLE expenseForm (
   expenseFormID int(11) NOT NULL auto_increment,
   expenseFormModifiedUser int(11) NOT NULL default '0',

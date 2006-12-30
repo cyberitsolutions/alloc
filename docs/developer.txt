@@ -163,9 +163,8 @@ Alloc account she may be added as an owner of Bob's TF so that she can work
 with the TF in the same way that Bob can.
 
 Each entity uses a set of standard actions: create, update, read and
-delete.  If the entity supports the use of events a monitor events action is
-also automatically added.  Additionally entities can define their own actions,
-such as an 'approve' action for a timesheet entity.
+delete.  Additionally entities can define their own actions, such as an
+'approve' action for a timesheet entity.
 
 A permissions defines what actions a user or role can perform on an entity.
 Examples of possible permission definitions include:

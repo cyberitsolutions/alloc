@@ -257,7 +257,7 @@ case 4:
     $reminder->delete();
   }
 
-  header("Location: ".$TPL["url_alloc_eventFilterList"]);
+  header("Location: ".$TPL["url_alloc_reminderList"]);
   if ($returnToParent == "t") {
     if ($parentType == "client") {
       header("Location: ".$TPL["url_alloc_client"]."clientID=".$parentID);

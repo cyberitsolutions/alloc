@@ -38,17 +38,16 @@ function get_alloc_version() {
     die("No alloc_version file found.");
   }
 }
-function get_script_path() {
+function get_script_path($modules) {
   // Has to return something like
   // /alloc_dev/
   // /
 
-  $modules = get_alloc_modules();
   $path = dirname($_SERVER["SCRIPT_NAME"]);
   $bits = explode("/",$path);
   $last_bit = end($bits);
 
-  if ($modules[$last_bit]) {
+  if (is_array($modules) && in_array($last_bit,$modules)) {
     array_pop($bits);
   }
   is_array($bits) and $path = implode("/",$bits);
@@ -73,13 +72,6 @@ function seconds_to_display_format($seconds) {
      
   }
   
-}
-function get_alloc_modules() {
-  if (defined("ALLOC_MODULES")) {
-    return unserialize(ALLOC_MODULES);
-  } else {
-    echo "ALLOC_MODULES is not defined!";
-  }
 }
 function page_close() {
   $sess = new Session;
@@ -194,11 +186,9 @@ function show_tabs() {
   }
 }
 function show_toolbar() {
-  global $TPL, $modules, $category;
-
+  global $TPL, $category;
   $TPL["category_options"] = get_category_options($_POST["category"]);
   $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Search...";
-
   include_template(ALLOC_MOD_DIR."/shared/templates/toolbarS.tpl");
 }
 function move_attachment($entity, $id) {

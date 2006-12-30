@@ -25,7 +25,6 @@ define("PERM_READ", 1);
 define("PERM_UPDATE", 2);
 define("PERM_DELETE", 4);
 define("PERM_CREATE", 8);
-define("PERM_MONITOR_EVENTS", 16);
 define("PERM_READ_WRITE", PERM_READ + PERM_UPDATE + PERM_DELETE + PERM_CREATE);
 class db_entity {
   var $classname = "db_entity"; // Support phplib session variables
@@ -37,8 +36,6 @@ class db_entity {
   var $db_class = "db_alloc";
   var $db;
   var $debug = false;
-  var $fire_events = false;
-  var $event_names = array("created", "updated", "deleted");
   var $filter_class;            // Set this to the name of the db_filter class corresponding to this entity if one exists
   var $fields_loaded = false;
   var $display_field_name;      // Set this to the field to be used by the get_display_value function
@@ -55,9 +52,6 @@ class db_entity {
   // Constructor
   function db_entity() {
     $this->permissions = array(PERM_READ=>"Read", PERM_UPDATE=>"Update", PERM_DELETE=>"Delete", PERM_CREATE=>"Create",);
-    if ($this->fire_events) {
-      $this->permissions[PERM_MONITOR_EVENTS] = "Monitor events";
-    }
   }
 
   // Quick and dirty - use with caution.
@@ -183,9 +177,6 @@ class db_entity {
       echo "db_entity->delete query: $query<br>\n";
     $db = $this->get_db();
     $db->query($query);
-    if ($this->fire_events) {
-      fire_event(new event($this, "deleted"));
-    }
     return true;
   }
 
@@ -212,10 +203,6 @@ class db_entity {
       echo die($db->get_error());
     }
     $this->key_field->set_value(mysql_insert_id());
-
-    if ($this->fire_events) {
-      fire_event(new event($this, "created"));
-    }
     return true;
   }
 
@@ -236,9 +223,6 @@ class db_entity {
     if ($this->debug)
       echo "update() { query=$query<br>\n";
     $db->query($query);
-    if ($this->fire_events) {
-      fire_event(new event($this, "updated"));
-    }
     return true;
   }
 
@@ -421,9 +405,6 @@ class db_entity {
       $foreign_objects[$o->get_id()] = $o;
     }
     return $foreign_objects;
-  }
-  function get_event_names() {
-    return $this->event_names;
   }
 
   // Return the value of a 'calculated' field

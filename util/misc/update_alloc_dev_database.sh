@@ -32,7 +32,6 @@ where username = 'alla'
    or username = 'anonymous'
 ;
 update person set password = '/.lBw./3lMC2Q' where username = 'anonymous';
-delete from eventFilter;
 " >> ${FILE}
 
 
