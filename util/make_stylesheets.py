@@ -16,13 +16,13 @@ fd = open(d+'../style.css')
 str_orig = fd.read();
 fd.close();
 
-# Get list of default options from the style_icy section
-default_options = config.options('style_icy')
+# Get list of default options from the style_default section
+default_options = config.options('style_default')
 
 # Build up a defaults dictionary
 dict_default = {}
 for option in default_options:
-  dict_default[option] = config.get('style_icy',option)
+  dict_default[option] = config.get('style_default',option)
 
 
 
