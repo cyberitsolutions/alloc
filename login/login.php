@@ -120,7 +120,7 @@ if (!isset($account)) {
 }
 
 
-$TPL["status_line"] = ALLOC_TITLE." ".ALLOC_VERSION." &copy; 2006 <a href=\"http://www.cybersource.com.au\">Cybersource</a>"; 
+$TPL["status_line"] = ALLOC_TITLE." ".get_alloc_version()." &copy; 2006 <a href=\"http://www.cybersource.com.au\">Cybersource</a>"; 
 $TPL["ALLOC_SHOOER"] = ALLOC_SHOOER; 
 
 

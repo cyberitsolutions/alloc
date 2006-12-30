@@ -40,11 +40,6 @@ class time_module extends module
         register_home_item(new pendingApprovalTimeSheetListHomeItem);
       }
     }
-
-    // Putting this here so that it comes after timesheets
-    include(ALLOC_MOD_DIR."/home/lib/customize_alloc_home_item.inc.php");
-    register_home_item(new customize_alloc_home_item);
-
   }
 
 }

@@ -21,17 +21,11 @@
  *
  */
 
-require_once("../alloc.php");
+class reminder_module extends module {
+  var $db_entities = array("reminder");
+}
 
-$eventFilter = new eventFilter();
-$eventFilter->set_id($eventFilterID);
-$eventFilter->select() || die("Could not load record");
-
-$eventFilter->get_value("personID") == $current_user->get_id() || die("Permission denied");
-
-$eventFilter->delete();
-
-header("Location: ".$TPL["url_alloc_eventFilterList"]);
+include(ALLOC_MOD_DIR."/reminder/lib/reminder.inc.php");
 
 
 

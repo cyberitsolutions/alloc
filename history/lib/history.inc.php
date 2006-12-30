@@ -77,7 +77,7 @@ class history extends db_entity {
     $ignored_files[] = "clientList.php";
     $ignored_files[] = "itemLoan.php";
     $ignored_files[] = "personList.php";
-    $ignored_files[] = "eventFilterList.php";
+    $ignored_files[] = "reminderList.php";
     $ignored_files[] = "search.php";
     $ignored_files[] = "person.php";
 

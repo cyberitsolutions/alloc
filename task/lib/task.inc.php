@@ -26,7 +26,6 @@ define("PERM_PROJECT_READ_TASK_DETAIL", 256);
 class task extends db_entity {
   var $classname = "task";
   var $data_table = "task";
-  var $fire_events = true;
   var $display_field_name = "taskName";
 
   function task() {

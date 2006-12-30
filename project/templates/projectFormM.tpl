@@ -206,7 +206,7 @@ function updateClientContact(number) \{
   </tr>
   <form action="{$url_alloc_project}" method=post>
   <input type="hidden" name="projectID" value="{$project_projectID}">
-  {show_reminders("../notification/templates/reminderR.tpl")}
+  {show_reminders("../reminder/templates/reminderR.tpl")}
   </form>
 </table>
 

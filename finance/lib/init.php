@@ -25,17 +25,9 @@ class finance_module extends module {
   var $db_entities = array("tf", "transaction", "expenseForm", "invoice", "invoiceItem", "tfPerson", "transactionRepeat");
 
   function register_home_items() {
-
-    $modules = get_alloc_modules();
-    if (isset($modules["finance"]) && $modules["finance"]) {
-      include(ALLOC_MOD_DIR."/home/lib/tfList_home_item.inc.php");
-      register_home_item(new tfList_home_item);
-    } 
-    //include(ALLOC_MOD_DIR."/home/lib/date_home_item.inc.php");
-    //register_home_item(new date_home_item);
+    include(ALLOC_MOD_DIR."/home/lib/tfList_home_item.inc.php");
+    register_home_item(new tfList_home_item);
   } 
-
-
 }
 
 include(ALLOC_MOD_DIR."/finance/lib/tf.inc.php");

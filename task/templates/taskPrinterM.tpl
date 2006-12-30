@@ -82,7 +82,7 @@
     <td class="overline" valign="top">Reminders</td>
     <td class="overline" colspan="3">
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
-          {show_reminders("../notification/templates/reminderR.tpl")}
+          {show_reminders("../reminder/templates/reminderR.tpl")}
         </table>&nbsp;
     </td>
   </tr>

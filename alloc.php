@@ -54,36 +54,36 @@ define("DST_VARIABLE"       , 2);  // For use within the PHP script itself
 define("DST_HTML_ATTRIBUTE" , 3);  // For use in a HTML elements attribute - e.g. a form input's value or a link's href
 define("DST_HTML_DISPLAY"   , 4);  // For display to the user as non-editable HTML text
   
+// The list of all the modules that are enabled for this install of alloc
+$m = array("shared"       
+          ,"home"         
+          ,"project"      
+          ,"task"         
+          ,"time"         
+          ,"finance"      
+          ,"client"       
+          ,"item"         
+          ,"person"       
+          ,"announcement" 
+          ,"reminder" 
+          ,"security"     
+          ,"config"       
+          ,"search"       
+          ,"tools"        
+          ,"report"       
+          ,"login"        
+          ,"soap"         
+          ,"history"      
+          ,"installation" 
+          );
 
-define("ALLOC_MODULES",serialize(array("shared"       => true
-                                      ,"home"         => true
-                                      ,"project"      => true
-                                      ,"task"         => true
-                                      ,"time"         => true
-                                      ,"finance"      => true
-                                      ,"client"       => true
-                                      ,"item"         => true
-                                      ,"person"       => true
-                                      ,"announcement" => true
-                                      ,"notification" => true
-                                      ,"security"     => true
-                                      ,"config"       => true
-                                      ,"search"       => true
-                                      ,"tools"        => true
-                                      ,"report"       => true
-                                      ,"login"        => true
-                                      ,"soap"         => true
-                                      ,"history"      => true
-                                      ,"installation" => true
-                                      )));
-
-
+// Helper functions
 require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
-define("SCRIPT_PATH",get_script_path()); 
-define("ALLOC_VERSION", get_alloc_version());
 
-$m = get_alloc_modules();
-foreach ($m as $module_name => $v) {
+// Get the web base url for the alloc site
+define("SCRIPT_PATH",get_script_path($m)); 
+
+foreach ($m as $module_name) {
   if (file_exists(ALLOC_MOD_DIR."/$module_name/lib/init.php")) {
     require_once(ALLOC_MOD_DIR."/$module_name/lib/init.php");
     $module_class = $module_name."_module";
@@ -108,7 +108,6 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"table_box"                                => "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">"
             ,"table_box_border"                         => "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">"
             ,"main_alloc_title"                         => end(explode("/", $_SERVER["SCRIPT_NAME"]))
-            ,"ALLOC_VERSION"                            => ALLOC_VERSION
             );
 
 
@@ -132,27 +131,35 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   require_once(ALLOC_MOD_DIR."/alloc_config.php");
 
   define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
+
+  // Include all the urls
   require_once(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
 
+  // Setup a current_user person who will represent the logged in user
   $current_user = new person;
 
+
+  // Some scripts don't require authentication
   if (!defined("NO_AUTH")) {
 
     // Check for existing session..
     $sess = new Session;
 
+    // If the session hasn't started and we're not on the login screen, then redirect to login 
     if (!$sess->Started() && !defined("IN_LOGIN_RIGHT_NOW")) { 
       header("Location: ". $TPL["url_alloc_login"]);
       exit();
 
+    // Else load the current_user...
     } else {
       $current_user = person::load_get_current_user($sess->Get("personID"));
+
+      // Save history entry
+      $history = new history;
+      $history->save_history();
     }
   }
 
-  // Save history entry
-  $history = new history;
-  $history->save_history();
 }
 
 
