@@ -23,7 +23,7 @@
 
 class announcements_home_item extends home_item {
   function announcements_home_item() {
-    home_item::home_item("announcements", "Announcements", "announcement", "announcementsH.tpl", "standard", "2");
+    home_item::home_item("announcements", "Announcements", "announcement", "announcementsH.tpl", "standard", 10);
   }
 
   function show_announcements($template_name) {

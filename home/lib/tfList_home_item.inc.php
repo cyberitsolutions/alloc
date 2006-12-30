@@ -23,7 +23,7 @@
 
 class tfList_home_item extends home_item {
   function tfList_home_item() {
-    home_item::home_item("", "TF", "home", "tfListH.tpl", "narrow");
+    home_item::home_item("", "TF", "home", "tfListH.tpl", "narrow",20);
   }
 
 

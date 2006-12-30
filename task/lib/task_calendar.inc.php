@@ -21,13 +21,8 @@
  *
  */
 
-class task_graph_home_item extends home_item {
+class task_calendar {
   var $date;
-
-  function task_graph_home_item() {
-    home_item::home_item("task_graph_home_item", "Task Calendar", "project", "taskGraphH.tpl");
-  }
-
 
   function show_task_calendar_recursive($template) {
     global $current_user, $TPL;
@@ -150,9 +145,6 @@ class task_graph_home_item extends home_item {
       $i++;
     }
   }
-
-
-
 
 }
 

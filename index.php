@@ -25,9 +25,7 @@ require_once("alloc.php");
 
 page_close();
 
-$first_toolbar_item = $toolbar_items[0];
-$url = $first_toolbar_item->get_url();
-header("Location: ".$url);
+header("Location: ".$TPL["url_alloc_home"]);
 
 
 

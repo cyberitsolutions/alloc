@@ -28,12 +28,6 @@ class notification_module extends module {
     $notification = new notification;
     $notification->handle_event($event);
   }
-
-  function register_toolbar_items() {
-    /*
-    register_toolbar_item("eventFilterList", "Reminders");
-    */
-  }
 }
 
 include(ALLOC_MOD_DIR."/notification/lib/notification.inc.php");

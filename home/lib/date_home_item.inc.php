@@ -23,7 +23,7 @@
 
 class date_home_item extends home_item {
   function date_home_item() {
-    home_item::home_item("date", "Today", "home", "dateH.tpl", "narrow");
+    home_item::home_item("date", "Today", "home", "dateH.tpl", "narrow",10);
   }
 
   function show_date() {

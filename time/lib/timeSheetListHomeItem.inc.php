@@ -24,7 +24,7 @@
 class timeSheetListHomeItem extends home_item {
   function timeSheetListHomeItem() {
     global $current_user, $TPL;
-    home_item::home_item("time_list", "Time Sheets", "time", "timeSheetHomeM.tpl", "narrow");
+    home_item::home_item("time_list", "Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
 
     // Get averages for hours worked over the past fortnight and year
     $t = new timeSheetItem;

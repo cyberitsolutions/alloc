@@ -29,17 +29,23 @@ class home_item {
   var $library;
   var $width = "standard";
   var $help_topic;
+  var $seq;
 
-  function home_item($name, $label, $module, $template, $width = "standard") {
+  function home_item($name, $label, $module, $template, $width="standard",$seq=0) {
     $this->name = $name;
     $this->label = $label;
     $this->module = $module;
     $this->template = $template;
     $this->width = $width;
+    $this->seq = $seq;
   }
 
   function get_template_dir() {
     return ALLOC_MOD_DIR."/".$this->module."/templates/";
+  }
+
+  function get_seq() {
+    return $this->seq;
   }
 
   function show() {
@@ -68,7 +74,7 @@ class home_item {
 
 function register_home_item($home_item) {
   global $home_items;
-  $home_items[] = $home_item;
+  $home_items[$home_item->get_width()][$home_item->get_seq()] = $home_item;
 }
 
 function register_home_items() {

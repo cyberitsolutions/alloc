@@ -23,10 +23,6 @@
 
 class person_module extends module {
   var $db_entities = array("person", "absence", "skillList", "skillProficiencys");
-
-  function register_toolbar_items() {
-    register_toolbar_item("personList", "Personnel");
-  }
 }
 
 include(ALLOC_MOD_DIR."/person/lib/person.inc.php");

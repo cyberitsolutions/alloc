@@ -24,13 +24,17 @@
 class finance_module extends module {
   var $db_entities = array("tf", "transaction", "expenseForm", "invoice", "invoiceItem", "tfPerson", "transactionRepeat");
 
-  function register_toolbar_items() {
-    global $current_user;
+  function register_home_items() {
 
-    if (isset($current_user) && $current_user->is_employee()) {
-      register_toolbar_item("financeMenu", "Finance");
-    }
-  }
+    $modules = get_alloc_modules();
+    if (isset($modules["finance"]) && $modules["finance"]) {
+      include(ALLOC_MOD_DIR."/home/lib/tfList_home_item.inc.php");
+      register_home_item(new tfList_home_item);
+    } 
+    //include(ALLOC_MOD_DIR."/home/lib/date_home_item.inc.php");
+    //register_home_item(new date_home_item);
+  } 
+
 
 }
 
