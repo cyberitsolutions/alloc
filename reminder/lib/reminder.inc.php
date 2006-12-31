@@ -38,7 +38,10 @@ class reminder extends db_entity {
                                "reminderAdvNoticeSent"=>new db_text_field("reminderAdvNoticeSent"),
                                "reminderAdvNoticeInterval"=>new db_text_field("reminderAdvNoticeInterval"),
                                "reminderAdvNoticeValue"=>new db_text_field("reminderAdvNoticeValue"),
-                               "reminderSubject"=>new db_text_field("reminderSubject"), "reminderContent"=>new db_text_field("reminderContent"), "reminderModifiedTime"=>new db_text_field("reminderModifiedTime"), "reminderModifiedUser"=>new db_text_field("reminderModifiedUser"));
+                               "reminderSubject"=>new db_text_field("reminderSubject"), 
+                               "reminderContent"=>new db_text_field("reminderContent"), 
+                               "reminderModifiedTime"=>new db_text_field("reminderModifiedTime"), 
+                               "reminderModifiedUser"=>new db_text_field("reminderModifiedUser"));
   }
 
   // set the modified time to now
@@ -56,15 +59,22 @@ class reminder extends db_entity {
     $recipients = array("-1"=>"-- all --");
     $type = $this->get_value('reminderType');
     if ($type == "project") {
-      $query = "SELECT * FROM projectPerson LEFT JOIN person ON projectPerson.personID=person.personID"." WHERE projectPerson.projectID=".$this->get_value('reminderLinkID')
-        ." ORDER BY person.username";
+      $query = sprintf("SELECT * 
+                          FROM projectPerson 
+                     LEFT JOIN person ON projectPerson.personID=person.personID 
+                         WHERE projectPerson.projectID = %d 
+                      ORDER BY person.username",$this->get_value('reminderLinkID'));
+
     } else if ($type == "task") {
       // Modified query option: to send to all people on the project that this task is from.
-      $db->query("SELECT projectID FROM task where taskID=".$this->get_value('reminderLinkID'));
+      $db->query("SELECT projectID FROM task WHERE taskID = %s",$this->get_value('reminderLinkID'));
       $db->next_record();
 
-      $query = "SELECT * FROM projectPerson LEFT JOIN person ON projectPerson.personID=person.personID"." WHERE projectPerson.projectID=".$db->f('projectID')
-        ." ORDER BY person.username";
+      $query = sprintf("SELECT * 
+                          FROM projectPerson 
+                     LEFT JOIN person ON projectPerson.personID=person.personID 
+                         WHERE projectPerson.projectID = %d 
+                      ORDER BY person.username",$db->f('projectID'));
 
     } else {
       $query = "SELECT * FROM person ORDER BY username";
@@ -75,9 +85,6 @@ class reminder extends db_entity {
       $person->read_db_record($db);
       $recipients[$person->get_id()] = $person->get_value('username');
     }
-    // if(count($recipients) <= 2) {
-    // array_shift($recipients);
-    // }
 
     return $recipients;
   }
@@ -232,84 +239,72 @@ class reminder extends db_entity {
   // dome before calling this function
   function mail_reminder() {
     // if no longer alive then dont send, just delete
-    if ($this->is_alive() != true) {
-      print "Removed out of date reminder #".$this->get_id()."\n";
+    if (!$this->is_alive()) {
       $this->delete();
     } else {
       $date = strtotime($this->get_value('reminderTime'));
-      // only sent reminder if it is time to send it
+      // Only send reminder if it is time to send it
       if (date("YmdHis", $date) <= date("YmdHis")) {
-
-        print sprintf("[%s] Reminder #%d: ",date("Y-m-d H:i:s"), $this->get_id());
 
         $person = new person;
         $person->set_id($this->get_value('personID'));
         $person->select();
 
-        if ($person->get_value('emailAddress') != "") {
+        if ($person->get_value('emailAddress')) {
           $email = sprintf("%s %s <%s>"
                           , $person->get_value('firstName')
                           , $person->get_value('surname')
                           , $person->get_value('emailAddress'));
 
-          $personSender = new person;
-          $personSender->set_id($this->get_value('reminderModifiedUser'));
-          $personSender->select();
-
           $from = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = $this->get_value('reminderSubject');
           $content = $this->get_value('reminderContent');
 
-          // update reminder
+          // Update reminder
           if ($this->get_value('reminderRecuringInterval') == "No") {
             if ($this->delete()) {
               $e = new alloc_email;
               $e->send($email, stripslashes($subject), stripslashes($content), "reminder", $from);
-              print "Sent (One time reminder removed)\n";
             }
           } else if ($this->get_value('reminderRecuringValue') != 0) {
-            // increment date until after current date .. no point in sending 
-            // multiple reminders, one every 5 minutes in order to catch up 
-            // if system is shutdown for a while
+
             $interval = $this->get_value('reminderRecuringValue');
+            $intervalUnit = $this->get_value('reminderRecuringInterval');
+            $newtime = $this->get_next_reminder_time($date,$interval,$intervalUnit);
 
-            $date_H = date("H",$date);
-            $date_i = date("i",$date);
-            $date_s = 0;
-            $date_m = date("m",$date);
-            $date_d = date("d",$date);
-            $date_Y = date("Y",$date);
-
-            $switch = $this->get_value('reminderRecuringInterval');
-            while (date("YmdHis", $date) <= date("YmdHis")) {
-
-              switch ($switch) {
-                case "Hour":  $date_H = date("H", $date) + $interval;       break;
-                case "Day":   $date_d = date("d", $date) + $interval;       break;
-                case "Week":  $date_d = date("d", $date) + (7 * $interval); break;
-                case "Month": $date_m = date("m", $date) + $interval;       break;
-                case "Year":  $date_Y = date("Y", $date) + $interval;       break;
-              }
-
-              $newtime = mktime($date_H,$date_i,$date_s,$date_m,$date_d,$date_Y);
-              $date = $newtime;
-            }
             $this->set_value('reminderTime', date("Y-m-d H:i:s", $newtime));
             // reset advanced notice
             $this->set_value('reminderAdvNoticeSent', 0);
             if ($this->save()) {
               $e = new alloc_email;
               $e->send($email, stripslashes($subject), stripslashes($content), "reminder", $from);
-              print "Sent (Reminder date updated to next)\n";
             }
           }
-        } else {
-          print "ERROR: Unable to send email to '".$person->get_value('username')
-               ."' (no email address)\n";
-        }
+        } 
       }
     }
   }
+
+  function get_next_reminder_time($reminderTime,$interval,$intervalUnit) {
+
+    $date_H = date("H",$reminderTime);
+    $date_i = date("i",$reminderTime);
+    $date_s = date("s",$reminderTime);
+    $date_m = date("m",$reminderTime);
+    $date_d = date("d",$reminderTime);
+    $date_Y = date("Y",$reminderTime);
+
+     switch ($intervalUnit) {
+       case "Hour":  $date_H = date("H", $reminderTime) + $interval;       break;
+       case "Day":   $date_d = date("d", $reminderTime) + $interval;       break;
+       case "Week":  $date_d = date("d", $reminderTime) + (7 * $interval); break;
+       case "Month": $date_m = date("m", $reminderTime) + $interval;       break;
+       case "Year":  $date_Y = date("Y", $reminderTime) + $interval;       break;
+     }
+
+     return mktime($date_H,$date_i,$date_s,$date_m,$date_d,$date_Y);
+  }
+
 
   // checks advanced notice time if any and mails advanced notice if it is time
   function mail_advnotice() {
@@ -317,32 +312,14 @@ class reminder extends db_entity {
     // if no advanced notice needs to be sent then dont bother
     if ($this->get_value('reminderAdvNoticeInterval') != "No" 
     &&  $this->get_value('reminderAdvNoticeSent') == 0) {
+
       $date = strtotime($this->get_value('reminderTime'));
-      $interval = $this->get_value('reminderAdvNoticeValue');
-      $switch = $this->get_value('reminderAdvNoticeInterval');
+      $interval = $this->get_value('reminderRecuringValue');
+      $intervalUnit = $this->get_value('reminderRecuringInterval');
+      $advnotice_time = $this->get_next_reminder_time($date,$interval,$intervalUnit);
 
-      $date_H = date("H",$date);
-      $date_i = date("i",$date);
-      $date_s = 0;
-      $date_m = date("m",$date);
-      $date_d = date("d",$date);
-      $date_Y = date("Y",$date);
-
-      switch ($switch) {
-        case "Minute": $date_i = date("i", $date) - $interval;       break;
-        case "Hour":   $date_H = date("H", $date) - $interval;       break;
-        case "Day":    $date_d = date("d", $date) - $interval;       break;
-        case "Week":   $date_d = date("d", $date) - (7 * $interval); break;
-        case "Month":  $date_m = date("m", $date) - $interval;       break;
-        case "Year":   $date_Y = date("Y", $date) - $interval;       break;
-      }
-  
-      $advnotice_time = mktime($date_H,$date_i,$date_s,$date_m,$date_d,$date_Y);  
-  
       // only sent advanced notice if it is time to send it
       if (date("YmdHis", $advnotice_time) <= date("YmdHis")) {
-        print sprintf("[%s] Sent Advanced Notice for Reminder #%d\n"
-                     ,date("Y-m-d H:i:s"), $this->get_id());
 
         $person = new person;
         $person->set_id($this->get_value('personID'));
@@ -354,10 +331,6 @@ class reminder extends db_entity {
                           ,$person->get_value('surname')
                           ,$person->get_value('emailAddress'));
 
-          $personSender = new person;
-          $personSender->set_id($this->get_value('reminderModifiedUser'));
-          $personSender->select();
-
           $from = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = sprintf("Adv Notice: %s"
                             ,$this->get_value('reminderSubject'));
@@ -367,10 +340,7 @@ class reminder extends db_entity {
           $e->send($email, stripslashes($subject), stripslashes($content), "reminder_advnotice", $from);
           $this->set_value('reminderAdvNoticeSent', 1);
           $this->save();
-        } else {
-          print "ERROR: Unable to send email to '".$person->get_value('username')
-            ."' (no email address)\n";
-        }
+        } 
       }
     }
   }

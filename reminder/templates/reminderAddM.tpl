@@ -21,7 +21,7 @@
       </td>
     </tr>
     <tr>
-      <td>Recuring:</td>
+      <td>Recurring:</td>
       <td>
         <input type="checkbox" name="reminder_recuring" {$reminder_recuring}>Yes, every
         <input type="text" size="4" name="reminder_recuring_value" value="{$reminder_recuring_value}">
@@ -64,6 +64,8 @@
   <input type="hidden" name="parentID" value="{$parentID}">
   <input type="hidden" name="returnToParent" value="{$returnToParent}">
   <input type="hidden" name="step" value="4">
+  <input type="hidden" name="reminderTime" value="{$reminderTime}">
+
 
   </form>
 

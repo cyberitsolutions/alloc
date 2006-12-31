@@ -27,6 +27,15 @@ class task_calendar {
   function show_task_calendar_recursive($template) {
     global $current_user, $TPL;
 
+    $personID = $_GET["personID"] or $personID = $_POST["personID"];
+    if ($personID) {
+      $person = new person;
+      $person->set_id($personID);
+      $person->select();
+    } else {
+      $person = $current_user; 
+    }
+
  
     $tasksGraphPlotHome = $current_user->prefs["tasksGraphPlotHome"];
     $tasksGraphPlotHomeStart = $current_user->prefs["tasksGraphPlotHomeStart"];
@@ -54,6 +63,53 @@ class task_calendar {
     $db = new db_alloc;
     $i = 0;
 
+
+    /// Need to fetch the first and latest date on the page so that we only genereate repeating reminders up to the maximum date displayed (as opposed to inifinity)
+    $first_date_on_page = mktime(date("H")
+                                ,date("i")
+                                ,date("s")
+                                ,date("m")
+                                ,date("d")-($tasksGraphPlotHomeStart*7)-7
+                                ,date("Y"));
+
+    $last_date_on_page = mktime(date("H",$first_date_on_page)
+                               ,date("i",$first_date_on_page)
+                               ,date("s",$first_date_on_page)
+                               ,date("m",$first_date_on_page)
+                               ,date("d",$first_date_on_page)+(($tasksGraphPlotHome*7)-1)
+                               ,date("Y",$first_date_on_page));
+
+
+    // Pre-load all the users reminders 
+    $query = sprintf("SELECT * 
+                        FROM reminder 
+                       WHERE personID = %d", $person->get_id());
+    $db->query($query);
+    while ($db->next_record()) {
+      $reminder = new reminder;
+      $reminder->read_db_record($db);
+
+      if ($reminder->is_alive()) {
+        $reminderTime = format_date("U",$reminder->get_value("reminderTime"));
+
+        // If repeating reminder
+        if ($reminder->get_value('reminderRecuringInterval') != "No" && $reminder->get_value('reminderRecuringValue') != 0) {
+          $interval = $reminder->get_value('reminderRecuringValue');
+          $intervalUnit = $reminder->get_value('reminderRecuringInterval');
+          
+          while ($reminderTime <= $last_date_on_page) {
+            $reminders[] = array("reminderID"=>$reminder->get_id(),"reminderSubject"=>$reminder->get_value("reminderSubject"),"reminderTime"=>$reminderTime);
+            $reminderTime = $reminder->get_next_reminder_time($reminderTime,$interval,$intervalUnit);
+          }
+
+        // Else if once off reminder
+        } else {
+          $reminders[] = array("reminderID"=>$reminder->get_id(),"reminderSubject"=>$reminder->get_value("reminderSubject"),"reminderTime"=>$reminderTime);
+        }
+      }
+    }
+
+
     while ($i < $tasksGraphPlotHome) {
 
       foreach($days_of_week as $day) {
@@ -72,6 +128,7 @@ class task_calendar {
         $a++;
       }
 
+
       $date1 = date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i), $sunday_year));
       $date2 = date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * ($i + 1)), $sunday_year));
 
@@ -80,54 +137,63 @@ class task_calendar {
                           FROM task 
                          WHERE personID = %d 
                            AND ((dateTargetCompletion >= '%s' AND dateTargetCompletion < '%s') OR (dateTargetStart >= '%s' AND dateTargetStart < '%s'))
-                           AND dateActualCompletion IS NULL", $current_user->get_id(), $date1, $date2, $date1, $date2);
+                           AND dateActualCompletion IS NULL", $person->get_id(), $date1, $date2, $date1, $date2);
       $db->query($query);
       while ($db->next_record()) {
         foreach($dates_of_week as $day=>$date) {
 
           if ($db->f("dateTargetStart") == $date) {
             ${"to_be_started_".$day} = "<br><br/>To be started:";
-            $TPL["calendar_".$day."_started"].= '<br/><a href="'.$TPL["url_alloc_task"].'taskID='.$db->f("taskID").'">';
-            $TPL["calendar_".$day."_started"].= $db->f("taskName")."</a>";
+            unset($extra);
+            $db->f("timeEstimate") and $extra = " (".sprintf("Est %0.1fhrs",$db->f("timeEstimate")).")";
+            $TPL["calendar_".$day."_started"].= '<br/><a href="'.$TPL["url_alloc_task"].'taskID='.$db->f("taskID").'">'.$db->f("taskName").$extra."</a>";
           }
 
           if ($db->f("dateTargetCompletion") == $date) {
             $TPL["calendar_".$day."_started"] or $br = "<br/>";
             ${"to_be_completed_".$day} = $br."<br/>To be completed:";
-            $TPL["calendar_".$day."_completed"].= '<br/><a href="'.$TPL["url_alloc_task"].'taskID='.$db->f("taskID").'">';
-            $TPL["calendar_".$day."_completed"].= $db->f("taskName")."</a>";
+            unset($extra);
+            $db->f("timeEstimate") and $extra = " (".sprintf("Est %0.1fhrs",$db->f("timeEstimate")).")";
+            $TPL["calendar_".$day."_completed"].= '<br/><a href="'.$TPL["url_alloc_task"].'taskID='.$db->f("taskID").'">'.$db->f("taskName").$extra."</a>";
           }
 
         }
       }
 
-      // select all reminders which are targetted for this week
-      $query = sprintf("SELECT * 
-                          FROM reminder 
-                         WHERE personID = %d AND reminderTime >= '%s' AND reminderTime < '%s'", $current_user->get_id(), $date1, $date2);
-
-      $reminder = new reminder;
-      $db->query($query);
-      while ($db->next_record()) {
-        foreach($dates_of_week as $day=>$date) {
-          $reminder->read_db_record($db);
-	        if ($reminder->is_alive()) {
-            if (date("Y-m-d", strtotime($db->f("reminderTime"))) == $date) {
-              ${"reminders_".$day} = "<br/><br/>Reminders:";
-              $TPL["calendar_".$day."_reminders"].= '<br/><a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$db->f("reminderID").'">';
-              $TPL["calendar_".$day."_reminders"].= $db->f("reminderSubject")."</a>";
-            }
+      // Paint reminders on 
+      foreach($dates_of_week as $day=>$date) {
+        $reminders or $reminders = array();
+        foreach ($reminders as $reminder => $r) {
+          if (date("Y-m-d",$r["reminderTime"]) == $date) {
+            ${"reminders_".$day} = "<br/><br/>Reminders:";
+            $TPL["calendar_".$day."_reminders"].= '<br/><a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$r["reminderID"].'">'.$r["reminderSubject"]."</a>";
           }
         }
       }
+
 
       // Draw day numbers and Today square.
       foreach($days_of_week as $k=>$day) {
-        $TPL["calendar_".$day."_date"] = date("jS M", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year));
+
+        $calendar_date = date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year));
+
+        $TPL["calendar_".$day."_date"] = date("j-M", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year));
+
+
+        // Toggle every second month to have slightly different coloured shading
+        $month_num = date("n", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year));
+
         $TPL["calendar_class_".$day] = "";
-        if (date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year)) == date("Y-m-d")) {
+        if ($calendar_date == date("Y-m-d")) {
           $TPL["calendar_class_".$day] = " class=\"today\"";
+
+        } else if ($month_num % 2 == 0) {
+          $TPL["calendar_class_".$day] = " class=\"even\"";
         }
+
+        $reminderTime = urlencode($calendar_date." 9:00am");
+        $TPL["calendar_".$day."_links"] = "<a href=\"".$TPL["url_alloc_task"]."dateTargetStart=".$calendar_date."\"><img border=\"0\" src=\"".$TPL["url_alloc_images"]."task.png\" alt=\"New Task\"></a>";
+        $TPL["calendar_".$day."_links"].= "<a href=\"".$TPL["url_alloc_reminderAdd"]."parentType=general&step=2&returnToParent=t&reminderTime=".$reminderTime."\"><img border=\"0\" src=\"".$TPL["url_alloc_images"]."reminder.png\" alt=\"New Reminder\"></a>";
 
         if ($TPL["calendar_".$day."_started"]) {
           $TPL["calendar_".$day."_started"] = ${"to_be_started_".$day}.$TPL["calendar_".$day."_started"];

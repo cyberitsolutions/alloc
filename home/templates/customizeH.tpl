@@ -37,7 +37,7 @@
   </tr>
 
   <tr>
-    <td colspan="4"><b>Task Calendar</b></td>
+    <td colspan="4"><b>Calendar</b></td>
   </tr>
   <tr>
     <td>No. Weeks</td>
