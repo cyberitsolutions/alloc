@@ -135,11 +135,26 @@ table.calendar td {
   background-color:(TABLE_BOX_BACKGROUND_COLOR); 
   border-left:1px solid (PANE_FRAME_COLOR);  
   border-top:1px solid (PANE_FRAME_COLOR); 
-  width:14%; vertical-align:top;
+  width:10%; vertical-align:top;
+  font-size:smaller;
 }
 table.calendar td.today { 
   background-color:(PANE_BG_COLOR); 
-  width:14%;
+}
+table.calendar td.even { 
+  background-color:#eeeeee; 
+}
+table.calendar h1 {
+  text-align:right;
+  font-size:(DEFAULT_FONT_SIZE)px;
+  margin:0px;
+  padding:0px;
+  font-weight:normal;
+}
+
+table.calendar img {
+  float:left;
+  margin-right:3px;
 }
 
 table.filter { 

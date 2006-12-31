@@ -6,7 +6,7 @@
     <nobr>
 		<a href="{$url_alloc_taskSummary}personID={$person_personID}&taskView=byProject&applyFilter=1&dontSave=1&taskStatus=not_completed&projectType=curr">Tasks</a>&nbsp;&nbsp;
 		<a href="{$url_alloc_personGraph}personID={$person_personID}">Graph</a>&nbsp;&nbsp;
-		<a href="{$url_alloc_calendar}personID={$person_personID}">Calendar</a>
+		<a href="{$url_alloc_taskCalendar}personID={$person_personID}">Calendar</a>
     </nobr>
   </td>
   <td>{$ts_hrs_col_1}</td>

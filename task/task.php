@@ -251,6 +251,11 @@ if (!$taskID && $_GET["tasktype"]) {
   $task->set_value("taskTypeID", $_GET["tasktype"]);
 }
 
+// If we've been sent here by a "New Task" link from the calendar
+if (!$taskID && $_GET["dateTargetStart"]) {
+  $TPL["task_dateTargetStart"] = $_GET["dateTargetStart"];
+}
+
 // Set options for the dropdown boxen
 $task->set_option_tpl_values();
 

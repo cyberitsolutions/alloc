@@ -29,6 +29,7 @@ $parentType = $_POST["parentType"] or $parentType = $_GET["parentType"];
 $parentID = $_POST["parentID"] or $parentID = $_GET["parentID"];
 $returnToParent = $_POST["returnToParent"] or $returnToParent = $_GET["returnToParent"];
 $parentID = sprintf("%d",$parentID);
+$_GET["reminderTime"] and $TPL["reminderTime"] = $_GET["reminderTime"];
 
 if (!$step) {
   $step = 1;
@@ -106,14 +107,14 @@ case 3:
     $reminder->select();
     $parentType = $reminder->get_value('reminderType');
     $parentID = $reminder->get_value('reminderLinkID');
-    $TPL["reminder_title"] = "Edit Reminder:";
+    $TPL["reminder_title"] = "Edit Reminder";
     $TPL["reminder_buttons"] =
       sprintf("<input type=\"hidden\" name=\"reminder_id\" value=\"%d\">", $reminderID).
       "<input type=\"submit\" name=\"reminder_update\" value=\"Update\">&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"reminder_delete\" value=\"Delete\">&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"reminder_cancel\" value=\"Cancel\">";
   } else {
     $reminder->set_value('reminderType', $parentType);
     $reminder->set_value('reminderLinkID', $parentID);
-    $TPL["reminder_title"] = "New Reminder:";
+    $TPL["reminder_title"] = "New Reminder";
     $TPL["reminder_buttons"] = "<input type=\"submit\" name=\"reminder_save\" value=\"Save\">"."<input type=\"submit\" name=\"reminder_cancel\" value=\"Cancel\">";
   }
 
@@ -131,6 +132,7 @@ case 3:
   // recipients
   $TPL["reminder_recipients"] = $reminder->get_recipient_options();
   // date/time
+  $_GET["reminderTime"] && $reminder->set_value("reminderTime",urldecode($_GET["reminderTime"]));
   $TPL["reminder_months"] = $reminder->get_month_options();
   $TPL["reminder_days"] = $reminder->get_day_options();
   $TPL["reminder_years"] = $reminder->get_year_options();
@@ -175,7 +177,7 @@ case 3:
       $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/task.php?taskID=".$parentID;
 
     } else if ($parentType == "general") {
-      $TPL["reminder_default_subject"] = "[General Reminder]";
+      $TPL["reminder_default_subject"] = "[Reminder]";
     }
   }
   $TPL["reminder_default_content"].= "\n".$reminder->get_value('reminderContent');
@@ -265,6 +267,8 @@ case 4:
       header("Location: ".$TPL["url_alloc_project"]."projectID=".$parentID);
     } else if ($parentType == "task") {
       header("Location: ".$TPL["url_alloc_task"]."taskID=".$parentID);
+    } else if ($_POST["reminderTime"]) {
+      header("Location: ".$TPL["url_alloc_home"]);
     }
   }
 

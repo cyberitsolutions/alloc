@@ -21,18 +21,19 @@
  *
  */
 
-class task_calendar_home_item extends home_item {
-  var $date;
 
-  function task_calendar_home_item() {
-    home_item::home_item("task_calendar_home_item", "Calendar", "task", "taskCalendarS.tpl","standard",30);
-  }
+require_once("../alloc.php");
 
-  function show_task_calendar_recursive($template) {
-    $task_calendar = new task_calendar();
-    $task_calendar->show_task_calendar_recursive($template);
-  }
+function show_task_calendar_recursive($template) {
+  $task_calendar = new task_calendar();
+  $task_calendar->show_task_calendar_recursive($template);
 }
+
+
+include_template("templates/taskCalendarM.tpl");
+
+
+
 
 
 
