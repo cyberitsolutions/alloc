@@ -4,7 +4,7 @@ body {
   color:#666666; 
 }
 a:link, a:visited { 
-  color:#825703;
+  color:#c86c12;
 }
 a:hover { 
   color:#cb832f; 
@@ -104,7 +104,7 @@ table.box {
   width:98%; 
 } 
 table.box th { 
-  background: url(../images/bg_default.jpg) repeat-x; 
+  background: url(../images/bg_leaf.jpg) repeat-x; 
   color:#829858; 
   font-size:11px; 
 } 
@@ -117,7 +117,7 @@ table.box th.right table {
 
 table.box th a:link, table.box th a:visited { 
   font-weight:bold; 
-  color:#825703; 
+  color:#c86c12; 
   font-size:11px; 
 }
 table.box th a:hover { 
