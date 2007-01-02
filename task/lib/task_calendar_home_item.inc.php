@@ -28,9 +28,12 @@ class task_calendar_home_item extends home_item {
     home_item::home_item("task_calendar_home_item", "Calendar", "task", "taskCalendarS.tpl","standard",30);
   }
 
-  function show_task_calendar_recursive($template) {
-    $task_calendar = new task_calendar();
-    $task_calendar->show_task_calendar_recursive($template);
+  function show_task_calendar_recursive() {
+    global $current_user;
+    $calendar = new calendar($current_user->prefs["tasksGraphPlotHomeStart"],$current_user->prefs["tasksGraphPlotHome"]);
+    $calendar->set_cal_person($current_user->get_id());
+    $calendar->set_return_mode("home");
+    $calendar->draw($template);
   }
 }
 

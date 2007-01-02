@@ -539,7 +539,7 @@ function format_date($format="Y/m/d", $date="") {
 function get_config_link() {
   global $current_user, $TPL;
   if (have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
-    echo "<a href=\"".$TPL["url_alloc_config"]."\">Config</a>";
+    echo "<a href=\"".$TPL["url_alloc_config"]."\">Setup</a>";
   }
 }
 function parse_sql_file($file) {
@@ -653,7 +653,7 @@ function show_history() {
     $str[] = "<option value=\"".$TPL["url_alloc_expOneOff"]."\">New Expense Form</option>";
   }
 
-  $str[] = "<option value=\"".$TPL["url_alloc_reminderAdd"]."\">New Reminder</option>";
+  $str[] = "<option value=\"".$TPL["url_alloc_reminderAdd"]."parentType=general&step=2\">New Reminder</option>";
 
   if (have_entity_perm("person", PERM_CREATE, $current_user)) {
     $str[] = "<option value=\"".$TPL["url_alloc_person"]."\">New Person</option>";

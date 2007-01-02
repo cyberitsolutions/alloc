@@ -77,13 +77,13 @@ class reminder extends db_entity {
                       ORDER BY person.username",$db->f('projectID'));
 
     } else {
-      $query = "SELECT * FROM person ORDER BY username";
+      $query = "SELECT * FROM person WHERE personActive = 1 ORDER BY username";
     }
     $db->query($query);
     while ($db->next_record()) {
       $person = new person;
       $person->read_db_record($db);
-      $recipients[$person->get_id()] = $person->get_value('username');
+      $recipients[$person->get_id()] = $person->get_username(1);
     }
 
     return $recipients;
@@ -112,6 +112,8 @@ class reminder extends db_entity {
     if(!$recipient) {
       if ($this->get_value('personID')) {
         $recipient = $this->get_value('personID');
+      } else if ($_GET["personID"]){
+        $recipient = $_GET["personID"];
       } else {
         $recipient = $current_user->get_id();
       }
@@ -147,7 +149,7 @@ class reminder extends db_entity {
 
   function get_year_options() {
     $years = array();
-    for ($i = date("Y"); $i < date("Y") + 10; $i++) {
+    for ($i = date("Y")-10; $i < date("Y") + 21; $i++) {
       $years[$i] = $i;
     }
     if ($this->get_value('reminderTime') != "") {

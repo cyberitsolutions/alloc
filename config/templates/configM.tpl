@@ -3,7 +3,7 @@
 <form action="{$url_alloc_config}" method="post">
 {$table_box}
   <tr>
-    <th colspan="3">Basic Configuration</th>
+    <th colspan="3">Basic Setup</th>
   </tr>
   <tr>
     <td width="20%"><nobr>allocPSA Base URL</nobr></td>
@@ -15,6 +15,11 @@
     <td><input type="text" size="70" value="{$AllocFromEmailAddress}" name="AllocFromEmailAddress"></td> 
     <td width="1%">{help_button("config_AllocFromEmailAddress")}</td>
   </tr>
+  <tr>
+    <td width="20%"><nobr>Calendar 1st Day</nobr></td>
+    <td><select name="calendarFirstDay">{$calendarFirstDayOptions}</select></td>
+    <td width="1%">{help_button("config_calendarFirstDay")}</td>
+  </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
@@ -22,7 +27,7 @@
 
 {$table_box}
   <tr>
-    <th colspan="3">Time Sheets Configuration</th>
+    <th colspan="3">Time Sheets Setup</th>
   </tr>
   <tr>
     <td width="20%"><nobr>Finance Tagged Fund</nobr></td>

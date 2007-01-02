@@ -3,6 +3,7 @@
     <form action="{$url_alloc_absence}" method=post>
       {$myMessage}
       <input type="hidden" name="absenceID" value="{$absence_absenceID}">
+      <input type="hidden" name="returnToParent" value="{$returnToParent}">
       <input type="hidden" name="personID" value="{$absence_personID}">
       {$table_box}
         <tr>

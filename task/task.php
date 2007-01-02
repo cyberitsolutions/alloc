@@ -44,7 +44,7 @@ require_once("../alloc.php");
       $person->set_id($reminder->get_value('personID'));
       $person->select();
       $TPL["reminder_reminderRecipient"] = $person->get_username(1);
-      $TPL["returnToParent"] = "t";
+      $TPL["returnToParent"] = "task";
 
       include_template($template);
     }
@@ -254,7 +254,9 @@ if (!$taskID && $_GET["tasktype"]) {
 // If we've been sent here by a "New Task" link from the calendar
 if (!$taskID && $_GET["dateTargetStart"]) {
   $TPL["task_dateTargetStart"] = $_GET["dateTargetStart"];
+  $task->set_value("personID", $_GET["personID"]);
 }
+
 
 // Set options for the dropdown boxen
 $task->set_option_tpl_values();
