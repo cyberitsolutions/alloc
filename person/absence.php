@@ -23,24 +23,30 @@
 
 require_once("../alloc.php");
 
-$person = new person;
-
-$personID = $_POST["personID"] or $personID = $_GET["personID"];
 $absenceID = $_POST["absenceID"] or $absenceID = $_GET["absenceID"];
 
-if (isset($personID)) {
-  $person->set_id($personID);
-} else {
-  $person->set_id($current_user->get_id());
-}
-$person->select();
+$returnToParent = $_GET["returnToParent"] or $returnToParent = $_POST["returnToParent"];
+$TPL["returnToParent"] = $returnToParent;
 
-if (!$current_user->is_employee() || !$person->is_employee()) {
-  die("You do not have permission to access absence form.");
-}
 
+$urls["home"] = $TPL["url_alloc_home"];
+$urls["calendar"] = $TPL["url_alloc_taskCalendar"]."personID=".$personID;
 
 $absence = new absence;
+if ($absenceID) {
+  $absence->set_id($absenceID);
+  $absence->select();
+  $absence->set_tpl_values();
+  $personID = $absence->get_value("personID");
+}
+
+$person = new person;
+$personID = $personID or $personID = $_POST["personID"] or $personID = $_GET["personID"];
+if ($personID) {
+  $person->set_id($personID);
+  $person->select();
+}
+
 $db = new db_alloc;
 
 if ($_POST["save"]) {
@@ -50,6 +56,7 @@ if ($_POST["save"]) {
   $success = $absence->save();
   if ($success) {
     $url = $TPL["url_alloc_person"]."personID=".$personID;
+    $urls[$returnToParent] and $url = $urls[$returnToParent];
     header("Location: $url");
   }
   page_close();
@@ -58,7 +65,9 @@ if ($_POST["save"]) {
   // Deleting a record
   $absence->read_globals();
   $absence->delete();
-  header("location: ".$TPL["url_alloc_person"]."personID=".$personID);
+  $url = $TPL["url_alloc_person"]."personID=".$personID;
+  $urls[$returnToParent] and $url = $urls[$returnToParent];
+  header("location: ".$url);
 } else if ($absenceID) {
   // Displaying a record
   $absence->set_id($absenceID);
@@ -70,9 +79,11 @@ if ($_POST["save"]) {
   $absence->set_value("personID", $person->get_id());
 }
 
-$absence->set_tpl_values(DST_HTML_ATTRIBUTE, "absence_");
 
-$TPL["personName"] = $person->get_value("username");
+$absence->set_tpl_values(DST_HTML_ATTRIBUTE, "absence_");
+$_GET["date"] and $TPL["absence_dateFrom"] = $_GET["date"];
+
+$TPL["personName"] = $person->get_username(1);
 
 // Set up the options for a list of user.
 $query = sprintf("SELECT * FROM person ORDER by username");
@@ -80,8 +91,13 @@ $db->query($query);
 $person_array = get_array_from_db($db, "personID", "username");
 $TPL["person_options"] = get_select_options($person_array, $personID);
 
-  // Set up the options for the absence type.
-$absenceType_array = array("conference"=>"conference", "holiday"=>"holiday", "sick"=>"sick");
+// Set up the options for the absence type.
+$absenceType_array = array('Annual Leave'=>'Annual Leave'
+                          ,'Holiday'     =>'Holiday'
+                          ,'Illness'     =>'Illness'
+                          ,'Other'       =>'Other');
+
+
 $TPL["absenceType_options"] = get_select_options($absenceType_array, $absence->get_value("absenceType"));
 
 include_template("templates/absenceFormM.tpl");

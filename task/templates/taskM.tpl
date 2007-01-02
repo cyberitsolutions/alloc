@@ -127,7 +127,7 @@ function updateTaskCommentTemplate(number) \{
 {$table_box}
   <tr>
     <th>Reminders</th>
-    <th class="right" colspan="3"><a href="{$url_alloc_reminderAdd}step=3&parentType=task&parentID={$task_taskID}&returnToParent=t">Add Reminder</a></th>
+    <th class="right" colspan="3"><a href="{$url_alloc_reminderAdd}step=3&parentType=task&parentID={$task_taskID}&returnToParent=task">Add Reminder</a></th>
   </tr>
   <tr>
     <td>Recipient</td>

@@ -20,7 +20,7 @@
     {$table_box}
       <tr>
         <th>Reminders</th>
-        <th class="right" colspan="3"><a href="{$url_alloc_reminderAdd}step=3&parentType=client&parentID={$client_clientID}&returnToParent=t">Add Reminder</a></th>
+        <th class="right" colspan="3"><a href="{$url_alloc_reminderAdd}step=3&parentType=client&parentID={$client_clientID}&returnToParent=client">Add Reminder</a></th>
       </tr>
       <tr>
         <td>Recipient</td>

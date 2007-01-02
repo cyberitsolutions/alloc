@@ -49,7 +49,9 @@ class home_item {
   }
 
   function show() {
-    include_template($this->get_template_dir().$this->template, $this);
+    if ($this->template) {
+      include_template($this->get_template_dir().$this->template, $this);
+    }  
   }
 
   function get_label() {

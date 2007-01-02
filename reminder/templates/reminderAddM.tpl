@@ -27,7 +27,7 @@
         <input type="text" size="4" name="reminder_recuring_value" value="{$reminder_recuring_value}">
         <select name="reminder_recuring_interval">{$reminder_recuring_intervals}</select>
       </td>
-      <td>Advanced<br>notice:</td>
+      <td>Advanced Notice:</td>
       <td>
         <input type="checkbox" name="reminder_advnotice" {$reminder_advnotice}>Yes
         <input type="text" size="4" name="reminder_advnotice_value" value="{$reminder_advnotice_value}">
@@ -65,6 +65,7 @@
   <input type="hidden" name="returnToParent" value="{$returnToParent}">
   <input type="hidden" name="step" value="4">
   <input type="hidden" name="reminderTime" value="{$reminderTime}">
+  <input type="hidden" name="personID" value="{$personID}">
 
 
   </form>

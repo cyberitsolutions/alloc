@@ -94,6 +94,8 @@ div.message {
   font-size:(TABLE_BOX_TH_FONT_SIZE)px;
 }
 
+
+/* Main content boxes */ 
 table.box { 
   border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); 
   background-color:(TABLE_BOX_BACKGROUND_COLOR); 
@@ -126,6 +128,7 @@ table.box th a:hover {
   font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; 
 }
 
+/* Calendar */
 table.calendar { 
   width:100%; 
   border-right:1px solid (PANE_FRAME_COLOR); 
@@ -139,24 +142,39 @@ table.calendar td {
   font-size:smaller;
 }
 table.calendar td.today { 
-  background-color:(PANE_BG_COLOR); 
+  background-color:#fffdf2; 
+  border-top:2px solid (PANE_FRAME_COLOR);  
+  border-left:2px solid (PANE_FRAME_COLOR);  
+  border-right:1px solid (PANE_FRAME_COLOR);  
+  border-bottom:1px solid (PANE_FRAME_COLOR); 
+}
+table.calendar td.today h1 {
+  font-weight:bold;
 }
 table.calendar td.even { 
   background-color:#eeeeee; 
+}
+table.calendar td.absent {
+  background-color:#cccccc;
+  color:#999999;
+}
+table.calendar td.absent h1{
+  color:#999999;
 }
 table.calendar h1 {
   text-align:right;
   font-size:(DEFAULT_FONT_SIZE)px;
   margin:0px;
-  padding:0px;
+  padding:3px;
   font-weight:normal;
 }
-
 table.calendar img {
   float:left;
   margin-right:3px;
 }
 
+
+/* Filters */
 table.filter { 
   background-color:(PANE_BG_COLOR); 
   border:2px dashed (PANE_FRAME_COLOR); 

@@ -3,7 +3,7 @@ CREATE TABLE absence (
   absenceID int(11) NOT NULL auto_increment,
   dateFrom date default NULL,
   dateTo date default NULL,
-  absenceType enum('confrence','holiday','sick') default NULL,
+  absenceType enum('Annual Leave','Holiday','Illness','Other') default NULL,
   contactDetails text,
   personID int(11) NOT NULL default '0',
   PRIMARY KEY  (absenceID)

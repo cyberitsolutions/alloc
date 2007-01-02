@@ -24,11 +24,14 @@
 
 require_once("../alloc.php");
 
-function show_task_calendar_recursive($template) {
-  $task_calendar = new task_calendar();
-  $task_calendar->show_task_calendar_recursive($template);
+function show_task_calendar_recursive() {
+  $calendar = new calendar(2,20);
+  $calendar->set_cal_person($_GET["personID"]);
+  $calendar->set_return_mode("calendar");
+  $calendar->draw();
 }
 
+$TPL["username"] = person::get_fullname($_GET["personID"]);
 
 include_template("templates/taskCalendarM.tpl");
 

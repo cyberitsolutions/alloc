@@ -316,7 +316,7 @@ include_template("templates/clientM.tpl");
       $person->set_id($reminder->get_value('personID'));
       $person->select();
       $TPL["reminder_reminderRecipient"] = $person->get_value('username');
-      $TPL["returnToParent"] = "t";
+      $TPL["returnToParent"] = "client";
 
       include_template($template);
     }

@@ -21,73 +21,130 @@
  *
  */
 
-class task_calendar {
-  var $date;
+class calendar_day {
+  var $date;          // Y-m-d
+  var $day;           // Mon
+  var $display_date;  // m-Y
+  var $links;
+  var $class;
+  var $absences = array();
+  var $start_tasks = array();
+  var $complete_tasks = array();
+  var $reminders = array();
+      
+  function calendar_day() {
+  }
 
-  function show_task_calendar_recursive($template) {
-    global $current_user, $TPL;
+  function set_date($date) {
+    $this->date = $date;
+    $this->day = format_date("D",$date);
+    $this->display_date = format_date("j-M",$date);
 
-    $personID = $_GET["personID"] or $personID = $_POST["personID"];
-    if ($personID) {
-      $person = new person;
-      $person->set_id($personID);
-      $person->select();
-    } else {
-      $person = $current_user; 
+    if ($this->date == date("Y-m-d")) {
+      $this->class = "today";
+
+    // Toggle every second month to have slightly different coloured shading 
+    } else if (date("n", format_date("U",$this->date)) % 2 == 0) {
+      $this->class = "even";
     }
+  }
 
- 
-    $tasksGraphPlotHome = $current_user->prefs["tasksGraphPlotHome"];
-    $tasksGraphPlotHomeStart = $current_user->prefs["tasksGraphPlotHomeStart"];
+  function set_links($links) {
+    $this->links = $links;
+  }
+
+  function draw_day_html() {
+    global $TPL;
+    
+    if ($this->absences) {
+      $this->class.= " absent";
+      $rows[] = "<br/>Absent:";
+      $rows[] = implode("<br/>",$this->absences);
+    }
   
-
-    if (!$tasksGraphPlotHome && !isset($tasksGraphPlotHome)) {
-      $tasksGraphPlotHome = 2;
+    if ($this->start_tasks) {
+      $rows[] = "<br/>Tasks to be started:";
+      $rows[] = implode("<br/>",$this->start_tasks);
     }
 
-    if (!$tasksGraphPlotHomeStart || $tasksGraphPlotHomeStart == "Zero") {
-      $tasksGraphPlotHomeStart = "0";
+    if ($this->complete_tasks) {
+      $rows[] = "<br/>Tasks to be complete:";
+      $rows[] = implode("<br/>",$this->complete_tasks);
     }
-    $i = -7;
+    if ($this->reminders) {
+      $rows[] = "<br/>Reminders:";
+      $rows[] = implode("<br/>",$this->reminders);
+    }
 
-    while (date("D", mktime(0, 0, 0, date("m"), date("d") + $i, date("Y"))) != "Sun") {
+    echo "\n<td class=\"".$this->class."\">";
+    echo "<h1>".$this->links.$this->display_date."</h1>";
+
+    if (count($rows)) {
+      echo implode("<br/>",$rows);
+    }
+
+    echo "</td>";
+  }
+
+}
+
+
+class calendar {
+  var $person;
+  var $week_start;
+  var $weeks_to_display;
+  var $days_of_week = array();
+  var $rtp;
+  var $first_date;
+  var $last_date;
+  var $db;
+  var $first_day_of_week;
+
+
+  function calendar($week_start=1, $weeks_to_display=4) {
+    $this->db = new db_alloc;
+    $this->first_day_of_week = config::get_config_item("calendarFirstDay");
+    $this->set_cal_date_range($week_start, $weeks_to_display);
+    $this->days_of_week = $this->get_days_of_week_array($this->first_day_of_week);
+  }
+
+  function set_cal_person($personID) {
+    $this->person = new person;
+    $this->person->set_id($personID);
+    $this->person->select();
+  }
+
+  function set_cal_date_range($week_start, $weeks_to_display) {
+    $this->week_start = $week_start;
+    $this->weeks_to_display = $weeks_to_display;
+
+    // Wind the date forward till we find the starting day of week
+    while (date("D", mktime(0, 0, 0, date("m"), date("d") + $i, date("Y"))) != $this->first_day_of_week) {
       $i++;
     }
-    $i = $i - ($tasksGraphPlotHomeStart * 7);
-    $sunday_day = date("d", mktime(0, 0, 0, date(m), date(d) + $i, date(Y)));
-    $sunday_month = date("m", mktime(0, 0, 0, date(m), date(d) + $i, date(Y)));
-    $sunday_year = date("Y", mktime(0, 0, 0, date(m), date(d) + $i, date(Y)));
+    $fd = mktime(date("H"),date("i"),date("s"),date("m"),date("d")-($this->week_start*7)+($i-7),date("Y"));
+    
+    /// Set the first and last date on the page 
+    $this->first_date = date("Y-m-d",$fd); 
+    $this->last_date = date("Y-m-d", mktime(date("H",$fd)
+                                           ,date("i",$fd)
+                                           ,date("s",$fd)
+                                           ,date("m",$fd)
+                                           ,date("d",$fd)+(($this->weeks_to_display*7)-1)
+                                           ,date("Y",$fd)));
+  }
 
-    $days_of_week = array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+  function get_cal_reminders() {
 
-    $db = new db_alloc;
-    $i = 0;
-
-
-    /// Need to fetch the first and latest date on the page so that we only genereate repeating reminders up to the maximum date displayed (as opposed to inifinity)
-    $first_date_on_page = mktime(date("H")
-                                ,date("i")
-                                ,date("s")
-                                ,date("m")
-                                ,date("d")-($tasksGraphPlotHomeStart*7)-7
-                                ,date("Y"));
-
-    $last_date_on_page = mktime(date("H",$first_date_on_page)
-                               ,date("i",$first_date_on_page)
-                               ,date("s",$first_date_on_page)
-                               ,date("m",$first_date_on_page)
-                               ,date("d",$first_date_on_page)+(($tasksGraphPlotHome*7)-1)
-                               ,date("Y",$first_date_on_page));
-
-
-    // Pre-load all the users reminders 
+    // Get persons reminders
     $query = sprintf("SELECT * 
                         FROM reminder 
-                       WHERE personID = %d", $person->get_id());
-    $db->query($query);
-    while ($db->next_record()) {
+                       WHERE personID = %d", $this->person->get_id());
+    $this->db->query($query);
+    $reminders = array();
+    while ($row = $this->db->row()) {
       $reminder = new reminder;
-      $reminder->read_db_record($db);
+      $reminder->read_db_record($this->db);
 
       if ($reminder->is_alive()) {
         $reminderTime = format_date("U",$reminder->get_value("reminderTime"));
@@ -96,120 +153,244 @@ class task_calendar {
         if ($reminder->get_value('reminderRecuringInterval') != "No" && $reminder->get_value('reminderRecuringValue') != 0) {
           $interval = $reminder->get_value('reminderRecuringValue');
           $intervalUnit = $reminder->get_value('reminderRecuringInterval');
-          
-          while ($reminderTime <= $last_date_on_page) {
-            $reminders[] = array("reminderID"=>$reminder->get_id(),"reminderSubject"=>$reminder->get_value("reminderSubject"),"reminderTime"=>$reminderTime);
+
+          while ($reminderTime <= format_date("U",$this->last_date)) {
+            $row["reminderTime"] = $reminderTime;
+            $reminders[date("Y-m-d",$reminderTime)][] = $row;
             $reminderTime = $reminder->get_next_reminder_time($reminderTime,$interval,$intervalUnit);
           }
 
         // Else if once off reminder
         } else {
-          $reminders[] = array("reminderID"=>$reminder->get_id(),"reminderSubject"=>$reminder->get_value("reminderSubject"),"reminderTime"=>$reminderTime);
+          $row["reminderTime"] = $reminderTime;
+          $reminders[date("Y-m-d",$reminderTime)][] = $row;
         }
       }
     }
 
+    return $reminders;
+  }
 
-    while ($i < $tasksGraphPlotHome) {
+  function get_cal_tasks_to_start() {
+    
+    // Select all tasks which are targetted to start
+    $query = sprintf("SELECT * 
+                        FROM task 
+                       WHERE personID = %d 
+                         AND dateTargetStart >= '%s' 
+                         AND dateTargetStart < '%s'
+                         AND dateActualCompletion IS NULL"
+                    ,$this->person->get_id()
+                    ,$this->first_date
+                    ,$this->last_date);
 
-      foreach($days_of_week as $day) {
-        unset($TPL["calendar_".$day."_started"]);
-        unset($TPL["calendar_".$day."_completed"]);
-        unset($TPL["calendar_".$day."_reminders"]);
-        unset($TPL["to_be_started_".$day]);
-        unset($TPL["to_be_completed_".$day]);
-        unset($TPL["reminders_".$day]);
+    $this->db->query($query);
+    $tasks_to_start = array();
+    while ($row = $this->db->next_record()) {
+      $tasks_to_start[$row["dateTargetStart"]][] = $row;
+    }
+    return $tasks_to_start;
+  }
+
+  function get_cal_tasks_to_complete() {
+
+    // Select all tasks which are targetted for completion
+    $query = sprintf("SELECT * 
+                        FROM task 
+                       WHERE personID = %d 
+                         AND dateTargetCompletion >= '%s' 
+                         AND dateTargetCompletion < '%s'
+                         AND dateActualCompletion IS NULL"
+                    ,$this->person->get_id()
+                    ,$this->first_date
+                    ,$this->last_date);
+
+    $this->db->query($query);
+    $tasks_to_complete = array();
+    while ($row = $this->db->next_record()) {
+      $tasks_to_complete[$row["dateTargetCompletion"]][] = $row;
+    }
+    return $tasks_to_complete;
+  }
+
+  function get_cal_absences() {
+    $query = sprintf("SELECT * 
+                        FROM absence
+                       WHERE personID = %d
+                         AND (dateFrom >= '%s' OR dateTo <= '%s')"
+                    ,$this->person->get_id(),$this->first_date,$this->last_date);
+    $this->db->query($query);
+    $absences = array();
+    while ($row = $this->db->row()) {
+      $start_time = format_date("U",$row["dateFrom"]);
+      $end_time = format_date("U",$row["dateTo"]);
+      while ($start_time <= $end_time) {
+        $absences[date("Y-m-d",$start_time)][] = $row;
+        $start_time += 86400;
       }
+    }
 
+    return $absences;
+  }
+
+  function get_days_of_week_array($first_day) {
+    // Generate a list of days, being mindful that a user may not want Sunday to be the first day of the week
+    $days = array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"); 
+    foreach ($days as $day) {
+      if (($day == $first_day || $go) && count($days_of_week) < 7) {
+        $days_of_week[] = $day;
+        $go = true;
+      } 
+    }
+    return $days_of_week;
+  }
+
+  function set_return_mode($mode) {
+    $this->rtp = $mode;
+  }
+
+  function draw() {
+    global $TPL;
+
+    $this->draw_canvas();
+    $this->draw_row_header();
+
+    $i = -7;
+ 
+
+    while (date("D", mktime(0, 0, 0, date("m"), date("d") + $i, date("Y"))) != $this->first_day_of_week) {
+      $i++;
+    }
+    $i = $i - ($this->week_start * 7);
+    $sunday_day = date("d", mktime(0, 0, 0, date("m"), date("d") + $i, date("Y")));
+    $sunday_month = date("m", mktime(0, 0, 0, date("m"), date("d") + $i, date("Y")));
+    $sunday_year = date("Y", mktime(0, 0, 0, date("m"), date("d") + $i, date("Y")));
+
+    $i = 0;
+
+    $absences = $this->get_cal_absences();
+    $reminders = $this->get_cal_reminders();
+    $tasks_to_start = $this->get_cal_tasks_to_start();
+    $tasks_to_complete = $this->get_cal_tasks_to_complete();
+
+    // For each single week...
+    while ($i < $this->weeks_to_display) {
+      $this->draw_row();
 
       $a = 0;
       while ($a < 7) {
-        $dates_of_week[$days_of_week[$a]] = date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i) + $a, $sunday_year));
+        $dates_of_week[$this->days_of_week[$a]] = date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i) + $a, $sunday_year));
         $a++;
       }
 
 
-      $date1 = date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i), $sunday_year));
-      $date2 = date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * ($i + 1)), $sunday_year));
-
-      // select all tasks which are targetted for this week
-      $query = sprintf("SELECT * 
-                          FROM task 
-                         WHERE personID = %d 
-                           AND ((dateTargetCompletion >= '%s' AND dateTargetCompletion < '%s') OR (dateTargetStart >= '%s' AND dateTargetStart < '%s'))
-                           AND dateActualCompletion IS NULL", $person->get_id(), $date1, $date2, $date1, $date2);
-      $db->query($query);
-      while ($db->next_record()) {
-        foreach($dates_of_week as $day=>$date) {
-
-          if ($db->f("dateTargetStart") == $date) {
-            ${"to_be_started_".$day} = "<br><br/>To be started:";
-            unset($extra);
-            $db->f("timeEstimate") and $extra = " (".sprintf("Est %0.1fhrs",$db->f("timeEstimate")).")";
-            $TPL["calendar_".$day."_started"].= '<br/><a href="'.$TPL["url_alloc_task"].'taskID='.$db->f("taskID").'">'.$db->f("taskName").$extra."</a>";
-          }
-
-          if ($db->f("dateTargetCompletion") == $date) {
-            $TPL["calendar_".$day."_started"] or $br = "<br/>";
-            ${"to_be_completed_".$day} = $br."<br/>To be completed:";
-            unset($extra);
-            $db->f("timeEstimate") and $extra = " (".sprintf("Est %0.1fhrs",$db->f("timeEstimate")).")";
-            $TPL["calendar_".$day."_completed"].= '<br/><a href="'.$TPL["url_alloc_task"].'taskID='.$db->f("taskID").'">'.$db->f("taskName").$extra."</a>";
-          }
-
-        }
-      }
-
-      // Paint reminders on 
       foreach($dates_of_week as $day=>$date) {
-        $reminders or $reminders = array();
-        foreach ($reminders as $reminder => $r) {
-          if (date("Y-m-d",$r["reminderTime"]) == $date) {
-            ${"reminders_".$day} = "<br/><br/>Reminders:";
-            $TPL["calendar_".$day."_reminders"].= '<br/><a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$r["reminderID"].'">'.$r["reminderSubject"]."</a>";
-          }
+ 
+        $d = new calendar_day();
+        #$d->set_date(date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year));
+        $d->set_date($date);
+        $d->set_links($this->get_link_new_task($date).$this->get_link_new_reminder($date).$this->get_link_new_absence($date));
+
+
+        // Tasks to be Started
+        $tasks_to_start[$date] or $tasks_to_start[$date] = array();
+        foreach($tasks_to_start[$date] as $t) {
+          unset($extra);
+          $t["timeEstimate"] and $extra = " (".sprintf("Est %0.1fhrs",$t["timeEstimate"]).")";
+          $d->start_tasks[] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$t["taskID"].'">'.$t["taskName"].$extra."</a>";
         }
+
+        // Tasks to be Completed
+        $tasks_to_complete[$date] or $tasks_to_complete[$date] = array();
+        foreach($tasks_to_complete[$date] as $t) {
+          unset($extra);
+          $t["timeEstimate"] and $extra = " (".sprintf("Est %0.1fhrs",$t["timeEstimate"]).")";
+          $d->complete_tasks[] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$t["taskID"].'">'.$t["taskName"].$extra."</a>";
+        }
+
+        // Reminders
+        $reminders[$date] or $reminders[$date] = array();
+        foreach ($reminders[$date] as $r) {
+          #if (date("Y-m-d",$r["reminderTime"]) == $date) {
+            $d->reminders[] = '<a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$r["reminderSubject"]."</a>";
+          #}
+        }
+
+        // Absences
+        $absences[$date] or $absences[$date] = array();
+        foreach ($absences[$date] as $a) {
+          $d->absences[] = '<a href="'.$TPL["url_alloc_absence"].'absenceID='.$a["absenceID"].'&returnToParent='.$this->rtp.'">'.$a["absenceType"].'</a>';
+        }
+
+        $d->draw_day_html();
+
+        $k++;
       }
-
-
-      // Draw day numbers and Today square.
-      foreach($days_of_week as $k=>$day) {
-
-        $calendar_date = date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year));
-
-        $TPL["calendar_".$day."_date"] = date("j-M", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year));
-
-
-        // Toggle every second month to have slightly different coloured shading
-        $month_num = date("n", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year));
-
-        $TPL["calendar_class_".$day] = "";
-        if ($calendar_date == date("Y-m-d")) {
-          $TPL["calendar_class_".$day] = " class=\"today\"";
-
-        } else if ($month_num % 2 == 0) {
-          $TPL["calendar_class_".$day] = " class=\"even\"";
-        }
-
-        $reminderTime = urlencode($calendar_date." 9:00am");
-        $TPL["calendar_".$day."_links"] = "<a href=\"".$TPL["url_alloc_task"]."dateTargetStart=".$calendar_date."\"><img border=\"0\" src=\"".$TPL["url_alloc_images"]."task.png\" alt=\"New Task\"></a>";
-        $TPL["calendar_".$day."_links"].= "<a href=\"".$TPL["url_alloc_reminderAdd"]."parentType=general&step=2&returnToParent=t&reminderTime=".$reminderTime."\"><img border=\"0\" src=\"".$TPL["url_alloc_images"]."reminder.png\" alt=\"New Reminder\"></a>";
-
-        if ($TPL["calendar_".$day."_started"]) {
-          $TPL["calendar_".$day."_started"] = ${"to_be_started_".$day}.$TPL["calendar_".$day."_started"];
-        }
-        if ($TPL["calendar_".$day."_completed"]) {
-          $TPL["calendar_".$day."_completed"] = ${"to_be_completed_".$day}.$TPL["calendar_".$day."_completed"];
-        }
-        if ($TPL["calendar_".$day."_reminders"]) {
-          $TPL["calendar_".$day."_reminders"] = ${"reminders_".$day}.$TPL["calendar_".$day."_reminders"];
-        }
-
-      }
-
-      include_template($template);
       $i++;
+      $this->draw_row_end();
     }
+    $this->draw_canvas_end();
+  }
+
+  function draw_canvas() {
+    echo "<table border='0' cellspacing='0' class='calendar' cellpadding='3'>";
+  }
+  function draw_canvas_end() {
+    echo "</table>";
+  }
+  function draw_row() {
+    echo "\n<tr>";
+  }
+  function draw_row_end() {
+    echo "</tr>";
+  }
+  function draw_row_header() {
+    echo "\n<tr>";
+    foreach ($this->days_of_week as $day) {
+      echo "<th class=\"col\">".$day."</th>";
+    }
+    echo "</tr>";
+  }
+
+  function get_link_new_task($date) {
+    global $TPL;
+    $link = '<a href="'.$TPL["url_alloc_task"].'dateTargetStart='.$date.'&personID='.$this->person->get_id().'">';
+    $link.= $this->get_img_new_task();
+    $link.= "</a>";
+    return $link;
+  }
+
+  function get_link_new_reminder($date) {
+    global $TPL;
+    $time = urlencode($date." 9:00am");
+    $link = '<a href="'.$TPL["url_alloc_reminderAdd"].'parentType=general&step=2&returnToParent='.$this->rtp.'&reminderTime='.$time;
+    $link.= '&personID='.$this->person->get_id().'">';
+    $link.= $this->get_img_new_reminder();
+    $link.= "</a>";
+    return $link;
+  }
+
+  function get_link_new_absence($date) {
+    global $TPL;
+    $link = '<a href="'.$TPL["url_alloc_absence"].'date='.$date.'&personID='.$this->person->get_id().'&returnToParent='.$this->rtp.'">';
+    $link.= $this->get_img_new_absence();
+    $link.= "</a>";
+    return $link;
+  }
+
+  function get_img_new_task() {
+    global $TPL;
+    return "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."task.gif\" alt=\"New Task\" title=\"New Task\">";
+  }
+
+  function get_img_new_reminder() {
+    global $TPL;
+    return "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."reminder.gif\" alt=\"New Reminder\" title=\"New Reminder\">";
+  }
+
+  function get_img_new_absence() {
+    global $TPL;
+    return "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."absence.gif\" alt=\"New Absence\" title=\"New Absence\">";
   }
 
 }

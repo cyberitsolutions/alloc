@@ -3,13 +3,11 @@
 
 {$table_box}
   <tr>
-    <th>Calendar</th>
+    <th>Calendar: {$username}</th>
   </tr>
   <tr>
     <td>
-
-      {include_template("templates/taskCalendarS.tpl")}
-
+      {show_task_calendar_recursive()}
     </td>
   </tr>
 </table>

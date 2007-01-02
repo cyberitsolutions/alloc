@@ -194,7 +194,7 @@ function updateClientContact(number) \{
   <tr>
     <th colspan="4">Reminders</th>
     <th class="right">
-      <a href="{$url_alloc_reminderAdd}step=3&parentType=project&parentID={$project_projectID}&returnToParent=t">
+      <a href="{$url_alloc_reminderAdd}step=3&parentType=project&parentID={$project_projectID}&returnToParent=project">
       New Reminder</a>
     </th>
   </tr>

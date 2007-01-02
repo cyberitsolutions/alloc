@@ -94,6 +94,8 @@ div.message {
   font-size:19px;
 }
 
+
+/* Main content boxes */ 
 table.box { 
   border:1px solid #b8c2cf; 
   background-color:#f9f9f9; 
@@ -126,6 +128,7 @@ table.box th a:hover {
   font-size:19px; 
 }
 
+/* Calendar */
 table.calendar { 
   width:100%; 
   border-right:1px solid #87abd7; 
@@ -139,24 +142,39 @@ table.calendar td {
   font-size:smaller;
 }
 table.calendar td.today { 
-  background-color:#e8eff9; 
+  background-color:#fffdf2; 
+  border-top:2px solid #87abd7;  
+  border-left:2px solid #87abd7;  
+  border-right:1px solid #87abd7;  
+  border-bottom:1px solid #87abd7; 
+}
+table.calendar td.today h1 {
+  font-weight:bold;
 }
 table.calendar td.even { 
   background-color:#eeeeee; 
+}
+table.calendar td.absent {
+  background-color:#cccccc;
+  color:#999999;
+}
+table.calendar td.absent h1{
+  color:#999999;
 }
 table.calendar h1 {
   text-align:right;
   font-size:18px;
   margin:0px;
-  padding:0px;
+  padding:3px;
   font-weight:normal;
 }
-
 table.calendar img {
   float:left;
   margin-right:3px;
 }
 
+
+/* Filters */
 table.filter { 
   background-color:#e8eff9; 
   border:2px dashed #87abd7; 

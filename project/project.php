@@ -338,7 +338,7 @@ $grand_total = 0;
       $person->set_id($reminder->get_value('personID'));
       $person->select();
       $TPL["reminder_reminderRecipient"] = $person->get_value('username');
-      $TPL["returnToParent"] = "t";
+      $TPL["returnToParent"] = "project";
 
       include_template($template);
     }
