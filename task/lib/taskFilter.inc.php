@@ -70,6 +70,12 @@ function load_form_data($defaults=array()) {
   
   if (!$_FORM["applyFilter"]) {
     $_FORM = $current_user->prefs[$_FORM["form_name"]];
+    if (!isset($current_user->prefs[$_FORM["form_name"]])) {
+      $_FORM["projectType"] = "mine";
+      $_FORM["taskStatus"] = "not_completed";
+      $_FORM["personID"] = $current_user->get_id();
+    }
+
   } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
     $current_user->prefs[$_FORM["form_name"]] = $_FORM;
   }
