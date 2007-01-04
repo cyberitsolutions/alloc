@@ -61,8 +61,8 @@ function updateProjectList(number) \{
                 <td valign="top"><b><nobr>Display Options</nobr></b></td>
                 <td colspan="3" align="right">
                   <nobr>
-                    List by Priority <input type="radio" name="taskView" value="prioritised"{$taskView_checked_prioritised}>
-               <br/>List by Project <input type="radio" name="taskView" value="byProject"{$taskView_checked_byProject}> 
+List by Priority <input type="radio" name="taskView" value="prioritised"{$taskView_checked_prioritised}><br/>
+List by Project <input type="radio" name="taskView" value="byProject"{$taskView_checked_byProject}>
                   </nobr>
                 </td>
               </tr>
