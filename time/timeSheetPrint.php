@@ -271,7 +271,9 @@ if ($timeSheetID) {
 
   $pdf =& new Cezpdf();
   $pdf->selectFont($font1);
-  $pdf->ezText("ID: <b>".$TPL["timeSheetID"]."</b>",12, array("justification"=>"right"));
+  $pdf->ezStartPageNumbers(436,80,12,'right','Page {PAGENUM} of {TOTALPAGENUM}');
+  $pdf->ezStartPageNumbers(180,80,12,'left','Time Sheet ID: <b>'.$TPL["timeSheetID"].'</b>');
+  $pdf->ezSetY(775);
   $pdf->ezText("<b>".$TPL["companyName"]."</b>",17, array("justification"=>"center"));
   $y = $pdf->ezText($TPL["companyNos1"],12, array("justification"=>"center"));
   $y = $pdf->ezText($TPL["companyNos2"],12, array("justification"=>"center"));
@@ -293,7 +295,6 @@ if ($timeSheetID) {
   $ts_info[] = array($TPL["period"]);
   $y = $pdf->ezTable($ts_info,false,"",$pdf_table_options2);
   $pdf->ezSetY($y -20);
-
 
   if ($_GET["timeSheetPrintMode"] == "money") {
     list($rows,$info) = get_timeSheetItem_list_money($TPL["timeSheetID"]);
@@ -317,7 +318,15 @@ if ($timeSheetID) {
   $pdf->ezSetY($y -20);
   $footer = array(array(str_replace(array("<br/>","<br>"),"\n",$TPL["footer"])));
   $pdf->ezTable($footer,false,"",$pdf_table_options2);
-  $pdf->ezText("ID: <b>".$TPL["timeSheetID"]."</b>",12, array("justification"=>"right"));
+
+
+  // Add footer
+  #$all = $pdf->openObject(); 
+  #$pdf->saveState(); 
+  #$pdf->addText(415,80,12,"Time Sheet ID: <b>".$TPL["timeSheetID"]."</b>"); 
+  #$pdf->restoreState(); 
+  #$pdf->closeObject(); 
+  #$pdf->addObject($all,'all'); 
 
   $pdf->ezStream();
 
