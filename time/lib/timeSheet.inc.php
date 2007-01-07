@@ -190,7 +190,7 @@ class timeSheet extends db_entity
     $db = new db_alloc;
     $project = $this->get_foreign_object("project");
     $projectName = $project->get_value("projectName");
-    $cost_centre = $project->get_value("cost_centre_tfID");
+    $cost_centre = $project->get_value("cost_centre_tfID") or $cost_centre = config::get_config_item("cybersourceTfID");
     $this->load_pay_info();
 
     if ($this->get_value("status") != "admin") {
