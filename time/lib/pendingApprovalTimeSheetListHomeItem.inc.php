@@ -23,7 +23,7 @@
 
 class pendingApprovalTimeSheetListHomeItem extends home_item {
   function pendingApprovalTimeSheetListHomeItem() {
-    home_item::home_item("pending_time_list", "Time Sheets Pending Approval", "time", "pendingApprovalTimeSheetHomeM.tpl", "narrow", 20);
+    home_item::home_item("pending_time_list", "Time Sheets Pending Approval", "time", "pendingApprovalTimeSheetHomeM.tpl", "narrow", 21);
   }
 
   function show_pending_time_sheets($template_name) {
@@ -96,21 +96,30 @@ function get_pending_timesheet_db() {
   $c = new config; 
   $timeSheetAdminEmailPersonID = $c->get_config_item("timeSheetAdminEmail");
 
-  $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars 
-                      FROM timeSheet
-                           LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
-                           LEFT JOIN project on project.projectID = timeSheet.projectID
-                           LEFT JOIN projectPerson on project.projectID = projectPerson.projectID 
-                           LEFT JOIN projectPersonRole on projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
-                     WHERE ((projectPerson.personID = %d AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' AND timeSheet.status='manager') 
-                             OR 
-                            (%d = %d and timeSheet.status='admin'))
-                  GROUP BY timeSheet.timeSheetID 
-                  ORDER BY timeSheet.dateSubmittedToManager, timeSheet.dateSubmittedToAdmin"
-                   , $current_user->get_id()
-                   , $current_user->get_id()
-                   , $timeSheetAdminEmailPersonID
-    );
+  if ($timeSheetAdminEmailPersonID == $current_user->get_id()) {
+    $query = "SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars 
+                FROM timeSheet
+           LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+               WHERE timeSheet.status='admin'
+            GROUP BY timeSheet.timeSheetID 
+            ORDER BY timeSheet.dateSubmittedToAdmin";
+
+  } else {
+
+    $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars 
+                        FROM timeSheet
+                             LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                             LEFT JOIN project on project.projectID = timeSheet.projectID
+                             LEFT JOIN projectPerson on project.projectID = projectPerson.projectID 
+                             LEFT JOIN projectPersonRole on projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
+                       WHERE projectPerson.personID = %d AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' AND timeSheet.status='manager'
+                    GROUP BY timeSheet.timeSheetID 
+                    ORDER BY timeSheet.dateSubmittedToManager"
+                     , $current_user->get_id()
+                     , $current_user->get_id()
+                     , $timeSheetAdminEmailPersonID
+      );
+  }
 
   $db->query($query);
   return $db;
