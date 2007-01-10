@@ -86,7 +86,7 @@
 
   <tr>
     <td valign="top">
-          {if $TPL["timeSheet_status"] != "paid"} 
+          {if $TPL["timeSheet_status"] != "finished"} 
           <div id="shrink_ts_note" style="display:none;">
             <img src="../images/shrink.gif"
                    onMouseUp="document.getElementById('ts_note').style.height='22px';
@@ -106,7 +106,7 @@
     <td align="right" valign="top">Billing Note:</td>
     <td colspan="3" valign="top">
 
-          {if $TPL["timeSheet_status"] != "paid"} 
+          {if $TPL["timeSheet_status"] != "finished"} 
           <textarea rows="3" cols="70" wrap="virtual" id="ts_note" style="height:22px;" name="timeSheet_billingNote"
                     onFocus="document.getElementById('ts_note').style.height='150px';
                              document.getElementById('grow_ts_note').style.display='none'
