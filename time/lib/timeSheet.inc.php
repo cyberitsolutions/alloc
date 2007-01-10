@@ -58,7 +58,7 @@ class timeSheet extends db_entity
                 ,"manager"   => "Project Manager"
                 ,"admin"     => "Administrator"
                 ,"invoiced"  => "Invoiced"
-                ,"paid"      => "Time Sheet Paid"
+                ,"finished"  => "Completed"
                 );
   }
 

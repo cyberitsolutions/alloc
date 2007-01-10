@@ -43,7 +43,7 @@ class timeSheetListHomeItem extends home_item {
                         FROM timeSheet
                         LEFT JOIN timeSheetItem on timeSheet.timeSheetID = timeSheetItem.timeSheetID
                       WHERE timeSheet.personID=%d 
-                         AND timeSheet.status != 'paid' 
+                         AND timeSheet.status != 'finished' 
                     GROUP BY timeSheet.timeSheetID
                     ORDER BY timeSheet.status", $current_user->get_id());
     $db = new db_alloc;

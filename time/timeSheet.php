@@ -33,7 +33,7 @@ if (!$current_user->is_employee()) {
     global $timeSheet, $TPL, $current_user, $percent_array;
     $db = new db_alloc;
 
-    if ($timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "paid") {
+    if ($timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
 
       $db->query("SELECT * FROM tf ORDER BY tfName");
       $tf_array = get_array_from_db($db, "tfID", "tfName");
@@ -42,6 +42,11 @@ if (!$current_user->is_employee()) {
 
 
       if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced") {
+
+        $p_button = "<input type=\"submit\" name=\"p_button\" value=\"P\">";
+        $a_button = "<input type=\"submit\" name=\"a_button\" value=\"A\">";
+        $r_button = "<input type=\"submit\" name=\"r_button\" value=\"R\">";
+
 
         $db->query("SELECT SUM(amount) as total FROM transaction WHERE timeSheetID = ".$timeSheet->get_id());
         $db->next_record();
@@ -54,10 +59,11 @@ if (!$current_user->is_employee()) {
           $msg = "(allocate: ".sprintf("\$%0.2f)",$total);
         }
         echo $TPL["table_box"];
-        echo "<th colspan=\"7\">Transactions</th></tr><tr><td colspan=\"5\"></td>";
+        echo "<th colspan=\"8\">Transactions</th></tr><tr><td colspan=\"5\"></td>";
         echo "<td></td><td>&nbsp;</td></tr>";
         echo "<tr><td>Date</td><td>Product</td>";
         echo "<td>TF</td><td>Amount ".$msg."</td><td>Type</td>";
+        echo "<td><form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button."</form></td>";
         echo "<td>&nbsp;</td>";
         echo "<td>&nbsp;</td></tr>";
 
@@ -480,24 +486,16 @@ if ($_POST["save"]
     case 'invoiced':
 
       if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-
-        // Change all the transactions to approved
-        if ($timeSheet->get_id()) {
-          $query = sprintf("update transaction set status = 'approved' where timeSheetID = %d",$timeSheet->get_id());
-          $db = new db_alloc;
-          $db->query($query);
-        }
-
         // Send Email
         $address = $timeSheet_personID_email;
-        $subject = "Timesheet Paid";
+        $subject = "Timesheet Completed";
         $body = "\n          To: ".$timeSheet_personID_name;
         $body.= "\n  Time Sheet: ".$url;
         $body.= "\n For Project: ".$projectName;
         $body.= "\n";
-        $type = "timesheet_paid";
+        $type = "timesheet_finished";
         $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
-        $timeSheet->set_value("status", "paid");
+        $timeSheet->set_value("status", "finished");
       }
 
     break;
@@ -508,12 +506,9 @@ if ($_POST["save"]
   } else if ($_POST["save_and_MoveBack"]) {
 
     
-    if ($timeSheet->get_value("status") == "paid") {
+    if ($timeSheet->get_value("status") == "finished") {
 
       if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-        $query = sprintf("update transaction set status = 'pending' where timeSheetID = %d",$timeSheet->get_id());
-        $db = new db_alloc;
-        $db->query($query);
         $timeSheet->set_value("status", "invoiced");
       }
 
@@ -661,6 +656,24 @@ if ($_POST["save"]
 if (!$timeSheetID) {
   $timeSheet->set_value("personID", $current_user->get_id());
 }
+
+if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+
+  if ($_POST["p_button"]) {
+    $status = "pending";
+  } else if ($_POST["a_button"]) {
+    $status = "approved";
+  } else if ($_POST["r_button"]) {
+    $status = "rejected";
+  }
+
+  $query = sprintf("UPDATE transaction SET status = '%s' WHERE timeSheetID = %d", $status, $timeSheet->get_id());
+  $db = new db_alloc;
+  $db->query($query);
+  $db->next_record();
+}
+
+
 
 $person = $timeSheet->get_foreign_object("person");
 $TPL["timeSheet_personName"] = $person->get_username(1);
@@ -826,12 +839,12 @@ case 'edit':
       $TPL["timeSheet_ChangeStatusButton"] = "
           <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
           <input type=\"submit\" name=\"save\" value=\"Save\"> 
-          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Manager -->\"> ";
+          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Manager --&gt;\"> ";
     } else {
       $TPL["timeSheet_ChangeStatusButton"] = "
           <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
           <input type=\"submit\" name=\"save\" value=\"Save\"> 
-          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Admin -->\"> ";
+          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Admin --&gt;\"> ";
     }
   }
   break;
@@ -841,9 +854,9 @@ case 'manager':
       || ($timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
 
     $TPL["timeSheet_ChangeStatusButton"] = "
-        <input type=\"submit\" name=\"save_and_MoveBack\" value=\"<-- Back\">
+        <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
         <input type=\"submit\" name=\"save\" value=\"Save\">
-        <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Admin -->\">
+        <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Admin --&gt;\">
         ";
     $TPL["radio_email"] = $radio_email;
   }
@@ -853,15 +866,15 @@ case 'admin':
   if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
     if ($projectManagers) {
       $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"save_and_MoveBack\" value=\"<-- Back\">
+          <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
           <input type=\"submit\" name=\"save\" value=\"Save\">
-          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Invoiced -->\">
+          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Invoiced --&gt;\">
           ";
     } else {
       $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"save_and_MoveBack\" value=\"<-- Back\">
+          <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
           <input type=\"submit\" name=\"save\" value=\"Save\">
-          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Invoiced -->\">
+          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Invoiced --&gt;\">
           ";
     }
 
@@ -886,17 +899,17 @@ case 'admin':
 case 'invoiced':
   if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
     $TPL["timeSheet_ChangeStatusButton"] = "
-        <input type=\"submit\" name=\"save_and_MoveBack\" value=\"<-- Back (Delete All Transactions)\">
+        <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back (Delete All Transactions)\">
         <input type=\"submit\" name=\"save\" value=\"Save\">
-        <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Paid (Approve Transactions) -->\">";
+        <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Complete -&gt;\">";
 
     $TPL["radio_email"] = $radio_email;
   }
   break;
 
-case 'paid':
+case 'finished':
   if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-    $TPL["timeSheet_ChangeStatusButton"] = "<input type=\"submit\" name=\"save_and_MoveBack\" value=\"<-- Back\">";
+    $TPL["timeSheet_ChangeStatusButton"] = "<input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">";
   }
   $TPL["payment_insurance"] = $payment_insurance_label;
   break;
