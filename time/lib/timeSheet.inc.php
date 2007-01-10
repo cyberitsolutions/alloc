@@ -153,9 +153,9 @@ class timeSheet extends db_entity
       $this->pay_info["total_duration"] = 0;
     }
     $taxPercent = config::get_config_item("taxPercent");
-    $taxPercentMult = (100 - $taxPercent)/100;
-    $this->pay_info["total_dollars_minus_gst"] = $this->pay_info["total_dollars"] * $taxPercentMult;
-    $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_customerBilledDollars"] * $taxPercentMult;
+    $taxPercentDivisor = ($taxPercent/100) + 1;
+    $this->pay_info["total_dollars_minus_gst"] = $this->pay_info["total_dollars"] / $taxPercentDivisor;
+    $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_customerBilledDollars"] / $taxPercentDivisor;
   }
 
   function destroyTransactions() {
@@ -205,11 +205,11 @@ class timeSheet extends db_entity
 
       $taxName = config::get_config_item("taxName");
       $taxPercent = config::get_config_item("taxPercent");
-      $taxPercentMult = (100 - $taxPercent)/100;
+      $taxPercentDivisor = ($taxPercent/100) + 1;
       $payrollTaxPercent = config::get_config_item("payrollTaxPercent");
       $companyPercent = config::get_config_item("companyPercent");
       $paymentInsurancePercent = config::get_config_item("paymentInsurancePercent");
-      $paymentInsurancePercentMult = (100 - $paymentInsurancePercent)/100;
+      $paymentInsurancePercent and $paymentInsurancePercentMult = ($paymentInsurancePercent/100);
 
       $cyberIsClient = $project->get_value("clientID") == 13;
       $cyberNotClient = $project->get_value("clientID") != 13;
@@ -246,7 +246,7 @@ class timeSheet extends db_entity
 
 
         // 4. Payment Insurance
-        if ($this->get_value("payment_insurance")) {
+        if ($this->get_value("payment_insurance") && $paymentInsurancePercent) {
           $product = "Debit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * -$paymentInsurancePercentMult, $recipient_tfID, "insurance", $insur_trans_status);
           $product = "Credit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
@@ -321,7 +321,7 @@ class timeSheet extends db_entity
 
 
         // 4. Payment Insurance
-        if ($this->get_value("payment_insurance")) {
+        if ($this->get_value("payment_insurance") && $paymentInsurancePercent) {
           $product = "Debit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * -$paymentInsurancePercentMult, $recipient_tfID, "insurance", $insur_trans_status);
           $product = "Credit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
