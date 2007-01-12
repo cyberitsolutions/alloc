@@ -24,7 +24,7 @@
 class tools_module extends module {
 }
 
-include(ALLOC_MOD_DIR."/tools/lib/stats.inc.php");
+include(ALLOC_MOD_DIR."tools/lib/stats.inc.php");
 
 
 

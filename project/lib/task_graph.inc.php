@@ -24,7 +24,7 @@
 define("TICK_SIZE", 7); // Days between tick marks along the axis
 define("LARGE_TICK_SIZE", 60);  // Days between tick marks along the axis
 define("MAX_TICKS", 20);        // Days between tick marks along the axis
-define("ALLOC_FONT",ALLOC_MOD_DIR."/util/fonts/LucidaSansRegular.ttf");
+define("ALLOC_FONT",ALLOC_MOD_DIR."util/fonts/LucidaSansRegular.ttf");
 define("ALLOC_FONT_SIZE","8");
 
 // Set the enviroment variable for GD

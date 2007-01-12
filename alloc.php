@@ -31,7 +31,13 @@ ini_set("error_reporting", E_ALL & ~E_NOTICE);
 if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
   die();
 } 
-define("ALLOC_MOD_DIR",dirname(__FILE__));
+
+// Get the alloc directory
+$f = trim(dirname(__FILE__));
+substr($f,-1,1) != "/" and $f.= "/";
+define("ALLOC_MOD_DIR",$f);
+unset($f);
+
 define("ALLOC_TITLE", "allocPSA");
 define("ALLOC_SHOOER","");
 define("ALLOC_GD_IMAGE_TYPE","PNG");
@@ -78,14 +84,14 @@ $m = array("shared"
           );
 
 // Helper functions
-require_once(ALLOC_MOD_DIR."/shared/util.inc.php");
+require_once(ALLOC_MOD_DIR."shared/util.inc.php");
 
 // Get the web base url for the alloc site
 define("SCRIPT_PATH",get_script_path($m)); 
 
 foreach ($m as $module_name) {
-  if (file_exists(ALLOC_MOD_DIR."/$module_name/lib/init.php")) {
-    require_once(ALLOC_MOD_DIR."/$module_name/lib/init.php");
+  if (file_exists(ALLOC_MOD_DIR."$module_name/lib/init.php")) {
+    require_once(ALLOC_MOD_DIR."$module_name/lib/init.php");
     $module_class = $module_name."_module";
     $module = new $module_class;
     $modules[$module_name] = $module;
@@ -99,8 +105,8 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"url_alloc_stylesheets"                    => SCRIPT_PATH."stylesheets/"
             ,"url_alloc_javascript"                     => SCRIPT_PATH."javascript/"
             ,"url_alloc_images"                         => SCRIPT_PATH."images/"
-            ,"url_alloc_help"                           => ALLOC_MOD_DIR."/help/"
-            ,"url_alloc_help_relative"                  => SCRIPT_PATH."/help/"
+            ,"url_alloc_help"                           => ALLOC_MOD_DIR."help/"
+            ,"url_alloc_help_relative"                  => SCRIPT_PATH."help/"
             ,"current_date"                             => date("Y-m-d H:i:s")
             ,"today"                                    => date("Y-m-d")
             ,"alloc_help_link_name"                     => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
@@ -115,25 +121,25 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
 if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // Re-direct home if an alloc_config.php already exists
-  if (file_exists(ALLOC_MOD_DIR."/alloc_config.php") && is_readable(ALLOC_MOD_DIR."/alloc_config.php") && filesize(ALLOC_MOD_DIR."/alloc_config.php") >0) {
+  if (file_exists(ALLOC_MOD_DIR."alloc_config.php") && is_readable(ALLOC_MOD_DIR."alloc_config.php") && filesize(ALLOC_MOD_DIR."alloc_config.php") >0) {
     header("Location: ".$TPL["url_alloc_login"]);
     exit();
   }
 
 
 // Else if were not in the installation process and there's no alloc_config.php file then redirect to the installation directory
-} else if (!file_exists(ALLOC_MOD_DIR."/alloc_config.php") || !is_readable(ALLOC_MOD_DIR."/alloc_config.php") || filesize(ALLOC_MOD_DIR."/alloc_config.php") == 0) {
+} else if (!file_exists(ALLOC_MOD_DIR."alloc_config.php") || !is_readable(ALLOC_MOD_DIR."alloc_config.php") || filesize(ALLOC_MOD_DIR."alloc_config.php") == 0) {
   header("Location: ".$TPL["url_alloc_installation"]);
   exit();
 
 // Else include the alloc_config.php file and begin with proceedings..
 } else {
-  require_once(ALLOC_MOD_DIR."/alloc_config.php");
+  require_once(ALLOC_MOD_DIR."alloc_config.php");
 
   define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
 
   // Include all the urls
-  require_once(ALLOC_MOD_DIR."/shared/global_tpl_values.inc.php");
+  require_once(ALLOC_MOD_DIR."shared/global_tpl_values.inc.php");
 
   // Setup a current_user person who will represent the logged in user
   $current_user = new person;

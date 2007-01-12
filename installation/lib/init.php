@@ -25,7 +25,7 @@ class installation_module extends module {
 }
 
 function get_patch_file_list() {
-  $dir = ALLOC_MOD_DIR."/patches/";
+  $dir = ALLOC_MOD_DIR."patches/";
   $files = array();
   if (is_dir($dir)) {
     $dh = opendir($dir);

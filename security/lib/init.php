@@ -25,7 +25,7 @@ class security_module extends module {
   var $db_entities = array("permission");
 }
 
-include(ALLOC_MOD_DIR."/security/lib/permission.inc.php");
+include(ALLOC_MOD_DIR."security/lib/permission.inc.php");
 
 
 

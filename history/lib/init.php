@@ -25,7 +25,7 @@ class history_module extends module {
   var $db_entities = array("history");
 }
 
-include(ALLOC_MOD_DIR."/history/lib/history.inc.php");
+include(ALLOC_MOD_DIR."history/lib/history.inc.php");
 
 
 

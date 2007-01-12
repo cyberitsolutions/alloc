@@ -11,7 +11,7 @@
 {$applied_patches = get_applied_patches()}
 
 {foreach $files as $file}
-  {list($sql,$comments,$comments_html) = parse_sql_file(ALLOC_MOD_DIR."/patches/".$file)}
+  {list($sql,$comments,$comments_html) = parse_sql_file(ALLOC_MOD_DIR."patches/".$file)}
   {unset($go)}
   {if !in_array($file,$applied_patches)}
     {$go = true}

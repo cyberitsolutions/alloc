@@ -31,8 +31,8 @@ function get_default_from_address() {
   return "allocPSA ".$f;
 }
 function get_alloc_version() {
-  if (file_exists(ALLOC_MOD_DIR."/util/alloc_version") && is_readable(ALLOC_MOD_DIR."/util/alloc_version")) {
-    $v = file(ALLOC_MOD_DIR."/util/alloc_version");
+  if (file_exists(ALLOC_MOD_DIR."util/alloc_version") && is_readable(ALLOC_MOD_DIR."util/alloc_version")) {
+    $v = file(ALLOC_MOD_DIR."util/alloc_version");
     return $v[0];
   } else {
     die("No alloc_version file found.");
@@ -138,7 +138,7 @@ function get_option($label, $value = "", $selected = false) {
   return $rtn;
 }
 function show_header() {
-  include_template(ALLOC_MOD_DIR."/shared/templates/headerS.tpl");
+  include_template(ALLOC_MOD_DIR."shared/templates/headerS.tpl");
 }
 function get_stylesheet_name() {
   global $current_user;
@@ -157,7 +157,7 @@ function get_customizedTheme_array() {
   return array("Default","Leaf");
 }
 function show_footer() {
-  include_template(ALLOC_MOD_DIR."/shared/templates/footerS.tpl");
+  include_template(ALLOC_MOD_DIR."shared/templates/footerS.tpl");
 }
 function show_tabs() {
   global $TPL;
@@ -182,14 +182,14 @@ function show_tabs() {
     if (preg_match("/".str_replace("/", "\\/", $_SERVER["PHP_SELF"])."/", $url) || preg_match("/".$arr["module"]."/",$_SERVER["PHP_SELF"])) {
        $TPL["active"] = " active";
     }
-    include_template(ALLOC_MOD_DIR."/shared/templates/tabR.tpl");
+    include_template(ALLOC_MOD_DIR."shared/templates/tabR.tpl");
   }
 }
 function show_toolbar() {
   global $TPL, $category;
   $TPL["category_options"] = get_category_options($_POST["category"]);
   $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Search...";
-  include_template(ALLOC_MOD_DIR."/shared/templates/toolbarS.tpl");
+  include_template(ALLOC_MOD_DIR."shared/templates/toolbarS.tpl");
 }
 function move_attachment($entity, $id) {
   global $TPL;

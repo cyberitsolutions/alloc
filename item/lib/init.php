@@ -25,8 +25,8 @@ class item_module extends module {
   var $db_entities = array("item", "loan");
 }
 
-include(ALLOC_MOD_DIR."/item/lib/item.inc.php");
-include(ALLOC_MOD_DIR."/item/lib/loan.inc.php");
+include(ALLOC_MOD_DIR."item/lib/item.inc.php");
+include(ALLOC_MOD_DIR."item/lib/loan.inc.php");
 
 
 
