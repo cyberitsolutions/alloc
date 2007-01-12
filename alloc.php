@@ -137,6 +137,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   require_once(ALLOC_MOD_DIR."alloc_config.php");
 
   define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
+  define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
 
   // Include all the urls
   require_once(ALLOC_MOD_DIR."shared/global_tpl_values.inc.php");
