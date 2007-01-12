@@ -41,7 +41,7 @@ class home_item {
   }
 
   function get_template_dir() {
-    return ALLOC_MOD_DIR."/".$this->module."/templates/";
+    return ALLOC_MOD_DIR.$this->module."/templates/";
   }
 
   function get_seq() {

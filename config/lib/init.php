@@ -25,7 +25,7 @@ class config_module extends module {
   var $db_entities = array("config");
 }
 
-include(ALLOC_MOD_DIR."/config/lib/config.inc.php");
+include(ALLOC_MOD_DIR."config/lib/config.inc.php");
 
 
 

@@ -25,7 +25,7 @@ class announcement_module extends module {
   var $db_entities = array("announcement");
 
   function register_home_items() {
-    include(ALLOC_MOD_DIR."/announcement/lib/announcements_home_item.inc.php");
+    include(ALLOC_MOD_DIR."announcement/lib/announcements_home_item.inc.php");
     $announcement = new announcement;
     if ($announcement->has_announcements()) {
       register_home_item(new announcements_home_item());
@@ -34,7 +34,7 @@ class announcement_module extends module {
 
 }
 
-include(ALLOC_MOD_DIR."/announcement/lib/announcement.inc.php");
+include(ALLOC_MOD_DIR."announcement/lib/announcement.inc.php");
 
 
 

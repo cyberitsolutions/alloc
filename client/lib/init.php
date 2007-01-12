@@ -25,9 +25,9 @@ class client_module extends module {
   var $db_entities = array("client", "comment", "clientContact");
 }
 
-include(ALLOC_MOD_DIR."/client/lib/client.inc.php");
-include(ALLOC_MOD_DIR."/client/lib/clientContact.inc.php");
-include(ALLOC_MOD_DIR."/client/lib/comment.inc.php");
+include(ALLOC_MOD_DIR."client/lib/client.inc.php");
+include(ALLOC_MOD_DIR."client/lib/clientContact.inc.php");
+include(ALLOC_MOD_DIR."client/lib/comment.inc.php");
 
 
 

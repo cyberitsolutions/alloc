@@ -262,8 +262,8 @@ if ($timeSheetID) {
   // Build PDF document
   require_once("../pdf/class.ezpdf.php");
 
-  $font1 = ALLOC_MOD_DIR."/util/fonts/Helvetica.afm";
-  $font2 = ALLOC_MOD_DIR."/util/fonts/Helvetica-Oblique.afm";
+  $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
+  $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
 
   $pdf_table_options = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0,"width"=>400,"xPos"=>"center","fontSize"=>11);
   $pdf_table_options2 = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0,"width"=>400, "xPos"=>"center","fontSize"=>11);

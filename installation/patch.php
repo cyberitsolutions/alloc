@@ -41,7 +41,7 @@ if ($apply_patches) {
 
 
   foreach ($files as $file) {
-    $f = ALLOC_MOD_DIR."/patches/".$file;
+    $f = ALLOC_MOD_DIR."patches/".$file;
 
       
     $go = false;
@@ -85,7 +85,7 @@ foreach ($files as $file) {
 
 if ($msg) {
   foreach ($files as $file) {
-   $f = ALLOC_MOD_DIR."/patches/".$file;
+   $f = ALLOC_MOD_DIR."patches/".$file;
    $msg[$f] and $TPL["msg"].= "\n\n<br/><br/>".implode("\n<br/>",$msg[$f]);
   }
 } else if (!$incomplete) {

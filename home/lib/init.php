@@ -25,10 +25,10 @@ class home_module extends module {
   var $db_entities = array("history");
 
   function register_home_items() {
-    include(ALLOC_MOD_DIR."/home/lib/customize_alloc_home_item.inc.php");
+    include(ALLOC_MOD_DIR."home/lib/customize_alloc_home_item.inc.php");
     register_home_item(new customize_alloc_home_item);
 
-    //include(ALLOC_MOD_DIR."/home/lib/date_home_item.inc.php");
+    //include(ALLOC_MOD_DIR."home/lib/date_home_item.inc.php");
     //register_home_item(new date_home_item);
             
   }

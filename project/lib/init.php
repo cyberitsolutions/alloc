@@ -22,11 +22,11 @@
  */
 
 
-include(ALLOC_MOD_DIR."/project/lib/project.inc.php");
-include(ALLOC_MOD_DIR."/project/lib/projectPerson.inc.php");
-include(ALLOC_MOD_DIR."/project/lib/projectPersonRole.inc.php");
-include(ALLOC_MOD_DIR."/project/lib/projectModificationNote.inc.php");
-include(ALLOC_MOD_DIR."/project/lib/projectCommissionPerson.inc.php");
+include(ALLOC_MOD_DIR."project/lib/project.inc.php");
+include(ALLOC_MOD_DIR."project/lib/projectPerson.inc.php");
+include(ALLOC_MOD_DIR."project/lib/projectPersonRole.inc.php");
+include(ALLOC_MOD_DIR."project/lib/projectModificationNote.inc.php");
+include(ALLOC_MOD_DIR."project/lib/projectCommissionPerson.inc.php");
 
 
 class project_module extends module
@@ -38,7 +38,7 @@ class project_module extends module
                          );
 
   function register_home_items() {
-    include(ALLOC_MOD_DIR."/project/lib/project_list_home_item.inc.php");
+    include(ALLOC_MOD_DIR."project/lib/project_list_home_item.inc.php");
     register_home_item(new project_list_home_item());
   }
 

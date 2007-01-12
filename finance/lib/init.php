@@ -25,18 +25,18 @@ class finance_module extends module {
   var $db_entities = array("tf", "transaction", "expenseForm", "invoice", "invoiceItem", "tfPerson", "transactionRepeat");
 
   function register_home_items() {
-    include(ALLOC_MOD_DIR."/home/lib/tfList_home_item.inc.php");
+    include(ALLOC_MOD_DIR."home/lib/tfList_home_item.inc.php");
     register_home_item(new tfList_home_item);
   } 
 }
 
-include(ALLOC_MOD_DIR."/finance/lib/tf.inc.php");
-include(ALLOC_MOD_DIR."/finance/lib/transaction.inc.php");
-include(ALLOC_MOD_DIR."/finance/lib/expenseForm.inc.php");
-include(ALLOC_MOD_DIR."/finance/lib/invoice.inc.php");
-include(ALLOC_MOD_DIR."/finance/lib/invoiceItem.inc.php");
-include(ALLOC_MOD_DIR."/finance/lib/tfPerson.inc.php");
-include(ALLOC_MOD_DIR."/finance/lib/transactionRepeat.inc.php");
+include(ALLOC_MOD_DIR."finance/lib/tf.inc.php");
+include(ALLOC_MOD_DIR."finance/lib/transaction.inc.php");
+include(ALLOC_MOD_DIR."finance/lib/expenseForm.inc.php");
+include(ALLOC_MOD_DIR."finance/lib/invoice.inc.php");
+include(ALLOC_MOD_DIR."finance/lib/invoiceItem.inc.php");
+include(ALLOC_MOD_DIR."finance/lib/tfPerson.inc.php");
+include(ALLOC_MOD_DIR."finance/lib/transactionRepeat.inc.php");
 
 
 

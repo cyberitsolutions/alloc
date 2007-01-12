@@ -25,10 +25,10 @@ class person_module extends module {
   var $db_entities = array("person", "absence", "skillList", "skillProficiencys");
 }
 
-include(ALLOC_MOD_DIR."/person/lib/person.inc.php");
-include(ALLOC_MOD_DIR."/person/lib/absence.inc.php");
-include(ALLOC_MOD_DIR."/person/lib/skillList.inc.php");
-include(ALLOC_MOD_DIR."/person/lib/skillProficiencys.inc.php");
+include(ALLOC_MOD_DIR."person/lib/person.inc.php");
+include(ALLOC_MOD_DIR."person/lib/absence.inc.php");
+include(ALLOC_MOD_DIR."person/lib/skillList.inc.php");
+include(ALLOC_MOD_DIR."person/lib/skillProficiencys.inc.php");
 
 
 

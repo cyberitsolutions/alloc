@@ -25,7 +25,7 @@ class reminder_module extends module {
   var $db_entities = array("reminder");
 }
 
-include(ALLOC_MOD_DIR."/reminder/lib/reminder.inc.php");
+include(ALLOC_MOD_DIR."reminder/lib/reminder.inc.php");
 
 
 
