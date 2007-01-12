@@ -78,8 +78,13 @@ if ($sess->Started()) {
     }
     $current_user->set_value('password', db_esc(crypt(trim($password), trim($password))));
     $current_user->save();
-    $mail = mail($email, "New Alloc password request", "Your new temporary password: ".$password, "From: ".ALLOC_DEFAULT_FROM_ADDRESS);
-    $error = "New password sent to: ".$_POST["email"];
+
+    $e = new alloc_email();
+    if ($e->send($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password", "From: ".ALLOC_DEFAULT_FROM_ADDRESS)) {
+      $error = "New password sent to: ".$_POST["email"];
+    } else {
+      $error = "<p class='error'>Unable to send email!</p>";
+    }
   } else {
     $error = "<p class='error'>Invalid Username or Email Address.</p>";
   }
