@@ -52,7 +52,6 @@ class alloc_email {
 
   // Initializer
   function alloc_email($to_address="",$subject="",$message="",$message_type="",$header="") {
-
     $to_address   and $this->to_address   = $to_address;
     $subject      and $this->subject      = $subject;
     $message      and $this->message      = $message;
@@ -71,15 +70,11 @@ class alloc_email {
     if (!$this->header || !preg_match('/@/',$this->header)) {
       $this->header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
     }
-    
-    $this->subject                     = "allocPSA ".$this->subject;
 
+    $this->is_valid_to_address() or $this->to_address = ALLOC_DEFAULT_TO_ADDRESS;
+    $this->subject = "[allocPSA] ".$this->subject;
 
-    if (!$this->is_valid_to_address()) {
-
-    } else if (!$this->is_valid_url()) {
-
-    } else {
+    if ($this->is_valid_to_address() && $this->is_valid_url()) {
       $result = mail($this->to_address, stripslashes($this->subject), stripslashes($this->message), $this->header);
       if ($result) {
         $this->log();
@@ -107,7 +102,7 @@ class alloc_email {
   // Will return true if $this->to_address is true
   function is_valid_to_address() {
     // TODO
-    if ($this->to_address) {
+    if (strstr($this->to_address,"@")) {
       return true;
     }
   }
