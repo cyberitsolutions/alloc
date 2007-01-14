@@ -195,13 +195,13 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   if ($success) {
   
     if ($_POST["save"] && $_POST["view"] == "brief") {
-      $url = $TPL["url_alloc_taskSummary"];
+      $url = $TPL["url_alloc_taskList"];
     } else if ($_POST["save"]) {
       $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
     } else if ($_POST["save_and_back"]) {
       $url = $TPL["url_alloc_project"]."projectID=".$task->get_value("projectID");
     } else if ($_POST["save_and_summary"]) {
-      $url = $TPL["url_alloc_taskSummary"];
+      $url = $TPL["url_alloc_taskList"];
     } else if ($_POST["save_and_new"]) {
       $url = $TPL["url_alloc_task"]."projectID=".$task->get_value("projectID")."&parentTaskID=".$task->get_value("parentTaskID");
     } else if ($_POST["timeSheet_save"]) {
@@ -218,7 +218,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 } else if ($_POST["delete"]) {
   $task->read_globals();
   $task->delete();
-  header("location: ".$TPL["url_alloc_taskSummary"]);
+  header("location: ".$TPL["url_alloc_taskList"]);
 }
 
 

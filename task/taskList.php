@@ -27,8 +27,8 @@ require_once("../alloc.php");
 $defaults = array("showHeader"=>true
                  ,"showProject"=>true
                  ,"padding"=>1
-                 ,"url_form_action"=>$TPL["url_alloc_taskSummary"]
-                 ,"form_name"=>"taskSummary_filter"
+                 ,"url_form_action"=>$TPL["url_alloc_taskList"]
+                 ,"form_name"=>"taskList_filter"
                  );
 
 function show_filter() {
@@ -48,7 +48,7 @@ function show_task_list() {
   echo task::get_task_list($_FORM);
 }
 
-include_template("templates/taskSummaryM.tpl");
+include_template("templates/taskListM.tpl");
 page_close();
 
 ?>

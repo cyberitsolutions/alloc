@@ -178,7 +178,7 @@ function show_tabs() {
   $menu_links = array("Home"     =>array("url"=>$TPL["url_alloc_home"],"module"=>"home")
                      ,"Clients"  =>array("url"=>$TPL["url_alloc_clientList"],"module"=>"client")
                      ,"Projects" =>array("url"=>$TPL["url_alloc_projectList"],"module"=>"project")
-                     ,"Tasks"    =>array("url"=>$TPL["url_alloc_taskSummary"],"module"=>"task")
+                     ,"Tasks"    =>array("url"=>$TPL["url_alloc_taskList"],"module"=>"task")
                      ,"Time"     =>array("url"=>$TPL["url_alloc_timeSheetList"],"module"=>"time")
                      ,"Finance"  =>array("url"=>$TPL["url_alloc_financeMenu"],"module"=>"finance")
                      ,"People"   =>array("url"=>$TPL["url_alloc_personList"],"module"=>"person")
