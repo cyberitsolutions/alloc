@@ -25,6 +25,9 @@ require_once("../alloc.php");
 
 $client = new client;
 $clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];
+
+
+
 if ($_POST["save"]) {
   if ($_POST["clientName"] == "") {
     $TPL["error"] = "Please enter a company name.";
@@ -166,6 +169,11 @@ if ($_POST["commentID"] && $_POST["clientComment_edit"]) {
 } else {
   $TPL["client_clientComment_buttons"] = "<input type=\"submit\" name=\"clientComment_save\" value=\"Save Comment\">";
 }
+
+if (!$clientID) {
+  $TPL["message_help"][] = "Create a new Client by inputting the Company Name and other details and clicking the Create New Client button.";
+}
+
 
 include_template("templates/clientM.tpl");
 

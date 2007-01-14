@@ -359,7 +359,7 @@ class project extends db_entity {
     $_FORM["showClient"]          and $summary[] = "  <td class=\"col\">".$row["clientName"]."&nbsp;</td>";
     $_FORM["showProjectType"]     and $summary[] = "  <td class=\"col\">".ucwords($row["projectType"])."&nbsp;</td>";
     $_FORM["showProjectStatus"]   and $summary[] = "  <td class=\"col\">".ucwords($row["projectStatus"])."&nbsp;</td>";
-    $_FORM["showNavLinks"]        and $summary[] = "  <td class=\"col\" align=\"right\">".$row["navLinks"]."&nbsp;</td>";
+    $_FORM["showNavLinks"]        and $summary[] = "  <td class=\"col nobr\" align=\"right\" width=\"1%\">".$row["navLinks"]."&nbsp;</td>";
     $summary[] = "</tr>";
 
     $summary = "\n".implode("\n",$summary);

@@ -65,7 +65,8 @@ form {
 }
 table.helper_table { 
   background-color:#fffdf2; 
-  color:#666666; border:1px solid #999999; 
+  color:#666666; 
+  border:1px solid #999999; 
   width:400px; 
   font-size:10px;
 }
@@ -73,24 +74,22 @@ table.helper_table {
 
 
 div.message { 
-  padding:7px; 
-  margin:7px; 
-  margin-left:5px; 
-  padding-left:0px; 
+  padding:4px 4px; 
+  margin:14px auto 7px auto; 
+  border:1px solid #cccccc;
+  background-color:#fffdf2; 
+  width:60%; 
 }
 .bad { 
-  color:red; 
-  font-weight:bold; 
+  color:#c84e12; 
   font-size:14px; 
 }
 .good { 
-  color:green; 
-  font-weight:bold; 
+  color:#6e883b; 
   font-size:14px; 
 }
 .help { 
   color:black;  
-  font-weight:bold; 
   font-size:14px;
 }
 
@@ -131,22 +130,22 @@ table.box th a:hover {
 /* Calendar */
 table.calendar { 
   width:100%; 
-  border-right:1px solid #a2ba68; 
-  border-bottom:1px solid #a2ba68;
+  border-right:1px solid #bacf88; 
+  border-bottom:1px solid #bacf88;
 } 
 table.calendar td { 
   background-color:#f9f9f9; 
-  border-left:1px solid #a2ba68;  
-  border-top:1px solid #a2ba68; 
+  border-left:1px solid #bacf88;  
+  border-top:1px solid #bacf88; 
   width:10%; vertical-align:top;
   font-size:smaller;
 }
 table.calendar td.today { 
   background-color:#fffdf2; 
-  border-top:2px solid #a2ba68;  
-  border-left:2px solid #a2ba68;  
-  border-right:1px solid #a2ba68;  
-  border-bottom:1px solid #a2ba68; 
+  border-top:2px solid #bacf88;  
+  border-left:2px solid #bacf88;  
+  border-right:1px solid #bacf88;  
+  border-bottom:1px solid #bacf88; 
 }
 table.calendar td.today h1 {
   font-weight:bold;
@@ -176,8 +175,8 @@ table.calendar img {
 
 /* Filters */
 table.filter { 
-  background-color:#e5e8d9; 
-  border:2px dashed #a2ba68; 
+  background-color:#eeeeee; 
+  border:2px dashed #bacf88; 
   padding:4px; 
   margin:4px; 
   margin-top:14px; 
@@ -185,43 +184,43 @@ table.filter {
 }
 table.filter th { 
   font-weight:bold; 
-  background-color:#e5e8d9; 
+  background-color:#eeeeee; 
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
 }
 
 table.panel { 
-  background-color:#e5e8d9; 
+  background-color:#eeeeee; 
   height:100%; 
-  border:1px solid #a2ba68; 
+  border:1px solid #bacf88; 
 }
 
 tr.odd { 
-  background-color:#e5e8d9; 
+  background-color:#eeeeee; 
 }
 tr.even { 
   background-color:#f9f9f9; 
 }
 
 .overdue { 
-  color: red; 
+  color: #c84e12; 
 }
 .really_overdue { 
   font-weight:bold; 
-  color: red;
+  color: #c84e12;
 }
 .behind-target { 
   color: #ccaa00; 
 }
 .transaction-approved { 
-  color: green; 
+  color: #6e883b; 
 }
 .transaction-pending { 
   color: black; 
 }
 .transaction-rejected { 
-  color: red; 
+  color: #c84e12; 
 }
 .highlighted { 
   font-weight:normal; 
@@ -232,23 +231,23 @@ tr.even {
 
 table.tasks { 
   width:100%; 
-  border-right:1px solid #a2ba68; 
-  border-bottom:1px solid #a2ba68;
+  border-right:1px solid #bacf88; 
+  border-bottom:1px solid #bacf88;
 }
 td.tasks { 
-  background-color: #e5e8d9; 
+  background-color: #eeeeee; 
   padding:4px; 
 }
 table.tasks th, table.calendar th { 
   border-bottom:0px; 
   font-weight:bold; 
   white-space:nowrap; 
-  background:#e2e7cf; 
+  background:#e5e8d9; 
   color:#444444; 
 }
 .col { 
-  border-left:1px solid #a2ba68; 
-  border-top:1px solid #a2ba68; 
+  border-left:1px solid #bacf88; 
+  border-top:1px solid #bacf88; 
   padding:4px;
 }
 
@@ -257,14 +256,14 @@ table.tasks th, table.calendar th {
 }
 
 table.comments { 
-  border:1px solid #a2ba68; 
-  background:#e5e8d9; 
+  border:1px solid #bacf88; 
+  background:#eeeeee; 
   margin-bottom:4px; 
   margin-top:2px;
 }
 table.comments th { 
   text-align:left; 
-  background:#e5e8d9; 
+  background:#eeeeee; 
   vertical-align:top; 
   color:#444444; 
   font-weight:normal; 
@@ -366,10 +365,10 @@ div#menu_top_right {
   font-size:13px;
   font-weight:bold;
   color:#5c7600;
-  background:#e2e7cf;
-  border-bottom:1px solid #a2ba68;
-  border-left:1px solid #a2ba68;
-  border-right:1px solid #a2ba68;
+  background:#e5e8d9;
+  border-bottom:1px solid #bacf88;
+  border-left:1px solid #bacf88;
+  border-right:1px solid #bacf88;
   padding:6px;
   padding-top:8px;
   margin-top:0px;
