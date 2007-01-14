@@ -34,8 +34,8 @@ $defaults = array("showHeader"=>true
 function show_filter() {
   global $TPL,$defaults;
 
-  $_FORM = load_form_data($defaults);
-  $arr = load_task_filter($_FORM);
+  $_FORM = task::load_form_data($defaults);
+  $arr = task::load_task_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);
   include_template("templates/taskFilterS.tpl");
 }
@@ -43,7 +43,7 @@ function show_filter() {
 function show_task_list() {
   global $defaults;
 
-  $_FORM = load_form_data($defaults);
+  $_FORM = task::load_form_data($defaults);
   #echo "<pre>".print_r($_FORM,1)."</pre>";
   echo task::get_task_list($_FORM);
 }

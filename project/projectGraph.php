@@ -33,16 +33,16 @@ $defaults = array("showHeader"=>true
 function show_filter() {
   global $TPL,$defaults;
 
-  $_FORM = load_form_data($defaults);
-  $arr = load_task_filter($_FORM);
+  $_FORM = task::load_form_data($defaults);
+  $arr = task::load_task_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);
   include_template("../task/templates/taskFilterS.tpl");
 }
 
 function show_projects($template_name) {
   global $TPL, $default;
-  $_FORM = load_form_data($defaults);
-  $arr = load_task_filter($_FORM);
+  $_FORM = task::load_form_data($defaults);
+  $arr = task::load_task_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);
  
   if (is_array($_FORM["projectID"])) {
@@ -53,7 +53,7 @@ function show_projects($template_name) {
       $project->select();
       $_FORM["projectID"] = array($projectID);
       $TPL["graphTitle"] = urlencode($project->get_value("projectName"));
-      $arr = load_task_filter($_FORM);
+      $arr = task::load_task_filter($_FORM);
       is_array($arr) and $TPL = array_merge($TPL,$arr);
       include_template($template_name);
     }
