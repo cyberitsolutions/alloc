@@ -70,7 +70,7 @@ class history extends db_entity {
     }
     $ignored_files[] = "index.php";
     $ignored_files[] = "home.php";
-    $ignored_files[] = "taskSummary.php";
+    $ignored_files[] = "taskList.php";
     $ignored_files[] = "projectList.php";
     $ignored_files[] = "timeSheetList.php";
     $ignored_files[] = "menu.php";
