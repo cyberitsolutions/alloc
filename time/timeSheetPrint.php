@@ -326,16 +326,16 @@ if ($timeSheetID) {
   $pdf_table_options2 = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0, "width"=>400, "fontSize"=>11, "xPos"=>"center", "xOrientation"=>"center", "cols"=>$cols_settings);
   $cols_settings2["gst"] = array("justification"=>"right");
   $cols_settings2["money"] = array("justification"=>"right");
-  $pdf_table_options3 = array("showLines"=>2,"shaded"=>0,"width"=>400, "xPos"=>"center","fontSize"=>11,"cols"=>$cols_settings2);
+  $pdf_table_options3 = array("showLines"=>2,"shaded"=>0,"width"=>400, "xPos"=>"center","fontSize"=>11,"cols"=>$cols_settings2,"lineCol"=>array(0.8, 0.8, 0.8));
   $cols_settings["two"] = array("justification"=>"right","width"=>80);
-  $pdf_table_options4 = array("showLines"=>2,"shaded"=>0,"width"=>400, "showHeadings"=>0, "fontSize"=>11, "xPos"=>"center", "cols"=>$cols_settings);
+  $pdf_table_options4 = array("showLines"=>2,"shaded"=>0,"width"=>400, "showHeadings"=>0, "fontSize"=>11, "xPos"=>"center", "cols"=>$cols_settings,"lineCol"=>array(0.8, 0.8, 0.8));
 
   $pdf =& new Cezpdf();
   $pdf->ezSetMargins(90,90,90,90);
 
   $pdf->selectFont($font1);
   $pdf->ezStartPageNumbers(436,80,11,'right','Page {PAGENUM} of {TOTALPAGENUM}');
-  $pdf->ezStartPageNumbers(180,80,11,'left','<b>Invoice Number: </b>'.$TPL["timeSheetID"]);
+  $pdf->ezStartPageNumbers(200,80,11,'left','<b>Invoice Number: </b>'.$TPL["timeSheetID"]);
   $pdf->ezSetY(775);
 
   $TPL["companyName"]            and $contact_info[] = array($TPL["companyName"]);
