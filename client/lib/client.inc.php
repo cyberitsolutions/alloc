@@ -58,12 +58,10 @@ class client extends db_entity {
 
   }
 
-  
   function has_attachment_permission() {
     // Placeholder for security check in shared/get_attchment.php
     return true;
   }
- 
 
   function get_client_contact_select($clientID="",$clientContactID="") {
     $db = new db_alloc;
@@ -73,6 +71,195 @@ class client extends db_entity {
     return "<select name=\"clientContactID\" style=\"width:300px\">".$options."</select>";
   }
  
+  function get_client_name() {
+    return stripslashes($this->get_value("clientName"));
+  }
+
+  function get_client_link() {
+    global $TPL;
+    return "<a href=\"".$TPL["url_alloc_client"]."clientID=".$this->get_id()."\">".$this->get_client_name()."</a>";
+  }
+
+  function get_client_list_filter($filter=array()) {
+    
+    if ($filter["clientStatus"]) {
+      $sql[] = sprintf("(clientStatus = '%s')",db_esc($filter["clientStatus"]));
+    } 
+
+    if ($filter["clientName"]) {
+      $sql[] = sprintf("(clientName LIKE '%%%s%%')",db_esc($filter["clientName"]));
+    } 
+
+    if ($filter["clientLetter"] && $filter["clientLetter"] == "A") {
+      $sql[] = "(clientName like 'A%' or clientName REGEXP '^[^[:alpha:]]')";
+    } else if ($filter["clientLetter"] && $filter["clientLetter"] != "ALL") {
+      $sql[] = sprintf("(clientName LIKE '%s%%')",db_esc($filter["clientLetter"]));
+    }
+
+    return $sql;
+  }
+
+  function get_client_list($_FORM) {
+    /*
+     * This is the definitive method of getting a list of clients that need a sophisticated level of filtering
+     * 
+     * Display Options:
+     *  showHeader
+     *  showClientName
+     *  showClientLink
+     *  showPrimaryContactName
+     *  showPrimaryContactPhone
+     *  showPrimaryContactEmail
+     *  
+     * Filter Options:
+     *   clientStatus
+     *   clientName
+     *   clientLetter
+     *
+     */
+
+    $filter = client::get_client_list_filter($_FORM);
+
+    $debug = $_FORM["debug"];
+    $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
+    $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
+  
+    $_FORM["return"] or $_FORM["return"] = "html";
+
+    // A header row
+    $summary.= client::get_client_list_tr_header($_FORM);
+
+
+    if (is_array($filter) && count($filter)) {
+      $filter = " WHERE ".implode(" AND ",$filter);
+    }
+
+    $q = "SELECT * FROM client ".$filter." ORDER BY clientName";
+    $debug and print "Query: ".$q;
+    $db = new db_alloc;
+    $db->query($q);
+    while ($row = $db->next_record()) {
+      $print = true;
+      $c = new client;
+      $c->read_db_record($db);
+      $row["clientLink"] = $c->get_client_link();
+      $summary.= client::get_client_list_tr($row,$_FORM);
+
+      #$TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
+    }
+
+    if ($print && $_FORM["return"] == "html") {
+      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+
+    } else if (!$print && $_FORM["return"] == "html") {
+      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Clients Found</b></td></tr></table>";
+    }
+
+  }
+
+
+  function get_client_list_tr_header($_FORM) {
+    if ($_FORM["showHeader"]) {
+      $summary = "\n<tr>";
+      $_FORM["showClientName"]          and $summary.= "\n<th class=\"col\">Client</th>";
+      $_FORM["showClientLink"]          and $summary.= "\n<th class=\"col\">Client</th>";
+      $_FORM["showPrimaryContactName"]  and $summary.= "\n<th class=\"col\">Contact Name</th>";
+      $_FORM["showPrimaryContactPhone"] and $summary.= "\n<th class=\"col\">Contact Phone</th>";
+      $_FORM["showPrimaryContactEmail"] and $summary.= "\n<th class=\"col\">Contact Email</th>";
+      $_FORM["showClientStatus"]        and $summary.= "\n<th class=\"col\">Status</th>";
+      $summary.="\n</tr>";
+      return $summary;
+    }
+  }
+
+  function get_client_list_tr($client,$_FORM) {
+
+    $clientContact = new clientContact;
+    $clientContact->set_id($client['clientPrimaryContactID']);
+    $clientContact->select();
+    $primaryContactName = $clientContact->get_value("clientContactName");
+    $primaryContactPhone = $clientContact->get_value("clientContactPhone");
+    $primaryContactEmail = $clientContact->get_value("clientContactEmail");
+    $primaryContactEmail and $primaryContactEmail = "<a href=\"mailto:".$primaryContactEmail."\">".$primaryContactEmail."</a>";
+
+    $summary[] = "<tr>";
+    $_FORM["showClientName"]          and $summary[] = "  <td class=\"col\">".$client["clientName"]."&nbsp;</td>";
+    $_FORM["showClientLink"]          and $summary[] = "  <td class=\"col\">".$client["clientLink"]."&nbsp;</td>";
+    $_FORM["showPrimaryContactName"]  and $summary[] = "  <td class=\"col\">".$primaryContactName."&nbsp;</td>";
+    $_FORM["showPrimaryContactPhone"] and $summary[] = "  <td class=\"col\">".$primaryContactPhone."&nbsp;</td>";
+    $_FORM["showPrimaryContactEmail"] and $summary[] = "  <td class=\"col\">".$primaryContactEmail."&nbsp;</td>";
+    $_FORM["showClientStatus"]        and $summary[] = "  <td class=\"col\">".ucwords($client["clientStatus"])."&nbsp;</td>";
+    $summary[] = "</tr>";
+
+    $summary = "\n".implode("\n",$summary);
+    return $summary;
+  }
+
+  function load_form_data($defaults=array()) {
+    global $current_user;
+
+    $page_vars = array("clientStatus"
+                      ,"clientName"
+                      ,"clientLetter"
+                      ,"url_form_action"
+                      ,"form_name"
+                      ,"dontSave"
+                      ,"applyFilter"
+                      ,"showHeader"
+                      ,"showClientName"
+                      ,"showClientLink"
+                      ,"showClientStatus"
+                      ,"showPrimaryContactName"
+                      ,"showPrimaryContactPhone"
+                      ,"showPrimaryContactEmail"
+                      );
+
+    $_FORM = get_all_form_data($page_vars,$defaults);
+
+    if (!$_FORM["applyFilter"]) {
+      $_FORM = $current_user->prefs[$_FORM["form_name"]];
+      if (!isset($current_user->prefs[$_FORM["form_name"]])) {
+        $_FORM["clientLetter"] = "A";
+        $_FORM["clientStatus"] = "current";
+      }
+
+    } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+      $url = $_FORM["url_form_action"];
+      unset($_FORM["url_form_action"]);
+      $current_user->prefs[$_FORM["form_name"]] = $_FORM;
+      $_FORM["url_form_action"] = $url;
+    }
+
+    return $_FORM;
+  }
+
+  function load_client_filter($_FORM) {
+    global $TPL;
+
+    $db = new db_alloc;
+
+    // Load up the forms action url
+    $rtn["url_form_action"] = $_FORM["url_form_action"];
+
+    $rtn["clientStatusOptions"] = get_select_options(array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived"), $_FORM["clientStatus"]);
+    $rtn["clientName"] = $_FORM["clientName"];
+    $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ALL");
+    foreach($letters as $letter) {
+      if ($_FORM["clientLetter"] == $letter) {
+        $rtn["alphabet_filter"].= "&nbsp;&nbsp;".$letter;
+      } else {
+        $rtn["alphabet_filter"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_clientList"]."clientLetter=".$letter."&clientStatus=".$_FORM["clientStatus"]."&applyFilter=1\">".$letter."</a>";
+      }
+    }
+   
+    // Get
+    $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
+
+    return $rtn;
+  }
+
+
+
 }
 
 

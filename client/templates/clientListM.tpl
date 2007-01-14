@@ -3,17 +3,15 @@
 {$table_box}
   <tr>
     <th>Clients</th>
-    <th class="right" colspan="4">{$nav_links}</th>
+    <th class="right"><a href="{$url_alloc_client}">New Client</a></th>
   </tr>
   <tr>
-    <td colspan="4" align="center">{show_filter("templates/clientListFilterS.tpl")}</td>
+    <td colspan="2" align="center">{show_filter()}</td>
   </tr>
   <tr>
-    <td>Client Name</td>
-    <td>Contact Name</td>
-    <td>Contact Phone</td>
-    <td>Contact E-mail</td>
-  </tr>
-  {show_client("templates/clientListR.tpl")}
+    <td colspan="2">
+      {show_client_list()}
+    </td>
+
 </table>
 {show_footer()}

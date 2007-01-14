@@ -721,7 +721,7 @@ function get_task_statii_array() {
     /*
      * This is the definitive method of getting a list of tasks that need a sophisticated level of filtering
      *
-     # Display Options:
+     * Display Options:
      *   showDates            = Show dates 1-4
      *   showDate1            = Date Target Start
      *   showDate2            = Date Target Completion
