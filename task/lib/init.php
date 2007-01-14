@@ -25,7 +25,6 @@
 include(ALLOC_MOD_DIR."task/lib/task.inc.php");
 include(ALLOC_MOD_DIR."task/lib/taskType.inc.php");
 include(ALLOC_MOD_DIR."task/lib/taskCommentTemplate.inc.php");
-include(ALLOC_MOD_DIR."task/lib/taskFilter.inc.php");
 include(ALLOC_MOD_DIR."task/lib/task_calendar.inc.php");
 
 

@@ -3,7 +3,7 @@
 
 {$table_box}
   <tr>
-    <th>Task Summary</th>
+    <th>Tasks</th>
     <th class="right"><nobr><a href="{$url_alloc_task}">New Task</a></nobr></th>
   </tr>
   <tr>
