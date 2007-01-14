@@ -11,8 +11,8 @@
         <tr>
           <td>&nbsp;</td>
           <td><select name="clientStatus"><option value=""> -- ALL -- {$clientStatusOptions}</select></td>
-          <td><input type="text" name="clientN" value="{$clientN}"></td>
-          <td><input type="submit" value="Filter"></td>
+          <td><input type="text" name="clientName" value="{$clientName}"></td>
+          <td><input type="submit" name="applyFilter" value="Filter"></td>
           <td>&nbsp;</td>
         </tr>
         <tr>

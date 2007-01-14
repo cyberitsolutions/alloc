@@ -77,7 +77,10 @@ function load_form_data($defaults=array()) {
     }
 
   } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+    $url = $_FORM["url_form_action"];
+    unset($_FORM["url_form_action"]);
     $current_user->prefs[$_FORM["form_name"]] = $_FORM;
+    $_FORM["url_form_action"] = $url;
   }
 
   // If have check Show Description checkbox then display the Long Description and the Comments
@@ -129,7 +132,6 @@ function load_task_filter($_FORM) {
   
   // Get
   $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
-
 
   return $rtn;
 }
