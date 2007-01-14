@@ -13,7 +13,7 @@
           <td><select name="projectType"><option value=""> -- ALL -- {$projectTypeOptions}</select></td>
           <td>{$personSelect}</td>
           <td><input type="text" name="projectName" value="{$projectName}"></td>
-          <td><input type="submit" value="Filter"></td>
+          <td><input type="submit" name="applyFilter" value="Filter"></td>
         </tr>
       </table>
     </form>

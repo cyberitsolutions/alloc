@@ -26,28 +26,19 @@ class project_list_home_item extends home_item {
     home_item::home_item("project_list", "Project List", "project", "projectListH.tpl", "standard", 40);
   }
 
-  function show_projects($template_name) {
+  function show_projects() {
     global $current_user, $TPL;
 
     if (isset($current_user->prefs["projectListNum"]) && $current_user->prefs["projectListNum"] != "all") {
-      $limit = sprintf("LIMIT %d",$current_user->prefs["projectListNum"]);
+      $options["limit"] = $current_user->prefs["projectListNum"];
     }
+    
+    $options["projectStatus"] = "current";
+    $options["personID"] = $current_user->get_id();
+    $options["showProjectLink"] = 1;
+    $options["showNavLinks"] = 1;
 
-    $query = sprintf("SELECT project.*, clientName
-             FROM project LEFT JOIN client ON project.clientID = client.clientID, projectPerson
-             WHERE projectPerson.projectID = project.projectID AND personID=%d AND projectStatus = 'current'
-             ORDER BY projectName,projectPriority %s", $current_user->get_id(), $limit);
-    $db = new db_alloc;
-    $db->query($query);
-    while ($db->next_record()) {
-      $project = new project;
-      $project->read_db_record($db);
-      $TPL["projectID"] = $project->get_id();
-      $TPL["projectName"] = $project->get_value("projectName");
-      $TPL["projectNav"] = $project->get_navigation_links();
-      $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
-      include_template($this->get_template_dir().$template_name, $this);
-    }
+    echo project::get_project_list($options);
   }
 }
 
