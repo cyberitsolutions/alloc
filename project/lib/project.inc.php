@@ -24,8 +24,7 @@
 define("PERM_PROJECT_VIEW_TASK_ALLOCS", 256);
 define("PERM_PROJECT_ADD_TASKS", 512);
 
-class project extends db_entity
-{
+class project extends db_entity {
   var $classname = "project";
   var $data_table = "project";
   var $display_field_name = "projectName";
@@ -76,6 +75,15 @@ class project extends db_entity
     return $url;
   }
 
+  function get_project_name() {
+    return stripslashes($this->get_value("projectName"));
+  }
+
+  function get_project_link() {
+    global $TPL;
+    return "<a href=\"".$TPL["url_alloc_project"]."projectID=".$this->get_id()."\">".$this->get_project_name()."</a>";
+  }
+
   function is_owner($person = "") {
     global $current_user;
     $person or $person = $current_user;
@@ -122,7 +130,7 @@ class project extends db_entity
 
   function get_navigation_links() {
     global $taskID, $TPL, $current_user;
- 
+
     // Client 
     if ($this->get_value("clientID")) {  
       $url = $TPL["url_alloc_client"]."clientID=".$this->get_value("clientID");
@@ -237,6 +245,198 @@ class project extends db_entity
   function has_attachment_permission($person) {
     return $this->has_project_permission($person);
   }
+
+  function get_project_list_filter($filter=array()) {
+
+    if ($filter["personID"]) {
+      $sql[] = sprintf("(projectPerson.projectID = project.projectID AND personID=%d)", $filter["personID"]);
+    }
+
+    if ($filter["projectName"]) {
+      $sql[] = sprintf("(projectName LIKE '%%%s%%')", db_esc($filter["projectName"]));
+    }
+    if ($filter["projectStatus"]) {
+      $sql[] = sprintf("(projectStatus = '%s')", db_esc($filter["projectStatus"]));
+    }
+    if ($filter["projectType"]) {
+      $sql[] = sprintf("(projectType = '%s')", db_esc($filter["projectType"]));
+    }
+
+    return $sql;
+  }
+
+  function get_project_list($_FORM) {
+    /*
+     * This is the definitive method of getting a list of projects that need a sophisticated level of filtering
+     * 
+     * Display Options:
+     *  showHeader
+     *  showProjectName
+     *  showProjectLink
+     *  showClient
+     *  showProjectType
+     *  showProjectStatus
+     *  showNavLinks
+     *  
+     * Filter Options:
+     *   projectStatus
+     *   clientID
+     *   projectType
+     *   personID
+     *   projectName
+     *   limit
+     *
+     */
+
+    $filter = project::get_project_list_filter($_FORM);
+
+    $debug = $_FORM["debug"];
+    $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
+    $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
+  
+    $_FORM["return"] or $_FORM["return"] = "html";
+
+    // A header row
+    $summary.= project::get_project_list_tr_header($_FORM);
+
+
+    if (is_array($filter) && count($filter)) {
+      $filter = " WHERE ".implode(" AND ",$filter);
+    }
+
+    if ($filter["personID"]) { 
+      $from.= ", projectPerson ";
+    }
+
+    $q = "SELECT * FROM project LEFT JOIN client ON project.clientID = client.clientID ".$from.$filter." GROUP BY project.projectID ORDER BY projectName";
+
+    $_FORM["limit"] and $q.= sprintf(" LIMIT %d",$_FORM["limit"]);
+
+    $debug and print "Query: ".$q;
+    $db = new db_alloc;
+    $db->query($q);
+    while ($row = $db->next_record()) {
+      $print = true;
+      $p = new project;
+      $p->read_db_record($db);
+      $row["projectName"] = $p->get_project_name();
+      $row["projectLink"] = $p->get_project_link();
+      $row["navLinks"] = $p->get_navigation_links();
+      $summary.= project::get_project_list_tr($row,$_FORM);
+
+    }
+
+    if ($print && $_FORM["return"] == "html") {
+      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+
+    } else if (!$print && $_FORM["return"] == "html") {
+      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Projects Found</b></td></tr></table>";
+    }
+  }
+
+  function get_project_list_tr_header($_FORM) {
+    if ($_FORM["showHeader"]) {
+      $summary = "\n<tr>";
+      $_FORM["showProjectName"]   and $summary.= "\n<th class=\"col\">Project</th>";
+      $_FORM["showProjectLink"]   and $summary.= "\n<th class=\"col\">Project</th>";
+      $_FORM["showClient"]        and $summary.= "\n<th class=\"col\">Client</th>";
+      $_FORM["showProjectType"]   and $summary.= "\n<th class=\"col\">Type</th>";
+      $_FORM["showProjectStatus"] and $summary.= "\n<th class=\"col\">Status</th>";
+      $_FORM["showNavLinks"]      and $summary.= "\n<th class=\"col\">&nbsp;</th>";
+      $summary.="\n</tr>";
+      return $summary;
+    }
+  }
+
+  function get_project_list_tr($row,$_FORM) {
+
+    static $odd_even;
+    $odd_even = $odd_even == "even" ? "odd" : "even";
+
+    $summary[] = "<tr class=\"".$odd_even."\">";
+    $_FORM["showProjectName"]     and $summary[] = "  <td class=\"col\">".$row["projectName"]."&nbsp;</td>";
+    $_FORM["showProjectLink"]     and $summary[] = "  <td class=\"col\">".$row["projectLink"]."&nbsp;</td>";
+    $_FORM["showClient"]          and $summary[] = "  <td class=\"col\">".$row["clientName"]."&nbsp;</td>";
+    $_FORM["showProjectType"]     and $summary[] = "  <td class=\"col\">".ucwords($row["projectType"])."&nbsp;</td>";
+    $_FORM["showProjectStatus"]   and $summary[] = "  <td class=\"col\">".ucwords($row["projectStatus"])."&nbsp;</td>";
+    $_FORM["showNavLinks"]        and $summary[] = "  <td class=\"col\" align=\"right\">".$row["navLinks"]."&nbsp;</td>";
+    $summary[] = "</tr>";
+
+    $summary = "\n".implode("\n",$summary);
+    return $summary;
+  }
+
+  function load_form_data($defaults=array()) {
+    global $current_user;
+
+    $page_vars = array("showHeader"
+                      ,"showProjectName"
+                      ,"showProjectLink"
+                      ,"showClient"
+                      ,"showProjectType"
+                      ,"showProjectStatus"
+                      ,"showNavLinks"
+
+                      ,"projectStatus"
+                      ,"clientID"
+                      ,"projectType"
+                      ,"personID"
+                      ,"projectName"
+
+                      ,"url_form_action"
+                      ,"form_name"
+                      ,"dontSave"
+                      ,"applyFilter"
+                      );
+
+    $_FORM = get_all_form_data($page_vars,$defaults);
+
+    if (!$_FORM["applyFilter"]) {
+      $_FORM = $current_user->prefs[$_FORM["form_name"]];
+      if (!isset($current_user->prefs[$_FORM["form_name"]])) {
+        $_FORM["projectStatus"] = "current";
+        $_FORM["personID"] = $current_user->get_id();
+      }
+
+    } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+      $url = $_FORM["url_form_action"];
+      unset($_FORM["url_form_action"]);
+      $current_user->prefs[$_FORM["form_name"]] = $_FORM;
+      $_FORM["url_form_action"] = $url;
+    }
+
+    return $_FORM;
+  }
+
+  function load_project_filter($_FORM) {
+
+    global $TPL, $current_user;
+
+    if (have_entity_perm("project", PERM_READ, $current_user, false)) {
+      $personDb = new db_alloc;
+      $query = "SELECT personID, username FROM person ORDER BY username";
+      $personDb->query($query);
+
+      $personSelect= "<select name=\"personID\">";
+      $personSelect.= "<option value=\"\"> -- ALL -- ";
+      $personSelect.= get_options_from_db($personDb, "username", "personID", $_FORM["personID"]);
+      $personSelect.= "</select>";
+    } else {
+      $personSelect = $current_user->get_value("username");
+    }
+
+    $rtn["personSelect"] = $personSelect;
+    $rtn["projectStatusOptions"] = get_options_from_array(array("Current", "Potential", "Archived"), $_FORM["projectStatus"], false);
+    $rtn["projectTypeOptions"] = get_options_from_array(array("Project", "Job", "Contract"), $_FORM["projectType"], false);
+    $rtn["projectName"] = $_FORM["projectName"];
+
+
+    // Get
+    $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
+
+    return $rtn;
+  }
+
 
 }
 

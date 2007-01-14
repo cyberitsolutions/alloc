@@ -938,6 +938,9 @@ function get_task_statii_array() {
 
   function get_task_list_tr($task,$_FORM) {
 
+    static $odd_even;
+    $odd_even = $odd_even == "even" ? "odd" : "even";
+
     $today = date("Y-m-d");
     $task["dateTargetStart"]      == $today and $task["dateTargetStart"]      = "<b>".$task["dateTargetStart"]."</b>";
     $task["dateTargetCompletion"] == $today and $task["dateTargetCompletion"] = "<b>".$task["dateTargetCompletion"]."</b>";
@@ -948,7 +951,7 @@ function get_task_statii_array() {
     $timeUnit_cache = $_FORM["timeUnit_cache"];
 
 
-                                  $summary[] = "<tr>";
+                                  $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
                               and $summary[] = "  <td class=\"col\">".$task["project_name"]."&nbsp;</td>";
                                   $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"]."</td>";
@@ -1232,33 +1235,32 @@ function get_task_statii_array() {
     return $status;
   }
 
-
   function load_form_data($defaults=array()) {
     global $current_user;
 
     $page_vars = array("projectID"
-                      ,"taskStatus"
-                      ,"taskTypeID"
-                      ,"personID"
-                      ,"taskView"
-                      ,"projectType"
-                      ,"applyFilter"
-                      ,"showDescription"
-                      ,"showDates"
-                      ,"showCreator"
-                      ,"showAssigned"
-                      ,"showTimes"
-                      ,"showPercent"
-                      ,"showPriority"
-                      ,"showStatus"
-                      ,"showTaskID"
-                      ,"showHeader"
-                      ,"showProject"
-                      ,"padding"
-                      ,"url_form_action"
-                      ,"form_name"
-                      ,"dontSave"
-                      );
+        ,"taskStatus"
+        ,"taskTypeID"
+        ,"personID"
+        ,"taskView"
+        ,"projectType"
+        ,"applyFilter"
+        ,"showDescription"
+        ,"showDates"
+        ,"showCreator"
+        ,"showAssigned"
+        ,"showTimes"
+        ,"showPercent"
+        ,"showPriority"
+        ,"showStatus"
+        ,"showTaskID"
+        ,"showHeader"
+        ,"showProject"
+        ,"padding"
+        ,"url_form_action"
+        ,"form_name"
+        ,"dontSave"
+        );
 
     $_FORM = get_all_form_data($page_vars,$defaults);
 
@@ -1278,7 +1280,7 @@ function get_task_statii_array() {
     } else if (!$_FORM["projectType"]){
       $_FORM["projectType"] = "mine";
     }
-    
+
     if (!$_FORM["applyFilter"]) {
       $_FORM = $current_user->prefs[$_FORM["form_name"]];
       if (!isset($current_user->prefs[$_FORM["form_name"]])) {
