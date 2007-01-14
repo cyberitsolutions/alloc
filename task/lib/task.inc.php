@@ -792,7 +792,7 @@ function get_task_statii_array() {
       while ($project = $db->next_record()) {
         $p = new project;
         $p->read_db_record($db);
-        $project["link"] = "<strong><a href=\"".$p->get_url()."\">".$p->get_value("projectName")."</a></strong>&nbsp;&nbsp;".$p->get_navigation_links();
+        $project["link"] = "<strong><a href=\"".$p->get_url()."\">".$p->get_value("projectName")."</a></strong>&nbsp;&nbsp;&nbsp;&nbsp;".$p->get_navigation_links();
         $projects[] = $project;
       }
     
@@ -818,7 +818,7 @@ function get_task_statii_array() {
           $print = true;
 
           $_FORM["showProject"] and $summary.= "\n<tr>";
-          $_FORM["showProject"] and $summary.= "\n  <td class=\"col tasks\" colspan=\"21\">".$project["link"]."</td>";
+          $_FORM["showProject"] and $summary.= "\n  <th class=\"col tasks\" colspan=\"21\">".$project["link"]."</th>";
           $_FORM["showProject"] and $summary.= "\n</tr>";
 
           foreach ($t as $task) {

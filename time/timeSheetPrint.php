@@ -112,6 +112,7 @@ define("DEFAULT_SEP","\n");
     }
 
     // Group by units ie, a particular row/task might have  3 Weeks, 2 Hours of work done.
+    $units or $units = array();
     foreach ($units as $tid => $u) {
       unset($commar);
       foreach ($u as $unit => $amount) {
@@ -121,6 +122,7 @@ define("DEFAULT_SEP","\n");
       }
     }
     unset($commar);
+    $i or $i = array();
     foreach ($i as $unit => $amount) {
       $info["total_units"].= $commar.$amount." ".$unit;
       $commar = ", ";
@@ -177,6 +179,7 @@ define("DEFAULT_SEP","\n");
     }
 
     // Group by units ie, a particular row/task might have  3 Weeks, 2 Hours of work done.
+    $units or $units = array();
     foreach ($units as $tid => $u) {
       unset($commar);
       foreach ($u as $unit => $amount) {
@@ -187,6 +190,7 @@ define("DEFAULT_SEP","\n");
     }
 
     unset($commar);
+    $i or $i = array();
     foreach ($i as $unit => $amount) {
       $info["total"].= $commar.$amount." ".$unit;
       $commar = ", ";

@@ -65,7 +65,8 @@ form {
 }
 table.helper_table { 
   background-color:#fffdf2; 
-  color:#666666; border:1px solid #999999; 
+  color:#666666; 
+  border:1px solid #999999; 
   width:400px; 
   font-size:10px;
 }
@@ -73,24 +74,22 @@ table.helper_table {
 
 
 div.message { 
-  padding:7px; 
-  margin:7px; 
-  margin-left:5px; 
-  padding-left:0px; 
+  padding:4px 4px; 
+  margin:14px auto 7px auto; 
+  border:1px solid #cccccc;
+  background-color:#fffdf2; 
+  width:60%; 
 }
 .bad { 
   color:(TRANSACTION_REJECTED); 
-  font-weight:bold; 
   font-size:(TABLE_BOX_TH_FONT_SIZE)px; 
 }
 .good { 
   color:(TRANSACTION_APPROVED); 
-  font-weight:bold; 
   font-size:(TABLE_BOX_TH_FONT_SIZE)px; 
 }
 .help { 
   color:(TRANSACTION_PENDING);  
-  font-weight:bold; 
   font-size:(TABLE_BOX_TH_FONT_SIZE)px;
 }
 
@@ -152,7 +151,7 @@ table.calendar td.today h1 {
   font-weight:bold;
 }
 table.calendar td.even { 
-  background-color:#eeeeee; 
+  background-color:(PANE_BG_COLOR); 
 }
 table.calendar td.absent {
   background-color:#cccccc;

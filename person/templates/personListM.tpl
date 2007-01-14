@@ -3,10 +3,7 @@
 {$table_box}
   <tr>
     <th>People</th> 
-    <th class="right" colspan="8">
-      &nbsp;&nbsp;<a href={$url_alloc_personGraph}>Person Graphs</a></td>
-      {$personAddSkill_link}
-      &nbsp;&nbsp;<a href="{$url_alloc_person}">New Person</a>
+    <th class="right" colspan="8">&nbsp;&nbsp;<a href={$url_alloc_personGraph}>Person Graphs</a></td>{$personAddSkill_link}&nbsp;&nbsp;<a href="{$url_alloc_person}">New Person</a>
     </th>
   </tr>
   <tr>
