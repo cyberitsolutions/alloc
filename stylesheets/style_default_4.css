@@ -1,8 +1,16 @@
 body { 
-  background-color: #eeeeee; 
+  background-color: #d3e5fb; 
   font-family:arial,helvetica,sans-serif; 
   color:#666666; 
+  margin:5px 0px;
+  font-size:100% !important; font-size:12px;
 }
+
+/* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
+body table {
+  font-size:100% !important; font-size:12px;
+}
+
 a:link, a:visited { 
   color:#003d76;
 }
@@ -98,7 +106,7 @@ div.message {
 table.box { 
   border:1px solid #b8c2cf; 
   background-color:#f9f9f9; 
-  margin:7px; 
+  margin:8px; 
   margin-top:14px; 
   margin-bottom:0px; 
   vertical-align:top; 
@@ -169,7 +177,7 @@ table.calendar h1 {
 }
 table.calendar img {
   float:left;
-  margin-right:3px;
+  margin:0px;
 }
 
 
@@ -276,23 +284,34 @@ table.comments td {
 
 /* Setup the main content box that encapsulates everything */
 div#main {
-  width:99%;
+  width:100%;
   padding-bottom:20px;
   background-color: white;
   margin:auto;
   border:1px solid #9c9c9c;
+  border-left:0px;
+  border-right:0px;
   position: relative;
   clear:both;
   text-align:left;
-  margin-top:4px;
   margin-bottom:4px;
-  border-top:0px;
+}
+
+div#tabs {
+  width:99%;
+  margin:auto;
+  position: relative;
+  clear:both;
   text-align:left;
+  height:27px;
+  top:1px;
+  left:2px;
+  z-index:1;
 }
 
 div#header {
   display:inline;
-  margin-left:6px;
+  margin-left:8px;
   position:relative;
   text-align:left;
   float:left;
@@ -308,13 +327,6 @@ div#header p {
   top:-6px;
 }
 
-/* A div that makes up the background line image for tabs */
-div.tab_line_bg {
-  white-space:nowrap;
-  display:block;
-  background:url(../images/tab_line_bg.gif) top right repeat-x;
-  height:27px;
-}
 
 /* A single image based tab */
 div.tab {
@@ -322,7 +334,7 @@ div.tab {
   position:absolute;
   background:url(../images/tab_unselected.gif) top no-repeat;
   display:inline;
-  width:80px;
+  width:81px;
   height:27px;
   text-align:center;
   font-size:12px;
@@ -349,26 +361,20 @@ div.active a:link, div.active a:visited {
   color:#688db0;
 }
 
-div#blocker {
-  display:inline; 
-  position:absolute; 
-  right:-5px; 
-  z-index:0;
-}
 
 div#menu_top_right {
   float:right;
   position:relative;
-  right:0px;
+  right:5px;
   top:-12px;
   display:inline;
   font-size:12px;
   font-weight:bold;
   color:#003d76;
-  background:#d3e5fb;
-  border-bottom:1px solid #a3bee0;
-  border-left:1px solid #a3bee0;
-  border-right:1px solid #a3bee0;
+  background:#a3bee0;
+  border-bottom:1px solid #003d76;
+  border-left:1px solid #003d76;
+  border-right:1px solid #003d76;
   padding:6px;
   padding-top:8px;
   margin-top:0px;
