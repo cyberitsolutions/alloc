@@ -5,7 +5,7 @@
       <td style="width:74%;" valign="top">
         {show_home_items("standard")}
       </td>
-      <td style="width:24%; vertical-align:top; padding-right:8px;">
+      <td style="width:24%; vertical-align:top; padding-right:12px;">
         {show_home_items("narrow")}
       </td>
     </tr>

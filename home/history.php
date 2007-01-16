@@ -25,7 +25,7 @@ require_once("../alloc.php");
 
 global $sess, $TPL;
 
-$historyID = $_POST["historyID"];
+$historyID = $_POST["historyID"] or $historyID = $_GET["historyID"];
 
 if ($historyID) {
   if (is_numeric($historyID)) {

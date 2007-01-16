@@ -1,9 +1,10 @@
 body { 
-  background-color: #d3e5fb; 
+  background:url(../images/wallpaper_default.jpg) repeat-x #dbeafc; 
   font-family:arial,helvetica,sans-serif; 
   color:#666666; 
-  margin:5px 0px;
+  margin:0px 0px;
   font-size:100% !important; font-size:14px;
+  border-top:1px solid #ffffff;
 }
 
 /* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
@@ -312,6 +313,7 @@ div#tabs {
 div#header {
   display:inline;
   margin-left:8px;
+  margin-top:6px;
   position:relative;
   text-align:left;
   float:left;
@@ -364,20 +366,27 @@ div.active a:link, div.active a:visited {
 
 div#menu_top_right {
   float:right;
+  text-align:right;
   position:relative;
-  right:5px;
-  top:-12px;
   display:inline;
   font-size:14px;
   font-weight:bold;
   color:#003d76;
-  background:#a3bee0;
-  border-bottom:1px solid #003d76;
-  border-left:1px solid #003d76;
-  border-right:1px solid #003d76;
-  padding:6px;
-  padding-top:8px;
-  margin-top:0px;
+  padding:0px;
+  margin:4px;
+}
+
+div#menu_top_right table {
+  padding:0px;
+  margin:0px;
+}
+
+.menu_form {
+  font-size:14px;
+  height:1.5em;
+  padding:0px;
+  margin:0px;
+  border:0px;
 }
 
 p#extra_links {
