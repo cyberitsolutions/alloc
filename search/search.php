@@ -25,7 +25,7 @@ require_once("../alloc.php");
 
 global $TPL;
 
-  function get_trimmed_description($haystack, $needle) {
+  function get_trimmed_description($haystack, $needle, $category) {
 
 
     $position = strpos(strtolower($haystack),strtolower($needle));
@@ -57,16 +57,16 @@ global $TPL;
       return $str;
     } 
 
-    if ($_POST["category"] == "Clients") {
+    if ($category == "Clients") {
       return substr($haystack,0,100);
     }
 
   }
 
 
-$search = $_POST["search"];
-$category = $_POST["category"];
-$needle = db_esc($_POST["needle"]);
+$search = $_POST["search"] or $search = $_GET["search"];
+$category = $_POST["category"] or $category = $_GET["category"];
+$needle = db_esc($_POST["needle"]) or $needle = db_esc(urldecode($_GET["needle"]));
 
 if (!$search) {
   $str = "<br><br><b>Searching Announcements</b> looks for a match in each <br>Announcement's Heading and Body.<br><br>";
@@ -106,13 +106,13 @@ if (!$search) {
       if ($project->have_perm(PERM_READ)) {
         $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
-        $projectName = get_trimmed_description($project->get_value('projectName'), $needle);
+        $projectName = get_trimmed_description($project->get_value('projectName'), $needle, $category);
         $projectName and $details.= "<b>Project Name:</b> ".htmlentities($projectName)."<br>\n";
 
-        $projectComments = get_trimmed_description($project->get_value('projectComments'), $needle);
+        $projectComments = get_trimmed_description($project->get_value('projectComments'), $needle, $category);
         $projectComments and $details.= "<b>Project Comments:</b> ".htmlentities($projectComments)."<br>\n";
 
-        $projectClientName = get_trimmed_description($project->get_value('projectClientName'), $needle);
+        $projectClientName = get_trimmed_description($project->get_value('projectClientName'), $needle, $category);
         $projectClientName and $details.= "<b>Project Client Name:</b> ".htmlentities($projectClientName)."<br>\n";
 
         // Recursively search comments
@@ -127,7 +127,7 @@ if (!$search) {
           while ($db2->next_record()) {
             $comment = new comment;
             $comment->read_db_record($db2);
-            $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
+            $commentText = get_trimmed_description($comment->get_value('comment'), $needle, $category);
             $commentText and $details.= "<b>Modification History:</b> ".htmlentities($commentText)."<br>\n";
           }
 
@@ -170,7 +170,7 @@ if (!$search) {
       if ($client->have_perm(PERM_READ)) {
         $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
-        $clientName = get_trimmed_description($client->get_value('clientName'), $needle);
+        $clientName = get_trimmed_description($client->get_value('clientName'), $needle, $category);
         $clientName and $details[] = "<b>Client Name: </b>".htmlentities($clientName);
 
         $db2 = new db_alloc;
@@ -182,7 +182,7 @@ if (!$search) {
           $clientContact = new clientContact;
           $clientContact->read_db_record($db2);
 
-          $clientContactName = get_trimmed_description($clientContact->get_value('clientContactName'), $needle);
+          $clientContactName = get_trimmed_description($clientContact->get_value('clientContactName'), $needle, $category);
           #$clientContactName = $clientContact->get_value('clientContactName');
           if ($clientContactName != "") {
             $str = "<b>Contact Name: </b>".htmlentities($clientContactName);
@@ -190,7 +190,7 @@ if (!$search) {
               $str .= "&nbsp;&nbsp;<a href=\"mailto:".$clientContact->get_value("clientContactEmail")."\">".htmlentities($clientContact->get_value("clientContactEmail"))."</a>";
             }
           }
-          $clientContactOther = get_trimmed_description($clientContact->get_value('clientContactOther'), $needle);
+          $clientContactOther = get_trimmed_description($clientContact->get_value('clientContactOther'), $needle, $category);
           if ($clientContactOther != "") {
             $str.= "&nbsp;&nbsp;".htmlentities($clientContactOther);
           }
@@ -204,7 +204,7 @@ if (!$search) {
           while ($db2->next_record()) {
             $comment = new comment;
             $comment->read_db_record($db2);
-            $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
+            $commentText = get_trimmed_description($comment->get_value('comment'), $needle, $category);
             if ($commentText != "") {
               $details[] = "<b>Comment: </b>".htmlentities($commentText);
             }
@@ -252,10 +252,10 @@ if (!$search) {
         $project->select();
         $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
-        $taskName = get_trimmed_description($task->get_value('taskName'), $needle);
+        $taskName = get_trimmed_description($task->get_value('taskName'), $needle, $category);
         $taskName and $details.= "<b>Task Name:</b> ".htmlentities($taskName)."<br>\n";
 
-        $taskDescription = get_trimmed_description($task->get_value('taskDescription'), $needle);
+        $taskDescription = get_trimmed_description($task->get_value('taskDescription'), $needle, $category);
         $taskDescription and $details.= "<b>Task Description:</b> ".htmlentities($taskDescription)."<br>\n";
 
         if ($task->get_id() != "") {
@@ -265,7 +265,7 @@ if (!$search) {
           while ($db2->next_record()) {
             $comment = new comment;
             $comment->read_db_record($db2);
-            $commentText = get_trimmed_description($comment->get_value('comment'), $needle);
+            $commentText = get_trimmed_description($comment->get_value('comment'), $needle, $category);
             $commentText and $details.= "<b>Comment:</b> ".htmlentities($commentText)."<br>\n";
           }
 
@@ -299,8 +299,8 @@ if (!$search) {
       if ($announcement->have_perm(PERM_READ)) {
         $announcement->set_tpl_values(DST_HTML_ATTRIBUTE, "announcement_");
 
-        $heading = get_trimmed_description($announcement->get_value('heading'), $needle);
-        $body = get_trimmed_description($announcement->get_value('body'), $needle);
+        $heading = get_trimmed_description($announcement->get_value('heading'), $needle, $category);
+        $body = get_trimmed_description($announcement->get_value('body'), $needle, $category);
 
         if ($announcement->get_id() != "") {
           $TPL["search_results"] .=  "<b>".htmlentities($heading)."</b><br>".htmlentities($body)."<br><br>";
@@ -335,10 +335,10 @@ if (!$search) {
       if ($item->have_perm(PERM_READ)) {
         $item->set_tpl_values(DST_HTML_ATTRIBUTE, "item_");
 
-        $itemName = get_trimmed_description($item->get_value('itemName'), $needle);
+        $itemName = get_trimmed_description($item->get_value('itemName'), $needle, $category);
         $itemName and $details.= "<b>Item Name:</b> ".htmlentities($itemName)."<br>\n";
 
-        $itemNotes = get_trimmed_description($item->get_value('itemNotes'), $needle);
+        $itemNotes = get_trimmed_description($item->get_value('itemNotes'), $needle, $category);
         $itemNotes and $details.= "<b>Item Notes:</b> ".htmlentities($itemNotes)."<br>\n";
 
         $TPL["item_searchDetails"] = $details;
@@ -421,19 +421,19 @@ if (!$search) {
       if ($timeSheet->have_perm(PERM_READ)) {
         $timeSheet->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheet_");
 
-        $projectName = get_trimmed_description($db->f('projectName'), $needle);
+        $projectName = get_trimmed_description($db->f('projectName'), $needle, $category);
         $projectName and $details[] = "<b>Project Name: </b>".htmlentities($projectName);
 
-        $projectShortName = get_trimmed_description($db->f('projectShortName'), $needle);
+        $projectShortName = get_trimmed_description($db->f('projectShortName'), $needle, $category);
         $projectShortName and $details[] = "<b>Project Short Name: </b>".htmlentities($projectShortName);
 
-        $billingNote = get_trimmed_description($timeSheet->get_value('billingNote'), $needle);
+        $billingNote = get_trimmed_description($timeSheet->get_value('billingNote'), $needle, $category);
         $billingNote and $details[] = "<b>Billing Note: </b>".htmlentities($billingNote);
 
-        $taskName = get_trimmed_description($db->f('description'), $needle);
+        $taskName = get_trimmed_description($db->f('description'), $needle, $category);
         $taskName and $details[] = "<b>Task Name: </b>".htmlentities($taskName);
 
-        $taskComment = get_trimmed_description($db->f('comment'), $needle);
+        $taskComment = get_trimmed_description($db->f('comment'), $needle, $category);
         $taskComment and $details[] = "<b>Task Comment: </b>".htmlentities($taskComment);
 
         if (count($details)) {
@@ -449,9 +449,9 @@ if (!$search) {
 
 
 // setup generic values
-$TPL["category_options"] = get_category_options($_POST["category"]);
-$TPL["needle"] = $_POST["needle"];
-$TPL["needle2"] = $_POST["needle"];
+$TPL["category_options"] = get_category_options($category);
+$TPL["needle"] = $needle;
+$TPL["needle2"] = $needle;
 
 
 if ($TPL["search_results"]) {

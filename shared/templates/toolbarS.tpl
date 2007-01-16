@@ -4,15 +4,17 @@
     </div>
 
     <div id="menu_top_right">
-      <form action="{$url_alloc_history}" method="post" name="history">
-        <select name="historyID" onChange="this.form.submit();">{show_history()}</select>&nbsp;&nbsp;or&nbsp;
-      </form>
-      <form action="{$url_alloc_search}" method="post" id="form_search">
-        <input size="14" name="needle" value="{$needle}" onFocus="document.getElementById('form_search').needle.value='';">
-        <select size="1" name="category">{$category_options}</select>
-        <input type="submit" name="search" value="Go">&nbsp;&nbsp;{help_button("quicklist_and_search")}
-      </form>
-    </div>
+      <form action="{$url_alloc_menuSubmit}" method="post" id="form_search">
+      <table cellpadding="0" cellspacing="0" align="center">
+        <tr>
+          <td><select name="historyID" class="menu_form" onChange="this.form.submit();">{show_history()}</select></td>
+          <td>&nbsp;&nbsp;or&nbsp;&nbsp;</td>
+          <td><input size="14" name="needle" value="{$needle}" class="menu_form" onFocus="document.getElementById('form_search').needle.value='';">&nbsp;</td>
+          <td><select size="1" name="category" class="menu_form">{$category_options}</select></td>
+          <td><input type="submit" name="search" value="Go">&nbsp;&nbsp;</td>
+          <td>{help_button("quicklist_and_search")}</td>
+        </tr>
+      </table></form></div>
 
     <div id="tabs">
       {show_tabs()}

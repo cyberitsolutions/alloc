@@ -675,13 +675,33 @@ function show_history() {
   $str[] = "<option value=\"".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
 
   $history = new history;
-  $str[] = get_options_from_db($history->get_history_db("DESC"), "the_label", "historyID", $_GET["historyID"], 43);
+  $str[] = get_options_from_db($history->get_history_db("DESC"), "the_label", "historyID", $_GET["historyID"], 35);
   echo implode("\n",$str);
 }   
 function get_category_options($category="") {
   $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients");
   return get_options_from_array($category_options, $category, true);
 } 
+function help_button($topic) {
+  global $TPL;
+
+  $file = $TPL["url_alloc_help"].$topic.".html";
+  $file_relative = $TPL["url_alloc_help_relative"].$topic.".html";
+  if (file_exists($file)) {
+    $str = file_get_contents($file);
+    $str = htmlentities(addslashes($str));
+    $str = str_replace("\n"," ",$str);
+    $img = "<a href=\"".$file_relative."\" target=\"_blank\"><img id=\"".$topic."\" border=\"0\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
+    $img.= $TPL["url_alloc_images"]."help.gif\"></a>";
+  }
+  echo $img;
+}
+function get_help_link() {
+  global $TPL;
+  $url = "../help/help.html#".$TPL["alloc_help_link_name"];
+  echo "<a href=\"".$url."\">Help</a>";
+}
+
 
 
 
