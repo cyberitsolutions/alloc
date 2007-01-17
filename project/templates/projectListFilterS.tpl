@@ -9,8 +9,8 @@
     <!--      <td rowspan="2">{help_button("projectListFilter")}</td> -->
         </tr>
         <tr>
-          <td><select name="projectStatus"><option value=""> -- ALL -- {$projectStatusOptions}</select></td>
-          <td><select name="projectType"><option value=""> -- ALL -- {$projectTypeOptions}</select></td>
+          <td><select name="projectStatus"><option value=""> {$projectStatusOptions}</select></td>
+          <td><select name="projectType"><option value=""> {$projectTypeOptions}</select></td>
           <td>{$personSelect}</td>
           <td><input type="text" name="projectName" value="{$projectName}"></td>
           <td><input type="submit" name="applyFilter" value="Filter"></td>

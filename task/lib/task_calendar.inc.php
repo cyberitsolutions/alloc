@@ -38,7 +38,7 @@ class calendar_day {
   function set_date($date) {
     $this->date = $date;
     $this->day = format_date("D",$date);
-    $this->display_date = format_date("j-M",$date);
+    $this->display_date = format_date("j M",$date);
 
     if ($this->date == date("Y-m-d")) {
       $this->class = "today";

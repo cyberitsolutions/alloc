@@ -412,18 +412,10 @@ class project extends db_entity {
 
     global $TPL, $current_user;
 
-    if (have_entity_perm("project", PERM_READ, $current_user, false)) {
-      $personDb = new db_alloc;
-      $query = "SELECT personID, username FROM person ORDER BY username";
-      $personDb->query($query);
-
-      $personSelect= "<select name=\"personID\">";
-      $personSelect.= "<option value=\"\"> -- ALL -- ";
-      $personSelect.= get_options_from_db($personDb, "username", "personID", $_FORM["personID"]);
-      $personSelect.= "</select>";
-    } else {
-      $personSelect = $current_user->get_value("username");
-    }
+    $personSelect= "<select name=\"personID\">";
+    $personSelect.= "<option value=\"\"> ";
+    $personSelect.= get_select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
+    $personSelect.= "</select>";
 
     $rtn["personSelect"] = $personSelect;
     $rtn["projectStatusOptions"] = get_options_from_array(array("Current", "Potential", "Archived"), $_FORM["projectStatus"], false);
