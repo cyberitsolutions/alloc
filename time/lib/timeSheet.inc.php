@@ -60,7 +60,7 @@ class timeSheet extends db_entity
                 ,"invoiced"  => "Invoiced"
                 ,"finished"  => "Completed"
                 );
-  }
+  } 
 
   function delete() {
     $db = new db_alloc;
@@ -449,6 +449,247 @@ class timeSheet extends db_entity
     $dropdown_options.= get_select_options($tasks, $taskID, 100);
     return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\">".$dropdown_options."</select>";
   }
+
+  function get_timeSheet_list_filter($filter=array()) {
+    if ($filter["projectID"]) {
+      $sql[] = sprintf("(timeSheet.projectID = '%d')", $filter["projectID"]);
+    }
+    if ($filter["personID"]) {
+      $sql[] = sprintf("(timeSheet.personID = '%d')", $filter["personID"]);
+    }
+    if ($filter["status"]) {
+      $sql[] = sprintf("(timeSheet.status = '%s')", db_esc($filter["status"]));
+    }
+    if ($filter["dateFrom"]) {
+      $sql[] = sprintf("(timeSheet.dateFrom >= '%s')", db_esc($filter["dateFrom"]));
+    }
+
+    return $sql;
+  }
+
+  function get_timeSheet_list($_FORM) {
+    /*
+     * This is the definitive method of getting a list of timeSheets that need a sophisticated level of filtering
+     * 
+     * Display Options:
+     *  showHeader
+     *  showProject
+     *  showProjectLink
+     *  showAmount
+     *  showDuration
+     *  showPerson
+     *  showDateFrom
+     *  showDateTo
+     *  showStatus
+     *  
+     * Filter Options:
+     *   projectID
+     *   personID
+     *   status
+     *   dateFrom
+     *
+     */
+
+    $filter = timeSheet::get_timeSheet_list_filter($_FORM);
+
+    $debug = $_FORM["debug"];
+    $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
+    $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
+
+    $_FORM["return"] or $_FORM["return"] = "html";
+
+    // A header row
+    $summary.= timeSheet::get_timeSheet_list_tr_header($_FORM);
+
+    if (is_array($filter) && count($filter)) {
+      $filter = " WHERE ".implode(" AND ",$filter);
+    }
+
+    $q = "SELECT timeSheet.*, person.personID, projectName 
+          FROM timeSheet 
+          LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+          LEFT JOIN person ON timeSheet.personID = person.personID
+          LEFT JOIN project ON timeSheet.projectID = project.projectID
+          ".$filter."
+          GROUP BY timeSheet.timeSheetID
+          ORDER BY dateFrom,projectName,surname";
+
+    $debug and print "Query: ".$q;
+    $db = new db_alloc();
+    $db->query($q);
+    $status_array = timeSheet::get_timeSheet_statii();
+    $people_array = get_cached_table("person");
+
+    while ($row = $db->next_record()) {
+      $print = true;
+      $t = new timeSheet;
+      $t->read_db_record($db);
+      $t->load_pay_info();
+     
+      $row["amount"] = sprintf("%0.2f",$t->pay_info["total_dollars"]);
+      $extra["amountTotal"] += $row["amount"];
+      $row["duration"] = $t->pay_info["summary_unit_totals"];
+      $row["person"] = $people_array[$row["personID"]]["name"];
+      $row["status"] = $status_array[$row["status"]];
+
+      $p = new project();
+      $p->read_db_record($db);
+      #$row["projectName"] = $p->get_project_name();
+      $row["projectLink"] = $t->get_link($p->get_project_name());
+      $summary.= timeSheet::get_timeSheet_list_tr($row,$_FORM);
+    }
+
+    if ($print && $_FORM["return"] == "html") {
+      $summary.= timeSheet::get_timeSheet_list_tr_bottom($extra,$_FORM);
+      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+
+    } else if (!$print && $_FORM["return"] == "html") {
+      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Time Sheets Found</b></td></tr></table>";
+    }
+  }
+
+  function get_link($text) {
+    global $TPL;
+    return "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$this->get_id()."\">".$text."</a>";
+  }
+
+  function get_timeSheet_list_tr_header($_FORM) {
+    if ($_FORM["showHeader"]) {
+      $summary = "\n<tr>";
+      $_FORM["showProject"]       and $summary.= "\n<th class=\"col\">Time Sheet</th>";
+      $_FORM["showProjectLink"]   and $summary.= "\n<th class=\"col\">Time Sheet</th>";
+      $_FORM["showAmount"]        and $summary.= "\n<th class=\"col\">Amount</th>";
+      $_FORM["showDuration"]      and $summary.= "\n<th class=\"col\">Duration</th>";
+      $_FORM["showPerson"]        and $summary.= "\n<th class=\"col\">Owner</th>";
+      $_FORM["showDateFrom"]      and $summary.= "\n<th class=\"col\">Start Date</th>";
+      $_FORM["showDateTo"]        and $summary.= "\n<th class=\"col\">End Date</th>";
+      $_FORM["showStatus"]        and $summary.= "\n<th class=\"col\">Status</th>";
+      $summary.="\n</tr>";
+      return $summary;
+    }
+  }
+
+  function get_timeSheet_list_tr($row,$_FORM) {
+    static $odd_even;
+    $odd_even = $odd_even == "even" ? "odd" : "even";
+
+    $summary[] = "<tr class=\"".$odd_even."\">";
+    $_FORM["showProject"]         and $summary[] = "  <td class=\"col\">".$row["projectName"]."&nbsp;</td>";
+    $_FORM["showProjectLink"]     and $summary[] = "  <td class=\"col\">".$row["projectLink"]."&nbsp;</td>";
+    $_FORM["showAmount"]          and $summary[] = "  <td class=\"col\" align=\"right\">".sprintf("$%0.2f",$row["amount"])."&nbsp;</td>";
+    $_FORM["showDuration"]        and $summary[] = "  <td class=\"col\">".$row["duration"]."&nbsp;</td>";
+    $_FORM["showPerson"]          and $summary[] = "  <td class=\"col\">".$row["person"]."&nbsp;</td>";
+    $_FORM["showDateFrom"]        and $summary[] = "  <td class=\"col\">".$row["dateFrom"]."&nbsp;</td>";
+    $_FORM["showDateTo"]          and $summary[] = "  <td class=\"col\">".$row["dateTo"]."&nbsp;</td>";
+    $_FORM["showStatus"]          and $summary[] = "  <td class=\"col\">".$row["status"]."&nbsp;</td>";
+    $summary[] = "</tr>";
+     
+    $summary = "\n".implode("\n",$summary);
+    return $summary;   
+  } 
+
+  function get_timeSheet_list_tr_bottom($row,$_FORM) {
+    if ($_FORM["showAmountTotal"]) {
+      $summary[] = "<tr>";
+      $_FORM["showProject"]         and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+      $_FORM["showProjectLink"]     and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"col grand_total\" align=\"right\">".sprintf("$%0.2f",$row["amountTotal"])."</td>";
+      $_FORM["showDuration"]        and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+      $_FORM["showPerson"]          and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+      $_FORM["showDateFrom"]        and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+      $_FORM["showDateTo"]          and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+      $_FORM["showStatus"]          and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+      $summary[] = "</tr>";
+      $summary = "\n".implode("\n",$summary);
+    }
+    return $summary;   
+  } 
+
+  function load_form_data($defaults=array()) {
+    global $current_user;
+
+    $page_vars = array("showHeader"
+                      ,"showProject"
+                      ,"showProjectLink"
+                      ,"showAmount"
+                      ,"showAmountTotal"
+                      ,"showDuration"
+                      ,"showPerson"
+                      ,"showDateFrom"
+                      ,"showDateTo"
+                      ,"showStatus"
+
+                      ,"projectID"
+                      ,"personID"
+                      ,"status"
+                      ,"dateFrom"
+
+                      ,"url_form_action"
+                      ,"form_name"
+                      ,"dontSave"
+                      ,"applyFilter"
+                      );
+
+    $_FORM = get_all_form_data($page_vars,$defaults);
+
+    if (!$_FORM["applyFilter"]) {
+      $_FORM = $current_user->prefs[$_FORM["form_name"]];
+      if (!isset($current_user->prefs[$_FORM["form_name"]])) {
+        $_FORM["status"] = "edit";
+        $_FORM["personID"] = $current_user->get_id();
+      }
+
+    } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+      $url = $_FORM["url_form_action"];
+      unset($_FORM["url_form_action"]);
+      $current_user->prefs[$_FORM["form_name"]] = $_FORM;
+      $_FORM["url_form_action"] = $url;
+    }
+
+    return $_FORM;
+  }
+
+  function load_timeSheet_filter($_FORM) {
+    global $current_user;
+
+    // display the list of project name.
+    $db = new db_alloc();
+    $query = sprintf("SELECT * FROM project ORDER by projectName");
+    $db->query($query);
+    $project_array = get_array_from_db($db, "projectID", "projectName");
+    $rtn["show_project_options"] = get_options_from_array($project_array, $_FORM["projectID"], true);
+
+    // display the list of user name.
+    if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
+      $rtn["show_userID_options"] = get_option(" ", "");
+      $rtn["show_userID_options"].= get_select_options(person::get_username_list(), $_FORM["personID"]);
+      
+    } else {
+      $person = new person;
+      $person->set_id($current_user->get_id());
+      $person->select();
+      $person_array = array($current_user->get_id()=>$person->get_username(1));
+      $rtn["show_userID_options"].= get_options_from_array($person_array, $_FORM["personID"], true);
+    } 
+
+    // display a list of status
+    $status_array = timeSheet::get_timeSheet_statii();
+    unset($status_array["create"]);
+
+    $rtn["show_status_options"] = get_options_from_array($status_array, $_FORM["status"]);
+
+    // display the date from filter value
+    $rtn["dateFrom"] = $_FORM["dateFrom"];
+    $rtn["userID"] = $current_user->get_id();
+
+    // Get
+    $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
+
+    return $rtn;
+  }
+
+
+
 
 }  
 

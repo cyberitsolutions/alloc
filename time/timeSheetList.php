@@ -23,103 +23,35 @@
 
 require_once("../alloc.php");
 
-if (!$current_user->is_employee()) {
-  die("You do not have permission to access time sheets");
+
+$defaults = array("showHeader"=>true
+                 ,"showProjectLink"=>true
+                 ,"showAmount"=>true
+                 ,"showAmountTotal"=>true
+                 ,"showDuration"=>true
+                 ,"showPerson"=>true
+                 ,"showDateFrom"=>true
+                 ,"showDateTo"=>true
+                 ,"showStatus"=>true
+                 ,"url_form_action"=>$TPL["url_alloc_timeSheetList"]
+                 ,"form_name"=>"timeSheetList_filter"
+                 );
+
+function show_filter() {
+  global $TPL,$defaults;
+  $_FORM = timeSheet::load_form_data($defaults);
+  $arr = timeSheet::load_timeSheet_filter($_FORM);
+  is_array($arr) and $TPL = array_merge($TPL,$arr);
+  include_template("templates/timeSheetListFilterS.tpl");
 }
 
-function show_timeSheets($template_name) {
-  global $db, $current_user, $TPL, $timeSheet;
-
-  $query = sprintf("SELECT timeSheet.*, username, projectName ")
-    .sprintf("FROM timeSheet ")
-    .sprintf("  LEFT JOIN timeSheetItem on timeSheet.timeSheetID = timeSheetItem.timeSheetID ")
-    .sprintf("  LEFT JOIN person on timeSheet.personID = person.personID ")
-    .sprintf("  LEFT JOIN project on timeSheet.projectID = project.projectID ")
-    .sprintf("WHERE 1 ");
-
-  if ($_POST["projectID"]) {
-    $query.= sprintf(" AND timeSheet.projectID = '%d'", $_POST["projectID"]);
-  }
-  if ($_POST["personID"]) {
-    $query.= sprintf(" AND timeSheet.personID = '%d'", $_POST["personID"]);
-  }
-  if ($_POST["status"]) {
-    $query.= sprintf(" AND timeSheet.status = '%s'", $_POST["status"]);
-  }
-  if ($_POST["dateFrom"]) {
-    $query.= sprintf(" AND timeSheet.dateFrom >= '%s'", $_POST["dateFrom"]);
-  }
-  $query.= "GROUP BY timeSheet.timeSheetID";
-  $query.= sprintf(" ORDER BY dateFrom,projectName, username, dateFrom ");
-
-  $db = new db_alloc;
-  $db->query($query);
-
-  $status_array = timeSheet::get_timeSheet_statii();
-
-  while ($db->next_record()) {
-    $timeSheet = new timeSheet;
-    $timeSheet->read_db_record($db);
-    $timeSheet->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheet_");
-    $timeSheet->load_pay_info();
-
-    $TPL["timeSheet_total_dollars"] = sprintf("%0.2f",$timeSheet->pay_info["total_dollars"]);
-    $TPL["summary_unit_totals"] = $timeSheet->pay_info["summary_unit_totals"];
-    $TPL["timeSheet_username"] = $db->f("username");
-    $TPL["timeSheet_projectName"] = $db->f("projectName");
-    $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
-    $TPL["grand_total"] += $TPL["timeSheet_total_dollars"];
-    $TPL["timeSheet_status"] = $status_array[$db->f("status")];
-    include_template($template_name);
-  }
-  $TPL["grand_total"] = sprintf("%0.2f",$TPL["grand_total"]);
+function show_timeSheet_list() {
+  global $defaults;
+  $_FORM = timeSheet::load_form_data($defaults);
+  echo timeSheet::get_timeSheet_list($_FORM);
 }
 
-
-
-if (!$_POST["search"] && !$_POST["status"]) {
-  $_POST["status"] = "edit";
-}
-
-if (!$_POST["search"] && !$_POST["personID"] && is_object($current_user)) {
-  $_POST["personID"] = $current_user->get_id();
-}
-
-$db = new db_alloc;
-
-// display the list of project name.
-$query = sprintf("SELECT * FROM project ORDER by projectName");
-$db->query($query);
-$project_array = get_array_from_db($db, "projectID", "projectName");
-$TPL["show_project_options"] = get_options_from_array($project_array, $_POST["projectID"], true);
-
-// display the list of user name.
-if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
-  $TPL["show_userID_options"] = get_option(" ", "");
-  $TPL["show_userID_options"].= get_select_options(person::get_username_list(), $_POST["personID"]);
-
-} else {
-  $person = new person;
-  $person->set_id($current_user->get_id());
-  $person->select();
-  $person_array = array($current_user->get_id()=>$person->get_username(1));
-  $TPL["show_userID_options"].= get_options_from_array($person_array, $_POST["personID"], true);
-}
-
-
-// display a list of status
-$status_array = timeSheet::get_timeSheet_statii();
-unset($status_array["create"]);
-
-$TPL["show_status_options"] = get_options_from_array($status_array, $_POST["status"]);
-
-// display the date from filter value
-$TPL["dateFrom"] = $_POST["dateFrom"];
-$TPL["userID"] = $current_user->get_id();
 
 include_template("templates/timeSheetListM.tpl");
 page_close();
-
-
-
 ?>
