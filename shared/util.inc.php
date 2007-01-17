@@ -631,13 +631,13 @@ function show_messages() {
   }
 
   if (is_array($arr) && count($arr)) {
-    echo "<div class=\"message\">";
+    echo "<div style=\"text-align:center;\"><div class=\"message\">";
 
     foreach ($arr as $type => $str) {
       echo "<table cellspacing=\"0\"><tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".gif\"/><td/>";
       echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".str_replace('\\','',$str)."</td></tr></table>";
     }
-    echo "</div>";
+    echo "</div></div>";
   }
 
 }
