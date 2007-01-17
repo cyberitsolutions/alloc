@@ -7,11 +7,11 @@
       <form action="{$url_alloc_menuSubmit}" method="post" id="form_search">
       <table cellpadding="0" cellspacing="0" align="center">
         <tr>
-          <td><select name="historyID" class="menu_form" onChange="this.form.submit();">{show_history()}</select></td>
+          <td><select name="historyID" class="menu_form menu_form_dropdown" onChange="this.form.submit();">{show_history()}</select></td>
           <td>&nbsp;&nbsp;or&nbsp;&nbsp;</td>
-          <td><input size="14" name="needle" value="{$needle}" class="menu_form" onFocus="document.getElementById('form_search').needle.value='';">&nbsp;</td>
-          <td><select size="1" name="category" class="menu_form">{$category_options}</select></td>
-          <td><input type="submit" name="search" value="Go">&nbsp;&nbsp;</td>
+          <td><input size="14" type="text" name="needle" value="{$needle}" class="menu_form_text" onFocus="document.getElementById('form_search').needle.value='';">&nbsp;</td>
+          <td><select size="1" name="category" class="menu_form menu_form_dropdown">{$category_options}</select>&nbsp;</td>
+          <td><input type="submit" name="search" class="menu_form_button" value="Go">&nbsp;&nbsp;</td>
           <td>{help_button("quicklist_and_search")}</td>
         </tr>
       </table></form></div>

@@ -2,9 +2,8 @@ body {
   background:url(../images/wallpaper_leaf.jpg) repeat-x #eaede1; 
   font-family:arial,helvetica,sans-serif; 
   color:#666666; 
-  margin:0px 0px;
+  margin:0px 14px;
   font-size:100% !important; font-size:16px;
-  border-top:1px solid #ffffff;
 }
 
 /* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
@@ -290,8 +289,8 @@ div#main {
   background-color: white;
   margin:auto;
   border:1px solid #9c9c9c;
-  border-left:0px;
-  border-right:0px;
+  border-left:1px solid #9c9c9c;
+  border-right:1px solid #9c9c9c;
   position: relative;
   clear:both;
   text-align:left;
@@ -299,20 +298,21 @@ div#main {
 }
 
 div#tabs {
-  width:99%;
+  width:100%;
   margin:auto;
+  border:0px;
   position: relative;
   clear:both;
   text-align:left;
   height:27px;
   top:1px;
-  left:2px;
+  left:1px !important; left:0px;
   z-index:1;
 }
 
 div#header {
   display:inline;
-  margin-left:8px;
+  margin-left:0px;
   margin-top:6px;
   position:relative;
   text-align:left;
@@ -373,20 +373,38 @@ div#menu_top_right {
   font-weight:bold;
   color:#5c7600;
   padding:0px;
-  margin:4px;
+  margin:0px;
+  margin-top:10px;
 }
 
-div#menu_top_right table {
+div#menu_top_right table, div#menu_top_right table tr, div#menu_top_right table td {
   padding:0px;
   margin:0px;
+  vertical-align:center;
 }
 
 .menu_form {
-  font-size:16px;
+  font-size:12px !important; font-size:10px;
   height:1.5em;
   padding:0px;
   margin:0px;
-  border:0px;
+}
+.menu_form_text {
+  font-size:12px !important; font-size:11px;
+  padding:0px;
+  margin:0px;
+}
+
+.menu_form_button {
+  font-size:12px !important; font-size:11px;
+  padding:0px 5px;
+  margin:1px;
+}
+
+.menu_form_dropdown {
+  position:relative;
+  top:0px !important; top:-3px;
+
 }
 
 p#extra_links {
