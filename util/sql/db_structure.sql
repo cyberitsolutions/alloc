@@ -80,9 +80,10 @@ CREATE TABLE comment (
 
 CREATE TABLE config (
   configID int(11) NOT NULL auto_increment,
-  name text NOT NULL,
+  name varchar(255) NOT NULL,
   value text NOT NULL,
-  PRIMARY KEY  (configID)
+  PRIMARY KEY  (configID),
+  UNIQUE KEY (name)
 ) TYPE=MyISAM;
 
 
@@ -202,8 +203,8 @@ CREATE TABLE person (
   phoneNo1 varchar(255) default "",
   phoneNo2 varchar(255) default "",
   sessData text,
-  PRIMARY KEY  (personID),
-  KEY username (username)
+  PRIMARY KEY (personID),
+  UNIQUE KEY (username)
 ) TYPE=ISAM PACK_KEYS=1;
 
 
@@ -306,7 +307,7 @@ CREATE TABLE sentEmailLog (
   sentEmailSubject varchar(255),
   sentEmailBody text,
   sentEmailHeader varchar(255),
-  sentEmailType enum('reminder','reminder_advnotice','task_created','task_closed','task_comments','timesheet_submit','timesheet_reject','timesheet_paid','daily_digest'),
+  sentEmailType enum('reminder','reminder_advnotice','task_created','task_closed','task_comments','timesheet_submit','timesheet_reject','daily_digest','timesheet_finished','new_password'),
   sentEmailLogModifiedTime timestamp(14) NOT NULL,
   sentEmailLogModifiedUser int(11) NOT NULL default '0',
   PRIMARY KEY  (sentEmailLogID)
@@ -425,7 +426,7 @@ CREATE TABLE timeSheet (
   projectID int(11) NOT NULL default '0',
   dateFrom date default NULL,
   dateTo date default NULL,
-  status enum('edit','manager','admin','invoiced','paid') default NULL,
+  status enum('edit','manager','admin','invoiced','finished') default NULL,
   personID int(11) NOT NULL default '0',
   approvedByManagerPersonID int(11) default NULL,
   approvedByAdminPersonID int(11) default NULL,
