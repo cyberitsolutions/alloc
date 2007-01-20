@@ -308,7 +308,14 @@ class project extends db_entity {
       $from.= ", projectPerson ";
     }
 
-    $q = "SELECT * FROM project LEFT JOIN client ON project.clientID = client.clientID ".$from.$filter." GROUP BY project.projectID ORDER BY projectName";
+    $q = "SELECT project.projectID as projectID, 
+                 project.*,
+                 client.* 
+            FROM project 
+       LEFT JOIN client ON project.clientID = client.clientID 
+                 ".$from.$filter." 
+        GROUP BY project.projectID 
+        ORDER BY projectName";
 
     $_FORM["limit"] and $q.= sprintf(" LIMIT %d",$_FORM["limit"]);
 
@@ -323,7 +330,6 @@ class project extends db_entity {
       $row["projectLink"] = $p->get_project_link();
       $row["navLinks"] = $p->get_navigation_links();
       $summary.= project::get_project_list_tr($row,$_FORM);
-
     }
 
     if ($print && $_FORM["return"] == "html") {
