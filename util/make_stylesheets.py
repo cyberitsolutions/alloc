@@ -12,7 +12,7 @@ config.read([d+'../style.ini'])
 sections = config.sections()
 
 # Convert the style template into a string
-fd = open(d+'../style.css')
+fd = open(d+'../style.tpl')
 str_orig = fd.read();
 fd.close();
 

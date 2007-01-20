@@ -216,7 +216,7 @@ if ($_POST["install_db"]) {
   $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
   @mysql_select_db($_FORM["ALLOC_DB_NAME"], $link);
 
-  $files = array("../util/sql/db_structure.sql","../util/sql/db_data.sql");
+  $files = array("../sql/db_structure.sql","../sql/db_data.sql");
 
   foreach ($files as $file) {
     $mqr = @get_magic_quotes_runtime();
