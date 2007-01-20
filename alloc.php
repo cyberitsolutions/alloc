@@ -79,7 +79,6 @@ $m = array("shared"
           ,"report"       
           ,"login"        
           ,"soap"         
-          ,"history"      
           ,"installation" 
           );
 

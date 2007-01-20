@@ -12,10 +12,7 @@
     <h1>allocPSA Installation Helper</h1>
   </div>
 
-  <div id="main">        
-
-  <!-- Tabs -->
-  <div class="tab_line_bg">
+  <div id="tabs">
     <div class="tab{$tab1}" style="left:-1px;">
       <a href="{$url_alloc_installation}?tab=1{$get}">Input</a>
     </div>
@@ -28,11 +25,10 @@
     <div class="tab{$tab4}" style="left:242px;">
       <a href="{$url_alloc_installation}?tab=4{$get}">Launch</a>
     </div>
- 
-    <div style="display:inline; position:absolute; right:-5px;">
-      <img src="../images/tab_line_bg_white_corners.gif" width="11px" height="27px" alt="-">
-    </div>
   </div>
+
+
+  <div id="main">        
 
 
 <form action="{$url_alloc_installation}" method="post">
@@ -219,7 +215,7 @@ Verify that all the tests succeeded below, and click the Complete Installation b
     {/}
 
     {if show_tab_4c()}
-    <b>Once last thing...</b><br/>
+    <b>One last thing...</b><br/>
     You can enable further functionality of allocPSA by installing these
     cronjobs onto the server:
 
