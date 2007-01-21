@@ -31,30 +31,9 @@
       {show_reminders("../reminder/templates/reminderR.tpl")}
     </table>
    
-{$table_box}
-  <tr>
-    <th colspan="2">Comments</th>
-  </tr>
-  <tr>
-    <td colspan="2">
-      <form action="{$url_alloc_client}" method="post">
-      <table width="100%">
-        <tr>
-          <td>
-            <input type="hidden" name="clientID" value="{$client_clientID}">
-            <textarea name="clientComment" cols="85" rows="4" wrap="virtual">{$client_clientComment}</textarea>&nbsp;
-          </td>
-          <td align="right" valign="top">
-            {$client_clientComment_buttons}
-          </td>
-        </tr>
-      </table>
-      </form>
-    </td>
-  </tr>
-  {show_comments("templates/clientCommentR.tpl")}
-</table>
  
+{show_comments()}
+
 
 {show_attachments()}
 

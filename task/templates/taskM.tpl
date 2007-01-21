@@ -14,7 +14,7 @@ function updateStuffWithAjax() \{
 function updateTaskCommentTemplate(number) \{
   if (http_request[number].readyState == 4) \{
     if (http_request[number].status == 200) \{
-      document.getElementById("taskComment").value = http_request[number].responseText;
+      document.getElementById("comment").value = http_request[number].responseText;
     \}
   \}
 \}

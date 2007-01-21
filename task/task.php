@@ -305,16 +305,16 @@ $TPL["hierarchy_links"].= "</br><br/><b>".$TPL["task_taskName"]."</b>";
 
 
 
-if ($_GET["commentID"] && $_GET["taskComment_edit"]) {
+if ($_GET["commentID"] && $_GET["comment_edit"]) {
   $comment = new comment();
   $comment->set_id($_GET["commentID"]);
   $comment->select();
-  $TPL["task_taskComment"] = $comment->get_value('comment');
-  $TPL["task_taskComment_buttons"] =
-    sprintf("<input type=\"hidden\" name=\"taskComment_id\" value=\"%d\">", $_GET["commentID"])
-           ."<input type=\"submit\" name=\"taskComment_update\" value=\"Save Comment\">";
+  $TPL["comment"] = $comment->get_value('comment');
+  $TPL["comment_buttons"] =
+    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_GET["commentID"])
+           ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
 } else {
-  $TPL["task_taskComment_buttons"] = "<input type=\"submit\" name=\"taskComment_save\" value=\"Save Comment\">";
+  $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
   if ($task->get_id()) {
 
     if ($current_user->get_id() != $task->get_value("creatorID")) {
