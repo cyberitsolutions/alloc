@@ -197,6 +197,7 @@ class db_entity {
     $query.= ") VALUES (";
     $query.= $this->get_insert_values($this->data_fields);
     $query.= ")";
+    $this->debug and print "<br/>db_entity->insert() query: ".$query;
     $db = $this->get_db();
     $db->query($query);
     if ($db->get_error()) {
@@ -220,8 +221,7 @@ class db_entity {
     $query = "UPDATE $this->data_table SET ".$this->get_name_equals_value($write_fields)." WHERE ";
     $query.= $this->get_name_equals_value(array($this->key_field));
     $db = $this->get_db();
-    if ($this->debug)
-      echo "update() { query=$query<br>\n";
+    $this->debug and print "<br/>db_entity->update() query: ".$query;
     $db->query($query);
     return true;
   }
@@ -235,8 +235,8 @@ class db_entity {
   // Validates the entity using validate() then if this is a new record, calls insert() otherwise calls update()
   function save() {
     global $TPL;
-    if ($this->debug)
-      echo "db_entity->save<br>\n";
+    #$this->debug = true;
+    $this->debug and print "<br/>db_entity->save";
     $error = $this->validate();
     if (strlen($error) && $error) {
       $TPL["message"][] = $error;
