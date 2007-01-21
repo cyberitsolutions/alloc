@@ -23,142 +23,6 @@
 
 require_once("../alloc.php");
 
-$client = new client;
-$clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];
-
-
-
-if ($_POST["save"]) {
-  if ($_POST["clientName"] == "") {
-    $TPL["error"] = "Please enter a company name.";
-  }
-  $client->read_globals();
-  $client->set_value("clientModifiedTime", date("Y-m-d"));
-  if (!$client->get_id()) {
-    // New client.
-
-    $TPL["createGeneralSupportProject"] = "<tr> <td colspan=\"2\"><b>Don't Create General Support Project</b></td>
-        <td><input type=\"checkbox\" name=\"dontCreateProject\" checked=\"yes\"/></td></tr>";
-					     
-    
-    $client->set_value("clientCreatedTime", date("Y-m-d"));
-    $new_client = true;
-  }
-
-  $client->save();
-  $clientID = $client->get_id();
-  $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-  
-  if ($new_client == true && $_POST["createProject"]) {
-     // Create Project: <Client Name> - General Support 
-    $project = new project;
-    $project->set_value("projectName", $client->get_value("clientName")." - General Support");
-    $project->set_value("clientID", $clientID);
-    $project->set_value("projectType", "contract");
-    $project->set_value("projectStatus", "current");
-    $project->save();
-
-    // Now add current_user as a projectPerson
-    $projectperson = new projectperson;
-    $projectperson->set_value("personID", $current_user->get_id());
-    $projectperson->set_value("projectID", $project->get_id());
-    $projectperson->set_value_role("isManager");
-    $projectperson->save();
-  }    
-  
-} else if ($_POST["save_attachment"]) {
-  move_attachment("client",$clientID);
-  header("Location: ".$TPL["url_alloc_client"]."clientID=".$clientID);
-
-} else {
-
-  if ($_POST["delete"]) {
-    $client->read_globals();
-    // delete all contacts and comments linked with this client as well
-    $db = new db_alloc;
-    $query = sprintf("SELECT * FROM clientContact WHERE clientID=%d", $client->get_id());
-    $db->query($query);
-    while ($db->next_record()) {
-      $clientContact = new clientContact;
-      $clientContact->read_db_record($db);
-      $clientContact->delete();
-    }
-    $query = sprintf("SELECT * FROM comment WHERE commentLinkID=%d", $client->get_id());
-    $db->query($query);
-    while ($db->next_record()) {
-      $comment = new comment;
-      $comment->read_db_record($db);
-      $comment->delete();
-    }
-    $client->delete();
-    header("location: ".$TPL["url_alloc_clientList"]);
-  } else {
-    $client->set_id($clientID);
-    $client->select();
-  }
-
-  $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-}
-
-$clientStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
-$TPL["clientStatusOptions"] = get_select_options($clientStatus_array, $client->get_value("clientStatus"));
-
-  // client contacts
-if ($_POST["clientContact_save"] || $_POST["clientContact_add"] || $_POST["clientContact_addpc"]
-    || $_POST["clientContact_makepc"] || $_POST["clientContact_delete"]) {
-  $clientContact = new clientContact;
-  $clientContact->read_globals();
-  if ($_POST["clientContact_add"] || $_POST["clientContact_addpc"]) {
-    $clientContact->set_value('clientID', $clientID);
-
-
-    if ($clientContact->get_value('clientContactEmail') && preg_match("/<(.*)>/",$clientContact->get_value('clientContactEmail'),$matches)) {
-      $clientContact->set_value('clientContactEmail',$matches[1]);
-    }
-
-    $clientContact->save();
-    if ($_POST["clientContact_addpc"]) {
-      $client->set_value('clientPrimaryContactID', $clientContact->get_id());
-      $client->save();
-    }
-  }
-  if ($_POST["clientContact_save"]) {
-    $clientContact->save();
-  }
-  if ($_POST["clientContact_delete"]) {
-    $clientContact->delete();
-  }
-  if ($_POST["clientContact_makepc"]) {
-    $client->set_value('clientPrimaryContactID', $clientContact->get_id());
-    $client->save();
-  }
-}
-
-
-
-
-
-// Comments
-if ($_POST["commentID"] && $_POST["comment_edit"]) {
-  $comment = new comment();
-  $comment->set_id($_POST["commentID"]);
-  $comment->select();
-  $TPL["comment"] = $comment->get_value('comment');
-  $TPL["comment_buttons"] =
-    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_POST["commentID"])
-           ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
-} else {
-  $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
-}
-
-
-if (!$clientID) {
-  $TPL["message_help"][] = "Create a new Client by inputting the Company Name and other details and clicking the Create New Client button.";
-}
-
-
-include_template("templates/clientM.tpl");
-
   function check_optional_client_exists() {
     global $clientID;
     return isset($clientID);
@@ -335,7 +199,6 @@ include_template("templates/clientM.tpl");
     }
   }
 
-
   function show_attachments() {
     global $clientID;
     util_show_attachments("client",$clientID);
@@ -347,56 +210,143 @@ include_template("templates/clientM.tpl");
     $TPL["commentsR"] = util_get_comments("client",$clientID,$options);
     include_template("templates/clientCommentM.tpl");
   }
- 
 
-  function show_commentsi($template) {
-    global $TPL, $clientID, $current_user;
 
+
+$client = new client;
+$clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];
+
+
+if ($_POST["save"]) {
+  if ($_POST["clientName"] == "") {
+    $TPL["error"] = "Please enter a company name.";
+  }
+  $client->read_globals();
+  $client->set_value("clientModifiedTime", date("Y-m-d"));
+  if (!$client->get_id()) {
+    // New client.
+
+    $TPL["createGeneralSupportProject"] = "<tr> <td colspan=\"2\"><b>Don't Create General Support Project</b></td>
+        <td><input type=\"checkbox\" name=\"dontCreateProject\" checked=\"yes\"/></td></tr>";
+					     
     
-    // setup add/edit comment section values
-    $TPL["client_clientID"] = $clientID;
-    $TPL["client_clientComment"] = "";
+    $client->set_value("clientCreatedTime", date("Y-m-d"));
+    $new_client = true;
+  }
 
-    // Init
-    $rows = array();
+  $client->save();
+  $clientID = $client->get_id();
+  $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+  
+  if ($new_client == true && $_POST["createProject"]) {
+     // Create Project: <Client Name> - General Support 
+    $project = new project;
+    $project->set_value("projectName", $client->get_value("clientName")." - General Support");
+    $project->set_value("clientID", $clientID);
+    $project->set_value("projectType", "contract");
+    $project->set_value("projectStatus", "current");
+    $project->save();
 
+    // Now add current_user as a projectPerson
+    $projectperson = new projectperson;
+    $projectperson->set_value("personID", $current_user->get_id());
+    $projectperson->set_value("projectID", $project->get_id());
+    $projectperson->set_value_role("isManager");
+    $projectperson->save();
+  }    
+  
+} else if ($_POST["save_attachment"]) {
+  move_attachment("client",$clientID);
+  header("Location: ".$TPL["url_alloc_client"]."clientID=".$clientID);
 
-    // Get list of comments
-    $query = sprintf("SELECT commentID, commentLinkID, commentModifiedTime AS date, comment, commentModifiedUser AS personID
-                        FROM comment 
-                       WHERE comment.commentType = 'client' AND comment.commentLinkID = %d
-                    ORDER BY comment.commentModifiedTime", $clientID);
+} else {
+
+  if ($_POST["delete"]) {
+    $client->read_globals();
+    // delete all contacts and comments linked with this client as well
     $db = new db_alloc;
+    $query = sprintf("SELECT * FROM clientContact WHERE clientID=%d", $client->get_id());
+    $db->query($query);
+    while ($db->next_record()) {
+      $clientContact = new clientContact;
+      $clientContact->read_db_record($db);
+      $clientContact->delete();
+    }
+    $query = sprintf("SELECT * FROM comment WHERE commentLinkID=%d", $client->get_id());
     $db->query($query);
     while ($db->next_record()) {
       $comment = new comment;
       $comment->read_db_record($db);
-      $comment->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-      $person = new person;
-      $person->set_id($db->f("personID"));
-      $person->select();
-      $person->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+      $comment->delete();
+    }
+    $client->delete();
+    header("location: ".$TPL["url_alloc_clientList"]);
+  } else {
+    $client->set_id($clientID);
+    $client->select();
+  }
 
-      $TPL["comment_buttons"] = "";
-      if ($db->f("personID") == $current_user->get_id()) {
-        $TPL["comment_buttons"] = "<nobr><input type=\"submit\" name=\"clientComment_edit\" value=\"Edit\">
-                                         <input type=\"submit\" name=\"clientComment_delete\" value=\"Delete\"></nobr>";
-      }
+  $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+}
 
-      $TPL["client_username"] = $person->get_username(1);
+$clientStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
+$TPL["clientStatusOptions"] = get_select_options($clientStatus_array, $client->get_value("clientStatus"));
 
-      // trim comment to 128 characters
-      if (strlen($comment->get_value("comment")) > 3000 && $_GET["view"] != "printer") {
-        $TPL["client_comment_trimmed"] = nl2br(sprintf("%s...", substr($comment->get_value("comment"), 0, 3000)));
-      } else {
-        $TPL["client_comment_trimmed"] = str_replace("\n", "<br>", htmlentities($comment->get_value("comment")));
-      }
+  // client contacts
+if ($_POST["clientContact_save"] || $_POST["clientContact_add"] || $_POST["clientContact_addpc"]
+    || $_POST["clientContact_makepc"] || $_POST["clientContact_delete"]) {
+  $clientContact = new clientContact;
+  $clientContact->read_globals();
+  if ($_POST["clientContact_add"] || $_POST["clientContact_addpc"]) {
+    $clientContact->set_value('clientID', $clientID);
 
-      if (!$_POST["commentID"] || $_POST["commentID"] != $comment->get_id()) {
-        include_template($template);
-      }
+
+    if ($clientContact->get_value('clientContactEmail') && preg_match("/<(.*)>/",$clientContact->get_value('clientContactEmail'),$matches)) {
+      $clientContact->set_value('clientContactEmail',$matches[1]);
+    }
+
+    $clientContact->save();
+    if ($_POST["clientContact_addpc"]) {
+      $client->set_value('clientPrimaryContactID', $clientContact->get_id());
+      $client->save();
     }
   }
+  if ($_POST["clientContact_save"]) {
+    $clientContact->save();
+  }
+  if ($_POST["clientContact_delete"]) {
+    $clientContact->delete();
+  }
+  if ($_POST["clientContact_makepc"]) {
+    $client->set_value('clientPrimaryContactID', $clientContact->get_id());
+    $client->save();
+  }
+}
+
+
+
+
+
+// Comments
+if ($_POST["commentID"] && $_POST["comment_edit"]) {
+  $comment = new comment();
+  $comment->set_id($_POST["commentID"]);
+  $comment->select();
+  $TPL["comment"] = $comment->get_value('comment');
+  $TPL["comment_buttons"] =
+    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_POST["commentID"])
+           ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
+} else {
+  $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
+}
+
+
+if (!$clientID) {
+  $TPL["message_help"][] = "Create a new Client by inputting the Company Name and other details and clicking the Create New Client button.";
+}
+
+
+include_template("templates/clientM.tpl");
 
 page_close();
 

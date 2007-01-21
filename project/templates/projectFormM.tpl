@@ -141,26 +141,9 @@ function updateClientContact(number) \{
 {show_new_person("templates/projectPersonListR.tpl")}
 </table>
 
-{$table_box}
-  <tr>
-    <th colspan="3">Comments</th>
-  </tr>
-  <tr>
-    <td>User</td>
-    <td>Date</td>
-    <td width="75%">Comment</td>
-  </tr>
-  {show_comments("templates/projectCommentsR.tpl")}
-  <tr>
-    <td valign="top">{$project_projectComment_title}</td>
-    <td colspan="2">
-      <form action="{$url_alloc_project}" method=post>
-      <input type="hidden" name="projectID" value="{$project_projectID}">
-      <textarea name="projectComment" cols="70" rows="4" wrap="virtual">{$project_projectComment}</textarea><br>{$project_projectComment_buttons}
-      </form>
-    </td>
-  </tr>
-</table>
+
+{show_comments()}
+
 
 {$table_box}
   <tr>
