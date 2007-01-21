@@ -5,12 +5,13 @@
   </tr>
   <tr>
     <td colspan="2">
-      <form action="{$url_alloc_taskComment}" method="post" id="taskCommentForm">
+      <form action="{$url_alloc_comment}" method="post" id="taskCommentForm">
       <table width="100%">
         <tr>
           <td>
-            <input type="hidden" name="taskID" value="{$task_taskID}">
-            <textarea name="taskComment" cols="85" rows="7" wrap="virtual" id="taskComment">{$task_taskComment}</textarea>&nbsp;
+            <input type="hidden" name="entity" value="task">
+            <input type="hidden" name="entityID" value="{$task_taskID}">
+            <textarea name="comment" cols="85" rows="7" wrap="virtual" id="comment">{$comment}</textarea>&nbsp;
           </td>
           <td align="right" valign="top">
             <select name="taskCommentTemplateID" onChange="updateStuffWithAjax()">{$taskCommentTemplateOptions}</select>
@@ -19,7 +20,7 @@
             <br/>Email Interested Parties <input type="checkbox" name="commentEmailCheckboxes[]" value="CCList"{$email_comment_CCList_checked}>
             <br/>
             <br/>
-            {$task_taskComment_buttons}
+            {$comment_buttons}
           </td>
         </tr>
       </table>

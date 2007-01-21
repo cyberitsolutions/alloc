@@ -133,42 +133,24 @@ if ($_POST["clientContact_save"] || $_POST["clientContact_add"] || $_POST["clien
     $client->save();
   }
 }
-  // client comments
-if ($_POST["clientComment_save"] || $_POST["clientComment_update"]) {
-  $comment = new comment;
-  $comment->set_value('commentType', 'client');
-  $comment->set_value('commentLinkID', $clientID);
-  $comment->set_modified_time();
-  $comment->set_value('commentModifiedUser', $current_user->get_id());
 
-  if ($_POST["clientComment_update"]) {
-    $comment->set_id($_POST["clientComment_id"]);
-  }
-  if ($_POST["clientComment"]) {
-    $comment->set_value('comment', $_POST["clientComment"]);
-    $comment->save();
-  }
-}
-if ($_POST["clientComment_delete"] && $_POST["clientComment_id"]) {
-  $comment = new comment;
-  $comment->set_id($_POST["clientComment_id"]);
-  $comment->delete();
-}
-if ($_POST["clientComment_cancel"]) {
-  unset($commentID);
-}
 
-if ($_POST["commentID"] && $_POST["clientComment_edit"]) {
+
+
+
+// Comments
+if ($_POST["commentID"] && $_POST["comment_edit"]) {
   $comment = new comment();
   $comment->set_id($_POST["commentID"]);
   $comment->select();
-  $TPL["client_clientComment"] = $comment->get_value('comment');
-  $TPL["client_clientComment_buttons"] =
-    sprintf("<input type=\"hidden\" name=\"clientComment_id\" value=\"%d\">", $_POST["commentID"])
-           ."<input type=\"submit\" name=\"clientComment_update\" value=\"Save Comment\">";
+  $TPL["comment"] = $comment->get_value('comment');
+  $TPL["comment_buttons"] =
+    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_POST["commentID"])
+           ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
 } else {
-  $TPL["client_clientComment_buttons"] = "<input type=\"submit\" name=\"clientComment_save\" value=\"Save Comment\">";
+  $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
 }
+
 
 if (!$clientID) {
   $TPL["message_help"][] = "Create a new Client by inputting the Company Name and other details and clicking the Create New Client button.";
@@ -358,9 +340,16 @@ include_template("templates/clientM.tpl");
     global $clientID;
     util_show_attachments("client",$clientID);
   }
-  
+ 
+  function show_comments() {
+    global $clientID, $TPL;
+    $options["showEditButtons"] = true;
+    $TPL["commentsR"] = util_get_comments("client",$clientID,$options);
+    include_template("templates/clientCommentM.tpl");
+  }
+ 
 
-  function show_comments($template) {
+  function show_commentsi($template) {
     global $TPL, $clientID, $current_user;
 
     

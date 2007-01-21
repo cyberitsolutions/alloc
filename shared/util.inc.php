@@ -269,6 +269,8 @@ function sort_task_comments_callback_func($a, $b) {
 function util_get_comments($entity, $id, $options=array()) {
   global $TPL, $current_user;
 
+  
+
   // Need to get timeSheet comments too for task comments
   if ($entity == "task") {
     $rows = comment::get_comments($entity,$id);
@@ -302,8 +304,8 @@ function util_get_comments($entity, $id, $options=array()) {
       $ts_label = "(Time Sheet Comment)";
 
     } else if ($v["personID"] == $current_user->get_id() && $options["showEditButtons"]) {
-      $comment_buttons = "<nobr><input type=\"submit\" name=\"taskComment_edit\" value=\"Edit\">
-                                <input type=\"submit\" name=\"taskComment_delete\" value=\"Delete\"></nobr>";
+      $comment_buttons = "<nobr><input type=\"submit\" name=\"comment_edit\" value=\"Edit\">
+                                <input type=\"submit\" name=\"comment_delete\" value=\"Delete\"></nobr>";
     }
 
     if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
@@ -313,10 +315,11 @@ function util_get_comments($entity, $id, $options=array()) {
         $edit = true;
       } 
 
-      $edit and $rtn[] =  '<form action="'.$TPL["url_alloc_taskComment"].'" method="post">';
-      $edit and $rtn[] =  '<input type="hidden" name="'.$entity.'ID" value="'.$v["commentLinkID"].'">';
+      $edit and $rtn[] =  '<form action="'.$TPL["url_alloc_comment"].'" method="post">';
+      $edit and $rtn[] =  '<input type="hidden" name="entity" value="'.$entity.'">';
+      $edit and $rtn[] =  '<input type="hidden" name="entityID" value="'.$v["commentLinkID"].'">';
       $edit and $rtn[] =  '<input type="hidden" name="commentID" value="'.$v["commentID"].'">';
-      $edit and $rtn[] =  '<input type="hidden" name="taskComment_id" value="'.$v["commentID"].'">';
+      $edit and $rtn[] =  '<input type="hidden" name="comment_id" value="'.$v["commentID"].'">';
       $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="comments">';
       $rtn[] =  '<tr>';
       $rtn[] =  '<th>Comment by <b>'.$person->get_username(1).'</b> '.$v["date"].' '.$ts_label."</th>";
