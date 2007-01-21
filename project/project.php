@@ -259,52 +259,11 @@ $grand_total = 0;
     echo get_select_options($tf_array, $TPL[$commission_tfID]);
   }
 
-  // show table of comments
-  function show_comments($template) {
-    global $TPL, $projectID;
-
-    // setup add/edit comment section values
-    $TPL["project_projectID"] = $projectID;
-    $TPL["project_projectComment_title"] = "New comment:";
-    $TPL["project_projectComment"] = "";
-    $TPL["project_projectComment_buttons"] = "<input type=\"submit\" name=\"projectComment_save\" value=\"Save Comment\">";
-
-    $query = "SELECT * FROM comment LEFT JOIN person ON comment.commentModifiedUser=person.personID";
-    $query.= sprintf(" WHERE comment.commentType='project' AND comment.commentLinkID=%d", $projectID);
-    $query.= " ORDER BY comment.commentModifiedTime DESC";
-    $db = new db_alloc;
-    $db->query($query);
-
-    while ($db->next_record()) {
-      $comment = new comment;
-      $comment->read_db_record($db);
-      $comment->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
-      $person = new person;
-      $person->read_db_record($db);
-      $person->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
-
-      // if a commentID was posted and it is equal to this one then setup values for editing
-      if ($_GET["commentID"] && $_GET["commentID"] == $comment->get_id()) {
-        $TPL["project_projectComment_title"] = "Edit comment:";
-        $TPL["project_projectComment"] = $comment->get_value('comment');
-        $TPL["project_projectComment_buttons"] =
-          sprintf("<input type=\"hidden\" name=\"projectComment_id\" value=\"%d\">", $_GET["commentID"])
-                 ."<input type=\"submit\" name=\"projectComment_update\" value=\"Update\">"
-                 ."<input type=\"submit\" name=\"projectComment_delete\" value=\"Delete\">"
-                 ."<input type=\"submit\" name=\"projectComment_cancel\" value=\"Cancel\">";
-      }
-
-      $TPL["project_commentModifiedDate"] = $comment->get_modified_date();
-
-      // trim comment to 128 characters
-      if (strlen($comment->get_value('comment')) > 128) {
-        $TPL["project_comment_trimmed"] = sprintf("%s...", substr($comment->get_value('comment'), 0, 128));
-      } else {
-        $TPL["project_comment_trimmed"] = $comment->get_value('comment');
-      }
-
-      include_template($template);
-    }
+  function show_comments() {
+    global $projectID, $TPL;
+    $options["showEditButtons"] = true;
+    $TPL["commentsR"] = util_get_comments("project",$projectID,$options);
+    include_template("templates/projectCommentM.tpl");
   }
 
   function show_reminders($template) {
@@ -467,29 +426,18 @@ if ($projectID) {
 }
 
 // Comments
-if ($_POST["projectComment_save"] || $_POST["projectComment_update"]) {
-  $comment = new comment;
-  $comment->set_value('commentType', 'project');
-  $comment->set_value('commentLinkID', $projectID);
-  $comment->set_modified_time();
-  $comment->set_value('commentModifiedUser', $current_user->get_id());
-
-  if ($_POST["projectComment_update"]) {
-    $comment->set_id($_POST["projectComment_id"]);
-  }
-
-  if ($_POST["projectComment"]) {
-    $comment->set_value('comment', $_POST["projectComment"]);
-    $comment->save();
-  }
+if ($_POST["commentID"] && $_POST["comment_edit"]) {
+  $comment = new comment();
+  $comment->set_id($_POST["commentID"]);
+  $comment->select();
+  $TPL["comment"] = $comment->get_value('comment');
+  $TPL["comment_buttons"] =
+    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_POST["commentID"])
+           ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
+} else {
+  $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
 }
 
-
-if ($_POST["projectComment_delete"] && $_POST["projectComment_id"]) {
-  $comment = new comment;
-  $comment->set_id($_POST["projectComment_id"]);
-  $comment->delete();
-}
 
 // if someone uploads an attachment
 if ($_POST["save_attachment"]) {
