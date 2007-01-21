@@ -25,7 +25,7 @@
   </tr>
   <tr>
     <td>Last Modified by:</td>
-    <td>{$tfModifiedUser} ({$tfModifiedTime})</td>
+    <td>{$tfModifiedUser} {$tfModifiedTime}</td>
   </tr>
   <tr>
     <td colspan="2" align="center"><input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
