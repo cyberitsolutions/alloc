@@ -56,7 +56,7 @@ function get_template($filename, $use_function_object = false) {
 
   // Replace {$var_name} with echo stripslashes($TPL["var_name"]); 
   $pattern = '/{\$([\w|\d|_]+)}/i';
-  $replace = '<?php echo stripslashes($TPL["${1}"] ? $TPL["${1}"] : $${1}); ?>';
+  $replace = '<?php echo stripslashes($TPL["${1}"] !=="" ? $TPL["${1}"] : $${1}); ?>';
   $template = preg_replace($pattern,$replace,$template);
 
 

@@ -69,7 +69,7 @@ define("DEFAULT_SEP","\n");
         $num = sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration") * $timeSheetItem->get_value('rate'));
       }
 
-      if ($taxPercent) {
+      if ($taxPercent !== '') {
         $num_minus_gst = sprintf("%0.2f",$num / $taxPercentDivisor);
         $gst = sprintf("%0.2f",$num - $num_minus_gst); 
 
@@ -314,6 +314,15 @@ if ($timeSheetID) {
   $TPL["taxName"] = config::get_config_item("taxName");
 
 
+
+  $default_header = "Time Sheet";
+  $default_id_label = "Time Sheet ID";
+  if ($_GET["timeSheetPrintMode"] == "money") {
+    $default_header = "Tax Invoice";
+    $default_id_label = "Invoice Number";
+  }
+
+
   // Build PDF document
   require_once("../pdf/class.ezpdf.php");
 
@@ -339,7 +348,7 @@ if ($timeSheetID) {
 
   $pdf->selectFont($font1);
   $pdf->ezStartPageNumbers(436,80,11,'right','Page {PAGENUM} of {TOTALPAGENUM}');
-  $pdf->ezStartPageNumbers(200,80,11,'left','<b>Invoice Number: </b>'.$TPL["timeSheetID"]);
+  $pdf->ezStartPageNumbers(200,80,11,'left','<b>'.$default_id_label.': </b>'.$TPL["timeSheetID"]);
   $pdf->ezSetY(775);
 
   $TPL["companyName"]            and $contact_info[] = array($TPL["companyName"]);
@@ -371,10 +380,10 @@ if ($timeSheetID) {
 
 
   $pdf->ezSetY($line_y -20);
-  $y = $pdf->ezText("Tax Invoice",20, array("justification"=>"center"));
+  $y = $pdf->ezText($default_header,20, array("justification"=>"center"));
   $pdf->ezSetY($y -20);
 
-  $ts_info[] = array("one"=>"<b>Invoice Number:</b>","two"=>$TPL["timeSheetID"],"three"=>"<b>Date Issued:</b>","four"=>date("d/m/Y"));
+  $ts_info[] = array("one"=>"<b>".$default_id_label.":</b>","two"=>$TPL["timeSheetID"],"three"=>"<b>Date Issued:</b>","four"=>date("d/m/Y"));
   $ts_info[] = array("one"=>"<b>Client:</b>"        ,"two"=>$TPL["clientName"],"three"=>"<b>Project:</b>","four"=>$TPL["timeSheet_projectName"]);
   $ts_info[] = array("one"=>"<b>Contractor:</b>"    ,"two"=>$TPL["timeSheet_personName"],"three"=>"<b>Billing Period:</b>","four"=>$TPL["period"]);
   $y = $pdf->ezTable($ts_info,$cols,"",$pdf_table_options2);
@@ -387,11 +396,11 @@ if ($timeSheetID) {
     list($rows,$info) = get_timeSheetItem_list_money($TPL["timeSheetID"]);
     $cols2 = array("desc"=>"Description","units"=>"Units","money"=>"Charges","gst"=>$TPL["taxName"]);
     $taxPercent = config::get_config_item("taxPercent");
-    if (!$taxPercent) unset($cols2["gst"]);
+    if ($taxPercent === '') unset($cols2["gst"]);
     $rows[] = array("desc"=>"<b>TOTAL</b>","units"=>$info["total_units"], "money"=>$info["total"],"gst"=>$info["total_gst"]);
     $y = $pdf->ezTable($rows,$cols2,"",$pdf_table_options3);
     $pdf->ezSetY($y -20);
-    $taxPercent and $totals[] = array("one"=>"TOTAL ".$TPL["taxName"],"two"=>$info["total_gst"]);
+    if ($taxPercent !== '') $totals[] = array("one"=>"TOTAL ".$TPL["taxName"],"two"=>$info["total_gst"]);
     $totals[] = array("one"=>"TOTAL CHARGES","two"=>$info["total"]);
     $totals[] = array("one"=>"<b>TOTAL AMOUNT PAYABLE</b>","two"=>"<b>".$info["total_inc_gst"]."</b>");
     $y = $pdf->ezTable($totals,$cols3,"",$pdf_table_options4);
