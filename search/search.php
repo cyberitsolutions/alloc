@@ -69,11 +69,12 @@ $category = $_POST["category"] or $category = $_GET["category"];
 $needle = db_esc($_POST["needle"]) or $needle = db_esc(urldecode($_GET["needle"]));
 
 if (!$search) {
-  $str = "<br><br><b>Searching Announcements</b> looks for a match in each <br>Announcement's Heading and Body.<br><br>";
-  $str.= "<b>Searching Clients</b> looks for a match in each Client's<br> Client Name, Contact Name, and Comments. <br><br>";
+  $str = "<br/><br/>";
+  $str.= "<b>Searching Tasks</b> looks for a match in each Task's Name, Description and Comments.<br><br>";
+  $str.= "<b>Searching Projects</b> looks for a match in each Project's Name, Client and Comments.<br><br>";  
+  $str.= "<b>Searching Time Sheets</b> looks for a match in each Time Sheets Billing Note, Comment and Project.<br><br>";
   $str.= "<b>Searching Items</b> looks for a matching Item Name.<br><br>";
-  $str.= "<b>Searching Projects</b> looks for a match in each Project's <br>Project Name, Client Name, and Comments.	<br><br>";  
-  $str.= "<b>Searching Tasks</b> looks for a match in each Task's <br>Task Name, Task Description, and Comments. <br><br>";
+  $str.= "<b>Searching Clients</b> looks for a match in each Client's Name, Contact Name, and Comments.<br><br>";
   $TPL["search_results"] = $str;
 
 
