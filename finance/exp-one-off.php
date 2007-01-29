@@ -130,17 +130,8 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormModifiedUser"
   $TPL["user"] = $p->get_username(1);
 }
 
-if ($_POST["cancel"]) {
-  if (is_object($expenseForm)) {
-    $expenseForm->delete_transactions();
-    $expenseForm->delete();
-  
-    header("location:".$TPL["url_alloc_expenseFormList"]);
-  } else {
-    $TPL["message"][] = "Unable to delete Expense Form";
-  }
 
-} else if ($_POST["pend"]) {
+if ($_POST["pend"]) {
   $expenseForm->save();
   $expenseForm->set_status("pending");
   page_close();
@@ -166,6 +157,7 @@ if ($_POST["cancel"]) {
   if ($expenseForm->get_value("reimbursementRequired") == 0 || $expenseForm->get_value("reimbursementRequired") == 1) {
     $expenseForm->set_value("paymentMethod", "");
   }
+  $expenseForm->set_value("seekClientReimbursement", $_POST["seekClientReimbursement"] ? 1 : 0);
   $expenseForm->save();
   header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
   exit();
@@ -175,6 +167,7 @@ if ($_POST["cancel"]) {
   if ($expenseForm->get_value("reimbursementRequired") == 0 || $expenseForm->get_value("reimbursementRequired") == 1) {
     $expenseForm->set_value("paymentMethod", "");
   }
+  $expenseForm->set_value("seekClientReimbursement", $_POST["seekClientReimbursement"] ? 1 : 0);
   $expenseForm->set_value("expenseFormFinalised", 1);
   $expenseForm->save();
   header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
@@ -196,6 +189,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") &
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["message_help"][] = "Step 2/4: Add Expense Form Line Items by filling in the details and clicking the Add Expense Form Line Item button.";
+
 } else if (!is_object($expenseForm) || !$expenseForm->get_id()) {
   $TPL["message_help"][] = "Step 1/4: Begin an Expense Form by choosing the Payment Method and then clicking the Create Expense Form button.";
 }
@@ -228,6 +222,17 @@ foreach ($rr_options as $value => $label) {
 $TPL["paymentMethodOptions"] = $expenseForm->get_value("paymentMethod");
 $TPL["reimbursementRequiredOption"] = $rr_label;
 
+$scr_label = "No";
+if ($expenseForm->get_value("seekClientReimbursement")) {
+  $scr_sel = " checked";
+  $scr_label = "Yes";
+}
+
+$TPL["seekClientReimbursementLabel"] = $scr_label;
+$seekClientReimbursementOption = "<input type=\"checkbox\" value=\"1\" name=\"seekClientReimbursement\"".$scr_sel.">";
+$scr_hidden = "<input type=\"hidden\" name=\"seekClientReimbursement\" value=\"".$expenseForm->get_value("seekClientReimbursement")."\">";
+$TPL["seekClientReimbursementOption"] = $scr_label.$scr_hidden;
+
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
 
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save Expense Form\">";
@@ -235,6 +240,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"finalise\" value=\"To Admin -&gt;\">";
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
   $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios; 
+  $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
   
@@ -248,7 +254,8 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
 } else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Create Expense Form\">";
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
-  $TPL["reimbursementRequiredOption"]= $reimbursementRequiredRadios;
+  $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios;
+  $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
 }
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {

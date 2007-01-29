@@ -21,6 +21,9 @@
   </tr>
     {$reimbursementRequiredOption}
   <tr>
+    <td align="right">Seek Client Reimbursement:</td><td>{$seekClientReimbursementOption}</td>
+  </tr>
+  <tr>
     <td colspan="2" align="center">
       {$expenseFormButtons}
     </td>

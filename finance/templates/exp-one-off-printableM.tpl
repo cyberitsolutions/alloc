@@ -1,5 +1,3 @@
-{show_header()}
-
 <table border="1" cellpadding="9" cellspacing="0" bgcolor="white">
 <tr>
   <td colspan="5"><h2><u>Expense Form</u></h2></td>
@@ -13,11 +11,11 @@
   <td colspan="6" align="left"><b>{$rr_label}</b></td>
 </tr>
 <tr>
+  <td colspan="6" align="left">Seek Client Reimbursement: <b>{$seekClientReimbursementLabel}</b></td>
+</tr>
+<tr>
   <td colspan="3" align="left">User: <b>{$user}</b></td>
   <td colspan="3" align="left">Signature:</td>
 </tr>
 </table>
-
-
-{show_footer()}
 
