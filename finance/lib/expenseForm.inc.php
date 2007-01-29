@@ -31,6 +31,7 @@ class expenseForm extends db_entity {
                                , "lastModified"=>new db_text_field("lastModified")
                                , "paymentMethod"=>new db_text_field("paymentMethod")
                                , "reimbursementRequired"=>new db_text_field("reimbursementRequired", "Reimbursement Required", "", array("empty_to_null"=>false))
+                               , "seekClientReimbursement"=>new db_text_field("seekClientReimbursement")
                                , "transactionRepeatID"=>new db_text_field("transactionRepeatID", "Transaction Repeat", "", array("empty_to_null"=>false))
                                , "enteredBy"=>new db_text_field("enteredBy")
                                , "expenseFormFinalised"=>new db_text_field("expenseFormFinalised", "Expense Finalised", "", array("empty_to_null"=>false))
