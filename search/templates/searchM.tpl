@@ -3,7 +3,7 @@
 <form action="{$url_alloc_search}" method="post">
 {$table_box}
   <tr>
-    <th>Global Search</th>
+    <th>Search</th>
   </tr>
   <tr>
     <td align="center">
