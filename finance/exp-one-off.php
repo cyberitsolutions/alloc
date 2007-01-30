@@ -130,8 +130,17 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormModifiedUser"
   $TPL["user"] = $p->get_username(1);
 }
 
+if ($_POST["cancel"]) {
+  if (is_object($expenseForm)) {
+    $expenseForm->delete_transactions();
+    $expenseForm->delete();
 
-if ($_POST["pend"]) {
+    header("location:".$TPL["url_alloc_expenseFormList"]);
+  } else {
+    $TPL["message"][] = "Unable to delete Expense Form";
+  }
+
+} else if ($_POST["pend"]) {
   $expenseForm->save();
   $expenseForm->set_status("pending");
   page_close();
