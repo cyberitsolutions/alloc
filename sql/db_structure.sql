@@ -96,6 +96,7 @@ CREATE TABLE expenseForm (
   enteredBy int(11) NOT NULL default '0',
   transactionRepeatID int(11) NOT NULL default '0',
   expenseFormFinalised tinyint(4) NOT NULL default '0',
+  seekClientReimbursement int(1) NOT NULL default 0,
   PRIMARY KEY  (expenseFormID)
 ) TYPE=MyISAM;
 
