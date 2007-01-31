@@ -71,9 +71,15 @@
   </tr>
 
 	<tr>
+    {if config::get_config_item("paymentInsurancePercent")}
     <td>{help_button("payment_insurance")}</td>
     <td align="right">Payment Insurance:</td>
     <td>{$payment_insurance}</td>
+    {else}
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    {/}
     <td align="right">Date Submitted to Admin:</td>
     <td>{$timeSheet_dateSubmittedToAdmin}</td>
   </tr>
