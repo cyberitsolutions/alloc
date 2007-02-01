@@ -904,11 +904,7 @@ function get_task_statii_array() {
 
   function get_task_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
-      $summary = "\n<tr>";
-      $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                             and $summary.= "\n<td>&nbsp;</td>";
-      $summary.= "\n<td>&nbsp;</td>";
-      $_FORM["showPriority"] and $summary.= "\n<th class=\"col\">Priority</th>";
+      $_FORM["showPriority"] and $summary = "\n<th class=\"col\">Priority</th>";
       $_FORM["showPriority"] and $summary.= "\n<th class=\"col\">Task Pri</th>";
       $_FORM["showPriority"] and $summary.= "\n<th class=\"col\">Proj Pri</th>";
       $_FORM["showStatus"]   and $summary.= "\n<th class=\"col\">Status</th>";
@@ -921,8 +917,17 @@ function get_task_statii_array() {
       $_FORM["showTimes"]    and $summary.= "\n<th class=\"col\">Estimate</th>";
       $_FORM["showTimes"]    and $summary.= "\n<th class=\"col\">Actual</th>";
       $_FORM["showTimes"]    and $summary.= "\n<th class=\"col\">%</th>";
-      $summary.="\n</tr>";
-      return $summary;
+
+      if ($summary) {
+        $rtn = "\n<tr>";
+        $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
+                               and $rtn.= "\n<td>&nbsp;</td>";
+        $rtn.= "\n<td>&nbsp;</td>";
+        $rtn.= $summary;
+        $rtn.="\n</tr>";
+      }
+
+      return $rtn;
     }
   }
 
