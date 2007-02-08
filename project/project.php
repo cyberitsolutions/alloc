@@ -426,13 +426,13 @@ if ($projectID) {
 }
 
 // Comments
-if ($_POST["commentID"] && $_POST["comment_edit"]) {
+if ($_GET["commentID"] && $_GET["comment_edit"]) {
   $comment = new comment();
-  $comment->set_id($_POST["commentID"]);
+  $comment->set_id($_GET["commentID"]);
   $comment->select();
   $TPL["comment"] = $comment->get_value('comment');
   $TPL["comment_buttons"] =
-    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_POST["commentID"])
+    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_GET["commentID"])
            ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
 } else {
   $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
