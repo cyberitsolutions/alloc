@@ -132,7 +132,7 @@ function get_cached_table($table) {
     $people = $cache->get_cached_table("person");
     foreach ($people as $id => $row) {
       if ($people[$id]["firstName"] && $people[$id]["surname"]) {
-        $people[$id]["name"] = $people[$id]["firstName"]." ".$people[$id]["surname"];
+        $people[$id]["name"] = stripslashes($people[$id]["firstName"]." ".$people[$id]["surname"]);
       } else {
         $people[$id]["name"] = $people[$id]["username"];
       }
