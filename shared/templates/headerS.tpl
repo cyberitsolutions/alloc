@@ -17,4 +17,4 @@
     helper.style.visibility = "visible";
     helper.style.display = "none";
   </script>
-  <div style="text-align:center">
+  <div id="all">
