@@ -201,7 +201,7 @@ function show_tabs() {
 function show_toolbar() {
   global $TPL, $category;
   $TPL["category_options"] = get_category_options($_POST["category"]);
-  $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Search...";
+  $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Enter Search...";
   include_template(ALLOC_MOD_DIR."shared/templates/toolbarS.tpl");
 }
 function move_attachment($entity, $id) {

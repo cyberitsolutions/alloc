@@ -41,14 +41,14 @@ function updateTaskCCList(number) \{
 {$table_box}
   <tr>
     <th class="nobr">{$task_taskType}</th>
-    <th class="right nobr" colspan="4">&nbsp;&nbsp;<a href="{$url_alloc_task}taskID={$task_taskID}&view=brief">View</a>&nbsp;&nbsp;<a target="_BLANK" href="{$url_alloc_task}taskID={$task_taskID}&view=printer">Printer</a>&nbsp;&nbsp;<a href="{$url_alloc_project}projectID={$task_projectID}">Project</a>&nbsp;&nbsp;{$navigation_links}</th>
+    <th class="right nobr" colspan="3">&nbsp;&nbsp;<a href="{$url_alloc_task}taskID={$task_taskID}&view=brief">View</a>&nbsp;&nbsp;<a target="_BLANK" href="{$url_alloc_task}taskID={$task_taskID}&view=printer">Printer</a>&nbsp;&nbsp;<a href="{$url_alloc_project}projectID={$task_projectID}">Project</a>&nbsp;&nbsp;{$navigation_links}</th>
   </tr>
   <tr>
-    <td colspan="5">&nbsp;</td>
+    <td colspan="4">&nbsp;</td>
   </tr>    
   <tr>
     <td>Project</td>
-    <td colspan="2">
+    <td>
       <select name="projectID" onChange="updateStuffWithAjax()">
         {$projectOptions}
       </select>
@@ -64,7 +64,7 @@ function updateTaskCCList(number) \{
 
   <tr>
     <td>Task Name</td>
-    <td colspan="2">
+    <td>
       <nobr>
       <input type="text" name="taskName" value="{$task_taskName}" size="50" maxlength="75">
       <select name="priority">
@@ -86,15 +86,15 @@ function updateTaskCCList(number) \{
   </tr>
   <tr>
     <td valign="top">Description</td>
-    <td colspan="4"><textarea name="taskDescription" rows="7" cols="100" wrap="virtual">{$task_taskDescription}</textarea></td>
+    <td colspan="3"><textarea name="taskDescription" rows="7" cols="100" wrap="virtual">{$task_taskDescription}</textarea></td>
 
   </tr>  
   <tr>
-    <td colspan="5"></td>
+    <td colspan="4"></td>
   </tr>
   <tr>
     <td>Parent Task</td>
-    <td colspan="4">
+    <td colspan="3">
       <div id="parenTaskDropdown">
         {$parentTaskOptions}
       </div>
@@ -103,17 +103,15 @@ function updateTaskCCList(number) \{
 
   <tr>    
     <td valign="top"><nobr>Interested Parties</nobr><br/>{$new_client_contact_link}</td>
-    <td valign="top">
+    <td valign="top" colspan="3">
       <div id="taskCCListDropdown" style="display:inline">
         {$taskCCListOptions}
       </div>
       {help_button("task_interested_parties")}
-    </td>
-    <td valign="bottom" colspan="3">
 
-      <table border="0" cellspacing="0" cellpadding="5">
+      <table border="0" cellspacing="0" cellpadding="5" align="right">
         <tr>
-          <td><nobr>Target Start/Completion</nobr></td>
+          <td><nobr>Target Start/Complete</nobr></td>
           <td>
             <nobr>
               <input type="text" size="11" name="dateTargetStart" value="{$task_dateTargetStart}"><input type="button" value="Today" onClick="dateTargetStart.value='{$today}'">
@@ -122,7 +120,7 @@ function updateTaskCCList(number) \{
           </td>
         </tr>
         <tr>
-          <td><nobr>Actual Start/Completion</nobr></td>
+          <td><nobr>Actual Start/Complete</nobr></td>
           <td>
             <nobr>
               <input type="text" size="11" name="dateActualStart" value="{$task_dateActualStart}"><input type="button" value="Today" onClick="dateActualStart.value='{$today}'">
@@ -136,11 +134,11 @@ function updateTaskCCList(number) \{
   </tr>
 
   <tr>
-    <td colspan="5">&nbsp;</td>
+    <td colspan="4">&nbsp;</td>
   </tr>
 
   <tr>
-    <td align="center" colspan="5">
+    <td align="center" colspan="4">
       {$timeSheet_save}
       <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
       <input type="submit" name="save_and_new" value="Save &amp; New">
