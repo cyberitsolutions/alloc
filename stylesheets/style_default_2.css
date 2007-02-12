@@ -64,6 +64,10 @@ form {
   white-space:nowrap 
 }
 
+.hidden {
+  display:none;
+}
+
 #helper { 
   position:absolute; 
   visibility:hidden; 
@@ -155,7 +159,7 @@ table.calendar td.today h1 {
   font-weight:bold;
 }
 table.calendar td.even { 
-  background-color:#eeeeee; 
+  background-color:#f0f0f0; 
 }
 table.calendar td.absent {
   background-color:#cccccc;
@@ -179,7 +183,7 @@ table.calendar img {
 
 /* Filters */
 table.filter { 
-  background-color:#eeeeee; 
+  background-color:#eaf3ff; 
   border:2px dashed #a3bee0; 
   padding:4px; 
   margin:4px; 
@@ -188,20 +192,20 @@ table.filter {
 }
 table.filter th { 
   font-weight:bold; 
-  background-color:#eeeeee; 
+  background-color:#eaf3ff; 
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
 }
 
 table.panel { 
-  background-color:#eeeeee; 
+  background-color:#eaf3ff; 
   height:100%; 
   border:1px solid #a3bee0; 
 }
 
 tr.odd { 
-  background-color:#eeeeee; 
+  background-color:#f0f0f0; 
 }
 tr.even { 
   background-color:#f9f9f9; 
@@ -239,7 +243,7 @@ table.tasks {
   border-bottom:1px solid #a3bee0;
 }
 td.tasks { 
-  background-color: #eeeeee; 
+  background-color: #eaf3ff; 
   padding:4px; 
 }
 table.tasks th, table.calendar th { 
@@ -262,20 +266,20 @@ table.tasks th, table.calendar th {
 
 table.comments { 
   border:1px solid #a3bee0; 
-  background:#eeeeee; 
+  background:#eaf3ff; 
   margin-bottom:4px; 
   margin-top:2px;
 }
 table.comments th { 
   text-align:left; 
-  background:#eeeeee; 
+  background:#eaf3ff; 
   vertical-align:top; 
   color:#444444; 
   font-weight:normal; 
   padding:4px; 
 }
 table.comments td { 
-  padding:4px; 
+  padding:2px 4px; 
 }
 
 
@@ -300,13 +304,11 @@ table#menu_top {
 }
 
 table#menu_top th {
-  vertical-align:center;
   text-align:left;
   font-size:100%;
 }
 
 table#menu_top td {
-  vertical-align:center;
   text-align:right;
 }
 

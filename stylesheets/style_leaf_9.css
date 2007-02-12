@@ -64,6 +64,10 @@ form {
   white-space:nowrap 
 }
 
+.hidden {
+  display:none;
+}
+
 #helper { 
   position:absolute; 
   visibility:hidden; 
@@ -179,7 +183,7 @@ table.calendar img {
 
 /* Filters */
 table.filter { 
-  background-color:#eeeeee; 
+  background-color:#f6f9ed; 
   border:2px dashed #c7cfb8; 
   padding:4px; 
   margin:4px; 
@@ -188,14 +192,14 @@ table.filter {
 }
 table.filter th { 
   font-weight:bold; 
-  background-color:#eeeeee; 
+  background-color:#f6f9ed; 
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
 }
 
 table.panel { 
-  background-color:#eeeeee; 
+  background-color:#f6f9ed; 
   height:100%; 
   border:1px solid #c7cfb8; 
 }
@@ -239,7 +243,7 @@ table.tasks {
   border-bottom:1px solid #c7cfb8;
 }
 td.tasks { 
-  background-color: #eeeeee; 
+  background-color: #f6f9ed; 
   padding:4px; 
 }
 table.tasks th, table.calendar th { 
@@ -262,20 +266,20 @@ table.tasks th, table.calendar th {
 
 table.comments { 
   border:1px solid #c7cfb8; 
-  background:#eeeeee; 
+  background:#f6f9ed; 
   margin-bottom:4px; 
   margin-top:2px;
 }
 table.comments th { 
   text-align:left; 
-  background:#eeeeee; 
+  background:#f6f9ed; 
   vertical-align:top; 
   color:#444444; 
   font-weight:normal; 
   padding:4px; 
 }
 table.comments td { 
-  padding:4px; 
+  padding:2px 4px; 
 }
 
 
@@ -300,13 +304,11 @@ table#menu_top {
 }
 
 table#menu_top th {
-  vertical-align:center;
   text-align:left;
   font-size:100%;
 }
 
 table#menu_top td {
-  vertical-align:center;
   text-align:right;
 }
 
