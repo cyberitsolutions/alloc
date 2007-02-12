@@ -956,10 +956,25 @@ function get_task_statii_array() {
     $timeUnit_cache = $_FORM["timeUnit_cache"];
 
 
+    if ($_FORM["showDescription"] || $_FORM["showComments"]) {
+      if ($task["taskDescription"]) {
+        $str[] = $task["taskDescription"];
+      }
+      if ($_FORM["showComments"]) {
+        $comments = util_get_comments("task",$task["taskID"]);
+        if ($comments) {
+          $str[] = $comments;
+        }
+      }
+      if (is_array($str) && count($str)) {
+        $str = "<br/>".implode("<br/>",$str);
+      }
+    }
+
                                   $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
                               and $summary[] = "  <td class=\"col\">".$task["project_name"]."&nbsp;</td>";
-                                  $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"]."</td>";
+                                  $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["priority"])."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["projectPriority"])."&nbsp;</td>"; 
@@ -974,29 +989,6 @@ function get_task_statii_array() {
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".$task["percentComplete"]."&nbsp;</td>";
                                   $summary[] = "</tr>";
-
-    if ($_FORM["showDescription"] || $_FORM["showComments"]) {
-
-      if ($task["taskDescription"]) {
-        $str[] = $task["taskDescription"];
-      }
-
-      if ($_FORM["showComments"]) {
-        $comments = util_get_comments("task",$task["taskID"]);
-        if ($comments) {
-          $str[] = $comments;
-        }
-      }
-
-      if (is_array($str) && count($str)) {
-                                    $summary[] = "<tr>";
-         $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                                and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-                                    $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+4)."px\" colspan=\"21\" class=\"col\">".implode("<br/>",$str)."</td>";
-                                    $summary[] = "</tr>";
-      }
-    }
-
 
     $summary = "\n".implode("\n",$summary);
     return $summary;
