@@ -64,6 +64,10 @@ form {
   white-space:nowrap 
 }
 
+.hidden {
+  display:none;
+}
+
 #helper { 
   position:absolute; 
   visibility:hidden; 
@@ -155,7 +159,7 @@ table.calendar td.today h1 {
   font-weight:bold;
 }
 table.calendar td.even { 
-  background-color:(PANE_BG_COLOR); 
+  background-color:(TR_ODD_BACKGROUND_COLOR); 
 }
 table.calendar td.absent {
   background-color:#cccccc;
@@ -201,7 +205,7 @@ table.panel {
 }
 
 tr.odd { 
-  background-color:(PANE_BG_COLOR); 
+  background-color:(TR_ODD_BACKGROUND_COLOR); 
 }
 tr.even { 
   background-color:(TR_EVEN_BACKGROUND_COLOR); 
@@ -275,7 +279,7 @@ table.comments th {
   padding:4px; 
 }
 table.comments td { 
-  padding:4px; 
+  padding:2px 4px; 
 }
 
 
@@ -300,13 +304,11 @@ table#menu_top {
 }
 
 table#menu_top th {
-  vertical-align:center;
   text-align:left;
   font-size:100%;
 }
 
 table#menu_top td {
-  vertical-align:center;
   text-align:right;
 }
 
