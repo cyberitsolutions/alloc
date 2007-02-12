@@ -110,8 +110,8 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"today"                                    => date("Y-m-d")
             ,"alloc_help_link_name"                     => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
             ,"script_path"                              => SCRIPT_PATH
-            ,"table_box"                                => "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">"
-            ,"table_box_border"                         => "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">"
+            ,"table_box"                                => "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">\n"
+            ,"table_box_border"                         => "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" class=\"box\">\n"
             ,"main_alloc_title"                         => end(explode("/", $_SERVER["SCRIPT_NAME"]))
             );
 

@@ -3,7 +3,6 @@
 {$table_box}
   <tr>
     <th>Client Details</th>
-    <th class="right"><nobr><a href="{$url_alloc_clientList}">Return to Client List</a></nobr></th>
   </tr>
   <tr>
     <td>
@@ -15,7 +14,7 @@
 
 {if check_optional_client_exists()}
 
-    {show_client_contacts("templates/clientContactR.tpl")}
+    {show_client_contacts()}
 
     {$table_box}
       <tr>

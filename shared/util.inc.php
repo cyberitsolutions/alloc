@@ -269,8 +269,6 @@ function sort_task_comments_callback_func($a, $b) {
 function util_get_comments($entity, $id, $options=array()) {
   global $TPL, $current_user;
 
-  
-
   // Need to get timeSheet comments too for task comments
   if ($entity == "task") {
     $rows = comment::get_comments($entity,$id);
@@ -305,7 +303,7 @@ function util_get_comments($entity, $id, $options=array()) {
 
     } else if ($v["personID"] == $current_user->get_id() && $options["showEditButtons"]) {
       $comment_buttons = "<nobr><input type=\"submit\" name=\"comment_edit\" value=\"Edit\">
-                                <input type=\"submit\" name=\"comment_delete\" value=\"Delete\"></nobr>";
+                                <input type=\"submit\" name=\"comment_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this comment?')\"></nobr>";
     }
 
     if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
@@ -705,7 +703,12 @@ function get_help_link() {
   $url = "../help/help.html#".$TPL["alloc_help_link_name"];
   echo "<a href=\"".$url."\">Help</a>";
 }
-
+function get_expand_link($id) {
+  global $TPL;
+  $display = "none";
+  echo "<div id=\"button_".$id."\"><a class=\"nobr\" onClick=\"set_grow_shrink_box('".$id."','".$display."','".$TPL["url_alloc_images"]."');\">New ";
+  echo "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."small_grow.gif\"></a></div>";
+}
 
 
 
