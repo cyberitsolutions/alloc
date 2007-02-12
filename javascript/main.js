@@ -27,3 +27,18 @@ function makeAjaxRequest(url,actionFunction,number) {
     http_request[number].open('GET', url, true);
     http_request[number].send(null);
 }
+
+function set_grow_shrink_box(id, display, images) {
+  if (display == 'none') {
+    display = 'inline';
+    image = images+'small_shrink.gif'
+  } else {
+    display = 'none';
+    image = images+'small_grow.gif'
+  }
+
+  document.getElementById(id).style.display=display;
+  str = "<a onClick=\"set_grow_shrink_box('"+id+"','"+display+"','"+images+"');\">New <img border=\"0\" src=\""+image+"\"</a>"
+  document.getElementById('button_'+id).innerHTML = str;
+}
+

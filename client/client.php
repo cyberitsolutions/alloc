@@ -31,7 +31,7 @@ require_once("../alloc.php");
   function show_client_details_edit($template) {
     global $TPL, $clientID;
 
-    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
+    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save Client Contact\">";
 
     if (!isset($clientID) || $_POST["client_edit"]) {
 
@@ -83,66 +83,101 @@ require_once("../alloc.php");
         $a.= "<br>".$country;
       }
     } else {
-      $a = "(no address)";
+      $a = "";
     }
     return $a;
   }
 
-  function show_client_contacts($template) {
+  function show_client_contacts() {
     global $TPL, $clientID;
 
-    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
+    $TPL["clientContact_clientID"] = $clientID;
+
+    if ($_POST["clientContact_delete"] && $_POST["clientContactID"]) {
+      $clientContact = new clientContact;
+      $clientContact->set_id($_POST["clientContactID"]);
+      $clientContact->delete();
+    }
 
     // get primary contact first
     $client = new client;
     $client->set_id($clientID);
     $client->select();
-    if ($client->get_id('clientPrimaryContactID') != "NULL") {
-      $clientContact = new clientContact;
-      $clientContact->set_id($client->get_value('clientPrimaryContactID'));
-      $clientContact->select();
-      if ($clientContact->get_value('clientContactName') != "") {
-        $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-        $TPL["client_clientTitle"] = "Primary: ".$clientContact->get_value('clientContactName');
-        if ($TPL["client_clientContactEmail"]) {
-          $TPL["client_clientTitle"] .= "&nbsp;&nbsp;<a href=\"mailto:".$TPL["client_clientContactEmail"]."\">".$TPL["client_clientContactEmail"]."</a>";
-        }
-        $TPL["client_clientContactID"] = $clientContact->get_id();
+    $clientPrimaryContactID = $client->get_value("clientPrimaryContactID");
 
-        include_template($template);
-      }
-    }
-
-    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save\">"."<input type=\"submit\" name=\"clientContact_makepc\" value=\"Make Primary Contact\">"."<input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\">";
+    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save Client Contact\">";
 
     // other contacts
-    $query = "SELECT * FROM clientContact";
-    $query.= sprintf(" WHERE clientID=%d AND clientContactID!=%d", $clientID, $client->get_value('clientPrimaryContactID'));
-    $query.= " ORDER BY clientContactName";
+    $query = sprintf("SELECT * 
+                        FROM clientContact
+                       WHERE clientID=%d    
+                    ORDER BY clientContactName", $clientID);
+
     $db = new db_alloc;
     $db->query($query);
     while ($db->next_record()) {
       $clientContact = new clientContact;
       $clientContact->read_db_record($db);
-      $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-      $TPL["client_clientTitle"] = $clientContact->get_value('clientContactName');
-      if ($TPL["client_clientContactEmail"]) {
-        $TPL["client_clientTitle"] .= "&nbsp;&nbsp;<a href=\"mailto:".$TPL["client_clientContactEmail"]."\">".$TPL["client_clientContactEmail"]."</a>";
-      }
-      $TPL["client_clientContactID"] = $clientContact->get_id();
 
-      include_template($template);
+      if ($_POST["clientContact_edit"] && $_POST["clientContactID"] == $clientContact->get_id()) {
+        continue;
+      }
+
+
+      $pc = "";
+      if ($clientPrimaryContactID == $clientContact->get_id()) {
+        $pc = " (Primary Contact)";
+      }
+
+      $email = $clientContact->get_value("clientContactEmail");
+      $email and $email = "<a href=\"mailto:".$email."\">".$email."</a>";
+
+      $buttons = "<nobr><input type=\"submit\" name=\"clientContact_edit\" value=\"Edit\"> 
+                        <input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this Client Contact?')\"></nobr>";
+
+      $rtn[] =  '<form action="'.$TPL["url_alloc_client"].'" method="post">';
+      $rtn[] =  '<input type="hidden" name="clientContactID" value="'.$clientContact->get_id().'">';
+      $rtn[] =  '<input type="hidden" name="clientID" value="'.$clientID.'">';
+      $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="comments">';
+      $rtn[] =  '<tr>';
+      $rtn[] =  '  <td width="20%" class="nobr"><b>'.$clientContact->get_value('clientContactName').'</b>'.$pc.'</td>';
+      $rtn[] =  '  <td width="20%">'.$email.'</td>';
+      $rtn[] =  '  <td rowspan="4" align="left" valign="top">'.$clientContact->get_value('clientContactOther').'</td>';
+      $rtn[] =  '  <th rowspan="2" align="right" width="2%">'.$buttons.'</th>';
+      $rtn[] =  '</tr>';
+      $rtn[] =  '<tr>';
+      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactStreetAddress').'</td>';
+      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactPhone').'</td>';
+      $rtn[] =  '</tr>';
+      $rtn[] =  '<tr>';
+      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactSuburb').'</td>';
+      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactMobile').'</td>';
+      $rtn[] =  '</tr>';
+      $rtn[] =  '<tr>';
+      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactState')." ".$clientContact->get_value('clientContactPostcode').'</td>';
+      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactFax').'</td>';
+      $rtn[] =  '</tr>';
+      $rtn[] =  '</table>';
+      $rtn[] =  '</form>';
+
     }
 
-    // place blank client contact form at the end with add button for adding new contacts
+    if (is_array($rtn)) { 
+      $TPL["clientContacts"] = implode("\n",$rtn);
+    } 
+    if ($_POST["clientContact_edit"] && $_POST["clientContactID"]) {
+      $clientContact = new clientContact;
+      $clientContact->set_id($_POST["clientContactID"]);
+      $clientContact->select();
+      $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "clientContact_");
+      if ($clientPrimaryContactID == $clientContact->get_id()) {
+        $TPL["clientPrimaryContactID_checked"] = " checked";
+      }
+    } else if ($rtn) {
+      $TPL["class_new_client_contact"] = "hidden";
+    }
 
-    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_addpc\" value=\"Add as Primary Contact\">"."<input type=\"submit\" name=\"clientContact_add\" value=\"Add\">";
-
-    $clientContact = new clientContact;
-    $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-    $TPL["client_clientID"] = $clientID;
-    $TPL["client_clientTitle"] = "Add New Contact";
-    include_template($template);
+    include_template("templates/clientContactM.tpl");
   }
 
   function show_reminders($template) {
@@ -208,6 +243,11 @@ require_once("../alloc.php");
     global $clientID, $TPL;
     $options["showEditButtons"] = true;
     $TPL["commentsR"] = util_get_comments("client",$clientID,$options);
+  
+    if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
+      $TPL["class_new_client_comment"] = "hidden";
+    }
+
     include_template("templates/clientCommentM.tpl");
   }
 
@@ -292,34 +332,25 @@ if ($_POST["save"]) {
 $clientStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
 $TPL["clientStatusOptions"] = get_select_options($clientStatus_array, $client->get_value("clientStatus"));
 
-  // client contacts
-if ($_POST["clientContact_save"] || $_POST["clientContact_add"] || $_POST["clientContact_addpc"]
-    || $_POST["clientContact_makepc"] || $_POST["clientContact_delete"]) {
+// client contacts
+if ($_POST["clientContact_save"] || $_POST["clientContact_delete"]) {
+
   $clientContact = new clientContact;
   $clientContact->read_globals();
-  if ($_POST["clientContact_add"] || $_POST["clientContact_addpc"]) {
-    $clientContact->set_value('clientID', $clientID);
 
-
-    if ($clientContact->get_value('clientContactEmail') && preg_match("/<(.*)>/",$clientContact->get_value('clientContactEmail'),$matches)) {
-      $clientContact->set_value('clientContactEmail',$matches[1]);
-    }
-
-    $clientContact->save();
-    if ($_POST["clientContact_addpc"]) {
-      $client->set_value('clientPrimaryContactID', $clientContact->get_id());
-      $client->save();
-    }
-  }
   if ($_POST["clientContact_save"]) {
+    #$clientContact->set_value('clientID', $_POST["clientID"]);
     $clientContact->save();
   }
+
+
+  if (is_object($client)) {
+    $_POST["clientPrimaryContactID"] && $client->set_value('clientPrimaryContactID', $clientContact->get_id());
+    $client->save();
+  }
+
   if ($_POST["clientContact_delete"]) {
     $clientContact->delete();
-  }
-  if ($_POST["clientContact_makepc"]) {
-    $client->set_value('clientPrimaryContactID', $clientContact->get_id());
-    $client->save();
   }
 }
 
@@ -336,6 +367,8 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
   $TPL["comment_buttons"] =
     sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_GET["commentID"])
            ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
+
+
 } else {
   $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
 }
