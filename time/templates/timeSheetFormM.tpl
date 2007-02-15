@@ -16,7 +16,7 @@
 
 {$table_box}
   <tr>
-    <th colspan="3">{help_button("timesheet_overview")}Time Sheet</th>  
+    <th colspan="3">{get_help("timesheet_overview")}Time Sheet</th>  
     <th class="right" colspan="2">
       {if $TPL["timeSheet_timeSheetID"]}
       <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items">Default</a>
@@ -63,7 +63,7 @@
   </tr>
 
 	<tr>
-	  <td>{help_button("which_tf_to_credit")}</td>
+	  <td>{get_help("which_tf_to_credit")}</td>
  	  <td align="right">TF:</td>
  	  <td align="left">{$recipient_tfID_name}</td>
     <td align="right">Approved by Manager:</td>
@@ -72,7 +72,7 @@
 
 	<tr>
     {if config::get_config_item("paymentInsurancePercent")}
-    <td>{help_button("payment_insurance")}</td>
+    <td>{get_help("payment_insurance")}</td>
     <td align="right">Payment Insurance:</td>
     <td>{$payment_insurance}</td>
     {else}
@@ -135,7 +135,7 @@
           <td align="center" colspan="3">{$radio_email}<br/><table><tr><td align="left">{$simple_or_complex_transaction}</td></tr></table></td>
         </tr>
         <tr>
-          <td width="1%">{help_button("timesheet_buttons")}</td>
+          <td width="1%">{get_help("timesheet_buttons")}</td>
           <td align="center">{$timeSheet_ChangeStatusButton}<br/><br/>{$timeSheet_status_text}</td>
           <td>&nbsp;</td>
         </tr>

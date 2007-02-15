@@ -6,7 +6,7 @@
           <td>Name containing</td>
           <td>&nbsp;</td>
           <td width="20%">&nbsp;</td>
-        <!--  <td rowspan="2">{help_button("clientListFilter")}</td> -->
+        <!--  <td rowspan="2">{get_help("clientListFilter")}</td> -->
         </tr>
         <tr>
           <td>&nbsp;</td>

@@ -24,7 +24,7 @@ function updateProjectList(number) \{
 
       <table class="filter" align="center">
         <tr>
-          <td>{help_button("taskList_project_superset")}</td>
+          <td>{get_help("taskList_project_superset")}</td>
           <td><b>Project Superset</b></td>
           <td><b>Projects</b></td>
           <td><b>Task Type</b></td>
@@ -85,7 +85,7 @@ List by Project <input type="radio" name="taskView" value="byProject"{$taskView_
             </table>
 
           </td>
-          <td valign="bottom" align="right"><input type="submit" name="applyFilter" value="Filter"> {help_button("taskList_filter")}</td>
+          <td valign="bottom" align="right"><input type="submit" name="applyFilter" value="Filter"> {get_help("taskList_filter")}</td>
         </tr>
 
       </table>

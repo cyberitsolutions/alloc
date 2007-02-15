@@ -35,6 +35,8 @@ while ($db->next_record()) {
 }
 
 
+#echo "<pre>".print_r($_POST,1)."</pre>";
+
 if ($_POST["save"]) {
 
   if ($_POST["hoursInDay"]) {
@@ -48,15 +50,18 @@ if ($_POST["save"]) {
     $db->query($q);
   }
 
-  foreach ($fields_to_save as $name) {
-    $id = $config->get_config_item_id($name);
-    $c = new config;
-    $c->set_id($id);
-    $c->select();
-    $c->set_value("value",$_POST[$name]);
-    $c->save();
-    $TPL[$name] = htmlentities($_POST[$name]);
-    $TPL["message_good"] = "Saved configuration.";
+  foreach ($_POST as $name => $value) {
+
+    if (in_array($name,$fields_to_save)) {
+      $id = $config->get_config_item_id($name);
+      $c = new config;
+      $c->set_id($id);
+      $c->select();
+      $c->set_value("value",$_POST[$name]);
+      $c->save();
+      $TPL[$name] = htmlentities($_POST[$name]);
+      $TPL["message_good"] = "Saved configuration.";
+    }
   }
 }
 

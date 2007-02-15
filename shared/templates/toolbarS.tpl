@@ -8,7 +8,7 @@
         <td width="1%"><input size="14" type="text" name="needle" value="{$needle}" class="menu_form_text" onFocus="document.getElementById('form_search').needle.value='';"></td>
         <td width="1%"><select size="1" name="category" class="menu_form_select">{$category_options}</select></td>
         <td width="1%"><input type="submit" name="search" class="menu_form_button" value="Search"></td>
-        <td width="1%">{help_button("quicklist_and_search")}</td>
+        <td width="1%">{get_help("quicklist_and_search")}</td>
       </tr>
     </table>
     </form>
