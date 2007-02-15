@@ -67,9 +67,9 @@ class home_item {
     return $this->width;
   }
 
-  function help_button() {
+  function get_help() {
     if ($this->help_topic) {
-      help_button($this->help_topic);
+      get_help($this->help_topic);
     }
   }
 }

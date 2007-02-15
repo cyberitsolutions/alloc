@@ -683,7 +683,7 @@ function get_category_options($category="") {
   $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients");
   return get_options_from_array($category_options, $category, true);
 } 
-function help_button($topic) {
+function get_help($topic) {
   global $TPL;
 
   $file = $TPL["url_alloc_help"].$topic.".html";
@@ -692,6 +692,13 @@ function help_button($topic) {
     $str = file_get_contents($file);
     $str = htmlentities(addslashes($str));
     $str = str_replace("\n"," ",$str);
+  } else {
+    
+    
+
+  }
+
+  if (strlen($str)) {
     $img = "<a href=\"".$file_relative."\" target=\"_blank\">";
     $img.= "<img id=\"".$topic."\" border=\"0\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
     $img.= $TPL["url_alloc_images"]."help.gif\"></a>";

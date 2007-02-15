@@ -58,7 +58,7 @@ function updateTaskCCList(number) \{
       <select name="taskTypeID">
         {$taskTypeOptions}
       </select>
-      {help_button("taskType")}
+      {get_help("taskType")}
     </td>
   </tr>
 
@@ -107,7 +107,7 @@ function updateTaskCCList(number) \{
       <div id="taskCCListDropdown" style="display:inline">
         {$taskCCListOptions}
       </div>
-      {help_button("task_interested_parties")}
+      {get_help("task_interested_parties")}
 
       <table border="0" cellspacing="0" cellpadding="5" align="right">
         <tr>

@@ -199,7 +199,7 @@ function updateClientContact(number) \{
 {$table_box}
   <tr>
     <th>Financial Summary</th>
-    <th class="right">{help_button("project_financial_summary")}</th>
+    <th class="right">{get_help("project_financial_summary")}</th>
   </tr>
   <tr>
     <td>Project Budget: ${$project_projectBudget}</td>
