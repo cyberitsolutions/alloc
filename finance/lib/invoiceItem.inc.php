@@ -30,13 +30,13 @@ class invoiceItem extends db_entity
 
   function invoiceItem() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("invoiceItemID");
-    $this->data_fields = array("invoiceID"=>new db_text_field("invoiceID")
-                               , "iiMemo"=>new db_text_field("iiMemo")
-                               , "iiQuantity"=>new db_text_field("iiQuantity")
-                               , "iiUnitPrice"=>new db_text_field("iiUnitPrice")
-                               , "iiAmount"=>new db_text_field("iiAmount")
-                               , "status"=>new db_text_field("status")
+    $this->key_field = new db_field("invoiceItemID");
+    $this->data_fields = array("invoiceID"=>new db_field("invoiceID")
+                               , "iiMemo"=>new db_field("iiMemo")
+                               , "iiQuantity"=>new db_field("iiQuantity")
+                               , "iiUnitPrice"=>new db_field("iiUnitPrice")
+                               , "iiAmount"=>new db_field("iiAmount")
+                               , "status"=>new db_field("status")
       );
     $this->permissions[PERM_FINANCE_UPDATE_APPROVED] = "Update approved transactions";
   }

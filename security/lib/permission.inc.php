@@ -27,15 +27,15 @@ class permission extends db_entity {
 
   function permission() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("permissionID");
-    $this->data_fields = array("tableName"=>new db_text_field("tableName")
-                               , "entityID"=>new db_text_field("entityID", "Record ID", "", array("empty_to_null"=>false))
-                               , "personID"=>new db_text_field("personID", "Record ID", "", array("empty_to_null"=>false))
-                               , "roleName"=>new db_text_field("roleName", "Record ID", "", array("empty_to_null"=>false))
-                               , "actions"=>new db_text_field("actions")
-                               , "sortKey"=>new db_text_field("sortKey")
-                               , "allow"=>new db_text_field("allow")
-                               , "comment"=>new db_text_field("comment")
+    $this->key_field = new db_field("permissionID");
+    $this->data_fields = array("tableName"=>new db_field("tableName")
+                               , "entityID"=>new db_field("entityID", "Record ID", "", array("empty_to_null"=>false))
+                               , "personID"=>new db_field("personID", "Record ID", "", array("empty_to_null"=>false))
+                               , "roleName"=>new db_field("roleName", "Record ID", "", array("empty_to_null"=>false))
+                               , "actions"=>new db_field("actions")
+                               , "sortKey"=>new db_field("sortKey")
+                               , "allow"=>new db_field("allow")
+                               , "comment"=>new db_field("comment")
       );
   }
 

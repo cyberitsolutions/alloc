@@ -26,11 +26,11 @@ class project_modification extends data_entity {
   var $display_field_name = "modDescription";
 
   function project_modification() {
-    $this->key_field = new db_text_field("projectModNoteID");
-    $this->data_fields = array("projectID"=>new db_text_field("projectID")
-                               , "dateMod"=>new db_text_field("dateMod")
-                               , "modDescription"=>new db_text_field("modDescription")
-                               , "personID"=>new db_text_field("personID")
+    $this->key_field = new db_field("projectModNoteID");
+    $this->data_fields = array("projectID"=>new db_field("projectID")
+                               , "dateMod"=>new db_field("dateMod")
+                               , "modDescription"=>new db_field("modDescription")
+                               , "personID"=>new db_field("personID")
       );
   }
 }

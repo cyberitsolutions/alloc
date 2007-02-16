@@ -28,8 +28,8 @@ class skillList extends db_entity {
 
   function skillList() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("skillID");
-    $this->data_fields = array("skillName"=>new db_text_field("skillName"), "skillDescription"=>new db_text_field("skillDescription"), "skillClass"=>new db_text_field("skillClass"));
+    $this->key_field = new db_field("skillID");
+    $this->data_fields = array("skillName"=>new db_field("skillName"), "skillDescription"=>new db_field("skillDescription"), "skillClass"=>new db_field("skillClass"));
   }
 
   // return true if a skill with same name and class already exists

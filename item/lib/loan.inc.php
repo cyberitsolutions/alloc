@@ -28,14 +28,14 @@ class loan extends db_entity {
 
   function loan() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("loanID");
-    $this->data_fields = array("itemID"=>new db_text_field("itemID")
-                               , "personID"=>new db_text_field("personID")
-                               , "loanModifiedUser"=>new db_text_field("loanModifiedUser")
-                               , "lastModified"=>new db_text_field("lastModified")
-                               , "dateBorrowed"=>new db_text_field("dateBorrowed")
-                               , "dateToBeReturned"=>new db_text_field("dateToBeReturned")
-                               , "dateReturned"=>new db_text_field("dateReturned")
+    $this->key_field = new db_field("loanID");
+    $this->data_fields = array("itemID"=>new db_field("itemID")
+                               , "personID"=>new db_field("personID")
+                               , "loanModifiedUser"=>new db_field("loanModifiedUser")
+                               , "lastModified"=>new db_field("lastModified")
+                               , "dateBorrowed"=>new db_field("dateBorrowed")
+                               , "dateToBeReturned"=>new db_field("dateToBeReturned")
+                               , "dateReturned"=>new db_field("dateReturned")
       );
   }
 

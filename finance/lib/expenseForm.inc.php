@@ -26,15 +26,15 @@ class expenseForm extends db_entity {
 
   function expenseForm() {
     $this->db_entity();
-    $this->key_field = new db_text_field("expenseFormID");
-    $this->data_fields = array("expenseFormModifiedUser"=>new db_text_field("expenseFormModifiedUser")
-                               , "lastModified"=>new db_text_field("lastModified")
-                               , "paymentMethod"=>new db_text_field("paymentMethod")
-                               , "reimbursementRequired"=>new db_text_field("reimbursementRequired", "Reimbursement Required", "", array("empty_to_null"=>false))
-                               , "seekClientReimbursement"=>new db_text_field("seekClientReimbursement", "Seek Client Reimbursement", "", array("empty_to_null"=>false))
-                               , "transactionRepeatID"=>new db_text_field("transactionRepeatID", "Transaction Repeat", "", array("empty_to_null"=>false))
-                               , "enteredBy"=>new db_text_field("enteredBy")
-                               , "expenseFormFinalised"=>new db_text_field("expenseFormFinalised", "Expense Finalised", "", array("empty_to_null"=>false))
+    $this->key_field = new db_field("expenseFormID");
+    $this->data_fields = array("expenseFormModifiedUser"=>new db_field("expenseFormModifiedUser")
+                               , "lastModified"=>new db_field("lastModified")
+                               , "paymentMethod"=>new db_field("paymentMethod")
+                               , "reimbursementRequired"=>new db_field("reimbursementRequired", "Reimbursement Required", "", array("empty_to_null"=>false))
+                               , "seekClientReimbursement"=>new db_field("seekClientReimbursement", "Seek Client Reimbursement", "", array("empty_to_null"=>false))
+                               , "transactionRepeatID"=>new db_field("transactionRepeatID", "Transaction Repeat", "", array("empty_to_null"=>false))
+                               , "enteredBy"=>new db_field("enteredBy")
+                               , "expenseFormFinalised"=>new db_field("expenseFormFinalised", "Expense Finalised", "", array("empty_to_null"=>false))
       );
   }
 

@@ -27,11 +27,11 @@ class projectModificationNote extends db_entity {
 
   function projectModificationNote() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("projectModNoteID");
-    $this->data_fields = array("projectID"=>new db_text_field("projectID")
-                               , "dateMod"=>new db_text_field("dateMod")
-                               , "modDescription"=>new db_text_field("modDescription")
-                               , "personID"=>new db_text_field("personID")
+    $this->key_field = new db_field("projectModNoteID");
+    $this->data_fields = array("projectID"=>new db_field("projectID")
+                               , "dateMod"=>new db_field("dateMod")
+                               , "modDescription"=>new db_field("modDescription")
+                               , "personID"=>new db_field("personID")
       );
   }
 }

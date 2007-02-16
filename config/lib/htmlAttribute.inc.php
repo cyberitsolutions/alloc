@@ -26,11 +26,11 @@ class htmlAttribute extends db_entity {
 
   function htmlAttribute() {
     $this->db_entity();
-    $this->key_field = new db_text_field("htmlAttributeID");
-    $this->data_fields = array("htmlElementID"=>new db_text_field("htmlElementID")
-                              ,"name"=>new db_text_field("name")
-                              ,"value"=>new db_text_field("value")
-                              ,"isDefault"=>new db_text_field("isDefault")
+    $this->key_field = new db_field("htmlAttributeID");
+    $this->data_fields = array("htmlElementID"=>new db_field("htmlElementID")
+                              ,"name"=>new db_field("name")
+                              ,"value"=>new db_field("value")
+                              ,"isDefault"=>new db_field("isDefault")
       );
   }
 

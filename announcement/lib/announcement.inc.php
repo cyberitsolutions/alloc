@@ -28,12 +28,12 @@ class announcement extends db_entity {
 
   function announcement() {
     $this->db_entity();
-    $this->key_field = new db_text_field("announcementID");
-    $this->data_fields = array("heading"=>new db_text_field("heading")
-                               , "body"=>new db_text_field("body")
-                               , "personID"=>new db_text_field("personID")
-                               , "displayFromDate"=>new db_text_field("displayFromDate")
-                               , "displayToDate"=>new db_text_field("displayToDate")
+    $this->key_field = new db_field("announcementID");
+    $this->data_fields = array("heading"=>new db_field("heading")
+                               , "body"=>new db_field("body")
+                               , "personID"=>new db_field("personID")
+                               , "displayFromDate"=>new db_field("displayFromDate")
+                               , "displayToDate"=>new db_field("displayToDate")
       );
   }
 

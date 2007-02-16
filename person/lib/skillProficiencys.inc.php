@@ -28,8 +28,8 @@ class skillProficiencys extends db_entity {
 
   function skillProficiencys() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("proficiencyID");
-    $this->data_fields = array("personID"=>new db_text_field("personID"), "skillID"=>new db_text_field("skillID"), "skillProficiency"=>new db_text_field("skillProficiency"),);
+    $this->key_field = new db_field("proficiencyID");
+    $this->data_fields = array("personID"=>new db_field("personID"), "skillID"=>new db_field("skillID"), "skillProficiency"=>new db_field("skillProficiency"),);
   }
 }
 

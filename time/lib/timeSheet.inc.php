@@ -32,21 +32,21 @@ class timeSheet extends db_entity
 
   function timeSheet() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("timeSheetID");
-    $this->data_fields = array("projectID"=>new db_text_field("projectID")
-                               , "dateFrom"=>new db_text_field("dateFrom")
-                               , "dateTo"=>new db_text_field("dateTo")
-                               , "status"=>new db_text_field("status")
-                               , "personID"=>new db_text_field("personID")
-                               , "approvedByManagerPersonID"=>new db_text_field("approvedByManagerPersonID")
-                               , "approvedByAdminPersonID"=>new db_text_field("approvedByAdminPersonID")
-                               , "invoiceNum"=>new db_text_field("invoiceNum")
-                               , "invoiceItemID"=>new db_text_field("invoiceItemID")
-                               , "dateSubmittedToManager"=>new db_text_field("dateSubmittedToManager")
-                               , "dateSubmittedToAdmin"=>new db_text_field("dateSubmittedToAdmin")
-                               , "billingNote"=>new db_text_field("billingNote")
-                               , "payment_insurance"=>new db_text_field("payment_insurance")
-                               , "recipient_tfID"=>new db_text_field("recipient_tfID")
+    $this->key_field = new db_field("timeSheetID");
+    $this->data_fields = array("projectID"=>new db_field("projectID")
+                               , "dateFrom"=>new db_field("dateFrom")
+                               , "dateTo"=>new db_field("dateTo")
+                               , "status"=>new db_field("status")
+                               , "personID"=>new db_field("personID")
+                               , "approvedByManagerPersonID"=>new db_field("approvedByManagerPersonID")
+                               , "approvedByAdminPersonID"=>new db_field("approvedByAdminPersonID")
+                               , "invoiceNum"=>new db_field("invoiceNum")
+                               , "invoiceItemID"=>new db_field("invoiceItemID")
+                               , "dateSubmittedToManager"=>new db_field("dateSubmittedToManager")
+                               , "dateSubmittedToAdmin"=>new db_field("dateSubmittedToAdmin")
+                               , "billingNote"=>new db_field("billingNote")
+                               , "payment_insurance"=>new db_field("payment_insurance")
+                               , "recipient_tfID"=>new db_field("recipient_tfID")
       );
     $this->permissions[PERM_TIME_APPROVE_TIMESHEETS] = "Approve";
     $this->permissions[PERM_TIME_INVOICE_TIMESHEETS] = "Invoice";

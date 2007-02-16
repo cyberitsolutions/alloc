@@ -36,23 +36,23 @@ class transaction extends db_entity
 
   function transaction() {
     $this->db_entity();
-    $this->key_field = new db_text_field("transactionID");
-    $this->data_fields = array("companyDetails"=>new db_text_field("companyDetails", "Company Details", "", array("empty_to_null"=>false))
-                               , "product"=>new db_text_field("product")
-                               , "amount"=>new db_text_field("amount")
-                               , "status"=>new db_text_field("status")
-                               , "expenseFormID"=>new db_text_field("expenseFormID", "Expense Form ID", "", array("empty_to_null"=>false))
-                               , "invoiceItemID"=>new db_text_field("invoiceItemID")
-                               , "tfID"=>new db_text_field("tfID")
-                               , "projectID"=>new db_text_field("projectID")
-                               , "transactionModifiedUser"=>new db_text_field("transactionModifiedUser")
-                               , "lastModified"=>new db_text_field("lastModified")
-                               , "dateEntered"=>new db_text_field("dateEntered")
-                               , "quantity"=>new db_text_field("quantity")
-                               , "transactionDate"=>new db_text_field("transactionDate")
-                               , "transactionType"=>new db_text_field("transactionType")
-                               , "timeSheetID"=>new db_text_field("timeSheetID")
-                               , "transactionRepeatID"=>new db_text_field("transactionRepeatID")
+    $this->key_field = new db_field("transactionID");
+    $this->data_fields = array("companyDetails"=>new db_field("companyDetails", "Company Details", "", array("empty_to_null"=>false))
+                               , "product"=>new db_field("product")
+                               , "amount"=>new db_field("amount")
+                               , "status"=>new db_field("status")
+                               , "expenseFormID"=>new db_field("expenseFormID", "Expense Form ID", "", array("empty_to_null"=>false))
+                               , "invoiceItemID"=>new db_field("invoiceItemID")
+                               , "tfID"=>new db_field("tfID")
+                               , "projectID"=>new db_field("projectID")
+                               , "transactionModifiedUser"=>new db_field("transactionModifiedUser")
+                               , "lastModified"=>new db_field("lastModified")
+                               , "dateEntered"=>new db_field("dateEntered")
+                               , "quantity"=>new db_field("quantity")
+                               , "transactionDate"=>new db_field("transactionDate")
+                               , "transactionType"=>new db_field("transactionType")
+                               , "timeSheetID"=>new db_field("timeSheetID")
+                               , "transactionRepeatID"=>new db_field("transactionRepeatID")
       );
 
     $this->permissions[PERM_FINANCE_WRITE_INVOICE_TRANSACTION] = "Add/update/delete invoice transaction";

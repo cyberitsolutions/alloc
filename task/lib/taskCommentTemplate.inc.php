@@ -30,10 +30,10 @@ class taskCommentTemplate extends db_entity {
 
   function taskCommentTemplate() {
     $this->db_entity();
-    $this->key_field = new db_text_field("taskCommentTemplateID");
-    $this->data_fields = array("taskCommentTemplateName"=>new db_text_field("taskCommentTemplateName")
-                             , "taskCommentTemplateText"=>new db_text_field("taskCommentTemplateText")
-                             , "taskCommentTemplateLastModified"=>new db_text_field("taskCommentTemplateLastModified"));
+    $this->key_field = new db_field("taskCommentTemplateID");
+    $this->data_fields = array("taskCommentTemplateName"=>new db_field("taskCommentTemplateName")
+                             , "taskCommentTemplateText"=>new db_field("taskCommentTemplateText")
+                             , "taskCommentTemplateLastModified"=>new db_field("taskCommentTemplateLastModified"));
    }
 
 

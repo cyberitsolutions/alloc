@@ -26,12 +26,12 @@ class comment extends db_entity {
 
   function comment() {
     $this->db_entity();
-    $this->key_field = new db_text_field("commentID");
-    $this->data_fields = array("commentType"=>new db_text_field("commentType")
-                              ,"commentLinkID"=>new db_text_field("commentLinkID")
-                              ,"commentModifiedTime"=>new db_text_field("commentModifiedTime")
-                              ,"commentModifiedUser"=>new db_text_field("commentModifiedUser")
-                              ,"comment"=>new db_text_field("comment")
+    $this->key_field = new db_field("commentID");
+    $this->data_fields = array("commentType"=>new db_field("commentType")
+                              ,"commentLinkID"=>new db_field("commentLinkID")
+                              ,"commentModifiedTime"=>new db_field("commentModifiedTime")
+                              ,"commentModifiedUser"=>new db_field("commentModifiedUser")
+                              ,"comment"=>new db_field("comment")
                               );
   }
 

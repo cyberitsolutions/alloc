@@ -28,14 +28,14 @@ class item extends db_entity {
 
   function item() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("itemID");
-    $this->data_fields = array("itemModifiedUser"=>new db_text_field("itemModifiedUser")
-                               , "itemName"=>new db_text_field("itemName")
-                               , "itemAuthor"=>new db_text_field("itemAuthor")
-                               , "itemNotes"=>new db_text_field("itemNotes")
-                               , "lastModified"=>new db_text_field("lastModified")
-                               , "itemType"=>new db_text_field("itemType")
-			       , "personID"=>new db_text_field("personID")
+    $this->key_field = new db_field("itemID");
+    $this->data_fields = array("itemModifiedUser"=>new db_field("itemModifiedUser")
+                               , "itemName"=>new db_field("itemName")
+                               , "itemAuthor"=>new db_field("itemAuthor")
+                               , "itemNotes"=>new db_field("itemNotes")
+                               , "lastModified"=>new db_field("lastModified")
+                               , "itemType"=>new db_field("itemType")
+			       , "personID"=>new db_field("personID")
       );
   }
 

@@ -26,15 +26,15 @@ class htmlElement extends db_entity {
 
   function htmlElement() {
     $this->db_entity();
-    $this->key_field = new db_text_field("htmlElementID");
-    $this->data_fields = array("htmlElementTypeID"=>new db_text_field("htmlElementTypeID")
-                              ,"htmlElementParentID"=>new db_text_field("htmlElementParentID","","",array("null_to"))
-                              ,"handle"=>new db_text_field("handle")
-                              ,"label"=>new db_text_field("label")
-                              ,"helpText"=>new db_text_field("helpText")
-                              ,"defaultValue"=>new db_text_field("defaultValue")
-                              ,"sequence"=>new db_text_field("sequence")
-                              ,"enabled"=>new db_text_field("enabled")
+    $this->key_field = new db_field("htmlElementID");
+    $this->data_fields = array("htmlElementTypeID"=>new db_field("htmlElementTypeID")
+                              ,"htmlElementParentID"=>new db_field("htmlElementParentID","","",array("null_to"))
+                              ,"handle"=>new db_field("handle")
+                              ,"label"=>new db_field("label")
+                              ,"helpText"=>new db_field("helpText")
+                              ,"defaultValue"=>new db_field("defaultValue")
+                              ,"sequence"=>new db_field("sequence")
+                              ,"enabled"=>new db_field("enabled")
       );
 
   }
