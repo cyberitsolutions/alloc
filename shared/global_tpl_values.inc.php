@@ -93,6 +93,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_expenseUpload"                  => $sess->url(SCRIPT_PATH."finance/expenseUpload.php")
             ,"url_alloc_expenseUploadResults"           => $sess->url(SCRIPT_PATH."finance/expenseUploadResults.php")
             ,"url_alloc_config"                         => $sess->url(SCRIPT_PATH."config/config.php")
+            ,"url_alloc_configHtml"                     => $sess->url(SCRIPT_PATH."config/configHtml.php")
             ,"url_alloc_absence"                        => $sess->url(SCRIPT_PATH."person/absence.php")
             ,"url_alloc_announcementList"               => $sess->url(SCRIPT_PATH."announcement/announcementList.php")
             ,"url_alloc_announcement"                   => $sess->url(SCRIPT_PATH."announcement/announcement.php")

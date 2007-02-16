@@ -42,8 +42,8 @@ class alloc_cache {
 
     foreach ($this->tables_to_cache as $table) {
       $db->query("SELECT * FROM ".$table);
-      while ($db->next_record()) {
-        $this->cache[$table][$db->f($table."ID")] = $db->Record;
+      while ($row = $db->next_record()) {
+        $this->cache[$table][$db->f($table."ID")] = $row;
       }
     }
 

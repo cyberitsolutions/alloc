@@ -80,6 +80,7 @@ $m = array("shared"
           ,"login"        
           ,"soap"         
           ,"installation" 
+          ,"help" 
           );
 
 // Helper functions

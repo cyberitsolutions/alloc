@@ -235,13 +235,15 @@ class db_entity {
   // Validates the entity using validate() then if this is a new record, calls insert() otherwise calls update()
   function save() {
     global $TPL;
-    #$this->debug = true;
-    $this->debug and print "<br/>db_entity->save";
     $error = $this->validate();
-    if (strlen($error) && $error) {
+    if (is_array($error) && count($error)) {
+      $TPL["message"] = $error;
+      return false;
+    } else if (strlen($error) && $error) {
       $TPL["message"][] = $error;
       return false;
     }
+
     if ($this->is_new()) {
       return $this->insert();
     } else {

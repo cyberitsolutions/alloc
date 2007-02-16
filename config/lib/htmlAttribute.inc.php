@@ -21,13 +21,32 @@
  *
  */
 
-class config_module extends module {
-  var $db_entities = array("config");
-}
+class htmlAttribute extends db_entity {
+  var $data_table = "htmlAttribute";
 
-include(ALLOC_MOD_DIR."config/lib/config.inc.php");
-include(ALLOC_MOD_DIR."config/lib/htmlElement.inc.php");
-include(ALLOC_MOD_DIR."config/lib/htmlAttribute.inc.php");
+  function htmlAttribute() {
+    $this->db_entity();
+    $this->key_field = new db_text_field("htmlAttributeID");
+    $this->data_fields = array("htmlElementID"=>new db_text_field("htmlElementID")
+                              ,"name"=>new db_text_field("name")
+                              ,"value"=>new db_text_field("value")
+                              ,"isDefault"=>new db_text_field("isDefault")
+      );
+  }
+
+  function get_list($htmlElementID) {
+    $rows = array();
+    $db = new db_alloc();
+    $q = sprintf("SELECT * FROM htmlAttribute WHERE htmlElementID = %d",$htmlElementID);
+    $db->query($q);
+    while ($row = $db->row()) {
+      $rows[] = $row;
+    }
+    return $rows;
+  }
+
+
+}
 
 
 
