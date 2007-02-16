@@ -70,11 +70,16 @@ class reminder extends db_entity {
       $db->query("SELECT projectID FROM task WHERE taskID = %s",$this->get_value('reminderLinkID'));
       $db->next_record();
 
-      $query = sprintf("SELECT * 
-                          FROM projectPerson 
-                     LEFT JOIN person ON projectPerson.personID=person.personID 
-                         WHERE projectPerson.projectID = %d 
-                      ORDER BY person.username",$db->f('projectID'));
+      if ($db->f('projectID')) {
+        $query = sprintf("SELECT * 
+                            FROM projectPerson 
+                       LEFT JOIN person ON projectPerson.personID=person.personID 
+                           WHERE projectPerson.projectID = %d 
+                        ORDER BY person.username",$db->f('projectID'));
+
+      } else {
+        $query = "SELECT * FROM person WHERE personActive = 1 ORDER BY username";
+      }
 
     } else {
       $query = "SELECT * FROM person WHERE personActive = 1 ORDER BY username";
