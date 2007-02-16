@@ -91,42 +91,6 @@ class db_text_field extends db_field {
   var $classname = "db_text_field";
 }
 
-class db_object_field extends db_field {
-  var $classname = "db_object_field";
-  var $object_value;
-
-  function set_value($value, $source = SRC_VARIABLE) {
-    if (!isset($value)) {
-      return;
-    }
-
-    if ($source == SRC_DATABASE || $source == SRC_REQUEST) {
-      $this->value = unserialize($value);
-    } else if ($source == SRC_VARIABLE) {
-      $this->value = $value;
-    } else {
-      die("Unexpected source setting object field value: ".$source);
-    }
-  }
-
-  function get_value($target = DST_VARIABLE) {
-    if ($target == DST_VARIABLE) {
-      return $this->value;
-    } else if ($target == DST_DATABASE) {
-      return "'".addslashes(serialize($this->value))."'";
-    } else if ($target == DST_HTML_ATTRIBUTE) {
-      return serialize($this->value);
-    } else if ($target == DST_HTML_DISPLAY) {
-      if (is_object($this->value)) {
-        return $this->value->get_display_value();
-      } else {
-        return "";
-      }
-    } else {
-      die("Unrecognized destination for object field value: ".$target);
-    }
-  }
-}
 
 
 

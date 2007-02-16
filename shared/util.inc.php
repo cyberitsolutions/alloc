@@ -125,11 +125,11 @@ function timetook($start, $text="Duration: ") {
 function get_cached_table($table) {
   static $cache;
   if (!$cache) {
-    $cache = new alloc_cache(array("person","taskType","timeUnit"));
+    $cache = new alloc_cache(array("person","taskType","timeUnit","htmlElement"));
     $cache->load_cache();
 
     // Special processing for person table
-    $people = $cache->get_cached_table("person");
+    $people = $cache->get_cached_table("person") or $people = array();
     foreach ($people as $id => $row) {
       if ($people[$id]["firstName"] && $people[$id]["surname"]) {
         $people[$id]["name"] = stripslashes($people[$id]["firstName"]." ".$people[$id]["surname"]);
@@ -138,9 +138,16 @@ function get_cached_table($table) {
       }
     }
     $cache->set_cached_table("person",$people);
+
+    // Special processing for htmlElement table
+    $htmlElement = $cache->get_cached_table("htmlElement") or $htmlElement = array();
+    foreach ($htmlElement as $id => $row) {
+      $rows_htmlElement[$row["handle"]] = $row;
+    }
+    $cache->set_cached_table("htmlElement",$rows_htmlElement);
   }
   return $cache->get_cached_table($table);
-}
+} 
 function get_option($label, $value = "", $selected = false) {
   $rtn = "<option";
   $rtn.= " value=\"$value\"";
@@ -683,27 +690,38 @@ function get_category_options($category="") {
   $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients");
   return get_options_from_array($category_options, $category, true);
 } 
-function get_help($topic) {
+function get_help_string($topic) {
   global $TPL;
 
   $file = $TPL["url_alloc_help"].$topic.".html";
-  $file_relative = $TPL["url_alloc_help_relative"].$topic.".html";
   if (file_exists($file)) {
     $str = file_get_contents($file);
     $str = htmlentities(addslashes($str));
     $str = str_replace("\n"," ",$str);
-  } else {
-    
-    
 
+  } else {
+    $rows = get_cached_table("htmlElement");
+    $str = $rows[$topic]["helpText"];
   }
 
+  return $str;
+}
+function get_help($topic) {
+  global $TPL;
+  $str = get_help_string($topic);
   if (strlen($str)) {
-    $img = "<a href=\"".$file_relative."\" target=\"_blank\">";
+    $img = "<a href=\"".$TPL["url_alloc_help_relative"]."getHelp.php?topic=".$topic."\" target=\"_blank\">";
     $img.= "<img id=\"".$topic."\" border=\"0\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
     $img.= $TPL["url_alloc_images"]."help.gif\"></a>";
   }
   echo $img;
+}
+function get_text($handle) {
+  $rows = get_cached_table("htmlElement");
+  return $rows[$handle]["label"];
+}
+function get_html($handle,$value=false) {
+  return build_html_element($handle,$value);
 }
 function get_help_link() {
   global $TPL;

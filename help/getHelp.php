@@ -21,14 +21,20 @@
  *
  */
 
-class config_module extends module {
-  var $db_entities = array("config");
+require_once("../alloc.php");
+
+if ($_GET["topic"]) {
+
+  $topic = $_GET["topic"];
+  $TPL["str"] = "<div style='text-align:left'><table width='150' border='0' cellpadding='4' cellspacing='0' id='helper_table' class='helper_table' style='margin:40px'><tr><td>";
+  $TPL["str"].= html_entity_decode(get_help_string($topic));
+  $TPL["str"].= "</td></tr></table></div>";
+
+} else {
+  $TPL["str"] = "No valid help topic specified.";
 }
 
-include(ALLOC_MOD_DIR."config/lib/config.inc.php");
-include(ALLOC_MOD_DIR."config/lib/htmlElement.inc.php");
-include(ALLOC_MOD_DIR."config/lib/htmlAttribute.inc.php");
-
+include_template("templates/getHelpM.tpl");
 
 
 ?>
