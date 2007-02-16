@@ -30,13 +30,13 @@ class timeUnit extends db_entity
 
   function timeUnit() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("timeUnitID");
-    $this->data_fields = array("timeUnitName"=>new db_text_field("timeUnitName")
-                               ,"timeUnitLabelA"=>new db_text_field("timeUnitLabelA")
-                               ,"timeUnitLabelB"=>new db_text_field("timeUnitLabelB")
-                               ,"timeUnitSeconds"=>new db_text_field("timeUnitSeconds")
-                               ,"timeUnitActive"=>new db_text_field("timeUnitActive")
-                               ,"timeUnitSequence"=>new db_text_field("timeUnitSequence")
+    $this->key_field = new db_field("timeUnitID");
+    $this->data_fields = array("timeUnitName"=>new db_field("timeUnitName")
+                               ,"timeUnitLabelA"=>new db_field("timeUnitLabelA")
+                               ,"timeUnitLabelB"=>new db_field("timeUnitLabelB")
+                               ,"timeUnitSeconds"=>new db_field("timeUnitSeconds")
+                               ,"timeUnitActive"=>new db_field("timeUnitActive")
+                               ,"timeUnitSequence"=>new db_field("timeUnitSequence")
         );
   }
 

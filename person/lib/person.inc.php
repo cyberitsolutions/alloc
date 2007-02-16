@@ -35,25 +35,25 @@ class person extends db_entity {
 
   function person() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("personID");
-    $this->data_fields = array("username"=>new db_text_field("username")
-                               , "lastLoginDate"=>new db_text_field("lastLoginDate", "Last login date", "")
-                               , "password"=>new db_text_field("password", "Password", "", array("allow_null"=>false, "read_perm_name"=>PERM_PERSON_READ_DETAILS))
-                               , "perms"=>new db_text_field("perms", "Permissions", "", array("write_perm_name"=>PERM_PERSON_WRITE_ROLES))
-                               , "emailAddress"=>new db_text_field("emailAddress", "Email address", "")
-                               , "emailFormat"=>new db_text_field("emailFormat", "Email Format", "", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
-                               , "availability"=>new db_text_field("availability", "Availability", "", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
-                               , "areasOfInterest"=>new db_text_field("areasOfInterest", "Areas of interest", "", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
-                               , "comments"=>new db_text_field("comments", "Comments", "", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
-                               , "managementComments"=>new db_text_field("managementComments", "Management Comments", "", array("read_perm_name"=>PERM_PERSON_READ_MANAGEMENT, "write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT))
-                               , "firstName"=>new db_text_field("firstName", "First name", "")
-                               , "surname"=>new db_text_field("surname", "Surname", "")
-                               , "preferred_tfID"=>new db_text_field("preferred_tfID", "Preferred Payment TF", "")
-                               , "dailyTaskEmail"=>new db_text_field("dailyTaskEmail", "Daily Task Email", "")
-                               , "personActive"=>new db_text_field("personActive", "Active", "")
-                               , "sessData"=>new db_text_field("sessData", "Session Data", "")
-                               , "phoneNo1"=>new db_text_field("phoneNo1", "Phone No", "")
-                               , "phoneNo2"=>new db_text_field("phoneNo2", "Mobile No", "")
+    $this->key_field = new db_field("personID");
+    $this->data_fields = array("username"=>new db_field("username")
+                               , "lastLoginDate"=>new db_field("lastLoginDate", "Last login date", "")
+                               , "password"=>new db_field("password", "Password", "", array("allow_null"=>false, "read_perm_name"=>PERM_PERSON_READ_DETAILS))
+                               , "perms"=>new db_field("perms", "Permissions", "", array("write_perm_name"=>PERM_PERSON_WRITE_ROLES))
+                               , "emailAddress"=>new db_field("emailAddress", "Email address", "")
+                               , "emailFormat"=>new db_field("emailFormat", "Email Format", "", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
+                               , "availability"=>new db_field("availability", "Availability", "", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
+                               , "areasOfInterest"=>new db_field("areasOfInterest", "Areas of interest", "", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
+                               , "comments"=>new db_field("comments", "Comments", "", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
+                               , "managementComments"=>new db_field("managementComments", "Management Comments", "", array("read_perm_name"=>PERM_PERSON_READ_MANAGEMENT, "write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT))
+                               , "firstName"=>new db_field("firstName", "First name", "")
+                               , "surname"=>new db_field("surname", "Surname", "")
+                               , "preferred_tfID"=>new db_field("preferred_tfID", "Preferred Payment TF", "")
+                               , "dailyTaskEmail"=>new db_field("dailyTaskEmail", "Daily Task Email", "")
+                               , "personActive"=>new db_field("personActive", "Active", "")
+                               , "sessData"=>new db_field("sessData", "Session Data", "")
+                               , "phoneNo1"=>new db_field("phoneNo1", "Phone No", "")
+                               , "phoneNo2"=>new db_field("phoneNo2", "Mobile No", "")
       );
 
     $this->permissions[PERM_PERSON_READ_DETAILS] = "Read details";

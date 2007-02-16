@@ -23,7 +23,8 @@
 
 class db_field {
   var $classname = "db_field";
-  var $persistent_slots = array("name", "value", "label", "empty_to_null", "allow_null", "write_perm_name");
+ // list of options
+ // var $persistent_slots = array("name", "value", "label", "empty_to_null", "allow_null", "write_perm_name");
   var $name;
   var $value;
   var $label;
@@ -87,9 +88,6 @@ class db_field {
   }
 }
 
-class db_text_field extends db_field {
-  var $classname = "db_text_field";
-}
 
 
 

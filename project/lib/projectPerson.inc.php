@@ -30,14 +30,14 @@ class projectPerson extends db_entity
 
   function projectPerson() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("projectPersonID");
-    $this->data_fields = array("personID"=>new db_text_field("personID")
-                              ,"projectID"=>new db_text_field("projectID")
-                              ,"emailType"=>new db_text_field("emailType")
-                              ,"emailDateRegex"=>new db_text_field("emailDateRegex")
-                              ,"rate"=>new db_text_field("rate")
-                              ,"rateUnitID"=>new db_text_field("rateUnitID")
-                              ,"projectPersonRoleID"=>new db_text_field("projectPersonRoleID")
+    $this->key_field = new db_field("projectPersonID");
+    $this->data_fields = array("personID"=>new db_field("personID")
+                              ,"projectID"=>new db_field("projectID")
+                              ,"emailType"=>new db_field("emailType")
+                              ,"emailDateRegex"=>new db_field("emailDateRegex")
+                              ,"rate"=>new db_field("rate")
+                              ,"rateUnitID"=>new db_field("rateUnitID")
+                              ,"projectPersonRoleID"=>new db_field("projectPersonRoleID")
                               );
   }
 

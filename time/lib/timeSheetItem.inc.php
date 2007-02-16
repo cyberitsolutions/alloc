@@ -27,17 +27,17 @@ class timeSheetItem extends db_entity {
 
   function timeSheetItem() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("timeSheetItemID");
-    $this->data_fields = array("timeSheetID"=>new db_text_field("timeSheetID")
-                               , "dateTimeSheetItem"=>new db_text_field("dateTimeSheetItem")
-                               , "timeSheetItemDuration"=>new db_text_field("timeSheetItemDuration")
-                               , "timeSheetItemDurationUnitID"=>new db_text_field("timeSheetItemDurationUnitID")
-                               , "rate"=>new db_text_field("rate")
-                               , "personID"=>new db_text_field("personID")
-                               , "description"=>new db_text_field("description")
-                               , "comment"=>new db_text_field("comment")
-                               , "taskID"=>new db_text_field("taskID")
-                               , "commentPrivate"=>new db_text_field("commentPrivate")
+    $this->key_field = new db_field("timeSheetItemID");
+    $this->data_fields = array("timeSheetID"=>new db_field("timeSheetID")
+                               , "dateTimeSheetItem"=>new db_field("dateTimeSheetItem")
+                               , "timeSheetItemDuration"=>new db_field("timeSheetItemDuration")
+                               , "timeSheetItemDurationUnitID"=>new db_field("timeSheetItemDurationUnitID")
+                               , "rate"=>new db_field("rate")
+                               , "personID"=>new db_field("personID")
+                               , "description"=>new db_field("description")
+                               , "comment"=>new db_field("comment")
+                               , "taskID"=>new db_field("taskID")
+                               , "commentPrivate"=>new db_field("commentPrivate")
       );
   }
 

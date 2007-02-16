@@ -28,20 +28,20 @@ class reminder extends db_entity {
 
   function reminder() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("reminderID");
-    $this->data_fields = array("reminderType"=>new db_text_field("reminderType"),
-                               "reminderLinkID"=>new db_text_field("reminderLinkID"),
-                               "personID"=>new db_text_field("personID"),
-                               "reminderTime"=>new db_text_field("reminderTime"),
-                               "reminderRecuringInterval"=>new db_text_field("reminderRecuringInterval"),
-                               "reminderRecuringValue"=>new db_text_field("reminderRecuringValue"),
-                               "reminderAdvNoticeSent"=>new db_text_field("reminderAdvNoticeSent"),
-                               "reminderAdvNoticeInterval"=>new db_text_field("reminderAdvNoticeInterval"),
-                               "reminderAdvNoticeValue"=>new db_text_field("reminderAdvNoticeValue"),
-                               "reminderSubject"=>new db_text_field("reminderSubject"), 
-                               "reminderContent"=>new db_text_field("reminderContent"), 
-                               "reminderModifiedTime"=>new db_text_field("reminderModifiedTime"), 
-                               "reminderModifiedUser"=>new db_text_field("reminderModifiedUser"));
+    $this->key_field = new db_field("reminderID");
+    $this->data_fields = array("reminderType"=>new db_field("reminderType"),
+                               "reminderLinkID"=>new db_field("reminderLinkID"),
+                               "personID"=>new db_field("personID"),
+                               "reminderTime"=>new db_field("reminderTime"),
+                               "reminderRecuringInterval"=>new db_field("reminderRecuringInterval"),
+                               "reminderRecuringValue"=>new db_field("reminderRecuringValue"),
+                               "reminderAdvNoticeSent"=>new db_field("reminderAdvNoticeSent"),
+                               "reminderAdvNoticeInterval"=>new db_field("reminderAdvNoticeInterval"),
+                               "reminderAdvNoticeValue"=>new db_field("reminderAdvNoticeValue"),
+                               "reminderSubject"=>new db_field("reminderSubject"), 
+                               "reminderContent"=>new db_field("reminderContent"), 
+                               "reminderModifiedTime"=>new db_field("reminderModifiedTime"), 
+                               "reminderModifiedUser"=>new db_field("reminderModifiedUser"));
   }
 
   // set the modified time to now

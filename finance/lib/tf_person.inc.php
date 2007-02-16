@@ -27,9 +27,9 @@ class tf_person extends data_entity {
 
 
   function tf_person() {
-    $this->key_field = new db_text_field("tfPersonID");
-    $this->data_fields = array("tfID"=>new db_text_field("tfID")
-                               , "personID"=>new db_text_field("personID"));
+    $this->key_field = new db_field("tfPersonID");
+    $this->data_fields = array("tfID"=>new db_field("tfID")
+                               , "personID"=>new db_field("personID"));
 
   }
 }

@@ -28,14 +28,14 @@ class sentEmailLog extends db_entity {
 
   function sentEmailLog() {
       $this->db_entity();       // Call constructor of parent class
-      $this->key_field = new db_text_field("sentEmailLogID");
-      $this->data_fields = array("sentEmailTo"=>new db_text_field("sentEmailTo")
-                                 , "sentEmailSubject"=>new db_text_field("sentEmailSubject")
-                                 , "sentEmailBody"=>new db_text_field("sentEmailBody")
-                                 , "sentEmailHeader"=>new db_text_field("sentEmailHeader")
-                                 , "sentEmailType"=>new db_text_field("sentEmailType")
-                                 , "sentEmailLogModifiedTime"=>new db_text_field("sentEmailLogModifiedTime")
-                                 , "sentEmailLogModifiedUser"=>new db_text_field("sentEmailLogModifiedUser")
+      $this->key_field = new db_field("sentEmailLogID");
+      $this->data_fields = array("sentEmailTo"=>new db_field("sentEmailTo")
+                                 , "sentEmailSubject"=>new db_field("sentEmailSubject")
+                                 , "sentEmailBody"=>new db_field("sentEmailBody")
+                                 , "sentEmailHeader"=>new db_field("sentEmailHeader")
+                                 , "sentEmailType"=>new db_field("sentEmailType")
+                                 , "sentEmailLogModifiedTime"=>new db_field("sentEmailLogModifiedTime")
+                                 , "sentEmailLogModifiedUser"=>new db_field("sentEmailLogModifiedUser")
       );
   }
 }

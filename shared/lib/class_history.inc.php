@@ -33,12 +33,12 @@ class history extends db_entity {
 
   function history() {
     $this->db_entity();
-    $this->key_field = new db_text_field("historyID");
-    $this->data_fields = array("the_time"=>new db_text_field("the_time")
-                               , "the_place"=>new db_text_field("the_place")
-                               , "the_args"=>new db_text_field("the_args")
-                               , "the_label"=>new db_text_field("the_label")
-                               , "personID"=>new db_text_field("personID")
+    $this->key_field = new db_field("historyID");
+    $this->data_fields = array("the_time"=>new db_field("the_time")
+                               , "the_place"=>new db_field("the_place")
+                               , "the_args"=>new db_field("the_args")
+                               , "the_label"=>new db_field("the_label")
+                               , "personID"=>new db_field("personID")
       );
   }
 

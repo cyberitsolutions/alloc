@@ -28,12 +28,12 @@ class absence extends db_entity {
 
   function absence() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("absenceID");
-    $this->data_fields = array("dateFrom"=>new db_text_field("dateFrom")
-                               , "dateTo"=>new db_text_field("dateTo")
-                               , "personID"=>new db_text_field("personID")
-                               , "absenceType"=>new db_text_field("absenceType")
-                               , "contactDetails"=>new db_text_field("contactDetails")
+    $this->key_field = new db_field("absenceID");
+    $this->data_fields = array("dateFrom"=>new db_field("dateFrom")
+                               , "dateTo"=>new db_field("dateTo")
+                               , "personID"=>new db_field("personID")
+                               , "absenceType"=>new db_field("absenceType")
+                               , "contactDetails"=>new db_field("contactDetails")
       );
   }
 }

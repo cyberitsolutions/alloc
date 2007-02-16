@@ -26,11 +26,11 @@ class invoice extends db_entity {
   var $display_field_name = "invoiceName";
   function invoice() {
     $this->db_entity();
-    $this->key_field = new db_text_field("invoiceID");
-    $this->data_fields = array("invoiceName"=>new db_text_field("invoiceName")
-                               , "invoiceDate"=>new db_text_field("invoiceDate")
-                               , "invoiceNum"=>new db_text_field("invoiceNum")
-                               , "invoiceName"=>new db_text_field("invoiceName")
+    $this->key_field = new db_field("invoiceID");
+    $this->data_fields = array("invoiceName"=>new db_field("invoiceName")
+                               , "invoiceDate"=>new db_field("invoiceDate")
+                               , "invoiceNum"=>new db_field("invoiceNum")
+                               , "invoiceName"=>new db_field("invoiceName")
       );
   }
 

@@ -27,10 +27,10 @@ class projectCommissionPerson extends db_entity {
 
   function projectCommissionPerson() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("projectCommissionPersonID");
-    $this->data_fields = array("projectID"=>new db_text_field("projectID")
-                               , "tfID"=>new db_text_field("tfID")
-                               , "commissionPercent"=>new db_text_field("commissionPercent")
+    $this->key_field = new db_field("projectCommissionPersonID");
+    $this->data_fields = array("projectID"=>new db_field("projectID")
+                               , "tfID"=>new db_field("tfID")
+                               , "commissionPercent"=>new db_field("commissionPercent")
       );
   }
 

@@ -29,10 +29,10 @@ class projectPersonRole extends db_entity
 
   function projectPersonRole() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_text_field("projectPersonRoleID");
-    $this->data_fields = array("projectPersonRoleName"=>new db_text_field("projectPersonRoleName")
-                               , "projectPersonRoleHandle"=>new db_text_field("projectPersonRoleHandle")
-                               , "projectPersonRoleSortKey"=>new db_text_field("projectPersonRoleSortKey")
+    $this->key_field = new db_field("projectPersonRoleID");
+    $this->data_fields = array("projectPersonRoleName"=>new db_field("projectPersonRoleName")
+                               , "projectPersonRoleHandle"=>new db_field("projectPersonRoleHandle")
+                               , "projectPersonRoleSortKey"=>new db_field("projectPersonRoleSortKey")
       );
   }
 

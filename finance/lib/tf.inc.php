@@ -27,13 +27,13 @@ class tf extends db_entity {
 
   function tf() {
     $this->db_entity();
-    $this->key_field = new db_text_field("tfID");
-    $this->data_fields = array("tfName"=>new db_text_field("tfName")
-                               , "tfComments"=>new db_text_field("tfComments")
-                               , "tfModifiedUser"=>new db_text_field("tfModifiedUser")
-                               , "tfModifiedTime"=>new db_text_field("tfModifiedTime")
-                               , "qpEmployeeNum"=>new db_text_field("qpEmployeeNum")
-                               , "quickenAccount"=>new db_text_field("quickenAccount")
+    $this->key_field = new db_field("tfID");
+    $this->data_fields = array("tfName"=>new db_field("tfName")
+                               , "tfComments"=>new db_field("tfComments")
+                               , "tfModifiedUser"=>new db_field("tfModifiedUser")
+                               , "tfModifiedTime"=>new db_field("tfModifiedTime")
+                               , "qpEmployeeNum"=>new db_field("qpEmployeeNum")
+                               , "quickenAccount"=>new db_field("quickenAccount")
       );
   }
 
