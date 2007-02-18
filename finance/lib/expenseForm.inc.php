@@ -30,11 +30,11 @@ class expenseForm extends db_entity {
     $this->data_fields = array("expenseFormModifiedUser"=>new db_field("expenseFormModifiedUser")
                                , "lastModified"=>new db_field("lastModified")
                                , "paymentMethod"=>new db_field("paymentMethod")
-                               , "reimbursementRequired"=>new db_field("reimbursementRequired", "Reimbursement Required", "", array("empty_to_null"=>false))
-                               , "seekClientReimbursement"=>new db_field("seekClientReimbursement", "Seek Client Reimbursement", "", array("empty_to_null"=>false))
-                               , "transactionRepeatID"=>new db_field("transactionRepeatID", "Transaction Repeat", "", array("empty_to_null"=>false))
+                               , "reimbursementRequired"=>new db_field("reimbursementRequired", array("empty_to_null"=>false))
+                               , "seekClientReimbursement"=>new db_field("seekClientReimbursement", array("empty_to_null"=>false))
+                               , "transactionRepeatID"=>new db_field("transactionRepeatID", array("empty_to_null"=>false))
                                , "enteredBy"=>new db_field("enteredBy")
-                               , "expenseFormFinalised"=>new db_field("expenseFormFinalised", "Expense Finalised", "", array("empty_to_null"=>false))
+                               , "expenseFormFinalised"=>new db_field("expenseFormFinalised", array("empty_to_null"=>false))
       );
   }
 

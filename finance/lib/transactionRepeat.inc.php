@@ -29,16 +29,16 @@ class transactionRepeat extends db_entity {
   function transactionRepeat() {
     $this->db_entity();         // Call constructor of parent class
     $this->key_field = new db_field("transactionRepeatID");
-    $this->data_fields = array("companyDetails"=>new db_field("companyDetails", "Company Details", "", array("empty_to_null"=>false))
-                               , "payToName"=>new db_field("payToName", "Pay To Name", "", array("empty_to_null"=>false))
-                               , "payToAccount"=>new db_field("payToAccount", "Pay To Account", "", array("empty_to_null"=>false))
+    $this->data_fields = array("companyDetails"=>new db_field("companyDetails", array("empty_to_null"=>false))
+                               , "payToName"=>new db_field("payToName", array("empty_to_null"=>false))
+                               , "payToAccount"=>new db_field("payToAccount", array("empty_to_null"=>false))
                                , "tfID"=>new db_field("tfID")
 
                                , "emailOne"=>new db_field("emailOne")
                                , "emailTwo"=>new db_field("emailTwo")
 
                                , "transactionRepeatModifiedUser"=>new db_field("transactionRepeatModifiedUser")
-                               , "reimbursementRequired"=>new db_field("reimbursementRequired", "Reimbursement Required", "", array("empty_to_null"=>false))
+                               , "reimbursementRequired"=>new db_field("reimbursementRequired",array("empty_to_null"=>false))
                                , "lastModified"=>new db_field("lastModified")
                                , "dateEntered"=>new db_field("dateEntered")
                                , "transactionStartDate"=>new db_field("transactionStartDate")

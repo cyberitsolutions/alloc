@@ -24,6 +24,7 @@
 require_once("../alloc.php");
 
 
+
 include_template("templates/configHtmlListM.tpl");
 
 

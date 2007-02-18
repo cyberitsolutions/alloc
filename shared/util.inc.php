@@ -734,6 +734,77 @@ function get_expand_link($id) {
   echo "<div id=\"button_".$id."\"><a class=\"nobr\" onClick=\"set_grow_shrink_box('".$id."','".$display."','".$TPL["url_alloc_images"]."');\">New ";
   echo "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."small_grow.gif\"></a></div>";
 }
+function build_html_tag($htmlElementID,$value="") {
+  $db = new db_alloc();
+
+  $q = sprintf("SELECT * FROM htmlElement WHERE htmlElementID = %d",$htmlElementID);
+  $db->query($q);
+  $row = $db->next_record();
+
+  $q = sprintf("SELECT * FROM htmlElementType WHERE htmlElementTypeID = %d",$row["htmlElementTypeID"]);
+  $db->query($q);
+  $row_type = $db->next_record();
+
+  $str_nobr[] = "<".$row_type["name"];
+
+  $q = sprintf("SELECT * FROM htmlAttribute WHERE htmlElementID = '%s'",db_esc($row["htmlElementID"]));
+  $db->query($q);
+  while ($row_attr = $db->next_record()) {
+    if (!($row_type["hasValueAttribute"] && $row_type["valueAttributeName"] == $row_attr["name"])) {
+      $str_nobr[] = $row_attr["name"]."=\"".$row_attr["value"]."\"";
+      $attributes[$row_attr["name"]] = $row_attr["value"];
+    }
+  }
+
+  if ($row_type["hasValueAttribute"] && $row_type["hasLabelValue"]) {
+    $str_nobr[] = "value=\"".$row["label"]."\"";
+
+  } else if ($row_type["hasValueAttribute"] && $row_type["valueAttributeName"] && $attributes["value"] == $value) {
+    $str_nobr[] = $row_type["valueAttributeName"]."=\"".$value."\"";
+
+  } else if ($row_type["hasValueAttribute"] && !$row_type["valueAttributeName"]) {
+    $str_nobr[] = "value=\"".$value."\"";
+  } 
+
+  if (!$row_type["hasEndTag"]) {
+    $str_nobr[] = " />";
+  } else {
+    $str_nobr[] = ">";
+  }
+
+  $str[] = implode(" ",$str_nobr);
+
+  if ($row_type["hasValueContent"]) {
+    $str[] = $value;
+  } else if ($row_type["hasContent"]) {
+    $str[] = $row["label"];
+  }
+
+  if ($row_type["hasChildElement"]) { 
+    $q = sprintf("SELECT * FROM htmlElement WHERE htmlElementParentID = %d AND enabled = 1 ORDER BY sequence",$row["htmlElementID"]);
+    $db->query($q);
+    while ($r = $db->next_record()) {
+      $str[] = "\n".build_html_element($r["handle"],$value);
+    }
+  }
+
+  if ($row_type["hasEndTag"]) {
+    $str[] = "</".$row_type["name"].">";
+  }
+  
+  return $str;
+}
+function build_html_element($handle,$value) {
+  $db = new db_alloc();
+  $q = sprintf("SELECT * FROM htmlElement WHERE handle = '%s'",db_esc($handle));
+  $db->query($q);
+  $row = $db->next_record();
+
+  $str = build_html_tag($row["htmlElementID"],$value);
+
+  if (is_array($str))
+  return implode("",$str);
+}
 
 
 
