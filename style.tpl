@@ -36,6 +36,7 @@ textarea, input, select, textarea {
 th { 
   color:(TD_COLOR); 
   text-align:left; 
+  font-size:(DEFAULT_FONT_SIZE)px; 
 }
 td { 
   color:(TD_COLOR); 

@@ -1,8 +1,12 @@
 {show_header()}
 <style>
-  body {background-color:white; color:black; }
-  td.overline { border-top:1px solid #666666; }
+  body \{background:white; color:black; \}
+  td.overline \{ border-top:1px solid #666666; \}
+  td \{text-align:left; \}
+  table.comments \{ background:white; border:1px solid #666666; \}
+  table.comments th \{ background:white; \}
 </style>
+
 
 <table width="100%" cellspacing="0" cellpadding="4"> 
  <tr>
@@ -92,4 +96,7 @@
   </tr>
 </table>
 {show_taskCommentsPrinter()}
+
+
+
 {show_footer()}
