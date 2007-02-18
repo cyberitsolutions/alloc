@@ -112,6 +112,52 @@ CREATE TABLE history (
 ) TYPE=MyISAM;
 
 
+CREATE TABLE htmlElement (
+  htmlElementID INT(11) NOT NULL auto_increment,
+  htmlElementTypeID INT(11) NOT NULL,
+  htmlElementParentID INT(11) DEFAULT 0,
+  handle VARCHAR(255) NOT NULL,
+  label VARCHAR(255) DEFAULT NULL,
+  helpText TEXT DEFAULT NULL,
+  defaultValue VARCHAR(255) DEFAULT NULL,
+  sequence INT(11) DEFAULT 0,
+  enabled  INT(1) DEFAULT 1,
+  PRIMARY KEY (htmlElementID)
+);
+
+CREATE TABLE htmlAttribute (
+  htmlAttributeID INT(11) NOT NULL auto_increment,
+  htmlElementID INT(11) NOT NULL,
+  name VARCHAR(255) DEFAULT NULL,
+  value VARCHAR(255) DEFAULT NULL,
+  isDefault INT(1) DEFAULT 0,
+  PRIMARY KEY (htmlAttributeID)
+);
+
+CREATE TABLE htmlElementType (
+  htmlElementTypeID INT(11) NOT NULL auto_increment,
+  handle VARCHAR(255) DEFAULT NULL,
+  name VARCHAR(255) DEFAULT NULL,
+  hasEndTag INT(1) DEFAULT 1,
+  hasChildElement INT(1) DEFAULT 0,
+  hasContent INT(1) DEFAULT 0,
+  hasValueContent INT(1) DEFAULT 0,
+  hasValueAttribute INT(1) DEFAULT 0,
+  valueAttributeName VARCHAR(255) DEFAULT NULL,
+  hasLabelValue INT(1) DEFAULT 0, 
+  parentHtmlElementID INT(11) DEFAULT 0,
+  PRIMARY KEY  (htmlElementTypeID)
+);
+
+CREATE TABLE htmlAttributeType (
+  htmlAttributeTypeID INT(11) NOT NULL auto_increment,
+  htmlElementTypeID INT(11) DEFAULT NULL,
+  name VARCHAR(255) NOT NULL DEFAULT "",
+  defaultValue VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY  (htmlAttributeTypeID)
+);
+
+
 CREATE TABLE invoice (
   invoiceID int(11) NOT NULL auto_increment,
   invoiceDate date NOT NULL default '0000-00-00',

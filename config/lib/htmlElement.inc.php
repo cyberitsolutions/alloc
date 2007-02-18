@@ -28,7 +28,7 @@ class htmlElement extends db_entity {
     $this->db_entity();
     $this->key_field = new db_field("htmlElementID");
     $this->data_fields = array("htmlElementTypeID"=>new db_field("htmlElementTypeID")
-                              ,"htmlElementParentID"=>new db_field("htmlElementParentID","","",array("null_to"))
+                              ,"htmlElementParentID"=>new db_field("htmlElementParentID",array("empty_to_null"=>false))
                               ,"handle"=>new db_field("handle")
                               ,"label"=>new db_field("label")
                               ,"helpText"=>new db_field("helpText")
@@ -51,29 +51,29 @@ class htmlElement extends db_entity {
     return $str;
   }
 
-
-  function get_list_children($htmlElementParentID=0) {
+  function get_list_children($htmlElementParentID=0, $padding=5) {
     $rows = array();
     $db = new db_alloc();
-    $q = sprintf("SELECT * 
+    $q = sprintf("SELECT htmlElement.*,htmlElementType.hasChildElement
                     FROM htmlElement 
                LEFT JOIN htmlElementType on htmlElement.htmlElementTypeID = htmlElementType.htmlElementTypeID
                    WHERE htmlElementParentID = %d
                 GROUP BY htmlElement.htmlElementID
                  ",$htmlElementParentID);
     $db->query($q);
-echo "het: ".$q;
     while ($row = $db->row()) {
 
+      $row["padding"] = $padding;
+      
       if ($row["hasChildElement"]) {
-        $row["padding"] += 10;
+        $rows[$row["htmlElementID"]] = $row;
+        $row["padding"] += 15;
 
-        $arr = htmlElement::get_list($row["htmlElementID"]);
+        $arr = htmlElement::get_list_children($row["htmlElementID"],$row["padding"]);
         if (is_array($arr) && count($arr)) {
-          $rows[$row["htmlElementID"]] = $row;
           $rows = array_merge($rows,$arr);
         }
-        $row["padding"] -= 10;
+        $row["padding"] -= 15;
 
       } else {
         $rows[$row["htmlElementID"]] = $row;
@@ -81,8 +81,30 @@ echo "het: ".$q;
       
     }
 
-
     return $rows;
+  }
+
+  function createDefaultAttributes() {
+
+    $db = new db_alloc();
+    $q = sprintf("SELECT * FROM htmlAttributeType WHERE htmlElementTypeID = '%s' OR htmlElementTypeID IS NULL",db_esc($this->get_value("htmlElementTypeID")));
+    $db->query($q);
+    while ($row = $db->next_record()) {
+      $htmlAttribute= new htmlAttribute();
+      $htmlAttribute->set_value("htmlElementID",$this->get_id());
+      $htmlAttribute->set_value("name",$row["name"]);
+      $default = $row["defaultValue"] or $default = $this->get_value("handle");
+      $htmlAttribute->set_value("value",$default);
+      $htmlAttribute->save();
+    }
+
+  }
+
+  function delete() {
+    $db = new db_alloc();
+    $q = sprintf("DELETE FROM htmlAttribute WHERE htmlElementID = %d",$this->get_id());
+    $db->query($q);
+    parent::delete();
   }
 
 

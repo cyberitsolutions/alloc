@@ -29,9 +29,9 @@ class permission extends db_entity {
     $this->db_entity();         // Call constructor of parent class
     $this->key_field = new db_field("permissionID");
     $this->data_fields = array("tableName"=>new db_field("tableName")
-                               , "entityID"=>new db_field("entityID", "Record ID", "", array("empty_to_null"=>false))
-                               , "personID"=>new db_field("personID", "Record ID", "", array("empty_to_null"=>false))
-                               , "roleName"=>new db_field("roleName", "Record ID", "", array("empty_to_null"=>false))
+                               , "entityID"=>new db_field("entityID", array("empty_to_null"=>false))
+                               , "personID"=>new db_field("personID", array("empty_to_null"=>false))
+                               , "roleName"=>new db_field("roleName", array("empty_to_null"=>false))
                                , "actions"=>new db_field("actions")
                                , "sortKey"=>new db_field("sortKey")
                                , "allow"=>new db_field("allow")

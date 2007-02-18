@@ -37,11 +37,11 @@ class transaction extends db_entity
   function transaction() {
     $this->db_entity();
     $this->key_field = new db_field("transactionID");
-    $this->data_fields = array("companyDetails"=>new db_field("companyDetails", "Company Details", "", array("empty_to_null"=>false))
+    $this->data_fields = array("companyDetails"=>new db_field("companyDetails", array("empty_to_null"=>false))
                                , "product"=>new db_field("product")
                                , "amount"=>new db_field("amount")
                                , "status"=>new db_field("status")
-                               , "expenseFormID"=>new db_field("expenseFormID", "Expense Form ID", "", array("empty_to_null"=>false))
+                               , "expenseFormID"=>new db_field("expenseFormID", array("empty_to_null"=>false))
                                , "invoiceItemID"=>new db_field("invoiceItemID")
                                , "tfID"=>new db_field("tfID")
                                , "projectID"=>new db_field("projectID")

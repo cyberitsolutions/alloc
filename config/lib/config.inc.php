@@ -27,8 +27,8 @@ class config extends db_entity {
   function config() {
     $this->db_entity();
     $this->key_field = new db_field("configID");
-    $this->data_fields = array("name"=>new db_field("name", "")
-                              ,"value"=>new db_field("value", "")
+    $this->data_fields = array("name"=>new db_field("name")
+                              ,"value"=>new db_field("value")
       );
   }
 

@@ -54,7 +54,6 @@ class db_entity {
     $this->permissions = array(PERM_READ=>"Read", PERM_UPDATE=>"Update", PERM_DELETE=>"Delete", PERM_CREATE=>"Create",);
   }
 
-  // Quick and dirty - use with caution.
   function is_god() {
     global $current_user;
     $perms = explode(",", $current_user->get_value("perms"));
@@ -65,7 +64,6 @@ class db_entity {
     }
   }
 
-  // Check if user has permission to access this entity
   function have_perm($action = 0, $person = "", $assume_owner = false) {
     if ((defined("NO_AUTH") && NO_AUTH) || $this->is_god()) {
       return true;
@@ -134,7 +132,6 @@ class db_entity {
     return false;
   }
 
-  // Ensure that the user has permission to access this entity
   function check_perm($action = 0, $person = "", $assume_owner = false) {
     if (!$this->have_perm($action, $person, $assume_owner)) {
       $description = $this->permissions[$action];
@@ -145,9 +142,6 @@ class db_entity {
     }
   }
 
-  // Query the database to retrieve a record according to the value supplied in key_field
-  // The field values in the database record are copied in to the data_fields array
-  // Returns true if a record was found, otherwise false
   function select() {
     if (!$this->has_key_values()) {
       return false;
@@ -165,8 +159,6 @@ class db_entity {
     }
   }
 
-  // Delete records according to the value supplied in key_field
-  // Returns true if a record was found, otherwise false
   function delete() {
     $this->check_perm(PERM_DELETE);
     if (!$this->has_key_values()) {
@@ -180,7 +172,6 @@ class db_entity {
     return true;
   }
 
-  // Insert a record in to the database
   function insert() {
     global $current_user;
     if (is_object($current_user) && $current_user->get_id()) {
@@ -207,8 +198,6 @@ class db_entity {
     return true;
   }
 
-  // Update the database with values from the data_fields data members
-  // The key_field value is used to create the where_clause portion of the SQL update statement
   function update() {
     $this->check_perm(PERM_UPDATE);
     $write_fields = array();
@@ -226,13 +215,10 @@ class db_entity {
     return true;
   }
 
-  // Determine if this object is an new entity that doesn't exist in the database yet.
-  // Returns true if this object is a new entity or false if it is an existing entity
   function is_new() {
     return !$this->has_key_values();
   }
 
-  // Validates the entity using validate() then if this is a new record, calls insert() otherwise calls update()
   function save() {
     global $TPL;
     $error = $this->validate();
@@ -251,8 +237,6 @@ class db_entity {
     }
   }
 
-  // Validate the entity
-  // Returns an error message if data is invalid, or an empty string if it is valid
   function validate() {
     $message = array();
     reset($this->data_fields);
@@ -264,14 +248,15 @@ class db_entity {
     if ($message && preg_match("/[a-zA-Z0-9]+/",$message)) 
     return $message;
   }
+ 
   function set_field_value(&$field, $value, $source = SRC_VARIABLE) {
     $field->set_value($value, $source);
   }
+
   function clear_field_value(&$field) {
     $field->clear_value();
   }
 
-  // Read field values from an array
   function read_array(&$array, $source_prefix = "", $source = SRC_VARIABLE) {
 
     // Data fields
@@ -292,7 +277,6 @@ class db_entity {
     $this->fields_loaded = true;
   }
 
-  // Write field values to an array
   function write_array(&$array, $dest = DST_VARIABLE, $array_index_prefix = "") {
 
     // Data fields
@@ -307,30 +291,22 @@ class db_entity {
     $array[$array_index] = $this->key_field->get_value($dest);
   }
 
-  // Set template variables with field values.  Variable names are field names prefixed with the tpl_key_prefix param
   function set_tpl_values($dest = DST_HTML_ATTRIBUTE, $tpl_key_prefix = "") {
     $this->write_array($GLOBALS["TPL"], $dest, $tpl_key_prefix);
   }
 
-  // Copies values from global variables in to any items in the key_field or data_fields data members that have the same
-  // name
-  // If prefix is set, then $_POST[$prefix.$var] gets copied to field[$var]
   function read_globals($prefix = "", $source = SRC_VARIABLE) {
     $this->read_array($_POST, $prefix, $source);
   }
 
-  // Set global variables with field values.  Variable names are field names prefixed with the variable_name_prefix param
   function set_global_variables($variale_name_prefix = "") {
     $this->write_array($GLOBALS, DST_VARIABLE, $variable_name_prefix);
   }
 
-  // Returns true if values have been supplied for all key fields
   function has_key_values() {
     return $this->key_field->has_value();
   }
 
-  // Read data in to fields array out of a database record
-  // $db is a phplib database object
   function read_db_record($db, $errors_fatal = true) {
     $this->set_id($db->f($this->key_field->get_name()));
     $this->read_array($db->Record, "", SRC_DATABASE);
@@ -347,13 +323,11 @@ class db_entity {
     }
   }
 
-  // Set the value of a field
   function set_value($field_name, $value, $source = SRC_VARIABLE) {
     is_object($this->data_fields[$field_name]) || die("Cannot set field value - field not found: ".$field_name);
     $this->set_field_value($this->data_fields[$field_name], $value, $source);
   }
 
-  // Get the value of a field
   function get_value($field_name, $dest = DST_VARIABLE) {
     $field = $this->data_fields[$field_name];
     if (!is_object($field)) {
@@ -365,23 +339,18 @@ class db_entity {
     return $field->get_value($dest);
   }
 
-  // Get the value of a field in the row used to load this entity that isn't one of the standard fields
   function get_row_value($field_name) {
     return $this->all_row_fields[$field_name];
   }
 
-  // Get the value of the record's identifying field
-  // Assumes the entity only has one key field
   function get_id($dest = DST_VARIABLE) {
     return $this->key_field->get_value($dest);
   }
 
-  // Set the value of the record's identifying field
   function set_id($id) {
     $this->key_field->set_value($id);
   }
 
-  // Get an object related to this record through a foreign key (i.e. a many to one relationship)
   function get_foreign_object($class_name, $key_name = "") {
     if ($key_name == "") {
       $key_name = $class_name."ID";
@@ -392,7 +361,6 @@ class db_entity {
     return $object;
   }
 
-  // Get objects related to this record through a foreign key in another table (i.e. a one to many relationship)
   function get_foreign_objects($class_name, $key_name = "") {
     if ($key_name == "") {
       $key_name = $this->key_field->get_name();
@@ -409,7 +377,6 @@ class db_entity {
     return $foreign_objects;
   }
 
-  // Return the value of a 'calculated' field
   function get_calculated_value($name) {
     $code = "return \$this->calculate_$name();";
     #$code = "echo '<br>'.\$this->classname;";
@@ -420,7 +387,6 @@ class db_entity {
     return $this->filter_class;
   }
 
-  // This function returns a string to display to the user that represents this object
   function get_display_value() {
     if ($this->display_field_name) {
       if (!$this->fields_loaded) {
@@ -435,8 +401,6 @@ class db_entity {
     }
   }
 
-  // Determines if the current user can read a field by checking that the 
-  // user has the permission specified by the field's read_perm_name (if any)
   function can_read_field($field_name) {
     $field = $this->data_fields[$field_name];
     if ($field->read_perm_name) {
@@ -446,9 +410,6 @@ class db_entity {
     }
   }
 
-  // Determines if the current user can write a field by checking that the 
-  // user has the permission specified by the field's write_perm_name (if any)
-  // $field can be either a field object or a data field name
   function can_write_field($field) {
     if (is_string($field)) {
       $field = $this->data_fields[$field];
@@ -462,19 +423,18 @@ class db_entity {
     }
     if (isset($this->data_fields["personID"])) {
 
-#echo "data_table: " .$this->data_table. ",  data field: " .$this->get_value("personID") . " == " . $person->get_id() . "<br>";
-#echo "HERE: ".$this->get_value("personID"). " - ".$person->get_id();
+      #echo "data_table: " .$this->data_table. ",  data field: " .$this->get_value("personID") . " == " . $person->get_id() . "<br>";
+      #echo "HERE: ".$this->get_value("personID"). " - ".$person->get_id();
       return $this->get_value("personID") == $person->get_id();
     } else if ($this->key_field->get_name() == "personID") {
 
-#echo "key field " . $this->get_id() . " == " . $person->get_id() . "<br>";
+      #echo "key field " . $this->get_id() . " == " . $person->get_id() . "<br>";
       return $this->get_id() == $person->get_id();
     } else {
       echo "Warning: could not determine owner for ".$this->data_table."<br>";
     }
   }
 
-  // Clear the value of all fields
   function clear() {
 
     // Data fields
@@ -495,11 +455,10 @@ class db_entity {
   function recalculate() {
   }
 
-    /**********************************************************************************************
-    'Private' utilitity functions
-    These functions probably won't be useful to users of this class but are used by the other
-    functions in the class
-    **********************************************************************************************/
+  /**************************************************************************
+  'Private' utilitity functions These functions probably won't be useful to
+  users of this class but are used by the other functions in the class
+  ***************************************************************************/
   function get_db() {
     if (!is_object($this->db)) {
       $db_class = $this->db_class;
@@ -542,11 +501,10 @@ class db_entity {
   }
 
 
-    /**********************************************************************************************
-    Array utilitity functions
-    I have included these inside the class to avoid potential name conflicts with
-    functions defined in individual applications
-    **********************************************************************************************/
+  /***************************************************************************
+  Array utilitity functions I have included these inside the class to avoid
+  potential name conflicts with functions defined in individual applications
+  ****************************************************************************/
   function copy_array(&$source, &$dest_array, $source_prefix = "", $clear_dest = false) {
     reset($dest_array);
     while (list($field_name, $field_value) = each($dest_array)) {
@@ -618,9 +576,9 @@ class db_entity {
 }
 
 
-  // Check that the person speicified by $person (default current user) has the
-  // permission specified by $perm_name for the data entity class specified by
-  // $class_name.  If they do not have permission then an error is displayed.
+// Check that the person speicified by $person (default current user) has the
+// permission specified by $perm_name for the data entity class specified by
+// $class_name.  If they do not have permission then an error is displayed.
 function check_entity_perm($class_name, $perm_name = 0, $person = "", $assume_owner = false) {
   $entity = new $class_name;
   $entity->set_id(0);
@@ -628,10 +586,10 @@ function check_entity_perm($class_name, $perm_name = 0, $person = "", $assume_ow
 }
 
 
-  // Determine if the person speicified by $person (default current user) has
-  // the permission specified by $perm_name for the data entity class specified 
-  // by $class_name.  Returns true if the user has the person has the 
-  // permission.
+// Determine if the person speicified by $person (default current user) has
+// the permission specified by $perm_name for the data entity class specified 
+// by $class_name.  Returns true if the user has the person has the 
+// permission.
 function have_entity_perm($class_name, $perm_name = "", $person = "", $assume_owner = false) {
   $entity = new $class_name;
   $entity->set_id(0);
@@ -639,7 +597,7 @@ function have_entity_perm($class_name, $perm_name = "", $person = "", $assume_ow
 }
 
 
-  // Returns an array of all the entities
+// Returns an array of all the entities
 function get_entities() {
   global $modules;
   $entities = array();
@@ -652,7 +610,7 @@ function get_entities() {
 }
 
 
-  // Returns an array of all table names used by entities
+// Returns an array of all table names used by entities
 function get_entity_table_names() {
   $entities = get_entities();
   $table_names = array();

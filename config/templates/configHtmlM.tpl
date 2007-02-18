@@ -17,7 +17,7 @@
     <td>{echo get_text($TPL["handle"])}</td>
     <td>{echo get_html($TPL["handle"])}</td>
     <td>{echo get_help($TPL["handle"])}</td>
-    <td>{echo htmlentities(get_html($TPL["handle"]))}</td>
+    <td>{echo nl2br(htmlentities(get_html($TPL["handle"])))}</td>
   </tr>
 </table>
 {/}
@@ -28,7 +28,8 @@
 
 {$table_box}
   <tr>
-    <th colspan="2">Html Element</th>
+    <th>Html Element</th>
+    <th class="right"><a href="{$url_alloc_configHtmlList}">HTML Element List</a>
   </tr>
   <tr>
     <td>Element Type</td><td><select name="htmlElementTypeID">{$htmlElementType_options}</select></td>
@@ -46,17 +47,23 @@
     <td>Default Value</td><td>{$defaultValue}</td>
   </tr>
   <tr>
-    <td>Sequence</td><td>{$sequence}</td>
+    <td>Sequence</td><td><input type="text" name="sequence" size="40" value="{$sequence}"></td>
   </tr>
   <tr>
     <td>Enabled</td><td><input type="checkbox" name="enabled" value="1"{$enabled_checked}></td>
   </tr>
   <tr>
-    <td></td><td><input type="submit" name="save" value="Save"></td>
+    <td></td>
+    <td>
+      <input type="submit" name="save" value="Save">
+      {if $TPL["htmlElementID"]}<input type="submit" name="delete" value="Delete">{/}
+    
+    </td>
   </tr>
 </table>
 
 <input type="hidden" name="htmlElementID" value="{$htmlElementID}">
+<input type="hidden" name="htmlElementParentID" value="{$htmlElementParentID}">
 
 </form>
 
@@ -75,8 +82,8 @@
       <form action="{$url_alloc_configHtml}" method="post">
       <table>
         <tr>
-          <td>Name</td><td><input type="text" name="name" size="40" value="{$row.name}"></td>
-          <td>Value</td><td><input type="text" name="value" size="40" value="{$row.value}"></td>
+          <td></td><td><input type="text" name="name" size="40" value="{$row.name}"></td>
+          <td> = </td><td><input type="text" name="value" size="40" value="{$row.value}"></td>
           <td>
             <input type="submit" name="save_attribute" size="40" value="Save">
             <input type="submit" name="delete_attribute" size="40" value="Delete">
@@ -96,8 +103,8 @@
       <form action="{$url_alloc_configHtml}" method="post">
       <table>
         <tr>
-          <td>Name</td><td><input type="text" name="name" size="40"></td>
-          <td>Value</td><td><input type="text" name="value" size="40"></td>
+          <td></td><td><input type="text" name="name" size="40"></td>
+          <td> = </td><td><input type="text" name="value" size="40"></td>
           <td>
             <input type="submit" name="save_attribute" value="Save">
             <input type="hidden" name="htmlElementID" value="{$htmlElementID}">

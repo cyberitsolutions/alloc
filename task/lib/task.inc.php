@@ -33,12 +33,12 @@ class task extends db_entity {
 
       $this->db_entity();       // Call constructor of parent class
       $this->key_field = new db_field("taskID");
-      $this->data_fields = array("taskName"=>new db_field("taskName", "Name", "", array("allow_null"=>false))
+      $this->data_fields = array("taskName"=>new db_field("taskName", array("empty_to_null"=>false))
                                  , "taskDescription"=>new db_field("taskDescription")
                                  , "creatorID"=>new db_field("creatorID")
                                  , "closerID"=>new db_field("closerID")
                                  , "priority"=>new db_field("priority")
-                                 , "timeEstimate"=>new db_field("timeEstimate", "Time Estimate", 0, array("empty_to_null"=>true))
+                                 , "timeEstimate"=>new db_field("timeEstimate", array("empty_to_null"=>true))
                                  , "dateCreated"=>new db_field("dateCreated")
                                  , "dateAssigned"=>new db_field("dateAssigned")
                                  , "dateClosed"=>new db_field("dateClosed")

@@ -24,28 +24,24 @@
 class db_field {
   var $classname = "db_field";
  // list of options
- // var $persistent_slots = array("name", "value", "label", "empty_to_null", "allow_null", "write_perm_name");
+ // var $persistent_slots = array("name", "value", "label", "empty_to_null", "write_perm_name");
   var $name;
   var $value;
   var $label;
   var $empty_to_null = true;
-  var $allow_null = true;
   var $write_perm_name = 0;     // Name of a permission a user must have to write to this field, if any.  E.g. "admin"
   var $read_perm_name = 0;      // Name of the permission a user must have to read this field, if any.  E.g. "read details"
 
-  function db_field($name = "", $label = "", $value = "", $options = "") {
+  function db_field($name = "", $options = array()) {
     $this->name = $name;
-    if ($this->label) {
-      $this->label = $label;
-    } else {
-      $this->label = $name;
-    }
-    $this->value = $value;
+    $this->label = $name;
 
-    if ($options == "")
+    if (!is_array($options)) {
       $options = array();
+      #echo "<br/>".$this->name;
+    }
     reset($options);
-    while (list($option_name, $option_value) = each($options)) {
+    foreach ($options as $option_name => $option_value) {
       $this->$option_name = $option_value;
     }
   }
@@ -81,10 +77,8 @@ class db_field {
     unset($this->value);
   }
 
+  // Holder
   function validate() {
-    if (((!isset($this->value)) || $this->value == "") && $this->empty_to_null && !$this->allow_null) {
-      return "You must enter a value for ".$this->label."\n";
-    }
   }
 }
 
