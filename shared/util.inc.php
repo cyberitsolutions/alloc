@@ -236,9 +236,9 @@ function get_attachments($entity, $id) {
   $dir = $TPL["url_alloc_attachments_dir"].$entity."/".$id;
 
   if ($id) {
-    if (!is_dir($dir)) {
-      mkdir($dir, 0777);
-    }
+    #if (!is_dir($dir)) {
+      #mkdir($dir, 0777);
+    #}
 
     if (is_dir($dir)) {
       $handle = opendir($dir);
