@@ -226,8 +226,8 @@ class task extends db_entity {
     }
   }
 
-  function has_attachment_permission() {
-    return $this->is_owner();
+  function has_attachment_permission($person) {
+    return $this->is_owner($person);
   }
 
   function get_parent_task_select($projectID="") {

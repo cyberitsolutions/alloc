@@ -58,7 +58,7 @@ class client extends db_entity {
 
   }
 
-  function has_attachment_permission() {
+  function has_attachment_permission($person) {
     // Placeholder for security check in shared/get_attchment.php
     return true;
   }
