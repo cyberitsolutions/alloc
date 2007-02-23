@@ -116,25 +116,28 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"main_alloc_title"                         => end(explode("/", $_SERVER["SCRIPT_NAME"]))
             );
 
+  
+if (file_exists(ALLOC_MOD_DIR."alloc_config.php")) {
+  require_once(ALLOC_MOD_DIR."alloc_config.php");
+}
 
 // If we're inside the installation process
 if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // Re-direct home if an alloc_config.php already exists
-  if (file_exists(ALLOC_MOD_DIR."alloc_config.php") && is_readable(ALLOC_MOD_DIR."alloc_config.php") && filesize(ALLOC_MOD_DIR."alloc_config.php") >0) {
+  if (file_exists(ALLOC_MOD_DIR."alloc_config.php") && is_readable(ALLOC_MOD_DIR."alloc_config.php") && filesize(ALLOC_MOD_DIR."alloc_config.php") >0 && defined("ALLOC_DB_NAME")) {
     header("Location: ".$TPL["url_alloc_login"]);
     exit();
   }
 
 
 // Else if were not in the installation process and there's no alloc_config.php file then redirect to the installation directory
-} else if (!file_exists(ALLOC_MOD_DIR."alloc_config.php") || !is_readable(ALLOC_MOD_DIR."alloc_config.php") || filesize(ALLOC_MOD_DIR."alloc_config.php") == 0) {
+} else if (!file_exists(ALLOC_MOD_DIR."alloc_config.php") || !is_readable(ALLOC_MOD_DIR."alloc_config.php") || filesize(ALLOC_MOD_DIR."alloc_config.php") == 0 || !defined("ALLOC_DB_NAME")) {
   header("Location: ".$TPL["url_alloc_installation"]);
   exit();
 
 // Else include the alloc_config.php file and begin with proceedings..
 } else {
-  require_once(ALLOC_MOD_DIR."alloc_config.php");
 
   define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
   define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
