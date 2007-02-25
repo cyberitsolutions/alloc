@@ -34,7 +34,7 @@ if (date("D") == "Sat" || date("D") == "Sun") {
 // Do announcements ONCE up here.
 $announcement = person::get_announcements_for_email();
 $db = new db_alloc;
-$db->query("SELECT * FROM person WHERE dailyTaskEmail = 'yes' AND personActive = '1'");
+$db->query("SELECT personID,emailAddress,firstName,surname FROM person WHERE dailyTaskEmail = 'yes' AND personActive = '1'");
 // AND username='alla'"); // or username=\"ashridah\"");
 
 
@@ -67,7 +67,9 @@ while ($db->next_record()) {
 
     if ($tasks && $to) {
       $email = new alloc_email;
-      $email->send($to, $subject, $msg, "daily_digest", $headers);
+      if ($email->send($to, $subject, $msg, "daily_digest", $headers)) {
+        echo "\n<br>Sent email to: ".$to;
+      }
     } 
 
   }
