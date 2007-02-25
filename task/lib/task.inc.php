@@ -760,8 +760,8 @@ function get_task_statii_array() {
     $filter = task::get_task_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
-    $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
-    $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
+    $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
+    $debug and print "\n<pre>filter: ".print_r($filter,1)."</pre>";
 
     isset($_FORM["limit"]) && $_FORM["limit"] != "all" and $limit = sprintf("limit %d",$_FORM["limit"]); # needs to use isset cause of zeroes is a valid number 
     $_FORM["return"] or $_FORM["return"] = "html";
@@ -786,6 +786,7 @@ function get_task_statii_array() {
       // If selected projects, build up an array of selected projects
       $filter["projectIDs"] and $projectIDs = " WHERE ".$filter["projectIDs"];
       $q = "SELECT projectID, projectName, clientID, projectPriority FROM project ".$projectIDs. " ORDER BY projectName";
+      $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);
       
@@ -855,6 +856,7 @@ function get_task_statii_array() {
                          ) / 10 as priorityFactor
               FROM task LEFT JOIN project ON task.projectID = project.projectID 
              ".$filter." ORDER BY priorityFactor ".$limit;
+      $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);
       while ($row = $db->next_record()) {
@@ -1002,6 +1004,7 @@ function get_task_statii_array() {
     # The str_replace lets us use this same filter from above. 
     $db = new db_alloc;
     $q = sprintf("SELECT * FROM task %s ORDER BY taskName",str_replace("project.projectID","projectID",$f));
+    $_FORM["debug"] and print "\n<br>QUERY: ".$q;
     $db->query($q);
     #echo "<br/>q: ".$q;
 
