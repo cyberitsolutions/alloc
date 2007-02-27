@@ -238,7 +238,7 @@ if ($_POST["install_db"]) {
   }    
   
   // Insert config data
-  $query = "INSERT INTO config (name, value) VALUES ('allocURL','".$_FORM["allocURL"]."')";
+  $query = "INSERT INTO config (name, value, type) VALUES ('allocURL','".$_FORM["allocURL"]."','text')";
   if (!@mysql_query($query,$link)) {
     $errors[] = "Error! (".mysql_error().").";
   }

@@ -24,6 +24,7 @@
 require_once("../alloc.php");
 
 
+$current_user->check_role("god");
 
 $htmlElementID = $_POST["htmlElementID"] or $htmlElementID = $_GET["htmlElementID"];
 $htmlElementParentID = $_POST["htmlElementParentID"] or $htmlElementParentID = $_GET["htmlElementParentID"];

@@ -85,29 +85,32 @@ INSERT INTO permission (tableName,entityID,personID,roleName,actions,sortKey,all
 --
 
 
-INSERT INTO config (name, value) VALUES ('AllocFromEmailAddress','example@example.com');
-INSERT INTO config (name, value) VALUES ('cybersourceTfID','0');
-INSERT INTO config (name, value) VALUES ('timeSheetAdminEmail','0');
-INSERT INTO config (name, value) VALUES ('companyName','Cybersource');
-INSERT INTO config (name, value) VALUES ('companyContactPhone','+61 3 9621 2377');
-INSERT INTO config (name, value) VALUES ('companyContactFax','+61 3 9621 2477');
-INSERT INTO config (name, value) VALUES ('companyContactEmail','info@cyber.com.au');
-INSERT INTO config (name, value) VALUES ('companyContactHomePage','http://www.cybersource.com.au');
-INSERT INTO config (name, value) VALUES ('companyContactAddress','Level 4, 10-16 Queen St');
-INSERT INTO config (name, value) VALUES ('companyACN','ACN 053 904 082');
-INSERT INTO config (name, value) VALUES ('hoursInDay','7.5');
+INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','example@example.com','text');
+INSERT INTO config (name, value, type) VALUES ('cybersourceTfID','0','text');
+INSERT INTO config (name, value, type) VALUES ('timeSheetAdminEmail','0','text');
+INSERT INTO config (name, value, type) VALUES ('companyName','Cybersource','text');
+INSERT INTO config (name, value, type) VALUES ('companyContactPhone','+61 3 9621 2377','text');
+INSERT INTO config (name, value, type) VALUES ('companyContactFax','+61 3 9621 2477','text');
+INSERT INTO config (name, value, type) VALUES ('companyContactEmail','info@cyber.com.au','text');
+INSERT INTO config (name, value, type) VALUES ('companyContactHomePage','http://www.cybersource.com.au','text');
+INSERT INTO config (name, value, type) VALUES ('companyContactAddress','Level 4, 10-16 Queen St','text');
+INSERT INTO config (name, value, type) VALUES ('companyACN','ACN 053 904 082','text');
+INSERT INTO config (name, value, type) VALUES ('hoursInDay','7.5','text');
 -- This line has been moved into the install program. 
 -- INSERT INTO config (name, value) VALUES ('allocURL','http://change_me_to_your_URL_for_allocPSA/')
-INSERT INTO config (name, value) VALUES ('companyABN','ABN 13 053 904 082');
-INSERT INTO config (name, value) VALUES ('companyContactAddress2','Melbourne Vic. 3000');
-INSERT INTO config (name, value) VALUES ('companyContactAddress3','Australia');
-INSERT INTO config (name, value) VALUES ('timeSheetPrintFooter','Authorisation (please print):<br><br>Authorisation (signature):<br><br>Date:');
-INSERT INTO config (name, value) VALUES ('taxName','GST');
-INSERT INTO config (name, value) VALUES ('taxPercent','10');
-INSERT INTO config (name, value) VALUES ('companyPercent','28.5');
-INSERT INTO config (name, value) VALUES ('paymentInsurancePercent','10');
-INSERT INTO config (name, value) VALUES ('payrollTaxPercent','5');
-INSERT INTO config (name, value) VALUES ("calendarFirstDay","Sun");
+INSERT INTO config (name, value, type) VALUES ('companyABN','ABN 13 053 904 082','text');
+INSERT INTO config (name, value, type) VALUES ('companyContactAddress2','Melbourne Vic. 3000','text');
+INSERT INTO config (name, value, type) VALUES ('companyContactAddress3','Australia','text');
+INSERT INTO config (name, value, type) VALUES ('timeSheetPrintFooter','Authorisation (please print):<br><br>Authorisation (signature):<br><br>Date:','text');
+INSERT INTO config (name, value, type) VALUES ('taxName','GST','text');
+INSERT INTO config (name, value, type) VALUES ('taxPercent','10','text');
+INSERT INTO config (name, value, type) VALUES ('companyPercent','28.5','text');
+INSERT INTO config (name, value, type) VALUES ('paymentInsurancePercent','10','text');
+INSERT INTO config (name, value, type) VALUES ('payrollTaxPercent','5','text');
+INSERT INTO config (name, value, type) VALUES ('calendarFirstDay','Sun','text');
+INSERT INTO config (name,value,type) VALUES ("timeSheetPrint",'a:3:{i:0;s:24:"timeSheetPrintMode=items";i:1;s:24:"timeSheetPrintMode=units";i:2;s:24:"timeSheetPrintMode=money";}',"array");
+INSERT INTO config (name,value,type) VALUES ("timeSheetPrintOptions",'a:6:{s:24:"timeSheetPrintMode=items";s:7:"Default";s:36:"timeSheetPrintMode=items&printDesc=1";s:8:"Default+";s:24:"timeSheetPrintMode=units";s:5:"Units";s:36:"timeSheetPrintMode=units&printDesc=1";s:6:"Units+";s:24:"timeSheetPrintMode=money";s:7:"Invoice";s:36:"timeSheetPrintMode=money&printDesc=1";s:8:"Invoice+";}',"array"); 
+
 
 
 -- INSERT select, table, tr, td, label, content (ie plaintext), 

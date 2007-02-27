@@ -17,7 +17,7 @@
     <td>{echo get_text($TPL["handle"])}</td>
     <td>{echo get_html($TPL["handle"])}</td>
     <td>{echo get_help($TPL["handle"])}</td>
-    <td>{echo nl2br(htmlentities(get_html($TPL["handle"])))}</td>
+    <td>{echo nl2br(htmlentities(build_html_element($TPL["handle"])))}</td>
   </tr>
 </table>
 {/}

@@ -76,6 +76,11 @@
     <td><input type="text" size="70" value="{$paymentInsurancePercent}" name="paymentInsurancePercent"></td> 
     <td width="1%">{get_help("config_paymentInsurancePercent")}</td>
   </tr>
+  <tr>
+    <td valign="top">Time Sheet Print Options</td>
+    <td><select size="10" name="timeSheetPrint[]" multiple><option value="">{$timeSheetPrintOptions}</select><a href="{$url_alloc_configEdit}configName=timeSheetPrintOptions">Advanced Option Edit</a></td>
+    <td width="1%" valign="top">{get_help("config_timeSheetPrint")}</td>
+  </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
