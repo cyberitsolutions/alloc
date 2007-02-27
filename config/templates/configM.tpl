@@ -78,7 +78,7 @@
   </tr>
   <tr>
     <td valign="top">Time Sheet Print Options</td>
-    <td><select size="10" name="timeSheetPrint[]" multiple><option value="">{$timeSheetPrintOptions}</select><a href="{$url_alloc_configEdit}configName=timeSheetPrintOptions">Advanced Option Edit</a></td>
+    <td><select size="9" name="timeSheetPrint[]" multiple><option value="">{$timeSheetPrintOptions}</select><a href="{$url_alloc_configEdit}configName=timeSheetPrintOptions">Advanced Options Edit</a></td>
     <td width="1%" valign="top">{get_help("config_timeSheetPrint")}</td>
   </tr>
   <tr>  
