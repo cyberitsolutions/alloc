@@ -268,6 +268,7 @@ case 4:
                   ,"home"     => $TPL["url_alloc_home"]
                   ,"calendar" => $TPL["url_alloc_taskCalendar"]."personID=".$_POST["personID"]
                   ,"list"     => $TPL["url_alloc_reminderList"]
+                  ,""         => $TPL["url_alloc_reminderList"]
                   );
 
   header("Location: ".$headers[$returnToParent]);
