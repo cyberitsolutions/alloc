@@ -696,13 +696,15 @@ function get_help_string($topic) {
   $file = $TPL["url_alloc_help"].$topic.".html";
   if (file_exists($file)) {
     $str = file_get_contents($file);
-    $str = htmlentities(addslashes($str));
-    $str = str_replace("\n"," ",$str);
 
   } else {
     $rows = get_cached_table("htmlElement");
     $str = $rows[$topic]["helpText"];
   }
+
+  $str = htmlentities(addslashes($str));
+  $str = str_replace("\r"," ",$str);
+  $str = str_replace("\n"," ",$str);
 
   return $str;
 }
@@ -711,17 +713,17 @@ function get_help($topic) {
   $str = get_help_string($topic);
   if (strlen($str)) {
     $img = "<a href=\"".$TPL["url_alloc_help_relative"]."getHelp.php?topic=".$topic."\" target=\"_blank\">";
-    $img.= "<img id=\"".$topic."\" border=\"0\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
+    $img.= "<img id=\"help_button_".$topic."\" border=\"0\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off();\" src=\"";
     $img.= $TPL["url_alloc_images"]."help.gif\"></a>";
   }
   echo $img;
 }
 function get_text($handle) {
   $rows = get_cached_table("htmlElement");
-  return $rows[$handle]["label"];
+  echo $rows[$handle]["label"];
 }
 function get_html($handle,$value=false) {
-  return build_html_element($handle,$value);
+  echo build_html_element($handle,$value);
 }
 function get_help_link() {
   global $TPL;
@@ -759,7 +761,7 @@ function build_html_tag($htmlElementID,$value="") {
   if ($row_type["hasValueAttribute"] && $row_type["hasLabelValue"]) {
     $str_nobr[] = "value=\"".$row["label"]."\"";
 
-  } else if ($row_type["hasValueAttribute"] && $row_type["valueAttributeName"] && $attributes["value"] == $value) {
+  } else if ($row_type["hasValueAttribute"] && $row_type["valueAttributeName"] && ($attributes["value"] == $value || is_array($value) && in_array($attributes["value"],$value))) {
     $str_nobr[] = $row_type["valueAttributeName"]."=\"".$value."\"";
 
   } else if ($row_type["hasValueAttribute"] && !$row_type["valueAttributeName"]) {
@@ -794,7 +796,7 @@ function build_html_tag($htmlElementID,$value="") {
   
   return $str;
 }
-function build_html_element($handle,$value) {
+function build_html_element($handle,$value="") {
   $db = new db_alloc();
   $q = sprintf("SELECT * FROM htmlElement WHERE handle = '%s'",db_esc($handle));
   $db->query($q);

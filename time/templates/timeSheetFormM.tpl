@@ -19,13 +19,15 @@
     <th colspan="3">{get_help("timesheet_overview")}Time Sheet</th>  
     <th class="right" colspan="2">
       {if $TPL["timeSheet_timeSheetID"]}
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items">Default</a>
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=items&printDesc=1">+</a> |
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=units">Units</a>
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=units&printDesc=1">+</a> |
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=money">Invoice</a>
-      <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&timeSheetPrintMode=money&printDesc=1">+</a>
-      <img src="{$url_alloc_images}pdf_icon.png">
+        {$timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions")}
+        {$timeSheetPrint = config::get_config_item("timeSheetPrint")}
+        {foreach $timeSheetPrint as $value}
+          <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&{$value}">{echo $timeSheetPrintOptions[$value]}</a>
+          {$value and $show_icon = true}
+        {/}
+        {if $show_icon}
+        <img src="{$url_alloc_images}pdf_icon.png">
+        {/}
       {/}
     </th>
   </tr>

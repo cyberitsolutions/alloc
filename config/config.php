@@ -23,15 +23,24 @@
 
 require_once("../alloc.php");
 
-
+if (!have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
+  die("Permission denied.");
+}
 
 $config = new config;
 
 $db = new db_alloc;
-$db->query("SELECT name,value FROM config");
+$db->query("SELECT name,value,type FROM config");
 while ($db->next_record()) {
   $fields_to_save[] = $db->f("name");
-  $TPL[$db->f("name")] = htmlentities($db->f("value"));
+  $types[$db->f("name")] = $db->f("type");
+
+  if ($db->f("type") == "text") {
+    $TPL[$db->f("name")] = htmlentities($db->f("value"));
+
+  } else if ($db->f("type") == "array") {
+    $TPL[$db->f("name")] = unserialize($db->f("value"));
+  }
 }
 
 
@@ -57,9 +66,15 @@ if ($_POST["save"]) {
       $c = new config;
       $c->set_id($id);
       $c->select();
-      $c->set_value("value",$_POST[$name]);
+
+      if ($types[$name] == "text") {
+        $c->set_value("value",$_POST[$name]);
+        $TPL[$name] = htmlentities($_POST[$name]);
+      } else if ($types[$name] == "array") {
+        $c->set_value("value",serialize($_POST[$name]));
+        $TPL[$name] = $_POST[$name];
+      }
       $c->save();
-      $TPL[$name] = htmlentities($_POST[$name]);
       $TPL["message_good"] = "Saved configuration.";
     }
   }
@@ -81,6 +96,7 @@ $TPL["timeSheetAdminEmailOptions"].= get_options_from_db($db, $display, "personI
 $days =  array("Sun"=>"Sun","Mon"=>"Mon","Tue"=>"Tue","Wed"=>"Wed","Thu"=>"Thu","Fri"=>"Fri","Sat"=>"Sat");
 $TPL["calendarFirstDayOptions"] = get_select_options($days,$config->get_config_item("calendarFirstDay"));
 
+$TPL["timeSheetPrintOptions"] = get_select_options($TPL["timeSheetPrintOptions"],$TPL["timeSheetPrint"]);
 
 include_template("templates/configM.tpl");
 

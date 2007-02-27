@@ -29,14 +29,20 @@ class config extends db_entity {
     $this->key_field = new db_field("configID");
     $this->data_fields = array("name"=>new db_field("name")
                               ,"value"=>new db_field("value")
+                              ,"type"=>new db_field("type")
       );
   }
 
   function get_config_item($name='') {
     $db = new db_alloc;
-    $db->query(sprintf("SELECT value FROM config WHERE name = '%s'",$name));
+    $db->query(sprintf("SELECT value,type FROM config WHERE name = '%s'",$name));
     $db->next_record();
-    return $db->f('value');
+    if ($db->f("type") == "array") {
+      $val = unserialize($db->f("value")) or $val = array();
+    } else if ($db->f("type") == "text") {
+      $val = $db->f("value");
+    }
+    return $val;
   }
 
   function get_config_item_id($name='') {

@@ -82,7 +82,8 @@ CREATE TABLE config (
   configID int(11) NOT NULL auto_increment,
   name varchar(255) NOT NULL,
   value text NOT NULL,
-  PRIMARY KEY  (configID),
+  type enum("text","array") NOT NULL default "text",
+  PRIMARY KEY (configID),
   UNIQUE KEY (name)
 ) TYPE=MyISAM;
 
