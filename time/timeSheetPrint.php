@@ -323,118 +323,123 @@ if ($timeSheetID) {
   }
 
 
-  // Build PDF document
-  require_once("../pdf/class.ezpdf.php");
+  if ($_GET["format"] != "html") {
 
-  $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
-  $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
+    // Build PDF document
+    require_once("../pdf/class.ezpdf.php");
 
-  $pdf_table_options = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0,"xPos"=>"left","xOrientation"=>"right","fontSize"=>11,"rowGap"=>0,"fontSize"=>10);
+    $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
+    $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
 
-
-  $cols = array("one"=>"","two"=>"","three"=>"","four"=>"");
-  $cols3 = array("one"=>"","two"=>"");
-  $cols_settings["one"] = array("justification"=>"right");
-  $cols_settings["three"] = array("justification"=>"right");
-  $pdf_table_options2 = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0, "width"=>400, "fontSize"=>11, "xPos"=>"center", "xOrientation"=>"center", "cols"=>$cols_settings);
-  $cols_settings2["gst"] = array("justification"=>"right");
-  $cols_settings2["money"] = array("justification"=>"right");
-  $pdf_table_options3 = array("showLines"=>2,"shaded"=>0,"width"=>400, "xPos"=>"center","fontSize"=>11,"cols"=>$cols_settings2,"lineCol"=>array(0.8, 0.8, 0.8),"splitRows"=>1,"protectRows"=>0);
-  $cols_settings["two"] = array("justification"=>"right","width"=>80);
-  $pdf_table_options4 = array("showLines"=>2,"shaded"=>0,"width"=>400, "showHeadings"=>0, "fontSize"=>11, "xPos"=>"center", "cols"=>$cols_settings,"lineCol"=>array(0.8, 0.8, 0.8));
-
-  $pdf =& new Cezpdf();
-  $pdf->ezSetMargins(90,90,90,90);
-
-  $pdf->selectFont($font1);
-  $pdf->ezStartPageNumbers(436,80,11,'right','Page {PAGENUM} of {TOTALPAGENUM}');
-  $pdf->ezStartPageNumbers(200,80,11,'left','<b>'.$default_id_label.': </b>'.$TPL["timeSheetID"]);
-  $pdf->ezSetY(775);
-
-  $TPL["companyName"]            and $contact_info[] = array($TPL["companyName"]);
-  $TPL["companyContactAddress"]  and $contact_info[] = array($TPL["companyContactAddress"]);
-  $TPL["companyContactAddress2"] and $contact_info[] = array($TPL["companyContactAddress2"]);
-  $TPL["companyContactAddress3"] and $contact_info[] = array($TPL["companyContactAddress3"]);
-  $TPL["companyContactEmail"]    and $contact_info[] = array($TPL["companyContactEmail"]);
-  $TPL["companyContactHomePage"] and $contact_info[] = array($TPL["companyContactHomePage"]);
-  $TPL["phone"]                  and $contact_info[] = array($TPL["phone"]);
-  $TPL["fax"]                    and $contact_info[] = array($TPL["fax"]);
-
-  $pdf->selectFont($font2);
-  $y = $pdf->ezTable($contact_info,false,"",$pdf_table_options);
-  $pdf->selectFont($font1);
-
-  $line_y = $y-10;
-  $pdf->setLineStyle(1,"round");
-  $pdf->line(90,$line_y,510,$line_y);
+    $pdf_table_options = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0,"xPos"=>"left","xOrientation"=>"right","fontSize"=>11,"rowGap"=>0,"fontSize"=>10);
 
 
-  $pdf->ezSetY(782);
-  $y = $pdf->ezText($TPL["companyName"],27, array("justification"=>"right"));
-  $nos_y = $line_y + 22;
-  $TPL["companyNos2"] and $nos_y = $line_y + 34;
-  $pdf->ezSetY($nos_y);
-  $TPL["companyNos1"] and $y = $pdf->ezText($TPL["companyNos1"],11, array("justification"=>"right"));
-  $TPL["companyNos2"] and $y = $pdf->ezText($TPL["companyNos2"],11, array("justification"=>"right"));
+    $cols = array("one"=>"","two"=>"","three"=>"","four"=>"");
+    $cols3 = array("one"=>"","two"=>"");
+    $cols_settings["one"] = array("justification"=>"right");
+    $cols_settings["three"] = array("justification"=>"right");
+    $pdf_table_options2 = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0, "width"=>400, "fontSize"=>11, "xPos"=>"center", "xOrientation"=>"center", "cols"=>$cols_settings);
+    $cols_settings2["gst"] = array("justification"=>"right");
+    $cols_settings2["money"] = array("justification"=>"right");
+    $pdf_table_options3 = array("showLines"=>2,"shaded"=>0,"width"=>400, "xPos"=>"center","fontSize"=>11,"cols"=>$cols_settings2,"lineCol"=>array(0.8, 0.8, 0.8),"splitRows"=>1,"protectRows"=>0);
+    $cols_settings["two"] = array("justification"=>"right","width"=>80);
+    $pdf_table_options4 = array("showLines"=>2,"shaded"=>0,"width"=>400, "showHeadings"=>0, "fontSize"=>11, "xPos"=>"center", "cols"=>$cols_settings,"lineCol"=>array(0.8, 0.8, 0.8));
+
+    $pdf =& new Cezpdf();
+    $pdf->ezSetMargins(90,90,90,90);
+
+    $pdf->selectFont($font1);
+    $pdf->ezStartPageNumbers(436,80,11,'right','Page {PAGENUM} of {TOTALPAGENUM}');
+    $pdf->ezStartPageNumbers(200,80,11,'left','<b>'.$default_id_label.': </b>'.$TPL["timeSheetID"]);
+    $pdf->ezSetY(775);
+
+    $TPL["companyName"]            and $contact_info[] = array($TPL["companyName"]);
+    $TPL["companyContactAddress"]  and $contact_info[] = array($TPL["companyContactAddress"]);
+    $TPL["companyContactAddress2"] and $contact_info[] = array($TPL["companyContactAddress2"]);
+    $TPL["companyContactAddress3"] and $contact_info[] = array($TPL["companyContactAddress3"]);
+    $TPL["companyContactEmail"]    and $contact_info[] = array($TPL["companyContactEmail"]);
+    $TPL["companyContactHomePage"] and $contact_info[] = array($TPL["companyContactHomePage"]);
+    $TPL["phone"]                  and $contact_info[] = array($TPL["phone"]);
+    $TPL["fax"]                    and $contact_info[] = array($TPL["fax"]);
+
+    $pdf->selectFont($font2);
+    $y = $pdf->ezTable($contact_info,false,"",$pdf_table_options);
+    $pdf->selectFont($font1);
+
+    $line_y = $y-10;
+    $pdf->setLineStyle(1,"round");
+    $pdf->line(90,$line_y,510,$line_y);
+
+
+    $pdf->ezSetY(782);
+    $y = $pdf->ezText($TPL["companyName"],27, array("justification"=>"right"));
+    $nos_y = $line_y + 22;
+    $TPL["companyNos2"] and $nos_y = $line_y + 34;
+    $pdf->ezSetY($nos_y);
+    $TPL["companyNos1"] and $y = $pdf->ezText($TPL["companyNos1"],11, array("justification"=>"right"));
+    $TPL["companyNos2"] and $y = $pdf->ezText($TPL["companyNos2"],11, array("justification"=>"right"));
 
 
 
-  $pdf->ezSetY($line_y -20);
-  $y = $pdf->ezText($default_header,20, array("justification"=>"center"));
-  $pdf->ezSetY($y -20);
-
-  $ts_info[] = array("one"=>"<b>".$default_id_label.":</b>","two"=>$TPL["timeSheetID"],"three"=>"<b>Date Issued:</b>","four"=>date("d/m/Y"));
-  $ts_info[] = array("one"=>"<b>Client:</b>"        ,"two"=>$TPL["clientName"],"three"=>"<b>Project:</b>","four"=>$TPL["timeSheet_projectName"]);
-  $ts_info[] = array("one"=>"<b>Contractor:</b>"    ,"two"=>$TPL["timeSheet_personName"],"three"=>"<b>Billing Period:</b>","four"=>$TPL["period"]);
-  $y = $pdf->ezTable($ts_info,$cols,"",$pdf_table_options2);
- 
-
-
- $pdf->ezSetY($y -20);
-
-  if ($_GET["timeSheetPrintMode"] == "money") {
-    list($rows,$info) = get_timeSheetItem_list_money($TPL["timeSheetID"]);
-    $cols2 = array("desc"=>"Description","units"=>"Units","money"=>"Charges","gst"=>$TPL["taxName"]);
-    $taxPercent = config::get_config_item("taxPercent");
-    if ($taxPercent === '') unset($cols2["gst"]);
-    $rows[] = array("desc"=>"<b>TOTAL</b>","units"=>$info["total_units"], "money"=>$info["total"],"gst"=>$info["total_gst"]);
-    $y = $pdf->ezTable($rows,$cols2,"",$pdf_table_options3);
+    $pdf->ezSetY($line_y -20);
+    $y = $pdf->ezText($default_header,20, array("justification"=>"center"));
     $pdf->ezSetY($y -20);
-    if ($taxPercent !== '') $totals[] = array("one"=>"TOTAL ".$TPL["taxName"],"two"=>$info["total_gst"]);
-    $totals[] = array("one"=>"TOTAL CHARGES","two"=>$info["total"]);
-    $totals[] = array("one"=>"<b>TOTAL AMOUNT PAYABLE</b>","two"=>"<b>".$info["total_inc_gst"]."</b>");
-    $y = $pdf->ezTable($totals,$cols3,"",$pdf_table_options4);
 
-  } else if ($_GET["timeSheetPrintMode"] == "units") {
-    list($rows,$info) = get_timeSheetItem_list_units($TPL["timeSheetID"]);
-    $cols2 = array("desc"=>"Description","units"=>"Units");
-    $rows[] = array("desc"=>"<b>TOTAL</b>","units"=>"<b>".$info["total"]."</b>");
-    $y = $pdf->ezTable($rows,$cols2,"",$pdf_table_options3);
+    $ts_info[] = array("one"=>"<b>".$default_id_label.":</b>","two"=>$TPL["timeSheetID"],"three"=>"<b>Date Issued:</b>","four"=>date("d/m/Y"));
+    $ts_info[] = array("one"=>"<b>Client:</b>"        ,"two"=>$TPL["clientName"],"three"=>"<b>Project:</b>","four"=>$TPL["timeSheet_projectName"]);
+    $ts_info[] = array("one"=>"<b>Contractor:</b>"    ,"two"=>$TPL["timeSheet_personName"],"three"=>"<b>Billing Period:</b>","four"=>$TPL["period"]);
+    $y = $pdf->ezTable($ts_info,$cols,"",$pdf_table_options2);
 
-  } else if ($_GET["timeSheetPrintMode"] == "items") {
-    list($rows,$info) = get_timeSheetItem_list_items($TPL["timeSheetID"]);
-    $cols2 = array("date"=>"Date","units"=>"Units","desc"=>"Description");
-    $rows[] = array("date"=>"<b>TOTAL</b>","units"=>"<b>".$info["total"]."</b>");
-    $y = $pdf->ezTable($rows,$cols2,"",$pdf_table_options3);
+    $pdf->ezSetY($y -20);
+
+    if ($_GET["timeSheetPrintMode"] == "money") {
+      list($rows,$info) = get_timeSheetItem_list_money($TPL["timeSheetID"]);
+      $cols2 = array("desc"=>"Description","units"=>"Units","money"=>"Charges","gst"=>$TPL["taxName"]);
+      $taxPercent = config::get_config_item("taxPercent");
+      if ($taxPercent === '') unset($cols2["gst"]);
+      $rows[] = array("desc"=>"<b>TOTAL</b>","units"=>$info["total_units"], "money"=>$info["total"],"gst"=>$info["total_gst"]);
+      $y = $pdf->ezTable($rows,$cols2,"",$pdf_table_options3);
+      $pdf->ezSetY($y -20);
+      if ($taxPercent !== '') $totals[] = array("one"=>"TOTAL ".$TPL["taxName"],"two"=>$info["total_gst"]);
+      $totals[] = array("one"=>"TOTAL CHARGES","two"=>$info["total"]);
+      $totals[] = array("one"=>"<b>TOTAL AMOUNT PAYABLE</b>","two"=>"<b>".$info["total_inc_gst"]."</b>");
+      $y = $pdf->ezTable($totals,$cols3,"",$pdf_table_options4);
+
+    } else if ($_GET["timeSheetPrintMode"] == "units") {
+      list($rows,$info) = get_timeSheetItem_list_units($TPL["timeSheetID"]);
+      $cols2 = array("desc"=>"Description","units"=>"Units");
+      $rows[] = array("desc"=>"<b>TOTAL</b>","units"=>"<b>".$info["total"]."</b>");
+      $y = $pdf->ezTable($rows,$cols2,"",$pdf_table_options3);
+
+    } else if ($_GET["timeSheetPrintMode"] == "items") {
+      list($rows,$info) = get_timeSheetItem_list_items($TPL["timeSheetID"]);
+      $cols2 = array("date"=>"Date","units"=>"Units","desc"=>"Description");
+      $rows[] = array("date"=>"<b>TOTAL</b>","units"=>"<b>".$info["total"]."</b>");
+      $y = $pdf->ezTable($rows,$cols2,"",$pdf_table_options3);
+    }
+
+
+
+
+
+    $pdf->ezSetY($y -20);
+    $pdf->ezText(str_replace(array("<br/>","<br>"),"\n",$TPL["footer"]),11);
+
+
+    // Add footer
+    #$all = $pdf->openObject(); 
+    #$pdf->saveState(); 
+    #$pdf->addText(415,80,12,"Time Sheet ID: <b>".$TPL["timeSheetID"]."</b>"); 
+    #$pdf->restoreState(); 
+    #$pdf->closeObject(); 
+    #$pdf->addObject($all,'all'); 
+
+    $pdf->ezStream();
+
+  // Else HTML format
+  } else {
+    include_template("templates/timeSheetPrintM.tpl");
   }
-
-
-
-
-
-  $pdf->ezSetY($y -20);
-  $pdf->ezText(str_replace(array("<br/>","<br>"),"\n",$TPL["footer"]),11);
-
-
-  // Add footer
-  #$all = $pdf->openObject(); 
-  #$pdf->saveState(); 
-  #$pdf->addText(415,80,12,"Time Sheet ID: <b>".$TPL["timeSheetID"]."</b>"); 
-  #$pdf->restoreState(); 
-  #$pdf->closeObject(); 
-  #$pdf->addObject($all,'all'); 
-
-  $pdf->ezStream();
 
 }
 
