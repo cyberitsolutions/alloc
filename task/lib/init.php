@@ -43,7 +43,7 @@ class task_module extends module
       register_home_item(new task_calendar_home_item());
     }
 
-    if (isset($current_user->prefs["topTasksNum"]) && sprintf("%d",$current_user->prefs["topTasksNum"]) > 0) {
+    if (isset($current_user->prefs["topTasksNum"]) && (sprintf("%d",$current_user->prefs["topTasksNum"]) > 0 || $current_user->prefs["topTasksNum"] == "all")) {
       include(ALLOC_MOD_DIR."task/lib/top_ten_tasks_home_item.inc.php");
       if (have_entity_perm("task", PERM_READ_WRITE, $current_user, true)) {
         register_home_item(new top_ten_tasks_home_item());

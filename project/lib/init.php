@@ -39,7 +39,7 @@ class project_module extends module
 
   function register_home_items() {
     global $current_user;
-    if (sprintf("%d",$current_user->prefs["projectListNum"]) > 0) {
+    if (sprintf("%d",$current_user->prefs["projectListNum"]) > 0 || $current_user->prefs["projectListNum"] == "all") {
       include(ALLOC_MOD_DIR."project/lib/project_list_home_item.inc.php");
       register_home_item(new project_list_home_item());
     }
