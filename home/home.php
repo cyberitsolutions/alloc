@@ -26,10 +26,11 @@ require_once("../alloc.php");
 function show_home_items($width) {
   global $home_items, $current_home_item, $TPL;
 
+  $home_items or $home_items = array();
   reset($home_items);
 
 
-  $arr = $home_items[$width];
+  $arr = $home_items[$width] or $arr = array();
   ksort($arr);
 
   foreach ($arr as $current_home_item) {

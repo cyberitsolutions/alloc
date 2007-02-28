@@ -30,16 +30,8 @@ class task_calendar_home_item extends home_item {
 
   function show_task_calendar_recursive() {
     global $current_user;
-    if (!$current_user->prefs["tasksGraphPlotHomeStart"] && !isset($current_user->prefs["tasksGraphPlotHomeStart"])) {
-      $tasksGraphPlotHomeStart = 1;
-    } else {
-      $tasksGraphPlotHomeStart = $current_user->prefs["tasksGraphPlotHomeStart"];
-    }
-    if (!$current_user->prefs["tasksGraphPlotHome"] && !isset($current_user->prefs["tasksGraphPlotHome"])) {
-      $tasksGraphPlotHome = 2;
-    } else {
-      $tasksGraphPlotHome = $current_user->prefs["tasksGraphPlotHome"];
-    }
+    $tasksGraphPlotHomeStart = $current_user->prefs["tasksGraphPlotHomeStart"];
+    $tasksGraphPlotHome = $current_user->prefs["tasksGraphPlotHome"];
 
     $calendar = new calendar($tasksGraphPlotHomeStart,$tasksGraphPlotHome);
     $calendar->set_cal_person($current_user->get_id());
