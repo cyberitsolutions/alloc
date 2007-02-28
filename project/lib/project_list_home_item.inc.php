@@ -30,7 +30,7 @@ class project_list_home_item extends home_item {
     global $current_user, $TPL;
 
     if (isset($current_user->prefs["projectListNum"]) && $current_user->prefs["projectListNum"] != "all") {
-      $options["limit"] = $current_user->prefs["projectListNum"];
+      $options["limit"] = sprintf("%d",$current_user->prefs["projectListNum"]);
     }
     
     $options["projectStatus"] = "current";

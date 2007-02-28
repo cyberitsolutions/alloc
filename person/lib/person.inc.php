@@ -273,6 +273,8 @@ class person extends db_entity {
     isset($current_user->prefs["topTasksNum"]) or $current_user->prefs["topTasksNum"] = 5;
     $current_user->prefs["topTasksStatus"] or $current_user->prefs["topTasksStatus"] = "not_completed";
     isset($current_user->prefs["projectListNum"]) or $current_user->prefs["projectListNum"] = "10";
+    isset($current_user->prefs["tasksGraphPlotHome"]) or $current_user->prefs["tasksGraphPlotHome"] = "4";
+    isset($current_user->prefs["tasksGraphPlotHomeStart"]) or $current_user->prefs["tasksGraphPlotHomeStart"] = "1";
     return $current_user;
   }
 

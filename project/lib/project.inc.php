@@ -317,7 +317,7 @@ class project extends db_entity {
         GROUP BY project.projectID 
         ORDER BY projectName";
 
-    $_FORM["limit"] and $q.= sprintf(" LIMIT %d",$_FORM["limit"]);
+    isset($_FORM["limit"]) and $q.= sprintf(" LIMIT %d",$_FORM["limit"]);
 
     $debug and print "Query: ".$q;
     $db = new db_alloc;

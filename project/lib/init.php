@@ -38,8 +38,11 @@ class project_module extends module
                          );
 
   function register_home_items() {
-    include(ALLOC_MOD_DIR."project/lib/project_list_home_item.inc.php");
-    register_home_item(new project_list_home_item());
+    global $current_user;
+    if (sprintf("%d",$current_user->prefs["projectListNum"]) > 0) {
+      include(ALLOC_MOD_DIR."project/lib/project_list_home_item.inc.php");
+      register_home_item(new project_list_home_item());
+    }
   }
 
 }
