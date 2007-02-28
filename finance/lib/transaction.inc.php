@@ -100,6 +100,12 @@ class transaction extends db_entity
       $person = $current_user;
     }
 
+    if ($this->get_value("timeSheetID")) {
+      $timeSheet = $this->get_foreign_object("timeSheet");
+      return $timeSheet->is_owner($person);
+    }
+
+
     $tf = $this->get_foreign_object("tf");
     return $tf->is_owner($person);
   }
