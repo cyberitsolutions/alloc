@@ -26,8 +26,8 @@ function updateClientContact(number) \{
 
 {$table_box}
   <tr>
-    <th colspan="2">Project Details</th>
-    <th class="right" colspan="2">{$navigation_links}</th>
+    <th class="nobr" colspan="1">Project Details</th>
+    <th class="right" colspan="3">{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</th>
   </tr>
   <tr>
     <td colspan="4">&nbsp;</td>
@@ -39,9 +39,9 @@ function updateClientContact(number) \{
     <td><input type="text" name="projectShortName" value="{$project_projectShortName}" size="10"></td>
   </tr>
   <tr>
-    <td align="right" rowspan="4" valign="top">Description</td>
-    <td rowspan="4">
-      <textarea name="projectComments" rows="7" wrap="virtual" cols="55">{$project_projectComments}</textarea>
+    <td align="right" rowspan="5" valign="top">Description</td>
+    <td rowspan="5">
+      <textarea name="projectComments" rows="7" wrap="virtual" cols="50">{$project_projectComments}</textarea>
     </td>
     <td align="right">Priority</td>
     <td><select name="projectPriority">{$projectPriority_options}</select></td>
@@ -55,17 +55,18 @@ function updateClientContact(number) \{
     <td><select name="projectType">{$projectType_options}</select></td>
   </tr>
   <tr>
-    <td align="right">Project Budget $</td>
-    <td>
-      <input type="text" name="projectBudget" value="{$project_projectBudget}" size="10">
-      <select name="currencyType">{$currencyType_options}</select>
-    </td>
+    <td align="right">Currency</td>
+    <td><select name="currencyType">{$currencyType_options}</select></td>
+  </tr>
+  <tr>
+    <td align="right" class="nobr">Project Budget $</td>
+    <td class="nobr"><input type="text" name="projectBudget" value="{$project_projectBudget}" size="10"></td>
   </tr>
   <tr>
     <td align="right">Client</td>
     <td><nobr><select name="clientID" onChange="updateStuffWithAjax()">{$clientOptions}</select>&nbsp; &nbsp;<a href="{$url_alloc_client}">New Client</a></nobr></td>
-    <td align="right">Customer Billed At $</td>
-    <td><input type="text" name="customerBilledDollars" value="{$project_customerBilledDollars}"></td>
+    <td align="right" class="nobr">Customer Billed $</td>
+    <td><input type="text" name="customerBilledDollars" value="{$project_customerBilledDollars}" size="10"></td>
   </tr>
   <tr>
     <td align="right">Client Contact</td>
@@ -74,19 +75,17 @@ function updateClientContact(number) \{
         {$clientContactDropdown}
       </div>
     </td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="right"></td>
-    <td rowspan="2">{$clientDetails}</td>
     <td align="right">{$cost_centre_label}&nbsp;</td>
     <td>{$cost_centre_bit}&nbsp;</td>
   </tr>
   <tr>
     <td align="right"></td>
-    <td align="right">Through an Agency<br>(Payroll Tax Exempt)</td>
+    <td rowspan="2">{$clientDetails}</td>
+    <td align="right">Payroll Tax Exempt</td>
     <td><input type="checkbox" name="project_is_agency" value="1"{$project_is_agency}></td>
+  </tr>
+  <tr>
+    <td align="right"></td>
   </tr>
   <tr>
     <td align="right"></td>
@@ -126,8 +125,8 @@ function updateClientContact(number) \{
   </tr>
 </table>
 
-{if $_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]}
-
+{if defined("PROJECT_EXISTS")}
+  
 
 {$table_box}
   <tr>

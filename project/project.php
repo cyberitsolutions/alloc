@@ -503,7 +503,7 @@ if ($clientID_sql) {
     $q = sprintf("SELECT * FROM clientContact WHERE clientContactID = %d",$project->get_value("clientContactID"));  
     $db->query($q);
     $db->next_record();
-    $db->f("clientContactName")          and $fiv .= $db->f("clientContactName")."<br/>";
+    $db->f("clientContactName")          and $fiv .= "<nobr>".$db->f("clientContactName")."</nobr><br/>";
     $db->f("clientContactStreetAddress") and $fiv .= $db->f("clientContactStreetAddress")."<br/>";
     $db->f("clientContactSuburb")        and $fiv .= $db->f("clientContactSuburb")."<br/>";
     $db->f("clientContactPostcode")      and $fiv .= $db->f("clientContactPostcode")."<br/>";
@@ -515,7 +515,7 @@ if ($clientID_sql) {
   }
 
   $TPL["clientDetails"] = "<table width=\"70%\">";
-  $TPL["clientDetails"].= "<tr><td><b>Postal Address</b></td><td><b>Street Address</b></td><td><b>Contact</b></td></tr>";
+  $TPL["clientDetails"].= "<tr><td class=\"nobr\"><b>Postal Address</b></td><td class=\"nobr\"><b>Street Address</b></td><td><b>Contact</b></td></tr>";
   $TPL["clientDetails"].= "<tr><td valign=\"top\">".$one."</td><td valign=\"top\">".$two."</td><td valign=\"top\">".$thr."</td></tr>";
   $TPL["clientDetails"].= "</table>";
 }
@@ -596,7 +596,7 @@ $db->query($query);
 $cost_centre_tfID_options = get_options_from_db($db, "tfName", "tfID", $TPL["project_cost_centre_tfID"]);
 
 if ($cost_centre_tfID_options) {
-$TPL["cost_centre_label"] = "Cost Centre TF (Time<br>Sheets will use this TF)";
+$TPL["cost_centre_label"] = "Cost Centre TF";
 $TPL["cost_centre_bit"] = "<select name=\"cost_centre_tfID\"><option value=\"\">&nbsp;</option>";
 $TPL["cost_centre_bit"].= $cost_centre_tfID_options;
 $TPL["cost_centre_bit"].= "</select>";
@@ -626,6 +626,10 @@ $TPL["projectStatus_options"] = get_select_options($projectStatus_array, $TPL["p
 $TPL["project_projectPriority"] or $TPL["project_projectPriority"] = 3;
 $TPL["projectPriority_options"] = get_options_from_array(array(1, 2, 3, 4, 5), $TPL["project_projectPriority"], false);
 $TPL["currencyType_options"] = get_select_options($currency_array, $TPL["project_currencyType"]);
+
+if ($_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]) {
+  define("PROJECT_EXISTS",1);
+}
 
 
 if ($project->have_perm(PERM_READ_WRITE)) {
