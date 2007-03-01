@@ -126,6 +126,9 @@ function updateClientContact(number) \{
   </tr>
 </table>
 
+{if $_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]}
+
+
 {$table_box}
   <tr>
     <th align="left" colspan="11">Project People</th>
@@ -211,4 +214,8 @@ function updateClientContact(number) \{
     <td>Task Estimate: ${$cost_remaining} / {$time_remaining} Hours ({$count_incomplete_tasks} incomplete, {$count_not_quoted_tasks} not included)</td>
   </tr>            
 </table>
+
+{/}
+
+
 {show_footer()}
