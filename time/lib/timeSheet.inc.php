@@ -284,7 +284,7 @@ class timeSheet extends db_entity
       } else  if ($this->transactions_are_complex() == "simple") {
         /*  This was previously named "Simple" transactions. Ho ho.
             On the Project page we care about these following variables:
-             - Customer Billed At $amount eg: $121
+             - Client Billed At $amount eg: $121
              - Through an agency bool     
              - The projectPersons rate for this project eg: $50;
 
