@@ -60,9 +60,9 @@ require_once("../alloc.php");
       // setup formatted address output
 
       // postal address
-      $TPL["client_clientPostalAddress"] = $client->get_value('clientName')."<br>".format_address($client->get_value('clientStreetAddressOne'), $client->get_value('clientSuburbOne'), $client->get_value('clientStateOne'), $client->get_value('clientPostcodeOne'), $client->get_value('clientCountryOne'));
+      $TPL["client_clientPostalAddress"] = format_address($client->get_value('clientStreetAddressOne'), $client->get_value('clientSuburbOne'), $client->get_value('clientStateOne'), $client->get_value('clientPostcodeOne'), $client->get_value('clientCountryOne'));
       // street address
-      $TPL["client_clientStreetAddress"] = $client->get_value('clientName')."<br>".format_address($client->get_value('clientStreetAddressTwo'), $client->get_value('clientSuburbTwo'), $client->get_value('clientStateTwo'), $client->get_value('clientPostcodeTwo'), $client->get_value('clientCountryTwo'));
+      $TPL["client_clientStreetAddress"] = format_address($client->get_value('clientStreetAddressTwo'), $client->get_value('clientSuburbTwo'), $client->get_value('clientStateTwo'), $client->get_value('clientPostcodeTwo'), $client->get_value('clientCountryTwo'));
       include_template($template);
     }
   }

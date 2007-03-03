@@ -10,12 +10,12 @@
           </td>
         </tr>
         <tr>
-          <td>
+          <td valign="top">
             <b>Postal Address:</b><br>
             {$client_clientPostalAddress}
           </td>
           <td>&nbsp;</td>
-          <td>
+          <td valign="top">
             <b>Street Address:</b><br>
             {$client_clientStreetAddress}
           </td>
