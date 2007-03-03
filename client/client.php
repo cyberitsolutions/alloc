@@ -247,7 +247,6 @@ require_once("../alloc.php");
     if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
       $TPL["class_new_client_comment"] = "hidden";
     }
-
     include_template("templates/clientCommentM.tpl");
   }
 

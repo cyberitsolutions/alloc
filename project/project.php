@@ -263,6 +263,11 @@ $grand_total = 0;
     global $projectID, $TPL;
     $options["showEditButtons"] = true;
     $TPL["commentsR"] = util_get_comments("project",$projectID,$options);
+
+    if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
+      $TPL["class_new_project_comment"] = "hidden";
+    }
+
     include_template("templates/projectCommentM.tpl");
   }
 

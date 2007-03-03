@@ -81,6 +81,9 @@ require_once("../alloc.php");
     global $taskID, $TPL;
     $options["showEditButtons"] = true;
     $TPL["commentsR"] = util_get_comments("task",$taskID,$options);
+    if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
+      $TPL["class_new_task_comment"] = "hidden";
+    }
     include_template("templates/taskCommentM.tpl");
   }
 
