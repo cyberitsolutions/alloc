@@ -1,17 +1,19 @@
 
 {$table_box}
   <tr>
-    <th colspan="2">Comments</th>
+    <th>Comments</th>
+    <th class="right">{get_expand_link("id_new_task_comment")}</th>
   </tr>
   <tr>
     <td colspan="2">
       <form action="{$url_alloc_comment}" method="post" id="taskCommentForm">
+      <div class="{$class_new_task_comment}" id="id_new_task_comment">
       <table width="100%">
         <tr>
           <td>
             <input type="hidden" name="entity" value="task">
             <input type="hidden" name="entityID" value="{$task_taskID}">
-            <textarea name="comment" cols="85" rows="7" wrap="virtual" id="comment">{$comment}</textarea>&nbsp;
+            <textarea name="comment" cols="85" rows="10" wrap="virtual" id="comment">{$comment}</textarea>&nbsp;
           </td>
           <td align="right" valign="top">
             <select name="taskCommentTemplateID" onChange="updateStuffWithAjax()">{$taskCommentTemplateOptions}</select>
@@ -24,6 +26,7 @@
           </td>
         </tr>
       </table>
+      </div>
       </form>
     </td>
   </tr>
