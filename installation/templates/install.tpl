@@ -221,7 +221,7 @@ Verify that all the tests succeeded below, and click the Complete Installation b
 
     <table class="nice" cellspacing="0" border="0">
       <tr>
-        <th>Cronjobs</th>
+        <th>Cron Jobs</th>
       </tr>
       <tr>
         <td>

@@ -219,24 +219,16 @@ if ($_POST["install_db"]) {
   $files = array("../sql/db_structure.sql","../sql/db_data.sql");
 
   foreach ($files as $file) {
-    $mqr = @get_magic_quotes_runtime();
-    @set_magic_quotes_runtime(0);
-    $query = fread(fopen($file, 'r'), filesize($file));
-    @set_magic_quotes_runtime($mqr);
+    list($sql,$comments) = parse_sql_file($file);
 
-    $query = ereg_replace("\n--[^\n]*\n", "\n", $query);
-    $pieces = explode(";\n",$query);
-
-    for ($i=0; $i<count($pieces); $i++) {
-      $pieces[$i] = trim($pieces[$i]);
-      if(!empty($pieces[$i]) && $pieces[$i] != "-") {
-        if (!@mysql_query($pieces[$i],$link)) {
-          $errors[] = "Error! (".mysql_error().").";
-        }
-      } 
+    foreach($sql as $q) {
+      if (!@mysql_query($q,$link)) {
+        $errors[] = "Error! (".mysql_error().").";
+      }
     }   
   }    
   
+
   // Insert config data
   $query = "INSERT INTO config (name, value, type) VALUES ('allocURL','".$_FORM["allocURL"]."','text')";
   if (!@mysql_query($query,$link)) {

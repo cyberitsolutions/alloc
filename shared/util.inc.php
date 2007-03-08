@@ -572,7 +572,7 @@ function parse_sql_file($file) {
   }
 
   $sql = array();
-  
+  $comments = array();
   $mqr = @get_magic_quotes_runtime();
   @set_magic_quotes_runtime(0);
   $lines = file($file);
@@ -580,28 +580,26 @@ function parse_sql_file($file) {
 
   foreach ($lines as $line) {
     if (preg_match("/^[\s]*(--[^\n]*)$/", $line, $m)) {
-      $comments[] = str_replace("-- ","",$m[1]);
-      $comments_html[] = $m[1];
+      $comments[] = str_replace("-- ","",trim($m[1]));
     } else if (!empty($line) && substr($line,0,2) != "--" && $line) {
-      $queries[] = $line;
+      $queries[] = trim($line);
     }
   }
 
-  is_array($comments_html) and $comments_html = implode("<br/>",$comments_html);
-  $queries = implode(" ",$queries);
-  $queries = explode(";\n",$queries.";\n");
-
-  #echo "<br/><br/><br/>---------".$file."----------<br/><pre>";
-  #echo "<br/>NEW QUERY: ".implode("<br/>NEW QUERY: ",$sql)."</pre>";
-
+  $bits = array();
   foreach ($queries as $query) {
-    $query = trim($query);
-    if(!empty($query) && $query != ";\n") {
-      $sql[] = $query;
+    if(!empty($query)) {
+      $query = trim($query);
+      $bits[] = $query;
+      if (preg_match('/;\s*$/',$query)) {
+        $sql[] = implode(" ",$bits);
+        $bits = array();
+      }
     }
   }
   
-  return array($sql,$comments,$comments_html);
+  #print implode($sql,"<br>Q: ");
+  return array($sql,$comments);
 }
 function show_messages() {
   global $TPL;

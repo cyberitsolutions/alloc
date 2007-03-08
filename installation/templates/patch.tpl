@@ -11,7 +11,7 @@
 {$applied_patches = get_applied_patches()}
 
 {foreach $files as $file}
-  {list($sql,$comments,$comments_html) = parse_sql_file(ALLOC_MOD_DIR."patches/".$file)}
+  {list($sql,$comments) = parse_sql_file(ALLOC_MOD_DIR."patches/".$file)}
   {unset($go)}
   {if !in_array($file,$applied_patches)}
     {$go = true}
@@ -21,8 +21,8 @@
   <tr>
     <td valign="top"><input type='checkbox' name='patches_to_apply[]' value='{$file}'>&nbsp;</td>
     <td valign="top" class="nobr">{$file}&nbsp;</td>
-    <td valign="top">{$comments_html}&nbsp;</td>
-    <td valign="top">{is_array($sql) and print implode("<br/>",$sql)}&nbsp;</td>
+    <td valign="top">{echo implode("<br/>",$comments)}&nbsp;</td>
+    <td valign="top">{echo implode("<br/>",$sql)}&nbsp;</td>
   </tr>
   {/}
 
