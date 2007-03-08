@@ -59,7 +59,7 @@ if ($apply_patches) {
     if ($go && $go2) {
 
       $msg[$f][] = "<b>Attempting:</b> ".$file."<br/>";
-      list($sql,$comments,$comments_html) = parse_sql_file($f);
+      list($sql,$comments) = parse_sql_file($f);
       foreach ($sql as $query) {
         if (!$db->query($query)) {
           $msg[$f][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
