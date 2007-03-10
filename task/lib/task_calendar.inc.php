@@ -63,12 +63,12 @@ class calendar_day {
     }
   
     if ($this->start_tasks) {
-      $rows[] = "<br/>Tasks to be started:";
+      $rows[] = "<br/>To be started:";
       $rows[] = stripslashes(implode("<br/>",$this->start_tasks));
     }
 
     if ($this->complete_tasks) {
-      $rows[] = "<br/>Tasks to be complete:";
+      $rows[] = "<br/>To be complete:";
       $rows[] = stripslashes(implode("<br/>",$this->complete_tasks));
     }
     if ($this->reminders) {
