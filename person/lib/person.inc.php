@@ -68,7 +68,7 @@ class person extends db_entity {
     $format = "text";
 
     $options = array();
-    $options["projectType"] = "mine";
+    #$options["projectType"] = "mine";
     $options["limit"] = 3;
     $options["current_user"] = $this->get_id();
     $options["personID"] = $this->get_id();
