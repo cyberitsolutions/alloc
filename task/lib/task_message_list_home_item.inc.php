@@ -25,7 +25,7 @@ class task_message_list_home_item extends home_item {
   var $date;
 
   function task_message_list_home_item() {
-    home_item::home_item("task_message_list_home_item", "Messages For You", "project", "taskMessageListH.tpl", "narrow", 20);
+    home_item::home_item("task_message_list_home_item", "Messages For You", "project", "taskMessageListH.tpl", "narrow", 19);
   }
 
   function show_tasks() {
