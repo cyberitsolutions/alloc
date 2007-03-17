@@ -85,9 +85,6 @@ $TPL["get"] = "&".implode("&",$get);
 $TPL["hidden"] = implode("\n",$hidden);
  
 
-// Path to alloc_config.php
-define("ALLOC_CONFIG_PATH", realpath(dirname(__FILE__)."/..")."/alloc_config.php");
-
 if ($_POST["refresh_tab_1"]) {
   header("Location: ".$TPL["url_alloc_installation"]."?1=1".$TPL["get"]);
   exit;
@@ -153,7 +150,8 @@ if ($_POST["submit_stage_4"]) {
   } else {
     define("INSTALL_SUCCESS",1);
     $TPL["img_install_result"] = IMG_TICK;
-    $TPL["msg_install_result"] = "The allocPSA installation has completed successfully. <a href=\"".$TPL["url_alloc_login"]."\">Click here</a> and login with the username and password of 'alloc'.";
+    $TPL["url_alloc_login"][strlen($TPL["url_alloc_login"])-1] != "?" and $qm = "?";
+    $TPL["msg_install_result"] = "The allocPSA installation has completed successfully. <a href=\"".$TPL["url_alloc_login"].$qm."msg=".urlencode("Default login username/password: <b>alloc</b><br>You should change both the username and password of this administrator account ASAP.")."\">Click here</a> and login with the username and password of 'alloc'.";
   }
 
   $_GET["tab"] = 4;
@@ -234,6 +232,41 @@ if ($_POST["install_db"]) {
   if (!@mysql_query($query,$link)) {
     $errors[] = "Error! (".mysql_error().").";
   }
+
+
+
+  $body = <<<EOD
+If you're new to allocPSA, just follow the tabs across left to right at the
+top of the page, ie: Clients have Projects &gt; Projects have Tasks &gt; Time
+Sheet are billed against Tasks &gt; and the Finance section will help you out
+when there are Time Sheets.
+
+Here are the cron jobs from the installation in case you hadn't installed
+them yet. You will need to install at least the first one to enable the very
+useful automated reminders functionality. 
+
+# Check every 10 minutes for any allocPSA Reminders to send
+*/10 * * * * wget -q -O /dev/null {$_FORM["allocURL"]}reminder/sendReminders.php
+
+# Send allocPSA Daily Digest emails once a day at 4:35am
+35 4 * * * wget -q -O /dev/null {$_FORM["allocURL"]}person/sendEmail.php
+
+# Check for allocPSA Repeating Expenses once a day at 4:40am
+40 4 * * * wget -q -O /dev/null {$_FORM["allocURL"]}finance/checkRepeat.php
+
+Please feel free to contact us at Cybersource &lt;info@cyber.com.au&gt; or just use
+the forums at http://sourceforge.net/projects/allocpsa/ if you have any questions.
+
+To remove this announcement click on the Tools tab and then click the
+Announcements link.
+EOD;
+
+  // Insert new announcement
+  $query = "INSERT INTO announcement (heading, body, personID,displayFromDate,displayToDate) VALUES (\"Getting Started in allocPSA\",\"".db_esc($body)."\",1,'2000-01-01','2030-01-01')";
+  if (!@mysql_query($query,$link)) {
+    $errors[] = "Error! (".mysql_error().").";
+  }
+
 
   // Insert patch data
   $files = get_patch_file_list();

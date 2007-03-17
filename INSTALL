@@ -22,10 +22,10 @@ allocPSA Installation
 
 allocPSA is intended to run with PHP and MySQL on a Linux server.  If you
 manage to get it running on an alternate operating system then please let us
-know about it <info@cyber.com.au>  :)
+know about it.
 
 
-1) Put the source code in a directory called "alloc" in your webservers
+1) Put the source code in a directory called eg "alloc" in your webservers
    document root.
 
 2) Open that URL with your web browser eg: http://webserver/alloc/
@@ -33,6 +33,6 @@ know about it <info@cyber.com.au>  :)
 
 
 Please feel free to contact us at Cybersource <info@cyber.com.au> or just use the 
-forums at http://sourceforge.net/projects/allocpsa/ if you have any difficulties.
+forums at http://sourceforge.net/projects/allocpsa/ if you have any questions.
 
-Alex Lance
+

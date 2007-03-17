@@ -21,6 +21,11 @@
  *
  */
 
+
+// Path to alloc_config.php
+define("ALLOC_CONFIG_PATH", realpath(dirname(__FILE__)."/../..")."/alloc_config.php");
+
+
 class installation_module extends module {
 }
 

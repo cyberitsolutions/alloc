@@ -32,6 +32,7 @@ class db {
   var $link_id;
   var $row = array();
   var $error;
+  var $verbose = 1;
 
   function db($username="",$password="",$hostname="",$database="") { // Constructor
     $this->username = $username;
@@ -58,7 +59,7 @@ class db {
   } 
 
   function error($msg=false) {
-    $msg and print "<br/>".$msg;
+    strlen($msg) && $this->verbose and print "<br/>".$msg;
     $this->error = $msg;
   }
 
@@ -109,12 +110,14 @@ class db {
     $id = mysql_query($query);
     if ($id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
       $this->query_id = $id;
+      $rtn = $this->query_id;
       $this->error();
     } else {
-      $this->query_id = false;
-      $this->error("Query failed: ".mysql_error($this->link_id)."<br><pre>".$query."</pre>");
+      $rtn = false;
+      is_resource($this->link_id) and $str = mysql_error($this->link_id);
+      $this->error("Query failed: ".$str."<br><pre>".$query."</pre>");
     }
-    return $this->query_id;
+    return $rtn;
   } 
 
   function num($query_id="") {
@@ -151,7 +154,7 @@ class db {
     $this->select_db($db);
     $query = sprintf('SHOW TABLES LIKE "%s"',$table);
     $this->query($query);
-    while ($row = $this->row()) {
+    while ($row = $this->row($this->query_id,MYSQL_NUM)) {
       if ($row[0] == $table) $yep = true;
     }
     $this->select_db($prev_db);
