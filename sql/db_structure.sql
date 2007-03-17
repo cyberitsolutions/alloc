@@ -362,8 +362,6 @@ CREATE TABLE sentEmailLog (
 ) TYPE=ISAM PACK_KEYS=1;
 
 
-
-
 CREATE TABLE sess (
   sessID varchar(32) NOT NULL default '',
   personID int(11) NOT NULL default '0',

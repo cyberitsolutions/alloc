@@ -22,9 +22,30 @@
 # 
 # To update database structure for db's which already have data in them.
 #
-
 # This script has been re-written so that livealloc can still use it
+#
 
-wget -q -O /dev/null http://localhost/alloc/installation/patch.php?apply_patches=true
+#set -x
+
+
+# The location of the alloc install, default to localhost for livealloc
+if [ -n "${1}" ]; then
+  alloc="${1}"
+else
+  alloc="http://localhost/alloc/"
+fi
+
+
+# Append a forward-slash if necessary
+[ "${alloc:(-1):1}" != "/" ] && alloc="${alloc}/"
+
+# This upgrade script will fetch bash commands to be run as ROOT
+str=$(wget -q -O - ${alloc}installation/patch_1_2_256_to_1_3_497.php?return_commands=1)
+
+# Run commands
+eval "${str}"
+
+# Perform regular db upgrades
+wget -q -O /dev/null ${alloc}installation/patch.php?apply_patches=true
 
 

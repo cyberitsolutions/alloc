@@ -35,7 +35,7 @@ class config extends db_entity {
 
   function get_config_item($name='') {
     $db = new db_alloc;
-    $db->query(sprintf("SELECT value,type FROM config WHERE name = '%s'",$name));
+    $db->query(sprintf("SELECT * FROM config WHERE name = '%s'",$name));
     $db->next_record();
     if ($db->f("type") == "array") {
       $val = unserialize($db->f("value")) or $val = array();

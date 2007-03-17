@@ -40,6 +40,7 @@ class announcements_home_item extends home_item {
       $announcement->read_db_record($db);
       $announcement->set_tpl_values();
       $TPL["personName"] = $db->f("username");
+      $TPL["body"] = nl2br($db->f("body"));
       include_template($this->get_template_dir().$template_name, $this);
     }
   }

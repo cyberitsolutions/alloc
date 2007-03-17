@@ -14,7 +14,7 @@
 
   <div style="text-align:center">
 
-    {$ALLOC_SHOOER}
+    {$ALLOC_SHOOER}{echo stripslashes(urldecode($_GET["msg"]))}
 
     <div class="cssbox">
       <div class="cssbox_head">
