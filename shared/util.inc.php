@@ -654,16 +654,17 @@ function show_history() {
 
   $str[] = "<option value=\"\">Quick List</option>";
   $str[] = "<option value=\"".$TPL["url_alloc_task"]."\">New Task</option>";
+
+  if (isset($modules["time"]) && $modules["time"]) {
+    $str[] = "<option value=\"".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
+  }
+
   $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".TT_FAULT."\">New Fault</option>";
   $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".TT_MESSAGE."\">New Message</option>";
 
   if (have_entity_perm("project", PERM_CREATE, $current_user)) {
     $str[] = "<option value=\"".$TPL["url_alloc_project"]."\">New Project</option>";
   } 
-  
-  if (isset($modules["time"]) && $modules["time"]) {
-    $str[] = "<option value=\"".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
-  }
 
   if (isset($modules["client"]) && $modules["client"]) {
     $str[] = "<option value=\"".$TPL["url_alloc_client"]."\">New Client</option>";
