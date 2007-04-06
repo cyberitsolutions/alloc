@@ -52,7 +52,7 @@
 	  <td>&nbsp;</td>
     <td align="right">Client Billing:</td>
     <td><nobr>{$total_customerBilledDollars}{$ex_gst}</nobr></td>
-    <td align="right">Project Cost Centre:</td>
+    <td align="right">Cost Centre:</td>
 	  <td>{$cost_centre_link}</td>
   </tr>
 

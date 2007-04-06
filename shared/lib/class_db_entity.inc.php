@@ -142,7 +142,7 @@ class db_entity {
     }
   }
 
-  function select() {
+  function select($errors_fatal=true) {
     if (!$this->has_key_values()) {
       return false;
     }
@@ -152,7 +152,7 @@ class db_entity {
     $db = $this->get_db();
     $db->query($query);
     if ($db->next_record()) {
-      $this->read_db_record($db);
+      $this->read_db_record($db,$errors_fatal);
       return true;
     } else {
       return false;
@@ -321,7 +321,7 @@ class db_entity {
       }
       return $have_perm;
     }
-  }
+  } 
 
   function set_value($field_name, $value, $source = SRC_VARIABLE) {
     is_object($this->data_fields[$field_name]) || die("Cannot set field value - field not found: ".$field_name);

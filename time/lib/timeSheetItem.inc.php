@@ -29,17 +29,35 @@ class timeSheetItem extends db_entity {
     $this->db_entity();         // Call constructor of parent class
     $this->key_field = new db_field("timeSheetItemID");
     $this->data_fields = array("timeSheetID"=>new db_field("timeSheetID")
-                               , "dateTimeSheetItem"=>new db_field("dateTimeSheetItem")
-                               , "timeSheetItemDuration"=>new db_field("timeSheetItemDuration")
-                               , "timeSheetItemDurationUnitID"=>new db_field("timeSheetItemDurationUnitID")
-                               , "rate"=>new db_field("rate")
-                               , "personID"=>new db_field("personID")
-                               , "description"=>new db_field("description")
-                               , "comment"=>new db_field("comment")
-                               , "taskID"=>new db_field("taskID")
-                               , "commentPrivate"=>new db_field("commentPrivate")
+                             , "dateTimeSheetItem"=>new db_field("dateTimeSheetItem")
+                             , "timeSheetItemDuration"=>new db_field("timeSheetItemDuration")
+                             , "timeSheetItemDurationUnitID"=>new db_field("timeSheetItemDurationUnitID")
+                             , "rate"=>new db_field("rate")
+                             , "personID"=>new db_field("personID")
+                             , "description"=>new db_field("description")
+                             , "comment"=>new db_field("comment")
+                             , "taskID"=>new db_field("taskID")
+                             , "commentPrivate"=>new db_field("commentPrivate")
       );
   }
+
+  function save() {
+    $status = parent::save();
+
+
+    $db = new db_alloc();
+    $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) as count
+                        FROM timeSheetItem WHERE timeSheetID=%d ", $this->get_value("timeSheetID")));
+    $db->next_record();
+    $timeSheet = new timeSheet;
+    $timeSheet->set_id($this->get_value("timeSheetID"));
+    $timeSheet->select();
+    $timeSheet->set_value("dateFrom", $db->f("minDate"));
+    $timeSheet->set_value("dateTo", $db->f("maxDate"));
+    $status2 = $timeSheet->save();
+
+    return $status && $status2;
+  } 
 
   function get_fortnightly_average($personID=false) {
 
@@ -85,6 +103,14 @@ class timeSheetItem extends db_entity {
     return array($rtn,$rtn_dollars);
   }
 
+  function is_owner() {
+    if ($this->get_value("timeSheetID")) {
+      $timeSheet = new timeSheet;
+      $timeSheet->set_id($this->get_value("timeSheetID"));
+      $timeSheet->select();
+      return $timeSheet->is_owner();
+    }
+  }
   
   #function get_averages_past_fortnight($personID=false) {
    # $dateTimeSheetItem = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y")));
