@@ -44,8 +44,7 @@ define("DEFAULT_SEP","\n");
     $db = new db_alloc;
     $db->query($q);
 
-    $project = $timeSheet->get_foreign_object("project");
-    $customerBilledDollars = $project->get_value("customerBilledDollars");
+    $customerBilledDollars = $timeSheet->get_value("customerBilledDollars");
 
     return array($db, $customerBilledDollars,$timeSheet,$unit_array);
   }
