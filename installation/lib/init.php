@@ -76,11 +76,10 @@ function perform_test($test) {
     case "php_memory":
       $arr["value"] = get_cfg_var("memory_limit");
       if (str_replace(array("m","M"),"",$arr["value"]) < 32) {
-        $arr["remedy"] = "PHP does not have enough memory enabled. It is recommended to change the memory limit in the PHP config file: ".get_cfg_var("cfg_file_path");
+        $arr["remedy"] = "Your installation of PHP does not have enough memory enabled. It is recommended to change the memory limit in the PHP config file: ".get_cfg_var("cfg_file_path");
       }
     break;
     case "php_gd":
-
       if (function_exists("gd_info")) {
         $gd_info = gd_info();
       } else {
@@ -88,19 +87,19 @@ function perform_test($test) {
       }
       $arr["value"] = $gd_info["GD Version"];
       if (!in_array("gd",$extensions)) {
-        $arr["remedy"] = "PHP does not have the GD extension. It is recommended to install GD.";
+        $arr["remedy"] = "Your installation of PHP does not have the GD extension. It is recommended to install GD.";
       }
     break;
     case "mysql_version":
       $arr["value"] =  "Client: ".mysql_get_client_info();
       if (!in_array("mysql",$extensions)) {
-        $arr["remedy"] = "PHP does not have the MySQL extension. allocPSA requires the use of a MySQL database.";
+        $arr["remedy"] = "Your installation of PHP does not have the MySQL extension. allocPSA requires the use of a MySQL database.";
       }
     break;
     case "mail_exists":
-      $arr["value"] = get_cfg_var("sendmail_path");
-      if (!function_exists("mail") || !get_cfg_var("sendmail_path")) {
-        $arr["remedy"] = "PHP doesn't know the path to sendmail, alloc may not be able to send out emails. Please check the sendmail_path option in the PHP config file: ".get_cfg_var("cfg_file_path");
+      $arr["value"] = "mail()";
+      if (!function_exists("mail")) {
+        $arr["remedy"] = "Your installation of PHP does not have the mail() function. allocPSA may not be able to send out emails.";
       }
     break;
     case "db_connect":
