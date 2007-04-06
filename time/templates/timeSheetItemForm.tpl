@@ -80,7 +80,7 @@ function updateTimeSheetTaskList(number) \{
           </div>
     </td>
     <td colspan="3">
-      Task Comments<br/>
+      Comments<br/>
       <textarea rows="3" cols="70" name="timeSheetItem_comment" id="tsi_note" style="height:22px;"
                 onFocus="document.getElementById('tsi_note').style.height='150px';
                          document.getElementById('grow_tsi_note').style.display='none'

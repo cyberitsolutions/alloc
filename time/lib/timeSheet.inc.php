@@ -47,9 +47,47 @@ class timeSheet extends db_entity
                                , "billingNote"=>new db_field("billingNote")
                                , "payment_insurance"=>new db_field("payment_insurance")
                                , "recipient_tfID"=>new db_field("recipient_tfID")
+                               , "customerBilledDollars"=>new db_field("customerBilledDollars")
       );
     $this->permissions[PERM_TIME_APPROVE_TIMESHEETS] = "Approve";
     $this->permissions[PERM_TIME_INVOICE_TIMESHEETS] = "Invoice";
+  }
+
+  function save() {
+    global $current_user;
+  
+    if (!$this->get_value("personID")) {
+      $this->set_value("personID", $current_user->get_id());
+    }
+
+    $status = parent::save();
+    return $status;
+  }
+
+  function is_owner() {
+    global $current_user;
+    if ($this->get_value("personID") == $current_user->get_id()) {
+      return true;
+    } else {
+
+      // This allows people with transactions on this time sheet who may not
+      // actually be this time sheets owner to view this time sheet.
+      if ($this->get_value("status") != "edit") { 
+        $current_user_tfIDs = $current_user->get_tfIDs();
+        $q = sprintf("SELECT * FROM transaction WHERE timeSheetID = %d",$this->get_id());
+        $db = new db_alloc();
+        $db->query($q);
+        while ($db->next_record()) {
+          if (in_array($db->f("tfID"),$current_user_tfIDs)) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  function select() {
+    return parent::select(false);
   }
 
   function get_timeSheet_statii() {
@@ -107,9 +145,7 @@ class timeSheet extends db_entity
     $this->pay_info["project_rateUnitID"] = $db->f("rateUnitID");
 
     // Get external rate for this particular project
-    $db->query("SELECT customerBilledDollars FROM project WHERE projectID = ".$this->get_value("projectID"));
-    $db->next_record();
-    $this->pay_info["project_customerBilledDollars"] = $db->f("customerBilledDollars");
+    $this->pay_info["project_customerBilledDollars"] = $this->get_value("customerBilledDollars");
 
     // Get duration for this timesheet/timeSheetItem
     $db->query(sprintf("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$this->get_id()));
@@ -211,8 +247,6 @@ class timeSheet extends db_entity
       $paymentInsurancePercent = config::get_config_item("paymentInsurancePercent");
       $paymentInsurancePercent and $paymentInsurancePercentMult = ($paymentInsurancePercent/100);
 
-      $cyberIsClient = $project->get_value("clientID") == 13;
-      $cyberNotClient = $project->get_value("clientID") != 13;
       $recipient_tfID = $this->get_value("recipient_tfID");
       $cyber_tfID = config::get_config_item("cybersourceTfID");
       $cyberIsCostCentre = $project->get_value("cost_centre_tfID") == $cyber_tfID;
@@ -232,11 +266,11 @@ class timeSheet extends db_entity
         $agency_percentage = 0;
         if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
           $agency_percentage = $payrollTaxPercent;
-          $product = "Credit: Agency Percentage ".$agency_percentage."% of $".$this->pay_info["total_dollars_minus_gst"]." for timesheet id: ".$this->get_id();
+          $product = "Credit: Agency Percentage ".$agency_percentage."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"])." for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
         $percent = $companyPercent - $agency_percentage;
-        $product = "Credit: ".$percent."% of $".$this->pay_info["total_dollars_minus_gst"]." for timesheet id: ".$this->get_id();
+        $product = "Credit: ".$percent."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"])." for timesheet id: ".$this->get_id();
         $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
 
 
@@ -260,7 +294,7 @@ class timeSheet extends db_entity
                     AND commissionPercent != 0");
         while ($db->next_record()) {
           $percent_so_far += $db->f("commissionPercent");
-          $product = "Credit: Commission ".$db->f("commissionPercent")."% of $".$this->pay_info["total_dollars_minus_gst"];
+          $product = "Credit: Commission ".$db->f("commissionPercent")."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"]);
           $product.= " from timesheet id: ".$this->get_id().".  Project: ".$projectName;
           $rtn[$product] = $this->createTransaction($product
                                                   , $this->pay_info["total_dollars_minus_gst"]*($db->f("commissionPercent")/100)
@@ -271,7 +305,7 @@ class timeSheet extends db_entity
         // 6. Employee gets commission if none were paid previously or the remainder of 5% commission if there is any
         if (!$percent_so_far || $percent_so_far < 5) {
           $percent = 5 - $percent_so_far;
-          $product = "Credit: Commission ".sprintf("%0.3f",$percent)."% of $".$this->pay_info["total_dollars_minus_gst"];
+          $product = "Credit: Commission ".sprintf("%0.3f",$percent)."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"]);
           $product.= " from timesheet id: ".$this->get_id().".  Project: ".$projectName;
           $rtn[$product] = $this->createTransaction($product
                                                   , $this->pay_info["total_dollars_minus_gst"]*($percent/100)
@@ -307,11 +341,11 @@ class timeSheet extends db_entity
         $agency_percentage = 0;
         if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
           $agency_percentage = $payrollTaxPercent;
-          $product = "Credit: Agency Percentage ".$agency_percentage."% of $".$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet id: ".$this->get_id();
+          $product = "Credit: Agency Percentage ".$agency_percentage."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"])." for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
         $percent = $companyPercent - $agency_percentage;
-        $product = "Credit: ".$percent."% of $".$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet id: ".$this->get_id();
+        $product = "Credit: ".$percent."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"])." for timesheet id: ".$this->get_id();
         $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
 
 
@@ -332,7 +366,7 @@ class timeSheet extends db_entity
         // 5. Credit Project Commissions
         $db->query("SELECT * FROM projectCommissionPerson where projectID = ".$this->get_value("projectID")." ORDER BY commissionPercent DESC");
         while ($db->next_record()) {
-          $product = "Credit: Commission ".$db->f("commissionPercent")."% of $".$this->pay_info["total_customerBilledDollars_minus_gst"];
+          $product = "Credit: Commission ".$db->f("commissionPercent")."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"]);
           $product.= " from timesheet id: ".$this->get_id().".  Project: ".$projectName;
           $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
 
