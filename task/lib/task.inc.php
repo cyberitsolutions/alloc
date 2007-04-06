@@ -965,7 +965,7 @@ function get_task_statii_array() {
       if ($_FORM["showComments"]) {
         $comments = util_get_comments("task",$task["taskID"]);
         if ($comments) {
-          $str[] = $comments;
+          $str[] = stripslashes($comments);
         }
       }
       if (is_array($str) && count($str)) {
