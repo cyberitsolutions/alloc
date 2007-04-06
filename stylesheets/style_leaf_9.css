@@ -342,7 +342,7 @@ div#header_image {
 
 /* Setup the main content box that encapsulates everything */
 div#main {
-  width:100%
+  width:100%;
   margin:0px;
   padding:14px 0px !important; padding:14px 8px;
   background-color:white;
@@ -376,7 +376,6 @@ div.tab {
   height:27px;
   text-align:center;
   font-size:17px;
-  vertical-align:center;
 }
 
 /* Active tabs use this class as well */
