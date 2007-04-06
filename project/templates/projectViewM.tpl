@@ -3,7 +3,7 @@
 {$table_box}
   <tr>
     <th><nobr>Project Details</nobr></th>
-    <th class="right">&nbsp;</th>
+    <th class="right">{$navigation_links}</th>
   </tr>
   <tr>
     <td>Name</td>
