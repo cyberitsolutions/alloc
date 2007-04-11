@@ -25,7 +25,7 @@
 
 require_once("../alloc.php");
 
-
+$current_user->have_role("god") or die("nope");
 
 $db = new db_alloc;
 $q = sprintf("SELECT * FROM project WHERE customerBilledDollars > 0");
