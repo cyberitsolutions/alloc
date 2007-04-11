@@ -91,12 +91,12 @@ user.
 <br/>
 
 If you need to create the allocPSA database and database user, run the
-following commands on your MySQL server, ensure you are logged in as a
+following commands on your MySQL server. Ensure you are logged in as a
 MySQL administrator user when you run them.
 
 <br/><br/>
 
-Note, you do not need to run these commands if the database and user
+<b>Note: </b> you do not need to run these commands if the database and user
 credentials you entered on the previous page are already setup on the MySQL
 server.
 
@@ -192,10 +192,12 @@ Verify that all the tests succeeded below, and click the Complete Installation b
 {/}
 </table>
 
+    {if !show_tab_4c()}
 <div class="buttons">
   <input type='submit' name='submit_stage_3' value='Refresh Page'>
   <input type='submit' name='submit_stage_4' value='Complete Installation'>
 </div>
+    {/}
 
     {if show_tab_4b()}
     <table class="nice" cellspacing="0" border="0">
