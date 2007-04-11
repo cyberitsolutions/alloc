@@ -25,7 +25,7 @@
 # This script has been re-written so that livealloc can still use it
 #
 
-#set -x
+set -x
 
 
 # The location of the alloc install, default to localhost for livealloc
