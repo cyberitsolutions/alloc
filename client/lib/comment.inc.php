@@ -46,6 +46,7 @@ class comment extends db_entity {
   }
 
   function get_comments($commentType="",$commentLinkID="") {
+    $rows = array();
     if ($commentType && $commentLinkID) {
       $q = sprintf("SELECT commentID, commentLinkID, commentModifiedTime AS date, comment, commentModifiedUser AS personID 
                       FROM comment 
@@ -57,8 +58,8 @@ class comment extends db_entity {
       while ($row = $db->row()) {
         $rows[] = $row;
       }
-      return $rows;
     }
+    return $rows;
   }
 
 
