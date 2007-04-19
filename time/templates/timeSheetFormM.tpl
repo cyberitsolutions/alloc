@@ -129,12 +129,12 @@
 
 
   </tr>
-  {show_invoice_details()}
+  { // show_invoice_details()}
   <tr>
     <td colspan="5"><br/><br/>
       <table width="100%" align="center" cellpadding="0" cellspacing="0">
         <tr>
-          <td align="center" colspan="3">{$radio_email}<br/><table><tr><td align="left">{$simple_or_complex_transaction}</td></tr></table></td>
+          <td align="center" colspan="3">{$radio_email}</td>
         </tr>
         <tr>
           <td width="1%">{get_help("timesheet_buttons")}</td>
@@ -152,8 +152,7 @@
 
 {show_main_list()}
 
-{show_transaction_list("templates/timeSheetTransactionListR.tpl")}
-{show_new_transaction("templates/timeSheetNewTransaction.tpl")}
+{show_transaction_list("templates/timeSheetTransactionListM.tpl")}
 
 
 <br><br>

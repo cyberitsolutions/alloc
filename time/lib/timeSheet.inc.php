@@ -201,23 +201,6 @@ class timeSheet extends db_entity
     $db->next_record();
   }
 
-  function transactions_are_complex() {
-    $simple_or_complex_transaction = $_POST["simple_or_complex_transaction"];
-    $project = $this->get_foreign_object("project");
-
-    if ($simple_or_complex_transaction == "simple") {
-      return $simple_or_complex_transaction;
-    
-    } else if ($simple_or_complex_transaction == "none") {
-      return $simple_or_complex_transaction;
-
-    } else if (($project->get_value("clientID") != 13) || $simple_or_complex_transaction == "complex") {
-      return "complex";
-    }
-
-    return "none";
-  }
-
   function createTransactions() {
 
     // So this will only create transaction if:
@@ -226,10 +209,11 @@ class timeSheet extends db_entity
     $db = new db_alloc;
     $project = $this->get_foreign_object("project");
     $projectName = $project->get_value("projectName");
-    $cost_centre = $project->get_value("cost_centre_tfID") or $cost_centre = config::get_config_item("cybersourceTfID");
+    $company_tfID = config::get_config_item("cybersourceTfID");
+    $cost_centre = $project->get_value("cost_centre_tfID") or $cost_centre = $company_tfID;
     $this->load_pay_info();
 
-    if ($this->get_value("status") != "admin") {
+    if ($this->get_value("status") != "invoiced") {
       return "ERROR: The Status of the timesheet must be 'ADMIN' in order to Create Transactions.  The status is currently: ".$this->get_value("status");
     } else if ($this->get_value("recipient_tfID") == "") {
       return "ERROR: There is no recipient TF to credit for this timesheet.";
@@ -248,14 +232,11 @@ class timeSheet extends db_entity
       $paymentInsurancePercent and $paymentInsurancePercentMult = ($paymentInsurancePercent/100);
 
       $recipient_tfID = $this->get_value("recipient_tfID");
-      $cyber_tfID = config::get_config_item("cybersourceTfID");
-      $cyberIsCostCentre = $project->get_value("cost_centre_tfID") == $cyber_tfID;
-      $cyberNotCostCentre = $project->get_value("cost_centre_tfID") != $cyber_tfID;
       $timeSheetRecipients = $project->get_timeSheetRecipients();
       $this->get_value("payment_insurance") and $insur_trans_status = "approved";
       $rtn = array();
 
-      if ($this->transactions_are_complex() == "complex") {
+      if ($_POST["create_transactions_old"]) {
 
         // 1. Debit Cost Centre
         $product = "Debit: Cost Centre for ".$projectName." for timesheet id: ".$this->get_id();
@@ -271,7 +252,7 @@ class timeSheet extends db_entity
         }
         $percent = $companyPercent - $agency_percentage;
         $product = "Credit: ".$percent."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"])." for timesheet id: ".$this->get_id();
-        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
+        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
 
 
         // 3. Credit Employee TF
@@ -284,7 +265,7 @@ class timeSheet extends db_entity
           $product = "Debit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * -$paymentInsurancePercentMult, $recipient_tfID, "insurance", $insur_trans_status);
           $product = "Credit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * $paymentInsurancePercentMult, $cyber_tfID, "insurance", $insur_trans_status);
+          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * $paymentInsurancePercentMult, $company_tfID, "insurance", $insur_trans_status);
         }
 
         
@@ -313,9 +294,54 @@ class timeSheet extends db_entity
                                                   , "commission");
         } 
 
-        $rtnmsg = "Created Old Style Transactions. ".$taxName." deducted.";
+        #$rtnmsg = "Created Old Style Transactions. ".$taxName." deducted.";
 
-      } else  if ($this->transactions_are_complex() == "simple") {
+
+      // This is just for internal transactions
+      } else if ($_POST["create_transactions_default"] && $this->pay_info["total_customerBilledDollars"] == 0) {
+
+        $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_dollars"];
+
+        // 1. Debit Cost Centre
+        $product = "Debit: Cost Centre for ".$projectName." for timesheet id: ".$this->get_id();
+        $rtn[$product] = $this->createTransaction($product, -$this->pay_info["total_customerBilledDollars_minus_gst"], $cost_centre, "timesheet");
+
+        // 3. Credit Employee TF
+        $product = "Credit: Timesheet id: ".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
+        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $insur_trans_status);
+
+        // 4. Payment Insurance
+        if ($this->get_value("payment_insurance") && $paymentInsurancePercent) {
+          $product = "Debit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
+          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * -$paymentInsurancePercentMult, $recipient_tfID, "insurance", $insur_trans_status);
+          $product = "Credit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
+          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * $paymentInsurancePercentMult, $company_tfID, "insurance", $insur_trans_status);
+        }
+        
+        /*
+        // 5. Credit Project Commissions
+        $db->query("SELECT * FROM projectCommissionPerson where projectID = ".$this->get_value("projectID")." ORDER BY commissionPercent DESC");
+        while ($db->next_record()) {
+          $product = "Credit: Commission ".$db->f("commissionPercent")."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"]);
+          $product.= " from timesheet id: ".$this->get_id().".  Project: ".$projectName;
+          $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
+
+          // Suck up the rest of funds if it is a special zero % commission
+          if ($db->f("commissionPercent") == 0) { 
+            $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_positive_amount_so_far_minus_insurance();
+            $amount < 0 and $amount = 0;
+            $product = "Credit: Commission Remaining from timesheet id: ".$this->get_id().".  Project: ".$projectName;
+          }
+
+          $rtn[$product] = $this->createTransaction($product
+                                                  , $amount
+                                                  , $db->f("tfID")
+                                                  , "commission");
+        }
+        */
+
+
+      } else if ($_POST["create_transactions_default"]) {
         /*  This was previously named "Simple" transactions. Ho ho.
             On the Project page we care about these following variables:
              - Client Billed At $amount eg: $121
@@ -346,7 +372,7 @@ class timeSheet extends db_entity
         }
         $percent = $companyPercent - $agency_percentage;
         $product = "Credit: ".$percent."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"])." for timesheet id: ".$this->get_id();
-        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $cyber_tfID, "timesheet");
+        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
 
 
         // 3. Credit Employee TF
@@ -359,31 +385,32 @@ class timeSheet extends db_entity
           $product = "Debit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * -$paymentInsurancePercentMult, $recipient_tfID, "insurance", $insur_trans_status);
           $product = "Credit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * $paymentInsurancePercentMult, $cyber_tfID, "insurance", $insur_trans_status);
+          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * $paymentInsurancePercentMult, $company_tfID, "insurance", $insur_trans_status);
         }
 
         
         // 5. Credit Project Commissions
         $db->query("SELECT * FROM projectCommissionPerson where projectID = ".$this->get_value("projectID")." ORDER BY commissionPercent DESC");
         while ($db->next_record()) {
-          $product = "Credit: Commission ".$db->f("commissionPercent")."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"]);
-          $product.= " from timesheet id: ".$this->get_id().".  Project: ".$projectName;
-          $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
+
+          if ($db->f("commissionPercent") > 0) { 
+            $product = "Credit: Commission ".$db->f("commissionPercent")."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"]);
+            $product.= " from timesheet id: ".$this->get_id().".  Project: ".$projectName;
+            $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
+            $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
 
           // Suck up the rest of funds if it is a special zero % commission
-          if ($db->f("commissionPercent") == 0) { 
+          } else if ($db->f("commissionPercent") == 0) { 
             $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_positive_amount_so_far_minus_insurance();
+            $amount < 0 and $amount = 0;
+            config::for_cyber() and $amount = $amount/2; // If it's cyber do a 50/50 split with the commission tf and the company
             $product = "Credit: Commission Remaining from timesheet id: ".$this->get_id().".  Project: ".$projectName;
+            $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
+            config::for_cyber() and $rtn[$product] = $this->createTransaction($product, $amount, $company_tfID, "commission"); // 50/50
           }
 
-          $rtn[$product] = $this->createTransaction($product
-                                                  , $amount
-                                                  , $db->f("tfID")
-                                                  , "commission");
         }
-
-    
-        $rtnmsg = "Created New Style Transactions.";
+        #$rtnmsg = "Created New Style Transactions.";
       }
 
       foreach($rtn as $error=>$v) {
@@ -409,6 +436,8 @@ class timeSheet extends db_entity
   }
 
   function createTransaction($product, $amount, $tfID, $transactionType, $status="") {
+
+    if ($amount == 0) return 1;
 
     $status or $status = "pending";
 
