@@ -52,6 +52,10 @@ class config extends db_entity {
     return $db->f('configID');
   }
 
+  function for_cyber() {
+    return config::get_config_item("companyHandle") == "cybersource";
+  }
+
 }
 
 
