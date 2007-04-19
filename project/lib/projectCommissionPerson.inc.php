@@ -42,6 +42,23 @@ class projectCommissionPerson extends db_entity {
     return $project->is_owner($person);
   }
 
+  function save() {
+    global $TPL;
+    // Just ensure multiple 0 entries cannot be saved.
+    if ($this->get_value("commissionPercent") == 0) {
+      $q = sprintf("SELECT * FROM projectCommissionPerson WHERE projectID = %d AND commissionPercent = 0",$this->get_value("projectID"));
+      $db = new db_alloc();
+      $db->query($q);
+      if ($db->next_record()) { 
+        $fail = true;
+        $TPL["message"][] = "Only one Time Sheet Commission is allowed to be set to 0%";
+      }
+    }
+    if (!$fail) {
+      parent::save();
+    }
+  }
+
 
 }
 
