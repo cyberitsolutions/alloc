@@ -30,6 +30,57 @@ if (!$current_user->is_employee()) {
 
 
   function show_transaction_list($template_name) {
+    global $timeSheet, $TPL;
+
+    if ($timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
+
+      if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced") {
+        $p_button = "<input type=\"submit\" name=\"p_button\" value=\"P\">";
+        $a_button = "<input type=\"submit\" name=\"a_button\" value=\"A\">";
+        $r_button = "<input type=\"submit\" name=\"r_button\" value=\"R\">";
+        $TPL["p_a_r_buttons"] = "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button."</form>";
+
+        // If cyber is client
+        $project = $timeSheet->get_foreign_object("project");
+        if (config::for_cyber() && $project->get_value("clientID") == 13) {
+          #$cyber_is_client = " (Cyber is client so pick this button!)";
+        }
+
+        $TPL["create_transaction_buttons"] = "<tr><td colspan=\"8\" align=\"left\">";
+        $TPL["create_transaction_buttons"].= "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">";
+        $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_default\" value=\"Create Default Transactions\">";
+        $TPL["create_transaction_buttons"].= "&nbsp;";
+        config::for_cyber() and $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_old\" value=\"Create Old Style Transactions".$cyber_is_client."\">";
+        $TPL["create_transaction_buttons"].= "</form></tr></tr>";
+  
+
+      }
+
+      $db = new db_alloc;
+      $db->query("SELECT SUM(amount) as total FROM transaction WHERE amount > 0 AND timeSheetID = ".$timeSheet->get_id());
+      $db->next_record();
+      $total_positive = $db->f("total");
+
+      $db->query("SELECT SUM(amount) as total FROM transaction WHERE amount < 0 AND timeSheetID = ".$timeSheet->get_id());
+      $db->next_record();
+      $total_negative = $db->f("total");
+
+      if (sprintf("%0.2f",$total_positive) + sprintf("%0.2f",$total_negative) != 0) {
+        $start_bad = "<span class=\"bad\">";
+        $end_bad = "</span>";
+        $extra = " (allocate: ".sprintf("\$%0.2f",-($total_positive + $total_negative)).")";
+      }
+
+      $TPL["amount_msg"] = $start_bad.$extra.$end_bad;
+      $TPL["total_pos"] = sprintf("\$%0.2f",$total_positive);
+      $TPL["total_neg"] = str_replace("-","-\$",sprintf("%0.2f",$total_negative));
+
+      include_template($template_name);
+    }
+  }
+
+  function show_transaction_listR($template_name) {
+
     global $timeSheet, $TPL, $current_user, $percent_array;
     $db = new db_alloc;
 
@@ -38,31 +89,10 @@ if (!$current_user->is_employee()) {
       $db->query("SELECT * FROM tf ORDER BY tfName");
       $tf_array = get_array_from_db($db, "tfID", "tfName");
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
-      $transactionType_options = array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance");
+      $transactionType_options = array("salary", "commission", "timesheet", "adjustment", "insurance");
 
-      $db->query("SELECT SUM(amount) as total FROM transaction WHERE timeSheetID = ".$timeSheet->get_id());
-      $db->next_record();
-      $total = $db->f("total");
-
-      if (sprintf("%0.2f",$total) != 0) {
-        $total = -$total;
-        $msg = "<span class=\"bad\">(allocate: ".sprintf("\$%0.2f)",$total)."</span>";
-      }
 
       if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced") {
-
-        $p_button = "<input type=\"submit\" name=\"p_button\" value=\"P\">";
-        $a_button = "<input type=\"submit\" name=\"a_button\" value=\"A\">";
-        $r_button = "<input type=\"submit\" name=\"r_button\" value=\"R\">";
-
-        echo $TPL["table_box"];
-        echo "<th colspan=\"8\">Transactions</th></tr><tr><td colspan=\"5\"></td>";
-        echo "<td></td><td>&nbsp;</td></tr>";
-        echo "<tr><td>Date</td><td>Product</td>";
-        echo "<td>TF</td><td class=\"nobr\">Amount ".$msg."</td><td>Type</td>";
-        echo "<td><form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button."</form></td>";
-        echo "<td>&nbsp;</td>";
-        echo "<td>&nbsp;</td></tr>";
 
         $db->query("SELECT * from transaction where timeSheetID = ".$timeSheet->get_id()." order by transactionID");
 
@@ -76,15 +106,11 @@ if (!$current_user->is_employee()) {
           $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $transaction->get_value("transactionType"), false);
           $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
           $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Save\">
-                                                <input type=\"submit\" name=\"transaction_delete\" value=\"Delete\">";
+                                         <input type=\"submit\" name=\"transaction_delete\" value=\"Delete\">";
           include_template($template_name);
         }
 
       } else {
-
-        echo $TPL["table_box"];
-        echo "<tr><th colspan=\"7\">Transactions</th></tr><tr><td>Date</td><td>Product</td>";
-        echo "<td>TF</td><td class=\"nobr\">Amount ".$msg."</td><td>Type</td><td>Status</td><td>&nbsp;</td></tr>";
 
         // If you don't have perm INVOICE TIMESHEETS then only select 
         // transactions which you have permissions to see. 
@@ -99,16 +125,12 @@ if (!$current_user->is_employee()) {
           $transaction = new transaction;
           $transaction->read_db_record($db,false);
           $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
+          unset($TPL["transaction_amount_pos"]);
+          unset($TPL["transaction_amount_neg"]);
           $TPL["transaction_amount"] = "$".number_format($TPL["transaction_amount"], 2);
           $TPL["transaction_tfID"] = get_tf_name($transaction->get_value("tfID"));
           include_template("templates/timeSheetTransactionListViewR.tpl");
         }
-
-        // Have to finish table here because normally the table would get
-        // finished in the show new transaction function, but that won't be
-        // called if you don't have perm INVOICE_TIMESHEETS. 
-
-        echo "</table><br>";
       }
     }
   }
@@ -121,22 +143,18 @@ if (!$current_user->is_employee()) {
       $tf_array = get_array_from_db($db, "tfID", "tfName");
       $TPL["tf_options"] = get_options_from_array($tf_array, $none, true, 35);
 
-      $transactionType_options = array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance");
+      $transactionType_options = array("salary", "commission", "timesheet", "adjustment", "insurance");
       $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $none, false);
 
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
       $TPL["status_options"] = get_select_options($status_options, $none);
-
       $TPL["invoiceItemID"] = $timeSheet->get_value("invoiceItemID");
-
       $TPL["transaction_timeSheetID"] = $timeSheet->get_id();
       $TPL["transaction_transactionDate"] = date("Y-m-d");
       $TPL["transaction_product"] = "";
       $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Add\">";
       $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
-
       include_template($template);
-      echo "</table><br>";
     }
   }
 
@@ -347,6 +365,15 @@ if ($timeSheetID) {
 } 
 
 
+// Hack to manually update the Client Billing field
+if ($_GET["CB"]) {
+  $project = new project;
+  $project->set_id($timeSheet->get_value("projectID"));
+  $project->select();
+  $timeSheet->set_value("customerBilledDollars",sprintf("%0.2f",$project->get_value("customerBilledDollars")));
+  $timeSheet->save();
+}
+
 
 if ($_POST["save"]
 || $_POST["save_and_new"]
@@ -478,7 +505,6 @@ if ($_POST["save"]
       }
       $timeSheet->set_value("approvedByAdminPersonID", $current_user->get_id());
 
-      $msg.= $timeSheet->createTransactions();
 
       $timeSheet->set_value("status", "invoiced");
 
@@ -667,6 +693,10 @@ if (!$timeSheetID) {
 } 
 
 
+// if have perm and status == blah
+if (($_POST["create_transactions_default"] || $_POST["create_transactions_old"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+  $msg.= $timeSheet->createTransactions();
+}
 
 // Take care of saving transactions
 if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
@@ -756,7 +786,7 @@ if ($projectID != 0) {
 
   $tfID = $project->get_value("cost_centre_tfID");
   $tfID or $tfID = config::get_config_item("cybersourceTfID");
-  $tfID and $TPL["cost_centre_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$project->get_value("cost_centre_tfID")."\">";
+  $tfID and $TPL["cost_centre_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$tfID."\">";
   $tfID and $TPL["cost_centre_link"].= get_tf_name($tfID)."</a>";
 
   $TPL["client_link"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
@@ -891,19 +921,6 @@ case 'admin':
 
     $TPL["radio_email"] = $radio_email;
 
-    if ($timeSheet->transactions_are_complex() == "complex") {
-      $checked2 = " checked";
-    } else {
-      $checked0 = " checked";
-    }
-
-    $TPL["simple_or_complex_transaction"] = "<nobr><input type=\"radio\" id=\"s_o_c_t_none\" name=\"simple_or_complex_transaction\" value=\"none\"".$checked0.">
-                                                   <label for=\"s_o_c_t_none\">Don't Create Default Transactions</label></nobr><br>
-                                             <nobr><input type=\"radio\" id=\"s_o_c_t_simple\" name=\"simple_or_complex_transaction\" value=\"simple\"".$checked1.">
-                                                   <label for=\"s_o_c_t_simple\">Create New Style Pending Transactions</label></nobr><br>
-                                             <nobr><input type=\"radio\" id=\"s_o_c_t_complex\" name=\"simple_or_complex_transaction\" value=\"complex\"".$checked2.">
-                                                   <label for=\"s_o_c_t_complex\">Create Old Style Pending Transactions</label></nobr>
-        ";
   }
   break;
 
@@ -915,6 +932,8 @@ case 'invoiced':
         <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Complete -&gt;\">";
 
     $TPL["radio_email"] = $radio_email;
+    
+
   }
   break;
 
