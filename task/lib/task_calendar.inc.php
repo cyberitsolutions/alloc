@@ -154,7 +154,7 @@ class calendar {
           $interval = $reminder->get_value('reminderRecuringValue');
           $intervalUnit = $reminder->get_value('reminderRecuringInterval');
 
-          while ($reminderTime <= format_date("U",$this->last_date)) {
+          while ($reminderTime < format_date("U",$this->last_date)+86400) {
             $row["reminderTime"] = $reminderTime;
             $reminders[date("Y-m-d",$reminderTime)][] = $row;
             $reminderTime = $reminder->get_next_reminder_time($reminderTime,$interval,$intervalUnit);
@@ -312,7 +312,9 @@ class calendar {
         $reminders[$date] or $reminders[$date] = array();
         foreach ($reminders[$date] as $r) {
           #if (date("Y-m-d",$r["reminderTime"]) == $date) {
-            $d->reminders[] = '<a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$r["reminderSubject"]."</a>";
+            $text = $r["reminderSubject"];
+            $r["reminderTime"] and $text = date("g:ia",$r["reminderTime"])." ".$text;
+            $d->reminders[] = '<a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$text.'</a>';
           #}
         }
 
