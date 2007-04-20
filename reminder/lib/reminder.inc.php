@@ -302,11 +302,12 @@ class reminder extends db_entity {
     $date_Y = date("Y",$reminderTime);
 
      switch ($intervalUnit) {
-       case "Hour":  $date_H = date("H", $reminderTime) + $interval;       break;
-       case "Day":   $date_d = date("d", $reminderTime) + $interval;       break;
-       case "Week":  $date_d = date("d", $reminderTime) + (7 * $interval); break;
-       case "Month": $date_m = date("m", $reminderTime) + $interval;       break;
-       case "Year":  $date_Y = date("Y", $reminderTime) + $interval;       break;
+       case "Minute": $date_i = date("i", $reminderTime) + $interval;       break;
+       case "Hour":   $date_H = date("H", $reminderTime) + $interval;       break;
+       case "Day":    $date_d = date("d", $reminderTime) + $interval;       break;
+       case "Week":   $date_d = date("d", $reminderTime) + (7 * $interval); break;
+       case "Month":  $date_m = date("m", $reminderTime) + $interval;       break;
+       case "Year":   $date_Y = date("Y", $reminderTime) + $interval;       break;
      }
 
      return mktime($date_H,$date_i,$date_s,$date_m,$date_d,$date_Y);
@@ -321,8 +322,8 @@ class reminder extends db_entity {
     &&  $this->get_value('reminderAdvNoticeSent') == 0) {
 
       $date = strtotime($this->get_value('reminderTime'));
-      $interval = $this->get_value('reminderRecuringValue');
-      $intervalUnit = $this->get_value('reminderRecuringInterval');
+      $interval = -$this->get_value('reminderAdvNoticeValue');
+      $intervalUnit = $this->get_value('reminderAdvNoticeInterval');
       $advnotice_time = $this->get_next_reminder_time($date,$interval,$intervalUnit);
 
       // only sent advanced notice if it is time to send it
