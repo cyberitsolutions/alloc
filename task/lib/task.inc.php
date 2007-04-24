@@ -960,7 +960,7 @@ function get_task_statii_array() {
 
     if ($_FORM["showDescription"] || $_FORM["showComments"]) {
       if ($task["taskDescription"]) {
-        $str[] = $task["taskDescription"];
+        $str[] = stripslashes($task["taskDescription"]);
       }
       if ($_FORM["showComments"]) {
         $comments = util_get_comments("task",$task["taskID"]);
