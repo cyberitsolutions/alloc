@@ -25,7 +25,7 @@ require_once("../alloc.php");
 
   function check_optional_client_exists() {
     global $clientID;
-    return isset($clientID);
+    return $clientID;
   }
 
   function show_client_details_edit($template) {
@@ -33,10 +33,10 @@ require_once("../alloc.php");
 
     $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save Client Contact\">";
 
-    if (!isset($clientID) || $_POST["client_edit"]) {
+    if (!isset($clientID) || $_POST["client_edit"] || $TPL["message"]) {
 
       // If new client
-      if (!isset($clientID)) {
+      if (!$clientID) {
         $TPL["clientDetails_buttons"] = "<input type=\"submit\" name=\"save\" value=\"Create New Client\">";
         $TPL["createGeneralSupportProject"] = "<b>Create General Support Project</b> <input type=\"checkbox\" name=\"createProject\"/>";
           
@@ -56,7 +56,7 @@ require_once("../alloc.php");
 
   function show_client_details($template) {
     global $TPL, $client, $clientID;
-    if (isset($clientID) && !$_POST["client_edit"]) {
+    if ($clientID && !$_POST["client_edit"] && !$TPL["message"]) {
       // setup formatted address output
 
       // postal address
@@ -257,11 +257,14 @@ $clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];
 
 
 if ($_POST["save"]) {
-  if ($_POST["clientName"] == "") {
-    $TPL["error"] = "Please enter a company name.";
+  if (!$_POST["clientName"]) {
+    $TPL["message"][] = "Please enter a Client Name.";
   }
   $client->read_globals();
   $client->set_value("clientModifiedTime", date("Y-m-d"));
+  $clientID = $client->get_id();
+  $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+
   if (!$client->get_id()) {
     // New client.
 
@@ -273,26 +276,28 @@ if ($_POST["save"]) {
     $new_client = true;
   }
 
-  $client->save();
-  $clientID = $client->get_id();
-  $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-  
-  if ($new_client == true && $_POST["createProject"]) {
-     // Create Project: <Client Name> - General Support 
-    $project = new project;
-    $project->set_value("projectName", $client->get_value("clientName")." - General Support");
-    $project->set_value("clientID", $clientID);
-    $project->set_value("projectType", "contract");
-    $project->set_value("projectStatus", "current");
-    $project->save();
+  if (!$TPL["message"]) {
+    $client->save();
+    $clientID = $client->get_id();
+    $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+    
+    if ($new_client == true && $_POST["createProject"]) {
+       // Create Project: <Client Name> - General Support 
+      $project = new project;
+      $project->set_value("projectName", $client->get_value("clientName")." - General Support");
+      $project->set_value("clientID", $clientID);
+      $project->set_value("projectType", "contract");
+      $project->set_value("projectStatus", "current");
+      $project->save();
 
-    // Now add current_user as a projectPerson
-    $projectperson = new projectperson;
-    $projectperson->set_value("personID", $current_user->get_id());
-    $projectperson->set_value("projectID", $project->get_id());
-    $projectperson->set_value_role("isManager");
-    $projectperson->save();
-  }    
+      // Now add current_user as a projectPerson
+      $projectperson = new projectperson;
+      $projectperson->set_value("personID", $current_user->get_id());
+      $projectperson->set_value("projectID", $project->get_id());
+      $projectperson->set_value_role("isManager");
+      $projectperson->save();
+    }    
+  }
   
 } else if ($_POST["save_attachment"]) {
   move_attachment("client",$clientID);

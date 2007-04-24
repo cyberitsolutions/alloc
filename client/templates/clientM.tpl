@@ -31,10 +31,10 @@
     </table>
    
  
-{show_comments()}
+    {show_comments()}
 
+    {show_attachments()}
 
-{show_attachments()}
 
     {$table_box}
       <tr>
