@@ -141,6 +141,8 @@ require_once("../alloc.php");
 
       $col2 = array();
       $email = $clientContact->get_value("clientContactEmail");
+      $email = str_replace("<","",$email);
+      $email = str_replace(">","",$email);
       $email and $col2[] = "E: <a href=\"mailto:".$email."\">".$email."</a>";
 
       $phone = $clientContact->get_value('clientContactPhone');
