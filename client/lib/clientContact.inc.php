@@ -34,6 +34,7 @@ class clientContact extends db_entity {
                               ,"clientContactSuburb"=>new db_field("clientContactSuburb")
                               ,"clientContactState"=>new db_field("clientContactState")
                               ,"clientContactPostcode"=>new db_field("clientContactPostcode")
+                              ,"clientContactCountry"=>new db_field("clientContactCountry")
                               ,"clientContactPhone"=>new db_field("clientContactPhone")
                               ,"clientContactMobile"=>new db_field("clientContactMobile")
                               ,"clientContactFax"=>new db_field("clientContactFax")
