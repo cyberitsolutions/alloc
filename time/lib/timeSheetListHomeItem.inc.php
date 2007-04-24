@@ -45,7 +45,7 @@ class timeSheetListHomeItem extends home_item {
                       WHERE timeSheet.personID=%d 
                          AND timeSheet.status != 'finished' 
                     GROUP BY timeSheet.timeSheetID
-                    ORDER BY timeSheet.status", $current_user->get_id());
+                    ORDER BY timeSheet.status, timeSheet.dateFrom", $current_user->get_id());
     $db = new db_alloc;
     $db->query($query);
     while ($db->next_record()) {
