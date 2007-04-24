@@ -74,10 +74,10 @@ require_once("../alloc.php");
         $a.= "<br>".$suburb;
       }
       if ($state != "") {
-        $a.= "<br>".$state;
-        if ($postcode != "") {
-          $a.= ", ".$postcode;
-        }
+        $a.= " ".$state;
+      }
+      if ($postcode != "") {
+        $a.= " ".$postcode;
       }
       if ($country != "") {
         $a.= "<br>".$country;
@@ -129,8 +129,28 @@ require_once("../alloc.php");
         $pc = " (Primary Contact)";
       }
 
+      $col1 = array();
+      $clientContact->get_value('clientContactName') and $col1[] = "<b>".$clientContact->get_value('clientContactName')."</b>".$pc;
+      $clientContact->get_value('clientContactStreetAddress') and $col1[] = $clientContact->get_value('clientContactStreetAddress');
+
+      $clientContact->get_value('clientContactSuburb') || $clientContact->get_value('clientContactState') || $clientContact->get_value('clientContactPostcode') and
+      $col1[] = $clientContact->get_value('clientContactSuburb').' '.$clientContact->get_value('clientContactState')." ".$clientContact->get_value('clientContactPostcode');
+
+      $clientContact->get_value('clientContactCountry') and $col1[] = $clientContact->get_value('clientContactCountry');
+
+
+      $col2 = array();
       $email = $clientContact->get_value("clientContactEmail");
-      $email and $email = "<a href=\"mailto:".$email."\">".$email."</a>";
+      $email and $col2[] = "E: <a href=\"mailto:".$email."\">".$email."</a>";
+
+      $phone = $clientContact->get_value('clientContactPhone');
+      $phone and $col2[] = "P: ".$phone;
+
+      $mobile = $clientContact->get_value('clientContactMobile');
+      $mobile and $col2[] = "M: ".$mobile;
+
+      $fax = $clientContact->get_value('clientContactFax');
+      $fax and $col2[] = "F: ".$fax;
 
       $buttons = "<nobr><input type=\"submit\" name=\"clientContact_edit\" value=\"Edit\"> 
                         <input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this Client Contact?')\"></nobr>";
@@ -140,22 +160,10 @@ require_once("../alloc.php");
       $rtn[] =  '<input type="hidden" name="clientID" value="'.$clientID.'">';
       $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="comments">';
       $rtn[] =  '<tr>';
-      $rtn[] =  '  <td width="20%" class="nobr"><b>'.$clientContact->get_value('clientContactName').'</b>'.$pc.'</td>';
-      $rtn[] =  '  <td width="20%">'.$email.'</td>';
-      $rtn[] =  '  <td rowspan="4" align="left" valign="top">'.$clientContact->get_value('clientContactOther').'</td>';
+      $rtn[] =  '  <td width="25%" class="nobr">'.implode("<br>",$col1).'</td>';
+      $rtn[] =  '  <td width="20%">'.implode("<br>",$col2).'</td>';
+      $rtn[] =  '  <td rowspan="4" align="left" valign="top">'.nl2br($clientContact->get_value('clientContactOther')).'</td>';
       $rtn[] =  '  <th rowspan="2" align="right" width="2%">'.$buttons.'</th>';
-      $rtn[] =  '</tr>';
-      $rtn[] =  '<tr>';
-      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactStreetAddress').'</td>';
-      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactPhone').'</td>';
-      $rtn[] =  '</tr>';
-      $rtn[] =  '<tr>';
-      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactSuburb').'</td>';
-      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactMobile').'</td>';
-      $rtn[] =  '</tr>';
-      $rtn[] =  '<tr>';
-      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactState')." ".$clientContact->get_value('clientContactPostcode').'</td>';
-      $rtn[] =  '  <td>'.$clientContact->get_value('clientContactFax').'</td>';
       $rtn[] =  '</tr>';
       $rtn[] =  '</table>';
       $rtn[] =  '</form>';
@@ -258,7 +266,7 @@ $clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];
 
 if ($_POST["save"]) {
   if (!$_POST["clientName"]) {
-    $TPL["message"][] = "Please enter a Client Name.";
+    $TPL["message"][] = "Please enter a Company Name.";
   }
   $client->read_globals();
   $client->set_value("clientModifiedTime", date("Y-m-d"));

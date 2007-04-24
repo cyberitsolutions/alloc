@@ -55,6 +55,7 @@ CREATE TABLE clientContact (
   clientContactSuburb varchar(255) default NULL,
   clientContactState varchar(255) default NULL,
   clientContactPostcode varchar(255) default NULL,
+  clientContactCountry varchar(255) default NULL,
   clientContactPhone varchar(255) default NULL,
   clientContactMobile varchar(255) default NULL,
   clientContactFax varchar(255) default NULL,
