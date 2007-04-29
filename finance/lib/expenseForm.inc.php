@@ -33,6 +33,7 @@ class expenseForm extends db_entity {
                                , "reimbursementRequired"=>new db_field("reimbursementRequired", array("empty_to_null"=>false))
                                , "seekClientReimbursement"=>new db_field("seekClientReimbursement", array("empty_to_null"=>false))
                                , "transactionRepeatID"=>new db_field("transactionRepeatID", array("empty_to_null"=>false))
+                               , "clientID"=>new db_field("clientID")
                                , "enteredBy"=>new db_field("enteredBy")
                                , "expenseFormFinalised"=>new db_field("expenseFormFinalised", array("empty_to_null"=>false))
       );

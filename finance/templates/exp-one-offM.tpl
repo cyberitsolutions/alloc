@@ -9,6 +9,8 @@
   <tr> 
     <th>Expense Form</th>
     <th class="right"><a href="{$url_alloc_expOneOff}expenseFormID={$expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>
+    <a href="{$url_alloc_expenseFormList}">Expense Form List</a>
+    </th>
   </tr>
   <tr>
     <td align="right">Total:</td><td>${$formTotal}</td>
@@ -21,7 +23,7 @@
   </tr>
     {$reimbursementRequiredOption}
   <tr>
-    <td align="right">Seek Client Reimbursement:</td><td>{$seekClientReimbursementOption}</td>
+    <td align="right">Seek Client Reimbursement:</td><td>{$seekClientReimbursementOption}{$field_clientID}</td>
   </tr>
   <tr>
     <td colspan="2" align="center">
@@ -40,7 +42,7 @@
   </tr>
 
   <tr>
-    <td colspan="4"><b>Enter the company name, address and supplier ID</b></td> 
+    <td colspan="4"><b>Enter the company name and address</b></td> 
     <td colspan="2"><b>Project</b></td> 
   </tr>
   <tr>
