@@ -35,6 +35,7 @@ class alloc_email {
   var $no_email_hosts = array("garlic.office.cyber.com.au"
                              ,"spectrum.lancewood.net"
                              ,"peach.office.cyber.com.au"
+                             ,"alloc_dev"
                              );
                              #,"mint.lancewood.net"
                              #,"mint"
