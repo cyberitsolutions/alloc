@@ -115,6 +115,7 @@ class client extends db_entity {
      *   clientStatus
      *   clientName
      *   clientLetter
+     *   return = html | dropdown_options
      *
      */
 
@@ -144,12 +145,16 @@ class client extends db_entity {
       $c->read_db_record($db);
       $row["clientLink"] = $c->get_client_link();
       $summary.= client::get_client_list_tr($row,$_FORM);
+      $summary_ops[$c->get_id()] = stripslashes($c->get_value("clientName"));
 
       #$TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
     }
 
     if ($print && $_FORM["return"] == "html") {
       return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+
+    } else if ($print && $_FORM["return"] == "dropdown_options") {
+      return $summary_ops;
 
     } else if (!$print && $_FORM["return"] == "html") {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Clients Found</b></td></tr></table>";
