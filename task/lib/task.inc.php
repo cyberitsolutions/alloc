@@ -301,11 +301,7 @@ class task extends db_entity {
       while ($db->next_record()) {
         $taskCCListOptions[$db->f("emailAddress")] = stripslashes($db->f("firstName")." ".$db->f("surname"));
       }
-      
-
     }
-
-
 
     if (is_array($taskCCListOptions)) {
       foreach ($taskCCListOptions as $email => $name) {
@@ -319,29 +315,58 @@ class task extends db_entity {
     return $str;
   }
 
+  function get_personList_dropdown($projectID) {
+    global $current_user;
+ 
+    $db = new db_alloc;
+
+    if ($_GET["timeSheetID"]) {
+      $ts_query = sprintf("SELECT * FROM timeSheet WHERE timeSheetID = %d",$_GET["timeSheetID"]);
+      $db->query($ts_query);
+      $db->next_record();
+      $owner = $db->f("personID");
+
+    } else if (is_object($this) && $this->get_value("personID")) {
+      $owner = $this->get_value("personID");
+
+    } else if (!is_object($this) || !$this->get_id()) {
+      $owner = $current_user->get_id();
+    }
+
+    $peoplenames = person::get_username_list($owner);
+
+    if ($projectID) {
+      $q = sprintf("SELECT * 
+                      FROM projectPerson 
+                 LEFT JOIN person ON person.personID = projectPerson.personID 
+                     WHERE person.personActive = 1 
+                       AND projectID = %d
+                   ",$projectID);
+      $db->query($q);
+      while ($row = $db->row()) {
+        $ops[$row["personID"]] = $peoplenames[$row["personID"]];
+      }
+    } else {
+      $ops = $peoplenames;
+    }
+
+    $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
+   
+    $str = '<select name="personID">';
+    $str.= get_option("None", "0", $owner == 0)."\n";
+    $str.= get_select_options($ops, $owner);
+    $str.= '</select>';
+    return $str;
+  }
+
   function set_option_tpl_values() {
     // Set template values to provide options for edit selects
     global $TPL, $current_user, $isMessage;
 
     $db = new db_alloc;
 
-    if ($_GET["timeSheetID"]) {
-      $ts_query = sprintf("select * from timeSheet where timeSheetID = %d",$_GET["timeSheetID"]);
-      $db->query($ts_query);
-      $db->next_record();
-      $owner = $db->f("personID");
-      $projectID = $db->f("projectID");
-    } else if ($this->get_value("personID")) {
-      $owner = $this->get_value("personID");
-    } else if (!$this->get_id()) {
-      $owner = $current_user->get_id();
-    }
-
-    $TPL["personOptions"] = get_option("None", "0", $owner == 0)."\n";
-    $TPL["personOptions"].= get_select_options(person::get_username_list($owner), $owner);
-
-
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
+    $TPL["personOptions"] = task::get_personList_dropdown($projectID);
 
     // TaskType Options
     $taskType = new taskType;

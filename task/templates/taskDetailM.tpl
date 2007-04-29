@@ -6,10 +6,15 @@
 function updateStuffWithAjax() \{
   obj = document.getElementById("taskform").projectID;
   id = obj.options[obj.selectedIndex].value;
+  document.getElementById("parenTaskDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
   url = '{$url_alloc_updateParentTasks}projectID='+id
   makeAjaxRequest(url,'updateParentTasks',1)
+  document.getElementById("taskCCListDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
   url = '{$url_alloc_updateTaskCCList}projectID='+id
   makeAjaxRequest(url,'updateTaskCCList',2)
+  document.getElementById("taskPersonList").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
+  url = '{$url_alloc_updatePersonList}projectID='+id
+  makeAjaxRequest(url,'updatePersonList',3)
 \}
 
 // Here's the callback function
@@ -26,6 +31,15 @@ function updateTaskCCList(number) \{
   if (http_request[number].readyState == 4) \{
     if (http_request[number].status == 200) \{
       document.getElementById("taskCCListDropdown").innerHTML = http_request[number].responseText;
+    \}
+  \}
+\}
+
+// Another callback function
+function updatePersonList(number) \{
+  if (http_request[number].readyState == 4) \{
+    if (http_request[number].status == 200) \{
+      document.getElementById("taskPersonList").innerHTML = http_request[number].responseText;
     \}
   \}
 \}
@@ -74,10 +88,9 @@ function updateTaskCCList(number) \{
     </td>
     <td width="1%"><nobr>Assigned To</nobr></td>
     <td>
-      <select name="personID">
+      <div id="taskPersonList">
         {$personOptions}
-      </select>
-
+      </div>
 <input type="hidden" name="dateAssigned" value="{$task_dateAssigned}">
 <input type="hidden" name="dateCreated" value="{$task_dateCreated}">
 <input type="hidden" name="dateClosed" value="{$task_dateClosed}">

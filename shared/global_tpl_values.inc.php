@@ -50,11 +50,12 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_updateTaskCommentTemplate"      => $sess->url(SCRIPT_PATH."task/updateTaskCommentTemplate.php")
             ,"url_alloc_updateProjectList"              => $sess->url(SCRIPT_PATH."task/updateProjectList.php")
             ,"url_alloc_taskList"                       => $sess->url(SCRIPT_PATH."task/taskList.php")
-            ,"url_alloc_comment"                        => $sess->url(SCRIPT_PATH."shared/comment.php")
             ,"url_alloc_taskCommentTemplate"            => $sess->url(SCRIPT_PATH."task/taskCommentTemplate.php")
             ,"url_alloc_taskCommentTemplateList"        => $sess->url(SCRIPT_PATH."task/taskCommentTemplateList.php")
             ,"url_alloc_taskCalendar"                   => $sess->url(SCRIPT_PATH."task/taskCalendar.php")
+            ,"url_alloc_updatePersonList"               => $sess->url(SCRIPT_PATH."task/updatePersonList.php")
 
+            ,"url_alloc_comment"                        => $sess->url(SCRIPT_PATH."shared/comment.php")
             ,"url_alloc_client"                         => $sess->url(SCRIPT_PATH."client/client.php")
             ,"url_alloc_clientList"                     => $sess->url(SCRIPT_PATH."client/clientList.php")
             ,"url_alloc_personList"                     => $sess->url(SCRIPT_PATH."person/personList.php")

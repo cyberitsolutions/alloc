@@ -24,10 +24,9 @@
 
 require_once("../alloc.php");
 
-if ($_GET["projectID"]) {
-  usleep(500000);
-  echo task::get_task_cc_list_select($_GET["projectID"]);
-}
+
+usleep(600000);
+echo task::get_personList_dropdown($_GET["projectID"]);
 
 
 ?>
