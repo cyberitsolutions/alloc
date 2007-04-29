@@ -2,6 +2,7 @@
 
 // Make the XML request thing, specify the callback function 
 function refreshProjectList(radiobutton) \{
+  document.getElementById("projectListDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
   url = '{$url_alloc_updateProjectList}projectType='+radiobutton.value
   makeAjaxRequest(url,'updateProjectList',1)
 \}
@@ -46,7 +47,7 @@ function updateProjectList(number) \{
             <label for="pt_all">Everything</label><input type="radio" id="pt_all" name="projectType" value="all" onClick="refreshProjectList(this)"{$projectType_checked_all}><br/>
             &nbsp;
           </td>
-          <td valign="top" rowspan="2"><div id="projectListDropdown">{$projectOptions}</div></td>
+          <td valign="top" rowspan="2" style="width:275px"><div id="projectListDropdown">{$projectOptions}</div></td>
           <td valign="top" rowspan="2"><select name="taskTypeID[]" size="6" multiple="true">{$taskTypeOptions}</select></td>
           <td valign="top"><select name="taskStatus" size="1">{$taskStatusOptions}</select></td>
           <td valign="top"><select name="personID">{$personOptions}</select></td>  
