@@ -23,6 +23,89 @@
 
 require_once("../alloc.php");
 
+
+function show_all_exp($template) {
+
+  global $TPL, $expenseForm, $db;
+
+  if ($expenseForm->get_id()) {
+
+    $transaction = new transaction;
+    $tf = new tf;
+
+    if ($_POST["transactionID"] && $_POST["edit"]) {   // if edit is clicked
+      $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d AND transactionID<>%d ORDER BY transactionID DESC", $expenseForm->get_id()
+                       , $_POST["transactionID"]);
+    } else {
+      $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d ORDER BY transactionID DESC", $expenseForm->get_id());
+    }
+
+    $db->query($query);
+
+    while ($db->next_record()) {
+
+      $transaction->read_db_record($db,false);
+      $transaction->set_tpl_values();
+
+      $transaction->get_value("quantity") and $TPL["amount"] = -$transaction->get_value("amount") / $transaction->get_value("quantity");
+      $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);
+
+      $TPL["lineTotal"] = sprintf("%0.2f",$TPL["amount"] * $transaction->get_value("quantity"));
+      $tf->set_id($transaction->get_value("tfID"));
+      $tf->select();
+      $TPL["tfID"] = $tf->get_value("tfName");
+
+      $projectID = $transaction->get_value("projectID");
+      if (isset($_POST["projectID"]) && $_POST["projectID"] != "") {
+        $project = new project;
+        $project->set_id($transaction->get_value("projectID"));
+        $project->select();
+        $TPL["projectID"] = $project->get_value("projectName");
+      }
+
+      include_template($template);
+    }
+  }
+}
+
+function check_optional_allow_edit() {
+  global $db, $expenseForm;
+
+  if (is_object($expenseForm) && !$expenseForm->get_id()) { // New Expense Form
+    $allow_edit = true;
+
+  } else if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") != 1 && $expenseForm->get_id() && $expenseForm->is_owner()) {
+    $allow_edit = true;
+
+  } else {
+    $allow_edit = false;
+  }
+
+  return $allow_edit;
+}
+
+function check_optional_no_edit() {
+  $allow_edit = check_optional_allow_edit();
+  return !$allow_edit;
+}
+
+function check_optional_has_line_items() {
+  global $expenseForm;
+  if (is_object($expenseForm) && $expenseForm->get_id()) {
+    $db = new db_alloc;
+    $q = sprintf("SELECT COUNT(*) as tally FROM transaction WHERE expenseFormID = %d",$expenseForm->get_id());
+    $db->query($q);
+    $db->next_record();
+    return $db->f("tally");
+  }
+}
+
+function check_optional_show_line_item_add() {
+  global $expenseForm;
+  return (is_object($expenseForm) && $expenseForm->get_id() && $expenseForm->get_value("expenseFormFinalised")!=1);
+}
+
+
 $current_user->check_employee();
 
 $expenseForm = new expenseForm;
@@ -114,7 +197,11 @@ $db->query("SELECT * FROM tf ORDER BY tfName");
 $TPL["tfOptions"] = get_option("", "0", false)."\n";
 $TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $selectedTfID);
 
-$db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'current' ORDER BY projectName");
+if (is_object($expenseForm) && $expenseForm->get_value("clientID")) { 
+  $clientID_sql = sprintf(" AND clientID = %d",$expenseForm->get_value("clientID"));
+}
+
+$db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'current' ".$clientID_sql." ORDER BY projectName");
 $TPL["projectOptions"] = get_option("", "0", false)."\n";
 $TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $selectedProjectID);
 
@@ -242,14 +329,25 @@ $seekClientReimbursementOption = "<input type=\"checkbox\" value=\"1\" name=\"se
 $scr_hidden = "<input type=\"hidden\" name=\"seekClientReimbursement\" value=\"".$expenseForm->get_value("seekClientReimbursement")."\">";
 $TPL["seekClientReimbursementOption"] = $scr_label.$scr_hidden;
 
+$c = new client;
+$c->set_id($expenseForm->get_value("clientID"));
+$c->select();
+$clientName = $c->get_client_name();
+$clientName and $TPL["field_clientID"] = ": ".$clientName;
+
+
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
 
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save Expense Form\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"cancel\" value=\"Delete\" onClick=\"return confirm('Delete this Expense Form?')\">";
+  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"finalise\" value=\"To Admin -&gt;\">";
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
   $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios; 
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
+  $options["clientStatus"] = "current";
+  $options["return"] = "dropdown_options";
+  $ops = client::get_client_list($options);
+  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".get_select_options($ops,$TPL["clientID"])."</select>";
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
   
@@ -258,13 +356,16 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"pend\" value=\"Pending\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"approve\" value=\"Approve\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"reject\" value=\"Reject\">";
-  $TPL["expenseFormButtons"].= "&nbsp;<a href=\"".$TPL["url_alloc_expenseFormList"]."\">Return To Pending Expense Forms</a>";
 
 } else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Create Expense Form\">";
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
   $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios;
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
+  $options["clientStatus"] = "current";
+  $options["return"] = "dropdown_options";
+  $ops = client::get_client_list($options);
+  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".get_select_options($ops,$TPL["clientID"])."</select>";
 }
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {
@@ -275,94 +376,13 @@ if (is_object($expenseForm) && $expenseForm->get_id()) {
 }
 
 
+
+
 if ($_GET["printVersion"]) {
   include_template("templates/exp-one-off-printableM.tpl");
 } else {
   include_template("templates/exp-one-offM.tpl");
 }
-
-function show_all_exp($template) {
-
-  global $TPL, $expenseForm, $db;
-
-  if ($expenseForm->get_id()) {
-
-    $transaction = new transaction;
-    $tf = new tf;
-
-    if ($_POST["transactionID"] && $_POST["edit"]) {   // if edit is clicked
-      $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d AND transactionID<>%d ORDER BY transactionID DESC", $expenseForm->get_id()
-                       , $_POST["transactionID"]);
-    } else {
-      $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d ORDER BY transactionID DESC", $expenseForm->get_id());
-    }
-
-    $db->query($query);
-
-    while ($db->next_record()) {
-
-      $transaction->read_db_record($db,false);
-      $transaction->set_tpl_values();
-
-      $transaction->get_value("quantity") and $TPL["amount"] = -$transaction->get_value("amount") / $transaction->get_value("quantity");
-      $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);
-
-      $TPL["lineTotal"] = sprintf("%0.2f",$TPL["amount"] * $transaction->get_value("quantity"));
-      $tf->set_id($transaction->get_value("tfID"));
-      $tf->select();
-      $TPL["tfID"] = $tf->get_value("tfName");
-
-      $projectID = $transaction->get_value("projectID");
-      if (isset($_POST["projectID"]) && $_POST["projectID"] != "") {
-        $project = new project;
-        $project->set_id($transaction->get_value("projectID"));
-        $project->select();
-        $TPL["projectID"] = $project->get_value("projectName");
-      }
-
-      include_template($template);
-    }
-  }
-}
-
-function check_optional_allow_edit() {
-  global $db, $expenseForm;
-
-  if (is_object($expenseForm) && !$expenseForm->get_id()) { // New Expense Form
-    $allow_edit = true;
-
-  } else if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") != 1 && $expenseForm->get_id() && $expenseForm->is_owner()) {
-    $allow_edit = true;
-
-  } else {
-    $allow_edit = false;
-  }
-
-  return $allow_edit;
-}
-
-function check_optional_no_edit() {
-  $allow_edit = check_optional_allow_edit();
-  return !$allow_edit;
-}
-
-
-function check_optional_has_line_items() {
-  global $expenseForm;
-  if (is_object($expenseForm) && $expenseForm->get_id()) {
-    $db = new db_alloc;
-    $q = sprintf("SELECT COUNT(*) as tally FROM transaction WHERE expenseFormID = %d",$expenseForm->get_id());
-    $db->query($q);
-    $db->next_record();
-    return $db->f("tally");
-  }
-}
-
-function check_optional_show_line_item_add() {
-  global $expenseForm;
-  return (is_object($expenseForm) && $expenseForm->get_id() && $expenseForm->get_value("expenseFormFinalised")!=1);
-}
-
 
 page_close();
 ?>

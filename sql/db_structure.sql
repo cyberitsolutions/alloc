@@ -91,6 +91,7 @@ CREATE TABLE config (
 
 CREATE TABLE expenseForm (
   expenseFormID int(11) NOT NULL auto_increment,
+  clientID int(11) DEFAULT 0,
   expenseFormModifiedUser int(11) NOT NULL default '0',
   lastModified timestamp(14) NOT NULL,
   paymentMethod varchar(255) default NULL,
