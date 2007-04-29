@@ -75,7 +75,7 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('project',-1,0,'employee','Y',99,'This will hopefully allow projects to administrated by employees with Project Manager perms for a project.',271,103);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('item',-1,0,'','Y',NULL,'Allow people to do what they like with items they own/have created.',15,105);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('sentEmailLog',0,0,'','Y',NULL,NULL,15,107);
-INSERT INTO permission (tableName,entityID,personID,roleName,actions,sortKey,allow,comment) VALUES ('absence','','','admin','15',NULL,'Y','Allow all admin to manipulate all absence records.');
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, actions,  comment, permissionID) VALUES ('absence',0,0,'admin','Y',NULL,15,'Allow all admin to manipulate all absence records.',108);
 
 
 
