@@ -15,7 +15,7 @@ table.login td {
 }
 
 table.login td.message { 
-  padding-top:20px;
+  padding-top:0px;
   padding-bottom:15px;
   letter-spacing: 0.00em; 
 }
@@ -68,7 +68,7 @@ p.error {
 }
 
 .cssbox, .cssbox_body, .cssbox_head, .cssbox_head h2 {
-    background: transparent url(../images/roundbg.jpg) no-repeat bottom right;
+    background: transparent url(../images/roundbg.png) no-repeat bottom right;
 }
 .cssbox {
     width: 395px !important;
@@ -86,8 +86,8 @@ p.error {
     background-position: top left;
     margin: 0;
     border: 0;
-    padding: 25px 0 15px 40px;
-    height: auto !important; height: 1%;
+    padding: 35px 0 15px 40px;
+    height: 35px !important; height:40px;
 }
 .cssbox_body {
     background-position: bottom left;
