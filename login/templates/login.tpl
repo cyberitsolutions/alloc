@@ -18,7 +18,7 @@
 
     <div class="cssbox">
       <div class="cssbox_head">
-        <h2 class="link"><img src="{$script_path}images/alloc_med.png" alt="allocPSA"/>{$links}</h2>
+        <h2 class="link"><b style="position:relative; top:-12px">{$links}</b></h2>
       </div>
       <div class="cssbox_body">
 
