@@ -89,7 +89,7 @@ if (!$current_user->is_employee()) {
       $db->query("SELECT * FROM tf ORDER BY tfName");
       $tf_array = get_array_from_db($db, "tfID", "tfName");
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
-      $transactionType_options = array("salary", "commission", "timesheet", "adjustment", "insurance");
+      $transactionType_options = array("commission", "timesheet", "adjustment", "insurance");
 
 
       if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced") {
@@ -143,7 +143,7 @@ if (!$current_user->is_employee()) {
       $tf_array = get_array_from_db($db, "tfID", "tfName");
       $TPL["tf_options"] = get_options_from_array($tf_array, $none, true, 35);
 
-      $transactionType_options = array("salary", "commission", "timesheet", "adjustment", "insurance");
+      $transactionType_options = array("commission", "timesheet", "adjustment", "insurance");
       $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $none, false);
 
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
@@ -179,7 +179,7 @@ if (!$current_user->is_employee()) {
 
     if (is_object($timeSheet) && $timeSheet->get_value("status") == "edit") {
       $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_edit\" value=\"Edit\">";
-      $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
+      $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">";
     }
 
     $timeUnit = new timeUnit;
@@ -263,7 +263,7 @@ if (!$current_user->is_employee()) {
 
       if ($timeSheet->get_value("invoiceItemID") && $timeSheet->get_value("status") == 'invoiced') {
         if ($db->next_record()) {
-          $TPL["invoiceItem_options"] = "<a href=\"".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$db->f("iiiiID")."\">";
+          $TPL["invoiceItem_options"] = "<a href=\"".$TPL["url_alloc_invoice"]."invoiceItemID=".$db->f("iiiiID")."\">";
           $TPL["invoiceItem_options"].= $db->f("iiiNum").",  $".$db->f("iiAmount")." ".$db->f("iiiiMemo")."</a>";
         }
       } else if ($timeSheet->get_value("status") == 'admin') {
@@ -759,9 +759,24 @@ if ($timeSheet->get_value("status") == 'edit' && !$timeSheet->get_value("project
   $query = sprintf("SELECT * FROM project ORDER by projectName");
 }
 
+// This needs to be just above the newTimeSheet_projectID logic
+$projectID = $timeSheet->get_value("projectID");
+
+// If we are entering the page from a project link: New time sheet
+if ($_GET["newTimeSheet_projectID"] && !$projectID) {
+ 
+  $projectID = $_GET["newTimeSheet_projectID"];
+  $db = new db_alloc;
+  $q = sprintf("SELECT * FROM timeSheet WHERE status = 'edit' AND personID = %d AND projectID = %d",$current_user->get_id(),$projectID);
+  $db->query($q);
+  if ($db->next_record()) {
+    header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID"));
+  }
+}
+
+
 $db->query($query);
 $project_array = get_array_from_db($db, "projectID", "projectName");
-$projectID = $timeSheet->get_value("projectID");
 $TPL["timeSheet_projectName"] = $project_array[$projectID];
 $TPL["projectID"] = $projectID;
 
@@ -783,14 +798,34 @@ if ($projectID != 0) {
   // Get client name
   $client = $project->get_foreign_object("client");
   $TPL["clientName"] = $client->get_value("clientName");
+  $clientID = $client->get_id();
 
   $tfID = $project->get_value("cost_centre_tfID");
   $tfID or $tfID = config::get_config_item("cybersourceTfID");
   $tfID and $TPL["cost_centre_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$tfID."\">";
   $tfID and $TPL["cost_centre_link"].= get_tf_name($tfID)."</a>";
 
-  $TPL["client_link"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
+  $TPL["show_client_options"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
 }
+
+
+// Set up arrays for the forms.
+if (!$TPL["timeSheet_projectName"]) {
+  $TPL["show_project_options"] = "<select size=\"1\" name=\"timeSheet_projectID\"><option></option>";
+  $TPL["show_project_options"].= get_select_options($project_array, $projectID)."</select>";
+
+  $options["clientStatus"] = "current";
+  $options["return"] = "dropdown_options";
+  $ops = client::get_client_list($options);
+
+  $TPL["show_client_options"] = "<select size=\"1\" name=\"clientID\" onChange=\"updateStuffWithAjax()\"><option></option>";
+  $TPL["show_client_options"].= get_select_options($ops,$clientID)."</select>";
+
+
+} else {
+  $TPL["show_project_options"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["timeSheet_projectID"]."\">".$TPL["timeSheet_projectName"]."</a>";
+}
+
 
 
 // msg passed in url and print it out pretty..
@@ -986,27 +1021,6 @@ if ($timeSheet->pay_info["total_dollars"]) {
 $TPL["total_units"] = $timeSheet->pay_info["summary_unit_totals"];
 
 
-
-
-// If we are entering the page from a project link: New time sheet
-if ($_GET["newTimeSheet_projectID"] && !$projectID) {
- 
-  $projectID = $_GET["newTimeSheet_projectID"];
-  $db = new db_alloc;
-  $q = sprintf("SELECT * FROM timeSheet WHERE status = 'edit' AND personID = %d AND projectID = %d",$current_user->get_id(),$projectID);
-  $db->query($q);
-  if ($db->next_record()) {
-    header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID"));
-  }
-  
-}
-// Set up arrays for the forms.
-if (!$TPL["timeSheet_projectName"]) {
-  $TPL["show_project_options"] = "<select size=\"1\" name =\"timeSheet_projectID\"><option></option>";
-  $TPL["show_project_options"].= get_select_options($project_array, $projectID)."</Select>";
-} else {
-  $TPL["show_project_options"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["timeSheet_projectID"]."\">".$TPL["timeSheet_projectName"]."</a>";
-}
 
 
 

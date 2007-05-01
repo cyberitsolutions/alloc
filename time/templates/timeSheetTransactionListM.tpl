@@ -13,7 +13,7 @@
   <td>TF</td>
   <td>Amount{$amount_msg}</td>
   <td>Type</td> 
-  <td>{$p_a_r_buttons}</td>
+  <td class="nobr">{$p_a_r_buttons}</td>
   <td>&nbsp;</td>
   <td>&nbsp;</td>
 </tr>
