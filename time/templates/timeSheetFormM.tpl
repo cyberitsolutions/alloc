@@ -1,6 +1,26 @@
 {show_header()}
 {show_toolbar()}
-<form action="{$url_alloc_timeSheet}" method=post>
+<script type="text/javascript" language="javascript">
+
+// Make the XML request thing, specify the callback function 
+function updateStuffWithAjax() \{
+  obj = document.getElementById("timeSheetForm").clientID;
+  id = obj.options[obj.selectedIndex].value;
+  document.getElementById("projectDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
+  url = '{$url_alloc_updateProjectListByClient}clientID='+id
+  makeAjaxRequest(url,'updateProjectList',1)
+\}
+
+// Here's the callback function
+function updateProjectList(number) \{
+  if (http_request[number].readyState == 4) \{
+    if (http_request[number].status == 200) \{
+      document.getElementById("projectDropdown").innerHTML = http_request[number].responseText;
+    \}
+  \}
+\}
+</script>
+<form action="{$url_alloc_timeSheet}" method="post" id="timeSheetForm">
 <input type="hidden" name="timeSheetID" value="{$timeSheet_timeSheetID}">
 <input type="hidden" name="timeSheet_personID" value="{$timeSheet_personID}">
 <input type="hidden" name="projectID" value="{$projectID}">
@@ -37,7 +57,7 @@
     <td width="20%" align="right">Created By:</td>
     <td>{$timeSheet_personName}</td>
     <td align="right">Client:</td>
-	  <td>{$client_link}</td>
+	  <td>{$show_client_options}</td>
   </tr>
 
   <tr>
@@ -45,7 +65,7 @@
     <td align="right">Amount:</td>
     <td>{$total_dollars}</td>
     <td align="right">Project:</td>
-	  <td width="30%">{$show_project_options}</td>
+	  <td width="30%" class="nobr"><div id="projectDropdown" style="display:inline">{$show_project_options}</div></td>
   </tr>
 
   <tr>

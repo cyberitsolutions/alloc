@@ -228,6 +228,15 @@ class project extends db_entity {
     return $q;
   }
 
+  function get_project_list_by_client($clientID) {
+    $options["clientID"] = $clientID;
+    $options["projectStatus"] = "current";
+    $options["return"] = "dropdown_options";
+    #global $current_user;
+    #$options["personID"] = $current_user->get_id();
+    return project::get_project_list($options);
+  }
+
   function get_project_list_dropdown($type="mine",$projectIDs=array()) {
     $db = new db_alloc;
     $q = project::get_project_type_query($type);
@@ -248,10 +257,12 @@ class project extends db_entity {
 
   function get_project_list_filter($filter=array()) {
 
-    if ($filter["personID"]) {
-      $sql[] = sprintf("(projectPerson.projectID = project.projectID AND personID=%d)", $filter["personID"]);
+    if ($filter["clientID"]) {
+      $sql[] = sprintf("(project.clientID = %d)", $filter["clientID"]);
     }
-
+    if ($filter["personID"]) {
+      $sql[] = sprintf("(projectPerson.personID=%d)", $filter["personID"]);
+    }
     if ($filter["projectName"]) {
       $sql[] = sprintf("(projectName LIKE '%%%s%%')", db_esc($filter["projectName"]));
     }
@@ -299,21 +310,18 @@ class project extends db_entity {
     // A header row
     $summary.= project::get_project_list_tr_header($_FORM);
 
+    if ($_FORM["personID"]) { 
+      $from.= " LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ";
+    }
 
     if (is_array($filter) && count($filter)) {
       $filter = " WHERE ".implode(" AND ",$filter);
     }
 
-    if ($filter["personID"]) { 
-      $from.= ", projectPerson ";
-    }
-
-    $q = "SELECT project.projectID as projectID, 
-                 project.*,
-                 client.* 
-            FROM project 
+    $q = "SELECT project.*, client.* 
+            FROM project".$from."
        LEFT JOIN client ON project.clientID = client.clientID 
-                 ".$from.$filter." 
+                 ".$filter." 
         GROUP BY project.projectID 
         ORDER BY projectName";
 
@@ -330,10 +338,14 @@ class project extends db_entity {
       $row["projectLink"] = $p->get_project_link();
       $row["navLinks"] = $p->get_navigation_links();
       $summary.= project::get_project_list_tr($row,$_FORM);
+      $summary_ops[$row["projectID"]] = $p->get_project_name(); 
     }
 
     if ($print && $_FORM["return"] == "html") {
       return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+    
+    } else if ($print && $_FORM["return"] == "dropdown_options") {
+      return $summary_ops;
 
     } else if (!$print && $_FORM["return"] == "html") {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Projects Found</b></td></tr></table>";
