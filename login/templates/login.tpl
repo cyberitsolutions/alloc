@@ -18,7 +18,7 @@
 
     <div class="cssbox">
       <div class="cssbox_head">
-        <h2 class="link"><b style="position:relative; top:-12px">{$links}</b></h2>
+        <h2 class="link"><b style="position:relative; top:-27px">{$links}</b></h2>
       </div>
       <div class="cssbox_body">
 
@@ -37,9 +37,8 @@
           </tr>
           <tr>
             <td></td>
-            <td style="text-align:right; padding-top:30px;">{$login_or_send_pass_button}</td>
+            <td style="text-align:right; padding:20px 0px;">{$login_or_send_pass_button}</td>
           </tr>
-          <tr><td colspan="2" style="border-bottom:1px solid #e0e0e0;">&nbsp;</td></tr>
           <tr>
             <td class="center" colspan="2">{$status_line}</td>
             <td><input type="hidden" name="account" value="{$account}"></td>
