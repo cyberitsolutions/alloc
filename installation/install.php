@@ -95,7 +95,7 @@ if ($_POST["refresh_tab_1"]) {
 if ($_POST["submit_stage_4"]) {
 
   // Create directories under attachment dir and chmod them
-  $dirs = array("task","client","project");
+  $dirs = array("task","client","project","invoice");
   foreach ($dirs as $dir) {
     $d = $_FORM["ATTACHMENTS_DIR"].$dir;
     if (is_dir($d)) {
@@ -144,7 +144,6 @@ if ($_POST["submit_stage_4"]) {
   }
 
   if ($failed) {
-    file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && unlink(ALLOC_CONFIG_PATH);
     $TPL["img_install_result"] = IMG_CROSS;
     $TPL["msg_install_result"] = "The allocPSA installation has not completed successfully.";
   } else {
