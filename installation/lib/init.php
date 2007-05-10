@@ -23,7 +23,14 @@
 
 
 // Path to alloc_config.php
-define("ALLOC_CONFIG_PATH", realpath(dirname(__FILE__)."/../..")."/alloc_config.php");
+$ALLOC_CONFIG_PATH = $_POST["ALLOC_CONFIG_PATH"] or $ALLOC_CONFIG_PATH = $_GET["ALLOC_CONFIG_PATH"];
+if ($ALLOC_CONFIG_PATH) {
+  define("ALLOC_CONFIG_PATH",$ALLOC_CONFIG_PATH);
+} else {
+  define("ALLOC_CONFIG_PATH", realpath(dirname(__FILE__)."/../..")."/alloc_config.php");
+} 
+unset($ALLOC_CONFIG_PATH);
+
 
 
 class installation_module extends module {
