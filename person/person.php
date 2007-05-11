@@ -220,7 +220,7 @@ if ($_POST["save"]) {
       $person_check->select();
       $person->set_value('password', $person_check->get_value('password'));
     } else {
-      $person->set_value('password', addslashes(crypt(trim($_POST["password1"]), trim($current_user->get_value('password')))));
+      $person->set_value('password', encrypt_password($_POST["password1"]));
     }
 
     if ($_POST["username"]) {

@@ -61,13 +61,13 @@ function show_tab_4c() {
 
 $default_allocURL = "http://".$_SERVER["SERVER_NAME"].SCRIPT_PATH;
 
-$config_vars = array("ALLOC_DB_NAME"   => array("default"=>"alloc",              "info"=>"Enter a name for the new allocPSA MySQL database")
-                    ,"ALLOC_DB_USER"   => array("default"=>"alloc",              "info"=>"Enter the name of the database user that will access the database")
-                    ,"ALLOC_DB_PASS"   => array("default"=>"changeme",           "info"=>"Enter that users database password")
-                    ,"ALLOC_DB_HOST"   => array("default"=>"localhost",          "info"=>"Enter the name of the host that the database resides on")
-                    ,"ATTACHMENTS_DIR" => array("default"=>"/var/local/alloc/",  "info"=>"Enter the full path to a directory that can be used for file upload storage, 
+$config_vars = array("ALLOC_DB_NAME"     => array("default"=>"alloc",              "info"=>"Enter a name for the new allocPSA MySQL database")
+                    ,"ALLOC_DB_USER"     => array("default"=>"alloc",              "info"=>"Enter the name of the database user that will access the database")
+                    ,"ALLOC_DB_PASS"     => array("default"=>"changeme",           "info"=>"Enter that users database password")
+                    ,"ALLOC_DB_HOST"     => array("default"=>"localhost",          "info"=>"Enter the name of the host that the database resides on")
+                    ,"ATTACHMENTS_DIR"   => array("default"=>"/var/local/alloc/",  "info"=>"Enter the full path to a directory that can be used for file upload storage, 
                                                                                           (The path must be outside the web document root)")
-                    ,"allocURL"        => array("default"=>$default_allocURL,    "info"=>"Enter the base URL that people will use to access allocPSA, eg: http://example.com/alloc/")
+                    ,"allocURL"          => array("default"=>$default_allocURL,    "info"=>"Enter the base URL that people will use to access allocPSA, eg: http://example.com/alloc/")
                     );
 
 
@@ -266,6 +266,11 @@ EOD;
     $errors[] = "Error! (".mysql_error().").";
   }
 
+  // Insert new person
+  $query = sprintf("INSERT INTO person (username,password,personActive,perms) VALUES ('alloc','%s',1,'god,admin,manage,employee')",encrypt_password("alloc"));
+  if (!@mysql_query($query,$link)) {
+    $errors[] = "Error! (".mysql_error().").";
+  }
 
   // Insert patch data
   $files = get_patch_file_list();
@@ -314,15 +319,15 @@ $text_tab_2a[] = "DROP DATABASE IF EXISTS ".$_FORM["ALLOC_DB_NAME"].";";
 $text_tab_2a[] = "";
 $text_tab_2a[] = "CREATE DATABASE ".$_FORM["ALLOC_DB_NAME"].";";
 $text_tab_2a[] = "";
-$text_tab_2a[] = "USE mysql;";
+$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "USE mysql;";
 $text_tab_2a[] = "";
 $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "DELETE FROM user WHERE User = '".$_FORM["ALLOC_DB_USER"]."';";
 $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "";
 $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "DELETE FROM db WHERE User = '".$_FORM["ALLOC_DB_USER"]."';";
 $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "";
-$text_tab_2a[] = "INSERT INTO user (Host, User, Password) values ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_USER"]."',PASSWORD('".$_FORM["ALLOC_DB_PASS"]."'));";
+$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "INSERT INTO user (Host, User, Password) values ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_USER"]."',PASSWORD('".$_FORM["ALLOC_DB_PASS"]."'));";
 $text_tab_2a[] = "";
-$text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y');";
+$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y');";
 $text_tab_2a[] = "";
 $text_tab_2a[] = "FLUSH PRIVILEGES;";
 
