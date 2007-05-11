@@ -807,7 +807,14 @@ function build_html_element($handle,$value="") {
   if (is_array($str))
   return implode("",$str);
 }
-
+function encrypt_password($password) {
+  $t_hasher = new PasswordHash(8, FALSE);
+  return $t_hasher->HashPassword($password);
+}
+function check_password($password, $hash) {
+  $t_hasher = new PasswordHash(8, FALSE);
+  return $t_hasher->CheckPassword($password, $hash);
+}
 
 
 

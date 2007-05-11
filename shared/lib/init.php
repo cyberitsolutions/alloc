@@ -34,6 +34,7 @@ require_once(ALLOC_MOD_DIR."shared/lib/class_sentEmailLog.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_alloc_email.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_alloc_cache.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_history.inc.php");
+require_once(ALLOC_MOD_DIR."shared/lib/class_PasswordHash.php");
 
 class shared_module extends module {
   var $db_entities = array("sentEmailLog");

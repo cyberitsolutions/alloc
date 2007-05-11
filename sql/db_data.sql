@@ -191,7 +191,6 @@ INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, proje
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (3,'Project Manager + Time Sheet Recipient','timeSheetRecipient',40);
 
 
-INSERT INTO person (username,password,personActive,perms) VALUES ('alloc','/.N0BifPoPoZg',1,'god,admin,manage,employee');
 
 
 

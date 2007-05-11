@@ -251,17 +251,16 @@ class person extends db_entity {
 
 
   function get_valid_login_row($username, $password="") {
-    $q = sprintf("SELECT * FROM person WHERE username = '%s'",db_esc($username));
     $db = new db_alloc;
-    $db->query($q);
-    $db->next_record();
-    $salt = $db->f("password");
-
-    $q = sprintf("SELECT * FROM person WHERE username = '%s' AND password = '%s'"
-                ,db_esc($username),db_esc(crypt(trim($password), $salt)));
+    $q = sprintf("SELECT * FROM person WHERE username = '%s'"
+                 ,db_esc($username));
 
     $db->query($q);
-    return $db->row();
+    $row = $db->row();
+
+    if (check_password($password, $row["password"])) {
+      return $row;
+    }
   }
 
   function load_get_current_user($personID) {

@@ -234,7 +234,7 @@ CREATE TABLE permission (
 
 CREATE TABLE person (
   username varchar(32) NOT NULL default '',
-  password varchar(32) NOT NULL default '',
+  password varchar(255) NOT NULL default '',
   perms varchar(255) default NULL,
   personID int(11) NOT NULL auto_increment,
   emailAddress varchar(255) default NULL,

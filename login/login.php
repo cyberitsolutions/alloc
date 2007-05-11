@@ -76,10 +76,12 @@ if ($sess->Started()) {
     for ($i = 0; $i < 8; $i++) {
       $password.= substr($pwSource, rand(0, strlen($pwSource)), 1);
     }
-    $current_user->set_value('password', db_esc(crypt(trim($password), trim($password))));
+
+    $current_user->set_value('password', encrypt_password($password));
     $current_user->save();
 
     $e = new alloc_email();
+    #echo "Your new temporary password: ".$password;
     if ($e->send($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password", "From: ".ALLOC_DEFAULT_FROM_ADDRESS)) {
       $error = "New password sent to: ".$_POST["email"];
     } else {
