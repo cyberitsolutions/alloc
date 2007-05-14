@@ -55,7 +55,7 @@ function updateTimeSheetTaskList(number) \{
         </tr>
         <tr>
           <td colspan="2">
-            <div id="taskListDropdown">
+            <div id="taskListDropdown" style="width:400px;">
               {$taskListDropdown}
             </div>
           </td>

@@ -6,6 +6,7 @@
 function updateStuffWithAjax() \{
   obj = document.getElementById("projectForm").clientID;
   id = obj.options[obj.selectedIndex].value;
+  document.getElementById("clientContactDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
   url = '{$url_alloc_updateProjectClientContactList}clientID='+id
   makeAjaxRequest(url,'updateClientContact',1)
 \}

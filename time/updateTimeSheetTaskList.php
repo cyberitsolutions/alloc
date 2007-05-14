@@ -25,6 +25,7 @@
 require_once("../alloc.php");
 
 if ($_GET["task_type"] && $_GET["timeSheetID"]) {
+  usleep(400000);
   echo timeSheet::get_task_list_dropdown($_GET["task_type"], $_GET["timeSheetID"], $_GET["taskID"]);
 }
 
