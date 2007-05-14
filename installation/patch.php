@@ -88,7 +88,8 @@ if ($msg) {
    $f = ALLOC_MOD_DIR."patches/".$file;
    $msg[$f] and $TPL["msg"].= "\n\n<br/><br/>".implode("\n<br/>",$msg[$f]);
   }
-} else if (!$incomplete) {
+} 
+if (!$incomplete) {
   header("Location: ".$TPL["url_alloc_login"]);
 } 
 
