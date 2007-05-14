@@ -1,7 +1,7 @@
 {show_header()}
 <style>td \{text-align:left; border-top:1px solid #999999; font-size:11px;\}</style>
 <form action="{$url_alloc_patch}" method="post">
-
+<br>
 {$table_box}
 <tr>
   <th colspan="4">allocPSA Patch System</th>
