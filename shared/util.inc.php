@@ -126,7 +126,7 @@ function timetook($start, $text="Duration: ") {
 function get_cached_table($table) {
   static $cache;
   if (!$cache) {
-    $cache = new alloc_cache(array("person","taskType","timeUnit","htmlElement"));
+    $cache = new alloc_cache(array("person","taskType","timeUnit","htmlElement","config"));
     $cache->load_cache();
 
     // Special processing for person table
@@ -146,6 +146,13 @@ function get_cached_table($table) {
       $rows_htmlElement[$row["handle"]] = $row;
     }
     $cache->set_cached_table("htmlElement",$rows_htmlElement);
+
+    // Special processing for config table
+    $config = $cache->get_cached_table("config") or $config = array();
+    foreach ($config as $id => $row) {
+      $rows_config[$row["name"]] = $row;
+    }
+    $cache->set_cached_table("config",$rows_config);
   }
   return $cache->get_cached_table($table);
 } 
