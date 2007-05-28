@@ -181,13 +181,15 @@ class client extends db_entity {
     static $odd_even;
     $odd_even = $odd_even == "even" ? "odd" : "even";
 
-    $clientContact = new clientContact;
-    $clientContact->set_id($client['clientPrimaryContactID']);
-    $clientContact->select();
-    $primaryContactName = $clientContact->get_value("clientContactName");
-    $primaryContactPhone = $clientContact->get_value("clientContactPhone");
-    $primaryContactEmail = $clientContact->get_value("clientContactEmail");
-    $primaryContactEmail and $primaryContactEmail = "<a href=\"mailto:".$primaryContactEmail."\">".$primaryContactEmail."</a>";
+    if ($_FORM["showPrimaryContactName"] || $_FORM["showPrimaryContactPhone"] || $_FORM["showPrimaryContactEmail"]) {
+      $clientContact = new clientContact;
+      $clientContact->set_id($client['clientPrimaryContactID']);
+      $clientContact->select();
+      $primaryContactName = $clientContact->get_value("clientContactName");
+      $primaryContactPhone = $clientContact->get_value("clientContactPhone");
+      $primaryContactEmail = $clientContact->get_value("clientContactEmail");
+      $primaryContactEmail and $primaryContactEmail = "<a href=\"mailto:".$primaryContactEmail."\">".$primaryContactEmail."</a>";
+    }
 
     $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["showClientName"]          and $summary[] = "  <td class=\"col\">".$client["clientName"]."&nbsp;</td>";
