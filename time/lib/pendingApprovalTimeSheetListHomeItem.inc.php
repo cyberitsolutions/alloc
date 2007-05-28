@@ -49,6 +49,8 @@ function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
     $db = get_pending_timesheet_db();
   }
 
+  $people = get_cached_table("person");
+
   while ($db->next_record()) {
     $timeSheet = new timeSheet;
     $timeSheet->read_db_record($db);
@@ -72,18 +74,8 @@ function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
     } 
     
     $TPL["date"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".$date."</a>";
-    
-    $person = new person;
-    $person->set_id($timeSheet->get_value("personID"));
-    $person->select();
-    $TPL["user"] = $person->get_username(1);
-
-    $project = $timeSheet->get_foreign_object("project");
-    if ($project->get_value("projectShortName")) {
-      $TPL["projectName"] = $project->get_value("projectShortName");
-    } else {
-      $TPL["projectName"] = $project->get_value("projectName");
-    }
+    $TPL["user"] = $people[$timeSheet->get_value("personID")]["name"];
+    $TPL["projectName"] = $db->f("projectName");
 
     include_template("../time/templates/".$template_name);
   }
@@ -109,7 +101,7 @@ function get_pending_timesheet_db() {
   global $current_user;
   $db = new db_alloc;
  
-  $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars 
+  $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars, COALESCE(projectShortName, projectName) as projectName
                       FROM timeSheet
                            LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
                            LEFT JOIN project on project.projectID = timeSheet.projectID
@@ -136,9 +128,10 @@ function get_pending_admin_timesheet_db() {
   $timeSheetAdminEmailPersonID = $c->get_config_item("timeSheetAdminEmail");
 
   if ($timeSheetAdminEmailPersonID == $current_user->get_id()) {
-    $query = "SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars 
+    $query = "SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars, COALESCE(projectShortName, projectName) as projectName
                 FROM timeSheet
            LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+           LEFT JOIN project on project.projectID = timeSheet.projectID
                WHERE timeSheet.status='admin'
             GROUP BY timeSheet.timeSheetID 
             ORDER BY timeSheet.dateSubmittedToAdmin";
