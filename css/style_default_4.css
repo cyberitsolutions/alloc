@@ -98,7 +98,7 @@ div.message {
   font-size:13px; 
 }
 .help { 
-  color:black;  
+  color:#666666;  
   font-size:13px;
 }
 
@@ -227,11 +227,12 @@ tr.even {
   color: green; 
 }
 .transaction-pending { 
-  color: black; 
+  color: #666666; 
 }
 .transaction-rejected { 
   color: red; 
 }
+
 .highlighted { 
   font-weight:normal; 
   font-style:normal; 
@@ -282,6 +283,23 @@ table.comments th {
 }
 table.comments td { 
   padding:2px 4px; 
+}
+
+table.pending { 
+  background-color:#eaf3ff; 
+  border:1px solid #a3bee0; 
+}
+table.warn { 
+  background-color:#fbf6e6; 
+  border:1px solid #e3b375; 
+}
+table.approved { 
+  background-color:#eefff0; 
+  border:1px solid #96d28a; 
+}
+table.rejected { 
+  background-color:#ffeaea; 
+  border:1px solid #e0a6a3; 
 }
 
 

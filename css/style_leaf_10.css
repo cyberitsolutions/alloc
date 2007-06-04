@@ -232,6 +232,7 @@ tr.even {
 .transaction-rejected { 
   color: #c84e12; 
 }
+
 .highlighted { 
   font-weight:normal; 
   font-style:normal; 
@@ -282,6 +283,23 @@ table.comments th {
 }
 table.comments td { 
   padding:2px 4px; 
+}
+
+table.pending { 
+  background-color:#f6f9ed; 
+  border:1px solid #c7cfb8; 
+}
+table.warn { 
+  background-color:#efe8d4; 
+  border:1px solid #a6925b; 
+}
+table.approved { 
+  background-color:#dde5cf; 
+  border:1px solid #849d58; 
+}
+table.rejected { 
+  background-color:#efded4; 
+  border:1px solid #b37a5d; 
 }
 
 
