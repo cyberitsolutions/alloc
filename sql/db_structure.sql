@@ -7,7 +7,7 @@ CREATE TABLE absence (
   contactDetails text,
   personID int(11) NOT NULL default '0',
   PRIMARY KEY  (absenceID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE announcement (
@@ -44,7 +44,7 @@ CREATE TABLE client (
   clientCreatedTime varchar(11) default NULL,
   PRIMARY KEY  (clientID),
   KEY clientName (clientName)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE clientContact (
@@ -63,7 +63,7 @@ CREATE TABLE clientContact (
   clientContactOther text,
   PRIMARY KEY  (clientContactID),
   KEY clientID (clientID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE comment (
@@ -76,7 +76,7 @@ CREATE TABLE comment (
   PRIMARY KEY  (commentID),
   KEY commentLinkID (commentLinkID),
   KEY commentType (commentType)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE config (
@@ -126,7 +126,7 @@ CREATE TABLE htmlElement (
   sequence INT(11) DEFAULT 0,
   enabled  INT(1) DEFAULT 1,
   PRIMARY KEY (htmlElementID)
-);
+) TYPE=MyISAM;
 
 CREATE TABLE htmlAttribute (
   htmlAttributeID INT(11) NOT NULL auto_increment,
@@ -135,7 +135,7 @@ CREATE TABLE htmlAttribute (
   value VARCHAR(255) DEFAULT NULL,
   isDefault INT(1) DEFAULT 0,
   PRIMARY KEY (htmlAttributeID)
-);
+) TYPE=MyISAM;
 
 CREATE TABLE htmlElementType (
   htmlElementTypeID INT(11) NOT NULL auto_increment,
@@ -150,7 +150,7 @@ CREATE TABLE htmlElementType (
   hasLabelValue INT(1) DEFAULT 0, 
   parentHtmlElementID INT(11) DEFAULT 0,
   PRIMARY KEY  (htmlElementTypeID)
-);
+) TYPE=MyISAM;
 
 CREATE TABLE htmlAttributeType (
   htmlAttributeTypeID INT(11) NOT NULL auto_increment,
@@ -158,7 +158,7 @@ CREATE TABLE htmlAttributeType (
   name VARCHAR(255) NOT NULL DEFAULT "",
   defaultValue VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY  (htmlAttributeTypeID)
-);
+) TYPE=MyISAM;
 
 
 CREATE TABLE invoice (
@@ -214,7 +214,7 @@ CREATE TABLE patchLog (
   patchDesc text,
   patchDate timestamp(14) NOT NULL,
   PRIMARY KEY  (patchLogID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE permission (
@@ -255,7 +255,7 @@ CREATE TABLE person (
   sessData text,
   PRIMARY KEY (personID),
   UNIQUE KEY (username)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE project (
@@ -286,7 +286,7 @@ CREATE TABLE project (
   PRIMARY KEY  (projectID),
   KEY projectName (projectName),
   KEY clientID (clientID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE projectCommissionPerson (
@@ -320,7 +320,7 @@ CREATE TABLE projectPerson (
   projectPersonModifiedUser int(11) NOT NULL default '0',
   emailDateRegex varchar(255) default NULL,
   PRIMARY KEY  (projectPersonID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE projectPersonRole (
@@ -348,7 +348,7 @@ CREATE TABLE reminder (
   reminderModifiedTime datetime NOT NULL default '0000-00-00 00:00:00',
   reminderModifiedUser int(11) NOT NULL default '0',
   PRIMARY KEY  (reminderID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE sentEmailLog (
@@ -361,7 +361,7 @@ CREATE TABLE sentEmailLog (
   sentEmailLogModifiedTime timestamp(14) NOT NULL,
   sentEmailLogModifiedUser int(11) NOT NULL default '0',
   PRIMARY KEY  (sentEmailLogID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE sess (
@@ -419,7 +419,7 @@ CREATE TABLE task (
   KEY parentTaskID (parentTaskID),
   KEY taskTypeID (taskTypeID),
   KEY parentTaskID_2 (parentTaskID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE taskCCList (
@@ -446,7 +446,7 @@ CREATE TABLE taskType (
   taskTypeActive int(1) default NULL,
   taskTypeSequence int(11) default NULL,
   PRIMARY KEY  (taskTypeID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE tf (
@@ -466,7 +466,7 @@ CREATE TABLE tfPerson (
   tfID int(11) NOT NULL default '0',
   personID int(11) NOT NULL default '0',
   PRIMARY KEY  (tfPersonID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE timeSheet (
@@ -506,7 +506,7 @@ CREATE TABLE timeSheetItem (
   comment text,
   PRIMARY KEY  (timeSheetItemID),
   INDEX idx_timeSheetID (timeSheetID)
-) TYPE=ISAM PACK_KEYS=1;
+) TYPE=MyISAM;
 
 
 CREATE TABLE timeUnit (
