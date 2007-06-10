@@ -124,6 +124,8 @@ class timeSheet extends db_entity
      *                                                                         *
      ***************************************************************************/
 
+    static $rates;
+
     unset($this->pay_info);
     $db = new db_alloc;
 
@@ -135,17 +137,23 @@ class timeSheet extends db_entity
     $timeUnit = new timeUnit;
     $units = array_reverse($timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA"),true);
 
-    // Get rate for person for this particular project
-    $db->query("SELECT rate, rateUnitID FROM projectPerson
-                WHERE projectID = ".$this->get_value("projectID")."
-                AND personID = ".$this->get_value("personID"));
+    if ($rates[$this->get_value("projectID")][$this->get_value("personID")]) {
+      list($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]) = $rates[$this->get_value("projectID")][$this->get_value("personID")];
+    } else {
+      // Get rate for person for this particular project
+      $db->query("SELECT rate, rateUnitID FROM projectPerson
+                  WHERE projectID = ".$this->get_value("projectID")."
+                  AND personID = ".$this->get_value("personID"));
 
-    $db->next_record();
-    $this->pay_info["project_rate"] = $db->f("rate");
-    $this->pay_info["project_rateUnitID"] = $db->f("rateUnitID");
+      $db->next_record();
+      $this->pay_info["project_rate"] = $db->f("rate");
+      $this->pay_info["project_rateUnitID"] = $db->f("rateUnitID");
 
-    // Get external rate for this particular project
-    $this->pay_info["project_customerBilledDollars"] = $this->get_value("customerBilledDollars");
+      $rates[$this->get_value("projectID")][$this->get_value("personID")] = array($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]);
+    }
+
+    // Get external rate
+    $this->pay_info["customerBilledDollars"] = $this->get_value("customerBilledDollars");
 
     // Get duration for this timesheet/timeSheetItem
     $db->query(sprintf("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$this->get_id()));
