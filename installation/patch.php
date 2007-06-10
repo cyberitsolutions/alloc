@@ -41,6 +41,7 @@ if ($apply_patches) {
 
 
   foreach ($files as $file) {
+    $comments or $comments = array();
     $f = ALLOC_MOD_DIR."patches/".$file;
 
       
@@ -58,16 +59,40 @@ if ($apply_patches) {
 
     if ($go && $go2) {
 
-      $msg[$f][] = "<b>Attempting:</b> ".$file."<br/>";
-      list($sql,$comments) = parse_sql_file($f);
-      foreach ($sql as $query) {
-        if (!$db->query($query)) {
-          $msg[$f][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
+      #$msg[$f][] = "<b>Attempting:</b> ".$file."<br/>";
+
+      // Try for sql file
+      if (strtolower(substr($file,-4)) == ".sql") {
+
+        list($sql,$comments) = parse_sql_file($f);
+        foreach ($sql as $query) {
+          if (!$db->query($query)) {
+            $TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
+            $failed[$f] = true;
+          }
+        }
+        if (!$failed[$f]) {
+          $TPL["message_good"][] = "Successfully Applied: ".$f;
+        }
+
+      // Try for php file
+      } else if (strtolower(substr($file,-4)) == ".php") {
+        ob_start();
+        include("../patches/".$file);
+        $str = ob_get_contents();
+        if ($str) { 
+          $TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$str;
           $failed[$f] = true;
-        } 
+          ob_end_clean();
+        } else {
+          $TPL["message_good"][] = "Successfully Applied: ".$f;
+        }
       }
+
+
       if (!$failed[$f]) {
-        $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('%s','%s','%s')",db_esc($file), db_esc(implode(" ",$comments)), date("Y-m-d H:i:s"));
+        $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
+                      VALUES ('%s','%s','%s')",db_esc($file), db_esc(implode(" ",$comments)), date("Y-m-d H:i:s"));
         $db->query($q);
       } 
     }
@@ -83,12 +108,6 @@ foreach ($files as $file) {
 }
 
 
-if ($msg) {
-  foreach ($files as $file) {
-   $f = ALLOC_MOD_DIR."patches/".$file;
-   $msg[$f] and $TPL["msg"].= "\n\n<br/><br/>".implode("\n<br/>",$msg[$f]);
-  }
-} 
 if (!$incomplete) {
   header("Location: ".$TPL["url_alloc_login"]);
 } 
