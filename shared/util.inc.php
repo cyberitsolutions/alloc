@@ -32,11 +32,8 @@ function get_default_from_address() {
 }
 function get_default_to_address() {
   $personID = config::get_config_item("timeSheetAdminEmail");
-  $q = sprintf("SELECT emailAddress FROM person WHERE personID = %d",$personID);
-  $db = new db_alloc();
-  $db->query($q);
-  $row = $db->row();
-  $f = $row["emailAddress"];
+  $people = get_cached_table("person");
+  $f = $people[$personID]["emailAddress"];
   $l = strpos($f, "<");
   $r = strpos($f, ">");
   $l === false and $f = "<".$f;
