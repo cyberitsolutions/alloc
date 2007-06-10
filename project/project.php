@@ -50,13 +50,13 @@ $grand_total = 0;
 
     $timeSheet = new timeSheet;
 
-    $db2 = new db_alloc;
 
     if ($projectID) {
 
-      $query = sprintf("SELECT timeSheet.*, username
+      $query = sprintf("SELECT timeSheet.*, username, SUM(transaction.amount) AS amount
                           FROM timeSheet
                      LEFT JOIN person on timeSheet.personID = person.personID 
+                     LEFT JOIN transaction on timeSheet.timeSheetID = transaction.timeSheetID AND ((transaction.amount>0 and transaction.status = 'approved') OR transaction.amount IS NULL OR transaction.amount = 0)
                          WHERE timeSheet.projectID = %d 
                       GROUP BY timeSheetID
                       ORDER BY dateFrom, username",$projectID);
@@ -69,17 +69,8 @@ $grand_total = 0;
         $TPL["timeSheet_username"] = $db->f("username");
         $timeSheet->load_pay_info();
 
-        $q = sprintf("SELECT SUM(amount) AS amount 
-                        FROM transaction 
-                       WHERE timeSheetID = %d 
-                         AND amount>0 
-                         AND status = 'approved'
-                     ",$timeSheet->get_id());
-        $db2->query($q);
-        $db2->next_record(); 
-
-        $TPL["amount"] = sprintf("$%0.2f", $db2->f("amount"));
-        $grand_total += $db2->f("amount");
+        $TPL["amount"] = sprintf("$%0.2f", $db->f("amount"));
+        $grand_total += $db->f("amount");
 
         include_template($template);
       }

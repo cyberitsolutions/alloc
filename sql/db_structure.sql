@@ -539,6 +539,7 @@ CREATE TABLE transaction (
   transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance') NOT NULL default 'invoice',
   timeSheetID int(11) default NULL,
   transactionRepeatID int(11) default NULL,
+  INDEX idx_timeSheetID (timeSheetID),
   PRIMARY KEY  (transactionID)
 ) TYPE=MyISAM;
 
