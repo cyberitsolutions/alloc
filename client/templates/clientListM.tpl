@@ -12,6 +12,6 @@
     <td colspan="2">
       {show_client_list()}
     </td>
-
+  </tr>
 </table>
 {show_footer()}
