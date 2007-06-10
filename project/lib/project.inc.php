@@ -257,6 +257,11 @@ class project extends db_entity {
     return $this->has_project_permission($person);
   }
 
+  function has_attachment_permission_delete($person) {
+    return $this->has_project_permission($person,array("isManager"));
+  }
+
+
   function get_project_list_filter($filter=array()) {
 
     if ($filter["clientID"]) {
