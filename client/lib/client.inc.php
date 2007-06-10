@@ -63,6 +63,11 @@ class client extends db_entity {
     return true;
   }
 
+  function has_attachment_permission_delete($person) {
+    // Placeholder for security check in shared/get_attchment.php
+    return true;
+  }
+
   function get_client_contact_select($clientID="",$clientContactID="") {
     $db = new db_alloc;
     $q = sprintf("SELECT clientContactName as value, clientContactID as name FROM clientContact WHERE clientID = %d",$clientID);
