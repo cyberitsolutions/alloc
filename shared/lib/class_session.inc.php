@@ -138,15 +138,21 @@ class Session {
   }
 
   function url($url="") {
-   $url = ereg_replace("[&?]+$", "", $url);
+    $url = ereg_replace("[&?]+$", "", $url);
 
     if ($this->mode == "get") {
-       (strpos($url, "sess=") == false) && $this->key and $extra = "sess=".$this->key."&";
+      if (!strpos($url, "sess=") && $this->key) {
+        $extra = "sess=".$this->key."&";
+      }
     }
 
-    $url.= (strpos($url, "?") != false ? "&" : "?").$extra;
+    if (strpos($url, "?")) {
+      $url.= "&";
+    } else {
+      $url.= "?";
+    }
 
-    return $url;
+    return $url.$extra;
   }
 
   function UseGet() {

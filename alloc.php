@@ -141,6 +141,9 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
   define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
 
+  // Check for existing session..
+  $sess = new Session;
+
   // Include all the urls
   require_once(ALLOC_MOD_DIR."shared/global_tpl_values.inc.php");
 
@@ -151,8 +154,6 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // Some scripts don't require authentication
   if (!defined("NO_AUTH")) {
 
-    // Check for existing session..
-    $sess = new Session;
 
     // If the session hasn't started and we're not on the login screen, then redirect to login 
     if (!$sess->Started() && !defined("IN_LOGIN_RIGHT_NOW")) { 
