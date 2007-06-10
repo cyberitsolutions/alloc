@@ -85,11 +85,17 @@ class db {
   }
 
   function select_db($db="") { 
-    // Select a database
-    if (mysql_select_db($db)) {
-      $this->database = $db;
-    } else {
-      $this->error("<b>Could not select database: ".$db."</b>"); 
+
+    static $selected;
+
+    if (!$selected || $selected != $db) {
+      // Select a database
+      if (mysql_select_db($db)) {
+        $this->database = $db;
+        $selected = $db;
+      } else {
+        $this->error("<b>Could not select database: ".$db."</b>"); 
+      }
     }
   } 
 
