@@ -82,7 +82,7 @@ if ($sess->Started()) {
 
     $e = new alloc_email();
     #echo "Your new temporary password: ".$password;
-    if ($e->send($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password", "From: ".ALLOC_DEFAULT_FROM_ADDRESS)) {
+    if ($e->send($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password", "From: ".get_default_from_address())) {
       $error = "New password sent to: ".$_POST["email"];
     } else {
       $error = "<p class='error'>Unable to send email!</p>";
@@ -127,7 +127,7 @@ if (!isset($account)) {
 }
 
 
-$TPL["status_line"] = ALLOC_TITLE." ".get_alloc_version()." &copy; 2006 <a href=\"http://www.cybersource.com.au\">Cybersource</a>"; 
+$TPL["status_line"] = APPLICATION_NAME." ".get_alloc_version()." &copy; 2006 <a href=\"http://www.cybersource.com.au\">Cybersource</a>"; 
 $TPL["ALLOC_SHOOER"] = ALLOC_SHOOER; 
 
 

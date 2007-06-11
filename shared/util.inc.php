@@ -121,12 +121,11 @@ function timetook($start, $text="Duration: ") {
   echo "<br>".$text.sprintf("%0.5f", $dur) . $unit;
 }
 function get_cached_table($table) {
-  static $cache;
-  if (!$cache) {
-    $cache = new alloc_cache(array("person","taskType","timeUnit","htmlElement","config"));
-    $cache->load_cache();
+  $cache = alloc_cache::get_cache();
+  $cache->load_cache($table);
 
-    // Special processing for person table
+  // Special processing for person table
+  if ($table == "person") {
     $people = $cache->get_cached_table("person") or $people = array();
     foreach ($people as $id => $row) {
       if ($people[$id]["firstName"] && $people[$id]["surname"]) {
@@ -136,14 +135,18 @@ function get_cached_table($table) {
       }
     }
     $cache->set_cached_table("person",$people);
+  }
 
+  if ($table == "htmlElement") {
     // Special processing for htmlElement table
     $htmlElement = $cache->get_cached_table("htmlElement") or $htmlElement = array();
     foreach ($htmlElement as $id => $row) {
       $rows_htmlElement[$row["handle"]] = $row;
     }
     $cache->set_cached_table("htmlElement",$rows_htmlElement);
+  }
 
+  if ($table == "config") {
     // Special processing for config table
     $config = $cache->get_cached_table("config") or $config = array();
     foreach ($config as $id => $row) {
@@ -151,6 +154,7 @@ function get_cached_table($table) {
     }
     $cache->set_cached_table("config",$rows_config);
   }
+
   return $cache->get_cached_table($table);
 } 
 function get_option($label, $value = "", $selected = false) {

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td></td>
-            <td style="text-align:right; padding:20px 0px;">{$login_or_send_pass_button}</td>
+            <td style="text-align:right; padding:35px 0px 35px 0px;">{$login_or_send_pass_button}</td>
           </tr>
           <tr>
             <td class="center" colspan="2">{$status_line}</td>
