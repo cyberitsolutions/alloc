@@ -21,10 +21,10 @@
  *
  */
 
+define("IN_INDEX_RIGHT_NOW",1);
 require_once("alloc.php");
 
 page_close();
-
 header("Location: ".$TPL["url_alloc_home"]);
 
 

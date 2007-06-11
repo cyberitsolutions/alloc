@@ -138,11 +138,6 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 // Else include the alloc_config.php file and begin with proceedings..
 } else {
 
-  if (!defined("IN_LOGIN_RIGHT_NOW")) {
-    define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
-    define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
-  }
-
   // Check for existing session..
   $sess = new Session;
 
@@ -153,22 +148,21 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   $current_user = new person;
 
 
+  // If the session hasn't started and we're not on the login screen, then redirect to login 
   // Some scripts don't require authentication
-  if (!defined("NO_AUTH")) {
+  if (!defined("NO_AUTH") && !$sess->Started() && !defined("IN_LOGIN_RIGHT_NOW")) { 
+    header("Location: ". $TPL["url_alloc_login"]);
+    exit();
 
-    // If the session hasn't started and we're not on the login screen, then redirect to login 
-    if (!$sess->Started() && !defined("IN_LOGIN_RIGHT_NOW")) { 
-      header("Location: ". $TPL["url_alloc_login"]);
-      exit();
+  } else if (!defined("IN_LOGIN_RIGHT_NOW") && !defined("IN_INDEX_RIGHT_NOW")) {
+    define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
+    define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
 
-    // Else load the current_user...
-    } else if (!defined("IN_LOGIN_RIGHT_NOW")) {
-      $current_user = person::load_get_current_user($sess->Get("personID"));
+    $current_user = person::load_get_current_user($sess->Get("personID"));
 
-      // Save history entry
-      $history = new history;
-      $history->save_history();
-    }
+    // Save history entry
+    $history = new history;
+    $history->save_history();
   }
 
 }
