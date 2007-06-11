@@ -113,6 +113,9 @@ class db {
     $this->connect();
     $args = func_get_args();
     $query = $this->get_escaped_query_str($args);
+    #echo "<br><br>Query: ".$query;
+    #echo "<br><pre>".print_r(debug_backtrace(),1)."</pre>";
+
     $id = mysql_query($query);
     if ($id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
       $this->query_id = $id;

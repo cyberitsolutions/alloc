@@ -25,22 +25,29 @@
 // 
 class alloc_cache {
 
-
   var $db = "db_alloc";
   var $tables_to_cache = array();
   var $cache; 
 
   
   // Initializer
-  function alloc_cache($arr=array()) {
-    $this->tables_to_cache = $arr;
+  function alloc_cache() {
+  }
+
+  // Singleton
+  function get_cache() {
+    static $instance;
+    if (!$instance) {
+      $instance = new alloc_cache();
+    }
+    return $instance;
   }
 
   // Loads up assoc array[$table][primarykey] = row;
-  function load_cache() {
+  function load_cache($table) {
     $db = new $this->db;
 
-    foreach ($this->tables_to_cache as $table) {
+    if (!$this->cache[$table]) {
       $db->query("SELECT * FROM ".$table);
       while ($row = $db->next_record()) {
         $this->cache[$table][$db->f($table."ID")] = $row;
