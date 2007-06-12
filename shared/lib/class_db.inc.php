@@ -116,15 +116,17 @@ class db {
     #echo "<br><br>Query: ".$query;
     #echo "<br><pre>".print_r(debug_backtrace(),1)."</pre>";
 
-    $id = mysql_query($query);
-    if ($id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
-      $this->query_id = $id;
-      $rtn = $this->query_id;
-      $this->error();
-    } else {
-      $rtn = false;
-      is_resource($this->link_id) and $str = mysql_error($this->link_id);
-      $this->error("Query failed: ".$str."<br><pre>".$query."</pre>");
+    if ($query) {
+      $id = mysql_query($query);
+      if ($id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
+        $this->query_id = $id;
+        $rtn = $this->query_id;
+        $this->error();
+      } else {
+        $rtn = false;
+        is_resource($this->link_id) and $str = mysql_error($this->link_id);
+        $this->error("Query failed: ".$str."<br><pre>".$query."</pre>");
+      }
     }
     return $rtn;
   } 
@@ -210,12 +212,21 @@ class db {
   function save($table, $row=array(), $debug=0) {
     $table_keys = $this->get_table_keys($table) or $table_keys = array();
     foreach ($table_keys as $k) {
-      !$row[$k] and $do_insert = true;
+      $row[$k] and $do_update = true;
       $keys[$k] = $row[$k]; 
     }
     $row = $this->unset_invalid_field_names($table, $row, $keys);
 
-    if ($do_insert) {
+    if ($do_update) {
+      $q = sprintf("UPDATE %s SET %s WHERE %s"
+                  , $table, $this->get_update_str($row), $this->get_update_str($keys, " AND "));
+      $debug &&  sizeof($row) and print ("<br>SAVE -> UPDATE -> Would have executed this query: <br>".$q);
+      $debug && !sizeof($row) and print ("<br>SAVE -> UPDATE -> Would NOT have executed this query: <br>".$q);
+      !$debug && sizeof($row) and $this->query($q);
+      reset($keys);
+      return current($keys);
+
+   } else {
       $q = sprintf("INSERT INTO %s (%s) VALUES (%s)"
                   , $table, $this->get_insert_str_fields($row), $this->get_insert_str_values($row));
       $debug &&  sizeof($row) and print ("<br>SAVE -> INSERT -> Would have executed this query: <br>".$q);
@@ -224,14 +235,7 @@ class db {
       if (mysql_affected_rows() != 0) { 
         return mysql_insert_id(); // The primary key needs to be of type AUTO_INCREMENT for this to work.
       }
-    } else {
-      $q = sprintf("UPDATE %s SET %s WHERE %s"
-                  , $table, $this->get_update_str($row), $this->get_update_str($keys, " AND "));
-      $debug &&  sizeof($row) and print ("<br>SAVE -> UPDATE -> Would have executed this query: <br>".$q);
-      $debug && !sizeof($row) and print ("<br>SAVE -> UPDATE -> Would NOT have executed this query: <br>".$q);
-      !$debug && sizeof($row) and $this->query($q);
-      return current($keys);
-    }
+   }
   }
 
   function delete($table, $row=array(), $debug=0) {
