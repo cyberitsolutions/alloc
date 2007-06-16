@@ -575,7 +575,7 @@ function get_config_link() {
 function parse_sql_file($file) {
   
   // Filename must be readable and end in .sql
-  if (!is_readable($file) || substr($file,-3) != strtolower("sql")) {
+  if (!is_readable($file) || substr($file,-4) != strtolower(".sql")) {
     return;
   }
 
@@ -605,9 +605,41 @@ function parse_sql_file($file) {
       }
     }
   }
-  
-  #print implode($sql,"<br>Q: ");
   return array($sql,$comments);
+} 
+function parse_php_file($file) {
+  // Filename must be readable and end in .php
+  if (!is_readable($file) || substr($file,-4) != strtolower(".php")) {
+    return;
+  }
+
+  $php = array();
+  $comments = array();
+  $mqr = @get_magic_quotes_runtime();
+  @set_magic_quotes_runtime(0);
+  $lines = file($file);
+  @set_magic_quotes_runtime($mqr);
+
+  foreach ($lines as $line) {
+    if (preg_match("/^[\s]*(\/\/[^\n]*)$/", $line, $m)) {
+      $comments[] = str_replace("// ","",trim($m[1]));
+    } else if (!empty($line) && substr($line,0,2) != "//" && $line) {
+      $php[] = trim($line);
+    }
+  }
+  return array($php,$comments);
+}
+function parse_patch_file($file) {
+  if (!is_readable($file)) {
+    return;
+  }
+
+  if (substr($file,-4) == strtolower(".php")) {
+    return parse_php_file($file);
+
+  } else if (substr($file,-4) == strtolower(".sql")) {
+    return parse_sql_file($file);
+  }
 }
 function show_messages() {
   global $TPL;
