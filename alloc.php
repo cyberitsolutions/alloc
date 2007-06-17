@@ -138,6 +138,12 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 // Else include the alloc_config.php file and begin with proceedings..
 } else {
 
+  // Need to just touch a db connection, so that calls to
+  // mysql_real_escape_string() et al, don't break because 
+  // no prior connection was initialized.
+  $db = new db_alloc();
+  $db->connect();
+
   // Check for existing session..
   $sess = new Session;
 
