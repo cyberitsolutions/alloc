@@ -200,6 +200,11 @@ table.filter th {
   text-align:center; 
 }
 
+table.filter table.filter {
+  border:2px dashed #d3e5fb; 
+  margin:0px;
+}
+
 table.panel { 
   background-color:#eaf3ff; 
   height:100%; 

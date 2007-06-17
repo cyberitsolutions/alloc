@@ -22,7 +22,8 @@ files = os.listdir(d+'../styles/')
 # Loop through files
 for item in files:
 
-  if item != 'style.tpl':
+  if item.endswith('.ini'):
+
 
     # Parse each style_something.ini file
     config.read([d+'../styles/'+item])

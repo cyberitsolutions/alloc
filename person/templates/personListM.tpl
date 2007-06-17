@@ -14,12 +14,12 @@
           <td><select name="skill_class">{$skill_classes}</select></td>
           <td rowspan="3" valign="top">
 
-            <table class="filter" align="center" width="95%" style="margin:0px">
+            <table class="filter" align="center" width="95%">
               <tr>
                 <td valign="top" colspan="2"><b><nobr>Display Options</nobr></b></td>
               </tr>
               <tr>
-                <td align="right" class="nobr">Show <b>All</b> Users</td>
+                <td align="right" class="nobr">Show All Users</td>
                 <td align="right" width="1%"><input type="checkbox" name="show_all_users"{$show_all_users_checked}></td>
               </tr>
               <tr>
