@@ -143,8 +143,6 @@ $skills = skillList::get_skills();
 if ($skill_class && !in_array($skills[$_POST["skill"]], $skills)) { $_POST["skill"] = ""; }
 $TPL["skills"] = get_options_from_array($skills, $_POST["skill"], true);
 
-$current_user->have_perm(PERM_PERSON_READ_MANAGEMENT) and $TPL["personAddSkill_link"] = "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_personSkillAdd"]."\">New Skill</a>";
-
 include_template("templates/personListM.tpl");
 page_close();
 

@@ -24,17 +24,6 @@
 require_once("../alloc.php");
 
 
-$skill_classes = skillList::get_skill_classes();
-$skill_classes[""] = ">> OTHER >>";
-$TPL["new_skill_classes"] = get_options_from_array($skill_classes, $_POST["skill_class"], true);
-
-$skills = skillList::get_skills();
-// if a skill class is selected and a skill that is not in that class is also selected, clear the skill as this is what the filter options will do
-if ($skill_class && !in_array($skills[$_POST["skill"]], $skills)) { $_POST["skill"] = ""; }
-$skills[""] = ">> NEW >>";
-$TPL["new_skills"] = get_options_from_array($skills, $_POST["skill"], true);
-
-
 
 // add new skill to database
 if ($_POST["add_skill"]) {
@@ -56,7 +45,6 @@ if ($_POST["add_skill"]) {
   } 
   if ($failed == FALSE && $skillList->skill_exists() == FALSE) {
     $skillList->save();
-    header("Location: ".$TPL["url_alloc_personList"]);
   } 
 } 
 if ($_POST["delete_skill"]) {
@@ -64,9 +52,21 @@ if ($_POST["delete_skill"]) {
   if ($_POST["new_skill_name"] != "") {
     $skillList->set_id($_POST["new_skill_name"]);
     $skillList->delete();
-    header("Location: ".$TPL["url_alloc_personList"]);
   } 
 } 
+
+
+$skill_classes = skillList::get_skill_classes();
+$skill_classes[""] = ">> OTHER >>";
+$TPL["new_skill_classes"] = get_options_from_array($skill_classes, $_POST["skill_class"], true);
+
+$skills = skillList::get_skills();
+// if a skill class is selected and a skill that is not in that class is also selected, clear the skill as this is what the filter options will do
+if ($skill_class && !in_array($skills[$_POST["skill"]], $skills)) { $_POST["skill"] = ""; }
+$skills[""] = ">> NEW >>";
+$TPL["new_skills"] = get_options_from_array($skills, $_POST["skill"], true);
+
+
 
 if ($current_user->have_perm(PERM_PERSON_READ_MANAGEMENT)) {
   include_template("templates/personSkillAdd.tpl");
