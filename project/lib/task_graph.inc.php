@@ -37,16 +37,18 @@ putenv('GDFONTPATH=' . realpath('../util'));
         // Outputs an image with an error message given by $s and then terminates the script
   function image_die($s="") {
 
-    $image = imageCreate(950, 40);
+    $image = imageCreate(700, 40);
 
     // allocate all required colors
     $color_background = imageColorAllocate($image, 255, 255, 255);
-    $color_text = imageColorAllocate($image, 0, 0, 64);
+    $color_text = imageColorAllocate($image, 176, 176, 176);
+    $color_grid = imageColorAllocate($image, 224, 224, 224);
 
     // clear the image space with the background color
-    imageFilledRectangle($image, 0, 0, 200 - 1, 50 - 1, $color_background);
-    imagettftext($image, ALLOC_FONT_SIZE, 0, 3, 10, $color_text, ALLOC_FONT, $s);
+    imageFilledRectangle($image, 0, 0, 700, 40, $color_background);
+    imagettftext($image, ALLOC_FONT_SIZE, 0, 6, 23, $color_text, ALLOC_FONT, $s);
 
+    imageRectangle($image,0,0,700-1, 40-1,$color_grid);
 
     if (ALLOC_GD_IMAGE_TYPE == "PNG") {
       header("Content-type: image/png");
@@ -112,7 +114,7 @@ class task_graph
     // allocate all required colors
     $this->color_background = imageColorAllocate($this->image, 255, 255, 255);
     $this->color_text = imageColorAllocate($this->image, 0, 0, 0);
-    $this->color_grid = imageColorAllocate($this->image, 200, 200, 255);
+    $this->color_grid = imageColorAllocate($this->image, 161, 202, 255);
     $this->color_milestone = imageColorAllocate($this->image, 255, 128, 255);
     $this->color_today = imageColorAllocate($this->image, 255, 192, 0);
 
@@ -121,7 +123,7 @@ class task_graph
 
     imageRectangle($this->image,0,0,$this->width - 1,$this->height - 1,$this->color_grid);
 
-    imageString($this->image, 5, 3, 3, $this->title, $this->color_text);
+    imagettftext($this->image, ALLOC_FONT_SIZE+3, 0, 6, 28, $this->color_text, ALLOC_FONT, $this->title);
 
     $this->y = $this->top_margin;
   }
@@ -144,7 +146,7 @@ class task_graph
     // Text
     $text = stripslashes($t["taskName"]);
     echo_debug("task: $text<br>");
-    imagettftext($this->image, ALLOC_FONT_SIZE, 0,  3 + ($indent * $this->indent_increment), $y + 13, $this->color_text, ALLOC_FONT, $text);
+    imagettftext($this->image, ALLOC_FONT_SIZE, 0,  6 + ($indent * $this->indent_increment), $y + 13, $this->color_text, ALLOC_FONT, $text);
 
     // Get date values
     $date_target_start = $t["dateTargetStart"];
@@ -259,7 +261,7 @@ class task_graph
     while ($current_stamp < $completion_stamp) {
       $x_pos = $this->date_stamp_to_x($current_stamp);
       imageLine($this->image, $x_pos, $this->top_margin - 5, $x_pos, $this->height - $this->bottom_margin, $this->color_grid);
-      imagettftext($this->image, ALLOC_FONT_SIZE - 2, 45, $x_pos, $this->top_margin - 7, $this->color_text, ALLOC_FONT, date("d-M", $current_stamp));
+      imagettftext($this->image, ALLOC_FONT_SIZE - 2, 45, $x_pos, $this->top_margin - 7, $this->color_text, ALLOC_FONT, date("M-d", $current_stamp));
       $current_stamp += $time_increment;
     }
 
