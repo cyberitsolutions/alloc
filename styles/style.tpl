@@ -200,6 +200,11 @@ table.filter th {
   text-align:center; 
 }
 
+table.filter table.filter {
+  border:2px dashed (PANE_BG_COLOR_HEADER); 
+  margin:0px;
+}
+
 table.panel { 
   background-color:(PANE_BG_COLOR); 
   height:100%; 

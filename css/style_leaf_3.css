@@ -133,7 +133,7 @@ table.box th a:link, table.box th a:visited {
 }
 table.box th a:hover { 
   font-weight:bold; 
-  color:#cb832f; 
+  color:#5c7600; 
   font-size:12px; 
 }
 
@@ -198,6 +198,11 @@ table.filter th {
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
+}
+
+table.filter table.filter {
+  border:2px dashed #e5e8d9; 
+  margin:0px;
 }
 
 table.panel { 
