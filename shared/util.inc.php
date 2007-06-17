@@ -208,8 +208,9 @@ function show_tabs() {
     $TPL["url"] = $arr["url"];
     $TPL["name"] = $name;
     unset($TPL["active"]);
-    if (preg_match("/".str_replace("/", "\\/", $_SERVER["PHP_SELF"])."/", $url) || preg_match("/".$arr["module"]."/",$_SERVER["PHP_SELF"])) {
-       $TPL["active"] = " active";
+    if (preg_match("/".str_replace("/", "\\/", $_SERVER["PHP_SELF"])."/", $url) || preg_match("/".$arr["module"]."/",$_SERVER["PHP_SELF"]) && !$done) {
+      $TPL["active"] = " active";
+      $done = true;
     }
     include_template(ALLOC_MOD_DIR."shared/templates/tabR.tpl");
   }
