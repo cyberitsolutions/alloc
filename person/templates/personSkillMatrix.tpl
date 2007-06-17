@@ -2,15 +2,20 @@
 {show_toolbar()}
 {$table_box}
   <tr>
-    <th colspan="200">Skill Matrix</th>
+    <th>Skill Matrix</th>
+    <th class="right">{$personAddSkill_link}</th>
   </tr> 
   <tr>
-    <td colspan="200" align="center">
-    {show_filter("templates/personSkillFilterS.tpl")}
+    <td colspan="2" align="center">
+      <table>
+        <tr>
+          <td>{show_filter("templates/personSkillFilterS.tpl")}</td>
+        </tr>
+      </table>
     </td>
   </tr>
   <tr>
-    <td colspan="200">Key:
+    <td colspan="2">Key:
       <img src="../images/skill_senior.png" alt="S" align="absmiddle"> Senior,
       <img src="../images/skill_advanced.png" alt="A" align="absmiddle"> Advanced,
       <img src="../images/skill_intermediate.png" alt="I" align="absmiddle"> Intermediate,
@@ -18,6 +23,12 @@
       <img src="../images/skill_novice.png" alt="N" align="absmiddle"> Novice
     </td>
   </tr>
-  {show_skill_expertise()}
+  <tr>
+    <td colspan="2">
+      <table>
+        {show_skill_expertise()}
+      </table>
+    </td>
+  </tr>
 </table>
 {show_footer()}
