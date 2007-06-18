@@ -13,11 +13,13 @@ function help_text_on(img, str) {
   }
   helper.style.top=y+'px';
   toggleCombos("hidden"); 
+  img.style.border = "1px solid #cccccc";
 }
-function help_text_off(str) {
+function help_text_off(img) {
   yyy=-1000;
   helper.style.display="none";
   toggleCombos("visible"); 
+  img.style.border = "1px solid #999999";
 }
 function popup(msg) {
   var content;
