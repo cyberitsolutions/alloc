@@ -38,7 +38,8 @@
 
     {$table_box}
       <tr>
-        <th colspan="3">Projects</th>
+        <th colspan="2">Projects</th>
+        <th class="right"><a href="{$url_alloc_project}clientID={$client_clientID}">New Project</a></th>
       </tr>
       <tr>
         <td>Name</td>

@@ -328,50 +328,55 @@ if ($_POST["save"]) {
     $definately_new_project = true;
   }
 
+  if (!$project->get_id() && !$project->get_value("projectName")) {  
+    $TPL["message"][] = "Please enter a name for the Project.";
+  }  
 
-  $project->save();
-  $projectID = $project->get_id();
+  if (!$TPL["message"]) {
 
-  if ($definately_new_project) {
-    $projectPerson = new projectPerson;
-    $projectPerson->set_value("projectID", $projectID);
-    $projectPerson->set_value_role("isManager");
-    $projectPerson->set_value("personID", $current_user->get_id());
-    $projectPerson->save();
-  }
-  // Automaticall created phases in projects
-  if ($new_project && $project->get_value("projectType") == "project") {
-    $creatorID = $current_user->get_id();
-    $dateCreated = date("Y-m-d H:i:s");
-    $taskNames = array(1=>"Phase 1: Discussion & Legal", 2=>"Phase 2: Planning & Documentation", 3=>"Phase 3: Development", 4=>"Phase 4: Testing", 5=>"Phase 5: Handover & Deployment");
-    $phasePercentageTimes = array(1=>0.10, 2=>0.16, 3=>0.32, 4=>0.32, 5=>0.10);
-    if ($project->get_value("dateTargetStart") != "") {
-      $time_start = strtotime($project->get_value("dateTargetStart"));
-    } else {
-      $time_start = strtotime(date("Y-m-d"));
-    }
-    if ($project->get_value("dateTargetCompletion") != "") {
-      $time_total = strtotime($project->get_value("dateTargetCompletion")) - $time_start;
-    } else {
-      $time_total = mktime(0, 0, 0, date("m") + 6, date("d"), date("Y")) - $time_start;
-    }
-    for ($i = 1; $i < 6; $i++) {
-      $time_end = $time_start + $phasePercentageTimes[$i] * $time_total;
-      $task = new task;
-      $task->set_value("taskName", $taskNames[$i]);
-      $task->set_value("creatorID", $creatorID);
-      $task->set_value("priority", "4");
-      $task->set_value("timeEstimate", "0");
-      $task->set_value("dateCreated", $dateCreated);
-      $task->set_value("projectID", $projectID);
-      $task->set_value("dateTargetStart", date("Y-m-d", $time_start));
-      $task->set_value("dateTargetCompletion", date("Y-m-d", $time_end));
-      $task->set_value("parentTaskID", "0");
-      $task->set_value("taskTypeID", TT_PHASE);
-      $task->save();
-      $time_start = $time_end;
-    }
+    $project->save();
+    $projectID = $project->get_id();
 
+    if ($definately_new_project) {
+      $projectPerson = new projectPerson;
+      $projectPerson->set_value("projectID", $projectID);
+      $projectPerson->set_value_role("isManager");
+      $projectPerson->set_value("personID", $current_user->get_id());
+      $projectPerson->save();
+    }
+    // Automaticall created phases in projects
+    if ($new_project && $project->get_value("projectType") == "project") {
+      $creatorID = $current_user->get_id();
+      $dateCreated = date("Y-m-d H:i:s");
+      $taskNames = array(1=>"Phase 1: Discussion & Legal", 2=>"Phase 2: Planning & Documentation", 3=>"Phase 3: Development", 4=>"Phase 4: Testing", 5=>"Phase 5: Handover & Deployment");
+      $phasePercentageTimes = array(1=>0.10, 2=>0.16, 3=>0.32, 4=>0.32, 5=>0.10);
+      if ($project->get_value("dateTargetStart") != "") {
+        $time_start = strtotime($project->get_value("dateTargetStart"));
+      } else {
+        $time_start = strtotime(date("Y-m-d"));
+      }
+      if ($project->get_value("dateTargetCompletion") != "") {
+        $time_total = strtotime($project->get_value("dateTargetCompletion")) - $time_start;
+      } else {
+        $time_total = mktime(0, 0, 0, date("m") + 6, date("d"), date("Y")) - $time_start;
+      }
+      for ($i = 1; $i < 6; $i++) {
+        $time_end = $time_start + $phasePercentageTimes[$i] * $time_total;
+        $task = new task;
+        $task->set_value("taskName", $taskNames[$i]);
+        $task->set_value("creatorID", $creatorID);
+        $task->set_value("priority", "4");
+        $task->set_value("timeEstimate", "0");
+        $task->set_value("dateCreated", $dateCreated);
+        $task->set_value("projectID", $projectID);
+        $task->set_value("dateTargetStart", date("Y-m-d", $time_start));
+        $task->set_value("dateTargetCompletion", date("Y-m-d", $time_end));
+        $task->set_value("parentTaskID", "0");
+        $task->set_value("taskTypeID", TT_PHASE);
+        $task->save();
+        $time_start = $time_end;
+      }
+    }
   }
 } else if ($_POST["delete"]) {
   $project->read_globals();
@@ -448,11 +453,13 @@ $TPL["project_is_agency"] = $project->get_value("is_agency") ? " checked" : "";
 
 
 $db = new db_alloc;
-$project->get_value("clientID") and $clientID_sql = sprintf(" OR clientID = %d",$project->get_value("clientID"));
+
+$cID = $project->get_value("clientID") or $cID = $_GET["clientID"];
+$cID and $clientID_sql = sprintf(" OR clientID = %d",$cID);
 $query = sprintf("SELECT * FROM client WHERE clientStatus = 'current' ".$clientID_sql." ORDER BY clientName");
 $db->query($query);
 $TPL["clientOptions"] = get_option("None", "0", $TPL["project_clientID"] == 0)."\n";
-$TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $TPL["project_clientID"],55);
+$TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $cID, 55);
 $client = $project->get_foreign_object("client");
 $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
@@ -462,11 +469,10 @@ if ($clientID_sql) {
                       FROM client 
                  LEFT JOIN clientContact ON client.clientPrimaryContactID = clientContact.clientContactID 
                      WHERE client.clientID = %d "
-                   ,$project->get_value("clientID"));
+                   ,$cID);
 
   $db->query($query);
   $row = $db->next_record();
-
   
   $row["clientStreetAddressOne"] and $one.= $row["clientStreetAddressOne"]."<br/>";
   $row["clientSuburbOne"]        and $one.= $row["clientSuburbOne"]."<br/>";
