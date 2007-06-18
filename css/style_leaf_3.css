@@ -309,58 +309,64 @@ table.rejected {
 
 
 #all {
-  width:auto !important; width:98%;
+  width:auto !important; width:95%;
   margin:0px 14px;
   text-align:center;
 }
 
-table#menu_top {
+#menu {
   margin:0px;
   padding:0px;
-  margin-bottom:22px !important; margin-bottom:0px;
-  text-align:left;
+  width:100%; 
+  position:relative; 
+  top:0px;
+  margin-bottom:20px;
+}
+
+table.menu_top {
   position:relative;
   top:10px;
+  margin:0px;
+  padding:0px;
+  text-align:left;
   font-size:11px;
   font-weight:bold;
   color:#5c7600;
-  width:100%;
-  display:inline;
 }
 
-table#menu_top th {
+.mtl {
+  left:0px;
+}
+
+.mtr {
+  right:0px !important; right:-14px;
+}
+
+table.menu_top th {
   text-align:left;
-  font-size:100%;
+  font-size:140%;
 }
 
-table#menu_top td {
+table.menu_top td {
   text-align:right;
 }
 
-table#menu_top .menu_form_text {
+table.menu_top .menu_form_text {
   font-size:12px !important; font-size:13px;
   padding:0px;
   margin:0px;
 }
 
-table#menu_top .menu_form_button {
+table.menu_top .menu_form_button {
   font-size:11px !important; font-size:11px;
   padding:0px 2px;
   margin:1px;
 }
 
-table#menu_top .menu_form_select {
+table.menu_top .menu_form_select {
+  font-size:12px !important; font-size:11px;
   position:relative;
   top:0px !important; top:-2px;
-}
-
-div#header_image {
-  width:100%;
-  margin:auto;
-  margin-bottom:0px !important; margin-bottom:22px;
-  position: relative;
-  text-align:left;
-  z-index:1;
 }
 
 /* Setup the main content box that encapsulates everything */
@@ -379,11 +385,12 @@ div#main {
 div#tabs {
   width:100%;
   margin:0px;
-  border:0px;
-  position: relative;
+  padding:0px !important; padding:0px 16px;
+  border:1px;
   clear:both;
   text-align:left;
   height:27px;
+  position:relative;
   top:1px;
   left:1px;
   z-index:1;
