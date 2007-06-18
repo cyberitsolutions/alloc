@@ -25,25 +25,36 @@
 
 require_once("../alloc.php");
 
-$file = urldecode($_GET["file"]);
+$id = $_GET["id"] or $id = $_POST["id"];
+$file = $_GET["file"] or $file = $_POST["file"];
+$entity = $_GET["entity"] or $entity = $_POST["entity"];
 
-if ($_GET["id"] && is_numeric($_GET["id"]) && $file && !preg_match("/\.\./",$file) && !preg_match("/\//",$file)) {
+$id = sprintf("%d",$id);
 
-  $entity = new $_GET["entity"];
-  $entity->set_id($_GET["id"]);
-  $entity->select();
 
-  $dir = $TPL["url_alloc_attachments_dir"].$_GET["entity"]."/".$_GET["id"]."/";
+
+if ($id && $file 
+&& !preg_match("/\.\./",$file) && !preg_match("/\//",$file)
+&& !preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)
+&& strlen($file) <= 40) {
+
+  $e = new $entity;
+  $e->set_id($id);
+  $e->select();
+
+  $dir = $TPL["url_alloc_attachments_dir"].$entity."/".$id."/";
   $file = $dir.$file;
 
-  if ($entity->has_attachment_permission_delete($current_user) && file_exists($file)) {
+  if ($e->has_attachment_permission_delete($current_user) && file_exists($file)) {
     if (dirname($file) == dirname($dir.".")) { // last check
       unlink($file);
-      header("Location: ".$TPL["url_alloc_".$_GET["entity"]].$_GET["entity"]."ID=".$id);
+      header("Location: ".$TPL["url_alloc_".$entity].$entity."ID=".$id);
+      exit();
     }
   }
 }
 
-
+// return by default
+header("Location: ".$TPL["url_alloc_".$entity].$entity."ID=".$id);
 
 ?>

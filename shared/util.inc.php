@@ -224,18 +224,36 @@ function show_toolbar() {
 function move_attachment($entity, $id) {
   global $TPL;
 
+  $id = sprintf("%d",$id);
+
   if ($_FILES["attachment"]) {
     is_uploaded_file($_FILES["attachment"]["tmp_name"]) || die("Uploaded document error.  Please try again.");
 
-    $dir = $TPL["url_alloc_attachments_dir"].$entity."/".$id;
+    $dir = $TPL["url_alloc_attachments_dir"].$entity.DIRECTORY_SEPARATOR.$id;
     if (!is_dir($dir)) {
       mkdir($dir, 0777);
     }
 
-    if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $dir."/".$_FILES["attachment"]["name"])) {
-      die("could not move attachment to: ".$dir."/".$_FILES["attachment"]["name"]);
+    $newname = $_FILES["attachment"]["name"];
+    $newname = str_replace("/","",$newname);
+
+    while (preg_match("/\.\./",$newname)) {
+      $newname = str_replace("..",".",$newname);
+    }
+
+    if (!preg_match("/\.\./",$file) && !preg_match("/\//",$file)
+    &&  !preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)
+    && strlen($newname) <= 40) {
+
+
+      if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $dir.DIRECTORY_SEPARATOR.$newname)) {
+        die("could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
+      } else {
+        chmod($dir.DIRECTORY_SEPARATOR.$newname, 0777);
+      }
     } else {
-      chmod($dir."/".$_FILES["attachment"]["name"], 0777);
+      die("error uploading file. Please ensure that the filename only contains regular characters, 
+           and that the length of the filename is shorter than 40 characters.");
     }
   }
 }
@@ -243,7 +261,7 @@ function get_attachments($entity, $id) {
   
   global $TPL;
   $rows = array();
-  $dir = $TPL["url_alloc_attachments_dir"].$entity."/".$id;
+  $dir = $TPL["url_alloc_attachments_dir"].$entity.DIRECTORY_SEPARATOR.$id;
 
   if ($id) {
     #if (!is_dir($dir)) {
@@ -254,17 +272,34 @@ function get_attachments($entity, $id) {
       $handle = opendir($dir);
 
       while (false !== ($file = readdir($handle))) {
+        clearstatcache();
 
         if ($file != "." && $file != "..") {
-          $size = filesize($dir."/".$file);
+          $size = filesize($dir.DIRECTORY_SEPARATOR.$file);
           $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".htmlentities($file)."</a>";
-          $row["size"] = sprintf("%dkb",$size/1024);
+          $row["text"] = htmlentities($file);
+          $size > 1023 and $row["size"] = sprintf("%dkb",$size/1024);
+          $size < 1024 and $row["size"] = sprintf("%db",$size);
+          #$row["delete"] = "<a href=\"".$TPL["url_alloc_delDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">Delete</a>";
+          $row["delete"] = "<form action=\"".$TPL["url_alloc_delDoc"]."\" method=\"post\">
+                            <input type=\"hidden\" name=\"id\" value=\"".$id."\">
+                            <input type=\"hidden\" name=\"file\" value=\"".$file."\">
+                            <input type=\"hidden\" name=\"entity\" value=\"".$entity."\">
+                            <input type=\"submit\" name=\"delete_file_attachment\" value=\"Delete\" onClick=\"return confirm('Delete File?')\">
+                            </form>";
+
+
+          $row["mtime"] = date("Y-m-d H:i:s",filemtime($dir.DIRECTORY_SEPARATOR.$file));
           $rows[] = $row;    
         }
       }
     }
+    is_array($rows) && usort($rows, "sort_by_mtime");
     return $rows;
   }
+}
+function sort_by_mtime($a, $b) {
+  return $a["mtime"] >= $b["mtime"];
 }
 function util_show_attachments($entity, $id) {
   global $TPL;
@@ -275,7 +310,8 @@ function util_show_attachments($entity, $id) {
   $rows = get_attachments($entity, $id);
   $rows or $rows = array();
   foreach ($rows as $row) {
-    $TPL["attachments"].= "<tr><td>".$row["size"]."</td><td>".$row["file"]."</td></tr>";
+    $TPL["attachments"].= "<tr><td class=\"nobr\">".$row["mtime"]."</td><td>".$row["file"]."</td><td>".$row["size"]."</td>";
+    $TPL["attachments"].= "<td align=\"right\" width=\"1%\">".$row["delete"]."</td></tr>";
   }
 
   include_template("../shared/templates/attachmentM.tpl");
