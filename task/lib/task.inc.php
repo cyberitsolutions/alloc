@@ -230,6 +230,10 @@ class task extends db_entity {
     return $this->is_owner($person);
   }
 
+  function has_attachment_permission_delete($person) {
+    return $this->is_owner($person);
+  }
+
   function get_parent_task_select($projectID="") {
     global $TPL;
     
