@@ -249,19 +249,20 @@ class reminder extends db_entity {
     if (!$this->is_alive()) {
       $this->delete();
     } else {
+    
+
       $date = strtotime($this->get_value('reminderTime'));
       // Only send reminder if it is time to send it
       if (date("YmdHis", $date) <= date("YmdHis")) {
-
-        $person = new person;
-        $person->set_id($this->get_value('personID'));
-        $person->select();
-
-        if ($person->get_value('emailAddress')) {
+     
+        $people = get_cached_table("person");
+        $person = $people[$this->get_value('personID')];
+    
+        if ($person['emailAddress']) {
           $email = sprintf("%s %s <%s>"
-                          , $person->get_value('firstName')
-                          , $person->get_value('surname')
-                          , $person->get_value('emailAddress'));
+                          , $person['firstName']
+                          , $person['surname']
+                          , $person['emailAddress']);
 
           $from = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = $this->get_value('reminderSubject');
@@ -329,15 +330,15 @@ class reminder extends db_entity {
       // only sent advanced notice if it is time to send it
       if (date("YmdHis", $advnotice_time) <= date("YmdHis")) {
 
-        $person = new person;
-        $person->set_id($this->get_value('personID'));
-        $person->select();
+        $people = get_cached_table("person");
+        $person = $people[$this->get_value('personID')];
 
-        if ($person->get_value('emailAddress') != "") {
+
+        if ($person['emailAddress'] != "") {
           $email = sprintf("%s %s <%s>"
-                          ,$person->get_value('firstName')
-                          ,$person->get_value('surname')
-                          ,$person->get_value('emailAddress'));
+                          ,$person['firstName']
+                          ,$person['surname']
+                          ,$person['emailAddress']);
 
           $from = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = sprintf("Adv Notice: %s"
