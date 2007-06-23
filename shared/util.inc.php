@@ -310,7 +310,7 @@ function util_show_attachments($entity, $id) {
   $rows = get_attachments($entity, $id);
   $rows or $rows = array();
   foreach ($rows as $row) {
-    $TPL["attachments"].= "<tr><td class=\"nobr\">".$row["mtime"]."</td><td>".$row["file"]."</td><td>".$row["size"]."</td>";
+    $TPL["attachments"].= "<tr><td>".$row["file"]."</td><td class=\"nobr\">".$row["mtime"]."</td><td>".$row["size"]."</td>";
     $TPL["attachments"].= "<td align=\"right\" width=\"1%\">".$row["delete"]."</td></tr>";
   }
 
