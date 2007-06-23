@@ -4,8 +4,8 @@
     <th colspan="4">Attachments</th>
   </tr>
   <tr>
-    <td width="3%" class="nobr">Date Modified</td>
     <td>File</td>
+    <td class="nobr">Date Modified</td>
     <td>Size</td>
     <td align="right">
 
