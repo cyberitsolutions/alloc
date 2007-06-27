@@ -112,6 +112,8 @@ class timeSheet extends db_entity
      *                                                                         *
      * load_pay_info() loads these vars:                                       *
      * $this->pay_info["project_rate"];	    according to projectPerson table   *
+     * $this->pay_info["timeSheetItem_rate"];according to timeSheetItem table  *
+     * $this->pay_info["customerBilledDollars"];                               *
      * $this->pay_info["project_rateUnitID"];	according to projectPerson table *
      * $this->pay_info["duration"][time sheet ITEM ID];                        *
      * $this->pay_info["total_duration"]; of a timesheet                       *
@@ -163,9 +165,10 @@ class timeSheet extends db_entity
       $this->pay_info["total_duration"] += $db->f("timeSheetItemDuration");
       $this->pay_info["duration"][$db->f("timeSheetItemID")] = $db->f("timeSheetItemDuration");
       $this->pay_info["total_dollars"] += ($db->f("timeSheetItemDuration") * $db->f("rate"));
+      $db->f("rate") and $this->pay_info["timeSheetItem_rate"] = $db->f("rate");
 
       if ($db->f("rate") > 0) {
-        $this->pay_info["total_customerBilledDollars"] += ($db->f("timeSheetItemDuration") * $this->pay_info["project_customerBilledDollars"]);
+        $this->pay_info["total_customerBilledDollars"] += ($db->f("timeSheetItemDuration") * $this->pay_info["customerBilledDollars"]);
       }
       $summary_totals[$units[$db->f("timeSheetItemDurationUnitID")]] += $db->f("timeSheetItemDuration");
     }
