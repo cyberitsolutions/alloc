@@ -77,6 +77,7 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('sentEmailLog',0,0,'','Y',NULL,NULL,15,107);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, actions,  comment, permissionID) VALUES ('absence',0,0,'admin','Y',NULL,15,'Allow all admin to manipulate all absence records.',108);
 INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allow`, `sortKey`, `comment`, `actions`,`permissionID`) VALUES ('taskCommentTemplate',0,0,'','Y',NULL,'Allow everyone to read taskCommentTemplates',1,109);
+INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allow`, `sortKey`, `comment`, `actions`, `permissionID`) VALUES ('token',0,0,'','Y',NULL,'Allow everyone to do anything with tokens.',15,110);
 
 
 
