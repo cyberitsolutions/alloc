@@ -46,13 +46,13 @@ class alloc_email {
 
   // Actual email variables
   var $to_address = "";
-  var $header = "";
+  var $header = array();
   var $subject = "";
   var $body = ""; 
 
 
   // Initializer
-  function alloc_email($to_address="",$subject="",$message="",$message_type="",$header="") {
+  function alloc_email($to_address="",$subject="",$message="",$message_type="",$header=array()) {
     $to_address   and $this->to_address   = $to_address;
     $subject      and $this->subject      = $subject;
     $message      and $this->message      = $message;
@@ -61,22 +61,30 @@ class alloc_email {
   }
 
   // Send and log the email
-  function send($to_address="",$subject="",$message="",$message_type="",$header="") {
+  function send($to_address="",$subject="",$message="",$message_type="",$header=array()) {
     $to_address   and $this->to_address   = $to_address;
     $subject      and $this->subject      = $subject;
     $message      and $this->message      = $message;
     $message_type and $this->message_type = $message_type;
     $header       and $this->header       = $header;
 
-    if (!$this->header || !preg_match('/@/',$this->header)) {
-      $this->header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
+    if (!$this->header["From"]) {
+      $this->header["From"] = ALLOC_DEFAULT_FROM_ADDRESS;
     }
 
     $this->is_valid_to_address() or $this->to_address = ALLOC_DEFAULT_TO_ADDRESS;
     $this->subject = "[allocPSA] ".$this->subject;
 
     if ($this->is_valid_to_address() && $this->is_valid_url()) {
-      $result = mail($this->to_address, stripslashes($this->subject), stripslashes($this->message), $this->header);
+    
+      if (is_array($this->header)) {
+        foreach ($this->header as $k => $v) {
+          $h.= $br.$k.": ".$v;
+          $br = "\r\n";
+        }
+      }
+
+      $result = mail($this->to_address, stripslashes($this->subject), stripslashes($this->message), $h);
       if ($result) {
         $this->log();
         return true;
@@ -91,13 +99,28 @@ class alloc_email {
       $person->set_id($personID);
       $person->select();
       if ($person->get_value("emailAddress")) {
-        $this->header = "From: ".$person->get_username(1)." <".$person->get_value("emailAddress").">";
-      } else {
-        $this->header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
+        $this->header["From"] = $person->get_username(1)." <".$person->get_value("emailAddress").">";
       }
-    } else {
-      $this->header = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
-    }
+    } 
+    $this->header["From"] or $this->header["From"] = ALLOC_DEFAULT_FROM_ADDRESS;
+  }
+
+  function set_reply_to($email=false) {
+    $email or $email = ALLOC_DEFAULT_FROM_ADDRESS;
+    $this->header["Reply-To"] or $this->header["Reply-To"] = $email;
+  }
+
+
+  function set_message_id($hash="") {
+    $hash and $hash = ".".$hash;
+    list($usec, $sec) = explode(" ", microtime());
+    $time = $sec.$usec;
+    $time = base_convert($time,10,36);
+    $rand = md5(microtime().getmypid().md5(microtime()));
+    $rand = base_convert($rand,16,36);
+    $bits = explode("@",ALLOC_DEFAULT_FROM_ADDRESS);
+    $host = str_replace(">","",$bits[1]);
+    $this->header["Message-ID"] = "<".$time.".".$rand.$hash."@".$host.">";
   }
 
   // Will return true if $this->to_address is true
@@ -133,7 +156,14 @@ class alloc_email {
     $sentEmailLog->set_value("sentEmailTo",$this->to_address);
     $sentEmailLog->set_value("sentEmailSubject",$this->subject);
     $sentEmailLog->set_value("sentEmailBody",$this->message);
-    $sentEmailLog->set_value("sentEmailHeader",$this->header);
+
+    if (is_array($this->header)) {
+      foreach ($this->header as $k => $v) {
+        $h.= $br.$k.": ".$v;
+        $br = "\r\n";
+      }
+    }
+    $sentEmailLog->set_value("sentEmailHeader",$h);
     $sentEmailLog->set_value("sentEmailType",$this->message_type);
     $sentEmailLog->save();
   }

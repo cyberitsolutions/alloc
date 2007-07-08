@@ -248,8 +248,6 @@ class person extends db_entity {
     return $tfIDs;
   }
 
-
-
   function get_valid_login_row($username, $password="") {
     $db = new db_alloc;
     $q = sprintf("SELECT * FROM person WHERE username = '%s'"
@@ -293,6 +291,34 @@ class person extends db_entity {
     return false;
   } 
 
+  function find_by_name($name=false) {
+
+    $stack1 = array();
+    $people = get_cached_table("person");
+    foreach ($people as $personID => $row) {
+      similar_text($row["name"],$name,$percent1);
+      $stack1[$personID] = $percent1;
+    }
+
+    asort($stack1);
+    end($stack1);
+    $probable1_personID = key($stack1);
+    $person_percent1 = current($stack1);
+
+    if ($probable1_personID && $person_percent1 > 70) {
+      return $probable1_personID;
+    }
+  }
+
+  function find_by_email($email=false) {
+    $email = str_replace(array("<",">"),"",$email);
+    $people = get_cached_table("person");
+    foreach ($people as $personID => $row) {
+      if ($email == str_replace(array("<",">"),"",$row["emailAddress"])) {
+        return $personID;
+      }
+    }
+  }
 
 }
 

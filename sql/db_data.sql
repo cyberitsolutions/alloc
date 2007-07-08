@@ -111,6 +111,15 @@ INSERT INTO config (name, value, type) VALUES ('payrollTaxPercent','5','text');
 INSERT INTO config (name, value, type) VALUES ('calendarFirstDay','Sun','text');
 INSERT INTO config (name,value,type) VALUES ("timeSheetPrint",'a:3:{i:0;s:24:"timeSheetPrintMode=items";i:1;s:24:"timeSheetPrintMode=units";i:2;s:24:"timeSheetPrintMode=money";}',"array");
 INSERT INTO config (name,value,type) VALUES ("timeSheetPrintOptions",'a:8:{s:24:"timeSheetPrintMode=items";s:7:"Default";s:36:"timeSheetPrintMode=items&printDesc=1";s:8:"Default+";s:24:"timeSheetPrintMode=units";s:5:"Units";s:36:"timeSheetPrintMode=units&printDesc=1";s:6:"Units+";s:24:"timeSheetPrintMode=money";s:7:"Invoice";s:36:"timeSheetPrintMode=money&printDesc=1";s:8:"Invoice+";s:36:"timeSheetPrintMode=items&format=html";s:12:"Default Html";s:48:"timeSheetPrintMode=items&format=html&printDesc=1";s:13:"Default Html+";}',"array"); 
+INSERT INTO config (name,value,type) VALUES ("allocEmailAdmin","","text");
+INSERT INTO config (name,value,type) VALUES ("allocEmailHost","","text");
+INSERT INTO config (name,value,type) VALUES ("allocEmailPort","143","text");
+INSERT INTO config (name,value,type) VALUES ("allocEmailUsername","","text");
+INSERT INTO config (name,value,type) VALUES ("allocEmailPassword","","text");
+INSERT INTO config (name,value,type) VALUES ("allocEmailProtocol","imap","text");
+INSERT INTO config (name,value,type) VALUES ("allocEmailFolder","INBOX","text");
+INSERT INTO config (name,value,type) VALUES ("allocEmailKeyMethod","headers","text");
+
 
 
 
@@ -192,6 +201,7 @@ INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, proje
 INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, projectPersonRoleHandle, projectPersonRoleSortKey) VALUES (3,'Project Manager + Time Sheet Recipient','timeSheetRecipient',40);
 
 
+INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ("Add Comments to Task","task","add_comment_from_email");
 
 
 
