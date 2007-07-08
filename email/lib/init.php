@@ -27,10 +27,7 @@ require_once(ALLOC_MOD_DIR."email/lib/tokenAction.inc.php");
 
 
 class email_module extends module {
-  #var $db_entities = array("task"
-                         #, "taskType"
-                         #, "taskCommentTemplate"
-                         #);
+  var $db_entities = array("token");
 
   function register_home_items() {
     global $current_user;
