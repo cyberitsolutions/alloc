@@ -87,11 +87,12 @@ class comment extends db_entity {
   }
 
   function is_owner() {
+    global $current_user;
     $entity = $this->get_value("commentType");
     $e = new $entity;
     $e->set_id($this->get_value("commentLinkID"));
     $e->select();
-    return $e->is_owner();
+    return $e->is_owner($current_user);
   }
 
 
