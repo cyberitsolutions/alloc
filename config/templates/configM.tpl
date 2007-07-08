@@ -1,5 +1,6 @@
 {show_header()}
 {show_toolbar()}
+
 <form action="{$url_alloc_config}" method="post">
 {$table_box}
   <tr>
@@ -11,11 +12,6 @@
     <td width="1%">{get_help("config_allocURL")}</td>
   </tr>
   <tr>
-    <td width="20%"><nobr>allocPSA Email From Address</nobr></td>
-    <td><input type="text" size="70" value="{$AllocFromEmailAddress}" name="AllocFromEmailAddress"></td> 
-    <td width="1%">{get_help("config_AllocFromEmailAddress")}</td>
-  </tr>
-  <tr>
     <td width="20%"><nobr>Calendar 1st Day</nobr></td>
     <td><select name="calendarFirstDay">{$calendarFirstDayOptions}</select></td>
     <td width="1%">{get_help("config_calendarFirstDay")}</td>
@@ -25,6 +21,64 @@
   </tr>
 </table>
 </form>
+
+
+<form action="{$url_alloc_config}" method="post">
+{$table_box}
+  <tr>
+    <th colspan="3">Email Setup</th>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Mail Adminstrator Email Address</nobr></td>
+    <td><input type="text" size="70" value="{$allocEmailAdmin}" name="allocEmailAdmin"></td> 
+    <td width="1%">{get_help("config_allocEmailAdmin")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Default Email From Address</nobr></td>
+    <td><input type="text" size="70" value="{$AllocFromEmailAddress}" name="AllocFromEmailAddress"></td> 
+    <td width="1%">{get_help("config_AllocFromEmailAddress")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Mail Server Hostname/IP</nobr></td>
+    <td><input type="text" size="70" value="{$allocEmailHost}" name="allocEmailHost"></td> 
+    <td width="1%">{get_help("config_allocEmailHost")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Mail Server Port</nobr></td>
+    <td><input type="text" size="70" value="{$allocEmailPort}" name="allocEmailPort"></td> 
+    <td width="1%">{get_help("config_allocEmailPort")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Mail Server Username</nobr></td>
+    <td><input type="text" size="70" value="{$allocEmailUsername}" name="allocEmailUsername"></td> 
+    <td width="1%">{get_help("config_allocEmailUsername")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Mail Server Password</nobr></td>
+    <td><input type="password" size="70" value="{$allocEmailPassword}" name="allocEmailPassword"></td> 
+    <td width="1%">{get_help("config_allocEmailPassword")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Mail Protocol</nobr></td>
+    <td><select name="allocEmailProtocol">{echo get_select_options(array("imap"=>"IMAP","pop3"=>"POP3"),$TPL["allocEmailProtocol"])}</select></td> 
+    <td width="1%">{get_help("config_allocEmailProtocol")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Mail Box Name</nobr></td>
+    <td><input type="text" size="70" value="{$allocEmailFolder}" name="allocEmailFolder"></td> 
+    <td width="1%">{get_help("config_allocEmailFolder")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Mail Key Method</nobr></td>
+    <td><select name="allocEmailKeyMethod">{echo get_select_options(array("headers"=>"Email Headers","subject"=>"Email Subject"),$TPL["allocEmailKeyMethod"])}</select></td>
+    <td width="1%">{get_help("config_allocEmailKeyMethod")}</td>
+  </tr>
+  <tr>  
+    <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
+  </tr>
+</table>
+</form>
+
 
 <form action="{$url_alloc_config}" method="post">
 {$table_box}

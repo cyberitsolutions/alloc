@@ -81,6 +81,7 @@ $m = array("shared"
           ,"soap"         
           ,"installation" 
           ,"help" 
+          ,"email" 
           );
 
 // Helper functions

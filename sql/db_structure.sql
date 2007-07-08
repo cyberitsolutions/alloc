@@ -71,8 +71,10 @@ CREATE TABLE comment (
   commentType varchar(255) NOT NULL default '',
   commentLinkID int(11) NOT NULL default '0',
   commentModifiedTime datetime NOT NULL default '0000-00-00 00:00:00',
-  commentModifiedUser int(11) NOT NULL default '0',
-  comment text,
+  commentModifiedUser int(11) DEFAULT NULL,
+  commentModifiedUserClientContactID int(11) DEFAULT NULL,
+  commentEmailRecipients VARCHAR(255) DEFAULT "",
+  comment TEXT,
   PRIMARY KEY  (commentID),
   KEY commentLinkID (commentLinkID),
   KEY commentType (commentType)
@@ -518,6 +520,30 @@ CREATE TABLE timeUnit (
   timeUnitActive int(1) default NULL,
   timeUnitSequence int(11) default NULL,
   PRIMARY KEY  (timeUnitID)
+) TYPE=MyISAM;
+
+
+CREATE TABLE token (
+  tokenID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  tokenHash VARCHAR(255) NOT NULL DEFAULT '',
+  tokenEntity VARCHAR(32) DEFAULT '',
+  tokenEntityID INT(11),
+  tokenActionID INT(11) NOT NULL,
+  tokenExpirationDate DATETIME DEFAULT NULL,
+  tokenUsed INT(11) DEFAULT 0,
+  tokenMaxUsed INT(11) DEFAULT 0,
+  tokenActive INT(1) DEFAULT 0,
+  tokenCreatedBy INT(11) NOT NULL,
+  tokenCreatedDate DATETIME,
+  UNIQUE KEY (tokenHash)
+) TYPE=MyISAM;
+
+
+CREATE TABLE tokenAction (
+  tokenActionID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  tokenAction VARCHAR(32) NOT NULL,
+  tokenActionType VARCHAR(32),
+  tokenActionMethod VARCHAR(32)
 ) TYPE=MyISAM;
 
 

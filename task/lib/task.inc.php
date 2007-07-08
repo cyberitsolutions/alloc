@@ -97,7 +97,7 @@ class task extends db_entity {
     global $current_user;
     if ($current_user->get_id() != $this->get_value("creatorID")) {
       $successful_recipients = $this->send_emails(array("creator"),"task_closed");
-      $successful_recipients and $msg = "Emailed: ".stripslashes($successful_recipients).", Task Closed: ".stripslashes($this->get_value("taskName"));
+      $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Closed: ".stripslashes($this->get_value("taskName"));
     }
     return $msg; 
   }
@@ -541,7 +541,8 @@ class task extends db_entity {
 
     // New email object wrapper takes care of logging etc.
     $email = new alloc_email;
-    $email->set_from($current_user->get_id());
+    #$email->set_from($current_user->get_id());
+    #$email->set_reply_to();
 
     // REMOVE ME!!
     $email->ignore_no_email_urls = true;
@@ -573,6 +574,29 @@ class task extends db_entity {
 
     $message = "\n".wordwrap($message)."\n\n";
 
+    $token = new token;
+    if ($token->select_token_by_entity("task",$this->get_id())) {
+      $hash = $token->get_value("tokenHash");
+    } else {
+      $token->set_value("tokenEntity","task");
+      $token->set_value("tokenEntityID",$this->get_id());
+      $token->set_value("tokenActionID",1);
+      $token->set_value("tokenActive",1);
+      $token->set_value("tokenCreatedBy",$current_user->get_id());
+      $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
+      $hash = $token->generate_hash();
+      $token->set_value("tokenHash",$hash);
+      $token->save();
+    }
+
+    if ($hash && config::get_config_item("allocEmailKeyMethod") == "headers") {
+      $email->set_message_id($hash);
+    } else if ($hash && config::get_config_item("allocEmailKeyMethod") == "subject") {
+      $email->set_message_id();
+      $subject_extra = " {Key:".$hash."}";
+    }
+
+
     // Convert plain old recipient address blah@cyber.com.au to Alex Lance <blah@cyber.com.au>
     if ($recipient["firstName"] && $recipient["surname"] && $recipient["emailAddress"]) {
       $recipient["emailAddress"] = $recipient["firstName"]." ".$recipient["surname"]." <".$recipient["emailAddress"].">";
@@ -581,7 +605,7 @@ class task extends db_entity {
     }
 
     if ($recipient["emailAddress"]) {
-      $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName");
+      $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName").$subject_extra;
       return $email->send($recipient["emailAddress"], $subject, $message, $type);
     }
   }
@@ -1376,6 +1400,78 @@ function get_task_statii_array() {
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
 
     return $rtn;
+  }
+
+  function add_comment_from_email($email) {
+
+    $comment = new comment;
+    $comment->set_value("commentType","task");
+    $comment->set_value("commentLinkID",$this->get_id());
+    $comment->set_modified_time();
+    $comment->save();
+    $commentID = $comment->get_id();
+
+    $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$comment->get_id();
+    if (!is_dir($dir)) {
+      mkdir($dir, 0777);
+    }
+    $file = $dir.DIRECTORY_SEPARATOR."mail.eml";
+    $decoded = $email->save_email($file);
+    
+    $email_bits = explode(" ",$decoded[0]["Headers"]["from:"]);
+    $from_address = str_replace(array("<",">"),"",array_pop($email_bits));
+    is_array($email_bits) and $from_person = implode(" ",$email_bits);
+    
+    $person = new person;
+    $personID = $person->find_by_name($from_person);
+  
+    #die("personID ".$personID);
+
+    if (!$personID) {
+      $personID = $person->find_by_email($from_address);
+    }
+
+    if ($personID) {
+      $comment->set_value('commentModifiedUser', $personID);
+
+    } else {
+      $cc = new clientContact();
+      $clientContactID = $cc->find_by_name($from_person, $this->get_value("projectID"));
+
+      if (!$clientContactID) {
+        $clientContactID = $cc->find_by_email($from_address, $this->get_value("projectID"));
+      }
+
+      if ($clientContactID) {
+        $comment->set_value('commentModifiedUserClientContactID', $clientContactID);
+      }
+    }
+
+    $body = "Email received from: ".$decoded[0]["Headers"]["from:"]; //."  Date: ".$decoded[0]["Headers"]["date:"];
+    $body.= "\n\n";
+    $body.= trim(mime_parser::get_body_text($decoded));
+    $comment->set_value("comment",trim($body));
+    $comment->save();
+
+    if ($personID && $personID == $this->get_value("creatorID")) {
+      $recipients[] = "assignee";
+      $successful_recipients = $this->send_emails($recipients,"task_comments",$body);
+    } else if ($personID && $personID == $this->get_value("personID")) {
+      $recipients[] = "creator";
+      $successful_recipients = $this->send_emails($recipients,"task_comments",$body);
+    } else if ($clientContactID) {
+      $recipients[] = "assignee";
+      $recipients[] = "creator";
+      $successful_recipients = $this->send_emails($recipients,"task_comments",$body);
+    }
+
+    if ($successful_recipients) {
+      $comment->set_value("commentEmailRecipients",$successful_recipients);
+      $comment->set_value("comment",$append_comment_text);
+      $comment->save();
+    }
+
+
   }
 
 }

@@ -31,8 +31,29 @@ class comment extends db_entity {
                               ,"commentLinkID"=>new db_field("commentLinkID")
                               ,"commentModifiedTime"=>new db_field("commentModifiedTime")
                               ,"commentModifiedUser"=>new db_field("commentModifiedUser")
+                              ,"commentModifiedUserClientContactID"=>new db_field("commentModifiedUserClientContactID")
+                              ,"commentEmailRecipients"=>new db_field("commentEmailRecipients")
                               ,"comment"=>new db_field("comment")
                               );
+  }
+
+  function delete() {
+  
+    if ($this->get_id()) {
+      $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$this->get_id();
+      if (is_dir($dir)) {
+        $handle = opendir($dir);
+        clearstatcache();
+        while (false !== ($file = readdir($handle))) {
+          if ($file != "." && $file != ".." && file_exists($dir.DIRECTORY_SEPARATOR.$file)) {
+            unlink($dir.DIRECTORY_SEPARATOR.$file);
+            clearstatcache();
+          }
+        }
+        is_dir($dir) && rmdir($dir);
+      }
+    }
+    parent::delete();
   }
 
   // set the modified time to now
@@ -48,7 +69,10 @@ class comment extends db_entity {
   function get_comments($commentType="",$commentLinkID="") {
     $rows = array();
     if ($commentType && $commentLinkID) {
-      $q = sprintf("SELECT commentID, commentLinkID, commentModifiedTime AS date, comment, commentModifiedUser AS personID 
+      $q = sprintf("SELECT commentID, commentLinkID, commentModifiedTime AS date, 
+                           comment, commentModifiedUser AS personID, 
+                           commentModifiedUserClientContactID as clientContactID,
+                           commentEmailRecipients
                       FROM comment 
                      WHERE commentType = '%s' AND commentLinkID = %d 
                   ORDER BY commentModifiedTime"
@@ -62,6 +86,22 @@ class comment extends db_entity {
     return $rows;
   }
 
+  function is_owner() {
+    $entity = $this->get_value("commentType");
+    $e = new $entity;
+    $e->set_id($this->get_value("commentLinkID"));
+    $e->select();
+    return $e->is_owner();
+  }
+
+
+  function has_attachment_permission($person) {
+    return $this->is_owner();
+  }
+
+  function has_attachment_permission_delete($person) {
+    return $this->is_owner();
+  }
 
 }
 

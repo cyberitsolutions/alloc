@@ -32,9 +32,11 @@ require_once(ALLOC_MOD_DIR."shared/lib/class_db_entity.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_module.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_sentEmailLog.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_alloc_email.inc.php");
+require_once(ALLOC_MOD_DIR."shared/lib/class_alloc_email_receive.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_alloc_cache.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_history.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_PasswordHash.php");
+require_once(ALLOC_MOD_DIR."shared/lib/class_mime_parser.inc.php");
 
 class shared_module extends module {
   var $db_entities = array("sentEmailLog");

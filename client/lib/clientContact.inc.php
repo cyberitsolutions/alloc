@@ -42,6 +42,66 @@ class clientContact extends db_entity {
                               ,"clientContactOther"=>new db_field("clientContactOther")
                               );
   }
+
+  function find_by_name($name=false,$projectID=false) {
+
+    $stack1 = array();
+
+    static $people;
+    if (!$people) {
+      $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactName
+                      FROM client
+                 LEFT JOIN clientContact ON client.clientID = clientContact.clientID
+                 LEFT JOIN project ON project.clientID = client.clientID 
+                     WHERE project.projectID = %d
+                   ",$projectID);
+      $db = new db_alloc();
+      $db->query($q);
+      while ($row = $db->row()) {
+        $people[$db->f("clientContactID")] = $row;
+      }
+    }
+
+    foreach ($people as $personID => $row) {
+      similar_text($row["clientContactName"],$name,$percent1);
+      $stack1[$personID] = $percent1;
+    }
+
+    asort($stack1);
+    end($stack1);
+    $probable1_clientContactID = key($stack1);
+    $person_percent1 = current($stack1);
+
+    if ($probable1_clientContactID && $person_percent1 > 70) {
+      return $probable1_clientContactID;
+    }
+  }
+
+  function find_by_email($email=false,$projectID=false) {
+    static $people;
+    if (!$people) {
+      $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactEmail
+                      FROM client
+                 LEFT JOIN clientContact ON client.clientID = clientContact.clientID
+                 LEFT JOIN project ON project.clientID = client.clientID 
+                     WHERE project.projectID = %d
+                   ",$projectID);
+      $db = new db_alloc();
+      $db->query($q);
+      while ($row = $db->row()) {
+        $people[$db->f("clientContactID")] = $row;
+      }
+    }
+
+    $email = str_replace(array("<",">"),"",$email);
+    foreach($people as $clientContactID => $row) {
+      if ($email == $row["clientContactEmail"]) {
+        return $clientContactID;
+      }
+    }
+  }
+
+
 }
 
 

@@ -71,9 +71,9 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
  
         // Append success to end of the comment
         if ($successful_recipients && is_object($comment)) {
-          $append_comment_text = "Emailed: ".$successful_recipients." at ".date("Y-m-d H:i:s")."\n".$comment->get_value("comment");
+          $append_comment_text = "Email sent to: ".$successful_recipients;
           $message_good.= $append_comment_text;
-          $comment->set_value("comment",$append_comment_text);
+          $comment->set_value("commentEmailRecipients",$successful_recipients);
           $comment->save();
         }
       }
@@ -82,6 +82,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
 } else if ($_POST["comment_delete"] && $_POST["comment_id"]) {
   $comment = new comment;
   $comment->set_id($_POST["comment_id"]);
+  $comment->select();
   $comment->delete();
 }
 

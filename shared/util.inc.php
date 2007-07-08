@@ -268,15 +268,31 @@ function get_attachments($entity, $id) {
       #mkdir($dir, 0777);
     #}
 
+    $types["pdf"] = "pdf.gif";
+    $types["xls"] = "xls.gif";
+    $types["csv"] = "xls.gif";
+    $types["zip"] = "zip.gif";
+    $types[".gz"] = "zip.gif";
+    $types["doc"] = "doc.gif";
+    $types["sxw"] = "doc.gif";
+    $types["odf"] = "doc.gif";
+
+
     if (is_dir($dir)) {
       $handle = opendir($dir);
 
+      // TODO add icons to files attachaments in general
       while (false !== ($file = readdir($handle))) {
         clearstatcache();
 
         if ($file != "." && $file != "..") {
+
+          $type = substr($file,-3);
+          $t = $types[$type] or $t = "unknown.gif";
+          $image = "<img src=\"".$TPL["url_alloc_images"]."/fileicons/".$t."\">";
+
           $size = filesize($dir.DIRECTORY_SEPARATOR.$file);
-          $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".htmlentities($file)."</a>";
+          $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.htmlentities($file)."</a>";
           $row["text"] = htmlentities($file);
           $size > 1023 and $row["size"] = sprintf("%dkb",$size/1024);
           $size < 1024 and $row["size"] = sprintf("%db",$size);
@@ -344,17 +360,27 @@ function util_get_comments($entity, $id, $options=array()) {
     if (!$v["comment"])
       continue ;
 
-    $person = new person;
-    $person->set_id($v["personID"]);
-    $person->select();
+    unset($author);
+    if ($v["clientContactID"]) {
+      $cc = new clientContact;
+      $cc->set_id($v["clientContactID"]);
+      $cc->select();
+      #$author = " <a href=\"".$TPL["url_alloc_client"]."clientID=".$cc->get_value("clientID")."\">".$cc->get_value("clientContactName")."</a>";
+      $author = $cc->get_value("clientContactName");
+    } else {
+      $person = new person;
+      $person->set_id($v["personID"]);
+      $person->select();
+      $author = $person->get_username(1);
+    }
 
     $comment_buttons = "";
     $ts_label = "";
 
     if ($v["timeSheetID"]) {
-      $ts_label = "(Time Sheet Comment)";
+      $ts_label = " (Time Sheet Comment)";
 
-    } else if ($v["personID"] == $current_user->get_id() && $options["showEditButtons"]) {
+    } else if (($v["personID"] == $current_user->get_id() || $current_user->have_role("admin")) && $options["showEditButtons"]) {
       $comment_buttons = "<nobr><input type=\"submit\" name=\"comment_edit\" value=\"Edit\">
                                 <input type=\"submit\" name=\"comment_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this comment?')\"></nobr>";
     }
@@ -366,6 +392,20 @@ function util_get_comments($entity, $id, $options=array()) {
         $edit = true;
       } 
 
+      $files = get_attachments("comment",$v["commentID"]);
+      #echo "<pre>".print_r($files,1)."</pre>";
+      unset($f,$br);
+      if (is_array($files)) {
+        foreach($files as $key => $file) {
+          $f.= $br.$file["file"];
+          $br = "&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
+      }
+
+      unset($emailed);
+      $v["commentEmailRecipients"] and $emailed = ", Email sent to ".$v["commentEmailRecipients"];
+
+
       $edit and $rtn[] =  '<form action="'.$TPL["url_alloc_comment"].'" method="post">';
       $edit and $rtn[] =  '<input type="hidden" name="entity" value="'.$entity.'">';
       $edit and $rtn[] =  '<input type="hidden" name="entityID" value="'.$v["commentLinkID"].'">';
@@ -373,13 +413,16 @@ function util_get_comments($entity, $id, $options=array()) {
       $edit and $rtn[] =  '<input type="hidden" name="comment_id" value="'.$v["commentID"].'">';
       $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="comments">';
       $rtn[] =  '<tr>';
-      $rtn[] =  '<th>Comment by <b>'.$person->get_username(1).'</b> '.$v["date"].' '.$ts_label."</th>";
+      $rtn[] =  '<th>Comment by <b>'.$author.'</b> '.$v["date"].$ts_label.$emailed."</th>";
       $edit and $rtn[] =  '<th align="right" width="2%">'.$comment_buttons.'</th>';
       $rtn[] =  '</tr>';
       $rtn[] =  '<tr>';
       $rtn[] =  '<td>'.nl2br(htmlentities($v["comment"])).'</td>';
       $edit and $rtn[] =  '<td>&nbsp;</td>';
       $rtn[] =  '</tr>';
+      $files and $rtn[] =  '<tr>';
+      $files and $rtn[] =  '<td colspan="2">'.$f.'</td>';
+      $files and $rtn[] =  '</tr>';
       $rtn[] =  '</table>';
       $edit and $rtn[] =  '</form>';
 

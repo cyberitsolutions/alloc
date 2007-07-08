@@ -247,6 +247,9 @@ useful automated reminders functionality.
 # Check every 10 minutes for any allocPSA Reminders to send
 */10 * * * * wget -q -O /dev/null {$_FORM["allocURL"]}reminder/sendReminders.php
 
+# Check every 5 minutes for any new emails to import into allocPSA
+*/5 * * * * wget -q -O /dev/null {$allocURL}email/receiveEmail.php
+
 # Send allocPSA Daily Digest emails once a day at 4:35am
 35 4 * * * wget -q -O /dev/null {$_FORM["allocURL"]}person/sendEmail.php
 
