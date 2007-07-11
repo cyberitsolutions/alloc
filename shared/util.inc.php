@@ -170,14 +170,18 @@ function show_header() {
   include_template(ALLOC_MOD_DIR."shared/templates/headerS.tpl");
 }
 function get_stylesheet_name() {
-  global $current_user;
+  if ($_GET["media"] == "print") {
+    echo "print.css";
+  } else {
+    global $current_user;
 
-  $themes = get_customizedTheme_array();
-  $fonts  = get_customizedFont_array();
+    $themes = get_customizedTheme_array();
+    $fonts  = get_customizedFont_array();
 
-  $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme2"])]);
-  $font = $fonts[sprintf("%d",$current_user->prefs["customizedFont"])];
-  echo "style_".$style."_".$font.".css";
+    $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme2"])]);
+    $font = $fonts[sprintf("%d",$current_user->prefs["customizedFont"])];
+    echo "style_".$style."_".$font.".css";
+  }
 }
 function get_customizedFont_array() {
   return array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"4", "1"=>5, "2"=>6, "3"=>7, "4"=>8, "5"=>9, "6"=>10);

@@ -1,0 +1,32 @@
+.noprint {
+  display: none;
+}
+
+#menu {
+  display: none;
+}
+
+#tabs {
+  display: none;
+}
+table.tasks {
+  width:100%;
+  border-right:1px solid #808080;
+  border-bottom:1px solid #808080;
+}
+td.tasks {
+  background-color: #eaf3ff; 
+  padding:4px;
+}
+table.tasks th, table.calendar th {
+  border-bottom:0px;
+  font-weight:bold;
+  white-space:nowrap;
+  color:#444444;
+}
+.col {
+  border-left:1px solid #808080;
+  border-top:1px solid #808080;
+  padding:4px;
+}
+

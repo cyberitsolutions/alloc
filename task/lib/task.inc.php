@@ -874,7 +874,7 @@ function get_task_statii_array() {
           $print = true;
 
           $_FORM["showProject"] and $summary.= "\n<tr>";
-          $_FORM["showProject"] and $summary.= "\n  <th class=\"col tasks\" colspan=\"21\">".$project["link"]."</th>";
+          $_FORM["showProject"] and $summary.= "\n  <th class=\"col tasks noprint\" colspan=\"21\">".$project["link"]."</th>";
           $_FORM["showProject"] and $summary.= "\n</tr>";
 
           foreach ($t as $task) {
