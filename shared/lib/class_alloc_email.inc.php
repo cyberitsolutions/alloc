@@ -34,7 +34,8 @@ class alloc_email {
   // If alloc is running on any of these boxes then no emails will be sent!
   var $no_email_hosts = array("garlic.office.cyber.com.au"
                              ,"spectrum.lancewood.net"
-                             ,"peach.office.cyber.com.au"
+			     ,"peach.office.cyber.com.au"
+			     ,"peach"
                              ,"alloc_dev"
                              );
                              #,"mint.lancewood.net"

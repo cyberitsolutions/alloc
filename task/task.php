@@ -163,6 +163,14 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   }
 
   if ($task_is_new || $task->get_value("personID") != $orig_personID) {
+  }
+
+  if (!$task_is_new) {
+    if ($task->get_value("personID") != $orig_personID) {
+      $msg[] = $task->email_task_reassigned($orig_personID);
+      $task->set_value("dateAssigned",date("Y-m-d H:i:s"));
+    }
+  } else {
     $task->set_value("dateAssigned",date("Y-m-d H:i:s"));
   }
 
