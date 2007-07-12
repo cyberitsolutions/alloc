@@ -22,7 +22,7 @@
       %cn = Company Name<br/>
       %ti = Task ID<br/>
       %to = Task Owner/Creator<br/>
-      %ta = Task Assigner (The person the task is assigned to)<br/>
+      %ta = Task Assignee (The person the task is assigned to)<br/>
       %pn = Project Name<br/>
       %cc = Client Company Name<br/>
       %tn = Task Name<br/>
