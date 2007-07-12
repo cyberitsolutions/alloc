@@ -179,7 +179,7 @@ case 3:
       $task->set_id($parentID);
       $task->select();
       $TPL["reminder_default_subject"] = sprintf("[Task: %s]", $task->get_value('taskName'));
-      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/task.php?taskID=".$parentID;
+      $TPL["reminder_default_content"] = config::get_config_item("allocURL")."task/task.php?taskID=".$parentID;
 
     } else if ($parentType == "general") {
       $TPL["reminder_default_subject"] = "[Reminder]";

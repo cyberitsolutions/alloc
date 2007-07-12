@@ -558,7 +558,7 @@ class task extends db_entity {
     
     $message.= "\n\n".$subject." by ".$current_user->get_username(1);
     $message.= "\n\n".stripslashes(wordwrap($body));
-    $message.= "\n\n".config::get_config_item("allocURL")."project/task.php?taskID=".$this->get_id();
+    $message.= "\n\n".config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
     $message.= "\n\nProject: ".stripslashes($p->get_value("projectName"));
     $message.= "\n   Task: ".stripslashes($this->get_value("taskName"));
     $message.= "\n   Desc: ".stripslashes($this->get_value("taskDescription"));
