@@ -93,6 +93,26 @@ class task extends db_entity {
     return $msg;
   }
 
+  function email_task_reassigned($old_assignee) {
+    global $current_user;
+    $recipients = array();
+    # Mail to old
+    if ($current_user->get_id() != $old_assignee) {
+      $recipients[] = $old_assignee;
+    }
+    if ($current_user->get_id() != $this->get_value("personID")) {
+      $recipients[] = "assignee";
+    }
+    if ($current_user->get_id() != $this->get_value("creatorID")) {
+      $recipients[] = "creator";
+    }
+  
+    $successful_recipients = $this->send_emails($recipients,"task_reassigned");
+    $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Reassigned: ".stripslashes($this->get_value("taskName"));
+ 
+    return $msg;
+  }
+
   function email_task_closed() {
     global $current_user;
     if ($current_user->get_id() != $this->get_value("creatorID")) {
@@ -510,6 +530,8 @@ class task extends db_entity {
         while ($db->next_record()) {
           $recipients[] = $people[$db->f("personID")];
         }
+      } else if (is_int($selected_option)){
+        $recipients[] = $people[$selected_option];
       }
     }
     return $recipients;
@@ -534,6 +556,7 @@ class task extends db_entity {
     $types = array('task_created'  => "Task Created"
                   ,'task_closed'   => "Task Closed"
                   ,'task_comments' => "Task Comments"
+                  ,'task_reassigned' => "Task Reassigned"
                   );
   
     $subject = $types[$type];
