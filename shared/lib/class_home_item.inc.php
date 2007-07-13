@@ -30,14 +30,16 @@ class home_item {
   var $width = "standard";
   var $help_topic;
   var $seq;
+  var $print;
 
-  function home_item($name, $label, $module, $template, $width="standard",$seq=0) {
+  function home_item($name, $label, $module, $template, $width="standard",$seq=0, $print=true) {
     $this->name = $name;
     $this->label = $label;
     $this->module = $module;
     $this->template = $template;
     $this->width = $width;
     $this->seq = $seq;
+    $this->print = $print;
   }
 
   function get_template_dir() {

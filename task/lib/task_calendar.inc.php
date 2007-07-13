@@ -255,6 +255,8 @@ class calendar {
     $this->draw_canvas();
     $this->draw_row_header();
 
+    $this->draw_body();
+
     $i = -7;
  
 
@@ -331,6 +333,7 @@ class calendar {
       $i++;
       $this->draw_row_end();
     }
+    $this->draw_body_end();
     $this->draw_canvas_end();
   }
 
@@ -340,6 +343,16 @@ class calendar {
   function draw_canvas_end() {
     echo "</table>";
   }
+  function draw_body() {
+    # Unfortunately browser support for this seems to be quite bad. Eventually 
+    # this should cause the table to have headers draw at the start of 
+    # each page where the table is broken, but for now it doesn't seem to 
+    # work.
+    echo "<tbody>";
+  }
+  function draw_body_end() {
+    echo "</tbody>";
+  }
   function draw_row() {
     echo "\n<tr>";
   }
@@ -347,11 +360,11 @@ class calendar {
     echo "</tr>";
   }
   function draw_row_header() {
-    echo "\n<tr>";
+    echo "\n<thead><tr>";
     foreach ($this->days_of_week as $day) {
       echo "<th class=\"col\">".$day."</th>";
     }
-    echo "</tr>";
+    echo "</tr></thead>";
   }
 
   function get_link_new_task($date) {

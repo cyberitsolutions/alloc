@@ -36,7 +36,9 @@ class project_list_home_item extends home_item {
     $options["projectStatus"] = "current";
     $options["personID"] = $current_user->get_id();
     $options["showProjectLink"] = 1;
-    $options["showNavLinks"] = 1;
+    if ($_GET["media"] != "print") {
+      $options["showNavLinks"] = 1;
+    }
 
     echo project::get_project_list($options);
   }

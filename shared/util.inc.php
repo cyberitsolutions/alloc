@@ -656,6 +656,12 @@ function get_config_link() {
     echo "<a href=\"".$TPL["url_alloc_config"]."\">Setup</a>";
   }
 }
+function get_print_link() {
+  global $printable;
+  if ($printable) {
+    echo "<a href=\"" . $_SERVER["REQUEST_URI"] . "&media=print\">Print</a>";
+  }
+}
 function parse_sql_file($file) {
   
   // Filename must be readable and end in .sql

@@ -30,3 +30,63 @@ table.tasks th, table.calendar th {
   padding:4px;
 }
 
+th.boxheader {
+  font-weight: bold;
+  font-size: 120%;
+}
+
+table.calendar { 
+  width:100%; 
+  border-right:1px solid #808080; 
+  border-bottom:1px solid #808080;
+} 
+table.calendar td { 
+  border-left:1px solid #808080;  
+  border-top:1px solid #808080; 
+  width:10%; vertical-align:top;
+  font-size:smaller;
+}
+table.calendar td.today { 
+  border-top:2px solid #808080;  
+  border-left:2px solid #808080;  
+  border-right:1px solid #808080;  
+  border-bottom:1px solid #808080; 
+}
+table.calendar td.today h1 {
+  font-weight:bold;
+}
+table.calendar td.even { 
+  background-color:#f0f0f0; 
+}
+table.calendar td.absent {
+  background-color:#cccccc;
+  color:#999999;
+}
+table.calendar td.absent h1{
+  color:#999999;
+}
+table.calendar h1 {
+  text-align:right;
+  font-size:12px;
+  margin:0px;
+  padding:3px;
+  font-weight:normal;
+}
+table.calendar img {
+  float:left;
+  margin:0px;
+}
+
+/* This allows the thead to degrade if it's not supported */
+thead {display: table-header-group;}
+
+table {page-break-inside: avoid;}
+
+table.box { 
+  margin-left:8px !important;  margin-left:0px;
+  margin-right:8px !important;  margin-right:0px;
+  margin-top:0px; 
+  margin-bottom:14px; 
+  vertical-align:top; 
+  width:98%; 
+} 
