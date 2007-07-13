@@ -67,7 +67,7 @@ while ($db->next_record()) {
 
     if ($tasks && $to) {
       $email = new alloc_email;
-      if ($email->send($to, $subject, $msg, "daily_digest", $headers)) {
+      if ($email->send($to, $subject, stripslashes($msg), "daily_digest", $headers)) {
         echo "\n<br>Sent email to: ".$to;
       }
     } 
