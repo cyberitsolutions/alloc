@@ -34,8 +34,10 @@ function show_home_items($width) {
   ksort($arr);
 
   foreach ($arr as $current_home_item) {
-    $TPL["item_title"] = $current_home_item->get_title();
-    include_template("templates/homeItemS.tpl");
+    if ($_GET["media"] != "print" || $current_home_item->print) {
+      $TPL["item_title"] = $current_home_item->get_title();
+      include_template("templates/homeItemS.tpl");
+    }
   }
 }
 
@@ -45,8 +47,12 @@ function show_item() {
 }
 
 register_home_items();
-
-include_template("templates/homeM.tpl");
+$printable = true;
+if ($_GET["media"] == "print") {
+	include_template("templates/homePrintableM.tpl");
+} else {
+	include_template("templates/homeM.tpl");
+}
 
 page_close();
 

@@ -28,7 +28,7 @@
 
     <div id="tabs">
       {show_tabs()}
-      <p id="extra_links">{get_config_link()}&nbsp;&nbsp;{get_help_link()}&nbsp;&nbsp;<a href="{$url_alloc_logout}">Logout</a>&nbsp;</p>
+      <p id="extra_links">{get_print_link()}&nbsp;&nbsp;{get_config_link()}&nbsp;&nbsp;{get_help_link()}&nbsp;&nbsp;<a href="{$url_alloc_logout}">Logout</a>&nbsp;</p>
     </div>
 
     <div id="main">
