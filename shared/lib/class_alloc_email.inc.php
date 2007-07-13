@@ -85,7 +85,7 @@ class alloc_email {
         }
       }
 
-      $result = mail($this->to_address, stripslashes($this->subject), stripslashes($this->message), $h);
+      $result = mail($this->to_address, $this->subject, $this->message, $h);
       if ($result) {
         $this->log();
         return true;
