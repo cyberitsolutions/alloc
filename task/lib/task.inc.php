@@ -1124,7 +1124,7 @@ function get_task_statii_array() {
   function get_new_subtask_link() {
     global $TPL;
     if (is_object($this) && $this->get_value("taskTypeID") == TT_PHASE) {
-      return "<a href=\"".$TPL["url_alloc_task"]."projectID=".$this->get_value("projectID")."&parentTaskID=".$this->get_id()."\">New Subtask</a>";
+      return "<a class=\"noprint\" href=\"".$TPL["url_alloc_task"]."projectID=".$this->get_value("projectID")."&parentTaskID=".$this->get_id()."\">New Subtask</a>";
     }
   }
 

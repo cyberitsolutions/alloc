@@ -48,6 +48,7 @@ function show_task_list() {
   echo task::get_task_list($_FORM);
 }
 
+$printable = true;
 include_template("templates/taskListM.tpl");
 page_close();
 
