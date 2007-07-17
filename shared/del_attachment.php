@@ -42,7 +42,7 @@ if ($id && $file
   $e->set_id($id);
   $e->select();
 
-  $dir = $TPL["url_alloc_attachments_dir"].$entity."/".$id."/";
+  $dir = $TPL["url_alloc_attachments_dir"].$entity.DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR;
   $file = $dir.$file;
 
   if ($e->has_attachment_permission_delete($current_user) && file_exists($file)) {
