@@ -41,7 +41,7 @@ class config extends db_entity {
     } else if ($table[$name]["type"] == "text") {
       $val = $table[$name]["value"];
     }
-    return $val;
+    return stripslashes($val);
   }
 
   function get_config_item_id($name='') {

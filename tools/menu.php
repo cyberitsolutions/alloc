@@ -33,6 +33,7 @@ $options = array(array("url"=>"reminderList"            ,"text"=>"Reminders"    
                 ,array("url"=>"taskCommentTemplateList" ,"text"=>"Task Comment Templates","entity"=>"taskCommentTemplate","action"=>PERM_READ_WRITE)
                 ,array("url"=>"loans"                   ,"text"=>"Item Loans"            ,"entity"=>"loan"               ,"action"=>true)
                 ,array("url"=>"report"                  ,"text"=>"Reports"               ,"entity"=>""                   ,"action"=>true, "function"=>"has_report_perm")
+                ,array("url"=>"backup"                  ,"text"=>"Backup"                ,"entity"=>"person"             ,"function"=>"is_god")
 );
 
   //,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)

@@ -110,7 +110,8 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_stats"                          => $sess->url(SCRIPT_PATH."tools/stats.php")
             ,"url_alloc_statsImage"                     => $sess->url(SCRIPT_PATH."tools/statsImage.php")
             ,"url_alloc_costtime"                       => $sess->url(SCRIPT_PATH."tools/costtime.php")
-            );
+            ,"url_alloc_backup"                         => $sess->url(SCRIPT_PATH."tools/backup.php")
+);
 
 $TPL = array_merge($TPL,$TPL2);
 
