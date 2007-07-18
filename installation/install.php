@@ -59,6 +59,7 @@ function show_tab_4c() {
 }
 
 
+
 $default_allocURL = "http://".$_SERVER["SERVER_NAME"].SCRIPT_PATH;
 
 $config_vars = array("ALLOC_DB_NAME"     => array("default"=>"alloc",              "info"=>"Enter a name for the new allocPSA MySQL database")
@@ -83,7 +84,10 @@ foreach($config_vars as $name => $arr) {
 }
 $TPL["get"] = "&".implode("&",$get);
 $TPL["hidden"] = implode("\n",$hidden);
- 
+
+if ($_FORM["ALLOC_DB_USER"] && $_FORM["ALLOC_DB_NAME"]) {
+  $db = new db($_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"],$_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_NAME"]);
+}
 
 if ($_POST["refresh_tab_1"]) {
   header("Location: ".$TPL["url_alloc_installation"]."?1=1".$TPL["get"]);
@@ -157,14 +161,17 @@ if ($_POST["submit_stage_4"]) {
 }
 
 
-if ($_POST["test_db_credentials"]) {
+if ($_POST["test_db_credentials"] && is_object($db)) {
   // Test supplied credentials
 
-  $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
+
+  $link = $db->connect();
+  #@mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
   if ($link) {
     $text_tab_2b[] = "Successfully connected to MySQL database server as user '".$_FORM["ALLOC_DB_USER"]."'.";
 
-    if (@mysql_select_db($_FORM["ALLOC_DB_NAME"], $link)) {
+    if ($db->select_db($_FORM["ALLOC_DB_NAME"])) {
+      #@mysql_select_db($_FORM["ALLOC_DB_NAME"], $link)
       $text_tab_2b[] = "Successfully connected to database '".$_FORM["ALLOC_DB_NAME"]."'.";
     } else {
       $text_tab_2b[] = "Unable to select database '".$_FORM["ALLOC_DB_NAME"]."'. Ensure it was created. (".mysql_error().").";
@@ -172,7 +179,7 @@ if ($_POST["test_db_credentials"]) {
     }
 
     $query = "CREATE TABLE test ( hey int );";
-    if (@mysql_query($query,$link)) {
+    if ($db->query($query)) {
       $text_tab_2b[] = "Successfully created table 'test'.";
     } else {
       $text_tab_2b[] = "Unable to create table 'test'! (".mysql_error().").";
@@ -180,7 +187,7 @@ if ($_POST["test_db_credentials"]) {
     }
 
     $query = "DROP TABLE test;";
-    if (@mysql_query($query,$link)) {
+    if ($db->query($query)) {
       $text_tab_2b[] = "Successfully deleted table 'test'.";
     } else {
       $text_tab_2b[] = "Unable to delete table 'test'! (".mysql_error().").";
@@ -208,10 +215,12 @@ if ($_POST["test_db_credentials"]) {
 }
 
 
-if ($_POST["install_db"]) {
+if ($_POST["install_db"] && is_object($db)) {
   unset($failed);
-  $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
-  @mysql_select_db($_FORM["ALLOC_DB_NAME"], $link);
+  $link = $db->connect();
+  $db->select_db($_FORM["ALLOC_DB_NAME"]);
+  #$link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
+  #@mysql_select_db($_FORM["ALLOC_DB_NAME"], $link);
 
   $files = array("../sql/db_structure.sql","../sql/db_data.sql");
 
@@ -219,7 +228,7 @@ if ($_POST["install_db"]) {
     list($sql,$comments) = parse_sql_file($file);
 
     foreach($sql as $q) {
-      if (!@mysql_query($q,$link)) {
+      if (!$db->query($q)) {
         $errors[] = "Error! (".mysql_error().").";
       }
     }   
@@ -228,7 +237,7 @@ if ($_POST["install_db"]) {
 
   // Insert config data
   $query = "INSERT INTO config (name, value, type) VALUES ('allocURL','".$_FORM["allocURL"]."','text')";
-  if (!@mysql_query($query,$link)) {
+  if (!$db->query($query)) {
     $errors[] = "Error! (".mysql_error().").";
   }
 
@@ -265,13 +274,13 @@ EOD;
 
   // Insert new announcement
   $query = "INSERT INTO announcement (heading, body, personID,displayFromDate,displayToDate) VALUES (\"Getting Started in allocPSA\",\"".db_esc($body)."\",1,'2000-01-01','2030-01-01')";
-  if (!@mysql_query($query,$link)) {
+  if (!$db->query($query)) {
     $errors[] = "Error! (".mysql_error().").";
   }
 
   // Insert new person
   $query = sprintf("INSERT INTO person (username,password,personActive,perms) VALUES ('alloc','%s',1,'god,admin,manage,employee')",encrypt_password("alloc"));
-  if (!@mysql_query($query,$link)) {
+  if (!$db->query($query)) {
     $errors[] = "Error! (".mysql_error().").";
   }
 
@@ -279,7 +288,7 @@ EOD;
   $files = get_patch_file_list();
   foreach ($files as $f) {
     $query = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('%s','','%s')",db_esc($f), date("Y-m-d H:i:s"));
-    if (!@mysql_query($query)) {
+    if (!$db->query($query)) {
       $errors[] = "Error! (".mysql_error().").";
     }
   }
@@ -287,8 +296,8 @@ EOD;
 
   if (!is_array($errors) && !count($errors)) {
     $text_tab_3b[] = "Database import successful!";
-    $res = mysql_query("SELECT username FROM person",$link);
-    $r = mysql_fetch_assoc($res);
+    $res = $db->query("SELECT username FROM person");
+    $r = $db->row();
     if (is_array($r)) {
       $text_tab_3b[] = "Admin user '".$r["username"]."' imported successfully!";
     } else {
@@ -318,22 +327,33 @@ EOD;
 
 
 // Tab 2 Text
-$text_tab_2a[] = "DROP DATABASE IF EXISTS ".$_FORM["ALLOC_DB_NAME"].";";
-$text_tab_2a[] = "";
-$text_tab_2a[] = "CREATE DATABASE ".$_FORM["ALLOC_DB_NAME"].";";
-$text_tab_2a[] = "";
-$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "USE mysql;";
-$text_tab_2a[] = "";
-$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "DELETE FROM user WHERE User = '".$_FORM["ALLOC_DB_USER"]."';";
-$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "";
-$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "DELETE FROM db WHERE User = '".$_FORM["ALLOC_DB_USER"]."';";
-$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "";
-$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "INSERT INTO user (Host, User, Password) values ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_USER"]."',PASSWORD('".$_FORM["ALLOC_DB_PASS"]."'));";
-$text_tab_2a[] = "";
-$_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y');";
-$text_tab_2a[] = "";
-$text_tab_2a[] = "FLUSH PRIVILEGES;";
 
+if ($_FORM["ALLOC_DB_NAME"] && $_FORM["ALLOC_DB_USER"]) {
+
+  $text_tab_2a[] = "DROP DATABASE IF EXISTS ".$_FORM["ALLOC_DB_NAME"].";";
+  $text_tab_2a[] = "";
+  $text_tab_2a[] = "CREATE DATABASE ".$_FORM["ALLOC_DB_NAME"].";";
+  $text_tab_2a[] = "";
+  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "USE mysql;";
+  $text_tab_2a[] = "";
+  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "DELETE FROM user WHERE User = '".$_FORM["ALLOC_DB_USER"]."';";
+  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "";
+  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "DELETE FROM db WHERE User = '".$_FORM["ALLOC_DB_USER"]."';";
+  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "";
+  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "INSERT INTO user (Host, User, Password) values ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_USER"]."',PASSWORD('".$_FORM["ALLOC_DB_PASS"]."'));";
+  $text_tab_2a[] = "";
+
+  // The mysql.db table only has Create_tmp_table_priv and Lock_tables_priv from mysql >= 4.0
+  if (is_object($db) && version_compare($db->get_db_version(),"4.0",">=") && $_FORM["ALLOC_DB_USER"] != 'root') {
+    $text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv,Create_tmp_table_priv,Lock_tables_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y','y','y');";
+  } else if ($_FORM["ALLOC_DB_USER"] != 'root') {
+    $text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y');";
+  }
+
+  $text_tab_2a[] = "";
+  $text_tab_2a[] = "FLUSH PRIVILEGES;";
+
+}
 
 
 // Tab 1 Text
