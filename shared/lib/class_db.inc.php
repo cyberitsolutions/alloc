@@ -55,7 +55,7 @@ class db {
       $this->error("Unable to connect to database: ".mysql_error()."<br>");
       unset($this->link_id);
     }
-  
+    return $this->link_id;
   } 
 
   function error($msg=false) {
@@ -85,7 +85,6 @@ class db {
   }
 
   function select_db($db="") { 
-
     static $selected;
 
     if (!$selected || $selected != $db) {
@@ -93,10 +92,13 @@ class db {
       if (mysql_select_db($db)) {
         $this->database = $db;
         $selected = $db;
+        return true;
       } else {
         $this->error("<b>Could not select database: ".$db."</b>"); 
+        return false;
       }
     }
+    return true;
   } 
 
   function qr() {
@@ -117,7 +119,7 @@ class db {
     #echo "<br><pre>".print_r(debug_backtrace(),1)."</pre>";
 
     if ($query) {
-      $id = mysql_query($query);
+      $id = @mysql_query($query);
       if ($id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
         $this->query_id = $id;
         $rtn = $this->query_id;
@@ -320,7 +322,11 @@ class db {
   }
 
   function get_db_version() {
-    $a = mysql_get_server_info($this->link_id);
+    $link_id = $this->link_id;
+    if (!$link_id) {
+      $link_id = mysql_connect($this->hostname);
+    }
+    $a = mysql_get_server_info($link_id);
     $b = substr($a, 0, strpos($a, "-"));
     return $b;
   }

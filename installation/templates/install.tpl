@@ -68,8 +68,8 @@ Verify that the system is configured correctly and has all the necessary compone
   <input type='submit' name='refresh_tab_1' value='Refresh Page'>
 </div>
 
-Fill in the fields below and click the Save Settings button. If you have an
-existing database and database user, then enter those credentials, otherwise
+Fill in the fields below and click the Save Settings button. <b>If you already have an
+existing database and database user, then enter those credentials</b>, otherwise
 this installer will guide you through the creation of a database and database
 user.
 
@@ -90,8 +90,8 @@ user.
 {if show_tab_2()}
 <br/>
 
-If you need to create the allocPSA database and database user, run the
-following commands on your MySQL server. Ensure you are logged in as a
+<b>If you need to create the allocPSA database and database user, run the
+following commands on your MySQL server</b>. Ensure you are logged in as a
 MySQL administrator user when you run them.
 
 <br/><br/>
