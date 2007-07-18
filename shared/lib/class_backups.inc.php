@@ -21,8 +21,6 @@
  *
  */
 
-require_once("../alloc.php");
-
 
 class backups {
 
