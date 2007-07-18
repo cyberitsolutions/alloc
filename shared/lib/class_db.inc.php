@@ -333,7 +333,7 @@ class db {
 
   function dump_db($filename) {
     if ($this->password) {
-      $pw = " -p " . $this->password;
+      $pw = " -p" . $this->password;
     }
     $command = sprintf("mysqldump -B -c --add-drop-table -h %s -u %s %s %s", $this->hostname, $this->username, $pw, $this->database);
 

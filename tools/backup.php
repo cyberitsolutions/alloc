@@ -25,139 +25,22 @@ require_once("../alloc.php");
 
 $db = new db_alloc;
 
-$folders = array("client", "invoice", "project", "task"); # This list may need to be fixed as new modules are added
-
-function add_to_archive($archive, $dir, $intpath) {
-  
-  if (is_dir($dir)) { 
-    $handle = opendir($dir);
-
-    while (false !== ($file = readdir($handle))) {
-  
-      if ($file != "." && $file != "..") {
-        $path = $dir . DIRECTORY_SEPARATOR . $file;
-        if (is_dir($path)) {
-          add_to_archive($archive, $path, $intpath . DIRECTORY_SEPARATOR . $file);
-        } else {
-          $archive->addFile($path, $intpath . DIRECTORY_SEPARATOR . $file);
-        }
-      }
-
-    }
-    closedir($handle);
-  }
-}
-
-function empty_dir($dir) {
-  if (is_dir($dir)) {
-    $handle = opendir($dir);
-
-    while (false !== ($file = readdir($handle))) {
-      if ($file != "." && $file != "..") {
-        $path = $dir . DIRECTORY_SEPARATOR . $file;
-        if (is_dir($path)) {
-          empty_dir($path);
-          rmdir($path);
-        } else {
-          unlink($path);
-        }
-      }
-    }
-  }
-}
- 
-function backup() {
-  global $db, $TPL, $folders; 
-
-  $archivename = "backup_" . date("Ymd_His") . ".zip";
-
-  $archive = new ZipArchive();
-  $archive->open($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR . $archivename,
-      ZIPARCHIVE::CREATE); # This attribute may be wrong. 
-
-  $dumpfile = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "database.sql";
-
-  $db->dump_db($dumpfile);
-
-  $archive->addFile($dumpfile, "database.sql");
-
-  
-  foreach ($folders as $folder) {
-    add_to_archive($archive, $TPL["url_alloc_attachments_dir"] . $folder, $folder);
-  }
-
-  $archive->close();
-  $TPL["message_good"][] = "Backup created: " . $archivename;
-}
-
-function restore($archivename) {
-  global $db, $TPL, $folders;
-  $archive = new ZipArchive();
-  if (!$archive->open($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $archivename)) {
-    return false;
-  }
-
-  if (FALSE === $archive->statName("database.sql")) {
-    return false;
-  }
-
-  # Clear out the folder list
-  foreach($folders as $folder) {
-    empty_dir($TPL["url_alloc_attachments_dir"] . $folder);
-  }
-
-  # Extract attachments
-  if (!$archive->extractTo($TPL["url_alloc_attachments_dir"])) {
-    return false;
-  }
-
-  list($sql, $commends) = parse_sql_file($TPL["url_alloc_attachments_dir"] . "database.sql");
-
-  foreach($sql as $q) {
-    $db->qr($q);
-  }
-  unlink($TPL["url_alloc_attachments_dir"] . "database.sql");
-  return true;
-}
-
-function show_backups() {
-  global $TPL;
-  $rows = array();
-  $dir = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR;
-  $handle = opendir($dir);
-
-  while (false !== ($file = readdir($handle))) {
-    if ($file != "." && $file != ".." && !is_dir($dir . $file)) {
-      $path = $dir . $file;
-      $row["filename"] = "<a target=\"_BLANK\" href=\"".$TPL["url_alloc_backup"]."&get_file=".urlencode($file)."\">".htmlentities($file)."</a>";
-      $row["mtime"] = date("Y-m-d H:i:s",filemtime($path));
-
-      $size = filesize($dir.DIRECTORY_SEPARATOR.$file);
-      $size < 1024 and $row["size"] = sprintf("%db",$size);
-      $size > 1023 and $row["size"] = sprintf("%dkb",$size/1024);
-      $size > (1024 * 1024) and $row["size"] = sprintf("%dMb",$size/(1024*1024));
-
-      $row["restore_name"] = $file;
-      $rows[] = $row;
-    }
-
-  }
-  return $rows;
-}
-
 # End of functions
 
-if (!person::is_god()) {
+if (!$current_user->have_role("god")) {
   die("Insufficient permissions. Backups may only be performed by super-users.");
 }
 
+$backup = new backups();
+
+
 if ($_POST["create_backup"]) {
-  backup();
+  $backup->backup();
 }
 
 if ($_POST["restore_backup"]) {
-  backup();
-  if (restore($_POST["file"])) {
+  $backup->backup();
+  if ($backup->restore($_POST["file"])) {
     $TPL["message_good"][] = "Backup restored successfully: " . $_POST["file"];
   } else {
     $TPL["message"][] = "Error restoring backup: " . $_POST["file"];
@@ -169,13 +52,17 @@ if ($_POST["delete_backup"]) {
 
   $file = $_POST["file"];
 
-  if (check_filename($file)) {
+  if (bad_filename($file)) {
     die("File delete error: Name contains slashes.");
   }
   $path = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $file;
   if (!is_file($path)) {
     die("File delete error: Not a file.");
   }
+  if (dirname($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR.".") != dirname($path)) {
+    die("File delete error: Bad path.");
+  }
+
   unlink($path);
 }
 
@@ -183,25 +70,7 @@ if ($_POST["save_attachment"]) {
   move_attachment("backups", 0);
 }
 
-if (($file = $_GET["get_file"])) { # = is intentional
-  if (check_filename($file)) {
-    die("File retrieve error: Name contains slashes.");
-  }
-  $path = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $file;
 
-  if (!is_file($path)) {
-    die("Error: File does not exist.");
-  }
-
-  $fp = fopen($path, "rb");
-  header('Content-Type: application/octet-stream');
-  header("Content-Length: ".filesize($path));
-  header('Content-Disposition: attachment; filename="'.$file.'"');
-  fpassthru($fp);
-  exit;
-}
-
-$TPL["default_filename"] = "backup-" . $TPL["today"];
 
 include_template("templates/backupM.tpl");
 

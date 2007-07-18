@@ -99,7 +99,7 @@ if ($_POST["refresh_tab_1"]) {
 if ($_POST["submit_stage_4"]) {
 
   // Create directories under attachment dir and chmod them
-  $dirs = array("task","client","project","invoice");
+  $dirs = $external_storage_directories; // something like array("task","client","project","invoice","comment","backups");
   foreach ($dirs as $dir) {
     $d = $_FORM["ATTACHMENTS_DIR"].$dir;
     if (is_dir($d)) {

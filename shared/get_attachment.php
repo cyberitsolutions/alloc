@@ -27,10 +27,10 @@ require_once("../alloc.php");
 
 $file = urldecode($_GET["file"]);
 
-if ($_GET["id"] && is_numeric($_GET["id"]) && $file && !preg_match("/\.\./",$file)) {
+if (isset($_GET["id"]) && $file && !bad_filename($file)) {
 
   $entity = new $_GET["entity"];
-  $entity->set_id($_GET["id"]);
+  $entity->set_id(sprintf("%d",$_GET["id"]));
   $entity->select();
 
   $file = $TPL["url_alloc_attachments_dir"].$_GET["entity"]."/".$_GET["id"]."/".$file;
