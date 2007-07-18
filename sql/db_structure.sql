@@ -122,9 +122,9 @@ CREATE TABLE history (
 
 CREATE TABLE htmlElement (
   htmlElementID INT(11) NOT NULL auto_increment,
-  htmlElementTypeID INT(11) NOT NULL default '0',
+  htmlElementTypeID INT(11) NOT NULL,
   htmlElementParentID INT(11) DEFAULT 0,
-  handle VARCHAR(255) NOT NULL default '',
+  handle VARCHAR(255) NOT NULL,
   label VARCHAR(255) DEFAULT NULL,
   helpText TEXT DEFAULT NULL,
   defaultValue VARCHAR(255) DEFAULT NULL,
@@ -135,7 +135,7 @@ CREATE TABLE htmlElement (
 
 CREATE TABLE htmlAttribute (
   htmlAttributeID INT(11) NOT NULL auto_increment,
-  htmlElementID INT(11) NOT NULL default '0',
+  htmlElementID INT(11) NOT NULL,
   name VARCHAR(255) DEFAULT NULL,
   value VARCHAR(255) DEFAULT NULL,
   isDefault INT(1) DEFAULT 0,
@@ -159,7 +159,7 @@ CREATE TABLE htmlElementType (
 
 CREATE TABLE htmlAttributeType (
   htmlAttributeTypeID INT(11) NOT NULL auto_increment,
-  htmlElementTypeID INT(11) DEFAULT NULL default NULL,
+  htmlElementTypeID INT(11) DEFAULT NULL,
   name VARCHAR(255) NOT NULL DEFAULT "",
   defaultValue VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY  (htmlAttributeTypeID)
@@ -215,7 +215,7 @@ CREATE TABLE loan (
 
 CREATE TABLE patchLog (
   patchLogID int(11) NOT NULL auto_increment,
-  patchName varchar(255) NOT NULL default '',
+  patchName varchar(255) NOT NULL,
   patchDesc text,
   patchDate timestamp(14) NOT NULL,
   PRIMARY KEY  (patchLogID)
@@ -255,9 +255,9 @@ CREATE TABLE person (
   preferred_tfID int(11) default NULL,
   dailyTaskEmail varchar(255) default 'yes',
   personActive tinyint(1) default '1',
-  sessData text,
   phoneNo1 varchar(255) default "",
   phoneNo2 varchar(255) default "",
+  sessData text,
   PRIMARY KEY (personID),
   UNIQUE KEY (username)
 ) TYPE=MyISAM PACK_KEYS=0;
@@ -364,8 +364,8 @@ CREATE TABLE sentEmailLog (
   sentEmailHeader varchar(255),
   sentEmailType
   enum('reminder','reminder_advnotice','task_created','task_closed','task_comments','timesheet_submit','timesheet_reject','daily_digest','timesheet_finished','new_password', 'task_reassigned'),
-  sentEmailLogModifiedTime timestamp(14) NOT NULL,
-  sentEmailLogModifiedUser int(11) NOT NULL default '0',
+  sentEmailLogModifiedTime datetime default NULL,
+  sentEmailLogModifiedUser int(11) default NULL,
   PRIMARY KEY  (sentEmailLogID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
