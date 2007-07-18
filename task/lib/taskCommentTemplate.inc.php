@@ -33,7 +33,7 @@ class taskCommentTemplate extends db_entity {
     $this->key_field = new db_field("taskCommentTemplateID");
     $this->data_fields = array("taskCommentTemplateName"=>new db_field("taskCommentTemplateName")
                              , "taskCommentTemplateText"=>new db_field("taskCommentTemplateText")
-                             , "taskCommentTemplateLastModified"=>new db_field("taskCommentTemplateLastModified"));
+                             , "taskCommentTemplateModifiedTime"=>new db_field("taskCommentTemplateModifiedTime"));
    }
 
 

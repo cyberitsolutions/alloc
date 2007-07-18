@@ -29,9 +29,12 @@ class comment extends db_entity {
     $this->key_field = new db_field("commentID");
     $this->data_fields = array("commentType"=>new db_field("commentType")
                               ,"commentLinkID"=>new db_field("commentLinkID")
+                              ,"commentCreatedUser"=>new db_field("commentCreatedUser")
+                              ,"commentCreatedTime"=>new db_field("commentCreatedTime")
                               ,"commentModifiedTime"=>new db_field("commentModifiedTime")
                               ,"commentModifiedUser"=>new db_field("commentModifiedUser")
-                              ,"commentModifiedUserClientContactID"=>new db_field("commentModifiedUserClientContactID")
+                              ,"commentCreatedUserClientContactID"=>new db_field("commentCreatedUserClientContactID")
+                              ,"commentCreatedUserText"=>new db_field("commentCreatedUserText")
                               ,"commentEmailRecipients"=>new db_field("commentEmailRecipients")
                               ,"comment"=>new db_field("comment")
                               );
@@ -56,26 +59,21 @@ class comment extends db_entity {
     parent::delete();
   }
 
-  // set the modified time to now
-  function set_modified_time() {
-    $this->set_value("commentModifiedTime", date("Y-m-d H:i:s"));
-  }
-
-  // return just the date of the comment without the time
-  function get_modified_date() {
-    return substr($this->get_value("commentModifiedTime"), 0, 10);
-  }
-
   function get_comments($commentType="",$commentLinkID="") {
     $rows = array();
     if ($commentType && $commentLinkID) {
-      $q = sprintf("SELECT commentID, commentLinkID, commentModifiedTime AS date, 
-                           comment, commentModifiedUser AS personID, 
-                           commentModifiedUserClientContactID as clientContactID,
+      $q = sprintf("SELECT commentID, commentLinkID, 
+                           commentCreatedUser as personID, 
+                           commentCreatedTime as date, 
+                           commentModifiedTime, 
+                           commentModifiedUser, 
+                           comment, 
+                           commentCreatedUserClientContactID as clientContactID,
+                           commentCreatedUserText,
                            commentEmailRecipients
                       FROM comment 
                      WHERE commentType = '%s' AND commentLinkID = %d 
-                  ORDER BY commentModifiedTime"
+                  ORDER BY commentCreatedTime"
                   ,$commentType, $commentLinkID);
       $db = new db_alloc;
       $db->query($q);

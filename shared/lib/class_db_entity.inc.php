@@ -180,8 +180,18 @@ class db_entity {
       $current_user_id = "0";
     }
     $this->check_perm(PERM_CREATE);
+
+    if (isset($this->data_fields[$this->data_table."CreatedUser"])) {
+      $this->set_value($this->data_table."CreatedUser", $current_user_id);
+    }
+    if (isset($this->data_fields[$this->data_table."CreatedTime"])) {
+      $this->set_value($this->data_table."CreatedTime", date("Y-m-d H:i:s"));
+    }
     if (isset($this->data_fields[$this->data_table."ModifiedUser"])) {
-      $this->set_value($this->data_table."ModifiedUser", $current_user_id);
+      #$this->set_value($this->data_table."ModifiedUser", $current_user_id);
+    }
+    if (isset($this->data_fields[$this->data_table."ModifiedTime"])) {
+      #$this->set_value($this->data_table."ModifiedTime", date("Y-m-d H:i:s"));
     }
     $query = "INSERT INTO $this->data_table (";
     $query.= $this->get_insert_fields($this->data_fields);
@@ -200,6 +210,23 @@ class db_entity {
 
   function update() {
     $this->check_perm(PERM_UPDATE);
+
+    global $current_user;
+    if (is_object($current_user) && $current_user->get_id()) {
+      $current_user_id = $current_user->get_id();
+    } else {
+      $current_user_id = "0";
+    }
+
+    if (!$this->skip_modified_fields) {
+      if (isset($this->data_fields[$this->data_table."ModifiedUser"])) {
+        $this->set_value($this->data_table."ModifiedUser", $current_user_id);
+      }
+      if (isset($this->data_fields[$this->data_table."ModifiedTime"])) {
+        $this->set_value($this->data_table."ModifiedTime", date("Y-m-d H:i:s"));
+      }
+    }
+
     $write_fields = array();
     reset($this->data_fields);
     while (list(, $field) = each($this->data_fields)) {

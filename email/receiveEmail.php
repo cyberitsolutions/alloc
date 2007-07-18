@@ -78,7 +78,7 @@ while ($x < $num_emails) {
   $mail->set_msg($x);
   // forward to admin
   if (config::get_config_item("allocEmailAdmin")) {
-    $mail->forward(config::get_config_item("allocEmailAdmin"), "[allocPSA] Email sent to allocPSA address");
+    $mail->forward(config::get_config_item("allocEmailAdmin"), "[allocPSA] Email sent to allocPSA address - unable to process");
   }
   $mail->delete();
 }

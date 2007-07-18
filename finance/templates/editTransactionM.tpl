@@ -92,7 +92,7 @@
   </tr>
   <tr>
     <td>Last Modified On</td>
-    <td>{$lastModified}&nbsp;</td>
+    <td>{$transactionModifiedTime}&nbsp;</td>
     <td class="hint">The date that this record was last modified</td>
   </tr>
 

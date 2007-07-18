@@ -49,18 +49,17 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
   
 
   $comment = new comment;
-  $comment->set_value('commentType', $entity);
-  $comment->set_value('commentLinkID', $entityID);
-  $comment->set_modified_time();
-  $comment->set_value('commentModifiedUser', $current_user->get_id());
 
   if ($_POST["comment_update"]) {
     $comment->set_id($_POST["comment_id"]);
+    $comment->select();
   }
+
+  $comment->set_value('commentType', $entity);
+  $comment->set_value('commentLinkID', $entityID);
 
   if ($_POST["comment"]) {
     $comment->set_value('comment', $_POST["comment"]);
-    $comment->save();
 
     // Email new comment?
     if ($_POST["commentEmailCheckboxes"]) {
@@ -74,10 +73,11 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
           $append_comment_text = "Email sent to: ".$successful_recipients;
           $message_good.= $append_comment_text;
           $comment->set_value("commentEmailRecipients",$successful_recipients);
-          $comment->save();
         }
       }
     }
+    $comment->save();
+
   }
 } else if ($_POST["comment_delete"] && $_POST["comment_id"]) {
   $comment = new comment;

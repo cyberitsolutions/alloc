@@ -49,11 +49,6 @@ class reminder extends db_entity {
     $this->set_value("reminderModifiedTime", date("Y-m-d H:i:s"));
   }
 
-  // return just the date of the comment without the time
-  function get_modified_date() {
-    return substr($this->get_value("reminderModifiedTime"), 0, 10);
-  }
-
   function get_recipients() {
     $db = new db_alloc;
     $recipients = array("-1"=>"-- all --");

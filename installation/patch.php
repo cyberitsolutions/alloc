@@ -24,91 +24,56 @@
 define("NO_AUTH",1);
 require_once("../alloc.php");
 
-$db = new db_alloc;
-
 // Get list of patch files in order
-$files = get_patch_file_list();
+$abc123_files = get_patch_file_list();
 
 // Get the most recently applied patch
-$applied_patches = get_applied_patches();
+$abc123_applied_patches = get_applied_patches();
+
+
+// Hack to update everyones patch tree
+if (!in_array("patch-00053-alla.php",$abc123_applied_patches)) {
+  apply_patch(ALLOC_MOD_DIR."patches/patch-00053-alla.php");
+}
 
 // This script can potentially be called via the livealloc patch system via GET
-$apply_patches = $_POST["apply_patches"] or $apply_patches = $_GET["apply_patches"];
+$abc123_apply_patches = $_POST["apply_patches"] or $abc123_apply_patches = $_GET["apply_patches"];
 
 $_POST["patches_to_apply"] or $_POST["patches_to_apply"] = array();
 
-if ($apply_patches) {
+if ($abc123_apply_patches) {
 
-
-  foreach ($files as $file) {
-    $comments or $comments = array();
-    $f = ALLOC_MOD_DIR."patches/".$file;
-
+  foreach ($abc123_files as $abc123_file) {
+    $abc123_f = ALLOC_MOD_DIR."patches/".$abc123_file;
       
-    $go = false;
-    $go2 = false;
+    $abc123_go = false;
+    $abc123_go2 = false;
 
-    if (!in_array($file,$applied_patches)) {
-      $go = true;
+    if (!in_array($abc123_file,$abc123_applied_patches)) {
+      $abc123_go = true;
     }
 
     // The livealloc patch system doesn't use the interactive patching mechanism, so by default apply all patches that haven't been applied
-    if (in_array($file,$_POST["patches_to_apply"]) || $_GET["apply_patches"]) {
-      $go2 = true;
+    if (in_array($abc123_file,$_POST["patches_to_apply"]) || $_GET["apply_patches"]) {
+      $abc123_go2 = true;
     }
 
-    if ($go && $go2) {
-
-      #$msg[$f][] = "<b>Attempting:</b> ".$file."<br/>";
-
-      // Try for sql file
-      if (strtolower(substr($file,-4)) == ".sql") {
-
-        list($sql,$comments) = parse_sql_file($f);
-        foreach ($sql as $query) {
-          if (!$db->query($query)) {
-            $TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
-            $failed[$f] = true;
-          }
-        }
-        if (!$failed[$f]) {
-          $TPL["message_good"][] = "Successfully Applied: ".$f;
-        }
-
-      // Try for php file
-      } else if (strtolower(substr($file,-4)) == ".php") {
-        ob_start();
-        include("../patches/".$file);
-        $str = ob_get_contents();
-        if ($str) { 
-          $TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$str;
-          $failed[$f] = true;
-          ob_end_clean();
-        } else {
-          $TPL["message_good"][] = "Successfully Applied: ".$f;
-        }
-      }
-
-
-      if (!$failed[$f]) {
-        $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
-                      VALUES ('%s','%s','%s')",db_esc($file), db_esc(implode(" ",$comments)), date("Y-m-d H:i:s"));
-        $db->query($q);
-      } 
+    if ($abc123_go && $abc123_go2) {
+      apply_patch($abc123_f);
     }
   }
 }
 
 
-$applied_patches = get_applied_patches();
-foreach ($files as $file) {
-  if (!in_array($file,$applied_patches)) {
-    $incomplete = true;
+$abc123_applied_patches = get_applied_patches();
+foreach ($abc123_files as $abc123_file) {
+  if (!in_array($abc123_file,$abc123_applied_patches)) {
+    $abc123_incomplete = true;
   }
 }
 
 
-if (!$incomplete) {
+if (!$abc123_incomplete) {
   header("Location: ".$TPL["url_alloc_login"]);
 } 
 

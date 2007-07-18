@@ -321,6 +321,7 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
   $comment->set_id($_GET["commentID"]);
   $comment->select();
   $TPL["comment"] = $comment->get_value('comment');
+  $TPL["commentEmailRecipients"] = $comment->get_value('commentEmailRecipients');
   $TPL["comment_buttons"] =
     sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_GET["commentID"])
            ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";

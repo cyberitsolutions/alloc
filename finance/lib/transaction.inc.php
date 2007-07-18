@@ -46,7 +46,7 @@ class transaction extends db_entity
                                , "tfID"=>new db_field("tfID")
                                , "projectID"=>new db_field("projectID")
                                , "transactionModifiedUser"=>new db_field("transactionModifiedUser")
-                               , "lastModified"=>new db_field("lastModified")
+                               , "transactionModifiedTime"=>new db_field("transactionModifiedTime")
                                , "dateEntered"=>new db_field("dateEntered")
                                , "quantity"=>new db_field("quantity")
                                , "transactionDate"=>new db_field("transactionDate")
