@@ -260,7 +260,7 @@ Verify that all the tests succeeded below, and click the Complete Installation b
     </div>
 
     <div style="text-align:center; font-size:70%; color:#666666;">
-      allocPSA {get_alloc_version()} &copy; 2006 <a style="color:#666666" href="http://www.cybersource.com.au">Cybersource</a>
+      allocPSA {get_alloc_version()} &copy; 2007 <a style="color:#666666" href="http://www.cybersource.com.au">Cybersource</a>
     </div>
 
   </body>
