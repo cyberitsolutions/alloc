@@ -509,6 +509,7 @@ class task extends db_entity {
         $db->query($q);
         while($row = $db->next_record()) {
           $row["isCC"] = true;
+          $row["name"] = $row["fullName"];
           $recipients[] = $row;
         }
       } else if ($selected_option == "creator") {
