@@ -64,7 +64,6 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 
   if (!count($TPL["message"]))  {
     $transaction->check_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION);
-    $transaction->set_value("lastModified", date("YmdHis"));
     $transaction->set_value("amount",str_replace(array("$",","),"",$transaction->get_value("amount")));
     $transaction->save();
     $TPL["message_good"][] = "Transaction Saved";
@@ -87,7 +86,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 
 $transaction->set_tpl_values();
 
-$TPL["lastModified"] = get_display_date($transaction->get_value("lastModified"));
+$TPL["transactionModifiedTime"] = get_display_date($transaction->get_value("transactionModifiedTime"));
 $TPL["product"] = htmlentities($transaction->get_value("product"));
 $TPL["statusOptions"] = get_options_from_array(array("pending", "rejected", "approved"), $transaction->get_value("status"), false);
 $TPL["transactionTypeOptions"] = get_options_from_array(array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance"), $transaction->get_value("transactionType"), false);

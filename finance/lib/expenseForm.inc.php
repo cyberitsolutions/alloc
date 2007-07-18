@@ -28,7 +28,7 @@ class expenseForm extends db_entity {
     $this->db_entity();
     $this->key_field = new db_field("expenseFormID");
     $this->data_fields = array("expenseFormModifiedUser"=>new db_field("expenseFormModifiedUser")
-                               , "lastModified"=>new db_field("lastModified")
+                               , "expenseFormModifiedTime"=>new db_field("expenseFormModifiedTime")
                                , "paymentMethod"=>new db_field("paymentMethod")
                                , "reimbursementRequired"=>new db_field("reimbursementRequired", array("empty_to_null"=>false))
                                , "seekClientReimbursement"=>new db_field("seekClientReimbursement", array("empty_to_null"=>false))

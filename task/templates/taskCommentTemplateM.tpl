@@ -37,7 +37,7 @@
 </table>
 
 <input type="hidden" name="taskCommentTemplateID" value="{$taskCommentTemplateID}">
-<input type="hidden" name="taskCommentTemplateLastModified" value="{$displayFromDate}">
+<input type="hidden" name="taskCommentTemplateModifiedTime" value="{$displayFromDate}">
 </form>
 {show_footer()}
 										    

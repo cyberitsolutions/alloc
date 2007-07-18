@@ -42,7 +42,7 @@
   </tr>
   <tr>
     <td>Last Modfied On</td>
-    <td>{$lastModified}</td>
+    <td>{$transactionModifiedTime}</td>
   </tr>
 </table>
 {show_footer()}

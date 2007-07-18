@@ -39,7 +39,7 @@ class transactionRepeat extends db_entity {
 
                                , "transactionRepeatModifiedUser"=>new db_field("transactionRepeatModifiedUser")
                                , "reimbursementRequired"=>new db_field("reimbursementRequired",array("empty_to_null"=>false))
-                               , "lastModified"=>new db_field("lastModified")
+                               , "transactionRepeatModifiedTime"=>new db_field("transactionRepeatModifiedTime")
                                , "dateEntered"=>new db_field("dateEntered")
                                , "transactionStartDate"=>new db_field("transactionStartDate")
                                , "transactionFinishDate"=>new db_field("transactionFinishDate")

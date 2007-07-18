@@ -7,7 +7,7 @@ CREATE TABLE absence (
   contactDetails text,
   personID int(11) NOT NULL default '0',
   PRIMARY KEY  (absenceID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE announcement (
@@ -18,7 +18,7 @@ CREATE TABLE announcement (
   displayFromDate date default NULL,
   displayToDate date default NULL,
   PRIMARY KEY  (announcementID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE client (
@@ -38,13 +38,13 @@ CREATE TABLE client (
   clientCountryOne varchar(255) default NULL,
   clientCountryTwo varchar(255) default NULL,
   clientComment text,
-  clientModifiedTime timestamp(14) NOT NULL,
-  clientModifiedUser int(11) NOT NULL default '0',
+  clientModifiedTime datetime DEFAULT NULL,
+  clientModifiedUser int(11) DEFAULT NULL,
   clientStatus enum('current','potential','archived') NOT NULL default 'current',
   clientCreatedTime varchar(11) default NULL,
   PRIMARY KEY  (clientID),
   KEY clientName (clientName)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE clientContact (
@@ -55,30 +55,33 @@ CREATE TABLE clientContact (
   clientContactSuburb varchar(255) default NULL,
   clientContactState varchar(255) default NULL,
   clientContactPostcode varchar(255) default NULL,
-  clientContactCountry varchar(255) default NULL,
   clientContactPhone varchar(255) default NULL,
   clientContactMobile varchar(255) default NULL,
   clientContactFax varchar(255) default NULL,
   clientContactEmail varchar(255) default NULL,
   clientContactOther text,
+  clientContactCountry varchar(255) default NULL,
   PRIMARY KEY  (clientContactID),
   KEY clientID (clientID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE comment (
   commentID int(11) NOT NULL auto_increment,
   commentType varchar(255) NOT NULL default '',
   commentLinkID int(11) NOT NULL default '0',
-  commentModifiedTime datetime NOT NULL default '0000-00-00 00:00:00',
+  commentCreatedTime datetime default NULL,
+  commentCreatedUser int(11) default NULL,
+  commentModifiedTime datetime DEFAULT NULL,
   commentModifiedUser int(11) DEFAULT NULL,
-  commentModifiedUserClientContactID int(11) DEFAULT NULL,
+  commentCreatedUserClientContactID int(11) DEFAULT NULL,
+  commentCreatedUserText varchar(255) DEFAULT NULL,
   commentEmailRecipients VARCHAR(255) DEFAULT "",
   comment TEXT,
   PRIMARY KEY  (commentID),
   KEY commentLinkID (commentLinkID),
   KEY commentType (commentType)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE config (
@@ -88,14 +91,14 @@ CREATE TABLE config (
   type enum("text","array") NOT NULL default "text",
   PRIMARY KEY (configID),
   UNIQUE KEY (name)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE expenseForm (
   expenseFormID int(11) NOT NULL auto_increment,
   clientID int(11) DEFAULT 0,
-  expenseFormModifiedUser int(11) NOT NULL default '0',
-  lastModified timestamp(14) NOT NULL,
+  expenseFormModifiedUser int(11) DEFAULT NULL,
+  expenseFormModifiedTime datetime DEFAULT NULL,
   paymentMethod varchar(255) default NULL,
   reimbursementRequired tinyint(4) NOT NULL default '0',
   enteredBy int(11) NOT NULL default '0',
@@ -103,7 +106,7 @@ CREATE TABLE expenseForm (
   expenseFormFinalised tinyint(4) NOT NULL default '0',
   seekClientReimbursement int(1) NOT NULL default 0,
   PRIMARY KEY  (expenseFormID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE history (
@@ -114,30 +117,30 @@ CREATE TABLE history (
   personID int(11) NOT NULL default '0',
   the_label varchar(255) default '',
   PRIMARY KEY  (historyID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE htmlElement (
   htmlElementID INT(11) NOT NULL auto_increment,
-  htmlElementTypeID INT(11) NOT NULL,
+  htmlElementTypeID INT(11) NOT NULL default '0',
   htmlElementParentID INT(11) DEFAULT 0,
-  handle VARCHAR(255) NOT NULL,
+  handle VARCHAR(255) NOT NULL default '',
   label VARCHAR(255) DEFAULT NULL,
   helpText TEXT DEFAULT NULL,
   defaultValue VARCHAR(255) DEFAULT NULL,
   sequence INT(11) DEFAULT 0,
   enabled  INT(1) DEFAULT 1,
   PRIMARY KEY (htmlElementID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 CREATE TABLE htmlAttribute (
   htmlAttributeID INT(11) NOT NULL auto_increment,
-  htmlElementID INT(11) NOT NULL,
+  htmlElementID INT(11) NOT NULL default '0',
   name VARCHAR(255) DEFAULT NULL,
   value VARCHAR(255) DEFAULT NULL,
   isDefault INT(1) DEFAULT 0,
   PRIMARY KEY (htmlAttributeID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 CREATE TABLE htmlElementType (
   htmlElementTypeID INT(11) NOT NULL auto_increment,
@@ -149,18 +152,18 @@ CREATE TABLE htmlElementType (
   hasValueContent INT(1) DEFAULT 0,
   hasValueAttribute INT(1) DEFAULT 0,
   valueAttributeName VARCHAR(255) DEFAULT NULL,
-  hasLabelValue INT(1) DEFAULT 0, 
+  hasLabelValue INT(1) DEFAULT 0,
   parentHtmlElementID INT(11) DEFAULT 0,
   PRIMARY KEY  (htmlElementTypeID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 CREATE TABLE htmlAttributeType (
   htmlAttributeTypeID INT(11) NOT NULL auto_increment,
-  htmlElementTypeID INT(11) DEFAULT NULL,
+  htmlElementTypeID INT(11) DEFAULT NULL default NULL,
   name VARCHAR(255) NOT NULL DEFAULT "",
   defaultValue VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY  (htmlAttributeTypeID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE invoice (
@@ -169,7 +172,7 @@ CREATE TABLE invoice (
   invoiceNum int(11) NOT NULL default '0',
   invoiceName varchar(255) NOT NULL default '',
   PRIMARY KEY  (invoiceID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE invoiceItem (
@@ -179,44 +182,44 @@ CREATE TABLE invoiceItem (
   iiQuantity float default NULL,
   iiUnitPrice float default NULL,
   iiAmount float default NULL,
-  status varchar(255) NOT NULL default '',
+  status varchar(255) default NULL,
   PRIMARY KEY  (invoiceItemID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE item (
   itemID int(11) NOT NULL auto_increment,
   itemName varchar(255) default '',
   itemNotes text,
-  lastModified timestamp(14) NOT NULL,
-  itemModifiedUser int(11) NOT NULL default '0',
+  itemModifiedTime datetime DEFAULT NULL,
+  itemModifiedUser int(11) DEFAULT NULL,
   itemType enum('cd','book','other') NOT NULL default 'cd',
   itemAuthor varchar(255) default '',
   personID int(11) default '0',
   PRIMARY KEY  (itemID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE loan (
   loanID int(11) NOT NULL auto_increment,
   itemID int(11) NOT NULL default '0',
   personID int(11) NOT NULL default '0',
-  loanModifiedUser int(11) NOT NULL default '0',
-  lastModified timestamp(14) NOT NULL,
+  loanModifiedUser int(11) DEFAULT NULL,
+  loanModifiedTime datetime DEFAULT NULL,
   dateBorrowed date NOT NULL default '0000-00-00',
   dateToBeReturned date default NULL,
   dateReturned date default NULL,
   PRIMARY KEY  (loanID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE patchLog (
   patchLogID int(11) NOT NULL auto_increment,
-  patchName varchar(255) NOT NULL,
+  patchName varchar(255) NOT NULL default '',
   patchDesc text,
   patchDate timestamp(14) NOT NULL,
   PRIMARY KEY  (patchLogID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE permission (
@@ -231,7 +234,7 @@ CREATE TABLE permission (
   permissionID int(11) NOT NULL auto_increment,
   PRIMARY KEY  (permissionID),
   KEY tableName (tableName)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE person (
@@ -246,18 +249,18 @@ CREATE TABLE person (
   managementComments text,
   emailFormat varchar(255) default NULL,
   lastLoginDate datetime default NULL,
-  personModifiedUser int(11) NOT NULL default '0',
+  personModifiedUser int(11) DEFAULT NULL,
   firstName varchar(255) default NULL,
   surname varchar(255) default NULL,
   preferred_tfID int(11) default NULL,
   dailyTaskEmail varchar(255) default 'yes',
   personActive tinyint(1) default '1',
+  sessData text,
   phoneNo1 varchar(255) default "",
   phoneNo2 varchar(255) default "",
-  sessData text,
   PRIMARY KEY (personID),
   UNIQUE KEY (username)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE project (
@@ -266,7 +269,7 @@ CREATE TABLE project (
   projectComments text,
   clientID int(11) NOT NULL default '0',
   clientContactID int(11) default '0',
-  projectModifiedUser int(11) NOT NULL default '0',
+  projectModifiedUser int(11) DEFAULT NULL,
   projectType enum('contract','job','project') default NULL,
   projectClientName varchar(255) default NULL,
   projectClientPhone varchar(20) default NULL,
@@ -288,7 +291,7 @@ CREATE TABLE project (
   PRIMARY KEY  (projectID),
   KEY projectName (projectName),
   KEY clientID (clientID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE projectCommissionPerson (
@@ -298,7 +301,7 @@ CREATE TABLE projectCommissionPerson (
   commissionPercent decimal(5,3) default '0.000',
   tfID int(11) NOT NULL default '0',
   PRIMARY KEY  (projectCommissionPersonID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE projectModificationNote (
@@ -308,7 +311,7 @@ CREATE TABLE projectModificationNote (
   modDescription text,
   personID int(11) NOT NULL default '0',
   PRIMARY KEY  (projectModNoteID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE projectPerson (
@@ -319,10 +322,10 @@ CREATE TABLE projectPerson (
   emailType enum('None','Assigned Tasks','All Tasks') default NULL,
   rate decimal(5,2) default '0.00',
   rateUnitID int(3) default NULL,
-  projectPersonModifiedUser int(11) NOT NULL default '0',
+  projectPersonModifiedUser int(11) DEFAULT NULL,
   emailDateRegex varchar(255) default NULL,
   PRIMARY KEY  (projectPersonID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE projectPersonRole (
@@ -331,7 +334,7 @@ CREATE TABLE projectPersonRole (
   projectPersonRoleHandle varchar(255) default NULL,
   projectPersonRoleSortKey int(11) default NULL,
   PRIMARY KEY  (projectPersonRoleID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE reminder (
@@ -347,10 +350,10 @@ CREATE TABLE reminder (
   reminderAdvNoticeValue int(11) NOT NULL default '0',
   reminderSubject varchar(255) NOT NULL default '',
   reminderContent text,
-  reminderModifiedTime datetime NOT NULL default '0000-00-00 00:00:00',
-  reminderModifiedUser int(11) NOT NULL default '0',
+  reminderModifiedTime datetime DEFAULT NULL,
+  reminderModifiedUser int(11) DEFAULT NULL,
   PRIMARY KEY  (reminderID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE sentEmailLog (
@@ -364,7 +367,7 @@ CREATE TABLE sentEmailLog (
   sentEmailLogModifiedTime timestamp(14) NOT NULL,
   sentEmailLogModifiedUser int(11) NOT NULL default '0',
   PRIMARY KEY  (sentEmailLogID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE sess (
@@ -372,7 +375,7 @@ CREATE TABLE sess (
   personID int(11) NOT NULL default '0',
   sessData text,
   PRIMARY KEY  (sessID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE skillList (
@@ -381,7 +384,7 @@ CREATE TABLE skillList (
   skillDescription text,
   skillClass varchar(40) NOT NULL default '',
   PRIMARY KEY  (skillID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE skillProficiencys (
@@ -390,7 +393,7 @@ CREATE TABLE skillProficiencys (
   skillID int(11) NOT NULL default '0',
   skillProficiency enum('Novice','Junior','Intermediate','Advanced','Senior') NOT NULL default 'Novice',
   PRIMARY KEY  (proficiencyID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE task (
@@ -413,7 +416,7 @@ CREATE TABLE task (
   personID int(11) default NULL,
   parentTaskID int(11) NOT NULL default '0',
   taskTypeID int(11) NOT NULL default '1',
-  taskModifiedUser int(11) NOT NULL default '0',
+  taskModifiedUser int(11) DEFAULT NULL,
   taskCommentTemplateID int(11) default NULL,
   PRIMARY KEY  (taskID),
   KEY taskName (taskName),
@@ -422,7 +425,7 @@ CREATE TABLE task (
   KEY parentTaskID (parentTaskID),
   KEY taskTypeID (taskTypeID),
   KEY parentTaskID_2 (parentTaskID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE taskCCList (
@@ -431,16 +434,16 @@ CREATE TABLE taskCCList (
   fullName text,
   emailAddress text NOT NULL,
   PRIMARY KEY  (taskCCListID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE taskCommentTemplate (
   taskCommentTemplateID int(11) NOT NULL auto_increment,
   taskCommentTemplateName varchar(255) default NULL,
   taskCommentTemplateText text,
-  taskCommentTemplateLastModified timestamp(14) NOT NULL,
+  taskCommentTemplateModifiedTime datetime DEFAULT NULL,
   PRIMARY KEY  (taskCommentTemplateID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE taskType (
@@ -449,19 +452,19 @@ CREATE TABLE taskType (
   taskTypeActive int(1) default NULL,
   taskTypeSequence int(11) default NULL,
   PRIMARY KEY  (taskTypeID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE tf (
   tfID int(11) NOT NULL auto_increment,
   tfName varchar(255) NOT NULL default '',
   tfComments text,
-  tfModifiedTime timestamp(14) NOT NULL,
-  tfModifiedUser int(11) NOT NULL default '0',
+  tfModifiedTime datetime DEFAULT NULL,
+  tfModifiedUser int(11) DEFAULT NULL,
   qpEmployeeNum int(11) default NULL,
   quickenAccount varchar(255) default NULL,
   PRIMARY KEY  (tfID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE tfPerson (
@@ -469,7 +472,7 @@ CREATE TABLE tfPerson (
   tfID int(11) NOT NULL default '0',
   personID int(11) NOT NULL default '0',
   PRIMARY KEY  (tfPersonID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE timeSheet (
@@ -491,7 +494,7 @@ CREATE TABLE timeSheet (
   recipient_tfID int(11) default NULL,
   customerBilledDollars decimal(19,2) default '0.00',
   PRIMARY KEY  (timeSheetID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE timeSheetItem (
@@ -509,7 +512,7 @@ CREATE TABLE timeSheetItem (
   comment text,
   PRIMARY KEY  (timeSheetItemID),
   INDEX idx_timeSheetID (timeSheetID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE timeUnit (
@@ -521,7 +524,7 @@ CREATE TABLE timeUnit (
   timeUnitActive int(1) default NULL,
   timeUnitSequence int(11) default NULL,
   PRIMARY KEY  (timeUnitID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE token (
@@ -537,7 +540,7 @@ CREATE TABLE token (
   tokenCreatedBy INT(11) NOT NULL,
   tokenCreatedDate DATETIME,
   UNIQUE KEY (tokenHash)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE tokenAction (
@@ -545,7 +548,7 @@ CREATE TABLE tokenAction (
   tokenAction VARCHAR(32) NOT NULL,
   tokenActionType VARCHAR(32),
   tokenActionMethod VARCHAR(32)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE transaction (
@@ -557,8 +560,8 @@ CREATE TABLE transaction (
   expenseFormID int(11) NOT NULL default '0',
   tfID int(11) NOT NULL default '0',
   projectID int(11) default '0',
-  transactionModifiedUser int(11) NOT NULL default '0',
-  lastModified timestamp(14) NOT NULL,
+  transactionModifiedUser int(11) DEFAULT NULL,
+  transactionModifiedTime datetime DEFAULT NULL,
   quantity int(11) NOT NULL default '1',
   dateEntered date NOT NULL default '0000-00-00',
   transactionDate date NOT NULL default '0000-00-00',
@@ -568,7 +571,7 @@ CREATE TABLE transaction (
   transactionRepeatID int(11) default NULL,
   INDEX idx_timeSheetID (timeSheetID),
   PRIMARY KEY  (transactionID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 
 
 CREATE TABLE transactionRepeat (
@@ -579,8 +582,8 @@ CREATE TABLE transactionRepeat (
   companyDetails text NOT NULL,
   emailOne varchar(255) default '',
   emailTwo varchar(255) default '',
-  transactionRepeatModifiedUser int(11) NOT NULL default '0',
-  lastModified timestamp(14) NOT NULL,
+  transactionRepeatModifiedUser int(11) DEFAULT NULL,
+  transactionRepeatModifiedTime datetime DEFAULT NULL,
   dateEntered date NOT NULL default '0000-00-00',
   transactionStartDate date NOT NULL default '0000-00-00',
   transactionFinishDate date NOT NULL default '0000-00-00',
@@ -591,5 +594,5 @@ CREATE TABLE transactionRepeat (
   transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance') NOT NULL default 'invoice',
   reimbursementRequired tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (transactionRepeatID)
-) TYPE=MyISAM;
+) TYPE=MyISAM PACK_KEYS=0;
 

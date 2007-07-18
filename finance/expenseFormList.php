@@ -54,7 +54,7 @@ function show_expense_form_list($template_name) {
       $dbTwo->query("select username from person where personID=".$expenseForm->get_value("expenseFormModifiedUser"));
       $dbTwo->next_record();
       $TPL["expenseFormModifiedUser"] = $dbTwo->f("username");
-      $TPL["lastModified"] = get_mysql_date_stamp($expenseForm->get_value("lastModified"));
+      $TPL["expenseFormModifiedTime"] = get_mysql_date_stamp($expenseForm->get_value("expenseFormModifiedTime"));
       include_template($template_name);
     }
   }
@@ -79,7 +79,7 @@ function show_pending_transaction_list($template_name) {
     $transactionRepeat->read_db_record($db);
     $transactionRepeat->set_tpl_values();
     $TPL["formTotal"] = sprintf("%0.2f", -$db->f("amount"));
-    $TPL["lastModified"] = get_mysql_date_stamp($transaction->get_value("lastModified"));
+    $TPL["transactionModifiedTime"] = get_mysql_date_stamp($transaction->get_value("transactionModifiedTime"));
     include_template($template_name);
   }
 }

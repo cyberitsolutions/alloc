@@ -104,7 +104,7 @@ function show_transaction($template_name) {
     $TPL["running_balance"] = sprintf("%0.2f",$running_balance);
     $TPL["closing_balance"] = $TPL["running_balance"];
 
-    $TPL["lastModified"] = get_mysql_date_stamp($TPL["lastModified"]);
+    $TPL["transactionModifiedTime"] = get_mysql_date_stamp($TPL["transactionModifiedTime"]);
 
     $type = $transaction->get_value("transactionType");
 
@@ -162,7 +162,7 @@ if ($_GET["sortBy"]) {
 }
 
 // List may only be sorted by one of these.
-$valid_orders_by = array("transactionDate","lastModified");
+$valid_orders_by = array("transactionDate","transactionModifiedTime");
 in_array($sortTransactions,$valid_orders_by) or $sortTransactions = "transactionDate";
 
 // Store a user variable to record the users preference.
@@ -230,7 +230,7 @@ $TPL["transactionTypeOptions"] = get_select_options($transactionTypeOptions,$tra
 
 
 
-// WHERE lastModified or transactionDate is <= end date
+// WHERE transactionModifiedTime or transactionDate is <= end date
 $where[$sortTransactions] = array(" <= ",$statement_end_date);
 
 // Add pending transactions filter to get pending amount balance
@@ -246,11 +246,11 @@ $TPL["opening_balance"] = sprintf("%0.2f",$opening_balance);
 $TPL["balance"] = sprintf("%0.2f",$tf->get_balance());
 
 // Setup the info for the href linking to the alternate sort
-if ($sortTransactions == "lastModified") {
+if ($sortTransactions == "transactionModifiedTime") {
   $_GET["sortBy"] = "transactionDate";
   $link_text = "Sort By Transaction Date";
 } else {
-  $_GET["sortBy"] = "lastModified";
+  $_GET["sortBy"] = "transactionModifiedTime";
   $link_text = "Sort By Date Last Modified";
 }
 

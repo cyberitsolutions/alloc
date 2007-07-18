@@ -32,7 +32,7 @@ class loan extends db_entity {
     $this->data_fields = array("itemID"=>new db_field("itemID")
                                , "personID"=>new db_field("personID")
                                , "loanModifiedUser"=>new db_field("loanModifiedUser")
-                               , "lastModified"=>new db_field("lastModified")
+                               , "loanModifiedTime"=>new db_field("loanModifiedTime")
                                , "dateBorrowed"=>new db_field("dateBorrowed")
                                , "dateToBeReturned"=>new db_field("dateToBeReturned")
                                , "dateReturned"=>new db_field("dateReturned")

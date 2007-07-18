@@ -33,7 +33,7 @@ class item extends db_entity {
                                , "itemName"=>new db_field("itemName")
                                , "itemAuthor"=>new db_field("itemAuthor")
                                , "itemNotes"=>new db_field("itemNotes")
-                               , "lastModified"=>new db_field("lastModified")
+                               , "itemModifiedTime"=>new db_field("itemModifiedTime")
                                , "itemType"=>new db_field("itemType")
 			       , "personID"=>new db_field("personID")
       );

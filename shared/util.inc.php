@@ -364,8 +364,13 @@ function util_get_comments($entity, $id, $options=array()) {
     if (!$v["comment"])
       continue ;
 
-    unset($author);
-    if ($v["clientContactID"]) {
+    unset($author,$emailed_text);
+    $emailed_text = "Comment by ";
+    if ($v["commentCreatedUserText"]) {
+      $author = htmlentities($v["commentCreatedUserText"]);
+      $emailed_text = "Comment emailed by ";
+
+    } else if ($v["clientContactID"]) {
       $cc = new clientContact;
       $cc->set_id($v["clientContactID"]);
       $cc->select();
@@ -377,6 +382,12 @@ function util_get_comments($entity, $id, $options=array()) {
       $person->select();
       $author = $person->get_username(1);
     }
+
+    unset($modified_info);
+    if ($v["commentModifiedTime"] || $v["commentModifiedUser"]) {
+      $modified_info = ", last modified by ".person::get_fullname($v["commentModifiedUser"])." ".$v["commentModifiedTime"];
+    }
+
 
     $comment_buttons = "";
     $ts_label = "";
@@ -407,7 +418,7 @@ function util_get_comments($entity, $id, $options=array()) {
       }
 
       unset($emailed);
-      $v["commentEmailRecipients"] and $emailed = ", Email sent to ".$v["commentEmailRecipients"];
+      $v["commentEmailRecipients"] and $emailed = "<br>This comment has been emailed to ".$v["commentEmailRecipients"];
 
 
       $edit and $rtn[] =  '<form action="'.$TPL["url_alloc_comment"].'" method="post">';
@@ -417,7 +428,7 @@ function util_get_comments($entity, $id, $options=array()) {
       $edit and $rtn[] =  '<input type="hidden" name="comment_id" value="'.$v["commentID"].'">';
       $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="comments">';
       $rtn[] =  '<tr>';
-      $rtn[] =  '<th>Comment by <b>'.$author.'</b> '.$v["date"].$ts_label.$emailed."</th>";
+      $rtn[] =  '<th>'.$emailed_text.'<b>'.$author.'</b> '.$v["date"].$ts_label.$modified_info.$emailed."</th>";
       $edit and $rtn[] =  '<th align="right" width="2%">'.$comment_buttons.'</th>';
       $rtn[] =  '</tr>';
       $rtn[] =  '<tr>';
@@ -454,10 +465,13 @@ function get_date_stamp($db_date) {
 }
 function get_mysql_date_stamp($db_date) {
   // Converts mysql timestamp 20011024161045 to YYYY-MM-DD - AL
-  ereg("^([0-9]{4})([0-9]{2})([0-9]{2})", $db_date, $matches);
-  $date_stamp = mktime(0, 0, 0, $matches[2], $matches[3], $matches[1]);
-  $date = date("Y", $date_stamp)."-".date("m", $date_stamp)."-".date("d", $date_stamp);
-  return $date;
+  if (ereg("^([0-9]{4})-?([0-9]{2})-?([0-9]{2})", $db_date, $matches)) {
+    $date_stamp = mktime(0, 0, 0, $matches[2], $matches[3], $matches[1]);
+    $date = date("Y", $date_stamp)."-".date("m", $date_stamp)."-".date("d", $date_stamp);
+    return $date;
+  } else {
+    return $db_date;
+  }
 }
 function get_select_options($options,$selected_value=NULL,$max_length=45) {
   /**
@@ -729,6 +743,50 @@ function parse_patch_file($file) {
 
   } else if (substr($file,-4) == strtolower(".sql")) {
     return parse_sql_file($file);
+  }
+}
+function execute_php_file($file_to_execute) {
+   global $TPL;
+   ob_start();
+   include($file_to_execute);
+   return ob_get_contents();
+}
+function apply_patch($f) {
+  global $TPL;
+  $db = new db_alloc();
+  $file = basename($f);
+  $failed = false;
+  $comments = array();
+
+  // Try for sql file
+  if (strtolower(substr($file,-4)) == ".sql") {
+
+    list($sql,$comments) = parse_sql_file($f);
+    foreach ($sql as $query) {
+      if (!$db->query($query)) {
+        $TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
+        $failed = true;
+      }
+    }
+    if (!$failed) {
+      $TPL["message_good"][] = "Successfully Applied: ".$f;
+    }
+
+  // Try for php file
+  } else if (strtolower(substr($file,-4)) == ".php") {
+    $str = execute_php_file("../patches/".$file);
+    if ($str) {
+      $TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$str;
+      $failed = true;
+      ob_end_clean();
+    } else {
+      $TPL["message_good"][] = "Successfully Applied: ".$f;
+    }
+  }
+  if (!$failed) {
+    $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
+                  VALUES ('%s','%s','%s')",db_esc($file), db_esc(implode(" ",$comments)), date("Y-m-d H:i:s"));
+    $db->query($q);
   }
 }
 function show_messages() {

@@ -87,13 +87,13 @@ $grand_total = 0;
         $query = sprintf("SELECT transaction.* ")
           .sprintf("FROM transaction ")
           .sprintf("WHERE transaction.projectID = '%d' AND status='approved' ", $projectID)
-          .sprintf("ORDER BY lastModified desc");
+          .sprintf("ORDER BY transactionModifiedTime desc");
       } else {
         $query = sprintf("SELECT transaction.* ")
           .sprintf("FROM transaction ")
           .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
           .sprintf(" AND transaction.tfID = %d AND status='approved'", $current_user->get_id())
-          .sprintf("ORDER BY lastModified desc");
+          .sprintf("ORDER BY transactionModifiedTime desc");
       }
       $db->query($query);
       while ($db->next_record()) {

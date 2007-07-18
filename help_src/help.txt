@@ -1,0 +1,2907 @@
+
+.. |date| date::
+
+
+==========================
+allocPSA v1.3 User Manual
+==========================
+-----------------------------------------------------------------
+The Premier Open Source Professional Services Automation Solution
+-----------------------------------------------------------------
+
+.. figure:: images/icon_alloc.png
+
+**Cybersource Pty Ltd.  ACN 053 904 082  ABN 13 053 904 082**
+
+**Level 4, 10 Queen Street Melbourne, Victoria 3000 Australia**
+
+http://www.cybersource.com.au/
+
+THIS DOCUMENT IS PROVIDED FOR INFORMATIONAL PURPOSES ONLY.
+
+The information furnished in this document, believed by Cybersource to be
+accurate as of the date of its publication, is subject to change without
+notice. Cybersource assumes no responsibility for any errors or omissions in
+this document and shall have no obligation to you as a result of having made
+this document available to you or based upon the information it contains. 
+
+Cybersource and allocPSA are registered trademarks of Cybersource Pty. Ltd.
+All other products and services are the registered trademarks of their
+respective holders. 
+
+Written By: kei, Con Zymaris, Alex Lance, Jeremy Chin, robbie, Erick Fabre,
+Trent Buck, Manjula Arulananther.
+
+Creation Date: 2001-10-25
+
+Modification Date: |date|
+
+
+This documentation is released under the GNU GPL `www.gnu.org/copyleft/gpl.html <http://www.gnu.org/copyleft/gpl.html>`_
+
+.. sectnum::
+.. contents:: Table of Contents
+
+
+
+
+
+Administrative Information
+==========================
+
+The original administration account on allocPSA is:
+
+.. list-table::
+
+   - - username: 
+     - alloc
+   - - password: 
+     - alloc
+
+NOTE: You (or the technician deploying allocPSA) should change this password
+promptly. Instructions on how to change this password are shown later in this
+manual. 
+
+
+Purpose and Audience
+====================
+
+The purpose of this documentation is 2-fold:
+
+1. To provide a complete set of documentation for printing purposes.
+
+2. To provide a complete on-line set of documentation for user perusal
+
+
+How to Obtain Latest Versions of allocPSA
+=========================================
+
+allocPSA is open source software, meaning you can gain access to the latest
+versions of the product directly from the project's website:
+http://www.allocpsa.org/
+
+How to Contact Cybersource
+==========================
+
+Full contact details are available from http://www.cybersource.com.au/ or by
+emailing `info@cyber.com.au <mailto:info@cyber.com.au>`_
+
+.. list-table::
+
+   - - Address
+     - Level 4, 10 Queen Street
+   - - City
+     - Melbourne
+   - - Country
+     - Australia
+   - - Postcode
+     - 3000
+   - - Phone
+     - +61 3 9621 2377
+   - - Fax
+     - +61 3 9621 2477
+   - - Email
+     - info@cyber.com.au
+   - - Web
+     - http://www.cybersource.com.au/
+
+Product Support Community
+===============================
+
+Free, community support for allocPSA is available here:
+
+http://sourceforge.net/forum/forum.php?forum_id=562148
+
+This is a web forum system where you can join, post your queries and get
+responses from the allocPSA user community.
+
+Product Support Commercial
+================================
+
+allocPSA is free, open source software. As such, you are free to use it in any manner you like. This includes:
+
+1. installing and using allocPSA in a commercial environment, in a commercial
+   manner,
+
+2. installing and using allocPSA on as many computers or servers as you like,
+   and
+
+3. having allocPSA accessed and used by as many users as you like.
+
+If you have the technical skill in-house or can hire them, you may be happy to
+support and maintain this product on your own. However, allocPSA was developed
+and is commercially supported by Cybersource Pty. Ltd., based in Melbourne,
+Australia.
+
+Cybersource has been providing commercial support since 1991 and has been the
+allocPSA product developer and maintainer since 2000. As such, we can offer
+your firm high-quality support. In addition, because allocPSA is open source
+software, and any other competent web-development firm can also elect to offer
+commercial support for it, Cybersource must also offer great value in its
+support services.
+
+
+
+Per Incident
+------------
+
+The first level of support is on a per-incident basis. Per-incident support is
+offered on a best-effort basis and is capped at two (2) hours actual
+expended effort. Contact Cybersource for pricing.
+
+
+Service Level Agreement Pre-Purchase Block
+------------------------------------------
+
+The service level of support is a pre-paid incident support block. By
+purchasing a pre-paid support block (in multiples of 5 incidents), you can
+save through a price discount and you are also placed on a Service Level
+Agreement (SLA). The service level agreement guarantees that we will actively
+work towards resolving your support incident within two hours of initial
+notification. This is during AEST (UTC +10) standard business hours, Monday to
+Friday, 9:00am to 5:00pm, excluding public holidays. 
+
+Contact Cybersource to discuss your commercial support needs.
+
+
+
+Pre-installed Server Appliance
+------------------------------
+
+.. figure:: images/allocPSA_server_appliance.png
+
+If you would like to have allocPSA professionally installed on
+production-quality server hardware, Cybersource makes available the allocPSA
+Server Appliance. 
+
+The server appliance contains the operating system platform, SQL database
+server, web server, application server and allocPSA suite pre-installed. The
+server appliance comes bundled with 10 hours of installation, data migration
+and operational support.
+
+
+
+The server appliance ships in the form of a: 
+
+1. Business class 1RU/2RU Server.
+
+2. Minimum 2.4Ghz+class x86 CPU,
+
+3. 512MBRAM,
+
+4. Standard 80 GB mirrored disk storage (160GB of disk).
+
+5. Linux operating system,
+
+6. SQL database server,
+
+7. Web server.
+
+8. Application server.
+
+9. Compatible with Windows 95, 98, Me, 2000, XP, 2003, Mac OS 9, OS X, Linux
+   (all versions), Unix (most versions)
+
+10. Works with Internet Explorer, version 5.0 and above, Netscape 6.0 and
+    above, Mozilla, Firefox, Opera, Konqueror, elinks, lynx.
+
+
+
+Customisation
+-------------
+
+No two services businesses work the same way. To provide for this reality,
+allocPSA was designed and is intended to be customised for each site. To that
+end, Cybersource offers your firm a complete customisation service, whereby
+allocPSA can be optimised for your work processes, your firm's accounting and
+billing practices and the software used to implement these, or any other
+site-specific requirements.
+
+If allocPSA does most of what your business needs but could benefit from
+specific functionality to make it better integrate with your existing business
+systems or processes, speak to us about a free quote to add those features into
+allocPSA.
+
+Alternatively, as allocPSA is completely open source, you can elect to make any
+modifications in-house, or hire a third-party to make any modifications. You
+are fully entitled to select either course of action.
+
+Making Your Own Customisations
+------------------------------
+
+As allocPSA is released under the GPL, you are welcome to make your own
+site-specific customisations. However, the GPL requires that if you pass this
+modified application on to others beyond your organisation, that you give them
+the source code to the modifications as well, thereby affording them the same
+freedoms that you have enjoyed.
+
+If you do build extensions onto allocPSA, please consider donating these back
+to the allocPSA project. This will provide two benefits:
+
+1. You will be making a contribution back to the community, so that allocPSA
+   grows in capabilities and polish, with time.
+
+2. You will reduce your level of burden by feeding your code changes back
+   up stream, you will let the project maintainers maintain your modified
+   codebase, ensuring that new versions include the features you want and that
+   these continue to work with the other new as well as the existing
+   features in newer versions of allocPSA.
+
+Integration
+-----------
+
+Cybersource maintains a full integration, support and development team which is
+able to assist you in integrating allocPSA into your organisation's information
+system architecture. In fact, if you've purchased the allocPSA server
+appliance, the price for allocPSA includes a pre-purchased quanta of
+installation, customisation and support services.
+
+
+Introduction
+============
+
+Welcome to the user-level documentation for allocPSA. 
+
+allocPSA is an on-line, web-based Professional Services Automation
+system. allocPSA provides a suite of integrated applications designed for
+organisations which provide services to clients. It enables services personnel
+to become more productive and profitable by increasing their efficiency through
+increased utilisation and productive time, improved planning and integrated
+knowledge management. It reduces the likelihood of slip-ups and increases the
+traceability and manageability of projects, expenses, tasks and people. 
+
+allocPSA can streamline the process of allocating staff resources to key
+projects, managing strategic initiatives at a granular level, and can offer a
+platform for process collaboration and knowledge reuse to any professional
+services business.
+
+allocPSA consists of numerous software modules for business areas such as:
+resource planning, project management, time and expenses, fault & issues
+tracking, message, announcement, reminder and knowledge management,
+collaboration, services supply chain, human resources and staff skilling and
+certification, item loans and management of cost-centres. allocPSA offers
+integration between the modules, as well as an open architecture and
+integration with existing external invoicing, book-keeping and payroll systems.
+
+allocPSA is intended for use in daily organisational operations, such as
+client contact, project management, task and resource allocation, skills
+tracking, time-sheeting, issues tracking, calendaring, reminders and
+escalation, item loans, cost expenses and centres as well as integration with
+existing external accounts and billing systems. 
+
+allocPSA is made available as a server-based appliance. By deploying an
+allocPSA system into your network, all staff can access the application from
+any networked computer which has a web browser. Depending on your network
+configuration and security policies, staff can also access the allocPSA system
+from external computers. Therefore, they can monitor tasks and submit
+timesheets from home, or from any Internet-access point around the world.
+
+As a web-based application, users access allocPSA via the standard web-browser
+they already have on their PCs. No software needs to be installed on their PCs.
+Installation and maintenance of allocPSA is therefore a simple and
+straightforward affair. The new server is installed and configured in hours and
+all users' PCs are able to access the allocPSA application immediately.
+
+allocPSA is open source software - you are provided with full access to the
+complete source code under an open source (GPL) licence. That means you have
+open-ended usage and code modification access rights. This greatly reduces your
+business risks in adopting allocPSA as a system element in your core business
+operations. The product's source code will always be yours in perpetual code
+escrow, at no additional cost.
+
+Deployment
+----------
+
+allocPSA is supplied as in a number of 'formats':
+
+1. As a self-contained server appliance unit. The server appliance contains the
+   operating system platform, SQL server, web server and core allocPSA
+   applications.
+
+2. As a download from http://www.allocpsa.org/ which will need to be installed
+   on a web application server.
+
+3. As a live CD, which can be installed simply and easily by a non-technical
+   person, onto a spare PC. (See below for more information.)
+
+allocPSA is an on-line, web-based suite. The core system can be deployed in
+less than an hour, and requires no workstation-level software installation, as
+allocPSA works with almost any Internet-standard web-browser. 
+
+allocPSA can be used by hundreds of simultaneous users, within your Local Area
+Network, campus network, wireless network, Wide Area network or as an extranet
+application by authorised personnel and partners from anywhere on the Internet
+
+LiveAllocPSA
+------------
+
+If you'd like to obtain and run a copy of allocPSA, but either don't have the
+in-house skills to deploy and maintain the platform that allocPSA needs to run,
+i.e. Linux, Apache, MySQL and PHP, then this is the solution for you.
+
+LiveAllocPSA delivers the whole allocPSA application and system software stack
+in an easy to run product that runs live off the CD. All you need to run this
+version is a spare PC. 
+
+Normally, you would need a Linux/Unix server, an installed instance of Apache,
+MySQL and the PHP application server, along with a number of other libraries
+and system components. LiveAllocPSA packs all this into a live Linux CD, which
+means that you can run it off the CD and with minimal installation effort. If
+you've never installed an operating system or database server beforehand, then
+this product is for you.
+
+What You Need
+~~~~~~~~~~~~~
+
+LiveAllocPSA ships as a live Linux CD. To run it, you need the following as a
+PC or server:
+
+1. Minimum 500MHz x86 CPU
+
+2. Minimum 128MB of RAM
+
+3. Minimum 2 GB of Hard Disk
+
+What You Get
+~~~~~~~~~~~~
+
+The LiveAllocPSA product ships as a CD and manual. The manual provides both
+installation and operation instructions.
+
+**How It Works**
+
+In order to run allocPSA off the LiveAllocPSA system, all you need to do is
+insert the CD into a spare PC and reboot. The LiveAllocPSA installer will then
+erase and reformat your hard disk and set up an area on the hard disk for
+allocPSA to store all its data. The web server, database and application server
+are then started, and allocPSA is then available to use. LiveAllocPSA will
+display on-screen the IP address or URL that you can point your web browser at
+to use the application.
+
+Benefits
+~~~~~~~~
+
+The key benefit of LiveAllocPSA is ease of installation and convenience. You
+can install it on a blank PC in under 10 minutes. You can upgrade it by
+replacing the old CD with any new upgrade CD. You know that once operational,
+LiveAllocPSA can keep running and running unless your PC hardware fails. And
+surprisingly, even though running off a CD, it runs at lightning speed.
+
+Buying LiveAllocPSA
+~~~~~~~~~~~~~~~~~~~
+
+You can contact Cybersource by email for order information:
+<`info@cybersource.com.au <mailto:info@cybersource.com.au>`_>
+
+Open Source Reducing Business Continuity Risks
+----------------------------------------------
+
+allocPSA has been designed to offer your firm the ultimate in flexible
+deployment integration and ongoing control. To that end, the complete source
+code for allocPSA is supplied under a GPL open source licence. You are then
+able to extend, modify or maintain this code, should you so wish, or hire 3rd
+parties to undertake this work for you.
+
+
+Installation and Configuration
+==============================
+
+Once you've installed allocPSA, you must login and then change the default
+login account password. You can do this by accessing the default account
+through the People tab and supplying a new strong account password.
+
+You should also update the allocPSA configuration settings, found by clicking
+the 'Setup' link in the top right hand corner of the allocPSA toolbar. You can
+get more information about each configuration item, by using the Help
+squares to the right of each configuration option.
+
+.. figure:: images/config.png
+
+   Change the allocPSA configuration information as soon as you can.
+
+
+Features & Benefits
+===================
+
+Modern businesses are quickly recognizing the need to make intelligent use of
+information throughout the organization to better address support issues and
+other business problems. allocPSA can help track and manage customer requests,
+problems, complaints, tasks and any other projects that need to be tracked.
+Web-based action tracking offers the best and most simple way to gain control
+over information, issues and tasks for a group or department, or throughout an
+organization worldwide. 
+
+With the increasing business requirement that information management systems
+provide substantial and immediate return on investment, 
+
+allocPSA is the answer to many of your service-industry information management
+concerns.
+
+Among other features, allocPSA provides a comprehensive multilevel,
+multi-project planning, scheduling and reporting engine scalable to thousands
+of projects. The ability to search for qualified and available resources,
+assign tasks and manage staff with a powerful resource search engine across
+single or multiple projects. 
+
+allocPSA also offers cost-control management and project graphical and
+milestone-enabled Gantt-style bar chart reporting capabilities. This makes
+allocPSA a valuable platform for managing the priorities and objectives that
+drive your business.
+
+Using proven project management disciplines and processes, allocPSA helps you
+optimize resources and manage activities to meet project deadlines and budgets. 
+
+allocPSA automatically generates customizable outgoing email alerts to
+instantly notify relevant assignees, managers and other people involved with
+all aspects of service delivery. Daily email alerts, sent to all resources,
+outlines that day's key tasks and scheduled events, meetings and expectations.
+
+A task and reminder Calendar is available for all staff on entry into allocPSA,
+via the Home page.
+
+A filtering drill-down facility to resource (personnel) availability and
+skilling makes it possible to determine which of your staff is suited for
+particular project and tasks.
+
+allocPSA provides a simple inventory and loans management module, a framework
+for producing project cost-estimators, a graphical chart representation of
+historical and current business activity, as well as an open-ended and
+customisable report generator which allows you to extract data to a web-page or
+CSV file, ready for mail-merges or exporting.
+
+For more information, please contact Cybersource.
+
+Home
+----
+
+One-stop overview of user's daily/weekly calendar, company announcements,
+reminders, tasks, projects, cost-centre balances, submitted or timesheets
+pending approval. 
+
+Project Management
+------------------
+
+1. Contract, consultancy, implementation or other templates of projects.
+
+2. Customer contacts, information, budgets, timesheet authoriser.
+
+3. Document and file attachments.
+
+4. Project-wide reminders.
+
+5. Project-wide notes and modification history.
+
+6. Resource, internal and external rates.
+
+7. One or more project leaders who can review project status.
+
+8. Project activity graphs, showing overdue tasks.
+
+9. Timesheet history and comparison to budget estimates.
+
+
+Tasks
+-----
+
+1. Implements tasks, subtasks, project phases, faults and messages.
+
+2. Unlimited number of tasks per project.
+
+3. Unlimited number of comments per task.
+
+4. Unlimited number of reminders/escalations per task
+
+5. Escalation regime for priority tasks not completed within time limits.
+
+Timesheets
+----------
+
+1. Very flexible timesheet workflow engine.
+
+2. Allocation of timesheets on a per-project, per staff basis.
+
+3. Routes timesheets (and sends notification email) to specific project's
+   managers for approval.
+
+4. Subsequently routes of timesheets (along with notification email) to
+   financial administrators for invoicing/payroll.
+
+Financials
+----------
+
+1. Staff, project and general cost-centres, including transfer and tracking of
+   funds between cost-centre accounts.
+
+2. Importing and exporting of invoices/billing.
+
+3. Allocation of invoice payments to staff, project and general cost-centres.
+
+4. Searching of invoices related to projects.
+
+5. Expense forms and claims for staff and projects.
+
+6. Supports repeat/cyclical expenses in cost-centres
+
+7. Reconciliation report.
+
+8. Integration with external payroll and accounting systems
+
+Clients
+-------
+
+1. Full customer company details
+
+2. Unlimited contacts per company
+
+3. Allocation of primary contact status
+
+4. Unlimited notes per company
+
+5. Unlimited document attachments
+
+6. Overview of projects undertaken for this company
+
+7. Actual and potential project revenue from this company
+
+Item Loans
+----------
+
+1. Open-ended item loan, borrowing lists and overdue status
+
+Personnel
+---------
+
+1. Unlimited number of staff resources/personnel.
+
+2. Information detail on availability.
+
+3. Flexible and powerful skills tracking engine, adaptable to any industry.
+
+4. Overview of resource allocation, tasks, overdue tasks etc.
+
+Calendaring/Reminders
+---------------------
+
+1. Week, fortnight and month overview of tasks, appointments and reminders.
+
+2. Project and task-level reminders.
+
+3. Cyclical repeat reminders
+
+Reporting
+---------
+
+1. Completely open-ended report engine.
+
+2. Every field in the core component tables can be queried, filtered and
+   exported.
+
+Fault & Issue Tracking
+----------------------
+
+1. Integrated with the Projects and Task engine and therefore the timesheet
+   system.
+
+2. Escalation engine sends email to specified staff on inactivity/overdue
+   status.
+
+Document Management
+-------------------
+
+1. Project-level document attachments.
+
+2. Task-level document attachments.
+
+3. Customer-level document attachments.
+
+
+
+
+How to Accomplish Common Tasks
+==============================
+
+
+How do I Log In?
+----------------
+
+.. figure:: images/login.png
+
+   This is the allocPSA log in screen
+
+
+In order to gain access to allocPSA, you will need the allocPSA administrator
+to create an account for you, and to assign you a password. You can then enter
+the Username and your Password in the login screen of allocPSA, as shown here.
+
+When you point your web-browser to the URL which contains allocPSA, you
+should see the Login screen. Enter your username and your password, then click
+on the Login button. allocPSA should then take you to the main allocPSA Home
+page. 
+
+
+
+How do I Recover My Lost Password?
+----------------------------------
+
+.. figure:: images/forgot_pass.png
+
+   If you've forgotten your password, have a new one sent to you..
+
+If you have forgotten or misplaced your password, you are able to get allocPSA
+to send you another password by clicking on the 'New Password' link, which will
+bring up a form for you to supply details to.
+
+allocPSA will only email you a password if you supply the same email address
+and username in this form that have been specified previously for that
+user in allocPSA.
+
+
+How do I Logout?
+----------------
+
+There is a Logout link in the top right hand corner which will log you out
+immediately.  For security reasons, allocPSA will automatically time-out your
+login session, if you are inactive for a period of time. If you go out to
+lunch etc. when you next come to us allocPSA, you will be presented with the
+Login screen from above, and asked to re-authenticate. When you do so, you
+will be taken straight to the page where you left off.
+
+
+How do I Add New Users?
+-----------------------
+
+In order for your staff or personnel to use allocPSA, they will need accounts
+on the system. To create an account, you follow these steps.
+
+1. Log into allocPSA as an administrator.
+
+2. From the action 'Quick List', located near the top right on the allocPSA
+   toolbar at the top of the screen, select 'New Person'.
+
+3. Fill in the form. At bare minimum, a username, password (+ password
+   confirmation) and if your new user has special privileges, add them from the
+   'Special Permissions' selection list. In general, for normal users, no special
+   permissions need to be given.
+
+4. Click the 'Save' button near the bottom.
+
+5. If you know their skill-set, add this at the bottom of the form. Better yet,
+   give them their account details, have them log in and let them update their
+   skill sets.
+
+
+How do I Create a New Project?
+------------------------------
+
+1. Log in to allocPSA
+
+2. From the action 'Quick List' drop list on the allocPSA toolbar, select 'New
+   Project'.
+
+3. What you will see is the form you need to fill out to create this project's
+   header. Once done, you can add additional project components.
+
+4. If this project is for a client which hasn't been added in allocPSA
+   beforehand, you will need to add that client. You can do this either by
+   using the steps outlined in this section on Adding a New Client, or by
+   clicking the 'New Client' link in the Project Details form, and following
+   the same steps. 
+
+5. Select the client contact for that client, for this project.
+
+6. Choose the priority, status and type of project from the drop list, set the
+   project's manager for timesheet purposes etc.
+
+7. Press 'Save' button.
+
+8. You are now able to add project comments, commissions, project resources,
+   reminders, timesheets, attachments etc.
+
+
+How do I Create a New Task?
+---------------------------
+
+1. Log in to allocPSA.
+
+2. From the action Quick List on the allocPSA toolbar, select New Task.
+
+3. What you see is the task header section of the form. Fill in this form,
+   selecting from the droplists which project you want this task to belong to.
+
+4. Click the Save button.
+
+5. Your task header is now saved, and you can update the task with new
+   comments, percentages complete etc.
+
+6. You can always edit the task header (to change the name, start dates,
+   resource allocation etc.) by clicking on the 'Edit' link at the
+   task.
+
+
+How do I Add an Appointment?
+----------------------------
+
+An appointment is actually a task with an optional reminder. We'll assume that
+you have already created a new task which is a meeting with somebody at a
+particular time and place. Then, an appointment is created by the following
+steps.
+
+1. Log in to allocPSA
+
+2. Locate and click on the task that relates to the proposed meeting task on
+   the 'Task Calendar'.
+
+3. It is recommended that the task name should contain the contact person, the
+   time and the place.
+
+4. Click 'New Reminder' located on the 'Reminder' section of the task
+
+5. Select the Date, Time, Recurring and Advanced notice needed according to
+   your requirements of the meeting like location, dress code, the time
+   required to arrive. I
+
+6. Press 'Save' button
+
+7. If you now go to the 'Task Calendar' of the 'Home' page again, you should
+   find there is a new reminder for that meeting.
+
+8. HINT: It is a good idea, when creating a meeting task, to give it a name
+   which includes information about who/what/when and when. Here's an example:
+   Meeting with Yvonne Smith (Partek Partners) to discuss support issues.
+   Office, Tuesday, 10am'
+
+How do I Add a Meeting Reminder?
+--------------------------------
+
+1. Log in to allocPSA
+
+2. From the action Quick List drop list on the allocPSA toolbar, select 'New
+   Reminder'
+
+3. Choose the type of the reminder from the drop list. Four types of reminders
+   are Client, Project, Task and General. Press 'Next' button after chosen
+
+4. Choose which kind of task you are going to do from the drop list if your
+   type of reminder is Client, Project, Task. And press 'Next' button
+
+5. Fill in the form
+
+6. Select the Date, Time, Recurring and Advanced notice according to your
+   requirement of the meeting like dress code, the time required to arrive
+
+7. Press 'Save' button.
+
+How do I Re-Edit a Task's Name?
+-------------------------------
+
+1. Once a task header has been created, it is not normally available for
+   editing. You can follow these steps to make the header accessible again.
+
+2. Log in to allocPSA.
+
+1. From the toolbar, select 'Tasks'.
+
+2. Select the task you want to edit from the 'Task Summary' Table
+
+3. HINT: You can filter out any unrelated tasks to locate the task you want
+   from the list, if that task isn't visible near the top. You can also use
+   your browser's Find facility, to locate any known part of the text of that
+   task.
+
+4. Click 'Edit' link on the top right hand concern
+
+5. Edit the name or any other aspect of the task header.
+
+6. Press 'Save' button at the bottom
+
+
+How do I Delete a Task?
+-----------------------
+
+1. Log in to allocPSA.
+
+2. From the toolbar, press 'Tasks'.
+
+3. Select the task you want to delete from the 'Task Summary' list.
+
+5. Press the 'Delete' button.
+
+6. A dialog-box will appear asking you 'Are you sure to delete this record?',
+   press 'OK' to confirm the deletion of the task.
+
+How do I Create a New Timesheet?
+--------------------------------
+
+1. Log in to allocPSA.
+
+2. From the action 'Quick List' drop list on the allocPSA toolbar, select 'New
+   Time Sheet' link.
+
+3. Choose the Project that this timesheet belongs to.
+
+4. Fill in 'Billing Note' if any. This could be something like 'Send the
+   invoice relating to this timesheet to the client before the end of the
+   month or Internal billing only.
+
+5. Press the 'Save' button to continue or 'Delete' to delete this Time Sheet.
+
+6. Timesheets are made up of individual line items, pertaining to specific
+   tasks. For instance, you may have worked for 3 hours on one problem (Task
+   A), 2 hours on Task B and 1 hour on Task C, all for the one client.
+
+7. For each timesheet line item, fill in Date, Duration, Task and Location.
+
+8. Press the 'Add Time Sheet Item' button to add each new line item.
+
+9. Repeat step 7 to add more line item entries if needed.
+
+12. Press 'Time Sheet to Admin' button when done. An email will be sent off to the
+    person designated as the next stop in the timesheet workflow process.
+
+13. HINT: You can save the timesheet as-is, then return to it later on.
+
+14. HINT: You can track the progress of your timesheets from the 'Timesheet'
+    section of your 'Homepage'.
+
+15. HINT: If you're a manager designated to receive requests to authorise
+    timesheets, you can view them from the 'Timesheet' section of your
+    'Homepage'.
+
+How do I Authorise a Timesheet?
+-------------------------------
+
+You must be setup as a Project Manager + Time Sheet Recepient (on the project
+screen) or be setup as the Tiem Sheet Admin on the Setup screen in order to
+authorise timesheets.
+
+1. Log in to allocPSA
+
+2. Click 'admin' or 'manager' on 'Time Sheets Pending Your Approval' table
+   which is located on the lower right side of the 'Home' page
+
+3. If you're happy with the information contained on the timesheet, press the
+   button to submit the Time Sheet to the next step in the workflow.
+
+How do I Reject a Timesheet?
+----------------------------
+
+1. Log in to allocPSA
+
+2. Click 'admin' or 'manager' on 'Time Sheets Pending Your Approval' table
+   which is located on the lower right side of the 'Home' page
+
+3. If you perceive that there is a problem with the timesheet, then add a
+   comment in the note field specifying what the originator should do to fix
+   then re-submit the timesheet, then press the '<-Back' button on the
+   timesheet (not the web-browser's Back button). An email will be sent to the
+   previous person in the Time Sheet workflow.
+
+How do I Find Client Information?
+---------------------------------
+
+1. Log into allocPSA.
+
+2. From the toolbar, select the 'Clients' tab.
+
+3. Choose the status of the client you want to find, by default 'Current' is
+   set.
+
+4. You now have two options. You can select the first letter of the client
+   organisation's name and be shown a list of clients starting with that name.
+
+5. Alternatively, you can type the part of the client organisation's name in
+   the 'Name Containing' text box, then press the 'Filter' button.
+
+6. A list of clients matching the criteria is shown.
+
+7. HINT: You can also use your browser's Find facility, to locate any known
+   part of the text of client's information.
+
+8. HINT: If the Client's name begins with a number or other, non-alphabetical
+   letter, then they will be listed under the 'A' filter list.
+
+9. HINT: If you're looking at the list of Clients, you can send email to their
+   primary contact, assuming that one exists and they have an email address
+   listed in allocPSA, by clicking on their email address as shown in the
+   Client listing page.
+
+10. HINT: If you're presently in any particular Client's page, you can send
+    email to any of the contacts by clicking on their email address (once
+    again, assuming they have one) as shown in the Client contact page.
+
+How do I Add Client Information?
+--------------------------------
+
+1. Log in to allocPSA.
+
+2. From the action 'Quick List' drop list on the allocPSA toolbar, select 'New
+   Client'.
+
+3. You will be presented with the Client record information header. This
+   contains the information which pertains to that Client organisation, such as
+   central phone and fax numbers, physical and mail addresses etc.
+
+4. Fill in the details of the Client.
+
+5. Press 'Add' button.
+
+6. You are now able to attach as many Contacts to this Client record
+   information header as you want.
+
+7. To do so, fill in the first 'Add New Contact' sub-form.
+
+8. Press 'Add' button.
+
+9. If you have add more than one Contact person, and want to make one of them
+   to the primary contact person, use the 'Make Primary Contact' button
+   associated with that Contact.
+
+10. If you want to add any Client-level comments, you can do so via the
+    'Comment' text area.
+
+11. Furthermore, if you want to add a document (such as a contract, agreement,
+    photo, database etc.) related to the Client, you could press 'Browse' from
+    the 'Files' section to select a file from your computer, then press the
+    'Save Document' to upload and store it.
+
+Some Useful Tips on Using allocPSA
+==================================
+
+Firstly, remember that allocPSA is a web-based application. As such, all the
+normal behaviour that you would expect from a web-browser functions correctly
+in allocPSA. Therefore, 
+
+1. When you are viewing a page which is larger than the web-browser window, you
+   can always scroll down (and up) with the scrollbar or Page Up or Page Down
+   on your keyboard.
+
+2. You can print a whole (or part) page to any printer your workstation has
+   been configured to use, at any time, just like you would print a web-page.
+
+3. You can find any piece of text in a page by using your browser's page Find
+   function (often a Ctrl + F keystroke or available from the Edit menu)
+
+4. You can save the complete contents of a page to a file, for later review, by
+   using your browser's Save Page As... function (often a Ctrl + S keystroke or
+   available from the Edit menu)
+
+5. You can trace your steps back to any specific point that you have been
+   during this session, by using your browser's Back button (or function, often
+   accessed via a Ctrl + Left Keyboard Arrow)
+
+6. You can establish specific browser Bookmarks for particular, commonly used
+   projects, tasks or function pages in allocPSA
+
+7. You can (with some care) send others within your organisation the current
+   web-browser address (i.e. URL) of a particularly interesting page in
+   allocPSA that you want them to see. 
+
+8. Your organisation can make some parts of allocPSA available to outsiders,
+   via an extranet system, which may help them better understand how their
+   project with your firm is progressing.
+
+A note on dates in allocPSA
+
+As this system is intended for use in multiple countries, it has been designed
+to work with International Standards Organisation (ISO) standard dates, which
+are in the format of YYYY-MM-DD. Thus the 1st of November, 2002 is displayed as
+2002-11-01.
+
+A note on viewing levels and privileges
+---------------------------------------
+
+allocPSA has a strict notion of what functions are visible and permissible to
+various user levels. While this manual describes all functions which are
+available, some (or many) may not be visible to users who do not have the
+appropriate access privileges.
+
+
+
+
+allocPSA Tab Menu
+=================
+
+The tab menu in allocPSA is at the top of every page of the application.
+It is very important that you become familiar with it, as it is perhaps the
+most often used component of the allocPSA application. From this tab bar, you
+will be able to jump directly to almost all of the main application modules
+(Home, Projects, Clients, Tasks, Finances, etc.) There is also a search
+facility with which you will be able to look for almost all important data-sets
+archived in allocPSA. Finally, there is also an Quick List, from which,
+you will be able to create new Tasks, Project, Client entries, as well as see a
+list of recently visited pages of the allocPSA application.
+
+
+Home
+----
+
+The Home page is a convenient one-stop spot for you to determine the status of
+your tasks, calendar, cost-centre(s), pending work items, messages, timesheets
+and any organisation-wide announcements that have been made. For really simple
+usage, can operate much of allocPSA from the main screen; many of the other
+top-level screens are often function-specific enhancements of the Home screen.
+
+Top Tasks
+~~~~~~~~~
+
+.. figure:: images/top_tasks.png
+
+   The highest priority tasks are arranged according to their urgency by a formula
+
+**How It Works**
+
+This section shows you view the top five tasks which have been allocated to
+you. allocPSA uses a weighted formula to determine which of your tasks should
+ranked at the top, based on the task, phase and project priority, percentage
+complete, target completion etc.
+
+**How To Use**
+
+The tasks should be listed with the task title (or name), the project that the
+task belongs to, and the completion status (for example overdue for
+completion). Click the task title (or name) and you will be taken to the
+content of that task.
+
+
+Calendar
+~~~~~~~~
+
+.. figure:: images/calendar.png
+
+   The calendar show the tasks, reminders and absences
+
+**How It Works**
+
+The Calendar will show you a date-centric view of the current week, fortnight,
+month etc. Tasks which are due to begin or finish which fall on specific days,
+will be shown in here, as well as any Reminders which have been set up or
+Absences which are scheduled.
+
+**How To Use**
+
+You can view the details of any single task by clicking on that task. You can
+modify the the date-range shown within the calendar by clicking on the single
+or multi-week options shown. Only your tasks are shown in the calendar. As with
+all other parts of allocPSA, you can print this page, including your full
+calendar, to any printer configured on your workstation. You can create new
+tasks, reminders or absences by clicking on any of the three icons that are in
+the top-left hand corner of each day in the calendar.
+
+Project List
+~~~~~~~~~~~~
+
+.. figure:: images/project_list.png
+
+   The table above listed all the new projects belonging to their corresponding clients
+
+**How It Works**
+
+allocPSA allows for the management of Projects, among other things. Within your
+Home page, allocPSA shows projects which are allocated to you, the user. The
+list shows you the Client that the project belongs to, which can be an internal
+client, within your organisation, or an external client. 
+
+**How To Use**
+
+The Project name, which you can click on to jump to that particular project, a
+link to the list of Tasks for that particular project, as well as link to the
+Task Graph, for a that project.
+
+For more information, please refer to the 'Project' section.
+
+
+
+
+Cost Centres & TF (Tagged Fund)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+allocPSA uses the concept of Cost Centres (called Tagged Funds or just TFs) to
+show the maintain and track the financial state of each Project's or Person's
+accounts. 
+
+As a Professional Services Automation system, allocPSA must keep track of both
+the expenses and revenues of a project as well as cost-centres for individual
+consultants and resources. It does so with a form of cost centre called a
+tagged fund (TF for short). In this home page view, a user will be shown
+their own personal cost centre account balance, as well as the present balance
+of any projects they have been allocated to oversee financially.
+
+**How To Use**
+
+Click the account name you want to view in greater detail, and you will be
+taken to that account. The account information page is described in detail
+elsewhere in this document, but suffice to say that it displays and behaves
+very much like an online bank account statement, with money being debited and
+credited for any number of other accounts and source, reflecting the generation
+and processing of timesheets, billable hours, expense forms and financial
+injections from external systems like invoicing etc.
+
+Current Timesheets
+~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+allocPSA allows users to submit timesheets allocated to specific projects or
+consultancy jobs. The list of timesheets shown in the Home page is the list of
+timesheets which are presently still being edited or worked on by the user. In
+other words, they are in progress.
+
+**How To Use**
+
+Click the link of the time sheet status to enter into the current
+timesheet.
+
+Customize Interface
+~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+The appearance and font-size of allocPSA can be changed to suit the user's taste. 
+Additionally the Top Tasks, Calendar and Project List on the home page can be
+customized to individual preference.
+
+**How To Use**
+
+Settings can be changed by making a selection from the respective
+drop-lists. When satisfied, press the 'Save' button to confirm the changes. 
+
+
+Clients
+-------
+
+.. figure:: images/client_list.png
+
+   List(s) of current, potential and archived clients are
+   shown in the Clients section of allocPSA
+
+**How It Works**
+
+All Professional Services Organisations (PSO) have a notion of clients. This
+normally includes all main companies and organisations that the PSO has contact
+with. allocPSA has the ability to track all current, potential and archived
+(i.e. lapsed) clients. Besides the core organisational information, any number
+of contacts can also be entered for each organisation tracked. The information
+maintained includes the Client Name, Contact Name, Contact Phone, Contact
+E-mail etc. 
+
+allocPSA also allows for the attachment of documents which pertain to this
+client, as well as any per-client reminders that need to be added.
+
+**How To Use**
+
+To view the list of current clients, you need to click on the 'Client' link in
+the allocPSA toolbar. You will then be taken to the Client module, where you
+will be shown a table of current clients. You can view and edit details for
+each client, by clicking on that client's link. 
+
+Hint: When allocPSA lists the list of current client's, you can use your
+browser's Find facility (often a Ctrl + F keystroke or available from the Edit
+menu) to find any piece of text in this page. Thus, if you know that the
+surname of the contact that you want is Purcell, you can quickly locate this
+contact and jump straight to that contact's details on this client list page.
+
+If you want to view the list of Potential clients, you can change the drop-list
+which specifies client type, and press the 'Filter' button. The same process
+can be used to list All or Archived clients.
+
+Hint: If you have nominated a primary contacts for a Client, then that primary
+contact's details will be shown in the client listing. If those details include
+an email address, that email address will be hyperlinked, so that you can click
+on it to send that person mail, straight from within your mail client.  You
+will note that much like Task and Project forms, the Client forms have a header
+component, as well as the body or main component. The header is used to store
+information for the company or organisation which is common to all of the
+contacts, such as headquarters address details, main switch and fax number.
+
+.. figure:: images/client.png
+
+   Each Client record is defined as a client organisation
+   detail header and any number of contacts, reminders, documents, comments
+   etc.
+
+.. figure:: images/client_contact.png
+
+   For each Client you can have as many contacts as you liked.
+   You can designate one of these to be the Primary, which will make it then
+   show up in the Client list.
+
+Adding a Primary Contact to a Client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The body of the client form consists of as many contacts as you care to add.
+There's no real limit. Further, you can specify which of the contacts is the
+primary contact. This will be the person whose details will appear in the main
+Client page table list of clients and the contacts. You can also specify each
+contacts specific particulars, such as their personal contact numbers,
+mobile/cell-phone numbers, email addresses, as well as their physical address,
+if this is different from the main address listed in the client header record
+(perhaps they work from a branch-office.)
+
+Adding Notes to a Client
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. figure:: images/client_comment.png
+
+   Add as many free-form comments as you need to a Client record.
+
+allocPSA provides the facility to add client-level status notes to your
+project. To do so, simply add text into the 'New Comment' field and click on
+the 'Save Comment' button. You can review any existing comments by selecting
+them from the comments list, and also update and delete them when they are in
+view.
+
+Adding Documents to a Client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. figure:: images/client_upload.png
+
+   You can upload documents like images, database files, contracts, etc.
+
+
+allocPSA allows you to add electronic documents to a Client's record These
+documents could be contracts, letters, scanned images, business-plans, or
+database files. All forms of electronic document are supported (PDF files,
+ASCII, HTML, all graphics files, MS Word, Powerpoint, Excel and OpenOffice.org
+to name but a few.) These documents are then displayed in a list on the
+project page, and can be downloaded or viewed very easily and quickly.
+Further, if your web-browser is able to, it will either display the uploaded
+document within the browser, or launch a helper application to display the
+document on screen, which greatly facilitates easy retrieval and viewing.
+
+To add a document to the project document 'tree', you can click on the 'Choose'
+button which is visible on the Client page. This will bring up a File
+Open-style dialog box (depending on your web-browser) with which you can
+navigate to the document that you want to upload to allocPSA's document
+repository. When you have selected the file you want to upload, and are back to
+allocPSA's Project page, you should see the file path specified in the
+file-upload textbox. You can then click the 'Save Document' button, and your
+web-browser will upload the file to allocPSA. This process may take a moment,
+particularly if you have a large file. 
+
+Adding Reminders to Clients
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can add a new reminder to the client project (rather than to just a
+specific task) by clicking on the 'Add Reminder' link on the Client page.
+
+.. figure:: images/new_reminder.png
+
+   Remainders can even be linked to clients
+
+Reminders are a wonderfully useful facility in allocPSA. They can be set within
+the context of a Client, rather than a project or task.
+
+Modifying Client Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you need to modify the Client header information:
+
+1. Click the 'Client Name'.
+
+2. Click the 'Edit Client Details' button to modify the Client header details
+   such as name, address etc.
+
+3. Click on the 'Save' button.
+
+4. You can also modify the content you want to change or add for the other
+   parts, and press appropriate 'Save' or 'Add' buttons
+
+
+Projects
+--------
+
+.. figure:: images/project.png
+
+   A project's header information.
+
+**How It Works**
+
+A Project is a logical entity which is constituted by one or more
+people/resources/personnel working on one or more tasks. Most Professional
+Services firms have very specific examples of what constitutes a project. It
+might be implementing a new computer system for their own use or for a Client.
+It might be in the production of a report, or the development of a new device
+or item of software. allocPSA is very flexible in terms of how it handles the
+concept of a project, and how the life-cycle of a project is handled in your
+organisation.
+
+Much like a task, a Project has a header component, which is not likely to
+change that frequently. Within this header component are informational details
+about a the project, including the project's name, who the Client is,
+project-specific details about the Client's contact person, a number of start
+and finish dates, along with project budget details, project manager (for
+timesheet sign off purposes) and a project modification history. 
+
+Once the header has been defined and saved, you will be able to set any
+per-project assignment of Commission (used for tracking revenues to account
+managers of salespeople within your firm.) You can also establish which
+resources/personnel are assigned to work on this project. Unless a resource is
+assigned to a project, they will not be able to view it or its attendant tasks
+and phases (unless they have manager security privileges.) When establishing
+the staff resources who will work on this project, you can also specify what
+their charge rates are to be. 
+
+allocPSA allows for the flexible management of in-house per-project rates, as
+well as externally charged rates which then bring revenues into particular
+staff, project or departmental cost-centres (known as Tagged Funds or TFs).
+
+allocPSA also allows you to upload (and attach) any type of electronic document
+to this project's repository, as well as establish project-specific Reminders.
+
+**How To Use**
+
+The header information which can be specified, is listed below:
+
+.. list-table::
+
+   - - Field
+     - Attributes
+   - - Name
+     - The name of this particular Project. Provide a name which is reasonably
+       memorable clearly understandable and readable . Doesn't matter if it's a
+       little long.
+   - - Short Name
+     - If the project Name is long and can be contracted or acronymised,
+       provide a short name for easy reference here.
+   - - Comments
+     - A detail account of what this Project is all about This makes it easy
+       for new resource to quickly get up to speed with the project, and can
+       help staff who are on dozens of similar projects quickly identify the
+       aims and deliverables of this particular project.
+   - - Priority
+     - Specify a priority (used for prioritisation sorting.) Level 1 is the
+       highest priority in allocPSA
+   - - Status
+     - Which should be either Current, Potential or Archived. Only Current
+       projects are displayed by default to users of allocPSA. Potential
+       projects are still being pitched for, and Archived projects are
+       available for review, but aren't active.
+   - - Type
+     - Which should be either Contract, Job or Project. Most Professional
+       Services firms perform work on either a Contract (support contract,
+       long-term ongoing work or staff on-site basis), Job (short term work or
+       consultancy) or Project (multi-person, with specified beginning, middle
+       and end, and more likely to be fixed cost and on a timeline with
+       milestones and deliverables.) If you select a Project, allocPSA
+       establishes a number of boilerplate phases, which you can use, extend or
+       delete as you deem fit. 
+   - - Client
+     - The name of the Client which may have already been added to allocPSA's
+       Client database, or ,if new, can be added by clicking "New Client".
+       Remember, many projects and jobs are for internal clients. As such, your
+       internal clients should be added in allocPSA's Client database too,
+   - - Phone
+     - The contact phone number of the Client's representative. 
+   - - Contact name
+     - The Client's contact representative. This is on a per-project basis,
+       which may be different from the main contact(s) listed in the Client
+       database.
+   - - E-mail
+     - The e-mail address of the Client's contact representative.
+   - - Address
+     - The postal or street address of the Client's contact representative.
+   - - Mobile
+     - The mobile/cell phone number of the Client's contact representative.
+   - - Target Start
+     - The estimated date you plan to start the Project
+   - - Actual Start
+     - The actual date you started the Project
+   - - Target Completion
+     - The estimated date you plan to finish the Project
+   - - Actual Completion
+     - The actual date you finished the Project
+   - - Project Budget $
+     - You can set the Project Budget amount here using different currency such
+       as AUD, USD, NZD, CAD etc. This figure is used to determine the
+       percentage of project budget which has presently been spent, which is a
+       useful metric for project managers and the professional service firm's
+       management. For example, if only half the project has been completed,
+       and 60%of the budget has been spent thus far, there are likely to be
+       budget constraint or blow-out problems further down the track.
+   - - Time Sheets to Manager
+     - If this is a project which requires timesheet authorisation from an
+       internal manager (i.e. project manager) then this manager can be
+       specified here.
+   - - Cost Centre TF
+     - If this project has an associated project cost-centre, either
+       specifically established for the purposes and life-cycle of this
+       project, or a more generic one, to be used by multiple projects which
+       are thematically linked, this cost-centre can be specified here.
+   - - Through an Agency
+     - If a 3rd party external services firm, system integrator, partner or
+       agency is to be billed for this work, and there are financial systems
+       in-place to handle this timesheeted transaction separately (for example
+       superannuation or payroll expenses), then this check box should be
+       selected.
+
+After you have finished all the details:
+
+1. Press the 'Save' button to create your new project and then proceed to add
+   resources to the project, add specifications for commission etc., or you can
+
+2. Click the link 'Return to Project List' button to return to the Projects
+   page when finished, or you can
+
+3. You can also edit and update the project header information, adding new
+   comments for Modification History, Commission To, Project People, uploading
+   Project Files, creating a New Task, adding Reminders or generating New
+   Timesheets, Transactions.
+
+A project is constituted by one or more people/resource undertaking numerous
+tasks. Tasks can be active (i.e. not-complete) or archived (i.e. completed).
+Normally, allocPSA's Project page will only show you the current (i.e. active
+and non-complete) task list. You can elect to see the complete task list, or
+the project's Task Graph or the Task Allocation Report. A project will also
+allow you to specify people/staff/resource, commissions and attach documents,
+which we will see how to manage later on.
+
+Adding Notes to your Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+allocPSA provides the facility to add project-level modification history notes
+to your project. To do so, simply add text into the New Comment field and click
+on the 'Save Comment' button. You can review any existing comments by selecting
+them from the comments list, and also update and delete them when they are in
+view.
+
+Project Sales Commission
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In many professional services organisations, sales commissions are often
+allocated for the business development efforts. In allocPSA, these sales
+commissions are tracked on a per-project basis. Each project has the facility
+for the project's owner to establish one or more staff/resources from your
+organisation, who will receive the sales commission. To add a percentage
+commission to a specified staff member, select their name from the drop-list at
+left, then add the 'Commission %' in the text-box, then click on the 'Add'
+button. This will add that staff member as a commission holder in this project.
+You can add more staff-members as commission-holders by following this simple
+procedure.
+
+
+Adding Staff Resource to your Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. figure:: images/project_people.png
+
+   The people/resource related to the project can be added or deleted according to your need
+
+You can add as many people/resource to your project as you wish. To do so,
+simply move the page down to the 'Project People' segment of the project form,
+which may show existing resources who have been added to the project. You will
+note that the last-most row (also possibly the first row, if only one row
+exists) of the resource entries has a blank selected in the 'Person' drop-list.
+You can select the person you wish to add, the type of email notifications they
+will receive for this project: none, only for tasks assigned to them, and if
+this person is the project's manager, perhaps for all project tasks.
+
+Complete Task List
+~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+This shows the total list of existing tasks for this particular project. Even
+completed (i.e. archived) tasks are shown.
+
+**How To Use**
+
+To view this list, click on the 'Tasks' link in the project you are in. You
+will be shown a (possibly long) list of tasks, which you can click on
+individually, to view and edit. You can always return to the normal project
+view by clicking the Back button on your browser or clicking on the
+'Project' link at top.
+
+Task Graph - Project Task Summary
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+This is like the Complete Task List, but also includes a graphical
+representation of the timeline of the Tasks and Phases, as well as a list of
+the existing tasks for this particular project. It can be used as a very simple
+facsimile of a Gantt chart for planning purposes. As with all things in
+allocPSA, you will always able to print this page to any printers you have
+configured to work from our workstation. 
+
+**How To Use**
+
+To view this list, click on the 'Graph' link in the project you are in.
+You will be shown a (possibly) large graph with coloured lines, and a
+(possibly) long list of tasks, which you can click on individually, to view and
+edit.
+
+The graph shows dates and the names of the tasks and phases along the left-hand
+side. There are 8 separate pieces of information shown on the graph, including
+the:
+
+.. list-table::
+
+   - - Field
+     - Attributes
+   - - Target Task Period
+     - The Target Task Period is a period of time you set for the task
+       completion, from start to finish.
+   - - Actual Task Period
+     - The Actual Task Period is the actual time you use to complete that
+       particular task, from start to finish.
+   - - Forecast Task Period
+     - When the progress for a particular task or phase tending beyond today's
+       date, the system will automatically calculate the completion date as
+       well as the period for your task completion, based on percentage
+       complete estimates, the date duration spent thus far, and the number of
+       hours allocated to this task.
+   - - Start Date (completion date not known)
+     - This is a right-heading triangle showing the starting date of the task
+       or phase which has no completion date set. Therefore no target, actual
+       and forecast period will be shown.
+   - - Completion Date (start date not known)
+     - This is a left-heading triangle showing the completion date of the task
+       or phase without any start date having been set. Again, no target,
+       actual and forecast period will be shown.
+   - - Target Phase Period
+     - The Target Phase Period is a period of time you set for the entire phase
+       completion. It uses the dates established within its child tasks to
+       determine these dates.
+   - - Actual Phase Period
+     - The Actual Phase Period is the actual time you use to complete the
+       entire phase. . It uses the dates established within its child tasks to
+       determine these dates.
+   - - Forecast Phase Period
+     - When the progress for a particular task or phase tending beyond today's
+       date, the system will automatically calculate the completion date as
+       well as the period for your phase completion. allocPSA will attempt to
+       mathematically estimate the forecast completion phase period based on
+       the time and percentage complete estimates supplied within its child
+       tasks.
+
+The project's phases and tasks are then shown in a list below the graph. The
+child tasks of any parent task or phase are shown indented below that parent.
+Clicking on any of these will bring it to the screen.
+
+
+
+Task Allocation Report
+~~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+This report works in a manner very similar to the Task Graph. The difference
+being that each individual user/resource's allocation of tasks are listed and
+displayed in their own separate graphs. You can use this report to determine
+where possible overload work situations might arise for specific
+people/resources on your projects.
+
+**How To Use**
+
+To view this list, click on the 'Allocation' link in the project you are
+in. You will be shown one or more large graphs with coloured lines, and a
+possibly long list of tasks, which you can click on individually, to view and
+edit.
+
+Each allocPSA user/resource/personnel who has been allocated to this project,
+has their graph and list of tasks.
+
+The graph shows the dates along the top, and the names of the tasks and phases
+along the left-hand side. There are 8 separate pieces of information shown on
+the graphs, including the:
+
+.. list-table::
+
+   - - Field
+     - Attributes
+   - - Target Task Period
+     - The Target Task Period is a period of time you set for the task
+       completion, from start to finish.
+   - - Actual Task Period
+     - The Actual Task Period is the actual time you use to complete that
+       particular task, from start to finish.
+   - - Forecast Task Period
+     - When the progress for a particular task or phase tending beyond today's
+       date, the system will automatically calculate the completion date as
+       well as the period for your task completion, based on percentage
+       complete estimates, the date duration spent thus far, and the number of
+       hours allocated to this task.
+   - - Start Date (completion date not known)
+     - This is a right-heading triangle showing the starting date of the task
+       or phase which has no completion date set. Therefore no target, actual
+       and forecast period will be shown
+   - - Completion Date (start date not known)
+     - This is a left-heading triangle showing the completion date of the task
+       or phase without any start date having been set. Again, no period shown
+   - - Target Phase Period
+     - The Target Phase Period is a period of time you set for the entire phase
+       completion. It uses the dates established within its child tasks to
+       determine these dates.
+   - - Actual Phase Period
+     - The Actual Phase Period is the actual time you use to complete the
+       entire phase. . It uses the dates established within its child tasks to
+       determine these dates.
+   - - Forecast Phase Period
+     - When the progress for a particular task or phase tending beyond today's
+       date, the system will automatically calculate the completion date as
+       well as the period for your phase completion. allocPSA will attempt to
+       mathematically estimate the forecast completion phase period based on
+       the time and percentage complete estimates supplied within its child
+       tasks.
+
+The project's phases and tasks for each specific user/resource are then shown
+in a list below the graph. The child tasks of any parent task or phase are
+shown indented below that parent. Clicking on any of these will bring it to the
+screen.
+
+
+List of the Current Uncompleted Tasks in a Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Either from within a project or from the Tasks view, you can drill down into
+those tasks for a particular project which are still not complete. These tasks
+may be tracking well or may be overdue. When overdue, allocPSA will flag them
+in a brighter colour for obvious recognition.
+
+
+
+
+New Task
+~~~~~~~~
+
+.. figure:: images/task_detail.png
+
+   When adding new tasks, you first create the task header
+   itself, which specifies the task name, initial description of the task,
+   start, end dates, estimated hours work etc.
+
+**How It Works**
+
+Allows you to create a new Task for this particular project.
+
+**How To Use**
+
+Whenever you are in a project, and can see the 'New Task' link, click on it to
+be presented with a blank new task screen, which you can then complete, and
+submit as per normal. Any tasks created in this manner will automatically
+belong to the project you are currently viewing.
+
+Adding Reminders to Projects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can add a new reminder to the project (rather than to just a specific task
+or client) by clicking on the New Reminder link on the project page
+
+Reminders are a wonderfully useful facility in allocPSA. They can be set
+globally, within the context of a Project (so that they cease being sent when
+the project is complete,) and within the context of a task, (so that they cease
+being sent when that task or its parent project is complete.) You can set
+reminders for yourself, for other resources working on the project, or for the
+whole project team together (for example, to remind everyone of a project
+meeting, or of a weekly timesheet submission policy.)
+
+
+
+Uploading Documents to Projects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+allocPSA allows you to add electronic documents to a Project. These could be
+specification documents, scanned images of signed contracts or manuals. All
+forms of electronic document are supported (PDF files, ASCII, HTML, all
+graphics files, MS Word, Powerpoint, Excel, MDF files and OpenOffice to name
+but a few.) These documents are then displayed in a list on the project page,
+and can be downloaded or viewed very easily and quickly. Further, if your
+web-browser is able to, it will either display the uploaded document within the
+browser, or launch a help application to display the document on screen, which
+greatly facilitates easy retrieval and viewing.
+
+To add a document to the project document 'tree', you can click on the 'Browse'
+button which is visible on the Project page. This will bring up a File
+Open-style dialog box (depending on your web-browser) with which you can
+navigate to the document that you want to upload to allocPSA's document
+repository. When you have selected the file you want to upload, and are back to
+allocPSA's Project page, you should see the file path specified in the
+file-upload textbox. You can then click the 'Save Document' button, and your
+web-browser will upload the file to allocPSA. This process may take a moment,
+particularly if you have a large file. 
+
+
+
+Adding a Timesheet to a Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In most services organisations, timesheets are used to co-ordinate the billing
+(internally or externally) of staff/resource times and for paying of
+staff/resources. As a user of allocPSA who is also entitled to submit
+timesheets against a project (and correspondingly, against the cost-centre
+associated with that project,) you can to create timesheets from within the
+project in question. Any timesheets which are created in this manner are
+automatically attached to the current project. See the Timesheets section for
+further details on how to create and manage timesheets.
+
+Project Expense Forms
+~~~~~~~~~~~~~~~~~~~~~
+
+If you need to raise a project-specific expense, you can create those expenses
+with allocPSA's Expense Form (described later in this manual.) All such
+expenses will appear on your project's Transactions section.
+
+
+
+Tasks
+-----
+
+.. figure:: images/task.png
+
+   A task can have its specific details, reminders and comments
+
+**How It Works**
+
+A Task is a unit of work or a work requirement which needs to be accomplished.
+Tasks normally relate to specific Projects. Tasks normally have start and
+finish dates. Most tasks are normally allocated to one specific user (i.e. a user
+resource in project management parlance). Tasks can have associated
+descriptions, as well as priorities, and can be part of other Tasks or of
+Phases. Tasks can also have a number of user created comments, which can
+provide a running history of the task.
+
+A task can have Reminders associated with it which can be set to email the
+specified owner of the task, or others within that project, on certain dates
+and at certain times.
+
+Once a task has been completed, it can be marked off as 100% done. It will then
+be archived within the Project, available in a Complete Task List, but not
+shown in the normal operational view of the project. This reduces the overall
+clutter.
+
+A Phase is a special kind of Task, whose primary purpose is to contain other
+tasks. Examples of a phases might be 'Documentation' or 'Testing' or 'Planning'
+or 'Contract Negotiation'. There is generally little different between a task
+and a phase, except that a phase will be displayed differently in the Task
+List when doing a 'List by Project'.
+
+Special Tasks: Faults
+~~~~~~~~~~~~~~~~~~~~~
+
+In allocPSA a fault is a special kind of task which exhibits particular
+behaviour with respect to the automatic setting of reminders for the Person to
+which the fault has been assigned, and to the Project's Manager (if any) listed
+in the Project in which this fault was attached to, as a form of safety-net
+escalation mechanism. 
+
+While allocPSA does not purport to be a full Service Desk solution, the
+tracking of faults as part of the overall system framework provides quite a
+powerful system for companies which provide service-level support to track,
+manage, filter and archive any issues or problems which arise in the day-to-day
+operation of any services organisation. 
+
+NOTE: Only if appropriate email addresses have been configured for the
+Project's Manager or the Person to whom the fault is assigned, will there be
+any email notification possible.
+
+Special Tasks: Messages
+~~~~~~~~~~~~~~~~~~~~~~~
+
+In allocPSA, a message is a special kind of task which exhibits particular
+behaviour with respect to the automatic sending of the message via an email, as
+well as the setting of email reminders for the Person to which the message has
+been directed to, and to the Manager (if any) listed in the Project in which
+this message was associated with, as a form of safety-net escalation mechanism. 
+
+Normally, in most offices, a majority of messages would be pasted onto a desk
+or computer screen by way of a sticky-note, or perhaps sent as a one off email.
+Use the message-task facility in allocPSA when you want to ensure that the
+Person to whom you are sending this message to needs to sign-off on the task,
+or that if they task is not signed-off in a reasonable limit of time (as
+dictated by the Priority of the message) that an email will be sent to an
+administrator or the Project's Manager. 
+
+NOTE: Only if appropriate email addresses have been configured for the
+Project's Manager or the Person to whom the message is directed to, will there
+be any email notification possible.
+
+Tasks in allocPSA have a number of view. When creating a new task, you will be
+presented with a view which primarily shows the header information. Once this
+is saved, and from that point on, viewing that task should show you the normal
+operational view of the task, with much of the header information now made
+read-only. 
+
+You can now process the task through its normal workflow, by adding comments
+upon each atomic action of the tasks history, updating the percentage complete
+and eventually closing the task off when it's been fully realised or judged
+complete. Finally, you can view a task with its full details displayed on
+screen at once (referred to as the printer-friendly view, as its the most
+conducive to grabbing a hard-copy snapshot of the task in totality.
+
+
+
+**How To Use**
+
+.. figure:: images/task_detail.png
+
+   Task header, allowing you to specify the project, task name, description, interested parties and dates.
+
+Tasks have two editable views. The first view is the header view, where you can
+establish a number of attributes which are normally immutable (or change rather
+infrequently.) The header view shows only a limited subset of all the
+information which is normally associated with a task. Once you have supplied
+whatever information you have and ensured that the task has a name, you should
+then be able to Save the header component, and allocPSA will then take this
+information and display it in read-only form, while opening a number of new
+attributes which you can now set or change. You may always re-enable editing of
+the task header, by clicking on the 'Edit' link at the top of any
+fully-specified task. 
+
+If you are creating a New Task, or are updating a task, you may see any of the following data fields:
+
+.. list-table::
+
+   - - Field
+     - Attributes
+   - - Name
+     - The name of this particular Task. Provide a name which is reasonably
+       memorable, descriptive and readable
+   - - Description
+     - A full account of what this Task is about. Provide as much detail as you
+       can.
+   - - Project
+     - Which Project is this Task associated with. 
+       Normally left to the default (current) Project, but can be assigned to
+       any other Project
+   - - Parent Task
+     - Select a parent task (or phase) if this particular task is a sub-task.
+   - - Priority
+     - Specify a priority (used for prioritisation sorting.) Level 1 is the
+       highest priority in allocPSA
+   - - Assigned to
+     - The Person Responsible is the user who is tasked with undertaking this Task
+   - - Task Type
+     - Select a task type; task, phase, message or fault. A phase is handled
+       much the same as a task, but displayed in different colour in charts.
+       Messages and faults are handled differently, and establish reminders for
+       service level escalation etc. etc., so as to be handled in a timely
+       manner.  Some tasks or phases are (or have) milestones. For example,
+       code releases or document deliverables. As such, they need to be clearly
+       displayed as important date-points in online graphs. Setting a milestone
+       for this task will result in a special vertical bar to be drawn in the
+       project Graph .
+   - - Interested Parties
+     - allocPSA allows you to specify which other members of the project (which
+       the task belongs to) as well as any Client contacts listed for the
+       nominated project Client, should be included in automated emails which
+       are sent. This is a great way to keep a whole team of in-house and
+       external resource briefed on the task status.  NOTE: Naturally, your and
+       your staff need to be mindful of what messages are sent to these
+       external resources.
+   - - Time Estimate (Hours)
+     - Time estimated to finish this Task. It is measured in terms of hour
+       units. This figure helps allocPSA produce project timeline estimates and
+       forecasts. It does not need to be the same as the final time effort
+       which results in an entry in a Timesheet.
+   - - Percent Complete
+     - This is an autocalculated field bases on the Estimated Hours versus the
+       Hours that have actually been billed against this task in the time
+       sheet section.
+   - - Dates
+     - The date of action. It is automatically recorded when you get into this page
+   - - Target Start
+     - The estimated date you plan to start the Task. Click on the button at
+       right to automatically enter today's date. For International reasons and
+       to minimise date-format errors, allocPSA uses ISO date format of
+       YYYY-MM-DD. Therefore, the 1st of September 2002 is 2002-09-01
+   - - Actual Start
+     - The actual date you started the Task . Click on the button at right to
+       automatically enter today's date. For International reasons and to
+       minimise date-format errors, allocPSA uses ISO date format of
+       YYYY-MM-DD. Therefore, the 1st of September 2002 is 2002-09-01
+   - - Target Completion
+     - The estimated date you plan to finish the Task. Click on the button at
+       right to automatically enter today's date. For International reasons and
+       to minimise date-format errors, allocPSA uses ISO date format of
+       YYYY-MM-DD. Therefore, the 1st of September 2002 is 2002-09-01
+   - - Actual Completion
+     - The actual date you finished the Task . Click on the button at right to
+       automatically enter today's date. For International reasons and to
+       minimise date-format errors, allocPSA uses ISO date format of
+       YYYY-MM-DD. Therefore, the 1st of September 2002 is 2002-09-01
+
+Fill in all the information needed, then press the 'Save' button to create this
+new task. You will then be shown the normal editable task view which is used
+for normal operations on, and updating of tasks. In general, the header, or top
+part of the task wouldn't need to be modified, but additions can be made to the
+task by way of Comments. You can now add such Comment updates (as they arise)
+to this task, and change the percentage complete status where necessary.
+
+You can add as many comments as you like. All comments will be stamped for
+date-time and username. You can also edit (or delete) a comment after it has
+been saved, by selecting it from the comments list to display it in the
+comments edit box, then updating or deleting it. 
+
+
+Adding Reminders to Tasks
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. figure:: images/new_reminder.png
+
+   Add reminders for you and other members of the project.
+
+Reminders are a wonderfully useful facility in allocPSA. They can be set
+globally, within the context of a Project (so that they cease being sent when
+the project is complete,) and within the context of a task, (so that they cease
+being sent when the project is complete.) You can set reminders for yourself,
+for other resources working on the project, or for the whole project team
+together (for example, to remind everyone of a project meeting, or of a weekly
+timesheet submission policy.) 
+
+Closing a Task When Complete
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once you have finished all aspects of a task, you are able to mark it
+complete.  To do this, enter a date for Actual Completion. 
+
+
+Time
+----
+
+.. figure:: images/timeSheet_new.png
+
+.. figure:: images/timeSheet_items.png
+
+   Once you've created the timesheet header, you can add as
+   many items from the project to that timesheet. You can also add comments,
+   which will then be added to the task comment list, and optionally displayed
+   with the printed version of the timesheet, if not marked private.
+
+**How It Works**
+
+The timesheet system in allocPSA allows for creation and management of
+timesheets by users. This timesheet system is built around a workflow model
+which is established as a 'factory default' when allocPSA is first installed.
+This model works as follows. 
+
+1. Timesheets are created by staff/personnel/resources who have accounts in
+   allocPSA
+
+2. Once the timesheet has been created and tasks and hours have been added to
+   it, it can be sent to the next person in the workflow queue.
+
+3. Who this next person is depends on a number of factors and default rulesets
+   established in the ruleset and configuration of allocPSA when it's
+   installed.
+
+4. By default, if the Project in which the timesheet was created in has a
+   Timesheet Manager specified, then the timesheet will get routed to that
+   manager. An email will also be sent to that manager to notify of a pending
+   timesheet.
+
+5. If this manager verifies all the data and times in the timesheet, they can
+   elect to send it onwards to the administrative officer, nominally the staff
+   member who handles office or financial administration. An email will also be
+   sent to that administrative officer to notify of a pending timesheet
+
+6. If the manager disputes any of the details in the timesheet, the manager can
+   add a notice in the timesheet, and elect to send it back to the user who
+   created the timesheet for its rectification and re-submission.
+
+7. If no Timesheet Manager is specified within the project, then the timesheet
+   will automatically be routed to the user who has been specified in the
+   configuration of allocPSA as the administrative officer, nominally the staff
+   member who handles office or financial administration. An email will also be
+   sent to that administrative officer to notify of a pending timesheet
+
+8. If the administrative officer disputes any of the details in the timesheet,
+   the administrative officer can add a notice in the timesheet, and elect to
+   send it back to the user who created the timesheet for its rectification and
+   re-submission.
+
+**How To Use**
+
+Adding New Timesheet
+~~~~~~~~~~~~~~~~~~~~
+
+1. From the action 'Quick List' drop list on the allocPSA toolbar, select 'New
+   Time Sheet' link.
+
+2. Choose the Project that this timesheet belongs to.
+
+3. Some sites offer their staff a direct payment for timesheets, rather than
+   waiting for invoices to be paid. In allocPSA this is classified as 'Payment
+   Insurance'. Select this if your site offers this facility.
+
+4. Fill in 'Billing Note' if any. This could be something like 'Send the
+   invoice relating to this timesheet to the client before the end of the
+   month or Internal billing only.
+
+5. Press the 'Save' button to continue or 'Delete Record' to remove any data
+   added.
+
+6. Timesheets are made up of individual line items, pertaining to specific
+   tasks. For instance, you may have worked for 3 hours on one problem (Task
+   A), 2 hours on Task B and 1 hour on Task C, all for the one client.
+
+7. For each timesheet line item, fill in Date, Duration, Task and Location.
+
+8. HINT: If the task you need to link a timesheet line item to doesn't exist
+   yet, you can create it by clicking on the 'New Task' link.
+
+9. Press the 'Add' button to add each new item.
+
+10. Repeat step 7 to add more line item entries if needed.
+
+11. Press 'Save and Submit' button when done. An email will be sent off to the
+    person designated as the next stop in the timesheet workflow process.
+
+12. HINT: You can save the timesheet as-is, then return to it later on.
+
+13. HINT: You can track the progress of your timesheets from the 'Timesheet'
+    section of your 'Homepage'.
+
+14. HINT: If you're a manager designated to receive requests to authorise
+    timesheets, you can view them from the 'Timesheet' section of your
+    'Homepage'.
+
+Any submitted timesheet is and sent to either the Manager specified in the
+project or to the financial Admin person as specified in the allocPSA
+configuration, for approval and to perhaps be invoiced. 
+
+Printing Timesheets
+~~~~~~~~~~~~~~~~~~~
+
+Click the links in the top right hand corner to generate a PDF version of
+the Time Sheet which conforms to Australian government standards for Tax
+Invoices.
+
+Adding a Timesheet within a Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can also add a timesheet from within a project.
+
+1. To create a new timesheet, enter the project which you want to add the
+   timesheet to.
+
+2. Enter the details and add a timesheet header.
+
+3. Add individual timesheet items, specifying charge rates, durations, dates
+   and locations.
+
+Reviewing Existing Timesheets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can also review existing timesheets you've created. 
+
+1. From the toolbar, click on the 'Timesheet' link.
+
+2. Decide on what Project, Status, Date From you want to filter within.
+   Normally the results page will show those timesheets with edit status only.
+   Choose All if you want to see all of them. Users with Admin or Manager
+   privileges are able to see other people's timesheets by selecting the right
+   'User Name'.
+
+3. Press the 'Filter' button
+
+4. Click on the timesheet you want to edit
+
+5. Complete the details needed.
+
+6. When complete, save or submit the timesheet as per usual.
+
+Because timesheeting is complicated, we've added special help links for
+reminders on the page.
+
+
+
+
+Finance
+-------
+
+
+**How It Works**
+
+The Finance tab is the gateway to most of allocPSA's
+finance modules. The Finance tab contains reasonably complicated functions
+which most users don't need to access. In general, only the user's TF
+account and Expense Forms need to be accessed by regular/employee users.
+
+Part of almost any professional services organisation is the management of the
+finances associated with the projects and tasks which constitute the daily
+operations of the organisation. As a Professional Services Automation system,
+allocPSA includes a modular and flexible finance management system whose
+purpose is to provide the conduit for any and all financial transactions with
+the professional services organisation's accounting software. As such, allocPSA
+offers the necessary modules to conduct financial transactional activities
+within allocPSA (for timesheets, for project-related expense forms etc) as well
+as a shadow of many of the financial transactional activities which are found
+in standard modern business accounting systems, such as invoicing, cost-centre
+and wages management. As with many other aspects of allocPSA, non-privileged
+users will be shown a simplified view of the financial tab, while managers and
+administrative users will see the full offering.
+
+Reminder: A Tagged Fund (TF) is an allocPSA term referring to the per-project,
+per-group/division or per-staff-member cost-centre which is tracked and managed
+by allocPSA.
+
+Non-privileged users will be offered these items: TF List, New Expense Form,
+Search Invoices, View Pending Expense Forms and Search Transactions. Privileged
+users can also see the following items: Approve Invoices, Allocate Invoices,
+Upload Invoices File, New Transaction, Upload Expenses File, New TF, Push
+Repeating Expenses Through, Upload Wages Files, Reconciliation Report, View
+Pending Transaction.
+
+
+New Tagged Fund
+~~~~~~~~~~~~~~~
+
+.. figure:: images/tf_new.png
+
+   You can create new TF cost-centres for projects, staff or
+   for any other purpose.
+
+**How It Works**
+
+When new staff or projects that need a corresponding TF cost-centre are added
+to allocPSA, you can create such accounts from this section of the Finance
+area. By default, for staff cost-centres, allocPSA uses a standard Payroll ID
+based on a product call QuickPayroll, part of the QuickBooks accounting system.
+This number would need to be reconfigured for your site's specific requirements
+and accounting software. The instructions below would generally apply however.
+
+**How To Use**
+
+1. Fill in the contents of the form which include TF Name, Quick Payroll
+   Employee Number, Quicken Account Name, Comments, and Last Modified by.
+
+2. Press the 'Save' button to save your work
+
+3. Click 'Return to TF List' to return to the TF List page.
+
+This new account will have been automatically added to the TF account list.
+
+
+List of Tagged Funds
+~~~~~~~~~~~~~~~~~~~~
+
+allocPSA has the ability to track internal cost-centres (or Tagged Funds, known
+within the program as TFs) for expenses and revenues related to projects, staff
+and business units.
+
+**How It Works**
+
+If you are a normal user, a TF is your personal cost-centre account. The TF is
+the account into which timesheet payments are made (credited) and from which
+expense items are taken out of (debited) upon reimbursements.
+
+If you are a manager, you may also be shown any TF cost-centres which have been
+allocated to you (among possibly other managers users) to manage.
+
+**How To Use**
+
+Within the TF List page, there are:
+
+1. TF Name
+
+2. Description
+
+3. Balance and
+
+4. Three specific action, namely 1. Statement 2. Repeating Expenses and 3. Edit
+   TF (lower level user does not have the item Edit TF)
+
+Statement shows all the information of your payment. They are as follows:
+
+
+New Transaction
+~~~~~~~~~~~~~~~
+
+.. figure:: images/transaction.png
+
+   Transaction detail view
+
+**How It Works**
+
+This facility allows for the insertion of new ad-hoc transactions into any
+project or staff TF cost-centre account.
+
+**How To Use**
+
+Fill in the fields as per the fairly detailed descriptions and then press any
+of the various 'Save' buttons. The new transaction will automatically be added
+to that specific TF cost-centre account.
+
+
+Search Transactions
+~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+This facility allows you to search through the Transactions recorded in
+allocPSA, using a variety of search options.
+
+**How To Use**
+
+There are a number of ways to search the transaction database stored within
+allocPSA:
+
+1. Firstly, you can choose the cost-centre TF of any project or staff member,
+   from the drop list.
+
+2. You can also select the status of the transactions from the drop list.
+   Options include All, Pending, Rejected and Approved.
+
+3. You can supply the period sought through dates in YYYY-MM-DD format.
+
+4. You can also enter the Transaction ID or Expense Form ID directly.
+
+You can also apply the various search criteria in combinations. allocPSA will
+search the database and return a list of matching records.
+
+
+.. figure:: images/statement.png
+
+   A cost-centre is like an internal bank account. You can review its contents much like you would any online bank account.
+
+A user with higher privileges can drill down into the the transactions by
+clicking on any 'ID / Invoice Numbers' links will show you the invoice details. 
+
+Repeating Expenses can let user create an expense that repeats on a fixed
+basis. All that needs to be done to process the next cycle is for the financial
+Admin user to press the New button, which creates the repeating transaction.
+
+Privileged users can view all TFs by clicking the 'Edit TF' link associated
+with each TF account.
+
+
+Upload Invoices File
+~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+allocPSA allows you to upload invoices from your accounting
+system so the revenue can be allocated to the various project and staff
+cost-centres. Although allocPSA default factory settings are for Quicken
+Interchange format QIF, Cybersource can customize this facility to meet the
+individual allocPSA customer needs.
+
+**How To Use**
+
+1. Enter the file name in the space provided, or
+
+2. Press the 'Browse' button to search the file
+
+3. Press the 'Upload' button after you have chosen the file
+
+allocPSA will now take a few seconds to upload the file and add the data to the
+project accounting system and will then return to the main 'Finance' page when
+finish uploading.
+
+
+Allocate Invoices
+~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+Invoices, once imported into allocPSA, can be tracked, and
+disbursed amongst many different cost-centres.
+Allow allocation of invoices with status marking "pending"
+
+**How To Use**
+
+This procedure is essentially the same as 'Approve Invoices'. Refer to that
+section within this manual.
+
+
+
+Approve Invoices
+~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+Staff and project cost centres in allocPSA support both inputs and outputs.
+Outputs are items that are purchased on behalf of the cost centre. Inputs are
+revenue that the cost centres is allocated. In this section of the Finance
+area we can allocate invoices with status marking "allocated".
+
+**How To Use**
+
+1. Once in the 'Invoices to be Allocated' page, click whichever invoice number
+   that you want to allocate.
+
+2. Adjust the timesheet if needed.
+
+3. You now have several options: 1. Mark Item as Allocated and Proceed to Next
+   Item 2. Mark Item as Paid and Proceed to Next Item 3. Mark Item as Allocated
+   and Return to List 4. Mark Item as Paid and Return to List
+
+4. You can also choose 'Goto Next Invoice Item' or 'Return to Invoice Items
+   List' without saving.
+
+
+Search Invoices
+~~~~~~~~~~~~~~~
+
+**How It Works**
+
+This facility allows you to search through the invoices that have been uploaded
+to allocPSA, using a variety of search options.
+
+**How To Use**
+
+You can have four means to search the invoice within allocPSA:
+
+1. Enter 'ID' and 'Invoice Name'.
+
+2. Select the status of the invoice from the drop list within this page.
+   options include 'All', 'Pending', 'Allocated' and 'Paid'.
+
+3. Enter the period of dates in the standard YYYY-MM-DD format.
+
+4. Enter the Invoice Number.
+
+You can also apply the various search criteria in combinations. allocPSA will
+search the database and return a list of matching records.
+
+
+New Expense Form
+~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+Expense forms can be created in allocPSA to better represent the project
+accounting costs associated with each project. For instance, if additional
+laptops are needed in order to meet certain project deliverables, then the
+costs for these laptops should be borne by that project. 
+
+**How To Use**
+
+To create a once off expense, follow the instructions below:
+
+1. From the allocPSA toolbar, click on the 'Finance' tab.
+
+2. From the Finance page, click on the 'New Expense Form' link.
+
+3. Select your payment options and click the 'Create Expense Form' button.
+
+4. Add your expense(s) by completing the details. Specify the
+   supplier you purchased from, and what was purchased, the date, unit cost and
+   number of units.
+
+5. Click 'Add To List' and repeat the previous step if necessary, adding as
+   many items, from as many suppliers as needed.
+
+6. Click the 'To Admin' button when you want to submit this expense form.
+
+7. In general, you may want to print a hardcopy of this form, so you can
+   attach expense receipts or invoices for taxation purposes. You can do this
+   by clicking on the 'Printer Friendly Version' in the top right-hand corner.
+
+
+View Pending Expenses
+~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+This facility allows you to view the Pending Expense Forms allocated to the TF
+cost-centre accounts you manage. This information provided includes the expense
+form ID, when it was Last Modified, who it was last Modified By, the Payment
+Method and Form Total.
+
+**How To Use**
+
+1. Click the ID link you want and go into the detail of the expenses form. You
+   will access the same page as New Expense Form.
+
+2. Follow the instructions and then press the 'Save' button to commit those
+   changes.
+
+Reconciliation Report
+~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+Show the Reconciliation Report of each TF account
+
+allocPSA summarizes the report into six different headings, namely
+
+1. TF
+
+2. Opening balance
+
+3. Expenses
+
+4. Salaries
+
+5. Invoices and
+
+6. Closing Balance
+
+**How To Use**
+
+You can navigate and browse through this account report by clicking on the
+'Previous Month' and 'Next Month' to see the other month's reports
+
+
+Upload Wages File
+~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+Allows for the uploading of wage transaction files into TF Cost Centres,
+normally in Quicken Interchange Format QIF text format, from your accounting
+system.
+
+**How To Use**
+
+1. Enter the file name in the space provided, or
+
+2. Press the 'Browse' button to search the file
+
+3. Press the 'Upload' button after you have chosen the file
+
+allocPSA will now take a few seconds to upload the file and add the data to the
+project accounting system and will then return to the main 'Finance' page when
+finish uploading.
+
+
+New Repeating Expense
+~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+This will let you create an automated transaction creation. You can specify
+the regularity and description and TF etc.
+
+
+Repeating Expense List
+~~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+This is a list of all the Repeating Expenses. 
+
+
+Execute Repeating Expenses
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+Repeating expenses are re-occurring expenses that are created by a scheduled
+job that runs once per day. If that job is not run, the repeating expenses may
+be manually created by clicking this link.
+
+**How To Use**
+
+Click the link to create all repeating expenses that are scheduled to be
+created.
+
+
+
+People
+------
+
+**How It Works**
+
+People For higher lever user: Provide general information of each personnel.
+This includes Name, Last Login, Availability, Task Summary, Graph and On Leave.
+It comprises also the function of sending email to any personnel
+
+For both higher and lower level users: Allow Changes of your personal
+information including Preferred Payment TF, Skill and Absence Forms etc.
+
+**How To Use**
+
+1. Availability and On Leave are firstly displayed on the front page
+
+2. If you want to see other information like Task Summary, Graph, Skill Matrix
+   etc., simply click the link to get into the detail
+
+Filter Section is the same as that in Tools - Miscellaneous Tools - Company
+Wide Skill Matrix. You can have a look at the detail under the section
+mentioned in the later part
+
+You can now change your personal information as well as add or view your
+absence from, and allocPSA will take you to this
+
+
+
+Tools
+-----
+
+**How It Works**
+
+In general, most of the tools on this tab provide additional management and
+resource information, allow for customisation and offer your firm a framework
+into which you can add your own, site-specific add-ons to your organisation's
+allocPSA server.
+
+
+Reminders
+~~~~~~~~~
+
+**How It Works**
+
+Remind recipient everything regarding Client, Project, Task etc.
+
+List of reminders which relate the user you're presently logged in as
+
+**How To Use**
+
+Except for the high level user, all the reminders can only be read, edited and
+removed by those specific recipients!
+
+Add Reminder:
+
+1. Click the 'Add Reminder' link and go into the Add Reminder - Select Type
+   page
+
+2. Select what type of reminder you want to create from the drop list. Examples
+   include Client, Project, Task, General. If you want a reminder which is
+   independent of any task, project or client life-spans, select General.
+
+3. Press the 'Next' button
+
+4. Select the Project, Task or Client that this reminder will be related to,
+   or, if you've selected General, allocPSA will take you to the next step.
+
+5. Supply reminder date and time, repeat levels and early warning information,
+   along with title and reminder email content.
+
+6. Press the 'Save' button.
+
+Your new reminder is now set and ready to trigger an email at the points you've
+defined.
+
+Update or Deleting the Reminder:
+
+You can also update an existing reminder, by jumping back into the Reminders
+page, and following these steps.
+
+1. From the list of Reminders, click the Subject name link.
+
+2. Update the reminder
+
+3. Press 'Update' or 'Delete' button to finish your update.
+
+Changes will automatically be displayed and updated.
+
+
+
+Announcements
+~~~~~~~~~~~~~
+
+**How It Works**
+
+You can publish announcements which will be displayed on the Home page of each
+user's account, as well as within each allocPSA Daily Tasks email. From this
+tool, you can add new announcements and edit existing ones. 
+
+
+**How To Use**
+
+1. Once you've entered the Announcement section, to add a new announcement
+   simply click the 'New Announcement' link.
+
+2. Supply a Heading, a date from which to start displaying this announcement, a
+   date when this announcement should stop being shown, and the contents of
+   your message in the Body.
+
+3. Press the 'Save' button.
+
+4. click the 'Return to Announcement List' link to return to the Announcement
+   page.
+
+allocPSA will automatically save and display the announcement on each user's
+Home page, under the Announcement section, during the dates you specified. If
+you want to edit or delete an announcement, from the Announcements page:
+
+1. click the 'Edit' link, located at the right of each announcement.
+
+2. Press the 'Save' button if you have made your changes
+
+3. Click the 'Return to Announcement List' link, and allocPSA will return to
+   the Announcement page.
+
+4. Alternatively, you can also select the 'Delete' link, to remove this
+   announcement.
+
+Security
+~~~~~~~~
+
+**How It Works**
+
+This section allows you to tweak security permission for the database tables
+used by allocPSA. It is possible to establish different permissions for
+different user levels, for different (i.e. Read, Update, Delete, Create etc.)
+actions. 
+
+NOTE: In general, you would not need to make any changes at all to this section.
+
+NOTE: Due to the critical nature of this configuration system. only 'god' level
+users are able to see this configuration option.
+
+**How To Use**
+
+1. To add a new permission, click the 'New Permission' link. This will take you
+   to the New Permission - Select table.
+
+2. Select the table you want to add new permissions to, from the drop-down
+   list.
+
+3. Press the 'Next' button.
+
+4. Supply the information needed to establish a new permission for this table.
+
+5. Press the 'Save' button.
+
+6. Click the 'Return to Permission List' link to return to the Permission page.
+
+To edit an existing permission:
+
+1. Click the 'Edit' link, shown beside each permission.
+
+2. Make the required modifications (or even delete the permission.)
+
+3. Press the 'Save' (or 'Delete') button
+
+4. Click the 'Return to Permission List' link to return to the Permission page.
+
+Your changes will be automatically updated on the Permission page and activated for all users.
+
+
+Cost & Time Estimator
+~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+As an example of the kinds of functional extensions that can be made within
+allocPSA, the Simple Cost & Time Estimator is provided, and documented here. It
+is envisaged that this utility will not be of direct use to most users of
+allocPSA. It is hoped that by providing this simple utility as an example, your
+organisation will be inspired to visualise and eventually add your own set of
+tools which can be used by your staff, to assist in day-to-day  operations at
+your organisation.
+
+**How To Use**
+
+Based on a set of pre-determined programming and database languages, it is
+possible to input various values for the scope and size of a particular
+web-based database application, and this Estimator will produce a pre-figured
+determination of the best-effort time and cost estimation, along with a spread
+of values, based on number of resources. The values generated are based on a
+pre-computed seed metric, derived from several years' evaluation of similarly
+scoped projects.
+
+
+
+Search
+~~~~~~
+
+.. figure:: images/search.png
+
+   allocPSA allows you to search most of the main data types.
+   Results will show highlighted text, relating to your search criteria.
+
+**How It Works**
+
+allocPSA Search is a global search engine used for searching various fields in
+the database. For example, if you only remember some keywords in an
+announcement that was approximately noticed in these few days, you could use
+allocPSA Search to search for it rather than watching the announcement one by
+one. 
+
+**How To Use**
+
+Decide on what type of database entity you want to search on from the drop list
+within this page. This includes databases like Announcements, Clients ,
+Projects , Tasks etc. Then, enter the text you want to search for. And press
+the Search button. 
+
+The systems will now take a bit time, and will return a list of records, with
+the keyword you are searching for, highlighted for your convenience
+
+You can now click the record you want to view in greater detail, and allocPSA
+will take you to this.
+
+
+Company Skill Matrix
+~~~~~~~~~~~~~~~~~~~~
+
+.. figure:: images/skill_matrix.png
+
+   You have the ability to add your own skill types and
+   levels, and categorise your resources against those skill types.
+
+**How It Works**
+
+This tool allows you to review, filter and drill down into the various
+skillsets of your resource list as known by allocPSA. Whilst the samples
+provided and screenshots shown display IT-related skills, this module can be
+configured to handle any type of skill set.
+
+**How To Use**
+
+You can use the first droplist to select a primary (i.e. broad) skill type,
+then press the 'Filter' button. You should now be able to drill down into the
+sub-categorised skills by selecting from the secondary drop-list, once again
+pressing the 'Filter' button. At any stage, you can print the resulting matrix.
+
+
+
+Task Comment Templates
+~~~~~~~~~~~~~~~~~~~~~~
+
+**How It Works**
+
+In allocPSA, Task Comment Templates are used primarily as a form of open-ended
+checklist system, allowing particular types of tasks to be created quickly.
+
+The Templates are created for oft-repeated jobs and tasks. They can be enacted
+when creating new Tasks. 
+
+When creating a new comment for a task, you have the option
+of invoking a pre-existing template for the text comment. This is useful if
+there is a set routine or process which the person who has been allocated
+the task needs to undertake. 
+
+**How To Use**
+
+Task Comment Templates are create by pressing the 'New Comment/Template' link.
+Simply fill in the Name for this new template, and supply the check list
+content in the Text section. You can be as detailed as you like. Adding text
+which appears like bullet-points is a good idea. When ready, press the 'Save'
+button.
+
+You can add new templates, which then become available from
+a droplist in new tasks. These templates can have place-holders, such as
+Company Contact Details, Project Name etc, and allocPSA will replace these
+place-holders with real values.
+
+You can also edit and delete a Task Template by select it from the list, making
+modifications and pressing the 'Save' button, or pressing the 'Delete' button.
+
+
+Item Loans
+~~~~~~~~~~
+
+**How It Works**
+
+allocPSA can track any items that your firm needs to track. It can also keep
+track of who borrowed these items. The Item Loan facility is intended to be
+simple and easy to use, to increase the likelihood that staff use it.
+
+**How To Use**
+
+allocPSA shows you a list of all the available items which
+can be loaned. Simply click on the item's 'Borrow' link to borrow it.
+
+To Add a New Loan or to Return an Item:
+
+1. From the allocPSA toolbar, select the 'Item Loans' link.
+
+2. Click the link 'New Loan / Return Item'. allocPSA The system will go to the
+   'New Loan' page. Items and their status will be shown on this page.
+
+3. Click 'Return' if you have borrowed the item and want to return it.
+
+4. Click 'Borrow' if you want to borrow an item.
+
+5. The system will take you to the next page and you simply press the 'Return
+   Item' button to return the item.
+
+6. Or in case you borrow the item, note the detail of it, select person to take
+   out loan, enter the number of months you want the item for and finally press
+   Borrow Item button
+
+The system will go back to the New Loan page and action will be taken
+
+When borrowing an item, you can select the loan duration.
+
+You can add or edit individual items for loan or upload a file with multiple items.
+
+
+Add / Edit / Remove Item:
+
+1. To add a new item (or items) to the loan list, click the link 'Add / Edit /
+   Remove Item'.
+
+2. If you have one item to add, enter its details, specifying the Item Name and
+   Notes.
+
+3. Select the 'Type'.
+
+4. Press the 'Save' button.
+
+If you want to upload a list of items, possibly generated from a inventory
+management system, you can upload a text file to accomplish this.
+
+1. The text file has to be in Comma Separated Value (CSV) format. It should
+   look something like this: Field One, Field Two Holly Goes to Hollywood,
+   Miranda Films Janey Goes to Jamaica, GoogolPlex Distributors ...
+
+2. Select the 'Type' of item from the drop list.
+
+3. Click on the 'Choose' button and select the file you want to upload to
+   allocPSA from your PC.
+
+4. Click on the 'Import From File' button.
+
+
+
+
+
+Reports
+~~~~~~~
+
+allocPSA provides an open and flexible way in which you can extract data from
+its database. This is managed through the Reports interface.
+
+**How It Works**
+
+Reporting allows you to select which tables, fields and criteria you want to
+sort and filter data out from your allocPSA database. The data can be displayed
+on-screen within the web browser, or bundled into a text-based Comma Separated
+Value (CSV) or TAB delimited file, for downloading to your computer. This data
+can then be inserted into applications like Microsoft Excel, OpenOffice.org
+Calc (http://openoffice.org/), Crystal Reports, Microsoft Access or other
+reporting tools.
+
+**How To Use**
+
+1. Click the 'Reports' link on the allocPSA toolbar to go to the Report page.
+
+2. Select which module you want to report on (Clients, Tasks etc.)
+
+3. Press the 'Show Fields' button.
+
+4. allocPSA will now display all the database table fields which pertain to
+   that module.
+
+5. If you want to pull data out of any particular field, you need to click its
+   corresponding checkbox.
+
+6. If you want to enact any filtering on that field, for instance, in answer to
+   the question 'Show me all Clients companies which have names starting with
+   the word HyperGlobalMegaNet', you would use the following filter criteria:
+   HyperGlobalMegaNet%
+
+7. Alternatively, you can specify number ranges, upper and lower, using the
+   supplied numeric criteria fields.
+
+8. Scroll down to the bottom and press the 'Dump Fields' button.
+
+9. This will now dump the resulting records to your browser screen, below the
+   fields and selection criteria.
+
+10. You can choose which suitable you use as the 'Group By' aggregator, by
+    selecting the choice button next to its title.
+
+11. You can also elect to put quotes around the field data (handy when dealing
+    with data which has commas etc.) by selecting the option from the 'Quotes
+    around fields' droplist.
+
+12. Rather than dumping the resulting dataset to the browser, you can tick the
+    'Generate File' checkbox and allocPSA will supply the resulting dataset in
+    the form of a text file.
+
+13. You can also select a number of delimiters, comma (,), TAB (tab),
+    double-hash (##) etc, which you can then use to separate your fields when
+    you pull them into your report analysis application, or mail-merge
+    facility.
+
+
+

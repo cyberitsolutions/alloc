@@ -211,8 +211,6 @@ class task extends db_entity {
     $reminder->set_value('reminderAdvNoticeInterval', "No");
     $reminder->set_value('reminderAdvNoticeValue', "0");
 
-    $reminder->set_value('reminderModifiedTime', date("Y-m-d H:i:s"));
-    $reminder->set_value('reminderModifiedUser', $current_user->get_display_value());
     $reminder->set_value('reminderTime', date("Y-m-d H:i:s"));
     $reminder->set_value('personID', $personID);
 
@@ -481,22 +479,24 @@ class task extends db_entity {
   }
 
   function get_email_recipients($options=array()) {
-    static $people;
+    #static $people;
     $recipients = array();
 
     // Load up all people into array
-    if (!$people) { 
-      $db = new db_alloc;
-      $db->query("SELECT personID, username, firstName, surname, emailAddress FROM person");
-      while($db->next_record()) {
-        if ($db->f("firstName") && $db->f("surname")) {
-          $db->Record["fullName"] = $db->f("firstName")." ".$db->f("surname");
-        } else {
-          $db->Record["fullName"] = $db->f("username");
-        }
-        $people[$db->f("personID")] = $db->Record;
-      }
-    }
+    #if (!$people) { 
+      #$db = new db_alloc;
+      #$db->query("SELECT personID, username, firstName, surname, emailAddress FROM person");
+      #while($db->next_record()) {
+        #if ($db->f("firstName") && $db->f("surname")) {
+          #$db->Record["fullName"] = $db->f("firstName")." ".$db->f("surname");
+        #} else {
+          #$db->Record["fullName"] = $db->f("username");
+        #}
+        #$people[$db->f("personID")] = $db->Record;
+      #}
+    #}
+
+    $people = get_cached_table("person");
 
 
     foreach ($options as $selected_option) {
@@ -543,7 +543,7 @@ class task extends db_entity {
 
     foreach ($recipients as $recipient) {
       if ($this->send_email($recipient, $type, $body)) {
-        $successful_recipients.= $commar.$recipient["fullName"];
+        $successful_recipients.= $commar.$recipient["name"];
         $commar = ", ";
       }
     }
@@ -1430,7 +1430,6 @@ function get_task_statii_array() {
     $comment = new comment;
     $comment->set_value("commentType","task");
     $comment->set_value("commentLinkID",$this->get_id());
-    $comment->set_modified_time();
     $comment->save();
     $commentID = $comment->get_id();
 
@@ -1455,7 +1454,7 @@ function get_task_statii_array() {
     }
 
     if ($personID) {
-      $comment->set_value('commentModifiedUser', $personID);
+      $comment->set_value('commentCreatedUser', $personID);
 
     } else {
       $cc = new clientContact();
@@ -1466,14 +1465,14 @@ function get_task_statii_array() {
       }
 
       if ($clientContactID) {
-        $comment->set_value('commentModifiedUserClientContactID', $clientContactID);
+        $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
       }
     }
+    $comment->skip_modified_fields = true;
 
-    $body = "Email received from: ".$decoded[0]["Headers"]["from:"]; //."  Date: ".$decoded[0]["Headers"]["date:"];
-    $body.= "\n\n";
-    $body.= trim(mime_parser::get_body_text($decoded));
+    $body = trim(mime_parser::get_body_text($decoded));
     $comment->set_value("comment",trim($body));
+    $comment->set_value("commentCreatedUserText",trim($decoded[0]["Headers"]["from:"]));
     $comment->save();
 
     if ($personID && $personID == $this->get_value("creatorID")) {

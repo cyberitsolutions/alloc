@@ -6,7 +6,7 @@
      </nobr>
   </td>
   <td align="center">{$expenseFormID}</td>
-  <td align="center">{$lastModified} by UID: {$expenseFormModifiedUser}</td>
+  <td align="center">{$expenseFormModifiedTime} by UID: {$expenseFormModifiedUser}</td>
   <td align="center">{$paymentMethod}</td>
   <td align="right">${$formTotal}</td>
 
