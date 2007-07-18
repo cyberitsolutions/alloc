@@ -34,7 +34,7 @@ if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
 
 // Get the alloc directory
 $f = trim(dirname(__FILE__));
-substr($f,-1,1) != "/" and $f.= "/";
+substr($f,-1,1) != DIRECTORY_SEPARATOR and $f.= DIRECTORY_SEPARATOR;
 define("ALLOC_MOD_DIR",$f);
 unset($f);
 
@@ -85,14 +85,14 @@ $m = array("shared"
           );
 
 // Helper functions
-require_once(ALLOC_MOD_DIR."shared/util.inc.php");
+require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."util.inc.php");
 
 // Get the web base url for the alloc site
 define("SCRIPT_PATH",get_script_path($m)); 
 
 foreach ($m as $module_name) {
-  if (file_exists(ALLOC_MOD_DIR."$module_name/lib/init.php")) {
-    require_once(ALLOC_MOD_DIR."$module_name/lib/init.php");
+  if (file_exists(ALLOC_MOD_DIR.$module_name.DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR."init.php")) {
+    require_once(ALLOC_MOD_DIR.$module_name.DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR."init.php");
     $module_class = $module_name."_module";
     $module = new $module_class;
     $modules[$module_name] = $module;
@@ -106,7 +106,7 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"url_alloc_stylesheets"                    => SCRIPT_PATH."css/"
             ,"url_alloc_javascript"                     => SCRIPT_PATH."javascript/"
             ,"url_alloc_images"                         => SCRIPT_PATH."images/"
-            ,"url_alloc_help"                           => ALLOC_MOD_DIR."help/"
+            ,"url_alloc_help"                           => ALLOC_MOD_DIR."help".DIRECTORY_SEPARATOR
             ,"url_alloc_help_relative"                  => SCRIPT_PATH."help/"
             ,"current_date"                             => date("Y-m-d H:i:s")
             ,"today"                                    => date("Y-m-d")
@@ -149,7 +149,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   $sess = new Session;
 
   // Include all the urls
-  require_once(ALLOC_MOD_DIR."shared/global_tpl_values.inc.php");
+  require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."global_tpl_values.inc.php");
 
   // Setup a current_user person who will represent the logged in user
   $current_user = new person;
