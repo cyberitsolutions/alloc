@@ -3,24 +3,45 @@
 
 {$table_box}
 <tr><th colspan="4">Backups</th></tr>
+
+
+
+{$rows = show_backups();}
+{if $rows}
+<tr><td>Filename</td><td>Created on</td><td>Size</td><td></td></tr>
+{/}
+
+{foreach $rows as $row}
 <tr>
-<td colspan="2">
+<td>{$row.filename}</td>
+<td>{$row.mtime}</td>
+<td>{$row.size}</td>
+<td>
 <form enctype="multipart/form-data" action="" method="post">
-<input size="14" type="text" name="backup_name" value="{$default_filename}" />
-<input type="submit" value="Create Backup" name="create_backup" />
+<input type="submit" value="Restore" name="restore_backup" onClick="return confirm('Are you sure you want to restore this backup?')"/>
+<input type="submit" value="Delete"  name="delete_backup" onClick="return confirm('Are you sure you want to delete this backup?')"/>
+<input type="hidden" name="file" value="{$row.restore_name}" />
 </form>
 </td>
+</tr>
+{/}
 
-<td colspan="2">
+
+<tr>
+
+<td colspan="4" class="center">
 <form enctype="multipart/form-data" action="" method="post">
 <input type="file" name="attachment" />
 <input type="submit" value="Upload Backup" name="save_attachment" />
 </form>
-</td></tr>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<tr><td>Filename</td><td>Created on</td><td>Size</td><td></td></tr>
+<form enctype="multipart/form-data" action="" method="post">
+<input type="submit" value="Create Backup" name="create_backup" />
+</form>
+</td>
 
-{show_backups()}
+</tr>
 
 </table>
 {show_footer()}
