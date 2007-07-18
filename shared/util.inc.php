@@ -267,7 +267,7 @@ function get_attachments($entity, $id) {
   $rows = array();
   $dir = $TPL["url_alloc_attachments_dir"].$entity.DIRECTORY_SEPARATOR.$id;
 
-  if ($id) {
+  if (isset($id)) {
     #if (!is_dir($dir)) {
       #mkdir($dir, 0777);
     #}
@@ -279,7 +279,7 @@ function get_attachments($entity, $id) {
     $types[".gz"] = "zip.gif";
     $types["doc"] = "doc.gif";
     $types["sxw"] = "doc.gif";
-    $types["odf"] = "doc.gif";
+    #$types["odf"] = "doc.gif";
 
 
     if (is_dir($dir)) {
@@ -298,8 +298,9 @@ function get_attachments($entity, $id) {
           $size = filesize($dir.DIRECTORY_SEPARATOR.$file);
           $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.htmlentities($file)."</a>";
           $row["text"] = htmlentities($file);
-          $size > 1023 and $row["size"] = sprintf("%dkb",$size/1024);
+          $size > 1023 and $row["size"] = sprintf("%dKb",$size/1024);
           $size < 1024 and $row["size"] = sprintf("%db",$size);
+          $size > (1024 * 1024) and $row["size"] = sprintf("%0.1fMb",$size/(1024*1024));
           #$row["delete"] = "<a href=\"".$TPL["url_alloc_delDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">Delete</a>";
           $row["delete"] = "<form action=\"".$TPL["url_alloc_delDoc"]."\" method=\"post\">
                             <input type=\"hidden\" name=\"id\" value=\"".$id."\">
@@ -310,13 +311,15 @@ function get_attachments($entity, $id) {
 
 
           $row["mtime"] = date("Y-m-d H:i:s",filemtime($dir.DIRECTORY_SEPARATOR.$file));
+          $row["restore_name"] = $file;
+
           $rows[] = $row;    
         }
       }
     }
     is_array($rows) && usort($rows, "sort_by_mtime");
-    return $rows;
   }
+  return $rows;
 }
 function sort_by_mtime($a, $b) {
   return $a["mtime"] >= $b["mtime"];
@@ -1003,7 +1006,7 @@ function check_password($password, $hash) {
   $t_hasher = new PasswordHash(8, FALSE);
   return $t_hasher->CheckPassword($password, $hash);
 }
-function check_filename($filename) {
+function bad_filename($filename) {
   return preg_match("@[/\\\]@", $filename);
 }
 
