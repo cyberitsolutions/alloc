@@ -945,7 +945,8 @@ function check_password($password, $hash) {
   $t_hasher = new PasswordHash(8, FALSE);
   return $t_hasher->CheckPassword($password, $hash);
 }
-
-
+function check_filename($filename) {
+  return preg_match("@[/\\\]@", $filename);
+}
 
 ?>

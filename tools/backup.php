@@ -66,8 +66,10 @@ function empty_dir($dir) {
   }
 }
  
-function backup($archivename) {
+function backup() {
   global $db, $TPL, $folders; 
+
+  $archivename = "backup_" . date("Ymd_His") . ".zip";
 
   $archive = new ZipArchive();
   $archive->open($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR . $archivename,
@@ -85,6 +87,7 @@ function backup($archivename) {
   }
 
   $archive->close();
+  $TPL["message_good"][] = "Backup created: " . $archivename;
 }
 
 function restore($archivename) {
@@ -119,24 +122,27 @@ function restore($archivename) {
 
 function show_backups() {
   global $TPL;
+  $rows = array();
   $dir = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR;
   $handle = opendir($dir);
 
   while (false !== ($file = readdir($handle))) {
     if ($file != "." && $file != ".." && !is_dir($dir . $file)) {
       $path = $dir . $file;
-      $TPL["filename"] = "<a target=\"_BLANK\" href=\"".$TPL["url_alloc_backup"]."&get_file=".urlencode($file)."\">".htmlentities($file)."</a>";
-      $TPL["mtime"] = date("Y-m-d H:i:s",filemtime($path));
+      $row["filename"] = "<a target=\"_BLANK\" href=\"".$TPL["url_alloc_backup"]."&get_file=".urlencode($file)."\">".htmlentities($file)."</a>";
+      $row["mtime"] = date("Y-m-d H:i:s",filemtime($path));
 
       $size = filesize($dir.DIRECTORY_SEPARATOR.$file);
-      $size < 1024 and $TPL["size"] = sprintf("%db",$size);
-      $size > 1023 and $TPL["size"] = sprintf("%dkb",$size/1024);
-      $size > (1024 * 1024) and $TPL["size"] = sprintf("%dMb",$size/(1024*1024));
+      $size < 1024 and $row["size"] = sprintf("%db",$size);
+      $size > 1023 and $row["size"] = sprintf("%dkb",$size/1024);
+      $size > (1024 * 1024) and $row["size"] = sprintf("%dMb",$size/(1024*1024));
 
-      $TPL["restore_name"] = $file;
-      include_template("templates/backupFileM.tpl");
+      $row["restore_name"] = $file;
+      $rows[] = $row;
     }
+
   }
+  return $rows;
 }
 
 # End of functions
@@ -146,14 +152,15 @@ if (!person::is_god()) {
 }
 
 if ($_POST["create_backup"]) {
-  backup($_POST["backup_name"]);
+  backup();
 }
 
 if ($_POST["restore_backup"]) {
-  if (!restore($_POST["file"])) {
-    $TPL["message"][] = "Error restoring backup.";
+  backup();
+  if (restore($_POST["file"])) {
+    $TPL["message_good"][] = "Backup restored successfully: " . $_POST["file"];
   } else {
-    $TPL["message_good"][] = "Backup restored successfully.";
+    $TPL["message"][] = "Error restoring backup: " . $_POST["file"];
   }
 }
 
@@ -162,7 +169,7 @@ if ($_POST["delete_backup"]) {
 
   $file = $_POST["file"];
 
-  if (preg_match("/{\/}|{\\}/", $file)) {
+  if (check_filename($file)) {
     die("File delete error: Name contains slashes.");
   }
   $path = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $file;
@@ -177,7 +184,7 @@ if ($_POST["save_attachment"]) {
 }
 
 if (($file = $_GET["get_file"])) { # = is intentional
-  if (preg_match("/{\/}|{\\}/", $file)) {
+  if (check_filename($file)) {
     die("File retrieve error: Name contains slashes.");
   }
   $path = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $file;
@@ -193,7 +200,6 @@ if (($file = $_GET["get_file"])) { # = is intentional
   fpassthru($fp);
   exit;
 }
-
 
 $TPL["default_filename"] = "backup-" . $TPL["today"];
 
