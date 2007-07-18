@@ -113,15 +113,15 @@ test_db:
 	mysqldump -d $$MYSQL_CONNECT $$DB_NAME > sql/db_current_structure.sql; \
 	echo "drop database if exists $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
 	DIFF="$$(diff -b -I 'Host:' sql/db_current_structure.sql sql/db_imported_structure.sql)"; \
-	rm -f sql/db_imported_structure.sql sql/db_current_structure.sql; \
 	if [ -n "$${DIFF}" ]; then \
-	  echo "There are differences between the current database $$DB_NAME, and the database " \
-		echo "that would be created from the sql/db_structure.sql file."; \
+	  echo "There are differences between the current database $$DB_NAME, and the database that would be created from the sql/db_structure.sql file."; \
 	  echo "Please fix either the patch files or sql/db_structure.sql before committing."; \
-		echo $${DIFF}; \
+		echo "diff -b sql/db_current_structure.sql sql/db_imported_structure.sql"; \
+		echo "$${DIFF}"; \
 		exit 1; \
 		echo "test_db: failed";\
 	else \
+		rm -f sql/db_imported_structure.sql sql/db_current_structure.sql; \
 		echo "test_db: passed";\
 	fi;
 
