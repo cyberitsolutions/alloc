@@ -48,27 +48,6 @@ class backups {
     return $person->have_role("god");
   }
 
-  function add_to_archive($archive, $dir, $intpath) {
-    
-    if (is_dir($dir)) { 
-      $handle = opendir($dir);
-
-      while (false !== ($file = readdir($handle))) {
-    
-        if ($file != "." && $file != "..") {
-          $path = $dir . DIRECTORY_SEPARATOR . $file;
-          if (is_dir($path)) {
-            $this->add_to_archive($archive, $path, $intpath . DIRECTORY_SEPARATOR . $file);
-          } else {
-            $archive->addFile($path, $intpath . DIRECTORY_SEPARATOR . $file);
-          }
-        }
-
-      }
-      closedir($handle);
-    }
-  }
-
   function empty_dir($dir) {
     if (is_dir($dir)) {
       $handle = opendir($dir);
@@ -89,49 +68,47 @@ class backups {
 
   function backup() {
     global $TPL; 
+    require_once("../lib/zip.php");
 
     $archivename = "backup_" . date("Ymd_His") . ".zip";
-
-    $archive = new ZipArchive();
-    $archive->open($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR . $archivename,
-        ZIPARCHIVE::CREATE); # This attribute may be wrong. 
-
+    $zipfile = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR . $archivename;
     $dumpfile = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "database.sql";
+    is_file($dumpfile) && unlink($dumpfile);
+
+    $archive = new compress_zip("w+",$zipfile);
 
     $db = new db_alloc();
     $db->dump_db($dumpfile);
 
-    $archive->addFile($dumpfile, "database.sql");
-
+    if (!file_exists($dumpfile)) { 
+      die("Couldn't backup database to ".$dumpfile);
+    } else {
+      $archive->add_file($dumpfile,$TPL["url_alloc_attachments_dir"]."backups");
     
-    foreach ($this->folders as $folder) {
-      $this->add_to_archive($archive, $TPL["url_alloc_attachments_dir"] . $folder, $folder);
-    }
+      foreach ($this->folders as $folder) {
+        $archive->add_file($TPL["url_alloc_attachments_dir"].$folder,$TPL["url_alloc_attachments_dir"]);
+      }
 
-    $archive->close();
-    $TPL["message_good"][] = "Backup created: " . $archivename;
+      $archive->close();
+      $TPL["message_good"][] = "Backup created: " . $archivename;
+    }
   }
 
   function restore($archivename) {
     global $TPL;
-    $archive = new ZipArchive();
-    if (!$archive->open($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $archivename)) {
-      return false;
-    }
 
-    if (FALSE === $archive->statName("database.sql")) {
-      return false;
-    }
+    require_once("../lib/zip.php");
+
+    $file = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $archivename;
+
+    $archive = new compress_zip("r",$file);
 
     # Clear out the folder list
     foreach($this->folders as $folder) {
       $this->empty_dir($TPL["url_alloc_attachments_dir"] . $folder);
     }
 
-    # Extract attachments
-    if (!$archive->extractTo($TPL["url_alloc_attachments_dir"])) {
-      return false;
-    }
+    $archive->extract($TPL["url_alloc_attachments_dir"]);
 
     list($sql, $commends) = parse_sql_file($TPL["url_alloc_attachments_dir"] . "database.sql");
 
