@@ -73,6 +73,10 @@ class alloc_email {
       $this->header["From"] = ALLOC_DEFAULT_FROM_ADDRESS;
     }
 
+    if (!$this->header["Content-Type"]) {
+      $this->header["Content-Type"] = "text/plain; charset=utf-8";
+    }
+
     $this->is_valid_to_address() or $this->to_address = ALLOC_DEFAULT_TO_ADDRESS;
     $this->subject = "[allocPSA] ".$this->subject;
 
