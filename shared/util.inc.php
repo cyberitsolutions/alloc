@@ -670,14 +670,25 @@ function format_date($format="Y/m/d", $date="") {
 function get_config_link() {
   global $current_user, $TPL;
   if (have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
-    echo "<a href=\"".$TPL["url_alloc_config"]."\">Setup</a>";
+    echo "<a href=\"".$TPL["url_alloc_config"]."\">Setup</a>&nbsp;&nbsp;";
   }
 }
 function get_print_link() {
-  global $printable;
-  if ($printable) {
-    echo "<a href=\"" . $_SERVER["REQUEST_URI"] . "&media=print\">Print</a>";
+  if (defined("PAGE_IS_PRINTABLE") && PAGE_IS_PRINTABLE) {
+    global $sess;
+    $sess or $sess = new Session;
+    echo "<a href=\"" . $sess->url($_SERVER["REQUEST_URI"]) . "media=print\">Print</a>&nbsp;&nbsp;";
   }
+}
+function get_help_link() {
+  global $TPL;
+  $url = "../help/help.html#".$TPL["alloc_help_link_name"];
+  echo "<a href=\"".$url."\">Help</a>&nbsp;&nbsp;";
+}
+function get_logout_link() {
+  global $TPL;
+  $url = $TPL["url_alloc_logout"];
+  echo "<a href=\"".$url."\">Logout</a>&nbsp;";
 }
 function parse_sql_file($file) {
   
@@ -915,11 +926,6 @@ function get_text($handle) {
 }
 function get_html($handle,$value=false) {
   echo build_html_element($handle,$value);
-}
-function get_help_link() {
-  global $TPL;
-  $url = "../help/help.html#".$TPL["alloc_help_link_name"];
-  echo "<a href=\"".$url."\">Help</a>";
 }
 function get_expand_link($id) {
   global $TPL;

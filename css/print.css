@@ -1,14 +1,17 @@
-.noprint {
+.noprint,
+#menu,
+#tabs,
+table.box th.right,
+table.filter,
+table.calendar img {
   display: none;
 }
 
-#menu {
-  display: none;
+a {
+  text-decoration:none;
+  color:black;
 }
 
-#tabs {
-  display: none;
-}
 table.tasks {
   width:100%;
   border-right:1px solid #808080;
@@ -30,10 +33,6 @@ table.tasks th, table.calendar th {
   padding:4px;
 }
 
-th.boxheader {
-  font-weight: bold;
-  font-size: 120%;
-}
 
 table.calendar { 
   width:100%; 
@@ -79,7 +78,6 @@ table.calendar img {
 
 /* This allows the thead to degrade if it's not supported */
 thead {display: table-header-group;}
-
 table {page-break-inside: avoid;}
 
 table.box { 
@@ -90,3 +88,25 @@ table.box {
   vertical-align:top; 
   width:98%; 
 } 
+table.box th {
+  font-weight: bold;
+  font-size: 120%;
+  text-align:left;
+  background-color:#f4f4f4;
+}
+table.box table th {
+  font-weight: bold;
+  font-size: 100%;
+}
+table.comments th {
+  text-align:left;
+}
+table th {
+  text-align:left;
+  font-weight:normal;
+}
+table {
+  margin-top:10px;
+}
+
+

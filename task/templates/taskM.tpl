@@ -25,7 +25,7 @@ function updateTaskCommentTemplate(number) \{
 {$table_box}
   <tr>
     <th class="nobr">{$task_taskType}</th>
-    <th class="right nobr" colspan="4"><a href="{$url_alloc_task}taskID={$task_taskID}&view=detail">Edit</a>&nbsp;&nbsp;<a target="_BLANK" href="{$url_alloc_task}taskID={$task_taskID}&view=printer">Printer</a>&nbsp;&nbsp;<a href="{$url_alloc_project}projectID={$task_projectID}">Project</a>&nbsp;&nbsp;{$navigation_links}</th>
+    <th class="right nobr" colspan="4"><a href="{$url_alloc_task}taskID={$task_taskID}&view=detail">Edit</a>&nbsp;&nbsp;{$navigation_links}</th>
   </tr>
   <tr>
     <td colspan="5">&nbsp;</td>

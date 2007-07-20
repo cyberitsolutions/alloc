@@ -22,6 +22,7 @@
  */
 
 require_once("../alloc.php");
+define("PAGE_IS_PRINTABLE",1);
 
   function show_reminders($template) {
     global $TPL, $taskID, $reminderID;
@@ -281,7 +282,7 @@ $TPL["percentComplete"] = $task->get_percentComplete();
 $project = $task->get_foreign_object("project");
 $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 if ($project->get_id()) {
-  $TPL["navigation_links"] = $project->get_navigation_links();
+  $TPL["navigation_links"] = $project->get_navigation_links(true);
 }
 
 $parent_task = $task->get_foreign_object("task", "parentTaskID");
@@ -355,8 +356,8 @@ if ($task->get_id()) {
   $options["showHeader"] = true;
   $options["showTimes"] = true;
 
-  $_GET["view"] == "printer" and $options["showDescription"] = true;
-  $_GET["view"] == "printer" and $options["showComments"] = true;
+  $_GET["media"] == "print" and $options["showDescription"] = true;
+  $_GET["media"] == "print" and $options["showComments"] = true;
   $TPL["task_children_summary"] = task::get_task_list($options);
 
   $taskType = $task->get_foreign_object("taskType");
@@ -370,13 +371,8 @@ if ($task->get_id()) {
 
 
 
-// Detailed editable view
-if ($_GET["view"] == "detail" || !$task->get_id()) {
-  $TPL["task_taskName"] = htmlentities($task->get_value("taskName"));
-  include_template("templates/taskDetailM.tpl");
-
 // Printer friendly view
-} else if ($_GET["view"] == "printer") {
+if ($_GET["media"] == "print") {
 
   $client = new client;
   $client->set_id($project->get_value("clientID"));
@@ -393,6 +389,11 @@ if ($_GET["view"] == "detail" || !$task->get_id()) {
   $TPL["task_taskDescription"] = nl2br(htmlentities($task->get_value("taskDescription")));
 
   include_template("templates/taskPrinterM.tpl");
+
+// Detailed editable view
+} else if ($_GET["view"] == "detail" || !$task->get_id()) {
+  $TPL["task_taskName"] = htmlentities($task->get_value("taskName"));
+  include_template("templates/taskDetailM.tpl");
 
 // Default read-only view
 } else {

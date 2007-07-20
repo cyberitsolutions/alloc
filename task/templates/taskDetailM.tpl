@@ -10,7 +10,7 @@ function updateStuffWithAjax() \{
   url = '{$url_alloc_updateParentTasks}projectID='+id
   makeAjaxRequest(url,'updateParentTasks',1)
   document.getElementById("taskCCListDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updateTaskCCList}projectID='+id
+  url = '{$url_alloc_updateTaskCCList}projectID='+id+'&taskID={$task_taskID}';
   makeAjaxRequest(url,'updateTaskCCList',2)
   document.getElementById("taskPersonList").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
   url = '{$url_alloc_updatePersonList}projectID='+id
@@ -55,7 +55,7 @@ function updatePersonList(number) \{
 {$table_box}
   <tr>
     <th class="nobr">{$task_taskType}</th>
-    <th class="right nobr" colspan="3">&nbsp;&nbsp;<a href="{$url_alloc_task}taskID={$task_taskID}&view=brief">View</a>&nbsp;&nbsp;<a target="_BLANK" href="{$url_alloc_task}taskID={$task_taskID}&view=printer">Printer</a>&nbsp;&nbsp;<a href="{$url_alloc_project}projectID={$task_projectID}">Project</a>&nbsp;&nbsp;{$navigation_links}</th>
+    <th class="right nobr" colspan="3">&nbsp;&nbsp;<a href="{$url_alloc_task}taskID={$task_taskID}&view=brief">View</a>&nbsp;&nbsp;{$navigation_links}</th>
   </tr>
   <tr>
     <td colspan="4">&nbsp;</td>

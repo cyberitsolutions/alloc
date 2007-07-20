@@ -22,6 +22,7 @@
  */
 
 require_once("../alloc.php");
+define("PAGE_IS_PRINTABLE",1);
 
 
 

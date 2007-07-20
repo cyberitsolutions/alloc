@@ -130,43 +130,49 @@ class project extends db_entity {
     return $rows;
   }
 
-  function get_navigation_links() {
+  function get_navigation_links($show_project=false) {
     global $taskID, $TPL, $current_user;
 
     // Client 
     if ($this->get_value("clientID")) {  
       $url = $TPL["url_alloc_client"]."clientID=".$this->get_value("clientID");
-      $links[] = "<a href=\"$url\" class=\"nobr\">Client</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr noprint\">Client</a>";
+    }
+
+    // Project
+    if ($show_project) {
+      $url = $TPL["url_alloc_project"]."projectID=".$this->get_id();
+      $links[] = "<a href=\"$url\" class=\"nobr noprint\">Project</a>";
     }
 
     // Tasks
     if ($this->have_perm()) {
       $url = $TPL["url_alloc_taskList"]."applyFilter=1&amp;taskStatus=not_completed&amp;taskView=byProject&amp;projectID=".$this->get_id();
-      $links[] = "<a href=\"$url\" class=\"nobr\">Tasks</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr noprint\">Tasks</a>";
     } 
 
     // Graph
     if ($this->have_perm()) {
       $url = $TPL["url_alloc_projectGraph"]."applyFilter=1&projectID=".$this->get_id()."&taskStatus=not_completed&showTaskID=true";
-      $links[] = "<a href=\"$url\" class=\"nobr\">Graph</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr noprint\">Graph</a>";
     }
 
     // Allocation
     if ($this->have_perm(PERM_PROJECT_VIEW_TASK_ALLOCS)) {
       $url = $TPL["url_alloc_personGraph"]."projectID=".$this->get_id();
-      $links[] = "<a href=\"$url\" class=\"nobr\">Allocation</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr noprint\">Allocation</a>";
     } 
 
     // To Time Sheet
     if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
       $url = $TPL["url_alloc_timeSheet"]."newTimeSheet_projectID=".$this->get_id();
-      $links[] = "<a href=\"$url\" class=\"nobr\">Time Sheet</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr noprint\">Time Sheet</a>";
     }
 
     // New Task
     if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
       $url = $TPL["url_alloc_task"]."projectID=".$this->get_id();
-      $links[] = "<a href=\"$url\" class=\"nobr\">New Task</a>";
+      $links[] = "<a href=\"$url\" class=\"nobr noprint\">New Task</a>";
     }
 
     // Join links up with space
@@ -260,7 +266,6 @@ class project extends db_entity {
   function has_attachment_permission_delete($person) {
     return $this->has_project_permission($person,array("isManager"));
   }
-
 
   function get_project_list_filter($filter=array()) {
 
@@ -367,7 +372,7 @@ class project extends db_entity {
       $_FORM["showClient"]        and $summary.= "\n<th class=\"col\">Client</th>";
       $_FORM["showProjectType"]   and $summary.= "\n<th class=\"col\">Type</th>";
       $_FORM["showProjectStatus"] and $summary.= "\n<th class=\"col\">Status</th>";
-      $_FORM["showNavLinks"]      and $summary.= "\n<th class=\"col\">&nbsp;</th>";
+      $_FORM["showNavLinks"]      and $summary.= "\n<th class=\"col noprint\">&nbsp;</th>";
       $summary.="\n</tr>";
       return $summary;
     }
@@ -384,7 +389,7 @@ class project extends db_entity {
     $_FORM["showClient"]          and $summary[] = "  <td class=\"col\">".$row["clientName"]."&nbsp;</td>";
     $_FORM["showProjectType"]     and $summary[] = "  <td class=\"col\">".ucwords($row["projectType"])."&nbsp;</td>";
     $_FORM["showProjectStatus"]   and $summary[] = "  <td class=\"col\">".ucwords($row["projectStatus"])."&nbsp;</td>";
-    $_FORM["showNavLinks"]        and $summary[] = "  <td class=\"col nobr\" align=\"right\" width=\"1%\">".$row["navLinks"]."&nbsp;</td>";
+    $_FORM["showNavLinks"]        and $summary[] = "  <td class=\"col nobr noprint\" align=\"right\" width=\"1%\">".$row["navLinks"]."&nbsp;</td>";
     $summary[] = "</tr>";
 
     $summary = "\n".implode("\n",$summary);

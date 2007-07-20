@@ -61,26 +61,34 @@ function updateProjectList(number) \{
                 <td valign="top"><b><nobr>Display Options</nobr></b></td>
                 <td colspan="3" align="right">
                   <nobr>
-List by Priority <input type="radio" name="taskView" value="prioritised"{$taskView_checked_prioritised}><br/>
-List by Project <input type="radio" name="taskView" value="byProject"{$taskView_checked_byProject}>
+<label for="list_prioritised">List by Priority</label> <input type="radio" id="list_prioritised" name="taskView" value="prioritised"{$taskView_checked_prioritised}><br/>
+<label for="list_byProject">List by Project</label> <input type="radio" id="list_byProject" name="taskView" value="byProject"{$taskView_checked_byProject}>
                   </nobr>
                 </td>
               </tr>
               <tr>
-                <td align="right"><nobr>Desc &amp; Comments</nobr></td><td><input type="checkbox" name="showDescription"{$showDescription_checked}></td>
-                <td align="right">Task Dates</td><td><input type="checkbox" name="showDates"{$showDates_checked}></td>
+                <td align="right"><label for="showDescription" class="nobr">Desc &amp; Comments</label></td>
+                <td><input type="checkbox" id="showDescription" name="showDescription"{$showDescription_checked}></td>
+                <td align="right"><label for="showDates">Task Dates</label></td>
+                <td><input type="checkbox" id="showDates" name="showDates"{$showDates_checked}></td>
               </tr>
               <tr>
-                <td align="right"><nobr>Task Creator</nobr></td><td><input type="checkbox" name="showCreator"{$showCreator_checked}></td>
-                <td align="right"><nobr>Assigned To</nobr></td><td><input type="checkbox" name="showAssigned"{$showAssigned_checked}></td>
+                <td align="right"><label for="showCreator" class="nobr">Task Creator</label></td>
+                <td><input type="checkbox" id="showCreator" name="showCreator"{$showCreator_checked}></td>
+                <td align="right"><label for="showAssigned" class="nobr">Assigned To</label></td>
+                <td><input type="checkbox" id="showAssigned" name="showAssigned"{$showAssigned_checked}></td>
               </tr>
               <tr>
-                <td align="right"><nobr>Est, Act &amp; Percent</nobr></td><td><input type="checkbox" name="showTimes"{$showTimes_checked}></td>
-                <td align="right">Task ID </td><td><input type="checkbox" name="showTaskID"{$showTaskID_checked}></td>
+                <td align="right"><label for="showTimes" class="nobr">Est, Act &amp; Percent</label></td>
+                <td><input type="checkbox" id="showTimes" name="showTimes"{$showTimes_checked}></td>
+                <td align="right"><label for="showTaskID" class="nobr">Task ID</label></td>
+                <td><input type="checkbox" id="showTaskID" name="showTaskID"{$showTaskID_checked}></td>
               </tr>
               <tr>
-                <td align="right">Priority Info</td><td><input type="checkbox" name="showPriority"{$showPriority_checked}></td>
-                <td align="right">Task Status</td><td><input type="checkbox" name="showStatus"{$showStatus_checked}></td>
+                <td align="right"><label for="showPriority" class="nobr">Priority Info</label></td>
+                <td><input type="checkbox" id="showPriority" name="showPriority"{$showPriority_checked}></td>
+                <td align="right"><label for="showStatus" class="nobr">Task Status</label></td>
+                <td><input type="checkbox" id="showStatus" name="showStatus"{$showStatus_checked}></td>
               </tr>
                 
             </table>

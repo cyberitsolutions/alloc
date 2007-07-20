@@ -47,7 +47,8 @@ function show_item() {
 }
 
 register_home_items();
-$printable = true;
+define("PAGE_IS_PRINTABLE",1);
+
 if ($_GET["media"] == "print") {
 	include_template("templates/homePrintableM.tpl");
 } else {
