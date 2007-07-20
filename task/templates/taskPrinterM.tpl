@@ -9,60 +9,55 @@
 
 
 <table width="100%" cellspacing="0" cellpadding="4"> 
- <tr>
-    <td class="overline">Project</td>
-    <td class="overline">{$projectName}&nbsp;</td>
-    <td class="overline">Parent Task</td>
-    <td class="overline">{$parentTask}&nbsp;</td>
-  </tr>
   <tr>
-    <td class="overline">Client</td>
+    <td class="overline" width="20%">Client</td>
     <td class="overline" colspan="3">{$client_clientName}&nbsp;</td>
   </tr>
   <tr>
-    <td class="overline">Contact Name</td>
-    <td class="overline">{$clientContact_clientContactName}&nbsp;</td>
-    <td class="overline">Email</td>
-    <td class="overline">{$clientContact_clientContactEmail}&nbsp;</td>
+    <td>Contact Name</td>
+    <td>{$clientContact_clientContactName}&nbsp;</td>
+    <td>Email</td>
+    <td>{$clientContact_clientContactEmail}&nbsp;</td>
   </tr>
   <tr>
-    <td class="overline">Phone</td>
-    <td class="overline">{$clientContact_clientContactPhone}&nbsp;</td>
-    <td class="overline">Mobile</td>
-    <td class="overline">{$clientContact_clientContactMobile}&nbsp;</td>
+    <td>Phone</td>
+    <td>{$clientContact_clientContactPhone}&nbsp;</td>
+    <td>Mobile</td>
+    <td>{$clientContact_clientContactMobile}&nbsp;</td>
   </tr>
   <tr>
-    <td class="overline">Postal Address</td>
-    <td class="overline">{$client_clientStreetAddressOne}&nbsp;<br>
-    {$client_clientSuburbOne}<br>{$client_clientStateOne} {$client_clientPostcodeOne}</td>
-    <td class="overline">Street Address</td>
-    <td class="overline">{$client_clientStreetAddressTwo}&nbsp;<br>
-        {$client_clientSuburbTwo}<br>
-	{$client_clientStateTwo} {$client_clientPostcodeTwo}</td>
+    <td>Postal Address</td>
+    <td>{$client_clientStreetAddressOne} {$cbOne} {$client_clientStateOne} {$client_clientPostcodeOne}</td>
+    <td>Street Address</td>
+    <td>{$client_clientStreetAddressTwo} {$client_clientSuburbTwo} {$client_clientStateTwo} {$client_clientPostcodeTwo}</td>
   </tr>  
   <tr>
-    <td class="overline">Name</td>
-    <td class="overline" colspan="3">{$task_taskName}&nbsp;</td>
+    <td class="overline">Project</td>
+    <td class="overline" colspan="3">{$project_projectName}&nbsp;</td>
   </tr>
   <tr>
-    <td class="overline" valign="top">Description</td>
-    <td class="overline" colspan="3">{$task_taskDescription}&nbsp;</td>
+    <td>Parent Task</td>
+    <td colspan="3">{$parentTask}&nbsp;</td>
   </tr>
   <tr>
-    <td class="overline">Date Created</td>
-    <td class="overline" colspan="3">{$task_dateCreated}&nbsp;</td>
+    <td>Task Name</td>
+    <td colspan="3">#{$task_taskID} {$task_taskName}&nbsp;</td>
   </tr>
- <tr>
-    <td class="overline">Priority</td>
-    <td class="overline">{$priority}&nbsp;</td>
+  <tr>
+    <td valign="top">Description</td>
+    <td colspan="3">{$task_taskDescription}&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="overline">Created By</td>
+    <td class="overline">{$task_createdBy} {$task_dateCreated}&nbsp;</td>
     <td class="overline">Task Type</td>
     <td class="overline">{$taskType}&nbsp;</td>
   </tr>
   <tr>
     <td class="overline">Assigned To</td>
-    <td class="overline">{$person_username}&nbsp;</td>
-    <td class="overline">&nbsp;</td>
-    <td class="overline">&nbsp;</td>
+    <td class="overline">{$person_username} {$task_dateAssigned}</td>
+    <td class="overline">Priority</td>
+    <td class="overline">{$priority}&nbsp;</td>
   </tr>
   <tr>
     <td class="overline">Time Estimate</td>

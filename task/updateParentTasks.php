@@ -26,10 +26,10 @@ require_once("../alloc.php");
 
 
 
-if ($_GET["projectID"]) {
+#if ($_GET["projectID"]) {
   usleep(400000);
   echo task::get_parent_task_select($_GET["projectID"]);
-}
+#}
 
 
 

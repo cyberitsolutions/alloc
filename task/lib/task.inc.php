@@ -282,9 +282,10 @@ class task extends db_entity {
   function get_task_cc_list_select($projectID="") {
     global $TPL;
     $db = new db_alloc;
+    $taskCCListOptions = array();
     
     if (is_object($this)) {
-      $projectID = $this->get_value("projectID") or $projectID = $_GET["projectID"];
+      $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
       $q = sprintf("SELECT fullName,emailAddress FROM taskCCList WHERE taskID = %d",$this->get_id());
       $db->query($q);  
       while ($db->next_record()) {
@@ -296,7 +297,6 @@ class task extends db_entity {
     }
 
     if ($projectID) {
-      $taskCCListOptions = array();
 
       // Get primary client contact from Project page
       $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
@@ -326,6 +326,8 @@ class task extends db_entity {
     }
 
     if (is_array($taskCCListOptions)) {
+      asort($taskCCListOptions);
+
       foreach ($taskCCListOptions as $email => $name) {
         if ($email) {
           $str = trim(htmlentities($name." <".$email.">"));
@@ -363,6 +365,7 @@ class task extends db_entity {
                  LEFT JOIN person ON person.personID = projectPerson.personID 
                      WHERE person.personActive = 1 
                        AND projectID = %d
+                  ORDER BY firstName, username
                    ",$projectID);
       $db->query($q);
       while ($row = $db->row()) {
@@ -446,8 +449,7 @@ class task extends db_entity {
 
 
     // If we're viewing the printer friendly view
-    global $view;
-    if ($view == "printer") {
+    if ($_GET["media"] == "print") {
       // Parent Task label
       $t = new task;
       $t->set_id($this->get_value("parentTaskID"));
@@ -898,7 +900,7 @@ function get_task_statii_array() {
           $print = true;
 
           $_FORM["showProject"] and $summary.= "\n<tr>";
-          $_FORM["showProject"] and $summary.= "\n  <th class=\"col tasks noprint\" colspan=\"21\">".$project["link"]."</th>";
+          $_FORM["showProject"] and $summary.= "\n  <th class=\"col tasks\" colspan=\"21\">".$project["link"]."</th>";
           $_FORM["showProject"] and $summary.= "\n</tr>";
 
           foreach ($t as $task) {
