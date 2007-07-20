@@ -282,7 +282,9 @@ $TPL["percentComplete"] = $task->get_percentComplete();
 $project = $task->get_foreign_object("project");
 $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 if ($project->get_id()) {
-  $TPL["navigation_links"] = $project->get_navigation_links(true);
+  $ops["taskID"] = $task->get_id();
+  $ops["showProject"] = true;
+  $TPL["navigation_links"] = $project->get_navigation_links($ops);
 }
 
 $parent_task = $task->get_foreign_object("task", "parentTaskID");

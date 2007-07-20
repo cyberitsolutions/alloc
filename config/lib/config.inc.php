@@ -37,11 +37,12 @@ class config extends db_entity {
     $table = get_cached_table("config");
     if ($table[$name]["type"] == "array") {
       $val = unserialize($table[$name]["value"]) or $val = array();
+      return $val;
 
     } else if ($table[$name]["type"] == "text") {
       $val = $table[$name]["value"];
+      return stripslashes($val);
     }
-    return stripslashes($val);
   }
 
   function get_config_item_id($name='') {
