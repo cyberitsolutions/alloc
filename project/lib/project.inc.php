@@ -130,7 +130,7 @@ class project extends db_entity {
     return $rows;
   }
 
-  function get_navigation_links($show_project=false) {
+  function get_navigation_links($ops=array()) {
     global $taskID, $TPL, $current_user;
 
     // Client 
@@ -140,7 +140,7 @@ class project extends db_entity {
     }
 
     // Project
-    if ($show_project) {
+    if ($ops["showProject"]) {
       $url = $TPL["url_alloc_project"]."projectID=".$this->get_id();
       $links[] = "<a href=\"$url\" class=\"nobr noprint\">Project</a>";
     }
@@ -165,7 +165,10 @@ class project extends db_entity {
 
     // To Time Sheet
     if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
-      $url = $TPL["url_alloc_timeSheet"]."newTimeSheet_projectID=".$this->get_id();
+      if ($ops["taskID"]) {
+        $extra = "&taskID=".$ops["taskID"];
+      }
+      $url = $TPL["url_alloc_timeSheet"]."newTimeSheet_projectID=".$this->get_id().$extra;
       $links[] = "<a href=\"$url\" class=\"nobr noprint\">Time Sheet</a>";
     }
 
