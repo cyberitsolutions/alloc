@@ -27,10 +27,7 @@ class report_module extends module {
 function has_report_perm() {
   global $current_user;
   if (is_object($current_user)) {
-    $permissions = explode(",", $current_user->get_value("perms"));
-    if (in_array("admin", $permissions) || in_array("god", $permissions)) {
-      return true;
-    }
+    return $current_user->have_role("admin");
   }
   return false;
 }

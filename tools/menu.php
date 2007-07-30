@@ -33,7 +33,7 @@ $options = array(array("url"=>"reminderList"            ,"text"=>"Reminders"    
                 ,array("url"=>"taskCommentTemplateList" ,"text"=>"Task Comment Templates","entity"=>"taskCommentTemplate","action"=>PERM_READ_WRITE)
                 ,array("url"=>"loans"                   ,"text"=>"Item Loans"            ,"entity"=>"loan"               ,"action"=>true)
                 ,array("url"=>"report"                  ,"text"=>"Reports"               ,"entity"=>""                   ,"action"=>true, "function"=>"has_report_perm")
-                ,array("url"=>"backup"                  ,"text"=>"Database & File Backup","entity"=>"person"             ,"function"=>"is_god")
+                ,array("url"=>"backup"                  ,"text"=>"Database & File Backup","entity"=>""                   ,"function"=>"has_backup_perm")
 );
 
   //,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
@@ -55,6 +55,7 @@ function show_options($template) {
       }
     } else if ($option["function"]){
       $f = $option["function"];
+
       if ($f()) {
         $TPL["url"] = $TPL["url_alloc_".$option["url"]];
         $TPL["params"] = $option["params"];
