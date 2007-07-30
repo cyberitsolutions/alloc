@@ -96,8 +96,9 @@ class db_entity {
                         WHERE (tableName = '".$this->data_table."' OR tableName='')
                          AND (entityID = %d OR entityID = 0 OR entityID = -1)
                          AND (personID = %d OR personID = 0)
-                         AND (actions & $action = $action OR actions = 0)
-                    ORDER BY sortKey",$entity_id,$person_id);
+                         AND (actions & %d = %d OR actions = 0)
+                    ORDER BY sortKey"
+                    ,$entity_id,$person_id,$action,$action);
     $db->query($query);
     
 #$action == 4 and print $query;
