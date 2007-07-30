@@ -187,7 +187,20 @@ function get_customizedFont_array() {
   return array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"4", "1"=>5, "2"=>6, "3"=>7, "4"=>8, "5"=>9, "6"=>10);
 }
 function get_customizedTheme_array() {
-  return array("Default","Leaf");
+  global $TPL;
+  $dir = $TPL["url_alloc_styles"];
+  $rtn = array();
+  if (is_dir($dir)) {
+    $handle = opendir($dir);
+    // TODO add icons to files attachaments in general
+    while (false !== ($file = readdir($handle))) {
+      if (preg_match("/style_(.*)\.ini$/",$file,$m)) {
+        $rtn[] = ucwords($m[1]);
+      }
+    }
+    sort($rtn);
+  }
+  return $rtn;
 }
 function show_footer() {
   include_template(ALLOC_MOD_DIR."shared/templates/footerS.tpl");
