@@ -73,6 +73,7 @@ class alloc_email_receive {
 
     if (!$this->connection) {
       echo "<pre>".print_r(imap_errors(),1)."</pre>"; 
+      echo "<pre>".print_r(imap_alerts(),1)."</pre>"; 
     }
   }
 
@@ -156,14 +157,11 @@ class alloc_email_receive {
     $x or $x = $this->msg_num;
     if ($this->connection) {
       imap_delete($this->connection, $x);
-      imap_expunge($this->connection);
     }
   }
 
-  function get_hash_from_message_id($id) {
-    $bits = explode("@",$id);
-    $key = substr($bits[0],-8);
-    return $key;
+  function expunge() {
+    imap_expunge($this->connection);
   }
 
   function get_hashes($headers=false) {
@@ -173,24 +171,26 @@ class alloc_email_receive {
 
     if (config::get_config_item("allocEmailKeyMethod") == "subject") {
 
-      if (preg_match("/\{Key:[a-zA-Z0-9]{8}\}/i",$headers->subject,$m)) {
+      if (preg_match("/\{Key:[A-Za-z0-9]{8}\}/i",$headers->subject,$m)) {
         $key = $m[0];
         $key = str_ireplace(array("{Key:","}"),"",$key);
-        $keys[] = $key;
+        $key and $keys[] = $key;
       }
 
     } else if (config::get_config_item("allocEmailKeyMethod") == "headers") {
 
-        $irt = $headers->in_reply_to;
-        if ($irt) {
-          $keys[] = $this->get_hash_from_message_id($irt);
+      $str = $headers->in_reply_to." ".$headers->references;
+
+      preg_match_all("/([A-Za-z0-9]{8})@/",$str,$m);
+
+      if (is_array($m[1])) {
+        $temp = array_flip($m[1]);// unique pls
+        foreach ($temp as $k => $v) {
+          $keys[] = $k;
         }
-        $ref = $headers->references;
-        $ref_bits = explode(" ",$ref);
-        foreach($ref_bits as $key) {
-          $keys[] = $this->get_hash_from_message_id($key);
-        }
+      } 
     }
+
     return $keys;
   }
 
