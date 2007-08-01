@@ -631,8 +631,9 @@ class task extends db_entity {
     }
 
     if ($recipient["emailAddress"]) {
+      is_object($current_user) and $header["From"] = $current_user->get_username(1)." via ".ALLOC_DEFAULT_FROM_ADDRESS;
       $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName").$subject_extra;
-      return $email->send($recipient["emailAddress"], $subject, $message, $type);
+      return $email->send($recipient["emailAddress"], $subject, $message, $type, $header);
     }
   }
 
@@ -1484,7 +1485,7 @@ function get_task_statii_array() {
     } else if ($personID && $personID == $this->get_value("personID")) {
       $recipients[] = "creator";
       $successful_recipients = $this->send_emails($recipients,"task_comments",$body);
-    } else if ($clientContactID) {
+    } else {
       $recipients[] = "assignee";
       $recipients[] = "creator";
       $successful_recipients = $this->send_emails($recipients,"task_comments",$body);
@@ -1492,7 +1493,6 @@ function get_task_statii_array() {
 
     if ($successful_recipients) {
       $comment->set_value("commentEmailRecipients",$successful_recipients);
-      $comment->set_value("comment",$append_comment_text);
       $comment->save();
     }
 

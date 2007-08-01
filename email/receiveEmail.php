@@ -50,7 +50,7 @@ print $nl."Found $num_emails emails.";
 $x = 0;
 // fetch and parse email
 while ($x < $num_emails) {
-  unset($bad_key);
+  unset($bad_key,$done);
   $x++;
   $mail->set_msg($x);
   $headers = $mail->get_msg_header();
@@ -60,29 +60,27 @@ while ($x < $num_emails) {
   foreach ($keys as $key) {
     $token = new token;
     if ($token->set_hash($key)) {
-      print $nl.$nl."Executing:";
+      print $nl.$nl."Executing...";
       print $nl."  From: ".$mail->mail_headers->fromaddress;
       print $nl."  Subject: ".$mail->mail_headers->subject;
       $token->execute($mail);
       $mail->delete();
-      break;
+      $done = true;
+    } 
+  }
+
+  if (!$done) {
+    // forward to admin
+    if (config::get_config_item("allocEmailAdmin")) {
+      $mail->forward(config::get_config_item("allocEmailAdmin"), "[allocPSA] Unable to process email sent to ".config::get_config_item("AllocFromEmailAddress"));
     }
+    $mail->delete();
   }
+
+
 }
 
-$mail->check_mail();
-$num_emails = $mail->mailbox_info->Nmsgs;
-$x = 0;
-while ($x < $num_emails) {
-  $x++;
-  $mail->set_msg($x);
-  // forward to admin
-  if (config::get_config_item("allocEmailAdmin")) {
-    $mail->forward(config::get_config_item("allocEmailAdmin"), "[allocPSA] Email sent to allocPSA address - unable to process");
-  }
-  $mail->delete();
-}
-
+$mail->expunge();
 $mail->close();
 
 

@@ -51,8 +51,6 @@ class alloc_email {
   var $subject = "";
   var $body = ""; 
 
-
-  // Initializer
   function alloc_email($to_address="",$subject="",$message="",$message_type="",$header=array()) {
     $to_address   and $this->to_address   = $to_address;
     $subject      and $this->subject      = $subject;
@@ -61,13 +59,17 @@ class alloc_email {
     $header       and $this->header       = $header;
   }
 
-  // Send and log the email
   function send($to_address="",$subject="",$message="",$message_type="",$header=array()) {
-    $to_address   and $this->to_address   = $to_address;
-    $subject      and $this->subject      = $subject;
-    $message      and $this->message      = $message;
-    $message_type and $this->message_type = $message_type;
-    $header       and $this->header       = $header;
+    $to_address        and $this->to_address   = $to_address;
+    $subject           and $this->subject      = $subject;
+    $message           and $this->message      = $message;
+    $message_type      and $this->message_type = $message_type;
+
+    if (is_array($this->header)) {
+      $this->header = array_merge($this->header,$header);
+    } else {
+      $this->header = $header;
+    }
 
     if (!$this->header["From"]) {
       $this->header["From"] = ALLOC_DEFAULT_FROM_ADDRESS;
@@ -115,7 +117,6 @@ class alloc_email {
     $this->header["Reply-To"] or $this->header["Reply-To"] = $email;
   }
 
-
   function set_message_id($hash="") {
     $hash and $hash = ".".$hash;
     list($usec, $sec) = explode(" ", microtime());
@@ -128,7 +129,6 @@ class alloc_email {
     $this->header["Message-ID"] = "<".$time.".".$rand.$hash."@".$host.">";
   }
 
-  // Will return true if $this->to_address is true
   function is_valid_to_address() {
     // TODO
     if (strstr($this->to_address,"@")) {
@@ -136,7 +136,6 @@ class alloc_email {
     }
   }
 
-  // Will return true if the requested URL is ok to send from
   function is_valid_url() {
 
     // Validate against particular hosts
@@ -153,8 +152,6 @@ class alloc_email {
     return !$dont_send;
   }
 
-
-  // Log
   function log($message="") {
     global $current_user;
     $sentEmailLog = new sentEmailLog();
