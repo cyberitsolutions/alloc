@@ -593,7 +593,7 @@ class task extends db_entity {
 
     $from_name = $from or $from_name = $current_user->get_username(1);
     
-    $message.= "\n\n".$subject." by ".$from_name;
+    $message.= "\n\n".stripslashes($subject." by ".$from_name);
     $message.= "\n\n".stripslashes(wordwrap($body));
     $message.= "\n\n".config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
     $message.= "\n\nProject: ".stripslashes($p->get_value("projectName"));
