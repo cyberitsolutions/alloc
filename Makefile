@@ -74,7 +74,7 @@ patch:
 
 version:
 	@version=$$((`bzr revno`+1)); \
-	echo 1.3-$${version} > ./util/alloc_version;
+	echo 1.4-$${version} > ./util/alloc_version;
 	@echo "version: allocPSA `cat ./util/alloc_version`"
 
 commit: test_db
