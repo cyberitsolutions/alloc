@@ -3,7 +3,7 @@
 
 
 ==========================
-allocPSA v1.3 User Manual
+allocPSA v1.4 User Manual
 ==========================
 -----------------------------------------------------------------
 The Premier Open Source Professional Services Automation Solution
