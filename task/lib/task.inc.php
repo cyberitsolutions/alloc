@@ -540,12 +540,12 @@ class task extends db_entity {
     return $recipients;
   }
 
-  function send_emails($selected_option, $type="", $body="") {
+  function send_emails($selected_option, $type="", $body="", $from=false) {
     global $current_user;
     $recipients = $this->get_email_recipients($selected_option);
 
     foreach ($recipients as $recipient) {
-      if ($this->send_email($recipient, $type, $body)) {
+      if ($this->send_email($recipient, $type, $body, $from)) {
         $successful_recipients.= $commar.$recipient["name"];
         $commar = ", ";
       }
@@ -553,7 +553,7 @@ class task extends db_entity {
     return $successful_recipients;
   }
 
-  function send_email($recipient, $type, $body) {
+  function send_email($recipient, $type, $body, $from=false) {
     global $current_user;
 
     $types = array('task_created'  => "Task Created"
@@ -581,8 +581,10 @@ class task extends db_entity {
     $recipient["isCC"] and $message.= "[Note: this email is sent to you from the allocPSA services management ";
     $recipient["isCC"] and $message.= "system. You are receiving this email because you are nominated as an ";
     $recipient["isCC"] and $message.= "interested party on the project, task or activity detailed below.]\n";
+
+    $from_name = $from or $from_name = $current_user->get_username(1);
     
-    $message.= "\n\n".$subject." by ".$current_user->get_username(1);
+    $message.= "\n\n".$subject." by ".$from_name;
     $message.= "\n\n".stripslashes(wordwrap($body));
     $message.= "\n\n".config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
     $message.= "\n\nProject: ".stripslashes($p->get_value("projectName"));
@@ -631,7 +633,7 @@ class task extends db_entity {
     }
 
     if ($recipient["emailAddress"]) {
-      is_object($current_user) and $header["From"] = $current_user->get_username(1)." via ".ALLOC_DEFAULT_FROM_ADDRESS;
+      $header["From"] = $from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS;
       $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName").$subject_extra;
       return $email->send($recipient["emailAddress"], $subject, $message, $type, $header);
     }
@@ -1472,6 +1474,7 @@ function get_task_statii_array() {
         $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
       }
     }
+    // Don't update last modified fields...
     $comment->skip_modified_fields = true;
 
     $body = trim(mime_parser::get_body_text($decoded));
@@ -1481,22 +1484,22 @@ function get_task_statii_array() {
 
     if ($personID && $personID == $this->get_value("creatorID")) {
       $recipients[] = "assignee";
-      $successful_recipients = $this->send_emails($recipients,"task_comments",$body);
+      $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from_person);
+
     } else if ($personID && $personID == $this->get_value("personID")) {
       $recipients[] = "creator";
-      $successful_recipients = $this->send_emails($recipients,"task_comments",$body);
+      $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from_person);
+
     } else {
       $recipients[] = "assignee";
       $recipients[] = "creator";
-      $successful_recipients = $this->send_emails($recipients,"task_comments",$body);
+      $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from_person);
     }
 
     if ($successful_recipients) {
       $comment->set_value("commentEmailRecipients",$successful_recipients);
       $comment->save();
     }
-
-
   }
 
 }
