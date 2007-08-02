@@ -306,7 +306,7 @@ function get_attachments($entity, $id) {
 
           $type = substr($file,-3);
           $t = $types[$type] or $t = "unknown.gif";
-          $image = "<img src=\"".$TPL["url_alloc_images"]."/fileicons/".$t."\">";
+          $image = "<img border=\"0\" alt=\"icon\" src=\"".$TPL["url_alloc_images"]."/fileicons/".$t."\">";
 
           $size = filesize($dir.DIRECTORY_SEPARATOR.$file);
           $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.htmlentities($file)."</a>";
