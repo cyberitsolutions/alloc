@@ -24,7 +24,7 @@ doc_html:
 	if [ -d ./help/images ]; then rm -rf ./help/images; fi;
 	mkdir ./help/images
 	cp ./help_src/images_source/* ./help/images/
-	find ./help/images/ -type f -exec mogrify -format gif -scale '700x>' {} \;
+	find ./help/images/ -type f -exec mogrify -format gif -scale '750x>' {} \;
 	rm ./help/images/*.png
 	cat ./help_src/help.txt | sed -e 's/.png/.gif/' > ./help_src/help.gif.txt
 	cd ./help_src && rst2html.py $(RHFLAGS) ./help.gif.txt ./help.html
