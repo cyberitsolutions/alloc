@@ -13,7 +13,7 @@ function updateStuffWithAjax() \{
   url = '{$url_alloc_updateTaskCCList}projectID='+id+'&taskID={$task_taskID}';
   makeAjaxRequest(url,'updateTaskCCList',2)
   document.getElementById("taskPersonList").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updatePersonList}projectID='+id
+  url = '{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}';
   makeAjaxRequest(url,'updatePersonList',3)
 \}
 

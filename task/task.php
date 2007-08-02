@@ -191,7 +191,9 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   if (is_array($_POST["taskCCList"])) {
     foreach ($_POST["taskCCList"] as $encoded_name_and_email) {
       $name_and_email = unserialize(base64_decode(urldecode($encoded_name_and_email)));
-      $q = sprintf("INSERT INTO taskCCList (fullName,emailAddress,taskID) VALUES ('%s','%s',%d)",addslashes($name_and_email["name"]),$name_and_email["email"],$task->get_id());
+      $CCname = addslashes($name_and_email["name"]);
+      preg_match("/[A-Za-z0-9]+/",$CCname) or $CCname = ""; // sometimes name were being saved as a single space
+      $q = sprintf("INSERT INTO taskCCList (fullName,emailAddress,taskID) VALUES ('%s','%s',%d)",$CCname,$name_and_email["email"],$task->get_id());
       $db->query($q);
     }
   }

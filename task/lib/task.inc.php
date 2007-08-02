@@ -290,6 +290,7 @@ class task extends db_entity {
       $db->query($q);  
       while ($db->next_record()) {
         $taskCCList[] = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",stripslashes($db->f("fullName"))),"email"=>$db->f("emailAddress")))));
+
         // And add the list of people who are already in the taskCCList for this task, just in case they get deleted from the client pages
         // This email address will be overwritten by later entries
         $taskCCListOptions[$db->f("emailAddress")] = stripslashes($db->f("fullName"));
@@ -330,6 +331,7 @@ class task extends db_entity {
 
       foreach ($taskCCListOptions as $email => $name) {
         if ($email) {
+          $name = trim($name);
           $str = trim(htmlentities($name." <".$email.">"));
           $options[urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$name),"email"=>$email))))] = $str;
         }
@@ -339,7 +341,7 @@ class task extends db_entity {
     return $str;
   }
 
-  function get_personList_dropdown($projectID) {
+  function get_personList_dropdown($projectID,$taskID=false) {
     global $current_user;
  
     $db = new db_alloc;
@@ -352,6 +354,12 @@ class task extends db_entity {
 
     } else if (is_object($this) && $this->get_value("personID")) {
       $owner = $this->get_value("personID");
+
+    } else if ($taskID) {
+      $t = new task;
+      $t->set_id($taskID);
+      $t->select();
+      $owner = $t->get_value("personID");
 
     } else if (!is_object($this) || !$this->get_id()) {
       $owner = $current_user->get_id();
@@ -546,7 +554,8 @@ class task extends db_entity {
 
     foreach ($recipients as $recipient) {
       if ($this->send_email($recipient, $type, $body, $from)) {
-        $successful_recipients.= $commar.$recipient["name"];
+        $to = $recipient["name"] or $to = $recipient["emailAddress"];
+        $successful_recipients.= $commar.$to;
         $commar = ", ";
       }
     }
