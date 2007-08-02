@@ -3,7 +3,7 @@
 body { 
   background-color: #eeeeee; font-size:80%;
   font-family:arial,helvetica,sans-serif; 
-  max-width: 750px;
+  max-width: 800px;
   padding: 0;
   margin: 0;
   margin-left: auto;
@@ -15,7 +15,7 @@ img {
 }
 
 div.document { 
-  width:700px; 
+  width:750px; 
   border:1px solid #cccccc; 
   background-color: white; 
   padding:25px;
@@ -206,7 +206,8 @@ p.attribution {
   margin-left: 50% }
 
 p.caption {
-  font-style: italic }
+  font-style: italic;
+}
 
 p.credits {
   font-style: italic ;
