@@ -139,20 +139,31 @@ require_once("../alloc.php");
       $clientContact->get_value('clientContactCountry') and $col1[] = $clientContact->get_value('clientContactCountry');
 
 
+      // find some gpl icons!
+      #$ico_e = "<img src=\"".$TPL["url_alloc_images"]."/icon_email.gif\">";
+      #$ico_p = "<img src=\"".$TPL["url_alloc_images"]."/icon_phone.gif\">";
+      #$ico_m = "<img src=\"".$TPL["url_alloc_images"]."/icon_mobile.gif\">";
+      #$ico_f = "<img src=\"".$TPL["url_alloc_images"]."/icon_fax.gif\">";
+
+      $ico_e = "E: ";
+      $ico_p = "P: ";
+      $ico_m = "M: ";
+      $ico_f = "F: ";
+
       $col2 = array();
       $email = $clientContact->get_value("clientContactEmail");
       $email = str_replace("<","",$email);
       $email = str_replace(">","",$email);
-      $email and $col2[] = "E: <a href=\"mailto:".$email."\">".$email."</a>";
+      $email and $col2[] = $ico_e."<a href=\"mailto:".$email."\">".$email."</a>";
 
       $phone = $clientContact->get_value('clientContactPhone');
-      $phone and $col2[] = "P: ".$phone;
+      $phone and $col2[] = $ico_p.$phone;
 
       $mobile = $clientContact->get_value('clientContactMobile');
-      $mobile and $col2[] = "M: ".$mobile;
+      $mobile and $col2[] = $ico_m.$mobile;
 
       $fax = $clientContact->get_value('clientContactFax');
-      $fax and $col2[] = "F: ".$fax;
+      $fax and $col2[] = $ico_f.$fax;
 
       $buttons = "<nobr><input type=\"submit\" name=\"clientContact_edit\" value=\"Edit\"> 
                         <input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this Client Contact?')\"></nobr>";
