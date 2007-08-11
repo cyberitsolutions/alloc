@@ -798,8 +798,9 @@ function apply_patch($f) {
     list($sql,$comments) = parse_sql_file($f);
     foreach ($sql as $query) {
       if (!$db->query($query)) {
-        $TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
+        #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
         $failed = true;
+        die("<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error());
       }
     }
     if (!$failed) {
@@ -810,9 +811,10 @@ function apply_patch($f) {
   } else if (strtolower(substr($file,-4)) == ".php") {
     $str = execute_php_file("../patches/".$file);
     if ($str) {
-      $TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$str;
+      #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$str;
       $failed = true;
       ob_end_clean();
+      die("<b style=\"color:red\">Error:</b> ".$f."<br/>".$str);
     } else {
       $TPL["message_good"][] = "Successfully Applied: ".$f;
     }
