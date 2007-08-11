@@ -780,6 +780,13 @@ function execute_php_file($file_to_execute) {
 }
 function apply_patch($f) {
   global $TPL;
+  static $files;
+  // Should never attempt to apply the same patch twice.. in case 
+  // there are function declarations in the .php patches.
+  if ($files[$f]) {
+    return;
+  }
+  $files[$f] = true;
   $db = new db_alloc();
   $file = basename($f);
   $failed = false;
