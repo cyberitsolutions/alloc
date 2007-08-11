@@ -9,9 +9,6 @@ ALTER TABLE comment CHANGE commentModifiedTime commentModifiedTime datetime DEFA
 UPDATE comment SET commentCreatedUser = commentModifiedUser;
 UPDATE comment SET commentCreatedTime = commentModifiedTime;
 
--- rename comment.commentModifiedUserClientContactID to commentCreatedUserClientContactID
-ALTER TABLE comment CHANGE commentModifiedUserClientContactID commentCreatedUserClientContactID int(11) DEFAULT NULL;
-
 -- add plaintext field to capture person who created comment, for incoming email comments
 ALTER TABLE comment ADD commentCreatedUserText varchar(255) DEFAULT NULL AFTER commentCreatedUserClientContactID;
 
