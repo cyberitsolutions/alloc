@@ -501,7 +501,7 @@ CREATE TABLE timeSheetItem (
   timeSheetItemID int(11) NOT NULL auto_increment,
   timeSheetID int(11) NOT NULL default '0',
   dateTimeSheetItem date default NULL,
-  timeSheetItemDuration decimal(4,2) default '0.00',
+  timeSheetItemDuration decimal(9,2) default '0.00',
   timeSheetItemDurationUnitID int(3) default NULL,
   description text,
   location text,
