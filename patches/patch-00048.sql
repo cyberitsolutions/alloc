@@ -39,10 +39,10 @@ tokenActionMethod VARCHAR(32)
 INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ("Add Comments to Task","task","add_comment_from_email");
 
 -- Add new modified user field to the comment table to represent the client contacts
-ALTER TABLE comment ADD commentModifiedUserClientContactID INT(11) DEFAULT NULL AFTER commentModifiedUser;
+ALTER TABLE comment ADD commentCreatedUserClientContactID INT(11) DEFAULT NULL AFTER commentModifiedUser;
 
 -- Change type of commentModifiedUser so that it can be NULL
 ALTER TABLE comment CHANGE commentModifiedUser commentModifiedUser INT(11) DEFAULT NULL;
 
 -- Add email recipients field to comment table
-ALTER TABLE comment ADD commentEmailRecipients VARCHAR(255) DEFAULT "" AFTER commentModifiedUserClientContactID;
+ALTER TABLE comment ADD commentEmailRecipients VARCHAR(255) DEFAULT "" AFTER commentCreatedUserClientContactID;
