@@ -90,6 +90,7 @@ class backups {
       }
 
       $archive->close();
+      is_file($dumpfile) && unlink($dumpfile);
       $TPL["message_good"][] = "Backup created: " . $archivename;
     }
   }
