@@ -238,7 +238,7 @@ function show_toolbar() {
   $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Enter Search...";
   include_template(ALLOC_MOD_DIR."shared/templates/toolbarS.tpl");
 }
-function move_attachment($entity, $id) {
+function move_attachment($entity, $id=false) {
   global $TPL;
 
   $id = sprintf("%d",$id);
