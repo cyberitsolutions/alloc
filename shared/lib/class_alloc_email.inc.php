@@ -65,9 +65,9 @@ class alloc_email {
     $message           and $this->message      = $message;
     $message_type      and $this->message_type = $message_type;
 
-    if (is_array($this->header)) {
+    if (is_array($this->header) && is_array($header)) {
       $this->header = array_merge($this->header,$header);
-    } else {
+    } else if (is_array($header)) {
       $this->header = $header;
     }
 
