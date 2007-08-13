@@ -36,7 +36,7 @@ $info["username"] = config::get_config_item("allocEmailUsername");
 $info["password"] = config::get_config_item("allocEmailPassword");
 $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
-if (!$info["username"]) {
+if (!$info["username"] || !$info["password"] || !$info["host"]) {
   die("Email inbox username not defined, assuming email receive function is inactive.");
 }
 
