@@ -29,7 +29,6 @@ class alloc_email_receive {
   var $password;
   var $protocol;
   var $lockfile;
-  var $locked = false;
   var $mbox;
   var $connection;
   var $mail_headers;
@@ -45,30 +44,34 @@ class alloc_email_receive {
     $this->lockfile = $lockfile;
 
 
-    // Nuke lock files that are more that 10 min old 
-    
-    if (file_exists($this->lockfile) && (time() - filemtime($this->lockfile)) > 600) {
-      unlink($this->lockfile);
+    // Nuke lock files that are more that 30 min old 
+    if (file_exists($this->lockfile) && (time() - filemtime($this->lockfile)) > 1800) {
+      $this->unlock();
     } 
 
     if (file_exists($this->lockfile)) {
-      $this->locked = true;
-      #die("Email lock file found: ".$this->lockfile." Unable to continue!");
-
-    } else if (is_dir(dirname($this->lockfile)) && is_writeable(dirname($this->lockfile))) {
-      $fh = fopen($this->lockfile,"w");
-      fputs($fh,date("r"));
-      fclose($fh);
+      die("Mailbox is locked. Remove ".$this->lockfile." to unlock.");
+    } else {
+      $this->lock();
     }
+  
   }
   
   function open_mailbox($folder="") {
-    if (!$this->locked) {
-      $connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.'/notls/norsh}'.$folder;
-      $this->connection = imap_open($connect_string, $this->username, $this->password);
-      
+    $connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.'/notls/norsh}';
+    $this->connection = imap_open($connect_string, $this->username, $this->password, OP_HALFOPEN) or die("Unable to access mail folder(1).");
+    $list = imap_list($this->connection, $connect_string, "*");
+    if (!is_array($list) || !count($list)) { // || !in_array($connect_string.$folder,$list)) {
+      $this->unlock();
+      imap_close($this->connection); 
+      die("Unable to access mail folder(2).");
     } else {
-      unset($this->connection);
+      $connect_string.= $folder;
+      $rtn = imap_reopen($this->connection, $connect_string);
+      if (!$rtn) {
+        imap_close($this->connection); 
+        die("Unable to access mail folder(3).");
+      }
     }
 
     if (!$this->connection) {
@@ -142,10 +145,22 @@ class alloc_email_receive {
     mail($address,$subject,$header.$body,"From: ".get_default_from_address());
   }
 
-  function close() {
+  function lock() {
+    if (is_dir(dirname($this->lockfile)) && is_writeable(dirname($this->lockfile))) {
+      $fh = fopen($this->lockfile,"w");
+      fputs($fh,date("r"));
+      fclose($fh);
+    }
+  }
+
+  function unlock() {
     if (file_exists($this->lockfile)) {
       unlink($this->lockfile);  
     }
+  }
+
+  function close() {
+    $this->unlock();
     if ($this->connection) {
       #imap_close($this->connection);
       imap_close($this->connection,CL_EXPUNGE); // expunge messages marked for deletion
