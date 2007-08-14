@@ -259,7 +259,7 @@ class reminder extends db_entity {
                           , $person['surname']
                           , $person['emailAddress']);
 
-          $from = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
+          $headers["From"] = ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = $this->get_value('reminderSubject');
           $content = $this->get_value('reminderContent');
 
@@ -267,7 +267,7 @@ class reminder extends db_entity {
           if ($this->get_value('reminderRecuringInterval') == "No") {
             if ($this->delete()) {
               $e = new alloc_email;
-              $e->send($email, stripslashes($subject), stripslashes($content), "reminder", $from);
+              $e->send($email, stripslashes($subject), stripslashes($content), "reminder", $headers);
             }
           } else if ($this->get_value('reminderRecuringValue') != 0) {
 
@@ -280,7 +280,7 @@ class reminder extends db_entity {
             $this->set_value('reminderAdvNoticeSent', 0);
             if ($this->save()) {
               $e = new alloc_email;
-              $e->send($email, stripslashes($subject), stripslashes($content), "reminder", $from);
+              $e->send($email, stripslashes($subject), stripslashes($content), "reminder", $headers);
             }
           }
         } 
@@ -335,13 +335,13 @@ class reminder extends db_entity {
                           ,$person['surname']
                           ,$person['emailAddress']);
 
-          $from = "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
+          $headers["From"] = ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = sprintf("Adv Notice: %s"
                             ,$this->get_value('reminderSubject'));
           $content = $this->get_value('reminderContent');
           
           $e = new alloc_email;
-          $e->send($email, stripslashes($subject), stripslashes($content), "reminder_advnotice", $from);
+          $e->send($email, stripslashes($subject), stripslashes($content), "reminder_advnotice", $headers);
           $this->set_value('reminderAdvNoticeSent', 1);
           $this->save();
         } 
