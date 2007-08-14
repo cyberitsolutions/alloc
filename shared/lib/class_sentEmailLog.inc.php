@@ -34,8 +34,8 @@ class sentEmailLog extends db_entity {
                                  , "sentEmailBody"=>new db_field("sentEmailBody")
                                  , "sentEmailHeader"=>new db_field("sentEmailHeader")
                                  , "sentEmailType"=>new db_field("sentEmailType")
-                                 , "sentEmailLogModifiedTime"=>new db_field("sentEmailLogModifiedTime")
-                                 , "sentEmailLogModifiedUser"=>new db_field("sentEmailLogModifiedUser")
+                                 , "sentEmailLogCreatedTime"=>new db_field("sentEmailLogCreatedTime")
+                                 , "sentEmailLogCreatedUser"=>new db_field("sentEmailLogCreatedUser")
       );
   }
 }
