@@ -188,7 +188,7 @@ class alloc_email_receive {
 
       if (preg_match("/\{Key:[A-Za-z0-9]{8}\}/i",$headers->subject,$m)) {
         $key = $m[0];
-        $key = str_ireplace(array("{Key:","}"),"",$key);
+        $key = str_replace(array("{Key:","}"),"",$key);
         $key and $keys[] = $key;
       }
 
