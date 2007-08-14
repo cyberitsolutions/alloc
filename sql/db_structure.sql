@@ -364,8 +364,8 @@ CREATE TABLE sentEmailLog (
   sentEmailHeader varchar(255),
   sentEmailType
   enum('reminder','reminder_advnotice','task_created','task_closed','task_comments','timesheet_submit','timesheet_reject','daily_digest','timesheet_finished','new_password', 'task_reassigned'),
-  sentEmailLogModifiedTime datetime default NULL,
-  sentEmailLogModifiedUser int(11) default NULL,
+  sentEmailLogCreatedTime datetime default NULL,
+  sentEmailLogCreatedUser int(11) default NULL,
   PRIMARY KEY  (sentEmailLogID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
