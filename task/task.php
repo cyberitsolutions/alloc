@@ -310,11 +310,11 @@ if (is_array($parentTaskIDs)) {
 
   foreach ($parentTaskIDs as $tName => $tID) {
     $spaces.="&nbsp;&nbsp;&nbsp;&nbsp;";
-    $TPL["hierarchy_links"] .= "<br/>".$spaces."<a href=\"".$TPL["url_alloc_task"]."taskID=".$tID."\">".$tName."</a>";
+    $TPL["hierarchy_links"] .= "<br/>".$spaces."<a href=\"".$TPL["url_alloc_task"]."taskID=".$tID."\">".$tID." ".$tName."</a>";
   }
 }
 
-$TPL["hierarchy_links"].= "</br><br/><b>".$TPL["task_taskName"]."</b>";
+$TPL["hierarchy_links"].= "</br><br/><b>".$TPL["task_taskID"]." ".$TPL["task_taskName"]."</b>";
 
 
 
