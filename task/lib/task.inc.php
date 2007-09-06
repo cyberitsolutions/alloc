@@ -602,7 +602,7 @@ class task extends db_entity {
 
 
     $recipient["isCC"] and $message.= "\n\n\nIf you have any questions, please reply to this email or contact: ";
-    $recipient["isCC"] and $message.= "\n\n".config::get_config_item("companyName");
+    $recipient["isCC"] and $message.= "\n\n-- \n".config::get_config_item("companyName");
     $recipient["isCC"] and $message.= "\n".config::get_config_item("companyContactAddress");
     $recipient["isCC"] and $message.= "\n\nE: ".config::get_config_item("companyContactEmail");
     $recipient["isCC"] and $message.= "\nP: ".config::get_config_item("companyContactPhone");
