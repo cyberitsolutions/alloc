@@ -86,7 +86,7 @@ CREATE TABLE comment (
 
 CREATE TABLE config (
   configID int(11) NOT NULL auto_increment,
-  name varchar(255) NOT NULL,
+  name varchar(255) NOT NULL DEFAULT '',
   value text NOT NULL,
   type enum("text","array") NOT NULL default "text",
   PRIMARY KEY (configID),
@@ -122,9 +122,9 @@ CREATE TABLE history (
 
 CREATE TABLE htmlElement (
   htmlElementID INT(11) NOT NULL auto_increment,
-  htmlElementTypeID INT(11) NOT NULL,
+  htmlElementTypeID INT(11) NOT NULL DEFAULT 0,
   htmlElementParentID INT(11) DEFAULT 0,
-  handle VARCHAR(255) NOT NULL,
+  handle VARCHAR(255) NOT NULL DEFAULT '',
   label VARCHAR(255) DEFAULT NULL,
   helpText TEXT DEFAULT NULL,
   defaultValue VARCHAR(255) DEFAULT NULL,
@@ -135,7 +135,7 @@ CREATE TABLE htmlElement (
 
 CREATE TABLE htmlAttribute (
   htmlAttributeID INT(11) NOT NULL auto_increment,
-  htmlElementID INT(11) NOT NULL,
+  htmlElementID INT(11) NOT NULL DEFAULT 0,
   name VARCHAR(255) DEFAULT NULL,
   value VARCHAR(255) DEFAULT NULL,
   isDefault INT(1) DEFAULT 0,
@@ -215,7 +215,7 @@ CREATE TABLE loan (
 
 CREATE TABLE patchLog (
   patchLogID int(11) NOT NULL auto_increment,
-  patchName varchar(255) NOT NULL,
+  patchName varchar(255) NOT NULL DEFAULT '',
   patchDesc text,
   patchDate timestamp(14) NOT NULL,
   PRIMARY KEY  (patchLogID)
@@ -255,9 +255,9 @@ CREATE TABLE person (
   preferred_tfID int(11) default NULL,
   dailyTaskEmail varchar(255) default 'yes',
   personActive tinyint(1) default '1',
+  sessData text,
   phoneNo1 varchar(255) default "",
   phoneNo2 varchar(255) default "",
-  sessData text,
   PRIMARY KEY (personID),
   UNIQUE KEY (username)
 ) TYPE=MyISAM PACK_KEYS=0;
@@ -532,12 +532,12 @@ CREATE TABLE token (
   tokenHash VARCHAR(255) NOT NULL DEFAULT '',
   tokenEntity VARCHAR(32) DEFAULT '',
   tokenEntityID INT(11),
-  tokenActionID INT(11) NOT NULL,
+  tokenActionID INT(11) NOT NULL DEFAULT 0,
   tokenExpirationDate DATETIME DEFAULT NULL,
   tokenUsed INT(11) DEFAULT 0,
   tokenMaxUsed INT(11) DEFAULT 0,
   tokenActive INT(1) DEFAULT 0,
-  tokenCreatedBy INT(11) NOT NULL,
+  tokenCreatedBy INT(11) NOT NULL DEFAULT 0,
   tokenCreatedDate DATETIME,
   UNIQUE KEY (tokenHash)
 ) TYPE=MyISAM PACK_KEYS=0;
@@ -545,7 +545,7 @@ CREATE TABLE token (
 
 CREATE TABLE tokenAction (
   tokenActionID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  tokenAction VARCHAR(32) NOT NULL,
+  tokenAction VARCHAR(32) NOT NULL DEFAULT '',
   tokenActionType VARCHAR(32),
   tokenActionMethod VARCHAR(32)
 ) TYPE=MyISAM PACK_KEYS=0;
