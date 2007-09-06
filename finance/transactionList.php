@@ -49,7 +49,7 @@ function add_month_to_date($month, $year, $month_increm)
 	}
 }
 
-function show_transaction($template_name) {
+function show_transaction($template_name=false) {
 
   global $db, $tfID, $TPL, $month, $year, $sortTransactions, $status, $opening_balance, $transactionType;
 
@@ -73,7 +73,7 @@ function show_transaction($template_name) {
                   ",$tfID,$sortTransactions,$statement_start_date,$sortTransactions,$statement_end_date,$status_sql,$transactionType_sql,$sortTransactions);
   $db->query($query);
 
-  while ($db->next_record()) {
+  while ($row = $db->next_record()) {
     $entityID = "";
 
     $transaction = new transaction;
@@ -138,9 +138,23 @@ function show_transaction($template_name) {
       }
     }
 
-    include_template("templates/transactionListR.tpl");
+    if ($_POST["download"]) {
+      $headers or $headers = array_keys($row);
+      $csv.= $nl.implode(",",$row);
+      $nl = "\n";
+
+    } else if ($_POST["filter"]) {
+      include_template("templates/transactionListR.tpl");
+    }
   }
 
+  if ($_POST["download"] && $csv) {
+    $csv = implode(",",$headers)."\n".$csv;
+    header('Content-Type: application/octet-stream');
+    header("Content-Length: ".strlen($csv));
+    header('Content-Disposition: attachment; filename="'.date("Ymd_His").'.csv"');
+    echo $csv;
+  }
 
 }
 
@@ -271,7 +285,12 @@ $TPL["month_curr_link"] = $base_url."&month=".date("m")."&year=".date("Y")."&sor
 $TPL["month_curr_link"].= "&status=".$status."&transactionType=".$transactionType;
 $TPL["now"] = date("M y");
 
-include_template("templates/transactionListM.tpl");
+
+if ($_POST["download"]) {
+  show_transaction();
+} else {
+  include_template("templates/transactionListM.tpl");
+}
 
 
 

@@ -32,7 +32,9 @@
           <td><select name="transactionType"><option value="ALL"> -- ALL -- {$transactionTypeOptions}</select></td>
           <td><select name="status"><option value="ALL"> -- ALL -- {$statusOptions}</select></td>
           <td><input type="hidden" name="tfID" value="{$tfID}">
-              <input type="submit" name="filter" value="Filter"></td>
+              <input type="submit" name="download" value="Download">
+              <input type="submit" name="filter" value="Filter">
+          </td>
         </tr>
       </table>
 			</form>
