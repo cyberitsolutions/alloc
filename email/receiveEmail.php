@@ -25,8 +25,9 @@
 define("NO_AUTH",1);
 require_once("../alloc.php");
 
-$nl = "<br>";
-#$nl = "\n";
+#$nl = "<br>";
+$nl = "\n";
+$debug = true;
 
 $lockfile = ATTACHMENTS_DIR."mail.lock";
 
@@ -44,8 +45,7 @@ $mail = new alloc_email_receive($info,$lockfile);
 $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
 $mail->check_mail();
 $num_emails = $mail->mailbox_info->Nmsgs;
-
-print $nl."Found $num_emails emails.";
+$debug && $num_emails and print $nl.date("Y-m-d H:i:s")." Found $num_emails emails.";
 
 $x = 0;
 // fetch and parse email
@@ -55,21 +55,25 @@ while ($x < $num_emails) {
   $mail->set_msg($x);
   $headers = $mail->get_msg_header();
   $keys = $mail->get_hashes();
-  #echo "<pre>".print_r($keys,1)."</pre>";
+  $debug and print $nl.$nl."Keys: ".$nl.print_r($keys,1);
   
   foreach ($keys as $key) {
     $token = new token;
+    $debug and print $nl."Attempting key: ".$key;
     if ($token->set_hash($key)) {
-      print $nl.$nl."Executing...";
-      print $nl."  From: ".$mail->mail_headers->fromaddress;
-      print $nl."  Subject: ".$mail->mail_headers->subject;
+      $debug and print $nl."Executing with key ".$key;
+      $debug and print $nl."  From: ".$mail->mail_headers->fromaddress;
+      $debug and print $nl."  Subject: ".$mail->mail_headers->subject;
       $token->execute($mail);
       $mail->delete();
       $done = true;
-    } 
+    } else {
+      $debug and print $nl."Unable to set key to: ".$key;
+    }
   }
 
   if (!$done) {
+    $debug and print $nl."Mail failed and forwarded to admin!";
     // forward to admin
     if (config::get_config_item("allocEmailAdmin")) {
       $mail->forward(config::get_config_item("allocEmailAdmin"), "[allocPSA] Unable to process email sent to ".config::get_config_item("AllocFromEmailAddress"));
