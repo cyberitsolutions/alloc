@@ -143,12 +143,12 @@ function show_transaction($template_name=false) {
       $csv.= $nl.implode(",",$row);
       $nl = "\n";
 
-    } else if ($_POST["filter"]) {
+    } else {
       include_template("templates/transactionListR.tpl");
     }
   }
 
-  if ($_POST["download"] && $csv) {
+  if ($_POST["download"] && $csv && $csv != $nl) {
     $csv = implode(",",$headers)."\n".$csv;
     header('Content-Type: application/octet-stream');
     header("Content-Length: ".strlen($csv));
