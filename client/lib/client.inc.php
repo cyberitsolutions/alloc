@@ -69,6 +69,7 @@ class client extends db_entity {
   }
 
   function get_client_contact_select($clientID="",$clientContactID="") {
+    $clientID or $clientID = $_GET["clientID"];
     $db = new db_alloc;
     $q = sprintf("SELECT clientContactName as value, clientContactID as name FROM clientContact WHERE clientID = %d",$clientID);
     $options = get_option("None", "")."\n";
