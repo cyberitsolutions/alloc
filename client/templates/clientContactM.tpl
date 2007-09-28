@@ -35,7 +35,7 @@
           <tr>
             <td>Postcode</td> <td><input type="text" name="clientContactPostcode" value="{$clientContact_clientContactPostcode}"></td>
             <td class="nobr">Country</td><td><input type="text" name="clientContactCountry" value="{$clientContact_clientContactCountry}"></td>
-            <td></td><td align="right">Primary Contact <input type="checkbox" name="clientPrimaryContactID" value="{$clientContact_clientContactID}"{$clientPrimaryContactID_checked}>
+            <td></td><td align="right">Primary Contact <input type="checkbox" name="clientPrimaryContactID" value="1"{$clientPrimaryContactID_checked}>
             {$clientContactItem_buttons}</td>
           </tr>
           <tr>

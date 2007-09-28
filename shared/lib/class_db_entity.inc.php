@@ -205,7 +205,16 @@ class db_entity {
     if ($db->get_error()) {
       echo die($db->get_error());
     }
-    $this->key_field->set_value(mysql_insert_id());
+  
+    $id = mysql_insert_id();
+    if ($id === 0) {
+      $this->debug and print "<br/>db_entity->insert(): The previous query does not generate an AUTO_INCREMENT value`";
+    } else if ($id === FALSE) {
+      $this->debug and print "<br/>db_entity->insert(): No MySQL connection was established";
+    } else {
+      $this->debug and print "<br/>db_entity->insert(): New ID: ".$id;
+    }
+    $this->key_field->set_value($id);
     return true;
   }
 

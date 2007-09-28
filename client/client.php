@@ -369,10 +369,11 @@ if ($_POST["clientContact_save"] || $_POST["clientContact_delete"]) {
   }
 
 
-  if (is_object($client)) {
-    $_POST["clientPrimaryContactID"] && $client->set_value('clientPrimaryContactID', $clientContact->get_id());
+  if (is_object($client) && $_POST["clientPrimaryContactID"]) {
+    #die("<pre>".print_r($clientContact,1)."</pre>");
+    $client->set_value('clientPrimaryContactID', $clientContact->get_id());
     $client->save();
-  }
+  } 
 
   if ($_POST["clientContact_delete"]) {
     $clientContact->delete();
