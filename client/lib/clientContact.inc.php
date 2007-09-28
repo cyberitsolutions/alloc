@@ -22,6 +22,7 @@
  */
 
 class clientContact extends db_entity {
+  var $classname = "clientContact";
   var $data_table = "clientContact";
   var $display_field_name = "clientContactName";
 
