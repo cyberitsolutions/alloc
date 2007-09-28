@@ -1,5 +1,5 @@
 
-SHELL = /bin/sh
+SHELL = /bin/bash
 
 RHFLAGS = --link-stylesheet \
 					--stylesheet=help.css
@@ -10,7 +10,7 @@ RLFLAGS = --documentclass=report \
 
 help:
 	@echo "make targets: "
-	@echo "  commit   - tests db_struc/patches, makes version, updates source, bzr commit"
+	@echo "  commit   - makes version, updates source, bzr commit"
 	@echo "  test_db  - tests db_struc/patches"
 	@echo "  doc_html - makes html alloc help"
 	@echo "  doc_pdf  - makes pdf alloc help"
@@ -77,7 +77,7 @@ version:
 	echo 1.4-$${version} > ./util/alloc_version;
 	@echo "version: allocPSA `cat ./util/alloc_version`"
 
-commit: test_db
+commit: 
 	@currev=`bzr revno`; \
 	echo "commit: Current revno: $${currev}"; \
 	echo -e "commit: Current status:\n`bzr status`"; \
