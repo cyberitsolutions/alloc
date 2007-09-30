@@ -37,6 +37,7 @@ $modules = array();
 $modules["transaction"] = "Transactions";
 $modules["invoice"] = "Invoices";
 $modules["project"] = "Projects";
+$modules["task"] = "Tasks";
 $modules["time"] = "Time Sheets";
 $modules["client"] = "Clients";
 $modules["item"] = "Items";
@@ -76,6 +77,9 @@ if ($_POST["do_step_2"]) {
     $query["join"].= " LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID";
   }
 
+  if ($_POST["mod"] == "task") {
+    $db_tables[] = "task";
+  }
 
   if ($_POST["mod"] == "time") {
     $db_tables[] = "timeSheet";
