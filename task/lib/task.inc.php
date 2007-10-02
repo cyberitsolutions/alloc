@@ -203,8 +203,8 @@ class task extends db_entity {
     $reminder->set_value('reminderLinkID', $this->get_id());
     $reminder->set_value('reminderRecuringInterval', $reminderInterval);
     $reminder->set_value('reminderRecuringValue', $intervalValue);
-    $reminder->set_value('reminderSubject', $this->get_value("taskName"));
-    $reminder->set_value('reminderContent', "\nReminder Created By: ".$current_user->get_display_value()
+    $reminder->set_value('reminderSubject', "Task Reminder: ".$this->get_id()." ".$this->get_value("taskName"));
+    $reminder->set_value('reminderContent', "\nReminder Created by ".$current_user->get_username(1)
                          ."\n\n".$message."\n\n".$this->get_value("taskDescription"));
 
     $reminder->set_value('reminderAdvNoticeSent', "0");
@@ -548,6 +548,7 @@ class task extends db_entity {
     return $recipients;
   }
 
+/*
   function send_emails($selected_option, $type="", $body="", $from=false) {
     global $current_user;
     $recipients = $this->get_email_recipients($selected_option);
@@ -561,91 +562,105 @@ class task extends db_entity {
     }
     return $successful_recipients;
   }
+*/
 
-  function send_email($recipient, $type, $body, $from=false) {
+  function send_emails($selected_option, $type="", $body="", $from=false) {
     global $current_user;
+    $recipients = $this->get_email_recipients($selected_option);
 
-    $types = array('task_created'  => "Task Created"
-                  ,'task_closed'   => "Task Closed"
-                  ,'task_comments' => "Task Comments"
-                  ,'task_reassigned' => "Task Reassigned"
-                  );
-  
-    $subject = $types[$type];
-                  
 
-    // New email object wrapper takes care of logging etc.
-    $email = new alloc_email;
-    #$email->set_from($current_user->get_id());
-    #$email->set_reply_to();
+    // Build up To: and Bcc: headers
+    foreach ($recipients as $recipient) {
+      unset($recipient_full_name);
 
-    // REMOVE ME!!
-    $email->ignore_no_email_urls = true;
-    $email->ignore_no_email_hosts = true;
+      if ($recipient["firstName"] && $recipient["surname"]) {
+        $recipient_full_name = $recipient["firstName"]." ".$recipient["surname"];
+      } else if ($recipient["fullName"]) {
+        $recipient_full_name = $recipient["fullName"];
+      } else if ($recipient["name"]) {
+        $recipient_full_name = $recipient["name"];
+      }
 
-    $p = new project;
-    $p->set_id($this->get_value("projectID"));
-    $p->select();
+      if ($recipient_full_name && $recipient["emailAddress"] && $recipient_full_name != $from) { 
+        $to_address.= $commar.$recipient_full_name.": ;";
+        $bcc.= $commar.$recipient["emailAddress"];
+        $successful_recipients.= $commar.$recipient_full_name;
+        $commar = ", ";
+      }
+    }
 
-    $recipient["isCC"] and $message.= "[Note: this email is sent to you from the allocPSA services management ";
-    $recipient["isCC"] and $message.= "system. You are receiving this email because you are nominated as an ";
-    $recipient["isCC"] and $message.= "interested party on the project, task or activity detailed below.]\n";
+    $headers["Bcc"] = $bcc;
+    if ($headers["Bcc"]) {
 
-    $from_name = $from or $from_name = $current_user->get_username(1);
+      $types = array('task_created'    => "Task Created"
+                    ,'task_closed'     => "Task Closed"
+                    ,'task_comments'   => "Task Comments"
+                    ,'task_reassigned' => "Task Reassigned"
+                    );
     
-    $message.= "\n\n".stripslashes($subject." by ".$from_name);
-    $message.= "\n\n".stripslashes(wordwrap($body));
-    $message.= "\n\n".config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
-    $message.= "\n\nProject: ".stripslashes($p->get_value("projectName"));
-    $message.= "\n   Task: ".stripslashes($this->get_value("taskName"));
-    $message.= "\n   Desc: ".stripslashes($this->get_value("taskDescription"));
+      $subject = $types[$type];
+                    
+
+      // New email object wrapper takes care of logging etc.
+      $email = new alloc_email;
+
+      // REMOVE ME!!
+      $email->ignore_no_email_urls = true;
+      $email->ignore_no_email_hosts = true;
+
+      $p = new project;
+      $p->set_id($this->get_value("projectID"));
+      $p->select();
+
+      $from_name = $from or $from_name = $current_user->get_username(1);
+      
+      $message.= "\n".stripslashes($subject." by ".$from_name);
+      $body and $message.= "\n\n".stripslashes(wordwrap($body));
+      $message.= "\n\n".config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
+      $message.= "\n\nProject: ".stripslashes($p->get_value("projectName"));
+      $message.= "\n   Task: ".stripslashes($this->get_value("taskName"));
+      $message.= "\n   Desc: ".stripslashes($this->get_value("taskDescription"));
 
 
-    $recipient["isCC"] and $message.= "\n\n-- \nIf you have any questions, please reply to this email or contact: ";
-    $recipient["isCC"] and $message.= "\n".config::get_config_item("companyName");
-    $recipient["isCC"] and $message.= "\n".config::get_config_item("companyContactAddress");
-    $recipient["isCC"] and $message.= "\n\nE: ".config::get_config_item("companyContactEmail");
-    $recipient["isCC"] and $message.= "\nP: ".config::get_config_item("companyContactPhone");
-    $recipient["isCC"] and $message.= "\nF: ".config::get_config_item("companyContactFax");
-    $recipient["isCC"] and $message.= "\nW: ".config::get_config_item("companyContactHomePage");
+      $message.= "\n\n-- \nIf you have any questions, please reply to this email or contact: ";
+      config::get_config_item("companyName")            and $message.= "\n".config::get_config_item("companyName");
+      config::get_config_item("companyContactAddress")  and $message.= "\n".config::get_config_item("companyContactAddress");
+      config::get_config_item("companyContactEmail")    and $message.= "\n\nE: ".config::get_config_item("companyContactEmail");
+      config::get_config_item("companyContactPhone")    and $message.= "\nP: ".config::get_config_item("companyContactPhone");
+      config::get_config_item("companyContactFax")      and $message.= "\nF: ".config::get_config_item("companyContactFax");
+      config::get_config_item("companyContactHomePage") and $message.= "\nW: ".config::get_config_item("companyContactHomePage");
 
-    $message = "\n".wordwrap($message)."\n\n";
+      $message = "\n".wordwrap($message)."\n\n";
 
-    $token = new token;
-    if ($token->select_token_by_entity("task",$this->get_id())) {
-      $hash = $token->get_value("tokenHash");
-    } else {
-      $token->set_value("tokenEntity","task");
-      $token->set_value("tokenEntityID",$this->get_id());
-      $token->set_value("tokenActionID",1);
-      $token->set_value("tokenActive",1);
-      $token->set_value("tokenCreatedBy",$current_user->get_id());
-      $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
-      $hash = $token->generate_hash();
-      $token->set_value("tokenHash",$hash);
-      $token->save();
-    }
+      $token = new token;
+      if ($token->select_token_by_entity("task",$this->get_id())) {
+        $hash = $token->get_value("tokenHash");
+      } else {
+        $token->set_value("tokenEntity","task");
+        $token->set_value("tokenEntityID",$this->get_id());
+        $token->set_value("tokenActionID",1);
+        $token->set_value("tokenActive",1);
+        $token->set_value("tokenCreatedBy",$current_user->get_id());
+        $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
+        $hash = $token->generate_hash();
+        $token->set_value("tokenHash",$hash);
+        $token->save();
+      }
 
-    if ($hash && config::get_config_item("allocEmailKeyMethod") == "headers") {
-      $email->set_message_id($hash);
-    } else if ($hash && config::get_config_item("allocEmailKeyMethod") == "subject") {
-      $email->set_message_id();
-      $subject_extra = " {Key:".$hash."}";
-    }
+      if ($hash && config::get_config_item("allocEmailKeyMethod") == "headers") {
+        $email->set_message_id($hash);
+      } else if ($hash && config::get_config_item("allocEmailKeyMethod") == "subject") {
+        $email->set_message_id();
+        $subject_extra = " {Key:".$hash."}";
+      }
 
-
-    // Convert plain old recipient address blah@cyber.com.au to Alex Lance <blah@cyber.com.au>
-    if ($recipient["firstName"] && $recipient["surname"] && $recipient["emailAddress"]) {
-      $recipient["emailAddress"] = $recipient["firstName"]." ".$recipient["surname"]." <".$recipient["emailAddress"].">";
-    } else if ($recipient["fullName"] && $recipient["emailAddress"]) {
-      $recipient["emailAddress"] = $recipient["fullName"]." <".$recipient["emailAddress"].">";
-    }
-
-    if ($recipient["emailAddress"]) {
-      $header["From"] = $from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS;
-      $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName").$subject_extra;
-      return $email->send($recipient["emailAddress"], $subject, $message, $type, $header);
-    }
+      $headers["Reply-To"] = "All parties via ".ALLOC_DEFAULT_FROM_ADDRESS;
+      $headers["From"] = $from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS;
+      $subject = $subject.": ".$this->get_id()." ".stripslashes($this->get_value("taskName")).$subject_extra;
+      if ($email->send($to_address, $subject, $message, $type, $headers)) {
+        return $successful_recipients;
+      }
+    }   
   }
 
   function get_task_link($_FORM=array()) {
@@ -1491,19 +1506,10 @@ function get_task_statii_array() {
     $comment->set_value("commentCreatedUserText",trim($decoded[0]["Headers"]["from:"]));
     $comment->save();
 
-    if ($personID && $personID == $this->get_value("creatorID")) {
-      $recipients[] = "assignee";
-      $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from_person);
-
-    } else if ($personID && $personID == $this->get_value("personID")) {
-      $recipients[] = "creator";
-      $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from_person);
-
-    } else {
-      $recipients[] = "assignee";
-      $recipients[] = "creator";
-      $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from_person);
-    }
+    $recipients[] = "assignee";
+    $recipients[] = "creator";
+    $recipients[] = "CCList";
+    $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from_person);
 
     if ($successful_recipients) {
       $comment->set_value("commentEmailRecipients",$successful_recipients);
