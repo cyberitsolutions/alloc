@@ -483,7 +483,7 @@ class timeSheet extends db_entity
       return "Elected not to send email.";
     } else if (!$email->is_valid_url()) {
       return "Almost sent email to: ".$email->to_address;
-    } else if (!$email->is_valid_to_address()) {
+    } else if (!$email->to_address) {
       return "Could not send email, invalid email address: ".$email->to_address;
     } else if ($email->send()) {
       return "Sent email to: ".$email->to_address;

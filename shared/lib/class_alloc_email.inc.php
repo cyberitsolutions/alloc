@@ -79,10 +79,9 @@ class alloc_email {
       $this->header["Content-Type"] = "text/plain; charset=utf-8";
     }
 
-    $this->is_valid_to_address() or $this->to_address = ALLOC_DEFAULT_TO_ADDRESS;
     $this->subject = "[allocPSA] ".$this->subject;
 
-    if ($this->is_valid_to_address() && $this->is_valid_url()) {
+    if ($this->is_valid_url()) {
     
       if (is_array($this->header)) {
         foreach ($this->header as $k => $v) {
@@ -127,13 +126,6 @@ class alloc_email {
     $bits = explode("@",ALLOC_DEFAULT_FROM_ADDRESS);
     $host = str_replace(">","",$bits[1]);
     $this->header["Message-ID"] = "<".$time.".".$rand.$hash."@".$host.">";
-  }
-
-  function is_valid_to_address() {
-    // TODO
-    if (strstr($this->to_address,"@")) {
-      return true;
-    }
   }
 
   function is_valid_url() {
