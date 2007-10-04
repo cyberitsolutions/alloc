@@ -275,7 +275,14 @@ if (!$taskID && $_GET["dateTargetStart"]) {
 // Set options for the dropdown boxen
 $task->set_option_tpl_values();
 
-$TPL["task_timeActual"] = seconds_to_display_format($task->get_time_billed(false));
+$time_billed = $task->get_time_billed(false);
+$time_billed_label = "Actual Billed ".seconds_to_display_format($time_billed);
+if ($time_billed > 0) {
+  $TPL["time_billed_link"] = "<a href=\"".$TPL["url_alloc_timeSheetList"]."taskID=".$task->get_id()."&dontSave=true&applyFilter=true\">".$time_billed_label."</a>";
+} else {
+  $TPL["time_billed_link"] = $time_billed_label;
+}
+
 $TPL["task_timeEstimate"] or $TPL["task_timeEstimate"] = "";
 $TPL["percentComplete"] = $task->get_percentComplete();
 

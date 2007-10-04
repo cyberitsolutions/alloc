@@ -63,7 +63,7 @@ function updateTaskCommentTemplate(number) \{
         <tr>
           <td>Estimated Hours</td>
           <td><input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5">
-            &nbsp;&nbsp;Actual Billed {$task_timeActual}
+            &nbsp;&nbsp;{$time_billed_link}
           </td>
         </tr>  
         <tr>
