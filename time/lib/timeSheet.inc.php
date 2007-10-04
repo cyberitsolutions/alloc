@@ -528,6 +528,9 @@ class timeSheet extends db_entity
     if ($filter["projectID"]) {
       $sql[] = sprintf("(timeSheet.projectID = '%d')", $filter["projectID"]);
     }
+    if ($filter["taskID"]) {
+      $sql[] = sprintf("(timeSheetItem.taskID = '%d')", $filter["taskID"]);
+    }
     if ($filter["personID"]) {
       $sql[] = sprintf("(timeSheet.personID = '%d')", $filter["personID"]);
     }
@@ -558,6 +561,7 @@ class timeSheet extends db_entity
      *  
      * Filter Options:
      *   projectID
+     *   taskID
      *   personID
      *   status
      *   dateFrom
@@ -694,6 +698,7 @@ class timeSheet extends db_entity
                       ,"showStatus"
 
                       ,"projectID"
+                      ,"taskID"
                       ,"personID"
                       ,"status"
                       ,"dateFrom"
