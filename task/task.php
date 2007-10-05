@@ -354,6 +354,9 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
     if ($current_user->get_id() != $task->get_value("personID")) {
       $TPL["email_comment_assignee_checked"] = " checked";
     } 
+    if ($task->get_value("managerID") && $current_user->get_id() != $task->get_value("managerID")) {
+      $TPL["email_comment_manager_checked"] = " checked";
+    } 
     // If there are interested parties then, default the checkbox to on
     $q = sprintf("SELECT * FROM taskCCList WHERE taskID = %d",$task->get_id());
     $db = new db_alloc();
