@@ -414,6 +414,7 @@ CREATE TABLE task (
   dateActualStart date default NULL,
   dateTargetStart date default NULL,
   personID int(11) default NULL,
+  managerID int(11) default NULL,
   parentTaskID int(11) NOT NULL default '0',
   taskTypeID int(11) NOT NULL default '1',
   taskModifiedUser int(11) DEFAULT NULL,

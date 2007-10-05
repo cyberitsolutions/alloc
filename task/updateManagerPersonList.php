@@ -21,36 +21,12 @@
  *
  */
 
+
 require_once("../alloc.php");
-define("PAGE_IS_PRINTABLE",1);
 
 
-$defaults = array("showHeader"=>true
-                 ,"showProject"=>true
-                 ,"showTaskID"=>true
-                 ,"padding"=>1
-                 ,"url_form_action"=>$TPL["url_alloc_taskList"]
-                 ,"form_name"=>"taskList_filter"
-                 );
+usleep(500000);
+echo task::get_managerPersonList_dropdown($_GET["projectID"],$_GET["taskID"]);
 
-function show_filter() {
-  global $TPL,$defaults;
-
-  $_FORM = task::load_form_data($defaults);
-  $arr = task::load_task_filter($_FORM);
-  is_array($arr) and $TPL = array_merge($TPL,$arr);
-  include_template("templates/taskFilterS.tpl");
-}
-
-function show_task_list() {
-  global $defaults;
-
-  $_FORM = task::load_form_data($defaults);
-  #echo "<pre>".print_r($_FORM,1)."</pre>";
-  echo task::get_task_list($_FORM);
-}
-
-include_template("templates/taskListM.tpl");
-page_close();
 
 ?>

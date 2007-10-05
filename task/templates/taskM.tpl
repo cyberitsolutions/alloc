@@ -45,11 +45,15 @@ function updateTaskCommentTemplate(number) \{
     
       <table border="0" cellspacing="0" cellpadding="5" class="panel" width="100%">
         <tr> 
-          <td>Task Created By</td>
+          <td>Created By</td>
           <td><b>{$task_createdBy}</b> {$task_dateCreated}</td> 
         </tr>
+        <tr> 
+          <td>Managed By</td>
+          <td><b>{$manager_username}</b> </td> 
+        </tr>
         <tr>
-          <td>Task Assigned To</td> 
+          <td>Assigned To</td> 
           <td><b>{$person_username}</b> {$task_dateAssigned}</td>
         </tr>
         {$task_closed_info}

@@ -53,6 +53,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_taskCommentTemplateList"        => $sess->url(SCRIPT_PATH."task/taskCommentTemplateList.php")
             ,"url_alloc_taskCalendar"                   => $sess->url(SCRIPT_PATH."task/taskCalendar.php")
             ,"url_alloc_updatePersonList"               => $sess->url(SCRIPT_PATH."task/updatePersonList.php")
+            ,"url_alloc_updateManagerPersonList"        => $sess->url(SCRIPT_PATH."task/updateManagerPersonList.php")
 
             ,"url_alloc_comment"                        => $sess->url(SCRIPT_PATH."shared/comment.php")
             ,"url_alloc_client"                         => $sess->url(SCRIPT_PATH."client/client.php")
