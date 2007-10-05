@@ -6,42 +6,22 @@
 function updateStuffWithAjax() \{
   obj = document.getElementById("taskform").projectID;
   id = obj.options[obj.selectedIndex].value;
+
   document.getElementById("parenTaskDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
   url = '{$url_alloc_updateParentTasks}projectID='+id
-  makeAjaxRequest(url,'updateParentTasks',1)
+  makeAjaxRequest(url,'callbackReceiver',1,'parenTaskDropdown')
+
   document.getElementById("taskCCListDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
   url = '{$url_alloc_updateTaskCCList}projectID='+id+'&taskID={$task_taskID}';
-  makeAjaxRequest(url,'updateTaskCCList',2)
+  makeAjaxRequest(url,'callbackReceiver',2,'taskCCListDropdown')
+
   document.getElementById("taskPersonList").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
   url = '{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}';
-  makeAjaxRequest(url,'updatePersonList',3)
-\}
+  makeAjaxRequest(url,'callbackReceiver',3,'taskPersonList')
 
-// Here's the callback function
-function updateParentTasks(number) \{
-  if (http_request[number].readyState == 4) \{
-    if (http_request[number].status == 200) \{
-      document.getElementById("parenTaskDropdown").innerHTML = http_request[number].responseText;
-    \}
-  \}
-\}
-
-// Another callback function
-function updateTaskCCList(number) \{
-  if (http_request[number].readyState == 4) \{
-    if (http_request[number].status == 200) \{
-      document.getElementById("taskCCListDropdown").innerHTML = http_request[number].responseText;
-    \}
-  \}
-\}
-
-// Another callback function
-function updatePersonList(number) \{
-  if (http_request[number].readyState == 4) \{
-    if (http_request[number].status == 200) \{
-      document.getElementById("taskPersonList").innerHTML = http_request[number].responseText;
-    \}
-  \}
+  document.getElementById("taskManagerPersonList").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
+  url = '{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}';
+  makeAjaxRequest(url,'callbackReceiver',4,'taskManagerPersonList')
 \}
 
 </script>
@@ -67,13 +47,14 @@ function updatePersonList(number) \{
         {$projectOptions}
       </select>
     </td>
-    <td>Task Type</td>
+
+    <td width="1%"><nobr>Managed By</nobr></td>
     <td>
-      <select name="taskTypeID">
-        {$taskTypeOptions}
-      </select>
-      {get_help("taskType")}
+      <div id="taskManagerPersonList">
+        {$managerPersonOptions}
+      </div>
     </td>
+
   </tr>
 
   <tr>
@@ -111,6 +92,16 @@ function updatePersonList(number) \{
       <div id="parenTaskDropdown">
         {$parentTaskOptions}
       </div>
+    </td>
+  </tr>
+
+  <tr>
+    <td>Task Type</td>
+    <td>
+      <select name="taskTypeID">
+        {$taskTypeOptions}
+      </select>
+      {get_help("taskType")}
     </td>
   </tr>
 

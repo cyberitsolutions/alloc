@@ -257,6 +257,13 @@ $person->select();
 $TPL["person_username"] = $person->get_username(1);
 $TPL["person_username_personID"] = $person->get_id();
 
+$manager = new person;
+$manager->set_id($task->get_value("managerID"));
+$manager->select();
+$TPL["manager_username"] = $manager->get_username(1);
+$TPL["manager_username_personID"] = $manager->get_id();
+
+
 
 
 

@@ -1,6 +1,6 @@
 var http_request = new Array();
 
-function makeAjaxRequest(url,actionFunction,number) {
+function makeAjaxRequest(url,actionFunction,number,entityid) {
     http_request[number] = false;
 
     if (window.XMLHttpRequest) { // Mozilla, Safari,...
@@ -23,12 +23,20 @@ function makeAjaxRequest(url,actionFunction,number) {
         return false;
     }
     // Here's how to be a bit crafty object.onreadystatechange=Function("yourfunction("+yourargumentlist+");");
-    http_request[number].onreadystatechange = Function(actionFunction+"("+number+");");
+    http_request[number].onreadystatechange = Function(actionFunction+"("+number+",'"+entityid+"');");
     http_request[number].open('GET', url, true);
     http_request[number].send(null);
 }
 
-function set_grow_shrink_box(id, display, images) {
+function callbackReceiver(number,entityid) {
+  if (http_request[number].readyState == 4) {
+    if (http_request[number].status == 200) {
+      document.getElementById(entityid).innerHTML = http_request[number].responseText;
+    }
+  }
+}
+
+function set_grow_shrink_box(id, display, images, text) {
   if (display == 'none') {
     display = 'inline';
     image = images+'small_shrink.gif'
@@ -38,7 +46,7 @@ function set_grow_shrink_box(id, display, images) {
   }
 
   document.getElementById(id).style.display=display;
-  str = "<a onClick=\"set_grow_shrink_box('"+id+"','"+display+"','"+images+"');\">New <img border=\"0\" src=\""+image+"\"</a>"
+  str = "<nobr><a onClick=\"set_grow_shrink_box('"+id+"','"+display+"','"+images+"','"+text+"');\">"+text+"<img border=\"0\" src=\""+image+"\"</a></nobr>"
   document.getElementById('button_'+id).innerHTML = str;
 }
 

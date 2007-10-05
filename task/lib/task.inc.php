@@ -51,6 +51,7 @@ class task extends db_entity {
                                  , "parentTaskID"=>new db_field("parentTaskID")
                                  , "taskTypeID"=>new db_field("taskTypeID")
                                  , "personID"=>new db_field("personID")
+                                 , "managerID"=>new db_field("managerID")
                                  
       );
 
@@ -106,9 +107,14 @@ class task extends db_entity {
     if ($current_user->get_id() != $this->get_value("creatorID")) {
       $recipients[] = "creator";
     }
+    if ($current_user->get_id() != $this->get_value("managerID")) {
+      $recipients[] = "manager";
+    }
   
-    $successful_recipients = $this->send_emails($recipients,"task_reassigned");
-    $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Reassigned: ".stripslashes($this->get_value("taskName"));
+    if ($recipients) {
+      $successful_recipients = $this->send_emails($recipients,"task_reassigned");
+      $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Reassigned: ".stripslashes($this->get_value("taskName"));
+    }
  
     return $msg;
   }
@@ -116,7 +122,17 @@ class task extends db_entity {
   function email_task_closed() {
     global $current_user;
     if ($current_user->get_id() != $this->get_value("creatorID")) {
-      $successful_recipients = $this->send_emails(array("creator"),"task_closed");
+      $recipients[] = "creator";
+    }
+    if ($current_user->get_id() != $this->get_value("managerID")) {
+      $recipients[] = "manager";
+    }
+    if ($current_user->get_id() != $this->get_value("personID")) {
+      $recipients[] = "assignee";
+    }
+
+    if ($recipients) {
+      $successful_recipients = $this->send_emails($recipients,"task_closed");
       $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Closed: ".stripslashes($this->get_value("taskName"));
     }
     return $msg; 
@@ -392,6 +408,57 @@ class task extends db_entity {
     return $str;
   }
 
+  function get_managerPersonList_dropdown($projectID,$taskID=false) {
+    global $current_user;
+ 
+    $db = new db_alloc;
+
+    if ($_GET["timeSheetID"]) {
+      $ts_query = sprintf("SELECT * FROM timeSheet WHERE timeSheetID = %d",$_GET["timeSheetID"]);
+      $db->query($ts_query);
+      $db->next_record();
+      $owner = $db->f("personID");
+
+    } else if (is_object($this) && $this->get_value("managerID")) {
+      $owner = $this->get_value("managerID");
+
+    } else if ($taskID) {
+      $t = new task;
+      $t->set_id($taskID);
+      $t->select();
+      $owner = $t->get_value("managerID");
+
+    } else if (!is_object($this) || !$this->get_id()) {
+      $owner = $current_user->get_id();
+    }
+
+    $peoplenames = person::get_username_list($owner);
+
+    if ($projectID) {
+      $q = sprintf("SELECT * 
+                      FROM projectPerson 
+                 LEFT JOIN person ON person.personID = projectPerson.personID 
+                     WHERE person.personActive = 1 
+                       AND projectID = %d
+                  ORDER BY firstName, username
+                   ",$projectID);
+      $db->query($q);
+      while ($row = $db->row()) {
+        $ops[$row["personID"]] = $peoplenames[$row["personID"]];
+      }
+    } else {
+      $ops = $peoplenames;
+    }
+
+    $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
+   
+    $str = '<select name="managerID">';
+    $str.= get_option("None", "0", $owner == 0)."\n";
+    $str.= get_select_options($ops, $owner);
+    $str.= '</select>';
+    return $str;
+  }
+
   function set_option_tpl_values() {
     // Set template values to provide options for edit selects
     global $TPL, $current_user, $isMessage;
@@ -400,6 +467,7 @@ class task extends db_entity {
 
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
     $TPL["personOptions"] = task::get_personList_dropdown($projectID);
+    $TPL["managerPersonOptions"] = task::get_managerPersonList_dropdown($projectID);
 
     // TaskType Options
     $taskType = new taskType;
@@ -525,6 +593,9 @@ class task extends db_entity {
       } else if ($selected_option == "creator") {
         $recipients[] = $people[$this->get_value("creatorID")];
 
+      } else if ($selected_option == "manager") {
+        $recipients[] = $people[$this->get_value("managerID")];
+
       } else if ($selected_option == "assignee") {
         $recipients[] = $people[$this->get_value("personID")];
 
@@ -547,22 +618,6 @@ class task extends db_entity {
     }
     return $recipients;
   }
-
-/*
-  function send_emails($selected_option, $type="", $body="", $from=false) {
-    global $current_user;
-    $recipients = $this->get_email_recipients($selected_option);
-
-    foreach ($recipients as $recipient) {
-      if ($this->send_email($recipient, $type, $body, $from)) {
-        $to = $recipient["name"] or $to = $recipient["emailAddress"];
-        $successful_recipients.= $commar.$to;
-        $commar = ", ";
-      }
-    }
-    return $successful_recipients;
-  }
-*/
 
   function send_emails($selected_option, $type="", $body="", $from=false) {
     global $current_user;
@@ -789,6 +844,7 @@ function get_task_statii_array() {
       $sql[] = sprintf("(taskTypeID = %d)",$filter["taskTypeID"]);
     }
 
+
     // If personID filter and the view is byProject, then allow unassigned phases into the results 
     if ($filter["personID"] && $filter["taskView"] == "byProject") {
       $sql["personID"] = sprintf("(personID = %d or (taskTypeID = %d and (personID IS NULL or personID = '' or personID = 0)))",$filter["personID"],TT_PHASE);
@@ -796,6 +852,24 @@ function get_task_statii_array() {
     // If personID filter and the view is prioritised, then do a strict by personID query
     } else if ($filter["personID"] && $filter["taskView"] == "prioritised") {
       $sql["personID"] = sprintf("(personID = %d)",$filter["personID"]);
+    }
+
+    // If creatorID filter and the view is byProject, then allow unassigned phases into the results 
+    if ($filter["creatorID"] && $filter["taskView"] == "byProject") {
+      $sql["creatorID"] = sprintf("(creatorID = %d or (taskTypeID = %d and (creatorID IS NULL or creatorID = '' or creatorID = 0)))",$filter["creatorID"],TT_PHASE);
+    
+    // If creatorID filter and the view is prioritised, then do a strict by creatorID query
+    } else if ($filter["creatorID"] && $filter["taskView"] == "prioritised") {
+      $sql["creatorID"] = sprintf("(creatorID = %d)",$filter["creatorID"]);
+    }
+
+    // If managerID filter and the view is byProject, then allow unassigned phases into the results 
+    if ($filter["managerID"] && $filter["taskView"] == "byProject") {
+      $sql["managerID"] = sprintf("(managerID = %d or (taskTypeID = %d and (managerID IS NULL or managerID = '' or managerID = 0)))",$filter["managerID"],TT_PHASE);
+    
+    // If managerID filter and the view is prioritised, then do a strict by managerID query
+    } else if ($filter["managerID"] && $filter["taskView"] == "prioritised") {
+      $sql["managerID"] = sprintf("(managerID = %d)",$filter["managerID"]);
     }
 
 
@@ -845,6 +919,7 @@ function get_task_statii_array() {
      *   showDescription      = The tasks description
      *   showComments         = The tasks comments
      *   showTaskID           = Prefix the taskName with the task ID
+     *   showManager          = Show the tasks manager
      *
      *
      * Filter Options:
@@ -856,6 +931,8 @@ function get_task_statii_array() {
      *   taskTimeSheetStatus  = my_open | not_assigned | my_closed | my_recently_closed | all
      *   taskTypeID           = the task type
      *   current_user         = lets us set and fake a current_user id for when generating task emails and there is no $current_user object
+     *   creatorID            = task creator
+     *   managerID            = person managing task
      *   personID             = person assigned to the task
      *   parentTaskID         = id of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0
      *  
@@ -1019,6 +1096,7 @@ function get_task_statii_array() {
       $_FORM["showPriority"] and $summary.= "\n<th class=\"col\">Proj Pri</th>";
       $_FORM["showStatus"]   and $summary.= "\n<th class=\"col\">Status</th>";
       $_FORM["showCreator"]  and $summary.= "\n<th class=\"col\">Task Creator</th>";
+      $_FORM["showManager"]  and $summary.= "\n<th class=\"col\">Task Manager</th>";
       $_FORM["showAssigned"] and $summary.= "\n<th class=\"col\">Assigned To</th>";
       $_FORM["showDate1"]    and $summary.= "\n<th class=\"col\">Targ Start</th>";
       $_FORM["showDate2"]    and $summary.= "\n<th class=\"col\">Targ Compl</th>";
@@ -1090,6 +1168,7 @@ function get_task_statii_array() {
     $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%d",$task["projectPriority"])."&nbsp;</td>"; 
     $_FORM["showStatus"]      and $summary[] = "  <td class=\"col\">".$task["taskStatus"]."&nbsp;</td>"; 
     $_FORM["showCreator"]     and $summary[] = "  <td class=\"col\">".$people_cache[$task["creatorID"]]["name"]."&nbsp;</td>";
+    $_FORM["showManager"]     and $summary[] = "  <td class=\"col\">".$people_cache[$task["managerID"]]["name"]."&nbsp;</td>";
     $_FORM["showAssigned"]    and $summary[] = "  <td class=\"col\">".$people_cache[$task["personID"]]["name"]."&nbsp;</td>";
     $_FORM["showDate1"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateTargetStart"]."&nbsp;</td>";
     $_FORM["showDate2"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateTargetCompletion"]."&nbsp;</td>";
@@ -1350,6 +1429,8 @@ function get_task_statii_array() {
         ,"taskStatus"
         ,"taskTypeID"
         ,"personID"
+        ,"creatorID"
+        ,"managerID"
         ,"taskView"
         ,"projectType"
         ,"applyFilter"
@@ -1362,6 +1443,7 @@ function get_task_statii_array() {
         ,"showPriority"
         ,"showStatus"
         ,"showTaskID"
+        ,"showManager"
         ,"showHeader"
         ,"showProject"
         ,"padding"
@@ -1429,6 +1511,12 @@ function get_task_statii_array() {
     $rtn["personOptions"] = "\n<option value=\"\"> ";
     $rtn["personOptions"].= get_select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
 
+    $rtn["creatorPersonOptions"] = "\n<option value=\"\"> ";
+    $rtn["creatorPersonOptions"].= get_select_options(person::get_username_list($_FORM["creatorID"]), $_FORM["creatorID"]);
+
+    $rtn["managerPersonOptions"] = "\n<option value=\"\"> ";
+    $rtn["managerPersonOptions"].= get_select_options(person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
+
     $taskType = new taskType;
     $rtn["taskTypeOptions"] = "\n<option value=\"\"> ";
     $rtn["taskTypeOptions"].= $taskType->get_dropdown_options("taskTypeID","taskTypeName",$_FORM["taskTypeID"]);
@@ -1448,6 +1536,7 @@ function get_task_statii_array() {
     $_FORM["showPriority"]    and $rtn["showPriority_checked"]    = " checked";
     $_FORM["showStatus"]      and $rtn["showStatus_checked"]      = " checked";
     $_FORM["showTaskID"]      and $rtn["showTaskID_checked"]      = " checked";
+    $_FORM["showManager"]     and $rtn["showManager_checked"]     = " checked";
     
     // Get
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
@@ -1507,6 +1596,7 @@ function get_task_statii_array() {
     $comment->save();
 
     $recipients[] = "assignee";
+    $recipients[] = "manager";
     $recipients[] = "creator";
     $recipients[] = "CCList";
     $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from_person);
