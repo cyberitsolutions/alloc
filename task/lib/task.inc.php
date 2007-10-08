@@ -492,7 +492,12 @@ class task extends db_entity {
     $TPL["taskCommentTemplateOptions"].= get_options_from_db($db, "taskCommentTemplateName", "taskCommentTemplateID",false);
 
     $priority = $this->get_value("priority") or $priority = 3;
-    $TPL["priorityOptions"] = get_select_options(array(1=>"Priority 1", 2=>"Priority 2", 3=>"Priority 3", 4=>"Priority 4", 5=>"Priority 5"), $priority);
+    $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
+    $tp = array();
+    foreach($taskPriorities as $key => $arr) {
+      $tp[$key] = $arr["label"];
+    }
+    $TPL["priorityOptions"] = get_select_options($tp,$priority);
 
     // We're building these two with the <select> tags because they will be replaced by an AJAX created dropdown when
     // The projectID changes.
