@@ -194,5 +194,60 @@
 </table>
 </form>
 
+<form action="{$url_alloc_config}" method="post">
+{$table_box}
+  <tr>
+    <th colspan="2">Miscellaneous Setup</th>
+    <th width="1%">{get_help("config_misc_setup")}</th>
+  </tr>
+  <tr>
+    <td valign="top" width="20%"><nobr>Default Interested Parties</nobr></td>
+    <td>
+      <table>
+      {foreach $TPL["defaultInterestedParties"] as $k => $v}
+        <tr>
+          <td>{echo $k}</td>
+          <td>{echo $v}</td>
+        </tr>
+      {/}
+      </table>
+    <a href="{$url_alloc_configEdit}configName=defaultInterestedParties">Options Edit</a></td> 
+    <td width="1%">{get_help("config_defaultInterestedParties.html")}</td>
+  </tr>
+  <tr>
+    <td valign="top" width="20%"><nobr>Project Priorities</nobr></td>
+    <td>
+      <table>
+      {foreach $TPL["projectPriorities"] as $k => $arr}
+        <tr>
+          <td>{echo $k}</td>
+          <td style="color:{echo $arr["colour"]}">{echo $arr["label"]}</td>
+        </tr>
+      {/}
+      </table>
+    <a href="{$url_alloc_configEdit}configName=projectPriorities">Options Edit</a></td> 
+    <td width="1%">{get_help("config_projectPriorities.html")}</td>
+  </tr>
+  <tr>
+    <td valign="top" width="20%"><nobr>Task Priorities</nobr></td>
+    <td>
+      <table>
+      {foreach $TPL["taskPriorities"] as $k => $arr}
+        <tr>
+          <td>{echo $k}</td>
+          <td style="color:{echo $arr["colour"]}">{echo $arr["label"]}</td>
+        </tr>
+      {/}
+      </table>
+    <a href="{$url_alloc_configEdit}configName=taskPriorities">Options Edit</a></td> 
+    <td width="1%">{get_help("config_taskPriorities.html")}</td>
+  </tr>
+  <tr>  
+    <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
+  </tr>
+</table>
+</form>
+
+
   
 {show_footer()}

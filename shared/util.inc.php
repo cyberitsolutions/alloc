@@ -120,9 +120,9 @@ function timetook($start, $text="Duration: ") {
   $dur > 60 and $dur = $dur / 60;
   echo "<br>".$text.sprintf("%0.5f", $dur) . $unit;
 }
-function get_cached_table($table) {
+function get_cached_table($table,$anew=false) {
   $cache = alloc_cache::get_cache();
-  $cache->load_cache($table);
+  $cache->load_cache($table,$anew);
 
   // Special processing for person table
   if ($table == "person") {
