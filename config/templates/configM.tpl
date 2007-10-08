@@ -203,20 +203,22 @@
   <tr>
     <td valign="top" width="20%"><nobr>Default Interested Parties</nobr></td>
     <td>
+      <a href="{$url_alloc_configEdit}configName=defaultInterestedParties">Options Edit</a>
       <table>
       {foreach $TPL["defaultInterestedParties"] as $k => $v}
         <tr>
-          <td>{echo $k}</td>
+          <td>{echo stripslashes($k)}</td>
           <td>{echo $v}</td>
         </tr>
       {/}
       </table>
-    <a href="{$url_alloc_configEdit}configName=defaultInterestedParties">Options Edit</a></td> 
+    </td> 
     <td width="1%">{get_help("config_defaultInterestedParties.html")}</td>
   </tr>
   <tr>
     <td valign="top" width="20%"><nobr>Project Priorities</nobr></td>
     <td>
+      <a href="{$url_alloc_configEdit}configName=projectPriorities">Options Edit</a>
       <table>
       {foreach $TPL["projectPriorities"] as $k => $arr}
         <tr>
@@ -225,12 +227,13 @@
         </tr>
       {/}
       </table>
-    <a href="{$url_alloc_configEdit}configName=projectPriorities">Options Edit</a></td> 
+    </td> 
     <td width="1%">{get_help("config_projectPriorities.html")}</td>
   </tr>
   <tr>
     <td valign="top" width="20%"><nobr>Task Priorities</nobr></td>
     <td>
+      <a href="{$url_alloc_configEdit}configName=taskPriorities">Options Edit</a>
       <table>
       {foreach $TPL["taskPriorities"] as $k => $arr}
         <tr>
@@ -239,7 +242,7 @@
         </tr>
       {/}
       </table>
-    <a href="{$url_alloc_configEdit}configName=taskPriorities">Options Edit</a></td> 
+    </td> 
     <td width="1%">{get_help("config_taskPriorities.html")}</td>
   </tr>
   <tr>  

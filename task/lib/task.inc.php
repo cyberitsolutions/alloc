@@ -342,6 +342,12 @@ class task extends db_entity {
       }
     }
 
+    $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
+    foreach ($extra_interested_parties as $name => $email) {
+      $taskCCListOptions[$email] = stripslashes($name);
+    }
+
+
     if (is_array($taskCCListOptions)) {
       asort($taskCCListOptions);
 
