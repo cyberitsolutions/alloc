@@ -973,8 +973,6 @@ function get_task_statii_array() {
     $_FORM["people_cache"] = get_cached_table("person");
     $_FORM["timeUnit_cache"] = get_cached_table("timeUnit");
 
-    // A header row
-    $summary.= task::get_task_list_tr_header($_FORM);
 
 
     // Get a hierarchical list of tasks
@@ -1019,14 +1017,15 @@ function get_task_statii_array() {
           $_FORM["showProject"] and $summary.= "\n  <th class=\"col tasks\" colspan=\"21\">".$project["link"]."</th>";
           $_FORM["showProject"] and $summary.= "\n</tr>";
 
-          foreach ($t as $task) {
-            $task["projectPriority"] = $project["projectPriority"];
+          foreach ($t as $row) {
+            $row["projectPriority"] = $project["projectPriority"];
+            $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
             if ($_FORM["return"] == "objects"){
-              $tasks[$task["taskID"]] = $task;
+              $tasks[$row["taskID"]] = $row;
             } else if ($_FORM["return"] == "dropdown_options"){
-              $summary_ops[$task["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;",$task["padding"]).$task["taskName"];
+              $summary_ops[$row["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;",$row["padding"]).$row["taskName"];
             } else {
-              $summary.= task::get_task_list_tr($task,$_FORM);
+              $summary.= task::get_task_list_tr($row,$_FORM);
             }
           }
         }
@@ -1043,16 +1042,9 @@ function get_task_statii_array() {
 
       $q = "SELECT task.*, projectName, projectShortName, clientID, projectPriority, 
                    IF(task.dateTargetCompletion IS NULL, \"-\",
-                     TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) as daysUntilDue,
-                     priority * POWER(projectPriority, 2) * 
-                       IF(task.dateTargetCompletion IS NULL, 
-                         8,
-                         ATAN(
-                              (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
-                             ) / 3.14 * 8 + 4
-                         ) / 10 as priorityFactor
+                     TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) as daysUntilDue
               FROM task LEFT JOIN project ON task.projectID = project.projectID 
-             ".$filter." ORDER BY priorityFactor ".$limit;
+             ".$filter." ".$limit;
       $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);
@@ -1068,30 +1060,45 @@ function get_task_statii_array() {
         $row["taskStatus"] = $t->get_status($_FORM["return"]);
         $row["object"] = $t;
         $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
-
-        if ($_FORM["return"] == "objects") {
-          $tasks[$row["taskID"]] = $row;
-
-        } else if ($_FORM["return"] == "text"){
-          $summary.= task::get_task_list_tr_text($row,$_FORM);
-
-        } else {
-          $summary.= task::get_task_list_tr($row,$_FORM);
-        }
+        $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
+        $tasks[$row["taskID"]] = $row;
       }
     } 
 
 
+    if ($_FORM["taskView"] == "prioritised") {
+
+      if (is_array($tasks) && count($tasks)) {
+        usort($tasks, array("task", "priority_compare"));
+      } else {
+        $tasks = array();
+      }
+        
+      if ($_FORM["return"] == "text"){
+        foreach ($tasks as $row) {
+          $summary.= task::get_task_list_tr_text($row,$_FORM);
+        }
+
+      } else {
+        foreach ($tasks as $row) {
+          $summary.= task::get_task_list_tr($row,$_FORM);
+        }
+      }
+    }
+
+
+    // A header row
+    $header_row = task::get_task_list_tr_header($_FORM);
 
     // Decide what to actually return
     if ($_FORM["return"] == "objects") {
       return $tasks;
 
     } else if ($print && $_FORM["return"] == "html") {
-      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$header_row.$summary."</table>";
 
     } else if ($print && $_FORM["return"] == "text") {
-      return $summary;
+      return $header_row.$summary;
 
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;
@@ -1100,6 +1107,23 @@ function get_task_statii_array() {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Tasks Found</b></td></tr></table>";
     } 
   } 
+
+  function priority_compare($a, $b) {
+    return $a["priorityFactor"] > $b["priorityFactor"];
+  }
+
+  function get_overall_priority($projectPriority=0,$taskPriority=0,$dateTargetCompletion) {
+    if ($dateTargetCompletion) {
+      $daysUntilDue = (format_date("U",$dateTargetCompletion) - mktime()) / 60 / 60 / 24;
+      $mult = atan($daysUntilDue / 20) / 3.14 * 8 + 4;
+    } else {
+      $mult = 8;
+    }
+
+    $priorityFactor = ($taskPriority * pow($projectPriority,2)) * $mult / 10;
+    return $priorityFactor;
+  }
+
 
   function get_task_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
@@ -1170,6 +1194,8 @@ function get_task_statii_array() {
         $str = "<br/>".implode("<br/>",$str);
       }
     }
+
+
 
                                   $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
