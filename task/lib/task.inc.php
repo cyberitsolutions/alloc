@@ -498,6 +498,7 @@ class task extends db_entity {
       $tp[$key] = $arr["label"];
     }
     $TPL["priorityOptions"] = get_select_options($tp,$priority);
+    $priority and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$taskPriorities[$priority]["colour"]."\">[".$tp[$priority]."]</div>";
 
     // We're building these two with the <select> tags because they will be replaced by an AJAX created dropdown when
     // The projectID changes.

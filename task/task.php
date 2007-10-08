@@ -328,7 +328,7 @@ if (is_array($parentTaskIDs)) {
   }
 }
 
-$TPL["hierarchy_links"].= "</br><br/><b>".$TPL["task_taskID"]." ".$TPL["task_taskName"]."</b>";
+$TPL["hierarchy_links"].= "<br/><br/><b>".$TPL["task_taskID"]." ".$TPL["task_taskName"]."</b>";
 
 
 
