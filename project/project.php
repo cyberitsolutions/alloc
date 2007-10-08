@@ -626,7 +626,13 @@ $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
 $TPL["projectType_options"] = get_select_options($projectType_array, $TPL["project_projectType"]);
 $TPL["projectStatus_options"] = get_select_options($projectStatus_array, $TPL["project_projectStatus"]);
 $TPL["project_projectPriority"] or $TPL["project_projectPriority"] = 3;
-$TPL["projectPriority_options"] = get_options_from_array(array(1, 2, 3, 4, 5), $TPL["project_projectPriority"], false);
+$projectPriorities = config::get_config_item("projectPriorities") or $projectPriorities = array();
+$tp = array();
+foreach($projectPriorities as $key => $arr) {
+  $tp[$key] = $arr["label"];
+}
+$TPL["projectPriority_options"] = get_select_options($tp,$TPL["project_projectPriority"]);
+
 $TPL["currencyType_options"] = get_select_options($currency_array, $TPL["project_currencyType"]);
 
 if ($_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]) {
