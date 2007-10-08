@@ -33,8 +33,8 @@ class config extends db_entity {
       );
   }
 
-  function get_config_item($name='') {
-    $table = get_cached_table("config");
+  function get_config_item($name='',$anew=false) {
+    $table = get_cached_table("config",$anew);
     if ($table[$name]["type"] == "array") {
       $val = unserialize($table[$name]["value"]) or $val = array();
       return $val;

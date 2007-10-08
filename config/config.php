@@ -98,6 +98,7 @@ $TPL["calendarFirstDayOptions"] = get_select_options($days,$config->get_config_i
 
 $TPL["timeSheetPrintOptions"] = get_select_options($TPL["timeSheetPrintOptions"],$TPL["timeSheetPrint"]);
 
+
 include_template("templates/configM.tpl");
 
 

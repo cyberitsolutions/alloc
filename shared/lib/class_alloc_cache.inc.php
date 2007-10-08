@@ -44,10 +44,10 @@ class alloc_cache {
   }
 
   // Loads up assoc array[$table][primarykey] = row;
-  function load_cache($table) {
+  function load_cache($table,$anew=false) {
     $db = new $this->db;
 
-    if (!$this->cache[$table]) {
+    if (!$this->cache[$table] || $anew) {
       $db->query("SELECT * FROM ".$table);
       while ($row = $db->next_record()) {
         $this->cache[$table][$db->f($table."ID")] = $row;
