@@ -35,7 +35,7 @@ function updateTaskCommentTemplate(number) \{
 
       <table border="0" cellspacing="0" cellpadding="5" class="panel" width="100%">
         <tr>
-          <td>{$project_projectName}{$hierarchy_links}<br/>{$task_taskDescription}</td>
+          <td>{$project_projectName}{$hierarchy_links}{$priorityLabel}<br/>{$task_taskDescription}</td>
         </tr>
       </table>
 
