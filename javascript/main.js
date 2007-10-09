@@ -36,17 +36,24 @@ function callbackReceiver(number,entityid) {
   }
 }
 
-function set_grow_shrink_box(id, display, images, text) {
+function set_grow_shrink_box(id, display, images, text, id_to_hide) {
   if (display == 'none') {
     display = 'inline';
+    display_to_hide = 'none';
     image = images+'small_shrink.gif'
   } else {
     display = 'none';
+    display_to_hide = 'inline';
     image = images+'small_grow.gif'
   }
 
   document.getElementById(id).style.display=display;
-  str = "<nobr><a onClick=\"set_grow_shrink_box('"+id+"','"+display+"','"+images+"','"+text+"');\">"+text+"<img border=\"0\" src=\""+image+"\"</a></nobr>"
+
+  if (id_to_hide) {
+    document.getElementById(id_to_hide).style.display=display_to_hide;
+  }
+
+  str = "<nobr><a class=\"nobr\" href=\"#\" onClick=\"set_grow_shrink_box('"+id+"','"+display+"','"+images+"','"+text+"','"+id_to_hide+"');\">"+text+"<img border=\"0\" src=\""+image+"\"></a></nobr>"
   document.getElementById('button_'+id).innerHTML = str;
 }
 

@@ -363,7 +363,7 @@ class task extends db_entity {
         }
       }
     }
-    $str = "<select name=\"taskCCList[]\" size=\"5\" multiple=\"true\"  style=\"width:300px\">".get_select_options($options,$taskCCList)."</select>";
+    $str = "<select name=\"taskCCList[]\" size=\"8\" multiple=\"true\"  style=\"width:300px\">".get_select_options($options,$taskCCList)."</select>";
     return $str;
   }
 
@@ -511,6 +511,7 @@ class task extends db_entity {
       $str = trim(htmlentities($db->f("fullName")." <".$db->f("emailAddress").">"));
       $value = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$db->f("fullName")),"email"=>$db->f("emailAddress")))));
       $TPL["taskCCList_hidden"].= $commar.$str."<input type=\"hidden\" name=\"taskCCList[]\" value=\"".$value."\">";
+      $TPL["taskCCList_text"].= $commar.$str;
       $commar = "<br/>";
     }
     

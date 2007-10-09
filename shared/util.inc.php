@@ -949,10 +949,10 @@ function get_text($handle) {
 function get_html($handle,$value=false) {
   echo build_html_element($handle,$value);
 }
-function get_expand_link($id, $text="New ") {
+function get_expand_link($id, $text="New ",$id_to_hide="") {
   global $TPL;
   $display = "none";
-  echo "<div id=\"button_".$id."\"><a class=\"nobr\" onClick=\"set_grow_shrink_box('".$id."','".$display."','".$TPL["url_alloc_images"]."','".$text."');\">".$text;
+  echo "<div id=\"button_".$id."\"><a class=\"nobr\" href=\"#\" onClick=\"set_grow_shrink_box('".$id."','".$display."','".$TPL["url_alloc_images"]."','".$text."','".$id_to_hide."');\">".$text;
   echo "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."small_grow.gif\"></a></div>";
 }
 function build_html_tag($htmlElementID,$value="") {
