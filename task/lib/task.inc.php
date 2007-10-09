@@ -648,7 +648,8 @@ class task extends db_entity {
         $recipient_full_name = $recipient["name"];
       }
 
-      if ($recipient_full_name && $recipient["emailAddress"] && $recipient_full_name != $from) { 
+      if ($recipient_full_name && $recipient["emailAddress"] && $recipient_full_name != $from && !$done[$recipient["emailAddress"]]) { 
+        $done[$recipient["emailAddress"]] = true;
         $to_address.= $commar.$recipient_full_name.": ;";
         $bcc.= $commar.$recipient["emailAddress"];
         $successful_recipients.= $commar.$recipient_full_name;
@@ -1600,7 +1601,7 @@ function get_task_statii_array() {
     $email_bits = explode(" ",$decoded[0]["Headers"]["from:"]);
     $from_address = str_replace(array("<",">"),"",array_pop($email_bits));
     is_array($email_bits) and $from_person = implode(" ",$email_bits);
-    
+
     $person = new person;
     $personID = $person->find_by_name($from_person);
   
@@ -1625,6 +1626,27 @@ function get_task_statii_array() {
         $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
       }
     }
+
+    // If we don't know the usersname, then try and determine it
+    if (!$from_person) {
+      if ($personID) {
+        $p = new person;
+        $p->set_id($personID);
+        $p->select();
+        $from_person = $p->get_value("firstName")." ".$p->get_value("surname");
+        $from_person == " " and $from_person = $p->get_value("username");
+
+      } else if ($clientContactID) {
+        $cc = new clientContact;
+        $cc->set_id($clientContactID);
+        $cc->select();
+        $from_person = $cc->get_value("clientContactName");
+      }
+    }
+
+    $from_person or $from_person = $from_address;
+
+
     // Don't update last modified fields...
     $comment->skip_modified_fields = true;
 
