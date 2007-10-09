@@ -88,14 +88,11 @@ function updateStuffWithAjax() \{
   </tr>
   <tr>
     <td>Parent Task</td>
-    <td colspan="3">
+    <td>
       <div id="parenTaskDropdown">
         {$parentTaskOptions}
       </div>
     </td>
-  </tr>
-
-  <tr>
     <td>Task Type</td>
     <td>
       <select name="taskTypeID">
@@ -113,6 +110,7 @@ function updateStuffWithAjax() \{
       </div>
       {get_help("task_interested_parties")}
 
+      <div>
       <table border="0" cellspacing="0" cellpadding="5" align="right">
         <tr>
           <td><nobr>Target Start/Complete</nobr></td>
@@ -133,6 +131,7 @@ function updateStuffWithAjax() \{
           </td>
         </tr>
       </table>
+      </div>
 
     </td>
   </tr>

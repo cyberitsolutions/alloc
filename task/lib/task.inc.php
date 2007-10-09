@@ -497,7 +497,10 @@ class task extends db_entity {
 
     $priority = $this->get_value("priority") or $priority = 3;
     $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
-    $TPL["priorityOptions"] = get_select_options($taskPriorities,$priority);
+    foreach ($taskPriorities as $k => $v) {
+      $tp[$k] = $v["label"];
+    }
+    $TPL["priorityOptions"] = get_select_options($tp,$priority);
     $priority and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$taskPriorities[$priority]["colour"]."\">[".$this->get_priority_label()."]</div>";
 
     // We're building these two with the <select> tags because they will be replaced by an AJAX created dropdown when
