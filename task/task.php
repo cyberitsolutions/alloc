@@ -209,7 +209,8 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   if ($success) {
   
     if ($_POST["save"] && $_POST["view"] == "brief") {
-      $url = $TPL["url_alloc_taskList"];
+      #$url = $TPL["url_alloc_taskList"];
+      $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
     } else if ($_POST["save"]) {
       $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
     } else if ($_POST["save_and_back"]) {

@@ -106,7 +106,7 @@ function updateStuffWithAjax() \{
   </tr>
 
   <tr>    
-    <td valign="top"><nobr>Interested Parties</nobr><br/>{$new_client_contact_link}</td>
+    <td valign="top"><nobr>Interested Parties</nobr></td>
     <td valign="top" colspan="3">
       <div id="taskCCListDropdown" style="display:inline">
         {$taskCCListOptions}
