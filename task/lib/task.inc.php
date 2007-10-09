@@ -631,7 +631,7 @@ class task extends db_entity {
     return $recipients;
   }
 
-  function send_emails($selected_option, $type="", $body="", $from=false) {
+  function send_emails($selected_option, $type="", $body="", $from=array()) {
     global $current_user;
     $recipients = $this->get_email_recipients($selected_option);
 
@@ -648,9 +648,12 @@ class task extends db_entity {
         $recipient_full_name = $recipient["name"];
       }
 
-      if ($recipient_full_name && $recipient["emailAddress"] && $recipient_full_name != $from && !$done[$recipient["emailAddress"]]) { 
+      if ($recipient_full_name && $recipient["emailAddress"] 
+      && $recipient_full_name != $from["name"] && $recipient["emailAddress"] != $from["email"] 
+      && !$done[$recipient["emailAddress"]]) { 
+
         $done[$recipient["emailAddress"]] = true;
-        $to_address.= $commar.$recipient_full_name.": ;";
+        $to_address.= $commar.'"'.$recipient_full_name.'": ;';
         $bcc.= $commar.$recipient["emailAddress"];
         $successful_recipients.= $commar.$recipient_full_name;
         $commar = ", ";
@@ -680,7 +683,7 @@ class task extends db_entity {
       $p->set_id($this->get_value("projectID"));
       $p->select();
 
-      $from_name = $from or $from_name = $current_user->get_username(1);
+      $from_name = $from["name"] or $from_name = $current_user->get_username(1);
       
       $message.= "\n".stripslashes($subject." by ".$from_name);
       $body and $message.= "\n\n".stripslashes(wordwrap($body));
@@ -1600,10 +1603,10 @@ function get_task_statii_array() {
     
     $email_bits = explode(" ",$decoded[0]["Headers"]["from:"]);
     $from_address = str_replace(array("<",">"),"",array_pop($email_bits));
-    is_array($email_bits) and $from_person = implode(" ",$email_bits);
+    is_array($email_bits) and $from_name = implode(" ",$email_bits);
 
     $person = new person;
-    $personID = $person->find_by_name($from_person);
+    $personID = $person->find_by_name($from_name);
   
     #die("personID ".$personID);
 
@@ -1616,7 +1619,7 @@ function get_task_statii_array() {
 
     } else {
       $cc = new clientContact();
-      $clientContactID = $cc->find_by_name($from_person, $this->get_value("projectID"));
+      $clientContactID = $cc->find_by_name($from_name, $this->get_value("projectID"));
 
       if (!$clientContactID) {
         $clientContactID = $cc->find_by_email($from_address, $this->get_value("projectID"));
@@ -1628,23 +1631,25 @@ function get_task_statii_array() {
     }
 
     // If we don't know the usersname, then try and determine it
-    if (!$from_person) {
+    if (!$from_name) {
       if ($personID) {
         $p = new person;
         $p->set_id($personID);
         $p->select();
-        $from_person = $p->get_value("firstName")." ".$p->get_value("surname");
-        $from_person == " " and $from_person = $p->get_value("username");
+        $from_name = $p->get_value("firstName")." ".$p->get_value("surname");
+        $from_name == " " and $from_name = $p->get_value("username");
 
       } else if ($clientContactID) {
         $cc = new clientContact;
         $cc->set_id($clientContactID);
         $cc->select();
-        $from_person = $cc->get_value("clientContactName");
+        $from_name = $cc->get_value("clientContactName");
       }
     }
 
-    $from_person or $from_person = $from_address;
+    $from_name or $from_name = $from_address;
+    $from["email"] = $from_address;
+    $from["name"] = $from_name;
 
 
     // Don't update last modified fields...
@@ -1659,7 +1664,7 @@ function get_task_statii_array() {
     $recipients[] = "manager";
     $recipients[] = "creator";
     $recipients[] = "CCList";
-    $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from_person);
+    $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from);
 
     if ($successful_recipients) {
       $comment->set_value("commentEmailRecipients",$successful_recipients);
