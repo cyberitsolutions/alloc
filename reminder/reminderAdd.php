@@ -164,21 +164,21 @@ case 3:
       $client = new client;
       $client->set_id($parentID);
       $client->select();
-      $TPL["reminder_default_subject"] = sprintf("[Client: %s]", $client->get_value('clientName'));
+      $TPL["reminder_default_subject"] = sprintf("Client Reminder: %d %s", $client->get_id(), $client->get_value('clientName'));
       $TPL["reminder_default_content"] = config::get_config_item("allocURL")."client/client.php?clientID=".$parentID;
 
     } else if ($parentType == "project") {
       $project = new project;
       $project->set_id($parentID);
       $project->select();
-      $TPL["reminder_default_subject"] = sprintf("[Project: %s]", $project->get_value('projectName'));
+      $TPL["reminder_default_subject"] = sprintf("Project Reminder: %d %s", $project->get_id(), $project->get_value('projectName'));
       $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/project.php?projectID=".$parentID;
 
     } else if ($parentType == "task") {
       $task = new task;
       $task->set_id($parentID);
       $task->select();
-      $TPL["reminder_default_subject"] = sprintf("[Task: %s]", $task->get_value('taskName'));
+      $TPL["reminder_default_subject"] = sprintf("Task Reminder: %d %s [%s]", $task->get_id(), $task->get_value('taskName'), $task->get_priority_label());
       $TPL["reminder_default_content"] = config::get_config_item("allocURL")."task/task.php?taskID=".$parentID;
 
     } else if ($parentType == "general") {

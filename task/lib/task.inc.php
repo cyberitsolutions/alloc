@@ -141,16 +141,18 @@ class task extends db_entity {
   function new_message_task() {
     // Create a reminder with its regularity being based upon what the task priority is
 
+    $label = $this->get_priority_label();
+
     if ($this->get_value("priority") == 1) {
       $reminderInterval = "Day";
       $intervalValue = 1;
-      $message = "A priority 1 message has been created for you.  You will continue to receive these ";
+      $message = "A [".$label."] message has been created for you.  You will continue to receive these ";
       $message.= "emails until you kill off this task either by deleting it or putting a date in its ";
       $message.= "'Date Actual Completion' box.";
     } else {
       $reminderInterval = "Day";
       $intervalValue = $this->get_value("priority");
-      $message = "A priority ".$this->get_value("priority")." message has been created for you.  You will ";
+      $message = "A [".$label."] message has been created for you.  You will ";
       $message.= "continue to receive these ";
       $message.= "every ".$this->get_value("priority")." days until you kill this task either by deleting it ";
       $message.= "or putting a date in its 'Date Actual Completion' box.";
@@ -162,6 +164,7 @@ class task extends db_entity {
   function new_fault_task() {
     // Create a reminder with its regularity being based upon what the task priority is
     $db = new db_alloc;
+    $label = $this->get_priority_label();
 
     if ($this->get_value("priority") == 1) {
       if ($this->get_value("projectID")) {
@@ -172,10 +175,9 @@ class task extends db_entity {
       } else {
         $people[] = $this->get_value("personID");
       }
-      $message = "THIS IS IMPORTANT.\nThis is a priority 1 fault/task/alert.  See the task immediately for details.";
+      $message = "This is a [".$label."] Fault Task.  See the task immediately for details.";
       $message.= "\nYou will receive one of these emails every four hours until the task has a date in its 'Actual ";
       $message.= "Completion' box.";
-      // $message.= "\n\n<a href=\"" . $this->get_url() . "\">";
       $reminderInterval = "Hour";
       $intervalValue = 4;
     } else if ($this->get_value("priority") == 2) {
@@ -189,9 +191,8 @@ class task extends db_entity {
       } else {
         $people[] = $this->get_value("personID");
       }
-      $message = "This is a priority 2 fault/task/alert.  See the task immediately for details.";
+      $message = "This is a [".$label."] Fault Task.  See the task immediately for details.";
       $message.= "You will receive an email once a day everyday until the task is resolved.";
-      // $message.= "\n\n<a href=\"" . $this->get_url() . "\">";
       $reminderInterval = "Day";
       $intervalValue = 1;
     }
@@ -214,12 +215,15 @@ class task extends db_entity {
 
   function create_reminder($personID, $message, $reminderInterval, $intervalValue) {
     global $current_user;
+
+    $label = $this->get_priority_label();
+
     $reminder = new reminder;
     $reminder->set_value('reminderType', "task");
     $reminder->set_value('reminderLinkID', $this->get_id());
     $reminder->set_value('reminderRecuringInterval', $reminderInterval);
     $reminder->set_value('reminderRecuringValue', $intervalValue);
-    $reminder->set_value('reminderSubject', "Task Reminder: ".$this->get_id()." ".$this->get_value("taskName"));
+    $reminder->set_value('reminderSubject', "Task Reminder: ".$this->get_id()." ".$this->get_value("taskName")." [".$label."]");
     $reminder->set_value('reminderContent', "\nReminder Created by ".$current_user->get_username(1)
                          ."\n\n".$message."\n\n".$this->get_value("taskDescription"));
 
@@ -493,12 +497,8 @@ class task extends db_entity {
 
     $priority = $this->get_value("priority") or $priority = 3;
     $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
-    $tp = array();
-    foreach($taskPriorities as $key => $arr) {
-      $tp[$key] = $arr["label"];
-    }
-    $TPL["priorityOptions"] = get_select_options($tp,$priority);
-    $priority and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$taskPriorities[$priority]["colour"]."\">[".$tp[$priority]."]</div>";
+    $TPL["priorityOptions"] = get_select_options($taskPriorities,$priority);
+    $priority and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$taskPriorities[$priority]["colour"]."\">[".$this->get_priority_label()."]</div>";
 
     // We're building these two with the <select> tags because they will be replaced by an AJAX created dropdown when
     // The projectID changes.
@@ -723,7 +723,7 @@ class task extends db_entity {
 
       $headers["Reply-To"] = "All parties via ".ALLOC_DEFAULT_FROM_ADDRESS;
       $headers["From"] = $from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS;
-      $subject = $subject.": ".$this->get_id()." ".stripslashes($this->get_value("taskName")).$subject_extra;
+      $subject = $subject.": ".$this->get_id()." ".stripslashes($this->get_value("taskName"))." [".$this->get_priority_label()."] ".$subject_extra;
       if ($email->send($to_address, $subject, $message, $type, $headers)) {
         return $successful_recipients;
       }
@@ -1124,7 +1124,6 @@ function get_task_statii_array() {
     $priorityFactor = ($taskPriority * pow($projectPriority,2)) * $mult / 10;
     return $priorityFactor;
   }
-
 
   function get_task_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
@@ -1644,6 +1643,11 @@ function get_task_statii_array() {
       $comment->set_value("commentEmailRecipients",$successful_recipients);
       $comment->save();
     }
+  }
+
+  function get_priority_label() {
+    $taskPriorities = config::get_config_item("taskPriorities");
+    return $taskPriorities[$this->get_value("priority")]["label"];
   }
 
 }
