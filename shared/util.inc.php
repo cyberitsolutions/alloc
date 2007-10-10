@@ -1044,6 +1044,16 @@ function bad_filename($filename) {
     }
     return false;
   }
-
+  function parse_email_address($email="") {
+    // Takes Alex Lance <alla@cyber.com.au> and returns array("alla@cyber.com.au", "Alex Lance");
+    if ($email) {
+      $bits = explode(" ",$email);
+      $last_bit = array_pop($bits);
+      $address = str_replace(array("<",">"),"",$last_bit);
+      is_array($bits) && count($bits) and $name = implode(" ",$bits);
+      return array($address, $name);
+    }
+    return array();
+  }
 
 ?>

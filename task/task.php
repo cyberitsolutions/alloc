@@ -316,6 +316,7 @@ $db->next_record();
 if ($db->f("clientID")) {
   $TPL["new_client_contact_link"] = "<br/><br/><a href=\"".$TPL["url_alloc_client"]."clientID=".$db->f("clientID")."\">";
   $TPL["new_client_contact_link"].= "New Client Contact</a>";
+  $TPL["task_clientID"] = $db->f("clientID");
 }
 
 

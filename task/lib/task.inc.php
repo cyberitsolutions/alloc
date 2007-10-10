@@ -576,20 +576,6 @@ class task extends db_entity {
     #static $people;
     $recipients = array();
 
-    // Load up all people into array
-    #if (!$people) { 
-      #$db = new db_alloc;
-      #$db->query("SELECT personID, username, firstName, surname, emailAddress FROM person");
-      #while($db->next_record()) {
-        #if ($db->f("firstName") && $db->f("surname")) {
-          #$db->Record["fullName"] = $db->f("firstName")." ".$db->f("surname");
-        #} else {
-          #$db->Record["fullName"] = $db->f("username");
-        #}
-        #$people[$db->f("personID")] = $db->Record;
-      #}
-    #}
-
     $people = get_cached_table("person");
 
 
@@ -628,8 +614,13 @@ class task extends db_entity {
         while ($db->next_record()) {
           $recipients[] = $people[$db->f("personID")];
         }
+
       } else if (is_int($selected_option)){
         $recipients[] = $people[$selected_option];
+
+      } else if (preg_match("/@/",$selected_option)) {
+        list($email, $name) = parse_email_address($selected_option);
+        $email and $recipients[] = array("name"=>$name,"emailAddress"=>$email);
       }
     }
     return $recipients;
@@ -665,6 +656,15 @@ class task extends db_entity {
     }
 
     $headers["Bcc"] = $bcc;
+
+    // Debug
+    if (0) {
+      echo "<br>To: ".$to_address;
+      echo "<br>Bcc: ".$headers["Bcc"];
+      die();
+    }
+
+
     if ($headers["Bcc"]) {
 
       $types = array('task_created'    => "Task Created"
@@ -1605,9 +1605,7 @@ function get_task_statii_array() {
     $file = $dir.DIRECTORY_SEPARATOR."mail.eml";
     $decoded = $email->save_email($file);
     
-    $email_bits = explode(" ",$decoded[0]["Headers"]["from:"]);
-    $from_address = str_replace(array("<",">"),"",array_pop($email_bits));
-    is_array($email_bits) and $from_name = implode(" ",$email_bits);
+    list($from_address,$from_name) = parse_email_address($decoded[0]["Headers"]["from:"]);
 
     $person = new person;
     $personID = $person->find_by_name($from_name);

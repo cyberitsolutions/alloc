@@ -62,7 +62,32 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
     $comment->set_value('comment', $_POST["comment"]);
 
     // Email new comment?
-    if ($_POST["commentEmailCheckboxes"]) {
+    if ($_POST["commentEmailCheckboxes"] || ($_POST["eo_email"] && preg_match("/@/",$_POST["eo_email"]))) {
+
+      // On-the-fly add name and email to recipients
+      if ($_POST["eo_email"]) {
+        $str = $_POST["eo_name"];
+        $str and $str.=" ";
+        $str.= str_replace(array("<",">"),"",$_POST["eo_email"]);
+        $_POST["commentEmailCheckboxes"][] = $str;
+      }
+
+      // Add the dude to the interested parties list
+      if ($_POST["eo_email"] && $_POST["eo_add_interested_party"]) {
+         $db = new db_alloc();
+         $q = sprintf("INSERT INTO taskCCList (fullName,emailAddress,taskID) VALUES ('%s','%s',%d)",db_esc(trim($_POST["eo_name"])),db_esc(trim($_POST["eo_email"])),$entityID);
+         $db->query($q);
+      }
+
+      // Add a new client contact
+      if ($_POST["eo_email"] && $_POST["eo_add_client_contact"] && $_POST["eo_client_id"]) {
+        $cc = new clientContact;
+        $cc->set_value("clientContactName",trim($_POST["eo_name"]));
+        $cc->set_value("clientContactEmail",trim($_POST["eo_email"]));
+        $cc->set_value("clientID",sprintf("%d",$_POST["eo_client_id"]));
+        $cc->save();
+      }
+
 
       if (is_object($e) && method_exists($e, "send_emails")) {
 
