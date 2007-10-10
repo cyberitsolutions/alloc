@@ -58,6 +58,13 @@ form {
 .left { 
   text-align:left; 
 } 
+
+.small {
+  padding:0px;
+  margin:0px;
+  font-size:90%;
+}
+
 .center { 
   text-align:center; 
 } 
