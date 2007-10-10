@@ -80,7 +80,7 @@ function updateStuffWithAjax() \{
   </tr>
   <tr>
     <td valign="top">Description</td>
-    <td colspan="3"><textarea name="taskDescription" rows="7" cols="100" wrap="virtual">{$task_taskDescription}</textarea></td>
+    <td colspan="3"><textarea name="taskDescription" rows="7" cols="85" wrap="virtual">{$task_taskDescription}</textarea></td>
 
   </tr>  
   <tr>
