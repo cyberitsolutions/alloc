@@ -1679,6 +1679,28 @@ function get_task_statii_array() {
     return $taskPriorities[$this->get_value("priority")]["label"];
   }
 
+  function get_all_parties() {
+    $rtn = array();
+    $people = get_cached_table("person");
+    $email_addresses[$people[$this->get_value("creatorID")]["emailAddress"]] = $people[$this->get_value("creatorID")]["name"];
+    $email_addresses[$people[$this->get_value("managerID")]["emailAddress"]] = $people[$this->get_value("managerID")]["name"];
+    $email_addresses[$people[$this->get_value("personID")]["emailAddress"]] = $people[$this->get_value("personID")]["name"];
+    $email_addresses[$people[$this->get_value("closerID")]["emailAddress"]] = $people[$this->get_value("closerID")]["name"];
+
+    $db = new db_alloc();
+    $q = sprintf("SELECT emailAddress, fullName FROM taskCCList WHERE taskID = %d",$this->get_id());
+    $db->query($q);
+    while ($db->row()) {
+      $email_addresses[$db->f("emailAddress")] = stripslashes($db->f("fullName"));
+    }
+
+    foreach ($email_addresses as $email => $name) {
+      preg_match("/@/",$email) and $rtn[$email] = $name;
+    }
+    return $rtn;
+  }
+
+
 }
 
 
