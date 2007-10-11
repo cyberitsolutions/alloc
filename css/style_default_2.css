@@ -62,7 +62,6 @@ form {
 .small {
   padding:0px;
   margin:0px;
-  font-size:90%;
 }
 
 .center { 
