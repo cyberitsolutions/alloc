@@ -1,32 +1,37 @@
 {show_header()}
   {show_toolbar()}
 
-<form name="costForm" action="{$url_alloc_expOneOff}" method="post">
+<form name="costForm" action="{$url_alloc_expenseForm}" method="post">
 
 <strong style="color: red; text-align:center; ">{$error}</strong>
 
 {$table_box}
   <tr> 
     <th>Expense Form</th>
-    <th class="right"><a href="{$url_alloc_expOneOff}expenseFormID={$expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>
+    <th class="right" colspan="3"><a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>
     <a href="{$url_alloc_expenseFormList}">Expense Form List</a>
     </th>
   </tr>
   <tr>
-    <td align="right">Total:</td><td>${$formTotal}</td>
+    <td align="right">Created By:</td><td>{$user}</td>
+    <td align="right">Client:</td><td>{$field_clientID}</td>
   </tr>
   <tr>
-    <td align="right">Created By:</td><td>{$user}</td>
+    <td align="right">Total:</td><td>${$formTotal}</td>
+    <td align="right">Seek Client Reimbursement:</td><td>{$seekClientReimbursementOption}</td>
   </tr>
   <tr>
     <td align="right">Expense Form ID:</td><td>{$expenseFormID}</td>
-  </tr>
-    {$reimbursementRequiredOption}
-  <tr>
-    <td align="right">Seek Client Reimbursement:</td><td>{$seekClientReimbursementOption}{$field_clientID}</td>
+    <td align="right">{$invoice_label}</td><td>{$attach_to_invoice_button}{$invoice_link}</td>
   </tr>
   <tr>
-    <td colspan="2" align="center">
+    <td align="right" valign="top">Payment:</td><td colspan="2">{$reimbursementRequiredOption}</td>
+  </tr>
+  <tr>
+    <td colspan="4">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="4" align="center">
       {$expenseFormButtons}
     </td>
   </tr>
@@ -90,9 +95,11 @@
 {if check_optional_has_line_items()}
 {$table_box}
   <tr>
-    <th colspan="7">Expense Form Line Items</th>
+    <th>Expense Form Line Items</th>
   </tr>
- {show_all_exp("templates/exp-one-offR.tpl")}
+  <tr>
+    <td>{show_all_exp("templates/expenseFormR.tpl")}</td>
+  </tr>
 </table>
 {/}
 

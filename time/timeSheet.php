@@ -28,11 +28,13 @@ if (!$current_user->is_employee()) {
 }
 
 
-
   function show_transaction_list($template_name) {
     global $timeSheet, $TPL;
 
-    if ($timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
+    $db = new db_alloc;
+    $db->query(sprintf("SELECT * FROM transaction WHERE timeSheetID = %d",$timeSheet->get_id()));
+
+    if ($db->next_record() || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
 
       if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced") {
         $p_button = "<input type=\"submit\" name=\"p_button\" value=\"P\">";
@@ -46,14 +48,14 @@ if (!$current_user->is_employee()) {
           #$cyber_is_client = " (Cyber is client so pick this button!)";
         }
 
-        $TPL["create_transaction_buttons"] = "<tr><td colspan=\"8\" align=\"left\">";
+
+        $TPL["create_transaction_buttons"] = "<tr><td colspan=\"7\" align=\"center\">";
         $TPL["create_transaction_buttons"].= "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">";
         $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_default\" value=\"Create Default Transactions\">";
         $TPL["create_transaction_buttons"].= "&nbsp;";
-        config::for_cyber() and $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_old\" value=\"Create Old Style Transactions".$cyber_is_client."\">";
+        config::for_cyber() and $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_old\" value=\"Create Old Style Transactions".$cyber_is_client."\">&nbsp;";
+        $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"delete_all_transactions\" value=\"Delete Transactions\" onClick=\"return confirm('Delete all Transactions?')\"></td>";
         $TPL["create_transaction_buttons"].= "</form></tr></tr>";
-  
-
       }
 
       $db = new db_alloc;
@@ -83,8 +85,9 @@ if (!$current_user->is_employee()) {
 
     global $timeSheet, $TPL, $current_user, $percent_array;
     $db = new db_alloc;
+    $db->query(sprintf("SELECT * FROM transaction WHERE timeSheetID = %d",$timeSheet->get_id()));
 
-    if ($timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
+    if ($db->next_record() || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
 
       $db->query("SELECT * FROM tf ORDER BY tfName");
       $tf_array = get_array_from_db($db, "tfID", "tfName");
@@ -148,7 +151,6 @@ if (!$current_user->is_employee()) {
 
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
       $TPL["status_options"] = get_select_options($status_options, $none);
-      $TPL["invoiceItemID"] = $timeSheet->get_value("invoiceItemID");
       $TPL["transaction_timeSheetID"] = $timeSheet->get_id();
       $TPL["transaction_transactionDate"] = date("Y-m-d");
       $TPL["transaction_product"] = "";
@@ -203,15 +205,20 @@ if (!$current_user->is_employee()) {
 
       $TPL["unit"] = $unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")];
 
+      $br = "";
+      $commentPrivateText = "";
 
       $text = $TPL["timeSheetItem_description_printer_version"] = stripslashes($timeSheetItem->get_value('description'));
       $TPL["timeSheetItem_comment_printer_version"] = "";
-      !$timeSheetItem->get_value("commentPrivate") and $TPL["timeSheetItem_comment_printer_version"] = nl2br($timeSheetItem->get_value("comment"));
+      if (!$timeSheetItem->get_value("commentPrivate")) {
+        $TPL["timeSheetItem_comment_printer_version"] = nl2br($timeSheetItem->get_value("comment"));
+      } else {
+        $commentPrivateText = "<b>[Private Comment]</b> ";
+      }
       
       $text and $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
-      $br = "";
       $text && $timeSheetItem->get_value("comment") and $br = "<br/>";
-      $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.nl2br($timeSheetItem->get_value("comment"));
+      $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$commentPrivateText.nl2br($timeSheetItem->get_value("comment"));
       $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f",$timeSheetItem->get_value('timeSheetItemDuration') * $timeSheetItem->get_value('rate'));
 
       include_template($template);
@@ -222,64 +229,6 @@ if (!$current_user->is_employee()) {
 
   }
   
-  function show_invoice_details() {
-    global $timeSheet, $TPL, $db, $timeSheetID, $projectID, $current_user;
-
-    if (($timeSheet->get_value("status") == 'admin' || $timeSheet->get_value("status") == 'invoiced')
-        && $timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
-
-      $timeSheet->load_pay_info();
-      $totalPrice = $timeSheet->pay_info["total_dollars"];
-
-      // this is a just-in-case clause. So entries that are close 
-      // but for some reason or another aren't coming up.  Just making
-      // it a teeny bit flexible.
-      $upperTotalPrice = ceil($totalPrice) + 1;
-      $lowerTotalPrice = floor($totalPrice) - 1;
-
-
-      // iiQuantity * iiUnitPrice == iiAmount
-      // get invoice drop down list;
-      $query = "SELECT invoiceItem.*, 
-        invoiceItem.invoiceItemID as iiiiID, 
-      invoiceItem.iiMemo 	   as iiiiMemo, 
-      invoice.invoiceNum 	   as iiiNum, 	
-      invoice.invoiceName	   as iiName, 
-      timeSheet.invoiceItemID
-        FROM invoiceItem, invoice, timeSheet
-        WHERE invoiceItem.invoiceID = invoice.invoiceID
-        AND invoiceItem.iiAmount >= ".$lowerTotalPrice."
-        AND invoiceItem.iiAmount <= ".$upperTotalPrice."
-        AND invoiceItem.invoiceItemID != timeSheet.invoiceItemID";
-
-      if ($timeSheet->get_value("invoiceItemID") && $timeSheet->get_value("status") == "invoiced") {
-        $query.= " AND invoiceItem.invoiceItemID = ".$timeSheet->get_value("invoiceItemID");
-      }
-
-      $query.= " GROUP BY invoiceItem.invoiceItemID";
-
-      $db->query($query);
-
-
-      if ($timeSheet->get_value("invoiceItemID") && $timeSheet->get_value("status") == 'invoiced') {
-        if ($db->next_record()) {
-          $TPL["invoiceItem_options"] = "<a href=\"".$TPL["url_alloc_invoice"]."invoiceItemID=".$db->f("iiiiID")."\">";
-          $TPL["invoiceItem_options"].= $db->f("iiiNum").",  $".$db->f("iiAmount")." ".$db->f("iiiiMemo")."</a>";
-        }
-      } else if ($timeSheet->get_value("status") == 'admin') {
-
-        // Every second array element is a string separator.  YEA!
-        $display_fields = array("", "iiiNum", ",  $", "iiAmount", " ", "iiName", " - ", "iiiiMemo");
-        $TPL["invoiceItem_options"] = "<select name=\"timeSheet_invoiceItemID\"><option value=\"\">Potential Invoices</option>";
-        $TPL["invoiceItem_options"].= get_options_from_db($db, $display_fields, "iiiiID", $timeSheet->get_value("invoiceItemID"), 100);
-        $TPL["invoiceItem_options"].= "</select>";
-
-      }
-
-      include_template("templates/timeSheetInvoiceForm.tpl");
-    }
-  }
-
   function task_exists($taskID) {
 
     $db = new db_alloc;
@@ -388,17 +337,6 @@ if ($_POST["save"]
   $timeSheet->read_globals();
   $timeSheet->read_globals("timeSheet_");
 
-  if ($_POST["invoiceItemID"]) {
-    $invoiceItem = new invoiceItem;
-    $invoiceItem->set_id($_POST["invoiceItemID"]);
-    $invoiceItem->select() || die("invoiceItemID was a bogey: ".$_POST["invoiceItemID"]);
-
-    $db->query("select invoiceNum from invoice where invoiceID = ".$invoiceItem->get_value("invoiceID"));
-    $db->next_record();
-    $timeSheet->set_value("invoiceNum", $db->f("invoiceNum"));
-  }
-
-
 
   $projectID = $timeSheet->get_value("projectID");
 
@@ -407,207 +345,23 @@ if ($_POST["save"]
     $project->set_id($projectID);
     $project->select();
 
-    // Get vars for the emails below
-    $people_cache = get_cached_table("person");
     $projectManagers = $project->get_timeSheetRecipients();
-    $projectName = $project->get_value("projectName");
-    $timeSheet_personID_email = $people_cache[$timeSheet->get_value("personID")]["emailAddress"];
-    $timeSheet_personID_name  = $people_cache[$timeSheet->get_value("personID")]["name"];
-    $config = new config;
-    $url = $config->get_config_item("allocURL")."time/timeSheet.php?timeSheetID=".$timeSheet->get_id();
-    $admin_name = $people_cache[$config->get_config_item('timeSheetAdminEmail')]["name"];
-    $admin_email = $people_cache[$config->get_config_item('timeSheetAdminEmail')]["emailAddress"];
 
     if (!$timeSheet->get_id()) {
       $timeSheet->set_value("customerBilledDollars",$project->get_value("customerBilledDollars"));
     }
-
-
   } else {
     $save_error=true;
     $TPL["message_help"][] = "Step 1/3: Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
     $TPL["message"][] = "Please select a Project and then click the Create Time Sheet button.";
   }
 
-
   if ($_POST["save_and_MoveForward"]) {
-
-    switch ($timeSheet->get_value("status")) {
-    case 'edit':
-
-      if (is_array($projectManagers) && count($projectManagers)) {
-        $timeSheet->set_value("status", "manager");
-        $timeSheet->set_value("dateSubmittedToManager", date("y-m-d"));
-   
-        // Send Email 
-        foreach ($projectManagers as $pm) {
-          $address = $people_cache[$pm]["emailAddress"];
-          $subject = "Timesheet submitted for your approval";
-          $body = "\n  To Manager: ".$people_cache[$pm]["name"];
-          $body.= "\n  Time Sheet: ".$url;
-          $body.= "\nSubmitted By: ".$timeSheet_personID_name;
-          $body.= "\n For Project: ".$projectName;
-          $body.= "\n";
-          $body.= "\nA timesheet has been submitted for your approval. If it is satisfactory, submit the";
-          $body.= "\ntimesheet to the Administrator. If not, make it editable again for re-submission.";
-          $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-          $type = "timesheet_submit";
-          $rtn[] = $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
-        }
-        is_array($rtn) and $msg.= implode("<br/>",$rtn);
-
-     } else {
-        $timeSheet->set_value("status", "admin");
-        $timeSheet->set_value("dateSubmittedToAdmin", date("y-m-d"));
-
-        // Send Email
-        $address = $admin_email;
-        $subject = "Timesheet submitted for your approval";
-        $body = "\n    To Admin: ".$admin_name;
-        $body.= "\n  Time Sheet: ".$url;
-        $body.= "\nSubmitted By: ".$timeSheet_personID_name;
-        $body.= "\n For Project: ".$projectName;
-        $body.= "\n";
-        $body.= "\nA timesheet has been submitted for your approval. If it is not satisfactory, make it";
-        $body.= "\neditable again for re-submission.";
-        $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-        $type = "timesheet_submit";
-        $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
-      }
-    break;
-
-    case 'manager':
-      if (is_array($projectManagers) && count($projectManagers) && (in_array($current_user->get_id(),$projectManagers)) || ($timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
-        $timeSheet->set_value("approvedByManagerPersonID", $current_user->get_id());
-        $timeSheet->set_value("dateSubmittedToAdmin", date("y-m-d"));
-        $timeSheet->set_value("status", "admin");
-        $approvedByManagerPersonID_email = $people_cache[$timeSheet->get_value("approvedByManagerPersonID")]["emailAddress"];
-        $approvedByManagerPersonID_name  = $people_cache[$timeSheet->get_value("approvedByManagerPersonID")]["name"];
-      
-        // Send Email
-        $address = $admin_email;
-        $subject = "Timesheet submitted for your approval";
-        $body = "\n    To Admin: ".$admin_name;
-        $body.= "\n  Time Sheet: ".$url;
-        $body.= "\nSubmitted By: ".$timeSheet_personID_name;
-        $body.= "\n For Project: ".$projectName;
-        $body.= "\n Approved By: ".$approvedByManagerPersonID_name;
-        $body.= "\n";
-        $body.= "\nA timesheet has been submitted for your approval. If it is not satisfactory, make it";
-        $body.= "\neditable again for re-submission.";
-        $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-        $type = "timesheet_submit";
-        $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
-      }
-    break;
-
-    case 'admin':
-      if ($projectManagers && !$timeSheet->get_value("approvedByManagerPersonID")) {
-        $timeSheet->set_value("approvedByManagerPersonID", $current_user->get_id());
-      }
-      $timeSheet->set_value("approvedByAdminPersonID", $current_user->get_id());
-
-
-      $timeSheet->set_value("status", "invoiced");
-
-    break;
-    case 'invoiced':
-
-      if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-        // Send Email
-        $address = $timeSheet_personID_email;
-        $subject = "Timesheet Completed";
-        $body = "\n          To: ".$timeSheet_personID_name;
-        $body.= "\n  Time Sheet: ".$url;
-        $body.= "\n For Project: ".$projectName;
-        $body.= "\n";
-        $type = "timesheet_finished";
-        $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
-        $timeSheet->set_value("status", "finished");
-      }
-
-    break;
-    }
-
-
-  // They've clicked the <- Back Submit button
+    $msg.= $timeSheet->change_status("forwards");
   } else if ($_POST["save_and_MoveBack"]) {
-
-    
-    if ($timeSheet->get_value("status") == "finished") {
-
-      if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-        $timeSheet->set_value("status", "invoiced");
-      }
-
-    } else if ($timeSheet->get_value("status") == "invoiced") {
-      $timeSheet->destroyTransactions();
-      $timeSheet->set_value("approvedByAdminPersonID", "");
-      $timeSheet->set_value("status", "admin");
-
-    } else if ($timeSheet->get_value("status") == "admin") {
-
-      if ($timeSheet->get_value("approvedByManagerPersonID")) {
-        $timeSheet->set_value("status", "manager");
-        $approvedByManagerPersonID_email = $people_cache[$timeSheet->get_value("approvedByManagerPersonID")]["emailAddress"];
-        $approvedByManagerPersonID_name  = $people_cache[$timeSheet->get_value("approvedByManagerPersonID")]["name"];
-      
-        // Send Email
-        $address = $approvedByManagerPersonID_email;
-        $subject = "Timesheet Rejected";
-        $body = "\n  To Manager: ".$approvedByManagerPersonID_name;
-        $body.= "\n  Time Sheet: ".$url;
-        $body.= "\nSubmitted By: ".$timeSheet_personID_name;
-        $body.= "\n For Project: ".$projectName;
-        $body.= "\n Rejected By: ".$people_cache[$current_user->get_id()]["name"];
-        $body.= "\n";
-        $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-        $type = "timesheet_reject";
-        $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
-       
-      } else {
-        $timeSheet->set_value("status", "edit");
-
-        // Send Email
-        $address = $timeSheet_personID_email;
-        $subject = "Timesheet Rejected";
-        $body = "\n          To: ".$timeSheet_personID_name;
-        $body.= "\n  Time Sheet: ".$url;
-        $body.= "\n For Project: ".$projectName;
-        $body.= "\n Rejected By: ".$people_cache[$current_user->get_id()]["name"];
-        $body.= "\n";
-        $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-        $type = "timesheet_reject";
-        $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
-      }
-
-      $timeSheet->set_value("dateSubmittedToAdmin", "");        // unset 
-      $timeSheet->set_value("approvedByAdminPersonID", "");     // unset approved by admin owner.
-
-    } else if ($timeSheet->get_value("status") == "manager") {
-      $timeSheet->set_value("status", "edit");
-      $timeSheet->set_value("approvedByManagerPersonID", "");   // unset approvedByManagerPersonID
-      $timeSheet->set_value("dateSubmittedToManager", "");      // unset
-
-      // Send Email
-      $address = $timeSheet_personID_email;
-      $subject = "Timesheet Rejected";
-      $body = "\n          To: ".$timeSheet_personID_name;
-      $body.= "\n  Time Sheet: ".$url;
-      $body.= "\n For Project: ".$projectName;
-      $body.= "\n Rejected By: ".$people_cache[$current_user->get_id()]["name"];
-      $body.= "\n";
-      $timeSheet->get_value("billingNote") and $body.= "\n\nBilling Note: ".$timeSheet->get_value("billingNote");
-      $type = "timesheet_reject";
-      $msg.= $timeSheet->shootEmail($address, $body, $subject, $type, $dont_send_email);
-    }
+    $msg.= $timeSheet->change_status("backwards");
   }
 
-
-
-
-
-  // WE ARE STILL WITHIN THAT BIG IF "SAVE" STATEMENT AT THE TOP
   if ($save_error) {
     // don't save or sql will complain
     $url = $TPL["url_alloc_timeSheet"];
@@ -620,7 +374,7 @@ if ($_POST["save"]
       $url = $TPL["url_alloc_project"]."projectID=".$timeSheet->get_value("projectID");
     } else {
       $msg = htmlentities(urlencode($msg));
-      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."&msg=".$msg."&dont_send_email=".$dont_send_email;
+      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."&msg=".$msg."&dont_send_email=".$_POST["dont_send_email"];
     }
     page_close();
     header("Location: $url");
@@ -698,7 +452,16 @@ if (!$timeSheetID) {
 // if have perm and status == blah
 if (($_POST["create_transactions_default"] || $_POST["create_transactions_old"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
   $msg.= $timeSheet->createTransactions();
-}
+
+} else if ($_POST["delete_all_transactions"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+  $msg.= $timeSheet->destroyTransactions();
+
+} else if ($_POST["attach_transactions_to_invoice"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+  $timeSheet->save_to_invoice();
+} 
+
+
+
 
 // Take care of saving transactions
 if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
@@ -794,9 +557,19 @@ if ($projectID != 0) {
 
   
   $projectManagers = $project->get_timeSheetRecipients();
+
   if (!$projectManagers) {
+    $TPL["managers"] = "N/A";
     $TPL["timeSheet_dateSubmittedToManager"] = "N/A";
     $TPL["timeSheet_approvedByManagerPersonID_username"] = "N/A";
+  } else {
+    count($projectManagers)>1 and $TPL["manager_plural"] = "s";
+    $people = get_cached_table("person");
+    foreach ($projectManagers as $pID) {
+      $TPL["managers"].= $commar.$people[$pID]["name"];
+      $commar = ", ";
+    }
+
   }
 
   // Get client name
@@ -804,13 +577,11 @@ if ($projectID != 0) {
   $TPL["clientName"] = $client->get_value("clientName");
   $clientID = $client->get_id();
 
-  $tfID = $project->get_value("cost_centre_tfID");
-  $tfID or $tfID = config::get_config_item("cybersourceTfID");
-  $tfID and $TPL["cost_centre_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$tfID."\">";
-  $tfID and $TPL["cost_centre_link"].= get_tf_name($tfID)."</a>";
-
   $TPL["show_client_options"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
 }
+
+
+$TPL["invoice_link"] = $timeSheet->get_invoice_link();
 
 
 // Set up arrays for the forms.
@@ -831,6 +602,10 @@ if (!$TPL["timeSheet_projectName"]) {
 }
 
 
+if (is_object($timeSheet) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced" && !$timeSheet->get_invoice_link()) {
+  $TPL["attach_to_invoice_button"] = "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add Time Sheet to Invoice\"> ";
+  $TPL["attach_to_invoice_button"].= "<br><input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Invoice Items</label>";
+}
 
 // msg passed in url and print it out pretty..
 $msg = $msg or $msg = $_GET["msg"] or $msg = $_POST["msg"];
@@ -966,7 +741,7 @@ case 'admin':
 case 'invoiced':
   if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
     $TPL["timeSheet_ChangeStatusButton"] = "
-        <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back (Delete All Transactions)\">
+        <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
         <input type=\"submit\" name=\"save\" value=\"Save\">
         <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Complete -&gt;\">";
 

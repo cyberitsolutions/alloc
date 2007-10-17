@@ -40,8 +40,6 @@ class timeSheet extends db_entity
                                , "personID"=>new db_field("personID")
                                , "approvedByManagerPersonID"=>new db_field("approvedByManagerPersonID")
                                , "approvedByAdminPersonID"=>new db_field("approvedByAdminPersonID")
-                               , "invoiceNum"=>new db_field("invoiceNum")
-                               , "invoiceItemID"=>new db_field("invoiceItemID")
                                , "dateSubmittedToManager"=>new db_field("dateSubmittedToManager")
                                , "dateSubmittedToAdmin"=>new db_field("dateSubmittedToAdmin")
                                , "billingNote"=>new db_field("billingNote")
@@ -78,7 +76,7 @@ class timeSheet extends db_entity
         $db = new db_alloc();
         $db->query($q);
         while ($db->next_record()) {
-          if (in_array($db->f("tfID"),$current_user_tfIDs)) {
+          if (is_array($current_user_tfIDs) && in_array($db->f("tfID"),$current_user_tfIDs)) {
             return true;
           }
         }
@@ -95,14 +93,16 @@ class timeSheet extends db_entity
                 ,"edit"      => "Add Time"
                 ,"manager"   => "Project Manager"
                 ,"admin"     => "Administrator"
-                ,"invoiced"  => "Invoiced"
+                ,"invoiced"  => "Invoice"
                 ,"finished"  => "Completed"
                 );
   } 
 
   function delete() {
     $db = new db_alloc;
-    $db->query("DELETE FROM timeSheetItem where timeSheetID = ".$this->get_id());  
+    $db->query(sprintf("DELETE FROM timeSheetItem where timeSheetID = %d",$this->get_id()));  
+    $db->query(sprintf("DELETE FROM transaction where timeSheetID = %d",$this->get_id()));  
+    $db->query(sprintf("DELETE FROM invoiceItem where timeSheetID = %d",$this->get_id()));  
     db_entity::delete();
   }
 
@@ -462,7 +462,6 @@ class timeSheet extends db_entity
       $transaction->set_value("tfID", $tfID);
       $transaction->set_value("dateEntered", date("Y-m-d"));
       $transaction->set_value("transactionDate", date("Y-m-d"));
-      $transaction->set_value("invoiceItemID", $this->get_value("invoiceItemID"));
       $transaction->set_value("transactionType", $transactionType);
       $transaction->set_value("timeSheetID", $this->get_id());
       $transaction->save();
@@ -470,7 +469,13 @@ class timeSheet extends db_entity
     }
   }
 
-  function shootEmail($addr, $msg, $sub, $type, $dummy) {
+  function shootEmail($email) {
+    
+    $addr = $email["to"];
+    $msg = $email["body"];
+    $sub = $email["subject"];
+    $type = $email["type"];
+    $dummy = $_POST["dont_send_email"];
     
     // New email object wrapper takes care of logging etc.
     $email = new alloc_email($addr,$sub,$msg,$type);
@@ -767,8 +772,251 @@ class timeSheet extends db_entity
     return $rtn;
   }
 
+  function save_to_invoice() {
+    $project = $this->get_foreign_object("project");
+    $client = $project->get_foreign_object("client");
+    $db = new db_alloc;
+    $q = sprintf("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit'",$project->get_value("clientID"));
+    $db->query($q);
 
+    // Create invoice
+    if (!$db->next_record()) {
+      $invoice = new invoice;
+      $invoice->set_value("clientID",$project->get_value("clientID"));
+      $invoice->set_value("invoiceDateFrom",$this->get_value("dateFrom"));
+      $invoice->set_value("invoiceDateTo",$this->get_value("dateTo"));
+      $invoice->set_value("invoiceNum",invoice::get_next_invoiceNum());
+      $invoice->set_value("invoiceName",stripslashes($client->get_value("clientName")));
+      $invoice->set_value("invoiceStatus","edit");
+      $invoice->save();
+      $invoiceID = $invoice->get_id();
 
+    // Use existing invoice
+    } else {
+      $invoiceID = $db->f("invoiceID");
+    }
+
+    // Add invoiceItem and add timesheet transactions to invoiceItem
+    $invoiceItem = new invoiceItem;
+    if ($_POST["split_invoice"]) {
+      $invoiceItem->add_timeSheetItems($invoiceID,$this->get_id());
+    } else {
+      $invoiceItem->add_timeSheet($invoiceID,$this->get_id());
+    }
+    //$invoiceItem->update_transaction();
+  }
+
+  function get_invoice_link() {
+    global $TPL;
+    $db = new db_alloc();
+    $db->query("SELECT invoice.* FROM invoiceItem LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID WHERE timeSheetID = %s",$this->get_id());
+    if ($db->next_record()) { 
+      return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$db->f("invoiceID")."\">".$db->f("invoiceNum")."</a>";
+    }
+  }
+
+  function change_status($direction) {
+    $info = $this->get_email_vars();
+    if (is_array($info["projectManagers"]) && count($info["projectManagers"])) {
+      $steps["forwards"]["edit"] = "manager";
+      $steps["backwards"]["admin"] = "manager";
+    } else {
+      $steps["forwards"]["edit"] = "admin";
+      $steps["backwards"]["admin"] = "edit";
+    }
+    $steps["forwards"][""] = "edit";
+    $steps["forwards"]["manager"] = "admin";
+    $steps["forwards"]["admin"] = "invoiced";
+    $steps["forwards"]["invoiced"] = "finished";
+    $steps["forwards"]["finished"] = "";
+    $steps["backwards"]["finished"] = "invoiced";
+    $steps["backwards"]["invoiced"] = "admin";
+    $steps["backwards"]["manager"] = "edit";
+    $status = $this->get_value("status");
+    $newstatus = $steps[$direction][$status];
+    if ($newstatus) {
+      $m = $this->{"email_move_status_to_".$newstatus}($direction,$info);
+      $this->save();
+      if (is_array($m)) { 
+        return implode("<br/>",$m);
+      }
+    }
+  }
+
+  function email_move_status_to_edit($direction,$info) { 
+    // is possible to move backwards to "edit", from both "manager" and "admin"
+    global $current_user;
+    if ($direction == "backwards") {
+      $email = array();
+      $email["type"] = "timesheet_reject";
+      $email["to"] = $info["timeSheet_personID_email"];
+      $email["subject"] = "Time Sheet: ".$this->get_id()." Rejected";
+      $email["body"] = <<<EOD
+         To: {$info["timeSheet_personID_name"]}
+ Time Sheet: {$info["url"]}
+For Project: {$info["projectName"]}
+Rejected By: {$info["people_cache"][$current_user->get_id()]["name"]}
+
+EOD;
+      $this->get_value("billingNote") 
+      and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
+      $msg[] = $this->shootEmail($email);
+
+      $this->set_value("dateSubmittedToAdmin", "");   
+      $this->set_value("approvedByAdminPersonID", "");   
+      $this->set_value("dateSubmittedToManager", "");     
+      $this->set_value("approvedByManagerPersonID", "");   
+    }
+    $this->set_value("status", "edit");
+    return $msg;
+  }
+
+  function email_move_status_to_manager($direction,$info) { 
+    global $current_user;
+    // Can get forwards to "manager" only from "edit"
+    if ($direction == "forwards") {
+      $this->set_value("dateSubmittedToManager", date("Y-m-d"));
+      foreach ($info["projectManagers"] as $pm) {
+        $email = array();
+        $email["type"] = "timesheet_submit";
+        $email["to"] = $info["people_cache"][$pm]["emailAddress"];
+        $email["subject"] = "Time Sheet: ".$this->get_id()." Submitted for your approval";
+        $email["body"] = <<<EOD
+  To Manager: {$info["people_cache"][$pm]["name"]}
+  Time Sheet: {$info["url"]}
+Submitted By: {$info["timeSheet_personID_name"]}
+ For Project: {$info["projectName"]}
+
+A timesheet has been submitted for your approval. If it is satisfactory,
+submit the timesheet to the Administrator. If not, make it editable again for
+re-submission.
+
+EOD;
+        $this->get_value("billingNote") and 
+        $email["body"].= "\n\nBilling Note: ".$this->get_value("billingNote");
+        $msg[] = $this->shootEmail($email);
+      }
+    // Can get backwards to "manager" only from "admin"
+    } else if ($direction == "backwards") {
+      $email = array();
+      $email["type"] = "timesheet_reject";
+      $email["to"] = $info["approvedByManagerPersonID_email"];
+      $email["subject"] = "Time Sheet: ".$this->get_id()." Rejected";
+      $email["body"] = <<<EOD
+  To Manager: {$info["approvedByManagerPersonID_name"]}
+  Time Sheet: {$info["url"]}
+Submitted By: {$info["timeSheet_personID_name"]}
+ For Project: {$info["projectName"]}
+ Rejected By: {$info["people_cache"][$current_user->get_id()]["name"]}
+
+EOD;
+      $this->get_value("billingNote") 
+      and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
+      $msg[] = $this->shootEmail($email);
+    }
+    $this->set_value("status", "manager");
+    $this->set_value("dateSubmittedToAdmin", "");
+    $this->set_value("approvedByAdminPersonID", "");
+    return $msg;
+  }
+
+  function email_move_status_to_admin($direction,$info) { 
+    global $current_user;
+    // Can get forwards to "admin" from "edit" and "manager"
+    if ($direction == "forwards") {
+        if ($this->get_value("status") == "manager") { 
+          $this->set_value("approvedByManagerPersonID",$current_user->get_id());
+          $extra = " Approved By: ".person::get_fullname($current_user->get_id());
+        }
+        $this->set_value("status", "admin");
+        $this->set_value("dateSubmittedToAdmin", date("Y-m-d"));
+        $email = array();
+        $email["type"] = "timesheet_submit";
+        $email["to"] = $info["admin_email"];
+        $email["subject"] = "Time Sheet: ".$this->get_id()." Submitted for your approval";
+        $email["body"] = <<<EOD
+    To Admin: {$info["admin_name"]}
+  Time Sheet: {$info["url"]}
+Submitted By: {$info["timeSheet_personID_name"]}
+ For Project: {$info["projectName"]}
+{$extra}
+
+A timesheet has been submitted for your approval. If it is not
+satisfactory, make it editable again for re-submission.
+
+EOD;
+        $this->get_value("billingNote") 
+        and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
+        $msg[] = $this->shootEmail($email);
+
+    // Can get backwards to "admin" from "invoiced" 
+    } else {
+      $this->set_value("approvedByAdminPersonID", "");
+    }
+    $this->set_value("status", "admin");
+    return $msg;
+  }
+
+  function email_move_status_to_invoiced($direction,$info) { 
+    global $current_user;
+    // Can get forwards to "invoiced" from "admin" 
+    if ($info["projectManagers"] 
+    && !$this->get_value("approvedByManagerPersonID")) {
+      $this->set_value("approvedByManagerPersonID", $current_user->get_id());
+    }
+    $this->set_value("approvedByAdminPersonID", $current_user->get_id());
+    $this->set_value("status", "invoiced");
+  }
+
+  function email_move_status_to_finished($direction,$info) {
+    global $current_user;
+    if ($direction == "forwards") {
+      $email = array();
+      $email["type"] = "timesheet_finished";
+      $email["to"] = $info["timeSheet_personID_email"];
+      $email["subject"] = "Time Sheet: ".$this->get_id()." Completed";
+      $email["body"] = <<<EOD
+         To: {$info["timeSheet_personID_name"]}
+ Time Sheet: {$info["url"]}
+For Project: {$info["projectName"]}
+
+Your timesheet has been completed by {$info["approvedByAdminPersonID_name"]}.
+
+EOD;
+      $msg[] = $this->shootEmail($email);
+      $this->set_value("status", "finished");
+      return $msg;
+    } 
+  }
+
+  function pending_transactions_to_approved() {
+    $db = new db_alloc();
+    $q = sprintf("UPDATE transaction SET status = 'approved' WHERE timeSheetID = %d AND status = 'pending'",$this->get_id());
+    $db->query($q);
+  }
+
+  function get_email_vars() {
+    static $rtn;
+    if ($rtn) {
+      return $rtn;
+    }
+    // Get vars for the emails below
+    $rtn["people_cache"] = $people_cache = get_cached_table("person");
+    $project = $this->get_foreign_object("project");
+    $rtn["projectManagers"] = $project->get_timeSheetRecipients();
+    $rtn["projectName"] = $project->get_value("projectName");
+    $rtn["timeSheet_personID_email"] = $people_cache[$this->get_value("personID")]["emailAddress"];
+    $rtn["timeSheet_personID_name"]  = $people_cache[$this->get_value("personID")]["name"];
+
+    $config = new config;
+    $rtn["url"] = $config->get_config_item("allocURL")."time/timeSheet.php?timeSheetID=".$this->get_id();
+    $rtn["admin_name"] = $people_cache[$config->get_config_item('timeSheetAdminEmail')]["name"];
+    $rtn["admin_email"] = $people_cache[$config->get_config_item('timeSheetAdminEmail')]["emailAddress"];
+    $rtn["approvedByManagerPersonID_email"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["emailAddress"];
+    $rtn["approvedByManagerPersonID_name"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["name"];
+    $rtn["approvedByAdminPersonID_name"] = $people_cache[$this->get_value("approvedByAdminPersonID")]["name"];
+    return $rtn;
+  }
 
 }  
 

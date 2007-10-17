@@ -1,7 +1,7 @@
 {$table_box}
   <tr>
     <th colspan="5">Transactions</th>
-    <th class="right"><a href="{$url_alloc_expOneOff}">New Expense Form</a></th>
+    <th class="right"><a href="{$url_alloc_expenseForm}">New Expense Form</a></th>
   </tr>
   <tr>
     <td>User Name</td>

@@ -3,7 +3,7 @@
   <td colspan="5"><h2><u>Expense Form</u></h2></td>
   <td align="right">ID: <b>{$expenseFormID}</b></td>
 </tr>
- {show_all_exp("templates/exp-one-off-printableR.tpl")}
+ {show_all_exp("templates/expenseFormPrintableR.tpl")}
 <tr>
   <td colspan="6" align="right"><b>${$formTotal}</b></td>
 </tr>

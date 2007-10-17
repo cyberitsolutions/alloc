@@ -96,9 +96,24 @@ if ($_POST["upload"]) {
       $invoiceID = $db->f("invoiceID");
     } else {
       $invoice = new invoice;
-      $invoice->set_value("invoiceDate", $date);
+      $invoice->set_value("invoiceDateFrom", $date);
+      $invoice->set_value("invoiceDateTo", $date);
       $invoice->set_value("invoiceNum", $num);
       $invoice->set_value("invoiceName", $name);
+      $invoice->set_value("invoiceStatus", "reconcile");
+      list($clientID,$percent) = get_clientID_from_name($name);
+      if ($clientID && $percent > 75) {
+        $c = new client;
+        $c->set_id($clientID);
+        $c->select();
+        $msg[] = "Found client: '".$c->get_value("clientName")."' for uploaded client name: '".$name."'";
+        $invoice->set_value("clientID", $clientID);
+
+      } else {
+        $msg[] = "Skipping Row: Client: '".$name."' &lt;-- Couldn't find a matching Client";
+        continue;
+
+      }
       $invoice->save();
       $invoiceID = $invoice->get_id();
       $msg[] = "Invoice $num saved";
@@ -109,6 +124,7 @@ if ($_POST["upload"]) {
                         FROM invoiceItem
                         WHERE invoiceID=%d AND iiMemo='%s'
 						AND iiAmount=%f AND iiUnitPrice=%f", $invoiceID, addslashes(mysql_escape_string($memo)), $amount, $sales_price);
+    $msg[] = $query;
     $db->query($query);
 
     if ($db->next_record()) {
@@ -122,7 +138,7 @@ if ($_POST["upload"]) {
     $invoice_item->set_value("iiQuantity", $quantity);
     $invoice_item->set_value("iiUnitPrice", $sales_price);
     $invoice_item->set_value("iiAmount", $amount);
-    $invoice_item->set_value("status", "pending");
+    $invoice_item->set_value("iiDate", $date);
     $invoice_item->save();
 
     $config = new config;

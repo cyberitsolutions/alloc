@@ -213,7 +213,7 @@ function show_tabs() {
                      ,"Projects" =>array("url"=>$TPL["url_alloc_projectList"],"module"=>"project")
                      ,"Tasks"    =>array("url"=>$TPL["url_alloc_taskList"],"module"=>"task")
                      ,"Time"     =>array("url"=>$TPL["url_alloc_timeSheetList"],"module"=>"time")
-                     ,"Finance"  =>array("url"=>$TPL["url_alloc_financeMenu"],"module"=>"finance")
+                     ,"Invoices" =>array("url"=>$TPL["url_alloc_invoiceList"],"module"=>"invoice")
                      ,"People"   =>array("url"=>$TPL["url_alloc_personList"],"module"=>"person")
                      ,"Tools"    =>array("url"=>$TPL["url_alloc_tools"],"module"=>"tools")
                      );
@@ -895,7 +895,7 @@ function show_history() {
   } 
 
   if (isset($modules["finance"]) && $modules["finance"]) {
-    $str[] = "<option value=\"".$TPL["url_alloc_expOneOff"]."\">New Expense Form</option>";
+    $str[] = "<option value=\"".$TPL["url_alloc_expenseForm"]."\">New Expense Form</option>";
   }
 
   $str[] = "<option value=\"".$TPL["url_alloc_reminderAdd"]."parentType=general&step=2\">New Reminder</option>";
@@ -1034,26 +1034,50 @@ function check_password($password, $hash) {
   $t_hasher = new PasswordHash(8, FALSE);
   return $t_hasher->CheckPassword($password, $hash);
 }
+function get_clientID_from_name($name) {                                                                                                                                 
+  static $clients;                                                                                                                                                       
+  if (!$clients) {                                                                                                                                                       
+    $db = new db_alloc();                                                                                                                                                
+    $q = sprintf("SELECT * FROM client");                                                                                                                                
+    $db->query($q);                                                                                                                                                      
+    while ($db->next_record()) {                                                                                                                                         
+      $clients[$db->f("clientID")] = $db->f("clientName");                                                                                                               
+    }                                                                                                                                                                    
+  }                                                                                                                                                                      
+                                                                                                                                                                         
+  $stack = array();                                                                                                                                                      
+  foreach ($clients as $clientID => $clientName) {
+    similar_text($name,$clientName,$percent);
+    $stack[$clientID] = $percent;
+  }
+                                                                                                                                                                         
+  asort($stack);                                                                                                                                                         
+  end($stack);
+  $probable_clientID = key($stack);
+  $client_percent = current($stack);
+  
+  return array($probable_clientID,$client_percent);
+}  
 function bad_filename($filename) {
   return preg_match("@[/\\\]@", $filename);
 }
-  function has_backup_perm() {
-    global $current_user;
-    if (is_object($current_user)) {
-      return $current_user->have_role("god");
-    }
-    return false;
+function has_backup_perm() {
+  global $current_user;
+  if (is_object($current_user)) {
+    return $current_user->have_role("god");
   }
-  function parse_email_address($email="") {
-    // Takes Alex Lance <alla@cyber.com.au> and returns array("alla@cyber.com.au", "Alex Lance");
-    if ($email) {
-      $bits = explode(" ",$email);
-      $last_bit = array_pop($bits);
-      $address = str_replace(array("<",">"),"",$last_bit);
-      is_array($bits) && count($bits) and $name = implode(" ",$bits);
-      return array($address, $name);
-    }
-    return array();
+  return false;
+}
+function parse_email_address($email="") {
+  // Takes Alex Lance <alla@cyber.com.au> and returns array("alla@cyber.com.au", "Alex Lance");
+  if ($email) {
+    $bits = explode(" ",$email);
+    $last_bit = array_pop($bits);
+    $address = str_replace(array("<",">"),"",$last_bit);
+    is_array($bits) && count($bits) and $name = implode(" ",$bits);
+    return array($address, $name);
   }
+  return array();
+}
 
 ?>

@@ -115,7 +115,7 @@ function show_transaction($template_name=false) {
       $invoice = $invoiceItem->get_foreign_object("invoice");
       $invoice->get_value("invoiceNum") and $entityID = $invoice->get_value("invoiceNum");
       if ($transaction->get_value("invoiceItemID") && $invoiceItem && $invoiceItem->have_perm(PERM_READ_WRITE)) {
-        $TPL["transactionType"] = "<a href=\"".$TPL["url_alloc_invoiceItem"]."invoiceItemID=".$transaction->get_value("invoiceItemID");
+        $TPL["transactionType"] = "<a href=\"".$TPL["url_alloc_invoice"]."invoiceItemID=".$transaction->get_value("invoiceItemID");
         $TPL["transactionType"].= "\">".$type." ".$entityID."</a>";
       } 
 
@@ -123,7 +123,7 @@ function show_transaction($template_name=false) {
     } else if ($type == "expense") {
       if (($transaction->get_value("expenseFormID") != "" && $transaction->get_value("expenseFormID") != "0")
       &&  ($expenseForm = $transaction->get_foreign_object("expenseForm")) && ($expenseForm->have_perm(PERM_READ_WRITE))) {
-        $TPL["transactionType"] = "<a href=\"".$TPL["url_alloc_expOneOff"]."expenseFormID=".$transaction->get_value("expenseFormID");
+        $TPL["transactionType"] = "<a href=\"".$TPL["url_alloc_expenseForm"]."expenseFormID=".$transaction->get_value("expenseFormID");
         $TPL["transactionType"].= "\">".$type." ".$transaction->get_value("expenseFormID")."</a>";
       }
 
