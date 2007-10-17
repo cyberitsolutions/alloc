@@ -21,11 +21,11 @@
  *
  */
 
-require_once("../alloc.php");
-$current_user->check_employee();
-include_template("templates/exp-fixed-repeatM.tpl");
-page_close();
+class invoice_module extends module {
+  var $db_entities = array("invoice", "invoiceItem");
+}
 
-
+include(ALLOC_MOD_DIR."invoice/lib/invoice.inc.php");
+include(ALLOC_MOD_DIR."invoice/lib/invoiceItem.inc.php");
 
 ?>

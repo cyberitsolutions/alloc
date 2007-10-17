@@ -72,15 +72,15 @@ function updateProjectList(number) \{
 	  <td>&nbsp;</td>
     <td align="right">Client Billing:</td>
     <td><nobr>{$total_customerBilledDollars}{$ex_gst}</nobr></td>
-    <td align="right">Cost Centre:</td>
-	  <td>{$cost_centre_link}</td>
+    <td align="right">Time Sheet Manager{$manager_plural}:</td>
+    <td>{$managers}</td>
   </tr>
 
-	<tr>
+  <tr>
 	  <td>&nbsp;</td>
     <td align="right">Units:</td>
     <td>{$total_units}</td>
-    <td align="right"><nobr>Date Submitted to Manager:</nobr></td>
+    <td align="right"><nobr>Date Submitted to Manager{$manager_plural}:</nobr></td>
     <td>{$timeSheet_dateSubmittedToManager}</td>
   </tr>
 
@@ -93,6 +93,14 @@ function updateProjectList(number) \{
   </tr>
 
 	<tr>
+	  <td>&nbsp;</td>
+    <td align="right">Period:</td>
+    <td><nobr>{$period}</nobr></td>
+    <td align="right">Date Submitted to Admin:</td>
+    <td>{$timeSheet_dateSubmittedToAdmin}</td>
+	</tr>
+
+	<tr>
     {if config::get_config_item("paymentInsurancePercent")}
     <td>{get_help("payment_insurance")}</td>
     <td align="right">Payment Insurance:</td>
@@ -102,17 +110,18 @@ function updateProjectList(number) \{
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     {/}
-    <td align="right">Date Submitted to Admin:</td>
-    <td>{$timeSheet_dateSubmittedToAdmin}</td>
+    <td align="right">Approved by Admin:</td> 
+    <td>{$timeSheet_approvedByAdminPersonID_username}</td>
   </tr>
 
 	<tr>
-	  <td>&nbsp;</td>
-    <td align="right">Period:</td>
-    <td><nobr>{$period}</nobr></td>
-    <td align="right">Approved by Admin:</td> 
-    <td>{$timeSheet_approvedByAdminPersonID_username}</td>
-	</tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="right" valign="top">Invoice:</td>
+    <td>{$attach_to_invoice_button}{$invoice_link}</td>
+  </tr>
+
 
   <tr>
     <td valign="top">
@@ -149,7 +158,6 @@ function updateProjectList(number) \{
 
 
   </tr>
-  { // show_invoice_details()}
   <tr>
     <td colspan="5"><br/><br/>
       <table width="100%" align="center" cellpadding="0" cellspacing="0">

@@ -42,6 +42,7 @@ class transaction extends db_entity
                                , "amount"=>new db_field("amount")
                                , "status"=>new db_field("status")
                                , "expenseFormID"=>new db_field("expenseFormID", array("empty_to_null"=>false))
+                               , "invoiceID"=>new db_field("invoiceID")
                                , "invoiceItemID"=>new db_field("invoiceItemID")
                                , "tfID"=>new db_field("tfID")
                                , "projectID"=>new db_field("projectID")

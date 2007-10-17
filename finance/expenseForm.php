@@ -231,21 +231,21 @@ if ($_POST["cancel"]) {
   $expenseForm->save();
   $expenseForm->set_status("pending");
   page_close();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["approve"]) {
   $expenseForm->save();
   $expenseForm->set_status("approved");
   page_close();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["reject"]) {
   $expenseForm->save();
   $expenseForm->set_status("rejected");
   page_close();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["save"]) {
@@ -255,7 +255,7 @@ if ($_POST["cancel"]) {
   }
   $expenseForm->set_value("seekClientReimbursement", $_POST["seekClientReimbursement"] ? 1 : 0);
   $expenseForm->save();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["finalise"]) {
@@ -266,16 +266,20 @@ if ($_POST["cancel"]) {
   $expenseForm->set_value("seekClientReimbursement", $_POST["seekClientReimbursement"] ? 1 : 0);
   $expenseForm->set_value("expenseFormFinalised", 1);
   $expenseForm->save();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["unfinalise"]) {
   $expenseForm->read_globals();
   $expenseForm->set_value("expenseFormFinalised", 0);
   $expenseForm->save();
-  header("Location: ".$TPL["url_alloc_expOneOff"]."expenseFormID=".$expenseForm->get_id());
+  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
+
+} else if ($_POST["attach_transactions_to_invoice"] && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
+  $expenseForm->save_to_invoice();
 }
+
 
 if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") && $current_user->get_id() == $expenseForm->get_value("enteredBy")) {
   $TPL["message_help"][] = "Step 4/4: Print out the Expense Form using the Printer Friendly Version link, attach receipts and hand in to office admin.";
@@ -295,9 +299,9 @@ $paymentOptions = get_options_from_array($paymentOptions, $expenseForm->get_valu
 
 
 function get_reimbursementRequired_array() {
-  return array("0"=>"Expense hasn't been paid"
-              ,"1"=>"Expense has been paid by me"
-              ,"2"=>"Expense has been paid by company"
+  return array("0"=>"Unpaid"
+              ,"1"=>"Paid by me"
+              ,"2"=>"Paid by company"
               );
 }
 
@@ -305,13 +309,14 @@ function get_reimbursementRequired_array() {
 $rr_options = get_reimbursementRequired_array();
 $rr_checked[sprintf("%d",$expenseForm->get_value("reimbursementRequired"))] = " checked";
 $expenseForm->get_value("paymentMethod") and $extra = " (".$expenseForm->get_value("paymentMethod").")";
-$rr_label = "<tr><td align=\"right\">Payment:</td><td>".$rr_options[$expenseForm->get_value("reimbursementRequired")].$extra."</td></tr>";
+$rr_label = $rr_options[$expenseForm->get_value("reimbursementRequired")].$extra;
 $TPL["rr_label"] = $rr_options[$expenseForm->get_value("reimbursementRequired")].$extra;
 
 foreach ($rr_options as $value => $label) {
   unset($extra);
-  $value == 2 and $extra = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
-  $reimbursementRequiredRadios.= "<tr><td align=\"right\">".$label.":</td><td><input type=\"radio\" name=\"reimbursementRequired\" value=\"".$value."\"".$rr_checked[$value].">".$extra."</td></tr>";
+  $value == 2 and $extra = " <select name=\"paymentMethod\">".$paymentOptions."</select>";
+  $reimbursementRequiredRadios.= $br."<input type=\"radio\" name=\"reimbursementRequired\" value=\"".$value."\"".$rr_checked[$value].">".$label.$extra;
+  $br = "<br>";
 }
 
 
@@ -333,7 +338,7 @@ $c = new client;
 $c->set_id($expenseForm->get_value("clientID"));
 $c->select();
 $clientName = $c->get_client_name();
-$clientName and $TPL["field_clientID"] = ": ".$clientName;
+$clientName and $TPL["field_clientID"] = $clientName;
 
 
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
@@ -375,13 +380,28 @@ if (is_object($expenseForm) && $expenseForm->get_id()) {
   $TPL["formTotal"] = sprintf("%0.2f",abs($db->f("sum")));
 }
 
+if (is_object($expenseForm) && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION) 
+&& !$expenseForm->get_invoice_link() && $expenseForm->get_value("expenseFormFinalised") && $expenseForm->get_value("seekClientReimbursement")) {
+  $TPL["attach_to_invoice_button"] = "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add Expense Form to Invoice\"> ";
+  $TPL["attach_to_invoice_button"].= "<input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Invoice Items</label>";
+  $TPL["invoice_label"] = "Invoice:";
+}
+
+if (is_object($expenseForm)) {
+  $invoice_link = $expenseForm->get_invoice_link();
+  if ($invoice_link) {
+    $TPL["invoice_label"] = "Invoice:";
+    $TPL["invoice_link"] = $invoice_link;
+  }
+}
+
 
 
 
 if ($_GET["printVersion"]) {
-  include_template("templates/exp-one-off-printableM.tpl");
+  include_template("templates/expenseFormPrintableM.tpl");
 } else {
-  include_template("templates/exp-one-offM.tpl");
+  include_template("templates/expenseFormM.tpl");
 }
 
 page_close();

@@ -1,1 +1,1 @@
-<a href="{$url}{$params}">{$text}</a><br/>
+<a class="nobr" href="{$url}{$params}">{$text}</a>{$br}

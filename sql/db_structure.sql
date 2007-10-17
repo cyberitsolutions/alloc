@@ -168,9 +168,12 @@ CREATE TABLE htmlAttributeType (
 
 CREATE TABLE invoice (
   invoiceID int(11) NOT NULL auto_increment,
-  invoiceDate date NOT NULL default '0000-00-00',
+  clientID int(11) NOT NULL,
+  invoiceDateFrom date,
+  invoiceDateTo date,
   invoiceNum int(11) NOT NULL default '0',
   invoiceName varchar(255) NOT NULL default '',
+  invoiceStatus enum('edit','generate','reconcile','finished') NOT NULL DEFAULT 'edit',
   PRIMARY KEY  (invoiceID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
@@ -178,12 +181,17 @@ CREATE TABLE invoice (
 CREATE TABLE invoiceItem (
   invoiceItemID int(11) NOT NULL auto_increment,
   invoiceID int(11) NOT NULL default '0',
-  iiMemo text,
+  timeSheetID int(11) default 0,
+  timeSheetItemID int(11) default 0,
+  expenseFormID int(11) default 0,
+  transactionID int(11) DEFAULT 0,
+  iiMemo text DEFAULT NULL,
   iiQuantity float default NULL,
   iiUnitPrice float default NULL,
   iiAmount float default NULL,
-  status varchar(255) default NULL,
-  PRIMARY KEY  (invoiceItemID)
+  iiDate date DEFAULT NULL,
+  INDEX idx_invoiceID (invoiceID),
+  PRIMARY KEY (invoiceItemID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
@@ -472,6 +480,7 @@ CREATE TABLE tfPerson (
   tfPersonID int(11) NOT NULL auto_increment,
   tfID int(11) NOT NULL default '0',
   personID int(11) NOT NULL default '0',
+  INDEX idx_tfID (tfID),
   PRIMARY KEY  (tfPersonID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
@@ -557,7 +566,7 @@ CREATE TABLE transaction (
   companyDetails text NOT NULL,
   product varchar(255) NOT NULL default '',
   amount float NOT NULL default '0',
-  status varchar(255) NOT NULL default 'pending',
+  status enum('pending','rejected','approved') NOT NULL DEFAULT 'pending',
   expenseFormID int(11) NOT NULL default '0',
   tfID int(11) NOT NULL default '0',
   projectID int(11) default '0',
@@ -566,11 +575,14 @@ CREATE TABLE transaction (
   quantity int(11) NOT NULL default '1',
   dateEntered date NOT NULL default '0000-00-00',
   transactionDate date NOT NULL default '0000-00-00',
+  invoiceID int(11) DEFAULT NULL,
   invoiceItemID int(11) default NULL,
   transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance') NOT NULL default 'invoice',
   timeSheetID int(11) default NULL,
   transactionRepeatID int(11) default NULL,
+  INDEX idx_tfID (tfID),
   INDEX idx_timeSheetID (timeSheetID),
+  INDEX idx_invoiceItemID (invoiceItemID),
   PRIMARY KEY  (transactionID)
 ) TYPE=MyISAM PACK_KEYS=0;
 

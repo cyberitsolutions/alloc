@@ -1,12 +1,12 @@
 <div align="center">
 
-  <a href="{$url_alloc_invoiceItemList}mode=approve">Approve Invoices</a>
+  <a href="{$url_alloc_invoiceList}mode=approve">Approve Invoices</a>
    &nbsp; | &nbsp;
-  <a href="{$url_alloc_invoiceItemList}mode=allocate">Allocate Invoices to TFs</a>
+  <a href="{$url_alloc_invoiceList}mode=allocate">Allocate Invoices to TFs</a>
    &nbsp; | &nbsp;
   <a href="{$url_alloc_invoicesUpload}">Upload Invoices File</a>
    &nbsp; | &nbsp;
-  <a href="{$url_alloc_searchInvoice}">Search Invoices</a>
+  <a href="{$url_alloc_invoiceList}">Search Invoices</a>
 
 <br>
 
