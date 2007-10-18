@@ -448,7 +448,7 @@ function util_get_comments($entity, $id, $options=array()) {
       $edit and $rtn[] =  '<th align="right" width="2%">'.$comment_buttons.'</th>';
       $rtn[] =  '</tr>';
       $rtn[] =  '<tr>';
-      $rtn[] =  '<td>'.nl2br(htmlentities($v["comment"])).'</td>';
+      $rtn[] =  '<td>'.text_to_html($v["comment"]).'</td>';
       $edit and $rtn[] =  '<td>&nbsp;</td>';
       $rtn[] =  '</tr>';
       $files and $rtn[] =  '<tr>';
@@ -1079,5 +1079,12 @@ function parse_email_address($email="") {
   }
   return array();
 }
-
+function text_to_html($str="") {
+  $str = htmlentities($str);
+  $str = str_replace("\t","&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$str);
+  $str = str_replace(" ","&nbsp;",$str);
+  $str = nl2br($str);
+  return $str;
+}
+  
 ?>

@@ -65,28 +65,13 @@ function updateTimeSheetTaskList(number) \{
     </td>
   </tr>
   <tr>
-    <td valign="top">
-          <br/>
-          <div id="shrink_tsi_note" style="display:none;">
-            <img src="../images/shrink.gif"
-                   onMouseUp="document.getElementById('tsi_note').style.height='22px';
-                              document.getElementById('shrink_tsi_note').style.display='none'
-                              document.getElementById('grow_tsi_note').style.display='inline'">
-          </div>
-          <div id="grow_tsi_note">
-            <img src="../images/grow.gif"
-                   onMouseUp="document.getElementById('tsi_note').style.height='150px';
-                              document.getElementById('grow_tsi_note').style.display='none'
-                              document.getElementById('shrink_tsi_note').style.display='inline'">
-          </div>
-    </td>
-    <td colspan="3">
-      Comments<br/>
-      <textarea rows="3" cols="70" name="timeSheetItem_comment" id="tsi_note" style="height:22px;"
-                onFocus="document.getElementById('tsi_note').style.height='150px';
-                         document.getElementById('grow_tsi_note').style.display='none'
-                         document.getElementById('shrink_tsi_note').style.display='inline'">{$timeSheetItem_comment}</textarea>
+    <td valign="top"></td>
+    <td colspan="3" valign="top">
+      {get_expand_link("tsi_note_large","Comments ","tsi_note_small")}
+      <div id="tsi_note_small" class="nobr">{echo text_to_html($TPL["timeSheetItem_comment"])}</div>
+      <div style="display:none;" id="tsi_note_large" class="nobr"><textarea rows="10" cols="70" wrap="virtual" name="timeSheetItem_comment">{$timeSheetItem_comment}</textarea>
       Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{$commentPrivateChecked}>
+      </div>
     </td>
     <td colspan="1" valign="top" align="right"><br/>{$timeSheetItem_buttons}</td>
   </tr>

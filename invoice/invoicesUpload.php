@@ -123,8 +123,9 @@ if ($_POST["upload"]) {
     $query = sprintf("SELECT invoiceItemID
                         FROM invoiceItem
                         WHERE invoiceID=%d AND iiMemo='%s'
-						AND iiAmount=%f AND iiUnitPrice=%f", $invoiceID, addslashes(mysql_escape_string($memo)), $amount, $sales_price);
-    $msg[] = $query;
+						AND iiAmount=%f AND iiDate='%s'", $invoiceID, addslashes(mysql_escape_string($memo)), $amount, $date);
+
+    #$msg[] = $query;
     $db->query($query);
 
     if ($db->next_record()) {

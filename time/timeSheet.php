@@ -211,14 +211,14 @@ if (!$current_user->is_employee()) {
       $text = $TPL["timeSheetItem_description_printer_version"] = stripslashes($timeSheetItem->get_value('description'));
       $TPL["timeSheetItem_comment_printer_version"] = "";
       if (!$timeSheetItem->get_value("commentPrivate")) {
-        $TPL["timeSheetItem_comment_printer_version"] = nl2br($timeSheetItem->get_value("comment"));
+        $TPL["timeSheetItem_comment_printer_version"] = text_to_html($timeSheetItem->get_value("comment"));
       } else {
         $commentPrivateText = "<b>[Private Comment]</b> ";
       }
       
       $text and $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
       $text && $timeSheetItem->get_value("comment") and $br = "<br/>";
-      $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$commentPrivateText.nl2br($timeSheetItem->get_value("comment"));
+      $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$commentPrivateText.text_to_html($timeSheetItem->get_value("comment"));
       $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f",$timeSheetItem->get_value('timeSheetItemDuration') * $timeSheetItem->get_value('rate'));
 
       include_template($template);
@@ -603,8 +603,8 @@ if (!$TPL["timeSheet_projectName"]) {
 
 
 if (is_object($timeSheet) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced" && !$timeSheet->get_invoice_link()) {
-  $TPL["attach_to_invoice_button"] = "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add Time Sheet to Invoice\"> ";
-  $TPL["attach_to_invoice_button"].= "<br><input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Invoice Items</label>";
+  $TPL["attach_to_invoice_button"] = "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
+  $TPL["attach_to_invoice_button"].= "<input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Items</label>";
 }
 
 // msg passed in url and print it out pretty..

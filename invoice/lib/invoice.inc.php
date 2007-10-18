@@ -436,7 +436,7 @@ class invoice extends db_entity {
     is_array($filter2_having) && count($filter2_having) and $f2_having = " HAVING ".implode(" AND ",$filter2_having);
  
     $q1= "CREATE TEMPORARY TABLE invoice_details
-          SELECT CAST(SUM(invoiceItem.iiAmount) AS DECIMAL) as iiAmountSum
+          SELECT SUM(invoiceItem.iiAmount) as iiAmountSum
                , invoice.*
                , client.clientName
             FROM invoice
@@ -451,9 +451,9 @@ class invoice extends db_entity {
     $db->query($q1);
 
     $q2= "SELECT invoice_details.*
-               , CAST(SUM(transaction_approved.amount) AS DECIMAL) as amountPaidApproved
-               , CAST(SUM(transaction_pending.amount) AS DECIMAL) as amountPaidPending
-               , CAST(SUM(transaction_rejected.amount) AS DECIMAL) as amountPaidRejected
+               , SUM(transaction_approved.amount) as amountPaidApproved
+               , SUM(transaction_pending.amount) as amountPaidPending
+               , SUM(transaction_rejected.amount) as amountPaidRejected
             FROM invoice_details
        LEFT JOIN invoiceItem on invoiceItem.invoiceID = invoice_details.invoiceID
        LEFT JOIN transaction transaction_approved on invoiceItem.invoiceItemID = transaction_approved.invoiceItemID AND transaction_approved.status = 'approved'

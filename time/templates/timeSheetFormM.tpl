@@ -119,45 +119,20 @@ function updateProjectList(number) \{
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td align="right" valign="top">Invoice:</td>
-    <td>{$attach_to_invoice_button}{$invoice_link}</td>
+    <td class="nobr">{$attach_to_invoice_button}{$invoice_link} {get_help("timesheet_add_invoice")}</td>
   </tr>
 
 
   <tr>
-    <td valign="top">
-          {if $TPL["timeSheet_status"] != "finished"} 
-          <div id="shrink_ts_note" style="display:none;">
-            <img src="../images/shrink.gif"
-                   onMouseUp="document.getElementById('ts_note').style.height='22px';
-                              document.getElementById('shrink_ts_note').style.display='none'
-                              document.getElementById('grow_ts_note').style.display='inline'" alt="Restore">
-          </div>
-          <div id="grow_ts_note">
-            <img src="../images/grow.gif"
-                   onMouseUp="document.getElementById('ts_note').style.height='150px';
-                              document.getElementById('grow_ts_note').style.display='none'
-                              document.getElementById('shrink_ts_note').style.display='inline'" alt="Expand">
-          </div>
-          {/}
-
-
+    <td valign="top"></td>
+    <td align="right" valign="top">{get_expand_link("billing_note_input","Billing Note ","billing_note_text")}</td>
+    <td colspan="3" valign="top"><div id="billing_note_text">{echo text_to_html($TPL["timeSheet_billingNote"])}</div>
+                                 <div style="display:none;" id="billing_note_input" class="nobr">
+                                   <textarea rows="10" cols="70" wrap="virtual" name="timeSheet_billingNote">{$timeSheet_billingNote}</textarea>
+                                 </div>
     </td>
-    <td align="right" valign="top">Billing Note:</td>
-    <td colspan="3" valign="top">
-
-          {if $TPL["timeSheet_status"] != "finished"} 
-          <textarea rows="3" cols="70" wrap="virtual" id="ts_note" style="height:22px;" name="timeSheet_billingNote"
-                    onFocus="document.getElementById('ts_note').style.height='150px';
-                             document.getElementById('grow_ts_note').style.display='none'
-                             document.getElementById('shrink_ts_note').style.display='inline'">{$timeSheet_billingNote}</textarea>
-          {else}
-            <input type="hidden" name="timeSheet_billingNote" value="{$timeSheet_billingNote}">
-            {$timeSheet_billingNote}
-          {/}
-</td>
-
-
   </tr>
+
   <tr>
     <td colspan="5"><br/><br/>
       <table width="100%" align="center" cellpadding="0" cellspacing="0">

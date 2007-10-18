@@ -19,9 +19,9 @@
        <br><br>
        <ul>
        <li>Note the leading tab.</li>
-       <li>The Name field should match up with the name of an existing Client in alloc.</li>
+       <li>The Name field should match up with the name of an existing Client in alloc. (If the Client cannot be determined the invoice in the file will be skipped).</li>
        <li>The Type field should just be the word "Invoice" or "Credit Memo".</li>
-       <li>Invoices will be imported as Invoice Status "allocate".</li>
+       <li>Invoices will be imported as Invoice Status "Approve/Reject".</li>
        </ul>
        <br><br>
 
