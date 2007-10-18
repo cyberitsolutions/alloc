@@ -409,21 +409,21 @@ if ($_GET["media"] == "print") {
 
   // Need to html-ise taskName and description
   $TPL["task_taskName"] = htmlentities($task->get_value("taskName"));
-  $TPL["task_taskDescription"] = nl2br(htmlentities($task->get_value("taskDescription")));
+  $TPL["task_taskDescription"] = text_to_html($task->get_value("taskDescription"));
 
   include_template("templates/taskPrinterM.tpl");
 
 // Detailed editable view
 } else if ($_GET["view"] == "detail" || !$task->get_id()) {
-  $TPL["task_taskName"] = htmlentities($task->get_value("taskName"));
+  $TPL["task_taskName"] = text_to_html($task->get_value("taskName"));
   include_template("templates/taskDetailM.tpl");
 
 // Default read-only view
 } else {
 
   // Need to html-ise taskName and description
-  $TPL["task_taskName"] = htmlentities($task->get_value("taskName"));
-  $TPL["task_taskDescription"] = nl2br(htmlentities($task->get_value("taskDescription")));
+  $TPL["task_taskName"] = text_to_html($task->get_value("taskName"));
+  $TPL["task_taskDescription"] = text_to_html($task->get_value("taskDescription"));
 
   include_template("templates/taskM.tpl");
 }

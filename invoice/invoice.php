@@ -389,7 +389,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
         $transaction->set_value("invoiceItemID",$iiID);
         $transaction->set_value("transactionDate",$ii->get_value("iiDate"));
         $transaction->set_value("transactionType","invoice");
-        $transaction->set_value("product",$ii->get_value("iiMemo"));
+        $transaction->set_value("product",sprintf("%s",$ii->get_value("iiMemo")));
         $transaction->save();
       }
     }

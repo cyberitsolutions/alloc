@@ -32,6 +32,8 @@ h3 {
 }
 textarea, input, select, textarea { 
   font-size:15px; 
+  font-family:arial,helvetica,sans-serif; 
+  font-weight:normal;
 }
 th { 
   color:#444444; 
@@ -83,7 +85,7 @@ form {
 table.helper_table { 
   background-color:#fffdf2; 
   color:#666666; 
-  border:1px solid #999999; 
+  border:3px solid #e0e0e0; 
   width:400px; 
   font-size:10px;
 }
@@ -335,7 +337,7 @@ table.menu_top {
   margin:0px;
   padding:0px;
   text-align:left;
-  font-size:15px;
+  font-size:12px;
   font-weight:bold;
   color:#5c7600;
 }
@@ -350,11 +352,12 @@ table.menu_top {
 
 table.menu_top th {
   text-align:left;
-  font-size:140%;
+  font-size:17px;
 }
 
 table.menu_top td {
   text-align:right;
+  font-size:12px;
 }
 
 table.menu_top .menu_form_text {
@@ -411,7 +414,7 @@ div.tab {
   width:80px;
   height:27px;
   text-align:center;
-  font-size:15px;
+  font-size:12px;
 }
 
 /* Active tabs use this class as well */
@@ -437,7 +440,7 @@ div.active a:link, div.active a:visited {
 }
 
 p#extra_links {
-  font-size:15px;
+  font-size:12px;
   font-weight:bold;
   display:inline; 
   z-index:1; 

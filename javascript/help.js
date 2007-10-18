@@ -23,7 +23,7 @@ function help_text_off(img) {
 }
 function popup(msg) {
   var content;
-  content ="<table width='150' border='0' cellpadding='4' cellspacing='0' id='helper_table' class='helper_table'><tr><td>";
+  content ="<table width='150' border='0' cellpadding='8' cellspacing='0' id='helper_table' class='helper_table'><tr><td>";
   content += msg + "</td></tr></table>";
   yyy = 0;
   document.getElementById("helper").innerHTML=content;

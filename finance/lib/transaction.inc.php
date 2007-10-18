@@ -38,7 +38,7 @@ class transaction extends db_entity
     $this->db_entity();
     $this->key_field = new db_field("transactionID");
     $this->data_fields = array("companyDetails"=>new db_field("companyDetails", array("empty_to_null"=>false))
-                               , "product"=>new db_field("product")
+                               , "product"=>new db_field("product", array("empty_to_null"=>false))
                                , "amount"=>new db_field("amount")
                                , "status"=>new db_field("status")
                                , "expenseFormID"=>new db_field("expenseFormID", array("empty_to_null"=>false))
