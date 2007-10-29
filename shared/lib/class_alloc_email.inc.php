@@ -79,6 +79,10 @@ class alloc_email {
       $this->header["Content-Type"] = "text/plain; charset=utf-8";
     }
 
+    if (!$this->header["Return-Path"]) {
+      $this->header["Return-Path"] = ALLOC_DEFAULT_FROM_ADDRESS;
+    }
+
     $this->subject = "[allocPSA] ".$this->subject;
 
     if ($this->is_valid_url()) {
