@@ -174,7 +174,8 @@ CREATE TABLE invoice (
   invoiceNum int(11) NOT NULL default '0',
   invoiceName varchar(255) NOT NULL default '',
   invoiceStatus enum('edit','generate','reconcile','finished') NOT NULL DEFAULT 'edit',
-  PRIMARY KEY  (invoiceID)
+  PRIMARY KEY  (invoiceID),
+  UNIQUE KEY `invoiceNum` (`invoiceNum`)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
@@ -186,9 +187,9 @@ CREATE TABLE invoiceItem (
   expenseFormID int(11) default 0,
   transactionID int(11) DEFAULT 0,
   iiMemo text DEFAULT NULL,
-  iiQuantity float default NULL,
-  iiUnitPrice float default NULL,
-  iiAmount float default NULL,
+  iiQuantity DECIMAL(19,2) DEFAULT NULL,
+  iiUnitPrice DECIMAL(19,2) DEFAULT NULL,
+  iiAmount DECIMAL(19,2) DEFAULT NULL,
   iiDate date DEFAULT NULL,
   INDEX idx_invoiceID (invoiceID),
   PRIMARY KEY (invoiceItemID)
@@ -288,14 +289,14 @@ CREATE TABLE project (
   dateTargetCompletion date default NULL,
   dateActualStart date default NULL,
   dateActualCompletion date default NULL,
-  projectBudget decimal(10,0) default NULL,
+  projectBudget DECIMAL(19,2) DEFAULT NULL,
   currencyType enum('AUD','USD','NZD','CAD') default NULL,
   projectShortName varchar(255) default NULL,
   projectStatus enum('current','potential','archived') NOT NULL default 'current',
   projectPriority int(11) default NULL,
   is_agency tinyint(4) default NULL,
   cost_centre_tfID int(11) default NULL,
-  customerBilledDollars decimal(19,2) default '0.00',
+  customerBilledDollars DECIMAL(19,2) DEFAULT NULL,
   PRIMARY KEY  (projectID),
   KEY projectName (projectName),
   KEY clientID (clientID)
@@ -328,7 +329,7 @@ CREATE TABLE projectPerson (
   personID int(11) NOT NULL default '0',
   projectPersonRoleID int(11) NOT NULL default '0',
   emailType enum('None','Assigned Tasks','All Tasks') default NULL,
-  rate decimal(5,2) default '0.00',
+  rate DECIMAL(19,2) DEFAULT '0.00',
   rateUnitID int(3) default NULL,
   projectPersonModifiedUser int(11) DEFAULT NULL,
   emailDateRegex varchar(255) default NULL,
@@ -494,15 +495,13 @@ CREATE TABLE timeSheet (
   personID int(11) NOT NULL default '0',
   approvedByManagerPersonID int(11) default NULL,
   approvedByAdminPersonID int(11) default NULL,
-  invoiceNum int(11) default NULL,
-  invoiceItemID int(11) default '0',
   dateSubmittedToManager date default NULL,
   dateSubmittedToAdmin date default NULL,
   invoiceDate date default NULL,
   billingNote text,
   payment_insurance tinyint(4) default '0',
   recipient_tfID int(11) default NULL,
-  customerBilledDollars decimal(19,2) default '0.00',
+  customerBilledDollars DECIMAL(19,2) DEFAULT '0.00',
   PRIMARY KEY  (timeSheetID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
@@ -517,7 +516,7 @@ CREATE TABLE timeSheetItem (
   location text,
   personID int(11) NOT NULL default '0',
   taskID int(11) default '0',
-  rate decimal(5,2) default '0.00',
+  rate DECIMAL(19,2) DEFAULT '0.00',
   commentPrivate tinyint(1) default '0',
   comment text,
   PRIMARY KEY  (timeSheetItemID),
@@ -565,7 +564,7 @@ CREATE TABLE transaction (
   transactionID int(11) NOT NULL auto_increment,
   companyDetails text NOT NULL,
   product varchar(255) NOT NULL default '',
-  amount float NOT NULL default '0',
+  amount DECIMAL(19,2) NOT NULL DEFAULT 0,
   status enum('pending','rejected','approved') NOT NULL DEFAULT 'pending',
   expenseFormID int(11) NOT NULL default '0',
   tfID int(11) NOT NULL default '0',
@@ -580,8 +579,8 @@ CREATE TABLE transaction (
   transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance') NOT NULL default 'invoice',
   timeSheetID int(11) default NULL,
   transactionRepeatID int(11) default NULL,
-  INDEX idx_tfID (tfID),
   INDEX idx_timeSheetID (timeSheetID),
+  INDEX idx_tfID (tfID),
   INDEX idx_invoiceItemID (invoiceItemID),
   PRIMARY KEY  (transactionID)
 ) TYPE=MyISAM PACK_KEYS=0;
@@ -601,7 +600,7 @@ CREATE TABLE transactionRepeat (
   transactionStartDate date NOT NULL default '0000-00-00',
   transactionFinishDate date NOT NULL default '0000-00-00',
   paymentBasis varchar(255) NOT NULL default '',
-  amount float NOT NULL default '0',
+  amount DECIMAL(19,2) NOT NULL DEFAULT 0,
   product varchar(255) NOT NULL default '',
   status varchar(255) NOT NULL default 'pending',
   transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance') NOT NULL default 'invoice',
