@@ -641,7 +641,10 @@ class task extends db_entity {
         $recipient_full_name = $recipient["fullName"];
       } else if ($recipient["name"]) {
         $recipient_full_name = $recipient["name"];
+      } else {
+        $recipient_full_name = $recipient["emailAddress"];
       }
+
 
       if ($recipient_full_name && $recipient["emailAddress"] 
       && $recipient_full_name != $from["name"] && $recipient["emailAddress"] != $from["email"] 
