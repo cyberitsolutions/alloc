@@ -59,9 +59,16 @@ if ($_POST["save"]) {
     $db->query($q);
   }
 
+  // remove bracketed [Alex Lance <]alla@cyber.com.au[>] bits, leaving just alla@cyber.com.au
+  if ($_POST["AllocFromEmailAddress"]) {
+    $_POST["AllocFromEmailAddress"] = preg_replace("/^.*</","",$_POST["AllocFromEmailAddress"]);
+    $_POST["AllocFromEmailAddress"] = str_replace(">","",$_POST["AllocFromEmailAddress"]);
+  }
+
   foreach ($_POST as $name => $value) {
 
     if (in_array($name,$fields_to_save)) {
+
       $id = $config->get_config_item_id($name);
       $c = new config;
       $c->set_id($id);
