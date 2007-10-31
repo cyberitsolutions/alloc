@@ -229,20 +229,6 @@ if (!$current_user->is_employee()) {
 
   }
   
-  function task_exists($taskID) {
-
-    $db = new db_alloc;
-
-    // its not zero is it
-    $taskID == 0 ? $rtn = false : $rtn = true;
-
-    // is task in DB
-    $query = sprintf("SELECT * FROM task WHERE taskID = %d", $taskID);
-    $db->query($query);
-    $db->next_record()? $rtn = true : $rtn = false;
-    return $rtn;
-  }
-
   function show_new_timeSheet($template) {
     global $TPL, $timeSheet, $timeSheetID, $db, $current_user;
 

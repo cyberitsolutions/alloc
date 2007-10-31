@@ -1018,6 +1018,66 @@ EOD;
     return $rtn;
   }
 
+  function add_timeSheetItem_by_task($taskID, $duration, $comments) {
+    global $current_user;
+
+    $task = new task;
+    $task->set_id($taskID);
+    if ($task->select() && $task->get_value("projectID")) {
+      $q = sprintf("SELECT * 
+                      FROM timeSheet 
+                     WHERE status = 'edit' 
+                       AND projectID = %d
+                       AND personID = %d
+                ",$task->get_value("projectID"), $current_user->get_id());
+      $db = new db_alloc();
+      $db->query($q);
+      $row = $db->row();
+
+      // If no timeSheets add a new one
+      if (!$row) {
+        $project = new project();
+        $project->set_id($task->get_value("projectID"));
+        $project->select();
+
+        $timeSheet = new timeSheet();
+        $timeSheet->set_value("projectID",$task->get_value("projectID"));
+        $timeSheet->set_value("dateFrom",date("Y-m-d"));
+        $timeSheet->set_value("dateTo",date("Y-m-d"));
+        $timeSheet->set_value("status","edit");
+        $timeSheet->set_value("personID", $current_user->get_id());
+        $timeSheet->set_value("recipient_tfID",$current_user->get_value("preferred_tfID"));
+        $timeSheet->set_value("customerBilledDollars",$project->get_value("customerBilledDollars"));
+        $timeSheet->save();
+        $timeSheetID = $timeSheet->get_id();
+
+      // Else use the first timesheet we found
+      } else {
+        $timeSheetID = $row["timeSheetID"];
+      }   
+
+      // Add new time sheet item
+      if ($timeSheetID) {
+        $row_projectPerson = projectPerson::get_projectPerson_row($task->get_value("projectID"), $current_user->get_id());
+
+        $tsi = new timeSheetItem();
+        $tsi->set_value("timeSheetID",$timeSheetID);
+        $tsi->set_value("dateTimeSheetItem",date("Y-m-d"));
+        $tsi->set_value("timeSheetItemDuration",$duration);
+        $tsi->set_value("timeSheetItemDurationUnitID", $row_projectPerson["rateUnitID"]);
+        $tsi->set_value("description",$task->get_value("taskName"));
+        $tsi->set_value("personID",$current_user->get_id());
+        $tsi->set_value("taskID",sprintf("%d",$taskID));
+        $tsi->set_value("rate",$row_projectPerson["rate"]);
+        $tsi->set_value("comment",$comments);
+        $tsi->save();
+      }
+  
+      return $timeSheetID;
+    }
+  }
+
+
 }  
 
 

@@ -166,7 +166,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
     header("Location: ". $TPL["url_alloc_login"]);
     exit();
 
-  } else if (!defined("IN_LOGIN_RIGHT_NOW") && !defined("IN_INDEX_RIGHT_NOW")) {
+  } else if (!defined("NO_AUTH") && !defined("IN_LOGIN_RIGHT_NOW") && !defined("IN_INDEX_RIGHT_NOW")) {
     define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
     define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
     define("ALLOC_DEFAULT_RETURN_PATH_ADDRESS",config::get_config_item("AllocFromEmailAddress"));

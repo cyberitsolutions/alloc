@@ -264,15 +264,15 @@ class person extends db_entity {
   function load_get_current_user($personID) {
     $current_user = new person;
     $current_user->set_id($personID);
-    $current_user->select();
-    $current_user->prefs = unserialize($current_user->get_value("sessData"));
-
-    isset($current_user->prefs["topTasksNum"]) or $current_user->prefs["topTasksNum"] = 5;
-    $current_user->prefs["topTasksStatus"] or $current_user->prefs["topTasksStatus"] = "not_completed";
-    isset($current_user->prefs["projectListNum"]) or $current_user->prefs["projectListNum"] = "10";
-    isset($current_user->prefs["tasksGraphPlotHome"]) or $current_user->prefs["tasksGraphPlotHome"] = "4";
-    isset($current_user->prefs["tasksGraphPlotHomeStart"]) or $current_user->prefs["tasksGraphPlotHomeStart"] = "1";
-    return $current_user;
+    if ($current_user->select()) {
+      $current_user->prefs = unserialize($current_user->get_value("sessData"));
+      isset($current_user->prefs["topTasksNum"]) or $current_user->prefs["topTasksNum"] = 5;
+      $current_user->prefs["topTasksStatus"] or $current_user->prefs["topTasksStatus"] = "not_completed";
+      isset($current_user->prefs["projectListNum"]) or $current_user->prefs["projectListNum"] = "10";
+      isset($current_user->prefs["tasksGraphPlotHome"]) or $current_user->prefs["tasksGraphPlotHome"] = "4";
+      isset($current_user->prefs["tasksGraphPlotHomeStart"]) or $current_user->prefs["tasksGraphPlotHomeStart"] = "1";
+      return $current_user;
+    }
   }
 
   function has_messages() {

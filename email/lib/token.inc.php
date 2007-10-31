@@ -63,7 +63,7 @@ class token extends db_entity {
     }
   }
 
-  function execute($email) {
+  function execute($arg=false) {
 
     if ($this->get_id()) {
 
@@ -81,11 +81,12 @@ class token extends db_entity {
           $entity->select();
         }
         $method = $tokenAction->get_value("tokenActionMethod");
-        $entity->{$method}($email);
+        $rtn = $entity->{$method}($arg);
       }
 
       $this->increment_tokenUsed(); 
     }
+    return $rtn;
   }
 
   function increment_tokenUsed() {
@@ -114,8 +115,14 @@ class token extends db_entity {
     return $randval;
   }
 
-  function select_token_by_entity($entity,$entityID) {
-    $q = sprintf("SELECT * FROM token WHERE tokenEntity = '%s' AND tokenEntityID = %d",$entity,$entityID);
+  function select_token_by_entity_and_action($entity,$entityID,$action) {
+    $q = sprintf("SELECT token.*, tokenAction.*
+                    FROM token 
+               LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID 
+                   WHERE tokenEntity = '%s' 
+                     AND tokenEntityID = %d
+                     AND tokenAction.tokenActionMethod = '%s'
+                ",$entity,$entityID,$action);
     $db = new db_alloc();
     $db->query($q);
     if ($db->next_record()) {

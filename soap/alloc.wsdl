@@ -1,8 +1,7 @@
 <?xml version ='1.0' encoding ='UTF-8' ?>
 <definitions name='allocPSA'
-
-  targetNamespace='http://example.org/allocPSA'
-  xmlns:tns='http://example.org/allocPSA'
+  targetNamespace='http://allocpsa.com/allocPSA'
+  xmlns:tns='http://allocpsa.com/allocPSA'
   xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
   xmlns:xsd='http://www.w3.org/2001/XMLSchema'
   xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'
@@ -11,55 +10,59 @@
 
 
 
-<message name='AuthenticateRequest'>
+<!-- FIELDS -->
+
+<message name='authIn'>
   <part name='username' type='xsd:string'/>
   <part name='password' type='xsd:string'/>
 </message>
+<message name='authOut'>
+  <part name='sessKey' type='xsd:string'/>
+</message>
 
-<message name='AuthenticateResponse'>
-  <part name='Result' type='xsd:array'/>
+<message name='gtcIn'>
+  <part name='sessKey' type='xsd:string'/>
+  <part name='taskID' type='xsd:string'/>
+</message>
+<message name='gtcOut'>
+  <part name='comments' type='xsd:array'/>
 </message>
 
 
-<message name="yesno">
-  <part name='result' type='xsd:string'/>
+<message name='atsibtIn'>
+  <part name='sessKey' type='xsd:string'/>
+  <part name='taskID' type='xsd:string'/>
+  <part name='duration' type='xsd:string'/>
+  <part name='comments' type='xsd:string'/>
 </message>
-
-<message name="request">
-  <part name='one' type='xsd:string'/>
-  <part name='two' type='xsd:string'/>
-</message>
-
-<message name="responseArray">
-  <part name='responseArray' type='xsd:array'/>
+<message name='atsibtOut'>
+  <part name='timeSheetID' type='xsd:string'/>
 </message>
 
 
+<!-- PORT TYPES -->
 
-<portType name='AuthenticatePortType'>
+<portType name='allocPortType'>
 
   <operation name='authenticate'>
-    <input message='tns:AuthenticateRequest'/>
-    <output message='tns:AuthenticateResponse'/>
+    <input message='tns:authIn'/>
+    <output message='tns:authOut'/>
   </operation>
 
-  <operation name='check_auth'>
-    <input message='tns:yesno'/>
-    <output message='tns:yesno'/>
+  <operation name='get_task_comments'>
+    <input message='tns:gtcIn'/>
+    <output message='tns:gtcOut'/>
   </operation>
 
-  <operation name='get_table_array'>
-    <input message='tns:request'/>
-    <output message='tns:responseArray'/>
+  <operation name='add_timeSheetItem_by_task'>
+    <input message='tns:atsibtIn'/>
+    <output message='tns:atsibtOut'/>
   </operation>
-  
-
-
 </portType>
 
 
 
-<binding name='StockQuoteBinding' type='tns:AuthenticatePortType'>
+<binding name='allocHandlerBinding' type='tns:allocPortType'>
   <soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
 
   <operation name='authenticate'>
@@ -68,26 +71,26 @@
     <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
   </operation>
 
-  <operation name='check_auth'>
-    <soap:operation soapAction='urn:xmethods-delayed-quotes#check_auth'/>
+  <operation name='get_task_comments'>
+    <soap:operation soapAction='urn:xmethods-delayed-quotes#get_task_comments'/>
     <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
     <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
   </operation>
 
-  <operation name='get_table_array'>
-    <soap:operation soapAction='urn:xmethods-delayed-quotes#get_table_array'/>
+  <operation name='add_timeSheetItem_by_task'>
+    <soap:operation soapAction='urn:xmethods-delayed-quotes#add_timeSheetItem_by_task'/>
     <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
     <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
   </operation>
+
 
 </binding>
 
 
 
-<service name='StockQuoteService'>
-  <port name='StockQuotePort' binding='StockQuoteBinding'>
-    <soap:address location='http://mint/alloc_dev/soap/server.php'/>
+<service name='allocService'>
+  <port name='allocPort' binding='allocHandlerBinding'>
+    <soap:address location='http://alloc_dev/soap/soapServer.php'/>
   </port>
 </service>
 </definitions>
-

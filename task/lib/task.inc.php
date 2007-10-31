@@ -710,20 +710,7 @@ class task extends db_entity {
 
       $message = "\n".wordwrap($message)."\n\n";
 
-      $token = new token;
-      if ($token->select_token_by_entity("task",$this->get_id())) {
-        $hash = $token->get_value("tokenHash");
-      } else {
-        $token->set_value("tokenEntity","task");
-        $token->set_value("tokenEntityID",$this->get_id());
-        $token->set_value("tokenActionID",1);
-        $token->set_value("tokenActive",1);
-        $token->set_value("tokenCreatedBy",$current_user->get_id());
-        $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
-        $hash = $token->generate_hash();
-        $token->set_value("tokenHash",$hash);
-        $token->save();
-      }
+      $hash = $this->make_token_add_comment_from_email();
 
       if ($hash && config::get_config_item("allocEmailKeyMethod") == "headers") {
         $email->set_message_id($hash);
@@ -739,6 +726,50 @@ class task extends db_entity {
         return $successful_recipients;
       }
     }   
+  }
+
+  function make_token_add_comment_from_email() {
+    global $current_user;
+    $token = new token;
+    if ($token->select_token_by_entity_and_action("task",$this->get_id(),"add_comment_from_email")) {
+      $hash = $token->get_value("tokenHash");
+    } else {
+      $token->set_value("tokenEntity","task");
+      $token->set_value("tokenEntityID",$this->get_id());
+      $token->set_value("tokenActionID",1);
+      $token->set_value("tokenActive",1);
+      $token->set_value("tokenCreatedBy",$current_user->get_id());
+      $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
+      $hash = $token->generate_hash();
+      $token->set_value("tokenHash",$hash);
+      $token->save();
+    }
+    return $hash;
+  }
+
+  function make_token_get_task_comments() {
+#    global $current_user;
+#    $token = new token;
+#    if ($token->select_token_by_entity_and_action("task",$this->get_id(),"get_task_comments_array")) {
+#      $hash = $token->get_value("tokenHash");
+#    } else {
+#      $token->set_value("tokenEntity","task");
+#      $token->set_value("tokenEntityID",$this->get_id());
+#      $token->set_value("tokenActionID",2);
+#      $token->set_value("tokenActive",1);
+#      $token->set_value("tokenCreatedBy",$current_user->get_id());
+#      $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
+#      $hash = $token->generate_hash();
+#      $token->set_value("tokenHash",$hash);
+#      $token->save();
+#    }
+#    return $hash;
+  }
+
+  function get_task_comments_array() {
+    $rows = util_get_comments_array("task",$this->get_id());
+    $rows or $rows = array();
+    return $rows;
   }
 
   function get_task_link($_FORM=array()) {

@@ -57,11 +57,13 @@ class Session {
 
 
   // Call this in a login page to start session 
-  function Start($row) {
+  function Start($row,$nuke_prev_sessions=true) {
     $this->key = md5($row["personID"]."mix it up#@!".md5(mktime().md5(microtime())));
     $this->Put("key2", $this->key2);
     $this->Put("session_started", mktime());
-    $this->db->query("DELETE FROM sess WHERE personID = %d",$row["personID"]);
+    if ($nuke_prev_sessions) {
+      $this->db->query("DELETE FROM sess WHERE personID = %d",$row["personID"]);
+    }
     $this->db->query("INSERT INTO sess (sessID,sessData,personID) VALUES (%s,%s,%d)"
                              ,$this->key, $this->Encode($this->session_data), $row["personID"]);
     $this->Put("username" ,strtolower($row["username"]));
