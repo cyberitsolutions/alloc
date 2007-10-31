@@ -69,6 +69,19 @@ class projectPerson extends db_entity
   }
 
 
+
+  function get_projectPerson_row($projectID, $personID, $roleHandle=false) {
+    $roleHandle and $extra = sprintf(" AND projectPersonRoleHandle = '%s'",$roleHandle);
+    $q = sprintf("SELECT * 
+                    FROM projectPerson 
+                   WHERE projectID = %d AND personID = %d %s"
+                ,$projectID,$personID,$extra);
+    $db = new db_alloc();
+    $db->query($q);
+    return $db->row();
+  }
+
+
 }
 
 
