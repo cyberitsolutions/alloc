@@ -36,14 +36,9 @@ if (!in_array("patch-00053-alla.php",$abc123_applied_patches)) {
   apply_patch(ALLOC_MOD_DIR."patches/patch-00053-alla.php");
 }
 
-// This script can potentially be called via the livealloc patch system via GET
-$abc123_apply_patches = $_POST["apply_patches"] or $abc123_apply_patches = $_GET["apply_patches"];
-
-$_POST["patches_to_apply"] or $_POST["patches_to_apply"] = array();
-
 
 // Apply all patches
-if ($_GET["apply_patches"]) {
+if ($_GET["apply_patches"] || $_POST["apply_patches"]) {
   foreach ($abc123_files as $abc123_file) {
     $abc123_f = ALLOC_MOD_DIR."patches/".$abc123_file;
     if (!in_array($abc123_file,$abc123_applied_patches)) {
