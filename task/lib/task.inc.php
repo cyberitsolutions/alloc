@@ -783,7 +783,7 @@ class task extends db_entity {
 
     $_FORM["showTaskID"] and $id = $this->get_id()." ";
 
-    if ($this->get_value("taskTypeID") == TT_PHASE && $_FORM["return"] == "html") {
+    if ($this->get_value("taskTypeID") == TT_PHASE && ($_FORM["return"] == "html" || $_FORM["return"] == "objectsAndHtml")) {
       $rtn = "<strong>".$id.stripslashes($this->get_value("taskName"))."</strong>";
     } else if ($this->get_value("taskTypeID") == TT_PHASE) {
       $rtn = $id.stripslashes($this->get_value("taskName"));
@@ -978,7 +978,7 @@ function get_task_statii_array() {
      *
      * Filter Options:
      *   taskView             = byProject | prioritised
-     *   return               = html | text | objects | dropdown_options
+     *   return               = html | text | objects | dropdown_options | objectsAndHtml
      *   limit                = appends an SQL limit (only for prioritised and objects views)
      *   projectIDs           = an array of projectIDs
      *   taskStatus           = completed | not_completed | in_progress | due_today | new | overdue
@@ -1063,11 +1063,11 @@ function get_task_statii_array() {
           foreach ($t as $row) {
             $row["projectPriority"] = $project["projectPriority"];
             $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
-            if ($_FORM["return"] == "objects"){
-              $tasks[$row["taskID"]] = $row;
-            } else if ($_FORM["return"] == "dropdown_options"){
+
+            if ($_FORM["return"] == "dropdown_options"){
               $summary_ops[$row["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;",$row["padding"]).$row["taskName"];
             } else {
+              $tasks[$row["taskID"]] = $row;
               $summary.= task::get_task_list_tr($row,$_FORM);
             }
           }
@@ -1134,7 +1134,10 @@ function get_task_statii_array() {
     $header_row = task::get_task_list_tr_header($_FORM);
 
     // Decide what to actually return
-    if ($_FORM["return"] == "objects") {
+    if ($print && $_FORM["return"] == "objectsAndHtml") { // sheesh
+      return array($tasks,"<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$header_row.$summary."</table>");
+      
+    } else if ($_FORM["return"] == "objects") {
       return $tasks;
 
     } else if ($print && $_FORM["return"] == "html") {
@@ -1146,7 +1149,7 @@ function get_task_statii_array() {
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;
 
-    } else if (!$print && $_FORM["return"] == "html") {
+    } else if (!$print && ($_FORM["return"] == "html" || $_FORM["return"] == "objectsAndHtml")) {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Tasks Found</b></td></tr></table>";
     } 
   } 
@@ -1460,12 +1463,12 @@ function get_task_statii_array() {
         } else {
           $status = "Overdue for completion - $status";
         }
-        if ($format == "html") {
+        if ($format == "html" || $format == "objectsAndHtml") {
           $status = "<strong class=\"overdue\">$status</strong>";
         }
       } else if ($date_target_completion && date("Y-m-d", $date_forecast_completion) > $date_target_completion) {
         $status = "Behind target - $status";
-        if ($format == "html") {
+        if ($format == "html" || $format == "objectsAndHtml") {
           $status = "<strong class=\"behind-target\">$status</strong>";
         }
       }
@@ -1486,12 +1489,12 @@ function get_task_statii_array() {
       }
     } else if ($actual == NOT_STARTED && $target == STARTED) {
       $status = "Overdue to start on ".$date_target_start;
-      if ($format == "html") {
+      if ($format == "html" || $format == "objectsAndHtml") {
         $status = "<strong class=\"behind-target\">$status</strong>";
       }
     } else if ($actual == NOT_STARTED && $target == COMPLETED) {
       $status = "Overdue to start and be completed by $date_target_completion";
-      if ($format == "html") {
+      if ($format == "html" || $format == "objectsAndHtml") {
         $status = "<strong class=\"overdue\">$status</strong>";
       }
     } else {
