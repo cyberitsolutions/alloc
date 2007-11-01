@@ -549,10 +549,8 @@ function get_projectPerson_hourly_rate($personID,$projectID) {
 
 
 if ($project->get_id()) { 
-  $TPL["task_summary"] = task::get_task_list($options);
-
-  $options["return"] = "objects";
-  $tasks = task::get_task_list($options);
+  $options["return"] = "objectsAndHtml";
+  list($tasks,$TPL["task_summary"]) = task::get_task_list($options);
   if (is_array($tasks)) {
     foreach ($tasks as $tid => $t) {
       $hourly_rate = get_projectPerson_hourly_rate($t["personID"],$t["projectID"]);
