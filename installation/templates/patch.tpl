@@ -4,6 +4,10 @@
 {show_messages()}
 <br>
 
+<form action="{$url_alloc_patch}" method="post">
+<input type='submit' name='apply_patches' value='Apply All Patches'>
+</form>
+
 {$table_box}
 <tr>
   <th colspan="4">allocPSA Patch System</th>
