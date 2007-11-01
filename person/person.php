@@ -230,12 +230,6 @@ if ($_POST["save"]) {
       $num_rows = $db->num_rows();
       $row = $db->row();
 
-
-      #echo "<br/>personID: ".$person->get_id();
-      #echo "<br/>num_rows: ".$num_rows;
-      #echo "<br/>row_personID: ".$row["personID"];
-
-
       if (($num_rows > 0 && !$person->get_id()) || ($num_rows > 0 && $person->get_id() != $row["personID"])){
         $TPL["message"][] = "That username is already taken. Please select another.";
       }
@@ -246,7 +240,6 @@ if ($_POST["save"]) {
     if (!$TPL["message"]) {
       $person->save();
       header("Location: ".$TPL["url_alloc_personList"]);
-      $personID = $person->get_id();
     }
   } else {
     $TPL["message"][] = "Please re-type the passwords";
@@ -256,9 +249,9 @@ if ($_POST["save"]) {
   header("Location: ".$TPL["url_alloc_personList"]);
 }
 
-$person = new person;
-$person->set_id($personID);
-$person->select();
+#$person = new person;
+#$person->set_id($personID);
+#$person->select();
 $person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
 
 if ($person->get_id()) {
