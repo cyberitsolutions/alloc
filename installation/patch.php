@@ -41,28 +41,24 @@ $abc123_apply_patches = $_POST["apply_patches"] or $abc123_apply_patches = $_GET
 
 $_POST["patches_to_apply"] or $_POST["patches_to_apply"] = array();
 
-if ($abc123_apply_patches) {
 
+// Apply all patches
+if ($_GET["apply_patches"]) {
   foreach ($abc123_files as $abc123_file) {
     $abc123_f = ALLOC_MOD_DIR."patches/".$abc123_file;
-      
-    $abc123_go = false;
-    $abc123_go2 = false;
-
     if (!in_array($abc123_file,$abc123_applied_patches)) {
-      $abc123_go = true;
-    }
-
-    // The livealloc patch system doesn't use the interactive patching mechanism, so by default apply all patches that haven't been applied
-    if (in_array($abc123_file,$_POST["patches_to_apply"]) || $_GET["apply_patches"]) {
-      $abc123_go2 = true;
-    }
-
-    if ($abc123_go && $abc123_go2) {
       apply_patch($abc123_f);
     }
   }
+
+// Apply a single patch
+} else if ($_POST["apply_patch"] && $_POST["patch_file"]) {
+  $abc123_f = ALLOC_MOD_DIR."patches/".$_POST["patch_file"];
+  if (!in_array($abc123_file,$abc123_applied_patches)) {
+    apply_patch($abc123_f);
+  }
 }
+
 
 
 $abc123_applied_patches = get_applied_patches();
