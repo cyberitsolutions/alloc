@@ -48,7 +48,8 @@ class transaction extends db_entity
                                , "projectID"=>new db_field("projectID")
                                , "transactionModifiedUser"=>new db_field("transactionModifiedUser")
                                , "transactionModifiedTime"=>new db_field("transactionModifiedTime")
-                               , "dateEntered"=>new db_field("dateEntered")
+                               , "transactionCreatedTime"=>new db_field("transactionCreatedTime")
+                               , "transactionCreatedUser"=>new db_field("transactionCreatedUser")
                                , "quantity"=>new db_field("quantity")
                                , "transactionDate"=>new db_field("transactionDate")
                                , "transactionType"=>new db_field("transactionType")
@@ -80,7 +81,6 @@ class transaction extends db_entity
   }
 
   function insert() {
-    $this->set_value("dateEntered", date("Y-m-d"));
     $this->check_write_perms();
     db_entity::insert();
   }

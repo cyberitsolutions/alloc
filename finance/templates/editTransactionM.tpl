@@ -2,7 +2,6 @@
 {show_toolbar()}
 <form action="{$url_alloc_transaction}" method="post">
 <input type="hidden" name="expenseFormID" value={$expenseFormID}>
-<input type="hidden" name="dateEntered" value={$dateEntered}>
 <input type="hidden" name="quantity" value={$quantity}>
 <input type="hidden" name="transactionID" value={$transactionID}>
 {$table_box}
@@ -86,14 +85,24 @@
     <td class="hint">If a time sheet is associated with this transaction, the time sheet's identification number is shown.</td>
   </tr>
   <tr>
+    <td>Created By User ID</td>
+    <td>{$transactionCreatedUser}&nbsp;</td>
+    <td class="hint">The user who created this record.</td>
+  </tr>
+  <tr>
+    <td>Created On</td>
+    <td>{$transactionCreatedTime}&nbsp;</td>
+    <td class="hint">The date that this record was created.</td>
+  </tr>
+  <tr>
     <td>Last Modified By User ID</td>
     <td>{$transactionModifiedUser}&nbsp;</td>
-    <td class="hint">The user who last modified this record</td>
+    <td class="hint">The user who last modified this record.</td>
   </tr>
   <tr>
     <td>Last Modified On</td>
     <td>{$transactionModifiedTime}&nbsp;</td>
-    <td class="hint">The date that this record was last modified</td>
+    <td class="hint">The date that this record was last modified.</td>
   </tr>
 
   <tr>

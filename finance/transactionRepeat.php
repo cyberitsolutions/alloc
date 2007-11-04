@@ -90,7 +90,6 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
   $_POST["amount"]  or $TPL["message"][].= "Please enter an Amount";
   $_POST["tfID"]    or $TPL["message"][].= "Please select a TF";
   $_POST["companyDetails"]  or $TPL["message"][].= "Please provide Company Details";
-  $_POST["dateEntered"]     or $TPL["message"][].= "Please enter a Date Incurred";
   $_POST["transactionType"] or $TPL["message"][].= "Please select a Transaction Type";
 
   if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $_POST["transactionStartDate"])) {
