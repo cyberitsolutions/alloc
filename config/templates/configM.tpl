@@ -12,6 +12,11 @@
     <td width="1%">{get_help("config_allocURL")}</td>
   </tr>
   <tr>
+    <td width="20%"><nobr>Time Zone</nobr></td>
+    <td><select name="allocTimezone">{echo get_select_options(get_timezone_array(),$TPL["allocTimezone"])}</select></td>
+    <td width="1%">{get_help("config_allocTimezone")}</td>
+  </tr>
+  <tr>
     <td width="20%"><nobr>Calendar 1st Day</nobr></td>
     <td><select name="calendarFirstDay">{$calendarFirstDayOptions}</select></td>
     <td width="1%">{get_help("config_calendarFirstDay")}</td>
