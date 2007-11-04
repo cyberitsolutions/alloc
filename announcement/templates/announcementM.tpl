@@ -12,11 +12,11 @@
   </tr>
   <tr>
     <td>Display From</td>
-    <td><input type="text" name="displayFromDate" size="10" value="{$displayFromDate}"><input type="button" value="Today" onClick="displayFromDate.value='{$today}'"</td>
+    <td>{get_calendar("displayFromDate",$TPL["displayFromDate"])}</td>
   </tr>
   <tr>
     <td>Display To</td>
-    <td><input type="text" name="displayToDate" size="10" value="{$displayToDate}"><input type="button" value="Today" onClick="displayToDate.value='{$today}'"</td>
+    <td>{get_calendar("displayToDate",$TPL["displayToDate"])}</td>
   </tr>
   <tr>
     <td>Body</td>

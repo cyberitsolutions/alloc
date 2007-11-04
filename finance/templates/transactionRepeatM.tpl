@@ -17,21 +17,18 @@
   </tr>
   <tr>
     <td><select name="paymentBasis" value="{$paymentBasis}">{$basisOptions}</select></td>
-    <td><input type="text" name="transactionStartDate" size="11" value="{$transactionStartDate}"><input type="button" onClick="transactionStartDate.value='{$today}'" value="Today"></td>
-    <td><input type="text" name="transactionFinishDate" size="11" value="{$transactionFinishDate}"><input type="button" onClick="transactionFinishDate.value='{$today}'" value="Today"></td>
-
+    <td>{get_calendar("transactionStartDate",$TPL["transactionStartDate"])}</td>
+    <td>{get_calendar("transactionFinishDate",$TPL["transactionFinishDate"])}</td>
   </tr>
-
-
 	<tr>
-	  <td><b>Date Incurred</b></td>
+	  <td></td>
 	  <td><b>Product/Service</b></td>
  	  <td><b>Amount</b></td>
  	  <td><b>Type</b></td>
     <td><b>TF</b></td>
 	</tr>
 	<tr>
-    <td><input type="text" size="11" name="dateEntered" value="{$dateEntered}"><input type="button" onClick="dateEntered.value='{$today}'" value="Today"></td>
+    <td></td>
  	  <td><input type="text" size="20" name="product" value="{$product}"></td>
  	  <td><input type="text" size="9" name="amount" value="{$amount}"></td>
    	<td><select name="transactionType">{$transactionTypeOptions}</select></td>

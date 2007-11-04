@@ -21,6 +21,27 @@
  *
  */
 
+
+
+
+function get_calendar($name, $default_value) {
+  // setup the first day of the week
+  $days = array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
+  $days = array_flip($days);
+  $firstday = config::get_config_item("calendarFirstDay");
+  $firstday = sprintf("%d",$days[$firstday]);
+  
+  $default_value and $default = ", date : ".$default_value;
+  $str = <<<EOD
+  <input name="${name}" type="input" size="10" value="${default_value}" id="${name}" />
+  <input type="button" value="Cal" id="button_${name}" />
+  <script type="text/javascript">
+  Calendar.setup( { inputField : "${name}", ifFormat : "%Y-%m-%d", button : "button_${name}", showOthers : 1, align : "Bl", firstDay : ${firstday}, step : 1, weekNumbers : 0 ${default} })
+  </script>
+
+EOD;
+  echo $str;
+}
 function get_timezone_array() {
   return array("-12"  => "-12"
               ,"-11"  => "-11"
@@ -60,6 +81,34 @@ function get_timezone_array() {
               ,"13"   => "+13"
               ,"14"   => "+14"
               );
+}
+function format_date($format="Y/m/d", $date="") {
+
+  // If looks like this: 2003-07-07 21:37:01
+  if (preg_match("/^[\d]{4}-[\d]{2}-[\d]{2} [\d]{2}:[\d]{2}:[\d]{2}$/",$date)) {
+    list($d,$t) = explode(" ", $date);
+
+  // If looks like this: 2003-07-07
+  } else if (preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/",$date)) {
+    $d = $date;
+
+  // If looks like this: 12:01:01
+  } else if (preg_match("/^[\d]{2}:[\d]{2}:[\d]{2}$/",$date)) {
+    $d = "2000-01-01";
+    $t = $date;
+
+  // Nasty hobbitses!
+  } else if ($date) {
+    return "Date unrecognized: ".$date;
+  } else {
+    return;
+  }
+  list($y,$m,$d) = explode("-", $d);
+  list($h,$i,$s) = explode(":", $t);
+  list($y,$m,$d,$h,$i,$s) = array(sprintf("%d",$y),sprintf("%d",$m),sprintf("%d",$d)
+                                 ,sprintf("%d",$h),sprintf("%d",$i),sprintf("%d",$s)
+                                 );
+  return date($format, mktime(date($h),date($i),date($s),date($m),date($d),date($y)));
 }
 function get_default_from_address() {
   // Wrap angle brackets around the default From: email address 
@@ -691,34 +740,6 @@ function db_get_where($where = array()) {
     $and = " AND ";
   }
   return $rtn;
-}
-function format_date($format="Y/m/d", $date="") {
-
-  // If looks like this: 2003-07-07 21:37:01
-  if (preg_match("/^[\d]{4}-[\d]{2}-[\d]{2} [\d]{2}:[\d]{2}:[\d]{2}$/",$date)) {
-    list($d,$t) = explode(" ", $date);
-
-  // If looks like this: 2003-07-07
-  } else if (preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/",$date)) {
-    $d = $date;
-
-  // If looks like this: 12:01:01
-  } else if (preg_match("/^[\d]{2}:[\d]{2}:[\d]{2}$/",$date)) {
-    $d = "2000-01-01";
-    $t = $date;
-
-  // Nasty hobbitses!
-  } else if ($date) {
-    return "Date unrecognized: ".$date;
-  } else {
-    return;
-  }
-  list($y,$m,$d) = explode("-", $d);
-  list($h,$i,$s) = explode(":", $t);
-  list($y,$m,$d,$h,$i,$s) = array(sprintf("%d",$y),sprintf("%d",$m),sprintf("%d",$d)
-                                 ,sprintf("%d",$h),sprintf("%d",$i),sprintf("%d",$s)
-                                 );
-  return date($format, mktime(date($h),date($i),date($s),date($m),date($d),date($y)));
 }
 function get_config_link() {
   global $current_user, $TPL;
