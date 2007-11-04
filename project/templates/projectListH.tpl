@@ -1,1 +1,1 @@
-{show_projects()}
+{$TPL["this"]->show_projects()}

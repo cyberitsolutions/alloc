@@ -51,8 +51,10 @@ class home_item {
   }
 
   function show() {
+    global $TPL;
     if ($this->template) {
-      include_template($this->get_template_dir().$this->template, $this);
+      $TPL["this"] = $this;
+      include_template($this->get_template_dir().$this->template);
     }  
   }
 

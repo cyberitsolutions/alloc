@@ -69,7 +69,7 @@ class timeSheetListHomeItem extends home_item {
         $TPL["projectName"] = $project->get_value("projectName");
       }
 
-      include_template($this->get_template_dir().$template_name, $this);
+      include_template($this->get_template_dir().$template_name);
     }
   }
 }

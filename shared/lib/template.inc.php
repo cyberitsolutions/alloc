@@ -24,7 +24,7 @@
 
 
 // Read a template and return the mixed php/html, ready for processing
-function get_template($filename, $use_function_object = false) {
+function get_template($filename) {
 
   $template = implode("", (@file($filename)));
   if ((!$template) or(empty($template))) {
@@ -40,14 +40,6 @@ function get_template($filename, $use_function_object = false) {
   $pattern = '\{';
   $replace = 'TPL_START_BRACE';
   $template = str_replace($pattern,$replace,$template);
-
-
-  // Replace {function_name param} with function("param"); - Remove this sometime.
-  if ($use_function_object) {
-    $pattern = '/{(\w+)\s?([^}]*)}/i';
-    $replace = '<?php $function_object->${1}${2}; ?>';
-    $template = preg_replace($pattern,$replace,$template);
-  }
 
   // Replace {$arr.something} with echo stripslashes($arr["something"]); 
   $pattern = '/{\$([\w|\d|_]+)\.([^}]+)}/i';
@@ -104,10 +96,10 @@ function get_template($filename, $use_function_object = false) {
 
 
 // This is the publically callable function, used to include template files
-function include_template($filename, $function_object = "") {
+function include_template($filename) {
   global $TPL;
   #echo "<!-- Start $filename -->\n";
-  $template = get_template($filename, is_object($function_object));
+  $template = get_template($filename);
   #echo "<pre>".htmlspecialchars($template)."</pre>"; 
 
   // Make variable available via $TPL_var ... nah

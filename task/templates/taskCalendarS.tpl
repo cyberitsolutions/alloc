@@ -1,1 +1,1 @@
-{show_task_calendar_recursive()}
+{$TPL["this"]->show_task_calendar_recursive()}
