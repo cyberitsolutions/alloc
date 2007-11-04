@@ -271,6 +271,27 @@ require_once("../alloc.php");
     include_template("templates/clientCommentM.tpl");
   }
 
+  function show_invoices() {
+    global $current_user, $clientID;
+
+    $_FORM["showHeader"] = true;
+    $_FORM["showInvoiceNumber"] = true;
+    $_FORM["showInvoiceClient"] = true;
+    $_FORM["showInvoiceName"] = true;
+    $_FORM["showInvoiceAmount"] = true;
+    $_FORM["showInvoiceAmountPaid"] = true;
+    $_FORM["showInvoiceDate"] = true;
+    $_FORM["showInvoiceStatus"] = true;
+    $_FORM["clientID"] = $clientID;
+
+    // Restrict non-admin users records  
+    if (!$current_user->have_role("admin")) {
+      $_FORM["personID"] = $current_user->get_id();  
+    }
+
+    echo invoice::get_invoice_list($_FORM);
+  }
+
 
 
 $client = new client;
@@ -402,6 +423,10 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
 
 if (!$clientID) {
   $TPL["message_help"][] = "Create a new Client by inputting the Company Name and other details and clicking the Create New Client button.";
+}
+
+if ($current_user->have_role("admin")) {
+  $TPL["invoice_links"].= "<a href=\"".$TPL["url_alloc_invoice"]."clientID=".$clientID."\">New Invoice</a>";
 }
 
 

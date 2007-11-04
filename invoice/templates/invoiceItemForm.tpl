@@ -64,7 +64,7 @@ function refreshInvoiceItemForm(radiobutton) \{
       </tr>
       <tr>
         <td><select name="timeSheetID"><option value=""></option>{$timeSheetOptions}</select></td>
-        <td><input id="split_timeSheet" type="checkbox" name="split_timeSheet"> <label for="split_timeSheet">New Invoice Item for each Time Sheet Item</label></td>
+        <td></td>
         <td align="right">{$invoiceItem_buttons}</td>
       </tr>
       </table>
@@ -77,7 +77,7 @@ function refreshInvoiceItemForm(radiobutton) \{
       </tr>
       <tr>
         <td><select name="expenseFormID"><option value=""></option>{$expenseFormOptions}</select></td>
-        <td><input id="split_expenseForm" type="checkbox" name="split_expenseForm"> <label for="split_expenseForm">New Invoice Item for each Expense Form Item</label></td>
+        <td></td>
         <td align="right">{$invoiceItem_buttons}</td>
       </tr>
       </table>

@@ -148,7 +148,7 @@ function show_invoiceItem_list() {
     unset($br);
     unset($sel);
     unset($amount);
-    unset($TPL["invoiceItem_buttons_top"],$TPL["invoiceItem_buttons"]);
+    unset($TPL["invoiceItem_buttons_top"],$TPL["invoiceItem_buttons"],$TPL["transaction_info"],$TPL["status_label"]);
 
     // If editing a invoiceItem then don't display it in the list
     if (is_array($_POST["invoiceItem_edit"]) && key($_POST["invoiceItem_edit"]) == $invoiceItem->get_id()) {
@@ -175,6 +175,8 @@ function show_invoiceItem_list() {
         $one_pending = true;
       }
 
+      $amounts[$invoiceItem->get_id()] = $db2->f("transaction_amount");
+
       $transaction_sum+= $db2->f("transaction_amount");
       $transaction_info.= $br.ucwords($db2->f("transaction_status"))." Transaction ";
       $transaction_info.= "<a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$db2->f("transactionID")."\">#".$db2->f("transactionID")."</a>";
@@ -185,6 +187,7 @@ function show_invoiceItem_list() {
     }
 
 
+    $TPL["transaction_info"] = $transaction_info;
 
     
     // Sets the background colour of the invoice item boxes based on transaction.status
@@ -208,12 +211,32 @@ function show_invoiceItem_list() {
 
     $sel[$transaction_status] = " checked";
 
+    if ($sel["rejected"]) {
+      $TPL["status_label"] = "<b>[Not Going To Be Paid]</b>";
+
+    } else if ($sel["pending"]) {
+      $TPL["status_label"] = "<b>[In Dispute]</b>";
+
+    } else if ($sel["approved"]) {
+      $TPL["status_label"] = "<b>[Paid]</b>";
+    }
+
+    if ($transaction_sum > 0 && $transaction_sum < $invoiceItem->get_value("iiAmount")) {
+      $TPL["status_label"] = "<b>[Paid in part]</b>";
+    } else if ($transaction_sum > $invoiceItem->get_value("iiAmount")) {
+      $TPL["status_label"] = "<b>[Overpaid]</b>";
+    }
+
+    $TPL["status_label"] or $TPL["status_label"] = "<b>[No Transactions Created]</b>";
+
+
+
     if ($invoice->get_value("invoiceStatus") == "reconcile") {
       
-      if ($db->f("transaction_amount") === null) {
+      if ($amounts[$invoiceItem->get_id()] === null) {
         $amount = $invoiceItem->get_value("iiAmount");
       } else {
-        $amount = $db->f("transaction_amount");
+        $amount = $amounts[$invoiceItem->get_id()];
       }
       
       $selected_tfID = $db->f("transaction_tfID");
@@ -251,39 +274,20 @@ function show_invoiceItem_list() {
       $radio_buttons.= " value=\"approved\"".$sel["approved"].">";
 
       $TPL["invoiceItem_buttons_top"] = $radio_buttons;
-      $TPL["invoiceItem_buttons_top"].= "<input type=\"hidden\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
+      $TPL["invoiceItem_buttons_top"].= "<input type=\"text\" size=\"7\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
       $TPL["invoiceItem_buttons_top"].= "<input type=\"hidden\" name=\"invoiceItemAmountPaidTfID[".$invoiceItem->get_id()."]\" value=\"".$selected_tfID."\">";
-      if ($transaction_info) {
-        $TPL["invoiceItem_buttons"] = $transaction_info."<br>";
-      } else {
-        unset($TPL["invoiceItem_buttons"]);
-      }
+
+
+      unset($TPL["invoiceItem_buttons"]);
         
     } else if ($invoice->get_value("invoiceStatus") == "finished") {
 
 
-      if ($sel["rejected"]) {
-        $TPL["invoiceItem_buttons_top"] = "<b>[Not Going To Be Paid]</b>";
-
-      } else if ($sel["pending"]) {
-        $TPL["invoiceItem_buttons_top"] = "<b>[In Dispute]</b>";
-
-      } else if ($sel["approved"]) {
-        $TPL["invoiceItem_buttons_top"] = "<b>[Paid]</b>";
-      }
-
-      if ($transaction_sum > 0 && $transaction_sum < $invoiceItem->get_value("iiAmount")) {
-        $TPL["invoiceItem_buttons_top"] = "<b>[Paid in part]</b>";
-      } 
-
-      $TPL["invoiceItem_buttons_top"] or $TPL["invoiceItem_buttons_top"] = "<b>[No Transactions Created]</b>";
-
-      $TPL["invoiceItem_buttons"] = $transaction_info;
       
 
     } else if (is_object($invoice) && $invoice->get_value("invoiceStatus") == "edit") {
       $TPL["invoiceItem_buttons"] = "<input type=\"submit\" name=\"invoiceItem_edit[".$invoiceItem->get_id()."]\" value=\"Edit\">";
-      $TPL["invoiceItem_buttons"].= "<input type=\"submit\" name=\"invoiceItem_delete[".$invoiceItem->get_id()."]\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">";
+      $TPL["invoiceItem_buttons"].= "<input type=\"submit\" name=\"invoiceItem_delete[".$invoiceItem->get_id()."]\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record? The transactions associated with this item will be deleted as well.')\">";
     }
 
     unset($TPL["link"]);
@@ -380,9 +384,9 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
         if ($db->f("transactionID")) {
           $transaction->set_id($db->f("transactionID"));
           $transaction->select();
-          $amount = $transaction->get_value("amount");
+          #$amount = $transaction->get_value("amount");
         }
-        $transaction->set_value("amount",sprintf("%0.2f",$amount));  
+        $transaction->set_value("amount",sprintf("%0.2f",$_POST["invoiceItemAmountPaid"][$iiID]));  
         $transaction->set_value("tfID",$_POST["invoiceItemAmountPaidTfID"][$iiID]);
         $transaction->set_value("status",$status);
         $transaction->set_value("invoiceID",$ii->get_value("invoiceID"));
@@ -538,7 +542,7 @@ $TPL["field_invoiceName"] = '<input type="text" name="invoiceName" value="'.$TPL
 $c = new client;
 $c->set_id($invoice->get_value("clientID"));
 $c->select();
-$client_label = $c->get_client_name();
+$client_label = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$c->get_id()."\">".$c->get_client_name()."</a>";
 
 
 
@@ -546,6 +550,7 @@ $client_label = $c->get_client_name();
 if ($current_user->have_role('admin')) {
 
   if (!$invoiceID) {
+    $_GET["clientID"] and $TPL["clientID"] = $_GET["clientID"];
     $TPL["invoice_buttons"] = "<input type=\"submit\" name=\"save\" value=\"Create Invoice\">";
     $options["clientStatus"] = "current";
     $options["return"] = "dropdown_options";

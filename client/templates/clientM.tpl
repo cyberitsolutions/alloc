@@ -49,6 +49,21 @@
       {show_projects()}
     </table>
 
+
+    {$table_box}
+      <tr>
+        <th>Invoices</th>
+        <th class="right">{$invoice_links}</th>
+      </tr>
+       <tr>
+        <td colspan="2">
+          {show_invoices()}
+        </td>
+      </tr>
+    </table>
+
+
+
 {/}
 
 {show_footer()}

@@ -590,7 +590,7 @@ if (!$TPL["timeSheet_projectName"]) {
 
 if (is_object($timeSheet) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced" && !$timeSheet->get_invoice_link()) {
   $TPL["attach_to_invoice_button"] = "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
-  $TPL["attach_to_invoice_button"].= "<input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Items</label>";
+  #$TPL["attach_to_invoice_button"].= "<input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Items</label>";
 }
 
 // msg passed in url and print it out pretty..
