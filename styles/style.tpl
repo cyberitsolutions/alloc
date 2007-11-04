@@ -146,46 +146,46 @@ table.box th a:hover {
 }
 
 /* Calendar */
-table.calendar { 
+table.alloc_calendar { 
   width:100%; 
   border-right:1px solid (PANE_FRAME_COLOR); 
   border-bottom:1px solid (PANE_FRAME_COLOR);
 } 
-table.calendar td { 
+table.alloc_calendar td { 
   background-color:(TABLE_BOX_BACKGROUND_COLOR); 
   border-left:1px solid (PANE_FRAME_COLOR);  
   border-top:1px solid (PANE_FRAME_COLOR); 
   width:10%; vertical-align:top;
   font-size:smaller;
 }
-table.calendar td.today { 
+table.alloc_calendar td.today { 
   background-color:#fffdf2; 
   border-top:2px solid (PANE_FRAME_COLOR);  
   border-left:2px solid (PANE_FRAME_COLOR);  
   border-right:1px solid (PANE_FRAME_COLOR);  
   border-bottom:1px solid (PANE_FRAME_COLOR); 
 }
-table.calendar td.today h1 {
+table.alloc_calendar td.today h1 {
   font-weight:bold;
 }
-table.calendar td.even { 
+table.alloc_calendar td.even { 
   background-color:(TR_ODD_BACKGROUND_COLOR); 
 }
-table.calendar td.absent {
+table.alloc_calendar td.absent {
   background-color:#cccccc;
   color:#999999;
 }
-table.calendar td.absent h1{
+table.alloc_calendar td.absent h1{
   color:#999999;
 }
-table.calendar h1 {
+table.alloc_calendar h1 {
   text-align:right;
   font-size:(DEFAULT_FONT_SIZE)px;
   margin:0px;
   padding:3px;
   font-weight:normal;
 }
-table.calendar img {
+table.alloc_calendar img {
   float:left;
   margin:0px;
 }
@@ -262,7 +262,7 @@ td.tasks {
   background-color: (PANE_BG_COLOR); 
   padding:4px; 
 }
-table.tasks th, table.calendar th { 
+table.tasks th, table.alloc_calendar th { 
   border-bottom:0px; 
   font-weight:bold; 
   white-space:nowrap; 

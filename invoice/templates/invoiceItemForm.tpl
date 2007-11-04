@@ -47,7 +47,7 @@ function refreshInvoiceItemForm(radiobutton) \{
         <td>Memo</td>
       </tr>
       <tr>
-        <td class="nobr"><input type="text" size="11" name="iiDate" value="{$invoiceItem_iiDate}"><input type="button" value="Today" onClick="iiDate.value='{$today}'"></td>
+        <td class="nobr">{get_calendar("iiDate",$TPL["invoiceItem_iiDate"])}</td>
         <td><input type="text" size="4" name="iiQuantity" value="{$invoiceItem_iiQuantity}"></td>
         <td><input type="text" size="7" name="iiUnitPrice" value="{$invoiceItem_iiUnitPrice}"></td>
         <td><input type="text" size="10" name="iiAmount" value="{$invoiceItem_iiAmount}"></td>

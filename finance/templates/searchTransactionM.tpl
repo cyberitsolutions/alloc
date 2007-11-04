@@ -25,11 +25,9 @@
           <td><select name="tfID" value={$tfID}>{$tfOptions}</select></td>
           <td><select name="status" value={$status}>{$statusOptions}</select></td>
           <td>&nbsp;&nbsp;  
-            <input type="text" size="11" name="dateOne" value="{$dateOne}">
-            <input type="button" onClick="dateOne.value='{$today}'" value="Today">
+            {get_calendar("dateOne",$TPL["dateOne"])}
             &nbsp; to &nbsp;  
-            <input type="text" size="11" name="dateTwo" value="{$dateTwo}">
-            <input type="button" onClick="dateTwo.value='{$today}'" value="Today">
+            {get_calendar("dateTwo",$TPL["dateTwo"])}
           </td>
           <td><input type="text" size="5" name="transactionID" value="{$transactionID}"></td>
           <td><input type="text" size="5" name="expenseFormID" value="{$expenseFormID}"></td>

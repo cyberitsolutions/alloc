@@ -18,11 +18,9 @@
         </tr>
         <tr>
           <td>&nbsp; From &nbsp;&nbsp;&nbsp;
-            <input type="text" size="11" name="dateOne" value="{$dateOne}">
-            <input type="button" onClick="dateOne.value='{$today}'" value="Today">
+            {get_calendar("dateOne",$TPL["dateOne"])}
             &nbsp;&nbsp;&nbsp; to &nbsp;&nbsp;&nbsp;
-            <input type="text" size="11" name="dateTwo" value="{$dateTwo}">
-            <input type="button" onClick="dateTwo.value='{$today}'" value="Today">
+            {get_calendar("dateTwo",$TPL["dateTwo"])}
           </td>
           <td><input type="text" size="11" name="invoiceNum" value="{$invoiceNum}"></td>
           <td><select name="invoiceStatusPayment"><option value="">All</option>{$statusPaymentOptions}</select></td>

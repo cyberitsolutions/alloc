@@ -8,6 +8,10 @@
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print" />
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}main.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}help.js"></script>
+    <style type="text/css">@import url({$url_alloc_stylesheets}calendar.css);</style>
+    <script type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
+    <script type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>
+    <script type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>
   </head>
   <body>
   <div id="helper"></div>

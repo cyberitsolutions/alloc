@@ -116,8 +116,8 @@ function updateStuffWithAjax() \{
           <td><nobr>Target Start/Complete</nobr></td>
           <td>
             <nobr>
-              <input type="text" size="11" name="dateTargetStart" value="{$task_dateTargetStart}"><input type="button" value="Today" onClick="dateTargetStart.value='{$today}'">
-              <input type="text" size="11" name="dateTargetCompletion" value="{$task_dateTargetCompletion}"><input type="button" value="Today" onClick="dateTargetCompletion.value='{$today}'">
+              {get_calendar("dateTargetStart",$TPL["task_dateTargetStart"])}
+              {get_calendar("dateTargetCompletion",$TPL["task_dateTargetCompletion"])}
             </nobr>
           </td>
         </tr>
@@ -125,8 +125,8 @@ function updateStuffWithAjax() \{
           <td><nobr>Actual Start/Complete</nobr></td>
           <td>
             <nobr>
-              <input type="text" size="11" name="dateActualStart" value="{$task_dateActualStart}"><input type="button" value="Today" onClick="dateActualStart.value='{$today}'">
-              <input type="text" size="11" name="dateActualCompletion" value="{$task_dateActualCompletion}"><input type="button" value="Today" onClick="dateActualCompletion.value='{$today}'">
+              {get_calendar("dateActualStart",$TPL["task_dateActualStart"])}
+              {get_calendar("dateActualCompletion",$TPL["task_dateActualCompletion"])}
             </nobr>
           </td>
         </tr>

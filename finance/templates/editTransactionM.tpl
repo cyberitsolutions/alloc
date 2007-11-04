@@ -33,7 +33,7 @@
     <td class="hint">Select the Project which this transaction is to be recorded against</td>
   </tr>
     <td>Transaction Date</td>
-    <td><input type="text" name="transactionDate" size="10" value={$transactionDate}><input type="button" onClick="transactionDate.value='{$today}'" value="Today"></td>
+    <td>{get_calendar("transactionDate",$TPL["transactionDate"])}</td>
     <td class="hint">This is the date of the transaction itself (e.g. the receipt date) in the format YYYY-MM-DD</td>
   </tr>
   <tr>

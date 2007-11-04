@@ -66,8 +66,7 @@
           <td><b>Price</b></td>
 		    </tr>
         <tr>
-          <td><nobr><input type="text" size="11" name="transactionDate" value="{$transactionDate}">
-                    <input type="button" onClick="transactionDate.value='{$today}'" value="Today"></nobr>
+          <td><nobr>{get_calendar("transactionDate",$TPL["transactionDate"])}</nobr>
           <td><input type="text" size="25" name="product" value="{$product}"></td>
           <td><select name="tfID" value="{$tfID}">{$tfOptions}</select></td>
           <td><input type="text" size="9" name="quantity" value="{$quantity}"></td>

@@ -16,15 +16,13 @@
         <tr>
           <td>Date From</td>
           <td>
-            <input type="text" size="10" name="absence_dateFrom" value="{$absence_dateFrom}">
-            <input type="button" value="Today" onClick="absence_dateFrom.value='{$today}'">
+            {get_calendar("absence_dateFrom",$TPL["absence_dateFrom"])}
           </td>
 	      </tr>
         <tr>
           <td>Date To</td>
           <td>
-            <input type="text" size="10" name="absence_dateTo" value="{$absence_dateTo}">
-            <input type="button" value="Today" onClick="absence_dateTo.value='{$today}'">
+            {get_calendar("absence_dateTo",$TPL["absence_dateTo"])}
           </td>
         </tr>
         <tr>

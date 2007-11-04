@@ -92,10 +92,8 @@ function updateClientContact(number) \{
     <td align="right"></td>
     <td align="right">Target Start/Completion</td>
     <td colspan="2">
-      <input type="text" size="11" name="dateTargetStart" value="{$project_dateTargetStart}">
-      <input type="button" value="Today" onClick="dateTargetStart.value='{$today}'">
-      <input type="text" size="11" name="dateTargetCompletion" value="{$project_dateTargetCompletion}">
-      <input type="button" value="Today" onClick="dateTargetCompletion.value='{$today}'">
+      {get_calendar("dateTargetStart",$TPL["project_dateTargetStart"])}
+      {get_calendar("dateTargetCompletion",$TPL["project_dateTargetCompletion"])}
     </td>
   </tr>
 
@@ -103,10 +101,8 @@ function updateClientContact(number) \{
     <td align="right"></td>
     <td align="right">Actual Start/Completion</td>
     <td colspan="2">
-      <input type="text" size="11" name="dateActualStart" value="{$project_dateActualStart}">
-      <input type="button" value="Today" onClick="dateActualStart.value='{$today}'">
-      <input type="text" size="11" name="dateActualCompletion" value="{$project_dateActualCompletion}">
-      <input type="button" value="Today" onClick="dateActualCompletion.value='{$today}'">
+      {get_calendar("dateActualStart",$TPL["project_dateActualStart"])}
+      {get_calendar("dateActualCompletion",$TPL["project_dateActualCompletion"])}
     </td>
   </tr>
 

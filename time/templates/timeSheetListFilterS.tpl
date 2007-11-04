@@ -18,8 +18,7 @@
               {$show_userID_options}
             </select>
           </td>
-          <td><input type="text" size="10" name="dateFrom" value="{$dateFrom}"></td>
-          <td><input type="button" value="Today" onClick="dateFrom.value='{$today}'"></td>
+          <td>{get_calendar("dateFrom",$TPL["dateFrom"])}</td>
           <td>
             <select name="status">
               <option value=""> </option>

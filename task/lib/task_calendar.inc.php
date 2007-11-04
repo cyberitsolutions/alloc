@@ -338,7 +338,7 @@ class calendar {
   }
 
   function draw_canvas() {
-    echo "<table border='0' cellspacing='0' class='calendar' cellpadding='3'>";
+    echo "<table border='0' cellspacing='0' class='alloc_calendar' cellpadding='3'>";
   }
   function draw_canvas_end() {
     echo "</table>";

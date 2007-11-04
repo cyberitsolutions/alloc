@@ -37,7 +37,7 @@ function updateTimeSheetTaskList(number) \{
    
         <tr>
           <td>
-            <input type="text" size="11" name="timeSheetItem_dateTimeSheetItem" value="{$timeSheetItem_dateTimeSheetItem}"><input type="button" value="Today" onClick="timeSheetItem_dateTimeSheetItem.value='{$today}'">
+            {get_calendar("timeSheetItem_dateTimeSheetItem",$TPL["timeSheetItem_dateTimeSheetItem"])}
           </td>
           <td>
             <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$timeSheetItem_timeSheetItemDuration}">
