@@ -40,7 +40,8 @@ class transactionRepeat extends db_entity {
                                , "transactionRepeatModifiedUser"=>new db_field("transactionRepeatModifiedUser")
                                , "reimbursementRequired"=>new db_field("reimbursementRequired",array("empty_to_null"=>false))
                                , "transactionRepeatModifiedTime"=>new db_field("transactionRepeatModifiedTime")
-                               , "dateEntered"=>new db_field("dateEntered")
+                               , "transactionRepeatCreatedTime"=>new db_field("transactionRepeatCreatedTime")
+                               , "transactionRepeatCreatedUser"=>new db_field("transactionRepeatCreatedUser")
                                , "transactionStartDate"=>new db_field("transactionStartDate")
                                , "transactionFinishDate"=>new db_field("transactionFinishDate")
 
@@ -61,12 +62,6 @@ class transactionRepeat extends db_entity {
     $tf->set_id($this->get_value("tfID"));
     $tf->select();
     return $tf->is_owner();
-  }
-
-
-  function insert() {
-    $this->set_value("dateEntered", date("Y-m-d"));
-    db_entity::insert();
   }
 
 }

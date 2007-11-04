@@ -460,7 +460,6 @@ class timeSheet extends db_entity
       $transaction->set_value("amount", sprintf("%0.2f", $amount));
       $transaction->set_value("status", $status);
       $transaction->set_value("tfID", $tfID);
-      $transaction->set_value("dateEntered", date("Y-m-d"));
       $transaction->set_value("transactionDate", date("Y-m-d"));
       $transaction->set_value("transactionType", $transactionType);
       $transaction->set_value("timeSheetID", $this->get_id());

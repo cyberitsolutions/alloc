@@ -57,6 +57,9 @@
     <td colspan="4"><b>Created By:</b> {$user}</td>
   </tr>
   <tr>
+    <td colspan="4"><b>Date Created:</b> {$transactionRepeatCreatedTime}</td>
+  </tr>
+  <tr>
     <td colspan="4"><b>Status:</b> {$status}</td>
   </tr>
   <tr>

@@ -86,7 +86,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 
 $transaction->set_tpl_values();
 
-$TPL["transactionModifiedTime"] = get_display_date($transaction->get_value("transactionModifiedTime"));
+$TPL["transactionModifiedTime"] = $transaction->get_value("transactionModifiedTime");
 $TPL["product"] = htmlentities($transaction->get_value("product"));
 $TPL["statusOptions"] = get_options_from_array(array("pending", "rejected", "approved"), $transaction->get_value("status"), false);
 $TPL["transactionTypeOptions"] = get_options_from_array(array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance"), $transaction->get_value("transactionType"), false);
