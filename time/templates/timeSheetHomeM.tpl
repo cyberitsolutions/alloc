@@ -15,5 +15,5 @@
 <tr>
   <td colspan="3"><b>Current Time Sheets</b></td>
 </tr>
-  {show_time_sheets("timeSheetHomeR.tpl")}
+  {$TPL["this"]->show_time_sheets("timeSheetHomeR.tpl")}
 </table>

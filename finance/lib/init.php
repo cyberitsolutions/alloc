@@ -25,7 +25,7 @@ class finance_module extends module {
   var $db_entities = array("tf", "transaction", "expenseForm", "tfPerson", "transactionRepeat");
 
   function register_home_items() {
-    include(ALLOC_MOD_DIR."home/lib/tfList_home_item.inc.php");
+    include(ALLOC_MOD_DIR."finance/lib/tfList_home_item.inc.php");
     register_home_item(new tfList_home_item);
   } 
 }
