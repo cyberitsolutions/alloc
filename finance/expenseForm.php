@@ -382,8 +382,8 @@ if (is_object($expenseForm) && $expenseForm->get_id()) {
 
 if (is_object($expenseForm) && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION) 
 && !$expenseForm->get_invoice_link() && $expenseForm->get_value("expenseFormFinalised") && $expenseForm->get_value("seekClientReimbursement")) {
-  $TPL["attach_to_invoice_button"] = "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add Expense Form to Invoice\"> ";
-  $TPL["attach_to_invoice_button"].= "<input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Invoice Items</label>";
+  $TPL["attach_to_invoice_button"] = "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
+  #$TPL["attach_to_invoice_button"].= "<input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Invoice Items</label>";
   $TPL["invoice_label"] = "Invoice:";
 }
 

@@ -517,6 +517,7 @@ class invoice extends db_entity {
   }
 
   function get_invoice_list_tr($invoice,$_FORM) {
+    global $TPL;
 
     static $odd_even;
     $odd_even = $odd_even == "even" ? "odd" : "even";
@@ -525,7 +526,7 @@ class invoice extends db_entity {
 
     $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["showInvoiceNumber"]       and $summary[] = "  <td class=\"col\">".$invoice["invoiceLink"]."&nbsp;</td>";
-    $_FORM["showInvoiceClient"]       and $summary[] = "  <td class=\"col\">".$invoice["clientName"]."&nbsp;</td>";
+    $_FORM["showInvoiceClient"]       and $summary[] = "  <td class=\"col\"><a href=\"".$TPL["url_alloc_client"]."clientID=".$invoice["clientID"]."\">".$invoice["clientName"]."</a></td>";
     $_FORM["showInvoiceName"]         and $summary[] = "  <td class=\"col\">".$invoice["invoiceName"]."&nbsp;</td>";
     $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"col nobr\">".$invoice["invoiceDateFrom"]."&nbsp;</td>";
     $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"col nobr\">".$invoice["invoiceDateTo"]."&nbsp;</td>";
