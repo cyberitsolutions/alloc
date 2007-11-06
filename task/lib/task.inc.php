@@ -1240,6 +1240,8 @@ function get_task_statii_array() {
       }
     }
 
+    $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
+
 
 
                                   $summary[] = "<tr class=\"".$odd_even."\">";
@@ -1257,7 +1259,7 @@ function get_task_statii_array() {
     $_FORM["showDate2"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateTargetCompletion"]."&nbsp;</td>";
     $_FORM["showDate3"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateActualStart"]."&nbsp;</td>";
     $_FORM["showDate4"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateActualCompletion"]."&nbsp;</td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".seconds_to_display_format($task["timeEstimate"]*60*60)."&nbsp;</td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".seconds_to_display_format($timeEstimate)."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".$task["percentComplete"]."&nbsp;</td>";
                                   $summary[] = "</tr>";
