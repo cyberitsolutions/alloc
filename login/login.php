@@ -66,9 +66,6 @@ if ($sess->Started()) {
                     ,db_esc($_POST["username"]), db_esc($_POST["email"])));
 
   if ($db->next_record()) {
-    $current_user = new person;
-    $current_user->read_db_record($db);
-
     // generate new random password
     $password = "";
     $pwSource = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!?";
@@ -77,8 +74,10 @@ if ($sess->Started()) {
       $password.= substr($pwSource, rand(0, strlen($pwSource)), 1);
     }
 
-    $current_user->set_value('password', encrypt_password($password));
-    $current_user->save();
+    $q = sprintf("UPDATE person SET password = '%s' WHERE username = '%s' AND emailAddress = '%s'
+                 ",encrypt_password($password),db_esc($_POST["username"]), db_esc($_POST["email"]));
+    $db2 = new db_alloc();
+    $db2->query($q);
 
     $e = new alloc_email();
     #echo "Your new temporary password: ".$password;
