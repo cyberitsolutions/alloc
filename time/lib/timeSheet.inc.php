@@ -236,6 +236,7 @@ class timeSheet extends db_entity
 
       $taxName = config::get_config_item("taxName");
       $taxPercent = config::get_config_item("taxPercent");
+      $taxTfID = config::get_config_item("taxTfID") or $taxTfID = $cost_centre;
       $taxPercentDivisor = ($taxPercent/100) + 1;
       $payrollTaxPercent = config::get_config_item("payrollTaxPercent");
       $companyPercent = config::get_config_item("companyPercent");
@@ -251,10 +252,13 @@ class timeSheet extends db_entity
 
         // 1. Debit Cost Centre
         $product = "Debit: Cost Centre for ".$projectName." for timesheet id: ".$this->get_id();
-        $rtn[$product] = $this->createTransaction($product, -$this->pay_info["total_dollars_minus_gst"], $cost_centre, "timesheet");
+        $rtn[$product] = $this->createTransaction($product, -$this->pay_info["total_dollars"], $cost_centre, "timesheet");
 
+        // 2. Credit TAX/GST Cost Centre
+        $product = "Credit: Cost Centre for ".$taxName." for timesheet id: ".$this->get_id();
+        $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_dollars"]-$this->pay_info["total_dollars_minus_gst"]), $taxTfID, "timesheet");
 
-        // 2. Credit Cyber Percentage and do agency percentage if necessary
+        // 3. Credit Cyber Percentage and do agency percentage if necessary
         $agency_percentage = 0;
         if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
           $agency_percentage = $payrollTaxPercent;
@@ -266,12 +270,12 @@ class timeSheet extends db_entity
         $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
 
 
-        // 3. Credit Employee TF
+        // 4. Credit Employee TF
         $product = "Credit: Timesheet id: ".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
         $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * .665, $recipient_tfID, "timesheet", $insur_trans_status);
 
 
-        // 4. Payment Insurance
+        // 5. Payment Insurance
         if ($this->get_value("payment_insurance") && $paymentInsurancePercent) {
           $product = "Debit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * -$paymentInsurancePercentMult, $recipient_tfID, "insurance", $insur_trans_status);
@@ -280,7 +284,7 @@ class timeSheet extends db_entity
         }
 
         
-        // 5. Credit Project Commissions
+        // 6. Credit Project Commissions
         $db->query("SELECT * FROM projectCommissionPerson 
                      WHERE projectID = ".$this->get_value("projectID")." 
                     AND commissionPercent != 0");
@@ -294,7 +298,7 @@ class timeSheet extends db_entity
                                                   , "commission");
         }
     
-        // 6. Employee gets commission if none were paid previously or the remainder of 5% commission if there is any
+        // 7. Employee gets commission if none were paid previously or the remainder of 5% commission if there is any
         if (!$percent_so_far || $percent_so_far < 5) {
           $percent = 5 - $percent_so_far;
           $product = "Credit: Commission ".sprintf("%0.3f",$percent)."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"]);
@@ -365,16 +369,19 @@ class timeSheet extends db_entity
             djk get $50
             commissions 
             payment insurance
-            whatever is left of the $110 goes to the timesheet manager
+            whatever is left of the $110 goes to the 0% commissions
         */
         
 
         // 1. Debit Cost Centre
         $product = "Debit: Cost Centre for ".$projectName." for timesheet id: ".$this->get_id();
-        $rtn[$product] = $this->createTransaction($product, -$this->pay_info["total_customerBilledDollars_minus_gst"], $cost_centre, "timesheet");
+        $rtn[$product] = $this->createTransaction($product, -$this->pay_info["total_customerBilledDollars"], $cost_centre, "timesheet");
 
+        // 2. Credit TAX/GST Cost Centre
+        $product = "Credit: Cost Centre for ".$taxName." for timesheet id: ".$this->get_id();
+        $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "timesheet");
 
-        // 2. Credit Cyber Percentage and do agency percentage if necessary
+        // 3. Credit Cyber Percentage and do agency percentage if necessary
         $agency_percentage = 0;
         if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
           $agency_percentage = $payrollTaxPercent;
@@ -386,12 +393,12 @@ class timeSheet extends db_entity
         $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
 
 
-        // 3. Credit Employee TF
+        // 4. Credit Employee TF
         $product = "Credit: Timesheet id: ".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
         $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $insur_trans_status);
 
 
-        // 4. Payment Insurance
+        // 5. Payment Insurance
         if ($this->get_value("payment_insurance") && $paymentInsurancePercent) {
           $product = "Debit: Payment Insurance ".$paymentInsurancePercent."% for timesheet id: ".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * -$paymentInsurancePercentMult, $recipient_tfID, "insurance", $insur_trans_status);
@@ -400,7 +407,7 @@ class timeSheet extends db_entity
         }
 
         
-        // 5. Credit Project Commissions
+        // 6. Credit Project Commissions
         $db->query("SELECT * FROM projectCommissionPerson where projectID = ".$this->get_value("projectID")." ORDER BY commissionPercent DESC");
         while ($db->next_record()) {
 
