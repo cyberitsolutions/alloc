@@ -161,7 +161,10 @@ function seconds_to_display_format($seconds) {
 
   $day_in_seconds = $day * 60 * 60;
   $hours = $seconds / 60 / 60;
-  return sprintf("%0.2f hrs",$hours);
+  if ($seconds > 0 || $seconds === 0.00) {
+    return sprintf("%0.2f hrs",$hours);
+  }
+  return;
   
   if ($seconds < $day_in_seconds) {
     return sprintf("%0.2f hrs",$hours);
