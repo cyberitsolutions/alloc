@@ -348,9 +348,7 @@ function move_attachment($entity, $id=false) {
     }
 
     if (!preg_match("/\.\./",$file) && !preg_match("/\//",$file)
-    &&  !preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)
-    && strlen($newname) <= 40) {
-
+    &&  !preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)) {
 
       if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $dir.DIRECTORY_SEPARATOR.$newname)) {
         die("could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
@@ -358,8 +356,7 @@ function move_attachment($entity, $id=false) {
         chmod($dir.DIRECTORY_SEPARATOR.$newname, 0777);
       }
     } else {
-      die("error uploading file. Please ensure that the filename only contains regular characters, 
-           and that the length of the filename is shorter than 40 characters.");
+      die("Error uploading file. Please ensure that the filename only contains regular characters.");
     }
   }
 }
