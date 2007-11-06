@@ -255,7 +255,7 @@ class timeSheet extends db_entity
         $rtn[$product] = $this->createTransaction($product, -$this->pay_info["total_dollars"], $cost_centre, "timesheet");
 
         // 2. Credit TAX/GST Cost Centre
-        $product = "Credit: Cost Centre for ".$taxName." for timesheet id: ".$this->get_id();
+        $product = "Credit: Cost Centre for ".$taxName." ".$taxPercent."% for timesheet id: ".$this->get_id();
         $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_dollars"]-$this->pay_info["total_dollars_minus_gst"]), $taxTfID, "timesheet");
 
         // 3. Credit Cyber Percentage and do agency percentage if necessary
@@ -378,7 +378,7 @@ class timeSheet extends db_entity
         $rtn[$product] = $this->createTransaction($product, -$this->pay_info["total_customerBilledDollars"], $cost_centre, "timesheet");
 
         // 2. Credit TAX/GST Cost Centre
-        $product = "Credit: Cost Centre for ".$taxName." for timesheet id: ".$this->get_id();
+        $product = "Credit: Cost Centre for ".$taxName." ".$taxPercent."% for timesheet id: ".$this->get_id();
         $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "timesheet");
 
         // 3. Credit Cyber Percentage and do agency percentage if necessary
