@@ -87,11 +87,16 @@ if ($_POST["save"]) {
   }
 }
 
+$config = new config;
+get_cached_table("config",true); // flush cache
 
 $db->query("SELECT * FROM tf ORDER BY tfName");
-$TPL["tfOptions"] = get_option("", "0", false)."\n";
-$TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $config->get_config_item("cybersourceTfID"));
-
+$options[""] = "";
+while($row = $db->row()) {
+  $options[$row["tfID"]] = $row["tfName"];
+}
+$TPL["tfOptions"] = get_select_options($options, $config->get_config_item("cybersourceTfID"));
+$TPL["taxTfOptions"] = get_select_options($options, $config->get_config_item("taxTfID"));
 
 $db = new db_alloc;
 $display = array("", "username", ", ", "emailAddress");

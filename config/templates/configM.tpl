@@ -121,6 +121,11 @@
     <td width="1%">{get_help("config_taxPercent")}</td>
   </tr>
   <tr>
+    <td width="20%"><nobr>Tax Tagged Fund</nobr></td>
+    <td><select name="taxTfID">{$taxTfOptions}</select></td>
+    <td width="1%">{get_help("config_taxTfID")}</td>
+  </tr>
+  <tr>
     <td>Payroll Tax Percent</td>
     <td><input type="text" size="70" value="{$payrollTaxPercent}" name="payrollTaxPercent"></td> 
     <td width="1%">{get_help("config_payrollTaxPercent")}</td>
