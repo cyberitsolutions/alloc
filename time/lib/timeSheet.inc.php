@@ -230,8 +230,6 @@ class timeSheet extends db_entity
       return "ERROR: There is no recipient TF to credit for this timesheet.";
     } else if (!$cost_centre || $cost_centre == 0) {
       return "ERROR: There is no cost centre associated with the project.";
-    } else if ($this->pay_info["total_dollars"] < 0) {
-      return "ERROR: The dollar amount for this timesheet is ".$this->pay_info["total_dollars"];
     } else {
 
       $taxName = config::get_config_item("taxName");
