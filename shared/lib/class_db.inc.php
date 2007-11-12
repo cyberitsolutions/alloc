@@ -48,12 +48,14 @@ class db {
   }
 
   function connect() {
-    $this->link_id = mysql_connect($this->hostname,$this->username,$this->password);
-    if ($this->link_id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
-      $this->database && $this->select_db($this->database);
-    } else {
-      $this->error("Unable to connect to database: ".mysql_error()."<br>");
-      unset($this->link_id);
+    if (!$this->link_id) {
+      $this->link_id = mysql_connect($this->hostname,$this->username,$this->password);
+      if ($this->link_id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
+        $this->database && $this->select_db($this->database);
+      } else {
+        $this->error("Unable to connect to database: ".mysql_error()."<br>");
+        unset($this->link_id);
+      }
     }
     return $this->link_id;
   } 
