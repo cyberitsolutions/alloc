@@ -37,24 +37,28 @@ function show_expense_form_list($template_name) {
 
   $db->query("SELECT expenseForm.*, SUM(transaction.amount) as formTotal
                 FROM expenseForm, transaction
-                WHERE expenseForm.expenseFormID = transaction.expenseFormID
-                AND transaction.status = 'pending'
-                GROUP BY expenseForm.expenseFormID
-                ORDER BY expenseFormID");
+               WHERE expenseForm.expenseFormID = transaction.expenseFormID
+                 AND transaction.status = 'pending'
+            GROUP BY expenseForm.expenseFormID
+            ORDER BY expenseFormID");
 
+  $rr_options = expenseForm::get_reimbursementRequired_array();
 
   while ($db->next_record()) {
+    $expenseForm = new expenseForm();
     if ($expenseForm->read_db_record($db, false)) {
       $i++;
       $TPL["row_class"] = "odd";
       $i % 2 == 0 and $TPL["row_class"] = "even";
-
       $expenseForm->set_tpl_values();
       $TPL["formTotal"] = sprintf("%0.2f", -$db->f("formTotal"));
-      $dbTwo->query("select username from person where personID=".$expenseForm->get_value("expenseFormModifiedUser"));
-      $dbTwo->next_record();
-      $TPL["expenseFormModifiedUser"] = $dbTwo->f("username");
+      $TPL["expenseFormModifiedUser"] = person::get_fullname($expenseForm->get_value("expenseFormModifiedUser"));
       $TPL["expenseFormModifiedTime"] = get_mysql_date_stamp($expenseForm->get_value("expenseFormModifiedTime"));
+      $TPL["expenseFormCreatedUser"] = person::get_fullname($expenseForm->get_value("expenseFormCreatedUser"));
+      $TPL["expenseFormCreatedTime"] = get_mysql_date_stamp($expenseForm->get_value("expenseFormCreatedTime"));
+      unset($extra);
+      $expenseForm->get_value("paymentMethod") and $extra = " (".$expenseForm->get_value("paymentMethod").")";
+      $TPL["rr_label"] = $rr_options[$expenseForm->get_value("reimbursementRequired")].$extra;
       include_template($template_name);
     }
   }
@@ -80,6 +84,8 @@ function show_pending_transaction_list($template_name) {
     $transactionRepeat->set_tpl_values();
     $TPL["formTotal"] = sprintf("%0.2f", -$db->f("amount"));
     $TPL["transactionModifiedTime"] = get_mysql_date_stamp($transaction->get_value("transactionModifiedTime"));
+    $TPL["transactionCreatedTime"] = get_mysql_date_stamp($transaction->get_value("transactionCreatedTime"));
+    $TPL["transactionCreatedUser"] = person::get_fullname($transaction->get_value("transactionCreatedUser"));
     include_template($template_name);
   }
 }

@@ -1,15 +1,7 @@
 <tr class="{$row_class}">
-  <td align="center">
-     <nobr>
-     <a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&edit=true">{$expenseFormID}</a>
-     </nobr>
-  </td>
-  <td align="center">&nbsp;{$expenseFormModifiedTime}</td>
-  <td align="center">&nbsp;{$expenseFormModifiedUser}</td>
-  <td align="center">&nbsp;{$paymentMethod}</td>
+  <td><a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&edit=true">{$expenseFormID}</a></td>
+  <td>{$expenseFormCreatedTime}</td>
+  <td>{$expenseFormCreatedUser}</td>
+  <td>{$rr_label}</td>
   <td align="right">&nbsp;${$formTotal}</td>
-
-
 </tr>
-
-

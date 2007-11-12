@@ -44,7 +44,7 @@ $finance_options = array(array("url"=>"tf", "params"=>"", "text"=>"New Tagged Fu
                         ,array("url"=>"transaction", "params"=>"", "text"=>"New Transaction", "entity"=>"transaction", "action"=>PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION)
                         ,array("url"=>"searchTransaction", "params"=>"", "text"=>"Search Transactions", "entity"=>"transaction", "action"=>PERM_READ, "br"=>true)
                         ,array("url"=>"expenseForm", "text"=>"New Expense Form", "entity"=>"expenseForm", "action"=>PERM_CREATE)
-                        ,array("url"=>"expenseFormList", "params"=>"&view=true", "text"=>"View Pending Expenses", "entity"=>"expenseForm", "action"=>PERM_READ, "br"=>true)
+                        ,array("url"=>"expenseFormList", "params"=>"", "text"=>"View Pending Expenses", "entity"=>"expenseForm", "action"=>PERM_READ, "br"=>true)
                         ,array("url"=>"reconciliationReport", "params"=>"", "text"=>"Reconciliation Report", "entity"=>"transaction", "action"=>PERM_FINANCE_RECONCILIATION_REPORT)
                         ,array("url"=>"wagesUpload", "params"=>"", "text"=>"Upload Wages File", "entity"=>"transaction", "action"=>PERM_FINANCE_WRITE_WAGE_TRANSACTION, "br"=>true)
                         ,array("url"=>"transactionRepeat", "params"=>"", "text"=>"New Repeating Expense", "entity"=>"transaction", "action"=>PERM_READ)
