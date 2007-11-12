@@ -3,18 +3,18 @@
 /*
  *
  * Copyright 2006, Alex Lance, Clancy Malcolm, Cybersource Pty. Ltd.
- * 
+ *
  * This file is part of allocPSA <info@cyber.com.au>.
- * 
+ *
  * allocPSA is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
- * 
+ *
  * allocPSA is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * allocPSA; if not, write to the Free Software Foundation, Inc., 51 Franklin
  * St, Fifth Floor, Boston, MA 02110-1301 USA
@@ -34,7 +34,8 @@ class expenseForm extends db_entity {
                                , "seekClientReimbursement"=>new db_field("seekClientReimbursement", array("empty_to_null"=>false))
                                , "transactionRepeatID"=>new db_field("transactionRepeatID", array("empty_to_null"=>false))
                                , "clientID"=>new db_field("clientID")
-                               , "enteredBy"=>new db_field("enteredBy")
+                               , "expenseFormCreatedUser"=>new db_field("expenseFormCreatedUser")
+                               , "expenseFormCreatedTime"=>new db_field("expenseFormCreatedTime")
                                , "expenseFormFinalised"=>new db_field("expenseFormFinalised", array("empty_to_null"=>false))
       );
   }
@@ -46,7 +47,7 @@ class expenseForm extends db_entity {
       $person = $current_user;
     }
     // Return true if this user created the expense form
-    if ($person->get_id() == $this->get_value("enteredBy", DST_VARIABLE)) {
+    if ($person->get_id() == $this->get_value("expenseFormCreatedUser", DST_VARIABLE)) {
       return true;
     }
     // Return true if any of the transactions on the expense form are accessible by the current user
@@ -68,6 +69,13 @@ class expenseForm extends db_entity {
     return false;
   }
 
+  function get_reimbursementRequired_array() {
+    return array("0"=>"Unpaid"
+                ,"1"=>"Paid by me"
+                ,"2"=>"Paid by company"
+                );
+  }
+
   // This sets the status of the expense form.
   // Actually, the expense form doesn't have its own status - this sets the status of the transactions on the expense form
   function set_status($status) {
@@ -78,12 +86,6 @@ class expenseForm extends db_entity {
       $transaction->set_value("status", $status);
       $transaction->save();
     }
-  }
-
-  function insert() {
-    global $current_user;
-    $this->set_value("enteredBy", $current_user->get_id());
-    db_entity::insert();
   }
 
   function delete_transactions($transactionID="") {
@@ -101,9 +103,11 @@ class expenseForm extends db_entity {
   function get_invoice_link() {
     global $TPL;
     $db = new db_alloc();
-    $db->query("SELECT invoice.* FROM invoiceItem LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID WHERE expenseFormID = %s",$this->get_id());
-    if ($db->next_record()) { 
-      return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$db->f("invoiceID")."\">".$db->f("invoiceNum")."</a>";
+    if ($this->get_id()) {
+      $db->query("SELECT invoice.* FROM invoiceItem LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID WHERE expenseFormID = %s",$this->get_id());
+      if ($db->next_record()) {
+        return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$db->f("invoiceID")."\">".$db->f("invoiceNum")."</a>";
+      }
     }
   }
 
@@ -158,7 +162,7 @@ class expenseForm extends db_entity {
   }
 
 
-  
+
 }
 
 

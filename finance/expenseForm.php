@@ -210,9 +210,9 @@ if (is_object($expenseForm)) {
   $TPL["expenseFormID"] = $expenseForm->get_id();
 }
 
-if (is_object($expenseForm) && $expenseForm->get_value("expenseFormModifiedUser")) {
+if (is_object($expenseForm) && $expenseForm->get_value("expenseFormCreatedUser")) {
   $p = new person;
-  $p->set_id($expenseForm->get_value("expenseFormModifiedUser"));
+  $p->set_id($expenseForm->get_value("expenseFormCreatedUser"));
   $p->select();
   $TPL["user"] = $p->get_username(1);
 }
@@ -281,7 +281,7 @@ if ($_POST["cancel"]) {
 }
 
 
-if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") && $current_user->get_id() == $expenseForm->get_value("enteredBy")) {
+if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") && $current_user->get_id() == $expenseForm->get_value("expenseFormCreatedUser")) {
   $TPL["message_help"][] = "Step 4/4: Print out the Expense Form using the Printer Friendly Version link, attach receipts and hand in to office admin.";
 
 } else if (check_optional_has_line_items() && !$expenseForm->get_value("expenseFormFinalised")) {  
@@ -306,7 +306,7 @@ function get_reimbursementRequired_array() {
 }
 
 
-$rr_options = get_reimbursementRequired_array();
+$rr_options = $expenseForm->get_reimbursementRequired_array();
 $rr_checked[sprintf("%d",$expenseForm->get_value("reimbursementRequired"))] = " checked";
 $expenseForm->get_value("paymentMethod") and $extra = " (".$expenseForm->get_value("paymentMethod").")";
 $rr_label = $rr_options[$expenseForm->get_value("reimbursementRequired")].$extra;
