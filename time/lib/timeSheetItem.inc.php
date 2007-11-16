@@ -42,8 +42,39 @@ class timeSheetItem extends db_entity {
   }
 
   function save() {
-    $status = parent::save();
+  
+    $timeSheet = new timeSheet;
+    $timeSheet->set_id($this->get_value("timeSheetID"));
+    $timeSheet->select();
+    $timeSheet->load_pay_info();
+    $total = $timeSheet->pay_info["total_customerBilledDollars"] or $total = $timeSheet->pay_info["total_dollars"];
 
+    if ($timeSheet->pay_info["customerBilledDollars"] > 0) {
+      $total+= $this->get_value("timeSheetItemDuration") * $timeSheet->pay_info["customerBilledDollars"];
+    } else {
+      $total+= $this->get_value("timeSheetItemDuration") * $this->get_value("rate");
+    }
+
+    $limit = $timeSheet->get_amount_allocated();
+
+    if ($total > $limit) {
+      return "Adding this Time Sheet Item would exceed the amount allocated for this Time Sheet.";
+      exit;
+    }
+
+    parent::save();
+
+    $db = new db_alloc();
+    if ($_POST["timeSheetItem_taskID"] != 0 && $_POST["timeSheetItem_taskID"]) {
+      $db->query("select taskName,dateActualStart from task where taskID = %d",$_POST["timeSheetItem_taskID"]);
+      $db->next_record();
+      $taskName = $db->f("taskName");
+      if (!$db->f("dateActualStart")) {
+        $q = sprintf("UPDATE task SET dateActualStart = '%s' WHERE taskID = %d",$this->get_value("dateTimeSheetItem"),$_POST["timeSheetItem_taskID"]);
+        $db->query($q);
+      }
+    }
+    $this->set_value("description", $taskName);
 
     $db = new db_alloc();
     $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) as count
@@ -56,8 +87,45 @@ class timeSheetItem extends db_entity {
     $timeSheet->set_value("dateTo", $db->f("maxDate"));
     $status2 = $timeSheet->save();
 
-    return $status && $status2;
+    // ALEX REMEMBER invoiceItem PERMS!!!
+    $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
+    $db->query($q);
+    $row = $db->row();
+    if ($row) {
+      $ii = new invoiceItem;
+      $ii->set_id($row["invoiceItemID"]);
+      $ii->select();
+      $ii->add_timeSheet($row["invoiceID"],$this->get_value("timeSheetID"));  // will update the existing invoice item
+    }
   } 
+
+  function delete() {
+
+    $timeSheetID = $this->get_value("timeSheetID");
+
+    parent::delete();
+
+    $db = new db_alloc();
+    $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) as count
+                        FROM timeSheetItem WHERE timeSheetID=%d ", $this->get_value("timeSheetID")));
+    $db->next_record();
+    $timeSheet = new timeSheet;
+    $timeSheet->set_id($timeSheetID);
+    $timeSheet->select();
+    $timeSheet->set_value("dateFrom", $db->f("minDate"));
+    $timeSheet->set_value("dateTo", $db->f("maxDate"));
+    $status2 = $timeSheet->save();
+
+    $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$timeSheetID);
+    $db->query($q);
+    $row = $db->row();
+    if ($row) {
+      $ii = new invoiceItem;
+      $ii->set_id($row["invoiceItemID"]);
+      $ii->select();
+      $ii->add_timeSheet($row["invoiceID"],$timeSheetID);  // will update the existing invoice item
+    }
+  }
 
   function get_fortnightly_average($personID=false) {
 

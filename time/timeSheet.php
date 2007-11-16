@@ -256,13 +256,18 @@ if (!$current_user->is_employee()) {
 
       // Else default values for creating a new timeSheetItem
       } else {
-        $timeSheetItem = new timeSheetItem;
-        $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
+        #$timeSheetItem = new timeSheetItem;
         $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Add Time Sheet Item\">";
         $TPL["timeSheetItem_personID"] = $current_user->get_id();
         $timeSheet->load_pay_info();
         $TPL["timeSheetItem_rate"] = $timeSheet->pay_info["project_rate"];
         $timeSheetItemDurationUnitID = $timeSheet->pay_info["project_rateUnitID"];
+        global $timeSheetItem;
+        if (is_object($timeSheetItem)) {
+          $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
+          $taskID = $timeSheetItem->get_value("taskID");
+          $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
+        }
       }
 
       $taskID or $taskID = $_GET["taskID"];
@@ -338,7 +343,7 @@ if ($_POST["save"]
     }
   } else {
     $save_error=true;
-    $TPL["message_help"][] = "Step 1/3: Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
+    $TPL["message_help"][] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
     $TPL["message"][] = "Please select a Project and then click the Create Time Sheet button.";
   }
 
@@ -389,34 +394,20 @@ if ($_POST["save"]
     if ($_POST["timeSheetItem_save"]) {
       // SAVE INDIVIDUAL TIME SHEET ITEM
 
-      if ($_POST["timeSheetItem_taskID"]) {
-        $selectedTask = new Task;
-        $selectedTask->set_id($_POST["timeSheetItem_taskID"]);
-	$selectedTask->select();
-
-	if ($selectedTask->get_value("duplicateTaskID")) {
-          $oldName = $selectedTask->get_task_name();
-          $selectedTask->set_id($selectedTask->get_value("duplicateTaskID"));
-          $selectedTask->select();
-	  $message_good = "Task <a href=\"".$TPL["url_alloc_task"]."taskID=".$_POST["timeSheetItem_taskID"]."\">".$_POST["timeSheetItem_taskID"]." ".$oldName."</a> is marked as a duplicate.";
-          $message_good.=  " Time was allocated to task <a href=\"".$TPL["url_alloc_task"]."taskID=".$selectedTask->get_id()."\">".$selectedTask->get_id()." ".$selectedTask->get_task_name()."</a>.";
-	  $timeSheetItem->set_value("taskID", $selectedTask->get_id());
-        }
-
-        $taskName = $selectedTask->get_task_name();
-
-        if (!$selectedTask->get_value("dateActualStart")) {
-          $selectedTask->set_value("dateActualStart", $timeSheetItem->get_value("dateTimeSheetItem"));
+      if ($_POST["timeSheetItem_taskID"] != 0 && $_POST["timeSheetItem_taskID"]) {
+        $db->query("select taskName,dateActualStart from task where taskID = %d",$_POST["timeSheetItem_taskID"]);
+        $db->next_record();
+        $taskName = $db->f("taskName");
+        if (!$db->f("dateActualStart")) {
+          $q = sprintf("UPDATE task SET dateActualStart = '%s' WHERE taskID = %d",$timeSheetItem->get_value("dateTimeSheetItem"),$_POST["timeSheetItem_taskID"]);
+          $db->query($q);
         }
       }
 
       $timeSheetItem->set_value("description", $taskName);
       $_POST["timeSheetItem_commentPrivate"] and $timeSheetItem->set_value("commentPrivate", 1);
       $timeSheetItem->save();
-      if ($message_good) {
-        $message.="&message_good=".$message_good;
-      }
-      header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetItem->get_value("timeSheetID").$message);
+      header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetItem->get_value("timeSheetID"));
 
     } else if ($_POST["timeSheetItem_edit"]) {
       // Hmph. Nothing needs to go here?
@@ -435,7 +426,7 @@ if ($_POST["save"]
   $timeSheet->read_globals();
   $timeSheet->read_globals("timeSheet_");
   $timeSheet->set_value("status", "edit");
-  $TPL["message_help"] = "Step 1/3: Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
+  $TPL["message_help"] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
 }
 
 // THAT'S THE END OF THE BIG SAVE.  
@@ -584,7 +575,13 @@ if ($projectID != 0) {
 }
 
 
+$currency = '$';
 $TPL["invoice_link"] = $timeSheet->get_invoice_link();
+$amount_allocated = $timeSheet->get_amount_allocated();
+if ($amount_allocated) {
+  $TPL["amount_allocated_label"] = "Amount Allocated:";
+  $TPL["amount_allocated"] = $currency.sprintf("%0.2f",$amount_allocated);
+}
 
 
 // Set up arrays for the forms.
@@ -605,8 +602,9 @@ if (!$TPL["timeSheet_projectName"]) {
 }
 
 
-if (is_object($timeSheet) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced" && !$timeSheet->get_invoice_link()) {
-  $TPL["attach_to_invoice_button"] = "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
+if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && !$timeSheet->get_invoice_link()) {
+  #$TPL["attach_to_invoice_button"] = "<select name=\"\"
+  $TPL["attach_to_invoice_button"].= "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
   #$TPL["attach_to_invoice_button"].= "<input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Items</label>";
 }
 
@@ -815,10 +813,10 @@ if ($timeSheetID) {
   }
 
   if ($timeSheet->get_value("status") == "edit" && $db->f("count") == 0) {
-    $TPL["message_help"][] = "Step 2/3: Enter Time Sheet Items by inputting the Duration, Amount and Task and clicking the Add Time Sheet Item Button.";
+    $TPL["message_help"][] = "Enter Time Sheet Items by inputting the Duration, Amount and Task and clicking the Add Time Sheet Item Button.";
 
   } else if ($timeSheet->get_value("status") == "edit" && $db->f("count") > 0) {
-    $TPL["message_help"][] = "Step 3/3: When finished adding Time Sheet Line Items, click the To Manager/Admin button to submit this Time Sheet.";
+    $TPL["message_help"][] = "When finished adding Time Sheet Line Items, click the To Manager/Admin button to submit this Time Sheet.";
   }
 
 }

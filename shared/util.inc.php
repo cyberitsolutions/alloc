@@ -426,17 +426,18 @@ function get_attachments($entity, $id) {
 function sort_by_mtime($a, $b) {
   return $a["mtime"] >= $b["mtime"];
 }
-function util_show_attachments($entity, $id, $upload_disabled=false) {
+function util_show_attachments($entity, $id) {
   global $TPL;
   $TPL["entity_url"] = $TPL["url_alloc_".$entity];
   $TPL["entity_key_name"] = $entity."ID";
   $TPL["entity_key_value"] = $id;
+  $TPL["bottom_button"] = $options["bottom_button"];
 
   $rows = get_attachments($entity, $id);
   $rows or $rows = array();
   foreach ($rows as $row) {
     $TPL["attachments"].= "<tr><td>".$row["file"]."</td><td class=\"nobr\">".$row["mtime"]."</td><td>".$row["size"]."</td>";
-    $TPL["attachments"].= "<td align=\"right\" width=\"1%\">".$row["delete"]."</td></tr>";
+    $TPL["attachments"].= "<td align=\"right\" width=\"1%\" style=\"padding:5px;\">".$row["delete"]."</td></tr>";
   }
   $TPL["attachment_upload_disabled"] = $upload_disabled;
   include_template("../shared/templates/attachmentM.tpl");

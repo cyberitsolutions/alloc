@@ -41,19 +41,27 @@ class invoice extends db_entity {
   function get_invoice_statii() {
     return array("create"=>"Create"
                 ,"edit"=>"Add Items"
-                ,"generate"=>"Generate Invoice"
                 ,"reconcile"=>"Approve/Reject"
                 ,"finished"=>"Completed");
 
   }
 
   function get_invoice_statii_payment() {
-    return array("pending"=>"Pending"
-                ,"partly_paid"=>"Partly Paid"
-                ,"rejected"=>"Not Going To Be Fully Paid"
-                ,"fully_paid"=>"Fully Paid"
+    return array("pending"=>"Not Paid In Full"
+                // "partly_paid"=>"Waiting to be Paid"
+                ,"rejected"=>"Has Rejected Transactions"
+                ,"fully_paid"=>"Paid In Full"
+                ,"over_paid"=>"Overpaid/Pre-Paid"
                 );
 
+  }
+
+  function get_invoice_statii_payment_image($payment_status=false) {
+    global $TPL;
+    if ($payment_status) {
+      $payment_statii = invoice::get_invoice_statii_payment();
+      return "<img src=\"".$TPL["url_alloc_images"]."invoice_".$payment_status.".png\" title=\"".$payment_statii[$payment_status]."\">";
+    }
   }
 
   function is_owner($person = "") {
@@ -304,15 +312,16 @@ class invoice extends db_entity {
     }
 
     $rows = get_attachments("invoice",$this->get_id());
-    if ($rows) {
-      $ar = end($rows);
-      $file = $ar["text"];
-    } else {
-      $file = $this->get_value("invoiceNum")."-0.pdf";
+    $rows or $rows = array();
+    foreach ($rows as $row) {
+      if (preg_match("/-[0-9]+\.pdf$/",$row["text"])) {
+        $file = preg_replace("/-([0-9]+)\.pdf$/e","sprintf('-%d.pdf',\\1 + 1)",$row["text"]);
+      }
     }
 
-    $file = preg_replace("/-([0-9]+)\.pdf$/e","sprintf('-%d.pdf',\\1 + 1)",$file);
-
+    if (!$file) {
+      $file = $this->get_value("invoiceNum")."-0.pdf";
+    }
 
 
     //$debug = true;
@@ -358,7 +367,7 @@ class invoice extends db_entity {
   }
 
   function get_invoice_list_filter2($filter=array()) {
-
+    global $current_user;
     // restrict non-admin users records
     if ($filter["personID"]) {
       $tfIDs = $current_user->get_tfIDs();
@@ -367,7 +376,7 @@ class invoice extends db_entity {
       } else {
         $filter["tfIDs"] = array(0);
       }
-      $sql[] = sprintf("(transaction.tfID in (".implode(",",$filter["tfIDs"])."))");
+      $sql[] = sprintf("(tfPerson.tfID in (".implode(",",$filter["tfIDs"])."))");
       $sql[] = sprintf("(tfPerson.personID = %d)",$filter["personID"]);
     }
 
@@ -375,13 +384,15 @@ class invoice extends db_entity {
     // Filter for the HAVING clause
     $sql2 = array();
     if ($filter["invoiceStatusPayment"] == "pending") {
-      $sql2[] = "(amountPaidPending <= iiAmountSum)";
-    } else if ($filter["invoiceStatusPayment"] == "partly_paid") {
-      $sql2[] = "(amountPaidApproved > 0 AND amountPaidApproved < iiAmountSum)";
+      $sql2[] = "(amountPaidApproved < iiAmountSum)";
+    #if ($filter["invoiceStatusPayment"] == "partly_paid") {
+     # $sql2[] = "(amountPaidApproved < iiAmountSum)";
     } else if ($filter["invoiceStatusPayment"] == "rejected") {
-      $sql2[] = "(amountPaidRejected > 0 AND amountPaidRejected < iiAmountSum)";
+      $sql2[] = "(amountPaidRejected > 0)";
     } else if ($filter["invoiceStatusPayment"] == "fully_paid") {
       $sql2[] = "(amountPaidApproved = iiAmountSum)";
+    } else if ($filter["invoiceStatusPayment"] == "over_paid") {
+      $sql2[] = "(amountPaidApproved > iiAmountSum)";
     }
 
     return array($sql,$sql2);
@@ -464,6 +475,7 @@ class invoice extends db_entity {
         GROUP BY invoice_details.invoiceID
               $f2_having
         ORDER BY invoiceDateFrom";
+       //LEFT JOIN tfPerson ON tfPerson.tfID = transaction_approved.tfID OR tfPerson.tfID = transaction_pending.tfID OR tfPerson.tfID = transaction_rejected.tfID
 
     $debug and print "<pre>Query1: ".$q1."</pre>";
     $debug and print "<pre>Query2: ".$q2."</pre>";
@@ -472,7 +484,7 @@ class invoice extends db_entity {
     while ($row = $db->next_record()) {
       $print = true;
       $i = new invoice;
-      $i->read_db_record($db);
+      $i->read_db_record($db,false);
       $row["invoiceLink"] = $i->get_invoice_link();
       $summary.= invoice::get_invoice_list_tr($row,$_FORM);
       $summary_ops[$i->get_id()] = stripslashes($i->get_value("invoiceNum"));
@@ -491,11 +503,19 @@ class invoice extends db_entity {
   }
 
   function get_invoice_list_tr_header($_FORM) {
+    global $TPL;
     if ($_FORM["showHeader"]) {
 
       if ($_FORM["showInvoiceAmountPaid"]) {
+        $payment_statii = invoice::get_invoice_statii_payment();
         $summary.= "\n<tr>";
-        $summary.= "\n<td colspan=\"7\">&nbsp;</td>";
+        $summary.= "\n<td colspan=\"7\">";
+        foreach($payment_statii as $payment_status => $label) {
+          $summary.= "\n".$nbsp.invoice::get_invoice_statii_payment_image($payment_status)." ".$label;
+          $nbsp = "&nbsp;&nbsp;";
+        }
+        $summary.= "</td>";
+        $summary.= "\n<td>&nbsp;</td>";
         $summary.= "\n<th class=\"col\" colspan=\"3\" style=\"text-align:center;\">Transactions</th>";
         $summary.="\n</tr>";
       }
@@ -508,6 +528,7 @@ class invoice extends db_entity {
       $_FORM["showInvoiceDate"]         and $summary.= "\n<th class=\"col\">To</th>";
       $_FORM["showInvoiceStatus"]       and $summary.= "\n<th class=\"col\">Status</th>";
       $_FORM["showInvoiceAmount"]       and $summary.= "\n<th class=\"col\">Amount</th>";
+      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th class=\"col\">&nbsp;</th>";
       $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th class=\"col\">Rejected</th>";
       $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th class=\"col\">Pending</th>";
       $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th class=\"col\">Approved</th>";
@@ -524,6 +545,20 @@ class invoice extends db_entity {
     $statii = invoice::get_invoice_statii();
     $currency = '$';
 
+    $payment_statii = invoice::get_invoice_statii_payment();
+    $payment_status = array();
+
+    $invoice["amountPaidApproved"] == $invoice["iiAmountSum"] and $payment_status[] = "fully_paid";
+    $invoice["amountPaidApproved"] > $invoice["iiAmountSum"] and $payment_status[] = "over_paid";
+    $invoice["amountPaidRejected"] > 0 and $payment_status[] = "rejected";
+    #$invoice["amountPaidApproved"] > 0 && $invoice["amountPaidApproved"] < $invoice["iiAmountSum"] and $payment_status[] = "partly_paid";
+    $invoice["amountPaidApproved"] < $invoice["iiAmountSum"] and $payment_status[] = "pending";
+
+    foreach ($payment_status as $ps) {
+      $image.= invoice::get_invoice_statii_payment_image($ps);
+    }
+
+
     $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["showInvoiceNumber"]       and $summary[] = "  <td class=\"col\">".$invoice["invoiceLink"]."&nbsp;</td>";
     $_FORM["showInvoiceClient"]       and $summary[] = "  <td class=\"col\"><a href=\"".$TPL["url_alloc_client"]."clientID=".$invoice["clientID"]."\">".$invoice["clientName"]."</a></td>";
@@ -532,6 +567,7 @@ class invoice extends db_entity {
     $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"col nobr\">".$invoice["invoiceDateTo"]."&nbsp;</td>";
     $_FORM["showInvoiceStatus"]       and $summary[] = "  <td class=\"col nobr\">".$statii[$invoice["invoiceStatus"]]."&nbsp;</td>";
     $_FORM["showInvoiceAmount"]       and $summary[] = "  <td class=\"col\">".$currency.sprintf("%0.2f",$invoice["iiAmountSum"])."&nbsp;</td>";
+    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"col nobr\">".$image."&nbsp;</td>";
     $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"col\">".$currency.sprintf("%0.2f",$invoice["amountPaidRejected"])."&nbsp;</td>";
     $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"col\">".$currency.sprintf("%0.2f",$invoice["amountPaidPending"])."&nbsp;</td>";
     $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"col\">".$currency.sprintf("%0.2f",$invoice["amountPaidApproved"])."&nbsp;</td>";
@@ -655,13 +691,11 @@ class invoice extends db_entity {
   function change_status($direction) {
 
     $steps["forwards"][""] = "edit";
-    $steps["forwards"]["edit"] = "generate";
-    $steps["forwards"]["generate"] = "reconcile";
+    $steps["forwards"]["edit"] = "reconcile";
     $steps["forwards"]["reconcile"] = "finished";
 
     $steps["backwards"]["finished"] = "reconcile";
-    $steps["backwards"]["reconcile"] = "generate";
-    $steps["backwards"]["generate"] = "edit";
+    $steps["backwards"]["reconcile"] = "edit";
     $steps["backwards"]["edit"] = "";
 
     $status = $this->get_value("invoiceStatus");
@@ -678,14 +712,6 @@ class invoice extends db_entity {
 
   function move_status_to_edit($direction) {
     $this->set_value("invoiceStatus", "edit");
-  }
-
-  function move_status_to_generate($direction) {
-    global $current_user;
-    if ($direction == "forwards") {
-      $current_user->have_role('admin') && $this->generate_invoice_file();
-    }
-    $this->set_value("invoiceStatus", "generate");
   }
 
   function move_status_to_reconcile($direction) {

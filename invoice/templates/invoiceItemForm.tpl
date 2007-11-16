@@ -16,8 +16,6 @@ function refreshInvoiceItemForm(radiobutton) \{
     document.getElementById("new_invoice_item").style.display = 'none';
     document.getElementById("new_invoice_item_from_timeSheet").style.display = 'none';
     document.getElementById("new_invoice_item_from_expenseForm").style.display = 'inline';
-
-
   \}
 \}
 
@@ -29,15 +27,15 @@ function refreshInvoiceItemForm(radiobutton) \{
 {$table_box}
   <tr>
     <th colspan="6">
-      <input type="radio" name="change" id="change_default" value="default" onClick="refreshInvoiceItemForm(this)" checked> <label for="change_default">Create Invoice Item&nbsp;&nbsp;&nbsp;</label>
-      <input type="radio" name="change" id="change_timeSheet" value="timeSheet" onClick="refreshInvoiceItemForm(this)"> <label for="change_timeSheet">From Time Sheet&nbsp;&nbsp;&nbsp;</label>
-      <input type="radio" name="change" id="change_expenseForm" value="expenseForm" onClick="refreshInvoiceItemForm(this)"> <label for="change_expenseForm">From Expense Form&nbsp;&nbsp;&nbsp;</label>
+      <input type="radio" name="change" id="change_default" value="default" onClick="refreshInvoiceItemForm(this)"{$radio1}> <label for="change_default">Create Invoice Item&nbsp;&nbsp;&nbsp;</label>
+      <input type="radio" name="change" id="change_timeSheet" value="timeSheet" onClick="refreshInvoiceItemForm(this)"{$radio2}> <label for="change_timeSheet">From Time Sheet&nbsp;&nbsp;&nbsp;</label>
+      <input type="radio" name="change" id="change_expenseForm" value="expenseForm" onClick="refreshInvoiceItemForm(this)"{$radio3}> <label for="change_expenseForm">From Expense Form&nbsp;&nbsp;&nbsp;</label>
     </th>
   </tr>
   <tr>
     <td>
 
-      <div id="new_invoice_item">
+      <div id="new_invoice_item"{$div1}>
       <table border="0" width="100%">
       <tr>
         <td>Date</td>
@@ -57,7 +55,7 @@ function refreshInvoiceItemForm(radiobutton) \{
       </table>
       </div>
 
-      <div id="new_invoice_item_from_timeSheet" class="hidden">
+      <div id="new_invoice_item_from_timeSheet"{$div2}>
       <table border="0" width="100%">
       <tr>
         <td>Create Item from Time Sheet</td>
@@ -70,7 +68,7 @@ function refreshInvoiceItemForm(radiobutton) \{
       </table>
       </div>
 
-      <div id="new_invoice_item_from_expenseForm" class="hidden">
+      <div id="new_invoice_item_from_expenseForm"{$div3}>
       <table border="0" width="100%">
       <tr>
         <td>Create Item from Expense Form</td>

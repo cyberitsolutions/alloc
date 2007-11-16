@@ -21,15 +21,8 @@
   <tr>
     <td align="right">Invoice Name: </td>
     <td>{$field_invoiceName}</td>
-    <td align="right">Invoice Download: </td>
-    <td rowspan="3" valign="top">{$invoice_download}</td>
-  </tr>
-  <tr>
     <td align="right">Period: </td>
     <td>{$invoiceDateFrom} to {$invoiceDateTo}</td>
-  </tr>
-  <tr>
-    <td colspan="3">&nbsp;</td>
   </tr>
   <tr>
     <td colspan="4" align="center">
@@ -68,9 +61,8 @@
 
 </form>
 
-
-{if $TPL["invoiceStatus"] == "generate"}
-  {show_attachments($TPL["invoiceID"])}
+{if $TPL["invoiceID"] && invoice::has_attachment_permission($current_user)}
+{show_attachments($TPL["invoiceID"])}
 {/}
 
 {show_footer()}

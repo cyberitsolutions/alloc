@@ -53,7 +53,8 @@ class invoiceItem extends db_entity
     }
 
     $db = new db_alloc();
-    $db->query("SELECT * FROM transaction WHERE invoiceItemID = %s OR transactionID = %s",$this->get_id(),$this->get_value("transactionID"));
+    $q = sprintf("SELECT * FROM transaction WHERE invoiceItemID = %d OR transactionID = %d",$this->get_id(),$this->get_value("transactionID"));
+    $db->query($q);
     while ($db->next_record()) {
       $transaction = new transaction();
       $transaction->read_db_record($db, false);
@@ -61,6 +62,31 @@ class invoiceItem extends db_entity
         return true;
       }
     }
+
+    if ($this->get_value("timeSheetID")) {
+      $q = sprintf("SELECT * FROM timeSheet WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
+      $db->query($q);
+      while ($db->next_record()) {
+        $timeSheet = new timeSheet();
+        $timeSheet->read_db_record($db, false);
+        if ($timeSheet->is_owner($person)) {
+          return true;
+        }
+      }
+    }
+
+    if ($this->get_value("expenseFormID")) {
+      $q = sprintf("SELECT * FROM expenseForm WHERE expenseFormID = %d",$this->get_value("expenseFormID"));
+      $db->query($q);
+      while ($db->next_record()) {
+        $expenseForm = new expenseForm();
+        $expenseForm->read_db_record($db, false);
+        if ($expenseForm->is_owner($person)) {
+          return true;
+        }
+      }
+    }
+
     return false;
   }
 
@@ -97,13 +123,13 @@ class invoiceItem extends db_entity
     $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
     $iiUnitPrice >0 or $iiUnitPrice = $timeSheet->pay_info["timeSheetItem_rate"];
 
+    $iiQuantity = $timeSheet->pay_info["total_duration"] or $iiQuantity = "0";
     $project = $timeSheet->get_foreign_object("project");
-    $client = $project->get_foreign_object("client");
 
     $this->set_value("invoiceID",$invoiceID);
     $this->set_value("timeSheetID",$timeSheet->get_id());
-    $this->set_value("iiMemo","Time Sheet for ".person::get_fullname($timeSheet->get_value("personID")).", Project: ".stripslashes($project->get_value("projectName").", ".$timeSheet->pay_info["summary_unit_totals"]));
-    $this->set_value("iiQuantity",$timeSheet->pay_info["total_duration"]);
+    $this->set_value("iiMemo","Time Sheet #".$timeSheet->get_id()." for ".person::get_fullname($timeSheet->get_value("personID")).", Project: ".stripslashes($project->get_value("projectName")));
+    $this->set_value("iiQuantity",$iiQuantity);
     $this->set_value("iiUnitPrice",$iiUnitPrice);
     $this->set_value("iiAmount",$amount);
     $this->set_value("iiDate",$timeSheet->get_value("dateFrom"));
