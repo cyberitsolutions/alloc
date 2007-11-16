@@ -2,11 +2,23 @@
 {show_toolbar()}
 {$table_box}
   <tr>
-    <th colspan="2">Transaction {$transactionID}</th>
+    <th colspan="2">Transaction</th>
   </tr>
   <tr>
-    <td>Transcation ID</td>
+    <td>ID</td>
     <td>{$transactionID}</td>
+  </tr>
+  <tr>
+    <td>Tagged Fund</td>
+    <td>{$tf_link}</td>
+  </tr>
+  <tr>
+    <td>Project</td>
+    <td>{$project_link}</td>
+  </tr>
+  <tr>
+    <td>Transaction Date</td>
+    <td>{$transactionDate}</td>
   </tr>
   <tr>
     <td>Company Details</td>
@@ -25,24 +37,28 @@
     <td>{$status}</td>
   </tr>
   <tr>
-    <td>Invoice</td>
-    <td>#{$invoiceNum} {$invoiceDate}</td>
+    <td>Transaction Type</td>
+    <td>{$transactionType}</td>
   </tr>
   <tr>
-    <td>Expense Form ID</td>
-    <td>{$expenseFormID}</td>
+    <td>Invoice Number</td>
+    <td>{$invoice_link}</td>
   </tr>
   <tr>
-    <td>Time Sheet ID</td>
-    <td>{$timeSheetID}</td>
+    <td>Expense Form</td>
+    <td>{$expenseForm_link}</td>
   </tr>
   <tr>
-    <td>Last Modfied By User ID</td>
-    <td>{$transactionModifiedUser}</td>
+    <td>Time Sheet</td>
+    <td>{$timeSheet_link}</td>
   </tr>
   <tr>
-    <td>Last Modfied On</td>
-    <td>{$transactionModifiedTime}</td>
+    <td>Created</td>
+    <td>{$transactionCreatedUser}&nbsp;{$transactionCreatedTime}</td>
+  </tr>
+  <tr>
+    <td>Last Modified</td>
+    <td>{$transactionModifiedUser}&nbsp;{$transactionModifiedTime}</td>
   </tr>
 </table>
 {show_footer()}
