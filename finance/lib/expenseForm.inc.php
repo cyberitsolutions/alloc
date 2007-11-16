@@ -52,7 +52,7 @@ class expenseForm extends db_entity {
       return true;
     }
     // Return true if any of the transactions on the expense form are accessible by the current user
-    $query = "SELECT * FROM transaction WHERE expenseFormID=".$this->get_id();
+    $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d",$this->get_id());
     $db = new db_alloc;
     $db->query($query);
     while ($db->next_record()) {

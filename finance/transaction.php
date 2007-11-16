@@ -28,7 +28,6 @@ global $current_user, $TPL, $db, $save, $saveAndNew, $saveGoTf;
 
 $db = new db_alloc;
 $transaction = new transaction;
-
 $transactionID = $_POST["transactionID"] or $transactionID = $_GET["transactionID"];
 
 if ($transactionID && !$_GET["new"]) {
@@ -42,7 +41,24 @@ $tf->check_perm();
 $invoice_item = $transaction->get_foreign_object("invoiceItem");
 $invoice_item->set_tpl_values();
 $invoice = $invoice_item->get_foreign_object("invoice");
+if (!$invoice->get_id()) {
+  $invoice = $transaction->get_foreign_object("invoice");
+}
 $invoice->set_tpl_values();
+if ($invoice->get_id()) {
+  $TPL["invoice_link"] = "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$invoice->get_id()."\">#".$invoice->get_value("invoiceNum");
+  $TPL["invoice_link"].= " ".$invoice->get_value("invoiceDateFrom")." to ". $invoice->get_value("invoiceDateTo")."</a>";
+}
+
+$expenseForm = $transaction->get_foreign_object("expenseForm");
+if ($expenseForm->get_id()) {
+  $TPL["expenseForm_link"] = "<a href=\"".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id()."\">#".$expenseForm->get_id()."</a>";
+}
+
+$timeSheet = $transaction->get_foreign_object("timeSheet");
+if ($timeSheet->get_id()) {
+  $TPL["timeSheet_link"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">#".$timeSheet->get_id()."</a>";
+}
 
 $transaction->set_tpl_values();
 
@@ -57,7 +73,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
   $transaction->get_value("transactionDate") or $TPL["message"][] = "You must enter a date for the transaction";
   $transaction->get_value("product")         or $TPL["message"][] = "You must enter a product"; 
   $transaction->get_value("status")          or $TPL["message"][] = "You must set the status of the transaction";
-  $transaction->get_value("tfID")            or $TPL["message"][] = "You must select a TF";
+  $transaction->get_value("tfID")            or $TPL["message"][] = "You must select a Tagged Fund to add this transaction against";
   $transaction->get_value("transactionType") or $TPL["message"][] = "You must set a transaction type";
   #$transaction->get_value("projectID")       or $TPL["message"][] = "You must select a project";
   #$transaction->get_value("companyDetails")  or $TPL["message"][] = "You must enter the company details";
@@ -86,7 +102,6 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 
 $transaction->set_tpl_values();
 
-$TPL["transactionModifiedTime"] = $transaction->get_value("transactionModifiedTime");
 $TPL["product"] = htmlentities($transaction->get_value("product"));
 $TPL["statusOptions"] = get_options_from_array(array("pending", "rejected", "approved"), $transaction->get_value("status"), false);
 $TPL["transactionTypeOptions"] = get_options_from_array(array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance"), $transaction->get_value("transactionType"), false);
@@ -103,8 +118,6 @@ if ($TPL["transactionModifiedUser"]) {
   $db->next_record();
   $TPL["transactionModifiedUser"] = $db->f("username");
 }
-
-$TPL["taxName"] = config::get_config_item("taxName");
 
 if ($transaction->have_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION)) {
   $TPL["main_alloc_title"] = "Create Transaction - ".APPLICATION_NAME;

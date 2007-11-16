@@ -6,105 +6,94 @@
 <input type="hidden" name="transactionID" value={$transactionID}>
 {$table_box}
   <tr>
-    <th colspan="3">Transaction {$transactionID}</th>
+    <th colspan="3">Transaction</th>
   </tr>
   <tr>
-    <td width="15%">Transaction ID</td>
+    <td width="15%">ID</td>
     <td>{$transactionID}&nbsp;</td>
-    <td class="hint">This is an automatically generated number that uniquely identifies the transaction</td>
+    <td width="1%"></td>
   </tr>
   <tr>
-    <td>TF</td>
+    <td>Tagged Fund</td>
     <td><select name="tfID">
-      <option value="">Select TF
+      <option value="">
       {$tfIDOptions}
       </select>
     </td>
-    <td class="hint">Select the TF which this transaction is to be recorded against</td>
+    <td class="hint">{get_help("transaction_tf")}</td>
   </tr>
   <tr>
   <tr>
     <td>Project</td>
     <td><select name="projectID">
-      <option value="">Select Project
+      <option value="">
       {$projectIDOptions}
       </select>
     </td>
-    <td class="hint">Select the Project which this transaction is to be recorded against</td>
+    <td class="hint"></td>
   </tr>
     <td>Transaction Date</td>
     <td>{get_calendar("transactionDate",$TPL["transactionDate"])}</td>
-    <td class="hint">This is the date of the transaction itself (e.g. the receipt date) in the format YYYY-MM-DD</td>
+    <td class="hint"></td>
   </tr>
   <tr>
     <td>Company Details</td>
     <td><input type="text" name="companyDetails" size="20" value="{$companyDetails}"></td>
-    <td class="hint">This field may be replaced in the future to allow easy selection of the company (client or supplier), but for now is free text.</td>
+    <td class="hint"></td>
   </tr>
   <tr>
     <td>Product/Description</td>
     <td><input type="text" name="product" size="20" value="{$product}"></td>
-    <td class="hint">Enter the description that will appear on the TF statement</td>
+    <td class="hint">{get_help("transaction_product")}</td>
   </tr>
   <tr>
     <td>Amount</td>
     <td><input type="text" name="amount" size="20" value="{$amount}"></td>
-    <td class="hint">Enter the amount of the transaction (inc. {$taxName}).  Expenses and salaries should generally be negative amounts.  Do no include the $ character, spaces or commas</td>
+    <td class="hint">Enter the amount of the transaction.  Expenses and salaries should generally be negative amounts.  Do no include the $ character, spaces or commas</td>
   </tr>
   <tr>
     <td>Status</td>
     <td><select name="status" value={$status}>
-        <option value="">Select status
+        <option value="">
       {$statusOptions}
 </select>
     </td>      
-    <td class="hint">Select the status of this transaction.  Pending transactions indicate that the system has registered the transaction but it has not yet been finalised (e.g. an invoice that is due to be paid.  Approved transactions are completed transactions.  Rejected transactions are transactions that were never finalised (e.g. invoices which are no longer being chased).</td>
+    <td class="hint">{get_help("transaction_status")}</td>
   </tr>
   <tr>
     <td>Transaction Type</td>
     <td><select name="transactionType">
-        <option value="">Select Type
+        <option value="">
         {$transactionTypeOptions}
 </select>
     </td>      
-    <td class="hint">Select salary, invoice or expense</td>
+    <td class="hint"></td>
   </tr>
   <tr>
-    <td>Invoice</td>
-    <td>#{$invoiceNum} {$invoiceDate}&nbsp;</td>
-    <td class="hint">If this transaction is associated with an invoice the invoice number and date are shown.</td>
+    <td>Invoice Number</td>
+    <td>{$invoice_link}&nbsp;</td>
+    <td class="hint"></td>
   </tr>
   <tr>
-    <td>Expense Form ID</td>
-    <td>{$expenseFormID}&nbsp;</td>
-    <td class="hint">If this transaction is associated with an expense form, the expense form's identification number is shown.</td>
+    <td>Expense Form</td>
+    <td>{$expenseForm_link}&nbsp;</td>
+    <td class="hint"></td>
   </tr>
   <tr>
-    <td>Time Sheet ID</td>
-    <td>{$timeSheetID}&nbsp;</td>
-    <td class="hint">If a time sheet is associated with this transaction, the time sheet's identification number is shown.</td>
+    <td>Time Sheet</td>
+    <td>{$timeSheet_link}&nbsp;</td>
+    <td class="hint"></td>
   </tr>
   <tr>
-    <td>Created By User ID</td>
-    <td>{$transactionCreatedUser}&nbsp;</td>
-    <td class="hint">The user who created this record.</td>
+    <td>Created</td>
+    <td>{$transactionCreatedUser}&nbsp;{$transactionCreatedTime}</td>
+    <td class="hint"></td>
   </tr>
   <tr>
-    <td>Created On</td>
-    <td>{$transactionCreatedTime}&nbsp;</td>
-    <td class="hint">The date that this record was created.</td>
+    <td>Last Modified</td>
+    <td>{$transactionModifiedUser}&nbsp;{$transactionModifiedTime}</td>
+    <td class="hint"></td>
   </tr>
-  <tr>
-    <td>Last Modified By User ID</td>
-    <td>{$transactionModifiedUser}&nbsp;</td>
-    <td class="hint">The user who last modified this record.</td>
-  </tr>
-  <tr>
-    <td>Last Modified On</td>
-    <td>{$transactionModifiedTime}&nbsp;</td>
-    <td class="hint">The date that this record was last modified.</td>
-  </tr>
-
   <tr>
     <td align="center" colspan="3">
       <input type="submit" name="save" value="Save">
