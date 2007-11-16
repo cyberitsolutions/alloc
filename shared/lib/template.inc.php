@@ -97,7 +97,8 @@ function get_template($filename) {
 
 // This is the publically callable function, used to include template files
 function include_template($filename) {
-  global $TPL;
+  global $TPL, $current_user;
+  $TPL["current_user"] = $current_user;
   #echo "<!-- Start $filename -->\n";
   $template = get_template($filename);
   #echo "<pre>".htmlspecialchars($template)."</pre>"; 
