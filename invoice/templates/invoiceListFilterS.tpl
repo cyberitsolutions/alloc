@@ -26,6 +26,9 @@
           <td><select name="invoiceStatusPayment"><option value="">All</option>{$statusPaymentOptions}</select></td>
           <td rowspan="2" align="right"><input type="submit" name="applyFilter" value="Filter"></td>
         </tr>
+        <tr>
+          <td colspan="3">Note: Only user accounts with Financial Administrator privileges can see the full totals of invoices.</td>
+        </tr>
       </table>
       </form>
 

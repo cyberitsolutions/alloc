@@ -44,10 +44,6 @@ function updateProjectList(number) \{
         {$timeSheetPrint = config::get_config_item("timeSheetPrint")}
         {foreach $timeSheetPrint as $value}
           <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&{$value}">{echo $timeSheetPrintOptions[$value]}</a>
-          {$value and $show_icon = true}
-        {/}
-        {if $show_icon}
-        <img src="{$url_alloc_images}pdf_icon.png">
         {/}
       {/}
     </th>
@@ -116,11 +112,11 @@ function updateProjectList(number) \{
   </tr>
 
 	<tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td>{get_help("timesheet_add_invoice")}</td>
     <td align="right" valign="top">Invoice:</td>
-    <td class="nobr">{$attach_to_invoice_button}{$invoice_link} {get_help("timesheet_add_invoice")}</td>
+    <td class="nobr">{$attach_to_invoice_button}{$invoice_link}</td>
+    <td class="right">{$amount_allocated_label}</td>
+    <td>{$amount_allocated}</td>
   </tr>
 
 

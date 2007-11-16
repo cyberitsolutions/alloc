@@ -812,10 +812,25 @@ class timeSheet extends db_entity
 
   function get_invoice_link() {
     global $TPL;
-    $db = new db_alloc();
-    $db->query("SELECT invoice.* FROM invoiceItem LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID WHERE timeSheetID = %s",$this->get_id());
-    if ($db->next_record()) { 
-      return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$db->f("invoiceID")."\">".$db->f("invoiceNum")."</a>";
+    if (is_object($this) && $this->get_id()) {
+      $db = new db_alloc();
+      $db->query("SELECT invoice.* FROM invoiceItem LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID WHERE timeSheetID = %s",$this->get_id());
+      if ($db->next_record()) { 
+        return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$db->f("invoiceID")."\">".$db->f("invoiceNum")."</a>";
+      }
+    }
+  }
+
+  function get_amount_allocated() {
+    if (is_object($this) && $this->get_id()) {
+      $db = new db_alloc();
+      $q = sprintf("SELECT amount 
+                      FROM transaction 
+                 LEFT JOIN invoiceItem ON invoiceItem.invoiceItemID = transaction.invoiceItemID 
+                     WHERE invoiceItem.timeSheetID = %d",$this->get_id());
+      $db->query($q);
+      $row = $db->row();
+      return $row["amount"];
     }
   }
 
@@ -1074,6 +1089,7 @@ EOD;
         $tsi->set_value("taskID",sprintf("%d",$taskID));
         $tsi->set_value("rate",$row_projectPerson["rate"]);
         $tsi->set_value("comment",$comments);
+        $_POST["timeSheetItem_taskID"] = sprintf("%d",$taskID); // this gets used in timeSheetItem->save();
         $tsi->save();
       }
   
