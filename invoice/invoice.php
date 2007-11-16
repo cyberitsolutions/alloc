@@ -341,7 +341,12 @@ function show_invoiceItem_list() {
 }
 
 function show_attachments($invoiceID) {
-  util_show_attachments("invoice",$invoiceID);
+  global $TPL;
+  $options["bottom_button"] = "<form action=\"".$TPL["url_alloc_invoice"]."\" method=\"post\">";
+  $options["bottom_button"].= "<input type=\"submit\" value=\"Generate Invoice PDF\" name=\"generate_pdf\">";
+  $options["bottom_button"].= "<input type=\"hidden\" value=\"".$invoiceID."\" name=\"invoiceID\">";
+  $options["bottom_button"].= "</form>";
+  util_show_attachments("invoice",$invoiceID, $options);
 }
 
 $invoiceID = $_POST["invoiceID"] or $invoiceID = $_GET["invoiceID"];
@@ -563,17 +568,17 @@ foreach ($statii as $s => $label) {
 }
 
 
-if ($invoice->get_id() && is_dir(ATTACHMENTS_DIR."invoice".DIRECTORY_SEPARATOR.$invoice->get_id())) {
-  $rows = get_attachments("invoice",$invoice->get_id());
-  foreach ($rows as $arr) {
-    if ($invoice->has_attachment_permission($current_user)) {
-      $TPL["invoice_download"] .= $commar.$arr["file"]."&nbsp;&nbsp;".$arr["mtime"];
-    } else {
-      $TPL["invoice_download"] .= $commar.$arr["text"];
-    }
-    $commar = "<br>";
-  }
-}
+# if ($invoice->get_id() && is_dir(ATTACHMENTS_DIR."invoice".DIRECTORY_SEPARATOR.$invoice->get_id())) {
+#   $rows = get_attachments("invoice",$invoice->get_id());
+#   foreach ($rows as $arr) {
+#     if ($invoice->has_attachment_permission($current_user)) {
+#       $TPL["invoice_download"] .= $commar.$arr["file"]."&nbsp;&nbsp;".$arr["mtime"];
+#     } else {
+#       $TPL["invoice_download"] .= $commar.$arr["text"];
+#     }
+#     $commar = "<br>";
+#   }
+# }
 
 
 $TPL["field_invoiceNum"] = '<input type="text" name="invoiceNum" value="'.$TPL["invoiceNum"].'">';
