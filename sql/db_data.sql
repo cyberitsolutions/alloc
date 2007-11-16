@@ -75,9 +75,13 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('project',-1,0,'employee','Y',99,'This will hopefully allow projects to administrated by employees with Project Manager perms for a project.',271,103);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('item',-1,0,'','Y',NULL,'Allow people to do what they like with items they own/have created.',15,105);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('sentEmailLog',0,0,'','Y',NULL,NULL,15,107);
-INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, actions,  comment, permissionID) VALUES ('absence',0,0,'admin','Y',NULL,15,'Allow all admin to manipulate all absence records.',108);
-INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allow`, `sortKey`, `comment`, `actions`,`permissionID`) VALUES ('taskCommentTemplate',0,0,'','Y',NULL,'Allow everyone to read taskCommentTemplates',1,109);
-INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allow`, `sortKey`, `comment`, `actions`, `permissionID`) VALUES ('token',0,0,'','Y',NULL,'Allow everyone to do anything with tokens.',15,110);
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('absence',0,0,'admin','Y',NULL,'Allow all admin to manipulate all absence records.', 15, 108);
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('taskCommentTemplate',0,0,'','Y',NULL,'Allow everyone to read taskCommentTemplates',1,109);
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('token',0,0,'','Y',NULL,'Allow everyone to do anything with tokens.',15,110);
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('invoiceItem',-1,0,'','Y',NULL,'This allows time sheet users to update the related invoice item record.',11,111);
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('invoice',-1,0,'','Y',NULL,'User needs to be able to update invoice because updating an invoiceItem, changes the dates on the invoice itself.',3,112);
+
+
 
 
 

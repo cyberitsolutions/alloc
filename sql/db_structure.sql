@@ -175,7 +175,7 @@ CREATE TABLE invoice (
   invoiceDateTo date,
   invoiceNum int(11) NOT NULL default '0',
   invoiceName varchar(255) NOT NULL default '',
-  invoiceStatus enum('edit','generate','reconcile','finished') NOT NULL DEFAULT 'edit',
+  invoiceStatus enum('edit','reconcile','finished') NOT NULL DEFAULT 'edit',
   PRIMARY KEY  (invoiceID),
   UNIQUE KEY `invoiceNum` (`invoiceNum`)
 ) TYPE=MyISAM PACK_KEYS=0;
