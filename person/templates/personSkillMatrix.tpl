@@ -15,8 +15,7 @@
     </td>
   </tr>
   <tr>
-    <td colspan="2">Key:
-      <img src="../images/skill_senior.png" alt="S" align="absmiddle"> Senior,
+    <td colspan="2"><img src="../images/skill_senior.png" alt="S" align="absmiddle"> Senior,
       <img src="../images/skill_advanced.png" alt="A" align="absmiddle"> Advanced,
       <img src="../images/skill_intermediate.png" alt="I" align="absmiddle"> Intermediate,
       <img src="../images/skill_junior.png" alt="J" align="absmiddle"> Junior,
