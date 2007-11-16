@@ -1,3 +1,4 @@
+-- Change all the dollar amount fields to DECIMAL(19,2)
 alter table transaction CHANGE amount amount DECIMAL(19,2) NOT NULL DEFAULT 0;
 alter table transactionRepeat CHANGE amount amount DECIMAL(19,2) NOT NULL DEFAULT 0;
 
