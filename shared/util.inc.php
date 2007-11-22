@@ -925,11 +925,12 @@ function show_messages() {
 
   if (is_array($arr) && count($arr)) {
     echo "<div style=\"text-align:center;\"><div class=\"message\">";
-
+    echo "<table cellspacing=\"0\">";
     foreach ($arr as $type => $str) {
-      echo "<table cellspacing=\"0\"><tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".gif\"/><td/>";
-      echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".str_replace('\\','',$str)."</td></tr></table>";
+      echo "<tr><td width=\"1%\" style=\"vertical-align:top; padding:4px;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".png\"/><td/>";
+      echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".str_replace('\\','',$str)."</td></tr>";
     }
+    echo "</table>";
     echo "</div></div>";
   }
 
