@@ -66,7 +66,7 @@ global $TPL;
 
 $search = $_POST["search"] or $search = $_GET["search"];
 $category = $_POST["category"] or $category = $_GET["category"];
-$needle = db_esc($_POST["needle"]) or $needle = db_esc(urldecode($_GET["needle"]));
+$needle = trim(db_esc($_POST["needle"]) or $needle = db_esc(urldecode($_GET["needle"])));
 
 if (!$search) {
   $str = "<br/><br/>";
