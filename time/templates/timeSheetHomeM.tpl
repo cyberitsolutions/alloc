@@ -21,7 +21,7 @@
 <tr>
   <td>{$line.projectName}</td>
   <td class="nobr">{$line.dateFrom}</td>
-  <td class="nobr">{$line.total_dollars}</td>
+  <td class="nobr right">{$line.total_dollars}</td>
   <td class="noprint">{$line.status}</td>
 </tr>
 {/}

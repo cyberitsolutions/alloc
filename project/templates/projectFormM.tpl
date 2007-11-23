@@ -27,7 +27,7 @@ function updateClientContact(number) \{
 
 {$table_box}
   <tr>
-    <th class="nobr" colspan="1">Project {$projectSelfLink}</th>
+    <th class="nobr" colspan="1">Project: {$projectSelfLink}</th>
     <th class="right" colspan="3">{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</th>
   </tr>
   <tr>
