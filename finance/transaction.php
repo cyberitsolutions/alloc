@@ -104,6 +104,8 @@ if ($TPL["transactionModifiedUser"]) {
   $TPL["transactionModifiedUser"] = $db->f("username");
 }
 
+$TPL["taxName"] = config::get_config_item("taxName");
+
 if ($transaction->have_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION)) {
   $TPL["main_alloc_title"] = "Create Transaction - ".APPLICATION_NAME;
   include_template("templates/editTransactionM.tpl");

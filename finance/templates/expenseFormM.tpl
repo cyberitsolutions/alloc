@@ -75,7 +75,7 @@
           <td><input type="text" size="25" name="product" value="{$product}"></td>
           <td><select name="tfID" value="{$tfID}">{$tfOptions}</select></td>
           <td><input type="text" size="9" name="quantity" value="{$quantity}"></td>
-          <td><input type="text" size="9" name="amount" value="{$amount}"></td>
+          <td><input type="text" size="9" name="amount" value="{$amount}"> (inc. {$taxName})</td>
 
           </td>
 		    </tr>

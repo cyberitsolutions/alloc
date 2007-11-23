@@ -395,7 +395,7 @@ if (is_object($expenseForm)) {
   }
 }
 
-
+$TPL["taxName"] = config::get_config_item("taxName");
 
 $TPL["main_alloc_title"] = "Expense Form - ".APPLICATION_NAME;
 if ($_GET["printVersion"]) {
