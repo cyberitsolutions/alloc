@@ -25,29 +25,9 @@
 require_once("../alloc.php");
 
 
-if ($_GET["projectID"]) {
-  $opt["return"] = "dropdown_options";
-  $opt["projectID"] = $_GET["projectID"];
-  $opt["taskStatus"] = $_GET["task_status"];
-  $opt["taskView"] = "byProject";
-  $tasklist = task::get_task_list($opt);
-  unset($tasklist[$_GET["taskID"]]);
-  
-  $dropdown_options = get_option("", 0);
-
-  $task = new task;
-  $task->set_id($_GET["taskID"]);
-  $task->select();
-  $duplicateID = $task->get_value("duplicateTaskID");
-  
-  if ($duplicateID && !$tasklist[$duplicateID]) {
-    $othertask = new task;
-    $othertask->set_id($duplicateID);
-    $othertask->select();
-    $dropdown_options.= get_option($duplicateID." ".$othertask->get_task_name(), $duplicateID, true);
-  }
-  $dropdown_options.= get_select_options($tasklist, $duplicateID, 40);
-  echo stripslashes("<select name=\"duplicateTaskID_1\">".$dropdown_options."/select");
+if ($_GET["taskID"]) {
+  usleep(600000);
+  echo task::get_task_duplicate_options($_GET["task_status"],$_GET["taskID"]);
 }
 
 

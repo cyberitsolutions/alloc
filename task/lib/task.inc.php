@@ -51,7 +51,7 @@ class task extends db_entity {
                                  , "parentTaskID"=>new db_field("parentTaskID")
                                  , "taskTypeID"=>new db_field("taskTypeID")
                                  , "personID"=>new db_field("personID")
-				 , "managerID"=>new db_field("managerID")
+				                         , "managerID"=>new db_field("managerID")
                                  , "duplicateTaskID"=>new db_field("duplicateTaskID")
       );
 
@@ -152,10 +152,11 @@ class task extends db_entity {
 
     if ($recipients) {
       $successful_recipients = $this->send_emails($recipients,"task_duplicate");
-      $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Marked as Duplicate: ".stripslashes($this->get_value("taskName"));
+      $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Marked Duplicate: ".stripslashes($this->get_value("taskName"));
     }
     return $msg; 
   }
+
   function new_message_task() {
     // Create a reminder with its regularity being based upon what the task priority is
 
@@ -487,6 +488,31 @@ class task extends db_entity {
     return $str;
   }
 
+  function get_task_duplicate_options($task_status,$taskID=false) {
+    if ($taskID) {
+      $task = new task();
+      $task->set_id($taskID);
+      $task->select();
+      $duplicateID = $task->get_value("duplicateTaskID");
+
+      //build list of possible duplicated tasks
+      $opt["return"] = "dropdown_options";
+      $opt["projectID"] = $task->get_value("projectID");
+      $opt["taskStatus"] = $task_status;
+      $opt["taskView"] = "byProject";
+      $tasklist = task::get_task_list($opt);
+      unset($tasklist[$taskID]); // prevent self references
+      if ($duplicateID && !$tasklist[$duplicateID]) {
+        $othertask = new task;
+        $othertask->set_id($duplicateID);
+        $othertask->select();
+        $tasklist[$duplicateID] = $duplicateID." ".$othertask->get_task_name();
+      }
+      $dropdown_options = get_select_options($tasklist,$duplicateID, 40);
+      return "<select name=\"duplicateTaskID\"><option value=\"\"> ".$dropdown_options."</select>";
+    }
+  }
+
   function set_option_tpl_values() {
     // Set template values to provide options for edit selects
     global $TPL, $current_user, $isMessage;
@@ -691,8 +717,8 @@ class task extends db_entity {
       $types = array('task_created'    => "Task Created"
                     ,'task_closed'     => "Task Closed"
                     ,'task_comments'   => "Task Comments"
-		    ,'task_reassigned' => "Task Reassigned"
-		    ,'task_duplicate'  => "Task marked as duplicate"
+                    ,'task_reassigned' => "Task Reassigned"
+                    ,'task_duplicate'  => "Task Marked Duplicate"
                     );
     
       $subject = $types[$type];

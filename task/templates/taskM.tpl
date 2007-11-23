@@ -20,18 +20,9 @@ function updateTaskCommentTemplate(number) \{
 \}
 
 function refreshTaskList(radiobutton) \{
-  document.getElementById("duplicateTaskList".innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">');
-  url =
-  '{$url_alloc_updateDuplicateTaskList}task_status='+radiobutton.value+'&projectID={$task_projectID}&taskID={$task_taskID}';
-  makeAjaxRequest(url, 'updateDuplicateTaskList', 1);
-\}
-
-function updateDuplicateTaskList(number) \{
-  if (http_request[number].readyState == 4) \{
-    if (http_request[number].status == 200) \{
-    document.getElementById("duplicateTaskList").innerHTML = http_request[number].responseText;
-    \}
-  \}
+  document.getElementById("duplicateTaskList").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
+  url = '{$url_alloc_updateDuplicateTaskList}task_status='+radiobutton.value+'&taskID={$task_taskID}';
+  makeAjaxRequest(url, 'callbackReceiver', 1, "duplicateTaskList");
 \}
 </script>
 <form action="{$url_alloc_task}" method="post">
@@ -80,9 +71,6 @@ function updateDuplicateTaskList(number) \{
           </td>
         </tr>
         <tr>
-          <td colspan="2">&nbsp;</td>
-        </tr> 
-        <tr>
           <td>Estimated Hours</td>
           <td><input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5">
             &nbsp;&nbsp;{$time_billed_link}
@@ -112,24 +100,33 @@ function updateDuplicateTaskList(number) \{
             </nobr>
           </td>
         </tr>
-{if !$TPL["hide_duplicate_options"]}
         <tr>
-           <td colspan="1">Duplicate of task </td> 
-           <td colspan="1"><div id="duplicateTaskList" class="nobr" style="display:inline">
-	   <select name="duplicateTaskID_1">
-           {$dupe_list_dropdown}</select></div>
-           {get_help("task_duplicate")}</td>
-           <td colspan="1" class="nobr">
-             <label for="task_type_open">Open</label><input id="task_type_open" type="radio" name="task_type" value="not_completed" onClick="refreshTaskList(this)" checked />
-             <label for="task_type_closed">Closed</label><input id="task_type_closed" type="radio" name="task_type" value="completed" onClick="refreshTaskList(this)" />
-           </td>
+          <td colspan="1">{get_expand_link("duplicateTaskList_widgets","Task Is Duplicate Of ","duplicateTaskList_text")}</td> 
+          <td colspan="1" class="nobr">
+            <div id="duplicateTaskList_text">{$taskDuplicateLink}</div>
+
+            <div id="duplicateTaskList_widgets" style="display:none">
+              <table cellpadding="2" cellspacing="0">
+                <tr>
+                  <td width="100%">
+                    <div id="duplicateTaskList" style="display:inline">{$taskDuplicateOptions}</div>
+                  </td>
+                  <td>
+                    {get_help("task_duplicate")}
+                  </td>
+                  <td class="right">
+                    <label for="task_type_open">Open</label>
+                    <input id="task_type_open" type="radio" name="task_type" value="not_completed" onClick="refreshTaskList(this)" checked /><br>
+                    <label for="task_type_closed">Closed</label>
+                    <input id="task_type_closed" type="radio" name="task_type" value="completed" onClick="refreshTaskList(this)" />
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+          </td>
         </tr>
-{/}
-
-
-</table>
-
-
+      </table>
 
     </td>
   </tr>
@@ -138,7 +135,7 @@ function updateDuplicateTaskList(number) \{
   </tr>
   
   <tr>
-    <td colspan="5" align="center">
+    <td colspan="5" align="center" class="padded">
       {$timeSheet_save}
       
       <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
@@ -149,9 +146,6 @@ function updateDuplicateTaskList(number) \{
       <input type='hidden' name='view' value='brief'>
 
     </td>
-  </tr>
-  <tr>
-    <td colspan="5">&nbsp;</td>
   </tr>
 </table>
 
