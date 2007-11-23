@@ -829,7 +829,7 @@ if ($timeSheetID) {
   }
 
   if ($timeSheet->get_value("status") == "edit" && $db->f("count") == 0) {
-    $TPL["message_help"][] = "Enter Time Sheet Items by inputting the Duration, Amount and Task and clicking the Add Time Sheet Item Button.";
+    $TPL["message_help"][] = "Enter Time Sheet Items and click the Add Time Sheet Item Button.";
 
   } else if ($timeSheet->get_value("status") == "edit" && $db->f("count") > 0) {
     $TPL["message_help"][] = "When finished adding Time Sheet Line Items, click the To Manager/Admin button to submit this Time Sheet.";
