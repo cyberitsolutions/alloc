@@ -637,9 +637,15 @@ if ($_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]) {
   define("PROJECT_EXISTS",1);
 }
 
-$TPL["projectSelfLink"] = "<a href=\"". $project->get_url() . "\">";
-$TPL["projectSelfLink"] .=  sprintf("%d %s", $project->get_id(), $project->get_project_name());
-$TPL["projectSelfLink"] .= "</a>";
+if ($new_project) {
+  $TPL["main_alloc_title"] = "New Project - ".APPLICATION_NAME;
+  $TPL["projectSelfLink"] = "New Project";
+} else {
+  $TPL["main_alloc_title"] = "Project " . $project->get_id() . ": " . $project->get_project_name() . " - ".APPLICATION_NAME;
+  $TPL["projectSelfLink"] = "<a href=\"". $project->get_url() . "\">";
+  $TPL["projectSelfLink"] .=  sprintf("%d %s", $project->get_id(), $project->get_project_name());
+  $TPL["projectSelfLink"] .= "</a>";
+}
 
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");

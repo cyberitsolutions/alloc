@@ -54,7 +54,7 @@ function show_project_list() {
   echo project::get_project_list($_FORM);
 }
 
-
+$TPL["main_alloc_title"] = "Project List - ".APPLICATION_NAME;
 include_template("templates/projectListM.tpl");
 page_close();
 

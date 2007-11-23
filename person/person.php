@@ -277,6 +277,12 @@ $TPL["email_format_options"] = $email_format_options;
 $TPL["absence_url"] = $TPL["url_alloc_absence"]."personID=".$personID;
 $TPL["personActive"] = (!$person->get_id() || $person->get_value("personActive")) ? " checked" : "";
 
+if ($personID) {
+  $TPL["main_alloc_title"] = "Person Details: " . $person->get_value("username")." - ".APPLICATION_NAME;
+} else {
+  $TPL["main_alloc_title"] = "New Person - ".APPLICATION_NAME;
+}
+
 include_template("templates/personM.tpl");
 
 page_close();

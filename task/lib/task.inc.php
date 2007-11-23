@@ -779,13 +779,6 @@ class task extends db_entity {
     return $rtn;
   }
 
-  function get_task_header($_FORM=array()) {
-    $rtn = "<a href=\"".$this->get_url()."\">";
-    $rtn.= sprintf("%d %s", $this->get_id(), $this->get_task_name($_FORM));
-    $rtn.= "</a>";
-    return $rtn;
-  }
-
   function get_task_name($_FORM=array()) {
 
     $_FORM["showTaskID"] and $id = $this->get_id()." ";

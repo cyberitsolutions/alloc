@@ -52,7 +52,7 @@ function show_timeSheet_list() {
   echo timeSheet::get_timeSheet_list($_FORM);
 }
 
-
+$TPL["main_alloc_title"] = "Timesheet List - ".APPLICATION_NAME;
 include_template("templates/timeSheetListM.tpl");
 page_close();
 ?>
