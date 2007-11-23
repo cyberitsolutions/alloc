@@ -113,11 +113,15 @@ $TPL["tfIDOptions"] = get_options_from_db($db, "tfName", "tfID", $transaction->g
 $db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'current' ORDER BY projectName");
 $TPL["projectIDOptions"] = get_options_from_db($db, "projectName", "projectID", $transaction->get_value("projectID"));
 
-if ($TPL["transactionModifiedUser"]) {
-  $db->query("select username from person where personID = ".$TPL["transactionModifiedUser"]);
-  $db->next_record();
-  $TPL["transactionModifiedUser"] = $db->f("username");
-}
+$TPL["transactionModifiedUser"] = person::get_fullname($TPL["transactionModifiedUser"]);
+$TPL["transactionCreatedUser"] = person::get_fullname($TPL["transactionCreatedUser"]);
+
+$TPL["tf_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$TPL["tfID"]."\">".get_tf_name($TPL["tfID"])."</a>";
+
+$p = $transaction->get_foreign_object("project");
+$TPL["project_link"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$p->get_id()."\">".$p->get_value("projectName")."</a>";
+
+$TPL["taxName"] = config::get_config_item("taxName");
 
 if ($transaction->have_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION)) {
   $TPL["main_alloc_title"] = "Create Transaction - ".APPLICATION_NAME;
