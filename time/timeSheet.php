@@ -395,17 +395,18 @@ if ($_POST["save"]
       // SAVE INDIVIDUAL TIME SHEET ITEM
 
       if ($_POST["timeSheetItem_taskID"]) {
-        $selectedTask = new Task;
+        $selectedTask = new task();
         $selectedTask->set_id($_POST["timeSheetItem_taskID"]);
-	$selectedTask->select();
+	      $selectedTask->select();
 
-	if ($selectedTask->get_value("duplicateTaskID")) {
+	      if ($selectedTask->get_value("duplicateTaskID")) {
           $oldName = $selectedTask->get_task_name();
           $selectedTask->set_id($selectedTask->get_value("duplicateTaskID"));
           $selectedTask->select();
-	  $message_good = "Task <a href=\"".$TPL["url_alloc_task"]."taskID=".$_POST["timeSheetItem_taskID"]."\">".$_POST["timeSheetItem_taskID"]." ".$oldName."</a> is marked as a duplicate.";
+	        $message_good = "Task <a href=\"".$TPL["url_alloc_task"]."taskID=".$_POST["timeSheetItem_taskID"]."\">".$_POST["timeSheetItem_taskID"]." ".$oldName."</a> is marked as a duplicate.";
           $message_good.=  " Time was allocated to task <a href=\"".$TPL["url_alloc_task"]."taskID=".$selectedTask->get_id()."\">".$selectedTask->get_id()." ".$selectedTask->get_task_name()."</a>.";
-	  $timeSheetItem->set_value("taskID", $selectedTask->get_id());
+          $TPL["message_good"][] = $message_good;
+	        $timeSheetItem->set_value("taskID", $selectedTask->get_id());
         }
 
         $taskName = $selectedTask->get_task_name();
@@ -417,20 +418,12 @@ if ($_POST["save"]
 
       $timeSheetItem->set_value("description", $taskName);
       $_POST["timeSheetItem_commentPrivate"] and $timeSheetItem->set_value("commentPrivate", 1);
-v v v v v v v
+
       $rtn = $timeSheetItem->save();
-      if ($rtn) { 
-        $TPL["message"][] = $rtn;
-      } else {
+      $rtn and $TPL["message"][] = $rtn;
+      if (!$TPL["message"] && !$TPL["message_good"]) {
         header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetItem->get_value("timeSheetID"));
       }
-*************
-      $timeSheetItem->save();
-      if ($message_good) {
-        $message.="&message_good=".$message_good;
-      }
-      header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetItem->get_value("timeSheetID").$message);
-^ ^ ^ ^ ^ ^ ^
 
     } else if ($_POST["timeSheetItem_edit"]) {
       // Hmph. Nothing needs to go here?
