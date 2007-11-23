@@ -42,7 +42,7 @@ function updateTimeSheetTaskList(number) \{
           <td>
             <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$timeSheetItem_timeSheetItemDuration}">
             <select name="timeSheetItem_timeSheetItemDurationUnitID">{$timeSheetItem_unit_options}</select>
-            &nbsp;x&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$timeSheetItem_rate}">
+            &nbsp;x&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$timeSheetItem_rate}"> (inc. {$taxName})
           </td>
         </tr>
         <tr>

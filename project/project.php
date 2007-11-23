@@ -655,6 +655,8 @@ if ($new_project) {
   $TPL["projectSelfLink"] .= "</a>";
 }
 
+$TPL["taxName"] = config::get_config_item("taxName");
+
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");
 } else {

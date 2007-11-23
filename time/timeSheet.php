@@ -829,6 +829,8 @@ if ($timeSheetID) {
   $TPL["main_alloc_title"] = "New Time Sheet - ".APPLICATION_NAME;
 }
 
+$TPL["taxName"] = config::get_config_item("taxName");
+
 include_template("templates/timeSheetFormM.tpl");
 
 

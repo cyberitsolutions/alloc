@@ -61,13 +61,13 @@ function updateClientContact(number) \{
   </tr>
   <tr>
     <td align="right" class="nobr">Project Budget $</td>
-    <td class="nobr"><input type="text" name="projectBudget" value="{$project_projectBudget}" size="10"></td>
+    <td class="nobr"><input type="text" name="projectBudget" value="{$project_projectBudget}" size="10">(ex. {$taxName})</td>
   </tr>
   <tr>
     <td align="right">Client</td>
     <td><nobr><select name="clientID" onChange="updateStuffWithAjax()">{$clientOptions}</select>&nbsp; &nbsp;<a href="{$url_alloc_client}">New Client</a></nobr></td>
     <td align="right" class="nobr">Client Billed At $</td>
-    <td><input type="text" name="customerBilledDollars" value="{$project_customerBilledDollars}" size="10"> (per unit)</td>
+    <td><input type="text" name="customerBilledDollars" value="{$project_customerBilledDollars}" size="10"> (per unit, inc. {$taxName})</td>
   </tr>
   <tr>
     <td align="right">Client Contact</td>
