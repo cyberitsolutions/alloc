@@ -326,9 +326,9 @@ class db {
   function get_db_version() {
     $link_id = $this->link_id;
     if (!$link_id) {
-      $link_id = mysql_connect($this->hostname);
+      $link_id = @mysql_connect($this->hostname);
     }
-    $a = mysql_get_server_info($link_id);
+    $a = @mysql_get_server_info($link_id);
     $b = substr($a, 0, strpos($a, "-"));
     return $b;
   }
