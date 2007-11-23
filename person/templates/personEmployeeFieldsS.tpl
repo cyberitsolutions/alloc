@@ -13,3 +13,8 @@
   <td>Comments</td>
   <td colspan="3"><textarea rows="3" cols="50" name="comments">{$person_comments}</textarea></td>
 </tr>
+<tr>
+  <td>Emergency Contact Information</td>
+  <td colspan="3"><textarea rows="3" cols="50" name="emergencyContact">{$person_emergencyContact}</textarea></td>
+</tr>
+
