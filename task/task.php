@@ -392,7 +392,7 @@ if ($task->get_id()) {
 
 
 
-
+$TPL["taskSelfLink"] = $task->get_task_header();
 
 // Printer friendly view
 if ($_GET["media"] == "print") {
@@ -424,6 +424,7 @@ if ($_GET["media"] == "print") {
   // Need to html-ise taskName and description
   $TPL["task_taskName"] = text_to_html($task->get_value("taskName"));
   $TPL["task_taskDescription"] = text_to_html($task->get_value("taskDescription"));
+  $TPL["taskHash"] = $task->make_token_add_comment_from_email();
 
   include_template("templates/taskM.tpl");
 }
