@@ -51,6 +51,7 @@ if ($_POST["save"]) {
 // Load data for display in the template
 $taskCommentTemplate->set_tpl_values();
 
+$TPL["main_alloc_title"] = "Edit Comment Template - ".APPLICATION_NAME;
 // Invoke the page's main template
 include_template("templates/taskCommentTemplateM.tpl");
 

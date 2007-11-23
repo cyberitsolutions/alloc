@@ -328,7 +328,7 @@ if ($_POST["do_step_3"]) {
 
 
 
-
+$TPL["main_alloc_title"] = "Reports - ".APPLICATION_NAME;
 
 include_template("templates/reportM.tpl");
 

@@ -105,8 +105,10 @@ if ($TPL["transactionModifiedUser"]) {
 }
 
 if ($transaction->have_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION)) {
+  $TPL["main_alloc_title"] = "Create Transaction - ".APPLICATION_NAME;
   include_template("templates/editTransactionM.tpl");
 } else {
+  $TPL["main_alloc_title"] = "View Transaction - ".APPLICATION_NAME;
   include_template("templates/viewTransactionM.tpl");
 }
 

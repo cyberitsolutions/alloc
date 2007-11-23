@@ -39,5 +39,6 @@ function show_taskCommentTemplate($template_name) {
   }
 }
 
+$TPL["main_alloc_title"] = "Comment Template List - ".APPLICATION_NAME;
 include_template("templates/taskCommentTemplateListM.tpl");
 page_close();

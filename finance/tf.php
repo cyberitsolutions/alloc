@@ -135,6 +135,8 @@ if ($tf->get_value("tfModifiedUser")) {
   $TPL["tfModifiedUser"] = $db->f("username");
 }
 
+$TPL["main_alloc_title"] = "Edit TF - ".APPLICATION_NAME;
+
 include_template("templates/tfM.tpl");
 
 page_close();

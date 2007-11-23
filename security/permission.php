@@ -73,6 +73,8 @@ $entity = new $table_name;
 
 $TPL["actionOptions"] = get_options_from_array($entity->permissions, $permission->get_value("actions"), true, 40, true);
 
+$TPL["main_alloc_title"] = "Edit Permission - ".APPLICATION_NAME;
+
 include_template("templates/permissionM.tpl");
 
 page_close();

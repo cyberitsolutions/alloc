@@ -49,6 +49,8 @@ function show_permission_list($template_name) {
   }
 }
 
+$TPL["main_alloc_title"] = "Permissions List - ".APPLICATION_NAME;
+
 include_template("templates/permissionListM.tpl");
 
 page_close();

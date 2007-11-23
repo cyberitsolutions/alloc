@@ -99,7 +99,7 @@ while ($db->next_record()) {
   }
 }
 
-
+$TPL["main_alloc_title"] = "Execute Repeating Expenses - ".APPLICATION_NAME;
 include_template("templates/checkRepeatM.tpl");
 
 ?>

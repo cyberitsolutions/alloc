@@ -54,6 +54,8 @@ if ($_POST["save"]) {
 // load data for display in the template
 $announcement->set_tpl_values();
 
+$TPL["main_alloc_title"] = "Edit Announcement - ".APPLICATION_NAME;
+
 // invoke the page's main template
 include_template("templates/announcementM.tpl");
 

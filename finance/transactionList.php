@@ -289,6 +289,7 @@ $TPL["now"] = date("M y");
 if ($_POST["download"]) {
   show_transaction();
 } else {
+  $TPL["main_alloc_title"] = "Transaction List - ".APPLICATION_NAME;
   include_template("templates/transactionListM.tpl");
 }
 

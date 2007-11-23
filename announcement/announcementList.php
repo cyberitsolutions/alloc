@@ -43,6 +43,8 @@ function show_announcements($template_name) {
   }
 }
 
+$TPL["main_alloc_title"] = "Announcement List - ".APPLICATION_NAME;
+
 include_template("templates/announcementListM.tpl");
 
 page_close();
