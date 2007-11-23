@@ -63,18 +63,19 @@ global $TPL;
 
   }
 
-
+$noRedirect = $_POST["idRedirect"] or $_GET["idRedirect"];
 $search = $_POST["search"] or $search = $_GET["search"];
 $category = $_POST["category"] or $category = $_GET["category"];
-$needle = trim(db_esc($_POST["needle"]) or $needle = db_esc(urldecode($_GET["needle"])));
+$needle = trim(db_esc($_POST["needle"])) or $needle = trim(db_esc(urldecode($_GET["needle"])));
 
 if (!$search) {
   $str = "<br/><br/>";
-  $str.= "<b>Searching Tasks</b> looks for a match in each Task's Name, Description and Comments.<br><br>";
-  $str.= "<b>Searching Projects</b> looks for a match in each Project's Name, Client and Comments.<br><br>";  
-  $str.= "<b>Searching Time Sheets</b> looks for a match in each Time Sheets Billing Note, Comment and Project.<br><br>";
-  $str.= "<b>Searching Items</b> looks for a matching Item Name.<br><br>";
-  $str.= "<b>Searching Clients</b> looks for a match in each Client's Name, Contact Name, and Comments.<br><br>";
+  $str.= "<b>Searching Tasks</b> looks for a match in each Task's Name, Description and Comments.<br /><br />";
+  $str.= "<b>Searching Projects</b> looks for a match in each Project's Name, Client and Comments.<br /><br />";  
+  $str.= "<b>Searching Time Sheets</b> looks for a match in each Time Sheets Billing Note, Comment and Project.<br /><br />";
+  $str.= "<b>Searching Items</b> looks for a matching Item Name.<br /><br />";
+  $str.= "<b>Searching Clients</b> looks for a match in each Client's Name, Contact Name, and Comments.<br /><br />";
+  $str.= "<b>Redirection by ID</b> will cause a redirection to the task, project, etc. if the search key is a valid ID. Disable this to search for numerical strings.";
   $TPL["search_results"] = $str;
 
 
@@ -83,7 +84,7 @@ if (!$search) {
 
   $db = new db_alloc;
 
-  if (is_numeric($needle)) {
+  if (!$noRedirect && is_numeric($needle)) {
     $query = sprintf("SELECT projectID FROM project WHERE projectID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
@@ -143,7 +144,7 @@ if (!$search) {
 
   $db = new db_alloc;
 
-  if (is_numeric($needle)) {
+  if (!$noRedirect && is_numeric($needle)) {
     $query = sprintf("SELECT clientID FROM client WHERE clientID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
@@ -226,7 +227,7 @@ if (!$search) {
   // need to search tables: task;
   $db = new db_alloc;
 
-  if (is_numeric($needle)) {
+  if (!$noRedirect && is_numeric($needle)) {
     $query = sprintf("SELECT taskID FROM task WHERE taskID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
@@ -283,7 +284,7 @@ if (!$search) {
 
   $db = new db_alloc;
 
-  if (is_numeric($needle)) {
+  if (!$noRedirect && is_numeric($needle)) {
     $query = sprintf("SELECT announcementID FROM announcement WHERE announcementID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
@@ -318,7 +319,7 @@ if (!$search) {
   // need to search tables: item;
   $db = new db_alloc;
 
-  if (is_numeric($needle)) {
+  if (!$noRedirect && is_numeric($needle)) {
     $query = sprintf("SELECT itemID FROM item WHERE itemID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
@@ -393,7 +394,7 @@ if (!$search) {
 
   $db = new db_alloc;
 
-  if (is_numeric($needle)) {
+  if (!$noRedirect && is_numeric($needle)) {
     $query = sprintf("SELECT timeSheetID FROM timeSheet WHERE timeSheetID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
@@ -453,7 +454,9 @@ if (!$search) {
 $TPL["search_category_options"] = get_category_options($category);
 $TPL["needle"] = $needle;
 $TPL["needle2"] = $needle;
-
+if (!$needle || $noRedirect) {
+  $TPL["redir"] = "checked=\"1\"";
+}
 
 if ($TPL["search_results"]) {
   $TPL["search_results"] = str_replace("[[[","<em class=\"highlighted\">",$TPL["search_results"]);
