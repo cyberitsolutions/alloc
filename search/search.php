@@ -450,7 +450,7 @@ if (!$search) {
 
 
 // setup generic values
-$TPL["category_options"] = get_category_options($category);
+$TPL["search_category_options"] = get_category_options($category);
 $TPL["needle"] = $needle;
 $TPL["needle2"] = $needle;
 

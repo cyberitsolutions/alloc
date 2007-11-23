@@ -325,8 +325,8 @@ function show_tabs() {
   }
 }
 function show_toolbar() {
-  global $TPL, $category;
-  $TPL["category_options"] = get_category_options($_POST["category"]);
+  global $TPL;
+  $TPL["category_options"] = get_category_options($_GET["category"]);
   $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Enter Search...";
   include_template(ALLOC_MOD_DIR."shared/templates/toolbarS.tpl");
 }
@@ -641,7 +641,7 @@ function get_options_from_array($options, $selected_value, $use_values = true, $
   foreach ($options as $value => $label) {
     $rtn.= "\n<option";
     if ($use_values) {
-      $rtn.= " value=\"$value\"";
+    $rtn.= " value=\"$value\"";
 
       if ($value == $selected_value || ($bitwise_values && (($selected_value & $value) == $value))) {
         $rtn.= " selected";
