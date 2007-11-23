@@ -37,6 +37,7 @@ class expenseForm extends db_entity {
                                , "expenseFormCreatedUser"=>new db_field("expenseFormCreatedUser")
                                , "expenseFormCreatedTime"=>new db_field("expenseFormCreatedTime")
                                , "expenseFormFinalised"=>new db_field("expenseFormFinalised", array("empty_to_null"=>false))
+                               , "expenseFormComment"=>new db_field("expenseFormComment")
       );
   }
 
