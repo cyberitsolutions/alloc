@@ -80,6 +80,12 @@ while ($db->next_record()) {
   //echo "<br/>".$nextScheduled." <= ".$today." && ".$nextScheduled." >= ".$startDate." && ".$nextScheduled." <= ".$finishDate;
   while ($nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate) {
 
+    $tf = new tf;
+    $tf->set_id("transactionRepeat->get_value("tfID"));
+    if ($tf->get_value("status") != 'active') {
+      continue;
+    }
+
     $transaction = new transaction;
     $transaction->set_value("tfID", $transactionRepeat->get_value("tfID"));
     $transaction->set_value("companyDetails", $transactionRepeat->get_value("companyDetails"));

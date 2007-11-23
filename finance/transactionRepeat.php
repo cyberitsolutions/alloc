@@ -125,15 +125,26 @@ if ($transactionRepeat->get_value("transactionRepeatModifiedUser")) {
 
 if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
   // Person can access all TF records
-  $db->query("SELECT * FROM tf ORDER BY tfName");
+  $db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
 } else if (have_entity_perm("tf", PERM_READ, $current_user, true)) {
   // Person can only read TF records that they own
-  $db->query("select  * from tf,tfPerson where tfPerson.personID=".$current_user->get_id()." and tf.tfID=tfPerson.tfID order by tfName");
+  $db->query("select  * from tf,tfPerson where tfPerson.personID=".$current_user->get_id()." and tf.tfID=tfPerson.tfID AND tf.status = 'active' order by tfName");
 } else {
   die("No permissions to generate TF list");
 }
 
 $TPL["tfOptions"] = get_option("", "0", false)."\n";
+
+//special case for disabled TF. Include it in the list, but also add a warning
+//message.
+$tf = new tf;
+$tf->set_id($transactionRepeat->get_value("tfID"));
+$tf->select();
+if ($tf->get_value("status") != 'active') {
+  $TPL["tfOptions"].= get_option($tf->get_value("tfName"), $transactionRepeat->get_value("tfID"), true);
+  $TPL["message_help"][] = "This expense is allocated to an inactive TF. It will not create transactions.";
+}
+
 $TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $transactionRepeat->get_value("tfID"));
 $TPL["basisOptions"] = get_options_from_array(array("weekly", "fortnightly", "monthly", "quarterly", "yearly"), $transactionRepeat->get_value("paymentBasis"), false);
 $TPL["transactionTypeOptions"] = get_select_options(transaction::get_transactionTypes(), $transactionRepeat->get_value("transactionType"));

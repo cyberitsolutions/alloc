@@ -76,12 +76,13 @@ if ($_POST["upload"]) {
       continue;
     }
     // Find the TF ID for the expense
-    $query = sprintf("SELECT * FROM tf WHERE quickenAccount='%s'", addslashes($account));
+    $query = sprintf("SELECT * FROM tf WHERE status = 'active' AND quickenAccount='%s'", addslashes($account));
+    echo $query;
     $db->query($query);
     if ($db->next_record()) {
       $tfID = $db->f("tfID");
     } else {
-      $msg.= "<b>Warning: Could not find TF for account '$account'</b><br>";
+      $msg.= "<b>Warning: Could not find active TF for account '$account'</b><br>";
       continue;
     }
 

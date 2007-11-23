@@ -32,6 +32,12 @@ if ($_POST["owner"]) {
   $TPL["owner_checked"] = "";
 }
 
+if ($_POST["showall"]) {
+  $TPL["showall_checked"] = " checked";
+} else {
+  $filter[] = "status = 'active'";
+}
+
 $TPL["main_alloc_title"] = "TF List - ".APPLICATION_NAME;
 
 include_template("templates/tfListM.tpl");

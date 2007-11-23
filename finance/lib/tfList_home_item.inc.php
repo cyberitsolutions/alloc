@@ -38,6 +38,11 @@ class tfList_home_item extends home_item {
       $tf = new tf;
       $tf->set_id($db->f("tfID"));
       $tf->select();
+
+      if ($tf->get_value("status") != 'active') {
+        continue;
+      }
+
       $tf->set_tpl_values();
 
       if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {

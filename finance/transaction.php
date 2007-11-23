@@ -92,7 +92,7 @@ $TPL["statusOptions"] = get_options_from_array(array("pending", "rejected", "app
 $TPL["transactionTypeOptions"] = get_options_from_array(array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance"), $transaction->get_value("transactionType"), false);
 
 $db = new db_alloc;
-$db->query("SELECT tfID, tfName FROM tf ORDER BY tfName");
+$db->query("SELECT tfID, tfName FROM tf WHERE status = 'active' ORDER BY tfName");
 $TPL["tfIDOptions"] = get_options_from_db($db, "tfName", "tfID", $transaction->get_value("tfID"));
 
 $db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'current' ORDER BY projectName");

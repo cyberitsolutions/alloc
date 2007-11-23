@@ -65,7 +65,7 @@ require_once("../alloc.php");
 $db = new db_alloc;
 $transaction = new transaction;
 
-$db->query("SELECT * FROM tf ORDER BY tfName");
+$db->query("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
 $TPL["tfOptions"] = get_option("", "0", false)."\n";
 $TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $_POST["tfID"]);
 

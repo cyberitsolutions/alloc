@@ -90,7 +90,7 @@ if ($_POST["save"]) {
 $config = new config;
 get_cached_table("config",true); // flush cache
 
-$db->query("SELECT * FROM tf ORDER BY tfName");
+$db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
 $options[""] = "";
 while($row = $db->row()) {
   $options[$row["tfID"]] = $row["tfName"];

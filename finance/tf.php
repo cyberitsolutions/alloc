@@ -90,6 +90,8 @@ if ($_POST["save"]) {
       $tf_is_taken = $db->f("tally");
     }
 
+
+
     if ($tf_is_taken) {
       $TPL["message"][] = "That TF name is taken, please choose another.";
     } else {
@@ -134,6 +136,10 @@ if ($tf->get_value("tfModifiedUser")) {
   $db->next_record();
   $TPL["tfModifiedUser"] = $db->f("username");
 }
+
+$tfStatus_array = array("active"=>"Active", "disabled"=>"Disabled");
+//"readonly" => "Read-Only");
+$TPL["status_dropdown"] = get_select_options($tfStatus_array, $tf->get_value("status"));
 
 $TPL["main_alloc_title"] = "Edit TF - ".APPLICATION_NAME;
 

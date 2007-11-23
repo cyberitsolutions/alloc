@@ -125,7 +125,7 @@ function show_invoiceItem_list() {
 
   $db = new db_alloc();
   $db2 = new db_alloc();
-  $q = sprintf("SELECT * FROM tf ORDER BY tfName");
+  $q = sprintf("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
   $db->query($q);
   #$tf_array = get_array_from_db($db, "tfID", "tfName");
 

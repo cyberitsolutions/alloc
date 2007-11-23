@@ -20,6 +20,13 @@
     <td><input type="text" size="30" maxlength="255" name="quickenAccount" value="{$quickenAccount}"></td> 
   </tr>
   <tr>
+    <td>Status: </td>
+    <td><select name="status">
+      {$status_dropdown}
+      </select>
+    </td>
+  </tr>
+  <tr>
     <td>Comments: </td>
     <td><textarea rows="4" cols="30" wrap="virtual" name="tfComments">{$tfComments}</textarea></td>
   </tr>
