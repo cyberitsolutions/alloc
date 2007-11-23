@@ -31,6 +31,11 @@
     <td colspan="4">&nbsp;</td>
   </tr>
   <tr>
+    <td style="text-align:right">Comment:</td>
+    <td colspan="3">
+    <textarea rows="5" cols="70" wrap="virtual" name="expenseFormComment">{$expenseFormComment}</textarea></td>
+  </tr>
+  <tr>
     <td colspan="4" align="center">
       {$expenseFormButtons}
     </td>

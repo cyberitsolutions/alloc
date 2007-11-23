@@ -106,6 +106,7 @@ CREATE TABLE expenseForm (
   transactionRepeatID int(11) NOT NULL default '0',
   expenseFormFinalised tinyint(4) NOT NULL default '0',
   seekClientReimbursement int(1) NOT NULL default 0,
+  expenseFormComment text default "",
   PRIMARY KEY  (expenseFormID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
