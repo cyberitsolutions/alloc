@@ -268,6 +268,7 @@ CREATE TABLE person (
   sessData text,
   phoneNo1 varchar(255) default "",
   phoneNo2 varchar(255) default "",
+  emergencyContact varchar(255) default "",
   PRIMARY KEY (personID),
   UNIQUE KEY (username)
 ) TYPE=MyISAM PACK_KEYS=0;

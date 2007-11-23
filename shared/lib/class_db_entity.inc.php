@@ -336,7 +336,7 @@ class db_entity {
     $this->read_array($_POST, $prefix, $source);
   }
 
-  function set_global_variables($variale_name_prefix = "") {
+  function set_global_variables($variable_name_prefix = "") {
     $this->write_array($GLOBALS, DST_VARIABLE, $variable_name_prefix);
   }
 

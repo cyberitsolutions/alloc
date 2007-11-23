@@ -53,7 +53,9 @@ class person extends db_entity {
                                , "personActive"=>new db_field("personActive")
                                , "sessData"=>new db_field("sessData")
                                , "phoneNo1"=>new db_field("phoneNo1")
-                               , "phoneNo2"=>new db_field("phoneNo2")
+			       , "phoneNo2"=>new db_field("phoneNo2")
+			       #			       , "emergencyContact"=>new db_field("emergencyContact", array("read_perm_name"=>PERM_READ))
+      			       , "emergencyContact"=>new db_field("emergencyContact")
       );
 
     $this->permissions[PERM_PERSON_READ_DETAILS] = "Read details";
