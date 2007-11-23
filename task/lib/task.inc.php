@@ -357,7 +357,7 @@ class task extends db_entity {
       // Get all the project people for this tasks project
       $q = sprintf("SELECT emailAddress, firstName, surname 
                      FROM projectPerson LEFT JOIN person on projectPerson.personID = person.personID 
-                    WHERE projectPerson.projectID = %d",$projectID);
+                    WHERE projectPerson.projectID = %d AND person.personActive = 1 ",$projectID);
       $db->query($q);
       while ($db->next_record()) {
         $taskCCListOptions[$db->f("emailAddress")] = stripslashes($db->f("firstName")." ".$db->f("surname"));
