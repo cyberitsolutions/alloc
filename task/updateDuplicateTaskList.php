@@ -31,6 +31,7 @@ if ($_GET["projectID"]) {
   $opt["taskStatus"] = $_GET["task_status"];
   $opt["taskView"] = "byProject";
   $tasklist = task::get_task_list($opt);
+  unset($tasklist[$_GET["taskID"]]);
   
   $dropdown_options = get_option("", 0);
 
@@ -46,7 +47,7 @@ if ($_GET["projectID"]) {
     $dropdown_options.= get_option($duplicateID." ".$othertask->get_task_name(), $duplicateID, true);
   }
   $dropdown_options.= get_select_options($tasklist, $duplicateID, 40);
-  echo stripslashes("<select>".$dropdown_options."/select");
+  echo stripslashes("<select name=\"duplicateTaskID_1\">".$dropdown_options."/select");
 }
 
 

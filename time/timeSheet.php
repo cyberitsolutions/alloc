@@ -400,6 +400,7 @@ if ($_POST["save"]
           $selectedTask->select();
 	  $message_good = "Task <a href=\"".$TPL["url_alloc_task"]."taskID=".$_POST["timeSheetItem_taskID"]."\">".$_POST["timeSheetItem_taskID"]." ".$oldName."</a> is marked as a duplicate.";
           $message_good.=  " Time was allocated to task <a href=\"".$TPL["url_alloc_task"]."taskID=".$selectedTask->get_id()."\">".$selectedTask->get_id()." ".$selectedTask->get_task_name()."</a>.";
+	  $timeSheetItem->set_value("taskID", $selectedTask->get_id());
         }
 
         $taskName = $selectedTask->get_task_name();
