@@ -18,6 +18,16 @@ a:link, a:visited {
 a:hover { 
   color:(A_HOVER); 
 }
+
+a.growshrink {
+  color:(TD_COLOR);
+  text-decoration:none;
+  border-bottom:1px dashed (BODY_COLOR);
+}
+a.growshrink:hover {
+  border-bottom:1px solid (BODY_COLOR);
+}
+
 h1 { 
   font-weight:bold; 
   font-size:(H1_FONT_SIZE)px; 
