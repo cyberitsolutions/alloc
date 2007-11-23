@@ -51,8 +51,8 @@ class task extends db_entity {
                                  , "parentTaskID"=>new db_field("parentTaskID")
                                  , "taskTypeID"=>new db_field("taskTypeID")
                                  , "personID"=>new db_field("personID")
-                                 , "managerID"=>new db_field("managerID")
-                                 
+				 , "managerID"=>new db_field("managerID")
+                                 , "duplicateTaskID"=>new db_field("duplicateTaskID")
       );
 
     if (isset($current_user)) {
@@ -138,6 +138,24 @@ class task extends db_entity {
     return $msg; 
   }
 
+  function email_task_duplicate() {
+    global $current_user;
+    if ($current_user->get_id() != $this->get_value("creatorID")) {
+      $recipients[] = "creator";
+    }
+    if ($current_user->get_id() != $this->get_value("managerID")) {
+      $recipients[] = "manager";
+    }
+    if ($current_user->get_id() != $this->get_value("personID")) {
+      $recipients[] = "assignee";
+    }
+
+    if ($recipients) {
+      $successful_recipients = $this->send_emails($recipients,"task_duplicate");
+      $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Marked as Duplicate: ".stripslashes($this->get_value("taskName"));
+    }
+    return $msg; 
+  }
   function new_message_task() {
     // Create a reminder with its regularity being based upon what the task priority is
 
@@ -673,7 +691,8 @@ class task extends db_entity {
       $types = array('task_created'    => "Task Created"
                     ,'task_closed'     => "Task Closed"
                     ,'task_comments'   => "Task Comments"
-                    ,'task_reassigned' => "Task Reassigned"
+		    ,'task_reassigned' => "Task Reassigned"
+		    ,'task_duplicate'  => "Task marked as duplicate"
                     );
     
       $subject = $types[$type];

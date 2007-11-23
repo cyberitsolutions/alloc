@@ -74,12 +74,12 @@ define("PAGE_IS_PRINTABLE",1);
   }
 
   function show_attachments() {
-    global $taskID;
-    util_show_attachments("task",$taskID);
+    global $taskID, $dupeID;
+    util_show_attachments("task",$taskID, $dupeID);
   }
 
   function show_taskComments() {
-    global $taskID, $TPL;
+    global $taskID, $TPL, $dupeID;
     $options["showEditButtons"] = true;
     $TPL["commentsR"] = util_get_comments("task",$taskID,$options);
     if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
@@ -116,6 +116,25 @@ if (isset($taskID)) {
   $orig_personID = $task->get_value("personID");
   $orig_dateActualCompletion = $task->get_value("dateActualCompletion");
 
+  //build list of possible duplicated tasks
+  $opt["return"] = "dropdown_options";
+  $opt["projectID"] = $task->get_value("projectID");
+  $opt["taskStatus"] = "not_completed";
+  $opt["taskView"] = "byProject";
+  $tasklist = task::get_task_list($opt);
+
+  $dropdown_options = get_option("", 0);
+  $duplicateID = $task->get_value("duplicateTaskID");
+  if ($duplicateID && !$tasklist[$duplicateID]) {
+    $othertask = new task;
+    $othertask->set_id($duplicateID);
+    $othertask->select();
+    $dropdown_options.= get_option($duplicateID." ".$othertask->get_task_name(), $duplicateID, true);
+  }
+
+  $dropdown_options.= get_select_options($tasklist,$duplicateID, 40);
+  $TPL["dupe_list_dropdown"] = $dropdown_options;
+
 // Creating a new record
 } else {
   $_POST["dateCreated"] = date("Y-m-d H:i:s");
@@ -124,6 +143,7 @@ if (isset($taskID)) {
   if ($task->get_value("projectID")) {
     $project = $task->get_foreign_object("project");
   }
+  $TPL["hide_duplicate_options"] = true;
 }
 
 // if someone uploads an attachment
@@ -138,6 +158,30 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 
   $task->read_globals();
   $task_is_new = !$task->get_id();
+
+  // Marked as dupe?
+  $dupeID = $_POST["duplicateTaskID_1"];
+  if ($dupeID && $task->get_value("duplicateTaskID") != $dupeID) {
+    $task->set_value("duplicateTaskID", $dupeID);
+    // Close off the task
+    if (!$task->get_value("dateActualCompletion")) {
+      $task->set_value("dateActualCompletion", date("Y-m-d"));
+    }
+    $task->email_task_duplicate();
+    //Insert a comment to the other task
+    //Possibly the wrong method.
+    /*
+    $comment = new comment;
+    $comment->set_value('commentType', "task");
+    $comment->set_value('commentLinkID', $dupeID);
+    $comment->set_value('comment', "Task ".$task->get_id()." has been marked as a duplicate of this task.");
+    $comment->save();
+     */
+  }
+  //unmark as dupe
+  if (!$dupeID && $task->get_value("duplicateTaskID")) {
+    $task->set_value("duplicateTaskID", 0);
+  }
 
   // If dateActualCompletion and there's no dateActualStart then default today
   if ($task->get_value("dateActualCompletion") && $task->get_value("dateActualStart") == "") {
@@ -329,8 +373,27 @@ if (is_array($parentTaskIDs)) {
     $TPL["hierarchy_links"] .= "<br/>".$spaces."<a href=\"".$TPL["url_alloc_task"]."taskID=".$tID."\">".$tID." ".$tName."</a>";
   }
 }
-
 $TPL["hierarchy_links"].= "<br/><br/><b>".$TPL["task_taskID"]." ".$TPL["task_taskName"]."</b>";
+
+$dupeID=$task->get_value("duplicateTaskID");
+if (!$dupeID) {
+  } else {
+  $realtask = new task;
+  $realtask->set_id($dupeID);
+  $realtask->select();
+
+  $mesg = "<strong>This task has been marked as a duplicate of Task <a href=\"";
+  $mesg.= $TPL["url_alloc_task"]."taskID=".$dupeID;
+  $mesg.= "\">".$dupeID." ";
+  $mesg.=$realtask->get_value("taskName")."</a></strong>";
+
+  $TPL["message_help"][] = $mesg;
+  $TPL["comments_disabled"] = true;
+
+  $TPL["editing_disabled"] = true;
+  $TPL["disabled_reason"] = "Posting comments for this task is disabled because it has been marked as a duplicate.";
+
+}
 
 
 
@@ -421,6 +484,7 @@ if ($_GET["media"] == "print") {
 // Detailed editable view
 } else if ($_GET["view"] == "detail" || !$task->get_id()) {
   $TPL["task_taskName"] = text_to_html($task->get_value("taskName"));
+
   include_template("templates/taskDetailM.tpl");
 
 // Default read-only view

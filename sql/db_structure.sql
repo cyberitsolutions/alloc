@@ -431,6 +431,7 @@ CREATE TABLE task (
   taskTypeID int(11) NOT NULL default '1',
   taskModifiedUser int(11) DEFAULT NULL,
   taskCommentTemplateID int(11) default NULL,
+  duplicateTaskID int(11) default NULL,
   PRIMARY KEY  (taskID),
   KEY taskName (taskName),
   KEY dateAdded (dateCreated),
