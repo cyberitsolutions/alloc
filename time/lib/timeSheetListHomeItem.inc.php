@@ -22,6 +22,7 @@
  */
 
 class timeSheetListHomeItem extends home_item {
+
   function timeSheetListHomeItem() {
     global $current_user, $TPL;
     home_item::home_item("time_list", "Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
@@ -36,8 +37,9 @@ class timeSheetListHomeItem extends home_item {
     $TPL["dollars_avg"] = sprintf("%d",$dollars_avg[$current_user->get_id()]);
   }
 
-  function show_time_sheets($template_name) {
+  function time_sheet_items() {
     global $current_user, $TPL;
+    $grand_total = 0;
 
     $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
                         FROM timeSheet
@@ -48,32 +50,32 @@ class timeSheetListHomeItem extends home_item {
                     ORDER BY timeSheet.status, timeSheet.dateFrom", $current_user->get_id());
     $db = new db_alloc;
     $db->query($query);
+    $lines = array();
     while ($db->next_record()) {
       $timeSheet = new timeSheet;
       $timeSheet->read_db_record($db);
       $timeSheet->set_tpl_values();
+      $line = array();
 
-      #if ($timeSheet->get_value("status") == "edit") {
-        $TPL["status"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".ucwords($timeSheet->get_value("status"))."</a>";
-      #} else {
-        #$TPL["status"] = $timeSheet->get_value("status");
-      #}
+        $line["status"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".ucwords($timeSheet->get_value("status"))."</a>";
 
-      $TPL["total_dollars"] = "\$0";
-      $db->f("total_dollars") > 0 and $TPL["total_dollars"] = "\$".sprintf("%d", $db->f("total_dollars"));
+      $line["total_dollars"] = "\$0";
+      $db->f("total_dollars") > 0 and $line["total_dollars"] = "\$".sprintf("%d", $db->f("total_dollars"));
+      $grand_total += $db->f("total_dollars");
 
       $project = $timeSheet->get_foreign_object("project");
       if ($project->get_value("projectShortName")) {
-        $TPL["projectName"] = $project->get_value("projectShortName");
+        $line["projectName"] = $project->get_value("projectShortName");
       } else {
-        $TPL["projectName"] = $project->get_value("projectName");
+        $line["projectName"] = $project->get_value("projectName");
       }
-
-      include_template($this->get_template_dir().$template_name);
+      $lines[] = $line;
     }
+  $rtn["total"] = sprintf("%d", $grand_total);
+  $rtn["lines"] = $lines;
+  return $rtn;
   }
+
 }
-
-
 
 ?>

@@ -11,9 +11,23 @@
 </tr>
 </table>
 <br/>
+{$fields = $TPL["this"]->time_sheet_items()}
+{if count($fields["lines"]) > 0}
 <table border="0" cellspacing="0" cellpadding="2" width="100%">
 <tr>
   <td colspan="3"><b>Current Time Sheets</b></td>
 </tr>
-  {$TPL["this"]->show_time_sheets("timeSheetHomeR.tpl")}
+{foreach $fields["lines"] as $line}
+<tr>
+  <td>{$line.projectName}</td>
+  <td class="nobr">{$line.dateFrom}</td>
+  <td class="nobr">{$line.total_dollars}</td>
+  <td class="noprint">{$line.status}</td>
+</tr>
+{/}
+<tr>
+<td >Total</td>
+<td colspan="2" class="grand_total"> ${echo $fields["total"]}</td>
+</tr>
+{/}
 </table>
