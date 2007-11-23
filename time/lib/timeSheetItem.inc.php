@@ -57,7 +57,7 @@ class timeSheetItem extends db_entity {
 
     $limit = $timeSheet->get_amount_allocated();
 
-    if ($total > $limit) {
+    if ($limit && $total > $limit) {
       return "Adding this Time Sheet Item would exceed the amount allocated for this Time Sheet.";
       exit;
     }
