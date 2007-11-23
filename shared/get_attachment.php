@@ -46,7 +46,9 @@ if (isset($_GET["id"]) && $file && !bad_filename($file)) {
     }
     header('Content-Type: '.$mimetype);
     header("Content-Length: ".filesize($file));
-    header('Content-Disposition: attachment; filename="'.basename($file).'"');
+    if ($mimetype == "application/octet-stream") {
+    	header('Content-Disposition: attachment; filename="'.basename($file).'"');
+    }
     fpassthru($fp);
     exit;
   }
