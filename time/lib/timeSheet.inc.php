@@ -525,7 +525,7 @@ class timeSheet extends db_entity
       $t = new task;
       $t->set_id($taskID);
       $t->select();
-      $tasks[$taskID] = $t->get_task_name();
+      $tasks[$taskID] = $t->get_id()." ".$t->get_task_name();
     }
 
     $dropdown_options = get_option("",0);
