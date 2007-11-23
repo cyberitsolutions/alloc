@@ -622,9 +622,12 @@ function get_select_options($options,$selected_value=NULL,$max_length=45) {
       }
 
       $label = stripslashes($label);
+      $label = str_replace("&nbsp;"," ",$label);
       if (strlen($label) > $max_length) {
         $label = substr($label, 0, $max_length - 3)."...";
       } 
+      #$label = htmlentities($label); nope!
+      $label = str_replace(" ","&nbsp;",$label);
 
       $str.= "\n<option value=\"".$value."\"".$sel.">".$label."</option>";
     }

@@ -76,6 +76,9 @@ form {
 .hidden {
   display:none;
 }
+.padded {
+  padding:8px;
+}
 
 #helper { 
   position:absolute; 
