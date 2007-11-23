@@ -49,7 +49,7 @@
   <tr>
     <td>Amount</td>
     <td><input type="text" name="amount" size="20" value="{$amount}"></td>
-    <td class="hint">Enter the amount of the transaction.  Expenses and salaries should generally be negative amounts.  Do no include the $ character, spaces or commas</td>
+    <td class="hint"> (inc. {$taxName}).</td>
   </tr>
   <tr>
     <td>Status</td>
