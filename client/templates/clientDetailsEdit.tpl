@@ -5,7 +5,7 @@
           <td colspan="3" width="100%">
             <table border="0" cellspacing=0 cellpadding=5 width="100%">
               <tr>
-                <td class="nobr"><b>Company Name</b></td>
+                <td class="nobr"><b>Client Name</b></td>
                 <td colspan="2"><input type="text" size="43" name="clientName" value="{$client_clientName}" tabindex="1"></td>
                 <td><select name="clientStatus" tabindex="2">{$clientStatusOptions}</select></td>
               </tr>

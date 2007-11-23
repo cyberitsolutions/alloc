@@ -3,7 +3,7 @@
       <table>
         <tr>
           <td colspan="3">
-            <b>Company Name:</b> {$client_clientName}<br/>
+            <b>Client Name:</b> {$client_clientName}<br/>
             <b>Phone:</b> {$client_clientPhoneOne}<br/>
             <b>Fax:</b> {$client_clientFaxOne}</br>
             <b>Status:</b>{$client_clientStatus}
