@@ -273,7 +273,11 @@ class client extends db_entity {
     return $rtn;
   }
 
-
+  function get_url() {
+    global $sess;
+    $url = "client/client.php?&clientID=".$this->get_id();
+    return config::get_config_item("allocURL").$url;
+  }
 
 }
 

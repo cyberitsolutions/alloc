@@ -24,7 +24,7 @@ function updateTaskCommentTemplate(number) \{
 <input type="hidden" name="taskID" value="{$task_taskID}">
 {$table_box}
   <tr>
-    <th class="nobr">{$task_taskType}</th>
+    <th class="nobr">{$task_taskType} {$taskSelfLink}</th>
     <th class="right nobr" colspan="4"><a href="{$url_alloc_task}taskID={$task_taskID}&view=detail">Edit</a>&nbsp;&nbsp;{$navigation_links}</th>
   </tr>
   <tr>
