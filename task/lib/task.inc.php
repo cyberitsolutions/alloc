@@ -1072,7 +1072,7 @@ function get_task_statii_array() {
             $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
 
             if ($_FORM["return"] == "dropdown_options"){
-              $summary_ops[$row["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;",$row["padding"]).$row["taskName"];
+              $summary_ops[$row["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;",$row["padding"]).$row["taskID"]." ".$row["taskName"];
             } else {
               $tasks[$row["taskID"]] = $row;
               $summary.= task::get_task_list_tr($row,$_FORM);
