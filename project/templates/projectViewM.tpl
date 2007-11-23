@@ -2,7 +2,7 @@
 {show_toolbar()}
 {$table_box}
   <tr>
-    <th><nobr>Project {$projectSelfLink} </nobr></th>
+    <th><nobr>Project: {$projectSelfLink} </nobr></th>
     <th class="right">{$navigation_links}</th>
   </tr>
   <tr>

@@ -429,7 +429,7 @@ if ($current_user->have_role("admin")) {
   $TPL["invoice_links"].= "<a href=\"".$TPL["url_alloc_invoice"]."clientID=".$clientID."\">New Invoice</a>";
 }
 
-$TPL["clientSelfLink"] = sprintf("<a href=\"%s\">%d: %s</a>", $client->get_url(), $client->get_id(), $client->get_client_name());
+$TPL["clientSelfLink"] = sprintf("<a href=\"%s\">%d %s</a>", $client->get_url(), $client->get_id(), $client->get_client_name());
 
 include_template("templates/clientM.tpl");
 

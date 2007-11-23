@@ -34,7 +34,7 @@ function updateStuffWithAjax() \{
 
 {$table_box}
   <tr>
-    <th class="nobr">{$task_taskType} {$taskSelfLink}</th>
+    <th class="nobr">{$task_taskType}: {$taskSelfLink}</th>
     <th class="right nobr" colspan="3">&nbsp;&nbsp;<a href="{$url_alloc_task}taskID={$task_taskID}&view=brief">View</a>&nbsp;&nbsp;{$navigation_links}</th>
   </tr>
   <tr>

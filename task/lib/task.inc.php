@@ -781,7 +781,7 @@ class task extends db_entity {
 
   function get_task_header($_FORM=array()) {
     $rtn = "<a href=\"".$this->get_url()."\">";
-    $rtn.= sprintf("%d: %s", $this->get_id(), $this->get_task_name($_FORM));
+    $rtn.= sprintf("%d %s", $this->get_id(), $this->get_task_name($_FORM));
     $rtn.= "</a>";
     return $rtn;
   }

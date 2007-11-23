@@ -2,7 +2,7 @@
 {show_toolbar()}
 {$table_box}
   <tr>
-    <th>Client {$clientSelfLink}</th>
+    <th>Client: {$clientSelfLink}</th>
   </tr>
   <tr>
     <td>
