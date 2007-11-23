@@ -19,6 +19,20 @@ function updateTaskCommentTemplate(number) \{
   \}
 \}
 
+function refreshTaskList(radiobutton) \{
+  document.getElementById("duplicateTaskList".innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">');
+  url =
+  '{$url_alloc_updateDuplicateTaskList}task_status='+radiobutton.value+'&projectID={$task_projectID}&taskID={$task_taskID}';
+  makeAjaxRequest(url, 'updateDuplicateTaskList', 1);
+\}
+
+function updateDuplicateTaskList(number) \{
+  if (http_request[number].readyState == 4) \{
+    if (http_request[number].status == 200) \{
+    document.getElementById("duplicateTaskList").innerHTML = http_request[number].responseText;
+    \}
+  \}
+\}
 </script>
 <form action="{$url_alloc_task}" method="post">
 <input type="hidden" name="taskID" value="{$task_taskID}">
@@ -98,7 +112,24 @@ function updateTaskCommentTemplate(number) \{
             </nobr>
           </td>
         </tr>
-      </table>
+{if !$TPL["hide_duplicate_options"]}
+        <tr>
+           <td colspan="1">Duplicate of task </td> 
+           <td colspan="1"><div id="duplicateTaskList" class="nobr" style="display:inline">
+	   <select name="duplicateTaskID_1">
+           {$dupe_list_dropdown}</select></div>
+           {get_help("task_duplicate")}</td>
+           <td colspan="1" class="nobr">
+             <label for="task_type_open">Open</label><input id="task_type_open" type="radio" name="task_type" value="not_completed" onClick="refreshTaskList(this)" checked />
+             <label for="task_type_closed">Closed</label><input id="task_type_closed" type="radio" name="task_type" value="completed" onClick="refreshTaskList(this)" />
+           </td>
+        </tr>
+{/}
+
+
+</table>
+
+
 
     </td>
   </tr>
@@ -129,9 +160,13 @@ function updateTaskCommentTemplate(number) \{
 
 {$table_box}
   <tr>
+{if (!$TPL["editing_disabled"])}
     <th>Reminders</th>
     <th class="right" colspan="3"><a href="{$url_alloc_reminderAdd}step=3&parentType=task&parentID={$task_taskID}&returnToParent=task">Add Reminder</a></th>
   </tr>
+{else}
+    <th colspan="4">Reminders</th>
+{/}
   <tr>
     <td>Recipient</td>
     <td>Date / Time</td>

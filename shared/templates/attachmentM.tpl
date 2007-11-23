@@ -8,7 +8,7 @@
     <td class="nobr">Date Modified</td>
     <td>Size</td>
     <td align="right">
-
+{if (!$TPL["attachment_upload_disabled"])}
       <form enctype="multipart/form-data" action="{$entity_url}" method="post">
       <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
       <input type="hidden" name="{$entity_key_name}" value="{$entity_key_value}">
@@ -19,7 +19,7 @@
         </tr>
       </table>
       </form>
-
+{/}
     </td>
   </tr>
 {$attachments}

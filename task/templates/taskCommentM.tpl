@@ -2,6 +2,7 @@
 {$table_box}
   <tr>
     <th>Comments</th>
+{if (!$TPL["editing_disabled"])}
     <th class="right">{get_expand_link("id_new_task_comment")}</th>
   </tr>
   <tr>
@@ -75,9 +76,19 @@
       </form>
     </td>
   </tr>
+{/}
   <tr>
     <td colspan="2">
       {$commentsR}
     </td>
+  </tr>
+{if $TPL["editing_disabled"]}
+  <tr>
+    <td colspan="2">
+      <p><em>{$disabled_reason}</em></p>
+    </td>
+  </tr>
+{/}
+
 </table>
 
