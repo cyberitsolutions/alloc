@@ -37,7 +37,14 @@ if (isset($_GET["id"]) && $file && !bad_filename($file)) {
 
   if ($entity->has_attachment_permission($current_user) && file_exists($file)) {
     $fp = fopen($file, "rb");
-    header('Content-Type: application/octet-stream');
+    $mimetype="application/octet-stream";
+    if (function_exists("mime_content_type")) {
+      $mimetype = mime_content_type($file);
+    }
+    elseif ($size = getimagesize($file)) {
+      $mimetype = $size['mime'];
+    }
+    header('Content-Type: '.$mimetype);
     header("Content-Length: ".filesize($file));
     header('Content-Disposition: attachment; filename="'.basename($file).'"');
     fpassthru($fp);
