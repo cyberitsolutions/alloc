@@ -89,7 +89,7 @@ if (!$current_user->is_employee()) {
 
     if ($db->next_record() || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
 
-      $db->query("SELECT * FROM tf ORDER BY tfName");
+      $db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
       $tf_array = get_array_from_db($db, "tfID", "tfName");
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
       $transactionType_options = array("commission", "timesheet", "adjustment", "insurance");

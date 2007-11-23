@@ -115,6 +115,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
       $msg.= "Warning: Salary for employee #$employeeNum $name on $transactionDate already exists as transaction #".$db->f("transactionID")."<br>";
       continue;
     }
+
     // Create a transaction object and then save it
     $transaction = new transaction;
     $transaction->set_value("tfID", $tfID);

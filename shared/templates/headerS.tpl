@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="language" content="English-AU">
+    <meta http-equiv="pragma" content="no-cache" />
     <title>{$main_alloc_title}</title>
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}{get_stylesheet_name()}" type="text/css" media="screen" />
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print" />

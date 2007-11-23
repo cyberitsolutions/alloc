@@ -10,6 +10,7 @@
       <table class="filter" align="center">
         <tr>
           <td><input type="checkbox" name="owner"{$owner_checked}> Owner</td>
+	  <td><input type="checkbox" name="showall"{$showall_checked}> Show All</td>
           <td><input type="submit" name="apply_filter" value="Filter"></td>
         </tr>
       </table>
