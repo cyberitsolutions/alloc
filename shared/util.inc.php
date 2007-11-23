@@ -756,7 +756,7 @@ function get_print_link() {
 }
 function get_help_link() {
   global $TPL;
-  $url = "../help/help.html#".$TPL["alloc_help_link_name"];
+  $url = "../help/help.php?topic=".$TPL["alloc_help_link_name"];
   echo "<a href=\"".$url."\">Help</a>&nbsp;&nbsp;";
 }
 function get_logout_link() {
