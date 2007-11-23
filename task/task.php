@@ -122,6 +122,7 @@ if (isset($taskID)) {
   $opt["taskStatus"] = "not_completed";
   $opt["taskView"] = "byProject";
   $tasklist = task::get_task_list($opt);
+  unset($tasklist[$taskID]); // prevent self references
 
   $dropdown_options = get_option("", 0);
   $duplicateID = $task->get_value("duplicateTaskID");
@@ -162,6 +163,18 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   // Marked as dupe?
   $dupeID = $_POST["duplicateTaskID_1"];
   if ($dupeID && $task->get_value("duplicateTaskID") != $dupeID) {
+    $othertask = new task;
+    $othertask->set_id($dupeID);
+    $othertask->select();
+    if ($othertask->get_value("duplicateTaskID")) {
+      $msg_error = "Task ".$dupeID." ".$othertask->get_task_name()." is marked as a duplicate. You may not set a task to be a duplicate of a duplicate.";
+      //abort the page
+      $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
+      page_close();
+      header("Location: ".$url."&message=".urlencode($msg_error));
+      exit();
+    }
+
     $task->set_value("duplicateTaskID", $dupeID);
     // Close off the task
     if (!$task->get_value("dateActualCompletion")) {
