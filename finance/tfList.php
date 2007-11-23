@@ -32,6 +32,7 @@ if ($_POST["owner"]) {
   $TPL["owner_checked"] = "";
 }
 
+$TPL["main_alloc_title"] = "TF List - ".APPLICATION_NAME;
 
 include_template("templates/tfListM.tpl");
 

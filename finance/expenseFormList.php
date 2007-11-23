@@ -23,6 +23,8 @@
 
 require_once("../alloc.php");
 
+
+$TPL["main_alloc_title"] = "Expense Form List - ".APPLICATION_NAME;
 include_template("templates/expenseFormListM.tpl");
 
 function show_expense_form_list($template_name) {

@@ -397,7 +397,7 @@ if (is_object($expenseForm)) {
 
 
 
-
+$TPL["main_alloc_title"] = "Expense Form - ".APPLICATION_NAME;
 if ($_GET["printVersion"]) {
   include_template("templates/expenseFormPrintableM.tpl");
 } else {

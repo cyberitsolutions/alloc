@@ -79,6 +79,7 @@ $TPL["transactionID"] = $_POST["transactionID"];
 $TPL["expenseFormID"] = $_POST["expenseFormID"];
 $TPL["product"] = $_POST["product"];
 
+$TPL["main_alloc_title"] = "Search Transactions - ".APPLICATION_NAME;
 include_template("templates/searchTransactionM.tpl");
 
 

@@ -29,7 +29,7 @@ $db = new db_alloc;
 $TPL["tfID"] = $_GET["tfID"];
 
 
-
+$TPL["main_alloc_title"] = "Repeating Expenses List - ".APPLICATION_NAME;
 include_template("templates/transactionRepeatListM.tpl");
 
 function show_expenseFormList($template_name) {

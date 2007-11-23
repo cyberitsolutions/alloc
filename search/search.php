@@ -462,6 +462,7 @@ if ($TPL["search_results"]) {
   $TPL["search_results"] = "No records found.";
 }
 
+$TPL["main_alloc_title"] = "Search - ".APPLICATION_NAME;
 include_template("templates/searchM.tpl");
 page_close();
 

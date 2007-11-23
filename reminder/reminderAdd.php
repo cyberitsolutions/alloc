@@ -23,6 +23,8 @@
 
 require_once("../alloc.php");
 
+$TPL["main_alloc_title"] = "Add reminder - ".APPLICATION_NAME;
+
 $reminderID = $_POST["reminderID"] or $reminderID = $_GET["reminderID"];
 $step = $_POST["step"] or $step = $_GET["step"];
 $parentType = $_POST["parentType"] or $parentType = $_GET["parentType"];

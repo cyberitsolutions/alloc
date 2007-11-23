@@ -150,6 +150,7 @@ if (is_object($transactionRepeat) && $transactionRepeat->get_id() && $transactio
 
 $transactionRepeat->get_value("status") and $TPL["statusLabel"] = " - ".ucwords($transactionRepeat->get_value("status"));
 
+$TPL["main_alloc_title"] = "Create Repeating Expense - ".APPLICATION_NAME;
 include_template("templates/transactionRepeatM.tpl");
 
 page_close();

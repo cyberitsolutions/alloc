@@ -122,6 +122,7 @@ if ($_POST["edit_items"]) {
   }
 }
 
+$TPL["main_alloc_title"] = "Edit Items - ".APPLICATION_NAME;
 include_template("templates/addItemM.tpl");
 
 

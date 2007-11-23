@@ -75,7 +75,7 @@ if ($_POST["save_attachment"]) {
 }
 
 
-
+$TPL["main_alloc_title"] = "Database Backups - ".APPLICATION_NAME;
 include_template("templates/backupM.tpl");
 
 ?>
