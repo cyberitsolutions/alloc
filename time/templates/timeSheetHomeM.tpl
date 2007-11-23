@@ -10,9 +10,9 @@
   <td>Average Per Fortnight:</td><td>{$hours_avg}hrs</td><td>${$dollars_avg}</td>
 </tr>
 </table>
-<br/>
 {$fields = $TPL["this"]->time_sheet_items()}
 {if count($fields["lines"]) > 0}
+<br/>
 <table border="0" cellspacing="0" cellpadding="2" width="100%">
 <tr>
   <td colspan="3"><b>Current Time Sheets</b></td>
@@ -25,9 +25,11 @@
   <td class="noprint">{$line.status}</td>
 </tr>
 {/}
+{if count($fields["lines"]) > 1}
 <tr>
-<td >Total</td>
-<td colspan="2" class="grand_total"> ${echo $fields["total"]}</td>
+  <td></td>
+  <td colspan="2" class="grand_total"> ${echo $fields["total"]}</td>
 </tr>
 {/}
 </table>
+{/}
