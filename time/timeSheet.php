@@ -361,6 +361,8 @@ if ($_POST["save"]
     } else {
       $msg = htmlentities(urlencode($msg));
       $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."&msg=".$msg."&dont_send_email=".$_POST["dont_send_email"];
+      # Pass the taskID forward if we came from a task
+      $url .= "&taskID=".$_POST["taskID"];
     }
     page_close();
     header("Location: $url");
@@ -532,6 +534,7 @@ $db->query($query);
 $project_array = get_array_from_db($db, "projectID", "projectName");
 $TPL["timeSheet_projectName"] = $project_array[$projectID];
 $TPL["projectID"] = $projectID;
+$TPL["taskID"] = $_GET["taskID"];
 
 
 

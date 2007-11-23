@@ -33,6 +33,7 @@ function updateProjectList(number) \{
 <input type="hidden" name="timeSheet_approvedByAdminPersonID" value="{$timeSheet_approvedByAdminPersonID}">
 <input type="hidden" name="timeSheet_recipient_tfID" value="{$recipient_tfID}">
 <input type="hidden" name="timeSheet_invoiceDate" value="{$timeSheet_invoiceDate}">
+<input type="hidden" name="taskID" value="{$taskID}" />
 
 {$table_box}
   <tr>
