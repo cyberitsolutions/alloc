@@ -337,6 +337,14 @@ if ($_POST["save"]) {
     $project->save();
     $projectID = $project->get_id();
 
+    $client = new client;
+    $client->set_id($project->get_value("clientID"));
+    $client->select();
+    if ($client->get_value("clientStatus") == 'potential') {
+      $client->set_value("clientStatus", "current");
+      $client->save();
+    }
+   
     if ($definately_new_project) {
       $projectPerson = new projectPerson;
       $projectPerson->set_value("projectID", $projectID);
@@ -344,7 +352,7 @@ if ($_POST["save"]) {
       $projectPerson->set_value("personID", $current_user->get_id());
       $projectPerson->save();
     }
-    // Automaticall created phases in projects
+    // Automatically created phases in projects
     if ($new_project && $project->get_value("projectType") == "project") {
       $creatorID = $current_user->get_id();
       $dateCreated = date("Y-m-d H:i:s");
@@ -456,7 +464,7 @@ $db = new db_alloc;
 
 $cID = $project->get_value("clientID") or $cID = $_GET["clientID"];
 $cID and $clientID_sql = sprintf(" OR clientID = %d",$cID);
-$query = sprintf("SELECT * FROM client WHERE clientStatus = 'current' ".$clientID_sql." ORDER BY clientName");
+$query = sprintf("SELECT * FROM client WHERE clientStatus != 'archived' ".$clientID_sql." ORDER BY clientName");
 $db->query($query);
 $TPL["clientOptions"] = get_option("None", "0", $TPL["project_clientID"] == 0)."\n";
 $TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $cID, 55);
