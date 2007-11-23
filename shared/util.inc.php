@@ -134,7 +134,7 @@ function get_alloc_version() {
     $v = file(ALLOC_MOD_DIR."util/alloc_version");
     return $v[0];
   } else {
-    die("No alloc_version file found.");
+    #die("No alloc_version file found.");
   }
 }
 function get_script_path($modules) {
