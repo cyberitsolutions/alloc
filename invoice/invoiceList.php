@@ -67,6 +67,7 @@ if ($current_user->have_role("admin")) {
   $TPL["invoice_links"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_invoice"]."\">New Invoice</a>";
 }
 
+$TPL["main_alloc_title"] = "Invoice List - ".APPLICATION_NAME;
 include_template("templates/invoiceListM.tpl");
 page_close();
 

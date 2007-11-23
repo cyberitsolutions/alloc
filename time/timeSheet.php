@@ -809,6 +809,12 @@ if ($timeSheetID) {
 
 }
 
+if ($timeSheetID) {
+  $TPL["main_alloc_title"] = "Time Sheet " . $timeSheet->get_id() . " - ".APPLICATION_NAME;
+} else {
+  $TPL["main_alloc_title"] = "New Time Sheet - ".APPLICATION_NAME;
+}
+
 include_template("templates/timeSheetFormM.tpl");
 
 

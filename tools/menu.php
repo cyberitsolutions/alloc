@@ -105,7 +105,7 @@ function show_finance_options($template) {
 
 
 
-
+$TPL["main_alloc_title"] = "Tools - ".APPLICATION_NAME;
 
 include_template("templates/menuM.tpl");
 

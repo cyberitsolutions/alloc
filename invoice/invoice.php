@@ -608,6 +608,12 @@ if (!$invoice->get_value("clientID")) {
 #$db->query("SELECT * FROM tf ORDER BY tfName");
 #$tf_array = get_array_from_db($db, "tfID", "tfName");
 
+if ($invoiceID) {
+  $TPL["main_alloc_title"] = "Invoice " . $TPL["invoiceNum"] . " - ".APPLICATION_NAME;
+} else {
+  $TPL["main_alloc_title"] = "New Invoice - ".APPLICATION_NAME;
+}
+
 include_template("templates/invoiceM.tpl");
 
 page_close();

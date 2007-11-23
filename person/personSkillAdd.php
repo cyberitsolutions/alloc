@@ -67,7 +67,7 @@ $skills[""] = ">> NEW >>";
 $TPL["new_skills"] = get_options_from_array($skills, $_POST["skill"], true);
 
 
-
+$TPL["main_alloc_title"] = "Edit Skills - ".APPLICATION_NAME;
 if ($current_user->have_perm(PERM_PERSON_READ_MANAGEMENT)) {
   include_template("templates/personSkillAdd.tpl");
 }

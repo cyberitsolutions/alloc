@@ -59,7 +59,9 @@ if ($projectID) {
 }
 
 $TPL["projectID"] = $projectID;
+$TPL["main_alloc_title"] = "Allocation Graph - ".APPLICATION_NAME;
 include_template("templates/personGraphM.tpl");
+
 
 page_close();
 

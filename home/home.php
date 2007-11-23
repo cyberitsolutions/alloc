@@ -48,7 +48,7 @@ function show_item() {
 
 register_home_items();
 define("PAGE_IS_PRINTABLE",1);
-
+$TPL["main_alloc_title"]="Home Page - ".APPLICATION_NAME;
 if ($_GET["media"] == "print") {
 	include_template("templates/homePrintableM.tpl");
 } else {

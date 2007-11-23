@@ -50,6 +50,8 @@ function show_task_list() {
   echo task::get_task_list($_FORM);
 }
 
+$TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;
+
 include_template("templates/taskListM.tpl");
 page_close();
 

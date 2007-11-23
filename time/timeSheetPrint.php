@@ -437,6 +437,7 @@ if ($timeSheetID) {
 
   // Else HTML format
   } else {
+    $TPL["main_alloc_title"] = "Time Sheet - ".APPLICATION_NAME;
     include_template("templates/timeSheetPrintM.tpl");
   }
 

@@ -391,8 +391,13 @@ if ($task->get_id()) {
 }
 
 
-
-$TPL["taskSelfLink"] = $task->get_task_header();
+if ($taskID) {
+  $TPL["taskSelfLink"] = "<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_task_name()."</a>";
+  $TPL["main_alloc_title"] = "Task " . $task->get_id() . ": " . $task->get_task_name()." - ".APPLICATION_NAME;
+} else {
+  $TPL["taskSelfLink"] = "New Task";
+  $TPL["main_alloc_title"] = "New Task - ".APPLICATION_NAME;
+}
 
 // Printer friendly view
 if ($_GET["media"] == "print") {

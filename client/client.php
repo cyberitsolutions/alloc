@@ -423,13 +423,19 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
 
 if (!$clientID) {
   $TPL["message_help"][] = "Create a new Client by inputting the Company Name and other details and clicking the Create New Client button.";
+  $TPL["main_alloc_title"] = "New Client - ".APPLICATION_NAME;
+  $TPL["clientSelfLink"] = "New Client";
+} else {
+  $TPL["main_alloc_title"] = "Client " . $client->get_id() . ": " . $client->get_client_name()." - ".APPLICATION_NAME;
+  $TPL["clientSelfLink"] = sprintf("<a href=\"%s\">%d %s</a>", $client->get_url(), $client->get_id(), $client->get_client_name());
 }
+
 
 if ($current_user->have_role("admin")) {
   $TPL["invoice_links"].= "<a href=\"".$TPL["url_alloc_invoice"]."clientID=".$clientID."\">New Invoice</a>";
 }
 
-$TPL["clientSelfLink"] = sprintf("<a href=\"%s\">%d %s</a>", $client->get_url(), $client->get_id(), $client->get_client_name());
+
 
 include_template("templates/clientM.tpl");
 

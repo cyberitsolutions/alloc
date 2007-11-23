@@ -51,7 +51,7 @@ function show_client_list() {
   echo client::get_client_list($_FORM);
 }
 
-
+$TPL["main_alloc_title"] = "Client List - ".APPLICATION_NAME;
 include_template("templates/clientListM.tpl");
 page_close();
 

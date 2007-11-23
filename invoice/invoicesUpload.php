@@ -163,6 +163,7 @@ if ($_POST["upload"]) {
   }
   $TPL["msg"] = implode("<br>", $msg);
 }
+$TPL["main_alloc_title"] = "Upload Invoices - ".APPLICATION_NAME;
 include_template("templates/invoicesUploadM.tpl");
 
 page_close();

@@ -143,6 +143,7 @@ $skills = skillList::get_skills();
 if ($skill_class && !in_array($skills[$_POST["skill"]], $skills)) { $_POST["skill"] = ""; }
 $TPL["skills"] = get_options_from_array($skills, $_POST["skill"], true);
 
+$TPL["main_alloc_title"] = "People - ".APPLICATION_NAME;
 include_template("templates/personListM.tpl");
 page_close();
 
