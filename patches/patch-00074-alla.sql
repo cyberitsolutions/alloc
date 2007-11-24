@@ -10,7 +10,7 @@ UPDATE expenseForm set expenseFormCreatedTime = expenseFormModifiedTime WHERE ex
 
 -- Same for transaction
 UPDATE transaction set transactionCreatedUser = transactionModifiedUser WHERE transactionCreatedUser IS NULL or transactionCreatedUser = 0;
-UPDATE transaction set transactionCreatedTime = transactionModifiedTime WHERE transactionCreatedTime IS NULL;
+UPDATE transaction SET transactionCreatedTime = IF(transactionDate,transactionDate,transactionModifiedTime) WHERE transactionCreatedTime IS NULL;
 
 
 
