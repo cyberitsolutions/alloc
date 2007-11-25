@@ -54,7 +54,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_taskCalendar"                   => $sess->url(SCRIPT_PATH."task/taskCalendar.php")
             ,"url_alloc_updatePersonList"               => $sess->url(SCRIPT_PATH."task/updatePersonList.php")
             ,"url_alloc_updateManagerPersonList"        => $sess->url(SCRIPT_PATH."task/updateManagerPersonList.php")
- 	    ,"url_alloc_updateDuplicateTaskList"        => $sess->url(SCRIPT_PATH."task/updateDuplicateTaskList.php")
+ 	          ,"url_alloc_updateDuplicateTaskList"        => $sess->url(SCRIPT_PATH."task/updateDuplicateTaskList.php")
 
             ,"url_alloc_comment"                        => $sess->url(SCRIPT_PATH."shared/comment.php")
             ,"url_alloc_client"                         => $sess->url(SCRIPT_PATH."client/client.php")
@@ -110,7 +110,6 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_statsImage"                     => $sess->url(SCRIPT_PATH."tools/statsImage.php")
             ,"url_alloc_costtime"                       => $sess->url(SCRIPT_PATH."tools/costtime.php")
             ,"url_alloc_backup"                         => $sess->url(SCRIPT_PATH."tools/backup.php")
-
             ,"url_alloc_helpfile"                       => $sess->url(SCRIPT_PATH."help/help.html")
 );
 
