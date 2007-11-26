@@ -73,15 +73,9 @@ function refreshTaskList(radiobutton) \{
         <tr>
           <td>Estimated Hours</td>
           <td><input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5">
-            &nbsp;&nbsp;{$time_billed_link}
+            &nbsp;&nbsp;{$time_billed_link}&nbsp;&nbsp;{if $TPL["percentComplete"] != "" && $TPL["percentComplete"] != "0%"}({$percentComplete}){/}
           </td>
         </tr>  
-        <tr>
-          <td>Percent</td>
-          <td>
-            {$percentComplete}
-          </td>
-        </tr>
         <tr>
           <td><nobr>Target Start/Completion</nobr></td>
           <td>
