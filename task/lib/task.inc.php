@@ -1399,7 +1399,7 @@ function get_task_statii_array() {
     if ($timeEstimate>0 && is_object($this)) {
 
       $percent = $timeActual / $timeEstimate * 100;
-      $this->get_value("dateActualCompletion") and $closed_text = "<del>" and $closed_text_end = "</del> (Closed)";
+      $this->get_value("dateActualCompletion") and $closed_text = "<del>" and $closed_text_end = "</del> Closed";
  
       // Return number
       if ($get_num) {
