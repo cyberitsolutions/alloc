@@ -38,10 +38,6 @@ class tf extends db_entity {
       );
   }
 
-  /** 
-   *  Get the balance of a TF.
-   *  @param where An associative array whose key is the column name and whose value is the sql criteria. Eg: array("status"=>"approved")
-   */
   function get_balance($where = array(), $debug="") {
     global $current_user;
  
@@ -63,8 +59,6 @@ class tf extends db_entity {
     $db->next_record() || die("TF $tfID not found in tf::get_balance");
     return $db->f("balance");
   }
-
-
 
   function delete() {
     global $current_user, $TPL;

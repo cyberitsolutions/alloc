@@ -202,6 +202,9 @@ table.alloc_calendar img {
   float:left;
   margin:0px;
 }
+table.alloc_calendar td:hover { 
+  background-color:(TR_HOVER_BACKGROUND_COLOR); 
+}
 
 
 /* Filters */
@@ -237,6 +240,9 @@ tr.odd {
 }
 tr.even { 
   background-color:(TR_EVEN_BACKGROUND_COLOR); 
+}
+tr.odd:hover, tr.even:hover {
+  background-color:(TR_HOVER_BACKGROUND_COLOR); 
 }
 
 .overdue { 
