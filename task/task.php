@@ -149,7 +149,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     $othertask->set_id($dupeID);
     $othertask->select();
     if ($othertask->get_value("duplicateTaskID")) {
-      $msg_error = "Task ".$dupeID." ".$othertask->get_task_name()." is marked as a duplicate. You may not set a task to be a duplicate of a duplicate.";
+      $msg_error = "Task ".$dupeID." ".$othertask->get_task_name()." is a duplicate. You may not set a task to be a duplicate of a duplicate.";
       //abort the page
       $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
       page_close();
@@ -360,7 +360,7 @@ if ($dupeID) {
   $realtask->set_id($dupeID);
   $realtask->select();
   $TPL["taskDuplicateLink"] = $realtask->get_task_link(array("showTaskID"=>1));
-  $mesg = "This task has been marked as a duplicate of Task ".$TPL["taskDuplicateLink"];
+  $mesg = "This task is a duplicate of ".$TPL["taskDuplicateLink"];
   $TPL["message_help"][] = $mesg;
   $TPL["comments_disabled"] = true;
   $TPL["editing_disabled"] = true;
