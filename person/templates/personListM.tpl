@@ -43,25 +43,30 @@
     </td>
   </tr>
   <tr>
-    <!-- <th>Select</th> -->
-    <td>Name</td>
-    <td>Enabled</td>
-    <td>Contact</td>
-    <td>Actions</th>
-    <td>Sum Prev Fort.</td>
-    <td>Avg Per Fort.</td>
-{if check_optional_show_skills_list()}
-    <td>
-      Senior
-      <img src="../images/skill_senior.png" alt="S" align="absmiddle">
-      <img src="../images/skill_advanced.png" alt="A" align="absmiddle">
-      <img src="../images/skill_intermediate.png" alt="I" align="absmiddle">
-      <img src="../images/skill_junior.png" alt="J" align="absmiddle">
-      <img src="../images/skill_novice.png" alt="N" align="absmiddle"> Novice
-    </td>
-{/}
+    <td colspan="9">
+      <table class="tasks" border="0" cellspacing="0">
+        <tr>
+          <th class="col">Name</th>
+          <th class="col">Enabled</th>
+          <th class="col">Contact</th>
+          <th class="col">Actions</th>
+          <th class="col">Sum Prev Fort.</th>
+          <th class="col">Avg Per Fort.</th>
+      {if check_optional_show_skills_list()}
+          <th class="col">
+            Senior
+            <img src="../images/skill_senior.png" alt="S" align="absmiddle">
+            <img src="../images/skill_advanced.png" alt="A" align="absmiddle">
+            <img src="../images/skill_intermediate.png" alt="I" align="absmiddle">
+            <img src="../images/skill_junior.png" alt="J" align="absmiddle">
+            <img src="../images/skill_novice.png" alt="N" align="absmiddle"> Novice
+          </th>
+      {/}
 
+        </tr>
+        {show_people("templates/personListR.tpl")}
+      </table>
+    </td>
   </tr>
-  {show_people("templates/personListR.tpl")}
 </table>
 {show_footer()}

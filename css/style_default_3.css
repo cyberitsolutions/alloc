@@ -182,7 +182,7 @@ table.alloc_calendar td.today h1 {
   font-weight:bold;
 }
 table.alloc_calendar td.even { 
-  background-color:#f0f0f0; 
+  background-color:#ffffff; 
 }
 table.alloc_calendar td.absent {
   background-color:#cccccc;
@@ -201,6 +201,9 @@ table.alloc_calendar h1 {
 table.alloc_calendar img {
   float:left;
   margin:0px;
+}
+table.alloc_calendar td:hover { 
+  background-color:#f1f8ff; 
 }
 
 
@@ -233,10 +236,13 @@ table.panel {
 }
 
 tr.odd { 
-  background-color:#f0f0f0; 
+  background-color:#ffffff; 
 }
 tr.even { 
-  background-color:#f9f9f9; 
+  background-color:#f4f4f4; 
+}
+tr.odd:hover, tr.even:hover {
+  background-color:#f1f8ff; 
 }
 
 .overdue { 
