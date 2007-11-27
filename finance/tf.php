@@ -77,6 +77,11 @@ if ($tfID) {
 if ($_POST["save"]) {
   $tf->read_globals();
 
+  if ($_POST["isActive"])
+    $tf->set_value("status", "active");
+  else
+    $tf->set_value("status", "disabled");
+
   if ($tf->get_value("tfName") == "") {
     $TPL["message"][] = "You must enter a name.";
   } else {
@@ -137,9 +142,7 @@ if ($tf->get_value("tfModifiedUser")) {
   $TPL["tfModifiedUser"] = $db->f("username");
 }
 
-$tfStatus_array = array("active"=>"Active", "disabled"=>"Disabled");
-//"readonly" => "Read-Only");
-$TPL["status_dropdown"] = get_select_options($tfStatus_array, $tf->get_value("status"));
+$tf->get_value("status") == 'active' and $TPL["tfIsActive"] = "checked";
 
 $TPL["main_alloc_title"] = "Edit TF - ".APPLICATION_NAME;
 
