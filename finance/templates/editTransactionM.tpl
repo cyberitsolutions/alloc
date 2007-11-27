@@ -49,7 +49,7 @@
   <tr>
     <td>Amount</td>
     <td><input type="text" name="amount" size="20" value="{$amount}"></td>
-    <td class="hint"> (inc. {$taxName}).</td>
+    <td class="hint">{get_help("transaction_amount")}</td>
   </tr>
   <tr>
     <td>Status</td>
