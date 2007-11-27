@@ -11,7 +11,11 @@
   <td colspan="6" align="left"><b>{$rr_label}</b></td>
 </tr>
 <tr>
-  <td colspan="6" align="left">Seek Client Reimbursement: <b>{$seekClientReimbursementLabel}{$field_clientID}</b></td>
+  <td colspan="6" align="left">Seek Client Reimbursement: <b>{$seekClientReimbursementLabel}</b></td>
+</tr>
+<tr>
+  <td><b>Comment</b></td>
+  <td colspan="5">{$expenseFormComment}</td>
 </tr>
 <tr>
   <td colspan="3" align="left">User: <b>{$user}</b></td>
