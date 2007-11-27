@@ -31,10 +31,12 @@
     <td colspan="4">&nbsp;</td>
   </tr>
   <tr>
-    <td style="text-align:right">Comment:</td>
-    <td colspan="3">
-    <textarea rows="5" cols="70" wrap="virtual" name="expenseFormComment">{$expenseFormComment}</textarea></td>
-  </tr>
+    <td align="right" valign="top">{get_expand_link("expense_comment_input", "Comment ", "expense_comment_text")}</td>
+    <td colspan="3" valign="top"><div id="expense_comment_text">{echo text_to_html($TPL["expenseFormComment"])}</div>
+    <div style="display:none" id="expense_comment_input" class="nobr">
+      <textarea rows="10" cols="70" wrap="virtual" name="expenseFormComment">{$expenseFormComment}</textarea></div>
+      </td>
+   </tr>
   <tr>
     <td colspan="4" align="center">
       {$expenseFormButtons}
