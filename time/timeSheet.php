@@ -103,7 +103,17 @@ if (!$current_user->is_employee()) {
           $transaction = new transaction;
           $transaction->read_db_record($db);
           $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
+
           $TPL["tf_options"] = get_options_from_array($tf_array, $TPL["transaction_tfID"], true, 35);
+
+          # Account for disabled TF
+          $tf = new tf;
+          $tf->set_id($transaction->get_value("tfID"));
+          $tf->select();
+          if ($tf->get_value("status") != 'active') {
+            $TPL["tf_options"] .= get_option($tf->get_value("tfName"), $tf->get_id(), true);
+          }
+
           $TPL["status_options"] = get_select_options($status_options, $transaction->get_value("status"));
           $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
           $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $transaction->get_value("transactionType"), false);
@@ -142,7 +152,7 @@ if (!$current_user->is_employee()) {
     global $timeSheet, $TPL, $db, $percent_array;
 
     if ($timeSheet->get_value("status") == "invoiced" && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-      $db->query("SELECT * FROM tf ORDER BY tfName");
+      $db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
       $tf_array = get_array_from_db($db, "tfID", "tfName");
       $TPL["tf_options"] = get_options_from_array($tf_array, $none, true, 35);
 
