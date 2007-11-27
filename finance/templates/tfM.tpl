@@ -21,10 +21,7 @@
   </tr>
   <tr>
     <td>Status: </td>
-    <td><select name="status">
-      {$status_dropdown}
-      </select>
-    </td>
+    <td><input type="checkbox" name="isActive" {$tfIsActive} />Active</td>
   </tr>
   <tr>
     <td>Comments: </td>
