@@ -76,20 +76,16 @@ class tf extends db_entity {
     }
   }
 
-
-  // Check if user has permission to access this project
-
   function is_owner($person = "") {
     global $current_user;
     if ($person == "") {
       $person = $current_user;
     }
-    // echo "<br>" . $this->get_id() . " " . $person->get_id();
 
     if (!$this->get_id()) {
       return false;
     }
-    $query = "SELECT * FROM tfPerson WHERE tfID=".$this->get_id()." AND personID=".$person->get_id();
+    $query = sprintf("SELECT * FROM tfPerson WHERE tfID=%d AND personID=%d",$this->get_id(),$person->get_id());
     $db = new db_alloc;
     $db->query($query);
     return $db->next_record();

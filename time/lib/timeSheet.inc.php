@@ -635,9 +635,26 @@ class timeSheet extends db_entity
     }
   }
 
+   function get_url() {
+    global $sess;
+    $sess or $sess = new Session;
+
+    $url = "time/timeSheet.php?timeSheetID=".$this->get_id();
+
+    if ($sess->Started()) {
+      $url = $sess->url(SCRIPT_PATH.$url);
+
+    // This for urls that are emailed
+    } else {
+      static $prefix;
+      $prefix or $prefix = config::get_config_item("allocURL");
+      $url = $prefix.$url;
+    }
+    return $url;
+  }
+
   function get_link($text) {
-    global $TPL;
-    return "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$this->get_id()."\">".$text."</a>";
+    return "<a href=\"".$this->get_url()."\">".$text."</a>";
   }
 
   function get_timeSheet_list_tr_header($_FORM) {
