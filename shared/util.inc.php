@@ -1166,8 +1166,6 @@ function parse_email_address($email="") {
 }
 function text_to_html($str="") {
   $str = htmlentities($str);
-  $str = str_replace("\t","&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$str);
-  $str = str_replace(" ","&ensp;",$str);
   $str = nl2br($str);
   return $str;
 }
