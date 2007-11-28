@@ -71,7 +71,15 @@ function show_tf($template_name) {
     $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
 
     $nav_links = $tf->get_nav_links();
-    $TPL["nav_links"] = implode(" | ", $nav_links);
+    $TPL["nav_links"] = implode(" ", $nav_links);
+
+    if ($tf->have_perm(PERM_UPDATE)) {
+      $edit_url = $TPL["url_alloc_tf"]."tfID=".$tf->get_id();
+      $TPL["tfName"] = "<a href=\"".$edit_url."\">".$tf->get_value("tfName")."</a>";
+    }
+
+
+
     include_template($template_name);
   }
 
