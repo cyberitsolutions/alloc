@@ -162,6 +162,25 @@ class expenseForm extends db_entity {
     return $db->f('date');
   }
 
+  function get_url() {
+    global $sess;
+    $sess or $sess = new Session;
+
+    $url = "finance/expenseForm.php?expenseFormID=".$this->get_id();
+
+    if ($sess->Started()) {
+      $url = $sess->url(SCRIPT_PATH.$url);
+
+    // This for urls that are emailed
+    } else {
+      static $prefix;
+      $prefix or $prefix = config::get_config_item("allocURL");
+      $url = $prefix.$url;
+    }
+    return $url;
+  }
+
+
 
 
 }

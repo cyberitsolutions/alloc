@@ -344,6 +344,24 @@ class invoice extends db_entity {
     return $person->have_role("admin");
   }
 
+  function get_url() {
+    global $sess;
+    $sess or $sess = new Session;
+
+    $url = "invoice/invoice.php?invoiceID=".$this->get_id();
+
+    if ($sess->Started()) {
+      $url = $sess->url(SCRIPT_PATH.$url);
+
+    // This for urls that are emailed
+    } else {
+      static $prefix;
+      $prefix or $prefix = config::get_config_item("allocURL");
+      $url = $prefix.$url;
+    }
+    return $url;
+  }
+
   function get_invoice_name() {
     return stripslashes($this->get_value("invoiceNum"));
   }

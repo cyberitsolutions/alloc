@@ -45,12 +45,9 @@ include_template("templates/tfListM.tpl");
 function show_tf($template_name) {
   global $TPL, $filter;
 
-
-
   if (is_array($filter) && count($filter)) {
     $f = " WHERE ".implode(" AND ",$filter);
   }
-
 
   $db = new db_alloc;
   $q = sprintf("SELECT tf.* FROM tf LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID %s GROUP BY tf.tfID ORDER BY tf.tfName",$f);  
