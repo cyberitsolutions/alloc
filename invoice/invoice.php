@@ -208,7 +208,7 @@ function show_invoiceItem_list() {
         $one_pending = true;
       }
 
-      $amounts[$invoiceItem->get_id()] = $db2->f("transaction_amount");
+      $amounts[$invoiceItem->get_id()]+= $db2->f("transaction_amount");
 
       $transaction_sum+= $db2->f("transaction_amount");
       $transaction_info.= $br.ucwords($db2->f("transaction_status"))." Transaction ";
@@ -239,10 +239,6 @@ function show_invoiceItem_list() {
       $transaction_status = "";
     }
 
-    if ($transaction_sum > 0 && $transaction_sum < $invoiceItem->get_value("iiAmount")) {
-      $TPL["box_class"] = " warn";
-    } 
-
     $sel[$transaction_status] = " checked";
 
     if ($sel["rejected"]) {
@@ -255,9 +251,11 @@ function show_invoiceItem_list() {
       $TPL["status_label"] = "<b>[Paid]</b>";
     }
 
-    if ($transaction_sum > 0 && $transaction_sum < $invoiceItem->get_value("iiAmount")) {
+    if ($transaction_sum > 0 && sprintf("%0.2f",$transaction_sum) < sprintf("%0.2f",$invoiceItem->get_value("iiAmount"))) {
       $TPL["status_label"] = "<b>[Paid in part]</b>";
-    } else if ($transaction_sum > $invoiceItem->get_value("iiAmount")) {
+      $TPL["box_class"] = " warn";
+
+    } else if (sprintf("%0.2f",$transaction_sum) > sprintf("%0.2f",$invoiceItem->get_value("iiAmount"))) {
       $TPL["status_label"] = "<b>[Overpaid]</b>";
     }
 
