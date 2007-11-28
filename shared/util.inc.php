@@ -1020,6 +1020,26 @@ function get_expand_link($id, $text="New ",$id_to_hide="") {
   echo "<div id=\"button_".$id."\"><a class=\"growshrink nobr\" href=\"#\" onClick=\"set_grow_shrink_box('".$id."','".$display."','".$TPL["url_alloc_images"]."','".$text."','".$id_to_hide."');\">".$text;
   echo "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."small_grow.gif\"></a></div>";
 }
+function get_side_by_side_links($items=array(),$default=false) {
+  global $TPL;
+
+  foreach ($items as $id => $label) {
+    $default or $default = $id; // first option is default
+    $ids[] = $id; 
+  }
+
+  $js_array = "['".implode("','",$ids)."']";
+
+  foreach ($items as $id => $label) {
+    $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"#\" onClick=\"sidebyside_activate('".$id."',".$js_array.");\">".$label."</a>";
+    $sp = "&nbsp;|&nbsp;";
+  }
+
+  // argh, I am bad man, this activates the default option, because it's minutely cleaner than putting in a body onload
+  $TPL["extra_footer_stuff"].= "<img src=\"".$TPL["url_alloc_images"]."pixel.gif\" onload=\"sidebyside_activate('".$default."',".$js_array.");\">";
+
+  echo $str;
+}
 function build_html_tag($htmlElementID,$value="") {
   $db = new db_alloc();
 

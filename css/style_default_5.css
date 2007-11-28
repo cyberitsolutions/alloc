@@ -28,6 +28,11 @@ a.growshrink:hover {
   border-bottom:1px solid #666666;
 }
 
+a.sidebyside_inactive {
+  color:#444444;
+  text-decoration:none;
+}
+
 h1 { 
   font-weight:bold; 
   font-size:17px; 

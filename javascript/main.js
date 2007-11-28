@@ -57,3 +57,13 @@ function set_grow_shrink_box(id, display, images, text, id_to_hide) {
   document.getElementById('button_'+id).innerHTML = str;
 }
 
+function sidebyside_activate(id,arr) {
+  for (var i=0; i<arr.length; i++) {
+    obj = document.getElementById('sbs_link_' + arr[i]);
+    obj.className = obj.className.replace(/ sidebyside_inactive/, "");
+     document.getElementById(arr[i]).style.display='none';
+  }
+  document.getElementById('sbs_link_' + id).className = document.getElementById('sbs_link_' + id).className + " sidebyside_inactive";
+  document.getElementById(id).style.display='inline';
+}
+
