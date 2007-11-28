@@ -3,11 +3,11 @@
   <td colspan="7">{$companyDetails}</td>
 </tr>
 <tr>
-  <td>{$transactionDate}</td> 
-  <td>{$product}</td>
+  <td width="40%">{$product}</td>
+  <td width="25%" class="nobr">{$quantity}pcs. @ ${$amount} each  &nbsp;&nbsp;&nbsp;<b>${$lineTotal}</b></td>
+  <td class="nobr" width="1%">{$transactionDate}</td> 
   <td>TF: {$tfID}</td>
-  <td>Project: {$projectID}</td>
-  <td>{$quantity}pcs. @ ${$amount} each  &nbsp;&nbsp;&nbsp;<b>${$lineTotal}</b></td>
+  {if $TPL["projectID"]}<td>Project: <a href="{$url_alloc_project}projectID={$projectID}">{$projectID}</a></td>{/}
   <td width="1%">{$status}</td>
   <td width="1%" align="right" class="nobr">
 	  &nbsp;&nbsp;{if check_optional_allow_edit()}
