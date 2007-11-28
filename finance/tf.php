@@ -70,6 +70,9 @@ $tfID = $_GET["tfID"] or $tfID = $_POST["tfID"];
 if ($tfID) {
   $tf->set_id($tfID);
   $tf->select();
+  $tf->get_value("status") == 'active' and $TPL["tfIsActive"] = "checked";
+} else {
+  $TPL["tfIsActive"] = "checked";
 }
 
 
@@ -142,7 +145,6 @@ if ($tf->get_value("tfModifiedUser")) {
   $TPL["tfModifiedUser"] = $db->f("username");
 }
 
-$tf->get_value("status") == 'active' and $TPL["tfIsActive"] = "checked";
 
 $TPL["main_alloc_title"] = "Edit TF - ".APPLICATION_NAME;
 
