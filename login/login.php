@@ -22,7 +22,7 @@
  */
 
 
-define("IN_LOGIN_RIGHT_NOW",true);
+define("DO_NOT_REDIRECT_TO_LOGIN",true);
 require_once("../alloc.php");
 
 // If we already have a session

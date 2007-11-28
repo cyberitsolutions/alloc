@@ -20,7 +20,7 @@ class alloc_soap {
   function get_current_user($key) {
     $sess = new Session($key);
     if (!$sess->Started()) {
-      die("Session was not started.");
+      throw new SoapFault("Server","Authentication Failed(2).");
     } else {
       $person = new person;
       return $person->load_get_current_user($sess->Get("personID"));
@@ -28,7 +28,7 @@ class alloc_soap {
   }
 
   function get_task_comments($key,$taskID) {
-    global $current_user; // Always neeeeed this :(
+    global $current_user; // Always need this :(
     $current_user = $this->get_current_user($key);
     if ($taskID) {
       $task = new task;
@@ -39,10 +39,24 @@ class alloc_soap {
   }
 
   function add_timeSheetItem_by_task($key, $task, $duration, $comments) {
-    global $current_user; // Always neeeeed this :(
+    global $current_user; // Always need this :(
     $current_user = $this->get_current_user($key);
     return timeSheet::add_timeSheetItem_by_task($task, $duration, $comments);
   }
+
+  function get_tf_transactions($key,$tfName,$startDate=false,$endDate=false) {
+    global $current_user; // Always need this :(
+    $current_user = $this->get_current_user($key);
+    if ($tfName) {
+      $ops["return"] = "array";
+      $ops["tfName"] = $tfName;
+      #$ops["personID"] = $current_user->get_id();
+      $ops["startDate"] = $startDate;
+      $ops["endDate"] = $endDate;
+      return transaction::get_transaction_list($ops);
+    }
+  }
+
 
 
 

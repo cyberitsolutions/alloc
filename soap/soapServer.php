@@ -1,7 +1,7 @@
 <?php
 
 ini_set("soap.wsdl_cache_enabled", 0);
-define("NO_AUTH",true);
+define("DO_NOT_REDIRECT_TO_LOGIN",1); 
 require_once("../alloc.php");
 require_once("./class_alloc_soap.inc.php");
 $server = new SoapServer("alloc.wsdl"); 

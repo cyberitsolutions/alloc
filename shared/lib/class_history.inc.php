@@ -161,8 +161,10 @@ class history extends db_entity {
   function save_history() {
     global $current_user, $TPL;
 
-
     // Delete old items if they have too many.
+    if (!is_object($current_user) || !$current_user->get_id()) {
+      return;
+    }
     $db = new db_alloc;
     $query = sprintf("SELECT count(*) AS total FROM history WHERE personID = %d",$current_user->get_id());
     $db->query($query);

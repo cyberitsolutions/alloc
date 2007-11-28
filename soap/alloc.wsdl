@@ -40,6 +40,17 @@
 </message>
 
 
+<message name='gttIn'>
+  <part name='sessKey' type='xsd:string'/>
+  <part name='tfName' type='xsd:string'/>
+  <part name='startDate' type='xsd:string'/>
+  <part name='endDate' type='xsd:string'/>
+</message>
+<message name='gttOut'>
+  <part name='transactions' type='xsd:array'/>
+</message>
+
+
 <!-- PORT TYPES -->
 
 <portType name='allocPortType'>
@@ -57,6 +68,11 @@
   <operation name='add_timeSheetItem_by_task'>
     <input message='tns:atsibtIn'/>
     <output message='tns:atsibtOut'/>
+  </operation>
+
+  <operation name='get_tf_transactions'>
+    <input message='tns:gttIn'/>
+    <output message='tns:gttOut'/>
   </operation>
 </portType>
 
@@ -83,6 +99,11 @@
     <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
   </operation>
 
+  <operation name='get_tf_transactions'>
+    <soap:operation soapAction='urn:xmethods-delayed-quotes#get_tf_transactions'/>
+    <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
+    <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
+  </operation>
 
 </binding>
 
