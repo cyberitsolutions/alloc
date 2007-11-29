@@ -1031,7 +1031,7 @@ function get_side_by_side_links($items=array(),$default=false) {
   $js_array = "['".implode("','",$ids)."']";
 
   foreach ($items as $id => $label) {
-    $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"#\" onClick=\"sidebyside_activate('".$id."',".$js_array.");\">".$label."</a>";
+    $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"#x\" onClick=\"sidebyside_activate('".$id."',".$js_array.");\">".$label."</a>";
     $sp = "&nbsp;|&nbsp;";
   }
 
