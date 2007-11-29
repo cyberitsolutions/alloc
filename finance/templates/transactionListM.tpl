@@ -3,13 +3,13 @@
 
 {$table_box}
   <tr>
-    <th colspan="9" class="nobr">{$title}</th>
+    <th class="nobr">{$title}</th>
   </tr>
   <tr>
-    <td colspan="9" class="center" align="center">{show_filter()}</td>
+    <td align="center">{show_filter()}</td>
   </tr>
   <tr>
-    <td colspan="9">
+    <td>
     <table align="center">
        <tr>
         <td align="right" class="transaction-approved"><strong>Balance:</strong></td> 
@@ -23,10 +23,8 @@
     </td>
   </tr>
   <tr>
-    <td colspan="9">{show_transaction_list()}</td>
+    <td>{show_transaction_list()}</td>
   </tr>
 </table>
-
-
 
 {show_footer()}
