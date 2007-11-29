@@ -1017,7 +1017,7 @@ function get_html($handle,$value=false) {
 function get_expand_link($id, $text="New ",$id_to_hide="") {
   global $TPL;
   $display = "none";
-  echo "<div id=\"button_".$id."\"><a class=\"growshrink nobr\" href=\"#\" onClick=\"set_grow_shrink_box('".$id."','".$display."','".$TPL["url_alloc_images"]."','".$text."','".$id_to_hide."');\">".$text;
+  echo "<div id=\"button_".$id."\"><a class=\"growshrink nobr\" href=\"#x\" onClick=\"set_grow_shrink_box('".$id."','".$display."','".$TPL["url_alloc_images"]."','".$text."','".$id_to_hide."');\">".$text;
   echo "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."small_grow.gif\"></a></div>";
 }
 function get_side_by_side_links($items=array(),$default=false) {
