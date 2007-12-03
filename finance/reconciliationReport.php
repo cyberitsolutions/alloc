@@ -33,7 +33,7 @@ function load_transaction_total($info_field, $transaction_type) {
                                             AND transactionType='%s' 
                                             AND transactionDate LIKE '%02d-%02d-%%'
                                             AND transaction.status <> 'rejected'
-                      GROUP BY tfID", addslashes($transaction_type), $_GET["year"], $_GET["month"]);
+                      GROUP BY tfID", db_esc($transaction_type), $_GET["year"], $_GET["month"]);
   $db = new db_alloc;
   $db->query($query);
 
@@ -105,7 +105,7 @@ function show_transaction_list($transactionType) {
   $query = sprintf("SELECT transaction.*, tf.tfName  
                       FROM transaction LEFT JOIN tf ON transaction.tfID = tf.tfID
                       WHERE transactionDate LIKE '%04d-%02d-%%' AND transactionType='%s'
-                      ORDER BY transactionDate", $_GET["year"], $_GET["month"], addslashes($transactionType));
+                      ORDER BY transactionDate", $_GET["year"], $_GET["month"], db_esc($transactionType));
   $db = new db_alloc;
   $db->query($query);
 

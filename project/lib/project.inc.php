@@ -78,7 +78,7 @@ class project extends db_entity {
   }
 
   function get_project_name() {
-    return stripslashes($this->get_value("projectName"));
+    return $this->get_value("projectName");
   }
 
   function get_project_link() {

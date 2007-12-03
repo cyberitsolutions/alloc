@@ -123,7 +123,7 @@ if ($_POST["upload"]) {
     $query = sprintf("SELECT invoiceItemID
                         FROM invoiceItem
                         WHERE invoiceID=%d AND iiMemo='%s'
-						AND iiAmount=%f AND iiDate='%s'", $invoiceID, addslashes(mysql_escape_string($memo)), $amount, $date);
+						AND iiAmount=%f AND iiDate='%s'", $invoiceID, db_esc($memo), $amount, $date);
 
     #$msg[] = $query;
     $db->query($query);
@@ -135,7 +135,7 @@ if ($_POST["upload"]) {
     // Create a invoice_item object and then save it
     $invoice_item = new invoiceItem;
     $invoice_item->set_value("invoiceID", $invoiceID);
-    $invoice_item->set_value("iiMemo", addslashes($memo));
+    $invoice_item->set_value("iiMemo", $memo);
     $invoice_item->set_value("iiQuantity", $quantity);
     $invoice_item->set_value("iiUnitPrice", $sales_price);
     $invoice_item->set_value("iiAmount", $amount);

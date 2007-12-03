@@ -29,7 +29,7 @@ if ($_GET["taskCommentTemplateID"] && $_GET["taskID"]) {
   $taskCommentTemplate = new taskCommentTemplate;
   $taskCommentTemplate->set_id($_GET["taskCommentTemplateID"]);
   $taskCommentTemplate->select();
-  echo stripslashes($taskCommentTemplate->get_populated_template($_GET["taskID"]));
+  echo $taskCommentTemplate->get_populated_template($_GET["taskID"]);
 }
 
 

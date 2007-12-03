@@ -64,7 +64,7 @@ class Session {
     if ($nuke_prev_sessions) {
       $this->db->query("DELETE FROM sess WHERE personID = %d",$row["personID"]);
     }
-    $this->db->query("INSERT INTO sess (sessID,sessData,personID) VALUES (%s,%s,%d)"
+    $this->db->query("INSERT INTO sess (sessID,sessData,personID) VALUES ('%s','%s',%d)"
                              ,$this->key, $this->Encode($this->session_data), $row["personID"]);
     $this->Put("username" ,strtolower($row["username"]));
     $this->Put("perms" ,$row["perms"]);
@@ -82,14 +82,14 @@ class Session {
       $this->Destroy();
     } else if ($this->Started()) {
       $this->Put("session_started",mktime());
-      $this->db->query("UPDATE sess SET sessData = %s WHERE sessID = %s"
+      $this->db->query("UPDATE sess SET sessData = '%s' WHERE sessID = '%s'"
                   , $this->Encode($this->session_data), $this->key);
     }
   } 
 
   function Destroy() {
     if ($this->Started() && $this->key) {
-      $this->db->query("DELETE FROM sess WHERE sessID = %s",$this->key);
+      $this->db->query("DELETE FROM sess WHERE sessID = '%s'",$this->key);
     }
     $this->DestroyCookie();
     $this->key = "";
@@ -179,7 +179,7 @@ class Session {
   // Fetches data given a key
   function GetSessionData() {
     if ($this->key) {
-      $row = $this->db->qr("SELECT sessData FROM sess WHERE sessID = %s", $this->key);
+      $row = $this->db->qr("SELECT sessData FROM sess WHERE sessID = '%s'", $this->key);
       return $row["sessData"];
     }
   }

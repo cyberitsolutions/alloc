@@ -267,7 +267,7 @@ class reminder extends db_entity {
           if ($this->get_value('reminderRecuringInterval') == "No") {
             if ($this->delete()) {
               $e = new alloc_email;
-              $e->send($email, stripslashes($subject), stripslashes($content), "reminder", $headers);
+              $e->send($email, $subject, $content, "reminder", $headers);
             }
           } else if ($this->get_value('reminderRecuringValue') != 0) {
 
@@ -280,7 +280,7 @@ class reminder extends db_entity {
             $this->set_value('reminderAdvNoticeSent', 0);
             if ($this->save()) {
               $e = new alloc_email;
-              $e->send($email, stripslashes($subject), stripslashes($content), "reminder", $headers);
+              $e->send($email, $subject, $content, "reminder", $headers);
             }
           }
         } 
@@ -341,7 +341,7 @@ class reminder extends db_entity {
           $content = $this->get_value('reminderContent');
           
           $e = new alloc_email;
-          $e->send($email, stripslashes($subject), stripslashes($content), "reminder_advnotice", $headers);
+          $e->send($email, $subject, $content, "reminder_advnotice", $headers);
           $this->set_value('reminderAdvNoticeSent', 1);
           $this->save();
         } 

@@ -217,7 +217,7 @@
       <table>
       {foreach $TPL["defaultInterestedParties"] as $k => $v}
         <tr>
-          <td>{echo stripslashes($k)}</td>
+          <td>{echo $k}</td>
           <td>{echo $v}</td>
         </tr>
       {/}

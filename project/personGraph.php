@@ -50,7 +50,7 @@ if ($projectID) {
   $person_query = sprintf("SELECT person.* ")
     .sprintf("FROM person, projectPerson ")
     .sprintf("WHERE person.personID = projectPerson.personID ")
-    .sprintf(" AND projectPerson.projectID='%d'", addslashes($project->get_id()));
+    .sprintf(" AND projectPerson.projectID='%d'", db_esc($project->get_id()));
 
 } else if ($_GET["personID"]) {
   $person_query = sprintf("SELECT * FROM person where personID = ".$_GET["personID"]." ORDER BY username");

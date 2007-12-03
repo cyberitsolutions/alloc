@@ -109,7 +109,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     // Check for an existing transaction for this wage - note we have to use a range or amount because it is floating point
     $query = sprintf("SELECT transactionID
                         FROM transaction
-                        WHERE tfID=%d AND transactionDate='%s' AND amount>%0.3f AND amount < %0.3f", $tfID, addslashes($transactionDate), $amount - 0.001, $amount + 0.001);
+                        WHERE tfID=%d AND transactionDate='%s' AND amount>%0.3f AND amount < %0.3f", $tfID, db_esc($transactionDate), $amount - 0.001, $amount + 0.001);
     $db->query($query);
     if ($db->next_record()) {
       $msg.= "Warning: Salary for employee #$employeeNum $name on $transactionDate already exists as transaction #".$db->f("transactionID")."<br>";

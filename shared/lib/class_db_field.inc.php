@@ -63,7 +63,7 @@ class db_field {
   function get_value($dest = DST_VARIABLE) {
     if ($dest == DST_DATABASE) {
       if ((isset($this->value) && $this->value != "") || !$this->empty_to_null) {
-        return "'".addslashes($this->value)."'";
+        return "'".db_esc($this->value)."'";
       } else {
 
         return "NULL";

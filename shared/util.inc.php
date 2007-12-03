@@ -221,7 +221,7 @@ function get_cached_table($table,$anew=false) {
     $people = $cache->get_cached_table("person") or $people = array();
     foreach ($people as $id => $row) {
       if ($people[$id]["firstName"] && $people[$id]["surname"]) {
-        $people[$id]["name"] = stripslashes($people[$id]["firstName"]." ".$people[$id]["surname"]);
+        $people[$id]["name"] = $people[$id]["firstName"]." ".$people[$id]["surname"];
       } else {
         $people[$id]["name"] = $people[$id]["username"];
       }
@@ -621,7 +621,6 @@ function get_select_options($options,$selected_value=NULL,$max_length=45) {
         $selected_value == $value and $sel = " selected";
       }
 
-      $label = stripslashes($label);
       $label = str_replace("&nbsp;"," ",$label);
       if (strlen($label) > $max_length) {
         $label = substr($label, 0, $max_length - 3)."...";
@@ -656,7 +655,6 @@ function get_options_from_array($options, $selected_value, $use_values = true, $
       }
     }
     $rtn.= ">";
-    $label = stripslashes($label);
     if (strlen($label) > $max_label_length) {
       $rtn.= substr($label, 0, $max_label_length - 3)."...";
     } else {
@@ -692,9 +690,9 @@ function get_array_from_db($db, $key_field, $label_field) {
       $return = $db->f($label_field);
     }
     if ($key_field) {
-      $rtn[$db->f($key_field)] = stripslashes($return);
+      $rtn[$db->f($key_field)] = $return;
     } else {
-      $rtn[] = stripslashes($return);
+      $rtn[] = $return;
     }
   }
   return $rtn;
@@ -715,20 +713,7 @@ function get_tf_name($tfID) {
   }
 }
 function db_esc($str = "") {
-  // If they're using magic_quotes_gpc then we gotta strip the 
-  // automatically added backslashes otherwise they'll be added again..
-  if (get_magic_quotes_gpc()) {
-    $str = stripslashes($str);
-  }
-  $esc_function = "mysql_escape_string";
-  if (version_compare(phpversion(), "4.3.0", ">")) {
-    $esc_function = "mysql_real_escape_string";
-  }
-  
-  if (is_numeric($str)) {
-    return $str;
-  }
-  return $esc_function($str);
+  return db::esc($str);
 }
 function db_get_where($where = array()) {
   // Okay so $value can be like eg: $where["status"] = array(" LIKE ","hey")

@@ -78,7 +78,7 @@ class client extends db_entity {
   }
  
   function get_client_name() {
-    return stripslashes($this->get_value("clientName"));
+    return $this->get_value("clientName");
   }
 
   function get_client_link() {
@@ -151,7 +151,7 @@ class client extends db_entity {
       $c->read_db_record($db);
       $row["clientLink"] = $c->get_client_link();
       $summary.= client::get_client_list_tr($row,$_FORM);
-      $summary_ops[$c->get_id()] = stripslashes($c->get_value("clientName"));
+      $summary_ops[$c->get_id()] = $c->get_value("clientName");
 
       #$TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
     }

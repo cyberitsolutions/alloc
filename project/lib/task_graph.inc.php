@@ -144,7 +144,7 @@ class task_graph
     $task = $t["object"];
 
     // Text
-    $text = stripslashes($t["taskName"]);
+    $text = $t["taskName"];
     echo_debug("task: $text<br>");
     imagettftext($this->image, ALLOC_FONT_SIZE, 0,  6 + ($indent * $this->indent_increment), $y + 13, $this->color_text, ALLOC_FONT, $text);
 

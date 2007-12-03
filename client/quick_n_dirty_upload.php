@@ -53,13 +53,13 @@ if ($upload) {
       $a++;
 
       if ($a % 2 != 0) {
-        $clientName = trim(addslashes($line));
+        $clientName = trim($line);
         $print = false;
       } else {
         $fields = explode("  ", $line);
-        $clientStreetAddressOne = trim(addslashes($fields[0]));
-        $clientSuburbOne = trim(addslashes($fields[1]));
-        $clientPhoneOne = trim(addslashes($fields[2]));
+        $clientStreetAddressOne = trim($fields[0]);
+        $clientSuburbOne = trim($fields[1]);
+        $clientPhoneOne = trim($fields[2]);
         $print = true;
       }
 
@@ -67,7 +67,7 @@ if ($upload) {
       if ($print) {
 
         $db = new db_alloc;
-        $db->query("select * from client where clientName = '".addslashes($clientName)."'");
+        $db->query("select * from client where clientName = '".db_esc($clientName)."'");
         if (!$db->next_record()) {
           echo "<br><br><br>".$clientName;
           echo "<br>".$clientStreetAddressOne."<br>".$clientSuburbOne."<br>".$clientPhoneOne;
