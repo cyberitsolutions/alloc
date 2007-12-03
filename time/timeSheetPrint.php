@@ -91,7 +91,7 @@ define("DEFAULT_SEP","\n");
 
       unset($str);
       $d = $timeSheetItem->get_value('description');
-      $d && !$rows[$taskID]["desc"] and $str[] = stripslashes($d);
+      $d && !$rows[$taskID]["desc"] and $str[] = $d;
 
       // Get task description
       if ($taskID && $_GET["printDesc"]) {
@@ -100,12 +100,12 @@ define("DEFAULT_SEP","\n");
         $t->select();
         $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription"));
 
-        $d2 && !$d2s[$taskID] and $str[] = stripslashes($d2);
+        $d2 && !$d2s[$taskID] and $str[] = $d2;
         $d2 and $d2s[$taskID] = true;
       }
 
       $c = str_replace("\r\n","\n",$timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = stripslashes($c);
+      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = $c;
 
       is_array($str) and $rows[$taskID]["desc"].= trim(implode(DEFAULT_SEP,$str));
     }
@@ -155,7 +155,7 @@ define("DEFAULT_SEP","\n");
 
       unset($str);
       $d = $timeSheetItem->get_value('description');
-      $d && !$rows[$taskID]["desc"] and $str[] = stripslashes($d);
+      $d && !$rows[$taskID]["desc"] and $str[] = $d;
 
 
       // Get task description
@@ -165,12 +165,12 @@ define("DEFAULT_SEP","\n");
         $t->select();
         $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription"));
 
-        $d2 && !$d2s[$taskID] and $str[] = stripslashes($d2);
+        $d2 && !$d2s[$taskID] and $str[] = $d2;
         $d2 and $d2s[$taskID] = true;
       }
 
       $c = str_replace("\r\n","\n",$timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c  && !$cs[$c] and $str[] = stripslashes($c);
+      !$timeSheetItem->get_value("commentPrivate") && $c  && !$cs[$c] and $str[] = $c;
       $cs[$c] = true;
 
       is_array($str) and $rows[$taskID]["desc"].= trim(implode(DEFAULT_SEP,$str));
@@ -219,7 +219,7 @@ define("DEFAULT_SEP","\n");
 
       unset($str);
       $d = $timeSheetItem->get_value('description');
-      $d && !$rows[$row_num]["desc"] and $str[] = stripslashes($d);
+      $d && !$rows[$row_num]["desc"] and $str[] = $d;
 
       // Get task description
       if ($taskID && $_GET["printDesc"]) {
@@ -228,12 +228,12 @@ define("DEFAULT_SEP","\n");
         $t->select();
         $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription"));
 
-        $d2 && !$d2s[$taskID] and $str[] = stripslashes($d2);
+        $d2 && !$d2s[$taskID] and $str[] = $d2;
         $d2 and $d2s[$taskID] = true;
       }
 
       $c = str_replace("\r\n","\n",$timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = stripslashes($c);
+      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = $c;
 
       is_array($str) and $rows[$row_num]["desc"].= trim(implode(DEFAULT_SEP,$str));
     }
@@ -309,7 +309,7 @@ if ($timeSheetID) {
   $web = config::get_config_item("companyContactHomePage");
   $web and $TPL["companyContactHomePage"] = "Web: ".$web;
 
-  $TPL["footer"] = stripslashes(config::get_config_item("timeSheetPrintFooter"));
+  $TPL["footer"] = config::get_config_item("timeSheetPrintFooter");
   $TPL["taxName"] = config::get_config_item("taxName");
 
 

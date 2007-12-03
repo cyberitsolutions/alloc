@@ -113,7 +113,7 @@ class task extends db_entity {
   
     if ($recipients) {
       $successful_recipients = $this->send_emails($recipients,"task_reassigned");
-      $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Reassigned: ".stripslashes($this->get_value("taskName"));
+      $successful_recipients and $msg = "Email sent: ".$successful_recipients.", Task Reassigned: ".$this->get_value("taskName");
     }
  
     return $msg;
@@ -133,7 +133,7 @@ class task extends db_entity {
 
     if ($recipients) {
       $successful_recipients = $this->send_emails($recipients,"task_closed");
-      $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Closed: ".stripslashes($this->get_value("taskName"));
+      $successful_recipients and $msg = "Email sent: ".$successful_recipients.", Task Closed: ".$this->get_value("taskName");
     }
     return $msg; 
   }
@@ -152,7 +152,7 @@ class task extends db_entity {
 
     if ($recipients) {
       $successful_recipients = $this->send_emails($recipients,"task_duplicate");
-      $successful_recipients and $msg = "Email sent: ".stripslashes($successful_recipients).", Task Marked Duplicate: ".stripslashes($this->get_value("taskName"));
+      $successful_recipients and $msg = "Email sent: ".$successful_recipients.", Task Marked Duplicate: ".$this->get_value("taskName");
     }
     return $msg; 
   }
@@ -328,11 +328,11 @@ class task extends db_entity {
       $q = sprintf("SELECT fullName,emailAddress FROM taskCCList WHERE taskID = %d",$this->get_id());
       $db->query($q);  
       while ($db->next_record()) {
-        $taskCCList[] = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",stripslashes($db->f("fullName"))),"email"=>$db->f("emailAddress")))));
+        $taskCCList[] = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$db->f("fullName")),"email"=>$db->f("emailAddress")))));
 
         // And add the list of people who are already in the taskCCList for this task, just in case they get deleted from the client pages
         // This email address will be overwritten by later entries
-        $taskCCListOptions[$db->f("emailAddress")] = stripslashes($db->f("fullName"));
+        $taskCCListOptions[$db->f("emailAddress")] = $db->f("fullName");
       }
     }
 
@@ -342,7 +342,7 @@ class task extends db_entity {
       $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
       $db->query($q);
       $db->next_record();
-      $taskCCListOptions[$db->f("projectClientEMail")] = stripslashes($db->f("projectClientName"));
+      $taskCCListOptions[$db->f("projectClientEMail")] = $db->f("projectClientName");
   
       // Get all other client contacts from the Client pages for this Project
       $q = sprintf("SELECT clientID FROM project WHERE projectID = %d",$projectID);
@@ -352,7 +352,7 @@ class task extends db_entity {
       $q = sprintf("SELECT clientContactName, clientContactEmail FROM clientContact WHERE clientID = %d",$clientID);
       $db->query($q);
       while ($db->next_record()) {
-        $taskCCListOptions[$db->f("clientContactEmail")] = stripslashes($db->f("clientContactName"));
+        $taskCCListOptions[$db->f("clientContactEmail")] = $db->f("clientContactName");
       }
 
       // Get all the project people for this tasks project
@@ -361,13 +361,13 @@ class task extends db_entity {
                     WHERE projectPerson.projectID = %d AND person.personActive = 1 ",$projectID);
       $db->query($q);
       while ($db->next_record()) {
-        $taskCCListOptions[$db->f("emailAddress")] = stripslashes($db->f("firstName")." ".$db->f("surname"));
+        $taskCCListOptions[$db->f("emailAddress")] = $db->f("firstName")." ".$db->f("surname");
       }
     }
 
     $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
     foreach ($extra_interested_parties as $name => $email) {
-      $taskCCListOptions[$email] = stripslashes($name);
+      $taskCCListOptions[$email] = $name;
     }
 
 
@@ -737,12 +737,12 @@ class task extends db_entity {
 
       $from_name = $from["name"] or $from_name = $current_user->get_username(1);
       
-      $message.= "\n".stripslashes($subject." by ".$from_name);
-      $body and $message.= "\n\n".stripslashes(wordwrap($body));
+      $message.= "\n".$subject." by ".$from_name;
+      $body and $message.= "\n\n".wordwrap($body);
       $message.= "\n\n".config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
-      $message.= "\n\nProject: ".stripslashes($p->get_value("projectName"));
-      $message.= "\n   Task: ".stripslashes($this->get_value("taskName"));
-      $message.= "\n   Desc: ".stripslashes($this->get_value("taskDescription"));
+      $message.= "\n\nProject: ".$p->get_value("projectName");
+      $message.= "\n   Task: ".$this->get_value("taskName");
+      $message.= "\n   Desc: ".$this->get_value("taskDescription");
 
 
       $message.= "\n\n-- \nIf you have any questions, please reply to this email or contact: ";
@@ -766,7 +766,7 @@ class task extends db_entity {
 
       $headers["Reply-To"] = "All parties via ".ALLOC_DEFAULT_FROM_ADDRESS;
       $headers["From"] = $from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS;
-      $subject = $subject.": ".$this->get_id()." ".stripslashes($this->get_value("taskName"))." [".$this->get_priority_label()."] ".$subject_extra;
+      $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName")." [".$this->get_priority_label()."] ".$subject_extra;
       if ($email->send($to_address, $subject, $message, $type, $headers)) {
         return $successful_recipients;
       }
@@ -829,12 +829,12 @@ class task extends db_entity {
     $_FORM["showTaskID"] and $id = $this->get_id()." ";
 
     if ($this->get_value("taskTypeID") == TT_PHASE && ($_FORM["return"] == "html" || $_FORM["return"] == "objectsAndHtml")) {
-      $rtn = "<strong>".$id.stripslashes($this->get_value("taskName"))."</strong>";
+      $rtn = "<strong>".$id.$this->get_value("taskName")."</strong>";
     } else if ($this->get_value("taskTypeID") == TT_PHASE) {
-      $rtn = $id.stripslashes($this->get_value("taskName"));
+      $rtn = $id.$this->get_value("taskName");
     } else {
       substr($this->get_value("taskName"),0,140) != $this->get_value("taskName") and $dotdotdot = "...";
-      $rtn = $id.substr(stripslashes($this->get_value("taskName")),0,140).$dotdotdot;
+      $rtn = $id.substr($this->get_value("taskName"),0,140).$dotdotdot;
     }
     return $rtn;
   }
@@ -1272,12 +1272,12 @@ function get_task_statii_array() {
 
     if ($_FORM["showDescription"] || $_FORM["showComments"]) {
       if ($task["taskDescription"]) {
-        $str[] = stripslashes($task["taskDescription"]);
+        $str[] = $task["taskDescription"];
       }
       if ($_FORM["showComments"]) {
         $comments = util_get_comments("task",$task["taskID"]);
         if ($comments) {
-          $str[] = stripslashes($comments);
+          $str[] = $comments;
         }
       }
       if (is_array($str) && count($str)) {
@@ -1775,7 +1775,7 @@ function get_task_statii_array() {
     $q = sprintf("SELECT emailAddress, fullName FROM taskCCList WHERE taskID = %d",$this->get_id());
     $db->query($q);
     while ($db->row()) {
-      $email_addresses[$db->f("emailAddress")] = stripslashes($db->f("fullName"));
+      $email_addresses[$db->f("emailAddress")] = $db->f("fullName");
     }
 
     foreach ($email_addresses as $email => $name) {

@@ -59,21 +59,21 @@ class calendar_day {
     if ($this->absences) {
       $this->class.= " absent";
       $rows[] = "<br/>Absent:";
-      $rows[] = stripslashes(implode("<br/>",$this->absences));
+      $rows[] = implode("<br/>",$this->absences);
     }
   
     if ($this->start_tasks) {
       $rows[] = "<br/>To be started:";
-      $rows[] = stripslashes(implode("<br/>",$this->start_tasks));
+      $rows[] = implode("<br/>",$this->start_tasks);
     }
 
     if ($this->complete_tasks) {
       $rows[] = "<br/>To be complete:";
-      $rows[] = stripslashes(implode("<br/>",$this->complete_tasks));
+      $rows[] = implode("<br/>",$this->complete_tasks);
     }
     if ($this->reminders) {
       $rows[] = "<br/>Reminders:";
-      $rows[] = stripslashes(implode("<br/>",$this->reminders));
+      $rows[] = implode("<br/>",$this->reminders);
     }
 
     echo "\n<td class=\"".$this->class."\">";

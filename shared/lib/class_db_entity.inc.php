@@ -320,7 +320,7 @@ class db_entity {
     reset($this->data_fields);
     while (list($field_name) = each($this->data_fields)) {
       $array_index = $array_index_prefix.$field_name;
-      $array[$array_index] = stripslashes($this->get_value($field_name, $dest));
+      $array[$array_index] = $this->get_value($field_name, $dest);
     }
 
     // Key field

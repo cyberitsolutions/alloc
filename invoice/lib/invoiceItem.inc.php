@@ -128,7 +128,7 @@ class invoiceItem extends db_entity
 
     $this->set_value("invoiceID",$invoiceID);
     $this->set_value("timeSheetID",$timeSheet->get_id());
-    $this->set_value("iiMemo","Time Sheet #".$timeSheet->get_id()." for ".person::get_fullname($timeSheet->get_value("personID")).", Project: ".stripslashes($project->get_value("projectName")));
+    $this->set_value("iiMemo","Time Sheet #".$timeSheet->get_id()." for ".person::get_fullname($timeSheet->get_value("personID")).", Project: ".$project->get_value("projectName"));
     $this->set_value("iiQuantity",$iiQuantity);
     $this->set_value("iiUnitPrice",$iiUnitPrice);
     $this->set_value("iiAmount",$amount);
@@ -159,7 +159,7 @@ class invoiceItem extends db_entity
       $ii->set_value("invoiceID",$invoiceID);
       $ii->set_value("timeSheetID",$timeSheet->get_id());
       $ii->set_value("timeSheetItemID",$row["timeSheetItemID"]);
-      $ii->set_value("iiMemo","Time Sheet for ".person::get_fullname($timeSheet->get_value("personID")).", Project: ".stripslashes($project->get_value("projectName").", ".$row["description"]."\n".$str));
+      $ii->set_value("iiMemo","Time Sheet for ".person::get_fullname($timeSheet->get_value("personID")).", Project: ".$project->get_value("projectName").", ".$row["description"]."\n".$str);
       $ii->set_value("iiQuantity",$row["timeSheetItemDuration"]);
       $ii->set_value("iiUnitPrice",$iiUnitPrice);
       $ii->set_value("iiAmount",$iiUnitPrice*$row["timeSheetItemDuration"]);

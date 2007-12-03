@@ -218,7 +218,7 @@ if (!$current_user->is_employee()) {
       $br = "";
       $commentPrivateText = "";
 
-      $text = $TPL["timeSheetItem_description_printer_version"] = stripslashes($timeSheetItem->get_value('description'));
+      $text = $TPL["timeSheetItem_description_printer_version"] = $timeSheetItem->get_value('description');
       $TPL["timeSheetItem_comment_printer_version"] = "";
       if (!$timeSheetItem->get_value("commentPrivate")) {
         $TPL["timeSheetItem_comment_printer_version"] = text_to_html($timeSheetItem->get_value("comment"));

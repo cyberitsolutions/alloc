@@ -32,6 +32,19 @@ if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
   die();
 } 
 
+// Undo magic quotes if it's enabled
+if (get_magic_quotes_gpc()) {
+  function stripslashes_array($array) {
+    return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
+  }
+
+  $_COOKIE = stripslashes_array($_COOKIE);
+  $_FILES = stripslashes_array($_FILES);
+  $_GET = stripslashes_array($_GET);
+  $_POST = stripslashes_array($_POST);
+  $_REQUEST = stripslashes_array($_REQUEST);
+}
+
 // Get the alloc directory
 $f = trim(dirname(__FILE__));
 substr($f,-1,1) != DIRECTORY_SEPARATOR and $f.= DIRECTORY_SEPARATOR;

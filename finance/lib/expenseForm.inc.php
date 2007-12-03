@@ -126,7 +126,7 @@ class expenseForm extends db_entity {
         $invoice->set_value("invoiceDateFrom",$this->get_min_date());
         $invoice->set_value("invoiceDateTo",$this->get_max_date());
         $invoice->set_value("invoiceNum",invoice::get_next_invoiceNum());
-        $invoice->set_value("invoiceName",stripslashes($client->get_value("clientName")));
+        $invoice->set_value("invoiceName",$client->get_value("clientName"));
         $invoice->set_value("invoiceStatus","edit");
         $invoice->save();
         $invoiceID = $invoice->get_id();

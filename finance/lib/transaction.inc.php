@@ -147,7 +147,7 @@ class transaction extends db_entity
   }
 
   function get_transaction_name() {
-    $rtn = stripslashes($this->get_value("product"));
+    $rtn = $this->get_value("product");
     return $rtn;
   }
 

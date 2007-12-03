@@ -155,7 +155,7 @@ class invoice extends db_entity {
 
       unset($str);
       $d = $invoiceItem->get_value('iiMemo');
-      $str[] = stripslashes($d);
+      $str[] = $d;
 
       // Get task description
       if ($invoiceItem->get_value("timeSheetID") && $_GET["printDesc"]) {
@@ -163,7 +163,7 @@ class invoice extends db_entity {
         $db = new db_alloc();
         $db->query($q);
         while ($db->next_record()) {
-          $str[$invoiceItem->get_id()].= stripslashes($db->f("description"));
+          $str[$invoiceItem->get_id()].= $db->f("description");
         }
       }
       is_array($str) and $rows[$invoiceItem->get_id()]["desc"].= trim(implode(DEFAULT_SEP,$str));
@@ -206,7 +206,7 @@ class invoice extends db_entity {
     $email and $companyContactEmail = "Email: ".$email;
     $web = config::get_config_item("companyContactHomePage");
     $web and $companyContactHomePage = "Web: ".$web;
-    $footer = stripslashes(config::get_config_item("timeSheetPrintFooter"));
+    $footer = config::get_config_item("timeSheetPrintFooter");
     $taxName = config::get_config_item("taxName");
 
 
@@ -363,7 +363,7 @@ class invoice extends db_entity {
   }
 
   function get_invoice_name() {
-    return stripslashes($this->get_value("invoiceNum"));
+    return $this->get_value("invoiceNum");
   }
 
   function get_invoice_link() {
@@ -505,7 +505,7 @@ class invoice extends db_entity {
       $i->read_db_record($db,false);
       $row["invoiceLink"] = $i->get_invoice_link();
       $summary.= invoice::get_invoice_list_tr($row,$_FORM);
-      $summary_ops[$i->get_id()] = stripslashes($i->get_value("invoiceNum"));
+      $summary_ops[$i->get_id()] = $i->get_value("invoiceNum");
     }
 
     if ($print && $_FORM["return"] == "html") {

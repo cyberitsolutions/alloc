@@ -41,14 +41,14 @@ function get_template($filename) {
   $replace = 'TPL_START_BRACE';
   $template = str_replace($pattern,$replace,$template);
 
-  // Replace {$arr.something} with echo stripslashes($arr["something"]); 
+  // Replace {$arr.something} with echo $arr["something"]; 
   $pattern = '/{\$([\w|\d|_]+)\.([^}]+)}/i';
-  $replace = '<?php echo stripslashes($${1}["${2}"]); ?>';
+  $replace = '<?php echo $${1}["${2}"]; ?>';
   $template = preg_replace($pattern,$replace,$template);
 
-  // Replace {$var_name} with echo stripslashes($TPL["var_name"]); 
+  // Replace {$var_name} with echo $TPL["var_name"]; 
   $pattern = '/{\$([\w|\d|_]+)}/i';
-  $replace = '<?php echo stripslashes(strlen($TPL["${1}"]) ? $TPL["${1}"] : $${1}); ?>';
+  $replace = '<?php echo strlen($TPL["${1}"]) ? $TPL["${1}"] : $${1}; ?>';
   $template = preg_replace($pattern,$replace,$template);
 
 

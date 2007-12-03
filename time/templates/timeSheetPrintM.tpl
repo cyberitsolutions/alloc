@@ -120,7 +120,7 @@
  
     <br/><br/>
 
-    {echo stripslashes(config::get_config_item("timeSheetPrintFooter"))}
+    {echo config::get_config_item("timeSheetPrintFooter")}
 
     <div class="container">
       <div style="float:right">

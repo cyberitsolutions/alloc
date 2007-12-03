@@ -70,11 +70,6 @@ class db {
   }
   
   function esc($str) {
-    // If they're using magic_quotes_gpc then we gotta strip the 
-    // automatically added backslashes otherwise they'll be added again..
-    if (get_magic_quotes_gpc()) {
-      $str = stripslashes($str);
-    }
     $esc_function = "mysql_escape_string";
     if (version_compare(phpversion(), "4.3.0", ">")) {
       $esc_function = "mysql_real_escape_string";
@@ -83,7 +78,7 @@ class db {
     if (is_numeric($str)) {
       return $str;
     }
-    return "'".$esc_function($str)."'";
+    return $esc_function($str);
   }
 
   function select_db($db="") { 

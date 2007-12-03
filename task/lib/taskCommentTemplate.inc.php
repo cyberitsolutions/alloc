@@ -45,17 +45,17 @@ class taskCommentTemplate extends db_entity {
     $swap["ti"] = $task->get_id();
     $swap["to"] = person::get_fullname($task->get_value("creatorID"));
     $swap["ta"] = person::get_fullname($task->get_value("personID"));
-    $swap["tn"] = stripslashes($task->get_value("taskName"));
+    $swap["tn"] = $task->get_value("taskName");
     
     $project = new project;
     $project->set_id($task->get_value("projectID"));
     $project->select();
-    $swap["pn"] = stripslashes($project->get_value("projectName"));
+    $swap["pn"] = $project->get_value("projectName");
 
     $client = new client;
     $client->set_id($project->get_value("clientID"));
     $client->select();
-    $swap["cc"] = stripslashes($client->get_value("clientName"));
+    $swap["cc"] = $client->get_value("clientName");
 
     $swap["cd"] = "Phone: ".config::get_config_item("companyContactPhone");
     $swap["cd"].= "\nFax: ".config::get_config_item("companyContactFax");

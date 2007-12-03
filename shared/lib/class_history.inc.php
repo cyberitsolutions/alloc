@@ -121,7 +121,7 @@ class history extends db_entity {
             if ($newClass->key_field->get_name() == $KEY_FIELD) {
               // The primary key for this db table is the same as 
               // our KEY_FIELD var which was extracted from url.
-              $query = sprintf("select * from %s where %s = %d", $CLASS_NAME, $KEY_FIELD, $ID);
+              $query = sprintf("SELECT * FROM %s WHERE %s = %d", $CLASS_NAME, $KEY_FIELD, $ID);
               $db->query($query);
               $db->next_record();
               // return that particular classes _default_ display field
@@ -149,7 +149,7 @@ class history extends db_entity {
                 }
               }
               $rtn = ": ".$rtn;
-              return addslashes(ucwords($CLASS_NAME).$rtn);
+              return ucwords($CLASS_NAME).$rtn;
             }
           }
         }

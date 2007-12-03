@@ -807,7 +807,7 @@ class timeSheet extends db_entity
       $invoice->set_value("invoiceDateFrom",$this->get_value("dateFrom"));
       $invoice->set_value("invoiceDateTo",$this->get_value("dateTo"));
       $invoice->set_value("invoiceNum",invoice::get_next_invoiceNum());
-      $invoice->set_value("invoiceName",stripslashes($client->get_value("clientName")));
+      $invoice->set_value("invoiceName",$client->get_value("clientName"));
       $invoice->set_value("invoiceStatus","edit");
       $invoice->save();
       $invoiceID = $invoice->get_id();
