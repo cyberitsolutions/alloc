@@ -180,7 +180,7 @@ class invoiceItem extends db_entity
 
     $this->set_value("invoiceID",$invoiceID);
     $this->set_value("expenseFormID",$expenseForm->get_id());
-    $this->set_value("iiMemo","Expenses for ".person::get_fullname($expenseForm->get_value("enteredBy")));
+    $this->set_value("iiMemo","Expenses for ".person::get_fullname($expenseForm->get_value("expenseFormCreatedUser")));
     $this->set_value("iiQuantity",1);
     $this->set_value("iiUnitPrice",$amount);
     $this->set_value("iiAmount",$amount);
@@ -200,7 +200,7 @@ class invoiceItem extends db_entity
       $ii->set_value("invoiceID",$invoiceID);
       $ii->set_value("expenseFormID",$expenseForm->get_id());
       $ii->set_value("transactionID",$row["transactionID"]);
-      $ii->set_value("iiMemo","Expenses for ".person::get_fullname($expenseForm->get_value("enteredBy")).", ".$row["product"]);
+      $ii->set_value("iiMemo","Expenses for ".person::get_fullname($expenseForm->get_value("expenseFormCreatedUser")).", ".$row["product"]);
       $ii->set_value("iiQuantity",$row["quantity"]);
       $ii->set_value("iiUnitPrice",$amount);
       $ii->set_value("iiAmount",$amount*$row["quantity"]);
