@@ -30,7 +30,6 @@ function show_all_exp($template) {
 
   if ($expenseForm->get_id()) {
 
-    $transaction = new transaction;
     $tf = new tf;
 
     if ($_POST["transactionID"] && $_POST["edit"]) {   // if edit is clicked
@@ -44,6 +43,7 @@ function show_all_exp($template) {
 
     while ($db->next_record()) {
 
+      $transaction = new transaction;
       $transaction->read_db_record($db,false);
       $transaction->set_tpl_values();
 
@@ -54,13 +54,13 @@ function show_all_exp($template) {
       $tf->set_id($transaction->get_value("tfID"));
       $tf->select();
       $TPL["tfID"] = $tf->get_value("tfName");
-
+  
       $projectID = $transaction->get_value("projectID");
       if (isset($_POST["projectID"]) && $_POST["projectID"] != "") {
         $project = new project;
         $project->set_id($transaction->get_value("projectID"));
         $project->select();
-        $TPL["projectID"] = $project->get_value("projectName");
+        $TPL["projectName"] = $project->get_value("projectName");
       }
 
       include_template($template);
@@ -338,7 +338,7 @@ $c = new client;
 $c->set_id($expenseForm->get_value("clientID"));
 $c->select();
 $clientName = $c->get_client_name();
-$clientName and $TPL["field_clientID"] = $clientName;
+$clientName and $TPL["printer_clientID"] = $clientName;
 
 
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
@@ -361,6 +361,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"pend\" value=\"Pending\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"approve\" value=\"Approve\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"reject\" value=\"Reject\">";
+  $TPL["field_clientID"] = $clientName;
 
 } else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Create Expense Form\">";

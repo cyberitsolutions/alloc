@@ -11,15 +11,16 @@
   <td colspan="6" align="left"><b>{$rr_label}</b></td>
 </tr>
 <tr>
-  <td colspan="6" align="left">Seek Client Reimbursement: <b>{$seekClientReimbursementLabel}</b></td>
+  <td colspan="1" align="left">Seek Client Reimbursement: <b>{$seekClientReimbursementLabel}</b></td>
+  <td colspan="5">{$printer_clientID}</td>
 </tr>
 <tr>
   <td><b>Comment</b></td>
   <td colspan="5">{$expenseFormComment}</td>
 </tr>
 <tr>
-  <td colspan="3" align="left">User: <b>{$user}</b></td>
-  <td colspan="3" align="left">Signature:</td>
+  <td colspan="1" align="left"><b>{$user}</b></td>
+  <td colspan="5" align="left">Signature:</td>
 </tr>
 </table>
 
