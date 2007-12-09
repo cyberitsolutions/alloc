@@ -36,9 +36,6 @@ $backup = new backups();
 
 
 if ($_POST["create_backup"]) {
-  if (!is_dir($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0")) {
-    mkdir($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0", 0777);
-  }
   $backup->backup();
 }
 
