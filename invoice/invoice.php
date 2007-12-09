@@ -122,7 +122,7 @@ function show_new_invoiceItem($template) {
       $r = array();
       while ($row = $db->row()) {
         $r[$row["expenseFormID"]] += $row["amount"];
-        !$done[$row["expenseFormID"]] and $expenseFormOptions[$row["expenseFormID"]] = "Expense Form #".$row["expenseFormID"]."  %s  ".person::get_fullname($row["enteredBy"]);
+        !$done[$row["expenseFormID"]] and $expenseFormOptions[$row["expenseFormID"]] = "Expense Form #".$row["expenseFormID"]."  %s  ".person::get_fullname($row["expenseFormCreatedUser"]);
         $done[$row["expenseFormID"]] = true;
       }
 
