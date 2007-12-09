@@ -131,7 +131,7 @@ div.message {
 
 /* Main content boxes */ 
 table.box { 
-  border:(TABLE_BOX_BORDER_PX) solid (TABLE_BOX_BORDER); 
+  border:(TABLE_BOX_BORDER); 
   background-color:(TABLE_BOX_BACKGROUND_COLOR); 
   margin-left:8px !important;  margin-left:0px;
   margin-right:8px !important;  margin-right:0px;
