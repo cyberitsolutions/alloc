@@ -30,6 +30,7 @@ class backups {
     global $external_storage_directories;
 
     ini_set('max_execution_time',900); // max time 15 minutes
+    ini_set('memory_limit',"256M"); // max memory_limit
 
     // externally_stored_directories is set in alloc.php
     foreach ($external_storage_directories as $folder) {
