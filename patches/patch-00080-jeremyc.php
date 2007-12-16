@@ -1,10 +1,14 @@
 <?php
 
-// Unescape everything in the database. Previously, due to magic_quotes_gpc being left on, everything in the database had a single layer of escaping. The default preferred setting is now for it to be off. This patch modifies everything in the DB to comply. Any errors are probably not fatal, but you may wish to look over the data to ensure it still looks correct.
+// Unescape everything in the database. Previously, due to magic_quotes_gpc
+// being left on, everything in the database had a single layer of escaping. The
+// default preferred setting is now for it to be off. This patch modifies
+// everything in the DB to comply. Any errors are probably not fatal, but you may
+// wish to look over the data to ensure it still looks correct.
 // BACKUP YOUR DATABASE BEFORE RUNNING THIS PATCH.
 
+ini_set('max_execution_time',600);
 
-require_once("../alloc.php");
 $fields["absence"]=array(
  "contactDetails"
 );
