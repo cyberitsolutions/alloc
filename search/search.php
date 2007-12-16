@@ -41,18 +41,17 @@ global $TPL;
 
       $buffer = 30;
       $position = $position - $buffer;
+
       // Reset position to zero cause negative number will make it wrap around, 
       // and nuke ellipses prefix because the string begins with the match
       if ($position < 0) {
         $position = 0;
         $prefix = "";
       }
-      
-      preg_match("/".$needle."/i",$haystack,$matches); // This gets the actual casse insensive match for search and replace
+
 
       $str = substr($haystack,$position,strlen($needle)+100);
-      #$str = str_replace($matches[0],"<em class=\"highlighted\">".$matches[0]."</em>",$str);
-      $str = str_replace($matches[0],"[[[".$matches[0]."]]]",$str);
+      $str = str_replace($needle,"[[[".$needle."]]]",$str);
       $str = $prefix.$str.$suffix;
       return $str;
     } 
@@ -66,7 +65,8 @@ global $TPL;
 $noRedirect = $_POST["idRedirect"] or $_GET["idRedirect"];
 $search = $_POST["search"] or $search = $_GET["search"];
 $category = $_POST["category"] or $category = $_GET["category"];
-$needle = trim(db_esc($_POST["needle"])) or $needle = trim(db_esc(urldecode($_GET["needle"])));
+$needle = trim($_POST["needle"]) or $needle = trim(urldecode($_GET["needle"]));
+$needle_esc = db_esc($needle);
 
 if (!$search) {
   $str = "<br/><br/>";
@@ -95,8 +95,8 @@ if (!$search) {
     $query = "SELECT *, count(*) AS rank 
                 FROM project 
            LEFT JOIN comment ON project.projectID = comment.commentLinkID 
-               WHERE (project.projectName LIKE '%".$needle."%' OR project.projectComments LIKE '%".$needle."%' OR project.projectClientName LIKE '%".$needle."%')
-                  OR (comment.comment LIKE '%".$needle."%' AND comment.commentType='project') 
+               WHERE (project.projectName LIKE '%".$needle_esc."%' OR project.projectComments LIKE '%".$needle_esc."%' OR project.projectClientName LIKE '%".$needle_esc."%')
+                  OR (comment.comment LIKE '%".$needle_esc."%' AND comment.commentType='project') 
             GROUP BY project.projectID 
             ORDER BY rank DESC,project.projectName";
 
@@ -123,7 +123,7 @@ if (!$search) {
           $query = "SELECT * FROM comment 
                      WHERE commentType = 'project' 
                        AND commentLinkID = ".$project->get_id()."  
-                       AND comment LIKE '%".$needle."%'";
+                       AND comment LIKE '%".$needle_esc."%'";
 
           $db2->query($query);
           while ($db2->next_record()) {
@@ -156,9 +156,9 @@ if (!$search) {
                 FROM client 
            LEFT JOIN clientContact ON client.clientID=clientContact.clientID 
            LEFT JOIN comment ON client.clientID=comment.commentLinkID 
-               WHERE (client.clientName LIKE '%".$needle."%')
-                  OR (clientContact.clientContactName LIKE '%".$needle."%' OR clientContact.clientContactOther LIKE '%".$needle."%') 
-                  OR (comment.comment LIKE '%".$needle."%' AND comment.commentType='client') 
+               WHERE (client.clientName LIKE '%".$needle_esc."%')
+                  OR (clientContact.clientContactName LIKE '%".$needle_esc."%' OR clientContact.clientContactOther LIKE '%".$needle_esc."%') 
+                  OR (comment.comment LIKE '%".$needle_esc."%' AND comment.commentType='client') 
             GROUP BY client.clientID 
             ORDER BY rank DESC,client.clientName";
 
@@ -201,7 +201,7 @@ if (!$search) {
 
         if ($client->get_id() != "") {
           // recursively search comments
-          $query = "SELECT * from comment WHERE commentType='client' AND commentLinkID = ".$client->get_id()." AND comment LIKE '%".$needle."%'";
+          $query = "SELECT * from comment WHERE commentType='client' AND commentLinkID = ".$client->get_id()." AND comment LIKE '%".$needle_esc."%'";
           $db2->query($query);
           while ($db2->next_record()) {
             $comment = new comment;
@@ -236,10 +236,12 @@ if (!$search) {
 
   } else {
     $query = "SELECT *,count(*) AS rank 
-                FROM task LEFT JOIN comment ON task.taskID=comment.commentLinkID 
-               WHERE (taskName LIKE '%".$needle."%' OR taskDescription LIKE '%".$needle."%')
-                  OR (comment.comment LIKE '%".$needle."%' AND comment.commentType='task') 
-            GROUP BY task.taskID ORDER BY rank DESC,task.taskName";
+                FROM task 
+           LEFT JOIN comment ON task.taskID = comment.commentLinkID 
+               WHERE (taskName LIKE '%".$needle_esc."%' OR taskDescription LIKE '%".$needle_esc."%')
+                  OR (comment.comment LIKE '%".$needle_esc."%' AND comment.commentType='task') 
+            GROUP BY task.taskID 
+            ORDER BY rank DESC,task.taskName";
 
     $db->query($query);
 
@@ -262,7 +264,7 @@ if (!$search) {
 
         if ($task->get_id() != "") {
           $db2 = new db_alloc;
-          $query = "SELECT * from comment WHERE commentType='task' AND commentLinkID = ".$task->get_id()." AND comment LIKE '%".$needle."%'";
+          $query = "SELECT * from comment WHERE commentType='task' AND commentLinkID = ".$task->get_id()." AND comment LIKE '%".$needle_esc."%'";
           $db2->query($query);
           while ($db2->next_record()) {
             $comment = new comment;
@@ -292,8 +294,7 @@ if (!$search) {
     }
 
   } else {
-
-    $query = "SELECT * FROM announcement WHERE (heading LIKE '%".$needle."%' OR body LIKE '%".$needle."%')";
+    $query = "SELECT * FROM announcement WHERE (heading LIKE '%".$needle_esc."%' OR body LIKE '%".$needle_esc."%')";
     $db->query($query);
     while ($db->next_record()) {
       $announcement = new announcement;
@@ -327,7 +328,7 @@ if (!$search) {
     }
 
   } else {
-    $query = "SELECT * FROM item WHERE (itemName LIKE '%".$needle."%' OR itemNotes LIKE '%".$needle."%')";
+    $query = "SELECT * FROM item WHERE (itemName LIKE '%".$needle_esc."%' OR itemNotes LIKE '%".$needle_esc."%')";
     $db->query($query);
     while ($db->next_record()) {
       $details = "";
@@ -347,7 +348,7 @@ if (!$search) {
 
         // get availability of loan
         $db2 = new db_alloc;
-        $query = "SELECT * FROM loan WHERE itemID=".$item->get_id()." AND dateReturned='0000-00-00'";
+        $query = sprintf("SELECT * FROM loan WHERE itemID = %d AND dateReturned='0000-00-00'",$item->get_id());
         $db2->query($query);
         if ($db2->next_record()) {
           $loan = new loan;
@@ -406,11 +407,11 @@ if (!$search) {
                 FROM timeSheetItem
            LEFT JOIN timeSheet ON timeSheetItem.timeSheetID=timeSheet.timeSheetID
            LEFT JOIN project ON timeSheet.projectID=project.projectID
-               WHERE (timeSheetItem.description LIKE '%".$needle."%')
-                  OR (timeSheetItem.comment LIKE '%".$needle."%') 
-                  OR (timeSheet.billingNote LIKE '%".$needle."%') 
-                  OR (project.projectName LIKE '%".$needle."%') 
-                  OR (project.projectShortName LIKE '%".$needle."%') 
+               WHERE (timeSheetItem.description LIKE '%".$needle_esc."%')
+                  OR (timeSheetItem.comment LIKE '%".$needle_esc."%') 
+                  OR (timeSheet.billingNote LIKE '%".$needle_esc."%') 
+                  OR (project.projectName LIKE '%".$needle_esc."%') 
+                  OR (project.projectShortName LIKE '%".$needle_esc."%') 
             GROUP BY timeSheet.timeSheetID";
 
 
