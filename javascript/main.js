@@ -53,8 +53,9 @@ function set_grow_shrink_box(id, display, images, text, id_to_hide) {
     document.getElementById(id_to_hide).style.display=display_to_hide;
   }
 
-  str = "<nobr><a class=\"growshrink nobr\" href=\"#\" onClick=\"set_grow_shrink_box('"+id+"','"+display+"','"+images+"','"+text+"','"+id_to_hide+"');\">"+text+"<img border=\"0\" src=\""+image+"\"></a></nobr>"
+  str = "<nobr><a class=\"growshrink nobr\" href=\"#\" onClick=\"return set_grow_shrink_box('"+id+"','"+display+"','"+images+"','"+text+"','"+id_to_hide+"');\">"+text+"<img border=\"0\" src=\""+image+"\"></a></nobr>"
   document.getElementById('button_'+id).innerHTML = str;
+  return false;
 }
 
 function sidebyside_activate(id,arr) {
