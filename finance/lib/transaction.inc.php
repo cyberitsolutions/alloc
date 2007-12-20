@@ -94,6 +94,46 @@ class transaction extends db_entity
     db_entity::delete();
   }
 
+  function save() {
+    //safety checks
+    //The transaction may not be modified if the timesheet, invoice or expense
+    //form it is attached to has been completed.
+    if ($this->is_final()) {
+      die("Cannot save transaction, as it has been finalised.");
+    }
+    
+    return parent::save();
+  }
+
+  function is_final() {
+    if ($this->get_value("expenseFormID")) {
+      $expenseForm = new expenseForm;
+      $expenseForm->set_id($this->get_value("expenseFormID"));
+      $expenseForm->select();
+      if ($expenseForm->get_value("expenseFormFinalised")) {
+        return true;
+      }
+    } else if ($this->get_value("invoiceItemID")) {
+      $invoiceItem = new invoiceItem;
+      $invoiceItem->set_id($this->get_value("invoiceItemID"));
+      $invoiceItem->select();
+      $invoice = new invoice;
+      $invoice->set_id($invoiceItem->get_value("invoiceID"));
+      $invoice->select();
+      if ($invoice->get_value("invoiceStatus") == "finished") {
+        return true;
+      }
+    } else if ($this->get_value("timeSheetID")) {
+      $ts = new timeSheet;
+      $ts->set_id($this->get_value("timeSheetID"));
+      $ts->select();
+      if ($ts->get_value("status") == "finished") {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function is_owner($person = "") {
     global $current_user;
     if ($person == "") {

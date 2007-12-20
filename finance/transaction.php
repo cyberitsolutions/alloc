@@ -64,7 +64,11 @@ $transaction->set_tpl_values();
 
 
 if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
-
+/*
+  if ($transaction->get_value("status") != "pending") {
+    $TPL["message"][] = "This transaction is no longer editable.";
+  }
+*/
   $transaction->read_globals();
 
   // Tweaked validation to allow reporting of multiple errors
@@ -125,7 +129,7 @@ $TPL["project_link"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$p->g
 
 $TPL["taxName"] = config::get_config_item("taxName");
 
-if ($transaction->have_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION)) {
+if ($transaction->have_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION) && !$transaction->is_final()) {
   $TPL["main_alloc_title"] = "Create Transaction - ".APPLICATION_NAME;
   include_template("templates/editTransactionM.tpl");
 } else {

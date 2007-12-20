@@ -391,15 +391,10 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     $client->select();
     $invoice->set_value("invoiceName", $client->get_value("clientName"));
   } 
-
-  if (!$TPL["message"]) {
-
-    if ($_POST["save_and_MoveForward"]) {
-      $invoice->change_status("forwards");
-      
-    } else if ($_POST["save_and_MoveBack"]) {
-      $invoice->change_status("backwards");
-    }
+  if ($_POST["save_and_MoveForward"]) {
+    $direction = "forwards";
+  } else if ($_POST["save_and_MoveBack"]) {
+    $direction = "backwards";
   }
 
   if (!$TPL["message"]) {
@@ -407,10 +402,6 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     if (!$invoice->get_value("invoiceStatus")) {
       $invoice->set_value("invoiceStatus","edit");
     }
-
-    $invoice->save();
-    $invoiceID = $invoice->get_id();
-
     // Save invoice Item approved/rejected info
     if (is_array($_POST["invoiceItemStatus"])) {
       foreach ($_POST["invoiceItemStatus"] as $iiID => $status) {
@@ -439,6 +430,12 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
         $transaction->save();
       }
     }
+    if (!$TPL["message"]) {
+      $invoice->change_status($direction);
+    }
+
+    $invoice->save();
+    $invoiceID = $invoice->get_id();
 
     $TPL["message_good"][] = "Invoice saved.";
     alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID.$extra);
