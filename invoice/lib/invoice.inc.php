@@ -693,8 +693,8 @@ class invoice extends db_entity {
     }
   }
 
-  function change_status($direction) {
-
+  function next_status($direction) {
+ 
     $steps["forwards"][""] = "edit";
     $steps["forwards"]["edit"] = "reconcile";
     $steps["forwards"]["reconcile"] = "finished";
@@ -705,8 +705,16 @@ class invoice extends db_entity {
 
     $status = $this->get_value("invoiceStatus");
     $newstatus = $steps[$direction][$status];
+
+    return $newstatus;
+  }
+ 
+  function change_status($direction) {
+    $newstatus = $this->next_status($direction);
     if ($newstatus) {
-      $m = $this->{"move_status_to_".$newstatus}($direction);
+      if ($this->can_move($direction, $newstatus)) {
+        $m = $this->{"move_status_to_".$newstatus}($direction);
+      }
       if (is_array($m)) {
         return implode("<br/>",$m);
       }
@@ -724,18 +732,24 @@ class invoice extends db_entity {
   }
 
   function move_status_to_finished($direction) {
-    global $TPL;
     if ($direction == "forwards") {
-      if ($this->has_pending_transactions()) {
-        $TPL["message"][] = "There are still Invoice Items in dispute. This Invoice cannot be marked completed.";
-        return;
-      } else {
-        $this->close_related_entities();
-      }
+      $this->close_related_entities();
     }
     $this->set_value("invoiceStatus", "finished");
   }
 
+  function can_move($direction) {
+    global $TPL;
+    $newstatus = $this->next_status($direction);
+    if ($direction == "forwards" && $newstatus == "finished") {
+      if ($this->has_pending_transactions()) {
+        $TPL["message"][] = "There are still Invoice Items in dispute. This Invoice cannot be marked completed.";
+        return false;
+      }
+    }
+    return true;
+  }
+  
   function has_pending_transactions() {
     $q = sprintf("SELECT * 
                     FROM transaction
