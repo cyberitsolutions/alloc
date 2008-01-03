@@ -6,13 +6,19 @@
     <th colspan="4">Repeating Transactions</th>
     <th class="right"><a href="{$url_alloc_transactionRepeat}">New Repeating Expense</a></th>
   </tr>
-    <tr>
-      <td>Name</td>
-      <td>Start Date</td>
-      <td>End Date</td>
-      <td>TF</td>
-      <td>Status</td>
-    </tr>
-    {show_expenseFormList("templates/transactionRepeatListR.tpl")}
-  </table>
+  <tr>
+    <td colspan="5">
+      {$table_list}
+        <tr>
+          <th>Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>TF</th>
+          <th>Status</th>
+        </tr>
+        {show_expenseFormList("templates/transactionRepeatListR.tpl")}
+      </table>
+    </td>
+  </tr>
+</table>
 {show_footer()}

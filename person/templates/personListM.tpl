@@ -44,16 +44,16 @@
   </tr>
   <tr>
     <td colspan="9">
-      <table class="tasks" border="0" cellspacing="0">
+      {$table_list}
         <tr>
-          <th class="col">Name</th>
-          <th class="col">Enabled</th>
-          <th class="col">Contact</th>
-          <th class="col">Actions</th>
-          <th class="col">Sum Prev Fort.</th>
-          <th class="col">Avg Per Fort.</th>
+          <th>Name</th>
+          <th>Enabled</th>
+          <th>Contact</th>
+          <th>Actions</th>
+          <th>Sum Prev Fort.</th>
+          <th>Avg Per Fort.</th>
       {if check_optional_show_skills_list()}
-          <th class="col">
+          <th>
             Senior
             <img src="../images/skill_senior.png" alt="S" align="absmiddle">
             <img src="../images/skill_advanced.png" alt="A" align="absmiddle">

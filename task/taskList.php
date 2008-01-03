@@ -28,6 +28,7 @@ define("PAGE_IS_PRINTABLE",1);
 $defaults = array("showHeader"=>true
                  ,"showProject"=>true
                  ,"showTaskID"=>true
+                 ,"taskView" => "byProject"
                  ,"padding"=>1
                  ,"url_form_action"=>$TPL["url_alloc_taskList"]
                  ,"form_name"=>"taskList_filter"

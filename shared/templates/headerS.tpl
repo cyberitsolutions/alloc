@@ -13,6 +13,7 @@
     <script type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
     <script type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>
     <script type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>
+    <script type="text/javascript" src="{$url_alloc_javascript}sorttable.js"></script>
   </head>
   <body>
   <div id="helper"></div>

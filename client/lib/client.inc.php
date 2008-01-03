@@ -125,6 +125,7 @@ class client extends db_entity {
      *
      */
 
+    global $TPL;
     $filter = client::get_client_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
@@ -157,7 +158,7 @@ class client extends db_entity {
     }
 
     if ($print && $_FORM["return"] == "html") {
-      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+      return $TPL["table_list"].$summary."</table>";
 
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;
@@ -171,12 +172,12 @@ class client extends db_entity {
   function get_client_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
       $summary = "\n<tr>";
-      $_FORM["showClientName"]          and $summary.= "\n<th class=\"col\">Client</th>";
-      $_FORM["showClientLink"]          and $summary.= "\n<th class=\"col\">Client</th>";
-      $_FORM["showPrimaryContactName"]  and $summary.= "\n<th class=\"col\">Contact Name</th>";
-      $_FORM["showPrimaryContactPhone"] and $summary.= "\n<th class=\"col\">Contact Phone</th>";
-      $_FORM["showPrimaryContactEmail"] and $summary.= "\n<th class=\"col\">Contact Email</th>";
-      $_FORM["showClientStatus"]        and $summary.= "\n<th class=\"col\">Status</th>";
+      $_FORM["showClientName"]          and $summary.= "\n<th>Client</th>";
+      $_FORM["showClientLink"]          and $summary.= "\n<th>Client</th>";
+      $_FORM["showPrimaryContactName"]  and $summary.= "\n<th>Contact Name</th>";
+      $_FORM["showPrimaryContactPhone"] and $summary.= "\n<th>Contact Phone</th>";
+      $_FORM["showPrimaryContactEmail"] and $summary.= "\n<th>Contact Email</th>";
+      $_FORM["showClientStatus"]        and $summary.= "\n<th>Status</th>";
       $summary.="\n</tr>";
       return $summary;
     }
@@ -198,12 +199,12 @@ class client extends db_entity {
     }
 
     $summary[] = "<tr class=\"".$odd_even."\">";
-    $_FORM["showClientName"]          and $summary[] = "  <td class=\"col\">".$client["clientName"]."&nbsp;</td>";
-    $_FORM["showClientLink"]          and $summary[] = "  <td class=\"col\">".$client["clientLink"]."&nbsp;</td>";
-    $_FORM["showPrimaryContactName"]  and $summary[] = "  <td class=\"col\">".$primaryContactName."&nbsp;</td>";
-    $_FORM["showPrimaryContactPhone"] and $summary[] = "  <td class=\"col\">".$primaryContactPhone."&nbsp;</td>";
-    $_FORM["showPrimaryContactEmail"] and $summary[] = "  <td class=\"col\">".$primaryContactEmail."&nbsp;</td>";
-    $_FORM["showClientStatus"]        and $summary[] = "  <td class=\"col\">".ucwords($client["clientStatus"])."&nbsp;</td>";
+    $_FORM["showClientName"]          and $summary[] = "  <td>".$client["clientName"]."&nbsp;</td>";
+    $_FORM["showClientLink"]          and $summary[] = "  <td>".$client["clientLink"]."&nbsp;</td>";
+    $_FORM["showPrimaryContactName"]  and $summary[] = "  <td>".$primaryContactName."&nbsp;</td>";
+    $_FORM["showPrimaryContactPhone"] and $summary[] = "  <td>".$primaryContactPhone."&nbsp;</td>";
+    $_FORM["showPrimaryContactEmail"] and $summary[] = "  <td>".$primaryContactEmail."&nbsp;</td>";
+    $_FORM["showClientStatus"]        and $summary[] = "  <td>".ucwords($client["clientStatus"])."&nbsp;</td>";
     $summary[] = "</tr>";
 
     $summary = "\n".implode("\n",$summary);

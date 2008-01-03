@@ -1,7 +1,5 @@
 {show_header()}
-  {show_toolbar()}
-
-
+{show_toolbar()}
 {$error}
 <form method="post" action="{$url_alloc_newLoan}">
 {$table_box}
@@ -10,13 +8,18 @@
     <th class="right" colspan="3"><a href="{$url_alloc_loans}">Return To Main Items</a></th>
   </tr>
   <tr>
-    <td><b>Item</b></td>
-    <td><b>Type</b></td>
-    <td><b>Status/Due Back</b></td>
-    <td><b>Action</b></td>
+    <td colspan="4">
+      {$table_list}
+        <tr>
+          <th>Item</th>
+          <th>Type</th>
+          <th>Status/Due Back</th>
+          <th>Action</th>
+        </tr>
+        {show_items("templates/loanAndReturnR.tpl")}
+      </table>
+    </td>
   </tr>
-  {show_items("templates/loanAndReturnR.tpl")}
-
 </table>
 </form>
 

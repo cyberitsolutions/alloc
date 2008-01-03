@@ -29,24 +29,15 @@ function updateProjectList(number) \{
           <td><b>{get_expand_link("project_superset","Projects ")}</b></td>
           <td><b>Task Status</b> {get_help("taskList_taskStatus")}</td>
           <td><b>Created By</b></td> 
-          <td rowspan="6" valign="top">
+          <td rowspan="6" valign="top" colspan="2">
           
             <table class="filter" align="center" width="95%">
               <tr>
-                <td valign="top"><b>{get_expand_link("more_display_options","Display Options ")}</b></td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <nobr>
-<label for="list_prioritised">List by Priority</label> <input type="radio" id="list_prioritised" name="taskView" value="prioritised"{$taskView_checked_prioritised}><br/>
-<label for="list_byProject">List by Project</label> <input type="radio" id="list_byProject" name="taskView" value="byProject"{$taskView_checked_byProject}>
-                  </nobr>
-                </td>
+                <td valign="top"><b>Display Options</b></td>
               </tr>
               <tr>
                 <td>
 
-                  <div id="more_display_options" style="display:none">
                   <table>
                     <tr>
                       <td align="right"><label for="showDescription" class="nobr">Desc &amp; Comments</label></td>
@@ -73,7 +64,6 @@ function updateProjectList(number) \{
                       <td><input type="checkbox" id="showStatus" name="showStatus"{$showStatus_checked}></td>
                     </tr>
                   </table>
-                  </div>
 
                 </td>
               </tr>
@@ -81,7 +71,6 @@ function updateProjectList(number) \{
 
           
           </td>
-          <td>&nbsp;</td>
         </tr>
 
         <tr>
@@ -118,12 +107,19 @@ function updateProjectList(number) \{
           <td valign="top"><select name="personID">{$personOptions}</select></td>
         </tr>
 
-
         <tr>
-          <td></td>
-          <td valign="bottom" align="right"><input type="submit" name="applyFilter" value="Filter"></td><td valign="bottom">{get_help("taskList_filter")}</td>
-        </tr>
+          <td>&nbsp;</td>
+          <td valign="bottom" align="right">
+  
+            <table>
+              <tr>
+                <td><input type="submit" name="applyFilter" value="Filter"></td>
+                <td valign="bottom">{get_help("taskList_filter")}</td>
+              </tr>
+            </table>
 
+          </td>
+        </tr>
       </table>
 
     </td>

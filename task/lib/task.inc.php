@@ -826,7 +826,7 @@ class task extends db_entity {
 
   function get_task_name($_FORM=array()) {
 
-    $_FORM["showTaskID"] and $id = $this->get_id()." ";
+    #$_FORM["showTaskID"] and $id = $this->get_id()." ";
 
     if ($this->get_value("taskTypeID") == TT_PHASE && ($_FORM["return"] == "html" || $_FORM["return"] == "objectsAndHtml")) {
       $rtn = "<strong>".$id.$this->get_value("taskName")."</strong>";
@@ -1017,7 +1017,7 @@ function get_task_statii_array() {
      *   showHeader           = A descriptive header row
      *   showDescription      = The tasks description
      *   showComments         = The tasks comments
-     *   showTaskID           = Prefix the taskName with the task ID
+     *   showTaskID           = The task ID
      *   showManager          = Show the tasks manager
      *
      *
@@ -1068,7 +1068,7 @@ function get_task_statii_array() {
 
       // If selected projects, build up an array of selected projects
       $filter["projectIDs"] and $projectIDs = " WHERE ".$filter["projectIDs"];
-      $q = "SELECT projectID, projectName, clientID, projectPriority FROM project ".$projectIDs. " ORDER BY projectName";
+      $q = "SELECT projectID, projectName, projectShortName, clientID, projectPriority FROM project ".$projectIDs. " ORDER BY projectName";
       $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);
@@ -1076,7 +1076,7 @@ function get_task_statii_array() {
       while ($project = $db->next_record()) {
         $p = new project;
         $p->read_db_record($db);
-        $project["link"] = "<strong><a href=\"".$p->get_url()."\">".$p->get_value("projectName")."</a></strong>&nbsp;&nbsp;&nbsp;&nbsp;".$p->get_navigation_links();
+        $project["link"] = $p->get_project_name(true); #$p->get_navigation_links();
         $projects[] = $project;
       }
     
@@ -1094,6 +1094,8 @@ function get_task_statii_array() {
         } else {
           $filter["projectID"] = sprintf("(projectID IS NULL OR projectID = 0)");
         }
+  
+        $_FORM["project_name"] = $project["link"];
 
         $t = task::get_task_children($filter,$_FORM);
         $debug and print "<br/><b>Found ".count($t)." tasks.<b/>";
@@ -1101,9 +1103,6 @@ function get_task_statii_array() {
         if (count($t)) {
           $print = true;
 
-          $_FORM["showProject"] and $summary.= "\n<tr>";
-          $_FORM["showProject"] and $summary.= "\n  <th class=\"col tasks\" colspan=\"21\">".$project["link"]."</th>";
-          $_FORM["showProject"] and $summary.= "\n</tr>";
 
           foreach ($t as $row) {
             $row["projectPriority"] = $project["projectPriority"];
@@ -1174,22 +1173,21 @@ function get_task_statii_array() {
       }
     }
 
-
-    // A header row
-    $header_row = task::get_task_list_tr_header($_FORM);
+    $header = task::get_task_list_header($_FORM);
+    $footer = task::get_task_list_footer($_FORM);
 
     // Decide what to actually return
     if ($print && $_FORM["return"] == "objectsAndHtml") { // sheesh
-      return array($tasks,"<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$header_row.$summary."</table>");
+      return array($tasks,$header.$summary.$footer);
       
     } else if ($_FORM["return"] == "objects") {
       return $tasks;
 
     } else if ($print && $_FORM["return"] == "html") {
-      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$header_row.$summary."</table>";
+      return $header.$summary.$footer;
 
     } else if ($print && $_FORM["return"] == "text") {
-      return $header_row.$summary;
+      return $summary;
 
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;
@@ -1215,34 +1213,37 @@ function get_task_statii_array() {
     return $priorityFactor;
   }
 
-  function get_task_list_tr_header($_FORM) {
+  function get_task_list_header($_FORM) {
+    global $TPL;
     if ($_FORM["showHeader"]) {
-      $_FORM["showPriority"] and $summary = "\n<th class=\"col\">Priority</th>";
-      $_FORM["showPriority"] and $summary.= "\n<th class=\"col\">Task Pri</th>";
-      $_FORM["showPriority"] and $summary.= "\n<th class=\"col\">Proj Pri</th>";
-      $_FORM["showStatus"]   and $summary.= "\n<th class=\"col\">Status</th>";
-      $_FORM["showCreator"]  and $summary.= "\n<th class=\"col\">Task Creator</th>";
-      $_FORM["showManager"]  and $summary.= "\n<th class=\"col\">Task Manager</th>";
-      $_FORM["showAssigned"] and $summary.= "\n<th class=\"col\">Assigned To</th>";
-      $_FORM["showDate1"]    and $summary.= "\n<th class=\"col\">Targ Start</th>";
-      $_FORM["showDate2"]    and $summary.= "\n<th class=\"col\">Targ Compl</th>";
-      $_FORM["showDate3"]    and $summary.= "\n<th class=\"col\">Act Start</th>";
-      $_FORM["showDate4"]    and $summary.= "\n<th class=\"col\">Act Compl</th>";
-      $_FORM["showTimes"]    and $summary.= "\n<th class=\"col\">Estimate</th>";
-      $_FORM["showTimes"]    and $summary.= "\n<th class=\"col\">Actual</th>";
-      $_FORM["showTimes"]    and $summary.= "\n<th class=\"col\">%</th>";
+      #$_FORM["taskView"] == "byProject" and $summary[] = "<br>".$_FORM["projectLinks"];
+      $summary[] = $TPL["table_list"];
+      $summary[] = "<tr>";
+      $_FORM["showTaskID"]   and $summary[] = "<th>ID</th>";
+                                 $summary[] = "<th>Task</th>";
+      $_FORM["showProject"]  and $summary[] = "<th>Project</th>";
+      $_FORM["showPriority"] and $summary[] = "<th>Priority</th>";
+      $_FORM["showPriority"] and $summary[] = "<th>Task Pri</th>";
+      $_FORM["showPriority"] and $summary[] = "<th>Proj Pri</th>";
+      $_FORM["showStatus"]   and $summary[] = "<th>Status</th>";
+      $_FORM["showCreator"]  and $summary[] = "<th>Task Creator</th>";
+      $_FORM["showManager"]  and $summary[] = "<th>Task Manager</th>";
+      $_FORM["showAssigned"] and $summary[] = "<th>Assigned To</th>";
+      $_FORM["showDate1"]    and $summary[] = "<th>Targ Start</th>";
+      $_FORM["showDate2"]    and $summary[] = "<th>Targ Compl</th>";
+      $_FORM["showDate3"]    and $summary[] = "<th>Act Start</th>";
+      $_FORM["showDate4"]    and $summary[] = "<th>Act Compl</th>";
+      $_FORM["showTimes"]    and $summary[] = "<th>Estimate</th>";
+      $_FORM["showTimes"]    and $summary[] = "<th>Actual</th>";
+      $_FORM["showTimes"]    and $summary[] = "<th>%</th>";
+      $summary[] ="</tr>";
 
-      if ($summary) {
-        $rtn = "\n<tr>";
-        $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                               and $rtn.= "\n<td>&nbsp;</td>";
-        $rtn.= "\n<td>&nbsp;</td>";
-        $rtn.= $summary;
-        $rtn.="\n</tr>";
-      }
-
-      return $rtn;
+      return implode("\n",$summary);
     }
+  }
+
+  function get_task_list_footer($_FORM) {
+    return "</table>";
   }
 
   function get_task_list_tr_text($task,$_FORM) {
@@ -1287,26 +1288,24 @@ function get_task_statii_array() {
 
     $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
 
-
-
                                   $summary[] = "<tr class=\"".$odd_even."\">";
-    $_FORM["taskView"] == "prioritised" && $_FORM["showProject"]
-                              and $summary[] = "  <td class=\"col\">".$task["project_name"]."&nbsp;</td>";
-                                  $summary[] = "  <td class=\"col\" style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
-    $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\">".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
-    $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\" style=\"color:".$_FORM["taskPriorities"][$task["priority"]]["colour"]."\">".$_FORM["taskPriorities"][$task["priority"]]["label"]."&nbsp;</td>"; 
-    $_FORM["showPriority"]    and $summary[] = "  <td class=\"col\" style=\"color:".$_FORM["projectPriorities"][$task["projectPriority"]]["colour"]."\">".$_FORM["projectPriorities"][$task["projectPriority"]]["label"]."&nbsp;</td>"; 
-    $_FORM["showStatus"]      and $summary[] = "  <td class=\"col\">".$task["taskStatus"]."&nbsp;</td>"; 
-    $_FORM["showCreator"]     and $summary[] = "  <td class=\"col\">".$people_cache[$task["creatorID"]]["name"]."&nbsp;</td>";
-    $_FORM["showManager"]     and $summary[] = "  <td class=\"col\">".$people_cache[$task["managerID"]]["name"]."&nbsp;</td>";
-    $_FORM["showAssigned"]    and $summary[] = "  <td class=\"col\">".$people_cache[$task["personID"]]["name"]."&nbsp;</td>";
-    $_FORM["showDate1"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateTargetStart"]."&nbsp;</td>";
-    $_FORM["showDate2"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateTargetCompletion"]."&nbsp;</td>";
-    $_FORM["showDate3"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateActualStart"]."&nbsp;</td>";
-    $_FORM["showDate4"]       and $summary[] = "  <td class=\"col nobr\">".$task["dateActualCompletion"]."&nbsp;</td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".seconds_to_display_format($timeEstimate)."&nbsp;</td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"col nobr\">".$task["percentComplete"]."&nbsp;</td>";
+    $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
+                                  $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
+    $_FORM["showProject"]     and $summary[] = "  <td>".$task["project_name"]."&nbsp;</td>";
+    $_FORM["showPriority"]    and $summary[] = "  <td>".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
+    $_FORM["showPriority"]    and $summary[] = "  <td style=\"color:".$_FORM["taskPriorities"][$task["priority"]]["colour"]."\">".$_FORM["taskPriorities"][$task["priority"]]["label"]."&nbsp;</td>"; 
+    $_FORM["showPriority"]    and $summary[] = "  <td style=\"color:".$_FORM["projectPriorities"][$task["projectPriority"]]["colour"]."\">".$_FORM["projectPriorities"][$task["projectPriority"]]["label"]."&nbsp;</td>"; 
+    $_FORM["showStatus"]      and $summary[] = "  <td>".$task["taskStatus"]."&nbsp;</td>"; 
+    $_FORM["showCreator"]     and $summary[] = "  <td>".$people_cache[$task["creatorID"]]["name"]."&nbsp;</td>";
+    $_FORM["showManager"]     and $summary[] = "  <td>".$people_cache[$task["managerID"]]["name"]."&nbsp;</td>";
+    $_FORM["showAssigned"]    and $summary[] = "  <td>".$people_cache[$task["personID"]]["name"]."&nbsp;</td>";
+    $_FORM["showDate1"]       and $summary[] = "  <td class=\"nobr\">".$task["dateTargetStart"]."&nbsp;</td>";
+    $_FORM["showDate2"]       and $summary[] = "  <td class=\"nobr\">".$task["dateTargetCompletion"]."&nbsp;</td>";
+    $_FORM["showDate3"]       and $summary[] = "  <td class=\"nobr\">".$task["dateActualStart"]."&nbsp;</td>";
+    $_FORM["showDate4"]       and $summary[] = "  <td class=\"nobr\">".$task["dateActualCompletion"]."&nbsp;</td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format($timeEstimate)."&nbsp;</td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</td>";
+    $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".$task["percentComplete"]."&nbsp;</td>";
                                   $summary[] = "</tr>";
 
     $summary = "\n".implode("\n",$summary);
@@ -1331,6 +1330,7 @@ function get_task_statii_array() {
       $task->read_db_record($db);
 
       $row["taskURL"] = $task->get_url();
+      $row["project_name"] = $_FORM["project_name"];
       $row["taskName"] = $task->get_task_name($_FORM);
       $row["taskLink"] = $task->get_task_link($_FORM);
       $row["newSubTask"] = $task->get_new_subtask_link();

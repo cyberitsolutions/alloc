@@ -19,18 +19,20 @@
   </tr>
   <tr>
     <td colspan="4">
-      <table class="tasks" border="0" cellspacing="0">
+      {$table_list}
         <tr>
-          <th class="col">TF Name</th>
-          <th class="col">Description</th>
-          <th class="col" align="right">Balance</th>
-          <th class="col" align="center"></th>
+          <th>TF Name</th>
+          <th>Description</th>
+          <th align="right">Balance</th>
+          <th align="center"></th>
         </tr>
         {show_tf("templates/tfListR.tpl")}
+        <tfoot>
         <tr>
-          <td class="col" colspan="3">&nbsp;</td>
-          <td class="col">Total:  ${$grand_total}</td>
+          <td colspan="3">&nbsp;</td>
+          <td>Total:  ${$grand_total}</td>
         </tr>
+        </tfoot>
       </table>
     </td>
   </tr>

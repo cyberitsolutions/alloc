@@ -39,24 +39,21 @@
     </td>
   </tr>
   <tr>
-    <td><b>Transaction ID </td>
-    <td><b>Name </td>
-    <td><b>Product </td>
-    <td><b>Type </td>
-    <td align="right"><b>Amount </td>
-    <td align="center"><b>Transaction Date </td>
-    <td><b>Status</td>
+    <td colspan="7">
+      {$table_list}
+        <tr>
+          <th>Transaction ID</th>
+          <th>Name</th>
+          <th>Product</th>
+          <th>Type</th>
+          <th align="right">Amount</th>
+          <th align="center">Transaction Date</th>
+          <th>Status</th>
+        </tr>
+        {startSearch("templates/searchTransactionR.tpl")}
+      </table>
+    </td>
   </tr>
-  {startSearch("templates/searchTransactionR.tpl")}
 </table>
-
-
-
 </form>
 {show_footer()}
-
-
-
-
-
-

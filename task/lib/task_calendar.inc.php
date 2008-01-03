@@ -362,7 +362,7 @@ class calendar {
   function draw_row_header() {
     echo "\n<thead><tr>";
     foreach ($this->days_of_week as $day) {
-      echo "<th class=\"col\">".$day."</th>";
+      echo "<th>".$day."</th>";
     }
     echo "</tr></thead>";
   }

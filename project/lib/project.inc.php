@@ -77,13 +77,16 @@ class project extends db_entity {
     return $url;
   }
 
-  function get_project_name() {
+  function get_project_name($shortest=false) {
+    if ($shortest && $this->get_value("projectShortName")) {
+      return $this->get_value("projectShortName");
+    }
     return $this->get_value("projectName");
   }
 
-  function get_project_link() {
+  function get_project_link($shortest=false) {
     global $TPL;
-    return "<a href=\"".$TPL["url_alloc_project"]."projectID=".$this->get_id()."\">".$this->get_project_name()."</a>";
+    return "<a href=\"".$TPL["url_alloc_project"]."projectID=".$this->get_id()."\">".$this->get_project_name($shortest)."</a>";
   }
 
   function is_owner($person = "") {
@@ -314,6 +317,7 @@ class project extends db_entity {
      *
      */
 
+    global $TPL;
     $filter = project::get_project_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
@@ -357,7 +361,7 @@ class project extends db_entity {
     }
 
     if ($print && $_FORM["return"] == "html") {
-      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+      return $TPL["table_list"].$summary."</table>";
     
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;
@@ -370,12 +374,12 @@ class project extends db_entity {
   function get_project_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
       $summary = "\n<tr>";
-      $_FORM["showProjectName"]   and $summary.= "\n<th class=\"col\">Project</th>";
-      $_FORM["showProjectLink"]   and $summary.= "\n<th class=\"col\">Project</th>";
-      $_FORM["showClient"]        and $summary.= "\n<th class=\"col\">Client</th>";
-      $_FORM["showProjectType"]   and $summary.= "\n<th class=\"col\">Type</th>";
-      $_FORM["showProjectStatus"] and $summary.= "\n<th class=\"col\">Status</th>";
-      $_FORM["showNavLinks"]      and $summary.= "\n<th class=\"col noprint\">&nbsp;</th>";
+      $_FORM["showProjectName"]   and $summary.= "\n<th>Project</th>";
+      $_FORM["showProjectLink"]   and $summary.= "\n<th>Project</th>";
+      $_FORM["showClient"]        and $summary.= "\n<th>Client</th>";
+      $_FORM["showProjectType"]   and $summary.= "\n<th>Type</th>";
+      $_FORM["showProjectStatus"] and $summary.= "\n<th>Status</th>";
+      $_FORM["showNavLinks"]      and $summary.= "\n<th class=\"noprint\">&nbsp;</th>";
       $summary.="\n</tr>";
       return $summary;
     }
@@ -387,12 +391,12 @@ class project extends db_entity {
     $odd_even = $odd_even == "even" ? "odd" : "even";
 
     $summary[] = "<tr class=\"".$odd_even."\">";
-    $_FORM["showProjectName"]     and $summary[] = "  <td class=\"col\">".$row["projectName"]."&nbsp;</td>";
-    $_FORM["showProjectLink"]     and $summary[] = "  <td class=\"col\">".$row["projectLink"]."&nbsp;</td>";
-    $_FORM["showClient"]          and $summary[] = "  <td class=\"col\">".$row["clientName"]."&nbsp;</td>";
-    $_FORM["showProjectType"]     and $summary[] = "  <td class=\"col\">".ucwords($row["projectType"])."&nbsp;</td>";
-    $_FORM["showProjectStatus"]   and $summary[] = "  <td class=\"col\">".ucwords($row["projectStatus"])."&nbsp;</td>";
-    $_FORM["showNavLinks"]        and $summary[] = "  <td class=\"col nobr noprint\" align=\"right\" width=\"1%\">".$row["navLinks"]."&nbsp;</td>";
+    $_FORM["showProjectName"]     and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
+    $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";
+    $_FORM["showClient"]          and $summary[] = "  <td>".$row["clientName"]."&nbsp;</td>";
+    $_FORM["showProjectType"]     and $summary[] = "  <td>".ucwords($row["projectType"])."&nbsp;</td>";
+    $_FORM["showProjectStatus"]   and $summary[] = "  <td>".ucwords($row["projectStatus"])."&nbsp;</td>";
+    $_FORM["showNavLinks"]        and $summary[] = "  <td class=\"nobr noprint\" align=\"right\" width=\"1%\">".$row["navLinks"]."&nbsp;</td>";
     $summary[] = "</tr>";
 
     $summary = "\n".implode("\n",$summary);
