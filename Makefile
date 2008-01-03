@@ -112,7 +112,7 @@ test_db:
 	mysqldump -d $$MYSQL_CONNECT $$TEMP_DB > sql/db_imported_structure.sql; \
 	mysqldump -d $$MYSQL_CONNECT $$DB_NAME > sql/db_current_structure.sql; \
 	echo "drop database if exists $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	DIFF="$$(diff -b -I 'Host:' sql/db_current_structure.sql sql/db_imported_structure.sql)"; \
+	DIFF="$$(diff -b -I 'Host:' -I 'ENGINE=MyISAM' sql/db_current_structure.sql sql/db_imported_structure.sql)"; \
 	if [ -n "$${DIFF}" ]; then \
 	  echo "There are differences between the current database $$DB_NAME, and the database that would be created from the sql/db_structure.sql file."; \
 	  echo "Please fix either the patch files or sql/db_structure.sql before committing."; \
