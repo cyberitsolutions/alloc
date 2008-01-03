@@ -33,6 +33,7 @@ class project_list_home_item extends home_item {
       $options["limit"] = sprintf("%d",$current_user->prefs["projectListNum"]);
     }
     
+    $options["showHeader"] = true;
     $options["projectStatus"] = "current";
     $options["personID"] = $current_user->get_id();
     $options["showProjectLink"] = 1;

@@ -4,7 +4,7 @@
   <td class="transaction-{$status}">{$product}</td>
   <td class="transaction-{$status}">{$transactionType}</td>
   <td align="right" class="transaction-{$status}">${$amount} </td>
-  <td align="center" class="transaction-{$status}">{$transactionDate} </td>
+  <td class="transaction-{$status}">{$transactionDate} </td>
   <td class="transaction-{$status}">{$status} </td>
 </tr>
 

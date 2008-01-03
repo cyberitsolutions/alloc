@@ -293,12 +293,17 @@ table.tasks th, table.alloc_calendar th {
   background:(PANE_BG_COLOR_HEADER); 
   color:(TD_COLOR); 
 }
-.col { 
+table.tasks td, table.tasks th, table.alloc_calendar th { 
   border-left:1px solid (PANE_FRAME_COLOR); 
   border-top:1px solid (PANE_FRAME_COLOR); 
   padding:4px;
 }
-
+.sort_arrow_invisible {
+  color:(PANE_BG_COLOR_HEADER);
+}
+.sort_arrow_faded {
+  color:#999999;
+}
 .grand_total { 
   border-top:1px solid black;
   text-align:right;

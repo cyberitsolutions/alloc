@@ -44,6 +44,14 @@ function show_filter() {
   $_FORM = invoice::load_form_data($defaults);
   $arr = invoice::load_invoice_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);
+
+  $payment_statii = invoice::get_invoice_statii_payment();
+  foreach($payment_statii as $payment_status => $label) {
+    $summary.= "\n".$nbsp.invoice::get_invoice_statii_payment_image($payment_status)." ".$label;
+    $nbsp = "&nbsp;&nbsp;";
+  }
+  $TPL["status_legend"] = $summary;
+
   include_template("templates/invoiceListFilterS.tpl");
 }
 

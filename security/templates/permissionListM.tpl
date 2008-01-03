@@ -23,16 +23,22 @@
     </td>
   </tr>
   <tr>
-    <td>Table</td>
-    <td>Record ID</td>
-    <td>User</td>
-    <td>Role</td>
-    <td>Actions</td>
-    <td>Sort Key</td>
-    <td>Allow?</td>
-    <td>Comments</td>
-    <td>&nbsp;</td>
+    <td colspan="9">
+      {$table_list}
+        <tr>
+          <th>Table</th>
+          <th>Record ID</th>
+          <th>User</th>
+          <th>Role</th>
+          <th>Actions</th>
+          <th>Sort Key</th>
+          <th>Allow?</th>
+          <th>Comments</th>
+          <th>&nbsp;</th>
+        </tr>
+        {show_permission_list("templates/permissionListR.tpl")}
+      </table>
+    </td>
   </tr>
-  {show_permission_list("templates/permissionListR.tpl")}
 </table>
 {show_footer()}

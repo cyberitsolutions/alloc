@@ -25,8 +25,8 @@
       </form>
 
 
-      {$counter}
-      <table border="1" cellpadding="4" cellspacing="0">
+      {$counter}<br>&nbsp;
+      {$table_list}
         {$result_row}
       </table>
 

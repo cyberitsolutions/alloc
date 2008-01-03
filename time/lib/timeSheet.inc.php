@@ -576,7 +576,8 @@ class timeSheet extends db_entity
      *   dateFrom
      *
      */
-
+  
+    global $TPL;
     $filter = timeSheet::get_timeSheet_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
@@ -628,14 +629,14 @@ class timeSheet extends db_entity
 
     if ($print && $_FORM["return"] == "html") {
       $summary.= timeSheet::get_timeSheet_list_tr_bottom($extra,$_FORM);
-      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+      return $TPL["table_list"].$summary."</table>";
 
     } else if (!$print && $_FORM["return"] == "html") {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Time Sheets Found</b></td></tr></table>";
     }
   }
 
-   function get_url() {
+  function get_url() {
     global $sess;
     $sess or $sess = new Session;
 
@@ -660,14 +661,14 @@ class timeSheet extends db_entity
   function get_timeSheet_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
       $summary = "\n<tr>";
-      $_FORM["showProject"]       and $summary.= "\n<th class=\"col\">Time Sheet</th>";
-      $_FORM["showProjectLink"]   and $summary.= "\n<th class=\"col\">Time Sheet</th>";
-      $_FORM["showAmount"]        and $summary.= "\n<th class=\"col\">Amount</th>";
-      $_FORM["showDuration"]      and $summary.= "\n<th class=\"col\">Duration</th>";
-      $_FORM["showPerson"]        and $summary.= "\n<th class=\"col\">Owner</th>";
-      $_FORM["showDateFrom"]      and $summary.= "\n<th class=\"col\">Start Date</th>";
-      $_FORM["showDateTo"]        and $summary.= "\n<th class=\"col\">End Date</th>";
-      $_FORM["showStatus"]        and $summary.= "\n<th class=\"col\">Status</th>";
+      $_FORM["showProject"]       and $summary.= "\n<th>Time Sheet</th>";
+      $_FORM["showProjectLink"]   and $summary.= "\n<th>Time Sheet</th>";
+      $_FORM["showAmount"]        and $summary.= "\n<th>Amount</th>";
+      $_FORM["showDuration"]      and $summary.= "\n<th>Duration</th>";
+      $_FORM["showPerson"]        and $summary.= "\n<th>Owner</th>";
+      $_FORM["showDateFrom"]      and $summary.= "\n<th>Start Date</th>";
+      $_FORM["showDateTo"]        and $summary.= "\n<th>End Date</th>";
+      $_FORM["showStatus"]        and $summary.= "\n<th>Status</th>";
       $summary.="\n</tr>";
       return $summary;
     }
@@ -678,14 +679,14 @@ class timeSheet extends db_entity
     $odd_even = $odd_even == "even" ? "odd" : "even";
 
     $summary[] = "<tr class=\"".$odd_even."\">";
-    $_FORM["showProject"]         and $summary[] = "  <td class=\"col\">".$row["projectName"]."&nbsp;</td>";
-    $_FORM["showProjectLink"]     and $summary[] = "  <td class=\"col\">".$row["projectLink"]."&nbsp;</td>";
-    $_FORM["showAmount"]          and $summary[] = "  <td class=\"col\" align=\"right\">".sprintf("$%0.2f",$row["amount"])."&nbsp;</td>";
-    $_FORM["showDuration"]        and $summary[] = "  <td class=\"col\">".$row["duration"]."&nbsp;</td>";
-    $_FORM["showPerson"]          and $summary[] = "  <td class=\"col\">".$row["person"]."&nbsp;</td>";
-    $_FORM["showDateFrom"]        and $summary[] = "  <td class=\"col\">".$row["dateFrom"]."&nbsp;</td>";
-    $_FORM["showDateTo"]          and $summary[] = "  <td class=\"col\">".$row["dateTo"]."&nbsp;</td>";
-    $_FORM["showStatus"]          and $summary[] = "  <td class=\"col\">".$row["status"]."&nbsp;</td>";
+    $_FORM["showProject"]         and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
+    $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";
+    $_FORM["showAmount"]          and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["amount"])."&nbsp;</td>";
+    $_FORM["showDuration"]        and $summary[] = "  <td>".$row["duration"]."&nbsp;</td>";
+    $_FORM["showPerson"]          and $summary[] = "  <td>".$row["person"]."&nbsp;</td>";
+    $_FORM["showDateFrom"]        and $summary[] = "  <td>".$row["dateFrom"]."&nbsp;</td>";
+    $_FORM["showDateTo"]          and $summary[] = "  <td>".$row["dateTo"]."&nbsp;</td>";
+    $_FORM["showStatus"]          and $summary[] = "  <td>".$row["status"]."&nbsp;</td>";
     $summary[] = "</tr>";
      
     $summary = "\n".implode("\n",$summary);
@@ -694,16 +695,18 @@ class timeSheet extends db_entity
 
   function get_timeSheet_list_tr_bottom($row,$_FORM) {
     if ($_FORM["showAmountTotal"]) {
+      $summary[] = "<tfoot>";
       $summary[] = "<tr>";
-      $_FORM["showProject"]         and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-      $_FORM["showProjectLink"]     and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"col grand_total\" align=\"right\">".sprintf("$%0.2f",$row["amountTotal"])."</td>";
-      $_FORM["showDuration"]        and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-      $_FORM["showPerson"]          and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-      $_FORM["showDateFrom"]        and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-      $_FORM["showDateTo"]          and $summary[] = "  <td class=\"col\">&nbsp;</td>";
-      $_FORM["showStatus"]          and $summary[] = "  <td class=\"col\">&nbsp;</td>";
+      $_FORM["showProject"]         and $summary[] = "  <td>&nbsp;</td>";
+      $_FORM["showProjectLink"]     and $summary[] = "  <td>&nbsp;</td>";
+      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["amountTotal"])."</td>";
+      $_FORM["showDuration"]        and $summary[] = "  <td>&nbsp;</td>";
+      $_FORM["showPerson"]          and $summary[] = "  <td>&nbsp;</td>";
+      $_FORM["showDateFrom"]        and $summary[] = "  <td>&nbsp;</td>";
+      $_FORM["showDateTo"]          and $summary[] = "  <td>&nbsp;</td>";
+      $_FORM["showStatus"]          and $summary[] = "  <td>&nbsp;</td>";
       $summary[] = "</tr>";
+      $summary[] = "</tfoot>";
       $summary = "\n".implode("\n",$summary);
     }
     return $summary;   

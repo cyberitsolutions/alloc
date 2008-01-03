@@ -446,6 +446,7 @@ class invoice extends db_entity {
      *
      */
 
+    global $TPL;
     $filter1_where = invoice::get_invoice_list_filter($_FORM);
     list($filter2_where,$filter2_having) = invoice::get_invoice_list_filter2($_FORM);
 
@@ -509,7 +510,7 @@ class invoice extends db_entity {
     }
 
     if ($print && $_FORM["return"] == "html") {
-      return "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">".$summary."</table>";
+      return $TPL["table_list"].$summary."</table>";
 
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;
@@ -524,32 +525,18 @@ class invoice extends db_entity {
     global $TPL;
     if ($_FORM["showHeader"]) {
 
-      if ($_FORM["showInvoiceAmountPaid"]) {
-        $payment_statii = invoice::get_invoice_statii_payment();
-        $summary.= "\n<tr>";
-        $summary.= "\n<td colspan=\"7\">";
-        foreach($payment_statii as $payment_status => $label) {
-          $summary.= "\n".$nbsp.invoice::get_invoice_statii_payment_image($payment_status)." ".$label;
-          $nbsp = "&nbsp;&nbsp;";
-        }
-        $summary.= "</td>";
-        $summary.= "\n<td>&nbsp;</td>";
-        $summary.= "\n<th class=\"col\" colspan=\"3\" style=\"text-align:center;\">Transactions</th>";
-        $summary.="\n</tr>";
-      }
-
       $summary.= "\n<tr>";
-      $_FORM["showInvoiceNumber"]       and $summary.= "\n<th class=\"col\">Invoice Number</th>";
-      $_FORM["showInvoiceClient"]       and $summary.= "\n<th class=\"col\">Client</th>";
-      $_FORM["showInvoiceName"]         and $summary.= "\n<th class=\"col\">Name</th>";
-      $_FORM["showInvoiceDate"]         and $summary.= "\n<th class=\"col\">From</th>";
-      $_FORM["showInvoiceDate"]         and $summary.= "\n<th class=\"col\">To</th>";
-      $_FORM["showInvoiceStatus"]       and $summary.= "\n<th class=\"col\">Status</th>";
-      $_FORM["showInvoiceAmount"]       and $summary.= "\n<th class=\"col\">Amount</th>";
-      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th class=\"col\">&nbsp;</th>";
-      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th class=\"col\">Rejected</th>";
-      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th class=\"col\">Pending</th>";
-      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th class=\"col\">Approved</th>";
+      $_FORM["showInvoiceNumber"]       and $summary.= "\n<th>Invoice Number</th>";
+      $_FORM["showInvoiceClient"]       and $summary.= "\n<th>Client</th>";
+      $_FORM["showInvoiceName"]         and $summary.= "\n<th>Name</th>";
+      $_FORM["showInvoiceDate"]         and $summary.= "\n<th>From</th>";
+      $_FORM["showInvoiceDate"]         and $summary.= "\n<th>To</th>";
+      $_FORM["showInvoiceStatus"]       and $summary.= "\n<th>Status</th>";
+      $_FORM["showInvoiceAmount"]       and $summary.= "\n<th>Amount</th>";
+      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th>&nbsp;</th>";
+      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th>Rejected</th>";
+      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th>Pending</th>";
+      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th>Approved</th>";
       $summary.="\n</tr>";
       return $summary;
     }
@@ -574,21 +561,22 @@ class invoice extends db_entity {
 
     foreach ($payment_status as $ps) {
       $image.= invoice::get_invoice_statii_payment_image($ps);
+      $status_label.= $ps;
     }
 
 
     $summary[] = "<tr class=\"".$odd_even."\">";
-    $_FORM["showInvoiceNumber"]       and $summary[] = "  <td class=\"col\">".$invoice["invoiceLink"]."&nbsp;</td>";
-    $_FORM["showInvoiceClient"]       and $summary[] = "  <td class=\"col\"><a href=\"".$TPL["url_alloc_client"]."clientID=".$invoice["clientID"]."\">".$invoice["clientName"]."</a></td>";
-    $_FORM["showInvoiceName"]         and $summary[] = "  <td class=\"col\">".$invoice["invoiceName"]."&nbsp;</td>";
-    $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"col nobr\">".$invoice["invoiceDateFrom"]."&nbsp;</td>";
-    $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"col nobr\">".$invoice["invoiceDateTo"]."&nbsp;</td>";
-    $_FORM["showInvoiceStatus"]       and $summary[] = "  <td class=\"col nobr\">".$statii[$invoice["invoiceStatus"]]."&nbsp;</td>";
-    $_FORM["showInvoiceAmount"]       and $summary[] = "  <td class=\"col\">".$currency.sprintf("%0.2f",$invoice["iiAmountSum"])."&nbsp;</td>";
-    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"col nobr\">".$image."&nbsp;</td>";
-    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"col\">".$currency.sprintf("%0.2f",$invoice["amountPaidRejected"])."&nbsp;</td>";
-    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"col\">".$currency.sprintf("%0.2f",$invoice["amountPaidPending"])."&nbsp;</td>";
-    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"col\">".$currency.sprintf("%0.2f",$invoice["amountPaidApproved"])."&nbsp;</td>";
+    $_FORM["showInvoiceNumber"]       and $summary[] = "  <td>".$invoice["invoiceLink"]."&nbsp;</td>";
+    $_FORM["showInvoiceClient"]       and $summary[] = "  <td><a href=\"".$TPL["url_alloc_client"]."clientID=".$invoice["clientID"]."\">".$invoice["clientName"]."</a></td>";
+    $_FORM["showInvoiceName"]         and $summary[] = "  <td>".$invoice["invoiceName"]."&nbsp;</td>";
+    $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"nobr\">".$invoice["invoiceDateFrom"]."&nbsp;</td>";
+    $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"nobr\">".$invoice["invoiceDateTo"]."&nbsp;</td>";
+    $_FORM["showInvoiceStatus"]       and $summary[] = "  <td class=\"nobr\">".$statii[$invoice["invoiceStatus"]]."&nbsp;</td>";
+    $_FORM["showInvoiceAmount"]       and $summary[] = "  <td>".$currency.sprintf("%0.2f",$invoice["iiAmountSum"])."&nbsp;</td>";
+    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"nobr\" sorttable_customkey=\"".$status_label."\">".$image."&nbsp;</td>";
+    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td>".$currency.sprintf("%0.2f",$invoice["amountPaidRejected"])."&nbsp;</td>";
+    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td>".$currency.sprintf("%0.2f",$invoice["amountPaidPending"])."&nbsp;</td>";
+    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td>".$currency.sprintf("%0.2f",$invoice["amountPaidApproved"])."&nbsp;</td>";
     $summary[] = "</tr>";
 
     $summary = "\n".implode("\n",$summary);

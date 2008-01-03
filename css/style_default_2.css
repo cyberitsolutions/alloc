@@ -293,12 +293,17 @@ table.tasks th, table.alloc_calendar th {
   background:#d3e5fb; 
   color:#444444; 
 }
-.col { 
+table.tasks td, table.tasks th, table.alloc_calendar th { 
   border-left:1px solid #a3bee0; 
   border-top:1px solid #a3bee0; 
   padding:4px;
 }
-
+.sort_arrow_invisible {
+  color:#d3e5fb;
+}
+.sort_arrow_faded {
+  color:#999999;
+}
 .grand_total { 
   border-top:1px solid black;
   text-align:right;

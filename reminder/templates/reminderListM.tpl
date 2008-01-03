@@ -9,13 +9,17 @@
     <td align="center" colspan="4">{show_reminder_filter("../reminder/templates/reminderFilter.tpl")}</td>
   </tr>  
   <tr>
-    <td>Recipient</td>
-    <td>Date / Time</td>
-    <td>Subject</td>
-    <td>Repeat</td>
+    <td colspan="4">
+      {$table_list}
+        <tr>
+          <th>Recipient</th>
+          <th>Date / Time</th>
+          <th>Subject</th>
+          <th>Repeat</th>
+        </tr>
+        {show_reminders("../reminder/templates/reminderR.tpl")}
+      </table>
+    </td>
   </tr>
-  {show_reminders("../reminder/templates/reminderR.tpl")}
 </table>
-
-
 {show_footer()}

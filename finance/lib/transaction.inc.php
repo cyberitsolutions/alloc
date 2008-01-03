@@ -329,28 +329,31 @@ class transaction extends db_entity
   }
 
   function get_transaction_list_tr_header($_FORM) {
-    $str[] = "<table class=\"tasks\" border=\"0\" cellspacing=\"0\">";
+    global $TPL;
+    $str[] = $TPL["table_list"];
     $str[] = "<tr>";
-    $str[] = "  <th class=\"col\" width=\"1%\">ID</th>";
-    $str[] = "  <th class=\"col\" width=\"1%\">Type</th>";
-    $str[] = "  <th class=\"col\" width=\"1%\">Status</th>";
-    $str[] = "  <th class=\"col\" width=\"1%\">Date</th>";
-    $str[] = "  <th class=\"col\" width=\"1%\">Modified</th>";
-    $str[] = "  <th class=\"col\">Product</th>";
-    $str[] = "  <th class=\"col right\" width=\"1%\">Credit</th>";
-    $str[] = "  <th class=\"col right\" width=\"1%\">Debit</th>";
-    $str[] = "  <th class=\"col right\" width=\"1%\">Balance</th>";
+    $str[] = "  <th width=\"1%\">ID</th>";
+    $str[] = "  <th width=\"1%\">Type</th>";
+    $str[] = "  <th width=\"1%\">Status</th>";
+    $str[] = "  <th width=\"1%\">Date</th>";
+    $str[] = "  <th width=\"1%\">Modified</th>";
+    $str[] = "  <th>Product</th>";
+    $str[] = "  <th class=\"right\" width=\"1%\">Credit</th>";
+    $str[] = "  <th class=\"right\" width=\"1%\">Debit</th>";
+    $str[] = "  <th class=\"right\" width=\"1%\">Balance</th>";
     $str[] = "</tr>";
     return implode("\n",$str);
   }
 
   function get_transaction_list_tr_footer($_FORM) {
+    $str[] = "<tfoot>";
     $str[] = "<tr>";
-    $str[] = "  <td class=\"col\" colspan=\"6\">&nbsp;</td>";
-    $str[] = "  <td class=\"col grand_total nobr right\">".$_FORM["total_amount_positive"]."&nbsp;</td>";
-    $str[] = "  <td class=\"col grand_total nobr right\">".$_FORM["total_amount_negative"]."&nbsp;</td>";
-    $str[] = "  <td class=\"col grand_total nobr right transaction-approved\">".$_FORM["running_balance"]."&nbsp;</td>";
+    $str[] = "  <td colspan=\"6\">&nbsp;</td>";
+    $str[] = "  <td class=\"grand_total nobr right\">".$_FORM["total_amount_positive"]."&nbsp;</td>";
+    $str[] = "  <td class=\"grand_total nobr right\">".$_FORM["total_amount_negative"]."&nbsp;</td>";
+    $str[] = "  <td class=\"grand_total nobr right transaction-approved\">".$_FORM["running_balance"]."&nbsp;</td>";
     $str[] = "</tr>";
+    $str[] = "</tfoot>";
     $str[] = "</table>";
     return implode("\n",$str);
   }
@@ -358,15 +361,15 @@ class transaction extends db_entity
   function get_transaction_list_tr($row) {
     global $TPL;
     $str[] = "<tr class=\"".$row["class"]."\">";
-    $str[] = "  <td class=\"col transaction-".$row["status"]." nobr\"><a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$row["transactionID"]."\">".$row["transactionID"]."</a></td>";
-    $str[] = "  <td class=\"col transaction-".$row["status"]." nobr\">".$row["transactionTypeLink"]."&nbsp;</td>";
-    $str[] = "  <td class=\"col transaction-".$row["status"]." nobr\">".$row["status"]."&nbsp;</td>";
-    $str[] = "  <td class=\"col transaction-".$row["status"]." nobr\">".$row["transactionDate"]."&nbsp;</td>";
-    $str[] = "  <td class=\"col transaction-".$row["status"]." nobr\">".$row["transactionSortDate"]."&nbsp;</td>";
-    $str[] = "  <td class=\"col transaction-".$row["status"]."\">".$row["product"]."&nbsp;</td>";
-    $str[] = "  <td class=\"col transaction-".$row["status"]." nobr right\">".$row["amount_positive"]."&nbsp;</td>";
-    $str[] = "  <td class=\"col transaction-".$row["status"]." nobr right\">".$row["amount_negative"]."&nbsp;</td>";
-    $str[] = "  <td class=\"col transaction-".$row["status"]." nobr right\">".$row["running_balance"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\"><a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$row["transactionID"]."\">".$row["transactionID"]."</a></td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionTypeLink"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["status"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionDate"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionSortDate"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]."\">".$row["product"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["amount_positive"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["amount_negative"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["running_balance"]."&nbsp;</td>";
     $str[] = "</tr>";
     return implode("\n",$str);
   }

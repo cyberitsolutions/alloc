@@ -27,12 +27,17 @@ table.tasks th, table.alloc_calendar th {
   white-space:nowrap;
   color:#444444;
 }
-.col {
+table.tasks td, table.tasks th, table.alloc_calendar th {
   border-left:1px solid #808080;
   border-top:1px solid #808080;
   padding:4px;
 }
-
+.sort_arrow_invisible {
+  color:#f4f4f4;
+}
+.sort_arrow_faded {
+  color:#999999;
+}
 
 table.alloc_calendar { 
   width:100%; 

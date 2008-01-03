@@ -6,12 +6,18 @@
       <th class="right" colspan="4"><a href="{$url_alloc_announcement}">New Announcement</a></th>
     </tr>
     <tr>
-      <td>Heading</td>
-      <td>Posted By</td>
-      <td>Display From</td>
-      <td>Display To</td>
-      <td>Action</td>
+      <td colspan="5">
+        {$table_list} 
+          <tr>
+            <th>Heading</th>
+            <th>Posted By</th>
+            <th>Display From</th>
+            <th>Display To</th>
+            <th>Action</th>
+          </tr>
+          {show_announcements("templates/announcementListR.tpl")}
+        </table>
+      </td>
     </tr>
-    {show_announcements("templates/announcementListR.tpl")}
   </table>
 {show_footer()}
