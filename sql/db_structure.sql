@@ -96,7 +96,7 @@ CREATE TABLE config (
 
 CREATE TABLE expenseForm (
   expenseFormID int(11) NOT NULL auto_increment,
-  clientID int(11) DEFAULT 0,
+  clientID int(11) DEFAULT NULL,
   expenseFormModifiedUser int(11) DEFAULT NULL,
   expenseFormModifiedTime datetime DEFAULT NULL,
   paymentMethod varchar(255) default NULL,
@@ -183,11 +183,11 @@ CREATE TABLE invoice (
 
 CREATE TABLE invoiceItem (
   invoiceItemID int(11) NOT NULL auto_increment,
-  invoiceID int(11) NOT NULL default '0',
-  timeSheetID int(11) default 0,
-  timeSheetItemID int(11) default 0,
-  expenseFormID int(11) default 0,
-  transactionID int(11) DEFAULT 0,
+  invoiceID int(11) NOT NULL,
+  timeSheetID int(11) DEFAULT NULL,
+  timeSheetItemID int(11) DEFAULT NULL,
+  expenseFormID int(11) DEFAULT NULL,
+  transactionID int(11) DEFAULT NULL,
   iiMemo text DEFAULT NULL,
   iiQuantity DECIMAL(19,2) DEFAULT NULL,
   iiUnitPrice DECIMAL(19,2) DEFAULT NULL,
