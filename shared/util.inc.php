@@ -1017,13 +1017,13 @@ function get_side_by_side_links($items=array(),$default=false) {
 
   foreach ($items as $id => $label) {
     $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"#x\" onClick=\"sidebyside_activate('".$id."',".$js_array.");\">".$label."</a>";
-    $sp = "&nbsp;|&nbsp;";
+    $sp = "&nbsp;";
   }
 
   // argh, I am bad man, this activates the default option, because it's minutely cleaner than putting in a body onload
   $TPL["extra_footer_stuff"].= "<img src=\"".$TPL["url_alloc_images"]."pixel.gif\" onload=\"sidebyside_activate('".$default."',".$js_array.");\">";
 
-  echo $str;
+  echo "<div style=\"margin:10px 8px;\">".$str."</div>";
 }
 function build_html_tag($htmlElementID,$value="") {
   $db = new db_alloc();

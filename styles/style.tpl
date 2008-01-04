@@ -28,9 +28,26 @@ a.growshrink:hover {
   border-bottom:1px solid (BODY_COLOR);
 }
 
-a.sidebyside_inactive {
+a.sidebyside {
+  padding:5px;
+  background-color: #f9f9f9;
+  border:1px solid #cccccc;
+  text-decoration:none;
+  color:#999999;
+  font-size:(DEFAULT_FONT_SIZE)px; 
+}
+a.sidebyside:hover {
+  color:(TD_COLOR);
+  border:1px solid #999999;
+  font-size:(DEFAULT_FONT_SIZE)px; 
+}
+a.sidebyside_active {
   color:(TD_COLOR);
   text-decoration:none;
+  background-color:(PANE_BG_COLOR);
+  border:1px solid (PANE_FRAME_COLOR);
+  padding:5px;
+  font-size:(DEFAULT_FONT_SIZE)px; 
 }
 
 h1 { 
