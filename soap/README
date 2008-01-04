@@ -1,0 +1,17 @@
+To use parts of alloc's functionality via SOAP services, you need to ensure that
+your version of PHP can run SOAP/WDSL etc. Have a look at
+http://php.net/manual/en/ref.soap.php
+
+
+Also, note that in order to access the services you will need to change the path
+at the bottom of the alloc.wsdl file.  The bit that looks like this:
+
+<soap:address location='http://alloc_dev/soap/soapServer.php'/>
+
+Needs to be updated with the path to the location of your instance of alloc.
+
+
+The soapClient_* files should give you a rough understanding of how to write
+soap client scripts in PHP. Of course they could be written in any language that
+speaks SOAP+WSDL.
+

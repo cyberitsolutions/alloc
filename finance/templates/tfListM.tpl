@@ -29,8 +29,9 @@
         {show_tf("templates/tfListR.tpl")}
         <tfoot>
         <tr>
-          <td colspan="3">&nbsp;</td>
-          <td>Total:  ${$grand_total}</td>
+          <td colspan="2">&nbsp;</td>
+          <td class="grand_total">${$grand_total}</td>
+          <td>&nbsp;</td>
         </tr>
         </tfoot>
       </table>

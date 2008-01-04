@@ -36,7 +36,15 @@
 
 {if show_tab_1()}
 <br/>
-Verify that the system is configured correctly and has all the necessary components installed.
+
+This will help you install allocPSA on your webserver. Please note that
+allocPSA is written in PHP, uses MySQL and runs best on a Linux server. If you
+want to install allocPSA on a Windows server, see <a
+href="http://www.allocpsa.org/installing_alloc_under_windows/">Installing allocPSA Under Windows</a>. 
+
+<br><br>
+
+1). Verify that the system is configured correctly and has all the necessary components installed.
 
 
 {$tests = array("php_version"  =>"PHP &gt;= 4.3.0"           
@@ -68,10 +76,10 @@ Verify that the system is configured correctly and has all the necessary compone
   <input type='submit' name='refresh_tab_1' value='Refresh Page'>
 </div>
 
-Fill in the fields below and click the Save Settings button. <b>If you already have an
-existing database and database user, then enter those credentials</b>, otherwise
-this installer will guide you through the creation of a database and database
-user.
+2). Fill in the fields below and click the Save Settings button. <b>If you
+already have an existing database and database user, then enter those
+credentials</b>, otherwise this installer will guide you through the creation
+of a database and database user.
 
 <table class="nice" cellspacing="0" border="0">
 <tr>
@@ -90,7 +98,7 @@ user.
 {if show_tab_2()}
 <br/>
 
-<b>If you need to create the allocPSA database and database user, run the
+3). <b>If you need to create the allocPSA database and database user, run the
 following commands on your MySQL server</b>. Ensure you are logged in as a
 MySQL administrator user when you run them.
 
@@ -111,7 +119,7 @@ server.
 </table>
 
 <br/>
-Once that is done, you should test that everything worked ok by clicking the Test Database Connection button.
+4). Once that is done, you should test that everything worked ok by clicking the Test Database Connection button.
 <div class="buttons">
   <input type='submit' name='test_db_credentials' value='Test Database Connection'>
   <input type='submit' name='submit_stage_2' value='Next &gt;'>
@@ -137,7 +145,7 @@ Once that is done, you should test that everything worked ok by clicking the Tes
 
 {if show_tab_3()}
 <br/>
-Click the Install Database button to install the tables into the allocPSA database.
+5). Click the Install Database button to install the tables into the allocPSA database.
 <div class="buttons">
   <input type='submit' name='install_db' value='Install Database'>&nbsp;&nbsp;
   <!-- <input type='submit' name='patch_db' value='Patch Existing Database'> -->
@@ -164,7 +172,7 @@ Click the Install Database button to install the tables into the allocPSA databa
 
 {if show_tab_4()}
 <br/>
-Verify that all the tests succeeded below, and click the Complete Installation button.
+6). Verify that all the tests succeeded below, and click the Complete Installation button.
 <br/>
 
 {$tests = array("db_connect"     =>"DB Connect" 
@@ -218,8 +226,8 @@ Verify that all the tests succeeded below, and click the Complete Installation b
 
     {if show_tab_4c()}
     <b>One last thing...</b><br/>
-    You can enable further functionality of allocPSA by installing these
-    cronjobs onto the server:
+    7). You can enable further functionality of allocPSA by installing these
+    cron jobs onto the server:
 
     <table class="nice" cellspacing="0" border="0">
       <tr>
@@ -242,9 +250,9 @@ Verify that all the tests succeeded below, and click the Complete Installation b
         </td>
       </tr>
     </table>
-    These cronjobs will enable the Reminders, the Daily Task Digest
-    emails and the Repeating Expenses functionality to work. They rely on
-    you already having wget installed.
+    These cronjobs will enable the automatic Reminders, the Email Gateway,
+    the Daily Task Digests and the Repeating Expenses functionality to work.
+    They rely on you already having wget installed.
     {/}
 
 {$hidden}
