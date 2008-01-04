@@ -31,11 +31,8 @@ function show_new_invoiceItem($template) {
     return;
   }
 
-  $TPL["radio1"] = "checked";
   $TPL["div1"] = "";
-  $TPL["radio2"] = "";
   $TPL["div2"] = " class=\"hidden\"";
-  $TPL["radio3"] = "";
   $TPL["div3"] = " class=\"hidden\"";
 
 
@@ -55,14 +52,12 @@ function show_new_invoiceItem($template) {
       if ($invoiceItem->get_value("timeSheetID")) {
         unset($TPL["div2"]);
         $TPL["div1"] = " class=\"hidden\"";
-        $TPL["radio2"] = " checked";
-        unset($TPL["radio1"]);
+        $TPL["sbs_link"] = "timeSheet_ii";
 
       } else if ($invoiceItem->get_value("expenseFormID")) {
         unset($TPL["div3"]);
         $TPL["div1"] = " class=\"hidden\"";
-        $TPL["radio3"] = " checked";
-        unset($TPL["radio1"]);
+        $TPL["sbs_link"] = "expenseForm_ii";
       }
 
     // Else default values for creating a new invoiceItem
