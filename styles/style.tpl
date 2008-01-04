@@ -191,7 +191,6 @@ table.alloc_calendar td {
   border-left:1px solid (PANE_FRAME_COLOR);  
   border-top:1px solid (PANE_FRAME_COLOR); 
   width:10%; vertical-align:top;
-  font-size:smaller;
 }
 table.alloc_calendar td.today { 
   background-color:#fffdf2; 
