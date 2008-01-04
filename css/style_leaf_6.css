@@ -317,7 +317,7 @@ table.tasks td, table.tasks th, table.alloc_calendar th {
 .sort_arrows {
   padding:0px 3px;
 }
-.grand_total { 
+table.tasks td.grand_total, .grand_total { 
   border-top:1px solid black;
   text-align:right;
 }

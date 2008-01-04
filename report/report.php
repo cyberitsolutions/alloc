@@ -260,7 +260,7 @@ if ($_POST["do_step_3"]) {
     $TPL["result_row"].= "</tr>";
 
     if (!$_POST["generate_file"]) {
-      $start_row_separator = "<tr>";
+      $start_row_separator = "<tr class='%s'>";
       $end_row_separator = "</tr>\n";
       $start_field_separator = "<td>&nbsp;";
       $end_field_separator = "</td>";
@@ -285,7 +285,8 @@ if ($_POST["do_step_3"]) {
 
 
     while ($db->next_record()) {
-      $TPL["result_row"].= $start_row_separator;
+      $odd_even = $odd_even == "even" ? "odd" : "even";
+      $TPL["result_row"].= sprintf($start_row_separator,$odd_even);
       foreach($fields as $k=>$field) {
         $field = end(explode(".", $field));
         if (eregi("ModifiedUser", $field) || eregi("personID", $field)) {
