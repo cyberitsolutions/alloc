@@ -107,14 +107,14 @@ sorttable = {
 	      headrow[i].sorttable_tbody = table.tBodies[0];
 
         arrow = document.createElement('span');
-        arrow.className = 'sort_arrows sort_arrow_invisible';
-        arrow.innerHTML = stIsIE ? '&nbsp<font face="webdings">6</font>' : '&nbsp;&#x25BE;';
+        arrow.className = 'sort_arrows';
+        arrow.innerHTML = '<img src="../images/arrow_blank.gif" border="0">';
         headrow[i].appendChild(arrow);
 
         // mouse over -> show arrow
 	      dean_addEvent(headrow[i],"mouseover", function(e) {
           if (this.className.search(/\bsorttable_sorted\b/) == -1 && this.className.search(/\bsorttable_sorted_reverse\b/) == -1) {
-            this.getElementsByTagName('span')[0].className = 'sort_arrows sort_arrow_faded';
+            this.getElementsByTagName('span')[0].innerHTML = '<img src="../images/arrow_faded.gif" border="0">';
             return;
           }
         });
@@ -122,7 +122,7 @@ sorttable = {
         // mouse off -> hide arrow
         dean_addEvent(headrow[i],"mouseout", function(e) {
           if (this.className.search(/\bsorttable_sorted\b/) == -1 && this.className.search(/\bsorttable_sorted_reverse\b/) == -1) {
-            this.getElementsByTagName('span')[0].className = 'sort_arrows sort_arrow_invisible';
+            this.getElementsByTagName('span')[0].innerHTML = '<img src="../images/arrow_blank.gif" border="0">';
             return;
           }
         });
@@ -137,7 +137,7 @@ sorttable = {
           arrows = getElementsByClass("sort_arrows",this.parentNode);
           if (arrows) {
             for (i=0; i<arrows.length; i++) {
-              arrows[i].className='sort_arrows sort_arrow_invisible';
+              arrows[i].innerHTML = '<img src="../images/arrow_blank.gif" border="0">';
             }
           }
 
@@ -146,7 +146,7 @@ sorttable = {
             sorttable.reverse(this.sorttable_tbody);
             this.className = this.className.replace('sorttable_sorted', 'sorttable_sorted_reverse');
             arrow.className = 'sort_arrows';
-            arrow.innerHTML = stIsIE ? '&nbsp<font face="webdings">5</font>' : '&nbsp;&#x25B4;';
+            arrow.innerHTML = '<img src="../images/arrow_up.gif" border="0">';
             return;
           }
 
@@ -155,7 +155,7 @@ sorttable = {
             sorttable.reverse(this.sorttable_tbody);
             this.className = this.className.replace('sorttable_sorted_reverse', 'sorttable_sorted');
             arrow.className = 'sort_arrows';
-            arrow.innerHTML = stIsIE ? '&nbsp<font face="webdings">6</font>' : '&nbsp;&#x25BE;';
+            arrow.innerHTML = '<img src="../images/arrow_down.gif" border="0">';
             return;
           }
           
@@ -171,7 +171,7 @@ sorttable = {
 
           this.className += ' sorttable_sorted';
           arrow.className = 'sort_arrows';
-          arrow.innerHTML = stIsIE ? '&nbsp<font face="webdings">6</font>' : '&nbsp;&#x25BE;';
+          arrow.innerHTML = '<img src="../images/arrow_down.gif" border="0">';
 
 	        // build an array to sort. This is a Schwartzian transform thing,
 	        // i.e., we "decorate" each row with the actual sort key,

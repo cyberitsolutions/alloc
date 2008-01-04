@@ -314,11 +314,8 @@ table.tasks td, table.tasks th, table.alloc_calendar th {
   border-top:1px solid (PANE_FRAME_COLOR); 
   padding:4px;
 }
-.sort_arrow_invisible {
-  color:(PANE_BG_COLOR_HEADER);
-}
-.sort_arrow_faded {
-  color:#999999;
+.sort_arrows {
+  padding:0px 3px;
 }
 .grand_total { 
   border-top:1px solid black;
