@@ -45,7 +45,7 @@ a.sidebyside_active {
   color:(TD_COLOR);
   text-decoration:none;
   background-color:(PANE_BG_COLOR);
-  border:1px solid (PANE_FRAME_COLOR);
+  border:1px solid #999999;
   padding:5px;
   font-size:(DEFAULT_FONT_SIZE)px; 
 }
