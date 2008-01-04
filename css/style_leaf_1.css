@@ -28,9 +28,26 @@ a.growshrink:hover {
   border-bottom:1px solid #666666;
 }
 
-a.sidebyside_inactive {
+a.sidebyside {
+  padding:5px;
+  background-color: #f9f9f9;
+  border:1px solid #cccccc;
+  text-decoration:none;
+  color:#999999;
+  font-size:9px; 
+}
+a.sidebyside:hover {
+  color:#444444;
+  border:1px solid #999999;
+  font-size:9px; 
+}
+a.sidebyside_active {
   color:#444444;
   text-decoration:none;
+  background-color:#f3f9e0;
+  border:1px solid #c7cfb8;
+  padding:5px;
+  font-size:9px; 
 }
 
 h1 { 
@@ -214,7 +231,7 @@ table.alloc_calendar td:hover {
 
 /* Filters */
 table.filter { 
-  background-color:#f6f9ed; 
+  background-color:#f3f9e0; 
   border:2px dashed #c7cfb8; 
   padding:4px; 
   margin:4px; 
@@ -223,7 +240,7 @@ table.filter {
 }
 table.filter th { 
   font-weight:bold; 
-  background-color:#f6f9ed; 
+  background-color:#f3f9e0; 
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
@@ -235,7 +252,7 @@ table.filter table.filter {
 }
 
 table.panel { 
-  background-color:#f6f9ed; 
+  background-color:#f3f9e0; 
   height:100%; 
   border:1px solid #c7cfb8; 
 }
@@ -283,7 +300,7 @@ table.tasks {
   border-bottom:1px solid #c7cfb8;
 }
 td.tasks { 
-  background-color: #f6f9ed; 
+  background-color: #f3f9e0; 
   padding:4px; 
 }
 table.tasks th, table.alloc_calendar th { 
@@ -311,13 +328,13 @@ table.tasks td, table.tasks th, table.alloc_calendar th {
 
 table.comments { 
   border:1px solid #c7cfb8; 
-  background:#f6f9ed; 
+  background:#f3f9e0; 
   margin-bottom:4px; 
   margin-top:2px;
 }
 table.comments th { 
   text-align:left; 
-  background:#f6f9ed; 
+  background:#f3f9e0; 
   vertical-align:top; 
   color:#444444; 
   font-weight:normal; 
@@ -328,7 +345,7 @@ table.comments td {
 }
 
 table.pending { 
-  background-color:#f6f9ed; 
+  background-color:#f3f9e0; 
   border:1px solid #c7cfb8; 
 }
 table.warn { 
