@@ -23,7 +23,22 @@
 
 
 
+function path_under_path($path,$path2) {
+  // Checks that path is under the directory path2
+  $safe = realpath($path2);
+  $unsafe = realpath($path);
 
+  // strip trailing slash
+  substr($safe,-1,1) == DIRECTORY_SEPARATOR and $safe = substr($safe,0,-1);
+  substr($unsafe,-1,1) == DIRECTORY_SEPARATOR and $unsafe = substr($unsafe,0,-1);
+
+  if ($safe && $unsafe) {
+    // Make sure the unsafe dir is under the safe dir
+    if (substr($unsafe,0,strlen($safe)) == $safe) {
+      return true;
+    }
+  }
+}
 function get_calendar($name, $default_value) {
   // setup the first day of the week
   $days = array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
