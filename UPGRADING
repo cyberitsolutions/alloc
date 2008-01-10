@@ -33,19 +33,19 @@ To upgrade from 1.3.508 to 1.4.0
 
 1. Backup your allocPSA database. 
 
-2. Grab the file alloc_config.php from your current installation of alloc.
 
-3. Completely replace the old allocPSA source code with the new source code
-   that you have just downloaded.
+2. Unpack the new allocPSA source code alongside your current installation.
 
-3. Put your original alloc_config.php file back in with the new source
-   code.
 
-4. Finally, update your alloc database by going to this address in your web
+3. Copy the alloc_config.php file from your current installation of
+   allocPSA into the directory that contains the new installation of allocPSA.
+
+
+4. Finally, update your allocPSA database by going to this address in your web
    browser: http://YOUR_ALLOC_INSTALLATION/installation/patch.php
 
-   It is recommended that you apply each change separately, so that if
-   something breaks, it is easier to determine how to fix it.
+   It is strongly recommended that you apply each patch/change separately,
+   starting from the _top_ and working your way down.
 
 
 
