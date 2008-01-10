@@ -16,19 +16,6 @@
 */
 
 
-// preload mouseover images
-if (document.images) {
-  pic1= new Image(9,11); 
-  pic1.src="../images/arrow_blank.gif"; 
-  pic2= new Image(9,11); 
-  pic2.src="../images/arrow_faded.gif"; 
-  pic3= new Image(9,11); 
-  pic3.src="../images/arrow_down.gif"; 
-  pic4= new Image(9,11); 
-  pic4.src="../images/arrow_up.gif"; 
-}
-
- 
 var stIsIE = /*@cc_on!@*/false;
 
 function oddevenifyrows(table) {

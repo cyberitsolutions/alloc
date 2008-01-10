@@ -2,18 +2,17 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="language" content="English-AU">
     <meta http-equiv="pragma" content="no-cache" />
     <title>{$main_alloc_title}</title>
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}{get_stylesheet_name()}" type="text/css" media="screen" />
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print" />
+    <link rel="StyleSheet" href="{$url_alloc_stylesheets}calendar.css" type="text/css" media="screen" />
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}main.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}help.js"></script>
-    <style type="text/css">@import url({$url_alloc_stylesheets}calendar.css);</style>
-    <script type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
-    <script type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>
-    <script type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>
-    <script type="text/javascript" src="{$url_alloc_javascript}sorttable.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}sorttable.js"></script>
   </head>
   <body>
   <div id="helper"></div>
