@@ -326,27 +326,15 @@ EOD;
 
 
 // Tab 2 Text
-
 if ($_FORM["ALLOC_DB_NAME"] && $_FORM["ALLOC_DB_USER"]) {
-
   $text_tab_2a[] = "DROP DATABASE IF EXISTS ".$_FORM["ALLOC_DB_NAME"].";";
   $text_tab_2a[] = "";
   $text_tab_2a[] = "CREATE DATABASE ".$_FORM["ALLOC_DB_NAME"].";";
-  $text_tab_2a[] = "";
-  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "USE mysql;";
-  $text_tab_2a[] = "";
-  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "DELETE FROM user WHERE User = '".$_FORM["ALLOC_DB_USER"]."';";
-  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "";
-  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "DELETE FROM db WHERE User = '".$_FORM["ALLOC_DB_USER"]."';";
-  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "";
-  $_FORM["ALLOC_DB_USER"] != 'root' and $text_tab_2a[] = "INSERT INTO user (Host, User, Password) values ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_USER"]."',PASSWORD('".$_FORM["ALLOC_DB_PASS"]."'));";
-  $text_tab_2a[] = "";
 
-  // The mysql.db table only has Create_tmp_table_priv and Lock_tables_priv from mysql >= 4.0
-  if (is_object($db) && version_compare($db->get_db_version(),"4.0",">=") && $_FORM["ALLOC_DB_USER"] != 'root') {
-    $text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv,Create_tmp_table_priv,Lock_tables_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y','y','y');";
-  } else if ($_FORM["ALLOC_DB_USER"] != 'root') {
-    $text_tab_2a[] = "INSERT INTO db \n(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,\nCreate_priv,Drop_priv,References_priv,Index_priv,Alter_priv) \nVALUES ('".$_FORM["ALLOC_DB_HOST"]."','".$_FORM["ALLOC_DB_NAME"]."','".$_FORM["ALLOC_DB_USER"]."','y','y','y','y','y','y','y','y','y');";
+  if ($_FORM["ALLOC_DB_USER"] != 'root') {
+    // grant all on alloc14.* to 'heydiddle'@'localhost' IDENTIFIED BY 'hey';
+    $text_tab_2a[] = "";
+    $text_tab_2a[] = "GRANT ALL ON ".$_FORM["ALLOC_DB_NAME"].".* TO '".$_FORM["ALLOC_DB_USER"]."'@'".$_FORM["ALLOC_DB_HOST"]."' IDENTIFIED BY '".$_FORM["ALLOC_DB_PASS"]."';";
   }
 
   $text_tab_2a[] = "";

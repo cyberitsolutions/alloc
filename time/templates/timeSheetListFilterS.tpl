@@ -3,8 +3,8 @@
         <tr>
           <td>Project</td>
           <td>User Name</td>
-          <td colspan="2">Date From</td>
-          <td colspan="3">Status</td>
+          <td>Date From</td>
+          <td>Status</td>
         </tr>
         <tr>
           <td>
