@@ -163,8 +163,9 @@ h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
 h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
   margin-top: 0.4em }
 
-h1 {font-size:130%;}
-h2 {font-size:100%;}
+h1 {font-size:140%;}
+h2 {font-size:110%;}
+h3 {font-size:80%;}
 
 h1.title {
   font-size:180%;
