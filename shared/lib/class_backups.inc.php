@@ -70,7 +70,7 @@ class backups {
 
   function backup() {
     global $TPL; 
-    require_once("../lib/zip.php");
+    require_once("../lib/pclzip.lib.php");
 
     if (!is_dir($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0")) {
       mkdir($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0", 0777);
@@ -78,10 +78,10 @@ class backups {
 
     $archivename = "backup_" . date("Ymd_His") . ".zip";
     $zipfile = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR . $archivename;
-    $dumpfile = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "database.sql";
+    $dumpfile = $TPL["url_alloc_attachments_dir"] . "database.sql";
     is_file($dumpfile) && unlink($dumpfile);
 
-    $archive = new compress_zip("w+",$zipfile);
+    $archive = new PclZip($zipfile);
 
     $db = new db_alloc();
     $db->dump_db($dumpfile);
@@ -89,13 +89,19 @@ class backups {
     if (!file_exists($dumpfile)) { 
       die("Couldn't backup database to ".$dumpfile);
     } else {
-      $archive->add_file($dumpfile,$TPL["url_alloc_attachments_dir"]."backups");
+
+      // database dump
+      $files[] = $dumpfile;
     
+      // load up all the attachment dirs
       foreach ($this->folders as $folder) {
-        $archive->add_file($TPL["url_alloc_attachments_dir"].$folder,$TPL["url_alloc_attachments_dir"]);
+        $files[] = $TPL["url_alloc_attachments_dir"].$folder;
       }
 
-      $archive->close();
+      // add everything to the archive
+      $archive->add($files,
+                    PCLZIP_OPT_REMOVE_PATH, $TPL["url_alloc_attachments_dir"]); // again, nuke leading path
+
       is_file($dumpfile) && unlink($dumpfile);
       $TPL["message_good"][] = "Backup created: " . $archivename;
     }
@@ -104,11 +110,11 @@ class backups {
   function restore($archivename) {
     global $TPL;
 
-    require_once("../lib/zip.php");
+    require_once("../lib/pclzip.lib.php");
 
     $file = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $archivename;
 
-    $archive = new compress_zip("r",$file);
+    $archive = new PclZip($file);
 
     # Clear out the folder list
     foreach($this->folders as $folder) {
