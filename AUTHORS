@@ -1,0 +1,59 @@
+
+Copyright (C) 2006, 2007, 2008 Alex Lance, Clancy Malcolm, Cybersource
+Pty. Ltd.
+
+This file is part of the allocPSA application <info@cyber.com.au>.
+
+allocPSA is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.
+
+allocPSA is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
+License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
+
+
+allocPSA has been devloped by:
+
+Alex Lance 
+Clancy Malcolm
+Andrew Harris
+Jeremy Chin
+Kate Alisha Lanyon
+Andrew MacKinlay
+
+Cybersource http://www.cybersource.com.au
+
+
+And in addition contains code from the following projects:
+
+cpdf (public domain)
+Wayne Munro <pdf@ros.co.nz> http://www.ros.co.nz/pdf
+
+mime_parser (BSD license) 
+Copyright © (C) Manuel Lemos 2006 <mlemos-at-acm.org> 
+
+phpass (public domain)
+Solar Designer <solar at openwall.com> http://www.openwall.com/phpass/
+
+SortTable (MIT/X11)
+Stuart Langridge, http://www.kryogenix.org/code/browser/sorttable/
+
+DHTML calendar (GPL 2.1 OR LATER)
+Copyright Mihai Bazon, 2002-2005  http://www.bazon.net/mishoo
+
+PclZip (GNU/LGPL)
+Vincent Blavet - March 2006 http://www.phpconcept.net
+
+
+
+Incorporating software with different licenses? 
+See http://www.fsf.org/licensing/licenses/gpl-faq.html#AllCompatibility
+
+
+
