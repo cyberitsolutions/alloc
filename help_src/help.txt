@@ -86,17 +86,17 @@ emailing `info@cyber.com.au <mailto:info@cyber.com.au>`_
 .. list-table::
 
    - - Address
-     - Level 4, 10 Queen Street
+     - 1/130-132 Stawell St Richmond
    - - City
      - Melbourne
    - - Country
      - Australia
    - - Postcode
-     - 3000
+     - 3121
    - - Phone
-     - +61 3 9621 2377
+     - +61 3 9428 6922
    - - Fax
-     - +61 3 9621 2477
+     - +61 3 9428 6944
    - - Email
      - info@cyber.com.au
    - - Web
