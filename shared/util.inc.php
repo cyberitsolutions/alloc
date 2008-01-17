@@ -377,6 +377,17 @@ function move_attachment($entity, $id=false) {
     }
   }
 }
+function get_mimetype($file) {
+  $mimetype="application/octet-stream";
+  if (function_exists("mime_content_type")) {
+    $mimetype = mime_content_type($file);
+
+  } else if ($size = getimagesize($file)) {
+    $mimetype = $size['mime'];
+  }
+  return $mimetype;
+}
+
 function get_attachments($entity, $id) {
   
   global $TPL;
@@ -412,6 +423,7 @@ function get_attachments($entity, $id) {
           $image = "<img border=\"0\" alt=\"icon\" src=\"".$TPL["url_alloc_images"]."/fileicons/".$t."\">";
 
           $size = filesize($dir.DIRECTORY_SEPARATOR.$file);
+          $row["path"] = $dir.DIRECTORY_SEPARATOR.$file;
           $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.htmlentities($file)."</a>";
           $row["text"] = htmlentities($file);
           $size > 1023 and $row["size"] = sprintf("%dKb",$size/1024);
@@ -509,8 +521,7 @@ function util_get_comments_array($entity, $id, $options=array()) {
       $new["ts_label"] = " (Time Sheet Comment)";
 
     } else if (($v["personID"] == $current_user->get_id() || $current_user->have_role("admin")) && $options["showEditButtons"]) {
-      $new["comment_buttons"] = "<nobr><input type=\"submit\" name=\"comment_edit\" value=\"Edit\">
-                                 <input type=\"submit\" name=\"comment_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this comment?')\"></nobr>";
+      $new["comment_buttons"] = "<nobr><input type=\"submit\" name=\"comment_edit\" value=\"Edit\"><input type=\"submit\" name=\"comment_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this comment?')\"></nobr>";
     }
 
     if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
@@ -523,7 +534,7 @@ function util_get_comments_array($entity, $id, $options=array()) {
       #echo "<pre>".print_r($files,1)."</pre>";
       if (is_array($files)) {
         foreach($files as $key => $file) {
-          $new["f"].= $br.$file["file"];
+          $new["files"].= $br.$file["file"];
           $new["br"] = "&nbsp;&nbsp;&nbsp;&nbsp;";
         }
       }
@@ -550,14 +561,14 @@ function util_get_comments($entity, $id, $options=array()) {
     $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="comments">';
     $rtn[] =  '<tr>';
     $rtn[] =  '<th>'.$v["emailed_text"].'<b>'.$v["author"].'</b> '.$v["date"].$v["ts_label"].$v["modified_info"].$v["emailed"]."</th>";
-    $v["edit"] and $rtn[] =  '<th align="right" width="2%">'.$v["comment_buttons"].'</th>';
+    $v["edit"] and $rtn[] =  '<th align="right" width="2%" class="nobr">'.$v["comment_buttons"].'</th>';
     $rtn[] =  '</tr>';
     $rtn[] =  '<tr>';
     $rtn[] =  '<td>'.text_to_html($v["comment"]).'</td>';
     $v["edit"] and $rtn[] =  '<td>&nbsp;</td>';
     $rtn[] =  '</tr>';
     $v["files"] and $rtn[] =  '<tr>';
-    $v["files"] and $rtn[] =  '<td colspan="2">'.$v["f"].'</td>';
+    $v["files"] and $rtn[] =  '<td colspan="2">'.$v["files"].'</td>';
     $v["files"] and $rtn[] =  '</tr>';
     $rtn[] =  '</table>';
     $v["edit"] and $rtn[] =  '</form>';

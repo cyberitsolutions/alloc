@@ -183,7 +183,7 @@ case 3:
       $TPL["reminder_default_content"] = config::get_config_item("allocURL")."task/task.php?taskID=".$parentID;
 
     } else if ($parentType == "general") {
-      $TPL["reminder_default_subject"] = "[Reminder]";
+      $TPL["reminder_default_subject"] = "Reminder: ";
     }
   }
   $TPL["reminder_default_content"].= "\n".$reminder->get_value('reminderContent');

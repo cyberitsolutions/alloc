@@ -42,8 +42,8 @@ while ($db->next_record()) {
   $person = new person;
   $person->read_db_record($db);
   $person->set_id($db->f("personID"));
+
   $msg = "";
-  $headers = "";
   $tasks = "";
   $to = "";
 
@@ -57,7 +57,6 @@ while ($db->next_record()) {
     $tasks = $person->get_tasks_for_email();
     $msg.= $tasks;
 
-    $headers.= "From: ".ALLOC_DEFAULT_FROM_ADDRESS;
     $subject = "Daily Digest";
     $to = $person->get_value("emailAddress");
     if ($person->get_value("firstName") && $person->get_value("surname") && $to) {
@@ -65,8 +64,8 @@ while ($db->next_record()) {
     }
 
     if ($tasks && $to) {
-      $email = new alloc_email;
-      if ($email->send($to, $subject, $msg, "daily_digest", $headers)) {
+      $email = new alloc_email($to, $subject, $msg, "daily_digest");
+      if ($email->send()) {
         echo "\n<br>Sent email to: ".$to;
       }
     } 

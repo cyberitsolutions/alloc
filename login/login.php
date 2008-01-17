@@ -78,9 +78,9 @@ if ($sess->Started()) {
     $db2 = new db_alloc();
     $db2->query($q);
 
-    $e = new alloc_email();
+    $e = new alloc_email($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password");
     #echo "Your new temporary password: ".$password;
-    if ($e->send($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password", "From: ".get_default_from_address())) {
+    if ($e->send()) {
       $error = "New password sent to: ".$_POST["email"];
     } else {
       $error = "<p class='error'>Unable to send email!</p>";

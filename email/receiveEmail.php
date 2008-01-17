@@ -43,47 +43,49 @@ if (!$info["username"] || !$info["password"] || !$info["host"]) {
 $mail = new alloc_email_receive($info,$lockfile);
 $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
 $mail->check_mail();
-$num_emails = $mail->mailbox_info->Nmsgs;
-$debug && $num_emails and print $nl.date("Y-m-d H:i:s")." Found $num_emails emails.";
+$num_new_emails = $mail->get_num_new_emails();
 
-$x = 0;
-// fetch and parse email
-while ($x < $num_emails) {
-  unset($bad_key,$done);
-  $x++;
-  $mail->set_msg($x);
-  $headers = $mail->get_msg_header();
-  $keys = $mail->get_hashes();
-  $debug and print $nl.$nl."Keys: ".$nl.print_r($keys,1);
-  
-  foreach ($keys as $key) {
-    $token = new token;
-    $debug and print $nl."Attempting key: ".$key;
-    if ($token->set_hash($key)) {
-      $debug and print $nl."Executing with key ".$key;
-      $debug and print $nl."  From: ".$mail->mail_headers->fromaddress;
-      $debug and print $nl."  Subject: ".$mail->mail_headers->subject;
-      $token->execute($mail);
-      $mail->delete();
-      $done = true;
-    } else {
-      $debug and print $nl."Unable to set key to: ".$key;
+if ($num_new_emails >0) {
+
+  $msg_nums = $mail->get_new_email_msg_nums(); 
+  #$msg_nums = $mail->get_all_email_msg_nums(); // for debugging (and if degbugging don't forget to add a ||1 to the if statement above :)
+
+  $debug and print $nl.date("Y-m-d H:i:s")." Found ".count($msg_nums)." new/unseen emails.";
+
+  // fetch and parse email
+  foreach ($msg_nums as $num) {
+    unset($bad_key,$done);
+    $mail->set_msg($num);
+    $headers = $mail->get_msg_header();
+    $keys = $mail->get_hashes();
+    $debug and print $nl.$nl."Keys: ".$nl.print_r($keys,1);
+    
+    foreach ($keys as $key) {
+      $token = new token;
+      $debug and print $nl."Attempting key: ".$key;
+      if ($token->set_hash($key)) {
+        $debug and print $nl."Executing with key ".$key;
+        $debug and print $nl."  From: ".$mail->mail_headers->fromaddress;
+        $debug and print $nl."  Subject: ".$mail->mail_headers->subject;
+        $debug and print $nl."  To: ".$mail->mail_headers->toaddress;
+        $token->execute($mail);
+        $done = true;
+      } else {
+        $debug and print $nl."Unable to set key to: ".$key;
+      }
+    }
+
+    if (!$done) {
+      $debug and print $nl."Mail failed and forwarded to admin!";
+      // forward to admin
+      if (config::get_config_item("allocEmailAdmin")) {
+        $mail->forward(config::get_config_item("allocEmailAdmin"), "[allocPSA] Email sent to ".config::get_config_item("AllocFromEmailAddress"));
+      }
     }
   }
-
-  if (!$done) {
-    $debug and print $nl."Mail failed and forwarded to admin!";
-    // forward to admin
-    if (config::get_config_item("allocEmailAdmin")) {
-      $mail->forward(config::get_config_item("allocEmailAdmin"), "[allocPSA] Unable to process email sent to ".config::get_config_item("AllocFromEmailAddress"));
-    }
-    $mail->delete();
-  }
-
-
 }
 
-$mail->expunge();
+
 $mail->close();
 
 

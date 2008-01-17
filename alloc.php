@@ -169,6 +169,11 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // Include all the urls
   require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."global_tpl_values.inc.php");
 
+  // Setup some useful constants
+  define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
+  define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
+  define("ALLOC_DEFAULT_RETURN_PATH_ADDRESS",config::get_config_item("AllocFromEmailAddress"));
+
   // Setup a current_user person who will represent the logged in user
   $current_user = new person;
 
@@ -182,10 +187,6 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   } 
   
   if (!defined("NO_AUTH") && !defined("DO_NOT_REDIRECT_TO_LOGIN")) {
-    define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
-    define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
-    define("ALLOC_DEFAULT_RETURN_PATH_ADDRESS",config::get_config_item("AllocFromEmailAddress"));
-
     $current_user = person::load_get_current_user($sess->Get("personID"));
 
     // Save history entry
