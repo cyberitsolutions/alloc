@@ -669,10 +669,7 @@ class task extends db_entity {
     return $recipients;
   }
 
-  function send_emails($selected_option, $type="", $body="", $from=array()) {
-    global $current_user;
-    $recipients = $this->get_email_recipients($selected_option);
-
+  function get_email_recipient_headers($recipients, $from) {
 
     // Build up To: and Bcc: headers
     foreach ($recipients as $recipient) {
@@ -700,18 +697,21 @@ class task extends db_entity {
         $commar = ", ";
       }
     }
+    return array($to_address, $bcc, $successful_recipients);
+  }
 
-    $headers["Bcc"] = $bcc;
+  function send_emails($selected_option, $type="", $body="", $from=array()) {
+    global $current_user;
 
-    // Debug
-    if (0) {
-      echo "<br>To: ".$to_address;
-      echo "<br>Bcc: ".$headers["Bcc"];
-      die();
-    }
+    $recipients = $this->get_email_recipients($selected_option);
+    list($to_address,$bcc,$successful_recipients) = $this->get_email_recipient_headers($recipients, $from);
 
-
-    if ($headers["Bcc"]) {
+    // The To address contains no actual email addresses, ie "Alex Lance": ; 
+    // The Bcc list contains the actual recpient email addresses.
+    if ($bcc) {
+      $email = new alloc_email();
+      $email->add_header("Bcc",$bcc);
+      $email->set_to_address($to_address);
 
       $types = array('task_created'    => "Task Created"
                     ,'task_closed'     => "Task Closed"
@@ -721,29 +721,18 @@ class task extends db_entity {
                     );
     
       $subject = $types[$type];
-                    
-
-      // New email object wrapper takes care of logging etc.
-      $email = new alloc_email;
-
-      // REMOVE ME!!
-      $email->ignore_no_email_urls = true;
-      $email->ignore_no_email_hosts = true;
 
       $p = new project;
       $p->set_id($this->get_value("projectID"));
       $p->select();
 
       $from_name = $from["name"] or $from_name = $current_user->get_username(1);
-      
-      $message.= "\n".$subject." by ".$from_name;
-      $body and $message.= "\n\n".wordwrap($body);
+      $message = "\n".$subject." by ".$from_name;
+      $body and $message.= "\n\n".$body;
       $message.= "\n\n".config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
       $message.= "\n\nProject: ".$p->get_value("projectName");
       $message.= "\n   Task: ".$this->get_value("taskName");
       $message.= "\n   Desc: ".$this->get_value("taskDescription");
-
-
       $message.= "\n\n-- \nIf you have any questions, please reply to this email or contact: ";
       config::get_config_item("companyName")            and $message.= "\n".config::get_config_item("companyName");
       config::get_config_item("companyContactAddress")  and $message.= "\n".config::get_config_item("companyContactAddress");
@@ -752,7 +741,9 @@ class task extends db_entity {
       config::get_config_item("companyContactFax")      and $message.= "\nF: ".config::get_config_item("companyContactFax");
       config::get_config_item("companyContactHomePage") and $message.= "\nW: ".config::get_config_item("companyContactHomePage");
 
-      $message = "\n".wordwrap($message)."\n\n";
+      // REMOVE ME!!
+      $email->ignore_no_email_urls = true;
+      $email->ignore_no_email_hosts = true;
 
       $hash = $this->make_token_add_comment_from_email();
 
@@ -760,13 +751,26 @@ class task extends db_entity {
         $email->set_message_id($hash);
       } else if ($hash && config::get_config_item("allocEmailKeyMethod") == "subject") {
         $email->set_message_id();
-        $subject_extra = " {Key:".$hash."}";
+        $subject_extra = "{Key:".$hash."}";
       }
 
-      $headers["Reply-To"] = "All parties via ".ALLOC_DEFAULT_FROM_ADDRESS;
-      $headers["From"] = $from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS;
       $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName")." [".$this->get_priority_label()."] ".$subject_extra;
-      if ($email->send($to_address, $subject, $message, $type, $headers)) {
+      $email->set_subject($subject);
+      $email->set_body($message);
+      $email->set_message_type($type);
+      $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
+      $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
+
+      if ($from["commentID"]) {
+        $files = get_attachments("comment",$from["commentID"]);
+        if (is_array($files)) {
+          foreach ($files as $file) {
+            $email->add_attachment($file["path"]);
+          }
+        }
+      }
+
+      if ($email->send(false)) {
         return $successful_recipients;
       }
     }   
@@ -1687,7 +1691,7 @@ function get_task_statii_array() {
     }
     $file = $dir.DIRECTORY_SEPARATOR."mail.eml";
     $decoded = $email->save_email($file);
-    
+
     list($from_address,$from_name) = parse_email_address($decoded[0]["Headers"]["from:"]);
 
     $person = new person;
@@ -1736,19 +1740,20 @@ function get_task_statii_array() {
     $from["email"] = $from_address;
     $from["name"] = $from_name;
 
-
     // Don't update last modified fields...
     $comment->skip_modified_fields = true;
 
     $body = trim(mime_parser::get_body_text($decoded));
-    $comment->set_value("comment",trim($body));
+    $comment->set_value("comment",$body);
     $comment->set_value("commentCreatedUserText",trim($decoded[0]["Headers"]["from:"]));
     $comment->save();
+    $from["commentID"] = $comment->get_id();
 
     $recipients[] = "assignee";
     $recipients[] = "manager";
     $recipients[] = "creator";
     $recipients[] = "CCList";
+
     $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from);
 
     if ($successful_recipients) {

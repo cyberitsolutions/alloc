@@ -258,15 +258,14 @@ class reminder extends db_entity {
                           , $person['surname']
                           , $person['emailAddress']);
 
-          $headers["From"] = ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = $this->get_value('reminderSubject');
           $content = $this->get_value('reminderContent');
 
           // Update reminder
           if ($this->get_value('reminderRecuringInterval') == "No") {
             if ($this->delete()) {
-              $e = new alloc_email;
-              $e->send($email, $subject, $content, "reminder", $headers);
+              $e = new alloc_email($email, $subject, $content, "reminder");
+              $e->send();
             }
           } else if ($this->get_value('reminderRecuringValue') != 0) {
 
@@ -278,8 +277,8 @@ class reminder extends db_entity {
             // reset advanced notice
             $this->set_value('reminderAdvNoticeSent', 0);
             if ($this->save()) {
-              $e = new alloc_email;
-              $e->send($email, $subject, $content, "reminder", $headers);
+              $e = new alloc_email($email, $subject, $content, "reminder");
+              $e->send();
             }
           }
         } 
@@ -334,13 +333,12 @@ class reminder extends db_entity {
                           ,$person['surname']
                           ,$person['emailAddress']);
 
-          $headers["From"] = ALLOC_DEFAULT_FROM_ADDRESS;
           $subject = sprintf("Adv Notice: %s"
                             ,$this->get_value('reminderSubject'));
           $content = $this->get_value('reminderContent');
           
-          $e = new alloc_email;
-          $e->send($email, $subject, $content, "reminder_advnotice", $headers);
+          $e = new alloc_email($email, $subject, $content, "reminder_advnotice");
+          $e->send();
           $this->set_value('reminderAdvNoticeSent', 1);
           $this->save();
         } 

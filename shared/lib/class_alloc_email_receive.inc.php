@@ -58,6 +58,7 @@ class alloc_email_receive {
   
   function open_mailbox($folder="") {
     $connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.'/notls/norsh}';
+    $this->connect_string = $connect_string;
     $this->connection = imap_open($connect_string, $this->username, $this->password, OP_HALFOPEN) or die("Unable to access mail folder(1).");
     $list = imap_list($this->connection, $connect_string, "*");
     if (!is_array($list) || !count($list)) { // || !in_array($connect_string.$folder,$list)) {
@@ -79,12 +80,38 @@ class alloc_email_receive {
     }
   }
 
+  function get_num_emails() {
+    if (!$this->mailbox_info) {
+      $this->check_mail();
+    }
+    if (is_object($this->mailbox_info)) {
+      return $this->mailbox_info->messages;
+    }
+  }
+
+  function get_num_new_emails() {
+    if (!$this->mailbox_info) {
+      $this->check_mail();
+    }
+    if (is_object($this->mailbox_info)) {
+      return $this->mailbox_info->unseen;
+    }
+  }
+
   function check_mail() {
     if ($this->connection) {
-      $this->mailbox_info = imap_check($this->connection);
+      $this->mailbox_info = imap_status($this->connection, $this->connect_string, SA_ALL);
     } else { 
       unset($this->mailbox_info);
     }
+  }
+
+  function get_new_email_msg_nums() {
+    return imap_search($this->connection,"UNSEEN");
+  }
+
+  function get_all_email_msg_nums() {
+    return imap_search($this->connection,"ALL");
   }
 
   function set_msg($x) {
@@ -139,9 +166,25 @@ class alloc_email_receive {
   }
 
   function forward($address,$subject) {
-    $header = imap_fetchheader($this->connection,$this->msg_num,FT_PREFETCHTEXT);
+    $header = imap_fetchheader($this->connection,$this->msg_num);
     $body = imap_body($this->connection,$this->msg_num);
-    mail($address,$subject,$header.$body,"From: ".get_default_from_address());
+
+    $email = new alloc_email();
+    $email->set_headers($header);
+
+    $orig_subject = $email->get_header("subject");
+    $email->add_header("Subject", $subject." [".trim($orig_subject)."]");    
+  
+    // Nuke certain headers from the email
+    $email->del_header("to");
+    $email->del_header("subject");
+    $email->del_header("cc");
+    $email->del_header("bcc");
+
+    $email->set_to_address($address);
+    $email->set_message_type("orphan");
+    $email->set_body($body);
+    $email->send(false);
   }
 
   function lock() {
@@ -179,7 +222,6 @@ class alloc_email_receive {
   }
 
   function get_hashes($headers=false) {
-
     $headers or $headers = $this->mail_headers;
     $keys = array();
 
