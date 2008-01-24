@@ -193,8 +193,5 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
     $history = new history;
     $history->save_history();
   }
-
 }
-
-
 ?>

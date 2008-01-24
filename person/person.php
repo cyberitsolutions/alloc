@@ -200,49 +200,53 @@ if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $
 if ($_POST["save"]) {
   $person->read_globals();
 
-  if (($personID || $_POST["password1"]) && $_POST["password1"] == $_POST["password2"]) {
-
-    if ($person->can_write_field("perms")) {
-      if (is_array($_POST["perm_select"])) {
-        $person->set_value("perms", implode(",", $_POST["perm_select"]).",employee");
-      } else {
-        $person->set_value("perms", "employee");
-      }
-    }
-
-    $person->set_value("personActive", $_POST["personActive"] ? 1 : "0");
-
-
-    if ($_POST["password1"] == "") {
-      $person_check = new person;
-      $person_check->set_id($person->get_id());
-      $person_check->select();
-      $person->set_value('password', $person_check->get_value('password'));
+  if ($person->can_write_field("perms")) {
+    if (is_array($_POST["perm_select"])) {
+      $person->set_value("perms", implode(",", $_POST["perm_select"]).",employee");
     } else {
-      $person->set_value('password', encrypt_password($_POST["password1"]));
+      $person->set_value("perms", "employee");
     }
+  }
 
-    if ($_POST["username"]) {
-      $q = sprintf("SELECT personID FROM person WHERE username = '%s'",db_esc($_POST["username"]));
-      $db = new db_alloc();
-      $db->query($q);
-      $num_rows = $db->num_rows();
-      $row = $db->row();
+  if ($_POST["password1"] && $_POST["password1"] == $_POST["password2"]) {
+    $person->set_value('password', encrypt_password($_POST["password1"]));
 
-      if (($num_rows > 0 && !$person->get_id()) || ($num_rows > 0 && $person->get_id() != $row["personID"])){
-        $TPL["message"][] = "That username is already taken. Please select another.";
-      }
-    } else {
-      $TPL["message"][] = "Please enter a username.";
-    }
+  } else if (!$_POST["password1"] && $personID) {
+    // nothing required here, just don't update the password field
 
-    if (!$TPL["message"]) {
-      $person->save();
-      header("Location: ".$TPL["url_alloc_personList"]);
-    }
   } else {
     $TPL["message"][] = "Please re-type the passwords";
   }
+
+
+  if ($_POST["username"]) {
+    $q = sprintf("SELECT personID FROM person WHERE username = '%s'",db_esc($_POST["username"]));
+    $db = new db_alloc();
+    $db->query($q);
+    $num_rows = $db->num_rows();
+    $row = $db->row();
+
+    if (($num_rows > 0 && !$person->get_id()) || ($num_rows > 0 && $person->get_id() != $row["personID"])){
+      $TPL["message"][] = "That username is already taken. Please select another.";
+    }
+  } else {
+    $TPL["message"][] = "Please enter a username.";
+  }
+
+  $person->set_value("personActive", $_POST["personActive"] ? 1 : "0");
+
+  $max_alloc_users = get_max_alloc_users();
+  if ($max_alloc_users && get_num_alloc_users() >= $max_alloc_users && $_POST["personActive"]) {
+    $TPL["message"][] = get_max_alloc_users_message();
+  }
+
+  if (!$TPL["message"]) {
+    $person->save();
+    header("Location: ".$TPL["url_alloc_personList"]);
+  }
+
+
+
 } else if ($_POST["delete"]) {
   $person->delete();
   header("Location: ".$TPL["url_alloc_personList"]);
