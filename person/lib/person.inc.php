@@ -251,7 +251,7 @@ class person extends db_entity {
 
   function get_valid_login_row($username, $password="") {
     $db = new db_alloc;
-    $q = sprintf("SELECT * FROM person WHERE username = '%s'"
+    $q = sprintf("SELECT * FROM person WHERE username = '%s' AND personActive = 1"
                  ,db_esc($username));
 
     $db->query($q);
