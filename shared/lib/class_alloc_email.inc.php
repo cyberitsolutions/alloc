@@ -144,10 +144,10 @@ class alloc_email {
     if ($replace) {
       $this->del_header($header);
     }
-    $this->headers = trim($this->headers)."\r\n".$header.": ".$value;
+    $this->headers = trim($this->headers)."\n".$header.": ".$value;
   }
   function del_header($header) {
-    $this->headers = preg_replace("/\n".$header.":.*/i","",$this->headers);
+    $this->headers = preg_replace("/\r?\n".$header.":\s*.*/i","",$this->headers);
   }
   function get_header($header) {
     preg_match("/\n".$header.":(.*)/i",$this->headers,$matches);

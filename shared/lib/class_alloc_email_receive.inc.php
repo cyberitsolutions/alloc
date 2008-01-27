@@ -173,7 +173,6 @@ class alloc_email_receive {
     $email->set_headers($header);
 
     $orig_subject = $email->get_header("subject");
-    $email->add_header("Subject", $subject." [".trim($orig_subject)."]");    
   
     // Nuke certain headers from the email
     $email->del_header("to");
@@ -181,6 +180,7 @@ class alloc_email_receive {
     $email->del_header("cc");
     $email->del_header("bcc");
 
+    $email->set_subject($subject." [".trim($orig_subject)."]");    
     $email->set_to_address($address);
     $email->set_message_type("orphan");
     $email->set_body($body);
