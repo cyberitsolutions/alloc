@@ -79,7 +79,7 @@ if ($num_new_emails >0) {
       $debug and print $nl."Mail failed and forwarded to admin!";
       // forward to admin
       if (config::get_config_item("allocEmailAdmin")) {
-        $mail->forward(config::get_config_item("allocEmailAdmin"), "[allocPSA] Email sent to ".config::get_config_item("AllocFromEmailAddress"));
+        $mail->forward(config::get_config_item("allocEmailAdmin"), "Email sent to ".config::get_config_item("AllocFromEmailAddress"));
       }
     }
   }
