@@ -103,7 +103,10 @@ $transaction->set_tpl_values();
 
 $TPL["product"] = htmlentities($transaction->get_value("product"));
 $TPL["statusOptions"] = get_options_from_array(array("pending", "rejected", "approved"), $transaction->get_value("status"), false);
-$TPL["transactionTypeOptions"] = get_options_from_array(array("expense", "invoice", "salary", "commission", "timesheet", "adjustment", "insurance"), $transaction->get_value("transactionType"), false);
+$transactionTypes = transaction::get_transactionTypes();
+$TPL["transactionTypeOptions"] = get_select_options($transactionTypes, $transaction->get_value("transactionType"));
+
+is_object($transaction) and $TPL["transactionType"] = $transaction->get_transaction_type_link();
 
 $db = new db_alloc;
 $db->query("SELECT tfID, tfName FROM tf WHERE status = 'active' ORDER BY tfName");

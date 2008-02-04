@@ -123,7 +123,17 @@ function updateClientContact(number) \{
 </table>
 
 {if defined("PROJECT_EXISTS")}
-  
+ 
+{$table_box}
+  <tr>
+    <th>Financial Summary</th>
+    <th class="right">{get_help("project_financial_summary")}</th>
+  </tr>
+  <tr>
+    <td>Project Spend: ${$grand_total} ({$percentage}%)&nbsp;&nbsp;&nbsp;&nbsp;Task Time Estimate: {$time_remaining} Hours  ${$cost_remaining} ({$count_not_quoted_tasks} tasks not included in estimate)</td>
+  </tr>            
+</table>
+ 
 
 {$table_box}
   <tr>
@@ -194,22 +204,6 @@ function updateClientContact(number) \{
 
 {show_time_sheets("templates/projectTimeSheetS.tpl")}
 {show_transactions("templates/projectTransactionS.tpl")}
-
-{$table_box}
-  <tr>
-    <th>Financial Summary</th>
-    <th class="right">{get_help("project_financial_summary")}</th>
-  </tr>
-  <tr>
-    <td>Project Budget: ${$project_projectBudget}</td>
-  </tr>
-  <tr>
-    <td>Project Spend: ${$grand_total} ({$percentage}%)</td>
-  </tr>
-  <tr>
-    <td>Task Estimate: ${$cost_remaining} / {$time_remaining} Hours ({$count_incomplete_tasks} incomplete, {$count_not_quoted_tasks} not included)</td>
-  </tr>            
-</table>
 
 {/}
 

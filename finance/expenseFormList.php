@@ -68,6 +68,7 @@ function show_expense_form_list($template_name) {
 
 function show_pending_transaction_list($template_name) {
   global $TPL;
+  $transactionTypes = transaction::get_transactionTypes();
   $q = "SELECT * FROM transaction 
             LEFT JOIN transactionRepeat on transactionRepeat.transactionRepeatID = transaction.transactionRepeatID 
                 WHERE transaction.transactionRepeatID IS NOT NULL AND transaction.status = 'pending'";
@@ -83,6 +84,7 @@ function show_pending_transaction_list($template_name) {
     $transactionRepeat = new transactionRepeat;
     $transactionRepeat->read_db_record($db);
     $transactionRepeat->set_tpl_values();
+    $TPL["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];
     $TPL["formTotal"] = sprintf("%0.2f", -$db->f("amount"));
     $TPL["transactionModifiedTime"] = get_mysql_date_stamp($transaction->get_value("transactionModifiedTime"));
     $TPL["transactionCreatedTime"] = get_mysql_date_stamp($transaction->get_value("transactionCreatedTime"));

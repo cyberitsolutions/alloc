@@ -582,7 +582,7 @@ CREATE TABLE transaction (
   transactionDate date NOT NULL default '0000-00-00',
   invoiceID int(11) DEFAULT NULL,
   invoiceItemID int(11) default NULL,
-  transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance') NOT NULL default 'invoice',
+  transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax') NOT NULL,
   timeSheetID int(11) default NULL,
   transactionRepeatID int(11) default NULL,
   INDEX idx_timeSheetID (timeSheetID),
