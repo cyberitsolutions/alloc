@@ -46,6 +46,7 @@ require_once("../alloc.php");
       $db->query($query);
     }
 
+    $transactionTypes = transaction::get_transactionTypes();
     while ($db->next_record()) {
       $i++;
       $TPL["row_class"] = "odd";
@@ -55,7 +56,8 @@ require_once("../alloc.php");
       $transaction->set_tpl_values();
       $tf = $transaction->get_foreign_object("tf");
       $tf->set_tpl_values();
-      $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);
+      $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);   
+      $TPL["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];
       include_template($template);
     }
   }

@@ -41,18 +41,6 @@
     <td>{$transactionType}</td>
   </tr>
   <tr>
-    <td>Invoice Number</td>
-    <td>{$invoice_link}</td>
-  </tr>
-  <tr>
-    <td>Expense Form</td>
-    <td>{$expenseForm_link}</td>
-  </tr>
-  <tr>
-    <td>Time Sheet</td>
-    <td>{$timeSheet_link}</td>
-  </tr>
-  <tr>
     <td>Created</td>
     <td>{$transactionCreatedUser}&nbsp;{$transactionCreatedTime}</td>
   </tr>

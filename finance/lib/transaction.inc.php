@@ -110,14 +110,15 @@ class transaction extends db_entity
   }
 
   function get_transactionTypes() {
-    return array('invoice'   => 'invoice'
-                ,'expense'   => 'expense'
-                ,'salary'    => 'salary'
-                ,'commission'=> 'commission'
-                ,'timesheet' => 'timesheet'
-                ,'adjustment'=> 'adjustment'
-                ,'insurance' => 'insurance'
-                );
+    $taxName = config::get_config_item("taxName") or $taxName = "Tax";
+    return array('invoice'=>'Invoice'
+                ,'expense'=>'Expense'
+                ,'salary'=>'Salary'
+                ,'commission'=>'Commission'
+                ,'timesheet'=>'Time Sheet'
+                ,'adjustment'=>'Adjustment'
+                ,'insurance'=>'Insurance'
+                ,'tax'=>$taxName);
   }
 
   function get_url() {
@@ -153,6 +154,7 @@ class transaction extends db_entity
   function get_transaction_type_link() {
     global $TPL;
     $type = $this->get_value("transactionType");
+    $transactionTypes = transaction::get_transactionTypes();
     
     // Transaction stems from an invoice
     if ($type == "invoice") {
@@ -161,23 +163,28 @@ class transaction extends db_entity
           $invoiceItem = $this->get_foreign_object("invoiceItem");
           $invoice = $invoiceItem->get_foreign_object("invoice");
         }
-        $str = "<a href=\"".$invoice->get_url()."\">".$type." ".$invoice->get_value("invoiceNum")."</a>";
+        $str = "<a href=\"".$invoice->get_url()."\">".$transactionTypes[$type]." ".$invoice->get_value("invoiceNum")."</a>";
       
     // Transaction is from an expenseform
     } else if ($type == "expense") {
       $expenseForm = $this->get_foreign_object("expenseForm");
       if ($expenseForm->get_id() && $expenseForm->have_perm(PERM_READ_WRITE)) {
-        $str = "<a href=\"".$expenseForm->get_url()."\">".$type." ".$this->get_value("expenseFormID")."</a>";
+        $str = "<a href=\"".$expenseForm->get_url()."\">".$transactionTypes[$type]." ".$this->get_value("expenseFormID")."</a>";
       } 
       
     // Had to rewrite this so that people who had transactions on other peoples timesheets 
     // could see their own transactions, but not the other persons timesheet.
-    } else if (($type == "timesheet" || $type == "insurance" || $type == "commission") && $this->get_value("timeSheetID")) {
+    } else if ($type == "timesheet" && $this->get_value("timeSheetID")) {
       $timeSheet = new timeSheet;
       $timeSheet->set_id($this->get_value("timeSheetID"));
-      if ($timeSheet->have_perm(PERM_READ_WRITE)) {
-        $str = "<a href=\"".$timeSheet->get_url()."\">".$type." ".$this->get_value("timeSheetID")."</a>";
-      }
+      $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." ".$this->get_value("timeSheetID")."</a>";
+
+    } else if (($type == "insurance" || $type == "commission" || $type == "tax") && $this->get_value("timeSheetID")) {
+      $timeSheet = new timeSheet;
+      $timeSheet->set_id($this->get_value("timeSheetID"));
+      $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." (Time Sheet ".$this->get_value("timeSheetID").")</a>";
+    } else {
+      return $transactionTypes[$type];
     }
     return $str;
   }
@@ -255,6 +262,7 @@ class transaction extends db_entity
     $_FORM["sortTransactions"] or $_FORM["sortTransactions"] = "transactionDate";
     $order_by = "ORDER BY ".$_FORM["sortTransactions"];
 
+  
     // Determine opening balance
     $q = "SELECT SUM(amount) as balance FROM transaction ".$filter2;
     $debug and print "\n<br>QUERY: ".$q;
@@ -418,13 +426,7 @@ class transaction extends db_entity
 
     $rtn["statusOptions"] = get_select_options(array("pending"=>"Pending","approved"=>"Approved","rejected"=>"Rejected"),$_FORM["status"]);
 
-    $transactionTypeOptions = array('invoice'=>'Invoice'
-                                   ,'expense'=>'Expense'
-                                   ,'salary'=>'Salary'
-                                   ,'commission'=>'Commission'
-                                   ,'timesheet'=>'Timesheet'
-                                   ,'adjustment'=>'Adjustment'
-                                   ,'insurance'=>'Insurance');
+    $transactionTypeOptions = transaction::get_transactionTypes();
     $rtn["transactionTypeOptions"] = get_select_options($transactionTypeOptions,$_FORM["transactionType"]);
 
     $rtn["startDate"] = $_FORM["startDate"];

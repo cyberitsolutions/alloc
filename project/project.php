@@ -42,42 +42,32 @@ require_once("../alloc.php");
     }
   }
 
-$grand_total = 0;
-
-  function show_timeSheet($template) {
-    global $db, $TPL, $projectID, $current_user, $projectBudget, $grand_total;
-
-    $timeSheet = new timeSheet;
-
+  function show_timeSheet_list() {
+    global $TPL, $projectID, $current_user;
 
     if ($projectID) {
 
-      $query = sprintf("SELECT timeSheet.*, username, SUM(transaction.amount) AS amount
-                          FROM timeSheet
-                     LEFT JOIN person on timeSheet.personID = person.personID 
-                     LEFT JOIN transaction on timeSheet.timeSheetID = transaction.timeSheetID AND ((transaction.amount>0 and transaction.status = 'approved') OR transaction.amount IS NULL OR transaction.amount = 0)
-                         WHERE timeSheet.projectID = %d 
-                      GROUP BY timeSheetID
-                      ORDER BY dateFrom, username",$projectID);
-      $db->query($query);
-
-      while ($db->next_record()) {
-        $timeSheet = new timeSheet;
-        $timeSheet->read_db_record($db,false);
-        $timeSheet->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheet_");
-        $TPL["timeSheet_username"] = $db->f("username");
-        $timeSheet->load_pay_info();
-
-        $TPL["amount"] = sprintf("$%0.2f", $db->f("amount"));
-        $grand_total += $db->f("amount");
-
-        include_template($template);
-      }
+      $defaults = array("showHeader"=>true
+                       ,"showProjectLink"=>true
+                       ,"showAmount"=>true
+                       ,"showAmountTotal"=>true
+                       ,"showCustomerBilledDollars"=>true
+                       ,"showCustomerBilledDollarsTotal"=>true
+                       ,"showTransactionsPos"=>true
+                       ,"showTransactionsNeg"=>true
+                       ,"showDuration"=>true
+                       ,"showPerson"=>true
+                       ,"showDateFrom"=>true
+                       ,"showDateTo"=>true
+                       ,"showStatus"=>true
+                       ,"projectID"=>$projectID
+                       );
+      echo timeSheet::get_timeSheet_list($defaults);
     }
   }
 
   function show_transaction($template) {
-    global $db, $TPL, $projectID, $current_user, $projectBudget, $grand_total;
+    global $db, $TPL, $projectID, $current_user;
 
     $transaction = new transaction;
 
@@ -108,19 +98,9 @@ $grand_total = 0;
         $TPL["transaction_amount"] = number_format(($TPL["transaction_amount"]), 2);
         include_template($template);
 
-        $grand_total += $TPL["transaction_amount"];
       }
 
-      $gt = $TPL["grand_total"] = sprintf("%0.2f", $grand_total);
-      $pb = $TPL["project_projectBudget"] = sprintf("%0.2f", $TPL["project_projectBudget"]);
 
-      // calculate percentage from grand total (gt) and project budget (pb)
-      if ($gt > 0 && $pb > 0) {
-        $p = $gt / $pb * 100;
-      } else {
-        $p = "0";
-      }
-      $TPL["percentage"] = sprintf("%0.1f",$p);
     }
   }
 
@@ -555,7 +535,7 @@ function get_projectPerson_hourly_rate($personID,$projectID) {
 }
 
 
-if ($project->get_id()) { 
+if (is_object($project) && $project->get_id()) {
   $options["return"] = "objectsAndHtml";
   list($tasks,$TPL["task_summary"]) = task::get_task_list($options);
   if (is_array($tasks)) {
@@ -583,6 +563,17 @@ if ($project->get_id()) {
     $not_quoted = count($tasks) - $count_quoted_tasks;
     $TPL["count_not_quoted_tasks"] = sprintf("%d",$not_quoted);
   }
+
+  $TPL["grand_total"] = $gt = sprintf("%0.2f", $project->get_project_budget_spent());
+  $TPL["project_projectBudget"] = $pb = sprintf("%0.2f", $TPL["project_projectBudget"]);
+
+  // calculate percentage from grand total (gt) and project budget (pb)
+  if ($gt > 0 && $pb > 0) {
+    $p = $gt / $pb * 100;
+  } else {
+    $p = "0";
+  }
+  $TPL["percentage"] = sprintf("%0.1f",$p);
 }
 
 

@@ -91,7 +91,7 @@ if (!$current_user->is_employee()) {
       $db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
       $tf_array = get_array_from_db($db, "tfID", "tfName");
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
-      $transactionType_options = array("commission", "timesheet", "adjustment", "insurance");
+      $transactionType_options = transaction::get_transactionTypes();
 
 
       if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced") {
@@ -115,7 +115,7 @@ if (!$current_user->is_employee()) {
 
           $TPL["status_options"] = get_select_options($status_options, $transaction->get_value("status"));
           $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
-          $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $transaction->get_value("transactionType"), false);
+          $TPL["transactionType_options"] = get_select_options($transactionType_options, $transaction->get_value("transactionType"));
           $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
           $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Save\">
                                          <input type=\"submit\" name=\"transaction_delete\" value=\"Delete\">";
@@ -141,6 +141,7 @@ if (!$current_user->is_employee()) {
           unset($TPL["transaction_amount_neg"]);
           $TPL["transaction_amount"] = "$".number_format($TPL["transaction_amount"], 2);
           $TPL["transaction_tfID"] = get_tf_name($transaction->get_value("tfID"));
+          $TPL["transaction_transactionType"] = $transactionType_options[$transaction->get_value("transactionType")];
           include_template("templates/timeSheetTransactionListViewR.tpl");
         }
       }
@@ -155,11 +156,11 @@ if (!$current_user->is_employee()) {
       $tf_array = get_array_from_db($db, "tfID", "tfName");
       $TPL["tf_options"] = get_options_from_array($tf_array, $none, true, 35);
 
-      $transactionType_options = array("commission", "timesheet", "adjustment", "insurance");
-      $TPL["transactionType_options"] = get_options_from_array($transactionType_options, $none, false);
+      $transactionType_options = transaction::get_transactionTypes();
+      $TPL["transactionType_options"] = get_select_options($transactionType_options);
 
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
-      $TPL["status_options"] = get_select_options($status_options, $none);
+      $TPL["status_options"] = get_select_options($status_options);
       $TPL["transaction_timeSheetID"] = $timeSheet->get_id();
       $TPL["transaction_transactionDate"] = date("Y-m-d");
       $TPL["transaction_product"] = "";

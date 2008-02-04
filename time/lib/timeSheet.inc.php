@@ -253,7 +253,7 @@ class timeSheet extends db_entity
 
         // 2. Credit TAX/GST Cost Centre
         $product = "Credit: Cost Centre for ".$taxName." ".$taxPercent."% for timesheet id: ".$this->get_id();
-        $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_dollars"]-$this->pay_info["total_dollars_minus_gst"]), $taxTfID, "timesheet");
+        $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_dollars"]-$this->pay_info["total_dollars_minus_gst"]), $taxTfID, "tax");
 
         // 3. Credit Cyber Percentage and do agency percentage if necessary
         $agency_percentage = 0;
@@ -376,7 +376,7 @@ class timeSheet extends db_entity
 
         // 2. Credit TAX/GST Cost Centre
         $product = "Credit: Cost Centre for ".$taxName." ".$taxPercent."% for timesheet id: ".$this->get_id();
-        $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "timesheet");
+        $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "tax");
 
         // 3. Credit Cyber Percentage and do agency percentage if necessary
         $agency_percentage = 0;
@@ -561,6 +561,13 @@ class timeSheet extends db_entity
      *  showProject
      *  showProjectLink
      *  showAmount
+     *  showAmountTotal
+     *  showCustomerBilledDollars
+     *  showCustomerBilledDollarsTotal
+     *  showTransactionsPos
+     *  showTransactionsPosTotal
+     *  showTransactionsNeg
+     *  showTransactionsNegTotal
      *  showDuration
      *  showPerson
      *  showDateFrom
@@ -592,11 +599,22 @@ class timeSheet extends db_entity
       $filter = " WHERE ".implode(" AND ",$filter);
     }
 
-    $q = "SELECT timeSheet.*, person.personID, projectName 
+    if ($_FORM["showTransactionsPos"]) {
+      $sel.= ", SUM(tPos.amount) AS transactionsPos";
+      $join.= "LEFT JOIN transaction tPos ON timeSheet.timeSheetID = tPos.timeSheetID AND tPos.amount>0 and tPos.status = 'approved' AND tPos.timeSheetID IS NOT NULL AND tPos.timeSheetID != 0 AND tPos.timeSheetID != ''";
+    }
+    if ($_FORM["showTransactionsNeg"]) {
+      $sel.= ", SUM(tNeg.amount) AS transactionsNeg";
+      $join.= "LEFT JOIN transaction tNeg ON timeSheet.timeSheetID = tNeg.timeSheetID AND tNeg.amount<0 and tNeg.status = 'approved'";
+    }
+
+    // LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID - nope! stuffs up transactionPos/Neg calculations
+    $q = "SELECT timeSheet.*, person.personID, projectName
+          ".$sel."
           FROM timeSheet 
-          LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
           LEFT JOIN person ON timeSheet.personID = person.personID
           LEFT JOIN project ON timeSheet.projectID = project.projectID
+          ".$join."
           ".$filter."
           GROUP BY timeSheet.timeSheetID
           ORDER BY dateFrom,projectName,surname";
@@ -618,6 +636,11 @@ class timeSheet extends db_entity
       $row["duration"] = $t->pay_info["summary_unit_totals"];
       $row["person"] = $people_array[$row["personID"]]["name"];
       $row["status"] = $status_array[$row["status"]];
+      $row["customerBilledDollars"] = $t->pay_info["customerBilledDollars"];
+      $extra["customerBilledDollarsTotal"] += $t->pay_info["customerBilledDollars"];
+
+      $extra["transactionsPosTotal"] += $row["transactionsPos"];
+      $extra["transactionsNegTotal"] += $row["transactionsNeg"];
 
       $p = new project();
       $p->read_db_record($db);
@@ -662,12 +685,15 @@ class timeSheet extends db_entity
       $summary = "\n<tr>";
       $_FORM["showProject"]       and $summary.= "\n<th>Time Sheet</th>";
       $_FORM["showProjectLink"]   and $summary.= "\n<th>Time Sheet</th>";
-      $_FORM["showAmount"]        and $summary.= "\n<th>Amount</th>";
-      $_FORM["showDuration"]      and $summary.= "\n<th>Duration</th>";
       $_FORM["showPerson"]        and $summary.= "\n<th>Owner</th>";
       $_FORM["showDateFrom"]      and $summary.= "\n<th>Start Date</th>";
       $_FORM["showDateTo"]        and $summary.= "\n<th>End Date</th>";
       $_FORM["showStatus"]        and $summary.= "\n<th>Status</th>";
+      $_FORM["showDuration"]      and $summary.= "\n<th>Duration</th>";
+      $_FORM["showAmount"]        and $summary.= "\n<th>Amount</th>";
+      $_FORM["showCustomerBilledDollars"] and $summary.= "\n<th>Customer Billed</th>";
+      $_FORM["showTransactionsPos"] and $summary.= "\n<th>Sum $ &gt;0</th>";
+      $_FORM["showTransactionsNeg"] and $summary.= "\n<th>Sum $ &lt;0</th>";
       $summary.="\n</tr>";
       return $summary;
     }
@@ -680,12 +706,15 @@ class timeSheet extends db_entity
     $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["showProject"]         and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
     $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";
-    $_FORM["showAmount"]          and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["amount"])."&nbsp;</td>";
-    $_FORM["showDuration"]        and $summary[] = "  <td>".$row["duration"]."&nbsp;</td>";
     $_FORM["showPerson"]          and $summary[] = "  <td>".$row["person"]."&nbsp;</td>";
     $_FORM["showDateFrom"]        and $summary[] = "  <td>".$row["dateFrom"]."&nbsp;</td>";
     $_FORM["showDateTo"]          and $summary[] = "  <td>".$row["dateTo"]."&nbsp;</td>";
     $_FORM["showStatus"]          and $summary[] = "  <td>".$row["status"]."&nbsp;</td>";
+    $_FORM["showDuration"]        and $summary[] = "  <td>".$row["duration"]."&nbsp;</td>";
+    $_FORM["showAmount"]          and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["amount"])."&nbsp;</td>";
+    $_FORM["showCustomerBilledDollars"]  and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["customerBilledDollars"])."&nbsp;</td>";
+    $_FORM["showTransactionsPos"]  and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["transactionsPos"])."&nbsp;</td>";
+    $_FORM["showTransactionsNeg"]  and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["transactionsNeg"])."&nbsp;</td>";
     $summary[] = "</tr>";
      
     $summary = "\n".implode("\n",$summary);
@@ -698,12 +727,15 @@ class timeSheet extends db_entity
       $summary[] = "<tr>";
       $_FORM["showProject"]         and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showProjectLink"]     and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["amountTotal"])."</td>";
-      $_FORM["showDuration"]        and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showPerson"]          and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showDateFrom"]        and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showDateTo"]          and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showStatus"]          and $summary[] = "  <td>&nbsp;</td>";
+      $_FORM["showDuration"]        and $summary[] = "  <td>&nbsp;</td>";
+      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["amountTotal"])."</td>";
+      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["customerBilledDollarsTotal"])."</td>";
+      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["transactionsPosTotal"])."</td>";
+      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["transactionsNegTotal"])."</td>";
       $summary[] = "</tr>";
       $summary[] = "</tfoot>";
       $summary = "\n".implode("\n",$summary);

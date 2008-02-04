@@ -465,6 +465,27 @@ class project extends db_entity {
     return $rtn;
   }
 
+  function get_project_budget_spent() {
+    $db = new db_alloc();
+    $q = sprintf("SELECT SUM(amount) AS total FROM transaction WHERE projectID = %d AND status='approved'",$this->get_id());
+    $db->query($q);
+    $row = $db->row();
+
+    $grand_total += $row["total"];
+    
+    $q = sprintf("SELECT SUM(amount) AS total 
+                  FROM timeSheet 
+                  LEFT JOIN transaction on timeSheet.timeSheetID = transaction.timeSheetID AND transaction.status='approved' AND amount>0  
+                  WHERE timeSheet.projectID = %d
+                ",$this->get_id());
+
+    $db->query($q);
+    $row = $db->row();
+    $grand_total += $row["total"];
+
+    return $grand_total;
+  }
+
 
 }
 
