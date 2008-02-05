@@ -901,37 +901,21 @@ function apply_patch($f) {
 function show_messages() {
   global $TPL;
 
+  $msgtypes["message"]      = "bad";
+  $msgtypes["message_good"] = "good";
+  $msgtypes["message_help"] = "help";
 
-  if ($TPL["message"] && is_string($TPL["message"])) {
-    $t = $TPL["message"];
-    unset($TPL["message"]);
-    $TPL["message"][] = $t;
-  }
-  $_GET["message"] and $TPL["message"][] = urldecode($_GET["message"]);
+  foreach ($msgtypes as $type => $label) {
+    if ($TPL[$type] && is_string($TPL[$type])) {
+      $t = $TPL[$type];
+      unset($TPL[$type]);
+      $TPL[$type][] = $t;
+    }
+    $_GET[$type] and $TPL[$type][] = urldecode($_GET[$type]);
 
-  if ($TPL["message_good"] && is_string($TPL["message_good"])) {
-    $t = $TPL["message_good"];
-    unset($TPL["message_good"]);
-    $TPL["message_good"][] = $t;
-  }
-  $_GET["message_good"] and $TPL["message_good"][] = urldecode($_GET["message_good"]);
-
-  if ($TPL["message_help"] && is_string($TPL["message_help"])) {
-    $t = $TPL["message_help"];
-    unset($TPL["message_help"]);
-    $TPL["message_help"][] = $t;
-  }
-  $_GET["message_help"] and $TPL["message_help"][] = urldecode($_GET["message_help"]);
-
-
-  if (is_array($TPL["message"]) && count($TPL["message"])) {
-    $arr["bad"] = implode("<br/>",$TPL["message"]);
-  }
-  if (is_array($TPL["message_good"]) && count($TPL["message_good"])) {
-    $arr["good"] = implode("<br/>",$TPL["message_good"]);
-  }
-  if (is_array($TPL["message_help"]) && count($TPL["message_help"])) {
-    $arr["help"] = implode("<br/>",$TPL["message_help"]);
+    if (is_array($TPL[$type]) && count($TPL[$type])) {
+      $arr[$label] = implode("<br/>",$TPL[$type]);
+    }
   }
 
   if (is_array($arr) && count($arr)) {
@@ -1196,6 +1180,21 @@ function text_to_html($str="") {
     $row = $db->row();
     return $row["total"];
   }
+function alloc_redirect($url) {
+  global $TPL;
 
+  $sep = "&";
+  strpos($url,"?") === false and $sep = "?";
+
+  foreach (array("message","message_good","message_help") as $type) {
+    if ($TPL[$type]) {
+      is_array($TPL[$type]) and $TPL[$type] = implode("<br>",$TPL[$type]);
+      is_string($TPL[$type]) && strlen($TPL[$type]) and $str[] = $type."=".urlencode($TPL[$type]);
+    }
+  }
+
+  $str and $str = $sep.implode("&",$str);
+  header("Location: ".$url.$str);
+}
   
 ?>

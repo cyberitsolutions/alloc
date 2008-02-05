@@ -476,7 +476,7 @@ if (($_POST["create_transactions_default"] || $_POST["create_transactions_old"])
   $msg.= $timeSheet->destroyTransactions();
 
 } else if ($_POST["attach_transactions_to_invoice"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-  $timeSheet->save_to_invoice();
+  $timeSheet->save_to_invoice($_POST["attach_to_invoiceID"]);
 } 
 
 
@@ -629,9 +629,21 @@ if (!$TPL["timeSheet_projectName"]) {
 
 
 if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && !$timeSheet->get_invoice_link()) {
-  #$TPL["attach_to_invoice_button"] = "<select name=\"\"
+
+  $p = $timeSheet->get_foreign_object("project");  
+  $ops["invoiceStatus"] = "edit";
+  $ops["clientID"] = $p->get_value("clientID");
+  $ops["return"] = "dropdown_options";
+  $invoice_list = invoice::get_invoice_list($ops);
+  $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$timeSheet->get_id());
+  $db = new db_alloc();
+  $db->query($q);
+  $row = $db->row();
+  $sel_invoice = $row["invoiceID"];
+  $TPL["attach_to_invoice_button"] = "<select name=\"attach_to_invoiceID\">";
+  $TPL["attach_to_invoice_button"].= "<option value=\"create_new\">Create New Invoice</option>";
+  $TPL["attach_to_invoice_button"].= get_select_options($invoice_list,$sel_invoice)."</select>";
   $TPL["attach_to_invoice_button"].= "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
-  #$TPL["attach_to_invoice_button"].= "<input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Items</label>";
 }
 
 // msg passed in url and print it out pretty..

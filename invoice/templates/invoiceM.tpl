@@ -8,12 +8,12 @@
   </tr>  
   <tr>
     <td align="right" width="30%">Client: </td>
-    <td>{$field_clientID}</td>
-    <td align="right">Total Incoming Funds:</td>
+    <td class="nobr" class="nobr" width="20%">{$field_clientID}</td>
+    <td align="right" class="nobr" width="10%">Total Incoming Funds:</td>
     <td>{$invoiceTotal}</td>
   </tr>
   <tr>
-    <td align="right" width="30%">Invoice Number: </td>
+    <td align="right">Invoice Number: </td>
     <td>{$field_invoiceNum}</td>
     <td align="right">Total Amount Paid:</td>
     <td>{$invoiceTotalPaid}</td>

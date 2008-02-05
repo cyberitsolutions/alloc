@@ -8,34 +8,36 @@
 {$table_box}
   <tr> 
     <th>Expense Form</th>
-    <th class="right" colspan="3"><a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>
+    <th class="right" colspan="4"><a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>
     <a href="{$url_alloc_expenseFormList}">Expense Form List</a>
     </th>
   </tr>
   <tr>
-    <td align="right">Created By:</td><td>{$user}</td>
-    <td align="right">Client:</td><td>{$field_clientID}</td>
+    <td align="right" class="nobr" width="10%">Expense Form ID:</td><td width="30%">{$expenseFormID}</td>
+    <td width="20%">&nbsp;</td>
+    <td align="right" width="10%">Client:</td><td>{$field_clientID}</td>
   </tr>
   <tr>
-    <td align="right">Total:</td><td>${$formTotal}</td>
+    <td align="right">Created By:</td><td>{$user}</td>
+    <td></td>
     <td align="right" class="nobr">Seek Client Reimbursement:</td><td>{$seekClientReimbursementOption}</td>
   </tr>
   <tr>
-    <td align="right" class="nobr">Expense Form ID:</td><td>{$expenseFormID}</td>
-    <td align="right">{$invoice_label}</td><td>{$attach_to_invoice_button}{$invoice_link}</td>
-  </tr>
-  <tr>
-    <td align="right" valign="top">Payment:</td><td colspan="2">{$reimbursementRequiredOption}</td>
+    <td align="right" valign="top">Total:</td><td valign="top">${$formTotal}</td>
+    <td></td>
+    <td align="right" valign="top">Payment Status:</td><td colspan="2">{$reimbursementRequiredOption}</td>
   </tr>
   <tr>
     <td align="right" valign="top">{get_expand_link("expense_comment_input", "Comment ", "expense_comment_text")}</td>
-    <td colspan="3" valign="top"><div id="expense_comment_text">{echo text_to_html($TPL["expenseFormComment"])}</div>
+    <td colspan="2" valign="top"><div id="expense_comment_text">{echo text_to_html($TPL["expenseFormComment"])}</div>
     <div style="display:none" id="expense_comment_input" class="nobr">
-      <textarea rows="10" cols="70" wrap="virtual" name="expenseFormComment">{$expenseFormComment}</textarea></div>
-      </td>
-   </tr>
+      <textarea rows="10" cols="85" wrap="virtual" name="expenseFormComment">{$expenseFormComment}</textarea></div>
+    </td>
+
+    <td align="right" valign="top">{$invoice_label}</td><td valign="top" class="nobr">{$attach_to_invoice_button}{$invoice_link}</td>
+  </tr>
   <tr>
-    <td colspan="4" align="center">
+    <td colspan="5" align="center">
       {$expenseFormButtons}
     </td>
   </tr>

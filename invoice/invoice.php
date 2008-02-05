@@ -86,7 +86,7 @@ function show_new_invoiceItem($template) {
                        WHERE timeSheet.projectID IN (%s) 
                          AND timeSheet.status != 'finished'
                     GROUP BY timeSheet.timeSheetID
-                    ORDER BY dateFrom
+                    ORDER BY timeSheetID
                      ",implode(", ",$projectIDs));
         $db->query($q);
     
@@ -97,7 +97,7 @@ function show_new_invoiceItem($template) {
           $t->read_db_record($db);
           $t->load_pay_info();
           $dollars = $t->pay_info["total_customerBilledDollars"] or $dollars = $t->pay_info["total_dollars"];
-          $timeSheetOptions[$row["timeSheetID"]] = $row["dateFrom"]." ".$currency.sprintf("%0.2f",$dollars)." Time Sheet #".$t->get_id()." for ".person::get_fullname($row["personID"]).", Project: ".$row["projectName"]." [".$timeSheetStatii[$t->get_value("status")]."]";
+          $timeSheetOptions[$row["timeSheetID"]] = "Time Sheet #".$t->get_id()." ".$row["dateFrom"]." ".$currency.sprintf("%0.2f",$dollars)." for ".person::get_fullname($row["personID"]).", Project: ".$row["projectName"]." [".$timeSheetStatii[$t->get_value("status")]."]";
         }
 
         $TPL["timeSheetOptions"] = get_select_options($timeSheetOptions,$invoiceItem->get_value("timeSheetID"),150);
@@ -207,9 +207,8 @@ function show_invoiceItem_list() {
       $transaction_sum+= $db2->f("transaction_amount");
       $transaction_info.= $br.ucwords($db2->f("transaction_status"))." Transaction ";
       $transaction_info.= "<a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$db2->f("transactionID")."\">#".$db2->f("transactionID")."</a>";
+      $transaction_info.= " in TF <a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$db2->f("transaction_tfID")."\">".get_tf_name($db2->f("transaction_tfID"))."</a>";
       $transaction_info.= " for <b>".$currency.sprintf("%0.2f",$db2->f("transaction_amount"))."</b>";
-      $transaction_info.= " in TF <a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$db2->f("transaction_tfID")."\">";
-      $transaction_info.= get_tf_name($db2->f("transaction_tfID"))."</a>";
       $br = "<br>";
     }
 
@@ -319,9 +318,19 @@ function show_invoiceItem_list() {
     }
 
     if ($invoiceItem->get_value("timeSheetID")) {
-      $TPL["invoiceItem_iiMemo"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$invoiceItem->get_value("timeSheetID")."\">".$invoiceItem->get_value("iiMemo")."</a>";
+      $t = new timeSheet();
+      $t->set_id($invoiceItem->get_value("timeSheetID"));
+      $t->select();
+      $t->load_pay_info();
+      $amount = $t->pay_info["total_customerBilledDollars"] or $amount = $t->pay_info["total_dollars"];
+
+      $TPL["invoiceItem_iiMemo"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$invoiceItem->get_value("timeSheetID")."\">".$invoiceItem->get_value("iiMemo")." (Currently: $".$amount.", Status: ".$t->get_timeSheet_status().")</a>";
+
+
     } else if ($invoiceItem->get_value("expenseFormID")) {
-      $TPL["invoiceItem_iiMemo"] = "<a href=\"".$TPL["url_alloc_expenseForm"]."expenseFormID=".$invoiceItem->get_value("expenseFormID")."\">".$invoiceItem->get_value("iiMemo")."</a>";
+      $ep = $invoiceItem->get_foreign_object("expenseForm");
+      $total = $ep->get_abs_sum_transactions();
+      $TPL["invoiceItem_iiMemo"] = "<a href=\"".$TPL["url_alloc_expenseForm"]."expenseFormID=".$invoiceItem->get_value("expenseFormID")."\">".$invoiceItem->get_value("iiMemo")." (Currently: $".$total.", Status: ".$ep->get_status().")</a>";
     } 
 
     $TPL["invoiceItem_iiUnitPrice"] = $currency.sprintf("%0.2f",$TPL["invoiceItem_iiUnitPrice"]);
@@ -431,8 +440,8 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
       }
     }
 
-    #$TPL["message_good"] = "Invoice saved.";
-    header("Location: ".$TPL["url_alloc_invoice"]."invoiceID=".$invoiceID."&msg=Invoice saved.");
+    $TPL["message_good"][] = "Invoice saved.";
+    alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID.$extra);
   }
 
 } else if ($_POST["delete"] && $invoice->get_value("invoiceStatus") == "edit") {
@@ -445,10 +454,11 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     $db->query($q);
   }
 
-  // DONT FORGET TO DELETE/UNLINK THE PDFS DOCUMENTS!!!
+  // should probablg delete/unlink the pdf docs
 
   $invoice->delete();
-  header("Location: ".$TPL["url_alloc_invoiceList"]);
+  $TPL["message_good"][] = "Invoice deleted.";
+  alloc_redirect($TPL["url_alloc_invoiceList"]);
 
 
 // Saving editing individual invoiceItems
@@ -474,7 +484,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
       $invoiceItem->add_timeSheetItems($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
 
     } else if ($_POST["timeSheetID"]) {
-      $invoiceItem->add_timeSheet($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
+      $invoiceItem->add_timeSheet($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"], $_POST["iiAmount"]);
 
     } else if ($_POST["expenseFormID"] && $_POST["split_expenseForm"]) {
       $invoiceItem->add_expenseFormItems($invoiceItem->get_value("invoiceID"),$_POST["expenseFormID"]);
@@ -486,7 +496,8 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
       $invoiceItem->save();
     }
 
-    header("Location: ".$TPL["url_alloc_invoice"]."invoiceID=".$invoiceItem->get_value("invoiceID"));
+    $TPL["message_good"][] = "Invoice Item saved.";
+    alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceItem->get_value("invoiceID"));
 
   } else if ($_POST["invoiceItem_edit"]) {
     // Hmph. Nothing needs to go here?
@@ -495,7 +506,8 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
     $invoiceItem->select();
     $invoiceItem->delete();
-    header("Location: ".$TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
+    $TPL["message_good"][] = "Invoice Item deleted.";
+    alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
   }
   // Displaying a record
   $invoice->set_id($invoiceID);
@@ -504,11 +516,13 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 // if someone uploads an attachment                                                                                                                                      
 } else if ($_POST["save_attachment"]) {
   move_attachment("invoice",$invoiceID);
-  header("Location: ".$TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
+  $TPL["message_good"][] = "Attachment saved.";
+  alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
 
 } else if ($_POST["generate_pdf"]) {
   $invoice->generate_invoice_file();
-  header("Location: ".$TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
+  $TPL["message_good"][] = "Invoice PDF generated.";
+  alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
 }
 
 

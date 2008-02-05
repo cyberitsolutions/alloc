@@ -7,7 +7,7 @@
   <tr>
     <td>
       <br>
-       Expecting a tab separated file from quickbooks where the fields are in the following order:<br><br>
+       Please upload a tab/commar separated field, QuickBooks Invoices file where the fields are in the following order:<br><br>
        &nbsp;&nbsp;&nbsp;&nbsp;Type
        &nbsp;&nbsp;&nbsp;&nbsp;Date
        &nbsp;&nbsp;&nbsp;&nbsp;Num     

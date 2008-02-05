@@ -76,17 +76,33 @@ class expenseForm extends db_entity {
                 );
   }
 
-  // This sets the status of the expense form.
-  // Actually, the expense form doesn't have its own status - this sets the status of the transactions on the expense form
   function set_status($status) {
+    // This sets the status of the expense form. Actually, the expense form
+    // doesn't have its own status - this sets the status of the transactions on the
+    // expense form
     global $current_user;
-
     $transactions = $this->get_foreign_objects("transaction");
     while (list(, $transaction) = each($transactions)) {
       $transaction->set_value("status", $status);
       $transaction->save();
     }
   }
+
+  function get_status() {
+    $q = sprintf("SELECT status FROM transaction WHERE expenseFormID = %d",$this->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $arr[$row["status"]] = 1;
+    }
+    $arr or $arr = array();
+    foreach ($arr as $s => $v) {
+      $return .= $sp.$s;
+      $sp = "&nbsp;&amp;&nbsp;";
+    }
+    return $return;
+  }
+
 
   function delete_transactions($transactionID="") {
     global $TPL;
@@ -105,17 +121,21 @@ class expenseForm extends db_entity {
     $db = new db_alloc();
     if ($this->get_id()) {
       $db->query("SELECT invoice.* FROM invoiceItem LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID WHERE expenseFormID = %s",$this->get_id());
-      if ($db->next_record()) {
-        return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$db->f("invoiceID")."\">".$db->f("invoiceNum")."</a>";
+      while ($row = $db->next_record()) {
+        $str.= $sp."<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$row["invoiceID"]."\">".$row["invoiceNum"]."</a>";
+        $sp = "&nbsp;&nbsp;";
       }
+      return $str;
     }
   }
 
-  function save_to_invoice() {
+  function save_to_invoice($invoiceID=false) {
+
     if ($this->get_value("clientID")) {
+      $invoiceID and $extra = sprintf(" AND invoiceID = %d",$invoiceID);
       $client = $this->get_foreign_object("client");
       $db = new db_alloc;
-      $q = sprintf("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit'",$this->get_value("clientID"));
+      $q = sprintf("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit' %s",$this->get_value("clientID"),$extra);
       $db->query($q);
 
       // Create invoice
@@ -179,7 +199,13 @@ class expenseForm extends db_entity {
     return $url;
   }
 
-
+  function get_abs_sum_transactions() {
+    $db = new db_alloc();
+    $q = sprintf("SELECT SUM(amount) as total FROM transaction WHERE expenseFormID = %d",$this->get_id());
+    $db->query($q);
+    $row = $db->row();
+    return abs($row["total"]);
+  } 
 
 
 }

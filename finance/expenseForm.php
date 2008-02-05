@@ -276,7 +276,7 @@ if ($_POST["cancel"]) {
   exit();
 
 } else if ($_POST["attach_transactions_to_invoice"] && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
-  $expenseForm->save_to_invoice();
+  $expenseForm->save_to_invoice($_POST["attach_to_invoiceID"]);
 }
 
 
@@ -382,8 +382,20 @@ if (is_object($expenseForm) && $expenseForm->get_id()) {
 
 if (is_object($expenseForm) && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION) 
 && !$expenseForm->get_invoice_link() && $expenseForm->get_value("expenseFormFinalised") && $expenseForm->get_value("seekClientReimbursement")) {
-  $TPL["attach_to_invoice_button"] = "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
-  #$TPL["attach_to_invoice_button"].= "<input type=\"checkbox\" name=\"split_invoice\" id=\"split_invoice\" value=\"1\"><label for=\"split_invoice\">Multiple Invoice Items</label>";
+
+  $ops["invoiceStatus"] = "edit";
+  $ops["clientID"] = $expenseForm->get_value("clientID");
+  $ops["return"] = "dropdown_options";
+  $invoice_list = invoice::get_invoice_list($ops);
+  $q = sprintf("SELECT * FROM invoiceItem WHERE expenseFormID = %d",$expenseForm->get_id());
+  $db = new db_alloc();
+  $db->query($q);
+  $row = $db->row();
+  $sel_invoice = $row["invoiceID"];
+  $TPL["attach_to_invoice_button"] = "<select name=\"attach_to_invoiceID\">";
+  $TPL["attach_to_invoice_button"].= "<option value=\"create_new\">Create New Invoice</option>";
+  $TPL["attach_to_invoice_button"].= get_select_options($invoice_list,$sel_invoice)."</select>";
+  $TPL["attach_to_invoice_button"].= "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
   $TPL["invoice_label"] = "Invoice:";
 }
 

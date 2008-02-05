@@ -87,15 +87,15 @@ class timeSheetItem extends db_entity {
     $status2 = $timeSheet->save();
 
     // ALEX REMEMBER invoiceItem PERMS!!!
-    $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
-    $db->query($q);
-    $row = $db->row();
-    if ($row) {
-      $ii = new invoiceItem;
-      $ii->set_id($row["invoiceItemID"]);
-      $ii->select();
-      $ii->add_timeSheet($row["invoiceID"],$this->get_value("timeSheetID"));  // will update the existing invoice item
-    }
+    #$q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
+    #$db->query($q);
+    #$row = $db->row();
+    #if ($row) {
+    #  $ii = new invoiceItem;
+    #  $ii->set_id($row["invoiceItemID"]);
+    #  $ii->select();
+    #  $ii->add_timeSheet($row["invoiceID"],$this->get_value("timeSheetID"));  // will update the existing invoice item
+    #}
   } 
 
   function delete() {

@@ -113,10 +113,10 @@ function updateProjectList(number) \{
 
 	<tr>
     <td>{get_help("timesheet_add_invoice")}</td>
-    <td align="right" valign="top">Invoice:</td>
+    <td align="right" valign="top">Attached to Invoice:</td>
     <td class="nobr">{$attach_to_invoice_button}{$invoice_link}</td>
     <td class="right">{$amount_allocated_label}</td>
-    <td>{$amount_allocated}</td>
+    <td><b>{$amount_allocated}</b></td>
   </tr>
 
 

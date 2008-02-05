@@ -112,17 +112,25 @@ class invoiceItem extends db_entity
     return $status && $status2;
   }
 
-  function add_timeSheet($invoiceID,$timeSheetID) {
+  function add_timeSheet($invoiceID,$timeSheetID, $maxAmount=false) {
     $timeSheet = new timeSheet;
     $timeSheet->set_id($timeSheetID);
     $timeSheet->select();
     $timeSheet->load_pay_info();
-    $amount = $timeSheet->pay_info["total_customerBilledDollars"] or $amount = $timeSheet->pay_info["total_dollars"];
 
-    $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
-    $iiUnitPrice >0 or $iiUnitPrice = $timeSheet->pay_info["timeSheetItem_rate"];
+    $date = $timeSheet->get_value("dateFrom") or $date = date("Y-m-d");
+    
+    if (!$maxAmount) { 
+      $amount = $timeSheet->pay_info["total_customerBilledDollars"] or $amount = $timeSheet->pay_info["total_dollars"];
+      $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
+      $iiUnitPrice >0 or $iiUnitPrice = $timeSheet->pay_info["timeSheetItem_rate"];
+      $iiQuantity = $timeSheet->pay_info["total_duration"] or $iiQuantity = "0";
+    } else {
+      $amount = $maxAmount;
+      $iiUnitPrice = $maxAmount; 
+      $iiQuantity = 1;
+    }
 
-    $iiQuantity = $timeSheet->pay_info["total_duration"] or $iiQuantity = "0";
     $project = $timeSheet->get_foreign_object("project");
 
     $this->set_value("invoiceID",$invoiceID);
@@ -131,7 +139,7 @@ class invoiceItem extends db_entity
     $this->set_value("iiQuantity",$iiQuantity);
     $this->set_value("iiUnitPrice",$iiUnitPrice);
     $this->set_value("iiAmount",$amount);
-    $this->set_value("iiDate",$timeSheet->get_value("dateFrom"));
+    $this->set_value("iiDate",$date);
     $this->save();
   }
 
@@ -179,7 +187,7 @@ class invoiceItem extends db_entity
 
     $this->set_value("invoiceID",$invoiceID);
     $this->set_value("expenseFormID",$expenseForm->get_id());
-    $this->set_value("iiMemo","Expenses for ".person::get_fullname($expenseForm->get_value("expenseFormCreatedUser")));
+    $this->set_value("iiMemo","Expense Form #".$expenseForm->get_id()." for ".person::get_fullname($expenseForm->get_value("expenseFormCreatedUser")));
     $this->set_value("iiQuantity",1);
     $this->set_value("iiUnitPrice",$amount);
     $this->set_value("iiAmount",$amount);
@@ -209,31 +217,38 @@ class invoiceItem extends db_entity
   }
 
   function close_related_entity() {
-  
+    global $TPL;
 
-    // Really should do this properly so that it checks for APPROVED transactions and 
-    // only approves the timesheets or expenseforms that are completely paid for by an 
-    // invoice item.
-    #$db = new db_alloc();
-    #$q = sprintf("SELECT * FROM transaction WHERE invoiceItemID = %d",$this->get_id());
-    #$db->query($q);
+    // It checks for approved transactions and only approves the timesheets
+    // or expenseforms that are completely paid for by an invoice item.
+    $db = new db_alloc();
+    $q = sprintf("SELECT sum(amount) as total FROM transaction WHERE invoiceItemID = %d AND status = 'approved'",$this->get_id());
+    $db->query($q);
+    $row = $db->row();
+    $total = $row["total"];
 
-    if ($this->get_value("timeSheetItemID")) {
-      $timeSheetItem = new timeSheetItem;
-      $timeSheetItem->set_id($this->get_value("timeSheetItemID"));
-      $timeSheetItem->select();
-      $timeSheetID = $timeSheetItem->get_value("timeSheetID");
-    }
-
-    $timeSheetID or $timeSheetID = $this->get_value("timeSheetID");
+    $timeSheetID = $this->get_value("timeSheetID");
+    $expenseFormID = $this->get_value("expenseFormID");
 
     if ($timeSheetID) {
       $timeSheet = new timeSheet;
       $timeSheet->set_id($timeSheetID);
       $timeSheet->select();
+      
+      $db = new db_alloc();
+      $q = sprintf("SELECT SUM(amount) AS total FROM transaction WHERE timeSheetID = %d AND amount >0",$timeSheet->get_id());
+      $db->query($q);
+      $row = $db->row();
+      $total_timeSheet = $row["total"];
+
       if ($timeSheet->get_value("status") == "invoiced") {
-        $timeSheet->pending_transactions_to_approved();
-        $timeSheet->change_status("forwards");
+        if ($total == $total_timeSheet) {
+          $timeSheet->pending_transactions_to_approved();
+          $timeSheet->change_status("forwards");
+          $TPL["message_good"][] = "Closed Time Sheet #".$timeSheet->get_id()." and approved it's Transactions.";
+        } else {
+          $TPL["message_help"][] = "Unable to close Time Sheet #".$timeSheet->get_id()." the sum of Time Sheet Transactions does not equal the Invoice Item Transaction.";
+        }
       }
     
 
@@ -241,7 +256,14 @@ class invoiceItem extends db_entity
       $expenseForm = new expenseForm;
       $expenseForm->set_id($expenseFormID);
       $expenseForm->select();
-      $expenseForm->set_status("approved");
+      $total_expenseForm = $expenseForm->get_abs_sum_transactions();
+      
+      if ($total == $total_expenseForm) {
+        $expenseForm->set_status("approved");
+        $TPL["message_good"][] = "Approved Expense Form #".$expenseForm->get_id().".";
+      } else {
+        $TPL["message_help"][] = "Unable to approve Expense Form #".$expenseForm->get_id()." the sum of Expense Form Transactions does not equal the Invoice Item Transaction.";
+      }
     }
 
   }

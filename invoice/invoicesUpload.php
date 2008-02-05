@@ -32,6 +32,12 @@ if ($_POST["upload"]) {
   reset($lines);
   while (list(, $line) = each($lines)) {
     // Read field values from the line
+    if (preg_match("/\t/",$line)) { 
+      $fields = explode("\t", $line);
+    } else if (preg_match("/,/",$line)) { 
+      $fields = explode(",", $line);
+    } 
+
     $fields = explode("\t", $line);
     $type = trim($fields[$field_map["type"]]);
     $date = trim($fields[$field_map["date"]]);
@@ -42,41 +48,35 @@ if ($_POST["upload"]) {
     $sales_price = trim($fields[$field_map["sales_price"]]);
     $amount = trim($fields[$field_map["amount"]]);
 
-
     // Newer versions of Quick Books use different labels
     $type == "Tax Invoice" and $type = "Invoice";
     $type == "Adjustment Note" and $type = "Credit Memo";
 
-
-    // Lline number
+    // Line number
     $line_number++;
-    $msg[] = "<br><b>Line: ".$line_number."</b>";
+    $msg[] = "<hr><b>Line ".$line_number.":</b> <pre style=\"display:inline\">".$line."</pre>";
 
-    // Ignore heading row and total rows
-    if ($type == "Type" || $type == "") {
-      continue;
 
-      // If not enough fields
-    } else if (count($fields) < 5) {
-      $msg[] = "Skipping Row: Not enough fields in row.";
+    // If not enough fields
+    if (count($fields) < 5 || ($type == "Type" || $type == "" || !$date)) {
+      $msg[] = "Skipping Row.";
       continue;
-    }
+    }  
+
     // It was skipping "credit memo" transactions
-    if (strtolower($type) == "credit memo") {
-      $type = "Invoice";
-    }
+    strtolower($type) == "credit memo" and $type = "Invoice";
+
     // More coercion
-    if ($quantity == 0) {
-      $quantity = 1;
-    }
+    $quantity == 0 and $quantity = 1;
+
     // Show a warning and skip rows that have $type != invoice
     if ($type != "Invoice") {
-      $msg[] = "Skipping Row: type $type (invoice number=$num, memo=$memo).";
+      $msg[] = "<b class=\"transaction-rejected\">Skipping Row: Bad type: $type (invoice number=$num, memo=$memo).</b>";
       continue;
     }
     // Convert the date to yyyy-mm-dd
     if (!eregi("^([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})$", $date, $matches)) {
-      $msg[] = "Skipping Row: Could not convert date '$date'.";
+      $msg[] = "<b class=\"transaction-rejected\">Skipping Row: Could not convert date '$date'.</b>";
       continue;
     }
     $date = sprintf("%04d-%02d-%02d", $matches[3], $matches[2], $matches[1]);
@@ -85,7 +85,7 @@ if ($_POST["upload"]) {
     // Strip $ and , from amount
     $amount = ereg_replace("[\$,]", "", $amount);
     if (!ereg("^-?[0-9]+(\\.[0-9]+)?$", $amount)) {
-      $msg[] = "Skipping Row: Could not convert amount '$amount'.";
+      $msg[] = "<b class=\"transaction-rejected\">Skipping Row: Could not convert amount '$amount'.</b>";
       continue;
     }
     // If invoice record doesn't already exist create an invoice object and save it
@@ -109,13 +109,13 @@ if ($_POST["upload"]) {
         $invoice->set_value("clientID", $clientID);
 
       } else {
-        $msg[] = "Skipping Row: Client: '".$name."' &lt;-- Couldn't find a matching Client";
+        $msg[] = "<b class=\"transaction-rejected\">Skipping Row: Client: '".$name."' &lt;-- Couldn't find a matching Client</b>";
         continue;
 
       }
       $invoice->save();
       $invoiceID = $invoice->get_id();
-      $msg[] = "Invoice $num saved";
+      $msg[] = "<b class=\"transaction-approved\">Invoice $num saved</b>";
     }
 
     // Check for an existing invoice item
@@ -128,7 +128,7 @@ if ($_POST["upload"]) {
     $db->query($query);
 
     if ($db->next_record()) {
-      $msg[] = "Skipping Row: Invoice item '$memo' on invoice number $num already exixsts.";
+      $msg[] = "<b>Skipping Row: Invoice item '$memo' on invoice number $num already exixsts.</b>";
       continue;
     }
     // Create a invoice_item object and then save it
@@ -150,6 +150,7 @@ if ($_POST["upload"]) {
     $transactionNew->set_value("status", "pending");
     $transactionNew->set_value("amount", sprintf("%f", $transactionAmount));
     $transactionNew->set_value("quantity", $quantity);
+    $transactionNew->set_value("invoiceID", $invoice_item->get_value("invoiceID"));
     $transactionNew->set_value("invoiceItemID", $invoice_item->get_id());
     $transactionNew->set_value("transactionDate", $date);
     $transactionNew->set_value("product", $memo);
@@ -158,7 +159,8 @@ if ($_POST["upload"]) {
     $transactionNew->set_value("transactionType", "invoice");
     $transactionNew->save();
 
-    $msg[] = "Invoice item '$memo' on invoice number $num saved.";
+    $msg[] = "<b class=\"transaction-approved\">Invoice item '$memo' on invoice number $num saved.</b>";
+    $msg[] = "<b class=\"transaction-approved\">Transaction with ID ".$transactionNew->get_id()." saved.</b>";
   }
   $TPL["msg"] = implode("<br>", $msg);
 }
