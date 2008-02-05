@@ -97,6 +97,11 @@ class timeSheet extends db_entity
                 );
   } 
 
+  function get_timeSheet_status() {
+    $statii = $this->get_timeSheet_statii();
+    return $statii[$this->get_value("status")];
+  }
+
   function delete() {
     $db = new db_alloc;
     $db->query(sprintf("DELETE FROM timeSheetItem where timeSheetID = %d",$this->get_id()));  
@@ -827,11 +832,13 @@ class timeSheet extends db_entity
     return $rtn;
   }
 
-  function save_to_invoice() {
+  function save_to_invoice($invoiceID=false) {
+
+    $invoiceID and $extra = sprintf(" AND invoiceID = %d",$invoiceID);
     $project = $this->get_foreign_object("project");
     $client = $project->get_foreign_object("client");
     $db = new db_alloc;
-    $q = sprintf("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit'",$project->get_value("clientID"));
+    $q = sprintf("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit' %s",$project->get_value("clientID"),$extra);
     $db->query($q);
 
     // Create invoice
@@ -865,23 +872,28 @@ class timeSheet extends db_entity
     global $TPL;
     if (is_object($this) && $this->get_id()) {
       $db = new db_alloc();
-      $db->query("SELECT invoice.* FROM invoiceItem LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID WHERE timeSheetID = %s",$this->get_id());
-      if ($db->next_record()) { 
-        return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$db->f("invoiceID")."\">".$db->f("invoiceNum")."</a>";
+      $db->query("SELECT invoice.* 
+                    FROM invoiceItem 
+               LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID 
+                   WHERE timeSheetID = %s",$this->get_id());
+      while ($row = $db->next_record()) { 
+        $str.= $sp."<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$row["invoiceID"]."\">".$row["invoiceNum"]."</a>";
+        $sp = "&nbsp;&nbsp;";
       }
+      return $str;
     }
   }
 
   function get_amount_allocated() {
     if (is_object($this) && $this->get_id()) {
       $db = new db_alloc();
-      $q = sprintf("SELECT amount 
-                      FROM transaction 
-                 LEFT JOIN invoiceItem ON invoiceItem.invoiceItemID = transaction.invoiceItemID 
-                     WHERE invoiceItem.timeSheetID = %d",$this->get_id());
+      $q = sprintf("SELECT sum(iiAmount) as total
+                      FROM invoiceItem
+                     WHERE invoiceItem.timeSheetID = %d
+                  ",$this->get_id());
       $db->query($q);
       $row = $db->row();
-      return $row["amount"];
+      return $row["total"];
     }
   }
 

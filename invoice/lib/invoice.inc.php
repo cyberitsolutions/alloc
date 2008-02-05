@@ -566,7 +566,7 @@ class invoice extends db_entity {
 
     $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["showInvoiceNumber"]       and $summary[] = "  <td>".$invoice["invoiceLink"]."&nbsp;</td>";
-    $_FORM["showInvoiceClient"]       and $summary[] = "  <td><a href=\"".$TPL["url_alloc_client"]."clientID=".$invoice["clientID"]."\">".$invoice["clientName"]."</a></td>";
+    $_FORM["showInvoiceClient"]       and $summary[] = "  <td>".$invoice["clientName"]."</td>";
     $_FORM["showInvoiceName"]         and $summary[] = "  <td>".$invoice["invoiceName"]."&nbsp;</td>";
     $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"nobr\">".$invoice["invoiceDateFrom"]."&nbsp;</td>";
     $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"nobr\">".$invoice["invoiceDateTo"]."&nbsp;</td>";
