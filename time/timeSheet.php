@@ -628,7 +628,7 @@ if (!$TPL["timeSheet_projectName"]) {
 }
 
 
-if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && !$timeSheet->get_invoice_link()) {
+if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && !$timeSheet->get_invoice_link() && $timeSheet->get_value("status") != "finished") {
 
   $p = $timeSheet->get_foreign_object("project");  
   $ops["invoiceStatus"] = "edit";

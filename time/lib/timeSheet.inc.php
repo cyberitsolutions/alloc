@@ -604,22 +604,11 @@ class timeSheet extends db_entity
       $filter = " WHERE ".implode(" AND ",$filter);
     }
 
-    if ($_FORM["showTransactionsPos"]) {
-      $sel.= ", SUM(tPos.amount) AS transactionsPos";
-      $join.= "LEFT JOIN transaction tPos ON timeSheet.timeSheetID = tPos.timeSheetID AND tPos.amount>0 and tPos.status = 'approved' AND tPos.timeSheetID IS NOT NULL AND tPos.timeSheetID != 0 AND tPos.timeSheetID != ''";
-    }
-    if ($_FORM["showTransactionsNeg"]) {
-      $sel.= ", SUM(tNeg.amount) AS transactionsNeg";
-      $join.= "LEFT JOIN transaction tNeg ON timeSheet.timeSheetID = tNeg.timeSheetID AND tNeg.amount<0 and tNeg.status = 'approved'";
-    }
-
     // LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID - nope! stuffs up transactionPos/Neg calculations
     $q = "SELECT timeSheet.*, person.personID, projectName
-          ".$sel."
           FROM timeSheet 
           LEFT JOIN person ON timeSheet.personID = person.personID
           LEFT JOIN project ON timeSheet.projectID = project.projectID
-          ".$join."
           ".$filter."
           GROUP BY timeSheet.timeSheetID
           ORDER BY dateFrom,projectName,surname";
@@ -641,11 +630,14 @@ class timeSheet extends db_entity
       $row["duration"] = $t->pay_info["summary_unit_totals"];
       $row["person"] = $people_array[$row["personID"]]["name"];
       $row["status"] = $status_array[$row["status"]];
-      $row["customerBilledDollars"] = $t->pay_info["customerBilledDollars"];
-      $extra["customerBilledDollarsTotal"] += $t->pay_info["customerBilledDollars"];
+      $row["customerBilledDollars"] = $t->pay_info["total_customerBilledDollars"];
+      $extra["customerBilledDollarsTotal"] += $t->pay_info["total_customerBilledDollars"];
 
-      $extra["transactionsPosTotal"] += $row["transactionsPos"];
-      $extra["transactionsNegTotal"] += $row["transactionsNeg"];
+      if ($_FORM["showTransactionsNeg"] || $_FORM["showTransactionsPos"]) {
+        list($row["transactionsPos"],$row["transactionsNeg"]) = $t->get_transaction_totals();
+        $extra["transactionsPosTotal"] += $row["transactionsPos"];
+        $extra["transactionsNegTotal"] += $row["transactionsNeg"];
+      }
 
       $p = new project();
       $p->read_db_record($db);
@@ -661,6 +653,22 @@ class timeSheet extends db_entity
     } else if (!$print && $_FORM["return"] == "html") {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Time Sheets Found</b></td></tr></table>";
     }
+  }
+
+  function get_transaction_totals() {
+  
+    $db = new db_alloc();
+    $q = sprintf("SELECT SUM(amount) AS total FROM transaction WHERE amount>0 AND status = 'approved' AND timeSheetID = %d",$this->get_id());
+    $db->query($q);
+    $row = $db->row();
+    $pos = $row["total"];
+
+    $q = sprintf("SELECT SUM(amount) AS total FROM transaction WHERE amount<0 AND status = 'approved' AND timeSheetID = %d",$this->get_id());
+    $db->query($q);
+    $row = $db->row();
+    $neg = $row["total"];
+
+    return array($pos,$neg);
   }
 
   function get_url() {
