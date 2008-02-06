@@ -28,7 +28,6 @@
   <part name='comments' type='xsd:array'/>
 </message>
 
-
 <message name='atsibtIn'>
   <part name='sessKey' type='xsd:string'/>
   <part name='taskID' type='xsd:string'/>
@@ -39,7 +38,6 @@
   <part name='timeSheetID' type='xsd:string'/>
 </message>
 
-
 <message name='gttIn'>
   <part name='sessKey' type='xsd:string'/>
   <part name='tfName' type='xsd:string'/>
@@ -49,6 +47,15 @@
 <message name='gttOut'>
   <part name='transactions' type='xsd:array'/>
 </message>
+
+<message name='gtrIn'>
+  <part name='sessKey' type='xsd:string'/>
+  <part name='tableName' type='xsd:string'/>
+</message>
+<message name='gtrOut'>
+  <part name='rows' type='xsd:array'/>
+</message>
+
 
 
 <!-- PORT TYPES -->
@@ -74,6 +81,12 @@
     <input message='tns:gttIn'/>
     <output message='tns:gttOut'/>
   </operation>
+
+  <operation name='get_table_rows'>
+    <input message='tns:gtrIn'/>
+    <output message='tns:gtrOut'/>
+  </operation>
+
 </portType>
 
 
@@ -101,6 +114,12 @@
 
   <operation name='get_tf_transactions'>
     <soap:operation soapAction='urn:xmethods-delayed-quotes#get_tf_transactions'/>
+    <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
+    <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
+  </operation>
+
+  <operation name='get_table_rows'>
+    <soap:operation soapAction='urn:xmethods-delayed-quotes#get_table_rows'/>
     <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
     <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
   </operation>

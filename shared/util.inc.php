@@ -443,6 +443,7 @@ function get_attachments($entity, $id) {
           $rows[] = $row;    
         }
       }
+      closedir($handle);
     }
     is_array($rows) && usort($rows, "sort_by_mtime");
   }
