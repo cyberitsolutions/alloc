@@ -571,12 +571,13 @@ class db_entity {
     return false;
   }
 
+  function get_assoc_array($key=false,$value=false,$sel=false, $where=array()){
+    $key or $key = $this->key_field->name;
+    $value or $value = "*";
+    $value != "*" and $key_sql = $key.",";
 
-  function get_assoc_array($key,$value=false,$sel=false){
-    $value or $value = $key;
-    $q = sprintf('SELECT %s, %s FROM %s'
-                ,$key,$value,$this->data_table);
-
+    $q = sprintf('SELECT %s %s FROM %s WHERE 1=1 '
+                ,$key_sql,$value,$this->data_table);
 
     $pkey_sql = " OR ".$this->key_field->name." = ";
     if (is_array($sel) && count($sel)) {
@@ -587,17 +588,35 @@ class db_entity {
       $extra = $pkey_sql.$sel;
     }
 
-    is_object($this->data_fields[$this->data_table."Active"])   and $q.= " WHERE (".$this->data_table."Active = 1 ".$extra.")";
+    if (is_object($this->data_fields[$this->data_table."Active"]) && !$where[$this->data_table."Active"]) {
+      $where[$this->data_table."Active"] = 1;
+    }
+
+    if (is_array($where) && count($where)) {
+      foreach ($where as $colname => $colvalue) {
+        $q.= " AND ".$colname." = '".db_esc($colvalue)."'";
+      }
+    }
+
+    $q.= $extra;
+
     is_object($this->data_fields[$this->data_table."Sequence"]) and $q.= " ORDER BY ".$this->data_table."Sequence";
 
     $db = new db_alloc;
     $db->query($q);
-    while($db->next_record()) {
-      $rtn[$db->f($key)] = $db->f($value);
+    $rows = array();
+    while($row = $db->row()) {
+      if ($this->read_db_record($db,false)) {
+        if ($value && $value != "*") {
+          $v = $row[$value];
+        } else {
+          $v = $row;
+        }
+        $rows[$row[$key]] = $v;
+      }
     }
-    return $rtn;
+    return $rows;
   }
-
 
   // This could be called like: 
   // $timeUnit->get_dropdown_options("timeUnitID","timeUnitLabelA",$task->get_value("timeEstimateUnitID"));

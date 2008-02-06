@@ -57,6 +57,19 @@ class alloc_soap {
     }
   }
 
+  function get_table_rows($key,$tableName=false) {
+    global $current_user; // Always need this :(
+    $current_user = $this->get_current_user($key);
+    if (class_exists($tableName)) {
+      $t = new $tableName;
+      $rows = $t->get_assoc_array();
+      return $rows;
+    } else {
+      throw new SoapFault("Server","Table '".$tableName."' does not exist."); 
+    }
+  }
+
+
 
 
 
