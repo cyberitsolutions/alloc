@@ -27,7 +27,7 @@ include(ALLOC_MOD_DIR."time/lib/pendingApprovalTimeSheetListHomeItem.inc.php");
 
 class time_module extends module
 {
-  var $db_entities = array("timeSheet", "timeSheetItem");
+  var $db_entities = array("timeSheet", "timeSheetItem","timeUnit");
 
   function register_home_items() {
     global $current_user;
