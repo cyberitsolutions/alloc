@@ -80,8 +80,7 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('token',0,0,'','Y',NULL,'Allow everyone to do anything with tokens.',15,110);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('invoiceItem',-1,0,'','Y',NULL,'This allows time sheet users to update the related invoice item record.',11,111);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('invoice',-1,0,'','Y',NULL,'User needs to be able to update invoice because updating an invoiceItem, changes the dates on the invoice itself.',3,112);
-
-
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('timeUnit',0,0,'','Y',NULL,'Allow people to read timeUnit records.',1,113);
 
 
 
