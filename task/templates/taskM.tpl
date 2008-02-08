@@ -29,8 +29,8 @@ function refreshTaskList(radiobutton) \{
 <input type="hidden" name="taskID" value="{$task_taskID}">
 {$table_box}
   <tr>
-    <th class="nobr">{$task_taskType}: {$taskSelfLink}</th>
-    <th class="right nobr" colspan="4"><a href="{$url_alloc_task}taskID={$task_taskID}&view=detail">Edit</a>&nbsp;&nbsp;{$navigation_links}</th>
+    <th class="nobr" colspan="2">{$task_taskType}: {$taskSelfLink}</th>
+    <th class="right nobr" colspan="3"><a href="{$url_alloc_task}taskID={$task_taskID}&view=detail">Edit</a>&nbsp;&nbsp;{$navigation_links}</th>
   </tr>
   <tr>
     <td colspan="5">&nbsp;</td>
@@ -80,7 +80,7 @@ function refreshTaskList(radiobutton) \{
           <td><nobr>Target Start/Completion</nobr></td>
           <td>
             <nobr>
-              {get_calendar("dateTargetStart",$TPL["task_dateTargetStart"])}
+              {get_calendar("dateTargetStart",$TPL["task_dateTargetStart"])}&nbsp;&nbsp;
               {get_calendar("dateTargetCompletion",$TPL["task_dateTargetCompletion"])}
             </nobr>
           </td>
@@ -89,7 +89,7 @@ function refreshTaskList(radiobutton) \{
           <td>Actual Start/Completion</td>
           <td>
             <nobr>
-              {get_calendar("dateActualStart",$TPL["task_dateActualStart"])}
+              {get_calendar("dateActualStart",$TPL["task_dateActualStart"])}&nbsp;&nbsp;
               {get_calendar("dateActualCompletion",$TPL["task_dateActualCompletion"])}
             </nobr>
           </td>
