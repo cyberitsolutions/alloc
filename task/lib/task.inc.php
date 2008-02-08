@@ -1182,8 +1182,12 @@ function get_task_statii_array() {
     // Decide what to actually return
     if ($print && $_FORM["return"] == "objectsAndHtml") { // sheesh
       return array($tasks,$header.$summary.$footer);
+
+    } else if (!$print && $_FORM["return"] == "objectsAndHtml") { 
+      $rtn = "<table style=\"width:100%\"><tr><td style=\"text-align:center\"><b>No Tasks Found</b></td></tr></table>";
+      return array(array(),$rtn);
       
-    } else if ($_FORM["return"] == "objects") {
+    } else if ($print && $_FORM["return"] == "objects") {
       return $tasks;
 
     } else if ($print && $_FORM["return"] == "html") {
@@ -1196,7 +1200,7 @@ function get_task_statii_array() {
       return $summary_ops;
 
     } else if (!$print && ($_FORM["return"] == "html" || $_FORM["return"] == "objectsAndHtml")) {
-      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Tasks Found</b></td></tr></table>";
+      return "<table style=\"width:100%\"><tr><td style=\"text-align:center\"><b>No Tasks Found</b></td></tr></table>";
     } 
   } 
 
