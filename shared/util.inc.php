@@ -44,10 +44,10 @@ function get_calendar($name, $default_value) {
   $days = array_flip($days);
   $firstday = config::get_config_item("calendarFirstDay");
   $firstday = sprintf("%d",$days[$firstday]);
-  
+  $today = date("Y-m-d"); 
   $default_value and $default = ", date : ".$default_value;
   $str = <<<EOD
-  <input name="${name}" type="input" size="10" value="${default_value}" id="${name}" />
+  <input name="${name}" type="input" size="10" value="${default_value}" id="${name}" ondblclick="this.value='${today}'"/>
   <input type="button" value="Cal" id="button_${name}" />
   <script type="text/javascript">
   Calendar.setup( { inputField : "${name}", ifFormat : "%Y-%m-%d", button : "button_${name}", showOthers : 1, align : "Bl", firstDay : ${firstday}, step : 1, weekNumbers : 0 ${default} })

@@ -34,8 +34,8 @@ function updateStuffWithAjax() \{
 
 {$table_box}
   <tr>
-    <th class="nobr">{$task_taskType}: {$taskSelfLink}</th>
-    <th class="right nobr" colspan="3">&nbsp;&nbsp;<a href="{$url_alloc_task}taskID={$task_taskID}&view=brief">View</a>&nbsp;&nbsp;{$navigation_links}</th>
+    <th class="nobr" colspan="2">{$task_taskType}: {$taskSelfLink}</th>
+    <th class="right nobr" colspan="2">&nbsp;&nbsp;<a href="{$url_alloc_task}taskID={$task_taskID}&view=brief">View</a>&nbsp;&nbsp;{$navigation_links}</th>
   </tr>
   <tr>
     <td colspan="4">&nbsp;</td>
@@ -47,16 +47,13 @@ function updateStuffWithAjax() \{
         {$projectOptions}
       </select>
     </td>
-
-    <td width="1%"><nobr>Managed By</nobr></td>
+    <td width="1%" class="right nobr">Managed By</td>
     <td>
       <div id="taskManagerPersonList">
         {$managerPersonOptions}
       </div>
     </td>
-
   </tr>
-
   <tr>
     <td>Task Name</td>
     <td>
@@ -67,7 +64,7 @@ function updateStuffWithAjax() \{
       </select>
       </nobr>
     </td>
-    <td width="1%"><nobr>Assigned To</nobr></td>
+    <td width="1%" class="right nobr">Assigned To</td>
     <td>
       <div id="taskPersonList">
         {$personOptions}
@@ -81,11 +78,7 @@ function updateStuffWithAjax() \{
   <tr>
     <td valign="top">Description</td>
     <td colspan="3"><textarea name="taskDescription" rows="7" cols="85" wrap="virtual">{$task_taskDescription}</textarea></td>
-
   </tr>  
-  <tr>
-    <td colspan="4"></td>
-  </tr>
   <tr>
     <td>Parent Task</td>
     <td>
@@ -93,7 +86,7 @@ function updateStuffWithAjax() \{
         {$parentTaskOptions}
       </div>
     </td>
-    <td>Task Type</td>
+    <td class="right nobr">Task Type</td>
     <td>
       <select name="taskTypeID">
         {$taskTypeOptions}
@@ -104,42 +97,31 @@ function updateStuffWithAjax() \{
 
   <tr>    
     <td valign="top"><nobr>Interested Parties</nobr></td>
-    <td valign="top" colspan="3">
+    <td valign="top" rowspan="2">
       <div id="taskCCListDropdown" style="display:inline">
         {$taskCCListOptions}
       </div>
       {get_help("task_interested_parties")}
-
+    </td>
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td class="right nobr" valign="bottom"><div style="margin-bottom:8px;">Target Start/Complete</div><div>Actual Start/Complete</div></td>
+    <td valign="bottom">
       <div>
-      <table border="0" cellspacing="0" cellpadding="5" align="right">
-        <tr>
-          <td><nobr>Target Start/Complete</nobr></td>
-          <td>
-            <nobr>
-              {get_calendar("dateTargetStart",$TPL["task_dateTargetStart"])}
-              {get_calendar("dateTargetCompletion",$TPL["task_dateTargetCompletion"])}
-            </nobr>
-          </td>
-        </tr>
-        <tr>
-          <td><nobr>Actual Start/Complete</nobr></td>
-          <td>
-            <nobr>
-              {get_calendar("dateActualStart",$TPL["task_dateActualStart"])}
-              {get_calendar("dateActualCompletion",$TPL["task_dateActualCompletion"])}
-            </nobr>
-          </td>
-        </tr>
-      </table>
+      {get_calendar("dateTargetStart",$TPL["task_dateTargetStart"])}&nbsp;&nbsp;
+      {get_calendar("dateTargetCompletion",$TPL["task_dateTargetCompletion"])}
       </div>
-
+      <div>
+      {get_calendar("dateActualStart",$TPL["task_dateActualStart"])}&nbsp;&nbsp;
+      {get_calendar("dateActualCompletion",$TPL["task_dateActualCompletion"])}
+      </div>
     </td>
   </tr>
-
   <tr>
     <td colspan="4">&nbsp;</td>
   </tr>
-
   <tr>
     <td align="center" colspan="4">
       {$timeSheet_save}
