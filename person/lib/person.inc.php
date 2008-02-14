@@ -321,6 +321,17 @@ class person extends db_entity {
     }
   }
 
+  function get_from() {
+    $name = $this->get_username(1);
+    $email = $this->get_value("emailAddress");
+    if ($email) {
+      $str = $name;
+      $str and $str.= " <";
+      $str and $end = ">";
+      return $str.$email.$end;
+    }
+  }
+
 }
 
 

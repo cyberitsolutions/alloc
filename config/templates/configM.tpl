@@ -1,6 +1,14 @@
 {show_header()}
 {show_toolbar()}
 
+{get_side_by_side_links(array("basic"=>"Basic Setup"
+                             ,"time_sheets"=>"Time Sheets"
+                             ,"company_info"=>"Company Info"
+                             ,"email_gateway"=>"Email Gateway"
+                             ,"misc"=>"Miscellaneous"
+                             ),$_POST["sbs_link"])}
+
+<div id="basic">
 <form action="{$url_alloc_config}" method="post">
 {$table_box}
   <tr>
@@ -23,25 +31,37 @@
     <td><select name="calendarFirstDay">{$calendarFirstDayOptions}</select></td>
     <td width="1%">{get_help("config_calendarFirstDay")}</td>
   </tr>
+  <tr>
+    <td width="20%"><nobr>Adminstrator Email Address</nobr></td>
+    <td><input type="text" size="70" value="{$allocEmailAdmin}" name="allocEmailAdmin"></td> 
+    <td width="1%">{get_help("config_allocEmailAdmin")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Email Addressing Method</nobr></td>
+    <td>
+      <label for="eam_to">Use "To:"</label><input id="eam_to" type="radio" name="allocEmailAddressMethod" value="to"{$TPL["allocEmailAddressMethod"] == "to" and print " checked"}>&nbsp;&nbsp;&nbsp;&nbsp;
+      <label for="eam_bcc">Use "Bcc:"</label><input id="eam_bcc" type="radio" name="allocEmailAddressMethod" value="bcc"{$TPL["allocEmailAddressMethod"] == "bcc" and print " checked"}>&nbsp;&nbsp;&nbsp;&nbsp;
+      <label for="eam_tobcc">Use Both with special "To:"</label><input id="eam_tobcc" type="radio" name="allocEmailAddressMethod" value="tobcc"{$TPL["allocEmailAddressMethod"] == "tobcc" and print " checked"}>
+    </td> 
+    <td width="1%">{get_help("config_allocEmailAddressMethod")}</td>
+  </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
 </table>
 </form>
+</div>
 
 
+<div id="email_gateway">
 <form action="{$url_alloc_config}" method="post">
 {$table_box}
   <tr>
-    <th colspan="3">Email Setup</th>
+    <th colspan="2">Email Gateway</th>
+    <th class="right">{get_help("config_allocEmailGateway")}</th>
   </tr>
   <tr>
-    <td width="20%"><nobr>Mail Adminstrator Email Address</nobr></td>
-    <td><input type="text" size="70" value="{$allocEmailAdmin}" name="allocEmailAdmin"></td> 
-    <td width="1%">{get_help("config_allocEmailAdmin")}</td>
-  </tr>
-  <tr>
-    <td width="20%"><nobr>Default Email From Address</nobr></td>
+    <td width="20%"><nobr>From Address</nobr></td>
     <td><input type="text" size="70" value="{$AllocFromEmailAddress}" name="AllocFromEmailAddress"></td> 
     <td width="1%">{get_help("config_AllocFromEmailAddress")}</td>
   </tr>
@@ -84,9 +104,11 @@
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
 </table>
+<input type="hidden" name="sbs_link" value="email_gateway">
 </form>
+</div>
 
-
+<div id="time_sheets">
 <form action="{$url_alloc_config}" method="post">
 {$table_box}
   <tr>
@@ -144,15 +166,18 @@
   </tr>
   <tr>
     <td valign="top">Time Sheet Print Options</td>
-    <td><select size="9" name="timeSheetPrint[]" multiple><option value="">{$timeSheetPrintOptions}</select><a href="{$url_alloc_configEdit}configName=timeSheetPrintOptions">Advanced Options Edit</a></td>
+    <td><select size="9" name="timeSheetPrint[]" multiple><option value="">{$timeSheetPrintOptions}</select><a href="{$url_alloc_configEdit}configName=timeSheetPrintOptions">Edit</a></td>
     <td width="1%" valign="top">{get_help("config_timeSheetPrint")}</td>
   </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
 </table>
+<input type="hidden" name="sbs_link" value="time_sheets">
 </form>
+</div>
 
+<div id="company_info">
 <form action="{$url_alloc_config}" method="post">
 {$table_box}
   <tr>
@@ -202,10 +227,12 @@
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
-
 </table>
+<input type="hidden" name="sbs_link" value="company_info">
 </form>
+</div>
 
+<div id="misc">
 <form action="{$url_alloc_config}" method="post">
 {$table_box}
   <tr>
@@ -213,47 +240,37 @@
     <th width="1%">{get_help("config_misc_setup")}</th>
   </tr>
   <tr>
-    <td valign="top" width="20%"><nobr>Default Interested Parties</nobr></td>
+    <td valign="top" width="20%"><nobr>Extra Interested Parties Options</nobr></td>
     <td>
-      <a href="{$url_alloc_configEdit}configName=defaultInterestedParties">Options Edit</a>
-      <table>
+      <a href="{$url_alloc_configEdit}configName=defaultInterestedParties">Edit:</a>
       {foreach $TPL["defaultInterestedParties"] as $k => $v}
-        <tr>
-          <td>{echo $k}</td>
-          <td>{echo $v}</td>
-        </tr>
+          {echo $br.$k." ".$v}
+          {$br = ", "}
       {/}
-      </table>
     </td> 
     <td width="1%">{get_help("config_defaultInterestedParties.html")}</td>
   </tr>
   <tr>
     <td valign="top" width="20%"><nobr>Project Priorities</nobr></td>
     <td>
-      <a href="{$url_alloc_configEdit}configName=projectPriorities">Options Edit</a>
-      <table>
+      <a href="{$url_alloc_configEdit}configName=projectPriorities">Edit:</a>
+      {unset($br)}
       {foreach $TPL["projectPriorities"] as $k => $arr}
-        <tr>
-          <td>{echo $k}</td>
-          <td style="color:{echo $arr["colour"]}">{echo $arr["label"]}</td>
-        </tr>
+          {$br}<span style="color:{echo $arr["colour"]}">{echo $k." ".$arr["label"]}</span>
+          {$br = ", "}
       {/}
-      </table>
     </td> 
     <td width="1%">{get_help("config_projectPriorities.html")}</td>
   </tr>
   <tr>
     <td valign="top" width="20%"><nobr>Task Priorities</nobr></td>
     <td>
-      <a href="{$url_alloc_configEdit}configName=taskPriorities">Options Edit</a>
-      <table>
+      <a href="{$url_alloc_configEdit}configName=taskPriorities">Edit:</a>
+      {unset($br)}
       {foreach $TPL["taskPriorities"] as $k => $arr}
-        <tr>
-          <td>{echo $k}</td>
-          <td style="color:{echo $arr["colour"]}">{echo $arr["label"]}</td>
-        </tr>
+          {$br}<span style="color:{echo $arr["colour"]}">{echo $k." ".$arr["label"]}</span>
+          {$br = ", "}
       {/}
-      </table>
     </td> 
     <td width="1%">{get_help("config_taskPriorities.html")}</td>
   </tr>
@@ -261,7 +278,9 @@
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
 </table>
+<input type="hidden" name="sbs_link" value="misc">
 </form>
+</div>
 
 
   

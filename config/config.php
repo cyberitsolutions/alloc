@@ -84,6 +84,7 @@ if ($_POST["save"]) {
       $TPL["message_good"] = "Saved configuration.";
     }
   }
+  $TPL["message"] or $TPL["message_good"] = "Saved configuration.";
 }
 
 $config = new config;

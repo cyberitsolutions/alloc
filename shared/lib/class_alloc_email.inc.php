@@ -56,7 +56,7 @@ class alloc_email {
   }
   function set_to_address($to=false) {
     $to or $to = $this->to_address;
-    $to or $to = ALLOC_DEFAULT_TO_ADDRESS;
+    #$to or $to = ALLOC_DEFAULT_TO_ADDRESS; // no
     $this->to_address = $to;
     $this->del_header("to");
   }
@@ -121,8 +121,11 @@ class alloc_email {
         $this->body.= $this->get_bottom_mime_header();
       }
 
-      #echo "<pre><br>HEADERS: ".$this->headers."</pre>";
-      #echo "<pre><br>BODY: ".$this->body."</pre>";
+      # echo "<pre><br>HEADERS:\n".htmlentities($this->headers)."</pre>";
+      # echo "<pre><br>TO:\n".htmlentities($this->to_address)."</pre>";
+      # echo "<pre><br>SUBJECT:\n".htmlentities($this->subject)."</pre>";
+      # echo "<pre><br>BODY:\n".htmlentities($this->body)."</pre>";
+      # die();
 
       $result = mail($this->to_address, $this->subject, $this->body, $this->headers, "-f".ALLOC_DEFAULT_RETURN_PATH_ADDRESS);
       if ($result) {

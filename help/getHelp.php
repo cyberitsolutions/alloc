@@ -26,7 +26,7 @@ if ($_GET["topic"]) {
 
   $topic = $_GET["topic"];
   $TPL["str"] = "<div style='text-align:left'><table width='150' border='0' cellpadding='4' cellspacing='0' id='helper_table' class='helper_table' style='margin:40px'><tr><td>";
-  $TPL["str"].= html_entity_decode(get_help_string($topic));
+  $TPL["str"].= html_entity_decode(stripslashes(get_help_string($topic)));
   $TPL["str"].= "</td></tr></table></div>";
 
 } else {

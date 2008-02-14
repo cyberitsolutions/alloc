@@ -1,0 +1,36 @@
+<u>allocPSA Email Gateway</u>
+
+<br><br>
+
+<b>Optionally</b> enter this infomation to enable the allocPSA Email Gateway.
+
+<br><br>
+If you decide to enable this functionality, ensure you use a dedicated mailbox.
+<br><br>
+Here's an example of this useful functionality in action:
+<br><br>
+
+<style>
+.dp li { margin-bottom:10px; }
+
+</style>
+<ul class="dp">
+<li>Alex adds a comment to a task, but just before clicking save, Alex ensures that the checkbox to email the comment to Bill is checked.
+<li>The comment is subsequently added to the task and Bill receives Alex's email - <b>Note: that email is *from* the address that you enter in the "From Address" box.</b>
+<li>Bill decides to reply to Alex's email, but he doesn't want to login to allocPSA... so Bill hits "Reply" in his email client, types a message and clicks "Send".
+<li>Since the email was <b>from the address that you enter in the "From Address" box</b>, the email gets sent straight to the mailbox that you've set up allocPSA to check.
+<li>allocPSA checks the mailbox and sees that there is new mail from Bill.
+<li>allocPSA adds Bills email as a comment on the relevant task, complete with any email attachments.
+<li>allocPSA then re-emails Bill's comment to Alex.
+</ul>
+
+Alex can then reply to that email if he likes and the whole conversation can bounce backwards and forwards through email, all the while getting logged to the relevant task.
+
+
+<br><br>
+
+To activate this functionality, fill in the information on this page, and
+also ensure that you've set up a re-occurring automated job (eg cronjob) to hit
+the email fetching script: http://YOUR_ALLOC/email/receiveEmail.php  We
+recommend hitting that script about every five minutes.
+

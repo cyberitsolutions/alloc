@@ -90,7 +90,7 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 --
 
 
-INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','example@example.com','text');
+INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','','text');
 INSERT INTO config (name, value, type) VALUES ('cybersourceTfID','0','text');
 INSERT INTO config (name, value, type) VALUES ('timeSheetAdminEmail','0','text');
 INSERT INTO config (name, value, type) VALUES ('companyName','Cybersource','text');
@@ -123,6 +123,8 @@ INSERT INTO config (name,value,type) VALUES ("allocEmailPassword","","text");
 INSERT INTO config (name,value,type) VALUES ("allocEmailProtocol","imap","text");
 INSERT INTO config (name,value,type) VALUES ("allocEmailFolder","INBOX","text");
 INSERT INTO config (name,value,type) VALUES ("allocEmailKeyMethod","headers","text");
+INSERT INTO config (name,value,type) VALUES ("allocEmailAddressMethod","to","text");
+
 
 
 
