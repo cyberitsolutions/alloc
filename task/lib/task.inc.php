@@ -670,6 +670,9 @@ class task extends db_entity {
   }
 
   function get_email_recipient_headers($recipients, $from) {
+    global $current_user;
+
+    $emailMethod = config::get_config_item("allocEmailAddressMethod");
 
     // Build up To: and Bcc: headers
     foreach ($recipients as $recipient) {
@@ -681,19 +684,34 @@ class task extends db_entity {
         $recipient_full_name = $recipient["fullName"];
       } else if ($recipient["name"]) {
         $recipient_full_name = $recipient["name"];
-      } else {
-        $recipient_full_name = $recipient["emailAddress"];
-      }
+      } 
+        
+      $r = $recipient_full_name or $r = $recipient["emailAddress"];
 
-
-      if ($recipient_full_name && $recipient["emailAddress"] 
-      && $recipient_full_name != $from["name"] && $recipient["emailAddress"] != $from["email"] 
+      if ($recipient["emailAddress"] 
+      && $recipient_full_name != $from["name"] 
+      && $recipient["emailAddress"] != $from["email"] 
+      && $recipient["emailAddress"] != $current_user->get_value("emailAddress")
       && !$done[$recipient["emailAddress"]]) { 
 
         $done[$recipient["emailAddress"]] = true;
-        $to_address.= $commar.'"'.$recipient_full_name.'": ;';
-        $bcc.= $commar.$recipient["emailAddress"];
-        $successful_recipients.= $commar.$recipient_full_name;
+
+        if ($emailMethod == "to") {
+          $recipient_full_name  and $to_address.= $commar.$recipient_full_name." <".$recipient["emailAddress"].">";
+          !$recipient_full_name and $to_address.= $commar.$recipient["emailAddress"];
+          $successful_recipients.= $commar.$r;
+
+        } else if ($emailMethod == "bcc") {
+          $bcc.= $commar.$recipient["emailAddress"];
+          $successful_recipients.= $commar.$r;
+
+        // The To address contains no actual email addresses, ie "Alex Lance": ; all the real recipients are in the Bcc.
+        } else if ($emailMethod == "tobcc") {
+          $to_address.= $commar.'"'.$r.'": ;';
+          $bcc.= $commar.$recipient["emailAddress"];
+          $successful_recipients.= $commar.$r;
+        }
+  
         $commar = ", ";
       }
     }
@@ -706,11 +724,9 @@ class task extends db_entity {
     $recipients = $this->get_email_recipients($selected_option);
     list($to_address,$bcc,$successful_recipients) = $this->get_email_recipient_headers($recipients, $from);
 
-    // The To address contains no actual email addresses, ie "Alex Lance": ; 
-    // The Bcc list contains the actual recpient email addresses.
-    if ($bcc) {
+    if ($successful_recipients) {
       $email = new alloc_email();
-      $email->add_header("Bcc",$bcc);
+      $bcc && $email->add_header("Bcc",$bcc);
       $email->set_to_address($to_address);
 
       $types = array('task_created'    => "Task Created"
@@ -758,8 +774,17 @@ class task extends db_entity {
       $email->set_subject($subject);
       $email->set_body($message);
       $email->set_message_type($type);
-      $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
-      $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
+
+
+      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS 
+      && config::get_config_item("allocEmailHost") && config::get_config_item("allocEmailAddressMethod") != "to") {
+        $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
+        $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
+      } else {
+        $f = $current_user->get_from() or $f = config::get_config_item("allocEmailAdmin");
+        $email->set_reply_to($f);
+        $email->set_from($f);
+      }
 
       if ($from["commentID"]) {
         $files = get_attachments("comment",$from["commentID"]);
