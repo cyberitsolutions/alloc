@@ -127,11 +127,13 @@ function format_date($format="Y/m/d", $date="") {
 function get_default_from_address() {
   // Wrap angle brackets around the default From: email address 
   $f = config::get_config_item("AllocFromEmailAddress");
-  $l = strpos($f, "<");
-  $r = strpos($f, ">");
-  $l === false and $f = "<".$f;
-  $r === false and $f .= ">";
-  return "allocPSA ".$f;
+  if ($f) {
+    $l = strpos($f, "<");
+    $r = strpos($f, ">");
+    $l === false and $f = "<".$f;
+    $r === false and $f .= ">";
+    return "allocPSA ".$f;
+  }
 }
 function get_default_to_address() {
   $personID = config::get_config_item("timeSheetAdminEmail");
@@ -144,12 +146,15 @@ function get_default_to_address() {
   return "allocPSA Administrator ".$f;
 }
 function get_alloc_version() {
+  static $version;
+  if ($version) {
+    return $version;
+  }
   if (file_exists(ALLOC_MOD_DIR."util/alloc_version") && is_readable(ALLOC_MOD_DIR."util/alloc_version")) {
     $v = file(ALLOC_MOD_DIR."util/alloc_version");
-    return $v[0];
-  } else {
-    #die("No alloc_version file found.");
-  }
+    $version = trim($v[0]);
+  } 
+  return $version;
 }
 function get_script_path($modules) {
   // Has to return something like
