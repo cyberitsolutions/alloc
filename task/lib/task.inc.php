@@ -698,21 +698,23 @@ class task extends db_entity {
 
         if ($emailMethod == "to") {
           $recipient_full_name  and $to_address.= $commar.$recipient_full_name." <".$recipient["emailAddress"].">";
-          !$recipient_full_name and $to_address.= $commar.$recipient["emailAddress"];
+          $recipient_full_name  or  $to_address.= $commar.$recipient["emailAddress"];
           $successful_recipients.= $commar.$r;
+          $commar = ", ";
 
         } else if ($emailMethod == "bcc") {
           $bcc.= $commar.$recipient["emailAddress"];
           $successful_recipients.= $commar.$r;
+          $commar = ", ";
 
         // The To address contains no actual email addresses, ie "Alex Lance": ; all the real recipients are in the Bcc.
         } else if ($emailMethod == "tobcc") {
           $to_address.= $commar.'"'.$r.'": ;';
           $bcc.= $commar.$recipient["emailAddress"];
           $successful_recipients.= $commar.$r;
+          $commar = ", ";
         }
   
-        $commar = ", ";
       }
     }
     return array($to_address, $bcc, $successful_recipients);
@@ -776,8 +778,7 @@ class task extends db_entity {
       $email->set_message_type($type);
 
 
-      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS 
-      && config::get_config_item("allocEmailHost") && config::get_config_item("allocEmailAddressMethod") != "to") {
+      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
         $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
         $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
       } else {

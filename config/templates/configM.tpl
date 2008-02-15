@@ -101,7 +101,10 @@
     <td width="1%">{get_help("config_allocEmailKeyMethod")}</td>
   </tr>
   <tr>  
-    <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
+    <td colspan="3" align="center">
+      <input type="submit" name="save" value="Save">
+      <input type="submit" name="test_email_gateway" value="Test Connection">
+    </td>
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="email_gateway">

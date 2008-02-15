@@ -44,11 +44,13 @@ class alloc_email {
 
   // Actual email variables
   var $to_address = "";
-  var $headers = "";
+  var $headers = ""; 
+  var $default_headers = ""; 
   var $subject = "";
   var $body = ""; 
 
   function alloc_email($to_address="",$subject="",$body="",$message_type="") {
+    $this->default_headers = "X-Mailer: allocPSA ".get_alloc_version();
     $to_address   and $this->set_to_address($to_address);
     $subject      and $this->set_subject($subject);
     $body         and $this->set_body($body);
@@ -121,13 +123,19 @@ class alloc_email {
         $this->body.= $this->get_bottom_mime_header();
       }
 
+      $this->headers = $this->default_headers."\n".trim($this->headers);
+
       # echo "<pre><br>HEADERS:\n".htmlentities($this->headers)."</pre>";
       # echo "<pre><br>TO:\n".htmlentities($this->to_address)."</pre>";
       # echo "<pre><br>SUBJECT:\n".htmlentities($this->subject)."</pre>";
       # echo "<pre><br>BODY:\n".htmlentities($this->body)."</pre>";
       # die();
+    
+      if (defined("ALLOC_DEFAULT_RETURN_PATH_ADDRESS") && ALLOC_DEFAULT_RETURN_PATH_ADDRESS) {
+        $return_path = "-f".ALLOC_DEFAULT_RETURN_PATH_ADDRESS;
+      } 
 
-      $result = mail($this->to_address, $this->subject, $this->body, $this->headers, "-f".ALLOC_DEFAULT_RETURN_PATH_ADDRESS);
+      $result = mail($this->to_address, $this->subject, $this->body, $this->headers, $return_path);
       if ($result) {
         $this->log();
         return true;
@@ -177,7 +185,8 @@ class alloc_email {
   function log() {
     global $current_user;
     $sentEmailLog = new sentEmailLog();
-    $sentEmailLog->set_value("sentEmailTo",$this->to_address);
+    $to = $this->to_address or $to = $this->get_header("Cc") or $to = $this->get_header("Bcc");
+    $sentEmailLog->set_value("sentEmailTo",$to);
     $sentEmailLog->set_value("sentEmailSubject",$this->subject);
     $sentEmailLog->set_value("sentEmailBody",$this->body);
     $sentEmailLog->set_value("sentEmailHeader",$this->headers);
