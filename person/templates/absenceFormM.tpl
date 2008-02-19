@@ -35,7 +35,7 @@
         </tr>
         <tr>
           <td>Emergency contact details<br /> while on leave.</td>
-          <td><textarea name="absence_contactDetails" rows="4" wrap="virtual" cols = "50">{$absence_contactDetails}</textarea></td>
+          <td>{get_textarea("absence_contactDetails",$TPL["absence_contactDetails"])}</td>
         </tr>
         <tr>
           <td colspan="2" align="center">

@@ -61,8 +61,8 @@
     <td>Records with a lower sort key will have higher precedence than those with higher sort keys</td>
   </tr>
   <tr>
-    <td>Comment</td>
-    <td colspan="2"><textarea name="comment" rows="3" cols="80" wrap="virtual">{$comment}</textarea></td>
+    <td valign="top">Comment</td>
+    <td colspan="2" valign="top">{get_textarea("comment",$TPL["comment"])}</td>
   </tr>
   <tr>
     <td align="center" colspan="3">

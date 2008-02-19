@@ -51,9 +51,7 @@
     </tr>
     <tr>
       <td valign="top">Content:</td>
-      <td colspan="3">
-        <textarea name="reminder_content" cols="60" rows="6" wrap="virtual">{$reminder_default_content}</textarea>
-      </td>
+      <td colspan="3">{get_textarea("reminder_content",$TPL["reminder_default_content"])}</td>
     </tr>
     <tr>
       <td colspan="4" align="center">{$reminder_buttons}&nbsp;&nbsp;&nbsp;{$reminder_goto_parent}</td>

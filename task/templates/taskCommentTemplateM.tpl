@@ -16,7 +16,7 @@
   </tr>
   <tr>
     <td valign="top">Text</td>
-    <td><textarea name="taskCommentTemplateText" rows="8" cols="80">{$taskCommentTemplateText}</textarea></td>
+    <td valign="top">{get_textarea("taskCommentTemplateText",$TPL["taskCommentTemplateText"],array("height"=>"jumbo"))}</td>
     <td>
       %cd = Company Contact Details<br/>
       %cn = Company Name<br/>

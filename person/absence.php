@@ -52,6 +52,7 @@ if ($_POST["save"]) {
   // Saving a record
   $absence->read_globals();
   $absence->read_globals("absence_");
+  $absence->set_value("contactDetails",rtrim($absence->get_value("contactDetails")));
   $success = $absence->save();
   if ($success) {
     $url = $TPL["url_alloc_person"]."personID=".$personID;

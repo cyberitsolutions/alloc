@@ -25,7 +25,7 @@
   </tr>
   <tr>
     <td>Comments: </td>
-    <td><textarea rows="4" cols="30" wrap="virtual" name="tfComments">{$tfComments}</textarea></td>
+    <td>{get_textarea("tfComments",$TPL["tfComments"],array("cols"=>30))}</td>
   </tr>
   <tr>
     <td>Last Modified by:</td>

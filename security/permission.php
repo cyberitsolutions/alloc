@@ -54,6 +54,7 @@ if (!$permission->get_value("tableName")) {
 
 if ($_POST["save"]) {
   $permission->set_value("actions",$actions);
+  $permission->set_value("comment",rtrim($permission->get_value("comment")));
   $permission->save();
   header("Location: ".$TPL["url_alloc_permissionList"]);
 } else if ($_POST["delete"]) {

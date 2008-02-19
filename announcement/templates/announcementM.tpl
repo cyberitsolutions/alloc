@@ -20,7 +20,7 @@
   </tr>
   <tr>
     <td>Body</td>
-    <td><textarea name="body" rows="5" cols="80">{$body}</textarea></td>
+    <td>{get_textarea("body",$TPL["body"],array("height"=>"jumbo"))}</td>
   </tr>
   <tr>
     <td colspan="2" align="center">

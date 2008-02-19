@@ -241,6 +241,11 @@ if ($_POST["save"]) {
   }
 
   if (!$TPL["message"]) {
+    $person->set_value("availability",rtrim($person->get_value("availability")));
+    $person->set_value("areasOfInterest",rtrim($person->get_value("areasOfInterest")));
+    $person->set_value("comments",rtrim($person->get_value("comments")));
+    $person->set_value("emergencyContact",rtrim($person->get_value("emergencyContact")));
+    $person->set_value("managementComments",rtrim($person->get_value("managementComments")));
     $person->save();
     header("Location: ".$TPL["url_alloc_personList"]);
   }

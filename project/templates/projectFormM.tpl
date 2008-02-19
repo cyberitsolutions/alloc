@@ -27,27 +27,23 @@ function updateClientContact(number) \{
 
 {$table_box}
   <tr>
-    <th class="nobr" colspan="1">Project: {$projectSelfLink}</th>
+    <th class="nobr" colspan="2">Project: {$projectSelfLink}</th>
     <th class="right" colspan="3">{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</th>
   </tr>
   <tr>
-    <td colspan="4">&nbsp;</td>
+    <td colspan="5">&nbsp;</td>
   </tr>
   <tr>
-    <td align="right">Name</td>
-    <td colspan="1"><input type="text" name="projectName" value="{$project_projectName}" size="45"></td>
+    <td width="1%" align="right">Name</td>
+    <td colspan="1"><input type="text" name="projectName" value="{$project_projectName}" size="45">
+                    <select name="projectPriority">{$projectPriority_options}</select></td>
+    <td></td>
     <td align="right">Short Name</td>
     <td><input type="text" name="projectShortName" value="{$project_projectShortName}" size="10"></td>
   </tr>
   <tr>
-    <td align="right" rowspan="5" valign="top">Description</td>
-    <td rowspan="5">
-      <textarea name="projectComments" rows="7" wrap="virtual" cols="50">{$project_projectComments}</textarea>
-    </td>
-    <td align="right">Priority</td>
-    <td><select name="projectPriority">{$projectPriority_options}</select></td>
-  </tr>
-  <tr>
+    <td align="right" rowspan="4" valign="top">Description</td>
+    <td rowspan="4" colspan="2" valign="top">{get_textarea("projectComments",$TPL["project_projectComments"],array("height"=>"medium"))}</td>
     <td align="right">Status</td>
     <td><select name="projectStatus">{$projectStatus_options}</select></td>
   </tr>
@@ -61,51 +57,45 @@ function updateClientContact(number) \{
   </tr>
   <tr>
     <td align="right" class="nobr">Project Budget $</td>
-    <td class="nobr"><input type="text" name="projectBudget" value="{$project_projectBudget}" size="10">(ex. {$taxName})</td>
+    <td class="nobr"><input type="text" name="projectBudget" value="{$project_projectBudget}" size="10"> (ex. {$taxName})</td>
   </tr>
   <tr>
     <td align="right">Client</td>
     <td><nobr><select name="clientID" onChange="updateStuffWithAjax()">{$clientOptions}</select>&nbsp; &nbsp;<a href="{$url_alloc_client}">New Client</a></nobr></td>
+    <td></td>
     <td align="right" class="nobr">Client Billed At $</td>
     <td><input type="text" name="customerBilledDollars" value="{$project_customerBilledDollars}" size="10"> (per unit, inc. {$taxName})</td>
   </tr>
   <tr>
-    <td align="right">Client Contact</td>
+    <td align="right">Contact</td>
     <td>
       <div id="clientContactDropdown">
         {$clientContactDropdown}
       </div>
     </td>
+    <td></td>
     <td align="right">{$cost_centre_label}&nbsp;</td>
     <td>{$cost_centre_bit}&nbsp;</td>
   </tr>
   <tr>
-    <td align="right"></td>
+    <td rowspan="2"  align="right"></td>
     <td rowspan="2">{$clientDetails}</td>
-    <td align="right">Payroll Tax Exempt</td>
+    <td align="right" colspan="2">Payroll Tax Exempt</td>
     <td><input type="checkbox" name="project_is_agency" value="1"{$project_is_agency}></td>
   </tr>
   <tr>
-    <td align="right"></td>
-  </tr>
-  <tr>
-    <td align="right"></td>
-    <td align="right">Target Start/Completion</td>
-    <td colspan="2">
-      {get_calendar("dateTargetStart",$TPL["project_dateTargetStart"])}
+    <td colspan="2" class="right nobr" valign="bottom"><div style="margin-bottom:8px;">Target Start/Complete</div><div>Actual Start/Complete</div></td>
+    <td valign="bottom">
+      <div class="nobr">
+      {get_calendar("dateTargetStart",$TPL["project_dateTargetStart"])}&nbsp;&nbsp;
       {get_calendar("dateTargetCompletion",$TPL["project_dateTargetCompletion"])}
-    </td>
-  </tr>
-
-  <tr>
-    <td align="right"></td>
-    <td align="right">Actual Start/Completion</td>
-    <td colspan="2">
-      {get_calendar("dateActualStart",$TPL["project_dateActualStart"])}
+      </div>
+      <div class="nobr">
+      {get_calendar("dateActualStart",$TPL["project_dateActualStart"])}&nbsp;&nbsp;
       {get_calendar("dateActualCompletion",$TPL["project_dateActualCompletion"])}
+      </div>
     </td>
   </tr>
-
   <tr>
     <td colspan="5">&nbsp;</td>
   </tr>
@@ -118,7 +108,7 @@ function updateClientContact(number) \{
     </td>
   </tr>
   <tr>
-    <td colspan="4">&nbsp;</td>
+    <td colspan="5">&nbsp;</td>
   </tr>
 </table>
 

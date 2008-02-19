@@ -3,5 +3,6 @@
 </tr>
 <tr>
   <td>Comments for management viewing only</td>
-  <td colspan="3"><textarea name="managementComments" rows="3" cols="50">{$person_managementComments}</textarea></td>
+  <td colspan="3">{get_textarea("managementComments",$TPL["person_managementComments"])}
+</td>
 </tr>
