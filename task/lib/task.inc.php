@@ -1290,7 +1290,7 @@ function get_task_statii_array() {
   }
 
   function get_task_list_tr($task,$_FORM) {
-
+    global $TPL;
     static $odd_even;
     $odd_even = $odd_even == "even" ? "odd" : "even";
 
@@ -1324,7 +1324,7 @@ function get_task_statii_array() {
                                   $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
                                   $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
-    $_FORM["showProject"]     and $summary[] = "  <td>".$task["project_name"]."&nbsp;</td>";
+    $_FORM["showProject"]     and $summary[] = "  <td><a href=\"".$TPL["url_alloc_project"]."projectID=".$task["projectID"]."\">".$task["project_name"]."</a>&nbsp;</td>";
     $_FORM["showPriority"]    and $summary[] = "  <td>".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td style=\"color:".$_FORM["taskPriorities"][$task["priority"]]["colour"]."\">".$_FORM["taskPriorities"][$task["priority"]]["label"]."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td style=\"color:".$_FORM["projectPriorities"][$task["projectPriority"]]["colour"]."\">".$_FORM["projectPriorities"][$task["projectPriority"]]["label"]."&nbsp;</td>"; 
