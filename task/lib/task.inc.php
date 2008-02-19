@@ -691,7 +691,6 @@ class task extends db_entity {
       if ($recipient["emailAddress"] 
       && $recipient_full_name != $from["name"] 
       && $recipient["emailAddress"] != $from["email"] 
-      && $recipient["emailAddress"] != $current_user->get_value("emailAddress")
       && !$done[$recipient["emailAddress"]]) { 
 
         $done[$recipient["emailAddress"]] = true;
