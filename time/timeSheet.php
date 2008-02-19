@@ -363,6 +363,8 @@ if ($_POST["save"]
     $msg.= $timeSheet->change_status("backwards");
   }
 
+  $timeSheet->set_value("billingNote",rtrim($timeSheet->get_value("billingNote")));
+
   if ($save_error) {
     // don't save or sql will complain
     $url = $TPL["url_alloc_timeSheet"];
@@ -428,6 +430,8 @@ if ($_POST["save"]
 
       $timeSheetItem->set_value("description", $taskName);
       $_POST["timeSheetItem_commentPrivate"] and $timeSheetItem->set_value("commentPrivate", 1);
+
+      $timeSheetItem->set_value("comment",rtrim($timeSheetItem->get_value("comment")));
 
       $rtn = $timeSheetItem->save();
       $rtn and $TPL["message"][] = $rtn;

@@ -67,9 +67,8 @@ function updateTimeSheetTaskList(number) \{
   <tr>
     <td valign="top"></td>
     <td colspan="3" valign="top">
-      {get_expand_link("tsi_note_large","Comments ","tsi_note_small")}
-      <div id="tsi_note_small" class="nobr">{echo text_to_html($TPL["timeSheetItem_comment"])}</div>
-      <div style="display:none;" id="tsi_note_large" class="nobr"><textarea rows="10" cols="70" wrap="virtual" name="timeSheetItem_comment">{$timeSheetItem_comment}</textarea>
+      Comments<br>
+      {get_textarea("timeSheetItem_comment",$TPL["timeSheetItem_comment"])}
       Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{$commentPrivateChecked}>
       </div>
     </td>

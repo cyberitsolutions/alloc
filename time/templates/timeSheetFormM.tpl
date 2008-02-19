@@ -119,15 +119,10 @@ function updateProjectList(number) \{
     <td><b>{$amount_allocated}</b></td>
   </tr>
 
-
   <tr>
     <td valign="top"></td>
-    <td align="right" valign="top">{get_expand_link("billing_note_input","Billing Note ","billing_note_text")}</td>
-    <td colspan="3" valign="top"><div id="billing_note_text">{echo text_to_html($TPL["timeSheet_billingNote"])}</div>
-                                 <div style="display:none;" id="billing_note_input" class="nobr">
-                                   <textarea rows="10" cols="70" wrap="virtual" name="timeSheet_billingNote">{$timeSheet_billingNote}</textarea>
-                                 </div>
-    </td>
+    <td align="right" valign="top">Billing Note</td>
+    <td colspan="2" valign="top">{get_textarea("timeSheet_billingNote",$TPL["timeSheet_billingNote"])}</td>
   </tr>
 
   <tr>
