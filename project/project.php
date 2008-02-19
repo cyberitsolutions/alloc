@@ -43,7 +43,7 @@ require_once("../alloc.php");
   }
 
   function show_timeSheet_list() {
-    global $TPL, $projectID, $current_user;
+    global $TPL, $projectID, $current_user, $project;
 
     if ($projectID) {
 
@@ -62,9 +62,20 @@ require_once("../alloc.php");
                        ,"showStatus"=>true
                        ,"projectID"=>$projectID
                        );
+
+      // Limit to the owner's timesheets if necessary
+      //This is to be corrected when the new permissions system is in place.
+      //The full display should not appear to normal users.
+
+      if (!$project->have_perm(PERM_READ_WRITE)) {
+        $defaults["personID"] = $current_user->get_id();
+      }
       echo timeSheet::get_timeSheet_list($defaults);
     }
   }
+
+$grand_total = 0;
+
 
   function show_transaction($template) {
     global $db, $TPL, $projectID, $current_user;
