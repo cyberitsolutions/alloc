@@ -18,4 +18,6 @@
     <td>{$project_projectComments}</td>
   </tr>
 </table>
+
+{show_time_sheets("templates/projectTimeSheetS.tpl")}
 {show_footer()}
