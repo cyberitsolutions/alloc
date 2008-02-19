@@ -253,7 +253,7 @@ case 4:
         $reminder->set_value('reminderAdvNoticeValue', $_POST["reminder_advnotice_value"]);
       }
       $reminder->set_value('reminderSubject', $_POST["reminder_subject"]);
-      $reminder->set_value('reminderContent', $_POST["reminder_content"]);
+      $reminder->set_value('reminderContent', rtrim($_POST["reminder_content"]));
       $reminder->save();
     }
 

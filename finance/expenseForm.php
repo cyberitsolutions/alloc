@@ -227,6 +227,7 @@ if ($_POST["cancel"]) {
   }
 
 } else if ($_POST["pend"]) {
+  $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("pending");
   page_close();
@@ -234,6 +235,7 @@ if ($_POST["cancel"]) {
   exit();
 
 } else if ($_POST["approve"]) {
+  $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("approved");
   page_close();
@@ -241,6 +243,7 @@ if ($_POST["cancel"]) {
   exit();
 
 } else if ($_POST["reject"]) {
+  $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("rejected");
   page_close();
@@ -253,6 +256,7 @@ if ($_POST["cancel"]) {
     $expenseForm->set_value("paymentMethod", "");
   }
   $expenseForm->set_value("seekClientReimbursement", $_POST["seekClientReimbursement"] ? 1 : 0);
+  $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
@@ -264,6 +268,7 @@ if ($_POST["cancel"]) {
   }
   $expenseForm->set_value("seekClientReimbursement", $_POST["seekClientReimbursement"] ? 1 : 0);
   $expenseForm->set_value("expenseFormFinalised", 1);
+  $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
@@ -271,6 +276,7 @@ if ($_POST["cancel"]) {
 } else if ($_POST["unfinalise"]) {
   $expenseForm->read_globals();
   $expenseForm->set_value("expenseFormFinalised", 0);
+  $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();

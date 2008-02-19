@@ -3,18 +3,18 @@
 </tr>
 <tr>
   <td>Availability</td>
-  <td colspan="3"><textarea rows="3" cols="50" name="availability">{$person_availability}</textarea></td>
+  <td colspan="3">{get_textarea("availability",$TPL["person_availability"])}</td>
 </tr>
 <tr>
   <td>Areas of interest</td>
-  <td colspan="3"><textarea rows="3" cols="50" name="areasOfInterest">{$person_areasOfInterest}</textarea></td>
+  <td colspan="3">{get_textarea("areasOfInterest",$TPL["person_areasOfInterest"])}</td>
 </tr>
 <tr>
   <td>Comments</td>
-  <td colspan="3"><textarea rows="3" cols="50" name="comments">{$person_comments}</textarea></td>
+  <td colspan="3">{get_textarea("comments",$TPL["person_comments"])}</td>
 </tr>
 <tr>
   <td>Emergency Contact Information</td>
-  <td colspan="3"><textarea rows="3" cols="50" name="emergencyContact">{$person_emergencyContact}</textarea></td>
+  <td colspan="3">{get_textarea("emergencyContact",$TPL["person_emergencyContact"])}</td>
 </tr>
 

@@ -36,8 +36,8 @@
  	</tr>
 
   <tr>
-    <td rowspan="3"><b>Company Details</b></td>
-    <td colspan="2" rowspan="3"><textarea rows="4" cols="40" name="companyDetails" wrap="virtual">{$companyDetails}</textarea></td>
+    <td rowspan="3" valign="top"><b>Company Details</b></td>
+    <td colspan="2" rowspan="3" valign="top">{get_textarea("companyDetails",$TPL["companyDetails"], array("cols"=>40))}</td>
     <td rowspan="3" colspan="3">
       <nobr><b>Reminder email</b><br/><input type="text" size="40" name="emailOne" value="{$emailOne}"></nobr><br>
       <nobr><b>Reminder email</b><br/><input type="text" size="40" name="emailTwo" value="{$emailTwo}"></nobr>

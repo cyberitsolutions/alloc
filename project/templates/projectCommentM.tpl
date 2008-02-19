@@ -12,7 +12,7 @@
           <td>
             <input type="hidden" name="entity" value="project">
             <input type="hidden" name="entityID" value="{$project_projectID}">
-            <textarea name="comment" cols="85" rows="10" wrap="virtual">{$comment}</textarea>&nbsp;
+            {get_textarea("comment",$TPL["comment"])}&nbsp;
           </td>
           <td align="right" valign="bottom">
             {$comment_buttons}

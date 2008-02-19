@@ -197,6 +197,8 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     $task->set_value("dateAssigned",date("Y-m-d H:i:s"));
   }
 
+  $task->get_value("taskDescription") and $task->set_value("taskDescription",rtrim($task->get_value("taskDescription")));
+
   $success = $task->save();
 
   if ($task_is_new && $task->get_value("taskTypeID") == TT_FAULT) {     // Task is a "Fault" type task.

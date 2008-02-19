@@ -313,6 +313,7 @@ if ($_POST["save"]) {
 
   if (!$TPL["message"]) {
 
+    $project->set_value("projectComments",rtrim($project->get_value("projectComments")));
     $project->save();
     $projectID = $project->get_id();
 
@@ -504,8 +505,16 @@ if ($clientID_sql) {
   }
 
   $TPL["clientDetails"] = "<table width=\"70%\">";
-  $TPL["clientDetails"].= "<tr><td class=\"nobr\"><b>Postal Address</b></td><td class=\"nobr\"><b>Street Address</b></td><td><b>Contact</b></td></tr>";
-  $TPL["clientDetails"].= "<tr><td valign=\"top\">".$one."</td><td valign=\"top\">".$two."</td><td valign=\"top\">".$thr."</td></tr>";
+  $TPL["clientDetails"].= "<tr>";
+  $one and $TPL["clientDetails"].= "<td class=\"nobr\"><b>Postal Address</b></td>";
+  $two and $TPL["clientDetails"].= "<td class=\"nobr\"><b>Street Address</b></td>";
+  $thr and $TPL["clientDetails"].= "<td><b>Contact</b></td>";
+  $TPL["clientDetails"].= "</tr>";
+  $TPL["clientDetails"].= "<tr>";
+  $one and $TPL["clientDetails"].= "<td valign=\"top\">".$one."</td>";
+  $two and $TPL["clientDetails"].= "<td valign=\"top\">".$two."</td>";
+  $thr and $TPL["clientDetails"].= "<td valign=\"top\">".$thr."</td>";
+  $TPL["clientDetails"].= "</tr>";
   $TPL["clientDetails"].= "</table>";
 }
 

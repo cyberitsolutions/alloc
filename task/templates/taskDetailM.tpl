@@ -77,7 +77,7 @@ function updateStuffWithAjax() \{
   </tr>
   <tr>
     <td valign="top">Description</td>
-    <td colspan="3"><textarea name="taskDescription" rows="7" cols="85" wrap="virtual">{$task_taskDescription}</textarea></td>
+    <td colspan="3">{get_textarea("taskDescription",$TPL["task_taskDescription"],array("height"=>"medium"))}</td>
   </tr>  
   <tr>
     <td>Parent Task</td>

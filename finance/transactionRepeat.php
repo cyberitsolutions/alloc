@@ -100,6 +100,7 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
 
   if (!$TPL["message"]) {
     !$transactionRepeat->get_value("status") && $transactionRepeat->set_value("status","pending"); 
+    $transactionRepeat->set_value("companyDetails",rtrim($transactionRepeat->get_value("companyDetails")));
     $transactionRepeat->save();
 
     if ($_POST["save"]) {

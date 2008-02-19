@@ -58,7 +58,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
   $comment->set_value('commentLinkID', $entityID);
 
   if ($_POST["comment"]) {
-    $comment->set_value('comment', $_POST["comment"]);
+    $comment->set_value('comment', rtrim($_POST["comment"]));
 
     // Email new comment?
     if ($_POST["commentEmailCheckboxes"] || ($_POST["eo_email"] && preg_match("/@/",$_POST["eo_email"]))) {

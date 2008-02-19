@@ -11,10 +11,11 @@
       <div class="{$class_new_task_comment}" id="id_new_task_comment">
       <table width="100%">
         <tr>
-          <td valign="top">
+          <td valign="top" align="right">
             <input type="hidden" name="entity" value="task">
             <input type="hidden" name="entityID" value="{$task_taskID}">
-            <textarea name="comment" cols="85" rows="14" wrap="virtual" id="comment">{$comment}</textarea>
+            {get_textarea("comment",$TPL["comment"],array("height"=>"medium"))}<br>
+            <select name="taskCommentTemplateID" onChange="updateStuffWithAjax()">{$taskCommentTemplateOptions}</select>
           </td>
           <td align="right" valign="top" width="100%">
             <table cellpadding="0" cellspacing="2">
@@ -65,7 +66,6 @@
         </tr>
         <tr>
           <td class="right">
-            <select name="taskCommentTemplateID" onChange="updateStuffWithAjax()">{$taskCommentTemplateOptions}</select>
           </td>
           <td class="right">
             {$comment_buttons}

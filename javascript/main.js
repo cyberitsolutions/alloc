@@ -103,6 +103,31 @@ function getElementsByClass(searchClass,node,tag) {
   return classEls;
 }
 
+// function adjust_textarea(textarea, default_num_rows) {
+//   n = textarea.value.split('\n').length;
+//   if (n < default_num_rows) {
+//     n = default_num_rows
+//   }
+//   if (textarea.rows != n) {
+//     textarea.rows = n;
+//   }
+// } 
+
+// this function dynamically resizes a text area as data is inputted
+function adjust_textarea(textarea, default_height) {
+  // a div is setup off screen, we use that div to determine the height of the textarea
+  shadow = document.getElementById("shadow_" + textarea.id);
+  shadow.style.width=parseInt(textarea.clientWidth-8)+'px';
+  shadow.innerHTML = textarea.value.replace(/[\n]/g,'<br />&nbsp;');
+  shadow_height = shadow.clientHeight;
+  if(shadow_height < default_height) {
+    n = default_height;
+  } else {
+    n = shadow_height+14;
+  }
+  textarea.style.height = n+'px';
+} 
+
 
 // Preload mouseover images
 if (document.images) {
@@ -116,6 +141,10 @@ if (document.images) {
   pic4.src="../images/arrow_up.gif";
   pic5= new Image(119,13);
   pic5.src="../images/ticker2.gif";
+  pic6= new Image(9,9);
+  pic6.src="../images/small_shrink.gif";
+  pic7= new Image(9,9);
+  pic7.src="../images/small_grow.gif";
 }
 
 
