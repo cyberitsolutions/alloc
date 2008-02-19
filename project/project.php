@@ -69,13 +69,14 @@ require_once("../alloc.php");
 
       if (!$project->have_perm(PERM_READ_WRITE)) {
         $defaults["personID"] = $current_user->get_id();
+        unset($defaults["showTransactionsPos"]);
+        unset($defaults["showTransactionsNeg"]);
+        unset($defaults["showCustomerBilledDollars"]);
+        unset($defaults["showCustomerBilledDollarsTotal"]);
       }
       echo timeSheet::get_timeSheet_list($defaults);
     }
   }
-
-$grand_total = 0;
-
 
   function show_transaction($template) {
     global $db, $TPL, $projectID, $current_user;
