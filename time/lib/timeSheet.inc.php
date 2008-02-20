@@ -448,7 +448,7 @@ class timeSheet extends db_entity
     // This is for getting the amount the manager gets. There is probably a better way to do this.
     $db = new db_alloc;
     $db->query("SELECT * FROM transaction 
-                WHERE timeSheetID = ".$this->get_id()." AND amount > 0 AND transactionType != 'insurance'");
+                WHERE timeSheetID = ".$this->get_id()." AND amount > 0 AND transactionType != 'insurance' AND transactionType != 'tax'");
     while ($db->next_record()) {
       $amount_so_far += $db->f("amount");
     }
