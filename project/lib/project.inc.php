@@ -119,11 +119,22 @@ class project extends db_entity {
   }
 
   function get_timeSheetRecipients() {
+    $rows = $this->get_project_people_by_role("timeSheetRecipient");
+
+    // Fallback time sheet manager person
+    if (!$rows) {
+      $person = config::get_config_item("timeSheetManagerEmail");
+      $person and $rows[] = $person;
+    }
+    return $rows;
+  }
+
+  function get_project_people_by_role($role="") {
     $rows = array();
     $q = sprintf("SELECT projectPerson.personID as personID
                     FROM projectPerson
                LEFT JOIN projectPersonRole ON projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID 
-                   WHERE projectPerson.projectID = %d AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient'",$this->get_id());
+                   WHERE projectPerson.projectID = %d AND projectPersonRole.projectPersonRoleHandle = '%s'",$this->get_id(),db_esc($role));
     $db = new db_alloc;
     $db->query($q);
     while ($db->next_record()) {

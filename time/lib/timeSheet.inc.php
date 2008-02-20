@@ -65,19 +65,26 @@ class timeSheet extends db_entity
     global $current_user;
     if ($this->get_value("personID") == $current_user->get_id()) {
       return true;
-    } else {
+    } 
 
-      // This allows people with transactions on this time sheet who may not
-      // actually be this time sheets owner to view this time sheet.
-      if ($this->get_value("status") != "edit") { 
-        $current_user_tfIDs = $current_user->get_tfIDs();
-        $q = sprintf("SELECT * FROM transaction WHERE timeSheetID = %d",$this->get_id());
-        $db = new db_alloc();
-        $db->query($q);
-        while ($db->next_record()) {
-          if (is_array($current_user_tfIDs) && in_array($db->f("tfID"),$current_user_tfIDs)) {
-            return true;
-          }
+    if ($this->get_value("status") == "manager") { 
+      $project = $this->get_foreign_object("project");
+      $managers = $project->get_timeSheetRecipients() or $managers = array();
+      if (in_array($current_user->get_id(), $managers)) {
+        return true;
+      }
+    } 
+
+    // This allows people with transactions on this time sheet who may not
+    // actually be this time sheets owner to view this time sheet.
+    if ($this->get_value("status") != "edit") { 
+      $current_user_tfIDs = $current_user->get_tfIDs();
+      $q = sprintf("SELECT * FROM transaction WHERE timeSheetID = %d",$this->get_id());
+      $db = new db_alloc();
+      $db->query($q);
+      while ($db->next_record()) {
+        if (is_array($current_user_tfIDs) && in_array($db->f("tfID"),$current_user_tfIDs)) {
+          return true;
         }
       }
     }

@@ -123,8 +123,13 @@
     <td width="1%">{get_help("config_cybersourceTfID")}</td>
   </tr>
   <tr>
+    <td>Time Sheet Manager</td>
+    <td><select name="timeSheetManagerEmail"><option value="">{$timeSheetManagerEmailOptions}</select></td> 
+    <td width="1%">{get_help("config_timeSheetManagerEmail")}</td>
+  </tr>
+  <tr>
     <td>Time Sheet Administrator</td>
-    <td><select name="timeSheetAdminEmail">{$timeSheetAdminEmailOptions}</select></td> 
+    <td><select name="timeSheetAdminEmail"><option value="">{$timeSheetAdminEmailOptions}</select></td> 
     <td width="1%">{get_help("config_timeSheetAdminEmail")}</td>
   </tr>
   <tr>
