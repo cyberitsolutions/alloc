@@ -80,8 +80,6 @@ function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
   }
 }
 
-
-
 function get_pending_timesheet_db() {
   /*
    -----------     -----------------     ---------------------
@@ -99,25 +97,58 @@ function get_pending_timesheet_db() {
 
   global $current_user;
   $db = new db_alloc;
+
+  // Get all the time sheets that are in status manager, and are the responsibility of only the default manager
+  if ($current_user->get_id() == config::get_config_item("timeSheetManagerEmail")) {
+
+    // First get the blacklist of projects that we don't want to include below
+    $db = new db_alloc;
+    $query = sprintf("SELECT projectID 
+                        FROM projectPerson 
+                       WHERE personID != %d 
+                         AND projectPersonRoleID = 3"
+                    ,$current_user->get_id());
+
+    $db->query($query);
+    $bad_projectIDs = array();
+    while ($row = $db->row()) {
+      $bad_projectIDs[$row["projectID"]] = $row["projectID"];
+    }
+
+    $bad_projectIDs and $bad_projectIDs_sql = " AND timeSheet.projectID not in (".implode(",",$bad_projectIDs).")";
+
+    $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
+                           , COALESCE(projectShortName, projectName) as projectName
+                        FROM timeSheet
+                             LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                             LEFT JOIN project on project.projectID = timeSheet.projectID
+                       WHERE timeSheet.status='manager'
+                      $bad_projectIDs_sql
+                    GROUP BY timeSheet.timeSheetID 
+                    ORDER BY timeSheet.dateSubmittedToManager"
+                    );
+
+  // Get all the time sheets that are in status manager, where the currently logged in user is the manager
+  } else {
  
-  $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars, COALESCE(projectShortName, projectName) as projectName
-                      FROM timeSheet
-                           LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
-                           LEFT JOIN project on project.projectID = timeSheet.projectID
-                           LEFT JOIN projectPerson on project.projectID = projectPerson.projectID 
-                           LEFT JOIN projectPersonRole on projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
-                     WHERE projectPerson.personID = %d AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' AND timeSheet.status='manager'
-                  GROUP BY timeSheet.timeSheetID 
-                  ORDER BY timeSheet.dateSubmittedToManager"
-                   , $current_user->get_id()
-                   , $current_user->get_id()
-                   , $timeSheetAdminEmailPersonID
-                  );
+    $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
+                           , COALESCE(projectShortName, projectName) as projectName
+                        FROM timeSheet
+                             LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                             LEFT JOIN project on project.projectID = timeSheet.projectID
+                             LEFT JOIN projectPerson on project.projectID = projectPerson.projectID 
+                             LEFT JOIN projectPersonRole on projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
+                       WHERE projectPerson.personID = %d AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' AND timeSheet.status='manager'
+                    GROUP BY timeSheet.timeSheetID 
+                    ORDER BY timeSheet.dateSubmittedToManager"
+                     , $current_user->get_id()
+                    );
+
+  }
 
   $db->query($query);
   return $db;
 }
-
 
 function get_pending_admin_timesheet_db() {
   global $current_user;
@@ -140,9 +171,6 @@ function get_pending_admin_timesheet_db() {
   return $db;
 
 }
-
-
-
 
 function has_pending_admin_timesheet() {
   $db = get_pending_admin_timesheet_db();

@@ -250,6 +250,9 @@ function timetook($start, $text="Duration: ") {
   $dur > 60 and $dur = $dur / 60;
   echo "<br>".$text.sprintf("%0.5f", $dur) . $unit;
 }
+function sort_by_name($a, $b) {
+  return strtolower($a["name"]) >= strtolower($b["name"]);
+}
 function get_cached_table($table,$anew=false) {
   $cache = alloc_cache::get_cache();
   $cache->load_cache($table,$anew);
@@ -264,6 +267,7 @@ function get_cached_table($table,$anew=false) {
         $people[$id]["name"] = $people[$id]["username"];
       }
     }
+    uasort($people,"sort_by_name");
     $cache->set_cached_table("person",$people);
   }
 

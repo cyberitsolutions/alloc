@@ -120,9 +120,14 @@ $TPL["taxTfOptions"] = get_select_options($options, $config->get_config_item("ta
 $db = new db_alloc;
 $display = array("", "username", ", ", "emailAddress");
 
-$db->query("SELECT * FROM person ORDER BY username");
-$TPL["timeSheetAdminEmailOptions"] = get_option("Time Sheet Admin (email)", "0", false)."\n";
-$TPL["timeSheetAdminEmailOptions"].= get_options_from_db($db, $display, "personID", $config->get_config_item("timeSheetAdminEmail"));
+
+$person = new person;
+$people = get_cached_table("person");
+foreach ($people as $p) {
+  $peeps[$p["personID"]] = $p["name"];
+}
+$TPL["timeSheetManagerEmailOptions"] = get_select_options($peeps,$config->get_config_item("timeSheetManagerEmail"));
+$TPL["timeSheetAdminEmailOptions"] = get_select_options($peeps,$config->get_config_item("timeSheetAdminEmail"));
 
 $days =  array("Sun"=>"Sun","Mon"=>"Mon","Tue"=>"Tue","Wed"=>"Wed","Thu"=>"Thu","Fri"=>"Fri","Sat"=>"Sat");
 $TPL["calendarFirstDayOptions"] = get_select_options($days,$config->get_config_item("calendarFirstDay"));
