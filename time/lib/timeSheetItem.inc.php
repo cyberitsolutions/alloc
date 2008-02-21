@@ -36,6 +36,7 @@ class timeSheetItem extends db_entity {
                              , "description"=>new db_field("description")
                              , "comment"=>new db_field("comment")
                              , "taskID"=>new db_field("taskID")
+                             , "multiplier"=> new db_field("multiplier")
                              , "commentPrivate"=>new db_field("commentPrivate")
       );
   }
@@ -97,6 +98,11 @@ class timeSheetItem extends db_entity {
     #  $ii->add_timeSheet($row["invoiceID"],$this->get_value("timeSheetID"));  // will update the existing invoice item
     #}
   } 
+
+  function calculate_item_charge() {
+    $multipliers = config::get_config_item("timeSheetMultipliers");
+    return sprintf($this->get_value("rate") * $this->get_value("timeSheetItemDuration") * $multipliers[$this->get_value("multiplier")]['multiplier']);
+  }
 
   function delete() {
 
@@ -197,7 +203,6 @@ class timeSheetItem extends db_entity {
 
     $q = sprintf("SELECT personID
                        , SUM(timeSheetItemDuration*timeUnitSeconds) %s AS avg
-                       , SUM(timeSheetItemDuration*rate) as dollars
                     FROM timeSheetItem 
                LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID 
                    WHERE dateTimeSheetItem > '%s'
@@ -208,10 +213,18 @@ class timeSheetItem extends db_entity {
     $db = new db_alloc;
     $db->query($q);
     $rows = array();
-    $rows_dollars = array();
     while ($db->next_record()) {
       $rows[$db->f("personID")] = $db->f("avg")/3600;
-      $rows_dollars[$db->f("personID")] = $db->f("dollars");
+    }
+
+    //Calculate the dollar values
+    $q = sprintf("SELECT * FROM timeSheetItem WHERE dateTimeSheetItem > '%s' %s", $dateTimeSheetItem, $personID_sql);
+    $db->query($q);
+    $rows_dollars = array();
+    while($db->next_record()) {
+      $tsi = new timeSheetItem();
+      $tsi->read_db_record($db);
+      $rows_dollars[$db->f("personID")] += $tsi->calculate_item_charge();
     }
     return array($rows,$rows_dollars);
   }

@@ -175,7 +175,9 @@ class timeSheet extends db_entity
     while ($db->next_record()) {
       $this->pay_info["total_duration"] += $db->f("timeSheetItemDuration");
       $this->pay_info["duration"][$db->f("timeSheetItemID")] = $db->f("timeSheetItemDuration");
-      $this->pay_info["total_dollars"] += ($db->f("timeSheetItemDuration") * $db->f("rate"));
+      $tsi = new timeSheetItem();
+      $tsi->read_db_record($db);
+      $this->pay_info["total_dollars"] += $tsi->calculate_item_charge();
       $db->f("rate") and $this->pay_info["timeSheetItem_rate"] = $db->f("rate");
 
       if ($db->f("rate") > 0) {

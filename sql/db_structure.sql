@@ -524,6 +524,7 @@ CREATE TABLE timeSheetItem (
   rate DECIMAL(19,2) DEFAULT '0.00',
   commentPrivate tinyint(1) default '0',
   comment text,
+  multiplier tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY  (timeSheetItemID),
   INDEX idx_timeSheetID (timeSheetID)
 ) TYPE=MyISAM PACK_KEYS=0;

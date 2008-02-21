@@ -282,6 +282,18 @@
     </td> 
     <td width="1%">{get_help("config_taskPriorities.html")}</td>
   </tr>
+  <tr>
+    <td valign="top" width="20%"><nobr>Timesheet Multipliers</nobr></td>
+    <td>
+      <a href="{$url_alloc_configEdit}configName=timeSheetMultipliers">Edit:</a>
+      {unset($br)}
+      {foreach $TPL["timeSheetMultipliers"] as $k => $arr}
+          {$br}{echo $arr["label"]} (&nbsp;&times;&nbsp;{$arr.multiplier})</span>
+          {$br = ", "}
+      {/}
+    </td>
+    <td width="1%">{get_help("config_timeSheetMultipliers")}</td>
+  </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
