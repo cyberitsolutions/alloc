@@ -40,12 +40,10 @@ class timeSheetListHomeItem extends home_item {
     global $current_user, $TPL;
     $grand_total = 0;
 
-    $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
+    $query = sprintf("SELECT timeSheet.*
                         FROM timeSheet
-                        LEFT JOIN timeSheetItem on timeSheet.timeSheetID = timeSheetItem.timeSheetID
-                      WHERE timeSheet.personID=%d 
+                       WHERE timeSheet.personID=%d 
                          AND timeSheet.status != 'finished' 
-                    GROUP BY timeSheet.timeSheetID
                     ORDER BY timeSheet.status, timeSheet.dateFrom", $current_user->get_id());
     $db = new db_alloc;
     $db->query($query);
@@ -54,13 +52,13 @@ class timeSheetListHomeItem extends home_item {
       $timeSheet = new timeSheet;
       $timeSheet->read_db_record($db);
       $timeSheet->set_tpl_values();
+      $timeSheet->load_pay_info();
       $line = array();
 
         $line["status"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".ucwords($timeSheet->get_value("status"))."</a>";
 
-      $line["total_dollars"] = "\$0";
-      $db->f("total_dollars") > 0 and $line["total_dollars"] = "\$".sprintf("%d", $db->f("total_dollars"));
-      $grand_total += $db->f("total_dollars");
+      $line["total_dollars"] = "\$" . sprintf("%d", $timeSheet->pay_info["total_dollars"]);
+      $grand_total += $timeSheet->pay_info["total_dollars"];
 
       $project = $timeSheet->get_foreign_object("project");
       if ($project->get_value("projectShortName")) {

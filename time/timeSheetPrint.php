@@ -64,7 +64,7 @@ define("DEFAULT_SEP","\n");
       if ($customerBilledDollars > 0) {
         $num = sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration") * $customerBilledDollars);
       } else {
-        $num = sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration") * $timeSheetItem->get_value('rate'));
+        $num = sprintf("%0.2f",$timeSheetItem->calculate_item_charge());
       }
 
       if ($taxPercent !== '') {
@@ -204,6 +204,8 @@ define("DEFAULT_SEP","\n");
   function get_timeSheetItem_list_items($timeSheetID) {
     list($db,$customerBilledDollars,$timeSheet,$unit_array) = get_timeSheetItem_vars($timeSheetID);
 
+    $multiplier_strings = config::get_config_item("timeSheetMultipliers");
+
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
       $timeSheetItem->read_db_record($db);
@@ -215,6 +217,7 @@ define("DEFAULT_SEP","\n");
       $info["total"] += $num;
       $rows[$row_num]["date"] = $timeSheetItem->get_value("dateTimeSheetItem");
       $rows[$row_num]["units"] = $num." ".$unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")];
+      $rows[$row_num]["multiplier_string"] = $multiplier_strings[$timeSheetItem->get_value("multiplier")]["label"];
 
       unset($str);
       $d = $timeSheetItem->get_value('description');
@@ -411,7 +414,7 @@ if ($timeSheetID) {
 
     } else if ($_GET["timeSheetPrintMode"] == "items") {
       list($rows,$info) = get_timeSheetItem_list_items($TPL["timeSheetID"]);
-      $cols2 = array("date"=>"Date","units"=>"Units","desc"=>"Description");
+      $cols2 = array("date"=>"Date","units"=>"Units","multiplier_string"=>"Multiplier","desc"=>"Description");
       $rows[] = array("date"=>"<b>TOTAL</b>","units"=>"<b>".$info["total"]."</b>");
       $y = $pdf->ezTable($rows,$cols2,"",$pdf_table_options3);
     }

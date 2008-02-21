@@ -100,6 +100,7 @@
       <tr>
         <th>Date</th>
         <th>Units</th>
+	<th>Multiplier</th>
         <th>Description</th>
       </tr>
       {list($rows,$info) = get_timeSheetItem_list_items($TPL["timeSheetID"])}
@@ -107,12 +108,14 @@
       <tr>
         <td class="nobr">{$r.date}</td>
         <td align="right" class="nobr">{$r.units}</td>
+        <td class="nobr">{$r.multiplier_string}</td>
         <td>{$r.desc}</td>
       </tr>
       {/}
       <tr>
         <th align="left">TOTAL</th>
         <th align="right">{$info.total}</th>
+        <th>&nbsp;</th>
         <th>&nbsp;</th>
       </tr>
     </table>

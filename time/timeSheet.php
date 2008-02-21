@@ -229,7 +229,10 @@ if (!$current_user->is_employee()) {
       $text and $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
       $text && $timeSheetItem->get_value("comment") and $br = "<br/>";
       $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$commentPrivateText.text_to_html($timeSheetItem->get_value("comment"));
-      $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f",$timeSheetItem->get_value('timeSheetItemDuration') * $timeSheetItem->get_value('rate'));
+      $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f", $timeSheetItem->calculate_item_charge());
+
+      $tsMultipliers = config::get_config_item("timeSheetMultipliers") or $tsMultipliers = array();
+      $timeSheetItem->get_value('multiplier') and $TPL["timeSheetItem_multiplier"] = $tsMultipliers[$timeSheetItem->get_value('multiplier')]['label'];
 
       include_template($template);
 
@@ -264,6 +267,8 @@ if (!$current_user->is_employee()) {
         $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
         $TPL["timeSheetItem_commentPrivate"] and $TPL["commentPrivateChecked"] = " checked";
 
+        $timeSheetItemMultiplier = $timeSheetItem->get_value("multiplier");
+
       // Else default values for creating a new timeSheetItem
       } else {
         #$timeSheetItem = new timeSheetItem;
@@ -276,6 +281,7 @@ if (!$current_user->is_employee()) {
         if (is_object($timeSheetItem)) {
           $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
           $taskID = $timeSheetItem->get_value("taskID");
+          $timeSheetItemMultiplier = $timeSheetItem->get_value("multiplier");
           $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
         }
       }
@@ -289,6 +295,13 @@ if (!$current_user->is_employee()) {
       $timeUnit = new timeUnit;
       $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
       $TPL["timeSheetItem_unit_options"] = get_select_options($unit_array, $timeSheetItemDurationUnitID);
+
+      $timeSheetItemMultiplier  or $timeSheetItemMultiplier = 0;
+      $tsMultipliers = config::get_config_item("timeSheetMultipliers") or $tsMultipliers = array();
+      foreach ($tsMultipliers as $k => $v) {
+        $multiplier_array[$k] = $v["label"];
+      }
+      $TPL["timeSheetItem_multiplier_options"] = get_select_options($multiplier_array, $timeSheetItemMultiplier);
 
       #$TPL["timeSheetItem_dateTimeSheetItem"] or $TPL["timeSheetItem_dateTimeSheetItem"] = date("Y-m-d");
 
