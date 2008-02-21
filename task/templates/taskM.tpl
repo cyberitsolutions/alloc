@@ -18,12 +18,6 @@ function updateTaskCommentTemplate(number) \{
     \}
   \}
 \}
-
-function refreshTaskList(radiobutton) \{
-  document.getElementById("duplicateTaskList").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updateDuplicateTaskList}task_status='+radiobutton.value+'&taskID={$task_taskID}';
-  makeAjaxRequest(url, 'callbackReceiver', 1, "duplicateTaskList");
-\}
 </script>
 <form action="{$url_alloc_task}" method="post">
 <input type="hidden" name="taskID" value="{$task_taskID}">
@@ -96,28 +90,12 @@ function refreshTaskList(radiobutton) \{
         </tr>
         <tr>
           <td colspan="1">{get_expand_link("duplicateTaskList_widgets","Task Is Duplicate Of ","duplicateTaskList_text")}</td> 
-          <td colspan="1" class="nobr">
+          <td colspan="1" class="nobr" valign="center">
             <div id="duplicateTaskList_text">{$taskDuplicateLink}</div>
-
             <div id="duplicateTaskList_widgets" style="display:none">
-              <table cellpadding="2" cellspacing="0">
-                <tr>
-                  <td width="100%">
-                    <div id="duplicateTaskList" style="display:inline">{$taskDuplicateOptions}</div>
-                  </td>
-                  <td>
-                    {get_help("task_duplicate")}
-                  </td>
-                  <td class="right">
-                    <label for="task_type_open">Open</label>
-                    <input id="task_type_open" type="radio" name="task_type" value="not_completed" onClick="refreshTaskList(this)" checked /><br>
-                    <label for="task_type_closed">Closed</label>
-                    <input id="task_type_closed" type="radio" name="task_type" value="completed" onClick="refreshTaskList(this)" />
-                  </td>
-                </tr>
-              </table>
+              <input type="text" name="duplicateTaskID" value="{$task_duplicateTaskID}" size="10">
+              {get_help("task_duplicate")}
             </div>
-
           </td>
         </tr>
       </table>
