@@ -487,31 +487,6 @@ class task extends db_entity {
     return $str;
   }
 
-  function get_task_duplicate_options($task_status,$taskID=false) {
-    if ($taskID) {
-      $task = new task();
-      $task->set_id($taskID);
-      $task->select();
-      $duplicateID = $task->get_value("duplicateTaskID");
-
-      //build list of possible duplicated tasks
-      $opt["return"] = "dropdown_options";
-      $opt["projectID"] = $task->get_value("projectID");
-      $opt["taskStatus"] = $task_status;
-      $opt["taskView"] = "byProject";
-      $tasklist = task::get_task_list($opt);
-      unset($tasklist[$taskID]); // prevent self references
-      if ($duplicateID && !$tasklist[$duplicateID]) {
-        $othertask = new task;
-        $othertask->set_id($duplicateID);
-        $othertask->select();
-        $tasklist[$duplicateID] = $duplicateID." ".$othertask->get_task_name();
-      }
-      $dropdown_options = get_select_options($tasklist,$duplicateID, 40);
-      return "<select name=\"duplicateTaskID\"><option value=\"\"> ".$dropdown_options."</select>";
-    }
-  }
-
   function set_option_tpl_values() {
     // Set template values to provide options for edit selects
     global $TPL, $current_user, $isMessage;
@@ -854,7 +829,7 @@ class task extends db_entity {
 
   function get_task_name($_FORM=array()) {
 
-    #$_FORM["showTaskID"] and $id = $this->get_id()." ";
+    $_FORM["prefixTaskID"] and $id = $this->get_id()." ";
 
     if ($this->get_value("taskTypeID") == TT_PHASE && ($_FORM["return"] == "html" || $_FORM["return"] == "objectsAndHtml")) {
       $rtn = "<strong>".$id.$this->get_value("taskName")."</strong>";
@@ -1172,7 +1147,7 @@ function get_task_statii_array() {
         $row["taskName"] = $t->get_task_name($_FORM);
         $row["taskLink"] = $t->get_task_link($_FORM);
         $row["newSubTask"] = $t->get_new_subtask_link();
-        $row["taskStatus"] = $t->get_status($_FORM["return"]);
+        $_FORM["showStatus"] and $row["taskStatus"] = $t->get_status($_FORM["return"]);
         $row["object"] = $t;
         $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
@@ -1364,7 +1339,7 @@ function get_task_statii_array() {
       $row["taskName"] = $task->get_task_name($_FORM);
       $row["taskLink"] = $task->get_task_link($_FORM);
       $row["newSubTask"] = $task->get_new_subtask_link();
-      $row["taskStatus"] = $task->get_status();
+      $_FORM["showStatus"] and $row["taskStatus"] = $task->get_status();
       $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
       $row["padding"] = $_FORM["padding"];
       $row["object"] = $task;

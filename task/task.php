@@ -115,7 +115,6 @@ if (isset($taskID)) {
   $orig_personID = $task->get_value("personID");
   $orig_duplicateTaskID = $task->get_value("duplicateTaskID");
   $orig_dateActualCompletion = $task->get_value("dateActualCompletion");
-  $TPL["taskDuplicateOptions"] = task::get_task_duplicate_options("not_completed",$taskID);
 
 // Creating a new record
 } else {
@@ -358,7 +357,7 @@ if ($dupeID) {
   $realtask = new task;
   $realtask->set_id($dupeID);
   $realtask->select();
-  $TPL["taskDuplicateLink"] = $realtask->get_task_link(array("showTaskID"=>1));
+  $TPL["taskDuplicateLink"] = $realtask->get_task_link(array("prefixTaskID"=>1));
   $mesg = "This task is a duplicate of ".$TPL["taskDuplicateLink"];
   $TPL["message_help"][] = $mesg;
   $TPL["comments_disabled"] = true;
