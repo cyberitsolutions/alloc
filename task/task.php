@@ -405,7 +405,7 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
 if ($task->get_id()) {
   $options["parentTaskID"] = $task->get_id();
   $options["taskView"] = "byProject";
-  $options["projectIDs"][] = $task->get_value("projectID");
+  $task->get_value("projectID") and $options["projectIDs"][] = $task->get_value("projectID");
   $options["showDates"] = true;
   #$options["showCreator"] = true;
   $options["showAssigned"] = true;
