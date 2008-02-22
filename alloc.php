@@ -172,7 +172,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // Setup some useful constants
   define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
   define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
-  define("ALLOC_DEFAULT_RETURN_PATH_ADDRESS",config::get_config_item("AllocFromEmailAddress"));
+  define("ALLOC_DEFAULT_RETURN_PATH_ADDRESS",config::get_config_item("allocEmailAdmin"));
 
   // Setup a current_user person who will represent the logged in user
   $current_user = new person;
