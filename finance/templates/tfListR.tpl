@@ -1,4 +1,4 @@
-<tr class="{$odd_even}">
+<tr>
   <td align="left">{$tfName}</td>
   <td align="left">{$tfComments}&nbsp;</td>
   <td align="right">{$tfBalance}</td>

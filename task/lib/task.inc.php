@@ -1290,8 +1290,6 @@ function get_task_statii_array() {
 
   function get_task_list_tr($task,$_FORM) {
     global $TPL;
-    static $odd_even;
-    $odd_even = $odd_even == "even" ? "odd" : "even";
 
     $today = date("Y-m-d");
     $task["dateTargetStart"]      == $today and $task["dateTargetStart"]      = "<b>".$task["dateTargetStart"]."</b>";
@@ -1320,7 +1318,7 @@ function get_task_statii_array() {
 
     $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
 
-                                  $summary[] = "<tr class=\"".$odd_even."\">";
+                                  $summary[] = "<tr>";
     $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
                                   $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
     $_FORM["showProject"]     and $summary[] = "  <td><a href=\"".$TPL["url_alloc_project"]."projectID=".$task["projectID"]."\">".$task["project_name"]."</a>&nbsp;</td>";

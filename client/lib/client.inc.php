@@ -152,8 +152,6 @@ class client extends db_entity {
       $row["clientLink"] = $c->get_client_link();
       $summary.= client::get_client_list_tr($row,$_FORM);
       $summary_ops[$c->get_id()] = $c->get_value("clientName");
-
-      #$TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
     }
 
     if ($print && $_FORM["return"] == "html") {
@@ -184,9 +182,6 @@ class client extends db_entity {
 
   function get_client_list_tr($client,$_FORM) {
 
-    static $odd_even;
-    $odd_even = $odd_even == "even" ? "odd" : "even";
-
     if ($_FORM["showPrimaryContactName"] || $_FORM["showPrimaryContactPhone"] || $_FORM["showPrimaryContactEmail"]) {
       $clientContact = new clientContact;
       $clientContact->set_id($client['clientPrimaryContactID']);
@@ -197,7 +192,7 @@ class client extends db_entity {
       $primaryContactEmail and $primaryContactEmail = "<a href=\"mailto:".$primaryContactEmail."\">".$primaryContactEmail."</a>";
     }
 
-    $summary[] = "<tr class=\"".$odd_even."\">";
+    $summary[] = "<tr>";
     $_FORM["showClientName"]          and $summary[] = "  <td>".$client["clientName"]."&nbsp;</td>";
     $_FORM["showClientLink"]          and $summary[] = "  <td>".$client["clientLink"]."&nbsp;</td>";
     $_FORM["showPrimaryContactName"]  and $summary[] = "  <td>".$primaryContactName."&nbsp;</td>";

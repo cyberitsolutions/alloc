@@ -396,11 +396,7 @@ class project extends db_entity {
   }
 
   function get_project_list_tr($row,$_FORM) {
-
-    static $odd_even;
-    $odd_even = $odd_even == "even" ? "odd" : "even";
-
-    $summary[] = "<tr class=\"".$odd_even."\">";
+    $summary[] = "<tr>";
     $_FORM["showProjectName"]     and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
     $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";
     $_FORM["showClient"]          and $summary[] = "  <td>".$row["clientName"]."&nbsp;</td>";

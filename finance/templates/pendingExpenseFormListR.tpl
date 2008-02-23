@@ -1,4 +1,4 @@
-<tr class="{$row_class}">
+<tr>
   <td><a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&edit=true">{$expenseFormID}</a></td>
   <td>{$expenseFormCreatedTime}</td>
   <td>{$expenseFormCreatedUser}</td>

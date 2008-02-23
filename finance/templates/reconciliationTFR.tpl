@@ -1,4 +1,4 @@
-<tr class="{$row_class}">
+<tr>
   <td>{$tfName}</td>
   <td align="right">{$openingBalance}</td>
   <td align="right">{$expenses}</td>

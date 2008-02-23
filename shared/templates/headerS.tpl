@@ -7,12 +7,14 @@
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}{get_stylesheet_name()}" type="text/css" media="screen" />
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print" />
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}calendar.css" type="text/css" media="screen" />
-    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}main.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}alloc.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}help.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}sorttable.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}init.js"></script>
   </head>
   <body>
   <div id="helper"></div>

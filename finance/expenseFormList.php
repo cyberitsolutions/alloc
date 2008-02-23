@@ -49,8 +49,6 @@ function show_expense_form_list($template_name) {
     $expenseForm = new expenseForm();
     if ($expenseForm->read_db_record($db, false)) {
       $i++;
-      $TPL["row_class"] = "odd";
-      $i % 2 == 0 and $TPL["row_class"] = "even";
       $expenseForm->set_tpl_values();
       $TPL["formTotal"] = sprintf("%0.2f", -$db->f("formTotal"));
       $TPL["expenseFormModifiedUser"] = person::get_fullname($expenseForm->get_value("expenseFormModifiedUser"));
@@ -76,8 +74,6 @@ function show_pending_transaction_list($template_name) {
   $db->query($q);
   while ($db->next_record()) {
     $i++;
-    $TPL["row_class"] = "odd";
-    $i % 2 == 0 and $TPL["row_class"] = "even";
     $transaction = new transaction;
     $transaction->read_db_record($db);
     $transaction->set_tpl_values();

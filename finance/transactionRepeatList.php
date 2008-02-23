@@ -50,8 +50,6 @@ function show_expenseFormList($template_name) {
 
   while ($db->next_record()) {
     $i++;
-    $TPL["row_class"] = "odd";
-    $i % 2 == 0 and $TPL["row_class"] = "even";
     $transactionRepeat->read_db_record($db);
     $transactionRepeat->set_tpl_values();
     $TPL["tfName"] = get_tf_name($transactionRepeat->get_value("tfID"));
