@@ -1,4 +1,4 @@
-    <tr class="{$odd_even}">
+    <tr>
       <td>{$heading}</td>
       <td>{$personName}</td>
       <td>{$displayFromDate}</td>

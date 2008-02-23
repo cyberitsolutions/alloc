@@ -1,4 +1,4 @@
-    <tr class="{$odd_even}">
+    <tr>
       <td align="left">{$user_username}</td>
       <td align="center">{$user_projects_current}</td>
       <td align="center">{$user_projects_total}</td>

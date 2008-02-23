@@ -1,4 +1,4 @@
-<tr class="{$odd_even}">
+<tr>
   <td><a href="{$url_alloc_person}personID={$person_personID}">{$person_username}</a></td>
   <td>{$person_personActive}</td>
   <td>{$person_phoneNo1}{$person_phoneNo2}&nbsp;</td>

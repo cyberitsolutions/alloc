@@ -320,8 +320,6 @@ class transaction extends db_entity
       #echo "<pre>".print_r($row,1)."</pre>";
       $print = true;
       $i++;
-      $row["class"] = "odd";
-      $i % 2 == 0 and $row["class"] = "even";
       $t = new transaction;
       if (!$t->read_db_record($db,false)) {
         continue;

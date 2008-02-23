@@ -1,4 +1,4 @@
-<tr class="{$odd_even}">
+<tr>
   <td>{$tableName}</td>
   <td>{$entityID}</td>
   <td>{$username}</td>

@@ -83,8 +83,6 @@ function show_tf_balances($template) {
 
   while (list($tfName, $info) = each($tf_info)) {
     $i++;
-    $TPL["row_class"] = "odd";
-    $i % 2 == 0 and $TPL["row_class"] = "even";
 
     $TPL["tfName"] = $tfName;
     $TPL["expenses"] = number_format($info["expenses"], 2);
@@ -111,8 +109,6 @@ function show_transaction_list($transactionType) {
 
   while ($db->next_record()) {
     $i++;
-    $TPL["row_class"] = "odd";
-    $i % 2 == 0 and $TPL["row_class"] = "even";
 
     $transaction = new transaction;
     $transaction->read_db_record($db);

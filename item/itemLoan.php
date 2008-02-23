@@ -53,8 +53,6 @@ function show_overdue($template_name) {
 
   while ($db->next_record()) {
     $i++;
-    $TPL["row_class"] = "odd";
-    $i % 2 == 0 and $TPL["row_class"] = "even";
 
     $item = new item;
     $loan = new loan;

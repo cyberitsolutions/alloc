@@ -1,4 +1,4 @@
-<tr class="{$row_class}">
+<tr>
   <td><a href="{$url_alloc_invoice}invoiceID={$invoiceID}">{$invoiceNum}</a></td>
   <td>{$clientName}</td>
   <td>{$invoiceName}</td>

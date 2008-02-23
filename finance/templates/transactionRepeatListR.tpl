@@ -1,4 +1,4 @@
-<tr class="{$row_class}">
+<tr>
   <td><a href="{$url_alloc_transactionRepeat}transactionRepeatID={$transactionRepeatID}">{$product}</a></td>
   <td>{$transactionStartDate}</td>
   <td>{$transactionFinishDate}</td>

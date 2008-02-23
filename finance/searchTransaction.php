@@ -49,9 +49,6 @@ require_once("../alloc.php");
     $transactionTypes = transaction::get_transactionTypes();
     while ($db->next_record()) {
       $i++;
-      $TPL["row_class"] = "odd";
-      $i % 2 == 0 and $TPL["row_class"] = "even";
-
       $transaction->read_db_record($db);
       $transaction->set_tpl_values();
       $tf = $transaction->get_foreign_object("tf");

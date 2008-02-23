@@ -544,8 +544,6 @@ class invoice extends db_entity {
   function get_invoice_list_tr($invoice,$_FORM) {
     global $TPL;
 
-    static $odd_even;
-    $odd_even = $odd_even == "even" ? "odd" : "even";
     $statii = invoice::get_invoice_statii();
     $currency = '$';
 
@@ -564,7 +562,7 @@ class invoice extends db_entity {
     }
 
 
-    $summary[] = "<tr class=\"".$odd_even."\">";
+    $summary[] = "<tr>";
     $_FORM["showInvoiceNumber"]       and $summary[] = "  <td>".$invoice["invoiceLink"]."&nbsp;</td>";
     $_FORM["showInvoiceClient"]       and $summary[] = "  <td>".$invoice["clientName"]."</td>";
     $_FORM["showInvoiceName"]         and $summary[] = "  <td>".$invoice["invoiceName"]."&nbsp;</td>";

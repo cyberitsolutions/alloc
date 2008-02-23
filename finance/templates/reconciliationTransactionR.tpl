@@ -1,4 +1,4 @@
-<tr class="{$row_class}">
+<tr>
   <td>{$transactionID}</td>
   <td>{$transactionDate}</td>
   <td>{$product}</td>
