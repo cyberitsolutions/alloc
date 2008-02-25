@@ -53,13 +53,24 @@ function refreshTaskList(radiobutton) \{
   <tr>
     <td valign="top"></td>
     <td colspan="3" valign="top">
-      Comments<br>
-      {get_textarea("timeSheetItem_comment",$TPL["timeSheetItem_comment"])}
-      Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{$commentPrivateChecked}>
-      </div>
+      <label for="timeSheetItem_comment">Invoice Summary</label><br>
+      {if strlen($TPL['timeSheetItem_comment']) > 78}
+        {get_textarea("timeSheetItem_comment", $TPL['timeSheetItem_comment'])}
+      {else}
+        <input name="timeSheetItem_comment" size="78" maxlength="78" type="text" value="{$timeSheetItem_comment}">
+      {/}
     </td>
     <td colspan="1" valign="top" align="right"><br/>{$timeSheetItem_buttons}</td>
   </tr>
+  {if !$_POST['timeSheetItem_edit']}
+  <tr>
+    <td valign="top"></td>
+    <td colspan="3" valign="top">
+      Task Comment (<em>Internal Comment Only</em>)<br />
+      <div class="nobr">{get_textarea("timeSheetItem_taskComment", "")}</textarea>
+      </div>
+    </td>
+  {/}
 </table>
 
 

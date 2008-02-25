@@ -546,7 +546,7 @@ function util_get_comments_array($entity, $id, $options=array()) {
     }
 
     if ($v["timeSheetID"]) {
-      $new["ts_label"] = " (Time Sheet Comment)";
+      $new["ts_label"] = " (Time Sheet Invoice Summary)";
 
     } else if (($v["personID"] == $current_user->get_id() || $current_user->have_role("admin")) && $options["showEditButtons"]) {
       $new["comment_buttons"] = "<nobr><input type=\"submit\" name=\"comment_edit\" value=\"Edit\"><input type=\"submit\" name=\"comment_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this comment?')\"></nobr>";
