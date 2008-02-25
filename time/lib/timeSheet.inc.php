@@ -1092,6 +1092,12 @@ EOD;
 
   function email_move_status_to_finished($direction,$info) {
     if ($direction == "forwards") {
+      //transactions
+      $q = sprintf("SELECT * FROM transaction WHERE timeSheetID = %d", $this->get_id());
+      $db = new db_alloc();
+      $db->query($q);
+
+      //the email itself
       $email = array();
       $email["type"] = "timesheet_finished";
       $email["to"] = $info["timeSheet_personID_email"];
@@ -1104,6 +1110,14 @@ For Project: {$info["projectName"]}
 Your timesheet has been completed by {$info["current_user_name"]}.
 
 EOD;
+
+      if($db->num_rows() > 0) {
+        $email["body"] .= "Transaction summary:\n";
+        $status_ops = array("pending" => "Pending", "approved" => "Approved", "rejected" => "Rejected");
+        while($db->next_record()) {
+          $email["body"] .= $db->f("transactionDate") . " for " . $db->f("product") . ": " . $status_ops[$db->f("status")] . "\n";
+        }
+      }
       $msg[] = $this->shootEmail($email);
       $this->set_value("status", "finished");
       return $msg;
