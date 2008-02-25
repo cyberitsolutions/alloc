@@ -1,23 +1,9 @@
 {show_header()}
 {show_toolbar()}
 <script type="text/javascript" language="javascript">
-
 // Make the XML request thing, specify the callback function 
 function updateStuffWithAjax() \{
-  obj = document.getElementById("timeSheetForm").clientID;
-  id = obj.options[obj.selectedIndex].value;
-  document.getElementById("projectDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updateProjectListByClient}clientID='+id
-  makeAjaxRequest(url,'updateProjectList',1)
-\}
-
-// Here's the callback function
-function updateProjectList(number) \{
-  if (http_request[number].readyState == 4) \{
-    if (http_request[number].status == 200) \{
-      document.getElementById("projectDropdown").innerHTML = http_request[number].responseText;
-    \}
-  \}
+  makeAjaxRequest('{$url_alloc_updateProjectListByClient}clientID='+$("#clientID").attr("value"),'projectDropdown')
 \}
 </script>
 <form action="{$url_alloc_timeSheet}" method="post" id="timeSheetForm">

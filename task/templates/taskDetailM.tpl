@@ -1,29 +1,14 @@
 {show_header()}
 {show_toolbar()}
 <script type="text/javascript" language="javascript">
-
 // Make the XML request thing, specify the callback function 
 function updateStuffWithAjax() \{
-  obj = document.getElementById("taskform").projectID;
-  id = obj.options[obj.selectedIndex].value;
-
-  document.getElementById("parenTaskDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updateParentTasks}projectID='+id
-  makeAjaxRequest(url,'callbackReceiver',1,'parenTaskDropdown')
-
-  document.getElementById("taskCCListDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updateTaskCCList}projectID='+id+'&taskID={$task_taskID}';
-  makeAjaxRequest(url,'callbackReceiver',2,'taskCCListDropdown')
-
-  document.getElementById("taskPersonList").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}';
-  makeAjaxRequest(url,'callbackReceiver',3,'taskPersonList')
-
-  document.getElementById("taskManagerPersonList").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}';
-  makeAjaxRequest(url,'callbackReceiver',4,'taskManagerPersonList')
+  id = $("#projectID").attr("value")
+  makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+id, 'parenTaskDropdown')
+  makeAjaxRequest('{$url_alloc_updateTaskCCList}projectID='+id+'&taskID={$task_taskID}', 'taskCCListDropdown')
+  makeAjaxRequest('{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}', 'taskPersonList')
+  makeAjaxRequest('{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}', 'taskManagerPersonList')
 \}
-
 </script>
 
 <form action="{$url_alloc_task}" method="post" id="taskform">
@@ -43,7 +28,7 @@ function updateStuffWithAjax() \{
   <tr>
     <td>Project</td>
     <td>
-      <select name="projectID" onChange="updateStuffWithAjax()">
+      <select id="projectID" name="projectID" onChange="updateStuffWithAjax()">
         {$projectOptions}
       </select>
     </td>

@@ -18,14 +18,10 @@ if (document.images) {
 }
 
 
-
+// When the document has loaded...
 $(document).ready(function() {
   // Give the tables alternating stripes
   $(".tasks tr:even").addClass("even");
   $(".tasks tr:odd").addClass("odd");
 });
-
-
-
-
 

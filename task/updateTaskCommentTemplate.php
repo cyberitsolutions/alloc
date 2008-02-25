@@ -23,12 +23,13 @@
 
 require_once("../alloc.php");
 
-
+usleep(400000);
 if ($_GET["taskCommentTemplateID"] && $_GET["taskID"]) {
   $taskCommentTemplate = new taskCommentTemplate;
   $taskCommentTemplate->set_id($_GET["taskCommentTemplateID"]);
   $taskCommentTemplate->select();
-  echo $taskCommentTemplate->get_populated_template($_GET["taskID"]);
+  $val = $taskCommentTemplate->get_populated_template($_GET["taskID"]);
+  get_textarea("comment",$val,array("height"=>"medium"));
 }
 
 

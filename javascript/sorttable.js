@@ -133,13 +133,8 @@ sorttable = {
             arrow = this.getElementsByTagName('span')[0];
           }
 
-          // Switch all the other arrows off
-          arrows = getElementsByClass("sort_arrows",this.parentNode);
-          if (arrows) {
-            for (i=0; i<arrows.length; i++) {
-              arrows[i].innerHTML = '<img src="../images/arrow_blank.gif" border="0">';
-            }
-          }
+          // Switch all the other arrows off (uses jQuery)
+          $(".sort_arrows").html('<img src="../images/arrow_blank.gif" border="0">');
 
           // if we're already sorted by this column, just reverse the table, which is quicker
           if (this.className.search(/\bsorttable_sorted\b/) != -1) {

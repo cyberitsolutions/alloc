@@ -14,8 +14,10 @@
           <td valign="top" align="right">
             <input type="hidden" name="entity" value="task">
             <input type="hidden" name="entityID" value="{$task_taskID}">
-            {get_textarea("comment",$TPL["comment"],array("height"=>"medium"))}<br>
-            <select name="taskCommentTemplateID" onChange="updateStuffWithAjax()">{$taskCommentTemplateOptions}</select>
+            <div id="comment_textarea">
+              {get_textarea("comment",$TPL["comment"],array("height"=>"medium"))}<br>
+            </div>
+            <select name="taskCommentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateTaskCommentTemplate}taskID={$task_taskID}&taskCommentTemplateID='+$(this).attr('value'),'comment_textarea')">{$taskCommentTemplateOptions}</select>
           </td>
           <td align="right" valign="top" width="100%">
             <table cellpadding="0" cellspacing="2">

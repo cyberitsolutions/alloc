@@ -52,7 +52,7 @@ function get_textarea($name, $default_value, $ops=array()) {
     <div id="shadow_${name}" style="position:absolute; left:-8000px; top:-8000px;">${div_value}</div>
     <textarea id="${name}" name="${name}" cols="${cols}" wrap="virtual" style="height:${default_height}px"
               onFocus="adjust_textarea(this,${default_height})" 
-              onkeyup="adjust_textarea(this,${default_height})"
+              onBlur="stop_textarea_timer()""
     >${default_value}</textarea>
 EOD;
   echo $str;

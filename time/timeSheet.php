@@ -636,7 +636,7 @@ if (!$TPL["timeSheet_projectName"]) {
   $options["return"] = "dropdown_options";
   $ops = client::get_client_list($options);
 
-  $TPL["show_client_options"] = "<select size=\"1\" name=\"clientID\" onChange=\"updateStuffWithAjax()\"><option></option>";
+  $TPL["show_client_options"] = "<select size=\"1\" id=\"clientID\" name=\"clientID\" onChange=\"updateStuffWithAjax()\"><option></option>";
   $TPL["show_client_options"].= get_select_options($ops,$clientID)."</select>";
 
 
