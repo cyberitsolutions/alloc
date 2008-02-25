@@ -103,7 +103,8 @@ function updateStuffWithAjax() \{
       </div>
       {get_help("task_interested_parties")}
     </td>
-    <td colspan="2"></td>
+    <td class="right" valign="top">Estimated Hours</td>
+    <td valign="top"><input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5"></td>
   </tr>
   <tr>
     <td></td>
