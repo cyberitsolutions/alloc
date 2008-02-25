@@ -147,12 +147,13 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     $othertask->set_id($dupeID);
     $othertask->select();
     if ($othertask->get_value("duplicateTaskID")) {
-      $msg_error = "Task ".$dupeID." ".$othertask->get_task_name()." is a duplicate. You may not set a task to be a duplicate of a duplicate.";
-      //abort the page
-      $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
-      page_close();
-      header("Location: ".$url."&message=".urlencode($msg_error));
-      exit();
+      $TPL["message"][] = "Task ".$dupeID." ".$othertask->get_task_name()." is a duplicate. Task may not be a duplicate of a duplicate.";
+      alloc_redirect($TPL["url_alloc_task"]."taskID=".$task->get_id());
+    }
+
+    if ($othertask->get_id() == $task->get_id() || $othertask->get_id() == 0) {
+      $TPL["message"][] = "Error setting duplicate. Invalid Task ID.";
+      alloc_redirect($TPL["url_alloc_task"]."taskID=".$task->get_id());
     }
 
     $task->set_value("duplicateTaskID", $dupeID);
