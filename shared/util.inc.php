@@ -1224,6 +1224,7 @@ function alloc_redirect($url) {
 
   $str and $str = $sep.implode("&",$str);
   header("Location: ".$url.$str);
+  exit();
 }
   
 ?>
