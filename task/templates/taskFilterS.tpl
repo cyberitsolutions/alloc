@@ -1,22 +1,10 @@
 <script type="text/javascript" language="javascript">
-
 // Make the XML request thing, specify the callback function 
 function refreshProjectList(radiobutton) \{
-  document.getElementById("projectListDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updateProjectList}projectType='+radiobutton.value
-  makeAjaxRequest(url,'updateProjectList',1)
-\}
-
-// Here's the callback function
-function updateProjectList(number) \{
-  if (http_request[number].readyState == 4) \{
-    if (http_request[number].status == 200) \{
-      document.getElementById("projectListDropdown").innerHTML = http_request[number].responseText;
-    \}
-  \}
+  url = '{$url_alloc_updateProjectList}projectType='+radiobutton.value;
+  makeAjaxRequest(url, 'projectListDropdown')
 \}
 </script>
-
 
 <form action="{$url_form_action}" method="post">
 <table border="0" cellspacing="0" cellpadding="3" width="100%">

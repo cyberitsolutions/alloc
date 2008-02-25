@@ -335,9 +335,12 @@ table.comments th {
   color:(TD_COLOR); 
   font-weight:normal; 
   padding:4px; 
+  border:0px solid black;
 }
 table.comments td { 
+  background:(PANE_BG_COLOR);
   padding:2px 4px; 
+  border:0px solid black;
 }
 
 table.pending { 

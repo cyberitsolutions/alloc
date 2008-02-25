@@ -1,26 +1,5 @@
 {show_header()}
 {show_toolbar()}
-<script type="text/javascript" language="javascript">
-
-// Make the XML request thing, specify the callback function 
-function updateStuffWithAjax() \{
-  obj = document.getElementById("projectForm").clientID;
-  id = obj.options[obj.selectedIndex].value;
-  document.getElementById("clientContactDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
-  url = '{$url_alloc_updateProjectClientContactList}clientID='+id
-  makeAjaxRequest(url,'updateClientContact',1)
-\}
-
-// Here's the callback function
-function updateClientContact(number) \{
-  if (http_request[number].readyState == 4) \{
-    if (http_request[number].status == 200) \{
-      document.getElementById("clientContactDropdown").innerHTML = http_request[number].responseText;
-    \}
-  \}
-\}
-
-</script>
 
 <form action="{$url_alloc_project}" method="post" id="projectForm">
 <input type="hidden" name="projectID" value="{$project_projectID}">
@@ -61,7 +40,7 @@ function updateClientContact(number) \{
   </tr>
   <tr>
     <td align="right">Client</td>
-    <td><nobr><select name="clientID" onChange="updateStuffWithAjax()">{$clientOptions}</select>&nbsp; &nbsp;<a href="{$url_alloc_client}">New Client</a></nobr></td>
+    <td><nobr><select id="clientID" name="clientID" onChange="makeAjaxRequest('{$url_alloc_updateProjectClientContactList}clientID='+$('#clientID').attr('value'),'clientContactDropdown')">{$clientOptions}</select>&nbsp; &nbsp;<a href="{$url_alloc_client}">New Client</a></nobr></td>
     <td></td>
     <td align="right" class="nobr">Client Billed At $</td>
     <td><input type="text" name="customerBilledDollars" value="{$project_customerBilledDollars}" size="10"> (per unit, inc. {$taxName})</td>

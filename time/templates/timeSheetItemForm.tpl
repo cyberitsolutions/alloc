@@ -1,26 +1,12 @@
 <script type="text/javascript" language="javascript">
-
 // Make the XML request thing, specify the callback function 
 function refreshTaskList(radiobutton) \{
-  document.getElementById("taskListDropdown").innerHTML = '<img src="{$url_alloc_images}ticker2.gif" alt="Updating field..." title="Updating field...">';
   url = '{$url_alloc_updateTimeSheetTaskList}task_type='+radiobutton.value+'&timeSheetID={$timeSheet_timeSheetID}&taskID={$taskListDropdown_taskID}'
-  makeAjaxRequest(url,'updateTimeSheetTaskList',1)
-\}
-
-// Here's the callback function
-function updateTimeSheetTaskList(number) \{
-  if (http_request[number].readyState == 4) \{
-    if (http_request[number].status == 200) \{
-      document.getElementById("taskListDropdown").innerHTML = http_request[number].responseText;
-    \}
-  \}
+  makeAjaxRequest(url,'taskListDropdown')
 \}
 </script>
 
-
 <form action="{$url_alloc_timeSheet}" method="post">
-
-
 {$table_box}
   <tr>
     <th colspan="5">Create Time Sheet Item</th>
