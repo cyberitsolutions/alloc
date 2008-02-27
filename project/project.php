@@ -443,7 +443,7 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
 // if someone uploads an attachment
 if ($_POST["save_attachment"]) {
   move_attachment("project",$projectID);
-  header("Location: ".$TPL["url_alloc_project"]."projectID=".$projectID);
+  header("Location: ".$TPL["url_alloc_project"]."projectID=".$projectID."&sbs_link=attachments");
 }
 
 

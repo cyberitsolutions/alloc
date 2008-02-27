@@ -263,8 +263,8 @@ case 4:
     $reminder->delete();
   }
 
-  $headers = array("client"   => $TPL["url_alloc_client"]."clientID=".$parentID
-                  ,"project"  => $TPL["url_alloc_project"]."projectID=".$parentID
+  $headers = array("client"   => $TPL["url_alloc_client"]."clientID=".$parentID."&sbs_link=reminders"
+                  ,"project"  => $TPL["url_alloc_project"]."projectID=".$parentID."&sbs_link=reminders"
                   ,"task"     => $TPL["url_alloc_task"]."taskID=".$parentID
                   ,"home"     => $TPL["url_alloc_home"]
                   ,"calendar" => $TPL["url_alloc_taskCalendar"]."personID=".$_POST["personID"]

@@ -342,7 +342,7 @@ if ($_POST["save"]) {
   
 } else if ($_POST["save_attachment"]) {
   move_attachment("client",$clientID);
-  header("Location: ".$TPL["url_alloc_client"]."clientID=".$clientID);
+  header("Location: ".$TPL["url_alloc_client"]."clientID=".$clientID."&sbs_link=attachments");
 
 } else {
 
