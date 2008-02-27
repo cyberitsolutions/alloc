@@ -1,5 +1,17 @@
 {show_header()}
 {show_toolbar()}
+
+{$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"] or $sbs_link = "client"}
+{get_side_by_side_links(array("client"=>"Main"
+                             ,"reminders"=>"Reminders"
+                             ,"comments"=>"Comments"
+                             ,"attachments"=>"Attachments"
+                             ,"projects"=>"Projects"
+                             ,"invoices"=>"Invoices"
+                             ,"sbsAll"=>"All"
+                             ),$sbs_link)}
+
+<div id="client">
 {$table_box}
   <tr>
     <th>Client: {$clientSelfLink}</th>
@@ -13,9 +25,13 @@
 </table>
 
 {if check_optional_client_exists()}
+  {show_client_contacts()}
+{/}
 
-    {show_client_contacts()}
+</div>
 
+{if check_optional_client_exists()}
+    <div id="reminders">
     {$table_box}
       <tr>
         <th>Reminders</th>
@@ -29,13 +45,18 @@
       </tr>
       {show_reminders("../reminder/templates/reminderR.tpl")}
     </table>
+    </div>
    
- 
+  
+    <div id="comments">
     {show_comments()}
+    </div>
 
+    <div id="attachments">
     {show_attachments()}
+    </div>
 
-
+    <div id="projects">
     {$table_box}
       <tr>
         <th colspan="2">Projects</th>
@@ -48,8 +69,9 @@
       </tr>
       {show_projects()}
     </table>
+    </div>
 
-
+    <div id="invoices">
     {$table_box}
       <tr>
         <th>Invoices</th>
@@ -61,8 +83,7 @@
         </td>
       </tr>
     </table>
-
-
+    </div>
 
 {/}
 

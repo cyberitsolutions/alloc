@@ -121,8 +121,9 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
 
 if (is_object($e) && $e->get_id()) {
   $_POST["comment_edit"] and $extra = "&comment_edit=true&commentID=".$_POST["comment_id"];
-  $message_good and $extra.="&message_good=".urlencode($message_good);
-  header("Location: ".$TPL["url_alloc_".$entity].$entity."ID=".$e->get_id().$extra);
+  $TPL["message_good"][] = $message_good;
+  $extra.= "&sbs_link=comments";
+  alloc_redirect($TPL["url_alloc_".$entity].$entity."ID=".$e->get_id().$extra);
 }
 
 

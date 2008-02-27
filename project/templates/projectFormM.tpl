@@ -1,6 +1,25 @@
 {show_header()}
 {show_toolbar()}
 
+{$_POST["save"] and $_POST["sbs_link"] = "project"}
+{$_POST["person_save"] || $_POST["person_delete"] and $_POST["sbs_link"] = "people"}
+{$_POST["commission_delete"] || $_POST["commission_save"] and $_POST["sbs_link"] = "commissions"}
+{$_POST["delete_file_attachment"] || $_POST["save_attachment"] and $_POST["sbs_link"] = "attachments"}
+
+{$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"] or $sbs_link = "project"}
+{get_side_by_side_links(array("project"=>"Main"
+                             ,"people"=>"People"
+                             ,"comments"=>"Comments"
+                             ,"commissions"=>"Commissions"
+                             ,"attachments"=>"Attachments"
+                             ,"tasks"=>"Tasks"
+                             ,"reminders"=>"Reminders"
+                             ,"time"=>"Time Sheets"
+                             ,"transactions"=>"Transactions"
+                             ,"sbsAll"=>"All"
+                             ),$sbs_link)}
+
+<div id="project">
 <form action="{$url_alloc_project}" method="post" id="projectForm">
 <input type="hidden" name="projectID" value="{$project_projectID}">
 
@@ -92,7 +111,6 @@
 </table>
 
 {if defined("PROJECT_EXISTS")}
- 
 {$table_box}
   <tr>
     <th>Financial Summary</th>
@@ -102,8 +120,13 @@
     <td>Project Spend: ${$grand_total} ({$percentage}%)&nbsp;&nbsp;&nbsp;&nbsp;Task Time Estimate: {$time_remaining} Hours  ${$cost_remaining} ({$count_not_quoted_tasks} tasks not included in estimate)</td>
   </tr>            
 </table>
- 
+{/}
 
+</div>
+ 
+{if defined("PROJECT_EXISTS")}
+
+<div id="people">
 {$table_box}
   <tr>
     <th align="left" colspan="11">Project People</th>
@@ -118,11 +141,14 @@
 {show_person_list("templates/projectPersonListR.tpl")}
 {show_new_person("templates/projectPersonListR.tpl")}
 </table>
+</div>
 
-
+<div id="comments">
 {show_comments()}
+</div>
 
 
+<div id="commissions">
 {$table_box}
   <tr>
     <th align="left" colspan="4">Time Sheet Commission</th>
@@ -133,11 +159,14 @@
 {show_commission_list("templates/commissionListR.tpl")}
 {show_new_commission("templates/commissionListR.tpl")}
 </table>
+</div>
 
 
+<div id="attachments">
 {show_attachments()}
+</div>
 
-
+<div id="tasks">
 {$table_box}
   <tr>
     <th>Uncompleted Tasks</th>
@@ -149,8 +178,9 @@
     </td>
   </tr>
 </table>
+</div>
 
-
+<div id="reminders">
 {$table_box}  
   <tr>
     <th colspan="4">Reminders</th>
@@ -170,9 +200,14 @@
   {show_reminders("../reminder/templates/reminderR.tpl")}
   </form>
 </table>
+</div>
 
+<div id="time">
 {show_time_sheets("templates/projectTimeSheetS.tpl")}
+</div>
+<div id="transactions">
 {show_transactions("templates/projectTransactionS.tpl")}
+</div>
 
 {/}
 
