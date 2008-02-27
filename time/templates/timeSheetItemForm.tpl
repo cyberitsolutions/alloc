@@ -28,7 +28,7 @@ function refreshTaskList(radiobutton) \{
           <td>
             <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$timeSheetItem_timeSheetItemDuration}">
             <select name="timeSheetItem_timeSheetItemDurationUnitID">{$timeSheetItem_unit_options}</select>
-            &nbsp;at&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$timeSheetItem_rate}"> (inc. {$taxName})&nbsp;&times;&nbsp;<select name="timeSheetItem_multiplier">{$timeSheetItem_multiplier_options}</select>
+            &nbsp;at&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$timeSheetItem_rate}">&nbsp;&times;&nbsp;<select name="timeSheetItem_multiplier">{$timeSheetItem_multiplier_options}</select>
           </td>
         </tr>
         <tr>
@@ -66,7 +66,7 @@ function refreshTaskList(radiobutton) \{
   <tr>
     <td valign="top"></td>
     <td colspan="3" valign="top">
-      Task Comment (<em>Internal Comment Only</em>)<br />
+      Task Comment<br />
       <div class="nobr">{get_textarea("timeSheetItem_taskComment", "")}</textarea>
       </div>
     </td>
