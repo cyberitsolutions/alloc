@@ -20,4 +20,4 @@
 {show_transaction_listR("templates/timeSheetTransactionListR.tpl")}
 {show_new_transaction("templates/timeSheetNewTransaction.tpl")}
 {$create_transaction_buttons}
-</table><br>
+</table>

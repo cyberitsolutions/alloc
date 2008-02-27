@@ -108,7 +108,12 @@ function updateStuffWithAjax() \{
   <tr>
     <td valign="top"></td>
     <td align="right" valign="top">Billing Note</td>
-    <td colspan="2" valign="top">{get_textarea("timeSheet_billingNote",$TPL["timeSheet_billingNote"])}</td>
+    <td colspan="2" valign="top">{if $TPL["timeSheet_status"] != "finished"}
+                                   {get_textarea("timeSheet_billingNote",$TPL["timeSheet_billingNote"])}
+                                 {else}
+                                   {$timeSheet_billingNote}
+                                 {/}
+    </td>
   </tr>
 
   <tr>
@@ -131,9 +136,10 @@ function updateStuffWithAjax() \{
 
 {show_new_timeSheet("templates/timeSheetItemForm.tpl")}
 
+{show_transaction_list("templates/timeSheetTransactionListM.tpl")}
+
 {show_main_list()}
 
-{show_transaction_list("templates/timeSheetTransactionListM.tpl")}
 
 
 <br><br>

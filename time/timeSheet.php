@@ -48,7 +48,7 @@ if (!$current_user->is_employee()) {
         }
 
 
-        $TPL["create_transaction_buttons"] = "<tr><td colspan=\"7\" align=\"center\">";
+        $TPL["create_transaction_buttons"] = "<tr><td colspan=\"7\" align=\"center\" style=\"padding:10px;\">";
         $TPL["create_transaction_buttons"].= "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">";
         $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_default\" value=\"Create Default Transactions\">";
         $TPL["create_transaction_buttons"].= "&nbsp;";
