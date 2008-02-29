@@ -57,7 +57,7 @@ function refreshTaskList(radiobutton) \{
       {if strlen($TPL['timeSheetItem_comment']) > 78}
         {get_textarea("timeSheetItem_comment", $TPL['timeSheetItem_comment'])}
       {else}
-        <input name="timeSheetItem_comment" size="78" maxlength="78" type="text" value="{$timeSheetItem_comment}">
+        <input name="timeSheetItem_comment" size="78" type="text" value="{$timeSheetItem_comment}">
       {/}
     </td>
     <td colspan="1" valign="top" align="right"><br/>{$timeSheetItem_buttons}</td>
