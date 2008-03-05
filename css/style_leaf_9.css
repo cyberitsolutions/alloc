@@ -80,10 +80,41 @@ ul {
   display:inline; 
   list-style:circle inside; 
 }
+
 form { 
   display:inline; 
   padding:0px; 
   margin:0px;
+}
+input[type="text"], 
+input[type="password"], 
+input[type="checkbox"], 
+textarea,
+select {
+  border: 1px solid #cccccc; 
+  background-color: #fcfcfc;
+}
+input[type="text"]:focus, 
+input[type="password"]:focus, 
+input[type="checkbox"]:focus, 
+textarea:focus,
+select:focus {
+  border: 1px solid #666666; 
+  background-color: #ffffff;
+}
+input[type="text"].bad,
+input[type="password"].bad,
+input[type="checkbox"].bad,
+textarea.bad,
+select.bad,
+input[type="text"]:focus.bad,
+input[type="password"]:focus.bad,
+input[type="checkbox"]:focus.bad,
+textarea:focus.bad,
+select:focus.bad
+{
+  border:1px solid #cd7373;
+  background-color: #ffffff;
 }
 
 .right { 
