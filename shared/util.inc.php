@@ -415,7 +415,7 @@ function get_mimetype($file) {
   }
   return $mimetype;
 }
-function get_attachments($entity, $id) {
+function get_attachments($entity, $id, $ops=array()) {
   
   global $TPL;
   $rows = array();
@@ -451,7 +451,7 @@ function get_attachments($entity, $id) {
 
           $size = filesize($dir.DIRECTORY_SEPARATOR.$file);
           $row["path"] = $dir.DIRECTORY_SEPARATOR.$file;
-          $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.htmlentities($file)."</a>";
+          $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.$ops["sep"].htmlentities($file)."</a>";
           $row["text"] = htmlentities($file);
           $size > 1023 and $row["size"] = sprintf("%dKb",$size/1024);
           $size < 1024 and $row["size"] = sprintf("%db",$size);
@@ -494,116 +494,6 @@ function util_show_attachments($entity, $id, $options=array()) {
     $TPL["attachments"].= "<td align=\"right\" width=\"1%\" style=\"padding:5px;\">".$row["delete"]."</td></tr>";
   }
   include_template("../shared/templates/attachmentM.tpl");
-}
-function sort_task_comments_callback_func($a, $b) {
-  return $a["date"] > $b["date"];
-}
-function util_get_comments_array($entity, $id, $options=array()) {
-  global $TPL, $current_user;
-  $rows = array();
-  $new_rows = array();
-  // Need to get timeSheet comments too for task comments
-  if ($entity == "task") {
-    $rows = comment::get_comments($entity,$id);
-    $rows2 = timeSheetItem::get_timeSheetItemComments($id);
-    $rows or $rows = array();
-    $rows2 or $rows2 = array();
-    $rows = array_merge($rows,$rows2);
-    if (is_array($rows)) {
-      usort($rows, "sort_task_comments_callback_func");
-    }
-  } else {
-    $rows = comment::get_comments($entity,$id);
-  }
-
-
-  foreach ($rows as $v) {
-    $new = $v;
-
-    if (!$v["comment"])
-      continue ;
-
-    $new["emailed_text"] = "Comment by ";
-    if ($v["commentCreatedUserText"]) {
-      $new["author"] = htmlentities($v["commentCreatedUserText"]);
-      $new["emailed_text"] = "Comment emailed by ";
-
-    } else if ($v["clientContactID"]) {
-      $cc = new clientContact;
-      $cc->set_id($v["clientContactID"]);
-      $cc->select();
-      #$author = " <a href=\"".$TPL["url_alloc_client"]."clientID=".$cc->get_value("clientID")."\">".$cc->get_value("clientContactName")."</a>";
-      $new["author"] = $cc->get_value("clientContactName");
-    } else {
-      $person = new person;
-      $person->set_id($v["personID"]);
-      $person->select();
-      $new["author"] = $person->get_username(1);
-    }
-
-    if ($v["commentModifiedTime"] || $v["commentModifiedUser"]) {
-      $new["modified_info"] = ", last modified by ".person::get_fullname($v["commentModifiedUser"])." ".$v["commentModifiedTime"];
-    }
-
-    if ($v["timeSheetID"]) {
-      $new["ts_label"] = " (Time Sheet Invoice Summary)";
-
-    } else if (($v["personID"] == $current_user->get_id() || $current_user->have_role("admin")) && $options["showEditButtons"]) {
-      $new["comment_buttons"] = "<nobr><input type=\"submit\" name=\"comment_edit\" value=\"Edit\"><input type=\"submit\" name=\"comment_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this comment?')\"></nobr>";
-    }
-
-    if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
-
-      if ($options["showEditButtons"]) {
-        $new["edit"] = true;
-      } 
-
-      $files = get_attachments("comment",$v["commentID"]);
-      #echo "<pre>".print_r($files,1)."</pre>";
-      if (is_array($files)) {
-        foreach($files as $key => $file) {
-          $new["files"].= $br.$file["file"];
-          $new["br"] = "&nbsp;&nbsp;&nbsp;&nbsp;";
-        }
-      }
-
-      $v["commentEmailRecipients"] and $new["emailed"] = "<br>This comment has been emailed to ".$v["commentEmailRecipients"];
-
-      $new_rows[] = $new;
-    }
-  }
-
-  return $new_rows;
-}
-function util_get_comments($entity, $id, $options=array()) {
-  global $TPL, $current_user;
-  $rows = util_get_comments_array($entity, $id, $options);
-  $rows or $rows = array();
-
-  foreach ($rows as $v) {
-    $v["edit"] and $rtn[] =  '<form action="'.$TPL["url_alloc_comment"].'" method="post">';
-    $v["edit"] and $rtn[] =  '<input type="hidden" name="entity" value="'.$entity.'">';
-    $v["edit"] and $rtn[] =  '<input type="hidden" name="entityID" value="'.$v["commentLinkID"].'">';
-    $v["edit"] and $rtn[] =  '<input type="hidden" name="commentID" value="'.$v["commentID"].'">';
-    $v["edit"] and $rtn[] =  '<input type="hidden" name="comment_id" value="'.$v["commentID"].'">';
-    $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="comments">';
-    $rtn[] =  '<tr>';
-    $rtn[] =  '<th>'.$v["emailed_text"].'<b>'.$v["author"].'</b> '.$v["date"].$v["ts_label"].$v["modified_info"].$v["emailed"]."</th>";
-    $v["edit"] and $rtn[] =  '<th align="right" width="2%" class="nobr">'.$v["comment_buttons"].'</th>';
-    $rtn[] =  '</tr>';
-    $rtn[] =  '<tr>';
-    $rtn[] =  '<td>'.text_to_html($v["comment"]).'</td>';
-    $v["edit"] and $rtn[] =  '<td>&nbsp;</td>';
-    $rtn[] =  '</tr>';
-    $v["files"] and $rtn[] =  '<tr>';
-    $v["files"] and $rtn[] =  '<td colspan="2">'.$v["files"].'</td>';
-    $v["files"] and $rtn[] =  '</tr>';
-    $rtn[] =  '</table>';
-    $v["edit"] and $rtn[] =  '</form>';
-  }
-  if (is_array($rtn)) {
-    return implode("\n",$rtn);
-  }
 }
 function get_display_date($db_date) {
   // Convert date from database format (yyyy-mm-dd) to display format (d/m/yyyy)

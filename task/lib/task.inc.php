@@ -815,7 +815,7 @@ class task extends db_entity {
   }
 
   function get_task_comments_array() {
-    $rows = util_get_comments_array("task",$this->get_id());
+    $rows = comment::util_get_comments_array("task",$this->get_id());
     $rows or $rows = array();
     return $rows;
   }
@@ -1317,7 +1317,7 @@ function get_task_statii_array() {
         $str[] = $task["taskDescription"];
       }
       if ($_FORM["showComments"]) {
-        $comments = util_get_comments("task",$task["taskID"]);
+        $comments = comment::util_get_comments("task",$task["taskID"]);
         if ($comments) {
           $str[] = $comments;
         }
@@ -1720,6 +1720,7 @@ function get_task_statii_array() {
     $comment = new comment;
     $comment->set_value("commentType","task");
     $comment->set_value("commentLinkID",$this->get_id());
+    $comment->set_value("commentEmailUID",$email->msg_uid);
     $comment->save();
     $commentID = $comment->get_id();
 

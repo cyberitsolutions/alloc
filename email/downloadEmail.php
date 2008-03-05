@@ -20,13 +20,27 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class client_module extends module {
-  var $db_entities = array("client", "clientContact");
+require_once("../alloc.php");
+
+$lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
+
+$info["host"] = config::get_config_item("allocEmailHost");
+$info["port"] = config::get_config_item("allocEmailPort");
+$info["username"] = config::get_config_item("allocEmailUsername");
+$info["password"] = config::get_config_item("allocEmailPassword");
+$info["protocol"] = config::get_config_item("allocEmailProtocol");
+
+if (!$info["host"]) {
+  die("Email mailbox host not defined, assuming email fetch function is inactive.");
 }
 
-include(ALLOC_MOD_DIR."client/lib/client.inc.php");
-include(ALLOC_MOD_DIR."client/lib/clientContact.inc.php");
+$mail = new alloc_email_receive($info,$lockfile);
+$mail->open_mailbox(config::get_config_item("allocEmailFolder"));
 
+if ($_GET["msg_uid"]) {
+  header('Content-Disposition: attachment; filename="task_comment_email.txt"');
+  echo $mail->get_raw_email_by_msg_uid($_GET["msg_uid"]);
+}
 
-
+$mail->close();
 ?>

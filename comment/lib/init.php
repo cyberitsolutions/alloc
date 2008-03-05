@@ -20,12 +20,11 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class client_module extends module {
-  var $db_entities = array("client", "clientContact");
+class comment_module extends module {
+  var $db_entities = array("comment");
 }
 
-include(ALLOC_MOD_DIR."client/lib/client.inc.php");
-include(ALLOC_MOD_DIR."client/lib/clientContact.inc.php");
+include(ALLOC_MOD_DIR."comment/lib/comment.inc.php");
 
 
 

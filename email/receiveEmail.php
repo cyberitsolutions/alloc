@@ -56,6 +56,7 @@ if ($num_new_emails >0) {
   foreach ($msg_nums as $num) {
     unset($bad_key,$done);
     $mail->set_msg($num);
+    $mail->set_uid($mail->get_uid($num)); // This is so that comments can start tracking the emails uid. 
     $headers = $mail->get_msg_header();
     $keys = $mail->get_hashes();
     $debug and print $nl.$nl."Keys: ".$nl.print_r($keys,1);

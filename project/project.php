@@ -244,7 +244,7 @@ require_once("../alloc.php");
   function show_comments() {
     global $projectID, $TPL;
     $options["showEditButtons"] = true;
-    $TPL["commentsR"] = util_get_comments("project",$projectID,$options);
+    $TPL["commentsR"] = comment::util_get_comments("project",$projectID,$options);
 
     if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
       $TPL["class_new_project_comment"] = "hidden";
