@@ -118,6 +118,19 @@ class alloc_email_receive {
     $this->msg_num = $x;
   }
 
+  function set_uid($x) {
+    $this->msg_uid = $x;
+  }
+
+  function get_uid($msgno) {
+    static $cache;
+    if ($cache[$msgno]) {
+      return $cache[$msgno];
+    }
+    $cache[$msgno] = imap_uid($this->connection,$msgno);
+    return $cache[$msgno];
+  }
+
   function get_msg_header($num=0) {
     $num or $num = $this->msg_num;
     $num and $this->mail_headers = imap_headerinfo($this->connection, $num);
@@ -126,6 +139,12 @@ class alloc_email_receive {
 
   function load_structure() {
     $this->mail_structure = imap_fetchstructure($this->connection,$this->msg_num);
+  }
+
+  function get_raw_email_by_msg_uid($msg_uid) {
+    $header = imap_fetchheader($this->connection,$msg_uid,FT_PREFETCHTEXT+FT_UID);
+    $body = imap_body($this->connection,$msg_uid,FT_UID);
+    return $header.$body;
   }
 
   function save_email($file) {

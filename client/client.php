@@ -262,7 +262,7 @@ require_once("../alloc.php");
   function show_comments() {
     global $clientID, $TPL;
     $options["showEditButtons"] = true;
-    $TPL["commentsR"] = util_get_comments("client",$clientID,$options);
+    $TPL["commentsR"] = comment::util_get_comments("client",$clientID,$options);
   
     if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
       $TPL["class_new_client_comment"] = "hidden";

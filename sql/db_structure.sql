@@ -77,6 +77,7 @@ CREATE TABLE comment (
   commentCreatedUserClientContactID int(11) DEFAULT NULL,
   commentCreatedUserText varchar(255) DEFAULT NULL,
   commentEmailRecipients VARCHAR(255) DEFAULT "",
+  commentEmailUID VARCHAR(255) DEFAULT NULL,
   comment TEXT,
   PRIMARY KEY  (commentID),
   KEY commentLinkID (commentLinkID),
