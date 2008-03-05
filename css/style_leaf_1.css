@@ -373,6 +373,10 @@ table.comments td {
   padding:2px 4px; 
   border:0px solid black;
 }
+table.comments div.hidden_text {
+  color:#888888;
+  font-style:italic;
+}
 
 table.pending { 
   background-color:#f3f9e0; 

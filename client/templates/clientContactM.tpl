@@ -1,7 +1,7 @@
   {$table_box}
     <tr>
       <th>Client Contacts</th>
-      <th class="right">{get_expand_link("id_new_client_contact")}</th>
+      <th class="right">{print_expand_link("id_new_client_contact")}</th>
     </tr>
     <tr>
       <td colspan="2">

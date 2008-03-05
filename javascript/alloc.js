@@ -7,22 +7,39 @@ function makeAjaxRequest(url,entityid) {
   })
 }
 
-function set_grow_shrink_box(id, display, images, text, id_to_hide) {
-  if (display == 'none') {
-    display = 'inline';
-    var display_to_hide = 'none';
-    var image = images+'small_shrink.gif'
+function set_grow_shrink_box(id, images, text, id_to_hide) {
+  if ($("#"+id).is(':visible')) {
+    image = images+'small_grow.gif';
   } else {
-    display = 'none';
-    var display_to_hide = 'inline';
-    var image = images+'small_grow.gif'
+    image = images+'small_shrink.gif';
   }
-  document.getElementById(id).style.display=display;
+  // hide or show the actual div
+  $("#"+id).toggle();
+
+  // toggle the other div - if any
   if (id_to_hide) {
-    document.getElementById(id_to_hide).style.display=display_to_hide;
+    $("#"+id_to_hide).toggle();
   }
-  var str = "<nobr><a class=\"growshrink nobr\" href=\"#\" onClick=\"return set_grow_shrink_box('"+id+"','"+display+"','"+images+"','"+text+"','"+id_to_hide+"');\">"+text+"<img border=\"0\" src=\""+image+"\"></a></nobr>"
-  document.getElementById('button_'+id).innerHTML = str;
+  str = "<nobr><a class=\"growshrink nobr\" href=\"#\" onClick=\"return set_grow_shrink_box('"+id+"','"+images+"','"+text+"','"+id_to_hide+"');\">"+text+"<img border=\"0\" src=\""+image+"\"></a></nobr>"
+  $('#button_'+id).html(str);
+  return false;
+}
+
+// This is a generic show/hide for anything
+function set_grow_shrink(id, id_to_hide, use_classes_instead_of_ids) {
+  // hide or show the actual div
+  if (use_classes_instead_of_ids) {
+    $("."+id).toggle();
+  } else {
+    $("#"+id).toggle();
+  }
+
+  // toggle the other div - if any
+  if (use_classes_instead_of_ids && id_to_hide) {
+    $("."+id_to_hide).toggle();
+  } else if (id_to_hide) {
+    $("#"+id_to_hide).toggle();
+  }
   return false;
 }
 

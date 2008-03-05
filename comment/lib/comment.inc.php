@@ -186,7 +186,7 @@ class comment extends db_entity {
 
   function get_comment_html_table($row=array()) {
     global $TPL;
-    $comment = text_to_html($row["comment"]);
+    $comment = comment::add_shrinky_divs(text_to_html($row["comment"]),$row["commentID"]);
     $onClick = "return set_grow_shrink('comment_".$row["commentID"]."','button_comment_".$row["commentID"]."','true');";
     $rtn[] = '<table width="100%" cellspacing="0" border="0" class="comments">';
     $rtn[] = '<tr>';
@@ -212,6 +212,58 @@ class comment extends db_entity {
         $str.= ", last modified by <b>".person::get_fullname($comment["commentModifiedUser"])."</b> ".$comment["commentModifiedTime"];
       }
     return $str;
+  }
+
+  function add_shrinky_divs($html="", $commentID) {
+    if ($_GET["media"] == "print") return $html;
+    $class = "comment_".$commentID;
+    $lines = explode("\n","\n".$html."\n");
+    foreach ($lines as $k => $line) {
+      if (!$started && preg_match("/^&gt;/",$line)) {
+        $started = true;
+        $start_position = $k;
+        $new_lines[$k] = $line;
+
+      } else if ($started && !preg_match("/^&gt;/",$line)){
+    
+        $num_lines_hidden = $k-$start_position;
+
+        if ($num_lines_hidden > 3) {
+          $new_lines[$start_position-1].= "<div style=\"display:inline;\" class=\"hidden_text button_".$class."\"> --- ".$num_lines_hidden." lines hidden --- <br></div>";
+          $new_lines[$start_position-1].= "<div style=\"display:none;\" class=\"hidden_text ".$class."\">";
+          $new_lines[$k] = "</div>".$line;
+    
+        } else {
+          $new_lines[$start_position-1].= "<div style=\"display:inline;\" class=\"hidden_text\">";
+          $new_lines[$k] = "</div>".$line;
+        }
+
+        $started = false;
+
+      } else {
+        $new_lines[$k] = $line;
+      }
+    }
+
+    // Hide signature too
+    foreach ($new_lines as $k => $line) {
+      if (!$sig_started && preg_match("/^--(\s|\n|\r|<br>|<br \/>)*$/",$line)) {
+        $sig_started = true;
+        $sig_start_position = $k;
+      } 
+      $new_lines2[$k] = $line;
+    }
+
+    $sig_num_lines_hidden = count($new_lines2)-1-$sig_start_position;
+  
+    if ($sig_started && $sig_num_lines_hidden > 3){
+      $new_lines2[$sig_start_position-1].= "<div style=\"display:inline;\" class=\"hidden_text button_".$class."\"> --- ".$sig_num_lines_hidden." lines hidden (signature) --- <br></div>";
+      $new_lines2[$sig_start_position-1].= "<div style=\"display:none;\" class=\"hidden_text ".$class."\">"; 
+      $new_lines2[count($new_lines2)].= "</div>";
+    } else if ($sig_started) {
+    }
+
+    return rtrim(implode("\n",$new_lines2));
   }
 
   function get_comment_children($children=array(), $padding=1) {

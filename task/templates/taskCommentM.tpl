@@ -3,7 +3,7 @@
   <tr>
     <th>Comments</th>
 {if (!$TPL["editing_disabled"])}
-    <th class="right">{get_expand_link("id_new_task_comment")}</th>
+    <th class="right">{print_expand_link("id_new_task_comment")}</th>
   </tr>
   <tr>
     <td colspan="2">
@@ -40,7 +40,7 @@
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td class="left small">{get_expand_link("email_other","Email Other Party ")}</td>
+                <td class="left small">{print_expand_link("email_other","Email Other Party ")}</td>
               </tr>
             </table>
 
