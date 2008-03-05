@@ -928,9 +928,12 @@ function get_html($handle,$value=false) {
 }
 function get_expand_link($id, $text="New ",$id_to_hide="") {
   global $TPL;
-  $display = "none";
-  echo "<div id=\"button_".$id."\"><a class=\"growshrink nobr\" href=\"#x\" onClick=\"return set_grow_shrink_box('".$id."','".$display."','".$TPL["url_alloc_images"]."','".$text."','".$id_to_hide."');\">".$text;
-  echo "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."small_grow.gif\"></a></div>";
+  $str = "<div id=\"button_".$id."\"><a class=\"growshrink nobr\" href=\"#x\" onClick=\"return set_grow_shrink_box('".$id."','".$TPL["url_alloc_images"]."','".$text."','".$id_to_hide."');\">".$text;
+  $str.= "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."small_grow.gif\"></a></div>";
+  return $str;
+}
+function print_expand_link($id, $text="New ",$id_to_hide="") {
+  echo get_expand_link($id, $text, $id_to_hide);
 }
 function get_side_by_side_links($items=array(),$default=false) {
   global $TPL;

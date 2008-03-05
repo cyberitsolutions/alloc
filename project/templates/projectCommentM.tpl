@@ -1,7 +1,7 @@
 {$table_box}
   <tr>
     <th>Comments</th>
-    <th class="right">{get_expand_link("id_new_project_comment")}</th>
+    <th class="right">{print_expand_link("id_new_project_comment")}</th>
   </tr>
   <tr>
     <td colspan="2">

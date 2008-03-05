@@ -37,7 +37,7 @@
         </tr>
         {$task_closed_info}
         <tr>
-          <td valign="top">{get_expand_link("interested_parties_dropdown","Interested Parties ","interested_parties_text")}</td>
+          <td valign="top">{print_expand_link("interested_parties_dropdown","Interested Parties ","interested_parties_text")}</td>
           <td valign="top"><div id="interested_parties_text">{$taskCCList_text}</div>
             <div style="display:none;" id="interested_parties_dropdown" class="nobr">
               {$taskCCListOptions}{get_help("task_interested_parties")}
@@ -69,7 +69,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="1">{get_expand_link("duplicateTaskList_widgets","Task Is Duplicate Of ","duplicateTaskList_text")}</td> 
+          <td colspan="1">{print_expand_link("duplicateTaskList_widgets","Task Is Duplicate Of ","duplicateTaskList_text")}</td> 
           <td colspan="1" class="nobr" valign="center">
             <div id="duplicateTaskList_text">{$taskDuplicateLink}</div>
             <div id="duplicateTaskList_widgets" style="display:none">
