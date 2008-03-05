@@ -895,7 +895,6 @@ function get_task_statii_array() {
 
   function get_task_list_filter($filter=array()) {
 
-
     if (!$filter["projectID"] && $filter["projectType"] && $filter["projectType"] != "all") {
       $db = new db_alloc;
       $q = project::get_project_type_query($filter["projectType"],$filter["current_user"]);
@@ -946,58 +945,90 @@ function get_task_statii_array() {
       $sql[] = sprintf("(taskTypeID = %d)",$filter["taskTypeID"]);
     }
 
-
-    // If personID filter and the view is byProject, then allow unassigned phases into the results 
-    if ($filter["personID"] && $filter["taskView"] == "byProject") {
-      $sql["personID"] = sprintf("(personID = %d or (taskTypeID = %d and (personID IS NULL or personID = '' or personID = 0)))",$filter["personID"],TT_PHASE);
-    
-    // If personID filter and the view is prioritised, then do a strict by personID query
-    } else if ($filter["personID"] && $filter["taskView"] == "prioritised") {
+    // If personID filter
+    if ($filter["personID"]) {
       $sql["personID"] = sprintf("(personID = %d)",$filter["personID"]);
     }
-
-    // If creatorID filter and the view is byProject, then allow unassigned phases into the results 
-    if ($filter["creatorID"] && $filter["taskView"] == "byProject") {
-      $sql["creatorID"] = sprintf("(creatorID = %d or (taskTypeID = %d and (creatorID IS NULL or creatorID = '' or creatorID = 0)))",$filter["creatorID"],TT_PHASE);
-    
-    // If creatorID filter and the view is prioritised, then do a strict by creatorID query
-    } else if ($filter["creatorID"] && $filter["taskView"] == "prioritised") {
+    // If creatorID filter
+    if ($filter["creatorID"]) {
       $sql["creatorID"] = sprintf("(creatorID = %d)",$filter["creatorID"]);
     }
-
-    // If managerID filter and the view is byProject, then allow unassigned phases into the results 
-    if ($filter["managerID"] && $filter["taskView"] == "byProject") {
-      $sql["managerID"] = sprintf("(managerID = %d or (taskTypeID = %d and (managerID IS NULL or managerID = '' or managerID = 0)))",$filter["managerID"],TT_PHASE);
-    
-    // If managerID filter and the view is prioritised, then do a strict by managerID query
-    } else if ($filter["managerID"] && $filter["taskView"] == "prioritised") {
+    // If managerID filter
+    if ($filter["managerID"]) {
       $sql["managerID"] = sprintf("(managerID = %d)",$filter["managerID"]);
     }
 
-
+    // These filters are for the time sheet dropdown list
     if ($filter["taskTimeSheetStatus"] == "open") {
       unset($sql["personID"]);
-      $sql[] = sprintf("(dateActualCompletion IS NULL OR dateActualCompletion = '')");
+      $sql[] = sprintf("(task.dateActualCompletion IS NULL OR task.dateActualCompletion = '')");
 
-    // Needs to override the personID setting from above
     } else if ($filter["taskTimeSheetStatus"] == "not_assigned"){ 
       unset($sql["personID"]);
-      $sql[] = sprintf("((dateActualCompletion IS NULL OR dateActualCompletion = '') AND personID != %d)",$filter["personID"]);
+      $sql[] = sprintf("((task.dateActualCompletion IS NULL OR task.dateActualCompletion = '') AND personID != %d)",$filter["personID"]);
 
     } else if ($filter["taskTimeSheetStatus"] == "recent_closed"){
       unset($sql["personID"]);
-      $sql[] = sprintf("(taskTypeID = %d OR dateActualCompletion >= DATE_SUB(CURDATE(),INTERVAL 14 DAY))",TT_PHASE);
+      $sql[] = sprintf("(taskTypeID = %d OR task.dateActualCompletion >= DATE_SUB(CURDATE(),INTERVAL 14 DAY))",TT_PHASE);
 
     } else if ($filter["taskTimeSheetStatus"] == "all") {
     }
 
-
-    // This will be zero if not set. Which is fine since all top level tasks have a parentID of zero
-    // This filter is unset for returning a prioritised list of tasks.
-    $sql["parentTaskID"] = sprintf("(parentTaskID = %d)",$filter["parentTaskID"]);
-
-    #die("<pre>".print_r($sql,1)."</pre>");
+    $filter["parentTaskID"] and $sql["parentTaskID"] = sprintf("(parentTaskID = %d)",$filter["parentTaskID"]);
     return $sql;
+  }
+
+  function get_recursive_child_tasks($taskID_of_parent, $rows=array(), $padding=0) {
+    $rtn = array();
+    $rows or $rows = array();
+    foreach($rows as $taskID => $v) {
+      $parentTaskID = $v["parentTaskID"];
+      $row = $v["row"];
+
+      if ($taskID_of_parent == $parentTaskID) {
+        $row["padding"] = $padding;
+        $rtn[$taskID]["row"] = $row;
+        unset($rows[$taskID]);
+        $padding+=1;
+        $children = task::get_recursive_child_tasks($taskID,$rows,$padding);
+        $padding-=1;
+
+        if (count($children)) {
+          $rtn[$taskID]["children"] = $children;
+        }
+      }
+    }
+    return $rtn;
+  }
+
+  function build_recursive_task_list($t=array(),$_FORM=array()) {
+    $tasks or $tasks = array();
+    $summary_ops or $summary_ops = array();
+    foreach ($t as $r) {
+      $row = $r["row"];
+      $done[$row["taskID"]] = true; // To track orphans
+
+      list($t,$s,$o) = task::load_task_list_row_details($row,$_FORM);
+      $t and $tasks += $t;
+      $s and $summary.= $s;
+      $o and $summary_ops += $o;
+
+      if ($r["children"]) {
+        list($t,$s,$o,$d) = task::build_recursive_task_list($r["children"],$_FORM);
+        $t and $tasks += $t;
+        $s and $summary.= $s;
+        $o and $summary_ops += $o;
+        $d and $done += $d;
+      }
+    }
+    return array($tasks,$summary,$summary_ops,$done);
+  }
+
+  function load_task_list_row_details($row,$_FORM=array()) {
+    $summary_ops[$row["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$row["padding"]).$row["taskID"]." ".$row["taskName"];
+    $tasks[$row["taskID"]] = $row;
+    $summary.= task::get_task_list_tr($row,$_FORM);
+    return array($tasks,$summary,$summary_ops);
   }
 
   function get_task_list($_FORM) {
@@ -1050,7 +1081,8 @@ function get_task_statii_array() {
     $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
     $debug and print "\n<pre>filter: ".print_r($filter,1)."</pre>";
 
-    isset($_FORM["limit"]) && $_FORM["limit"] != "all" and $limit = sprintf("limit %d",$_FORM["limit"]); # needs to use isset cause of zeroes is a valid number 
+    // needs to use isset cause of zeroes is a valid number
+    isset($_FORM["limit"]) && $_FORM["limit"] != "all" and $limit = sprintf("limit %d",$_FORM["limit"]); 
     $_FORM["return"] or $_FORM["return"] = "html";
 
     if ($_FORM["showDates"]) {
@@ -1068,61 +1100,65 @@ function get_task_statii_array() {
 
     // Get a hierarchical list of tasks
     if ($_FORM["taskView"] == "byProject") {
-
-      // If selected projects, build up an array of selected projects
-      $filter["projectIDs"] and $projectIDs = " WHERE ".$filter["projectIDs"];
-      $q = "SELECT projectID, projectName, projectShortName, clientID, projectPriority FROM project ".$projectIDs. " ORDER BY projectName";
-      $debug and print "\n<br>QUERY: ".$q;
+      if (is_array($filter) && count($filter)) {
+        $f = " WHERE ".implode(" AND ",$filter);
+      }
       $db = new db_alloc;
-      $db->query($q);
+      $q = sprintf("SELECT task.*, projectName, projectPriority
+                      FROM task
+                 LEFT JOIN project ON project.projectID = task.projectID
+                           %s
+                  GROUP BY task.taskID
+                  ORDER BY projectName,taskName
+                   ",$f);
       
-      while ($project = $db->next_record()) {
-        $p = new project;
-        $p->read_db_record($db);
-        $project["link"] = $p->get_project_name(true); #$p->get_navigation_links();
-        $projects[] = $project;
+      $_FORM["debug"] and print "\n<br>QUERY: ".$q;
+      $db->query($q);
+      while ($row = $db->next_record()) {
+        $task = new task;
+        $task->read_db_record($db);
+        $row["taskURL"] = $task->get_url();
+        $row["project_name"] = $db->f("projectName");
+        $row["projectPriority"] = $db->f("projectPriority");
+        $row["taskName"] = $task->get_task_name($_FORM);
+        $row["taskLink"] = $task->get_task_link($_FORM);
+        $row["newSubTask"] = $task->get_new_subtask_link();
+        $_FORM["showStatus"] and $row["taskStatus"] = $task->get_status();
+        $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
+        $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
+        $row["padding"] = $_FORM["padding"];
+        $row["object"] = $task;
+        $row["taskID"] = $task->get_id();
+        $row["parentTaskID"] = $task->get_value("parentTaskID");
+        $rows[$task->get_id()] = array("parentTaskID"=>$row["parentTaskID"],"row"=>$row);
       }
     
+      $rows or $rows = array();
+      $tasks or $tasks = array();
+      $summary_ops or $summary_ops = array();
   
-      // This will add a dummy row for tasks that don't have a project
-      $_FORM["projectType"] == "all" and $projects[] = array("link"=>"<strong>Miscellaneous Tasks</strong>");
+      $parentTaskID = $_FORM["parentTaskID"] or $parentTaskID = 0;
+      $t = task::get_recursive_child_tasks($parentTaskID,$rows);
+      list($tasks,$summary,$summary_ops,$done) = task::build_recursive_task_list($t,$_FORM);
 
-      $projects or $projects = array();
-
-      // Loop through all projects
-      foreach ($projects as $project) {
-
-        if ($project["projectID"]) {
-          $filter["projectID"] = sprintf("(projectID = %d)",$project["projectID"]);
-        } else {
-          $filter["projectID"] = sprintf("(projectID IS NULL OR projectID = 0)");
+      // This bit appends the orphan tasks onto the end..
+      foreach ($rows as $taskID => $r) {
+        $row = $r["row"];
+        $row["padding"] = 0;
+        if (!$done[$taskID]) {
+          list($t,$s,$o) = task::load_task_list_row_details($row,$_FORM);
+          $t and $tasks += $t;
+          $s and $summary.= $s;
+          $o and $summary_ops += $o;
+        }
         }
   
-        $_FORM["project_name"] = $project["link"];
-
-        $t = task::get_task_children($filter,$_FORM);
-        $debug and print "<br/><b>Found ".count($t)." tasks.<b/>";
-
-        if (count($t)) {
+      if ((is_array($tasks) && count($tasks)) || $s || (is_array($summary_ops) && count($summary_ops))) {
           $print = true;
-
-
-          foreach ($t as $row) {
-            $row["projectPriority"] = $project["projectPriority"];
-            $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
-
-            if ($_FORM["return"] == "dropdown_options"){
-              $summary_ops[$row["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;",$row["padding"]).$row["taskID"]." ".$row["taskName"];
-            } else {
-              $tasks[$row["taskID"]] = $row;
-              $summary.= task::get_task_list_tr($row,$_FORM);
-            }
-          }
-        }
       }
 
 
-    // If they don't want a hierarichal list, get a prioritised list of tasks..
+    // Else get a prioritised list of tasks..
     } else if ($_FORM["taskView"] == "prioritised") {
           
       unset($filter["parentTaskID"]);
@@ -1327,7 +1363,7 @@ function get_task_statii_array() {
     $q = sprintf("SELECT * FROM task %s ORDER BY taskName",str_replace("project.projectID","projectID",$f));
     $_FORM["debug"] and print "\n<br>QUERY: ".$q;
     $db->query($q);
-    #echo "<br/>q: ".$q;
+    echo "<br/>q: ".$q;
 
     while ($row = $db->next_record()) {
 
@@ -1594,13 +1630,13 @@ function get_task_statii_array() {
       unset($_FORM["projectID"]);
       $_FORM["projectID"][] = $p;
 
-    } else if (!$_FORM["projectID"] && $_FORM["projectType"]) {
-      $q = project::get_project_type_query($_FORM["projectType"]);
-      $db = new db_alloc;
-      $db->query($q);
-      while($row = $db->row()) {
-        $_FORM["projectID"][] = $row["projectID"];
-      }
+    // } else if (!$_FORM["projectID"] && $_FORM["projectType"]) {
+    //   $q = project::get_project_type_query($_FORM["projectType"]);
+    //   $db = new db_alloc;
+    //   $db->query($q);
+    //   while($row = $db->row()) {
+    //     $_FORM["projectID"][] = $row["projectID"];
+    //   }
 
     } else if (!$_FORM["projectType"]){
       $_FORM["projectType"] = "mine";
