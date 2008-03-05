@@ -613,11 +613,11 @@ class timeSheet extends db_entity
       $filter = " WHERE ".implode(" AND ",$filter);
     }
 
-    // LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID - nope! stuffs up transactionPos/Neg calculations
     $q = "SELECT timeSheet.*, person.personID, projectName
           FROM timeSheet 
           LEFT JOIN person ON timeSheet.personID = person.personID
           LEFT JOIN project ON timeSheet.projectID = project.projectID
+          LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID 
           ".$filter."
           GROUP BY timeSheet.timeSheetID
           ORDER BY dateFrom,projectName,surname";
