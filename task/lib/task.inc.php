@@ -728,6 +728,8 @@ class task extends db_entity {
       $message.= "\n\n-- \nIf you have any questions, please reply to this email or contact: ";
       config::get_config_item("companyName")            and $message.= "\n".config::get_config_item("companyName");
       config::get_config_item("companyContactAddress")  and $message.= "\n".config::get_config_item("companyContactAddress");
+      config::get_config_item("companyContactAddress2") and $message.= " ".config::get_config_item("companyContactAddress2");
+      config::get_config_item("companyContactAddress3") and $message.= " ".config::get_config_item("companyContactAddress3");
       config::get_config_item("companyContactEmail")    and $message.= "\nE: ".config::get_config_item("companyContactEmail");
       config::get_config_item("companyContactPhone")    and $message.= "\nP: ".config::get_config_item("companyContactPhone");
       config::get_config_item("companyContactFax")      and $message.= "\nF: ".config::get_config_item("companyContactFax");
