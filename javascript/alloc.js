@@ -1,9 +1,11 @@
 var alloc_http_request = new Array();
 
 function makeAjaxRequest(url,entityid) {
-  document.getElementById(entityid).innerHTML = '<img src="../images/ticker2.gif" alt="Updating field..." title="Updating field...">';
+  $("#"+entityid).html('<img src="../images/ticker2.gif" alt="Updating field..." title="Updating field...">');
   jQuery.get(url,'',function(data) {
-    document.getElementById(entityid).innerHTML = data;
+    $("#"+entityid).hide();
+    $("#"+entityid).html(data);
+    $("#"+entityid).fadeIn("fast");
   })
 }
 
