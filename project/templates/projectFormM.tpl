@@ -1,16 +1,17 @@
 {show_header()}
 {show_toolbar()}
 
-{$_POST["save"] and $_POST["sbs_link"] = "project"}
 {$_POST["person_save"] || $_POST["person_delete"] and $_POST["sbs_link"] = "people"}
 {$_POST["commission_delete"] || $_POST["commission_save"] and $_POST["sbs_link"] = "commissions"}
 {$_POST["delete_file_attachment"] || $_POST["save_attachment"] and $_POST["sbs_link"] = "attachments"}
 
 {$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"] or $sbs_link = "project"}
+{if defined("PROJECT_EXISTS")}
+{$first_div="hidden"}
 {get_side_by_side_links(array("project"=>"Main"
                              ,"people"=>"People"
-                             ,"comments"=>"Comments"
                              ,"commissions"=>"Commissions"
+                             ,"comments"=>"Comments"
                              ,"attachments"=>"Attachments"
                              ,"tasks"=>"Tasks"
                              ,"reminders"=>"Reminders"
@@ -18,8 +19,9 @@
                              ,"transactions"=>"Transactions"
                              ,"sbsAll"=>"All"
                              ),$sbs_link)}
+{/}
 
-<div id="project">
+<div id="project" class="{$first_div}">
 <form action="{$url_alloc_project}" method="post" id="projectForm">
 <input type="hidden" name="projectID" value="{$project_projectID}">
 
@@ -126,7 +128,7 @@
  
 {if defined("PROJECT_EXISTS")}
 
-<div id="people">
+<div id="people" class="hidden">
 {$table_box}
   <tr>
     <th align="left" colspan="11">Project People</th>
@@ -143,12 +145,12 @@
 </table>
 </div>
 
-<div id="comments">
+<div id="comments" class="hidden">
 {show_comments()}
 </div>
 
 
-<div id="commissions">
+<div id="commissions" class="hidden">
 {$table_box}
   <tr>
     <th align="left" colspan="4">Time Sheet Commission</th>
@@ -162,11 +164,11 @@
 </div>
 
 
-<div id="attachments">
+<div id="attachments" class="hidden">
 {show_attachments()}
 </div>
 
-<div id="tasks">
+<div id="tasks" class="hidden">
 {$table_box}
   <tr>
     <th>Uncompleted Tasks</th>
@@ -180,7 +182,7 @@
 </table>
 </div>
 
-<div id="reminders">
+<div id="reminders" class="hidden">
 {$table_box}  
   <tr>
     <th colspan="4">Reminders</th>
@@ -202,10 +204,10 @@
 </table>
 </div>
 
-<div id="time">
+<div id="time" class="hidden">
 {show_time_sheets("templates/projectTimeSheetS.tpl")}
 </div>
-<div id="transactions">
+<div id="transactions" class="hidden">
 {show_transactions("templates/projectTransactionS.tpl")}
 </div>
 

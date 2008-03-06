@@ -47,21 +47,21 @@ function sidebyside_activate(id,arr) {
   if (id == "sbsAll") {
     for (var i=0; i<arr.length; i++) {
       if (arr[i] != "sbsAll") {
-        document.getElementById(arr[i]).style.display='inline';
-        document.getElementById('sbs_link_' + arr[i]).className = "sidebyside"
+        $("#"+arr[i]).show();
+        $('#sbs_link_'+arr[i]).removeClass("sidebyside_active").addClass("sidebyside");
       }
     }
-    document.getElementById('sbs_link_' + id).className = "sidebyside_active";
+    $('#sbs_link_' + id).addClass("sidebyside_active");
 
   } else {
     for (var i=0; i<arr.length; i++) {
       if (arr[i] != "sbsAll") {
-        document.getElementById(arr[i]).style.display='none';
+        $("#"+arr[i]).hide();
       }
-      document.getElementById('sbs_link_' + arr[i]).className = "sidebyside"
+      $('#sbs_link_' + arr[i]).removeClass("sidebyside_active").addClass("sidebyside");
     }
-    document.getElementById('sbs_link_' + id).className = "sidebyside_active";
-    document.getElementById(id).style.display='inline';
+    $('#sbs_link_' + id).addClass("sidebyside_active");
+    $("#"+id).show();
   }
 }
 
