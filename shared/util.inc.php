@@ -946,11 +946,11 @@ function get_side_by_side_links($items=array(),$default=false) {
   $js_array = "['".implode("','",$ids)."']";
 
   foreach ($items as $id => $label) {
-    $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"#x\" onClick=\"sidebyside_activate('".$id."',".$js_array.");\">".$label."</a>";
+    $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"#x\" class=\"sidebyside\" onClick=\"sidebyside_activate('".$id."',".$js_array.");\">".$label."</a>";
     $sp = "&nbsp;";
   }
 
-  // argh, I am bad man, this activates the default option, because it's minutely cleaner than putting in a body onload
+  // argh, I am bad man, this activates the default option, because it's minutely better than putting in a body onload
   $TPL["extra_footer_stuff"].= "<img src=\"".$TPL["url_alloc_images"]."pixel.gif\" onload=\"sidebyside_activate('".$default."',".$js_array.");\">";
 
   echo "<div style=\"margin:10px 8px;\">".$str."</div>";
