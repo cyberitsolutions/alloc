@@ -443,12 +443,15 @@ CREATE TABLE task (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
-CREATE TABLE taskCCList (
-  taskCCListID int(11) NOT NULL auto_increment,
-  taskID int(11) NOT NULL default '0',
+CREATE TABLE interestedParty (
+  interestedPartyID int(11) NOT NULL auto_increment,
+  entity VARCHAR(255) NOT NULL,
+  entityID int(11) NOT NULL,
   fullName text,
   emailAddress text NOT NULL,
-  PRIMARY KEY  (taskCCListID)
+  personID int(11) DEFAULT NULL,
+  clientContactID int(11) DEFAULT NULL,
+  PRIMARY KEY  (interestedPartyID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 

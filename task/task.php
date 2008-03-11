@@ -208,16 +208,16 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     $task->new_message_task();
   }
 
-  // Add entries to taskCCList
-  $q = sprintf("DELETE FROM taskCCList WHERE taskID = %d",$task->get_id());
+  // Add entries to interestedParty
+  $q = sprintf("DELETE FROM interestedParty WHERE entity='task' AND entityID = %d",$task->get_id());
   $db->query($q);
   
-  if (is_array($_POST["taskCCList"])) {
-    foreach ($_POST["taskCCList"] as $encoded_name_and_email) {
+  if (is_array($_POST["interestedParty"])) {
+    foreach ($_POST["interestedParty"] as $encoded_name_and_email) {
       $name_and_email = unserialize(base64_decode(urldecode($encoded_name_and_email)));
       $CCname = db_esc($name_and_email["name"]);
       preg_match("/[A-Za-z0-9]+/",$CCname) or $CCname = ""; // sometimes name were being saved as a single space
-      $q = sprintf("INSERT INTO taskCCList (fullName,emailAddress,taskID) VALUES ('%s','%s',%d)",$CCname,db_esc($name_and_email["email"]),$task->get_id());
+      $q = sprintf("INSERT INTO interestedParty (fullName,emailAddress,entityID,entity) VALUES ('%s','%s',%d,'task')",$CCname,db_esc($name_and_email["email"]),$task->get_id());
       $db->query($q);
     }
   }
@@ -394,7 +394,7 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
       $TPL["email_comment_manager_checked"] = " checked";
     } 
     // If there are interested parties then, default the checkbox to on
-    $q = sprintf("SELECT * FROM taskCCList WHERE taskID = %d",$task->get_id());
+    $q = sprintf("SELECT * FROM interestedParty WHERE entity='task' AND entityID = %d",$task->get_id());
     $db = new db_alloc();
     $db->query($q);
     $db->num_rows() and $TPL["email_comment_CCList_checked"] = " checked";

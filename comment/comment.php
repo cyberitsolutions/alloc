@@ -74,7 +74,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
       // Add the dude to the interested parties list
       if ($_POST["eo_email"] && $_POST["eo_add_interested_party"]) {
         $db = new db_alloc();
-        $q = sprintf("INSERT INTO taskCCList (fullName,emailAddress,taskID) VALUES ('%s','%s',%d)",db_esc(trim($_POST["eo_name"])),db_esc(trim($_POST["eo_email"])),$entityID);
+        $q = sprintf("INSERT INTO interestedParty (fullName,emailAddress,entityID,entity,personID) VALUES ('%s','%s',%d,'task',%d)",db_esc(trim($_POST["eo_name"])),db_esc(trim($_POST["eo_email"])),$entityID,$current_user->get_id());
         $db->query($q);
       }
 
@@ -92,7 +92,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
         if ($current_user->get_value("emailAddress") && !$emails[$current_user->get_value("emailAddress")]) {
         #die(print_r($emails,1));
           $db = new db_alloc();
-          $q = sprintf("INSERT INTO taskCCList (fullName,emailAddress,taskID) VALUES ('%s','%s',%d)",db_esc($current_user->get_username(1)),db_esc($current_user->get_value("emailAddress")),$entityID);
+          $q = sprintf("INSERT INTO interestedParty (fullName,emailAddress,entityID,entity,personID) VALUES ('%s','%s',%d,'task',%d)",db_esc($current_user->get_username(1)),db_esc($current_user->get_value("emailAddress")),$entityID,$current_user->get_id());
           $db->query($q);
         }
       }

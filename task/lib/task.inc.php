@@ -320,18 +320,18 @@ class task extends db_entity {
   function get_task_cc_list_select($projectID="") {
     global $TPL;
     $db = new db_alloc;
-    $taskCCListOptions = array();
+    $interestedPartyOptions = array();
     
     if (is_object($this)) {
       $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
-      $q = sprintf("SELECT fullName,emailAddress FROM taskCCList WHERE taskID = %d",$this->get_id());
+      $q = sprintf("SELECT fullName,emailAddress FROM interestedParty WHERE entity='task' AND entityID = %d",$this->get_id());
       $db->query($q);  
       while ($db->next_record()) {
-        $taskCCList[] = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$db->f("fullName")),"email"=>$db->f("emailAddress")))));
+        $interestedParty[] = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$db->f("fullName")),"email"=>$db->f("emailAddress")))));
 
-        // And add the list of people who are already in the taskCCList for this task, just in case they get deleted from the client pages
+        // And add the list of people who are already in the interestedParty for this task, just in case they get deleted from the client pages
         // This email address will be overwritten by later entries
-        $taskCCListOptions[$db->f("emailAddress")] = $db->f("fullName");
+        $interestedPartyOptions[$db->f("emailAddress")] = $db->f("fullName");
       }
     }
 
@@ -341,7 +341,7 @@ class task extends db_entity {
       $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
       $db->query($q);
       $db->next_record();
-      $taskCCListOptions[$db->f("projectClientEMail")] = $db->f("projectClientName");
+      $interestedPartyOptions[$db->f("projectClientEMail")] = $db->f("projectClientName");
   
       // Get all other client contacts from the Client pages for this Project
       $q = sprintf("SELECT clientID FROM project WHERE projectID = %d",$projectID);
@@ -351,7 +351,7 @@ class task extends db_entity {
       $q = sprintf("SELECT clientContactName, clientContactEmail FROM clientContact WHERE clientID = %d",$clientID);
       $db->query($q);
       while ($db->next_record()) {
-        $taskCCListOptions[$db->f("clientContactEmail")] = $db->f("clientContactName");
+        $interestedPartyOptions[$db->f("clientContactEmail")] = $db->f("clientContactName");
       }
 
       // Get all the project people for this tasks project
@@ -360,20 +360,20 @@ class task extends db_entity {
                     WHERE projectPerson.projectID = %d AND person.personActive = 1 ",$projectID);
       $db->query($q);
       while ($db->next_record()) {
-        $taskCCListOptions[$db->f("emailAddress")] = $db->f("firstName")." ".$db->f("surname");
+        $interestedPartyOptions[$db->f("emailAddress")] = $db->f("firstName")." ".$db->f("surname");
       }
     }
 
     $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
     foreach ($extra_interested_parties as $name => $email) {
-      $taskCCListOptions[$email] = $name;
+      $interestedPartyOptions[$email] = $name;
     }
 
 
-    if (is_array($taskCCListOptions)) {
-      asort($taskCCListOptions);
+    if (is_array($interestedPartyOptions)) {
+      asort($interestedPartyOptions);
 
-      foreach ($taskCCListOptions as $email => $name) {
+      foreach ($interestedPartyOptions as $email => $name) {
         if ($email) {
           $name = trim($name);
           $str = trim(htmlentities($name." <".$email.">"));
@@ -381,7 +381,7 @@ class task extends db_entity {
         }
       }
     }
-    $str = "<select name=\"taskCCList[]\" size=\"8\" multiple=\"true\"  style=\"width:300px\">".get_select_options($options,$taskCCList)."</select>";
+    $str = "<select name=\"interestedParty[]\" size=\"8\" multiple=\"true\"  style=\"width:300px\">".get_select_options($options,$interestedParty)."</select>";
     return $str;
   }
 
@@ -524,15 +524,15 @@ class task extends db_entity {
     // We're building these two with the <select> tags because they will be replaced by an AJAX created dropdown when
     // The projectID changes.
     $TPL["parentTaskOptions"] = $this->get_parent_task_select();
-    $TPL["taskCCListOptions"] = $this->get_task_cc_list_select();
+    $TPL["interestedPartyOptions"] = $this->get_task_cc_list_select();
     
 
-    $db->query(sprintf("SELECT fullName,emailAddress FROM taskCCList WHERE taskID = %d ORDER BY fullName",$this->get_id()));
+    $db->query(sprintf("SELECT fullName,emailAddress FROM interestedParty WHERE entity='task' AND entityID = %d ORDER BY fullName",$this->get_id()));
     while ($db->next_record()) {
       $str = trim(htmlentities($db->f("fullName")." <".$db->f("emailAddress").">"));
       $value = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$db->f("fullName")),"email"=>$db->f("emailAddress")))));
-      $TPL["taskCCList_hidden"].= $commar.$str."<input type=\"hidden\" name=\"taskCCList[]\" value=\"".$value."\">";
-      $TPL["taskCCList_text"].= $commar.$str;
+      $TPL["interestedParty_hidden"].= $commar.$str."<input type=\"hidden\" name=\"interestedParty[]\" value=\"".$value."\">";
+      $TPL["interestedParty_text"].= $commar.$str;
       $commar = "<br/>";
     }
     
@@ -601,9 +601,9 @@ class task extends db_entity {
 
       // Determine recipient/s 
 
-      if ($selected_option == "CCList") {
+      if ($selected_option == "interested") {
         $db = new db_alloc;
-        $q = sprintf("SELECT * FROM taskCCList WHERE taskID = %d",$this->get_id()); 
+        $q = sprintf("SELECT * FROM interestedParty WHERE entity='task' AND entityID = %d",$this->get_id()); 
         $db->query($q);
         while($row = $db->next_record()) {
           $row["isCC"] = true;
@@ -1793,7 +1793,7 @@ function get_task_statii_array() {
     $recipients[] = "assignee";
     $recipients[] = "manager";
     $recipients[] = "creator";
-    $recipients[] = "CCList";
+    $recipients[] = "interested";
 
     $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from);
 
@@ -1817,7 +1817,7 @@ function get_task_statii_array() {
     $email_addresses[$people[$this->get_value("closerID")]["emailAddress"]] = $people[$this->get_value("closerID")]["name"];
 
     $db = new db_alloc();
-    $q = sprintf("SELECT emailAddress, fullName FROM taskCCList WHERE taskID = %d",$this->get_id());
+    $q = sprintf("SELECT emailAddress, fullName FROM interestedParty WHERE entity='task' AND entityID = %d",$this->get_id());
     $db->query($q);
     while ($db->row()) {
       $email_addresses[$db->f("emailAddress")] = $db->f("fullName");
