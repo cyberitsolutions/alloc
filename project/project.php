@@ -178,7 +178,10 @@ require_once("../alloc.php");
     global $email_type_array, $rate_type_array, $project_person_role_array;
 
     if ($projectID) {
-      $query = sprintf("SELECT * from projectPerson WHERE projectID=%d", $projectID);
+      $query = sprintf("SELECT projectPerson.*, projectPersonRoleSortKey
+                          FROM projectPerson 
+                     LEFT JOIN projectPersonRole ON projectPersonRole.projectPersonRoleID = projectPerson.projectPersonRoleID
+                         WHERE projectID=%d ORDER BY projectPersonRoleSortKey DESC,personID ASC", $projectID);
       $db->query($query);
 
       while ($db->next_record()) {
@@ -190,9 +193,6 @@ require_once("../alloc.php");
         $TPL["person_emailType_options"] = get_select_options($email_type_array, $TPL["person_emailType"]);
         $TPL["person_projectPersonRole_options"] = get_select_options($project_person_role_array, $TPL["person_projectPersonRoleID"]);
         $TPL["rateType_options"] = get_select_options($rate_type_array, $TPL["person_rateUnitID"]);
-        $TPL["person_buttons"] = "
-          <input type=\"submit\" name=\"person_save\" value=\"Save\">
-          <input type=\"submit\" name=\"person_delete\" value=\"Delete\">";
         include_template($template);
       }
     }
@@ -205,8 +205,6 @@ require_once("../alloc.php");
     if (!$projectID) {
       return;
     }
-
-    $TPL["person_buttons"] = "<input type=\"submit\" name=\"person_save\" value=\"Add\">";
     $project_person = new projectPerson;
     $project_person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
     $TPL["person_emailType_options"] = get_select_options($email_type_array, $TPL["person_emailType"]);
@@ -387,23 +385,41 @@ if ($_POST["save"]) {
 
 if ($projectID) {
 
-  if ($_POST["person_save"] || $_POST["person_delete"]) {
-    $project_person = new projectPerson;
-
-    if ($_POST["person_projectPersonID"]) {
-      // Read current values from database so we don't loose any fields that are not set by the form
-      $project_person->set_id($_POST["person_projectPersonID"]);
-      $project_person->select();
+  if ($_POST["person_save"]) {
+    $q = sprintf("SELECT * FROM projectPerson WHERE projectID = %d",$project->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    while ($db->next_record()) {
+      $pp = new projectPerson;
+      $pp->read_db_record($db);
+      $delete[] = $pp->get_id();
+      #$pp->delete(); // need to delete them after, cause we'll wipe out the current user
     }
 
-    $project_person->read_globals();
-    $project_person->read_globals("person_");
-
-    if ($_POST["person_save"]) {
-      $project_person->save();
-    } else if ($_POST["person_delete"]) {
-      $project_person->delete();
+    if (is_array($_POST["person_personID"])) {
+      foreach ($_POST["person_personID"] as $k => $personID) {
+        if ($personID) {
+          $pp = new projectPerson;
+          $pp->set_value("projectID",$project->get_id());
+          $pp->set_value("personID",$personID);
+          $pp->set_value("projectPersonRoleID",$_POST["person_projectPersonRoleID"][$k]);
+          $pp->set_value("rate",$_POST["person_rate"][$k]);
+          $pp->set_value("rateUnitID",$_POST["person_rateUnitID"][$k]);
+          $pp->set_value("projectPersonModifiedUser",$current_user->get_id());
+          $pp->save();
+        }
+      }
     }
+
+    if (is_array($delete)) {
+      foreach ($delete as $projectPersonID) {
+        $pp = new projectPerson;
+        $pp->set_id($projectPersonID);
+        $pp->delete();
+      }
+    }
+
+  
 
   } else if ($_POST["commission_save"] || $_POST["commission_delete"]) {
     $commission_item = new projectCommissionPerson;
