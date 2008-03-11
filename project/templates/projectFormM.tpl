@@ -1,7 +1,7 @@
 {show_header()}
 {show_toolbar()}
 
-{$_POST["person_save"] || $_POST["person_delete"] and $_POST["sbs_link"] = "people"}
+{$_POST["person_save"] and $_POST["sbs_link"] = "people"}
 {$_POST["commission_delete"] || $_POST["commission_save"] and $_POST["sbs_link"] = "commissions"}
 {$_POST["delete_file_attachment"] || $_POST["save_attachment"] and $_POST["sbs_link"] = "attachments"}
 
@@ -24,7 +24,6 @@
 <div id="project" class="{$first_div}">
 <form action="{$url_alloc_project}" method="post" id="projectForm">
 <input type="hidden" name="projectID" value="{$project_projectID}">
-
 {$table_box}
   <tr>
     <th class="nobr" colspan="2">Project: {$projectSelfLink}</th>
@@ -111,6 +110,7 @@
     <td colspan="5">&nbsp;</td>
   </tr>
 </table>
+</form>
 
 {if defined("PROJECT_EXISTS")}
 {$table_box}
@@ -119,7 +119,10 @@
     <th class="right">{get_help("project_financial_summary")}</th>
   </tr>
   <tr>
-    <td>Project Spend: ${$grand_total} ({$percentage}%)&nbsp;&nbsp;&nbsp;&nbsp;Task Time Estimate: {$time_remaining} Hours  ${$cost_remaining} ({$count_not_quoted_tasks} tasks not included in estimate)</td>
+    <td>Project Spend: ${$grand_total} ({$percentage}%)</td>
+  </tr>
+  <tr>
+    <td>Task Time Estimate: {$time_remaining} Hours  ${$cost_remaining} ({$count_not_quoted_tasks} tasks not included in estimate)</td>
   </tr>            
 </table>
 {/}
@@ -128,21 +131,28 @@
  
 {if defined("PROJECT_EXISTS")}
 
+
 <div id="people" class="hidden">
+<form action="{$url_alloc_project}" method="post">
 {$table_box}
   <tr>
-    <th align="left" colspan="11">Project People</th>
+    <th align="left">Project People</th>
+    <th class="right"><a href="#x" class="magic" onClick="$('#projectPersonContainer').append($('#new_projectPerson').html());">New</a></th>
   </tr>
   <tr>
-    <td>Person</td>
-    <td>Role</td>
-    <td>Rate</td>
-    <td>Rate Type</td>
-    <td>Action</td>
-  </tr>
+    <td colspan="2" id="projectPersonContainer">
 {show_person_list("templates/projectPersonListR.tpl")}
 {show_new_person("templates/projectPersonListR.tpl")}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="right">
+      <input type="submit" name="person_save" value="Save Project People">
+      <input type="hidden" name="projectID" value="{$project_projectID}">
+    </td>
+  </tr>
 </table>
+</form>
 </div>
 
 <div id="comments" class="hidden">

@@ -37,6 +37,7 @@ class projectPerson extends db_entity
                               ,"rate"=>new db_field("rate")
                               ,"rateUnitID"=>new db_field("rateUnitID")
                               ,"projectPersonRoleID"=>new db_field("projectPersonRoleID")
+                              ,"projectPersonModifiedUser"=>new db_field("projectPersonModifiedUser")
                               );
   }
 

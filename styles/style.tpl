@@ -19,7 +19,7 @@ a:hover {
   color:(A_HOVER); 
 }
 
-a.growshrink {
+a.growshrink, a.magic {
   color:(TD_COLOR);
   text-decoration:none;
   border-bottom:1px dashed (BODY_COLOR);
