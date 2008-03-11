@@ -44,7 +44,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
 
             ,"url_alloc_task"                           => $sess->url(SCRIPT_PATH."task/task.php")
             ,"url_alloc_updateParentTasks"              => $sess->url(SCRIPT_PATH."task/updateParentTasks.php")
-            ,"url_alloc_updateTaskCCList"               => $sess->url(SCRIPT_PATH."task/updateTaskCCList.php")
+            ,"url_alloc_updateInterestedParties"        => $sess->url(SCRIPT_PATH."task/updateInterestedParties.php")
             ,"url_alloc_updateTaskCommentTemplate"      => $sess->url(SCRIPT_PATH."task/updateTaskCommentTemplate.php")
             ,"url_alloc_updateProjectList"              => $sess->url(SCRIPT_PATH."task/updateProjectList.php")
             ,"url_alloc_taskList"                       => $sess->url(SCRIPT_PATH."task/taskList.php")

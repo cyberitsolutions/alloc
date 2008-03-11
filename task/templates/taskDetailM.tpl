@@ -5,7 +5,7 @@
 function updateStuffWithAjax() \{
   id = $("#projectID").attr("value")
   makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+id, 'parenTaskDropdown')
-  makeAjaxRequest('{$url_alloc_updateTaskCCList}projectID='+id+'&taskID={$task_taskID}', 'taskCCListDropdown')
+  makeAjaxRequest('{$url_alloc_updateInterestedParties}projectID='+id+'&taskID={$task_taskID}', 'interestedPartyDropdown')
   makeAjaxRequest('{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}', 'taskPersonList')
   makeAjaxRequest('{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}', 'taskManagerPersonList')
 \}
@@ -83,8 +83,8 @@ function updateStuffWithAjax() \{
   <tr>    
     <td valign="top"><nobr>Interested Parties</nobr></td>
     <td valign="top" rowspan="2">
-      <div id="taskCCListDropdown" style="display:inline">
-        {$taskCCListOptions}
+      <div id="interestedPartyDropdown" style="display:inline">
+        {$interestedPartyOptions}
       </div>
       {get_help("task_interested_parties")}
     </td>

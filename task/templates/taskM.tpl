@@ -38,9 +38,9 @@
         {$task_closed_info}
         <tr>
           <td valign="top">{print_expand_link("interested_parties_dropdown","Interested Parties ","interested_parties_text")}</td>
-          <td valign="top"><div id="interested_parties_text">{$taskCCList_text}</div>
+          <td valign="top"><div id="interested_parties_text">{$interestedParty_text}</div>
             <div style="display:none;" id="interested_parties_dropdown" class="nobr">
-              {$taskCCListOptions}{get_help("task_interested_parties")}
+              {$interestedPartyOptions}{get_help("task_interested_parties")}
             </div>
           </td>
         </tr>
