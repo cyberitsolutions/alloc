@@ -67,8 +67,7 @@ function refreshTaskList(radiobutton) \{
     <td valign="top"></td>
     <td colspan="3" valign="top">
       Task Comment<br />
-      <div class="nobr">{get_textarea("timeSheetItem_taskComment", "")}</textarea>
-      </div>
+      <div class="nobr">{get_textarea("timeSheetItem_taskComment")}</textarea></div>
     </td>
   {/}
 </table>
