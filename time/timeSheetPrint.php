@@ -104,7 +104,7 @@ define("DEFAULT_SEP","\n");
       }
 
       $c = str_replace("\r\n","\n",$timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = $c;
+      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = text_to_html($c);
 
       is_array($str) and $rows[$taskID]["desc"].= trim(implode(DEFAULT_SEP,$str));
     }
@@ -169,7 +169,7 @@ define("DEFAULT_SEP","\n");
       }
 
       $c = str_replace("\r\n","\n",$timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c  && !$cs[$c] and $str[] = $c;
+      !$timeSheetItem->get_value("commentPrivate") && $c  && !$cs[$c] and $str[] = text_to_html($c);
       $cs[$c] = true;
 
       is_array($str) and $rows[$taskID]["desc"].= trim(implode(DEFAULT_SEP,$str));
@@ -235,7 +235,7 @@ define("DEFAULT_SEP","\n");
       }
 
       $c = str_replace("\r\n","\n",$timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = $c;
+      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = text_to_html($c);
 
       is_array($str) and $rows[$row_num]["desc"].= trim(implode(DEFAULT_SEP,$str));
     }

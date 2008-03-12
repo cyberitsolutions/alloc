@@ -98,18 +98,18 @@
     {else if $_GET["timeSheetPrintMode"] == "items"}
      <table border="1" cellspacing="0" cellpadding="2" width="100%">
       <tr>
-        <th>Date</th>
-        <th>Units</th>
-	<th>Multiplier</th>
-        <th>Description</th>
+        <th class="nobr" width="10%" valign="top">Date</th>
+        <th class="nobr" width="25%" valign="top">Units</th>
+	      <th class="nobr" width="1%" valign="top">Multiplier</th>
+        <th valign="top">Description</th>
       </tr>
       {list($rows,$info) = get_timeSheetItem_list_items($TPL["timeSheetID"])}
       {foreach $rows as $r}
       <tr>
-        <td class="nobr">{$r.date}</td>
-        <td align="right" class="nobr">{$r.units}</td>
-        <td class="nobr">{$r.multiplier_string}</td>
-        <td>{$r.desc}</td>
+        <td class="nobr" valign="top">{$r.date}&nbsp;</td>
+        <td align="right" class="nobr" valign="top">{$r.units}&nbsp;</td>
+        <td class="nobr" valign="top">{$r.multiplier_string}&nbsp;</td>
+        <td valign="top">{$r.desc}&nbsp;</td>
       </tr>
       {/}
       <tr>
