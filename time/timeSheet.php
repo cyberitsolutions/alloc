@@ -455,7 +455,15 @@ if ($_POST["save"]
       $timeSheetItem->set_value("description", $taskName);
       $_POST["timeSheetItem_commentPrivate"] and $timeSheetItem->set_value("commentPrivate", 1);
 
-      $timeSheetItem->set_value("comment",rtrim($timeSheetItem->get_value("comment")));
+      if (is_array($_POST["timeSheetItem_comment"])) {
+        $timeSheetItem_comments = array();
+        foreach ($_POST["timeSheetItem_comment"] as $c) {
+          $c and $timeSheetItem_comments[] = $c;
+        }
+        $timeSheetItem->set_value("comment",rtrim("* ".implode("\n* ",$timeSheetItem_comments)));
+      } else {
+        $timeSheetItem->set_value("comment",rtrim($timeSheetItem->get_value("comment")));
+      }
 
       $rtn = $timeSheetItem->save();
       $rtn and $TPL["message"][] = $rtn;
