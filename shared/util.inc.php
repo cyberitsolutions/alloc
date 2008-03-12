@@ -38,7 +38,7 @@ function path_under_path($path,$path2) {
     }
   }
 }
-function get_textarea($name, $default_value, $ops=array()) {
+function get_textarea($name, $default_value="", $ops=array()) {
   $height = $ops["height"] or $height = "small";
   $heights["small"] = 40;
   $heights["medium"] = 100;
