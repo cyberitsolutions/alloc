@@ -52,12 +52,13 @@ function refreshTaskList(radiobutton) \{
   </tr>
   <tr>
     <td valign="top"></td>
-    <td colspan="3" valign="top">
+    <td colspan="3" valign="top" id="invoice_summary_container">
       <label for="timeSheetItem_comment">Invoice Summary</label><br>
-      {if strlen($TPL['timeSheetItem_comment']) > 78}
+      {if strlen($TPL['timeSheetItem_comment']) > 78 || $TPL["timeSheetItem_timeSheetItemID"]}
         {get_textarea("timeSheetItem_comment", $TPL['timeSheetItem_comment'])}
       {else}
-        <input name="timeSheetItem_comment" size="78" type="text" value="{$timeSheetItem_comment}">
+        <input name="timeSheetItem_comment[]" size="78" type="text" value="{$timeSheetItem_comment}">
+        <a href="#x" class="magic" onClick="$('#invoice_summary_container').append('<input name=\'timeSheetItem_comment[]\' size=\'78\' type=\'text\'><br>')">New Dotpoint</a>
       {/}
     </td>
     <td colspan="1" valign="top" align="right"><br/>{$timeSheetItem_buttons}</td>
