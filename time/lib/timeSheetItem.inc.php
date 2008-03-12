@@ -99,9 +99,10 @@ class timeSheetItem extends db_entity {
     #}
   } 
 
-  function calculate_item_charge() {
+  function calculate_item_charge($rate=false) {
+    $rate === false and $rate = $this->get_value("rate");
     $multipliers = config::get_config_item("timeSheetMultipliers");
-    return sprintf($this->get_value("rate") * $this->get_value("timeSheetItemDuration") * $multipliers[$this->get_value("multiplier")]['multiplier']);
+    return sprintf("%0.2f",$rate * $this->get_value("timeSheetItemDuration") * $multipliers[$this->get_value("multiplier")]['multiplier']);
   }
 
   function delete() {
