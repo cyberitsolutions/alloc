@@ -23,20 +23,20 @@ function refreshTaskList(radiobutton) \{
    
         <tr>
           <td>
-            {get_calendar("timeSheetItem_dateTimeSheetItem",$TPL["timeSheetItem_dateTimeSheetItem"])}
+            {get_calendar("timeSheetItem_dateTimeSheetItem",$TPL["timeSheetItem_dateTimeSheetItem"])}&nbsp;
           </td>
           <td>
             <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$timeSheetItem_timeSheetItemDuration}">
             <select name="timeSheetItem_timeSheetItemDurationUnitID">{$timeSheetItem_unit_options}</select>
-            &nbsp;at&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$timeSheetItem_rate}">&nbsp;&times;&nbsp;<select name="timeSheetItem_multiplier">{$timeSheetItem_multiplier_options}</select>
+            &nbsp;@&nbsp;&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$timeSheetItem_rate}">&nbsp;&times;&nbsp;<select name="timeSheetItem_multiplier">{$timeSheetItem_multiplier_options}</select>
           </td>
         </tr>
         <tr>
-          <td valign="bottom" colspan="2"><a href="{$url_alloc_task}projectID={$projectID}&timeSheetID={$timeSheet_timeSheetID}">New Task</a></td>
+          <td valign="bottom" colspan="2"><a tabindex="100" href="{$url_alloc_task}projectID={$projectID}&timeSheetID={$timeSheet_timeSheetID}">New Task</a></td>
           <td valign="bottom" rowspan="2"> 
-            <label for="task_type_open">Open Tasks</label><input id="task_type_open" type="radio" name="task_type" value="open" onClick="refreshTaskList(this)" checked>
-            <label for="task_type_recent_closed">Recently Closed</label><input id="task_type_recent_closed" type="radio" name="task_type" value="recent_closed" onClick="refreshTaskList(this)">
-            <label for="task_type_all">All Tasks</label><input id="task_type_all" type="radio" name="task_type" value="all" onClick="refreshTaskList(this)">
+            <label for="task_type_open">Open Tasks</label><input id="task_type_open" type="radio" name="task_type" tabindex="100" value="open" onClick="refreshTaskList(this)" checked>
+            <label for="task_type_recent_closed">Recently Closed</label><input id="task_type_recent_closed" type="radio" name="task_type" tabindex="100" value="recent_closed" onClick="refreshTaskList(this)">
+            <label for="task_type_all">All Tasks</label><input id="task_type_all" type="radio" name="task_type" tabindex="100" value="all" onClick="refreshTaskList(this)">
           </td>
         </tr>
         <tr>
