@@ -94,11 +94,13 @@ class reminder extends db_entity {
 
     $recipients = $this->get_recipients();
     $type = $this->get_value('reminderType');
+    $recipient = $this->get_value('personID');
+    
     //project reminder
-    if ($type == "project") {
+    if (!$recipient && $type == "project") {
 
     //task reminder
-    } else if($type == "task") {
+    } else if(!$recipient && $type == "task") {
       $task = new task;
       $task->set_id($this->get_value('reminderLinkID'));
       $task->select();
@@ -109,9 +111,7 @@ class reminder extends db_entity {
 
     //default -  set to logged in user
     if(!$recipient) {
-      if ($this->get_value('personID')) {
-        $recipient = $this->get_value('personID');
-      } else if ($_GET["personID"]){
+      if ($_GET["personID"]){
         $recipient = $_GET["personID"];
       } else {
         $recipient = $current_user->get_id();
