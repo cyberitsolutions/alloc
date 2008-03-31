@@ -913,9 +913,9 @@ function get_help($topic) {
   global $TPL;
   $str = get_help_string($topic);
   if (strlen($str)) {
-    $img = "<a href=\"".$TPL["url_alloc_help_relative"]."getHelp.php?topic=".$topic."\" target=\"_blank\">";
-    $img.= "<img id=\"help_button_".$topic."\" border=\"0\" onmouseover=\"help_text_on(this,'".$str."');\" onmouseout=\"help_text_off(this);\" src=\"";
-    $img.= $TPL["url_alloc_images"]."help.gif\" style=\"border:1px solid #999999;\"></a>";
+    $img = "<div id='help_button_".$topic."' style='display:inline;'><a href=\"".$TPL["url_alloc_getHelp"]."topic=".$topic."\" target=\"_blank\">";
+    $img.= "<img border='0' class='help_button' onmouseover=\"help_text_on('help_button_".$topic."','".$str."');\" onmouseout=\"help_text_off('help_button_".$topic."');\" src=\"";
+    $img.= $TPL["url_alloc_images"]."help.gif\"></a></div>";
   }
   echo $img;
 }

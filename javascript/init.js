@@ -23,5 +23,6 @@ $(document).ready(function() {
   // Give the tables alternating stripes
   $(".tasks tr:nth-child(even)").addClass("even");
   $(".tasks tr:nth-child(odd)").addClass("odd");
+  $("div.message").corner();
 });
 

@@ -111,6 +111,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_costtime"                       => $sess->url(SCRIPT_PATH."tools/costtime.php")
             ,"url_alloc_backup"                         => $sess->url(SCRIPT_PATH."tools/backup.php")
             ,"url_alloc_helpfile"                       => $sess->url(SCRIPT_PATH."help/help.html")
+            ,"url_alloc_getHelp"                        => $sess->url(SCRIPT_PATH."help/getHelp.php")
             ,"url_alloc_sourceCodeList"                 => $sess->url(SCRIPT_PATH."tools/sourceCodeList.php")
             ,"url_alloc_sourceCodeView"                 => $sess->url(SCRIPT_PATH."tools/sourceCodeView.php")
 );

@@ -145,19 +145,23 @@ select:focus.bad
 
 #helper { 
   position:absolute; 
-  visibility:hidden; 
-  z-index:200;  
-}
-table.helper_table { 
+  z-index:2;  
   background-color:#fffdf2; 
+  border:1px solid #cccccc; 
   color:#666666; 
-  border:3px solid #e0e0e0; 
   width:400px; 
-  font-size:10px;
+  font-size:(DEFAULT_FONT_SIZE)px; 
+  padding:8px;
+}
+.help_button {
+  border:1px solid #999999;
+}
+.help_button:hover {
+  border:1px solid #cccccc;
 }
 
 div.message { 
-  padding:4px 4px; 
+  padding:2px 4px; 
   margin:0px auto 12px auto; 
   border:1px solid #cccccc;
   background-color:#fffdf2; 
