@@ -94,3 +94,28 @@ function stop_textarea_timer() {
   clearTimeout(alloc_current_resizable_textarea_timer);
 }
 
+function help_text_on(id, str) {
+  $('#main').append("<div id='helper' style='display:none'></div>");
+  $('#helper').hide().html(str).corner();
+  
+  offset = $('#'+id).offset();
+  
+  x = offset.left -400;
+  if (x < 0) {
+    x = x + 380;
+  } 
+  $("#helper").css('left',x);
+  
+  y = offset.top - 50;
+  if (y > 350) {
+    y = y-$('#helper').height() -40;
+  } 
+  
+  $("#helper").css('top',y);
+  $("#helper").fadeIn("normal");
+} 
+function help_text_off(id) {
+  $("#helper").fadeOut("normal");
+  $('#helper').remove();
+} 
+

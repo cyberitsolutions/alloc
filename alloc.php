@@ -125,7 +125,6 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"url_alloc_javascript"                     => SCRIPT_PATH."javascript/"
             ,"url_alloc_images"                         => SCRIPT_PATH."images/"
             ,"url_alloc_help"                           => ALLOC_MOD_DIR."help".DIRECTORY_SEPARATOR
-            ,"url_alloc_help_relative"                  => SCRIPT_PATH."help/"
             ,"current_date"                             => date("Y-m-d H:i:s")
             ,"today"                                    => date("Y-m-d")
             ,"alloc_help_link_name"                     => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
