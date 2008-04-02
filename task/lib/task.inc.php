@@ -81,7 +81,6 @@ class task extends db_entity {
 
         // If it isn't already closed, then send emails..
         if (!$orig_dateActualCompletion) {
-          $m = $task->email_task_closed();
           $m and $msg[] = $m;
         }
         $arr = $task->close_off_children_recursive();
@@ -91,69 +90,6 @@ class task extends db_entity {
       }
     }
     return $msg;
-  }
-
-  function email_task_reassigned($old_assignee) {
-    global $current_user;
-    $recipients = array();
-    # Mail to old
-    if ($current_user->get_id() != $old_assignee) {
-      $recipients[] = $old_assignee;
-    }
-    if ($current_user->get_id() != $this->get_value("personID")) {
-      $recipients[] = "assignee";
-    }
-    if ($current_user->get_id() != $this->get_value("creatorID")) {
-      $recipients[] = "creator";
-    }
-    if ($current_user->get_id() != $this->get_value("managerID")) {
-      $recipients[] = "manager";
-    }
-  
-    if ($recipients) {
-      $successful_recipients = $this->send_emails($recipients,"task_reassigned");
-      $successful_recipients and $msg = "Email sent: ".$successful_recipients.", Task Reassigned: ".$this->get_value("taskName");
-    }
- 
-    return $msg;
-  }
-
-  function email_task_closed() {
-    global $current_user;
-    if ($current_user->get_id() != $this->get_value("creatorID")) {
-      $recipients[] = "creator";
-    }
-    if ($current_user->get_id() != $this->get_value("managerID")) {
-      $recipients[] = "manager";
-    }
-    if ($current_user->get_id() != $this->get_value("personID")) {
-      $recipients[] = "assignee";
-    }
-
-    if ($recipients) {
-      $successful_recipients = $this->send_emails($recipients,"task_closed");
-      $successful_recipients and $msg = "Email sent: ".$successful_recipients.", Task Closed: ".$this->get_value("taskName");
-    }
-    return $msg; 
-  }
-
-  function email_task_duplicate() {
-    global $current_user;
-    if ($current_user->get_id() != $this->get_value("creatorID")) {
-      $recipients[] = "creator";
-    }
-    if ($current_user->get_id() != $this->get_value("managerID")) {
-      $recipients[] = "manager";
-    }
-    if ($current_user->get_id() != $this->get_value("personID")) {
-      $recipients[] = "assignee";
-    }
-
-    if ($recipients) {
-      $successful_recipients = $this->send_emails($recipients,"task_duplicate");
-      $successful_recipients and $msg = "Email sent: ".$successful_recipients.", Task Marked Duplicate: ".$this->get_value("taskName");
-    }
-    return $msg; 
   }
 
   function new_message_task() {
