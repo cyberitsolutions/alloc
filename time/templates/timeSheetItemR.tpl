@@ -1,5 +1,5 @@
 <form action="{$url_alloc_timeSheet}" method="post">
-<table width="100%" cellspacing="0" border="0" class="comments">
+<table width="100%" cellspacing="0" border="0" class="panel">
 <tr>
   <td valign="top" width="10%"><nobr>{$timeSheetItem_dateTimeSheetItem}</nobr></td>
   <td valign="top" width="19%"><nobr>{$timeSheetItem_timeSheetItemDuration} {$unit} @ ${$timeSheetItem_rate} x {$timeSheetItem_multiplier}</nobr></td>

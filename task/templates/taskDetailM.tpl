@@ -20,14 +20,14 @@ function updateStuffWithAjax() \{
 {$table_box}
   <tr>
     <th class="nobr" colspan="2">{$task_taskType}: {$taskSelfLink}</th>
-    <th class="right nobr" colspan="2">&nbsp;&nbsp;<a href="{$url_alloc_task}taskID={$task_taskID}&view=brief">View</a>&nbsp;&nbsp;{$navigation_links}</th>
+    <th class="right nobr" colspan="3">&nbsp;&nbsp;<a href="{$url_alloc_task}taskID={$task_taskID}&view=brief">View</a>&nbsp;&nbsp;{$navigation_links}</th>
   </tr>
   <tr>
     <td colspan="4">&nbsp;</td>
   </tr>    
   <tr>
-    <td>Project</td>
-    <td>
+    <td width="1%">Project</td>
+    <td width="1%">
       <select id="projectID" name="projectID" onChange="updateStuffWithAjax()">
         {$projectOptions}
       </select>
@@ -54,11 +54,11 @@ function updateStuffWithAjax() \{
       <div id="taskPersonList">
         {$personOptions}
       </div>
-<input type="hidden" name="dateAssigned" value="{$task_dateAssigned}">
-<input type="hidden" name="dateCreated" value="{$task_dateCreated}">
-<input type="hidden" name="dateClosed" value="{$task_dateClosed}">
-<input type="hidden" name="timeEstimate" value="{$task_timeEstimate}">
-</td>
+      <input type="hidden" name="dateAssigned" value="{$task_dateAssigned}">
+      <input type="hidden" name="dateCreated" value="{$task_dateCreated}">
+      <input type="hidden" name="dateClosed" value="{$task_dateClosed}">
+      <input type="hidden" name="timeEstimate" value="{$task_timeEstimate}">
+    </td>
   </tr>
   <tr>
     <td valign="top">Description</td>
@@ -72,29 +72,31 @@ function updateStuffWithAjax() \{
       </div>
     </td>
     <td class="right nobr">Task Type</td>
-    <td>
+    <td class="nobr">
       <select name="taskTypeID">
         {$taskTypeOptions}
       </select>
       {get_help("taskType")}
     </td>
   </tr>
-
-  <tr>    
+  <tr>
     <td valign="top"><nobr>Interested Parties</nobr></td>
-    <td valign="top" rowspan="2">
+    <td valign="top" rowspan="3">
       <div id="interestedPartyDropdown" style="display:inline">
         {$interestedPartyOptions}
       </div>
       {get_help("task_interested_parties")}
     </td>
-    <td class="right" valign="top">Estimated Hours</td>
+    <td class="right nobr" valign="top">Estimated Hours</td>
     <td valign="top"><input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5"></td>
+  </tr>
+  <tr>    
+    <td></td>
   </tr>
   <tr>
     <td></td>
     <td class="right nobr" valign="bottom"><div style="margin-bottom:8px;">Target Start/Complete</div><div>Actual Start/Complete</div></td>
-    <td valign="bottom">
+    <td valign="bottom" colspan="2">
       <div>
       {get_calendar("dateTargetStart",$TPL["task_dateTargetStart"])}&nbsp;&nbsp;
       {get_calendar("dateTargetCompletion",$TPL["task_dateTargetCompletion"])}
@@ -106,10 +108,10 @@ function updateStuffWithAjax() \{
     </td>
   </tr>
   <tr>
-    <td colspan="4">&nbsp;</td>
+    <td colspan="5">&nbsp;</td>
   </tr>
   <tr>
-    <td align="center" colspan="4">
+    <td align="center" colspan="5">
       {$timeSheet_save}
       <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
       <input type="submit" name="save_and_new" value="Save &amp; New">

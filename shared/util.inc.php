@@ -377,31 +377,82 @@ function move_attachment($entity, $id=false) {
 
   $id = sprintf("%d",$id);
 
-  if ($_FILES["attachment"]) {
-    is_uploaded_file($_FILES["attachment"]["tmp_name"]) || die("Uploaded document error.  Please try again.");
-
-    $dir = $TPL["url_alloc_attachments_dir"].$entity.DIRECTORY_SEPARATOR.$id;
-    if (!is_dir($dir)) {
-      mkdir($dir, 0777);
-    }
-
-    $newname = $_FILES["attachment"]["name"];
-    $newname = str_replace("/","",$newname);
-
-    while (preg_match("/\.\./",$newname)) {
-      $newname = str_replace("..",".",$newname);
-    }
-
-    if (!preg_match("/\.\./",$file) && !preg_match("/\//",$file)
-    &&  !preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)) {
-
-      if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $dir.DIRECTORY_SEPARATOR.$newname)) {
-        die("could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
-      } else {
-        chmod($dir.DIRECTORY_SEPARATOR.$newname, 0777);
+  // Re-jig the $_FILES array so that it can handle <input type="file" name="many_files[]">
+  if ($_FILES) {
+    foreach ($_FILES as $key => $f) {
+      if (is_array($_FILES[$key]["tmp_name"])) {
+        foreach ($_FILES[$key]["tmp_name"] as $k=>$v) {
+          if ($_FILES[$key]["tmp_name"][$k]) {
+            $files[] = array("name"     =>$_FILES[$key]["name"][$k]
+                            ,"tmp_name" =>$_FILES[$key]["tmp_name"][$k]
+                            ,"type"     =>$_FILES[$key]["type"][$k]
+                            ,"error"    =>$_FILES[$key]["error"][$k]
+                            ,"size"     =>$_FILES[$key]["size"][$k]
+                            );
+          }
+        }
+      } else if ($_FILES[$key]["tmp_name"]) {
+          $files[] = array("name"     =>$_FILES[$key]["name"]
+                          ,"tmp_name" =>$_FILES[$key]["tmp_name"]
+                          ,"type"     =>$_FILES[$key]["type"]
+                          ,"error"    =>$_FILES[$key]["error"]
+                          ,"size"     =>$_FILES[$key]["size"]
+                          );
       }
-    } else {
-      die("Error uploading file. Please ensure that the filename only contains regular characters.");
+    }
+  } 
+
+  if (is_array($files) && count($files)) {
+
+    foreach ($files as $file) {
+
+  #    print_r($file);
+  
+      if (is_uploaded_file($file["tmp_name"])) {
+
+        $dir = $TPL["url_alloc_attachments_dir"].$entity.DIRECTORY_SEPARATOR.$id;
+        if (!is_dir($dir)) {
+          mkdir($dir, 0777);
+        }
+        $newname = $file["name"];
+        $newname = str_replace("/","",$newname);
+
+        while (preg_match("/\.\./",$newname)) {
+          $newname = str_replace("..",".",$newname);
+        }
+
+        if (!preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)) {
+          if (!move_uploaded_file($file["tmp_name"], $dir.DIRECTORY_SEPARATOR.$newname)) {
+            die("Could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
+          } else {
+            chmod($dir.DIRECTORY_SEPARATOR.$newname, 0777);
+          }
+        } else {
+          die("Error uploading file. Bad filename.");
+        }
+  
+      } else {
+        switch($file['error']){
+          case 0: 
+            die("There was a problem with your upload.");
+            break;
+          case 1: // upload_max_filesize in php.ini
+            die("The file you are trying to upload is too big(1).");
+            break;
+          case 2: // MAX_FILE_SIZE
+            die("The file you are trying to upload is too big(2).");
+            break;
+          case 3: 
+            echo "The file you are trying upload was only partially uploaded.";
+            break;
+          case 4: 
+            echo "You must select a file for upload.";
+            break;
+          default: 
+            echo "There was a problem with your upload.";
+            break;
+        } 
+      }
     }
   }
 }

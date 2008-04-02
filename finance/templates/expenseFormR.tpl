@@ -1,4 +1,4 @@
-<table width="100%" cellspacing="0" border="0" class="comments {$status}">
+<table width="100%" cellspacing="0" border="0" class="panel {$status}">
 <tr>
   <td colspan="2">{$companyDetails}</td>
   <td colspan="2">{if $TPL["projectID"]}<a href="{$url_alloc_project}projectID={$projectID}">{$projectName}</a>{/}</td>
