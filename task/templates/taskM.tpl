@@ -128,4 +128,6 @@
 
 {show_taskComments()}
 
+<br>&nbsp;
+
 {show_footer()}

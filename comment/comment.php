@@ -59,58 +59,83 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
 
   if ($_POST["comment"]) {
     $comment->set_value('comment', rtrim($_POST["comment"]));
+    $comment->save();
 
-    // Email new comment?
-    if ($_POST["commentEmailCheckboxes"] || ($_POST["eo_email"] && preg_match("/@/",$_POST["eo_email"]))) {
 
-      // On-the-fly add name and email to recipients
-      if ($_POST["eo_email"]) {
-        $str = $_POST["eo_name"];
-        $str and $str.=" ";
-        $str.= str_replace(array("<",">"),"",$_POST["eo_email"]);
-        $_POST["commentEmailCheckboxes"][] = $str;
+    // Add relevant people to the comments interestedParties list
+    interestedParty::make_insterested_parties("comment",$comment->get_id(),$_POST["commentEmailRecipients"]);
+    $emailRecipients[] = "interested";
+
+    // On-the-fly add name and email to recipients
+    if ($_POST["eo_email"] && preg_match("/@/",$_POST["eo_email"]) && $_POST["eo_email"]) {
+      unset($lt,$gt); // used above
+      $str = $_POST["eo_name"];
+      $str and $str.=" ";
+      $str and $lt = "<";
+      $str and $gt = ">";
+      $str.= $lt.str_replace(array("<",">"),"",$_POST["eo_email"]).$gt;
+      $emailRecipients[] = $str;
+
+      // Add the person to the interested parties list
+      if ($_POST["eo_add_interested_party"]) {
+        $interestedParty = new interestedParty;
+        $interestedParty->set_value("fullName",trim($_POST["eo_name"]));
+        $interestedParty->set_value("emailAddress",trim($_POST["eo_email"]));
+        $interestedParty->set_value("entityID",$comment->get_id());
+        $interestedParty->set_value("entity","comment");
+        $interestedParty->save();
       }
-
-      // Add the dude to the interested parties list
-      if ($_POST["eo_email"] && $_POST["eo_add_interested_party"]) {
-        $db = new db_alloc();
-        $q = sprintf("INSERT INTO interestedParty (fullName,emailAddress,entityID,entity,personID) VALUES ('%s','%s',%d,'task',%d)",db_esc(trim($_POST["eo_name"])),db_esc(trim($_POST["eo_email"])),$entityID,$current_user->get_id());
-        $db->query($q);
-      }
-
       // Add a new client contact
-      if ($_POST["eo_email"] && $_POST["eo_add_client_contact"] && $_POST["eo_client_id"]) {
+      if ($_POST["eo_add_client_contact"] && $_POST["eo_client_id"]) {
         $cc = new clientContact;
         $cc->set_value("clientContactName",trim($_POST["eo_name"]));
         $cc->set_value("clientContactEmail",trim($_POST["eo_email"]));
         $cc->set_value("clientID",sprintf("%d",$_POST["eo_client_id"]));
         $cc->save();
       }
+    }
+  
+    // if someone uploads an attachment
+    if ($_FILES) {
+      move_attachment("comment",$comment->get_id());
+    }
 
-      if (is_object($current_user) && is_object($e) && method_exists($e, "get_all_parties")) {
-        $emails = $e->get_all_parties();
-        if ($current_user->get_value("emailAddress") && !$emails[$current_user->get_value("emailAddress")]) {
-        #die(print_r($emails,1));
-          $db = new db_alloc();
-          $q = sprintf("INSERT INTO interestedParty (fullName,emailAddress,entityID,entity,personID) VALUES ('%s','%s',%d,'task',%d)",db_esc($current_user->get_username(1)),db_esc($current_user->get_value("emailAddress")),$entityID,$current_user->get_id());
-          $db->query($q);
-        }
-      }
-
+    if ($emailRecipients) {
       if (is_object($e) && method_exists($e, "send_emails")) {
+        $from["commentID"] = $comment->get_id();
+        $from["parentCommentID"] = $comment->get_id();
 
-        $successful_recipients = $e->send_emails($_POST["commentEmailCheckboxes"], $entity."_comments", $comment->get_value("comment"));
+        $token = new token;
+
+        if ($comment->get_value("commentType") == "comment" && $comment->get_value("commentLinkID")) {
+          $c = new comment;
+          $c->set_id($comment->get_value("commentLinkID"));
+          $c->select();
+          if ($token->select_token_by_entity_and_action("comment",$c->get_id(),"add_comment_from_email")) {
+            $from["hash"] = $token->get_value("tokenHash");
+          }
+        }
+  
+        if (!$from["hash"]) {
+          if ($token->select_token_by_entity_and_action("comment",$comment->get_id(),"add_comment_from_email")) {
+            $from["hash"] = $token->get_value("tokenHash");
+          } else {
+            $from["hash"] = $comment->make_token_add_comment_from_email();
+          }
+        }
+
+        $successful_recipients = $e->send_emails($emailRecipients, $entity."_comments", $comment->get_value("comment"), $from);
  
         // Append success to end of the comment
         if ($successful_recipients && is_object($comment)) {
-          $append_comment_text = "Email sent to: ".$successful_recipients;
+          $append_comment_text = "Email sent to: ".htmlentities($successful_recipients);
           $message_good.= $append_comment_text;
           $comment->set_value("commentEmailRecipients",$successful_recipients);
         }
       }
     }
+    $comment->skip_modified_fields = true;
     $comment->save();
-
   }
 } else if ($_POST["comment_delete"] && $_POST["comment_id"]) {
   $comment = new comment;

@@ -142,6 +142,10 @@ select:focus.bad
 .padded {
   padding:8px;
 }
+.bold {
+  font-weight:bold;
+}
+
 
 #helper { 
   position:absolute; 
@@ -283,12 +287,7 @@ table.filter th {
 table.filter table.filter {
   border:2px dashed #e5e8d9; 
   margin:0px;
-}
-
-table.panel { 
-  background-color:#f3f9e0; 
-  height:100%; 
-  border:1px solid #c7cfb8; 
+  background-color:#ffffff;
 }
 
 tr.odd { 
@@ -357,13 +356,37 @@ table.tasks td.grand_total, .grand_total {
   text-align:right;
 }
 
-table.comments { 
+/* .panel tables (Harpo) have a blue border and a light blue background in the default theme.
+   When a .panel table is inside another .panel table (Chico), the border and the background 
+   are lighter.
+
+   When a table has .panel and .loud (Groucho), then the table has an orange border with a light
+   orange background. And correspondingly, any inner .panel's (Zeppo) render more lightly.
+*/
+table.panel div.hidden_text {
+  color:#888888;
+  font-style:italic;
+}
+table.panel { 
   border:1px solid #c7cfb8; 
   background:#f3f9e0; 
-  margin-bottom:4px; 
-  margin-top:2px;
+  margin-bottom:8px; 
+  margin-top:0px;
 }
-table.comments th { 
+table.loud {
+  border:1px solid #e7ba98; 
+  background:#fff7ed; 
+}
+table.panel table.panel {
+  border:1px solid #e5e8d9; 
+  background:#ffffff; 
+  margin-bottom:6px; 
+}
+table.loud table.panel {
+  border:1px solid #ffe5c4; 
+  background:#ffffff; 
+}
+table.panel th { 
   text-align:left; 
   background:#f3f9e0; 
   vertical-align:top; 
@@ -372,31 +395,61 @@ table.comments th {
   padding:4px; 
   border:0px solid black;
 }
-table.comments td { 
+table.loud th {
+  background:#fff7ed; 
+}
+table.panel td { 
   background:#f3f9e0;
-  padding:2px 4px; 
+  padding:6px; 
   border:0px solid black;
 }
-table.comments div.hidden_text {
-  color:#888888;
-  font-style:italic;
+table.loud td {
+  background:#fff7ed;
+}
+table.panel td table.panel { 
+  background:#ffffff; 
+}
+table.loud td table.panel { 
+  background:#ffffff; 
+}
+table.panel td table.panel th { 
+  background:#ffffff;
+}
+table.loud td table.panel th { 
+  background:#ffffff;
+}
+table.panel td table.panel td { 
+  background:#ffffff;
+}
+table.loud td table.panel td { 
+  background:#ffffff;
 }
 
+
+
+.faint {
+  color:#888888;
+  font-style:normal;
+}
+
+.warn { 
+  color:#e17a00;
+}
 table.pending { 
   background-color:#f3f9e0; 
   border:1px solid #c7cfb8; 
 }
 table.warn { 
-  background-color:#efe8d4; 
-  border:1px solid #a6925b; 
+  background-color:#fff7ed; 
+  border:1px solid #e7ba98; 
 }
 table.approved { 
   background-color:#dde5cf; 
   border:1px solid #849d58; 
 }
 table.rejected { 
-  background-color:#efded4; 
-  border:1px solid #b37a5d; 
+  background-color:#f7e9e8; 
+  border:1px solid #be9a9e; 
 }
 
 

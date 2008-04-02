@@ -44,7 +44,7 @@ a.sidebyside:hover {
 a.sidebyside_active {
   color:(TD_COLOR);
   text-decoration:none;
-  background-color:(PANE_BG_COLOR);
+  background-color:(PANEL_HARPO_BG_COLOR);
   border:1px solid #999999;
   padding:5px;
   font-size:(DEFAULT_FONT_SIZE)px; 
@@ -142,6 +142,10 @@ select:focus.bad
 .padded {
   padding:8px;
 }
+.bold {
+  font-weight:bold;
+}
+
 
 #helper { 
   position:absolute; 
@@ -218,21 +222,21 @@ table.box th a:hover {
 /* Calendar */
 table.alloc_calendar { 
   width:100%; 
-  border-right:1px solid (PANE_FRAME_COLOR); 
-  border-bottom:1px solid (PANE_FRAME_COLOR);
+  border-right:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  border-bottom:1px solid (PANEL_HARPO_FRAME_COLOR);
 } 
 table.alloc_calendar td { 
   background-color:(TABLE_BOX_BACKGROUND_COLOR); 
-  border-left:1px solid (PANE_FRAME_COLOR);  
-  border-top:1px solid (PANE_FRAME_COLOR); 
+  border-left:1px solid (PANEL_HARPO_FRAME_COLOR);  
+  border-top:1px solid (PANEL_HARPO_FRAME_COLOR); 
   width:10%; vertical-align:top;
 }
 table.alloc_calendar td.today { 
   background-color:#fffdf2; 
-  border-top:2px solid (PANE_FRAME_COLOR);  
-  border-left:2px solid (PANE_FRAME_COLOR);  
-  border-right:1px solid (PANE_FRAME_COLOR);  
-  border-bottom:1px solid (PANE_FRAME_COLOR); 
+  border-top:2px solid (PANEL_HARPO_FRAME_COLOR);  
+  border-left:2px solid (PANEL_HARPO_FRAME_COLOR);  
+  border-right:1px solid (PANEL_HARPO_FRAME_COLOR);  
+  border-bottom:1px solid (PANEL_HARPO_FRAME_COLOR); 
 }
 table.alloc_calendar td.today h1 {
   font-weight:bold;
@@ -265,8 +269,8 @@ table.alloc_calendar td:hover {
 
 /* Filters */
 table.filter { 
-  background-color:(PANE_BG_COLOR); 
-  border:2px dashed (PANE_FRAME_COLOR); 
+  background-color:(PANEL_HARPO_BG_COLOR); 
+  border:2px dashed (PANEL_HARPO_FRAME_COLOR); 
   padding:4px; 
   margin:4px; 
   margin-top:14px; 
@@ -274,21 +278,16 @@ table.filter {
 }
 table.filter th { 
   font-weight:bold; 
-  background-color:(PANE_BG_COLOR); 
+  background-color:(PANEL_HARPO_BG_COLOR); 
   color:(TD_COLOR); 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
 }
 
 table.filter table.filter {
-  border:2px dashed (PANE_BG_COLOR_HEADER); 
+  border:2px dashed (PANEL_CHICO_FRAME_COLOR); 
   margin:0px;
-}
-
-table.panel { 
-  background-color:(PANE_BG_COLOR); 
-  height:100%; 
-  border:1px solid (PANE_FRAME_COLOR); 
+  background-color:(PANEL_CHICO_BG_COLOR);
 }
 
 tr.odd { 
@@ -330,23 +329,23 @@ tr.odd:hover, tr.even:hover {
 
 table.tasks { 
   width:100%; 
-  border-right:1px solid (PANE_FRAME_COLOR); 
-  border-bottom:1px solid (PANE_FRAME_COLOR);
+  border-right:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  border-bottom:1px solid (PANEL_HARPO_FRAME_COLOR);
 }
 td.tasks { 
-  background-color: (PANE_BG_COLOR); 
+  background-color: (PANEL_HARPO_BG_COLOR); 
   padding:4px; 
 }
 table.tasks th, table.alloc_calendar th { 
   border-bottom:0px; 
   font-weight:bold; 
   white-space:nowrap; 
-  background:(PANE_BG_COLOR_HEADER); 
+  background:(PANEL_CHICO_FRAME_COLOR); 
   color:(TD_COLOR); 
 }
 table.tasks td, table.tasks th, table.alloc_calendar th { 
-  border-left:1px solid (PANE_FRAME_COLOR); 
-  border-top:1px solid (PANE_FRAME_COLOR); 
+  border-left:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  border-top:1px solid (PANEL_HARPO_FRAME_COLOR); 
   padding:4px;
 }
 .sort_arrows {
@@ -357,46 +356,100 @@ table.tasks td.grand_total, .grand_total {
   text-align:right;
 }
 
-table.comments { 
-  border:1px solid (PANE_FRAME_COLOR); 
-  background:(PANE_BG_COLOR); 
-  margin-bottom:4px; 
-  margin-top:2px;
+/* .panel tables (Harpo) have a blue border and a light blue background in the default theme.
+   When a .panel table is inside another .panel table (Chico), the border and the background 
+   are lighter.
+
+   When a table has .panel and .loud (Groucho), then the table has an orange border with a light
+   orange background. And correspondingly, any inner .panel's (Zeppo) render more lightly.
+*/
+table.panel div.hidden_text {
+  color:#888888;
+  font-style:italic;
 }
-table.comments th { 
+table.panel { 
+  border:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  background:(PANEL_HARPO_BG_COLOR); 
+  margin-bottom:8px; 
+  margin-top:0px;
+}
+table.loud {
+  border:1px solid (PANEL_GROUCHO_FRAME_COLOR); 
+  background:(PANEL_GROUCHO_BG_COLOR); 
+}
+table.panel table.panel {
+  border:1px solid (PANEL_CHICO_FRAME_COLOR); 
+  background:(PANEL_CHICO_BG_COLOR); 
+  margin-bottom:6px; 
+}
+table.loud table.panel {
+  border:1px solid (PANEL_ZEPPO_FRAME_COLOR); 
+  background:(PANEL_ZEPPO_BG_COLOR); 
+}
+table.panel th { 
   text-align:left; 
-  background:(PANE_BG_COLOR); 
+  background:(PANEL_HARPO_BG_COLOR); 
   vertical-align:top; 
   color:(TD_COLOR); 
   font-weight:normal; 
   padding:4px; 
   border:0px solid black;
 }
-table.comments td { 
-  background:(PANE_BG_COLOR);
-  padding:2px 4px; 
+table.loud th {
+  background:(PANEL_GROUCHO_BG_COLOR); 
+}
+table.panel td { 
+  background:(PANEL_HARPO_BG_COLOR);
+  padding:6px; 
   border:0px solid black;
 }
-table.comments div.hidden_text {
-  color:#888888;
-  font-style:italic;
+table.loud td {
+  background:(PANEL_GROUCHO_BG_COLOR);
+}
+table.panel td table.panel { 
+  background:(PANEL_CHICO_BG_COLOR); 
+}
+table.loud td table.panel { 
+  background:(PANEL_ZEPPO_BG_COLOR); 
+}
+table.panel td table.panel th { 
+  background:(PANEL_CHICO_BG_COLOR);
+}
+table.loud td table.panel th { 
+  background:(PANEL_ZEPPO_BG_COLOR);
+}
+table.panel td table.panel td { 
+  background:(PANEL_CHICO_BG_COLOR);
+}
+table.loud td table.panel td { 
+  background:(PANEL_ZEPPO_BG_COLOR);
 }
 
+
+
+.faint {
+  color:#888888;
+  font-style:normal;
+}
+
+.warn { 
+  color:(WARN_COLOR);
+}
 table.pending { 
-  background-color:(PANE_BG_COLOR); 
-  border:1px solid (PANE_FRAME_COLOR); 
+  background-color:(PANEL_HARPO_BG_COLOR); 
+  border:1px solid (PANEL_HARPO_FRAME_COLOR); 
 }
 table.warn { 
-  background-color:(WARN_PANE_BG_COLOR); 
-  border:1px solid (WARN_PANE_FRAME_COLOR); 
+  background-color:(WARN_BG_COLOR); 
+  border:1px solid (WARN_FRAME_COLOR); 
 }
 table.approved { 
-  background-color:(APPROVED_PANE_BG_COLOR); 
-  border:1px solid (APPROVED_PANE_FRAME_COLOR); 
+  background-color:(APPROVED_BG_COLOR); 
+  border:1px solid (APPROVED_FRAME_COLOR); 
 }
 table.rejected { 
-  background-color:(REJECTED_PANE_BG_COLOR); 
-  border:1px solid (REJECTED_PANE_FRAME_COLOR); 
+  background-color:(REJECTED_BG_COLOR); 
+  border:1px solid (REJECTED_FRAME_COLOR); 
 }
 
 

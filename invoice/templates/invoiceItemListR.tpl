@@ -1,4 +1,4 @@
-<table width="100%" cellspacing="0" border="0" class="comments{$box_class}">
+<table width="100%" cellspacing="0" border="0" class="panel{$box_class}">
 <tr>
   <td width="10%" class="nobr">{$invoiceItem_iiDate}</td>
   <td width="15%" class="nobr">{$invoiceItem_iiQuantity} * {$invoiceItem_iiUnitPrice} = <b>{$invoiceItem_iiAmount}</b></td>

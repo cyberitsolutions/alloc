@@ -44,7 +44,9 @@ class taskCommentTemplate extends db_entity {
     $swap["ti"] = $task->get_id();
     $swap["to"] = person::get_fullname($task->get_value("creatorID"));
     $swap["ta"] = person::get_fullname($task->get_value("personID"));
+    $swap["tm"] = person::get_fullname($task->get_value("managerID"));
     $swap["tn"] = $task->get_value("taskName");
+    $swap["td"] = $task->get_value("taskDescription");
     
     $project = new project;
     $project->set_id($task->get_value("projectID"));

@@ -130,15 +130,36 @@ class comment extends db_entity {
       $children = comment::util_get_comments_array("comment", $v["commentID"], $options);
       is_array($children) && count($children) and $new["children"] = $children;
 
-      $new["attribution"] = comment::get_comment_attribution($v);
+
+      $token = new token;
+      if ($token->select_token_by_entity_and_action("comment",$new["commentID"],"add_comment_from_email")) {
+        $token->get_value("tokenHash") and $new["hash"] = " <em class=\"faint\">{Key:".$token->get_value("tokenHash")."}</em>";
+  
+        $ip = interestedParty::get_interested_parties("comment",$new["commentID"]);
+        if (is_array($ip)) {
+          foreach($ip as $email => $info) {
+            if ($info["clientContactID"]) {
+              $new["external"] = " loud";
+              $new["external_label"] = " <em class='faint warn'>[ External Conversation ]</em>";
+            }
+          }
+        }
+        $new["external_label"] or $new["external_label"] = " <em class='faint'>[ Internal Conversation ]</em>";
+
+      #} else if ($token->select_token_by_entity_and_action($entity,$id,"add_comment_from_email")) {
+        #$token->get_value("tokenHash") and $new["hash"] = " <em class=\"faint\">{Key:".$token->get_value("tokenHash")."}</em>";
+      }
 
 
       if ($v["timeSheetID"]) {
-        $new["ts_label"] = " (Time Sheet Comment)";
+        $v["ts_label"] = "Time Sheet ";
 
-      } else if (($v["personID"] == $current_user->get_id()) && $options["showEditButtons"] && !$new["commentEmailUID"]) {
-        $new["comment_buttons"] = "<input type=\"submit\" name=\"comment_edit\" value=\"Edit\"><input type=\"submit\" name=\"comment_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this comment?')\">";
+      } else if (($v["personID"] == $current_user->get_id()) && $options["showEditButtons"] && $new["hash"]) {
+        //$new["comment_buttons"] = "<input type=\"submit\" name=\"comment_edit\" value=\"Edit\">";
+      //<input type=\"submit\" name=\"comment_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this comment?')\">";
       }
+
+      $new["attribution"] = comment::get_comment_attribution($v);
 
       if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
 
@@ -153,9 +174,9 @@ class comment extends db_entity {
         }
     
         if ($new["commentEmailUID"] && config::get_config_item("allocEmailHost")) { 
-          $new['downloadEmail'] = '<div style="float:right" class="noprint"><a href="'.$TPL["url_alloc_downloadEmail"].'msg_uid='.$new["commentEmailUID"].'">';
-          $new['downloadEmail'].= '<img border="0" title="Download Email" src="'.$TPL["url_alloc_images"].'download_email.gif">';
-          $new['downloadEmail'].= '<br>Download</a></div>';
+          $new['downloadEmail'] = '<a class="noprint" href="'.$TPL["url_alloc_downloadEmail"].'msg_uid='.$new["commentEmailUID"].'">';
+          #$new['downloadEmail'].= '<img border="0" title="Download Email" src="'.$TPL["url_alloc_images"].'download_email.gif">';
+          $new['downloadEmail'].= 'Download</a>';
         }
 
         $files = get_attachments("comment",$v["commentID"],array("sep"=>"<br>"));
@@ -188,26 +209,26 @@ class comment extends db_entity {
     global $TPL;
     $comment = comment::add_shrinky_divs(text_to_html($row["comment"]),$row["commentID"]);
     $onClick = "return set_grow_shrink('comment_".$row["commentID"]."','button_comment_".$row["commentID"]."','true');";
-    $rtn[] = '<table width="100%" cellspacing="0" border="0" class="comments">';
+    $rtn[] = '<table width="100%" cellspacing="0" border="0" class="panel'.$row["external"].'">';
     $rtn[] = '<tr>';
-    $rtn[] = '  <th valign="top" class="magic" onClick="'.$onClick.'">'.$row["attribution"].$row["emailed"].'</th>';
-    $rtn[] = '  <td valign="top" width="1%" class="nobr" align="right">'.$row["form"].'</td>';
+    $rtn[] = '  <th valign="top" onClick="'.$onClick.'">'.$row["attribution"].$row["hash"].$row["emailed"].'</th>';
+    $rtn[] = '  <td valign="top" width="1%" class="nobr" align="right">'.$row["form"].$row["downloadEmail"].$row["interestedParties"].$row["external_label"].'</td>';
     $rtn[] = '</tr>';
     $rtn[] = '<tr>';
-    $rtn[] = '  <td class="magic" onClick="'.$onClick.'">'.$comment.'</td>';
-    $row["files"] or $rtn[] = '  <td valign="bottom" align="center">'.$row["downloadEmail"].'</td>';
+    $rtn[] = '  <td onClick="'.$onClick.'">'.$comment.'</td>';
+    $row["files"] or $rtn[] = '  <td valign="bottom" align="center"></td>';
     $rtn[] = '</tr>';
     $row["children"] and $rtn[] = comment::get_comment_children($row["children"]);
     $row["files"] and $rtn[] = '<tr>';
     $row["files"] and $rtn[] = '  <td valign="bottom" align="left">'.$row["files"].'</td>';
-    $row["files"] and $rtn[] = '  <td valign="bottom" align="center">'.$row["downloadEmail"].'</td>';
+    $row["files"] and $rtn[] = '  <td valign="bottom" align="center"></td>';
     $row["files"] and $rtn[] = '</tr>';
     $rtn[] = '</table>';
     return implode("\n",$rtn);
   }
 
   function get_comment_attribution($comment=array()) {
-    $str = 'Comment by <b>'.comment::get_comment_author($comment).'</b> '.$comment["date"].$comment["ts_label"];
+    $str = $comment['ts_label'].'Comment by <b>'.comment::get_comment_author($comment).'</b> '.$comment["date"];
       if ($comment["commentModifiedTime"] || $comment["commentModifiedUser"]) {
         $str.= ", last modified by <b>".person::get_fullname($comment["commentModifiedUser"])."</b> ".$comment["commentModifiedTime"];
       }
@@ -269,7 +290,8 @@ class comment extends db_entity {
   function get_comment_children($children=array(), $padding=1) {
     $rtn = array();
     foreach($children as $child) {
-      $rtn[] = "<tr><td style=\"padding-left:".($padding*15+3)."px\">".comment::get_comment_html_table($child)."</td></tr>";
+      // style=\"padding:0px; padding-left:".($padding*15+5)."px; padding-right:6px;\"
+      $rtn[] = "<tr><td colspan=\"2\" style=\"padding:0px; padding-left:6px; padding-right:6px;\">".comment::get_comment_html_table($child)."</td></tr>";
       if (is_array($child["children"]) && count($child["children"])) {
         $padding += 1;
         $rtn[] = comment::get_comment_children($child["children"],$padding);
@@ -298,9 +320,135 @@ class comment extends db_entity {
   }
 
   function sort_task_comments_callback_func($a, $b) {
-    return $a["date"] > $b["date"];
+    return strtotime($a["date"]) > strtotime($b["date"]);
   }
 
+  function make_token_add_comment_from_email() {
+    global $current_user;
+    $token = new token;
+    $token->set_value("tokenEntity","comment");
+    $token->set_value("tokenEntityID",$this->get_id());
+    $token->set_value("tokenActionID",2);
+    $token->set_value("tokenActive",1);
+    $token->set_value("tokenCreatedBy",$current_user->get_id());
+    $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
+    $hash = $token->generate_hash();
+    $token->set_value("tokenHash",$hash);
+    $token->save();
+    return $hash;
+  }
+
+  function add_comment_from_email($email) {
+
+    // Make a new comment
+    $comment = new comment;
+    $comment->set_value("commentType","comment");
+    $comment->set_value("commentLinkID",$this->get_id());
+    $comment->set_value("commentEmailUID",$email->msg_uid);
+    $comment->save();
+    $commentID = $comment->get_id();
+
+    $c = new comment();
+    $c->set_id($comment->get_value("commentLinkID"));
+    $c->select();
+    if ($c->get_value("commentType") == "task" && $c->get_value("commentLinkID")) {
+      $t = new task;
+      $t->set_id($c->get_value("commentLinkID"));
+      $t->select();
+      $projectID = $t->get_value("projectID");
+    }
+
+
+    // Save the email attachments into a directory
+    $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$comment->get_id();
+    if (!is_dir($dir)) {
+      mkdir($dir, 0777);
+    }
+    $file = $dir.DIRECTORY_SEPARATOR."mail.eml";
+    $decoded = $email->save_email($file);
+
+    // Try figure out and populate the commentCreatedUser/commentCreatedUserClientContactID fields
+    list($from_address,$from_name) = parse_email_address($decoded[0]["Headers"]["from:"]);
+
+    $person = new person;
+    $personID = $person->find_by_name($from_name);
+
+    if (!$personID) {
+      $personID = $person->find_by_email($from_address);
+    }
+
+    if ($personID) {
+      $comment->set_value('commentCreatedUser', $personID);
+
+    } else {
+      $cc = new clientContact();
+      $clientContactID = $cc->find_by_name($from_name, $projectID);
+
+      if (!$clientContactID) {
+        $clientContactID = $cc->find_by_email($from_address, $projectID);
+      }
+
+      if ($clientContactID) {
+        $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
+      }
+    }
+
+    // If we don't have a $from_name, but we do have a personID or a
+    // clientContactID, then build a proper $from_name
+    if (!$from_name) {
+      if ($personID) {
+        $p = new person;
+        $p->set_id($personID);
+        $p->select();
+        $from_name = $p->get_value("firstName")." ".$p->get_value("surname");
+        $from_name == " " and $from_name = $p->get_value("username");
+
+      } else if ($clientContactID) {
+        $cc = new clientContact;
+        $cc->set_id($clientContactID);
+        $cc->select();
+        $from_name = $cc->get_value("clientContactName");
+      }
+    }
+
+    $from_name or $from_name = $from_address;
+    $from["email"] = $from_address;
+    $from["name"] = $from_name;
+    $from["references"] = $decoded[0]["Headers"]["references:"];
+    $from["in-reply-to"] = $decoded[0]["Headers"]["in-reply-to:"];
+
+    // Don't update last modified fields...
+    $comment->skip_modified_fields = true;
+
+    // Update comment with the text body and the creator
+    $body = trim(mime_parser::get_body_text($decoded));
+    $comment->set_value("comment",$body);
+    $comment->set_value("commentCreatedUserText",trim($decoded[0]["Headers"]["from:"]));
+    $comment->save();
+    $from["commentID"] = $comment->get_id();
+
+    $recipients[] = "interested";
+
+    $class = $c->get_value("commentType");
+    if (class_exists($class)) {
+      $obj = new $class;
+      $obj->set_id($c->get_value("commentLinkID"));
+      $obj->select();
+      $from["parentCommentID"] = $c->get_id();
+
+      $token = new token;
+      if ($token->select_token_by_entity_and_action("comment",$comment->get_value("commentLinkID"),"add_comment_from_email")) {
+        $from["hash"] = $token->get_value("tokenHash");
+      }
+
+      $successful_recipients = $obj->send_emails($recipients, $c->get_value("commentType")."_comments", $body, $from);
+      if ($successful_recipients) {
+        $comment->set_value("commentEmailRecipients",$successful_recipients);
+        $comment->save();
+      }
+    }
+
+  }
 
 }
 

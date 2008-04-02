@@ -254,71 +254,116 @@ class task extends db_entity {
   }
 
   function get_task_cc_list_select($projectID="") {
-    global $TPL;
-    $db = new db_alloc;
+    $interestedParty = array();
     $interestedPartyOptions = array();
     
     if (is_object($this)) {
-      $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
-      $q = sprintf("SELECT fullName,emailAddress FROM interestedParty WHERE entity='task' AND entityID = %d",$this->get_id());
-      $db->query($q);  
-      while ($db->next_record()) {
-        $interestedParty[] = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$db->f("fullName")),"email"=>$db->f("emailAddress")))));
+      $interestedPartyOptions = $this->get_all_task_parties($projectID);
+    } else {
+      $interestedPartyOptions = task::get_all_task_parties($projectID);
+    }
 
-        // And add the list of people who are already in the interestedParty for this task, just in case they get deleted from the client pages
-        // This email address will be overwritten by later entries
-        $interestedPartyOptions[$db->f("emailAddress")] = $db->f("fullName");
+    #echo "<pre>".print_r($interestedPartyOptions,1)."</pre>";
+  
+    if (is_array($interestedPartyOptions)) {
+
+      foreach ($interestedPartyOptions as $email => $info) {
+        $name = $info["name"];
+        $identifier = $info["identifier"];
+
+        if ($info["role"] == "interested" && $info["selected"]) {
+          $interestedParty[] = $identifier;
+        }
+
+        if ($email) {
+          $name = trim($name);
+          $str = trim(htmlentities($name." <".$email.">"));
+          $options[$identifier] = $str;
+        }
       }
+    }
+    $str = "<select name=\"interestedParty[]\" size=\"8\" multiple=\"true\"  style=\"width:300px\">".get_select_options($options,$interestedParty)."</select>";
+    return $str;
+  }
+
+  function get_all_task_parties($projectID="") {
+    $db = new db_alloc;
+    $interestedPartyOptions = array();
+  
+    if ($_GET["projectID"]) {
+      $projectID = $_GET["projectID"];
+    } else if (is_object($this)) {
+      $projectID = $this->get_value("projectID");
     }
 
     if ($projectID) {
-
       // Get primary client contact from Project page
       $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
       $db->query($q);
       $db->next_record();
-      $interestedPartyOptions[$db->f("projectClientEMail")] = $db->f("projectClientName");
+      $interestedPartyOptions[$db->f("projectClientEMail")] = array("name"=>$db->f("projectClientName"));
   
       // Get all other client contacts from the Client pages for this Project
       $q = sprintf("SELECT clientID FROM project WHERE projectID = %d",$projectID);
       $db->query($q);
       $db->next_record();
       $clientID = $db->f("clientID");
-      $q = sprintf("SELECT clientContactName, clientContactEmail FROM clientContact WHERE clientID = %d",$clientID);
+      $q = sprintf("SELECT clientContactName, clientContactEmail, clientContactID 
+                      FROM clientContact 
+                     WHERE clientID = %d",$clientID);
       $db->query($q);
       while ($db->next_record()) {
-        $interestedPartyOptions[$db->f("clientContactEmail")] = $db->f("clientContactName");
+        $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>true,"clientContactID"=>$db->f("clientContactID"));
       }
 
       // Get all the project people for this tasks project
-      $q = sprintf("SELECT emailAddress, firstName, surname 
-                     FROM projectPerson LEFT JOIN person on projectPerson.personID = person.personID 
+      $q = sprintf("SELECT emailAddress, firstName, surname, person.personID
+                     FROM projectPerson 
+                LEFT JOIN person on projectPerson.personID = person.personID 
                     WHERE projectPerson.projectID = %d AND person.personActive = 1 ",$projectID);
       $db->query($q);
       while ($db->next_record()) {
-        $interestedPartyOptions[$db->f("emailAddress")] = $db->f("firstName")." ".$db->f("surname");
+        $interestedPartyOptions[$db->f("emailAddress")] = array("name"=>$db->f("firstName")." ".$db->f("surname"),"personID"=>$db->f("personID"));
       }
     }
 
     $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
     foreach ($extra_interested_parties as $name => $email) {
-      $interestedPartyOptions[$email] = $name;
+      $interestedPartyOptions[$email] = array("name"=>$name);
     }
 
-
-    if (is_array($interestedPartyOptions)) {
-      asort($interestedPartyOptions);
-
-      foreach ($interestedPartyOptions as $email => $name) {
-        if ($email) {
-          $name = trim($name);
-          $str = trim(htmlentities($name." <".$email.">"));
-          $options[urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$name),"email"=>$email))))] = $str;
-        }
+    if (is_object($this)) {
+      if ($this->get_value("creatorID")) {
+        $p = new person;
+        $p->set_id($this->get_value("creatorID"));
+        $p->select();
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"creator", "personID"=>$this->get_value("creatorID"));
       }
+      if ($this->get_value("personID")) {
+        $p = new person;
+        $p->set_id($this->get_value("personID"));
+        $p->select();
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"assignee", "selected"=>true, "personID"=>$this->get_value("personID"));
+      }
+      if ($this->get_value("managerID")) {
+        $p = new person;
+        $p->set_id($this->get_value("managerID"));
+        $p->select();
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"manager", "selected"=>true, "personID"=>$this->get_value("managerID"));
+      }
+      $this_id = $this->get_id();
     }
-    $str = "<select name=\"interestedParty[]\" size=\"8\" multiple=\"true\"  style=\"width:300px\">".get_select_options($options,$interestedParty)."</select>";
-    return $str;
+    // return an aggregation of the current task/proj/client parties + the existing interested parties
+    $interestedPartyOptions = interestedParty::get_interested_parties("task",$this_id,$interestedPartyOptions);
+    return $interestedPartyOptions;
+  }
+
+  function get_encoded_interested_party_identifier($info=array()) {
+    return urlencode(base64_encode(serialize($info)));
+  }
+
+  function get_decoded_interested_party_identifier($blob) {
+    return unserialize(base64_decode(urldecode($blob)));
   }
 
   function get_personList_dropdown($projectID,$taskID=false) {
@@ -426,9 +471,7 @@ class task extends db_entity {
   function set_option_tpl_values() {
     // Set template values to provide options for edit selects
     global $TPL, $current_user, $isMessage;
-
     $db = new db_alloc;
-
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
     $TPL["personOptions"] = task::get_personList_dropdown($projectID);
     $TPL["managerPersonOptions"] = task::get_managerPersonList_dropdown($projectID);
@@ -442,7 +485,7 @@ class task extends db_entity {
     $db->query($query);
     $TPL["projectOptions"] = get_option("None", "0", $projectID == 0)."\n";
     $TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $projectID,60);
-
+    
     // TaskCommentTemplateOptions - Select all task comment templates
     $query = sprintf("SELECT * FROM taskCommentTemplate ORDER BY taskCommentTemplateName");
     $db->query($query);
@@ -457,42 +500,19 @@ class task extends db_entity {
     $TPL["priorityOptions"] = get_select_options($tp,$priority);
     $priority and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$taskPriorities[$priority]["colour"]."\">[".$this->get_priority_label()."]</div>";
 
-    // We're building these two with the <select> tags because they will be replaced by an AJAX created dropdown when
-    // The projectID changes.
+    // We're building these two with the <select> tags because they will be
+    // replaced by an AJAX created dropdown when the projectID changes.
     $TPL["parentTaskOptions"] = $this->get_parent_task_select();
     $TPL["interestedPartyOptions"] = $this->get_task_cc_list_select();
-    
 
     $db->query(sprintf("SELECT fullName,emailAddress FROM interestedParty WHERE entity='task' AND entityID = %d ORDER BY fullName",$this->get_id()));
     while ($db->next_record()) {
       $str = trim(htmlentities($db->f("fullName")." <".$db->f("emailAddress").">"));
-      $value = urlencode(base64_encode(serialize(array("name"=>sprintf("%s",$db->f("fullName")),"email"=>$db->f("emailAddress")))));
+      $value = task::get_encoded_interested_party_identifier($db->f("fullName"), $db->f("emailAddress"));
       $TPL["interestedParty_hidden"].= $commar.$str."<input type=\"hidden\" name=\"interestedParty[]\" value=\"".$value."\">";
       $TPL["interestedParty_text"].= $commar.$str;
       $commar = "<br/>";
     }
-    
-
-    // The options for the email dropdown boxes
-    #$TPL["task_createdBy"] and $creator_extra = " (".$TPL["task_createdBy"].")";
-    #$TPL["person_username"] and $person_extra = " (".$TPL["person_username"].")";
-    #$emailOptions[] = "Email Sending Options";
-    #$TPL["task_createdBy_personID"] != $current_user->get_id() and $emailOptions["creator"] = "Email Task Creator".$creator_extra;
-    #$TPL["person_username_personID"] != $current_user->get_id() and $emailOptions["assignee"] = "Email Task Assignee".$person_extra;
-    #$emailOptions["isManager"] = "Email Project Managers";
-    #$emailOptions["canEditTasks"] = "Email Project Engineers";
-    #$emailOptions["all"] = "Email Project Managers & Engineers";
-
-    // Email dropdown options for the comment box
-    #if ($current_user->get_id() == $this->get_value("creatorID")) {
-      #$taskCommentEmailSelected = "assignee";
-    #}   
-    #if ($current_user->get_id() == $this->get_value("personID")) {
-      #$taskCommentEmailSelected = "creator";
-    #}   
-    #$TPL["taskCommentEmailOptions"] = get_select_options($emailOptions,$taskCommentEmailSelected);
-
-
 
     // If we're viewing the printer friendly view
     if ($_GET["media"] == "print") {
@@ -524,232 +544,6 @@ class task extends db_entity {
       $TPL["projectName"] = $p->get_display_value();
     }
 
-  }
-
-  function get_email_recipients($options=array()) {
-    #static $people;
-    $recipients = array();
-
-    $people = get_cached_table("person");
-
-
-    foreach ($options as $selected_option) {
-
-      // Determine recipient/s 
-
-      if ($selected_option == "interested") {
-        $db = new db_alloc;
-        $q = sprintf("SELECT * FROM interestedParty WHERE entity='task' AND entityID = %d",$this->get_id()); 
-        $db->query($q);
-        while($row = $db->next_record()) {
-          $row["isCC"] = true;
-          $row["name"] = $row["fullName"];
-          $recipients[] = $row;
-        }
-      } else if ($selected_option == "creator") {
-        $recipients[] = $people[$this->get_value("creatorID")];
-
-      } else if ($selected_option == "manager") {
-        $recipients[] = $people[$this->get_value("managerID")];
-
-      } else if ($selected_option == "assignee") {
-        $recipients[] = $people[$this->get_value("personID")];
-
-      } else if ($selected_option == "isManager" || $selected_option == "canEditTasks" || $selected_option == "all") {
-        $q = sprintf("SELECT personID,projectPersonRoleHandle 
-                        FROM projectPerson 
-                   LEFT JOIN projectPersonRole ON projectPersonRole.projectPersonRoleID = projectPerson.projectPersonRoleID 
-                       WHERE projectID = %d", $this->get_value("projectID"));
-        if ($selected_option != "all") {
-          $q .=  sprintf(" AND projectPersonRole.projectPersonRoleHandle = '%s'",$selected_option);
-        }
-
-        $db->query($q);
-        while ($db->next_record()) {
-          $recipients[] = $people[$db->f("personID")];
-        }
-
-      } else if (is_int($selected_option)){
-        $recipients[] = $people[$selected_option];
-
-      } else if (preg_match("/@/",$selected_option)) {
-        list($email, $name) = parse_email_address($selected_option);
-        $email and $recipients[] = array("name"=>$name,"emailAddress"=>$email);
-      }
-    }
-    return $recipients;
-  }
-
-  function get_email_recipient_headers($recipients, $from) {
-    global $current_user;
-
-    $emailMethod = config::get_config_item("allocEmailAddressMethod");
-
-    // Build up To: and Bcc: headers
-    foreach ($recipients as $recipient) {
-      unset($recipient_full_name);
-
-      if ($recipient["firstName"] && $recipient["surname"]) {
-        $recipient_full_name = $recipient["firstName"]." ".$recipient["surname"];
-      } else if ($recipient["fullName"]) {
-        $recipient_full_name = $recipient["fullName"];
-      } else if ($recipient["name"]) {
-        $recipient_full_name = $recipient["name"];
-      } 
-        
-      $r = $recipient_full_name or $r = $recipient["emailAddress"];
-
-      if ($recipient["emailAddress"] 
-      && $recipient_full_name != $from["name"] 
-      && $recipient["emailAddress"] != $from["email"] 
-      && !$done[$recipient["emailAddress"]]) { 
-
-        $done[$recipient["emailAddress"]] = true;
-
-        if ($emailMethod == "to") {
-          $recipient_full_name  and $to_address.= $commar.$recipient_full_name." <".$recipient["emailAddress"].">";
-          $recipient_full_name  or  $to_address.= $commar.$recipient["emailAddress"];
-          $successful_recipients.= $commar.$r;
-          $commar = ", ";
-
-        } else if ($emailMethod == "bcc") {
-          $bcc.= $commar.$recipient["emailAddress"];
-          $successful_recipients.= $commar.$r;
-          $commar = ", ";
-
-        // The To address contains no actual email addresses, ie "Alex Lance": ; all the real recipients are in the Bcc.
-        } else if ($emailMethod == "tobcc") {
-          $to_address.= $commar.'"'.$r.'": ;';
-          $bcc.= $commar.$recipient["emailAddress"];
-          $successful_recipients.= $commar.$r;
-          $commar = ", ";
-        }
-  
-      }
-    }
-    return array($to_address, $bcc, $successful_recipients);
-  }
-
-  function send_emails($selected_option, $type="", $body="", $from=array()) {
-    global $current_user;
-
-    $recipients = $this->get_email_recipients($selected_option);
-    list($to_address,$bcc,$successful_recipients) = $this->get_email_recipient_headers($recipients, $from);
-
-    if ($successful_recipients) {
-      $email = new alloc_email();
-      $bcc && $email->add_header("Bcc",$bcc);
-      $email->set_to_address($to_address);
-
-      $types = array('task_created'    => "Task Created"
-                    ,'task_closed'     => "Task Closed"
-                    ,'task_comments'   => "Task Comments"
-                    ,'task_reassigned' => "Task Reassigned"
-                    ,'task_duplicate'  => "Task Marked Duplicate"
-                    );
-    
-      $subject = $types[$type];
-
-      $p = new project;
-      $p->set_id($this->get_value("projectID"));
-      $p->select();
-
-      $from_name = $from["name"] or $from_name = $current_user->get_username(1);
-      $message = "\n".$subject." by ".$from_name;
-      $body and $message.= "\n\n".$body;
-      $message.= "\n\n".config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
-      $message.= "\n\nProject: ".$p->get_value("projectName");
-      $message.= "\n   Task: ".$this->get_value("taskName");
-      $message.= "\n   Desc: ".$this->get_value("taskDescription");
-      $message.= "\n\n-- \nIf you have any questions, please reply to this email or contact: ";
-      config::get_config_item("companyName")            and $message.= "\n".config::get_config_item("companyName");
-      config::get_config_item("companyContactAddress")  and $message.= "\n".config::get_config_item("companyContactAddress");
-      config::get_config_item("companyContactAddress2") and $message.= " ".config::get_config_item("companyContactAddress2");
-      config::get_config_item("companyContactAddress3") and $message.= " ".config::get_config_item("companyContactAddress3");
-      config::get_config_item("companyContactEmail")    and $message.= "\nE: ".config::get_config_item("companyContactEmail");
-      config::get_config_item("companyContactPhone")    and $message.= "\nP: ".config::get_config_item("companyContactPhone");
-      config::get_config_item("companyContactFax")      and $message.= "\nF: ".config::get_config_item("companyContactFax");
-      config::get_config_item("companyContactHomePage") and $message.= "\nW: ".config::get_config_item("companyContactHomePage");
-
-      // REMOVE ME!!
-      $email->ignore_no_email_urls = true;
-      $email->ignore_no_email_hosts = true;
-
-      $hash = $this->make_token_add_comment_from_email();
-
-      if ($hash && config::get_config_item("allocEmailKeyMethod") == "headers") {
-        $email->set_message_id($hash);
-      } else if ($hash && config::get_config_item("allocEmailKeyMethod") == "subject") {
-        $email->set_message_id();
-        $subject_extra = "{Key:".$hash."}";
-      }
-
-      $subject = $subject.": ".$this->get_id()." ".$this->get_value("taskName")." [".$this->get_priority_label()."] ".$subject_extra;
-      $email->set_subject($subject);
-      $email->set_body($message);
-      $email->set_message_type($type);
-
-
-      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
-        $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
-        $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
-      } else {
-        $f = $current_user->get_from() or $f = config::get_config_item("allocEmailAdmin");
-        $email->set_reply_to($f);
-        $email->set_from($f);
-      }
-
-      if ($from["commentID"]) {
-        $files = get_attachments("comment",$from["commentID"]);
-        if (is_array($files)) {
-          foreach ($files as $file) {
-            $email->add_attachment($file["path"]);
-          }
-        }
-      }
-
-      if ($email->send(false)) {
-        return $successful_recipients;
-      }
-    }   
-  }
-
-  function make_token_add_comment_from_email() {
-    global $current_user;
-    $token = new token;
-    if ($token->select_token_by_entity_and_action("task",$this->get_id(),"add_comment_from_email")) {
-      $hash = $token->get_value("tokenHash");
-    } else {
-      $token->set_value("tokenEntity","task");
-      $token->set_value("tokenEntityID",$this->get_id());
-      $token->set_value("tokenActionID",1);
-      $token->set_value("tokenActive",1);
-      $token->set_value("tokenCreatedBy",$current_user->get_id());
-      $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
-      $hash = $token->generate_hash();
-      $token->set_value("tokenHash",$hash);
-      $token->save();
-    }
-    return $hash;
-  }
-
-  function make_token_get_task_comments() {
-#    global $current_user;
-#    $token = new token;
-#    if ($token->select_token_by_entity_and_action("task",$this->get_id(),"get_task_comments_array")) {
-#      $hash = $token->get_value("tokenHash");
-#    } else {
-#      $token->set_value("tokenEntity","task");
-#      $token->set_value("tokenEntityID",$this->get_id());
-#      $token->set_value("tokenActionID",2);
-#      $token->set_value("tokenActive",1);
-#      $token->set_value("tokenCreatedBy",$current_user->get_id());
-#      $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
-#      $hash = $token->generate_hash();
-#      $token->set_value("tokenHash",$hash);
-#      $token->save();
-#    }
-#    return $hash;
   }
 
   function get_task_comments_array() {
@@ -798,14 +592,14 @@ class task extends db_entity {
     return $url;
   }
 
-function get_task_statii_array() {
-  $taskStatii = task::get_task_statii();
-  $taskStatiiArray[""] = "";
-  foreach($taskStatii as $key => $arr) {
-    $taskStatiiArray[$key] = $arr["label"];
+  function get_task_statii_array() {
+    $taskStatii = task::get_task_statii();
+    $taskStatiiArray[""] = "";
+    foreach($taskStatii as $key => $arr) {
+      $taskStatiiArray[$key] = $arr["label"];
+    }
+    return $taskStatiiArray;
   }
-  return $taskStatiiArray;
-}
 
   function get_task_statii() {
     $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 2, date("Y")))." 00:00:00";
@@ -1092,7 +886,7 @@ function get_task_statii_array() {
         }
   
       if ((is_array($tasks) && count($tasks)) || $s || (is_array($summary_ops) && count($summary_ops))) {
-          $print = true;
+        $print = true;
       }
 
 
@@ -1291,54 +1085,6 @@ function get_task_statii_array() {
     return $summary;
   }  
 
-  function get_task_children($filter="",$_FORM=array()) {
-
-    if (is_array($filter) && count($filter)) {
-      $f = " WHERE ".implode(" AND ",$filter);
-    }
-    # The str_replace lets us use this same filter from above. 
-    $db = new db_alloc;
-    $q = sprintf("SELECT * FROM task %s ORDER BY taskName",str_replace("project.projectID","projectID",$f));
-    $_FORM["debug"] and print "\n<br>QUERY: ".$q;
-    $db->query($q);
-    echo "<br/>q: ".$q;
-
-    while ($row = $db->next_record()) {
-
-      $task = new task;
-      $task->read_db_record($db);
-
-      $row["taskURL"] = $task->get_url();
-      $row["project_name"] = $_FORM["project_name"];
-      $row["taskName"] = $task->get_task_name($_FORM);
-      $row["taskLink"] = $task->get_task_link($_FORM);
-      $row["newSubTask"] = $task->get_new_subtask_link();
-      $_FORM["showStatus"] and $row["taskStatus"] = $task->get_status();
-      $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
-      $row["padding"] = $_FORM["padding"];
-      $row["object"] = $task;
-
-
-      if ($row["taskTypeID"] == TT_PHASE) {
-        $_FORM["padding"]+=1;
-        $filter["parentTaskID"] = sprintf("(parentTaskID = %d)",$row["taskID"]);
-        $arr = task::get_task_children($filter, $_FORM);
-        if ((is_array($arr) && count($arr)) || ($row["personID"] == $_FORM["personID"])) {
-          $tasks[$row["taskID"]] = $row;
-        }
-        if (is_array($arr) && count($arr)) {
-          $tasks = array_merge($tasks,$arr);
-        }
-        $_FORM["padding"]-=1;
-
-      } else {
-       $tasks[$row["taskID"]] = $row;
-      }
-    }
-
-    return $tasks;
-  }
-
   function get_new_subtask_link() {
     global $TPL;
     if (is_object($this) && $this->get_value("taskTypeID") == TT_PHASE) {
@@ -1395,6 +1141,11 @@ function get_task_statii_array() {
         return "<span class='bad'>".$closed_text.sprintf("%d%%",$percent).$closed_text_end."</span>";
       }
     }
+  }
+
+  function get_priority_label() {
+    $taskPriorities = config::get_config_item("taskPriorities");
+    return $taskPriorities[$this->get_value("priority")]["label"];
   }
 
   function get_forecast_completion() {
@@ -1653,8 +1404,176 @@ function get_task_statii_array() {
     return $rtn;
   }
 
+  function get_email_recipients($options=array(),$from=array()) {
+    $recipients = array();
+    $people = get_cached_table("person");
+
+    foreach ($options as $selected_option) {
+
+      // Determine recipient/s 
+      if ($selected_option == "interested") {
+        $db = new db_alloc;
+        if ($from["parentCommentID"]) {
+          $q = sprintf("SELECT * FROM interestedParty WHERE entity = 'comment' AND entityID = %d",$from["parentCommentID"]); 
+        } else {
+          $q = sprintf("SELECT * FROM interestedParty WHERE entity = 'task' AND entityID = %d",$this->get_id()); 
+        }
+        $db->query($q);
+        while($row = $db->next_record()) {
+          $row["isCC"] = true;
+          $row["name"] = $row["fullName"];
+          $recipients[] = $row;
+        }
+      } else if ($selected_option == "creator") {
+        $recipients[] = $people[$this->get_value("creatorID")];
+
+      } else if ($selected_option == "manager") {
+        $recipients[] = $people[$this->get_value("managerID")];
+
+      } else if ($selected_option == "assignee") {
+        $recipients[] = $people[$this->get_value("personID")];
+
+      } else if ($selected_option == "isManager" || $selected_option == "canEditTasks" || $selected_option == "all") {
+        $q = sprintf("SELECT personID,projectPersonRoleHandle 
+                        FROM projectPerson 
+                   LEFT JOIN projectPersonRole ON projectPersonRole.projectPersonRoleID = projectPerson.projectPersonRoleID 
+                       WHERE projectID = %d", $this->get_value("projectID"));
+        if ($selected_option != "all") {
+          $q .=  sprintf(" AND projectPersonRole.projectPersonRoleHandle = '%s'",$selected_option);
+        }
+
+        $db->query($q);
+        while ($db->next_record()) {
+          $recipients[] = $people[$db->f("personID")];
+        }
+
+      } else if (is_int($selected_option)){
+        $recipients[] = $people[$selected_option];
+
+      } else if (is_string($selected_option) && preg_match("/@/",$selected_option)) {
+        list($email, $name) = parse_email_address($selected_option);
+        $email and $recipients[] = array("name"=>$name,"emailAddress"=>$email);
+      }
+    }
+    return $recipients;
+  }
+
+  function get_email_recipient_headers($recipients, $from) {
+    global $current_user;
+
+    $emailMethod = config::get_config_item("allocEmailAddressMethod");
+
+    // Build up To: and Bcc: headers
+    foreach ($recipients as $recipient) {
+      unset($recipient_full_name);
+
+      if ($recipient["firstName"] && $recipient["surname"]) {
+        $recipient_full_name = $recipient["firstName"]." ".$recipient["surname"];
+      } else if ($recipient["fullName"]) {
+        $recipient_full_name = $recipient["fullName"];
+      } else if ($recipient["name"]) {
+        $recipient_full_name = $recipient["name"];
+      } 
+        
+
+      if ($recipient["emailAddress"] 
+      && $recipient_full_name != $from["name"] 
+      && $recipient["emailAddress"] != $from["email"] 
+      && !$done[$recipient["emailAddress"]]) { 
+
+        $done[$recipient["emailAddress"]] = true;
+
+        $name = $recipient_full_name or $name = $recipient["emailAddress"];
+        $email_without_name = $recipient["emailAddress"];
+        if ($recipient_full_name) {
+          $name_and_email = $recipient_full_name." <".$recipient["emailAddress"].">";
+        } else {
+          $name_and_email = $recipient["emailAddress"];
+        }
+
+        if ($emailMethod == "to") {
+          $to_address.= $commar.$name_and_email;
+          $successful_recipients.= $commar.$name_and_email;
+          $commar = ", ";
+
+        } else if ($emailMethod == "bcc") {
+          $bcc.= $commar.$email_without_name;
+          $successful_recipients.= $commar.$name_and_email;
+          $commar = ", ";
+
+        // The To address contains no actual email addresses, ie "Alex Lance": ; all the real recipients are in the Bcc.
+        } else if ($emailMethod == "tobcc") {
+          $to_address.= $commar.'"'.$name.'": ;';
+          $bcc.= $commar.$email_without_name;
+          $successful_recipients.= $commar.$name_and_email;
+          $commar = ", ";
+        }
+
+      }
+    }
+    return array($to_address, $bcc, $successful_recipients);
+  }
+
+  function send_emails($selected_option, $type="", $body="", $from=array()) {
+    global $current_user;
+
+    $recipients = $this->get_email_recipients($selected_option,$from);
+    list($to_address,$bcc,$successful_recipients) = $this->get_email_recipient_headers($recipients, $from);
+
+    if ($successful_recipients) {
+      $email = new alloc_email();
+      $bcc && $email->add_header("Bcc",$bcc);
+      $from["references"] && $email->add_header("References",$from["references"]);
+      $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
+      $email->set_to_address($to_address);
+    
+      $from_name = $from["name"] or $from_name = $current_user->get_username(1);
+
+      // REMOVE ME!!
+      $email->ignore_no_email_urls = true;
+      $email->ignore_no_email_hosts = true;
+
+      $hash = $from["hash"];
+
+      if ($hash && config::get_config_item("allocEmailKeyMethod") == "headers") {
+        $email->set_message_id($hash);
+      } else if ($hash && config::get_config_item("allocEmailKeyMethod") == "subject") {
+        $email->set_message_id();
+        $subject_extra = "{Key:".$hash."}";
+      }
+
+      $subject = "Task Comment: ".$this->get_id()." ".$this->get_value("taskName")." [".$this->get_priority_label()."] ".$subject_extra;
+      $email->set_subject($subject);
+      $email->set_body($body);
+      $email->set_message_type($type);
+
+      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
+        $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
+        $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
+      } else {
+        $f = $current_user->get_from() or $f = config::get_config_item("allocEmailAdmin");
+        $email->set_reply_to($f);
+        $email->set_from($f);
+      }
+
+      if ($from["commentID"]) {
+        $files = get_attachments("comment",$from["commentID"]);
+        if (is_array($files)) {
+          foreach ($files as $file) {
+            $email->add_attachment($file["path"]);
+          }
+        }
+      }
+
+      if ($email->send(false)) {
+        return $successful_recipients;
+      }
+    }   
+  }
+
   function add_comment_from_email($email) {
 
+    // Make a new comment
     $comment = new comment;
     $comment->set_value("commentType","task");
     $comment->set_value("commentLinkID",$this->get_id());
@@ -1662,6 +1581,7 @@ function get_task_statii_array() {
     $comment->save();
     $commentID = $comment->get_id();
 
+    // Save the email attachments into a directory
     $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$comment->get_id();
     if (!is_dir($dir)) {
       mkdir($dir, 0777);
@@ -1669,13 +1589,12 @@ function get_task_statii_array() {
     $file = $dir.DIRECTORY_SEPARATOR."mail.eml";
     $decoded = $email->save_email($file);
 
+    // Try figure out and populate the commentCreatedUser/commentCreatedUserClientContactID fields
     list($from_address,$from_name) = parse_email_address($decoded[0]["Headers"]["from:"]);
 
     $person = new person;
     $personID = $person->find_by_name($from_name);
   
-    #die("personID ".$personID);
-
     if (!$personID) {
       $personID = $person->find_by_email($from_address);
     }
@@ -1696,7 +1615,8 @@ function get_task_statii_array() {
       }
     }
 
-    // If we don't know the usersname, then try and determine it
+    // If we don't have a $from_name, but we do have a personID or a
+    // clientContactID, then build a proper $from_name
     if (!$from_name) {
       if ($personID) {
         $p = new person;
@@ -1716,20 +1636,29 @@ function get_task_statii_array() {
     $from_name or $from_name = $from_address;
     $from["email"] = $from_address;
     $from["name"] = $from_name;
+    $from["references"] = $decoded[0]["Headers"]["references:"];
+    $from["in-reply-to"] = $decoded[0]["Headers"]["in-reply-to:"];
 
     // Don't update last modified fields...
     $comment->skip_modified_fields = true;
 
+    // Update comment with the text body and the creator
     $body = trim(mime_parser::get_body_text($decoded));
     $comment->set_value("comment",$body);
     $comment->set_value("commentCreatedUserText",trim($decoded[0]["Headers"]["from:"]));
     $comment->save();
     $from["commentID"] = $comment->get_id();
+    $from["parentCommentID"] = $comment->get_id();
 
     $recipients[] = "assignee";
     $recipients[] = "manager";
-    $recipients[] = "creator";
+    #$recipients[] = "creator";
     $recipients[] = "interested";
+
+    $token = new token;
+    if ($token->select_token_by_entity_and_action("task",$comment->get_value("commentLinkID"),"add_comment_from_email")) {
+      $from["hash"] = $token->get_value("tokenHash");
+    }
 
     $successful_recipients = $this->send_emails($recipients,"task_comments",$body,$from);
 
@@ -1739,31 +1668,6 @@ function get_task_statii_array() {
     }
   }
 
-  function get_priority_label() {
-    $taskPriorities = config::get_config_item("taskPriorities");
-    return $taskPriorities[$this->get_value("priority")]["label"];
-  }
-
-  function get_all_parties() {
-    $rtn = array();
-    $people = get_cached_table("person");
-    $email_addresses[$people[$this->get_value("creatorID")]["emailAddress"]] = $people[$this->get_value("creatorID")]["name"];
-    $email_addresses[$people[$this->get_value("managerID")]["emailAddress"]] = $people[$this->get_value("managerID")]["name"];
-    $email_addresses[$people[$this->get_value("personID")]["emailAddress"]] = $people[$this->get_value("personID")]["name"];
-    $email_addresses[$people[$this->get_value("closerID")]["emailAddress"]] = $people[$this->get_value("closerID")]["name"];
-
-    $db = new db_alloc();
-    $q = sprintf("SELECT emailAddress, fullName FROM interestedParty WHERE entity='task' AND entityID = %d",$this->get_id());
-    $db->query($q);
-    while ($db->row()) {
-      $email_addresses[$db->f("emailAddress")] = $db->f("fullName");
-    }
-
-    foreach ($email_addresses as $email => $name) {
-      preg_match("/@/",$email) and $rtn[$email] = $name;
-    }
-    return $rtn;
-  }
 
 
 }

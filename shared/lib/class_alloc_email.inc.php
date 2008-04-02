@@ -217,7 +217,7 @@ class alloc_email {
     return "\n\n--".$this->get_mime_boundary()."--";
   }
   function add_attachment($file) {
-    if (file_exists($file) && is_readable($file)) {
+    if (file_exists($file) && is_readable($file) && filesize($file)) {
       $mime_boundary = $this->get_mime_boundary();
       $this->add_header("MIME-Version","1.0");
       $this->add_header("Content-Type","multipart/mixed; boundary=\"".$mime_boundary."\"");

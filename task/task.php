@@ -203,25 +203,29 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     $task->new_message_task();
   }
 
-  // Add entries to interestedParty
-  $q = sprintf("DELETE FROM interestedParty WHERE entity='task' AND entityID = %d",$task->get_id());
-  $db->query($q);
-  
-  if (is_array($_POST["interestedParty"])) {
-    foreach ($_POST["interestedParty"] as $encoded_name_and_email) {
-      $name_and_email = unserialize(base64_decode(urldecode($encoded_name_and_email)));
-      $CCname = db_esc($name_and_email["name"]);
-      preg_match("/[A-Za-z0-9]+/",$CCname) or $CCname = ""; // sometimes name were being saved as a single space
-      $q = sprintf("INSERT INTO interestedParty (fullName,emailAddress,entityID,entity) VALUES ('%s','%s',%d,'task')",$CCname,db_esc($name_and_email["email"]),$task->get_id());
-      $db->query($q);
-    }
-  }
 
-  if ($task_is_new && $current_user->get_id() != $task->get_value("personID")) {
-    $successful_recipients = $task->send_emails(array("assignee"),"task_created");
-    $successful_recipients and $msg[] = "Email sent to ".$successful_recipients;
-  }
- 
+  interestedParty::make_insterested_parties("task",$task->get_id(),$_POST["interestedParty"]);
+
+#  This section automatically adds the task people to the Interested Parties
+#  if ($task_is_new) {
+#    $add_to_ip = array("creatorID","managerID","personID");
+#
+#    foreach ($add_to_ip as $role) {
+#      $p = new person;
+#      $p->set_id($task->get_value($role));
+#      $p->select(); 
+#      
+#      if (!interestedParty::exists("task", $task->get_id(), $p->get_value("emailAddress"))) {
+#        $interestedParty = new interestedParty;
+#        $interestedParty->set_value("entityID",$task->get_id());
+#        $interestedParty->set_value("entity","task");
+#        $interestedParty->set_value("personID",$p->get_id());
+#        $interestedParty->set_value("fullName",$p->get_username(1));
+#        $interestedParty->set_value("emailAddress",$p->get_value("emailAddress"));
+#        $interestedParty->save();
+#      }
+#    }
+#  }
  
   count($msg) and $msg = "&message_good=".urlencode(implode("<br/>",$msg));
 
@@ -255,11 +259,8 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   header("location: ".$TPL["url_alloc_taskList"]);
 }
 
-
-
 // Start stuff here
 $task->set_tpl_values(DST_HTML_ATTRIBUTE, "task_");
-
 
 $person = new person;
 $person->set_id($task->get_value("creatorID"));
@@ -362,38 +363,20 @@ if ($dupeID) {
 }
 
 
-
-
-
-
 if ($_GET["commentID"] && $_GET["comment_edit"]) {
   $comment = new comment();
   $comment->set_id($_GET["commentID"]);
   $comment->select();
   $TPL["comment"] = $comment->get_value('comment');
   $TPL["commentEmailRecipients"] = $comment->get_value('commentEmailRecipients');
-  $TPL["comment_buttons"] =
-    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_GET["commentID"])
-           ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
+  $TPL["comment_buttons"] = sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_GET["commentID"]);
+  //$TPL["comment_buttons"].= "<label for=\"email_comment\">Send Email</label> ";
+  //$TPL["comment_buttons"].= "<input id=\"email_comment\" type=\"checkbox\" name=\"email_comment\" value=\"1\" checked>&nbsp;";
+  $TPL["comment_buttons"].= "<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
 } else {
-  $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
-  if ($task->get_id()) {
-
-    if ($current_user->get_id() != $task->get_value("creatorID")) {
-      $TPL["email_comment_creator_checked"] = " checked";
-    } 
-    if ($current_user->get_id() != $task->get_value("personID")) {
-      $TPL["email_comment_assignee_checked"] = " checked";
-    } 
-    if ($task->get_value("managerID") && $current_user->get_id() != $task->get_value("managerID")) {
-      $TPL["email_comment_manager_checked"] = " checked";
-    } 
-    // If there are interested parties then, default the checkbox to on
-    $q = sprintf("SELECT * FROM interestedParty WHERE entity='task' AND entityID = %d",$task->get_id());
-    $db = new db_alloc();
-    $db->query($q);
-    $db->num_rows() and $TPL["email_comment_CCList_checked"] = " checked";
-  }
+  //$TPL["comment_buttons"] = "<label for=\"email_comment\">Send Email</label> ";
+  //$TPL["comment_buttons"].= "<input id=\"email_comment\" type=\"checkbox\" name=\"email_comment\" value=\"1\" checked>&nbsp;";
+  $TPL["comment_buttons"].= "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
 }
 
 
@@ -423,10 +406,14 @@ if ($task->get_id()) {
 if ($taskID) {
   $TPL["taskSelfLink"] = "<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_task_name()."</a>";
   $TPL["main_alloc_title"] = "Task " . $task->get_id() . ": " . $task->get_task_name()." - ".APPLICATION_NAME;
+  $TPL["task_exists"] = true;
 } else {
   $TPL["taskSelfLink"] = "New Task";
   $TPL["main_alloc_title"] = "New Task - ".APPLICATION_NAME;
 }
+
+$TPL["allTaskParties"] = $task->get_all_task_parties($task->get_value("projectID")) or $TPL["allTaskParties"] = array();
+
 
 // Printer friendly view
 if ($_GET["media"] == "print") {
@@ -459,7 +446,6 @@ if ($_GET["media"] == "print") {
   // Need to html-ise taskName and description
   $TPL["task_taskName"] = text_to_html($task->get_value("taskName"));
   $TPL["task_taskDescription"] = text_to_html($task->get_value("taskDescription"));
-  $TPL["taskHash"] = $task->make_token_add_comment_from_email();
 
   include_template("templates/taskM.tpl");
 }

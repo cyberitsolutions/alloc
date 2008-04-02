@@ -128,8 +128,6 @@ INSERT INTO config (name,value,type) VALUES ("timeSheetMultipliers", "a:5:{i:1;a
 
 
 
-
-
 -- INSERT select, table, tr, td, label, content (ie plaintext), 
 INSERT INTO htmlElementType (htmlElementTypeID,handle,name, hasEndTag,hasChildElement,hasContent,hasValueContent,hasValueAttribute,valueAttributeName,parentHtmlElementID) VALUES (1,'select','select',1,1,0,0,0,NULL,NULL);
 INSERT INTO htmlElementType (htmlElementTypeID,handle,name, hasEndTag,hasChildElement,hasContent,hasValueContent,hasValueAttribute,valueAttributeName,parentHtmlElementID) VALUES (2,'option','option',1,0,1,0,1,"selected",1);
@@ -209,6 +207,8 @@ INSERT INTO projectPersonRole (projectPersonRoleID, projectPersonRoleName, proje
 
 
 INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ("Add Comments to Task","task","add_comment_from_email");
+INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ("Add Comments to Task (via a comment)","comment","add_comment_from_email");
+
 
 
 INSERT INTO config (name,value,type) VALUES ("taskPriorities",'a:5:{i:1;a:2:{s:5:"label";s:8:"Critical";s:6:"colour";s:7:"#ff0000";}i:2;a:2:{s:5:"label";s:9:"Important";s:6:"colour";s:7:"#ff7200";}i:3;a:2:{s:5:"label";s:6:"Normal";s:6:"colour";s:7:"#333333";}i:4;a:2:{s:5:"label";s:5:"Minor";s:6:"colour";s:7:"#666666";}i:5;a:2:{s:5:"label";s:8:"Wishlist";s:6:"colour";s:7:"#999999";}}',"array");
