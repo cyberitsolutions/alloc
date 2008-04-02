@@ -161,7 +161,6 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     if (!$task->get_value("dateActualCompletion")) {
       $task->set_value("dateActualCompletion", date("Y-m-d"));
     }
-    $task->email_task_duplicate();
   }
 
   // If dateActualCompletion and there's no dateActualStart then default today
@@ -175,9 +174,6 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
       $task->set_value("closerID",$current_user->get_id());
       $task->set_value("dateClosed",date("Y-m-d H:i:s"));
     }
-    if (!$orig_dateActualCompletion) {
-      $msg[] = $task->email_task_closed();
-    }
     $arr = $task->close_off_children_recursive();
     if (is_array($arr)) {
       $msg = array_merge($msg,$arr);
@@ -190,7 +186,6 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 
   if (!$task_is_new) {
     if (sprintf("%d",$task->get_value("personID")) != sprintf("%d",$orig_personID)) {
-      $msg[] = $task->email_task_reassigned($orig_personID);
       $task->set_value("dateAssigned",date("Y-m-d H:i:s"));
     }
   } else if ($task->get_value("personID")) {
