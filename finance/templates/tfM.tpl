@@ -8,7 +8,7 @@
     <th colspan="2">Tagged Fund</th>
   </tr>
   <tr>
-    <td width="30%">TF Name: </td>
+    <td width="20%">TF Name: </td>
     <td><input type="text" size="30" maxlength="255" name="tfName" value="{$tfName}"></td> 
   </tr>
   <tr>
@@ -20,11 +20,11 @@
     <td><input type="text" size="30" maxlength="255" name="quickenAccount" value="{$quickenAccount}"></td> 
   </tr>
   <tr>
-    <td>Status: </td>
-    <td><input type="checkbox" name="isActive" {$tfIsActive} />Active</td>
+    <td>Enabled: </td>
+    <td><input type="checkbox" name="isActive" value="1"{$tfIsActive}></td>
   </tr>
   <tr>
-    <td>Comments: </td>
+    <td valign="top">Comments: </td>
     <td>{get_textarea("tfComments",$TPL["tfComments"],array("cols"=>30))}</td>
   </tr>
   <tr>
