@@ -337,7 +337,8 @@ CREATE TABLE projectPerson (
   rateUnitID int(3) default NULL,
   projectPersonModifiedUser int(11) DEFAULT NULL,
   emailDateRegex varchar(255) default NULL,
-  PRIMARY KEY  (projectPersonID)
+  PRIMARY KEY (projectPersonID),
+  INDEX idx_person_project (projectID,personID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
@@ -530,6 +531,7 @@ CREATE TABLE timeSheetItem (
   comment text,
   multiplier tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY  (timeSheetItemID),
+  INDEX idx_taskID (taskID),
   INDEX idx_timeSheetID (timeSheetID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
