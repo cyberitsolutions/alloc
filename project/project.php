@@ -555,7 +555,8 @@ $options["taskView"] = "byProject";
 $options["projectIDs"] = array($project->get_id());   
 $options["taskStatus"] = "not_completed";
 $options["showAssigned"] = true;
-$options["showTimes"] = true;
+$options["showManager"] = true;
+#$options["showTimes"] = true; // performance hit
 
 // Gets $ per hour, even if user uses metric like $200 Daily
 function get_projectPerson_hourly_rate($personID,$projectID) {
@@ -571,18 +572,13 @@ function get_projectPerson_hourly_rate($personID,$projectID) {
   return $hourly_rate;
 }
 
-
 if (is_object($project) && $project->get_id()) {
   $options["return"] = "objectsAndHtml";
   list($tasks,$TPL["task_summary"]) = task::get_task_list($options);
   if (is_array($tasks)) {
     foreach ($tasks as $tid => $t) {
       $hourly_rate = get_projectPerson_hourly_rate($t["personID"],$t["projectID"]);
-
       $time_remaining = $t["timeEstimate"] - (task::get_time_billed($t["taskID"])/60/60);
-
-      #echo "<br/>TR: ".$t["timeEstimate"] ." - ". (task::get_time_billed($t["taskID"])/60/60);
-      #echo "<br>CR: ".$hourly_rate." * ".$time_remaining;
 
       $cost_remaining = $hourly_rate * $time_remaining;
 
@@ -613,11 +609,7 @@ if (is_object($project) && $project->get_id()) {
   $TPL["percentage"] = sprintf("%0.1f",$p);
 }
 
-
-
-
 $TPL["navigation_links"] = $project->get_navigation_links();
-
 
 $query = sprintf("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
 $db->query($query);
@@ -625,6 +617,7 @@ $tf_array = get_array_from_db($db, "tfID", "tfName");
 $TPL["commission_tf_options"] = get_select_options($tf_array, $TPL["commission_tfID"]);
 
 
+#timetook($start);
 
 $query = sprintf("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
 $db->query($query);
