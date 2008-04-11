@@ -58,11 +58,6 @@ a {
   white-space:nowrap; 
   vertical-align:top;
 }
-img { 
-  position:relative; 
-  float:left; 
-  left:-14px;
-}
 p.error { 
   color: #ff4d4d; 
   display:inline; 
@@ -79,7 +74,7 @@ p.error {
     width: 395px !important;
     width: 380px;
     padding-right: 15px;
-    margin: 40px auto;
+    margin: 0px auto;
     text-align:left;
 }
 .cssbox_head {
@@ -98,5 +93,29 @@ p.error {
     background-position: bottom left;
     margin-right: 25px;
     padding: 0px 0px 15px 40px;
+}
+
+div.message {
+  padding:20px;
+  margin:0px auto 12px auto;
+  border:1px solid #cccccc;
+  background-color:#ffffff;
+  width:100%;
+}
+.bad {
+  color:red;
+  font-size:12px;
+}
+.good {
+  color:green;
+  font-size:12px;
+}
+.help {
+  color:#666666;
+  font-size:12px;
+}
+
+ul {
+  margin-bottom:0px;
 }
 

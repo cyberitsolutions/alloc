@@ -129,6 +129,18 @@ $TPL["status_line"] = APPLICATION_NAME." ".get_alloc_version()." &copy; 2007 <a 
 $TPL["ALLOC_SHOOER"] = ALLOC_SHOOER; 
 
 
+if (!is_dir($TPL["url_alloc_attachments_dir"]."whatsnew".DIRECTORY_SEPARATOR."0")) {
+  mkdir($TPL["url_alloc_attachments_dir"]."whatsnew".DIRECTORY_SEPARATOR."0");
+}
+
+$files = get_attachments("whatsnew",0);
+if (is_array($files) && count($files)) {
+  $f = end($files);
+  $TPL["latest_changes_name"] = $f["restore_name"];
+  $TPL["latest_changes"] = trim(nl2br(file_get_contents($f["path"])));
+}
+
+
 include_template("templates/login.tpl");
 
 page_close();

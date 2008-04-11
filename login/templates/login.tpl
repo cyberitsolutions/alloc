@@ -5,15 +5,21 @@
     <meta name="language" content="English-AU">
     <title>allocPSA Login</title>
     <link rel="stylesheet" href="{$url_alloc_stylesheets}login.css" type="text/css" />
-    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}login.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.curvycorners.js"></script>
   </head>
-
-  <body onLoad="javascript:focus_field();">
+  <body>
+  <script>
+    // When the document has loaded...
+    $(document).ready(function() \{
+      $("#username").focus();
+      $("div.message").corner();
+    \});
+  </script>
 
   <form action="{$url_alloc_login}" method="post" id="login_form">
 
-  <div style="text-align:center">
-
+  <div style="margin-top:40px; text-align:center;">
     {$ALLOC_SHOOER}{echo stripslashes(urldecode($_GET["msg"]))}
 
     <div class="cssbox">
@@ -30,7 +36,7 @@
           </tr>
           <tr>
             <td class="right" style="width:100%">Username&nbsp;&nbsp;</td>
-            <td class="right"><input type="text" name="username" value="{$username}" size="20" maxlength="32"></td>
+            <td class="right"><input type="text" name="username" id="username" value="{$username}" size="20" maxlength="32"></td>
           </tr>
           <tr>
             {$password_or_email_address_field}
@@ -47,10 +53,27 @@
 
       </div>
     </div> 
-
   </div>
 
   </form>
+
+  {if $TPL["latest_changes"]}
+  <div style="width:40%; margin-top:50px; margin-left:auto; margin-right:auto">
+    <div class="message">
+      <table cellspacing="0">
+        <tr>
+          <td class="help" align="left">
+            <b>Latest changes for {$latest_changes_name}</b>
+            <br>
+            <ul>
+            {$latest_changes}
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  {/}
 
   </body>
 </html>
