@@ -37,6 +37,8 @@ class taskCommentTemplate extends db_entity {
 
 
   function get_populated_template($taskID) {
+    global $current_user;
+    $swap["cu"] = person::get_fullname($current_user->get_id());
 
     $task = new task;
     $task->set_id($taskID);
@@ -45,6 +47,7 @@ class taskCommentTemplate extends db_entity {
     $swap["to"] = person::get_fullname($task->get_value("creatorID"));
     $swap["ta"] = person::get_fullname($task->get_value("personID"));
     $swap["tm"] = person::get_fullname($task->get_value("managerID"));
+    $swap["tc"] = person::get_fullname($task->get_value("closerID"));
     $swap["tn"] = $task->get_value("taskName");
     $swap["td"] = $task->get_value("taskDescription");
     
@@ -58,13 +61,25 @@ class taskCommentTemplate extends db_entity {
     $client->select();
     $swap["cc"] = $client->get_value("clientName");
 
-    $swap["cd"] = "Phone: ".config::get_config_item("companyContactPhone");
-    $swap["cd"].= "\nFax: ".config::get_config_item("companyContactFax");
-    $swap["cd"].= "\n".config::get_config_item("companyContactAddress");
-    $swap["cd"].= "\nEmail: ".config::get_config_item("companyContactEmail");
-    $swap["cd"].= "  Web: ".config::get_config_item("companyContactHomePage");
+    $swap["cd"] = config::get_config_item("companyContactAddress");
+    $swap["cd"].= " ".config::get_config_item("companyContactAddress2");
+    $swap["cd"].= " ".config::get_config_item("companyContactAddress3");
+    $swap["cd"].= "\nP: ".config::get_config_item("companyContactPhone");
+    $swap["cd"].= "\nF: ".config::get_config_item("companyContactFax");
+    $swap["cd"].= "\nE: ".config::get_config_item("companyContactEmail");
+    $swap["cd"].= "\nW: ".config::get_config_item("companyContactHomePage");
 
     $swap["cn"] = config::get_config_item("companyName");
+
+    $swap["tu"] = config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
+
+    $swap["c1"] = config::get_config_item("companyContactAddress");
+    $swap["c2"] = config::get_config_item("companyContactAddress2");
+    $swap["c3"] = config::get_config_item("companyContactAddress3");
+    $swap["ce"] = config::get_config_item("companyContactEmail");
+    $swap["cp"] = config::get_config_item("companyContactPhone");
+    $swap["cf"] = config::get_config_item("companyContactFax");
+    $swap["cw"] = config::get_config_item("companyContactHomePage");
 
     $str = $this->get_value("taskCommentTemplateText");
     foreach ($swap as $k => $v) {
