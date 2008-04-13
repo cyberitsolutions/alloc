@@ -59,18 +59,8 @@
 
   {if $TPL["latest_changes"]}
   <div style="width:40%; margin-top:50px; margin-left:auto; margin-right:auto">
-    <div class="message">
-      <table cellspacing="0">
-        <tr>
-          <td class="help" align="left">
-            <b>Latest changes for {$latest_changes_name}</b>
-            <br>
-            <ul>
-            {$latest_changes}
-            </ul>
-          </td>
-        </tr>
-      </table>
+    <div class="message help">
+      {$latest_changes}
     </div>
   </div>
   {/}
