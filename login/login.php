@@ -134,10 +134,16 @@ if (!is_dir($TPL["url_alloc_attachments_dir"]."whatsnew".DIRECTORY_SEPARATOR."0"
 }
 
 $files = get_attachments("whatsnew",0);
+
 if (is_array($files) && count($files)) {
-  $f = end($files);
-  $TPL["latest_changes_name"] = $f["restore_name"];
-  $TPL["latest_changes"] = trim(nl2br(file_get_contents($f["path"])));
+  while ($f = array_pop($files)) {
+    $x++;
+    if($x>3) break;
+    $str.= $br."<b>Latest changes for ".$f["restore_name"]."</b>";
+    $str.= "<br><ul>".trim(nl2br(file_get_contents($f["path"])))."</ul>";
+    $br = "<br><br>";
+  }
+  $str and $TPL["latest_changes"] = $str;
 }
 
 
