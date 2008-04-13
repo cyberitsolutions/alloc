@@ -82,6 +82,8 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('invoice',-1,0,'','Y',NULL,'User needs to be able to update invoice because updating an invoiceItem, changes the dates on the invoice itself.',3,112);
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('timeUnit',0,0,'','Y',NULL,'Allow people to read timeUnit records.',1,113);
 
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('interestedParty',0,0,'','Y',NULL,'Allow people to do anything to interestedParty records.',15,115);
+
 
 
 
