@@ -48,7 +48,8 @@ function sidebyside_activate(id,arr) {
   if (id == "sbsAll") {
     for (var i=0; i<arr.length; i++) {
       if (arr[i] != "sbsAll") {
-        $("#"+arr[i]).show();
+        //$("#"+arr[i]).show(); konqueror doesn't like this
+        document.getElementById(arr[i]).style.display = 'inline';
         $('#sbs_link_'+arr[i]).removeClass("sidebyside_active").addClass("sidebyside");
       }
     }
@@ -57,12 +58,14 @@ function sidebyside_activate(id,arr) {
   } else {
     for (var i=0; i<arr.length; i++) {
       if (arr[i] != "sbsAll") {
-        $("#"+arr[i]).hide();
+        //$("#"+arr[i]).hide();  konqueror doesn't like this
+        document.getElementById(arr[i]).style.display = 'none';
       }
       $('#sbs_link_' + arr[i]).removeClass("sidebyside_active").addClass("sidebyside");
     }
     $('#sbs_link_' + id).addClass("sidebyside_active");
-    $("#"+id).show();
+    //$("#"+id).show(); konqueror doesn't like this
+    document.getElementById(id).style.display = 'inline';
   }
 }
 
