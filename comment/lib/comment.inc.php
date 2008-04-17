@@ -358,7 +358,6 @@ class comment extends db_entity {
       $projectID = $t->get_value("projectID");
     }
 
-
     // Save the email attachments into a directory
     $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$comment->get_id();
     if (!is_dir($dir)) {
@@ -370,48 +369,41 @@ class comment extends db_entity {
     // Try figure out and populate the commentCreatedUser/commentCreatedUserClientContactID fields
     list($from_address,$from_name) = parse_email_address($decoded[0]["Headers"]["from:"]);
 
+
     $person = new person;
     $personID = $person->find_by_name($from_name);
+    $personID or $personID = $person->find_by_email($from_address);
 
-    if (!$personID) {
-      $personID = $person->find_by_email($from_address);
-    }
+    $cc = new clientContact();
+    $clientContactID = $cc->find_by_name($from_name, $projectID);
+    $clientContactID or $clientContactID = $cc->find_by_email($from_address, $projectID);
 
     if ($personID) {
       $comment->set_value('commentCreatedUser', $personID);
-
-    } else {
-      $cc = new clientContact();
-      $clientContactID = $cc->find_by_name($from_name, $projectID);
-
-      if (!$clientContactID) {
-        $clientContactID = $cc->find_by_email($from_address, $projectID);
-      }
-
-      if ($clientContactID) {
-        $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
-      }
+    } else if ($clientContactID) {
+      $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
     }
 
-    // If we don't have a $from_name, but we do have a personID or a
-    // clientContactID, then build a proper $from_name
-    if (!$from_name) {
-      if ($personID) {
-        $p = new person;
-        $p->set_id($personID);
-        $p->select();
-        $from_name = $p->get_value("firstName")." ".$p->get_value("surname");
-        $from_name == " " and $from_name = $p->get_value("username");
+    // If we don't have a $from_name, but we do have a personID or clientContactID, get proper $from_name
+    if (!$from_name && $personID) {
+      $from_name = person::get_fullname($personID);
 
-      } else if ($clientContactID) {
-        $cc = new clientContact;
-        $cc->set_id($clientContactID);
-        $cc->select();
-        $from_name = $cc->get_value("clientContactName");
-      }
+    } else if (!$from_name && $clientContactID) {
+      $cc = new clientContact;
+      $cc->set_id($clientContactID);
+      $cc->select();
+      $from_name = $cc->get_value("clientContactName");
+
+    } else if (!$from_name) {
+      $from_name = $from_address;
     }
+ 
 
-    $from_name or $from_name = $from_address;
+    // If user wants to un/subscribe to this comment
+    $subject = $decoded[0]["Headers"]["subject:"];
+    $ip_action = interestedParty::adjust_by_email_subject($subject,"comment",$this->get_id(),$from_name,$from_address,$personID,$clientContactID);
+
+    // Load up some variables for later in send_emails()
     $from["email"] = $from_address;
     $from["name"] = $from_name;
     $from["references"] = $decoded[0]["Headers"]["references:"];
@@ -441,7 +433,18 @@ class comment extends db_entity {
         $from["hash"] = $token->get_value("tokenHash");
       }
 
-      $successful_recipients = $obj->send_emails($recipients, $c->get_value("commentType")."_comments", $body, $from);
+      if ($ip_action == "subscribed") {
+        $comment->set_value("comment",$from_name." is now a party to this conversation.\n\n".$comment->get_value("comment"));
+        $comment->save();
+      } else if ($ip_action == "unsubscribed") {
+        $comment->set_value("comment",$from_name." is no longer a party to this conversation.\n\n".$comment->get_value("comment"));
+        $comment->save();
+      } 
+
+      if ($ip_action != "unsubscribed") { // no email sent for unsubscription requests
+        $successful_recipients = $obj->send_emails($recipients, $c->get_value("commentType")."_comments", $comment->get_value("comment"), $from);
+      }
+
       if ($successful_recipients) {
         $comment->set_value("commentEmailRecipients",$successful_recipients);
         $comment->save();
