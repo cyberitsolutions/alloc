@@ -122,6 +122,40 @@ class interestedParty extends db_entity {
     return $str;
   }
 
+  function delete_interested_party($entity, $entityID, $emailAddress) {
+    $q = sprintf("DELETE 
+                    FROM interestedParty 
+                   WHERE entity='%s' 
+                     AND entityID='%d' 
+                     AND emailAddress='%s'",db_esc($entity),$entityID,db_esc($emailAddress));
+    $db = new db_alloc();
+    $db->query($q);
+  }
+
+  function adjust_by_email_subject($subject="",$entity,$entityID,$fullName="",$emailAddress="",$personID="",$clientContactID="") {
+
+    if (preg_match("/(unsub|unsubscribe)\s*$/i",$subject)) {
+      if (interestedParty::exists($entity, $entityID, $emailAddress)) {
+        interestedParty::delete_interested_party($entity, $entityID, $emailAddress);
+        $action = "unsubscribed";
+      }
+
+    } else if (preg_match("/(sub|subscribe)\s*$/i",$subject)) {
+      if (!interestedParty::exists($entity, $entityID, $emailAddress)) {
+        $interestedParty = new interestedParty;
+        $interestedParty->set_value("entity",$entity);
+        $interestedParty->set_value("entityID",$entityID);
+        $interestedParty->set_value("fullName",$fullName);
+        $interestedParty->set_value("emailAddress",$emailAddress);
+        $interestedParty->set_value("personID",$personID);
+        $interestedParty->set_value("clientContactID",$clientContactID);
+        $interestedParty->save();
+        $action = "subscribed";
+      }
+    }
+    return $action;
+  }
+
 
 }
 
