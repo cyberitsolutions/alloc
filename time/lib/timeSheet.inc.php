@@ -1065,7 +1065,6 @@ EOD;
   }
 
   function email_move_status_to_finished($direction,$info) {
-    global $current_user;
     if ($direction == "forwards") {
       $email = array();
       $email["type"] = "timesheet_finished";
@@ -1076,7 +1075,7 @@ EOD;
  Time Sheet: {$info["url"]}
 For Project: {$info["projectName"]}
 
-Your timesheet has been completed by {$info["approvedByAdminPersonID_name"]}.
+Your timesheet has been completed by {$info["current_user_name"]}.
 
 EOD;
       $msg[] = $this->shootEmail($email);
@@ -1092,6 +1091,7 @@ EOD;
   }
 
   function get_email_vars() {
+    global $current_user;
     static $rtn;
     if ($rtn) {
       return $rtn;
@@ -1111,6 +1111,8 @@ EOD;
     $rtn["approvedByManagerPersonID_email"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["emailAddress"];
     $rtn["approvedByManagerPersonID_name"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["name"];
     $rtn["approvedByAdminPersonID_name"] = $people_cache[$this->get_value("approvedByAdminPersonID")]["name"];
+    $rtn["current_user_name"] = $people_cache[$current_user->get_id()]["name"];
+    
     return $rtn;
   }
 
