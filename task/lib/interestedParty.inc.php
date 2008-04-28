@@ -46,7 +46,7 @@ class interestedParty extends db_entity {
     return $db->row();
   }
 
-  function make_insterested_parties($entity,$entityID,$encoded_parties=array()) {
+  function make_interested_parties($entity,$entityID,$encoded_parties=array()) {
     // Nuke entries from interestedParty
     $q = sprintf("DELETE FROM interestedParty WHERE entity = '%s' AND entityID = %d",db_esc($entity),$entityID);
     $db = new db_alloc();
