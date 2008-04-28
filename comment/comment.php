@@ -76,15 +76,6 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
       $str.= $lt.str_replace(array("<",">"),"",$_POST["eo_email"]).$gt;
       $emailRecipients[] = $str;
 
-      // Add the person to the interested parties list
-      if ($_POST["eo_add_interested_party"]) {
-        $interestedParty = new interestedParty;
-        $interestedParty->set_value("fullName",trim($_POST["eo_name"]));
-        $interestedParty->set_value("emailAddress",trim($_POST["eo_email"]));
-        $interestedParty->set_value("entityID",$comment->get_id());
-        $interestedParty->set_value("entity","comment");
-        $interestedParty->save();
-      }
       // Add a new client contact
       if ($_POST["eo_add_client_contact"] && $_POST["eo_client_id"]) {
         $cc = new clientContact;
@@ -93,6 +84,20 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
         $cc->set_value("clientID",sprintf("%d",$_POST["eo_client_id"]));
         $cc->save();
       }
+      // Add the person to the interested parties list
+      if ($_POST["eo_add_interested_party"]) {
+        $interestedParty = new interestedParty;
+        $interestedParty->set_value("fullName",trim($_POST["eo_name"]));
+        $interestedParty->set_value("emailAddress",trim($_POST["eo_email"]));
+        $interestedParty->set_value("entityID",$comment->get_id());
+        $interestedParty->set_value("entity","comment");
+        $interestedParty->set_value("external","1");
+        if (is_object($cc) && $cc->get_id()) {
+          $interestedParty->set_value("clientContactID",$cc->get_id());
+        }
+        $interestedParty->save();
+      }
+
     }
   
     // if someone uploads an attachment
