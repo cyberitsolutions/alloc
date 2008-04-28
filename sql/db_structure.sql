@@ -452,6 +452,7 @@ CREATE TABLE interestedParty (
   emailAddress text NOT NULL,
   personID int(11) DEFAULT NULL,
   clientContactID int(11) DEFAULT NULL,
+  external tinyint(1) DEFAULT NULL,
   PRIMARY KEY  (interestedPartyID)
 ) TYPE=MyISAM PACK_KEYS=0;
 

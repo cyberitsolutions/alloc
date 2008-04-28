@@ -32,6 +32,7 @@ class interestedParty extends db_entity {
                               ,"emailAddress"=>new db_field("emailAddress")
                               ,"personID"=>new db_field("personID")
                               ,"clientContactID"=>new db_field("clientContactID")
+                              ,"external"=>new db_field("external")
                               );
   }
 
@@ -63,6 +64,7 @@ class interestedParty extends db_entity {
         $interestedParty->set_value("emailAddress",$info["email"]);
         $interestedParty->set_value("personID",$info["personID"]);
         $interestedParty->set_value("clientContactID",$info["clientContactID"]);
+        $info["external"] and $interestedParty->set_value("external",1);
         $interestedParty->save();
       }
     }
@@ -78,9 +80,9 @@ class interestedParty extends db_entity {
     if ($entityID) {
       $db = new db_alloc();
       $q = sprintf("SELECT *
-                     FROM interestedParty
-                    WHERE entity='%s'
-                      AND entityID = %d
+                      FROM interestedParty
+                     WHERE entity='%s'
+                       AND entityID = %d
                   ",db_esc($entity),$entityID);
       $db->query($q);
       while ($db->row()) {
@@ -89,6 +91,7 @@ class interestedParty extends db_entity {
         $ops[$db->f("emailAddress")]["selected"] = true;
         $ops[$db->f("emailAddress")]["personID"] = $db->f("personID");
         $ops[$db->f("emailAddress")]["clientContactID"] = $db->f("clientContactID");
+        $ops[$db->f("emailAddress")]["external"] = $db->f("external");
       }
     }
 

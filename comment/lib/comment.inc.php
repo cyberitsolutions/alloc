@@ -138,7 +138,7 @@ class comment extends db_entity {
         $ip = interestedParty::get_interested_parties("comment",$new["commentID"]);
         if (is_array($ip)) {
           foreach($ip as $email => $info) {
-            if ($info["clientContactID"]) {
+            if ($info["external"]) {
               $new["external"] = " loud";
               $new["external_label"] = " <em class='faint warn'>[ External Conversation ]</em>";
             }
