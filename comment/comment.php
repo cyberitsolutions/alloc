@@ -63,7 +63,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
 
 
     // Add relevant people to the comments interestedParties list
-    interestedParty::make_insterested_parties("comment",$comment->get_id(),$_POST["commentEmailRecipients"]);
+    interestedParty::make_interested_parties("comment",$comment->get_id(),$_POST["commentEmailRecipients"]);
     $emailRecipients[] = "interested";
 
     // On-the-fly add name and email to recipients

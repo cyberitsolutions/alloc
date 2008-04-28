@@ -204,7 +204,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   }
 
 
-  interestedParty::make_insterested_parties("task",$task->get_id(),$_POST["interestedParty"]);
+  interestedParty::make_interested_parties("task",$task->get_id(),$_POST["interestedParty"]);
 
 #  This section automatically adds the task people to the Interested Parties
 #  if ($task_is_new) {
