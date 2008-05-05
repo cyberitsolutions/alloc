@@ -439,17 +439,6 @@ if ($_POST["save"]
         if (!$selectedTask->get_value("dateActualStart")) {
           $selectedTask->set_value("dateActualStart", $timeSheetItem->get_value("dateTimeSheetItem"));
         }
-
-	//SAVE THE COMMENT THAT GOES WITH THE TIME SHEET ITEM
-	//save a comment only if there's a task to save it with
-        if ($_POST["timeSheetItem_taskComment"]) {
-          $comment = new comment();
-          $comment->set_value('commentType', 'task');
-          $comment->set_value('commentLinkID', $selectedTask->get_id());
-          $comment->set_value('comment', $_POST["timeSheetItem_taskComment"]);
-          $comment->save();
-        }
-
       }
 
       $timeSheetItem->set_value("description", $taskName);
