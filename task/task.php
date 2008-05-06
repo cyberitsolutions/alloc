@@ -196,14 +196,6 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 
   $success = $task->save();
 
-  if ($task_is_new && $task->get_value("taskTypeID") == TT_FAULT) {     // Task is a "Fault" type task.
-    $task->new_fault_task();
-  }
-  if ($task_is_new && $task->get_value("taskTypeID") == TT_MESSAGE) {   // Task is a "Message" type task.
-    $task->new_message_task();
-  }
-
-
   interestedParty::make_interested_parties("task",$task->get_id(),$_POST["interestedParty"]);
 
 #  This section automatically adds the task people to the Interested Parties
