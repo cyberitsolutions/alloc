@@ -80,7 +80,7 @@ while ($db->next_record()) {
   while ($nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate) {
 
     $tf = new tf;
-    $tf->set_id("transactionRepeat->get_value("tfID"));
+    $tf->set_id($transactionRepeat->get_value("tfID"));
     if ($tf->get_value("status") != 'active') {
       continue;
     }
