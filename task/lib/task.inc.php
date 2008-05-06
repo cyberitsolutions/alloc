@@ -92,68 +92,6 @@ class task extends db_entity {
     return $msg;
   }
 
-  function new_message_task() {
-    // Create a reminder with its regularity being based upon what the task priority is
-
-    $label = $this->get_priority_label();
-
-    if ($this->get_value("priority") == 1) {
-      $reminderInterval = "Day";
-      $intervalValue = 1;
-      $message = "A [".$label."] message has been created for you.  You will continue to receive these ";
-      $message.= "emails until you kill off this task either by deleting it or putting a date in its ";
-      $message.= "'Date Actual Completion' box.";
-    } else {
-      $reminderInterval = "Day";
-      $intervalValue = $this->get_value("priority");
-      $message = "A [".$label."] message has been created for you.  You will ";
-      $message.= "continue to receive these ";
-      $message.= "every ".$this->get_value("priority")." days until you kill this task either by deleting it ";
-      $message.= "or putting a date in its 'Date Actual Completion' box.";
-    }
-    $people[] = $this->get_value("personID");
-    $this->create_reminders($people, $message, $reminderInterval, $intervalValue);
-  }
-
-  function new_fault_task() {
-    // Create a reminder with its regularity being based upon what the task priority is
-    $db = new db_alloc;
-    $label = $this->get_priority_label();
-
-    if ($this->get_value("priority") == 1) {
-      if ($this->get_value("projectID")) {
-        $db->query("SELECT * from projectPerson WHERE projectID = ".$this->get_value("projectID"));
-        while ($db->next_record()) {
-          $people[] = $db->f("personID");
-        }
-      } else {
-        $people[] = $this->get_value("personID");
-      }
-      $message = "This is a [".$label."] Fault Task.  See the task immediately for details.";
-      $message.= "\nYou will receive one of these emails every four hours until the task has a date in its 'Actual ";
-      $message.= "Completion' box.";
-      $reminderInterval = "Hour";
-      $intervalValue = 4;
-    } else if ($this->get_value("priority") == 2) {
-      if ($this->get_value("projectID")) {
-        $db->query("SELECT * 
-                      FROM projectPerson LEFT JOIN projectPersonRole on projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID 
-                     WHERE (projectPersonRole.projectPersonRoleHandle = 'isManager'  OR projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient') AND projectID = ".$this->get_value("projectID"));
-        while ($db->next_record()) {
-          $people[] = $db->f("personID");
-        }
-      } else {
-        $people[] = $this->get_value("personID");
-      }
-      $message = "This is a [".$label."] Fault Task.  See the task immediately for details.";
-      $message.= "You will receive an email once a day everyday until the task is resolved.";
-      $reminderInterval = "Day";
-      $intervalValue = 1;
-    }
-
-    $this->create_reminders($people, $message, $reminderInterval, $intervalValue);
-  }
-
   function create_reminders($people, $message, $reminderInterval, $intervalValue) {
     if (is_array($people)) {
       foreach($people as $personID) {
