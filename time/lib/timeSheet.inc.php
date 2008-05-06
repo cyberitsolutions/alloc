@@ -815,7 +815,7 @@ class timeSheet extends db_entity
     $query = sprintf("SELECT * FROM project ORDER by projectName");
     $db->query($query);
     $project_array = get_array_from_db($db, "projectID", "projectName");
-    $rtn["show_project_options"] = get_options_from_array($project_array, $_FORM["projectID"], true);
+    $rtn["show_project_options"] = get_select_options($project_array, $_FORM["projectID"],50);
 
     // display the list of user name.
     if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
