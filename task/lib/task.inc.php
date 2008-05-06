@@ -701,7 +701,7 @@ class task extends db_entity {
 
     } else if ($filter["taskTimeSheetStatus"] == "recent_closed"){
       unset($sql["personID"]);
-      $sql[] = sprintf("(taskTypeID = %d OR task.dateActualCompletion >= DATE_SUB(CURDATE(),INTERVAL 14 DAY))",TT_PHASE);
+      $sql[] = sprintf("(task.dateActualCompletion >= DATE_SUB(CURDATE(),INTERVAL 14 DAY))");
 
     } else if ($filter["taskTimeSheetStatus"] == "all") {
     }
