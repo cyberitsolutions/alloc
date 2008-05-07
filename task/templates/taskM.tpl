@@ -4,7 +4,7 @@
 <input type="hidden" name="taskID" value="{$task_taskID}">
 {$table_box}
   <tr>
-    <th class="nobr" colspan="2">{$task_taskType}: {$taskSelfLink}</th>
+    <th class="nobr" colspan="2">{$taskSelfLink}</th>
     <th class="right nobr" colspan="3"><a href="{$url_alloc_task}taskID={$task_taskID}&view=detail">Edit</a>&nbsp;&nbsp;{$navigation_links}</th>
   </tr>
   <tr>
