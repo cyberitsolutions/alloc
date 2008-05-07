@@ -300,6 +300,11 @@ tr.odd:hover, tr.even:hover {
   background-color:#f1f8ff; 
 }
 
+img.taskType {
+  margin:0px 2px;
+  padding:0px;
+}
+
 .overdue { 
   color: red; 
 }

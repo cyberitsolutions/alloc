@@ -300,6 +300,11 @@ tr.odd:hover, tr.even:hover {
   background-color:(TR_HOVER_BACKGROUND_COLOR); 
 }
 
+img.taskType {
+  margin:0px 2px;
+  padding:0px;
+}
+
 .overdue { 
   color: (TRANSACTION_REJECTED); 
 }

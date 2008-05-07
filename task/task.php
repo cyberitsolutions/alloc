@@ -396,7 +396,7 @@ if ($task->get_id()) {
 
 
 if ($taskID) {
-  $TPL["taskSelfLink"] = "<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_task_name()."</a>";
+  $TPL["taskSelfLink"] = $task->get_task_image()."<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_task_name()."</a>";
   $TPL["main_alloc_title"] = "Task " . $task->get_id() . ": " . $task->get_task_name()." - ".APPLICATION_NAME;
   $TPL["task_exists"] = true;
 } else {

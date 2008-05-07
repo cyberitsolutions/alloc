@@ -497,6 +497,12 @@ class task extends db_entity {
     return $rtn;
   }
 
+  function get_task_image() {
+    global $TPL;
+    $taskTypes = get_cached_table("taskType");
+    return "<img class=\"taskType\" title=\"".$taskTypes[$this->get_value("taskTypeID")]["taskTypeName"]."\" src=\"".$TPL["url_alloc_images"]."taskType_".$this->get_value("taskTypeID").".gif\">";
+  }
+
   function get_task_name($_FORM=array()) {
 
     $_FORM["prefixTaskID"] and $id = $this->get_id()." ";
@@ -792,6 +798,7 @@ class task extends db_entity {
         $row["projectPriority"] = $db->f("projectPriority");
         $row["taskName"] = $task->get_task_name($_FORM);
         $row["taskLink"] = $task->get_task_link($_FORM);
+        $row["taskTypeImage"] = $task->get_task_image();
         $row["newSubTask"] = $task->get_new_subtask_link();
         $_FORM["showStatus"] and $row["taskStatus"] = $task->get_status();
         $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
@@ -852,6 +859,7 @@ class task extends db_entity {
         $row["taskURL"] = $t->get_url();
         $row["taskName"] = $t->get_task_name($_FORM);
         $row["taskLink"] = $t->get_task_link($_FORM);
+        $row["taskTypeImage"] = $t->get_task_image();
         $row["newSubTask"] = $t->get_new_subtask_link();
         $_FORM["showStatus"] and $row["taskStatus"] = $t->get_status($_FORM["return"]);
         $row["object"] = $t;
@@ -932,6 +940,7 @@ class task extends db_entity {
       #$_FORM["taskView"] == "byProject" and $summary[] = "<br>".$_FORM["projectLinks"];
       $summary[] = $TPL["table_list"];
       $summary[] = "<tr>";
+                                 $summary[] = "<th width=\"1%\"></th>"; //taskTypeImage
       $_FORM["showTaskID"]   and $summary[] = "<th>ID</th>";
                                  $summary[] = "<th>Task</th>";
       $_FORM["showProject"]  and $summary[] = "<th>Project</th>";
@@ -1000,6 +1009,7 @@ class task extends db_entity {
     $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
 
                                   $summary[] = "<tr>";
+                                  $summary[] = "  <td sorttable_customkey=\"".$task["taskTypeID"]."\">".$task["taskTypeImage"]."&nbsp;</td>";
     $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
                                   $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
     $_FORM["showProject"]     and $summary[] = "  <td><a href=\"".$TPL["url_alloc_project"]."projectID=".$task["projectID"]."\">".$task["project_name"]."</a>&nbsp;</td>";
