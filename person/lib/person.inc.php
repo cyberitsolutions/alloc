@@ -40,7 +40,6 @@ class person extends db_entity {
                                , "password"=>new db_field("password", array("allow_null"=>false, "read_perm_name"=>PERM_PERSON_READ_DETAILS))
                                , "perms"=>new db_field("perms", array("write_perm_name"=>PERM_PERSON_WRITE_ROLES))
                                , "emailAddress"=>new db_field("emailAddress")
-                               , "emailFormat"=>new db_field("emailFormat", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
                                , "availability"=>new db_field("availability", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
                                , "areasOfInterest"=>new db_field("areasOfInterest", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
                                , "comments"=>new db_field("comments", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))

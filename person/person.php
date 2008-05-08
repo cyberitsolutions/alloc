@@ -279,17 +279,6 @@ if ($person->get_id()) {
   $TPL["dailyTaskEmailOptions"] = get_select_options($dailyTEO, $person->get_value("dailyTaskEmail"));
 }
 
-
-if ($person->get_value("emailFormat") == "html") {
-  $email_format_options = "<option>text";
-  $email_format_options.= "<option selected>html";
-} else {
-  $email_format_options = "<option selected>text";
-  $email_format_options.= "<option>html";
-}
-
-$TPL["email_format_options"] = $email_format_options;
-
 $TPL["absence_url"] = $TPL["url_alloc_absence"]."personID=".$personID;
 $TPL["personActive"] = (!$person->get_id() || $person->get_value("personActive")) ? " checked" : "";
 
