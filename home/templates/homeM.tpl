@@ -1,13 +1,9 @@
 {show_header()}
   {show_toolbar()}
-  <table border="0" cellspacing="0" cellpadding="0" style="width:100%">
-    <tr>
-      <td style="width:74%;" valign="top">
-        {show_home_items("standard")}
-      </td>
-      <td style="width:24%; vertical-align:top; padding-right:12px;">
-        {show_home_items("narrow")}
-      </td>
-    </tr>
-  </table>
+  <div style="float:left; width:74%; vertical-align:top;">
+    {show_home_items("standard")}
+  </div>
+  <div style="float:left; width:25%; vertical-align:top;">
+    {show_home_items("narrow")}
+  </div>
 {show_footer()}
