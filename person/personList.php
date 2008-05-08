@@ -27,8 +27,10 @@ function show_people($template_name) {
 
   // Get averages for hours worked over the past fortnight and year
   $t = new timeSheetItem;
-  list($ts_hrs_col_1,$ts_dollars_col_1) = $t->get_averages(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y"))));
-  list($ts_hrs_col_2,$ts_dollars_col_2) = $t->get_fortnightly_average();
+  if (defined("SHOW_PRIVATE_COLUMNS")) {
+    list($ts_hrs_col_1,$ts_dollars_col_1) = $t->get_averages(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y"))));
+    list($ts_hrs_col_2,$ts_dollars_col_2) = $t->get_fortnightly_average();
+  }
   
   $where = FALSE;
   $query = "SELECT *, person.personID as personID, username as u";
@@ -102,10 +104,8 @@ function show_people($template_name) {
     $novice_skills = $person->get_skills('Novice');
     $TPL["novice_skills"] = ($novice_skills ? "<img src=\"../images/skill_novice.png\" alt=\"Novice\">$novice_skills; " : "");
 
-    if ($person->have_perm(PERM_PERSON_READ_MANAGEMENT)) {
-      $TPL["ts_hrs_col_1"] = sprintf("%d",$ts_hrs_col_1[$db->f("personID")]);
-      $TPL["ts_hrs_col_2"] = sprintf("%d",$ts_hrs_col_2[$db->f("personID")]);
-    }
+    $TPL["ts_hrs_col_1"] = sprintf("%d",$ts_hrs_col_1[$db->f("personID")]);
+    $TPL["ts_hrs_col_2"] = sprintf("%d",$ts_hrs_col_2[$db->f("personID")]);
 
     # Might want to consider privacy issues before putting this in.
     #$TPL["ts_dollars_col_1"] = sprintf("%0.2f",$ts_dollars_col_1[$db->f("personID")]);
@@ -157,6 +157,10 @@ if ($max_alloc_users && $num_alloc_users > $max_alloc_users) {
   $TPL["message_help"][] = "Current number of active user accounts: ".$num_alloc_users;
 }
 
+
+if ($current_user->have_perm(PERM_PERSON_READ_MANAGEMENT)) {
+  define("SHOW_PRIVATE_COLUMNS",1);
+}
 
 
 include_template("templates/personListM.tpl");

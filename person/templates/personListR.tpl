@@ -9,9 +9,11 @@
 		<a href="{$url_alloc_taskCalendar}personID={$person_personID}">Calendar</a>
     </nobr>
   </td>
+  {if defined("SHOW_PRIVATE_COLUMNS")}
   <td>{$ts_hrs_col_1}</td>
   <td>{$ts_hrs_col_2}</td>
-{if check_optional_show_skills_list()}
+  {/}
+  {if check_optional_show_skills_list()}
   <td>{$senior_skills}{$advanced_skills}{$intermediate_skills}{$junior_skills}{$novice_skills}&nbsp;</td>
-{/}
+  {/}
 </tr>

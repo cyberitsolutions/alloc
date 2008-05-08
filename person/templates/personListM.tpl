@@ -50,8 +50,10 @@
           <th>Enabled</th>
           <th>Contact</th>
           <th>Actions</th>
+      {if defined("SHOW_PRIVATE_COLUMNS")}
           <th>Sum Prev Fort.</th>
           <th>Avg Per Fort.</th>
+      {/}
       {if check_optional_show_skills_list()}
           <th>
             Senior
