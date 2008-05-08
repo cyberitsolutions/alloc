@@ -23,7 +23,6 @@
 
 include(ALLOC_MOD_DIR."project/lib/project.inc.php");
 include(ALLOC_MOD_DIR."project/lib/projectPerson.inc.php");
-include(ALLOC_MOD_DIR."project/lib/projectPersonRole.inc.php");
 include(ALLOC_MOD_DIR."project/lib/projectModificationNote.inc.php");
 include(ALLOC_MOD_DIR."project/lib/projectCommissionPerson.inc.php");
 

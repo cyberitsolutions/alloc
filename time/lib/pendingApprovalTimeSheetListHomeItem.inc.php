@@ -82,9 +82,9 @@ function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
 
 function get_pending_timesheet_db() {
   /*
-   -----------     -----------------     ---------------------
-   | project |  <  | projectPerson |  <  | projectPersonRole |
-   -----------     -----------------     ---------------------
+   -----------     -----------------     --------
+   | project |  <  | projectPerson |  <  | role |
+   -----------     -----------------     --------
       /\
    -------------
    | timeSheet |
@@ -106,7 +106,7 @@ function get_pending_timesheet_db() {
     $query = sprintf("SELECT projectID 
                         FROM projectPerson 
                        WHERE personID != %d 
-                         AND projectPersonRoleID = 3"
+                         AND roleID = 3"
                     ,$current_user->get_id());
 
     $db->query($query);
@@ -137,8 +137,8 @@ function get_pending_timesheet_db() {
                              LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
                              LEFT JOIN project on project.projectID = timeSheet.projectID
                              LEFT JOIN projectPerson on project.projectID = projectPerson.projectID 
-                             LEFT JOIN projectPersonRole on projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
-                       WHERE projectPerson.personID = %d AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' AND timeSheet.status='manager'
+                             LEFT JOIN role on projectPerson.roleID = role.roleID
+                       WHERE projectPerson.personID = %d AND role.roleHandle = 'timeSheetRecipient' AND timeSheet.status='manager'
                     GROUP BY timeSheet.timeSheetID 
                     ORDER BY timeSheet.dateSubmittedToManager"
                      , $current_user->get_id()

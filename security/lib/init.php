@@ -21,10 +21,11 @@
 */
 
 class security_module extends module {
-  var $db_entities = array("permission");
+  var $db_entities = array("permission","role");
 }
 
 include(ALLOC_MOD_DIR."security/lib/permission.inc.php");
+include(ALLOC_MOD_DIR."security/lib/role.inc.php");
 
 
 

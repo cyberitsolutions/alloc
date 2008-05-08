@@ -43,9 +43,9 @@ return $p->get_value("preferred_tfID");
 
 }
 
-$q= "select project.*, projectPerson.personID as pid, projectPersonRoleHandle from project
+$q= "select project.*, projectPerson.personID as pid, roleHandle from project
     left join projectPerson on projectPerson.projectID = project.projectID
-    left join projectPersonRole on projectPersonRole.projectPersonRoleID = projectPerson.projectPersonRoleID";
+    left join role on role.roleID = projectPerson.roleID";
 $db = new db_alloc;
 $db->query($q);
 
@@ -54,7 +54,7 @@ $db2 = new db_alloc;
 while ($db->next_record()) {
 
 
-if ($db->f("customerBilledDollars")>0 && $db->f("projectPersonRoleHandle") == "timeSheetRecipient") {
+if ($db->f("customerBilledDollars")>0 && $db->f("roleHandle") == "timeSheetRecipient") {
 
   if ($db->f("projectID") && $db->f("pid")) {
  
@@ -65,7 +65,7 @@ if ($db->f("customerBilledDollars")>0 && $db->f("projectPersonRoleHandle") == "t
       #echo  "<br/>".person::get_fullname($db->f("pid"))." : ".get_tf_name($tfID);
 
       echo "<br/>".$db->f("projectName")." --- ". person::get_fullname($db->f("pid"));
-#. " ".$db->f("projectPersonRoleHandle")." ". $db->f("customerBilledDollars");
+#. " ".$db->f("roleHandle")." ". $db->f("customerBilledDollars");
       $q = sprintf("insert into projectCommissionPerson (projectID, personID,commissionPercent,tfID) values (%d,%d,0,%d)",$db->f("projectID"),$db->f("pid"),$tfID);
       #$db2->query($q);
       #echo "<br/>q: ".$q;

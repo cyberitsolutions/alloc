@@ -178,10 +178,10 @@ require_once("../alloc.php");
     global $email_type_array, $rate_type_array, $project_person_role_array;
 
     if ($projectID) {
-      $query = sprintf("SELECT projectPerson.*, projectPersonRoleSortKey
+      $query = sprintf("SELECT projectPerson.*, roleSequence
                           FROM projectPerson 
-                     LEFT JOIN projectPersonRole ON projectPersonRole.projectPersonRoleID = projectPerson.projectPersonRoleID
-                         WHERE projectID=%d ORDER BY projectPersonRoleSortKey DESC,personID ASC", $projectID);
+                     LEFT JOIN role ON role.roleID = projectPerson.roleID
+                         WHERE projectID=%d ORDER BY roleSequence DESC,personID ASC", $projectID);
       $db->query($query);
 
       while ($db->next_record()) {
@@ -191,7 +191,7 @@ require_once("../alloc.php");
         $person = $projectPerson->get_foreign_object("person");
         $TPL["person_username"] = $person->get_value("username");
         $TPL["person_emailType_options"] = get_select_options($email_type_array, $TPL["person_emailType"]);
-        $TPL["person_projectPersonRole_options"] = get_select_options($project_person_role_array, $TPL["person_projectPersonRoleID"]);
+        $TPL["person_role_options"] = get_select_options($project_person_role_array, $TPL["person_roleID"]);
         $TPL["rateType_options"] = get_select_options($rate_type_array, $TPL["person_rateUnitID"]);
         include_template($template);
       }
@@ -208,7 +208,7 @@ require_once("../alloc.php");
     $project_person = new projectPerson;
     $project_person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
     $TPL["person_emailType_options"] = get_select_options($email_type_array, $TPL["person_emailType"]);
-    $TPL["person_projectPersonRole_options"] = get_select_options($project_person_role_array,false);
+    $TPL["person_role_options"] = get_select_options($project_person_role_array,false);
     $TPL["rateType_options"] = get_select_options($rate_type_array, $TPL["person_rateUnitID"]);
     include_template($template);
   }
@@ -402,7 +402,7 @@ if ($projectID) {
           $pp = new projectPerson;
           $pp->set_value("projectID",$project->get_id());
           $pp->set_value("personID",$personID);
-          $pp->set_value("projectPersonRoleID",$_POST["person_projectPersonRoleID"][$k]);
+          $pp->set_value("roleID",$_POST["person_roleID"][$k]);
           $pp->set_value("rate",$_POST["person_rate"][$k]);
           $pp->set_value("rateUnitID",$_POST["person_rateUnitID"][$k]);
           $pp->set_value("projectPersonModifiedUser",$current_user->get_id());
@@ -634,11 +634,11 @@ $TPL["cost_centre_bit"].= "</select>";
 }
 
 
-$query = sprintf("SELECT projectPersonRoleName,projectPersonRoleID FROM projectPersonRole ORDER BY projectPersonRoleSortKey");
+$query = sprintf("SELECT roleName,roleID FROM role WHERE roleLevel = 'project' ORDER BY roleSequence");
 $db->query($query);
 #$project_person_role_array[] = "";
 while ($db->next_record()) {
-  $project_person_role_array[$db->f("projectPersonRoleID")] = $db->f("projectPersonRoleName");
+  $project_person_role_array[$db->f("roleID")] = $db->f("roleName");
 }
 
 
