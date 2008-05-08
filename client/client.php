@@ -37,7 +37,6 @@ require_once("../alloc.php");
       // If new client
       if (!$clientID) {
         $TPL["clientDetails_buttons"] = "<input type=\"submit\" name=\"save\" value=\"Create New Client\">";
-        $TPL["createGeneralSupportProject"] = "<b>Create General Support Project</b> <input type=\"checkbox\" name=\"createProject\"/>";
           
       // Else just editing
       } else {
@@ -45,9 +44,6 @@ require_once("../alloc.php");
           "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">".
           "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".
           "<input type=\"submit\" name=\"cancel\" value=\"&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;\">"."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Are you sure you want to delete this record?')\">";
-        // new support project check box should NOT be visible.
-        $TPL["createGeneralSupportProject"] = "";
-      
       }
       include_template($template);
     }
@@ -308,11 +304,6 @@ if ($_POST["save"]) {
 
   if (!$client->get_id()) {
     // New client.
-
-    $TPL["createGeneralSupportProject"] = "<tr> <td colspan=\"2\"><b>Don't Create General Support Project</b></td>
-        <td><input type=\"checkbox\" name=\"dontCreateProject\" checked=\"yes\"/></td></tr>";
-					     
-    
     $client->set_value("clientCreatedTime", date("Y-m-d"));
     $new_client = true;
   }
@@ -321,23 +312,6 @@ if ($_POST["save"]) {
     $client->save();
     $clientID = $client->get_id();
     $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
-    
-    if ($new_client == true && $_POST["createProject"]) {
-       // Create Project: <Client Name> - General Support 
-      $project = new project;
-      $project->set_value("projectName", $client->get_value("clientName")." - General Support");
-      $project->set_value("clientID", $clientID);
-      $project->set_value("projectType", "contract");
-      $project->set_value("projectStatus", "current");
-      $project->save();
-
-      // Now add current_user as a projectPerson
-      $projectperson = new projectperson;
-      $projectperson->set_value("personID", $current_user->get_id());
-      $projectperson->set_value("projectID", $project->get_id());
-      $projectperson->set_value_role("isManager");
-      $projectperson->save();
-    }    
   }
   
 } else if ($_POST["save_attachment"]) {

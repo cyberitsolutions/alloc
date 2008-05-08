@@ -75,7 +75,7 @@
           </td>
         </tr>
         <tr>
-          <td>{$createGeneralSupportProject}</td>
+          <td></td>
           <td colspan="2" align="right" class="nobr">{$clientDetails_buttons}</td>
         </tr>
       </table>
