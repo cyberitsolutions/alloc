@@ -533,6 +533,14 @@ div#main {
   margin-bottom:4px;
 }
 
+/* Hack to ensure info_box encapsulates all the stuff */
+div#main:after {
+  content:"";
+  display:block;
+  height:0;
+  clear:both;
+}
+
 div#tabs {
   width:100%;
   margin:0px;
