@@ -1,7 +1,4 @@
 <tr>
-  <td colspan="4"><hr><strong>Fields applicable to employees only:</strong></td>
-</tr>
-<tr>
   <td>Availability</td>
   <td colspan="3">{get_textarea("availability",$TPL["person_availability"])}</td>
 </tr>

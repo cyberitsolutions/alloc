@@ -30,7 +30,7 @@ require_once("../alloc.php");
       foreach ($ops as $p => $l) {
         unset($sel);
         in_array($p,$selected) and $sel = " checked";
-        echo $br."<input type=\"checkbox\" name=\"perm_select[]\" value=\"".$p."\"".$sel.">".$l;
+        echo $br."<input type=\"checkbox\" name=\"perm_select[]\" value=\"".$p."\"".$sel."> ".$l;
         $br = "<br>";
       }
     } else {
