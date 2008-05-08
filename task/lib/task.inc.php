@@ -1424,10 +1424,12 @@ class task extends db_entity {
       } 
         
 
-      if ($recipient["emailAddress"] 
-      && $recipient_full_name != $from["name"] 
-      && $recipient["emailAddress"] != $from["email"] 
-      && !$done[$recipient["emailAddress"]]) { 
+      if ($recipient["emailAddress"] && !$done[$recipient["emailAddress"]]) { 
+
+        if ((!$current_user->prefs["receiveOwnTaskComments"] || $current_user->prefs["receiveOwnTaskComments"] == 'no')
+        && ($recipient["emailAddress"] == $from["email"] || $recipient["emailAddress"] == $current_user->get_value("emailAddress"))) {
+          continue;
+        }
 
         $done[$recipient["emailAddress"]] = true;
 

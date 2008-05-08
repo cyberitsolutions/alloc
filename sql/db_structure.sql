@@ -264,7 +264,6 @@ CREATE TABLE person (
   firstName varchar(255) default NULL,
   surname varchar(255) default NULL,
   preferred_tfID int(11) default NULL,
-  dailyTaskEmail varchar(255) default 'yes',
   personActive tinyint(1) default '1',
   sessData text,
   phoneNo1 varchar(255) default "",

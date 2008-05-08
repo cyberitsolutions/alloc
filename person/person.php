@@ -274,9 +274,6 @@ if ($person->get_id()) {
   if ($person->get_value("preferred_tfID") && $tf->get_value("status") != 'active') {
     $TPL["preferred_tfID_options"].= get_option($tf->get_value("tfName"). " (disabled)", $tf->get_id(), true);
   }
-
-  $dailyTEO = array("yes"=>"Yes", "no"=>"No");
-  $TPL["dailyTaskEmailOptions"] = get_select_options($dailyTEO, $person->get_value("dailyTaskEmail"));
 }
 
 $TPL["absence_url"] = $TPL["url_alloc_absence"]."personID=".$personID;

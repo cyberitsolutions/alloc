@@ -38,10 +38,6 @@
           <td><input type="text" name="emailAddress" value="{$person_emailAddress}"></td>
         </tr>
         <tr>
-		      <td>Daily Email</td>
-		      <td><select name="dailyTaskEmail">{$dailyTaskEmailOptions}</select></td>
-        </tr>
-        <tr>
           <td>Phone No</td>
           <td><input type="text" name="phoneNo1" value="{$person_phoneNo1}"></td>
           <td>Mobile No</td>

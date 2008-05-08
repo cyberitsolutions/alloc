@@ -215,20 +215,11 @@ function seconds_to_display_format($seconds) {
   
 }
 function page_close() {
+  global $current_user;
   $sess = new Session;
   $sess->Save();
-
-  global $current_user;
   if (is_object($current_user) && $current_user->get_id()) {
-    $p = new person;
-    $p->set_id($current_user->get_id());
-    $p->select();
-
-    if (is_array($current_user->prefs)) {
-      $arr = serialize($current_user->prefs);
-      $p->set_value("sessData",$arr);
-    }
-    $p->save();
+    $current_user->store_prefs();
   }
 }
 function get_all_form_data($array=array(),$defaults=array()) {
