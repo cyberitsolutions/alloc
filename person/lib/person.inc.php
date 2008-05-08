@@ -47,7 +47,6 @@ class person extends db_entity {
                                , "firstName"=>new db_field("firstName")
                                , "surname"=>new db_field("surname")
                                , "preferred_tfID"=>new db_field("preferred_tfID")
-                               , "dailyTaskEmail"=>new db_field("dailyTaskEmail")
                                , "personActive"=>new db_field("personActive")
                                , "sessData"=>new db_field("sessData")
                                , "phoneNo1"=>new db_field("phoneNo1")
@@ -265,14 +264,31 @@ class person extends db_entity {
     $current_user = new person;
     $current_user->set_id($personID);
     if ($current_user->select()) {
-      $current_user->prefs = unserialize($current_user->get_value("sessData"));
-      isset($current_user->prefs["topTasksNum"]) or $current_user->prefs["topTasksNum"] = 5;
-      $current_user->prefs["topTasksStatus"] or $current_user->prefs["topTasksStatus"] = "not_completed";
-      isset($current_user->prefs["projectListNum"]) or $current_user->prefs["projectListNum"] = "10";
-      isset($current_user->prefs["tasksGraphPlotHome"]) or $current_user->prefs["tasksGraphPlotHome"] = "4";
-      isset($current_user->prefs["tasksGraphPlotHomeStart"]) or $current_user->prefs["tasksGraphPlotHomeStart"] = "1";
+      $current_user->load_prefs();
       return $current_user;
     }
+  }
+
+  function load_prefs() {
+    $this->prefs = unserialize($this->get_value("sessData"));
+    isset($this->prefs["topTasksNum"]) or $this->prefs["topTasksNum"] = 5;
+    $this->prefs["topTasksStatus"] or $this->prefs["topTasksStatus"] = "not_completed";
+    isset($this->prefs["projectListNum"]) or $this->prefs["projectListNum"] = "10";
+    isset($this->prefs["tasksGraphPlotHome"]) or $this->prefs["tasksGraphPlotHome"] = "4";
+    isset($this->prefs["tasksGraphPlotHomeStart"]) or $this->prefs["tasksGraphPlotHomeStart"] = "1";
+    isset($this->prefs["receiveOwnTaskComments"]) or $this->prefs["receiveOwnTaskComments"] = "1";
+  }
+
+  function store_prefs() {
+    $p = new person;
+    $p->set_id($this->get_id());
+    $p->select();
+
+    if (is_array($this->prefs)) {
+      $arr = serialize($this->prefs);
+      $p->set_value("sessData",$arr);
+    }
+    $p->save();
   }
 
   function has_messages() {

@@ -41,6 +41,10 @@ class customize_alloc_home_item extends home_item {
       $current_user->prefs["topTasksStatus"] = $_POST["topTasksStatus"];
 
       $current_user->prefs["projectListNum"] = $_POST["projectListNum"];
+
+      $current_user->prefs["dailyTaskEmail"] = $_POST["dailyTaskEmail"];
+      $current_user->prefs["receiveOwnTaskComments"] = $_POST["receiveOwnTaskComments"];
+
     }
 
     $TPL["fontOptions"] = get_select_options(get_customizedFont_array(), $current_user->prefs["customizedFont"]);
@@ -56,6 +60,10 @@ class customize_alloc_home_item extends home_item {
 
     $project_list_ops = array("0"=>0,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50,"all"=>"All");
     $TPL["projectListNumOptions"] = get_select_options($project_list_ops, $current_user->prefs["projectListNum"]);
+    
+    $dailyTEO = array("yes"=>"Yes", "no"=>"No");
+    $TPL["dailyTaskEmailOptions"] = get_select_options($dailyTEO, $current_user->prefs["dailyTaskEmail"]);
+    $TPL["receiveOwnTaskCommentsOptions"] = get_select_options($dailyTEO, $current_user->prefs["receiveOwnTaskComments"]);
   }
 
 

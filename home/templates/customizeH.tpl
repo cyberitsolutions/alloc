@@ -55,6 +55,16 @@
   </tr>
  
   <tr>
+    <td colspan="4"><b>Email</b></td>
+  </tr>
+  <tr>
+    <td>Daily Digest</td>
+    <td><select name="dailyTaskEmail">{$dailyTaskEmailOptions}</select></td>
+    <td>Receive Own Comments</td>
+    <td><select name="receiveOwnTaskComments">{$receiveOwnTaskCommentsOptions}</select></td>
+  </tr>
+
+  <tr>
     <td colspan="4"><b>Project List</b></td>
   </tr>
   <tr>
