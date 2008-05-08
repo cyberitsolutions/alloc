@@ -26,12 +26,20 @@ require_once("../alloc.php");
     global $person;
     if ($person->have_perm(PERM_PERSON_WRITE_ROLES)) {
       $selected = explode(",",$person->get_value("perms"));
-      $ops = array("god"=>"Super User","admin"=>"Finance Admin","manage"=>"Project Manager");
-      echo sprintf("<select size=\"3\" multiple name=\"perm_select[]\">\n");
-      echo get_select_options($ops,$selected);
-      echo "</select>";
+      $ops = role::get_roles_array("person");
+      foreach ($ops as $p => $l) {
+        unset($sel);
+        in_array($p,$selected) and $sel = " checked";
+        echo $br."<input type=\"checkbox\" name=\"perm_select[]\" value=\"".$p."\"".$sel.">".$l;
+        $br = "<br>";
+      }
     } else {
-      echo $person->get_value("perms");
+      $selected = explode(",",$person->get_value("perms"));
+      $ops = role::get_roles_array("person");
+      foreach ($selected as $sel) {
+        echo $br.$ops[$sel];
+        $br = "<br>";
+      }
     }
   }
 
@@ -201,11 +209,8 @@ if ($_POST["save"]) {
   $person->read_globals();
 
   if ($person->can_write_field("perms")) {
-    if (is_array($_POST["perm_select"])) {
-      $person->set_value("perms", implode(",", $_POST["perm_select"]).",employee");
-    } else {
-      $person->set_value("perms", "employee");
-    }
+    $_POST["perm_select"] or $_POST["perm_select"] = array();
+    $person->set_value("perms", implode(",", $_POST["perm_select"]));
   }
 
   if ($_POST["password1"] && $_POST["password1"] == $_POST["password2"]) {

@@ -44,11 +44,7 @@
           <td><input type="text" name="phoneNo2" value="{$person_phoneNo2}"></td>
         </tr>
         <tr>
-          <td>Special Permissions
-		          <br>Super User: Access everything
-		          <br>Finance Admin: Access all transactions, TF's
-		          <br>Project Manager: Access all projects
-		      </td>
+          <td valign="top">Special Permissions</td>
           <td>{show_perm_select()}</td>
           <td>Last Login</td>
           <td>{$person_lastLoginDate}</td>

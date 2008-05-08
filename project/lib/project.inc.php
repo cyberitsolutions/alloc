@@ -104,11 +104,11 @@ class project extends db_entity {
     // Check that user has permission for this project
     global $current_user;
     $person or $person = $current_user;
-    $permissions and $p = " AND ppr.projectPersonRoleHandle in ('".implode("','",$permissions)."')";
+    $permissions and $p = " AND ppr.roleHandle in ('".implode("','",$permissions)."')";
 
-    $query = sprintf("SELECT personID, projectID, pp.projectPersonRoleID, ppr.projectPersonRoleName, ppr.projectPersonRoleHandle 
+    $query = sprintf("SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
                         FROM projectPerson pp 
-                   LEFT JOIN projectPersonRole ppr ON ppr.projectPersonRoleID = pp.projectPersonRoleID 
+                   LEFT JOIN role ppr ON ppr.roleID = pp.roleID 
                        WHERE projectID = '%d' and personID = '%d' %s"
                     ,$this->get_id(), $person->get_id(), $p);
     #echo "<br><br>".$query;
@@ -133,8 +133,8 @@ class project extends db_entity {
     $rows = array();
     $q = sprintf("SELECT projectPerson.personID as personID
                     FROM projectPerson
-               LEFT JOIN projectPersonRole ON projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID 
-                   WHERE projectPerson.projectID = %d AND projectPersonRole.projectPersonRoleHandle = '%s'",$this->get_id(),db_esc($role));
+               LEFT JOIN role ON projectPerson.roleID = role.roleID 
+                   WHERE projectPerson.projectID = %d AND role.roleHandle = '%s'",$this->get_id(),db_esc($role));
     $db = new db_alloc;
     $db->query($q);
     while ($db->next_record()) {
@@ -209,7 +209,7 @@ class project extends db_entity {
       $q = sprintf("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
-                 LEFT JOIN projectPersonRole ON projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
+                 LEFT JOIN role ON projectPerson.roleID = role.roleID
                      WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
                   GROUP BY projectID 
                   ORDER BY project.projectName"
@@ -219,9 +219,9 @@ class project extends db_entity {
       $q = sprintf("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
-                 LEFT JOIN projectPersonRole ON projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
+                 LEFT JOIN role ON projectPerson.roleID = role.roleID
                      WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
-                       AND projectPersonRole.projectPersonRoleHandle = 'isManager' 
+                       AND role.roleHandle = 'isManager' 
                   GROUP BY projectID 
                   ORDER BY project.projectName"
                   ,$personID);
@@ -230,9 +230,9 @@ class project extends db_entity {
       $q = sprintf("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
-                 LEFT JOIN projectPersonRole ON projectPerson.projectPersonRoleID = projectPersonRole.projectPersonRoleID
+                 LEFT JOIN role ON projectPerson.roleID = role.roleID
                      WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
-                       AND projectPersonRole.projectPersonRoleHandle = 'timeSheetRecipient' 
+                       AND role.roleHandle = 'timeSheetRecipient' 
                   GROUP BY projectID 
                   ORDER BY project.projectName"
                   ,$personID);

@@ -1382,12 +1382,12 @@ class task extends db_entity {
         $recipients[] = $people[$this->get_value("personID")];
 
       } else if ($selected_option == "isManager" || $selected_option == "canEditTasks" || $selected_option == "all") {
-        $q = sprintf("SELECT personID,projectPersonRoleHandle 
+        $q = sprintf("SELECT personID,roleHandle 
                         FROM projectPerson 
-                   LEFT JOIN projectPersonRole ON projectPersonRole.projectPersonRoleID = projectPerson.projectPersonRoleID 
+                   LEFT JOIN role ON role.roleID = projectPerson.roleID 
                        WHERE projectID = %d", $this->get_value("projectID"));
         if ($selected_option != "all") {
-          $q .=  sprintf(" AND projectPersonRole.projectPersonRoleHandle = '%s'",$selected_option);
+          $q .=  sprintf(" AND role.roleHandle = '%s'",$selected_option);
         }
 
         $db->query($q);

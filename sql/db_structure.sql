@@ -329,7 +329,7 @@ CREATE TABLE projectPerson (
   projectPersonID int(11) NOT NULL auto_increment,
   projectID int(11) NOT NULL default '0',
   personID int(11) NOT NULL default '0',
-  projectPersonRoleID int(11) NOT NULL default '0',
+  roleID int(11) NOT NULL default '0',
   emailType enum('None','Assigned Tasks','All Tasks') default NULL,
   rate DECIMAL(19,2) DEFAULT '0.00',
   rateUnitID int(3) default NULL,
@@ -340,12 +340,13 @@ CREATE TABLE projectPerson (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
-CREATE TABLE projectPersonRole (
-  projectPersonRoleID int(11) NOT NULL auto_increment,
-  projectPersonRoleName varchar(255) default NULL,
-  projectPersonRoleHandle varchar(255) default NULL,
-  projectPersonRoleSortKey int(11) default NULL,
-  PRIMARY KEY  (projectPersonRoleID)
+CREATE TABLE role (
+  roleID int(11) NOT NULL auto_increment,
+  roleName varchar(255) default NULL,
+  roleHandle varchar(255) default NULL,
+  roleLevel ENUM('person','project') NOT NULL,
+  roleSequence int(11) default NULL,
+  PRIMARY KEY  (roleID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 

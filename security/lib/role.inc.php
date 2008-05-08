@@ -20,21 +20,30 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+class role extends db_entity {
+  var $data_table = "role";
 
-class projectPersonRole extends db_entity
-{
-  var $data_table = "projectPersonRole";
-  var $display_field_name = "projectID";
-
-  function projectPersonRole() {
+  function role() {
     $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("projectPersonRoleID");
-    $this->data_fields = array("projectPersonRoleName"=>new db_field("projectPersonRoleName")
-                               , "projectPersonRoleHandle"=>new db_field("projectPersonRoleHandle")
-                               , "projectPersonRoleSortKey"=>new db_field("projectPersonRoleSortKey")
+    $this->key_field = new db_field("roleID");
+    $this->data_fields = array("roleHandle"=>new db_field("roleHandle")
+                              ,"roleName"=>new db_field("roleName")
+                              ,"roleLevel"=>new db_field("roleLevel")
+                              ,"roleSequence"=>new db_field("roleSequence")
       );
   }
 
+  function get_roles_array($level="person") {
+    $rows = array();
+    $db = new db_alloc();
+    $q = sprintf("SELECT * FROM role WHERE roleLevel = '%s' ORDER BY roleSequence",db_esc($level));
+    $db->query($q);
+    while ($row = $db->row()) {
+      $rows[$row["roleHandle"]] = $row["roleName"];
+    }
+    return $rows;
+  }
+  
 
 
 }

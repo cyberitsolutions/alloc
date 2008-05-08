@@ -36,8 +36,8 @@ class projectPerson extends db_entity
                               ,"emailDateRegex"=>new db_field("emailDateRegex")
                               ,"rate"=>new db_field("rate")
                               ,"rateUnitID"=>new db_field("rateUnitID")
-                              ,"projectPersonRoleID"=>new db_field("projectPersonRoleID")
                               ,"projectPersonModifiedUser"=>new db_field("projectPersonModifiedUser")
+                              ,"roleID"=>new db_field("roleID")
                               );
   }
 
@@ -60,22 +60,21 @@ class projectPerson extends db_entity
 
 
   // This is a wrapper to simplify inserts into the projectPerson table using the new
-  // projectPersonRole methodology.. role handle is canEditTasks, or isManager atm
+  // Role methodology.. role handle is canEditTasks, or isManager atm
   function set_value_role($roleHandle) {
     $db = new db_alloc;
-    $db->query(sprintf("SELECT * FROM projectPersonRole WHERE projectPersonRoleHandle = '%s'",$roleHandle));
+    $db->query(sprintf("SELECT * FROM role WHERE roleHandle = '%s' AND roleLevel = 'project'",$roleHandle));
     $db->next_record();
-    $this->set_value("projectPersonRoleID",$db->f("projectPersonRoleID"));
+    $this->set_value("roleID",$db->f("roleID"));
   }
 
 
 
-  function get_projectPerson_row($projectID, $personID, $roleHandle=false) {
-    $roleHandle and $extra = sprintf(" AND projectPersonRoleHandle = '%s'",$roleHandle);
+  function get_projectPerson_row($projectID, $personID) {
     $q = sprintf("SELECT * 
                     FROM projectPerson 
-                   WHERE projectID = %d AND personID = %d %s"
-                ,$projectID,$personID,$extra);
+                   WHERE projectID = %d AND personID = %d"
+                ,$projectID,$personID);
     $db = new db_alloc();
     $db->query($q);
     return $db->row();
