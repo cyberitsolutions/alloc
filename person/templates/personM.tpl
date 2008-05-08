@@ -40,8 +40,6 @@
         <tr>
 		      <td>Daily Email</td>
 		      <td><select name="dailyTaskEmail">{$dailyTaskEmailOptions}</select></td>
-          <td>Email Format</td>
-          <td><select name="emailFormat">{$email_format_options}</select></td>
         </tr>
         <tr>
           <td>Phone No</td>

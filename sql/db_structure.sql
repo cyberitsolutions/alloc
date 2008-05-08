@@ -259,7 +259,6 @@ CREATE TABLE person (
   areasOfInterest text,
   comments text,
   managementComments text,
-  emailFormat varchar(255) default NULL,
   lastLoginDate datetime default NULL,
   personModifiedUser int(11) DEFAULT NULL,
   firstName varchar(255) default NULL,
