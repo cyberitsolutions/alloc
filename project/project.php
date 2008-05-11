@@ -342,45 +342,58 @@ if ($_POST["save"]) {
       $projectPerson->set_value("personID", $current_user->get_id());
       $projectPerson->save();
     }
-    // Automatically created phases in projects
-    if ($new_project && $project->get_value("projectType") == "project") {
-      $creatorID = $current_user->get_id();
-      $dateCreated = date("Y-m-d H:i:s");
-      $taskNames = array(1=>"Phase 1: Discussion & Legal", 2=>"Phase 2: Planning & Documentation", 3=>"Phase 3: Development", 4=>"Phase 4: Testing", 5=>"Phase 5: Handover & Deployment");
-      $phasePercentageTimes = array(1=>0.10, 2=>0.16, 3=>0.32, 4=>0.32, 5=>0.10);
-      if ($project->get_value("dateTargetStart") != "") {
-        $time_start = strtotime($project->get_value("dateTargetStart"));
-      } else {
-        $time_start = strtotime(date("Y-m-d"));
-      }
-      if ($project->get_value("dateTargetCompletion") != "") {
-        $time_total = strtotime($project->get_value("dateTargetCompletion")) - $time_start;
-      } else {
-        $time_total = mktime(0, 0, 0, date("m") + 6, date("d"), date("Y")) - $time_start;
-      }
-      for ($i = 1; $i < 6; $i++) {
-        $time_end = $time_start + $phasePercentageTimes[$i] * $time_total;
-        $task = new task;
-        $task->set_value("taskName", $taskNames[$i]);
-        $task->set_value("creatorID", $creatorID);
-        $task->set_value("priority", "4");
-        $task->set_value("timeEstimate", "0");
-        $task->set_value("dateCreated", $dateCreated);
-        $task->set_value("projectID", $projectID);
-        $task->set_value("dateTargetStart", date("Y-m-d", $time_start));
-        $task->set_value("dateTargetCompletion", date("Y-m-d", $time_end));
-        $task->set_value("parentTaskID", "0");
-        $task->set_value("taskTypeID", TT_PHASE);
-        $task->save();
-        $time_start = $time_end;
-      }
-    }
   }
 } else if ($_POST["delete"]) {
   $project->read_globals();
   $project->delete();
   header("location: ".$TPL["url_alloc_projectList"]);
+
+// If they are creating a new project that is based on an existing one
+} else if ($_POST["copy_project_save"] && $_POST["copy_projectID"] && $_POST["copy_project_name"]) {
+  
+  $p = new project();
+  $p->set_id($_POST["copy_projectID"]);
+  if ($p->select()) {
+    $p2 = new project;
+    $p2->read_row_record($p->row());
+    $p2->set_id("");
+    $p2->set_value("projectName",$_POST["copy_project_name"]);
+    $p2->save();
+    $TPL["message_good"][] = "Project details copied successfully.";
+
+    // Copy project people
+    $q = sprintf("SELECT * FROM projectPerson WHERE projectID = %d",$p->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $projectPerson = new projectPerson;
+      $projectPerson->read_row_record($row);
+      $projectPerson->set_id("");
+      $projectPerson->set_value("projectID",$p2->get_id());
+      $projectPerson->save();
+      $TPL["message_good"]["projectPeople"] = "Project people copied successfully.";
+    }
+
+    // Copy commissions
+    $q = sprintf("SELECT * FROM projectCommissionPerson WHERE projectID = %d",$p->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $projectCommissionPerson = new projectCommissionPerson;
+      $projectCommissionPerson->read_row_record($row);
+      $projectCommissionPerson->set_id("");
+      $projectCommissionPerson->set_value("projectID",$p2->get_id());
+      $projectCommissionPerson->save();
+      $TPL["message_good"]["projectCommissions"] = "Project commissions copied successfully.";
+    }
+
+    alloc_redirect($TPL["url_alloc_project"]."projectID=".$p2->get_id());
+  }
+
+
 }
+
+
 
 
 if ($projectID) {
@@ -393,7 +406,7 @@ if ($projectID) {
       $pp = new projectPerson;
       $pp->read_db_record($db);
       $delete[] = $pp->get_id();
-      #$pp->delete(); // need to delete them after, cause we'll wipe out the current user
+      #$pp->delete(); // need to delete them after, cause we'll accidently wipe out the current user
     }
 
     if (is_array($_POST["person_personID"])) {
@@ -658,16 +671,45 @@ foreach($projectPriorities as $key => $arr) {
   $tp[$key] = $arr["label"];
 }
 $TPL["projectPriority_options"] = get_select_options($tp,$TPL["project_projectPriority"]);
-
 $TPL["currencyType_options"] = get_select_options($currency_array, $TPL["project_currencyType"]);
 
 if ($_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]) {
   define("PROJECT_EXISTS",1);
 }
 
-if ($new_project) {
+if ($new_project && !(is_object($project) && $project->get_id())) {
   $TPL["main_alloc_title"] = "New Project - ".APPLICATION_NAME;
   $TPL["projectSelfLink"] = "New Project";
+  $p = new project;
+  if ($current_user->have_role("manage")) {
+    $copy_project_options = project::get_project_list_dropdown_options("all",false,60);
+  } else {
+    $copy_project_options = project::get_project_list_dropdown_options("pmORtsm",false,60);
+  }
+  $TPL["message_help"][] = "Create a new Project by inputting the Project Name and any other details, and clicking the Save button.";
+  if ($copy_project_options) {
+    $TPL["message_help"][] = "";
+    $TPL["message_help"][] = "<a href=\"#x\" class=\"magic\" onClick=\"$('#copy_project').slideToggle();\">Or copy an existing project</a>";
+    $str =<<<DONE
+      <div id="copy_project" style="display:none; margin-top:10px;">
+        <form action="{$TPL["url_alloc_project"]}" method="post">
+          <table>
+            <tr>
+              <td>Existing Project</td><td><select name="copy_projectID">{$copy_project_options}</select></td>
+            </tr>
+            <tr>
+              <td>New Project Name</td><td><input type="text" size="50" name="copy_project_name"></td>
+            </tr>
+            <tr>
+              <td colspan="2" align="center"><input type="submit" name="copy_project_save" value="Copy Project"></td>
+            </tr>
+          </table>
+        </form>
+      </div>
+DONE;
+    $TPL["message_help"][] = $str;
+  }
+
 } else {
   $TPL["main_alloc_title"] = "Project " . $project->get_id() . ": " . $project->get_project_name() . " - ".APPLICATION_NAME;
   $TPL["projectSelfLink"] = "<a href=\"". $project->get_url() . "\">";

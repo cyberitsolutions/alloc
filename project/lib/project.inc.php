@@ -97,7 +97,7 @@ class project extends db_entity {
       return true;
 
     // Else check that user has isManager permission for this project
-    return $this->has_project_permission($person, array("isManager"));
+    return $person->have_role("manage") || $this->has_project_permission($person, array("isManager"));
   }
 
   function has_project_permission($person = "", $permissions = array()) {
@@ -197,45 +197,54 @@ class project extends db_entity {
     }
   }
 
-  function get_project_type_query($type="mine",$personID=false) {
+  function get_project_type_query($type="mine",$personID=false,$projectStatus=false) {
     global $current_user;
     $type or $type = "mine";
     $personID or $personID = $current_user->get_id();
-
-    
-
+    $projectStatus and $projectStatus_sql = sprintf(" AND project.projectStatus = '%s' ",$projectStatus);
 
     if ($type == "mine") {
       $q = sprintf("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
                  LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
+                     WHERE projectPerson.personID = '%d' %s
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$personID);
+                  ,$personID, $projectStatus_sql);
 
     } else if ($type == "pm") {
       $q = sprintf("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
                  LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
+                     WHERE projectPerson.personID = '%d' %s
                        AND role.roleHandle = 'isManager' 
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$personID);
+                  ,$personID, $projectStatus_sql);
 
     } else if ($type == "tsm") {
       $q = sprintf("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
                  LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' AND project.projectStatus = 'current'
+                     WHERE projectPerson.personID = '%d' %s
                        AND role.roleHandle = 'timeSheetRecipient' 
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$personID);
+                  ,$personID, $projectStatus_sql);
+
+   } else if ($type == "pmORtsm") {
+      $q = sprintf("SELECT project.projectID, project.projectName
+                      FROM project
+                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
+                 LEFT JOIN role ON projectPerson.roleID = role.roleID
+                     WHERE projectPerson.personID = '%d' %s
+                       AND (role.roleHandle = 'isManager' or role.roleHandle = 'timeSheetRecipient')
+                  GROUP BY projectID 
+                  ORDER BY project.projectName"
+                  ,$personID, $projectStatus_sql);
 
     } else if ($type == "curr") {
       $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = 'current' ORDER BY projectName");
@@ -262,6 +271,11 @@ class project extends db_entity {
   }
 
   function get_project_list_dropdown($type="mine",$projectIDs=array()) {
+    $options = project::get_project_list_dropdown_options($type,$projectIDs);
+    return "<select name=\"projectID[]\" size=\"10\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
+  }
+
+  function get_project_list_dropdown_options($type="mine",$projectIDs=array(), $maxlength=35) {
     $db = new db_alloc;
     $q = project::get_project_type_query($type);
     // Project dropdown
@@ -269,10 +283,7 @@ class project extends db_entity {
     while ($db->next_record()) {
       $ops[$db->f("projectID")] = $db->f("projectName");
     }
-
-    $options = get_select_options($ops, $projectIDs, 35);
-
-    return "<select name=\"projectID[]\" size=\"10\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
+    return get_select_options($ops, $projectIDs, $maxlength);
   }
 
   function has_attachment_permission($person) {
