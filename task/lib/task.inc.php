@@ -573,7 +573,7 @@ class task extends db_entity {
 
     if (!$filter["projectID"] && $filter["projectType"] && $filter["projectType"] != "all") {
       $db = new db_alloc;
-      $q = project::get_project_type_query($filter["projectType"],$filter["current_user"]);
+      $q = project::get_project_type_query($filter["projectType"],$filter["current_user"],"current");
       $db->query($q);
       while ($db->next_record()) {
         $filter["projectIDs"][] = $db->f("projectID");

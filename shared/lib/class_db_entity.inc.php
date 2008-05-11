@@ -359,6 +359,26 @@ class db_entity {
     }
   } 
 
+  function read_row_record($row, $errors_fatal = true) {
+    $this->set_id($row[$this->key_field->get_name()]);
+    $this->read_array($row, "", SRC_DATABASE);
+    $this->all_row_fields = $row;
+    if ($errors_fatal) {
+      $this->check_perm(PERM_READ);
+      return true;
+    } else {
+      $have_perm = $this->have_perm(PERM_READ);
+      if (!$have_perm) {
+        $this->clear();
+      }
+      return $have_perm;
+    }
+  } 
+
+  function row() {
+    return $this->all_row_fields;
+  }
+
   function set_value($field_name, $value, $source = SRC_VARIABLE) {
     is_object($this->data_fields[$field_name]) || die("Cannot set field value - field not found: ".$field_name);
     $this->set_field_value($this->data_fields[$field_name], $value, $source);
@@ -600,7 +620,11 @@ class db_entity {
 
     $q.= $extra;
 
-    is_object($this->data_fields[$this->data_table."Sequence"]) and $q.= " ORDER BY ".$this->data_table."Sequence";
+    if (is_object($this->data_fields[$this->data_table."Sequence"])) {
+      $q.= " ORDER BY ".$this->data_table."Sequence";
+    } else if ($value != "*") {
+      $q.= " ORDER BY ".$value;
+    }
 
     $db = new db_alloc;
     $db->query($q);
