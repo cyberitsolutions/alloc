@@ -345,6 +345,7 @@ function show_attachments($invoiceID) {
   global $TPL;
   $options["bottom_button"] = "<form action=\"".$TPL["url_alloc_invoice"]."\" method=\"post\">";
   $options["bottom_button"].= "<input type=\"submit\" value=\"Generate Invoice PDF\" name=\"generate_pdf\">";
+  $options["bottom_button"].= "<input type=\"submit\" value=\"Generate Invoice PDF (verbose)\" name=\"generate_pdf_verbose\">";
   $options["bottom_button"].= "<input type=\"hidden\" value=\"".$invoiceID."\" name=\"invoiceID\">";
   $options["bottom_button"].= "</form>";
   util_show_attachments("invoice",$invoiceID, $options);
@@ -516,8 +517,8 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
   $TPL["message_good"][] = "Attachment saved.";
   alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
 
-} else if ($_POST["generate_pdf"]) {
-  $invoice->generate_invoice_file();
+} else if ($_POST["generate_pdf"] || $_POST["generate_pdf_verbose"]) {
+  $invoice->generate_invoice_file($_POST["generate_pdf_verbose"]);
   $TPL["message_good"][] = "Invoice PDF generated.";
   alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
 }
