@@ -61,7 +61,7 @@
 
 </form>
 
-{if $TPL["invoiceID"] && invoice::has_attachment_permission($current_user)}
+{if defined("SHOW_INVOICE_ATTACHMENTS") && SHOW_INVOICE_ATTACHMENTS}
 {show_attachments($TPL["invoiceID"])}
 {/}
 

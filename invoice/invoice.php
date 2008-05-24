@@ -646,6 +646,12 @@ if (!$invoice->get_value("clientID")) {
 } 
 
 
+if (is_object($invoice) && $invoice->get_id() 
+&& ($invoice->get_value("invoiceStatus") == "reconcile" || $invoice->get_value("invoiceStatus") == "finished")
+&& $invoice->has_attachment_permission($current_user)) {
+  define("SHOW_INVOICE_ATTACHMENTS",1);
+}
+
 
 #$db->query("SELECT * FROM tf ORDER BY tfName");
 #$tf_array = get_array_from_db($db, "tfID", "tfName");
