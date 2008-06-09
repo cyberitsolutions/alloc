@@ -556,7 +556,9 @@ class timeSheet extends db_entity
     if ($filter["personID"]) {
       $sql[] = sprintf("(timeSheet.personID = '%d')", $filter["personID"]);
     }
-    if ($filter["status"]) {
+    if ($filter["status"] && is_array($filter["status"]) && count($filter["status"])) {
+      $sql[] = sprintf("(timeSheet.status in ('%s'))", implode("','",$filter["status"]));
+    } else if ($filter["status"]) {
       $sql[] = sprintf("(timeSheet.status = '%s')", db_esc($filter["status"]));
     }
     if ($filter["dateFrom"]) {
@@ -620,7 +622,7 @@ class timeSheet extends db_entity
           LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID 
           ".$filter."
           GROUP BY timeSheet.timeSheetID
-          ORDER BY dateFrom,projectName,surname";
+          ORDER BY dateFrom,projectName,timeSheet.status,surname";
 
     $debug and print "Query: ".$q;
     $db = new db_alloc();
@@ -705,6 +707,7 @@ class timeSheet extends db_entity
   function get_timeSheet_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
       $summary = "\n<tr>";
+      $_FORM["showTimeSheetID"]   and $summary.= "\n<th>ID</th>";
       $_FORM["showProject"]       and $summary.= "\n<th>Time Sheet</th>";
       $_FORM["showProjectLink"]   and $summary.= "\n<th>Time Sheet</th>";
       $_FORM["showPerson"]        and $summary.= "\n<th>Owner</th>";
@@ -723,6 +726,7 @@ class timeSheet extends db_entity
 
   function get_timeSheet_list_tr($row,$_FORM) {
     $summary[] = "<tr class=\"".$odd_even."\">";
+    $_FORM["showTimeSheetID"]     and $summary[] = "  <td>".$row["timeSheetID"]."&nbsp;</td>";
     $_FORM["showProject"]         and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
     $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";
     $_FORM["showPerson"]          and $summary[] = "  <td>".$row["person"]."&nbsp;</td>";

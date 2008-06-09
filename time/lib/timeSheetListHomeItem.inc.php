@@ -25,45 +25,18 @@ class timeSheetListHomeItem extends home_item {
   function timeSheetListHomeItem() {
     global $current_user, $TPL;
     home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
+
+    $ops["showHeader"] = "true";
+    $ops["showProjectLink"] = "true";
+    $ops["showAmount"] = "true";
+    $ops["showAmountTotal"] = "true";
+    $ops["showDateFrom"] = "true";
+    $ops["showStatus"] = "true";
+    $ops["personID"] = $current_user->get_id();
+    $ops["status"] = array('edit','manager','admin','invoiced');
+
+    $TPL["time_sheet_list"] = timeSheet::get_timeSheet_list($ops);
   }
-
-  function time_sheet_items() {
-    global $current_user, $TPL;
-    $grand_total = 0;
-
-    $query = sprintf("SELECT timeSheet.*
-                        FROM timeSheet
-                       WHERE timeSheet.personID=%d 
-                         AND timeSheet.status != 'finished' 
-                    ORDER BY timeSheet.status, timeSheet.dateFrom", $current_user->get_id());
-    $db = new db_alloc;
-    $db->query($query);
-    $lines = array();
-    while ($db->next_record()) {
-      $timeSheet = new timeSheet;
-      $timeSheet->read_db_record($db);
-      $timeSheet->set_tpl_values();
-      $timeSheet->load_pay_info();
-      $line = array();
-
-        $line["status"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".ucwords($timeSheet->get_value("status"))."</a>";
-
-      $line["total_dollars"] = "\$" . sprintf("%d", $timeSheet->pay_info["total_dollars"]);
-      $grand_total += $timeSheet->pay_info["total_dollars"];
-
-      $project = $timeSheet->get_foreign_object("project");
-      if ($project->get_value("projectShortName")) {
-        $line["projectName"] = $project->get_value("projectShortName");
-      } else {
-        $line["projectName"] = $project->get_value("projectName");
-      }
-      $lines[] = $line;
-    }
-  $rtn["total"] = sprintf("%d", $grand_total);
-  $rtn["lines"] = $lines;
-  return $rtn;
-  }
-
 }
 
 ?>
