@@ -39,6 +39,10 @@ class time_module extends module
         register_home_item(new pendingApprovalTimeSheetListHomeItem);
       }
 
+      include(ALLOC_MOD_DIR."time/lib/timeSheetStatusHomeItem.inc.php");
+      register_home_item(new timeSheetStatusHomeItem);
+
+
       $c = new config;
       $timeSheetAdminEmailPersonID = $c->get_config_item("timeSheetAdminEmail");
       
