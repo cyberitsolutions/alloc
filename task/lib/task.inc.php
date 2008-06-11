@@ -1009,7 +1009,7 @@ class task extends db_entity {
     $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
 
                                   $summary[] = "<tr>";
-                                  $summary[] = "  <td sorttable_customkey=\"".$task["taskTypeID"]."\">".$task["taskTypeImage"]."&nbsp;</td>";
+                                  $summary[] = "  <td sorttable_customkey=\"".$task["taskTypeID"]."\">".$task["taskTypeImage"]."</td>";
     $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
                                   $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
     $_FORM["showProject"]     and $summary[] = "  <td><a href=\"".$TPL["url_alloc_project"]."projectID=".$task["projectID"]."\">".$task["project_name"]."</a>&nbsp;</td>";
