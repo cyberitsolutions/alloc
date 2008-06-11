@@ -24,5 +24,11 @@ $(document).ready(function() {
   $(".tasks tr:nth-child(even)").addClass("even");
   $(".tasks tr:nth-child(odd)").addClass("odd");
   $("div.message").corner();
+  $(".delete_button").bind("click", function(e){
+      return confirm("Click OK to confirm deletion.");
+  });
+  $(".confirm_button").bind("click", function(e){
+      return confirm("Click OK to confirm.");
+  });
 });
 

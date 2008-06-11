@@ -24,8 +24,8 @@
   <td>{$row.size}</td>
   <td class="right" style="padding:5px;">
     <form action="{$url_alloc_backup}" method="post">
-    <input type="submit" value="Restore" name="restore_backup" onClick="return confirm('Are you sure you want to restore this backup?')"/>
-    <input type="submit" value="Delete"  name="delete_backup" onClick="return confirm('Are you sure you want to delete this backup?')"/>
+    <input type="submit" value="Restore" name="restore_backup" class="confirm_button"/>
+    <input type="submit" value="Delete"  name="delete_backup" class="delete_button"/>
     <input type="hidden" value="{$row.restore_name}" name="file" />
     </form>
   </td>

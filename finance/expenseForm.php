@@ -348,7 +348,7 @@ $clientName and $TPL["printer_clientID"] = $clientName;
 
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
 
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"cancel\" value=\"Delete\" onClick=\"return confirm('Delete this Expense Form?')\">";
+  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"cancel\" value=\"Delete\" class=\"delete_button\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"finalise\" value=\"To Admin -&gt;\">";
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";

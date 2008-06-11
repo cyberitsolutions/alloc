@@ -314,7 +314,7 @@ function show_invoiceItem_list() {
 
     } else if (is_object($invoice) && $invoice->get_value("invoiceStatus") == "edit") {
       $TPL["invoiceItem_buttons"] = "<input type=\"submit\" name=\"invoiceItem_edit[".$invoiceItem->get_id()."]\" value=\"Edit\">";
-      $TPL["invoiceItem_buttons"].= "<input type=\"submit\" name=\"invoiceItem_delete[".$invoiceItem->get_id()."]\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record? The transactions associated with this item will be deleted as well.')\">";
+      $TPL["invoiceItem_buttons"].= "<input type=\"submit\" name=\"invoiceItem_delete[".$invoiceItem->get_id()."]\" value=\"Delete\" class=\"delete_button\">";
     }
 
     if ($invoiceItem->get_value("timeSheetID")) {
@@ -608,7 +608,7 @@ if ($current_user->have_role('admin')) {
 
   } else if ($invoice->get_value("invoiceStatus") == "edit") {
     $TPL["invoice_buttons"] = "
-    <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
+    <input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">
     <input type=\"submit\" name=\"save\" value=\"Save\"> 
     <input type=\"submit\" name=\"save_and_MoveForward\" value=\"".$statii["reconcile"]." --&gt;\"> 
     ";

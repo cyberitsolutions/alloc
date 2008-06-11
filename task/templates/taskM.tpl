@@ -94,7 +94,7 @@
     <!--  <input type="submit" name="save_and_back" value="Save and Return to Project"> -->
     <!--  <input type="submit" name="save_and_summary" value="Save and Return to Task List"> -->
       <input type="submit" name="save_and_new" value="Save &amp; New">
-      <input type="submit" name="delete" value="Delete" onClick="return confirm('Are you sure you want to delete this record?')">
+      <input type="submit" name="delete" value="Delete" class="delete_button">
       <input type='hidden' name='view' value='brief'>
 
     </td>

@@ -15,7 +15,7 @@
     <input type="hidden" name="expenseFormID" value="{$expenseFormID}">
     <input type="hidden" name="transactionID" value="{$transactionID}">
     <input type="submit" name="edit" value="Edit">
-    <input type="submit" name="delete" value="Delete" onClick="return confirm('Are you sure you want to delete this record?');">
+    <input type="submit" name="delete" value="Delete" class="delete_button">
     </form>
     {/}
   </td>
