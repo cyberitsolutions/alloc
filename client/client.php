@@ -43,7 +43,7 @@ require_once("../alloc.php");
         $TPL["clientDetails_buttons"] =
           "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">".
           "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".
-          "<input type=\"submit\" name=\"cancel\" value=\"&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;\">"."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Are you sure you want to delete this record?')\">";
+          "<input type=\"submit\" name=\"cancel\" value=\"&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;\">"."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">";
       }
       include_template($template);
     }
@@ -161,7 +161,7 @@ require_once("../alloc.php");
       $fax and $col2[] = $ico_f.$fax;
 
       $buttons = "<nobr><input type=\"submit\" name=\"clientContact_edit\" value=\"Edit\"> 
-                        <input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this Client Contact?')\"></nobr>";
+                        <input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\" class=\"delete_button\"></nobr>";
 
       $rtn[] =  '<form action="'.$TPL["url_alloc_client"].'" method="post">';
       $rtn[] =  '<input type="hidden" name="clientContactID" value="'.$clientContact->get_id().'">';

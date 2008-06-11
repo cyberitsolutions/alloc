@@ -102,8 +102,7 @@
     <td align="center" colspan="5">
       <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="submit" name="delete" value="Delete Record" 
-      onClick="return confirm('Are you sure you want to delete this record?')">
+      <input type="submit" name="delete" value="Delete" class="delete_button">
     </td>
   </tr>
   <tr>

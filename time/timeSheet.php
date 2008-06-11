@@ -53,7 +53,7 @@ if (!$current_user->is_employee()) {
         $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_default\" value=\"Create Default Transactions\">";
         $TPL["create_transaction_buttons"].= "&nbsp;";
         config::for_cyber() and $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_old\" value=\"Create Old Style Transactions".$cyber_is_client."\">&nbsp;";
-        $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"delete_all_transactions\" value=\"Delete Transactions\" onClick=\"return confirm('Delete all Transactions?')\"></td>";
+        $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"delete_all_transactions\" value=\"Delete Transactions\" class=\"delete_button\"></td>";
         $TPL["create_transaction_buttons"].= "</form></tr></tr>";
       }
 
@@ -191,7 +191,7 @@ if (!$current_user->is_employee()) {
 
     if (is_object($timeSheet) && $timeSheet->get_value("status") == "edit") {
       $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_edit\" value=\"Edit\">";
-      $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">";
+      $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\" class=\"delete_button\">";
     }
 
     $timeUnit = new timeUnit;
@@ -755,12 +755,12 @@ case 'edit':
   if (($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) && ($timeSheetID)) {
     if ($projectManagers) {
       $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
+          <input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">
           <input type=\"submit\" name=\"save\" value=\"Save\"> 
           <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Manager --&gt;\"> ";
     } else {
       $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this record?')\">
+          <input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">
           <input type=\"submit\" name=\"save\" value=\"Save\"> 
           <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Admin --&gt;\"> ";
     }

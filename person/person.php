@@ -64,7 +64,7 @@ require_once("../alloc.php");
 
     if ($person->have_perm(PERM_DELETE)) {
       echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-      echo "<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Deleting users may have adverse affects on any projects/tasks/transactions/etc that the user was associated with. It may be preferable to simply disable the user account. Are you sure you want to delete this user?')\">"; 
+      echo "<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Deleting users will have adverse affects on any projects/tasks/etc that the user was associated with. It is recommended to disable the user account instead. Are you sure you want to delete this user?')\">"; 
     } 
 
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";

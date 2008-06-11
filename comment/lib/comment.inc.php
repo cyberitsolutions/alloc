@@ -156,7 +156,7 @@ class comment extends db_entity {
 
       } else if (($v["personID"] == $current_user->get_id()) && $options["showEditButtons"] && $new["hash"]) {
         //$new["comment_buttons"] = "<input type=\"submit\" name=\"comment_edit\" value=\"Edit\">";
-      //<input type=\"submit\" name=\"comment_delete\" value=\"Delete\" onClick=\"return confirm('Are you sure you want to delete this comment?')\">";
+      //<input type=\"submit\" name=\"comment_delete\" value=\"Delete\" class=\"delete_button\">";
       }
 
       $new["attribution"] = comment::get_comment_attribution($v);

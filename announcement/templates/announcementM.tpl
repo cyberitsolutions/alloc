@@ -25,7 +25,7 @@
   <tr>
     <td colspan="2" align="center">
       <input type="submit" value="Save" name="save">
-      <input type="submit" value="Delete" name="delete" onClick="return confirm('Are you sure you want to delete this announcement?')">
+      <input type="submit" value="Delete" name="delete" class="delete_button">
     </td>
   </tr>
 </table>

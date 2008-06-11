@@ -67,7 +67,7 @@
   <tr>
     <td align="center" colspan="3">
       <input type="submit" value="Save" name="save">
-      <input type="submit" value="Delete" name="delete" onClick="return confirm('Are you sure you want to delete this permission?')">
+      <input type="submit" value="Delete" name="delete" class="delete_button">
     </td>
     </tr>
   </table>

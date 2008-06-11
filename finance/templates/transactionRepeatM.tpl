@@ -67,7 +67,7 @@
     <td align="center" colspan="6">
     {$adminButtons}
     <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
-    <input type="submit" name="delete" value="Delete Record" onClick="return confirm('Are you sure you want to delete this record?')"></td>
+    <input type="submit" name="delete" value="Delete" class="delete_button"></td>
   </tr>
 </table>
 
