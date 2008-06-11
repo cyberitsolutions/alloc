@@ -576,6 +576,7 @@ class timeSheet extends db_entity
      *  showHeader
      *  showProject
      *  showProjectLink
+     *  showShortProjectLink
      *  showAmount
      *  showAmountTotal
      *  showCustomerBilledDollars
@@ -600,6 +601,7 @@ class timeSheet extends db_entity
      */
   
     global $TPL;
+    $_FORM["showShortProjectLink"] and $_FORM["showProjectLink"] = true;
     $filter = timeSheet::get_timeSheet_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
@@ -615,7 +617,7 @@ class timeSheet extends db_entity
       $filter = " WHERE ".implode(" AND ",$filter);
     }
 
-    $q = "SELECT timeSheet.*, person.personID, projectName
+    $q = "SELECT timeSheet.*, person.personID, projectName, projectShortName
           FROM timeSheet 
           LEFT JOIN person ON timeSheet.personID = person.personID
           LEFT JOIN project ON timeSheet.projectID = project.projectID
@@ -653,7 +655,7 @@ class timeSheet extends db_entity
       $p = new project();
       $p->read_db_record($db);
       #$row["projectName"] = $p->get_project_name();
-      $row["projectLink"] = $t->get_link($p->get_project_name());
+      $row["projectLink"] = $t->get_link($p->get_project_name($_FORM["showShortProjectLink"]));
       $summary.= timeSheet::get_timeSheet_list_tr($row,$_FORM);
     }
 

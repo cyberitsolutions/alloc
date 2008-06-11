@@ -27,7 +27,7 @@ class timeSheetListHomeItem extends home_item {
     home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
 
     $ops["showHeader"] = "true";
-    $ops["showProjectLink"] = "true";
+    $ops["showShortProjectLink"] = "true";
     $ops["showAmount"] = "true";
     $ops["showAmountTotal"] = "true";
     $ops["showDateFrom"] = "true";
