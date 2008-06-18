@@ -4,12 +4,12 @@ body {
   color:(BODY_COLOR); 
   margin:0px;
   padding:0px;
-  font-size:100% !important; font-size:(DEFAULT_FONT_SIZE)px;
+  font-size:(DEFAULT_FONT_SIZE)px;
 }
 
 /* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
 body table {
-  font-size:100% !important; font-size:(DEFAULT_FONT_SIZE)px;
+  font-size:100%;
 }
 
 a:link, a:visited { 
@@ -34,12 +34,12 @@ a.sidebyside {
   border:1px solid #cccccc;
   text-decoration:none;
   color:#999999;
-  font-size:(DEFAULT_FONT_SIZE)px; 
+  font-size:100%; 
 }
 a.sidebyside:hover {
   color:(TD_COLOR);
   border:1px solid #999999;
-  font-size:(DEFAULT_FONT_SIZE)px; 
+  font-size:100%; 
 }
 a.sidebyside_active {
   color:(TD_COLOR);
@@ -47,34 +47,34 @@ a.sidebyside_active {
   background-color:(PANEL_HARPO_BG_COLOR);
   border:1px solid #999999;
   padding:5px;
-  font-size:(DEFAULT_FONT_SIZE)px; 
+  font-size:100%; 
 }
 
 h1 { 
   font-weight:bold; 
-  font-size:(H1_FONT_SIZE)px; 
+  font-size:150%; 
 }
 h2 { 
   font-weight:bold; 
-  font-size:(H2_FONT_SIZE)px; 
+  font-size:140%; 
 }
 h3 { 
   font-weight:bold; 
-  font-size:(H3_FONT_SIZE)px; 
+  font-size:120%; 
 }
 textarea, input, select, textarea { 
-  font-size:(DEFAULT_FONT_SIZE)px; 
+  font-size:100%; 
   font-family:arial,helvetica,sans-serif; 
   font-weight:normal;
 }
 th { 
   color:(TD_COLOR); 
   text-align:left; 
-  font-size:(DEFAULT_FONT_SIZE)px; 
+  font-size:100%; 
 }
 td { 
   color:(TD_COLOR); 
-  font-size:(DEFAULT_FONT_SIZE)px; 
+  font-size:100%; 
 }
 ul { 
   display:inline; 
@@ -154,7 +154,7 @@ select:focus.bad
   border:1px solid #cccccc; 
   color:#666666; 
   width:400px; 
-  font-size:(DEFAULT_FONT_SIZE)px; 
+  font-size:100%; 
   padding:8px;
 }
 .help_button {
@@ -173,15 +173,15 @@ div.message {
 }
 .bad { 
   color:(TRANSACTION_REJECTED); 
-  font-size:(TABLE_BOX_TH_FONT_SIZE)px; 
+  font-size:100%; 
 }
 .good { 
   color:(TRANSACTION_APPROVED); 
-  font-size:(TABLE_BOX_TH_FONT_SIZE)px; 
+  font-size:100%; 
 }
 .help { 
   color:(TRANSACTION_PENDING);  
-  font-size:(TABLE_BOX_TH_FONT_SIZE)px;
+  font-size:100%;
 }
 
 
@@ -199,7 +199,7 @@ table.box {
 table.box th { 
   (TABLE_BOX_TH_BACKGROUND); 
   color:(TABLE_BOX_TH_COLOR); 
-  font-size:(TABLE_BOX_TH_FONT_SIZE)px; 
+  font-size:110%; 
 } 
 table.box th.center { 
   text-align:center; 
@@ -211,12 +211,12 @@ table.box th.right table {
 table.box th a:link, table.box th a:visited { 
   font-weight:bold; 
   color:(TABLE_BOX_TH_A_LINK_COLOR); 
-  font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; 
+  font-size:110%; 
 }
 table.box th a:hover { 
   font-weight:bold; 
   color:(TABLE_BOX_TH_A_HOVER_COLOR); 
-  font-size:(TABLE_BOX_TH_A_FONT_SIZE)px; 
+  font-size:110%; 
 }
 
 /* Calendar */
@@ -253,7 +253,7 @@ table.alloc_calendar td.absent h1{
 }
 table.alloc_calendar h1 {
   text-align:right;
-  font-size:(DEFAULT_FONT_SIZE)px;
+  font-size:100%;
   margin:0px;
   padding:3px;
   font-weight:normal;
