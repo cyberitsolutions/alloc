@@ -4,12 +4,12 @@ body {
   color:#666666; 
   margin:0px;
   padding:0px;
-  font-size:100% !important; font-size:9px;
+  font-size:9px;
 }
 
 /* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
 body table {
-  font-size:100% !important; font-size:9px;
+  font-size:100%;
 }
 
 a:link, a:visited { 
@@ -34,12 +34,12 @@ a.sidebyside {
   border:1px solid #cccccc;
   text-decoration:none;
   color:#999999;
-  font-size:9px; 
+  font-size:100%; 
 }
 a.sidebyside:hover {
   color:#444444;
   border:1px solid #999999;
-  font-size:9px; 
+  font-size:100%; 
 }
 a.sidebyside_active {
   color:#444444;
@@ -47,34 +47,34 @@ a.sidebyside_active {
   background-color:#f3f9e0;
   border:1px solid #999999;
   padding:5px;
-  font-size:9px; 
+  font-size:100%; 
 }
 
 h1 { 
   font-weight:bold; 
-  font-size:13px; 
+  font-size:150%; 
 }
 h2 { 
   font-weight:bold; 
-  font-size:13px; 
+  font-size:140%; 
 }
 h3 { 
   font-weight:bold; 
-  font-size:12px; 
+  font-size:120%; 
 }
 textarea, input, select, textarea { 
-  font-size:9px; 
+  font-size:100%; 
   font-family:arial,helvetica,sans-serif; 
   font-weight:normal;
 }
 th { 
   color:#444444; 
   text-align:left; 
-  font-size:9px; 
+  font-size:100%; 
 }
 td { 
   color:#444444; 
-  font-size:9px; 
+  font-size:100%; 
 }
 ul { 
   display:inline; 
@@ -154,7 +154,7 @@ select:focus.bad
   border:1px solid #cccccc; 
   color:#666666; 
   width:400px; 
-  font-size:9px; 
+  font-size:100%; 
   padding:8px;
 }
 .help_button {
@@ -173,15 +173,15 @@ div.message {
 }
 .bad { 
   color:#c84e12; 
-  font-size:10px; 
+  font-size:100%; 
 }
 .good { 
   color:#6e883b; 
-  font-size:10px; 
+  font-size:100%; 
 }
 .help { 
   color:black;  
-  font-size:10px;
+  font-size:100%;
 }
 
 
@@ -199,7 +199,7 @@ table.box {
 table.box th { 
   background: url(../images/bg_leaf.jpg) repeat-x; 
   color:#829858; 
-  font-size:10px; 
+  font-size:110%; 
 } 
 table.box th.center { 
   text-align:center; 
@@ -211,12 +211,12 @@ table.box th.right table {
 table.box th a:link, table.box th a:visited { 
   font-weight:bold; 
   color:#c86c12; 
-  font-size:10px; 
+  font-size:110%; 
 }
 table.box th a:hover { 
   font-weight:bold; 
   color:#5c7600; 
-  font-size:10px; 
+  font-size:110%; 
 }
 
 /* Calendar */
@@ -253,7 +253,7 @@ table.alloc_calendar td.absent h1{
 }
 table.alloc_calendar h1 {
   text-align:right;
-  font-size:9px;
+  font-size:100%;
   margin:0px;
   padding:3px;
   font-weight:normal;

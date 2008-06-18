@@ -57,15 +57,7 @@ for item in files:
         str2 = str;
 
         font_sizes = {}
-        font_sizes['H1_FONT_SIZE']                = (16 + weight)
-        font_sizes['H2_FONT_SIZE']                = (16 + weight)
-        font_sizes['H3_FONT_SIZE']                = (15 + weight)
-        font_sizes['TABLE_BOX_TH_FONT_SIZE']      = (13 + weight)
-        font_sizes['TABLE_BOX_TH_A_FONT_SIZE']    = (13 + weight)
-        font_sizes['TABLE_TOOLBAR_TH_FONT_SIZE']  = (17 + weight)
-        font_sizes['TABLE_TOOLBAR_TD_FONT_SIZE']  = (13 + weight)
-        font_sizes['DEFAULT_FONT_SIZE']           = (12 + weight)   
-
+        font_sizes['DEFAULT_FONT_SIZE'] = (12 + weight)   
       
         for k, v in font_sizes.items():
           str2 = str2.replace('('+k.upper()+')', repr(v))
