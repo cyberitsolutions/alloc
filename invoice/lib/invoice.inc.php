@@ -410,15 +410,15 @@ class invoice extends db_entity {
     // Filter for the HAVING clause
     $sql2 = array();
     if ($filter["invoiceStatusPayment"] == "pending") {
-      $sql2[] = "(amountPaidApproved < iiAmountSum)";
+      $sql2[] = "(COALESCE(amountPaidApproved,0) < iiAmountSum)";
     #if ($filter["invoiceStatusPayment"] == "partly_paid") {
      # $sql2[] = "(amountPaidApproved < iiAmountSum)";
     } else if ($filter["invoiceStatusPayment"] == "rejected") {
-      $sql2[] = "(amountPaidRejected > 0)";
+      $sql2[] = "(COALESCE(amountPaidRejected,0) > 0)";
     } else if ($filter["invoiceStatusPayment"] == "fully_paid") {
-      $sql2[] = "(amountPaidApproved = iiAmountSum)";
+      $sql2[] = "(COALESCE(amountPaidApproved,0) = iiAmountSum)";
     } else if ($filter["invoiceStatusPayment"] == "over_paid") {
-      $sql2[] = "(amountPaidApproved > iiAmountSum)";
+      $sql2[] = "(COALESCE(amountPaidApproved,0) > iiAmountSum)";
     }
 
     return array($sql,$sql2);
