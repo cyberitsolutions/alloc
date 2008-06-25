@@ -58,7 +58,7 @@ define("PAGE_IS_PRINTABLE",1);
   }
 
   function get_parent_taskIDs($taskID) {
-    $q = sprintf("SELECT taskID,taskName,parentTaskID FROM task WHERE taskID = %d",$taskID);
+    $q = sprintf("SELECT taskID,taskName,parentTaskID FROM task WHERE taskID = %d and taskID != parentTaskID",$taskID);
     $db = new db_alloc;
     $db->query($q);
     
