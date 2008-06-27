@@ -6,7 +6,7 @@ function refreshTaskList(radiobutton) \{
 \}
 </script>
 
-<form action="{$url_alloc_timeSheet}" method="post">
+<form action="{$url_alloc_timeSheetItem}" method="post">
 {$table_box}
   <tr>
     <th colspan="5">Create Time Sheet Item</th>
@@ -23,12 +23,12 @@ function refreshTaskList(radiobutton) \{
    
         <tr>
           <td>
-            {get_calendar("timeSheetItem_dateTimeSheetItem",$TPL["timeSheetItem_dateTimeSheetItem"])}&nbsp;
+            {get_calendar("timeSheetItem_dateTimeSheetItem",$TPL["tsi_dateTimeSheetItem"])}&nbsp;
           </td>
           <td>
-            <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$timeSheetItem_timeSheetItemDuration}">
-            <select name="timeSheetItem_timeSheetItemDurationUnitID">{$timeSheetItem_unit_options}</select>
-            &nbsp;@&nbsp;&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$timeSheetItem_rate}">&nbsp;&times;&nbsp;<select name="timeSheetItem_multiplier">{$timeSheetItem_multiplier_options}</select>
+            <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$tsi_timeSheetItemDuration}">
+            <select name="timeSheetItem_timeSheetItemDurationUnitID">{$tsi_unit_options}</select>
+            &nbsp;@&nbsp;&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$tsi_rate}">&nbsp;&times;&nbsp;<select name="timeSheetItem_multiplier">{$tsi_multiplier_options}</select>
           </td>
         </tr>
         <tr>
@@ -54,16 +54,16 @@ function refreshTaskList(radiobutton) \{
     <td valign="top"></td>
     <td colspan="3" valign="top">
     Comments<br>
-    {get_textarea("timeSheetItem_comment",$TPL["timeSheetItem_comment"])}
+    {get_textarea("timeSheetItem_comment",$TPL["tsi_comment"])}
     Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{$commentPrivateChecked}>
     </td>
-    <td colspan="1" valign="top" align="right"><br/>{$timeSheetItem_buttons}</td>
+    <td colspan="1" valign="top" align="right"><br/>{$tsi_buttons}</td>
   </tr>
 </table>
 
 
-<input type="hidden" name="timeSheetItem_timeSheetItemID" value="{$timeSheetItem_timeSheetItemID}">
-<input type="hidden" name="timeSheetID" value="{$timeSheetItem_timeSheetID}">
-<input type="hidden" name="timeSheetItem_personID" value="{$timeSheetItem_personID}">
+<input type="hidden" name="timeSheetItem_timeSheetItemID" value="{$tsi_timeSheetItemID}">
+<input type="hidden" name="timeSheetID" value="{$tsi_timeSheetID}">
+<input type="hidden" name="timeSheetItem_personID" value="{$tsi_personID}">
 </form>
 
