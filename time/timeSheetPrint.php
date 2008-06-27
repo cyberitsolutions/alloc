@@ -318,9 +318,18 @@ if ($timeSheetID) {
 
   $default_header = "Time Sheet";
   $default_id_label = "Time Sheet ID";
+  $default_contractor_label = "Contractor";
+  $default_total_label = "TOTAL AMOUNT PAYABLE";
+
   if ($_GET["timeSheetPrintMode"] == "money") {
     $default_header = "Tax Invoice";
     $default_id_label = "Invoice Number";
+  }
+  if ($_GET["timeSheetPrintMode"] == "estimate") {
+    $default_header = "Estimate";
+    $default_id_label = "Estimate Number";
+    $default_contractor_label = "Issued By";
+    $default_total_label = "TOTAL AMOUNT ESTIMATED";
   }
 
 
@@ -388,12 +397,20 @@ if ($timeSheetID) {
 
     $ts_info[] = array("one"=>"<b>".$default_id_label.":</b>","two"=>$TPL["timeSheetID"],"three"=>"<b>Date Issued:</b>","four"=>date("d/m/Y"));
     $ts_info[] = array("one"=>"<b>Client:</b>"        ,"two"=>$TPL["clientName"],"three"=>"<b>Project:</b>","four"=>$TPL["timeSheet_projectName"]);
-    $ts_info[] = array("one"=>"<b>Contractor:</b>"    ,"two"=>$TPL["timeSheet_personName"],"three"=>"<b>Billing Period:</b>","four"=>$TPL["period"]);
+    $ts_info[] = array("one"=>"<b>".$default_contractor_label.":</b>"    ,"two"=>$TPL["timeSheet_personName"],"three"=>"<b>Billing Period:</b>","four"=>$TPL["period"]);
+    if ($_GET["timeSheetPrintMode"] == "estimate") { // This line needs to be glued to the above line
+      $temp = array_pop($ts_info);
+      $temp["three"] = ""; // Nuke Billing Period for the Estimate version of the pdf.
+      $temp["four"] = ""; // Nuke Billing Period for the Estimate version of the pdf.
+      $ts_info[] = $temp;
+    }
+
+
     $y = $pdf->ezTable($ts_info,$cols,"",$pdf_table_options2);
 
     $pdf->ezSetY($y -20);
 
-    if ($_GET["timeSheetPrintMode"] == "money") {
+    if ($_GET["timeSheetPrintMode"] == "money" || $_GET["timeSheetPrintMode"] == "estimate") {
       list($rows,$info) = get_timeSheetItem_list_money($TPL["timeSheetID"]);
       $cols2 = array("desc"=>"Description","units"=>"Units","money"=>"Charges","gst"=>$TPL["taxName"]);
       $taxPercent = config::get_config_item("taxPercent");
@@ -403,7 +420,7 @@ if ($timeSheetID) {
       $pdf->ezSetY($y -20);
       if ($taxPercent !== '') $totals[] = array("one"=>"TOTAL ".$TPL["taxName"],"two"=>$info["total_gst"]);
       $totals[] = array("one"=>"TOTAL CHARGES","two"=>$info["total"]);
-      $totals[] = array("one"=>"<b>TOTAL AMOUNT PAYABLE</b>","two"=>"<b>".$info["total_inc_gst"]."</b>");
+      $totals[] = array("one"=>"<b>".$default_total_label."</b>","two"=>"<b>".$info["total_inc_gst"]."</b>");
       $y = $pdf->ezTable($totals,$cols3,"",$pdf_table_options4);
 
     } else if ($_GET["timeSheetPrintMode"] == "units") {
