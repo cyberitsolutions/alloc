@@ -1,4 +1,4 @@
-<form action="{$url_alloc_timeSheet}" method="post">
+<form action="{$url_alloc_timeSheetItem}" method="post">
 <table width="100%" cellspacing="0" border="0" class="panel">
 <tr>
   <td valign="top" width="10%"><nobr>{$timeSheetItem_dateTimeSheetItem}</nobr></td>

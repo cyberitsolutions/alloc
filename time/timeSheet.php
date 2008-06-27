@@ -198,7 +198,10 @@ if (!$current_user->is_employee()) {
     $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
     
     $item_query = sprintf("SELECT * from timeSheetItem WHERE timeSheetID=%d ", $timeSheetID);
-    $item_query.= sprintf("GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
+    // If editing a timeSheetItem then don't display it in the list
+    $timeSheetItemID = $_POST["timeSheetItemID"] or $timeSheetItemID = $_GET["timeSheetItemID"];
+    $timeSheetItemID and $item_query.= sprintf(" AND timeSheetItemID != %d",$timeSheetItemID);
+    $item_query.= sprintf(" GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
     $db->query($item_query);
 
     while ($db->next_record()) {
@@ -206,11 +209,6 @@ if (!$current_user->is_employee()) {
       $timeSheetItem->read_db_record($db,false);
       $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
 
-      // If editing a timeSheetItem then don't display it in the list
-      if ($_POST["timeSheetItem_timeSheetItemID"] == $timeSheetItem->get_id()) {
-        continue;
-      }  
-     
       $TPL["timeSheet_totalHours"] += $timeSheetItem->get_value("timeSheetItemDuration");
 
       $TPL["unit"] = $unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")];
@@ -218,11 +216,8 @@ if (!$current_user->is_employee()) {
       $br = "";
       $commentPrivateText = "";
 
-      $text = $TPL["timeSheetItem_description_printer_version"] = $timeSheetItem->get_value('description');
-      $TPL["timeSheetItem_comment_printer_version"] = "";
-      if (!$timeSheetItem->get_value("commentPrivate")) {
-        $TPL["timeSheetItem_comment_printer_version"] = text_to_html($timeSheetItem->get_value("comment"));
-      } else {
+      $text = $timeSheetItem->get_value('description');
+      if ($timeSheetItem->get_value("commentPrivate")) {
         $commentPrivateText = "<b>[Private Comment]</b> ";
       }
       
@@ -243,7 +238,7 @@ if (!$current_user->is_employee()) {
   }
   
   function show_new_timeSheet($template) {
-    global $TPL, $timeSheet, $timeSheetID, $db, $current_user;
+    global $TPL, $timeSheet, $timeSheetID, $current_user;
 
     // Don't show entry form for new timeSheet.
     if (!$timeSheetID) {
@@ -255,55 +250,49 @@ if (!$current_user->is_employee()) {
     && ($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
 
       // If we are editing an existing timeSheetItem
-      if ($_POST["timeSheetItem_timeSheetItemID"]) {
+      $timeSheetItem_edit = $_POST["timeSheetItem_edit"] or $timeSheetItem_edit = $_GET["timeSheetItem_edit"];
+      $timeSheetItemID = $_POST["timeSheetItemID"] or $timeSheetItemID = $_GET["timeSheetItemID"];
+      if ($timeSheetItemID && $timeSheetItem_edit) {
         $timeSheetItem = new timeSheetItem;
-        $timeSheetItem->set_id($_POST["timeSheetItem_timeSheetItemID"]);
+        $timeSheetItem->set_id($timeSheetItemID);
         $timeSheetItem->select();
-        $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
+        $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "tsi_");
         $taskID = $timeSheetItem->get_value("taskID");
-        $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Save Time Sheet Item\">";
-        $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
+        $TPL["tsi_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Save Time Sheet Item\">";
+        $TPL["tsi_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
 
         $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
-        $TPL["timeSheetItem_commentPrivate"] and $TPL["commentPrivateChecked"] = " checked";
+        $TPL["tsi_commentPrivate"] and $TPL["commentPrivateChecked"] = " checked";
 
         $timeSheetItemMultiplier = $timeSheetItem->get_value("multiplier");
 
       // Else default values for creating a new timeSheetItem
       } else {
-        #$timeSheetItem = new timeSheetItem;
-        $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Add Time Sheet Item\">";
-        $TPL["timeSheetItem_personID"] = $current_user->get_id();
+        $TPL["tsi_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Add Time Sheet Item\">";
+        $TPL["tsi_personID"] = $current_user->get_id();
         $timeSheet->load_pay_info();
-        $TPL["timeSheetItem_rate"] = $timeSheet->pay_info["project_rate"];
+        $TPL["tsi_rate"] = $timeSheet->pay_info["project_rate"];
         $timeSheetItemDurationUnitID = $timeSheet->pay_info["project_rateUnitID"];
-        global $timeSheetItem;
-        if (is_object($timeSheetItem)) {
-          $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
-          $taskID = $timeSheetItem->get_value("taskID");
-          $timeSheetItemMultiplier = $timeSheetItem->get_value("multiplier");
-          $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
-        }
       }
 
       $taskID or $taskID = $_GET["taskID"];
 
       $TPL["taskListDropdown_taskID"] = $taskID;
       $TPL["taskListDropdown"] = $timeSheet->get_task_list_dropdown("open",$timeSheet->get_id(),$taskID);
-      $TPL["timeSheetItem_timeSheetID"] = $timeSheet->get_id();
+      $TPL["tsi_timeSheetID"] = $timeSheet->get_id();
 
       $timeUnit = new timeUnit;
       $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
-      $TPL["timeSheetItem_unit_options"] = get_select_options($unit_array, $timeSheetItemDurationUnitID);
+      $TPL["tsi_unit_options"] = get_select_options($unit_array, $timeSheetItemDurationUnitID);
 
       $timeSheetItemMultiplier  or $timeSheetItemMultiplier = 0;
       $tsMultipliers = config::get_config_item("timeSheetMultipliers") or $tsMultipliers = array();
       foreach ($tsMultipliers as $k => $v) {
         $multiplier_array[$k] = $v["label"];
       }
-      $TPL["timeSheetItem_multiplier_options"] = get_select_options($multiplier_array, $timeSheetItemMultiplier);
+      $TPL["tsi_multiplier_options"] = get_select_options($multiplier_array, $timeSheetItemMultiplier);
 
-      #$TPL["timeSheetItem_dateTimeSheetItem"] or $TPL["timeSheetItem_dateTimeSheetItem"] = date("Y-m-d");
+      #$TPL["tsi_dateTimeSheetItem"] or $TPL["tsi_dateTimeSheetItem"] = date("Y-m-d");
 
       include_template($template);
     }
@@ -408,67 +397,6 @@ if ($_POST["save"]
 
 
 } else if ($timeSheetID) {
-
-  if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["timeSheetItem_delete"]) && $timeSheet->get_value("status") == "edit") {
-    $timeSheetItem = new timeSheetItem;
-    $timeSheetItem->read_globals();
-    $timeSheetItem->read_globals("timeSheetItem_");
-    $timeSheet->set_id($timeSheetID);
-    $timeSheet->select();
-
-    if ($_POST["timeSheetItem_save"]) {
-      // SAVE INDIVIDUAL TIME SHEET ITEM
-
-      if ($_POST["timeSheetItem_taskID"]) {
-        $selectedTask = new task();
-        $selectedTask->set_id($_POST["timeSheetItem_taskID"]);
-	      $selectedTask->select();
-
-	      if ($selectedTask->get_value("duplicateTaskID")) {
-          $oldName = $selectedTask->get_task_name();
-          $selectedTask->set_id($selectedTask->get_value("duplicateTaskID"));
-          $selectedTask->select();
-	        $message_good = "Task <a href=\"".$TPL["url_alloc_task"]."taskID=".$_POST["timeSheetItem_taskID"]."\">".$_POST["timeSheetItem_taskID"]." ".$oldName."</a> is marked as a duplicate.";
-          $message_good.=  " Time was allocated to task <a href=\"".$TPL["url_alloc_task"]."taskID=".$selectedTask->get_id()."\">".$selectedTask->get_id()." ".$selectedTask->get_task_name()."</a>.";
-          $TPL["message_good"][] = $message_good;
-	        $timeSheetItem->set_value("taskID", $selectedTask->get_id());
-        }
-
-        $taskName = $selectedTask->get_task_name();
-
-        if (!$selectedTask->get_value("dateActualStart")) {
-          $selectedTask->set_value("dateActualStart", $timeSheetItem->get_value("dateTimeSheetItem"));
-        }
-      }
-
-      $timeSheetItem->set_value("description", $taskName);
-      $_POST["timeSheetItem_commentPrivate"] and $timeSheetItem->set_value("commentPrivate", 1);
-
-      if (is_array($_POST["timeSheetItem_comment"])) {
-        $timeSheetItem_comments = array();
-        foreach ($_POST["timeSheetItem_comment"] as $c) {
-          $c and $timeSheetItem_comments[] = $c;
-        }
-        $timeSheetItem->set_value("comment",rtrim("* ".implode("\n* ",$timeSheetItem_comments)));
-      } else {
-        $timeSheetItem->set_value("comment",rtrim($timeSheetItem->get_value("comment")));
-      }
-
-      $rtn = $timeSheetItem->save();
-      $rtn and $TPL["message"][] = $rtn;
-      if (!$TPL["message"] && !$TPL["message_good"]) {
-        header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetItem->get_value("timeSheetID"));
-      }
-
-    } else if ($_POST["timeSheetItem_edit"]) {
-      // Hmph. Nothing needs to go here?
-
-    } else if ($_POST["timeSheetItem_delete"]) {
-      $timeSheetItem->select();
-      $timeSheetItem->delete();
-      header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
-    }
-  }
   // Displaying a record
   $timeSheet->set_id($timeSheetID);
   $timeSheet->select();
