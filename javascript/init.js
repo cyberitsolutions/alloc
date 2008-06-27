@@ -25,10 +25,15 @@ $(document).ready(function() {
   $(".tasks tr:nth-child(odd)").addClass("odd");
   $("div.message").corner();
   $(".delete_button").bind("click", function(e){
-      return confirm("Click OK to confirm deletion.");
+    return confirm("Click OK to confirm deletion.");
   });
   $(".confirm_button").bind("click", function(e){
-      return confirm("Click OK to confirm.");
+    return confirm("Click OK to confirm.");
   });
+  $("input.datefield").bind("dblclick", function(e){
+    var now = new Date();
+    this.value=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+  });
+
 });
 
