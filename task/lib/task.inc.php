@@ -424,11 +424,11 @@ class task extends db_entity {
     $TPL["projectOptions"] = get_option("None", "0", $projectID == 0)."\n";
     $TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $projectID,60);
     
-    // TaskCommentTemplateOptions - Select all task comment templates
-    $query = sprintf("SELECT * FROM taskCommentTemplate ORDER BY taskCommentTemplateName");
+    // commentTemplateOptions - Select all comment templates
+    $query = sprintf("SELECT * FROM commentTemplate ORDER BY commentTemplateName");
     $db->query($query);
-    $TPL["taskCommentTemplateOptions"] = get_option("Comment Templates", "0")."\n";
-    $TPL["taskCommentTemplateOptions"].= get_options_from_db($db, "taskCommentTemplateName", "taskCommentTemplateID",false);
+    $TPL["commentTemplateOptions"] = get_option("Comment Templates", "0")."\n";
+    $TPL["commentTemplateOptions"].= get_options_from_db($db, "commentTemplateName", "commentTemplateID",false);
 
     $priority = $this->get_value("priority") or $priority = 3;
     $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();

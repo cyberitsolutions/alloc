@@ -22,7 +22,7 @@
             <div style="display:inline; float:left; clear:left;">
               <a href="#x" class="magic" onClick="$('#file_attachment_dialog').append('<input type=\'file\' name=\'attachment[]\'><br>');">Attach File</a>
             </div>
-            <select name="taskCommentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateTaskCommentTemplate}taskID={$task_taskID}&taskCommentTemplateID='+$(this).attr('value'),'comment_textarea')">{$taskCommentTemplateOptions}</select>
+            <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity=task&entityID={$task_taskID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
           </td>
           <td colspan="2" valign="top" width="60%">
             <div style="display:block; clear:both; padding-bottom:8px;"><u>Email Interested Parties</u></div>

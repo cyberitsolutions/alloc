@@ -29,7 +29,7 @@ $misc_options = array(array("url"=>"reminderList"            ,"text"=>"Reminders
                      ,array("url"=>"search"                  ,"text"=>"Search"                ,"entity"=>""                   ,"action"=>true)
                      ,array("url"=>"personSkillMatrix"       ,"text"=>"Company Skill Matrix"  ,"entity"=>"person"             ,"action"=>true)
                      ,array("url"=>"personSkillAdd"          ,"text"=>"Edit Skill Items"      ,"entity"=>"person"             ,"action"=>PERM_PERSON_READ_MANAGEMENT)
-                     ,array("url"=>"taskCommentTemplateList" ,"text"=>"Task Comment Templates","entity"=>"taskCommentTemplate","action"=>PERM_READ_WRITE)
+                     ,array("url"=>"commentTemplateList"     ,"text"=>"Comment Templates"     ,"entity"=>"commentTemplate","action"=>PERM_READ_WRITE)
                      ,array("url"=>"loans"                   ,"text"=>"Item Loans"            ,"entity"=>"loan"               ,"action"=>true)
                      ,array("url"=>"report"                  ,"text"=>"Reports"               ,"entity"=>""                   ,"action"=>true, "function"=>"has_report_perm")
                      ,array("url"=>"backup"                  ,"text"=>"Database & File Backup","entity"=>""                   ,"function"=>"has_backup_perm")

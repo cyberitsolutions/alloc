@@ -21,10 +21,11 @@
 */
 
 class comment_module extends module {
-  var $db_entities = array("comment");
+  var $db_entities = array("comment","commentTemplate");
 }
 
 include(ALLOC_MOD_DIR."comment/lib/comment.inc.php");
+include(ALLOC_MOD_DIR."comment/lib/commentTemplate.inc.php");
 
 
 

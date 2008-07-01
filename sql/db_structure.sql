@@ -456,12 +456,12 @@ CREATE TABLE interestedParty (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
-CREATE TABLE taskCommentTemplate (
-  taskCommentTemplateID int(11) NOT NULL auto_increment,
-  taskCommentTemplateName varchar(255) default NULL,
-  taskCommentTemplateText text,
-  taskCommentTemplateModifiedTime datetime DEFAULT NULL,
-  PRIMARY KEY  (taskCommentTemplateID)
+CREATE TABLE commentTemplate (
+  commentTemplateID int(11) NOT NULL auto_increment,
+  commentTemplateName varchar(255) default NULL,
+  commentTemplateText text,
+  commentTemplateModifiedTime datetime DEFAULT NULL,
+  PRIMARY KEY  (commentTemplateID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 

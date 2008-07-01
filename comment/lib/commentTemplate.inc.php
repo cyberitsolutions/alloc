@@ -21,45 +21,61 @@
 */
 
 
-class taskCommentTemplate extends db_entity {
+class commentTemplate extends db_entity {
   
-  var $data_table = "taskCommentTemplate";
-  var $display_field_name = "taskCommentTemplateName";
+  var $data_table = "commentTemplate";
+  var $display_field_name = "commentTemplateName";
 
 
-  function taskCommentTemplate() {
+  function commentTemplate() {
     $this->db_entity();
-    $this->key_field = new db_field("taskCommentTemplateID");
-    $this->data_fields = array("taskCommentTemplateName"=>new db_field("taskCommentTemplateName")
-                             , "taskCommentTemplateText"=>new db_field("taskCommentTemplateText")
-                             , "taskCommentTemplateModifiedTime"=>new db_field("taskCommentTemplateModifiedTime"));
+    $this->key_field = new db_field("commentTemplateID");
+    $this->data_fields = array("commentTemplateName"=>new db_field("commentTemplateName")
+                             , "commentTemplateText"=>new db_field("commentTemplateText")
+                             , "commentTemplateModifiedTime"=>new db_field("commentTemplateModifiedTime"));
    }
 
 
-  function get_populated_template($taskID) {
+  function get_populated_template($entity, $entityID=false) {
     global $current_user;
     $swap["cu"] = person::get_fullname($current_user->get_id());
 
-    $task = new task;
-    $task->set_id($taskID);
-    $task->select();
-    $swap["ti"] = $task->get_id();
-    $swap["to"] = person::get_fullname($task->get_value("creatorID"));
-    $swap["ta"] = person::get_fullname($task->get_value("personID"));
-    $swap["tm"] = person::get_fullname($task->get_value("managerID"));
-    $swap["tc"] = person::get_fullname($task->get_value("closerID"));
-    $swap["tn"] = $task->get_value("taskName");
-    $swap["td"] = $task->get_value("taskDescription");
-    
-    $project = new project;
-    $project->set_id($task->get_value("projectID"));
-    $project->select();
-    $swap["pn"] = $project->get_value("projectName");
+    if ($entity="timeSheet" && $entityID) {
+      $timeSheet = new timeSheet;
+      $timeSheet->set_id($entityID);
+      $timeSheet->select();
+      $projectID = $timeSheet->get_value("projectID");
+    }
 
-    $client = new client;
-    $client->set_id($project->get_value("clientID"));
-    $client->select();
-    $swap["cc"] = $client->get_value("clientName");
+
+    if ($entity="task" && $entityID) {
+      $task = new task;
+      $task->set_id($taskID);
+      $task->select();
+      $swap["ti"] = $task->get_id();
+      $swap["to"] = person::get_fullname($task->get_value("creatorID"));
+      $swap["ta"] = person::get_fullname($task->get_value("personID"));
+      $swap["tm"] = person::get_fullname($task->get_value("managerID"));
+      $swap["tc"] = person::get_fullname($task->get_value("closerID"));
+      $swap["tn"] = $task->get_value("taskName");
+      $swap["td"] = $task->get_value("taskDescription");
+      $projectID = $task->get_value("projectID");
+    }
+
+    if ($projectID) {
+      $project = new project;
+      $project->set_id($projectID);
+      $project->select();
+      $swap["pn"] = $project->get_value("projectName");
+      $clientID = $project->get_value("clientID");
+    }
+
+    if ($clientID) {
+      $client = new client;
+      $client->set_id($clientID);
+      $client->select();
+      $swap["cc"] = $client->get_value("clientName");
+    }
 
     $swap["cd"] = config::get_config_item("companyContactAddress");
     $swap["cd"].= " ".config::get_config_item("companyContactAddress2");
@@ -81,7 +97,7 @@ class taskCommentTemplate extends db_entity {
     $swap["cf"] = config::get_config_item("companyContactFax");
     $swap["cw"] = config::get_config_item("companyContactHomePage");
 
-    $str = $this->get_value("taskCommentTemplateText");
+    $str = $this->get_value("commentTemplateText");
     foreach ($swap as $k => $v) {
       $str = str_replace("%".$k,$v,$str);
     }
