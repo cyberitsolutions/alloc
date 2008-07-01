@@ -97,9 +97,12 @@ class interestedParty extends db_entity {
 
     if (is_array($ops)) {
       foreach ($ops as $email => $info) {
-        $info["email"] = $email;
-        $info["identifier"] = task::get_encoded_interested_party_identifier($info);
-        $rtn[$email] = $info;
+        // if there is an @ symbol in email address
+        if (stristr($email,"@")) { 
+          $info["email"] = $email;
+          $info["identifier"] = interestedParty::get_encoded_interested_party_identifier($info);
+          $rtn[$email] = $info;
+        }
       }
 
       uasort($rtn,array("interestedParty","sort_interested_parties"));
