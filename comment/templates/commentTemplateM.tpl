@@ -1,22 +1,22 @@
 {show_header()}
 {show_toolbar()}
-<form action="{$url_alloc_taskCommentTemplate}" method="post">
+<form action="{$url_alloc_commentTemplate}" method="post">
 {$table_box}
   <tr>
     <th>Task Comment Template</th>
-    <th class="right" colspan="2"><a href="{$url_alloc_taskCommentTemplateList}">Return to Comment Template List</a></th>
+    <th class="right" colspan="2"><a href="{$url_alloc_commentTemplateList}">Return to Comment Template List</a></th>
   </tr>
   <tr>
     <td colspan="3">&nbsp;</td>
   </tr>
   <tr>
     <td>Name</td>
-    <td><input type="text" name="taskCommentTemplateName" size="80" value="{$taskCommentTemplateName}"></td>
+    <td><input type="text" name="commentTemplateName" size="80" value="{$commentTemplateName}"></td>
     <td>&nbsp;</td>
   </tr>
   <tr>
     <td valign="top">Text</td>
-    <td valign="top">{get_textarea("taskCommentTemplateText",$TPL["taskCommentTemplateText"],array("height"=>"jumbo"))}</td>
+    <td valign="top">{get_textarea("commentTemplateText",$TPL["commentTemplateText"],array("height"=>"jumbo"))}</td>
     <td valign="top">
       Placeholder variables may be inserted into the template text.<br>
       The following is a list of the available variables:<br><br>
@@ -51,8 +51,8 @@
   </tr>
 </table>
 
-<input type="hidden" name="taskCommentTemplateID" value="{$taskCommentTemplateID}">
-<input type="hidden" name="taskCommentTemplateModifiedTime" value="{$displayFromDate}">
+<input type="hidden" name="commentTemplateID" value="{$commentTemplateID}">
+<input type="hidden" name="commentTemplateModifiedTime" value="{$displayFromDate}">
 </form>
 {show_footer()}
 										    

@@ -38,12 +38,12 @@ if ($entity && $entityID) {
 // comments
 if ($_POST["comment_save"] || $_POST["comment_update"]) {
 
-  // Add task comment template.
-  if ($_POST["taskCommentTemplateID"] && !$_POST["comment"]) {
-    $taskCommentTemplate = new taskCommentTemplate;
-    $taskCommentTemplate->set_id($_POST["taskCommentTemplateID"]);
-    $taskCommentTemplate->select();
-    $_POST["comment"] = $taskCommentTemplate->get_value("taskCommentTemplateText");
+  // Add comment template.
+  if ($_POST["commentTemplateID"] && !$_POST["comment"]) {
+    $commentTemplate = new commentTemplate;
+    $commentTemplate->set_id($_POST["commentTemplateID"]);
+    $commentTemplate->select();
+    $_POST["comment"] = $commentTemplate->get_value("commentTemplateText");
   }
   
 

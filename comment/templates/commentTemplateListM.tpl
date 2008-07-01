@@ -3,7 +3,7 @@
 {$table_box}
   <tr>
     <th>Task Comment Templates</th>
-    <th class="right"><a href="{$url_alloc_taskCommentTemplate}">New Comment Template</a></th>
+    <th class="right"><a href="{$url_alloc_commentTemplate}">New Comment Template</a></th>
   </tr>
   <tr>
     <td colspan="2">
@@ -11,7 +11,7 @@
         <tr>
           <th>Template</th>
         </tr>
-      {show_taskCommentTemplate("templates/taskCommentTemplateListR.tpl")}
+      {show_commentTemplate("templates/commentTemplateListR.tpl")}
       </table>
     </td>
   </tr>

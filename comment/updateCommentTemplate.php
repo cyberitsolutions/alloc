@@ -24,11 +24,13 @@
 require_once("../alloc.php");
 
 usleep(400000);
-if ($_GET["taskCommentTemplateID"] && $_GET["taskID"]) {
-  $taskCommentTemplate = new taskCommentTemplate;
-  $taskCommentTemplate->set_id($_GET["taskCommentTemplateID"]);
-  $taskCommentTemplate->select();
-  $val = $taskCommentTemplate->get_populated_template($_GET["taskID"]);
+if ($_GET["commentTemplateID"] && $_GET["entity"] && $_GET["entityID"]) {
+  $commentTemplate = new commentTemplate;
+  $commentTemplate->set_id($_GET["commentTemplateID"]);
+  $commentTemplate->select();
+  $val = $commentTemplate->get_populated_template($_GET["entity"], $_GET["entityID"]);
+  get_textarea("comment",$val,array("height"=>"medium"));
+} else {
   get_textarea("comment",$val,array("height"=>"medium"));
 }
 

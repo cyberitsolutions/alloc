@@ -22,37 +22,37 @@
 
 require_once("../alloc.php");
 
-// Create an object to hold a taskCommentTemplate
-$taskCommentTemplate = new taskCommentTemplate();
+// Create an object to hold a commentTemplate
+$commentTemplate = new commentTemplate();
 
-// Load the taskCommentTemplate from the database
+// Load the commentTemplate from the database
 
-$taskCommentTemplateID = $_POST["taskCommentTemplateID"] or $taskCommentTemplateID = $_GET["taskCommentTemplateID"];
+$commentTemplateID = $_POST["commentTemplateID"] or $commentTemplateID = $_GET["commentTemplateID"];
 
-if ($taskCommentTemplateID){
- $taskCommentTemplate->set_id($taskCommentTemplateID);
- $taskCommentTemplate->select();
+if ($commentTemplateID){
+ $commentTemplate->set_id($commentTemplateID);
+ $commentTemplate->select();
 }
 
 // Process submission of the form using the save button
 if ($_POST["save"]) {
-  $taskCommentTemplate->read_globals();
-  $taskCommentTemplate->save();
-  header("Location: ".$TPL["url_alloc_taskCommentTemplateList"]);
+  $commentTemplate->read_globals();
+  $commentTemplate->save();
+  header("Location: ".$TPL["url_alloc_commentTemplateList"]);
 
 // Process submission of the form using the delete button
 } else if ($_POST["delete"]) {
-  header("Location: ".$TPL["url_alloc_taskCommentTemplateList"]);
-  $taskCommentTemplate->delete();
+  header("Location: ".$TPL["url_alloc_commentTemplateList"]);
+  $commentTemplate->delete();
   page_close();
   exit();
 }
 // Load data for display in the template
-$taskCommentTemplate->set_tpl_values();
+$commentTemplate->set_tpl_values();
 
 $TPL["main_alloc_title"] = "Edit Comment Template - ".APPLICATION_NAME;
 // Invoke the page's main template
-include_template("templates/taskCommentTemplateM.tpl");
+include_template("templates/commentTemplateM.tpl");
 
 // Close the request
 page_close();
