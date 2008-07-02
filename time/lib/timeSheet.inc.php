@@ -978,6 +978,26 @@ EOD;
     // Can get forwards to "manager" only from "edit"
     if ($direction == "forwards") {
       $this->set_value("dateSubmittedToManager", date("Y-m-d"));
+      // Check for time overrun
+      $overrun_tasks = array();
+      $db = new db_alloc();
+      $task_id_query = sprintf("SELECT DISTINCT taskID FROM timeSheetItem WHERE timeSheetID=%d ORDER BY dateTimeSheetItem, timeSheetItemID", $this->get_id());
+      $db->query($task_id_query);
+      while($db->next_record()) {
+        $task = new task;
+        $task->read_db_record($db, false);
+        $task->select();
+        if(floatval($task->get_value('timeEstimate')) > 0) {
+          $total_billed_time = ($task->get_time_billed(false)) / 3600;
+          if($total_billed_time > floatval($task->get_value('timeEstimate'))) {
+            $overrun_tasks[] = sprintf(" * %d %s (estimated: %.02f hours, billed so far: %.02f hours)", $task->get_id(), $task->get_value('taskName'), floatval($task->get_value('timeEstimate')), $total_billed_time);
+          }
+        }
+      }
+      if(count($overrun_tasks)) {
+        $overrun_notice = "\n\nThe following tasks billed on this timesheet have exceeded their time estimates:\n";
+        $overrun_notice .= implode("\n", $overrun_tasks);
+      }
       foreach ($info["projectManagers"] as $pm) {
         $email = array();
         $email["type"] = "timesheet_submit";
@@ -991,7 +1011,7 @@ Submitted By: {$info["timeSheet_personID_name"]}
 
 A timesheet has been submitted for your approval. If it is satisfactory,
 submit the timesheet to the Administrator. If not, make it editable again for
-re-submission.
+re-submission.$overrun_notice
 
 EOD;
         $this->get_value("billingNote") and 
