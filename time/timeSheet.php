@@ -229,6 +229,22 @@ if (!$current_user->is_employee()) {
       $tsMultipliers = config::get_config_item("timeSheetMultipliers") or $tsMultipliers = array();
       $timeSheetItem->get_value('multiplier') and $TPL["timeSheetItem_multiplier"] = $tsMultipliers[$timeSheetItem->get_value('multiplier')]['label'];
 
+      // Check to see if this tsi is part of an overrun
+      $TPL["timeSheetItem_overrun"] = "";
+      $TPL["timeSheetItem_overrunText"] = "";
+      if($timeSheetItem->get_value('taskID')) {
+        $task = new task;
+        $task->set_id($timeSheetItem->get_value('taskID'));
+        $task->select();
+        if(floatval($task->get_value('timeEstimate')) > 0) {
+          $total_billed_time = ($task->get_time_billed(false)) / 3600;    // get_time_billed returns seconds, estimated hours is in hours
+          if($total_billed_time > floatval($task->get_value('timeEstimate'))) {
+            $TPL["timeSheetItem_overrun"] = "overrun";
+            $TPL["timeSheetItem_overrunText"] = "Exceeds time estimate";
+          }
+        }
+      }
+
       include_template($template);
 
     }
