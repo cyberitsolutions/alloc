@@ -1,8 +1,8 @@
 <form action="{$url_alloc_timeSheetItem}" method="post">
-<table width="100%" cellspacing="0" border="0" class="panel">
+<table width="100%" cellspacing="0" border="0" class="panel {$timeSheetItem_overrun}">
 <tr>
   <td valign="top" width="10%"><nobr>{$timeSheetItem_dateTimeSheetItem}</nobr></td>
-  <td valign="top" width="19%"><nobr>{$timeSheetItem_timeSheetItemDuration} {$unit} @ ${$timeSheetItem_rate} x {$timeSheetItem_multiplier}</nobr></td>
+  <td valign="top" width="19%"><nobr>{$timeSheetItem_timeSheetItemDuration} {$unit} @ ${$timeSheetItem_rate} x {$timeSheetItem_multiplier}</nobr><br /><b style="font-size: 90%">{$timeSheetItem_overrunText}</b></td>
   <td valign="top" width="8%"><b>${$timeSheetItem_unit_times_rate}</b></td>
   <td valign="top">{$timeSheetItem_description}{$timeSheetItem_comment}</td>
   <td valign="top" width="1%" align="right"><nobr>{$timeSheetItem_buttons}</nobr></td>
