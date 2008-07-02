@@ -40,18 +40,18 @@ function path_under_path($path,$path2) {
 }
 function get_textarea($name, $default_value="", $ops=array()) {
   $height = $ops["height"] or $height = "small";
-  $heights["small"] = 40;
-  $heights["medium"] = 100;
-  $heights["large"] = 340;
-  $heights["jumbo"] = 440;
-  $default_height = $heights[$height];
+  $heights["small"] = array(40, 120);
+  $heights["medium"] = array(100, 300);
+  $heights["large"] = array(340, 1020);
+  $heights["jumbo"] = array(440, 1320);
+  list($default_height, $max_height) = $heights[$height];
   $cols = $ops["cols"] or $cols = 85;
   #$rows = $ops["rows"] or $rows = 2;
   $div_value = text_to_html($default_value);
   $str=<<<EOD
     <div id="shadow_${name}" style="position:absolute; left:-8000px; top:-8000px;">${div_value}</div>
     <textarea id="${name}" name="${name}" cols="${cols}" wrap="virtual" style="height:${default_height}px"
-              onFocus="adjust_textarea(this,${default_height})" 
+              onFocus="adjust_textarea(this,${default_height},${max_height})" 
               onBlur="stop_textarea_timer()""
     >${default_value}</textarea>
 EOD;
