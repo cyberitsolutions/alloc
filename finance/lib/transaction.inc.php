@@ -350,7 +350,7 @@ class transaction extends db_entity
         $summary.= transaction::get_transaction_list_tr($row,$_FORM);
       } else if ($_FORM["return"] == "csv") {
         $csv_headers or $csv_headers = array_keys($row);
-        $csv.= $nl.implode(",",$row);
+        $csv.= $nl.implode(",",array_map('export_escape_csv', $row));
         $nl = "\n";
       } else if ($_FORM["return"] == "array") {
         #$row["object"] = $t; // this is really too large to return via soap
@@ -368,7 +368,7 @@ class transaction extends db_entity
     if ($print && $_FORM["return"] == "html") {
       return $header_row.$summary.$footer_row;
     } else if ($print && $_FORM["return"] == "csv") {
-      return implode(",",$csv_headers)."\n".$csv; 
+      return implode(",",array_map('export_escape_csv', $csv_headers))."\n".$csv; 
     } else if ($print && $_FORM["return"] == "array") {
       return $transactions;
     } 
