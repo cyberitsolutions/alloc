@@ -198,6 +198,27 @@ require_once("../alloc.php");
     }
   }
 
+  function show_projectPerson_list() {
+    global $db, $TPL, $projectID;
+    $template = "templates/projectPersonSummaryViewR.tpl";
+
+    if ($projectID) {
+      $query = sprintf("SELECT personID, roleName
+                          FROM projectPerson
+                     LEFT JOIN role ON role.roleID = projectPerson.roleID
+                         WHERE projectID = %d AND roleHandle IN ('isManager', 'timeSheetRecipient')
+                      ORDER BY roleSequence DESC, personID ASC", $projectID);
+      $db->query($query);
+      while ($db->next_record()) {
+        $projectPerson = new projectPerson;
+        $projectPerson->read_db_record($db);
+        $TPL['person_roleName'] = $db->f("roleName");
+        $TPL['person_name'] = person::get_fullname($projectPerson->get_value('personID'));
+        include_template($template);
+      }
+    }
+  }
+
   function show_new_person($template) {
     global $TPL, $email_type_array, $rate_type_array, $projectID, $project_person_role_array;
 
@@ -219,6 +240,10 @@ require_once("../alloc.php");
     if ($current_user->is_employee()) {
       include_template($template_name);
     }
+  }
+
+  function show_project_managers($template_name) {
+    include_template($template_name);
   }
 
   function show_transactions($template_name) {
