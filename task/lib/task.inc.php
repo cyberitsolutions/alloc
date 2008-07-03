@@ -411,7 +411,7 @@ class task extends db_entity {
     $TPL["taskTypeOptions"] = $taskType->get_dropdown_options("taskTypeID","taskTypeName",$this->get_value("taskTypeID"));
 
     // Project Options - Select all projects 
-    $query = sprintf("SELECT * FROM project WHERE projectStatus = 'current' ORDER BY projectName");
+    $query = sprintf("SELECT * FROM project WHERE projectStatus IN ('current', 'potential') ORDER BY projectName");
     $db->query($query);
     $TPL["projectOptions"] = get_option("None", "0", $projectID == 0)."\n";
     $TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $projectID,60);
