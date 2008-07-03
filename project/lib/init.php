@@ -25,6 +25,7 @@ include(ALLOC_MOD_DIR."project/lib/project.inc.php");
 include(ALLOC_MOD_DIR."project/lib/projectPerson.inc.php");
 include(ALLOC_MOD_DIR."project/lib/projectModificationNote.inc.php");
 include(ALLOC_MOD_DIR."project/lib/projectCommissionPerson.inc.php");
+include(ALLOC_MOD_DIR."shared/lib/import_export.inc.php");
 
 
 class project_module extends module

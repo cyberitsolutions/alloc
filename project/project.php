@@ -288,6 +288,10 @@ require_once("../alloc.php");
     }
   }
 
+  function show_import_export($template) {
+    include_template($template);
+  }
+
 
 // END FUNCTIONS
 
@@ -443,6 +447,16 @@ if ($projectID) {
       $commission_item->save();
     } else if ($_POST["commission_delete"]) {
       $commission_item->delete();
+    }
+  } else if ($_POST['do_import']) {
+    // Import from an uploaded file
+    switch($_POST['import_type']) {
+      case 'planner':
+        import_gnome_planner('import');
+      break;
+      case 'csv':
+        import_csv('import');
+      break;
     }
   }
   // Displaying a record

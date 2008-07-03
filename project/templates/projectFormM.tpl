@@ -17,6 +17,7 @@
                              ,"reminders"=>"Reminders"
                              ,"time"=>"Time Sheets"
                              ,"transactions"=>"Transactions"
+			     ,"importexport"=>"Import/Export"
                              ,"sbsAll"=>"All"
                              ),$sbs_link)}
 {/}
@@ -218,6 +219,9 @@
 </div>
 <div id="transactions" class="hidden">
 {show_transactions("templates/projectTransactionS.tpl")}
+</div>
+<div id="importexport" class="hidden">
+{show_import_export("templates/projectImportExportM.tpl")}
 </div>
 
 {/}

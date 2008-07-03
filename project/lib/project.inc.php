@@ -143,6 +143,19 @@ class project extends db_entity {
     return $rows;
   }
 
+  function get_project_manager() {
+    // Finds either the time sheet recipient or the project manager
+    $projectManager = $this->get_project_people_by_role("timeSheetRecipient");
+    if(!count($projectManager)) {
+      $projectManager = $this->get_project_people_by_role("isManager");
+    }
+    if(!count($projectManager)) {
+      return false;
+    } else {
+      return $projectManager[0];
+    }
+  }
+
   function get_navigation_links($ops=array()) {
     global $taskID, $TPL, $current_user;
 
