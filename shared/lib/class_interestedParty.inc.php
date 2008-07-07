@@ -56,7 +56,7 @@ class interestedParty extends db_entity {
     // Add entries to interestedParty
     if (is_array($encoded_parties)) {
       foreach ($encoded_parties as $encoded) {
-        $info = task::get_decoded_interested_party_identifier($encoded);
+        $info = interestedParty::get_decoded_interested_party_identifier($encoded);
         $interestedParty = new interestedParty;
         $interestedParty->set_value("entity",$entity);
         $interestedParty->set_value("entityID",$entityID);
@@ -108,6 +108,14 @@ class interestedParty extends db_entity {
       uasort($rtn,array("interestedParty","sort_interested_parties"));
     }
     return $rtn;
+  }
+
+  function get_encoded_interested_party_identifier($info=array()) {
+    return urlencode(base64_encode(serialize($info)));
+  }
+
+  function get_decoded_interested_party_identifier($blob) {
+    return unserialize(base64_decode(urldecode($blob)));
   }
 
   function get_interested_parties_html($parties=array()) {

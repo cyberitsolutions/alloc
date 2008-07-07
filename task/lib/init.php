@@ -24,8 +24,6 @@
 include(ALLOC_MOD_DIR."task/lib/task.inc.php");
 include(ALLOC_MOD_DIR."task/lib/taskType.inc.php");
 include(ALLOC_MOD_DIR."task/lib/task_calendar.inc.php");
-include(ALLOC_MOD_DIR."task/lib/interestedParty.inc.php");
-
 
 class task_module extends module
 {

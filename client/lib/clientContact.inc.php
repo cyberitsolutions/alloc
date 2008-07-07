@@ -49,6 +49,7 @@ class clientContact extends db_entity {
 
     static $people;
     if (!$people) {
+      $people = array();
       $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactName
                       FROM client
                  LEFT JOIN clientContact ON client.clientID = clientContact.clientID
@@ -61,7 +62,7 @@ class clientContact extends db_entity {
         $people[$db->f("clientContactID")] = $row;
       }
     }
-
+  
     foreach ($people as $personID => $row) {
       similar_text($row["clientContactName"],$name,$percent1);
       $stack1[$personID] = $percent1;
@@ -80,6 +81,7 @@ class clientContact extends db_entity {
   function find_by_email($email=false,$projectID=false) {
     static $people;
     if (!$people) {
+      $people = array();
       $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactEmail
                       FROM client
                  LEFT JOIN clientContact ON client.clientID = clientContact.clientID

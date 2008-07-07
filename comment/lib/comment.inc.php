@@ -427,6 +427,8 @@ class comment extends db_entity {
       $obj->set_id($c->get_value("commentLinkID"));
       $obj->select();
       $from["parentCommentID"] = $c->get_id();
+      $from["entity"] = "comment";
+      $from["entityID"] = $c->get_id();
 
       $token = new token;
       if ($token->select_token_by_entity_and_action("comment",$comment->get_value("commentLinkID"),"add_comment_from_email")) {
@@ -452,6 +454,96 @@ class comment extends db_entity {
     }
 
   }
+
+  function get_email_recipients($options=array(),$from=array()) {
+    $recipients = array();
+    $people = get_cached_table("person");
+
+    foreach ($options as $selected_option) {
+
+      // Determine recipients 
+      if ($selected_option == "interested") {
+        $db = new db_alloc;
+        if ($from["entity"] && $from["entityID"]) {
+          $q = sprintf("SELECT * FROM interestedParty WHERE entity = '%s' AND entityID = %d",$from["entity"],$from["entityID"]);
+        }
+        $db->query($q);
+        while($row = $db->next_record()) {
+          $row["isCC"] = true;
+          $row["name"] = $row["fullName"];
+          $recipients[] = $row;
+        }
+      } else if (is_int($selected_option)){
+        $recipients[] = $people[$selected_option];
+
+      } else if (is_string($selected_option) && preg_match("/@/",$selected_option)) {
+        list($email, $name) = parse_email_address($selected_option);
+        $email and $recipients[] = array("name"=>$name,"emailAddress"=>$email);
+      }
+    }
+    return $recipients;
+  }
+
+  function get_email_recipient_headers($recipients, $from) {
+    global $current_user;
+
+    $emailMethod = config::get_config_item("allocEmailAddressMethod");
+
+    // Build up To: and Bcc: headers
+    foreach ($recipients as $recipient) {
+      unset($recipient_full_name);
+
+      if ($recipient["firstName"] && $recipient["surname"]) {
+        $recipient_full_name = $recipient["firstName"]." ".$recipient["surname"];
+      } else if ($recipient["fullName"]) {
+        $recipient_full_name = $recipient["fullName"];
+      } else if ($recipient["name"]) {
+        $recipient_full_name = $recipient["name"];
+      }
+
+      if ($recipient["emailAddress"] && !$done[$recipient["emailAddress"]]) {
+
+        if ((!$current_user->prefs["receiveOwnTaskComments"] || $current_user->prefs["receiveOwnTaskComments"] == 'no')
+        && ($recipient["emailAddress"] == $from["email"] || $recipient["emailAddress"] == $current_user->get_value("emailAddress"))) {
+          continue;
+        }
+
+        $done[$recipient["emailAddress"]] = true;
+
+        $name = $recipient_full_name or $name = $recipient["emailAddress"];
+        $email_without_name = $recipient["emailAddress"];
+        if ($recipient_full_name) {
+          $name_and_email = $recipient_full_name." <".$recipient["emailAddress"].">";
+        } else {
+          $name_and_email = $recipient["emailAddress"];
+        }
+
+        if ($emailMethod == "to") {
+          $to_address.= $commar.$name_and_email;
+          $successful_recipients.= $commar.$name_and_email;
+          $commar = ", ";
+
+        } else if ($emailMethod == "bcc") {
+          $bcc.= $commar.$email_without_name;
+          $successful_recipients.= $commar.$name_and_email;
+          $commar = ", ";
+
+        // The To address contains no actual email addresses, ie "Alex Lance": ; all the real recipients are in the Bcc.
+        } else if ($emailMethod == "tobcc") {
+          $to_address.= $commar.'"'.$name.'": ;';
+          $bcc.= $commar.$email_without_name;
+          $successful_recipients.= $commar.$name_and_email;
+          $commar = ", ";
+        }
+
+      }
+    }
+    return array($to_address, $bcc, $successful_recipients);
+  }
+
+
+
+
 
 }
 

@@ -298,6 +298,14 @@ if (!$current_user->is_employee()) {
     }
   }
 
+  function show_comments() {
+    global $timeSheetID, $TPL;
+    if ($timeSheetID) {
+      $options["showEditButtons"] = true;
+      $TPL["commentsR"] = comment::util_get_comments("timeSheet",$timeSheetID,$options);
+      include_template("templates/timeSheetCommentM.tpl");
+    }
+  }
 
 
 
@@ -548,7 +556,7 @@ if ($projectID != 0) {
   // Get client name
   $client = $project->get_foreign_object("client");
   $TPL["clientName"] = $client->get_value("clientName");
-  $clientID = $client->get_id();
+  $TPL["clientID"] = $clientID = $client->get_id();
 
   $TPL["show_client_options"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
 }
@@ -819,6 +827,12 @@ if ($timeSheetID) {
 }
 
 $TPL["taxName"] = config::get_config_item("taxName");
+
+$TPL["allTimeSheetParties"] = $timeSheet->get_all_timeSheet_parties($timeSheet->get_value("projectID")) or $TPL["allTimeSheetParties"] = array();
+$commentTemplate = new commentTemplate();
+$TPL["commentTemplateOptions"] = $commentTemplate->get_dropdown_options("commentTemplateID","commentTemplateName","","Comment Templates");
+
+
 
 include_template("templates/timeSheetFormM.tpl");
 

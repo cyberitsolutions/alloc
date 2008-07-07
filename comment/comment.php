@@ -109,6 +109,8 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
       if (is_object($e) && method_exists($e, "send_emails")) {
         $from["commentID"] = $comment->get_id();
         $from["parentCommentID"] = $comment->get_id();
+        $from["entity"] = "comment";
+        $from["entityID"] = $comment->get_id();
 
         $token = new token;
 

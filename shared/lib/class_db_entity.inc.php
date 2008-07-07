@@ -647,7 +647,8 @@ class db_entity {
   function get_dropdown_options($key,$label,$sel=false,$blank=false) {
     $arr = $this->get_assoc_array($key,$label,$sel);
 
-    $blank and $options = get_option("", "0", !$sel)."\n";
+    // allows $blank to be set to ""
+    $blank!==false and $options = get_option($blank, "0", !$sel)."\n";
     $options.= get_select_options($arr,$sel);
     return $options;
   }

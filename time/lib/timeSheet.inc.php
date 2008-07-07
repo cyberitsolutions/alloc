@@ -1182,6 +1182,122 @@ EOD;
     }
   }
 
+  function get_all_timeSheet_parties() {
+    $db = new db_alloc;
+    $interestedPartyOptions = array();
+
+    $projectID = $this->get_value("projectID");
+
+    if ($projectID) {
+      // Get primary client contact from Project page
+      $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
+      $db->query($q);
+      $db->next_record();
+      $interestedPartyOptions[$db->f("projectClientEMail")] = array("name"=>$db->f("projectClientName"),"external"=>1);
+
+      // Get all other client contacts from the Client pages for this Project
+      $q = sprintf("SELECT clientID FROM project WHERE projectID = %d",$projectID);
+      $db->query($q);
+      $db->next_record();
+      $clientID = $db->f("clientID");
+      $q = sprintf("SELECT clientContactName, clientContactEmail, clientContactID 
+                      FROM clientContact 
+                     WHERE clientID = %d",$clientID);
+      $db->query($q);
+      while ($db->next_record()) {
+        $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>1,"clientContactID"=>$db->f("clientContactID"));
+      }
+      // Get all the project people for this tasks project
+      $q = sprintf("SELECT emailAddress, firstName, surname, person.personID
+                     FROM projectPerson 
+                LEFT JOIN person on projectPerson.personID = person.personID 
+                    WHERE projectPerson.projectID = %d AND person.personActive = 1 ",$projectID);
+      $db->query($q);
+      while ($db->next_record()) {
+        $interestedPartyOptions[$db->f("emailAddress")] = array("name"=>$db->f("firstName")." ".$db->f("surname"),"personID"=>$db->f("personID"));
+      }
+    }
+
+    $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
+    foreach ($extra_interested_parties as $name => $email) {
+      $interestedPartyOptions[$email] = array("name"=>$name);
+    }
+
+    if (is_object($this)) {
+      if ($this->get_value("personID")) {
+        $p = new person;
+        $p->set_id($this->get_value("personID"));
+        $p->select();
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"assignee", "selected"=>false, "personID"=>$this->get_value("personID"));
+      }
+      if ($this->get_value("approvedByManagerPersonID")) {
+        $p = new person;
+        $p->set_id($this->get_value("approvedByManagerPersonID"));
+        $p->select();
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"manager", "selected"=>true, "personID"=>$this->get_value("approvedByManagerPersonID"));
+      }
+      $this_id = $this->get_id();
+    }
+    // return an aggregation of the current task/proj/client parties + the existing interested parties
+    $interestedPartyOptions = interestedParty::get_interested_parties("timeSheet",$this_id,$interestedPartyOptions);
+    return $interestedPartyOptions;
+  }
+
+  function send_emails($selected_option, $type="", $body="", $from=array()) {
+    global $current_user;
+
+    $recipients = comment::get_email_recipients($selected_option,$from);
+    list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from);
+
+    if ($successful_recipients) {
+      $email = new alloc_email();
+      $bcc && $email->add_header("Bcc",$bcc);
+      $from["references"] && $email->add_header("References",$from["references"]);
+      $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
+      $email->set_to_address($to_address);
+
+      $from_name = $from["name"] or $from_name = $current_user->get_username(1);
+
+      $hash = $from["hash"];
+
+      if ($hash && config::get_config_item("allocEmailKeyMethod") == "headers") {
+        $email->set_message_id($hash);
+      } else if ($hash && config::get_config_item("allocEmailKeyMethod") == "subject") {
+        $email->set_message_id();
+        $subject_extra = "{Key:".$hash."}";
+      }
+
+      $project = $this->get_foreign_object("project");
+
+      $subject = "Time Sheet Comment: ".$this->get_id()." ".$project->get_project_name(1)." ".$subject_extra;
+      $email->set_subject($subject);
+      $email->set_body($body);
+      $email->set_message_type($type);
+
+      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
+        $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
+        $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
+      } else {
+        $f = $current_user->get_from() or $f = config::get_config_item("allocEmailAdmin");
+        $email->set_reply_to($f);
+        $email->set_from($f);
+      }
+
+      if ($from["commentID"]) {
+        $files = get_attachments("comment",$from["commentID"]);
+        if (is_array($files)) {
+          foreach ($files as $file) {
+            $email->add_attachment($file["path"]);
+          }
+        }
+      }
+
+      if ($email->send(false)) {
+        return $successful_recipients;
+      }
+    }
+  }
+
 
 }  
 
