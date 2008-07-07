@@ -296,14 +296,6 @@ class task extends db_entity {
     return $interestedPartyOptions;
   }
 
-  function get_encoded_interested_party_identifier($info=array()) {
-    return urlencode(base64_encode(serialize($info)));
-  }
-
-  function get_decoded_interested_party_identifier($blob) {
-    return unserialize(base64_decode(urldecode($blob)));
-  }
-
   function get_personList_dropdown($projectID,$taskID=false) {
     global $current_user;
  
@@ -424,11 +416,8 @@ class task extends db_entity {
     $TPL["projectOptions"] = get_option("None", "0", $projectID == 0)."\n";
     $TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $projectID,60);
     
-    // commentTemplateOptions - Select all comment templates
-    $query = sprintf("SELECT * FROM commentTemplate ORDER BY commentTemplateName");
-    $db->query($query);
-    $TPL["commentTemplateOptions"] = get_option("Comment Templates", "0")."\n";
-    $TPL["commentTemplateOptions"].= get_options_from_db($db, "commentTemplateName", "commentTemplateID",false);
+    $commentTemplate = new commentTemplate();
+    $TPL["commentTemplateOptions"] = $commentTemplate->get_dropdown_options("commentTemplateID","commentTemplateName","","Comment Templates");
 
     $priority = $this->get_value("priority") or $priority = 3;
     $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
@@ -446,7 +435,7 @@ class task extends db_entity {
     $db->query(sprintf("SELECT fullName,emailAddress FROM interestedParty WHERE entity='task' AND entityID = %d ORDER BY fullName",$this->get_id()));
     while ($db->next_record()) {
       $str = trim(htmlentities($db->f("fullName")." <".$db->f("emailAddress").">"));
-      $value = task::get_encoded_interested_party_identifier($db->f("fullName"), $db->f("emailAddress"));
+      $value = interestedParty::get_encoded_interested_party_identifier($db->f("fullName"), $db->f("emailAddress"));
       $TPL["interestedParty_hidden"].= $commar.$str."<input type=\"hidden\" name=\"interestedParty[]\" value=\"".$value."\">";
       $TPL["interestedParty_text"].= $commar.$str;
       $commar = "<br/>";
@@ -1352,123 +1341,11 @@ class task extends db_entity {
     return $rtn;
   }
 
-  function get_email_recipients($options=array(),$from=array()) {
-    $recipients = array();
-    $people = get_cached_table("person");
-
-    foreach ($options as $selected_option) {
-
-      // Determine recipient/s 
-      if ($selected_option == "interested") {
-        $db = new db_alloc;
-        if ($from["parentCommentID"]) {
-          $q = sprintf("SELECT * FROM interestedParty WHERE entity = 'comment' AND entityID = %d",$from["parentCommentID"]); 
-        } else {
-          $q = sprintf("SELECT * FROM interestedParty WHERE entity = 'task' AND entityID = %d",$this->get_id()); 
-        }
-        $db->query($q);
-        while($row = $db->next_record()) {
-          $row["isCC"] = true;
-          $row["name"] = $row["fullName"];
-          $recipients[] = $row;
-        }
-      } else if ($selected_option == "creator") {
-        $recipients[] = $people[$this->get_value("creatorID")];
-
-      } else if ($selected_option == "manager") {
-        $recipients[] = $people[$this->get_value("managerID")];
-
-      } else if ($selected_option == "assignee") {
-        $recipients[] = $people[$this->get_value("personID")];
-
-      } else if ($selected_option == "isManager" || $selected_option == "canEditTasks" || $selected_option == "all") {
-        $q = sprintf("SELECT personID,roleHandle 
-                        FROM projectPerson 
-                   LEFT JOIN role ON role.roleID = projectPerson.roleID 
-                       WHERE projectID = %d", $this->get_value("projectID"));
-        if ($selected_option != "all") {
-          $q .=  sprintf(" AND role.roleHandle = '%s'",$selected_option);
-        }
-
-        $db->query($q);
-        while ($db->next_record()) {
-          $recipients[] = $people[$db->f("personID")];
-        }
-
-      } else if (is_int($selected_option)){
-        $recipients[] = $people[$selected_option];
-
-      } else if (is_string($selected_option) && preg_match("/@/",$selected_option)) {
-        list($email, $name) = parse_email_address($selected_option);
-        $email and $recipients[] = array("name"=>$name,"emailAddress"=>$email);
-      }
-    }
-    return $recipients;
-  }
-
-  function get_email_recipient_headers($recipients, $from) {
-    global $current_user;
-
-    $emailMethod = config::get_config_item("allocEmailAddressMethod");
-
-    // Build up To: and Bcc: headers
-    foreach ($recipients as $recipient) {
-      unset($recipient_full_name);
-
-      if ($recipient["firstName"] && $recipient["surname"]) {
-        $recipient_full_name = $recipient["firstName"]." ".$recipient["surname"];
-      } else if ($recipient["fullName"]) {
-        $recipient_full_name = $recipient["fullName"];
-      } else if ($recipient["name"]) {
-        $recipient_full_name = $recipient["name"];
-      } 
-        
-
-      if ($recipient["emailAddress"] && !$done[$recipient["emailAddress"]]) { 
-
-        if ((!$current_user->prefs["receiveOwnTaskComments"] || $current_user->prefs["receiveOwnTaskComments"] == 'no')
-        && ($recipient["emailAddress"] == $from["email"] || $recipient["emailAddress"] == $current_user->get_value("emailAddress"))) {
-          continue;
-        }
-
-        $done[$recipient["emailAddress"]] = true;
-
-        $name = $recipient_full_name or $name = $recipient["emailAddress"];
-        $email_without_name = $recipient["emailAddress"];
-        if ($recipient_full_name) {
-          $name_and_email = $recipient_full_name." <".$recipient["emailAddress"].">";
-        } else {
-          $name_and_email = $recipient["emailAddress"];
-        }
-
-        if ($emailMethod == "to") {
-          $to_address.= $commar.$name_and_email;
-          $successful_recipients.= $commar.$name_and_email;
-          $commar = ", ";
-
-        } else if ($emailMethod == "bcc") {
-          $bcc.= $commar.$email_without_name;
-          $successful_recipients.= $commar.$name_and_email;
-          $commar = ", ";
-
-        // The To address contains no actual email addresses, ie "Alex Lance": ; all the real recipients are in the Bcc.
-        } else if ($emailMethod == "tobcc") {
-          $to_address.= $commar.'"'.$name.'": ;';
-          $bcc.= $commar.$email_without_name;
-          $successful_recipients.= $commar.$name_and_email;
-          $commar = ", ";
-        }
-
-      }
-    }
-    return array($to_address, $bcc, $successful_recipients);
-  }
-
   function send_emails($selected_option, $type="", $body="", $from=array()) {
     global $current_user;
 
-    $recipients = $this->get_email_recipients($selected_option,$from);
-    list($to_address,$bcc,$successful_recipients) = $this->get_email_recipient_headers($recipients, $from);
+    $recipients = comment::get_email_recipients($selected_option,$from);
+    list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from);
 
     if ($successful_recipients) {
       $email = new alloc_email();
@@ -1590,9 +1467,11 @@ class task extends db_entity {
     $comment->save();
     $from["commentID"] = $comment->get_id();
     $from["parentCommentID"] = $comment->get_id();
+    $from["entity"] = "task";
+    $from["entityID"] = $this->get_id();
 
-    $recipients[] = "assignee";
-    $recipients[] = "manager";
+    #$recipients[] = "assignee";
+    #$recipients[] = "manager";
     #$recipients[] = "creator";
     $recipients[] = "interested";
 

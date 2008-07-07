@@ -105,6 +105,7 @@ function updateStuffWithAjax() \{
     <td><b>{$amount_allocated}</b></td>
   </tr>
 
+  {if $TPL["timeSheet_billingNote"]}
   <tr>
     <td valign="top"></td>
     <td align="right" valign="top">Billing Note</td>
@@ -115,9 +116,10 @@ function updateStuffWithAjax() \{
                                  {/}
     </td>
   </tr>
+  {/}
 
   <tr>
-    <td colspan="5"><br/><br/>
+    <td colspan="5">
       <table width="100%" align="center" cellpadding="0" cellspacing="0">
         <tr>
           <td align="center" colspan="3">{$radio_email}</td>
@@ -140,6 +142,7 @@ function updateStuffWithAjax() \{
 
 {show_main_list()}
 
+{show_comments()}
 
 
 <br><br>
