@@ -30,7 +30,6 @@ class timeSheetListHomeItem extends home_item {
     $ops["showShortProjectLink"] = "true";
     $ops["showAmount"] = "true";
     $ops["showAmountTotal"] = "true";
-    $ops["showDateFrom"] = "true";
     $ops["showStatus"] = "true";
     $ops["personID"] = $current_user->get_id();
     $ops["status"] = array('edit','manager','admin','invoiced');
