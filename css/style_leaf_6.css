@@ -601,10 +601,3 @@ p#extra_links {
   margin:0px;
 }
 
-table.overrun tr, table.overrun tr td {
-  background-color: (OVERRUN_BG_COLOR);
-}
-table.overrun {
-  border: 1px solid (OVERRUN_FRAME_COLOR);
-}
-
