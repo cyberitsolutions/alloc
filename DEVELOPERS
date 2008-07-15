@@ -1,0 +1,73 @@
+
+Hints and Tips on developing allocPSA
+=====================================
+
+
+Version Control
+---------------
+
+allocPSA uses darcs for version control. To check out a copy of the latest
+version just run:
+
+$ darcs get http://dev.allocpsa.net/
+
+To commit changes back to the project, just run 
+
+$ darcs send
+
+Which should email the changes back to the correct place, at which point the
+changes will be given a once-over and then merged back into the development
+repository.
+
+
+Rebuilding the CSS Files
+------------------------
+
+In the css/ directory there are many css files. There is one css file per
+theme, multiplied by ten font settings.
+
+When manipulating css you do *not* need to change those files. You just
+need to change the files in the styles/ directory and then run `make css` which
+should rebuild the css files in the css directory.
+
+styles/style.tpl    ->  contains the template of the main CSS file
+styles/style_*.ini  ->  contains the actual settings that get plugged into the template
+
+
+Updating the Help document
+--------------------------
+
+The plaintext file help_src/help.txt contains the "source code" to the help
+documents that are generated both for the html Help document that is linked to
+within allocPSA, and the PDF Help document that is available for download at
+sourceforge.
+
+Simply change the help.txt file and then run `make doc_html` or `make
+doc_pdf`. You will need to have docutils/rst2html installed.
+
+
+Vim Settings
+------------
+
+I recommend using the following vim setting in your .vimrc. 
+
+set expandtab
+set softtabstop=2
+set tabstop=2
+set foldmethod=marker
+set sw=2
+let php_folding=1
+
+If you wish to only enable these settings when working on the alloc project
+one way to do that is to have a snippet like this in your ~/.vimrc:
+
+if version >= 501
+  if getcwd() =~ 'alloc.*'
+    source alloc_vimrc
+  endif
+endif
+
+And store the custom settings in that alloc_vimrc file.
+
+
+
