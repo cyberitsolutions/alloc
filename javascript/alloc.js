@@ -126,3 +126,32 @@ function help_text_off(id) {
   $('#helper').remove();
 } 
 
+//These are some checkbox commands
+//We expect checkboxArrayName, the root name of your checkboxes (if your checkboxes are named assigneeID[n], checkboxArrayName should be assigneeID)
+function checkbox_select_all(checkboxArrayName) {
+  checkboxes = get_checkboxes(checkboxArrayName);
+  for(var c in checkboxes) {
+    ckb = checkboxes[c];
+    ckb.checked = true;
+  }
+}
+
+function checkbox_select_none(checkboxArrayName) {
+  checkboxes = get_checkboxes(checkboxArrayName);
+  for(var c in checkboxes) {
+    ckb = checkboxes[c];
+    ckb.checked = false;
+  }
+}
+
+function checkbox_select_inverse(checkboxArrayName) {
+  checkboxes = get_checkboxes(checkboxArrayName);
+  for(var c in checkboxes) {
+    ckb = checkboxes[c];
+    ckb.checked = !ckb.checked;
+  }
+}
+
+function get_checkboxes(checkboxArrayName) {
+  return $("[type='checkbox'][name^='" + checkboxArrayName + "[']");
+}

@@ -296,7 +296,15 @@ class task extends db_entity {
     return $interestedPartyOptions;
   }
 
-  function get_personList_dropdown($projectID,$taskID=false) {
+  function get_encoded_interested_party_identifier($info=array()) {
+    return urlencode(base64_encode(serialize($info)));
+  }
+
+  function get_decoded_interested_party_identifier($blob) {
+    return unserialize(base64_decode(urldecode($blob)));
+  }
+
+  function get_personList_dropdown($projectID,$taskID=false, $formName="personID") {
     global $current_user;
  
     $db = new db_alloc;
@@ -340,7 +348,7 @@ class task extends db_entity {
 
     $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
    
-    $str = '<select name="personID">';
+    $str = '<select name="'. $formName . '">';
     $str.= get_option("None", "0", $owner == 0)."\n";
     $str.= get_select_options($ops, $owner);
     $str.= '</select>';
@@ -926,9 +934,13 @@ class task extends db_entity {
   function get_task_list_header($_FORM) {
     global $TPL;
     if ($_FORM["showHeader"]) {
+      if($_FORM["showEditControls"]) {
+        $summary[] = "<form action=\"" . $TPL["url_form_action"] . "\" method=\"POST\">";
+      }
       #$_FORM["taskView"] == "byProject" and $summary[] = "<br>".$_FORM["projectLinks"];
       $summary[] = $TPL["table_list"];
       $summary[] = "<tr>";
+      $_FORM["showEditControls"]and $summary[]="<th width=\"1%\"></th>";//check boxes (for when Task Edit Controls are visible)
                                  $summary[] = "<th width=\"1%\"></th>"; //taskTypeImage
       $_FORM["showTaskID"]   and $summary[] = "<th>ID</th>";
                                  $summary[] = "<th>Task</th>";
@@ -947,6 +959,7 @@ class task extends db_entity {
       $_FORM["showTimes"]    and $summary[] = "<th>Estimate</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>Actual</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>%</th>";
+      $_FORM["showEditControls"]and $summary[]="<th>Assign To</th>";
       $summary[] ="</tr>";
 
       return implode("\n",$summary);
@@ -954,7 +967,20 @@ class task extends db_entity {
   }
 
   function get_task_list_footer($_FORM) {
-    return "</table>";
+    $ret = array("</table>");
+    if($_FORM["showEditControls"]) {
+      $ret[] = "</td></tr><tr><td>";
+      $ret[] = "Select: <span class=\"jslink\" onclick=\"checkbox_select_all('select');\">All</span> , <span class=\"jslink\" onclick=\"checkbox_select_none('select');\">None</span>, <span class=\"jslink\" onclick=\"checkbox_select_inverse('select');\">Inverse</span>";
+      $ret[] = "</td><td>With selected tasks: <select name=\"update_action\">
+        <option value=\"nothing\">-</options>
+        <option value=\"close\">Close tasks</options>
+        <option value=\"targetStartToday\">Set target start to today</options>
+      </select>";
+      $ret[] = "</td></tr><tr><td colspan=\"2\">";
+      $ret[] = "<input type=\"submit\" name=\"run_mass_update\" value=\"Update\" />";
+      $ret[] = "</form>";
+    }
+    return implode("\n",$ret);
   }
 
   function get_task_list_tr_text($task,$_FORM) {
@@ -998,6 +1024,7 @@ class task extends db_entity {
     $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
 
                                   $summary[] = "<tr>";
+    $_FORM["showEditControls"]and $summary[] = "  <td class=\"nobr\"><input type=\"checkbox\" name=\"select[".$task["taskID"]."]\"></td>";
                                   $summary[] = "  <td sorttable_customkey=\"".$task["taskTypeID"]."\">".$task["taskTypeImage"]."</td>";
     $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
                                   $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
@@ -1016,6 +1043,7 @@ class task extends db_entity {
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format($timeEstimate)."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".$task["percentComplete"]."&nbsp;</td>";
+    $_FORM["showEditControls"]and $summary[] = "  <td class=\"nobr\">".task::get_personList_dropdown($task["projectID"], $task["taskID"], 'assigneeID[' . $task["taskID"] . ']')."</td>";
                                   $summary[] = "</tr>";
 
     $summary = "\n".implode("\n",$summary);
@@ -1243,6 +1271,7 @@ class task extends db_entity {
         ,"showManager"
         ,"showHeader"
         ,"showProject"
+        ,"showEditControls"
         ,"padding"
         ,"url_form_action"
         ,"form_name"
@@ -1334,6 +1363,7 @@ class task extends db_entity {
     $_FORM["showStatus"]      and $rtn["showStatus_checked"]      = " checked";
     $_FORM["showTaskID"]      and $rtn["showTaskID_checked"]      = " checked";
     $_FORM["showManager"]     and $rtn["showManager_checked"]     = " checked";
+    $_FORM["showEditControls"]and $rtn["showEditControls_checked"]= " checked";
     
     // Get
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));

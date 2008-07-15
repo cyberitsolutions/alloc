@@ -52,6 +52,50 @@ function show_task_list() {
 
 $TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;
 
+// Check for updates
+if($_POST["run_mass_update"]) {
+  if($_POST["assigneeID"]) {
+    $assignees = $_POST["assigneeID"];
+    foreach($assignees as $taskID => $assigneeID) {
+      $assigneeID = intval($assigneeID);
+      //TODO: there are possibly some efficiency gains to be made here
+      $task = new task;
+      $task->set_id($taskID);
+      $task->select();
+      if($task->get_value("personID") != $assigneeID) {
+        $task->set_value("personID", $assigneeID);
+      }
+      $task->save();
+    }
+    switch($_POST["update_action"]) {
+      case 'nothing':
+      break;
+      case 'close':
+        //Close every task, setting its date of resolution to today
+        foreach($_POST["select"] as $taskID => $selected) {   //we're actually only interested in the keys
+          $task = new task;
+          $task->set_id($taskID);
+          $task->select();
+          // Close the task
+          $task->set_value('dateActualCompletion', date('Y-m-d'));
+          $task->set_value('closerID', $current_user->get_id());
+          $task->save();
+        }
+      break;
+      case 'targetStartToday':
+        foreach($_POST["select"] as $taskID => $selected) {   //we're actually only interested in the keys
+          $task = new task;
+          $task->set_id($taskID);
+          $task->select();
+          $task->set_value('dateTargetStart', date('Y-m-d'));
+          $task->save();
+        }
+      break;
+    }
+  }
+  $TPL["task_update_result"] = "Tasks updated.";
+}
+
 include_template("templates/taskListM.tpl");
 page_close();
 
