@@ -50,6 +50,14 @@ a.sidebyside_active {
   font-size:100%; 
 }
 
+span.jslink {
+  color:#003d76;
+  cursor: pointer;
+}
+span.jslink:hover {
+  color:#688db0;
+}
+
 h1 { 
   font-weight:bold; 
   font-size:150%; 
