@@ -116,6 +116,21 @@ require_once("../alloc.php");
     }
   }
 
+  function get_product_sales() {
+    global $db, $project;
+    $query = "SELECT * FROM productSale where projectID = " . $project->get_id();
+    $db->query($query);
+    $rows = array();
+    while ($row = $db->next_record()) {
+      $rows[] = $row;
+    }
+    return $rows;
+  }
+
+  function show_product_sales($template_name) {
+    include_template($template_name);
+  }
+
   function show_commission_list($template_name) {
     global $TPL, $db, $projectID;
 

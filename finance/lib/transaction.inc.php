@@ -53,6 +53,7 @@ class transaction extends db_entity
                                , "transactionDate"=>new db_field("transactionDate")
                                , "transactionType"=>new db_field("transactionType")
                                , "timeSheetID"=>new db_field("timeSheetID")
+                               , "productSaleItemID"=>new db_field("productSaleItemID")
                                , "transactionRepeatID"=>new db_field("transactionRepeatID")
       );
 

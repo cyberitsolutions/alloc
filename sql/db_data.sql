@@ -84,8 +84,18 @@ INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey,
 
 INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, comment, actions, permissionID) VALUES ('interestedParty',0,0,'','Y',NULL,'Allow people to do anything to interestedParty records.',15,115);
 
-
-
+INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allow`, `sortKey`, `comment`, `actions`)
+VALUES
+('product', 0, 0, '', 'Y', 0, 'Users can view product templates', 1),
+('product', 0, 0, 'manage', 'Y', 100, 'Manager can manipulate all product templates.', 15),
+('productCost', 0, 0, 'manage', 'Y', 100, 'Manager can manipulate all product templates.', 15),
+('productCost', 0, 0, '', 'Y', 100, 'Users can view product templates', 1),
+('productSale', 0, 0, 'manage', 'Y', 100, 'Managers can manipulate product sales.', 15),
+('productSale', 0, 0, '', 'Y', 100, 'Users can view product sales', 1),
+('productSaleItem', 0, 0, 'manage', 'Y', 100, 'Managers can manipulate product sales.', 15),
+('productSaleItem', 0, 0, '', 'Y', 100, 'Users can view product sales', 1),
+('productSaleTransaction', 0, 0, 'manage', 'Y', 100, 'Managers can manipulate product sales', 15),
+('productSaleTransaction', 0, 0, '', 'Y', 100, 'Users can view product sales', 1);
 
 --
 -- Dumping data for table `config`
