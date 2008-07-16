@@ -639,7 +639,7 @@ CREATE TABLE productCost (
   tfID int(11) DEFAULT 0,
   amount DECIMAL(19,2) NOT NULL DEFAULT 0,
   isPercentage BOOL DEFAULT 0,
-  description varchar(255)
+  description varchar(255),
   PRIMARY KEY (productCostID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
