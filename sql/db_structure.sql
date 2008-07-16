@@ -1,4 +1,5 @@
 
+DROP TABLE IF EXISTS absence;
 CREATE TABLE absence (
   absenceID int(11) NOT NULL auto_increment,
   dateFrom date default NULL,
@@ -10,6 +11,7 @@ CREATE TABLE absence (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS announcement;
 CREATE TABLE announcement (
   announcementID int(11) NOT NULL auto_increment,
   heading varchar(255) default NULL,
@@ -21,6 +23,7 @@ CREATE TABLE announcement (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS client;
 CREATE TABLE client (
   clientID int(11) NOT NULL auto_increment,
   clientName varchar(255) NOT NULL default '',
@@ -47,6 +50,7 @@ CREATE TABLE client (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS clientContact;
 CREATE TABLE clientContact (
   clientContactID int(11) NOT NULL auto_increment,
   clientID int(11) NOT NULL default '0',
@@ -66,6 +70,7 @@ CREATE TABLE clientContact (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS comment;
 CREATE TABLE comment (
   commentID int(11) NOT NULL auto_increment,
   commentType varchar(255) NOT NULL default '',
@@ -85,6 +90,7 @@ CREATE TABLE comment (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS config;
 CREATE TABLE config (
   configID int(11) NOT NULL auto_increment,
   name varchar(255) NOT NULL DEFAULT '',
@@ -95,6 +101,7 @@ CREATE TABLE config (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS expenseForm;
 CREATE TABLE expenseForm (
   expenseFormID int(11) NOT NULL auto_increment,
   clientID int(11) DEFAULT NULL,
@@ -112,6 +119,7 @@ CREATE TABLE expenseForm (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS history;
 CREATE TABLE history (
   historyID int(11) NOT NULL auto_increment,
   the_time timestamp(14) NOT NULL,
@@ -123,6 +131,7 @@ CREATE TABLE history (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS htmlElement;
 CREATE TABLE htmlElement (
   htmlElementID INT(11) NOT NULL auto_increment,
   htmlElementTypeID INT(11) NOT NULL DEFAULT 0,
@@ -136,6 +145,8 @@ CREATE TABLE htmlElement (
   PRIMARY KEY (htmlElementID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
+
+DROP TABLE IF EXISTS htmlAttribute;
 CREATE TABLE htmlAttribute (
   htmlAttributeID INT(11) NOT NULL auto_increment,
   htmlElementID INT(11) NOT NULL DEFAULT 0,
@@ -145,6 +156,8 @@ CREATE TABLE htmlAttribute (
   PRIMARY KEY (htmlAttributeID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
+
+DROP TABLE IF EXISTS htmlElementType;
 CREATE TABLE htmlElementType (
   htmlElementTypeID INT(11) NOT NULL auto_increment,
   handle VARCHAR(255) DEFAULT NULL,
@@ -160,6 +173,8 @@ CREATE TABLE htmlElementType (
   PRIMARY KEY  (htmlElementTypeID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
+
+DROP TABLE IF EXISTS htmlAttributeType;
 CREATE TABLE htmlAttributeType (
   htmlAttributeTypeID INT(11) NOT NULL auto_increment,
   htmlElementTypeID INT(11) DEFAULT NULL,
@@ -169,6 +184,7 @@ CREATE TABLE htmlAttributeType (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS invoice;
 CREATE TABLE invoice (
   invoiceID int(11) NOT NULL auto_increment,
   clientID int(11) NOT NULL,
@@ -182,6 +198,7 @@ CREATE TABLE invoice (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS invoiceItem;
 CREATE TABLE invoiceItem (
   invoiceItemID int(11) NOT NULL auto_increment,
   invoiceID int(11) NOT NULL,
@@ -199,6 +216,7 @@ CREATE TABLE invoiceItem (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS item;
 CREATE TABLE item (
   itemID int(11) NOT NULL auto_increment,
   itemName varchar(255) default '',
@@ -212,6 +230,7 @@ CREATE TABLE item (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS loan;
 CREATE TABLE loan (
   loanID int(11) NOT NULL auto_increment,
   itemID int(11) NOT NULL default '0',
@@ -225,6 +244,7 @@ CREATE TABLE loan (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS patchLog;
 CREATE TABLE patchLog (
   patchLogID int(11) NOT NULL auto_increment,
   patchName varchar(255) NOT NULL DEFAULT '',
@@ -234,6 +254,7 @@ CREATE TABLE patchLog (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS permission;
 CREATE TABLE permission (
   tableName varchar(255) default NULL,
   entityID int(11) default NULL,
@@ -249,6 +270,7 @@ CREATE TABLE permission (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS person;
 CREATE TABLE person (
   username varchar(32) NOT NULL default '',
   password varchar(255) NOT NULL default '',
@@ -274,6 +296,7 @@ CREATE TABLE person (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS project;
 CREATE TABLE project (
   projectID int(11) NOT NULL auto_increment,
   projectName varchar(255) NOT NULL default '',
@@ -305,6 +328,7 @@ CREATE TABLE project (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS projectCommissionPerson;
 CREATE TABLE projectCommissionPerson (
   projectCommissionPersonID int(11) NOT NULL auto_increment,
   projectID int(11) NOT NULL default '0',
@@ -315,6 +339,7 @@ CREATE TABLE projectCommissionPerson (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS projectModificationNote;
 CREATE TABLE projectModificationNote (
   projectModNoteID int(11) NOT NULL auto_increment,
   projectID int(11) NOT NULL default '0',
@@ -325,6 +350,7 @@ CREATE TABLE projectModificationNote (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS projectPerson;
 CREATE TABLE projectPerson (
   projectPersonID int(11) NOT NULL auto_increment,
   projectID int(11) NOT NULL default '0',
@@ -340,6 +366,7 @@ CREATE TABLE projectPerson (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS role;
 CREATE TABLE role (
   roleID int(11) NOT NULL auto_increment,
   roleName varchar(255) default NULL,
@@ -350,6 +377,7 @@ CREATE TABLE role (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS reminder;
 CREATE TABLE reminder (
   reminderID int(11) NOT NULL auto_increment,
   reminderType varchar(255) default NULL,
@@ -369,6 +397,7 @@ CREATE TABLE reminder (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS sentEmailLog;
 CREATE TABLE sentEmailLog (
   sentEmailLogID int(11) NOT NULL auto_increment,
   sentEmailTo text NOT NULL,
@@ -383,6 +412,7 @@ CREATE TABLE sentEmailLog (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS sess;
 CREATE TABLE sess (
   sessID varchar(32) NOT NULL default '',
   personID int(11) NOT NULL default '0',
@@ -391,6 +421,7 @@ CREATE TABLE sess (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS skillList;
 CREATE TABLE skillList (
   skillID int(11) NOT NULL auto_increment,
   skillName varchar(40) NOT NULL default '',
@@ -400,6 +431,7 @@ CREATE TABLE skillList (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS skillProficiencys;
 CREATE TABLE skillProficiencys (
   proficiencyID int(11) NOT NULL auto_increment,
   personID int(11) NOT NULL default '0',
@@ -409,6 +441,7 @@ CREATE TABLE skillProficiencys (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS task;
 CREATE TABLE task (
   taskID int(11) NOT NULL auto_increment,
   taskName varchar(255) NOT NULL default '',
@@ -443,6 +476,7 @@ CREATE TABLE task (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS interestedParty;
 CREATE TABLE interestedParty (
   interestedPartyID int(11) NOT NULL auto_increment,
   entity VARCHAR(255) NOT NULL,
@@ -456,6 +490,7 @@ CREATE TABLE interestedParty (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS commentTemplate;
 CREATE TABLE commentTemplate (
   commentTemplateID int(11) NOT NULL auto_increment,
   commentTemplateName varchar(255) default NULL,
@@ -465,6 +500,7 @@ CREATE TABLE commentTemplate (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS taskType;
 CREATE TABLE taskType (
   taskTypeID int(11) NOT NULL auto_increment,
   taskTypeName varchar(255) default NULL,
@@ -474,6 +510,7 @@ CREATE TABLE taskType (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS tf;
 CREATE TABLE tf (
   tfID int(11) NOT NULL auto_increment,
   tfName varchar(255) NOT NULL default '',
@@ -487,6 +524,7 @@ CREATE TABLE tf (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS tfPerson;
 CREATE TABLE tfPerson (
   tfPersonID int(11) NOT NULL auto_increment,
   tfID int(11) NOT NULL default '0',
@@ -496,6 +534,7 @@ CREATE TABLE tfPerson (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS timeSheet;
 CREATE TABLE timeSheet (
   timeSheetID int(11) NOT NULL auto_increment,
   projectID int(11) NOT NULL default '0',
@@ -516,6 +555,7 @@ CREATE TABLE timeSheet (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS timeSheetItem;
 CREATE TABLE timeSheetItem (
   timeSheetItemID int(11) NOT NULL auto_increment,
   timeSheetID int(11) NOT NULL default '0',
@@ -536,6 +576,7 @@ CREATE TABLE timeSheetItem (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS timeUnit;
 CREATE TABLE timeUnit (
   timeUnitID int(11) NOT NULL auto_increment,
   timeUnitName varchar(30) default NULL,
@@ -548,6 +589,7 @@ CREATE TABLE timeUnit (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS token;
 CREATE TABLE token (
   tokenID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   tokenHash VARCHAR(255) NOT NULL DEFAULT '',
@@ -564,6 +606,7 @@ CREATE TABLE token (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS tokenAction;
 CREATE TABLE tokenAction (
   tokenActionID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   tokenAction VARCHAR(32) NOT NULL DEFAULT '',
@@ -572,6 +615,7 @@ CREATE TABLE tokenAction (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS transaction;
 CREATE TABLE transaction (
   transactionID int(11) NOT NULL auto_increment,
   companyDetails text NOT NULL,
@@ -600,6 +644,7 @@ CREATE TABLE transaction (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS transactionRepeat;
 CREATE TABLE transactionRepeat (
   transactionRepeatID int(11) NOT NULL auto_increment,
   tfID int(11) NOT NULL default '0',
@@ -623,6 +668,8 @@ CREATE TABLE transactionRepeat (
   PRIMARY KEY  (transactionRepeatID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
+
+DROP TABLE IF EXISTS product;
 CREATE TABLE product (
   productID int(11) NOT NULL auto_increment,
   productName varchar(255) NOT NULL DEFAULT '',
@@ -633,6 +680,8 @@ CREATE TABLE product (
   PRIMARY KEY (productID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
+
+DROP TABLE IF EXISTS productCost;
 CREATE TABLE productCost (
   productCostID int(11) NOT NULL auto_increment,
   productID int(11) NOT NULL DEFAULT 0,
@@ -643,6 +692,8 @@ CREATE TABLE productCost (
   PRIMARY KEY (productCostID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
+
+DROP TABLE IF EXISTS productSale;
 CREATE TABLE productSale (
   productSaleID int(11) NOT NULL auto_increment,
   projectID int(11) NOT NULL,
@@ -654,6 +705,8 @@ CREATE TABLE productSale (
   PRIMARY KEY (productSaleID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
+
+DROP TABLE IF EXISTS productSaleItem;
 CREATE TABLE productSaleItem (
   productSaleItemID int(11) NOT NULL auto_increment,
   productID int(11) NOT NULL,
@@ -665,6 +718,8 @@ CREATE TABLE productSaleItem (
   PRIMARY KEY (productSaleItemID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
+
+DROP TABLE IF EXISTS productSaleTransaction;
 CREATE TABLE productSaleTransaction (
   productSaleTransactionID int(11) NOT NULL auto_increment,
   productSaleItemID int(11) NOT NULL,
