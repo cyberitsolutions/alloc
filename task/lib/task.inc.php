@@ -1352,6 +1352,8 @@ class task extends db_entity {
       $bcc && $email->add_header("Bcc",$bcc);
       $from["references"] && $email->add_header("References",$from["references"]);
       $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
+      $from["precedence"] && $email->add_header("Precedence",$from["precedence"]);
+      
       $email->set_to_address($to_address);
     
       $from_name = $from["name"] or $from_name = $current_user->get_username(1);
@@ -1456,6 +1458,7 @@ class task extends db_entity {
     $from["name"] = $from_name;
     $from["references"] = $decoded[0]["Headers"]["references:"];
     $from["in-reply-to"] = $decoded[0]["Headers"]["in-reply-to:"];
+    $from["precedence"] = $decoded[0]["Headers"]["precedence:"];
 
     // Don't update last modified fields...
     $comment->skip_modified_fields = true;

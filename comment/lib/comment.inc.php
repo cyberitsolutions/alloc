@@ -408,6 +408,7 @@ class comment extends db_entity {
     $from["name"] = $from_name;
     $from["references"] = $decoded[0]["Headers"]["references:"];
     $from["in-reply-to"] = $decoded[0]["Headers"]["in-reply-to:"];
+    $from["precedence"] = $decoded[0]["Headers"]["precedence:"];
 
     // Don't update last modified fields...
     $comment->skip_modified_fields = true;
