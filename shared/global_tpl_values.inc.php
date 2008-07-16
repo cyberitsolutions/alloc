@@ -116,6 +116,11 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_getHelp"                        => $sess->url(SCRIPT_PATH."help/getHelp.php")
             ,"url_alloc_sourceCodeList"                 => $sess->url(SCRIPT_PATH."tools/sourceCodeList.php")
             ,"url_alloc_sourceCodeView"                 => $sess->url(SCRIPT_PATH."tools/sourceCodeView.php")
+            ,"url_alloc_product"                        => $sess->url(SCRIPT_PATH."product/product.php")
+            ,"url_alloc_productList"                    => $sess->url(SCRIPT_PATH."product/productList.php")
+            ,"url_alloc_productSale"                    => $sess->url(SCRIPT_PATH."product/productSale.php")
+            ,"url_alloc_updateCostPrice"                => $sess->url(SCRIPT_PATH."product/updateCostPrice.php")
+
 );
 
 $TPL = array_merge($TPL,$TPL2);

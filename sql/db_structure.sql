@@ -589,13 +589,14 @@ CREATE TABLE transaction (
   transactionDate date NOT NULL default '0000-00-00',
   invoiceID int(11) DEFAULT NULL,
   invoiceItemID int(11) default NULL,
-  transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax') NOT NULL,
+  transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax','product') NOT NULL,
   timeSheetID int(11) default NULL,
+  productSaleItemID int(11) default NULL,
   transactionRepeatID int(11) default NULL,
   INDEX idx_timeSheetID (timeSheetID),
   INDEX idx_tfID (tfID),
   INDEX idx_invoiceItemID (invoiceItemID),
-  PRIMARY KEY  (transactionID)
+  PRIMARY KEY (transactionID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
@@ -620,5 +621,57 @@ CREATE TABLE transactionRepeat (
   transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance') NOT NULL default 'invoice',
   reimbursementRequired tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (transactionRepeatID)
+) TYPE=MyISAM PACK_KEYS=0;
+
+CREATE TABLE product (
+  productID int(11) NOT NULL auto_increment,
+  productName varchar(255) NOT NULL DEFAULT '',
+  buyCost DECIMAL(19,2) NOT NULL DEFAULT 0,
+  sellPrice DECIMAL(19,2) NOT NULL DEFAULT 0,
+  description varchar(255),
+  comment TEXT,
+  PRIMARY KEY (productID)
+) TYPE=MyISAM PACK_KEYS=0;
+
+CREATE TABLE productCost (
+  productCostID int(11) NOT NULL auto_increment,
+  productID int(11) NOT NULL DEFAULT 0,
+  tfID int(11) DEFAULT 0,
+  amount DECIMAL(19,2) NOT NULL DEFAULT 0,
+  isPercentage BOOL DEFAULT 0,
+  description varchar(255)
+  PRIMARY KEY (productCostID)
+) TYPE=MyISAM PACK_KEYS=0;
+
+CREATE TABLE productSale (
+  productSaleID int(11) NOT NULL auto_increment,
+  projectID int(11) NOT NULL,
+  status enum('edit', 'admin', 'invoiced', 'finished') DEFAULT NULL,
+  productSaleCreatedTime datetime default NULL,
+  productSaleCreatedUser int(11) default NULL,
+  productSaleModifiedTime datetime default NULL,
+  productSaleModifiedUser int(11) default NULL,
+  PRIMARY KEY (productSaleID)
+) TYPE=MyISAM PACK_KEYS=0;
+
+CREATE TABLE productSaleItem (
+  productSaleItemID int(11) NOT NULL auto_increment,
+  productID int(11) NOT NULL,
+  productSaleID int(11) NOT NULL,
+  buyCost DECIMAL(19,2) NOT NULL DEFAULT 0,
+  sellPrice DECIMAL(19,2) NOT NULL DEFAULT 0,
+  quantity int(5) DEFAULT 1,
+  description varchar(255),
+  PRIMARY KEY (productSaleItemID)
+) TYPE=MyISAM PACK_KEYS=0;
+
+CREATE TABLE productSaleTransaction (
+  productSaleTransactionID int(11) NOT NULL auto_increment,
+  productSaleItemID int(11) NOT NULL,
+  tfID int(11) DEFAULT 0,
+  amount DECIMAL (19,2) NOT NULL DEFAULT 0,
+  isPercentage BOOL DEFAULT 0,
+  description varchar(255),
+  PRIMARY KEY (productSaleTransactionID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
