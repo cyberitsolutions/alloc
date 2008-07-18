@@ -304,7 +304,7 @@ class task extends db_entity {
     return unserialize(base64_decode(urldecode($blob)));
   }
 
-  function get_personList_dropdown($projectID,$taskID=false, $formName="personID") {
+  function get_personList_dropdown($projectID,$taskID=false) {
     global $current_user;
  
     $db = new db_alloc;
@@ -348,10 +348,8 @@ class task extends db_entity {
 
     $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
    
-    $str = '<select name="'. $formName . '">';
-    $str.= get_option("None", "0", $owner == 0)."\n";
+    $str = get_option("None", "0", $owner == 0)."\n";
     $str.= get_select_options($ops, $owner);
-    $str.= '</select>';
     return $str;
   }
 
@@ -411,7 +409,7 @@ class task extends db_entity {
     global $TPL, $current_user, $isMessage;
     $db = new db_alloc;
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
-    $TPL["personOptions"] = task::get_personList_dropdown($projectID);
+    $TPL["personOptions"] = "<select name=\"personID\">".task::get_personList_dropdown($projectID)."</select>";
     $TPL["managerPersonOptions"] = task::get_managerPersonList_dropdown($projectID);
 
     // TaskType Options
@@ -934,13 +932,13 @@ class task extends db_entity {
   function get_task_list_header($_FORM) {
     global $TPL;
     if ($_FORM["showHeader"]) {
-      if($_FORM["showEditControls"]) {
-        $summary[] = "<form action=\"" . $TPL["url_form_action"] . "\" method=\"POST\">";
+      if($_FORM["showEdit"]) {
+        $summary[] = "<form action=\"".$_FORM["url_form_action"]."\" method=\"post\">";
       }
       #$_FORM["taskView"] == "byProject" and $summary[] = "<br>".$_FORM["projectLinks"];
       $summary[] = $TPL["table_list"];
       $summary[] = "<tr>";
-      $_FORM["showEditControls"]and $summary[]="<th width=\"1%\"></th>";//check boxes (for when Task Edit Controls are visible)
+      $_FORM["showEdit"]     and $summary[] = "<th width=\"1%\" class=\"sorttable_nosort\"><input type=\"checkbox\" onclick=\"return $('.task_checkboxes').each(function(){this.checked=!this.checked});\"></th>";
                                  $summary[] = "<th width=\"1%\"></th>"; //taskTypeImage
       $_FORM["showTaskID"]   and $summary[] = "<th>ID</th>";
                                  $summary[] = "<th>Task</th>";
@@ -959,27 +957,67 @@ class task extends db_entity {
       $_FORM["showTimes"]    and $summary[] = "<th>Estimate</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>Actual</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>%</th>";
-      $_FORM["showEditControls"]and $summary[]="<th>Assign To</th>";
       $summary[] ="</tr>";
 
       return implode("\n",$summary);
     }
   }
 
+  function get_task_priority_dropdown($priority=false) {
+    $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
+    foreach ($taskPriorities as $k => $v) {
+      $tp[$k] = $v["label"];     
+    }
+    return get_select_options($tp,$priority);
+  }
+
   function get_task_list_footer($_FORM) {
-    $ret = array("</table>");
-    if($_FORM["showEditControls"]) {
-      $ret[] = "</td></tr><tr><td>";
-      $ret[] = "Select: <span class=\"jslink\" onclick=\"checkbox_select_all('select');\">All</span> , <span class=\"jslink\" onclick=\"checkbox_select_none('select');\">None</span>, <span class=\"jslink\" onclick=\"checkbox_select_inverse('select');\">Inverse</span>";
-      $ret[] = "</td><td>With selected tasks: <select name=\"update_action\">
-        <option value=\"nothing\">-</options>
-        <option value=\"close\">Close tasks</options>
-        <option value=\"targetStartToday\">Set target start to today</options>
-      </select>";
-      $ret[] = "</td></tr><tr><td colspan=\"2\">";
-      $ret[] = "<input type=\"submit\" name=\"run_mass_update\" value=\"Update\" />";
+    if($_FORM["showEdit"]) {
+
+      $person_dropdown_ops = task::get_personList_dropdown($_FORM["projectID"]);
+      $assignee_dropdown = "<select name=\"assignee\">".$person_dropdown_ops."</select>";
+      $manager_dropdown = "<select name=\"manager\">".$person_dropdown_ops."</select>";
+      $dateTargetStart = get_calendar_string("dateTargetStart");
+      $dateTargetCompletion = get_calendar_string("dateTargetCompletion");
+      $dateActualStart = get_calendar_string("dateActualStart");
+      $dateActualCompletion = get_calendar_string("dateActualCompletion");
+      $priority_dropdown = task::get_task_priority_dropdown(3);
+      $arr = "--&gt;";
+
+      $ret[] = "<tfoot>
+                  <tr>
+                    <th colspan=\"20\" class=\"nobr\" style=\"padding:2px\">
+                      <select name=\"update_action\" onChange=\"$('.hidden').hide(); $('#'+$(this).val()).css('display','inline');\"> 
+                        <option value=\"\">Modify Checked...</options>
+                        <option value=\"assignee\">Assign to ".$arr."</options>
+                        <option value=\"manager\">Manager to ".$arr."</options>
+                        <option value=\"timeEstimate\">Estimate to ".$arr."</options>
+                        <option value=\"priority\">Task Priority to ".$arr."</options>
+                        <option value=\"dateTargetStart\">Target Start Date to ".$arr."</options>
+                        <option value=\"dateTargetCompletion\">Target Completion Date to ".$arr."</options>
+                        <option value=\"dateActualStart\">Actual Start Date to ".$arr."</options>
+                        <option value=\"dateActualCompletion\">Actual Completion Date to ".$arr."</options>
+                      </select>
+                      <div class=\"hidden\" id=\"dateTargetStart\">".$dateTargetStart."</div>
+                      <div class=\"hidden\" id=\"dateTargetCompletion\">".$dateTargetCompletion."</div>
+                      <div class=\"hidden\" id=\"dateActualStart\">".$dateActualStart."</div>
+                      <div class=\"hidden\" id=\"dateActualCompletion\">".$dateActualCompletion."</div>
+                      <div class=\"hidden\" id=\"assignee\">".$assignee_dropdown."</div>
+                      <div class=\"hidden\" id=\"manager\">".$manager_dropdown."</div>
+                      <div class=\"hidden\" id=\"timeEstimate\"><input name=\"timeEstimate\" type=\"text\" size=\"5\"></div>
+                      <div class=\"hidden\" id=\"priority\"><select name=\"priority\">".$priority_dropdown."</select></div>
+                      <input type=\"submit\" name=\"run_mass_update\" value=\"Update\">
+                    </th>
+                  </tr>
+                </tfoot>";
+    }
+
+    $ret[] = "</table>";
+
+    if($_FORM["showEdit"]) {
       $ret[] = "</form>";
     }
+
     return implode("\n",$ret);
   }
 
@@ -1024,7 +1062,7 @@ class task extends db_entity {
     $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
 
                                   $summary[] = "<tr>";
-    $_FORM["showEditControls"]and $summary[] = "  <td class=\"nobr\"><input type=\"checkbox\" name=\"select[".$task["taskID"]."]\"></td>";
+    $_FORM["showEdit"]        and $summary[] = "  <td class=\"nobr\"><input type=\"checkbox\" name=\"select[".$task["taskID"]."]\" class=\"task_checkboxes\"></td>";
                                   $summary[] = "  <td sorttable_customkey=\"".$task["taskTypeID"]."\">".$task["taskTypeImage"]."</td>";
     $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
                                   $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
@@ -1043,7 +1081,6 @@ class task extends db_entity {
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format($timeEstimate)."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".$task["percentComplete"]."&nbsp;</td>";
-    $_FORM["showEditControls"]and $summary[] = "  <td class=\"nobr\">".task::get_personList_dropdown($task["projectID"], $task["taskID"], 'assigneeID[' . $task["taskID"] . ']')."</td>";
                                   $summary[] = "</tr>";
 
     $summary = "\n".implode("\n",$summary);
@@ -1271,7 +1308,7 @@ class task extends db_entity {
         ,"showManager"
         ,"showHeader"
         ,"showProject"
-        ,"showEditControls"
+        ,"showEdit"
         ,"padding"
         ,"url_form_action"
         ,"form_name"
@@ -1363,7 +1400,6 @@ class task extends db_entity {
     $_FORM["showStatus"]      and $rtn["showStatus_checked"]      = " checked";
     $_FORM["showTaskID"]      and $rtn["showTaskID_checked"]      = " checked";
     $_FORM["showManager"]     and $rtn["showManager_checked"]     = " checked";
-    $_FORM["showEditControls"]and $rtn["showEditControls_checked"]= " checked";
     
     // Get
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));

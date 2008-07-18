@@ -57,7 +57,10 @@ function get_textarea($name, $default_value="", $ops=array()) {
 EOD;
   echo $str;
 }
-function get_calendar($name, $default_value) {
+function get_calendar($name, $default_value="") {
+  echo get_calendar_string($name, $default_value);
+}
+function get_calendar_string($name, $default_value="") {
   // setup the first day of the week
   $days = array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
   $days = array_flip($days);
@@ -72,7 +75,7 @@ function get_calendar($name, $default_value) {
   </script>
 
 EOD;
-  echo $str;
+  return $str;
 }
 function get_timezone_array() {
   return array("-12"  => "-12"

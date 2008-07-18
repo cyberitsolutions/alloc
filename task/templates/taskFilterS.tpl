@@ -51,14 +51,6 @@ function refreshProjectList(radiobutton) \{
                       <td align="right"><label for="showStatus" class="nobr">Task Status</label></td>
                       <td><input type="checkbox" id="showStatus" name="showStatus"{$showStatus_checked}></td>
                     </tr>
-                    <tr >
-                      <td style="border-top: 1px solid #CCCCCC;" colspan="5"></td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">&nbsp;</td>
-                      <td align="right"><label for="showEditControls" class="nobr">Edit Tasks</label></td>
-                      <td><input type="checkbox" id="showEditControls" name="showEditControls"{$showEditControls_checked}></td>
-                    </tr>
                   </table>
 
                 </td>

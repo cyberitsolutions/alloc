@@ -27,6 +27,7 @@ define("PAGE_IS_PRINTABLE",1);
 $defaults = array("showHeader"=>true
                  ,"showProject"=>true
                  ,"showTaskID"=>true
+                 ,"showEdit"=>true
                  ,"taskView" => "byProject"
                  ,"padding"=>1
                  ,"url_form_action"=>$TPL["url_alloc_taskList"]
@@ -53,47 +54,50 @@ function show_task_list() {
 $TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;
 
 // Check for updates
-if($_POST["run_mass_update"]) {
-  if($_POST["assigneeID"]) {
-    $assignees = $_POST["assigneeID"];
-    foreach($assignees as $taskID => $assigneeID) {
-      $assigneeID = intval($assigneeID);
-      //TODO: there are possibly some efficiency gains to be made here
+if ($_POST["run_mass_update"]) {
+
+  if ($_POST["select"]) {
+    foreach($_POST["select"] as $taskID => $selected) { 
       $task = new task;
       $task->set_id($taskID);
       $task->select();
-      if($task->get_value("personID") != $assigneeID) {
-        $task->set_value("personID", $assigneeID);
+
+      if ($_POST["update_action"] == "dateTargetStart") {
+        $task->set_value('dateTargetStart', $_POST["dateTargetStart"]);
+        $task->save();
+
+      } else if ($_POST["update_action"] == "dateTargetCompletion") {
+        $task->set_value('dateTargetCompletion', $_POST["dateTargetCompletion"]);
+        $task->save();
+
+      } else if ($_POST["update_action"] == "dateActualStart") {
+        $task->set_value('dateActualStart', $_POST["dateActualStart"]);
+        $task->save();
+
+      } else if ($_POST["update_action"] == "dateActualCompletion") {
+        $task->set_value('dateActualCompletion', $_POST["dateActualCompletion"]);
+        $task->set_value('closerID', $current_user->get_id());
+        $task->save();
+
+      } else if ($_POST["update_action"] == "assignee") {
+        $task->set_value("personID", $_POST["assignee"]);
+        $task->save();
+
+      } else if ($_POST["update_action"] == "manager") {
+        $task->set_value("managerID", $_POST["manager"]);
+        $task->save();
+
+      } else if ($_POST["update_action"] == "timeEstimate") {
+        $task->set_value("timeEstimate", $_POST["timeEstimate"]);
+        $task->save();
+
+      } else if ($_POST["update_action"] == "priority") {
+        $task->set_value("priority", $_POST["priority"]);
+        $task->save();
       }
-      $task->save();
     }
-    switch($_POST["update_action"]) {
-      case 'nothing':
-      break;
-      case 'close':
-        //Close every task, setting its date of resolution to today
-        foreach($_POST["select"] as $taskID => $selected) {   //we're actually only interested in the keys
-          $task = new task;
-          $task->set_id($taskID);
-          $task->select();
-          // Close the task
-          $task->set_value('dateActualCompletion', date('Y-m-d'));
-          $task->set_value('closerID', $current_user->get_id());
-          $task->save();
-        }
-      break;
-      case 'targetStartToday':
-        foreach($_POST["select"] as $taskID => $selected) {   //we're actually only interested in the keys
-          $task = new task;
-          $task->set_id($taskID);
-          $task->select();
-          $task->set_value('dateTargetStart', date('Y-m-d'));
-          $task->save();
-        }
-      break;
-    }
+    $TPL["message_good"][] = "Tasks updated.";
   }
-  $TPL["task_update_result"] = "Tasks updated.";
 }
 
 include_template("templates/taskListM.tpl");

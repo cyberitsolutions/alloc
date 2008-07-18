@@ -14,10 +14,5 @@
       {show_task_list()}
     </td>
   </tr>
-  <tr>
-    <td colspan="2">
-      {$task_update_result}
-    </td>
-  </tr>
 </table>
 {show_footer()}
