@@ -25,7 +25,7 @@ require_once("../alloc.php");
 
 
 usleep(600000);
-echo task::get_personList_dropdown($_GET["projectID"],$_GET["taskID"]);
+echo "<select name=\"personID\">".task::get_personList_dropdown($_GET["projectID"],$_GET["taskID"])."</select>";
 
 
 ?>
