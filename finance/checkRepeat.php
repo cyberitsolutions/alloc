@@ -81,8 +81,9 @@ while ($db->next_record()) {
 
     $tf = new tf;
     $tf->set_id($transactionRepeat->get_value("tfID"));
+    $tf->select();
     if ($tf->get_value("status") != 'active') {
-      continue;
+      continue 2;
     }
 
     $transaction = new transaction;
