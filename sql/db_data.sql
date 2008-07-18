@@ -121,6 +121,7 @@ INSERT INTO config (name, value, type) VALUES ('companyContactAddress3','Austral
 INSERT INTO config (name, value, type) VALUES ('timeSheetPrintFooter','Authorisation (please print):<br><br>Authorisation (signature):<br><br>Date:','text');
 INSERT INTO config (name, value, type) VALUES ('taxName','GST','text');
 INSERT INTO config (name, value, type) VALUES ('taxPercent','10','text');
+INSERT INTO config (name, value, type) VALUES ('taxTfID', '0', 'text');
 INSERT INTO config (name, value, type) VALUES ('companyPercent','28.5','text');
 INSERT INTO config (name, value, type) VALUES ('paymentInsurancePercent','10','text');
 INSERT INTO config (name, value, type) VALUES ('payrollTaxPercent','5','text');
