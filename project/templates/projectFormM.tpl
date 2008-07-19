@@ -183,7 +183,7 @@
 {$table_box}
   <tr>
     <th>Uncompleted Tasks</th>
-    <th class="right" colspan="3"><a href="{$url_alloc_task}projectID={$project_projectID}">New Task</a></th>
+    <th class="right"><a href="{$url_alloc_task}projectID={$project_projectID}">New Task</a></th>
   </tr>
   <tr>
     <td colspan="2">

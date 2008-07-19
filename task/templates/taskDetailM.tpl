@@ -4,7 +4,7 @@
 // Make the XML request thing, specify the callback function 
 function updateStuffWithAjax() \{
   id = $("#projectID").attr("value")
-  makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+id, 'parenTaskDropdown')
+  makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+id, 'parentTaskDropdown')
   makeAjaxRequest('{$url_alloc_updateInterestedParties}projectID='+id+'&taskID={$task_taskID}', 'interestedPartyDropdown')
   makeAjaxRequest('{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}', 'taskPersonList')
   makeAjaxRequest('{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}', 'taskManagerPersonList')
@@ -67,7 +67,7 @@ function updateStuffWithAjax() \{
   <tr>
     <td>Parent Task</td>
     <td>
-      <div id="parenTaskDropdown">
+      <div id="parentTaskDropdown">
         {$parentTaskOptions}
       </div>
     </td>
