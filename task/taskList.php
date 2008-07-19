@@ -57,42 +57,49 @@ $TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;
 if ($_POST["run_mass_update"]) {
 
   if ($_POST["select"]) {
+
+    $allowed_auto_fields = array("dateTargetStart","dateTargetCompletion","dateActualStart","managerID","timeEstimate","priority","taskTypeID");  
+
     foreach($_POST["select"] as $taskID => $selected) { 
       $task = new task;
       $task->set_id($taskID);
       $task->select();
 
-      if ($_POST["update_action"] == "dateTargetStart") {
-        $task->set_value('dateTargetStart', $_POST["dateTargetStart"]);
-        $task->save();
-
-      } else if ($_POST["update_action"] == "dateTargetCompletion") {
-        $task->set_value('dateTargetCompletion', $_POST["dateTargetCompletion"]);
-        $task->save();
-
-      } else if ($_POST["update_action"] == "dateActualStart") {
-        $task->set_value('dateActualStart', $_POST["dateActualStart"]);
-        $task->save();
-
-      } else if ($_POST["update_action"] == "dateActualCompletion") {
+      // Special case: Close task
+      if ($_POST["update_action"] == "dateActualCompletion") {
         $task->set_value('dateActualCompletion', $_POST["dateActualCompletion"]);
-        $task->set_value('closerID', $current_user->get_id());
+        $d = $u = ""; # can't use unset(). The variables need to be empty strings for the set_value.
+        $_POST["dateActualCompletion"] and $d = date("Y-m-d");
+        $_POST["dateActualCompletion"] and $u = $current_user->get_id();
+        $task->set_value('closerID', $u);
+        $task->set_value("dateClosed", $d);
         $task->save();
 
-      } else if ($_POST["update_action"] == "assignee") {
-        $task->set_value("personID", $_POST["assignee"]);
+      // Special case: Re-assign task
+      } else if ($_POST["update_action"] == "personID") {
+        $task->set_value("personID", $_POST["personID"]);
+        $d = ""; # can't use unset(). The variables need to be empty strings for the set_value.
+        $_POST["personID"] and $d = date("Y-m-d");
+        $task->set_value("dateAssigned", $d);
         $task->save();
 
-      } else if ($_POST["update_action"] == "manager") {
-        $task->set_value("managerID", $_POST["manager"]);
+      // Special case: projectID and parentTaskID have to be done together
+      } else if ($_POST["update_action"] == "projectIDAndParentTaskID") {
+        
+        // Can't set self to be parent
+        if ($_POST["parentTaskID"] != $task->get_id()) {
+          $task->set_value("parentTaskID", $_POST["parentTaskID"]);
+        }
+        // If task is a parent, change the project of that tasks children
+        if ($_POST["projectID"] != $task->get_value("projectID") && $task->get_value("taskTypeID") == 2) { 
+          $task->update_children("projectID",$_POST["projectID"]);   
+        }
+        $task->set_value("projectID", $_POST["projectID"]);
         $task->save();
 
-      } else if ($_POST["update_action"] == "timeEstimate") {
-        $task->set_value("timeEstimate", $_POST["timeEstimate"]);
-        $task->save();
-
-      } else if ($_POST["update_action"] == "priority") {
-        $task->set_value("priority", $_POST["priority"]);
+      // All other cases are generic and can be handled by a single clause
+      } else if ($_POST["update_action"] && in_array($_POST["update_action"],$allowed_auto_fields)) {
+        $task->set_value($_POST["update_action"], $_POST[$_POST["update_action"]]);
         $task->save();
       }
     }

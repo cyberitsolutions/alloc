@@ -34,6 +34,11 @@ $(document).ready(function() {
     var now = new Date();
     this.value=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
   });
-
+  $('tr.clickrow').bind('click',function(e){                                                                                                     
+    var id = this.id.split('_')[1]; // clickrow_43242
+    if (id && !$(e.target).is('input:checkbox') && !$(e.target).is('a')) {
+      $('#checkbox_'+id).attr('checked',!$('#checkbox_'+id).attr('checked'));
+    }
+  });
 });
 

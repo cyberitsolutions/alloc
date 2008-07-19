@@ -164,10 +164,24 @@ class task extends db_entity {
     return $this->is_owner($person);
   }
 
+  function update_children($field,$value="") {
+    $q = sprintf("SELECT * FROM task WHERE parentTaskID = %d",$this->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    while ($db->row()) {
+      $t = new task;
+      $t->read_db_record($db);
+      $t->set_value($field,$value);
+      $t->save();
+      if ($t->get_value("taskTypeID") == 2) { // 2==parent
+        $t->update_children($field,$value);
+      }
+    }
+  }
+
   function get_parent_task_select($projectID="") {
     global $TPL;
     
-    $options = get_option("None", "0");
     if (is_object($this)) {
       $projectID = $this->get_value("projectID");
       $parentTaskID = $this->get_value("parentTaskID");
@@ -177,7 +191,7 @@ class task extends db_entity {
     $parentTaskID or $parentTaskID = $_GET["parentTaskID"];
 
     $db = new db_alloc;
-    $options = get_option("None", "0");
+    $options = get_option("", "0");
     if ($projectID) {
       $query = sprintf("SELECT * 
                         FROM task 
@@ -348,7 +362,7 @@ class task extends db_entity {
 
     $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
    
-    $str = get_option("None", "0", $owner == 0)."\n";
+    $str = get_option("", "0", $owner == 0)."\n";
     $str.= get_select_options($ops, $owner);
     return $str;
   }
@@ -398,9 +412,20 @@ class task extends db_entity {
     $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
    
     $str = '<select name="managerID">';
-    $str.= get_option("None", "0", $owner == 0)."\n";
+    $str.= get_option("", "0", $owner == 0)."\n";
     $str.= get_select_options($ops, $owner);
     $str.= '</select>';
+    return $str;
+  }
+  
+  function get_project_options($projectID="") {
+    $projectID or $projectID = $_GET["projectID"];
+    // Project Options - Select all projects 
+    $db = new db_alloc;
+    $query = sprintf("SELECT * FROM project WHERE projectStatus IN ('current', 'potential') ORDER BY projectName");
+    $db->query($query);
+    $str = get_option("", "0", $projectID == 0)."\n";
+    $str.= get_options_from_db($db, "projectName", "projectID", $projectID,60);
     return $str;
   }
 
@@ -416,11 +441,8 @@ class task extends db_entity {
     $taskType = new taskType;
     $TPL["taskTypeOptions"] = $taskType->get_dropdown_options("taskTypeID","taskTypeName",$this->get_value("taskTypeID"));
 
-    // Project Options - Select all projects 
-    $query = sprintf("SELECT * FROM project WHERE projectStatus IN ('current', 'potential') ORDER BY projectName");
-    $db->query($query);
-    $TPL["projectOptions"] = get_option("None", "0", $projectID == 0)."\n";
-    $TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $projectID,60);
+    // Project dropdown
+    $TPL["projectOptions"] = task::get_project_options($projectID);
     
     $commentTemplate = new commentTemplate();
     $TPL["commentTemplateOptions"] = $commentTemplate->get_dropdown_options("commentTemplateID","commentTemplateName","","Comment Templates");
@@ -972,16 +994,21 @@ class task extends db_entity {
   }
 
   function get_task_list_footer($_FORM) {
+    global $TPL;
     if($_FORM["showEdit"]) {
-
-      $person_dropdown_ops = task::get_personList_dropdown($_FORM["projectID"]);
-      $assignee_dropdown = "<select name=\"assignee\">".$person_dropdown_ops."</select>";
-      $manager_dropdown = "<select name=\"manager\">".$person_dropdown_ops."</select>";
+      $person_options = get_select_options(person::get_username_list());
+      $assignee_dropdown = "<select name=\"personID\">".$person_options."</select>";
+      $manager_dropdown = "<select name=\"managerID\">".$person_options."</select>";
       $dateTargetStart = get_calendar_string("dateTargetStart");
       $dateTargetCompletion = get_calendar_string("dateTargetCompletion");
       $dateActualStart = get_calendar_string("dateActualStart");
       $dateActualCompletion = get_calendar_string("dateActualCompletion");
-      $priority_dropdown = task::get_task_priority_dropdown(3);
+      $priority_options = task::get_task_priority_dropdown(3);
+      $taskType = new taskType;
+      $taskType_options = $taskType->get_dropdown_options("taskTypeID","taskTypeName");
+      $js = "makeAjaxRequest('".$TPL["url_alloc_updateParentTasks"]."projectID='+$(this).val(), 'parentTaskDropdown')";
+      $project_dropdown = "<select name=\"projectID\" id=\"projectID\" onChange=\"".$js."\">".task::get_project_options()."</select>";
+      $parentTask_div = "<div style=\"display:inline\" id=\"parentTaskDropdown\"></div>";
       $arr = "--&gt;";
 
       $ret[] = "<tfoot>
@@ -989,24 +1016,28 @@ class task extends db_entity {
                     <th colspan=\"20\" class=\"nobr\" style=\"padding:2px\">
                       <select name=\"update_action\" onChange=\"$('.hidden').hide(); $('#'+$(this).val()).css('display','inline');\"> 
                         <option value=\"\">Modify Checked...</options>
-                        <option value=\"assignee\">Assign to ".$arr."</options>
-                        <option value=\"manager\">Manager to ".$arr."</options>
+                        <option value=\"personID\">Assign to ".$arr."</options>
+                        <option value=\"managerID\">Manager to ".$arr."</options>
                         <option value=\"timeEstimate\">Estimate to ".$arr."</options>
                         <option value=\"priority\">Task Priority to ".$arr."</options>
+                        <option value=\"taskTypeID\">Task Type to ".$arr."</options>
                         <option value=\"dateTargetStart\">Target Start Date to ".$arr."</options>
                         <option value=\"dateTargetCompletion\">Target Completion Date to ".$arr."</options>
                         <option value=\"dateActualStart\">Actual Start Date to ".$arr."</options>
                         <option value=\"dateActualCompletion\">Actual Completion Date to ".$arr."</options>
+                        <option value=\"projectIDAndParentTaskID\">Project and Parent Task to ".$arr."</options>
                       </select>
                       <div class=\"hidden\" id=\"dateTargetStart\">".$dateTargetStart."</div>
                       <div class=\"hidden\" id=\"dateTargetCompletion\">".$dateTargetCompletion."</div>
                       <div class=\"hidden\" id=\"dateActualStart\">".$dateActualStart."</div>
                       <div class=\"hidden\" id=\"dateActualCompletion\">".$dateActualCompletion."</div>
-                      <div class=\"hidden\" id=\"assignee\">".$assignee_dropdown."</div>
-                      <div class=\"hidden\" id=\"manager\">".$manager_dropdown."</div>
+                      <div class=\"hidden\" id=\"personID\">".$assignee_dropdown."</div>
+                      <div class=\"hidden\" id=\"managerID\">".$manager_dropdown."</div>
                       <div class=\"hidden\" id=\"timeEstimate\"><input name=\"timeEstimate\" type=\"text\" size=\"5\"></div>
-                      <div class=\"hidden\" id=\"priority\"><select name=\"priority\">".$priority_dropdown."</select></div>
-                      <input type=\"submit\" name=\"run_mass_update\" value=\"Update\">
+                      <div class=\"hidden\" id=\"priority\"><select name=\"priority\">".$priority_options."</select></div>
+                      <div class=\"hidden\" id=\"taskTypeID\"><select name=\"taskTypeID\">".$taskType_options."</select></div>
+                      <div class=\"hidden\" id=\"projectIDAndParentTaskID\">".$project_dropdown.$parentTask_div."</div>
+                      <input type=\"submit\" name=\"run_mass_update\" value=\"Update Tasks\">
                     </th>
                   </tr>
                 </tfoot>";
@@ -1061,8 +1092,8 @@ class task extends db_entity {
 
     $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
 
-                                  $summary[] = "<tr>";
-    $_FORM["showEdit"]        and $summary[] = "  <td class=\"nobr\"><input type=\"checkbox\" name=\"select[".$task["taskID"]."]\" class=\"task_checkboxes\"></td>";
+                                  $summary[] = "<tr class=\"clickrow\" id=\"clickrow_".$task["taskID"]."\">"; // clickrow has onClick in init.js
+    $_FORM["showEdit"]        and $summary[] = "  <td class=\"nobr\"><input type=\"checkbox\" id=\"checkbox_".$task["taskID"]."\" name=\"select[".$task["taskID"]."]\" class=\"task_checkboxes\"></td>";
                                   $summary[] = "  <td sorttable_customkey=\"".$task["taskTypeID"]."\">".$task["taskTypeImage"]."</td>";
     $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
                                   $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
