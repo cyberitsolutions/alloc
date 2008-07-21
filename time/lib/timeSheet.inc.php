@@ -180,9 +180,7 @@ class timeSheet extends db_entity
       $this->pay_info["total_dollars"] += $tsi->calculate_item_charge();
       $db->f("rate") and $this->pay_info["timeSheetItem_rate"] = $db->f("rate");
 
-      if ($db->f("rate") > 0) {
-        $this->pay_info["total_customerBilledDollars"] += $tsi->calculate_item_charge($this->pay_info["customerBilledDollars"]);
-      }
+      $this->pay_info["total_customerBilledDollars"] += $tsi->calculate_item_charge($this->pay_info["customerBilledDollars"]);
       $summary_totals[$units[$db->f("timeSheetItemDurationUnitID")]] += $db->f("timeSheetItemDuration");
     }
 
