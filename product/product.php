@@ -166,7 +166,7 @@ if ($_POST["save_commissions"] || $_POST["commission_delete"]) {
     $TPL["message"][] = "Costs exceed sale price. Profit is negative.";
   }
   if ($pctSum != 100) {
-    $TPL["message"][] = "Percentage costs must sum to 100%.";
+    $TPL["message_help"][] = sprintf("Total percentage commissions sum to %0.0f%%, which is %s by %0.0f percentage points. Commissions will have to be adjusted to sum to 100%% when a product sale is made.", $pctSum, ($pctSum < 100 ? "underallocated" : "overallocated"), abs(100.0 - $pctSum));
   }
 }
 

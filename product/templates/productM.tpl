@@ -111,13 +111,13 @@ $(document).ready(function() \{
     <td>Recipient</td>
     <td>Amount</td>
     <td>Description</td>
-    <td>&nbsp;</td>
+    <td valign="top" align="right" rowspan="2">{get_help("product_fixedCost");}</td>
   </tr>
   <tr>
     <td>{$companyTF}</td>
     <td id="buyCostLine">{$product_buyCost}</td>
     <td>Product buy cost</td>
-    <td>&nbsp;</td>
+    <!-- <td> removed for help icon -->
   </tr>
   <tr>
     <td>{$taxTF}</td>
@@ -168,7 +168,7 @@ $(document).ready(function() \{
     <td>Recipient</td>
     <td>Percentage</td>
     <td>Description</td>
-    <td>&nbsp;</td>
+    <td valign="top" align="right" rowspan="2">{get_help("product_percentageCost");}</td>
   </tr>
   <tbody id="pctCostContainer">
 {foreach $pct as $cost}

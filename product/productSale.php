@@ -73,7 +73,8 @@ function get_productSale_costs() {
     $row["tax"] = $taxValue;
     $row["margin"] = -$total["fixed"] - $taxValue; // Fix this to remove tax
     if ($total["pct"] != 100) {
-      $row["pctRemaining"] = 100 - $total["pct"];
+      $row["pctRemaining"] = abs(100 - $total["pct"]);
+      $row["pctRemainingText"] = ($total["pct"] < 100 ? "To allocate: " : "Overallocated: ");
     }
     if ($total["transactions"] != 0) {
       $row["txRemaining"] = -$total["transactions"];
