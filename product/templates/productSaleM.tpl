@@ -174,7 +174,7 @@ function newProductField() \{
       <td>Destination TF</td>
       <td>Percentage
       {if $product["pctRemaining"]}
-      <span class="bad">To allocate: {$product.pctRemaining}%</span>
+      <span class="bad">{$product.pctRemainingText}{$product.pctRemaining}%</span>
       {/}
       </td>
       <td>Description</td>
