@@ -97,6 +97,8 @@ VALUES
 ('productSaleTransaction', 0, 0, 'manage', 'Y', 100, 'Managers can manipulate product sales', 15),
 ('productSaleTransaction', 0, 0, '', 'Y', 100, 'Users can view product sales', 1);
 
+INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allow`, `sortKey`, `comment`, `actions`) VALUES ('savedView', 0, 0, '', 'Y', 100, 'Allow people to view, save, edit and delete list filters.', 15);
+
 --
 -- Dumping data for table `config`
 --

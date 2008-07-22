@@ -28,6 +28,7 @@ include(ALLOC_MOD_DIR."person/lib/person.inc.php");
 include(ALLOC_MOD_DIR."person/lib/absence.inc.php");
 include(ALLOC_MOD_DIR."person/lib/skillList.inc.php");
 include(ALLOC_MOD_DIR."person/lib/skillProficiencys.inc.php");
+include(ALLOC_MOD_DIR."person/lib/savedView.inc.php");
 
 
 

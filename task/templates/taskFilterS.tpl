@@ -84,7 +84,7 @@ function refreshProjectList(radiobutton) \{
           <td><b>Managed By</b></td>
         </tr>
         <tr>
-          <td valign="top" rowspan="6"><select name="taskTypeID[]" size="6" multiple="true">{$taskTypeOptions}</select></td>
+          <td valign="top" rowspan="4"><select name="taskTypeID[]" size="6" multiple="true">{$taskTypeOptions}</select></td>
           <td><select name="managerID">{$managerPersonOptions}</select></td>
         </tr>
 
@@ -96,7 +96,21 @@ function refreshProjectList(radiobutton) \{
         </tr>
 
         <tr>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+
+        <tr>
           <td>&nbsp;</td>
+          <td align="right" valign="top">
+            {if $TPL['use_saved_filter']}
+              {include_template("../person/templates/savedViewFilterLinkS.tpl")}
+            {/}
+          </td>
+          <td valign="top" colspan="2">
+            {if $TPL['use_saved_filter']}
+              {include_template("../person/templates/savedViewFilterControlsS.tpl")}
+            {/}
+          </td>
           <td valign="bottom" align="right">
   
             <table>

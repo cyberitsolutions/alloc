@@ -32,26 +32,28 @@ $defaults = array("showHeader"=>true
                  ,"padding"=>1
                  ,"url_form_action"=>$TPL["url_alloc_taskList"]
                  ,"form_name"=>"taskList_filter"
+                 ,"saved_filter"=>"current"
                  );
 
 function show_filter() {
-  global $TPL,$defaults;
+  global $TPL,$defaults,$_FORM;
 
-  $_FORM = task::load_form_data($defaults);
   $arr = task::load_task_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);
   include_template("templates/taskFilterS.tpl");
 }
 
 function show_task_list() {
-  global $defaults;
+  global $defaults,$_FORM;
 
-  $_FORM = task::load_form_data($defaults);
   #echo "<pre>".print_r($_FORM,1)."</pre>";
   echo task::get_task_list($_FORM);
 }
 
 $TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;
+
+//Load form
+$_FORM = task::load_form_data($defaults);
 
 // Check for updates
 if ($_POST["run_mass_update"]) {
@@ -106,6 +108,10 @@ if ($_POST["run_mass_update"]) {
     $TPL["message_good"][] = "Tasks updated.";
   }
 }
+
+$_FORM = savedView::process_form($_FORM);
+// show the "saved filter" controls
+$TPL['use_saved_filter'] = true;
 
 include_template("templates/taskListM.tpl");
 page_close();

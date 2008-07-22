@@ -1344,6 +1344,10 @@ class task extends db_entity {
         ,"url_form_action"
         ,"form_name"
         ,"dontSave"
+        ,"saved_filter"
+        ,"new_filter_name"
+        ,"loadFilter"
+        ,"saveFilter"
         );
 
     $_FORM = get_all_form_data($page_vars,$defaults);
@@ -1365,7 +1369,7 @@ class task extends db_entity {
       $_FORM["projectType"] = "mine";
     }
 
-    if (!$_FORM["applyFilter"]) {
+    if (!$_FORM["applyFilter"] && !$_FORM["saveFilter"]) {
       $_FORM = $current_user->prefs[$_FORM["form_name"]];
       if (!isset($current_user->prefs[$_FORM["form_name"]])) {
         $_FORM["projectType"] = "mine";
@@ -1391,6 +1395,7 @@ class task extends db_entity {
   }
 
   function load_task_filter($_FORM) {
+    global $current_user;
 
     $db = new db_alloc;
 
@@ -1415,6 +1420,7 @@ class task extends db_entity {
     $rtn["taskTypeOptions"] = "\n<option value=\"\"> ";
     $rtn["taskTypeOptions"].= $taskType->get_dropdown_options("taskTypeID","taskTypeName",$_FORM["taskTypeID"]);
 
+    $current_user and $rtn["savedViewsOptions"] = get_select_options(savedView::get_saved_view_options($_FORM['form_name'], $current_user->get_id()));
 
     $_FORM["taskView"] and $rtn["taskView_checked_".$_FORM["taskView"]] = " checked";
 
