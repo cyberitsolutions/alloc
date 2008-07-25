@@ -92,6 +92,11 @@ class productSaleItem extends db_entity {
      * is considered to be the taxable portion.
      */
     $taxDone = false;
+
+    // There are a couple of cases where we shouldn't do tax
+    if(!$tax_tfID or $taxRate == 0) {
+      $taxDone = true;
+    }
     
     while ($row = $db->next_record()) {
       $description = sprintf("Product sale %d: %s", $this->get_value("productSaleID"), $row["description"]);
