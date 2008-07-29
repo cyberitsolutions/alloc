@@ -10,6 +10,7 @@
       {$table_list}
         <tr>
           <th>Template</th>
+          <th>Type</th>
         </tr>
       {show_commentTemplate("templates/commentTemplateListR.tpl")}
       </table>

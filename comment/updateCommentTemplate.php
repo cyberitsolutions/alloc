@@ -23,7 +23,6 @@
 
 require_once("../alloc.php");
 
-usleep(400000);
 if ($_GET["commentTemplateID"] && $_GET["entity"] && $_GET["entityID"]) {
   $commentTemplate = new commentTemplate;
   $commentTemplate->set_id($_GET["commentTemplateID"]);

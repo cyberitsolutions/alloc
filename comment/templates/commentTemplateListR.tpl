@@ -1,3 +1,4 @@
 <tr>
-  <td colspan="2"><a href="{$url_alloc_commentTemplate}commentTemplateID={$TCT_commentTemplateID}">{$TCT_commentTemplateName}</a></td>
+  <td><a href="{$url_alloc_commentTemplate}commentTemplateID={$commentTemplateID}">{$commentTemplateName}</a></td>
+  <td>{$commentTemplateType}</td>
 </tr>

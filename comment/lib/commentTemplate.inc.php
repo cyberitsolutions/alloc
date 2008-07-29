@@ -32,6 +32,7 @@ class commentTemplate extends db_entity {
     $this->key_field = new db_field("commentTemplateID");
     $this->data_fields = array("commentTemplateName"=>new db_field("commentTemplateName")
                              , "commentTemplateText"=>new db_field("commentTemplateText")
+                             , "commentTemplateType"=>new db_field("commentTemplateType")
                              , "commentTemplateModifiedTime"=>new db_field("commentTemplateModifiedTime"));
    }
 
@@ -40,17 +41,16 @@ class commentTemplate extends db_entity {
     global $current_user;
     $swap["cu"] = person::get_fullname($current_user->get_id());
 
-    if ($entity="timeSheet" && $entityID) {
+    if ($entity == "timeSheet" && $entityID) {
       $timeSheet = new timeSheet;
       $timeSheet->set_id($entityID);
       $timeSheet->select();
       $projectID = $timeSheet->get_value("projectID");
     }
 
-
-    if ($entity="task" && $entityID) {
+    if ($entity == "task" && $entityID) {
       $task = new task;
-      $task->set_id($taskID);
+      $task->set_id($entityID);
       $task->select();
       $swap["ti"] = $task->get_id();
       $swap["to"] = person::get_fullname($task->get_value("creatorID"));
@@ -102,8 +102,6 @@ class commentTemplate extends db_entity {
       $str = str_replace("%".$k,$v,$str);
     }
     return $str;
-    
-
   }
 
 

@@ -50,6 +50,9 @@ if ($_POST["save"]) {
 // Load data for display in the template
 $commentTemplate->set_tpl_values();
 
+$ops = array(""=>"Comment Template Type","task"=>"Task","timeSheet"=>"Time Sheet");
+$TPL["commentTemplateTypeOptions"] = get_select_options($ops,$commentTemplate->get_value("commentTemplateType"));
+
 $TPL["main_alloc_title"] = "Edit Comment Template - ".APPLICATION_NAME;
 // Invoke the page's main template
 include_template("templates/commentTemplateM.tpl");

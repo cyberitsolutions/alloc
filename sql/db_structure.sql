@@ -493,8 +493,9 @@ CREATE TABLE interestedParty (
 DROP TABLE IF EXISTS commentTemplate;
 CREATE TABLE commentTemplate (
   commentTemplateID int(11) NOT NULL auto_increment,
-  commentTemplateName varchar(255) default NULL,
+  commentTemplateName varchar(255) DEFAULT NULL,
   commentTemplateText text,
+  commentTemplateType varchar(255) DEFAULT NULL,
   commentTemplateModifiedTime datetime DEFAULT NULL,
   PRIMARY KEY  (commentTemplateID)
 ) TYPE=MyISAM PACK_KEYS=0;

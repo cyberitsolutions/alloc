@@ -445,7 +445,8 @@ class task extends db_entity {
     $TPL["projectOptions"] = task::get_project_options($projectID);
     
     $commentTemplate = new commentTemplate();
-    $TPL["commentTemplateOptions"] = $commentTemplate->get_dropdown_options("commentTemplateID","commentTemplateName","","Comment Templates");
+    $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"task"));
+    $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".get_select_options($ops);
 
     $priority = $this->get_value("priority") or $priority = 3;
     $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
