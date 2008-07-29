@@ -134,6 +134,11 @@ $TPL["calendarFirstDayOptions"] = get_select_options($days,$config->get_config_i
 
 $TPL["timeSheetPrintOptions"] = get_select_options($TPL["timeSheetPrintOptions"],$TPL["timeSheetPrint"]);
 
+$commentTemplate = new commentTemplate;
+$ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName");
+$TPL["task_email_header_options"] = get_select_options($ops,$config->get_config_item("task_email_header"));
+$TPL["task_email_footer_options"] = get_select_options($ops,$config->get_config_item("task_email_footer"));
+
 $TPL["main_alloc_title"] = "Setup - ".APPLICATION_NAME;
 include_template("templates/configM.tpl");
 

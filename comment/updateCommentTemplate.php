@@ -23,7 +23,7 @@
 
 require_once("../alloc.php");
 
-if ($_GET["commentTemplateID"] && $_GET["entity"] && $_GET["entityID"]) {
+if ($_GET["commentTemplateID"] && $_GET["commentTemplateID"] != "undefined" && $_GET["entity"] && $_GET["entityID"]) {
   $commentTemplate = new commentTemplate;
   $commentTemplate->set_id($_GET["commentTemplateID"]);
   $commentTemplate->select();
