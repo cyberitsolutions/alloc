@@ -64,7 +64,7 @@ if ($_POST["save"]) {
   exit();
 }
 
-$TPL["personOptions"] = get_select_options("SELECT personID as name, username as value FROM person ORDER BY username", $permission->get_value("personID"));
+$TPL["personOptions"] = get_select_options("SELECT personID as value, username as label FROM person ORDER BY username", $permission->get_value("personID"));
 $TPL["roleNameOptions"] = get_options_from_array(array("god", "admin", "manage", "employee"), $permission->get_value("roleName"), false);
 $TPL["allowOptions"] = get_select_options(array("Y"=>"Yes", "N"=>"No"), $permission->get_value("allow"));
 

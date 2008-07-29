@@ -575,15 +575,15 @@ function get_select_options($options,$selected_value=NULL,$max_length=45) {
   * @return                    string  The string of options
   */
 
-  // Build options from an SQL query: "SELECT col_a as name, col_b as value FROM"
+  // Build options from an SQL query: "SELECT col_a as value, col_b as label FROM"
   if (is_string($options)) {
     $db = new db_alloc;
     $db->query($options);
     while ($row = $db->row()) {
-      $rows[$row["name"]] = $row["value"];
+      $rows[$row["value"]] = $row["label"];
     }
 
-  // Build options from an array: array(array("name1","value1"),array("name2","value2"))
+  // Build options from an array: array(value1=>label1, value2=>label2)
   } else if (is_array($options)) {
     foreach ($options as $k => $v) {
       $rows[$k] = $v;
@@ -594,10 +594,9 @@ function get_select_options($options,$selected_value=NULL,$max_length=45) {
     foreach ($rows as $value=>$label) {
       $sel = "";
 
-      if (!$value && $value!==0 && !$value!=="0" && $label) {
-        $value = $label; 
+      if ($value && !$label) { 
+        $label = $value;
       }
-      !$label && $value and $label = $value;
 
       // If an array of selected values!
       if (is_array($selected_value)) {

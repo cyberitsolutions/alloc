@@ -80,7 +80,7 @@ if ($htmlElementParentID && !$htmlElement->get_value("htmlElementTypeID")) {
   $default_htmlElementTypeID = $htmlElement->get_value("htmlElementTypeID");
 }
 
-$TPL["htmlElementType_options"] = get_select_options("SELECT htmlElementTypeID as name, handle as value FROM htmlElementType",$default_htmlElementTypeID);
+$TPL["htmlElementType_options"] = get_select_options("SELECT htmlElementTypeID as value, handle as label FROM htmlElementType",$default_htmlElementTypeID);
 $htmlElement->get_value("enabled") and $TPL["enabled_checked"] = " checked";
 $htmlElementParentID and $TPL["htmlElementParentID"] = $htmlElementParentID;
 
