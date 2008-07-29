@@ -845,8 +845,11 @@ if ($timeSheetID) {
 $TPL["taxName"] = config::get_config_item("taxName");
 
 $TPL["allTimeSheetParties"] = $timeSheet->get_all_timeSheet_parties($timeSheet->get_value("projectID")) or $TPL["allTimeSheetParties"] = array();
+
 $commentTemplate = new commentTemplate();
-$TPL["commentTemplateOptions"] = $commentTemplate->get_dropdown_options("commentTemplateID","commentTemplateName","","Comment Templates");
+$ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"timeSheet"));
+$TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".get_select_options($ops);
+
 
 
 

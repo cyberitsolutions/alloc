@@ -11,7 +11,9 @@
   </tr>
   <tr>
     <td>Name</td>
-    <td><input type="text" name="commentTemplateName" size="80" value="{$commentTemplateName}"></td>
+    <td><input type="text" name="commentTemplateName" size="60" value="{$commentTemplateName}">
+        <select name="commentTemplateType">{$commentTemplateTypeOptions}</select>
+    </td>
     <td>&nbsp;</td>
   </tr>
   <tr>
