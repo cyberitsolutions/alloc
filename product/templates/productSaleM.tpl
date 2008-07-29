@@ -67,8 +67,13 @@ function newProductField() \{
       <tr>
         <td>Product</td>
         <td>Quantity</td>
+{if $TPL["taxRate"]}
         <td>Buy Cost (inc {$taxName})</td>
         <td>Sell Price (inc {$taxName})</td>
+{else}
+        <td>Buy Cost</td>
+        <td>Sell Price</td>
+{/}
         <td>Description</td>
         <td>&nbsp;</td>
       </tr>
@@ -143,12 +148,14 @@ function newProductField() \{
         <td>Description</td>
         <td>&nbsp;</td>
       </tr>
+{if $TPL["taxRate"]}
       <tr>
         <td>{tf_name($TPL["tax_tfID"])}</td>
         <td>{$product.tax}</td>
         <td>{$taxName}</td>
         <td>&nbsp;</td>
       </tr>
+{/}
     <tbody id="staticCostContainer{$productidx}">
     {foreach $staticrows[$product["productSaleItemID"]] as $row}
     <tr>
