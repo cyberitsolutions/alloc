@@ -33,10 +33,15 @@ if ($productSaleID) {
   $TPL["status"] = "create";
 }
 
+// Not really used, but needed to help with the template
+$taxRate = config::get_config_item("taxPercent") / 100.0;
+$TPL["taxRate"] = $taxRate;
+
+
 $db = new db_alloc;
 // {{{ Helper functions for the template
 function get_productSale_costs() {
-  global $db, $productSale;
+  global $db, $productSale, $taxRate;
   $pctRows = array();
   $staticRows = array();
   $transactions = array();
@@ -62,14 +67,17 @@ function get_productSale_costs() {
   //the right one
   $query = sprintf("SELECT *, productSaleItem.description as description FROM productSaleItem INNER JOIN product ON productSaleItem.productID = product.productID WHERE productSaleID = %d", $productSale->get_id());
   $db->query($query);
-  $taxRate = config::get_config_item("taxPercent") / 100.0;
   $psItems = array();
   while ($row = $db->next_record()) {
     $total = productSaleItem::checkTotals($row["productSaleItemID"]);
     if ($total["fixed"] > 0) {
       $row["fixedErr"] = $total["fixed"];
     }
-    $taxValue = sprintf("%0.2f", $row["sellPrice"] / (1 + 1/($taxRate)));
+    // Don't divide by zero
+    if ($taxRate != 0)
+      $taxValue =  sprintf("%0.2f", $row["sellPrice"] / (1 + 1/($taxRate)));
+    else
+      $taxValue = 0;
     $row["tax"] = $taxValue;
     $row["margin"] = -$total["fixed"] - $taxValue; // Fix this to remove tax
     if ($total["pct"] != 100) {

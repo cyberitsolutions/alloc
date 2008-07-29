@@ -6,6 +6,9 @@ $(document).ready(function() \{
   $("#buyCost").change(function(event) \{
     $("#buyCostLine").text($("#buyCost").val());
   \});
+
+
+{if $TPL["taxRate"]}  
   var incFactor = 1.0 + {$taxRate};
   var exFactor = 1.0/incFactor;
   var taxRate = 1 / (1 + 1/{$taxRate});
@@ -38,7 +41,7 @@ $(document).ready(function() \{
     $('#sellPrice').val(price.toFixed(2));
     $('#taxLine').text(tax.toFixed(2));
   \});
-
+{/}
 \});
 
 </script>
@@ -59,13 +62,21 @@ $(document).ready(function() \{
       </tr>
       <tr>
         <td>Buy cost</td>
+{if $TPL["taxRate"]}
         <td><input type="text" size="8" name="buyCost" id="buyCost" value="{$product_buyCost}" tabindex="2" /> (inc {$taxName})</td>
         <td><input type="text" size="8" name="buyCost_ex" id="buyCost_ex" /> (ex {$taxName})</td>
+{else}
+        <td colspan="2"><input type="text" size="8" name="buyCost" id="buyCost" value="{$product_buyCost}" tabindex="2" /></td>
+{/}
       </tr>
       <tr>
         <td>Sell price</td>
+{if $TPL["taxRate"]}
         <td><input type="text" size="8" name="sellPrice" id="sellPrice" value="{$product_sellPrice}" tabindex="3" /> (inc {$taxName})</td>
         <td><input type="text" size="8" name="sellPrice_ex" id="sellPrice_ex" /> (ex {$taxName})</td>
+{else}
+        <td colspan="2"><input type="text" size="8" name="sellPrice" id="sellPrice" value="{$product_sellPrice}" tabindex="3" /></td>
+{/}
       </tr>
       <tr>
         <td>Description</td><td colspan="2"><input type="text" size="50" name="description" value="{$product_description}" tabindex="4" /></td>
@@ -119,12 +130,14 @@ $(document).ready(function() \{
     <td>Product buy cost</td>
     <!-- <td> removed for help icon -->
   </tr>
+{if $TPL["taxRate"]}
   <tr>
     <td>{$taxTF}</td>
     <td id="taxLine">{$product_tax}</td>
     <td>{$taxName}</td>
     <td>&nbsp;</td>
   </tr>
+{/}
   <tbody id="fixedCostContainer">
 {foreach $fixed as $cost}
   <tr id="fixedCost_{$cost.productCostID}">

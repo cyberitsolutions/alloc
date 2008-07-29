@@ -176,8 +176,10 @@ if ($prodID) {
 
   # Calculate the tax
   # Divide by (reciprocal of tax rate + 1)
-  $TPL["product_tax"] = sprintf("%0.2f", $product->get_value("sellPrice") / (1 + 1/(config::get_config_item("taxPercent") / 100.0)));
-  $TPL["taxName"] = config::get_config_item("taxName");
+  if ($taxRate) {
+    $TPL["product_tax"] = sprintf("%0.2f", $product->get_value("sellPrice") / (1 + 1/(config::get_config_item("taxPercent") / 100.0)));
+    $TPL["taxName"] = config::get_config_item("taxName");
+  }
 } else {
    $TPL["main_alloc_title"] = "New Product - ".APPLICATION_NAME;
 }
