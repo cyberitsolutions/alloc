@@ -1475,9 +1475,22 @@ class task extends db_entity {
         $subject_extra = "{Key:".$hash."}";
       }
 
+      if ($commentTemplateHeaderID = config::get_config_item("task_email_header")) {
+        $commentTemplate = new commentTemplate;
+        $commentTemplate->set_id($commentTemplateHeaderID);
+        $commentTemplate->select();
+        $body_header = $commentTemplate->get_populated_template("task", $this->get_id());
+      }
+      if ($commentTemplateFooterID = config::get_config_item("task_email_footer")) {
+        $commentTemplate = new commentTemplate;
+        $commentTemplate->set_id($commentTemplateFooterID);
+        $commentTemplate->select();
+        $body_footer = $commentTemplate->get_populated_template("task", $this->get_id());
+      }
+
       $subject = "Task Comment: ".$this->get_id()." ".$this->get_value("taskName")." [".$this->get_priority_label()."] ".$subject_extra;
       $email->set_subject($subject);
-      $email->set_body($body);
+      $email->set_body($body_header.$body.$body_footer);
       $email->set_message_type($type);
 
       if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {

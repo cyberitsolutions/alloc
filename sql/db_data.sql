@@ -236,5 +236,8 @@ INSERT INTO config (name,value,type) VALUES ("projectPriorities",'a:5:{i:1;a:2:{
 
 INSERT INTO config (name,value,type) VALUES ("defaultInterestedParties",'a:0:{}',"array");
 INSERT INTO config (name,value,type) VALUES ("timeSheetManagerEmail", "","text");
+INSERT INTO config (name,value,type) VALUES ("task_email_header", "","text");
+INSERT INTO config (name,value,type) VALUES ("task_email_footer", "","text");
+
 
 
