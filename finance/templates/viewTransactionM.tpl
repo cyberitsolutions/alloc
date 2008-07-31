@@ -9,7 +9,11 @@
     <td>{$transactionID}</td>
   </tr>
   <tr>
-    <td>Tagged Fund</td>
+    <td>Source Tagged Fund</td>
+    <td>{$from_tf_link}</td>
+  </tr>
+  <tr>
+    <td>Destination Tagged Fund</td>
     <td>{$tf_link}</td>
   </tr>
   <tr>

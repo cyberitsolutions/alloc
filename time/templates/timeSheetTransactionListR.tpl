@@ -2,6 +2,7 @@
 <tr>
   <td><input type="text" name="transaction_transactionDate" value="{$transaction_transactionDate}" size="10"></td>
   <td><input type="text" name="transaction_product" value="{$transaction_product}" size="20"></td>
+  <td><select name="transaction_fromTfID"><option value="">{$from_tf_options}</select></td>
   <td><select name="transaction_tfID"><option value="">{$tf_options}</select></td>
   <td><input type="text" name="transaction_amount" value="{$transaction_amount}" size="8">
       <select name="percent_dropdown" onChange="this.form.transaction_amount.value=this.options[this.selectedIndex].value;">

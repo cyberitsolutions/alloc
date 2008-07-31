@@ -86,7 +86,15 @@ while ($db->next_record()) {
       continue 2;
     }
 
+    $tf = new tf;
+    $tf->set_id($transactionRepeat->get_value("fromTfID"));
+    $tf->select();
+    if ($tf->get_value("status") != 'active') {
+      continue 2;
+    }
+
     $transaction = new transaction;
+    $transaction->set_value("fromTfID", $transactionRepeat->get_value("fromTfID"));
     $transaction->set_value("tfID", $transactionRepeat->get_value("tfID"));
     $transaction->set_value("companyDetails", $transactionRepeat->get_value("companyDetails"));
     $transaction->set_value("amount", -$transactionRepeat->get_value("amount"));

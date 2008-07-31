@@ -22,6 +22,10 @@
 
 require_once("../alloc.php");
 
+if (!config::get_config_item("wagesTfID")) {
+  $TPL["message"][] = "Please select a default Wages TF from the Setup -&gt; Finance menu.";
+}
+
 #$field_map = array("transactionDate"=>0, "employeeNum"=>1, "name"=>2, ""=>3, ""=>4, ""=>5, ""=>6, ""=>7, ""=>8, ""=>9, "amount"=>10, ""=>11, ""=>12);
 
 $field_map = array(""                =>0
@@ -86,7 +90,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
       $msg.= "<b>Warning: Could not find TF for employee number '$employeeNum' $name</b><br>";
       continue;
     }
-    $tfID = $db->f("tfID");
+    $fromTfID = $db->f("tfID");
 
     // Convert the date to yyyy-mm-dd
     if (!eregi("^([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})$", $transactionDate, $matches)) {
@@ -108,7 +112,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     // Check for an existing transaction for this wage - note we have to use a range or amount because it is floating point
     $query = sprintf("SELECT transactionID
                         FROM transaction
-                        WHERE tfID=%d AND transactionDate='%s' AND amount>%0.3f AND amount < %0.3f", $tfID, db_esc($transactionDate), $amount - 0.001, $amount + 0.001);
+                        WHERE fromTfID=%d AND transactionDate='%s' AND amount>%0.3f AND amount < %0.3f", $fromTfID, db_esc($transactionDate), $amount - 0.001, $amount + 0.001);
     $db->query($query);
     if ($db->next_record()) {
       $msg.= "Warning: Salary for employee #$employeeNum $name on $transactionDate already exists as transaction #".$db->f("transactionID")."<br>";
@@ -117,7 +121,8 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
 
     // Create a transaction object and then save it
     $transaction = new transaction;
-    $transaction->set_value("tfID", $tfID);
+    $transaction->set_value("fromTfID", $fromTfID);
+    $transaction->set_value("tfID", config::get_config_item("wagesTfID"));
     $transaction->set_value("transactionDate", $transactionDate);
     $transaction->set_value("amount", $amount);
     $transaction->set_value("companyDetails", "");

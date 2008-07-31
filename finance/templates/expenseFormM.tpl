@@ -61,14 +61,14 @@
     <td><b>Product</b></td>
     <td><b>Quantity</b></td>
     <td><b>Price</b></td>
-    <td><b>TF</b></td>
+    <td><b>Source TF</b></td>
     <td><b>Date Incurred</b></td>
   </tr>
   <tr>
     <td><input type="text" size="25" name="product" value="{$product}"></td>
     <td><input type="text" size="5" name="quantity" value="{$quantity}"></td>
     <td><input type="text" size="9" name="amount" value="{$amount}"></td>
-    <td><select name="tfID" value="{$tfID}">{$tfOptions}</select></td>
+    <td><select name="fromTfID">{$fromTfOptions}</select></td>
     <td><nobr>{get_calendar("transactionDate",$TPL["transactionDate"])}</nobr>
     <td class="right"><input type="submit" name="add" value="Add Expense Form Item"><input type="hidden" name="transactionID" value="{$transactionID}"></td>
   </tr>

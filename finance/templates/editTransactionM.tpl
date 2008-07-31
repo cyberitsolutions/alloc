@@ -14,7 +14,17 @@
     <td width="1%"></td>
   </tr>
   <tr>
-    <td>Tagged Fund</td>
+    <td>Source Tagged Fund</td>
+    <td><select name="fromTfID">
+      <option value="">
+      {$fromTfIDOptions}
+      </select>
+    </td>
+    <td class="hint">{get_help("from_transaction_tf")}</td>
+  </tr>
+
+  <tr>
+    <td>Destination Tagged Fund</td>
     <td><select name="tfID">
       <option value="">
       {$tfIDOptions}
@@ -98,7 +108,7 @@
     <td align="center" colspan="3">
       <input type="submit" name="save" value="Save">
       <input type="submit" name="saveAndNew" value="Save and New">
-      <input type="submit" name="saveGoTf" value="Save and go to TF">
+      <input type="submit" name="saveGoTf" value="Save and go to Dest TF">
       <input type="submit" name="delete" value="Delete">
     </td>
   </tr>

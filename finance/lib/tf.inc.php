@@ -42,18 +42,28 @@ class tf extends db_entity {
  
     // If no status is requested then default to approved.  
     $where["status"] or $where["status"] = "approved";
-    $where["tfID"] = $this->get_id();
     
     // Check the current_user has PERM_READ for this
     check_entity_perm("transaction", PERM_READ, $current_user, $this->is_owner());
 
     // Get belance
     $db = new db_alloc;
-    $query = "SELECT SUM(amount) as balance FROM transaction WHERE";
+    $query = sprintf("SELECT sum(if(fromTfID=%d,-amount,amount)) AS balance 
+                        FROM transaction 
+                       WHERE (tfID = %d or fromTfID = %d) "
+                    ,$this->get_id(),$this->get_id(),$this->get_id());
 
     // Build up the rest of the WHERE sql
-    $query.= db_get_where($where);
-#echo "<br>".$debug." q: ".$query;
+    foreach($where as $column_name=>$value) {
+      $op = " = ";
+      if (is_array($value)) {
+        $op = $value[0];
+        $value = $value[1];
+      }
+      $query.= " AND ".$column_name.$op." '".db_esc($value)."'";
+    }
+
+    #echo "<br>".$debug." q: ".$query;
     $db->query($query);
     $db->next_record() || die("TF $tfID not found in tf::get_balance");
     return $db->f("balance");
@@ -117,6 +127,16 @@ class tf extends db_entity {
 
     return $nav_links;
   }
+
+  function get_link() {
+    global $current_user, $TPL;
+    if (have_entity_perm("transaction", PERM_READ, $current_user, $this->is_owner())) {
+      return "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$this->get_id()."\">".$this->get_value("tfName")."</a>";
+    } else {
+      return $this->get_value("tfName");
+    }
+  }
+
 }
 
 ?>

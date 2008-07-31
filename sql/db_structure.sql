@@ -625,6 +625,7 @@ CREATE TABLE transaction (
   status enum('pending','rejected','approved') NOT NULL DEFAULT 'pending',
   expenseFormID int(11) DEFAULT NULL,
   tfID int(11) NOT NULL default '0',
+  fromTfID int(11) NOT NULL,
   projectID int(11) DEFAULT NULL,
   transactionModifiedUser int(11) DEFAULT NULL,
   transactionModifiedTime datetime DEFAULT NULL,
@@ -640,6 +641,7 @@ CREATE TABLE transaction (
   transactionRepeatID int(11) default NULL,
   INDEX idx_timeSheetID (timeSheetID),
   INDEX idx_tfID (tfID),
+  INDEX idx_fromTfID (fromTfID),
   INDEX idx_invoiceItemID (invoiceItemID),
   PRIMARY KEY (transactionID)
 ) TYPE=MyISAM PACK_KEYS=0;
@@ -649,6 +651,7 @@ DROP TABLE IF EXISTS transactionRepeat;
 CREATE TABLE transactionRepeat (
   transactionRepeatID int(11) NOT NULL auto_increment,
   tfID int(11) NOT NULL default '0',
+  fromTfID int(11) NOT NULL,
   payToName text NOT NULL,
   payToAccount text NOT NULL,
   companyDetails text NOT NULL,

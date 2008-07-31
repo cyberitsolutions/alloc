@@ -27,6 +27,7 @@ require_once("../alloc.php");
 
     if ($_POST["search"]) {
       $where.= " where 1=1";
+      $_POST["fromTfID"] && $_POST["fromTfID"] != 0 and $where.= sprintf(" AND fromTfID=%d",db_esc($_POST["fromTfID"]));
       $_POST["tfID"] && $_POST["tfID"] != 0 and $where.= sprintf(" AND tfID=%d",db_esc($_POST["tfID"]));
       $_POST["status"] != "All"             and $where.= sprintf(" AND status=\"%s\"",db_esc($_POST["status"]));
       $_POST["dateOne"] != ""               and $where.= sprintf(" AND transactionDate>=\"%s\"",db_esc($_POST["dateOne"]));
@@ -51,8 +52,16 @@ require_once("../alloc.php");
       $i++;
       $transaction->read_db_record($db);
       $transaction->set_tpl_values();
-      $tf = $transaction->get_foreign_object("tf");
-      $tf->set_tpl_values();
+      $tf = new tf;
+      $tf->set_id($transaction->get_value("tfID"));
+      $tf->select();
+      $TPL["tfName"] = $tf->get_link();
+
+      $tf = new tf;
+      $tf->set_id($transaction->get_value("fromTfID"));
+      $tf->select();
+      $TPL["fromTfName"] = $tf->get_link();
+
       $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);   
       $TPL["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];
       include_template($template);
@@ -67,9 +76,14 @@ $db->query("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
 $TPL["tfOptions"] = get_option("", "0", false)."\n";
 $TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $_POST["tfID"]);
 
+$db->query("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
+$TPL["fromTfOptions"] = get_option("", "0", false)."\n";
+$TPL["fromTfOptions"].= get_options_from_db($db, "tfName", "tfID", $_POST["fromTfID"]);
+
 $TPL["statusOptions"] = get_options_from_array(array("All", "Pending", "Rejected", "Approved",), $_POST["status"], false);
 
 $TPL["status"] = $_POST["status"];
+$TPL["fromTfID"] = $_POST["fromTfID"];
 $TPL["tfID"] = $_POST["tfID"];
 $TPL["dateOne"] = $_POST["dateOne"];
 $TPL["dateTwo"] = $_POST["dateTwo"];

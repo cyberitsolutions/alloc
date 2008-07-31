@@ -35,6 +35,7 @@ class alloc_email {
                              ,"spectrum.lancewood.net"
                              ,"peach.office.cyber.com.au"
                              ,"peach"
+                             ,"leaf"
                              #,"alloc_dev"
                              );
 

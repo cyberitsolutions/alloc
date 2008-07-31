@@ -1,5 +1,6 @@
 <tr>
   <td><a href="{$url_alloc_transaction}transactionID={$transactionID}">{$transactionID}</a></td>
+  <td class="transaction-{$status}">{$fromTfName}</td>
   <td class="transaction-{$status}">{$tfName}</td>
   <td class="transaction-{$status}">{$product}</td>
   <td class="transaction-{$status}">{$transactionType}</td>

@@ -5,7 +5,7 @@
     <th colspan="4">TF List</th>
   </tr>
   <tr>
-    <td colspan="4">
+    <td colspan="4" align="center">
       <form action="{$url_alloc_tfList}" method="post">
       <table class="filter" align="center">
         <tr>

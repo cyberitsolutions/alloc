@@ -7,7 +7,7 @@
 <tr>
   <td width="40%">{$product}</td>
   <td width="25%" class="nobr">{$quantity}pcs. @ ${$amount} each  &nbsp;&nbsp;&nbsp;<b>${$lineTotal}</b></td>
-  <td class="nobr">TF:{$tfID}</td>
+  <td class="nobr">Source TF:{$fromTfIDLink} Dest TF: {$tfIDLink}</td>
   <td class="nobr" width="1%">{$transactionDate}</td> 
   <td width="1%" align="right" class="nobr">
 	  &nbsp;&nbsp;{if check_optional_allow_edit()}

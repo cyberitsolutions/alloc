@@ -29,27 +29,24 @@ class transactionRepeat extends db_entity {
     $this->db_entity();         // Call constructor of parent class
     $this->key_field = new db_field("transactionRepeatID");
     $this->data_fields = array("companyDetails"=>new db_field("companyDetails", array("empty_to_null"=>false))
-                               , "payToName"=>new db_field("payToName", array("empty_to_null"=>false))
-                               , "payToAccount"=>new db_field("payToAccount", array("empty_to_null"=>false))
-                               , "tfID"=>new db_field("tfID")
-
-                               , "emailOne"=>new db_field("emailOne")
-                               , "emailTwo"=>new db_field("emailTwo")
-
-                               , "transactionRepeatModifiedUser"=>new db_field("transactionRepeatModifiedUser")
-                               , "reimbursementRequired"=>new db_field("reimbursementRequired",array("empty_to_null"=>false))
-                               , "transactionRepeatModifiedTime"=>new db_field("transactionRepeatModifiedTime")
-                               , "transactionRepeatCreatedTime"=>new db_field("transactionRepeatCreatedTime")
-                               , "transactionRepeatCreatedUser"=>new db_field("transactionRepeatCreatedUser")
-                               , "transactionStartDate"=>new db_field("transactionStartDate")
-                               , "transactionFinishDate"=>new db_field("transactionFinishDate")
-
-                               , "paymentBasis"=>new db_field("paymentBasis")
-                               , "amount"=>new db_field("amount")
-                               , "product"=>new db_field("product")
-                               , "status"=>new db_field("status")
-
-                               , "transactionType"=>new db_field("transactionType")
+                              ,"payToName"=>new db_field("payToName", array("empty_to_null"=>false))
+                              ,"payToAccount"=>new db_field("payToAccount", array("empty_to_null"=>false))
+                              ,"tfID"=>new db_field("tfID")
+                              ,"fromTfID"=>new db_field("fromTfID")
+                              ,"emailOne"=>new db_field("emailOne")
+                              ,"emailTwo"=>new db_field("emailTwo")
+                              ,"transactionStartDate"=>new db_field("transactionStartDate")
+                              ,"transactionFinishDate"=>new db_field("transactionFinishDate")
+                              ,"transactionRepeatModifiedUser"=>new db_field("transactionRepeatModifiedUser")
+                              ,"reimbursementRequired"=>new db_field("reimbursementRequired",array("empty_to_null"=>false))
+                              ,"transactionRepeatModifiedTime"=>new db_field("transactionRepeatModifiedTime")
+                              ,"transactionRepeatCreatedTime"=>new db_field("transactionRepeatCreatedTime")
+                              ,"transactionRepeatCreatedUser"=>new db_field("transactionRepeatCreatedUser")
+                              ,"paymentBasis"=>new db_field("paymentBasis")
+                              ,"amount"=>new db_field("amount")
+                              ,"product"=>new db_field("product")
+                              ,"status"=>new db_field("status")
+                              ,"transactionType"=>new db_field("transactionType")
 
 
       );

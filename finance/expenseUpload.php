@@ -79,7 +79,7 @@ if ($_POST["upload"]) {
     echo $query;
     $db->query($query);
     if ($db->next_record()) {
-      $tfID = $db->f("tfID");
+      $fromTfID = $db->f("tfID");
     } else {
       $msg.= "<b>Warning: Could not find active TF for account '$account'</b><br>";
       continue;
@@ -99,7 +99,8 @@ if ($_POST["upload"]) {
     $transaction->set_value("amount", $amount);
     $transaction->set_value("status", "pending");
     $transaction->set_value("expenseFormID", "0");
-    $transaction->set_value("tfID", $tfID);
+    $transaction->set_value("fromTfID", $fromTfID);
+    $transaction->set_value("tfID", config::get_config_item("cybersourceTfID"));
     $transaction->set_value("quantity", 1);
     $transaction->set_value("invoiceItemID", "0");
     $transaction->set_value("transactionType", "expense");

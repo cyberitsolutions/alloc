@@ -48,7 +48,7 @@ if (!$current_user->is_employee()) {
         }
 
 
-        $TPL["create_transaction_buttons"] = "<tr><td colspan=\"7\" align=\"center\" style=\"padding:10px;\">";
+        $TPL["create_transaction_buttons"] = "<tr><td colspan=\"8\" align=\"center\" style=\"padding:10px;\">";
         $TPL["create_transaction_buttons"].= "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">";
         $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_default\" value=\"Create Default Transactions\">";
         $TPL["create_transaction_buttons"].= "&nbsp;";
@@ -58,23 +58,17 @@ if (!$current_user->is_employee()) {
       }
 
       $db = new db_alloc;
-      $db->query("SELECT SUM(amount) as total FROM transaction WHERE amount > 0 AND timeSheetID = ".$timeSheet->get_id());
+      $db->query("SELECT SUM(amount) as total FROM transaction WHERE transactionType != 'insurance' AND timeSheetID = %d",$timeSheet->get_id());
       $db->next_record();
-      $total_positive = $db->f("total");
+      $total = $db->f("total");
 
-      $db->query("SELECT SUM(amount) as total FROM transaction WHERE amount < 0 AND timeSheetID = ".$timeSheet->get_id());
-      $db->next_record();
-      $total_negative = $db->f("total");
-
-      if (sprintf("%0.2f",$total_positive) + sprintf("%0.2f",$total_negative) != 0) {
+      if ($total != $timeSheet->pay_info["total_dollars_not_null"]) {
         $start_bad = "<span class=\"bad\">";
         $end_bad = "</span>";
-        $extra = " (allocate: ".sprintf("\$%0.2f",-($total_positive + $total_negative)).")";
+        $extra = " (allocate: ".sprintf("\$%0.2f",$timeSheet->pay_info["total_dollars_not_null"]-$total).")";
       }
 
       $TPL["amount_msg"] = $start_bad.$extra.$end_bad;
-      $TPL["total_pos"] = sprintf("\$%0.2f",$total_positive);
-      $TPL["total_neg"] = str_replace("-","-\$",sprintf("%0.2f",$total_negative));
 
       include_template($template_name);
     }
@@ -104,6 +98,7 @@ if (!$current_user->is_employee()) {
           $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
 
           $TPL["tf_options"] = get_options_from_array($tf_array, $TPL["transaction_tfID"], true, 35);
+          $TPL["from_tf_options"] = get_options_from_array($tf_array, $TPL["transaction_fromTfID"], true, 35);
 
           # Account for disabled TF
           $tf = new tf;
@@ -112,6 +107,13 @@ if (!$current_user->is_employee()) {
           if ($tf->get_value("status") != 'active') {
             $TPL["tf_options"] .= get_option($tf->get_value("tfName"), $tf->get_id(), true);
           }
+          $tf = new tf;
+          $tf->set_id($transaction->get_value("fromTfID"));
+          $tf->select();
+          if ($tf->get_value("status") != 'active') {
+            $TPL["from_tf_options"] .= get_option($tf->get_value("tfName"), $tf->get_id(), true);
+          }
+
 
           $TPL["status_options"] = get_select_options($status_options, $transaction->get_value("status"));
           $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
@@ -140,6 +142,7 @@ if (!$current_user->is_employee()) {
           unset($TPL["transaction_amount_pos"]);
           unset($TPL["transaction_amount_neg"]);
           $TPL["transaction_amount"] = "$".number_format($TPL["transaction_amount"], 2);
+          $TPL["transaction_fromTfID"] = get_tf_name($transaction->get_value("fromTfID"));
           $TPL["transaction_tfID"] = get_tf_name($transaction->get_value("tfID"));
           $TPL["transaction_transactionType"] = $transactionType_options[$transaction->get_value("transactionType")];
           include_template("templates/timeSheetTransactionListViewR.tpl");
