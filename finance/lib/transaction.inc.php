@@ -44,6 +44,7 @@ class transaction extends db_entity
                                , "invoiceID"=>new db_field("invoiceID")
                                , "invoiceItemID"=>new db_field("invoiceItemID")
                                , "tfID"=>new db_field("tfID")
+                               , "fromTfID"=>new db_field("fromTfID")
                                , "projectID"=>new db_field("projectID")
                                , "transactionModifiedUser"=>new db_field("transactionModifiedUser")
                                , "transactionModifiedTime"=>new db_field("transactionModifiedTime")
@@ -96,14 +97,19 @@ class transaction extends db_entity
   }
 
   function save() {
+    global $TPL;
     //safety checks
     //The transaction may not be modified if the timesheet, invoice or expense
     //form it is attached to has been completed.
     if ($this->is_final()) {
       die("Cannot save transaction, as it has been finalised.");
-    }
+
+    } else if (!$this->get_value("fromTfID")) {
+      $TPL["message"][] = "Unable to save transaction without a Source TF.";
     
-    return parent::save();
+    } else {
+      return parent::save();
+    }
   }
 
   function is_final() {
@@ -232,21 +238,13 @@ class transaction extends db_entity
 
   function get_transaction_list_filter($_FORM) {
 
-    if ($_FORM["tfName"]) {
-      $q = sprintf("SELECT * FROM tf WHERE tfName = '%s'",db_esc($_FORM["tfName"]));
-      $db = new db_alloc();
-      $db->query($q);
-      $db->next_record();
-      $_FORM["tfIDs"][] = $db->f("tfID");
+    if (is_array($_FORM["tfIDs"]) && count($_FORM["tfIDs"])) {
+      foreach ($_FORM["tfIDs"] as $tfID) {
+        $str.= $commar.db_esc($tfID);
+        $commar=",";
+      }
+      $sql["tfIDs"] = sprintf("(tfID in (%s) or fromTfID in (%s))",$str,$str);
     }
-
-    if (is_array($_FORM["tfIDs"]) && count($_FORM["tfIDs"]) == 1 && !$_FORM["tfID"]) {
-      $_FORM["tfID"] = end($_FORM["tfIDs"]);
-      unset($_FORM["tfIDs"]);
-    }
-
-    $_FORM["tfID"] and $sql["tfID"] = sprintf("(tfID = %d)",db_esc($_FORM["tfID"]));
-    is_array($_FORM["tfIDs"]) && count($_FORM["tfIDs"]) and $sql["tfID"] = sprintf("(tfID in (%s))",implode(",",$_FORM["tfIDs"]));
 
     if ($_FORM["monthDate"]) {
       $_FORM["startDate"] = format_date("Y-m-",$_FORM["monthDate"])."01";
@@ -281,6 +279,18 @@ class transaction extends db_entity
      *
      */
 
+    if ($_FORM["tfName"]) {
+      $q = sprintf("SELECT * FROM tf WHERE tfName = '%s'",db_esc($_FORM["tfName"]));
+      $db = new db_alloc();
+      $db->query($q);
+      $db->next_record();
+      $_FORM["tfIDs"][] = $db->f("tfID");
+    }
+
+    if ($_FORM["tfID"]) {
+      $_FORM["tfIDs"][] = $_FORM["tfID"];
+    }
+
     $filter = transaction::get_transaction_list_filter($_FORM);
     $debug = $_FORM["debug"];
     $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
@@ -289,7 +299,7 @@ class transaction extends db_entity
     $_FORM["return"] or $_FORM["return"] = "html";
 
     $filter["prevBalance"] and $filter2[] = $filter["prevBalance"];
-    $filter["tfID"]        and $filter2[] = $filter["tfID"];
+    $filter["tfIDs"]       and $filter2[] = $filter["tfIDs"];
     $filter2               and $filter2[] = " (status = 'approved') ";
     unset($filter["prevBalance"]);
 
@@ -325,23 +335,41 @@ class transaction extends db_entity
       if (!$t->read_db_record($db,false)) {
         continue;
       }
+  
+      // If the destination of this TF is not the current TfID, then invert the $amount
+      $amount = $t->get_value("amount");
+      if (!in_array($row["tfID"],$_FORM["tfIDs"])) {
+        $amount = -$amount;
+      }
+
+      $row["amount"] = $amount;
       $row["transactionURL"] = $t->get_url();
       $row["transactionName"] = $t->get_transaction_name($_FORM);
       $row["transactionLink"] = $t->get_transaction_link($_FORM);
       $row["transactionTypeLink"] = $t->get_transaction_type_link() or $row["transactionTypeLink"] = $row["transactionType"];
       $row["transactionSortDate"] = format_date("Y-m-d",$row["transactionSortDate"]); 
 
+      $tf = new tf;
+      $tf->set_id($t->get_value("fromTfID"));
+      $tf->select();
+      $row["fromTfIDLink"] = $tf->get_link();
+
+      $tf = new tf;
+      $tf->set_id($t->get_value("tfID"));
+      $tf->select();
+      $row["tfIDLink"] = $tf->get_link();
+
       if ($t->get_value("status") == "approved") {
-        $running_balance += $t->get_value("amount");
+        $running_balance += $amount;
         $row["running_balance"] = sprintf("%0.2f",$running_balance);
       }
  
-      if ($t->get_value("amount") > 0) {
-        $row["amount_positive"] = sprintf("%0.2f",$t->get_value("amount"));
-        $total_amount_positive += sprintf("%0.2f",$t->get_value("amount"));
+      if ($amount > 0) {
+        $row["amount_positive"] = sprintf("%0.2f",$amount);
+        $total_amount_positive += sprintf("%0.2f",$amount);
       } else {
-        $row["amount_negative"] = sprintf("%0.2f",$t->get_value("amount"));
-        $total_amount_negative += $t->get_value("amount");
+        $row["amount_negative"] = sprintf("%0.2f",$amount);
+        $total_amount_negative += $amount;
       }
 
 
@@ -380,10 +408,12 @@ class transaction extends db_entity
     $str[] = "<tr>";
     $str[] = "  <th width=\"1%\">ID</th>";
     $str[] = "  <th width=\"1%\">Type</th>";
-    $str[] = "  <th width=\"1%\">Status</th>";
+    $str[] = "  <th width=\"1%\">Source TF</th>";
+    $str[] = "  <th width=\"1%\">Dest TF</th>";
     $str[] = "  <th width=\"1%\">Date</th>";
     $str[] = "  <th width=\"1%\">Modified</th>";
     $str[] = "  <th>Product</th>";
+    $str[] = "  <th width=\"1%\">Status</th>";
     $str[] = "  <th class=\"right\" width=\"1%\">Credit</th>";
     $str[] = "  <th class=\"right\" width=\"1%\">Debit</th>";
     $str[] = "  <th class=\"right\" width=\"1%\">Balance</th>";
@@ -394,7 +424,7 @@ class transaction extends db_entity
   function get_transaction_list_tr_footer($_FORM) {
     $str[] = "<tfoot>";
     $str[] = "<tr>";
-    $str[] = "  <td colspan=\"6\">&nbsp;</td>";
+    $str[] = "  <td colspan=\"8\">&nbsp;</td>";
     $str[] = "  <td class=\"grand_total nobr right\">".$_FORM["total_amount_positive"]."&nbsp;</td>";
     $str[] = "  <td class=\"grand_total nobr right\">".$_FORM["total_amount_negative"]."&nbsp;</td>";
     $str[] = "  <td class=\"grand_total nobr right transaction-approved\">".$_FORM["running_balance"]."&nbsp;</td>";
@@ -409,10 +439,12 @@ class transaction extends db_entity
     $str[] = "<tr class=\"".$row["class"]."\">";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr\"><a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$row["transactionID"]."\">".$row["transactionID"]."</a></td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionTypeLink"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["status"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["fromTfIDLink"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["tfIDLink"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionDate"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionSortDate"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]."\">".$row["product"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["status"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["amount_positive"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["amount_negative"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["running_balance"]."&nbsp;</td>";

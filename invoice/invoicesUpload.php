@@ -141,7 +141,6 @@ if ($_POST["upload"]) {
     $invoice_item->set_value("iiDate", $date);
     $invoice_item->save();
 
-    $config = new config;
     #$transactionAmount = $amount * .285;
     #$transactionAmount = $amount / 1.1;
     $transactionAmount = $amount;
@@ -155,7 +154,8 @@ if ($_POST["upload"]) {
     $transactionNew->set_value("transactionDate", $date);
     $transactionNew->set_value("product", $memo);
     $transactionNew->set_value("companyDetails", $invoiceName);
-    $transactionNew->set_value("tfID", $config->get_config_item("cybersourceTfID"));
+    $transactionNew->set_value("fromTfID", config::get_config_item("invoicesTfID"));
+    $transactionNew->set_value("tfID", config::get_config_item("cybersourceTfID"));
     $transactionNew->set_value("transactionType", "invoice");
     $transactionNew->save();
 

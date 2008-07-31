@@ -2,6 +2,7 @@
 {show_toolbar()}
 
 {get_side_by_side_links(array("basic"=>"Basic Setup"
+                             ,"finance"=>"Finance"
                              ,"time_sheets"=>"Time Sheets"
                              ,"company_info"=>"Company Info"
                              ,"email_gateway"=>"Email Gateway"
@@ -52,6 +53,61 @@
 </form>
 </div>
 
+<div id="finance">
+<form action="{$url_alloc_config}" method="post">
+{$table_box}
+  <tr>
+    <th colspan="3">Finance Setup</th>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Finance Tagged Fund</nobr></td>
+    <td><select name="cybersourceTfID">{$tfOptions}</select></td>
+    <td width="1%">{get_help("config_cybersourceTfID")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Wages Tagged Fund</nobr></td>
+    <td><select name="wagesTfID">{$wagesTfOptions}</select></td>
+    <td width="1%">{get_help("config_wagesTfID")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Invoices Tagged Fund</nobr></td>
+    <td><select name="wagesTfID">{$invoicesTfOptions}</select></td>
+    <td width="1%">{get_help("config_invoicesTfID")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Tax Tagged Fund</nobr></td>
+    <td><select name="taxTfID">{$taxTfOptions}</select></td>
+    <td width="1%">{get_help("config_taxTfID")}</td>
+  </tr>
+  <tr>
+    <td>Services Tax Name</td>
+    <td><input type="text" size="70" value="{$taxName}" name="taxName"></td> 
+    <td width="1%">{get_help("config_taxName")}</td>
+  </tr>
+  <tr>
+    <td>Services Tax Percent</td>
+    <td><input type="text" size="70" value="{$taxPercent}" name="taxPercent"></td> 
+    <td width="1%">{get_help("config_taxPercent")}</td>
+  </tr>
+  <tr>
+    <td>Payroll Tax Percent</td>
+    <td><input type="text" size="70" value="{$payrollTaxPercent}" name="payrollTaxPercent"></td> 
+    <td width="1%">{get_help("config_payrollTaxPercent")}</td>
+  </tr>
+  <tr>
+    <td>Company Percent</td>
+    <td><input type="text" size="70" value="{$companyPercent}" name="companyPercent"></td> 
+    <td width="1%">{get_help("config_companyPercent")}</td>
+  </tr>
+  <tr>  
+    <td colspan="3" align="center">
+      <input type="submit" name="save" value="Save">
+    </td>
+  </tr>
+</table>
+<input type="hidden" name="sbs_link" value="finance">
+</form>
+</div>
 
 <div id="email_gateway">
 <form action="{$url_alloc_config}" method="post">
@@ -127,11 +183,6 @@
     <th colspan="3">Time Sheets Setup</th>
   </tr>
   <tr>
-    <td width="20%"><nobr>Finance Tagged Fund</nobr></td>
-    <td><select name="cybersourceTfID">{$tfOptions}</select></td>
-    <td width="1%">{get_help("config_cybersourceTfID")}</td>
-  </tr>
-  <tr>
     <td>Time Sheet Manager</td>
     <td><select name="timeSheetManagerEmail"><option value="">{$timeSheetManagerEmailOptions}</select></td> 
     <td width="1%">{get_help("config_timeSheetManagerEmail")}</td>
@@ -150,31 +201,6 @@
     <td>Time Sheet Printout Footer</td>
     <td><input type="text" size="70" value="{$timeSheetPrintFooter}" name="timeSheetPrintFooter"></td> 
     <td width="1%">{get_help("config_timeSheetPrintFooter")}</td>
-  </tr>
-  <tr>
-    <td>Services Tax Name</td>
-    <td><input type="text" size="70" value="{$taxName}" name="taxName"></td> 
-    <td width="1%">{get_help("config_taxName")}</td>
-  </tr>
-  <tr>
-    <td>Services Tax Percent</td>
-    <td><input type="text" size="70" value="{$taxPercent}" name="taxPercent"></td> 
-    <td width="1%">{get_help("config_taxPercent")}</td>
-  </tr>
-  <tr>
-    <td width="20%"><nobr>Tax Tagged Fund</nobr></td>
-    <td><select name="taxTfID">{$taxTfOptions}</select></td>
-    <td width="1%">{get_help("config_taxTfID")}</td>
-  </tr>
-  <tr>
-    <td>Payroll Tax Percent</td>
-    <td><input type="text" size="70" value="{$payrollTaxPercent}" name="payrollTaxPercent"></td> 
-    <td width="1%">{get_help("config_payrollTaxPercent")}</td>
-  </tr>
-  <tr>
-    <td>Company Percent</td>
-    <td><input type="text" size="70" value="{$companyPercent}" name="companyPercent"></td> 
-    <td width="1%">{get_help("config_companyPercent")}</td>
   </tr>
   <tr>
     <td>Time Sheet Payment Insurance Percent</td>

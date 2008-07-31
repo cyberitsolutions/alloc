@@ -277,8 +277,7 @@ function newProductField() \{
   <tr>
     <td colspan="5" class="center">
     <input type="submit" name="create_default_transactions[{$product.productSaleItemID}]" value="Create Default Transactions" />
-    <input type="submit" name="delete_all_transactions[{$product.productSaleItemID}]" value="Delete All Transactions"
-    onClick="return confirm('Are you sure you want to delete transactions for this item?')" />
+    <input type="submit" name="delete_all_transactions[{$product.productSaleItemID}]" value="Delete All Transactions" class="delete_button"/>
     </td>
   </tr>
 
@@ -289,12 +288,12 @@ function newProductField() \{
 <tr><td class="center">{$statusText}</td></tr>
   <tr><td class="center">
   {if $TPL["status"] == "edit"}
-    <input type="submit" name="delete_productSale" value="Delete" onclick="return confirm('Are you sure you want to delete this record?')" />
+    <input type="submit" name="delete_productSale" value="Delete" class="delete_button" />
     <input type="submit" name="save_transactions" value="Save" />
     <input type="submit" name="move_to_admin" value="Save and Move to Administrator" />
   {else}
     <input type="submit" name="back_to_edit" value="Back to Edit" />
-    <input type="submit" name="delete_productSale" value="Delete" onclick="return confirm('Are you sure you want to delete this record?')" />
+    <input type="submit" name="delete_productSale" value="Delete" class="delete_button" />
     <input type="submit" name="save_transactions" value="Save" />
     <input type="submit" name="finish" value="Complete Product Sale" />
   {/}

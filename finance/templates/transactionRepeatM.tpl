@@ -3,7 +3,7 @@
 
 
 
-<form action="{$url_alloc_transactionRepeat}john={$john}" method="post">
+<form action="{$url_alloc_transactionRepeat}" method="post">
 
 {$table_box}
   <tr>
@@ -25,13 +25,15 @@
 	  <td><b>Product/Service</b></td>
  	  <td><b>Amount</b></td>
  	  <td><b>Type</b></td>
-    <td><b>TF</b></td>
+    <td><b>Source TF</b></td>
+    <td><b>Destination TF</b></td>
 	</tr>
 	<tr>
     <td></td>
  	  <td><input type="text" size="20" name="product" value="{$product}"></td>
  	  <td><input type="text" size="9" name="amount" value="{$amount}"> (inc. {$taxName})</td>
    	<td><select name="transactionType">{$transactionTypeOptions}</select></td>
+   	<td><select name="fromTfID">{$fromTfOptions}</select></td>
    	<td><select name="tfID">{$tfOptions}</select></td>
  	</tr>
 

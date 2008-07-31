@@ -238,6 +238,10 @@ INSERT INTO config (name,value,type) VALUES ("defaultInterestedParties",'a:0:{}'
 INSERT INTO config (name,value,type) VALUES ("timeSheetManagerEmail", "","text");
 INSERT INTO config (name,value,type) VALUES ("task_email_header", "","text");
 INSERT INTO config (name,value,type) VALUES ("task_email_footer", "","text");
+INSERT INTO config (name,value,type) VALUES ("wagesTfID","","text");
+INSERT INTO config (name,value,type) VALUES ("invoicesTfID","","text");
+
+
 
 
 

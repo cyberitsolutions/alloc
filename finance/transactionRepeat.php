@@ -24,16 +24,11 @@ require_once("../alloc.php");
 
 $current_user->check_employee();
 
-
-
-
 $transactionRepeat = new transactionRepeat;
 $db = new db_alloc;
 
 global $TPL;
-global $john, $transactionRepeatID;
-
-$TPL["john"] = $john;
+global $transactionRepeatID;
 
 $transactionRepeatID = $_POST["transactionRepeatID"] or $transactionRepeatID = $_GET["transactionRepeatID"];
 
@@ -41,11 +36,8 @@ if ($transactionRepeatID) {
   $transactionRepeat->set_id($transactionRepeatID);
   $transactionRepeat->select();
   $transactionRepeat->set_tpl_values();
-  $TPL["john"] = $tfID;
-} else {
-  $transactionRepeat = new transactionRepeat;
-  $TPL["message_help"][] = "Complete all the details and click the Save button to create an automatically Repeating Expense";
-}
+} 
+
 
 
 if (!isset($_POST["reimbursementRequired"])) {
@@ -68,44 +60,27 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
       $transactionRepeat->set_value("status","rejected");
       $TPL["message_good"][] = "Repeating Expense form  Rejected.";
     }
-
-  } else {
-    $extra_get = "tfID=".$_POST["tfID"];
   }
 
-  if ($_POST["delete"]) {
-
-    if ($transactionRepeatID) {
-      $transactionRepeat->set_id($transactionRepeatID);
-      $transactionRepeat->delete();
-      header("Location: ".$TPL["url_alloc_transactionRepeatList"].$extra_get);
-
-    } else {
-      header("Location: ".$TPL["url_alloc_tfList"]."tfID=".$extra_get);
-    }
+  if ($_POST["delete"] && $transactionRepeatID) {
+    $transactionRepeat->set_id($transactionRepeatID);
+    $transactionRepeat->delete();
+    header("Location: ".$TPL["url_alloc_transactionRepeatList"]."tfID=".$_POST["tfID"]);
   }
 
-  $_POST["product"] or $TPL["message"][].= "Please enter a Product";
-  $_POST["amount"]  or $TPL["message"][].= "Please enter an Amount";
-  $_POST["tfID"]    or $TPL["message"][].= "Please select a TF";
+  $_POST["product"]  or $TPL["message"][].= "Please enter a Product";
+  $_POST["amount"]   or $TPL["message"][].= "Please enter an Amount";
+  $_POST["fromTfID"] or $TPL["message"][].= "Please select a Source TF";
+  $_POST["tfID"]     or $TPL["message"][].= "Please select a Destination TF";
   $_POST["companyDetails"]  or $TPL["message"][].= "Please provide Company Details";
   $_POST["transactionType"] or $TPL["message"][].= "Please select a Transaction Type";
-
-  if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $_POST["transactionStartDate"])) {
-    $TPL["message"][].= "You must enter the Start date in the format yyyy-mm-dd ";
-  }
-  if (!ereg("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", $_POST["transactionFinishDate"])) {
-    $TPL["message"][].= "You must enter the Finish date in the format yyyy-mm-dd ";
-  }
+  $_POST["transactionStartDate"] or $TPL["message"][].= "You must enter the Start date in the format yyyy-mm-dd";
+  $_POST["transactionFinishDate"] or $TPL["message"][].= "You must enter the Finish date in the format yyyy-mm-dd";
 
   if (!$TPL["message"]) {
     !$transactionRepeat->get_value("status") && $transactionRepeat->set_value("status","pending"); 
     $transactionRepeat->set_value("companyDetails",rtrim($transactionRepeat->get_value("companyDetails")));
     $transactionRepeat->save();
-
-    if ($_POST["save"]) {
-      header("Location: ".$TPL["url_alloc_transactionRepeatList"].$extra_get);
-    } 
   }
   $transactionRepeat->set_tpl_values();
 }                       
@@ -125,27 +100,43 @@ if ($transactionRepeat->get_value("transactionRepeatModifiedUser")) {
 
 if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
   // Person can access all TF records
-  $db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
+  $q = "SELECT * FROM tf WHERE status = 'active' ORDER BY tfName";
 } else if (have_entity_perm("tf", PERM_READ, $current_user, true)) {
   // Person can only read TF records that they own
-  $db->query("select  * from tf,tfPerson where tfPerson.personID=".$current_user->get_id()." and tf.tfID=tfPerson.tfID AND tf.status = 'active' order by tfName");
+  $q = sprintf("SELECT * 
+                  FROM tf, tfPerson 
+                 WHERE tfPerson.personID=%d 
+                   AND tf.tfID=tfPerson.tfID 
+                   AND tf.status = 'active' 
+              ORDER BY tfName",$current_user->get_id());
 } else {
   die("No permissions to generate TF list");
 }
 
 $TPL["tfOptions"] = get_option("", "0", false)."\n";
+$TPL["fromTfOptions"] = get_option("", "0", false)."\n";
 
 //special case for disabled TF. Include it in the list, but also add a warning
 //message.
 $tf = new tf;
 $tf->set_id($transactionRepeat->get_value("tfID"));
-$tf->select();
-if ($tf->get_value("status") != 'active') {
+if ($tf->select() && $tf->get_value("status") != 'active') {
   $TPL["tfOptions"].= get_option($tf->get_value("tfName"), $transactionRepeat->get_value("tfID"), true);
   $TPL["message_help"][] = "This expense is allocated to an inactive TF. It will not create transactions.";
 }
+$tf = new tf;
+$tf->set_id($transactionRepeat->get_value("fromTfID"));
+if ($tf->select() && $tf->get_value("status") != 'active') {
+  $TPL["fromTfOptions"].= get_option($tf->get_value("tfName"), $transactionRepeat->get_value("fromTfID"), true);
+  $TPL["message_help"][] = "This expense is sourced from an inactive TF. It will not create transactions.";
+}
 
+$db->query($q);
 $TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $transactionRepeat->get_value("tfID"));
+$db->query($q);
+$TPL["fromTfOptions"].= get_options_from_db($db, "tfName", "tfID", $transactionRepeat->get_value("fromTfID"));
+
+
 $TPL["basisOptions"] = get_options_from_array(array("weekly", "fortnightly", "monthly", "quarterly", "yearly"), $transactionRepeat->get_value("paymentBasis"), false);
 $TPL["transactionTypeOptions"] = get_select_options(transaction::get_transactionTypes(), $transactionRepeat->get_value("transactionType"));
 
@@ -157,6 +148,8 @@ if (is_object($transactionRepeat) && $transactionRepeat->get_id() && have_entity
 
 if (is_object($transactionRepeat) && $transactionRepeat->get_id() && $transactionRepeat->get_value("status") == "pending") {
   $TPL["message_help"][] = "This Repeating Expense will only create Transactions once its status is Approved.";
+} else if (!$transactionRepeat->get_id()) {
+  $TPL["message_help"][] = "Complete all the details and click the Save button to create an automatically Repeating Expense";
 }
 
 $transactionRepeat->get_value("status") and $TPL["statusLabel"] = " - ".ucwords($transactionRepeat->get_value("status"));

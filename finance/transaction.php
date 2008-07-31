@@ -76,7 +76,8 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
   $transaction->get_value("transactionDate") or $TPL["message"][] = "You must enter a date for the transaction";
   $transaction->get_value("product")         or $TPL["message"][] = "You must enter a product"; 
   $transaction->get_value("status")          or $TPL["message"][] = "You must set the status of the transaction";
-  $transaction->get_value("tfID")            or $TPL["message"][] = "You must select a Tagged Fund to add this transaction against";
+  $transaction->get_value("fromTfID")        or $TPL["message"][] = "You must select a Source Tagged Fund to take this transaction from";
+  $transaction->get_value("tfID")            or $TPL["message"][] = "You must select a Destination Tagged Fund to add this transaction against";
   $transaction->get_value("transactionType") or $TPL["message"][] = "You must set a transaction type";
   #$transaction->get_value("projectID")       or $TPL["message"][] = "You must select a project";
   #$transaction->get_value("companyDetails")  or $TPL["message"][] = "You must enter the company details";
@@ -115,6 +116,8 @@ is_object($transaction) and $TPL["transactionType"] = $transaction->get_transact
 $db = new db_alloc;
 $db->query("SELECT tfID, tfName FROM tf WHERE status = 'active' ORDER BY tfName");
 $TPL["tfIDOptions"] = get_options_from_db($db, "tfName", "tfID", $transaction->get_value("tfID"));
+$db->query("SELECT tfID, tfName FROM tf WHERE status = 'active' ORDER BY tfName");
+$TPL["fromTfIDOptions"] = get_options_from_db($db, "tfName", "tfID", $transaction->get_value("fromTfID"));
 
 $db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'current' ORDER BY projectName");
 $TPL["projectIDOptions"] = get_options_from_db($db, "projectName", "projectID", $transaction->get_value("projectID"));
@@ -123,6 +126,7 @@ $TPL["transactionModifiedUser"] = person::get_fullname($TPL["transactionModified
 $TPL["transactionCreatedUser"] = person::get_fullname($TPL["transactionCreatedUser"]);
 
 $TPL["tf_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$TPL["tfID"]."\">".get_tf_name($TPL["tfID"])."</a>";
+$TPL["from_tf_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$TPL["fromTfID"]."\">".get_tf_name($TPL["fromTfID"])."</a>";
 
 $p = $transaction->get_foreign_object("project");
 $TPL["project_link"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$p->get_id()."\">".$p->get_value("projectName")."</a>";

@@ -264,7 +264,7 @@ function show_invoiceItem_list() {
         $amount = $amounts[$invoiceItem->get_id()];
       }
       
-      $selected_tfID = $db->f("transaction_tfID");
+      $selected_tfID = $db2->f("transaction_tfID");
       if (!$selected_tfID && $invoiceItem->get_value("timeSheetID")) {
         $timeSheet = $invoiceItem->get_foreign_object("timeSheet");
         $project = $timeSheet->get_foreign_object("project");
@@ -421,6 +421,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
           #$amount = $transaction->get_value("amount");
         }
         $transaction->set_value("amount",sprintf("%0.2f",$_POST["invoiceItemAmountPaid"][$iiID]));  
+        $transaction->set_value("fromTfID",config::get_config_item("invoicesTfID")); 
         $transaction->set_value("tfID",$_POST["invoiceItemAmountPaidTfID"][$iiID]);
         $transaction->set_value("status",$status);
         $transaction->set_value("invoiceID",$ii->get_value("invoiceID"));

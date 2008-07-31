@@ -29,7 +29,6 @@ function show_all_exp($template) {
 
   if ($expenseForm->get_id()) {
 
-    $tf = new tf;
 
     if ($_POST["transactionID"] && $_POST["edit"]) {   // if edit is clicked
       $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d AND transactionID<>%d ORDER BY transactionID DESC", $expenseForm->get_id()
@@ -50,9 +49,16 @@ function show_all_exp($template) {
       $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);
 
       $TPL["lineTotal"] = sprintf("%0.2f",$TPL["amount"] * $transaction->get_value("quantity"));
+
+      $tf = new tf;
+      $tf->set_id($transaction->get_value("fromTfID"));
+      $tf->select();
+      $TPL["fromTfIDLink"] = $tf->get_link();
+
+      $tf = new tf;
       $tf->set_id($transaction->get_value("tfID"));
       $tf->select();
-      $TPL["tfID"] = $tf->get_value("tfName");
+      $TPL["tfIDLink"] = $tf->get_link();
   
       $projectID = $transaction->get_value("projectID");
       if (isset($_POST["projectID"]) && $_POST["projectID"] != "") {
@@ -129,7 +135,7 @@ if ($_POST["add"]) {
 
   $_POST["product"]        or $TPL["message"][] = "You must enter a Product.";
   $_POST["companyDetails"] or $TPL["message"][] = "You must enter the Company Details.";
-  $_POST["tfID"]           or $TPL["message"][] = "You must enter the TF.";
+  $_POST["fromTfID"]       or $TPL["message"][] = "You must enter the Source TF.";
   $_POST["quantity"]       or $_POST["quantity"] = 1;
 
   if (!ereg("^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$", $_POST["transactionDate"])) {
@@ -151,6 +157,7 @@ if ($_POST["add"]) {
   if (!count($TPL["message"])) {
     $transaction->set_value("transactionType", "expense");
     $transaction->set_value("expenseFormID", $expenseForm->get_id());
+    $transaction->set_value("tfID",config::get_config_item("cybersourceTfID"));
     $transaction->save();
 
   } else {
@@ -176,8 +183,8 @@ if ($_POST["delete"] && $_POST["expenseFormID"] && $_POST["transactionID"]) {
   $expenseForm->select();
 }
 
-if ($transaction_to_edit->get_value("tfID")) {
-  $selectedTfID = $transaction_to_edit->get_value("tfID");
+if ($transaction_to_edit->get_value("fromTfID")) {
+  $selectedTfID = $transaction_to_edit->get_value("fromTfID");
   $selectedProjectID = $transaction_to_edit->get_value("projectID");
 
 } else {
@@ -193,8 +200,8 @@ if ($transaction_to_edit->get_value("tfID")) {
 }
 
 $db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
-$TPL["tfOptions"] = get_option("", "0", false)."\n";
-$TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $selectedTfID);
+$TPL["fromTfOptions"] = get_option("", "0", false)."\n";
+$TPL["fromTfOptions"].= get_options_from_db($db, "tfName", "tfID", $selectedTfID);
 
 if (is_object($expenseForm) && $expenseForm->get_value("clientID")) { 
   $clientID_sql = sprintf(" AND clientID = %d",$expenseForm->get_value("clientID"));

@@ -12,7 +12,8 @@
       <table align="center" class="filter">
         <tr align="center">
           <td align="center"><b>Transaction Desc</td>
-          <td align="center"><b>Which TF</td>
+          <td align="center"><b>Source TF</td>
+          <td align="center"><b>Dest TF</td>
           <td align="center"><b>Status</td>
           <td align="center"><b>Date in YYYY-MM-DD format</td>
           <td rowspan="3" align="center"></td>
@@ -22,7 +23,8 @@
         </tr>
         <tr align="center">
           <td><input type="text" size="20" name="product" value="{$product}"></td>
-          <td><select name="tfID" value={$tfID}>{$tfOptions}</select></td>
+          <td><select name="fromTfID">{$fromTfOptions}</select></td>
+          <td><select name="tfID">{$tfOptions}</select></td>
           <td><select name="status" value={$status}>{$statusOptions}</select></td>
           <td>&nbsp;&nbsp;  
             {get_calendar("dateOne",$TPL["dateOne"])}
@@ -43,7 +45,8 @@
       {$table_list}
         <tr>
           <th>Transaction ID</th>
-          <th>Name</th>
+          <th>Source</th>
+          <th>Dest</th>
           <th>Product</th>
           <th>Type</th>
           <th align="right">Amount</th>

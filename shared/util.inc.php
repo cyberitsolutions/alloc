@@ -701,20 +701,6 @@ function get_tf_name($tfID) {
 function db_esc($str = "") {
   return db::esc($str);
 }
-function db_get_where($where = array()) {
-  // Okay so $value can be like eg: $where["status"] = array(" LIKE ","hey")
-  // Or $where["status"] = "hey";
-  foreach($where as $column_name=>$value) {
-    $op = " = ";
-    if (is_array($value)) {
-      $op = $value[0];
-      $value = $value[1];
-    }
-    $rtn.= " ".$and.$column_name.$op." '".db_esc($value)."'";
-    $and = " AND ";
-  }
-  return $rtn;
-}
 function get_config_link() {
   global $current_user, $TPL;
   if (have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
