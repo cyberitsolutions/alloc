@@ -12,31 +12,21 @@
       <table class="filter" align="center">
         <tr>
           <td><select name="skill_class">{$skill_classes}</select></td>
-          <td rowspan="3" valign="top">
-
+          <td><select name="skill">{$skills}</select></td>
+          <td><select name="expertise">{$employee_expertise}</select></td>
+          <td valign="top">
             <table class="filter" align="center" width="95%">
               <tr>
-                <td valign="top" colspan="2"><b><nobr>Display Options</nobr></b></td>
-              </tr>
-              <tr>
-                <td align="right" class="nobr">Show All Users</td>
+                <td align="right" class="nobr">All Users</td>
                 <td align="right" width="1%"><input type="checkbox" name="show_all_users"{$show_all_users_checked}></td>
-              </tr>
-              <tr>
-                <td align="right" class="nobr">Show Skills List</td>
+                <td align="right" class="nobr">&nbsp;Skills</td>
                 <td align="right" width="1%"><input type="checkbox" name="show_skills"{$show_skills_checked}></td> 
               </tr>
             </table>
-
           </td>
+          <td><input type="submit" value="Filter"></td>
         </tr>
         <tr>
-          <td><select name="skill">{$skills}</select></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td valign="top"><select name="expertise">{$employee_expertise}</select></td>
-          <td valign="bottom"><input type="submit" value="Filter"></td>
         </tr>
       </table>
       </form>

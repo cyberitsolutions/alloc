@@ -348,7 +348,7 @@ function show_tabs() {
   $x = -1;
   foreach ($menu_links as $name => $arr) {
     $TPL["x"] = $x;
-    $x+=81;
+    $x+=80;
     $TPL["url"] = $arr["url"];
     $TPL["name"] = $name;
     unset($TPL["active"]);
@@ -704,25 +704,25 @@ function db_esc($str = "") {
 function get_config_link() {
   global $current_user, $TPL;
   if (have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
-    echo "<a href=\"".$TPL["url_alloc_config"]."\">Setup</a>&nbsp;&nbsp;";
+    echo "<a href=\"".$TPL["url_alloc_config"]."\">Setup</a>&nbsp;&nbsp;&nbsp;";
   }
 }
 function get_print_link() {
   if (defined("PAGE_IS_PRINTABLE") && PAGE_IS_PRINTABLE) {
     global $sess;
     $sess or $sess = new Session;
-    echo "<a href=\"" . $sess->url($_SERVER["REQUEST_URI"]) . "media=print\">Print</a>&nbsp;&nbsp;";
+    echo "<a href=\"" . $sess->url($_SERVER["REQUEST_URI"]) . "media=print\">Print</a>&nbsp;&nbsp;&nbsp;";
   }
 }
 function get_help_link() {
   global $TPL;
   $url = "../help/help.php?topic=".$TPL["alloc_help_link_name"];
-  echo "<a href=\"".$url."\">Help</a>&nbsp;&nbsp;";
+  echo "<a href=\"".$url."\">Help</a>&nbsp;&nbsp;&nbsp;";
 }
 function get_logout_link() {
   global $TPL;
   $url = $TPL["url_alloc_logout"];
-  echo "<a href=\"".$url."\">Logout</a>&nbsp;";
+  echo "<a href=\"".$url."\">Logout</a>";
 }
 function parse_sql_file($file) {
   

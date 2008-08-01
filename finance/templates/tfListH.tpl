@@ -1,6 +1,8 @@
-<table width="100%">
+{$table_list}
   <tr>
-    <td></td><td align="right">Pending</td><td align="right">Approved</td>
+    <th>TF</th>
+    <th class="right">Pending</th>
+    <th class="right">Approved</th>
   </tr>
 {$TPL["this"]->show_tfList("templates/tfListR.tpl")}
 </table>
