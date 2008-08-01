@@ -14,14 +14,14 @@ function refreshProjectList(radiobutton) \{
       <table class="filter" align="center">
         <tr>
           <td>&nbsp;</td>
-          <td><b>{print_expand_link("project_superset","Projects ")}</b></td>
-          <td><b>Task Status</b> {get_help("taskList_taskStatus")}</td>
-          <td><b>Created By</b></td> 
+          <td>{print_expand_link("project_superset","Projects ")}</td>
+          <td>Task Status {get_help("taskList_taskStatus")}</td>
+          <td>Created By</td> 
           <td rowspan="6" valign="top" colspan="2">
           
             <table class="filter" align="center" width="95%">
               <tr>
-                <td valign="top"><b>Display Options</b></td>
+                <td valign="top">Display Options</td>
               </tr>
               <tr>
                 <td>
@@ -80,8 +80,8 @@ function refreshProjectList(radiobutton) \{
         </tr>
 
         <tr>
-          <td><b>Task Type</b></td>
-          <td><b>Managed By</b></td>
+          <td>Task Type</td>
+          <td>Managed By</td>
         </tr>
         <tr>
           <td valign="top" rowspan="4"><select name="taskTypeID[]" size="6" multiple="true">{$taskTypeOptions}</select></td>
@@ -89,7 +89,7 @@ function refreshProjectList(radiobutton) \{
         </tr>
 
         <tr>
-          <td><b>Assigned To</b></td>
+          <td>Assigned To</td>
         </tr>
         <tr>
           <td valign="top"><select name="personID">{$personOptions}</select></td>

@@ -44,7 +44,7 @@ a.sidebyside:hover {
 a.sidebyside_active {
   color:#444444;
   text-decoration:none;
-  background-color:#f3f9e0;
+  background-color:#eeefe4;
   border:1px solid #999999;
   padding:5px;
   font-size:100%; 
@@ -93,6 +93,7 @@ textarea,
 select {
   border: 1px solid #cccccc; 
   background-color: #fcfcfc;
+  text-transform:none; /* tasks.th turns options into uppercase */
 }
 input[type="text"]:focus, 
 input[type="password"]:focus, 
@@ -181,7 +182,7 @@ div.message {
   font-size:100%; 
 }
 .help { 
-  color:black;  
+  color:#666666;  
   font-size:100%;
 }
 
@@ -201,6 +202,7 @@ table.box th {
   background: url(../images/bg_leaf.jpg) repeat-x; 
   color:#829858; 
   font-size:110%; 
+  border-bottom:1px solid #e0e0e0;
 } 
 table.box th.center { 
   text-align:center; 
@@ -241,7 +243,7 @@ table.alloc_calendar td.today h1 {
   font-weight:bold;
 }
 table.alloc_calendar td.even { 
-  background-color:#eeeeee; 
+  background-color:#f4f4f4; 
 }
 table.alloc_calendar td.absent {
   background-color:#cccccc;
@@ -268,16 +270,19 @@ table.alloc_calendar td:hover {
 
 /* Filters */
 table.filter { 
-  background-color:#f3f9e0; 
+  background-color:#eeefe4; 
   border:2px dashed #c7cfb8; 
   padding:4px; 
   margin:4px; 
   margin-top:14px; 
   text-align:left;
 }
+table.filter td { 
+  color:#9da973; 
+}
 table.filter th { 
   font-weight:bold; 
-  background-color:#f3f9e0; 
+  background-color:#eeefe4; 
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
@@ -290,7 +295,7 @@ table.filter table.filter {
 }
 
 tr.odd { 
-  background-color:#eeeeee; 
+  background-color:#f4f4f4; 
 }
 tr.even { 
   background-color:#f9f9f9; 
@@ -318,7 +323,7 @@ img.taskType {
   color: #6e883b; 
 }
 .transaction-pending { 
-  color: black; 
+  color: #666666; 
 }
 .transaction-rejected { 
   color: #c84e12; 
@@ -333,24 +338,29 @@ img.taskType {
 
 table.tasks { 
   width:100%; 
+  border-left:1px solid #c7cfb8; 
   border-right:1px solid #c7cfb8; 
   border-bottom:1px solid #c7cfb8;
 }
 td.tasks { 
-  background-color: #f3f9e0; 
+  background-color: #eeefe4; 
   padding:4px; 
 }
 table.tasks th, table.alloc_calendar th { 
   border-bottom:0px; 
-  font-weight:bold; 
+  font-weight:normal; 
   white-space:nowrap; 
-  background:#e5e8d9; 
-  color:#444444; 
+  background:#eeefe4; 
+  color:#9da973; 
+  font-size:90%;
+  text-transform:uppercase;
 }
 table.tasks td, table.tasks th, table.alloc_calendar th { 
-  border-left:1px solid #c7cfb8; 
   border-top:1px solid #c7cfb8; 
   padding:4px;
+}
+table.alloc_calendar th { 
+  border-left:1px solid #c7cfb8; 
 }
 .sort_arrows {
   padding:0px 3px;
@@ -373,8 +383,8 @@ table.panel div.hidden_text {
 }
 table.panel { 
   border:1px solid #c7cfb8; 
-  background:#f3f9e0; 
-  margin-bottom:8px; 
+  background:#eeefe4; 
+  margin-bottom:5px; 
   margin-top:0px;
 }
 table.loud {
@@ -392,18 +402,20 @@ table.loud table.panel {
 }
 table.panel th { 
   text-align:left; 
-  background:#f3f9e0; 
+  background:#eeefe4; 
   vertical-align:top; 
   color:#444444; 
   font-weight:normal; 
   padding:4px; 
   border:0px solid black;
+  text-transform:none; /* tasks.th turns these uppercase */
+  font-size:100%;
 }
 table.loud th {
   background:#fff7ed; 
 }
 table.panel td { 
-  background:#f3f9e0;
+  background:#eeefe4;
   padding:6px; 
   border:0px solid black;
 }
@@ -440,7 +452,7 @@ table.loud td table.panel td {
   color:#e17a00;
 }
 table.pending { 
-  background-color:#f3f9e0; 
+  background-color:#eeefe4; 
   border:1px solid #c7cfb8; 
 }
 table.warn { 
@@ -579,13 +591,12 @@ div.tab a {
   padding: 5px 10px;
 }
 
-div.tab a:link          { color:#5c7600;  }
-div.tab a:visited       { color:#5c7600;  }
-div.tab a:hover         { color:#829858; text-decoration:underline;}
+div.tab a:link, p#extra_links a:link        { color:#5c7600;  }
+div.tab a:visited, p#extra_links a:visited  { color:#5c7600;  }
+div.tab a:hover, p#extra_links a:hover      { color:#829858;}
 
 div.active a:link, div.active a:visited {
   color:#829858;
-  text-decoration:underline;
 }
 
 p#extra_links {
@@ -600,4 +611,6 @@ p#extra_links {
   padding:0px;
   margin:0px;
 }
+
+
 

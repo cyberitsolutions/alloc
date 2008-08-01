@@ -44,7 +44,7 @@ a.sidebyside:hover {
 a.sidebyside_active {
   color:#444444;
   text-decoration:none;
-  background-color:#eaf3ff;
+  background-color:#e7eff9;
   border:1px solid #999999;
   padding:5px;
   font-size:100%; 
@@ -93,6 +93,7 @@ textarea,
 select {
   border: 1px solid #cccccc; 
   background-color: #fcfcfc;
+  text-transform:none; /* tasks.th turns options into uppercase */
 }
 input[type="text"]:focus, 
 input[type="password"]:focus, 
@@ -199,8 +200,9 @@ table.box {
 } 
 table.box th { 
   background: url(../images/bg_default.jpg) repeat-x; 
-  color:#688db0; 
+  color:#a1a1a1; 
   font-size:110%; 
+  border-bottom:1px solid #e0e0e0;
 } 
 table.box th.center { 
   text-align:center; 
@@ -211,11 +213,11 @@ table.box th.right table {
 
 table.box th a:link, table.box th a:visited { 
   font-weight:bold; 
-  color:#003d76; 
+  color:#688db0; 
 }
 table.box th a:hover { 
   font-weight:bold; 
-  color:#688db0; 
+  color:#8aafd2; 
 }
 
 /* Calendar */
@@ -262,22 +264,25 @@ table.alloc_calendar img {
   margin:0px;
 }
 table.alloc_calendar td:hover { 
-  background-color:#f1f8ff; 
+  background-color:#fffdde; 
 }
 
 
 /* Filters */
 table.filter { 
-  background-color:#eaf3ff; 
+  background-color:#e7eff9; 
   border:2px dashed #a3bee0; 
   padding:4px; 
   margin:4px; 
   margin-top:14px; 
   text-align:left;
 }
+table.filter td { 
+  color:#6e8eb5; 
+}
 table.filter th { 
   font-weight:bold; 
-  background-color:#eaf3ff; 
+  background-color:#e7eff9; 
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
@@ -293,10 +298,10 @@ tr.odd {
   background-color:#ffffff; 
 }
 tr.even { 
-  background-color:#f4f4f4; 
+  background-color:#f7fbff; 
 }
 tr.odd:hover, tr.even:hover {
-  background-color:#f1f8ff; 
+  background-color:#fffdde; 
 }
 
 img.taskType {
@@ -333,24 +338,29 @@ img.taskType {
 
 table.tasks { 
   width:100%; 
+  border-left:1px solid #a3bee0; 
   border-right:1px solid #a3bee0; 
   border-bottom:1px solid #a3bee0;
 }
 td.tasks { 
-  background-color: #eaf3ff; 
+  background-color: #e7eff9; 
   padding:4px; 
 }
 table.tasks th, table.alloc_calendar th { 
   border-bottom:0px; 
-  font-weight:bold; 
+  font-weight:normal; 
   white-space:nowrap; 
-  background:#c6defb; 
-  color:#444444; 
+  background:#e7eff9; 
+  color:#6e8eb5; 
+  font-size:90%;
+  text-transform:uppercase;
 }
 table.tasks td, table.tasks th, table.alloc_calendar th { 
-  border-left:1px solid #a3bee0; 
   border-top:1px solid #a3bee0; 
   padding:4px;
+}
+table.alloc_calendar th { 
+  border-left:1px solid #a3bee0; 
 }
 .sort_arrows {
   padding:0px 3px;
@@ -373,8 +383,8 @@ table.panel div.hidden_text {
 }
 table.panel { 
   border:1px solid #a3bee0; 
-  background:#eaf3ff; 
-  margin-bottom:8px; 
+  background:#e7eff9; 
+  margin-bottom:5px; 
   margin-top:0px;
 }
 table.loud {
@@ -392,18 +402,20 @@ table.loud table.panel {
 }
 table.panel th { 
   text-align:left; 
-  background:#eaf3ff; 
+  background:#e7eff9; 
   vertical-align:top; 
   color:#444444; 
   font-weight:normal; 
   padding:4px; 
   border:0px solid black;
+  text-transform:none; /* tasks.th turns these uppercase */
+  font-size:100%;
 }
 table.loud th {
   background:#fff7ea; 
 }
 table.panel td { 
-  background:#eaf3ff;
+  background:#e7eff9;
   padding:6px; 
   border:0px solid black;
 }
@@ -440,7 +452,7 @@ table.loud td table.panel td {
   color:#e17a00;
 }
 table.pending { 
-  background-color:#eaf3ff; 
+  background-color:#e7eff9; 
   border:1px solid #a3bee0; 
 }
 table.warn { 
@@ -480,7 +492,7 @@ table.menu_top {
   text-align:left;
   font-size:12px;
   font-weight:bold;
-  color:#003d76;
+  color:#1b6cb7;
 }
 
 .mtl {
@@ -579,13 +591,12 @@ div.tab a {
   padding: 5px 10px;
 }
 
-div.tab a:link          { color:#003d76;  }
-div.tab a:visited       { color:#003d76;  }
-div.tab a:hover         { color:#688db0; text-decoration:underline;}
+div.tab a:link, p#extra_links a:link        { color:#1b6cb7;  }
+div.tab a:visited, p#extra_links a:visited  { color:#1b6cb7;  }
+div.tab a:hover, p#extra_links a:hover      { color:#4587c4;}
 
 div.active a:link, div.active a:visited {
-  color:#688db0;
-  text-decoration:underline;
+  color:#4587c4;
 }
 
 p#extra_links {
@@ -600,4 +611,6 @@ p#extra_links {
   padding:0px;
   margin:0px;
 }
+
+
 

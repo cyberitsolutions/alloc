@@ -679,10 +679,10 @@ class timeSheet extends db_entity
       $_FORM["showDateTo"]        and $summary.= "\n<th>End Date</th>";
       $_FORM["showStatus"]        and $summary.= "\n<th>Status</th>";
       $_FORM["showDuration"]      and $summary.= "\n<th>Duration</th>";
-      $_FORM["showAmount"]        and $summary.= "\n<th>Amount</th>";
-      $_FORM["showCustomerBilledDollars"] and $summary.= "\n<th>Customer Billed</th>";
-      $_FORM["showTransactionsPos"] and $summary.= "\n<th>Sum $ &gt;0</th>";
-      $_FORM["showTransactionsNeg"] and $summary.= "\n<th>Sum $ &lt;0</th>";
+      $_FORM["showAmount"]        and $summary.= "\n<th class=\"right\">Amount</th>";
+      $_FORM["showCustomerBilledDollars"] and $summary.= "\n<th class=\"right\">Customer Billed</th>";
+      $_FORM["showTransactionsPos"] and $summary.= "\n<th class=\"right\">Sum $ &gt;0</th>";
+      $_FORM["showTransactionsNeg"] and $summary.= "\n<th class=\"right\">Sum $ &lt;0</th>";
       $summary.="\n</tr>";
       return $summary;
     }

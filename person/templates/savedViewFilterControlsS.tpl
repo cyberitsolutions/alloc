@@ -6,8 +6,8 @@
   <input type="submit" name="loadFilter" value="Load"> {get_help("taskList_savedFilter")}
 </div>
 <div id="saved_views_superset" style="display: none;">
-  <label for="new_filter_name"><b>Name</b>: <input type="text" name="new_filter_name" /></label>
+  <label for="new_filter_name">Name: <input type="text" name="new_filter_name" /></label>
   <input type="submit" name="saveFilter" value="Save"><br />
-  <b>Delete</b>: <input type="submit" name="deleteFilter" value="Delete" id="deleteFilter" />
+  Delete: <input type="submit" name="deleteFilter" value="Delete" id="deleteFilter" />
   <br />
 </div>

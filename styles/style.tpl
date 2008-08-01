@@ -93,6 +93,7 @@ textarea,
 select {
   border: 1px solid #cccccc; 
   background-color: #fcfcfc;
+  text-transform:none; /* tasks.th turns options into uppercase */
 }
 input[type="text"]:focus, 
 input[type="password"]:focus, 
@@ -201,6 +202,7 @@ table.box th {
   (TABLE_BOX_TH_BACKGROUND); 
   color:(TABLE_BOX_TH_COLOR); 
   font-size:110%; 
+  border-bottom:1px solid #e0e0e0;
 } 
 table.box th.center { 
   text-align:center; 
@@ -275,6 +277,9 @@ table.filter {
   margin-top:14px; 
   text-align:left;
 }
+table.filter td { 
+  color:(TABLE_TASKS_TH_COLOR); 
+}
 table.filter th { 
   font-weight:bold; 
   background-color:(PANEL_HARPO_BG_COLOR); 
@@ -333,6 +338,7 @@ img.taskType {
 
 table.tasks { 
   width:100%; 
+  border-left:1px solid (PANEL_HARPO_FRAME_COLOR); 
   border-right:1px solid (PANEL_HARPO_FRAME_COLOR); 
   border-bottom:1px solid (PANEL_HARPO_FRAME_COLOR);
 }
@@ -342,15 +348,19 @@ td.tasks {
 }
 table.tasks th, table.alloc_calendar th { 
   border-bottom:0px; 
-  font-weight:bold; 
+  font-weight:normal; 
   white-space:nowrap; 
-  background:(PANEL_CHICO_FRAME_COLOR); 
-  color:(TD_COLOR); 
+  background:(TABLE_TASKS_TH_BACKGROUND); 
+  color:(TABLE_TASKS_TH_COLOR); 
+  font-size:90%;
+  text-transform:uppercase;
 }
 table.tasks td, table.tasks th, table.alloc_calendar th { 
-  border-left:1px solid (PANEL_HARPO_FRAME_COLOR); 
   border-top:1px solid (PANEL_HARPO_FRAME_COLOR); 
   padding:4px;
+}
+table.alloc_calendar th { 
+  border-left:1px solid (PANEL_HARPO_FRAME_COLOR); 
 }
 .sort_arrows {
   padding:0px 3px;
@@ -374,7 +384,7 @@ table.panel div.hidden_text {
 table.panel { 
   border:1px solid (PANEL_HARPO_FRAME_COLOR); 
   background:(PANEL_HARPO_BG_COLOR); 
-  margin-bottom:8px; 
+  margin-bottom:5px; 
   margin-top:0px;
 }
 table.loud {
@@ -398,6 +408,8 @@ table.panel th {
   font-weight:normal; 
   padding:4px; 
   border:0px solid black;
+  text-transform:none; /* tasks.th turns these uppercase */
+  font-size:100%;
 }
 table.loud th {
   background:(PANEL_GROUCHO_BG_COLOR); 
@@ -579,13 +591,12 @@ div.tab a {
   padding: 5px 10px;
 }
 
-div.tab a:link          { color:(TABLE_MENU_A_COLOR);  }
-div.tab a:visited       { color:(TABLE_MENU_A_COLOR);  }
-div.tab a:hover         { color:(TABLE_MENU_A_HOVER_COLOR); text-decoration:underline;}
+div.tab a:link, p#extra_links a:link        { color:(TABLE_MENU_A_COLOR);  }
+div.tab a:visited, p#extra_links a:visited  { color:(TABLE_MENU_A_COLOR);  }
+div.tab a:hover, p#extra_links a:hover      { color:(TABLE_MENU_A_HOVER_COLOR);}
 
 div.active a:link, div.active a:visited {
   color:(TABLE_MENU_A_ACTIVE_COLOR);
-  text-decoration:underline;
 }
 
 p#extra_links {
@@ -600,4 +611,6 @@ p#extra_links {
   padding:0px;
   margin:0px;
 }
+
+
 
