@@ -107,6 +107,9 @@ class transaction extends db_entity
     } else if (!$this->get_value("fromTfID")) {
       $TPL["message"][] = "Unable to save transaction without a Source TF.";
     
+    } else if ($this->get_value("fromTfID") == $this->get_value("tfID")) {
+      $TPL["message"][] = "Unable to save transaction with Source TF being the same as the Destination TF.";
+
     } else {
       return parent::save();
     }
