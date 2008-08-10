@@ -867,10 +867,10 @@ function show_messages() {
   }
 
   if (is_array($arr) && count($arr)) {
-    echo "<div style=\"text-align:center;\"><div class=\"message\">";
+    echo "<div style=\"text-align:center;\"><div class=\"message corner\">";
     echo "<table cellspacing=\"0\">";
     foreach ($arr as $type => $str) {
-      echo "<tr><td width=\"1%\" style=\"vertical-align:top; padding:4px;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".png\"/><td/>";
+      echo "<tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".png\"/><td/>";
       echo "<td class=\"".$type."\" align=\"left\" width=\"99%\">".str_replace('\\','',$str)."</td></tr>";
     }
     echo "</table>";
@@ -982,7 +982,7 @@ function get_side_by_side_links($items=array(),$default=false) {
   // argh, I am bad man, this activates the default option, because it's minutely better than putting in a body onload
   $TPL["extra_footer_stuff"].= "<img src=\"".$TPL["url_alloc_images"]."pixel.gif\" onload=\"sidebyside_activate('".$default."',".$js_array.");\">";
 
-  echo "<div style=\"margin:10px 8px;\">".$str."</div>";
+  echo "<div style=\"margin:15px 0px 0px 0px;\">".$str."</div>";
 }
 function build_html_tag($htmlElementID,$value="") {
   $db = new db_alloc();

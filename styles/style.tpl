@@ -2,14 +2,40 @@ body {
   (BODY_BACKGROUND); 
   font-family:arial,helvetica,sans-serif; 
   color:(BODY_COLOR); 
-  margin:0px;
   padding:0px;
   font-size:(DEFAULT_FONT_SIZE)px;
+  width:auto !important; width:95%;
+  margin:0px 14px;
 }
 
 /* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
 body table {
   font-size:100%;
+}
+
+/* Setup the main content box that encapsulates everything */
+div#main {
+  width:100%;
+  margin:0px;
+  padding:0px 0px 14px 0px !important; padding:0px 16px;
+  background-color:white;
+  border:1px solid #9c9c9c;
+  position:relative;
+  clear:both;
+  text-align:left;
+  margin-bottom:4px;
+}
+
+/* Hack to ensure info_box encapsulates all the stuff */
+div#main:after {
+  content:"";
+  display:block;
+  height:0;
+  clear:both;
+}
+
+div#main2 {
+  margin:0px 14px !important; margin:auto;
 }
 
 a:link, a:visited { 
@@ -33,19 +59,19 @@ a.sidebyside {
   background-color: #f9f9f9;
   border:1px solid #cccccc;
   text-decoration:none;
-  color:#999999;
+  color:(TABLE_TASKS_TH_COLOR);
   font-size:100%; 
 }
 a.sidebyside:hover {
-  color:(TD_COLOR);
-  border:1px solid #999999;
-  font-size:100%; 
+  background:(TABLE_TASKS_TH_BACKGROUND);
+  color:(TABLE_TASKS_TH_COLOR);
+  border:1px solid (TABLE_TASKS_TH_COLOR);
 }
 a.sidebyside_active {
-  color:(TD_COLOR);
+  background:(TABLE_TASKS_TH_BACKGROUND);
+  color:(TABLE_TASKS_TH_COLOR);
+  border:1px solid (TABLE_TASKS_TH_COLOR);
   text-decoration:none;
-  background-color:(PANEL_HARPO_BG_COLOR);
-  border:1px solid #999999;
   padding:5px;
   font-size:100%; 
 }
@@ -167,11 +193,11 @@ select:focus.bad
 }
 
 div.message { 
-  padding:2px 4px; 
-  margin:0px auto 12px auto; 
+  padding:0px 4px; 
+  margin:15px auto 12px auto; 
   border:1px solid #cccccc;
   background-color:#fffdf2; 
-  width:60%; 
+  width:50%; 
 }
 .bad { 
   color:(TRANSACTION_REJECTED); 
@@ -191,12 +217,9 @@ div.message {
 table.box { 
   border:(TABLE_BOX_BORDER); 
   background-color:(TABLE_BOX_BACKGROUND_COLOR); 
-  margin-left:8px !important;  margin-left:0px;
-  margin-right:8px !important;  margin-right:0px;
-  margin-top:0px; 
-  margin-bottom:14px; 
   vertical-align:top; 
-  width:98%; 
+  width:100%; 
+  margin:14px 0px 0px 0px;
 } 
 table.box th { 
   (TABLE_BOX_TH_BACKGROUND); 
@@ -271,7 +294,7 @@ table.alloc_calendar td:hover {
 /* Filters */
 table.filter { 
   background-color:(PANEL_HARPO_BG_COLOR); 
-  border:2px dashed (PANEL_HARPO_FRAME_COLOR); 
+  border:1px solid (PANEL_HARPO_FRAME_COLOR); 
   padding:4px; 
   margin:4px; 
   margin-top:14px; 
@@ -289,7 +312,7 @@ table.filter th {
 }
 
 table.filter table.filter {
-  border:2px dashed (PANEL_CHICO_FRAME_COLOR); 
+  border:1px solid (PANEL_CHICO_FRAME_COLOR); 
   margin:0px;
   background-color:(PANEL_CHICO_BG_COLOR);
 }
@@ -468,13 +491,6 @@ table.rejected {
   border:1px solid (REJECTED_FRAME_COLOR); 
 }
 
-
-#all {
-  width:auto !important; width:95%;
-  margin:0px 14px;
-  text-align:center;
-}
-
 #menu {
   margin:0px;
   padding:0px;
@@ -500,7 +516,7 @@ table.menu_top {
 }
 
 .mtr {
-  right:0px !important; right:-14px;
+  right:0px !important; right:-32px;
 }
 
 table.menu_top th {
@@ -529,27 +545,6 @@ table.menu_top .menu_form_select {
   font-size:12px !important; font-size:11px;
   position:relative;
   top:0px !important; top:-2px;
-}
-
-/* Setup the main content box that encapsulates everything */
-div#main {
-  width:100%;
-  margin:0px;
-  padding:14px 0px !important; padding:14px 8px;
-  background-color:white;
-  border:1px solid #9c9c9c;
-  position:relative;
-  clear:both;
-  text-align:left;
-  margin-bottom:4px;
-}
-
-/* Hack to ensure info_box encapsulates all the stuff */
-div#main:after {
-  content:"";
-  display:block;
-  height:0;
-  clear:both;
 }
 
 div#tabs {
@@ -606,7 +601,7 @@ p#extra_links {
   z-index:1; 
   position:relative; 
   float:right;
-  right:0px; 
+  right:0px !important; right:-16px; 
   top:9px; 
   padding:0px;
   margin:0px;

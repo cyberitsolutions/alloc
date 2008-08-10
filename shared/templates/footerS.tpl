@@ -1,5 +1,5 @@
 {$extra_footer_stuff}
-      </div> <!-- end #main -->
-    </div> <!-- end #all -->
+      </div> <!-- end #main2 -->
+    </div> <!-- end #main -->
   </body>
 </html>

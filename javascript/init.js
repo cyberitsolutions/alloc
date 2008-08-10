@@ -23,7 +23,7 @@ $(document).ready(function() {
   // Give the tables alternating stripes
   $(".tasks tr:nth-child(even)").addClass("even");
   $(".tasks tr:nth-child(odd)").addClass("odd");
-  $("div.message").corner();
+  $(".corner").corner();
   $(".delete_button").bind("click", function(e){
     return confirm("Click OK to confirm deletion.");
   });
