@@ -32,6 +32,7 @@
     </div>
 
     <div id="main">
+      <div id="main2"><!-- another div nested for padding -->
 
 {show_messages()}
 

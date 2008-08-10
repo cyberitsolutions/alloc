@@ -17,4 +17,3 @@
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}init.js"></script>
   </head>
   <body>
-    <div id="all">
