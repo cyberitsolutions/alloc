@@ -65,13 +65,13 @@
     <td width="1%">{get_help("config_cybersourceTfID")}</td>
   </tr>
   <tr>
-    <td width="20%"><nobr>Wages Tagged Fund</nobr></td>
+    <td width="20%"><nobr>Outgoing Funds TF</nobr></td>
     <td><select name="wagesTfID">{$wagesTfOptions}</select></td>
     <td width="1%">{get_help("config_wagesTfID")}</td>
   </tr>
   <tr>
-    <td width="20%"><nobr>Invoices Tagged Fund</nobr></td>
-    <td><select name="wagesTfID">{$invoicesTfOptions}</select></td>
+    <td width="20%"><nobr>Incoming Funds TF</nobr></td>
+    <td><select name="invoicesTfID">{$invoicesTfOptions}</select></td>
     <td width="1%">{get_help("config_invoicesTfID")}</td>
   </tr>
   <tr>
