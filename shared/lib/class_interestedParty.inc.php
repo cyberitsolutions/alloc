@@ -64,7 +64,7 @@ class interestedParty extends db_entity {
         $interestedParty->set_value("emailAddress",$info["email"]);
         $interestedParty->set_value("personID",$info["personID"]);
         $interestedParty->set_value("clientContactID",$info["clientContactID"]);
-        $info["external"] and $interestedParty->set_value("external",1);
+        $info["external"] and $interestedParty->set_value("external","1");
         $interestedParty->save();
       }
     }

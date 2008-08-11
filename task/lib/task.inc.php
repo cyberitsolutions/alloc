@@ -253,7 +253,7 @@ class task extends db_entity {
       $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
       $db->query($q);
       $db->next_record();
-      $interestedPartyOptions[$db->f("projectClientEMail")] = array("name"=>$db->f("projectClientName"),"external"=>1);
+      $interestedPartyOptions[$db->f("projectClientEMail")] = array("name"=>$db->f("projectClientName"),"external"=>"1");
   
       // Get all other client contacts from the Client pages for this Project
       $q = sprintf("SELECT clientID FROM project WHERE projectID = %d",$projectID);
@@ -265,7 +265,7 @@ class task extends db_entity {
                      WHERE clientID = %d",$clientID);
       $db->query($q);
       while ($db->next_record()) {
-        $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>1,"clientContactID"=>$db->f("clientContactID"));
+        $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
       }
 
       // Get all the project people for this tasks project
