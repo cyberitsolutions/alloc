@@ -1051,7 +1051,12 @@ EOD;
   function email_move_status_to_finished($direction,$info) {
     if ($direction == "forwards") {
       //transactions
-      $q = sprintf("SELECT * FROM transaction WHERE timeSheetID = %d", $this->get_id());
+      $q = sprintf("SELECT DISTINCT transaction.transactionDate, transaction.product, transaction.status
+                      FROM transaction
+                      JOIN tf ON tf.tfID = transaction.tfID OR tf.tfID = transaction.fromTfID
+                RIGHT JOIN tfPerson ON tfPerson.personID = %d AND tfPerson.tfID = tf.tfID
+                     WHERE transaction.timeSheetID = %d
+                   ", $this->get_value('personID'), $this->get_id());
       $db = new db_alloc();
       $db->query($q);
 
