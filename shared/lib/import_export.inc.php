@@ -40,6 +40,7 @@ function import_csv($infile) {
       $projectManager = $project->get_project_manager();
       fgetcsv($fh, 8192);               // Skip the header line
       while($row = fgetcsv($fh, 8192)) {
+        $warning = false;
         if(strlen($row[0]) == 0) {
           //blank line (or blank enough that we don't want to create a task with no name)
           continue;
@@ -47,7 +48,7 @@ function import_csv($infile) {
         $task = new task;
         $task->set_value('projectID', $projectID);
         // Fields are: Task, Hours, Assigned Engineer
-        $task->set_value('taskName', $row[0]);
+        $task->set_value('taskName', trim($row[0]));
         $task->set_value('timeEstimate', $row[1]);
         $assignee = import_find_username(array($row[2]));
         if($assignee) {
@@ -55,6 +56,7 @@ function import_csv($infile) {
         } else {
           //We don't know who the assignee is, so assign it to the project manager
           $task->set_value('personID', $projectManager);
+          $warning = sprintf('<li class="warn">Warning for task %%d: Unable to find a username corresponding to "%s", assigning task to project manager.</li>', $row[2]);
         }
         $task->set_value('creatorID', $current_user->get_id());
         $task->set_value('managerID', $projectManager);
@@ -67,14 +69,15 @@ function import_csv($infile) {
         $task->set_value('dateTargetStart', date('Y-m-d H:i:s')); // Target start is today
         $task->save();
 
-        $result[] = sprintf("Created task %d %s", $task->get_id(), $task->get_value('taskName'));
+        $result[] = sprintf('<li>Created task <a href="%s">%d %s</a>.</li>', $task->get_url(), $task->get_id(), $task->get_value('taskName'));
+        $warning and $result[] = sprintf($warning, $task->get_id());
       }
       fclose($fh);
     }
   } else {
     $result[] = "There was a problem with the upload.";
   }
-  $TPL['import_result'] = implode("<br />", $result);
+  $TPL['import_result'] = "<ul>" . implode("", $result) . "</ul>";
 }
 
 function import_gnome_planner($infile) {
@@ -93,7 +96,7 @@ function import_gnome_planner($infile) {
     }
     // This function does two passes of each file. First, it does a set of basic tests to check the file is valid.
     // If it is, the function then actually imports the data.
-    $result[] = "Checking the file for validity...";
+    $result[] = "<li>Checking the file for validity...</li>";
     // Check that every <resource /> element has a short-name that corresponds to the user id of a user we know about
     $resource_people = array();
     $resources = $doc->getElementsByTagName("resource");
@@ -108,7 +111,7 @@ function import_gnome_planner($infile) {
         $resource_people[$resource->getAttribute("id")] = $user;
       }
     }
-    $result[] = "Done checking resource names.";
+    $result[] = "<li>Done checking resource names.</li>";
     // Check that at most one person is assigned to each task
     $task_allocation = array();
     $allocations = $doc->getElementsByTagName("allocation");
@@ -128,7 +131,7 @@ function import_gnome_planner($infile) {
         $task_allocation[$allocation->getAttribute("task-id")] = $allocation->getAttribute("resource-id");
       }
     }
-    $result[] = "Done checking task allocations.";
+    $result[] = "<li>Done checking task allocations.</li>";
 
     // OK, checks are done, now we attempt to actually do the import
     if($fileIsValid) {
@@ -137,18 +140,18 @@ function import_gnome_planner($infile) {
       $project->select();
       $projectManager = $project->get_project_manager();
 
-      $result[] = "File looks valid, running import.";
+      $result[] = "<li>File looks valid, running import.</li>";
       // First import tasks
       $taskNode = $doc->getElementsByTagName("tasks");
       $result = array_merge($result, import_planner_tasks($taskNode->item(0), '0', 0, $task_allocation, $resource_people, $projectManager));
-      $result[] = "Import completed.";
+      $result[] = "<li>Import completed.</li>";
     } else {
-      $result[] = "Please fix the above problems and then attempt to reimport the file. No changes have been made to alloc's database.";
+      $result[] = "<li>Please fix the above problems and then attempt to reimport the file. No changes have been made to alloc's database.</li>";
     }
   } else {
-    $result[] = "There was a problem with the upload.";
+    $result[] = "<li>There was a problem with the upload.</li>";
   }
-  $TPL['import_result'] = implode("<br />", $result);
+  $TPL['import_result'] = "<ul>" . implode("", $result) . "</ul>";
 }
 
 function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocation, $resource_people, $project_manager_ID) {
@@ -160,7 +163,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
     $taskXML = $parentNode->childNodes->item($i);
     if($taskXML->nodeType == XML_ELEMENT_NODE && $taskXML->tagName == "task") {
       $task = new task;
-      $task->set_value('taskName', $taskXML->getAttribute("name"));
+      $task->set_value('taskName', trim($taskXML->getAttribute("name")));
       $task->set_value('projectID', $projectID);
       // We can find the task assignee's id in the $task_allocation array, and that person's Person record in the $resource_people array
       $planner_taskid = $taskXML->getAttribute("id");
@@ -214,7 +217,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
 
           $comment->set_value("comment", "Import notice: This task was originally assigned to " . implode($names, ', ') . ".");
           $comment->save();
-          $result[] = sprintf("Note: multiple people were assigned to the task %d %s", $task->get_id(), $task->get_value("taskName"));
+          $result[] = sprintf("<li>Note: multiple people were assigned to the task %d %s</li>", $task->get_id(), $task->get_value("taskName"));
         } else {
           $task->set_value('personID', $resource_people[$task_allocation[$taskXML->getAttribute("id")]]->get_id());
         }
@@ -225,7 +228,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
 
       $task->save();
 
-      $result[] = sprintf("%s Created task %d %s", str_repeat("&gt; ", $depth), $task->get_id(), $task->get_value('taskName'));
+      $result[] = sprintf('<li>%sCreated task <a href="%s">%d %s</a>.</li>', str_repeat("&gt;", $depth), $task->get_url(), $task->get_id(), $task->get_value('taskName'));
 
       // Do child nodes
       if($taskXML->hasChildNodes()) {
@@ -283,7 +286,7 @@ function export_gnome_planner($projectID) {
     if(!$task["dateActualStart"]) {
       if(!$task["dateTargetStart"]) {
         // This is a reasonably bad situation
-      	$taskStartDate = time();
+        $taskStartDate = time();
       } else {
         $taskStartDate = planner_date_timestamp($task["dateTargetStart"]);
       }
