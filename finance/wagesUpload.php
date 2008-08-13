@@ -106,8 +106,9 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
       $msg.= "<b>Warning: Could not convert amount '$amount'</b><br>";
       continue;
     }
+
     // Negate the amount - Wages are a debit from TF's
-    #$amount = -$amount;
+    $amount = -$amount;
 
     // Check for an existing transaction for this wage - note we have to use a range or amount because it is floating point
     $query = sprintf("SELECT transactionID
