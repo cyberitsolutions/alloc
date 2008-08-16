@@ -226,7 +226,7 @@ INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES 
 
 
 INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ("Add Comments to Task","task","add_comment_from_email");
-INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ("Add Comments to Task (via a comment)","comment","add_comment_from_email");
+INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ("Add Comments to Comment","comment","add_comment_from_email");
 
 
 
