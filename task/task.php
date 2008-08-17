@@ -261,7 +261,8 @@ $TPL["task_createdBy"] = $person->get_username(1);
 $TPL["task_createdBy_personID"] = $person->get_id();
 
 if ($task->get_value("closerID") && $task->get_value("dateClosed")) {
-  $TPL["task_closed_info"] = "<tr><td>Task Closed By</td><td><b>".person::get_fullname($task->get_value("closerID"))."</b> ".$task->get_value("dateClosed")."</td></tr>";
+  $TPL["task_closed_by"] = person::get_fullname($task->get_value("closerID"));
+  $TPL["task_closed_when"] = $task->get_value("dateClosed");
 }
 
 $person = new person;
@@ -335,11 +336,12 @@ if (is_array($parentTaskIDs)) {
   $parentTaskIDs = array_reverse($parentTaskIDs,1);
 
   foreach ($parentTaskIDs as $tName => $tID) {
+    $TPL["hierarchy_links"] .= $br.$spaces."<a href=\"".$TPL["url_alloc_task"]."taskID=".$tID."\">".$tID." ".$tName."</a>";
     $spaces.="&nbsp;&nbsp;&nbsp;&nbsp;";
-    $TPL["hierarchy_links"] .= "<br/>".$spaces."<a href=\"".$TPL["url_alloc_task"]."taskID=".$tID."\">".$tID." ".$tName."</a>";
+    $br = "<br>";
   }
 }
-$TPL["hierarchy_links"].= "<br/><br/><b>".$TPL["task_taskID"]." ".$TPL["task_taskName"]."</b>";
+$TPL["taskName_label"] = "<b>".$TPL["task_taskID"]." ".$TPL["task_taskName"]."</b>";
 
 $dupeID = $task->get_value("duplicateTaskID");
 if ($dupeID) {
@@ -396,7 +398,8 @@ if ($task->get_id()) {
 
 
 if ($taskID) {
-  $TPL["taskSelfLink"] = $task->get_task_image()."<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_task_name()."</a>";
+  $TPL["taskTypeImage"] = $task->get_task_image();
+  $TPL["taskSelfLink"] = "<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_task_name()."</a>";
   $TPL["main_alloc_title"] = "Task " . $task->get_id() . ": " . $task->get_task_name()." - ".APPLICATION_NAME;
   $TPL["task_exists"] = true;
 } else {
@@ -426,15 +429,7 @@ if ($_GET["media"] == "print") {
 
   include_template("templates/taskPrinterM.tpl");
 
-// Detailed editable view
-} else if ($_GET["view"] == "detail" || !$task->get_id()) {
-  $TPL["task_taskName"] = text_to_html($task->get_value("taskName"));
-
-  include_template("templates/taskDetailM.tpl");
-
-// Default read-only view
 } else {
-
   // Need to html-ise taskName and description
   $TPL["task_taskName"] = text_to_html($task->get_value("taskName"));
   $TPL["task_taskDescription"] = text_to_html($task->get_value("taskDescription"));

@@ -234,7 +234,7 @@ class task extends db_entity {
         }
       }
     }
-    $str = "<select name=\"interestedParty[]\" size=\"8\" multiple=\"true\"  style=\"width:300px\">".get_select_options($options,$interestedParty)."</select>";
+    $str = "<select name=\"interestedParty[]\" size=\"6\" multiple=\"true\"  style=\"width:300px\">".get_select_options($options,$interestedParty)."</select>";
     return $str;
   }
 
