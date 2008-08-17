@@ -83,11 +83,23 @@ h1 {
 h2 { 
   font-weight:bold; 
   font-size:140%; 
+  clear:both;
 }
 h3 { 
   font-weight:bold; 
   font-size:120%; 
 }
+/* these are the little headers on the task page */
+h6 {
+  font-size:90%;
+  font-weight:normal;
+  text-transform:uppercase;
+  color:#bbbbbb;
+  border-bottom:1px solid #bbbbbb;
+  margin:25px 0px 10px 0px;
+  clear:both;
+}
+
 textarea, input, select, textarea { 
   font-size:100%; 
   font-family:arial,helvetica,sans-serif; 
@@ -163,7 +175,7 @@ select:focus.bad
   white-space:nowrap 
 }
 
-.hidden {
+.hidden, .edit {
   display:none;
 }
 .padded {
@@ -606,6 +618,23 @@ p#extra_links {
   padding:0px;
   margin:0px;
 }
+
+/* the first column in a four-across div based table */
+.col1 {
+  clear:both;
+  float:left; 
+  width:25%; 
+  margin-bottom:6px;
+}
+
+/* all other columns */
+.coln {
+  float:left; 
+  width:25%; 
+  margin-bottom:6px;
+}
+
+
 
 
 
