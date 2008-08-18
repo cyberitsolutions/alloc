@@ -146,7 +146,7 @@ if ($_POST["add"]) {
     $TPL["message"][] = "You must enter the Price.";
   }
   $_POST["amount"] = sprintf("%0.2f",$_POST["amount"]);
-  $_POST["amount"] = -$_POST["amount"] * $_POST["quantity"];
+  $_POST["amount"] = $_POST["amount"] * $_POST["quantity"];
   $_POST["amount"] = sprintf("%0.2f",$_POST["amount"]);
 
 
