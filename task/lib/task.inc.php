@@ -1014,7 +1014,7 @@ class task extends db_entity {
       $ret[] = "<tfoot>
                   <tr>
                     <th colspan=\"20\" class=\"nobr noprint\" style=\"padding:2px\">
-                      <select name=\"update_action\" onChange=\"$('.hidden').hide(); $('#'+$(this).val()).css('display','inline');\"> 
+                      <select name=\"update_action\" onChange=\"$('.hidden').hide(); $('#'+$(this).val()+'_div').css('display','inline');\"> 
                         <option value=\"\">Modify Checked...</options>
                         <option value=\"personID\">Assign to ".$arr."</options>
                         <option value=\"managerID\">Manager to ".$arr."</options>
@@ -1027,16 +1027,16 @@ class task extends db_entity {
                         <option value=\"dateActualCompletion\">Actual Completion Date to ".$arr."</options>
                         <option value=\"projectIDAndParentTaskID\">Project and Parent Task to ".$arr."</options>
                       </select>
-                      <div class=\"hidden\" id=\"dateTargetStart\">".$dateTargetStart."</div>
-                      <div class=\"hidden\" id=\"dateTargetCompletion\">".$dateTargetCompletion."</div>
-                      <div class=\"hidden\" id=\"dateActualStart\">".$dateActualStart."</div>
-                      <div class=\"hidden\" id=\"dateActualCompletion\">".$dateActualCompletion."</div>
-                      <div class=\"hidden\" id=\"personID\">".$assignee_dropdown."</div>
-                      <div class=\"hidden\" id=\"managerID\">".$manager_dropdown."</div>
-                      <div class=\"hidden\" id=\"timeEstimate\"><input name=\"timeEstimate\" type=\"text\" size=\"5\"></div>
-                      <div class=\"hidden\" id=\"priority\"><select name=\"priority\">".$priority_options."</select></div>
-                      <div class=\"hidden\" id=\"taskTypeID\"><select name=\"taskTypeID\">".$taskType_options."</select></div>
-                      <div class=\"hidden\" id=\"projectIDAndParentTaskID\">".$project_dropdown.$parentTask_div."</div>
+                      <div class=\"hidden\" id=\"dateTargetStart_div\">".$dateTargetStart."</div>
+                      <div class=\"hidden\" id=\"dateTargetCompletion_div\">".$dateTargetCompletion."</div>
+                      <div class=\"hidden\" id=\"dateActualStart_div\">".$dateActualStart."</div>
+                      <div class=\"hidden\" id=\"dateActualCompletion_div\">".$dateActualCompletion."</div>
+                      <div class=\"hidden\" id=\"personID_div\">".$assignee_dropdown."</div>
+                      <div class=\"hidden\" id=\"managerID_div\">".$manager_dropdown."</div>
+                      <div class=\"hidden\" id=\"timeEstimate_div\"><input name=\"timeEstimate\" type=\"text\" size=\"5\"></div>
+                      <div class=\"hidden\" id=\"priority_div\"><select name=\"priority\">".$priority_options."</select></div>
+                      <div class=\"hidden\" id=\"taskTypeID_div\"><select name=\"taskTypeID\">".$taskType_options."</select></div>
+                      <div class=\"hidden\" id=\"projectIDAndParentTaskID_div\">".$project_dropdown.$parentTask_div."</div>
                       <input type=\"submit\" name=\"run_mass_update\" value=\"Update Tasks\">
                     </th>
                   </tr>
