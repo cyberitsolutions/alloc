@@ -99,9 +99,12 @@ class transaction extends db_entity
   function save() {
     global $TPL;
     //safety checks
-    //The transaction may not be modified if the timesheet, invoice or expense
-    //form it is attached to has been completed.
-    if ($this->is_final()) {
+    //The transaction may not be modified if the timesheet or invoice
+    //it is attached to has been completed.
+    //Special case: transactions attached to expense forms can be modified
+    //regardless (because the expense form is finalised before the user gets
+    //the chance to click "approve"/"reject")
+    if ($this->is_final() && !$this->get_value("expenseFormID")) {
       die("Cannot save transaction, as it has been finalised.");
 
     } else if (!$this->get_value("fromTfID")) {
