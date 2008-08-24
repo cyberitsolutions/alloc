@@ -86,6 +86,7 @@ $TPL["hidden"] = implode("\n",$hidden);
 
 if ($_FORM["ALLOC_DB_USER"] && $_FORM["ALLOC_DB_NAME"]) {
   $db = new db($_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"],$_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_NAME"]);
+  $db->verbose = false;
 }
 
 if ($_POST["refresh_tab_1"]) {
@@ -164,7 +165,7 @@ if ($_POST["test_db_credentials"] && is_object($db)) {
   // Test supplied credentials
 
 
-  $link = $db->connect();
+  $link = @$db->connect();
   #@mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
   if ($link) {
     $text_tab_2b[] = "Successfully connected to MySQL database server as user '".$_FORM["ALLOC_DB_USER"]."'.";
