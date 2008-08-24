@@ -32,20 +32,24 @@
     <td>{$client_clientStreetAddressTwo} {$client_clientSuburbTwo} {$client_clientStateTwo} {$client_clientPostcodeTwo}</td>
   </tr>  
   <tr>
-    <td class="overline">Project</td>
-    <td class="overline" colspan="3">{$project_projectName}&nbsp;</td>
+    <td class="overline">Task Name</td>
+    <td class="overline" colspan="3">#{$task_taskID} {$task_taskName}&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Project</td>
+    <td colspan="3">{$project_projectName}&nbsp;</td>
   </tr>
   <tr>
     <td>Parent Task</td>
-    <td colspan="3">{$parentTask}&nbsp;</td>
-  </tr>
-  <tr>
-    <td>Task Name</td>
-    <td colspan="3">#{$task_taskID} {$task_taskName}&nbsp;</td>
+    <td colspan="3">{$parentTask_taskName}&nbsp;</td>
   </tr>
   <tr>
     <td valign="top">Description</td>
     <td colspan="3">{$task_taskDescription}&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top">Managed By</td>
+    <td colspan="3">{$manager_username}&nbsp;</td>
   </tr>
   <tr>
     <td class="overline">Created By</td>

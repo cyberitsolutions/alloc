@@ -341,7 +341,6 @@ if (is_array($parentTaskIDs)) {
     $br = "<br>";
   }
 }
-$TPL["taskName_label"] = "<b>".$TPL["task_taskID"]." ".$TPL["task_taskName"]."</b>";
 
 $dupeID = $task->get_value("duplicateTaskID");
 if ($dupeID) {
@@ -431,8 +430,8 @@ if ($_GET["media"] == "print") {
 
 } else {
   // Need to html-ise taskName and description
-  $TPL["task_taskName"] = text_to_html($task->get_value("taskName"));
-  $TPL["task_taskDescription"] = text_to_html($task->get_value("taskDescription"));
+  $TPL["task_taskName_html"] = text_to_html($task->get_value("taskName"));
+  $TPL["task_taskDescription_html"] = text_to_html($task->get_value("taskDescription"));
 
   include_template("templates/taskM.tpl");
 }
