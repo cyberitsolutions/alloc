@@ -13,6 +13,9 @@ $(document).ready(function() \{
   {if !$task_taskID}
     $('.view').hide();
     $('.edit').show();
+    $('#taskName').focus();
+  {else}
+    $('#editTask').focus();
   {/}
 \});
 </script>
@@ -24,15 +27,16 @@ $(document).ready(function() \{
     <th class="right nobr" colspan="3">{$navigation_links}</th>
   </tr>
   <tr>
-    <td colspan="5" valign="top">
+    <td colspan="5" valign="top" ondblclick="$('.view').hide();$('.edit').show();">
       <div style="float:left; width:48%; padding:0px 12px; vertical-align:top;">
 
-        <h6>Task Name</h6>
         <div class="view">
-          <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$taskName_label}</h2>{$priorityLabel}
+          <h6>{$task_taskType}</h6>
+          <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {$task_taskName}</h2>&nbsp;{$priorityLabel}
         </div>
         <div class="edit nobr">
-          <input type="text" name="taskName" value="{$task_taskName}" size="40" maxlength="75">
+          <h6>{$task_taskType}</h6>
+          <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" size="40" maxlength="75">
           <select name="priority">
             {$priorityOptions}
           </select>
@@ -64,23 +68,27 @@ $(document).ready(function() \{
           <div id="parentTaskDropdown">{$parentTaskOptions}</div>
         </div>
 
-        <h6>Task Description</h6>
+        {if $task_taskDescription_html}
         <div class="view">
-          {$task_taskDescription}
+          <h6>Description</h6>
+          {$task_taskDescription_html}
         </div>
+        {/}
+
         <div class="edit">
+          <h6>Description</h6>
           {get_textarea("taskDescription",$TPL["task_taskDescription"],array("height"=>"medium","width"=>"100%"))}
         </div>
 
         {if $taskDuplicateLink}
         <div class="view" style="clear:both">
-          <h6>Task Duplicate</h6>
+          <h6>Duplicate</h6>
           {$taskDuplicateLink}
         </div>
         {/}
         {if $task_taskID}
         <div class="edit nobr" style="clear:both">
-          <h6>Task Duplicate</h6>
+          <h6>Duplicate</h6>
           <input type="text" name="duplicateTaskID" value="{$task_duplicateTaskID}" size="10">
           {get_help("task_duplicate")}
         </div>
@@ -90,74 +98,99 @@ $(document).ready(function() \{
 
       <div style="float:left; width:48%; padding:0px 12px; vertical-align:top;">
  
-       <h6>Task People</h6>
+        <div class="view">
+          <h6>People</h6>
+          Created By <b>{$task_createdBy}</b> {$task_dateCreated}
+          {if $manager_username}
+          <br><br>
+          Managed By <b>{$manager_username}</b>
+          {/}
+          {if $person_username}
+          <br><br>
+          Assigned To <b>{$person_username}</b> {$task_dateAssigned}
+          {/}
+          {if $task_closed_by}
+          <br><br>
+          Task Closed By <b>{$task_closed_by}</b> {$task_closed_when}
+          <br>
+          {/}
+        </div>
 
-        <div class="col1">Created By</div>
-        <div class="coln"><b>{$task_createdBy}</b></div>
-        <div class="coln">{$task_dateCreated}</div> 
+        <div class="edit">
+          <h6>People</h6>
+          Created By <b>{$task_createdBy}</b> {$task_dateCreated}
+          <br><br>
+          Managed By <div id="taskManagerPersonList" style="display:inline">{$managerPersonOptions}</div>
+          <br><br>
+          Assigned To <div id="taskPersonList" style="display:inline">{$personOptions}</div> {$task_dateAssigned}
+          {if $task_closed_by}
+          <br><br>
+          Task Closed By <b>{$task_closed_by}</b> {$task_closed_when}
+          <br>
+          {/}
+        </div>
 
-        <div class="col1">Managed By</div>
-        <div class="coln view"><b>{$manager_username}</b></div>
-        <div class="coln edit"><div id="taskManagerPersonList">{$managerPersonOptions}</div></div>
-
-        <div class="col1">Assigned To</div> 
-        <div class="coln view"><b>{$person_username}</b></div>  
-        <div class="coln view">{$task_dateAssigned}</div>  
-        <div class="coln edit"><div id="taskPersonList">{$personOptions}</div></div>
-    
-        {if $task_closed_by}
-        <div class="col1">Task Closed By</div> 
-        <div class="coln"><b>{$task_closed_by}</b></div>
-        <div class="coln">{$task_closed_when}</div>
+        {if $interestedParty_text}
+        <div class="view">
+          <h6>Interested Parties</h6> 
+          {$interestedParty_text}
+        </div>
         {/}
 
-        <div class="col1">Interested Parties</div>
-        <div class="coln view nobr">{$interestedParty_text}</div>
-        <div class="coln edit nobr">
-          <div id="interestedPartyDropdown" style="display:inline">
-            {$interestedPartyOptions}
-          </div>
+        <div class="edit">
+          <h6>Interested Parties</h6> 
+          <div id="interestedPartyDropdown" style="display:inline">{$interestedPartyOptions}</div>
           {get_help("task_interested_parties")}
         </div>
 
-        <br style="clear:both">
-  
-        <h6>Estimated Hours</h6>
+        {if $task_timeEstimate}
         <div class="view">
+          <h6>Estimated Hours</h6>
           {$task_timeEstimate}
-          &nbsp;&nbsp;{$time_billed_link}
-          &nbsp;&nbsp;{if $TPL["percentComplete"] != "" && $TPL["percentComplete"] != "0%"}({$percentComplete}){/}
+          {$time_billed_link} {if $TPL["percentComplete"] && $TPL["percentComplete"] != "0%"}({$percentComplete}){/}
         </div>
+        {/}
+
         <div class="edit">
+          <h6>Estimated Hours</h6>
           <input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5">
+          {$time_billed_link} {if $TPL["percentComplete"] && $TPL["percentComplete"] != "0%"}({$percentComplete}){/}
         </div>
 
-        <h6>Estimated Date</h6>
-        <div class="col1 nobr">Start: </div>
-        <div class="coln nobr">
-          <div class="view">{$task_dateTargetStart}</div>
-          <div class="edit">{get_calendar("dateTargetStart",$task_dateTargetStart)}</div>
+        {if $task_dateTargetStart || $task_dateTargetCompletion}
+        <div class="view">
+          <h6>Estimated Duration</h6>
+          {if $task_dateTargetStart}Start: {$task_dateTargetStart}{/}
+          {if $task_dateTargetCompletion}&nbsp;&nbsp;&nbsp;Completion: {$task_dateTargetCompletion}{/}
         </div>
-        <div class="coln nobr">Completion: </div>
-        <div class="coln nobr">
-          <div class="view">{$task_dateTargetCompletion}</div>
-          <div class="edit">{get_calendar("dateTargetCompletion",$task_dateTargetCompletion)}</div>
+        {/}
+
+        <div class="edit">
+          <h6>Estimated Duration</h6>
+          Start: 
+          {get_calendar("dateTargetStart",$task_dateTargetStart)}
+          &nbsp;&nbsp;&nbsp;
+          Completion: 
+          {get_calendar("dateTargetCompletion",$task_dateTargetCompletion)}
         </div>
 
-        <br style="clear:both">
-
-        <h6>Actual Date</h6>
-        <div class="col1 nobr">Start: </div>
-        <div class="coln nobr">
-          <div class="view">{$task_dateActualStart}</div>
-          <div class="edit">{get_calendar("dateActualStart",$task_dateActualStart)}</div>
+        {if $task_dateActualStart || $task_dateActualCompletion}
+        <div class="view">
+          <h6>Actual Duration</h6>
+          {if $task_dateActualStart}Start: {$task_dateActualStart}{/}
+          {if $task_dateActualCompletion}&nbsp;&nbsp;&nbsp;Completion: {$task_dateActualCompletion}{/}
         </div>
-        <div class="coln nobr">Completion: </div>
-        <div class="coln nobr">
-          <div class="view">{$task_dateActualCompletion}</div>
-          <div class="edit">{get_calendar("dateActualCompletion",$task_dateActualCompletion)}</div>
-        </div>
+        {/}
 
+        <div class="edit">
+          <h6>Actual Duration</h6>
+          Start: 
+          {get_calendar("dateActualStart",$task_dateActualStart)}
+          &nbsp;&nbsp;&nbsp;
+          Completion: 
+          {get_calendar("dateActualCompletion",$task_dateActualCompletion)}
+        </div>
+       
       </div>
 
     </td>
@@ -165,7 +198,7 @@ $(document).ready(function() \{
   <tr>
     <td colspan="5" align="center" class="padded">
       <div class="view">
-      <input type="button" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
+      <input type="button" id="editTask" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
       </div>
       <div class="edit" style="margin-top:20px">
       {$timeSheet_save}

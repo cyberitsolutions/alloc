@@ -90,12 +90,14 @@ h3 {
 }
 /* these are the little headers on the task page */
 h6 {
+  position:relative;
   font-size:90%;
   font-weight:normal;
   text-transform:uppercase;
   color:#bbbbbb;
   border-bottom:1px solid #bbbbbb;
-  margin:25px 0px 10px 0px;
+  padding:0px;
+  margin:20px 0px 10px 0px;
   clear:both;
 }
 
@@ -617,23 +619,5 @@ p#extra_links {
   padding:0px;
   margin:0px;
 }
-
-/* the first column in a four-across div based table */
-.col1 {
-  clear:both;
-  float:left; 
-  width:25%; 
-  margin-bottom:6px;
-}
-
-/* all other columns */
-.coln {
-  float:left; 
-  width:25%; 
-  margin-bottom:6px;
-}
-
-
-
 
 
