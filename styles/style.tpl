@@ -3,7 +3,6 @@ body {
   font-family:arial,helvetica,sans-serif; 
   color:(BODY_COLOR); 
   padding:0px;
-  font-size:(DEFAULT_FONT_SIZE)px;
   width:auto !important; width:95%;
   margin:0px 14px;
 }
@@ -518,7 +517,7 @@ table.menu_top {
   margin:0px;
   padding:0px;
   text-align:left;
-  font-size:12px;
+  font-size:12px; /* hardcoded */
   font-weight:bold;
   color:(TABLE_MENU_A_COLOR);
 }
@@ -533,28 +532,28 @@ table.menu_top {
 
 table.menu_top th {
   text-align:left;
-  font-size:17px;
+  font-size:17px; /* hardcoded */
 }
 
 table.menu_top td {
   text-align:right;
-  font-size:12px;
+  font-size:12px; /* hardcoded */
 }
 
 table.menu_top .menu_form_text {
-  font-size:12px !important; font-size:13px;
+  font-size:12px !important; font-size:13px; /* hardcoded */
   padding:0px;
   margin:0px;
 }
 
 table.menu_top .menu_form_button {
-  font-size:11px !important; font-size:11px;
+  font-size:11px !important; font-size:11px; /* hardcoded */
   padding:0px 2px;
   margin:1px;
 }
 
 table.menu_top .menu_form_select {
-  font-size:12px !important; font-size:11px;
+  font-size:12px !important; font-size:11px; /* hardcoded */
   position:relative;
   top:0px !important; top:-2px;
 }
@@ -582,7 +581,7 @@ div.tab {
   width:80px;
   height:27px;
   text-align:center;
-  font-size:12px;
+  font-size:12px; /* hardcoded */
 }
 
 /* Active tabs use this class as well */
@@ -607,7 +606,7 @@ div.active a:link, div.active a:visited {
 }
 
 p#extra_links {
-  font-size:12px;
+  font-size:12px; /* hardcoded */
   font-weight:bold;
   display:inline; 
   z-index:1; 

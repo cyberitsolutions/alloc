@@ -4,16 +4,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="pragma" content="no-cache" />
     <title>{$main_alloc_title}</title>
+    <style type="text/css" media="screen">body \{ font-size:{get_default_font_size()}px \}</style>
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}{get_stylesheet_name()}" type="text/css" media="screen" />
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print" />
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}calendar.css" type="text/css" media="screen" />
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.curvycorners.js"></script>
-    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}alloc.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}sorttable.js"></script>
-    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}init.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}alloc.js"></script>
   </head>
   <body>
