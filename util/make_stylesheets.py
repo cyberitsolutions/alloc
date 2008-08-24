@@ -18,12 +18,10 @@ fd.close();
 # List of style_something.ini files in ../styles/ 
 files = os.listdir(d+'../styles/')
 
-
-# Loop through files
+# Loop through style_*.ini files
 for item in files:
 
   if item.endswith('.ini'):
-
 
     # Parse each style_something.ini file
     config.read([d+'../styles/'+item])
@@ -50,28 +48,9 @@ for item in files:
       for k, v in dict.items():
         str = str.replace('('+k.upper()+')', v)
 
-
-      # Create matrix of stylesheets, themes vs font sizes 
-      for weight in range(-3,7):
-        filename_suffix += 1
-        str2 = str;
-
-        font_sizes = {}
-        font_sizes['DEFAULT_FONT_SIZE'] = (12 + weight)   
-      
-        for k, v in font_sizes.items():
-          str2 = str2.replace('('+k.upper()+')', repr(v))
-
-        
-        # Write it out to a file
-        fd = open(d+'../css/'+section+'_'+repr(filename_suffix)+'.css','w')
-        fd.write(str2) 
-        fd.close()
-
-
-
-
-
-
+      # Write it out to a file
+      fd = open(d+'../css/'+section+'.css','w')
+      fd.write(str) 
+      fd.close()
 
 
