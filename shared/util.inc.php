@@ -65,15 +65,18 @@ function get_calendar($name, $default_value="") {
   echo get_calendar_string($name, $default_value);
 }
 function get_calendar_string($name, $default_value="") {
+  global $TPL;
   // setup the first day of the week
   $days = array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
   $days = array_flip($days);
   $firstday = config::get_config_item("calendarFirstDay");
   $firstday = sprintf("%d",$days[$firstday]);
   $default_value and $default = ", date : ".$default_value;
+  $images = $TPL["url_alloc_images"];
+  $year = date("Y");
   $str = <<<EOD
   <input name="${name}" type="text" size="10" value="${default_value}" id="${name}" class="datefield">
-  <input type="button" value="Cal" id="button_${name}" />
+  <img src="${images}cal${year}.png" id="button_${name}" class="calendar_button" title="Date Selector">
   <script type="text/javascript">
   Calendar.setup( { inputField : "${name}", ifFormat : "%Y-%m-%d", button : "button_${name}", showOthers : 1, align : "Bl", firstDay : ${firstday}, step : 1, weekNumbers : 0 ${default} })
   </script>

@@ -163,6 +163,25 @@ $(document).ready(function() {
     var now = new Date();
     this.value=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
   });
+  $("input.datefield").bind("focus", function(e){
+    if (this.value == "YYYY-MM-DD") {
+      this.style.color = "#333333";
+      this.value = "";
+    }
+  });
+  $("input.datefield").each(function(){
+    if (this.value == "") {
+      this.style.color = "#cccccc";
+      this.value = "YYYY-MM-DD";
+    }
+  });
+  $('form').submit(function(){
+    $("input.datefield").each(function(){
+      if (this.value == "YYYY-MM-DD") {
+        this.value = "";
+      }
+    });
+  });
   $('tr.clickrow').bind('click',function(e){                                                                                                     
     var id = this.id.split('_')[1]; // clickrow_43242
     if (id && !$(e.target).is('input:checkbox') && !$(e.target).is('a')) {
