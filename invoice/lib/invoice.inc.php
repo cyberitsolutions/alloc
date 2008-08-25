@@ -303,7 +303,7 @@ class invoice extends db_entity {
     $y = $pdf->ezTable($totals,$cols3,"",$pdf_table_options4);
 
     $pdf->ezSetY($y-20);
-    #$pdf->ezText(str_replace(array("<br/>","<br>"),"\n",$footer,11);
+    $pdf->ezText(str_replace(array("<br/>","<br>"),"\n",$footer),10);
 
 
     // Add footer
@@ -335,7 +335,7 @@ class invoice extends db_entity {
     //$debug = true;
     if (!$debug) {
       $fh = fopen($dir.DIRECTORY_SEPARATOR.$file,"w+");
-      fputs($fh, $pdf->output());
+      fputs($fh, $pdf->ezOutput());
       fclose($fh);
     } else {
       $pdf->ezStream();
