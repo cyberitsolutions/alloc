@@ -961,9 +961,9 @@ class task extends db_entity {
       #$_FORM["taskView"] == "byProject" and $summary[] = "<br>".$_FORM["projectLinks"];
       $summary[] = $TPL["table_list"];
       $summary[] = "<tr>";
-      $_FORM["showEdit"]     and $summary[] = "<th width=\"1%\" class=\"sorttable_nosort\"><input type=\"checkbox\" onclick=\"return $('.task_checkboxes').each(function(){this.checked=!this.checked});\"></th>";
+      $_FORM["showEdit"]     and $summary[] = "<th width=\"1%\" class=\"sorttable_nosort noprint\"><input type=\"checkbox\" onclick=\"return $('.task_checkboxes').each(function(){this.checked=!this.checked});\"></th>";
                                  $summary[] = "<th width=\"1%\"></th>"; //taskTypeImage
-      $_FORM["showTaskID"]   and $summary[] = "<th>ID</th>";
+      $_FORM["showTaskID"]   and $summary[] = "<th width=\"1%\">ID</th>";
                                  $summary[] = "<th>Task</th>";
       $_FORM["showProject"]  and $summary[] = "<th>Project</th>";
       $_FORM["showPriority"] and $summary[] = "<th>Priority</th>";
@@ -1014,7 +1014,7 @@ class task extends db_entity {
 
       $ret[] = "<tfoot>
                   <tr>
-                    <th colspan=\"20\" class=\"nobr\" style=\"padding:2px\">
+                    <th colspan=\"20\" class=\"nobr noprint\" style=\"padding:2px\">
                       <select name=\"update_action\" onChange=\"$('.hidden').hide(); $('#'+$(this).val()).css('display','inline');\"> 
                         <option value=\"\">Modify Checked...</options>
                         <option value=\"personID\">Assign to ".$arr."</options>
@@ -1094,10 +1094,10 @@ class task extends db_entity {
     $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
 
                                   $summary[] = "<tr class=\"clickrow\" id=\"clickrow_".$task["taskID"]."\">"; // clickrow has onClick in init.js
-    $_FORM["showEdit"]        and $summary[] = "  <td class=\"nobr\"><input type=\"checkbox\" id=\"checkbox_".$task["taskID"]."\" name=\"select[".$task["taskID"]."]\" class=\"task_checkboxes\"></td>";
+    $_FORM["showEdit"]        and $summary[] = "  <td class=\"nobr noprint\"><input type=\"checkbox\" id=\"checkbox_".$task["taskID"]."\" name=\"select[".$task["taskID"]."]\" class=\"task_checkboxes\"></td>";
                                   $summary[] = "  <td sorttable_customkey=\"".$task["taskTypeID"]."\">".$task["taskTypeImage"]."</td>";
     $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
-                                  $summary[] = "  <td style=\"padding-left:".($task["padding"]*15+3)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
+                                  $summary[] = "  <td style=\"padding-left:".($task["padding"]*25+6)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
     $_FORM["showProject"]     and $summary[] = "  <td><a href=\"".$TPL["url_alloc_project"]."projectID=".$task["projectID"]."\">".$task["project_name"]."</a>&nbsp;</td>";
     $_FORM["showPriority"]    and $summary[] = "  <td>".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td style=\"color:".$_FORM["taskPriorities"][$task["priority"]]["colour"]."\">".$_FORM["taskPriorities"][$task["priority"]]["label"]."&nbsp;</td>"; 
