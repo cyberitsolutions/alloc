@@ -220,6 +220,18 @@ select:focus.bad
   border:1px solid #cccccc;
 }
 
+.calendar_button {
+  vertical-align:sub !important; vertical-align:bottom;
+  cursor:pointer; 
+  border: 1px solid #999999; 
+  margin:0px; 
+  position:relative; 
+}
+.calendar_button:hover {
+  border: 1px solid #666666;
+  background-color:#999999;
+}
+
 div.message { 
   padding:0px 4px; 
   margin:15px auto 12px auto; 
