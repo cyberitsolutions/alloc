@@ -28,7 +28,7 @@ $(document).ready(function() \{
   </tr>
   <tr>
     <td colspan="5" valign="top" ondblclick="$('.view').hide();$('.edit').show();">
-      <div style="float:left; width:48%; padding:0px 12px; vertical-align:top;">
+      <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
 
         <div class="view">
           <h6>{$task_taskType}</h6>
@@ -36,7 +36,7 @@ $(document).ready(function() \{
         </div>
         <div class="edit nobr">
           <h6>{$task_taskType}</h6>
-          <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" size="40" maxlength="75">
+          <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" size="35" maxlength="75">
           <select name="priority">
             {$priorityOptions}
           </select>
@@ -96,7 +96,7 @@ $(document).ready(function() \{
 
       </div>
 
-      <div style="float:left; width:48%; padding:0px 12px; vertical-align:top;">
+      <div style="float:right; width:47%; padding:0px 12px; vertical-align:top;">
  
         <div class="view">
           <h6>People</h6>
