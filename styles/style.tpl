@@ -26,7 +26,7 @@ div#main {
 }
 
 /* Hack to ensure info_box encapsulates all the stuff */
-div#main:after {
+div#main:after, .edit:after, .view:after {
   content:"";
   display:block;
   height:0;
@@ -88,7 +88,7 @@ h3 {
   font-weight:bold; 
   font-size:120%; 
 }
-/* these are the little headers on the task page */
+/* These are the little headers on the task page */
 h6 {
   position:relative;
   font-size:90%;
@@ -99,6 +99,16 @@ h6 {
   padding:0px;
   margin:20px 0px 10px 0px;
   clear:both;
+}
+
+/* For having a second column in the h6 */
+h6 div {
+  width:50%;  
+  float:right;
+  display:inline;
+  position:absolute;
+  top:0px;
+  right:0px !important; right:12px;
 }
 
 textarea, input, select, textarea { 
@@ -179,6 +189,11 @@ select:focus.bad
 .hidden, .edit {
   display:none;
 }
+
+.edit, .view {
+  clear:both;
+}
+
 .padded {
   padding:8px;
 }

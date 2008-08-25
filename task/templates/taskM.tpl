@@ -143,18 +143,26 @@ $(document).ready(function() \{
           {get_help("task_interested_parties")}
         </div>
 
-        {if $task_timeEstimate}
+        {if $task_timeEstimate || $time_billed_link || ($percentComplete && $percentComplete != "0%")}
         <div class="view">
-          <h6>Estimated Hours</h6>
-          {$task_timeEstimate}
-          {$time_billed_link} {if $TPL["percentComplete"] && $TPL["percentComplete"] != "0%"}({$percentComplete}){/}
+          <h6>Estimated Hours<div>Actual Hours</div></h6>
+          <div style="float:left; width:30%;">
+            {$task_timeEstimate} {if $task_timeEstimate} hrs &nbsp;&nbsp;{/}
+          </div>
+          <div style="float:right;width:50%;">
+            {$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}
+          </div>
         </div>
         {/}
 
         <div class="edit">
-          <h6>Estimated Hours</h6>
-          <input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5">
-          {$time_billed_link} {if $TPL["percentComplete"] && $TPL["percentComplete"] != "0%"}({$percentComplete}){/}
+          <h6>Estimated Hours<div>Actual Hours</div></h6>
+          <div style="float:left; width:30%">
+            <input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5">
+          </div>
+          <div style="float:right;width:50%;">
+            {$time_billed_link} {if $TPL["percentComplete"] && $TPL["percentComplete"] != "0%"}({$percentComplete}){/}
+          </div>
         </div>
 
         {if $task_dateTargetStart || $task_dateTargetCompletion}
