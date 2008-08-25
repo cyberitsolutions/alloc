@@ -2,9 +2,9 @@
 {show_toolbar()}
 
 {get_side_by_side_links(array("basic"=>"Basic Setup"
+                             ,"company_info"=>"Company Info"
                              ,"finance"=>"Finance"
                              ,"time_sheets"=>"Time Sheets"
-                             ,"company_info"=>"Company Info"
                              ,"email_gateway"=>"Email Gateway"
                              ,"misc"=>"Miscellaneous"
                              ),$_POST["sbs_link"])}
@@ -198,11 +198,6 @@
     <td width="1%">{get_help("config_hoursInDay")}</td>
   </tr>
   <tr>
-    <td>Time Sheet Printout Footer</td>
-    <td><input type="text" size="70" value="{$timeSheetPrintFooter}" name="timeSheetPrintFooter"></td> 
-    <td width="1%">{get_help("config_timeSheetPrintFooter")}</td>
-  </tr>
-  <tr>
     <td>Time Sheet Payment Insurance Percent</td>
     <td><input type="text" size="70" value="{$paymentInsurancePercent}" name="paymentInsurancePercent"></td> 
     <td width="1%">{get_help("config_paymentInsurancePercent")}</td>
@@ -260,12 +255,17 @@
     <td><input type="text" size="70" value="{$companyContactAddress3}" name="companyContactAddress3"></td> 
   </tr>
   <tr>
-    <td>Time Sheet PDF (line 2)</td>
+    <td>Invoice / Time Sheet PDF Header 2</td>
     <td><input type="text" size="70" value="{$companyACN}" name="companyACN"></td> 
   </tr>
   <tr>
-    <td>Time Sheet PDF (line 3)</td>
+    <td>Invoice / Time Sheet PDF Header 3</td>
     <td><input type="text" size="70" value="{$companyABN}" name="companyABN"></td> 
+  </tr>
+  <tr>
+    <td>Invoice / Time Sheet PDF Footer</td>
+    <td><input type="text" size="70" value="{$timeSheetPrintFooter}" name="timeSheetPrintFooter"></td> 
+    <td width="1%">{get_help("config_timeSheetPrintFooter")}</td>
   </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>

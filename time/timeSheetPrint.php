@@ -341,26 +341,26 @@ if ($timeSheetID) {
     $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
     $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
 
-    $pdf_table_options = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0,"xPos"=>"left","xOrientation"=>"right","fontSize"=>11,"rowGap"=>0,"fontSize"=>10);
+    $pdf_table_options = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0,"xPos"=>"left","xOrientation"=>"right","fontSize"=>10,"rowGap"=>0,"fontSize"=>10);
 
 
     $cols = array("one"=>"","two"=>"","three"=>"","four"=>"");
     $cols3 = array("one"=>"","two"=>"");
     $cols_settings["one"] = array("justification"=>"right");
     $cols_settings["three"] = array("justification"=>"right");
-    $pdf_table_options2 = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0, "width"=>400, "fontSize"=>11, "xPos"=>"center", "xOrientation"=>"center", "cols"=>$cols_settings);
+    $pdf_table_options2 = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0, "width"=>400, "fontSize"=>10, "xPos"=>"center", "xOrientation"=>"center", "cols"=>$cols_settings);
     $cols_settings2["gst"] = array("justification"=>"right");
     $cols_settings2["money"] = array("justification"=>"right");
-    $pdf_table_options3 = array("showLines"=>2,"shaded"=>0,"width"=>400, "xPos"=>"center","fontSize"=>11,"cols"=>$cols_settings2,"lineCol"=>array(0.8, 0.8, 0.8),"splitRows"=>1,"protectRows"=>0);
+    $pdf_table_options3 = array("showLines"=>2,"shaded"=>0,"width"=>400, "xPos"=>"center","fontSize"=>10,"cols"=>$cols_settings2,"lineCol"=>array(0.8, 0.8, 0.8),"splitRows"=>1,"protectRows"=>0);
     $cols_settings["two"] = array("justification"=>"right","width"=>80);
-    $pdf_table_options4 = array("showLines"=>2,"shaded"=>0,"width"=>400, "showHeadings"=>0, "fontSize"=>11, "xPos"=>"center", "cols"=>$cols_settings,"lineCol"=>array(0.8, 0.8, 0.8));
+    $pdf_table_options4 = array("showLines"=>2,"shaded"=>0,"width"=>400, "showHeadings"=>0, "fontSize"=>10, "xPos"=>"center", "cols"=>$cols_settings,"lineCol"=>array(0.8, 0.8, 0.8));
 
     $pdf =& new Cezpdf();
     $pdf->ezSetMargins(90,90,90,90);
 
     $pdf->selectFont($font1);
-    $pdf->ezStartPageNumbers(436,80,11,'right','Page {PAGENUM} of {TOTALPAGENUM}');
-    $pdf->ezStartPageNumbers(200,80,11,'left','<b>'.$default_id_label.': </b>'.$TPL["timeSheetID"]);
+    $pdf->ezStartPageNumbers(436,80,10,'right','Page {PAGENUM} of {TOTALPAGENUM}');
+    $pdf->ezStartPageNumbers(200,80,10,'left','<b>'.$default_id_label.': </b>'.$TPL["timeSheetID"]);
     $pdf->ezSetY(775);
 
     $TPL["companyName"]            and $contact_info[] = array($TPL["companyName"]);
@@ -386,8 +386,8 @@ if ($timeSheetID) {
     $nos_y = $line_y + 22;
     $TPL["companyNos2"] and $nos_y = $line_y + 34;
     $pdf->ezSetY($nos_y);
-    $TPL["companyNos1"] and $y = $pdf->ezText($TPL["companyNos1"],11, array("justification"=>"right"));
-    $TPL["companyNos2"] and $y = $pdf->ezText($TPL["companyNos2"],11, array("justification"=>"right"));
+    $TPL["companyNos1"] and $y = $pdf->ezText($TPL["companyNos1"],10, array("justification"=>"right"));
+    $TPL["companyNos2"] and $y = $pdf->ezText($TPL["companyNos2"],10, array("justification"=>"right"));
 
 
 
@@ -437,21 +437,8 @@ if ($timeSheetID) {
     }
 
 
-
-
-
     $pdf->ezSetY($y -20);
-    $pdf->ezText(str_replace(array("<br/>","<br>"),"\n",$TPL["footer"]),11);
-
-
-    // Add footer
-    #$all = $pdf->openObject(); 
-    #$pdf->saveState(); 
-    #$pdf->addText(415,80,12,"Time Sheet ID: <b>".$TPL["timeSheetID"]."</b>"); 
-    #$pdf->restoreState(); 
-    #$pdf->closeObject(); 
-    #$pdf->addObject($all,'all'); 
-
+    $pdf->ezText(str_replace(array("<br/>","<br>"),"\n",$TPL["footer"]),10);
     $pdf->ezStream();
 
   // Else HTML format
