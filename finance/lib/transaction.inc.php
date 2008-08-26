@@ -158,8 +158,15 @@ class transaction extends db_entity
       return $timeSheet->is_owner($person);
     }
 
-    $tf = $this->get_foreign_object("tf");
-    return $tf->is_owner($person);
+    $toTf = new tf;
+    $toTf->set_id($this->get_value('tfID'));
+    $toTf->select();
+
+    $fromTf = new tf;
+    $fromTf->set_id($this->get_value('fromTfID'));
+    $fromTf->select();
+
+    return ($toTf->is_owner($person) || $fromTf->is_owner($person));
   }
 
   function get_transactionTypes() {
