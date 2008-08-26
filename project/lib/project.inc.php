@@ -49,7 +49,7 @@ class project extends db_entity {
                                , "currencyType"=>new db_field("currencyType")
                                , "projectPriority"=>new db_field("projectPriority")
                                , "projectStatus"=>new db_field("projectStatus")
-                               , "is_agency"=>new db_field("is_agency")
+                               , "is_agency"=>new db_field("is_agency",array("empty_to_null"=>true))
                                , "cost_centre_tfID"=>new db_field("cost_centre_tfID")
                                , "customerBilledDollars"=>new db_field("customerBilledDollars")
                                , "clientContactID"=>new db_field("clientContactID")

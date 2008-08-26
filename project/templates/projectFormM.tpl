@@ -1,5 +1,25 @@
 {show_header()}
 {show_toolbar()}
+<script type="text/javascript" language="javascript">
+$(document).ready(function() \{
+  {if !$project_projectID}
+    $('.view').hide();
+    $('.edit').show();
+    $('#projectName').focus();
+  {else}
+    $('#editProject').focus();
+  {/}
+\});
+// Make the XML request thing, specify the callback function 
+function refreshClientList(value) \{
+  url = '{$url_alloc_updateProjectClientList}clientStatus='+value;
+  makeAjaxRequest(url,'clientDropdown')
+\}
+function refreshProjectList(value) \{
+  url = '{$url_alloc_updateCopyProjectList}projectStatus='+value;
+  makeAjaxRequest(url,'projectDropdown')
+\}
+</script>
 
 {$_POST["person_save"] and $_POST["sbs_link"] = "people"}
 {$_POST["commission_delete"] || $_POST["commission_save"] and $_POST["sbs_link"] = "commissions"}
@@ -28,87 +48,191 @@
 <input type="hidden" name="projectID" value="{$project_projectID}">
 {$table_box}
   <tr>
-    <th class="nobr" colspan="2">Project: {$projectSelfLink}</th>
+    <th class="nobr" colspan="2">{$projectSelfLink}</th>
     <th class="right" colspan="3">{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</th>
   </tr>
   <tr>
-    <td colspan="5">&nbsp;</td>
-  </tr>
-  <tr>
-    <td width="1%" align="right" class="nobr">Project Name{mandatory($project_projectName)}</td>
-    <td colspan="1"><input type="text" name="projectName" value="{$project_projectName}" size="45">
-                    <select name="projectPriority">{$projectPriority_options}</select></td>
-    <td></td>
-    <td align="right">Short Name</td>
-    <td><input type="text" name="projectShortName" value="{$project_projectShortName}" size="10"></td>
-  </tr>
-  <tr>
-    <td align="right" rowspan="4" valign="top">Description</td>
-    <td rowspan="4" colspan="2" valign="top">{get_textarea("projectComments",$TPL["project_projectComments"],array("height"=>"medium"))}</td>
-    <td align="right">Status</td>
-    <td><select name="projectStatus">{$projectStatus_options}</select></td>
-  </tr>
-  <tr>
-    <td align="right">Type</td>
-    <td><select name="projectType">{$projectType_options}</select></td>
-  </tr>
-  <tr>
-    <td align="right">Currency</td>
-    <td><select name="currencyType">{$currencyType_options}</select></td>
-  </tr>
-  <tr>
-    <td align="right" class="nobr">Project Budget $</td>
-    <td class="nobr"><input type="text" name="projectBudget" value="{$project_projectBudget}" size="10"> (ex. {$taxName})</td>
-  </tr>
-  <tr>
-    <td align="right">Client</td>
-    <td><nobr><select id="clientID" name="clientID" onChange="makeAjaxRequest('{$url_alloc_updateProjectClientContactList}clientID='+$('#clientID').attr('value'),'clientContactDropdown')">{$clientOptions}</select>&nbsp; &nbsp;<a href="{$url_alloc_client}">New Client</a></nobr></td>
-    <td></td>
-    <td align="right" class="nobr">Client Billed At $</td>
-    <td><input type="text" name="customerBilledDollars" value="{$project_customerBilledDollars}" size="10"> (per unit, inc. {$taxName})</td>
-  </tr>
-  <tr>
-    <td align="right">Contact</td>
-    <td>
-      <div id="clientContactDropdown">
-        {$clientContactDropdown}
+    <td colspan="5" valign="top" ondblclick="$('.view').hide();$('.edit').show();">
+      <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
+
+        <div class="view">
+          <h6>{$project_projectType}{mandatory($project_projectName)}</h6>
+          <h2 style="margin-bottom:0px; display:inline;">{$project_projectID} {$project_projectName}</h2>&nbsp;{$priorityLabel}
+        </div>
+
+        <div class="edit">
+          <h6>{$project_projectType}{mandatory($project_projectName)}</h6>
+          <input type="text" name="projectName" id="projectName" value="{$project_projectName_html}" size="45">
+          <select name="projectPriority">{$projectPriority_options}</select>
+          <select name="projectType">{$projectType_options}</select>
+        </div>
+        
+        {if $project_projectComments_html}  
+        <div class="view">
+          <h6>Description</h6>
+          {$project_projectComments_html}
+        </div>
+        {/}
+        <div class="edit">
+          <h6>Description</h6>  
+          {get_textarea("projectComments",$project_projectComments,array("height"=>"medium","width"=>"100%"))}
+        </div>
+
+        {if $clientDetails}
+        <div class="view">
+          <h6>Client</h6>
+          {$clientDetails}
+        </div>
+        {/}
+        <div class="edit">
+          <h6>Client</h6>
+          <label for="client_status_current">Current Clients</label>
+          <input id="client_status_current" type="radio" name="client_status"  value="current" onClick="refreshClientList(this.value)">
+          &nbsp;&nbsp;&nbsp;
+          <label for="client_status_potential">Potential Clients</label>
+          <input id="client_status_potential" type="radio" name="client_status"  value="potential" onClick="refreshClientList(this.value)">
+          &nbsp;&nbsp;&nbsp;
+          <label for="client_status_archived">Archived Clients</label>
+          <input id="client_status_archived" type="radio" name="client_status"  value="archived" onClick="refreshClientList(this.value)">
+          <div id="clientDropdown">
+            {$clientDropdown}
+          </div>
+          <div id="clientContactDropdown" style="margin-top:10px;">
+            {$clientContactDropdown}
+          </div>
+        </div>
+          
+      </div>
+
+      <div style="float:right; width:47%; padding:0px 12px; vertical-align:top;">
+
+        <div class="view">
+          <h6>Project Nickname<div>Status</div></h6>
+          <div style="float:left; width:40%;">
+            {$project_projectShortName}
+          </div>
+          <div style="float:right; width:50%;">
+            {echo ucwords($project_projectStatus)}
+          </div>
+        </div>
+
+        <div class="edit">
+          <h6>Project Nickname<div>Status</div></h6>
+          <div style="float:left; width:40%;">
+            <input type="text" name="projectShortName" value="{$project_projectShortName}" size="10">
+          </div>
+          <div style="float:right; width:50%;">
+            <select name="projectStatus">{$projectStatus_options}</select>
+          </div>
+        </div>
+
+
+        {if $project_projectBudget || $project_currencyType || $cost_centre_tfID_label}
+        <div class="view">
+          <h6>Budget<div>Cost Centre TF</div></h6>
+          <div style="float:left; width:40%;">
+            {$project_projectBudget} {$project_currencyType}{if $project_projectBudget && $taxName} (inc. {$taxName}){/}
+          </div>
+          <div style="float:right; width:50%;">
+            {$cost_centre_tfID_label}
+          </div>
+        </div>
+        {/}
+
+        <div class="edit">
+          <h6>Budget<div>Cost Centre TF</div></h6>
+          <div style="float:left; width:40%;">
+            <input type="text" name="projectBudget" value="{$project_projectBudget}" size="10"> 
+            <select name="currencyType"><option value="">{$currencyType_options}</select><br>
+          </div>
+          <div style="float:right; width:50%;">
+            <select name="cost_centre_tfID">
+              <option value="">&nbsp;</option>
+              {$cost_centre_tfID_options}
+            </select>
+          </div>
+        </div>
+
+        {if $project_customerBilledDollars || $project_is_agency_label}
+        <div class="view">
+          <h6>Client Billed At<div>Payroll Tax Exempt</div></h6>
+          <div style="float:left; width:40%;">
+            {$project_customerBilledDollars}{if $project_customerBilledDollars} {$project_currencyType} (per unit{if $taxName}, inc. {$taxName}){/}{/}
+          </div>
+          <div style="float:right; width:50%;">
+            {$project_is_agency_label}
+          </div>
+        </div>
+        {/}
+
+        <div class="edit">
+          <h6>Client Billed At<div>Payroll Tax Exempt</div></h6>
+          <div style="float:left; width:40%;">
+            <input type="text" name="customerBilledDollars" value="{$project_customerBilledDollars}" size="10"> (per unit, inc. {$taxName})
+          </div>
+          <div style="float:right; width:50%;">
+            <select name="is_agency">{$is_agency_options}</select>
+          </div>
+        </div>
+
+        {if $project_dateTargetStart || $project_dateTargetCompletion}
+        <div class="view">
+          <h6>Estimated Start<div>Estimated Completion</div></h6>
+          <div style="float:left; width:40%;">
+            {$project_dateTargetStart}
+          </div>
+          <div style="float:right; width:50%;">
+            {$project_dateTargetCompletion}
+          </div>
+        </div>
+        {/}
+
+        <div class="edit">
+          <h6>Estimated Start<div>Estimated Completion</div></h6>
+          <div style="float:left; width:40%;">
+            {get_calendar("dateTargetStart",$project_dateTargetStart)}
+          </div>
+          <div style="float:right; width:50%;">
+            {get_calendar("dateTargetCompletion",$project_dateTargetCompletion)}
+          </div>
+        </div>
+
+        {if $project_dateActualStart || $project_dateActualCompletion}
+        <div class="view">
+          <h6>Actual Start<div>Actual Completion</div></h6>
+          <div style="float:left; width:40%;">
+            {$project_dateActualStart}
+          </div>
+          <div style="float:right; width:50%;">
+            {$project_dateActualCompletion}
+          </div>
+        </div>
+        {/}
+
+        <div class="edit">
+          <h6>Actual Start<div>Actual Completion</div></h6>
+          <div style="float:left; width:40%;">
+            {get_calendar("dateActualStart",$project_dateActualStart)}
+          </div>
+          <div style="float:right; width:50%;">
+            {get_calendar("dateActualCompletion",$project_dateActualCompletion)}
+          </div>
+        </div>
+
       </div>
     </td>
-    <td></td>
-    <td align="right">{$cost_centre_label}&nbsp;</td>
-    <td>{$cost_centre_bit}&nbsp;</td>
-  </tr>
-  <tr>
-    <td rowspan="2"  align="right"></td>
-    <td rowspan="2">{$clientDetails}</td>
-    <td align="right" colspan="2">Payroll Tax Exempt</td>
-    <td><input type="checkbox" name="project_is_agency" value="1"{$project_is_agency}></td>
-  </tr>
-  <tr>
-    <td colspan="2" class="right nobr" valign="bottom"><div style="margin-bottom:8px;">Target Start/Complete</div><div>Actual Start/Complete</div></td>
-    <td valign="bottom">
-      <div class="nobr">
-      {get_calendar("dateTargetStart",$TPL["project_dateTargetStart"])}&nbsp;&nbsp;
-      {get_calendar("dateTargetCompletion",$TPL["project_dateTargetCompletion"])}
-      </div>
-      <div class="nobr">
-      {get_calendar("dateActualStart",$TPL["project_dateActualStart"])}&nbsp;&nbsp;
-      {get_calendar("dateActualCompletion",$TPL["project_dateActualCompletion"])}
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="5">&nbsp;</td>
   </tr>
   <tr>
     <td align="center" colspan="5">
-      <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="submit" name="delete" value="Delete" class="delete_button">
+      <div class="view" style="margin-top:20px">
+        <input type="button" id="editProject" value="Edit Project" onClick="$('.view').hide();$('.edit').show();">
+      </div>
+      <div class="edit" style="margin-top:20px">
+        <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
+        <input type="submit" name="delete" value="Delete" class="delete_button">
+        <input type="button" value="Cancel Edit" onClick="$('.edit').hide();$('.view').show();">
+      </div>
     </td>
-  </tr>
-  <tr>
-    <td colspan="5">&nbsp;</td>
   </tr>
 </table>
 </form>

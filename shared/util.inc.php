@@ -603,6 +603,14 @@ function get_select_options($options,$selected_value=NULL,$max_length=45) {
   }
 
   if (is_array($rows)) {
+  
+    // Coerce selected options into an array
+    if (is_array($selected_value)) {
+      $selected_values = $selected_value;
+    } else if ($selected_value !== NULL) {
+      $selected_values[] = $selected_value;
+    }
+
     foreach ($rows as $value=>$label) {
       $sel = "";
 
@@ -611,12 +619,14 @@ function get_select_options($options,$selected_value=NULL,$max_length=45) {
       }
 
       // If an array of selected values!
-      if (is_array($selected_value)) {
-        foreach ($selected_value as $id) {
-          $id == $value and $sel = " selected";
+      if (is_array($selected_values)) {
+        foreach ($selected_values as $selected_value) {
+          if ($selected_value === "" && $value === 0) {
+            // continue
+          } else if ($selected_value == $value) {
+            $sel = " selected";
+          }
         }
-      } else {
-        $selected_value == $value and $sel = " selected";
       }
 
       $label = str_replace("&nbsp;"," ",$label);
