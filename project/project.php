@@ -355,7 +355,9 @@ if ($projectID) {
 
 if ($_POST["save"]) {
   $project->read_globals();
-  $project->set_value("is_agency", $_POST["project_is_agency"] ? 1 : 0);
+  #$project->set_value("is_agency", $_POST["project_is_agency"] ? 1 : 0);
+  
+
 
   if (!$project->get_id()) {    // brand new project
     $definately_new_project = true;
@@ -532,22 +534,19 @@ if ($_POST["save_attachment"]) {
 
 $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
-$TPL["project_is_agency"] = $project->get_value("is_agency") ? " checked" : "";
+$ops = array(""=>"","0"=>"No","1"=>"Yes");
+$TPL["is_agency_options"] = get_select_options($ops,$project->get_value("is_agency"));
+$TPL["project_is_agency_label"] = $ops[$project->get_value("is_agency")];
 
 
 $db = new db_alloc;
 
 $cID = $project->get_value("clientID") or $cID = $_GET["clientID"];
-$cID and $clientID_sql = sprintf(" OR clientID = %d",$cID);
-$query = sprintf("SELECT * FROM client WHERE clientStatus != 'archived' ".$clientID_sql." ORDER BY clientName");
-$db->query($query);
-$TPL["clientOptions"] = get_option("None", "0", $TPL["project_clientID"] == 0)."\n";
-$TPL["clientOptions"].= get_options_from_db($db, "clientName", "clientID", $cID, 55);
 $client = $project->get_foreign_object("client");
 $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
 // If a client has been chosen
-if ($clientID_sql) {
+if ($cID) {
   $query = sprintf("SELECT * 
                       FROM client 
                  LEFT JOIN clientContact ON client.clientPrimaryContactID = clientContact.clientContactID 
@@ -599,11 +598,14 @@ if ($clientID_sql) {
     $temp and $thr = $fiv;
   }
 
-  $TPL["clientDetails"] = "<table width=\"70%\">";
+  $TPL["clientDetails"] = "<table width=\"100%\">";
   $TPL["clientDetails"].= "<tr>";
-  $one and $TPL["clientDetails"].= "<td class=\"nobr\"><b>Postal Address</b></td>";
-  $two and $TPL["clientDetails"].= "<td class=\"nobr\"><b>Street Address</b></td>";
-  $thr and $TPL["clientDetails"].= "<td><b>Contact</b></td>";
+  $TPL["clientDetails"].= "<td colspan=\"3\"><h2 style=\"margin-bottom:0px; display:inline;\">".$TPL["client_clientName"]."</h2></td>";
+  $TPL["clientDetails"].= "</tr>";
+  $TPL["clientDetails"].= "<tr>";
+  $one and $TPL["clientDetails"].= "<td class=\"nobr\"><u>Postal Address</u></td>";
+  $two and $TPL["clientDetails"].= "<td class=\"nobr\"><u>Street Address</u></td>";
+  $thr and $TPL["clientDetails"].= "<td><u>Contact</u></td>";
   $TPL["clientDetails"].= "</tr>";
   $TPL["clientDetails"].= "<tr>";
   $one and $TPL["clientDetails"].= "<td valign=\"top\">".$one."</td>";
@@ -614,7 +616,8 @@ if ($clientID_sql) {
 }
 
 
-$TPL["clientContactDropdown"] = client::get_client_contact_select($project->get_value("clientID"),$project->get_value("clientContactID"));
+$TPL["clientDropdown"] = "<input type=\"hidden\" name=\"clientID\" value=\"".$project->get_value("clientID")."\">";
+$TPL["clientContactDropdown"] = "<input type=\"hidden\" name=\"clientContactID\" value=\"".$project->get_value("clientContactID")."\">";
 
 
 $options["showHeader"] = true;
@@ -665,7 +668,7 @@ if (is_object($project) && $project->get_id()) {
   }
 
   $TPL["grand_total"] = $gt = sprintf("%0.2f", $project->get_project_budget_spent());
-  $TPL["project_projectBudget"] = $pb = sprintf("%0.2f", $TPL["project_projectBudget"]);
+  $TPL["project_projectBudget"] and $TPL["project_projectBudget"] = $pb = sprintf("%0.2f", $TPL["project_projectBudget"]);
 
   // calculate percentage from grand total (gt) and project budget (pb)
   if ($gt > 0 && $pb > 0) {
@@ -688,17 +691,15 @@ $TPL["commission_tf_options"] = get_select_options($tf_array, $TPL["commission_t
 
 $query = sprintf("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
 $db->query($query);
-$cost_centre_tfID_options = get_options_from_db($db, "tfName", "tfID", $TPL["project_cost_centre_tfID"]);
+$TPL["cost_centre_tfID_options"] = get_options_from_db($db, "tfName", "tfID", $TPL["project_cost_centre_tfID"]);
 
-if ($cost_centre_tfID_options) {
-$TPL["cost_centre_label"] = "Cost Centre TF";
-$TPL["cost_centre_bit"] = "<select name=\"cost_centre_tfID\"><option value=\"\">&nbsp;</option>";
-$TPL["cost_centre_bit"].= $cost_centre_tfID_options;
-$TPL["cost_centre_bit"].= "</select>";
-} else {
-  $TPL["cost_centre_label"] = "";
-  $TPL["cost_centre_bit"].= "";
+if ($TPL["project_cost_centre_tfID"]) {
+  $tf = new tf();
+  $tf->set_id($TPL["project_cost_centre_tfID"]);
+  $tf->select();
+  $TPL["cost_centre_tfID_label"] = $tf->get_link();
 }
+
 
 
 $query = sprintf("SELECT roleName,roleID FROM role WHERE roleLevel = 'project' ORDER BY roleSequence");
@@ -716,6 +717,7 @@ $projectType_array = array("contract"=>"Contract", "job"=>"Job", "project"=>"Pro
 $projectStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
 $timeUnit = new timeUnit;
 $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
+$TPL["project_projectType"] or $TPL["project_projectType"] = "project";
 $TPL["projectType_options"] = get_select_options($projectType_array, $TPL["project_projectType"]);
 $TPL["projectStatus_options"] = get_select_options($projectStatus_array, $TPL["project_projectStatus"]);
 $TPL["project_projectPriority"] or $TPL["project_projectPriority"] = 3;
@@ -725,6 +727,12 @@ foreach($projectPriorities as $key => $arr) {
   $tp[$key] = $arr["label"];
 }
 $TPL["projectPriority_options"] = get_select_options($tp,$TPL["project_projectPriority"]);
+$TPL["project_projectPriority"] and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$projectPriorities[$TPL["project_projectPriority"]]["colour"]."\">[".$tp[$TPL["project_projectPriority"]]."]</div>";
+
+
+
+
+
 $TPL["currencyType_options"] = get_select_options($currency_array, $TPL["project_currencyType"]);
 
 if ($_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]) {
@@ -735,34 +743,39 @@ if ($new_project && !(is_object($project) && $project->get_id())) {
   $TPL["main_alloc_title"] = "New Project - ".APPLICATION_NAME;
   $TPL["projectSelfLink"] = "New Project";
   $p = new project;
-  if ($current_user->have_role("manage")) {
-    $copy_project_options = project::get_project_list_dropdown_options("all",false,60);
-  } else {
-    $copy_project_options = project::get_project_list_dropdown_options("pmORtsm",false,60);
-  }
   $TPL["message_help"][] = "Create a new Project by inputting the Project Name and any other details, and clicking the Save button.";
-  if ($copy_project_options) {
-    $TPL["message_help"][] = "";
-    $TPL["message_help"][] = "<a href=\"#x\" class=\"magic\" onClick=\"$('#copy_project').slideToggle();\">Or copy an existing project</a>";
-    $str =<<<DONE
-      <div id="copy_project" style="display:none; margin-top:10px;">
-        <form action="{$TPL["url_alloc_project"]}" method="post">
-          <table>
-            <tr>
-              <td>Existing Project</td><td><select name="copy_projectID">{$copy_project_options}</select></td>
-            </tr>
-            <tr>
-              <td>New Project Name</td><td><input type="text" size="50" name="copy_project_name"></td>
-            </tr>
-            <tr>
-              <td colspan="2" align="center"><input type="submit" name="copy_project_save" value="Copy Project"></td>
-            </tr>
-          </table>
-        </form>
-      </div>
+  $TPL["message_help"][] = "";
+  $TPL["message_help"][] = "<a href=\"#x\" class=\"magic\" onClick=\"$('#copy_project').slideToggle();refreshProjectList('curr');\">Or copy an existing project</a>";
+  $str =<<<DONE
+    <div id="copy_project" style="display:none; margin-top:10px;">
+      <form action="{$TPL["url_alloc_project"]}" method="post">
+        <table>
+          <tr>
+            <td colspan="2">
+              <label for="project_status_current">Current Projects</label>
+              <input id="project_status_current" type="radio" name="project_status"  value="curr" onClick="refreshProjectList(this.value)" checked>
+              &nbsp;&nbsp;&nbsp;
+              <label for="project_status_potential">Potential Projects</label>
+              <input id="project_status_potential" type="radio" name="project_status"  value="pote" onClick="refreshProjectList(this.value)">
+              &nbsp;&nbsp;&nbsp;
+              <label for="project_status_archived">Archived Projects</label>
+              <input id="project_status_archived" type="radio" name="project_status"  value="arch" onClick="refreshProjectList(this.value)">
+            </td>
+          </tr>
+          <tr>
+            <td>Existing Project</td><td><div id="projectDropdown"><select name="copy_projectID"></select></div></td>
+          </tr>
+          <tr>
+            <td>New Project Name</td><td><input type="text" size="50" name="copy_project_name"></td>
+          </tr>
+          <tr>
+            <td colspan="2" align="center"><input type="submit" name="copy_project_save" value="Copy Project"></td>
+          </tr>
+        </table>
+      </form>
+    </div>
 DONE;
-    $TPL["message_help"][] = $str;
-  }
+  $TPL["message_help"][] = $str;
 
 } else {
   $TPL["main_alloc_title"] = "Project " . $project->get_id() . ": " . $project->get_project_name() . " - ".APPLICATION_NAME;
@@ -772,6 +785,11 @@ DONE;
 }
 
 $TPL["taxName"] = config::get_config_item("taxName");
+
+// Need to html-ise projectName and description
+$TPL["project_projectName_html"] = text_to_html($project->get_value("projectName"));
+$TPL["project_projectComments_html"] = text_to_html($project->get_value("projectComments"));
+
 
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");

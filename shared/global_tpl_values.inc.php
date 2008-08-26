@@ -39,6 +39,8 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_projectGraphImage"              => $sess->url(SCRIPT_PATH."project/projectGraphImage.php")
             ,"url_alloc_saveProjectPerson"              => $sess->url(SCRIPT_PATH."project/saveProjectPerson.php")
             ,"url_alloc_projectPerson"                  => $sess->url(SCRIPT_PATH."project/projectPerson.php")
+            ,"url_alloc_updateCopyProjectList"          => $sess->url(SCRIPT_PATH."project/updateProjectList.php")
+            ,"url_alloc_updateProjectClientList"        => $sess->url(SCRIPT_PATH."project/updateProjectClientList.php")
             ,"url_alloc_updateProjectClientContactList" => $sess->url(SCRIPT_PATH."project/updateProjectClientContactList.php")
             ,"url_alloc_personGraph"                    => $sess->url(SCRIPT_PATH."project/personGraph.php")
             ,"url_alloc_personGraphImage"               => $sess->url(SCRIPT_PATH."project/personGraphImage.php")

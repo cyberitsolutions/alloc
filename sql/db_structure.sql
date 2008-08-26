@@ -301,7 +301,7 @@ CREATE TABLE project (
   projectID int(11) NOT NULL auto_increment,
   projectName varchar(255) NOT NULL default '',
   projectComments text,
-  clientID int(11) NOT NULL default '0',
+  clientID int(11) DEFAULT NULL,
   clientContactID int(11) default '0',
   projectModifiedUser int(11) DEFAULT NULL,
   projectType enum('contract','job','project') default NULL,
