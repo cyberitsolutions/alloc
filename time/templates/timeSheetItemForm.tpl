@@ -21,9 +21,7 @@ function refreshTaskList(radiobutton) \{
           <td valign="bottom">Duration</td>
         </tr>
         <tr>
-          <td>
-            {get_calendar("timeSheetItem_dateTimeSheetItem",$TPL["tsi_dateTimeSheetItem"])}&nbsp;
-          </td>
+          <td>{get_calendar("timeSheetItem_dateTimeSheetItem",$TPL["tsi_dateTimeSheetItem"])}</td>
           <td>
             <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$tsi_timeSheetItemDuration}">
             <select name="timeSheetItem_timeSheetItemDurationUnitID">{$tsi_unit_options}</select>

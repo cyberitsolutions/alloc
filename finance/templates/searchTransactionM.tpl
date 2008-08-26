@@ -27,13 +27,10 @@
           <td><select name="fromTfID">{$fromTfOptions}</select></td>
           <td><select name="tfID">{$tfOptions}</select></td>
           <td><select name="status" value={$status}>{$statusOptions}</select></td>
-          <td>&nbsp;&nbsp;  
-            {get_calendar("dateOne",$TPL["dateOne"])}
-            &nbsp; to &nbsp;  
-            {get_calendar("dateTwo",$TPL["dateTwo"])}
-          </td>
-          <td><input type="text" size="5" name="transactionID" value="{$transactionID}"></td>
-          <td><input type="text" size="5" name="expenseFormID" value="{$expenseFormID}"></td>
+          <td>{get_calendar("dateOne",$TPL["dateOne"])}</td>
+          <td>{get_calendar("dateTwo",$TPL["dateTwo"])}</td>
+          <td><input type="text" size="10" name="transactionID" value="{$transactionID}"></td>
+          <td><input type="text" size="10" name="expenseFormID" value="{$expenseFormID}"></td>
           <td colspan="5"><input type="submit" name="search" value="Filter"></td>
         </tr>
         <tr>

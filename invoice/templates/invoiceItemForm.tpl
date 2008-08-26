@@ -23,7 +23,7 @@
         <td>Memo</td>
       </tr>
       <tr>
-        <td class="nobr">{get_calendar("iiDate",$TPL["invoiceItem_iiDate"])}&nbsp;&nbsp;</td>
+        <td class="nobr">{get_calendar("iiDate",$TPL["invoiceItem_iiDate"])}</td>
         <td><input type="text" size="4" name="iiQuantity" value="{$invoiceItem_iiQuantity}"></td>
         <td>*</td>
         <td><input type="text" size="7" name="iiUnitPrice" value="{$invoiceItem_iiUnitPrice}"></td>
