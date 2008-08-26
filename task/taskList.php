@@ -32,7 +32,6 @@ $defaults = array("showHeader"=>true
                  ,"padding"=>1
                  ,"url_form_action"=>$TPL["url_alloc_taskList"]
                  ,"form_name"=>"taskList_filter"
-                 ,"saved_filter"=>"current"
                  );
 
 function show_filter() {
@@ -110,8 +109,6 @@ if ($_POST["run_mass_update"]) {
 }
 
 $_FORM = savedView::process_form($_FORM);
-// show the "saved filter" controls
-$TPL['use_saved_filter'] = true;
 
 
 if (!$current_user->prefs["taskList_filter"]) {

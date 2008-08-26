@@ -285,7 +285,7 @@ class project extends db_entity {
 
   function get_project_list_dropdown($type="mine",$projectIDs=array()) {
     $options = project::get_project_list_dropdown_options($type,$projectIDs);
-    return "<select name=\"projectID[]\" size=\"10\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
+    return "<select name=\"projectID[]\" size=\"9\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
   }
 
   function get_project_list_dropdown_options($type="mine",$projectIDs=array(), $maxlength=35) {

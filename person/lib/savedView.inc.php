@@ -35,64 +35,52 @@ class savedView extends db_entity {
                               );
   }
 
-  function save_from_form($_FORM, $personID) {
-    // Saves a filter for the given form, with the name, et cetera given in the form itself
-    $filterName = db_esc($_FORM['new_filter_name']);
-    $formName = db_esc($_FORM['form_name']);
-    unset($_FORM['url_form_action']);
-
+  function save() {
     // Check for a duplicate
-    if( ($previousView = savedView::find_by_name($filterName, $personID)) !== FALSE) {
-      // A duplicate, so just update that one
+    $previousView = savedView::find_by_name($this->get_value("viewName"), $this->get_value("personID"));
+    if($previousView) {
       $this->set_id($previousView->get_id());
     }
-
-    $this->set_value('personID', $personID);
-    $this->set_value('formName', $formName);
-    $this->set_value('viewName', $filterName);
-    $this->set_value('formView', serialize($_FORM));
-
-    $this->save();
+    parent::save();
   }
 
   function process_form($_FORM) {
     // Processes the result of a form submission $_FORM, returning the new version of $_FORM
     global $current_user, $TPL;
 
-    if($_POST["saveFilter"]) {
+    if($_POST["filterName"] && $_POST["saveFilter"]) {
       $savedView = new savedView();
-      $current_user and $savedView->save_from_form($_FORM, $current_user->get_id());
+      $savedView->set_value("formName",$_FORM['form_name']);
+      $savedView->set_value("viewName",$_POST['filterName']);
+      $savedView->set_value('formView', serialize($_FORM));
+      $savedView->set_value('personID', $current_user->get_id());
+      $savedView->save();
+      $_POST["savedViewID"] = $_FORM["savedViewID"] = $savedView->get_id();
+      $_POST["loadFilter"] = true;
       $TPL["message_good"] = "Filter saved.";
     }
 
-    if($_POST["deleteFilter"] && $_POST["saved_filter"] != "current") {
-      $viewID = $_POST["saved_filter"];
+    if($_POST["deleteFilter"] && $_POST["savedViewID"]) {
       $savedView = new savedView();
-      $savedView->set_id($viewID);
+      $savedView->set_id($_POST["savedViewID"]);
       $savedView->select();
       $savedView->delete();
-    }
 
-    if($_POST["loadFilter"] && $_POST["saved_filter"] != "current") {
-      // We expect the filter to be specified in the form viewN, where N is the viewID to load
-      $viewID = $_POST["saved_filter"];
+    } else if($_POST["loadFilter"] && $_POST["savedViewID"] && !$_POST["applyFilter"]) {
       $savedView = new savedView();
-      $savedView->set_id($viewID);
+      $savedView->set_id($_POST["savedViewID"]);
       $savedView->select();
 
-      // OK, overwrite $_FORM
+      // OK, overwrite $_FORM and save it to the user's preferences
       $_FORM = $savedView->get_form_data();
-      // and save it to the user's preferences
+      $_FORM["savedViewID"] = $_POST["savedViewID"];
       if(is_object($current_user)) {
-        $url = $_FORM["url_form_action"];
-        unset($_FORM["url_form_action"]);
         $current_user->prefs[$_FORM["form_name"]] = $_FORM;
-        $_FORM["url_form_action"] = $url;
       }
+    } else if ($_POST["applyFilter"]) {
+      unset($_FORM["savedViewID"]);
     }
-
     return $_FORM;
-
   }
 
   function delete() {
@@ -130,12 +118,14 @@ class savedView extends db_entity {
   }
 
   function get_saved_view_options($form_name, $personID) {
-    // Gets the saved views for the given $personID for the given $form_name
+    // Gets the saved views for the given $personID and $form_name
     $db = new db_alloc();
     $query = sprintf("SELECT savedViewID, viewName
                         FROM savedView
                        WHERE formName = '%s'
-                         AND personID = '%d'", db_esc($form_name), $personID);
+                         AND personID = '%d'
+                    ORDER BY viewName
+                     ", db_esc($form_name), $personID);
     $db->query($query);
 
     $rtn_array = array();
