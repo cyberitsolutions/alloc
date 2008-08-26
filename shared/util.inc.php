@@ -1159,5 +1159,14 @@ function alloc_redirect($url) {
   header("Location: ".$url.$str);
   exit();
 }
+function mandatory($field="") {
+  $star = "&lowast;";
+  if (stristr($_SERVER["HTTP_USER_AGENT"],"MSIE")) {
+    $star = "*";
+  }
+  if ($field == "") {
+    echo "<b style=\"font-weight:bold;font-size:100%;color:red;display:inline;top:-5px !important;top:-3px;position:relative;\">".$star."</b>";
+  }
+}
   
 ?>

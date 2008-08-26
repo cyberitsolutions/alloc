@@ -57,11 +57,11 @@ $(document).ready(function() \{
     <input type="hidden" name="productID" value="{$product_productID}" />
     <table>
       <tr>
-        <td>Product Name</td>
+        <td>Product Name{mandatory($product_productName)}</td>
         <td colspan="2"><input type="text" size="43" name="productName" value="{$product_productName}" tabindex="1" /></td>
       </tr>
       <tr>
-        <td>Buy cost</td>
+        <td>Buy cost{mandatory($product_buyCost)}</td>
 {if $TPL["taxRate"]}
         <td><input type="text" size="8" name="buyCost" id="buyCost" value="{$product_buyCost}" tabindex="2" /> (inc {$taxName})</td>
         <td><input type="text" size="8" name="buyCost_ex" id="buyCost_ex" /> (ex {$taxName})</td>
@@ -70,7 +70,7 @@ $(document).ready(function() \{
 {/}
       </tr>
       <tr>
-        <td>Sell price</td>
+        <td>Sell price{mandatory($product_sellPrice)}</td>
 {if $TPL["taxRate"]}
         <td><input type="text" size="8" name="sellPrice" id="sellPrice" value="{$product_sellPrice}" tabindex="3" /> (inc {$taxName})</td>
         <td><input type="text" size="8" name="sellPrice_ex" id="sellPrice_ex" /> (ex {$taxName})</td>

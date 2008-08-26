@@ -35,7 +35,7 @@
     <td colspan="5">&nbsp;</td>
   </tr>
   <tr>
-    <td width="1%" align="right">Name</td>
+    <td width="1%" align="right" class="nobr">Project Name{mandatory($project_projectName)}</td>
     <td colspan="1"><input type="text" name="projectName" value="{$project_projectName}" size="45">
                     <select name="projectPriority">{$projectPriority_options}</select></td>
     <td></td>

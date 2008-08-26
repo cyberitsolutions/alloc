@@ -47,7 +47,7 @@ function updateStuffWithAjax() \{
     <td>&nbsp;</td>
     <td align="right">Amount:</td>
     <td>{$total_dollars}</td>
-    <td align="right">Project:</td>
+    <td align="right">Project:{mandatory($timeSheet_projectID)}</td>
 	  <td width="30%" class="nobr"><div id="projectDropdown" style="display:inline">{$show_project_options}</div></td>
   </tr>
 

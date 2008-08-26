@@ -361,7 +361,7 @@ if ($_POST["save"]) {
     $definately_new_project = true;
   }
 
-  if (!$project->get_id() && !$project->get_value("projectName")) {  
+  if (!$project->get_value("projectName")) {  
     $TPL["message"][] = "Please enter a name for the Project.";
   }  
 

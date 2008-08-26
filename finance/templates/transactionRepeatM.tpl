@@ -12,8 +12,8 @@
   </tr>
   <tr>
     <td><b>Basis</b></td>
-    <td><b>Start Date</b></td>
-    <td><b>Finish Date</b></td>
+    <td><b>Start Date{mandatory($transactionStartDate)}</b></td>
+    <td><b>Finish Date{mandatory($transactionFinishDate)}</b></td>
   </tr>
   <tr>
     <td><select name="paymentBasis" value="{$paymentBasis}">{$basisOptions}</select></td>
@@ -21,15 +21,13 @@
     <td>{get_calendar("transactionFinishDate",$TPL["transactionFinishDate"])}</td>
   </tr>
 	<tr>
-	  <td></td>
-	  <td><b>Product/Service</b></td>
- 	  <td><b>Amount</b></td>
+	  <td><b>Product/Service{mandatory($product)}</b></td>
+ 	  <td><b>Amount{mandatory($amount)}</b></td>
  	  <td><b>Type</b></td>
-    <td><b>Source TF</b></td>
-    <td><b>Destination TF</b></td>
+    <td><b>Source TF{mandatory($fromTfID)}</b></td>
+    <td><b>Destination TF{mandatory($tfID)}</b></td>
 	</tr>
 	<tr>
-    <td></td>
  	  <td><input type="text" size="20" name="product" value="{$product}"></td>
  	  <td><input type="text" size="9" name="amount" value="{$amount}"> (inc. {$taxName})</td>
    	<td><select name="transactionType">{$transactionTypeOptions}</select></td>
@@ -38,8 +36,7 @@
  	</tr>
 
   <tr>
-    <td rowspan="3" valign="top"><b>Company Details</b></td>
-    <td colspan="2" rowspan="3" valign="top">{get_textarea("companyDetails",$TPL["companyDetails"], array("cols"=>40))}</td>
+    <td colspan="2" rowspan="3" valign="top"><b>Company Details{mandatory($companyDetails)}</b><br>{get_textarea("companyDetails",$TPL["companyDetails"], array("cols"=>40))}</td>
     <td rowspan="3" colspan="3">
       <nobr><b>Reminder email</b><br/><input type="text" size="40" name="emailOne" value="{$emailOne}"></nobr><br>
       <nobr><b>Reminder email</b><br/><input type="text" size="40" name="emailTwo" value="{$emailTwo}"></nobr>

@@ -50,6 +50,23 @@ function show_client_list() {
   echo client::get_client_list($_FORM);
 }
 
+
+if (!$current_user->prefs["clientList_filter"]) {
+  $TPL["message_help"][] = "
+
+allocPSA allows you to store pertinent information about your Clients and
+the organisations that you interact with. This page allows you to see a list of Clients.
+
+<br><br>
+
+Simply adjust the filter settings and click the <b>Filter</b> button to
+display a list of previously created Clients. 
+If you would prefer to create a new Client, click the <b>New Client</b> link
+in the top-right hand corner of the box below.";
+
+}
+
+
 $TPL["main_alloc_title"] = "Client List - ".APPLICATION_NAME;
 include_template("templates/clientListM.tpl");
 page_close();
