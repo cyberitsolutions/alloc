@@ -167,37 +167,48 @@ $(document).ready(function() \{
 
         {if $task_dateTargetStart || $task_dateTargetCompletion}
         <div class="view">
-          <h6>Estimated Duration</h6>
-          {if $task_dateTargetStart}Start: {$task_dateTargetStart}{/}
-          {if $task_dateTargetCompletion}&nbsp;&nbsp;&nbsp;Completion: {$task_dateTargetCompletion}{/}
+          <h6>Estimated Start<div>Estimated Completion</div></h6>
+          <div style="float:left; width:30%">
+            {$task_dateTargetStart}
+          </div>
+          <div style="float:right; width:50%">
+            {$task_dateTargetCompletion}
+          </div>
         </div>
         {/}
 
         <div class="edit">
-          <h6>Estimated Duration</h6>
-          Start: 
-          {get_calendar("dateTargetStart",$task_dateTargetStart)}
-          &nbsp;&nbsp;&nbsp;
-          Completion: 
-          {get_calendar("dateTargetCompletion",$task_dateTargetCompletion)}
+          <h6>Estimated Start<div>Estimated Completion</div></h6>
+          <div style="float:left; width:30%">
+            {get_calendar("dateTargetStart",$task_dateTargetStart)}
+          </div>
+          <div style="float:right; width:50%">
+            {get_calendar("dateTargetCompletion",$task_dateTargetCompletion)}
+          </div>
         </div>
 
         {if $task_dateActualStart || $task_dateActualCompletion}
         <div class="view">
-          <h6>Actual Duration</h6>
-          {if $task_dateActualStart}Start: {$task_dateActualStart}{/}
-          {if $task_dateActualCompletion}&nbsp;&nbsp;&nbsp;Completion: {$task_dateActualCompletion}{/}
+          <h6>Actual Start<div>Actual Completion</div></h6>
+          <div style="float:left; width:30%">
+            {$task_dateActualStart}
+          </div>
+          <div style="float:right; width:50%">
+            {$task_dateActualCompletion}
+          </div>
         </div>
         {/}
 
         <div class="edit">
-          <h6>Actual Duration</h6>
-          Start: 
-          {get_calendar("dateActualStart",$task_dateActualStart)}
-          &nbsp;&nbsp;&nbsp;
-          Completion: 
-          {get_calendar("dateActualCompletion",$task_dateActualCompletion)}
+          <h6>Actual Start<div>Actual Completion</div></h6>
+          <div style="float:left; width:30%">
+            {get_calendar("dateActualStart",$task_dateActualStart)}
+          </div>
+          <div style="float:right; width:50%">
+            {get_calendar("dateActualCompletion",$task_dateActualCompletion)}
+          </div>
         </div>
+
        
       </div>
 
@@ -205,16 +216,16 @@ $(document).ready(function() \{
   </tr>
   <tr>
     <td colspan="5" align="center" class="padded">
-      <div class="view">
-      <input type="button" id="editTask" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
+      <div class="view" style="margin-top:20px">
+        <input type="button" id="editTask" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
       </div>
       <div class="edit" style="margin-top:20px">
-      {$timeSheet_save}
-      <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
-      <input type="submit" name="save_and_new" value="Save &amp; New">
-      <input type="submit" name="delete" value="Delete" class="delete_button">
-      <input type='hidden' name='view' value='brief'>
-      <input type="button" value="Cancel" onClick="$('.edit').hide();$('.view').show();">
+        {$timeSheet_save}
+        <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
+        <input type="submit" name="save_and_new" value="Save &amp; New">
+        <input type="submit" name="delete" value="Delete" class="delete_button">
+        <input type='hidden' name='view' value='brief'>
+        <input type="button" value="Cancel Edit" onClick="$('.edit').hide();$('.view').show();">
       </div>
     </td>
   </tr>

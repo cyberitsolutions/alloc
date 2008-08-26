@@ -2,32 +2,30 @@
       <form action="{$url_alloc_invoiceList}" method="post">
       <table class="filter" align="center" cellpadding="5" cellspacing="0">
         <tr>
-          <td colspan="1">Client</td>
+          <td colspan="2">Client</td>
           <td>Invoice Name</td>
           <td>Invoice Status</td>
         </tr>
         <tr>
-          <td colspan="1"><select name="clientID"><option value="">All</option>{$clientOptions}</select></td>
+          <td colspan="2"><select name="clientID"><option value="">All</option>{$clientOptions}</select></td>
           <td><input type="text" size="11" name="invoiceName" value="{$invoiceName}"></td>
           <td><select name="invoiceStatus"><option value="">All</option>{$statusOptions}</select></td>
         </tr>
         <tr>
-          <td align="center"></td>
+          <td width="15%">From</td>
+          <td>To</td>
           <td>Invoice Num</td>
           <td>Payment Status</td>
         </tr>
         <tr>
-          <td>&nbsp; From &nbsp;&nbsp;&nbsp;
-            {get_calendar("dateOne",$TPL["dateOne"])}
-            &nbsp;&nbsp;&nbsp; to &nbsp;&nbsp;&nbsp;
-            {get_calendar("dateTwo",$TPL["dateTwo"])}
-          </td>
+          <td>{get_calendar("dateOne",$TPL["dateOne"])}</td>
+          <td>{get_calendar("dateTwo",$TPL["dateTwo"])}</td>
           <td><input type="text" size="11" name="invoiceNum" value="{$invoiceNum}"></td>
           <td><select name="invoiceStatusPayment"><option value="">All</option>{$statusPaymentOptions}</select></td>
-          <td rowspan="2" align="right"><input type="submit" name="applyFilter" value="Filter"></td>
         </tr>
         <tr>
           <td colspan="3">Note: Only user accounts with Financial Administrator privileges can see the full totals of invoices.</td>
+          <td align="right"><input type="submit" name="applyFilter" value="Filter"></td>
         </tr>
       </table>
       </form>

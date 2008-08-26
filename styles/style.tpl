@@ -26,7 +26,7 @@ div#main {
 }
 
 /* Hack to ensure info_box encapsulates all the stuff */
-div#main:after, .edit:after, .view:after {
+div#main:after, .edit:after, .view:after, .enclose:after {
   content:"";
   display:block;
   height:0;
@@ -220,16 +220,32 @@ select:focus.bad
   border:1px solid #cccccc;
 }
 
-.calendar_button {
-  vertical-align:sub !important; vertical-align:bottom;
-  cursor:pointer; 
-  border: 1px solid #999999; 
-  margin:0px; 
+.calendar_container {
   position:relative; 
+  display:inline; 
+  vertical-align:middle; 
+  padding:0px; 
+  margin:0px; 
 }
-.calendar_button:hover {
+.calendar_container img {
+  vertical-align:text-bottom;
+  cursor:pointer; 
+  border:1px solid #999999; 
+  margin:0px; 
+  padding:0px; 
+  position:relative;
+  top:0px !important; top:-2px;
+  display:inline; 
+  float:left;
+}
+.calendar_container img:hover {
   border: 1px solid #666666;
   background-color:#999999;
+}
+.calendar_container input {
+  vertical-align:text-bottom;
+  display:inline; 
+  float:left;
 }
 
 div.message { 
