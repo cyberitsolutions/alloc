@@ -352,25 +352,23 @@ table.filter {
   background-color:(PANEL_HARPO_BG_COLOR); 
   border:1px solid (PANEL_HARPO_FRAME_COLOR); 
   padding:4px; 
-  margin:4px; 
-  margin-top:14px; 
+  margin-top:4px; 
   text-align:left;
 }
-table.filter td { 
+
+table.filter td {
   color:(TABLE_TASKS_TH_COLOR); 
 }
-table.filter th { 
+
+.filter table td { 
+  color:(TABLE_TASKS_TH_COLOR); 
+}
+.filter table th { 
   font-weight:bold; 
   background-color:(PANEL_HARPO_BG_COLOR); 
   color:(TD_COLOR); 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
-}
-
-table.filter table.filter {
-  border:1px solid (PANEL_CHICO_FRAME_COLOR); 
-  margin:0px;
-  background-color:(PANEL_CHICO_BG_COLOR);
 }
 
 tr.odd { 

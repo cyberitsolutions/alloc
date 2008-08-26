@@ -1345,10 +1345,7 @@ class task extends db_entity {
         ,"url_form_action"
         ,"form_name"
         ,"dontSave"
-        ,"saved_filter"
-        ,"new_filter_name"
-        ,"loadFilter"
-        ,"saveFilter"
+        ,"savedViewID"
         );
 
     $_FORM = get_all_form_data($page_vars,$defaults);
@@ -1370,19 +1367,22 @@ class task extends db_entity {
       $_FORM["projectType"] = "mine";
     }
 
-    if (!$_FORM["applyFilter"] && !$_FORM["saveFilter"]) {
+    if ($_FORM["applyFilter"]) {
+      unset($_FORM["savedViewID"]);
+    }
+
+    if (($_FORM["applyFilter"] || $_FORM["savedViewID"]) && is_object($current_user) && !$_FORM["dontSave"]) {
+      $url = $_FORM["url_form_action"];
+      unset($_FORM["url_form_action"]);
+      $current_user->prefs[$_FORM["form_name"]] = $_FORM;
+      $_FORM["url_form_action"] = $url;
+    } else {
       $_FORM = $current_user->prefs[$_FORM["form_name"]];
       if (!isset($current_user->prefs[$_FORM["form_name"]])) {
         $_FORM["projectType"] = "mine";
         $_FORM["taskStatus"] = "not_completed";
         $_FORM["personID"] = $current_user->get_id();
       }
-
-    } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
-      $url = $_FORM["url_form_action"];
-      unset($_FORM["url_form_action"]);
-      $current_user->prefs[$_FORM["form_name"]] = $_FORM;
-      $_FORM["url_form_action"] = $url;
     }
 
     // If have check Show Description checkbox then display the Long Description and the Comments
@@ -1421,7 +1421,8 @@ class task extends db_entity {
     $rtn["taskTypeOptions"] = "\n<option value=\"\"> ";
     $rtn["taskTypeOptions"].= $taskType->get_dropdown_options("taskTypeID","taskTypeName",$_FORM["taskTypeID"]);
 
-    $current_user and $rtn["savedViewsOptions"] = get_select_options(savedView::get_saved_view_options($_FORM['form_name'], $current_user->get_id()));
+    $ops = savedView::get_saved_view_options($_FORM['form_name'], $current_user->get_id());
+    $rtn["savedViewOptions"] = get_select_options($ops, $_FORM["savedViewID"]);
 
     $_FORM["taskView"] and $rtn["taskView_checked_".$_FORM["taskView"]] = " checked";
 

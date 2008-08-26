@@ -352,25 +352,23 @@ table.filter {
   background-color:#eeefe4; 
   border:1px solid #c7cfb8; 
   padding:4px; 
-  margin:4px; 
-  margin-top:14px; 
+  margin-top:4px; 
   text-align:left;
 }
-table.filter td { 
+
+table.filter td {
   color:#9da973; 
 }
-table.filter th { 
+
+.filter table td { 
+  color:#9da973; 
+}
+.filter table th { 
   font-weight:bold; 
   background-color:#eeefe4; 
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
-}
-
-table.filter table.filter {
-  border:1px solid #e5e8d9; 
-  margin:0px;
-  background-color:#ffffff;
 }
 
 tr.odd { 
