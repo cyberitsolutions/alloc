@@ -10,16 +10,17 @@
   <tr>
     <td align="center" colspan="7">
       <table align="center" class="filter">
-        <tr align="center">
-          <td align="center"><b>Transaction Desc</td>
-          <td align="center"><b>Source TF</td>
-          <td align="center"><b>Dest TF</td>
-          <td align="center"><b>Status</td>
-          <td align="center"><b>Date in YYYY-MM-DD format</td>
+        <tr>
+          <td><b>Transaction Desc</td>
+          <td><b>Source TF</td>
+          <td><b>Dest TF</td>
+          <td><b>Status</td>
+          <td><b>From</td>
+          <td><b>To</td>
           <td rowspan="3" align="center"></td>
-          <td align="center"><b>Transaction ID</td>
+          <td><b>Transaction ID</td>
           <td rowspan="3" align="center"></td>
-          <td align="center"><b>Expense Form ID</td>
+          <td><b>Expense Form ID</td>
         </tr>
         <tr align="center">
           <td><input type="text" size="20" name="product" value="{$product}"></td>

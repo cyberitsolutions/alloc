@@ -295,7 +295,7 @@ $clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];
 
 if ($_POST["save"]) {
   if (!$_POST["clientName"]) {
-    $TPL["message"][] = "Please enter a Company Name.";
+    $TPL["message"][] = "Please enter a Client Name.";
   }
   $client->read_globals();
   $client->set_value("clientModifiedTime", date("Y-m-d"));
@@ -395,7 +395,7 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
 
 
 if (!$clientID) {
-  $TPL["message_help"][] = "Create a new Client by inputting the Company Name and other details and clicking the Create New Client button.";
+  $TPL["message_help"][] = "Create a new Client by inputting the Client Name and other details and clicking the Create New Client button.";
   $TPL["main_alloc_title"] = "New Client - ".APPLICATION_NAME;
   $TPL["clientSelfLink"] = "New Client";
 } else {

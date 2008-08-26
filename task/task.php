@@ -194,7 +194,12 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 
   $task->get_value("taskDescription") and $task->set_value("taskDescription",rtrim($task->get_value("taskDescription")));
 
-  $success = $task->save();
+  if ($task->get_value("taskName") === "") {
+    $TPL["message"][] = "Please enter a name for the Task.";
+  } else {
+    $success = $task->save();
+  }
+
 
   interestedParty::make_interested_parties("task",$task->get_id(),$_POST["interestedParty"]);
 
@@ -407,6 +412,10 @@ if ($taskID) {
 }
 
 $TPL["allTaskParties"] = $task->get_all_task_parties($task->get_value("projectID")) or $TPL["allTaskParties"] = array();
+
+if (!$task->get_id()) {
+  $TPL["message_help"][] = "Enter a Task Name and click the \"Save\" button to create a new Task.";
+}
 
 
 // Printer friendly view

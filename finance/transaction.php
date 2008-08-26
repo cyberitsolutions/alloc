@@ -86,7 +86,9 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
     $transaction->check_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION);
     $transaction->set_value("amount",str_replace(array("$",","),"",$transaction->get_value("amount")));
     $transaction->save();
-    $TPL["message_good"][] = "Transaction Saved";
+    if (!count($TPL["message"]))  { // need to check this again as transaction->save might have triggered an error
+      $TPL["message_good"][] = "Transaction Saved";
+    }
 
     if ($_POST["saveAndNew"]) {
       header("Location: ".$TPL["url_alloc_transaction"]."new=true");

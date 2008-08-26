@@ -31,11 +31,11 @@ $(document).ready(function() \{
       <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
 
         <div class="view">
-          <h6>{$task_taskType}</h6>
+          <h6>{$task_taskType}{mandatory($task_taskName)}</h6>
           <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {$task_taskName}</h2>&nbsp;{$priorityLabel}
         </div>
         <div class="edit nobr">
-          <h6>{$task_taskType}</h6>
+          <h6>{$task_taskType}{mandatory($task_taskName)}</h6>
           <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" size="35" maxlength="75">
           <select name="priority">
             {$priorityOptions}

@@ -113,8 +113,8 @@ if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
   die("No permissions to generate TF list");
 }
 
-$TPL["tfOptions"] = get_option("", "0", false)."\n";
-$TPL["fromTfOptions"] = get_option("", "0", false)."\n";
+$TPL["tfOptions"] = get_option("", "", false)."\n";
+$TPL["fromTfOptions"] = get_option("", "", false)."\n";
 
 //special case for disabled TF. Include it in the list, but also add a warning
 //message.

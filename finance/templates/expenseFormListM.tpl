@@ -13,7 +13,7 @@
           <th>Created Date</th>
           <th>Created By</th>
           <th>Payment Method</th>
-          <th align="right">Form Total</th>
+          <th class="right">Form Total</th>
         </tr>
         {show_expense_form_list("templates/pendingExpenseFormListR.tpl")}
       </table>
@@ -34,7 +34,7 @@
           <th>Created Date</th>
           <th>Created By</th>
           <th>Transaction Type</th>
-          <th align="right">Form Total</th>
+          <th class="right">Form Total</th>
         </tr>
         {show_pending_transaction_list("templates/pendingTransactionListR.tpl")}
       </table>

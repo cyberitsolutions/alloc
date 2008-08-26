@@ -14,9 +14,9 @@
   <tr>
     <td>
       <div id="generic_ii"{$div1}>
-      <table border="0" width="100%">
+      <table border="0" width="100%" cellpadding="5">
       <tr>
-        <td style="width:10%">Date</td>
+        <td style="width:15%">Date</td>
         <td style="width:1%">Qty</td>
         <td style="width:1%">&nbsp;</td>
         <td>Amount</td>

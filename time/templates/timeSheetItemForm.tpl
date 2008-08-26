@@ -15,12 +15,11 @@ function refreshTaskList(radiobutton) \{
     <td>&nbsp;</td>
     <td colspan="4">
 
-      <table cellpadding="0" cellspacing="2" border="0">
+      <table cellpadding="0" cellspacing="5" border="0">
         <tr>
           <td valign="bottom">Date</td>
           <td valign="bottom">Duration</td>
         </tr>
-   
         <tr>
           <td>
             {get_calendar("timeSheetItem_dateTimeSheetItem",$TPL["tsi_dateTimeSheetItem"])}&nbsp;

@@ -74,6 +74,23 @@ if ($current_user->have_role("admin")) {
   $TPL["invoice_links"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_invoice"]."\">New Invoice</a>";
 }
 
+if (!$current_user->prefs["invoiceList_filter"]) {
+  $TPL["message_help"][] = "
+
+allocPSA allows you to create Invoices for your Clients and record the
+payment status of those Invoices. This page allows you to view a list of
+Invoices.
+
+<br><br>
+
+Simply adjust the filter settings and click the <b>Filter</b> button to
+display a list of previously created Invoices. 
+If you would prefer to create a new Invoice, click the <b>New Invoice</b> link
+in the top-right hand corner of the box below.";
+}
+
+
+
 $TPL["main_alloc_title"] = "Invoice List - ".APPLICATION_NAME;
 include_template("templates/invoiceListM.tpl");
 page_close();

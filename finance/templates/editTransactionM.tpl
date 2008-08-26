@@ -14,7 +14,7 @@
     <td width="1%"></td>
   </tr>
   <tr>
-    <td>Source Tagged Fund</td>
+    <td>Source Tagged Fund{mandatory($fromTfID)}</td>
     <td><select name="fromTfID">
       <option value="">
       {$fromTfIDOptions}
@@ -24,7 +24,7 @@
   </tr>
 
   <tr>
-    <td>Destination Tagged Fund</td>
+    <td>Destination Tagged Fund{mandatory($tfID)}</td>
     <td><select name="tfID">
       <option value="">
       {$tfIDOptions}
@@ -42,7 +42,7 @@
     </td>
     <td class="hint"></td>
   </tr>
-    <td>Transaction Date</td>
+    <td>Transaction Date{mandatory($transactionDate)}</td>
     <td>{get_calendar("transactionDate",$TPL["transactionDate"])}</td>
     <td class="hint"></td>
   </tr>
@@ -52,26 +52,25 @@
     <td class="hint"></td>
   </tr>
   <tr>
-    <td>Product/Description</td>
+    <td>Product/Description{mandatory($product)}</td>
     <td><input type="text" name="product" size="20" value="{$product}"></td>
     <td class="hint">{get_help("transaction_product")}</td>
   </tr>
   <tr>
-    <td>Amount</td>
+    <td>Amount{mandatory($amount)}</td>
     <td><input type="text" name="amount" size="20" value="{$amount}"></td>
     <td class="hint">{get_help("transaction_amount")}</td>
   </tr>
   <tr>
-    <td>Status</td>
-    <td><select name="status" value={$status}>
-        <option value="">
-      {$statusOptions}
-</select>
+    <td>Status{mandatory($status)}</td>
+    <td><select name="status">
+          {$statusOptions}
+        </select>
     </td>      
     <td class="hint">{get_help("transaction_status")}</td>
   </tr>
   <tr>
-    <td>Transaction Type</td>
+    <td>Transaction Type{mandatory($transactionType)}</td>
     <td><select name="transactionType">
         <option value="">
         {$transactionTypeOptions}

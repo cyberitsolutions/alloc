@@ -113,6 +113,23 @@ $_FORM = savedView::process_form($_FORM);
 // show the "saved filter" controls
 $TPL['use_saved_filter'] = true;
 
+
+if (!$current_user->prefs["taskList_filter"]) {
+  $TPL["message_help"][] = "
+
+allocPSA allows you to assign, schedule and plan out Tasks. This page
+allows you to view a list of Tasks. 
+
+<br><br>
+
+Simply adjust the filter settings and click the <b>Filter</b> button to
+display a list of previously created Tasks. 
+If you would prefer to create a new Task, click the <b>New Task</b> link
+in the top-right hand corner of the box below.";
+}
+
+
+
 include_template("templates/taskListM.tpl");
 page_close();
 

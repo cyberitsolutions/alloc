@@ -50,7 +50,7 @@
   </tr>
 
   <tr>
-    <td colspan="3"><b>Enter the company name and address</b></td> 
+    <td colspan="3"><b>Enter the company name and address{mandatory($companyDetails)}</b></td> 
     <td colspan="3"><b>Project</b></td> 
   </tr>
   <tr>
@@ -58,11 +58,11 @@
     <td colspan="3"><select name="projectID" value="{$projectID}">{$projectOptions}</select></td>
   </tr>
   <tr>
-    <td><b>Product</b></td>
+    <td><b>Product{mandatory($product)}</b></td>
     <td><b>Quantity</b></td>
-    <td><b>Price</b></td>
-    <td><b>Source TF</b></td>
-    <td><b>Date Incurred</b></td>
+    <td><b>Price{mandatory($amount)}</b></td>
+    <td><b>Source TF{mandatory($fromTfID)}</b></td>
+    <td><b>Date Incurred{mandatory($transactionDate)}</b></td>
   </tr>
   <tr>
     <td><input type="text" size="25" name="product" value="{$product}"></td>
