@@ -73,25 +73,15 @@ function get_people_header() {
   $db = new db_alloc;
   $query = "SELECT * FROM person";
   $query.= " LEFT JOIN skillProficiencys ON person.personID=skillProficiencys.personID";
-  $query.= " LEFT JOIN skillList ON skillProficiencys.skillID=skillList.skillID";
+  $query.= " LEFT JOIN skillList ON skillProficiencys.skillID=skillList.skillID WHERE personActive = 1 ";
   if (!isset($show_all)) {
-    $query.= " WHERE skillProficiencys.skillProficiency";
-    $where = TRUE;
+    $query.= " AND skillProficiencys.skillProficiency";
   }
   if ($skill) {
-    if ($where = FALSE) {
-      $query.= sprintf(" WHERE skillList.skillID=%d", $skill);
-      $where = TRUE;
-    } else {
-      $query.= sprintf(" AND skillList.skillID=%d", $skill);
-    }
+    $query.= sprintf(" AND skillList.skillID=%d", $skill);
+
   } else if ($skill_class) {
-    if ($where = FALSE) {
-      $query.= sprintf(" WHERE skillList.skillClass='%s'", $skill_class);
-      $where = TRUE;
-    } else {
-      $query.= sprintf(" AND skillList.skillClass='%s'", $skill_class);
-    }
+    $query.= sprintf(" AND skillList.skillClass='%s'", $skill_class);
   }
   $query.= " GROUP BY username ORDER BY username";
   $db->query($query);
@@ -99,7 +89,7 @@ function get_people_header() {
     $person = new person;
     $person->read_db_record($db);
     array_push($people_ids, $person->get_id());
-    $people_header.= sprintf("<th>%s</th>\n", $person->get_value('username'));
+    $people_header.= sprintf("<th style=\"text-align:center\">%s</th>\n", $person->get_value('username'));
   }
 }
 
