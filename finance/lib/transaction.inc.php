@@ -321,7 +321,7 @@ class transaction extends db_entity
 
   
     // Determine opening balance
-    $q = "SELECT SUM(amount) as balance FROM transaction ".$filter2;
+    $q = sprintf("SELECT SUM(IF(fromTfID IN (%s),-amount,amount)) AS balance FROM transaction %s", implode(",", $_FORM['tfIDs']), $filter2);
     $debug and print "\n<br>QUERY: ".$q;
     $db = new db_alloc;
     $db->query($q);
