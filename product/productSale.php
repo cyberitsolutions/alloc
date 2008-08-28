@@ -347,8 +347,7 @@ $statuses = array("create"=>"Create", "edit"=>"Edit", "admin"=>"Administrator", 
 $statuses[$TPL["status"]] = "<b>".$statuses[$TPL["status"]]."</b>";
 $TPL["statusText"] = implode(" | ", $statuses);
 
-$TPL["productList_dropdown"] = get_option("", 0);
-$TPL["productList_dropdown"].= get_options_from_db($db, "productName", "productID", 0);
+$TPL["productList_dropdown"] = get_options_from_db($db, "productName", "productID", 0);
 $TPL["productSaleID"] = $productSale->get_id();
 $TPL["taxName"] = config::get_config_item("taxName");
 $TPL["tax_tfID"] = config::get_config_item("taxTfID");

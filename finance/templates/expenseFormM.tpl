@@ -55,7 +55,7 @@
   </tr>
   <tr>
     <td colspan="3"><input type="text" size="50" name="companyDetails" value="{$companyDetails}"></td>
-    <td colspan="3"><select name="projectID" value="{$projectID}">{$projectOptions}</select></td>
+    <td colspan="3"><select name="projectID" value="{$projectID}"><option value="">{$projectOptions}</select></td>
   </tr>
   <tr>
     <td><b>Product{mandatory($product)}</b></td>
@@ -68,7 +68,7 @@
     <td><input type="text" size="25" name="product" value="{$product}"></td>
     <td><input type="text" size="5" name="quantity" value="{$quantity}"></td>
     <td><input type="text" size="9" name="amount" value="{$amount}"></td>
-    <td><select name="fromTfID">{$fromTfOptions}</select></td>
+    <td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
     <td><nobr>{get_calendar("transactionDate",$TPL["transactionDate"])}</nobr>
     <td class="right"><input type="submit" name="add" value="Add Expense Form Item"><input type="hidden" name="transactionID" value="{$transactionID}"></td>
   </tr>

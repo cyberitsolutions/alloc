@@ -82,7 +82,14 @@ if (!$current_user->is_employee()) {
 
     if ($db->next_record() || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
 
-      $db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
+      $db->query("SELECT * 
+                    FROM tf 
+                   WHERE status = 'active' 
+                      OR tfID = %d 
+                      OR tfID = %d 
+                ORDER BY tfName"
+                ,$db->f("tfID"),$db->f("fromTfID"));
+
       $tf_array = get_array_from_db($db, "tfID", "tfName");
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
       $transactionType_options = transaction::get_transactionTypes();
@@ -90,7 +97,7 @@ if (!$current_user->is_employee()) {
 
       if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced") {
 
-        $db->query("SELECT * from transaction where timeSheetID = ".$timeSheet->get_id()." order by transactionID");
+        $db->query("SELECT * FROM transaction WHERE timeSheetID = %d ORDER BY transactionID",$timeSheet->get_id());
 
         while ($db->next_record()) {
           $transaction = new transaction;
@@ -99,22 +106,6 @@ if (!$current_user->is_employee()) {
 
           $TPL["tf_options"] = get_options_from_array($tf_array, $TPL["transaction_tfID"], true, 35);
           $TPL["from_tf_options"] = get_options_from_array($tf_array, $TPL["transaction_fromTfID"], true, 35);
-
-          # Account for disabled TF
-          $tf = new tf;
-          $tf->set_id($transaction->get_value("tfID"));
-          $tf->select();
-          if ($tf->get_value("status") != 'active') {
-            $TPL["tf_options"] .= get_option($tf->get_value("tfName"), $tf->get_id(), true);
-          }
-          $tf = new tf;
-          $tf->set_id($transaction->get_value("fromTfID"));
-          $tf->select();
-          if ($tf->get_value("status") != 'active') {
-            $TPL["from_tf_options"] .= get_option($tf->get_value("tfName"), $tf->get_id(), true);
-          }
-
-
           $TPL["status_options"] = get_select_options($status_options, $transaction->get_value("status"));
           $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
           $TPL["transactionType_options"] = get_select_options($transactionType_options, $transaction->get_value("transactionType"));

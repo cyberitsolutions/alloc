@@ -73,12 +73,10 @@ $db = new db_alloc;
 $transaction = new transaction;
 
 $db->query("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
-$TPL["tfOptions"] = get_option("", "0", false)."\n";
-$TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $_POST["tfID"]);
+$TPL["tfOptions"] = get_options_from_db($db, "tfName", "tfID", $_POST["tfID"]);
 
 $db->query("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
-$TPL["fromTfOptions"] = get_option("", "0", false)."\n";
-$TPL["fromTfOptions"].= get_options_from_db($db, "tfName", "tfID", $_POST["fromTfID"]);
+$TPL["fromTfOptions"] = get_options_from_db($db, "tfName", "tfID", $_POST["fromTfID"]);
 
 $TPL["statusOptions"] = get_options_from_array(array("All", "Pending", "Rejected", "Approved",), $_POST["status"], false);
 

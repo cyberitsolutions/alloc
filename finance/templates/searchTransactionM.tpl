@@ -24,8 +24,8 @@
         </tr>
         <tr align="center">
           <td><input type="text" size="20" name="product" value="{$product}"></td>
-          <td><select name="fromTfID">{$fromTfOptions}</select></td>
-          <td><select name="tfID">{$tfOptions}</select></td>
+          <td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
+          <td><select name="tfID"><option value="">{$tfOptions}</select></td>
           <td><select name="status" value={$status}>{$statusOptions}</select></td>
           <td>{get_calendar("dateOne",$TPL["dateOne"])}</td>
           <td>{get_calendar("dateTwo",$TPL["dateTwo"])}</td>

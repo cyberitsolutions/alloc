@@ -642,17 +642,6 @@ class db_entity {
     return $rows;
   }
 
-  // This could be called like: 
-  // $timeUnit->get_dropdown_options("timeUnitID","timeUnitLabelA",$task->get_value("timeEstimateUnitID"));
-  function get_dropdown_options($key,$label,$sel=false,$blank=false) {
-    $arr = $this->get_assoc_array($key,$label,$sel);
-
-    // allows $blank to be set to ""
-    $blank!==false and $options = get_option($blank, "0", !$sel)."\n";
-    $options.= get_select_options($arr,$sel);
-    return $options;
-  }
-
 }
 
 

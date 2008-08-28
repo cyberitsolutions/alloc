@@ -31,8 +31,8 @@
  	  <td><input type="text" size="20" name="product" value="{$product}"></td>
  	  <td><input type="text" size="9" name="amount" value="{$amount}"> (inc. {$taxName})</td>
    	<td><select name="transactionType">{$transactionTypeOptions}</select></td>
-   	<td><select name="fromTfID">{$fromTfOptions}</select></td>
-   	<td><select name="tfID">{$tfOptions}</select></td>
+   	<td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
+   	<td><select name="tfID"><option value="">{$tfOptions}</select></td>
  	</tr>
 
   <tr>

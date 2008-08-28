@@ -54,7 +54,7 @@ $(document).ready(function() \{
         {/}
         <div class="edit">
           <h6>Project</h6>
-          <select id="projectID" name="projectID" onChange="updateStuffWithAjax()">{$projectOptions}</select>
+          <select id="projectID" name="projectID" onChange="updateStuffWithAjax()"><option value="">{$projectOptions}</select>
         </div>
 
         {if $hierarchy_links} 

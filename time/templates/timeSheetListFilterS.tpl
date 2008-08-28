@@ -15,6 +15,7 @@
           </td>
           <td>
             <select name="personID">
+              <option value="">
               {$show_userID_options}
             </select>
           </td>
