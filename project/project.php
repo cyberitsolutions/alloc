@@ -681,17 +681,12 @@ if (is_object($project) && $project->get_id()) {
 
 $TPL["navigation_links"] = $project->get_navigation_links();
 
-$query = sprintf("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
-$db->query($query);
-$tf_array = get_array_from_db($db, "tfID", "tfName");
-$TPL["commission_tf_options"] = get_select_options($tf_array, $TPL["commission_tfID"]);
-
-
-#timetook($start);
-
-$query = sprintf("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
-$db->query($query);
-$TPL["cost_centre_tfID_options"] = get_options_from_db($db, "tfName", "tfID", $TPL["project_cost_centre_tfID"]);
+$query = sprintf("SELECT tfID AS value, tfName AS label 
+                    FROM tf 
+                   WHERE status = 'active' 
+                ORDER BY tfName");
+$TPL["commission_tf_options"] = get_select_options($query, $TPL["commission_tfID"]);
+$TPL["cost_centre_tfID_options"] = get_select_options($query, $TPL["project_cost_centre_tfID"]);
 
 if ($TPL["project_cost_centre_tfID"]) {
   $tf = new tf();

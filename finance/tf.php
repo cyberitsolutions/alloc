@@ -55,15 +55,12 @@ function show_new_person($template) {
 }
 
 function show_person_options() {
-  global $person_array, $TPL;
+  global $TPL;
   echo get_select_options(person::get_username_list($TPL["person_personID"]), $TPL["person_personID"]);
 }
 
 $db = new db_alloc;
 $tf = new tf;
-
-$db->query("SELECT * FROM person ORDER BY username");
-$person_array = get_array_from_db($db, "personID", "username");
 
 $tfID = $_GET["tfID"] or $tfID = $_POST["tfID"];
 if ($tfID) {
@@ -136,9 +133,7 @@ $tf->set_tpl_values();
 
 $TPL["tfModifiedTime"] = get_display_date($tf->get_value("tfModifiedTime"));
 if ($tf->get_value("tfModifiedUser")) {
-  $db->query("select username from person where personID=".$tf->get_value("tfModifiedUser"));
-  $db->next_record();
-  $TPL["tfModifiedUser"] = $db->f("username");
+  $TPL["tfModifiedUser"] = person::get_fullname($tf->get_value("tfModifiedUser"));
 }
 
 $tf->get_value("status") == "active" || !$tf->get_id() and $TPL["tfIsActive"] = " checked";

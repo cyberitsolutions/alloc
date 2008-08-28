@@ -485,8 +485,8 @@ class project extends db_entity {
     $personSelect.= "</select>";
 
     $rtn["personSelect"] = $personSelect;
-    $rtn["projectStatusOptions"] = get_options_from_array(array("Current", "Potential", "Archived"), $_FORM["projectStatus"], false);
-    $rtn["projectTypeOptions"] = get_options_from_array(array("Project", "Job", "Contract"), $_FORM["projectType"], false);
+    $rtn["projectStatusOptions"] = get_select_options(array("Current", "Potential", "Archived"), $_FORM["projectStatus"]);
+    $rtn["projectTypeOptions"] = get_select_options(array("Project", "Job", "Contract"), $_FORM["projectType"]);
     $rtn["projectName"] = $_FORM["projectName"];
 
 

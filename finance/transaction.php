@@ -109,20 +109,19 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 $transaction->set_tpl_values();
 
 $TPL["product"] = htmlentities($transaction->get_value("product"));
-$TPL["statusOptions"] = get_options_from_array(array("pending", "rejected", "approved"), $transaction->get_value("status"), false);
+$TPL["statusOptions"] = get_select_options(array("pending", "rejected", "approved"), $transaction->get_value("status"));
 $transactionTypes = transaction::get_transactionTypes();
 $TPL["transactionTypeOptions"] = get_select_options($transactionTypes, $transaction->get_value("transactionType"));
 
 is_object($transaction) and $TPL["transactionType"] = $transaction->get_transaction_type_link();
 
 $db = new db_alloc;
-$db->query("SELECT tfID, tfName FROM tf WHERE status = 'active' ORDER BY tfName");
-$TPL["tfIDOptions"] = get_options_from_db($db, "tfName", "tfID", $transaction->get_value("tfID"));
-$db->query("SELECT tfID, tfName FROM tf WHERE status = 'active' ORDER BY tfName");
-$TPL["fromTfIDOptions"] = get_options_from_db($db, "tfName", "tfID", $transaction->get_value("fromTfID"));
+$q = "SELECT tfID AS value, tfName AS label FROM tf WHERE status = 'active' ORDER BY tfName";
+$TPL["tfIDOptions"] = get_select_options($q, $transaction->get_value("tfID"));
+$TPL["fromTfIDOptions"] = get_select_options($q, $transaction->get_value("fromTfID"));
 
-$db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'current' ORDER BY projectName");
-$TPL["projectIDOptions"] = get_options_from_db($db, "projectName", "projectID", $transaction->get_value("projectID"));
+$q = "SELECT projectID as value, projectName as label FROM project WHERE projectStatus = 'current' ORDER BY projectName";
+$TPL["projectIDOptions"] = get_select_options($q, $transaction->get_value("projectID"));
 
 $TPL["transactionModifiedUser"] = person::get_fullname($TPL["transactionModifiedUser"]);
 $TPL["transactionCreatedUser"] = person::get_fullname($TPL["transactionCreatedUser"]);

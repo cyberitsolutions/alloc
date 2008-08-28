@@ -199,15 +199,19 @@ if ($transaction_to_edit->get_value("fromTfID")) {
   $selectedProject = 0;
 }
 
-$db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
-$TPL["fromTfOptions"] = get_options_from_db($db, "tfName", "tfID", $selectedTfID);
+$q = "SELECT tfID AS value, tfName AS label FROM tf WHERE status = 'active' ORDER BY tfName";
+$TPL["fromTfOptions"] = get_select_options($q, $selectedTfID);
 
 if (is_object($expenseForm) && $expenseForm->get_value("clientID")) { 
   $clientID_sql = sprintf(" AND clientID = %d",$expenseForm->get_value("clientID"));
 }
 
-$db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'current' ".$clientID_sql." ORDER BY projectName");
-$TPL["projectOptions"] = get_options_from_db($db, "projectName", "projectID", $selectedProjectID);
+$q = "SELECT projectID AS value, projectName AS label 
+        FROM project 
+       WHERE projectStatus = 'current' 
+             ".$clientID_sql." 
+    ORDER BY projectName";
+$TPL["projectOptions"] = get_select_options($q, $selectedProjectID);
 
 if (is_object($expenseForm)) { 
   $expenseForm->set_tpl_values();
@@ -305,7 +309,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") &
 }
 
 $paymentOptions = array("", "COD", "Cheque", "Company Amex Charge", "Company Amex Blue", "Company Virgin MasterCard", "Other Credit Card", "Account", "Direct Deposit");
-$paymentOptions = get_options_from_array($paymentOptions, $expenseForm->get_value("paymentMethod"), false);
+$paymentOptions = get_select_options($paymentOptions, $expenseForm->get_value("paymentMethod"));
 
 
 function get_reimbursementRequired_array() {

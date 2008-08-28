@@ -779,10 +779,8 @@ class timeSheet extends db_entity
 
     // display the list of project name.
     $db = new db_alloc();
-    $query = sprintf("SELECT * FROM project ORDER by projectName");
-    $db->query($query);
-    $project_array = get_array_from_db($db, "projectID", "projectName");
-    $rtn["show_project_options"] = get_select_options($project_array, $_FORM["projectID"],50);
+    $query = sprintf("SELECT projectID AS value, projectName AS label FROM project ORDER by projectName");
+    $rtn["show_project_options"] = get_select_options($query, $_FORM["projectID"]);
 
     // display the list of user name.
     if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
@@ -793,14 +791,14 @@ class timeSheet extends db_entity
       $person->set_id($current_user->get_id());
       $person->select();
       $person_array = array($current_user->get_id()=>$person->get_username(1));
-      $rtn["show_userID_options"] = get_options_from_array($person_array, $_FORM["personID"], true);
+      $rtn["show_userID_options"] = get_select_options($person_array, $_FORM["personID"]);
     } 
 
     // display a list of status
     $status_array = timeSheet::get_timeSheet_statii();
     unset($status_array["create"]);
 
-    $rtn["show_status_options"] = get_options_from_array($status_array, $_FORM["status"]);
+    $rtn["show_status_options"] = get_select_options($status_array, $_FORM["status"]);
 
     // display the date from filter value
     $rtn["dateFrom"] = $_FORM["dateFrom"];

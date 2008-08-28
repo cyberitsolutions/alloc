@@ -47,8 +47,7 @@ if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
     $person->read_db_record($_db);
     $users[$person->get_id()] = $person->get_value('username');
   }
-  $TPL["userSelect"] = "<select name=\"userID\">".get_options_from_array($users, $current_user->get_id(), true)
-    ."</select><br>\n";
+  $TPL["userSelect"] = "<select name=\"userID\">".get_select_options($users, $current_user->get_id())."</select><br>\n";
 } else {
   $TPL["userSelect"] = "";
 }

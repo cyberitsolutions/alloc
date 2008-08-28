@@ -85,12 +85,6 @@ $_GET["date"] and $TPL["absence_dateFrom"] = $_GET["date"];
 
 $TPL["personName"] = $person->get_username(1);
 
-// Set up the options for a list of user.
-$query = sprintf("SELECT * FROM person ORDER by username");
-$db->query($query);
-$person_array = get_array_from_db($db, "personID", "username");
-$TPL["person_options"] = get_select_options($person_array, $personID);
-
 // Set up the options for the absence type.
 $absenceType_array = array('Annual Leave'=>'Annual Leave'
                           ,'Holiday'     =>'Holiday'

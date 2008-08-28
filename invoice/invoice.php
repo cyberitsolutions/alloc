@@ -147,7 +147,6 @@ function show_invoiceItem_list() {
   $db2 = new db_alloc();
   $q = sprintf("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
   $db->query($q);
-  #$tf_array = get_array_from_db($db, "tfID", "tfName");
 
   $q = sprintf("SELECT *
                   FROM invoiceItem 
@@ -653,10 +652,6 @@ if (is_object($invoice) && $invoice->get_id()
 && $invoice->has_attachment_permission($current_user)) {
   define("SHOW_INVOICE_ATTACHMENTS",1);
 }
-
-
-#$db->query("SELECT * FROM tf ORDER BY tfName");
-#$tf_array = get_array_from_db($db, "tfID", "tfName");
 
 if ($invoiceID) {
   $TPL["main_alloc_title"] = "Invoice " . $TPL["invoiceNum"] . " - ".APPLICATION_NAME;

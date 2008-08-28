@@ -129,10 +129,9 @@ function transaction_status_list($status) {
 }
 
 function get_project_list() {
-  global $db;
   $projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
-  $db->query("SELECT * FROM project");
-  echo get_options_from_db($db, "projectName", "projectID", $projectID,60);
+  $q = "SELECT projectID as value, projectName as label FROM project";
+  echo get_select_options($q, $projectID, 60);
 }
 
 // }}} 
@@ -334,8 +333,6 @@ if ($_POST["create"]) {
 }
 // }}} 
 
-$query = "SELECT * FROM product";
-$db->query($query);
 
 if ($productSaleID) {
   $TPL["status"] = $productSale->get_value("status");
@@ -347,7 +344,9 @@ $statuses = array("create"=>"Create", "edit"=>"Edit", "admin"=>"Administrator", 
 $statuses[$TPL["status"]] = "<b>".$statuses[$TPL["status"]]."</b>";
 $TPL["statusText"] = implode(" | ", $statuses);
 
-$TPL["productList_dropdown"] = get_options_from_db($db, "productName", "productID", 0);
+$query = "SELECT productID AS value, productName AS label FROM product";
+$TPL["productList_dropdown"] = get_select_options($query);
+
 $TPL["productSaleID"] = $productSale->get_id();
 $TPL["taxName"] = config::get_config_item("taxName");
 $TPL["tax_tfID"] = config::get_config_item("taxTfID");

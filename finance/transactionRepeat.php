@@ -100,11 +100,11 @@ if ($transactionRepeat->get_value("transactionRepeatModifiedUser")) {
 
 if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
   // Person can access all TF records
-  $q = sprintf("SELECT * FROM tf WHERE status = 'active' OR tf.tfID = %d OR tf.tfID = %d ORDER BY tfName"
+  $q = sprintf("SELECT tfID AS value, tfName AS label FROM tf WHERE status = 'active' OR tf.tfID = %d OR tf.tfID = %d ORDER BY tfName"
               , $transactionRepeat->get_value("tfID"), $transactionRepeat->get_value("fromTfID"));
 } else if (have_entity_perm("tf", PERM_READ, $current_user, true)) {
   // Person can only read TF records that they own
-  $q = sprintf("SELECT * 
+  $q = sprintf("SELECT tf.tfID AS value, tf.tfName AS label
                   FROM tf, tfPerson 
                  WHERE tfPerson.personID=%d 
                    AND tf.tfID=tfPerson.tfID 
@@ -126,13 +126,9 @@ if ($tf->select() && $tf->get_value("status") != 'active') {
   $TPL["message_help"][] = "This expense is sourced from an inactive TF. It will not create transactions.";
 }
 
-$db->query($q);
-$TPL["tfOptions"].= get_options_from_db($db, "tfName", "tfID", $transactionRepeat->get_value("tfID"));
-$db->query($q);
-$TPL["fromTfOptions"].= get_options_from_db($db, "tfName", "tfID", $transactionRepeat->get_value("fromTfID"));
-
-
-$TPL["basisOptions"] = get_options_from_array(array("weekly", "fortnightly", "monthly", "quarterly", "yearly"), $transactionRepeat->get_value("paymentBasis"), false);
+$TPL["tfOptions"] = get_select_options($q, $transactionRepeat->get_value("tfID"));
+$TPL["fromTfOptions"] = get_select_options($q, $transactionRepeat->get_value("fromTfID"));
+$TPL["basisOptions"] = get_select_options(array("weekly", "fortnightly", "monthly", "quarterly", "yearly"), $transactionRepeat->get_value("paymentBasis"));
 $TPL["transactionTypeOptions"] = get_select_options(transaction::get_transactionTypes(), $transactionRepeat->get_value("transactionType"));
 
 if (is_object($transactionRepeat) && $transactionRepeat->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {

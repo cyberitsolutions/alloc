@@ -46,7 +46,7 @@ $permission->set_tpl_values();
 if (!$permission->get_value("tableName")) {
   $table_name_options = get_entity_table_names();
   asort($table_name_options);
-  $TPL["tableNameOptions"] = get_options_from_array($table_name_options, $permission->get_value("tableName"), false);
+  $TPL["tableNameOptions"] = get_select_options($table_name_options, $permission->get_value("tableName"));
   include_template("templates/permissionTableM.tpl");
   page_close();
   exit();
@@ -65,13 +65,19 @@ if ($_POST["save"]) {
 }
 
 $TPL["personOptions"] = get_select_options("SELECT personID as value, username as label FROM person ORDER BY username", $permission->get_value("personID"));
-$TPL["roleNameOptions"] = get_options_from_array(array("god", "admin", "manage", "employee"), $permission->get_value("roleName"), false);
+$TPL["roleNameOptions"] = get_select_options(array("god", "admin", "manage", "employee"), $permission->get_value("roleName"));
 $TPL["allowOptions"] = get_select_options(array("Y"=>"Yes", "N"=>"No"), $permission->get_value("allow"));
 
 $table_name = $permission->get_value("tableName");
 $entity = new $table_name;
 
-$TPL["actionOptions"] = get_options_from_array($entity->permissions, $permission->get_value("actions"), true, 40, true);
+foreach ($entity->permissions as $value => $label) {
+  if (($permission->get_value("actions") & $value) == $value) {
+    $sel[] = $value;
+  }
+}
+
+$TPL["actionOptions"] = get_select_options($entity->permissions, $sel);
 
 $TPL["main_alloc_title"] = "Edit Permission - ".APPLICATION_NAME;
 
