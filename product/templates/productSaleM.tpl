@@ -80,7 +80,7 @@ function newProductField() \{
     </thead>
     <tbody id="productContainer">
       <tr class="saleTD">
-      <td><select name="new_productID[]" class="saleCreate prodID">{$productList_dropdown}</select></td>
+      <td><select name="new_productID[]" class="saleCreate prodID"><option value="">{$productList_dropdown}</select></td>
       <td><input type="text" size="5" name="new_quantity[]" class="saleCreate qty" value="{$ps_quantity}" /></td>
       <td><input type="text" size="5" name="new_buycost[]" value="" class="buyCost" /></td>
       <td><input type="text" size="5" name="new_sellprice[]" value="" class="sellPrice" /></td>
@@ -90,7 +90,7 @@ function newProductField() \{
     </tbody>
     <tbody id="new_lineItem" style="display:none">
     <tr class="saleTD">
-      <td><select name="new_productID[]" class="saleCreate prodID">{$productList_dropdown}</select></td>
+      <td><select name="new_productID[]" class="saleCreate prodID"><option value="">{$productList_dropdown}</select></td>
       <td><input type="text" size="5" name="new_quantity[]" class="saleCreate qty" value="{$ps_quantity}" /></td>
       <td><input type="text" size="5" name="new_buycost[]" class="buyCost" value="" /></td>
       <td><input type="text" size="5" name="new_sellprice[]" class="sellPrice" value="" /></td>

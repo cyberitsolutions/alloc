@@ -43,9 +43,7 @@ $modules["item"] = "Items";
 $modules["person"] = "Users";
 $modules["announcement"] = "Announcements";
 
-foreach($modules as $k=>$v) {
-  $TPL["module_options"].= get_option($v, $k, $_POST["mod"] == $k);
-}
+$TPL["module_options"] = get_select_options($modules,$_POST["mod"]);
 
 
 if ($_POST["do_step_2"]) {

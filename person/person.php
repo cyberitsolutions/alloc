@@ -269,16 +269,14 @@ $person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
 
 if ($person->get_id()) {
   $db_tf = new db_alloc;
-  $db_tf->query("SELECT tf.tfName as name, tfPerson.tfID as id FROM tf, tfPerson 
-  				 WHERE tf.tfID = tfPerson.tfID AND tfPerson.personID = ".$person->get_id()." AND tf.status = 'active'");
+  $db_tf->query("SELECT tf.tfName AS name, tfPerson.tfID AS id 
+                   FROM tf, tfPerson 
+  				        WHERE tf.tfID = tfPerson.tfID AND tfPerson.personID = %d AND tf.status = 'active' OR tf.tfID = %d"
+                ,$person->get_id(),$person->get_value("preferred_tfID"));
   $TPL["preferred_tfID_options"] = get_options_from_db($db_tf, "name", "id", $person->get_value("preferred_tfID"));
   $tf = new tf;
   $tf->set_id($person->get_value("preferred_tfID"));
   $tf->select();
-  // Need to show the person's TF even if it's disabled. 
-  if ($person->get_value("preferred_tfID") && $tf->get_value("status") != 'active') {
-    $TPL["preferred_tfID_options"].= get_option($tf->get_value("tfName"). " (disabled)", $tf->get_id(), true);
-  }
 }
 
 $TPL["absence_url"] = $TPL["url_alloc_absence"]."personID=".$personID;

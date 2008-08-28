@@ -503,9 +503,8 @@ class timeSheet extends db_entity
       $tasks[$taskID] = $t->get_id()." ".$t->get_task_name();
     }
 
-    $dropdown_options = get_option("",0);
-    $dropdown_options.= get_select_options($tasks, $taskID, 100);
-    return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\">".$dropdown_options."</select>";
+    $dropdown_options = get_select_options($tasks, $taskID, 100);
+    return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\"><option value=\"\">".$dropdown_options."</select>";
   }
 
   function get_timeSheet_list_filter($filter=array()) {
@@ -787,15 +786,14 @@ class timeSheet extends db_entity
 
     // display the list of user name.
     if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
-      $rtn["show_userID_options"] = get_option(" ", "");
-      $rtn["show_userID_options"].= get_select_options(person::get_username_list(), $_FORM["personID"]);
+      $rtn["show_userID_options"] = get_select_options(person::get_username_list(), $_FORM["personID"]);
       
     } else {
       $person = new person;
       $person->set_id($current_user->get_id());
       $person->select();
       $person_array = array($current_user->get_id()=>$person->get_username(1));
-      $rtn["show_userID_options"].= get_options_from_array($person_array, $_FORM["personID"], true);
+      $rtn["show_userID_options"] = get_options_from_array($person_array, $_FORM["personID"], true);
     } 
 
     // display a list of status

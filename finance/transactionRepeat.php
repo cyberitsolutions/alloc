@@ -100,34 +100,29 @@ if ($transactionRepeat->get_value("transactionRepeatModifiedUser")) {
 
 if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
   // Person can access all TF records
-  $q = "SELECT * FROM tf WHERE status = 'active' ORDER BY tfName";
+  $q = sprintf("SELECT * FROM tf WHERE status = 'active' OR tf.tfID = %d OR tf.tfID = %d ORDER BY tfName"
+              , $transactionRepeat->get_value("tfID"), $transactionRepeat->get_value("fromTfID"));
 } else if (have_entity_perm("tf", PERM_READ, $current_user, true)) {
   // Person can only read TF records that they own
   $q = sprintf("SELECT * 
                   FROM tf, tfPerson 
                  WHERE tfPerson.personID=%d 
                    AND tf.tfID=tfPerson.tfID 
-                   AND tf.status = 'active' 
-              ORDER BY tfName",$current_user->get_id());
+                   AND (tf.status = 'active' OR tf.tfID = %d OR tf.tfID = %d)
+              ORDER BY tfName",$current_user->get_id(), $transactionRepeat->get_value("tfID"), $transactionRepeat->get_value("fromTfID"));
 } else {
   die("No permissions to generate TF list");
 }
 
-$TPL["tfOptions"] = get_option("", "", false)."\n";
-$TPL["fromTfOptions"] = get_option("", "", false)."\n";
-
-//special case for disabled TF. Include it in the list, but also add a warning
-//message.
+//special case for disabled TF. Include it in the list, but also add a warning message.
 $tf = new tf;
 $tf->set_id($transactionRepeat->get_value("tfID"));
 if ($tf->select() && $tf->get_value("status") != 'active') {
-  $TPL["tfOptions"].= get_option($tf->get_value("tfName"), $transactionRepeat->get_value("tfID"), true);
   $TPL["message_help"][] = "This expense is allocated to an inactive TF. It will not create transactions.";
 }
 $tf = new tf;
 $tf->set_id($transactionRepeat->get_value("fromTfID"));
 if ($tf->select() && $tf->get_value("status") != 'active') {
-  $TPL["fromTfOptions"].= get_option($tf->get_value("tfName"), $transactionRepeat->get_value("fromTfID"), true);
   $TPL["message_help"][] = "This expense is sourced from an inactive TF. It will not create transactions.";
 }
 

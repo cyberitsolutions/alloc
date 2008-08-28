@@ -292,15 +292,6 @@ function get_cached_table($table,$anew=false) {
 
   return $cache->get_cached_table($table);
 } 
-function get_option($label, $value = "", $selected = false) {
-  $rtn = "<option";
-  $rtn.= " value=\"$value\"";
-  if ($selected) {
-    $rtn.= " selected";
-  }
-  $rtn.= ">".$label."</option>";
-  return $rtn;
-}
 function show_header() {
   include_template(ALLOC_MOD_DIR."shared/templates/headerS.tpl");
 }

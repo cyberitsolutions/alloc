@@ -73,10 +73,10 @@ class client extends db_entity {
     if ($clientStatus) {
       $q = sprintf("SELECT clientID as value, clientName as label FROM client WHERE clientStatus = '%s' ORDER BY clientName",db_esc($clientStatus));
     }
-    $options = get_option("", "")."\n";
     $options.= get_select_options($q,$clientContactID,100);
     $str = "<select id=\"clientID\" name=\"clientID\" style=\"width:100%;\" 
              onChange=\"makeAjaxRequest('".$TPL["url_alloc_updateProjectClientContactList"]."clientID='+$('#clientID').attr('value'),'clientContactDropdown')\">";
+    $str.= "<option value=\"\">";
     $str.= $options;
     $str.= "</select>";
     return $str;
@@ -86,9 +86,8 @@ class client extends db_entity {
     $clientID or $clientID = $_GET["clientID"];
     $db = new db_alloc;
     $q = sprintf("SELECT clientContactName as label, clientContactID as value FROM clientContact WHERE clientID = %d",$clientID);
-    $options = get_option("", "")."\n";
-    $options.= get_select_options($q,$clientContactID,100);
-    return "<select name=\"clientContactID\" style=\"width:100%\">".$options."</select>";
+    $options = get_select_options($q,$clientContactID,100);
+    return "<select name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
   }
  
   function get_client_name() {

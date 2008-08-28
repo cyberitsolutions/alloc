@@ -191,7 +191,6 @@ class task extends db_entity {
     $parentTaskID or $parentTaskID = $_GET["parentTaskID"];
 
     $db = new db_alloc;
-    $options = get_option("", "0");
     if ($projectID) {
       $query = sprintf("SELECT * 
                         FROM task 
@@ -202,7 +201,7 @@ class task extends db_entity {
       $db->query($query);
       $options.= get_options_from_db($db, "taskName", "taskID", $parentTaskID,70);
     }
-    return "<select name=\"parentTaskID\">".$options."</select>";
+    return "<select name=\"parentTaskID\"><option value=\"\">".$options."</select>";
   }
 
   function get_task_cc_list_select($projectID="") {
@@ -362,8 +361,7 @@ class task extends db_entity {
 
     $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
    
-    $str = get_option("", "0", $owner == 0)."\n";
-    $str.= get_select_options($ops, $owner);
+    $str = get_select_options($ops, $owner);
     return $str;
   }
 
@@ -411,8 +409,7 @@ class task extends db_entity {
 
     $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
    
-    $str = '<select name="managerID">';
-    $str.= get_option("", "0", $owner == 0)."\n";
+    $str = '<select name="managerID"><option value="">';
     $str.= get_select_options($ops, $owner);
     $str.= '</select>';
     return $str;
@@ -424,8 +421,7 @@ class task extends db_entity {
     $db = new db_alloc;
     $query = sprintf("SELECT * FROM project WHERE projectStatus IN ('current', 'potential') ORDER BY projectName");
     $db->query($query);
-    $str = get_option("", "0", $projectID == 0)."\n";
-    $str.= get_options_from_db($db, "projectName", "projectID", $projectID,60);
+    $str = get_options_from_db($db, "projectName", "projectID", $projectID,60);
     return $str;
   }
 
@@ -434,12 +430,13 @@ class task extends db_entity {
     global $TPL, $current_user, $isMessage;
     $db = new db_alloc;
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
-    $TPL["personOptions"] = "<select name=\"personID\">".task::get_personList_dropdown($projectID)."</select>";
+    $TPL["personOptions"] = "<select name=\"personID\"><option value=\"\">".task::get_personList_dropdown($projectID)."</select>";
     $TPL["managerPersonOptions"] = task::get_managerPersonList_dropdown($projectID);
 
     // TaskType Options
     $taskType = new taskType;
-    $TPL["taskTypeOptions"] = $taskType->get_dropdown_options("taskTypeID","taskTypeName",$this->get_value("taskTypeID"));
+    $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
+    $TPL["taskTypeOptions"] = get_select_options($taskType_array,$this->get_value("taskTypeID"));
 
     // Project dropdown
     $TPL["projectOptions"] = task::get_project_options($projectID);
@@ -1006,9 +1003,10 @@ class task extends db_entity {
       $dateActualCompletion = get_calendar_string("dateActualCompletion");
       $priority_options = task::get_task_priority_dropdown(3);
       $taskType = new taskType;
-      $taskType_options = $taskType->get_dropdown_options("taskTypeID","taskTypeName");
+      $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
+      $taskType_options = get_select_options($taskType_array);
       $js = "makeAjaxRequest('".$TPL["url_alloc_updateParentTasks"]."projectID='+$(this).val(), 'parentTaskDropdown')";
-      $project_dropdown = "<select name=\"projectID\" id=\"projectID\" onChange=\"".$js."\">".task::get_project_options()."</select>";
+      $project_dropdown = "<select name=\"projectID\" id=\"projectID\" onChange=\"".$js."\"><option value=\"\">".task::get_project_options()."</select>";
       $parentTask_div = "<div style=\"display:inline\" id=\"parentTaskDropdown\"></div>";
       $arr = "--&gt;";
 
@@ -1418,8 +1416,8 @@ class task extends db_entity {
     $rtn["managerPersonOptions"].= get_select_options(person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
 
     $taskType = new taskType;
-    $rtn["taskTypeOptions"] = "\n<option value=\"\"> ";
-    $rtn["taskTypeOptions"].= $taskType->get_dropdown_options("taskTypeID","taskTypeName",$_FORM["taskTypeID"]);
+    $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
+    $rtn["taskTypeOptions"] = get_select_options($taskType_array,$_FORM["taskTypeID"]);
 
     $ops = savedView::get_saved_view_options($_FORM['form_name'], $current_user->get_id());
     $rtn["savedViewOptions"] = get_select_options($ops, $_FORM["savedViewID"]);

@@ -200,16 +200,14 @@ if ($transaction_to_edit->get_value("fromTfID")) {
 }
 
 $db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
-$TPL["fromTfOptions"] = get_option("", "0", false)."\n";
-$TPL["fromTfOptions"].= get_options_from_db($db, "tfName", "tfID", $selectedTfID);
+$TPL["fromTfOptions"] = get_options_from_db($db, "tfName", "tfID", $selectedTfID);
 
 if (is_object($expenseForm) && $expenseForm->get_value("clientID")) { 
   $clientID_sql = sprintf(" AND clientID = %d",$expenseForm->get_value("clientID"));
 }
 
 $db->query("SELECT projectName, projectID FROM project WHERE projectStatus = 'current' ".$clientID_sql." ORDER BY projectName");
-$TPL["projectOptions"] = get_option("", "0", false)."\n";
-$TPL["projectOptions"].= get_options_from_db($db, "projectName", "projectID", $selectedProjectID);
+$TPL["projectOptions"] = get_options_from_db($db, "projectName", "projectID", $selectedProjectID);
 
 if (is_object($expenseForm)) { 
   $expenseForm->set_tpl_values();
