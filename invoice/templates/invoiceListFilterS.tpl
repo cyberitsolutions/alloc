@@ -12,7 +12,7 @@
           <td><select name="invoiceStatus"><option value="">All</option>{$statusOptions}</select></td>
         </tr>
         <tr>
-          <td width="15%">From</td>
+          <td>From</td>
           <td>To</td>
           <td>Invoice Num</td>
           <td>Payment Status</td>
@@ -24,8 +24,8 @@
           <td><select name="invoiceStatusPayment"><option value="">All</option>{$statusPaymentOptions}</select></td>
         </tr>
         <tr>
-          <td colspan="3">Note: Only user accounts with Financial Administrator privileges can see the full totals of invoices.</td>
-          <td align="right"><input type="submit" name="applyFilter" value="Filter"></td>
+          <td colspan="4" align="right">Note: Only user accounts with Financial Administrator privileges can see the full totals of invoices.
+          <input type="submit" name="applyFilter" value="Filter"></td>
         </tr>
       </table>
       </form>
