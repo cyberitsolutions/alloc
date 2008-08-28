@@ -115,7 +115,7 @@ require_once("../alloc.php");
         $skill_header = false;
       }
       $skill_prof = $skillPrificiencys->get_value('skillProficiency');
-      $TPL["skill_proficiencys"] = get_options_from_array($proficiencys, $skill_prof, true);
+      $TPL["skill_proficiencys"] = get_select_options($proficiencys, $skill_prof);
 
       # display rating if there is one
       include_template($template);
@@ -146,7 +146,7 @@ require_once("../alloc.php");
       }
     }
     if (count($skills) > 0) {
-      $TPL["skills"] = get_options_from_array($skills, "", true);
+      $TPL["skills"] = get_select_options($skills, "");
     }
   }
 
@@ -268,12 +268,14 @@ if ($_POST["save"]) {
 $person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
 
 if ($person->get_id()) {
-  $db_tf = new db_alloc;
-  $db_tf->query("SELECT tf.tfName AS name, tfPerson.tfID AS id 
-                   FROM tf, tfPerson 
-  				        WHERE tf.tfID = tfPerson.tfID AND tfPerson.personID = %d AND tf.status = 'active' OR tf.tfID = %d"
+  $q = sprintf("SELECT tfPerson.tfID AS value, tf.tfName AS label 
+                  FROM tf, tfPerson 
+  				       WHERE tf.tfID = tfPerson.tfID 
+                   AND tfPerson.personID = %d 
+                   AND (tf.status = 'active' OR tf.tfID = %d)"
                 ,$person->get_id(),$person->get_value("preferred_tfID"));
-  $TPL["preferred_tfID_options"] = get_options_from_db($db_tf, "name", "id", $person->get_value("preferred_tfID"));
+  $TPL["preferred_tfID_options"] = get_select_options($q, $person->get_value("preferred_tfID"));
+
   $tf = new tf;
   $tf->set_id($person->get_value("preferred_tfID"));
   $tf->select();

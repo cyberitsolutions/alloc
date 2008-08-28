@@ -132,15 +132,15 @@ $_POST["show_skills"] and $TPL["show_skills_checked"] = " checked";
 $_POST["show_all_users"] and $TPL["show_all_users_checked"] = " checked";
  
 $employee_expertise = array(""=>"Any Expertise", "Novice"=>"Novice", "Junior"=>"Junior", "Intermediate"=>"Intermediate", "Advanced"=>"Advanced", "Senior"=>"Senior");
-$TPL["employee_expertise"] = get_options_from_array($employee_expertise, $_POST["expertise"], true);
+$TPL["employee_expertise"] = get_select_options($employee_expertise, $_POST["expertise"]);
 
 $skill_classes = skillList::get_skill_classes();
-$TPL["skill_classes"] = get_options_from_array($skill_classes, $_POST["skill_class"], true);
+$TPL["skill_classes"] = get_select_options($skill_classes, $_POST["skill_class"]);
 
 $skills = skillList::get_skills();
 // if a skill class is selected and a skill that is not in that class is also selected, clear the skill as this is what the filter options will do
 if ($skill_class && !in_array($skills[$_POST["skill"]], $skills)) { $_POST["skill"] = ""; }
-$TPL["skills"] = get_options_from_array($skills, $_POST["skill"], true);
+$TPL["skills"] = get_select_options($skills, $_POST["skill"]);
 
 $TPL["main_alloc_title"] = "People - ".APPLICATION_NAME;
 

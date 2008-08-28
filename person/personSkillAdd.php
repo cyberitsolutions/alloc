@@ -57,13 +57,13 @@ if ($_POST["delete_skill"]) {
 
 $skill_classes = skillList::get_skill_classes();
 $skill_classes[""] = ">> OTHER >>";
-$TPL["new_skill_classes"] = get_options_from_array($skill_classes, $_POST["skill_class"], true);
+$TPL["new_skill_classes"] = get_select_options($skill_classes, $_POST["skill_class"]);
 
 $skills = skillList::get_skills();
 // if a skill class is selected and a skill that is not in that class is also selected, clear the skill as this is what the filter options will do
 if ($skill_class && !in_array($skills[$_POST["skill"]], $skills)) { $_POST["skill"] = ""; }
 $skills[""] = ">> NEW >>";
-$TPL["new_skills"] = get_options_from_array($skills, $_POST["skill"], true);
+$TPL["new_skills"] = get_select_options($skills, $_POST["skill"]);
 
 
 $TPL["main_alloc_title"] = "Edit Skills - ".APPLICATION_NAME;

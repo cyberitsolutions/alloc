@@ -192,14 +192,13 @@ class task extends db_entity {
 
     $db = new db_alloc;
     if ($projectID) {
-      $query = sprintf("SELECT * 
+      $query = sprintf("SELECT taskID AS value, taskName AS label
                         FROM task 
                         WHERE projectID= '%d' 
                         AND taskTypeID = 2 
                         AND (dateActualCompletion IS NULL or dateActualCompletion = '') 
                         ORDER BY taskName", $projectID);
-      $db->query($query);
-      $options.= get_options_from_db($db, "taskName", "taskID", $parentTaskID,70);
+      $options = get_select_options($query, $parentTaskID,70);
     }
     return "<select name=\"parentTaskID\"><option value=\"\">".$options."</select>";
   }
@@ -419,9 +418,11 @@ class task extends db_entity {
     $projectID or $projectID = $_GET["projectID"];
     // Project Options - Select all projects 
     $db = new db_alloc;
-    $query = sprintf("SELECT * FROM project WHERE projectStatus IN ('current', 'potential') ORDER BY projectName");
-    $db->query($query);
-    $str = get_options_from_db($db, "projectName", "projectID", $projectID,60);
+    $query = sprintf("SELECT projectID AS value, projectName AS label 
+                        FROM project 
+                       WHERE projectStatus IN ('current', 'potential') 
+                    ORDER BY projectName");
+    $str = get_select_options($query, $projectID, 60);
     return $str;
   }
 
@@ -1425,7 +1426,7 @@ class task extends db_entity {
     $_FORM["taskView"] and $rtn["taskView_checked_".$_FORM["taskView"]] = " checked";
 
     $taskStatii = task::get_task_statii_array();
-    $rtn["taskStatusOptions"] = get_options_from_array($taskStatii, $_FORM["taskStatus"]);
+    $rtn["taskStatusOptions"] = get_select_options($taskStatii, $_FORM["taskStatus"]);
 
     $_FORM["showDescription"] and $rtn["showDescription_checked"] = " checked";
     $_FORM["showDates"]       and $rtn["showDates_checked"]       = " checked";

@@ -72,14 +72,10 @@ require_once("../alloc.php");
 $db = new db_alloc;
 $transaction = new transaction;
 
-$db->query("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
-$TPL["tfOptions"] = get_options_from_db($db, "tfName", "tfID", $_POST["tfID"]);
-
-$db->query("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
-$TPL["fromTfOptions"] = get_options_from_db($db, "tfName", "tfID", $_POST["fromTfID"]);
-
-$TPL["statusOptions"] = get_options_from_array(array("All", "Pending", "Rejected", "Approved",), $_POST["status"], false);
-
+$q = "SELECT tfID AS value, tfName AS label FROM tf WHERE status != 'disabled' ORDER BY tfName";
+$TPL["tfOptions"] = get_select_options($q, $_POST["tfID"]);
+$TPL["fromTfOptions"] = get_select_options($q, $_POST["fromTfID"]);
+$TPL["statusOptions"] = get_select_options(array(""=>"", "pending"=>"Pending", "rejected"=>"Rejected", "approved"=>"Approved",), $_POST["status"]);
 $TPL["status"] = $_POST["status"];
 $TPL["fromTfID"] = $_POST["fromTfID"];
 $TPL["tfID"] = $_POST["tfID"];

@@ -41,20 +41,19 @@ class history extends db_entity {
       );
   }
 
-  function get_history_db($order="") {
+  function get_history_query($order="") {
     global $current_user;
     if (is_object($current_user)) {
       $db = new db_alloc;
-      $query = sprintf("SELECT * 
+      $query = sprintf("SELECT *, historyID AS value, the_label AS label 
                          FROM history 
                         WHERE personID = %d 
                      GROUP BY the_label 
                      ORDER BY the_time %s
                         LIMIT %d"
                       ,$current_user->get_id(),$order,$this->max_to_display);
-      $db->query($query);
     } 
-    return $db;
+    return $query;
   }
 
   // Returns an array of files which 
@@ -63,9 +62,13 @@ class history extends db_entity {
 
   function get_ignored_files() {
     $ignored_files = array();
-    $db = $this->get_history_db("ASC");
-    while (is_object($db) && $db->next_record()) {
-      $ignored_files[] = end(explode("/", $db->f("the_place").$db->f("the_args")));
+    $query = $this->get_history_query("ASC");
+    if ($query) { 
+      $db = new db_alloc();
+      $db->query($query);
+      while ($db->next_record()) {
+        $ignored_files[] = end(explode("/", $db->f("the_place").$db->f("the_args")));
+      }
     }
     $ignored_files[] = "index.php";
     $ignored_files[] = "home.php";

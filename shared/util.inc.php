@@ -632,75 +632,6 @@ function get_select_options($options,$selected_value=NULL,$max_length=45) {
   }
   return $str;
 }
-function get_options_from_array($options, $selected_value, $use_values = true, $max_label_length = 40, $bitwise_values = false, $reverse_results = false) {
-  // Get options for a <select> using an array of the form value=>label
-  is_array($options) or $options = array();
-
-  if ($reverse_results) {
-    $options = array_reverse($options, TRUE);
-  }
-  foreach ($options as $value => $label) {
-    $rtn.= "\n<option";
-    if ($use_values) {
-    $rtn.= " value=\"$value\"";
-
-      if ($value == $selected_value || ($bitwise_values && (($selected_value & $value) == $value))) {
-        $rtn.= " selected";
-      }
-    } else {
-      $rtn.= " value=\"$label\"";
-      if ($label == $selected_value) {
-        $rtn.= " selected";
-      }
-    }
-    $rtn.= ">";
-    if (strlen($label) > $max_label_length) {
-      $rtn.= substr($label, 0, $max_label_length - 3)."...";
-    } else {
-      $rtn.= $label;
-    }
-    $rtn.= "</option>";
-  }
-  return $rtn;
-}
-function get_array_from_db($db, $key_field, $label_field) {
-  // Constructs an array from a database containing 
-  // $key_field=>$label_field entries
-  // ALLA: Edited function so that an array of 
-  // label_field could be passed $return is the 
-  // _complete_ label string.
-  // TODO: Make this function SORT
-  $rtn = array();
-  while ($db->next_record()) {
-    if (is_array($label_field)) {
-      $return = "";
-      foreach($label_field as $key=>$label) {
-
-        // Every second array element (starting with zero) will 
-        // be the string separator. This really isn't quite as 
-        // lame as it seems.  Although it's close.
-        if (!is_int($key / 2)) {
-          $return.= $db->f($label);
-        } else {
-          $return.= $label;
-        }
-      }
-    } else {
-      $return = $db->f($label_field);
-    }
-    if ($key_field) {
-      $rtn[$db->f($key_field)] = $return;
-    } else {
-      $rtn[] = $return;
-    }
-  }
-  return $rtn;
-}
-function get_options_from_db($db, $label_field, $value_field = "", $selected_value, $max_label_length = 40, $reverse_results = false) {
-  // Get options for a <select> using a database object
-  $options = get_array_from_db($db, $value_field, $label_field);
-  return get_options_from_array($options, $selected_value, $value_field != "", $max_label_length, $bitwise_values = false, $reverse_results);
-}
 function get_tf_name($tfID) {
   if (!$tfID) {
     return false;
@@ -926,12 +857,12 @@ function show_history() {
   $str[] = "<option value=\"".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
 
   $history = new history;
-  $str[] = get_options_from_db($history->get_history_db("DESC"), "the_label", "historyID", $_GET["historyID"], 35);
+  $str[] = get_select_options($history->get_history_query("DESC"), $_GET["historyID"]);
   echo implode("\n",$str);
 }   
 function get_category_options($category="") {
   $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients");
-  return get_options_from_array($category_options, $category, true);
+  return get_select_options($category_options, $category);
 } 
 function get_help_string($topic) {
   global $TPL;

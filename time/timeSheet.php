@@ -90,7 +90,9 @@ if (!$current_user->is_employee()) {
                 ORDER BY tfName"
                 ,$db->f("tfID"),$db->f("fromTfID"));
 
-      $tf_array = get_array_from_db($db, "tfID", "tfName");
+      while ($db->row()) {
+        $tf_array[$db->f("tfID")] = $db->f("tdName");
+      }
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
       $transactionType_options = transaction::get_transactionTypes();
 
@@ -104,12 +106,12 @@ if (!$current_user->is_employee()) {
           $transaction->read_db_record($db);
           $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
 
-          $TPL["tf_options"] = get_options_from_array($tf_array, $TPL["transaction_tfID"], true, 35);
-          $TPL["from_tf_options"] = get_options_from_array($tf_array, $TPL["transaction_fromTfID"], true, 35);
+          $TPL["tf_options"] = get_select_options($tf_array, $TPL["transaction_tfID"]);
+          $TPL["from_tf_options"] = get_select_options($tf_array, $TPL["transaction_fromTfID"]);
           $TPL["status_options"] = get_select_options($status_options, $transaction->get_value("status"));
           $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
           $TPL["transactionType_options"] = get_select_options($transactionType_options, $transaction->get_value("transactionType"));
-          $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
+          $TPL["percent_dropdown"] = get_select_options($percent_array, $empty);
           $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Save\">
                                          <input type=\"submit\" name=\"transaction_delete\" value=\"Delete\">";
           include_template($template_name);
@@ -146,9 +148,8 @@ if (!$current_user->is_employee()) {
     global $timeSheet, $TPL, $db, $percent_array;
 
     if ($timeSheet->get_value("status") == "invoiced" && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-      $db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
-      $tf_array = get_array_from_db($db, "tfID", "tfName");
-      $TPL["tf_options"] = get_options_from_array($tf_array, $none, true, 35);
+      $q = "SELECT tfID as value, tfName as label FROM tf WHERE status = 'active' ORDER BY tfName";
+      $TPL["tf_options"] = get_select_options($q, $none);
 
       $transactionType_options = transaction::get_transactionTypes();
       $TPL["transactionType_options"] = get_select_options($transactionType_options);
@@ -159,7 +160,7 @@ if (!$current_user->is_employee()) {
       $TPL["transaction_transactionDate"] = date("Y-m-d");
       $TPL["transaction_product"] = "";
       $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Add\">";
-      $TPL["percent_dropdown"] = get_options_from_array($percent_array, $empty, true, 15);
+      $TPL["percent_dropdown"] = get_select_options($percent_array, $empty);
       include_template($template);
     }
   }
@@ -533,7 +534,9 @@ if ($_GET["newTimeSheet_projectID"] && !$projectID) {
 
 
 $db->query($query);
-$project_array = get_array_from_db($db, "projectID", "projectName");
+while ($db->row()) {
+  $project_array[$db->f("projectID")] = $db->f("projectName");
+}
 $TPL["timeSheet_projectName"] = $project_array[$projectID];
 $TPL["projectID"] = $projectID;
 $TPL["taskID"] = $_GET["taskID"];
