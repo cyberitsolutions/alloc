@@ -31,27 +31,27 @@ help:
 doc_html:
 	if [ -d ./help/images ]; then rm -rf ./help/images; fi;
 	mkdir ./help/images
-	cp ./help_src/images_source/* ./help/images/
+	cp ./help/src/images_source/* ./help/images/
 	find ./help/images/ -type f -exec mogrify -format gif -scale '750x>' {} \;
 	rm ./help/images/*.png
-	cat ./help_src/help.txt | sed -e 's/.png/.gif/' > ./help_src/help.gif.txt
-	cd ./help_src && rst2html.py --link-stylesheet --stylesheet=help.css ./help.gif.txt ./help.html
-	mv ./help_src/help.html ./help/
-	cp ./help_src/help.css ./help/
+	cat ./help/src/help.txt | sed -e 's/.png/.gif/' > ./help/src/help.gif.txt
+	cd ./help/src && rst2html.py --link-stylesheet --stylesheet=help.css ./help.gif.txt ./help.html
+	mv ./help/src/help.html ./help/
+	cp ./help/src/help.css ./help/
 	$(MAKE) doc_clean
 
 doc_pdf: 
-	if [ -d ./help_src/images ]; then rm -rf ./help_src/images; fi;
-	mkdir ./help_src/images
-	cp ./help_src/images_source/* ./help_src/images/
-	find ./help_src/images/ -type f -exec mogrify -scale '450x>' {} \;
-	cd ./help_src && rst2latex.py --documentclass=report --graphicx-option=pdftex --stylesheet=help.tss help.txt help.tex
-	cd ./help_src && pdflatex help.tex help.pdf
-	if [ -f "./help_src/help.pdf" ]; then mv ./help_src/help.pdf ./; fi;
+	if [ -d ./help/src/images ]; then rm -rf ./help/src/images; fi;
+	mkdir ./help/src/images
+	cp ./help/src/images_source/* ./help/src/images/
+	find ./help/src/images/ -type f -exec mogrify -scale '450x>' {} \;
+	cd ./help/src && rst2latex.py --documentclass=report --graphicx-option=pdftex --stylesheet=help.tss help.txt help.tex
+	cd ./help/src && pdflatex help.tex help.pdf
+	if [ -f "./help/src/help.pdf" ]; then mv ./help/src/help.pdf ./; fi;
 	$(MAKE) doc_clean
 
 doc_clean:
-	rm -rf ./help_src/help.aux ./help_src/help.log ./help_src/help.out ./help_src/help.tex ./help_src/images ./help_src/help.gif.txt
+	rm -rf ./help/src/help.aux ./help/src/help.log ./help/src/help.out ./help/src/help.tex ./help/src/images ./help/src/help.gif.txt
 
 dist: 
 	if [ -d ./src ]; then rm -rf ./src; fi;
@@ -59,7 +59,7 @@ dist:
 	rm -rf ./src/_darcs
 	cd ./src && $(MAKE) doc_html; 
 	cd ./src && $(MAKE) doc_clean; 
-	if [ -d "./src/help_src" ]; then rm -rf ./src/help_src; fi;
+	if [ -d "./src/help/src" ]; then rm -rf ./src/help/src; fi;
 	mv ./src ./allocPSA-`cat util/alloc_version`
 	tar -czvf allocPSA-`cat util/alloc_version`.tgz allocPSA-`cat util/alloc_version`; 
 	rm -rf ./allocPSA-`cat util/alloc_version`;
