@@ -70,7 +70,7 @@ class backups {
 
   function backup() {
     global $TPL; 
-    require_once("../lib/pclzip.lib.php");
+    require_once("../shared/lib/pclzip.lib.php");
 
     if (!is_dir($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0")) {
       mkdir($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0", 0777);
@@ -110,7 +110,7 @@ class backups {
   function restore($archivename) {
     global $TPL;
 
-    require_once("../lib/pclzip.lib.php");
+    require_once("../shared/lib/pclzip.lib.php");
 
     $file = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $archivename;
 
