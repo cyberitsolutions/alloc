@@ -25,18 +25,12 @@ require_once(ALLOC_MOD_DIR."shared/lib/template.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_db.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_db_alloc.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_session.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_home_item.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_db_field.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_db_entity.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_module.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_sentEmailLog.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_alloc_email.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_alloc_email_receive.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_alloc_cache.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_history.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_PasswordHash.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_mime_parser.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_backups.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_interestedParty.inc.php");
 
 class shared_module extends module {
