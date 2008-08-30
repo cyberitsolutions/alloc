@@ -20,6 +20,8 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once(ALLOC_MOD_DIR."home/lib/home_item.inc.php");
+
 class home_module extends module {
   var $db_entities = array("history");
 

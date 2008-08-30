@@ -23,6 +23,10 @@
 
 require_once(ALLOC_MOD_DIR."email/lib/token.inc.php");
 require_once(ALLOC_MOD_DIR."email/lib/tokenAction.inc.php");
+require_once(ALLOC_MOD_DIR."email/lib/email.inc.php");
+require_once(ALLOC_MOD_DIR."email/lib/email_receive.inc.php");
+require_once(ALLOC_MOD_DIR."email/lib/mime_parser.inc.php");
+require_once(ALLOC_MOD_DIR."email/lib/sentEmailLog.inc.php");
 
 
 class email_module extends module {
