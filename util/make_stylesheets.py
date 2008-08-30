@@ -11,12 +11,12 @@ d = os.path.dirname(sys.argv[0])+'/'
 
 
 # Convert the style template into a string
-fd = open(d+'../styles/style.tpl')
+fd = open(d+'../css/src/style.tpl')
 str_orig = fd.read();
 fd.close();
 
 # List of style_something.ini files in ../styles/ 
-files = os.listdir(d+'../styles/')
+files = os.listdir(d+'../css/src/')
 
 # Loop through style_*.ini files
 for item in files:
@@ -24,7 +24,7 @@ for item in files:
   if item.endswith('.ini'):
 
     # Parse each style_something.ini file
-    config.read([d+'../styles/'+item])
+    config.read([d+'../css/src/'+item])
 
     # Get a list of sections from the config file
     sections = config.sections()
