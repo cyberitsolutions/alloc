@@ -82,26 +82,26 @@ test_db:
   echo test_db: mysql connect string: $${MYSQL_CONNECT}; \
 	echo "drop database if exists $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
 	echo "create database $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	mysql $${MYSQL_CONNECT} $${TEMP_DB} < sql/db_structure.sql; \
-	mysql $${MYSQL_CONNECT} $${TEMP_DB} < sql/db_data.sql; \
+	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_structure.sql; \
+	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_data.sql; \
 	echo "drop database if exists $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
 	echo "create database $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	mysql $${MYSQL_CONNECT} $${TEMP_DB} < sql/db_structure.sql; \
-	mysqldump -d $$MYSQL_CONNECT $$TEMP_DB > sql/db_imported_structure.sql; \
-	mysqldump -d $$MYSQL_CONNECT $$DB_NAME > sql/db_current_structure.sql; \
+	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_structure.sql; \
+	mysqldump -d $$MYSQL_CONNECT $$TEMP_DB > installation/db_imported_structure.sql; \
+	mysqldump -d $$MYSQL_CONNECT $$DB_NAME > installation/db_current_structure.sql; \
 	echo "drop database if exists $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	DIFF="$$(diff -b -I 'Host:' -I 'ENGINE=MyISAM' sql/db_current_structure.sql sql/db_imported_structure.sql)"; \
+	DIFF="$$(diff -b -I 'Host:' -I 'ENGINE=MyISAM' -I 'DROP TABLE IF EXISTS' installation/db_current_structure.sql installation/db_imported_structure.sql)"; \
 	if [ -n "$${DIFF}" ]; then \
 	  echo "There are differences between the current database $$DB_NAME, and the database " \
-		echo "that would be created from the sql/db_structure.sql file."; \
+		echo "that would be created from the installation/db_structure.sql file."; \
 		echo \
-	  echo "Please fix either the patch files or sql/db_structure.sql before committing."; \
-		echo "diff -b sql/db_current_structure.sql sql/db_imported_structure.sql"; \
+	  echo "Please fix either the patch files or installation/db_structure.sql before committing."; \
+		echo "diff -b installation/db_current_structure.sql installation/db_imported_structure.sql"; \
 		echo "$${DIFF}"; \
 		exit 1; \
 		echo "test_db: failed";\
 	else \
-		rm -f sql/db_imported_structure.sql sql/db_current_structure.sql; \
+		rm -f installation/db_imported_structure.sql installation/db_current_structure.sql; \
 		echo "test_db: passed";\
 	fi;
 

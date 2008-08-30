@@ -222,7 +222,7 @@ if ($_POST["install_db"] && is_object($db)) {
   #$link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
   #@mysql_select_db($_FORM["ALLOC_DB_NAME"], $link);
 
-  $files = array("../sql/db_structure.sql","../sql/db_data.sql");
+  $files = array("../installation/db_structure.sql","../installation/db_data.sql");
 
   foreach ($files as $file) {
     list($sql,$comments) = parse_sql_file($file);
