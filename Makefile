@@ -21,7 +21,7 @@ SHELL = /bin/bash
 
 help:
 	@echo "Targets: "
-	@echo "  css       - rebuild css/* after a modification to styles/*"
+	@echo "  css       - rebuild css/* after a modification to css/src/*"
 	@echo "  test_db   - tests db_struc/patches against running db."
 	@echo "  doc_html  - makes html alloc help"
 	@echo "  doc_pdf   - makes pdf alloc help"
@@ -64,7 +64,7 @@ dist:
 	tar -czvf allocPSA-`cat util/alloc_version`.tgz allocPSA-`cat util/alloc_version`; 
 	rm -rf ./allocPSA-`cat util/alloc_version`;
 
-css: styles/*
+css: css/src/*
 	./util/make_stylesheets.py
 
 clean: ;
