@@ -240,16 +240,21 @@ function get_all_form_data($array=array(),$defaults=array()) {
   } 
   return $_FORM;
 } 
-function timetook($start, $text="Duration: ") {
+function timetook($start, $friendly_output=true) {
   $end = microtime();
   list($start_micro,$start_epoch,$end_micro,$end_epoch) = explode(" ",$start." ".$end);
   $started  = (substr($start_epoch,-4) + $start_micro);
   $finished = (substr($end_epoch  ,-4) + $end_micro);
   $dur = $finished - $started;
-  $unit = " seconds.";
-  $dur > 60 and $unit = " mins.";
-  $dur > 60 and $dur = $dur / 60;
-  echo "<br>".$text.sprintf("%0.5f", $dur) . $unit;
+  if ($friendly_output) {
+    $unit = " seconds.";
+    if ($dur > 60) {
+      $unit = " mins.";
+      $dur = $dur / 60;
+    }
+    return sprintf("%0.5f", $dur). $unit;
+  }
+  return sprintf("%0.5f", $dur);
 }
 function sort_by_name($a, $b) {
   return strtolower($a["name"]) >= strtolower($b["name"]);
@@ -899,10 +904,10 @@ function get_text($handle) {
 function get_html($handle,$value=false) {
   echo build_html_element($handle,$value);
 }
-function get_expand_link($id, $text="New ",$id_to_hide="") {
+function get_expand_link($id, $text="New",$id_to_hide=false) {
   global $TPL;
-  $str = "<div id=\"button_".$id."\"><a class=\"growshrink nobr\" href=\"#x\" onClick=\"return set_grow_shrink_box('".$id."','".$TPL["url_alloc_images"]."','".$text."','".$id_to_hide."');\">".$text;
-  $str.= "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."small_grow.gif\"></a></div>";
+  $id_to_hide and $extra = "$('#".$id_to_hide."').slideToggle('fast');";
+  $str = "<a class=\"growshrink nobr\" href=\"#x\" onClick=\"$('#".$id."').slideToggle('fast');".$extra."\">".$text."</a>";
   return $str;
 }
 function print_expand_link($id, $text="New ",$id_to_hide="") {

@@ -108,6 +108,8 @@ class db {
   }
 
   function query() {
+    global $TPL;
+    $start = microtime();
     $this->connect();
     $args = func_get_args();
     $query = $this->get_escaped_query_str($args);
@@ -125,6 +127,12 @@ class db {
         is_resource($this->link_id) and $str = mysql_error($this->link_id);
         $this->error("Query failed: ".$str."<br><pre>".$query."</pre>");
       }
+    }
+
+    $result = timetook($start,false);
+    if ($result > $TPL["slowest_query_time"]) {
+      $TPL["slowest_query"] = $query;
+      $TPL["slowest_query_time"] = $result;
     }
     return $rtn;
   } 

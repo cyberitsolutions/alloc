@@ -27,7 +27,7 @@
           <td colspan="2" valign="top" width="60%">
             <div style="display:block; clear:both; padding-bottom:8px;"><u>Email Recipients</u></div>
             {echo interestedParty::get_interested_parties_html($TPL["allTaskParties"])}
-            <div style="float:left; clear:both; padding:10px 0px 8px 0px">{print_expand_link("email_other","Email Other Party ")}</div>
+            <div style="float:left; clear:both; padding:10px 0px 8px 0px">{print_expand_link("email_other","Email Other Party")}</div>
             <div style="text-align:right; float:right; padding:10px 0px 8px 0px">{$comment_buttons}</div>
 
             <table id="email_other" style="clear:both; display:none" width="100%" cellpadding="4" cellspacing="0">

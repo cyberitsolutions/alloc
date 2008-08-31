@@ -9,24 +9,6 @@ function makeAjaxRequest(url,entityid) {
   })
 }
 
-function set_grow_shrink_box(id, images, text, id_to_hide) {
-  if ($("#"+id).is(':visible')) {
-    image = images+'small_grow.gif';
-  } else {
-    image = images+'small_shrink.gif';
-  }
-  // hide or show the actual div
-  $("#"+id).slideToggle("fast");
-
-  // toggle the other div - if any
-  if (id_to_hide) {
-    $("#"+id_to_hide).slideToggle("fast");
-  }
-  str = "<nobr><a class=\"growshrink nobr\" href=\"#\" onClick=\"return set_grow_shrink_box('"+id+"','"+images+"','"+text+"','"+id_to_hide+"');\">"+text+"<img border=\"0\" src=\""+image+"\"></a></nobr>"
-  $('#button_'+id).html(str);
-  return false;
-}
-
 // This is a generic show/hide for anything
 function set_grow_shrink(id, id_to_hide, use_classes_instead_of_ids) {
   // toggle the other div - if any
@@ -140,10 +122,6 @@ if (document.images) {
   pic4.src="../images/arrow_up.gif";
   pic5= new Image(119,13);
   pic5.src="../images/ticker2.gif";
-  pic6= new Image(9,9);
-  pic6.src="../images/small_shrink.gif";
-  pic7= new Image(9,9);
-  pic7.src="../images/small_grow.gif";
 }
 
 
