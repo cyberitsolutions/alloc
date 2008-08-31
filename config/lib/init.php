@@ -25,8 +25,6 @@ class config_module extends module {
 }
 
 include(ALLOC_MOD_DIR."config/lib/config.inc.php");
-include(ALLOC_MOD_DIR."config/lib/htmlElement.inc.php");
-include(ALLOC_MOD_DIR."config/lib/htmlAttribute.inc.php");
 
 
 
