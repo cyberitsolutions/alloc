@@ -132,59 +132,6 @@ CREATE TABLE history (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
-DROP TABLE IF EXISTS htmlElement;
-CREATE TABLE htmlElement (
-  htmlElementID INT(11) NOT NULL auto_increment,
-  htmlElementTypeID INT(11) NOT NULL DEFAULT 0,
-  htmlElementParentID INT(11) DEFAULT 0,
-  handle VARCHAR(255) NOT NULL DEFAULT '',
-  label VARCHAR(255) DEFAULT NULL,
-  helpText TEXT DEFAULT NULL,
-  defaultValue VARCHAR(255) DEFAULT NULL,
-  sequence INT(11) DEFAULT 0,
-  enabled  INT(1) DEFAULT 1,
-  PRIMARY KEY (htmlElementID)
-) TYPE=MyISAM PACK_KEYS=0;
-
-
-DROP TABLE IF EXISTS htmlAttribute;
-CREATE TABLE htmlAttribute (
-  htmlAttributeID INT(11) NOT NULL auto_increment,
-  htmlElementID INT(11) NOT NULL DEFAULT 0,
-  name VARCHAR(255) DEFAULT NULL,
-  value VARCHAR(255) DEFAULT NULL,
-  isDefault INT(1) DEFAULT 0,
-  PRIMARY KEY (htmlAttributeID)
-) TYPE=MyISAM PACK_KEYS=0;
-
-
-DROP TABLE IF EXISTS htmlElementType;
-CREATE TABLE htmlElementType (
-  htmlElementTypeID INT(11) NOT NULL auto_increment,
-  handle VARCHAR(255) DEFAULT NULL,
-  name VARCHAR(255) DEFAULT NULL,
-  hasEndTag INT(1) DEFAULT 1,
-  hasChildElement INT(1) DEFAULT 0,
-  hasContent INT(1) DEFAULT 0,
-  hasValueContent INT(1) DEFAULT 0,
-  hasValueAttribute INT(1) DEFAULT 0,
-  valueAttributeName VARCHAR(255) DEFAULT NULL,
-  hasLabelValue INT(1) DEFAULT 0,
-  parentHtmlElementID INT(11) DEFAULT 0,
-  PRIMARY KEY  (htmlElementTypeID)
-) TYPE=MyISAM PACK_KEYS=0;
-
-
-DROP TABLE IF EXISTS htmlAttributeType;
-CREATE TABLE htmlAttributeType (
-  htmlAttributeTypeID INT(11) NOT NULL auto_increment,
-  htmlElementTypeID INT(11) DEFAULT NULL,
-  name VARCHAR(255) NOT NULL DEFAULT "",
-  defaultValue VARCHAR(255) DEFAULT NULL,
-  PRIMARY KEY  (htmlAttributeTypeID)
-) TYPE=MyISAM PACK_KEYS=0;
-
-
 DROP TABLE IF EXISTS invoice;
 CREATE TABLE invoice (
   invoiceID int(11) NOT NULL auto_increment,

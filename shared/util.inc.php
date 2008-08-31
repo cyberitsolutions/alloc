@@ -277,15 +277,6 @@ function get_cached_table($table,$anew=false) {
     $cache->set_cached_table("person",$people);
   }
 
-  if ($table == "htmlElement") {
-    // Special processing for htmlElement table
-    $htmlElement = $cache->get_cached_table("htmlElement") or $htmlElement = array();
-    foreach ($htmlElement as $id => $row) {
-      $rows_htmlElement[$row["handle"]] = $row;
-    }
-    $cache->set_cached_table("htmlElement",$rows_htmlElement);
-  }
-
   if ($table == "config") {
     // Special processing for config table
     $config = $cache->get_cached_table("config") or $config = array();
@@ -876,10 +867,7 @@ function get_help_string($topic) {
   if (file_exists($file)) {
     $str = file_get_contents($file);
 
-  } else {
-    $rows = get_cached_table("htmlElement");
-    $str = $rows[$topic]["helpText"];
-  }
+  } 
 
   $str = htmlentities(addslashes($str));
   $str = str_replace("\r"," ",$str);
@@ -896,10 +884,6 @@ function get_help($topic) {
     $img.= $TPL["url_alloc_images"]."help.gif\"></a></div>";
   }
   echo $img;
-}
-function get_text($handle) {
-  $rows = get_cached_table("htmlElement");
-  echo $rows[$handle]["label"];
 }
 function get_html($handle,$value=false) {
   echo build_html_element($handle,$value);
@@ -932,77 +916,6 @@ function get_side_by_side_links($items=array(),$default=false) {
   $TPL["extra_footer_stuff"].= "<img src=\"".$TPL["url_alloc_images"]."pixel.gif\" onload=\"sidebyside_activate('".$default."',".$js_array.");\">";
 
   echo "<div style=\"margin:15px 0px 0px 0px;\">".$str."</div>";
-}
-function build_html_tag($htmlElementID,$value="") {
-  $db = new db_alloc();
-
-  $q = sprintf("SELECT * FROM htmlElement WHERE htmlElementID = %d",$htmlElementID);
-  $db->query($q);
-  $row = $db->next_record();
-
-  $q = sprintf("SELECT * FROM htmlElementType WHERE htmlElementTypeID = %d",$row["htmlElementTypeID"]);
-  $db->query($q);
-  $row_type = $db->next_record();
-
-  $str_nobr[] = "<".$row_type["name"];
-
-  $q = sprintf("SELECT * FROM htmlAttribute WHERE htmlElementID = '%s'",db_esc($row["htmlElementID"]));
-  $db->query($q);
-  while ($row_attr = $db->next_record()) {
-    if (!($row_type["hasValueAttribute"] && $row_type["valueAttributeName"] == $row_attr["name"])) {
-      $str_nobr[] = $row_attr["name"]."=\"".$row_attr["value"]."\"";
-      $attributes[$row_attr["name"]] = $row_attr["value"];
-    }
-  }
-
-  if ($row_type["hasValueAttribute"] && $row_type["hasLabelValue"]) {
-    $str_nobr[] = "value=\"".$row["label"]."\"";
-
-  } else if ($row_type["hasValueAttribute"] && $row_type["valueAttributeName"] && ($attributes["value"] == $value || is_array($value) && in_array($attributes["value"],$value))) {
-    $str_nobr[] = $row_type["valueAttributeName"]."=\"".$value."\"";
-
-  } else if ($row_type["hasValueAttribute"] && !$row_type["valueAttributeName"]) {
-    $str_nobr[] = "value=\"".$value."\"";
-  } 
-
-  if (!$row_type["hasEndTag"]) {
-    $str_nobr[] = " />";
-  } else {
-    $str_nobr[] = ">";
-  }
-
-  $str[] = implode(" ",$str_nobr);
-
-  if ($row_type["hasValueContent"]) {
-    $str[] = $value;
-  } else if ($row_type["hasContent"]) {
-    $str[] = $row["label"];
-  }
-
-  if ($row_type["hasChildElement"]) { 
-    $q = sprintf("SELECT * FROM htmlElement WHERE htmlElementParentID = %d AND enabled = 1 ORDER BY sequence",$row["htmlElementID"]);
-    $db->query($q);
-    while ($r = $db->next_record()) {
-      $str[] = "\n".build_html_element($r["handle"],$value);
-    }
-  }
-
-  if ($row_type["hasEndTag"]) {
-    $str[] = "</".$row_type["name"].">";
-  }
-  
-  return $str;
-}
-function build_html_element($handle,$value="") {
-  $db = new db_alloc();
-  $q = sprintf("SELECT * FROM htmlElement WHERE handle = '%s'",db_esc($handle));
-  $db->query($q);
-  $row = $db->next_record();
-
-  $str = build_html_tag($row["htmlElementID"],$value);
-
-  if (is_array($str))
-  return implode("",$str);
 }
 function encrypt_password($password) {
   $t_hasher = new PasswordHash(8, FALSE);
