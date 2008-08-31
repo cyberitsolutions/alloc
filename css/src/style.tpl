@@ -49,7 +49,7 @@ a.growshrink, a.magic {
   text-decoration:none;
   border-bottom:1px dashed (BODY_COLOR);
 }
-a.growshrink:hover {
+a.growshrink:hover, a.magic:hover {
   border-bottom:1px solid (BODY_COLOR);
 }
 
