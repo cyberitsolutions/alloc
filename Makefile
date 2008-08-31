@@ -79,30 +79,29 @@ test_db:
 	[ -n "$$DB_HOST" ] && DB_HOST="-h $${DB_HOST}"; \
 	TEMP_DB="alloc_test_sql"; \
 	MYSQL_CONNECT="$$DB_USER $$DB_PASS $$DB_HOST"; \
-  echo test_db: mysql connect string: $${MYSQL_CONNECT}; \
-	echo "drop database if exists $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	echo "create database $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
+  echo "test_db: mysql connect string: $${MYSQL_CONNECT}"; \
+  echo "test_db: Checking syntax of installation/*.sql files."; \
+	echo "DROP DATABASE IF EXISTS $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
+	echo "CREATE DATABASE $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
 	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_structure.sql; \
 	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_data.sql; \
-	echo "drop database if exists $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	echo "create database $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
+  echo "test_db: Checking that current structure matches db_structure.sql"; \
+	echo "DROP DATABASE IF EXISTS $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
+	echo "CREATE DATABASE $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
 	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_structure.sql; \
 	mysqldump -d $$MYSQL_CONNECT $$TEMP_DB > installation/db_imported_structure.sql; \
 	mysqldump -d $$MYSQL_CONNECT $$DB_NAME > installation/db_current_structure.sql; \
-	echo "drop database if exists $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	DIFF="$$(diff -b -I 'Host:' -I 'ENGINE=MyISAM' -I 'DROP TABLE IF EXISTS' installation/db_current_structure.sql installation/db_imported_structure.sql)"; \
+	echo "DROP DATABASE IF EXISTS $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
+	DIFF="$$(diff -b -I 'Dump completed on' -I 'Host:' -I 'ENGINE=MyISAM' -I 'DROP TABLE IF EXISTS' -I 'AUTO_INCREMENT=[[:digit:]]+' installation/db_current_structure.sql installation/db_imported_structure.sql)"; \
 	if [ -n "$${DIFF}" ]; then \
-	  echo "There are differences between the current database $$DB_NAME, and the database " \
-		echo "that would be created from the installation/db_structure.sql file."; \
-		echo \
-	  echo "Please fix either the patch files or installation/db_structure.sql before committing."; \
-		echo "diff -b installation/db_current_structure.sql installation/db_imported_structure.sql"; \
-		echo "$${DIFF}"; \
-		exit 1; \
-		echo "test_db: failed";\
+	echo -e "\nThere are differences between the current database $$DB_NAME, and the \ndatabase that would be created from the installation/db_structure.sql file. \n\nEither add some patches or modify installation/db_structure.sql \nbefore committing.\n"; \
+	echo "diff -b installation/db_current_structure.sql installation/db_imported_structure.sql"; \
+	echo "$${DIFF}"; \
+	exit 1; \
+	echo "test_db: failed";\
 	else \
-		rm -f installation/db_imported_structure.sql installation/db_current_structure.sql; \
-		echo "test_db: passed";\
+	rm -f installation/db_imported_structure.sql installation/db_current_structure.sql; \
+	echo "test_db: passed";\
 	fi;
 
 none: ;

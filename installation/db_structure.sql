@@ -127,6 +127,7 @@ CREATE TABLE history (
   the_args varchar(255) default NULL,
   personID int(11) NOT NULL default '0',
   the_label varchar(255) default '',
+  INDEX idx_personID (personID),
   PRIMARY KEY  (historyID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
@@ -455,13 +456,13 @@ CREATE TABLE task (
   dateClosed datetime default NULL,
   dateTargetCompletion date default NULL,
   taskComments text,
-  projectID int(11) NOT NULL default '0',
+  projectID int(11) DEFAULT NULL,
   dateActualCompletion date default NULL,
   dateActualStart date default NULL,
   dateTargetStart date default NULL,
   personID int(11) default NULL,
   managerID int(11) default NULL,
-  parentTaskID int(11) NOT NULL default '0',
+  parentTaskID int(11) DEFAULT NULL,
   taskTypeID int(11) NOT NULL default '1',
   taskModifiedUser int(11) DEFAULT NULL,
   taskCommentTemplateID int(11) default NULL,
@@ -572,8 +573,8 @@ CREATE TABLE timeSheetItem (
   comment text,
   multiplier tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY  (timeSheetItemID),
-  INDEX idx_taskID (taskID),
-  INDEX idx_timeSheetID (timeSheetID)
+  INDEX idx_timeSheetID (timeSheetID),
+  INDEX idx_taskID (taskID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
@@ -624,7 +625,7 @@ CREATE TABLE transaction (
   amount DECIMAL(19,2) NOT NULL DEFAULT 0,
   status enum('pending','rejected','approved') NOT NULL DEFAULT 'pending',
   expenseFormID int(11) DEFAULT NULL,
-  tfID int(11) NOT NULL default '0',
+  tfID int(11) NOT NULL,
   fromTfID int(11) NOT NULL,
   projectID int(11) DEFAULT NULL,
   transactionModifiedUser int(11) DEFAULT NULL,
@@ -641,8 +642,8 @@ CREATE TABLE transaction (
   transactionRepeatID int(11) default NULL,
   INDEX idx_timeSheetID (timeSheetID),
   INDEX idx_tfID (tfID),
-  INDEX idx_fromTfID (fromTfID),
   INDEX idx_invoiceItemID (invoiceItemID),
+  INDEX idx_fromTfID (fromTfID),
   PRIMARY KEY (transactionID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
@@ -650,7 +651,7 @@ CREATE TABLE transaction (
 DROP TABLE IF EXISTS transactionRepeat;
 CREATE TABLE transactionRepeat (
   transactionRepeatID int(11) NOT NULL auto_increment,
-  tfID int(11) NOT NULL default '0',
+  tfID int(11) NOT NULL,
   fromTfID int(11) NOT NULL,
   payToName text NOT NULL,
   payToAccount text NOT NULL,
@@ -667,7 +668,7 @@ CREATE TABLE transactionRepeat (
   amount DECIMAL(19,2) NOT NULL DEFAULT 0,
   product varchar(255) NOT NULL default '',
   status varchar(255) NOT NULL default 'pending',
-  transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance') NOT NULL default 'invoice',
+  transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax','product') NOT NULL,
   reimbursementRequired tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (transactionRepeatID)
 ) TYPE=MyISAM PACK_KEYS=0;
@@ -737,8 +738,8 @@ CREATE TABLE productSaleTransaction (
 
 DROP TABLE IF EXISTS `savedView`;
 CREATE TABLE `savedView` (
-  `savedViewID` int(10) unsigned NOT NULL auto_increment,
-  `personID` int(10) unsigned NOT NULL,
+  `savedViewID` int(11) NOT NULL auto_increment,
+  `personID` int(11) NOT NULL,
   `formName` varchar(32) NOT NULL,
   `viewName` varchar(255) NOT NULL,
   `formView` text,
