@@ -36,7 +36,7 @@ function refreshProjectList(radiobutton) \{
 <table align="center" class="filter">
   <tr>
     <td>&nbsp;</td>
-    <td>{print_expand_link("project_superset","Projects ")}</td>
+    <td>{print_expand_link("project_superset","Projects")}</td>
     <td>Task Status {get_help("taskList_taskStatus")}</td>
     <td>Created By</td> 
     <td rowspan="6" valign="top">
