@@ -819,8 +819,8 @@ class task extends db_entity {
         $_FORM["showStatus"] and $row["taskStatus"] = $task->get_status();
         $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
+        $_FORM["return"] == "objectsAndHtml" || $_FORM["return"] == "objects" and $row["object"] = $task;
         $row["padding"] = $_FORM["padding"];
-        $row["object"] = $task;
         $row["taskID"] = $task->get_id();
         $row["parentTaskID"] = $task->get_value("parentTaskID");
         $rows[$task->get_id()] = array("parentTaskID"=>$row["parentTaskID"],"row"=>$row);
@@ -1353,14 +1353,6 @@ class task extends db_entity {
       $p = $_FORM["projectID"];
       unset($_FORM["projectID"]);
       $_FORM["projectID"][] = $p;
-
-    // } else if (!$_FORM["projectID"] && $_FORM["projectType"]) {
-    //   $q = project::get_project_type_query($_FORM["projectType"]);
-    //   $db = new db_alloc;
-    //   $db->query($q);
-    //   while($row = $db->row()) {
-    //     $_FORM["projectID"][] = $row["projectID"];
-    //   }
 
     } else if (!$_FORM["projectType"]){
       $_FORM["projectType"] = "mine";
