@@ -109,6 +109,10 @@ class client extends db_entity {
       $sql[] = sprintf("(clientName LIKE '%%%s%%')",db_esc($filter["clientName"]));
     } 
 
+    if ($filter["contactName"]) {
+      $sql[] = sprintf("(clientContactName LIKE '%%%s%%')",db_esc($filter["contactName"]));
+    } 
+
     if ($filter["clientLetter"] && $filter["clientLetter"] == "A") {
       $sql[] = "(clientName like 'A%' or clientName REGEXP '^[^[:alpha:]]')";
     } else if ($filter["clientLetter"] && $filter["clientLetter"] != "ALL") {
@@ -133,6 +137,7 @@ class client extends db_entity {
      * Filter Options:
      *   clientStatus
      *   clientName
+     *   contactName
      *   clientLetter
      *   return = html | dropdown_options
      *
@@ -155,15 +160,37 @@ class client extends db_entity {
       $filter = " WHERE ".implode(" AND ",$filter);
     }
 
-    $q = "SELECT * FROM client ".$filter." ORDER BY clientName";
+    if ($_FORM["contactName"]) {
+      $join = sprintf("LEFT JOIN clientContact ON client.clientID = clientContact.clientID");
+    } else {
+      $join = sprintf("LEFT JOIN clientContact ON client.clientPrimaryContactID = clientContact.clientContactID");
+    } 
+
+    $q = "SELECT client.*,clientContactName, clientContactEmail, clientContactPhone, clientContactMobile
+            FROM client 
+                 ".$join." 
+                 ".$filter." 
+        GROUP BY client.clientID 
+        ORDER BY clientName";
     $debug and print "Query: ".$q;
     $db = new db_alloc;
+    $db2 = new db_alloc;
     $db->query($q);
     while ($row = $db->next_record()) {
       $print = true;
       $c = new client;
       $c->read_db_record($db);
       $row["clientLink"] = $c->get_client_link();
+
+      if (!$row["clientContactName"]) {
+        $q = sprintf("SELECT * FROM clientContact WHERE clientID = %d ORDER BY clientContactName LIMIT 1",$row["clientID"]);
+        $db2->query($q);  
+        $cc = $db2->row();
+        $row["clientContactName"] = $cc["clientContactName"];
+        $row["clientContactPhone"] = $cc["clientContactPhone"];
+        $row["clientContactEmail"] = $cc["clientContactEmail"];
+      }
+
       $summary.= client::get_client_list_tr($row,$_FORM);
       $summary_ops[$c->get_id()] = $c->get_value("clientName");
     }
@@ -196,22 +223,15 @@ class client extends db_entity {
 
   function get_client_list_tr($client,$_FORM) {
 
-    if ($_FORM["showPrimaryContactName"] || $_FORM["showPrimaryContactPhone"] || $_FORM["showPrimaryContactEmail"]) {
-      $clientContact = new clientContact;
-      $clientContact->set_id($client['clientPrimaryContactID']);
-      $clientContact->select();
-      $primaryContactName = $clientContact->get_value("clientContactName");
-      $primaryContactPhone = $clientContact->get_value("clientContactPhone");
-      $primaryContactEmail = $clientContact->get_value("clientContactEmail");
-      $primaryContactEmail and $primaryContactEmail = "<a href=\"mailto:".$primaryContactEmail."\">".$primaryContactEmail."</a>";
-    }
+    $client["clientContactPhone"] or $client["clientContactPhone"] = $client["clientContactMobile"];
+    $client["clientContactEmail"] and $client["clientContactEmail"] = "<a href=\"mailto:".$client["clientContactEmail"]."\">".$client["clientContactEmail"]."</a>";
 
     $summary[] = "<tr>";
     $_FORM["showClientName"]          and $summary[] = "  <td>".$client["clientName"]."&nbsp;</td>";
     $_FORM["showClientLink"]          and $summary[] = "  <td>".$client["clientLink"]."&nbsp;</td>";
-    $_FORM["showPrimaryContactName"]  and $summary[] = "  <td>".$primaryContactName."&nbsp;</td>";
-    $_FORM["showPrimaryContactPhone"] and $summary[] = "  <td>".$primaryContactPhone."&nbsp;</td>";
-    $_FORM["showPrimaryContactEmail"] and $summary[] = "  <td>".$primaryContactEmail."&nbsp;</td>";
+    $_FORM["showPrimaryContactName"]  and $summary[] = "  <td>".$client["clientContactName"]."&nbsp;</td>";
+    $_FORM["showPrimaryContactPhone"] and $summary[] = "  <td>".$client["clientContactPhone"]."&nbsp;</td>";
+    $_FORM["showPrimaryContactEmail"] and $summary[] = "  <td>".$client["clientContactEmail"]."&nbsp;</td>";
     $_FORM["showClientStatus"]        and $summary[] = "  <td>".ucwords($client["clientStatus"])."&nbsp;</td>";
     $summary[] = "</tr>";
 
@@ -224,6 +244,7 @@ class client extends db_entity {
 
     $page_vars = array("clientStatus"
                       ,"clientName"
+                      ,"contactName"
                       ,"clientLetter"
                       ,"url_form_action"
                       ,"form_name"
@@ -267,6 +288,7 @@ class client extends db_entity {
 
     $rtn["clientStatusOptions"] = get_select_options(array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived"), $_FORM["clientStatus"]);
     $rtn["clientName"] = $_FORM["clientName"];
+    $rtn["contactName"] = $_FORM["contactName"];
     $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ALL");
     foreach($letters as $letter) {
       if ($_FORM["clientLetter"] == $letter) {

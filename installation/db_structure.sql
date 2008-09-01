@@ -46,7 +46,8 @@ CREATE TABLE client (
   clientStatus enum('current','potential','archived') NOT NULL default 'current',
   clientCreatedTime varchar(11) default NULL,
   PRIMARY KEY  (clientID),
-  KEY clientName (clientName)
+  KEY clientName (clientName),
+  KEY idx_clientPrimaryContactID (clientPrimaryContactID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
