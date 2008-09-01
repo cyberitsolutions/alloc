@@ -1013,20 +1013,22 @@ class task extends db_entity {
 
       $ret[] = "<tfoot>
                   <tr>
-                    <th colspan=\"20\" class=\"nobr noprint\" style=\"padding:2px\">
-                      <select name=\"update_action\" onChange=\"$('.hidden').hide(); $('#'+$(this).val()+'_div').css('display','inline');\"> 
-                        <option value=\"\">Modify Checked...</options>
-                        <option value=\"personID\">Assign to ".$arr."</options>
-                        <option value=\"managerID\">Manager to ".$arr."</options>
-                        <option value=\"timeEstimate\">Estimate to ".$arr."</options>
-                        <option value=\"priority\">Task Priority to ".$arr."</options>
-                        <option value=\"taskTypeID\">Task Type to ".$arr."</options>
-                        <option value=\"dateTargetStart\">Target Start Date to ".$arr."</options>
-                        <option value=\"dateTargetCompletion\">Target Completion Date to ".$arr."</options>
-                        <option value=\"dateActualStart\">Actual Start Date to ".$arr."</options>
-                        <option value=\"dateActualCompletion\">Actual Completion Date to ".$arr."</options>
-                        <option value=\"projectIDAndParentTaskID\">Project and Parent Task to ".$arr."</options>
-                      </select>
+                    <th colspan=\"20\" class=\"nobr noprint\" style=\"padding:2px;\">
+                      <div style=\"float:left\">
+                        <select name=\"update_action\" onChange=\"$('.hidden').hide(); $('#'+$(this).val()+'_div').css('display','inline');\"> 
+                          <option value=\"\">Modify Checked...</options>
+                          <option value=\"personID\">Assign to ".$arr."</options>
+                          <option value=\"managerID\">Manager to ".$arr."</options>
+                          <option value=\"timeEstimate\">Estimate to ".$arr."</options>
+                          <option value=\"priority\">Task Priority to ".$arr."</options>
+                          <option value=\"taskTypeID\">Task Type to ".$arr."</options>
+                          <option value=\"dateTargetStart\">Target Start Date to ".$arr."</options>
+                          <option value=\"dateTargetCompletion\">Target Completion Date to ".$arr."</options>
+                          <option value=\"dateActualStart\">Actual Start Date to ".$arr."</options>
+                          <option value=\"dateActualCompletion\">Actual Completion Date to ".$arr."</options>
+                          <option value=\"projectIDAndParentTaskID\">Project and Parent Task to ".$arr."</options>
+                        </select>
+                      </div>
                       <div class=\"hidden\" id=\"dateTargetStart_div\">".$dateTargetStart."</div>
                       <div class=\"hidden\" id=\"dateTargetCompletion_div\">".$dateTargetCompletion."</div>
                       <div class=\"hidden\" id=\"dateActualStart_div\">".$dateActualStart."</div>

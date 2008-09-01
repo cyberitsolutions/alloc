@@ -77,10 +77,10 @@ function get_calendar_string($name, $default_value="") {
   $str = <<<EOD
   <div class="calendar_container enclose nobr">
     <input name="${name}" type="text" size="11" value="${default_value}" id="${name}" class="datefield"><img src="${images}cal${year}.png" id="button_${name}" title="Date Selector">
+    <script type="text/javascript">
+      Calendar.setup( { inputField : "${name}", ifFormat : "%Y-%m-%d", button : "button_${name}", showOthers : 1, align : "Bl", firstDay : ${firstday}, step : 1, weekNumbers : 0 ${default} })
+    </script>
   </div>
-  <script type="text/javascript">
-  Calendar.setup( { inputField : "${name}", ifFormat : "%Y-%m-%d", button : "button_${name}", showOthers : 1, align : "Bl", firstDay : ${firstday}, step : 1, weekNumbers : 0 ${default} })
-  </script>
 
 EOD;
   return $str;

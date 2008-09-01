@@ -222,10 +222,11 @@ select:focus.bad
 
 .calendar_container {
   position:relative; 
-  display:inline; 
   vertical-align:middle; 
   padding:0px; 
   margin:0px; 
+  display:inline; 
+  float:left;
 }
 .calendar_container img {
   vertical-align:text-bottom;
@@ -235,8 +236,6 @@ select:focus.bad
   padding:0px; 
   position:relative;
   top:0px !important; top:-2px;
-  display:inline; 
-  float:left;
 }
 .calendar_container img:hover {
   border: 1px solid #666666;
@@ -244,8 +243,6 @@ select:focus.bad
 }
 .calendar_container input {
   vertical-align:text-bottom;
-  display:inline; 
-  float:left;
 }
 
 div.message { 
