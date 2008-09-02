@@ -6,7 +6,7 @@
   <td>{$transactionID}</td> 
   <td>{$transactionDate}</td> 
   <td>Item: {$product}</td> 
-  <td>Source TF: {$tfIDLink} Dest Tf: {$fromTfIDLink}</td> 
+  <td>Source TF: {$fromTfIDLink} Dest Tf: {$tfIDLink}</td> 
   <td>{$quantity}pcs. @ ${$amount} each</td>
   <td>${$lineTotal}</td>
 </tr>
