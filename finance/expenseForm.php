@@ -154,6 +154,11 @@ if ($_POST["add"]) {
   $transactionID && $transaction->set_id($_POST["transactionID"]);
   $transaction->read_globals();
 
+  // check we have permission to make the transaction
+  if (!$transaction->have_perm(PERM_CREATE)) {
+    $TPL["message"][] = "You do not have permission to create transactions for that Source TF.";
+  }
+
   if (!count($TPL["message"])) {
     $transaction->set_value("transactionType", "expense");
     $transaction->set_value("expenseFormID", $expenseForm->get_id());
