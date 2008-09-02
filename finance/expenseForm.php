@@ -45,7 +45,7 @@ function show_all_exp($template) {
       $transaction->read_db_record($db,false);
       $transaction->set_tpl_values();
 
-      $transaction->get_value("quantity") and $TPL["amount"] = -$transaction->get_value("amount") / $transaction->get_value("quantity");
+      $transaction->get_value("quantity") and $TPL["amount"] = $transaction->get_value("amount") / $transaction->get_value("quantity");
       $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);
 
       $TPL["lineTotal"] = sprintf("%0.2f",$TPL["amount"] * $transaction->get_value("quantity"));
