@@ -99,7 +99,7 @@
      <table border="1" cellspacing="0" cellpadding="2" width="100%">
       <tr>
         <th class="nobr" width="10%" valign="top">Date</th>
-        <th class="nobr" width="25%" valign="top">Units</th>
+        <th class="nobr" width="11%" valign="top">Units</th>
 	      <th class="nobr" width="1%" valign="top">Multiplier</th>
         <th valign="top">Description</th>
       </tr>
