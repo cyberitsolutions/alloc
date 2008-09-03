@@ -66,6 +66,8 @@ $tfID = $_GET["tfID"] or $tfID = $_POST["tfID"];
 if ($tfID) {
   $tf->set_id($tfID);
   $tf->select();
+} else {
+  $tf_is_new = true;
 }
 
 if ($_POST["save"]) {
@@ -81,7 +83,6 @@ if ($_POST["save"]) {
     $TPL["message"][] = "You must enter a name.";
   } else {
 
-
     if (!$tf->get_id()) {
       $db = new db_alloc;
       $q = sprintf("SELECT count(*) AS tally FROM tf WHERE tfName = '%s'",db_esc($tf->get_value("tfName")));
@@ -90,16 +91,14 @@ if ($_POST["save"]) {
       $tf_is_taken = $db->f("tally");
     }
 
-
-
     if ($tf_is_taken) {
       $TPL["message"][] = "That TF name is taken, please choose another.";
     } else {
       $tf->set_value("tfComments",rtrim($tf->get_value("tfComments")));
       $tf->save();
       $TPL["message_good"][] = "Your TF has been saved.";
+      $tf_is_new and $TPL["message_help"][] = "Please now add the TF Owners who are allowed to access this TF.";
     }
-    
   }
 
 
@@ -131,7 +130,7 @@ if ($_POST["person_save"] || $_POST["person_delete"]) {
 $tf->set_tpl_values();
 
 
-$TPL["tfModifiedTime"] = get_display_date($tf->get_value("tfModifiedTime"));
+$TPL["tfModifiedTime"] = $tf->get_value("tfModifiedTime");
 if ($tf->get_value("tfModifiedUser")) {
   $TPL["tfModifiedUser"] = person::get_fullname($tf->get_value("tfModifiedUser"));
 }
@@ -139,6 +138,12 @@ if ($tf->get_value("tfModifiedUser")) {
 $tf->get_value("status") == "active" || !$tf->get_id() and $TPL["tfIsActive"] = " checked";
 
 $TPL["main_alloc_title"] = "Edit TF - ".APPLICATION_NAME;
+
+if (!$tf->get_id()) {
+  $TPL["message_help"][] = "Enter the details below and click the Save button to create a new Tagged Fund. 
+                            <br><br>A Tagged Fund or TF, is like a sort of bank account within allocPSA. 
+                            It contains transactions which track the transfer of monies.";
+}
 
 include_template("templates/tfM.tpl");
 

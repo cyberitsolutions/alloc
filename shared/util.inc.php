@@ -538,16 +538,6 @@ function util_show_attachments($entity, $id, $options=array()) {
   }
   include_template("../shared/templates/attachmentM.tpl");
 }
-function get_display_date($db_date) {
-  // Convert date from database format (yyyy-mm-dd) to display format (d/m/yyyy)
-  if ($db_date == "0000-00-00 00:00:00") {
-    return "";
-  } else if (ereg("([0-9]{4})-?([0-9]{2})-?([0-9]{2})", $db_date, $matches)) {
-    return sprintf("%d/%d/%d", $matches[3], $matches[2], $matches[1]);
-  } else {
-    return "";
-  }
-}
 function get_date_stamp($db_date) {
   // Converts from DB date string of YYYY-MM-DD to a Unix time stamp
   ereg("^([0-9]{4})-([0-9]{2})-([0-9]{2})", $db_date, $matches);

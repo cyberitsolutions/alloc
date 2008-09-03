@@ -74,10 +74,10 @@ class tf extends db_entity {
     $db = new db_alloc;
 
     if ($current_user->have_role("god") || $current_user->have_role("admin")) {
-      $query = "DELETE FROM transaction WHERE tfID='".$this->get_id()."'";
+      $query = sprintf("DELETE FROM transaction WHERE tfID=%d",$this->get_id());
       $db->query($query);
 
-      $query = "DELETE FROM tfPerson WHERE tfID='".$this->get_id()."'";
+      $query = sprintf("DELETE FROM tfPerson WHERE tfID=%d",$this->get_id());
       $db->query($query);
       db_entity::delete();
     } else {
@@ -117,12 +117,6 @@ class tf extends db_entity {
       $repeating_url = $TPL["url_alloc_transactionRepeatList"]."tfID=".$this->get_id();
       $repeating_link = "<a href=\"$repeating_url\">Repeating Expenses</a>";
   #    $nav_links[] = $repeating_link;
-    }
-
-    if ($this->have_perm(PERM_UPDATE)) {
-      $edit_url = $TPL["url_alloc_tf"]."tfID=".$this->get_id();
-      $edit_link = "<a href=\"$edit_url\">Edit TF</a>";
-      $nav_links[] = $edit_link;
     }
 
     return $nav_links;
