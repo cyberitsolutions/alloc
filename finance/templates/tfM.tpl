@@ -28,20 +28,20 @@
     <td>{get_textarea("tfComments",$TPL["tfComments"],array("cols"=>30))}</td>
   </tr>
   <tr>
-    <td>Last Modified by:</td>
+    <td>Last modified by:</td>
     <td>{$tfModifiedUser} {$tfModifiedTime}</td>
   </tr>
   <tr>
-    <td colspan="2" align="center"><input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
+    <td colspan="2" align="center"><input type="submit" name="save" value="Save">
     <input type="submit" name="delete" value="Delete" class="delete_button"></td>
   </tr>
 </table>
 </form>
 
-
+{if $tfID}
 {$table_box}
   <tr>
-    <th colspan="2">TF Owner(s)</th>
+    <th colspan="2">TF Owners</th>
   </tr>
   <tr>
     <td>
@@ -50,7 +50,7 @@
     </td>
   </tr>
 </table>
-
+{/}
 
 
 

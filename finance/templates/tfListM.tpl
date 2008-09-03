@@ -2,7 +2,8 @@
 {show_toolbar()}
 {$table_box}
   <tr>
-    <th colspan="4">TF List</th>
+    <th colspan="3">TF List</th>
+    <th class="right">{if have_entity_perm("tf", PERM_CREATE, $current_user, true)}<a href="{$url_alloc_tf}">New Tagged Fund</a>{/}</th>
   </tr>
   <tr>
     <td colspan="4" align="center">
@@ -10,7 +11,7 @@
       <table class="filter" align="center">
         <tr>
           <td><input type="checkbox" name="owner"{$owner_checked}> Owner</td>
-	  <td><input type="checkbox" name="showall"{$showall_checked}> Show All</td>
+	        <td><input type="checkbox" name="showall"{$showall_checked}> Show All</td>
           <td><input type="submit" name="apply_filter" value="Filter"></td>
         </tr>
       </table>
@@ -23,7 +24,7 @@
         <tr>
           <th>TF Name</th>
           <th>Description</th>
-          <th align="right">Balance</th>
+          <th class="right">Balance</th>
           <th align="center"></th>
         </tr>
         {show_tf("templates/tfListR.tpl")}
