@@ -52,9 +52,9 @@ function show_expense_form_list($template_name) {
       $expenseForm->set_tpl_values();
       $TPL["formTotal"] = sprintf("%0.2f", -$db->f("formTotal"));
       $TPL["expenseFormModifiedUser"] = person::get_fullname($expenseForm->get_value("expenseFormModifiedUser"));
-      $TPL["expenseFormModifiedTime"] = get_mysql_date_stamp($expenseForm->get_value("expenseFormModifiedTime"));
+      $TPL["expenseFormModifiedTime"] = $expenseForm->get_value("expenseFormModifiedTime");
       $TPL["expenseFormCreatedUser"] = person::get_fullname($expenseForm->get_value("expenseFormCreatedUser"));
-      $TPL["expenseFormCreatedTime"] = get_mysql_date_stamp($expenseForm->get_value("expenseFormCreatedTime"));
+      $TPL["expenseFormCreatedTime"] = $expenseForm->get_value("expenseFormCreatedTime");
       unset($extra);
       $expenseForm->get_value("paymentMethod") and $extra = " (".$expenseForm->get_value("paymentMethod").")";
       $TPL["rr_label"] = $rr_options[$expenseForm->get_value("reimbursementRequired")].$extra;
@@ -82,15 +82,12 @@ function show_pending_transaction_list($template_name) {
     $transactionRepeat->set_tpl_values();
     $TPL["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];
     $TPL["formTotal"] = sprintf("%0.2f", -$db->f("amount"));
-    $TPL["transactionModifiedTime"] = get_mysql_date_stamp($transaction->get_value("transactionModifiedTime"));
-    $TPL["transactionCreatedTime"] = get_mysql_date_stamp($transaction->get_value("transactionCreatedTime"));
+    $TPL["transactionModifiedTime"] = $transaction->get_value("transactionModifiedTime");
+    $TPL["transactionCreatedTime"] = $transaction->get_value("transactionCreatedTime");
     $TPL["transactionCreatedUser"] = person::get_fullname($transaction->get_value("transactionCreatedUser"));
     include_template($template_name);
   }
 }
-
-page_close();
-
 
 
 ?>

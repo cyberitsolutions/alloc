@@ -280,8 +280,5 @@ default:
   die("Unrecognized state");
 }
 
-page_close();
-
-
 
 ?>

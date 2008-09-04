@@ -206,7 +206,7 @@ function show_invoiceItem_list() {
       $transaction_sum+= $db2->f("transaction_amount");
       $transaction_info.= $br.ucwords($db2->f("transaction_status"))." Transaction ";
       $transaction_info.= "<a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$db2->f("transactionID")."\">#".$db2->f("transactionID")."</a>";
-      $transaction_info.= " in TF <a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$db2->f("transaction_tfID")."\">".get_tf_name($db2->f("transaction_tfID"))."</a>";
+      $transaction_info.= " in TF <a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$db2->f("transaction_tfID")."\">".tf::get_name($db2->f("transaction_tfID"))."</a>";
       $transaction_info.= " for <b>".$currency.sprintf("%0.2f",$db2->f("transaction_amount"))."</b>";
       $br = "<br>";
     }
@@ -660,9 +660,6 @@ if ($invoiceID) {
 }
 
 include_template("templates/invoiceM.tpl");
-
-page_close();
-
 
 
 ?>

@@ -368,6 +368,5 @@ if ($current_user->have_role("admin")) {
 
 $TPL["main_alloc_title"] = "Product Sale";
 include_template("templates/productSaleM.tpl");
-page_close();
 
-
+?>

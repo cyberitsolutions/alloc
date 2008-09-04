@@ -36,5 +36,5 @@ function get_products() {
 
 $TPL["main_alloc_title"] = "Product List - ".APPLICATION_NAME;
 include_template("templates/productListM.tpl");
-page_close();
 
+?>

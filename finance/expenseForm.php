@@ -244,7 +244,6 @@ if ($_POST["cancel"]) {
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("pending");
-  page_close();
   header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
@@ -252,7 +251,6 @@ if ($_POST["cancel"]) {
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("approved");
-  page_close();
   header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
@@ -260,7 +258,6 @@ if ($_POST["cancel"]) {
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("rejected");
-  page_close();
   header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
@@ -436,5 +433,4 @@ if ($_GET["printVersion"]) {
   include_template("templates/expenseFormM.tpl");
 }
 
-page_close();
 ?>

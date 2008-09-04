@@ -142,8 +142,5 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
 $TPL["main_alloc_title"] = "Upload Wages File - ".APPLICATION_NAME;
 include_template("templates/wagesUploadM.tpl");
 
-page_close();
-
-
 
 ?>

@@ -59,8 +59,8 @@ while ($db->next_record()) {
   $transactionRepeat = new transactionRepeat;
   $transactionRepeat->read_db_record($db);
 
-  $startDate = get_date_stamp($transactionRepeat->get_value("transactionStartDate"));
-  $finishDate = get_date_stamp($transactionRepeat->get_value("transactionFinishDate"));
+  $startDate = format_date("U",$transactionRepeat->get_value("transactionStartDate"));
+  $finishDate = format_date("U",$transactionRepeat->get_value("transactionFinishDate"));
   $timeBasisString = $transactionRepeat->get_value("paymentBasis");
 
   $query = "SELECT max(transactionDate) AS latestDate FROM transaction WHERE transactionRepeatID=".$transactionRepeat->get_id();
@@ -106,7 +106,7 @@ while ($db->next_record()) {
     $transaction->save();
 
     echo "\n<br>".$transaction->get_value("transactionDate");
-    echo " ".$transactionRepeat->get_value("paymentBasis")." $".$transaction->get_value("amount")." for TF: ".get_tf_name($transaction->get_value("tfID"));
+    echo " ".$transactionRepeat->get_value("paymentBasis")." $".$transaction->get_value("amount")." for TF: ".tf::get_name($transaction->get_value("tfID"));
     echo " (transactionID: ".$transaction->get_id()." transactionRepeatID:".$transactionRepeat->get_id()." name:".$transactionRepeat->get_value("product").")";
 
     $nextScheduled = timeWarp($nextScheduled, $timeBasisString);

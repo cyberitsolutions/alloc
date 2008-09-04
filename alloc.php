@@ -105,9 +105,6 @@ $external_storage_directories = array("task","client","project","invoice","comme
 // Helper functions
 require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."util.inc.php");
 
-// Get the web base url for the alloc site
-define("SCRIPT_PATH",get_script_path($m)); 
-
 foreach ($m as $module_name) {
   if (file_exists(ALLOC_MOD_DIR.$module_name.DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR."init.php")) {
     require_once(ALLOC_MOD_DIR.$module_name.DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR."init.php");
@@ -116,6 +113,16 @@ foreach ($m as $module_name) {
     $modules[$module_name] = $module;
   }
 }
+
+// Get the web base url SCRIPT_PATH for the alloc site
+$path = dirname($_SERVER["SCRIPT_NAME"]);
+$bits = explode("/",$path);
+is_array($m) && in_array(end($bits),$m) && array_pop($bits);
+is_array($bits) and $path = implode("/",$bits);
+$path[0] != "/" and $path = "/".$path;
+$path[strlen($path)-1] != "/" and $path.="/";
+define("SCRIPT_PATH",$path); 
+
 unset($m);
 
 $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.php"
@@ -170,9 +177,14 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // Include all the urls
   require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."global_tpl_values.inc.php");
 
-  // Setup some useful constants
-  define("ALLOC_DEFAULT_FROM_ADDRESS",get_default_from_address());
-  define("ALLOC_DEFAULT_TO_ADDRESS",get_default_to_address());
+  // The default From: email address 
+  define("ALLOC_DEFAULT_FROM_ADDRESS", "allocPSA ".add_brackets(config::get_config_item("AllocFromEmailAddress")));
+
+  // The default To: email address 
+  $p = get_cached_table("person");
+  define("ALLOC_DEFAULT_TO_ADDRESS", "allocPSA Administrator ".add_brackets($p[config::get_config_item("timeSheetAdminEmail")]["emailAddress"]));
+
+  // The default email bounce address
   define("ALLOC_DEFAULT_RETURN_PATH_ADDRESS",config::get_config_item("allocEmailAdmin"));
 
   // Setup a current_user person who will represent the logged in user
@@ -184,7 +196,6 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   if (!defined("NO_AUTH") && !$sess->Started() && !defined("DO_NOT_REDIRECT_TO_LOGIN")) { 
     header("Location: ". $TPL["url_alloc_login"]);
     exit();
-
   } 
   
   if (!defined("NO_AUTH") && !defined("DO_NOT_REDIRECT_TO_LOGIN")) {

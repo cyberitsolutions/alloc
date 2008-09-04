@@ -151,8 +151,5 @@ $current_user->have_perm(PERM_PERSON_READ_MANAGEMENT) and $TPL["personAddSkill_l
 
 $TPL["main_alloc_title"] = "Skill Matrix - ".APPLICATION_NAME;
 include_template("templates/personSkillMatrix.tpl");
-page_close();
-
-
 
 ?>

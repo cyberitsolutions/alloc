@@ -48,7 +48,6 @@ if (!$permission->get_value("tableName")) {
   asort($table_name_options);
   $TPL["tableNameOptions"] = get_select_options($table_name_options, $permission->get_value("tableName"));
   include_template("templates/permissionTableM.tpl");
-  page_close();
   exit();
 }
 
@@ -59,9 +58,7 @@ if ($_POST["save"]) {
   header("Location: ".$TPL["url_alloc_permissionList"]);
 } else if ($_POST["delete"]) {
   $permission->delete();
-  page_close();
   header("Location: ".$TPL["url_alloc_permissionList"]);
-  exit();
 }
 
 $TPL["personOptions"] = get_select_options("SELECT personID as value, username as label FROM person ORDER BY username", $permission->get_value("personID"));
@@ -82,8 +79,5 @@ $TPL["actionOptions"] = get_select_options($entity->permissions, $sel);
 $TPL["main_alloc_title"] = "Edit Permission - ".APPLICATION_NAME;
 
 include_template("templates/permissionM.tpl");
-
-page_close();
-
 
 ?>

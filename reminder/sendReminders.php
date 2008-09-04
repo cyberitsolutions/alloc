@@ -35,8 +35,5 @@ while ($db->next_record()) {
   $reminder->mail_advnotice();
 }
 
-page_close();
-
-
 
 ?>

@@ -44,7 +44,6 @@ if ($_POST["save"]) {
 } else if ($_POST["delete"]) {
   header("Location: ".$TPL["url_alloc_commentTemplateList"]);
   $commentTemplate->delete();
-  page_close();
   exit();
 }
 // Load data for display in the template
@@ -57,8 +56,5 @@ $TPL["main_alloc_title"] = "Edit Comment Template - ".APPLICATION_NAME;
 // Invoke the page's main template
 include_template("templates/commentTemplateM.tpl");
 
-// Close the request
-page_close();
-				 
 ?>
 

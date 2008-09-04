@@ -185,5 +185,4 @@ if ($prodID) {
 }
 
 include_template("templates/productM.tpl");
-page_close();
-
+?>

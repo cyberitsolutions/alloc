@@ -293,7 +293,7 @@ if ($_POST["do_step_3"]) {
           
           $result = $person->get_username();
         } else if (eregi("tfID", $field)) {
-          $result = get_tf_name($db->f($field));
+          $result = tf::get_name($db->f($field));
         } else {
           $result = $db->f($field);
         }

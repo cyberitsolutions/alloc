@@ -244,8 +244,8 @@ class task_graph
   function draw_grid() {
     global $graph_start_date, $graph_completion_date;
 
-    $start_stamp = get_date_stamp($graph_start_date);
-    $completion_stamp = get_date_stamp($graph_completion_date);
+    $start_stamp = format_date("U",$graph_start_date);
+    $completion_stamp = format_date("U",$graph_completion_date);
     $graph_time_width = $completion_stamp - $start_stamp;
 
     // 7 Day increment
@@ -340,15 +340,15 @@ class task_graph
   // Converts from a date string to an X coordinate
   function date_to_x($date) {
     echo_debug("Converting $date<br>");
-    return $this->date_stamp_to_x(get_date_stamp($date));
+    return $this->date_stamp_to_x(format_date("U",$date));
   }
 
   // Converts from a unix time stamp to an X coordinate
   function date_stamp_to_x($date) {
     global $graph_start_date, $graph_completion_date;
 
-    $graph_time_width = get_date_stamp($graph_completion_date) - get_date_stamp($graph_start_date);
-    $time_offset = $date - get_date_stamp($graph_start_date);
+    $graph_time_width = format_date("U",$graph_completion_date) - format_date("U",$graph_start_date);
+    $time_offset = $date - format_date("U",$graph_start_date);
     $decimal_pos = $time_offset / $graph_time_width;
     $working_width = $this->width - $this->left_margin - $this->right_margin;
     $x_pos = $this->left_margin + $decimal_pos * $working_width;

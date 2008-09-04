@@ -83,8 +83,5 @@ function show_tf($template_name) {
 
 }
 
-page_close();
-
-
 
 ?>

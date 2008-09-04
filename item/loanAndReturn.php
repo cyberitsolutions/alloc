@@ -100,8 +100,5 @@ function show_items($template_name) {
 }
 
 
-page_close();
-
-
 
 ?>

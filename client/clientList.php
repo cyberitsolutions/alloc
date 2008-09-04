@@ -69,7 +69,6 @@ in the top-right hand corner of the box below.";
 
 $TPL["main_alloc_title"] = "Client List - ".APPLICATION_NAME;
 include_template("templates/clientListM.tpl");
-page_close();
 
 
 

@@ -119,8 +119,4 @@ if ($_POST["upload"]) {
 
 include_template("templates/expenseUploadM.tpl");
 
-page_close();
-
-
-
 ?>

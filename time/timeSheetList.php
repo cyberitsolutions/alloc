@@ -70,5 +70,4 @@ in the top-right hand corner of the box below.";
 
 $TPL["main_alloc_title"] = "Timesheet List - ".APPLICATION_NAME;
 include_template("templates/timeSheetListM.tpl");
-page_close();
 ?>
