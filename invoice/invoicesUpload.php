@@ -24,6 +24,11 @@ require_once("../alloc.php");
 
 $field_map = array(""=>0, "type"=>1, "date"=>2, "num"=>3, "name"=>4, "memo"=>5, "quantity"=>6, "sales_price"=>7, "amount"=>8, ""=>9,);
 
+if (!config::get_config_item("inTfID")) {
+  $TPL["message"][] = "This functionality will not work until you specify an Incoming TF on the Setup -&gt; Finance screen.";
+}
+
+
 if ($_POST["upload"]) {
   $db = new db_alloc;
   is_uploaded_file($_FILES["invoices_file"]["tmp_name"]) || die("File referred to was not an uploaded file"); // Prevent attacks by setting $invoices_file in URL
@@ -154,8 +159,8 @@ if ($_POST["upload"]) {
     $transactionNew->set_value("transactionDate", $date);
     $transactionNew->set_value("product", $memo);
     $transactionNew->set_value("companyDetails", $invoiceName);
-    $transactionNew->set_value("fromTfID", config::get_config_item("invoicesTfID"));
-    $transactionNew->set_value("tfID", config::get_config_item("cybersourceTfID"));
+    $transactionNew->set_value("fromTfID", config::get_config_item("inTfID"));
+    $transactionNew->set_value("tfID", config::get_config_item("mainTfID"));
     $transactionNew->set_value("transactionType", "invoice");
     $transactionNew->save();
 

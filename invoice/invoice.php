@@ -275,7 +275,7 @@ function show_invoiceItem_list() {
         $selected_tfID = $project->get_value("cost_centre_tfID");
         $selected_tfID or $selected_tfID = $transaction->get_value("tfID");
       }
-      $selected_tfID or $selected_tfID = config::get_config_item("cybersourceTfID");
+      $selected_tfID or $selected_tfID = config::get_config_item("mainTfID");
 
 
       #$tf_options = get_select_options($tf_array, $selected_tfID);
@@ -420,7 +420,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
           #$amount = $transaction->get_value("amount");
         }
         $transaction->set_value("amount",sprintf("%0.2f",$_POST["invoiceItemAmountPaid"][$iiID]));  
-        $transaction->set_value("fromTfID",config::get_config_item("invoicesTfID")); 
+        $transaction->set_value("fromTfID",config::get_config_item("inTfID")); 
         $transaction->set_value("tfID",$_POST["invoiceItemAmountPaidTfID"][$iiID]);
         $transaction->set_value("status",$status);
         $transaction->set_value("invoiceID",$ii->get_value("invoiceID"));

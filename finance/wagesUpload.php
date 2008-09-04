@@ -22,8 +22,8 @@
 
 require_once("../alloc.php");
 
-if (!config::get_config_item("wagesTfID")) {
-  $TPL["message"][] = "Please select a default Wages TF from the Setup -&gt; Finance menu.";
+if (!config::get_config_item("outTfID")) {
+  $TPL["message"][] = "Please select a default Outgoing TF from the Setup -&gt; Finance menu.";
 }
 
 #$field_map = array("transactionDate"=>0, "employeeNum"=>1, "name"=>2, ""=>3, ""=>4, ""=>5, ""=>6, ""=>7, ""=>8, ""=>9, "amount"=>10, ""=>11, ""=>12);
@@ -123,7 +123,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     // Create a transaction object and then save it
     $transaction = new transaction;
     $transaction->set_value("fromTfID", $fromTfID);
-    $transaction->set_value("tfID", config::get_config_item("wagesTfID"));
+    $transaction->set_value("tfID", config::get_config_item("outTfID"));
     $transaction->set_value("transactionDate", $transactionDate);
     $transaction->set_value("amount", $amount);
     $transaction->set_value("companyDetails", "");

@@ -91,7 +91,7 @@ class productSale extends db_entity {
       }
       // Other transactions: Sell price to project cost centre, buy price to cyber TF
       $this->create_psTransaction($saleItem["productSaleItemID"], $project->get_value("cost_centre_tfID"), -$saleItem["sellPrice"], 0, "Price for product sale");
-      $this->create_psTransaction($saleItem["productSaleItemID"], config::get_config_item("cybersourceTfID"), $saleItem["buyCost"], 0, "Cost for product sale");
+      $this->create_psTransaction($saleItem["productSaleItemID"], config::get_config_item("mainTfID"), $saleItem["buyCost"], 0, "Cost for product sale");
     }
   }
  

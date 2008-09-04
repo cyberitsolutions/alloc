@@ -114,9 +114,9 @@ $options[""] = "";
 while($row = $db->row()) {
   $options[$row["tfID"]] = $row["tfName"];
 }
-$TPL["tfOptions"] = get_select_options($options, $config->get_config_item("cybersourceTfID"));
-$TPL["wagesTfOptions"] = get_select_options($options, $config->get_config_item("wagesTfID"));
-$TPL["invoicesTfOptions"] = get_select_options($options, $config->get_config_item("invoicesTfID"));
+$TPL["mainTfOptions"] = get_select_options($options, $config->get_config_item("mainTfID"));
+$TPL["outTfOptions"] = get_select_options($options, $config->get_config_item("outTfID"));
+$TPL["inTfOptions"] = get_select_options($options, $config->get_config_item("inTfID"));
 $TPL["taxTfOptions"] = get_select_options($options, $config->get_config_item("taxTfID"));
 
 $db = new db_alloc;
