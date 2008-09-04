@@ -8,33 +8,39 @@
 {$table_box}
   <tr> 
     <th>Expense Form</th>
-    <th class="right" colspan="4"><a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>
-    <a href="{$url_alloc_expenseFormList}">Expense Form List</a>
+    <th class="right" colspan="3">
+      <a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>&nbsp;
+      <a href="{$url_alloc_expenseFormList}">Expense Form List</a>
     </th>
   </tr>
   <tr>
-    <td align="right" class="nobr" width="10%">Expense Form ID:</td><td width="30%">{$expenseFormID}</td>
-    <td width="20%">&nbsp;</td>
-    <td align="right" width="10%">Client:</td><td>{$field_clientID}</td>
+    <td align="right" class="nobr" width="10%">Expense Form ID:</td>
+    <td width="30%">{$expenseFormID}</td>
+    <td align="right" width="10%">Client:</td>
+    <td>{$field_clientID}</td>
   </tr>
   <tr>
-    <td align="right">Created By:</td><td>{$user}</td>
-    <td></td>
-    <td align="right" class="nobr">Seek Client Reimbursement:</td><td>{$seekClientReimbursementOption}</td>
+    <td align="right">Created By:</td>
+    <td>{$user}</td>
+    <td align="right" class="nobr">Seek Client Reimbursement:</td>
+    <td>{$seekClientReimbursementOption}</td>
   </tr>
   <tr>
-    <td align="right" valign="top">Total:</td><td valign="top">${$formTotal}</td>
-    <td></td>
-    <td align="right" valign="top">Payment Status:</td><td colspan="2">{$reimbursementRequiredOption}</td>
+    <td align="right" valign="top">Total:</td>
+    <td valign="top">${$formTotal}</td>
+    <td align="right" valign="top">Payment Status:</td>
+    <td colspan="2">{$reimbursementRequiredOption}</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">{$invoice_label}</td>
+    <td valign="top" class="nobr">{$attach_to_invoice_button}{$invoice_link}</td>
   </tr>
   <tr>
     <td align="right" valign="top">Comment</td>
-    <td colspan="2" valign="top">{get_textarea("expenseFormComment",$TPL["expenseFormComment"])}</td>
-
-    <td align="right" valign="top">{$invoice_label}</td><td valign="top" class="nobr">{$attach_to_invoice_button}{$invoice_link}</td>
+    <td colspan="3" valign="top">{get_textarea("expenseFormComment",$expenseFormComment)}</td>
   </tr>
   <tr>
-    <td colspan="5" align="center">
+    <td colspan="4" align="center">
       {$expenseFormButtons}
     </td>
   </tr>
@@ -50,19 +56,19 @@
   </tr>
 
   <tr>
-    <td colspan="3"><b>Enter the company name and address{mandatory($companyDetails)}</b></td> 
-    <td colspan="3"><b>Project</b></td> 
+    <td colspan="3">Enter the company name and address{mandatory($companyDetails)}</td> 
+    <td colspan="3">Project</td> 
   </tr>
   <tr>
     <td colspan="3"><input type="text" size="50" name="companyDetails" value="{$companyDetails}"></td>
     <td colspan="3"><select name="projectID" value="{$projectID}"><option value="">{$projectOptions}</select></td>
   </tr>
   <tr>
-    <td><b>Product{mandatory($product)}</b></td>
-    <td><b>Quantity</b></td>
-    <td><b>Price{mandatory($amount)}</b></td>
-    <td><b>Source TF{mandatory($fromTfID)}</b></td>
-    <td><b>Date Incurred{mandatory($transactionDate)}</b></td>
+    <td>Product{mandatory($product)}</td>
+    <td>Quantity</td>
+    <td>Price{mandatory($amount)}</td>
+    <td>Source TF{mandatory($fromTfID)}</td>
+    <td>Date Incurred{mandatory($transactionDate)}</td>
   </tr>
   <tr>
     <td><input type="text" size="25" name="product" value="{$product}"></td>
