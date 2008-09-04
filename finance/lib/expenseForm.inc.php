@@ -50,16 +50,23 @@ class expenseForm extends db_entity {
     if ($person->get_id() == $this->get_value("expenseFormCreatedUser", DST_VARIABLE)) {
       return true;
     }
-    // Return true if any of the transactions on the expense form are accessible by the current user
-    $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d",$this->get_id());
-    $db = new db_alloc;
-    $db->query($query);
-    while ($db->next_record()) {
-      $transaction = new transaction;
-      $transaction->read_db_record($db, false);
-      if ($transaction->is_owner($person)) {
-        return true;
+
+    if ($this->get_id()) {
+      // Return true if any of the transactions on the expense form are accessible by the current user
+      $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d",$this->get_id());
+      $db = new db_alloc;
+      $db->query($query);
+      while ($db->next_record()) {
+        $transaction = new transaction;
+        $transaction->read_db_record($db, false);
+        if ($transaction->is_owner($person)) {
+          return true;
+        }
       }
+
+    // If no expenseForm ID, then it hasn't been created yet...
+    } else {
+      return true;
     }
 
     if ($current_user->have_role("admin") || $current_user->have_role("god")) {
@@ -102,7 +109,6 @@ class expenseForm extends db_entity {
     }
     return $return;
   }
-
 
   function delete_transactions($transactionID="") {
     global $TPL;
