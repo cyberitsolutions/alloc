@@ -24,6 +24,11 @@ require_once("../alloc.php");
 
 check_entity_perm("transaction", PERM_FINANCE_UPLOAD_EXPENSES_FILE);
 
+if (!config::get_config_item("mainTfID")) {
+  $TPL["message"][] = "This functionality will not work until you set a Finance TF on the Setup -&gt; Finance screen.";
+}
+
+
 $field_map = array("date"=>0, "account"=>1, "num"=>2, "description"=>3, "memo"=>4, "category"=>5, "clr"=>6, "amount"=>7);
 
 if ($_POST["upload"]) {
@@ -100,7 +105,7 @@ if ($_POST["upload"]) {
     $transaction->set_value("status", "pending");
     $transaction->set_value("expenseFormID", "0");
     $transaction->set_value("fromTfID", $fromTfID);
-    $transaction->set_value("tfID", config::get_config_item("cybersourceTfID"));
+    $transaction->set_value("tfID", config::get_config_item("mainTfID"));
     $transaction->set_value("quantity", 1);
     $transaction->set_value("invoiceItemID", "0");
     $transaction->set_value("transactionType", "expense");

@@ -61,18 +61,18 @@
   </tr>
   <tr>
     <td width="20%"><nobr>Finance Tagged Fund</nobr></td>
-    <td><select name="cybersourceTfID">{$tfOptions}</select></td>
-    <td width="1%">{get_help("config_cybersourceTfID")}</td>
+    <td><select name="mainTfID">{$mainTfOptions}</select></td>
+    <td width="1%">{get_help("config_mainTfID")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Outgoing Funds TF</nobr></td>
-    <td><select name="wagesTfID">{$wagesTfOptions}</select></td>
-    <td width="1%">{get_help("config_wagesTfID")}</td>
+    <td><select name="outTfID">{$outTfOptions}</select></td>
+    <td width="1%">{get_help("config_outTfID")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Incoming Funds TF</nobr></td>
-    <td><select name="invoicesTfID">{$invoicesTfOptions}</select></td>
-    <td width="1%">{get_help("config_invoicesTfID")}</td>
+    <td><select name="inTfID">{$inTfOptions}</select></td>
+    <td width="1%">{get_help("config_inTfID")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Tax Tagged Fund</nobr></td>

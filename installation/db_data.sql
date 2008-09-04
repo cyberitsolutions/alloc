@@ -105,7 +105,7 @@ INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allo
 
 
 INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','','text');
-INSERT INTO config (name, value, type) VALUES ('cybersourceTfID','0','text');
+INSERT INTO config (name, value, type) VALUES ('mainTfID','','text');
 INSERT INTO config (name, value, type) VALUES ('timeSheetAdminEmail','0','text');
 INSERT INTO config (name, value, type) VALUES ('companyName','Cybersource','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactPhone','+61 3 9621 2377','text');
@@ -192,8 +192,8 @@ INSERT INTO config (name,value,type) VALUES ("defaultInterestedParties",'a:0:{}'
 INSERT INTO config (name,value,type) VALUES ("timeSheetManagerEmail", "","text");
 INSERT INTO config (name,value,type) VALUES ("task_email_header", "","text");
 INSERT INTO config (name,value,type) VALUES ("task_email_footer", "","text");
-INSERT INTO config (name,value,type) VALUES ("wagesTfID","","text");
-INSERT INTO config (name,value,type) VALUES ("invoicesTfID","","text");
+INSERT INTO config (name,value,type) VALUES ("outTfID","","text");
+INSERT INTO config (name,value,type) VALUES ("inTfID","","text");
 
 
 

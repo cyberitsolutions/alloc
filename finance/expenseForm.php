@@ -162,7 +162,7 @@ if ($_POST["add"]) {
   if (!count($TPL["message"])) {
     $transaction->set_value("transactionType", "expense");
     $transaction->set_value("expenseFormID", $expenseForm->get_id());
-    $transaction->set_value("tfID",config::get_config_item("cybersourceTfID"));
+    $transaction->set_value("tfID",config::get_config_item("mainTfID"));
     $transaction->save();
 
   } else {
