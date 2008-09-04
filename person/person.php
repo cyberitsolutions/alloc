@@ -292,8 +292,5 @@ if ($personID) {
 
 include_template("templates/personM.tpl");
 
-page_close();
-
-
 
 ?>

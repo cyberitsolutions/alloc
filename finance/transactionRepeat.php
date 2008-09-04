@@ -150,8 +150,4 @@ $TPL["taxName"] = config::get_config_item("taxName");
 $TPL["main_alloc_title"] = "Create Repeating Expense - ".APPLICATION_NAME;
 include_template("templates/transactionRepeatM.tpl");
 
-page_close();
-
-
-
 ?>

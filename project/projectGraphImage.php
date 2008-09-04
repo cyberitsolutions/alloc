@@ -54,8 +54,4 @@ $task_graph->draw_legend();
 $task_graph->output();
 
 
-page_close();
-
-
-
 ?>

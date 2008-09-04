@@ -71,8 +71,5 @@ function show_overdue($template_name) {
 }
 
 
-page_close();
-
-
 
 ?>

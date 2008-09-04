@@ -311,6 +311,30 @@ class client extends db_entity {
     return $TPL["url_alloc_client"].$url;
   }
 
+  function get_clientID_from_name($name) {
+    static $clients;
+    if (!$clients) {
+      $db = new db_alloc();
+      $q = sprintf("SELECT * FROM client");
+      $db->query($q);
+      while ($db->next_record()) {
+        $clients[$db->f("clientID")] = $db->f("clientName");
+      }
+    }
+
+    $stack = array();
+    foreach ($clients as $clientID => $clientName) {
+      similar_text($name,$clientName,$percent);
+      $stack[$clientID] = $percent;
+    }
+    asort($stack);
+    end($stack);
+    $probable_clientID = key($stack);
+    $client_percent = current($stack);
+    return array($probable_clientID,$client_percent);
+  }
+
+
 }
 
 

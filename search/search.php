@@ -467,8 +467,5 @@ if ($TPL["search_results"]) {
 
 $TPL["main_alloc_title"] = "Search - ".APPLICATION_NAME;
 include_template("templates/searchM.tpl");
-page_close();
-
-
 
 ?>

@@ -78,9 +78,4 @@ while ($db->next_record()) {
 }
 
 
-
-page_close();
-
-
-
 ?>

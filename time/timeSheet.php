@@ -135,8 +135,8 @@ if (!$current_user->is_employee()) {
           unset($TPL["transaction_amount_pos"]);
           unset($TPL["transaction_amount_neg"]);
           $TPL["transaction_amount"] = "$".number_format($TPL["transaction_amount"], 2);
-          $TPL["transaction_fromTfID"] = get_tf_name($transaction->get_value("fromTfID"));
-          $TPL["transaction_tfID"] = get_tf_name($transaction->get_value("tfID"));
+          $TPL["transaction_fromTfID"] = tf::get_name($transaction->get_value("fromTfID"));
+          $TPL["transaction_tfID"] = tf::get_name($transaction->get_value("tfID"));
           $TPL["transaction_transactionType"] = $transactionType_options[$transaction->get_value("transactionType")];
           include_template("templates/timeSheetTransactionListViewR.tpl");
         }
@@ -402,7 +402,6 @@ if ($_POST["save"]
       # Pass the taskID forward if we came from a task
       $url .= "&taskID=".$_POST["taskID"];
     }
-    page_close();
     header("Location: $url");
     exit();
   }
@@ -787,7 +786,7 @@ if ($timeSheet->get_value("status") == "edit") {
     $tf_db->query("select * from tfPerson where personID = ".$timeSheet->get_value("personID")." and tfID = ".$preferred_tfID);
 
     if ($tf_db->next_record()) {        // The person has a preferred TF, and is a tfPerson for it too
-      $TPL["recipient_tfID_name"] = get_tf_name($tf_db->f("tfID"));
+      $TPL["recipient_tfID_name"] = tf::get_name($tf_db->f("tfID"));
       $TPL["recipient_tfID"] = $tf_db->f("tfID");
     }
   } else {
@@ -796,7 +795,7 @@ if ($timeSheet->get_value("status") == "edit") {
   }
 
 } else {
-  $TPL["recipient_tfID_name"] = get_tf_name($timeSheet->get_value("recipient_tfID"));
+  $TPL["recipient_tfID_name"] = tf::get_name($timeSheet->get_value("recipient_tfID"));
   $TPL["recipient_tfID"] = $timeSheet->get_value("recipient_tfID");
 }
 
@@ -848,10 +847,6 @@ $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateNam
 $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".get_select_options($ops);
 
 
-
-
 include_template("templates/timeSheetFormM.tpl");
 
-
-page_close();
 ?>

@@ -164,8 +164,5 @@ if ($current_user->have_perm(PERM_PERSON_READ_MANAGEMENT)) {
 
 
 include_template("templates/personListM.tpl");
-page_close();
-
-
 
 ?>

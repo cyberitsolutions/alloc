@@ -412,7 +412,6 @@ if ($current_user->have_role("admin")) {
 
 include_template("templates/clientM.tpl");
 
-page_close();
 
 
 

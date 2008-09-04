@@ -105,7 +105,7 @@ if ($_POST["upload"]) {
       $invoice->set_value("invoiceNum", $num);
       $invoice->set_value("invoiceName", $name);
       $invoice->set_value("invoiceStatus", "reconcile");
-      list($clientID,$percent) = get_clientID_from_name($name);
+      list($clientID,$percent) = client::get_clientID_from_name($name);
       if ($clientID && $percent > 75) {
         $c = new client;
         $c->set_id($clientID);
@@ -171,9 +171,6 @@ if ($_POST["upload"]) {
 }
 $TPL["main_alloc_title"] = "Upload Invoices - ".APPLICATION_NAME;
 include_template("templates/invoicesUploadM.tpl");
-
-page_close();
-
 
 
 ?>

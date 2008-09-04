@@ -103,8 +103,4 @@ $TPL["title"] = "Statement for TF ".$tf->get_value("tfName");
 
 include_template("templates/transactionListM.tpl");
 
-page_close();
-
-
-
 ?>

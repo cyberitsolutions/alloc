@@ -128,6 +128,5 @@ in the top-right hand corner of the box below.";
 
 
 include_template("templates/taskListM.tpl");
-page_close();
 
 ?>

@@ -131,6 +131,17 @@ class tf extends db_entity {
     }
   }
 
+  function get_name($tfID=false) {
+    if ($tfID) {
+      $db = new db_alloc;
+      $db->query(sprintf("SELECT tfName FROM tf WHERE tfID=%d",$tfID));
+      $db->next_record();
+      return $db->f("tfName");
+    }
+  }
+
+
+
 }
 
 ?>

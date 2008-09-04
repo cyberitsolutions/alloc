@@ -1194,7 +1194,7 @@ class task extends db_entity {
       return 0;
     }
 
-    $date_actual_start = get_date_stamp($date_actual_start);
+    $date_actual_start = format_date("U",$date_actual_start);
     $time_spent = mktime() - $date_actual_start;
     $time_per_percent = $time_spent / $percent_complete;
     $percent_left = 100 - $percent_complete;

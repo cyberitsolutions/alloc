@@ -52,8 +52,4 @@ $TPL["main_alloc_title"] = "Permissions List - ".APPLICATION_NAME;
 
 include_template("templates/permissionListM.tpl");
 
-page_close();
-
-
-
 ?>

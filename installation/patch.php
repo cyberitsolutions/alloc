@@ -23,6 +23,54 @@
 define("NO_AUTH",1);
 require_once("../alloc.php");
 
+function apply_patch($f) {
+  global $TPL;
+  static $files;
+  // Should never attempt to apply the same patch twice.. in case 
+  // there are function declarations in the .php patches.
+  if ($files[$f]) {
+    return;
+  }
+  $files[$f] = true;
+  $db = new db_alloc();
+  $file = basename($f);
+  $failed = false;
+  $comments = array();
+
+  // Try for sql file
+  if (strtolower(substr($file,-4)) == ".sql") {
+
+    list($sql,$comments) = parse_sql_file($f);
+    foreach ($sql as $query) {
+      if (!$db->query($query)) {
+        #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error();
+        $failed = true;
+        die("<b style=\"color:red\">Error:</b> ".$f."<br/>".$db->get_error());
+      }
+    }
+    if (!$failed) {
+      $TPL["message_good"][] = "Successfully Applied: ".$f;
+    }
+
+  // Try for php file
+  } else if (strtolower(substr($file,-4)) == ".php") {
+    $str = execute_php_file("../patches/".$file);
+    if ($str) {
+      #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br/>".$str;
+      $failed = true;
+      ob_end_clean();
+      die("<b style=\"color:red\">Error:</b> ".$f."<br/>".$str);
+    } else {
+      $TPL["message_good"][] = "Successfully Applied: ".$f;
+    }
+  }
+  if (!$failed) {
+    $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
+                  VALUES ('%s','%s','%s')",db_esc($file), db_esc(implode(" ",$comments)), date("Y-m-d H:i:s"));
+    $db->query($q);
+  }
+}
+
 // Get list of patch files in order
 $abc123_files = get_patch_file_list();
 

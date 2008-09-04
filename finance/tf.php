@@ -147,8 +147,5 @@ if (!$tf->get_id()) {
 
 include_template("templates/tfM.tpl");
 
-page_close();
-
-
 
 ?>

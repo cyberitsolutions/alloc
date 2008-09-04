@@ -79,14 +79,7 @@ function show_reminder_filter($template) {
 }
 
 
-
-
-
-
 include_template("templates/reminderListM.tpl");
-
-page_close();
-
 
 
 ?>

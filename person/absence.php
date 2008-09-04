@@ -59,8 +59,6 @@ if ($_POST["save"]) {
     $urls[$returnToParent] and $url = $urls[$returnToParent];
     header("Location: $url");
   }
-  page_close();
-  exit();
 } else if ($_POST["delete"]) {
   // Deleting a record
   $absence->read_globals();
@@ -97,9 +95,6 @@ $TPL["absenceType_options"] = get_select_options($absenceType_array, $absence->g
 $TPL["main_alloc_title"] = "Absence Form - ".APPLICATION_NAME;
 
 include_template("templates/absenceFormM.tpl");
-
-page_close();
-
 
 
 ?>

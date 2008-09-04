@@ -149,6 +149,4 @@ if (is_array($files) && count($files)) {
 
 include_template("templates/login.tpl");
 
-page_close();
-
 ?>

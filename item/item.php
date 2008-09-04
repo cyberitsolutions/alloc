@@ -134,11 +134,5 @@ if ($_GET["return"]) {
 }
 
 
-page_close();
-
-
-
-
-
 
 ?>

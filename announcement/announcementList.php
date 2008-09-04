@@ -46,7 +46,6 @@ $TPL["main_alloc_title"] = "Announcement List - ".APPLICATION_NAME;
 
 include_template("templates/announcementListM.tpl");
 
-page_close();
 
 
 

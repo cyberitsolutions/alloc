@@ -54,8 +54,4 @@ if ($_GET["media"] == "print") {
 	include_template("templates/homeM.tpl");
 }
 
-page_close();
-
-
-
 ?>

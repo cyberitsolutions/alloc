@@ -75,8 +75,5 @@ in the top-right hand corner of the box below.";
 
 $TPL["main_alloc_title"] = "Project List - ".APPLICATION_NAME;
 include_template("templates/projectListM.tpl");
-page_close();
-
-
 
 ?>

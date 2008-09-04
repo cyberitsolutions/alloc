@@ -28,7 +28,7 @@
 
     <div id="tabs">
       {show_tabs()}
-      <p id="extra_links">{get_print_link().get_config_link().get_help_link().get_logout_link()}</p>
+      <p id="extra_links">{show_extra_links()}</p>
     </div>
 
     <div id="main">

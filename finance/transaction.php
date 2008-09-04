@@ -126,8 +126,8 @@ $TPL["projectIDOptions"] = get_select_options($q, $transaction->get_value("proje
 $TPL["transactionModifiedUser"] = person::get_fullname($TPL["transactionModifiedUser"]);
 $TPL["transactionCreatedUser"] = person::get_fullname($TPL["transactionCreatedUser"]);
 
-$TPL["tf_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$TPL["tfID"]."\">".get_tf_name($TPL["tfID"])."</a>";
-$TPL["from_tf_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$TPL["fromTfID"]."\">".get_tf_name($TPL["fromTfID"])."</a>";
+$TPL["tf_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$TPL["tfID"]."\">".tf::get_name($TPL["tfID"])."</a>";
+$TPL["from_tf_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$TPL["fromTfID"]."\">".tf::get_name($TPL["fromTfID"])."</a>";
 
 $p = $transaction->get_foreign_object("project");
 $TPL["project_link"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$p->get_id()."\">".$p->get_value("projectName")."</a>";
@@ -141,10 +141,6 @@ if ($transaction->have_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION) && !$trans
   $TPL["main_alloc_title"] = "View Transaction - ".APPLICATION_NAME;
   include_template("templates/viewTransactionM.tpl");
 }
-
-page_close();
-
-
 
 
 ?>

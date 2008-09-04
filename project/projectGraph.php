@@ -62,5 +62,4 @@ function show_projects($template_name) {
 $TPL["main_alloc_title"] = "Project Graph - ".APPLICATION_NAME;
 
 include_template("templates/projectGraphM.tpl");
-page_close();
 ?>

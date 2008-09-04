@@ -60,6 +60,4 @@ $task_graph->draw_today();
 $task_graph->output();
 
 
-
-page_close();
 ?>

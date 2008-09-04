@@ -283,12 +283,21 @@ class person extends db_entity {
     $p = new person;
     $p->set_id($this->get_id());
     $p->select();
+    $p->load_prefs();
+  
+    $old_prefs = $p->prefs or $old_prefs = array();
+    foreach ($old_prefs as $k => $v) {
+      if ($this->prefs[$k] != $v) {
+        $save = true;
+      }
+    }
 
-    if (is_array($this->prefs)) {
+    if ($save || (!is_array($old_prefs) || !count($old_prefs))) {
       $arr = serialize($this->prefs);
       $p->set_value("sessData",$arr);
+      $p->save();
     }
-    $p->save();
+
   }
 
   function has_messages() {

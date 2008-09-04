@@ -797,8 +797,5 @@ if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectViewM.tpl");
 }
 
-page_close();
-
-
 
 ?>

@@ -45,7 +45,6 @@ if ($_POST["save"]) {
 // process submission of the form using the delete button
 } else if ($_POST["delete"]) {
   $announcement->delete();
-  page_close();
   header("Location: ".$TPL["url_alloc_announcementList"]);
   exit();
 }
@@ -57,9 +56,6 @@ $TPL["main_alloc_title"] = "Edit Announcement - ".APPLICATION_NAME;
 
 // invoke the page's main template
 include_template("templates/announcementM.tpl");
-
-// Close the request
-page_close();
 
 
 

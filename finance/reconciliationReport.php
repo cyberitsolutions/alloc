@@ -166,8 +166,4 @@ load_tf_info();
 $TPL["main_alloc_title"] = "Reconciliation Report - ".APPLICATION_NAME;
 include_template("templates/reconciliationReportM.tpl");
 
-page_close();
-
-
-
 ?>

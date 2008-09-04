@@ -93,9 +93,5 @@ in the top-right hand corner of the box below.";
 
 $TPL["main_alloc_title"] = "Invoice List - ".APPLICATION_NAME;
 include_template("templates/invoiceListM.tpl");
-page_close();
-
-
-
 
 ?>

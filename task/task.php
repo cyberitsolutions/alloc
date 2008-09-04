@@ -244,7 +244,6 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     } else {
       die("Unexpected save button");
     }
-    page_close();
     header("Location: ".$url.$msg);
     exit();
   }
@@ -444,12 +443,6 @@ if ($_GET["media"] == "print") {
 
   include_template("templates/taskM.tpl");
 }
-
-
-
-
-page_close();
-
 
 
 ?>

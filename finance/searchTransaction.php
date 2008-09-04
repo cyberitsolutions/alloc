@@ -89,5 +89,4 @@ $TPL["main_alloc_title"] = "Search Transactions - ".APPLICATION_NAME;
 include_template("templates/searchTransactionM.tpl");
 
 
-page_close();
 ?>
