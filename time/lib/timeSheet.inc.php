@@ -1170,6 +1170,7 @@ EOD;
         $tsi->set_value("personID",$current_user->get_id());
         $tsi->set_value("taskID",sprintf("%d",$taskID));
         $tsi->set_value("rate",$row_projectPerson["rate"]);
+        $tsi->set_value("multiplier",1);
         $tsi->set_value("comment",$comments);
         $_POST["timeSheetItem_taskID"] = sprintf("%d",$taskID); // this gets used in timeSheetItem->save();
         $tsi->save();
