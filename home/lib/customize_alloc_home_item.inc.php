@@ -47,23 +47,23 @@ class customize_alloc_home_item extends home_item {
 
     }
 
-    $TPL["fontOptions"] = get_select_options(get_customizedFont_array(), $current_user->prefs["customizedFont"]);
-    $TPL["themeOptions"] = get_select_options(get_customizedTheme_array(), $current_user->prefs["customizedTheme2"]);
+    $TPL["fontOptions"] = page::select_options(page::get_customizedFont_array(), $current_user->prefs["customizedFont"]);
+    $TPL["themeOptions"] = page::select_options(page::get_customizedTheme_array(), $current_user->prefs["customizedTheme2"]);
 
     $week_ops = array("0"=>0, 1=>1, 2=>2, 3=>3, 4=>4, 8=>8, 12=>12, 30=>30, 52=>52);
-    $TPL["weeksOptions"] = get_select_options($week_ops, $current_user->prefs["tasksGraphPlotHome"]);
-    $TPL["weeksBackOptions"] = get_select_options($week_ops, $current_user->prefs["tasksGraphPlotHomeStart"]);
+    $TPL["weeksOptions"] = page::select_options($week_ops, $current_user->prefs["tasksGraphPlotHome"]);
+    $TPL["weeksBackOptions"] = page::select_options($week_ops, $current_user->prefs["tasksGraphPlotHomeStart"]);
 
     $task_num_ops = array("0"=>0,1=>1,2=>2,3=>3,4=>4,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50,"all"=>"All");
-    $TPL["topTasksNumOptions"] = get_select_options($task_num_ops, $current_user->prefs["topTasksNum"]);
-    $TPL["topTasksStatusOptions"] = get_select_options(task::get_task_statii_array(), $current_user->prefs["topTasksStatus"]);
+    $TPL["topTasksNumOptions"] = page::select_options($task_num_ops, $current_user->prefs["topTasksNum"]);
+    $TPL["topTasksStatusOptions"] = page::select_options(task::get_task_statii_array(), $current_user->prefs["topTasksStatus"]);
 
     $project_list_ops = array("0"=>0,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50,"all"=>"All");
-    $TPL["projectListNumOptions"] = get_select_options($project_list_ops, $current_user->prefs["projectListNum"]);
+    $TPL["projectListNumOptions"] = page::select_options($project_list_ops, $current_user->prefs["projectListNum"]);
     
     $dailyTEO = array("yes"=>"Yes", "no"=>"No");
-    $TPL["dailyTaskEmailOptions"] = get_select_options($dailyTEO, $current_user->prefs["dailyTaskEmail"]);
-    $TPL["receiveOwnTaskCommentsOptions"] = get_select_options($dailyTEO, $current_user->prefs["receiveOwnTaskComments"]);
+    $TPL["dailyTaskEmailOptions"] = page::select_options($dailyTEO, $current_user->prefs["dailyTaskEmail"]);
+    $TPL["receiveOwnTaskCommentsOptions"] = page::select_options($dailyTEO, $current_user->prefs["receiveOwnTaskComments"]);
   }
 
 

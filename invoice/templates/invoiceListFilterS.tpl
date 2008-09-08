@@ -18,8 +18,8 @@
           <td>Payment Status</td>
         </tr>
         <tr>
-          <td>{get_calendar("dateOne",$TPL["dateOne"])}</td>
-          <td>{get_calendar("dateTwo",$TPL["dateTwo"])}</td>
+          <td>{page::calendar("dateOne",$TPL["dateOne"])}</td>
+          <td>{page::calendar("dateTwo",$TPL["dateTwo"])}</td>
           <td><input type="text" size="11" name="invoiceNum" value="{$invoiceNum}"></td>
           <td><select name="invoiceStatusPayment"><option value="">All</option>{$statusPaymentOptions}</select></td>
         </tr>

@@ -61,7 +61,6 @@ class home_item {
     return $this->label;
   }
 
-
   function get_title() {
     return $this->get_label();
   }
@@ -72,7 +71,7 @@ class home_item {
 
   function get_help() {
     if ($this->help_topic) {
-      get_help($this->help_topic);
+      page::help($this->help_topic);
     }
   }
 }

@@ -23,9 +23,8 @@
 require_once("../alloc.php");
 
 if ($_GET["topic"]) {
-
   $topic = $_GET["topic"];
-  $TPL["str"] = html_entity_decode(stripslashes(get_help_string($topic)));
+  $TPL["str"] = html_entity_decode(stripslashes(page::get_help_string($topic)));
 
 } else {
   $TPL["str"] = "No valid help topic specified.";

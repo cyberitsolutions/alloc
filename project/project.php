@@ -205,9 +205,9 @@ require_once("../alloc.php");
         $projectPerson->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
         $person = $projectPerson->get_foreign_object("person");
         $TPL["person_username"] = $person->get_value("username");
-        $TPL["person_emailType_options"] = get_select_options($email_type_array, $TPL["person_emailType"]);
-        $TPL["person_role_options"] = get_select_options($project_person_role_array, $TPL["person_roleID"]);
-        $TPL["rateType_options"] = get_select_options($rate_type_array, $TPL["person_rateUnitID"]);
+        $TPL["person_emailType_options"] = page::select_options($email_type_array, $TPL["person_emailType"]);
+        $TPL["person_role_options"] = page::select_options($project_person_role_array, $TPL["person_roleID"]);
+        $TPL["rateType_options"] = page::select_options($rate_type_array, $TPL["person_rateUnitID"]);
         include_template($template);
       }
     }
@@ -243,9 +243,9 @@ require_once("../alloc.php");
     }
     $project_person = new projectPerson;
     $project_person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
-    $TPL["person_emailType_options"] = get_select_options($email_type_array, $TPL["person_emailType"]);
-    $TPL["person_role_options"] = get_select_options($project_person_role_array,false);
-    $TPL["rateType_options"] = get_select_options($rate_type_array, $TPL["person_rateUnitID"]);
+    $TPL["person_emailType_options"] = page::select_options($email_type_array, $TPL["person_emailType"]);
+    $TPL["person_role_options"] = page::select_options($project_person_role_array,false);
+    $TPL["rateType_options"] = page::select_options($rate_type_array, $TPL["person_rateUnitID"]);
     include_template($template);
   }
 
@@ -271,12 +271,12 @@ require_once("../alloc.php");
 
   function show_person_options() {
     global $TPL;
-    echo get_select_options(person::get_username_list($TPL["person_personID"]),$TPL["person_personID"]);
+    echo page::select_options(person::get_username_list($TPL["person_personID"]),$TPL["person_personID"]);
   }
 
   function show_tf_options($commission_tfID) {
     global $tf_array, $TPL;
-    echo get_select_options($tf_array, $TPL[$commission_tfID]);
+    echo page::select_options($tf_array, $TPL[$commission_tfID]);
   }
 
   function show_comments() {
@@ -535,7 +535,7 @@ if ($_POST["save_attachment"]) {
 $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
 $ops = array(""=>"","0"=>"No","1"=>"Yes");
-$TPL["is_agency_options"] = get_select_options($ops,$project->get_value("is_agency"));
+$TPL["is_agency_options"] = page::select_options($ops,$project->get_value("is_agency"));
 $TPL["project_is_agency_label"] = $ops[$project->get_value("is_agency")];
 
 
@@ -685,8 +685,8 @@ $query = sprintf("SELECT tfID AS value, tfName AS label
                     FROM tf 
                    WHERE status = 'active' 
                 ORDER BY tfName");
-$TPL["commission_tf_options"] = get_select_options($query, $TPL["commission_tfID"]);
-$TPL["cost_centre_tfID_options"] = get_select_options($query, $TPL["project_cost_centre_tfID"]);
+$TPL["commission_tf_options"] = page::select_options($query, $TPL["commission_tfID"]);
+$TPL["cost_centre_tfID_options"] = page::select_options($query, $TPL["project_cost_centre_tfID"]);
 
 $db->query($query);
 while ($db->row()) {
@@ -718,22 +718,22 @@ $projectStatus_array = array("current"=>"Current", "potential"=>"Potential", "ar
 $timeUnit = new timeUnit;
 $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
 $TPL["project_projectType"] or $TPL["project_projectType"] = "project";
-$TPL["projectType_options"] = get_select_options($projectType_array, $TPL["project_projectType"]);
-$TPL["projectStatus_options"] = get_select_options($projectStatus_array, $TPL["project_projectStatus"]);
+$TPL["projectType_options"] = page::select_options($projectType_array, $TPL["project_projectType"]);
+$TPL["projectStatus_options"] = page::select_options($projectStatus_array, $TPL["project_projectStatus"]);
 $TPL["project_projectPriority"] or $TPL["project_projectPriority"] = 3;
 $projectPriorities = config::get_config_item("projectPriorities") or $projectPriorities = array();
 $tp = array();
 foreach($projectPriorities as $key => $arr) {
   $tp[$key] = $arr["label"];
 }
-$TPL["projectPriority_options"] = get_select_options($tp,$TPL["project_projectPriority"]);
+$TPL["projectPriority_options"] = page::select_options($tp,$TPL["project_projectPriority"]);
 $TPL["project_projectPriority"] and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$projectPriorities[$TPL["project_projectPriority"]]["colour"]."\">[".$tp[$TPL["project_projectPriority"]]."]</div>";
 
 
 
 
 
-$TPL["currencyType_options"] = get_select_options($currency_array, $TPL["project_currencyType"]);
+$TPL["currencyType_options"] = page::select_options($currency_array, $TPL["project_currencyType"]);
 
 if ($_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]) {
   define("PROJECT_EXISTS",1);
@@ -787,8 +787,8 @@ DONE;
 $TPL["taxName"] = config::get_config_item("taxName");
 
 // Need to html-ise projectName and description
-$TPL["project_projectName_html"] = text_to_html($project->get_value("projectName"));
-$TPL["project_projectComments_html"] = text_to_html($project->get_value("projectComments"));
+$TPL["project_projectName_html"] = page::to_html($project->get_value("projectName"));
+$TPL["project_projectComments_html"] = page::to_html($project->get_value("projectComments"));
 
 
 if ($project->have_perm(PERM_READ_WRITE)) {

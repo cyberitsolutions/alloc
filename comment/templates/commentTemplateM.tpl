@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 <form action="{$url_alloc_commentTemplate}" method="post">
 {$table_box}
   <tr>
@@ -18,7 +18,7 @@
   </tr>
   <tr>
     <td valign="top">Text</td>
-    <td valign="top">{get_textarea("commentTemplateText",$TPL["commentTemplateText"],array("height"=>"jumbo"))}</td>
+    <td valign="top">{page::textarea("commentTemplateText",$TPL["commentTemplateText"],array("height"=>"jumbo"))}</td>
     <td valign="top">
       Placeholder variables may be inserted into the template text.<br>
       The following is a list of the available variables:<br><br>
@@ -56,5 +56,5 @@
 <input type="hidden" name="commentTemplateID" value="{$commentTemplateID}">
 <input type="hidden" name="commentTemplateModifiedTime" value="{$displayFromDate}">
 </form>
-{show_footer()}
+{page::footer()}
 										    

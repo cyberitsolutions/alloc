@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 {$table_box}
   <tr>
     <th colspan="2">Project Task Graph</th>
@@ -11,4 +11,4 @@
     <td colspan="2" align="center">{show_projects("templates/projectGraphR.tpl")}</td>
   </tr>
 </table>
-{show_footer()}
+{page::footer()}

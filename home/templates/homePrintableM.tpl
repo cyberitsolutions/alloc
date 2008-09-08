@@ -1,5 +1,5 @@
-{show_header()}
-  {show_toolbar()}
+{page::header()}
+  {page::toolbar()}
         {show_home_items("standard")}
         {show_home_items("narrow")}
-{show_footer()}
+{page::footer()}

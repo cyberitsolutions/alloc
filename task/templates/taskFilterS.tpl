@@ -28,7 +28,7 @@ function refreshProjectList(radiobutton) \{
       </div>
     </td>
     <td>
-      {get_help("taskList_savedFilter")}     
+      {page::help("taskList_savedFilter")}     
     </td>
   </tr>
 </table>
@@ -36,8 +36,8 @@ function refreshProjectList(radiobutton) \{
 <table align="center" class="filter">
   <tr>
     <td>&nbsp;</td>
-    <td>{print_expand_link("project_superset","Projects")}</td>
-    <td>Task Status {get_help("taskList_taskStatus")}</td>
+    <td>{page::expand_link("project_superset","Projects")}</td>
+    <td>Task Status {page::help("taskList_taskStatus")}</td>
     <td>Created By</td> 
     <td rowspan="6" valign="top">
     
@@ -105,7 +105,7 @@ function refreshProjectList(radiobutton) \{
     <td class="nobr" colspan="1" valign="bottom">
     </td>
     <td class="right" valign="bottom">
-      <input type="submit" name="applyFilter" value="Filter"> {get_help("taskList_filter")}
+      <input type="submit" name="applyFilter" value="Filter"> {page::help("taskList_filter")}
     </td>
   </tr>
 </table>

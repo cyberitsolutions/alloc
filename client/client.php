@@ -349,7 +349,7 @@ if ($_POST["save"]) {
 }
 
 $clientStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
-$TPL["clientStatusOptions"] = get_select_options($clientStatus_array, $client->get_value("clientStatus"));
+$TPL["clientStatusOptions"] = page::select_options($clientStatus_array, $client->get_value("clientStatus"));
 
 // client contacts
 if ($_POST["clientContact_save"] || $_POST["clientContact_delete"]) {

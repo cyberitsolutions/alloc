@@ -168,7 +168,7 @@ if ($_POST["multiplier"] && $_POST["multiplier"] == -1) {
   }
 }
 $multiplier_options = array(0=>"-- Select One --", 3=>"Java Frontend Client/Server", 2=>"Java Servlet/JSP", 2=>"Java Servlet/PHP", 1.2=>"PHP/Oracle", 1=>"PHP/SQL", 1=>"Python Frontend Client/Server", -1=>"(Custom Multiplier)");
-$TPL["multiplier_options"] = get_select_options($multiplier_options);
+$TPL["multiplier_options"] = page::select_options($multiplier_options);
 $TPL["main_alloc_title"] = "Cost &amp; Time Estimator - ".APPLICATION_NAME;
 include_template("templates/costtime.tpl");
 

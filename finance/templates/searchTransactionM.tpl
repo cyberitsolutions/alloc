@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 <form action="{$url_alloc_searchTransaction}" method="post">
 
@@ -27,8 +27,8 @@
           <td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
           <td><select name="tfID"><option value="">{$tfOptions}</select></td>
           <td><select name="status" value={$status}>{$statusOptions}</select></td>
-          <td>{get_calendar("dateOne",$TPL["dateOne"])}</td>
-          <td>{get_calendar("dateTwo",$TPL["dateTwo"])}</td>
+          <td>{page::calendar("dateOne",$TPL["dateOne"])}</td>
+          <td>{page::calendar("dateTwo",$TPL["dateTwo"])}</td>
           <td><input type="text" size="10" name="transactionID" value="{$transactionID}"></td>
           <td><input type="text" size="10" name="expenseFormID" value="{$expenseFormID}"></td>
           <td colspan="5"><input type="submit" name="search" value="Filter"></td>
@@ -57,4 +57,4 @@
   </tr>
 </table>
 </form>
-{show_footer()}
+{page::footer()}

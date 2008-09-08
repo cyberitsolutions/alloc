@@ -43,7 +43,7 @@ $modules["item"] = "Items";
 $modules["person"] = "Users";
 $modules["announcement"] = "Announcements";
 
-$TPL["module_options"] = get_select_options($modules,$_POST["mod"]);
+$TPL["module_options"] = page::select_options($modules,$_POST["mod"]);
 
 
 if ($_POST["do_step_2"]) {

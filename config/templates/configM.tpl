@@ -1,7 +1,7 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
-{get_side_by_side_links(array("basic"=>"Basic Setup"
+{page::side_by_side_links(array("basic"=>"Basic Setup"
                              ,"company_info"=>"Company Info"
                              ,"finance"=>"Finance"
                              ,"time_sheets"=>"Time Sheets"
@@ -18,24 +18,24 @@
   <tr>
     <td width="20%"><nobr>allocPSA Base URL</nobr></td>
     <td><input type="text" size="70" value="{$allocURL}" name="allocURL"></td> 
-    <td width="1%">{get_help("config_allocURL")}</td>
+    <td width="1%">{page::help("config_allocURL")}</td>
   </tr>
 <!-- 
   <tr>
     <td width="20%"><nobr>Time Zone</nobr></td>
-    <td><select name="allocTimezone">{echo get_select_options(get_timezone_array(),$TPL["allocTimezone"])}</select></td>
-    <td width="1%">{get_help("config_allocTimezone")}</td>
+    <td><select name="allocTimezone">{echo page::select_options(get_timezone_array(),$TPL["allocTimezone"])}</select></td>
+    <td width="1%">{page::help("config_allocTimezone")}</td>
   </tr>
   -->
   <tr>
     <td width="20%"><nobr>Calendar 1st Day</nobr></td>
     <td><select name="calendarFirstDay">{$calendarFirstDayOptions}</select></td>
-    <td width="1%">{get_help("config_calendarFirstDay")}</td>
+    <td width="1%">{page::help("config_calendarFirstDay")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Adminstrator Email Address</nobr></td>
     <td><input type="text" size="70" value="{$allocEmailAdmin}" name="allocEmailAdmin"></td> 
-    <td width="1%">{get_help("config_allocEmailAdmin")}</td>
+    <td width="1%">{page::help("config_allocEmailAdmin")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Email Addressing Method</nobr></td>
@@ -44,7 +44,7 @@
       <label for="eam_bcc">Use "Bcc:"</label><input id="eam_bcc" type="radio" name="allocEmailAddressMethod" value="bcc"{$TPL["allocEmailAddressMethod"] == "bcc" and print " checked"}>&nbsp;&nbsp;&nbsp;&nbsp;
       <label for="eam_tobcc">Use Both with special "To:"</label><input id="eam_tobcc" type="radio" name="allocEmailAddressMethod" value="tobcc"{$TPL["allocEmailAddressMethod"] == "tobcc" and print " checked"}>
     </td> 
-    <td width="1%">{get_help("config_allocEmailAddressMethod")}</td>
+    <td width="1%">{page::help("config_allocEmailAddressMethod")}</td>
   </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
@@ -62,42 +62,42 @@
   <tr>
     <td width="20%"><nobr>Finance Tagged Fund</nobr></td>
     <td><select name="mainTfID">{$mainTfOptions}</select></td>
-    <td width="1%">{get_help("config_mainTfID")}</td>
+    <td width="1%">{page::help("config_mainTfID")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Outgoing Funds TF</nobr></td>
     <td><select name="outTfID">{$outTfOptions}</select></td>
-    <td width="1%">{get_help("config_outTfID")}</td>
+    <td width="1%">{page::help("config_outTfID")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Incoming Funds TF</nobr></td>
     <td><select name="inTfID">{$inTfOptions}</select></td>
-    <td width="1%">{get_help("config_inTfID")}</td>
+    <td width="1%">{page::help("config_inTfID")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Tax Tagged Fund</nobr></td>
     <td><select name="taxTfID">{$taxTfOptions}</select></td>
-    <td width="1%">{get_help("config_taxTfID")}</td>
+    <td width="1%">{page::help("config_taxTfID")}</td>
   </tr>
   <tr>
     <td>Services Tax Name</td>
     <td><input type="text" size="70" value="{$taxName}" name="taxName"></td> 
-    <td width="1%">{get_help("config_taxName")}</td>
+    <td width="1%">{page::help("config_taxName")}</td>
   </tr>
   <tr>
     <td>Services Tax Percent</td>
     <td><input type="text" size="70" value="{$taxPercent}" name="taxPercent"></td> 
-    <td width="1%">{get_help("config_taxPercent")}</td>
+    <td width="1%">{page::help("config_taxPercent")}</td>
   </tr>
   <tr>
     <td>Payroll Tax Percent</td>
     <td><input type="text" size="70" value="{$payrollTaxPercent}" name="payrollTaxPercent"></td> 
-    <td width="1%">{get_help("config_payrollTaxPercent")}</td>
+    <td width="1%">{page::help("config_payrollTaxPercent")}</td>
   </tr>
   <tr>
     <td>Company Percent</td>
     <td><input type="text" size="70" value="{$companyPercent}" name="companyPercent"></td> 
-    <td width="1%">{get_help("config_companyPercent")}</td>
+    <td width="1%">{page::help("config_companyPercent")}</td>
   </tr>
   <tr>  
     <td colspan="3" align="center">
@@ -114,52 +114,52 @@
 {$table_box}
   <tr>
     <th colspan="2">Email Gateway</th>
-    <th class="right">{get_help("config_allocEmailGateway")}</th>
+    <th class="right">{page::help("config_allocEmailGateway")}</th>
   </tr>
   <tr>
     <td width="20%"><nobr>From Address</nobr></td>
     <td><input type="text" size="70" value="{$AllocFromEmailAddress}" name="AllocFromEmailAddress"></td> 
-    <td width="1%">{get_help("config_AllocFromEmailAddress")}</td>
+    <td width="1%">{page::help("config_AllocFromEmailAddress")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Mail Server Hostname/IP</nobr></td>
     <td><input type="text" size="70" value="{$allocEmailHost}" name="allocEmailHost"></td> 
-    <td width="1%">{get_help("config_allocEmailHost")}</td>
+    <td width="1%">{page::help("config_allocEmailHost")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Mail Server Port</nobr></td>
     <td><input type="text" size="70" value="{$allocEmailPort}" name="allocEmailPort"></td> 
-    <td width="1%">{get_help("config_allocEmailPort")}</td>
+    <td width="1%">{page::help("config_allocEmailPort")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Mail Server Username</nobr></td>
     <td><input type="text" size="70" value="{$allocEmailUsername}" name="allocEmailUsername"></td> 
-    <td width="1%">{get_help("config_allocEmailUsername")}</td>
+    <td width="1%">{page::help("config_allocEmailUsername")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Mail Server Password</nobr></td>
     <td><input type="password" size="70" value="{$allocEmailPassword}" name="allocEmailPassword"></td> 
-    <td width="1%">{get_help("config_allocEmailPassword")}</td>
+    <td width="1%">{page::help("config_allocEmailPassword")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Mail Protocol</nobr></td>
-    <td><select name="allocEmailProtocol">{echo get_select_options(array("imap"=>"IMAP","pop3"=>"POP3"),$TPL["allocEmailProtocol"])}</select></td> 
-    <td width="1%">{get_help("config_allocEmailProtocol")}</td>
+    <td><select name="allocEmailProtocol">{echo page::select_options(array("imap"=>"IMAP","pop3"=>"POP3"),$TPL["allocEmailProtocol"])}</select></td> 
+    <td width="1%">{page::help("config_allocEmailProtocol")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Mail Box Name</nobr></td>
     <td><input type="text" size="70" value="{$allocEmailFolder}" name="allocEmailFolder"></td> 
-    <td width="1%">{get_help("config_allocEmailFolder")}</td>
+    <td width="1%">{page::help("config_allocEmailFolder")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Mail Key Method</nobr></td>
-    <td><select name="allocEmailKeyMethod">{echo get_select_options(array("headers"=>"Email Headers","subject"=>"Email Subject"),$TPL["allocEmailKeyMethod"])}</select></td>
-    <td width="1%">{get_help("config_allocEmailKeyMethod")}</td>
+    <td><select name="allocEmailKeyMethod">{echo page::select_options(array("headers"=>"Email Headers","subject"=>"Email Subject"),$TPL["allocEmailKeyMethod"])}</select></td>
+    <td width="1%">{page::help("config_allocEmailKeyMethod")}</td>
   </tr>
   <tr>
     <td valign="top" width="20%">Task Email Header</td>
     <td><select name="task_email_header"><option value="">{$task_email_header_options}</select></td>
-    <td width="1%">{get_help("config_taskEmailHeader")}</td>
+    <td width="1%">{page::help("config_taskEmailHeader")}</td>
   </tr>
   <tr>
     <td valign="top" width="20%">Task Email Footer</td>
@@ -185,27 +185,27 @@
   <tr>
     <td>Time Sheet Manager</td>
     <td><select name="timeSheetManagerEmail"><option value="">{$timeSheetManagerEmailOptions}</select></td> 
-    <td width="1%">{get_help("config_timeSheetManagerEmail")}</td>
+    <td width="1%">{page::help("config_timeSheetManagerEmail")}</td>
   </tr>
   <tr>
     <td>Time Sheet Administrator</td>
     <td><select name="timeSheetAdminEmail"><option value="">{$timeSheetAdminEmailOptions}</select></td> 
-    <td width="1%">{get_help("config_timeSheetAdminEmail")}</td>
+    <td width="1%">{page::help("config_timeSheetAdminEmail")}</td>
   </tr>
   <tr>
     <td>Hours in a Working Day</td>
     <td><input type="text" size="70" value="{$hoursInDay}" name="hoursInDay"></td> 
-    <td width="1%">{get_help("config_hoursInDay")}</td>
+    <td width="1%">{page::help("config_hoursInDay")}</td>
   </tr>
   <tr>
     <td>Time Sheet Payment Insurance Percent</td>
     <td><input type="text" size="70" value="{$paymentInsurancePercent}" name="paymentInsurancePercent"></td> 
-    <td width="1%">{get_help("config_paymentInsurancePercent")}</td>
+    <td width="1%">{page::help("config_paymentInsurancePercent")}</td>
   </tr>
   <tr>
     <td valign="top">Time Sheet Print Options</td>
     <td><select size="9" name="timeSheetPrint[]" multiple><option value="">{$timeSheetPrintOptions}</select><a href="{$url_alloc_configEdit}configName=timeSheetPrintOptions">Edit</a></td>
-    <td width="1%" valign="top">{get_help("config_timeSheetPrint")}</td>
+    <td width="1%" valign="top">{page::help("config_timeSheetPrint")}</td>
   </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
@@ -220,7 +220,7 @@
 {$table_box}
   <tr>
     <th colspan="2">Company Information</th>
-    <th width="1%">{get_help("config_companyInfo")}</th>
+    <th width="1%">{page::help("config_companyInfo")}</th>
   </tr>
   <tr>
     <td width="20%">Company Name</td>
@@ -265,7 +265,7 @@
   <tr>
     <td>Invoice / Time Sheet PDF Footer</td>
     <td><input type="text" size="70" value="{$timeSheetPrintFooter}" name="timeSheetPrintFooter"></td> 
-    <td width="1%">{get_help("config_timeSheetPrintFooter")}</td>
+    <td width="1%">{page::help("config_timeSheetPrintFooter")}</td>
   </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
@@ -280,7 +280,7 @@
 {$table_box}
   <tr>
     <th colspan="2">Miscellaneous Setup</th>
-    <th width="1%">{get_help("config_misc_setup")}</th>
+    <th width="1%">{page::help("config_misc_setup")}</th>
   </tr>
   <tr>
     <td valign="top" width="20%"><nobr>Extra Interested Parties Options</nobr></td>
@@ -291,7 +291,7 @@
           {$br = ", "}
       {/}
     </td> 
-    <td width="1%">{get_help("config_defaultInterestedParties.html")}</td>
+    <td width="1%">{page::help("config_defaultInterestedParties.html")}</td>
   </tr>
   <tr>
     <td valign="top" width="20%"><nobr>Project Priorities</nobr></td>
@@ -303,7 +303,7 @@
           {$br = ", "}
       {/}
     </td> 
-    <td width="1%">{get_help("config_projectPriorities.html")}</td>
+    <td width="1%">{page::help("config_projectPriorities.html")}</td>
   </tr>
   <tr>
     <td valign="top" width="20%"><nobr>Task Priorities</nobr></td>
@@ -315,7 +315,7 @@
           {$br = ", "}
       {/}
     </td> 
-    <td width="1%">{get_help("config_taskPriorities.html")}</td>
+    <td width="1%">{page::help("config_taskPriorities.html")}</td>
   </tr>
   <tr>
     <td valign="top" width="20%"><nobr>Timesheet Multipliers</nobr></td>
@@ -327,7 +327,7 @@
           {$br = ", "}
       {/}
     </td>
-    <td width="1%">{get_help("config_timeSheetMultipliers")}</td>
+    <td width="1%">{page::help("config_timeSheetMultipliers")}</td>
   </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
@@ -339,4 +339,4 @@
 
 
   
-{show_footer()}
+{page::footer()}

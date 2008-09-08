@@ -1,7 +1,7 @@
-{show_header()}
+{page::header()}
 <style>table.box td \{text-align:left; border-top:1px solid #999999; font-size:11px;\}</style>
 <br>
-{show_messages()}
+{page::messages()}
 <br>
 
 <form action="{$url_alloc_patch}" method="post">
@@ -36,4 +36,4 @@
 </table>
 
 <div><div>
-{show_footer()}
+{page::footer()}

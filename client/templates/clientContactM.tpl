@@ -1,7 +1,7 @@
   {$table_box}
     <tr>
       <th>Client Contacts</th>
-      <th class="right">{print_expand_link("id_new_client_contact")}</th>
+      <th class="right">{page::expand_link("id_new_client_contact")}</th>
     </tr>
     <tr>
       <td colspan="2">
@@ -15,7 +15,7 @@
             <td>Name</td> <td><input type="text" name="clientContactName" value="{$clientContact_clientContactName}"></td>
             <td>Email</td> <td><input type="text" name="clientContactEmail" value="{$clientContact_clientContactEmail}"></td>
             <td>Info</td>
-            <td rowspan="6" valign="top" align="right">{get_textarea("clientContactOther",$TPL["clientContact_clientContactOther"],array("height"=>"medium"))}<br>
+            <td rowspan="6" valign="top" align="right">{page::textarea("clientContactOther",$TPL["clientContact_clientContactOther"],array("height"=>"medium"))}<br>
                                          Primary Contact <input type="checkbox" name="clientPrimaryContactID" value="1"{$clientPrimaryContactID_checked}> {$clientContactItem_buttons}
 
             </td>

@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 {$table_box}
   <tr>
     <th>People</th> 
@@ -61,4 +61,4 @@
     </td>
   </tr>
 </table>
-{show_footer()}
+{page::footer()}

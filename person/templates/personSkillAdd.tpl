@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 <form action="{$url_alloc_personSkillAdd}" method="post">
 {$table_box}
@@ -29,4 +29,4 @@
 </table>
 </form>
 
-{show_footer()}
+{page::footer()}

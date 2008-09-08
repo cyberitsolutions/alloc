@@ -19,7 +19,7 @@
               {$show_userID_options}
             </select>
           </td>
-          <td>{get_calendar("dateFrom",$TPL["dateFrom"])}</td>
+          <td>{page::calendar("dateFrom",$TPL["dateFrom"])}</td>
           <td>
             <select name="status">
               <option value=""> </option>

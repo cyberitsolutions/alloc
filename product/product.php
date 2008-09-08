@@ -57,7 +57,7 @@ while ($row = $db->next_record()) {
 
 function tf_list($selected) {
   global $tflist;
-  echo get_select_options($tflist, $selected);
+  echo page::select_options($tflist, $selected);
   return;
 }
 $TPL["companyTF"] = $tflist[config::get_config_item("cybersourceTfID")];

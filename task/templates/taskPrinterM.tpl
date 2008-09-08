@@ -1,4 +1,4 @@
-{show_header()}
+{page::header()}
 <style>
   body \{background:white; color:black; \}
   td.overline \{ border-top:1px solid #666666; \}
@@ -98,4 +98,4 @@
 
 
 
-{show_footer()}
+{page::footer()}

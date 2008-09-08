@@ -100,7 +100,7 @@ function show_new_invoiceItem($template) {
           $timeSheetOptions[$row["timeSheetID"]] = "Time Sheet #".$t->get_id()." ".$row["dateFrom"]." ".$currency.sprintf("%0.2f",$dollars)." for ".person::get_fullname($row["personID"]).", Project: ".$row["projectName"]." [".$timeSheetStatii[$t->get_value("status")]."]";
         }
 
-        $TPL["timeSheetOptions"] = get_select_options($timeSheetOptions,$invoiceItem->get_value("timeSheetID"),150);
+        $TPL["timeSheetOptions"] = page::select_options($timeSheetOptions,$invoiceItem->get_value("timeSheetID"),150);
       }
 
       // Expense Form dropdown
@@ -127,7 +127,7 @@ function show_new_invoiceItem($template) {
       if ($invoiceItem->get_value("expenseFormID")) {
         $id = $invoiceItem->get_value("expenseFormID");
       }
-      $TPL["expenseFormOptions"] = get_select_options($expenseFormOptions,$id,90);
+      $TPL["expenseFormOptions"] = page::select_options($expenseFormOptions,$id,90);
     }
 
     $TPL["invoiceItem_iiQuantity"] or $TPL["invoiceItem_iiQuantity"] = 1;
@@ -278,7 +278,7 @@ function show_invoiceItem_list() {
       $selected_tfID or $selected_tfID = config::get_config_item("mainTfID");
 
 
-      #$tf_options = get_select_options($tf_array, $selected_tfID);
+      #$tf_options = page::select_options($tf_array, $selected_tfID);
       #$tf_options = "<select name=\"invoiceItemAmountPaidTfID[".$invoiceItem->get_id()."]\">".$tf_options."</select>";
       #$TPL["invoiceItem_buttons"] = $currency."<input size=\"8\" type=\"text\" id=\"ap_".$invoiceItem->get_id()."\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
       #$TPL["invoiceItem_buttons"].= $tf_options;
@@ -604,7 +604,7 @@ if ($current_user->have_role('admin')) {
     $options["clientStatus"] = "current";
     $options["return"] = "dropdown_options";
     $ops = client::get_client_list($options);
-    $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".get_select_options($ops,$TPL["clientID"])."</select>";
+    $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
 
   } else if ($invoice->get_value("invoiceStatus") == "edit") {
     $TPL["invoice_buttons"] = "
@@ -615,7 +615,7 @@ if ($current_user->have_role('admin')) {
     $options["clientStatus"] = "current";
     $options["return"] = "dropdown_options";
     $ops = client::get_client_list($options);
-    $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".get_select_options($ops,$invoice->get_value("clientID"))."</select>";
+    $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$invoice->get_value("clientID"))."</select>";
 
   } else if ($invoice->get_value("invoiceStatus") == "reconcile") {
     $TPL["invoice_buttons"] = "
@@ -643,7 +643,7 @@ if (!$invoice->get_value("clientID")) {
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
   $ops = client::get_client_list($options);
-  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".get_select_options($ops,$TPL["clientID"])."</select>";
+  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
 } 
 
 

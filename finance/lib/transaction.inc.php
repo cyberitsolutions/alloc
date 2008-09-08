@@ -508,10 +508,10 @@ class transaction extends db_entity
   function load_transaction_filter($_FORM) {
     global $TPL;
 
-    $rtn["statusOptions"] = get_select_options(array("pending"=>"Pending","approved"=>"Approved","rejected"=>"Rejected"),$_FORM["status"]);
+    $rtn["statusOptions"] = page::select_options(array("pending"=>"Pending","approved"=>"Approved","rejected"=>"Rejected"),$_FORM["status"]);
 
     $transactionTypeOptions = transaction::get_transactionTypes();
-    $rtn["transactionTypeOptions"] = get_select_options($transactionTypeOptions,$_FORM["transactionType"]);
+    $rtn["transactionTypeOptions"] = page::select_options($transactionTypeOptions,$_FORM["transactionType"]);
 
     $rtn["startDate"] = $_FORM["startDate"];
     $rtn["endDate"] = $_FORM["endDate"];

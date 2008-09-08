@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 <script type="text/javascript" language="javascript">
 // Make the XML request thing, specify the callback function 
 function updateStuffWithAjax() \{
@@ -31,11 +31,11 @@ $(document).ready(function() \{
       <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
 
         <div class="view">
-          <h6>{$task_taskType}{mandatory($task_taskName)}</h6>
+          <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
           <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {$task_taskName}</h2>&nbsp;{$priorityLabel}
         </div>
         <div class="edit nobr">
-          <h6>{$task_taskType}{mandatory($task_taskName)}</h6>
+          <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
           <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" size="35" maxlength="75">
           <select name="priority">
             {$priorityOptions}
@@ -43,7 +43,7 @@ $(document).ready(function() \{
           <select name="taskTypeID">
             {$taskTypeOptions}
           </select>
-          {get_help("taskType")}
+          {page::help("taskType")}
         </div>
 
         {if $project_projectName} 
@@ -77,7 +77,7 @@ $(document).ready(function() \{
 
         <div class="edit">
           <h6>Description</h6>
-          {get_textarea("taskDescription",$TPL["task_taskDescription"],array("height"=>"medium","width"=>"100%"))}
+          {page::textarea("taskDescription",$TPL["task_taskDescription"],array("height"=>"medium","width"=>"100%"))}
         </div>
 
         {if $taskDuplicateLink}
@@ -90,7 +90,7 @@ $(document).ready(function() \{
         <div class="edit nobr" style="clear:both">
           <h6>Duplicate</h6>
           <input type="text" name="duplicateTaskID" value="{$task_duplicateTaskID}" size="10">
-          {get_help("task_duplicate")}
+          {page::help("task_duplicate")}
         </div>
         {/}
 
@@ -140,7 +140,7 @@ $(document).ready(function() \{
         <div class="edit">
           <h6>Interested Parties</h6> 
           <div id="interestedPartyDropdown" style="display:inline">{$interestedPartyOptions}</div>
-          {get_help("task_interested_parties")}
+          {page::help("task_interested_parties")}
         </div>
 
         {if $task_timeEstimate || $time_billed_link || ($percentComplete && $percentComplete != "0%")}
@@ -180,10 +180,10 @@ $(document).ready(function() \{
         <div class="edit">
           <h6>Estimated Start<div>Estimated Completion</div></h6>
           <div style="float:left; width:30%">
-            {get_calendar("dateTargetStart",$task_dateTargetStart)}
+            {page::calendar("dateTargetStart",$task_dateTargetStart)}
           </div>
           <div style="float:right; width:50%">
-            {get_calendar("dateTargetCompletion",$task_dateTargetCompletion)}
+            {page::calendar("dateTargetCompletion",$task_dateTargetCompletion)}
           </div>
         </div>
 
@@ -202,10 +202,10 @@ $(document).ready(function() \{
         <div class="edit">
           <h6>Actual Start<div>Actual Completion</div></h6>
           <div style="float:left; width:30%">
-            {get_calendar("dateActualStart",$task_dateActualStart)}
+            {page::calendar("dateActualStart",$task_dateActualStart)}
           </div>
           <div style="float:right; width:50%">
-            {get_calendar("dateActualCompletion",$task_dateActualCompletion)}
+            {page::calendar("dateActualCompletion",$task_dateActualCompletion)}
           </div>
         </div>
 
@@ -263,4 +263,4 @@ $(document).ready(function() \{
 
 <br>&nbsp;
 
-{show_footer()}
+{page::footer()}

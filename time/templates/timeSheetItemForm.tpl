@@ -21,7 +21,7 @@ function refreshTaskList(radiobutton) \{
           <td valign="bottom">Duration</td>
         </tr>
         <tr>
-          <td>{get_calendar("timeSheetItem_dateTimeSheetItem",$TPL["tsi_dateTimeSheetItem"])}</td>
+          <td>{page::calendar("timeSheetItem_dateTimeSheetItem",$TPL["tsi_dateTimeSheetItem"])}</td>
           <td>
             <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$tsi_timeSheetItemDuration}">
             <select name="timeSheetItem_timeSheetItemDurationUnitID">{$tsi_unit_options}</select>
@@ -51,7 +51,7 @@ function refreshTaskList(radiobutton) \{
     <td valign="top"></td>
     <td colspan="3" valign="top">
     Comments<br>
-    {get_textarea("timeSheetItem_comment",$TPL["tsi_comment"])}
+    {page::textarea("timeSheetItem_comment",$TPL["tsi_comment"])}
     Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{$commentPrivateChecked}>
     </td>
     <td colspan="1" valign="top" align="right"><br/>{$tsi_buttons}</td>

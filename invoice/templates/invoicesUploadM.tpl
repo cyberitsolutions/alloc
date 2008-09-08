@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 {$table_box}
   <tr>
     <th>Invoices Upload</th>
@@ -34,4 +34,4 @@
       <td>{$msg}</td>
     </tr>
 </table>
-{show_footer()}
+{page::footer()}

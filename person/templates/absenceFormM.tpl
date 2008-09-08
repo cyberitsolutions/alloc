@@ -1,5 +1,5 @@
-{show_header()}
-  {show_toolbar()}
+{page::header()}
+  {page::toolbar()}
     <form action="{$url_alloc_absence}" method=post>
       {$myMessage}
       <input type="hidden" name="absenceID" value="{$absence_absenceID}">
@@ -16,13 +16,13 @@
         <tr>
           <td>Date From</td>
           <td>
-            {get_calendar("absence_dateFrom",$TPL["absence_dateFrom"])}
+            {page::calendar("absence_dateFrom",$TPL["absence_dateFrom"])}
           </td>
 	      </tr>
         <tr>
           <td>Date To</td>
           <td>
-            {get_calendar("absence_dateTo",$TPL["absence_dateTo"])}
+            {page::calendar("absence_dateTo",$TPL["absence_dateTo"])}
           </td>
         </tr>
         <tr>
@@ -35,7 +35,7 @@
         </tr>
         <tr>
           <td>Emergency contact details<br /> while on leave.</td>
-          <td>{get_textarea("absence_contactDetails",$TPL["absence_contactDetails"])}</td>
+          <td>{page::textarea("absence_contactDetails",$TPL["absence_contactDetails"])}</td>
         </tr>
         <tr>
           <td colspan="2" align="center">
@@ -46,5 +46,5 @@
       </table>
     </form>
 
-{show_footer()}
+{page::footer()}
 

@@ -1,5 +1,5 @@
-{show_header()}
-  {show_toolbar()}
+{page::header()}
+  {page::toolbar()}
 
 <form name="costForm" action="{$url_alloc_expenseForm}" method="post">
 
@@ -37,7 +37,7 @@
   </tr>
   <tr>
     <td align="right" valign="top">Comment</td>
-    <td colspan="3" valign="top">{get_textarea("expenseFormComment",$expenseFormComment)}</td>
+    <td colspan="3" valign="top">{page::textarea("expenseFormComment",$expenseFormComment)}</td>
   </tr>
   <tr>
     <td colspan="4" align="center">
@@ -56,7 +56,7 @@
   </tr>
 
   <tr>
-    <td colspan="3">Enter the company name and address{mandatory($companyDetails)}</td> 
+    <td colspan="3">Enter the company name and address{page::mandatory($companyDetails)}</td> 
     <td colspan="3">Project</td> 
   </tr>
   <tr>
@@ -64,18 +64,18 @@
     <td colspan="3"><select name="projectID" value="{$projectID}"><option value="">{$projectOptions}</select></td>
   </tr>
   <tr>
-    <td>Product{mandatory($product)}</td>
+    <td>Product{page::mandatory($product)}</td>
     <td>Quantity</td>
-    <td>Price{mandatory($amount)}</td>
-    <td>Source TF{mandatory($fromTfID)}</td>
-    <td>Date Incurred{mandatory($transactionDate)}</td>
+    <td>Price{page::mandatory($amount)}</td>
+    <td>Source TF{page::mandatory($fromTfID)}</td>
+    <td>Date Incurred{page::mandatory($transactionDate)}</td>
   </tr>
   <tr>
     <td><input type="text" size="25" name="product" value="{$product}"></td>
     <td><input type="text" size="5" name="quantity" value="{$quantity}"></td>
     <td><input type="text" size="9" name="amount" value="{$amount}"></td>
     <td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
-    <td><nobr>{get_calendar("transactionDate",$TPL["transactionDate"])}</nobr>
+    <td><nobr>{page::calendar("transactionDate",$TPL["transactionDate"])}</nobr>
     <td class="right"><input type="submit" name="add" value="Add Expense Form Item"><input type="hidden" name="transactionID" value="{$transactionID}"></td>
   </tr>
 </table>
@@ -97,5 +97,5 @@
 {/}
 
 
-{show_footer()}
+{page::footer()}
 

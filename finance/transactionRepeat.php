@@ -126,10 +126,10 @@ if ($tf->select() && $tf->get_value("status") != 'active') {
   $TPL["message_help"][] = "This expense is sourced from an inactive TF. It will not create transactions.";
 }
 
-$TPL["tfOptions"] = get_select_options($q, $transactionRepeat->get_value("tfID"));
-$TPL["fromTfOptions"] = get_select_options($q, $transactionRepeat->get_value("fromTfID"));
-$TPL["basisOptions"] = get_select_options(array("weekly", "fortnightly", "monthly", "quarterly", "yearly"), $transactionRepeat->get_value("paymentBasis"));
-$TPL["transactionTypeOptions"] = get_select_options(transaction::get_transactionTypes(), $transactionRepeat->get_value("transactionType"));
+$TPL["tfOptions"] = page::select_options($q, $transactionRepeat->get_value("tfID"));
+$TPL["fromTfOptions"] = page::select_options($q, $transactionRepeat->get_value("fromTfID"));
+$TPL["basisOptions"] = page::select_options(array("weekly", "fortnightly", "monthly", "quarterly", "yearly"), $transactionRepeat->get_value("paymentBasis"));
+$TPL["transactionTypeOptions"] = page::select_options(transaction::get_transactionTypes(), $transactionRepeat->get_value("transactionType"));
 
 if (is_object($transactionRepeat) && $transactionRepeat->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
   $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"pending\" value=\"Pending\">";

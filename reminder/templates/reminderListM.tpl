@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 {$table_box}
   <tr>
     <th colspan="3">Reminders</th>
@@ -22,4 +22,4 @@
     </td>
   </tr>
 </table>
-{show_footer()}
+{page::footer()}

@@ -6,7 +6,7 @@
           <td>Allocated To</td>
           <td>Name Containing</td>
           <td></td>
-    <!--      <td rowspan="2">{get_help("projectListFilter")}</td> -->
+    <!--      <td rowspan="2">{page::help("projectListFilter")}</td> -->
         </tr>
         <tr>
           <td><select name="projectStatus"><option value=""> {$projectStatusOptions}</select></td>

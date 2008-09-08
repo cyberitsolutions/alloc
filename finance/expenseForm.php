@@ -205,7 +205,7 @@ if ($transaction_to_edit->get_value("fromTfID")) {
 }
 
 $q = "SELECT tfID AS value, tfName AS label FROM tf WHERE status = 'active' ORDER BY tfName";
-$TPL["fromTfOptions"] = get_select_options($q, $selectedTfID);
+$TPL["fromTfOptions"] = page::select_options($q, $selectedTfID);
 
 if (is_object($expenseForm) && $expenseForm->get_value("clientID")) { 
   $clientID_sql = sprintf(" AND clientID = %d",$expenseForm->get_value("clientID"));
@@ -216,7 +216,7 @@ $q = "SELECT projectID AS value, projectName AS label
        WHERE projectStatus = 'current' 
              ".$clientID_sql." 
     ORDER BY projectName";
-$TPL["projectOptions"] = get_select_options($q, $selectedProjectID);
+$TPL["projectOptions"] = page::select_options($q, $selectedProjectID);
 
 if (is_object($expenseForm)) { 
   $expenseForm->set_tpl_values();
@@ -311,7 +311,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") &
 }
 
 $paymentOptions = array("", "COD", "Cheque", "Company Amex Charge", "Company Amex Blue", "Company Virgin MasterCard", "Other Credit Card", "Account", "Direct Deposit");
-$paymentOptions = get_select_options($paymentOptions, $expenseForm->get_value("paymentMethod"));
+$paymentOptions = page::select_options($paymentOptions, $expenseForm->get_value("paymentMethod"));
 
 
 function get_reimbursementRequired_array() {
@@ -368,7 +368,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
   $ops = client::get_client_list($options);
-  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".get_select_options($ops,$TPL["clientID"])."</select>";
+  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
   
@@ -387,7 +387,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
   $ops = client::get_client_list($options);
-  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".get_select_options($ops,$TPL["clientID"])."</select>";
+  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
 }
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {
@@ -411,7 +411,7 @@ if (is_object($expenseForm) && have_entity_perm("transaction", PERM_FINANCE_WRIT
   $sel_invoice = $row["invoiceID"];
   $TPL["attach_to_invoice_button"] = "<select name=\"attach_to_invoiceID\">";
   $TPL["attach_to_invoice_button"].= "<option value=\"create_new\">Create New Invoice</option>";
-  $TPL["attach_to_invoice_button"].= get_select_options($invoice_list,$sel_invoice)."</select>";
+  $TPL["attach_to_invoice_button"].= page::select_options($invoice_list,$sel_invoice)."</select>";
   $TPL["attach_to_invoice_button"].= "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
   $TPL["invoice_label"] = "Invoice:";
 }

@@ -1,5 +1,5 @@
-{show_header()}
-  {show_toolbar()}
+{page::header()}
+  {page::toolbar()}
 
 <form method="post" action="{$url_alloc_item}">
 
@@ -40,4 +40,4 @@
 
 
 
-{show_footer()}
+{page::footer()}

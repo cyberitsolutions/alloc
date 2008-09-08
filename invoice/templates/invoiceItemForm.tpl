@@ -5,7 +5,7 @@
   </tr>
   <tr>
     <td colspan="6">
-      {get_side_by_side_links(array("generic_ii"=>"Generic"
+      {page::side_by_side_links(array("generic_ii"=>"Generic"
                                    ,"timeSheet_ii"=>"From Time Sheet"
                                    ,"expenseForm_ii"=>"From Expense Form")
                              ,$TPL["sbs_link"])}    
@@ -23,7 +23,7 @@
         <td>Memo</td>
       </tr>
       <tr>
-        <td class="nobr">{get_calendar("iiDate",$TPL["invoiceItem_iiDate"])}</td>
+        <td class="nobr">{page::calendar("iiDate",$TPL["invoiceItem_iiDate"])}</td>
         <td><input type="text" size="4" name="iiQuantity" value="{$invoiceItem_iiQuantity}"></td>
         <td>*</td>
         <td><input type="text" size="7" name="iiUnitPrice" value="{$invoiceItem_iiUnitPrice}"></td>

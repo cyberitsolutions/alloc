@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 <form action="{$url_alloc_reminderAdd}" method="post">
 {$table_box}
@@ -51,7 +51,7 @@
     </tr>
     <tr>
       <td valign="top">Content:</td>
-      <td colspan="3">{get_textarea("reminder_content",$TPL["reminder_default_content"])}</td>
+      <td colspan="3">{page::textarea("reminder_content",$TPL["reminder_default_content"])}</td>
     </tr>
     <tr>
       <td colspan="4" align="center">{$reminder_buttons}&nbsp;&nbsp;&nbsp;{$reminder_goto_parent}</td>
@@ -68,4 +68,4 @@
 
   </form>
 
-{show_footer()}
+{page::footer()}

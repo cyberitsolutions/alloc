@@ -21,6 +21,7 @@
 */
 
 
+require_once(ALLOC_MOD_DIR."shared/lib/page.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/template.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_db.inc.php");
 require_once(ALLOC_MOD_DIR."shared/lib/class_db_alloc.inc.php");

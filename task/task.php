@@ -432,14 +432,14 @@ if ($_GET["media"] == "print") {
 
   // Need to html-ise taskName and description
   $TPL["task_taskName"] = htmlentities($task->get_value("taskName"));
-  $TPL["task_taskDescription"] = text_to_html($task->get_value("taskDescription"));
+  $TPL["task_taskDescription"] = page::to_html($task->get_value("taskDescription"));
 
   include_template("templates/taskPrinterM.tpl");
 
 } else {
   // Need to html-ise taskName and description
-  $TPL["task_taskName_html"] = text_to_html($task->get_value("taskName"));
-  $TPL["task_taskDescription_html"] = text_to_html($task->get_value("taskDescription"));
+  $TPL["task_taskName_html"] = page::to_html($task->get_value("taskName"));
+  $TPL["task_taskDescription_html"] = page::to_html($task->get_value("taskDescription"));
 
   include_template("templates/taskM.tpl");
 }

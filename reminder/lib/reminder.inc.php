@@ -117,7 +117,7 @@ class reminder extends db_entity {
         $recipient = $current_user->get_id();
       }
     }
-    return get_select_options($recipients, $recipient);
+    return page::select_options($recipients, $recipient);
   }
 
   function get_day_options() {
@@ -132,7 +132,7 @@ class reminder extends db_entity {
     } else {
       $day = date("d", mktime(date("H"), date("i") + 5 - (date("i") % 5), 0, date("m"), date("d"), date("Y")));
     }
-    return get_select_options($days, $day);
+    return page::select_options($days, $day);
   }
 
   function get_month_options() {
@@ -143,7 +143,7 @@ class reminder extends db_entity {
     } else {
       $month = date("m", mktime(date("H"), date("i") + 5 - (date("i") % 5), 0, date("m"), date("d"), date("Y")));
     }
-    return get_select_options($months, $month);
+    return page::select_options($months, $month);
   }
 
   function get_year_options() {
@@ -157,7 +157,7 @@ class reminder extends db_entity {
     } else {
       $year = date("Y", mktime(date("H"), date("i") + 5 - (date("i") % 5), 0, date("m"), date("d"), date("Y")));
     }
-    return get_select_options($years, $year);
+    return page::select_options($years, $year);
   }
 
   function get_hour_options() {
@@ -168,7 +168,7 @@ class reminder extends db_entity {
     } else {
       $hour = date("h", mktime(date("H"), date("i") + 5 - (date("i") % 5), 0, date("m"), date("d"), date("Y")));
     }
-    return get_select_options($hours, $hour);
+    return page::select_options($hours, $hour);
   }
 
   function get_minute_options() {
@@ -179,7 +179,7 @@ class reminder extends db_entity {
     } else {
       $minute = date("i", mktime(date("H"), date("i") + 5 - (date("i") % 5), 0, date("m"), date("d"), date("Y")));
     }
-    return get_select_options($minutes, $minute);
+    return page::select_options($minutes, $minute);
   }
 
   function get_meridian_options() {
@@ -190,7 +190,7 @@ class reminder extends db_entity {
     } else {
       $meridian = date("a", mktime(date("H"), date("i") + 5 - (date("i") % 5), 0, date("m"), date("d"), date("Y")));
     }
-    return get_select_options($meridians, $meridian);
+    return page::select_options($meridians, $meridian);
   }
 
   function get_recuring_interval_options() {
@@ -199,7 +199,7 @@ class reminder extends db_entity {
     if ($recuring_interval == "") {
       $recuring_interval = "Week";
     }
-    return get_select_options($recuring_interval_options, $recuring_interval);
+    return page::select_options($recuring_interval_options, $recuring_interval);
   }
 
   function get_advnotice_interval_options() {
@@ -208,7 +208,7 @@ class reminder extends db_entity {
     if ($advnotice_interval == "") {
       $advnotice_interval = "Hour";
     }
-    return get_select_options($advnotice_interval_options, $advnotice_interval);
+    return page::select_options($advnotice_interval_options, $advnotice_interval);
   }
 
   function is_alive() {

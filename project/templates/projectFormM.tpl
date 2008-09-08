@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 <script type="text/javascript" language="javascript">
 $(document).ready(function() \{
   {if !$project_projectID}
@@ -28,7 +28,7 @@ function refreshProjectList(value) \{
 {$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"] or $sbs_link = "project"}
 {if defined("PROJECT_EXISTS")}
 {$first_div="hidden"}
-{get_side_by_side_links(array("project"=>"Main"
+{page::side_by_side_links(array("project"=>"Main"
                              ,"people"=>"People"
                              ,"commissions"=>"Commissions"
                              ,"comments"=>"Comments"
@@ -56,12 +56,12 @@ function refreshProjectList(value) \{
       <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
 
         <div class="view">
-          <h6>{$project_projectType}{mandatory($project_projectName)}</h6>
+          <h6>{$project_projectType}{page::mandatory($project_projectName)}</h6>
           <h2 style="margin-bottom:0px; display:inline;">{$project_projectID} {$project_projectName}</h2>&nbsp;{$priorityLabel}
         </div>
 
         <div class="edit">
-          <h6>{$project_projectType}{mandatory($project_projectName)}</h6>
+          <h6>{$project_projectType}{page::mandatory($project_projectName)}</h6>
           <input type="text" name="projectName" id="projectName" value="{$project_projectName_html}" size="45">
           <select name="projectPriority">{$projectPriority_options}</select>
           <select name="projectType">{$projectType_options}</select>
@@ -75,7 +75,7 @@ function refreshProjectList(value) \{
         {/}
         <div class="edit">
           <h6>Description</h6>  
-          {get_textarea("projectComments",$project_projectComments,array("height"=>"medium","width"=>"100%"))}
+          {page::textarea("projectComments",$project_projectComments,array("height"=>"medium","width"=>"100%"))}
         </div>
 
         {if $clientDetails}
@@ -190,10 +190,10 @@ function refreshProjectList(value) \{
         <div class="edit">
           <h6>Estimated Start<div>Estimated Completion</div></h6>
           <div style="float:left; width:40%;">
-            {get_calendar("dateTargetStart",$project_dateTargetStart)}
+            {page::calendar("dateTargetStart",$project_dateTargetStart)}
           </div>
           <div style="float:right; width:50%;">
-            {get_calendar("dateTargetCompletion",$project_dateTargetCompletion)}
+            {page::calendar("dateTargetCompletion",$project_dateTargetCompletion)}
           </div>
         </div>
 
@@ -212,10 +212,10 @@ function refreshProjectList(value) \{
         <div class="edit">
           <h6>Actual Start<div>Actual Completion</div></h6>
           <div style="float:left; width:40%;">
-            {get_calendar("dateActualStart",$project_dateActualStart)}
+            {page::calendar("dateActualStart",$project_dateActualStart)}
           </div>
           <div style="float:right; width:50%;">
-            {get_calendar("dateActualCompletion",$project_dateActualCompletion)}
+            {page::calendar("dateActualCompletion",$project_dateActualCompletion)}
           </div>
         </div>
 
@@ -241,7 +241,7 @@ function refreshProjectList(value) \{
 {$table_box}
   <tr>
     <th>Financial Summary</th>
-    <th class="right">{get_help("project_financial_summary")}</th>
+    <th class="right">{page::help("project_financial_summary")}</th>
   </tr>
   <tr>
     <td>Project Spend: ${$grand_total} ({$percentage}%)</td>
@@ -355,4 +355,4 @@ function refreshProjectList(value) \{
 {/}
 
 
-{show_footer()}
+{page::footer()}

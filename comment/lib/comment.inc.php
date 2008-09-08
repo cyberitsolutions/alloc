@@ -207,7 +207,7 @@ class comment extends db_entity {
 
   function get_comment_html_table($row=array()) {
     global $TPL;
-    $comment = comment::add_shrinky_divs(text_to_html($row["comment"]),$row["commentID"]);
+    $comment = comment::add_shrinky_divs(page::to_html($row["comment"]),$row["commentID"]);
     $onClick = "return set_grow_shrink('comment_".$row["commentID"]."','button_comment_".$row["commentID"]."','true');";
     $rtn[] = '<table width="100%" cellspacing="0" border="0" class="panel'.$row["external"].'">';
     $rtn[] = '<tr>';

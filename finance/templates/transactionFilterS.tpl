@@ -1,7 +1,7 @@
       <table class="filter" align="center" class="center">
         <tr>
           <td colspan="6" class="center">
-            {get_side_by_side_links(array("simple_search"=>"Simple","advanced_search"=>"Advanced"),$_POST["search_type"])}
+            {page::side_by_side_links(array("simple_search"=>"Simple","advanced_search"=>"Advanced"),$_POST["search_type"])}
           </td>
         </tr>
         <tr>
@@ -18,8 +18,8 @@
                 <td align="left">&nbsp;</td>
               </tr>
               <tr>
-                <td>{get_calendar("startDate",$TPL["startDate"])}</td>
-                <td>{get_calendar("endDate",$TPL["endDate"])}</td>
+                <td>{page::calendar("startDate",$TPL["startDate"])}</td>
+                <td>{page::calendar("endDate",$TPL["endDate"])}</td>
                 <td><select name="transactionType"><option value=""> {$transactionTypeOptions}</select></td>
                 <td><select name="status"><option value=""> {$statusOptions}</select></td>
                 <td>
@@ -49,4 +49,4 @@
       </table>
 
 
-{show_footer()}
+{page::footer()}
