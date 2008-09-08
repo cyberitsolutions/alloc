@@ -106,12 +106,12 @@ if (!$current_user->is_employee()) {
           $transaction->read_db_record($db);
           $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
 
-          $TPL["tf_options"] = get_select_options($tf_array, $TPL["transaction_tfID"]);
-          $TPL["from_tf_options"] = get_select_options($tf_array, $TPL["transaction_fromTfID"]);
-          $TPL["status_options"] = get_select_options($status_options, $transaction->get_value("status"));
+          $TPL["tf_options"] = page::select_options($tf_array, $TPL["transaction_tfID"]);
+          $TPL["from_tf_options"] = page::select_options($tf_array, $TPL["transaction_fromTfID"]);
+          $TPL["status_options"] = page::select_options($status_options, $transaction->get_value("status"));
           $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
-          $TPL["transactionType_options"] = get_select_options($transactionType_options, $transaction->get_value("transactionType"));
-          $TPL["percent_dropdown"] = get_select_options($percent_array, $empty);
+          $TPL["transactionType_options"] = page::select_options($transactionType_options, $transaction->get_value("transactionType"));
+          $TPL["percent_dropdown"] = page::select_options($percent_array, $empty);
           $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Save\">
                                          <input type=\"submit\" name=\"transaction_delete\" value=\"Delete\">";
           include_template($template_name);
@@ -149,18 +149,18 @@ if (!$current_user->is_employee()) {
 
     if ($timeSheet->get_value("status") == "invoiced" && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
       $q = "SELECT tfID as value, tfName as label FROM tf WHERE status = 'active' ORDER BY tfName";
-      $TPL["tf_options"] = get_select_options($q, $none);
+      $TPL["tf_options"] = page::select_options($q, $none);
 
       $transactionType_options = transaction::get_transactionTypes();
-      $TPL["transactionType_options"] = get_select_options($transactionType_options);
+      $TPL["transactionType_options"] = page::select_options($transactionType_options);
 
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
-      $TPL["status_options"] = get_select_options($status_options);
+      $TPL["status_options"] = page::select_options($status_options);
       $TPL["transaction_timeSheetID"] = $timeSheet->get_id();
       $TPL["transaction_transactionDate"] = date("Y-m-d");
       $TPL["transaction_product"] = "";
       $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Add\">";
-      $TPL["percent_dropdown"] = get_select_options($percent_array, $empty);
+      $TPL["percent_dropdown"] = page::select_options($percent_array, $empty);
       include_template($template);
     }
   }
@@ -218,7 +218,7 @@ if (!$current_user->is_employee()) {
       
       $text and $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
       $text && $timeSheetItem->get_value("comment") and $br = "<br/>";
-      $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$commentPrivateText.text_to_html($timeSheetItem->get_value("comment"));
+      $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$commentPrivateText.page::to_html($timeSheetItem->get_value("comment"));
       $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f", $timeSheetItem->calculate_item_charge());
 
       $tsMultipliers = config::get_config_item("timeSheetMultipliers") or $tsMultipliers = array();
@@ -294,14 +294,14 @@ if (!$current_user->is_employee()) {
 
       $timeUnit = new timeUnit;
       $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
-      $TPL["tsi_unit_options"] = get_select_options($unit_array, $timeSheetItemDurationUnitID);
+      $TPL["tsi_unit_options"] = page::select_options($unit_array, $timeSheetItemDurationUnitID);
 
       $timeSheetItemMultiplier  or $timeSheetItemMultiplier = 0;
       $tsMultipliers = config::get_config_item("timeSheetMultipliers") or $tsMultipliers = array();
       foreach ($tsMultipliers as $k => $v) {
         $multiplier_array[$k] = $v["label"];
       }
-      $TPL["tsi_multiplier_options"] = get_select_options($multiplier_array, $timeSheetItemMultiplier);
+      $TPL["tsi_multiplier_options"] = page::select_options($multiplier_array, $timeSheetItemMultiplier);
 
       #$TPL["tsi_dateTimeSheetItem"] or $TPL["tsi_dateTimeSheetItem"] = date("Y-m-d");
 
@@ -586,14 +586,14 @@ if ($amount_allocated) {
 // Set up arrays for the forms.
 if (!$TPL["timeSheet_projectName"]) {
   $TPL["show_project_options"] = "<select size=\"1\" name=\"timeSheet_projectID\"><option></option>";
-  $TPL["show_project_options"].= get_select_options($project_array, $projectID)."</select>";
+  $TPL["show_project_options"].= page::select_options($project_array, $projectID)."</select>";
 
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
   $ops = client::get_client_list($options);
 
   $TPL["show_client_options"] = "<select size=\"1\" id=\"clientID\" name=\"clientID\" onChange=\"updateStuffWithAjax()\"><option></option>";
-  $TPL["show_client_options"].= get_select_options($ops,$clientID)."</select>";
+  $TPL["show_client_options"].= page::select_options($ops,$clientID)."</select>";
 
 
 } else {
@@ -615,7 +615,7 @@ if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_
   $sel_invoice = $row["invoiceID"];
   $TPL["attach_to_invoice_button"] = "<select name=\"attach_to_invoiceID\">";
   $TPL["attach_to_invoice_button"].= "<option value=\"create_new\">Create New Invoice</option>";
-  $TPL["attach_to_invoice_button"].= get_select_options($invoice_list,$sel_invoice)."</select>";
+  $TPL["attach_to_invoice_button"].= page::select_options($invoice_list,$sel_invoice)."</select>";
   $TPL["attach_to_invoice_button"].= "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
 }
 
@@ -844,7 +844,7 @@ $TPL["allTimeSheetParties"] = $timeSheet->get_all_timeSheet_parties($timeSheet->
 
 $commentTemplate = new commentTemplate();
 $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"timeSheet"));
-$TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".get_select_options($ops);
+$TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
 
 
 include_template("templates/timeSheetFormM.tpl");

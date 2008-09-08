@@ -76,6 +76,7 @@ function get_template($filename) {
 
   
   $sr = array("{/}"             => "<?php TPL_END_BRACE ?>"
+             ,"{page::"         => "<?php echo page::"
              ,"{"               => "<?php "
              ,"}"               => " ?>"
              ,"TPL_END_BRACE"   => "}"

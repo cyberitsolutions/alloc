@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 {$table_box}
   <tr>
@@ -71,4 +71,4 @@
   </tr>
   {show_absence_forms("templates/personAbsenceR.tpl")}
 </table>
-{show_footer()}
+{page::footer()}

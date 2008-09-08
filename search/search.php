@@ -451,7 +451,7 @@ if (!$search) {
 
 
 // setup generic values
-$TPL["search_category_options"] = get_category_options($category);
+$TPL["search_category_options"] = page::get_category_options($category);
 $TPL["needle"] = $needle;
 $TPL["needle2"] = $needle;
 if (!$needle || $noRedirect) {

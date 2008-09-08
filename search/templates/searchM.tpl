@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 <form action="{$url_alloc_search}" method="post">
 {$table_box}
   <tr>
@@ -30,5 +30,5 @@
 
 
 
-{show_footer()}
+{page::footer()}
 

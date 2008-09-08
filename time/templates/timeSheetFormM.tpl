@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 <script type="text/javascript" language="javascript">
 // Make the XML request thing, specify the callback function 
 function updateStuffWithAjax() \{
@@ -23,7 +23,7 @@ function updateStuffWithAjax() \{
 
 {$table_box}
   <tr>
-    <th colspan="3">{get_help("timesheet_overview")}Time Sheet</th>  
+    <th colspan="3">{page::help("timesheet_overview")}Time Sheet</th>  
     <th class="right" colspan="2">
       {if $TPL["timeSheet_timeSheetID"]}
         {$timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions")}
@@ -47,7 +47,7 @@ function updateStuffWithAjax() \{
     <td>&nbsp;</td>
     <td align="right">Amount:</td>
     <td>{$total_dollars}</td>
-    <td align="right">Project:{mandatory($timeSheet_projectID)}</td>
+    <td align="right">Project:{page::mandatory($timeSheet_projectID)}</td>
 	  <td width="30%" class="nobr"><div id="projectDropdown" style="display:inline">{$show_project_options}</div></td>
   </tr>
 
@@ -68,7 +68,7 @@ function updateStuffWithAjax() \{
   </tr>
 
 	<tr>
-	  <td>{get_help("which_tf_to_credit")}</td>
+	  <td>{page::help("which_tf_to_credit")}</td>
  	  <td align="right">TF:</td>
  	  <td align="left">{$recipient_tfID_name}</td>
     <td align="right">Approved by Manager:</td>
@@ -85,7 +85,7 @@ function updateStuffWithAjax() \{
 
 	<tr>
     {if config::get_config_item("paymentInsurancePercent")}
-    <td>{get_help("payment_insurance")}</td>
+    <td>{page::help("payment_insurance")}</td>
     <td align="right">Payment Insurance:</td>
     <td>{$payment_insurance}</td>
     {else}
@@ -98,7 +98,7 @@ function updateStuffWithAjax() \{
   </tr>
 
 	<tr>
-    <td>{get_help("timesheet_add_invoice")}</td>
+    <td>{page::help("timesheet_add_invoice")}</td>
     <td align="right" valign="top">Attached to Invoice:</td>
     <td class="nobr">{$attach_to_invoice_button}{$invoice_link}</td>
     <td class="right">{$amount_allocated_label}</td>
@@ -110,7 +110,7 @@ function updateStuffWithAjax() \{
     <td valign="top"></td>
     <td align="right" valign="top">Billing Note</td>
     <td colspan="2" valign="top">{if $TPL["timeSheet_status"] != "finished"}
-                                   {get_textarea("timeSheet_billingNote",$TPL["timeSheet_billingNote"])}
+                                   {page::textarea("timeSheet_billingNote",$TPL["timeSheet_billingNote"])}
                                  {else}
                                    {$timeSheet_billingNote}
                                  {/}
@@ -125,7 +125,7 @@ function updateStuffWithAjax() \{
           <td align="center" colspan="3">{$radio_email}</td>
         </tr>
         <tr>
-          <td width="1%">{get_help("timesheet_buttons")}</td>
+          <td width="1%">{page::help("timesheet_buttons")}</td>
           <td align="center">{$timeSheet_ChangeStatusButton}<br/><br/>{$timeSheet_status_text}</td>
           <td>&nbsp;</td>
         </tr>
@@ -148,6 +148,6 @@ function updateStuffWithAjax() \{
 <br><br>
 <br><br>&nbsp;
 
-{show_footer()}
+{page::footer()}
 
 

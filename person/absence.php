@@ -90,7 +90,7 @@ $absenceType_array = array('Annual Leave'=>'Annual Leave'
                           ,'Other'       =>'Other');
 
 
-$TPL["absenceType_options"] = get_select_options($absenceType_array, $absence->get_value("absenceType"));
+$TPL["absenceType_options"] = page::select_options($absenceType_array, $absence->get_value("absenceType"));
 
 $TPL["main_alloc_title"] = "Absence Form - ".APPLICATION_NAME;
 

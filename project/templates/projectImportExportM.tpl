@@ -29,7 +29,7 @@
         <option value="planner">GNOME Planner</option>
         <option value="csv">Comma Separated Values</option>
       </select>
-      {get_help("projectImport_types")}
+      {page::help("projectImport_types")}
     </td>
   </tr>
   <tr>

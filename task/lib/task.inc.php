@@ -198,7 +198,7 @@ class task extends db_entity {
                         AND taskTypeID = 2 
                         AND (dateActualCompletion IS NULL or dateActualCompletion = '') 
                         ORDER BY taskName", $projectID);
-      $options = get_select_options($query, $parentTaskID,70);
+      $options = page::select_options($query, $parentTaskID,70);
     }
     return "<select name=\"parentTaskID\"><option value=\"\">".$options."</select>";
   }
@@ -232,7 +232,7 @@ class task extends db_entity {
         }
       }
     }
-    $str = "<select name=\"interestedParty[]\" size=\"6\" multiple=\"true\"  style=\"width:95%\">".get_select_options($options,$interestedParty,100)."</select>";
+    $str = "<select name=\"interestedParty[]\" size=\"6\" multiple=\"true\"  style=\"width:95%\">".page::select_options($options,$interestedParty,100)."</select>";
     return $str;
   }
 
@@ -360,7 +360,7 @@ class task extends db_entity {
 
     $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
    
-    $str = get_select_options($ops, $owner);
+    $str = page::select_options($ops, $owner);
     return $str;
   }
 
@@ -409,7 +409,7 @@ class task extends db_entity {
     $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
    
     $str = '<select name="managerID"><option value="">';
-    $str.= get_select_options($ops, $owner);
+    $str.= page::select_options($ops, $owner);
     $str.= '</select>';
     return $str;
   }
@@ -422,7 +422,7 @@ class task extends db_entity {
                         FROM project 
                        WHERE projectStatus IN ('current', 'potential') 
                     ORDER BY projectName");
-    $str = get_select_options($query, $projectID, 60);
+    $str = page::select_options($query, $projectID, 60);
     return $str;
   }
 
@@ -437,21 +437,21 @@ class task extends db_entity {
     // TaskType Options
     $taskType = new taskType;
     $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
-    $TPL["taskTypeOptions"] = get_select_options($taskType_array,$this->get_value("taskTypeID"));
+    $TPL["taskTypeOptions"] = page::select_options($taskType_array,$this->get_value("taskTypeID"));
 
     // Project dropdown
     $TPL["projectOptions"] = task::get_project_options($projectID);
     
     $commentTemplate = new commentTemplate();
     $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"task"));
-    $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".get_select_options($ops);
+    $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
 
     $priority = $this->get_value("priority") or $priority = 3;
     $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
     foreach ($taskPriorities as $k => $v) {
       $tp[$k] = $v["label"];
     }
-    $TPL["priorityOptions"] = get_select_options($tp,$priority);
+    $TPL["priorityOptions"] = page::select_options($tp,$priority);
     $priority and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$taskPriorities[$priority]["colour"]."\">[".$this->get_priority_label()."]</div>";
 
     // We're building these two with the <select> tags because they will be
@@ -989,23 +989,23 @@ class task extends db_entity {
     foreach ($taskPriorities as $k => $v) {
       $tp[$k] = $v["label"];     
     }
-    return get_select_options($tp,$priority);
+    return page::select_options($tp,$priority);
   }
 
   function get_task_list_footer($_FORM) {
     global $TPL;
     if($_FORM["showEdit"]) {
-      $person_options = get_select_options(person::get_username_list());
+      $person_options = page::select_options(person::get_username_list());
       $assignee_dropdown = "<select name=\"personID\">".$person_options."</select>";
       $manager_dropdown = "<select name=\"managerID\">".$person_options."</select>";
-      $dateTargetStart = get_calendar_string("dateTargetStart");
-      $dateTargetCompletion = get_calendar_string("dateTargetCompletion");
-      $dateActualStart = get_calendar_string("dateActualStart");
-      $dateActualCompletion = get_calendar_string("dateActualCompletion");
+      $dateTargetStart = page::calendar("dateTargetStart");
+      $dateTargetCompletion = page::calendar("dateTargetCompletion");
+      $dateActualStart = page::calendar("dateActualStart");
+      $dateActualCompletion = page::calendar("dateActualCompletion");
       $priority_options = task::get_task_priority_dropdown(3);
       $taskType = new taskType;
       $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
-      $taskType_options = get_select_options($taskType_array);
+      $taskType_options = page::select_options($taskType_array);
       $js = "makeAjaxRequest('".$TPL["url_alloc_updateParentTasks"]."projectID='+$(this).val(), 'parentTaskDropdown')";
       $project_dropdown = "<select name=\"projectID\" id=\"projectID\" onChange=\"".$js."\"><option value=\"\">".task::get_project_options()."</select>";
       $parentTask_div = "<div style=\"display:inline\" id=\"parentTaskDropdown\"></div>";
@@ -1402,25 +1402,25 @@ class task extends db_entity {
     $_FORM["projectType"] and $rtn["projectType_checked_".$_FORM["projectType"]] = " checked"; 
 
     $rtn["personOptions"] = "\n<option value=\"\"> ";
-    $rtn["personOptions"].= get_select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
+    $rtn["personOptions"].= page::select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
 
     $rtn["creatorPersonOptions"] = "\n<option value=\"\"> ";
-    $rtn["creatorPersonOptions"].= get_select_options(person::get_username_list($_FORM["creatorID"]), $_FORM["creatorID"]);
+    $rtn["creatorPersonOptions"].= page::select_options(person::get_username_list($_FORM["creatorID"]), $_FORM["creatorID"]);
 
     $rtn["managerPersonOptions"] = "\n<option value=\"\"> ";
-    $rtn["managerPersonOptions"].= get_select_options(person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
+    $rtn["managerPersonOptions"].= page::select_options(person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
 
     $taskType = new taskType;
     $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
-    $rtn["taskTypeOptions"] = get_select_options($taskType_array,$_FORM["taskTypeID"]);
+    $rtn["taskTypeOptions"] = page::select_options($taskType_array,$_FORM["taskTypeID"]);
 
     $ops = savedView::get_saved_view_options($_FORM['form_name'], $current_user->get_id());
-    $rtn["savedViewOptions"] = get_select_options($ops, $_FORM["savedViewID"]);
+    $rtn["savedViewOptions"] = page::select_options($ops, $_FORM["savedViewID"]);
 
     $_FORM["taskView"] and $rtn["taskView_checked_".$_FORM["taskView"]] = " checked";
 
     $taskStatii = task::get_task_statii_array();
-    $rtn["taskStatusOptions"] = get_select_options($taskStatii, $_FORM["taskStatus"]);
+    $rtn["taskStatusOptions"] = page::select_options($taskStatii, $_FORM["taskStatus"]);
 
     $_FORM["showDescription"] and $rtn["showDescription_checked"] = " checked";
     $_FORM["showDates"]       and $rtn["showDates_checked"]       = " checked";

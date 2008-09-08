@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 {$table_box}
   <tr>
     <th colspan="2">Weekly Timesheet View</th>
@@ -12,4 +12,4 @@
       {show_days("templates/weeklyTimeDayR.tpl")}
     </tr>
   </table>
-{show_footer()}
+{page::footer()}

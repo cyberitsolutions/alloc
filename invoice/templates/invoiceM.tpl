@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 <form action="{$url_alloc_invoice}" method="post">
 {$table_box}
@@ -7,7 +7,7 @@
     <th colspan="4">Invoice</th>
   </tr>  
   <tr>
-    <td align="right" width="30%">Client:{mandatory($clientID)} </td>
+    <td align="right" width="30%">Client:{page::mandatory($clientID)} </td>
     <td class="nobr" class="nobr" width="20%">{$field_clientID}</td>
     <td align="right" class="nobr" width="10%">Total Incoming Funds:</td>
     <td>{$invoiceTotal}</td>
@@ -65,4 +65,4 @@
 {show_attachments($TPL["invoiceID"])}
 {/}
 
-{show_footer()}
+{page::footer()}

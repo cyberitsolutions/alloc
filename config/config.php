@@ -114,10 +114,10 @@ $options[""] = "";
 while($row = $db->row()) {
   $options[$row["tfID"]] = $row["tfName"];
 }
-$TPL["mainTfOptions"] = get_select_options($options, $config->get_config_item("mainTfID"));
-$TPL["outTfOptions"] = get_select_options($options, $config->get_config_item("outTfID"));
-$TPL["inTfOptions"] = get_select_options($options, $config->get_config_item("inTfID"));
-$TPL["taxTfOptions"] = get_select_options($options, $config->get_config_item("taxTfID"));
+$TPL["mainTfOptions"] = page::select_options($options, $config->get_config_item("mainTfID"));
+$TPL["outTfOptions"] = page::select_options($options, $config->get_config_item("outTfID"));
+$TPL["inTfOptions"] = page::select_options($options, $config->get_config_item("inTfID"));
+$TPL["taxTfOptions"] = page::select_options($options, $config->get_config_item("taxTfID"));
 
 $db = new db_alloc;
 $display = array("", "username", ", ", "emailAddress");
@@ -128,18 +128,18 @@ $people = get_cached_table("person");
 foreach ($people as $p) {
   $peeps[$p["personID"]] = $p["name"];
 }
-$TPL["timeSheetManagerEmailOptions"] = get_select_options($peeps,$config->get_config_item("timeSheetManagerEmail"));
-$TPL["timeSheetAdminEmailOptions"] = get_select_options($peeps,$config->get_config_item("timeSheetAdminEmail"));
+$TPL["timeSheetManagerEmailOptions"] = page::select_options($peeps,$config->get_config_item("timeSheetManagerEmail"));
+$TPL["timeSheetAdminEmailOptions"] = page::select_options($peeps,$config->get_config_item("timeSheetAdminEmail"));
 
 $days =  array("Sun"=>"Sun","Mon"=>"Mon","Tue"=>"Tue","Wed"=>"Wed","Thu"=>"Thu","Fri"=>"Fri","Sat"=>"Sat");
-$TPL["calendarFirstDayOptions"] = get_select_options($days,$config->get_config_item("calendarFirstDay"));
+$TPL["calendarFirstDayOptions"] = page::select_options($days,$config->get_config_item("calendarFirstDay"));
 
-$TPL["timeSheetPrintOptions"] = get_select_options($TPL["timeSheetPrintOptions"],$TPL["timeSheetPrint"]);
+$TPL["timeSheetPrintOptions"] = page::select_options($TPL["timeSheetPrintOptions"],$TPL["timeSheetPrint"]);
 
 $commentTemplate = new commentTemplate;
 $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName");
-$TPL["task_email_header_options"] = get_select_options($ops,$config->get_config_item("task_email_header"));
-$TPL["task_email_footer_options"] = get_select_options($ops,$config->get_config_item("task_email_footer"));
+$TPL["task_email_header_options"] = page::select_options($ops,$config->get_config_item("task_email_header"));
+$TPL["task_email_footer_options"] = page::select_options($ops,$config->get_config_item("task_email_footer"));
 
 $TPL["main_alloc_title"] = "Setup - ".APPLICATION_NAME;
 include_template("templates/configM.tpl");

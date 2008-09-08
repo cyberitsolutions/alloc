@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 <script type="text/javascript" language="javascript">
 $(document).ready(function() \{
@@ -57,11 +57,11 @@ $(document).ready(function() \{
     <input type="hidden" name="productID" value="{$product_productID}" />
     <table>
       <tr>
-        <td>Product Name{mandatory($product_productName)}</td>
+        <td>Product Name{page::mandatory($product_productName)}</td>
         <td colspan="2"><input type="text" size="43" name="productName" value="{$product_productName}" tabindex="1" /></td>
       </tr>
       <tr>
-        <td>Buy cost{mandatory($product_buyCost)}</td>
+        <td>Buy cost{page::mandatory($product_buyCost)}</td>
 {if $TPL["taxRate"]}
         <td><input type="text" size="8" name="buyCost" id="buyCost" value="{$product_buyCost}" tabindex="2" /> (inc {$taxName})</td>
         <td><input type="text" size="8" name="buyCost_ex" id="buyCost_ex" /> (ex {$taxName})</td>
@@ -70,7 +70,7 @@ $(document).ready(function() \{
 {/}
       </tr>
       <tr>
-        <td>Sell price{mandatory($product_sellPrice)}</td>
+        <td>Sell price{page::mandatory($product_sellPrice)}</td>
 {if $TPL["taxRate"]}
         <td><input type="text" size="8" name="sellPrice" id="sellPrice" value="{$product_sellPrice}" tabindex="3" /> (inc {$taxName})</td>
         <td><input type="text" size="8" name="sellPrice_ex" id="sellPrice_ex" /> (ex {$taxName})</td>
@@ -107,7 +107,7 @@ $(document).ready(function() \{
 {$table_box}
   <tr>
     <th>Commissions</th>
-    <th class="right">{get_help("product_commissions")}</th>
+    <th class="right">{page::help("product_commissions")}</th>
   </tr>
   <tr><td colspan="2">
   <form action="{$url_alloc_product}" method="post">
@@ -122,7 +122,7 @@ $(document).ready(function() \{
     <td>Recipient</td>
     <td>Amount</td>
     <td>Description</td>
-    <td valign="top" align="right" rowspan="2">{get_help("product_fixedCost");}</td>
+    <td valign="top" align="right" rowspan="2">{page::help("product_fixedCost");}</td>
   </tr>
   <tr>
     <td>{$companyTF}</td>
@@ -181,7 +181,7 @@ $(document).ready(function() \{
     <td>Recipient</td>
     <td>Percentage</td>
     <td>Description</td>
-    <td valign="top" align="right" rowspan="2">{get_help("product_percentageCost");}</td>
+    <td valign="top" align="right" rowspan="2">{page::help("product_percentageCost");}</td>
   </tr>
   <tbody id="pctCostContainer">
 {foreach $pct as $cost}
@@ -227,5 +227,5 @@ $(document).ready(function() \{
   </td></tr>
 </table>
 {/}
-{show_footer()}
+{page::footer()}
 

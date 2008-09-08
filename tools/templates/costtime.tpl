@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 <form method="post" action="{$url_alloc_costtime}">
 {$table_box}
   <tr>
@@ -61,4 +61,4 @@
   </tr>
 </table>
 </form>
-{show_footer()}
+{page::footer()}

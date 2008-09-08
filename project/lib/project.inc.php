@@ -296,7 +296,7 @@ class project extends db_entity {
     while ($db->next_record()) {
       $ops[$db->f("projectID")] = $db->f("projectName");
     }
-    return get_select_options($ops, $projectIDs, $maxlength);
+    return page::select_options($ops, $projectIDs, $maxlength);
   }
 
   function has_attachment_permission($person) {
@@ -481,12 +481,12 @@ class project extends db_entity {
 
     $personSelect= "<select name=\"personID\">";
     $personSelect.= "<option value=\"\"> ";
-    $personSelect.= get_select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
+    $personSelect.= page::select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
     $personSelect.= "</select>";
 
     $rtn["personSelect"] = $personSelect;
-    $rtn["projectStatusOptions"] = get_select_options(array("Current", "Potential", "Archived"), $_FORM["projectStatus"]);
-    $rtn["projectTypeOptions"] = get_select_options(array("Project", "Job", "Contract"), $_FORM["projectType"]);
+    $rtn["projectStatusOptions"] = page::select_options(array("Current", "Potential", "Archived"), $_FORM["projectStatus"]);
+    $rtn["projectTypeOptions"] = page::select_options(array("Project", "Job", "Contract"), $_FORM["projectType"]);
     $rtn["projectName"] = $_FORM["projectName"];
 
 

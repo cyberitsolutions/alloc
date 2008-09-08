@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 <form action="{$url_alloc_announcement}" method="post">
 {$table_box} 
   <tr>
@@ -12,15 +12,15 @@
   </tr>
   <tr>
     <td>Display From</td>
-    <td>{get_calendar("displayFromDate",$TPL["displayFromDate"])}</td>
+    <td>{page::calendar("displayFromDate",$TPL["displayFromDate"])}</td>
   </tr>
   <tr>
     <td>Display To</td>
-    <td>{get_calendar("displayToDate",$TPL["displayToDate"])}</td>
+    <td>{page::calendar("displayToDate",$TPL["displayToDate"])}</td>
   </tr>
   <tr>
     <td>Body</td>
-    <td>{get_textarea("body",$TPL["body"],array("height"=>"jumbo"))}</td>
+    <td>{page::textarea("body",$TPL["body"],array("height"=>"jumbo"))}</td>
   </tr>
   <tr>
     <td colspan="2" align="center">
@@ -31,4 +31,4 @@
 </table>
 <input type="hidden" name="announcementID" value="{$announcementID}">
 </form>
-{show_footer()}
+{page::footer()}

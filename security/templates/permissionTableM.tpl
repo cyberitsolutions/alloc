@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 <form action="{$url_alloc_permission}" method="post">
 {$table_box}
   <tr>
@@ -16,4 +16,4 @@
 </table>
 <input type="hidden" name="permissionID" value="{$permissionID}">
 </form>
-{show_footer()}
+{page::footer()}

@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 {$table_box}
   <tr>
     <th colspan="3">TF List</th>
@@ -42,4 +42,4 @@
 
 
 
-{show_footer()}
+{page::footer()}

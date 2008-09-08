@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 {$table_box}
   <tr>
     <th>Overdue Item Loans</th>
@@ -22,4 +22,4 @@
   </tr>
 </table>
 
-{show_footer()}
+{page::footer()}

@@ -115,7 +115,7 @@ require_once("../alloc.php");
         $skill_header = false;
       }
       $skill_prof = $skillPrificiencys->get_value('skillProficiency');
-      $TPL["skill_proficiencys"] = get_select_options($proficiencys, $skill_prof);
+      $TPL["skill_proficiencys"] = page::select_options($proficiencys, $skill_prof);
 
       # display rating if there is one
       include_template($template);
@@ -146,7 +146,7 @@ require_once("../alloc.php");
       }
     }
     if (count($skills) > 0) {
-      $TPL["skills"] = get_select_options($skills, "");
+      $TPL["skills"] = page::select_options($skills, "");
     }
   }
 
@@ -274,7 +274,7 @@ if ($person->get_id()) {
                    AND tfPerson.personID = %d 
                    AND (tf.status = 'active' OR tf.tfID = %d)"
                 ,$person->get_id(),$person->get_value("preferred_tfID"));
-  $TPL["preferred_tfID_options"] = get_select_options($q, $person->get_value("preferred_tfID"));
+  $TPL["preferred_tfID_options"] = page::select_options($q, $person->get_value("preferred_tfID"));
 
   $tf = new tf;
   $tf->set_id($person->get_value("preferred_tfID"));

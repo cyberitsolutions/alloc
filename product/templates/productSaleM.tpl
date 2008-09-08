@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 <script type="text/javascript">
 $(document).ready(function() \{
@@ -393,5 +393,5 @@ function newProductField() \{
 </form>
 {/}
 
-{show_footer()}
+{page::footer()}
 

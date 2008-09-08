@@ -643,9 +643,9 @@ class invoice extends db_entity {
 
     $statii = invoice::get_invoice_statii();
     unset($statii["create"]);
-    $rtn["statusOptions"] = get_select_options($statii,$_FORM["invoiceStatus"]);
+    $rtn["statusOptions"] = page::select_options($statii,$_FORM["invoiceStatus"]);
     $statii_payment = invoice::get_invoice_statii_payment();
-    $rtn["statusPaymentOptions"] = get_select_options($statii_payment,$_FORM["invoiceStatusPayment"]);
+    $rtn["statusPaymentOptions"] = page::select_options($statii_payment,$_FORM["invoiceStatusPayment"]);
     $rtn["status"] = $_FORM["status"];
     $rtn["dateOne"] = $_FORM["dateOne"];
     $rtn["dateTwo"] = $_FORM["dateTwo"];
@@ -657,7 +657,7 @@ class invoice extends db_entity {
     $options["clientStatus"] = "current";
     $options["return"] = "dropdown_options";
     $ops = client::get_client_list($options);
-    $rtn["clientOptions"] = get_select_options($ops,$_FORM["clientID"]);
+    $rtn["clientOptions"] = page::select_options($ops,$_FORM["clientID"]);
 
     // Get
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));

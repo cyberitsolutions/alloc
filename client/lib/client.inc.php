@@ -73,7 +73,7 @@ class client extends db_entity {
     if ($clientStatus) {
       $q = sprintf("SELECT clientID as value, clientName as label FROM client WHERE clientStatus = '%s' ORDER BY clientName",db_esc($clientStatus));
     }
-    $options.= get_select_options($q,$clientContactID,100);
+    $options.= page::select_options($q,$clientContactID,100);
     $str = "<select id=\"clientID\" name=\"clientID\" style=\"width:100%;\" 
              onChange=\"makeAjaxRequest('".$TPL["url_alloc_updateProjectClientContactList"]."clientID='+$('#clientID').attr('value'),'clientContactDropdown')\">";
     $str.= "<option value=\"\">";
@@ -86,7 +86,7 @@ class client extends db_entity {
     $clientID or $clientID = $_GET["clientID"];
     $db = new db_alloc;
     $q = sprintf("SELECT clientContactName as label, clientContactID as value FROM clientContact WHERE clientID = %d",$clientID);
-    $options = get_select_options($q,$clientContactID,100);
+    $options = page::select_options($q,$clientContactID,100);
     return "<select name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
   }
  
@@ -286,7 +286,7 @@ class client extends db_entity {
     // Load up the forms action url
     $rtn["url_form_action"] = $_FORM["url_form_action"];
 
-    $rtn["clientStatusOptions"] = get_select_options(array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived"), $_FORM["clientStatus"]);
+    $rtn["clientStatusOptions"] = page::select_options(array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived"), $_FORM["clientStatus"]);
     $rtn["clientName"] = $_FORM["clientName"];
     $rtn["contactName"] = $_FORM["contactName"];
     $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ALL");

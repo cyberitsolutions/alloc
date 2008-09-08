@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 <form method="post" action="{$url_alloc_item}">
 <input type="hidden" name="dateBorrowed" value="{$dateBorrowed}">
@@ -37,5 +37,5 @@
 
 </form>
 
-{show_footer()}
+{page::footer()}
 

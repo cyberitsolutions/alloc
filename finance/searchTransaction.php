@@ -73,9 +73,9 @@ $db = new db_alloc;
 $transaction = new transaction;
 
 $q = "SELECT tfID AS value, tfName AS label FROM tf WHERE status != 'disabled' ORDER BY tfName";
-$TPL["tfOptions"] = get_select_options($q, $_POST["tfID"]);
-$TPL["fromTfOptions"] = get_select_options($q, $_POST["fromTfID"]);
-$TPL["statusOptions"] = get_select_options(array(""=>"", "pending"=>"Pending", "rejected"=>"Rejected", "approved"=>"Approved",), $_POST["status"]);
+$TPL["tfOptions"] = page::select_options($q, $_POST["tfID"]);
+$TPL["fromTfOptions"] = page::select_options($q, $_POST["fromTfID"]);
+$TPL["statusOptions"] = page::select_options(array(""=>"", "pending"=>"Pending", "rejected"=>"Rejected", "approved"=>"Approved",), $_POST["status"]);
 $TPL["status"] = $_POST["status"];
 $TPL["fromTfID"] = $_POST["fromTfID"];
 $TPL["tfID"] = $_POST["tfID"];

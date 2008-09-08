@@ -114,7 +114,7 @@ while ($row = $db->next_record()) {
 
 function tf_list($selected) {
   global $tfList;
-  echo get_select_options($tfList, $selected);
+  echo page::select_options($tfList, $selected);
 }
 
 function tf_name($selected) {
@@ -125,13 +125,13 @@ function tf_name($selected) {
 
 function transaction_status_list($status) {
   $statusList = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
-  echo get_select_options($statusList, $status);
+  echo page::select_options($statusList, $status);
 }
 
 function get_project_list() {
   $projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
   $q = "SELECT projectID as value, projectName as label FROM project";
-  echo get_select_options($q, $projectID, 60);
+  echo page::select_options($q, $projectID, 60);
 }
 
 // }}} 
@@ -345,7 +345,7 @@ $statuses[$TPL["status"]] = "<b>".$statuses[$TPL["status"]]."</b>";
 $TPL["statusText"] = implode(" | ", $statuses);
 
 $query = "SELECT productID AS value, productName AS label FROM product";
-$TPL["productList_dropdown"] = get_select_options($query);
+$TPL["productList_dropdown"] = page::select_options($query);
 
 $TPL["productSaleID"] = $productSale->get_id();
 $TPL["taxName"] = config::get_config_item("taxName");

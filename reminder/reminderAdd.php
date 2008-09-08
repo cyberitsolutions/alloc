@@ -47,7 +47,7 @@ switch ($step) {
 case 1:
   // Reminder type (project,task,client,general)
   $parent_types = array("client"=>"Client", "project"=>"Project", "task"=>"Task", "general"=>"General");
-  $TPL["parentTypeOptions"] = get_select_options($parent_types);
+  $TPL["parentTypeOptions"] = page::select_options($parent_types);
   include_template("templates/reminderSelectParentTypeM.tpl");
   break;
 
@@ -101,7 +101,7 @@ case 2:
     }
   }
   $TPL["parentType"] = $parentType;
-  $TPL["parentNameOptions"] = get_select_options($parent_names);
+  $TPL["parentNameOptions"] = page::select_options($parent_names);
   include_template("templates/reminderSelectParentM.tpl");
   break;
 

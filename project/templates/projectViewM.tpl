@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 {$table_box}
   <tr>
     <th><nobr>Project: {$projectSelfLink} </nobr></th>
@@ -21,4 +21,4 @@
 
 {show_project_managers("templates/projectPersonSummaryViewS.tpl")}
 {show_time_sheets("templates/projectTimeSheetS.tpl")}
-{show_footer()}
+{page::footer()}

@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 {$error}
 <form method="post" action="{$url_alloc_newLoan}">
 {$table_box}
@@ -24,4 +24,4 @@
 </form>
 
 
-{show_footer()}
+{page::footer()}

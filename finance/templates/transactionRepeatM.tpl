@@ -1,5 +1,5 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 
 
@@ -12,20 +12,20 @@
   </tr>
   <tr>
     <td><b>Basis</b></td>
-    <td><b>Start Date{mandatory($transactionStartDate)}</b></td>
-    <td><b>Finish Date{mandatory($transactionFinishDate)}</b></td>
+    <td><b>Start Date{page::mandatory($transactionStartDate)}</b></td>
+    <td><b>Finish Date{page::mandatory($transactionFinishDate)}</b></td>
   </tr>
   <tr>
     <td><select name="paymentBasis" value="{$paymentBasis}">{$basisOptions}</select></td>
-    <td>{get_calendar("transactionStartDate",$TPL["transactionStartDate"])}</td>
-    <td>{get_calendar("transactionFinishDate",$TPL["transactionFinishDate"])}</td>
+    <td>{page::calendar("transactionStartDate",$TPL["transactionStartDate"])}</td>
+    <td>{page::calendar("transactionFinishDate",$TPL["transactionFinishDate"])}</td>
   </tr>
 	<tr>
-	  <td><b>Product/Service{mandatory($product)}</b></td>
- 	  <td><b>Amount{mandatory($amount)}</b></td>
+	  <td><b>Product/Service{page::mandatory($product)}</b></td>
+ 	  <td><b>Amount{page::mandatory($amount)}</b></td>
  	  <td><b>Type</b></td>
-    <td><b>Source TF{mandatory($fromTfID)}</b></td>
-    <td><b>Destination TF{mandatory($tfID)}</b></td>
+    <td><b>Source TF{page::mandatory($fromTfID)}</b></td>
+    <td><b>Destination TF{page::mandatory($tfID)}</b></td>
 	</tr>
 	<tr>
  	  <td><input type="text" size="20" name="product" value="{$product}"></td>
@@ -36,7 +36,7 @@
  	</tr>
 
   <tr>
-    <td colspan="2" rowspan="3" valign="top"><b>Company Details{mandatory($companyDetails)}</b><br>{get_textarea("companyDetails",$TPL["companyDetails"], array("cols"=>40))}</td>
+    <td colspan="2" rowspan="3" valign="top"><b>Company Details{page::mandatory($companyDetails)}</b><br>{page::textarea("companyDetails",$TPL["companyDetails"], array("cols"=>40))}</td>
     <td rowspan="3" colspan="3">
       <nobr><b>Reminder email</b><br/><input type="text" size="40" name="emailOne" value="{$emailOne}"></nobr><br>
       <nobr><b>Reminder email</b><br/><input type="text" size="40" name="emailTwo" value="{$emailTwo}"></nobr>
@@ -73,4 +73,4 @@
 <input type="hidden" name="transactionRepeatID" value="{$transactionRepeatID}">
 </form>
 
-{show_footer()}
+{page::footer()}

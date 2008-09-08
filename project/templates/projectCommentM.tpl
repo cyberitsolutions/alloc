@@ -1,7 +1,7 @@
 {$table_box}
   <tr>
     <th>Comments</th>
-    <th class="right">{print_expand_link("id_new_project_comment")}</th>
+    <th class="right">{page::expand_link("id_new_project_comment")}</th>
   </tr>
   <tr>
     <td colspan="2">
@@ -12,7 +12,7 @@
           <td>
             <input type="hidden" name="entity" value="project">
             <input type="hidden" name="entityID" value="{$project_projectID}">
-            {get_textarea("comment",$TPL["comment"])}&nbsp;
+            {page::textarea("comment",$TPL["comment"])}&nbsp;
           </td>
           <td align="right" valign="bottom">
             {$comment_buttons}

@@ -28,9 +28,9 @@ if ($_GET["commentTemplateID"] && $_GET["commentTemplateID"] != "undefined" && $
   $commentTemplate->set_id($_GET["commentTemplateID"]);
   $commentTemplate->select();
   $val = $commentTemplate->get_populated_template($_GET["entity"], $_GET["entityID"]);
-  get_textarea("comment",$val,array("height"=>"medium"));
+  echo page::textarea("comment",$val,array("height"=>"medium"));
 } else {
-  get_textarea("comment",$val,array("height"=>"medium"));
+  echo page::textarea("comment",$val,array("height"=>"medium"));
 }
 
 

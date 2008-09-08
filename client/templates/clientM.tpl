@@ -1,10 +1,10 @@
-{show_header()}
-{show_toolbar()}
+{page::header()}
+{page::toolbar()}
 
 {if check_optional_client_exists()}
 {$first_div="hidden"}
 {$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"] or $sbs_link = "client"}
-{get_side_by_side_links(array("client"=>"Main"
+{page::side_by_side_links(array("client"=>"Main"
                              ,"reminders"=>"Reminders"
                              ,"comments"=>"Comments"
                              ,"attachments"=>"Attachments"
@@ -89,4 +89,4 @@
 
 {/}
 
-{show_footer()}
+{page::footer()}
