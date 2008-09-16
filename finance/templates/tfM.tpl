@@ -3,7 +3,7 @@
 <form action="{$url_alloc_tf}" method="post">
 <input type="hidden" name="tfID" value="{$tfID}">
 
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="2">Tagged Fund</th>
   </tr>
@@ -39,7 +39,7 @@
 </form>
 
 {if $tfID}
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="2">TF Owners</th>
   </tr>

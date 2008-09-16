@@ -957,7 +957,7 @@ class task extends db_entity {
         $summary[] = "<form action=\"".$_FORM["url_form_action"]."\" method=\"post\">";
       }
       #$_FORM["taskView"] == "byProject" and $summary[] = "<br>".$_FORM["projectLinks"];
-      $summary[] = $TPL["table_list"];
+      $summary[] = "<table class=\"list sortable\">";
       $summary[] = "<tr>";
       $_FORM["showEdit"]     and $summary[] = "<th width=\"1%\" class=\"sorttable_nosort noprint\"><input type=\"checkbox\" onclick=\"return $('.task_checkboxes').each(function(){this.checked=!this.checked});\"></th>";
                                  $summary[] = "<th width=\"1%\"></th>"; //taskTypeImage

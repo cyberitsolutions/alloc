@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="2">Weekly Timesheet View</th>
     <th class="right" colspan="5"><a href="{$url_alloc_timeSheetList}">Default Time View</a>&nbsp;&nbsp;<a href="{$url_alloc_timeSheet}userID={$userID}">New Time Sheet</a></th>

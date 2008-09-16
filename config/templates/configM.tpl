@@ -11,7 +11,7 @@
 
 <div id="basic">
 <form action="{$url_alloc_config}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="3">Basic Setup</th>
   </tr>
@@ -55,7 +55,7 @@
 
 <div id="finance">
 <form action="{$url_alloc_config}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="3">Finance Setup</th>
   </tr>
@@ -111,7 +111,7 @@
 
 <div id="email_gateway">
 <form action="{$url_alloc_config}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="2">Email Gateway</th>
     <th class="right">{page::help("config_allocEmailGateway")}</th>
@@ -178,7 +178,7 @@
 
 <div id="time_sheets">
 <form action="{$url_alloc_config}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="3">Time Sheets Setup</th>
   </tr>
@@ -217,7 +217,7 @@
 
 <div id="company_info">
 <form action="{$url_alloc_config}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="2">Company Information</th>
     <th width="1%">{page::help("config_companyInfo")}</th>
@@ -277,7 +277,7 @@
 
 <div id="misc">
 <form action="{$url_alloc_config}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="2">Miscellaneous Setup</th>
     <th width="1%">{page::help("config_misc_setup")}</th>

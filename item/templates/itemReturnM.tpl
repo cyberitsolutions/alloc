@@ -9,7 +9,7 @@
 <input type="hidden" name="personID" value="{$personID}">
 <input type="hidden" name="dateToBeReturned" value="{$dateToBeReturned}">
 
-{$table_box}
+<table class="box">
   <tr>
     <th>Return Item</th>
     <th class="right"><a href="{$url_alloc_loanAndReturn}">Back to Loans and Returns</a></th>

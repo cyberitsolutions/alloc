@@ -1,7 +1,7 @@
 {page::header()}
 {page::toolbar()}
 
-{$table_box}
+<table class="box">
   <tr>
     <th>Permissions</th>
     <th class="right" colspan="8"><a href="{$url_alloc_permission}">New Permission</a></th>
@@ -24,7 +24,7 @@
   </tr>
   <tr>
     <td colspan="9">
-      {$table_list}
+      <table class="list sortable">
         <tr>
           <th>Table</th>
           <th>Record ID</th>

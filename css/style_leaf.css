@@ -142,7 +142,7 @@ textarea,
 select {
   border: 1px solid #cccccc; 
   background-color: #fcfcfc;
-  text-transform:none; /* tasks.th turns options into uppercase */
+  text-transform:none; /* list.th turns options into uppercase */
 }
 input[type="text"]:focus, 
 input[type="password"]:focus, 
@@ -273,12 +273,15 @@ table.box {
   vertical-align:top; 
   width:100%; 
   margin:14px 0px 0px 0px;
+  border-collapse:collapse;
+  border-spacing:0px;
 } 
 table.box th { 
   background: url(../images/bg_leaf.jpg) repeat-x; 
   color:#829858; 
   font-size:110%; 
   border-bottom:1px solid #e0e0e0;
+  padding:3px;
 } 
 table.box th.center { 
   text-align:center; 
@@ -286,7 +289,6 @@ table.box th.center {
 table.box th.right table { 
   width:40%; 
 } 
-
 table.box th a:link, table.box th a:visited { 
   font-weight:bold; 
   color:#c86c12; 
@@ -295,6 +297,10 @@ table.box th a:hover {
   font-weight:bold; 
   color:#5c7600; 
 }
+table.box td {
+  padding:3px;
+}
+
 
 /* Calendar */
 table.alloc_calendar { 
@@ -410,17 +416,19 @@ img.taskType {
   padding:0px 3px;
 }
 
-table.tasks { 
+table.list { 
   width:100%; 
   border-left:1px solid #c7cfb8; 
   border-right:1px solid #c7cfb8; 
   border-bottom:1px solid #c7cfb8;
+  border-collapse:collapse;
+  border-spacing:0px;
 }
-td.tasks { 
+td.list { 
   background-color: #eeefe4; 
   padding:4px; 
 }
-table.tasks th, table.alloc_calendar th { 
+table.list th, table.alloc_calendar th { 
   border-bottom:0px; 
   font-weight:normal; 
   white-space:nowrap; 
@@ -429,7 +437,7 @@ table.tasks th, table.alloc_calendar th {
   font-size:90%;
   text-transform:uppercase;
 }
-table.tasks td, table.tasks th, table.alloc_calendar th { 
+table.list td, table.list th, table.alloc_calendar th { 
   border-top:1px solid #c7cfb8; 
   padding:4px;
 }
@@ -439,7 +447,7 @@ table.alloc_calendar th {
 .sort_arrows {
   padding:0px 3px;
 }
-table.tasks td.grand_total, .grand_total { 
+table.list td.grand_total, .grand_total { 
   border-top:1px solid black;
   text-align:right;
 }
@@ -482,7 +490,7 @@ table.panel th {
   font-weight:normal; 
   padding:4px; 
   border:0px solid black;
-  text-transform:none; /* tasks.th turns these uppercase */
+  text-transform:none; /* list.th turns these uppercase */
   font-size:100%;
 }
 table.loud th {

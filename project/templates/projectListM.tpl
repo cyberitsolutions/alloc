@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th>Projects</th>
     <th class="right"><a href="{$url_alloc_project}">New Project</a></th>

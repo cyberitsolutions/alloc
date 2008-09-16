@@ -2,7 +2,7 @@
 {page::toolbar()}
 
 <form action="{$url_alloc_reminderAdd}" method="post">
-{$table_box}
+<table class="box">
     <tr>
       <th colspan="4">{$reminder_title}</th>
     </tr>

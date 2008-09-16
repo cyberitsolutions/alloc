@@ -15,7 +15,7 @@
 {/}
 
 <div id="client" class="{$first_div}">
-{$table_box}
+<table class="box">
   <tr>
     <th>Client: {$clientSelfLink}</th>
   </tr>
@@ -35,7 +35,7 @@
 
 {if check_optional_client_exists()}
 <div id="reminders" class="hidden">
-  {$table_box}
+  <table class="box">
     <tr>
       <th>Reminders</th>
       <th class="right" colspan="3"><a href="{$url_alloc_reminderAdd}step=3&parentType=client&parentID={$client_clientID}&returnToParent=client">Add Reminder</a></th>
@@ -59,7 +59,7 @@
 </div>
 
 <div id="projects" class="hidden">
-  {$table_box}
+  <table class="box">
     <tr>
       <th colspan="2">Projects</th>
       <th class="right"><a href="{$url_alloc_project}clientID={$client_clientID}">New Project</a></th>
@@ -74,7 +74,7 @@
 </div>
 
 <div id="invoices" class="hidden">
-  {$table_box}
+  <table class="box">
     <tr>
       <th>Invoices</th>
       <th class="right">{$invoice_links}</th>

@@ -1,4 +1,4 @@
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="5">Transactions</th>
     <th class="right"><a href="{$url_alloc_expenseForm}">New Expense Form</a></th>

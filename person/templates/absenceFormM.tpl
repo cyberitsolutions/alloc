@@ -5,7 +5,7 @@
       <input type="hidden" name="absenceID" value="{$absence_absenceID}">
       <input type="hidden" name="returnToParent" value="{$returnToParent}">
       <input type="hidden" name="personID" value="{$absence_personID}">
-      {$table_box}
+      <table class="box">
         <tr>
           <th colspan="3">Absence Form</th> 
         </tr>

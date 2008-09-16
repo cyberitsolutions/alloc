@@ -1,4 +1,4 @@
-{$table_box}
+<table class="box">
   <tr>
     <th>Comments</th>
     <th class="right">{page::expand_link("id_new_client_comment")}</th>

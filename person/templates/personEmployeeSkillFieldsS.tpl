@@ -1,4 +1,4 @@
-{$table_box}
+<table class="box">
 <tr>
   <th colspan="2">Areas of expertise</th>
   <th class="right"><a href={$url_alloc_personSkillMatrix}>Full Skill Matrix </a></th>

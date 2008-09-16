@@ -4,7 +4,7 @@
 <input type="hidden" name="expenseFormID" value={$expenseFormID}>
 <input type="hidden" name="quantity" value={$quantity}>
 <input type="hidden" name="transactionID" value={$transactionID}>
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="3">Transaction</th>
   </tr>

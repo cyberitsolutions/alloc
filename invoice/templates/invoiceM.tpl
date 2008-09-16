@@ -2,7 +2,7 @@
 {page::toolbar()}
 
 <form action="{$url_alloc_invoice}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="4">Invoice</th>
   </tr>  
@@ -46,7 +46,7 @@
   {show_new_invoiceItem("templates/invoiceItemForm.tpl")}
 
   {if count(invoice::get_invoiceItems($TPL["invoiceID"]))}
-    {$table_box}
+    <table class="box">
       <tr>
         <th>Invoice Items</th>
       </tr>

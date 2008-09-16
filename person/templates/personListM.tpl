@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th>People</th> 
     <th class="right" colspan="8">&nbsp;&nbsp;<a href={$url_alloc_personGraph}>Person Graphs</a>&nbsp;&nbsp;<a href={$url_alloc_personSkillMatrix}>Skill Matrix</a>&nbsp;&nbsp;<a href="{$url_alloc_person}">New Person</a>
@@ -34,7 +34,7 @@
   </tr>
   <tr>
     <td colspan="9">
-      {$table_list}
+      <table class="list sortable">
         <tr>
           <th>Name</th>
           <th>Enabled</th>

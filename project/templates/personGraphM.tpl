@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th>Person Graphs</th>
     <th class="right">{$navigation_links}</th>

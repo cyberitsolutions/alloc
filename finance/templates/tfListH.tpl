@@ -1,4 +1,4 @@
-{$table_list}
+<table class="list sortable">
   <tr>
     <th>TF</th>
     <th class="right">Pending</th>

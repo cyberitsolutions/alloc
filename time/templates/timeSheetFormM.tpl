@@ -21,7 +21,7 @@ function updateStuffWithAjax() \{
 <input type="hidden" name="timeSheet_invoiceDate" value="{$timeSheet_invoiceDate}">
 <input type="hidden" name="taskID" value="{$taskID}" />
 
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="3">{page::help("timesheet_overview")}Time Sheet</th>  
     <th class="right" colspan="2">

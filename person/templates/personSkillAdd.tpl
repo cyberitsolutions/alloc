@@ -2,7 +2,7 @@
 {page::toolbar()}
 
 <form action="{$url_alloc_personSkillAdd}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="2">Add/Delete New Skill</th>
     <th class="right"><a href={$url_alloc_personSkillMatrix}>Skill Matrix</a></th>

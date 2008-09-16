@@ -1,4 +1,4 @@
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="2">Project Managers</th>
   </tr>

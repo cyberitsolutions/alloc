@@ -1,5 +1,5 @@
 
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="6">Create Invoice Item</th>
   </tr>

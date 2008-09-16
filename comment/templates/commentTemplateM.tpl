@@ -1,7 +1,7 @@
 {page::header()}
 {page::toolbar()}
 <form action="{$url_alloc_commentTemplate}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th>Task Comment Template</th>
     <th class="right" colspan="2"><a href="{$url_alloc_commentTemplateList}">Return to Comment Template List</a></th>

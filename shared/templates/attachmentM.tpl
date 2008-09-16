@@ -1,5 +1,5 @@
 
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="4">Attachments</th>
   </tr>

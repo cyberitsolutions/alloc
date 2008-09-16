@@ -1,7 +1,7 @@
 {page::header()}
 {page::toolbar()}
 
-{$table_box}
+<table class="box">
   <tr>
     <th class="nobr">{$title}</th>
   </tr>

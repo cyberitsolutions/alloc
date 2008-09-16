@@ -1,6 +1,6 @@
 {page::header()}
   {page::toolbar()}
-{$table_box}
+<table class="box">
 <th>Add Single Item</th>
 <tr>
 <td>

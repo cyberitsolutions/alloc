@@ -1,4 +1,4 @@
-{$table_box} 
+<table class="box"> 
   <tr>
     <th>Time Sheet Items</th>
   </tr>

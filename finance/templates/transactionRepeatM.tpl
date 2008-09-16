@@ -5,7 +5,7 @@
 
 <form action="{$url_alloc_transactionRepeat}" method="post">
 
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="6">Create Repeating Expense{$statusLabel}</th>
     <th class="right"><a href="{$url_alloc_transactionRepeatList}tfID={$tfID}">Return to Repeating Expenses List</a></th>

@@ -1,7 +1,7 @@
 {page::header()}
 {page::toolbar()}
 <form method="post" action="{$url_alloc_costtime}">
-{$table_box}
+<table class="box">
   <tr>
     <th>Simple Cost & Time Estimater</th>
   </tr>

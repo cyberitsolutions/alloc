@@ -1,4 +1,4 @@
-{$table_list}
+<table class="list sortable">
   <tr>
     <th>Time Sheet</th>
     <th>Person</th>

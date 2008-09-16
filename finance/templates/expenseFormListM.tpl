@@ -1,13 +1,13 @@
 {page::header()}
   {page::toolbar()}
 
-{$table_box}
+<table class="box">
   <tr>
     <th>Pending Expense Forms</th>
   </tr>
   <tr>
     <td>
-      {$table_list}
+      <table class="list sortable">
         <tr>
           <th width="5%">ID</th>
           <th>Created Date</th>
@@ -22,13 +22,13 @@
 </table>
 
 
-{$table_box}
+<table class="box">
   <tr>
     <th>Pending Repeat Transactions</th>
   </tr>
   <tr>
     <td>
-      {$table_list}
+      <table class="list sortable">
         <tr>
           <th width="5%">ID</th>
           <th>Created Date</th>

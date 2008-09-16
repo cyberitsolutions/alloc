@@ -622,7 +622,7 @@ class timeSheet extends db_entity
 
     if ($print && $_FORM["return"] == "html") {
       $summary.= timeSheet::get_timeSheet_list_tr_bottom($extra,$_FORM);
-      return $TPL["table_list"].$summary."</table>";
+      return "<table class=\"list sortable\">".$summary."</table>";
 
     } else if (!$print && $_FORM["return"] == "html") {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Time Sheets Found</b></td></tr></table>";

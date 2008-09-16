@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th>Skill Matrix</th>
     <th class="right">{$personAddSkill_link}</th>

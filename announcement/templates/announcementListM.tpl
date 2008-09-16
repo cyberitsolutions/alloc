@@ -1,13 +1,13 @@
 {page::header()}
   {page::toolbar()}
-  {$table_box}
+  <table class="box">
     <tr>
       <th>Announcements</th>
       <th class="right" colspan="4"><a href="{$url_alloc_announcement}">New Announcement</a></th>
     </tr>
     <tr>
       <td colspan="5">
-        {$table_list} 
+        <table class="list sortable"> 
           <tr>
             <th>Heading</th>
             <th>Posted By</th>

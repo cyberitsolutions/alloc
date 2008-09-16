@@ -1,7 +1,7 @@
 {page::header()}
 {page::toolbar()}
 
-{$table_box}
+<table class="box">
   <tr>
     <th>Tasks</th>
     <th class="right noprint"><nobr><a href="{$url_alloc_task}">New Task</a></nobr></th>

@@ -1,4 +1,4 @@
-{$table_box}
+<table class="box">
 <tr>
   <th colspan="8">Transactions</th>
 </tr>

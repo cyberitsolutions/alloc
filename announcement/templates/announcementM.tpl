@@ -1,7 +1,7 @@
 {page::header()}
 {page::toolbar()}
 <form action="{$url_alloc_announcement}" method="post">
-{$table_box} 
+<table class="box"> 
   <tr>
     <th>Announcement</th>
     <th class="right"><a href="{$url_alloc_announcementList}">Return to Announcement List</a></th>
