@@ -46,7 +46,7 @@ function refreshProjectList(value) \{
 <div id="project" class="{$first_div}">
 <form action="{$url_alloc_project}" method="post" id="projectForm">
 <input type="hidden" name="projectID" value="{$project_projectID}">
-{$table_box}
+<table class="box">
   <tr>
     <th class="nobr" colspan="2">{$projectSelfLink}</th>
     <th class="right" colspan="3">{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</th>
@@ -238,7 +238,7 @@ function refreshProjectList(value) \{
 </form>
 
 {if defined("PROJECT_EXISTS")}
-{$table_box}
+<table class="box">
   <tr>
     <th>Financial Summary</th>
     <th class="right">{page::help("project_financial_summary")}</th>
@@ -259,7 +259,7 @@ function refreshProjectList(value) \{
 
 <div id="people" class="hidden">
 <form action="{$url_alloc_project}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th align="left">Project People</th>
     <th class="right"><a href="#x" class="magic" onClick="$('#projectPersonContainer').append($('#new_projectPerson').html());">New</a></th>
@@ -286,7 +286,7 @@ function refreshProjectList(value) \{
 
 
 <div id="commissions" class="hidden">
-{$table_box}
+<table class="box">
   <tr>
     <th align="left" colspan="4">Time Sheet Commission</th>
   </tr>
@@ -304,7 +304,7 @@ function refreshProjectList(value) \{
 </div>
 
 <div id="tasks" class="hidden">
-{$table_box}
+<table class="box">
   <tr>
     <th>Uncompleted Tasks</th>
     <th class="right"><a href="{$url_alloc_task}projectID={$project_projectID}">New Task</a></th>
@@ -318,7 +318,7 @@ function refreshProjectList(value) \{
 </div>
 
 <div id="reminders" class="hidden">
-{$table_box}  
+<table class="box">  
   <tr>
     <th colspan="4">Reminders</th>
     <th class="right">

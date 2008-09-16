@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th>Invoices</th>
     <th class="right">{$invoice_links}</th>

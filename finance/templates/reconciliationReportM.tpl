@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="5">Finance Reconciliation Report</th>
     <th class="right">{$month_links}</th>
@@ -24,7 +24,7 @@
   </tr>
 </table>
 
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="5">Expenses</th>
   </tr>
@@ -42,7 +42,7 @@
   </tr>
 </table>
 
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="5">Salaries</th>
   </tr>
@@ -60,7 +60,7 @@
   </tr>
 </table>
 
-{$table_box} 
+<table class="box"> 
   <tr>
     <th colspan="5">Invoices</th>
   </tr>

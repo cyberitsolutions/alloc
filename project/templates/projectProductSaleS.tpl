@@ -1,4 +1,4 @@
-{$table_box}
+<table class="box">
   <tr>
     <th>Product Sales</th>
     <th class="right"><a href="{$url_alloc_productSale}projectID={$project_projectID}">New Product Sale</a></th>

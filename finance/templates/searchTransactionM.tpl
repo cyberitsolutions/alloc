@@ -3,7 +3,7 @@
 
 <form action="{$url_alloc_searchTransaction}" method="post">
 
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="7">Search All Transactions</th>
   </tr>
@@ -40,7 +40,7 @@
   </tr>
   <tr>
     <td colspan="7">
-      {$table_list}
+      <table class="list sortable">
         <tr>
           <th>Transaction ID</th>
           <th>Source</th>

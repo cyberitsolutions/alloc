@@ -417,7 +417,7 @@ class transaction extends db_entity
 
   function get_transaction_list_tr_header($_FORM) {
     global $TPL;
-    $str[] = $TPL["table_list"];
+    $str[] = "<table class=\"list sortable\">";
     $str[] = "<tr>";
     $str[] = "  <th width=\"1%\">ID</th>";
     $str[] = "  <th width=\"1%\">Type</th>";

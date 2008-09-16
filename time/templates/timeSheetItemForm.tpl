@@ -7,7 +7,7 @@ function refreshTaskList(radiobutton) \{
 </script>
 
 <form action="{$url_alloc_timeSheetItem}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="5">Create Time Sheet Item</th>
   </tr>

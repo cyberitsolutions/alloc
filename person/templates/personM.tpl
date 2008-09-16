@@ -1,7 +1,7 @@
 {page::header()}
 {page::toolbar()}
 
-{$table_box}
+<table class="box">
   <tr>
     <th>Person Details</th>
   </tr>
@@ -60,7 +60,7 @@
 
 {include_employee_skill_fields()}
   
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="2">Absence Forms</th>
     <th class="right"><a href="{$absence_url}">New absence form</a></th>

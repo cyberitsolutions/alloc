@@ -128,8 +128,8 @@ if (document.images) {
 // When the document has loaded...
 $(document).ready(function() {
   // Give the tables alternating stripes
-  $(".tasks tr:nth-child(even)").addClass("even");
-  $(".tasks tr:nth-child(odd)").addClass("odd");
+  $(".list tr:nth-child(even)").addClass("even");
+  $(".list tr:nth-child(odd)").addClass("odd");
   $(".corner").corner();
   $(".delete_button").bind("click", function(e){
     return confirm("Click OK to confirm deletion.");

@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th>Add Reminder - Select {$parentType}</th>
   </tr>

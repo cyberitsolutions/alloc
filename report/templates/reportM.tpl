@@ -1,7 +1,7 @@
 {page::header()}
   {page::toolbar()}
 
-{$table_box}
+<table class="box">
   <tr>
     <th>Reports</th>
   </tr>
@@ -26,7 +26,7 @@
 
 
       {$counter}<br>&nbsp;
-      {$table_list}
+      <table class="list sortable">
         {$result_row}
       </table>
 

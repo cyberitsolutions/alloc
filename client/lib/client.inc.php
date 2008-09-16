@@ -196,7 +196,7 @@ class client extends db_entity {
     }
 
     if ($print && $_FORM["return"] == "html") {
-      return $TPL["table_list"].$summary."</table>";
+      return "<table class=\"list sortable\">".$summary."</table>";
 
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;

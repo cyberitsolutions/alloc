@@ -2,14 +2,14 @@
 {page::toolbar()}
 {$error}
 <form method="post" action="{$url_alloc_newLoan}">
-{$table_box}
+<table class="box">
   <tr>
     <th>New Loan</th>
     <th class="right" colspan="3"><a href="{$url_alloc_loans}">Return To Main Items</a></th>
   </tr>
   <tr>
     <td colspan="4">
-      {$table_list}
+      <table class="list sortable">
         <tr>
           <th>Item</th>
           <th>Type</th>

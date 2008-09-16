@@ -1,7 +1,7 @@
 {page::header()}
 {page::toolbar()}
 <form action="{$url_alloc_search}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th>Search</th>
   </tr>

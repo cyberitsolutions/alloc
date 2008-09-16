@@ -8,7 +8,7 @@
 <input type='submit' name='apply_patches' value='Apply All Patches'>
 </form>
 
-{$table_box}
+<table class="box">
 <tr>
   <th colspan="4">allocPSA Patch System</th>
 </tr>

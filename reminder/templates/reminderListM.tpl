@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="3">Reminders</th>
     <th class="right"><a href="{$url_alloc_reminderAdd}">Add Reminder</a></th>
@@ -10,7 +10,7 @@
   </tr>  
   <tr>
     <td colspan="4">
-      {$table_list}
+      <table class="list sortable">
         <tr>
           <th>Recipient</th>
           <th>Date / Time</th>

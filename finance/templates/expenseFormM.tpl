@@ -5,7 +5,7 @@
 
 <strong style="color: red; text-align:center; ">{$error}</strong>
 
-{$table_box}
+<table class="box">
   <tr> 
     <th>Expense Form</th>
     <th class="right" colspan="3">
@@ -50,7 +50,7 @@
 
 {if check_optional_show_line_item_add()}
 
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="6">Create Expense Form Items</th>
   </tr>
@@ -86,7 +86,7 @@
 </form>
 
 {if check_optional_has_line_items()}
-{$table_box}
+<table class="box">
   <tr>
     <th>Expense Form Line Items</th>
   </tr>

@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th>Clients</th>
     <th class="right"><a href="{$url_alloc_client}">New Client</a></th>

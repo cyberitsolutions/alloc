@@ -1,7 +1,7 @@
 {page::header()}
 {page::toolbar()}
 <form action="{$url_alloc_permission}" method="post">
-{$table_box}
+<table class="box">
   <tr>
     <th><nobr>New Permission - Select Table</nobr></th>
     <th class="right"><a href="{$url_alloc_permissionList}">Return to Permission List</a></th>

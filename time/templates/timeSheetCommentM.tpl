@@ -1,5 +1,5 @@
 
-{$table_box}
+<table class="box">
   <tr>
     <th>{page::help("taskComment")} Comments</th>
     <th class="right">{if (!$TPL["editing_disabled"])}{page::expand_link("id_new_comment")}{/}</th>

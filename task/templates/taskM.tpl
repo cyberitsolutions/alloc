@@ -21,7 +21,7 @@ $(document).ready(function() \{
 </script>
 <form action="{$url_alloc_task}" method="post">
 <input type="hidden" name="taskID" value="{$task_taskID}">
-{$table_box}
+<table class="box">
   <tr>
     <th class="nobr" colspan="2">{$taskSelfLink}</th>
     <th class="right nobr" colspan="3">{$navigation_links}</th>
@@ -235,7 +235,7 @@ $(document).ready(function() \{
 
 {show_task_children("templates/taskChildrenM.tpl")}
 
-{$table_box}
+<table class="box">
   <tr>
 {if (!$TPL["editing_disabled"])}
     <th>Reminders</th>

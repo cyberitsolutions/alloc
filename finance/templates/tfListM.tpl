@@ -1,6 +1,6 @@
 {page::header()}
 {page::toolbar()}
-{$table_box}
+<table class="box">
   <tr>
     <th colspan="3">TF List</th>
     <th class="right">{if have_entity_perm("tf", PERM_CREATE, $current_user, true)}<a href="{$url_alloc_tf}">New Tagged Fund</a>{/}</th>
@@ -20,7 +20,7 @@
   </tr>
   <tr>
     <td colspan="4">
-      {$table_list}
+      <table class="list sortable">
         <tr>
           <th>TF Name</th>
           <th>Description</th>

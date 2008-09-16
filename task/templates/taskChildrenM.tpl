@@ -1,4 +1,4 @@
-{$table_box}
+<table class="box">
     <tr>
       <th>Child Tasks</th>
       <th class="right">&nbsp;&nbsp;<a href="{$url_alloc_task}projectID={$task_projectID}&parentTaskID={$task_taskID}">New Subtask</a></th>
