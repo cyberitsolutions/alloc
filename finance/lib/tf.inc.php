@@ -33,7 +33,7 @@ class tf extends db_entity {
                                , "tfModifiedTime"=>new db_field("tfModifiedTime")
                                , "qpEmployeeNum"=>new db_field("qpEmployeeNum")
                                , "quickenAccount"=>new db_field("quickenAccount")
-                               , "status"=>new db_field("status")
+                               , "tfActive"=>new db_field("tfActive")
       );
   }
 

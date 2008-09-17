@@ -193,7 +193,7 @@ if ($transaction_to_edit->get_value("fromTfID")) {
   $selectedProjectID = $transaction_to_edit->get_value("projectID");
 
 } else {
-  $query = "SELECT tfID FROM tfPerson WHERE personID=".$current_user->get_id()." LIMIT 1";
+  $query = sprintf("SELECT tfID FROM tfPerson WHERE personID=%d LIMIT 1",$current_user->get_id());
   $db->query($query);
 
   if ($db->next_record()) {
@@ -204,8 +204,9 @@ if ($transaction_to_edit->get_value("fromTfID")) {
   $selectedProject = 0;
 }
 
-$q = "SELECT tfID AS value, tfName AS label FROM tf WHERE status = 'active' ORDER BY tfName";
-$TPL["fromTfOptions"] = page::select_options($q, $selectedTfID);
+$tf = new tf;
+$options = $tf->get_assoc_array("tfID","tfName");
+$TPL["fromTfOptions"] = page::select_options($options, $selectedTfID);
 
 if (is_object($expenseForm) && $expenseForm->get_value("clientID")) { 
   $clientID_sql = sprintf(" AND clientID = %d",$expenseForm->get_value("clientID"));

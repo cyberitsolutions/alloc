@@ -116,9 +116,11 @@ $TPL["transactionTypeOptions"] = page::select_options($transactionTypes, $transa
 is_object($transaction) and $TPL["transactionType"] = $transaction->get_transaction_type_link();
 
 $db = new db_alloc;
-$q = "SELECT tfID AS value, tfName AS label FROM tf WHERE status = 'active' ORDER BY tfName";
-$TPL["tfIDOptions"] = page::select_options($q, $transaction->get_value("tfID"));
-$TPL["fromTfIDOptions"] = page::select_options($q, $transaction->get_value("fromTfID"));
+
+$tf = new tf;
+$options = $tf->get_assoc_array("tfID","tfName");
+$TPL["tfIDOptions"] = page::select_options($options, $transaction->get_value("tfID"));
+$TPL["fromTfIDOptions"] = page::select_options($options, $transaction->get_value("fromTfID"));
 
 $q = "SELECT projectID as value, projectName as label FROM project WHERE projectStatus = 'current' ORDER BY projectName";
 $TPL["projectIDOptions"] = page::select_options($q, $transaction->get_value("projectID"));

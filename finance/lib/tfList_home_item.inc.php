@@ -38,7 +38,7 @@ class tfList_home_item extends home_item {
       $tf->set_id($db->f("tfID"));
       $tf->select();
 
-      if ($tf->get_value("status") != 'active') {
+      if (!$tf->get_value("tfActive")) {
         continue;
       }
 

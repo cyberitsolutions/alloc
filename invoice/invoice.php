@@ -145,12 +145,11 @@ function show_invoiceItem_list() {
 
   $db = new db_alloc();
   $db2 = new db_alloc();
-  $q = sprintf("SELECT * FROM tf WHERE status != 'disabled' ORDER BY tfName");
-  $db->query($q);
-
   $q = sprintf("SELECT *
                   FROM invoiceItem 
-                 WHERE invoiceItem.invoiceID = %d ORDER by iiDate,invoiceItem.invoiceItemID",$invoiceID);
+                 WHERE invoiceItem.invoiceID = %d 
+              ORDER BY iiDate,invoiceItem.invoiceItemID"
+              ,$invoiceID);
   $db->query($q);
   while ($db->next_record()) {
     $invoiceItem = new invoiceItem;
