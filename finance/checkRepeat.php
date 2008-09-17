@@ -82,14 +82,14 @@ while ($db->next_record()) {
     $tf = new tf;
     $tf->set_id($transactionRepeat->get_value("tfID"));
     $tf->select();
-    if ($tf->get_value("status") != 'active') {
+    if (!$tf->get_value("tfActive")) {
       continue 2;
     }
 
     $tf = new tf;
     $tf->set_id($transactionRepeat->get_value("fromTfID"));
     $tf->select();
-    if ($tf->get_value("status") != 'active') {
+    if (!$tf->get_value("tfActive")) {
       continue 2;
     }
 

@@ -61,22 +61,22 @@
   </tr>
   <tr>
     <td width="20%"><nobr>Finance Tagged Fund</nobr></td>
-    <td><select name="mainTfID">{$mainTfOptions}</select></td>
+    <td><select name="mainTfID"><option value="">{$mainTfOptions}</select></td>
     <td width="1%">{page::help("config_mainTfID")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Outgoing Funds TF</nobr></td>
-    <td><select name="outTfID">{$outTfOptions}</select></td>
+    <td><select name="outTfID"><option value="">{$outTfOptions}</select></td>
     <td width="1%">{page::help("config_outTfID")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Incoming Funds TF</nobr></td>
-    <td><select name="inTfID">{$inTfOptions}</select></td>
+    <td><select name="inTfID"><option value="">{$inTfOptions}</select></td>
     <td width="1%">{page::help("config_inTfID")}</td>
   </tr>
   <tr>
     <td width="20%"><nobr>Tax Tagged Fund</nobr></td>
-    <td><select name="taxTfID">{$taxTfOptions}</select></td>
+    <td><select name="taxTfID"><option value="">{$taxTfOptions}</select></td>
     <td width="1%">{page::help("config_taxTfID")}</td>
   </tr>
   <tr>

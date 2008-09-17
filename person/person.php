@@ -272,7 +272,7 @@ if ($person->get_id()) {
                   FROM tf, tfPerson 
   				       WHERE tf.tfID = tfPerson.tfID 
                    AND tfPerson.personID = %d 
-                   AND (tf.status = 'active' OR tf.tfID = %d)"
+                   AND (tf.tfActive = 1 OR tf.tfID = %d)"
                 ,$person->get_id(),$person->get_value("preferred_tfID"));
   $TPL["preferred_tfID_options"] = page::select_options($q, $person->get_value("preferred_tfID"));
 

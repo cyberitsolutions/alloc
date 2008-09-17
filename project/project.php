@@ -683,7 +683,7 @@ $TPL["navigation_links"] = $project->get_navigation_links();
 
 $query = sprintf("SELECT tfID AS value, tfName AS label 
                     FROM tf 
-                   WHERE status = 'active' 
+                   WHERE tfActive = 1
                 ORDER BY tfName");
 $TPL["commission_tf_options"] = page::select_options($query, $TPL["commission_tfID"]);
 $TPL["cost_centre_tfID_options"] = page::select_options($query, $TPL["project_cost_centre_tfID"]);

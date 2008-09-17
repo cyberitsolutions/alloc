@@ -34,7 +34,7 @@ if ($_POST["owner"]) {
 if ($_POST["showall"]) {
   $TPL["showall_checked"] = " checked";
 } else {
-  $filter[] = "status = 'active'";
+  $filter[] = "tfActive = 1";
 }
 
 $TPL["main_alloc_title"] = "TF List - ".APPLICATION_NAME;
@@ -49,7 +49,11 @@ function show_tf($template_name) {
   }
 
   $db = new db_alloc;
-  $q = sprintf("SELECT tf.* FROM tf LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID %s GROUP BY tf.tfID ORDER BY tf.tfName",$f);  
+  $q = sprintf("SELECT tf.* 
+                  FROM tf 
+             LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID %s 
+              GROUP BY tf.tfID 
+              ORDER BY tf.tfName",$f);  
   $db->query($q);
 
   while ($db->next_record()) {

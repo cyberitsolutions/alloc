@@ -80,7 +80,7 @@ if ($_POST["upload"]) {
       continue;
     }
     // Find the TF ID for the expense
-    $query = sprintf("SELECT * FROM tf WHERE status = 'active' AND quickenAccount='%s'", db_esc($account));
+    $query = sprintf("SELECT * FROM tf WHERE tfActive = 1 AND quickenAccount='%s'", db_esc($account));
     echo $query;
     $db->query($query);
     if ($db->next_record()) {

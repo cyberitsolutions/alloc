@@ -74,9 +74,9 @@ if ($_POST["save"]) {
   $tf->read_globals();
 
   if ($_POST["isActive"]) {
-    $tf->set_value("status", "active");
+    $tf->set_value("tfActive", 1);
   } else {
-    $tf->set_value("status", "disabled");
+    $tf->set_value("tfActive", 0);
   }
 
   if ($tf->get_value("tfName") == "") {
@@ -135,7 +135,7 @@ if ($tf->get_value("tfModifiedUser")) {
   $TPL["tfModifiedUser"] = person::get_fullname($tf->get_value("tfModifiedUser"));
 }
 
-$tf->get_value("status") == "active" || !$tf->get_id() and $TPL["tfIsActive"] = " checked";
+$tf->get_value("tfActive") || !$tf->get_id() and $TPL["tfIsActive"] = " checked";
 
 $TPL["main_alloc_title"] = "Edit TF - ".APPLICATION_NAME;
 

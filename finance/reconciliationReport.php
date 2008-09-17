@@ -26,12 +26,12 @@ check_entity_perm("transaction", PERM_FINANCE_RECONCILIATION_REPORT);
 function load_transaction_total($info_field, $transaction_type) {
   global $tf_info;
 
-  $query = sprintf("SELECT tf.tfID, tf.tfName, sum(transaction.amount) as total_amount
+  $query = sprintf("SELECT tf.tfID, tf.tfName, sum(transaction.amount) AS total_amount
                       FROM tf 
-                           LEFT JOIN transaction ON transaction.tfID = tf.tfID 
-                                            AND transactionType='%s' 
-                                            AND transactionDate LIKE '%02d-%02d-%%'
-                                            AND transaction.status <> 'rejected'
+                 LEFT JOIN transaction ON transaction.tfID = tf.tfID 
+                                      AND transactionType='%s' 
+                                      AND transactionDate LIKE '%02d-%02d-%%'
+                                      AND transaction.status <> 'rejected'
                       GROUP BY tfID", db_esc($transaction_type), $_GET["year"], $_GET["month"]);
   $db = new db_alloc;
   $db->query($query);
@@ -46,8 +46,10 @@ function load_balances($info_field, $where) {
   global $tf_info;
 
   $query = "SELECT tfName, sum(amount) AS balance 
-              FROM tf LEFT JOIN transaction ON tf.tfID = transaction.tfID AND $where
-              WHERE status <> 'rejected'
+              FROM tf 
+         LEFT JOIN transaction ON tf.tfID = transaction.tfID 
+                              AND $where
+              WHERE transaction.status <> 'rejected'
               GROUP BY tf.tfID";
 
   $db = new db_alloc;

@@ -469,7 +469,7 @@ CREATE TABLE tf (
   tfModifiedUser int(11) DEFAULT NULL,
   qpEmployeeNum int(11) default NULL,
   quickenAccount varchar(255) default NULL,
-  status enum('active','disabled') default 'active',
+  tfActive tinyint(1) NOT NULL,
   PRIMARY KEY  (tfID)
 ) TYPE=MyISAM PACK_KEYS=0;
 

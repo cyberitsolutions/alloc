@@ -109,11 +109,8 @@ if ($_POST["save"]) {
 $config = new config;
 get_cached_table("config",true); // flush cache
 
-$db->query("SELECT * FROM tf WHERE status = 'active' ORDER BY tfName");
-$options[""] = "";
-while($row = $db->row()) {
-  $options[$row["tfID"]] = $row["tfName"];
-}
+$tf = new tf;
+$options = $tf->get_assoc_array("tfID","tfName");
 $TPL["mainTfOptions"] = page::select_options($options, $config->get_config_item("mainTfID"));
 $TPL["outTfOptions"] = page::select_options($options, $config->get_config_item("outTfID"));
 $TPL["inTfOptions"] = page::select_options($options, $config->get_config_item("inTfID"));

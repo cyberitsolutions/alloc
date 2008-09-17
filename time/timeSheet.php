@@ -84,7 +84,7 @@ if (!$current_user->is_employee()) {
 
       $db->query("SELECT * 
                     FROM tf 
-                   WHERE status = 'active' 
+                   WHERE tfActive = 1
                       OR tfID = %d 
                       OR tfID = %d 
                 ORDER BY tfName"
@@ -148,8 +148,9 @@ if (!$current_user->is_employee()) {
     global $timeSheet, $TPL, $db, $percent_array;
 
     if ($timeSheet->get_value("status") == "invoiced" && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-      $q = "SELECT tfID as value, tfName as label FROM tf WHERE status = 'active' ORDER BY tfName";
-      $TPL["tf_options"] = page::select_options($q, $none);
+      $tf = new tf;
+      $options = $tf->get_assoc_array("tfID","tfName");
+      $TPL["tf_options"] = page::select_options($options, $none);
 
       $transactionType_options = transaction::get_transactionTypes();
       $TPL["transactionType_options"] = page::select_options($transactionType_options);
@@ -783,7 +784,11 @@ if ($timeSheet->get_value("status") == "edit") {
 
   if ($preferred_tfID = $tf_db->f("preferred_tfID")) {
 
-    $tf_db->query("select * from tfPerson where personID = ".$timeSheet->get_value("personID")." and tfID = ".$preferred_tfID);
+    $tf_db->query("SELECT * 
+                     FROM tfPerson 
+                    WHERE personID = %d 
+                      AND tfID = %d"
+                 ,$timeSheet->get_value("personID"), $preferred_tfID);
 
     if ($tf_db->next_record()) {        // The person has a preferred TF, and is a tfPerson for it too
       $TPL["recipient_tfID_name"] = tf::get_name($tf_db->f("tfID"));
