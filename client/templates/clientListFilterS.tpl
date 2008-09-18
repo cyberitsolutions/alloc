@@ -14,11 +14,10 @@
           <td><input type="text" name="clientName" value="{$clientName}"></td>
           <td><input type="text" name="contactName" value="{$contactName}"></td>
           <td><input type="submit" name="applyFilter" value="Filter"></td>
-          <td>&nbsp;</td>
           <td>{page::help("clientListFilter")}</td> 
         </tr>
         <tr>
-          <td align="center" colspan="7"><nobr>{$alphabet_filter}</nobr></td>
+          <td align="center" colspan="6"><nobr>{$alphabet_filter}</nobr></td>
         </tr>
       </table>
     </form>
