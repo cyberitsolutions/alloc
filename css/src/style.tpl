@@ -48,6 +48,7 @@ a.growshrink, a.magic {
   color:(TD_COLOR);
   text-decoration:none;
   border-bottom:1px dashed (BODY_COLOR);
+  text-transform:none;
 }
 a.growshrink:hover, a.magic:hover {
   border-bottom:1px solid (BODY_COLOR);
@@ -95,7 +96,7 @@ h6 {
   font-weight:normal;
   text-transform:uppercase;
   color:#bbbbbb;
-  border-bottom:1px solid #bbbbbb;
+  border-bottom:1px solid #cccccc;
   padding:0px;
   margin:20px 0px 10px 0px;
   clear:both;
@@ -165,6 +166,11 @@ select:focus.bad
 {
   border:1px solid #cd7373;
   background-color: #ffffff;
+}
+input[readonly="true"], input[readonly="true"]:focus {
+  border:1px solid #e0e0e0;
+  background-color:(TABLE_BOX_BACKGROUND_COLOR);
+  color:#777777;
 }
 
 .right { 
@@ -282,6 +288,7 @@ table.box th {
   font-size:110%; 
   border-bottom:1px solid #e0e0e0;
   padding:3px;
+  font-weight:normal;
 } 
 table.box th.center { 
   text-align:center; 
@@ -290,11 +297,11 @@ table.box th.right table {
   width:40%; 
 } 
 table.box th a:link, table.box th a:visited { 
-  font-weight:bold; 
+  font-weight:normal; 
   color:(TABLE_BOX_TH_A_LINK_COLOR); 
 }
 table.box th a:hover { 
-  font-weight:bold; 
+  font-weight:normal; 
   color:(TABLE_BOX_TH_A_HOVER_COLOR); 
 }
 table.box td {
