@@ -12,7 +12,11 @@
   <script>
     // When the document has loaded...
     $(document).ready(function() \{
-      $("#username").focus();
+      if (!$("#username").val()) \{
+        $("#username").focus();
+      \} else \{
+        $("#password").focus();
+      \}
       $("div.message").corner();
     \});
   </script>

@@ -48,6 +48,7 @@ if ($sess->Started()) {
 
     if ($sess->TestCookie()) {
       $sess->UseCookie();
+      $sess->SetTestCookie($_POST["username"]);
     } else {
       $sess->UseGet();
     }
@@ -92,7 +93,9 @@ if ($sess->Started()) {
 
 // Else if just visiting the page
 } else {
-  $sess->SetTestCookie();
+  if (!$sess->TestCookie()) {
+    $sess->SetTestCookie();
+  }
 }
 
 $account = $_POST["account"] or $account = $_GET["account"];
@@ -111,12 +114,15 @@ if (!isset($account)) {
   $TPL["links"] = "<a href=\"".$TPL["url_alloc_login"]."\">Login</a> | New Password";
 }
 
-$TPL["username"] = $_POST["username"];
-
+if (isset($_POST["username"])) {
+  $TPL["username"] = $_POST["username"];
+} else if ($sess->TestCookie() != "alloc_test_cookie") {
+  $TPL["username"] = $sess->TestCookie();
+}
 
 if (!isset($account)) { 
   $TPL["password_or_email_address_field"] = "<td class=\"right\">Password&nbsp;&nbsp;</td>";
-  $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"password\" name=\"password\" size=\"20\" maxlength=\"32\"></td>";
+  $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"password\" id=\"password\" name=\"password\" size=\"20\" maxlength=\"32\"></td>";
   $TPL["login_or_send_pass_button"] = "<input type=\"submit\" name=\"login\" value=\"&nbsp;&nbsp;Login&nbsp;&nbsp;\">";
 } else { 
   $TPL["password_or_email_address_field"] = "<td class=\"right\">Email Address&nbsp;&nbsp;</td>";
