@@ -109,7 +109,7 @@ class Session {
   function MakeCookie() {
 
     // Attempt to unset the test cookie
-    SetCookie("alloc_test_cookie",FALSE,0,"/","");
+    #SetCookie("alloc_test_cookie",FALSE,0,"/","");
 
     // Set the session cookie
     $rtn = SetCookie("alloc_cookie",$this->key,0,"/","");
@@ -125,14 +125,13 @@ class Session {
     unset($_COOKIE["alloc_cookie"]);
   }
 
-  function SetTestCookie() {
-    SetCookie("alloc_test_cookie","test",0,"/","");
+  function SetTestCookie($val="alloc_test_cookie") {
+    SetCookie("alloc_test_cookie",$val,0,"/","");
   }
 
   function TestCookie() {
     return $_COOKIE["alloc_test_cookie"];
   }
-
 
   function GetUrl($url="") {
     return $this->url($url);
