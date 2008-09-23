@@ -20,8 +20,8 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-include(ALLOC_MOD_DIR."tools/lib/stats.inc.php");
-include(ALLOC_MOD_DIR."tools/lib/backups.inc.php");
+require_once(dirname(__FILE__)."/stats.inc.php");
+require_once(dirname(__FILE__)."/backups.inc.php");
 
 class tools_module extends module {
 }

@@ -20,10 +20,12 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-include(ALLOC_MOD_DIR."time/lib/timeUnit.inc.php");
-include(ALLOC_MOD_DIR."time/lib/timeSheet.inc.php");
-include(ALLOC_MOD_DIR."time/lib/timeSheetItem.inc.php");
-include(ALLOC_MOD_DIR."time/lib/pendingApprovalTimeSheetListHomeItem.inc.php");
+require_once(dirname(__FILE__)."/timeUnit.inc.php");
+require_once(dirname(__FILE__)."/timeSheet.inc.php");
+require_once(dirname(__FILE__)."/timeSheetItem.inc.php");
+require_once(dirname(__FILE__)."/pendingApprovalTimeSheetListHomeItem.inc.php");
+require_once(dirname(__FILE__)."/timeSheetListHomeItem.inc.php");
+require_once(dirname(__FILE__)."/timeSheetStatusHomeItem.inc.php");
 
 class time_module extends module
 {
@@ -33,15 +35,12 @@ class time_module extends module
     global $current_user;
 
     if (isset($current_user) && $current_user->is_employee()) {
-      include(ALLOC_MOD_DIR."time/lib/timeSheetListHomeItem.inc.php");
       register_home_item(new timeSheetListHomeItem);
       if (has_pending_timesheet()) {
         register_home_item(new pendingApprovalTimeSheetListHomeItem);
       }
 
-      include(ALLOC_MOD_DIR."time/lib/timeSheetStatusHomeItem.inc.php");
       register_home_item(new timeSheetStatusHomeItem);
-
 
       $c = new config;
       $timeSheetAdminEmailPersonID = $c->get_config_item("timeSheetAdminEmail");

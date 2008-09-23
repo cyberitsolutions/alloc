@@ -20,11 +20,12 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once(dirname(__FILE__)."/reminder.inc.php");
+
 class reminder_module extends module {
   var $db_entities = array("reminder");
 }
 
-include(ALLOC_MOD_DIR."reminder/lib/reminder.inc.php");
 
 
 

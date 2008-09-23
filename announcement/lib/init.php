@@ -20,11 +20,13 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once(dirname(__FILE__)."/announcement.inc.php");
+require_once(dirname(__FILE__)."/announcements_home_item.inc.php");
+
 class announcement_module extends module {
   var $db_entities = array("announcement");
 
   function register_home_items() {
-    include(ALLOC_MOD_DIR."announcement/lib/announcements_home_item.inc.php");
     $announcement = new announcement;
     if ($announcement->has_announcements()) {
       register_home_item(new announcements_home_item());
@@ -33,7 +35,6 @@ class announcement_module extends module {
 
 }
 
-include(ALLOC_MOD_DIR."announcement/lib/announcement.inc.php");
 
 
 

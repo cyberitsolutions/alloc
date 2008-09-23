@@ -20,12 +20,13 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once(dirname(__FILE__)."/client.inc.php");
+require_once(dirname(__FILE__)."/clientContact.inc.php");
+
 class client_module extends module {
   var $db_entities = array("client", "clientContact");
 }
 
-include(ALLOC_MOD_DIR."client/lib/client.inc.php");
-include(ALLOC_MOD_DIR."client/lib/clientContact.inc.php");
 
 
 

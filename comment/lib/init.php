@@ -20,12 +20,13 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once(dirname(__FILE__)."/comment.inc.php");
+require_once(dirname(__FILE__)."/commentTemplate.inc.php");
+
 class comment_module extends module {
   var $db_entities = array("comment","commentTemplate");
 }
 
-include(ALLOC_MOD_DIR."comment/lib/comment.inc.php");
-include(ALLOC_MOD_DIR."comment/lib/commentTemplate.inc.php");
 
 
 

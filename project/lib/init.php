@@ -21,12 +21,12 @@
 */
 
 
-include(ALLOC_MOD_DIR."project/lib/project.inc.php");
-include(ALLOC_MOD_DIR."project/lib/projectPerson.inc.php");
-include(ALLOC_MOD_DIR."project/lib/projectModificationNote.inc.php");
-include(ALLOC_MOD_DIR."project/lib/projectCommissionPerson.inc.php");
-include(ALLOC_MOD_DIR."shared/lib/import_export.inc.php");
-
+require_once(dirname(__FILE__)."/project.inc.php");
+require_once(dirname(__FILE__)."/projectPerson.inc.php");
+require_once(dirname(__FILE__)."/projectModificationNote.inc.php");
+require_once(dirname(__FILE__)."/projectCommissionPerson.inc.php");
+require_once(dirname(__FILE__)."/import_export.inc.php");
+require_once(dirname(__FILE__)."/project_list_home_item.inc.php");
 
 class project_module extends module
 {
@@ -39,7 +39,6 @@ class project_module extends module
   function register_home_items() {
     global $current_user;
     if (sprintf("%d",$current_user->prefs["projectListNum"]) > 0 || $current_user->prefs["projectListNum"] == "all") {
-      include(ALLOC_MOD_DIR."project/lib/project_list_home_item.inc.php");
       register_home_item(new project_list_home_item());
     }
   }

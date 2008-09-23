@@ -21,9 +21,12 @@
 */
 
 
-include(ALLOC_MOD_DIR."task/lib/task.inc.php");
-include(ALLOC_MOD_DIR."task/lib/taskType.inc.php");
-include(ALLOC_MOD_DIR."task/lib/task_calendar.inc.php");
+require_once(dirname(__FILE__)."/task.inc.php");
+require_once(dirname(__FILE__)."/taskType.inc.php");
+require_once(dirname(__FILE__)."/task_calendar.inc.php");
+require_once(dirname(__FILE__)."/task_calendar_home_item.inc.php");
+require_once(dirname(__FILE__)."/top_ten_tasks_home_item.inc.php");
+require_once(dirname(__FILE__)."/task_message_list_home_item.inc.php");
 
 class task_module extends module
 {
@@ -35,12 +38,10 @@ class task_module extends module
     global $current_user;
 
     if (isset($current_user->prefs["tasksGraphPlotHome"]) && sprintf("%d",$current_user->prefs["tasksGraphPlotHome"]) > 0) {
-      include(ALLOC_MOD_DIR."task/lib/task_calendar_home_item.inc.php");
       register_home_item(new task_calendar_home_item());
     }
 
     if (isset($current_user->prefs["topTasksNum"]) && (sprintf("%d",$current_user->prefs["topTasksNum"]) > 0 || $current_user->prefs["topTasksNum"] == "all")) {
-      include(ALLOC_MOD_DIR."task/lib/top_ten_tasks_home_item.inc.php");
       if (have_entity_perm("task", PERM_READ_WRITE, $current_user, true)) {
         register_home_item(new top_ten_tasks_home_item());
         flush();
@@ -48,13 +49,9 @@ class task_module extends module
     }
 
     if ($current_user->has_messages()) {
-      include(ALLOC_MOD_DIR."task/lib/task_message_list_home_item.inc.php");
       register_home_item(new task_message_list_home_item());
     }
   }
-
-
-
 }
 
 
