@@ -23,15 +23,14 @@ repository.
 Rebuilding the CSS Files
 ------------------------
 
-In the css/ directory there are many css files. There is one css file per
-theme, multiplied by ten font settings.
+In the css/ directory there are css files for each theme. 
 
 When manipulating css you do *not* need to change those files. You just
-need to change the files in the styles/ directory and then run `make css` which
-should rebuild the css files in the css directory.
+need to change the files in the css/src/ directory and then run `make css` which
+should rebuild the css files.
 
-styles/style.tpl    ->  contains the template of the main CSS file
-styles/style_*.ini  ->  contains the actual settings that get plugged into the template
+css/src/style.tpl    ->  contains the template of the main CSS file
+css/src/style_*.ini  ->  contains the actual settings that get plugged into the template
 
 
 Updating the Help document
@@ -49,7 +48,7 @@ doc_pdf`. You will need to have docutils/rst2html installed.
 Vim Settings
 ------------
 
-I recommend using the following vim setting in your .vimrc. 
+It is strongly recommended to use the following setting in your .vimrc. 
 
 set expandtab
 set softtabstop=2
