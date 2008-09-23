@@ -34,8 +34,7 @@ $id = sprintf("%d",$id);
 
 if ($id && $file 
 && !preg_match("/\.\./",$file) && !preg_match("/\//",$file)
-&& !preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)
-&& strlen($file) <= 40) {
+&& !preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)) {
 
   $e = new $entity;
   $e->set_id($id);
