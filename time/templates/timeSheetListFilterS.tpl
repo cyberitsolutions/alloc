@@ -5,6 +5,7 @@
           <td>User Name</td>
           <td>Date From</td>
           <td>Status</td>
+          <td>&nbsp;</td>
         </tr>
         <tr>
           <td>
