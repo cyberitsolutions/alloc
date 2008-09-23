@@ -20,17 +20,14 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once(dirname(__FILE__)."/person.inc.php");
+require_once(dirname(__FILE__)."/absence.inc.php");
+require_once(dirname(__FILE__)."/skillList.inc.php");
+require_once(dirname(__FILE__)."/skillProficiencys.inc.php");
+require_once(dirname(__FILE__)."/savedView.inc.php");
+
 class person_module extends module {
   var $db_entities = array("person", "absence", "skillList", "skillProficiencys");
 }
-
-include(ALLOC_MOD_DIR."person/lib/person.inc.php");
-include(ALLOC_MOD_DIR."person/lib/absence.inc.php");
-include(ALLOC_MOD_DIR."person/lib/skillList.inc.php");
-include(ALLOC_MOD_DIR."person/lib/skillProficiencys.inc.php");
-include(ALLOC_MOD_DIR."person/lib/savedView.inc.php");
-
-
-
 
 ?>

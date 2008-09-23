@@ -21,11 +21,11 @@
  *
  */
 
-include(ALLOC_MOD_DIR."product/lib/product.inc.php");
-include(ALLOC_MOD_DIR."product/lib/productCost.inc.php");
-include(ALLOC_MOD_DIR."product/lib/productSale.inc.php");
-include(ALLOC_MOD_DIR."product/lib/productSaleItem.inc.php");
-include(ALLOC_MOD_DIR."product/lib/productSaleTransaction.inc.php");
+require_once(dirname(__FILE__)."/product.inc.php");
+require_once(dirname(__FILE__)."/productCost.inc.php");
+require_once(dirname(__FILE__)."/productSale.inc.php");
+require_once(dirname(__FILE__)."/productSaleItem.inc.php");
+require_once(dirname(__FILE__)."/productSaleTransaction.inc.php");
 
 class product_module extends module
 {

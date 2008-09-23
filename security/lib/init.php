@@ -20,12 +20,13 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once(dirname(__FILE__)."/permission.inc.php");
+require_once(dirname(__FILE__)."/role.inc.php");
+
 class security_module extends module {
   var $db_entities = array("permission","role");
 }
 
-include(ALLOC_MOD_DIR."security/lib/permission.inc.php");
-include(ALLOC_MOD_DIR."security/lib/role.inc.php");
 
 
 

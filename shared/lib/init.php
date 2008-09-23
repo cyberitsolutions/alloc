@@ -21,18 +21,18 @@
 */
 
 
-require_once(ALLOC_MOD_DIR."shared/lib/page.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/template.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_db.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_db_alloc.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_session.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_db_field.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_db_entity.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_module.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_alloc_cache.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_history.inc.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_PasswordHash.php");
-require_once(ALLOC_MOD_DIR."shared/lib/class_interestedParty.inc.php");
+require_once(dirname(__FILE__)."/page.inc.php");
+require_once(dirname(__FILE__)."/template.inc.php");
+require_once(dirname(__FILE__)."/class_db.inc.php");
+require_once(dirname(__FILE__)."/class_db_alloc.inc.php");
+require_once(dirname(__FILE__)."/class_session.inc.php");
+require_once(dirname(__FILE__)."/class_db_field.inc.php");
+require_once(dirname(__FILE__)."/class_db_entity.inc.php");
+require_once(dirname(__FILE__)."/class_module.inc.php");
+require_once(dirname(__FILE__)."/class_alloc_cache.inc.php");
+require_once(dirname(__FILE__)."/class_history.inc.php");
+require_once(dirname(__FILE__)."/class_PasswordHash.php");
+require_once(dirname(__FILE__)."/class_interestedParty.inc.php");
 
 class shared_module extends module {
   var $db_entities = array("sentEmailLog");

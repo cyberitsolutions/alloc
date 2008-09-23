@@ -20,12 +20,13 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once(dirname(__FILE__)."/item.inc.php");
+require_once(dirname(__FILE__)."/loan.inc.php");
+
 class item_module extends module {
   var $db_entities = array("item", "loan");
 }
 
-include(ALLOC_MOD_DIR."item/lib/item.inc.php");
-include(ALLOC_MOD_DIR."item/lib/loan.inc.php");
 
 
 

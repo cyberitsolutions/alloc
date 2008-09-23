@@ -20,20 +20,21 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once(dirname(__FILE__)."/tf.inc.php");
+require_once(dirname(__FILE__)."/transaction.inc.php");
+require_once(dirname(__FILE__)."/expenseForm.inc.php");
+require_once(dirname(__FILE__)."/tfPerson.inc.php");
+require_once(dirname(__FILE__)."/transactionRepeat.inc.php");
+require_once(dirname(__FILE__)."/tfList_home_item.inc.php");
+
 class finance_module extends module {
   var $db_entities = array("tf", "transaction", "expenseForm", "tfPerson", "transactionRepeat");
 
   function register_home_items() {
-    include(ALLOC_MOD_DIR."finance/lib/tfList_home_item.inc.php");
     register_home_item(new tfList_home_item);
   } 
 }
 
-include(ALLOC_MOD_DIR."finance/lib/tf.inc.php");
-include(ALLOC_MOD_DIR."finance/lib/transaction.inc.php");
-include(ALLOC_MOD_DIR."finance/lib/expenseForm.inc.php");
-include(ALLOC_MOD_DIR."finance/lib/tfPerson.inc.php");
-include(ALLOC_MOD_DIR."finance/lib/transactionRepeat.inc.php");
 
 
 
