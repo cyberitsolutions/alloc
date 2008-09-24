@@ -45,7 +45,7 @@ $defaults = array("url_form_action"=>$TPL["url_alloc_transactionList"]
 if ($download) {
   $_FORM = transaction::load_form_data($defaults);
   $_FORM["return"] = "csv";
-  $csv = transaction::get_transaction_list($_FORM);
+  $csv = transaction::get_list($_FORM);
   header('Content-Type: application/octet-stream');
   header("Content-Length: ".strlen($csv));
   header('Content-Disposition: attachment; filename="'.date("Ymd_His").'.csv"');
@@ -65,7 +65,7 @@ function show_filter() {
 function show_transaction_list() {
   global $defaults;
   $_FORM = transaction::load_form_data($defaults);
-  echo transaction::get_transaction_list($_FORM);
+  echo transaction::get_list($_FORM);
 }
 
 

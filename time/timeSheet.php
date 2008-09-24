@@ -591,7 +591,7 @@ if (!$TPL["timeSheet_projectName"]) {
 
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
-  $ops = client::get_client_list($options);
+  $ops = client::get_list($options);
 
   $TPL["show_client_options"] = "<select size=\"1\" id=\"clientID\" name=\"clientID\" onChange=\"updateStuffWithAjax()\"><option></option>";
   $TPL["show_client_options"].= page::select_options($ops,$clientID)."</select>";
@@ -608,7 +608,7 @@ if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_
   $ops["invoiceStatus"] = "edit";
   $ops["clientID"] = $p->get_value("clientID");
   $ops["return"] = "dropdown_options";
-  $invoice_list = invoice::get_invoice_list($ops);
+  $invoice_list = invoice::get_list($ops);
   $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$timeSheet->get_id());
   $db = new db_alloc();
   $db->query($q);

@@ -34,7 +34,7 @@ class timeSheetListHomeItem extends home_item {
     $ops["personID"] = $current_user->get_id();
     $ops["status"] = array('edit','manager','admin','invoiced');
 
-    $TPL["time_sheet_list"] = timeSheet::get_timeSheet_list($ops);
+    $TPL["time_sheet_list"] = timeSheet::get_list($ops);
   }
 }
 

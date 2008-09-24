@@ -53,7 +53,7 @@ class alloc_soap {
       #$ops["personID"] = $current_user->get_id();
       $ops["startDate"] = $startDate;
       $ops["endDate"] = $endDate;
-      return transaction::get_transaction_list($ops);
+      return transaction::get_list($ops);
     }
   }
 

@@ -76,7 +76,7 @@ class person extends db_entity {
     $options["taskStatus"] = "not_completed";
     $options["taskTypeID"] = array(TT_TASK,TT_MESSAGE,TT_FAULT,TT_MILESTONE);
 
-    $summary = task::get_task_list($options);
+    $summary = task::get_list($options);
 
     if ($summary) {
       $topThree = "\n\nTop Three Tasks";
@@ -86,7 +86,7 @@ class person extends db_entity {
     unset($summary);
     unset($options["limit"]);
     $options["taskStatus"] = "due_today";
-    $summary = task::get_task_list($options);
+    $summary = task::get_list($options);
 
     if ($summary) {
       $dueToday = "\n\nTasks Due Today";
@@ -96,7 +96,7 @@ class person extends db_entity {
     unset($summary);
     unset($options["limit"]);
     $options["taskStatus"] = "new";
-    $summary = task::get_task_list($options);
+    $summary = task::get_list($options);
 
     if ($summary) {
       $newTasks = "\n\nNew Tasks";

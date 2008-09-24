@@ -99,7 +99,7 @@ class client extends db_entity {
     return "<a href=\"".$TPL["url_alloc_client"]."clientID=".$this->get_id()."\">".$this->get_client_name()."</a>";
   }
 
-  function get_client_list_filter($filter=array()) {
+  function get_list_filter($filter=array()) {
     
     if ($filter["clientStatus"]) {
       $sql[] = sprintf("(clientStatus = '%s')",db_esc($filter["clientStatus"]));
@@ -122,7 +122,7 @@ class client extends db_entity {
     return $sql;
   }
 
-  function get_client_list($_FORM) {
+  function get_list($_FORM) {
     /*
      * This is the definitive method of getting a list of clients that need a sophisticated level of filtering
      * 
@@ -144,7 +144,7 @@ class client extends db_entity {
      */
 
     global $TPL;
-    $filter = client::get_client_list_filter($_FORM);
+    $filter = client::get_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
     $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
@@ -153,7 +153,7 @@ class client extends db_entity {
     $_FORM["return"] or $_FORM["return"] = "html";
 
     // A header row
-    $summary.= client::get_client_list_tr_header($_FORM);
+    $summary.= client::get_list_tr_header($_FORM);
 
 
     if (is_array($filter) && count($filter)) {
@@ -191,7 +191,7 @@ class client extends db_entity {
         $row["clientContactEmail"] = $cc["clientContactEmail"];
       }
 
-      $summary.= client::get_client_list_tr($row,$_FORM);
+      $summary.= client::get_list_tr($row,$_FORM);
       $summary_ops[$c->get_id()] = $c->get_value("clientName");
     }
 
@@ -207,7 +207,7 @@ class client extends db_entity {
 
   }
 
-  function get_client_list_tr_header($_FORM) {
+  function get_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
       $summary = "\n<tr>";
       $_FORM["showClientName"]          and $summary.= "\n<th>Client</th>";
@@ -221,7 +221,7 @@ class client extends db_entity {
     }
   }
 
-  function get_client_list_tr($client,$_FORM) {
+  function get_list_tr($client,$_FORM) {
 
     $client["clientContactPhone"] or $client["clientContactPhone"] = $client["clientContactMobile"];
     $client["clientContactEmail"] and $client["clientContactEmail"] = "<a href=\"mailto:".$client["clientContactEmail"]."\">".$client["clientContactEmail"]."</a>";

@@ -494,7 +494,7 @@ class timeSheet extends db_entity
     $options["taskView"] = "byProject";
     $options["return"] = "dropdown_options";
     $options["taskTimeSheetStatus"] = $status;
-    $tasks = task::get_task_list($options) or $tasks = array();
+    $tasks = task::get_list($options) or $tasks = array();
 
     if ($taskID) {
       $t = new task;
@@ -507,7 +507,7 @@ class timeSheet extends db_entity
     return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\"><option value=\"\">".$dropdown_options."</select>";
   }
 
-  function get_timeSheet_list_filter($filter=array()) {
+  function get_list_filter($filter=array()) {
     if ($filter["projectID"]) {
       $sql[] = sprintf("(timeSheet.projectID = '%d')", $filter["projectID"]);
     }
@@ -529,7 +529,7 @@ class timeSheet extends db_entity
     return $sql;
   }
 
-  function get_timeSheet_list($_FORM) {
+  function get_list($_FORM) {
     /*
      * This is the definitive method of getting a list of timeSheets that need a sophisticated level of filtering
      * 
@@ -563,7 +563,7 @@ class timeSheet extends db_entity
   
     global $TPL;
     $_FORM["showShortProjectLink"] and $_FORM["showProjectLink"] = true;
-    $filter = timeSheet::get_timeSheet_list_filter($_FORM);
+    $filter = timeSheet::get_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
     $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
@@ -572,7 +572,7 @@ class timeSheet extends db_entity
     $_FORM["return"] or $_FORM["return"] = "html";
 
     // A header row
-    $summary.= timeSheet::get_timeSheet_list_tr_header($_FORM);
+    $summary.= timeSheet::get_list_tr_header($_FORM);
 
     if (is_array($filter) && count($filter)) {
       $filter = " WHERE ".implode(" AND ",$filter);
@@ -617,11 +617,11 @@ class timeSheet extends db_entity
       $p->read_db_record($db);
       #$row["projectName"] = $p->get_project_name();
       $row["projectLink"] = $t->get_link($p->get_project_name($_FORM["showShortProjectLink"]));
-      $summary.= timeSheet::get_timeSheet_list_tr($row,$_FORM);
+      $summary.= timeSheet::get_list_tr($row,$_FORM);
     }
 
     if ($print && $_FORM["return"] == "html") {
-      $summary.= timeSheet::get_timeSheet_list_tr_bottom($extra,$_FORM);
+      $summary.= timeSheet::get_list_tr_bottom($extra,$_FORM);
       return "<table class=\"list sortable\">".$summary."</table>";
 
     } else if (!$print && $_FORM["return"] == "html") {
@@ -667,7 +667,7 @@ class timeSheet extends db_entity
     return "<a href=\"".$this->get_url()."\">".$text."</a>";
   }
 
-  function get_timeSheet_list_tr_header($_FORM) {
+  function get_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
       $summary = "\n<tr>";
       $_FORM["showTimeSheetID"]   and $summary.= "\n<th>ID</th>";
@@ -687,7 +687,7 @@ class timeSheet extends db_entity
     }
   }
 
-  function get_timeSheet_list_tr($row,$_FORM) {
+  function get_list_tr($row,$_FORM) {
     $summary[] = "<tr class=\"".$odd_even."\">";
     $_FORM["showTimeSheetID"]     and $summary[] = "  <td>".$row["timeSheetID"]."&nbsp;</td>";
     $_FORM["showProject"]         and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
@@ -707,7 +707,7 @@ class timeSheet extends db_entity
     return $summary;   
   } 
 
-  function get_timeSheet_list_tr_bottom($row,$_FORM) {
+  function get_list_tr_bottom($row,$_FORM) {
     if ($_FORM["showAmountTotal"]) {
       $summary[] = "<tfoot>";
       $summary[] = "<tr>";

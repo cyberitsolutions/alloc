@@ -368,7 +368,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
-  $ops = client::get_client_list($options);
+  $ops = client::get_list($options);
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
@@ -387,7 +387,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
-  $ops = client::get_client_list($options);
+  $ops = client::get_list($options);
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
 }
 
@@ -404,7 +404,7 @@ if (is_object($expenseForm) && have_entity_perm("transaction", PERM_FINANCE_WRIT
   $ops["invoiceStatus"] = "edit";
   $ops["clientID"] = $expenseForm->get_value("clientID");
   $ops["return"] = "dropdown_options";
-  $invoice_list = invoice::get_invoice_list($ops);
+  $invoice_list = invoice::get_list($ops);
   $q = sprintf("SELECT * FROM invoiceItem WHERE expenseFormID = %d",$expenseForm->get_id());
   $db = new db_alloc();
   $db->query($q);

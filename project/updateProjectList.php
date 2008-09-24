@@ -25,7 +25,7 @@ require_once("../alloc.php");
 
 if ($_GET["projectStatus"]) {
   usleep(400000);
-  $options = project::get_project_list_dropdown_options($_GET["projectStatus"]);
+  $options = project::get_list_dropdown_options($_GET["projectStatus"]);
   echo "<select name=\"copy_projectID\">".$options."</select>";
 }
 

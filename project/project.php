@@ -74,7 +74,7 @@ require_once("../alloc.php");
         unset($defaults["showCustomerBilledDollars"]);
         unset($defaults["showCustomerBilledDollarsTotal"]);
       }
-      echo timeSheet::get_timeSheet_list($defaults);
+      echo timeSheet::get_list($defaults);
     }
   }
 
@@ -644,7 +644,7 @@ function get_projectPerson_hourly_rate($personID,$projectID) {
 
 if (is_object($project) && $project->get_id()) {
   $options["return"] = "objectsAndHtml";
-  list($tasks,$TPL["task_summary"]) = task::get_task_list($options);
+  list($tasks,$TPL["task_summary"]) = task::get_list($options);
   if (is_array($tasks)) {
     foreach ($tasks as $tid => $t) {
       $hourly_rate = get_projectPerson_hourly_rate($t["personID"],$t["projectID"]);

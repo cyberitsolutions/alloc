@@ -25,7 +25,7 @@ require_once("../alloc.php");
 
 
 usleep(400000);
-echo "<select size=\"1\" name=\"timeSheet_projectID\"><option></option>".page::select_options(project::get_project_list_by_client($_GET["clientID"]))."</select>";
+echo "<select size=\"1\" name=\"timeSheet_projectID\"><option></option>".page::select_options(project::get_list_by_client($_GET["clientID"]))."</select>";
 
 
 

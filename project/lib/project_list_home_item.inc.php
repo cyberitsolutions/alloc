@@ -40,7 +40,7 @@ class project_list_home_item extends home_item {
       $options["showNavLinks"] = 1;
     }
 
-    echo project::get_project_list($options);
+    echo project::get_list($options);
   }
 }
 

@@ -585,7 +585,7 @@ class task extends db_entity {
     return $taskStatusFilter;
   }
 
-  function get_task_list_filter($filter=array()) {
+  function get_list_filter($filter=array()) {
 
     if (!$filter["projectID"] && $filter["projectType"] && $filter["projectType"] != "all") {
       $db = new db_alloc;
@@ -719,11 +719,11 @@ class task extends db_entity {
   function load_task_list_row_details($row,$_FORM=array()) {
     $summary_ops[$row["taskID"]] = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$row["padding"]).$row["taskID"]." ".$row["taskName"];
     $tasks[$row["taskID"]] = $row;
-    $summary.= task::get_task_list_tr($row,$_FORM);
+    $summary.= task::get_list_tr($row,$_FORM);
     return array($tasks,$summary,$summary_ops);
   }
 
-  function get_task_list($_FORM) {
+  function get_list($_FORM) {
 
     /*
      * This is the definitive method of getting a list of tasks that need a sophisticated level of filtering
@@ -767,7 +767,7 @@ class task extends db_entity {
      *
      */
  
-    $filter = task::get_task_list_filter($_FORM);
+    $filter = task::get_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
     $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
@@ -896,18 +896,18 @@ class task extends db_entity {
         
       if ($_FORM["return"] == "text"){
         foreach ($tasks as $row) {
-          $summary.= task::get_task_list_tr_text($row,$_FORM);
+          $summary.= task::get_list_tr_text($row,$_FORM);
         }
 
       } else {
         foreach ($tasks as $row) {
-          $summary.= task::get_task_list_tr($row,$_FORM);
+          $summary.= task::get_list_tr($row,$_FORM);
         }
       }
     }
 
-    $header = task::get_task_list_header($_FORM);
-    $footer = task::get_task_list_footer($_FORM);
+    $header = task::get_list_header($_FORM);
+    $footer = task::get_list_footer($_FORM);
 
     // Decide what to actually return
     if ($print && $_FORM["return"] == "objectsAndHtml") { // sheesh
@@ -950,7 +950,7 @@ class task extends db_entity {
     return $priorityFactor;
   }
 
-  function get_task_list_header($_FORM) {
+  function get_list_header($_FORM) {
     global $TPL;
     if ($_FORM["showHeader"]) {
       if($_FORM["showEdit"]) {
@@ -992,7 +992,7 @@ class task extends db_entity {
     return page::select_options($tp,$priority);
   }
 
-  function get_task_list_footer($_FORM) {
+  function get_list_footer($_FORM) {
     global $TPL;
     if($_FORM["showEdit"]) {
       $person_options = page::select_options(person::get_username_list());
@@ -1054,7 +1054,7 @@ class task extends db_entity {
     return implode("\n",$ret);
   }
 
-  function get_task_list_tr_text($task,$_FORM) {
+  function get_list_tr_text($task,$_FORM) {
     $summary[] = "";
     $summary[] = "";
     $summary[] = "Project: ".$task["project_name"];
@@ -1064,7 +1064,7 @@ class task extends db_entity {
     return implode("\n",$summary);
   }
 
-  function get_task_list_tr($task,$_FORM) {
+  function get_list_tr($task,$_FORM) {
     global $TPL;
 
     $today = date("Y-m-d");
@@ -1397,7 +1397,7 @@ class task extends db_entity {
     $rtn["url_form_action"] = $_FORM["url_form_action"];
 
     // Load up the filter bits
-    $rtn["projectOptions"] = project::get_project_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
+    $rtn["projectOptions"] = project::get_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
 
     $_FORM["projectType"] and $rtn["projectType_checked_".$_FORM["projectType"]] = " checked"; 
 
