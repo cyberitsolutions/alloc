@@ -50,7 +50,7 @@ function show_project_list() {
 
   $_FORM = project::load_form_data($defaults);
   #echo "<pre>".print_r($_FORM,1)."</pre>";
-  echo project::get_project_list($_FORM);
+  echo project::get_list($_FORM);
 }
 
 

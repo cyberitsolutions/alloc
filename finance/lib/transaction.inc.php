@@ -249,7 +249,7 @@ class transaction extends db_entity
     return $str;
   }
 
-  function get_transaction_list_filter($_FORM) {
+  function get_list_filter($_FORM) {
 
     if (is_array($_FORM["tfIDs"]) && count($_FORM["tfIDs"])) {
       foreach ($_FORM["tfIDs"] as $tfID) {
@@ -279,7 +279,7 @@ class transaction extends db_entity
     return $sql;
   }
 
-  function get_transaction_list($_FORM) {
+  function get_list($_FORM) {
     global $current_user;
 
 
@@ -304,7 +304,7 @@ class transaction extends db_entity
       $_FORM["tfIDs"][] = $_FORM["tfID"];
     }
 
-    $filter = transaction::get_transaction_list_filter($_FORM);
+    $filter = transaction::get_list_filter($_FORM);
     $debug = $_FORM["debug"];
     $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
     $debug and print "\n<pre>filter: ".print_r($filter,1)."</pre>";
@@ -388,7 +388,7 @@ class transaction extends db_entity
 
       if ($_FORM["return"] == "html") {
         $row["object"] = $t;
-        $summary.= transaction::get_transaction_list_tr($row,$_FORM);
+        $summary.= transaction::get_list_tr($row,$_FORM);
       } else if ($_FORM["return"] == "csv") {
         $csv_headers or $csv_headers = array_keys($row);
         $csv.= $nl.implode(",",array_map('export_escape_csv', $row));
@@ -403,8 +403,8 @@ class transaction extends db_entity
     $_FORM["running_balance"] = sprintf("%0.2f",$running_balance);
 
     // A header row
-    $header_row = transaction::get_transaction_list_tr_header($_FORM);
-    $footer_row = transaction::get_transaction_list_tr_footer($_FORM);
+    $header_row = transaction::get_list_tr_header($_FORM);
+    $footer_row = transaction::get_list_tr_footer($_FORM);
 
     if ($print && $_FORM["return"] == "html") {
       return $header_row.$summary.$footer_row;
@@ -415,7 +415,7 @@ class transaction extends db_entity
     } 
   }
 
-  function get_transaction_list_tr_header($_FORM) {
+  function get_list_tr_header($_FORM) {
     global $TPL;
     $str[] = "<table class=\"list sortable\">";
     $str[] = "<tr>";
@@ -434,7 +434,7 @@ class transaction extends db_entity
     return implode("\n",$str);
   }
 
-  function get_transaction_list_tr_footer($_FORM) {
+  function get_list_tr_footer($_FORM) {
     $str[] = "<tfoot>";
     $str[] = "<tr>";
     $str[] = "  <td colspan=\"8\">&nbsp;</td>";
@@ -447,7 +447,7 @@ class transaction extends db_entity
     return implode("\n",$str);
   }
 
-  function get_transaction_list_tr($row) {
+  function get_list_tr($row) {
     global $TPL;
     $str[] = "<tr class=\"".$row["class"]."\">";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr\"><a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$row["transactionID"]."\">".$row["transactionID"]."</a></td>";

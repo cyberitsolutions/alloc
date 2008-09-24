@@ -274,21 +274,21 @@ class project extends db_entity {
     return $q;
   }
 
-  function get_project_list_by_client($clientID) {
+  function get_list_by_client($clientID) {
     $options["clientID"] = $clientID;
     $options["projectStatus"] = "current";
     $options["return"] = "dropdown_options";
     #global $current_user;
     #$options["personID"] = $current_user->get_id();
-    return project::get_project_list($options);
+    return project::get_list($options);
   }
 
-  function get_project_list_dropdown($type="mine",$projectIDs=array()) {
-    $options = project::get_project_list_dropdown_options($type,$projectIDs);
+  function get_list_dropdown($type="mine",$projectIDs=array()) {
+    $options = project::get_list_dropdown_options($type,$projectIDs);
     return "<select name=\"projectID[]\" size=\"9\" style=\"width:275px;\" multiple=\"true\">".$options."</select>";
   }
 
-  function get_project_list_dropdown_options($type="mine",$projectIDs=array(), $maxlength=35) {
+  function get_list_dropdown_options($type="mine",$projectIDs=array(), $maxlength=35) {
     $db = new db_alloc;
     $q = project::get_project_type_query($type);
     // Project dropdown
@@ -307,7 +307,7 @@ class project extends db_entity {
     return $this->has_project_permission($person,array("isManager"));
   }
 
-  function get_project_list_filter($filter=array()) {
+  function get_list_filter($filter=array()) {
 
     if ($filter["clientID"]) {
       $sql[] = sprintf("(project.clientID = %d)", $filter["clientID"]);
@@ -328,7 +328,7 @@ class project extends db_entity {
     return $sql;
   }
 
-  function get_project_list($_FORM) {
+  function get_list($_FORM) {
     /*
      * This is the definitive method of getting a list of projects that need a sophisticated level of filtering
      * 
@@ -352,7 +352,7 @@ class project extends db_entity {
      */
 
     global $TPL;
-    $filter = project::get_project_list_filter($_FORM);
+    $filter = project::get_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
     $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
@@ -361,7 +361,7 @@ class project extends db_entity {
     $_FORM["return"] or $_FORM["return"] = "html";
 
     // A header row
-    $summary.= project::get_project_list_tr_header($_FORM);
+    $summary.= project::get_list_tr_header($_FORM);
 
     if ($_FORM["personID"]) { 
       $from.= " LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ";
@@ -390,7 +390,7 @@ class project extends db_entity {
       $row["projectName"] = $p->get_project_name();
       $row["projectLink"] = $p->get_project_link();
       $row["navLinks"] = $p->get_navigation_links();
-      $summary.= project::get_project_list_tr($row,$_FORM);
+      $summary.= project::get_list_tr($row,$_FORM);
       $summary_ops[$row["projectID"]] = $p->get_project_name(); 
     }
 
@@ -405,7 +405,7 @@ class project extends db_entity {
     }
   }
 
-  function get_project_list_tr_header($_FORM) {
+  function get_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
       $summary = "\n<tr>";
       $_FORM["showProjectName"]   and $summary.= "\n<th>Project</th>";
@@ -419,7 +419,7 @@ class project extends db_entity {
     }
   }
 
-  function get_project_list_tr($row,$_FORM) {
+  function get_list_tr($row,$_FORM) {
     $summary[] = "<tr>";
     $_FORM["showProjectName"]     and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
     $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";

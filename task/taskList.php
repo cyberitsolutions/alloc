@@ -46,7 +46,7 @@ function show_task_list() {
   global $defaults,$_FORM;
 
   #echo "<pre>".print_r($_FORM,1)."</pre>";
-  echo task::get_task_list($_FORM);
+  echo task::get_list($_FORM);
 }
 
 $TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;

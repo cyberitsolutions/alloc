@@ -390,7 +390,7 @@ if ($task->get_id()) {
 
   $_GET["media"] == "print" and $options["showDescription"] = true;
   $_GET["media"] == "print" and $options["showComments"] = true;
-  $TPL["task_children_summary"] = task::get_task_list($options);
+  $TPL["task_children_summary"] = task::get_list($options);
 
   $taskType = $task->get_foreign_object("taskType");
   $TPL["task_taskType"] = $taskType->get_value("taskTypeName");

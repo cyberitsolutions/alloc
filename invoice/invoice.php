@@ -602,7 +602,7 @@ if ($current_user->have_role('admin')) {
     $TPL["invoice_buttons"] = "<input type=\"submit\" name=\"save\" value=\"Create Invoice\">";
     $options["clientStatus"] = "current";
     $options["return"] = "dropdown_options";
-    $ops = client::get_client_list($options);
+    $ops = client::get_list($options);
     $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
 
   } else if ($invoice->get_value("invoiceStatus") == "edit") {
@@ -613,7 +613,7 @@ if ($current_user->have_role('admin')) {
     ";
     $options["clientStatus"] = "current";
     $options["return"] = "dropdown_options";
-    $ops = client::get_client_list($options);
+    $ops = client::get_list($options);
     $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$invoice->get_value("clientID"))."</select>";
 
   } else if ($invoice->get_value("invoiceStatus") == "reconcile") {
@@ -641,7 +641,7 @@ if ($current_user->have_role('admin')) {
 if (!$invoice->get_value("clientID")) {
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
-  $ops = client::get_client_list($options);
+  $ops = client::get_list($options);
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
 } 
 

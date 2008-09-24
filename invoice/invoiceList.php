@@ -66,7 +66,7 @@ function show_invoice_list() {
     $_FORM["personID"] = $current_user->get_id();
   }
 
-  echo invoice::get_invoice_list($_FORM);
+  echo invoice::get_list($_FORM);
 }
 
 if ($current_user->have_role("admin")) {

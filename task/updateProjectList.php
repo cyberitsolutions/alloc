@@ -24,7 +24,7 @@
 require_once("../alloc.php");
 
 usleep(400000);
-echo project::get_project_list_dropdown($_GET["projectType"]);
+echo project::get_list_dropdown($_GET["projectType"]);
 
 
 

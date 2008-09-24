@@ -48,7 +48,7 @@ function show_filter() {
 function show_timeSheet_list() {
   global $defaults;
   $_FORM = timeSheet::load_form_data($defaults);
-  echo timeSheet::get_timeSheet_list($_FORM);
+  echo timeSheet::get_list($_FORM);
 }
 
 if (!$current_user->prefs["timeSheetList_filter"]) {

@@ -42,7 +42,7 @@ $task_graph->set_title($_GET["graphTitle"]);
 $task_graph->set_width($_GET["graphWidth"]);
 $task_graph->bottom_margin = 20;
 
-$tasks = task::get_task_list($options) or $tasks = array();
+$tasks = task::get_list($options) or $tasks = array();
 
 foreach ($tasks as $task) {
   $objects[$task["taskID"]] = $task["object"];

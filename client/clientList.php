@@ -47,7 +47,7 @@ function show_filter() {
 function show_client_list() {
   global $defaults;
   $_FORM = client::load_form_data($defaults);
-  echo client::get_client_list($_FORM);
+  echo client::get_list($_FORM);
 }
 
 

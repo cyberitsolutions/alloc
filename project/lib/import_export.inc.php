@@ -268,7 +268,7 @@ function export_gnome_planner($projectID) {
   $taskOptions["return"] = "objects";
   $taskOptions["taskView"] = "byProject";
 
-  $tasks = task::get_task_list($taskOptions);
+  $tasks = task::get_list($taskOptions);
   // We need to sort by taskID (we assume taskIDs were assigned linearly on import) otherwise Planner will get very confused with ordering
   foreach($tasks as $task) {
     $taskIDs[] = $task['taskID'];
@@ -379,7 +379,7 @@ function export_csv($projectID) {
   $taskOptions["projectIDs"] = array($project->get_id());
   $taskOptions["return"] = "objects";
   $taskOptions["taskView"] = "byProject";
-  $tasks = task::get_task_list($taskOptions);
+  $tasks = task::get_list($taskOptions);
 
   // Sort by taskID--we assume taskIDs were assigned linearly on import/creation--so as to produce an identical file
   foreach($tasks as $task) {

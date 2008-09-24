@@ -284,7 +284,7 @@ require_once("../alloc.php");
       $_FORM["personID"] = $current_user->get_id();  
     }
 
-    echo invoice::get_invoice_list($_FORM);
+    echo invoice::get_list($_FORM);
   }
 
 

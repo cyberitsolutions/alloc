@@ -44,7 +44,7 @@ class top_ten_tasks_home_item extends home_item {
     $options["showTaskID"] = true;
     $options["taskTypeID"] = array(TT_TASK,TT_MESSAGE,TT_FAULT,TT_MILESTONE);
 
-    echo task::get_task_list($options);
+    echo task::get_list($options);
   }
 }
 

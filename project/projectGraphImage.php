@@ -32,7 +32,7 @@ $options["return"] = "objects";
 $options["padding"] = 0;
 $options["debug"] = 0;
 
-$tasks = task::get_task_list($options) or $tasks = array();
+$tasks = task::get_list($options) or $tasks = array();
 
 foreach ($tasks as $task) {
   $objects[$task["taskID"]] = $task["object"];

@@ -379,7 +379,7 @@ class invoice extends db_entity {
     return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$this->get_id()."\">".$this->get_invoice_name()."</a>";
   }
 
-  function get_invoice_list_filter($filter=array()) {
+  function get_list_filter($filter=array()) {
     global $current_user;
     $sql = array();
     $filter["invoiceID"]     and $sql[] = sprintf("(invoice.invoiceID = %d)",$filter["invoiceID"]);
@@ -392,7 +392,7 @@ class invoice extends db_entity {
     return $sql;
   }
 
-  function get_invoice_list_filter2($filter=array()) {
+  function get_list_filter2($filter=array()) {
     global $current_user;
     // restrict non-admin users records
     if ($filter["personID"]) {
@@ -424,7 +424,7 @@ class invoice extends db_entity {
     return array($sql,$sql2);
   }
 
-  function get_invoice_list($_FORM) {
+  function get_list($_FORM) {
     /*
      * This is the definitive method of getting a list of invoices that need a sophisticated level of filtering
      *
@@ -455,8 +455,8 @@ class invoice extends db_entity {
      */
 
     global $TPL;
-    $filter1_where = invoice::get_invoice_list_filter($_FORM);
-    list($filter2_where,$filter2_having) = invoice::get_invoice_list_filter2($_FORM);
+    $filter1_where = invoice::get_list_filter($_FORM);
+    list($filter2_where,$filter2_having) = invoice::get_list_filter2($_FORM);
 
     $debug = $_FORM["debug"];
     $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
@@ -467,7 +467,7 @@ class invoice extends db_entity {
     $_FORM["return"] or $_FORM["return"] = "html";
 
     // A header row
-    $summary.= invoice::get_invoice_list_tr_header($_FORM);
+    $summary.= invoice::get_list_tr_header($_FORM);
 
     is_array($filter1_where) && count($filter1_where) and $f1_where = " WHERE ".implode(" AND ",$filter1_where);
     is_array($filter2_where) && count($filter2_where) and $f2_where = " WHERE ".implode(" AND ",$filter2_where);
@@ -513,7 +513,7 @@ class invoice extends db_entity {
       $i = new invoice;
       $i->read_db_record($db,false);
       $row["invoiceLink"] = $i->get_invoice_link();
-      $summary.= invoice::get_invoice_list_tr($row,$_FORM);
+      $summary.= invoice::get_list_tr($row,$_FORM);
       $summary_ops[$i->get_id()] = $i->get_value("invoiceNum");
     }
 
@@ -529,7 +529,7 @@ class invoice extends db_entity {
 
   }
 
-  function get_invoice_list_tr_header($_FORM) {
+  function get_list_tr_header($_FORM) {
     global $TPL;
     if ($_FORM["showHeader"]) {
 
@@ -550,7 +550,7 @@ class invoice extends db_entity {
     }
   }
 
-  function get_invoice_list_tr($invoice,$_FORM) {
+  function get_list_tr($invoice,$_FORM) {
     global $TPL;
 
     $statii = invoice::get_invoice_statii();
@@ -656,7 +656,7 @@ class invoice extends db_entity {
 
     $options["clientStatus"] = "current";
     $options["return"] = "dropdown_options";
-    $ops = client::get_client_list($options);
+    $ops = client::get_list($options);
     $rtn["clientOptions"] = page::select_options($ops,$_FORM["clientID"]);
 
     // Get
