@@ -17,10 +17,8 @@
           <td><b>Status</td>
           <td><b>From</td>
           <td><b>To</td>
-          <td rowspan="3" align="center"></td>
           <td><b>Transaction ID</td>
-          <td rowspan="3" align="center"></td>
-          <td><b>Expense Form ID</td>
+          <td>&nbsp;</td>
         </tr>
         <tr align="center">
           <td><input type="text" size="20" name="product" value="{$product}"></td>
@@ -30,8 +28,7 @@
           <td>{page::calendar("dateOne",$TPL["dateOne"])}</td>
           <td>{page::calendar("dateTwo",$TPL["dateTwo"])}</td>
           <td><input type="text" size="10" name="transactionID" value="{$transactionID}"></td>
-          <td><input type="text" size="10" name="expenseFormID" value="{$expenseFormID}"></td>
-          <td colspan="5"><input type="submit" name="search" value="Filter"></td>
+          <td><input type="submit" name="search" value="Filter"></td>
         </tr>
         <tr>
         </tr>
