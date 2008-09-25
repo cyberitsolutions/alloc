@@ -713,7 +713,7 @@ while ($db->next_record()) {
 
 $email_type_array = array("None"=>"None", "Assigned Tasks"=>"Assigned Tasks", "All Tasks"=>"All Tasks");
 $currency_array = array("AUD"=>"AUD", "USD"=>"USD", "NZD"=>"NZD", "CAD"=>"CAD");
-$projectType_array = array("contract"=>"Contract", "job"=>"Job", "project"=>"Project");
+$projectType_array = array("project"=>"Project", "job"=>"Job", "contract"=>"Contract");
 $projectStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
 $timeUnit = new timeUnit;
 $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
