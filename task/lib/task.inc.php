@@ -1317,37 +1317,43 @@ class task extends db_entity {
     return $status;
   }
 
+  function get_list_vars() {
+
+    return array("projectID"
+                ,"taskStatus"
+                ,"taskTypeID"
+                ,"personID"
+                ,"creatorID"
+                ,"managerID"
+                ,"taskView"
+                ,"projectType"
+                ,"applyFilter"
+                ,"showDescription"
+                ,"showDates"
+                ,"showCreator"
+                ,"showAssigned"
+                ,"showTimes"
+                ,"showPercent"
+                ,"showPriority"
+                ,"showStatus"
+                ,"showTaskID"
+                ,"showManager"
+                ,"showHeader"
+                ,"showProject"
+                ,"showEdit"
+                ,"padding"
+                ,"url_form_action"
+                ,"form_name"
+                ,"dontSave"
+                ,"savedViewID"
+                );
+
+  }
+
   function load_form_data($defaults=array()) {
     global $current_user;
-
-    $page_vars = array("projectID"
-        ,"taskStatus"
-        ,"taskTypeID"
-        ,"personID"
-        ,"creatorID"
-        ,"managerID"
-        ,"taskView"
-        ,"projectType"
-        ,"applyFilter"
-        ,"showDescription"
-        ,"showDates"
-        ,"showCreator"
-        ,"showAssigned"
-        ,"showTimes"
-        ,"showPercent"
-        ,"showPriority"
-        ,"showStatus"
-        ,"showTaskID"
-        ,"showManager"
-        ,"showHeader"
-        ,"showProject"
-        ,"showEdit"
-        ,"padding"
-        ,"url_form_action"
-        ,"form_name"
-        ,"dontSave"
-        ,"savedViewID"
-        );
+  
+    $page_vars = task::get_list_vars();
 
     $_FORM = get_all_form_data($page_vars,$defaults);
 

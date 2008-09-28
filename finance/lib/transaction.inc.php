@@ -465,25 +465,30 @@ class transaction extends db_entity
     return implode("\n",$str);
   }
 
+  function get_list_vars() {
+  
+    return array("tfID"
+                ,"tfIDs"
+                ,"tfName"
+                ,"status"
+                ,"startDate"
+                ,"endDate"
+                ,"monthDate"
+                ,"sortTransactions"
+                ,"transactionType"
+                ,"applyFilter"
+                ,"url_form_action"
+                ,"form_name"
+                ,"dontSave"
+                ,"return"
+                );
+  }
+
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = array("tfID"
-                      ,"tfIDs"
-                      ,"tfName"
-                      ,"status"
-                      ,"startDate"
-                      ,"endDate"
-                      ,"monthDate"
-                      ,"sortTransactions"
-                      ,"transactionType"
-                      ,"applyFilter"
-                      ,"url_form_action"
-                      ,"form_name"
-                      ,"dontSave"
-                      ,"return"
-                      );
-
+    $page_vars = transaction::get_list_vars();
+  
     $_FORM = get_all_form_data($page_vars,$defaults);
 
     #echo "<pre>".print_r($_FORM,1)."</pre>";

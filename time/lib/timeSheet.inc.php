@@ -729,31 +729,34 @@ class timeSheet extends db_entity
     return $summary;   
   } 
 
+  function get_list_vars() {
+
+    return array("showHeader"
+                ,"showProject"
+                ,"showProjectLink"
+                ,"showAmount"
+                ,"showAmountTotal"
+                ,"showDuration"
+                ,"showPerson"
+                ,"showDateFrom"
+                ,"showDateTo"
+                ,"showStatus"
+                ,"projectID"
+                ,"taskID"
+                ,"personID"
+                ,"status"
+                ,"dateFrom"
+                ,"url_form_action"
+                ,"form_name"
+                ,"dontSave"
+                ,"applyFilter"
+                );
+  }
+
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = array("showHeader"
-                      ,"showProject"
-                      ,"showProjectLink"
-                      ,"showAmount"
-                      ,"showAmountTotal"
-                      ,"showDuration"
-                      ,"showPerson"
-                      ,"showDateFrom"
-                      ,"showDateTo"
-                      ,"showStatus"
-
-                      ,"projectID"
-                      ,"taskID"
-                      ,"personID"
-                      ,"status"
-                      ,"dateFrom"
-
-                      ,"url_form_action"
-                      ,"form_name"
-                      ,"dontSave"
-                      ,"applyFilter"
-                      );
+    $page_vars = timeSheet::get_list_vars();
 
     $_FORM = get_all_form_data($page_vars,$defaults);
 

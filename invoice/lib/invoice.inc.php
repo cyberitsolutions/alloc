@@ -589,32 +589,37 @@ class invoice extends db_entity {
     return $summary;
   }
 
+  function get_list_vars() {
+
+    return array("invoiceID"
+                ,"clientID"
+                ,"invoiceNum"
+                ,"dateOne"
+                ,"dateTwo"
+                ,"invoiceName"
+                ,"invoiceStatus"
+                ,"invoiceStatusPayment"
+                ,"tfIDs"
+                ,"url_form_action"
+                ,"form_name"
+                ,"dontSave"
+                ,"applyFilter"
+                ,"showHeader"
+                ,"showInvoiceNumber"
+                ,"showInvoiceClient"
+                ,"showInvoiceName"
+                ,"showInvoiceAmount"
+                ,"showInvoiceAmountPaid"
+                ,"showInvoiceDate"
+                ,"showInvoiceStatus"
+                ,"showInvoiceStatusPayment"
+                );
+  }
+
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = array("invoiceID"
-                      ,"clientID"
-                      ,"invoiceNum"
-                      ,"dateOne"
-                      ,"dateTwo"
-                      ,"invoiceName"
-                      ,"invoiceStatus"
-                      ,"invoiceStatusPayment"
-                      ,"tfIDs"
-                      ,"url_form_action"
-                      ,"form_name"
-                      ,"dontSave"
-                      ,"applyFilter"
-                      ,"showHeader"
-                      ,"showInvoiceNumber"
-                      ,"showInvoiceClient"
-                      ,"showInvoiceName"
-                      ,"showInvoiceAmount"
-                      ,"showInvoiceAmountPaid"
-                      ,"showInvoiceDate"
-                      ,"showInvoiceStatus"
-                      ,"showInvoiceStatusPayment"
-                      );
+    $page_vars = invoice::get_list_vars();
 
     $_FORM = get_all_form_data($page_vars,$defaults);
 

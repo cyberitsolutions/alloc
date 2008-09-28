@@ -1,136 +1,161 @@
-<?xml version ='1.0' encoding ='UTF-8' ?>
-<definitions name='allocPSA'
-  targetNamespace='http://allocpsa.com/allocPSA'
-  xmlns:tns='http://allocpsa.com/allocPSA'
-  xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
-  xmlns:xsd='http://www.w3.org/2001/XMLSchema'
-  xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'
-  xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
-  xmlns='http://schemas.xmlsoap.org/wsdl/'>
-
-
-
-<!-- FIELDS -->
-
-<message name='authIn'>
-  <part name='username' type='xsd:string'/>
-  <part name='password' type='xsd:string'/>
-</message>
-<message name='authOut'>
-  <part name='sessKey' type='xsd:string'/>
-</message>
-
-<message name='gtcIn'>
-  <part name='sessKey' type='xsd:string'/>
-  <part name='taskID' type='xsd:string'/>
-</message>
-<message name='gtcOut'>
-  <part name='comments' type='xsd:array'/>
-</message>
-
-<message name='atsibtIn'>
-  <part name='sessKey' type='xsd:string'/>
-  <part name='taskID' type='xsd:string'/>
-  <part name='duration' type='xsd:string'/>
-  <part name='comments' type='xsd:string'/>
-</message>
-<message name='atsibtOut'>
-  <part name='timeSheetID' type='xsd:string'/>
-</message>
-
-<message name='gttIn'>
-  <part name='sessKey' type='xsd:string'/>
-  <part name='tfName' type='xsd:string'/>
-  <part name='startDate' type='xsd:string'/>
-  <part name='endDate' type='xsd:string'/>
-</message>
-<message name='gttOut'>
-  <part name='transactions' type='xsd:array'/>
-</message>
-
-<message name='gtrIn'>
-  <part name='sessKey' type='xsd:string'/>
-  <part name='tableName' type='xsd:string'/>
-</message>
-<message name='gtrOut'>
-  <part name='rows' type='xsd:array'/>
-</message>
-
-
-
-<!-- PORT TYPES -->
-
-<portType name='allocPortType'>
-
-  <operation name='authenticate'>
-    <input message='tns:authIn'/>
-    <output message='tns:authOut'/>
-  </operation>
-
-  <operation name='get_task_comments'>
-    <input message='tns:gtcIn'/>
-    <output message='tns:gtcOut'/>
-  </operation>
-
-  <operation name='add_timeSheetItem_by_task'>
-    <input message='tns:atsibtIn'/>
-    <output message='tns:atsibtOut'/>
-  </operation>
-
-  <operation name='get_tf_transactions'>
-    <input message='tns:gttIn'/>
-    <output message='tns:gttOut'/>
-  </operation>
-
-  <operation name='get_table_rows'>
-    <input message='tns:gtrIn'/>
-    <output message='tns:gtrOut'/>
-  </operation>
-
-</portType>
-
-
-
-<binding name='allocHandlerBinding' type='tns:allocPortType'>
-  <soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
-
-  <operation name='authenticate'>
-    <soap:operation soapAction='urn:xmethods-delayed-quotes#authenticate'/>
-    <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
-    <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
-  </operation>
-
-  <operation name='get_task_comments'>
-    <soap:operation soapAction='urn:xmethods-delayed-quotes#get_task_comments'/>
-    <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
-    <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
-  </operation>
-
-  <operation name='add_timeSheetItem_by_task'>
-    <soap:operation soapAction='urn:xmethods-delayed-quotes#add_timeSheetItem_by_task'/>
-    <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
-    <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
-  </operation>
-
-  <operation name='get_tf_transactions'>
-    <soap:operation soapAction='urn:xmethods-delayed-quotes#get_tf_transactions'/>
-    <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
-    <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
-  </operation>
-
-  <operation name='get_table_rows'>
-    <soap:operation soapAction='urn:xmethods-delayed-quotes#get_table_rows'/>
-    <input> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </input>
-    <output> <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> </output>
-  </operation>
-
-</binding>
-
-
-
-<service name='allocService'>
-  <port name='allocPort' binding='allocHandlerBinding'>
-    <soap:address location='http://alloc_dev/soap/soapServer.php'/>
-  </port>
-</service>
+<?xml version="1.0"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://allocpsa.com/allocPSA" xmlns:soap-env="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://allocpsa.com/allocPSA">
+  <types>
+    <xsd:schema>
+      <xsd:complexType name="array">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:array">
+            <xsd:attribute ref="soapenc:arrayType" arrayType="tns:mixed[]"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <complexType name="mixed">
+        <all>
+          <element name="varString" type="xsd:string"/>
+          <element name="varInt" type="xsd:int"/>
+          <element name="varFloat" type="xsd:float"/>
+          <element name="varArray" type="tns:array"/>
+        </all>
+      </complexType>
+    </xsd:schema>
+  </types>
+  <message name="authenticateInput">
+    <part name="username" type="xsd:string"/>
+    <part name="password" type="xsd:string"/>
+  </message>
+  <message name="get_current_userInput"/>
+  <message name="get_task_commentsInput">
+    <part name="sessKey" type="xsd:string"/>
+    <part name="taskID" type="xsd:int"/>
+  </message>
+  <message name="add_timeSheetItem_by_taskInput">
+    <part name="sessKey" type="xsd:string"/>
+    <part name="taskID" type="xsd:int"/>
+    <part name="duration" type="xsd:string"/>
+    <part name="comments" type="xsd:string"/>
+  </message>
+  <message name="get_listInput">
+    <part name="sessKey" type="xsd:string"/>
+    <part name="entity" type="xsd:string"/>
+    <part name="options" type="tns:mixed"/>
+  </message>
+  <message name="get_helpInput">
+    <part name="topic" type="xsd:string"/>
+  </message>
+  <message name="get_list_helpInput">
+    <part name="sessKey" type="xsd:string"/>
+  </message>
+  <message name="authenticateOutput">
+    <part name="return" type="xsd:string"/>
+  </message>
+  <message name="get_current_userOutput"/>
+  <message name="get_task_commentsOutput">
+    <part name="return" type="tns:array"/>
+  </message>
+  <message name="add_timeSheetItem_by_taskOutput">
+    <part name="return" type="xsd:int"/>
+  </message>
+  <message name="get_listOutput">
+    <part name="return" type="tns:mixed"/>
+  </message>
+  <message name="get_helpOutput">
+    <part name="return" type="xsd:string"/>
+  </message>
+  <message name="get_list_helpOutput">
+    <part name="return" type="xsd:string"/>
+  </message>
+  <portType name="alloc_soapPortType">
+    <operation name="authenticate">
+      <input message="tns:authenticateInput"/>
+      <output message="tns:authenticateOutput"/>
+    </operation>
+    <operation name="get_current_user">
+      <input message="tns:get_current_userInput"/>
+      <output message="tns:get_current_userOutput"/>
+    </operation>
+    <operation name="get_task_comments">
+      <input message="tns:get_task_commentsInput"/>
+      <output message="tns:get_task_commentsOutput"/>
+    </operation>
+    <operation name="add_timeSheetItem_by_task">
+      <input message="tns:add_timeSheetItem_by_taskInput"/>
+      <output message="tns:add_timeSheetItem_by_taskOutput"/>
+    </operation>
+    <operation name="get_list">
+      <input message="tns:get_listInput"/>
+      <output message="tns:get_listOutput"/>
+    </operation>
+    <operation name="get_help">
+      <input message="tns:get_helpInput"/>
+      <output message="tns:get_helpOutput"/>
+    </operation>
+    <operation name="get_list_help">
+      <input message="tns:get_list_helpInput"/>
+      <output message="tns:get_list_helpOutput"/>
+    </operation>
+  </portType>
+  <binding name="alloc_soapBinding" type="tns:alloc_soapPortType">
+    <soap-env:binding xmlns="http://schemas.xmlsoap.org/wsdl/soap/" style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="authenticate">
+      <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="get_current_user">
+      <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="get_task_comments">
+      <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="add_timeSheetItem_by_task">
+      <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="get_list">
+      <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="get_help">
+      <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="get_list_help">
+      <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="alloc_soapService">
+    <port xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="alloc_soapPort" binding="tns:alloc_soapBinding">
+      <soap-env:address xmlns="http://schemas.xmlsoap.org/wsdl/soap/" location="http://leaf/alloc6/soap/server.php"/>
+    </port>
+  </service>
 </definitions>
