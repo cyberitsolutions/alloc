@@ -25,10 +25,8 @@ require_once(dirname(__FILE__)."/product.inc.php");
 require_once(dirname(__FILE__)."/productCost.inc.php");
 require_once(dirname(__FILE__)."/productSale.inc.php");
 require_once(dirname(__FILE__)."/productSaleItem.inc.php");
-require_once(dirname(__FILE__)."/productSaleTransaction.inc.php");
 
-class product_module extends module
-{
+class sale_module extends module {
   var $db_entities = array("product"
                          , "productCost"
                          , "productSale"
