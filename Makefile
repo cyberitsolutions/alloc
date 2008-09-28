@@ -64,6 +64,9 @@ dist:
 	tar -czvf allocPSA-`cat util/alloc_version`.tgz allocPSA-`cat util/alloc_version`; 
 	rm -rf ./allocPSA-`cat util/alloc_version`;
 
+soap:
+	cd soap && php wsdl.php
+
 css: css/src/*
 	./util/make_stylesheets.py
 
@@ -108,5 +111,5 @@ none: ;
 all: ;
 install: ;
 
-.PHONY: css help doc
+.PHONY: css help doc soap
 

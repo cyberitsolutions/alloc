@@ -383,6 +383,7 @@ class project extends db_entity {
     $debug and print "Query: ".$q;
     $db = new db_alloc;
     $db->query($q);
+    
     while ($row = $db->next_record()) {
       $print = true;
       $p = new project;
@@ -392,9 +393,14 @@ class project extends db_entity {
       $row["navLinks"] = $p->get_navigation_links();
       $summary.= project::get_list_tr($row,$_FORM);
       $summary_ops[$row["projectID"]] = $p->get_project_name(); 
+      $rows[$row["projectID"]] = $row;
     }
 
-    if ($print && $_FORM["return"] == "html") {
+    $rows or $rows = array();
+    if ($print && $_FORM["return"] == "array") {
+      return $rows;
+
+    } else if ($print && $_FORM["return"] == "html") {
       return "<table class=\"list sortable\">".$summary."</table>";
     
     } else if ($print && $_FORM["return"] == "dropdown_options") {
@@ -433,29 +439,33 @@ class project extends db_entity {
     return $summary;
   }
 
+  function get_list_vars() {
+  
+    return array("showHeader"
+                ,"showProjectName"
+                ,"showProjectLink"
+                ,"showClient"
+                ,"showProjectType"
+                ,"showProjectStatus"
+                ,"showNavLinks"
+                ,"projectStatus"
+                ,"clientID"
+                ,"projectType"
+                ,"personID"
+                ,"projectName"
+                ,"url_form_action"
+                ,"form_name"
+                ,"dontSave"
+                ,"applyFilter"
+                ,"return"
+                );
+  }
+
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = array("showHeader"
-                      ,"showProjectName"
-                      ,"showProjectLink"
-                      ,"showClient"
-                      ,"showProjectType"
-                      ,"showProjectStatus"
-                      ,"showNavLinks"
-
-                      ,"projectStatus"
-                      ,"clientID"
-                      ,"projectType"
-                      ,"personID"
-                      ,"projectName"
-
-                      ,"url_form_action"
-                      ,"form_name"
-                      ,"dontSave"
-                      ,"applyFilter"
-                      );
-
+    $page_vars = project::get_list_vars();
+  
     $_FORM = get_all_form_data($page_vars,$defaults);
 
     if (!$_FORM["applyFilter"]) {

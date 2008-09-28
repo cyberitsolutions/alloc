@@ -51,6 +51,7 @@ class db {
       $this->link_id = mysql_connect($this->hostname,$this->username,$this->password);
       if ($this->link_id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
         $this->database && $this->select_db($this->database);
+        function_exists("mysql_set_charset") && mysql_set_charset("utf8", $this->link_id); // this seems to fix data encoding for SOAP services
       } else {
         $this->error("Unable to connect to database: ".mysql_error()."<br>");
         unset($this->link_id);

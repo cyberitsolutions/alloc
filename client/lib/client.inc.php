@@ -239,25 +239,30 @@ class client extends db_entity {
     return $summary;
   }
 
+  function get_list_vars() {
+
+    return array("clientStatus"
+                ,"clientName"
+                ,"contactName"
+                ,"clientLetter"
+                ,"url_form_action"
+                ,"form_name"
+                ,"dontSave"
+                ,"applyFilter"
+                ,"showHeader"
+                ,"showClientName"
+                ,"showClientLink"
+                ,"showClientStatus"
+                ,"showPrimaryContactName"
+                ,"showPrimaryContactPhone"
+                ,"showPrimaryContactEmail"
+                );
+  }
+
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = array("clientStatus"
-                      ,"clientName"
-                      ,"contactName"
-                      ,"clientLetter"
-                      ,"url_form_action"
-                      ,"form_name"
-                      ,"dontSave"
-                      ,"applyFilter"
-                      ,"showHeader"
-                      ,"showClientName"
-                      ,"showClientLink"
-                      ,"showClientStatus"
-                      ,"showPrimaryContactName"
-                      ,"showPrimaryContactPhone"
-                      ,"showPrimaryContactEmail"
-                      );
+    $page_vars = client::get_list_vars();
 
     $_FORM = get_all_form_data($page_vars,$defaults);
 
