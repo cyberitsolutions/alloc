@@ -122,9 +122,10 @@ if (!$current_user->is_employee()) {
         // If you don't have perm INVOICE TIMESHEETS then only select 
         // transactions which you have permissions to see. 
 
-        $query = sprintf("SELECT * FROM transaction 
-                          WHERE timeSheetID = %d
-                          ORDER BY transactionID", $timeSheet->get_id());
+        $query = sprintf("SELECT * 
+                            FROM transaction 
+                           WHERE timeSheetID = %d
+                        ORDER BY transactionID", $timeSheet->get_id());
 
         $db->query($query);
 
@@ -171,7 +172,7 @@ if (!$current_user->is_employee()) {
     if (!$timeSheet->get_id()) return;
     
     $db = new db_alloc;
-    $q = sprintf("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d and timeSheetItemID != %d",$timeSheet->get_id(),$_POST["timeSheetItem_timeSheetItemID"]);
+    $q = sprintf("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d AND timeSheetItemID != %d",$timeSheet->get_id(),$_POST["timeSheetItem_timeSheetItemID"]);
     $db->query($q);
     $db->next_record();
     if ($db->f("tally")) {
@@ -193,7 +194,7 @@ if (!$current_user->is_employee()) {
     $timeUnit = new timeUnit;
     $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
     
-    $item_query = sprintf("SELECT * from timeSheetItem WHERE timeSheetID=%d ", $timeSheetID);
+    $item_query = sprintf("SELECT * from timeSheetItem WHERE timeSheetID=%d", $timeSheetID);
     // If editing a timeSheetItem then don't display it in the list
     $timeSheetItemID = $_POST["timeSheetItemID"] or $timeSheetItemID = $_GET["timeSheetItemID"];
     $timeSheetItemID and $item_query.= sprintf(" AND timeSheetItemID != %d",$timeSheetItemID);
@@ -588,15 +589,16 @@ if ($amount_allocated) {
 
 // Set up arrays for the forms.
 if (!$TPL["timeSheet_projectName"]) {
-  $TPL["show_project_options"] = "<select size=\"1\" name=\"timeSheet_projectID\"><option></option>";
+  $TPL["show_project_options"] = "<select size=\"1\" name=\"projectID\"><option></option>";
   $TPL["show_project_options"].= page::select_options($project_array, $projectID)."</select>";
 
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
   $ops = client::get_list($options);
 
-  $TPL["show_client_options"] = "<select size=\"1\" id=\"clientID\" name=\"clientID\" onChange=\"updateStuffWithAjax()\"><option></option>";
+  $TPL["show_client_options"] = "<select size=\"1\" id=\"clientID\" name=\"clientID\" onChange=\"makeAjaxRequest('".$TPL["url_alloc_updateProjectListByClient"]."clientID='+$('#clientID').attr('value'),'projectDropdown')\"><option></option>";
   $TPL["show_client_options"].= page::select_options($ops,$clientID)."</select>";
+
 
 
 } else {
@@ -823,7 +825,7 @@ $TPL["total_units"] = $timeSheet->pay_info["summary_unit_totals"];
 
 
 if ($timeSheetID) {
-  $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) as count
+  $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) AS count
         FROM timeSheetItem WHERE timeSheetID=%d ", $timeSheetID));
   $db->next_record();
   if ($db->f("minDate") || $db->f("maxDate")) {
