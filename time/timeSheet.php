@@ -224,6 +224,8 @@ if (!$current_user->is_employee()) {
 
       $tsMultipliers = config::get_config_item("timeSheetMultipliers") or $tsMultipliers = array();
       $timeSheetItem->get_value('multiplier') and $TPL["timeSheetItem_multiplier"] = $tsMultipliers[$timeSheetItem->get_value('multiplier')]['label'];
+  
+      $TPL["timeSheetItem_rate"] = sprintf("%0.2f",$TPL["timeSheetItem_rate"]);
 
       // Check to see if this tsi is part of an overrun
       $TPL["timeSheetItem_class"] = "panel";
