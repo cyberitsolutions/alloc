@@ -288,17 +288,6 @@ CREATE TABLE projectCommissionPerson (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
-DROP TABLE IF EXISTS projectModificationNote;
-CREATE TABLE projectModificationNote (
-  projectModNoteID int(11) NOT NULL auto_increment,
-  projectID int(11) NOT NULL default '0',
-  dateMod date default NULL,
-  modDescription text,
-  personID int(11) NOT NULL default '0',
-  PRIMARY KEY  (projectModNoteID)
-) TYPE=MyISAM PACK_KEYS=0;
-
-
 DROP TABLE IF EXISTS projectPerson;
 CREATE TABLE projectPerson (
   projectPersonID int(11) NOT NULL auto_increment,

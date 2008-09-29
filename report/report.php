@@ -67,10 +67,8 @@ if ($_POST["do_step_2"]) {
   if ($_POST["mod"] == "project") {
     $db_tables[] = "project";
     $db_tables[] = "projectCommissionPerson";
-    $db_tables[] = "projectModificationNote";
     $db_tables[] = "projectPerson";
     $query["join"] = " LEFT JOIN projectCommissionPerson ON project.projectID = projectCommissionPerson.projectID";
-    $query["join"].= " LEFT JOIN projectModificationNote ON project.projectID = projectModificationNote.projectID";
     $query["join"].= " LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID";
   }
 
