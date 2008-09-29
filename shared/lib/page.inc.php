@@ -48,6 +48,7 @@ class page {
         ,"Tasks"    =>array("url"=>$TPL["url_alloc_taskList"],"module"=>"task")
         ,"Time"     =>array("url"=>$TPL["url_alloc_timeSheetList"],"module"=>"time")
         ,"Invoices" =>array("url"=>$TPL["url_alloc_invoiceList"],"module"=>"invoice")
+        ,"Sales"    =>array("url"=>$TPL["url_alloc_productList"],"module"=>"sale")
         ,"People"   =>array("url"=>$TPL["url_alloc_personList"],"module"=>"person")
         ,"Tools"    =>array("url"=>$TPL["url_alloc_tools"],"module"=>"tools")
         );
