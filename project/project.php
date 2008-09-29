@@ -167,27 +167,6 @@ require_once("../alloc.php");
     include_template($template_name);
   }
 
-  function show_modification_history($template) {
-    global $TPL, $projectID, $db;
-
-    if ($projectID) {
-      $query = sprintf("SELECT * from projectModificationNote WHERE projectID= %d", $projectID);
-      $db->query($query);
-
-      while ($db->next_record()) {
-        $projectModification = new projectModificationNote;
-        $projectModification->read_db_record($db);
-        $projectModification->set_tpl_values(DST_HTML_ATTRIBUTE, "mod_");
-        // Display the user who made modification.
-        $person = new person;
-        $person->set_id($projectModification->get_value("personID"));
-        $person->select();
-        $TPL["mod_personName"] = $person->get_value("username");
-        include_template($template);
-      }
-    }
-  }
-
   function show_person_list($template) {
     global $db, $TPL, $projectID;
     global $email_type_array, $rate_type_array, $project_person_role_array;
