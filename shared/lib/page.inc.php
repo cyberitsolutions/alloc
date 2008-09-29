@@ -25,7 +25,6 @@ class page {
   // Initializer
   function page() {
   }
-
   function header() {
     include_template(ALLOC_MOD_DIR."shared/templates/headerS.tpl");
   }

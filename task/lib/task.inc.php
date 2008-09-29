@@ -844,7 +844,7 @@ class task extends db_entity {
           $s and $summary.= $s;
           $o and $summary_ops += $o;
         }
-        }
+      }
   
       if ((is_array($tasks) && count($tasks)) || $s || (is_array($summary_ops) && count($summary_ops))) {
         $print = true;

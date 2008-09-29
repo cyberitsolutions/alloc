@@ -220,7 +220,6 @@ class person extends db_entity {
     // Get vars for the emails below
     $people_cache = get_cached_table("person");
     return $people_cache[$personID]["name"];
-
   } 
 
   function get_username($long_format=false) {
