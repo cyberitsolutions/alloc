@@ -22,8 +22,6 @@
 
 class db_field {
   var $classname = "db_field";
- // list of options
- // var $persistent_slots = array("name", "value", "label", "empty_to_null", "write_perm_name");
   var $name;
   var $value;
   var $label;
@@ -46,7 +44,7 @@ class db_field {
   }
 
   function set_value($value, $source = SRC_VARIABLE) {
-    if (isset($value)) {
+    if (isset($value) || $this->empty_to_null == false) {
       $this->value = $value;
     }
   }
@@ -64,7 +62,6 @@ class db_field {
       if ((isset($this->value) && $this->value != "") || !$this->empty_to_null) {
         return "'".db_esc($this->value)."'";
       } else {
-
         return "NULL";
       }
     } else {
@@ -76,8 +73,8 @@ class db_field {
     unset($this->value);
   }
 
-  // Holder
   function validate() {
+    // Holder
   }
 }
 
