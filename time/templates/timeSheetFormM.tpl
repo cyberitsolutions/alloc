@@ -1,11 +1,5 @@
 {page::header()}
 {page::toolbar()}
-<script type="text/javascript" language="javascript">
-// Make the XML request thing, specify the callback function 
-function updateStuffWithAjax() \{
-  makeAjaxRequest('{$url_alloc_updateProjectListByClient}clientID='+$("#clientID").attr("value"),'projectDropdown')
-\}
-</script>
 <form action="{$url_alloc_timeSheet}" method="post" id="timeSheetForm">
 <input type="hidden" name="timeSheetID" value="{$timeSheet_timeSheetID}">
 <input type="hidden" name="timeSheet_personID" value="{$timeSheet_personID}">
