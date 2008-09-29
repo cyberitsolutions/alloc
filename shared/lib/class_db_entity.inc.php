@@ -296,20 +296,16 @@ class db_entity {
   function read_array(&$array, $source_prefix = "", $source = SRC_VARIABLE) {
 
     // Data fields
-    reset($this->data_fields);
-    while (list($field_index,) = each($this->data_fields)) {
-      $field = $this->data_fields[$field_index];
+    foreach ($this->data_fields as $field_index=>$field) {
       $source_index = $source_prefix.$field->get_name();
       $this->set_field_value($this->data_fields[$field_index], $array[$source_index], $source);
-      if ($this->debug)
-        echo "db_entity->read_array data_fields[$field_index]->set_value(".$array[$source_index].", $source)<br>\n";
+      $this->debug and print "db_entity->read_array data_fields[$field_index]->set_value(".$array[$source_index].", $source)<br>\n";
     }
 
     // Key field
     $source_index = $source_prefix.$this->key_field->get_name();
     $this->key_field->set_value($array[$source_index], $source);
-    if ($this->debug)
-      echo "db_entity->read_array key_field->set_value(".$array[$source_index].", $source)<br>\n";
+    $this->debug and print "db_entity->read_array key_field->set_value(".$array[$source_index].", $source)<br>\n";
     $this->fields_loaded = true;
   }
 
@@ -448,7 +444,7 @@ class db_entity {
       if (!$this->fields_loaded) {
         $found = $this->select();
         if (!$found) {
-          return "not found";
+          return "";
         }
       }
       return $this->get_value($this->display_field_name, DST_HTML_DISPLAY);
@@ -640,6 +636,13 @@ class db_entity {
       }
     }
     return $rows;
+  }
+
+  function get_link() {
+    global $TPL;
+    $str = "<a href=\"".$TPL["url_alloc_".$this->classname].$this->key_field->name."=".$this->get_id();
+    $str.= "\">".$this->get_display_value()."</a>";
+    return $str;
   }
 
 }
