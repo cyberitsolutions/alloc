@@ -22,24 +22,19 @@
 
 define("PERM_PROJECT_PERSON_READ_DETAILS", 256);
 
-class projectPerson extends db_entity
-{
-  var $data_table = "projectPerson";
-  var $display_field_name = "projectID";
-
-  function projectPerson() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("projectPersonID");
-    $this->data_fields = array("personID"=>new db_field("personID")
-                              ,"projectID"=>new db_field("projectID")
-                              ,"emailType"=>new db_field("emailType")
-                              ,"emailDateRegex"=>new db_field("emailDateRegex")
-                              ,"rate"=>new db_field("rate")
-                              ,"rateUnitID"=>new db_field("rateUnitID")
-                              ,"projectPersonModifiedUser"=>new db_field("projectPersonModifiedUser")
-                              ,"roleID"=>new db_field("roleID")
-                              );
-  }
+class projectPerson extends db_entity {
+  public $data_table = "projectPerson";
+  public $display_field_name = "projectID";
+  public $key_field = "projectPersonID";
+  public $data_fields = array("personID"
+                             ,"projectID"
+                             ,"emailType"
+                             ,"emailDateRegex"
+                             ,"rate"
+                             ,"rateUnitID"
+                             ,"projectPersonModifiedUser"
+                             ,"roleID"
+                             );
 
   function date_regex_matches() {
     return eregi($this->get_value("emailDateRegex"), date("YmdD"));

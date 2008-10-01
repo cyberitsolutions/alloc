@@ -21,21 +21,17 @@
 */
 
 class tf extends db_entity {
-  var $data_table = "tf";
-  var $display_field_name = "tfName";
-
-  function tf() {
-    $this->db_entity();
-    $this->key_field = new db_field("tfID");
-    $this->data_fields = array("tfName"=>new db_field("tfName")
-                               , "tfComments"=>new db_field("tfComments")
-                               , "tfModifiedUser"=>new db_field("tfModifiedUser")
-                               , "tfModifiedTime"=>new db_field("tfModifiedTime")
-                               , "qpEmployeeNum"=>new db_field("qpEmployeeNum")
-                               , "quickenAccount"=>new db_field("quickenAccount")
-                               , "tfActive"=>new db_field("tfActive")
-      );
-  }
+  public $data_table = "tf";
+  public $display_field_name = "tfName";
+  public $key_field = "tfID";
+  public $data_fields = array("tfName"
+                             ,"tfComments"
+                             ,"tfModifiedUser"
+                             ,"tfModifiedTime"
+                             ,"qpEmployeeNum"
+                             ,"quickenAccount"
+                             ,"tfActive"
+                             );
 
   function get_balance($where = array(), $debug="") {
     global $current_user;

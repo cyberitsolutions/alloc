@@ -22,19 +22,14 @@
 
 
 class commentTemplate extends db_entity {
-  
-  var $data_table = "commentTemplate";
-  var $display_field_name = "commentTemplateName";
-
-
-  function commentTemplate() {
-    $this->db_entity();
-    $this->key_field = new db_field("commentTemplateID");
-    $this->data_fields = array("commentTemplateName"=>new db_field("commentTemplateName")
-                             , "commentTemplateText"=>new db_field("commentTemplateText")
-                             , "commentTemplateType"=>new db_field("commentTemplateType")
-                             , "commentTemplateModifiedTime"=>new db_field("commentTemplateModifiedTime"));
-   }
+  public $data_table = "commentTemplate";
+  public $display_field_name = "commentTemplateName";
+  public $key_field = "commentTemplateID";
+  public $data_fields = array("commentTemplateName"
+                             ,"commentTemplateText"
+                             ,"commentTemplateType"
+                             ,"commentTemplateModifiedTime"
+                             );
 
 
   function get_populated_template($entity, $entityID=false) {

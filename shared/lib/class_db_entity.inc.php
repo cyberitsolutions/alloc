@@ -25,32 +25,52 @@ define("PERM_UPDATE", 2);
 define("PERM_DELETE", 4);
 define("PERM_CREATE", 8);
 define("PERM_READ_WRITE", PERM_READ + PERM_UPDATE + PERM_DELETE + PERM_CREATE);
+
 class db_entity {
-  var $classname = "db_entity"; // Support phplib session variables
-  var $persistent_slots = array("key_field", "data_fields");    // Support phplib session variables - only save key fields by default
-  var $data_table = "";         // Set this to the name of the data base table
-  var $key_field;               // Set this to a db_field object that corresponds to the table's primary key
-  var $data_fields = array();   // Set this to the data fields using array("field_name"=> new db_field, ...)
-  var $all_row_fields = array();        // This gets set to all fields from the row of the query result used to load this entity
-  var $db_class = "db_alloc";
-  var $db;
-  var $debug = false;
-  var $filter_class;            // Set this to the name of the db_filter class corresponding to this entity if one exists
-  var $fields_loaded = false;
-  var $display_field_name;      // Set this to the field to be used by the get_display_value function
-  var $permissions;
-  var $cache;                   // Cache associative array stored by primary key index
+  public $classname = "db_entity";   // Support phplib session variables
+  public $data_table = "";           // Set this to the name of the data base table
+  public $key_field = "";            // Set this to the table's primary key
+  public $data_fields = array();     // Set this to the data fields using array("field_name1","field_name2");
+  public $all_row_fields = array();  // This gets set to all fields from the row of the query result used to load this entity
+  public $db_class = "db_alloc";
+  public $db;
+  public $debug = false;
+  public $display_field_name;        // Set this to the field to be used by the get_display_value function
+  public $cache;                     // Cache associative array stored by primary key index
+  
+  private $fields_loaded = false;    // This internal flag just specifies whether a row from the db was loaded
 
 
+  function __construct($id = false) {
+  
+    $this->permissions[PERM_READ]   = "Read";
+    $this->permissions[PERM_UPDATE] = "Update";
+    $this->permissions[PERM_DELETE] = "Delete";
+    $this->permissions[PERM_CREATE] = "Create";
 
- /**********************************************************************************************
-  * Public functions                                                                         *
-  **********************************************************************************************/
+    // convert key_field into a field object
+    $this->key_field = new db_field($this->key_field); 
 
+    // we're going to reload the data_fields as $name => $object
+    $fields = $this->data_fields;
+    unset($this->data_fields); 
 
-  // Constructor
-  function db_entity() {
-    $this->permissions = array(PERM_READ=>"Read", PERM_UPDATE=>"Update", PERM_DELETE=>"Delete", PERM_CREATE=>"Create",);
+    // convert data_fields into field objects
+    foreach ($fields as $k=>$v) {
+
+      // This caters for per-field options.
+      if (is_array($v)) {
+        $this->data_fields[$k] = new db_field($k, $v);
+      } else {
+        $this->data_fields[$v] = new db_field($v);
+      }
+    }
+
+    // If we're passed an id load this object up
+    if ($id) {
+      $this->set_id($id);
+      $this->select();
+    }
   }
 
   function is_god() {

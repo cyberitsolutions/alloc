@@ -21,20 +21,15 @@
 */
 
 class absence extends db_entity {
-  var $data_table = "absence";
-  var $display_field_name = "personID";
-
-
-  function absence() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("absenceID");
-    $this->data_fields = array("dateFrom"=>new db_field("dateFrom")
-                               , "dateTo"=>new db_field("dateTo")
-                               , "personID"=>new db_field("personID")
-                               , "absenceType"=>new db_field("absenceType")
-                               , "contactDetails"=>new db_field("contactDetails")
-      );
-  }
+  public $data_table = "absence";
+  public $display_field_name = "personID";
+  public $key_field = "absenceID";
+  public $data_fields = array("dateFrom"
+                             ,"dateTo"
+                             ,"personID"
+                             ,"absenceType"
+                             ,"contactDetails"
+                             );
 }
 
 

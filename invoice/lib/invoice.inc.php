@@ -22,21 +22,17 @@
 
 define("DEFAULT_SEP","\n");
 class invoice extends db_entity {
-  var $data_table = "invoice";
-  var $display_field_name = "invoiceName";
-
-  function invoice() {
-    $this->db_entity();
-    $this->key_field = new db_field("invoiceID");
-    $this->data_fields = array("invoiceName"=>new db_field("invoiceName")
-                              ,"clientID"=>new db_field("clientID")
-                              ,"invoiceDateFrom"=>new db_field("invoiceDateFrom")
-                              ,"invoiceDateTo"=>new db_field("invoiceDateTo")
-                              ,"invoiceNum"=>new db_field("invoiceNum")
-                              ,"invoiceName"=>new db_field("invoiceName")
-                              ,"invoiceStatus"=>new db_field("invoiceStatus")
-      );
-  }
+  public $data_table = "invoice";
+  public $display_field_name = "invoiceName";
+  public $key_field = "invoiceID";
+  public $data_fields = array("invoiceName"
+                              ,"clientID"
+                              ,"invoiceDateFrom"
+                              ,"invoiceDateTo"
+                              ,"invoiceNum"
+                              ,"invoiceName"
+                              ,"invoiceStatus"
+                              );
 
   function get_invoice_statii() {
     return array("create"=>"Create"

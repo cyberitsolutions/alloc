@@ -27,40 +27,37 @@ define("PERM_PERSON_WRITE_ROLES", 2048);
 define("PERM_PERSON_SEND_EMAIL", 4096);
 
 class person extends db_entity {
-  var $classname = "person";
-  var $data_table = "person";
-  var $display_field_name = "username";
-  var $prefs = array();
+  public $classname = "person";
+  public $data_table = "person";
+  public $display_field_name = "username";
+  public $key_field = "personID";
+  public $data_fields = array("username"
+                             ,"lastLoginDate"
+                             ,"password"=>array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
+                             ,"perms"=>array("write_perm_name"=>PERM_PERSON_WRITE_ROLES)
+                             ,"emailAddress"
+                             ,"availability"=>array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
+                             ,"areasOfInterest"=>array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
+                             ,"comments"=>array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
+                             ,"managementComments"=>array("read_perm_name"=>PERM_PERSON_READ_MANAGEMENT
+                                                         ,"write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
+                             ,"firstName"
+                             ,"surname"
+                             ,"preferred_tfID"
+                             ,"personActive"
+                             ,"sessData"
+                             ,"phoneNo1"
+			                       ,"phoneNo2"
+      			                 ,"emergencyContact"
+                             );
+  
+  public $prefs = array();
+  public $permissions = array(PERM_PERSON_READ_DETAILS => "Read details"
+                             ,PERM_PERSON_READ_MANAGEMENT => "Read management fields"
+                             ,PERM_PERSON_WRITE_MANAGEMENT => "Write management fields"
+                             ,PERM_PERSON_WRITE_ROLES => "Set roles"
+                             ,PERM_PERSON_SEND_EMAIL => "Send mail-outs");
 
-  function person() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("personID");
-    $this->data_fields = array("username"=>new db_field("username")
-                               , "lastLoginDate"=>new db_field("lastLoginDate")
-                               , "password"=>new db_field("password", array("allow_null"=>false, "read_perm_name"=>PERM_PERSON_READ_DETAILS))
-                               , "perms"=>new db_field("perms", array("write_perm_name"=>PERM_PERSON_WRITE_ROLES))
-                               , "emailAddress"=>new db_field("emailAddress")
-                               , "availability"=>new db_field("availability", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
-                               , "areasOfInterest"=>new db_field("areasOfInterest", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
-                               , "comments"=>new db_field("comments", array("read_perm_name"=>PERM_PERSON_READ_DETAILS))
-                               , "managementComments"=>new db_field("managementComments", array("read_perm_name"=>PERM_PERSON_READ_MANAGEMENT, "write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT))
-                               , "firstName"=>new db_field("firstName")
-                               , "surname"=>new db_field("surname")
-                               , "preferred_tfID"=>new db_field("preferred_tfID")
-                               , "personActive"=>new db_field("personActive")
-                               , "sessData"=>new db_field("sessData")
-                               , "phoneNo1"=>new db_field("phoneNo1")
-			       , "phoneNo2"=>new db_field("phoneNo2")
-			       #			       , "emergencyContact"=>new db_field("emergencyContact", array("read_perm_name"=>PERM_READ))
-      			       , "emergencyContact"=>new db_field("emergencyContact")
-      );
-
-    $this->permissions[PERM_PERSON_READ_DETAILS] = "Read details";
-    $this->permissions[PERM_PERSON_READ_MANAGEMENT] = "Read management fields";
-    $this->permissions[PERM_PERSON_WRITE_MANAGEMENT] = "Write management fields";
-    $this->permissions[PERM_PERSON_WRITE_ROLES] = "Set roles";
-    $this->permissions[PERM_PERSON_SEND_EMAIL] = "Send mail-outs";
-  }
 
   function get_tasks_for_email() {
 

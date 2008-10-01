@@ -21,15 +21,13 @@
 */
 
 class skillList extends db_entity {
-  var $data_table = "skillList";
-  var $display_field_name = "skillName";
-
-
-  function skillList() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("skillID");
-    $this->data_fields = array("skillName"=>new db_field("skillName"), "skillDescription"=>new db_field("skillDescription"), "skillClass"=>new db_field("skillClass"));
-  }
+  public $data_table = "skillList";
+  public $display_field_name = "skillName";
+  public $key_field = "skillID";
+  public $data_fields = array("skillName"
+                             ,"skillDescription"
+                             ,"skillClass"
+                             );
 
   // return true if a skill with same name and class already exists
   // and update fields of current if it does exist

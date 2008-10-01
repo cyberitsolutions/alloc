@@ -21,24 +21,18 @@
 */
 
 
-class timeUnit extends db_entity
-{
-  var $classname = "timeUnit";
-  var $data_table = "timeUnit";
-  var $display_field_name = "timeUnitLabelA";
-
-  function timeUnit() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("timeUnitID");
-    $this->data_fields = array("timeUnitName"=>new db_field("timeUnitName")
-                               ,"timeUnitLabelA"=>new db_field("timeUnitLabelA")
-                               ,"timeUnitLabelB"=>new db_field("timeUnitLabelB")
-                               ,"timeUnitSeconds"=>new db_field("timeUnitSeconds")
-                               ,"timeUnitActive"=>new db_field("timeUnitActive")
-                               ,"timeUnitSequence"=>new db_field("timeUnitSequence")
-        );
-  }
-
+class timeUnit extends db_entity {
+  public $classname = "timeUnit";
+  public $data_table = "timeUnit";
+  public $display_field_name = "timeUnitLabelA";
+  public $key_field = "timeUnitID";
+  public $data_fields = array("timeUnitName"
+                               ,"timeUnitLabelA"
+                               ,"timeUnitLabelB"
+                               ,"timeUnitSeconds"
+                               ,"timeUnitActive"
+                               ,"timeUnitSequence"
+                               );
 
   function seconds_to_display_time_unit($seconds) {
     $q = "SELECT * FROM timeUnit";
@@ -49,8 +43,6 @@ class timeUnit extends db_entity
     }  
 
   }
-
-
 
 }  
 

@@ -24,39 +24,36 @@ define("PERM_PROJECT_VIEW_TASK_ALLOCS", 256);
 define("PERM_PROJECT_ADD_TASKS", 512);
 
 class project extends db_entity {
-  var $classname = "project";
-  var $data_table = "project";
-  var $display_field_name = "projectName";
+  public $classname = "project";
+  public $data_table = "project";
+  public $display_field_name = "projectName";
+  public $key_field = "projectID";
+  public $data_fields = array("projectName"
+                             ,"projectShortName"
+                             ,"projectComments"
+                             ,"clientID"
+                             ,"projectType"
+                             ,"projectClientName"
+                             ,"projectClientPhone"
+                             ,"projectClientMobile"
+                             ,"projectClientEMail"
+                             ,"projectClientAddress"
+                             ,"dateTargetStart"
+                             ,"dateTargetCompletion"
+                             ,"dateActualStart"
+                             ,"dateActualCompletion"
+                             ,"projectBudget"
+                             ,"currencyType"
+                             ,"projectPriority"
+                             ,"projectStatus"
+                             ,"is_agency"
+                             ,"cost_centre_tfID"
+                             ,"customerBilledDollars"
+                             ,"clientContactID"
+                             );
 
-  function project() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("projectID");
-    $this->data_fields = array("projectName"=>new db_field("projectName")
-                               , "projectShortName"=>new db_field("projectShortName")
-                               , "projectComments"=>new db_field("projectComments")
-                               , "clientID"=>new db_field("clientID")
-                               , "projectType"=>new db_field("projectType")
-                               , "projectClientName"=>new db_field("projectClientName")
-                               , "projectClientPhone"=>new db_field("projectClientPhone")
-                               , "projectClientMobile"=>new db_field("projectClientMobile")
-                               , "projectClientEMail"=>new db_field("projectClientEMail")
-                               , "projectClientAddress"=>new db_field("projectClientAddress")
-                               , "dateTargetStart"=>new db_field("dateTargetStart")
-                               , "dateTargetCompletion"=>new db_field("dateTargetCompletion")
-                               , "dateActualStart"=>new db_field("dateActualStart")
-                               , "dateActualCompletion"=>new db_field("dateActualCompletion")
-                               , "projectBudget"=>new db_field("projectBudget")
-                               , "currencyType"=>new db_field("currencyType")
-                               , "projectPriority"=>new db_field("projectPriority")
-                               , "projectStatus"=>new db_field("projectStatus")
-                               , "is_agency"=>new db_field("is_agency",array("empty_to_null"=>true))
-                               , "cost_centre_tfID"=>new db_field("cost_centre_tfID")
-                               , "customerBilledDollars"=>new db_field("customerBilledDollars")
-                               , "clientContactID"=>new db_field("clientContactID")
-      );
-    $this->permissions[PERM_PROJECT_VIEW_TASK_ALLOCS] = "View task allocations";
-    $this->permissions[PERM_PROJECT_ADD_TASKS] = "Add tasks";
-  }
+  public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "View task allocations"
+                             ,PERM_PROJECT_ADD_TASKS => "Add tasks");
 
   function get_url() {
     global $sess;

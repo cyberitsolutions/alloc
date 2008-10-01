@@ -21,17 +21,13 @@
 */
 
 class tfPerson extends db_entity {
-  var $data_table = "tfPerson";
-  var $display_field_name = "personID";
+  public $data_table = "tfPerson";
+  public $display_field_name = "personID";
+  public $key_field = "tfPersonID";
+  public $data_fields = array("tfID"
+                             ,"personID"
+                             );
 
-
-  function tfPerson() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("tfPersonID");
-    $this->data_fields = array("tfID"=>new db_field("tfID")
-                               , "personID"=>new db_field("personID"));
-
-  }
 }
 
 

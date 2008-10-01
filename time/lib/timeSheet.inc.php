@@ -23,32 +23,27 @@
 define("PERM_TIME_APPROVE_TIMESHEETS", 256);
 define("PERM_TIME_INVOICE_TIMESHEETS", 512);
 
-class timeSheet extends db_entity
-{
-  var $classname = "timeSheet";
-  var $data_table = "timeSheet";
-  var $display_field_name = "projectID";
-
-  function timeSheet() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("timeSheetID");
-    $this->data_fields = array("projectID"=>new db_field("projectID")
-                               , "dateFrom"=>new db_field("dateFrom")
-                               , "dateTo"=>new db_field("dateTo")
-                               , "status"=>new db_field("status")
-                               , "personID"=>new db_field("personID")
-                               , "approvedByManagerPersonID"=>new db_field("approvedByManagerPersonID")
-                               , "approvedByAdminPersonID"=>new db_field("approvedByAdminPersonID")
-                               , "dateSubmittedToManager"=>new db_field("dateSubmittedToManager")
-                               , "dateSubmittedToAdmin"=>new db_field("dateSubmittedToAdmin")
-                               , "billingNote"=>new db_field("billingNote")
-                               , "payment_insurance"=>new db_field("payment_insurance")
-                               , "recipient_tfID"=>new db_field("recipient_tfID")
-                               , "customerBilledDollars"=>new db_field("customerBilledDollars")
-      );
-    $this->permissions[PERM_TIME_APPROVE_TIMESHEETS] = "Approve";
-    $this->permissions[PERM_TIME_INVOICE_TIMESHEETS] = "Invoice";
-  }
+class timeSheet extends db_entity {
+  public $classname = "timeSheet";
+  public $data_table = "timeSheet";
+  public $display_field_name = "projectID";
+  public $key_field = "timeSheetID";
+  public $data_fields = array("projectID"
+                             ,"dateFrom"
+                             ,"dateTo"
+                             ,"status"
+                             ,"personID"
+                             ,"approvedByManagerPersonID"
+                             ,"approvedByAdminPersonID"
+                             ,"dateSubmittedToManager"
+                             ,"dateSubmittedToAdmin"
+                             ,"billingNote"
+                             ,"payment_insurance"
+                             ,"recipient_tfID"
+                             ,"customerBilledDollars"
+                             );
+  public $permissions = array(PERM_TIME_APPROVE_TIMESHEETS => "Approve"
+                             ,PERM_TIME_INVOICE_TIMESHEETS => "Invoice");
 
   function save() {
     global $current_user;

@@ -21,20 +21,16 @@
 */
 
 class interestedParty extends db_entity {
-  var $data_table = "interestedParty";
-
-  function interestedParty() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("interestedPartyID");
-    $this->data_fields = array("entityID"=>new db_field("entityID")
-                              ,"entity"=>new db_field("entity")
-                              ,"fullName"=>new db_field("fullName")
-                              ,"emailAddress"=>new db_field("emailAddress")
-                              ,"personID"=>new db_field("personID")
-                              ,"clientContactID"=>new db_field("clientContactID")
-                              ,"external"=>new db_field("external")
-                              );
-  }
+  public $data_table = "interestedParty";
+  public $key_field = "interestedPartyID";
+  public $data_fields = array("entityID"
+                             ,"entity"
+                             ,"fullName"
+                             ,"emailAddress"
+                             ,"personID"
+                             ,"clientContactID"
+                             ,"external"
+                             );
 
   function exists($entity, $entityID, $email) {
     $db = new db_alloc();

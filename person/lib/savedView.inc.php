@@ -21,19 +21,14 @@
 */
 
 class savedView extends db_entity {
-  var $data_table = "savedView";
-  var $display_field_name = "savedViewID";
-
-
-  function savedView() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("savedViewID");
-    $this->data_fields = array("personID"=>new db_field("personID")
-                              ,"formName"=>new db_field("formName")
-                              ,"viewName"=>new db_field("viewName")
-                              ,"formView"=>new db_field("formView")
-                              );
-  }
+  public $data_table = "savedView";
+  public $display_field_name = "savedViewID";
+  public $key_field = "savedViewID";
+  public $data_fields = array("personID"
+                             ,"formName"
+                             ,"viewName"
+                             ,"formView"
+                             );
 
   function save() {
     // Check for a duplicate

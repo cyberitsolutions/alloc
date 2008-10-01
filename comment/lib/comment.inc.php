@@ -21,24 +21,20 @@
 */
 
 class comment extends db_entity {
-  var $data_table = "comment";
-
-  function comment() {
-    $this->db_entity();
-    $this->key_field = new db_field("commentID");
-    $this->data_fields = array("commentType"=>new db_field("commentType")
-                              ,"commentLinkID"=>new db_field("commentLinkID")
-                              ,"commentCreatedUser"=>new db_field("commentCreatedUser")
-                              ,"commentCreatedTime"=>new db_field("commentCreatedTime")
-                              ,"commentModifiedTime"=>new db_field("commentModifiedTime")
-                              ,"commentModifiedUser"=>new db_field("commentModifiedUser")
-                              ,"commentCreatedUserClientContactID"=>new db_field("commentCreatedUserClientContactID")
-                              ,"commentCreatedUserText"=>new db_field("commentCreatedUserText")
-                              ,"commentEmailRecipients"=>new db_field("commentEmailRecipients")
-                              ,"commentEmailUID"=>new db_field("commentEmailUID")
-                              ,"comment"=>new db_field("comment")
-                              );
-  }
+  public $data_table = "comment";
+  public $key_field = "commentID";
+  public $data_fields = array("commentType"
+                             ,"commentLinkID"
+                             ,"commentCreatedUser"
+                             ,"commentCreatedTime"
+                             ,"commentModifiedTime"
+                             ,"commentModifiedUser"
+                             ,"commentCreatedUserClientContactID"
+                             ,"commentCreatedUserText"
+                             ,"commentEmailRecipients"
+                             ,"commentEmailUID"
+                             ,"comment"
+                             );
 
   function delete() {
   
