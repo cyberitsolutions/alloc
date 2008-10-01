@@ -61,7 +61,7 @@ function show_all_exp($template) {
       $TPL["tfIDLink"] = $tf->get_link();
   
       $projectID = $transaction->get_value("projectID");
-      if (isset($_POST["projectID"]) && $_POST["projectID"] != "") {
+      if($projectID) {
         $project = new project;
         $project->set_id($transaction->get_value("projectID"));
         $project->select();
