@@ -21,27 +21,23 @@
 */
 
 class clientContact extends db_entity {
-  var $classname = "clientContact";
-  var $data_table = "clientContact";
-  var $display_field_name = "clientContactName";
-
-  function clientContact() {
-    $this->db_entity();
-    $this->key_field = new db_field("clientContactID");
-    $this->data_fields = array("clientID"=>new db_field("clientID")
-                              ,"clientContactName"=>new db_field("clientContactName")
-                              ,"clientContactStreetAddress"=>new db_field("clientContactStreetAddress")
-                              ,"clientContactSuburb"=>new db_field("clientContactSuburb")
-                              ,"clientContactState"=>new db_field("clientContactState")
-                              ,"clientContactPostcode"=>new db_field("clientContactPostcode")
-                              ,"clientContactCountry"=>new db_field("clientContactCountry")
-                              ,"clientContactPhone"=>new db_field("clientContactPhone")
-                              ,"clientContactMobile"=>new db_field("clientContactMobile")
-                              ,"clientContactFax"=>new db_field("clientContactFax")
-                              ,"clientContactEmail"=>new db_field("clientContactEmail")
-                              ,"clientContactOther"=>new db_field("clientContactOther")
-                              );
-  }
+  public $classname = "clientContact";
+  public $data_table = "clientContact";
+  public $display_field_name = "clientContactName";
+  public $key_field = "clientContactID";
+  public $data_fields = array("clientID"
+                             ,"clientContactName"
+                             ,"clientContactStreetAddress"
+                             ,"clientContactSuburb"
+                             ,"clientContactState"
+                             ,"clientContactPostcode"
+                             ,"clientContactCountry"
+                             ,"clientContactPhone"
+                             ,"clientContactMobile"
+                             ,"clientContactFax"
+                             ,"clientContactEmail"
+                             ,"clientContactOther"
+                             );
 
   function find_by_name($name=false,$projectID=false) {
 

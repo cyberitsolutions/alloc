@@ -21,17 +21,13 @@
 */
 
 class role extends db_entity {
-  var $data_table = "role";
-
-  function role() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("roleID");
-    $this->data_fields = array("roleHandle"=>new db_field("roleHandle")
-                              ,"roleName"=>new db_field("roleName")
-                              ,"roleLevel"=>new db_field("roleLevel")
-                              ,"roleSequence"=>new db_field("roleSequence")
-      );
-  }
+  public $data_table = "role";
+  public $key_field = "roleID";
+  public $data_fields = array("roleHandle"
+                             ,"roleName"
+                             ,"roleLevel"
+                             ,"roleSequence"
+                             );
 
   function get_roles_array($level="person") {
     $rows = array();

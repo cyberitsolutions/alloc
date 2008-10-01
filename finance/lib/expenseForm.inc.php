@@ -21,24 +21,20 @@
 */
 
 class expenseForm extends db_entity {
-  var $data_table = "expenseForm";
-
-  function expenseForm() {
-    $this->db_entity();
-    $this->key_field = new db_field("expenseFormID");
-    $this->data_fields = array("expenseFormModifiedUser"=>new db_field("expenseFormModifiedUser")
-                               , "expenseFormModifiedTime"=>new db_field("expenseFormModifiedTime")
-                               , "paymentMethod"=>new db_field("paymentMethod")
-                               , "reimbursementRequired"=>new db_field("reimbursementRequired", array("empty_to_null"=>false))
-                               , "seekClientReimbursement"=>new db_field("seekClientReimbursement", array("empty_to_null"=>false))
-                               , "transactionRepeatID"=>new db_field("transactionRepeatID", array("empty_to_null"=>false))
-                               , "clientID"=>new db_field("clientID")
-                               , "expenseFormCreatedUser"=>new db_field("expenseFormCreatedUser")
-                               , "expenseFormCreatedTime"=>new db_field("expenseFormCreatedTime")
-                               , "expenseFormFinalised"=>new db_field("expenseFormFinalised", array("empty_to_null"=>false))
-                               , "expenseFormComment"=>new db_field("expenseFormComment")
-      );
-  }
+  public $data_table = "expenseForm";
+  public $key_field = "expenseFormID";
+  public $data_fields = array("expenseFormModifiedUser"
+                             ,"expenseFormModifiedTime"
+                             ,"paymentMethod"
+                             ,"reimbursementRequired"=>array("empty_to_null"=>false)
+                             ,"seekClientReimbursement"=>array("empty_to_null"=>false)
+                             ,"transactionRepeatID"=>array("empty_to_null"=>false)
+                             ,"clientID"
+                             ,"expenseFormCreatedUser"
+                             ,"expenseFormCreatedTime"
+                             ,"expenseFormFinalised"=>array("empty_to_null"=>false)
+                             ,"expenseFormComment"
+                             );
 
   function is_owner($person = "") {
     global $current_user;

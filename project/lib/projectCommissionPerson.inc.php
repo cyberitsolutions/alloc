@@ -21,18 +21,13 @@
 */
 
 class projectCommissionPerson extends db_entity {
-  var $data_table = "projectCommissionPerson";
-  var $display_field_name = "projectID";
-
-  function projectCommissionPerson() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("projectCommissionPersonID");
-    $this->data_fields = array("projectID"=>new db_field("projectID")
-                               , "tfID"=>new db_field("tfID")
-                               , "commissionPercent"=>new db_field("commissionPercent")
-      );
-  }
-
+  public $data_table = "projectCommissionPerson";
+  public $display_field_name = "projectID";
+  public $key_field = "projectCommissionPersonID";
+  public $data_fields = array("projectID"
+                             ,"tfID"
+                             ,"commissionPercent"
+                             );
 
   function is_owner($person = "") {
     $project = new project;

@@ -21,16 +21,12 @@
 */
 
 class config extends db_entity {
-  var $data_table = "config";
-
-  function config() {
-    $this->db_entity();
-    $this->key_field = new db_field("configID");
-    $this->data_fields = array("name"=>new db_field("name")
-                              ,"value"=>new db_field("value")
-                              ,"type"=>new db_field("type")
-      );
-  }
+  public $data_table = "config";
+  public $key_field = "configID";
+  public $data_fields = array("name"
+                             ,"value"
+                             ,"type"
+                             );
 
   function get_config_item($name='',$anew=false) {
     $table = get_cached_table("config",$anew);

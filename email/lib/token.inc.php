@@ -21,25 +21,21 @@
 */
 
 class token extends db_entity {
-  var $classname = "token";
-  var $data_table = "token";
+  public $classname = "token";
+  public $data_table = "token";
+  public $key_field = "tokenID";
+  public $data_fields = array("tokenHash"
+                             ,"tokenEntity"
+                             ,"tokenEntityID"
+                             ,"tokenActionID"
+                             ,"tokenExpirationDate"
+                             ,"tokenUsed"
+                             ,"tokenMaxUsed"
+                             ,"tokenActive"
+                             ,"tokenCreatedBy"
+                             ,"tokenCreatedDate"
+                             );
 
-  function token() {
-    $this->db_entity(); 
-    $this->key_field = new db_field("tokenID");
-    $this->data_fields = array("tokenHash"=>new db_field("tokenHash")
-                              ,"tokenEntity"=>new db_field("tokenEntity")
-                              ,"tokenEntityID"=>new db_field("tokenEntityID")
-                              ,"tokenActionID"=>new db_field("tokenActionID")
-                              ,"tokenExpirationDate"=>new db_field("tokenExpirationDate")
-                              ,"tokenUsed"=>new db_field("tokenUsed")
-                              ,"tokenMaxUsed"=>new db_field("tokenMaxUsed")
-                              ,"tokenActive"=>new db_field("tokenActive")
-                              ,"tokenCreatedBy"=>new db_field("tokenCreatedBy")
-                              ,"tokenCreatedDate"=>new db_field("tokenCreatedDate")
-                              );
-
-  }
 
   function set_hash($hash,$validate=true) {
     

@@ -21,25 +21,21 @@
 */
 
 class timeSheetItem extends db_entity {
-  var $data_table = "timeSheetItem";
-  var $display_field_name = "description";
-
-  function timeSheetItem() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("timeSheetItemID");
-    $this->data_fields = array("timeSheetID"=>new db_field("timeSheetID")
-                             , "dateTimeSheetItem"=>new db_field("dateTimeSheetItem")
-                             , "timeSheetItemDuration"=>new db_field("timeSheetItemDuration")
-                             , "timeSheetItemDurationUnitID"=>new db_field("timeSheetItemDurationUnitID")
-                             , "rate"=>new db_field("rate")
-                             , "personID"=>new db_field("personID")
-                             , "description"=>new db_field("description")
-                             , "comment"=>new db_field("comment")
-                             , "taskID"=>new db_field("taskID")
-                             , "multiplier"=> new db_field("multiplier")
-                             , "commentPrivate"=>new db_field("commentPrivate")
-      );
-  }
+  public $data_table = "timeSheetItem";
+  public $display_field_name = "description";
+  public $key_field = "timeSheetItemID";
+  public $data_fields = array("timeSheetID"
+                             ,"dateTimeSheetItem"
+                             ,"timeSheetItemDuration"
+                             ,"timeSheetItemDurationUnitID"
+                             ,"rate"
+                             ,"personID"
+                             ,"description"
+                             ,"comment"
+                             ,"taskID"
+                             ,"multiplier"
+                             ,"commentPrivate"
+                             );
 
   function save() {
   

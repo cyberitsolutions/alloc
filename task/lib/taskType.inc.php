@@ -21,17 +21,13 @@
 */
 
 class taskType extends db_entity {
-  var $data_table = "taskType";
-  var $display_field_name = "taskTypeName";
-
-  function taskType() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("taskTypeID");
-    $this->data_fields = array("taskTypeName"=>new db_field("taskTypeName")
-                              ,"taskTypeActive"=>new db_field("taskTypeActive")
-                              ,"taskTypeSequence"=>new db_field("taskTypeSequence")
-                              );
-  }
+  public $data_table = "taskType";
+  public $display_field_name = "taskTypeName";
+  public $key_field = "taskTypeID";
+  public $data_fields = array("taskTypeName"
+                             ,"taskTypeActive"
+                             ,"taskTypeSequence"
+                             );
 }
 
 

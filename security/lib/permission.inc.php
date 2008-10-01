@@ -21,22 +21,18 @@
 */
 
 class permission extends db_entity {
-  var $data_table = "permission";
-  var $display_field_name = "tableName";
-
-  function permission() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("permissionID");
-    $this->data_fields = array("tableName"=>new db_field("tableName")
-                               , "entityID"=>new db_field("entityID", array("empty_to_null"=>false))
-                               , "personID"=>new db_field("personID", array("empty_to_null"=>false))
-                               , "roleName"=>new db_field("roleName", array("empty_to_null"=>false))
-                               , "actions"=>new db_field("actions")
-                               , "sortKey"=>new db_field("sortKey")
-                               , "allow"=>new db_field("allow")
-                               , "comment"=>new db_field("comment")
-      );
-  }
+  public $data_table = "permission";
+  public $display_field_name = "tableName";
+  public $key_field = "permissionID";
+  public $data_fields = array("tableName"
+                             ,"entityID"=>array("empty_to_null"=>false)
+                             ,"personID"=>array("empty_to_null"=>false)
+                             ,"roleName"=>array("empty_to_null"=>false)
+                             ,"actions"
+                             ,"sortKey"
+                             ,"allow"
+                             ,"comment"
+                             );
 
   function describe_actions() {
     $actions = $this->get_value("actions");

@@ -21,20 +21,15 @@
 */
 
 class announcement extends db_entity {
-  var $data_table = "announcement";
-  var $display_field_name = "heading";
-
-
-  function announcement() {
-    $this->db_entity();
-    $this->key_field = new db_field("announcementID");
-    $this->data_fields = array("heading"=>new db_field("heading")
-                               , "body"=>new db_field("body")
-                               , "personID"=>new db_field("personID")
-                               , "displayFromDate"=>new db_field("displayFromDate")
-                               , "displayToDate"=>new db_field("displayToDate")
-      );
-  }
+  public $data_table = "announcement";
+  public $display_field_name = "heading";
+  public $key_field = "announcementID";
+  public $data_fields = array("heading"
+                             ,"body"
+                             ,"personID"
+                             ,"displayFromDate"
+                             ,"displayToDate"
+                             );
 
   function has_announcements() {
     $db = new db_alloc;

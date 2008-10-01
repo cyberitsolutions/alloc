@@ -22,27 +22,22 @@
 
 define("PERM_FINANCE_UPDATE_APPROVED", 256);
 
-class invoiceItem extends db_entity
-{
-  var $data_table = "invoiceItem";
-  var $display_field_name = "iiMemo";
-
-  function invoiceItem() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("invoiceItemID");
-    $this->data_fields = array("invoiceID"=>new db_field("invoiceID")
-                               , "timeSheetID"=>new db_field("timeSheetID")
-                               , "timeSheetItemID"=>new db_field("timeSheetItemID")
-                               , "expenseFormID"=>new db_field("expenseFormID")
-                               , "transactionID"=>new db_field("transactionID")
-                               , "iiMemo"=>new db_field("iiMemo")
-                               , "iiQuantity"=>new db_field("iiQuantity")
-                               , "iiUnitPrice"=>new db_field("iiUnitPrice")
-                               , "iiAmount"=>new db_field("iiAmount")
-                               , "iiDate"=>new db_field("iiDate")
-      );
-    $this->permissions[PERM_FINANCE_UPDATE_APPROVED] = "Update approved transactions";
-  }
+class invoiceItem extends db_entity {
+  public $data_table = "invoiceItem";
+  public $display_field_name = "iiMemo";
+  public $key_field = "invoiceItemID";
+  public $data_fields = array("invoiceID"
+                             ,"timeSheetID"
+                             ,"timeSheetItemID"
+                             ,"expenseFormID"
+                             ,"transactionID"
+                             ,"iiMemo"
+                             ,"iiQuantity"
+                             ,"iiUnitPrice"
+                             ,"iiAmount"
+                             ,"iiDate"
+                             );
+  public $permissions = array(PERM_FINANCE_UPDATE_APPROVED => "Update approved transactions");
 
   function is_owner($person = "") {
     global $current_user;

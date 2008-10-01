@@ -22,21 +22,17 @@
 
 
 class sentEmailLog extends db_entity {
-  var $classname = "sentEmailLog";
-  var $data_table = "sentEmailLog";
-
-  function sentEmailLog() {
-      $this->db_entity();       // Call constructor of parent class
-      $this->key_field = new db_field("sentEmailLogID");
-      $this->data_fields = array("sentEmailTo"=>new db_field("sentEmailTo")
-                                 , "sentEmailSubject"=>new db_field("sentEmailSubject")
-                                 , "sentEmailBody"=>new db_field("sentEmailBody")
-                                 , "sentEmailHeader"=>new db_field("sentEmailHeader")
-                                 , "sentEmailType"=>new db_field("sentEmailType")
-                                 , "sentEmailLogCreatedTime"=>new db_field("sentEmailLogCreatedTime")
-                                 , "sentEmailLogCreatedUser"=>new db_field("sentEmailLogCreatedUser")
-      );
-  }
+  public $classname = "sentEmailLog";
+  public $data_table = "sentEmailLog";
+  public $key_field = "sentEmailLogID";
+  public $data_fields = array("sentEmailTo"
+                             ,"sentEmailSubject"
+                             ,"sentEmailBody"
+                             ,"sentEmailHeader"
+                             ,"sentEmailType"
+                             ,"sentEmailLogCreatedTime"
+                             ,"sentEmailLogCreatedUser"
+                             );
 }
 
 

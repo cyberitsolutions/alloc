@@ -194,7 +194,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 
   $task->get_value("taskDescription") and $task->set_value("taskDescription",rtrim($task->get_value("taskDescription")));
 
-  if ($task->get_value("taskName") === "") {
+  if (!$task->get_value("taskName")) {
     $TPL["message"][] = "Please enter a name for the Task.";
   } else {
     $success = $task->save();

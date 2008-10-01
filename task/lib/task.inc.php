@@ -23,44 +23,41 @@
 define("PERM_PROJECT_READ_TASK_DETAIL", 256);
 
 class task extends db_entity {
-  var $classname = "task";
-  var $data_table = "task";
-  var $display_field_name = "taskName";
+  public $classname = "task";
+  public $data_table = "task";
+  public $display_field_name = "taskName";
+  public $key_field = "taskID";
+  public $data_fields = array("taskName"
+                             ,"taskDescription"
+                             ,"creatorID" => array("empty_to_null"=>false)
+                             ,"closerID"
+                             ,"priority"
+                             ,"timeEstimate"
+                             ,"dateCreated"
+                             ,"dateAssigned"
+                             ,"dateClosed"
+                             ,"dateTargetStart"
+                             ,"dateTargetCompletion"
+                             ,"dateActualStart"
+                             ,"dateActualCompletion"
+                             ,"taskComments"
+                             ,"projectID"
+                             ,"parentTaskID"
+                             ,"taskTypeID"
+                             ,"personID"
+                             ,"managerID"
+                             ,"duplicateTaskID"
+                             );
+  public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "Read details");
 
-  function task() {
+  function save() {
     global $current_user;
-
-      $this->db_entity();       // Call constructor of parent class
-      $this->key_field = new db_field("taskID");
-      $this->data_fields = array("taskName"=>new db_field("taskName", array("empty_to_null"=>false))
-                                 , "taskDescription"=>new db_field("taskDescription")
-                                 , "creatorID"=>new db_field("creatorID")
-                                 , "closerID"=>new db_field("closerID")
-                                 , "priority"=>new db_field("priority")
-                                 , "timeEstimate"=>new db_field("timeEstimate", array("empty_to_null"=>true))
-                                 , "dateCreated"=>new db_field("dateCreated")
-                                 , "dateAssigned"=>new db_field("dateAssigned")
-                                 , "dateClosed"=>new db_field("dateClosed")
-                                 , "dateTargetStart"=>new db_field("dateTargetStart")
-                                 , "dateTargetCompletion"=>new db_field("dateTargetCompletion")
-                                 , "dateActualStart"=>new db_field("dateActualStart")
-                                 , "dateActualCompletion"=>new db_field("dateActualCompletion")
-                                 , "taskComments"=>new db_field("taskComments")
-                                 , "projectID"=>new db_field("projectID")
-                                 , "parentTaskID"=>new db_field("parentTaskID")
-                                 , "taskTypeID"=>new db_field("taskTypeID")
-                                 , "personID"=>new db_field("personID")
-				                         , "managerID"=>new db_field("managerID")
-                                 , "duplicateTaskID"=>new db_field("duplicateTaskID")
-      );
-
-    if (isset($current_user)) {
-      $this->set_value("creatorID", $current_user->get_id());
+    if (!$this->get_value("creatorID")) {
+      $this->set_value("creatorID",$current_user->get_id());
     }
-
-    $this->permissions[PERM_PROJECT_READ_TASK_DETAIL] = "Read details";
+    return parent::save();
   }
-
+  
   function close_off_children_recursive() {
     // mark all children as complete
     global $current_user;

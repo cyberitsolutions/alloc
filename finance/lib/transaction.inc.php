@@ -28,46 +28,42 @@ define("PERM_FINANCE_WRITE_APPROVED_TRANSACTION", 4096);
 define("PERM_FINANCE_UPLOAD_EXPENSES_FILE", 16384);
 define("PERM_FINANCE_RECONCILIATION_REPORT", 32768);
 
-class transaction extends db_entity
-{
-  var $data_table = "transaction";
-  var $display_field_name = "product";
+class transaction extends db_entity {
+  public $data_table = "transaction";
+  public $display_field_name = "product";
+  public $key_field = "transactionID";
+  public $data_fields = array("companyDetails" => array("empty_to_null"=>false)
+                             ,"product" => array("empty_to_null"=>false)
+                             ,"amount" 
+                             ,"status"
+                             ,"expenseFormID" 
+                             ,"invoiceID"
+                             ,"invoiceItemID"
+                             ,"tfID"
+                             ,"fromTfID"
+                             ,"projectID"
+                             ,"transactionModifiedUser"
+                             ,"transactionModifiedTime"
+                             ,"transactionCreatedTime"
+                             ,"transactionCreatedUser"
+                             ,"quantity"
+                             ,"transactionDate"
+                             ,"transactionType"
+                             ,"timeSheetID"
+                             ,"productSaleItemID"
+                             ,"transactionRepeatID"
+                             );
 
-  function transaction() {
-    $this->db_entity();
-    $this->key_field = new db_field("transactionID");
-    $this->data_fields = array("companyDetails"=>new db_field("companyDetails", array("empty_to_null"=>false))
-                               , "product"=>new db_field("product", array("empty_to_null"=>false))
-                               , "amount"=>new db_field("amount")
-                               , "status"=>new db_field("status")
-                               , "expenseFormID"=>new db_field("expenseFormID", array("empty_to_null"=>false))
-                               , "invoiceID"=>new db_field("invoiceID")
-                               , "invoiceItemID"=>new db_field("invoiceItemID")
-                               , "tfID"=>new db_field("tfID")
-                               , "fromTfID"=>new db_field("fromTfID")
-                               , "projectID"=>new db_field("projectID")
-                               , "transactionModifiedUser"=>new db_field("transactionModifiedUser")
-                               , "transactionModifiedTime"=>new db_field("transactionModifiedTime")
-                               , "transactionCreatedTime"=>new db_field("transactionCreatedTime")
-                               , "transactionCreatedUser"=>new db_field("transactionCreatedUser")
-                               , "quantity"=>new db_field("quantity")
-                               , "transactionDate"=>new db_field("transactionDate")
-                               , "transactionType"=>new db_field("transactionType")
-                               , "timeSheetID"=>new db_field("timeSheetID")
-                               , "productSaleItemID"=>new db_field("productSaleItemID")
-                               , "transactionRepeatID"=>new db_field("transactionRepeatID")
-      );
+    public $permissions = array(PERM_FINANCE_WRITE_INVOICE_TRANSACTION => "Add/update/delete invoice transaction"
+                               ,PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION => "Add/update/delete free-form transaction"
+                               ,PERM_FINANCE_WRITE_WAGE_TRANSACTION => "Add/update/delete wage transaction"
+                               ,PERM_FINANCE_CREATE_TRANSACTION_FROM_REPEAT => "Create from repeating transactions"
+                               ,PERM_FINANCE_WRITE_APPROVED_TRANSACTION => "Approve/Reject transactions"
+                               ,PERM_FINANCE_UPLOAD_EXPENSES_FILE => "Upload expenses file"
+                               ,PERM_FINANCE_RECONCILIATION_REPORT => "View reconciliation report"
+                               );
+                                
 
-    $this->permissions[PERM_FINANCE_WRITE_INVOICE_TRANSACTION] = "Add/update/delete invoice transaction";
-    $this->permissions[PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION] = "Add/update/delete free-form transaction";
-    $this->permissions[PERM_FINANCE_WRITE_WAGE_TRANSACTION] = "Add/update/delete wage transaction";
-    $this->permissions[PERM_FINANCE_CREATE_TRANSACTION_FROM_REPEAT] = "Create from repeating transactions";
-    $this->permissions[PERM_FINANCE_WRITE_APPROVED_TRANSACTION] = "Approve/Reject transactions";
-    $this->permissions[PERM_FINANCE_UPLOAD_EXPENSES_FILE] = "Upload expenses file";
-    $this->permissions[PERM_FINANCE_RECONCILIATION_REPORT] = "View reconciliation report";
-
-    $this->set_value("quantity", 1);
-  }
 
   function check_write_perms() {
     if ($this->get_value("status") != "pending") {
@@ -114,6 +110,9 @@ class transaction extends db_entity
       $TPL["message"][] = "Unable to save transaction with Source TF being the same as the Destination TF.";
 
     } else {
+      if (!$this->get_value("quantity")) {
+        $this->set_value("quantity",1);
+      }
       return parent::save();
     }
   }

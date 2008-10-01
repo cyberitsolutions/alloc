@@ -21,25 +21,20 @@
 */
 
 class history extends db_entity {
-  var $data_table = "history";
+  public $data_table = "history";
 
   # Display the x most recent, but keep the 2x most recent
   # once we hit 3x, delete back down to 2x
-  var $max_to_display = 40;
+  public $max_to_display = 40;
 
+  public $key_field = historyID;
+  public $data_fields = array("the_time"
+                             ,"the_place"
+                             ,"the_args"
+                             ,"the_label"
+                             ,"personID"
+                             );
 
-
-
-  function history() {
-    $this->db_entity();
-    $this->key_field = new db_field("historyID");
-    $this->data_fields = array("the_time"=>new db_field("the_time")
-                               , "the_place"=>new db_field("the_place")
-                               , "the_args"=>new db_field("the_args")
-                               , "the_label"=>new db_field("the_label")
-                               , "personID"=>new db_field("personID")
-      );
-  }
 
   function get_history_query($order="") {
     global $current_user;

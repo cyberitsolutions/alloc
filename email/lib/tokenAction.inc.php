@@ -21,18 +21,13 @@
 */
 
 class tokenAction extends db_entity {
-  var $classname = "tokenAction";
-  var $data_table = "tokenAction";
-
-  function tokenAction() {
-    $this->db_entity(); 
-    $this->key_field = new db_field("tokenActionID");
-    $this->data_fields = array("tokenAction"=>new db_field("tokenAction")
-                              ,"tokenActionType"=>new db_field("tokenActionType")
-                              ,"tokenActionMethod"=>new db_field("tokenActionMethod")
-                              );
-
-  }
+  public $classname = "tokenAction";
+  public $data_table = "tokenAction";
+  public $key_field = "tokenActionID";
+  public $data_fields = array("tokenAction"
+                             ,"tokenActionType"
+                             ,"tokenActionMethod"
+                             );
 }
 
 

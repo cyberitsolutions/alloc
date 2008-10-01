@@ -21,27 +21,23 @@
 */
 
 class reminder extends db_entity {
-  var $data_table = "reminder";
-  var $display_field_name = "reminderSubject";
-
-
-  function reminder() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("reminderID");
-    $this->data_fields = array("reminderType"=>new db_field("reminderType"),
-                               "reminderLinkID"=>new db_field("reminderLinkID"),
-                               "personID"=>new db_field("personID"),
-                               "reminderTime"=>new db_field("reminderTime"),
-                               "reminderRecuringInterval"=>new db_field("reminderRecuringInterval"),
-                               "reminderRecuringValue"=>new db_field("reminderRecuringValue"),
-                               "reminderAdvNoticeSent"=>new db_field("reminderAdvNoticeSent"),
-                               "reminderAdvNoticeInterval"=>new db_field("reminderAdvNoticeInterval"),
-                               "reminderAdvNoticeValue"=>new db_field("reminderAdvNoticeValue"),
-                               "reminderSubject"=>new db_field("reminderSubject"), 
-                               "reminderContent"=>new db_field("reminderContent"), 
-                               "reminderModifiedTime"=>new db_field("reminderModifiedTime"), 
-                               "reminderModifiedUser"=>new db_field("reminderModifiedUser"));
-  }
+  public $data_table = "reminder";
+  public $display_field_name = "reminderSubject";
+  public $key_field = "reminderID";
+  public $data_fields = array("reminderType"
+                             ,"reminderLinkID"
+                             ,"personID"
+                             ,"reminderTime"
+                             ,"reminderRecuringInterval"
+                             ,"reminderRecuringValue"
+                             ,"reminderAdvNoticeSent"
+                             ,"reminderAdvNoticeInterval"
+                             ,"reminderAdvNoticeValue"
+                             ,"reminderSubject"
+                             ,"reminderContent"
+                             ,"reminderModifiedTime"
+                             ,"reminderModifiedUser"
+                             );
 
   // set the modified time to now
   function set_modified_time() {
