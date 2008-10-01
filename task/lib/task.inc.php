@@ -1372,12 +1372,16 @@ class task extends db_entity {
       unset($_FORM["savedViewID"]);
     }
 
-    if (($_FORM["applyFilter"] || $_FORM["savedViewID"]) && is_object($current_user) && !$_FORM["dontSave"]) {
-      $url = $_FORM["url_form_action"];
-      unset($_FORM["url_form_action"]);
-      $current_user->prefs[$_FORM["form_name"]] = $_FORM;
-      $_FORM["url_form_action"] = $url;
+    if (($_FORM["applyFilter"] || $_FORM["savedViewID"]) && is_object($current_user)) {
+      // we have a new filter configuration from the user, and must save it
+      if(!$_FORM["dontSave"]) {
+        $url = $_FORM["url_form_action"];
+        unset($_FORM["url_form_action"]);
+        $current_user->prefs[$_FORM["form_name"]] = $_FORM;
+        $_FORM["url_form_action"] = $url;
+      }
     } else {
+      // we haven't been given a filter configuration, so load it from user preferences
       $_FORM = $current_user->prefs[$_FORM["form_name"]];
       if (!isset($current_user->prefs[$_FORM["form_name"]])) {
         $_FORM["projectType"] = "mine";
