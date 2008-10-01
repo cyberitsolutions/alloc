@@ -520,39 +520,15 @@ class timeSheet extends db_entity {
     if ($filter["dateFrom"]) {
       $sql[] = sprintf("(timeSheet.dateFrom >= '%s')", db_esc($filter["dateFrom"]));
     }
-
+    if ($filter["dateTo"]) {
+      $sql[] = sprintf("(timeSheet.dateFrom <= '%s')", db_esc($filter["dateTo"]));
+    }
     return $sql;
   }
 
   function get_list($_FORM) {
     /*
      * This is the definitive method of getting a list of timeSheets that need a sophisticated level of filtering
-     * 
-     * Display Options:
-     *  showHeader
-     *  showProject
-     *  showProjectLink
-     *  showShortProjectLink
-     *  showAmount
-     *  showAmountTotal
-     *  showCustomerBilledDollars
-     *  showCustomerBilledDollarsTotal
-     *  showTransactionsPos
-     *  showTransactionsPosTotal
-     *  showTransactionsNeg
-     *  showTransactionsNegTotal
-     *  showDuration
-     *  showPerson
-     *  showDateFrom
-     *  showDateTo
-     *  showStatus
-     *  
-     * Filter Options:
-     *   projectID
-     *   taskID
-     *   personID
-     *   status
-     *   dateFrom
      *
      */
   
@@ -613,9 +589,13 @@ class timeSheet extends db_entity {
       #$row["projectName"] = $p->get_project_name();
       $row["projectLink"] = $t->get_link($p->get_project_name($_FORM["showShortProjectLink"]));
       $summary.= timeSheet::get_list_tr($row,$_FORM);
+      $rows[$row["timeSheetID"]] = $row;
     }
 
-    if ($print && $_FORM["return"] == "html") {
+    if ($print && $_FORM["return"] == "array") {
+      return $rows;
+
+    } else if ($print && $_FORM["return"] == "html") {
       $summary.= timeSheet::get_list_tr_bottom($extra,$_FORM);
       return "<table class=\"list sortable\">".$summary."</table>";
 
@@ -683,7 +663,7 @@ class timeSheet extends db_entity {
   }
 
   function get_list_tr($row,$_FORM) {
-    $summary[] = "<tr class=\"".$odd_even."\">";
+    $summary[] = "<tr>";
     $_FORM["showTimeSheetID"]     and $summary[] = "  <td>".$row["timeSheetID"]."&nbsp;</td>";
     $_FORM["showProject"]         and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
     $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";
@@ -725,33 +705,41 @@ class timeSheet extends db_entity {
   } 
 
   function get_list_vars() {
-
-    return array("showHeader"
-                ,"showProject"
-                ,"showProjectLink"
-                ,"showAmount"
-                ,"showAmountTotal"
-                ,"showDuration"
-                ,"showPerson"
-                ,"showDateFrom"
-                ,"showDateTo"
-                ,"showStatus"
-                ,"projectID"
-                ,"taskID"
-                ,"personID"
-                ,"status"
-                ,"dateFrom"
-                ,"url_form_action"
-                ,"form_name"
-                ,"dontSave"
-                ,"applyFilter"
+    return array("return"                         => "[MANDATORY] eg: array | html"
+                ,"projectID"                      => "Time Sheets that belong to this Project"
+                ,"taskID"                         => "Time Sheets that use this task"
+                ,"personID"                       => "Time Sheets for this person"
+                ,"status"                         => "Time Sheet status eg: edit | manager | admin | invoiced | finished"
+                ,"dateFrom"                       => "Time Sheets from a particular date"
+                ,"dateTo"                         => "Time Sheets to a particular date"
+                ,"url_form_action"                => "The submit action for the filter form"
+                ,"form_name"                      => "The name of this form, i.e. a handle for referring to this saved form"
+                ,"dontSave"                       => "Specify that the filter preferences should not be saved this time"
+                ,"applyFilter"                    => "Saves this filter as the persons preference"
+                ,"showHeader"                     => "A descriptive html header row"
+                ,"showProject"                    => "The Time Sheets Project"
+                ,"showProjectLink"                => "Show a link to the Time Sheets Project"
+                ,"showShortProjectLink"           => "Show short Project link"
+                ,"showAmount"                     => "Show the total to the engineer of the time sheet"
+                ,"showAmountTotal"                => "Put a footer row on the html showing the totals"
+                ,"showCustomerBilledDollars"      => "Show the total that the customer is billed for this time sheet"
+                ,"showCustomerBilledDollarsTotal" => "Put the grand total of customer billed in the footer"
+                ,"showTransactionsPos"            => "Sum of transactions > 0 [OBSOLETE]"
+                ,"showTransactionsPosTotal"       => "Put the grand total of sum transactions > 0 in the footer [OBSOLETE]"
+                ,"showTransactionsNeg"            => "Sum of transactions < 0 [OBSOLETE]"
+                ,"showTransactionsNegTotal"       => "Put the grand total of sum transactions < 0 in the footer [OBSOLETE]"
+                ,"showDuration"                   => "The time length of the Time Sheet"
+                ,"showPerson"                     => "The owner of the Time Sheet"
+                ,"showDateFrom"                   => "The start date of the Time Sheet"
+                ,"showDateTo"                     => "The end date of the Time Sheet"
+                ,"showStatus"                     => "The Time Sheet status"
                 );
   }
 
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = timeSheet::get_list_vars();
+    $page_vars = array_keys(timeSheet::get_list_vars());
 
     $_FORM = get_all_form_data($page_vars,$defaults);
 

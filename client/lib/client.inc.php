@@ -114,23 +114,9 @@ class client extends db_entity {
   function get_list($_FORM) {
     /*
      * This is the definitive method of getting a list of clients that need a sophisticated level of filtering
-     * 
-     * Display Options:
-     *  showHeader
-     *  showClientName
-     *  showClientLink
-     *  showPrimaryContactName
-     *  showPrimaryContactPhone
-     *  showPrimaryContactEmail
-     *  
-     * Filter Options:
-     *   clientStatus
-     *   clientName
-     *   contactName
-     *   clientLetter
-     *   return = html | dropdown_options
      *
      */
+
 
     global $TPL;
     $filter = client::get_list_filter($_FORM);
@@ -182,6 +168,7 @@ class client extends db_entity {
 
       $summary.= client::get_list_tr($row,$_FORM);
       $summary_ops[$c->get_id()] = $c->get_value("clientName");
+      $rows[$c->get_id()] = $row;
     }
 
     if ($print && $_FORM["return"] == "html") {
@@ -189,6 +176,9 @@ class client extends db_entity {
 
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;
+
+    } else if ($print && $_FORM["return"] == "array") {
+      return $rows;
 
     } else if (!$print && $_FORM["return"] == "html") {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Clients Found</b></td></tr></table>";
@@ -230,28 +220,29 @@ class client extends db_entity {
 
   function get_list_vars() {
 
-    return array("clientStatus"
-                ,"clientName"
-                ,"contactName"
-                ,"clientLetter"
-                ,"url_form_action"
-                ,"form_name"
-                ,"dontSave"
-                ,"applyFilter"
-                ,"showHeader"
-                ,"showClientName"
-                ,"showClientLink"
-                ,"showClientStatus"
-                ,"showPrimaryContactName"
-                ,"showPrimaryContactPhone"
-                ,"showPrimaryContactEmail"
+    return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options"
+                ,"clientStatus"             => "Client status eg: current | potential | archived"
+                ,"clientName"               => "Client name like *something*"
+                ,"contactName"              => "Client Contact name like *something*"
+                ,"clientLetter"             => "Client name starts with this letter"
+                ,"url_form_action"          => "The submit action for the filter form"
+                ,"form_name"                => "The name of this form, i.e. a handle for referring to this saved form"
+                ,"dontSave"                 => "Specify that the filter preferences should not be saved this time"
+                ,"applyFilter"              => "Saves this filter as the persons preference"
+                ,"showHeader"               => "A descriptive html header row"
+                ,"showClientName"           => "Shows the clients name"
+                ,"showClientLink"           => "Shows a client link"
+                ,"showClientStatus"         => "Shows the clients status"
+                ,"showPrimaryContactName"   => "Shows the primary contacts name"
+                ,"showPrimaryContactPhone"  => "Shows the primary contacts phone"
+                ,"showPrimaryContactEmail"  => "Shows the primary contacts email"
                 );
   }
 
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = client::get_list_vars();
+    $page_vars = array_keys(client::get_list_vars());
 
     $_FORM = get_all_form_data($page_vars,$defaults);
 

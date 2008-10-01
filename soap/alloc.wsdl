@@ -155,7 +155,7 @@
   </binding>
   <service name="alloc_soapService">
     <port xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="alloc_soapPort" binding="tns:alloc_soapBinding">
-      <soap-env:address xmlns="http://schemas.xmlsoap.org/wsdl/soap/" location="http://leaf/alloc6/soap/server.php"/>
+      <soap-env:address xmlns="http://schemas.xmlsoap.org/wsdl/soap/" location="http://leaf/alloc2/soap/server.php"/>
     </port>
   </service>
 </definitions>

@@ -281,13 +281,8 @@ class transaction extends db_entity {
   function get_list($_FORM) {
     global $current_user;
 
-
     /*
      * This is the definitive method of getting a list of transactions that need a sophisticated level of filtering
-     *
-     * Display Options:
-     *
-     * Filter Options:
      *
      */
 
@@ -341,12 +336,12 @@ class transaction extends db_entity {
     $db->query($q);
     while ($row = $db->next_record()) {
       #echo "<pre>".print_r($row,1)."</pre>";
-      $print = true;
       $i++;
       $t = new transaction;
       if (!$t->read_db_record($db,false)) {
         continue;
       }
+      $print = true;
   
       // If the destination of this TF is not the current TfID, then invert the $amount
       $amount = $t->get_value("amount");
@@ -388,10 +383,12 @@ class transaction extends db_entity {
       if ($_FORM["return"] == "html") {
         $row["object"] = $t;
         $summary.= transaction::get_list_tr($row,$_FORM);
+
       } else if ($_FORM["return"] == "csv") {
         $csv_headers or $csv_headers = array_keys($row);
         $csv.= $nl.implode(",",array_map('export_escape_csv', $row));
         $nl = "\n";
+
       } else if ($_FORM["return"] == "array") {
         #$row["object"] = $t; // this is really too large to return via soap
         $transactions[$row["transactionID"]] = $row;
@@ -407,8 +404,10 @@ class transaction extends db_entity {
 
     if ($print && $_FORM["return"] == "html") {
       return $header_row.$summary.$footer_row;
+
     } else if ($print && $_FORM["return"] == "csv") {
       return implode(",",array_map('export_escape_csv', $csv_headers))."\n".$csv; 
+
     } else if ($print && $_FORM["return"] == "array") {
       return $transactions;
     } 
@@ -466,27 +465,27 @@ class transaction extends db_entity {
 
   function get_list_vars() {
   
-    return array("tfID"
-                ,"tfIDs"
-                ,"tfName"
-                ,"status"
-                ,"startDate"
-                ,"endDate"
-                ,"monthDate"
-                ,"sortTransactions"
-                ,"transactionType"
-                ,"applyFilter"
-                ,"url_form_action"
-                ,"form_name"
-                ,"dontSave"
-                ,"return"
+    return array("return"            => "[MANDATORY] eg: html | csv | array"
+                ,"tfID"              => "Transactions that are for this TF"
+                ,"tfIDs"             => "Transactions that are for this array of TF's"
+                ,"tfName"            => "Transactions that are for this TF name"
+                ,"status"            => "Transaction status eg: pending | rejected | approved"
+                ,"startDate"         => "Transactions with dates after this start date eg: 2002-07-07"
+                ,"endDate"           => "Transactions with dates before this end date eg: 2007-07-07"
+                ,"monthDate"         => "Transactions for a particular month, by date, eg july: 2008-07-07"
+                ,"sortTransactions"  => "Sort transactions eg: transactionSortDate | transactionDate"
+                ,"transactionType"   => "Eg: invoice | expense | salary | commission | timesheet | adjustment | insurance | tax | sale"
+                ,"applyFilter"       => "Saves this filter as the persons preference"
+                ,"url_form_action"   => "The submit action for the filter form"
+                ,"form_name"         => "The name of this form, i.e. a handle for referring to this saved form"
+                ,"dontSave"          => "Specify that the filter preferences should not be saved this time"
                 );
   }
 
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = transaction::get_list_vars();
+    $page_vars = array_keys(transaction::get_list_vars());
   
     $_FORM = get_all_form_data($page_vars,$defaults);
 

@@ -29,7 +29,7 @@ if ($_GET["projectID"]) {
 
 $options["personID"] = $_GET["personID"];
 $options["taskView"] = "prioritised";
-$options["return"] = "objects";
+$options["return"] = "array";
 $options["taskStatus"] = "not_completed";
 $options["showTaskID"] = true;
 

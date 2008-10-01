@@ -622,7 +622,7 @@ function get_projectPerson_hourly_rate($personID,$projectID) {
 }
 
 if (is_object($project) && $project->get_id()) {
-  $options["return"] = "objectsAndHtml";
+  $options["return"] = "arrayAndHtml";
   list($tasks,$TPL["task_summary"]) = task::get_list($options);
   if (is_array($tasks)) {
     foreach ($tasks as $tid => $t) {

@@ -106,7 +106,14 @@ class alloc_soap {
     if (class_exists($entity)) {
       $e = new $entity;
       if (method_exists($e, "get_list")) {
-        return $e->get_list($options);
+        ob_start();
+        $rtn = $e->get_list($options);
+        $echoed = ob_get_contents();
+        if (!$rtn && $echoed) {
+          return $echoed;
+        } else {
+          return $rtn;
+        }
       } else {
         throw new SoapFault("Server","Entity method '".$entity."->get_list()' does not exist."); 
       }
@@ -160,12 +167,13 @@ class alloc_soap {
             if (class_exists($entity)) {
               $e = new $entity;
               if (method_exists($e, "get_list")) {
-                $rtn.= "\n\n Entity: ".$entity."\nOptions: ";
+                $rtn.= "\n\nEntity: ".$entity."\nOptions:\n";
                 if (method_exists($e, "get_list_vars")) {
                   $options = $e->get_list_vars();
-                  foreach ($options as $option) {
-                    $rtn.= $commar2.$option;
-                    $commar2 = ", ";
+                  foreach ($options as $option=>$help) {
+                    $padding = 30 - strlen($option);
+                    $rtn.= $commar2."    ".$option.str_repeat(" ",$padding).$help;
+                    $commar2 = "\n";
                   }
                 }
               }
@@ -173,7 +181,7 @@ class alloc_soap {
           }
         }
       }
-      return "The following entities can be used with get_list(): ".$rtn;
+      return "Usage: get_list(sessionKey, entity, options). The following entities are available: ".$rtn;
     }
   }
 

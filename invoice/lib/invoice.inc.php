@@ -424,30 +424,6 @@ class invoice extends db_entity {
     /*
      * This is the definitive method of getting a list of invoices that need a sophisticated level of filtering
      *
-     * Display Options:
-     *  showHeader
-     *  showHeader
-     *  showInvoiceNumber
-     *  showInvoiceClient
-     *  showInvoiceName
-     *  showInvoiceAmount
-     *  showInvoiceAmountPaid
-     *  showInvoiceDate
-     *  showInvoiceStatus
-     *  showInvoiceStatusPayment
-     *
-     * Filter Options:
-     *  invoiceID
-     *  clientID
-     *  invoiceNum
-     *  dateOne
-     *  dateTwo
-     *  invoiceName
-     *  invoiceStatus
-     *  invoiceStatusPayment
-     *  personID (sets tfIDs)
-     *  return = html | dropdown_options
-     *
      */
 
     global $TPL;
@@ -511,6 +487,7 @@ class invoice extends db_entity {
       $row["invoiceLink"] = $i->get_invoice_link();
       $summary.= invoice::get_list_tr($row,$_FORM);
       $summary_ops[$i->get_id()] = $i->get_value("invoiceNum");
+      $rows[$row["invoiceID"]] = $row;
     }
 
     if ($print && $_FORM["return"] == "html") {
@@ -518,6 +495,9 @@ class invoice extends db_entity {
 
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;
+
+    } else if ($print && $_FORM["return"] == "array") {
+      return $rows;
 
     } else if (!$print && $_FORM["return"] == "html") {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Invoices Found</b></td></tr></table>";
@@ -587,35 +567,37 @@ class invoice extends db_entity {
 
   function get_list_vars() {
 
-    return array("invoiceID"
-                ,"clientID"
-                ,"invoiceNum"
-                ,"dateOne"
-                ,"dateTwo"
-                ,"invoiceName"
-                ,"invoiceStatus"
-                ,"invoiceStatusPayment"
-                ,"tfIDs"
-                ,"url_form_action"
-                ,"form_name"
-                ,"dontSave"
-                ,"applyFilter"
-                ,"showHeader"
-                ,"showInvoiceNumber"
-                ,"showInvoiceClient"
-                ,"showInvoiceName"
-                ,"showInvoiceAmount"
-                ,"showInvoiceAmountPaid"
-                ,"showInvoiceDate"
-                ,"showInvoiceStatus"
-                ,"showInvoiceStatusPayment"
+    return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options"
+                ,"invoiceID"                => "Invoice by ID"
+                ,"clientID"                 => "Invoices for a particular Client"
+                ,"invoiceNum"               => "Invoice by invoice number"
+                ,"dateOne"                  => "Where invoice date from is >= a particular date"
+                ,"dateTwo"                  => "Where invoice date to is <= a particular date"
+                ,"invoiceName"              => "Invoice by name"
+                ,"invoiceStatus"            => "Invoice status eg: edit | reconcile | finished"
+                ,"invoiceStatusPayment"     => "Invoice payment status eg: pending | rejected | fully_paid | over_paid"
+                ,"personID"                 => "Invoices that are for this persons TF's"
+                ,"tfIDs"                    => "Invoices that are for these TF's"
+                ,"url_form_action"          => "The submit action for the filter form"
+                ,"form_name"                => "The name of this form, i.e. a handle for referring to this saved form"
+                ,"dontSave"                 => "Specify that the filter preferences should not be saved this time"
+                ,"applyFilter"              => "Saves this filter as the persons preference"
+                ,"showHeader"               => "A descriptive html header row"
+                ,"showInvoiceNumber"        => "Shows the invoice number"
+                ,"showInvoiceClient"        => "Shows the invoices client"
+                ,"showInvoiceName"          => "Shows the invoices name"
+                ,"showInvoiceAmount"        => "Shows the total amount for each invoice"
+                ,"showInvoiceAmountPaid"    => "Shows the total amount paid for each invoice"
+                ,"showInvoiceDate"          => "Shows the invoices date"
+                ,"showInvoiceStatus"        => "Shows the invoices status"
+                ,"showInvoiceStatusPayment" => "Shows the invoices payment status"
                 );
   }
 
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = invoice::get_list_vars();
+    $page_vars = array_keys(invoice::get_list_vars());
 
     $_FORM = get_all_form_data($page_vars,$defaults);
 

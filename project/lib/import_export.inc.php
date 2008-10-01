@@ -265,7 +265,7 @@ function export_gnome_planner($projectID) {
   $resourcesUsed = array();
   // Export all tasks in the project
   $taskOptions["projectIDs"] = array($project->get_id());
-  $taskOptions["return"] = "objects";
+  $taskOptions["return"] = "array";
   $taskOptions["taskView"] = "byProject";
 
   $tasks = task::get_list($taskOptions);
@@ -377,7 +377,7 @@ function export_csv($projectID) {
   $retstr = '"Task Name","Estimated Time","Assignee"';
   // Export all tasks in the project
   $taskOptions["projectIDs"] = array($project->get_id());
-  $taskOptions["return"] = "objects";
+  $taskOptions["return"] = "array";
   $taskOptions["taskView"] = "byProject";
   $tasks = task::get_list($taskOptions);
 
