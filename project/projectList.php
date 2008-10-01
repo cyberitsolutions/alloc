@@ -34,6 +34,7 @@ $defaults = array("showHeader"=>true
                  ,"showNavLinks"=>true
                  ,"url_form_action"=>$TPL["url_alloc_projectList"]
                  ,"form_name"=>"projectList_filter"
+                 ,"return"=>"html"
                  );
 
 function show_filter() {

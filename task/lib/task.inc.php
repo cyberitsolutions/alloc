@@ -520,7 +520,7 @@ class task extends db_entity {
 
     $_FORM["prefixTaskID"] and $id = $this->get_id()." ";
 
-    if ($this->get_value("taskTypeID") == TT_PHASE && ($_FORM["return"] == "html" || $_FORM["return"] == "objectsAndHtml")) {
+    if ($this->get_value("taskTypeID") == TT_PHASE && ($_FORM["return"] == "html" || $_FORM["return"] == "arrayAndHtml")) {
       $rtn = "<strong>".$id.$this->get_value("taskName")."</strong>";
     } else if ($this->get_value("taskTypeID") == TT_PHASE) {
       $rtn = $id.$this->get_value("taskName");
@@ -725,43 +725,6 @@ class task extends db_entity {
     /*
      * This is the definitive method of getting a list of tasks that need a sophisticated level of filtering
      *
-     * Display Options:
-     *   showDates            = Show dates 1-4
-     *   showDate1            = Date Target Start
-     *   showDate2            = Date Target Completion
-     *   showDate3            = Date Actual Start
-     *   showDate4            = Date Actual Completion
-     *   showProject          = The tasks Project (has different layout when prioritised vs byProject)
-     *   showPriority         = The calculated overall priority, then the tasks, then the projects priority
-     *   showStatus           = A colour coded textual description of the status of the task
-     *   showCreator          = The tasks creator
-     *   showAssigned         = The person assigned to the task
-     *   showTimes            = The original estimate and the time billed and percentage
-     *   showHeader           = A descriptive header row
-     *   showDescription      = The tasks description
-     *   showComments         = The tasks comments
-     *   showTaskID           = The task ID
-     *   showManager          = Show the tasks manager
-     *
-     *
-     * Filter Options:
-     *   taskView             = byProject | prioritised
-     *   return               = html | text | objects | dropdown_options | objectsAndHtml
-     *   limit                = appends an SQL limit (only for prioritised and objects views)
-     *   projectIDs           = an array of projectIDs
-     *   taskStatus           = completed | not_completed | in_progress | due_today | new | overdue
-     *   taskTimeSheetStatus  = my_open | not_assigned | my_closed | my_recently_closed | all
-     *   taskTypeID           = the task type
-     *   current_user         = lets us set and fake a current_user id for when generating task emails and there is no $current_user object
-     *   creatorID            = task creator
-     *   managerID            = person managing task
-     *   personID             = person assigned to the task
-     *   parentTaskID         = id of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0
-     *  
-     *
-     * Other:
-     *   padding              = Initial indentation level (useful for byProject lists)
-     *
      */
  
     $filter = task::get_list_filter($_FORM);
@@ -770,8 +733,10 @@ class task extends db_entity {
     $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
     $debug and print "\n<pre>filter: ".print_r($filter,1)."</pre>";
 
-    // needs to use isset cause of zeroes is a valid number
-    isset($_FORM["limit"]) && $_FORM["limit"] != "all" and $limit = sprintf("limit %d",$_FORM["limit"]); 
+    // Zero is a valid limit
+    if ($_FORM["limit"] || $_FORM["limit"] === 0 || $_FORM["limit"] === "0") {
+      $limit = sprintf("limit %d",$_FORM["limit"]); 
+    }
     $_FORM["return"] or $_FORM["return"] = "html";
 
     if ($_FORM["showDates"]) {
@@ -816,7 +781,7 @@ class task extends db_entity {
         $_FORM["showStatus"] and $row["taskStatus"] = $task->get_status();
         $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
-        $_FORM["return"] == "objectsAndHtml" || $_FORM["return"] == "objects" and $row["object"] = $task;
+        $_FORM["return"] == "arrayAndHtml" || $_FORM["return"] == "array" and $row["object"] = $task;
         $row["padding"] = $_FORM["padding"];
         $row["taskID"] = $task->get_id();
         $row["parentTaskID"] = $task->get_value("parentTaskID");
@@ -907,14 +872,14 @@ class task extends db_entity {
     $footer = task::get_list_footer($_FORM);
 
     // Decide what to actually return
-    if ($print && $_FORM["return"] == "objectsAndHtml") { // sheesh
+    if ($print && $_FORM["return"] == "arrayAndHtml") { // sheesh
       return array($tasks,$header.$summary.$footer);
 
-    } else if (!$print && $_FORM["return"] == "objectsAndHtml") { 
+    } else if (!$print && $_FORM["return"] == "arrayAndHtml") { 
       $rtn = "<table style=\"width:100%\"><tr><td style=\"text-align:center\"><b>No Tasks Found</b></td></tr></table>";
       return array(array(),$rtn);
       
-    } else if ($print && $_FORM["return"] == "objects") {
+    } else if ($print && $_FORM["return"] == "array") {
       return $tasks;
 
     } else if ($print && $_FORM["return"] == "html") {
@@ -926,7 +891,7 @@ class task extends db_entity {
     } else if ($print && $_FORM["return"] == "dropdown_options") {
       return $summary_ops;
 
-    } else if (!$print && ($_FORM["return"] == "html" || $_FORM["return"] == "objectsAndHtml")) {
+    } else if (!$print && ($_FORM["return"] == "html" || $_FORM["return"] == "arrayAndHtml")) {
       return "<table style=\"width:100%\"><tr><td style=\"text-align:center\"><b>No Tasks Found</b></td></tr></table>";
     } 
   } 
@@ -1272,12 +1237,12 @@ class task extends db_entity {
         } else {
           $status = "Overdue for completion - $status";
         }
-        if ($format == "html" || $format == "objectsAndHtml") {
+        if ($format == "html" || $format == "arrayAndHtml") {
           $status = "<strong class=\"overdue\">$status</strong>";
         }
       } else if ($date_target_completion && date("Y-m-d", $date_forecast_completion) > $date_target_completion) {
         $status = "Behind target - $status";
-        if ($format == "html" || $format == "objectsAndHtml") {
+        if ($format == "html" || $format == "arrayAndHtml") {
           $status = "<strong class=\"behind-target\">$status</strong>";
         }
       }
@@ -1298,12 +1263,12 @@ class task extends db_entity {
       }
     } else if ($actual == NOT_STARTED && $target == STARTED) {
       $status = "Overdue to start on ".$date_target_start;
-      if ($format == "html" || $format == "objectsAndHtml") {
+      if ($format == "html" || $format == "arrayAndHtml") {
         $status = "<strong class=\"behind-target\">$status</strong>";
       }
     } else if ($actual == NOT_STARTED && $target == COMPLETED) {
       $status = "Overdue to start and be completed by $date_target_completion";
-      if ($format == "html" || $format == "objectsAndHtml") {
+      if ($format == "html" || $format == "arrayAndHtml") {
         $status = "<strong class=\"overdue\">$status</strong>";
       }
     } else {
@@ -1316,41 +1281,51 @@ class task extends db_entity {
 
   function get_list_vars() {
 
-    return array("projectID"
-                ,"taskStatus"
-                ,"taskTypeID"
-                ,"personID"
-                ,"creatorID"
-                ,"managerID"
-                ,"taskView"
-                ,"projectType"
-                ,"applyFilter"
-                ,"showDescription"
-                ,"showDates"
-                ,"showCreator"
-                ,"showAssigned"
-                ,"showTimes"
-                ,"showPercent"
-                ,"showPriority"
-                ,"showStatus"
-                ,"showTaskID"
-                ,"showManager"
-                ,"showHeader"
-                ,"showProject"
-                ,"showEdit"
-                ,"padding"
-                ,"url_form_action"
-                ,"form_name"
-                ,"dontSave"
-                ,"savedViewID"
+    return array("taskView"             => "[MANDATORY] eg: byProject | prioritised"
+                ,"return"               => "[MANDATORY] eg: html | text | array | dropdown_options | arrayAndHtml"
+                ,"limit"                => "Appends an SQL limit (only for prioritised and objects views)"
+                ,"projectIDs"           => "An array of projectIDs"
+                ,"projectID"            => "A single projectID"
+                ,"taskStatus"           => "completed | not_completed | in_progress | due_today | new | overdue"
+                ,"taskTimeSheetStatus"  => "my_open | not_assigned | my_closed | my_recently_closed | all"
+                ,"taskTypeID"           => "1 = Task | 2 = Parent | 3 = Message | 4 = Fault | 5 = Milestone"
+                ,"current_user"         => "Lets us fake a current_user id for when generating task emails and there is no \$current_user object"
+                ,"creatorID"            => "Task creator"
+                ,"managerID"            => "The person managing task"
+                ,"personID"             => "The person assigned to the task"
+                ,"parentTaskID"         => "ID of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0"
+                ,"projectType"          => "mine | pm | tsm | pmORtsm | curr | pote | arch | all"
+                ,"applyFilter"          => "Saves this filter as the persons preference"
+                ,"padding"              => "Initial indentation level (useful for byProject lists)"
+                ,"url_form_action"      => "The submit action for the filter form"
+                ,"form_name"            => "The name of this form, i.e. a handle for referring to this saved form"
+                ,"dontSave"             => "Specify that the filter preferences should not be saved this time"
+                ,"savedViewID"          => "The ID of a savedView to load"
+                ,"showDates"            => "Show dates 1-4"
+                ,"showDate1"            => "Date Target Start"
+                ,"showDate2"            => "Date Target Completion"
+                ,"showDate3"            => "Date Actual Start"
+                ,"showDate4"            => "Date Actual Completion"
+                ,"showProject"          => "The tasks Project (has different layout when prioritised vs byProject)"
+                ,"showPriority"         => "The calculated overall priority, then the tasks, then the projects priority"
+                ,"showStatus"           => "A colour coded textual description of the status of the task"
+                ,"showCreator"          => "The tasks creator"
+                ,"showAssigned"         => "The person assigned to the task"
+                ,"showTimes"            => "The original estimate and the time billed and percentage"
+                ,"showHeader"           => "A descriptive html header row"
+                ,"showDescription"      => "The tasks description"
+                ,"showComments"         => "The tasks comments"
+                ,"showTaskID"           => "The task ID"
+                ,"showManager"          => "Show the tasks manager"
+                ,"showPercent"          => "The percent complete"
+                ,"showEdit"             => "Display the html edit controls to allow en masse task editing"
                 );
-
   }
 
   function load_form_data($defaults=array()) {
     global $current_user;
   
-    $page_vars = task::get_list_vars();
+    $page_vars = array_keys(task::get_list_vars());
 
     $_FORM = get_all_form_data($page_vars,$defaults);
 

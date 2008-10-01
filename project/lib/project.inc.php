@@ -328,23 +328,6 @@ class project extends db_entity {
   function get_list($_FORM) {
     /*
      * This is the definitive method of getting a list of projects that need a sophisticated level of filtering
-     * 
-     * Display Options:
-     *  showHeader
-     *  showProjectName
-     *  showProjectLink
-     *  showClient
-     *  showProjectType
-     *  showProjectStatus
-     *  showNavLinks
-     *  
-     * Filter Options:
-     *   projectStatus
-     *   clientID
-     *   projectType
-     *   personID
-     *   projectName
-     *   limit
      *
      */
 
@@ -375,7 +358,10 @@ class project extends db_entity {
         GROUP BY project.projectID 
         ORDER BY projectName";
 
-    isset($_FORM["limit"]) and $q.= sprintf(" LIMIT %d",$_FORM["limit"]);
+    // Zero is a valid limit
+    if ($_FORM["limit"] || $_FORM["limit"] === 0 || $_FORM["limit"] === "0") {
+      $q.= sprintf(" LIMIT %d",$_FORM["limit"]);
+    }
 
     $debug and print "Query: ".$q;
     $db = new db_alloc;
@@ -437,31 +423,32 @@ class project extends db_entity {
   }
 
   function get_list_vars() {
-  
-    return array("showHeader"
-                ,"showProjectName"
-                ,"showProjectLink"
-                ,"showClient"
-                ,"showProjectType"
-                ,"showProjectStatus"
-                ,"showNavLinks"
-                ,"projectStatus"
-                ,"clientID"
-                ,"projectType"
-                ,"personID"
-                ,"projectName"
-                ,"url_form_action"
-                ,"form_name"
-                ,"dontSave"
-                ,"applyFilter"
-                ,"return"
+   
+    return array("return"             => "[MANDATORY] eg: array | html | dropdown_options"
+                ,"projectStatus"      => "Status of the project eg: current | potential | archived"
+                ,"clientID"           => "Show projects that are owned by this Client"
+                ,"projectType"        => "Type of project eg: contract | job | project"
+                ,"personID"           => "Projects that have this person on them."
+                ,"projectName"        => "Project name like *something*"
+                ,"limit"              => "Limit the number of records returned"
+                ,"url_form_action"    => "The submit action for the filter form"
+                ,"form_name"          => "The name of this form, i.e. a handle for referring to this saved form"
+                ,"dontSave"           => "A flag that allows the user to specify that the filter preferences should not be saved this time"
+                ,"applyFilter"        => "Saves this filter as the persons preference"
+                ,"showHeader"         => "A descriptive html header row"
+                ,"showProjectName"    => "Show the projects name"
+                ,"showProjectLink"    => "Show a link to the project"
+                ,"showClient"         => "Show the projects client"
+                ,"showProjectType"    => "Show the project type"
+                ,"showProjectStatus"  => "Show the project status"
+                ,"showNavLinks"       => "Show the projects navigation links"
                 );
   }
 
   function load_form_data($defaults=array()) {
     global $current_user;
 
-    $page_vars = project::get_list_vars();
+    $page_vars = array_keys(project::get_list_vars());
   
     $_FORM = get_all_form_data($page_vars,$defaults);
 
