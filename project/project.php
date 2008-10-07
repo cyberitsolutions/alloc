@@ -688,6 +688,11 @@ $query = sprintf("SELECT tfID AS value, tfName AS label
 $TPL["commission_tf_options"] = get_select_options($query, $TPL["commission_tfID"]);
 $TPL["cost_centre_tfID_options"] = get_select_options($query, $TPL["project_cost_centre_tfID"]);
 
+$db->query($query);
+while ($db->row()) {
+  $tf_array[$db->f("value")] = $db->f("label");
+}
+
 if ($TPL["project_cost_centre_tfID"]) {
   $tf = new tf();
   $tf->set_id($TPL["project_cost_centre_tfID"]);
