@@ -222,7 +222,7 @@ class db_entity {
     $db = $this->get_db();
     $db->query($query);
     if ($db->get_error()) {
-      echo die($db->get_error());
+      die();
     }
   
     $id = mysql_insert_id();
