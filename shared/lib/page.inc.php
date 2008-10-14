@@ -304,7 +304,7 @@ EOD;
     // argh, I am bad man, this activates the default option, because it's minutely better than putting in a body onload
     $TPL["extra_footer_stuff"].= "<img src=\"".$TPL["url_alloc_images"]."pixel.gif\" onload=\"sidebyside_activate('".$default."',".$js_array.");\">";
 
-    return "<div style=\"margin:15px 0px 0px 0px;\">".$str."</div>";
+    return "<div style=\"margin:20px 0px 0px 0px;\">".$str."</div>";
   }
   function mandatory($field="") {
     $star = "&lowast;";
