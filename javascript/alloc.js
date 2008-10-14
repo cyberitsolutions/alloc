@@ -107,6 +107,27 @@ function help_text_off(id) {
   $("#helper").fadeOut("normal");
   $('#helper').remove();
 } 
+function preload_field(element, text) {
+  $(element).bind("focus", function(e){
+    if (this.value == text) {
+      this.style.color = "#333333";
+      this.value = "";
+    }
+  });
+  $(element).each(function(){
+    if (this.value == "") {
+      this.style.color = "#bbbbbb";
+      this.value = text;
+    }
+  });
+  $('form').submit(function(){
+    $(element).each(function(){
+      if (this.value == text) {
+        this.value = "";
+      }
+    });
+  });
+}
 
 
 
@@ -141,30 +162,18 @@ $(document).ready(function() {
     var now = new Date();
     this.value=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
   });
-  $("input.datefield").bind("focus", function(e){
-    if (this.value == "YYYY-MM-DD") {
-      this.style.color = "#333333";
-      this.value = "";
-    }
-  });
-  $("input.datefield").each(function(){
-    if (this.value == "") {
-      this.style.color = "#cccccc";
-      this.value = "YYYY-MM-DD";
-    }
-  });
-  $('form').submit(function(){
-    $("input.datefield").each(function(){
-      if (this.value == "YYYY-MM-DD") {
-        this.value = "";
-      }
-    });
-  });
+
   $('tr.clickrow').bind('click',function(e){                                                                                                     
     var id = this.id.split('_')[1]; // clickrow_43242
     if (id && !$(e.target).is('input:checkbox') && !$(e.target).is('a')) {
       $('#checkbox_'+id).attr('checked',!$('#checkbox_'+id).attr('checked'));
     }
   });
+
+  // This loads up certain textboxes with faint help text that vanishes upon focus
+  preload_field("#menu_form_needle", "Enter Search...");
+  preload_field("input.datefield", "YYYY-MM-DD");
+
 });
+
 

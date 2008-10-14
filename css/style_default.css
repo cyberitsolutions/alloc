@@ -573,7 +573,7 @@ table.rejected {
   margin-bottom:20px;
 }
 
-table.menu_top {
+#menu table {
   position:relative;
   top:10px;
   margin:0px;
@@ -584,38 +584,7 @@ table.menu_top {
   color:#1b6cb7;
 }
 
-.mtl {
-  left:0px;
-}
-
-.mtr {
-  right:0px !important; right:-32px;
-}
-
-table.menu_top th {
-  text-align:left;
-  font-size:17px; /* hardcoded */
-}
-
-table.menu_top td {
-  text-align:right;
-  font-size:12px; /* hardcoded */
-}
-
-table.menu_top .menu_form_text {
-  font-size:12px !important; font-size:13px; /* hardcoded */
-  padding:0px;
-  margin:0px;
-}
-
-table.menu_top .menu_form_button {
-  font-size:11px !important; font-size:11px; /* hardcoded */
-  padding:0px 2px;
-  margin:1px;
-}
-
-table.menu_top .menu_form_select {
-  font-size:12px !important; font-size:11px; /* hardcoded */
+#menu select {
   position:relative;
   top:0px !important; top:-2px;
 }

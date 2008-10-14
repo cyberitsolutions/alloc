@@ -2,21 +2,21 @@
     <table id="menu" cellpadding="0" cellspacing="0">
       <tr>
         <td>
-          <table cellpadding="0" cellspacing="0" align="left" class="menu_top mtl">
+          <table cellpadding="0" cellspacing="0" align="left" style="left:0px;">
             <tr>
-              <th>{echo config::get_config_item("companyName")}</th>
+              <td style="font-size:17px;">{echo config::get_config_item("companyName")}</td>
             </tr>
           </table>
         </td>
         <td>
           <form action="{$url_alloc_menuSubmit}" method="post" id="form_search">
-          <table cellpadding="0" cellspacing="0" align="right" class="menu_top mtr" width="40%">
+          <table cellpadding="0" cellspacing="1" align="right" width="40%" style="right:0px !important; right:-32px;">
             <tr>
-              <td width="1%"><select name="historyID" class="menu_form_select" onChange="this.form.submit();">{$history_options}</select></td>
+              <td width="1%"><select name="historyID" onChange="this.form.submit();">{$history_options}</select></td>
               <td width="6px">&nbsp;&nbsp;or&nbsp;&nbsp;</td>
-              <td width="30px"><input size="14" type="text" name="needle" value="{$needle}" class="menu_form_text" onFocus="document.getElementById('form_search').needle.value='';"></td>
-              <td width="30px"><select size="1" name="category" class="menu_form_select">{$category_options}</select></td>
-              <td width="30px"><input type="submit" name="search" class="menu_form_button" value="Search"></td>
+              <td width="30px"><input size="18" type="text" name="needle" id="menu_form_needle" value="{$needle}"></td>
+              <td width="30px"><select size="1" name="category">{$category_options}</select></td>
+              <td width="30px"><input type="submit" name="search" value="Search"></td>
               <td width="18px">{page::help("quicklist_and_search")}</td>
             </tr>
           </table>

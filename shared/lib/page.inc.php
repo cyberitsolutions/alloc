@@ -95,7 +95,7 @@ class page {
     $TPL["history_options"] = implode("\n",$str);
 
     $TPL["category_options"] = page::get_category_options($_GET["category"]);
-    $TPL["needle"] = $_POST["needle"] or $TPL["needle"] = "Enter Search...";
+    $TPL["needle"] = $_POST["needle"];
     include_template(ALLOC_MOD_DIR."shared/templates/toolbarS.tpl");
   }
   function extra_links() {
