@@ -260,7 +260,7 @@ input[readonly="true"], input[readonly="true"]:focus {
 
 div.message { 
   padding:0px 4px; 
-  margin:15px auto 12px auto; 
+  margin:15px auto 0px auto; 
   border:1px solid #cccccc;
   background-color:#fffdf2; 
   width:50%; 
