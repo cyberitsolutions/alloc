@@ -1,3 +1,10 @@
+
+/* 
+ * CSS for allocPSA
+ * Note: you'll occassionally see a CSS hack like: width:90% !important; width:95%;
+ * Good web browsers obey the first declaration "90%", IE5/6 will obey the latter. 
+ */
+
 body { 
   (BODY_BACKGROUND); 
   font-family:arial,helvetica,sans-serif; 
