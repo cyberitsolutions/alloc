@@ -4,8 +4,7 @@
         <td>
           <table cellpadding="0" cellspacing="0" align="left" class="menu_top mtl">
             <tr>
-              <th width="55px"><a href="http://www.allocpsa.org"><img src="{$url_alloc_images}alloc_tiny.png" alt="allocPSA" border="0"></a></th>
-              <th>&nbsp;{echo config::get_config_item("companyName")}</th>
+              <th>{echo config::get_config_item("companyName")}</th>
             </tr>
           </table>
         </td>
