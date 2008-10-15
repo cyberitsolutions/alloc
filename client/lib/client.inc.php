@@ -56,15 +56,19 @@ class client extends db_entity {
     return true;
   }
 
-  function get_client_select($clientStatus="") {
+  function get_client_select($clientStatus="", $clientID="") {
     global $TPL;
     $db = new db_alloc;
     if ($clientStatus) {
-      $q = sprintf("SELECT clientID as value, clientName as label FROM client WHERE clientStatus = '%s' ORDER BY clientName",db_esc($clientStatus));
+      $q = sprintf("SELECT clientID as value, clientName as label 
+                      FROM client 
+                     WHERE clientStatus = '%s' 
+                        OR clientID = %d 
+                  ORDER BY clientName"
+                    ,db_esc($clientStatus),$clientID);
     }
-    $options.= page::select_options($q,$clientContactID,100);
-    $str = "<select id=\"clientID\" name=\"clientID\" style=\"width:100%;\" 
-             onChange=\"makeAjaxRequest('".$TPL["url_alloc_updateProjectClientContactList"]."clientID='+$('#clientID').attr('value'),'clientContactDropdown')\">";
+    $options.= page::select_options($q,$clientID,100);
+    $str = "<select id=\"clientID\" name=\"clientID\" style=\"width:100%;\">";
     $str.= "<option value=\"\">";
     $str.= $options;
     $str.= "</select>";
@@ -76,7 +80,7 @@ class client extends db_entity {
     $db = new db_alloc;
     $q = sprintf("SELECT clientContactName as label, clientContactID as value FROM clientContact WHERE clientID = %d",$clientID);
     $options = page::select_options($q,$clientContactID,100);
-    return "<select name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
+    return "<select id=\"clientContactID\" name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
   }
  
   function get_client_name() {

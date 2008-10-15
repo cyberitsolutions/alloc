@@ -520,17 +520,19 @@ $TPL["project_is_agency_label"] = $ops[$project->get_value("is_agency")];
 
 $db = new db_alloc;
 
-$cID = $project->get_value("clientID") or $cID = $_GET["clientID"];
-$client = $project->get_foreign_object("client");
+$clientID = $project->get_value("clientID") or $clientID = $_GET["clientID"];
+$client = new client;
+$client->set_id($clientID);
+$client->select();
 $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
 // If a client has been chosen
-if ($cID) {
+if ($clientID) {
   $query = sprintf("SELECT * 
                       FROM client 
                  LEFT JOIN clientContact ON client.clientPrimaryContactID = clientContact.clientContactID 
                      WHERE client.clientID = %d "
-                   ,$cID);
+                   ,$clientID);
 
   $db->query($query);
   $row = $db->next_record();
@@ -595,8 +597,9 @@ if ($cID) {
 }
 
 
-$TPL["clientDropdown"] = "<input type=\"hidden\" name=\"clientID\" value=\"".$project->get_value("clientID")."\">";
 $TPL["clientContactDropdown"] = "<input type=\"hidden\" name=\"clientContactID\" value=\"".$project->get_value("clientContactID")."\">";
+$TPL["clientHidden"] = "<input type=\"hidden\" id=\"clientID\" name=\"clientID\" value=\"".$clientID."\">";
+$TPL["clientHidden"].= "<input type=\"hidden\" id=\"clientContactID\" name=\"clientContactID\" value=\"".$project->get_value("clientContactID")."\">";
 
 
 $options["showHeader"] = true;
@@ -724,7 +727,7 @@ if ($new_project && !(is_object($project) && $project->get_id())) {
   $p = new project;
   $TPL["message_help"][] = "Create a new Project by inputting the Project Name and any other details, and clicking the Save button.";
   $TPL["message_help"][] = "";
-  $TPL["message_help"][] = "<a href=\"#x\" class=\"magic\" onClick=\"$('#copy_project').slideToggle();refreshProjectList('curr');\">Or copy an existing project</a>";
+  $TPL["message_help"][] = "<a href=\"#x\" class=\"magic\" id=\"copy_project_link\">Or copy an existing project</a>";
   $str =<<<DONE
     <div id="copy_project" style="display:none; margin-top:10px;">
       <form action="{$TPL["url_alloc_project"]}" method="post">
@@ -732,13 +735,13 @@ if ($new_project && !(is_object($project) && $project->get_id())) {
           <tr>
             <td colspan="2">
               <label for="project_status_current">Current Projects</label>
-              <input id="project_status_current" type="radio" name="project_status"  value="curr" onClick="refreshProjectList(this.value)" checked>
+              <input id="project_status_current" type="radio" name="project_status"  value="curr" checked>
               &nbsp;&nbsp;&nbsp;
               <label for="project_status_potential">Potential Projects</label>
-              <input id="project_status_potential" type="radio" name="project_status"  value="pote" onClick="refreshProjectList(this.value)">
+              <input id="project_status_potential" type="radio" name="project_status"  value="pote">
               &nbsp;&nbsp;&nbsp;
               <label for="project_status_archived">Archived Projects</label>
-              <input id="project_status_archived" type="radio" name="project_status"  value="arch" onClick="refreshProjectList(this.value)">
+              <input id="project_status_archived" type="radio" name="project_status"  value="arch">
             </td>
           </tr>
           <tr>
