@@ -227,29 +227,6 @@ require_once("../alloc.php");
     }
   }
 
-  function show_projects() {
-
-    global $clientID;
-
-    if (!isset($clientID)) {
-      return;
-    }
-
-    $db_projects = new db_alloc;
-    $query = sprintf("SELECT * from project where clientID=%d", $clientID);
-    $db_projects->query($query);
-
-    while ($db_projects->next_record()) {
-
-      $project = new project;
-      $project->read_db_record($db_projects);
-      $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
-
-      include_template("templates/projectListR.tpl");
-
-    }
-  }
-
   function show_attachments() {
     global $clientID;
     util_show_attachments("client",$clientID);
