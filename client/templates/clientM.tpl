@@ -65,11 +65,18 @@
       <th class="right"><a href="{$url_alloc_project}clientID={$client_clientID}">New Project</a></th>
     </tr>
     <tr>
-      <td>Name</td>
-      <td>Type</td>
-      <td>Amount</td>
+      <td colspan="3">
+        {echo project::get_list(array("showHeader"=>true
+                                     ,"showProjectLink"=>true
+                                     ,"showClient"=>true
+                                     ,"showProjectType"=>true
+                                     ,"showProjectStatus"=>true
+                                     ,"showNavLinks"=>true
+                                     ,"return"=>"html"
+                                     ,"clientID"=>$client_clientID)
+                                );}
+      </td>
     </tr>
-    {show_projects()}
   </table>
 </div>
 
