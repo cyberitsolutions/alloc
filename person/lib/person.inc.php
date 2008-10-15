@@ -287,6 +287,11 @@ class person extends db_entity {
         $save = true;
       }
     }
+    foreach ($this->prefs as $k => $v) {
+      if ($old_prefs[$k] != $v) {
+        $save = true;
+      }
+    }
 
     if ($save || (!is_array($old_prefs) || !count($old_prefs))) {
       $arr = serialize($this->prefs);
