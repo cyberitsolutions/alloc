@@ -10,6 +10,7 @@
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}calendar.css" type="text/css" media="screen" />
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.curvycorners.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.livequery.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>

@@ -25,7 +25,7 @@ require_once("../alloc.php");
 
 if ($_GET["clientStatus"]) {
   usleep(400000);
-  echo client::get_client_select($_GET["clientStatus"]);
+  echo client::get_client_select($_GET["clientStatus"],$_GET["clientID"]);
 }
 
 

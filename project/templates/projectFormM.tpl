@@ -1,24 +1,63 @@
 {page::header()}
 {page::toolbar()}
 <script type="text/javascript" language="javascript">
+
 $(document).ready(function() \{
   {if !$project_projectID}
     $('.view').hide();
     $('.edit').show();
     $('#projectName').focus();
+    // fake a click to the client status radio button
+    clickClientStatus(); 
   {else}
     $('#editProject').focus();
   {/}
+
+  // This listens to the client radio buttons and refreshes the client dropdown
+  $('input[name=client_status]').bind("click", clickClientStatus);
+
+  // This listens to the client dropdown and refreshes the client contact
+  // dropdown, we have to use livequery() like this instead of bind() because the
+  // client dropdown needs to maintain its onChange event once it is refreshed
+  $('select[name=clientID]').livequery("change", function(e)\{
+    url = '{$url_alloc_updateProjectClientContactList}clientID='+this.value;
+    makeAjaxRequest(url,'clientContactDropdown');
+  \});
+
+  // This listens to the Copy Project radio buttons
+  $('input[name=project_status]').bind("click", function(e)\{
+    url = '{$url_alloc_updateCopyProjectList}projectStatus='+this.value;
+    makeAjaxRequest(url,'projectDropdown')
+  \});
+
+  // This opens up the copy_project div and loads the dropdown list
+  $('#copy_project_link').bind("click", function(e)\{
+    $('#copy_project').slideToggle();
+    url = '{$url_alloc_updateCopyProjectList}projectStatus=curr';
+    makeAjaxRequest(url,'projectDropdown')
+  \});
+
 \});
-// Make the XML request thing, specify the callback function 
-function refreshClientList(value) \{
-  url = '{$url_alloc_updateProjectClientList}clientStatus='+value;
+
+function clickClientStatus(e)\{
+
+  if (!$('input[name=client_status]:checked').val()) \{
+    $('#client_status_current').attr("checked", "checked");
+    this.value = 'current';
+  \}
+
+  clientID = $('#clientID').val()
+  url = '{$url_alloc_updateProjectClientList}clientStatus='+this.value+'&clientID='+clientID;
   makeAjaxRequest(url,'clientDropdown')
+
+  // If there's a clientID update the Client Contact dropdown as well
+  if (clientID) \{
+    clientContactID = $('#clientContactID').val()
+    url = '{$url_alloc_updateProjectClientContactList}clientID='+clientID+'&clientContactID='+clientContactID;
+    makeAjaxRequest(url,'clientContactDropdown')
+  \}
 \}
-function refreshProjectList(value) \{
-  url = '{$url_alloc_updateCopyProjectList}projectStatus='+value;
-  makeAjaxRequest(url,'projectDropdown')
-\}
+
 </script>
 
 {$_POST["person_save"] and $_POST["sbs_link"] = "people"}
@@ -52,7 +91,7 @@ function refreshProjectList(value) \{
     <th class="right" colspan="3">{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</th>
   </tr>
   <tr>
-    <td colspan="5" valign="top" ondblclick="$('.view').hide();$('.edit').show();">
+    <td colspan="5" valign="top" ondblclick="$('.view').hide();$('.edit').show();clickClientStatus();">
       <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
 
         <div class="view">
@@ -86,14 +125,15 @@ function refreshProjectList(value) \{
         {/}
         <div class="edit">
           <h6>Client</h6>
+          {$clientHidden}
           <label for="client_status_current">Current Clients</label>
-          <input id="client_status_current" type="radio" name="client_status"  value="current" onClick="refreshClientList(this.value)">
+          <input id="client_status_current" type="radio" name="client_status" value="current">
           &nbsp;&nbsp;&nbsp;
           <label for="client_status_potential">Potential Clients</label>
-          <input id="client_status_potential" type="radio" name="client_status"  value="potential" onClick="refreshClientList(this.value)">
+          <input id="client_status_potential" type="radio" name="client_status" value="potential">
           &nbsp;&nbsp;&nbsp;
           <label for="client_status_archived">Archived Clients</label>
-          <input id="client_status_archived" type="radio" name="client_status"  value="archived" onClick="refreshClientList(this.value)">
+          <input id="client_status_archived" type="radio" name="client_status" value="archived">
           <div id="clientDropdown">
             {$clientDropdown}
           </div>
@@ -225,7 +265,7 @@ function refreshProjectList(value) \{
   <tr>
     <td align="center" colspan="5">
       <div class="view" style="margin-top:20px">
-        <input type="button" id="editProject" value="Edit Project" onClick="$('.view').hide();$('.edit').show();">
+        <input type="button" id="editProject" value="Edit Project" onClick="$('.view').hide();$('.edit').show();clickClientStatus();">
       </div>
       <div class="edit" style="margin-top:20px">
         <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
