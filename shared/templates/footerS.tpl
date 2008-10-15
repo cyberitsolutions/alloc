@@ -1,4 +1,4 @@
-{$extra_footer_stuff}
+{$extra_footer_stuff}&nbsp;
       </div> <!-- end #main2 -->
     </div> <!-- end #main -->
     {if $slowest_query_time >1}
