@@ -27,11 +27,13 @@ class invoice extends db_entity {
   public $key_field = "invoiceID";
   public $data_fields = array("invoiceName"
                               ,"clientID"
+                              ,"projectID"
                               ,"invoiceDateFrom"
                               ,"invoiceDateTo"
                               ,"invoiceNum"
                               ,"invoiceName"
                               ,"invoiceStatus"
+                              ,"maxAmount"
                               );
 
   function get_invoice_statii() {
@@ -749,6 +751,25 @@ class invoice extends db_entity {
     $db = new db_alloc();
     $db->query($q);
     return $db->next_record();
+  }
+
+  function add_timeSheet($timeSheetID=false) {
+    if ($timeSheetID) {
+      $q = sprintf("SELECT * 
+                      FROM invoiceItem 
+                     WHERE invoiceID = %d 
+                       AND timeSheetID = %d"
+                  ,$this->get_id()
+                  ,$timeSheetID);
+      $db = new db_alloc();
+      $db->query($q);
+      // Add this time sheet to the invoice if the timeSheet hasn't already
+      // been added to this invoice
+      if (!$db->row()) {
+        $invoiceItem = new invoiceItem;
+        $invoiceItem->add_timeSheet($this->get_id(),$timeSheetID);
+      }
+    }  
   }
 
 

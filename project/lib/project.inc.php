@@ -271,9 +271,10 @@ class project extends db_entity {
     return $q;
   }
 
-  function get_list_by_client($clientID) {
-    $options["clientID"] = $clientID;
+  function get_list_by_client($clientID=false) {
+    $clientID and $options["clientID"] = $clientID;
     $options["projectStatus"] = "current";
+    $options["showProjectType"] = true;
     $options["return"] = "dropdown_options";
     #global $current_user;
     #$options["personID"] = $current_user->get_id();
@@ -294,6 +295,18 @@ class project extends db_entity {
       $ops[$db->f("projectID")] = $db->f("projectName");
     }
     return page::select_options($ops, $projectIDs, $maxlength);
+  }
+
+  function get_dropdown_by_client($clientID=false) {
+    if ($clientID) {
+      $ops = "<select size=\"1\" name=\"projectID\"><option></option>";
+      $ops.= page::select_options(project::get_list_by_client($clientID),$this->get_id())."</select>";
+    } else {
+      $ops = "<select size=\"1\" name=\"projectID\"><option></option>";
+      $ops.= page::select_options(project::get_list_by_client(),$this->get_id())."</select>";
+      #$ops.= project::get_list_dropdown_options("curr",$this->get_id(),100)."</select>";
+    }
+    return $ops;
   }
 
   function has_attachment_permission($person) {
@@ -375,7 +388,9 @@ class project extends db_entity {
       $row["projectLink"] = $p->get_project_link();
       $row["navLinks"] = $p->get_navigation_links();
       $summary.= project::get_list_tr($row,$_FORM);
-      $summary_ops[$row["projectID"]] = $p->get_project_name(); 
+      $label = $p->get_project_name();
+      $_FORM["showProjectType"] and $label.= " [".$p->get_project_type()."]";
+      $summary_ops[$row["projectID"]] = $label; 
       $rows[$row["projectID"]] = $row;
     }
 
@@ -511,6 +526,47 @@ class project extends db_entity {
     return $grand_total;
   }
 
+  function get_project_type_array() {
+    return  array("project"=>"Project", "job"=>"Job", "contract"=>"Contract", "prepaid"=>"Pre-Paid");
+  }
+
+  function get_project_type() {
+    $ops = $this->get_project_type_array();
+    return $ops[$this->get_value("projectType")];
+  }
+
+  function get_prepaid_invoice() {
+    $db = new db_alloc();
+
+    $q = sprintf("SELECT *
+                    FROM invoice 
+                   WHERE projectID = %d
+                     AND invoiceStatus != 'finished' 
+                ORDER BY invoiceDateFrom ASC 
+                   LIMIT 1"
+                 ,$this->get_id());
+    $db->query($q);
+
+    if ($row = $db->row()) {
+      $invoiceID = $row["invoiceID"];
+
+    } else if ($this->get_value("clientID")) {
+      $q = sprintf("SELECT *
+                      FROM invoice 
+                     WHERE clientID = %d 
+                       AND (projectID IS NULL OR projectID = 0 OR projectID = '')
+                       AND invoiceStatus != 'finished' 
+                  ORDER BY invoiceDateFrom ASC 
+                     LIMIT 1"
+                   ,$this->get_value("clientID"));
+      $db->query($q);
+
+      if ($row = $db->row()) {
+        $invoiceID = $row["invoiceID"];
+      }
+    } 
+    return $invoiceID;
+  }
 
 }
 

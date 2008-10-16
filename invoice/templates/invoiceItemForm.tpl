@@ -6,9 +6,9 @@
   <tr>
     <td colspan="6">
       {page::side_by_side_links(array("generic_ii"=>"Generic"
-                                   ,"timeSheet_ii"=>"From Time Sheet"
-                                   ,"expenseForm_ii"=>"From Expense Form")
-                             ,$TPL["sbs_link"])}    
+                                     ,"timeSheet_ii"=>"From Time Sheet"
+                                     ,"expenseForm_ii"=>"From Expense Form")
+                                     ,$sbs_link)}    
     </td>
   </tr>
   <tr>
@@ -37,11 +37,9 @@
       <table border="0" width="100%">
       <tr>
         <td>Create Item from Time Sheet</td>
-        <td>Time Sheet Max Amount</td>
       </tr>
       <tr>
         <td><select name="timeSheetID"><option value=""></option>{$timeSheetOptions}</select></td>
-        <td><input type="text" size="10" name="iiAmount" value="{$invoiceItem_iiAmount}"></td>
         <td align="right">{$invoiceItem_buttons}</td>
       </tr>
       </table>

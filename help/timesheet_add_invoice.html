@@ -1,29 +1,45 @@
-<b>Add To Invoice</b>
+<b>Attached To Invoice</b>
+<br/><br/>
+There are two main scenarios for when a Time Sheet is attached to an
+Invoice.
 <br/><br/>
 
-Time Sheets can be added to an Invoice using the "Add To Invoice" button.  
+The first more common scenario is when multiple Time Sheets are created first,
+and then an Invoice is created from those Time Sheets.
+<br/><br/>
 
-<br><br>
+This is useful for allowing many employees to log their time, and then
+generating an Invoice to be sent to the Client for those funds.
+<br/><br/>
 
-Once the button is clicked a new Invoice Item will be added to an Invoice for
-the Client of this Time Sheet.
+The second workflow is more complicated but it allows you to track a Pre-paid
+Invoice. I.e. when a Client has already approved work of up to X amount, and
+employees are able to log their time up to that amount, without going over the
+amount that the Client has specified.
+<br/><br/>
 
-<br><br>
+This is supported by:
+<br/><br/>
 
-If no Invoice exists for the Client, a new Invoice will be created. 
+1) Changing the Type of a Project to: "Pre-paid". This has the effect of
+automatically attaching all Time Sheets that are created for this Project, onto
+the relevant Invoice.
+<br/><br/>
 
-<br><br>
+If no Invoice is found an error will display and the user will be unable to
+create the Time Sheet.
+<br/><br/>
 
-If a Time Sheet is added to an Invoice and the Invoice is marked completed,
-then all the associated Time Sheets will have their Transactions
-approved or rejected depending on the outcome of the Invoice. And the Time Sheet
-will be moved to status "Completed".
+2) Create an Invoice for that Client and optionally that Project. Set the
+Invoices "Pre-paid Amount" field, to the maximum amount that that Invoice is
+for.
+<br/><br/>
 
-<br><br>
+3) Employees fill in Time Sheets and are able to see how much the total sum of
+all Time Sheets are for that Invoice as well as how much is allocated.
+<br/><br/>
 
-Therefore, whilst the Time Sheet is at the "Invoice" stage, it is
-recommended that the Time Sheets Monetary Transactions should be created and
-finalised, and left in a "Pending" state.
+4) Users are not allowed to add Time Sheet Items if adding those items
+pushes the sum of the Amount Used for that Invoice higher than the Amount
+Allocated.
 
-
-															 

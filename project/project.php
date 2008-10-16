@@ -695,11 +695,12 @@ while ($db->next_record()) {
 
 $email_type_array = array("None"=>"None", "Assigned Tasks"=>"Assigned Tasks", "All Tasks"=>"All Tasks");
 $currency_array = array("AUD"=>"AUD", "USD"=>"USD", "NZD"=>"NZD", "CAD"=>"CAD");
-$projectType_array = array("project"=>"Project", "job"=>"Job", "contract"=>"Contract");
+$projectType_array = project::get_project_type_array();
 $projectStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
 $timeUnit = new timeUnit;
 $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
 $TPL["project_projectType"] or $TPL["project_projectType"] = "project";
+$TPL["project_projectType"] = $projectType_array[$TPL["project_projectType"]];
 $TPL["projectType_options"] = page::select_options($projectType_array, $TPL["project_projectType"]);
 $TPL["projectStatus_options"] = page::select_options($projectStatus_array, $TPL["project_projectStatus"]);
 $TPL["project_projectPriority"] or $TPL["project_projectPriority"] = 3;

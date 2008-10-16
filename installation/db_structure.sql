@@ -137,11 +137,13 @@ DROP TABLE IF EXISTS invoice;
 CREATE TABLE invoice (
   invoiceID int(11) NOT NULL auto_increment,
   clientID int(11) NOT NULL,
+  projectID int(11) DEFAULT NULL,
   invoiceDateFrom date,
   invoiceDateTo date,
   invoiceNum int(11) NOT NULL default '0',
   invoiceName varchar(255) NOT NULL default '',
   invoiceStatus enum('edit','reconcile','finished') NOT NULL DEFAULT 'edit',
+  maxAmount decimal(19,2) DEFAULT 0,
   PRIMARY KEY  (invoiceID),
   UNIQUE KEY `invoiceNum` (`invoiceNum`)
 ) TYPE=MyISAM PACK_KEYS=0;
@@ -253,7 +255,7 @@ CREATE TABLE project (
   clientID int(11) DEFAULT NULL,
   clientContactID int(11) default '0',
   projectModifiedUser int(11) DEFAULT NULL,
-  projectType enum('contract','job','project') default NULL,
+  projectType enum('contract','job','project','prepaid') default NULL,
   projectClientName varchar(255) default NULL,
   projectClientPhone varchar(20) default NULL,
   projectClientMobile varchar(20) default NULL,

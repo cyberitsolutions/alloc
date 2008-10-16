@@ -107,26 +107,18 @@ class invoiceItem extends db_entity {
     return $status && $status2;
   }
 
-  function add_timeSheet($invoiceID,$timeSheetID, $maxAmount=false) {
+  function add_timeSheet($invoiceID,$timeSheetID) {
     $timeSheet = new timeSheet;
     $timeSheet->set_id($timeSheetID);
     $timeSheet->select();
     $timeSheet->load_pay_info();
-
-    $date = $timeSheet->get_value("dateFrom") or $date = date("Y-m-d");
-    
-    if (!$maxAmount) { 
-      $amount = $timeSheet->pay_info["total_customerBilledDollars"] or $amount = $timeSheet->pay_info["total_dollars"];
-      $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
-      $iiUnitPrice >0 or $iiUnitPrice = $timeSheet->pay_info["timeSheetItem_rate"];
-      $iiQuantity = $timeSheet->pay_info["total_duration"] or $iiQuantity = "0";
-    } else {
-      $amount = $maxAmount;
-      $iiUnitPrice = $maxAmount; 
-      $iiQuantity = 1;
-    }
-
     $project = $timeSheet->get_foreign_object("project");
+    $date = $timeSheet->get_value("dateFrom") or $date = date("Y-m-d");
+
+    #$amount = $timeSheet->pay_info["total_customerBilledDollars"] or $amount = $timeSheet->pay_info["total_dollars"];
+    #$iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
+    #$iiUnitPrice >0 or $iiUnitPrice = $timeSheet->pay_info["timeSheetItem_rate"];
+    #$iiQuantity = $timeSheet->pay_info["total_duration"] or $iiQuantity = "1";
 
     $this->set_value("invoiceID",$invoiceID);
     $this->set_value("timeSheetID",$timeSheet->get_id());

@@ -660,9 +660,15 @@ class db_entity {
 
   function get_link() {
     global $TPL;
-    $str = "<a href=\"".$TPL["url_alloc_".$this->classname].$this->key_field->name."=".$this->get_id();
-    $str.= "\">".$this->get_display_value()."</a>";
-    return $str;
+    if ($this->get_id()) {
+      $str = "<a href=\"".$TPL["url_alloc_".$this->classname].$this->key_field->name."=".$this->get_id();
+      $str.= "\">".$this->get_display_value()."</a>";
+      return $str;
+    }
+  }
+
+  function get_name() {
+    return $this->get_display_value();
   }
 
 }

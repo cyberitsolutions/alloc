@@ -363,7 +363,6 @@ if ($_POST["save"]
   $timeSheet->read_globals();
   $timeSheet->read_globals("timeSheet_");
 
-
   $projectID = $timeSheet->get_value("projectID");
 
   if ($projectID != 0) {
@@ -382,6 +381,18 @@ if ($_POST["save"]
     $TPL["message"][] = "Please select a Project and then click the Create Time Sheet button.";
   }
 
+  // If it's a Pre-paid project, join this time sheet onto an invoice
+  if ($project->get_id() && $project->get_value("projectType") == "prepaid") {
+    $invoiceID = $project->get_prepaid_invoice();
+
+    if (!$invoiceID) {
+      $save_error = true;
+      $TPL["message"][] = "Unable to find a Pre-paid Invoice for this Project or Client.";
+    } else if (!$timeSheet->get_id()) {
+      $add_timeSheet_to_invoiceID = $invoiceID;
+    }
+  }
+
   if ($_POST["save_and_MoveForward"]) {
     $msg.= $timeSheet->change_status("forwards");
   } else if ($_POST["save_and_MoveBack"]) {
@@ -393,7 +404,15 @@ if ($_POST["save"]
   if ($save_error) {
     // don't save or sql will complain
     $url = $TPL["url_alloc_timeSheet"];
+
   } else if ($timeSheet->save()) {
+
+    if ($add_timeSheet_to_invoiceID) {
+      $invoice = new invoice;
+      $invoice->set_id($add_timeSheet_to_invoiceID);
+      $invoice->select();   
+      $invoice->add_timeSheet($timeSheet->get_id());
+    }
     if ($_POST["save_and_new"]) {
       $url = $TPL["url_alloc_timeSheet"];
     } else if ($_POST["save_and_returnToList"]) {
@@ -443,15 +462,11 @@ if (!$timeSheetID) {
 } 
 
 
-// if have perm and status == blah
 if (($_POST["create_transactions_default"] || $_POST["create_transactions_old"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
   $msg.= $timeSheet->createTransactions();
 
 } else if ($_POST["delete_all_transactions"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
   $msg.= $timeSheet->destroyTransactions();
-
-} else if ($_POST["attach_transactions_to_invoice"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-  $timeSheet->save_to_invoice($_POST["attach_to_invoiceID"]);
 } 
 
 
@@ -546,6 +561,7 @@ $TPL["taskID"] = $_GET["taskID"];
 
 
 
+
 // Get the project record to determine which button for the edit status.
 if ($projectID != 0) {
   $project = new project;
@@ -569,40 +585,38 @@ if ($projectID != 0) {
 
   }
 
+  $clientID = $project->get_value("clientID");
+  $projectID = $project->get_id();
+
+
   // Get client name
   $client = $project->get_foreign_object("client");
-  $TPL["clientName"] = $client->get_value("clientName");
+  $TPL["clientName"] = $client_link;
   $TPL["clientID"] = $clientID = $client->get_id();
-
-  $TPL["show_client_options"] = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$project->get_value("clientID")."\">".$client->get_value("clientName")."</a>";
+  $TPL["show_client_options"] = $client_link;
 }
+
+list($client_select, $client_link, $project_select, $project_link)
+  = client::get_client_and_project_dropdowns_and_links($clientID, $projectID);
 
 
 $currency = '$';
 $TPL["invoice_link"] = $timeSheet->get_invoice_link();
-$amount_allocated = $timeSheet->get_amount_allocated();
+list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated();
 if ($amount_allocated) {
-  $TPL["amount_allocated_label"] = "Amount Allocated:";
+  $TPL["amount_allocated_label"] = "Amount Used / Allocated:";
   $TPL["amount_allocated"] = $currency.sprintf("%0.2f",$amount_allocated);
+  $TPL["amount_used"] = $currency.sprintf("%0.2f",$amount_used)." / ";
 }
 
 
-// Set up arrays for the forms.
-if (!$TPL["timeSheet_projectName"]) {
-  $TPL["show_project_options"] = "<select size=\"1\" name=\"projectID\"><option></option>";
-  $TPL["show_project_options"].= page::select_options($project_array, $projectID)."</select>";
-
-  $options["clientStatus"] = "current";
-  $options["return"] = "dropdown_options";
-  $ops = client::get_list($options);
-
-  $TPL["show_client_options"] = "<select size=\"1\" id=\"clientID\" name=\"clientID\" onChange=\"makeAjaxRequest('".$TPL["url_alloc_updateProjectListByClient"]."clientID='+$('#clientID').attr('value'),'projectDropdown')\"><option></option>";
-  $TPL["show_client_options"].= page::select_options($ops,$clientID)."</select>";
-
-
+if (!$timeSheet->get_id()) {
+  $TPL["show_project_options"] = $project_select;
+  $TPL["show_client_options"] = $client_select;
 
 } else {
-  $TPL["show_project_options"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["timeSheet_projectID"]."\">".$TPL["timeSheet_projectName"]."</a>";
+  $TPL["show_project_options"] = $project_link;
+  $TPL["show_client_options"] = $client_link;
 }
 
 
@@ -618,10 +632,10 @@ if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_
   $db->query($q);
   $row = $db->row();
   $sel_invoice = $row["invoiceID"];
-  $TPL["attach_to_invoice_button"] = "<select name=\"attach_to_invoiceID\">";
-  $TPL["attach_to_invoice_button"].= "<option value=\"create_new\">Create New Invoice</option>";
-  $TPL["attach_to_invoice_button"].= page::select_options($invoice_list,$sel_invoice)."</select>";
-  $TPL["attach_to_invoice_button"].= "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
+  #$TPL["attach_to_invoice_button"] = "<select name=\"attach_to_invoiceID\">";
+  #$TPL["attach_to_invoice_button"].= "<option value=\"create_new\">Create New Invoice</option>";
+  #$TPL["attach_to_invoice_button"].= page::select_options($invoice_list,$sel_invoice)."</select>";
+  #$TPL["attach_to_invoice_button"].= "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
 }
 
 // msg passed in url and print it out pretty..

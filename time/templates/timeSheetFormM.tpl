@@ -96,7 +96,7 @@
     <td align="right" valign="top">Attached to Invoice:</td>
     <td class="nobr">{$attach_to_invoice_button}{$invoice_link}</td>
     <td class="right">{$amount_allocated_label}</td>
-    <td><b>{$amount_allocated}</b></td>
+    <td><b>{$amount_used}{$amount_allocated}</b></td>
   </tr>
 
   {if $TPL["timeSheet_billingNote"]}

@@ -33,6 +33,8 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
   $timeSheet = new timeSheet;
   $timeSheet->set_id($timeSheetID);
   $timeSheet->select();
+  $timeSheet->load_pay_info();
+  list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated();
 
   if ($timeSheet->get_value("status") == "edit") {
     $timeSheetItem = new timeSheetItem;
@@ -56,9 +58,16 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
       $_POST["timeSheetItem_commentPrivate"] and $timeSheetItem->set_value("commentPrivate", 1);
       $timeSheetItem->set_value("comment",rtrim($timeSheetItem->get_value("comment")));
 
-      $rtn = $timeSheetItem->save();
+      $amount_of_item = $timeSheetItem->calculate_item_charge($timeSheet->pay_info["customerBilledDollars"]);
+      if ($amount_allocated && ($amount_of_item + $amount_used) > $amount_allocated) {
+        $TPL["message"][] = "Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice.<br>Time Sheet Item not saved.";
+      } else {
+        $rtn = $timeSheetItem->save();
+        $timeSheet->update_invoiceItem();
+        $rtn or $TPL["message_good"][] = "Time Sheet Item saved.";
+      }
+
       $rtn and $TPL["message"][] = $rtn;
-      $rtn or $TPL["message_good"][] = "Time Sheet Item saved.";
       alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
 
     } else if ($_POST["timeSheetItem_edit"]) {
@@ -67,6 +76,7 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
     } else if ($_POST["timeSheetItem_delete"]) {
       $timeSheetItem->select();
       $timeSheetItem->delete();
+      $timeSheet->update_invoiceItem();
       $TPL["message_good"][] = "Time Sheet Item deleted.";
       alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
     }
