@@ -369,6 +369,13 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
   // Validation
   if (!$invoice->get_value("clientID")) {
+    if ($invoice->get_value("projectID")) {
+      $project = $invoice->get_foreign_object("project");
+      $invoice->set_value("clientID",$project->get_value("clientID"));
+    }
+  }
+
+  if (!$invoice->get_value("clientID")) {
     $TPL["message"][] = "Please select a Client.";
   }
 
@@ -481,7 +488,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
       $invoiceItem->add_timeSheetItems($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
 
     } else if ($_POST["timeSheetID"]) {
-      $invoiceItem->add_timeSheet($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"], $_POST["iiAmount"]);
+      $invoiceItem->add_timeSheet($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
 
     } else if ($_POST["expenseFormID"] && $_POST["split_expenseForm"]) {
       $invoiceItem->add_expenseFormItems($invoiceItem->get_value("invoiceID"),$_POST["expenseFormID"]);
@@ -586,12 +593,13 @@ foreach ($statii as $s => $label) {
 
 $TPL["field_invoiceNum"] = '<input type="text" name="invoiceNum" value="'.$TPL["invoiceNum"].'">';
 $TPL["field_invoiceName"] = '<input type="text" name="invoiceName" value="'.$TPL["invoiceName"].'">';
+$TPL["field_maxAmount"] = '<input type="text" name="maxAmount" size="10" value="'.$invoice->get_value("maxAmount").'">';
 
-$c = new client;
-$c->set_id($invoice->get_value("clientID"));
-$c->select();
-$client_label = "<a href=\"".$TPL["url_alloc_client"]."clientID=".$c->get_id()."\">".$c->get_client_name()."</a>";
+$clientID = $invoice->get_value("clientID") or $clientID = $_GET["clientID"];
+$projectID = $invoice->get_value("projectID") or $projectID = $_GET["projectID"];
 
+list($client_select, $client_link, $project_select, $project_link) 
+  = client::get_client_and_project_dropdowns_and_links($clientID, $projectID);
 
 
 // Main invoice buttons
@@ -600,10 +608,8 @@ if ($current_user->have_role('admin')) {
   if (!$invoiceID) {
     $_GET["clientID"] and $TPL["clientID"] = $_GET["clientID"];
     $TPL["invoice_buttons"] = "<input type=\"submit\" name=\"save\" value=\"Create Invoice\">";
-    $options["clientStatus"] = "current";
-    $options["return"] = "dropdown_options";
-    $ops = client::get_list($options);
-    $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
+    $TPL["field_clientID"] = $client_select;
+    $TPL["field_projectID"] = $project_select;
 
   } else if ($invoice->get_value("invoiceStatus") == "edit") {
     $TPL["invoice_buttons"] = "
@@ -614,7 +620,8 @@ if ($current_user->have_role('admin')) {
     $options["clientStatus"] = "current";
     $options["return"] = "dropdown_options";
     $ops = client::get_list($options);
-    $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$invoice->get_value("clientID"))."</select>";
+    $TPL["field_clientID"] = $client_select;
+    $TPL["field_projectID"] = $project_select;
 
   } else if ($invoice->get_value("invoiceStatus") == "reconcile") {
     $TPL["invoice_buttons"] = "
@@ -624,25 +631,32 @@ if ($current_user->have_role('admin')) {
     ";
     $TPL["field_invoiceNum"] = $TPL["invoiceNum"];
     $TPL["field_invoiceName"] = $TPL["invoiceName"];
-    $TPL["field_clientID"] = $client_label;
+    $TPL["field_clientID"] = $client_link;
+    $TPL["field_projectID"] = $project_link;
+    $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
 
   } else if ($invoice->get_value("invoiceStatus") == "finished") {
+    $TPL["invoice_buttons"] = "<input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">";
     $TPL["field_invoiceNum"] = $TPL["invoiceNum"];
     $TPL["field_invoiceName"] = $TPL["invoiceName"];
-    $TPL["field_clientID"] = $client_label;
-    $TPL["invoice_buttons"] = "<input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">";
+    $TPL["field_clientID"] = $client_link;
+    $TPL["field_projectID"] = $project_link;
+    $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
   }
 } else {
   $TPL["field_invoiceNum"] = $TPL["invoiceNum"];
   $TPL["field_invoiceName"] = $TPL["invoiceName"];
-  $TPL["field_clientID"] = $client_label;
+  $TPL["field_clientID"] = $client_link;
+  $TPL["field_projectID"] = $project_link;
+  $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
 }
 
 if (!$invoice->get_value("clientID")) {
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
   $ops = client::get_list($options);
-  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
+  $TPL["field_clientID"] = $client_select;
+  $TPL["field_projectID"] = $project_select;
 } 
 
 

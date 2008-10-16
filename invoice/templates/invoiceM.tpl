@@ -9,6 +9,12 @@
   <tr>
     <td align="right" width="30%">Client:{page::mandatory($clientID)} </td>
     <td class="nobr" class="nobr" width="20%">{$field_clientID}</td>
+    <td align="right" class="nobr" width="10%">Amount Allocated:</td>
+    <td>{$field_maxAmount}</td>
+  </tr>
+  <tr>
+    <td align="right">Project:</td>
+    <td>{$field_projectID}</td>
     <td align="right" class="nobr" width="10%">Total Incoming Funds:</td>
     <td>{$invoiceTotal}</td>
   </tr>

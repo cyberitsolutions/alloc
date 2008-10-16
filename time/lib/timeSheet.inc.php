@@ -150,14 +150,16 @@ class timeSheet extends db_entity {
       list($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]) = $rates[$this->get_value("projectID")][$this->get_value("personID")];
     } else {
       // Get rate for person for this particular project
-      $db->query("SELECT rate, rateUnitID FROM projectPerson
-                  WHERE projectID = ".$this->get_value("projectID")."
-                  AND personID = ".$this->get_value("personID"));
+      $db->query("SELECT rate, rateUnitID 
+                    FROM projectPerson
+                   WHERE projectID = %d
+                     AND personID = %d"
+                 ,$this->get_value("projectID")
+                 ,$this->get_value("personID"));
 
       $db->next_record();
       $this->pay_info["project_rate"] = $db->f("rate");
       $this->pay_info["project_rateUnitID"] = $db->f("rateUnitID");
-
       $rates[$this->get_value("projectID")][$this->get_value("personID")] = array($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]);
     }
 
@@ -166,7 +168,6 @@ class timeSheet extends db_entity {
 
     // Get duration for this timesheet/timeSheetItem
     $db->query(sprintf("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$this->get_id()));
-
 
     while ($db->next_record()) {
       $this->pay_info["total_duration"] += $db->f("timeSheetItemDuration");
@@ -796,42 +797,6 @@ class timeSheet extends db_entity {
     return $rtn;
   }
 
-  function save_to_invoice($invoiceID=false) {
-
-    $invoiceID and $extra = sprintf(" AND invoiceID = %d",$invoiceID);
-    $project = $this->get_foreign_object("project");
-    $client = $project->get_foreign_object("client");
-    $db = new db_alloc;
-    $q = sprintf("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit' %s",$project->get_value("clientID"),$extra);
-    $db->query($q);
-
-    // Create invoice
-    if (!$db->next_record()) {
-      $invoice = new invoice;
-      $invoice->set_value("clientID",$project->get_value("clientID"));
-      $invoice->set_value("invoiceDateFrom",$this->get_value("dateFrom"));
-      $invoice->set_value("invoiceDateTo",$this->get_value("dateTo"));
-      $invoice->set_value("invoiceNum",invoice::get_next_invoiceNum());
-      $invoice->set_value("invoiceName",$client->get_value("clientName"));
-      $invoice->set_value("invoiceStatus","edit");
-      $invoice->save();
-      $invoiceID = $invoice->get_id();
-
-    // Use existing invoice
-    } else {
-      $invoiceID = $db->f("invoiceID");
-    }
-
-    // Add invoiceItem and add timesheet transactions to invoiceItem
-    $invoiceItem = new invoiceItem;
-    if ($_POST["split_invoice"]) {
-      $invoiceItem->add_timeSheetItems($invoiceID,$this->get_id());
-    } else {
-      $invoiceItem->add_timeSheet($invoiceID,$this->get_id());
-    }
-    //$invoiceItem->update_transaction();
-  }
-
   function get_invoice_link() {
     global $TPL;
     if (is_object($this) && $this->get_id()) {
@@ -845,19 +810,6 @@ class timeSheet extends db_entity {
         $sp = "&nbsp;&nbsp;";
       }
       return $str;
-    }
-  }
-
-  function get_amount_allocated() {
-    if (is_object($this) && $this->get_id()) {
-      $db = new db_alloc();
-      $q = sprintf("SELECT sum(iiAmount) as total
-                      FROM invoiceItem
-                     WHERE invoiceItem.timeSheetID = %d
-                  ",$this->get_id());
-      $db->query($q);
-      $row = $db->row();
-      return $row["total"];
     }
   }
 
@@ -1282,6 +1234,60 @@ EOD;
     }
   }
 
+  function get_amount_allocated() {
+    // Return total amount used and total amount allocated
+    if (is_object($this) && $this->get_id()) {
+      $db = new db_alloc();
+      // Get most recent invoiceItem that this time sheet belongs to.
+      $q = sprintf("SELECT invoiceID
+                      FROM invoiceItem
+                     WHERE invoiceItem.timeSheetID = %d
+                  ORDER BY invoiceItem.iiDate DESC
+                     LIMIT 1
+                  ",$this->get_id());
+      $db->query($q);
+      $row = $db->row();
+      $invoiceID = $row["invoiceID"];
+      if ($invoiceID) {
+        $invoice = new invoice;
+        $invoice->set_id($invoiceID);
+        $invoice->select();
+        $maxAmount = $invoice->get_value("maxAmount");
+      }
+    
+      // Loop through all the other invoice items on that invoice
+      $q = sprintf("SELECT sum(iiAmount) AS totalUsed FROM invoiceItem WHERE invoiceID = %d",$invoiceID);
+      $db->query($q);
+      $row2 = $db->row();
+
+      return array($row2["totalUsed"],$maxAmount);
+
+    }
+  }
+
+  function update_invoiceItem() {
+    $this->load_pay_info();
+    $iiAmount = $this->pay_info["total_customerBilledDollars"];
+    $iiUnitPrice = $this->pay_info["customerBilledDollars"];
+    $iiQuantity = $this->pay_info["total_duration"];
+
+    $project = $this->get_foreign_object("project");
+    $invoiceID = $project->get_prepaid_invoice();
+    if ($invoiceID) {
+      $q = sprintf("SELECT * FROM invoiceItem WHERE invoiceID = %d AND timeSheetID = %d",$invoiceID, $this->get_id()); 
+      $db = new db_alloc();
+      $db->query($q);
+      while ($db->row()) {
+        $invoiceItem = new invoiceItem;
+        $invoiceItem->read_db_record($db);
+        $invoiceItem->set_value("iiAmount",$iiAmount);
+        $invoiceItem->set_value("iiUnitPrice",$iiUnitPrice);
+        $invoiceItem->set_value("iiQuantity",$iiQuantity);
+        $invoiceItem->set_value("iiDate",$this->get_value("dateTo"));
+        $invoiceItem->save();
+      }
+    }
+  }
 
 }  
 
