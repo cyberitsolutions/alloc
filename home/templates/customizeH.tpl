@@ -1,81 +1,108 @@
+<style>
+  h6 \{ margin-top:10px; margin-bottom:3px; \}
+</style>
 <form action="{$url_alloc_home}" method="post">
 <table cellspacing="0" style="width:100%">
   <tr>
-    <td colspan="4"><b>Look and Feel</b></td>
-  </tr>
-  <tr>
-    <td>Font Size</td>
-    <td>
-      <select name="font">
-      {$fontOptions}
-      </select>
-    </td>
-    <td>Theme</td>
-    <td>
-      <select name="theme">
-      {$themeOptions}
-      </select>
-    </td>
-  </tr>
+    <td ondblclick="$('.view').hide();$('.edit').show();">
 
-  <tr>
-    <td colspan="4"><b>Top Tasks</b></td>
-  </tr>
-  <tr>
-    <td>No. Tasks</td>
-    <td>
-      <select name="topTasksNum">
-      {$topTasksNumOptions}
-      </select>
-    </td>
-    <td>Status</td>
-    <td>
-      <select name="topTasksStatus">
-      {$topTasksStatusOptions}
-      </select>
-    </td>
-  </tr>
+      <div class="edit">
+        <h6>Font Size<div>Theme</div></h6>
+        <div style="float:left; width:30%;">
+          <select name="font">{$fontOptions}</select>
+        </div>
+        <div style="float:right; width:50%;">
+          <select name="theme">{$themeOptions}</select>
+        </div>
+      </div>
+      <div class="view">
+        <h6>Font Size<div>Theme</div></h6>
+        <div style="float:left; width:30%;">
+          {$fontLabel}
+        </div>
+        <div style="float:right; width:50%;">
+          {$themeLabel}
+        </div>
+      </div>
 
-  <tr>
-    <td colspan="4"><b>Calendar</b></td>
-  </tr>
-  <tr>
-    <td>No. Weeks</td>
-    <td>
-      <select name="weeks">
-      {$weeksOptions}
-      </select>
-    </td>
-    <td>Back</td>
-    <td>
-      <select name="weeksBack">
-      {$weeksBackOptions}
-      </select>
-    </td>
-  </tr>
- 
-  <tr>
-    <td colspan="4"><b>Email</b></td>
-  </tr>
-  <tr>
-    <td>Daily Digest</td>
-    <td><select name="dailyTaskEmail">{$dailyTaskEmailOptions}</select></td>
-    <td>Receive Own Comments</td>
-    <td><select name="receiveOwnTaskComments">{$receiveOwnTaskCommentsOptions}</select></td>
-  </tr>
+      <div class="edit">
+        <h6>Top Tasks<div>Status</div></h6> 
+        <div style="float:left; width:30%;">
+          <select name="topTasksNum">{$topTasksNumOptions}</select>
+        </div>
+        <div style="float:right; width:50%;">
+          <select name="topTasksStatus">{$topTasksStatusOptions}</select>
+        </div>
+      </div>
+      <div class="view">
+        <h6>Top Tasks<div>Status</div></h6> 
+        <div style="float:left; width:30%;">
+          {$topTasksNumLabel}
+        </div>
+        <div style="float:right; width:50%;">
+          {$topTasksStatusLabel}
+        </div>
+      </div>
 
-  <tr>
-    <td colspan="4"><b>Project List</b></td>
-  </tr>
-  <tr>
-    <td class="nobr">No. Projects</td>
-    <td>
-      <select name="projectListNum">
-      {$projectListNumOptions}
-      </select>
+      <div class="edit">
+        <h6>Calendar Weeks<div>Weeks Back</div></h6> 
+        <div style="float:left; width:30%;">
+          <select name="weeks">{$weeksOptions}</select>
+        </div>
+        <div style="float:right; width:50%;">
+          <select name="weeksBack">{$weeksBackOptions}</select>
+        </div>
+      </div>
+      <div class="view">
+        <h6>Calendar Weeks<div>Weeks Back</div></h6> 
+        <div style="float:left; width:30%;">
+          {$weeksLabel}
+        </div>
+        <div style="float:right; width:50%;">
+          {$weeksBackLabel}
+        </div>
+      </div>
+
+      <div class="edit">
+        <h6>Daily Email<div>Receive My Comments</div></h6> 
+        <div style="float:left; width:30%;">
+          <select name="dailyTaskEmail">{$dailyTaskEmailOptions}</select>
+        </div>
+        <div style="float:right; width:50%;">
+          <select name="receiveOwnTaskComments">{$receiveOwnTaskCommentsOptions}</select>
+        </div>
+      </div>
+      <div class="view">
+        <h6>Daily Email<div>Receive My Comments</div></h6> 
+        <div style="float:left; width:30%;">
+          {$dailyTaskEmailLabel}
+        </div>
+        <div style="float:right; width:50%;">
+          {$receiveOwnTaskCommentsLabel}
+        </div>
+      </div>
+
+      <div class="edit">
+        <h6>Project List<div></div></h6> 
+        <div style="float:left; width:30%;">
+          <select name="projectListNum">{$projectListNumOptions}</select>
+        </div>
+        <div style="float:right; width:50%;" class="right">
+          <input type="button" value="Cancel" onClick="$('.edit').hide();$('.view').show();">
+          <input type="submit" name="customize_save" value="Save">
+        </div>
+      </div>
+      <div class="view">
+        <h6>Project List<div></div></h6> 
+        <div style="float:left; width:30%;">
+          {$projectListNumLabel}
+        </div>
+        <div style="float:right; width:50%;" class="right">
+          <input type="button" value="Edit" onClick="$('.view').hide();$('.edit').show();">
+        </div>
+      </div>
+
     </td>
-    <td></td>
-    <td align="center"><input type="submit" name="customize_save" value="Save"></td>
   </tr>
 </table>
 
