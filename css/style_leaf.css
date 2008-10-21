@@ -258,12 +258,11 @@ input[readonly="true"], input[readonly="true"]:focus {
   vertical-align:text-bottom;
 }
 
-div.message { 
+.message { 
   padding:0px 4px; 
   margin:15px auto 0px auto; 
   border:1px solid #cccccc;
   background-color:#fffdf2; 
-  width:50%; 
 }
 .bad { 
   color:#c84e12; 
