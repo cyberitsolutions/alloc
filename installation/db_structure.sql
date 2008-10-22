@@ -207,15 +207,15 @@ CREATE TABLE patchLog (
 
 DROP TABLE IF EXISTS permission;
 CREATE TABLE permission (
+  permissionID int(11) NOT NULL auto_increment,
   tableName varchar(255) default NULL,
   entityID int(11) default NULL,
   personID int(11) default NULL,
   roleName varchar(255) default NULL,
   allow enum('Y','N') default NULL,
   sortKey int(11) default '100',
-  comment text,
   actions int(11) default NULL,
-  permissionID int(11) NOT NULL auto_increment,
+  comment text,
   PRIMARY KEY  (permissionID),
   KEY tableName (tableName)
 ) TYPE=MyISAM PACK_KEYS=0;
