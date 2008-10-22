@@ -100,6 +100,7 @@ class page {
   }
   function extra_links() {
     global $current_user, $TPL, $sess;
+    $str.= "<a href=\"".$TPL["url_alloc_person"]."personID=".$current_user->get_id()."\">".$current_user->get_username(1)."</a>&nbsp;&nbsp;&nbsp;";
     if (defined("PAGE_IS_PRINTABLE") && PAGE_IS_PRINTABLE) {
       $sess or $sess = new Session;
       $str.= "<a href=\"".$sess->url($_SERVER["REQUEST_URI"])."media=print\">Print</a>&nbsp;&nbsp;&nbsp;";
