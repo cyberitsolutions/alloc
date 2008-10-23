@@ -20,113 +20,294 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class productSale extends db_entity {
-  var $classname = "productSale";
-  var $data_table = "productSale";
 
-  function productSale() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("productSaleID");
-    $this->data_fields = array("projectID"=>new db_field("projectID")
-                              ,"status"=>new db_field("status")
-                              ,"productSaleCreatedTime"=>new db_field("productSaleCreatedTime")
-                              ,"productSaleCreatedUser"=>new db_field("productSaleCreatedUser")
-                              ,"productSaleModifiedTime"=>new db_field("productSaleModifiedTime")
-                              ,"productSaleModifiedUser"=>new db_field("productSaleModifiedUser")
-                              );
+define("PERM_APPROVE_PRODUCT_TRANSACTIONS", 256);
+class productSale extends db_entity {
+  public $classname = "productSale";
+  public $data_table = "productSale";
+  public $key_field = "productSaleID";
+  public $data_fields = array("clientID"
+                             ,"projectID"
+                             ,"status"
+                             ,"productSaleCreatedTime"
+                             ,"productSaleCreatedUser"
+                             ,"productSaleModifiedTime"
+                             ,"productSaleModifiedUser"
+                             );
+  public $permissions = array(PERM_APPROVE_PRODUCT_TRANSACTIONS => "Approve Product Transactions");
+
+  function validate() {
+    if ($this->get_value("status") == "admin" || $this->get_value("status") == "finished") {
+      $orig = new $this->classname;
+      $orig->set_id($this->get_id());
+      $orig->select();
+      $orig_status = $orig->get_value("status");
+      if ($orig_status == "allocate" && $this->get_value("status") == "admin") {
+
+      } else if (!$this->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)) {
+        $rtn[] = "Unable to save Product Sale, user does not have correct permissions.";
+      }
+    }
+    return $rtn;
   }
+ 
+  function is_owner() {
+    global $current_user;
+    return !$this->get_id() || $this->get_value("productSaleCreatedUser") == $current_user->get_id();
+  } 
 
   function delete() {
     $db = new db_alloc;
-
-    $query = sprintf("SELECT * FROM productSaleItem WHERE productSaleID = %d", $this->get_id());
+    $query = sprintf("SELECT * 
+                        FROM productSaleItem 
+                       WHERE productSaleID = %d"
+                    , $this->get_id());
     $db->query($query);
-    while ($row = $db->next_record()) {
-      $psItem = new productSaleItem;
-      $psItem->set_id($row["productSaleItemID"]);
-      $psItem->select();
-      $psItem->delete();
+    while ($db->next_record()) {
+      $productSaleItem = new productSaleItem;
+      $productSaleItem->read_db_record($db);
+      $productSaleItem->delete();
     }
-    parent::delete();
-    return;
+    $this->delete_transactions();
+    return parent::delete();
+  }
+
+  function translate_meta_tfID($tfID="") {
+    global $TPL;
+    
+    // The special -1 and -2 tfID's represent META TF, i.e. calculated at runtime
+    // -1 == META: Project TF
+    if ($tfID == -1) { 
+      if ($this->get_value("projectID")) {
+        $project = new project();
+        $project->set_id($this->get_value("projectID"));
+        $project->select();
+        $tfID = $project->get_value("cost_centre_tfID");
+      }
+      if ($tfID == -1) {
+        $tfID = config::get_config_item("mainTfID");
+      }
+
+    // -2 == META: Salesperson TF
+    } else if ($tfID == -2) {
+      if ($this->get_value("productSaleCreatedUser")) {
+        $person = new person();
+        $person->set_id($this->get_value("productSaleCreatedUser")); 
+        $person->select();
+        $tfID = $person->get_value("preferred_tfID");
+        if (!$tfID) {
+          $TPL["message_bad"][] = "Unable to use META: Salesperson TF. Please ensure the Sale creator has a Preferred Payment TF.";
+        }
+      } else {
+        $TPL["message_bad"][] = "Unable to use META: Salesperson TF. No productSaleCreatedUser set.";
+      }
+    }
+    return $tfID;
   }
   
-  function create_psTransaction($productSaleItemID, $tfID, $amount, $isPercentage, $description) {
-    $psTransaction = new productSaleTransaction;
-    $psTransaction->set_value("productSaleItemID", $productSaleItemID);
-    $psTransaction->set_value("tfID", $tfID);
-    $psTransaction->set_value("amount", $amount);
-    $psTransaction->set_value("isPercentage", $isPercentage);
-    $psTransaction->set_value("description", $description);
-    $psTransaction->save();
-
+  function get_productSaleItems() {
+    $q = sprintf("SELECT * FROM productSaleItem WHERE productSaleID = %d",$this->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    $rows = array();
+    while($row = $db->row()) {
+      $rows[$row["productSaleItemID"]] = $row;
+    }
+    return $rows;
   }
 
-  function create_product_transactions() {
-    $db = new db_alloc();
-    $project = $this->get_foreign_object("project");
+  function get_amounts() {
 
-    $query = sprintf("SELECT * FROM productSaleItem WHERE productSaleID = %d", $this->get_id());
-    $db->query($query);
-    $products = array();
-    while ($row = $db->next_record()) {
-      $products[] = $row;
+    $rows = $this->get_productSaleItems();
+    $rows or $rows = array();
+    $rtn = array();
+  
+    foreach ($rows as $row) {
+      $productSaleItem = new productSaleItem;
+      $productSaleItem->read_row_record($row);
+      $rtn["total_spent"] += $productSaleItem->get_amount_spent();
+      $rtn["total_earnt"] += $productSaleItem->get_amount_earnt();
+      $rtn["total_other"] += $productSaleItem->get_amount_other();
+      $rtn["total_buyCost"] += $productSaleItem->get_value("buyCost");
+      $rtn["total_sellPrice"] += $productSaleItem->get_value("sellPrice");
+      $rtn["total_margin"] += $productSaleItem->get_amount_margin();
+      $rtn["total_unallocated"] += $productSaleItem->get_amount_unallocated();
+    }    
+    foreach ($rtn as $k => $v) {
+      $rtn[$k] = sprintf("%0.2f",$v);
     }
-    
-    foreach ($products as $saleItem) {
-      $query = sprintf("SELECT * FROM productCost WHERE productID = %d ORDER BY isPercentage ASC",
-          $saleItem["productID"]);
-      $staticSum = 0;
-      //this code relies on the static values coming up first
-      $db->query($query);
-      while ($row = $db->next_record()) {
-        if (!$row["isPercentage"]) {
-          $amount = $row["amount"] * $saleItem["quantity"];
-        } else {
-          $amount = $row["amount"];
-        }
-          
-        $this->create_psTransaction($saleItem["productSaleItemID"], $row["tfID"], $amount, $row["isPercentage"], $row["description"]);
+    return $rtn;
+  }
 
-      }
-      // Other transactions: Sell price to project cost centre, buy price to cyber TF
-      $this->create_psTransaction($saleItem["productSaleItemID"], $project->get_value("cost_centre_tfID"), -$saleItem["sellPrice"], 0, "Price for product sale");
-      $this->create_psTransaction($saleItem["productSaleItemID"], config::get_config_item("mainTfID"), $saleItem["buyCost"], 0, "Cost for product sale");
+  function create_transactions() {
+    $rows = $this->get_productSaleItems();
+    $rows or $rows = array();
+  
+    foreach ($rows as $row) {
+      $productSaleItem = new productSaleItem;
+      $productSaleItem->read_row_record($row);
+      $productSaleItem->create_transactions();
+    }
+  }
+
+  function delete_transactions() {
+    $rows = $this->get_productSaleItems();
+    $rows or $rows = array();
+  
+    foreach ($rows as $row) {
+      $productSaleItem = new productSaleItem;
+      $productSaleItem->read_row_record($row);
+      $productSaleItem->delete_transactions();
     }
   }
  
-  function move_forward() {
+  function move_forwards() {
     global $current_user;
     $status = $this->get_value("status");
+
     if ($status == "edit") {
-      //Manager permissions required, send emails 
-      if ($current_user->have_role("manage") || $current_user->have_role("admin")) {
-        $this->set_value("status", "admin");
-      } else {
-        return 1;
+      $this->set_value("status", "allocate");
+      
+      if (count($this->get_transactions()) == 0) {
+        $this->create_transactions();
       }
+
+    } else if ($status == "allocate") {
+      $this->set_value("status", "admin");
+
+    } else if ($status == "admin" && $this->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)) {
+      $this->set_value("status", "finished");
     }
-    if ($status == "admin") {
-      if ($current_user->have_role("admin")) {
-        $this->set_value("status", "finished");
-      } else {
-        return 1;
-      }
-    }
-    return 0;
   }
 
-  function move_backward() {
-    global $current_user;
-    if ($current_user->have_role("admin")) {
-      if ($this->get_value("status") == "finished")
-        $this->set_value("status", "admin");
-      else if ($this->get_value("status") == "admin")
-        $this->set_value("status", "edit");
-    } else {
-      return 1;
+  function get_transactions($productSaleItemID=false) {
+    $rows = array();
+    $productSaleItemID and $productSaleItemID_sql = sprintf("AND productSaleItemID = %d",$productSaleItemID);
+    $query = sprintf("SELECT * 
+                        FROM transaction 
+                       WHERE productSaleID = %d
+                          %s
+                    ORDER BY transactionID"
+                    ,$this->get_id()
+                    ,$productSaleItemID_sql);
+    $db = new db_alloc();
+    $db->query($query);
+    while ($row = $db->row()) {
+      $rows[] = $row;
     }
-    return 0;
+    return $rows;
+  }
+
+  function move_backwards() {
+    global $current_user;
+
+    if ($this->get_value("status") == "finished" && $current_user->have_role("admin")) {
+      $this->set_value("status", "admin");
+
+    } else if ($this->get_value("status") == "admin" && $current_user->have_role("admin")) {
+      $this->set_value("status", "allocate");
+
+    } else if ($this->get_value("status") == "allocate") {
+      $this->set_value("status", "edit");
+    }
+  }
+
+  function get_list_filter($filter=array()) {
+    if ($filter["projectID"]) {
+      $sql[] = sprintf("(productSale.projectID = %d)",$filter["projectID"]);
+    }
+    if ($filter["clientID"]) {
+      $sql[] = sprintf("(productSale.clientID = %d)",$filter["clientID"]);
+    }
+    return $sql;
+  }
+
+  function get_list($_FORM=array()) {
+
+    $filter = productSale::get_list_filter($_FORM);
+
+    $debug = $_FORM["debug"];
+    $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
+    $debug and print "\n<pre>filter: ".print_r($filter,1)."</pre>";
+
+    if (is_array($filter) && count($filter)) {
+      $f = " WHERE ".implode(" AND ",$filter);
+    }
+
+    $db = new db_alloc();
+    $query = sprintf("SELECT productSale.*, project.projectName, client.clientName
+                        FROM productSale 
+                   LEFT JOIN client ON productSale.clientID = client.clientID
+                   LEFT JOIN project ON productSale.projectID = project.projectID
+                    ".$f);
+    $db->query($query);
+    $statii = productSale::get_statii();
+    $people = get_cached_table("person");
+    $rows = array();
+    while ($row = $db->next_record()) {
+      $productSale = new productSale();
+      $productSale->read_db_record($db);
+      $row["amounts"] = $productSale->get_amounts();
+      $row["statusLabel"] = $statii[$row["status"]];
+      $row["creatorLabel"] = $people[$row["productSaleCreatedUser"]]["name"];
+      $body.= productSale::get_list_body($row,$_FORM);
+    }
+
+    $header = productSale::get_list_header($_FORM);
+    $footer = productSale::get_list_footer($_FORM);
+
+    if ($body) {
+      return $header.$body.$footer;
+    } else {
+      return "<table style=\"width:100%\"><tr><td style=\"text-align:center\"><b>No Product Sales Found</b></td></tr></table>";
+    }
+  }
+
+  function get_list_header($_FORM=array()) {
+    $ret[] = "<table class=\"list sortable\">";
+    $ret[] = "<tr>";
+    $ret[] = "  <th>ID</th>";
+    $ret[] = "  <th>Creator</th>";
+    $ret[] = "  <th>Date</th>";
+    $ret[] = "  <th>Client</th>";
+    $ret[] = "  <th>Project</th>";
+    $ret[] = "  <th>Status</th>";
+    $ret[] = "  <th class=\"right\">Margin</th>";
+    $ret[] = "  <th class=\"right\">Unallocated</th>";
+    $ret[] = "</tr>";
+    return implode("\n",$ret);
+  }
+
+  function get_list_body($row,$_FORM=array()) {
+    $ret[] = "<tr>";
+    $ret[] = "  <td class=\"nobr\">".productSale::get_link($row)."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".$row["creatorLabel"]."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".$row["productSaleCreatedTime"]."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".$row["clientName"]."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".$row["projectName"]."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".$row["statusLabel"]."&nbsp;</td>";
+    $ret[] = "  <td class=\"right nobr\">".$row["amounts"]["total_margin"]."&nbsp;</td>";
+    $ret[] = "  <td class=\"right nobr\">".$row["amounts"]["total_unallocated"]."&nbsp;</td>";
+    $ret[] = "</tr>";
+    return implode("\n",$ret);
+  }
+
+  function get_list_footer($_FORM=array()) {
+    $ret[] = "</table>";
+    return implode("\n",$ret);
+  }
+
+  function get_link($row=array()) {
+    global $TPL;
+    if (is_object($this)) {
+      return "<a href=\"".$TPL["url_alloc_productSale"]."productSaleID=".$this->get_id()."\">".$this->get_id()."</a>";
+    } else {
+      return "<a href=\"".$TPL["url_alloc_productSale"]."productSaleID=".$row["productSaleID"]."\">".$row["productSaleID"]."</a>";
+    }
+  }
+
+  function get_statii() {
+    return array("create"=>"Create", "edit"=>"Add Sale Items", "allocate" =>"Allocate", "admin"=>"Administrator", "finished"=>"Finished");
   }
 
 }

@@ -31,7 +31,6 @@ class sale_module extends module {
                          , "productCost"
                          , "productSale"
                          , "productSaleItem"
-                         , "productSaleTransaction"
                          );
 }
 

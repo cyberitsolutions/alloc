@@ -22,126 +22,216 @@
  */
 
 class productSaleItem extends db_entity {
-  var $classname = "productSaleItem";
-  var $data_table = "productSaleItem";
-
-  function productSaleItem() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("productSaleItemID");
-    $this->data_fields = array("productID"=>new db_field("productID")
-                        ,"productSaleID"=>new db_field("productSaleID")
-                        ,"buyCost"=>new db_field("buyCost")
-                        ,"sellPrice"=>new db_field("sellPrice")
-                        ,"quantity"=>new db_field("quantity")
-                        ,"description"=>new db_field("description")
-      );
+  public $classname = "productSaleItem";
+  public $data_table = "productSaleItem";
+  public $key_field = "productSaleItemID";
+  public $data_fields = array("productID"
+                             ,"productSaleID"
+                             ,"buyCost"
+                             ,"buyCostIncTax" => array("empty_to_null"=>false)
+                             ,"sellPrice"
+                             ,"sellPriceIncTax" => array("empty_to_null"=>false)
+                             ,"quantity"
+                             ,"description"
+                             );
+  function is_owner() {
+    $productSale = $this->get_foreign_object("productSale");
+    return $productSale->is_owner();
   }
 
-  function transactionTotal($id = -1) {
-    if ($id == -1)
-      $id = $this->get_id();
+  function validate() {
+    $this->get_value("productID")     or $err[] = "Please select a Product.";
+    $this->get_value("productSaleID") or $err[] = "Please select a Product Sale.";
+    $this->get_value("buyCost")       or $err[] = "Please enter a Buy Cost.";
+    $this->get_value("sellPrice")     or $err[] = "Please enter a Sell Price.";
+    $this->get_value("quantity")      or $err[] = "Please enter a Quantity.";
+    return $err;
+  }
+
+  function get_amount_spent() {
     $db = new db_alloc;
-    $row = $db->qr("SELECT SUM(amount) FROM transaction WHERE productSaleItemID = %d", $id);
-    return $row["SUM(amount)"];
+    $q = sprintf("SELECT *
+                    FROM transaction 
+                   WHERE tfID = %d
+                     AND productSaleID = %d
+                     AND status != 'rejected'
+                     AND productSaleItemID = %d
+                ",config::get_config_item("outTfID")
+                 ,$this->get_value("productSaleID")
+                 ,$this->get_id());
+    $db->query($q);
+    $rows = array();
+    while ($row = $db->row()) {
+      $rows[] = $row;
+    }
+    return transaction::get_actual_amount_used($rows);
   }
 
-  function checkTotals($id = -1) {
-    if ($id == -1)
-      $id = $this->get_id();
-
+  function get_amount_earnt() {
     $db = new db_alloc;
-    // != 1 doesn't give the right results because some columns are NULL
-    // The better test would be 'isPercentage IS NOT TRUE' but that's not supported in MySQL 3.23 and 4.0...
-    $fixed = $db->qr("SELECT SUM(amount) FROM productSaleTransaction WHERE (isPercentage IS NULL OR isPercentage = 0)  AND productSaleItemID = %d", $id);
-    $pct = $db->qr("SELECT SUM(amount) FROM productSaleTransaction WHERE isPercentage = 1 AND productSaleItemID = %d", $id);
-    $transactions = $db->qr("SELECT SUM(amount) FROM transaction WHERE productSaleItemID = %d", $id);
-    return array("fixed"=>$fixed["SUM(amount)"], "pct"=>$pct["SUM(amount)"], "transactions"=>$transactions["SUM(amount)"]);
+    $q = sprintf("SELECT *
+                    FROM transaction 
+                   WHERE fromTfID = %d
+                     AND productSaleID = %d
+                     AND status != 'rejected'
+                     AND productSaleItemID = %d
+                ",config::get_config_item("inTfID")
+                 ,$this->get_value("productSaleID")
+                 ,$this->get_id());
+    $db->query($q);
+    $rows = array();
+    while ($row = $db->row()) {
+      $rows[] = $row;
+    } 
+    return transaction::get_actual_amount_used($rows);
   }
 
-  function create_transaction($product, $amount, $tfID, $status = "pending", $type = 'product') {
-    # Safety stuff goes here
+  function get_amount_other() {
+    $db = new db_alloc;
+    $q = sprintf("SELECT *
+                    FROM transaction 
+                   WHERE fromTfID != %d
+                     AND tfID != %d
+                     AND tfID != %d
+                     AND productSaleID = %d
+                     AND status != 'rejected'
+                     AND productSaleItemID = %d
+                ",config::get_config_item("inTfID")
+                 ,config::get_config_item("outTfID")
+                 ,config::get_config_item("taxTfID")
+                 ,$this->get_value("productSaleID")
+                 ,$this->get_id());
+    $db->query($q);
+    $rows = array();
+    while ($row = $db->row()) {
+      $rows[] = $row;
+    }
+    return transaction::get_actual_amount_used($rows);
+  }
 
+  function get_amount_margin() {
+
+    $taxPercent = config::get_config_item("taxPercent");
+    $taxPercentDivisor = ($taxPercent/100) + 1;
+    
+    $buyCost = $this->get_value("buyCost");
+    $sellPrice = $this->get_value("sellPrice");
+
+    $this->get_value("buyCostIncTax") and $buyCost = $buyCost / $taxPercentDivisor;
+    $this->get_value("sellPriceIncTax") and $sellPrice = $sellPrice / $taxPercentDivisor;
+
+    return sprintf("%0.2f",$sellPrice - $buyCost);
+  }
+
+  function get_amount_unallocated() {
+    return sprintf("%0.2f",$this->get_amount_margin() - $this->get_amount_other());
+  }
+
+  function create_transaction($fromTfID, $tfID, $amount, $description) {
+    global $TPL;
+    $productSale = $this->get_foreign_object("productSale");
+    $tfID = $productSale->translate_meta_tfID($tfID);
+    $fromTfID = $productSale->translate_meta_tfID($fromTfID);
     $transaction = new transaction;
-    $transaction->set_value("product", $product);
-    $transaction->set_value("amount", sprintf("%0.2f", $amount));
-    $transaction->set_value("status", $status);
-    $transaction->set_value("tfID", $tfID);
-    $transaction->set_value("transactionDate", date("Y-m-d"));
-    $transaction->set_value("transactionType", $type);
+    $transaction->set_value("productSaleID", $this->get_value("productSaleID"));
     $transaction->set_value("productSaleItemID", $this->get_id());
+    $transaction->set_value("fromTfID", $fromTfID);
+    $transaction->set_value("tfID", $tfID);
+    $transaction->set_value("amount", $amount);
+    $transaction->set_value("status", 'pending');
+    $transaction->set_value("transactionDate", date("Y-m-d"));
+    $transaction->set_value("transactionType", 'sale');
+    $transaction->set_value("product", $description);
     $transaction->save();
-    return 1;
   }
-
 
   function create_transactions() {
-    $db = new db_alloc;
-    $query = sprintf("SELECT * FROM productSaleTransaction WHERE productSaleItemID = %d ORDER BY isPercentage, amount", $this->get_id());
-    $db->query($query);
+    $db = new db_alloc();
+    $db2 = new db_alloc();
 
-    $staticTotal = 0;
-    
+    $product = $this->get_foreign_object("product");
+    $productName = $product->get_value("productName");
+
     $taxName = config::get_config_item("taxName");
-    $tax_tfID = config::get_config_item("taxTfID");
-    $taxRate = config::get_config_item("taxPercent") / 100.0;
+    $taxPercent = config::get_config_item("taxPercent");
+    $taxTfID = config::get_config_item("taxTfID");
+    $taxPercentDivisor = ($taxPercent/100) + 1;
 
-    $taxDescription = "$taxName for product sale " . $this->get_id();
-    /* Tax calculation is kind of a nuisance
-     * Transactions are in ascending order, so the sale price and any other
-     * incoming funds come first. When these run out, the value of staticTotal
-     * is considered to be the taxable portion.
-     */
-    $taxDone = false;
+    // First transaction represents the transfer of money that is the
+    // amount paid by the company for the product. We model this by transferring
+    // the buyCost from the Projects TF (META: -1) to the Outgoing TF.
+    $this->create_transaction(-1, config::get_config_item("outTfID"),$this->get_value("buyCost"), "Product Acquisition: ".$productName);
 
-    // There are a couple of cases where we shouldn't do tax
-    if(!$tax_tfID or $taxRate == 0) {
-      $taxDone = true;
+    // If this price includes tax, then perform a tax transfer from the
+    // outgoing tf to the tax tf.
+    if ($this->get_value("buyCostIncTax")) {
+      $amount_minus_tax = $this->get_value("buyCost") / $taxPercentDivisor;
+      $amount_of_tax = $this->get_value("buyCost") - $amount_minus_tax;
+      $this->create_transaction(config::get_config_item("outTfID"),$taxTfID,$amount_of_tax,"Product Acquisition ".$taxName.": ".$productName);
     }
-    
-    while ($row = $db->next_record()) {
-      $description = sprintf("Product sale %d: %s", $this->get_value("productSaleID"), $row["description"]);
-      if (!$row["isPercentage"]) {
-        if (!$taxDone && $row["amount"] > 0) {
-          //Done the last of the negative values, calculate tax
-          $taxValue = -$staticTotal / (1 + 1/($taxRate));
-          $this->create_transaction($taxDescription, $taxValue, $tax_tfID, 'pending', 'tax');
-          $staticTotal += $taxValue;
-          $taxDone = true;
-        }
-        $staticTotal += $row["amount"];
-        $this->create_transaction($description, $row["amount"], $row["tfID"]);
-      } else {
-        // This needs to be here in case there are no other static items
-        if (!$taxDone) {
-          //Done the last of the negative values, calculate tax
-          $taxValue = -$staticTotal / (1 + 1/($taxRate));
-          $this->create_transaction($taxDescription, $taxValue, $tax_tfID, 'pending', 'tax');
-          $staticTotal += $taxValue;
-          $taxDone = true;
-        }
-        $this->create_transaction($description, -$staticTotal * $row["amount"] / 100.0, $row["tfID"]);
-      }
+
+    // Next transaction represents the amount that someone has paid the
+    // sellPrice amount for the product. This money is transferred from 
+    // the Incoming transactions TF, to the Projects TF (METE: -1).
+    $this->create_transaction(config::get_config_item("inTfID"), -1 ,$this->get_value("sellPrice"), "Product Sale: ".$productName);
+
+    // If this price includes tax, then perform a tax transfer from the
+    // outgoing tf to the tax tf.
+    if ($this->get_value("sellPriceIncTax")) {
+      $amount_minus_tax = $this->get_value("sellPrice") / $taxPercentDivisor;
+      $amount_of_tax = $this->get_value("sellPrice") - $amount_minus_tax;
+      $this->create_transaction(-1, $taxTfID ,$amount_of_tax, "Product Sale ".$taxName.": ".$productName);
+    }
+
+    // Now loop through all the productCosts for the sale items product.
+    $query = sprintf("SELECT productCost.*, product.productName
+                        FROM productCost 
+                   LEFT JOIN product ON product.productID = productCost.productID
+                       WHERE productCost.productID = %d 
+                         AND isPercentage != 1
+                    ORDER BY productCostID"
+                    , $this->get_value("productID"));
+
+    $db2->query($query);
+    while ($productCost_row = $db2->next_record()) {
+      $amount = $productCost_row["amount"];
+      $description = "Product Cost: ".$productCost_row["productName"]." ".$productCost_row["description"];
+      $this->create_transaction($productCost_row["fromTfID"], $productCost_row["tfID"], $amount, $description);
+    }
+
+    // Need to do the percentages separately because they rely on the $totalUnallocated figure
+    $totalUnallocated = $this->get_amount_unallocated();
+
+    #die("here: ".$totalUnallocated);
+
+    // Now loop through all the productCosts % COMMISSIONS for the sale items product.
+    $query = sprintf("SELECT productCost.*, product.productName
+                        FROM productCost 
+                   LEFT JOIN product ON product.productID = productCost.productID
+                       WHERE productCost.productID = %d 
+                         AND isPercentage = 1
+                    ORDER BY productCostID"
+                    , $this->get_value("productID"));
+
+    $db2->query($query);
+    while ($productCommission_row = $db2->next_record()) {
+      $amount = $totalUnallocated * $productCommission_row["amount"]/100;
+      $description = "Product Commission: ".$productCommission_row["productName"]." ".$productCommission_row["description"];
+      $this->create_transaction($productCommission_row["fromTfID"], $productCommission_row["tfID"], $amount, $description);
     }
   }
 
   function delete_transactions() {
-    # Do it this way to make sure permissions get checked
-    $db = new db_alloc;
-    $query = sprintf("SELECT * FROM transaction WHERE productSaleItemID = %d", $this->get_id());
-    $db->query($query);
-
-    while ($row = $db->next_record()) {
+    $q = sprintf("SELECT * FROM transaction WHERE productSaleItemID = %d",$this->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    while ($db->row()) {
       $transaction = new transaction;
-      $transaction->read_row_record($row);
+      $transaction->read_db_record($db);
       $transaction->delete();
     }
   }
 
-  function delete() {
-    $db = new db_alloc;
-    $db->qr("DELETE FROM transaction WHERE productSaleItemID = %d", $this->get_id());
-    parent::delete();
-  }
 
 }
 ?>

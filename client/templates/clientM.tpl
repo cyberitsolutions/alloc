@@ -10,6 +10,7 @@
                              ,"attachments"=>"Attachments"
                              ,"projects"=>"Projects"
                              ,"invoices"=>"Invoices"
+                             ,"sales"=>"Sales"
                              ,"sbsAll"=>"All"
                              ),$sbs_link)}
 {/}
@@ -92,6 +93,20 @@
       </td>
     </tr>
   </table>
+</div>
+
+<div id="sales" class="hidden">
+<table class="box">
+  <tr>
+    <th>Sales</th>
+    <th class="right"><a href="{$url_alloc_productSale}clientID={$client_clientID}">New Sale</a></th>
+  </tr>
+  <tr>
+    <td colspan="2">
+      {echo productSale::get_list(array("clientID"=>$client_clientID))}
+    </td>
+  </tr>
+</table>
 </div>
 
 {/}

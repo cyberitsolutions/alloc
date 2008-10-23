@@ -25,8 +25,10 @@ define("PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION", 512);
 define("PERM_FINANCE_WRITE_WAGE_TRANSACTION", 1024);
 define("PERM_FINANCE_CREATE_TRANSACTION_FROM_REPEAT", 2048);
 define("PERM_FINANCE_WRITE_APPROVED_TRANSACTION", 4096);
+define("PERM_FINANCE_CREATE_PENDING_TRANSACTION", 8192);
 define("PERM_FINANCE_UPLOAD_EXPENSES_FILE", 16384);
 define("PERM_FINANCE_RECONCILIATION_REPORT", 32768);
+
 
 class transaction extends db_entity {
   public $data_table = "transaction";
@@ -50,6 +52,7 @@ class transaction extends db_entity {
                              ,"transactionDate"
                              ,"transactionType"
                              ,"timeSheetID"
+                             ,"productSaleID"
                              ,"productSaleItemID"
                              ,"transactionRepeatID"
                              );
@@ -61,11 +64,23 @@ class transaction extends db_entity {
                                ,PERM_FINANCE_WRITE_APPROVED_TRANSACTION => "Approve/Reject transactions"
                                ,PERM_FINANCE_UPLOAD_EXPENSES_FILE => "Upload expenses file"
                                ,PERM_FINANCE_RECONCILIATION_REPORT => "View reconciliation report"
+                               ,PERM_FINANCE_CREATE_PENDING_TRANSACTION => "Create Pending Transaction"
                                );
-                                
 
+
+  function check_view_perms() {
+    if ($this->get_value("transactionType") == "sale" && $this->get_value("status") == "pending") {
+      $this->check_perm(PERM_FINANCE_CREATE_PENDING_TRANSACTION);
+      $skip_default = true;
+    }
+    return $skip_default;
+  }
 
   function check_write_perms() {
+    if ($this->get_value("transactionType") == "sale" && $this->get_value("status") == "pending") {
+      $this->check_perm(PERM_FINANCE_CREATE_PENDING_TRANSACTION);
+      $skip_default = true;
+    }
     if ($this->get_value("status") != "pending") {
       $this->check_perm(PERM_FINANCE_WRITE_APPROVED_TRANSACTION);
     }
@@ -75,46 +90,48 @@ class transaction extends db_entity {
     if ($this->get_value("transactionType") == "salary") {
       $this->check_perm(PERM_FINANCE_WRITE_WAGE_TRANSACTION);
     }
+    return $skip_default;
   }
 
-  function insert() {
-    $this->check_write_perms();
-    db_entity::insert();
+  function check_create_perms() {
+    $skip_default = $this->check_write_perms();
+    if (!$skip_default) {
+      parent::check_create_perms();
+    }
   }
 
-  function update() {
-    $this->check_write_perms();
-    db_entity::update();
+  function check_update_perms() {
+    $skip_default = $this->check_write_perms();
+    if (!$skip_default) {
+      parent::check_update_perms();
+    }
   }
 
-  function delete() {
-    $this->check_write_perms();
-    db_entity::delete();
+  function check_delete_perms() {
+    $skip_default = $this->check_write_perms();
+    if (!$skip_default) {
+      parent::check_delete_perms();
+    }
   }
 
-  function save() {
-    global $TPL;
-    //safety checks
+  function check_read_perms() {
+    $skip_default = $this->check_view_perms();
+    if (!$skip_default) {
+      parent::check_read_perms();
+    }
+  }
+
+  function validate() {
     //The transaction may not be modified if the timesheet or invoice
     //it is attached to has been completed.
     //Special case: transactions attached to expense forms can be modified
     //regardless (because the expense form is finalised before the user gets
     //the chance to click "approve"/"reject")
-    if ($this->is_final() && !$this->get_value("expenseFormID")) {
-      die("Cannot save transaction, as it has been finalised.");
-
-    } else if (!$this->get_value("fromTfID")) {
-      $TPL["message"][] = "Unable to save transaction without a Source TF.";
-    
-    } else if ($this->get_value("fromTfID") == $this->get_value("tfID")) {
-      $TPL["message"][] = "Unable to save transaction with Source TF being the same as the Destination TF.";
-
-    } else {
-      if (!$this->get_value("quantity")) {
-        $this->set_value("quantity",1);
-      }
-      return parent::save();
-    }
+    $this->is_final() && !$this->get_value("expenseFormID") and $err[] = "Cannot save transaction. Transaction has been finalised.";
+    $this->get_value("fromTfID") or $err[] = "Unable to save transaction without a Source TF.";
+    $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".$this->get_value("fromTfID").") being the same as the Destination TF (".$this->get_value("tfID").")";
+    $this->get_value("quantity") or $this->set_value("quantity",1);
+    return $err;
   }
 
   function is_final() {
@@ -156,6 +173,10 @@ class transaction extends db_entity {
       $timeSheet = $this->get_foreign_object("timeSheet");
       return $timeSheet->is_owner($person);
     }
+    if ($this->get_value("productSaleItemID")) {
+      $productSaleItem = $this->get_foreign_object("productSaleItem");
+      return $productSaleItem->is_owner();
+    }
 
     $toTf = new tf;
     $toTf->set_id($this->get_value('tfID'));
@@ -178,6 +199,10 @@ class transaction extends db_entity {
                 ,'adjustment'=>'Adjustment'
                 ,'insurance'=>'Insurance'
                 ,'tax'=>$taxName);
+  }
+
+  function get_transactionStatii() {
+    return array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
   }
 
   function get_url() {
@@ -560,9 +585,55 @@ class transaction extends db_entity {
     return $rtn;
   }
 
+  function get_actual_amount_used($rows=array()) {
+
+    /*
+     *  The purpose of this function is to turn the below three transactions
+     *  not into their sum of $48 but into the amount used, which is $10.
+     *
+     *  Amount   Source     Dest
+     *  $20       A    ->    B   -->  A -20   B 20
+     *  $18       B    ->    C   -->  B 2     C 18
+     *  $10       C    ->    A   -->  C 8     A -10
+     *
+     *  So, actually:
+     *
+     *  A gets $-10
+     *  B gets $2
+     *  C gets $8
+     *
+     *  So i.e. -10 +10 the amount actually *used* is ten dollars.
+     *
+     *  This function is useful for ensuring that if say a time sheet has
+     *  100 dollars to be allocated, that no more than that limit is spent.
+     *
+     */
+
+    $rows or $rows = array();
+    $tallies or $tallies = array();
+    foreach ($rows as $k => $row) {
+      $tallies[$row["fromTfID"]] -= $row["amount"];
+      $tallies[$row["tfID"]] += $row["amount"];
+    }
+
+    foreach ($tallies as $tfID => $amount) {
+      $amount >0 and $sum+=$amount;
+    }
+
+    return sprintf("%0.2f",$sum);
+    
+    # for debugging
+    #$rows[] = array("amount"=>"20","fromTfID"=>"alla","tfID"=>"twb");
+    #$rows[] = array("amount"=>"17","fromTfID"=>"twb","tfID"=>"alla");
+    #$rows[] = array("amount"=>"2","fromTfID"=>"alla","tfID"=>"pete");
+    #$rows[] = array("amount"=>"-4","fromTfID"=>"pete","tfID"=>"alla");
+    #$rows[] = array("amount"=>"200","fromTfID"=>"zebra","tfID"=>"ghost");
+    #echo "<br>SUM: ".transaction::get_actual_amount_used($rows);
+  }
 
 
 }
+
 
 
 

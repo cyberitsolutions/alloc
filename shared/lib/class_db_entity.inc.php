@@ -178,9 +178,25 @@ class db_entity {
       return false;
     }
   }
+ 
+  function check_create_perms() {
+    $this->check_perm(PERM_CREATE);
+  }
+
+  function check_read_perms() {
+    $this->check_perm(PERM_READ);
+  }
+
+  function check_update_perms() {
+    $this->check_perm(PERM_UPDATE);
+  }
+
+  function check_delete_perms() {
+    $this->check_perm(PERM_DELETE);
+  }
 
   function delete() {
-    $this->check_perm(PERM_DELETE);
+    $this->check_delete_perms();
     if (!$this->has_key_values()) {
       return false;
     }
@@ -191,7 +207,7 @@ class db_entity {
     $db->query($query);
     return true;
   }
-
+ 
   function insert() {
     global $current_user;
     if (is_object($current_user) && $current_user->get_id()) {
@@ -199,7 +215,7 @@ class db_entity {
     } else {
       $current_user_id = "0";
     }
-    $this->check_perm(PERM_CREATE);
+    $this->check_create_perms();
 
     if (isset($this->data_fields[$this->data_table."CreatedUser"])) {
       $this->set_value($this->data_table."CreatedUser", $current_user_id);
@@ -238,7 +254,7 @@ class db_entity {
   }
 
   function update() {
-    $this->check_perm(PERM_UPDATE);
+    $this->check_update_perms();
 
     global $current_user;
     if (is_object($current_user) && $current_user->get_id()) {
@@ -364,7 +380,7 @@ class db_entity {
     $this->read_array($db->Record, "", SRC_DATABASE);
     $this->all_row_fields = $db->Record;
     if ($errors_fatal) {
-      $this->check_perm(PERM_READ);
+      $this->check_read_perms();
       return true;
     } else {
       $have_perm = $this->have_perm(PERM_READ);
@@ -380,7 +396,7 @@ class db_entity {
     $this->read_array($row, "", SRC_DATABASE);
     $this->all_row_fields = $row;
     if ($errors_fatal) {
-      $this->check_perm(PERM_READ);
+      $this->check_read_perms();
       return true;
     } else {
       $have_perm = $this->have_perm(PERM_READ);

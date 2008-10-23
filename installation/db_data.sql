@@ -51,6 +51,22 @@ VALUES
 ,('person'                   ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
 ,('person'                   ,0  ,0 ,'admin'    ,'Y' ,NULL ,7951  ,NULL)
 
+,('product'                  ,0  ,0 ,''         ,'Y' ,0    ,1     ,NULL)
+,('product'                  ,0  ,0 ,'manage'   ,'Y' ,100  ,15    ,NULL)
+,('product'                  ,0  ,0 ,'admin'    ,'Y' ,100  ,15    ,NULL)
+
+,('productCost'              ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
+,('productCost'              ,0  ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('productCost'              ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+
+,('productSale'              ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
+,('productSale'              ,-1 ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('productSale'              ,0  ,0 ,'admin'    ,'Y' ,NULL ,271   ,NULL)
+
+,('productSaleItem'          ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
+,('productSaleItem'          ,-1 ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('productSaleItem'          ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+
 ,('project'                  ,0  ,0 ,''         ,'Y' ,100  ,513   ,'Allow all to read projects for searches.')
 ,('project'                  ,-1 ,0 ,'employee' ,'Y' ,100  ,769   ,NULL)
 ,('project'                  ,-1 ,0 ,'employee' ,'Y' ,99   ,271   ,NULL)
@@ -87,6 +103,7 @@ VALUES
 ,('taskType'                 ,0  ,0 ,''         ,'Y' ,NULL ,17    ,NULL)
 
 ,('tf'                       ,0  ,0 ,'employee' ,'Y' ,NULL ,1     ,NULL)
+,('tf'                       ,0  ,0 ,'manage'   ,'Y' ,NULL ,1     ,NULL)
 ,('tf'                       ,0  ,0 ,'admin'    ,'Y' ,NULL ,31    ,NULL)
 
 ,('tfPerson'                 ,-1 ,0 ,'employee' ,'Y' ,NULL ,1     ,'Allow employee to read own tfPerson.')
@@ -105,6 +122,7 @@ VALUES
 ,('token'                    ,0  ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
 
 ,('transaction'              ,-1 ,0 ,'employee' ,'Y' ,NULL ,15    ,NULL)
+,('transaction'              ,0  ,0 ,'manage'   ,'Y' ,NULL ,8192  ,"Manager create pending transaction.")
 ,('transaction'              ,0  ,0 ,'admin'    ,'Y' ,NULL ,65295 ,NULL)
 
 ,('transactionRepeat'        ,-1 ,0 ,'employee' ,'Y' ,NULL ,1     ,NULL)

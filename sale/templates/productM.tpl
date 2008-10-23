@@ -3,229 +3,180 @@
 
 <script type="text/javascript" language="javascript">
 $(document).ready(function() \{
-  $("#buyCost").change(function(event) \{
-    $("#buyCostLine").text($("#buyCost").val());
-  \});
-
-
-{if $TPL["taxRate"]}  
-  var incFactor = 1.0 + {$taxRate};
-  var exFactor = 1.0/incFactor;
-  var taxRate = 1 / (1 + 1/{$taxRate});
-
-  var cost = $('#buyCost').val() * exFactor;
-  $('#buyCost_ex').val(cost.toFixed(2));
-  var price = $('#sellPrice').val() * exFactor;
-  $('#sellPrice_ex').val(price.toFixed(2));
-
-  // Stuff to update inc and ex fields
-  $('#buyCost').change(function(event) \{
-    var cost = $('#buyCost').val() * exFactor;
-    $('#buyCost_ex').val(cost.toFixed(2));
-    $('#buyCostLine').val($('#buyCost').val());
-  \});
-  $('#buyCost_ex').change(function(event) \{
-    var cost = $('#buyCost_ex').val() * incFactor;
-    $('#buyCost').val(cost.toFixed(2));
-    $('#buyCostLine').val(cost.toFixed(2));
-  \});
-  $('#sellPrice').change(function(event) \{
-    var price = $('#sellPrice').val() * exFactor;
-    var tax = price * taxRate;
-    $('#sellPrice_ex').val(price.toFixed(2));
-    $('#taxLine').text(tax.toFixed(2));
-  \});
-  $('#sellPrice_ex').change(function(event) \{
-    var price = $('#sellPrice_ex').val() * incFactor;
-    var tax = $('#sellPrice_ex').val() * taxRate;
-    $('#sellPrice').val(price.toFixed(2));
-    $('#taxLine').text(tax.toFixed(2));
-  \});
-{/}
+  {if !$productID}
+  $('.view').hide();
+  $('.edit').show();
+  $('#productName').focus();
+  {else}
+  $('#editProduct').focus();
+  {/}
 \});
-
 </script>
 
-{$table_box}
+<form action="{$url_alloc_product}" method="post">
+<input type="hidden" name="productID" value="{$productID}">
+<table class="box">
   <tr>
-    <th colspan="2">Product</th>
+    <th>Product</th>
+    <th class="right">{page::help("product")}</th>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" ondblclick="$('.view').hide();$('.edit').show();">
+      <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
+
+        <div class="view">
+          <h6>Product Name{page::mandatory($productName)}</h6>
+          <h2 style="margin-bottom:0px; display:inline;">{$productName}</h2>
+        </div>
+        <div class="edit">
+          <h6>Product Name{page::mandatory($productName)}</h6>
+          <input type="text" style="width:100%" maxlength="255" id="productName" name="productName" value="{$productName}">
+        </div>
+
+        {if $description}
+        <div class="view">
+          <h6>Description</h6>
+          {$description}
+        </div>
+        {/}
+        <div class="edit">
+          <h6>Description</h6>
+          <input type="text" style="width:100%" maxlength="255" id="description" name="description" value="{$description}">
+        </div>
+
+
+        {if $comment}
+        <div class="view">
+          <h6>Comment</h6>
+          {page::to_html($comment)}
+        </div>
+        {/}
+        <div class="edit">
+          <h6>Comment</h6>
+          {page::textarea("comment",$comment, array("width"=>"100%"))}
+        </div>
+
+      </div>
+      
+      <div style="float:right; width:47%; padding:0px 12px; vertical-align:top;">
+
+      {if $taxName}
+        {$buyCost_check = sprintf("<input type='checkbox' name='buyCostIncTax' value='1'%s> inc %s" ,$buyCostIncTax ? ' checked':'',$taxName)}
+        {$sellPrice_check = sprintf("<input type='checkbox' name='sellPriceIncTax' value='1'%s> inc %s" ,$sellPriceIncTax ? ' checked':'',$taxName)}
+        {if $buyCostIncTax}
+          {$buyCost_label = " (inc ".$taxName.")"}
+        {else}
+          {$buyCost_label = " (ex ".$taxName.")"}
+        {/} 
+
+        {if $sellPriceIncTax}
+          {$sellPrice_label = " (inc ".$taxName.")"}
+        {else}
+          {$sellPrice_label = " (ex ".$taxName.")"}
+        {/}
+      {/}
+
+        <div class="view">
+          <h6>Buy Cost{$buyCost_label}{page::mandatory($buyCost)}<div>Sell Price{$sellPrice_label}{page::mandatory($sellPrice)}</div></h6>
+          <div style="float:left; width:30%;">
+            {$buyCost}
+          </div>
+          <div style="float:right;width:50%;">
+            {$sellPrice}
+          </div>
+        </div>
+        <div class="edit">
+          <h6>Buy Cost{$taxLabel}{page::mandatory($buyCost)}<div>Sell Price{$taxLabel}{page::mandatory($sellPrice)}</div></h6>
+          <div style="float:left; width:30%;">
+            <input type="text" size="8" name="buyCost" id="buyCost" value="{$buyCost}">
+            {$buyCost_check} 
+          </div>
+          <div style="float:right;width:50%;">
+            <input type="text" size="8" name="sellPrice" id="sellPrice" value="{$sellPrice}">
+            {$sellPrice_check} 
+          </div>
+        </div>
+    
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center" class="padded">
+      <div class="view" style="margin-top:20px">
+        <input type="button" id="editProduct" value="Edit Product" onClick="$('.view').hide();$('.edit').show();">
+      </div>
+      <div class="edit" style="margin-top:20px">
+        <input type="submit" name="save" value="Save">
+        <input type="submit" name="delete" value="Delete" class="delete_button">
+        <input type="button" value="Cancel Edit" onClick="$('.edit').hide();$('.view').show();">
+      </div>
+    </td>
+  </tr>
+</table>
+</form>
+
+{if $productID}
+
+<form action="{$url_alloc_product}" method="post">
+<input type="hidden" name="productID" value="{$productID}">
+<table class="box">
+  <tr>
+    <th>Product Costs</th>
+    <th width="1%">{page::help("product_fixedCost")}</th>
   </tr>
   <tr>
     <td colspan="2">
 
-    <form action="{$url_alloc_product}" method="post">
-    <input type="hidden" name="productID" value="{$product_productID}" />
-    <table>
-      <tr>
-        <td>Product Name{page::mandatory($product_productName)}</td>
-        <td colspan="2"><input type="text" size="43" name="productName" value="{$product_productName}" tabindex="1" /></td>
-      </tr>
-      <tr>
-        <td>Buy cost{page::mandatory($product_buyCost)}</td>
-{if $TPL["taxRate"]}
-        <td><input type="text" size="8" name="buyCost" id="buyCost" value="{$product_buyCost}" tabindex="2" /> (inc {$taxName})</td>
-        <td><input type="text" size="8" name="buyCost_ex" id="buyCost_ex" /> (ex {$taxName})</td>
-{else}
-        <td colspan="2"><input type="text" size="8" name="buyCost" id="buyCost" value="{$product_buyCost}" tabindex="2" /></td>
-{/}
-      </tr>
-      <tr>
-        <td>Sell price{page::mandatory($product_sellPrice)}</td>
-{if $TPL["taxRate"]}
-        <td><input type="text" size="8" name="sellPrice" id="sellPrice" value="{$product_sellPrice}" tabindex="3" /> (inc {$taxName})</td>
-        <td><input type="text" size="8" name="sellPrice_ex" id="sellPrice_ex" /> (ex {$taxName})</td>
-{else}
-        <td colspan="2"><input type="text" size="8" name="sellPrice" id="sellPrice" value="{$product_sellPrice}" tabindex="3" /></td>
-{/}
-      </tr>
-      <tr>
-        <td>Description</td><td colspan="2"><input type="text" size="50" name="description" value="{$product_description}" tabindex="4" /></td>
-      </tr>
-      <tr>
-        <td>Comment (internal)</td><td colspan="2">
-        <textarea id="comment" name="comment" cols="85" wrap="virtual" style="height:100px">{$product_comment}</textarea></td>
-      </tr>
-      <tr>
-        <td colspan="3">&nbsp;</td>
-      </tr>
-      <tr>
-        <td colspan="3" class="center">
-{if $TPL["product_productID"]}
-        <input type="submit" name="save" value="Save" />
-{else}
-        <input type="submit" name="save" value="Create New Product" />
-{/}
-        <input type="submit" name="delete"
-        value="Delete" value="Delete Record" onClick="return confirm('Are you sure you want to delete this record?')"/>
-        </td>
-      </tr>
-  </table>
-  </form>
+      <table class="list">
+        <tr>
+          <th width="15%">Amount</th>
+          <th width="35%">Source TF</th>
+          <th width="35%">Destination TF</th>
+          <th>Description</th>
+          <th class="right"><a href="#x" class="magic" onClick="$('#product_cost_footer').before('<tr>'+$('#product_cost_row').html()+'</tr>');">New</a></th>
+        </tr>
+        {show_productCost_list($productID, "templates/productCostR.tpl")}
+        {show_productCost_new("templates/productCostR.tpl")}
+        <tr id="product_cost_footer">
+          <th colspan="5" class="center"><input type="submit" name="save_costs" value="Save Costs"></th>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
 </table>
-{if $TPL["product_productID"]}
-{list($fixed, $pct) = get_costs()}
-{$table_box}
-  <tr>
-    <th>Commissions</th>
-    <th class="right">{page::help("product_commissions")}</th>
-  </tr>
-  <tr><td colspan="2">
-  <form action="{$url_alloc_product}" method="post">
-  <input type="hidden" name="productID" value="{$product_productID}" />
-  <table>
-  <tr>
-    <th colspan="3">Fixed costs</th>
-    <th><a href="#x" class="magic" onClick="$('#fixedCostContainer').append($('#new_fixedCost').html());">New</a></th>
-  </tr>
-  
-  <tr>
-    <td>Recipient</td>
-    <td>Amount</td>
-    <td>Description</td>
-    <td valign="top" align="right" rowspan="2">{page::help("product_fixedCost");}</td>
-  </tr>
-  <tr>
-    <td>{$companyTF}</td>
-    <td id="buyCostLine">{$product_buyCost}</td>
-    <td>Product buy cost</td>
-    <!-- <td> removed for help icon -->
-  </tr>
-{if $TPL["taxRate"]}
-  <tr>
-    <td>{$taxTF}</td>
-    <td id="taxLine">{$product_tax}</td>
-    <td>{$taxName}</td>
-    <td>&nbsp;</td>
-  </tr>
-{/}
-  <tbody id="fixedCostContainer">
-{foreach $fixed as $cost}
-  <tr id="fixedCost_{$cost.productCostID}">
-    <td><input type="hidden" name="costID[{$cost.productCostID}]" value="{$cost.productCostID}" />
-      <select name="tfID[{$cost.productCostID}]"><option value=0 />{tf_list($cost["tfID"])}</select>
-    </td>
-    <td>
-      <input type="text" size="7" name="amount[{$cost.productCostID}]" value="{$cost.amount}" />
-    </td>
-    <td>
-      <input type="text" size="43" name="description[{$cost.productCostID}]" value="{$cost.description}" />
-    </td>
-    <td>
-      <input type="checkbox" name=deleteCost[{$cost.productCostID}] value="1" id="deletefixed{$cost.productCostID}" />
-      <label for="deletefixed{$cost.productCostID}">Delete</label>
-    </td>
-  </tr>
-{/}
-  </tbody>
+</form>
 
-  <tbody id="new_fixedCost" style="display:none">
-  <tr id="fixedCost_{$cost.productCostID}">
-    <td><input type="hidden" name="new_fixedCostID[]" value="new" />
-      <select name="new_fixed_tfID[]"><option value=0 />{tf_list(0)}</select>
-    </td>
-    <td>
-      <input type="text" size="7" name="new_fixed_amount[]" value="" />
-    </td>
-    <td>
-      <input type="text" size="43" name="new_fixed_description[]" value="" />
-    </td>
-    <td> </td>
-  </tr>
 
-  </tbody>
-  <tr>
-    <th colspan="3">Percentages</th>
-    <th><a href="#x" class="magic" onClick="$('#pctCostContainer').append($('#new_pctCost').html());">New</a></th>
+<form action="{$url_alloc_product}" method="post">
+<input type="hidden" name="productID" value="{$productID}">
+<table class="box">
+  <tr>  
+    <th>Product Commissions</th>
+    <th width="1%">{page::help("product_percentageCost")}</th>
   </tr>
   <tr>
-    <td>Recipient</td>
-    <td>Percentage</td>
-    <td>Description</td>
-    <td valign="top" align="right" rowspan="2">{page::help("product_percentageCost");}</td>
-  </tr>
-  <tbody id="pctCostContainer">
-{foreach $pct as $cost}
-  <tr id="pctCost_{$cost.productCostID}">
-    <td><input type="hidden" name="costID[{$cost.productCostID}]" value="{$cost.productCostID}" />
-      <select name="tfID[{$cost.productCostID}]"><option value=0 />{tf_list($cost["tfID"])}</select>
-    </td>
-    <td>
-      <input type="text" size="7" name="amount[{$cost.productCostID}]" value="{$cost.amount}" />
-    </td>
-    <td>
-      <input type="text" size="43" name="description[{$cost.productCostID}]" value="{$cost.description}" />
-    </td>
-    <td>
-      <input type="checkbox" name=deleteCost[{$cost.productCostID}] value="1" id="deletepct{$cost.productCostID}" />
-      <label for="deletepct{$cost.productCostID}">Delete</label>
+    <td colspan="2">
+
+      <table class="list">
+        <tr>
+          <th width="15%">Percentage</th>
+          <th width="35%">Source TF</th>
+          <th width="35%">Destination TF</th>
+          <th>Description</th>
+          <th class="right"><a href="#x" class="magic" onClick="$('#product_commission_footer').before('<tr>'+$('#product_commission_row').html()+'</tr>');">New</a></th>
+        </tr>
+        {show_productCost_list($productID, "templates/productCommissionR.tpl", true)}
+        {show_productCost_new("templates/productCommissionR.tpl")}
+        <tr id="product_commission_footer">
+          <th colspan="5" class="center"><input type="submit" name="save_commissions" value="Save Commissions"></th>
+        </tr>
+      </table>
+
     </td>
   </tr>
-{/}
-  </tbody>
-  <tbody id="new_pctCost" style="display:none">
-  <tr id="pctCost_{$cost.productCostID}">
-    <td><input type="hidden" name="new_pctCostID[]" value="new" />
-      <select name="new_pct_tfID[]"><option value=0 />{tf_list(0)}</select>
-    </td>
-    <td>
-      <input type="text" size="7" name="new_pct_amount[]" value="" />
-    </td>
-    <td>
-      <input type="text" size="43" name="new_pct_description[]" value="" />
-    </td>
-    <td>
-    </td>
-  </tr>
-
-  </tbody>
-
-  <tr><td colspan="4"><br /></td></tr>
-  <tr><td colspan="4" class="center"><input type="submit" name="save_commissions" value="Save Commissions" />
-  </td></tr>
-
-  </table></form>
-  </td></tr>
 </table>
+</form>
+
 {/}
 {page::footer()}
-
