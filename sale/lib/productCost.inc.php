@@ -22,19 +22,32 @@
  */
 
 class productCost extends db_entity {
-  var $classname = "productCost";
-  var $data_table = "productCost";
+  public $classname = "productCost";
+  public $data_table = "productCost";
+  public $key_field = "productCostID";
+  public $data_fields = array("tfID"
+                             ,"fromTfID"
+                             ,"productID"
+                             ,"amount"
+                             ,"isPercentage"=> array("empty_to_null"=>false)
+                             ,"description"
+                             );
 
-  function productCost() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("productCostID");
-    $this->data_fields = array("tfID"=>new db_field("tfID")
-                        ,"productID"=>new db_field("productID")
-                        ,"amount"=>new db_field("amount")
-                        ,"isPercentage"=>new db_field("isPercentage")
-                        ,"description"=>new db_field("description")
-      );
+  function validate() {
+    $this->get_value("productID")    or $err[] = "Missing a Product.";
+    $this->get_value("fromTfID")     or $err[] = "Missing a Source TF.";
+    $this->get_value("tfID")         or $err[] = "Missing a Destination TF.";
+    $this->get_value("amount")       or $err[] = "Missing an amount.";
+    #$this->get_value("isPercentage") or $err[] = "Missing the isPercentage field.";
+    $this->get_value("tfID") == $this->get_value("fromTfID") and $err[] = "Can't have identical Source and Destination TF's.";
+    return $err;
   }
+
+
+
+
+
+
 }
 
 ?>

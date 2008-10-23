@@ -121,6 +121,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_product"                        => $sess->url(SCRIPT_PATH."sale/product.php")
             ,"url_alloc_productList"                    => $sess->url(SCRIPT_PATH."sale/productList.php")
             ,"url_alloc_productSale"                    => $sess->url(SCRIPT_PATH."sale/productSale.php")
+            ,"url_alloc_productSaleList"                => $sess->url(SCRIPT_PATH."sale/productSaleList.php")
             ,"url_alloc_updateCostPrice"                => $sess->url(SCRIPT_PATH."sale/updateCostPrice.php")
 
 );

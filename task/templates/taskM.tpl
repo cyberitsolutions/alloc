@@ -231,6 +231,8 @@ $(document).ready(function() \{
   </tr>
 </table>
 
+</form>
+
 {if $task_taskID}
 
 {show_task_children("templates/taskChildrenM.tpl")}
@@ -253,7 +255,6 @@ $(document).ready(function() \{
   {show_reminders("../reminder/templates/reminderR.tpl")}
 </table>
 
-</form>
 
 {show_attachments()}
 

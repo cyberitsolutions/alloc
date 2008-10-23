@@ -22,7 +22,7 @@
 
 require_once("../alloc.php");
 
-$TPL["main_alloc_title"] = "Product List - ".APPLICATION_NAME;
-include_template("templates/productListM.tpl");
+$TPL["main_alloc_title"] = "Sales List - ".APPLICATION_NAME;
+include_template("templates/productSaleListM.tpl");
 
 ?>

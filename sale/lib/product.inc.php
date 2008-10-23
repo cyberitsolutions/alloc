@@ -22,99 +22,100 @@
  */
 
 class product extends db_entity {
-  var $classname = "product";
-  var $data_table = "product";
-  var $display_field_name = "productName";
+  public $classname = "product";
+  public $data_table = "product";
+  public $display_field_name = "productName";
+  public $key_field = "productID";
+  public $data_fields = array("productName"
+                             ,"buyCost"
+                             ,"buyCostIncTax" => array("empty_to_null"=>false)
+                             ,"sellPrice"
+                             ,"sellPriceIncTax" => array("empty_to_null"=>false)
+                             ,"description"
+                             ,"comment"
+                             );
 
-  function product() {
-    $this->db_entity();         // Call constructor of parent class
-    $this->key_field = new db_field("productID");
-    $this->data_fields = array("productName"=>new db_field("productName")
-                        ,"buyCost"=>new db_field("buyCost")
-                        ,"sellPrice"=>new db_field("sellPrice")
-                        ,"description"=>new db_field("description")
-                        ,"comment"=>new db_field("comment")
-                      );
+  function delete() {
+    $db = new db_alloc;
+    $query = sprintf("DELETE FROM productCost WHERE productID = %d",$this->get_id());
+    $db->query($query);
+    return parent::delete();
   }
 
-    function delete() {
-      $db = new db_alloc;
-      $query = sprintf("DELETE FROM productCost WHERE productID = ". $this->get_id());
-      $db->query($query);
-      return parent::delete();
-    }
-
-  /* format is an array in column order
-   * Each element is a hash:
-   *  title=>column title string
-   *  field=>DB field name (from rows) _or_ array argument for the sprintf thing
-   *  format=>sprintf formatting string to convert field to display output
-   *    format may also be a callback that takes an array of fields and returns some html.
-   */
-
-  /* This is admittedly a somewhat nasty way of doing things, but the
-   * alternative is a massive branching function that manually picks out all
-   * the values.
-   */
-
-  function db_to_html($rows, $format) {
-    
-    // helper function for array_map
-    function look_up($k) {
-      return $rows[$k];
-    }
- 
-    global $TPL;
-    $output = array();
-    $titles = array();
-    foreach ($format as $row) {
-      $titles[] = $row["title"];
-    }
-
-    foreach ($rows as $row) {
-      $line = array();
-      foreach ($format as $fmt) {
-        // extract the fields
-        if (is_array($fmt["field"])) {
-          $args = array_map("look_up", $fmt["field"]);
-        } else {
-          $args = array($row[$fmt["field"]]);
-        }
-        if (is_callable($fmt["format"])) {
-          // $fmt["format"] is a callback
-          $line[] = $fmt["format"]($args);
-        } else {
-          $line[] = vsprintf($fmt["format"], $row[$fmt["field"]]);
-        }
-      }
-      $lines[] = $line;
-    }
-    $TPL["productSale_rowtitles"] = $titles;
-    $TPL["productSale_rows"] = $lines;
-    include_template("../product/templates/productSaleListS.tpl");
+  function get_list_filter($filter) {
+    // stub function for one day when you can filter products
+    return $sql;
   }
-  
-  function get_product_list($_FORM) {
-    $filter = array();
-    foreach ($_FORM as $k => $v) {
-      $filter[] = $k . " = " . $v;
+
+  function get_list($_FORM=array()) {
+
+    $filter = product::get_list_filter($_FORM);
+
+    $debug = $_FORM["debug"];
+    $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
+    $debug and print "\n<pre>filter: ".print_r($filter,1)."</pre>";
+
+    if (is_array($filter) && count($filter)) {
+      $f = " WHERE ".implode(" AND ",$filter);
     }
-    $query = "SELECT * FROM product";
-    $filter and $query .= " WHERE " . implode(" AND ", $filter);
-    $query .= ";";
+
+    $query = sprintf("SELECT * FROM product ".$f);
     $db = new db_alloc;
     $db->query($query);
     while ($row = $db->next_record()) {
-      $rows[] = $row;
+      $product = new product;
+      $product->read_db_record($db);
+      $body.= product::get_list_body($row,$_FORM);
     }
-    return $rows;
+
+    $header = product::get_list_header($_FORM);
+    $footer = product::get_list_footer($_FORM);
+    
+    if ($body) {
+      return $header.$body.$footer;
+    } else {
+      return "<table style=\"width:100%\"><tr><td style=\"text-align:center\"><b>No Products Found</b></td></tr></table>";
+    }
+  }
+
+  function get_list_header($_FORM=array()) {
+    global $TPL;
+    $ret[] = "<table class=\"list sortable\">";
+    $ret[] = "<tr>";
+    $ret[] = "  <th>Product</th>";
+    $ret[] = "  <th>Description</th>";
+    $ret[] = "  <th>Buy Cost</th>";
+    $ret[] = "  <th>Sell Price</th>";
+    $ret[] = "</tr>";
+    return implode("\n",$ret);
+  }
+
+  function get_list_body($row,$_FORM=array()) {
+    global $TPL;
+    $ret[] = "<tr>";
+    $ret[] = "  <td class=\"nobr\">".product::get_link($row)."&nbsp;</td>";
+    $ret[] = "  <td>".$row["description"]."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".$row["buyCost"]."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".$row["sellPrice"]."&nbsp;</td>";
+    $ret[] = "</tr>";
+    return implode("\n",$ret);
+  }
+
+  function get_list_footer($_FORM=array()) {
+    $ret[] = "</table>";
+    return implode("\n",$ret);
+  }
+
+  function get_link($row=array()) {
+    global $TPL;
+    if (is_object($this)) {
+      return "<a href=\"".$TPL["url_alloc_product"]."productID=".$this->get_id()."\">".$this->get_value("productName")."</a>";
+    } else {
+      return "<a href=\"".$TPL["url_alloc_product"]."productID=".$row["productID"]."\">".$row["productName"]."</a>";
+    } 
   }
 
 
 }
-
-
-
-
 
 ?>

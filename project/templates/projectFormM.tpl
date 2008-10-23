@@ -77,7 +77,7 @@ function clickClientStatus(e)\{
                              ,"time"=>"Time Sheets"
                              ,"transactions"=>"Transactions"
                              ,"importexport"=>"Import/Export"
-                             ,"prodsales"=>"Product Sales"
+                             ,"prodsales"=>"Sales"
                              ,"sbsAll"=>"All"
                              ),$sbs_link)}
 {/}
@@ -382,12 +382,25 @@ function clickClientStatus(e)\{
 <div id="time" class="hidden">
 {show_time_sheets("templates/projectTimeSheetS.tpl")}
 </div>
+
 <div id="transactions" class="hidden">
 {show_transactions("templates/projectTransactionS.tpl")}
 </div>
+
 <div id="prodsales" class="hidden">
-{show_product_sales("templates/projectProductSaleS.tpl")}
+<table class="box">
+  <tr>
+    <th>Product Sales</th>
+    <th class="right"><a href="{$url_alloc_productSale}projectID={$project_projectID}">New Sale</a></th>
+  </tr>
+  <tr>
+    <td colspan="2">
+      {echo productSale::get_list(array("projectID"=>$project_projectID))}
+    </td>
+  </tr>
+</table>
 </div>
+
 <div id="importexport" class="hidden">
 {show_import_export("templates/projectImportExportM.tpl")}
 </div>
