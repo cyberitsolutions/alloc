@@ -848,7 +848,7 @@ class timeSheet extends db_entity {
       $email = array();
       $email["type"] = "timesheet_reject";
       $email["to"] = $info["timeSheet_personID_email"];
-      $email["subject"] = "Time Sheet: ".$this->get_id()." Rejected";
+      $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetFromManager"), "timeSheet", $this->get_id());
       $email["body"] = <<<EOD
          To: {$info["timeSheet_personID_name"]}
  Time Sheet: {$info["url"]}
@@ -898,7 +898,7 @@ EOD;
         $email = array();
         $email["type"] = "timesheet_submit";
         $email["to"] = $info["people_cache"][$pm]["emailAddress"];
-        $email["subject"] = "Time Sheet: ".$this->get_id()." Submitted for your approval";
+        $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetToManager"), "timeSheet", $this->get_id());
         $email["body"] = <<<EOD
   To Manager: {$info["people_cache"][$pm]["name"]}
   Time Sheet: {$info["url"]}
@@ -919,7 +919,7 @@ EOD;
       $email = array();
       $email["type"] = "timesheet_reject";
       $email["to"] = $info["approvedByManagerPersonID_email"];
-      $email["subject"] = "Time Sheet: ".$this->get_id()." Rejected";
+      $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetFromAdministrator"), "timeSheet", $this->get_id());
       $email["body"] = <<<EOD
   To Manager: {$info["approvedByManagerPersonID_name"]}
   Time Sheet: {$info["url"]}
@@ -951,7 +951,7 @@ EOD;
         $email = array();
         $email["type"] = "timesheet_submit";
         $email["to"] = $info["admin_email"];
-        $email["subject"] = "Time Sheet: ".$this->get_id()." Submitted for your approval";
+        $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetToAdministrator"), "timeSheet", $this->get_id());
         $email["body"] = <<<EOD
     To Admin: {$info["admin_name"]}
   Time Sheet: {$info["url"]}
@@ -1002,7 +1002,7 @@ EOD;
       $email = array();
       $email["type"] = "timesheet_finished";
       $email["to"] = $info["timeSheet_personID_email"];
-      $email["subject"] = "Time Sheet: ".$this->get_id()." Completed";
+      $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetCompleted"), "timeSheet", $this->get_id());
       $email["body"] = <<<EOD
          To: {$info["timeSheet_personID_name"]}
  Time Sheet: {$info["url"]}

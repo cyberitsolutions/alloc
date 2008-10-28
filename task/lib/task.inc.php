@@ -1460,7 +1460,7 @@ class task extends db_entity {
         $body_footer = $commentTemplate->get_populated_template("task", $this->get_id());
       }
 
-      $subject = "Task Comment: ".$this->get_id()." ".$this->get_value("taskName")." [".$this->get_priority_label()."] ".$subject_extra;
+      $subject = commentTemplate::populate_string(config::get_config_item("emailSubject_taskComment"), "task", $this->get_id());
       $email->set_subject($subject);
       $email->set_body($body_header.$body.$body_footer);
       $email->set_message_type($type);

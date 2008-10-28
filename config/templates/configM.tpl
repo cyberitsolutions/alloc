@@ -6,6 +6,7 @@
                              ,"finance"=>"Finance"
                              ,"time_sheets"=>"Time Sheets"
                              ,"email_gateway"=>"Email Gateway"
+                             ,"email_subject"=>"Email Subject Lines"
                              ,"misc"=>"Miscellaneous"
                              ),$_POST["sbs_link"])}
 
@@ -173,6 +174,70 @@
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="email_gateway">
+</form>
+</div>
+
+<div id="email_subject">
+<form action="{$url_alloc_config}" method="post">
+<table class="box">
+  <tr>
+    <th colspan="2">Email Subject Lines</th>
+    <th class="right">{page::help("config_allocEmailSubject")}</th>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Task Comments</nobr></td>
+    <td><input type="text" size="70" value="{$emailSubject_taskComment}" name="emailSubject_taskComment"></td> 
+    <td width="1%">{page::help("config_taskSubjectLine")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Daily Digest</nobr></td>
+    <td colspan="2"><input type="text" size="70" value="{$emailSubject_dailyDigest}" name="emailSubject_dailyDigest"></td> 
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Time sheet submitted to manager</nobr></td>
+    <td><input type="text" size="70" value="{$emailSubject_timeSheetToManager}" name="emailSubject_timeSheetToManager"></td> 
+    <td width="1%">{page::help("config_timeSheetSubjectLine")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Time sheet rejected by manager</nobr></td>
+    <td colspan="2"><input type="text" size="70" value="{$emailSubject_timeSheetFromManager}" name="emailSubject_timeSheetFromManager"></td> 
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Time sheet submitted to administrator</nobr></td>
+    <td colspan="2"><input type="text" size="70" value="{$emailSubject_timeSheetToAdministrator}" name="emailSubject_timeSheetToAdministrator"></td> 
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Time sheet rejected by administrator</nobr></td>
+    <td colspan="2"><input type="text" size="70" value="{$emailSubject_timeSheetFromAdministrator}" name="emailSubject_timeSheetFromAdministrator"></td> 
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Time sheet completed</nobr></td>
+    <td colspan="2"><input type="text" size="70" value="{$emailSubject_timeSheetCompleted}" name="emailSubject_timeSheetCompleted"></td> 
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Reminder about a client</nobr></td>
+    <td><input type="text" size="70" value="{$emailSubject_reminderClient}" name="emailSubject_reminderClient"></td> 
+    <td width="1%">{page::help("config_clientSubjectLine")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Reminder about a project</nobr></td>
+    <td><input type="text" size="70" value="{$emailSubject_reminderProject}" name="emailSubject_reminderProject"></td> 
+    <td width="1%">{page::help("config_projectSubjectLine")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Reminder about a task</nobr></td>
+    <td><input type="text" size="70" value="{$emailSubject_reminderTask}" name="emailSubject_reminderTask"></td> 
+    <td width="1%">{page::help("config_taskSubjectLine")}</td>
+  </tr>
+  <tr>
+    <td width="20%"><nobr>Other reminder</nobr></td>
+    <td colspan="2"><input type="text" size="70" value="{$emailSubject_reminderOther}" name="emailSubject_reminderOther"></td> 
+  </tr>
+  <tr>
+    <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
+  </tr>
+</table>
+<input type="hidden" name="sbs_link" value="email_subject">
 </form>
 </div>
 
