@@ -410,7 +410,6 @@ if ($_POST["save"]
     if ($add_timeSheet_to_invoiceID) {
       $invoice = new invoice;
       $invoice->set_id($add_timeSheet_to_invoiceID);
-      $invoice->select();   
       $invoice->add_timeSheet($timeSheet->get_id());
     }
     if ($_POST["save_and_new"]) {
