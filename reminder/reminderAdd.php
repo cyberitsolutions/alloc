@@ -162,28 +162,19 @@ case 3:
     $TPL["reminder_default_subject"] = $reminder->get_value('reminderSubject');
   } else {
     if ($parentType == "client") {
-      $client = new client;
-      $client->set_id($parentID);
-      $client->select();
-      $TPL["reminder_default_subject"] = sprintf("Client Reminder: %d %s", $client->get_id(), $client->get_value('clientName'));
+      $TPL["reminder_default_subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_reminderClient"), "client", $parentID);
       $TPL["reminder_default_content"] = config::get_config_item("allocURL")."client/client.php?clientID=".$parentID;
 
     } else if ($parentType == "project") {
-      $project = new project;
-      $project->set_id($parentID);
-      $project->select();
-      $TPL["reminder_default_subject"] = sprintf("Project Reminder: %d %s", $project->get_id(), $project->get_value('projectName'));
+      $TPL["reminder_default_subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_reminderProject"), "project", $parentID);
       $TPL["reminder_default_content"] = config::get_config_item("allocURL")."project/project.php?projectID=".$parentID;
 
     } else if ($parentType == "task") {
-      $task = new task;
-      $task->set_id($parentID);
-      $task->select();
-      $TPL["reminder_default_subject"] = sprintf("Task Reminder: %d %s [%s]", $task->get_id(), $task->get_value('taskName'), $task->get_priority_label());
+      $TPL["reminder_default_subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_reminderTask"), "task", $parentID);
       $TPL["reminder_default_content"] = config::get_config_item("allocURL")."task/task.php?taskID=".$parentID;
 
     } else if ($parentType == "general") {
-      $TPL["reminder_default_subject"] = "Reminder: ";
+      $TPL["reminder_default_subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_reminderOther"), "");
     }
   }
   $TPL["reminder_default_content"].= "\n".$reminder->get_value('reminderContent');

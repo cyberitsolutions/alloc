@@ -33,6 +33,13 @@ class commentTemplate extends db_entity {
 
 
   function get_populated_template($entity, $entityID=false) {
+    // Gets a populated template for this->commentTemplateName
+    $str = $this->get_value("commentTemplateText");
+    return commentTemplate::populate_string($str, $entity, $entityID);
+  }
+
+  function populate_string($str, $entity, $entityID=false) {
+    // Actually do the text substitution
     global $current_user;
     $swap["cu"] = person::get_fullname($current_user->get_id());
 
@@ -40,6 +47,7 @@ class commentTemplate extends db_entity {
       $timeSheet = new timeSheet;
       $timeSheet->set_id($entityID);
       $timeSheet->select();
+      $swap["mi"] = $timeSheet->get_id();
       $projectID = $timeSheet->get_value("projectID");
     }
 
@@ -54,21 +62,33 @@ class commentTemplate extends db_entity {
       $swap["tc"] = person::get_fullname($task->get_value("closerID"));
       $swap["tn"] = $task->get_value("taskName");
       $swap["td"] = $task->get_value("taskDescription");
+      $swap["tu"] = config::get_config_item("allocURL")."task/task.php?taskID=".$task->get_id();
+      $swap["tp"] = $task->get_priority_label();
       $projectID = $task->get_value("projectID");
     }
 
-    if ($projectID) {
+    if (($entity == "project" && $entityID) || $projectID) {
       $project = new project;
-      $project->set_id($projectID);
+      if($projectID) {
+        $project->set_id($projectID);
+      } else {
+        $project->set_id($entityID);
+      }
       $project->select();
       $swap["pn"] = $project->get_value("projectName");
+      $swap["pi"] = $project->get_id();
       $clientID = $project->get_value("clientID");
     }
 
-    if ($clientID) {
+    if (($entity == "client" && $entityID) || $clientID) {
       $client = new client;
-      $client->set_id($clientID);
+      if($clientID) {
+        $client->set_id($clientID);
+      } else {
+        $client->set_id($entityID);
+      }
       $client->select();
+      $swap["li"] = $client->get_id();
       $swap["cc"] = $client->get_value("clientName");
     }
 
@@ -82,8 +102,6 @@ class commentTemplate extends db_entity {
 
     $swap["cn"] = config::get_config_item("companyName");
 
-    $swap["tu"] = config::get_config_item("allocURL")."task/task.php?taskID=".$this->get_id();
-
     $swap["c1"] = config::get_config_item("companyContactAddress");
     $swap["c2"] = config::get_config_item("companyContactAddress2");
     $swap["c3"] = config::get_config_item("companyContactAddress3");
@@ -92,7 +110,6 @@ class commentTemplate extends db_entity {
     $swap["cf"] = config::get_config_item("companyContactFax");
     $swap["cw"] = config::get_config_item("companyContactHomePage");
 
-    $str = $this->get_value("commentTemplateText");
     foreach ($swap as $k => $v) {
       $str = str_replace("%".$k,$v,$str);
     }

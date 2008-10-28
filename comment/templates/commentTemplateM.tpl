@@ -32,6 +32,7 @@
       %tn = Task Name<br/>
       %td = Task Description<br/>
       %tu = Task URL<br/>
+      %tp = Task Priority<br/>
       %pn = Task Project Name<br/>
       <br/>
       %cd = Company Contact Details (c1,c2,c3,cp,cf,ce,cw)<br/>
