@@ -35,7 +35,7 @@ doc_html:
 	find ./help/images/ -type f -exec mogrify -format gif -scale '750x>' {} \;
 	rm ./help/images/*.png
 	cat ./help/src/help.txt | sed -e 's/.png/.gif/' > ./help/src/help.gif.txt
-	cd ./help/src && rst2html.py --link-stylesheet --stylesheet=help.css ./help.gif.txt ./help.html
+	cd ./help/src && rst2html --link-stylesheet --stylesheet=help.css ./help.gif.txt ./help.html
 	mv ./help/src/help.html ./help/
 	cp ./help/src/help.css ./help/
 	$(MAKE) doc_clean
@@ -45,7 +45,7 @@ doc_pdf:
 	mkdir ./help/src/images
 	cp ./help/src/images_source/* ./help/src/images/
 	find ./help/src/images/ -type f -exec mogrify -scale '450x>' {} \;
-	cd ./help/src && rst2latex.py --documentclass=report --graphicx-option=pdftex --stylesheet=help.tss help.txt help.tex
+	cd ./help/src && rst2latex --documentclass=report --graphicx-option=pdftex --stylesheet=help.tss help.txt help.tex
 	cd ./help/src && pdflatex help.tex help.pdf
 	if [ -f "./help/src/help.pdf" ]; then mv ./help/src/help.pdf ./; fi;
 	$(MAKE) doc_clean
