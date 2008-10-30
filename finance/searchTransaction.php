@@ -22,69 +22,45 @@
 
 require_once("../alloc.php");
 
-  function startSearch($template) {
-    global $TPL, $db, $transaction, $current_user;
+$download = $_GET["download"] or $download = $_POST["download"];
+$applyFilter = $_GET["applyFilter"] or $applyFilter = $_POST["applyFilter"];
 
-    if ($_POST["search"]) {
-      $where.= " where 1=1";
-      $_POST["fromTfID"] && $_POST["fromTfID"] != 0 and $where.= sprintf(" AND fromTfID=%d",db_esc($_POST["fromTfID"]));
-      $_POST["tfID"] && $_POST["tfID"] != 0 and $where.= sprintf(" AND tfID=%d",db_esc($_POST["tfID"]));
-      $_POST["status"] != "All"             and $where.= sprintf(" AND status=\"%s\"",db_esc($_POST["status"]));
-      $_POST["dateOne"] != ""               and $where.= sprintf(" AND transactionDate>=\"%s\"",db_esc($_POST["dateOne"]));
-      $_POST["dateTwo"] != ""               and $where.= sprintf(" AND transactionDate<=\"%s\"",db_esc($_POST["dateTwo"]));
-      $_POST["expenseFormID"] != ""         and $where.= sprintf(" AND expenseFormID=%d",db_esc($_POST["expenseFormID"]));
-      $_POST["transactionID"] != ""         and $where.= sprintf(" AND transactionID=%d",db_esc($_POST["transactionID"]));
-      $_POST["product"]                     and $where.= sprintf(" AND product like \"%%%s%%\"",db_esc($_POST["product"]));
+$defaults = array("url_form_action"=>$TPL["url_alloc_searchTransaction"]
+                 ,"form_name"=>"searchTransaction_filter"
+                 ,"applyFilter"=>$applyFilter
+                 ,"return"=>"html"
+                 );
 
-      if (!$current_user->have_role("god") || !$current_user->have_role("admin")) {
-        $tfIDs = $current_user->get_tfIDs();
-        if (is_array($tfIDs)) {
-          $where.= " AND transaction.tfID in (".implode(",",$tfIDs).")";
-        } 
-      }
-      
-      $query = "select * from transaction ".$where;
-      $db->query($query);
-    }
+function show_filter() {
+  global $TPL,$defaults;
+  $_FORM = transaction::load_form_data($defaults);
+  $arr = transaction::load_transaction_filter($_FORM);
+  is_array($arr) and $TPL = array_merge($TPL,$arr);
+  include_template("templates/searchTransactionFilterS.tpl");
+}
 
-    $transactionTypes = transaction::get_transactionTypes();
-    while ($db->next_record()) {
-      $i++;
-      $transaction->read_db_record($db);
-      $transaction->set_tpl_values();
-      $tf = new tf;
-      $tf->set_id($transaction->get_value("tfID"));
-      $tf->select();
-      $TPL["tfName"] = $tf->get_link();
-
-      $tf = new tf;
-      $tf->set_id($transaction->get_value("fromTfID"));
-      $tf->select();
-      $TPL["fromTfName"] = $tf->get_link();
-
-      $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);   
-      $TPL["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];
-      include_template($template);
-    }
+function show_transaction_list() {
+  global $defaults;
+  $_FORM = transaction::load_form_data($defaults);
+  if ($_FORM["applyFilter"]) {
+    #echo "<pre>".print_r($_FORM,1)."</pre>";
+    echo transaction::get_list($_FORM);
   }
+}
 
 
-$db = new db_alloc;
-$transaction = new transaction;
+if ($download) {
+  $_FORM = transaction::load_form_data($defaults);
+  $_FORM["return"] = "csv";
+  $csv = transaction::get_list($_FORM);
+  header('Content-Type: application/octet-stream');
+  header("Content-Length: ".strlen($csv));
+  header('Content-Disposition: attachment; filename="'.date("Ymd_His").'.csv"');
+  echo $csv;
+  exit();
+}
 
-$tf = new tf;
-$options = $tf->get_assoc_array("tfID","tfName");
-$TPL["tfOptions"] = page::select_options($options, $_POST["tfID"]);
-$TPL["fromTfOptions"] = page::select_options($options, $_POST["fromTfID"]);
-$TPL["statusOptions"] = page::select_options(array(""=>"", "pending"=>"Pending", "rejected"=>"Rejected", "approved"=>"Approved",), $_POST["status"]);
-$TPL["status"] = $_POST["status"];
-$TPL["fromTfID"] = $_POST["fromTfID"];
-$TPL["tfID"] = $_POST["tfID"];
-$TPL["dateOne"] = $_POST["dateOne"];
-$TPL["dateTwo"] = $_POST["dateTwo"];
-$TPL["transactionID"] = $_POST["transactionID"];
-$TPL["expenseFormID"] = $_POST["expenseFormID"];
-$TPL["product"] = $_POST["product"];
+
 
 $TPL["main_alloc_title"] = "Search Transactions - ".APPLICATION_NAME;
 include_template("templates/searchTransactionM.tpl");

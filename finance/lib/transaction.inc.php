@@ -300,6 +300,13 @@ class transaction extends db_entity {
     $_FORM["endDate"]         and $sql["endDate"]         = "(".$_FORM["sortTransactions"]." <= '".db_esc($_FORM["endDate"])."')";
     $_FORM["status"]          and $sql["status"]          = "(status = '".db_esc($_FORM["status"])."')";
     $_FORM["transactionType"] and $sql["transactionType"] = "(transactionType = '".db_esc($_FORM["transactionType"])."')";
+
+    $_FORM["fromTfID"]        and $sql["fromTfID"]        = sprintf("(fromTfID=%d)",db_esc($_FORM["fromTfID"]));
+    $_FORM["expenseFormID"]   and $sql["expenseFormID"]   = sprintf("(expenseFormID=%d)",db_esc($_FORM["expenseFormID"]));
+    $_FORM["transactionID"]   and $sql["transactionID"]   = sprintf("(transactionID=%d)",db_esc($_FORM["transactionID"]));
+    $_FORM["product"]         and $sql["product"]         = sprintf("(product LIKE \"%%%s%%\")",db_esc($_FORM["product"]));
+    $_FORM["amount"]          and $sql["amount"]          = sprintf("(amount = '%s')",db_esc($_FORM["amount"]));
+
     return $sql;
   }
 
@@ -322,6 +329,8 @@ class transaction extends db_entity {
     if ($_FORM["tfID"]) {
       $_FORM["tfIDs"][] = $_FORM["tfID"];
     }
+
+    $_FORM["tfIDs"] or $_FORM["tfIDs"] = array();
 
     $filter = transaction::get_list_filter($_FORM);
     $debug = $_FORM["debug"];
@@ -347,15 +356,20 @@ class transaction extends db_entity {
 
   
     // Determine opening balance
-    $q = sprintf("SELECT SUM(IF(fromTfID IN (%s),-amount,amount)) AS balance FROM transaction %s", implode(",", $_FORM['tfIDs']), $filter2);
-    $debug and print "\n<br>QUERY: ".$q;
-    $db = new db_alloc;
-    $db->query($q);
-    $db->row();
-    $running_balance = $db->f("balance");
+    if (is_array($_FORM['tfIDs'] && count($_FORM['tfIDs']))) {
+      $q = sprintf("SELECT SUM(IF(fromTfID IN (%s),-amount,amount)) AS balance FROM transaction %s", implode(",", $_FORM['tfIDs']), $filter2);
+      $debug and print "\n<br>QUERY: ".$q;
+      $db = new db_alloc;
+      $db->query($q);
+      $db->row();
+      $running_balance = $db->f("balance");
+    }
 
-    $q = sprintf("SELECT *, if(transactionModifiedTime,transactionModifiedTime,transactionCreatedTime) AS transactionSortDate 
-                    FROM transaction ".$filter." ".$order_by);
+    $q = "SELECT *, if(transactionModifiedTime,transactionModifiedTime,transactionCreatedTime) AS transactionSortDate 
+            FROM transaction 
+         ".$filter." 
+         ".$order_by;
+
     $debug and print "\n<br>QUERY2: ".$q;
     $db = new db_alloc;
     $db->query($q);
@@ -504,6 +518,11 @@ class transaction extends db_entity {
                 ,"url_form_action"   => "The submit action for the filter form"
                 ,"form_name"         => "The name of this form, i.e. a handle for referring to this saved form"
                 ,"dontSave"          => "Specify that the filter preferences should not be saved this time"
+                ,"fromTfID"          => "Transactions that have a source of this TF"
+                ,"expenseFormID"     => "Transactions for a particular Expense Form"
+                ,"transactionID"     => "A Transaction by ID"
+                ,"product"           => "Transactions with a description like *something* (fuzzy)"
+                ,"amount"            => "Get Transactions that are for a certain amount"
                 );
   }
 
@@ -536,7 +555,7 @@ class transaction extends db_entity {
   function load_transaction_filter($_FORM) {
     global $TPL;
 
-    $rtn["statusOptions"] = page::select_options(array("pending"=>"Pending","approved"=>"Approved","rejected"=>"Rejected"),$_FORM["status"]);
+    $rtn["statusOptions"] = page::select_options(array(""=>"","pending"=>"Pending","approved"=>"Approved","rejected"=>"Rejected"),$_FORM["status"]);
 
     $transactionTypeOptions = transaction::get_transactionTypes();
     $rtn["transactionTypeOptions"] = page::select_options($transactionTypeOptions,$_FORM["transactionType"]);
@@ -580,7 +599,14 @@ class transaction extends db_entity {
       $rtn["checked_transactionDate"] = " checked";
     }
 
-
+    $tf = new tf;
+    $options = $tf->get_assoc_array("tfID","tfName");
+    $rtn["tfOptions"] = page::select_options($options, $_FORM["tfID"]);
+    $rtn["fromTfOptions"] = page::select_options($options, $_FORM["fromTfID"]);
+    $rtn["transactionID"] = $_FORM["transactionID"];
+    $rtn["expenseFormID"] = $_FORM["expenseFormID"];
+    $rtn["product"] = $_FORM["product"];
+    $rtn["amount"] = $_FORM["amount"];
 
     return $rtn;
   }
