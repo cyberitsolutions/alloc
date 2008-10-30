@@ -82,7 +82,7 @@ CREATE TABLE comment (
   commentModifiedUser int(11) DEFAULT NULL,
   commentCreatedUserClientContactID int(11) DEFAULT NULL,
   commentCreatedUserText varchar(255) DEFAULT NULL,
-  commentEmailRecipients VARCHAR(255) DEFAULT "",
+  commentEmailRecipients TEXT DEFAULT "",
   commentEmailUID VARCHAR(255) DEFAULT NULL,
   comment TEXT,
   PRIMARY KEY  (commentID),
