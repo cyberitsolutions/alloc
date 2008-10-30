@@ -1,6 +1,6 @@
       <table class="filter" align="center" class="center">
         <tr>
-          <td colspan="6" class="center">
+          <td colspan="6" class="center" style="padding-top:0px; padding-bottom:10px;">
             {page::side_by_side_links(array("simple_search"=>"Simple","advanced_search"=>"Advanced"),$_POST["search_type"])}
           </td>
         </tr>
@@ -23,11 +23,10 @@
                 <td><select name="transactionType"><option value=""> {$transactionTypeOptions}</select></td>
                 <td><select name="status"><option value=""> {$statusOptions}</select></td>
                 <td>
-                <input type="radio" id="st_sd" name="sortTransactions" value="transactionSortDate"{$checked_transactionSortDate}> 
-                <label for="st_sd">Last Modified</label><br>
-                <input type="radio" id="st_td" name="sortTransactions" value="transactionDate"{$checked_transactionDate}> 
-                <label for="st_td">Transaction Date</label>
-
+                  <input type="radio" id="st_sd" name="sortTransactions" value="transactionSortDate"{$checked_transactionSortDate}> 
+                  <label for="st_sd">Last Modified</label><br>
+                  <input type="radio" id="st_td" name="sortTransactions" value="transactionDate"{$checked_transactionDate}> 
+                  <label for="st_td">Transaction Date</label>
                 </td>
                 <td><input type="hidden" name="tfID" value="{$tfID}">
                     <input type="submit" name="download" value="CSV">
