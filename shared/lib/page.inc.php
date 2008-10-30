@@ -108,7 +108,7 @@ class page {
     if (have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
       $str.= "<a href=\"".$TPL["url_alloc_config"]."\">Setup</a>&nbsp;&nbsp;&nbsp;";
     }
-    $url = "../help/help.php?topic=".$TPL["alloc_help_link_name"];
+    $url = $sess->url("../help/help.php?topic=".$TPL["alloc_help_link_name"]);
     $str.= "<a href=\"".$url."\">Help</a>&nbsp;&nbsp;&nbsp;";
     $url = $TPL["url_alloc_logout"];
     $str.= "<a href=\"".$url."\">Logout</a>";
