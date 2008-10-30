@@ -255,6 +255,23 @@ require_once("../alloc.php");
     include_template("templates/projectCommentM.tpl");
   }
 
+  function show_tasks() {
+    global $tasks, $TPL, $project;
+    $options["showHeader"] = true;
+    $options["taskView"] = "byProject";
+    $options["projectIDs"] = array($project->get_id());   
+    $options["taskStatus"] = "not_completed";
+    $options["showTaskID"] = true;
+    $options["showAssigned"] = true;
+    $options["showManager"] = true;
+    $options["showDates"] = true;
+    #$options["showTimes"] = true; // performance hit
+    $options["return"] = "arrayAndHtml";
+    // $tasks is used for the budget estimatation outside of this function
+    list($tasks,$TPL["task_summary"]) = task::get_list($options); 
+    include_template("templates/projectTaskS.tpl"); 
+  }
+
   function show_reminders($template) {
     global $TPL, $projectID, $reminderID, $current_user;
 
@@ -586,15 +603,6 @@ $TPL["clientContactDropdown"] = "<input type=\"hidden\" name=\"clientContactID\"
 $TPL["clientHidden"] = "<input type=\"hidden\" id=\"clientID\" name=\"clientID\" value=\"".$clientID."\">";
 $TPL["clientHidden"].= "<input type=\"hidden\" id=\"clientContactID\" name=\"clientContactID\" value=\"".$project->get_value("clientContactID")."\">";
 
-
-$options["showHeader"] = true;
-$options["taskView"] = "byProject";
-$options["projectIDs"] = array($project->get_id());   
-$options["taskStatus"] = "not_completed";
-$options["showAssigned"] = true;
-$options["showManager"] = true;
-#$options["showTimes"] = true; // performance hit
-
 // Gets $ per hour, even if user uses metric like $200 Daily
 function get_projectPerson_hourly_rate($personID,$projectID) {
   $db = new db_alloc;
@@ -610,9 +618,7 @@ function get_projectPerson_hourly_rate($personID,$projectID) {
 }
 
 if (is_object($project) && $project->get_id()) {
-  $options["return"] = "arrayAndHtml";
-  list($tasks,$TPL["task_summary"]) = task::get_list($options);
-  if (is_array($tasks)) {
+  if (is_array($tasks)) { // $tasks is a global defined in show_tasks() for performance reasons
     foreach ($tasks as $tid => $t) {
       $hourly_rate = get_projectPerson_hourly_rate($t["personID"],$t["projectID"]);
       $time_remaining = $t["timeEstimate"] - (task::get_time_billed($t["taskID"])/60/60);

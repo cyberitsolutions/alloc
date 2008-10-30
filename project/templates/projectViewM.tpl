@@ -21,4 +21,6 @@
 
 {show_project_managers("templates/projectPersonSummaryViewS.tpl")}
 {show_time_sheets("templates/projectTimeSheetS.tpl")}
+{show_tasks()}
+{show_comments()}
 {page::footer()}
