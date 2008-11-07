@@ -280,14 +280,25 @@ function clickClientStatus(e)\{
 {if defined("PROJECT_EXISTS")}
 <table class="box">
   <tr>
-    <th>Financial Summary</th>
-    <th class="right">{page::help("project_financial_summary")}</th>
+    <th class="nobr" width="10%">Financial Summary</th>
+    <th class="right" colspan="2">{page::help("project_financial_summary")}</th>
   </tr>
   <tr>
-    <td>Project Spend: ${$grand_total} ({$percentage}%)</td>
+    <td>Time Sheets</td>
+    <td class="right">{$total_timesheet_transactions}</td>
   </tr>
   <tr>
-    <td>Task Time Estimate: {$time_remaining} Hours  ${$cost_remaining} ({$count_not_quoted_tasks} tasks not included in estimate)</td>
+    <td class="nobr">Other Transactions</td>
+    <td class="right">{$total_other_transactions}</td>
+  </tr>
+  <tr>
+    <td>Project Spend</td>
+    <td class="grand_total" width="10%">{$grand_total}</td>
+    <td>{$percentage}%</td>
+  </tr>
+  <tr>
+    <td class="nobr">Task Time Estimate</td>
+    <td colspan="2">{$time_remaining} {$cost_remaining} {$count_not_quoted_tasks}</td>
   </tr>            
 </table>
 {/}
