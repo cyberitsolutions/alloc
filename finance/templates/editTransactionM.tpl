@@ -19,6 +19,7 @@
       <option value="">
       {$fromTfIDOptions}
       </select>
+	  {$fromTfIDWarning}
     </td>
     <td class="hint">{page::help("from_transaction_tf")}</td>
   </tr>
@@ -29,6 +30,7 @@
       <option value="">
       {$tfIDOptions}
       </select>
+	  {$tfIDWarning}
     </td>
     <td class="hint">{page::help("transaction_tf")}</td>
   </tr>

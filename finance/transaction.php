@@ -25,6 +25,19 @@ $current_user->check_employee();
 
 global $current_user, $TPL, $db, $save, $saveAndNew, $saveGoTf;
 
+function add_tf($tfID, $options, $warningKey, $warningValue) {
+  // add a tf to the array of options, if it's not already there
+  global $TPL;
+  if($tfID && !array_key_exists($tfID, $options)) {
+    $tf = new tf;
+    $tf->set_id($tfID);
+    $tf->select();
+    $options[$tfID] = $tf->get_value("tfName");
+    $TPL[$warningKey] = sprintf($warningValue, $tf->get_value("tfName"));
+  }
+  return $options;
+}
+
 $db = new db_alloc;
 $transaction = new transaction;
 $transactionID = $_POST["transactionID"] or $transactionID = $_GET["transactionID"];
@@ -119,6 +132,11 @@ $db = new db_alloc;
 
 $tf = new tf;
 $options = $tf->get_assoc_array("tfID","tfName");
+// Special cases for the current tfID and fromTfID
+$options = add_tf($transaction->get_value("tfID"), $options, "tfIDWarning", " (warning: the TF <b>%s</b> is currently inactive)");
+$options = add_tf($transaction->get_value("fromTfID"), $options, "fromTfIDWarning", " (warning: the TF <b>%s</b> is currently inactive)");
+
+
 $TPL["tfIDOptions"] = page::select_options($options, $transaction->get_value("tfID"));
 $TPL["fromTfIDOptions"] = page::select_options($options, $transaction->get_value("fromTfID"));
 
