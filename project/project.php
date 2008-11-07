@@ -632,20 +632,22 @@ if (is_object($project) && $project->get_id()) {
       } 
       $t["timeEstimate"] and $count_quoted_tasks++;
     }
-    $TPL["cost_remaining"] = sprintf("%0.2f",$TPL["cost_remaining"]);
-    $TPL["time_remaining"] = sprintf("%0.1f",$TPL["time_remaining"]);
+    $currency = '$';
+    $TPL["cost_remaining"] and $TPL["cost_remaining"] = $currency.sprintf("%0.2f",$TPL["cost_remaining"]);
+    $TPL["time_remaining"] and $TPL["time_remaining"] = sprintf("%0.1f",$TPL["time_remaining"])." Hours.";
 
     $TPL["count_incomplete_tasks"] = count($tasks);
     $not_quoted = count($tasks) - $count_quoted_tasks;
-    $TPL["count_not_quoted_tasks"] = sprintf("%d",$not_quoted);
+    $not_quoted and $TPL["count_not_quoted_tasks"] = "(".sprintf("%d",$not_quoted)." tasks not included in estimate)";
   }
 
-  $TPL["grand_total"] = $gt = sprintf("%0.2f", $project->get_project_budget_spent());
+  list($TPL["total_timesheet_transactions"], $TPL["total_other_transactions"]) = $project->get_project_budget_spent();
+  $TPL["grand_total"] = sprintf("%0.2f",$TPL["total_timesheet_transactions"] + $TPL["total_other_transactions"]);
   $TPL["project_projectBudget"] and $TPL["project_projectBudget"] = $pb = sprintf("%0.2f", $TPL["project_projectBudget"]);
 
-  // calculate percentage from grand total (gt) and project budget (pb)
-  if ($gt > 0 && $pb > 0) {
-    $p = $gt / $pb * 100;
+  // calculate percentage from grand total and project budget (pb)
+  if ($TPL["grand_total"] > 0 && $pb > 0) {
+    $p = $TPL["grand_total"] / $pb * 100;
   } else {
     $p = "0";
   }

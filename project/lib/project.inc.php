@@ -511,19 +511,21 @@ class project extends db_entity {
     $db->query($q);
     $row = $db->row();
 
-    $grand_total += $row["total"];
+    $total_transactions = $row["total"];
     
     $q = sprintf("SELECT SUM(amount) AS total 
-                  FROM timeSheet 
-                  LEFT JOIN transaction on timeSheet.timeSheetID = transaction.timeSheetID AND transaction.status='approved' AND amount>0  
-                  WHERE timeSheet.projectID = %d
+                    FROM timeSheet 
+               LEFT JOIN transaction on timeSheet.timeSheetID = transaction.timeSheetID 
+                     AND transaction.status='approved' 
+                     AND amount>0  
+                   WHERE timeSheet.projectID = %d
                 ",$this->get_id());
 
     $db->query($q);
     $row = $db->row();
-    $grand_total += $row["total"];
+    $total_timesheet_transactions = $row["total"];
 
-    return $grand_total;
+    return array(sprintf("%0.2f",$total_timesheet_transactions), sprintf("%0.2f",$total_transactions));
   }
 
   function get_project_type_array() {
