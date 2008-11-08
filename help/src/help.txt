@@ -3,7 +3,7 @@
 
 
 ==========================
-allocPSA v1.4 User Manual
+allocPSA v1.5 User Manual
 ==========================
 -----------------------------------------------------------------
 The Premier Open Source Professional Services Automation Solution
@@ -17,6 +17,11 @@ The Premier Open Source Professional Services Automation Solution
 
 http://www.cybersource.com.au/
 
+**allocPSA Pty Ltd.  ACN 127 299 503  ABN 2712 7299 503**
+
+http://www.allocpsa.com
+
+
 THIS DOCUMENT IS PROVIDED FOR INFORMATIONAL PURPOSES ONLY.
 
 The information furnished in this document, believed by Cybersource to be
@@ -29,8 +34,8 @@ Cybersource and allocPSA are registered trademarks of Cybersource Pty. Ltd.
 All other products and services are the registered trademarks of their
 respective holders. 
 
-Written By: kei, Con Zymaris, Alex Lance, Jeremy Chin, robbie, Erick Fabre,
-Trent Buck, Manjula Arulananther.
+This document was written by: Kei, Con Zymaris, Alex Lance, Jeremy Chin,
+Robbie, Erick Fabre, Trent Buck, Manjula Arulananther.
 
 Creation Date: 2001-10-25, Modification Date: |date|
 
@@ -55,9 +60,8 @@ The original administration account on allocPSA is:
    - - password: 
      - alloc
 
-NOTE: You (or the technician deploying allocPSA) should change this password
-promptly. Instructions on how to change this password are shown later in this
-manual. 
+NOTE: You should change this password promptly. Instructions on how to
+change this password are shown later in this manual. 
 
 
 Purpose and Audience
@@ -178,33 +182,6 @@ server appliance comes bundled with 10 hours of installation, data migration
 and operational support.
 
 
-
-The server appliance ships in the form of a: 
-
-1. Business class 1RU/2RU Server.
-
-2. Minimum 2.4Ghz+class x86 CPU,
-
-3. 512MBRAM,
-
-4. Standard 80 GB mirrored disk storage (160GB of disk).
-
-5. Linux operating system,
-
-6. SQL database server,
-
-7. Web server.
-
-8. Application server.
-
-9. Compatible with Windows 95, 98, Me, 2000, XP, 2003, Mac OS 9, OS X, Linux
-   (all versions), Unix (most versions)
-
-10. Works with Internet Explorer, version 5.0 and above, Netscape 6.0 and
-    above, Mozilla, Firefox, Opera, Konqueror, elinks, lynx.
-
-
-
 Customisation
 -------------
 
@@ -293,7 +270,7 @@ integration between the modules, as well as an open architecture and
 integration with existing external invoicing, book-keeping and payroll systems.
 
 allocPSA is intended for use in daily organisational operations, such as
-Client contact, project management, Task and resource allocation, skills
+client contact, project management, task and resource allocation, skills
 tracking, time-sheeting, issues tracking, calendaring, reminders and
 escalation, item loans, cost expenses and centres as well as integration with
 existing external accounts and billing systems. 
@@ -544,7 +521,14 @@ Document Management
 
 3. Customer-level document attachments.
 
+Products and Sales
+------------------
 
+1. Ability to add Products for Sale
+
+2. Specify fixed product costs, as well as product margin commissions.
+
+3. Able to refine allocation on a per-sale basis.
 
 
 How to Accomplish Common Tasks
@@ -695,10 +679,10 @@ steps.
 7. If you now go to the 'Task Calendar' of the 'Home' page again, you should
    find there is a new reminder for that meeting.
 
-8. HINT: It is a good idea, when creating a meeting Task, to give it a name
-   which includes information about who/what/when and when. Here's an example:
-   Meeting with Yvonne Smith (Partek Partners) to discuss support issues.
-   Office, Tuesday, 10am'
+HINT: It is a good idea, when creating a meeting Task, to give it a name
+which includes information about who/what/when and when. Here's an example:
+Meeting with Yvonne Smith (Partek Partners) to discuss support issues. Office,
+Tuesday, 10am'
 
 How do I Add a Meeting Reminder?
 --------------------------------
@@ -729,20 +713,15 @@ How do I Re-Edit a Task's Name?
 
 2. Log in to allocPSA.
 
-1. From the toolbar, select 'Tasks'.
+3. From the toolbar, select 'Tasks'.
 
-2. Select the Task you want to edit from the 'Task Summary' Table
+4. Select the Task you want to edit from the 'Task Summary' Table
 
-3. HINT: You can filter out any unrelated Tasks to locate the Task you want
-   from the list, if that Task isn't visible near the top. You can also use
-   your browser's Find facility, to locate any known part of the text of that
-   Task.
+5. Click 'Edit' button at the bottom of the screen. (Or just double-click the main Task panel).
 
-4. Click 'Edit' link on the top right hand concern
+6. Edit the name or any other aspect of the Task header.
 
-5. Edit the name or any other aspect of the Task header.
-
-6. Press 'Save' button at the bottom
+7. Press 'Save' button at the bottom
 
 
 How do I Delete a Task?
@@ -754,7 +733,7 @@ How do I Delete a Task?
 
 3. Select the Task you want to delete from the 'Task Summary' list.
 
-5. Press the 'Delete' button.
+5. Press the 'Edit' button, then press the 'Delete' button.
 
 6. A dialog-box will appear asking you 'Are you sure to delete this record?',
    press 'OK' to confirm the deletion of the Task.
@@ -769,33 +748,28 @@ How do I Create a New Time Sheet?
 
 3. Choose the Project that this Time Sheet belongs to.
 
-4. Fill in 'Billing Note' if any. This could be something like 'Send the
-   Invoice relating to this Time Sheet to the Client before the end of the
-   month or Internal billing only.
+4. Press the 'Save' button to continue or 'Delete' to delete this Time Sheet.
 
-5. Press the 'Save' button to continue or 'Delete' to delete this Time Sheet.
-
-6. Time Sheets are made up of individual line items, pertaining to specific
+5. Time Sheets are made up of individual line items, pertaining to specific
    Tasks. For instance, you may have worked for 3 hours on one problem (Task
    A), 2 hours on Task B and 1 hour on Task C, all for the one Client.
 
-7. For each Time Sheet line item, fill in Date, Duration, Task and Location.
+6. For each Time Sheet line item, fill in Date, Duration, Task and Location.
 
-8. Press the 'Add Time Sheet Item' button to add each new line item.
+7. Press the 'Add Time Sheet Item' button to add each new line item.
 
-9. Repeat step 7 to add more line item entries if needed.
+8. Repeat step 7 to add more line item entries if needed.
 
-12. Press 'Time Sheet to Admin' button when done. An email will be sent off to the
-    person designated as the next stop in the Time Sheet workflow process.
+9. Press 'Time Sheet to Admin' button when done. An email will be sent off to the
+   person designated as the next stop in the Time Sheet workflow process.
 
-13. HINT: You can save the Time Sheet as-is, then return to it later on.
+HINT: You can save the Time Sheet as-is, then return to it later on.
 
-14. HINT: You can track the progress of your Time Sheets from the 'Time Sheet'
-    section of your 'Homepage'.
+HINT: You can track the progress of your Time Sheets from the 'Time Sheet'
+section of your 'Homepage'.
 
-15. HINT: If you're a manager designated to receive requests to authorise
-    Time Sheets, you can view them from the 'Time Sheet' section of your
-    'Homepage'.
+HINT: If you're a manager designated to receive requests to authorise Time
+Sheets, you can view them from the 'Time Sheet' section of your 'Homepage'.
 
 How do I Authorise a Time Sheet?
 --------------------------------
@@ -844,20 +818,20 @@ How do I Find Client Information?
 
 6. A list of Clients matching the criteria is shown.
 
-7. HINT: You can also use your browser's Find facility, to locate any known
-   part of the text of Client's information.
+HINT: You can also use your browser's Find facility, to locate any known
+part of the text of Client's information.
 
-8. HINT: If the Client's name begins with a number or other, non-alphabetical
-   letter, then they will be listed under the 'A' filter list.
+HINT: If the Client's name begins with a number or other, non-alphabetical
+letter, then they will be listed under the 'A' filter list.
 
-9. HINT: If you're looking at the list of Clients, you can send email to their
-   primary contact, assuming that one exists and they have an email address
-   listed in allocPSA, by clicking on their email address as shown in the
-   Client listing page.
+HINT: If you're looking at the list of Clients, you can send email to their
+primary contact, assuming that one exists and they have an email address listed
+in allocPSA, by clicking on their email address as shown in the Client listing
+page.
 
-10. HINT: If you're presently in any particular Client's page, you can send
-    email to any of the contacts by clicking on their email address (once
-    again, assuming they have one) as shown in the Client contact page.
+HINT: If you're presently in any particular Client's page, you can send
+email to any of the contacts by clicking on their email address (once again,
+assuming they have one) as shown in the Client contact page.
 
 How do I Add Client Information?
 --------------------------------
@@ -894,8 +868,8 @@ How do I Add Client Information?
     the 'Files' section to select a file from your computer, then press the
     'Save Document' to upload and store it.
 
-Some Useful Tips on Using allocPSA
-==================================
+Useful Tips for using allocPSA
+==============================
 
 Firstly, remember that allocPSA is a web-based application. As such, all the
 normal behaviour that you would expect from a web-browser functions correctly
@@ -953,15 +927,14 @@ appropriate access privileges.
 allocPSA Tab Menu
 =================
 
-The tab menu in allocPSA is at the top of every page of the application.
-It is very important that you become familiar with it, as it is perhaps the
-most often used component of the allocPSA application. From this tab bar, you
-will be able to jump directly to almost all of the main application modules
-(Home, Projects, Clients, Tasks, Finances, etc.) There is also a search
-facility with which you will be able to look for almost all important data-sets
-archived in allocPSA. Finally, there is also an Quick List, from which,
-you will be able to create new Tasks, Project, Client entries, as well as see a
-list of recently visited pages of the allocPSA application.
+The tab menu in allocPSA is at the top of every page of the application. It
+is perhaps the most often used component of the allocPSA application. From this
+tab bar, you will be able to jump directly to almost all of the main
+application modules (Home, Projects, Clients, Tasks, Finances, etc.) There is
+also a search facility with which you will be able to look for almost all
+important data-sets archived in allocPSA. Finally, there is also an Quick List,
+from which, you will be able to create new Tasks, Project, Client entries, as
+well as see a list of recently visited pages of the allocPSA application.
 
 
 Home
@@ -2070,12 +2043,151 @@ You can review existing Invoices you've created.
 3. Click on the Invoice number of the Invoice you want to review.
 
 
+Sales
+-----
+
+
+Workflow Overview
+~~~~~~~~~~~~~~~~~
+
+allocPSA allows you to add Products and specify Fixed Costs and/or Percentage
+Commissions to be auto-generated for any Sales of a particular Product.
+
+1. An allocPSA user who has "manager" or "admin" permissions creates a Product
+   and sets up any related Product Costs or Commissions.
+
+2. At some point in the future a manager or admin creates a Sale for a
+   Product. They can specify if the Sale is related to a particular Client or
+   Project.
+
+3. That manager or admin finalizes the Sale items that are on the Sale and
+   moves the Sale to status Allocate.
+
+4. That same manager or admin should then review the allocation of the *pending*
+   transactions for each Sale item. The "Total Unallocated" figure should be green
+   and equal to zero. This indicates that all the funds from the Sale have been
+   allocated. When they are satisfied they should push the Sale to status
+   Administrator.
+
+5. The Administrator should then review the Sale to ensure that everything is
+   correct and, once satisfied, should *approve* all the transactions and finally
+   move the Sale to status Finished.
+
+
+Fixed Costs
+~~~~~~~~~~~
+
+Fixed Product Costs are the list of monetary transactions that will be created
+whenever this Product is sold. They specify a particular amount that will be
+transferred between TF's, and may be used to represent certain known expenses
+that are generated every time there is a Sale of this Product.
+
+
+Percentage Commissions
+~~~~~~~~~~~~~~~~~~~~~~
+
+Each Product has a Buy Cost (the amount that you pay to acquire the item), and
+a Sale Price (the amount that you charge the customer). The difference between
+these two amounts is the Margin/Profit of the Sale.
+
+The margin/profit from each sale can be distributed based on any Percentage
+Commissions that you set up. For example you might specify that 10% of the
+profit from each Sale of a particular Product, should go to Alice, perhaps for
+a finders fee.
+
+
+Meta TF's
+~~~~~~~~~
+
+When specifying the Product Costs and Commissions, it is possible to select
+from the various particular TF's that the transactions should occur between.
+
+There are also Meta TF's that may be auto-calculated for each sale. There is
+the "Meta: Project TF", which defaults to the relevant Project (if any), TF. If
+no project is specified as part of this Sale, then this Meta TF will fall back
+to whatever you have specifed as the "Main Finance TF".
+
+The "Meta: Salesperson TF" allows you to specify transactions that should occur
+for the TF of the person who created the Sale. This gives you an easy way to
+set up a commission for the person who makes the Sale.
+
+
+Including or Excluding Tax
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When first setting up a Product you may select whether the Buy Cost or Sale
+Price are inclusive or exclusive of Tax. The Tax amount is the percentage
+specified on the Setup screen.
+
+If either the Buy Cost or Sale Price are including Tax, then when a Sale is
+made a separate transaction will be created for tax, and the corresponding
+margin/profit for that Sale will be smaller.
+
+
+Default Sale Transactions
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Product Acquisition: [PRODUCT]
+
+   When a Sale is made the first transaction that is created is for the
+   Product Acquisition, i.e. the amount your company spent on acquiring this
+   Product. This is represented by a single Transaction that transfers the amount
+   paid by your company for the Product. We model this by transferring the Buy
+   Cost from the related Project's TF (or if there is no related Project, then the
+   Main Finance TF) to the Outgoing TF.
+
+2. Product Acquisition Tax: [PRODUCT]
+
+   If Tax is included in the Buy Cost, then another transaction will be
+   created representing the transfer of the tax amount out of the Outgoing TF, and
+   into the nominated Tax TF.
+
+3. Product Sale: [PRODUCT] 
+
+   The next transaction will be for the amount that is incoming from the
+   customer who purchased the Product, i.e. the Sale Price. And it will transfer
+   monies from the Incoming TF to the Sale's related Project TF (or if no Project
+   is related, then it will fall back to the Main Finance TF).
+
+4. Product Sale Tax: [PRODUCT]
+
+   If Tax is included in the Sale Price, then another transaction will be
+   created representing the transfer of the tax amount from the related Project's
+   TF (or if there is no related Project, then the Main Finance TF) into the
+   nominated Tax TF.
+
+5. The other transactions that are created are from the Product Costs and
+   Commissions that were set up for each Product.
+
+
+
+Allocation Figures
+~~~~~~~~~~~~~~~~~~
+
+For each Sale Item on the Sale, a summary box is presented that allows you to
+quickly check that all the figures for this item are correct.
+
+.. list-table::
+
+   - - Transactions Outgoing
+     - The sum of the transactions that are for the Outgoing TF. This amount should be the same as the Buy Cost.
+   - - Transactions Incoming
+     - The sum of the transactions that are for the Incoming TF. This amount should be the same as the Sell Price.
+   - - Transactions Other
+     - The sum of the other transactions (not including Tax transactions). This amount should be the same as the Margin.
+   - - Total Unallocated
+     - The difference between the Margin and the Transactions Other. This amount should be zero.
+
+If all the figures line up and reconcile then this Sale is ready to be
+progressed. Otherwise the admin or manager should review this Sale and adjust
+the transactions until the figures reconcile correctly.
+
 
 
 People
 ------
 
-People For higher lever user: Provide general information of each personnel.
+People for higher lever user: Provide general information of each personnel.
 This includes Name, Last Login, Availability, Task Summary, Graph and On Leave.
 It comprises also the function of sending email to any personnel
 
