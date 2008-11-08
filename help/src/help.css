@@ -163,9 +163,11 @@ h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
 h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
   margin-top: 0.4em }
 
-h1 {font-size:140%;}
-h2 {font-size:110%;}
-h3 {font-size:80%;}
+h1 {font-size:180%; margin-top:30px; background-color:#e2e3f4; padding:10px 3px;}
+h2 {font-size:140%; margin-top:30px; background-color:#f4f4f4; padding:10px 3px;}
+h3 {font-size:100%; margin-top:30px;}
+
+h1 + h2 { margin:0; } /* if they're right next to each other, then collapse the margin */
 
 h1.title {
   font-size:180%;
@@ -186,6 +188,10 @@ img.align-right {
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
+
+ol.simple li {
+  margin-bottom: 0.5em;
+}
 
 ol.arabic {
   list-style: decimal }
