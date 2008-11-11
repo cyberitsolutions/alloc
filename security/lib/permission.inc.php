@@ -25,7 +25,7 @@ class permission extends db_entity {
   public $display_field_name = "tableName";
   public $key_field = "permissionID";
   public $data_fields = array("tableName"
-                             ,"entityID"=>array("empty_to_null"=>false)
+                             ,"entityID"
                              ,"personID"=>array("empty_to_null"=>false)
                              ,"roleName"=>array("empty_to_null"=>false)
                              ,"actions"
