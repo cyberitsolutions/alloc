@@ -115,6 +115,10 @@ class product extends db_entity {
     } 
   }
 
+  function get_list_vars() {
+    // stub function for one day when you can specify list parameters
+    return array();
+  }
 
 }
 

@@ -28,10 +28,10 @@ require_once(dirname(__FILE__)."/productSaleItem.inc.php");
 
 class sale_module extends module {
   var $db_entities = array("product"
-                         , "productCost"
-                         , "productSale"
-                         , "productSaleItem"
-                         );
+                          ,"productCost"
+                          ,"productSale"
+                          ,"productSaleItem"
+                          );
 }
 
 ?>

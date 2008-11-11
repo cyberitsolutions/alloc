@@ -153,36 +153,34 @@ class alloc_soap {
    * @param string $sessKey
    * @return string $helptext
    */
-  private function get_list_help($key) {
+  private function get_list_help() {
     # This function does not require authentication.
     #global $current_user; // Always need this :(
     #$current_user = $this->get_current_user($key);
 
     global $modules;
-    if (!$entity) {
-      foreach ($modules as $name => $object) {  
-        if (is_object($object) && is_array($object->db_entities)) {
-          foreach ($object->db_entities as $entity) {
-            unset($commar2);
-            if (class_exists($entity)) {
-              $e = new $entity;
-              if (method_exists($e, "get_list")) {
-                $rtn.= "\n\nEntity: ".$entity."\nOptions:\n";
-                if (method_exists($e, "get_list_vars")) {
-                  $options = $e->get_list_vars();
-                  foreach ($options as $option=>$help) {
-                    $padding = 30 - strlen($option);
-                    $rtn.= $commar2."    ".$option.str_repeat(" ",$padding).$help;
-                    $commar2 = "\n";
-                  }
+    foreach ($modules as $name => $object) {  
+      if (is_object($object) && is_array($object->db_entities)) {
+        foreach ($object->db_entities as $entity) {
+          unset($commar2);
+          if (class_exists($entity)) {
+            $e = new $entity;
+            if (method_exists($e, "get_list")) {
+              $rtn.= "\n\nEntity: ".$entity."\nOptions:\n";
+              if (method_exists($e, "get_list_vars")) {
+                $options = $e->get_list_vars();
+                foreach ($options as $option=>$help) {
+                  $padding = 30 - strlen($option);
+                  $rtn.= $commar2."    ".$option.str_repeat(" ",$padding).$help;
+                  $commar2 = "\n";
                 }
               }
             }
           }
         }
       }
-      return "Usage: get_list(sessionKey, entity, options). The following entities are available: ".$rtn;
     }
+    return "Usage: get_list(sessionKey, entity, options). The following entities are available: ".$rtn;
   }
 
 } 
