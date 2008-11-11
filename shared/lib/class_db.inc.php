@@ -151,8 +151,7 @@ class db {
     $id = $query_id or $id = $this->query_id;
     if (is_resource($id)) {
       unset($this->row);
-      $this->row =  mysql_fetch_array($id,$method);
-      $this->Record = $this->row;
+      $this->row = mysql_fetch_array($id,$method);
       return $this->row;
     }
   } 

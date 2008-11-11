@@ -37,7 +37,7 @@ class invoiceItem extends db_entity {
                              ,"iiAmount"
                              ,"iiDate"
                              );
-  public $permissions = array(PERM_FINANCE_UPDATE_APPROVED => "Update approved transactions");
+  public $permissions = array(PERM_FINANCE_UPDATE_APPROVED => "update approved transactions");
 
   function is_owner($person = "") {
     global $current_user;

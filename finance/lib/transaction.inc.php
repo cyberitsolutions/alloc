@@ -57,14 +57,14 @@ class transaction extends db_entity {
                              ,"transactionRepeatID"
                              );
 
-    public $permissions = array(PERM_FINANCE_WRITE_INVOICE_TRANSACTION => "Add/update/delete invoice transaction"
-                               ,PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION => "Add/update/delete free-form transaction"
-                               ,PERM_FINANCE_WRITE_WAGE_TRANSACTION => "Add/update/delete wage transaction"
-                               ,PERM_FINANCE_CREATE_TRANSACTION_FROM_REPEAT => "Create from repeating transactions"
-                               ,PERM_FINANCE_WRITE_APPROVED_TRANSACTION => "Approve/Reject transactions"
-                               ,PERM_FINANCE_UPLOAD_EXPENSES_FILE => "Upload expenses file"
-                               ,PERM_FINANCE_RECONCILIATION_REPORT => "View reconciliation report"
-                               ,PERM_FINANCE_CREATE_PENDING_TRANSACTION => "Create Pending Transaction"
+    public $permissions = array(PERM_FINANCE_WRITE_INVOICE_TRANSACTION => "add/update/delete invoice transaction"
+                               ,PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION => "add/update/delete free-form transaction"
+                               ,PERM_FINANCE_WRITE_WAGE_TRANSACTION => "add/update/delete wage transaction"
+                               ,PERM_FINANCE_CREATE_TRANSACTION_FROM_REPEAT => "create from repeating transactions"
+                               ,PERM_FINANCE_WRITE_APPROVED_TRANSACTION => "approve/reject transactions"
+                               ,PERM_FINANCE_UPLOAD_EXPENSES_FILE => "upload expenses file"
+                               ,PERM_FINANCE_RECONCILIATION_REPORT => "view reconciliation report"
+                               ,PERM_FINANCE_CREATE_PENDING_TRANSACTION => "create pending transaction"
                                );
 
 

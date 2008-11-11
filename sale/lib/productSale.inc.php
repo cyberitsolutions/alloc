@@ -34,7 +34,7 @@ class productSale extends db_entity {
                              ,"productSaleModifiedTime"
                              ,"productSaleModifiedUser"
                              );
-  public $permissions = array(PERM_APPROVE_PRODUCT_TRANSACTIONS => "Approve Product Transactions");
+  public $permissions = array(PERM_APPROVE_PRODUCT_TRANSACTIONS => "approve product transactions");
 
   function validate() {
     if ($this->get_value("status") == "admin" || $this->get_value("status") == "finished") {
