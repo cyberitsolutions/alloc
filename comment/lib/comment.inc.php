@@ -538,8 +538,22 @@ class comment extends db_entity {
     return array($to_address, $bcc, $successful_recipients);
   }
 
+  function get_list($_FORM=array()) {
+    if ($_FORM["entity"] && in_array($_FORM["entity"],array("project","client","task","timeSheet")) && $_FORM["entityID"]) {
+      $e = new $_FORM["entity"];
+      $e->set_id($_FORM["entityID"]);
+      if ($e->select()) { // this ensures that the user can read the entity
+        return comment::util_get_comments_array($_FORM["entity"],$_FORM["entityID"],$_FORM);
+      }
+    }
+  }
 
-
+  function get_list_vars() {
+    return array("entity"            => "The entity whose comments you want to fetch, eg: project | client | task | timeSheet"
+                ,"entityID"          => "The ID of the particular entity"
+                ,"showEditButtons"   => "Will fetch a form with edit comment buttons"
+                );
+  }
 
 
 }
