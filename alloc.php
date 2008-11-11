@@ -196,7 +196,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   } 
   
   if (!defined("NO_AUTH") && !defined("DO_NOT_REDIRECT_TO_LOGIN")) {
-    $current_user = person::load_get_current_user($sess->Get("personID"));
+    $current_user->load_current_user($sess->Get("personID"));
 
     // Save history entry
     $history = new history;

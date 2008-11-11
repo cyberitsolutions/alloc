@@ -187,6 +187,16 @@ class db_entity {
     $this->check_perm(PERM_READ);
   }
 
+  function perm_cleanup(&$row=array()) {
+    foreach ($row as $field_name => $object) {
+      if (!$this->can_read_field($field_name)) {
+        $str = "Permission denied to ".$this->permissions[$this->data_fields[$field_name]->read_perm_name]." of ".$this->data_table;
+        $row[$field_name] = $str;
+      }
+    }
+    return $row;
+  }
+
   function check_update_perms() {
     $this->check_perm(PERM_UPDATE);
   }
@@ -422,7 +432,7 @@ class db_entity {
       die("Field $field_name does not exist in ".$this->data_table);
     }
     if (!$this->can_read_field($field_name)) {
-      return "Permission denied (".$this->data_table.":".$this->data_fields[$field_name]->read_perm_name.")";
+      return "Permission denied to ".$this->permissions[$this->data_fields[$field_name]->read_perm_name]." of ".$this->data_table;
     }
     return $field->get_value($dest);
   }
@@ -491,7 +501,7 @@ class db_entity {
 
   function can_read_field($field_name) {
     $field = $this->data_fields[$field_name];
-    if ($field->read_perm_name) {
+    if (is_object($field) && $field->read_perm_name) {
       return $this->have_perm($field->read_perm_name);
     } else {
       return true;

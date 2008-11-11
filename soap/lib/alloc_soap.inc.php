@@ -61,7 +61,8 @@ class alloc_soap {
       throw new SoapFault("Server","Authentication Failed(2).");
     } else {
       $person = new person;
-      return $person->load_get_current_user($sess->Get("personID"));
+      $person->load_current_user($sess->Get("personID"));
+      return $person;
     }
   }
 

@@ -33,19 +33,19 @@ class person extends db_entity {
   public $key_field = "personID";
   public $data_fields = array("username"
                              ,"lastLoginDate"
-                             ,"password"=>array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
-                             ,"perms"=>array("write_perm_name"=>PERM_PERSON_WRITE_ROLES)
+                             ,"password"          => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
+                             ,"perms"             => array("write_perm_name"=>PERM_PERSON_WRITE_ROLES)
                              ,"emailAddress"
-                             ,"availability"=>array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
-                             ,"areasOfInterest"=>array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
-                             ,"comments"=>array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
-                             ,"managementComments"=>array("read_perm_name"=>PERM_PERSON_READ_MANAGEMENT
-                                                         ,"write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
+                             ,"availability"      => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
+                             ,"areasOfInterest"   => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
+                             ,"comments"          => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
+                             ,"managementComments"=> array("read_perm_name"=>PERM_PERSON_READ_MANAGEMENT
+                                                          ,"write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
                              ,"firstName"
                              ,"surname"
                              ,"preferred_tfID"
                              ,"personActive"
-                             ,"sessData"
+                             ,"sessData"          => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
                              ,"phoneNo1"
 			                       ,"phoneNo2"
       			                 ,"emergencyContact"
@@ -256,12 +256,10 @@ class person extends db_entity {
     }
   }
 
-  function load_get_current_user($personID) {
-    $current_user = new person;
-    $current_user->set_id($personID);
-    if ($current_user->select()) {
-      $current_user->load_prefs();
-      return $current_user;
+  function load_current_user($personID) {
+    $this->set_id($personID);
+    if ($this->select()) {
+      $this->load_prefs();
     }
   }
 
@@ -357,8 +355,254 @@ class person extends db_entity {
     }
   }
 
+  function get_list_filter($filter=array()) {
+    if ($filter["username"]) {
+      $sql[] = sprintf("(username = '%s')", db_esc($filter["username"]));
+    }
+    if ($filter["personActive"]) {
+      $sql[] = sprintf("(personActive = '%d')", db_esc($filter["personActive"]));
+    }
+    if ($filter["firstName"]) {
+      $sql[] = sprintf("(firstName = '%s')", db_esc($filter["firstName"]));
+    }
+    if ($filter["surname"]) {
+      $sql[] = sprintf("(surname = '%s')", db_esc($filter["surname"]));
+    }
+    if ($filter["personID"]) {
+      $sql[] = sprintf("(personID = '%d')", db_esc($filter["personID"]));
+    }
+    if ($filter["skill"]) {
+      $sql[] = sprintf("(skillID=%d)", $filter["skill"]);
+    } else if ($filter["skill_class"]) {
+      $q = sprintf("SELECT * FROM skillList WHERE skillClass='%s'", db_esc($filter["skill_class"]));
+      $db = new db_alloc();
+      $db->query($q);
+      while ($db->next_record()) {
+        $skillList = new skillList;
+        $skillList->read_db_record($db);
+        $sql2[] = sprintf("(skillID=%d)", $skillList->get_id());
+      } 
+    }
+    if ($filter["expertise"]) {
+      $sql[] = sprintf("(skillProficiency='%s')", db_esc($filter["expertise"]));
+    } 
+
+    return array($sql,$sql2);
+  }
+
+  function get_list($_FORM=array()) {
+    global $TPL, $current_user;
+    list($filter,$filter2) = person::get_list_filter($_FORM);
+
+    $debug = $_FORM["debug"];
+    $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
+    $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
+
+    $_FORM["return"] or $_FORM["return"] = "html";
+
+    // Get averages for hours worked over the past fortnight and year
+    if ($current_user->have_perm(PERM_PERSON_READ_MANAGEMENT) && $_FORM["showHours"]) {
+      $t = new timeSheetItem;
+      list($ts_hrs_col_1,$ts_dollars_col_1) = $t->get_averages(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y"))));
+      list($ts_hrs_col_2,$ts_dollars_col_2) = $t->get_fortnightly_average();
+    } else {
+      unset($_FORM["showHours"]);
+    }
+
+    // A header row
+    $summary.= person::get_list_tr_header($_FORM);
+
+    if (is_array($filter) && count($filter)) {
+      $filter = " WHERE ".implode(" AND ",$filter);
+    }
+    if (is_array($filter2) && count($filter2)) {
+      $filter.= " AND ".implode(" OR ",$filter2);
+    }
+
+    $q = "SELECT person.*
+            FROM person
+       LEFT JOIN skillProficiencys ON person.personID = skillProficiencys.personID
+           ".$filter."
+        GROUP BY username
+        ORDER BY firstName,surname,username";
+
+    $debug and print "Query: ".$q;
+    $db = new db_alloc;
+    $db->query($q);
+
+    while ($row = $db->next_record()) {
+      $p = new person;
+      if (!$p->read_db_record($db,false)) {
+        continue;
+      }
+      $row = $p->perm_cleanup($row); // this is not the right way to do this - alla
+      $print = true;
+      $_FORM["showHours"] and $row["hoursSum"] = $ts_hrs_col_1[$row["personID"]];
+      $_FORM["showHours"] and $row["hoursAvg"] = $ts_hrs_col_2[$row["personID"]];
+
+      $row["name"] = $p->get_username(1);
+      $row["name_link"] = $p->get_link();
+      $row["personActive_label"] = $p->get_value("personActive") == 1 ? "Y":"";
+      
+      if ($_FORM["showSkills"]) {
+        $senior_skills = $p->get_skills('Senior');
+        $advanced_skills = $p->get_skills('Advanced');
+        $intermediate_skills = $p->get_skills('Intermediate');
+        $junior_skills = $p->get_skills('Junior');
+        $novice_skills = $p->get_skills('Novice');
+
+        $skills = array();
+        $senior_skills       and $skills[] = "<img src=\"../images/skill_senior.png\" alt=\"Senior=\"> ".$senior_skills;
+        $advanced_skills     and $skills[] = "<img src=\"../images/skill_advanced.png\" alt=\"Advanced=\"> ".$advanced_skills;
+        $intermediate_skills and $skills[] = "<img src=\"../images/skill_intermediate.png\" alt=\"Intermediate=\"> ".$intermediate_skills;
+        $junior_skills       and $skills[] = "<img src=\"../images/skill_junior.png\" alt=\"Junior=\"> ".$junior_skills;
+        $novice_skills       and $skills[] = "<img src=\"../images/skill_novice.png\" alt=\"Novice\"> ".$novice_skills;
+        $row["skills_list"] = implode("<br>",$skills);
+      }
+  
+      if ($_FORM["showLinks"]) {
+        $row["navLinks"] = '<a href="'.$TPL["url_alloc_taskList"].'personID='.$row["personID"].'&taskView=byProject&applyFilter=1';
+        $row["navLinks"].= '&dontSave=1&taskStatus=not_completed&projectType=curr">Tasks</a>&nbsp;&nbsp;';
+        $row["navLinks"].= '<a href="'.$TPL["url_alloc_personGraph"].'personID='.$row["personID"].'">Graph</a>&nbsp;&nbsp;';
+        $row["navLinks"].= '<a href="'.$TPL["url_alloc_taskCalendar"].'personID='.$row["personID"].'">Calendar</a>';
+      }
+
+      $summary.= person::get_list_tr($row,$_FORM);
+      $rows[$row["personID"]] = $row;
+    }
+
+    $rows or $rows = array();
+    if ($print && $_FORM["return"] == "array") {
+      return $rows;
+
+    } else if ($print && $_FORM["return"] == "html") {
+      return "<table class=\"list sortable\">".$summary."</table>";
+
+    } else if (!$print && $_FORM["return"] == "html") {
+      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No People Found</b></td></tr></table>";
+    }
+  }
+
+  function get_list_tr_header($_FORM) {
+    if ($_FORM["showHeader"]) {
+      $summary[] = "<tr>";
+      $_FORM["showName"]    and $summary[] = "<th>Name</th>";
+      $_FORM["showActive"]  and $summary[] = "<th>Enabled</th>";
+      $_FORM["showNos"]     and $summary[] = "<th>Contact</th>";
+      if ($_FORM["showSkills"]) {
+        $summary[] = "<th>";
+        $summary[] = "Senior";
+        $summary[] = '<img src="../images/skill_senior.png" alt="S" align="absmiddle">';
+        $summary[] = '<img src="../images/skill_advanced.png" alt="A" align="absmiddle">';
+        $summary[] = '<img src="../images/skill_intermediate.png" alt="I" align="absmiddle">';
+        $summary[] = '<img src="../images/skill_junior.png" alt="J" align="absmiddle">';
+        $summary[] = '<img src="../images/skill_novice.png" alt="N" align="absmiddle"> Novice';
+        $summary[] = "</th>";
+      }
+      $_FORM["showHours"]   and $summary[] = "<th>Sum Prev Fort</th>";
+      $_FORM["showHours"]   and $summary[] = "<th>Avg Per Fort</th>";
+      $_FORM["showLinks"]   and $summary[] = "<th class=\"noprint\">Actions</th>";
+      $summary[] ="</tr>";
+      $summary = "\n".implode("\n",$summary);
+      return $summary;
+    }
+  }
+
+  function get_list_tr($row, $_FORM) {
+    $row["phoneNo1"] && $row["phoneNo2"] and $row["phoneNo1"].= " / ";
+    $summary[] = "<tr>";
+    $_FORM["showName"]    and $summary[] = "  <td>".$row["name_link"]."</td>";
+    $_FORM["showActive"]  and $summary[] = "  <td>".$row["personActive_label"]."</td>";
+    $_FORM["showNos"]     and $summary[] = "  <td>".$row["phoneNo1"].$row["phoneNo2"]."</td>";
+    $_FORM["showSkills"]  and $summary[] = "  <td>".$row["skills_list"]."</td>";
+    $_FORM["showHours"]   and $summary[] = "  <td>".sprintf("%0.1f",$row["hoursSum"])."</td>";
+    $_FORM["showHours"]   and $summary[] = "  <td>".sprintf("%0.1f",$row["hoursAvg"])."</td>";
+    $_FORM["showLinks"]   and $summary[] = "  <td class=\"nobr noprint\" align=\"right\" width=\"1%\">".$row["navLinks"]."</td>";
+    $summary[] = "</tr>";
+    $summary = "\n".implode("\n",$summary);
+    return $summary;
+  }
+
+  function get_list_vars() {
+    return array("return"       => "[MANDATORY] eg: array | html"
+                ,"username"     => "Search by the person username"
+                ,"personActive" => "Search by persons active/inactive status eg: 1 | 0"
+                ,"firstName"    => "Search by persons first name"
+                ,"surname"      => "Search by persons last name"
+                ,"personID"     => "Search by persons ID"
+                ,"skill"        => "Search by a particular skill"
+                ,"skill_class"  => "Search by a particular class of skill"
+                ,"expertise"    => "Search by a level of expertise eg: Novice | Junior | Intermediate | Advanced | Senior"
+                ,"applyFilter"  => "Saves this filter as the persons preference"
+                ,"dontSave"     => "A flag that allows the user to specify that the filter preferences should not be saved this time"
+                ,"form_name"    => "The name of this form, i.e. a handle for referring to this saved form"
+                ,"showHeader"   => "Show the HTML header row of the table"
+                ,"showName"     => "Show the persons name"
+                ,"showActive"   => "Show the persons active/inactive status"
+                ,"showNos"      => "Show the persons contact numbers"
+                ,"showHours"    => "Show the persons time sheeted hours figures"
+                ,"showLinks"    => "Show the person action links"
+                ,"showSkills"   => "Show the persons skills"
+                );
+  }
+
+  function load_form_data($defaults=array()) {
+    global $current_user;
+    $page_vars = array_keys(person::get_list_vars());
+    $_FORM = get_all_form_data($page_vars,$defaults);
+
+    if (!$_FORM["applyFilter"]) {
+      $_FORM = $current_user->prefs[$_FORM["form_name"]];
+      if (!isset($current_user->prefs[$_FORM["form_name"]])) {
+        $_FORM["personActive"] = true;
+      }
+
+    } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+      $url = $_FORM["url_form_action"];
+      unset($_FORM["url_form_action"]);
+      $current_user->prefs[$_FORM["form_name"]] = $_FORM;
+      $_FORM["url_form_action"] = $url;
+    }
+
+    return $_FORM;
+  }
+
+  function load_person_filter($_FORM) {
+    global $TPL, $current_user;
+
+    $db = new db_alloc;
+    $_FORM["showSkills"]   and $rtn["show_skills_checked"] = " checked";
+    $_FORM["showHours"]    and $rtn["show_hours_checked"] = " checked";
+    $_FORM["personActive"] and $rtn["show_all_users_checked"] = " checked";
+
+    $employee_expertise = array(""            =>"Any Expertise"
+                               ,"Novice"      =>"Novice"
+                               ,"Junior"      =>"Junior"
+                               ,"Intermediate"=>"Intermediate"
+                               ,"Advanced"    =>"Advanced"
+                               ,"Senior"      =>"Senior"
+                               );
+    $rtn["employee_expertise"] = page::select_options($employee_expertise, $_FORM["expertise"]);
+
+    $skill_classes = skillList::get_skill_classes();
+    $rtn["skill_classes"] = page::select_options($skill_classes, $_FORM["skill_class"]);
+
+    $skills = skillList::get_skills();
+    // if a skill class is selected and a skill that is not in that class is also selected, 
+    // clear the skill as this is what the filter options will do
+    if ($skill_class && !in_array($skills[$_FORM["skill"]], $skills)) { 
+      $_FORM["skill"] = ""; 
+    }
+    $rtn["skills"] = page::select_options($skills, $_FORM["skill"]);
+
+    return $rtn;
+  }
+
+  function get_link() {
+    global $TPL;
+    return "<a href=\"".$TPL["url_alloc_person"]."personID=".$this->get_id()."\">".$this->get_username(1)."</a>";
+  }
+
 }
-
-
 
 ?>
