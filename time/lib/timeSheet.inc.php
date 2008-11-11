@@ -167,10 +167,14 @@ class timeSheet extends db_entity {
     $this->pay_info["customerBilledDollars"] = $this->get_value("customerBilledDollars");
 
     // Get duration for this timesheet/timeSheetItem
-    $db->query(sprintf("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$this->get_id()));
+    $db->query(sprintf("SELECT *, (timeSheetItemDuration * timeUnit.timeUnitSeconds) / 3600 AS hours
+                          FROM timeSheetItem
+                     LEFT JOIN timeUnit ON timeUnit.timeUnitID = timeSheetItem.timeSheetItemDurationUnitID
+                         WHERE timeSheetID = %d",$this->get_id()));
 
     while ($db->next_record()) {
       $this->pay_info["total_duration"] += $db->f("timeSheetItemDuration");
+      $this->pay_info["total_duration_hours"] += $db->f("hours");
       $this->pay_info["duration"][$db->f("timeSheetItemID")] = $db->f("timeSheetItemDuration");
       $tsi = new timeSheetItem();
       $tsi->read_db_record($db);
@@ -206,6 +210,9 @@ class timeSheet extends db_entity {
     }
     if (!isset($this->pay_info["total_duration"])) {
       $this->pay_info["total_duration"] = 0;
+    }
+    if (!isset($this->pay_info["total_duration_hours"])) {
+      $this->pay_info["total_duration_hours"] = 0;
     }
     $taxPercent = config::get_config_item("taxPercent");
     $taxPercentDivisor = ($taxPercent/100) + 1;
@@ -573,6 +580,7 @@ class timeSheet extends db_entity {
      
       $row["amount"] = sprintf("%0.2f",$t->pay_info["total_dollars"]);
       $extra["amountTotal"] += $row["amount"];
+      $extra["totalHours"] += $t->pay_info["total_duration_hours"];
       $row["duration"] = $t->pay_info["summary_unit_totals"];
       $row["person"] = $people_array[$row["personID"]]["name"];
       $row["status"] = $status_array[$row["status"]];
@@ -693,11 +701,11 @@ class timeSheet extends db_entity {
       $_FORM["showDateFrom"]        and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showDateTo"]          and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showStatus"]          and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showDuration"]        and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["amountTotal"])."</td>";
-      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["customerBilledDollarsTotal"])."</td>";
-      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["transactionsPosTotal"])."</td>";
-      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total\" align=\"right\">".sprintf("$%0.2f",$row["transactionsNegTotal"])."</td>";
+      $_FORM["showDuration"]        and $summary[] = "  <td class=\"grand_total left\">".sprintf("%0.2f", $row["totalHours"])." hours</td>";
+      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["amountTotal"])."</td>";
+      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["customerBilledDollarsTotal"])."</td>";
+      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["transactionsPosTotal"])."</td>";
+      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["transactionsNegTotal"])."</td>";
       $summary[] = "</tr>";
       $summary[] = "</tfoot>";
       $summary = "\n".implode("\n",$summary);
