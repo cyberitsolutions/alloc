@@ -31,7 +31,7 @@
         <tfoot>
         <tr>
           <td colspan="2">&nbsp;</td>
-          <td class="grand_total">${$grand_total}</td>
+          <td class="grand_total right">${$grand_total}</td>
           <td>&nbsp;</td>
         </tr>
         </tfoot>

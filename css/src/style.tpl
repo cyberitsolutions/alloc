@@ -462,7 +462,6 @@ table.alloc_calendar th {
 }
 table.list td.grand_total, .grand_total { 
   border-top:1px solid black;
-  text-align:right;
 }
 
 /* .panel tables (Harpo) have a blue border and a light blue background in the default theme.
