@@ -190,7 +190,7 @@ class db_entity {
   function perm_cleanup(&$row=array()) {
     foreach ($row as $field_name => $object) {
       if (!$this->can_read_field($field_name)) {
-        $str = "Permission denied to ".$this->permissions[$this->data_fields[$field_name]->read_perm_name]." of ".$this->data_table;
+        $str = "Permission denied to ".$this->permissions[$this->data_fields[$field_name]->read_perm_name]." of ".$this->data_table.".".$field_name;
         $row[$field_name] = $str;
       }
     }
@@ -345,7 +345,6 @@ class db_entity {
     foreach ($this->data_fields as $field_index=>$field) {
       $source_index = $source_prefix.$field->get_name();
       $this->set_field_value($this->data_fields[$field_index], $array[$source_index], $source);
-      $this->debug and print "db_entity->read_array data_fields[$field_index]->set_value(".$array[$source_index].", $source)<br>\n";
     }
 
     // Key field
@@ -387,8 +386,8 @@ class db_entity {
 
   function read_db_record($db, $errors_fatal = true) {
     $this->set_id($db->f($this->key_field->get_name()));
-    $this->read_array($db->Record, "", SRC_DATABASE);
-    $this->all_row_fields = $db->Record;
+    $this->read_array($db->row, "", SRC_DATABASE);
+    $this->all_row_fields = $db->row;
     if ($errors_fatal) {
       $this->check_read_perms();
       return true;
@@ -432,7 +431,7 @@ class db_entity {
       die("Field $field_name does not exist in ".$this->data_table);
     }
     if (!$this->can_read_field($field_name)) {
-      return "Permission denied to ".$this->permissions[$this->data_fields[$field_name]->read_perm_name]." of ".$this->data_table;
+      return "Permission denied to ".$this->permissions[$this->data_fields[$field_name]->read_perm_name]." of ".$this->data_table.".".$field_name;
     }
     return $field->get_value($dest);
   }
@@ -514,6 +513,7 @@ class db_entity {
     }
     return $field->write_perm_name == 0 || $this->have_perm($field->write_perm_name);
   }
+
   function is_owner($person = "") {
     global $current_user;
     if ($person == "") {

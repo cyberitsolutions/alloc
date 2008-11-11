@@ -52,11 +52,11 @@ class person extends db_entity {
                              );
   
   public $prefs = array();
-  public $permissions = array(PERM_PERSON_READ_DETAILS => "Read details"
-                             ,PERM_PERSON_READ_MANAGEMENT => "Read management fields"
-                             ,PERM_PERSON_WRITE_MANAGEMENT => "Write management fields"
-                             ,PERM_PERSON_WRITE_ROLES => "Set roles"
-                             ,PERM_PERSON_SEND_EMAIL => "Send mail-outs");
+  public $permissions = array(PERM_PERSON_READ_DETAILS => "read details"
+                             ,PERM_PERSON_READ_MANAGEMENT => "read management fields"
+                             ,PERM_PERSON_WRITE_MANAGEMENT => "write management fields"
+                             ,PERM_PERSON_WRITE_ROLES => "set roles"
+                             ,PERM_PERSON_SEND_EMAIL => "send mail-outs");
 
 
   function get_tasks_for_email() {

@@ -42,8 +42,8 @@ class timeSheet extends db_entity {
                              ,"recipient_tfID"
                              ,"customerBilledDollars"
                              );
-  public $permissions = array(PERM_TIME_APPROVE_TIMESHEETS => "Approve"
-                             ,PERM_TIME_INVOICE_TIMESHEETS => "Invoice");
+  public $permissions = array(PERM_TIME_APPROVE_TIMESHEETS => "approve"
+                             ,PERM_TIME_INVOICE_TIMESHEETS => "invoice");
 
   function save() {
     global $current_user;

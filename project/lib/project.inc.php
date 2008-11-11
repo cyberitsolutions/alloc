@@ -52,8 +52,8 @@ class project extends db_entity {
                              ,"clientContactID"
                              );
 
-  public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "View task allocations"
-                             ,PERM_PROJECT_ADD_TASKS => "Add tasks");
+  public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "view task allocations"
+                             ,PERM_PROJECT_ADD_TASKS => "add tasks");
 
   function get_url() {
     global $sess;

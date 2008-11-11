@@ -48,7 +48,7 @@ class task extends db_entity {
                              ,"managerID"
                              ,"duplicateTaskID"
                              );
-  public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "Read details");
+  public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "read details");
 
   function save() {
     global $current_user;
