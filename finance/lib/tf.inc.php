@@ -105,14 +105,10 @@ class tf extends db_entity {
     // have entity perm for transaction because I figured they were the 
     // same and it nukes the error message!
 
-    if (have_entity_perm("transaction", PERM_READ, $current_user, $this->is_owner())) {
-      $statement_url = $TPL["url_alloc_transactionList"]."tfID=".$this->get_id();
-      $statement_link = "<a href=\"$statement_url\">Statement</a>";
+    if (have_entity_perm("tf", PERM_UPDATE, $current_user, $this->is_owner())) {
+      $statement_url = $TPL["url_alloc_tf"]."tfID=".$this->get_id();
+      $statement_link = "<a href=\"$statement_url\">Edit TF</a>";
       $nav_links[] = $statement_link;
-      // if (have_entity_perm("transactionRepeat", PERM_READ, $current_user, $this->is_owner())) {
-      $repeating_url = $TPL["url_alloc_transactionRepeatList"]."tfID=".$this->get_id();
-      $repeating_link = "<a href=\"$repeating_url\">Repeating Expenses</a>";
-  #    $nav_links[] = $repeating_link;
     }
 
     return $nav_links;

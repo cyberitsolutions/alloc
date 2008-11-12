@@ -65,6 +65,8 @@ function show_tf($template_name) {
     if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {
       $TPL["tfBalance"] = sprintf("%0.2f",$tf->get_balance());
       $grand_total += $tf->get_balance();
+      $url = $TPL["url_alloc_transactionList"]."tfID=".$tf->get_id();
+      $TPL["tfName"] = "<a href=\"".$url."\">".$tf->get_value("tfName")."</a>";
     } else {
       $TPL["tfBalance"] = "not available";
     }
@@ -72,13 +74,6 @@ function show_tf($template_name) {
 
     $nav_links = $tf->get_nav_links();
     $TPL["nav_links"] = implode(" ", $nav_links);
-
-    if ($tf->have_perm(PERM_UPDATE)) {
-      $edit_url = $TPL["url_alloc_tf"]."tfID=".$tf->get_id();
-      $TPL["tfName"] = "<a href=\"".$edit_url."\">".$tf->get_value("tfName")."</a>";
-    }
-
-
 
     include_template($template_name);
   }
