@@ -1,7 +1,11 @@
       <table class="filter" align="center" class="center">
         <tr>
           <td colspan="6" class="center" style="padding-top:0px; padding-bottom:10px;">
-            {page::side_by_side_links(array("simple_search"=>"Simple","advanced_search"=>"Advanced"),$_POST["search_type"])}
+            {$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"]}
+            {page::side_by_side_links(array("simple_search"=>"Simple"
+                                           ,"advanced_search"=>"Advanced")
+                                     ,$sbs_link
+                                     ,$url_alloc_transactionList."tfID=".$tfID)}
           </td>
         </tr>
         <tr>
@@ -31,7 +35,7 @@
                 <td><input type="hidden" name="tfID" value="{$tfID}">
                     <input type="submit" name="download" value="CSV">
                     <input type="submit" name="applyFilter" value="Filter">
-                    <input type="hidden" name="search_type" value="advanced_search">
+                    <input type="hidden" name="sbs_link" value="advanced_search">
                 </td>
               </tr>
             </table>

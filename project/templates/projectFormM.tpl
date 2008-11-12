@@ -68,18 +68,19 @@ function clickClientStatus(e)\{
 {if defined("PROJECT_EXISTS")}
 {$first_div="hidden"}
 {page::side_by_side_links(array("project"=>"Main"
-                             ,"people"=>"People"
-                             ,"commissions"=>"Commissions"
-                             ,"comments"=>"Comments"
-                             ,"attachments"=>"Attachments"
-                             ,"tasks"=>"Tasks"
-                             ,"reminders"=>"Reminders"
-                             ,"time"=>"Time Sheets"
-                             ,"transactions"=>"Transactions"
-                             ,"importexport"=>"Import/Export"
-                             ,"prodsales"=>"Sales"
-                             ,"sbsAll"=>"All"
-                             ),$sbs_link)}
+                               ,"people"=>"People"
+                               ,"commissions"=>"Commissions"
+                               ,"comments"=>"Comments"
+                               ,"attachments"=>"Attachments"
+                               ,"tasks"=>"Tasks"
+                               ,"reminders"=>"Reminders"
+                               ,"time"=>"Time Sheets"
+                               ,"transactions"=>"Transactions"
+                               ,"importexport"=>"Import/Export"
+                               ,"prodsales"=>"Sales"
+                               ,"sbsAll"=>"All")
+                          ,$sbs_link
+                          ,$url_alloc_project."projectID=".$project_projectID)}
 {/}
 
 <div id="project" class="{$first_div}">

@@ -1,14 +1,16 @@
 {page::header()}
 {page::toolbar()}
 
+{$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"]}
 {page::side_by_side_links(array("basic"=>"Basic Setup"
-                             ,"company_info"=>"Company Info"
-                             ,"finance"=>"Finance"
-                             ,"time_sheets"=>"Time Sheets"
-                             ,"email_gateway"=>"Email Gateway"
-                             ,"email_subject"=>"Email Subject Lines"
-                             ,"misc"=>"Miscellaneous"
-                             ),$_POST["sbs_link"])}
+                               ,"company_info"=>"Company Info"
+                               ,"finance"=>"Finance"
+                               ,"time_sheets"=>"Time Sheets"
+                               ,"email_gateway"=>"Email Gateway"
+                               ,"email_subject"=>"Email Subject Lines"
+                               ,"misc"=>"Miscellaneous")
+                          ,$sbs_link
+                          ,$url_alloc_config)}
 
 <div id="basic">
 <form action="{$url_alloc_config}" method="post">
