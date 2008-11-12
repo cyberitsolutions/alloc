@@ -412,7 +412,8 @@ CREATE TABLE task (
   KEY projectID (projectID),
   KEY parentTaskID (parentTaskID),
   KEY taskTypeID (taskTypeID),
-  KEY parentTaskID_2 (parentTaskID)
+  KEY parentTaskID_2 (parentTaskID),
+  FULLTEXT KEY `taskName_2` (`taskName`)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
