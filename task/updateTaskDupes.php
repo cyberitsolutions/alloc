@@ -21,12 +21,21 @@
 */
 
 
+require_once("../alloc.php");
 
-class search_module extends module {
+$tasks = search::by_fulltext("task", "taskName", $_GET["taskName"], sprintf("projectID = %d",$_GET["projectID"])." AND ");
+foreach ($tasks as $task) {
+  $str.= "<div style='padding-bottom:3px'>";
+  $str.= "<a href=\"".$TPL["url_alloc_task"]."taskID=".$task["taskID"]."\">".$task["taskID"]." ".$task["taskName"]."</a>";
+  $status = "";
+  $task["dateActualCompletion"] and $status = "[Closed ".$task["dateActualCompletion"]."]";
+  $str.= " ".$status;
+  $str.= "</div>";
 }
 
-require_once(dirname(__FILE__)."/search.inc.php");
-
+if ($str) {
+  echo $str;
+}
 
 
 ?>

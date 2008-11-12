@@ -8,6 +8,9 @@ function updateStuffWithAjax() \{
   makeAjaxRequest('{$url_alloc_updateInterestedParties}projectID='+id+'&taskID={$task_taskID}', 'interestedPartyDropdown')
   makeAjaxRequest('{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}', 'taskPersonList')
   makeAjaxRequest('{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}', 'taskManagerPersonList')
+  {if !$task_taskID}
+  makeAjaxRequest('{$url_alloc_updateTaskDupes}', 'taskDupes', \{ projectID: id, taskName: $("#taskName").attr("value") \})
+  {/}
 \}
 $(document).ready(function() \{
   {if !$task_taskID}
@@ -91,6 +94,13 @@ $(document).ready(function() \{
           <h6>Duplicate</h6>
           <input type="text" name="duplicateTaskID" value="{$task_duplicateTaskID}" size="10">
           {page::help("task_duplicate")}
+        </div>
+        {else}
+        <div class="edit">
+          <h6>Possible Duplicates</h6>
+          <div class="message" style="padding:4px 2px; width:100%; height:70px; border:1px solid #cccccc; overflow:auto;">
+            <div id="taskDupes"></div>
+          </div>
         </div>
         {/}
 
