@@ -5,14 +5,15 @@
 {$first_div="hidden"}
 {$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"] or $sbs_link = "client"}
 {page::side_by_side_links(array("client"=>"Main"
-                             ,"reminders"=>"Reminders"
-                             ,"comments"=>"Comments"
-                             ,"attachments"=>"Attachments"
-                             ,"projects"=>"Projects"
-                             ,"invoices"=>"Invoices"
-                             ,"sales"=>"Sales"
-                             ,"sbsAll"=>"All"
-                             ),$sbs_link)}
+                               ,"reminders"=>"Reminders"
+                               ,"comments"=>"Comments"
+                               ,"attachments"=>"Attachments"
+                               ,"projects"=>"Projects"
+                               ,"invoices"=>"Invoices"
+                               ,"sales"=>"Sales"
+                               ,"sbsAll"=>"All")
+                          ,$sbs_link
+                          ,$url_alloc_client."clientID=".$client_clientID)}
 {/}
 
 <div id="client" class="{$first_div}">

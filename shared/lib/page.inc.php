@@ -287,7 +287,7 @@ EOD;
     $str = "<a class=\"growshrink nobr\" href=\"#x\" onClick=\"$('#".$id."').slideToggle('fast');".$extra."\">".$text."</a>";
     return $str;
   }
-  function side_by_side_links($items=array(),$default=false) {
+  function side_by_side_links($items=array(),$default=false, $url) {
     global $TPL;
 
     foreach ($items as $id => $label) {
@@ -297,8 +297,15 @@ EOD;
 
     $js_array = "['".implode("','",$ids)."']";
 
+    $url = preg_replace("/[&?]+$/", "", $url);
+    if (strpos($url, "?")) {
+      $url.= "&";
+    } else {
+      $url.= "?";
+    }
+
     foreach ($items as $id => $label) {
-      $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"#x\" class=\"sidebyside\" onClick=\"sidebyside_activate('".$id."',".$js_array.");\">".$label."</a>";
+      $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"".$url."sbs_link=".$id."\" class=\"sidebyside\" onClick=\"sidebyside_activate('".$id."',".$js_array."); return false;\">".$label."</a>";
       $sp = "&nbsp;";
     }
 
