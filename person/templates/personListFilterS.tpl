@@ -11,8 +11,10 @@
                 <td align="right" width="1%"><input type="checkbox" value="1" id="personActive" name="personActive"{$show_all_users_checked}></td>
                 <td align="right" class="nobr"><label for="showSkills">Skills</label></td>
                 <td align="right" width="1%"><input type="checkbox" value="1" id="showSkills" name="showSkills"{$show_skills_checked}></td> 
+                {if $current_user->have_perm(PERM_PERSON_READ_MANAGEMENT)}
                 <td align="right" class="nobr"><label for="showHours">Hours</label></td>
                 <td align="right" width="1%"><input type="checkbox" value="1" id="showHours" name="showHours"{$show_hours_checked}></td> 
+                {/}
               </tr>
             </table>
           </td>
