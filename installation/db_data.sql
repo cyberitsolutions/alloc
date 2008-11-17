@@ -139,7 +139,7 @@ VALUES
 INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','','text');
 INSERT INTO config (name, value, type) VALUES ('mainTfID','','text');
 INSERT INTO config (name, value, type) VALUES ('timeSheetAdminEmail','0','text');
-INSERT INTO config (name, value, type) VALUES ('companyName','Cybersource','text');
+INSERT INTO config (name, value, type) VALUES ('companyName','Your Business Here','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactPhone','+61 3 9621 2377','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactFax','+61 3 9621 2477','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactEmail','info@cyber.com.au','text');

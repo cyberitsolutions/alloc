@@ -13,17 +13,17 @@
   </div>
 
   <div id="tabs">
-    <div class="tab{$tab1}" style="left:-1px;">
-      <a href="{$url_alloc_installation}?tab=1{$get}">Input</a>
+    <div class="tab{$tab1}" style="left:-2px;">
+      <a href="{$url_alloc_installation}?tab=1{$get}">Setup</a>
     </div>
-    <div class="tab{$tab2}" style="left:80px;">
-      <a href="{$url_alloc_installation}?tab=2{$get}">DB Setup</a>
+    <div class="tab{$tab2}" style="left:78px;">
+      <a href="{$url_alloc_installation}?tab=2{$get}">Test</a>
     </div>
-    <div class="tab{$tab3}" style="left:161px;">
-      <a href="{$url_alloc_installation}?tab=3{$get}">DB Install</a>
+    <div class="tab{$tab3}" style="left:158px;">
+      <a href="{$url_alloc_installation}?tab=3{$get}">DB</a>
     </div>
-    <div class="tab{$tab4}" style="left:242px;">
-      <a href="{$url_alloc_installation}?tab=4{$get}">Launch</a>
+    <div class="tab{$tab4}" style="left:238px;">
+      <a href="{$url_alloc_installation}?tab=4{$get}">Install</a>
     </div>
   </div>
 
@@ -47,7 +47,7 @@ href="http://www.allocpsa.org/installing_alloc_under_windows/">Installing allocP
 1). Verify that the system is configured correctly and has all the necessary components installed.
 
 
-{$tests = array("php_version"  =>"PHP &gt;= 4.3.0"           
+{$tests = array("php_version"  =>"PHP &gt;= 5.2.6"           
                ,"php_memory"   =>"PHP memory_limit &gt;= 32M"
                ,"php_gd"       =>"PHP GD image library"      
                ,"mysql_version"=>"MySQL &gt;= 3.23"          

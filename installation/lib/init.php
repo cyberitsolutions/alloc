@@ -77,14 +77,14 @@ function perform_test($test) {
   switch ($test) {
     case "php_version":
       $arr["value"] = phpversion();
-      if (!version_compare(phpversion(), "4.3.0", ">=")) {
-        $arr["remedy"] = "Some functionality will not work correctly with your version of PHP. It is recommended that you upgrade.";
+      if (!version_compare(phpversion(), "5.2.6", ">=")) {
+        $arr["remedy"] = "Some functionality may not work correctly with your version of PHP. It is recommended that you upgrade.";
       }
     break;
     case "php_memory":
       $arr["value"] = get_cfg_var("memory_limit");
       if (str_replace(array("m","M"),"",$arr["value"]) < 32) {
-        $arr["remedy"] = "Your installation of PHP does not have enough memory enabled. It is recommended to change the memory limit in the PHP config file: ".get_cfg_var("cfg_file_path");
+        $arr["remedy"] = "Your installation of PHP may not have enough memory enabled. It is recommended to change the memory limit in the PHP config file: ".get_cfg_var("cfg_file_path");
       }
     break;
     case "php_gd":
