@@ -27,8 +27,8 @@ the bottom of the login screen for allocPSA, or alternatively view the file
 http://YOUR_ALLOC_INSTALLATION/util/alloc_version
 
 
-To upgrade from 1.3.508 to 1.4.x
---------------------------------
+Generic Upgrade Instructions
+----------------------------
 
 1. Backup your allocPSA database. 
 

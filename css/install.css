@@ -2,7 +2,7 @@ body {
   background-color: #eeeeee;
   margin:0px;
   padding:0px;
-  font-size:80% !important; font-size:13px;
+  font-size:12px;
   font-family: arial,helvetica,sans-serif;
 }
 
@@ -21,19 +21,19 @@ div#main {
   clear:both;
   text-align:left;
   margin-bottom:4px;
-  text-align:left;
 }
 
 div#tabs {
   width:750px;
   margin:auto;
-  border:0px;
+  padding:0px !important; padding:0px 16px;
+  border:1px;
   position: relative;
   clear:both;
   text-align:left;
   height:27px;
   top:1px;
-  left:0px !important; left:1px;
+  left:1px;
   z-index:1;
 }
 
@@ -89,8 +89,7 @@ div.tab {
   width:80px;
   height:27px;
   text-align:center;
-  font-size:95%;
-  vertical-align:center;
+  font-size:12px;
 }
 
 /* Active tabs use this class as well */
@@ -102,7 +101,8 @@ div.tab a {
   font-weight:bold;
   text-decoration:none;
   position:relative;
-  top:8px;
+  top:8px !important; top:7px;
+  padding: 5px 10px;
 }
 
 div.active a {
