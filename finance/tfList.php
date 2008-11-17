@@ -75,6 +75,9 @@ function show_tf($template_name) {
     $nav_links = $tf->get_nav_links();
     $TPL["nav_links"] = implode(" ", $nav_links);
 
+    $TPL["tfActive_label"] = "";
+    $tf->get_value("tfActive") and $TPL["tfActive_label"] = "Y";
+
     include_template($template_name);
   }
 
