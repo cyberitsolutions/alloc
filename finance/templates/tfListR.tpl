@@ -1,6 +1,7 @@
 <tr>
-  <td align="left">{$tfName}</td>
-  <td align="left">{$tfComments}&nbsp;</td>
-  <td align="right">{$tfBalance}</td>
-  <td class="nobr" width="1%">{$nav_links}&nbsp;</td>
+  <td>{$tfName}</td>
+  <td>{$tfComments}</td>
+  <td>{$tfActive_label}</td>
+  <td class="right">{$tfBalance}</td>
+  <td class="right nobr" width="1%">{$nav_links}</td>
 </tr>
