@@ -3,7 +3,8 @@
         <tr>
           <td>Project</td>
           <td>User Name</td>
-          <td>Date From</td>
+          <td>Start Date From</td>
+          <td>Start Date To</td>
           <td>Status</td>
           <td>&nbsp;</td>
         </tr>
@@ -20,7 +21,8 @@
               {$show_userID_options}
             </select>
           </td>
-          <td>{page::calendar("dateFrom",$TPL["dateFrom"])}</td>
+          <td>{page::calendar("dateFrom",$dateFrom)}</td>
+          <td>{page::calendar("dateTo",$dateTo)}</td>
           <td>
             <select name="status">
               <option value=""> </option>
