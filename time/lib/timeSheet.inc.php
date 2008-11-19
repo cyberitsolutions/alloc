@@ -797,6 +797,7 @@ class timeSheet extends db_entity {
 
     // display the date from filter value
     $rtn["dateFrom"] = $_FORM["dateFrom"];
+    $rtn["dateTo"] = $_FORM["dateTo"];
     $rtn["userID"] = $current_user->get_id();
 
     // Get
