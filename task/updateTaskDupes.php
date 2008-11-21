@@ -21,6 +21,7 @@
 */
 
 
+define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
 $tasks = search::by_fulltext("task", "taskName", $_GET["taskName"], sprintf("projectID = %d",$_GET["projectID"])." AND ");

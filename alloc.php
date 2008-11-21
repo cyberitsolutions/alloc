@@ -191,8 +191,12 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // If the session hasn't started and we're not on the login screen, then redirect to login 
   // Some scripts don't require authentication
   if (!defined("NO_AUTH") && !$sess->Started()) { 
-    header("Location: ". $TPL["url_alloc_login"]);
-    exit();
+    if (defined("NO_REDIRECT")) {
+      exit();
+    } else {
+      header("Location: ".$TPL["url_alloc_login"]);
+      exit();
+    }
   } 
   
   if (!defined("NO_AUTH")) {
