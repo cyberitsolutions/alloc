@@ -336,7 +336,7 @@ if ($timeSheetID) {
   if ($_GET["format"] != "html") {
 
     // Build PDF document
-    require_once("../shared/lib/class.ezpdf.php");
+    require_once("../shared/lib/class_ezpdf.php");
 
     $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
     $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
