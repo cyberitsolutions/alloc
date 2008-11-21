@@ -21,7 +21,7 @@
 */
 
 
-define("DO_NOT_REDIRECT_TO_LOGIN",1);
+define("NO_AUTH",1);
 require_once("../alloc.php");
 
 // This script spits out a dynamically generated WSDL XML document, that enables

@@ -21,7 +21,7 @@
 */
 
 
-define("DO_NOT_REDIRECT_TO_LOGIN",true);
+define("NO_AUTH",1);
 require_once("../alloc.php");
 
 // If we already have a session
