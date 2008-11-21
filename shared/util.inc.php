@@ -229,6 +229,38 @@ function util_show_attachments($entity, $id, $options=array()) {
   }
   include_template("../shared/templates/attachmentM.tpl");
 }
+function get_filesize_label($file) {
+  $size = filesize($file);
+  $size > 1023 and $rtn = sprintf("%dK",$size/1024);
+  $size < 1024 and $rtn = sprintf("%d",$size);
+  $size > (1024 * 1024) and $rtn = sprintf("%0.1fM",$size/(1024*1024));
+  return $rtn;
+}
+function get_file_type_image($file) {
+  global $TPL;
+  // hardcoded types ...
+  $types["pdf"] = "pdf.gif";
+  $types["xls"] = "xls.gif";
+  $types["csv"] = "xls.gif";
+  $types["zip"] = "zip.gif";
+  $types[".gz"] = "zip.gif";
+  $types["doc"] = "doc.gif";
+  $types["sxw"] = "doc.gif";
+  #$types["odf"] = "doc.gif";
+
+  $type = strtolower(substr($file,-3));
+  $icon_dir = ALLOC_MOD_DIR."images".DIRECTORY_SEPARATOR."fileicons".DIRECTORY_SEPARATOR;
+  if ($types[$type]) {
+    $t = $types[$type];
+  } else if (file_exists($icon_dir.$type.".gif")) {
+    $t = $type.".gif";
+  } else if (file_exists($icon_dir.$type.".png")) {
+    $t = $type.".png";
+  } else {  
+    $t = "unknown.gif";
+  }
+  return "<img border=\"0\" alt=\"icon\" src=\"".$TPL["url_alloc_images"]."/fileicons/".$t."\">";
+}
 function get_attachments($entity, $id, $ops=array()) {
   
   global $TPL;
@@ -240,15 +272,6 @@ function get_attachments($entity, $id, $ops=array()) {
       #mkdir($dir, 0777);
     #}
 
-    $types["pdf"] = "pdf.gif";
-    $types["xls"] = "xls.gif";
-    $types["csv"] = "xls.gif";
-    $types["zip"] = "zip.gif";
-    $types[".gz"] = "zip.gif";
-    $types["doc"] = "doc.gif";
-    $types["sxw"] = "doc.gif";
-    #$types["odf"] = "doc.gif";
-
 
     if (is_dir($dir)) {
       $handle = opendir($dir);
@@ -259,17 +282,12 @@ function get_attachments($entity, $id, $ops=array()) {
 
         if ($file != "." && $file != "..") {
 
-          $type = substr($file,-3);
-          $t = $types[$type] or $t = "unknown.gif";
-          $image = "<img border=\"0\" alt=\"icon\" src=\"".$TPL["url_alloc_images"]."/fileicons/".$t."\">";
+          $image = get_file_type_image($dir.DIRECTORY_SEPARATOR.$file);
 
-          $size = filesize($dir.DIRECTORY_SEPARATOR.$file);
+          $row["size"] = get_filesize_label($dir.DIRECTORY_SEPARATOR.$file);
           $row["path"] = $dir.DIRECTORY_SEPARATOR.$file;
           $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.$ops["sep"].htmlentities($file)."</a>";
           $row["text"] = htmlentities($file);
-          $size > 1023 and $row["size"] = sprintf("%dKb",$size/1024);
-          $size < 1024 and $row["size"] = sprintf("%db",$size);
-          $size > (1024 * 1024) and $row["size"] = sprintf("%0.1fMb",$size/(1024*1024));
           #$row["delete"] = "<a href=\"".$TPL["url_alloc_delDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">Delete</a>";
           $row["delete"] = "<form action=\"".$TPL["url_alloc_delDoc"]."\" method=\"post\">
                             <input type=\"hidden\" name=\"id\" value=\"".$id."\">
