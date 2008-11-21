@@ -21,6 +21,7 @@
 */
 
 
+define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
 if ($_GET["task_type"] && $_GET["timeSheetID"]) {

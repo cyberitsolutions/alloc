@@ -21,6 +21,7 @@
 */
 
 
+define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
 usleep(400000);

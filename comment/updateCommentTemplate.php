@@ -20,7 +20,7 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
 if ($_GET["commentTemplateID"] && $_GET["commentTemplateID"] != "undefined" && $_GET["entity"] && $_GET["entityID"]) {
