@@ -141,6 +141,10 @@ $(document).ready(function() \{
           Task Closed By <b>{$task_closed_by}</b> {$task_closed_when}
           <br>
           {/}
+          <br><br>
+          {if !$task_taskID}
+            <label for="createTaskReminder"><input type="checkbox" name="createTaskReminder" id="createTaskReminder" value="true" /> Create reminder for this task</label>{page::help("task_create_reminder")}
+          {/}
         </div>
 
         {if $interestedParty_text}
