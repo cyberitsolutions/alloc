@@ -90,6 +90,26 @@ class task extends db_entity {
     return $msg;
   }
 
+  function create_task_reminder() {
+    // Create a reminder for this task based on the priority.
+
+    // Get the task type
+    $taskTypes = get_cached_table("taskType");
+    $taskTypeName = strtolower($taskTypes[$this->get_value("taskTypeID")]["taskTypeName"]);
+
+    $label = $this->get_priority_label();
+
+    $reminderInterval = "Day";
+    $intervalValue = $this->get_value("priority");
+
+    $message = "A [".$label."] $taskTypeName has been created for you.  You will continue to receive these ";
+    $message.= "emails until you either delete this reminder on the task, or close the task by putting a date in its ";
+    $message.= "'Date Actual Completion' box.";
+    $people[] = $this->get_value("personID");
+    $this->create_reminders($people, $message, $reminderInterval, $intervalValue);
+  }
+
+
   function create_reminders($people, $message, $reminderInterval, $intervalValue) {
     if (is_array($people)) {
       foreach($people as $personID) {
