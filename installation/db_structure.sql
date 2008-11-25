@@ -389,6 +389,7 @@ CREATE TABLE task (
   creatorID int(11) NOT NULL default '0',
   closerID int(11) default NULL,
   priority tinyint(4) NOT NULL default '0',
+  blocker TINYINT NOT NULL DEFAULT 0,
   timeEstimate decimal(7,2) DEFAULT NULL,
   dateCreated datetime NOT NULL default '0000-00-00 00:00:00',
   dateAssigned datetime default NULL,

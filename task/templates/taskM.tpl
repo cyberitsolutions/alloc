@@ -36,6 +36,7 @@ $(document).ready(function() \{
         <div class="view">
           <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
           <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {$task_taskName}</h2>&nbsp;{$priorityLabel}
+          <br>{$blockerLabel}
         </div>
         <div class="edit nobr">
           <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
@@ -47,6 +48,8 @@ $(document).ready(function() \{
             {$taskTypeOptions}
           </select>
           {page::help("taskType")}
+          <br>
+          <select name="blocker">{$blockerOptions}</select>
         </div>
 
         {if $project_projectName} 
