@@ -59,7 +59,7 @@ if ($_POST["run_mass_update"]) {
 
   if ($_POST["select"]) {
 
-    $allowed_auto_fields = array("dateTargetStart","dateTargetCompletion","dateActualStart","managerID","timeEstimate","priority","taskTypeID");  
+    $allowed_auto_fields = array("dateTargetStart","dateTargetCompletion","dateActualStart","managerID","timeEstimate","priority","taskTypeID","blocker");  
 
     foreach($_POST["select"] as $taskID => $selected) { 
       $task = new task;

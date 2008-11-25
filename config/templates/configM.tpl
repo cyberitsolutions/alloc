@@ -396,6 +396,17 @@
     </td>
     <td width="1%">{page::help("config_timeSheetMultipliers")}</td>
   </tr>
+  <tr>
+    <td valign="top" width="20%"><nobr>Task Blocking Status Options</nobr></td>
+    <td>
+      <a href="{$url_alloc_configEdit}configName=taskBlockers">Edit:</a>
+      {unset($br)}
+      {foreach $TPL["taskBlockers"] as $k => $arr}
+          {$br}{echo $arr["label"]} (icon: <img src="../images/{$arr.icon}" alt="{$arr.icon}">)
+          {$br = ", "}
+      {/}
+    </td>
+  </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>

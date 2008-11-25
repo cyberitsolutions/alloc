@@ -47,6 +47,7 @@ class task extends db_entity {
                              ,"personID"
                              ,"managerID"
                              ,"duplicateTaskID"
+                             ,"blocker"
                              );
   public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "read details");
 
@@ -451,6 +452,14 @@ class task extends db_entity {
     $TPL["priorityOptions"] = page::select_options($tp,$priority);
     $priority and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$taskPriorities[$priority]["colour"]."\">[".$this->get_priority_label()."]</div>";
 
+    $taskBlocker = $this->get_value("blocker");
+    $blockers = config::get_config_item("taskBlockers") or $blockers = array();
+    foreach ($blockers as $k => $v) {
+        $tb[$k] = $v["label"];
+    }
+    $TPL["blockerOptions"] = page::select_options($tb, $taskBlocker);
+    $TPL["blockerLabel"] = "Task Status: " . $this->get_blocker_label();
+
     // We're building these two with the <select> tags because they will be
     // replaced by an AJAX created dropdown when the projectID changes.
     $TPL["parentTaskOptions"] = $this->get_parent_task_select();
@@ -750,6 +759,7 @@ class task extends db_entity {
     $_FORM["timeUnit_cache"] = get_cached_table("timeUnit");
     $_FORM["taskPriorities"] = config::get_config_item("taskPriorities");
     $_FORM["projectPriorities"] = config::get_config_item("projectPriorities");
+    $_FORM["taskBlockers"] = config::get_config_item("taskBlockers");
 
 
     // Get a hierarchical list of tasks
@@ -930,9 +940,11 @@ class task extends db_entity {
       $_FORM["showPriority"] and $summary[] = "<th>Task Pri</th>";
       $_FORM["showPriority"] and $summary[] = "<th>Proj Pri</th>";
       $_FORM["showStatus"]   and $summary[] = "<th>Status</th>";
+      $_FORM["showStatus"]   and $summary[] = "<th>Blocker</th>";
       $_FORM["showCreator"]  and $summary[] = "<th>Task Creator</th>";
       $_FORM["showManager"]  and $summary[] = "<th>Task Manager</th>";
       $_FORM["showAssigned"] and $summary[] = "<th>Assigned To</th>";
+      $_FORM["showBlockerIcons"]and $summary[]="<th width=\"1%\"></td>";
       $_FORM["showDate1"]    and $summary[] = "<th>Targ Start</th>";
       $_FORM["showDate2"]    and $summary[] = "<th>Targ Compl</th>";
       $_FORM["showDate3"]    and $summary[] = "<th>Act Start</th>";
@@ -954,6 +966,14 @@ class task extends db_entity {
     return page::select_options($tp,$priority);
   }
 
+  function get_task_blocker_dropdown($blocker=false) {
+    $taskBlockers = config::get_config_item("taskBlockers") or $taskBlockers = array();
+    foreach ($taskBlockers as $k => $v) {
+      $tb[$k] = $v["label"];
+    }
+    return page::select_options($tb,$blocker);
+  }
+
   function get_list_footer($_FORM) {
     global $TPL;
     if($_FORM["showEdit"]) {
@@ -965,6 +985,7 @@ class task extends db_entity {
       $dateActualStart = page::calendar("dateActualStart");
       $dateActualCompletion = page::calendar("dateActualCompletion");
       $priority_options = task::get_task_priority_dropdown(3);
+      $taskBlocker_options = task::get_task_blocker_dropdown(0);
       $taskType = new taskType;
       $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
       $taskType_options = page::select_options($taskType_array);
@@ -989,6 +1010,7 @@ class task extends db_entity {
                           <option value=\"dateActualStart\">Actual Start Date to ".$arr."</options>
                           <option value=\"dateActualCompletion\">Actual Completion Date to ".$arr."</options>
                           <option value=\"projectIDAndParentTaskID\">Project and Parent Task to ".$arr."</options>
+                          <option value=\"blocker\">Task Blocker Status to ".$arr."</option>
                         </select>
                       </div>
                       <div class=\"hidden\" id=\"dateTargetStart_div\">".$dateTargetStart."</div>
@@ -1001,6 +1023,7 @@ class task extends db_entity {
                       <div class=\"hidden\" id=\"priority_div\"><select name=\"priority\">".$priority_options."</select></div>
                       <div class=\"hidden\" id=\"taskTypeID_div\"><select name=\"taskTypeID\">".$taskType_options."</select></div>
                       <div class=\"hidden\" id=\"projectIDAndParentTaskID_div\">".$project_dropdown.$parentTask_div."</div>
+                      <div class=\"hidden\" id=\"blocker_div\"><select name=\"blocker\">".$taskBlocker_options."</select></div>
                       <input type=\"submit\" name=\"run_mass_update\" value=\"Update Tasks\">
                     </th>
                   </tr>
@@ -1066,9 +1089,11 @@ class task extends db_entity {
     $_FORM["showPriority"]    and $summary[] = "  <td style=\"color:".$_FORM["taskPriorities"][$task["priority"]]["colour"]."\">".$_FORM["taskPriorities"][$task["priority"]]["label"]."&nbsp;</td>"; 
     $_FORM["showPriority"]    and $summary[] = "  <td style=\"color:".$_FORM["projectPriorities"][$task["projectPriority"]]["colour"]."\">".$_FORM["projectPriorities"][$task["projectPriority"]]["label"]."&nbsp;</td>"; 
     $_FORM["showStatus"]      and $summary[] = "  <td>".$task["taskStatus"]."&nbsp;</td>"; 
+    $_FORM["showStatus"]      and $summary[] = "  <td>".$_FORM["taskBlockers"][$task["blocker"]]["label"]."</td>";
     $_FORM["showCreator"]     and $summary[] = "  <td>".$people_cache[$task["creatorID"]]["name"]."&nbsp;</td>";
     $_FORM["showManager"]     and $summary[] = "  <td>".$people_cache[$task["managerID"]]["name"]."&nbsp;</td>";
     $_FORM["showAssigned"]    and $summary[] = "  <td>".$people_cache[$task["personID"]]["name"]."&nbsp;</td>";
+    $_FORM["showBlockerIcons"]and $summary[] = "  <td><img src=\"../images/".$_FORM["taskBlockers"][$task["blocker"]]["icon"]."\" alt=\"Task status: ".$_FORM["taskBlockers"][$task["blocker"]]["label"]."\" title=\"".$_FORM["taskBlockers"][$task["blocker"]]["label"]."\"></td>";
     $_FORM["showDate1"]       and $summary[] = "  <td class=\"nobr\">".$task["dateTargetStart"]."&nbsp;</td>";
     $_FORM["showDate2"]       and $summary[] = "  <td class=\"nobr\">".$task["dateTargetCompletion"]."&nbsp;</td>";
     $_FORM["showDate3"]       and $summary[] = "  <td class=\"nobr\">".$task["dateActualStart"]."&nbsp;</td>";
@@ -1143,6 +1168,11 @@ class task extends db_entity {
   function get_priority_label() {
     $taskPriorities = config::get_config_item("taskPriorities");
     return $taskPriorities[$this->get_value("priority")]["label"];
+  }
+
+  function get_blocker_label() {
+    $taskBlockers = config::get_config_item("taskBlockers");
+    return $taskBlockers[$this->get_value("blocker")]["label"];
   }
 
   function get_forecast_completion() {
