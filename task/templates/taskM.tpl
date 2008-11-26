@@ -30,7 +30,7 @@ $(document).ready(function() \{
     <th class="right nobr" colspan="3">{$navigation_links}</th>
   </tr>
   <tr>
-    <td colspan="5" valign="top" ondblclick="$('.view').hide();$('.edit').show();">
+    <td colspan="5" valign="top" class="toggle_edit_view">
       <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
 
         <div class="view">
