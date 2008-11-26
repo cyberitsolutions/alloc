@@ -6,11 +6,14 @@
     <title>{$main_alloc_title}</title>
     <style type="text/css" media="screen">body \{ font-size:{page::default_font_size()}px \}</style>
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}{page::stylesheet()}" type="text/css" media="screen" />
-    <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print" />
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}calendar.css" type="text/css" media="screen" />
+    <link rel="StyleSheet" href="{$url_alloc_stylesheets}wiki.css" type="text/css" media="screen" />
+    <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print" />
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.curvycorners.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.livequery.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.filetree.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.history.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>

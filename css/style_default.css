@@ -32,8 +32,8 @@ div#main {
   margin-bottom:4px;
 }
 
-/* Hack to ensure info_box encapsulates all the stuff */
-div#main:after, .edit:after, .view:after, .enclose:after {
+/* Hack to ensure certain div encapsulate all the stuff inside them */
+div#main:after, .edit:after, .view:after, .enclose:after, .wikidoc:after {
   content:"";
   display:block;
   height:0;
@@ -88,11 +88,15 @@ h1 {
   font-size:150%; 
 }
 h2 { 
-  font-weight:bold; 
+  font-weight:normal; 
   font-size:140%; 
   clear:both;
 }
 h3 { 
+  font-weight:bold; 
+  font-size:130%; 
+}
+h4 { 
   font-weight:bold; 
   font-size:120%; 
 }
@@ -180,33 +184,36 @@ input[readonly="true"], input[readonly="true"]:focus {
   color:#777777;
 }
 
+hr {
+  border:0px;
+  width: 100%;
+  color: #ccc;
+  background-color: #ccc;
+  height:1px;
+}
+
 .right { 
   text-align:right; 
 } 
 .left { 
   text-align:left; 
 } 
-
 .small {
   padding:0px;
   margin:0px;
 }
-
 .center { 
   text-align:center; 
 } 
 .nobr { 
   white-space:nowrap 
 }
-
 .hidden, .edit {
   display:none;
 }
-
 .edit, .view {
   clear:both;
 }
-
 .padded {
   padding:8px;
 }
@@ -425,7 +432,7 @@ img.taskType {
 .highlighted { 
   font-weight:normal; 
   font-style:normal; 
-  background-color:#fffeb7; 
+  background-color:#e7eff9; 
   padding:0px 3px;
 }
 
