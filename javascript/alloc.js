@@ -174,6 +174,11 @@ $(document).ready(function() {
   preload_field("#menu_form_needle", "Enter Search...");
   preload_field("input.datefield", "YYYY-MM-DD");
 
+  $('.toggle_edit_view').bind('dblclick', function(e) {
+    $('.view').hide();
+    $('.edit').show();
+  });
+
 });
 
 
