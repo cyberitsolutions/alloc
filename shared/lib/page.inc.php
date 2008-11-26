@@ -49,6 +49,7 @@ class page {
         ,"Invoices" =>array("url"=>$TPL["url_alloc_invoiceList"],"module"=>"invoice")
         ,"Sales"    =>array("url"=>$TPL["url_alloc_productSaleList"],"module"=>"sale")
         ,"People"   =>array("url"=>$TPL["url_alloc_personList"],"module"=>"person")
+        ,"Wiki"     =>array("url"=>$TPL["url_alloc_wiki"],"module"=>"wiki")
         ,"Tools"    =>array("url"=>$TPL["url_alloc_tools"],"module"=>"tools")
         );
 
@@ -161,16 +162,17 @@ class page {
     return $img;
   }
   function get_help_string($topic) {
-    global $TPL;
-
-    $file = $TPL["url_alloc_help"].$topic.".html";
-    if (file_exists($file)) {
-      $str = file_get_contents($file);
-    } 
-    $str = htmlentities(addslashes($str));
+    $str = htmlentities(addslashes(page::get_raw_help_string($topic)));
     $str = str_replace("\r"," ",$str);
     $str = str_replace("\n"," ",$str);
     return $str;
+  }
+  function get_raw_help_string($topic) {
+    global $TPL;
+    $file = $TPL["url_alloc_help"].$topic.".html";
+    if (file_exists($file)) {
+      return file_get_contents($file);
+    } 
   }
   function textarea($name, $default_value="", $ops=array()) {
     $height = $ops["height"] or $height = "small";

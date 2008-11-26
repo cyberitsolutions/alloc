@@ -53,6 +53,20 @@ Vincent Blavet - March 2006 http://www.phpconcept.net
 WSDL_Gen (http://www.schlossnagle.org/~george/)
 George Schlossnagle http://www.schlossnagle.org/~george/
 
+PHP Markdown (http://www.michelf.com/projects/php-markdown/)
+Michel Fortin
+
+Original Markdown (http://daringfireball.net/projects/markdown/)
+John Gruber
+
+jQuery File Tree Plugin (http://abeautifulsite.net/)
+Cory S.N. LaViska
+
+jQuery history plugin (MIT License)
+Taku Sano (Mikage Sawatari), Lincoln Cooper
+
+
+
 
 Incorporating software with different licenses? 
 See http://www.fsf.org/licensing/licenses/gpl-faq.html#AllCompatibility

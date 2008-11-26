@@ -195,6 +195,10 @@ INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_reminderClient"
 INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_reminderProject", "Project Reminder: %pi %pn", "text");
 INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_reminderTask", "Task Reminder: %ti %tn [%tp]", "text");
 INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_reminderOther", "Reminder: ", "text");
+INSERT INTO config (`name`,`value`,`type`) VALUES ("wikiMarkup", "Markdown","text");
+INSERT INTO config (`name`,`value`,`type`) VALUES ("wikiVCS", "git","text");
+
+
 
 
 
