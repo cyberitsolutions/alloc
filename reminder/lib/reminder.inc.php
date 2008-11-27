@@ -20,6 +20,9 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+define("REMINDER_METAPERSON_TASK_ASSIGNEE", 2);
+define("REMINDER_METAPERSON_TASK_MANAGER", 3);
+
 class reminder extends db_entity {
   public $data_table = "reminder";
   public $display_field_name = "reminderSubject";
@@ -27,6 +30,7 @@ class reminder extends db_entity {
   public $data_fields = array("reminderType"
                              ,"reminderLinkID"
                              ,"personID"
+                             ,"metaPerson"
                              ,"reminderTime"
                              ,"reminderRecuringInterval"
                              ,"reminderRecuringValue"
@@ -57,6 +61,10 @@ class reminder extends db_entity {
 
     } else if ($type == "task") {
       // Modified query option: to send to all people on the project that this task is from.
+      $recipients = array("-3" => "Task Manager"
+                         ,"-2" => "Task Assignee"
+                         ,"-1" => "-- all --");
+
       $db->query("SELECT projectID FROM task WHERE taskID = %s",$this->get_value('reminderLinkID'));
       $db->next_record();
 
@@ -90,7 +98,8 @@ class reminder extends db_entity {
 
     $recipients = $this->get_recipients();
     $type = $this->get_value('reminderType');
-    $recipient = $this->get_value('personID');
+    $recipient = -1 * $this->get_value('metaPerson');
+    $recipient or $recipient = $this->get_value('personID');
     
     //project reminder
     if (!$recipient && $type == "project") {
@@ -246,7 +255,7 @@ class reminder extends db_entity {
       if (date("YmdHis", $date) <= date("YmdHis")) {
      
         $people = get_cached_table("person");
-        $person = $people[$this->get_value('personID')];
+        $person = $people[$this->get_effective_person_id()];
     
         if ($person['emailAddress']) {
           $email = sprintf("%s %s <%s>"
@@ -320,7 +329,7 @@ class reminder extends db_entity {
       if (date("YmdHis", $advnotice_time) <= date("YmdHis")) {
 
         $people = get_cached_table("person");
-        $person = $people[$this->get_value('personID')];
+        $person = $people[$this->get_effective_person_id()];
 
 
         if ($person['emailAddress'] != "") {
@@ -341,6 +350,60 @@ class reminder extends db_entity {
       }
     }
   }
+
+  // get the personID of the person who'll actually recieve this reminder
+  // (i.e., convert "Task Assignee" into "Bob")
+  function get_effective_person_id() {
+    if($this->get_value('personID') === null) {
+      // OK, slightly more complicated, we need to get the relevant link entity
+      $metaperson = $this->get_value('metaPerson');
+      $type = $this->get_value("reminderType");
+      if($type == "task") {
+        $task = new task;
+        $task->set_id($this->get_value('reminderLinkID'));
+        $task->select();
+
+        switch($metaperson) {
+          case REMINDER_METAPERSON_TASK_ASSIGNEE:
+            return $task->get_value('personID');
+          break;
+          case REMINDER_METAPERSON_TASK_MANAGER:
+            return $task->get_value('managerID');
+          break;
+        }
+      } else {
+        // we should never actually get here...
+        die("Unknown metaperson.");
+      }
+    } else {
+      return $this->get_value('personID');
+    }
+  }
+
+  // gets a human-friendly description of the recipient, either the recipient name or in the form Task Manager (Bob)
+  function get_recipient_description() {
+      $person = new person;
+      $person->set_id($this->get_effective_person_id());
+      $person->select();
+      if($this->get_value("metaPerson") === null) {
+        return $person->get_username(1);
+      } else {
+        return sprintf("%s (%s)", reminder::get_metaperson_name($this->get_value("metaPerson")), $person->get_username(1));
+      }
+  }
+
+  // gets the human-friendly name of the meta person (e.g. R_MP_TASK_ASSIGNEE to "Task assignee")
+  function get_metaperson_name($metaperson) {
+    switch($metaperson) {
+      case REMINDER_METAPERSON_TASK_ASSIGNEE:
+        return "Task Assignee";
+      break;
+      case REMINDER_METAPERSON_TASK_MANAGER:
+        return "Task Manager";
+      break;
+    }
+  }
+
 }
 
 

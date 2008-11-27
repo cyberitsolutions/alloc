@@ -212,7 +212,11 @@ case 4:
       $reminder = new reminder;
       $reminder->set_value('reminderType', $parentType);
       $reminder->set_value('reminderLinkID', $parentID);
-      $reminder->set_value('personID', $recipient_keys[$i]);
+      if($recipient_keys[$i] < -1) {    // special case for meta people
+        $reminder->set_value('metaPerson', -1 * intval($recipient_keys[$i]));
+      } else {
+        $reminder->set_value('personID', $recipient_keys[$i]);
+      }
       $reminder->set_value('reminderModifiedUser', $current_user->get_id());
       $reminder->set_modified_time();
 

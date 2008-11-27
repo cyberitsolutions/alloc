@@ -200,7 +200,6 @@ require_once("../alloc.php");
     global $TPL, $clientID, $reminderID, $current_user;
 
     // show all reminders for this project
-    $reminder = new reminder;
     $db = new db_alloc;
     if ($current_user->have_role("manage") || $current_user->have_role("admin") || $current_user->have_role("god")) {
       $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d", $clientID);
@@ -209,6 +208,7 @@ require_once("../alloc.php");
     }
     $db->query($query);
     while ($db->next_record()) {
+      $reminder = new reminder;
       $reminder->read_db_record($db);
       $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
       if ($reminder->get_value('reminderRecuringInterval') == "No") {
@@ -217,10 +217,7 @@ require_once("../alloc.php");
         $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
           ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
       }
-      $person = new person;
-      $person->set_id($reminder->get_value('personID'));
-      $person->select();
-      $TPL["reminder_reminderRecipient"] = $person->get_value('username');
+      $TPL["reminder_reminderRecipient"] = $reminder->get_recipient_description();
       $TPL["returnToParent"] = "client";
 
       include_template($template);
