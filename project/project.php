@@ -276,7 +276,6 @@ require_once("../alloc.php");
     global $TPL, $projectID, $reminderID, $current_user;
 
     // show all reminders for this project
-    $reminder = new reminder;
     $db = new db_alloc;
     $permissions = explode(",", $current_user->get_value("perms"));
 
@@ -289,6 +288,7 @@ require_once("../alloc.php");
     $db->query($query);
 
     while ($db->next_record()) {
+      $reminder = new reminder;
       $reminder->read_db_record($db);
       $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
 
@@ -299,10 +299,7 @@ require_once("../alloc.php");
           ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
       }
 
-      $person = new person;
-      $person->set_id($reminder->get_value('personID'));
-      $person->select();
-      $TPL["reminder_reminderRecipient"] = $person->get_value('username');
+      $TPL["reminder_reminderRecipient"] = $reminder->get_recipient_description();
       $TPL["returnToParent"] = "project";
 
       include_template($template);

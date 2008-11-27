@@ -41,6 +41,7 @@
         <select name="reminder_recipient">
           {$reminder_recipients}
         </select>
+        {page::help("reminder_recipient")}
       </td>
     </tr>
     <tr>

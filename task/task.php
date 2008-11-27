@@ -27,11 +27,11 @@ define("PAGE_IS_PRINTABLE",1);
     global $TPL, $taskID, $reminderID;
 
     // show all reminders for this project
-    $reminder = new reminder;
     $db = new db_alloc;
     $query = sprintf("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d", $taskID);
     $db->query($query);
     while ($db->next_record()) {
+      $reminder = new reminder;
       $reminder->read_db_record($db);
       $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
       if ($reminder->get_value('reminderRecuringInterval') == "No") {
@@ -40,10 +40,8 @@ define("PAGE_IS_PRINTABLE",1);
         $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
           ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
       }
-      $person = new person;
-      $person->set_id($reminder->get_value('personID'));
-      $person->select();
-      $TPL["reminder_reminderRecipient"] = $person->get_username(1);
+
+      $TPL["reminder_reminderRecipient"] = $reminder->get_recipient_description();
       $TPL["returnToParent"] = "task";
 
       include_template($template);
