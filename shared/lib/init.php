@@ -23,16 +23,16 @@
 
 require_once(dirname(__FILE__)."/page.inc.php");
 require_once(dirname(__FILE__)."/template.inc.php");
-require_once(dirname(__FILE__)."/class_db.inc.php");
-require_once(dirname(__FILE__)."/class_db_alloc.inc.php");
-require_once(dirname(__FILE__)."/class_session.inc.php");
-require_once(dirname(__FILE__)."/class_db_field.inc.php");
-require_once(dirname(__FILE__)."/class_db_entity.inc.php");
-require_once(dirname(__FILE__)."/class_module.inc.php");
-require_once(dirname(__FILE__)."/class_alloc_cache.inc.php");
-require_once(dirname(__FILE__)."/class_history.inc.php");
-require_once(dirname(__FILE__)."/class_PasswordHash.php");
-require_once(dirname(__FILE__)."/class_interestedParty.inc.php");
+require_once(dirname(__FILE__)."/db.inc.php");
+require_once(dirname(__FILE__)."/db_alloc.inc.php");
+require_once(dirname(__FILE__)."/session.inc.php");
+require_once(dirname(__FILE__)."/db_field.inc.php");
+require_once(dirname(__FILE__)."/db_entity.inc.php");
+require_once(dirname(__FILE__)."/module.inc.php");
+require_once(dirname(__FILE__)."/alloc_cache.inc.php");
+require_once(dirname(__FILE__)."/history.inc.php");
+require_once(dirname(__FILE__)."/PasswordHash.inc.php");
+require_once(dirname(__FILE__)."/interestedParty.inc.php");
 
 class shared_module extends module {
   var $db_entities = array("sentEmailLog");
