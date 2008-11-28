@@ -108,8 +108,8 @@ is_dir(ATTACHMENTS_DIR."clients") && !is_dir(ATTACHMENTS_DIR."client")   and $ac
 
 
 // Include the database connectivity classes
-require_once("../shared/lib/class_db.inc.php");
-require_once("../shared/lib/class_db_alloc.inc.php");
+require_once("../shared/lib/db.inc.php");
+require_once("../shared/lib/db_alloc.inc.php");
 
 // Try and create a table to test if we have perm
 $db = new db_alloc();

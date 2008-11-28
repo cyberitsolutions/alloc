@@ -186,7 +186,7 @@ class invoice extends db_entity {
 
   function generate_invoice_file($verbose=false) {
     // Build PDF document
-    require_once("../shared/lib/class_ezpdf.php");
+    require_once("../shared/lib/ezpdf.inc.php");
     $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
     $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
 
