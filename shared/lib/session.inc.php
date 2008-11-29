@@ -60,7 +60,7 @@ class Session {
     $this->key = md5($row["personID"]."mix it up#@!".md5(mktime().md5(microtime())));
     $this->Put("key2", $this->key2);
     $this->Put("session_started", mktime());
-    if ($nuke_prev_sessions) {
+    if ($nuke_prev_sessions || config::get_config_item("singleSession")) {
       $this->db->query("DELETE FROM sess WHERE personID = %d",$row["personID"]);
     }
     $this->db->query("INSERT INTO sess (sessID,sessData,personID) VALUES ('%s','%s',%d)"
