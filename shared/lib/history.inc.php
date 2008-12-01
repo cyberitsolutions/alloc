@@ -115,7 +115,7 @@ class history extends db_entity {
             $newClass = new $CLASS_NAME;
             $display_field = $newClass->display_field_name;
 
-            if ($newClass->key_field->get_name() == $KEY_FIELD) {
+            if (is_object($newClass->key_field) && $newClass->key_field->get_name() == $KEY_FIELD) {
               // The primary key for this db table is the same as 
               // our KEY_FIELD var which was extracted from url.
               $query = sprintf("SELECT * FROM %s WHERE %s = %d", $CLASS_NAME, $KEY_FIELD, $ID);
