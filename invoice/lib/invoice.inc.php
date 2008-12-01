@@ -301,7 +301,7 @@ class invoice extends db_entity {
     $y = $pdf->ezTable($totals,$cols3,"",$pdf_table_options4);
 
     $pdf->ezSetY($y-20);
-    $pdf->ezText(str_replace(array("<br/>","<br>"),"\n",$footer),10);
+    $pdf->ezText(str_replace(array("<br/>","<br>","<br />"),"\n",$footer),10);
 
 
     // Add footer
