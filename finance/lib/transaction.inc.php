@@ -297,7 +297,7 @@ class transaction extends db_entity {
 
     $_FORM["startDate"]       and $sql["startDate"]       = "(".$_FORM["sortTransactions"]." >= '".db_esc($_FORM["startDate"])."')";
     $_FORM["startDate"]       and $sql["prevBalance"]     = "(".$_FORM["sortTransactions"]." < '".db_esc($_FORM["startDate"])."')";
-    $_FORM["endDate"]         and $sql["endDate"]         = "(".$_FORM["sortTransactions"]." <= '".db_esc($_FORM["endDate"])."')";
+    $_FORM["endDate"]         and $sql["endDate"]         = "(".$_FORM["sortTransactions"]." < '".db_esc($_FORM["endDate"])."')";
     $_FORM["status"]          and $sql["status"]          = "(status = '".db_esc($_FORM["status"])."')";
     $_FORM["transactionType"] and $sql["transactionType"] = "(transactionType = '".db_esc($_FORM["transactionType"])."')";
 
