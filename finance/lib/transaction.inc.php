@@ -354,6 +354,8 @@ class transaction extends db_entity {
     $_FORM["sortTransactions"] or $_FORM["sortTransactions"] = "transactionDate";
     $order_by = "ORDER BY ".$_FORM["sortTransactions"];
 
+    $_FORM["csvHeaders"] or $_FORM["csvHeaders"] = array("transactionID", "transactionType", "fromTfID", "tfID", "transactionDate", "transactionSortDate", "product", "status", "amount_positive", "amount_negative", "running_balance");
+
   
     // Determine opening balance
     if (is_array($_FORM['tfIDs'] && count($_FORM['tfIDs']))) {
@@ -424,8 +426,11 @@ class transaction extends db_entity {
         $summary.= transaction::get_list_tr($row,$_FORM);
 
       } else if ($_FORM["return"] == "csv") {
-        $csv_headers or $csv_headers = array_keys($row);
-        $csv.= $nl.implode(",",array_map('export_escape_csv', $row));
+        $csv_data = array();
+        foreach($_FORM["csvHeaders"] as $header) {  //suck out the data in the right order
+          $csv_data[] = $row[$header];
+        }
+        $csv.= $nl.implode(",",array_map('export_escape_csv', $csv_data));
         $nl = "\n";
 
       } else if ($_FORM["return"] == "array") {
@@ -445,7 +450,7 @@ class transaction extends db_entity {
       return $header_row.$summary.$footer_row;
 
     } else if ($print && $_FORM["return"] == "csv") {
-      return implode(",",array_map('export_escape_csv', $csv_headers))."\n".$csv; 
+      return implode(",",array_map('export_escape_csv', $_FORM["csvHeaders"]))."\n".$csv;
 
     } else if ($print && $_FORM["return"] == "array") {
       return $transactions;
@@ -523,6 +528,7 @@ class transaction extends db_entity {
                 ,"transactionID"     => "A Transaction by ID"
                 ,"product"           => "Transactions with a description like *something* (fuzzy)"
                 ,"amount"            => "Get Transactions that are for a certain amount"
+                ,"csvHeaders"        => "An array of columns to include in the output, when generating CSV"
                 );
   }
 
