@@ -143,11 +143,14 @@ $files = get_attachments("whatsnew",0);
 
 if (is_array($files) && count($files)) {
   while ($f = array_pop($files)) {
-    $x++;
-    if($x>3) break;
-    $str.= $br."<b>".$f["restore_name"]."</b>";
-    $str.= "<br><ul>".trim(file_get_contents($f["path"]))."</ul>";
-    $br = "<br><br>";
+    // Only show entries that are newer that 4 weeks old
+    if (format_date("U",basename($f["path"])) > mktime() - (60*60*24*28)) {
+      $x++;
+      if($x>3) break; 
+      $str.= $br."<b>".$f["restore_name"]."</b>";
+      $str.= "<br><ul>".trim(file_get_contents($f["path"]))."</ul>";
+      $br = "<br><br>";
+    }
   }
   $str and $TPL["latest_changes"] = $str;
 }
