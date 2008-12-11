@@ -26,6 +26,9 @@ class db_field {
   var $value;
   var $label;
   var $empty_to_null = true;
+
+  var $audit = false;
+
   var $write_perm_name = 0;     // Name of a permission a user must have to write to this field, if any.  E.g. "admin"
   var $read_perm_name = 0;      // Name of the permission a user must have to read this field, if any.  E.g. "read details"
 
@@ -55,6 +58,10 @@ class db_field {
 
   function get_name() {
     return $this->name;
+  }
+
+  function is_audited() {
+    return $this->audit;
   }
 
   function get_value($dest = DST_VARIABLE) {

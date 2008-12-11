@@ -215,7 +215,15 @@ class db_entity {
       echo "db_entity->delete query: $query<br>\n";
     $db = $this->get_db();
     $db->query($query);
+
+    // and audit this
+    $this->audit_delete();
+
     return true;
+  }
+
+  // subclasses with special needs for auditing deletion should override this function
+  function audit_delete() {
   }
  
   function insert() {
@@ -260,11 +268,24 @@ class db_entity {
       $this->debug and print "<br/>db_entity->insert(): New ID: ".$id;
     }
     $this->key_field->set_value($id);
+
+    // and since we're successful, we can audit the insertion
+    $this->audit_insert();
+
     return true;
+  }
+
+  // subclasses with special needs for auditing insertion should override this function
+  function audit_insert() {
   }
 
   function update() {
     $this->check_update_perms();
+
+    // retrieve a copy of this object with the old values from the database
+    $old_this = new $this;
+    $old_this->set_id($this->get_id());
+    $old_this->select();
 
     global $current_user;
     if (is_object($current_user) && $current_user->get_id()) {
@@ -287,6 +308,11 @@ class db_entity {
     while (list(, $field) = each($this->data_fields)) {
       if ($this->can_write_field($field)) {
         $write_fields[] = $field;
+
+        // auditing -- check if we audit this field, and if it's changed
+        if($field->is_audited() && $field->get_value() != $old_this->get_value($field->get_name())) {
+          $this->audit_updated_field($field, $old_this->get_value($field->get_name()));
+        }
       }
     }
     $query = "UPDATE $this->data_table SET ".$this->get_name_equals_value($write_fields)." WHERE ";
@@ -295,6 +321,13 @@ class db_entity {
     $this->debug and print "<br/>db_entity->update() query: ".$query;
     $db->query($query);
     return true;
+  }
+
+  // subclasses with special needs for auditing updated field should override this function
+  function audit_updated_field($field, $old_value) {
+    $auditItem = new auditItem;
+    $auditItem->audit_field_change($field, $this, $old_value);
+    $auditItem->insert();
   }
 
   function is_new() {

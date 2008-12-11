@@ -128,6 +128,8 @@ VALUES
 ,('transactionRepeat'        ,-1 ,0 ,'employee' ,'Y' ,NULL ,1     ,NULL)
 ,('transactionRepeat'        ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
+,("auditItem"                ,0  ,0 ,'employee' ,'Y', NULL, 8 + 1 ,"Allow employees to create and read audit items.")
+
 ;
 
 

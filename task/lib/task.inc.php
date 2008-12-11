@@ -27,27 +27,27 @@ class task extends db_entity {
   public $data_table = "task";
   public $display_field_name = "taskName";
   public $key_field = "taskID";
-  public $data_fields = array("taskName"
-                             ,"taskDescription"
+  public $data_fields = array("taskName" => array("audit"=>"true")
+                             ,"taskDescription" => array("audit"=>"true")
                              ,"creatorID" => array("empty_to_null"=>false)
                              ,"closerID"
-                             ,"priority"
-                             ,"timeEstimate"
+                             ,"priority" => array("audit"=>"true")
+                             ,"timeEstimate" => array("audit"=>"true")
                              ,"dateCreated"
                              ,"dateAssigned"
                              ,"dateClosed"
-                             ,"dateTargetStart"
-                             ,"dateTargetCompletion"
-                             ,"dateActualStart"
-                             ,"dateActualCompletion"
+                             ,"dateTargetStart" => array("audit"=>"true")
+                             ,"dateTargetCompletion" => array("audit"=>"true")
+                             ,"dateActualStart" => array("audit"=>"true")
+                             ,"dateActualCompletion" => array("audit"=>"true")
                              ,"taskComments"
-                             ,"projectID"
-                             ,"parentTaskID"
-                             ,"taskTypeID"
-                             ,"personID"
-                             ,"managerID"
-                             ,"duplicateTaskID"
-                             ,"blocker"
+                             ,"projectID" => array("audit"=>"true")
+                             ,"parentTaskID" => array("audit"=>"true")
+                             ,"taskTypeID" => array("audit"=>"true")
+                             ,"personID" => array("audit"=>"true")
+                             ,"managerID" => array("audit"=>"true")
+                             ,"duplicateTaskID" => array("audit"=>"true")
+                             ,"blocker" => array("audit"=>"true")
                              );
   public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "read details");
 
@@ -80,6 +80,9 @@ class task extends db_entity {
         // If it isn't already closed, then send emails..
         if (!$orig_dateActualCompletion) {
           $m and $msg[] = $m;
+
+          // write a log entry
+          $task->mark_closed();
         }
         $arr = $task->close_off_children_recursive();
         if (is_array($arr)) {
@@ -1644,6 +1647,144 @@ class task extends db_entity {
     }
   }
 
+  function get_changes_list() {
+    // This function returns HTML rows for the changes that have been made to this task
+    $rows = array();
+
+    $people_cache = get_cached_table("person");
+    $taskTypes = get_cached_table("taskType");
+
+
+    $options = array("return"       => "array"
+                    ,"entityType"   => "task"
+                    ,"entityID"     => $this->get_id());
+    $changes = auditItem::get_list($options);
+
+    // we record changes to taskName, taskDescription, priority, timeEstimate, projectID, dateActualCompletion, dateActualStart, dateTargetStart, dateTargetCompletion, personID, managerID, parentTaskID, taskTypeID, duplicateTaskID, blocker
+    foreach($changes as $auditItem) {
+      $changeDescription = "";
+      $oldValue = $auditItem->get_value('oldValue');
+      if($auditItem->get_value('changeType') == 'FieldChange') {
+        $newValue = $auditItem->get_new_value();
+        switch($auditItem->get_value('fieldName')) {
+          case 'taskName':
+            $changeDescription = "Task name changed from '$oldValue' to '$newValue'.";
+            break;
+          case 'taskDescription':
+            $changeDescription = "Task description changed. <a class=\"magic\" href=\"#x\" onclick=\"$('#auditItem" . $auditItem->get_id() . "').slideToggle('fast');\">Show</a> <div class=\"hidden\" id=\"auditItem" . $auditItem->get_id() . "\"><div><b>Old Description</b><br>" . page::to_html($oldValue) . "</div><div><b>New Description</b><br>" . page::to_html($newValue) . "</div></div>";
+            break;
+          case 'priority':
+            $priorities = config::get_config_item("taskPriorities");
+            $changeDescription = "Task priority changed from " . $priorities[$oldValue]["label"] . " to " . $priorities[$newValue]["label"] . ".";
+            $changeDescription = sprintf('Task priority changed from <span style="color: %s;">%s</span> to <span style="color: %s;">%s</span>.', $priorities[$oldValue]["colour"], $priorities[$oldValue]["label"], $priorities[$newValue]["colour"], $priorities[$newValue]["label"]);
+          break;
+          case 'projectID':
+            task::load_entity("project", $oldValue, $oldProject);
+            task::load_entity("project", $newValue, $newProject);
+            $changeDescription = "Project changed from " . $oldProject->get_project_link() . " to " . $newProject->get_project_link() . ".";
+          break;
+          case 'parentTaskID':
+            task::load_entity("task", $oldValue, $oldTask);
+            task::load_entity("task", $newValue, $newTask);
+            if(!$oldValue) {
+              $changeDescription = sprintf("Task was set to a child of %d %s.", $newTask->get_id(), $newTask->get_task_link());
+            } elseif(!$newValue) {
+              $changeDescription = sprintf("Task ceased to be a child of %d %s", $oldTask->get_id(), $oldTask->get_task_link());
+            } else {
+              $changeDescription = sprintf("Task ceased to be a child of %d %s and became a child of %d %s.", $oldTask->get_id(), $oldTask->get_task_link(), $newTask->get_id(), $newTask->get_task_link());
+            }
+          break;
+          case 'duplicateTaskID':
+            task::load_entity("task", $oldValue, $oldTask);
+            task::load_entity("task", $newValue, $newTask);
+            if(!$oldValue) {
+              $changeDescription = "The task was marked a duplicate of " . $newTask->get_task_link() . ".";
+            } elseif(!$newValue) {
+              $changeDescription = "Task is no longer a duplicate of " . $oldTask->get_task_link() . ".";
+            } else {
+              $changeDescription = "Task is no longer a duplicate of " . $oldTask->get_task_link() . " and is now a duplicate of " . $newTask->get_task_link() . ".";
+            }
+          break;
+          case 'personID':
+            $changeDescription = "Task was reassigned from " . $people_cache[$oldValue]["name"] . " to " . $people_cache[$newValue]["name"] . ".";
+          break;
+          case 'managerID':
+            $changeDescription = "Task manager changed from " . $people_cache[$oldValue]["name"] . " to " . $people_cache[$newValue]["name"] . ".";
+          break;
+          case 'taskTypeID':
+            $changeDescription = "Task type was changed from " . $taskTypes[$oldValue]["taskTypeName"] . " to " . $taskTypes[$newValue]["taskTypeName"] . ".";
+          break;
+          case 'blocker':
+            $taskBlockers = config::get_config_item("taskBlockers");
+            $changeDescription = sprintf('Blocking status changed from <img src="../images/%s" alt="" /> %s to <img src="../images/%s" alt="" /> %s.', $taskBlockers[$oldValue]["icon"], $taskBlockers[$oldValue]["label"], $taskBlockers[$newValue]["icon"], $taskBlockers[$newValue]["label"]);
+          break;
+          case 'dateActualCompletion':
+          case 'dateActualStart':
+          case 'dateTargetStart':
+          case 'dateTargetCompletion':
+          case 'timeEstimate':
+            // these four cases are more or less identical
+            switch($auditItem->get_value('fieldName')) {
+              case 'dateActualCompletion': $fieldDesc = "actual completion date"; break;
+              case 'dateActualStart': $fieldDesc = "actual start date"; break;
+              case 'dateTargetStart': $fieldDesc = "estimate/target start date"; break;
+              case 'dateTargetCompletion': $fieldDesc = "estimate/target completion date"; break;
+              case 'timeEstimate': $fieldDesc = "estimated time";
+            }
+            if(!$oldValue) {
+              $changeDescription = "The $fieldDesc was set to $newValue.";
+            } elseif(!$newValue) {
+              $changeDescription = "The $fieldDesc, previously $oldValue, was removed.";
+            } else {
+              $changeDescription = "The $fieldDesc changed from $oldValue to $newValue.";
+            }
+          break;
+        }
+
+      // these are the cases in which other tasks are un/marked duplicates of this task
+      } elseif($auditItem->get_value('changeType') == 'TaskMarkedDuplicate') {
+        task::load_entity("task", $oldValue, $otherTask);
+        $changeDescription = "The task " . $otherTask->get_id() . " " . $otherTask->get_task_link() . " was marked a duplicate of this task.";
+      } elseif($auditItem->get_value('changeType') == 'TaskUnmarkedDuplicate') {
+        task::load_entity("task", $oldValue, $otherTask);
+        $changeDescription = "The task " . $otherTask->get_id() . " " . $otherTask->get_task_link() . " was no longer marked a duplicate of this task.";
+      } elseif($auditItem->get_value('changeType') == 'TaskClosed') {
+        $changeDescription = "The task was closed.";
+      } elseif($auditItem->get_value('changeType') == 'TaskReopened') {
+        $changeDescription = "The task was opened.";
+      }
+      $rows[] = "<tr><td>" . $auditItem->get_value("dateChanged") . "</td><td>$changeDescription</td><td>" . $people_cache[$auditItem->get_value("personID")]["name"] . "</td></tr>";
+
+    }
+
+    return implode("\n", $rows);
+  }
+
+  // helper function to cut down on code duplication in the above function
+  function load_entity($type, $id, &$entity) {
+    if($id) {
+      $entity = new $type;
+      $entity->set_id($id);
+      $entity->select();
+    }
+  }
+
+  function audit_insert() {
+    $this->mark_reopened();
+  }
+
+  // write a message into the log, closing this task
+  function mark_closed() {
+    $ai = new auditItem();
+    $ai->audit_special_change($this, "TaskClosed");
+    $ai->insert();
+  }
+
+  function mark_reopened() {
+    $ai = new auditItem();
+    $ai->audit_special_change($this, "TaskReopened");
+    $ai->insert();
+  }
 
 
 }

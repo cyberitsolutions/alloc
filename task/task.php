@@ -91,6 +91,12 @@ define("PAGE_IS_PRINTABLE",1);
     include_template("templates/taskPrinterCommentsM.tpl");
   }
 
+  function show_taskHistory() {
+    global $task, $TPL;
+    $TPL["changeHistory"] = $task->get_changes_list();
+    include_template("templates/taskHistoryM.tpl");
+  }
+
 
 global $timeSheetID;
 
@@ -159,6 +165,20 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     if (!$task->get_value("dateActualCompletion")) {
       $task->set_value("dateActualCompletion", date("Y-m-d"));
     }
+
+    // Note in the other task's history that this task was marked a duplicate of it
+    $ai = new auditItem;
+    $ai->audit_special_change($othertask, "TaskMarkedDuplicate", $task->get_id());
+    $ai->insert();
+  }
+  if($orig_duplicateTaskID) {
+    // and, if we have a previous duplicate, note in that one that it's no longer a duplicate
+    $othertask = new task;
+    $othertask->set_id($orig_duplicateTaskID);
+    $othertask->select();
+    $ai = new auditItem;
+    $ai->audit_special_change($othertask, "TaskUnmarkedDuplicate", $task->get_id());
+    $ai->insert();
   }
 
   // If dateActualCompletion and there's no dateActualStart then default today
@@ -172,6 +192,9 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
       $task->set_value("closerID",$current_user->get_id());
       $task->set_value("dateClosed",date("Y-m-d H:i:s"));
     }
+    // mark this task closed (i.e., write a message in the task history about it
+    $task->mark_closed();
+
     $arr = $task->close_off_children_recursive();
     if (is_array($arr)) {
       $msg = array_merge($msg,$arr);
@@ -180,6 +203,9 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   } else if ($orig_dateActualCompletion && !$task->get_value("dateActualCompletion")) {
     $task->set_value("closerID",0);
     $task->set_value("dateClosed","");
+    
+    // task re-opened
+    $task->mark_reopened();
   }
 
   if (!$task_is_new) {
