@@ -419,6 +419,22 @@ CREATE TABLE task (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
+DROP TABLE IF EXISTS `auditItem`;
+CREATE TABLE `auditItem` (
+  `auditItemID` int(10) unsigned NOT NULL auto_increment,
+  `entityName` varchar(255) default NULL,
+  `entityID` int(10) unsigned NOT NULL,
+  `personID` int(10) unsigned NOT NULL,
+  `dateChanged` datetime NOT NULL,
+  `changeType` enum('FieldChange','TaskMarkedDuplicate','TaskUnmarkedDuplicate','TaskClosed','TaskReopened') NOT NULL default 'FieldChange',
+  `fieldName` varchar(255) default NULL,
+  `oldValue` text,
+  PRIMARY KEY  (`auditItemID`),
+  KEY `idx_entityName` (`entityName`),
+  KEY `idx_entityID` (`entityID`)
+) ENGINE=MyISAM PACK_KEYS=0;
+
+
 DROP TABLE IF EXISTS interestedParty;
 CREATE TABLE interestedParty (
   interestedPartyID int(11) NOT NULL auto_increment,

@@ -279,6 +279,8 @@ $(document).ready(function() \{
 
 {show_attachments()}
 
+{show_taskHistory()}
+
 {show_taskComments()}
 
 {/}
