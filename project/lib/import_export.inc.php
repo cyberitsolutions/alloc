@@ -67,6 +67,8 @@ function import_csv($infile) {
         $task->set_value('dateCreated', date('Y-m-d H:i:s'));
         $task->set_value('dateAssigned', date('Y-m-d H:i:s'));
         $task->set_value('dateTargetStart', date('Y-m-d H:i:s')); // Target start is today
+        // default blocker status of zero, which should correspond to an 'OK' state
+        $task->set_value('blocker', '0');
         $task->save();
 
         $result[] = sprintf('<li>Created task <a href="%s">%d %s</a>.</li>', $task->get_url(), $task->get_id(), $task->get_value('taskName'));
@@ -191,6 +193,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
         // Otherwise, a regular task
         $task->set_value('taskTypeID', '1');
       }
+      $task->set_value('blocker', '0');
       $task->set_value('priority', '3');
       $task->set_value('parentTaskID', $parentTaskId);
       // The following fields we leave at their default values: duplicateTaskID, dateActualCompletion, dateActualStart, closerID, timeEstimate, dateClosed, taskComments, parentTaskID, taskCommentTemplateID, taskModifiedUser
