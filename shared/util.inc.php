@@ -109,7 +109,7 @@ function add_brackets($email="") {
   if ($email) {
     $l = strpos($email, "<");
     $r = strpos($email, ">");
-    $l === false and $email = "<".$f;
+    $l === false and $email = "<".$email;
     $r === false and $email .= ">";
     return $email;
   }
