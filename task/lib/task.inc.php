@@ -1461,7 +1461,7 @@ class task extends db_entity {
       }
 
       $subject = commentTemplate::populate_string(config::get_config_item("emailSubject_taskComment"), "task", $this->get_id());
-      $email->set_subject($subject);
+      $email->set_subject($subject . " " . $subject_extra);
       $email->set_body($body_header.$body.$body_footer);
       $email->set_message_type($type);
 
