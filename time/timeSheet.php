@@ -91,7 +91,7 @@ if (!$current_user->is_employee()) {
                 ,$db->f("tfID"),$db->f("fromTfID"));
 
       while ($db->row()) {
-        $tf_array[$db->f("tfID")] = $db->f("tdName");
+        $tf_array[$db->f("tfID")] = $db->f("tfName");
       }
       $status_options = array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
       $transactionType_options = transaction::get_transactionTypes();
