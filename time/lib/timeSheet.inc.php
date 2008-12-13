@@ -655,8 +655,8 @@ class timeSheet extends db_entity {
     if ($_FORM["showHeader"]) {
       $summary = "\n<tr>";
       $_FORM["showTimeSheetID"]   and $summary.= "\n<th>ID</th>";
-      $_FORM["showProject"]       and $summary.= "\n<th>Time Sheet</th>";
-      $_FORM["showProjectLink"]   and $summary.= "\n<th>Time Sheet</th>";
+      $_FORM["showProject"]       and $summary.= "\n<th>Project</th>";
+      $_FORM["showProjectLink"]   and $summary.= "\n<th>Project</th>";
       $_FORM["showPerson"]        and $summary.= "\n<th>Owner</th>";
       $_FORM["showDateFrom"]      and $summary.= "\n<th>Start Date</th>";
       $_FORM["showDateTo"]        and $summary.= "\n<th>End Date</th>";
@@ -775,7 +775,7 @@ class timeSheet extends db_entity {
     // display the list of project name.
     $db = new db_alloc();
     $query = sprintf("SELECT projectID AS value, projectName AS label FROM project ORDER by projectName");
-    $rtn["show_project_options"] = page::select_options($query, $_FORM["projectID"]);
+    $rtn["show_project_options"] = page::select_options($query, $_FORM["projectID"],70);
 
     // display the list of user name.
     if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {

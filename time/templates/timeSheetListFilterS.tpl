@@ -1,7 +1,6 @@
       <form action="{$url_alloc_timeSheetList}" method="post">
       <table class="filter" align="center">
         <tr>
-          <td>Project</td>
           <td>User Name</td>
           <td>Start Date From</td>
           <td>Start Date To</td>
@@ -9,13 +8,7 @@
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td>
-            <select name="projectID">
-              <option value=""> </option>
-              {$show_project_options}
-            </select>
-          </td>
-          <td>
+           <td>
             <select name="personID">
               <option value="">
               {$show_userID_options}
@@ -29,7 +22,18 @@
               {$show_status_options}
             </select>
           </td>
-          <td>&nbsp;&nbsp;<input type="submit" name="applyFilter" value="Filter"></td>
+        </tr>
+        <tr>
+         <td>Project</td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <select name="projectID">
+              <option value=""> </option>
+              {$show_project_options}
+            </select>
+          </td>
+          <td class="right"><input type="submit" name="applyFilter" value="Filter"></td>
         </tr>
       </table>
       </form>

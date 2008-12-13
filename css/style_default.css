@@ -41,7 +41,7 @@ div#main:after, .edit:after, .view:after, .enclose:after, .wikidoc:after {
 }
 
 div#main2 {
-  margin:0px 14px !important; margin:auto;
+  margin:0px 1% !important; margin:auto;
 }
 
 a:link, a:visited { 
@@ -645,7 +645,7 @@ p#extra_links {
   font-size:12px; /* hardcoded */
   font-weight:bold;
   display:inline; 
-  z-index:1; 
+  z-index:-1; 
   position:relative; 
   float:right;
   right:0px !important; right:-16px; 
