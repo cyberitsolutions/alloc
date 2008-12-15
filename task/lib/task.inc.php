@@ -29,7 +29,7 @@ class task extends db_entity {
   public $key_field = "taskID";
   public $data_fields = array("taskName" => array("audit"=>"true")
                              ,"taskDescription" => array("audit"=>"true")
-                             ,"creatorID" => array("empty_to_null"=>false)
+                             ,"creatorID"
                              ,"closerID"
                              ,"priority" => array("audit"=>"true")
                              ,"timeEstimate" => array("audit"=>"true")
