@@ -31,7 +31,7 @@ class top_ten_tasks_home_item extends home_item {
     global $current_user, $tasks_date;
     
     $options["taskStatus"] = $current_user->prefs["topTasksStatus"];
-    $options["limit"] = $current_user->prefs["topTasksNum"];
+    $current_user->prefs["topTasksNum"] != "all" and $options["limit"] = $current_user->prefs["topTasksNum"];
 
     $options["taskView"] = "prioritised";
     #$options["projectType"] = "mine";
