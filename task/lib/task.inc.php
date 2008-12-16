@@ -27,27 +27,27 @@ class task extends db_entity {
   public $data_table = "task";
   public $display_field_name = "taskName";
   public $key_field = "taskID";
-  public $data_fields = array("taskName" => array("audit"=>"true")
-                             ,"taskDescription" => array("audit"=>"true")
+  public $data_fields = array("taskName" => array("audit"=>true)
+                             ,"taskDescription" => array("audit"=>true)
                              ,"creatorID"
                              ,"closerID"
-                             ,"priority" => array("audit"=>"true")
-                             ,"timeEstimate" => array("audit"=>"true")
+                             ,"priority" => array("audit"=>true)
+                             ,"timeEstimate" => array("audit"=>true)
                              ,"dateCreated"
                              ,"dateAssigned"
                              ,"dateClosed"
-                             ,"dateTargetStart" => array("audit"=>"true")
-                             ,"dateTargetCompletion" => array("audit"=>"true")
-                             ,"dateActualStart" => array("audit"=>"true")
-                             ,"dateActualCompletion" => array("audit"=>"true")
+                             ,"dateTargetStart" => array("audit"=>true)
+                             ,"dateTargetCompletion" => array("audit"=>true)
+                             ,"dateActualStart" => array("audit"=>true)
+                             ,"dateActualCompletion" => array("audit"=>true)
                              ,"taskComments"
-                             ,"projectID" => array("audit"=>"true")
-                             ,"parentTaskID" => array("audit"=>"true")
-                             ,"taskTypeID" => array("audit"=>"true")
-                             ,"personID" => array("audit"=>"true")
-                             ,"managerID" => array("audit"=>"true")
-                             ,"duplicateTaskID" => array("audit"=>"true")
-                             ,"blocker" => array("audit"=>"true")
+                             ,"projectID" => array("audit"=>true)
+                             ,"parentTaskID" => array("audit"=>true)
+                             ,"taskTypeID" => array("audit"=>true)
+                             ,"personID" => array("audit"=>true)
+                             ,"managerID" => array("audit"=>true)
+                             ,"duplicateTaskID" => array("audit"=>true)
+                             ,"blocker" => array("audit"=>true)
                              );
   public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "read details");
 
