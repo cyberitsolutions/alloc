@@ -163,8 +163,11 @@ class timeSheet extends db_entity {
       $rates[$this->get_value("projectID")][$this->get_value("personID")] = array($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]);
     }
 
-    // Get external rate
-    $this->pay_info["customerBilledDollars"] = $this->get_value("customerBilledDollars");
+    // Get external rate, only load up customerBilledDollars if the field is actually set
+    if ($this->get_value("customerBilledDollars") !== "" && $this->get_value("customerBilledDollars") !== NULL 
+    && $this->get_value("customerBilledDollars") !== false) {
+      $this->pay_info["customerBilledDollars"] = $this->get_value("customerBilledDollars");
+    }
 
     // Get duration for this timesheet/timeSheetItem
     $db->query(sprintf("SELECT *, (timeSheetItemDuration * timeUnit.timeUnitSeconds) / 3600 AS hours
@@ -1274,29 +1277,6 @@ EOD;
     }
   }
 
-  function update_invoiceItem() {
-    $this->load_pay_info();
-    $iiAmount = $this->pay_info["total_customerBilledDollars"];
-    $iiUnitPrice = $this->pay_info["customerBilledDollars"];
-    $iiQuantity = $this->pay_info["total_duration"];
-
-    $project = $this->get_foreign_object("project");
-    $invoiceID = $project->get_prepaid_invoice();
-    if ($invoiceID) {
-      $q = sprintf("SELECT * FROM invoiceItem WHERE invoiceID = %d AND timeSheetID = %d",$invoiceID, $this->get_id()); 
-      $db = new db_alloc();
-      $db->query($q);
-      while ($db->row()) {
-        $invoiceItem = new invoiceItem;
-        $invoiceItem->read_db_record($db);
-        $invoiceItem->set_value("iiAmount",$iiAmount);
-        $invoiceItem->set_value("iiUnitPrice",$iiUnitPrice);
-        $invoiceItem->set_value("iiQuantity",$iiQuantity);
-        $invoiceItem->set_value("iiDate",$this->get_value("dateTo"));
-        $invoiceItem->save();
-      }
-    }
-  }
 
 }  
 
