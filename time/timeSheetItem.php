@@ -63,7 +63,6 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
         $TPL["message"][] = "Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice.<br>Time Sheet Item not saved.";
       } else {
         $rtn = $timeSheetItem->save();
-        $timeSheet->update_invoiceItem();
         $rtn or $TPL["message_good"][] = "Time Sheet Item saved.";
       }
 
@@ -76,7 +75,6 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
     } else if ($_POST["timeSheetItem_delete"]) {
       $timeSheetItem->select();
       $timeSheetItem->delete();
-      $timeSheet->update_invoiceItem();
       $TPL["message_good"][] = "Time Sheet Item deleted.";
       alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
     }

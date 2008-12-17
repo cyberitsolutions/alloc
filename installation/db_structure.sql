@@ -492,7 +492,7 @@ CREATE TABLE timeSheet (
   billingNote text,
   payment_insurance tinyint(4) default '0',
   recipient_tfID int(11) default NULL,
-  customerBilledDollars DECIMAL(19,2) DEFAULT '0.00',
+  customerBilledDollars DECIMAL(19,2) DEFAULT NULL,
   PRIMARY KEY  (timeSheetID)
 ) TYPE=MyISAM PACK_KEYS=0;
 

@@ -108,26 +108,41 @@ class invoiceItem extends db_entity {
   }
 
   function add_timeSheet($invoiceID,$timeSheetID) {
-    $timeSheet = new timeSheet;
-    $timeSheet->set_id($timeSheetID);
-    $timeSheet->select();
-    $timeSheet->load_pay_info();
-    $project = $timeSheet->get_foreign_object("project");
-    $date = $timeSheet->get_value("dateFrom") or $date = date("Y-m-d");
+    global $TPL;
 
-    #$amount = $timeSheet->pay_info["total_customerBilledDollars"] or $amount = $timeSheet->pay_info["total_dollars"];
-    #$iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
-    #$iiUnitPrice >0 or $iiUnitPrice = $timeSheet->pay_info["timeSheetItem_rate"];
-    #$iiQuantity = $timeSheet->pay_info["total_duration"] or $iiQuantity = "1";
+    $invoice = $this->get_foreign_object("invoice");
 
-    $this->set_value("invoiceID",$invoiceID);
-    $this->set_value("timeSheetID",$timeSheet->get_id());
-    $this->set_value("iiMemo","Time Sheet #".$timeSheet->get_id()." for ".person::get_fullname($timeSheet->get_value("personID")).", Project: ".$project->get_value("projectName"));
-    $this->set_value("iiQuantity",$iiQuantity);
-    $this->set_value("iiUnitPrice",$iiUnitPrice);
-    $this->set_value("iiAmount",$amount);
-    $this->set_value("iiDate",$date);
-    $this->save();
+    if ($invoice->get_value("invoiceStatus") != "finished") {
+      $timeSheet = new timeSheet;
+      $timeSheet->set_id($timeSheetID);
+      $timeSheet->select();
+      $timeSheet->load_pay_info();
+      $project = $timeSheet->get_foreign_object("project");
+      $date = $timeSheet->get_value("dateFrom") or $date = date("Y-m-d");
+
+      // customerBilledDollars will not be set if the actual field is blank,
+      // and thus there won't be a usable total_customerBilledDollars.
+      if (isset($timeSheet->pay_info["customerBilledDollars"])) { 
+        $amount = $timeSheet->pay_info["total_customerBilledDollars"];
+        $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
+        $iiQuantity = $timeSheet->pay_info["total_duration"];
+      } else {
+        $amount = $timeSheet->pay_info["total_dollars"];
+        $iiUnitPrice = $amount; 
+        $iiQuantity = 1;
+      }
+
+      $this->set_value("invoiceID",$invoiceID);
+      $this->set_value("timeSheetID",$timeSheet->get_id());
+      $this->set_value("iiMemo","Time Sheet #".$timeSheet->get_id()." for ".person::get_fullname($timeSheet->get_value("personID")).", Project: ".$project->get_value("projectName"));
+      $this->set_value("iiQuantity",$iiQuantity);
+      $this->set_value("iiUnitPrice",$iiUnitPrice);
+      $this->set_value("iiAmount",$amount);
+      $this->set_value("iiDate",$date);
+      $this->save();
+    } else {
+      $TPL["message"][] = "Unable to update related Invoice (ID:".$this->get_value("invoiceID")."), Invoice has been completed.";
+    }
   }
 
   function add_timeSheetItems($invoiceID,$timeSheetID) {
@@ -234,7 +249,7 @@ class invoiceItem extends db_entity {
           $timeSheet->change_status("forwards");
           $TPL["message_good"][] = "Closed Time Sheet #".$timeSheet->get_id()." and approved it's Transactions.";
         } else {
-          $TPL["message_help"][] = "Unable to close Time Sheet #".$timeSheet->get_id()." the sum of Time Sheet Transactions does not equal the Invoice Item Transaction.";
+          $TPL["message_help"][] = "Unable to close Time Sheet #".$timeSheet->get_id()." the sum of Time Sheet *Transactions* does not equal the Invoice Item Transaction.";
         }
       }
     

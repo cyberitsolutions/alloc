@@ -347,7 +347,7 @@ if ($_GET["CB"]) {
   $project = new project;
   $project->set_id($timeSheet->get_value("projectID"));
   $project->select();
-  $timeSheet->set_value("customerBilledDollars",sprintf("%0.2f",$project->get_value("customerBilledDollars")));
+  $timeSheet->set_value("customerBilledDollars",sprintf("%s",$project->get_value("customerBilledDollars")));
   $timeSheet->save();
 }
 
