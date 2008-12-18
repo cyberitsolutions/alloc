@@ -84,8 +84,6 @@ VALUES
 
 ,('reminder'                 ,0  ,0 ,''         ,'Y' ,NULL ,15    ,'Will have to change this later?')
 
-,('savedView'                ,0  ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
-
 ,('sentEmailLog'             ,0  ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
 
 ,('skillList'                ,0  ,0 ,'employee' ,'Y' ,NULL ,1     ,NULL)

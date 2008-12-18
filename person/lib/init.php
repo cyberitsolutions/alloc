@@ -24,7 +24,6 @@ require_once(dirname(__FILE__)."/person.inc.php");
 require_once(dirname(__FILE__)."/absence.inc.php");
 require_once(dirname(__FILE__)."/skillList.inc.php");
 require_once(dirname(__FILE__)."/skillProficiencys.inc.php");
-require_once(dirname(__FILE__)."/savedView.inc.php");
 
 class person_module extends module {
   var $db_entities = array("person", "absence", "skillList", "skillProficiencys");
