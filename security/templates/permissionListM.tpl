@@ -8,7 +8,7 @@
   </tr>
   <tr>
     <td colspan="9" align="center">
-      <form action="{$url_alloc_permissionList}" method="post">
+      <form action="{$url_alloc_permissionList}" method="get">
       <table class="filter" align="center">
         <tr>
           <td>Table Name</td>

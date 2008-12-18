@@ -1,4 +1,4 @@
-<form action="{$url_alloc_searchTransaction}" method="post">
+<form action="{$url_alloc_searchTransaction}" method="get">
   <table align="center" class="filter">
     <tr>
       <td>Source TF</td>

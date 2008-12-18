@@ -6,7 +6,7 @@ function refreshProjectList(radiobutton) \{
 \}
 </script>
 
-<form action="{$url_form_action}" method="post">
+<form action="{$url_form_action}" method="get">
 <table align="center" class="filter">
   <tr>
     <td>

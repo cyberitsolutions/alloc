@@ -24,14 +24,14 @@ require_once("../alloc.php");
 
 $current_user->check_employee();
 
-if ($_POST["owner"]) {
+if ($_REQUEST["owner"]) {
   $TPL["owner_checked"] = " checked";
   $filter[] = sprintf("tfPerson.personID = %d",$current_user->get_id());
 } else {
   $TPL["owner_checked"] = "";
 }
 
-if ($_POST["showall"]) {
+if ($_REQUEST["showall"]) {
   $TPL["showall_checked"] = " checked";
 } else {
   $filter[] = "tfActive = 1";

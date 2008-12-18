@@ -1,4 +1,4 @@
-      <form action="{$url_alloc_personList}" method="post">
+      <form action="{$url_alloc_personList}" method="get">
       <table class="filter" align="center">
         <tr>
           <td><select name="skill_class">{$skill_classes}</select></td>

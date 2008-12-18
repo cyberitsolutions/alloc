@@ -28,7 +28,7 @@ function show_reminders($template) {
   // show all reminders for this project
   $db = new db_alloc;
   if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
-    $query = sprintf("SELECT * FROM reminder WHERE personID like '%s' ORDER BY reminderTime,reminderType", $_POST["filter_recipient"]);
+    $query = sprintf("SELECT * FROM reminder WHERE personID like '%s' ORDER BY reminderTime,reminderType", $_REQUEST["filter_recipient"]);
   } else {
     $query = sprintf("SELECT * FROM reminder WHERE personID = '%s' ORDER BY reminderType,reminderTime", $current_user->get_id());
   }
@@ -61,8 +61,8 @@ function show_reminder_filter($template) {
   if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
 
     // Set default filter parameter
-    if (!$_POST["filter_recipient"]) {
-      $_POST["filter_recipient"] = $current_user->get_id();
+    if (!$_REQUEST["filter_recipient"]) {
+      $_REQUEST["filter_recipient"] = $current_user->get_id();
     }
 
     $db = new db_alloc;
@@ -70,7 +70,7 @@ function show_reminder_filter($template) {
     while ($db->next_record()) {
       $recipientOptions[$db->f("personID")] = $db->f("username");
     }
-    $TPL["recipientOptions"] = page::select_options($recipientOptions, $_POST["filter_recipient"]);
+    $TPL["recipientOptions"] = page::select_options($recipientOptions, $_REQUEST["filter_recipient"]);
     include_template($template);
   }
 }

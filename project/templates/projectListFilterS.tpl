@@ -1,4 +1,4 @@
-    <form action="{$url_alloc_projectList}" method="post">
+    <form action="{$url_alloc_projectList}" method="get">
       <table class="filter">
         <tr>
           <td>Status</td>
