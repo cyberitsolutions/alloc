@@ -229,7 +229,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   if ($success) {
 
     // Create reminders if necessary
-    if($task_is_new && $_POST["createTaskReminder"] == true) {
+    if($_POST["createTaskReminder"] == true) {
       $task->create_task_reminder();
     }
   
