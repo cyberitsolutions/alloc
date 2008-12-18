@@ -1,4 +1,4 @@
-      <form action="{$url_alloc_timeSheetList}" method="post">
+      <form action="{$url_alloc_timeSheetList}" method="get">
       <table class="filter" align="center">
         <tr>
           <td>User Name</td>

@@ -1,4 +1,4 @@
-      <form action="{$url_alloc_reminderList}" method="post">
+      <form action="{$url_alloc_reminderList}" method="get">
       <table class="filter">
         <tr>
           <td>Recipient</td>

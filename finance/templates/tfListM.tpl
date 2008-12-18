@@ -7,7 +7,7 @@
   </tr>
   <tr>
     <td colspan="4" align="center">
-      <form action="{$url_alloc_tfList}" method="post">
+      <form action="{$url_alloc_tfList}" method="get">
       <table class="filter" align="center">
         <tr>
           <td><label for="owner">Owner</label> <input type="checkbox" id="owner" name="owner"{$owner_checked}>&nbsp;&nbsp;</td>

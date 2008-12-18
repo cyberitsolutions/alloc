@@ -1,4 +1,4 @@
-    <form action="{$url_alloc_clientList}" method="post">
+    <form action="{$url_alloc_clientList}" method="get">
       <table class="filter" align="center">
         <tr>
           <td>&nbsp;</td>
