@@ -690,13 +690,3 @@ CREATE TABLE productSaleItem (
   PRIMARY KEY (productSaleItemID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
-
-DROP TABLE IF EXISTS `savedView`;
-CREATE TABLE `savedView` (
-  `savedViewID` int(11) NOT NULL auto_increment,
-  `personID` int(11) NOT NULL,
-  `formName` varchar(32) NOT NULL,
-  `viewName` varchar(255) NOT NULL,
-  `formView` text,
-  PRIMARY KEY  (`savedViewID`)
-) TYPE=MyISAM PACK_KEYS=0;

@@ -108,9 +108,6 @@ if ($_POST["run_mass_update"]) {
   }
 }
 
-$_FORM = savedView::process_form($_FORM);
-
-
 if (!$current_user->prefs["taskList_filter"]) {
   $TPL["message_help"][] = "
 

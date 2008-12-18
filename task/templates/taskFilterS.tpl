@@ -9,32 +9,6 @@ function refreshProjectList(radiobutton) \{
 <form action="{$url_form_action}" method="get">
 <table align="center" class="filter">
   <tr>
-    <td>
-      <div id="lf_div" style="display:inline;"> 
-        Saved Filters
-        <select name="savedViewID" onChange="if(this.value=='-1')\{$('#lf_div').slideToggle('slow');$('#fn_div').slideToggle('slow');\}">
-          <option value=""></option>
-          <option value="-1">Create a new saved filter...</option>
-          {$savedViewOptions}
-        </select>
-        <input type="submit" name="loadFilter" value="Load" />
-        <input type="submit" name="deleteFilter" value="Delete" class="delete_button" />
-      </div>
-      <div style="display:none;" id="fn_div">
-        Filter Name
-        <input type="text" size="18" name="filterName" value="" />
-        <input type="submit" name="saveFilter" value="Save" />
-        <input type="button" name="cancel" value="Cancel" onClick="$('#lf_div').slideToggle('fast');$('#fn_div').slideToggle('fast');" />
-      </div>
-    </td>
-    <td>
-      {page::help("taskList_savedFilter")}     
-    </td>
-  </tr>
-</table>
-
-<table align="center" class="filter">
-  <tr>
     <td>&nbsp;</td>
     <td>{page::expand_link("project_superset","Projects")}</td>
     <td>Task Status {page::help("taskList_taskStatus")}</td>

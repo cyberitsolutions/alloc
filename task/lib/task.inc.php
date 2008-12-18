@@ -1353,7 +1353,6 @@ class task extends db_entity {
                 ,"url_form_action"      => "The submit action for the filter form"
                 ,"form_name"            => "The name of this form, i.e. a handle for referring to this saved form"
                 ,"dontSave"             => "Specify that the filter preferences should not be saved this time"
-                ,"savedViewID"          => "The ID of a savedView to load"
                 ,"showDates"            => "Show dates 1-4"
                 ,"showDate1"            => "Date Target Start"
                 ,"showDate2"            => "Date Target Completion"
@@ -1391,11 +1390,7 @@ class task extends db_entity {
       $_FORM["projectType"] = "mine";
     }
 
-    if ($_FORM["applyFilter"]) {
-      unset($_FORM["savedViewID"]);
-    }
-
-    if (($_FORM["applyFilter"] || $_FORM["savedViewID"]) && is_object($current_user)) {
+    if ($_FORM["applyFilter"] && is_object($current_user)) {
       // we have a new filter configuration from the user, and must save it
       if(!$_FORM["dontSave"]) {
         $url = $_FORM["url_form_action"];
@@ -1448,9 +1443,6 @@ class task extends db_entity {
     $taskType = new taskType;
     $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
     $rtn["taskTypeOptions"] = page::select_options($taskType_array,$_FORM["taskTypeID"]);
-
-    $ops = savedView::get_saved_view_options($_FORM['form_name'], $current_user->get_id());
-    $rtn["savedViewOptions"] = page::select_options($ops, $_FORM["savedViewID"]);
 
     $_FORM["taskView"] and $rtn["taskView_checked_".$_FORM["taskView"]] = " checked";
 
