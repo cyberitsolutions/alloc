@@ -236,7 +236,11 @@ $(document).ready(function() \{
       <div class="view" style="margin-top:20px">
         <input type="button" id="editTask" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
       </div>
-      <div class="edit" style="margin-top:20px">
+      <div class="edit" style="margin:20px">
+          {if !$task_taskID}
+          <br>
+          <label for="createTaskReminder"><input type="checkbox" name="createTaskReminder" id="createTaskReminder" value="true" /> Create reminder for assignee</label> {page::help("task_create_reminder")}<br><br>
+          {/}
         {$timeSheet_save}
         <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
         <input type="submit" name="save_and_new" value="Save &amp; New">
