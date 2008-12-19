@@ -362,7 +362,8 @@ EOD;
     }
     return $rtn;
   }
-  function to_html($str="") {
+  function to_html($str="",$maxlength=false) {
+    $maxlength and $str = wordwrap($str,$maxlength,"\n");
     $str = htmlentities($str);
     $str = nl2br($str);
     return $str;

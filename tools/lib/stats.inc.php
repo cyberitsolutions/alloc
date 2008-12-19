@@ -116,7 +116,7 @@ class stats {
     $q = "SELECT person.personID, person.username, count(taskID) as tally
             FROM task 
        LEFT JOIN person ON task.personID = person.personID 
-           WHERE (task.dateActualCompletion IS NULL or task.dateActualCompletion = '')
+           WHERE task.taskStatus != 'closed'
         GROUP BY person.personID";
 
     $db->query($q);
@@ -129,7 +129,7 @@ class stats {
     $q = "SELECT person.personID, person.username, count(taskID) as tally
             FROM task 
        LEFT JOIN person ON task.personID = person.personID 
-           WHERE (task.dateActualCompletion IS NOT NULL AND task.dateActualCompletion != '')
+           WHERE task.taskStatus != 'closed'
         GROUP BY person.personID";
 
     $db->query($q);

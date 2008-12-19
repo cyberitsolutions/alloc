@@ -31,7 +31,7 @@ class task_message_list_home_item extends home_item {
     global $current_user, $tasks_date;
     $q = sprintf("SELECT * 
                   FROM task 
-                  WHERE (task.dateActualCompletion IS NULL AND task.taskTypeID = %d) 
+                  WHERE (task.taskStatus != 'closed' AND task.taskTypeID = %d) 
                   AND (personID = %d) 
                   ORDER BY priority
                  ",TT_MESSAGE,$current_user->get_id());

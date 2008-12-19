@@ -120,9 +120,6 @@ if (isset($taskID)) {
   // Displaying a record
   $task->set_id($taskID);
   $task->select();
-  $orig_personID = $task->get_value("personID");
-  $orig_duplicateTaskID = $task->get_value("duplicateTaskID");
-  $orig_dateActualCompletion = $task->get_value("dateActualCompletion");
 
 // Creating a new record
 } else {
@@ -145,113 +142,12 @@ if ($_POST["save_attachment"]) {
 if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POST["save_and_summary"] || $_POST["timeSheet_save"]) {
 
   $task->read_globals();
-  $task_is_new = !$task->get_id();
 
-  // Marked as dupe?
-  $dupeID = $_POST["duplicateTaskID"];
-  if ($dupeID && $dupeID != $orig_duplicateTaskID) {
-
-    $othertask = new task;
-    $othertask->set_id($dupeID);
-    $othertask->select();
-    if ($othertask->get_value("duplicateTaskID")) {
-      $TPL["message"][] = "Task ".$dupeID." ".$othertask->get_task_name()." is a duplicate. Task may not be a duplicate of a duplicate.";
-      alloc_redirect($TPL["url_alloc_task"]."taskID=".$task->get_id());
-    }
-
-    if ($othertask->get_id() == $task->get_id() || $othertask->get_id() == 0) {
-      $TPL["message"][] = "Error setting duplicate. Invalid Task ID.";
-      alloc_redirect($TPL["url_alloc_task"]."taskID=".$task->get_id());
-    }
-
-    $task->set_value("duplicateTaskID", $dupeID);
-    // Close off the task
-    if (!$task->get_value("dateActualCompletion")) {
-      $task->set_value("dateActualCompletion", date("Y-m-d"));
-    }
-
-    // Note in the other task's history that this task was marked a duplicate of it
-    $ai = new auditItem;
-    $ai->audit_special_change($othertask, "TaskMarkedDuplicate", $task->get_id());
-    $ai->insert();
-  }
-  if($orig_duplicateTaskID) {
-    // and, if we have a previous duplicate, note in that one that it's no longer a duplicate
-    $othertask = new task;
-    $othertask->set_id($orig_duplicateTaskID);
-    $othertask->select();
-    $ai = new auditItem;
-    $ai->audit_special_change($othertask, "TaskUnmarkedDuplicate", $task->get_id());
-    $ai->insert();
-  }
-
-  // If dateActualCompletion and there's no dateActualStart then default today
-  if ($task->get_value("dateActualCompletion") && $task->get_value("dateActualStart") == "") {
-    $task->set_value("dateActualStart", date("Y-m-d"));
-  }
-
-  // mark all children as complete
-  if (!$orig_dateActualCompletion && $task->get_value("dateActualCompletion")) {
-    if ($task->get_value("closerID") == "" && !$task->get_value("dateClosed")) {
-      $task->set_value("closerID",$current_user->get_id());
-      $task->set_value("dateClosed",date("Y-m-d H:i:s"));
-    }
-    // mark this task closed (i.e., write a message in the task history about it
-    $task->mark_closed();
-
-    $arr = $task->close_off_children_recursive();
-    if (is_array($arr)) {
-      $msg = array_merge($msg,$arr);
-    }
-
-  } else if ($orig_dateActualCompletion && !$task->get_value("dateActualCompletion")) {
-    $task->set_value("closerID",0);
-    $task->set_value("dateClosed","");
-    
-    // task re-opened
-    $task->mark_reopened();
-  }
-
-  if (!$task_is_new) {
-    if (sprintf("%d",$task->get_value("personID")) != sprintf("%d",$orig_personID)) {
-      $task->set_value("dateAssigned",date("Y-m-d H:i:s"));
-    }
-  } else if ($task->get_value("personID")) {
-    $task->set_value("dateAssigned",date("Y-m-d H:i:s"));
-  }
-
-  $task->get_value("taskDescription") and $task->set_value("taskDescription",rtrim($task->get_value("taskDescription")));
-
-  if (!$task->get_value("taskName")) {
-    $TPL["message"][] = "Please enter a name for the Task.";
-  } else {
-    $success = $task->save();
-  }
-
+  // Moved all validation over into task.inc.php save()
+  $success = $task->save();
 
   interestedParty::make_interested_parties("task",$task->get_id(),$_POST["interestedParty"]);
 
-#  This section automatically adds the task people to the Interested Parties
-#  if ($task_is_new) {
-#    $add_to_ip = array("creatorID","managerID","personID");
-#
-#    foreach ($add_to_ip as $role) {
-#      $p = new person;
-#      $p->set_id($task->get_value($role));
-#      $p->select(); 
-#      
-#      if (!interestedParty::exists("task", $task->get_id(), $p->get_value("emailAddress"))) {
-#        $interestedParty = new interestedParty;
-#        $interestedParty->set_value("entityID",$task->get_id());
-#        $interestedParty->set_value("entity","task");
-#        $interestedParty->set_value("personID",$p->get_id());
-#        $interestedParty->set_value("fullName",$p->get_username(1));
-#        $interestedParty->set_value("emailAddress",$p->get_value("emailAddress"));
-#        $interestedParty->save();
-#      }
-#    }
-#  }
- 
   count($msg) and $msg = "&message_good=".urlencode(implode("<br/>",$msg));
 
   if ($success) {

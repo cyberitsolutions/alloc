@@ -38,10 +38,19 @@ if ($configName) {
 
 if ($_POST["save"]) {
 
-  $arr = $config->get_config_item($configName);
-  $arr[$_POST["key"]] = $_POST["value"];
-  $config->set_value("value",serialize($arr));
-  $config->save();
+  if ($configName == "taskStatusOptions" && is_array($_POST["status"])) {
+    foreach($_POST["status"] as $k => $v) { 
+      $arr[$_POST["status"][$k]][$_POST["subStatus"][$k]]   = array("label"=>$_POST["label"][$k],"colour"=>$_POST["colour"][$k]);
+    }
+    $config->set_value("value",serialize($arr));
+    $config->save();
+
+  } else {
+    $arr = $config->get_config_item($configName);
+    $arr[$_POST["key"]] = $_POST["value"];
+    $config->set_value("value",serialize($arr));
+    $config->save();
+  }
 
 } else if ($_POST["delete"]) {
 
@@ -52,7 +61,11 @@ if ($_POST["save"]) {
 }
 
 
-include_template("templates/configEdit.tpl");
+if (file_exists("templates/configEdit_".$configName.".tpl")) {
+  include_template("templates/configEdit_".$configName.".tpl");
+} else {
+  include_template("templates/configEdit.tpl");
+}
 
 
 

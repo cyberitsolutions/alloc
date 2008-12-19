@@ -30,7 +30,7 @@ if ($_GET["projectID"]) {
 $options["personID"] = $_GET["personID"];
 $options["taskView"] = "prioritised";
 $options["return"] = "array";
-$options["taskStatus"] = "not_completed";
+$options["taskStatus"] = "open";
 $options["showTaskID"] = true;
 
 if ($_GET["graph_type"] == "phases") {

@@ -52,6 +52,10 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
         if (!$selectedTask->get_value("dateActualStart")) {
           $selectedTask->set_value("dateActualStart", $timeSheetItem->get_value("dateTimeSheetItem"));
         }
+        if ($selectedTask->get_value("taskSubStatus") == "notstarted") {
+          $selectedTask->set_value("taskSubStatus", "inprogress");
+        }
+        $selectedTask->save();
       }
 
       $timeSheetItem->set_value("description", $taskName);

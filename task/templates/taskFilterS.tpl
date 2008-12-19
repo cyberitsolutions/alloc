@@ -4,6 +4,11 @@ function refreshProjectList(radiobutton) \{
   url = '{$url_alloc_updateProjectList}projectType='+radiobutton.value;
   makeAjaxRequest(url, 'projectListDropdown')
 \}
+$(document).ready(function() \{
+  if ('{$dateOne}' || '{$dateTwo}') \{
+    $('.d_dates').show();
+  \}
+\});
 </script>
 
 <form action="{$url_form_action}" method="get">
@@ -13,9 +18,9 @@ function refreshProjectList(radiobutton) \{
     <td>{page::expand_link("project_superset","Projects")}</td>
     <td>Task Status {page::help("taskList_taskStatus")}</td>
     <td>Created By</td> 
-    <td rowspan="6" valign="top">
+    <td rowspan="6" valign="top" colspan="3" class="right">
     
-      <table>
+      <table align="right">
         <tr>
           <td align="right"><label for="showDescription" class="nobr">Desc &amp; Comments</label></td>
           <td><input type="checkbox" id="showDescription" name="showDescription"{$showDescription_checked}></td>
@@ -37,8 +42,8 @@ function refreshProjectList(radiobutton) \{
         <tr>
           <td align="right"><label for="showPriority" class="nobr">Priority Info</label></td>
           <td><input type="checkbox" id="showPriority" name="showPriority"{$showPriority_checked}></td>
-          <td align="right"><label for="showStatus" class="nobr">Task Status</label></td>
-          <td><input type="checkbox" id="showStatus" name="showStatus"{$showStatus_checked}></td>
+          <td align="right"><label for="showDateStatus" class="nobr">Date Status</label></td>
+          <td><input type="checkbox" id="showDateStatus" name="showDateStatus"{$showDateStatus_checked}></td>
         </tr>
       </table>
     
@@ -76,10 +81,22 @@ function refreshProjectList(radiobutton) \{
     <td valign="top"><select id="personID" name="personID">{$personOptions}</select></td>
   </tr>
   <tr>
+    <td>Task Date</td>
+    <td rowspan="2" valign="bottom">
+      <div style="width:100%" class="hidden d_created d_assigned d_targetStart d_targetCompletion d_actualStart d_actualCompletion d_dates">
+        {page::calendar("dateOne",$dateOne);}<div style="display:inline; float:left;">&nbsp;to&nbsp;</div>
+        {page::calendar("dateTwo",$dateTwo);}
+      </div>
+    </td>
+  </tr>
+  <tr>
     <td class="nobr" colspan="1" valign="bottom">
+      <select name="taskDate" onChange="$('.hidden').hide(); if ($(this).val()) $('.'+$(this).val()).slideDown('fast');">
+        {$taskDateOptions}
+      </select>
     </td>
     <td class="right" valign="bottom">
-      <input type="submit" name="applyFilter" value="Filter"> {page::help("taskList_filter")}
+      &nbsp;&nbsp;<input type="submit" name="applyFilter" value="Filter"> {page::help("taskList_filter")}
     </td>
   </tr>
 </table>

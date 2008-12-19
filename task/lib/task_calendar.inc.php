@@ -178,7 +178,7 @@ class calendar {
                        WHERE personID = %d 
                          AND dateTargetStart >= '%s' 
                          AND dateTargetStart < '%s'
-                         AND dateActualCompletion IS NULL"
+                         AND taskStatus != 'closed'"
                     ,$this->person->get_id()
                     ,$this->first_date
                     ,$this->last_date);
@@ -199,7 +199,7 @@ class calendar {
                        WHERE personID = %d 
                          AND dateTargetCompletion >= '%s' 
                          AND dateTargetCompletion < '%s'
-                         AND dateActualCompletion IS NULL"
+                         AND taskStatus != 'closed'"
                     ,$this->person->get_id()
                     ,$this->first_date
                     ,$this->last_date);

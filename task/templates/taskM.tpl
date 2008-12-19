@@ -55,21 +55,20 @@ $(document).ready(function() \{
 
         <div class="view">
           <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
-          <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {$task_taskName}</h2>&nbsp;{$priorityLabel}
-          <br>{$blockerLabel}
+          <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {$task_taskName_html}</h2>&nbsp;{$priorityLabel}
         </div>
-        <div class="edit nobr">
+        <div class="edit">
           <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
-          <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" size="35" maxlength="75">
-          <select name="priority">
-            {$priorityOptions}
-          </select>
-          <select name="taskTypeID">
-            {$taskTypeOptions}
-          </select>
-          {page::help("taskType")}
-          <br>
-          <select name="blocker">{$blockerOptions}</select>
+          <div style="width:100%" class="">
+            <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" maxlength="75" size="35">
+            <select name="priority">
+              {$priorityOptions}
+            </select>
+            <select name="taskTypeID">
+              {$taskTypeOptions}
+            </select>
+            {page::help("taskType")}
+          </div>
         </div>
 
         {if $project_projectName} 
@@ -80,7 +79,7 @@ $(document).ready(function() \{
         {/}
         <div class="edit">
           <h6>Project</h6>
-          <select id="projectID" name="projectID" onChange="updateStuffWithAjax()"><option value="">{$projectOptions}</select>
+          <select id="projectID" name="projectID" style="width:100%" onChange="updateStuffWithAjax()"><option value="">{$projectOptions}</select>
         </div>
 
         {if $hierarchy_links} 
@@ -106,19 +105,7 @@ $(document).ready(function() \{
           {page::textarea("taskDescription",$TPL["task_taskDescription"],array("height"=>"medium","width"=>"100%"))}
         </div>
 
-        {if $taskDuplicateLink}
-        <div class="view" style="clear:both">
-          <h6>Duplicate</h6>
-          {$taskDuplicateLink}
-        </div>
-        {/}
-        {if $task_taskID}
-        <div class="edit nobr" style="clear:both">
-          <h6>Duplicate</h6>
-          <input type="text" name="duplicateTaskID" value="{$task_duplicateTaskID}" size="10">
-          {page::help("task_duplicate")}
-        </div>
-        {else}
+        {if !$task_taskID}
         <div class="edit">
           <h6>Possible Duplicates</h6>
           <div class="message" style="padding:4px 2px; width:100%; height:70px; border:1px solid #cccccc; overflow:auto;">
@@ -133,39 +120,51 @@ $(document).ready(function() \{
       <div style="min-width:400px; width:47%; float:left; margin:0px 12px; vertical-align:top;">
 
         <div class="view">
-          <h6>People</h6>
-          Created By <b>{$task_createdBy}</b> {$task_dateCreated}
-          {if $manager_username}
-          <br><br>
-          Managed By <b>{$manager_username}</b>
-          {/}
-          {if $person_username}
-          <br><br>
-          Assigned To <b>{$person_username}</b> {$task_dateAssigned}
-          {/}
-          {if $task_closed_by}
-          <br><br>
-          Task Closed By <b>{$task_closed_by}</b> {$task_closed_when}
-          <br>
-          {/}
+          <h6>People<div>Status</div></h6>
+          <div style="float:left; width:47%;">
+            Created by <b>{$task_createdBy}</b><br><span class="faint">{$task_dateCreated}</span>
+            {if $manager_username}
+            <br>
+            Managed by <b>{$manager_username}</b>
+            {/}
+            {if $person_username}
+            <br>
+            Assigned to <b>{$person_username}</b><br><span class="faint">{$task_dateAssigned}</span>
+            {/}
+            {if $task_closed_by}
+            <br>
+            Closed by <b>{$task_closed_by}</b><br><span class="faint">{$task_closed_when}</span>
+            <br>
+            {/}
+          </div>
+          <div style="float:right; width:50%; text-align:left;">
+            {if $taskStatusLabel}
+              <span class="corner" style="display:block;width:200px;border:1px solid #aaaaaa;margin-top:8px;text-align:center;{$taskStatusColour};">
+              {$taskStatusLabel}
+              </span>
+            {/}
+          </div>
         </div>
-
         <div class="edit">
-          <h6>People</h6>
-          Created By <b>{$task_createdBy}</b> {$task_dateCreated}
-          <br><br>
-          Managed By <div id="taskManagerPersonList" style="display:inline">{$managerPersonOptions}</div>
-          <br><br>
-          Assigned To <div id="taskPersonList" style="display:inline">{$personOptions}</div> {$task_dateAssigned}
-          {if $task_closed_by}
-          <br><br>
-          Task Closed By <b>{$task_closed_by}</b> {$task_closed_when}
-          <br>
-          {/}
-          <br><br>
-          {if !$task_taskID}
-            <label for="createTaskReminder"><input type="checkbox" name="createTaskReminder" id="createTaskReminder" value="true" /> Create reminder for this task</label>{page::help("task_create_reminder")}
-          {/}
+          <h6>People<div>Status</div></h6>
+          <div style="float:left; width:47%;">
+            Managed By <div id="taskManagerPersonList" style="display:inline">{$managerPersonOptions}</div>
+            <br><br>
+            Assigned To <div id="taskPersonList" style="display:inline">{$personOptions}</div>
+          </div>
+          <div style="float:right; width:50%; text-align:left;">
+            <select name="taskStatus" onChange="$('.hidden').hide(); $('#'+$(this).val()+'_div').css('display','inline');">
+              {$taskStatusOptions}
+            </select>
+            {$class="inline"}
+            {if !$task_duplicateTaskID}
+              {$class="hidden"}
+            {/}
+            <div id="closed_duplicate_div" class="{$class}">
+              <input type="text" name="duplicateTaskID" value="{$task_duplicateTaskID}" size="10">
+              {page::help("task_duplicate")}
+            </div>
+          </div>
         </div>
 
         {if $interestedParty_text}
@@ -175,7 +174,7 @@ $(document).ready(function() \{
         </div>
         {/}
 
-        <div class="edit">
+        <div class="edit nobr">
           <h6>Interested Parties</h6> 
           <div id="interestedPartyDropdown" style="display:inline">{$interestedPartyOptions}</div>
           {page::help("task_interested_parties")}
@@ -247,14 +246,15 @@ $(document).ready(function() \{
           </div>
         </div>
 
-       
       </div>
+
+
 
     </td>
   </tr>
   <tr>
     <td colspan="5" align="center" class="padded">
-      <div class="view" style="margin-top:20px">
+      <div class="view" style="margin:20px">
         <input type="button" id="editTask" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
       </div>
       <div class="edit" style="margin:20px">

@@ -70,7 +70,7 @@ class person extends db_entity {
     $options["personID"] = $this->get_id();
     $options["taskView"] = "prioritised";
     $options["return"] = $format;
-    $options["taskStatus"] = "not_completed";
+    $options["taskStatus"] = "open";
     $options["taskTypeID"] = array(TT_TASK,TT_MESSAGE,TT_FAULT,TT_MILESTONE);
 
     $summary = task::get_list($options);
@@ -82,7 +82,7 @@ class person extends db_entity {
 
     unset($summary);
     unset($options["limit"]);
-    $options["taskStatus"] = "due_today";
+    $options["taskDate"] = "due_today";
     $summary = task::get_list($options);
 
     if ($summary) {
@@ -92,7 +92,7 @@ class person extends db_entity {
 
     unset($summary);
     unset($options["limit"]);
-    $options["taskStatus"] = "new";
+    $options["taskDate"] = "new";
     $summary = task::get_list($options);
 
     if ($summary) {
@@ -266,7 +266,7 @@ class person extends db_entity {
   function load_prefs() {
     $this->prefs = unserialize($this->get_value("sessData"));
     isset($this->prefs["topTasksNum"]) or $this->prefs["topTasksNum"] = 5;
-    $this->prefs["topTasksStatus"] or $this->prefs["topTasksStatus"] = "not_completed";
+    $this->prefs["topTasksStatus"] or $this->prefs["topTasksStatus"] = "open";
     isset($this->prefs["projectListNum"]) or $this->prefs["projectListNum"] = "10";
     isset($this->prefs["tasksGraphPlotHome"]) or $this->prefs["tasksGraphPlotHome"] = "4";
     isset($this->prefs["tasksGraphPlotHomeStart"]) or $this->prefs["tasksGraphPlotHomeStart"] = "1";
@@ -302,11 +302,12 @@ class person extends db_entity {
   function has_messages() {
     if (is_object($this)) {
       $db = new db_alloc;
-      $query = "SELECT * 
-                  FROM task 
-                 WHERE taskTypeID = ".TT_MESSAGE." 
-                   AND personID = ".$this->get_id(). " 
-                   AND (dateActualCompletion = '' OR dateActualCompletion IS NULL)";
+      $query = sprintf("SELECT * 
+                          FROM task 
+                         WHERE taskTypeID = %d
+                           AND personID = %d
+                           AND taskStatus != 'closed'"
+                       ,TT_MESSAGE,$this->get_id());
       $db->query($query);
       if ($db->next_record()) {
         return true;
@@ -462,7 +463,7 @@ class person extends db_entity {
   
       if ($_FORM["showLinks"]) {
         $row["navLinks"] = '<a href="'.$TPL["url_alloc_taskList"].'personID='.$row["personID"].'&taskView=byProject&applyFilter=1';
-        $row["navLinks"].= '&dontSave=1&taskStatus=not_completed&projectType=curr">Tasks</a>&nbsp;&nbsp;';
+        $row["navLinks"].= '&dontSave=1&taskStatus=open&projectType=curr">Tasks</a>&nbsp;&nbsp;';
         $row["navLinks"].= '<a href="'.$TPL["url_alloc_personGraph"].'personID='.$row["personID"].'">Graph</a>&nbsp;&nbsp;';
         $row["navLinks"].= '<a href="'.$TPL["url_alloc_taskCalendar"].'personID='.$row["personID"].'">Calendar</a>';
       }
