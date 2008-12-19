@@ -64,7 +64,7 @@ class task extends db_entity {
     global $current_user;
     $db = new db_alloc;
     if ($this->get_id()) {
-      $query = "SELECT * FROM task WHERE parentTaskID = ".$this->get_id();
+      $query = sprintf("SELECT * FROM task WHERE parentTaskID = %d",$this->get_id());
       $db->query($query);
                                                                                                                                
       while ($db->next_record()) {
@@ -217,8 +217,8 @@ class task extends db_entity {
                         FROM task 
                         WHERE projectID= '%d' 
                         AND taskTypeID = 2 
-                        AND (dateActualCompletion IS NULL or dateActualCompletion = '') 
-                        ORDER BY taskName", $projectID);
+                        AND (taskStatus != 'closed' or taskID = %d)
+                        ORDER BY taskName", $projectID,$parentTaskID);
       $options = page::select_options($query, $parentTaskID,70);
     }
     return "<select name=\"parentTaskID\"><option value=\"\">".$options."</select>";
