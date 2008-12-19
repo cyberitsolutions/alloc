@@ -260,9 +260,10 @@ require_once("../alloc.php");
     $options["showHeader"] = true;
     $options["taskView"] = "byProject";
     $options["projectIDs"] = array($project->get_id());   
-    $options["taskStatus"] = "not_completed";
+    $options["taskStatus"] = "open";
     $options["showTaskID"] = true;
     $options["showAssigned"] = true;
+    $options["showStatus"] = true;
     $options["showManager"] = true;
     $options["showDates"] = true;
     #$options["showTimes"] = true; // performance hit

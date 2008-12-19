@@ -227,7 +227,7 @@ class reminder extends db_entity {
     } else if ($type == "task") {
       $task = new task;
       $task->set_id($this->get_value('reminderLinkID'));
-      if ($task->select() == false || $task->get_value("dateActualCompletion")) {
+      if ($task->select() == false || $task->get_value("taskStatus") == 'closed') {
         return false;
       }
     } else if ($type == "client") {

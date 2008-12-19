@@ -390,7 +390,6 @@ CREATE TABLE task (
   creatorID int(11) NOT NULL default '0',
   closerID int(11) default NULL,
   priority tinyint(4) NOT NULL default '0',
-  blocker TINYINT NOT NULL DEFAULT 0,
   timeEstimate decimal(7,2) DEFAULT NULL,
   dateCreated datetime NOT NULL default '0000-00-00 00:00:00',
   dateAssigned datetime default NULL,
@@ -408,6 +407,8 @@ CREATE TABLE task (
   taskModifiedUser int(11) DEFAULT NULL,
   taskCommentTemplateID int(11) default NULL,
   duplicateTaskID int(11) default NULL,
+  taskStatus varchar(255) NOT NULL,
+  taskSubStatus varchar(255) DEFAULT NULL,
   PRIMARY KEY  (taskID),
   KEY taskName (taskName),
   KEY dateAdded (dateCreated),
@@ -415,6 +416,8 @@ CREATE TABLE task (
   KEY parentTaskID (parentTaskID),
   KEY taskTypeID (taskTypeID),
   KEY parentTaskID_2 (parentTaskID),
+  KEY taskStatus (taskStatus),
+  KEY taskSubStatus (taskSubStatus),
   FULLTEXT KEY `taskName_2` (`taskName`)
 ) TYPE=MyISAM PACK_KEYS=0;
 

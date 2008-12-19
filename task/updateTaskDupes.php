@@ -29,7 +29,7 @@ foreach ($tasks as $task) {
   $str.= "<div style='padding-bottom:3px'>";
   $str.= "<a href=\"".$TPL["url_alloc_task"]."taskID=".$task["taskID"]."\">".$task["taskID"]." ".$task["taskName"]."</a>";
   $status = "";
-  $task["dateActualCompletion"] and $status = "[Closed ".$task["dateActualCompletion"]."]";
+  $task["taskStatus"] == "closed" and $status = "[Closed ".$task["dateActualCompletion"]."]";
   $str.= " ".$status;
   $str.= "</div>";
 }

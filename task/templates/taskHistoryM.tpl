@@ -10,7 +10,7 @@
 
         <table class="sortable list">
           <thead>
-            <tr><th>Date</th><th>Change</th><th>Made by</th></tr>
+            <tr><th>Date</th><th>Change</th><th>Created by</th></tr>
           </thead>
           <tbody>
             {$changeHistory}

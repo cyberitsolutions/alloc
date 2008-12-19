@@ -170,13 +170,13 @@ class project extends db_entity {
 
     // Tasks
     if ($this->have_perm()) {
-      $url = $TPL["url_alloc_taskList"]."applyFilter=1&amp;taskStatus=not_completed&amp;taskView=byProject&amp;projectID=".$this->get_id();
+      $url = $TPL["url_alloc_taskList"]."applyFilter=1&amp;taskStatus=open&amp;taskView=byProject&amp;projectID=".$this->get_id();
       $links[] = "<a href=\"$url\" class=\"nobr noprint\">Tasks</a>";
     } 
 
     // Graph
     if ($this->have_perm()) {
-      $url = $TPL["url_alloc_projectGraph"]."applyFilter=1&projectID=".$this->get_id()."&taskStatus=not_completed&showTaskID=true";
+      $url = $TPL["url_alloc_projectGraph"]."applyFilter=1&projectID=".$this->get_id()."&taskStatus=open&showTaskID=true";
       $links[] = "<a href=\"$url\" class=\"nobr noprint\">Graph</a>";
     }
 

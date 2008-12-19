@@ -29,6 +29,7 @@ $defaults = array("showHeader"=>true
                  ,"showTaskID"=>true
                  ,"showEdit"=>true
                  ,"taskView" => "byProject"
+                 ,"showStatus" => "true"
                  ,"padding"=>1
                  ,"url_form_action"=>$TPL["url_alloc_taskList"]
                  ,"form_name"=>"taskList_filter"
@@ -59,33 +60,16 @@ if ($_POST["run_mass_update"]) {
 
   if ($_POST["select"]) {
 
-    $allowed_auto_fields = array("dateTargetStart","dateTargetCompletion","dateActualStart","managerID","timeEstimate","priority","taskTypeID","blocker");  
+    $allowed_auto_fields = array("dateTargetStart","dateTargetCompletion","dateActualStart","dateActualCompletion","managerID"
+                                ,"timeEstimate","priority","taskTypeID","taskStatus","personID");  
 
     foreach($_POST["select"] as $taskID => $selected) { 
       $task = new task;
       $task->set_id($taskID);
       $task->select();
 
-      // Special case: Close task
-      if ($_POST["update_action"] == "dateActualCompletion") {
-        $task->set_value('dateActualCompletion', $_POST["dateActualCompletion"]);
-        $d = $u = ""; # can't use unset(). The variables need to be empty strings for the set_value.
-        $_POST["dateActualCompletion"] and $d = date("Y-m-d");
-        $_POST["dateActualCompletion"] and $u = $current_user->get_id();
-        $task->set_value('closerID', $u);
-        $task->set_value("dateClosed", $d);
-        $task->save();
-
-      // Special case: Re-assign task
-      } else if ($_POST["update_action"] == "personID") {
-        $task->set_value("personID", $_POST["personID"]);
-        $d = ""; # can't use unset(). The variables need to be empty strings for the set_value.
-        $_POST["personID"] and $d = date("Y-m-d");
-        $task->set_value("dateAssigned", $d);
-        $task->save();
-
       // Special case: projectID and parentTaskID have to be done together
-      } else if ($_POST["update_action"] == "projectIDAndParentTaskID") {
+      if ($_POST["update_action"] == "projectIDAndParentTaskID") {
         
         // Can't set self to be parent
         if ($_POST["parentTaskID"] != $task->get_id()) {

@@ -95,7 +95,7 @@ case 2:
     while ($db->next_record()) {
       $task = new task;
       $task->read_db_record($db);
-      if ($task->get_status("text", "standard") != "Completed") {
+      if ($task->get_value("taskStatus") != "closed") {
         $parent_names[$task->get_id()] = $task->get_value('taskName');
       }
     }
