@@ -11,11 +11,11 @@
       <div class="{$class_new_task_comment}" id="id_new_task_comment">
       <table align="left" width="100%" cellpadding="3">
         <tr>  
-          <td valign="top" align="right">
+          <td valign="top" align="right" style="width:50%">
             <input type="hidden" name="entity" value="task">
             <input type="hidden" name="entityID" value="{$task_taskID}">
             <div id="comment_textarea">
-              {page::textarea("comment",$TPL["comment"],array("height"=>"medium"))}
+              {page::textarea("comment",$TPL["comment"],array("height"=>"medium","width"=>"100%"))}
             </div>
             <div id="file_attachment_dialog" style="display:inline; float:left">
             </div>
@@ -24,7 +24,8 @@
             </div>
             <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity=task&entityID={$task_taskID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
           </td>
-          <td colspan="2" valign="top" width="60%">
+
+          <td colspan="2" valign="top" style="padding-left:10px;">
             <div style="display:block; clear:both; padding-bottom:8px;"><u>Email Recipients</u></div>
             {echo interestedParty::get_interested_parties_html($TPL["allTaskParties"])}
             <div style="float:left; clear:both; padding:10px 0px 8px 0px">{page::expand_link("email_other","Email Other Party")}</div>
