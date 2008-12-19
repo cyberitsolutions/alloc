@@ -31,7 +31,8 @@ $(document).ready(function() \{
   </tr>
   <tr>
     <td colspan="5" valign="top" class="toggle_edit_view">
-      <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
+
+      <div style="min-width:400px; width:47%; float:left; margin:0px 12px; vertical-align:top;">
 
         <div class="view">
           <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
@@ -109,8 +110,9 @@ $(document).ready(function() \{
 
       </div>
 
-      <div style="float:right; width:47%; padding:0px 12px; vertical-align:top;">
- 
+
+      <div style="min-width:400px; width:47%; float:left; margin:0px 12px; vertical-align:top;">
+
         <div class="view">
           <h6>People</h6>
           Created By <b>{$task_createdBy}</b> {$task_dateCreated}
