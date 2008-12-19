@@ -22,6 +22,25 @@ $(document).ready(function() \{
   {/}
 \});
 </script>
+
+{$_POST["delete_file_attachment"] || $_POST["save_attachment"] and $_POST["sbs_link"] = "attachments"}
+
+{$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"] or $sbs_link = "task"}
+{if $task_taskID}
+{$first_div="hidden"}
+{page::side_by_side_links(array("task"=>"Main"
+                               ,"comments"=>"Comments"
+                               ,"reminders"=>"Reminders"
+                               ,"attachments"=>"Attachments"
+                               ,"history"=>"History"
+                               ,"sbsAll"=>"All")
+                          ,$sbs_link
+                          ,$url_alloc_task."taskID=".$task_taskID)}
+{/}
+
+
+<div id="task" class="{$first_div}">
+
 <form action="{$url_alloc_task}" method="post">
 <input type="hidden" name="taskID" value="{$task_taskID}">
 <table class="box">
@@ -256,19 +275,27 @@ $(document).ready(function() \{
 
 </form>
 
+
 {if $task_taskID}
 
 {show_task_children("templates/taskChildrenM.tpl")}
 
+{/}
+
+
+</div> <!-- end id=task -->
+
+
+{if $task_taskID}
+
+<div id="reminders">
 <table class="box">
   <tr>
-{if (!$TPL["editing_disabled"])}
     <th>Reminders</th>
-    <th class="right" colspan="3"><a href="{$url_alloc_reminderAdd}step=3&parentType=task&parentID={$task_taskID}&returnToParent=task">Add Reminder</a></th>
+    <th class="right" colspan="3">
+      <a href="{$url_alloc_reminderAdd}step=3&parentType=task&parentID={$task_taskID}&returnToParent=task">Add Reminder</a>
+    </th>
   </tr>
-{else}
-    <th colspan="4">Reminders</th>
-{/}
   <tr>
     <td>Recipient</td>
     <td>Date / Time</td>
@@ -277,13 +304,19 @@ $(document).ready(function() \{
   </tr>
   {show_reminders("../reminder/templates/reminderR.tpl")}
 </table>
+</div>
 
-
+<div id="attachments">
 {show_attachments()}
+</div>
 
-{show_taskHistory()}
-
+<div id="comments">
 {show_taskComments()}
+</div>
+
+<div id="history">
+{show_taskHistory()}
+</div>
 
 {/}
 
