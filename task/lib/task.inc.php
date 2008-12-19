@@ -1001,8 +1001,8 @@ class task extends db_entity {
     global $TPL;
     if($_FORM["showEdit"]) {
       $person_options = page::select_options(person::get_username_list());
-      $assignee_dropdown = "<select name=\"personID\">".$person_options."</select>";
-      $manager_dropdown = "<select name=\"managerID\">".$person_options."</select>";
+      $assignee_dropdown = "<select name=\"personID\"><option value=\"\">".$person_options."</select>";
+      $manager_dropdown = "<select name=\"managerID\"><option value=\"\">".$person_options."</select>";
       $dateTargetStart = page::calendar("dateTargetStart");
       $dateTargetCompletion = page::calendar("dateTargetCompletion");
       $dateActualStart = page::calendar("dateActualStart");
