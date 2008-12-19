@@ -220,6 +220,9 @@ hr {
 .bold {
   font-weight:bold;
 }
+.inline {
+  display:inline;
+}
 
 
 #helper { 
