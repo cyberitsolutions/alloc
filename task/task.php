@@ -137,7 +137,7 @@ if (isset($taskID)) {
 // if someone uploads an attachment
 if ($_POST["save_attachment"]) {
   move_attachment("task",$taskID);
-  header("Location: ".$TPL["url_alloc_task"]."taskID=".$taskID);
+  header("Location: ".$TPL["url_alloc_task"]."taskID=".$taskID."&sbs_link=attachments");
 } 
   
 
