@@ -1959,8 +1959,8 @@ class task extends db_entity {
     return implode("\n", $rows);
   }
 
-  // helper function to cut down on code duplication in the above function
   function load_entity($type, $id, &$entity) {
+    // helper function to cut down on code duplication in the above function
     if($id) {
       $entity = new $type;
       $entity->set_id($id);
@@ -1972,8 +1972,8 @@ class task extends db_entity {
     $this->mark_reopened();
   }
 
-  // write a message into the log, closing this task
   function mark_closed() {
+    // write a message into the log, closing this task
     $ai = new auditItem();
     $ai->audit_special_change($this, "TaskClosed");
     $ai->insert();
