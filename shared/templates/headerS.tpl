@@ -10,6 +10,7 @@
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}wiki.css" type="text/css" media="screen" />
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print" />
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.textarearesizer.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.curvycorners.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.livequery.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.filetree.js"></script>
