@@ -51,38 +51,6 @@ function sidebyside_activate(id,arr) {
   }
 }
 
-
-// These global variables are for the setTimeout() below
-var alloc_current_resizable_textarea = "";
-var alloc_current_resizable_textarea_default_height = "";
-var alloc_current_resizable_textarea_maximum_height = "";
-var alloc_current_resizable_textarea_timer = "";
-
-// this function dynamically resizes a text area as data is inputted
-function adjust_textarea(textarea, default_height, maximum_height) {
-  // a div is setup off screen, we use that div to determine the height of the textarea
-  alloc_current_resizable_textarea = textarea;
-  alloc_current_resizable_textarea_default_height = default_height;
-  alloc_current_resizable_textarea_maximum_height = maximum_height;
-  var shadow = document.getElementById("shadow_" + textarea.id);
-  shadow.style.width=parseInt(textarea.clientWidth-8)+'px';
-  shadow.innerHTML = textarea.value.replace(/[\n]/g,'<br />&nbsp;');
-  var shadow_height = shadow.clientHeight;
-  if(shadow_height < default_height) {
-    var n = default_height;
-  } else if(shadow_height > maximum_height) {
-    var n = maximum_height;
-  } else {
-    var n = shadow_height+14;
-  }
-  textarea.style.height = n+'px';
-  alloc_current_resizable_textarea_timer = setTimeout('adjust_textarea(alloc_current_resizable_textarea,alloc_current_resizable_textarea_default_height,alloc_current_resizable_textarea_maximum_height)', 1000);
-}
-
-function stop_textarea_timer() {
-  clearTimeout(alloc_current_resizable_textarea_timer);
-}
-
 function help_text_on(id, str) {
   $('#main').append("<div id='helper' style='display:none'></div>");
   $('#helper').hide().html(str).corner();
@@ -178,6 +146,9 @@ $(document).ready(function() {
     $('.view').hide();
     $('.edit').show();
   });
+
+  // Add resize grippies to all textareas
+  $('textarea:not(.processed)').TextAreaResizer();
 
 });
 

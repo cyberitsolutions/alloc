@@ -657,4 +657,19 @@ p#extra_links {
   margin:0px;
 }
 
-
+div.grippie {
+  background:#EEEEEE url(../images/grippie.png) no-repeat scroll center 2px;
+  border-color:#DDDDDD;
+  border-style:solid;
+  border-width:0pt 1px 1px;
+  cursor:s-resize;
+  height:9px;
+  overflow:hidden;
+}
+/* IE fix */
+.resizable-textarea textarea {
+  display:block;
+  margin-bottom:0pt;
+  width:95%;
+  height: 20%;
+}

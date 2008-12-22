@@ -106,7 +106,7 @@ if (path_under_path(dirname($file), get_wiki_path()) && is_file($file) && is_rea
   $class = "vcs_".config::get_config_item("wikiVCS");
   if (class_exists($class)) {
     $commit_msg = '<br><input type="text" name="commit_msg" id="commit_msg" value="" style="margin-top:10px; width:100%;">';
-    $commit_msg.= '<script>preload_field("#commit_msg", "Enter a brief description of your changes...");</script>';
+    $commit_msg.= '<script>preload_field("#commit_msg", "Enter a brief description of your changes...");$("textarea:not(.processed)").TextAreaResizer();</script>';
   }
 
 

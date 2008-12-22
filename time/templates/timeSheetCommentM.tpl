@@ -11,11 +11,10 @@
       <div class="hidden" id="id_new_comment">
       <table align="left" width="100%" cellpadding="3">
         <tr>  
-          <td valign="top" align="right">
+          <td valign="top" align="right" width="50%">
             <input type="hidden" name="entity" value="timeSheet">
             <input type="hidden" name="entityID" value="{$timeSheetID}">
-            <div id="comment_textarea">
-              {page::textarea("comment",$TPL["comment"],array("height"=>"medium"))}
+            <div id="comment_textarea">{page::textarea("comment",$TPL["comment"],array("height"=>"medium","width"=>"100%"))}
             </div>
             <div id="file_attachment_dialog" style="display:inline; float:left">
             </div>
@@ -24,7 +23,7 @@
             </div>
             <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity=timeSheet&entityID={$timeSheetID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
           </td>
-          <td colspan="2" valign="top" width="60%">
+          <td colspan="2" valign="top">
             <div style="display:block; clear:both; padding-bottom:8px;"><u>Email Recipients</u></div>
             {echo interestedParty::get_interested_parties_html($TPL["allTimeSheetParties"])}
             <div style="float:left; clear:both; padding:10px 0px 8px 0px">{page::expand_link("email_other","Email Other Party")}</div>
