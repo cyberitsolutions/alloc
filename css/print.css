@@ -12,22 +12,32 @@ a {
   color:black;
 }
 
-table.tasks {
+hr {
+  border:0px;
+  width: 100%;
+  color: #ccc;
+  background-color: #ccc;
+  height:1px;
+}
+
+table.list {
   width:100%;
   border-right:1px solid #808080;
   border-bottom:1px solid #808080;
+  border-collapse:collapse;
+  border-spacing:0px;
 }
-td.tasks {
+td.list {
   background-color: #eaf3ff; 
   padding:4px;
 }
-table.tasks th, table.alloc_calendar th {
+table.list th, table.alloc_calendar th {
   border-bottom:0px;
   font-weight:bold;
   white-space:nowrap;
   color:#444444;
 }
-table.tasks td, table.tasks th, table.alloc_calendar th {
+table.list td, table.list th, table.alloc_calendar th {
   border-left:1px solid #808080;
   border-top:1px solid #808080;
   padding:4px;
@@ -92,6 +102,8 @@ table.box {
   margin-bottom:14px; 
   vertical-align:top; 
   width:98%; 
+  border-collapse:collapse;
+  border-spacing:0px;
 } 
 table.box th {
   font-weight: bold;
