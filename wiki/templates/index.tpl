@@ -1,5 +1,10 @@
 {page::header()}
 {page::toolbar()}
+
+<link rel="StyleSheet" href="{$url_alloc_stylesheets}wiki.css" type="text/css" />
+<script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.markitupsettings.js"></script>
+<script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.markitup.js"></script>
+
 <script type="text/javascript" language="javascript">
 
 // This function refreshes the document pane, and the documents history
@@ -25,14 +30,14 @@ $('#jftTree').fileTree(ops, function(path, isFile) \{
   \}
 \});
 
-// this allows the web browsers back button to function happily with the ajax
+// this allows the web browsers back button to function happily with the dynamic page updates
 $.history.init(loadFileAndHistory);
 
 
 \});
 </script>
 
-<table class="box" id="wiki">
+<table class="box">
   <tr>
     <th colspan="3" class="noprint">Wiki</th>
   </tr>

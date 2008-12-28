@@ -29,8 +29,6 @@ list($file, $rev) = explode("|",$_GET["file"]);
 $file = realpath(get_wiki_path().urldecode($file));
 
 $wikiMarkup = config::get_config_item("wikiMarkup");
-$wikiMarkupSyntaxHelp = page::get_raw_help_string("wikiMarkup_".$wikiMarkup);
-$wikiMarkupSyntaxHelp_translated = $wikiMarkup(page::get_raw_help_string("wikiMarkup_".$wikiMarkup));
 
 if (path_under_path(dirname($file), get_wiki_path()) && is_file($file) && is_readable($file)) {
 
@@ -94,7 +92,8 @@ if (path_under_path(dirname($file), get_wiki_path()) && is_file($file) && is_rea
     $str = $disk_file;
   }
   //$str = htmlentities($str);
-  $textarea = page::textarea('wikitext',$str,array("height"=>"large","width"=>"100%"));
+  // the class=>processed prevents the default grippie being added to this textarea
+  $textarea = page::textarea('wikitext',$str,array("height"=>"large","width"=>"100%","class"=>"processed")); 
   $str = $wikiMarkup($str); 
 
   //$str = rtrim($str);
@@ -106,8 +105,10 @@ if (path_under_path(dirname($file), get_wiki_path()) && is_file($file) && is_rea
   $class = "vcs_".config::get_config_item("wikiVCS");
   if (class_exists($class)) {
     $commit_msg = '<br><input type="text" name="commit_msg" id="commit_msg" value="" style="margin-top:10px; width:100%;">';
-    $commit_msg.= '<script>preload_field("#commit_msg", "Enter a brief description of your changes...");$("textarea:not(.processed)").TextAreaResizer();</script>';
+    $commit_msg.= '<script>preload_field("#commit_msg", "Enter a brief description of your changes...");</script>';
   }
+
+  $commit_msg.= '<script>mySettings.previewParserPath="'.$TPL["url_alloc_filePreview"].'"; $("#wikitext").markItUp(mySettings);</script>';
 
 
   //<h6 style="margin-top:0px;text-transform:none; color:#333333; font-weight:bold;">${filelabel}</h6>
@@ -117,13 +118,13 @@ if (path_under_path(dirname($file), get_wiki_path()) && is_file($file) && is_rea
   $rtn =<<<EOD
   <div class="view">
     {$msg}
-  <div class="wikidoc">
-    <div style="float:right; display:inline; width:30px; margin-top:10px; right:-20px; position:relative;" class="noprint">
-      <a target="_blank" href="{$url_alloc_wiki}?media=print#{$filelabel}|{$rev}"><img class="noprint" border="0" src="{$TPL["url_alloc_images"]}printer.png"></a>
+    <div class="wikidoc">
+      <div style="float:right; display:inline; width:30px; margin-top:10px; right:-10px; position:relative;" class="noprint">
+        <a target="_blank" href="{$url_alloc_wiki}?media=print#{$filelabel}|{$rev}"><img class="noprint" border="0" src="{$TPL["url_alloc_images"]}printer.png"></a>
+      </div>
+      ${str}
     </div>
-    ${str}
-  </div>
-  <h5 class="jftBot noprint">${edit_button}</h5>
+    <h5 class="jftBot noprint">${edit_button}</h5>
   </div>
 EOD;
 
@@ -142,11 +143,7 @@ EOD;
         <h5 class="jftBot">
           <input type="hidden" name="file" value="${file}">
           <input type="submit" name="save" value="Save">
-          <div style="display:inline; float:right"><a href="#x" onClick="$('#syntaxguide').toggle(); return false;">Syntax guide</a></div>
         </h5>
-        <div style='vertical-align:top; display:none;' class="message noprint" id="syntaxguide">
-        <pre>{$wikiMarkupSyntaxHelp}</pre>
-        </div>
       </form>
     </div>
 EOD2;

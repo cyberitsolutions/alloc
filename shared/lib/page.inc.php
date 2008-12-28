@@ -183,13 +183,14 @@ class page {
     list($default_height, $max_height) = $heights[$height];
 
     $ops["tabindex"] and $tabindex = "tabindex=\"".$ops["tabindex"]."\"";
+    $ops["class"] and $class = "class=\"".$ops["class"]."\"";
     $cols = $ops["cols"];
     !$ops["width"] && !$cols and $cols = 85;
     $cols and $cols = " cols=\"".$cols."\"";
 
     $ops["width"] and $width = "; width:".$ops["width"];
     $str=<<<EOD
-      <textarea id="${name}" name="${name}" ${cols} ${tabindex} wrap="virtual" style="height:${default_height}px${width}">${default_value}</textarea>
+      <textarea id="${name}" name="${name}" ${cols} ${tabindex} ${class} wrap="virtual" style="height:${default_height}px${width}">${default_value}</textarea>
 EOD;
     return $str;
   }
