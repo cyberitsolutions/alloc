@@ -128,6 +128,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_fileGet"                        => $sess->url(SCRIPT_PATH."wiki/fileGet.php")
             ,"url_alloc_fileSave"                       => $sess->url(SCRIPT_PATH."wiki/fileSave.php")
             ,"url_alloc_fileHistory"                    => $sess->url(SCRIPT_PATH."wiki/fileHistory.php")
+            ,"url_alloc_filePreview"                    => $sess->url(SCRIPT_PATH."wiki/filePreview.php")
 
 );
 

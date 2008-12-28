@@ -126,6 +126,12 @@ table {
   margin-top:10px;
 }
 
+
+/* The actual wiki stylesheet is called after this printer stylesheet, 
+ * so we need to override the values that are set later - this isn't going to
+ * work in IE<=6 cause it doesn't obey the !important modifier */
 .wikidoc {
-  border:0px solid black;
+  border:0px solid black !important;
+  margin:0px !important;
+  padding:0px !important;
 }
