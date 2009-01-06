@@ -223,6 +223,9 @@ hr {
 .inline {
   display:inline;
 }
+.top {
+  vertical-align:top;
+}
 
 
 #helper { 
