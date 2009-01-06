@@ -47,7 +47,41 @@ class commentTemplate extends db_entity {
       $timeSheet = new timeSheet;
       $timeSheet->set_id($entityID);
       $timeSheet->select();
-      $swap["mi"] = $timeSheet->get_id();
+
+      $timeSheet->load_pay_info();
+      foreach ($timeSheet->pay_info as $k => $v) {
+        $swap[$k] = $v;
+      }
+
+      if ($timeSheet->get_value("approvedByManagerPersonID")) {
+        $swap["tm"] = person::get_fullname($timeSheet->get_value("approvedByManagerPersonID"));
+      } else {
+        $project = $timeSheet->get_foreign_object("project");
+        $projectManagers = $project->get_timeSheetRecipients();
+        if (is_array($projectManagers) && count($projectManagers)) {
+          $people = get_cached_table("person");
+          foreach ($projectManagers as $pID) {
+            $swap["tm"].= $commar.$people[$pID]["name"];
+            $commar = ", ";
+          }
+        }
+      }
+
+      if ($timeSheet->get_value("approvedByAdminPersonID")) {
+        $swap["tc"] = person::get_fullname($timeSheet->get_value("approvedByAdminPersonID"));
+      } else {
+        $people = get_cached_table("person");
+        $swap["tc"] = $people[config::get_config_item('timeSheetAdminEmail')]["name"];
+      }
+
+      $swap["ti"] = $timeSheet->get_id();
+      $swap["to"] = person::get_fullname($timeSheet->get_value("personID"));
+      $swap["ta"] = person::get_fullname($timeSheet->get_value("personID"));
+      $swap["tf"] = $timeSheet->get_value("dateFrom");
+      $swap["tt"] = $timeSheet->get_value("dateTo");
+      $swap["ts"] = $timeSheet->get_timeSheet_status();
+      $swap["tu"] = config::get_config_item("allocURL")."time/timeSheet.php?timeSheetID=".$timeSheet->get_id();
+
       $projectID = $timeSheet->get_value("projectID");
     }
 
@@ -64,6 +98,7 @@ class commentTemplate extends db_entity {
       $swap["td"] = $task->get_value("taskDescription");
       $swap["tu"] = config::get_config_item("allocURL")."task/task.php?taskID=".$task->get_id();
       $swap["tp"] = $task->get_priority_label();
+      $swap["ts"] = $task->get_task_status("label");
       $projectID = $task->get_value("projectID");
     }
 
