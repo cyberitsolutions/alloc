@@ -25,12 +25,12 @@ require_once("../alloc.php");
 
 function show_all_exp($template) {
 
-  global $TPL, $expenseForm, $db;
+  global $TPL, $expenseForm, $db, $transaction_to_edit;
 
   if ($expenseForm->get_id()) {
 
 
-    if ($_POST["transactionID"] && $_POST["edit"]) {   // if edit is clicked
+    if ($_POST["transactionID"] && ($_POST["edit"] || ( is_object($transaction_to_edit) && $transaction_to_edit->get_id() ) )) {   // if edit is clicked OR if we've rejected changes made to something so are still editing it
       $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d AND transactionID<>%d ORDER BY transactionID DESC", $expenseForm->get_id()
                        , $_POST["transactionID"]);
     } else {
