@@ -21,7 +21,7 @@ $(document).ready(function() \{
     <th class="right">{page::help("product")}</th>
   </tr>
   <tr>
-    <td colspan="2" valign="top" ondblclick="$('.view').hide();$('.edit').show();">
+    <td colspan="2" valign="top">
       <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
 
         <div class="view">
