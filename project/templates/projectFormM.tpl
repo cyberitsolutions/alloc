@@ -92,7 +92,7 @@ function clickClientStatus(e)\{
     <th class="right" colspan="3">{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</th>
   </tr>
   <tr>
-    <td colspan="5" valign="top" ondblclick="$('.view').hide();$('.edit').show();clickClientStatus();">
+    <td colspan="5" valign="top">
       <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
 
         <div class="view">

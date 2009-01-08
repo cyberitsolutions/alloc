@@ -4,7 +4,7 @@
 <form action="{$url_alloc_home}" method="post">
 <table cellspacing="0" style="width:100%">
   <tr>
-    <td ondblclick="$('.view').hide();$('.edit').show();">
+    <td>
 
       <div class="edit">
         <h6>Font Size<div>Theme</div></h6>
