@@ -313,7 +313,7 @@ class task extends db_entity {
                         FROM task 
                         WHERE projectID= '%d' 
                         AND taskTypeID = 2 
-                        AND ((dateActualCompletion IS NULL or dateActualCompletion = '') or taskID = %d)
+                        AND (taskStatus != 'closed' or taskID = %d)
                         ORDER BY taskName", $projectID, $parentTaskID);
       $options = page::select_options($query, $parentTaskID,70);
     }
