@@ -106,7 +106,7 @@ global $timeSheetID;
 
 if ($_GET["timeSheetID"]) {
   $TPL["timeSheet_save"] = "<input type=\"submit\" name=\"timeSheet_save\" value=\"Save and Return to Time Sheet\">";
-  $TPL["timeSheetID"] = $_GET["timeSheetID"];
+  $TPL["timeSheet_save"].= "<input type=\"hidden\" name=\"timeSheetID\" value=\"".$_GET["timeSheetID"]."\">";
 }
 
 $db = new db_alloc;
