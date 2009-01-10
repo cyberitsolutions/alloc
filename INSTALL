@@ -23,7 +23,7 @@ allocPSA Installation
 
 Please note: If you are upgrading, please read the file called UPGRADING.
 
-allocPSA is generally intended to run with PHP>=4 and MySQL>=4 on a Linux
+allocPSA is generally intended to run with PHP>=5 and MySQL>=4 on a Linux
 server. It may also run on a Windows box, but possibly not with the full
 functionality.
 
@@ -33,7 +33,7 @@ To install allocPSA:
    webservers document root.
 
 2) Open that URL with your web browser eg: http://webserver/alloc/
-   to complete the installation.
+   and complete the installation.
 
 
 Please feel free to contact us at Cybersource <info@cyber.com.au> or just use the 
