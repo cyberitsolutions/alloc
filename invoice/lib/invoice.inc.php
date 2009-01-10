@@ -157,16 +157,17 @@ class invoice extends db_entity {
       // Get task description
       if ($invoiceItem->get_value("timeSheetID") && $verbose) {
         $q = sprintf("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$invoiceItem->get_value("timeSheetID"));
-        $db = new db_alloc();
-        $db->query($q); 
+        $db2 = new db_alloc();
+        $db2->query($q); 
         unset($sep);
-        while ($db->next_record()) {
-          if ($db->f("taskID") && !$task_info[$db->f("taskID")] && $db->f("description")) {
-            $task_info[$db->f("taskID")] = $db->f("description");
+        unset($task_info);
+        while ($db2->next_record()) {
+          if ($db2->f("taskID") && !$task_info[$db2->f("taskID")] && $db2->f("description")) {
+            $task_info[$db2->f("taskID")] = $db2->f("description");
             $sep = DEFAULT_SEP;
           } 
-          if (!$db->f("commentPrivate") && $db->f("comment")) {
-            $task_info[$db->f("taskID")].= $sep."  <i>- ".$db->f("comment")."</i>";
+          if (!$db2->f("commentPrivate") && $db2->f("comment")) {
+            $task_info[$db2->f("taskID")].= $sep."  <i>- ".$db2->f("comment")."</i>";
           }
           $sep = DEFAULT_SEP;
         }
