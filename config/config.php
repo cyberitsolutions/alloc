@@ -115,6 +115,7 @@ $TPL["mainTfOptions"] = page::select_options($options, $config->get_config_item(
 $TPL["outTfOptions"] = page::select_options($options, $config->get_config_item("outTfID"));
 $TPL["inTfOptions"] = page::select_options($options, $config->get_config_item("inTfID"));
 $TPL["taxTfOptions"] = page::select_options($options, $config->get_config_item("taxTfID"));
+$TPL["expenseFormTfOptions"] = page::select_options($options, $config->get_config_item("expenseFormTfID"));
 
 $db = new db_alloc;
 $display = array("", "username", ", ", "emailAddress");

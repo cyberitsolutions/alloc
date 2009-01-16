@@ -169,6 +169,11 @@ class transaction extends db_entity {
       $person = $current_user;
     }
 
+    if($person->have_role("employee") && $this->get_value('expenseFormID') && $this->get_value('fromTfID') == config::get_config_item('expenseFormTfID')) {
+      // employees have implicit ownership of the expenseFormTfID for expense forms
+      return true;
+    }
+
     if ($this->get_value("timeSheetID")) {
       $timeSheet = $this->get_foreign_object("timeSheet");
       return $timeSheet->is_owner($person);
