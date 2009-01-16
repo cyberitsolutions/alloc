@@ -78,6 +78,11 @@
     <td width="1%">{page::help("config_inTfID")}</td>
   </tr>
   <tr>
+    <td width="20%"><nobr>Expense Form TF</nobr></td>
+    <td><select name="expenseFormTfID"><option value="">{$expenseFormTfOptions}</option></td>
+    <td width="1%">{page::help("config_expenseFormTfID")}</td>
+  </tr>
+  <tr>
     <td width="20%"><nobr>Tax Tagged Fund</nobr></td>
     <td><select name="taxTfID"><option value="">{$taxTfOptions}</select></td>
     <td width="1%">{page::help("config_taxTfID")}</td>

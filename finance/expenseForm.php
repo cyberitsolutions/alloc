@@ -68,6 +68,12 @@ function show_all_exp($template) {
         $TPL["projectName"] = $project->get_value("projectName");
       }
 
+      if($transaction->get_value("fromTfID") == config::get_config_item("expenseFormTfID")) {
+        $TPL['expense_class'] = "loud";
+      } else {
+        $TPL['expense_class'] = "";
+      }
+
       include_template($template);
     }
   }
