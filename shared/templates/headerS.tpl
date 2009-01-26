@@ -2,7 +2,8 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="Tue, 27 Jul 1997 05:00:00 GMT" /> 
+    <meta http-equiv="Pragma" content="no-cache" />
     <title>{$main_alloc_title}</title>
     <style type="text/css" media="screen">body \{ font-size:{page::default_font_size()}px \}</style>
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}{page::stylesheet()}" type="text/css" media="screen" />
