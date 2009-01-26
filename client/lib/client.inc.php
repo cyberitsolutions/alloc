@@ -330,6 +330,13 @@ class client extends db_entity {
     // client, then the project dropdown dynamically updates 
     global $TPL;
 
+    $project = new project;
+    $project->set_id($projectID);
+    $project->select();
+    if (!$clientID) {
+      $clientID = $project->get_value("clientID");
+    }
+
     $client = new client;
     $client->set_id($clientID);
     $client->select();
@@ -343,9 +350,6 @@ class client extends db_entity {
 
     $client_link = $client->get_link();
 
-    $project = new project;
-    $project->set_id($projectID);
-    $project->select();
 
     $project_select = '<div id="projectDropdown" style="display:inline">'.$project->get_dropdown_by_client($clientID).'</div>';
     $project_link = $project->get_link();
