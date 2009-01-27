@@ -25,7 +25,7 @@ div#main {
   margin:0px;
   padding:0px 0px 14px 0px !important; padding:0px 16px;
   background-color:white;
-  border:1px solid #9c9c9c;
+  border:1px solid (BODY_BORDER);
   position:relative;
   clear:both;
   text-align:left;
@@ -63,8 +63,8 @@ a.growshrink:hover, a.magic:hover {
 
 a.sidebyside {
   padding:5px;
-  background-color: #f9f9f9;
-  border:1px solid #cccccc;
+  background-color: (TABLE_BOX_BACKGROUND_COLOR);
+  border:1px solid (SBS_BORDER_COLOR);
   text-decoration:none;
   color:(TABLE_TASKS_TH_COLOR);
   font-size:100%; 
@@ -106,8 +106,8 @@ h6 {
   font-size:90%;
   font-weight:normal;
   text-transform:uppercase;
-  color:#bbbbbb;
-  border-bottom:1px solid #cccccc;
+  color:(SMALL_HEADING_COLOR);
+  border-bottom:1px solid (DECORATIVE_LINE_COLOR);
   padding:0px;
   margin:20px 0px 10px 0px;
   clear:both;
@@ -115,7 +115,7 @@ h6 {
 
 /* For having a second column in the h6 */
 h6 div {
-  width:50%;  
+  width:50%;
   float:right;
   display:inline;
   position:absolute;
@@ -152,8 +152,8 @@ input[type="password"],
 input[type="checkbox"], 
 textarea,
 select {
-  border: 1px solid #cccccc; 
-  background-color: #fcfcfc;
+  border: 1px solid (DECORATIVE_LINE_COLOR);
+  background-color: (FORM_ELEMENT_BACKGROUND);
   text-transform:none; /* list.th turns options into uppercase */
 }
 input[type="text"]:focus, 
@@ -161,8 +161,8 @@ input[type="password"]:focus,
 input[type="checkbox"]:focus, 
 textarea:focus,
 select:focus {
-  border: 1px solid #666666; 
-  background-color: #ffffff;
+  border: 1px solid (FORM_ELEMENT_ACTIVE_BORDER_COLOR);
+  background-color: (FORM_ELEMENT_ACTIVE_BACKGROUND);
 }
 input[type="text"].bad,
 input[type="password"].bad,
@@ -230,20 +230,20 @@ hr {
 
 #helper { 
   position:absolute; 
-  z-index:2;  
-  background-color:#fffdf2; 
-  border:1px solid #cccccc; 
-  color:#666666; 
+  z-index:2;
+  background-color:(HELP_BACKGROUND);
+  border:1px solid (DECORATIVE_LINE_COLOR);
+  color:(HELP_COLOR);
   width:400px; 
   font-size:100%; 
   padding:8px;
 }
 .help_button {
-  border:1px solid #999999;
+  border:1px solid (HELP_ICON_BORDER_COLOR);
   vertical-align:sub !important; vertical-align:bottom;
 }
 .help_button:hover {
-  border:1px solid #cccccc;
+  border:1px solid (DECORATIVE_LINE_COLOR);
 }
 
 .calendar_container {
@@ -257,15 +257,15 @@ hr {
 .calendar_container img {
   vertical-align:text-bottom;
   cursor:pointer; 
-  border:1px solid #999999; 
+  border:1px solid (CALENDAR_IMAGE_BORDER_COLOR);
   margin:0px; 
   padding:0px; 
   position:relative;
   top:0px !important; top:-2px;
 }
 .calendar_container img:hover {
-  border: 1px solid #666666;
-  background-color:#999999;
+  border: 1px solid (CALENDAR_ACTIVE_BORDER_COLOR);
+  background-color:(CALENDAR_ACTIVE_BACKGROUND);
 }
 .calendar_container input {
   vertical-align:text-bottom;
@@ -274,8 +274,8 @@ hr {
 .message { 
   padding:0px 4px; 
   margin:15px auto 0px auto; 
-  border:1px solid #cccccc;
-  background-color:#fffdf2; 
+  border:1px solid (DECORATIVE_LINE_COLOR);
+  background-color:(HELP_BACKGROUND);
 }
 .bad { 
   color:(TRANSACTION_REJECTED); 
@@ -286,7 +286,7 @@ hr {
   font-size:100%; 
 }
 .help { 
-  color:(TRANSACTION_PENDING);  
+  color:(TRANSACTION_PENDING);
   font-size:100%;
 }
 
@@ -305,7 +305,7 @@ table.box th {
   (TABLE_BOX_TH_BACKGROUND); 
   color:(TABLE_BOX_TH_COLOR); 
   font-size:110%; 
-  border-bottom:1px solid #e0e0e0;
+  border-bottom:1px solid (TABLE_TH_UNDERLINE_COLOR);
   padding:3px;
   font-weight:normal;
 } 
@@ -336,15 +336,15 @@ table.alloc_calendar {
 } 
 table.alloc_calendar td { 
   background-color:(TABLE_BOX_BACKGROUND_COLOR); 
-  border-left:1px solid (PANEL_HARPO_FRAME_COLOR);  
+  border-left:1px solid (PANEL_HARPO_FRAME_COLOR);
   border-top:1px solid (PANEL_HARPO_FRAME_COLOR); 
   width:10%; vertical-align:top;
 }
 table.alloc_calendar td.today { 
-  background-color:#fffdf2; 
-  border-top:2px solid (PANEL_HARPO_FRAME_COLOR);  
-  border-left:2px solid (PANEL_HARPO_FRAME_COLOR);  
-  border-right:1px solid (PANEL_HARPO_FRAME_COLOR);  
+  background-color:(CALENDAR_TODAY_BACKGROUND);
+  border-top:2px solid (PANEL_HARPO_FRAME_COLOR);
+  border-left:2px solid (PANEL_HARPO_FRAME_COLOR);
+  border-right:1px solid (PANEL_HARPO_FRAME_COLOR);
   border-bottom:1px solid (PANEL_HARPO_FRAME_COLOR); 
 }
 table.alloc_calendar td.today h1 {
@@ -354,11 +354,11 @@ table.alloc_calendar td.even {
   background-color:(TR_ODD_BACKGROUND_COLOR); 
 }
 table.alloc_calendar td.absent {
-  background-color:#cccccc;
-  color:#999999;
+  background-color:(CALENDAR_ABSENT_BACKGROUND);
+  color:(CALENDAR_ABSENT_COLOR);
 }
 table.alloc_calendar td.absent h1{
-  color:#999999;
+  color:(CALENDAR_ABSENT_COLOR);
 }
 table.alloc_calendar h1 {
   text-align:right;
@@ -485,7 +485,7 @@ table.list td.grand_total, .grand_total {
    orange background. And correspondingly, any inner .panel's (Zeppo) render more lightly.
 */
 table.panel div.hidden_text {
-  color:#888888;
+  color:(COMMENT_HIDDEN_TEXT_COLOR);
   font-style:italic;
 }
 table.panel { 
@@ -551,7 +551,7 @@ table.loud td table.panel td {
 
 
 .faint {
-  color:#888888;
+  color:(COMMENT_HIDDEN_TEXT_COLOR);
   font-style:normal;
 }
 

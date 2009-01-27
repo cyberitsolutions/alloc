@@ -64,7 +64,7 @@ a.growshrink:hover, a.magic:hover {
 a.sidebyside {
   padding:5px;
   background-color: #f9f9f9;
-  border:1px solid #cccccc;
+  border:1px solid (SBS_BORDER_COLOR);
   text-decoration:none;
   color:#9da973;
   font-size:100%; 
@@ -115,7 +115,7 @@ h6 {
 
 /* For having a second column in the h6 */
 h6 div {
-  width:50%;  
+  width:50%;
   float:right;
   display:inline;
   position:absolute;
@@ -152,7 +152,7 @@ input[type="password"],
 input[type="checkbox"], 
 textarea,
 select {
-  border: 1px solid #cccccc; 
+  border: 1px solid #cccccc;
   background-color: #fcfcfc;
   text-transform:none; /* list.th turns options into uppercase */
 }
@@ -161,7 +161,7 @@ input[type="password"]:focus,
 input[type="checkbox"]:focus, 
 textarea:focus,
 select:focus {
-  border: 1px solid #666666; 
+  border: 1px solid #666666;
   background-color: #ffffff;
 }
 input[type="text"].bad,
@@ -230,10 +230,10 @@ hr {
 
 #helper { 
   position:absolute; 
-  z-index:2;  
-  background-color:#fffdf2; 
-  border:1px solid #cccccc; 
-  color:#666666; 
+  z-index:2;
+  background-color:#fffdf2;
+  border:1px solid #cccccc;
+  color:#666666;
   width:400px; 
   font-size:100%; 
   padding:8px;
@@ -257,7 +257,7 @@ hr {
 .calendar_container img {
   vertical-align:text-bottom;
   cursor:pointer; 
-  border:1px solid #999999; 
+  border:1px solid #999999;
   margin:0px; 
   padding:0px; 
   position:relative;
@@ -275,7 +275,7 @@ hr {
   padding:0px 4px; 
   margin:15px auto 0px auto; 
   border:1px solid #cccccc;
-  background-color:#fffdf2; 
+  background-color:#fffdf2;
 }
 .bad { 
   color:#c84e12; 
@@ -286,7 +286,7 @@ hr {
   font-size:100%; 
 }
 .help { 
-  color:#666666;  
+  color:#666666;
   font-size:100%;
 }
 
@@ -336,15 +336,15 @@ table.alloc_calendar {
 } 
 table.alloc_calendar td { 
   background-color:#f9f9f9; 
-  border-left:1px solid #c7cfb8;  
+  border-left:1px solid #c7cfb8;
   border-top:1px solid #c7cfb8; 
   width:10%; vertical-align:top;
 }
 table.alloc_calendar td.today { 
-  background-color:#fffdf2; 
-  border-top:2px solid #c7cfb8;  
-  border-left:2px solid #c7cfb8;  
-  border-right:1px solid #c7cfb8;  
+  background-color:#fffdf2;
+  border-top:2px solid #c7cfb8;
+  border-left:2px solid #c7cfb8;
+  border-right:1px solid #c7cfb8;
   border-bottom:1px solid #c7cfb8; 
 }
 table.alloc_calendar td.today h1 {
