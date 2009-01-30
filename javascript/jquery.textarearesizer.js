@@ -42,7 +42,7 @@
 		textarea.blur();
 		iLastMousePos = mousePosition(e).y;
 		staticOffset = textarea.height() - iLastMousePos;
-		textarea.css('opacity', 0.25);
+		//textarea.css('opacity', 0.25);
 		$(document).mousemove(performDrag).mouseup(endDrag);
 		return false;
 	}
@@ -64,7 +64,7 @@
 
 	function endDrag(e) {
 		$(document).unbind('mousemove', performDrag).unbind('mouseup', endDrag);
-		textarea.css('opacity', 1);
+		//textarea.css('opacity', 1);
 		textarea.focus();
 		textarea = null;
 		staticOffset = null;
