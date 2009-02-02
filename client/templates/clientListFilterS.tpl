@@ -5,6 +5,7 @@
           <td>Status</td>
           <td>Client Name</td>
           <td>Contact Name</td>
+          <td>Category</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
         </tr>
@@ -13,6 +14,7 @@
           <td><select name="clientStatus"><option value="">{$clientStatusOptions}</select></td>
           <td><input type="text" name="clientName" value="{$clientName}"></td>
           <td><input type="text" name="contactName" value="{$contactName}"></td>
+          <td><select name="clientCategory"><option value="">{$clientCategoryOptions}</select></td>
           <td><input type="submit" name="applyFilter" value="Filter"></td>
           <td>{page::help("clientListFilter")}</td> 
         </tr>

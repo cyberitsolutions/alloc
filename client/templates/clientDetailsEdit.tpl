@@ -8,12 +8,13 @@
                 <td class="nobr"><b>Client Name{page::mandatory($client_clientName)}</b></td>
                 <td colspan="2"><input type="text" size="43" name="clientName" value="{$client_clientName}" tabindex="1"></td>
                 <td><select name="clientStatus" tabindex="2">{$clientStatusOptions}</select></td>
+                <td><select name="clientCategory" tabindex="3">{$clientCategoryOptions}</select></td>
               </tr>
               <tr>
                 <td><b>Phone</b></td>
                 <td><input type="text" name="clientPhoneOne" value="{$client_clientPhoneOne}" tabindex="3"></td>
                 <td><b>Fax</b></td>
-                <td><input type="text" name="clientFaxOne" value="{$client_clientFaxOne}" tabindex="4"></td>
+                <td colspan="2"><input type="text" name="clientFaxOne" value="{$client_clientFaxOne}" tabindex="4"></td>
               </tr>
             </table>
           </td>

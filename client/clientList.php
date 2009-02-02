@@ -27,6 +27,7 @@ define("PAGE_IS_PRINTABLE",1);
 $defaults = array("showHeader"=>true
                  ,"showClientLink"=>true
                  ,"showClientStatus"=>true
+                 ,"showClientCategory"=>true
                  ,"showPrimaryContactName"=>true
                  ,"showPrimaryContactPhone"=>true
                  ,"showPrimaryContactEmail"=>true
