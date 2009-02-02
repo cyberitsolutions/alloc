@@ -44,6 +44,7 @@ CREATE TABLE client (
   clientModifiedTime datetime DEFAULT NULL,
   clientModifiedUser int(11) DEFAULT NULL,
   clientStatus enum('current','potential','archived') NOT NULL default 'current',
+  clientCategory int(11) DEFAULT 1,
   clientCreatedTime varchar(11) default NULL,
   PRIMARY KEY  (clientID),
   KEY clientName (clientName),

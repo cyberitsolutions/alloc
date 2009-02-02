@@ -412,6 +412,18 @@
       {/}
     </td>
   </tr>
+  <tr>
+    <td valign="top" width="20%"><nobr>Client Categories</nobr></td>
+    <td>
+      <a href="{$url_alloc_configEdit}configName=clientCategories">Edit:</a>
+      {unset($br)}
+      {foreach $TPL["clientCategories"] as $k => $arr}
+          {echo $br.$arr["label"]}
+          {$br = ", "}
+      {/}
+    </td> 
+    <td width="1%">{page::help("config_clientCategories.html")}</td>
+  </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>

@@ -201,6 +201,9 @@ INSERT INTO config (`name`,`value`,`type`) VALUES ("wikiVCS", "git","text");
 INSERT INTO config (`name`,`value`,`type`) VALUES ("singleSession","1","text");
 
 
+INSERT INTO config (name, value, type) VALUES ("clientCategories",'a:7:{i:0;a:2:{s:5:"label";s:6:"Client";s:5:"value";i:1;}i:1;a:2:{s:5:"label";s:6:"Vendor";s:5:"value";i:2;}i:2;a:2:{s:5:"label";s:8:"Supplier";s:5:"value";i:3;}i:3;a:2:{s:5:"label";s:10:"Consultant";s:5:"value";i:4;}i:4;a:2:{s:5:"label";s:10:"Government";s:5:"value";i:5;}i:5;a:2:{s:5:"label";s:10:"Non-profit";s:5:"value";i:6;}i:6;a:2:{s:5:"label";s:8:"Internal";s:5:"value";i:7;}}','array');
+
+
 
 
 

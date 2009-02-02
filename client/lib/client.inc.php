@@ -44,6 +44,7 @@ class client extends db_entity {
                              ,"clientModifiedTime"
                              ,"clientModifiedUser"
                              ,"clientStatus"
+                             ,"clientCategory"
                              );
 
 
@@ -99,6 +100,10 @@ class client extends db_entity {
       $sql[] = sprintf("(clientStatus = '%s')",db_esc($filter["clientStatus"]));
     } 
 
+    if ($filter["clientCategory"]) {
+      $sql[] = sprintf("(clientCategory = '%s')",db_esc($filter["clientCategory"]));
+    } 
+
     if ($filter["clientName"]) {
       $sql[] = sprintf("(clientName LIKE '%%%s%%')",db_esc($filter["clientName"]));
     } 
@@ -146,6 +151,11 @@ class client extends db_entity {
       $join = sprintf("LEFT JOIN clientContact ON client.clientPrimaryContactID = clientContact.clientContactID");
     } 
 
+    $cc = config::get_config_item("clientCategories");
+    foreach ($cc as $k => $v) {
+      $clientCategories[$v["value"]] = $v["label"];
+    }
+
     $q = "SELECT client.*,clientContactName, clientContactEmail, clientContactPhone, clientContactMobile
             FROM client 
                  ".$join." 
@@ -160,6 +170,8 @@ class client extends db_entity {
       $print = true;
       $c = new client;
       $c->read_db_record($db);
+
+      $row["clientCategoryLabel"] = $clientCategories[$c->get_value("clientCategory")];
       $row["clientLink"] = $c->get_client_link();
 
       if (!$row["clientContactName"]) {
@@ -200,6 +212,7 @@ class client extends db_entity {
       $_FORM["showPrimaryContactPhone"] and $summary.= "\n<th>Contact Phone</th>";
       $_FORM["showPrimaryContactEmail"] and $summary.= "\n<th>Contact Email</th>";
       $_FORM["showClientStatus"]        and $summary.= "\n<th>Status</th>";
+      $_FORM["showClientCategory"]      and $summary.= "\n<th>Category</th>";
       $summary.="\n</tr>";
       return $summary;
     }
@@ -217,6 +230,7 @@ class client extends db_entity {
     $_FORM["showPrimaryContactPhone"] and $summary[] = "  <td>".$client["clientContactPhone"]."&nbsp;</td>";
     $_FORM["showPrimaryContactEmail"] and $summary[] = "  <td>".$client["clientContactEmail"]."&nbsp;</td>";
     $_FORM["showClientStatus"]        and $summary[] = "  <td>".ucwords($client["clientStatus"])."&nbsp;</td>";
+    $_FORM["showClientCategory"]      and $summary[] = "  <td>".$client["clientCategoryLabel"]."&nbsp;</td>";
     $summary[] = "</tr>";
 
     $summary = "\n".implode("\n",$summary);
@@ -227,6 +241,7 @@ class client extends db_entity {
 
     return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options"
                 ,"clientStatus"             => "Client status eg: current | potential | archived"
+                ,"clientCategory"           => "Client category eg: 1-7"
                 ,"clientName"               => "Client name like *something*"
                 ,"contactName"              => "Client Contact name like *something*"
                 ,"clientLetter"             => "Client name starts with this letter"
@@ -238,6 +253,7 @@ class client extends db_entity {
                 ,"showClientName"           => "Shows the clients name"
                 ,"showClientLink"           => "Shows a client link"
                 ,"showClientStatus"         => "Shows the clients status"
+                ,"showClientCategory"       => "Shows the clients category"
                 ,"showPrimaryContactName"   => "Shows the primary contacts name"
                 ,"showPrimaryContactPhone"  => "Shows the primary contacts phone"
                 ,"showPrimaryContactEmail"  => "Shows the primary contacts email"
@@ -287,7 +303,14 @@ class client extends db_entity {
         $rtn["alphabet_filter"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_clientList"]."clientLetter=".$letter."&clientStatus=".$_FORM["clientStatus"]."&applyFilter=1\">".$letter."</a>";
       }
     }
-   
+    
+    $clientCategory = $_FORM["clientCategory"];
+    $clientCategories = config::get_config_item("clientCategories") or $clientCategories = array();
+    foreach ($clientCategories as $k => $v) {
+      $cc[$v["value"]] = $v["label"];
+    }
+    $rtn["clientCategoryOptions"] = page::select_options($cc,$clientCategory);
+
     // Get
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
 

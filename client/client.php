@@ -325,6 +325,14 @@ if ($_POST["save"]) {
 $clientStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
 $TPL["clientStatusOptions"] = page::select_options($clientStatus_array, $client->get_value("clientStatus"));
 
+$clientCategories = config::get_config_item("clientCategories") or $clientCategories = array();
+foreach ($clientCategories as $k => $v) {
+  $cc[$v["value"]] = $v["label"];
+}
+$TPL["clientCategoryOptions"] = page::select_options($cc,$client->get_value("clientCategory"));
+$client->get_value("clientCategory") and $TPL["client_clientCategoryLabel"] = $cc[$client->get_value("clientCategory")];
+
+
 // client contacts
 if ($_POST["clientContact_save"] || $_POST["clientContact_delete"]) {
 
