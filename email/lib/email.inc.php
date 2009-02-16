@@ -126,10 +126,10 @@ class alloc_email {
 
       $this->headers = $this->default_headers."\n".trim($this->headers);
 
-      # echo "<pre><br>HEADERS:\n".htmlentities($this->headers)."</pre>";
-      # echo "<pre><br>TO:\n".htmlentities($this->to_address)."</pre>";
-      # echo "<pre><br>SUBJECT:\n".htmlentities($this->subject)."</pre>";
-      # echo "<pre><br>BODY:\n".htmlentities($this->body)."</pre>";
+      # echo "<pre><br>HEADERS:\n".page::htmlentities($this->headers)."</pre>";
+      # echo "<pre><br>TO:\n".page::htmlentities($this->to_address)."</pre>";
+      # echo "<pre><br>SUBJECT:\n".page::htmlentities($this->subject)."</pre>";
+      # echo "<pre><br>BODY:\n".page::htmlentities($this->body)."</pre>";
       # die();
     
       if (defined("ALLOC_DEFAULT_RETURN_PATH_ADDRESS") && ALLOC_DEFAULT_RETURN_PATH_ADDRESS) {

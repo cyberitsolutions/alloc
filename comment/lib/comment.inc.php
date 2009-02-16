@@ -182,7 +182,7 @@ class comment extends db_entity {
           }
         }
 
-        $v["commentEmailRecipients"] and $new["emailed"] = "<br>Emailed to ".htmlentities($v["commentEmailRecipients"]);
+        $v["commentEmailRecipients"] and $new["emailed"] = "<br>Emailed to ".page::htmlentities($v["commentEmailRecipients"]);
 
         $new_rows[] = $new;
       }
@@ -299,7 +299,7 @@ class comment extends db_entity {
 
   function get_comment_author($comment=array()) {
     if ($comment["commentCreatedUserText"]) {
-      $author = htmlentities($comment["commentCreatedUserText"]);
+      $author = page::htmlentities($comment["commentCreatedUserText"]);
     } else if ($comment["clientContactID"]) {
       $cc = new clientContact;
       $cc->set_id($comment["clientContactID"]);

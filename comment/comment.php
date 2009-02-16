@@ -135,7 +135,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
  
         // Append success to end of the comment
         if ($successful_recipients && is_object($comment)) {
-          $append_comment_text = "Email sent to: ".htmlentities($successful_recipients);
+          $append_comment_text = "Email sent to: ".page::htmlentities($successful_recipients);
           $message_good.= $append_comment_text;
           $comment->set_value("commentEmailRecipients",$successful_recipients);
         }

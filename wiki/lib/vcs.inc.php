@@ -72,7 +72,7 @@ class vcs {
     if ($command) {
       // 2>&1 nope
       $str = $this->juggle_command_order($this->name, $command, $this->repoprefix);
-      $this->debug and print "<br>vcs->run: ".htmlentities($str);
+      $this->debug and print "<br>vcs->run: ".page::htmlentities($str);
       list($output, $result) = $this->exec($str);
       if ($result != 0) {
         //$error = $str."<br>".implode("<br>", $output)."<br>".$result;
@@ -137,11 +137,11 @@ class vcs {
       if (preg_match("/^Hash: (\w+)/",$line,$matches)) {
         $id = $matches[1];
       } else if (preg_match("/^Author: (.*$)/",$line,$matches)) {
-        $rtn[$id]["author"] = htmlentities(trim($matches[1]));
+        $rtn[$id]["author"] = page::htmlentities(trim($matches[1]));
       } else if (preg_match("/^Date: (.*$)/",$line,$matches)) {
-        $rtn[$id]["date"] = date("Y-m-d H:i:s",htmlentities(trim($matches[1])));
+        $rtn[$id]["date"] = date("Y-m-d H:i:s",page::htmlentities(trim($matches[1])));
       } else if (preg_match("/^Msg: (.+$)/",$line,$matches)) {
-        $rtn[$id]["msg"] = htmlentities(trim($matches[1]));
+        $rtn[$id]["msg"] = page::htmlentities(trim($matches[1]));
       }
     }
     return $rtn;

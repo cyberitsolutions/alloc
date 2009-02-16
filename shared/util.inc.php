@@ -287,8 +287,8 @@ function get_attachments($entity, $id, $ops=array()) {
 
           $row["size"] = get_filesize_label($dir.DIRECTORY_SEPARATOR.$file);
           $row["path"] = $dir.DIRECTORY_SEPARATOR.$file;
-          $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.$ops["sep"].htmlentities($file)."</a>";
-          $row["text"] = htmlentities($file);
+          $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.$ops["sep"].page::htmlentities($file)."</a>";
+          $row["text"] = page::htmlentities($file);
           #$row["delete"] = "<a href=\"".$TPL["url_alloc_delDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">Delete</a>";
           $row["delete"] = "<form action=\"".$TPL["url_alloc_delDoc"]."\" method=\"post\">
                             <input type=\"hidden\" name=\"id\" value=\"".$id."\">

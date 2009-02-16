@@ -162,7 +162,7 @@ class page {
     return $img;
   }
   function get_help_string($topic) {
-    $str = htmlentities(addslashes(page::get_raw_help_string($topic)));
+    $str = page::htmlentities(addslashes(page::get_raw_help_string($topic)));
     $str = str_replace("\r"," ",$str);
     $str = str_replace("\n"," ",$str);
     return $str;
@@ -175,24 +175,25 @@ class page {
     } 
   }
   function textarea($name, $default_value="", $ops=array()) {
+    $heights = array("small"=>40, "medium"=>100, "large"=>340, "jumbo"=>440);
     $height = $ops["height"] or $height = "small";
-    $heights["small"] = array(40, 120);
-    $heights["medium"] = array(100, 300);
-    $heights["large"] = array(340, 1020);
-    $heights["jumbo"] = array(440, 1320);
-    list($default_height, $max_height) = $heights[$height];
 
-    $ops["tabindex"] and $tabindex = "tabindex=\"".$ops["tabindex"]."\"";
-    $ops["class"] and $class = "class=\"".$ops["class"]."\"";
     $cols = $ops["cols"];
-    !$ops["width"] && !$cols and $cols = 85;
-    $cols and $cols = " cols=\"".$cols."\"";
+    !$ops["width"] && !$ops["cols"] and $cols = 85;
 
-    $ops["width"] and $width = "; width:".$ops["width"];
-    $str=<<<EOD
-      <textarea id="${name}" name="${name}" ${cols} ${tabindex} ${class} wrap="virtual" style="height:${default_height}px${width}">${default_value}</textarea>
-EOD;
-    return $str;
+    $attrs["id"] = $name;
+    $attrs["name"] = $name;
+    $attrs["wrap"] = "virtual";
+    $cols            and $attrs["cols"]     = $cols;
+                         $attrs["style"]    = "height:".$heights[$height]."px";
+    $ops["width"]    and $attrs["style"]   .= "; width:".$ops["width"];
+    $ops["class"]    and $attrs["class"]    = $ops["class"];
+    $ops["tabindex"] and $attrs["tabindex"] = $ops["tabindex"];
+
+    foreach ($attrs as $k => $v) {
+      $str.= sprintf(' %s="%s"',$k,$v);
+    }
+    return "<textarea".$str.">".page::htmlentities($default_value)."</textarea>\n";
   }
   function calendar($name, $default_value="") {
     global $TPL;
@@ -271,7 +272,7 @@ EOD;
         if (strlen($label) > $max_length) {
           $label = substr($label, 0, $max_length - 3)."...";
         } 
-#$label = htmlentities($label); nope!
+#$label = page::htmlentities($label); nope!
         $label = str_replace(" ","&nbsp;",$label);
 
         $str.= "\n<option value=\"".$value."\"".$sel.">".$label."</option>";
@@ -360,9 +361,12 @@ EOD;
   }
   function to_html($str="",$maxlength=false) {
     $maxlength and $str = wordwrap($str,$maxlength,"\n");
-    $str = htmlentities($str);
+    $str = page::htmlentities($str);
     $str = nl2br($str);
     return $str;
+  }
+  function htmlentities($str="") {
+    return htmlentities($str,ENT_QUOTES,"UTF-8");
   }
 
 }
