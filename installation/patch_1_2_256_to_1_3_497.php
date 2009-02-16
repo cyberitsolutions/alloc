@@ -199,7 +199,7 @@ if ($_GET["return_commands"] && is_array($actions) && count($actions)) {
 
   foreach ($actions as $action) {
     echo "<br><br> * ".$messages[$action];
-    echo "<pre>Try the shell command:<br>".htmlentities($commands[$action])."</pre>";
+    echo "<pre>Try the shell command:<br>".page::htmlentities($commands[$action])."</pre>";
   }
 
 // Don't echo this for livealloc

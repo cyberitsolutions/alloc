@@ -121,7 +121,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 
 $transaction->set_tpl_values();
 
-$TPL["product"] = htmlentities($transaction->get_value("product"));
+$TPL["product"] = page::htmlentities($transaction->get_value("product"));
 $TPL["statusOptions"] = page::select_options(array("pending"=>"Pending", "rejected"=>"Rejected", "approved"=>"Approved"), $transaction->get_value("status"));
 $transactionTypes = transaction::get_transactionTypes();
 $TPL["transactionTypeOptions"] = page::select_options($transactionTypes, $transaction->get_value("transactionType"));

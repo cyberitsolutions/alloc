@@ -344,7 +344,7 @@ class task extends db_entity {
 
         if ($email) {
           $name = trim($name);
-          $str = trim(htmlentities($name." <".$email.">"));
+          $str = trim(page::htmlentities($name." <".$email.">"));
           $options[$identifier] = $str;
         }
       }
@@ -578,7 +578,7 @@ class task extends db_entity {
 
     $db->query(sprintf("SELECT fullName,emailAddress FROM interestedParty WHERE entity='task' AND entityID = %d ORDER BY fullName",$this->get_id()));
     while ($db->next_record()) {
-      $str = trim(htmlentities($db->f("fullName")." <".$db->f("emailAddress").">"));
+      $str = trim(page::htmlentities($db->f("fullName")." <".$db->f("emailAddress").">"));
       $value = interestedParty::get_encoded_interested_party_identifier($db->f("fullName"), $db->f("emailAddress"));
       $TPL["interestedParty_hidden"].= $commar.$str."<input type=\"hidden\" name=\"interestedParty[]\" value=\"".$value."\">";
       $TPL["interestedParty_text"].= $commar.$str;

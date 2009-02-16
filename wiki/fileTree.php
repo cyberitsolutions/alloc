@@ -41,7 +41,7 @@ if (path_under_path($PATH, get_wiki_path()) && is_dir($PATH)) {
     // All dirs
     foreach ($files as $file) {
       if(!in_array($file, $dont_print_these_dirs) && is_dir($PATH.$file) ) {
-        $str.= "\n  <li class=\"directory collapsed\"><a class=\"file\" href=\"#\" rel=\"".htmlentities($DIR.$file.DIRECTORY_SEPARATOR)."\">".htmlentities($file)."</a></li>";
+        $str.= "\n  <li class=\"directory collapsed\"><a class=\"file\" href=\"#\" rel=\"".page::htmlentities($DIR.$file.DIRECTORY_SEPARATOR)."\">".page::htmlentities($file)."</a></li>";
       }
     }
 
@@ -52,7 +52,7 @@ if (path_under_path($PATH, get_wiki_path()) && is_dir($PATH)) {
         !is_writable($PATH.$file) and $extra = "(ro) ";
         $ext = strtolower(preg_replace('/^.*\./', '', $file));
         $str.= "\n  <li class=\"file ext_$ext nobr\">";
-        $str.= "\n    <a style=\"position:relative;\" class=\"file nobr\" href=\"#x\" rel=\"".htmlentities($DIR.$file)."\">".htmlentities($file);
+        $str.= "\n    <a style=\"position:relative;\" class=\"file nobr\" href=\"#x\" rel=\"".page::htmlentities($DIR.$file)."\">".page::htmlentities($file);
         $str.= "<div class='faint nobr' style='top:0px; position:absolute;'>".$extra.get_filesize_label($PATH.$file)."</div></a>";
         $str.= "\n  </li>";
       }
@@ -60,7 +60,7 @@ if (path_under_path($PATH, get_wiki_path()) && is_dir($PATH)) {
     $str.= "\n</ul>";	
   }
 
-  #echo "<pre>".htmlentities($str)."</pre>";
+  #echo "<pre>".page::htmlentities($str)."</pre>";
   echo $str;
 }
 

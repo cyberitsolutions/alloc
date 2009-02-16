@@ -72,13 +72,13 @@ if (!$search) {
         $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
         $projectName = search::get_trimmed_description($project->get_value('projectName'), $needle, $category);
-        $projectName and $details.= "<b>Project Name:</b> ".htmlentities($projectName)."<br>\n";
+        $projectName and $details.= "<b>Project Name:</b> ".page::htmlentities($projectName)."<br>\n";
 
         $projectComments = search::get_trimmed_description($project->get_value('projectComments'), $needle, $category);
-        $projectComments and $details.= "<b>Project Comments:</b> ".htmlentities($projectComments)."<br>\n";
+        $projectComments and $details.= "<b>Project Comments:</b> ".page::htmlentities($projectComments)."<br>\n";
 
         $projectClientName = search::get_trimmed_description($project->get_value('projectClientName'), $needle, $category);
-        $projectClientName and $details.= "<b>Project Client Name:</b> ".htmlentities($projectClientName)."<br>\n";
+        $projectClientName and $details.= "<b>Project Client Name:</b> ".page::htmlentities($projectClientName)."<br>\n";
 
         // Recursively search comments
         if ($project->get_id() != "") {
@@ -93,10 +93,10 @@ if (!$search) {
             $comment = new comment;
             $comment->read_db_record($db2);
             $commentText = search::get_trimmed_description($comment->get_value('comment'), $needle, $category);
-            $commentText and $details.= "<b>Modification History:</b> ".htmlentities($commentText)."<br>\n";
+            $commentText and $details.= "<b>Modification History:</b> ".page::htmlentities($commentText)."<br>\n";
           }
 
-          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</b></a><br>".$details."<br>";
+          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".page::htmlentities($TPL["project_projectName"])."</b></a><br>".$details."<br>";
         }
       }
     }
@@ -136,7 +136,7 @@ if (!$search) {
         $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
         $clientName = search::get_trimmed_description($client->get_value('clientName'), $needle, $category);
-        $clientName and $details[] = "<b>Client Name: </b>".htmlentities($clientName);
+        $clientName and $details[] = "<b>Client Name: </b>".page::htmlentities($clientName);
 
         $db2 = new db_alloc;
         $query = sprintf("SELECT * FROM clientContact WHERE clientID = %d",$client->get_id());
@@ -150,14 +150,14 @@ if (!$search) {
           $clientContactName = search::get_trimmed_description($clientContact->get_value('clientContactName'), $needle, $category);
           #$clientContactName = $clientContact->get_value('clientContactName');
           if ($clientContactName != "") {
-            $str = "<b>Contact Name: </b>".htmlentities($clientContactName);
+            $str = "<b>Contact Name: </b>".page::htmlentities($clientContactName);
             if ($clientContact->get_value("clientContactEmail")) {
-              $str .= "&nbsp;&nbsp;<a href=\"mailto:".$clientContact->get_value("clientContactEmail")."\">".htmlentities($clientContact->get_value("clientContactEmail"))."</a>";
+              $str .= "&nbsp;&nbsp;<a href=\"mailto:".$clientContact->get_value("clientContactEmail")."\">".page::htmlentities($clientContact->get_value("clientContactEmail"))."</a>";
             }
           }
           $clientContactOther = search::get_trimmed_description($clientContact->get_value('clientContactOther'), $needle, $category);
           if ($clientContactOther != "") {
-            $str.= "&nbsp;&nbsp;".htmlentities($clientContactOther);
+            $str.= "&nbsp;&nbsp;".page::htmlentities($clientContactOther);
           }
           $str and $details[] = $str;
         }
@@ -171,11 +171,11 @@ if (!$search) {
             $comment->read_db_record($db2);
             $commentText = search::get_trimmed_description($comment->get_value('comment'), $needle, $category);
             if ($commentText != "") {
-              $details[] = "<b>Comment: </b>".htmlentities($commentText);
+              $details[] = "<b>Comment: </b>".page::htmlentities($commentText);
             }
           }
           if (count($details)) {
-            $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_client"]."clientID=".$TPL["client_clientID"]."\">".htmlentities($TPL["client_clientName"]);
+            $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_client"]."clientID=".$TPL["client_clientID"]."\">".page::htmlentities($TPL["client_clientName"]);
             $TPL["search_results"] .= "</a></b><br>".implode("<br/>",$details)."<br/>"."<br>";
           }
 
@@ -220,10 +220,10 @@ if (!$search) {
         $project->set_tpl_values(DST_HTML_ATTRIBUTE, "project_");
 
         $taskName = search::get_trimmed_description($task->get_value('taskName'), $needle, $category);
-        $taskName and $details.= "<b>Task Name:</b> ".htmlentities($taskName)."<br>\n";
+        $taskName and $details.= "<b>Task Name:</b> ".page::htmlentities($taskName)."<br>\n";
 
         $taskDescription = search::get_trimmed_description($task->get_value('taskDescription'), $needle, $category);
-        $taskDescription and $details.= "<b>Task Description:</b> ".htmlentities($taskDescription)."<br>\n";
+        $taskDescription and $details.= "<b>Task Description:</b> ".page::htmlentities($taskDescription)."<br>\n";
 
         if ($task->get_id() != "") {
           $db2 = new db_alloc;
@@ -233,11 +233,11 @@ if (!$search) {
             $comment = new comment;
             $comment->read_db_record($db2);
             $commentText = search::get_trimmed_description($comment->get_value('comment'), $needle, $category);
-            $commentText and $details.= "<b>Comment:</b> ".htmlentities($commentText)."<br>\n";
+            $commentText and $details.= "<b>Comment:</b> ".page::htmlentities($commentText)."<br>\n";
           }
 
-          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_task"]."taskID=".$TPL["task_taskID"]."\">".htmlentities($TPL["task_taskName"])."</b></a> (belongs to project: ";
-          $TPL["search_results"] .= "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".htmlentities($TPL["project_projectName"])."</a>)<br>".$details."<br>";
+          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_task"]."taskID=".$TPL["task_taskID"]."\">".page::htmlentities($TPL["task_taskName"])."</b></a> (belongs to project: ";
+          $TPL["search_results"] .= "<a href=\"".$TPL["url_alloc_project"]."projectID=".$TPL["project_projectID"]."\">".page::htmlentities($TPL["project_projectName"])."</a>)<br>".$details."<br>";
         }
       }
     }
@@ -269,7 +269,7 @@ if (!$search) {
         $body = search::get_trimmed_description($announcement->get_value('body'), $needle, $category);
 
         if ($announcement->get_id() != "") {
-          $TPL["search_results"] .=  "<b>".htmlentities($heading)."</b><br>".htmlentities($body)."<br><br>";
+          $TPL["search_results"] .=  "<b>".page::htmlentities($heading)."</b><br>".page::htmlentities($body)."<br><br>";
         }
       }
     }
@@ -302,10 +302,10 @@ if (!$search) {
         $item->set_tpl_values(DST_HTML_ATTRIBUTE, "item_");
 
         $itemName = search::get_trimmed_description($item->get_value('itemName'), $needle, $category);
-        $itemName and $details.= "<b>Item Name:</b> ".htmlentities($itemName)."<br>\n";
+        $itemName and $details.= "<b>Item Name:</b> ".page::htmlentities($itemName)."<br>\n";
 
         $itemNotes = search::get_trimmed_description($item->get_value('itemNotes'), $needle, $category);
-        $itemNotes and $details.= "<b>Item Notes:</b> ".htmlentities($itemNotes)."<br>\n";
+        $itemNotes and $details.= "<b>Item Notes:</b> ".page::htmlentities($itemNotes)."<br>\n";
 
         $TPL["item_searchDetails"] = $details;
 
@@ -348,7 +348,7 @@ if (!$search) {
           $TPL["loan_status"] = "Available <a href=\"".$TPL["url_alloc_item"]."itemID=".$TPL["item_itemID"]."&borrow=true\">Borrow</a>";
         }
     
-        $TPL["search_results"] .=  "<b>".htmlentities($TPL["item_itemName"])."</b> (".$TPL["loan_status"].")<br>".$TPL["item_searchDetails"]."<br>";
+        $TPL["search_results"] .=  "<b>".page::htmlentities($TPL["item_itemName"])."</b> (".$TPL["loan_status"].")<br>".$TPL["item_searchDetails"]."<br>";
       }
     }
   }
@@ -388,22 +388,22 @@ if (!$search) {
         $timeSheet->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheet_");
 
         $projectName = search::get_trimmed_description($db->f('projectName'), $needle, $category);
-        $projectName and $details[] = "<b>Project Name: </b>".htmlentities($projectName);
+        $projectName and $details[] = "<b>Project Name: </b>".page::htmlentities($projectName);
 
         $projectShortName = search::get_trimmed_description($db->f('projectShortName'), $needle, $category);
-        $projectShortName and $details[] = "<b>Project Short Name: </b>".htmlentities($projectShortName);
+        $projectShortName and $details[] = "<b>Project Short Name: </b>".page::htmlentities($projectShortName);
 
         $billingNote = search::get_trimmed_description($timeSheet->get_value('billingNote'), $needle, $category);
-        $billingNote and $details[] = "<b>Billing Note: </b>".htmlentities($billingNote);
+        $billingNote and $details[] = "<b>Billing Note: </b>".page::htmlentities($billingNote);
 
         $taskName = search::get_trimmed_description($db->f('description'), $needle, $category);
-        $taskName and $details[] = "<b>Task Name: </b>".htmlentities($taskName);
+        $taskName and $details[] = "<b>Task Name: </b>".page::htmlentities($taskName);
 
         $taskComment = search::get_trimmed_description($db->f('comment'), $needle, $category);
-        $taskComment and $details[] = "<b>Task Comment: </b>".htmlentities($taskComment);
+        $taskComment and $details[] = "<b>Task Comment: </b>".page::htmlentities($taskComment);
 
         if (count($details)) {
-          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$TPL["timeSheet_timeSheetID"]."\">Time Sheet: ".htmlentities($TPL["timeSheet_timeSheetID"]);
+          $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$TPL["timeSheet_timeSheetID"]."\">Time Sheet: ".page::htmlentities($TPL["timeSheet_timeSheetID"]);
           $TPL["search_results"] .= "</a></b><br>".implode("<br/>",$details)."<br/>"."<br>";
         }
       }
@@ -428,7 +428,7 @@ if (!$search) {
       $f = str_replace(get_wiki_path(),"",$file);
       $TPL["search_results"].= "<br><br><a href='".$TPL["url_alloc_wiki"]."target=".urlencode($f)."'>".$f."</a><br>";
       foreach ($matches as $match) {
-        $TPL["search_results"].= search::get_trimmed_description(htmlentities($match),$needle,$category);
+        $TPL["search_results"].= search::get_trimmed_description(page::htmlentities($match),$needle,$category);
       }
     }
     

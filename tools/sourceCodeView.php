@@ -28,7 +28,7 @@ if ($_GET["dir"] && $_GET["file"]) {
   $path = realpath($_GET["dir"].DIRECTORY_SEPARATOR.$_GET["file"]);
   $TPL["path"] = $path;
   if (path_under_path($path,ALLOC_MOD_DIR) && is_file($path) && !in_array(basename($path),$prohibited)) {
-    $TPL["results"] = htmlentities(file_get_contents($path));
+    $TPL["results"] = page::htmlentities(file_get_contents($path));
   }
 }
 

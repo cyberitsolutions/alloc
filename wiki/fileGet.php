@@ -82,8 +82,8 @@ if (path_under_path(dirname($file), get_wiki_path()) && is_file($file) && is_rea
     //fputs($h,$vcs_file);
     //fclose($h);
     //echo "<br><br>".md5(nuke_trailing_spaces_from_all_lines($vcs_file));
-    //#echo htmlentities($disk_file);
-    //#echo htmlentities($vcs_file);
+    //#echo page::htmlentities($disk_file);
+    //#echo page::htmlentities($vcs_file);
   }
 
   if ($rev && $vcs_file) {
@@ -91,13 +91,13 @@ if (path_under_path(dirname($file), get_wiki_path()) && is_file($file) && is_rea
   } else {
     $str = $disk_file;
   }
-  //$str = htmlentities($str);
+  //$str = page::htmlentities($str);
   // the class=>processed prevents the default grippie being added to this textarea
   $textarea = page::textarea('wikitext',$str,array("height"=>"large","width"=>"100%","class"=>"processed")); 
   $str = $wikiMarkup($str); 
 
   //$str = rtrim($str);
-  //echo "<pre>".htmlentities($str)."</pre>"; // will echo the html
+  //echo "<pre>".page::htmlentities($str)."</pre>"; // will echo the html
 
   is_writable($file) and $edit_button = "<input type=\"button\" value=\"Edit File\" onClick=\"$('.view').hide();$('.edit').show();\">";
 

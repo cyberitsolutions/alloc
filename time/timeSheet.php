@@ -419,7 +419,7 @@ if ($_POST["save"]
     } else if ($_POST["save_and_returnToProject"]) {
       $url = $TPL["url_alloc_project"]."projectID=".$timeSheet->get_value("projectID");
     } else {
-      $msg = htmlentities(urlencode($msg));
+      $msg = page::htmlentities(urlencode($msg));
       $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."&msg=".$msg."&dont_send_email=".$_POST["dont_send_email"];
       # Pass the taskID forward if we came from a task
       $url .= "&taskID=".$_POST["taskID"];

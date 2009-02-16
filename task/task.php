@@ -360,7 +360,7 @@ if ($_GET["media"] == "print") {
   $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "clientContact_");
 
   // Need to html-ise taskName and description
-  $TPL["task_taskName"] = htmlentities($task->get_value("taskName"));
+  $TPL["task_taskName"] = page::htmlentities($task->get_value("taskName"));
   $TPL["task_taskDescription"] = page::to_html($task->get_value("taskDescription"));
 
   include_template("templates/taskPrinterM.tpl");

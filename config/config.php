@@ -54,7 +54,7 @@ while ($db->next_record()) {
   $types[$db->f("name")] = $db->f("type");
 
   if ($db->f("type") == "text") {
-    $TPL[$db->f("name")] = htmlentities($db->f("value"));
+    $TPL[$db->f("name")] = page::htmlentities($db->f("value"));
 
   } else if ($db->f("type") == "array") {
     $TPL[$db->f("name")] = unserialize($db->f("value"));
@@ -94,7 +94,7 @@ if ($_POST["save"]) {
 
       if ($types[$name] == "text") {
         $c->set_value("value",$_POST[$name]);
-        $TPL[$name] = htmlentities($_POST[$name]);
+        $TPL[$name] = page::htmlentities($_POST[$name]);
       } else if ($types[$name] == "array") {
         $c->set_value("value",serialize($_POST[$name]));
         $TPL[$name] = $_POST[$name];
