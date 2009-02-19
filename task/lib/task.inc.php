@@ -1762,6 +1762,12 @@ class task extends db_entity {
     $personID = $person->find_by_name($from_name);
     $personID or $personID = $person->find_by_email($from_address);
 
+    if ($personID && (!is_object($current_user) || (is_object($current_user) && !$current_user->get_id()))) {
+      global $current_user;
+      $current_user = new person;
+      $current_user->load_current_user($personID);
+    }
+
     $cc = new clientContact();
     $clientContactID = $cc->find_by_name($from_name, $this->get_value("projectID"));
     $clientContactID or $clientContactID = $cc->find_by_email($from_address, $this->get_value("projectID"));
