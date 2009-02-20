@@ -105,6 +105,7 @@ class alloc_soap {
     global $current_user; // Always need this :(
     $current_user = $this->get_current_user($key);
     if (class_exists($entity)) {
+      $options = obj2array($options);
       $e = new $entity;
       if (method_exists($e, "get_list")) {
         ob_start();
@@ -120,6 +121,32 @@ class alloc_soap {
       }
     } else {
       throw new SoapFault("Server","Entity '".$entity."' does not exist."); 
+    }
+  }
+
+  /** The get_email function
+   * @param string $sessKey
+   * @param string $emailUID
+   * @return string $email
+   */
+  public function get_email($key, $emailUID) {
+    global $current_user; // Always need this :(
+    $current_user = $this->get_current_user($key);
+    if ($emailUID) {
+      $lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
+      $info["host"] = config::get_config_item("allocEmailHost");
+      $info["port"] = config::get_config_item("allocEmailPort");
+      $info["username"] = config::get_config_item("allocEmailUsername");
+      $info["password"] = config::get_config_item("allocEmailPassword");
+      $info["protocol"] = config::get_config_item("allocEmailProtocol");
+      if (!$info["host"]) {
+        die("Email mailbox host not defined, assuming email fetch function is inactive.");
+      }
+      $mail = new alloc_email_receive($info,$lockfile);
+      $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
+      $str = $mail->get_raw_email_by_msg_uid($emailUID);
+      $mail->close();
+      return utf8_encode($str);
     }
   }
 
