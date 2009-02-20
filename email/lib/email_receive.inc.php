@@ -142,9 +142,15 @@ class alloc_email_receive {
   }
 
   function get_raw_email_by_msg_uid($msg_uid) {
-    $header = imap_fetchheader($this->connection,$msg_uid,FT_PREFETCHTEXT+FT_UID);
-    $body = imap_body($this->connection,$msg_uid,FT_UID);
-    return $header.$body;
+    $result = imap_fetch_overview($this->connection,$msg_uid,FT_UID);
+    // only view emails that *have* been seen before otherwise 
+    // we might view an email before it has been downloaded by
+    // receiveEmail.php
+    if (is_array($result) && $result[0]->seen) { 
+      $header = imap_fetchheader($this->connection,$msg_uid,FT_PREFETCHTEXT+FT_UID);
+      $body = imap_body($this->connection,$msg_uid,FT_UID);
+      return $header.$body;
+    }
   }
 
   function save_email($file) {

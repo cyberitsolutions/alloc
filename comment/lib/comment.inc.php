@@ -129,7 +129,11 @@ class comment extends db_entity {
 
       $token = new token;
       if ($token->select_token_by_entity_and_action("comment",$new["commentID"],"add_comment_from_email")) {
-        $token->get_value("tokenHash") and $new["hash"] = " <em class=\"faint\">{Key:".$token->get_value("tokenHash")."}</em>";
+        if ($token->get_value("tokenHash")) {
+          $new["hash"] = $token->get_value("tokenHash");
+          $new["hashKey"] = "{Key:".$new["hash"]."}";
+          $new["hashHTML"] = " <em class=\"faint\">".$new["hashKey"]."</em>";
+        }
   
         $ip = interestedParty::get_interested_parties("comment",$new["commentID"]);
         if (is_array($ip)) {
@@ -156,6 +160,9 @@ class comment extends db_entity {
       }
 
       $new["attribution"] = comment::get_comment_attribution($v);
+      $new["commentCreatedUserEmail"] = comment::get_comment_author_email($v);
+      $s = commentTemplate::populate_string(config::get_config_item("emailSubject_taskComment"), $entity, $id);
+      $new["commentEmailSubject"] = $s." ".$new["hashKey"];
 
       if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
 
@@ -207,7 +214,7 @@ class comment extends db_entity {
     $onClick = "return set_grow_shrink('comment_".$row["commentID"]."','button_comment_".$row["commentID"]."','true');";
     $rtn[] = '<table width="100%" cellspacing="0" border="0" class="panel'.$row["external"].'">';
     $rtn[] = '<tr>';
-    $rtn[] = '  <th valign="top" onClick="'.$onClick.'">'.$row["attribution"].$row["hash"].$row["emailed"].'</th>';
+    $rtn[] = '  <th valign="top" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].$row["emailed"].'</th>';
     $rtn[] = '  <td valign="top" width="1%" class="nobr" align="right">'.$row["form"].$row["downloadEmail"].$row["interestedParties"].$row["external_label"].'</td>';
     $rtn[] = '</tr>';
     $rtn[] = '<tr>';
@@ -313,6 +320,27 @@ class comment extends db_entity {
       $author = $person->get_username(1);
     }
     return $author;
+  }
+
+  function get_comment_author_email($comment=array()) {
+    if ($comment["commentCreatedUser"]) {
+      $personID = $comment["commentCreatedUser"];
+      $p = new person;
+      $p->set_id($personID);
+      $p->select();
+      $email = $p->get_from();
+    } else if ($comment["clientContactID"]) {
+      $cc = new clientContact;
+      $cc->set_id($comment["clientContactID"]);
+      $cc->select();
+      $email = $cc->get_value("clientContactEmail");
+    } else {
+      $p= new person;
+      $p->set_id($comment["personID"]);
+      $p->select();
+      $email = $p->get_from();
+    }
+    return $email;
   }
 
   function sort_task_comments_callback_func($a, $b) {

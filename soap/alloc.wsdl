@@ -39,6 +39,10 @@
     <part name="entity" type="xsd:string"/>
     <part name="options" type="tns:mixed"/>
   </message>
+  <message name="get_emailInput">
+    <part name="sessKey" type="xsd:string"/>
+    <part name="emailUID" type="xsd:string"/>
+  </message>
   <message name="get_helpInput">
     <part name="topic" type="xsd:string"/>
   </message>
@@ -57,6 +61,9 @@
   </message>
   <message name="get_listOutput">
     <part name="return" type="tns:mixed"/>
+  </message>
+  <message name="get_emailOutput">
+    <part name="return" type="xsd:string"/>
   </message>
   <message name="get_helpOutput">
     <part name="return" type="xsd:string"/>
@@ -84,6 +91,10 @@
     <operation name="get_list">
       <input message="tns:get_listInput"/>
       <output message="tns:get_listOutput"/>
+    </operation>
+    <operation name="get_email">
+      <input message="tns:get_emailInput"/>
+      <output message="tns:get_emailOutput"/>
     </operation>
     <operation name="get_help">
       <input message="tns:get_helpInput"/>
@@ -129,6 +140,14 @@
       </output>
     </operation>
     <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="get_list">
+      <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="get_email">
       <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
         <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
       </input>
