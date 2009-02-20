@@ -37,9 +37,13 @@ if (isset($_GET["id"]) && $file && !bad_filename($file)) {
   if ($entity->has_attachment_permission($current_user) && file_exists($file)) {
     $fp = fopen($file, "rb");
     $mimetype = get_mimetype($file);
+
+    $disposition = "attachment";
+    preg_match("/jpe?g|gif|png/i",basename($file)) and $disposition = "inline";
+
     header('Content-Type: '.$mimetype);
     header("Content-Length: ".filesize($file));
-    header('Content-Disposition: attachment; filename="'.basename($file).'"');
+    header('Content-Disposition: '.$disposition.'; filename="'.basename($file).'"');
     fpassthru($fp);
     exit;
   }
