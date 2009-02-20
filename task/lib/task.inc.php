@@ -384,13 +384,16 @@ class task extends db_entity {
       }
 
       // Get all the project people for this tasks project
-      $q = sprintf("SELECT emailAddress, firstName, surname, person.personID
+      $q = sprintf("SELECT emailAddress, firstName, surname, person.personID, username
                      FROM projectPerson 
                 LEFT JOIN person on projectPerson.personID = person.personID 
                     WHERE projectPerson.projectID = %d AND person.personActive = 1 ",$projectID);
       $db->query($q);
       while ($db->next_record()) {
-        $interestedPartyOptions[$db->f("emailAddress")] = array("name"=>$db->f("firstName")." ".$db->f("surname"),"personID"=>$db->f("personID"));
+        unset($name);
+        $db->f("firstName") && $db->f("surname") and $name = $db->f("firstName")." ".$db->f("surname");
+        $name or $name = $db->f("username");
+        $interestedPartyOptions[$db->f("emailAddress")] = array("name"=>$name,"personID"=>$db->f("personID"));
       }
     }
 
