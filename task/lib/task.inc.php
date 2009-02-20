@@ -954,6 +954,7 @@ class task extends db_entity {
       $_FORM["showDate2"] = true;
       $_FORM["showDate3"] = true;
       $_FORM["showDate4"] = true;
+      $_FORM["showDate5"] = true;
     }
 
     $_FORM["people_cache"] = get_cached_table("person");
@@ -1155,6 +1156,7 @@ class task extends db_entity {
       $_FORM["showDate2"]    and $summary[] = "<th>Targ Compl</th>";
       $_FORM["showDate3"]    and $summary[] = "<th>Act Start</th>";
       $_FORM["showDate4"]    and $summary[] = "<th>Act Compl</th>";
+      $_FORM["showDate5"]    and $summary[] = "<th>Task Created</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>Estimate</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>Actual</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>%</th>";
@@ -1295,6 +1297,7 @@ class task extends db_entity {
     $_FORM["showDate2"]       and $summary[] = "  <td class=\"nobr\">".$task["dateTargetCompletion"]."&nbsp;</td>";
     $_FORM["showDate3"]       and $summary[] = "  <td class=\"nobr\">".$task["dateActualStart"]."&nbsp;</td>";
     $_FORM["showDate4"]       and $summary[] = "  <td class=\"nobr\">".$task["dateActualCompletion"]."&nbsp;</td>";
+    $_FORM["showDate5"]       and $summary[] = "  <td class=\"nobr\">".$task["dateCreated"]."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format($timeEstimate)."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</td>";
     $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".$task["percentComplete"]."&nbsp;</td>";
@@ -1536,6 +1539,7 @@ class task extends db_entity {
                 ,"showDate2"            => "Date Target Completion"
                 ,"showDate3"            => "Date Actual Start"
                 ,"showDate4"            => "Date Actual Completion"
+                ,"showDate5"            => "Date Created"
                 ,"showProject"          => "The tasks Project (has different layout when prioritised vs byProject)"
                 ,"showPriority"         => "The calculated overall priority, then the tasks, then the projects priority"
                 ,"showStatus"           => "A colour coded textual description of the status of the task"
