@@ -534,8 +534,8 @@ class comment extends db_entity {
 
       if ($recipient["emailAddress"] && !$done[$recipient["emailAddress"]]) {
 
-        if ((!$current_user->prefs["receiveOwnTaskComments"] || $current_user->prefs["receiveOwnTaskComments"] == 'no')
-        && ($recipient["emailAddress"] == $from["email"] || $recipient["emailAddress"] == $current_user->get_value("emailAddress"))) {
+        // If the person does *not* want to receive their own emails, skip adding them as a recipient
+        if ($current_user->prefs["receiveOwnTaskComments"] == 'no' && same_email_address($recipient["emailAddress"],$from["email"])) {
           continue;
         }
 
