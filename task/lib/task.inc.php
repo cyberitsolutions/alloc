@@ -1746,6 +1746,13 @@ class task extends db_entity {
   }
 
   function add_comment_from_email($email) {
+ 
+    // Skip over emails that are from alloc. These emails are kept only for
+    // posterity and should not be parsed and downloaded and re-emailed etc.
+    if (same_email_address($email->mail_headers->fromaddress, ALLOC_DEFAULT_FROM_ADDRESS)) {
+      $email->mark_seen();
+      return;
+    }
 
     // Make a new comment
     $comment = new comment;

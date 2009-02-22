@@ -190,6 +190,11 @@ class alloc_email_receive {
     return $decoded;
   }
 
+  function mark_seen() {
+    imap_setflag_full($this->connection, $this->msg_num, "\\SEEN", FT_UID); // this doesn't work!
+    $body = imap_body($this->connection,$this->msg_num); // this seems to force it to be marked seen
+  }
+
   function forward($address,$subject) {
     $header = imap_fetchheader($this->connection,$this->msg_num);
     $body = imap_body($this->connection,$this->msg_num);
