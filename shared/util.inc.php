@@ -501,6 +501,13 @@ function parse_email_address($email="") {
   }
   return array();
 }
+function same_email_address($addy1, $addy2) {
+  list($from_address1,$from_name1) = parse_email_address($addy1);
+  list($from_address2,$from_name2) = parse_email_address($addy2);
+  if ($from_address1 == $from_address2) {
+    return true;
+  }
+}
   function get_max_alloc_users() {
     if (function_exists("ace_get_max_alloc_users")) {
       return ace_get_max_alloc_users();
