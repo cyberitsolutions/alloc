@@ -1146,10 +1146,10 @@ class task extends db_entity {
       $summary[] = "<tr>";
       $_FORM["showEdit"]     and $summary[] = "<th width=\"1%\" class=\"sorttable_nosort noprint\"><input type=\"checkbox\" onclick=\"return $('.task_checkboxes').each(function(){this.checked=!this.checked});\"></th>";
                                  $summary[] = "<th width=\"1%\"></th>"; //taskTypeImage
-      $_FORM["showTaskID"]   and $summary[] = "<th width=\"1%\">ID</th>";
+      $_FORM["showTaskID"]   and $summary[] = "<th class=\"sorttable_numeric\" width=\"1%\">ID</th>";
                                  $summary[] = "<th>Task</th>";
       $_FORM["showProject"]  and $summary[] = "<th>Project</th>";
-      $_FORM["showPriority"] and $summary[] = "<th>Priority</th>";
+      $_FORM["showPriority"] and $summary[] = "<th class=\"sorttable_numeric\">Priority</th>";
       $_FORM["showPriority"] and $summary[] = "<th>Task Pri</th>";
       $_FORM["showPriority"] and $summary[] = "<th>Proj Pri</th>";
       $_FORM["showDateStatus"] and $summary[] = "<th>Date Status</th>";
