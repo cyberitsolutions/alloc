@@ -140,11 +140,11 @@ class comment extends db_entity {
           foreach($ip as $email => $info) {
             if ($info["external"]) {
               $new["external"] = " loud";
-              $new["external_label"] = " <em class='faint warn'>[ External Conversation ]</em>";
+              $new["external_label"] = "<em class='faint warn'>[&nbsp;External&nbsp;Conversation&nbsp;]</em>";
             }
           }
         }
-        $new["external_label"] or $new["external_label"] = " <em class='faint'>[ Internal Conversation ]</em>";
+        $new["external_label"] or $new["external_label"] = "<em class='faint'>[&nbsp;Internal&nbsp;Conversation&nbsp;]</em>";
 
       #} else if ($token->select_token_by_entity_and_action($entity,$id,"add_comment_from_email")) {
         #$token->get_value("tokenHash") and $new["hash"] = " <em class=\"faint\">{Key:".$token->get_value("tokenHash")."}</em>";
@@ -166,7 +166,7 @@ class comment extends db_entity {
 
       if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
 
-        if ($options["showEditButtons"]) {
+        if ($options["showEditButtons"] && $new["comment_buttons"]) {
           $new["form"] = '<form action="'.$TPL["url_alloc_comment"].'" method="post">';
           $new["form"].= '<input type="hidden" name="entity" value="'.$v["commentType"].'">';
           $new["form"].= '<input type="hidden" name="entityID" value="'.$v["commentLinkID"].'">';
@@ -189,7 +189,7 @@ class comment extends db_entity {
           }
         }
 
-        $v["commentEmailRecipients"] and $new["emailed"] = "<br>Emailed to ".page::htmlentities($v["commentEmailRecipients"]);
+        $v["commentEmailRecipients"] and $new["emailed"] = 'Emailed to '.$v["commentEmailRecipients"];
 
         $new_rows[] = $new;
       }
@@ -214,24 +214,25 @@ class comment extends db_entity {
     $onClick = "return set_grow_shrink('comment_".$row["commentID"]."','button_comment_".$row["commentID"]."','true');";
     $rtn[] = '<table width="100%" cellspacing="0" border="0" class="panel'.$row["external"].'">';
     $rtn[] = '<tr>';
-    $rtn[] = '  <th valign="top" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].$row["emailed"].'</th>';
-    $rtn[] = '  <td valign="top" width="1%" class="nobr" align="right">'.$row["form"].$row["downloadEmail"].$row["interestedParties"].$row["external_label"].'</td>';
+    $rtn[] = '  <td style="width:75%; padding-bottom:0px; white-space:normal" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].'</td>';
+    $rtn[] = '  <td align="right" style="padding-bottom:0px;">'.$row["form"].$row["downloadEmail"].$row["external_label"].'</td>';
     $rtn[] = '</tr>';
     $rtn[] = '<tr>';
-    $rtn[] = '  <td onClick="'.$onClick.'">'.$comment.'</td>';
-    $row["files"] or $rtn[] = '  <td valign="bottom" align="center"></td>';
+    $rtn[] = '  <td colspan="2" style="padding-top:0px; white-space:normal;">'.preg_replace("/<[^>]>/","",$row["emailed"])."</td>";
+    $rtn[] = '</tr>';
+    $rtn[] = '<tr>';
+    $rtn[] = '  <td colspan="2" onClick="'.$onClick.'"><div style="overflow:auto">'.$comment.'</div></td>';
     $rtn[] = '</tr>';
     $row["children"] and $rtn[] = comment::get_comment_children($row["children"]);
     $row["files"] and $rtn[] = '<tr>';
-    $row["files"] and $rtn[] = '  <td valign="bottom" align="left">'.$row["files"].'</td>';
-    $row["files"] and $rtn[] = '  <td valign="bottom" align="center"></td>';
+    $row["files"] and $rtn[] = '  <td valign="bottom" align="left" colspan="2">'.$row["files"].'</td>';
     $row["files"] and $rtn[] = '</tr>';
     $rtn[] = '</table>';
     return implode("\n",$rtn);
   }
 
   function get_comment_attribution($comment=array()) {
-    $str = $comment['ts_label'].'Comment by <b>'.comment::get_comment_author($comment).'</b> '.$comment["date"];
+    $str = '<b>'.comment::get_comment_author($comment).'</b> '.$comment["date"];
       if ($comment["commentModifiedTime"] || $comment["commentModifiedUser"]) {
         $str.= ", last modified by <b>".person::get_fullname($comment["commentModifiedUser"])."</b> ".$comment["commentModifiedTime"];
       }
