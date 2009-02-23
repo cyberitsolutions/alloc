@@ -6,9 +6,9 @@
  */
 
 body { 
-  (BODY_BACKGROUND); 
+  background:url(../images/wallpaper_nacho.jpg) repeat-x #6277e0; 
   font-family:arial,helvetica,sans-serif; 
-  color:(BODY_COLOR); 
+  color:#666666; 
   padding:0px;
   width:auto !important; width:95%;
   margin:0px 14px;
@@ -25,7 +25,7 @@ div#main {
   margin:0px;
   padding:0px 0px 14px 0px !important; padding:0px 16px;
   background-color:white;
-  border:1px solid (BODY_BORDER);
+  border:1px solid #9c9c9c;
   position:relative;
   clear:both;
   text-align:left;
@@ -45,39 +45,39 @@ div#main2 {
 }
 
 a:link, a:visited { 
-  color:(A_COLOR);
+  color:#4659cf;
 }
 a:hover { 
-  color:(A_HOVER); 
+  color:#7583d7; 
 }
 
 a.growshrink, a.magic {
-  color:(TD_COLOR);
+  color:#444444;
   text-decoration:none;
-  border-bottom:1px dashed (BODY_COLOR);
+  border-bottom:1px dashed #666666;
   text-transform:none;
 }
 a.growshrink:hover, a.magic:hover {
-  border-bottom:1px solid (BODY_COLOR);
+  border-bottom:1px solid #666666;
 }
 
 a.sidebyside {
   padding:5px;
-  background-color: (TABLE_BOX_BACKGROUND_COLOR);
-  border:1px solid (SBS_BORDER_COLOR);
+  background-color: #f9f9f9;
+  border:1px solid #cccccc;
   text-decoration:none;
-  color:(TABLE_TASKS_TH_COLOR);
+  color:#f47916;
   font-size:100%; 
 }
 a.sidebyside:hover {
-  background:(TABLE_TASKS_TH_BACKGROUND);
-  color:(TABLE_TASKS_TH_COLOR);
-  border:1px solid (TABLE_TASKS_TH_COLOR);
+  background:#ffe2ab;
+  color:#f47916;
+  border:1px solid #f47916;
 }
 a.sidebyside_active {
-  background:(TABLE_TASKS_TH_BACKGROUND);
-  color:(TABLE_TASKS_TH_COLOR);
-  border:1px solid (TABLE_TASKS_TH_COLOR);
+  background:#ffe2ab;
+  color:#f47916;
+  border:1px solid #f47916;
   text-decoration:none;
   padding:5px;
   font-size:100%; 
@@ -106,8 +106,8 @@ h6 {
   font-size:90%;
   font-weight:normal;
   text-transform:uppercase;
-  color:(SMALL_HEADING_COLOR);
-  border-bottom:1px solid (DECORATIVE_LINE_COLOR);
+  color:#f47916;
+  border-bottom:1px solid #cccccc;
   padding:0px;
   margin:20px 0px 10px 0px;
   clear:both;
@@ -129,12 +129,12 @@ textarea, input, select, textarea {
   font-weight:normal;
 }
 th { 
-  color:(TD_COLOR); 
+  color:#444444; 
   text-align:left; 
   font-size:100%; 
 }
 td { 
-  color:(TD_COLOR); 
+  color:#444444; 
   font-size:100%; 
 }
 ul { 
@@ -152,8 +152,8 @@ input[type="password"],
 input[type="checkbox"], 
 textarea,
 select {
-  border: 1px solid (DECORATIVE_LINE_COLOR);
-  background-color: (FORM_ELEMENT_BACKGROUND);
+  border: 1px solid #cccccc;
+  background-color: #fcfcfc;
   text-transform:none; /* list.th turns options into uppercase */
 }
 input[type="text"]:focus, 
@@ -161,8 +161,8 @@ input[type="password"]:focus,
 input[type="checkbox"]:focus, 
 textarea:focus,
 select:focus {
-  border: 1px solid (FORM_ELEMENT_ACTIVE_BORDER_COLOR);
-  background-color: (FORM_ELEMENT_ACTIVE_BACKGROUND);
+  border: 1px solid #666666;
+  background-color: #ffffff;
 }
 input[type="text"].bad,
 input[type="password"].bad,
@@ -180,7 +180,7 @@ select:focus.bad
 }
 input[readonly="true"], input[readonly="true"]:focus {
   border:1px solid #e0e0e0;
-  background-color:(TABLE_BOX_BACKGROUND_COLOR);
+  background-color:#f9f9f9;
   color:#777777;
 }
 
@@ -231,19 +231,19 @@ hr {
 #helper { 
   position:absolute; 
   z-index:2;
-  background-color:(HELP_BACKGROUND);
-  border:1px solid (DECORATIVE_LINE_COLOR);
-  color:(HELP_COLOR);
+  background-color:#fffdf2;
+  border:1px solid #cccccc;
+  color:#666666;
   width:400px; 
   font-size:100%; 
   padding:8px;
 }
 .help_button {
-  border:1px solid (HELP_ICON_BORDER_COLOR);
+  border:1px solid #999999;
   vertical-align:sub !important; vertical-align:bottom;
 }
 .help_button:hover {
-  border:1px solid (DECORATIVE_LINE_COLOR);
+  border:1px solid #cccccc;
 }
 
 .calendar_container {
@@ -257,15 +257,15 @@ hr {
 .calendar_container img {
   vertical-align:text-bottom;
   cursor:pointer; 
-  border:1px solid (CALENDAR_IMAGE_BORDER_COLOR);
+  border:1px solid #999999;
   margin:0px; 
   padding:0px; 
   position:relative;
   top:0px !important; top:-2px;
 }
 .calendar_container img:hover {
-  border: 1px solid (CALENDAR_ACTIVE_BORDER_COLOR);
-  background-color:(CALENDAR_ACTIVE_BACKGROUND);
+  border: 1px solid #666666;
+  background-color:#999999;
 }
 .calendar_container input {
   vertical-align:text-bottom;
@@ -274,27 +274,27 @@ hr {
 .message { 
   padding:0px 4px; 
   margin:15px auto 0px auto; 
-  border:1px solid (DECORATIVE_LINE_COLOR);
-  background-color:(HELP_BACKGROUND);
+  border:1px solid #cccccc;
+  background-color:#fffdf2;
 }
 .bad { 
-  color:(TRANSACTION_REJECTED); 
+  color:#c84e12; 
   font-size:100%; 
 }
 .good { 
-  color:(TRANSACTION_APPROVED); 
+  color:#6e883b; 
   font-size:100%; 
 }
 .help { 
-  color:(TRANSACTION_PENDING);
+  color:#666666;
   font-size:100%;
 }
 
 
 /* Main content boxes */ 
 table.box { 
-  border:(TABLE_BOX_BORDER); 
-  background-color:(TABLE_BOX_BACKGROUND_COLOR); 
+  border:1px solid #f79b51; 
+  background-color:#f9f9f9; 
   vertical-align:top; 
   width:100%; 
   margin:14px 0px 0px 0px;
@@ -302,10 +302,10 @@ table.box {
   border-spacing:0px;
 } 
 table.box th { 
-  (TABLE_BOX_TH_BACKGROUND); 
-  color:(TABLE_BOX_TH_COLOR); 
+  background: url(../images/bg_nacho.jpg) repeat-x; 
+  color:#ffffff; 
   font-size:110%; 
-  border-bottom:1px solid (TABLE_TH_UNDERLINE_COLOR);
+  border-bottom:1px solid #f47916;
   padding:3px;
   font-weight:normal;
 } 
@@ -317,11 +317,11 @@ table.box th.right table {
 } 
 table.box th a:link, table.box th a:visited { 
   font-weight:normal; 
-  color:(TABLE_BOX_TH_A_LINK_COLOR); 
+  color:#ffffff; 
 }
 table.box th a:hover { 
   font-weight:normal; 
-  color:(TABLE_BOX_TH_A_HOVER_COLOR); 
+  color:#cccccc; 
 }
 table.box td {
   padding:3px;
@@ -331,34 +331,34 @@ table.box td {
 /* Calendar */
 table.alloc_calendar { 
   width:100%; 
-  border-right:1px solid (PANEL_HARPO_FRAME_COLOR); 
-  border-bottom:1px solid (PANEL_HARPO_FRAME_COLOR);
+  border-right:1px solid #d2ae69; 
+  border-bottom:1px solid #d2ae69;
 } 
 table.alloc_calendar td { 
-  background-color:(TABLE_BOX_BACKGROUND_COLOR); 
-  border-left:1px solid (PANEL_HARPO_FRAME_COLOR);
-  border-top:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  background-color:#f9f9f9; 
+  border-left:1px solid #d2ae69;
+  border-top:1px solid #d2ae69; 
   width:10%; vertical-align:top;
 }
 table.alloc_calendar td.today { 
-  background-color:(CALENDAR_TODAY_BACKGROUND);
-  border-top:2px solid (PANEL_HARPO_FRAME_COLOR);
-  border-left:2px solid (PANEL_HARPO_FRAME_COLOR);
-  border-right:1px solid (PANEL_HARPO_FRAME_COLOR);
-  border-bottom:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  background-color:#fffdf2;
+  border-top:2px solid #d2ae69;
+  border-left:2px solid #d2ae69;
+  border-right:1px solid #d2ae69;
+  border-bottom:1px solid #d2ae69; 
 }
 table.alloc_calendar td.today h1 {
   font-weight:bold;
 }
 table.alloc_calendar td.even { 
-  background-color:(TR_ODD_BACKGROUND_COLOR); 
+  background-color:#f9eed8; 
 }
 table.alloc_calendar td.absent {
-  background-color:(CALENDAR_ABSENT_BACKGROUND);
-  color:(CALENDAR_ABSENT_COLOR);
+  background-color:#cccccc;
+  color:#999999;
 }
 table.alloc_calendar td.absent h1{
-  color:(CALENDAR_ABSENT_COLOR);
+  color:#999999;
 }
 table.alloc_calendar h1 {
   text-align:right;
@@ -372,42 +372,42 @@ table.alloc_calendar img {
   margin:0px;
 }
 table.alloc_calendar td:hover { 
-  background-color:(TR_HOVER_BACKGROUND_COLOR); 
+  background-color:#fdfff6; 
 }
 
 
 /* Filters */
 table.filter { 
-  background-color:(PANEL_HARPO_BG_COLOR); 
-  border:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  background-color:#eaedff; 
+  border:1px solid #d2ae69; 
   padding:4px; 
   margin-top:4px; 
   text-align:left;
 }
 
 table.filter td {
-  color:(TABLE_TASKS_TH_COLOR); 
+  color:#f47916; 
 }
 
 .filter table td { 
-  color:(TABLE_TASKS_TH_COLOR); 
+  color:#f47916; 
 }
 .filter table th { 
   font-weight:bold; 
-  background-color:(PANEL_HARPO_BG_COLOR); 
-  color:(TD_COLOR); 
+  background-color:#eaedff; 
+  color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
 }
 
 tr.odd { 
-  background-color:(TR_ODD_BACKGROUND_COLOR); 
+  background-color:#f9eed8; 
 }
 tr.even { 
-  background-color:(TR_EVEN_BACKGROUND_COLOR); 
+  background-color:#f9f9f9; 
 }
 tr.odd:hover, tr.even:hover {
-  background-color:(TR_HOVER_BACKGROUND_COLOR); 
+  background-color:#fdfff6; 
 }
 
 img.taskType {
@@ -416,59 +416,59 @@ img.taskType {
 }
 
 .overdue { 
-  color: (TRANSACTION_REJECTED); 
+  color: #c84e12; 
 }
 .really_overdue { 
   font-weight:bold; 
-  color: (TRANSACTION_REJECTED);
+  color: #c84e12;
 }
 .behind-target { 
-  color: (BEHIND_TARGET); 
+  color: #ccaa00; 
 }
 .transaction-approved { 
-  color: (TRANSACTION_APPROVED); 
+  color: #6e883b; 
 }
 .transaction-pending { 
-  color: (TRANSACTION_PENDING); 
+  color: #666666; 
 }
 .transaction-rejected { 
-  color: (TRANSACTION_REJECTED); 
+  color: #c84e12; 
 }
 
 .highlighted { 
   font-weight:normal; 
   font-style:normal; 
-  background-color:(HIGHLIGHTED_BACKGROUND_COLOR); 
+  background-color:#fffeb7; 
   padding:0px 3px;
 }
 
 table.list { 
   width:100%; 
-  border-left:1px solid (PANEL_HARPO_FRAME_COLOR); 
-  border-right:1px solid (PANEL_HARPO_FRAME_COLOR); 
-  border-bottom:1px solid (PANEL_HARPO_FRAME_COLOR);
+  border-left:1px solid #d2ae69; 
+  border-right:1px solid #d2ae69; 
+  border-bottom:1px solid #d2ae69;
   border-collapse:collapse;
   border-spacing:0px;
 }
 td.list { 
-  background-color: (PANEL_HARPO_BG_COLOR); 
+  background-color: #eaedff; 
   padding:4px; 
 }
 table.list th, table.alloc_calendar th { 
   border-bottom:0px; 
   font-weight:normal; 
   white-space:nowrap; 
-  background:(TABLE_TASKS_TH_BACKGROUND); 
-  color:(TABLE_TASKS_TH_COLOR); 
+  background:#ffe2ab; 
+  color:#f47916; 
   font-size:90%;
   text-transform:uppercase;
 }
 table.list td, table.list th, table.alloc_calendar th { 
-  border-top:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  border-top:1px solid #d2ae69; 
   padding:4px;
 }
 table.alloc_calendar th { 
-  border-left:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  border-left:1px solid #d2ae69; 
 }
 .sort_arrows {
   padding:0px 3px;
@@ -485,33 +485,34 @@ table.list td.grand_total, .grand_total {
    orange background. And correspondingly, any inner .panel's (Zeppo) render more lightly.
 */
 table.panel div.hidden_text {
-  color:(COMMENT_HIDDEN_TEXT_COLOR);
+  color:#888888;
   font-style:italic;
 }
 table.panel { 
-  border:1px solid (PANEL_HARPO_FRAME_COLOR); 
-  background:(PANEL_HARPO_BG_COLOR); 
+  border:1px solid #d2ae69; 
+  background:#eaedff; 
   margin-bottom:5px; 
   margin-top:0px;
+  table-layout:fixed; /* nested divs that are overflow:auto no longer scroll off the screen */
 }
 table.loud {
-  border:1px solid (PANEL_GROUCHO_FRAME_COLOR); 
-  background:(PANEL_GROUCHO_BG_COLOR); 
+  border:1px solid #e7ba98; 
+  background:#fff7ed; 
 }
 table.panel table.panel {
-  border:1px solid (PANEL_CHICO_FRAME_COLOR); 
-  background:(PANEL_CHICO_BG_COLOR); 
+  border:1px solid #ffe2ab; 
+  background:#ffffff; 
   margin-bottom:6px; 
 }
 table.loud table.panel {
-  border:1px solid (PANEL_ZEPPO_FRAME_COLOR); 
-  background:(PANEL_ZEPPO_BG_COLOR); 
+  border:1px solid #ffe5c4; 
+  background:#ffffff; 
 }
 table.panel th { 
   text-align:left; 
-  background:(PANEL_HARPO_BG_COLOR); 
+  background:#eaedff; 
   vertical-align:top; 
-  color:(TD_COLOR); 
+  color:#444444; 
   font-weight:normal; 
   padding:4px; 
   border:0px solid black;
@@ -519,60 +520,60 @@ table.panel th {
   font-size:100%;
 }
 table.loud th {
-  background:(PANEL_GROUCHO_BG_COLOR); 
+  background:#fff7ed; 
 }
 table.panel td { 
-  background:(PANEL_HARPO_BG_COLOR);
+  background:#eaedff;
   padding:6px; 
   border:0px solid black;
 }
 table.loud td {
-  background:(PANEL_GROUCHO_BG_COLOR);
+  background:#fff7ed;
 }
 table.panel td table.panel { 
-  background:(PANEL_CHICO_BG_COLOR); 
+  background:#ffffff; 
 }
 table.loud td table.panel { 
-  background:(PANEL_ZEPPO_BG_COLOR); 
+  background:#ffffff; 
 }
 table.panel td table.panel th { 
-  background:(PANEL_CHICO_BG_COLOR);
+  background:#ffffff;
 }
 table.loud td table.panel th { 
-  background:(PANEL_ZEPPO_BG_COLOR);
+  background:#ffffff;
 }
 table.panel td table.panel td { 
-  background:(PANEL_CHICO_BG_COLOR);
+  background:#ffffff;
 }
 table.loud td table.panel td { 
-  background:(PANEL_ZEPPO_BG_COLOR);
+  background:#ffffff;
 }
 
 
 
 .faint {
-  color:(COMMENT_HIDDEN_TEXT_COLOR);
+  color:#888888;
   font-style:normal;
 }
 
 .warn { 
-  color:(WARN_COLOR);
+  color:#e17a00;
 }
 table.pending { 
-  background-color:(PANEL_HARPO_BG_COLOR); 
-  border:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  background-color:#eaedff; 
+  border:1px solid #d2ae69; 
 }
 table.warn { 
-  background-color:(WARN_BG_COLOR); 
-  border:1px solid (WARN_FRAME_COLOR); 
+  background-color:#fff7ed; 
+  border:1px solid #e7ba98; 
 }
 table.approved { 
-  background-color:(APPROVED_BG_COLOR); 
-  border:1px solid (APPROVED_FRAME_COLOR); 
+  background-color:#dde5cf; 
+  border:1px solid #849d58; 
 }
 table.rejected { 
-  background-color:(REJECTED_BG_COLOR); 
-  border:1px solid (REJECTED_FRAME_COLOR); 
+  background-color:#f7e9e8; 
+  border:1px solid #be9a9e; 
 }
 
 #menu {
@@ -592,11 +593,11 @@ table.rejected {
   text-align:left;
   font-size:12px; /* hardcoded */
   font-weight:bold;
-  color:(TABLE_MENU_A_COLOR);
+  color:#f4720a;
 }
 
 #menu table td {
-  color:(TABLE_MENU_TD_COLOR);
+  color:#ffffff;
 }
 
 #menu select {
@@ -643,12 +644,12 @@ div.tab a {
   padding: 5px 10px;
 }
 
-div.tab a:link, p#extra_links a:link        { color:(TABLE_MENU_A_COLOR);  }
-div.tab a:visited, p#extra_links a:visited  { color:(TABLE_MENU_A_COLOR);  }
-div.tab a:hover, p#extra_links a:hover      { color:(TABLE_MENU_A_HOVER_COLOR);}
+div.tab a:link, p#extra_links a:link        { color:#f4720a;  }
+div.tab a:visited, p#extra_links a:visited  { color:#f4720a;  }
+div.tab a:hover, p#extra_links a:hover      { color:#f6a15c;}
 
 div.active a:link, div.active a:visited {
-  color:(TABLE_MENU_A_ACTIVE_COLOR);
+  color:#f6a15c;
 }
 
 p#extra_links {
