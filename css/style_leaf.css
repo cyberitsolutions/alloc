@@ -64,7 +64,7 @@ a.growshrink:hover, a.magic:hover {
 a.sidebyside {
   padding:5px;
   background-color: #f9f9f9;
-  border:1px solid (SBS_BORDER_COLOR);
+  border:1px solid #cccccc;
   text-decoration:none;
   color:#9da973;
   font-size:100%; 
@@ -595,6 +595,10 @@ table.rejected {
   color:#5c7600;
 }
 
+#menu table td {
+  color:(TABLE_MENU_TD_COLOR);
+}
+
 #menu select {
   position:relative;
   top:0px !important; top:-2px;
@@ -649,7 +653,7 @@ div.active a:link, div.active a:visited {
 
 p#extra_links {
   font-size:12px; /* hardcoded */
-  font-weight:bold;
+  font-weight:normal;
   display:inline; 
   z-index:-1; 
   position:relative; 

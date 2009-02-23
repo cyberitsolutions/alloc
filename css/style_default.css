@@ -595,6 +595,10 @@ table.rejected {
   color:#1b6cb7;
 }
 
+#menu table td {
+  color:(TABLE_MENU_TD_COLOR);
+}
+
 #menu select {
   position:relative;
   top:0px !important; top:-2px;
@@ -649,7 +653,7 @@ div.active a:link, div.active a:visited {
 
 p#extra_links {
   font-size:12px; /* hardcoded */
-  font-weight:bold;
+  font-weight:normal;
   display:inline; 
   z-index:-1; 
   position:relative; 
