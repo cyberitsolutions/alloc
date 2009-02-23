@@ -266,7 +266,7 @@ class productSale extends db_entity {
   function get_list_header($_FORM=array()) {
     $ret[] = "<table class=\"list sortable\">";
     $ret[] = "<tr>";
-    $ret[] = "  <th>ID</th>";
+    $ret[] = "  <th class=\"sorttable_numeric\">ID</th>";
     $ret[] = "  <th>Creator</th>";
     $ret[] = "  <th>Date</th>";
     $ret[] = "  <th>Client</th>";

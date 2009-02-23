@@ -657,7 +657,7 @@ class timeSheet extends db_entity {
   function get_list_tr_header($_FORM) {
     if ($_FORM["showHeader"]) {
       $summary = "\n<tr>";
-      $_FORM["showTimeSheetID"]   and $summary.= "\n<th>ID</th>";
+      $_FORM["showTimeSheetID"]   and $summary.= "\n<th class=\"sorttable_numeric\">ID</th>";
       $_FORM["showProject"]       and $summary.= "\n<th>Project</th>";
       $_FORM["showProjectLink"]   and $summary.= "\n<th>Project</th>";
       $_FORM["showPerson"]        and $summary.= "\n<th>Owner</th>";
