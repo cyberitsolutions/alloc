@@ -12,7 +12,7 @@
           <td>
             <input type="hidden" name="entity" value="client">
             <input type="hidden" name="entityID" value="{$client_clientID}">
-            {page::textarea("comment",$TPL["comment"])}&nbsp;
+            {page::textarea("comment",$TPL["comment"],array("width"=>"100%"))}
           </td>
           <td align="right" valign="bottom">
             {$comment_buttons}

@@ -493,6 +493,7 @@ table.panel {
   background:(PANEL_HARPO_BG_COLOR); 
   margin-bottom:5px; 
   margin-top:0px;
+  table-layout:fixed; /* nested divs that are overflow:auto no longer scroll off the screen */
 }
 table.loud {
   border:1px solid (PANEL_GROUCHO_FRAME_COLOR); 

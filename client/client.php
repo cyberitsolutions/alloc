@@ -171,7 +171,7 @@ require_once("../alloc.php");
       $rtn[] =  '  <td width="25%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col1).'</span></td>';
       $rtn[] =  '  <td width="20%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col2).'</span></td>';
       $rtn[] =  '  <td rowspan="4" align="left" valign="top">'.nl2br($clientContact->get_value('clientContactOther')).'</td>';
-      $rtn[] =  '  <th rowspan="2" align="right" width="2%">'.$buttons.'</th>';
+      $rtn[] =  '  <th rowspan="2" align="right" style="float:right">'.$buttons.'</th>';
       $rtn[] =  '</tr>';
       $rtn[] =  '</table>';
       $rtn[] =  '</form>';
