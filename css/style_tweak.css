@@ -6,7 +6,7 @@
  */
 
 body { 
-  background:url(../images/wallpaper_leaf.jpg) repeat-x #eaede1; 
+  background:url(../images/wallpaper_tweak.jpg) repeat-x #5a0000; 
   font-family:arial,helvetica,sans-serif; 
   color:#666666; 
   padding:0px;
@@ -45,10 +45,10 @@ div#main2 {
 }
 
 a:link, a:visited { 
-  color:#c86c12;
+  color:#0674f1;
 }
 a:hover { 
-  color:#5c7600; 
+  color:#f60101; 
 }
 
 a.growshrink, a.magic {
@@ -63,21 +63,21 @@ a.growshrink:hover, a.magic:hover {
 
 a.sidebyside {
   padding:5px;
-  background-color: #f9f9f9;
+  background-color: #f6ffff;
   border:1px solid #cccccc;
   text-decoration:none;
-  color:#9da973;
+  color:#e77070;
   font-size:100%; 
 }
 a.sidebyside:hover {
-  background:#eeefe4;
-  color:#9da973;
-  border:1px solid #9da973;
+  background:#ffd2d2;
+  color:#e77070;
+  border:1px solid #e77070;
 }
 a.sidebyside_active {
-  background:#eeefe4;
-  color:#9da973;
-  border:1px solid #9da973;
+  background:#ffd2d2;
+  color:#e77070;
+  border:1px solid #e77070;
   text-decoration:none;
   padding:5px;
   font-size:100%; 
@@ -106,7 +106,7 @@ h6 {
   font-size:90%;
   font-weight:normal;
   text-transform:uppercase;
-  color:#bbbbbb;
+  color:#e77070;
   border-bottom:1px solid #cccccc;
   padding:0px;
   margin:20px 0px 10px 0px;
@@ -180,7 +180,7 @@ select:focus.bad
 }
 input[readonly="true"], input[readonly="true"]:focus {
   border:1px solid #e0e0e0;
-  background-color:#f9f9f9;
+  background-color:#f6ffff;
   color:#777777;
 }
 
@@ -293,8 +293,8 @@ hr {
 
 /* Main content boxes */ 
 table.box { 
-  border:1px solid #c7cfb8; 
-  background-color:#f9f9f9; 
+  border:1px solid #70a5e7; 
+  background-color:#f6ffff; 
   vertical-align:top; 
   width:100%; 
   margin:14px 0px 0px 0px;
@@ -302,8 +302,8 @@ table.box {
   border-spacing:0px;
 } 
 table.box th { 
-  background: url(../images/bg_leaf.jpg) repeat-x; 
-  color:#829858; 
+  background: url(../images/bg_tweak.jpg) repeat-x; 
+  color:#ffffff; 
   font-size:110%; 
   border-bottom:1px solid #e0e0e0;
   padding:3px;
@@ -317,11 +317,11 @@ table.box th.right table {
 } 
 table.box th a:link, table.box th a:visited { 
   font-weight:normal; 
-  color:#c86c12; 
+  color:#ffffff; 
 }
 table.box th a:hover { 
   font-weight:normal; 
-  color:#5c7600; 
+  color:#f60101; 
 }
 table.box td {
   padding:3px;
@@ -331,27 +331,27 @@ table.box td {
 /* Calendar */
 table.alloc_calendar { 
   width:100%; 
-  border-right:1px solid #c7cfb8; 
-  border-bottom:1px solid #c7cfb8;
+  border-right:1px solid #ff9797; 
+  border-bottom:1px solid #ff9797;
 } 
 table.alloc_calendar td { 
-  background-color:#f9f9f9; 
-  border-left:1px solid #c7cfb8;
-  border-top:1px solid #c7cfb8; 
+  background-color:#f6ffff; 
+  border-left:1px solid #ff9797;
+  border-top:1px solid #ff9797; 
   width:10%; vertical-align:top;
 }
 table.alloc_calendar td.today { 
   background-color:#fffdf2;
-  border-top:2px solid #c7cfb8;
-  border-left:2px solid #c7cfb8;
-  border-right:1px solid #c7cfb8;
-  border-bottom:1px solid #c7cfb8; 
+  border-top:2px solid #ff9797;
+  border-left:2px solid #ff9797;
+  border-right:1px solid #ff9797;
+  border-bottom:1px solid #ff9797; 
 }
 table.alloc_calendar td.today h1 {
   font-weight:bold;
 }
 table.alloc_calendar td.even { 
-  background-color:#f4f4f4; 
+  background-color:#ffffff; 
 }
 table.alloc_calendar td.absent {
   background-color:#cccccc;
@@ -372,42 +372,42 @@ table.alloc_calendar img {
   margin:0px;
 }
 table.alloc_calendar td:hover { 
-  background-color:#fdfff6; 
+  background-color:#fff8d2; 
 }
 
 
 /* Filters */
 table.filter { 
-  background-color:#eeefe4; 
-  border:1px solid #c7cfb8; 
+  background-color:#e8eeff; 
+  border:1px solid #ff9797; 
   padding:4px; 
   margin-top:4px; 
   text-align:left;
 }
 
 table.filter td {
-  color:#9da973; 
+  color:#e77070; 
 }
 
 .filter table td { 
-  color:#9da973; 
+  color:#e77070; 
 }
 .filter table th { 
   font-weight:bold; 
-  background-color:#eeefe4; 
+  background-color:#e8eeff; 
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
 }
 
 tr.odd { 
-  background-color:#f4f4f4; 
+  background-color:#ffffff; 
 }
 tr.even { 
-  background-color:#f9f9f9; 
+  background-color:#ffeaea; 
 }
 tr.odd:hover, tr.even:hover {
-  background-color:#fdfff6; 
+  background-color:#fff8d2; 
 }
 
 img.taskType {
@@ -444,31 +444,31 @@ img.taskType {
 
 table.list { 
   width:100%; 
-  border-left:1px solid #c7cfb8; 
-  border-right:1px solid #c7cfb8; 
-  border-bottom:1px solid #c7cfb8;
+  border-left:1px solid #ff9797; 
+  border-right:1px solid #ff9797; 
+  border-bottom:1px solid #ff9797;
   border-collapse:collapse;
   border-spacing:0px;
 }
 td.list { 
-  background-color: #eeefe4; 
+  background-color: #e8eeff; 
   padding:4px; 
 }
 table.list th, table.alloc_calendar th { 
   border-bottom:0px; 
   font-weight:normal; 
   white-space:nowrap; 
-  background:#eeefe4; 
-  color:#9da973; 
+  background:#ffd2d2; 
+  color:#e77070; 
   font-size:90%;
   text-transform:uppercase;
 }
 table.list td, table.list th, table.alloc_calendar th { 
-  border-top:1px solid #c7cfb8; 
+  border-top:1px solid #ff9797; 
   padding:4px;
 }
 table.alloc_calendar th { 
-  border-left:1px solid #c7cfb8; 
+  border-left:1px solid #ff9797; 
 }
 .sort_arrows {
   padding:0px 3px;
@@ -489,8 +489,8 @@ table.panel div.hidden_text {
   font-style:italic;
 }
 table.panel { 
-  border:1px solid #c7cfb8; 
-  background:#eeefe4; 
+  border:1px solid #ff9797; 
+  background:#e8eeff; 
   margin-bottom:5px; 
   margin-top:0px;
   table-layout:fixed; /* nested divs that are overflow:auto no longer scroll off the screen */
@@ -510,7 +510,7 @@ table.loud table.panel {
 }
 table.panel th { 
   text-align:left; 
-  background:#eeefe4; 
+  background:#e8eeff; 
   vertical-align:top; 
   color:#444444; 
   font-weight:normal; 
@@ -523,7 +523,7 @@ table.loud th {
   background:#fff7ed; 
 }
 table.panel td { 
-  background:#eeefe4;
+  background:#e8eeff;
   padding:6px; 
   border:0px solid black;
 }
@@ -560,8 +560,8 @@ table.loud td table.panel td {
   color:#e17a00;
 }
 table.pending { 
-  background-color:#eeefe4; 
-  border:1px solid #c7cfb8; 
+  background-color:#e8eeff; 
+  border:1px solid #ff9797; 
 }
 table.warn { 
   background-color:#fff7ed; 
@@ -593,11 +593,11 @@ table.rejected {
   text-align:left;
   font-size:12px; /* hardcoded */
   font-weight:bold;
-  color:#5c7600;
+  color:#0674f1;
 }
 
 #menu table td {
-  color:#333333;
+  color:#ffffff;
 }
 
 #menu select {
@@ -644,16 +644,16 @@ div.tab a {
   padding: 5px 10px;
 }
 
-div.tab a:link    { color:#5c7600;  }
-div.tab a:visited { color:#5c7600;  }
-div.tab a:hover   { color:#829858;}
+div.tab a:link    { color:#0674f1;  }
+div.tab a:visited { color:#0674f1;  }
+div.tab a:hover   { color:#f60101;}
 
-p#extra_links a:link    { color:#c86c12;  }
-p#extra_links a:visited { color:#c86c12;  }
-p#extra_links a:hover   { color:#5c7600;}
+p#extra_links a:link    { color:#ffffff;  }
+p#extra_links a:visited { color:#ffffff;  }
+p#extra_links a:hover   { color:#0674f1;}
 
 div.active a:link, div.active a:visited {
-  color:#829858;
+  color:#f60101;
 }
 
 p#extra_links {

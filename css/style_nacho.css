@@ -48,7 +48,7 @@ a:link, a:visited {
   color:#4659cf;
 }
 a:hover { 
-  color:#7583d7; 
+  color:#f4720a; 
 }
 
 a.growshrink, a.magic {
@@ -372,7 +372,7 @@ table.alloc_calendar img {
   margin:0px;
 }
 table.alloc_calendar td:hover { 
-  background-color:#fdfff6; 
+  background-color:#e3e7ff; 
 }
 
 
@@ -407,7 +407,7 @@ tr.even {
   background-color:#f9f9f9; 
 }
 tr.odd:hover, tr.even:hover {
-  background-color:#fdfff6; 
+  background-color:#e3e7ff; 
 }
 
 img.taskType {
@@ -644,9 +644,13 @@ div.tab a {
   padding: 5px 10px;
 }
 
-div.tab a:link, p#extra_links a:link        { color:#f4720a;  }
-div.tab a:visited, p#extra_links a:visited  { color:#f4720a;  }
-div.tab a:hover, p#extra_links a:hover      { color:#f6a15c;}
+div.tab a:link    { color:#f4720a;  }
+div.tab a:visited { color:#f4720a;  }
+div.tab a:hover   { color:#f6a15c;}
+
+p#extra_links a:link    { color:#ffffff;  }
+p#extra_links a:visited { color:#ffffff;  }
+p#extra_links a:hover   { color:#f4720a;}
 
 div.active a:link, div.active a:visited {
   color:#f6a15c;
