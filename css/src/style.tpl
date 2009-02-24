@@ -644,9 +644,13 @@ div.tab a {
   padding: 5px 10px;
 }
 
-div.tab a:link, p#extra_links a:link        { color:(TABLE_MENU_A_COLOR);  }
-div.tab a:visited, p#extra_links a:visited  { color:(TABLE_MENU_A_COLOR);  }
-div.tab a:hover, p#extra_links a:hover      { color:(TABLE_MENU_A_HOVER_COLOR);}
+div.tab a:link    { color:(TABLE_MENU_A_COLOR);  }
+div.tab a:visited { color:(TABLE_MENU_A_COLOR);  }
+div.tab a:hover   { color:(TABLE_MENU_A_HOVER_COLOR);}
+
+p#extra_links a:link    { color:(TABLE_MENU_EXTRA_A_COLOR);  }
+p#extra_links a:visited { color:(TABLE_MENU_EXTRA_A_COLOR);  }
+p#extra_links a:hover   { color:(TABLE_MENU_EXTRA_A_HOVER_COLOR);}
 
 div.active a:link, div.active a:visited {
   color:(TABLE_MENU_A_ACTIVE_COLOR);

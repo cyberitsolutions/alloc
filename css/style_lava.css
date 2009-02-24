@@ -597,7 +597,7 @@ table.rejected {
 }
 
 #menu table td {
-  color:(TABLE_MENU_TD_COLOR);
+  color:#333333;
 }
 
 #menu select {
@@ -644,9 +644,13 @@ div.tab a {
   padding: 5px 10px;
 }
 
-div.tab a:link, p#extra_links a:link        { color:#333333;  }
-div.tab a:visited, p#extra_links a:visited  { color:#333333;  }
-div.tab a:hover, p#extra_links a:hover      { color:#f47916;}
+div.tab a:link    { color:#333333;  }
+div.tab a:visited { color:#333333;  }
+div.tab a:hover   { color:#f47916;}
+
+p#extra_links a:link    { color:#333333;  }
+p#extra_links a:visited { color:#333333;  }
+p#extra_links a:hover   { color:#f47916;}
 
 div.active a:link, div.active a:visited {
   color:#f47916;
