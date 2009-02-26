@@ -21,6 +21,20 @@
 */
 
 
+// This is a callback function that examins the curly braces inside inline
+// javascript/css blocks, and ensures that we can have both PHP template
+// variables and javascript/css syntax playing together nicely. Basically we're
+// relying on braces within css or javascript to always have nice readable
+// white space around them. Where as PHP curly braces usually won't. m =
+// multiline, need it for the ^$ anchor matching.
+function fix_curly_braces($matches) {
+  $str = $matches[0];
+  $str = preg_replace('/{ /',"TPL_START_BRACE ",$str);
+  $str = preg_replace('/{$/m',"TPL_START_BRACE",$str);
+  $str = preg_replace('/ }/'," TPL_END_BRACE",$str);
+  $str = preg_replace('/^}/m',"TPL_END_BRACE",$str);
+  return $str;
+}
 
 // Read a template and return the mixed php/html, ready for processing
 function get_template($filename) {
@@ -31,14 +45,14 @@ function get_template($filename) {
   }
 
   // This allows us to use curly braces in our templates for javascript and CSS rules
-  // as long as we escape the curly brace using a backslash. The TPL_*_BRACE keyword
-  // gets replaces by an actual curly brace later on in this template function.
-  $pattern = '\}';
-  $replace = 'TPL_END_BRACE';
-  $template = str_replace($pattern,$replace,$template);
-  $pattern = '\{';
-  $replace = 'TPL_START_BRACE';
-  $template = str_replace($pattern,$replace,$template);
+  // The TPL_*_BRACE keyword gets replaces by an actual curly brace later
+  // on in this template function. Uis means: ungreedy, case-insensitive and
+  // include newlines for dot matches.
+  $pattern = "/<script.*<\/script>/Uis";
+  $template = preg_replace_callback($pattern,"fix_curly_braces",$template);
+
+  $pattern = "/<style.*<\/style>/Uis";
+  $template = preg_replace_callback($pattern,"fix_curly_braces",$template);
 
   // Replace {$arr.something} with echo $arr["something"]; 
   $pattern = '/{\$([\w|\d|_]+)\.([^}]+)}/i';

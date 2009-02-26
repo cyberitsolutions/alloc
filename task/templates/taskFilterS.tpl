@@ -1,14 +1,14 @@
 <script type="text/javascript" language="javascript">
 // Make the XML request thing, specify the callback function 
-function refreshProjectList(radiobutton) \{
+function refreshProjectList(radiobutton) {
   url = '{$url_alloc_updateProjectList}projectType='+radiobutton.value;
   makeAjaxRequest(url, 'projectListDropdown')
-\}
-$(document).ready(function() \{
-  if ('{$dateOne}' || '{$dateTwo}') \{
+}
+$(document).ready(function() {
+  if ('{$dateOne}' || '{$dateTwo}') {
     $('.d_dates').show();
-  \}
-\});
+  }
+});
 </script>
 
 <form action="{$url_form_action}" method="get">

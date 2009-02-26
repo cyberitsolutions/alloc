@@ -3,37 +3,37 @@
 
 <script type="text/javascript">
 
-$(document).ready(function() \{
+$(document).ready(function() {
   // For marking all boxes
-  $('.allPending').bind("click", function(event) \{
+  $('.allPending').bind("click", function(event) {
     $(this).parent().parent().parent().find('.txStatus').val("pending");
     return false;
-  \});
-  $('.allApproved').bind("click", function(event) \{
+  });
+  $('.allApproved').bind("click", function(event) {
     $(this).parent().parent().parent().find('.txStatus').val("approved");
     return false;
-  \});
-  $('.allRejected').bind("click", function(event) \{
+  });
+  $('.allRejected').bind("click", function(event) {
     $(this).parent().parent().parent().find('.txStatus').val("rejected");
     return false;
-  \});
-\});
+  });
+});
 
-function update_values(target) \{
+function update_values(target) {
     var myTD = $(target).parent().parent();
     var productID = myTD.find('select[name="productID[]"]').val();
     var quantity = myTD.find('input[name="quantity[]"]').val();
     
-    if (productID != 0) \{
-      $.get("{$url_alloc_updateCostPrice}product="+productID+"&quantity="+quantity, function(xml) \{
+    if (productID != 0) {
+      $.get("{$url_alloc_updateCostPrice}product="+productID+"&quantity="+quantity, function(xml) {
         myTD.find('input[name="buyCost[]"]').val($("cost", xml).text());
         myTD.find('input[name="sellPrice[]"]').val($("price",xml).text());
         myTD.find('input[name="description[]"]').val($("description",xml).text());
         myTD.find('input[name="buyCostIncTax[]"]').attr('checked', $("costTax",xml).text());
         myTD.find('input[name="sellPriceIncTax[]"]').attr('checked',$("priceTax",xml).text());
-      \}); 
-   \}
-\}
+      }); 
+   }
+}
 </script>
 
 <form action="{$url_alloc_productSale}" method="post">

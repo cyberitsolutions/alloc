@@ -1,5 +1,5 @@
 {page::header()}
-<style>table.box td \{text-align:left; border-top:1px solid #999999; font-size:11px;\}</style>
+<style>table.box td { text-align:left; border-top:1px solid #999999; font-size:11px; }</style>
 <br>
 {page::messages()}
 <br>
