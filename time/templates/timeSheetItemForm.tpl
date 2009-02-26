@@ -1,9 +1,9 @@
 <script type="text/javascript" language="javascript">
 // Make the XML request thing, specify the callback function 
-function refreshTaskList(radiobutton) \{
+function refreshTaskList(radiobutton) {
   url = '{$url_alloc_updateTimeSheetTaskList}task_type='+radiobutton.value+'&timeSheetID={$timeSheet_timeSheetID}&taskID={$taskListDropdown_taskID}'
   makeAjaxRequest(url,'taskListDropdown')
-\}
+}
 </script>
 
 <form action="{$url_alloc_timeSheetItem}" method="post">

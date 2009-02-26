@@ -1,10 +1,10 @@
 {page::header()}
 <style>
-  body \{background:white; color:black; \}
-  td.overline \{ border-top:1px solid #666666; \}
-  td \{text-align:left; \}
-  table.comments \{ background:white; border:1px solid #666666; \}
-  table.comments th \{ background:white; \}
+  body { background:white; color:black; }
+  td.overline { border-top:1px solid #666666; }
+  td { text-align:left; }
+  table.comments { background:white; border:1px solid #666666; }
+  table.comments th { background:white; }
 </style>
 
 

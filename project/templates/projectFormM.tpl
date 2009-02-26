@@ -2,7 +2,7 @@
 {page::toolbar()}
 <script type="text/javascript" language="javascript">
 
-$(document).ready(function() \{
+$(document).ready(function() {
   {if !$project_projectID}
     $('.view').hide();
     $('.edit').show();
@@ -19,44 +19,44 @@ $(document).ready(function() \{
   // This listens to the client dropdown and refreshes the client contact
   // dropdown, we have to use livequery() like this instead of bind() because the
   // client dropdown needs to maintain its onChange event once it is refreshed
-  $('select[name=clientID]').livequery("change", function(e)\{
+  $('select[name=clientID]').livequery("change", function(e) {
     url = '{$url_alloc_updateProjectClientContactList}clientID='+this.value;
     makeAjaxRequest(url,'clientContactDropdown');
-  \});
+  });
 
   // This listens to the Copy Project radio buttons
-  $('input[name=project_status]').bind("click", function(e)\{
+  $('input[name=project_status]').bind("click", function(e) {
     url = '{$url_alloc_updateCopyProjectList}projectStatus='+this.value;
     makeAjaxRequest(url,'projectDropdown')
-  \});
+  });
 
   // This opens up the copy_project div and loads the dropdown list
-  $('#copy_project_link').bind("click", function(e)\{
+  $('#copy_project_link').bind("click", function(e) {
     $('#copy_project').slideToggle();
     url = '{$url_alloc_updateCopyProjectList}projectStatus=curr';
     makeAjaxRequest(url,'projectDropdown')
-  \});
+  });
 
-\});
+});
 
-function clickClientStatus(e)\{
+function clickClientStatus(e) {
 
-  if (!$('input[name=client_status]:checked').val()) \{
+  if (!$('input[name=client_status]:checked').val()) {
     $('#client_status_current').attr("checked", "checked");
     this.value = 'current';
-  \}
+  }
 
   clientID = $('#clientID').val()
   url = '{$url_alloc_updateProjectClientList}clientStatus='+this.value+'&clientID='+clientID;
   makeAjaxRequest(url,'clientDropdown')
 
   // If there's a clientID update the Client Contact dropdown as well
-  if (clientID) \{
+  if (clientID) {
     clientContactID = $('#clientContactID').val()
     url = '{$url_alloc_updateProjectClientContactList}clientID='+clientID+'&clientContactID='+clientContactID;
     makeAjaxRequest(url,'clientContactDropdown')
-  \}
-\}
+  }
+}
 
 </script>
 

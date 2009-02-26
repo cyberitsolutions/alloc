@@ -2,7 +2,7 @@
 {page::toolbar()}
 
 <script type="text/javascript" language="javascript">
-$(document).ready(function() \{
+$(document).ready(function() {
   {if !$productID}
   $('.view').hide();
   $('.edit').show();
@@ -10,7 +10,7 @@ $(document).ready(function() \{
   {else}
   $('#editProduct').focus();
   {/}
-\});
+});
 </script>
 
 <form action="{$url_alloc_product}" method="post">

@@ -2,16 +2,16 @@
   <head>
     <title>{$main_alloc_title}</title>
     <style>
-      h1,h2,h3,h4,h5,h6 \{ 
+      h1,h2,h3,h4,h5,h6 { 
         display:inline; 
         font-weight:normal;
-      \}
-      div.container \{ 
+      }
+      div.container { 
         clear:both; padding-top:20px;
-      \}
-      .nobr \{ 
+      }
+      .nobr { 
         white-space:nowrap 
-      \}
+      }
     </style>
   </head>
   <body>

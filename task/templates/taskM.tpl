@@ -2,17 +2,17 @@
 {page::toolbar()}
 <script type="text/javascript" language="javascript">
 // Make the XML request thing, specify the callback function 
-function updateStuffWithAjax() \{
+function updateStuffWithAjax() {
   id = $("#projectID").attr("value")
   makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+id, 'parentTaskDropdown')
   makeAjaxRequest('{$url_alloc_updateInterestedParties}projectID='+id+'&taskID={$task_taskID}', 'interestedPartyDropdown')
   makeAjaxRequest('{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}', 'taskPersonList')
   makeAjaxRequest('{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}', 'taskManagerPersonList')
   {if !$task_taskID}
-  makeAjaxRequest('{$url_alloc_updateTaskDupes}', 'taskDupes', \{ projectID: id, taskName: $("#taskName").attr("value") \})
+  makeAjaxRequest('{$url_alloc_updateTaskDupes}', 'taskDupes', { projectID: id, taskName: $("#taskName").attr("value") })
   {/}
-\}
-$(document).ready(function() \{
+}
+$(document).ready(function() {
   {if !$task_taskID}
     $('.view').hide();
     $('.edit').show();
@@ -20,7 +20,7 @@ $(document).ready(function() \{
   {else}
     $('#editTask').focus();
   {/}
-\});
+});
 </script>
 
 {$_POST["delete_file_attachment"] || $_POST["save_attachment"] and $_POST["sbs_link"] = "attachments"}

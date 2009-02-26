@@ -1,5 +1,5 @@
 <style>
-  h6 \{ margin-top:10px; margin-bottom:3px; \}
+  h6 { margin-top:10px; margin-bottom:3px; }
 </style>
 <form action="{$url_alloc_home}" method="post">
 <table cellspacing="0" style="width:100%">

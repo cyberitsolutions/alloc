@@ -11,14 +11,14 @@
   <body>
   <script>
     // When the document has loaded...
-    $(document).ready(function() \{
-      if (!$("#username").val()) \{
+    $(document).ready(function() {
+      if (!$("#username").val()) {
         $("#username").focus();
-      \} else \{
+      } else {
         $("#password").focus();
-      \}
+      }
       $("div.message").corner();
-    \});
+    });
   </script>
 
   <form action="{$url_alloc_login}" method="post" id="login_form">
