@@ -703,7 +703,8 @@ class task extends db_entity {
     //$arr["open"]["notstarted"] = array("label"=>"Not Started","colour"=>"#ffffff");
     //$arr["open"]["inprogress"] = array("label"=>"In Progress","colour"=>"#ffffff");
     //etc
-    return config::get_config_item("taskStatusOptions");
+    $rtn = config::get_config_item("taskStatusOptions") or $rtn = array();
+    return $rtn;
   }
 
   function get_task_status($thing="") {
