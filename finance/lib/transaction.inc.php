@@ -31,6 +31,7 @@ define("PERM_FINANCE_RECONCILIATION_REPORT", 32768);
 
 
 class transaction extends db_entity {
+  public $classname = "transaction";
   public $data_table = "transaction";
   public $display_field_name = "product";
   public $key_field = "transactionID";
@@ -55,6 +56,7 @@ class transaction extends db_entity {
                              ,"productSaleID"
                              ,"productSaleItemID"
                              ,"transactionRepeatID"
+                             ,"transactionGroupID"
                              );
 
     public $permissions = array(PERM_FINANCE_WRITE_INVOICE_TRANSACTION => "add/update/delete invoice transaction"
@@ -131,6 +133,7 @@ class transaction extends db_entity {
     $this->get_value("fromTfID") or $err[] = "Unable to save transaction without a Source TF.";
     $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".$this->get_value("fromTfID").") being the same as the Destination TF (".$this->get_value("tfID").")";
     $this->get_value("quantity") or $this->set_value("quantity",1);
+    $this->get_value("transactionDate") or $this->set_value("transactionDate",date("Y-m-d"));
     return $err;
   }
 
@@ -667,6 +670,14 @@ class transaction extends db_entity {
     #$rows[] = array("amount"=>"200","fromTfID"=>"zebra","tfID"=>"ghost");
     #echo "<br>SUM: ".transaction::get_actual_amount_used($rows);
   }
+
+  function get_next_transactionGroupID() {
+    $q = "SELECT coalesce(max(transactionGroupID)+1,1) as newNum FROM transaction";
+    $db = new db_alloc();
+    $db->query($q);
+    $db->row();
+    return $db->f("newNum");
+  }  
 
 
 }
