@@ -717,12 +717,17 @@ class db_entity {
     return $rows;
   }
 
-  function get_link() {
+  function get_link($field=false) {
     global $TPL;
     if ($this->get_id()) {
-      $str = "<a href=\"".$TPL["url_alloc_".$this->classname].$this->key_field->name."=".$this->get_id();
-      $str.= "\">".$this->get_display_value()."</a>";
-      return $str;
+      $label = $this->get_display_value();
+
+      if ($field && $this->key_field->get_name() == $field) {
+        $label = $this->get_id();
+      } else if ($field) {
+        $label = $this->get_value($field);
+      }
+      return "<a href=\"".$TPL["url_alloc_".$this->classname].$this->key_field->get_name()."=".$this->get_id()."\">".$label."</a>";
     }
   }
 

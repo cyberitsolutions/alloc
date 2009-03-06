@@ -603,12 +603,14 @@ CREATE TABLE transaction (
   productSaleID int(11) default NULL,
   productSaleItemID int(11) default NULL,
   transactionRepeatID int(11) default NULL,
+  transactionGroupID int(11) default NULL,
   INDEX idx_timeSheetID (timeSheetID),
   INDEX idx_tfID (tfID),
   INDEX idx_invoiceItemID (invoiceItemID),
   INDEX idx_fromTfID (fromTfID),
   INDEX idx_productSaleID (productSaleID),
   INDEX idx_productSaleItemID (productSaleItemID),
+  INDEX idx_transactionGroupID (transactionGroupID),
   PRIMARY KEY (transactionID)
 ) TYPE=MyISAM PACK_KEYS=0;
 

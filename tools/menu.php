@@ -43,6 +43,7 @@ $misc_options = array(array("url"=>"reminderList"            ,"text"=>"Reminders
 $finance_options = array(array("url"=>"tf", "params"=>"", "text"=>"New Tagged Fund", "entity"=>"tf", "action"=>PERM_CREATE)
                         ,array("url"=>"tfList", "text"=>"List of Tagged Funds", "entity"=>"tf", "action"=>PERM_READ, "br"=>true)
                         ,array("url"=>"transaction", "params"=>"", "text"=>"New Transaction", "entity"=>"transaction", "action"=>PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION)
+                        ,array("url"=>"transactionGroup", "params"=>"", "text"=>"New Transaction Group", "entity"=>"transaction", "action"=>PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION)
                         ,array("url"=>"searchTransaction", "params"=>"", "text"=>"Search Transactions", "entity"=>"transaction", "action"=>PERM_READ, "br"=>true)
                         ,array("url"=>"expenseForm", "text"=>"New Expense Form", "entity"=>"expenseForm", "action"=>PERM_CREATE)
                         ,array("url"=>"expenseFormList", "params"=>"", "text"=>"View Pending Expenses", "entity"=>"expenseForm", "action"=>PERM_READ, "br"=>true)

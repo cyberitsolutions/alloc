@@ -85,6 +85,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_transactionPendingList"         => $sess->url(SCRIPT_PATH."finance/transactionPendingList.php")
             ,"url_alloc_searchTransaction"              => $sess->url(SCRIPT_PATH."finance/searchTransaction.php")
             ,"url_alloc_transaction"                    => $sess->url(SCRIPT_PATH."finance/transaction.php")
+            ,"url_alloc_transactionGroup"               => $sess->url(SCRIPT_PATH."finance/transactionGroup.php")
             ,"url_alloc_loans"                          => $sess->url(SCRIPT_PATH."item/itemLoan.php")
             ,"url_alloc_loanAndReturn"                  => $sess->url(SCRIPT_PATH."item/loanAndReturn.php")
             ,"url_alloc_addItem"                        => $sess->url(SCRIPT_PATH."item/addItem.php")
