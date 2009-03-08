@@ -46,6 +46,9 @@ table.login td.center a:hover {
 form { 
   display:inline;
 }
+#login_form input[type="submit"] {
+  padding:4px;
+}
 a { 
   color:#333333; 
   white-space:nowrap; 
