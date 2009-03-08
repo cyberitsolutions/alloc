@@ -147,6 +147,10 @@ form {
   padding:0px; 
   margin:0px;
 }
+div#main input[type="submit"],
+div#main input[type="button"] {
+  padding:4px;
+}
 input[type="text"], 
 input[type="password"], 
 input[type="checkbox"], 
