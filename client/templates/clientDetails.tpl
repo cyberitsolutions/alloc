@@ -23,6 +23,6 @@
         </tr>
       </table>
       <div style="text-align:center">
-        <input type="submit" name="client_edit" value="Edit Client Details">
+        <input type="submit" name="client_edit" value="Edit Client">
       </div>
     </form>

@@ -41,9 +41,9 @@ require_once("../alloc.php");
       // Else just editing
       } else {
         $TPL["clientDetails_buttons"] =
-          "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">".
-          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".
-          "<input type=\"submit\" name=\"cancel\" value=\"&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;\">"."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">";
+          "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">
+           <input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">
+           <input type=\"submit\" name=\"cancel\" value=\"Cancel Edit\">";
       }
       include_template($template);
     }
