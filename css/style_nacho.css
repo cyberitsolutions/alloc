@@ -670,18 +670,23 @@ p#extra_links {
 }
 
 div.grippie {
-  background:#EEEEEE url(../images/grippie.png) no-repeat scroll center 2px;
-  border-color:#DDDDDD;
+  background:#eeeeee Url(../images/grippie.png) no-repeat scroll center 2px;
+  border-color:#dddddd;
   border-style:solid;
   border-width:0pt 1px 1px;
   cursor:s-resize;
   height:9px;
+  width:100% !important; width:95%;
   overflow:hidden;
+  margin-bottom:5px;
+}
+div.grippie:hover {
+  background:#fffae8 url(../images/grippie.png) no-repeat scroll center 2px;
 }
 /* IE fix */
 .resizable-textarea textarea {
   display:block;
   margin-bottom:0pt;
-  width:95%;
+  width:100% !important; width:95%;
   height: 20%;
 }
