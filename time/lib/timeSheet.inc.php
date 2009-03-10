@@ -960,11 +960,12 @@ EOD;
         }
         $this->set_value("status", "admin");
         $this->set_value("dateSubmittedToAdmin", date("Y-m-d"));
-        $email = array();
-        $email["type"] = "timesheet_submit";
-        $email["to"] = $info["admin_email"];
-        $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetToAdministrator"), "timeSheet", $this->get_id());
-        $email["body"] = <<<EOD
+        foreach($info["timeSheetAdministrators"] as $adminID)  {
+          $email = array();
+          $email["type"] = "timesheet_submit";
+          $email["to"] = $info["people_cache"][$adminID]["emailAddress"];
+          $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetToAdministrator"), "timeSheet", $this->get_id());
+          $email["body"] = <<<EOD
     To Admin: {$info["admin_name"]}
   Time Sheet: {$info["url"]}
 Submitted By: {$info["timeSheet_personID_name"]}
@@ -975,9 +976,10 @@ A timesheet has been submitted for your approval. If it is not
 satisfactory, make it editable again for re-submission.
 
 EOD;
-        $this->get_value("billingNote") 
-        and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
-        $msg[] = $this->shootEmail($email);
+          $this->get_value("billingNote") 
+          and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
+          $msg[] = $this->shootEmail($email);
+        }
 
     // Can get backwards to "admin" from "invoiced" 
     } else {
@@ -1059,8 +1061,8 @@ EOD;
 
     $config = new config;
     $rtn["url"] = $config->get_config_item("allocURL")."time/timeSheet.php?timeSheetID=".$this->get_id();
-    $rtn["admin_name"] = $people_cache[$config->get_config_item('timeSheetAdminEmail')]["name"];
-    $rtn["admin_email"] = $people_cache[$config->get_config_item('timeSheetAdminEmail')]["emailAddress"];
+
+    $rtn["timeSheetAdministrators"] = $config->get_config_item('defaultTimeSheetAdminList');
     $rtn["approvedByManagerPersonID_email"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["emailAddress"];
     $rtn["approvedByManagerPersonID_name"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["name"];
     $rtn["approvedByAdminPersonID_name"] = $people_cache[$this->get_value("approvedByAdminPersonID")]["name"];

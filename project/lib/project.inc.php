@@ -120,8 +120,8 @@ class project extends db_entity {
 
     // Fallback time sheet manager person
     if (!$rows) {
-      $person = config::get_config_item("timeSheetManagerEmail");
-      $person and $rows[] = $person;
+      $people = config::get_config_item("defaultTimeSheetManagerList");
+      $people and $rows = $people;
     }
     return $rows;
   }

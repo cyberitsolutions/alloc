@@ -42,10 +42,9 @@ class time_module extends module
 
       register_home_item(new timeSheetStatusHomeItem);
 
-      $c = new config;
-      $timeSheetAdminEmailPersonID = $c->get_config_item("timeSheetAdminEmail");
+      $timeSheetAdminPersonIDs = config::get_config_item("defaultTimeSheetAdminList");
       
-      if ($timeSheetAdminEmailPersonID == $current_user->get_id() && has_pending_admin_timesheet()) {
+      if (in_array($current_user->get_id(), $timeSheetAdminPersonIDs) && has_pending_admin_timesheet()) {
         register_home_item(new pendingAdminApprovalTimeSheetListHomeItem);
       }
     }

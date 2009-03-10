@@ -71,7 +71,16 @@ class commentTemplate extends db_entity {
         $swap["tc"] = person::get_fullname($timeSheet->get_value("approvedByAdminPersonID"));
       } else {
         $people = get_cached_table("person");
-        $swap["tc"] = $people[config::get_config_item('timeSheetAdminEmail')]["name"];
+        $timeSheetAdministrators = config::get_config_item('defaultTimeSheetAdminList');
+        if(count($timeSheetAdministrators)) {
+          $swap["tc"] = ""; $comma = "";
+          foreach($timeSheetAdministrators as $adminID) {
+            $swap["tc"] .= $comma . $people[$adminID]["name"];
+            $comma = ", ";
+          }
+        } else {
+          $swap["tc"] = 'no-one';
+        }
       }
 
       $swap["ti"] = $timeSheet->get_id();

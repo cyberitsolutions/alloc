@@ -256,12 +256,16 @@
   </tr>
   <tr>
     <td>Time Sheet Manager</td>
-    <td><select name="timeSheetManagerEmail"><option value="">{$timeSheetManagerEmailOptions}</select></td> 
+    <td><a href="{$url_alloc_configEdit}configName=defaultTimeSheetManagerList&amp;configType=people">Edit:</a>
+    {$defaultTimeSheetManagerListText}
+    </td>
     <td width="1%">{page::help("config_timeSheetManagerEmail")}</td>
   </tr>
   <tr>
     <td>Time Sheet Administrator</td>
-    <td><select name="timeSheetAdminEmail"><option value="">{$timeSheetAdminEmailOptions}</select></td> 
+    <td><a href="{$url_alloc_configEdit}configName=defaultTimeSheetAdminList&amp;configType=people">Edit:</a>
+    {$defaultTimeSheetAdminListText}
+    </td>
     <td width="1%">{page::help("config_timeSheetAdminEmail")}</td>
   </tr>
   <tr>

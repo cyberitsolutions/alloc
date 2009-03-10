@@ -126,8 +126,10 @@ $people = get_cached_table("person");
 foreach ($people as $p) {
   $peeps[$p["personID"]] = $p["name"];
 }
-$TPL["timeSheetManagerEmailOptions"] = page::select_options($peeps,$config->get_config_item("timeSheetManagerEmail"));
-$TPL["timeSheetAdminEmailOptions"] = page::select_options($peeps,$config->get_config_item("timeSheetAdminEmail"));
+
+// get the default time sheet manager/admin options
+$TPL["defaultTimeSheetManagerListText"] = get_person_list(config::get_config_item("defaultTimeSheetManagerList"));
+$TPL["defaultTimeSheetAdminListText"] = get_person_list(config::get_config_item("defaultTimeSheetAdminList"));
 
 $days =  array("Sun"=>"Sun","Mon"=>"Mon","Tue"=>"Tue","Wed"=>"Wed","Thu"=>"Thu","Fri"=>"Fri","Sat"=>"Sat");
 $TPL["calendarFirstDayOptions"] = page::select_options($days,$config->get_config_item("calendarFirstDay"));
@@ -142,6 +144,17 @@ $TPL["task_email_footer_options"] = page::select_options($ops,$config->get_confi
 $TPL["main_alloc_title"] = "Setup - ".APPLICATION_NAME;
 include_template("templates/configM.tpl");
 
-
+function get_person_list($personID_array) {
+  global $peeps;
+  $people = array();
+  foreach($personID_array as $personID) {
+    $people[] = $peeps[$personID];
+  }
+  if(count($people) > 0) {
+    return implode(", ", $people);
+  } else {
+    return "<i>none</i>";
+  }
+}
 
 ?>
