@@ -99,7 +99,7 @@ function get_pending_timesheet_db() {
   $db = new db_alloc;
 
   // Get all the time sheets that are in status manager, and are the responsibility of only the default manager
-  if ($current_user->get_id() == config::get_config_item("timeSheetManagerEmail")) {
+  if (in_array($current_user->get_id(), config::get_config_item("defaultTimeSheetManagerList"))) {
 
     // First get the blacklist of projects that we don't want to include below
     $db = new db_alloc;
@@ -154,10 +154,9 @@ function get_pending_admin_timesheet_db() {
   global $current_user;
   $db = new db_alloc;
  
-  $c = new config; 
-  $timeSheetAdminEmailPersonID = $c->get_config_item("timeSheetAdminEmail");
+  $timeSheetAdminPersonIDs = config::get_config_item("defaultTimeSheetAdminList");
 
-  if ($timeSheetAdminEmailPersonID == $current_user->get_id()) {
+  if (in_array($current_user->get_id(), $timeSheetAdminPersonIDs)) {
     $query = "SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars, COALESCE(projectShortName, projectName) as projectName
                 FROM timeSheet
            LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID

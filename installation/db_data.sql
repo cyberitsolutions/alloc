@@ -138,7 +138,6 @@ VALUES
 
 INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','','text');
 INSERT INTO config (name, value, type) VALUES ('mainTfID','','text');
-INSERT INTO config (name, value, type) VALUES ('timeSheetAdminEmail','0','text');
 INSERT INTO config (name, value, type) VALUES ('companyName','Your Business Here','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactPhone','+61 3 9621 2377','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactFax','+61 3 9621 2477','text');
@@ -179,7 +178,6 @@ INSERT INTO config (name,value,type) VALUES ("projectPriorities",'a:5:{i:1;a:2:{
 INSERT INTO config (name,value,type) VALUES ("taskStatusOptions",'a:3:{s:4:"open";a:2:{s:10:"notstarted";a:2:{s:5:"label";s:11:"Not Started";s:6:"colour";s:25:"background-color:#8fe78f;";}s:10:"inprogress";a:2:{s:5:"label";s:11:"In Progress";s:6:"colour";s:25:"background-color:#8fe78f;";}}s:7:"pending";a:3:{s:4:"info";a:2:{s:5:"label";s:4:"Info";s:6:"colour";s:25:"background-color:#f9ca7f;";}s:7:"manager";a:2:{s:5:"label";s:7:"Manager";s:6:"colour";s:25:"background-color:#f9ca7f;";}s:6:"client";a:2:{s:5:"label";s:6:"Client";s:6:"colour";s:25:"background-color:#f9ca7f;";}}s:6:"closed";a:4:{s:7:"invalid";a:2:{s:5:"label";s:7:"Invalid";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:9:"duplicate";a:2:{s:5:"label";s:9:"Duplicate";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:10:"incomplete";a:2:{s:5:"label";s:10:"Incomplete";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:8:"complete";a:2:{s:5:"label";s:9:"Completed";s:6:"colour";s:25:"background-color:#e0e0e0;";}}}', 'array');
 
 INSERT INTO config (name,value,type) VALUES ("defaultInterestedParties",'a:0:{}',"array");
-INSERT INTO config (name,value,type) VALUES ("timeSheetManagerEmail", "","text");
 INSERT INTO config (name,value,type) VALUES ("task_email_header", "","text");
 INSERT INTO config (name,value,type) VALUES ("task_email_footer", "","text");
 INSERT INTO config (name,value,type) VALUES ("outTfID","","text");
@@ -199,12 +197,9 @@ INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_reminderOther",
 INSERT INTO config (`name`,`value`,`type`) VALUES ("wikiMarkup", "Markdown","text");
 INSERT INTO config (`name`,`value`,`type`) VALUES ("wikiVCS", "git","text");
 INSERT INTO config (`name`,`value`,`type`) VALUES ("singleSession","1","text");
-
-
 INSERT INTO config (name, value, type) VALUES ("clientCategories",'a:7:{i:0;a:2:{s:5:"label";s:6:"Client";s:5:"value";i:1;}i:1;a:2:{s:5:"label";s:6:"Vendor";s:5:"value";i:2;}i:2;a:2:{s:5:"label";s:8:"Supplier";s:5:"value";i:3;}i:3;a:2:{s:5:"label";s:10:"Consultant";s:5:"value";i:4;}i:4;a:2:{s:5:"label";s:10:"Government";s:5:"value";i:5;}i:5;a:2:{s:5:"label";s:10:"Non-profit";s:5:"value";i:6;}i:6;a:2:{s:5:"label";s:8:"Internal";s:5:"value";i:7;}}','array');
-
-
-
+INSERT INTO config (`name`,`value`,`type`) VALUES ("defaultTimeSheetManagerList", "a:0:{}", "array");
+INSERT INTO config (`name`,`value`,`type`) VALUES ("defaultTimeSheetAdminList", "a:0:{}", "array");
 
 
 
