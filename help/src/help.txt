@@ -447,33 +447,45 @@ Financials
 
 5. Expense forms and claims for staff and Projects.
 
-6. Supports repeat/cyclical expenses in cost-centres
+6. Supports repeat/cyclical expenses in cost-centres.
 
 7. Reconciliation report.
 
-8. Integration with external payroll and accounting systems
+8. Integration with external payroll and accounting systems.
 
 Clients
 -------
 
-1. Full customer company details
+1. Full customer company details.
 
-2. Unlimited contacts per company
+2. Unlimited contacts per company.
 
-3. Allocation of primary contact status
+3. Allocation of primary contact status.
 
-4. Unlimited notes per company
+4. Unlimited notes per company.
 
-5. Unlimited document attachments
+5. Unlimited document attachments.
 
-6. Overview of Projects undertaken for this company
+6. Overview of Projects undertaken for this company.
 
-7. Actual and potential Project revenue from this company
+7. Actual and potential Project revenue from this company.
+
+Wiki Knowledgebase
+------------------
+
+1. Offers an easy-to-use interface.
+
+2. Provides a simple wiki-syntax.
+
+3. Revision control for wiki pages.
+
+4. Great for adding documentation related your services offerings,
+   clients etc.
 
 Item Loans
 ----------
 
-1. Open-ended item loan, borrowing lists and overdue status
+1. Open-ended item loan, borrowing lists and overdue status.
 
 Personnel
 ---------
@@ -493,7 +505,7 @@ Calendaring/Reminders
 
 2. Project and Task-level reminders.
 
-3. Cyclical repeat reminders
+3. Cyclical repeat reminders.
 
 Reporting
 ---------
@@ -511,6 +523,10 @@ Fault & Issue Tracking
 
 2. Escalation engine sends email to specified staff on inactivity/overdue
    status.
+
+3. Full email gateway facility, so that all task comments and responses
+   to these can be routed to approprite internatl and external
+   stake-holders associated with the task/fault.
 
 Document Management
 -------------------
@@ -642,12 +658,57 @@ How do I Create a New Task?
 3. What you see is the Task header section of the form. Fill in this form,
    selecting from the droplists which Project you want this Task to belong to.
 
-4. Click the Save button.
+4. If the Task is important or critical, remember to reflect this in
+   the Task priority droplist (ie, change the Normal setting to an
+   alternative.)
 
-5. Your Task header is now saved, and you can update the Task with new
+5. If you want an automated Reminder to be sent to the Task, click
+   the option checkbox near the bottom of the form ('Create reminder for
+   assignee'). Depending on the priority established for this Task,
+   the Reminder created will have a longer or shorter repeat
+   periodicity. An urgent Task will result in more frequently
+   repeating reminders.
+
+6. Click the Save button.
+
+7. Your Task header is now saved, and you can update the Task with new
    comments, percentages complete etc.
 
-6. You can always edit the Task header (to change the name, start dates,
+8. You can always edit the Task header (to change the name, start dates,
+   resource allocation etc.) by clicking on the 'Edit' link at the
+   Task.
+
+How do I Create a New Phone Message?
+------------------------------------
+
+1. Log in to allocPSA.
+
+2. From the action Quick List on the allocPSA toolbar, select New
+   Message.
+
+3. What you see is the Message header section of the form. Fill in this form,
+   selecting from the droplists which Project you want this Message Task
+   to belong to, if any. Not selecting a parent Project isn't a problem.
+   The Message will still appear in the intended recipient's Home page as
+   a message.
+
+4. If the Message is important or critical, remember to reflect this in
+   the Message priority droplist (ie, change the Normal setting to an
+   alternative.)
+
+5. If you want an automated Reminder to be sent to the Message, click
+   the option checkbox near the bottom of the form ('Create reminder for
+   assignee'). Depending on the priority established for this Message,
+   the Reminder created will have a longer or shorter repeat
+   periodicity. An urgent Message will result in more frequently
+   repeating reminders.
+
+6. Click the Save button.
+
+7. Your Task header is now saved, and you can update the Task with new
+   comments, percentages complete etc.
+
+8. You can always edit the Task header (to change the name, start dates,
    resource allocation etc.) by clicking on the 'Edit' link at the
    Task.
 
@@ -868,6 +929,78 @@ How do I Add Client Information?
     the 'Files' section to select a file from your computer, then press the
     'Save Document' to upload and store it.
 
+
+How do I Quickly Jump to a Task if I have the Task ID?
+------------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. If you have a valid task ID (eg, '12762') then you can enter this
+   directly into the Quick Search textbox near the top right of the
+   allocPSA screen. 
+   
+3. Entering a number here indicates to allocPSA that you know its a 
+   Task ID number and that you want to be taken straight to that task. 
+
+4. This same approach works for some of the other search items available
+   under the Quick Search facility; given a Project or Timesheet ID, you
+   can quickly jump to those by selecting the appropriate entity from
+   the droplist associated with Quick Search.
+
+
+How do I Add Task/Fault Comments?
+---------------------------------
+
+1. Log in to allocPSA.
+
+2. Open the Task/Fault you want to add a comment to.
+
+3. Depending on how you last viewed a Task, you may be presented with
+   the Task showing a particular tab (eg, Main, Comments or All). To
+   show the Comments tab within the task, click on the Comments tab, or
+   alternatively, the All tab.
+
+4. You will be presented with the form to add new comments. You can now
+   add the comment, select intended recipients, and then click Save
+   Comment.
+
+5. If you want to add an additional recipient who doesn't appear on the
+   prepared list of recipients, you can add them by click-expanding the
+   Email Other Party link, adding their details, and deciding about
+   having them added permanently.
+   
+6. If you want to add an attachment to this Comment, click the Attach
+   File link to expand it, then browse to the file you want to attach
+   and click the Choose button. You can repeat this process to attach
+   more files/documents. Any files you attach will be sent along with
+   the email to all the recipients listed with checkboxes, and will
+   also be attached to this comment in this Task, for future reference.
+
+
+How do Bookmark Task List Filters for Future Use?
+-------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. Click on the Tasks tab to bring up the Task List.
+
+3. Change the filter settings to reflect what you want to show in the
+   list. You can select which projects you want to show the tasks for,
+   which project resources; open or closed tasks; which fields you want
+   displayed, etc.
+
+4. When done, apply the Filter.
+
+5. You will be shown the resulting filtered Task List.
+
+6. If you want to view the updated list with the same filters applied in
+   future. you can now Bookmark this page, using your web-browsers standard
+   bookmarking functionality.
+
+7. To bring up the Filter in future, merely access the stored Bookmark,
+   and allocPSA will provide a refreshed view of the same Task List filter.
+
+
 Useful Tips for using allocPSA
 ==============================
 
@@ -905,6 +1038,10 @@ in allocPSA. Therefore,
 8. Your organisation can make some parts of allocPSA available to outsiders,
    via an extranet system, which may help them better understand how their
    Project with your firm is progressing.
+
+9. You can Bookmark pages in your web-browser. For example, if you
+   establish a specific filter, with options, for showing Tasks,
+   bookmark it, and recall the same filter settings on future occasions.
 
 A note on dates in allocPSA
 
