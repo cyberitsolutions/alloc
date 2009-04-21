@@ -152,7 +152,9 @@ class comment extends db_entity {
 
 
       if ($v["timeSheetID"]) {
-        $v["ts_label"] = "Time Sheet ";
+        $timeSheet = new timeSheet();
+        $timeSheet->set_id($v["timeSheetID"]);
+        $v["ts_label"] = " (Time Sheet #".$timeSheet->get_id().")";
 
       } else if (($v["personID"] == $current_user->get_id()) && $options["showEditButtons"] && $new["hash"]) {
         //$new["comment_buttons"] = "<input type=\"submit\" name=\"comment_edit\" value=\"Edit\">";
@@ -236,6 +238,7 @@ class comment extends db_entity {
       if ($comment["commentModifiedTime"] || $comment["commentModifiedUser"]) {
         $str.= ", last modified by <b>".person::get_fullname($comment["commentModifiedUser"])."</b> ".$comment["commentModifiedTime"];
       }
+      $str.= $comment["ts_label"];
     return $str;
   }
 
