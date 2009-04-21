@@ -650,7 +650,8 @@ class timeSheet extends db_entity {
     return $url;
   }
 
-  function get_link($text) {
+  function get_link($text=false) {
+    $text or $text = $this->get_id();
     return "<a href=\"".$this->get_url()."\">".$text."</a>";
   }
 
