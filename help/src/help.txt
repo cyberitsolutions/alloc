@@ -977,8 +977,8 @@ How do I Add Task/Fault Comments?
    also be attached to this comment in this Task, for future reference.
 
 
-How do Bookmark Task List Filters for Future Use?
--------------------------------------------------
+How do I Bookmark Task List Filters for Future Use?
+---------------------------------------------------
 
 1. Log in to allocPSA.
 
@@ -999,6 +999,89 @@ How do Bookmark Task List Filters for Future Use?
 
 7. To bring up the Filter in future, merely access the stored Bookmark,
    and allocPSA will provide a refreshed view of the same Task List filter.
+
+
+How do I Mark a Task as Pending?
+--------------------------------
+
+1. Log in to allocPSA.
+
+2. Open the task (fault, message) that you would like to mark as 
+   Pending.
+
+3. From the Main (or All) task tab, click the Edit Task button. This
+   will open the task header section for editing. By default, a task is
+   Open: Not Started, until work has begun on a task.
+
+4. Select the Pending option from the Status droplist. For example,
+   Pending: Info, which means that the task is in limbo while specific
+   information is sought, or Pending: Manager, which means that the task
+   awaiting the go-ahead from an allocPSA manager, or Pending: Client,
+   which means that the task is awaiting information or the go-ahead
+   from the Client associated with the task.
+
+5. Once the Pending option has been selected, Save the task.
+
+6. You can, at any point, change the Status back to Open: or any other
+   setting using the approach outlined above.
+
+You will note that a task which has had its Status changed from Open: to
+Pending: may now not be included in the Task List filter or the Home
+Page filter, if these have been established to show only Open: tasks.
+
+
+How do I Close a Task?
+----------------------
+
+1. Log in to allocPSA.
+
+2. Open the task (fault, message) that you would like to mark as 
+   Closed.
+
+3. From the Main (or All) task tab, click the Edit Task button. This
+   will open the task header section for editing. By default, a task is
+   Open: Not Started, until work has begun on a task.
+
+4. Select one of the Closed options from the Status droplist. For example,
+   Closed: Invalid, which means that the task was incorrectly added to
+   allocPSA, or Closed: Duplicate, which means that the task is a
+   duplicate of another, existing task, or Closed: Incomplete, which means 
+   that the task could not be completed, or the issue resolved, or
+   Closed: Completed, which means that task was completed or the
+   fault/issue resolved.
+
+5. Once the Closed option has been selected, Save the task.
+
+6. You can, at any point, change the Status back to Open: or any other
+   setting using the approach outlined above.
+
+You will note that if you mark the task Closed: Duplicate, then you will
+be prompted for the Task ID of the task which it's a duplicate of, for
+record-keeping purposes. This is covered in detail elsewhere in this
+documentation.
+
+You will also note that once you close a task, the Actual Completion
+date will be set to today's date.
+
+How do I Mark a Task as a Duplicate?
+------------------------------------
+
+1. Log in to allocPSA.
+
+2. Open the task (fault, message) that you would like to mark as 
+   as a duplicate.
+
+3. From the Main (or All) task tab, click the Edit Task button. This
+   will open the task header section for editing. By default, a task is
+   Open: Not Started, until work has begun on a task.
+
+4. Select the Closed: Duplicate option from the Status droplist.
+
+5. This will show a textbox beside the Status droplist, into which you
+   sould enter the Task ID of the the task which it's a duplicate of,
+   for record-keeping purposes.
+
+6. Save the task.
 
 
 Useful Tips for using allocPSA
