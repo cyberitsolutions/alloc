@@ -189,7 +189,7 @@ class comment extends db_entity {
           }
         }
 
-        $v["commentEmailRecipients"] and $new["emailed"] = 'Emailed to '.$v["commentEmailRecipients"];
+        $v["commentEmailRecipients"] and $new["emailed"] = 'Emailed to '.page::htmlentities($v["commentEmailRecipients"]);
 
         $new_rows[] = $new;
       }
