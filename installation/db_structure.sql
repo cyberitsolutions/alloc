@@ -224,10 +224,10 @@ CREATE TABLE permission (
 
 DROP TABLE IF EXISTS person;
 CREATE TABLE person (
-  username varchar(32) NOT NULL default '',
+  personID int(11) NOT NULL auto_increment,
+  username varchar(32) NOT NULL,
   password varchar(255) NOT NULL default '',
   perms varchar(255) default NULL,
-  personID int(11) NOT NULL auto_increment,
   emailAddress varchar(255) default NULL,
   availability text,
   areasOfInterest text,
@@ -423,19 +423,19 @@ CREATE TABLE task (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
-DROP TABLE IF EXISTS `auditItem`;
-CREATE TABLE `auditItem` (
-  `auditItemID` int(10) unsigned NOT NULL auto_increment,
-  `entityName` varchar(255) default NULL,
-  `entityID` int(10) unsigned NOT NULL,
-  `personID` int(10) unsigned NOT NULL,
-  `dateChanged` datetime NOT NULL,
-  `changeType` enum('FieldChange','TaskMarkedDuplicate','TaskUnmarkedDuplicate','TaskClosed','TaskReopened') NOT NULL default 'FieldChange',
-  `fieldName` varchar(255) default NULL,
-  `oldValue` text,
-  PRIMARY KEY  (`auditItemID`),
-  KEY `idx_entityName` (`entityName`),
-  KEY `idx_entityID` (`entityID`)
+DROP TABLE IF EXISTS auditItem;
+CREATE TABLE auditItem (
+  auditItemID int(11) NOT NULL auto_increment,
+  entityName varchar(255) default NULL,
+  entityID int(11) NOT NULL,
+  personID int(11) NOT NULL,
+  dateChanged datetime NOT NULL,
+  changeType enum('FieldChange','TaskMarkedDuplicate','TaskUnmarkedDuplicate','TaskClosed','TaskReopened') NOT NULL default 'FieldChange',
+  fieldName varchar(255) default NULL,
+  oldValue text,
+  PRIMARY KEY  (auditItemID),
+  KEY idx_entityName (entityName),
+  KEY idx_entityID (entityID)
 ) ENGINE=MyISAM PACK_KEYS=0;
 
 
@@ -555,7 +555,7 @@ CREATE TABLE timeUnit (
 
 DROP TABLE IF EXISTS token;
 CREATE TABLE token (
-  tokenID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  tokenID INT(11) NOT NULL AUTO_INCREMENT,
   tokenHash VARCHAR(255) NOT NULL DEFAULT '',
   tokenEntity VARCHAR(32) DEFAULT '',
   tokenEntityID INT(11),
@@ -566,16 +566,18 @@ CREATE TABLE token (
   tokenActive INT(1) DEFAULT 0,
   tokenCreatedBy INT(11) NOT NULL DEFAULT 0,
   tokenCreatedDate DATETIME,
+  PRIMARY KEY (tokenID),
   UNIQUE KEY (tokenHash)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
 DROP TABLE IF EXISTS tokenAction;
 CREATE TABLE tokenAction (
-  tokenActionID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  tokenActionID INT(11) NOT NULL AUTO_INCREMENT,
   tokenAction VARCHAR(32) NOT NULL DEFAULT '',
   tokenActionType VARCHAR(32),
-  tokenActionMethod VARCHAR(32)
+  tokenActionMethod VARCHAR(32),
+  PRIMARY KEY (tokenActionID)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
