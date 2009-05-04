@@ -27,7 +27,7 @@ require_once("../alloc.php");
 // If we already have a session
 if ($sess->Started()) {
   $url = $sess->GetUrl($TPL["url_alloc_home"]);
-  header("Location: ".$url);
+  alloc_redirect($url);
   exit();
 
 // Else log the user in
@@ -55,7 +55,7 @@ if ($sess->Started()) {
 
     $url = $sess->GetUrl($TPL["url_alloc_home"]);
     $sess->Save();
-    header("Location: ".$url);
+    alloc_redirect($url);
   }
   $error = "<p class='error'>Invalid Username or Password.</p>";
 

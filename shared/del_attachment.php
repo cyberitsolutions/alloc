@@ -46,13 +46,13 @@ if ($id && $file
   if ($e->has_attachment_permission_delete($current_user) && file_exists($file)) {
     if (dirname($file) == dirname($dir.".")) { // last check
       unlink($file);
-      header("Location: ".$TPL["url_alloc_".$entity].$entity."ID=".$id."&sbs_link=attachments");
+      alloc_redirect($TPL["url_alloc_".$entity].$entity."ID=".$id."&sbs_link=attachments");
       exit();
     }
   }
 }
 
 // return by default
-header("Location: ".$TPL["url_alloc_".$entity].$entity."ID=".$id);
+alloc_redirect($TPL["url_alloc_".$entity].$entity."ID=".$id);
 
 ?>

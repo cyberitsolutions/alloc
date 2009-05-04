@@ -152,13 +152,13 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // Re-direct home if an alloc_config.php already exists
   if (file_exists(ALLOC_MOD_DIR."alloc_config.php") && is_readable(ALLOC_MOD_DIR."alloc_config.php") && filesize(ALLOC_MOD_DIR."alloc_config.php") >0 && defined("ALLOC_DB_NAME")) {
-    header("Location: ".$TPL["url_alloc_login"]);
+    alloc_redirect($TPL["url_alloc_login"]);
     exit();
   }
 
 // Else if were not in the installation process and there's no alloc_config.php file then redirect to the installation directory
 } else if (!file_exists(ALLOC_MOD_DIR."alloc_config.php") || !is_readable(ALLOC_MOD_DIR."alloc_config.php") || filesize(ALLOC_MOD_DIR."alloc_config.php") < 5 || !defined("ALLOC_DB_NAME")) {
-  header("Location: ".$TPL["url_alloc_installation"]);
+  alloc_redirect($TPL["url_alloc_installation"]);
   exit();
 
 // Else include the alloc_config.php file and begin with proceedings..
@@ -196,7 +196,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
     if (defined("NO_REDIRECT")) {
       exit();
     } else {
-      header("Location: ".$TPL["url_alloc_login"]);
+      alloc_redirect($TPL["url_alloc_login"]);
       exit();
     }
   } 

@@ -90,7 +90,7 @@ if ($_FORM["ALLOC_DB_USER"] && $_FORM["ALLOC_DB_NAME"]) {
 }
 
 if ($_POST["refresh_tab_1"]) {
-  header("Location: ".$TPL["url_alloc_installation"]."?1=1".$TPL["get"]);
+  alloc_redirect($TPL["url_alloc_installation"]."?1=1".$TPL["get"]);
   exit;
 }
 

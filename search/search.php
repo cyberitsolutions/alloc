@@ -51,7 +51,7 @@ if (!$search) {
     $query = sprintf("SELECT projectID FROM project WHERE projectID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
-      header("Location: ".$TPL["url_alloc_project"]."projectID=".$db->f("projectID"));
+      alloc_redirect($TPL["url_alloc_project"]."projectID=".$db->f("projectID"));
     } 
 
   } else {
@@ -111,7 +111,7 @@ if (!$search) {
     $query = sprintf("SELECT clientID FROM client WHERE clientID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
-      header("Location: ".$TPL["url_alloc_client"]."clientID=".$db->f("clientID"));
+      alloc_redirect($TPL["url_alloc_client"]."clientID=".$db->f("clientID"));
     } 
     
   } else {
@@ -194,7 +194,7 @@ if (!$search) {
     $query = sprintf("SELECT taskID FROM task WHERE taskID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
-      header("Location: ".$TPL["url_alloc_task"]."taskID=".$db->f("taskID"));
+      alloc_redirect($TPL["url_alloc_task"]."taskID=".$db->f("taskID"));
     } 
 
   } else {
@@ -253,7 +253,7 @@ if (!$search) {
     $query = sprintf("SELECT announcementID FROM announcement WHERE announcementID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
-      header("Location: ".$TPL["url_alloc_announcement"]."announcementID=".$db->f("announcementID"));
+      alloc_redirect($TPL["url_alloc_announcement"]."announcementID=".$db->f("announcementID"));
     }
 
   } else {
@@ -287,7 +287,7 @@ if (!$search) {
     $query = sprintf("SELECT itemID FROM item WHERE itemID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
-      header("Location: ".$TPL["url_alloc_item"]."itemID=".$db->f("itemID"));
+      alloc_redirect($TPL["url_alloc_item"]."itemID=".$db->f("itemID"));
     }
 
   } else {
@@ -362,7 +362,7 @@ if (!$search) {
     $query = sprintf("SELECT timeSheetID FROM timeSheet WHERE timeSheetID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
-      header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID"));
+      alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID"));
     } 
     
   } else {

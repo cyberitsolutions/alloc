@@ -55,10 +55,10 @@ if ($_POST["save"]) {
   $permission->set_value("actions",$actions);
   $permission->set_value("comment",rtrim($permission->get_value("comment")));
   $permission->save();
-  header("Location: ".$TPL["url_alloc_permissionList"]);
+  alloc_redirect($TPL["url_alloc_permissionList"]);
 } else if ($_POST["delete"]) {
   $permission->delete();
-  header("Location: ".$TPL["url_alloc_permissionList"]);
+  alloc_redirect($TPL["url_alloc_permissionList"]);
 }
 
 $TPL["personOptions"] = page::select_options("SELECT personID as value, username as label FROM person ORDER BY username", $permission->get_value("personID"));

@@ -290,7 +290,7 @@ if ($_POST["save"]) {
   
 } else if ($_POST["save_attachment"]) {
   move_attachment("client",$clientID);
-  header("Location: ".$TPL["url_alloc_client"]."clientID=".$clientID."&sbs_link=attachments");
+  alloc_redirect($TPL["url_alloc_client"]."clientID=".$clientID."&sbs_link=attachments");
 
 } else {
 
@@ -313,7 +313,7 @@ if ($_POST["save"]) {
       $comment->delete();
     }
     $client->delete();
-    header("location: ".$TPL["url_alloc_clientList"]);
+    alloc_redirect($TPL["url_alloc_clientList"]);
   } else {
     $client->set_id($clientID);
     $client->select();

@@ -252,14 +252,14 @@ if ($_POST["save"]) {
     $person->set_value("emergencyContact",rtrim($person->get_value("emergencyContact")));
     $person->set_value("managementComments",rtrim($person->get_value("managementComments")));
     $person->save();
-    header("Location: ".$TPL["url_alloc_personList"]);
+    alloc_redirect($TPL["url_alloc_personList"]);
   }
 
 
 
 } else if ($_POST["delete"]) {
   $person->delete();
-  header("Location: ".$TPL["url_alloc_personList"]);
+  alloc_redirect($TPL["url_alloc_personList"]);
 }
 
 #$person = new person;

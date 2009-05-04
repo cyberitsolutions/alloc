@@ -106,7 +106,7 @@ if ($_POST["save"]) {
 
   if ($_POST["delete"]) {
     $tf->delete();
-    header("location:".$TPL["url_alloc_tfList"]);
+    alloc_redirect($TPL["url_alloc_tfList"]);
     exit();
   }
 }

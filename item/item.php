@@ -69,7 +69,7 @@ if ($_POST["borrowItem"]) {
   $db->query("select * from loan where itemID=$itemID and dateReturned='0000-00-00'");
 
   if ($db->next_record()) {     // if the item is already borrowed
-    header("location:".$TPL["url_alloc_item"]."itemID=$itemID&badBorrow=true&error=already_borrowed");
+    alloc_redirect($TPL["url_alloc_item"]."itemID=$itemID&badBorrow=true&error=already_borrowed");
     exit();
   } else {                      // else lets make a new loan!
     $loan = new loan;
@@ -92,7 +92,7 @@ if ($_POST["borrowItem"]) {
     $loan->set_value("dateReturned", "0000-00-00");
     $loan->save();
 
-    header("location:".$TPL["url_alloc_loanAndReturn"]);
+    alloc_redirect($TPL["url_alloc_loanAndReturn"]);
   }
 }
 
@@ -122,7 +122,7 @@ if ($_POST["returnItem"]) {
     $loan->save();
   }
 
-  header("location:".$TPL["url_alloc_loanAndReturn"]);
+  alloc_redirect($TPL["url_alloc_loanAndReturn"]);
 }
 
 

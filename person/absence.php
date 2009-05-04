@@ -57,7 +57,7 @@ if ($_POST["save"]) {
   if ($success) {
     $url = $TPL["url_alloc_person"]."personID=".$personID;
     $urls[$returnToParent] and $url = $urls[$returnToParent];
-    header("Location: $url");
+    alloc_redirect($url);
   }
 } else if ($_POST["delete"]) {
   // Deleting a record
@@ -65,7 +65,7 @@ if ($_POST["save"]) {
   $absence->delete();
   $url = $TPL["url_alloc_person"]."personID=".$personID;
   $urls[$returnToParent] and $url = $urls[$returnToParent];
-  header("location: ".$url);
+  alloc_redirect($url);
 } else if ($absenceID) {
   // Displaying a record
   $absence->set_id($absenceID);

@@ -112,7 +112,7 @@ foreach ($abc123_files as $abc123_file) {
 
 
 if (!$abc123_incomplete) {
-  header("Location: ".$TPL["url_alloc_login"]);
+  alloc_redirect($TPL["url_alloc_login"]);
 } 
 
 
