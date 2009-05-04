@@ -27,7 +27,6 @@ DROP TABLE IF EXISTS client;
 CREATE TABLE client (
   clientID int(11) NOT NULL auto_increment,
   clientName varchar(255) NOT NULL default '',
-  clientPrimaryContactID int(11) default NULL,
   clientStreetAddressOne varchar(255) default NULL,
   clientStreetAddressTwo varchar(255) default NULL,
   clientSuburbOne varchar(255) default NULL,
@@ -47,8 +46,7 @@ CREATE TABLE client (
   clientCategory int(11) DEFAULT 1,
   clientCreatedTime varchar(11) default NULL,
   PRIMARY KEY  (clientID),
-  KEY clientName (clientName),
-  KEY idx_clientPrimaryContactID (clientPrimaryContactID)
+  KEY clientName (clientName)
 ) TYPE=MyISAM PACK_KEYS=0;
 
 
@@ -67,6 +65,7 @@ CREATE TABLE clientContact (
   clientContactEmail varchar(255) default NULL,
   clientContactOther text,
   clientContactCountry varchar(255) default NULL,
+  primaryContact boolean default false,
   PRIMARY KEY  (clientContactID),
   KEY clientID (clientID)
 ) TYPE=MyISAM PACK_KEYS=0;

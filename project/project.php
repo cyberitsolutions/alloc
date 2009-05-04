@@ -530,8 +530,8 @@ $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 if ($clientID) {
   $query = sprintf("SELECT * 
                       FROM client 
-                 LEFT JOIN clientContact ON client.clientPrimaryContactID = clientContact.clientContactID 
-                     WHERE client.clientID = %d "
+                 LEFT JOIN clientContact ON client.clientID = clientContact.clientID 
+                     WHERE client.clientID = %d AND clientContact.primaryContact = true"
                    ,$clientID);
 
   $db->query($query);

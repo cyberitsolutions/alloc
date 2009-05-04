@@ -37,6 +37,7 @@ class clientContact extends db_entity {
                              ,"clientContactFax"
                              ,"clientContactEmail"
                              ,"clientContactOther"
+                             ,"primaryContact"
                              );
 
   function find_by_name($name=false,$projectID=false) {

@@ -94,11 +94,9 @@ require_once("../alloc.php");
       $clientContact->delete();
     }
 
-    // get primary contact first
     $client = new client;
     $client->set_id($clientID);
     $client->select();
-    $clientPrimaryContactID = $client->get_value("clientPrimaryContactID");
 
     $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save Client Contact\">";
 
@@ -106,7 +104,7 @@ require_once("../alloc.php");
     $query = sprintf("SELECT * 
                         FROM clientContact
                        WHERE clientID=%d    
-                    ORDER BY clientContactName", $clientID);
+                    ORDER BY primaryContact desc, clientContactName", $clientID);
 
     $db = new db_alloc;
     $db->query($query);
@@ -120,7 +118,7 @@ require_once("../alloc.php");
 
 
       $pc = "";
-      if ($clientPrimaryContactID == $clientContact->get_id()) {
+      if ($clientContact->get_value("primaryContact")) {
         $pc = " (Primary Contact)";
       }
 
@@ -186,8 +184,8 @@ require_once("../alloc.php");
       $clientContact->set_id($_POST["clientContactID"]);
       $clientContact->select();
       $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "clientContact_");
-      if ($clientPrimaryContactID == $clientContact->get_id()) {
-        $TPL["clientPrimaryContactID_checked"] = " checked";
+      if ($clientContact->get_value("primaryContact")) {
+        $TPL["primaryContact_checked"] = " checked";
       }
     } else if ($rtn) {
       $TPL["class_new_client_contact"] = "hidden";
@@ -343,13 +341,6 @@ if ($_POST["clientContact_save"] || $_POST["clientContact_delete"]) {
     #$clientContact->set_value('clientID', $_POST["clientID"]);
     $clientContact->save();
   }
-
-
-  if (is_object($client) && $_POST["clientPrimaryContactID"]) {
-    #die("<pre>".print_r($clientContact,1)."</pre>");
-    $client->set_value('clientPrimaryContactID', $clientContact->get_id());
-    $client->save();
-  } 
 
   if ($_POST["clientContact_delete"]) {
     $clientContact->delete();
