@@ -354,8 +354,9 @@ if ($_GET["media"] == "print") {
   $client->select();
   $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
 
+  $project = $task->get_foreign_object("project");
   $clientContact = new clientContact;
-  $clientContact->set_id($client->get_value("clientPrimaryContactID"));
+  $clientContact->set_id($project->get_value("clientContactID"));
   $clientContact->select();
   $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "clientContact_");
 

@@ -26,7 +26,6 @@ class client extends db_entity {
   public $display_field_name = "clientName";
   public $key_field = "clientID";
   public $data_fields = array("clientName"
-                             ,"clientPrimaryContactID"
                              ,"clientStreetAddressOne"
                              ,"clientStreetAddressTwo"
                              ,"clientSuburbOne"
@@ -145,11 +144,7 @@ class client extends db_entity {
       $filter = " WHERE ".implode(" AND ",$filter);
     }
 
-    if ($_FORM["contactName"]) {
-      $join = sprintf("LEFT JOIN clientContact ON client.clientID = clientContact.clientID");
-    } else {
-      $join = sprintf("LEFT JOIN clientContact ON client.clientPrimaryContactID = clientContact.clientContactID");
-    } 
+    $join = sprintf("LEFT JOIN clientContact ON client.clientID = clientContact.clientID");
 
     $cc = config::get_config_item("clientCategories");
     foreach ($cc as $k => $v) {
@@ -161,7 +156,7 @@ class client extends db_entity {
                  ".$join." 
                  ".$filter." 
         GROUP BY client.clientID 
-        ORDER BY clientName";
+        ORDER BY clientName,clientContact.primaryContact asc";
     $debug and print "Query: ".$q;
     $db = new db_alloc;
     $db2 = new db_alloc;

@@ -45,7 +45,7 @@
           </tr>
           <tr>
             <td colspan="6" class="right">
-             Primary Contact <input type="checkbox" name="clientPrimaryContactID" value="1"{$clientPrimaryContactID_checked}> {$clientContactItem_buttons}
+             Primary Contact <input type="checkbox" name="primaryContact" value="1"{$primaryContact_checked}> {$clientContactItem_buttons}
             </td>
           </tr>
         </table>
