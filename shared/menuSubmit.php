@@ -24,10 +24,10 @@
 require_once("../alloc.php");
 
 if ($_POST["search"]) {
-  header("Location: ".$TPL["url_alloc_search"]."needle=".urlencode($_POST["needle"])."&category=".$_POST["category"]."&search=true");
+  alloc_redirect($TPL["url_alloc_search"]."needle=".urlencode($_POST["needle"])."&category=".$_POST["category"]."&search=true");
 
 } else if ($_POST["historyID"]) {
-  header("Location: ". $TPL["url_alloc_history"]."historyID=".$_POST["historyID"]);
+  alloc_redirect($TPL["url_alloc_history"]."historyID=".$_POST["historyID"]);
 }
 
 

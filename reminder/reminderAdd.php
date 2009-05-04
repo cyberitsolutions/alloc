@@ -267,7 +267,7 @@ case 4:
                   ,""         => $TPL["url_alloc_reminderList"]
                   );
 
-  header("Location: ".$headers[$returnToParent]);
+  alloc_redirect($headers[$returnToParent]);
 
   break;
 

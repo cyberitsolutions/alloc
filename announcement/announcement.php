@@ -40,12 +40,12 @@ $announcement->read_globals();
 if ($_POST["save"]) {
   $announcement->set_value("personID", $current_user->get_id());
   $announcement->save();
-  header("Location: ".$TPL["url_alloc_announcementList"]);
+  alloc_redirect($TPL["url_alloc_announcementList"]);
 
 // process submission of the form using the delete button
 } else if ($_POST["delete"]) {
   $announcement->delete();
-  header("Location: ".$TPL["url_alloc_announcementList"]);
+  alloc_redirect($TPL["url_alloc_announcementList"]);
   exit();
 }
 

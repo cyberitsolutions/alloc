@@ -104,11 +104,11 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
     }
 
     if ($_POST["saveAndNew"]) {
-      header("Location: ".$TPL["url_alloc_transaction"]."new=true");
+      alloc_redirect($TPL["url_alloc_transaction"]."new=true");
     }
 
     if ($_POST["saveGoTf"]) {
-      header("Location: ".$TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
+      alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
     }
     $transaction->set_tpl_values();
 
@@ -116,7 +116,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
     
 } else if ($_POST["delete"]) {
   $transaction->delete();
-  header("location:".$TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
+  alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
 }
 
 $transaction->set_tpl_values();

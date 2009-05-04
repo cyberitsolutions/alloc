@@ -242,7 +242,7 @@ if ($_POST["cancel"]) {
     $expenseForm->delete_transactions();
     $expenseForm->delete();
 
-    header("location:".$TPL["url_alloc_expenseFormList"]);
+    alloc_redirect($TPL["url_alloc_expenseFormList"]);
   } else {
     $TPL["message"][] = "Unable to delete Expense Form";
   }
@@ -251,21 +251,21 @@ if ($_POST["cancel"]) {
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("pending");
-  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
+  alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["approve"]) {
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("approved");
-  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
+  alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["reject"]) {
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("rejected");
-  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
+  alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["save"]) {
@@ -276,7 +276,7 @@ if ($_POST["cancel"]) {
   $expenseForm->set_value("seekClientReimbursement", $_POST["seekClientReimbursement"] ? 1 : 0);
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
-  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
+  alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["finalise"]) {
@@ -288,7 +288,7 @@ if ($_POST["cancel"]) {
   $expenseForm->set_value("expenseFormFinalised", 1);
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
-  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
+  alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["unfinalise"]) {
@@ -296,7 +296,7 @@ if ($_POST["cancel"]) {
   $expenseForm->set_value("expenseFormFinalised", 0);
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
-  header("Location: ".$TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
+  alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
 } else if ($_POST["attach_transactions_to_invoice"] && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {

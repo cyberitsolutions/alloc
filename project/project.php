@@ -371,7 +371,7 @@ if ($_POST["save"]) {
 } else if ($_POST["delete"]) {
   $project->read_globals();
   $project->delete();
-  header("location: ".$TPL["url_alloc_projectList"]);
+  alloc_redirect($TPL["url_alloc_projectList"]);
 
 // If they are creating a new project that is based on an existing one
 } else if ($_POST["copy_project_save"] && $_POST["copy_projectID"] && $_POST["copy_project_name"]) {
@@ -507,7 +507,7 @@ if ($_GET["commentID"] && $_GET["comment_edit"]) {
 // if someone uploads an attachment
 if ($_POST["save_attachment"]) {
   move_attachment("project",$projectID);
-  header("Location: ".$TPL["url_alloc_project"]."projectID=".$projectID."&sbs_link=attachments");
+  alloc_redirect($TPL["url_alloc_project"]."projectID=".$projectID."&sbs_link=attachments");
 }
 
 

@@ -32,9 +32,9 @@ if ($historyID) {
     $query = sprintf("SELECT * FROM history WHERE historyID = %d", $historyID);
     $db->query($query);
     $db->next_record();
-    header("Location: ".$sess->url($TPL[$db->f("the_place")]."historyID=".$historyID).$db->f("the_args"));
+    alloc_redirect($sess->url($TPL[$db->f("the_place")]."historyID=".$historyID).$db->f("the_args"));
   } else {
-    header("Location: ".$sess->url($historyID));
+    alloc_redirect($sess->url($historyID));
   }
 }
 

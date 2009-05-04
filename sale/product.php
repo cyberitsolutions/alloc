@@ -128,7 +128,7 @@ if ($_POST["save"]) {
 } else if ($_POST["delete"]) {
   $product->read_globals();
   $product->delete();
-  header("Location: ".$TPL["url_alloc_productList"]);
+  alloc_redirect($TPL["url_alloc_productList"]);
 }
 
 

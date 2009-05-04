@@ -38,11 +38,11 @@ if ($commentTemplateID){
 if ($_POST["save"]) {
   $commentTemplate->read_globals();
   $commentTemplate->save();
-  header("Location: ".$TPL["url_alloc_commentTemplateList"]);
+  alloc_redirect($TPL["url_alloc_commentTemplateList"]);
 
 // Process submission of the form using the delete button
 } else if ($_POST["delete"]) {
-  header("Location: ".$TPL["url_alloc_commentTemplateList"]);
+  alloc_redirect($TPL["url_alloc_commentTemplateList"]);
   $commentTemplate->delete();
   exit();
 }

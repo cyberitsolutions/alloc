@@ -22,6 +22,6 @@
 
 define("NO_AUTH",1);
 require_once("alloc.php");
-header("Location: ".$TPL["url_alloc_home"]);
+alloc_redirect($TPL["url_alloc_home"]);
 
 ?>

@@ -65,7 +65,7 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
   if ($_POST["delete"] && $transactionRepeatID) {
     $transactionRepeat->set_id($transactionRepeatID);
     $transactionRepeat->delete();
-    header("Location: ".$TPL["url_alloc_transactionRepeatList"]."tfID=".$_POST["tfID"]);
+    alloc_redirect($TPL["url_alloc_transactionRepeatList"]."tfID=".$_POST["tfID"]);
   }
 
   $_POST["product"]  or $TPL["message"][].= "Please enter a Product";

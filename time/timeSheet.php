@@ -424,7 +424,7 @@ if ($_POST["save"]
       # Pass the taskID forward if we came from a task
       $url .= "&taskID=".$_POST["taskID"];
     }
-    header("Location: $url");
+    alloc_redirect($url);
     exit();
   }
 
@@ -433,7 +433,7 @@ if ($_POST["save"]
   $timeSheet->read_globals();
   $timeSheet->select();
   $timeSheet->delete();
-  header("location: ".$TPL["url_alloc_timeSheetList"]);
+  alloc_redirect($TPL["url_alloc_timeSheetList"]);
 
 
 } else if ($timeSheetID) {
@@ -545,7 +545,7 @@ if ($_GET["newTimeSheet_projectID"] && !$projectID) {
   $q = sprintf("SELECT * FROM timeSheet WHERE status = 'edit' AND personID = %d AND projectID = %d",$current_user->get_id(),$projectID);
   $db->query($q);
   if ($db->next_record()) {
-    header("Location: ".$TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID").$tid);
+    alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID").$tid);
   }
 }
 

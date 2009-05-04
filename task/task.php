@@ -134,7 +134,7 @@ if (isset($taskID)) {
 // if someone uploads an attachment
 if ($_POST["save_attachment"]) {
   move_attachment("task",$taskID);
-  header("Location: ".$TPL["url_alloc_task"]."taskID=".$taskID."&sbs_link=attachments");
+  alloc_redirect($TPL["url_alloc_task"]."taskID=".$taskID."&sbs_link=attachments");
 } 
   
 
@@ -173,7 +173,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     } else {
       die("Unexpected save button");
     }
-    header("Location: ".$url.$msg);
+    alloc_redirect($url.$msg);
     exit();
   }
 
@@ -181,7 +181,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 } else if ($_POST["delete"]) {
   $task->read_globals();
   $task->delete();
-  header("location: ".$TPL["url_alloc_taskList"]);
+  alloc_redirect($TPL["url_alloc_taskList"]);
 }
 
 // Start stuff here
