@@ -1,3 +1,98 @@
+
+-- Info for the new metadata tables
+
+INSERT INTO absenceType (absenceTypeID, absenceTypeSeq, absenceTypeActive) VALUES ('Annual Leave',1,true);
+INSERT INTO absenceType (absenceTypeID, absenceTypeSeq, absenceTypeActive) VALUES ('Holiday',2,true);
+INSERT INTO absenceType (absenceTypeID, absenceTypeSeq, absenceTypeActive) VALUES ('Illness',3,true);
+INSERT INTO absenceType (absenceTypeID, absenceTypeSeq, absenceTypeActive) VALUES ('Other',4,true);
+INSERT INTO clientStatus (clientStatusID, clientStatusSeq, clientStatusActive) VALUES ('current',1,true);
+INSERT INTO clientStatus (clientStatusID, clientStatusSeq, clientStatusActive) VALUES ('potential',2,true);
+INSERT INTO clientStatus (clientStatusID, clientStatusSeq, clientStatusActive) VALUES ('archived',3,true);
+INSERT INTO configType (configTypeID, configTypeSeq, configTypeActive) VALUES ('text',1,true);
+INSERT INTO configType (configTypeID, configTypeSeq, configTypeActive) VALUES ('array',2,true);
+INSERT INTO invoiceStatus (invoiceStatusID, invoiceStatusSeq, invoiceStatusActive) VALUES ('edit',1,true);
+INSERT INTO invoiceStatus (invoiceStatusID, invoiceStatusSeq, invoiceStatusActive) VALUES ('reconcile',2,true);
+INSERT INTO invoiceStatus (invoiceStatusID, invoiceStatusSeq, invoiceStatusActive) VALUES ('finished',3,true);
+INSERT INTO itemType (itemTypeID, itemTypeSeq, itemTypeActive) VALUES ('cd',1,true);
+INSERT INTO itemType (itemTypeID, itemTypeSeq, itemTypeActive) VALUES ('book',2,true);
+INSERT INTO itemType (itemTypeID, itemTypeSeq, itemTypeActive) VALUES ('other',3,true);
+INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('contract',1,true);
+INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('job',2,true);
+INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('project',3,true);
+INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('prepaid',4,true);
+INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('AUD',1,true);
+INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('USD',2,true);
+INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('NZD',3,true);
+INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('CAD',4,true);
+INSERT INTO projectStatus (projectStatusID, projectStatusSeq, projectStatusActive) VALUES ('current',1,true);
+INSERT INTO projectStatus (projectStatusID, projectStatusSeq, projectStatusActive) VALUES ('potential',2,true);
+INSERT INTO projectStatus (projectStatusID, projectStatusSeq, projectStatusActive) VALUES ('archived',3,true);
+INSERT INTO roleLevel (roleLevelID, roleLevelSeq, roleLevelActive) VALUES ('person',1,true);
+INSERT INTO roleLevel (roleLevelID, roleLevelSeq, roleLevelActive) VALUES ('project',2,true);
+INSERT INTO reminderRecuringInterval (reminderRecuringIntervalID, reminderRecuringIntervalSeq, reminderRecuringIntervalActive) VALUES ('No',1,true);
+INSERT INTO reminderRecuringInterval (reminderRecuringIntervalID, reminderRecuringIntervalSeq, reminderRecuringIntervalActive) VALUES ('Hour',2,true);
+INSERT INTO reminderRecuringInterval (reminderRecuringIntervalID, reminderRecuringIntervalSeq, reminderRecuringIntervalActive) VALUES ('Day',3,true);
+INSERT INTO reminderRecuringInterval (reminderRecuringIntervalID, reminderRecuringIntervalSeq, reminderRecuringIntervalActive) VALUES ('Week',4,true);
+INSERT INTO reminderRecuringInterval (reminderRecuringIntervalID, reminderRecuringIntervalSeq, reminderRecuringIntervalActive) VALUES ('Month',5,true);
+INSERT INTO reminderRecuringInterval (reminderRecuringIntervalID, reminderRecuringIntervalSeq, reminderRecuringIntervalActive) VALUES ('Year',6,true);
+INSERT INTO reminderAdvNoticeInterval (reminderAdvNoticeIntervalID, reminderAdvNoticeIntervalSeq, reminderAdvNoticeIntervalActive) VALUES ('No',1,true);
+INSERT INTO reminderAdvNoticeInterval (reminderAdvNoticeIntervalID, reminderAdvNoticeIntervalSeq, reminderAdvNoticeIntervalActive) VALUES ('Minute',2,true);
+INSERT INTO reminderAdvNoticeInterval (reminderAdvNoticeIntervalID, reminderAdvNoticeIntervalSeq, reminderAdvNoticeIntervalActive) VALUES ('Hour',3,true);
+INSERT INTO reminderAdvNoticeInterval (reminderAdvNoticeIntervalID, reminderAdvNoticeIntervalSeq, reminderAdvNoticeIntervalActive) VALUES ('Day',4,true);
+INSERT INTO reminderAdvNoticeInterval (reminderAdvNoticeIntervalID, reminderAdvNoticeIntervalSeq, reminderAdvNoticeIntervalActive) VALUES ('Week',5,true);
+INSERT INTO reminderAdvNoticeInterval (reminderAdvNoticeIntervalID, reminderAdvNoticeIntervalSeq, reminderAdvNoticeIntervalActive) VALUES ('Month',6,true);
+INSERT INTO reminderAdvNoticeInterval (reminderAdvNoticeIntervalID, reminderAdvNoticeIntervalSeq, reminderAdvNoticeIntervalActive) VALUES ('Year',7,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('reminder',1,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('reminder_advnotice',2,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('task_created',3,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('task_closed',4,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('task_comments',5,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('timesheet_submit',6,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('timesheet_reject',7,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('daily_digest',8,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('timesheet_finished',9,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('new_password',10,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('task_reassigned',11,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('orphan',12,true);
+INSERT INTO sentEmailType (sentEmailTypeID, sentEmailTypeSeq, sentEmailTypeActive) VALUES ('timeSheet_comments',13,true);
+INSERT INTO skillProficiency (skillProficiencyID, skillProficiencySeq, skillProficiencyActive) VALUES ('Novice',1,true);
+INSERT INTO skillProficiency (skillProficiencyID, skillProficiencySeq, skillProficiencyActive) VALUES ('Junior',2,true);
+INSERT INTO skillProficiency (skillProficiencyID, skillProficiencySeq, skillProficiencyActive) VALUES ('Intermediate',3,true);
+INSERT INTO skillProficiency (skillProficiencyID, skillProficiencySeq, skillProficiencyActive) VALUES ('Advanced',4,true);
+INSERT INTO skillProficiency (skillProficiencyID, skillProficiencySeq, skillProficiencyActive) VALUES ('Senior',5,true);
+INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('FieldChange',1,true);
+INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskMarkedDuplicate',2,true);
+INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskUnmarkedDuplicate',3,true);
+INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskClosed',4,true);
+INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskReopened',5,true);
+INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('edit',1,true);
+INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('manager',2,true);
+INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('admin',3,true);
+INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('invoiced',4,true);
+INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('finished',5,true);
+INSERT INTO transactionStatus (transactionStatusID, transactionStatusSeq, transactionStatusActive) VALUES ('pending',1,true);
+INSERT INTO transactionStatus (transactionStatusID, transactionStatusSeq, transactionStatusActive) VALUES ('rejected',2,true);
+INSERT INTO transactionStatus (transactionStatusID, transactionStatusSeq, transactionStatusActive) VALUES ('approved',3,true);
+INSERT INTO transactionType (transactionTypeID, transactionTypeSeq, transactionTypeActive) VALUES ('invoice',1,true);
+INSERT INTO transactionType (transactionTypeID, transactionTypeSeq, transactionTypeActive) VALUES ('expense',2,true);
+INSERT INTO transactionType (transactionTypeID, transactionTypeSeq, transactionTypeActive) VALUES ('salary',3,true);
+INSERT INTO transactionType (transactionTypeID, transactionTypeSeq, transactionTypeActive) VALUES ('commission',4,true);
+INSERT INTO transactionType (transactionTypeID, transactionTypeSeq, transactionTypeActive) VALUES ('timesheet',5,true);
+INSERT INTO transactionType (transactionTypeID, transactionTypeSeq, transactionTypeActive) VALUES ('adjustment',6,true);
+INSERT INTO transactionType (transactionTypeID, transactionTypeSeq, transactionTypeActive) VALUES ('insurance',7,true);
+INSERT INTO transactionType (transactionTypeID, transactionTypeSeq, transactionTypeActive) VALUES ('tax',8,true);
+INSERT INTO transactionType (transactionTypeID, transactionTypeSeq, transactionTypeActive) VALUES ('sale',9,true);
+INSERT INTO productSaleStatus (productSaleStatusID, productSaleStatusSeq, productSaleStatusActive) VALUES ('edit',1,true);
+INSERT INTO productSaleStatus (productSaleStatusID, productSaleStatusSeq, productSaleStatusActive) VALUES ('allocate',2,true);
+INSERT INTO productSaleStatus (productSaleStatusID, productSaleStatusSeq, productSaleStatusActive) VALUES ('admin',3,true);
+INSERT INTO productSaleStatus (productSaleStatusID, productSaleStatusSeq, productSaleStatusActive) VALUES ('finished',4,true);
+
+
+
+
+
+
+
 --
 -- Dumping data for table `permission`
 --
@@ -6,127 +101,127 @@ DELETE FROM permission;
 INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allow`, `sortKey`, `actions`, `comment`)
 VALUES
 
- ('absence'                  ,-1 ,0 ,'employee' ,'Y' ,NULL ,15    ,NULL)
-,('absence'                  ,0  ,0 ,'manage'   ,'Y' ,NULL ,31    ,NULL)
-,('absence'                  ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+ ('absence'                  ,-1 ,NULL ,'employee' ,'Y' ,NULL ,15    ,NULL)
+,('absence'                  ,0  ,NULL ,'manage'   ,'Y' ,NULL ,31    ,NULL)
+,('absence'                  ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('announcement'             ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
-,('announcement'             ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('announcement'             ,0  ,NULL ,''         ,'Y' ,NULL ,1     ,NULL)
+,('announcement'             ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('client'                   ,0  ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
-,('clientContact'            ,0  ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
+,('client'                   ,0  ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
+,('clientContact'            ,0  ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
 
-,('comment'                  ,0  ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
+,('comment'                  ,0  ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
 
-,('commentTemplate'          ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
-,('commentTemplate'          ,0  ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('commentTemplate'          ,0  ,NULL ,''         ,'Y' ,NULL ,1     ,NULL)
+,('commentTemplate'          ,0  ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
 
-,('config'                   ,0  ,0 ,''         ,'Y' ,NULL ,17    ,NULL)
-,('config'                   ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('config'                   ,0  ,NULL ,''         ,'Y' ,NULL ,17    ,NULL)
+,('config'                   ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('expenseForm'              ,-1 ,0 ,'employee' ,'Y' ,NULL ,31    ,NULL)
-,('expenseForm'              ,0  ,0 ,'admin'    ,'Y' ,NULL ,31    ,NULL)
+,('expenseForm'              ,-1 ,NULL ,'employee' ,'Y' ,NULL ,31    ,NULL)
+,('expenseForm'              ,0  ,NULL ,'admin'    ,'Y' ,NULL ,31    ,NULL)
 
-,('history'                  ,0  ,0 ,''         ,'Y' ,NULL ,8     ,NULL)
+,('history'                  ,0  ,NULL ,''         ,'Y' ,NULL ,8     ,NULL)
 
-,('interestedParty'          ,0  ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
+,('interestedParty'          ,0  ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
 
-,('invoice'                  ,-1 ,0 ,''         ,'Y' ,NULL ,3     ,'Update invoiceItem, can change invoice.')
-,('invoice'                  ,-1 ,0 ,'employee' ,'Y' ,NULL ,17    ,NULL)
-,('invoice'                  ,0  ,0 ,'admin'    ,'Y' ,NULL ,31    ,NULL)
+,('invoice'                  ,-1 ,NULL ,''         ,'Y' ,NULL ,3     ,'Update invoiceItem, can change invoice.')
+,('invoice'                  ,-1 ,NULL ,'employee' ,'Y' ,NULL ,17    ,NULL)
+,('invoice'                  ,0  ,NULL ,'admin'    ,'Y' ,NULL ,31    ,NULL)
 
-,('invoiceItem'              ,-1 ,0 ,''         ,'Y' ,NULL ,11    ,'Update time sheet, can change invoice item.')
-,('invoiceItem'              ,-1 ,0 ,'employee' ,'Y' ,NULL ,17    ,NULL)
-,('invoiceItem'              ,0  ,0 ,'admin'    ,'Y' ,NULL ,271   ,NULL)
+,('invoiceItem'              ,-1 ,NULL ,''         ,'Y' ,NULL ,11    ,'Update time sheet, can change invoice item.')
+,('invoiceItem'              ,-1 ,NULL ,'employee' ,'Y' ,NULL ,17    ,NULL)
+,('invoiceItem'              ,0  ,NULL ,'admin'    ,'Y' ,NULL ,271   ,NULL)
 
-,('item'                     ,-1 ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
-,('item'                     ,0  ,0 ,'employee' ,'Y' ,NULL ,11    ,NULL)
-,('item'                     ,0  ,0 ,'admin'    ,'Y' ,NULL ,31    ,NULL)
+,('item'                     ,-1 ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
+,('item'                     ,0  ,NULL ,'employee' ,'Y' ,NULL ,11    ,NULL)
+,('item'                     ,0  ,NULL ,'admin'    ,'Y' ,NULL ,31    ,NULL)
 
-,('loan'                     ,0  ,0 ,'employee' ,'Y' ,NULL ,17    ,NULL)
-,('loan'                     ,-1 ,0 ,'employee' ,'Y' ,NULL ,31    ,NULL)
-,('loan'                     ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('loan'                     ,0  ,NULL ,'employee' ,'Y' ,NULL ,17    ,NULL)
+,('loan'                     ,-1 ,NULL ,'employee' ,'Y' ,NULL ,31    ,NULL)
+,('loan'                     ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('person'                   ,-1 ,0 ,''         ,'Y' ,NULL ,259   ,NULL)
-,('person'                   ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
-,('person'                   ,0  ,0 ,'admin'    ,'Y' ,NULL ,7951  ,NULL)
+,('person'                   ,-1 ,NULL ,''         ,'Y' ,NULL ,259   ,NULL)
+,('person'                   ,0  ,NULL ,''         ,'Y' ,NULL ,1     ,NULL)
+,('person'                   ,0  ,NULL ,'admin'    ,'Y' ,NULL ,7951  ,NULL)
 
-,('product'                  ,0  ,0 ,''         ,'Y' ,0    ,1     ,NULL)
-,('product'                  ,0  ,0 ,'manage'   ,'Y' ,100  ,15    ,NULL)
-,('product'                  ,0  ,0 ,'admin'    ,'Y' ,100  ,15    ,NULL)
+,('product'                  ,0  ,NULL ,''         ,'Y' ,0    ,1     ,NULL)
+,('product'                  ,0  ,NULL ,'manage'   ,'Y' ,100  ,15    ,NULL)
+,('product'                  ,0  ,NULL ,'admin'    ,'Y' ,100  ,15    ,NULL)
 
-,('productCost'              ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
-,('productCost'              ,0  ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
-,('productCost'              ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('productCost'              ,0  ,NULL ,''         ,'Y' ,NULL ,1     ,NULL)
+,('productCost'              ,0  ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('productCost'              ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('productSale'              ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
-,('productSale'              ,-1 ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
-,('productSale'              ,0  ,0 ,'admin'    ,'Y' ,NULL ,271   ,NULL)
+,('productSale'              ,0  ,NULL ,''         ,'Y' ,NULL ,1     ,NULL)
+,('productSale'              ,-1 ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('productSale'              ,0  ,NULL ,'admin'    ,'Y' ,NULL ,271   ,NULL)
 
-,('productSaleItem'          ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
-,('productSaleItem'          ,-1 ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
-,('productSaleItem'          ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('productSaleItem'          ,0  ,NULL ,''         ,'Y' ,NULL ,1     ,NULL)
+,('productSaleItem'          ,-1 ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('productSaleItem'          ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('project'                  ,0  ,0 ,''         ,'Y' ,100  ,513   ,'Allow all to read projects for searches.')
-,('project'                  ,-1 ,0 ,'employee' ,'Y' ,100  ,769   ,NULL)
-,('project'                  ,-1 ,0 ,'employee' ,'Y' ,99   ,271   ,NULL)
-,('project'                  ,-1 ,0 ,'manage'   ,'Y' ,100  ,783   ,NULL)
-,('project'                  ,0  ,0 ,'admin'    ,'Y' ,100  ,783   ,NULL)
+,('project'                  ,0  ,NULL ,''         ,'Y' ,100  ,513   ,'Allow all to read projects for searches.')
+,('project'                  ,-1 ,NULL ,'employee' ,'Y' ,100  ,769   ,NULL)
+,('project'                  ,-1 ,NULL ,'employee' ,'Y' ,99   ,271   ,NULL)
+,('project'                  ,-1 ,NULL ,'manage'   ,'Y' ,100  ,783   ,NULL)
+,('project'                  ,0  ,NULL ,'admin'    ,'Y' ,100  ,783   ,NULL)
 
-,('projectPerson'            ,-1 ,0 ,''         ,'Y' ,NULL ,17    ,NULL)
-,('projectPerson'            ,-1 ,0 ,'employee' ,'Y' ,NULL ,15    ,'Allow employee PMs to add other people.')
-,('projectPerson'            ,-1 ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
-,('projectPerson'            ,0  ,0 ,'admin'    ,'Y' ,NULL ,31    ,NULL)
+,('projectPerson'            ,-1 ,NULL ,''         ,'Y' ,NULL ,17    ,NULL)
+,('projectPerson'            ,-1 ,NULL ,'employee' ,'Y' ,NULL ,15    ,'Allow employee PMs to add other people.')
+,('projectPerson'            ,-1 ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('projectPerson'            ,0  ,NULL ,'admin'    ,'Y' ,NULL ,31    ,NULL)
 
-,('projectCommissionPerson'  ,-1 ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
-,('projectCommissionPerson'  ,-1 ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
-,('projectCommissionPerson'  ,0  ,0 ,'admin'    ,'Y' ,NULL ,31    ,NULL)
+,('projectCommissionPerson'  ,-1 ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
+,('projectCommissionPerson'  ,-1 ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('projectCommissionPerson'  ,0  ,NULL ,'admin'    ,'Y' ,NULL ,31    ,NULL)
 
-,('reminder'                 ,0  ,0 ,''         ,'Y' ,NULL ,15    ,'Will have to change this later?')
+,('reminder'                 ,0  ,NULL ,''         ,'Y' ,NULL ,15    ,'Will have to change this later?')
 
-,('sentEmailLog'             ,0  ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
+,('sentEmailLog'             ,0  ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
 
-,('skillList'                ,0  ,0 ,'employee' ,'Y' ,NULL ,1     ,NULL)
-,('skillList'                ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('skillList'                ,0  ,NULL ,'employee' ,'Y' ,NULL ,1     ,NULL)
+,('skillList'                ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('skillProficiencys'        ,0  ,0 ,'employee' ,'Y' ,NULL ,1     ,NULL)
-,('skillProficiencys'        ,-1 ,0 ,'employee' ,'Y' ,NULL ,14    ,NULL)
-,('skillProficiencys'        ,0  ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('skillProficiencys'        ,0  ,NULL ,'employee' ,'Y' ,NULL ,1     ,NULL)
+,('skillProficiencys'        ,-1 ,NULL ,'employee' ,'Y' ,NULL ,14    ,NULL)
+,('skillProficiencys'        ,0  ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
 
-,('task'                     ,-1 ,0 ,'employee' ,'Y' ,NULL ,287   ,NULL)
-,('task'                     ,0  ,0 ,'employee' ,'Y' ,NULL ,1     ,'Allow read all task records for searches.')
-,('task'                     ,0  ,0 ,'manage'   ,'Y' ,NULL ,287   ,NULL)
-,('task'                     ,0  ,0 ,'admin'    ,'Y' ,NULL ,257   ,NULL)
+,('task'                     ,-1 ,NULL ,'employee' ,'Y' ,NULL ,287   ,NULL)
+,('task'                     ,0  ,NULL ,'employee' ,'Y' ,NULL ,1     ,'Allow read all task records for searches.')
+,('task'                     ,0  ,NULL ,'manage'   ,'Y' ,NULL ,287   ,NULL)
+,('task'                     ,0  ,NULL ,'admin'    ,'Y' ,NULL ,257   ,NULL)
 
-,('taskType'                 ,0  ,0 ,''         ,'Y' ,NULL ,17    ,NULL)
+,('taskType'                 ,0  ,NULL ,''         ,'Y' ,NULL ,17    ,NULL)
 
-,('tf'                       ,0  ,0 ,'employee' ,'Y' ,NULL ,1     ,NULL)
-,('tf'                       ,0  ,0 ,'manage'   ,'Y' ,NULL ,1     ,NULL)
-,('tf'                       ,0  ,0 ,'admin'    ,'Y' ,NULL ,31    ,NULL)
+,('tf'                       ,0  ,NULL ,'employee' ,'Y' ,NULL ,1     ,NULL)
+,('tf'                       ,0  ,NULL ,'manage'   ,'Y' ,NULL ,1     ,NULL)
+,('tf'                       ,0  ,NULL ,'admin'    ,'Y' ,NULL ,31    ,NULL)
 
-,('tfPerson'                 ,-1 ,0 ,'employee' ,'Y' ,NULL ,1     ,'Allow employee to read own tfPerson.')
-,('tfPerson'                 ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('tfPerson'                 ,-1 ,NULL ,'employee' ,'Y' ,NULL ,1     ,'Allow employee to read own tfPerson.')
+,('tfPerson'                 ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('timeUnit'                 ,0  ,0 ,''         ,'Y' ,NULL ,1     ,NULL)
+,('timeUnit'                 ,0  ,NULL ,''         ,'Y' ,NULL ,1     ,NULL)
 
-,('timeSheet'                ,-1 ,0 ,'employee' ,'Y' ,NULL ,31    ,NULL)
-,('timeSheet'                ,0  ,0 ,'manage'   ,'Y' ,NULL ,287   ,NULL)
-,('timeSheet'                ,0  ,0 ,'admin'    ,'Y' ,NULL ,783   ,NULL)
+,('timeSheet'                ,-1 ,NULL ,'employee' ,'Y' ,NULL ,31    ,NULL)
+,('timeSheet'                ,0  ,NULL ,'manage'   ,'Y' ,NULL ,287   ,NULL)
+,('timeSheet'                ,0  ,NULL ,'admin'    ,'Y' ,NULL ,783   ,NULL)
 
-,('timeSheetItem'            ,-1 ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
-,('timeSheetItem'            ,0  ,0 ,'manage'   ,'Y' ,NULL ,15    ,NULL)
-,('timeSheetItem'            ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('timeSheetItem'            ,-1 ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
+,('timeSheetItem'            ,0  ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('timeSheetItem'            ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('token'                    ,0  ,0 ,''         ,'Y' ,NULL ,15    ,NULL)
+,('token'                    ,0  ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
 
-,('transaction'              ,-1 ,0 ,'employee' ,'Y' ,NULL ,15    ,NULL)
-,('transaction'              ,0  ,0 ,'manage'   ,'Y' ,NULL ,8192  ,"Manager create pending transaction.")
-,('transaction'              ,0  ,0 ,'admin'    ,'Y' ,NULL ,65295 ,NULL)
+,('transaction'              ,-1 ,NULL ,'employee' ,'Y' ,NULL ,15    ,NULL)
+,('transaction'              ,0  ,NULL ,'manage'   ,'Y' ,NULL ,8192  ,"Manager create pending transaction.")
+,('transaction'              ,0  ,NULL ,'admin'    ,'Y' ,NULL ,65295 ,NULL)
 
-,('transactionRepeat'        ,-1 ,0 ,'employee' ,'Y' ,NULL ,1     ,NULL)
-,('transactionRepeat'        ,0  ,0 ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('transactionRepeat'        ,-1 ,NULL ,'employee' ,'Y' ,NULL ,1     ,NULL)
+,('transactionRepeat'        ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,("auditItem"                ,0  ,0 ,'employee' ,'Y', NULL, 8 + 1 ,"Allow employees to create and read audit items.")
+,("auditItem"                ,0  ,NULL ,'employee' ,'Y', NULL, 8 + 1 ,"Allow employees to create and read audit items.")
 
 ;
 

@@ -1,31 +1,28 @@
 
+
 DROP TABLE IF EXISTS absence;
 CREATE TABLE absence (
-  absenceID int(11) NOT NULL auto_increment,
+  absenceID integer NOT NULL auto_increment PRIMARY KEY,
   dateFrom date default NULL,
   dateTo date default NULL,
-  absenceType enum('Annual Leave','Holiday','Illness','Other') default NULL,
+  absenceType varchar(255) default NULL,
   contactDetails text,
-  personID int(11) NOT NULL default '0',
-  PRIMARY KEY  (absenceID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  personID integer NOT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS announcement;
 CREATE TABLE announcement (
-  announcementID int(11) NOT NULL auto_increment,
+  announcementID integer NOT NULL auto_increment PRIMARY KEY,
   heading varchar(255) default NULL,
   body text,
-  personID int(11) NOT NULL default '0',
+  personID integer NOT NULL,
   displayFromDate date default NULL,
-  displayToDate date default NULL,
-  PRIMARY KEY  (announcementID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  displayToDate date default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS client;
 CREATE TABLE client (
-  clientID int(11) NOT NULL auto_increment,
+  clientID integer NOT NULL auto_increment PRIMARY KEY,
   clientName varchar(255) NOT NULL default '',
   clientStreetAddressOne varchar(255) default NULL,
   clientStreetAddressTwo varchar(255) default NULL,
@@ -41,19 +38,16 @@ CREATE TABLE client (
   clientCountryTwo varchar(255) default NULL,
   clientComment text,
   clientModifiedTime datetime DEFAULT NULL,
-  clientModifiedUser int(11) DEFAULT NULL,
-  clientStatus enum('current','potential','archived') NOT NULL default 'current',
-  clientCategory int(11) DEFAULT 1,
-  clientCreatedTime varchar(11) default NULL,
-  PRIMARY KEY  (clientID),
-  KEY clientName (clientName)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  clientModifiedUser integer DEFAULT NULL,
+  clientStatus varchar(255) NOT NULL default 'current',
+  clientCategory integer DEFAULT 1,
+  clientCreatedTime varchar(11) default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS clientContact;
 CREATE TABLE clientContact (
-  clientContactID int(11) NOT NULL auto_increment,
-  clientID int(11) NOT NULL default '0',
+  clientContactID integer NOT NULL auto_increment PRIMARY KEY,
+  clientID integer NOT NULL,
   clientContactName varchar(255) default NULL,
   clientContactStreetAddress varchar(255) default NULL,
   clientContactSuburb varchar(255) default NULL,
@@ -65,165 +59,134 @@ CREATE TABLE clientContact (
   clientContactEmail varchar(255) default NULL,
   clientContactOther text,
   clientContactCountry varchar(255) default NULL,
-  primaryContact boolean default false,
-  PRIMARY KEY  (clientContactID),
-  KEY clientID (clientID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  primaryContact boolean default false
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS comment;
 CREATE TABLE comment (
-  commentID int(11) NOT NULL auto_increment,
+  commentID integer NOT NULL auto_increment PRIMARY KEY,
   commentType varchar(255) NOT NULL default '',
-  commentLinkID int(11) NOT NULL default '0',
+  commentLinkID integer NOT NULL,
   commentCreatedTime datetime default NULL,
-  commentCreatedUser int(11) default NULL,
+  commentCreatedUser integer default NULL,
   commentModifiedTime datetime DEFAULT NULL,
-  commentModifiedUser int(11) DEFAULT NULL,
-  commentCreatedUserClientContactID int(11) DEFAULT NULL,
+  commentModifiedUser integer DEFAULT NULL,
+  commentCreatedUserClientContactID integer DEFAULT NULL,
   commentCreatedUserText varchar(255) DEFAULT NULL,
   commentEmailRecipients TEXT DEFAULT "",
   commentEmailUID VARCHAR(255) DEFAULT NULL,
-  comment TEXT,
-  PRIMARY KEY  (commentID),
-  KEY commentLinkID (commentLinkID),
-  KEY commentType (commentType)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  comment TEXT) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS config;
 CREATE TABLE config (
-  configID int(11) NOT NULL auto_increment,
+  configID integer NOT NULL auto_increment PRIMARY KEY,
   name varchar(255) NOT NULL DEFAULT '',
   value text NOT NULL,
-  type enum("text","array") NOT NULL default "text",
-  PRIMARY KEY (configID),
-  UNIQUE KEY (name)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  type varchar(255) NOT NULL default "text"
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS expenseForm;
 CREATE TABLE expenseForm (
-  expenseFormID int(11) NOT NULL auto_increment,
-  clientID int(11) DEFAULT NULL,
-  expenseFormModifiedUser int(11) DEFAULT NULL,
+  expenseFormID integer NOT NULL auto_increment PRIMARY KEY,
+  clientID integer DEFAULT NULL,
+  expenseFormModifiedUser integer DEFAULT NULL,
   expenseFormModifiedTime datetime DEFAULT NULL,
   paymentMethod varchar(255) default NULL,
-  reimbursementRequired tinyint(4) NOT NULL default '0',
-  expenseFormCreatedUser int(11) DEFAULT NULL,
+  reimbursementRequired boolean NOT NULL default false,
+  expenseFormCreatedUser integer DEFAULT NULL,
   expenseFormCreatedTime datetime DEFAULT NULL,
-  transactionRepeatID int(11) NOT NULL default '0',
-  expenseFormFinalised tinyint(4) NOT NULL default '0',
-  seekClientReimbursement int(1) NOT NULL default 0,
-  expenseFormComment text default NULL,
-  PRIMARY KEY  (expenseFormID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  transactionRepeatID integer DEFAULT NULL,
+  expenseFormFinalised boolean NOT NULL default false,
+  seekClientReimbursement boolean NOT NULL default false,
+  expenseFormComment text default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS history;
 CREATE TABLE history (
-  historyID int(11) NOT NULL auto_increment,
+  historyID integer NOT NULL auto_increment PRIMARY KEY,
   the_time timestamp(14) NOT NULL,
   the_place varchar(255) NOT NULL default '',
   the_args varchar(255) default NULL,
-  personID int(11) NOT NULL default '0',
-  the_label varchar(255) default '',
-  INDEX idx_personID (personID),
-  PRIMARY KEY  (historyID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  personID integer NOT NULL,
+  the_label varchar(255) default ''
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS invoice;
 CREATE TABLE invoice (
-  invoiceID int(11) NOT NULL auto_increment,
-  clientID int(11) NOT NULL,
-  projectID int(11) DEFAULT NULL,
+  invoiceID integer NOT NULL auto_increment PRIMARY KEY,
+  clientID integer NOT NULL,
+  projectID integer DEFAULT NULL,
   invoiceDateFrom date,
   invoiceDateTo date,
-  invoiceNum int(11) NOT NULL default '0',
+  invoiceNum integer NOT NULL,
   invoiceName varchar(255) NOT NULL default '',
-  invoiceStatus enum('edit','reconcile','finished') NOT NULL DEFAULT 'edit',
-  maxAmount decimal(19,2) DEFAULT 0,
-  PRIMARY KEY  (invoiceID),
-  UNIQUE KEY `invoiceNum` (`invoiceNum`)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  invoiceStatus varchar(255) NOT NULL DEFAULT 'edit',
+  maxAmount decimal(19,2) DEFAULT 0
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS invoiceItem;
 CREATE TABLE invoiceItem (
-  invoiceItemID int(11) NOT NULL auto_increment,
-  invoiceID int(11) NOT NULL,
-  timeSheetID int(11) DEFAULT NULL,
-  timeSheetItemID int(11) DEFAULT NULL,
-  expenseFormID int(11) DEFAULT NULL,
-  transactionID int(11) DEFAULT NULL,
+  invoiceItemID integer NOT NULL auto_increment PRIMARY KEY,
+  invoiceID integer NOT NULL,
+  timeSheetID integer DEFAULT NULL,
+  timeSheetItemID integer DEFAULT NULL,
+  expenseFormID integer DEFAULT NULL,
+  transactionID integer DEFAULT NULL,
   iiMemo text DEFAULT NULL,
   iiQuantity DECIMAL(19,2) DEFAULT NULL,
   iiUnitPrice DECIMAL(19,2) DEFAULT NULL,
   iiAmount DECIMAL(19,2) DEFAULT NULL,
-  iiDate date DEFAULT NULL,
-  INDEX idx_invoiceID (invoiceID),
-  PRIMARY KEY (invoiceItemID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  iiDate date DEFAULT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS item;
 CREATE TABLE item (
-  itemID int(11) NOT NULL auto_increment,
+  itemID integer NOT NULL auto_increment PRIMARY KEY,
   itemName varchar(255) default '',
   itemNotes text,
   itemModifiedTime datetime DEFAULT NULL,
-  itemModifiedUser int(11) DEFAULT NULL,
-  itemType enum('cd','book','other') NOT NULL default 'cd',
+  itemModifiedUser integer DEFAULT NULL,
+  itemType varchar(255) NOT NULL default 'cd',
   itemAuthor varchar(255) default '',
-  personID int(11) default '0',
-  PRIMARY KEY  (itemID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  personID integer default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS loan;
 CREATE TABLE loan (
-  loanID int(11) NOT NULL auto_increment,
-  itemID int(11) NOT NULL default '0',
-  personID int(11) NOT NULL default '0',
-  loanModifiedUser int(11) DEFAULT NULL,
+  loanID integer NOT NULL auto_increment PRIMARY KEY,
+  itemID integer NOT NULL,
+  personID integer NOT NULL,
+  loanModifiedUser integer DEFAULT NULL,
   loanModifiedTime datetime DEFAULT NULL,
   dateBorrowed date NOT NULL default '0000-00-00',
   dateToBeReturned date default NULL,
-  dateReturned date default NULL,
-  PRIMARY KEY  (loanID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  dateReturned date default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS patchLog;
 CREATE TABLE patchLog (
-  patchLogID int(11) NOT NULL auto_increment,
+  patchLogID integer NOT NULL auto_increment PRIMARY KEY,
   patchName varchar(255) NOT NULL DEFAULT '',
   patchDesc text,
-  patchDate timestamp(14) NOT NULL,
-  PRIMARY KEY  (patchLogID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  patchDate timestamp(14) NOT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS permission;
 CREATE TABLE permission (
-  permissionID int(11) NOT NULL auto_increment,
+  permissionID integer NOT NULL auto_increment PRIMARY KEY,
   tableName varchar(255) default NULL,
-  entityID int(11) default NULL,
-  personID int(11) default NULL,
+  entityID integer default NULL,
+  personID integer default NULL,
   roleName varchar(255) default NULL,
-  allow enum('Y','N') default NULL,
-  sortKey int(11) default '100',
-  actions int(11) default NULL,
-  comment text,
-  PRIMARY KEY  (permissionID),
-  KEY tableName (tableName)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  allow boolean default true,
+  sortKey integer default '100',
+  actions integer default NULL,
+  comment text
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS person;
 CREATE TABLE person (
-  personID int(11) NOT NULL auto_increment,
+  personID integer NOT NULL auto_increment PRIMARY KEY,
   username varchar(32) NOT NULL,
   password varchar(255) NOT NULL default '',
   perms varchar(255) default NULL,
@@ -233,29 +196,26 @@ CREATE TABLE person (
   comments text,
   managementComments text,
   lastLoginDate datetime default NULL,
-  personModifiedUser int(11) DEFAULT NULL,
+  personModifiedUser integer DEFAULT NULL,
   firstName varchar(255) default NULL,
   surname varchar(255) default NULL,
-  preferred_tfID int(11) default NULL,
-  personActive tinyint(1) default '1',
+  preferred_tfID integer default NULL,
+  personActive boolean default true,
   sessData text,
   phoneNo1 varchar(255) default "",
   phoneNo2 varchar(255) default "",
-  emergencyContact varchar(255) default "",
-  PRIMARY KEY (personID),
-  UNIQUE KEY (username)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  emergencyContact varchar(255) default ""
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS project;
 CREATE TABLE project (
-  projectID int(11) NOT NULL auto_increment,
+  projectID integer NOT NULL auto_increment PRIMARY KEY,
   projectName varchar(255) NOT NULL default '',
   projectComments text,
-  clientID int(11) DEFAULT NULL,
-  clientContactID int(11) default '0',
-  projectModifiedUser int(11) DEFAULT NULL,
-  projectType enum('contract','job','project','prepaid') default NULL,
+  clientID integer DEFAULT NULL,
+  clientContactID integer default NULL,
+  projectModifiedUser integer DEFAULT NULL,
+  projectType varchar(255) default NULL,
   projectClientName varchar(255) default NULL,
   projectClientPhone varchar(20) default NULL,
   projectClientMobile varchar(20) default NULL,
@@ -266,369 +226,299 @@ CREATE TABLE project (
   dateActualStart date default NULL,
   dateActualCompletion date default NULL,
   projectBudget DECIMAL(19,2) DEFAULT NULL,
-  currencyType enum('AUD','USD','NZD','CAD') default NULL,
+  currencyType varchar(255) default NULL,
   projectShortName varchar(255) default NULL,
-  projectStatus enum('current','potential','archived') NOT NULL default 'current',
-  projectPriority int(11) default NULL,
-  is_agency tinyint(4) default NULL,
-  cost_centre_tfID int(11) default NULL,
-  customerBilledDollars DECIMAL(19,2) DEFAULT NULL,
-  PRIMARY KEY  (projectID),
-  KEY projectName (projectName),
-  KEY clientID (clientID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  projectStatus varchar(255) NOT NULL default 'current',
+  projectPriority integer default NULL,
+  is_agency boolean default false,
+  cost_centre_tfID integer default NULL,
+  customerBilledDollars DECIMAL(19,2) DEFAULT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS projectCommissionPerson;
 CREATE TABLE projectCommissionPerson (
-  projectCommissionPersonID int(11) NOT NULL auto_increment,
-  projectID int(11) NOT NULL default '0',
-  personID int(11) NOT NULL default '0',
+  projectCommissionPersonID integer NOT NULL auto_increment PRIMARY KEY,
+  projectID integer NOT NULL,
+  personID integer DEFAULT NULL,
   commissionPercent decimal(5,3) default '0.000',
-  tfID int(11) NOT NULL default '0',
-  PRIMARY KEY  (projectCommissionPersonID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  tfID integer NOT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS projectPerson;
 CREATE TABLE projectPerson (
-  projectPersonID int(11) NOT NULL auto_increment,
-  projectID int(11) NOT NULL default '0',
-  personID int(11) NOT NULL default '0',
-  roleID int(11) NOT NULL default '0',
-  emailType enum('None','Assigned Tasks','All Tasks') default NULL,
+  projectPersonID integer NOT NULL auto_increment PRIMARY KEY,
+  projectID integer NOT NULL,
+  personID integer NOT NULL,
+  roleID integer NOT NULL,
+  emailType varchar(255) default NULL,
   rate DECIMAL(19,2) DEFAULT '0.00',
-  rateUnitID int(3) default NULL,
-  projectPersonModifiedUser int(11) DEFAULT NULL,
-  emailDateRegex varchar(255) default NULL,
-  PRIMARY KEY (projectPersonID),
-  INDEX idx_person_project (projectID,personID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  rateUnitID integer default NULL,
+  projectPersonModifiedUser integer DEFAULT NULL,
+  emailDateRegex varchar(255) default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS role;
 CREATE TABLE role (
-  roleID int(11) NOT NULL auto_increment,
+  roleID integer NOT NULL auto_increment PRIMARY KEY,
   roleName varchar(255) default NULL,
   roleHandle varchar(255) default NULL,
-  roleLevel ENUM('person','project') NOT NULL,
-  roleSequence int(11) default NULL,
-  PRIMARY KEY  (roleID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  roleLevel varchar(255) NOT NULL,
+  roleSequence integer default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS reminder;
 CREATE TABLE reminder (
-  reminderID int(11) NOT NULL auto_increment,
+  reminderID integer NOT NULL auto_increment PRIMARY KEY,
   reminderType varchar(255) default NULL,
-  reminderLinkID int(11) NOT NULL default '0',
-  personID int(11) NULL default NULL,
-  metaPerson int(11) NULL default NULL,
+  reminderLinkID integer NOT NULL,
+  personID integer NULL default NULL,
+  metaPerson integer NULL default NULL,
   reminderTime datetime NOT NULL default '0000-00-00 00:00:00',
-  reminderRecuringInterval enum('No','Hour','Day','Week','Month','Year') NOT NULL default 'No',
-  reminderRecuringValue int(11) NOT NULL default '0',
-  reminderAdvNoticeSent tinyint(1) NOT NULL default '0',
-  reminderAdvNoticeInterval enum('No','Minute','Hour','Day','Week','Month','Year') NOT NULL default 'No',
-  reminderAdvNoticeValue int(11) NOT NULL default '0',
+  reminderRecuringInterval varchar(255) NOT NULL default 'No',
+  reminderRecuringValue integer NOT NULL default '0',
+  reminderAdvNoticeSent boolean NOT NULL default false,
+  reminderAdvNoticeInterval varchar(255) NOT NULL default 'No',
+  reminderAdvNoticeValue integer NOT NULL default '0',
   reminderSubject varchar(255) NOT NULL default '',
   reminderContent text,
   reminderModifiedTime datetime DEFAULT NULL,
-  reminderModifiedUser int(11) DEFAULT NULL,
-  PRIMARY KEY  (reminderID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  reminderModifiedUser integer DEFAULT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS sentEmailLog;
 CREATE TABLE sentEmailLog (
-  sentEmailLogID int(11) NOT NULL auto_increment,
+  sentEmailLogID integer NOT NULL auto_increment PRIMARY KEY,
   sentEmailTo text NOT NULL,
   sentEmailSubject varchar(255),
   sentEmailBody text,
   sentEmailHeader text,
-  sentEmailType
-  enum('reminder','reminder_advnotice','task_created','task_closed','task_comments','timesheet_submit','timesheet_reject','daily_digest','timesheet_finished','new_password', 'task_reassigned','orphan') DEFAULT NULL,
+  sentEmailType varchar(255) DEFAULT NULL,
   sentEmailLogCreatedTime datetime default NULL,
-  sentEmailLogCreatedUser int(11) default NULL,
-  PRIMARY KEY  (sentEmailLogID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  sentEmailLogCreatedUser integer default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS sess;
 CREATE TABLE sess (
-  sessID varchar(32) NOT NULL default '',
-  personID int(11) NOT NULL default '0',
-  sessData text,
-  PRIMARY KEY  (sessID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  sessID varchar(32) NOT NULL default '' PRIMARY KEY,
+  personID integer NOT NULL,
+  sessData text
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS skillList;
 CREATE TABLE skillList (
-  skillID int(11) NOT NULL auto_increment,
+  skillID integer NOT NULL auto_increment PRIMARY KEY,
   skillName varchar(40) NOT NULL default '',
   skillDescription text,
-  skillClass varchar(40) NOT NULL default '',
-  PRIMARY KEY  (skillID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  skillClass varchar(40) NOT NULL default ''
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS skillProficiencys;
 CREATE TABLE skillProficiencys (
-  proficiencyID int(11) NOT NULL auto_increment,
-  personID int(11) NOT NULL default '0',
-  skillID int(11) NOT NULL default '0',
-  skillProficiency enum('Novice','Junior','Intermediate','Advanced','Senior') NOT NULL default 'Novice',
-  PRIMARY KEY  (proficiencyID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  proficiencyID integer NOT NULL auto_increment PRIMARY KEY,
+  personID integer NOT NULL,
+  skillID integer NOT NULL,
+  skillProficiency varchar(255) NOT NULL default 'Novice'
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS task;
 CREATE TABLE task (
-  taskID int(11) NOT NULL auto_increment,
+  taskID integer NOT NULL auto_increment PRIMARY KEY,
   taskName varchar(255) NOT NULL default '',
   taskDescription text,
-  creatorID int(11) NOT NULL default '0',
-  closerID int(11) default NULL,
-  priority tinyint(4) NOT NULL default '0',
+  creatorID integer NOT NULL,
+  closerID integer default NULL,
+  priority integer NOT NULL default '0',
   timeEstimate decimal(7,2) DEFAULT NULL,
   dateCreated datetime NOT NULL default '0000-00-00 00:00:00',
   dateAssigned datetime default NULL,
   dateClosed datetime default NULL,
   dateTargetCompletion date default NULL,
   taskComments text,
-  projectID int(11) DEFAULT NULL,
+  projectID integer DEFAULT NULL,
   dateActualCompletion date default NULL,
   dateActualStart date default NULL,
   dateTargetStart date default NULL,
-  personID int(11) default NULL,
-  managerID int(11) default NULL,
-  parentTaskID int(11) DEFAULT NULL,
-  taskTypeID int(11) NOT NULL default '1',
-  taskModifiedUser int(11) DEFAULT NULL,
-  taskCommentTemplateID int(11) default NULL,
-  duplicateTaskID int(11) default NULL,
+  personID integer default NULL,
+  managerID integer default NULL,
+  parentTaskID integer DEFAULT NULL,
+  taskTypeID integer NOT NULL default '1',
+  taskModifiedUser integer DEFAULT NULL,
+  taskCommentTemplateID integer default NULL,
+  duplicateTaskID integer default NULL,
   taskStatus varchar(255) NOT NULL,
-  taskSubStatus varchar(255) DEFAULT NULL,
-  PRIMARY KEY  (taskID),
-  KEY taskName (taskName),
-  KEY dateAdded (dateCreated),
-  KEY projectID (projectID),
-  KEY parentTaskID (parentTaskID),
-  KEY taskTypeID (taskTypeID),
-  KEY parentTaskID_2 (parentTaskID),
-  KEY taskStatus (taskStatus),
-  KEY taskSubStatus (taskSubStatus),
-  FULLTEXT KEY `taskName_2` (`taskName`)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  taskSubStatus varchar(255) DEFAULT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS auditItem;
 CREATE TABLE auditItem (
-  auditItemID int(11) NOT NULL auto_increment,
+  auditItemID integer NOT NULL auto_increment PRIMARY KEY,
   entityName varchar(255) default NULL,
-  entityID int(11) NOT NULL,
-  personID int(11) NOT NULL,
+  entityID integer NOT NULL,
+  personID integer NOT NULL,
   dateChanged datetime NOT NULL,
-  changeType enum('FieldChange','TaskMarkedDuplicate','TaskUnmarkedDuplicate','TaskClosed','TaskReopened') NOT NULL default 'FieldChange',
+  changeType varchar(255) NOT NULL default 'FieldChange',
   fieldName varchar(255) default NULL,
-  oldValue text,
-  PRIMARY KEY  (auditItemID),
-  KEY idx_entityName (entityName),
-  KEY idx_entityID (entityID)
-) ENGINE=MyISAM PACK_KEYS=0;
-
+  oldValue text
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS interestedParty;
 CREATE TABLE interestedParty (
-  interestedPartyID int(11) NOT NULL auto_increment,
+  interestedPartyID integer NOT NULL auto_increment PRIMARY KEY,
   entity VARCHAR(255) NOT NULL,
-  entityID int(11) NOT NULL,
+  entityID integer NOT NULL,
   fullName text,
   emailAddress text NOT NULL,
-  personID int(11) DEFAULT NULL,
-  clientContactID int(11) DEFAULT NULL,
-  external tinyint(1) DEFAULT NULL,
-  PRIMARY KEY  (interestedPartyID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  personID integer DEFAULT NULL,
+  clientContactID integer DEFAULT NULL,
+  external boolean DEFAULT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS commentTemplate;
 CREATE TABLE commentTemplate (
-  commentTemplateID int(11) NOT NULL auto_increment,
+  commentTemplateID integer NOT NULL auto_increment PRIMARY KEY,
   commentTemplateName varchar(255) DEFAULT NULL,
   commentTemplateText text,
   commentTemplateType varchar(255) DEFAULT NULL,
-  commentTemplateModifiedTime datetime DEFAULT NULL,
-  PRIMARY KEY  (commentTemplateID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  commentTemplateModifiedTime datetime DEFAULT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS taskType;
 CREATE TABLE taskType (
-  taskTypeID int(11) NOT NULL auto_increment,
+  taskTypeID integer NOT NULL auto_increment PRIMARY KEY,
   taskTypeName varchar(255) default NULL,
-  taskTypeActive int(1) default NULL,
-  taskTypeSequence int(11) default NULL,
-  PRIMARY KEY  (taskTypeID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  taskTypeActive boolean default true,
+  taskTypeSequence integer default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS tf;
 CREATE TABLE tf (
-  tfID int(11) NOT NULL auto_increment,
+  tfID integer NOT NULL auto_increment PRIMARY KEY,
   tfName varchar(255) NOT NULL default '',
   tfComments text,
   tfModifiedTime datetime DEFAULT NULL,
-  tfModifiedUser int(11) DEFAULT NULL,
-  qpEmployeeNum int(11) default NULL,
+  tfModifiedUser integer DEFAULT NULL,
+  qpEmployeeNum integer default NULL,
   quickenAccount varchar(255) default NULL,
-  tfActive tinyint(1) NOT NULL,
-  PRIMARY KEY  (tfID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  tfActive boolean NOT NULL DEFAULT true
+  ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS tfPerson;
 CREATE TABLE tfPerson (
-  tfPersonID int(11) NOT NULL auto_increment,
-  tfID int(11) NOT NULL default '0',
-  personID int(11) NOT NULL default '0',
-  INDEX idx_tfID (tfID),
-  PRIMARY KEY  (tfPersonID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  tfPersonID integer NOT NULL auto_increment PRIMARY KEY,
+  tfID integer NOT NULL,
+  personID integer NOT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS timeSheet;
 CREATE TABLE timeSheet (
-  timeSheetID int(11) NOT NULL auto_increment,
-  projectID int(11) NOT NULL default '0',
+  timeSheetID integer NOT NULL auto_increment PRIMARY KEY,
+  projectID integer NOT NULL,
   dateFrom date default NULL,
   dateTo date default NULL,
-  status enum('edit','manager','admin','invoiced','finished') default NULL,
-  personID int(11) NOT NULL default '0',
-  approvedByManagerPersonID int(11) default NULL,
-  approvedByAdminPersonID int(11) default NULL,
+  status varchar(255) default NULL,
+  personID integer NOT NULL,
+  approvedByManagerPersonID integer default NULL,
+  approvedByAdminPersonID integer default NULL,
   dateSubmittedToManager date default NULL,
   dateSubmittedToAdmin date default NULL,
   invoiceDate date default NULL,
   billingNote text,
-  payment_insurance tinyint(4) default '0',
-  recipient_tfID int(11) default NULL,
-  customerBilledDollars DECIMAL(19,2) DEFAULT NULL,
-  PRIMARY KEY  (timeSheetID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  payment_insurance boolean default false,
+  recipient_tfID integer default NULL,
+  customerBilledDollars DECIMAL(19,2) DEFAULT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS timeSheetItem;
 CREATE TABLE timeSheetItem (
-  timeSheetItemID int(11) NOT NULL auto_increment,
-  timeSheetID int(11) NOT NULL default '0',
+  timeSheetItemID integer NOT NULL auto_increment PRIMARY KEY,
+  timeSheetID integer NOT NULL,
   dateTimeSheetItem date default NULL,
   timeSheetItemDuration decimal(9,2) default '0.00',
-  timeSheetItemDurationUnitID int(3) default NULL,
+  timeSheetItemDurationUnitID integer default NULL,
   description text,
   location text,
-  personID int(11) NOT NULL default '0',
-  taskID int(11) default '0',
+  personID integer NOT NULL,
+  taskID integer default NULL,
   rate DECIMAL(19,2) DEFAULT '0.00',
-  commentPrivate tinyint(1) default '0',
+  commentPrivate boolean default false,
   comment text,
-  multiplier tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY  (timeSheetItemID),
-  INDEX idx_timeSheetID (timeSheetID),
-  INDEX idx_taskID (taskID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  multiplier integer NOT NULL DEFAULT '0'
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS timeUnit;
 CREATE TABLE timeUnit (
-  timeUnitID int(11) NOT NULL auto_increment,
+  timeUnitID integer NOT NULL auto_increment PRIMARY KEY,
   timeUnitName varchar(30) default NULL,
   timeUnitLabelA varchar(30) default NULL,
   timeUnitLabelB varchar(30) default NULL,
-  timeUnitSeconds int(11) default NULL,
-  timeUnitActive int(1) default NULL,
-  timeUnitSequence int(11) default NULL,
-  PRIMARY KEY  (timeUnitID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  timeUnitSeconds integer default NULL,
+  timeUnitActive boolean default false,
+  timeUnitSequence integer default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS token;
 CREATE TABLE token (
-  tokenID INT(11) NOT NULL AUTO_INCREMENT,
+  tokenID integer NOT NULL auto_increment PRIMARY KEY,
   tokenHash VARCHAR(255) NOT NULL DEFAULT '',
   tokenEntity VARCHAR(32) DEFAULT '',
-  tokenEntityID INT(11),
-  tokenActionID INT(11) NOT NULL DEFAULT 0,
+  tokenEntityID integer,
+  tokenActionID integer NOT NULL,
   tokenExpirationDate DATETIME DEFAULT NULL,
-  tokenUsed INT(11) DEFAULT 0,
-  tokenMaxUsed INT(11) DEFAULT 0,
-  tokenActive INT(1) DEFAULT 0,
-  tokenCreatedBy INT(11) NOT NULL DEFAULT 0,
-  tokenCreatedDate DATETIME,
-  PRIMARY KEY (tokenID),
-  UNIQUE KEY (tokenHash)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  tokenUsed integer DEFAULT 0,
+  tokenMaxUsed integer DEFAULT 0,
+  tokenActive boolean DEFAULT false,
+  tokenCreatedBy integer NOT NULL,
+  tokenCreatedDate DATETIME
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS tokenAction;
 CREATE TABLE tokenAction (
-  tokenActionID INT(11) NOT NULL AUTO_INCREMENT,
+  tokenActionID integer NOT NULL auto_increment PRIMARY KEY,
   tokenAction VARCHAR(32) NOT NULL DEFAULT '',
   tokenActionType VARCHAR(32),
-  tokenActionMethod VARCHAR(32),
-  PRIMARY KEY (tokenActionID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  tokenActionMethod VARCHAR(32)
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS transaction;
 CREATE TABLE transaction (
-  transactionID int(11) NOT NULL auto_increment,
+  transactionID integer NOT NULL auto_increment PRIMARY KEY,
   companyDetails text NOT NULL,
   product varchar(255) NOT NULL default '',
   amount DECIMAL(19,2) NOT NULL DEFAULT 0,
-  status enum('pending','rejected','approved') NOT NULL DEFAULT 'pending',
-  expenseFormID int(11) DEFAULT NULL,
-  tfID int(11) NOT NULL,
-  fromTfID int(11) NOT NULL,
-  projectID int(11) DEFAULT NULL,
-  transactionModifiedUser int(11) DEFAULT NULL,
+  status varchar(255) NOT NULL DEFAULT 'pending',
+  expenseFormID integer DEFAULT NULL,
+  tfID integer NOT NULL,
+  fromTfID integer NOT NULL,
+  projectID integer DEFAULT NULL,
+  transactionModifiedUser integer DEFAULT NULL,
   transactionModifiedTime datetime DEFAULT NULL,
-  quantity int(11) NOT NULL default '1',
-  transactionCreatedUser int(11) DEFAULT NULL,
+  quantity integer NOT NULL default '1',
+  transactionCreatedUser integer DEFAULT NULL,
   transactionCreatedTime datetime DEFAULT NULL,
   transactionDate date NOT NULL default '0000-00-00',
-  invoiceID int(11) DEFAULT NULL,
-  invoiceItemID int(11) default NULL,
-  transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax','sale') NOT NULL,
-  timeSheetID int(11) default NULL,
-  productSaleID int(11) default NULL,
-  productSaleItemID int(11) default NULL,
-  transactionRepeatID int(11) default NULL,
-  transactionGroupID int(11) default NULL,
-  INDEX idx_timeSheetID (timeSheetID),
-  INDEX idx_tfID (tfID),
-  INDEX idx_invoiceItemID (invoiceItemID),
-  INDEX idx_fromTfID (fromTfID),
-  INDEX idx_productSaleID (productSaleID),
-  INDEX idx_productSaleItemID (productSaleItemID),
-  INDEX idx_transactionGroupID (transactionGroupID),
-  PRIMARY KEY (transactionID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  invoiceID integer DEFAULT NULL,
+  invoiceItemID integer default NULL,
+  transactionType varchar(255) NOT NULL,
+  timeSheetID integer default NULL,
+  productSaleID integer default NULL,
+  productSaleItemID integer default NULL,
+  transactionRepeatID integer default NULL,
+  transactionGroupID integer default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS transactionRepeat;
 CREATE TABLE transactionRepeat (
-  transactionRepeatID int(11) NOT NULL auto_increment,
-  tfID int(11) NOT NULL,
-  fromTfID int(11) NOT NULL,
+  transactionRepeatID integer NOT NULL auto_increment PRIMARY KEY,
+  tfID integer NOT NULL,
+  fromTfID integer NOT NULL,
   payToName text NOT NULL,
   payToAccount text NOT NULL,
   companyDetails text NOT NULL,
   emailOne varchar(255) default '',
   emailTwo varchar(255) default '',
-  transactionRepeatModifiedUser int(11) DEFAULT NULL,
+  transactionRepeatModifiedUser integer DEFAULT NULL,
   transactionRepeatModifiedTime datetime DEFAULT NULL,
-  transactionRepeatCreatedUser int(11) DEFAULT NULL,
+  transactionRepeatCreatedUser integer DEFAULT NULL,
   transactionRepeatCreatedTime datetime DEFAULT NULL,
   transactionStartDate date NOT NULL default '0000-00-00',
   transactionFinishDate date NOT NULL default '0000-00-00',
@@ -636,64 +526,219 @@ CREATE TABLE transactionRepeat (
   amount DECIMAL(19,2) NOT NULL DEFAULT 0,
   product varchar(255) NOT NULL default '',
   status varchar(255) NOT NULL default 'pending',
-  transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax','product') NOT NULL,
-  reimbursementRequired tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (transactionRepeatID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  transactionType varchar(255) NOT NULL,
+  reimbursementRequired boolean NOT NULL default false
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
-  productID int(11) NOT NULL auto_increment,
+  productID integer NOT NULL auto_increment PRIMARY KEY,
   productName varchar(255) NOT NULL DEFAULT '',
   buyCost DECIMAL(19,2) NOT NULL DEFAULT 0,
-  buyCostIncTax tinyint(1) NOT NULL,
+  buyCostIncTax boolean NOT NULL default false,
   sellPrice DECIMAL(19,2) NOT NULL DEFAULT 0,
-  sellPriceIncTax tinyint(1) NOT NULL,
+  sellPriceIncTax boolean NOT NULL default false,
   description varchar(255),
-  comment TEXT,
-  PRIMARY KEY (productID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  comment TEXT
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS productCost;
 CREATE TABLE productCost (
-  productCostID int(11) NOT NULL auto_increment,
-  productID int(11) NOT NULL DEFAULT 0,
-  fromTfID int(11) NOT NULL,
-  tfID int(11) NOT NULL,
+  productCostID integer NOT NULL auto_increment PRIMARY KEY,
+  productID integer NOT NULL,
+  fromTfID integer NOT NULL,
+  tfID integer NOT NULL,
   amount DECIMAL(19,2) NOT NULL DEFAULT 0,
-  isPercentage tinyint(1) NOT NULL,
-  description varchar(255),
-  PRIMARY KEY (productCostID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  isPercentage boolean NOT NULL default false,
+  description varchar(255)
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS productSale;
 CREATE TABLE productSale (
-  productSaleID int(11) NOT NULL auto_increment,
-  clientID int(11) DEFAULT NULL,
-  projectID int(11) DEFAULT NULL,
-  status enum('edit','allocate','admin','finished') NOT NULL,
+  productSaleID integer NOT NULL auto_increment PRIMARY KEY,
+  clientID integer DEFAULT NULL,
+  projectID integer DEFAULT NULL,
+  status varchar(255) NOT NULL,
   productSaleCreatedTime datetime default NULL,
-  productSaleCreatedUser int(11) default NULL,
+  productSaleCreatedUser integer default NULL,
   productSaleModifiedTime datetime default NULL,
-  productSaleModifiedUser int(11) default NULL,
-  PRIMARY KEY (productSaleID)
-) TYPE=MyISAM PACK_KEYS=0;
-
+  productSaleModifiedUser integer default NULL
+) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS productSaleItem;
 CREATE TABLE productSaleItem (
-  productSaleItemID int(11) NOT NULL auto_increment,
-  productID int(11) NOT NULL,
-  productSaleID int(11) NOT NULL,
+  productSaleItemID integer NOT NULL auto_increment PRIMARY KEY,
+  productID integer NOT NULL,
+  productSaleID integer NOT NULL,
   buyCost DECIMAL(19,2) NOT NULL DEFAULT 0,
-  buyCostIncTax tinyint(1) NOT NULL,
+  buyCostIncTax boolean NOT NULL default false,
   sellPrice DECIMAL(19,2) NOT NULL DEFAULT 0,
-  sellPriceIncTax tinyint(1) NOT NULL,
-  quantity int(5) DEFAULT 1,
-  description varchar(255),
-  PRIMARY KEY (productSaleItemID)
-) TYPE=MyISAM PACK_KEYS=0;
+  sellPriceIncTax boolean NOT NULL default false,
+  quantity integer NOT NULL DEFAULT 1,
+  description varchar(255)
+) ENGINE=InnoDB PACK_KEYS=0;
+
+
+-- Meta data tables
+
+DROP TABLE IF EXISTS absenceType;
+CREATE TABLE absenceType (
+  absenceTypeID varchar(255) PRIMARY KEY,
+  absenceTypeSeq integer NOT NULL,
+  absenceTypeActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+DROP TABLE IF EXISTS clientStatus;
+CREATE TABLE clientStatus (
+  clientStatusID varchar(255) PRIMARY KEY,
+  clientStatusSeq integer NOT NULL,
+  clientStatusActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS configType;
+CREATE TABLE configType (
+  configTypeID varchar(255) PRIMARY KEY,
+  configTypeSeq integer NOT NULL,
+  configTypeActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS invoiceStatus;
+CREATE TABLE invoiceStatus (
+  invoiceStatusID varchar(255) PRIMARY KEY,
+  invoiceStatusSeq integer NOT NULL,
+  invoiceStatusActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS itemType;
+CREATE TABLE itemType (
+  itemTypeID varchar(255) PRIMARY KEY,
+  itemTypeSeq integer NOT NULL,
+  itemTypeActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS projectType;
+CREATE TABLE projectType (
+  projectTypeID varchar(255) PRIMARY KEY,
+  projectTypeSeq integer NOT NULL,
+  projectTypeActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS currencyType;
+CREATE TABLE currencyType (
+  currencyTypeID varchar(255) PRIMARY KEY,
+  currencyTypeSeq integer NOT NULL,
+  currencyTypeActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS projectStatus;
+CREATE TABLE projectStatus (
+  projectStatusID varchar(255) PRIMARY KEY,
+  projectStatusSeq integer NOT NULL,
+  projectStatusActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS roleLevel;
+CREATE TABLE roleLevel (
+  roleLevelID varchar(255) PRIMARY KEY,
+  roleLevelSeq integer NOT NULL,
+  roleLevelActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS reminderRecuringInterval;
+CREATE TABLE reminderRecuringInterval (
+  reminderRecuringIntervalID varchar(255) PRIMARY KEY,
+  reminderRecuringIntervalSeq integer NOT NULL,
+  reminderRecuringIntervalActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS reminderAdvNoticeInterval;
+CREATE TABLE reminderAdvNoticeInterval (
+  reminderAdvNoticeIntervalID varchar(255) PRIMARY KEY,
+  reminderAdvNoticeIntervalSeq integer NOT NULL,
+  reminderAdvNoticeIntervalActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS sentEmailType;
+CREATE TABLE sentEmailType (
+  sentEmailTypeID varchar(255) PRIMARY KEY,
+  sentEmailTypeSeq integer NOT NULL,
+  sentEmailTypeActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS skillProficiency;
+CREATE TABLE skillProficiency (
+  skillProficiencyID varchar(255) PRIMARY KEY,
+  skillProficiencySeq integer NOT NULL,
+  skillProficiencyActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS changeType;
+CREATE TABLE changeType (
+  changeTypeID varchar(255) PRIMARY KEY,
+  changeTypeSeq integer NOT NULL,
+  changeTypeActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS timeSheetStatus;
+CREATE TABLE timeSheetStatus (
+  timeSheetStatusID varchar(255) PRIMARY KEY,
+  timeSheetStatusSeq integer NOT NULL,
+  timeSheetStatusActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS transactionStatus;
+CREATE TABLE transactionStatus (
+  transactionStatusID varchar(255) PRIMARY KEY,
+  transactionStatusSeq integer NOT NULL,
+  transactionStatusActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS transactionType;
+CREATE TABLE transactionType (
+  transactionTypeID varchar(255) PRIMARY KEY,
+  transactionTypeSeq integer NOT NULL,
+  transactionTypeActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS productSaleStatus;
+CREATE TABLE productSaleStatus (
+  productSaleStatusID varchar(255) PRIMARY KEY,
+  productSaleStatusSeq integer NOT NULL,
+  productSaleStatusActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
+
 

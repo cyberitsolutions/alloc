@@ -88,14 +88,16 @@ test_db:
 	echo "CREATE DATABASE $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
 	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_structure.sql; \
 	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_data.sql; \
+	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_constraints.sql; \
   echo "test_db: Checking that current structure matches db_structure.sql"; \
 	echo "DROP DATABASE IF EXISTS $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
 	echo "CREATE DATABASE $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
 	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_structure.sql; \
+	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_constraints.sql; \
 	mysqldump -d $$MYSQL_CONNECT $$TEMP_DB > installation/db_imported_structure.sql; \
 	mysqldump -d $$MYSQL_CONNECT $$DB_NAME > installation/db_current_structure.sql; \
 	echo "DROP DATABASE IF EXISTS $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	DIFF="$$(diff -b -I 'Dump completed on' -I 'Host:' -I 'ENGINE=MyISAM' -I 'DROP TABLE IF EXISTS' -I 'AUTO_INCREMENT=[[:digit:]]+' installation/db_current_structure.sql installation/db_imported_structure.sql)"; \
+	DIFF="$$(diff -b -I 'Dump completed on' -I 'Host:' -I 'ENGINE=MyISAM' -I 'ENGINE=InnoDB' -I 'DROP TABLE IF EXISTS' -I 'AUTO_INCREMENT=[[:digit:]]+' installation/db_current_structure.sql installation/db_imported_structure.sql)"; \
 	if [ -n "$${DIFF}" ]; then \
 	echo -e "\nThere are differences between the current database $$DB_NAME, and the \ndatabase that would be created from the installation/db_structure.sql file. \n\nEither add some patches or modify installation/db_structure.sql \nbefore committing.\n"; \
 	echo "diff -b installation/db_current_structure.sql installation/db_imported_structure.sql"; \
