@@ -91,23 +91,23 @@ require_once("../alloc.php");
 
     # step through the list of skills ordered by skillclass
     $db = new db_alloc;
-    // $query = "SELECT * FROM skillList ORDER BY skillClass,skillName";
-    $query = "SELECT * FROM skillList LEFT JOIN skillProficiencys ON skillList.skillID=skillProficiencys.skillID";
-    $query.= sprintf(" WHERE skillProficiencys.personID=%d", $personID);
+    // $query = "SELECT * FROM skill ORDER BY skillClass,skillName";
+    $query = "SELECT * FROM skill LEFT JOIN proficiency ON skill.skillID=proficiency.skillID";
+    $query.= sprintf(" WHERE proficiency.personID=%d", $personID);
     $query.= " ORDER BY skillClass,skillName";
     $db->query($query);
     $currSkillClass = null;
     while ($db->next_record()) {
-      $skillList = new skillList;
-      $skillList->read_db_record($db);
-      $skillList->set_tpl_values();
+      $skill = new skill;
+      $skill->read_db_record($db);
+      $skill->set_tpl_values();
 
-      $skillPrificiencys = new skillProficiencys;
+      $skillPrificiencys = new proficiency;
       $skillPrificiencys->read_db_record($db);
       $skillPrificiencys->set_tpl_values();
 
       # if tey do and there is no heading for this segment put a heading
-      $thisSkillClass = $skillList->get_value('skillClass');
+      $thisSkillClass = $skill->get_value('skillClass');
       if ($currSkillClass != $thisSkillClass) {
         $currSkillClass = $thisSkillClass;
         $skill_header = true;
@@ -126,23 +126,23 @@ require_once("../alloc.php");
     global $TPL, $personID, $skills;
 
     $db = new db_alloc;
-    $query = sprintf("SELECT * FROM skillProficiencys WHERE personID=%d", $personID);
+    $query = sprintf("SELECT * FROM proficiency WHERE personID=%d", $personID);
     $db->query($query);
     $skills_got = array();
     while ($db->next_record()) {
-      $skillList = new skillList;
-      $skillList->read_db_record($db);
-      array_push($skills_got, $skillList->get_id());
+      $skill = new skill;
+      $skill->read_db_record($db);
+      array_push($skills_got, $skill->get_id());
     }
-    $query = "SELECT * FROM skillList ORDER BY skillClass";
+    $query = "SELECT * FROM skill ORDER BY skillClass";
     $db->query($query);
     while ($db->next_record()) {
-      $skillList = new skillList;
-      $skillList->read_db_record($db);
-      if (in_array($skillList->get_id(), $skills_got)) {
+      $skill = new skill;
+      $skill->read_db_record($db);
+      if (in_array($skill->get_id(), $skills_got)) {
         // dont show this item
       } else {
-        $skills[$skillList->get_id()] = sprintf("%s - %s", $skillList->get_value('skillClass'), $skillList->get_value('skillName'));
+        $skills[$skill->get_id()] = sprintf("%s - %s", $skill->get_value('skillClass'), $skill->get_value('skillName'));
       }
     }
     if (count($skills) > 0) {
@@ -174,31 +174,31 @@ if ($personID) {
     
 
 if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $_POST["personExpertiseItem_delete"]) {
-  $skillProficiencys = new skillProficiencys;
-  $skillProficiencys->read_globals();
+  $proficiency = new proficiency;
+  $proficiency->read_globals();
 
 
   if ($_POST["skillID"] != null) {
     if ($_POST["personExpertiseItem_delete"]) {
-      $skillProficiencys->delete();
+      $proficiency->delete();
     } else if ($_POST["personExpertiseItem_save"]) {
-      $skillProficiencys->save();
+      $proficiency->save();
     } else if ($_POST["personExpertiseItem_add"]) {
       // skillID is an array if when adding but not when saving or deleting
-      $skillProficiency = $skillProficiencys->get_value('skillProficiency');
+      $skillProficiency = $proficiency->get_value('skillProficiency');
       for ($i = 0; $i < count($_POST["skillID"]); $i++) {
-        $skillProficiencys = new skillProficiencys;
+        $proficiency = new proficiency;
 
-        $skillProficiencys->set_value('skillID', $_POST["skillID"][$i]);
-        $skillProficiencys->set_value('skillProficiency', $_POST["skillProficiency"]);
-        $skillProficiencys->set_value('personID', $personID);
+        $proficiency->set_value('skillID', $_POST["skillID"][$i]);
+        $proficiency->set_value('skillProficiency', $_POST["skillProficiency"]);
+        $proficiency->set_value('personID', $personID);
 
         $db = new db_alloc;
-        $query = "SELECT * FROM skillProficiencys WHERE personID = $personID";
+        $query = "SELECT * FROM proficiency WHERE personID = $personID";
         $query.= sprintf(" AND skillID = %d", $_POST["skillID"][$i]);
         $db->query($query);
         if (!$db->next_record()) {
-          $skillProficiencys->save();
+          $proficiency->save();
         }
       }
     }

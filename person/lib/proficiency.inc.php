@@ -20,8 +20,8 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class skillProficiencys extends db_entity {
-  public $data_table = "skillProficiencys";
+class proficiency extends db_entity {
+  public $data_table = "proficiency";
   public $display_field_name = "personID";
   public $key_field = "proficiencyID";
   public $data_fields = array("personID"

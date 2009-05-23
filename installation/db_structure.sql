@@ -304,16 +304,16 @@ CREATE TABLE sess (
   sessData text
 ) ENGINE=InnoDB PACK_KEYS=0;
 
-DROP TABLE IF EXISTS skillList;
-CREATE TABLE skillList (
+DROP TABLE IF EXISTS skill;
+CREATE TABLE skill (
   skillID integer NOT NULL auto_increment PRIMARY KEY,
   skillName varchar(40) NOT NULL default '',
   skillDescription text,
   skillClass varchar(40) NOT NULL default ''
 ) ENGINE=InnoDB PACK_KEYS=0;
 
-DROP TABLE IF EXISTS skillProficiencys;
-CREATE TABLE skillProficiencys (
+DROP TABLE IF EXISTS proficiency;
+CREATE TABLE proficiency (
   proficiencyID integer NOT NULL auto_increment PRIMARY KEY,
   personID integer NOT NULL,
   skillID integer NOT NULL,

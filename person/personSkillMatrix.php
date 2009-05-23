@@ -32,56 +32,56 @@ function show_filter($template) {
 function show_skill_classes() {
   global $TPL, $skill_class, $db;
   $skill_classes = array(""=>"Any class");
-  $query = "SELECT skillClass FROM skillList ORDER BY skillClass";
+  $query = "SELECT skillClass FROM skill ORDER BY skillClass";
   $db->query($query);
   while ($db->next_record()) {
-    $skillList = new skillList;
-    $skillList->read_db_record($db);
-    if (!in_array($skillList->get_value('skillClass'), $skill_classes)) {
-      $skill_classes[$skillList->get_value('skillClass')] = $skillList->get_value('skillClass');
+    $skill = new skill;
+    $skill->read_db_record($db);
+    if (!in_array($skill->get_value('skillClass'), $skill_classes)) {
+      $skill_classes[$skill->get_value('skillClass')] = $skill->get_value('skillClass');
     }
   }
   $TPL["skill_classes"] = page::select_options($skill_classes, $skill_class);
 }
 
 function show_skills() {
-  global $TPL, $skill, $skills, $skill_class, $db;
+  global $TPL, $talent, $skills, $skill_class, $db;
   $skills = array(""=>"Any skill");
-  $query = "SELECT * FROM skillList";
+  $query = "SELECT * FROM skill";
   if ($skill_class != "") {
     $query.= sprintf(" WHERE skillClass='%s'", $skill_class);
   }
   $query.= " ORDER BY skillClass,skillName";
   $db->query($query);
   while ($db->next_record()) {
-    $skillList = new skillList;
-    $skillList->read_db_record($db);
-    $skills[$skillList->get_id()] = sprintf("%s - %s", $skillList->get_value('skillClass'), $skillList->get_value('skillName'));
+    $skill = new skill;
+    $skill->read_db_record($db);
+    $skills[$skill->get_id()] = sprintf("%s - %s", $skill->get_value('skillClass'), $skill->get_value('skillName'));
   }
-  if ($skill_class != "" && !in_array($skills[$skill], $skills)) {
-    $skill = "";
+  if ($skill_class != "" && !in_array($skills[$talent], $skills)) {
+    $talent = "";
   }
-  $TPL["skills"] = page::select_options($skills, $skill);
+  $TPL["skills"] = page::select_options($skills, $talent);
 }
 
 function get_people_header() {
-  global $TPL, $people_ids, $people_header, $skill, $skill_class, $show_all;
+  global $TPL, $people_ids, $people_header, $talent, $skill_class, $show_all;
 
   $people_ids = array();
 
   $where = FALSE;
   $db = new db_alloc;
   $query = "SELECT * FROM person";
-  $query.= " LEFT JOIN skillProficiencys ON person.personID=skillProficiencys.personID";
-  $query.= " LEFT JOIN skillList ON skillProficiencys.skillID=skillList.skillID WHERE personActive = 1 ";
+  $query.= " LEFT JOIN proficiency ON person.personID=proficiency.personID";
+  $query.= " LEFT JOIN skill ON proficiency.skillID=skill.skillID WHERE personActive = 1 ";
   if (!isset($show_all)) {
-    $query.= " AND skillProficiencys.skillProficiency";
+    $query.= " AND proficiency.skillProficiency";
   }
-  if ($skill) {
-    $query.= sprintf(" AND skillList.skillID=%d", $skill);
+  if ($talent) {
+    $query.= sprintf(" AND skill.skillID=%d", $talent);
 
   } else if ($skill_class) {
-    $query.= sprintf(" AND skillList.skillClass='%s'", $skill_class);
+    $query.= sprintf(" AND skill.skillClass='%s'", $skill_class);
   }
   $query.= " GROUP BY username ORDER BY username";
   $db->query($query);
@@ -94,16 +94,16 @@ function get_people_header() {
 }
 
 function show_skill_expertise() {
-  global $TPL, $people_ids, $people_header, $skill, $skill_class;
+  global $TPL, $people_ids, $people_header, $talent, $skill_class;
 
   $currSkillClass = null;
 
   $db = new db_alloc;
-  $query = "SELECT * FROM skillProficiencys";
-  $query.= " LEFT JOIN skillList ON skillProficiencys.skillID=skillList.skillID";
-  if ($skill != "" || $skill_class != "") {
-    if ($skill != "") {
-      $query.= sprintf(" WHERE skillProficiencys.skillID=%d", $skill);
+  $query = "SELECT * FROM proficiency";
+  $query.= " LEFT JOIN skill ON proficiency.skillID=skill.skillID";
+  if ($talent != "" || $skill_class != "") {
+    if ($talent != "") {
+      $query.= sprintf(" WHERE proficiency.skillID=%d", $talent);
     } else {
       $query.= sprintf(" WHERE skillClass='%s'", $skill_class);
     }
@@ -111,30 +111,30 @@ function show_skill_expertise() {
   $query.= " GROUP BY skillName ORDER BY skillClass,skillName";
   $db->query($query);
   while ($db->next_record()) {
-    $skillList = new skillList;
-    $skillList->read_db_record($db);
-    $thisSkillClass = $skillList->get_value('skillClass');
+    $skill = new skill;
+    $skill->read_db_record($db);
+    $thisSkillClass = $skill->get_value('skillClass');
     if ($currSkillClass != $thisSkillClass) {
       $currSkillClass = $thisSkillClass;
       if (!isset($people_header)) {
         get_people_header();
       }
-      $class_header = sprintf("<tr class=\"highlighted\">\n<th width=\"5%%\">%s&nbsp;&nbsp;&nbsp;</th>\n", $skillList->get_value('skillClass'));
+      $class_header = sprintf("<tr class=\"highlighted\">\n<th width=\"5%%\">%s&nbsp;&nbsp;&nbsp;</th>\n", $skill->get_value('skillClass'));
       print $class_header.$people_header."</tr>\n";
     }
-    print sprintf("<tr>\n<th>%s</th>\n", $skillList->get_value('skillName'));
+    print sprintf("<tr>\n<th>%s</th>\n", $skill->get_value('skillName'));
     for ($i = 0; $i < count($people_ids); $i++) {
       $db2 = new db_alloc;
-      $query = "SELECT * FROM skillProficiencys";
-      $query.= sprintf(" WHERE skillID=%d AND personID=%d", $skillList->get_id(), $people_ids[$i]);
+      $query = "SELECT * FROM proficiency";
+      $query.= sprintf(" WHERE skillID=%d AND personID=%d", $skill->get_id(), $people_ids[$i]);
       $db2->query($query);
       if ($db2->next_record()) {
-        $skillProficiencys = new skillProficiencys;
-        $skillProficiencys->read_db_record($db2);
-        $proficiency = sprintf("<td align=\"center\"><img src=\"../images/skill_%s.png\" alt=\"%s\"/></td>\n"
-                              ,strtolower($skillProficiencys->get_value('skillProficiency'))
-                              ,substr($skillProficiencys->get_value('skillProficiency'), 0, 1));
-        print $proficiency;
+        $proficiency = new proficiency;
+        $proficiency->read_db_record($db2);
+        $p = sprintf("<td align=\"center\"><img src=\"../images/skill_%s.png\" alt=\"%s\"/></td>\n"
+                              ,strtolower($proficiency->get_value('skillProficiency'))
+                              ,substr($proficiency->get_value('skillProficiency'), 0, 1));
+        print $p;
       } else {
         print "<td align=\"center\">-</td>\n";
       }
@@ -143,7 +143,7 @@ function show_skill_expertise() {
   }
 }
 
-$skill or $skill = $_POST["skill"];
+$talent or $talent = $_POST["talent"];
 $skill_class or $skill_class = $_POST["skill_class"];
 
 $current_user->have_perm(PERM_PERSON_READ_MANAGEMENT) and $TPL["personAddSkill_link"] = "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_personSkillAdd"]."\">Edit Skill Items</a>";
