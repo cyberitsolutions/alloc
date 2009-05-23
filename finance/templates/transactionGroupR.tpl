@@ -1,4 +1,4 @@
-<tr id="transactionRow{$transactionID}" style="{$display}">
+<tr id="transactionRow{$transactionID}">
   <td>{$link}</td>
   <td><input name="amount[]" size="10" value="{$amount}"></td>
   <td width="15%"><select name="fromTfID[]" style="width:100%"><option value="">{$fromTfList_dropdown}</select></td>

@@ -3,19 +3,19 @@
 /*
  * Copyright (C) 2006, 2007, 2008 Alex Lance, Clancy Malcolm, Cybersource
  * Pty. Ltd.
- * 
+ *
  * This file is part of the allocPSA application <info@cyber.com.au>.
- * 
+ *
  * allocPSA is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * allocPSA is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
  * License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
@@ -25,8 +25,8 @@ require_once("../alloc.php");
 function show_transaction_list($template) {
   global $TPL, $tflist, $transactionGroupID;
 
-  $q = sprintf("SELECT * 
-                  FROM transaction 
+  $q = sprintf("SELECT *
+                  FROM transaction
                  WHERE transactionGroupID = %d
               ORDER BY transactionID
                ",$transactionGroupID);
@@ -37,7 +37,7 @@ function show_transaction_list($template) {
     $transaction = new transaction;
     $transaction->read_array($row);
     $transaction->set_tpl_values();
-  
+
     $tflist = add_inactive_tf($transaction->get_value("tfID"), $tflist);
     $tflist = add_inactive_tf($transaction->get_value("fromTfID"), $tflist);
 
@@ -54,7 +54,7 @@ function show_transaction_list($template) {
 function show_transaction_new($template) {
   global $TPL, $tflist;
   $transaction = new transaction;
-  $transaction->set_tpl_values(); // wipe clean 
+  $transaction->set_tpl_values(); // wipe clean
   $TPL["display"] = "display:none";
   $TPL["tfList_dropdown"] = page::select_options($tflist,NULL,500);
   $TPL["fromTfList_dropdown"] = page::select_options($tflist,NULL,500);
@@ -101,7 +101,7 @@ if ($_POST["save_transactions"]) {
         $commar1 = ", ";
 
       // Save
-      } else {
+      } else if ($_POST["amount"][$k]) {
         $a = array("amount"             => $_POST["amount"][$k]
                   ,"tfID"               => $_POST["tfID"][$k]
                   ,"fromTfID"           => $_POST["fromTfID"][$k]
@@ -119,10 +119,13 @@ if ($_POST["save_transactions"]) {
           $transaction->select();
         }
         $transaction->read_array($a);
-        if ($transaction->validate() == "") {
+        $v = $transaction->validate();
+        if ($v == "") {
           $transaction->save();
           $saved.= $commar2.$transaction->get_id();
           $commar2 = ", ";
+        } else {
+          $TPL["message"][] = implode("<br>",$v);
         }
       }
     }
