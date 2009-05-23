@@ -20,8 +20,8 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class skillList extends db_entity {
-  public $data_table = "skillList";
+class skill extends db_entity {
+  public $data_table = "skill";
   public $display_field_name = "skillName";
   public $key_field = "skillID";
   public $data_fields = array("skillName"
@@ -32,16 +32,16 @@ class skillList extends db_entity {
   // return true if a skill with same name and class already exists
   // and update fields of current if it does exist
   function skill_exists() {
-    $query = "SELECT * FROM skillList";
+    $query = "SELECT * FROM skill";
     $query.= sprintf(" WHERE skillName='%s'", $this->get_value('skillName'));
     $query.= sprintf(" AND skillClass='%s'", $this->get_value('skillClass'));
     $db = new db_alloc;
     $db->query($query);
     if ($db->next_record()) {
-      $skillList = new skillList;
-      $skillList->read_db_record($db);
-      $this->set_id($skillList->get_id());
-      $this->set_value('skillDescription', $skillList->get_value('skillDescription'));
+      $skill = new skill;
+      $skill->read_db_record($db);
+      $this->set_id($skill->get_id());
+      $this->set_value('skillDescription', $skill->get_value('skillDescription'));
       return TRUE;
     }
     return FALSE;
@@ -50,13 +50,13 @@ class skillList extends db_entity {
   function get_skill_classes() {
     $db = new db_alloc;
     $skill_classes = array(""=>"Any Class");
-    $query = "SELECT skillClass FROM skillList ORDER BY skillClass";
+    $query = "SELECT skillClass FROM skill ORDER BY skillClass";
     $db->query($query);
     while ($db->next_record()) {
-      $skillList = new skillList;
-      $skillList->read_db_record($db);
-      if (!in_array($skillList->get_value('skillClass'), $skill_classes)) {
-        $skill_classes[$skillList->get_value('skillClass')] = $skillList->get_value('skillClass');
+      $skill = new skill;
+      $skill->read_db_record($db);
+      if (!in_array($skill->get_value('skillClass'), $skill_classes)) {
+        $skill_classes[$skill->get_value('skillClass')] = $skill->get_value('skillClass');
       }
     }
     return $skill_classes;
@@ -65,7 +65,7 @@ class skillList extends db_entity {
   function get_skills() {
     global $TPL, $skill_class;
     $skills = array(""=>"Any Skill");
-    $query = "SELECT * FROM skillList";
+    $query = "SELECT * FROM skill";
     if ($skill_class != "") {
       $query.= sprintf(" WHERE skillClass='%s'", $skill_class);
     }
@@ -73,9 +73,9 @@ class skillList extends db_entity {
     $db = new db_alloc;
     $db->query($query);
     while ($db->next_record()) {
-      $skillList = new skillList;
-      $skillList->read_db_record($db);
-      $skills[$skillList->get_id()] = sprintf("%s - %s", $skillList->get_value('skillClass'), $skillList->get_value('skillName'));
+      $skill = new skill;
+      $skill->read_db_record($db);
+      $skills[$skill->get_id()] = sprintf("%s - %s", $skill->get_value('skillClass'), $skill->get_value('skillName'));
     }
     return $skills;
   }

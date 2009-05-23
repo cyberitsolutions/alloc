@@ -181,12 +181,12 @@ VALUES
 
 ,('sentEmailLog'             ,0  ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
 
-,('skillList'                ,0  ,NULL ,'employee' ,'Y' ,NULL ,1     ,NULL)
-,('skillList'                ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
+,('skill'                    ,0  ,NULL ,'employee' ,'Y' ,NULL ,1     ,NULL)
+,('skill'                    ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,('skillProficiencys'        ,0  ,NULL ,'employee' ,'Y' ,NULL ,1     ,NULL)
-,('skillProficiencys'        ,-1 ,NULL ,'employee' ,'Y' ,NULL ,14    ,NULL)
-,('skillProficiencys'        ,0  ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
+,('proficiency'              ,0  ,NULL ,'employee' ,'Y' ,NULL ,1     ,NULL)
+,('proficiency'              ,-1 ,NULL ,'employee' ,'Y' ,NULL ,14    ,NULL)
+,('proficiency'              ,0  ,NULL ,'manage'   ,'Y' ,NULL ,15    ,NULL)
 
 ,('task'                     ,-1 ,NULL ,'employee' ,'Y' ,NULL ,287   ,NULL)
 ,('task'                     ,0  ,NULL ,'employee' ,'Y' ,NULL ,1     ,'Allow read all task records for searches.')

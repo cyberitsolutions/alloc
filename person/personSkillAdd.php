@@ -27,39 +27,39 @@ require_once("../alloc.php");
 // add new skill to database
 if ($_POST["add_skill"]) {
   $failed = FALSE;
-  $skillList = new skillList;
+  $skill = new skill;
   if ($_POST["new_skill_class"] != "") {
-    $skillList->set_value('skillClass', $_POST["new_skill_class"]);
+    $skill->set_value('skillClass', $_POST["new_skill_class"]);
   } else if ($_POST["other_new_skill_class"] != "") {
-    $skillList->set_value('skillClass', $_POST["other_new_skill_class"]);
+    $skill->set_value('skillClass', $_POST["other_new_skill_class"]);
   } else {
     $failed = TRUE;
   } 
   if ($_POST["other_new_skill_name"] != "") {
-    $skillList->set_value('skillName', $_POST["other_new_skill_name"]);
+    $skill->set_value('skillName', $_POST["other_new_skill_name"]);
     // description for now can be the same as the name
-    $skillList->set_value('skillDescription', $_POST["other_new_skill_name"]);
+    $skill->set_value('skillDescription', $_POST["other_new_skill_name"]);
   } else {
     $failed = TRUE;
   } 
-  if ($failed == FALSE && $skillList->skill_exists() == FALSE) {
-    $skillList->save();
+  if ($failed == FALSE && $skill->skill_exists() == FALSE) {
+    $skill->save();
   } 
 } 
 if ($_POST["delete_skill"]) {
-  $skillList = new skillList;
+  $skill = new skill;
   if ($_POST["new_skill_name"] != "") {
-    $skillList->set_id($_POST["new_skill_name"]);
-    $skillList->delete();
+    $skill->set_id($_POST["new_skill_name"]);
+    $skill->delete();
   } 
 } 
 
 
-$skill_classes = skillList::get_skill_classes();
+$skill_classes = skill::get_skill_classes();
 $skill_classes[""] = ">> OTHER >>";
 $TPL["new_skill_classes"] = page::select_options($skill_classes, $_POST["skill_class"]);
 
-$skills = skillList::get_skills();
+$skills = skill::get_skills();
 // if a skill class is selected and a skill that is not in that class is also selected, clear the skill as this is what the filter options will do
 if ($skill_class && !in_array($skills[$_POST["skill"]], $skills)) { $_POST["skill"] = ""; }
 $skills[""] = ">> NEW >>";

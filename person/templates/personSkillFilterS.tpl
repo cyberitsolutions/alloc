@@ -9,7 +9,7 @@
       </tr>
       <tr>
         <td><select name="skill_class">{$skill_classes}</select></td>
-        <td><select name="skill">{$skills}</select></td>
+        <td><select name="talent">{$skills}</select></td>
         <td><input type="submit" value="Filter"></td>
       </tr>
     </table>

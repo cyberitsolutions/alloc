@@ -166,18 +166,18 @@ class person extends db_entity {
 
   function get_skills($proficiency) {
     // Return a string of skills with a given proficiency
-    $query = "SELECT * FROM skillProficiencys LEFT JOIN skillList on skillProficiencys.skillID=skillList.skillID";
+    $query = "SELECT * FROM proficiency LEFT JOIN skill on proficiency.skillID=skill.skillID";
     $query.= sprintf(" WHERE personID=%d AND skillProficiency='%s' ORDER BY skillName", $this->get_id(), $proficiency);
 
     $db = new db_alloc;
     $db->query($query);
     while ($db->next_record()) {
-      $skillList = new skillList;
-      $skillList->read_db_record($db);
+      $skill = new skill;
+      $skill->read_db_record($db);
       if ($rtn) {
         $rtn.= ", ";
       }
-      $rtn.= $skillList->get_value('skillName');
+      $rtn.= $skill->get_value('skillName');
     }
     return $rtn;
   }
@@ -375,13 +375,13 @@ class person extends db_entity {
     if ($filter["skill"]) {
       $sql[] = sprintf("(skillID=%d)", $filter["skill"]);
     } else if ($filter["skill_class"]) {
-      $q = sprintf("SELECT * FROM skillList WHERE skillClass='%s'", db_esc($filter["skill_class"]));
+      $q = sprintf("SELECT * FROM skill WHERE skillClass='%s'", db_esc($filter["skill_class"]));
       $db = new db_alloc();
       $db->query($q);
       while ($db->next_record()) {
-        $skillList = new skillList;
-        $skillList->read_db_record($db);
-        $sql2[] = sprintf("(skillID=%d)", $skillList->get_id());
+        $skill = new skill;
+        $skill->read_db_record($db);
+        $sql2[] = sprintf("(skillID=%d)", $skill->get_id());
       } 
     }
     if ($filter["expertise"]) {
@@ -422,7 +422,7 @@ class person extends db_entity {
 
     $q = "SELECT person.*
             FROM person
-       LEFT JOIN skillProficiencys ON person.personID = skillProficiencys.personID
+       LEFT JOIN proficiency ON person.personID = proficiency.personID
            ".$filter."
         GROUP BY username
         ORDER BY firstName,surname,username";
@@ -585,10 +585,10 @@ class person extends db_entity {
                                );
     $rtn["employee_expertise"] = page::select_options($employee_expertise, $_FORM["expertise"]);
 
-    $skill_classes = skillList::get_skill_classes();
+    $skill_classes = skill::get_skill_classes();
     $rtn["skill_classes"] = page::select_options($skill_classes, $_FORM["skill_class"]);
 
-    $skills = skillList::get_skills();
+    $skills = skill::get_skills();
     // if a skill class is selected and a skill that is not in that class is also selected, 
     // clear the skill as this is what the filter options will do
     if ($skill_class && !in_array($skills[$_FORM["skill"]], $skills)) { 
