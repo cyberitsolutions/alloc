@@ -1,5 +1,3 @@
-var alloc_http_request = new Array();
-
 function makeAjaxRequest(url,entityid,extra_fields) {
   $("#"+entityid).html('<img src="../images/ticker2.gif" alt="Updating field..." title="Updating field...">');
   jQuery.get(url,extra_fields,function(data) {
