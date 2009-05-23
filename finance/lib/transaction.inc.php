@@ -131,7 +131,7 @@ class transaction extends db_entity {
     //the chance to click "approve"/"reject")
     $this->is_final() && !$this->get_value("expenseFormID") and $err[] = "Cannot save transaction. Transaction has been finalised.";
     $this->get_value("fromTfID") or $err[] = "Unable to save transaction without a Source TF.";
-    $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".$this->get_value("fromTfID").") being the same as the Destination TF (".$this->get_value("tfID").")";
+    $this->get_value("fromTfID") && $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".$this->get_value("fromTfID").") being the same as the Destination TF (".$this->get_value("tfID").")";
     $this->get_value("quantity") or $this->set_value("quantity",1);
     $this->get_value("transactionDate") or $this->set_value("transactionDate",date("Y-m-d"));
     return $err;
@@ -255,8 +255,8 @@ class transaction extends db_entity {
           $invoiceItem = $this->get_foreign_object("invoiceItem");
           $invoice = $invoiceItem->get_foreign_object("invoice");
         }
-        $str = "<a href=\"".$invoice->get_url()."\">".$transactionTypes[$type]." ".$invoice->get_value("invoiceNum")."</a>";
-      
+        $invoice->get_id() and $str = "<a href=\"".$invoice->get_url()."\">".$transactionTypes[$type]." ".$invoice->get_value("invoiceNum")."</a>";
+
     // Transaction is from an expenseform
     } else if ($type == "expense") {
       $expenseForm = $this->get_foreign_object("expenseForm");
@@ -275,9 +275,15 @@ class transaction extends db_entity {
       $timeSheet = new timeSheet;
       $timeSheet->set_id($this->get_value("timeSheetID"));
       $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." (Time Sheet ".$this->get_value("timeSheetID").")</a>";
+
     } else {
-      return $transactionTypes[$type];
+      $str = $transactionTypes[$type];
     }
+
+    if ($this->get_value("transactionGroupID")) {
+      $str.= " <a href=\"".$TPL["url_alloc_transactionGroup"]."transactionGroupID=".$this->get_value("transactionGroupID")."\">Group ".$this->get_value("transactionGroupID")."</a>";
+    }
+
     return $str;
   }
 

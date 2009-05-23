@@ -25,7 +25,7 @@ $(document).ready(function() {
 <input type="hidden" name="transactionGroupID" value="{$transactionGroupID}">
 <table class="box">
   <tr>
-    <th>Transaction Group</th>
+    <th>Transaction Group {$transactionGroupID}</th>
   </tr>
   <tr>
     <td>
