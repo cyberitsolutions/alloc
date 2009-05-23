@@ -201,6 +201,7 @@ class history extends db_entity {
         $this->set_value("the_place", $arr[$the_place]);
         $this->set_value("the_args", $qs);
         $this->set_value("the_label", $the_label);
+        $this->set_value("the_time", date("Y-m-d H:i:s"));
         $this->save();
       }
     }

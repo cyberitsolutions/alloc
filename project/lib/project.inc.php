@@ -55,6 +55,13 @@ class project extends db_entity {
   public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "view task allocations"
                              ,PERM_PROJECT_ADD_TASKS => "add tasks");
 
+  function delete() { 
+    $q = sprintf("DELETE from projectPerson WHERE projectID = %d",$this->get_id()); 
+    $db = new db_alloc();
+    $db->query($q);
+    return parent::delete();
+  }
+
   function get_url() {
     global $sess;
     $sess or $sess = new Session;

@@ -294,22 +294,6 @@ if ($_POST["save"]) {
 
   if ($_POST["delete"]) {
     $client->read_globals();
-    // delete all contacts and comments linked with this client as well
-    $db = new db_alloc;
-    $query = sprintf("SELECT * FROM clientContact WHERE clientID=%d", $client->get_id());
-    $db->query($query);
-    while ($db->next_record()) {
-      $clientContact = new clientContact;
-      $clientContact->read_db_record($db);
-      $clientContact->delete();
-    }
-    $query = sprintf("SELECT * FROM comment WHERE commentLinkID=%d", $client->get_id());
-    $db->query($query);
-    while ($db->next_record()) {
-      $comment = new comment;
-      $comment->read_db_record($db);
-      $comment->delete();
-    }
     $client->delete();
     alloc_redirect($TPL["url_alloc_clientList"]);
   } else {
