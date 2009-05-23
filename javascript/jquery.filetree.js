@@ -68,8 +68,8 @@ if(jQuery) (function($){
             bots.push(bits.shift());
             o.target = bits.join("/");
             path = bots.join("/");
-            $('a[rel="'+path+'/"]').click();
-            $('a[rel="'+path+'"]').click();
+            $('a[rel="'+path+'/"]','#jftTreeTD').click();
+            $('a[rel="'+path+'"]','#jftTreeTD').click();
 					});
 				}
 				
@@ -96,7 +96,7 @@ if(jQuery) (function($){
 								$(this).parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
 								$(this).parent().removeClass('expanded').addClass('collapsed');
 							}
-							h($(this).attr('rel'));       // do the callBack function
+							h($(this).attr('rel'), false); // do the callBack function
 						} else {
 							h($(this).attr('rel'), true); // do the callBack function (true signals that it was a file not a dir)
 						}

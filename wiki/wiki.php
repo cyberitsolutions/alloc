@@ -20,37 +20,12 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 require_once("../alloc.php");
 
-$file = $_POST["file"];
-$filelabel = str_replace(get_wiki_path(),"",$file);
-$target = str_replace(get_wiki_path(),"",$file);
-$text = html_entity_decode($_POST["wikitext"]);
-$text = str_replace("\r\n","\n",$text);
+$TPL["target"] = $_GET["target"] or $TPL["target"] = $_POST["target"];
+$TPL["rev"] = $_GET["rev"];
+$TPL["wiki_tree"] = ATTACHMENTS_DIR."wiki";
 
-
-if (path_under_path(dirname($file), get_wiki_path()) && is_file($file) && is_writable($file)) {
-
-  // Check if we're using a VCS
-  $vcs = vcs::get();
-  //$vcs->debug = true;
-
-  // Save the file ...
-  $handle = fopen($file,"w+b");
-  fputs($handle,$text);
-  fclose($handle);
-
-  // VCS commit the file
-  if (is_object($vcs)) {
-    $vcs->commit($file,$_POST["commit_msg"]);
-  }
-
-  $TPL["message_good"][] = "File saved: ".$filelabel;
-} else {
-  $TPL["message"][] = "Problem saving file: ".$filelabel;
-}
-
-alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($target));
+include_template("templates/wikiM.tpl");
 
 ?>

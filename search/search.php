@@ -414,7 +414,7 @@ if (!$search) {
 
   $allowed_suffixes = array("",".text",".txt",".html",".xml",".mdwn");
 
-  $files = search::get_recursive_dir_list(get_wiki_path());
+  $files = search::get_recursive_dir_list(wiki_module::get_wiki_path());
   foreach ($files as $file) {
 
     // check that the file is of an allowable type. This hopefully means we don't 
@@ -425,7 +425,7 @@ if (!$search) {
 
     $matches = search::by_file($file,$needle);
     if ($matches) { 
-      $f = str_replace(get_wiki_path(),"",$file);
+      $f = str_replace(wiki_module::get_wiki_path(),"",$file);
       $TPL["search_results"].= "<br><br><a href='".$TPL["url_alloc_wiki"]."target=".urlencode($f)."'>".$f."</a><br>";
       foreach ($matches as $match) {
         $TPL["search_results"].= search::get_trimmed_description(page::htmlentities($match),$needle,$category);
