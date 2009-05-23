@@ -55,7 +55,7 @@ class vcs {
     // Check if we're using a VCS
     $class = "vcs_".config::get_config_item("wikiVCS");
     if (class_exists($class)) {
-      $vcs = new $class(get_wiki_path());
+      $vcs = new $class(wiki_module::get_wiki_path());
     }
     return $vcs;
   }
@@ -109,18 +109,20 @@ class vcs {
   }
   function cat($file, $revision) {
     $lines = $this->run(sprintf($this->cat, escapeshellarg($file), escapeshellarg($revision)
-                                ,escapeshellarg(str_replace(get_wiki_path(),"",$file))));
+                                ,escapeshellarg(str_replace(wiki_module::get_wiki_path(),"",$file))));
     $lines or $lines = array();
     return implode("\n",$lines);
   }
   function diff() {
   }
   function add($file) {
-    $this->run("add ".$file);
+    $this->run("add ".escapeshellarg($file));
   }
   function rm() {
   }
-  function mv() {
+  function mv($src, $dst, $message) {
+    $this->run("mv ".escapeshellarg($src)." ".escapeshellarg($dst));
+    $this->run($this->commit." ".escapeshellarg($message)." ".escapeshellarg($src)." ".escapeshellarg($dst));
   }
   function format_log($logs=array()) {
     /*

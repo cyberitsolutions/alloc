@@ -23,23 +23,28 @@
 define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
-list($file, $rev) = explode("|",$_GET["file"]);
-$pathfile = realpath(get_wiki_path().urldecode($file));
+$file = $_GET["file"];
+$rev = $_GET["rev"];
+$pathfile = realpath(wiki_module::get_wiki_path().urldecode($file));
 
-if (path_under_path(dirname($pathfile), get_wiki_path()) && is_file($pathfile) && is_readable($pathfile)) {
+if (path_under_path(dirname($pathfile), wiki_module::get_wiki_path())) {
 
   // Check if we're using a VCS
   $vcs = vcs::get();
+  #$vcs->debug = true;
   if (is_object($vcs)) {
     $logs = $vcs->log($pathfile);
     $logs = $vcs->format_log($logs);
     foreach ($logs as $id => $bits) {
       unset($class);
-      urldecode($rev) == $id and $class = "highlighted";
-      !$rev && !$done and $done = $class = "highlighted";
+      if (is_file($pathfile)) {
+        urldecode($rev) == $id and $class = "highlighted";
+        !$rev && !$done and $done = $class = "highlighted";
+      }
       echo "<div class=\"".$class."\" style=\"padding:3px; margin-bottom:10px;\">";
-      echo "<a href='#x' onClick=\"$.history.load('".$file."|".urlencode($id)."'); return false;\">";
-      echo $bits["author"]." ".$bits["date"]."<br>".$bits["msg"]."</a>";
+      is_file($pathfile) and print sprintf("<a href='%starget=%s&rev=%s'>",$TPL["url_alloc_wiki"],urlencode($file),urlencode($id));
+      echo $bits["author"]." ".$bits["date"]."<br>".$bits["msg"];
+      is_file($pathfile) and print "</a>";
       echo "</div>";
     }
   

@@ -31,9 +31,9 @@ $dont_print_these_dirs = array(".","..","CVS",".hg",".bzr","_darcs",".git");
 $DIR = urldecode($_POST['dir']);                                                       
 
 // full path
-$PATH = realpath(get_wiki_path().$DIR).DIRECTORY_SEPARATOR; 
+$PATH = realpath(wiki_module::get_wiki_path().$DIR).DIRECTORY_SEPARATOR; 
 
-if (path_under_path($PATH, get_wiki_path()) && is_dir($PATH)) {
+if (path_under_path($PATH, wiki_module::get_wiki_path()) && is_dir($PATH)) {
   $files = scandir($PATH);
   natcasesort($files);
   if(count($files) > 2) { /* The 2 accounts for . and .. */

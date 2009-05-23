@@ -72,6 +72,15 @@ class vcs_mercurial extends vcs {
     return $msg;
   }
 
+  function log($file) {
+  
+    if (is_file(wiki_module::get_wiki_path().DIRECTORY_SEPARATOR.$file)) {
+      $this->log.= " -f "; // follow renames to files
+    }
+    return $this->run($this->log." ".escapeshellarg($file));
+  }
+
+
 
 }
 

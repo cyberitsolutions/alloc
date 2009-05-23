@@ -521,10 +521,12 @@ class Markdown_Parser {
 
   function _doWikiLinkAnchors_reference_callback($matches) {
     $file = $matches[1];
-    if (file_exists(get_wiki_path().$file.".mdwn")) {
-      return '<a href="?target='.$file.'.mdwn">'.str_replace("_",'\_',$file).'</a>';
-    } else if (file_exists(get_wiki_path().$file)) {
-      return '<a href="?target='.$file.'">'.str_replace("_",'\_',$file).'</a>';
+    if (file_exists(wiki_module::get_wiki_path().$file.".mdwn")) {
+      return '<a href="?target='.urlencode($file).'.mdwn">'.str_replace("_",'\_',$file).'</a>';
+    } else if (file_exists(wiki_module::get_wiki_path().$file)) {
+      return '<a href="?target='.urlencode($file).'">'.str_replace("_",'\_',$file).'</a>';
+    } else {
+      return str_replace("_",'\_',$file).'<a href="?op=new&target='.urlencode($file).'" title="Click here to create this file.">?</a>';
     }
     return $matches[1];
   }

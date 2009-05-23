@@ -32,7 +32,7 @@ class vcs_git extends vcs {
     $this->commit = " commit --author '".$current_user->get_username(1)." <".$current_user->get_value("emailAddress").">' -m ";
     $this->metadir = ".git";
     $this->add_everything = " add ".$repo."/. "; 
-    $this->log = " log --pretty=format:'Hash: %H%nAuthor: %an%nDate: %ct%nMsg: %s' ";
+    $this->log = " log --pretty=format:'Hash: %H%nAuthor: %an%nDate: %ct%nMsg: %s' -M -C --follow ";
     $this->cat = ' show %2$s:%3$s ';
     parent::__construct($repo);
   }

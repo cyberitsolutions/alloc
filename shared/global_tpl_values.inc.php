@@ -111,7 +111,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_search"                         => $sess->url(SCRIPT_PATH."search/search.php")
             ,"url_alloc_report"                         => $sess->url(SCRIPT_PATH."report/report.php")
             ,"url_alloc_tools"                          => $sess->url(SCRIPT_PATH."tools/menu.php")
-            ,"url_alloc_wiki"                           => $sess->url(SCRIPT_PATH."wiki/index.php")
+            ,"url_alloc_wiki"                           => $sess->url(SCRIPT_PATH."wiki/wiki.php")
             ,"url_alloc_stats"                          => $sess->url(SCRIPT_PATH."tools/stats.php")
             ,"url_alloc_statsImage"                     => $sess->url(SCRIPT_PATH."tools/statsImage.php")
             ,"url_alloc_costtime"                       => $sess->url(SCRIPT_PATH."tools/costtime.php")
@@ -126,8 +126,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_productSaleList"                => $sess->url(SCRIPT_PATH."sale/productSaleList.php")
             ,"url_alloc_updateCostPrice"                => $sess->url(SCRIPT_PATH."sale/updateCostPrice.php")
             ,"url_alloc_fileTree"                       => $sess->url(SCRIPT_PATH."wiki/fileTree.php")
-            ,"url_alloc_fileGet"                        => $sess->url(SCRIPT_PATH."wiki/fileGet.php")
-            ,"url_alloc_fileSave"                       => $sess->url(SCRIPT_PATH."wiki/fileSave.php")
+            ,"url_alloc_file"                           => $sess->url(SCRIPT_PATH."wiki/file.php")
             ,"url_alloc_fileHistory"                    => $sess->url(SCRIPT_PATH."wiki/fileHistory.php")
             ,"url_alloc_filePreview"                    => $sess->url(SCRIPT_PATH."wiki/filePreview.php")
 

@@ -13,8 +13,6 @@
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.textarearesizer.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.curvycorners.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.livequery.js"></script>
-    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.filetree.js"></script>
-    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.history.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>
