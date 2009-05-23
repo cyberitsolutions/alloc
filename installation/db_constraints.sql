@@ -1,40 +1,40 @@
 
 -- Indexes to speed up querying
-ALTER TABLE client ADD KEY clientName (clientName);
-ALTER TABLE clientContact ADD KEY clientID (clientID);
-ALTER TABLE comment ADD KEY commentLinkID (commentLinkID);
-ALTER TABLE comment ADD KEY commentType (commentType);
-ALTER TABLE history ADD INDEX idx_personID (personID);
-ALTER TABLE invoiceItem ADD INDEX idx_invoiceID (invoiceID);
-ALTER TABLE permission ADD KEY tableName (tableName);
-ALTER TABLE project ADD KEY projectName (projectName);
-ALTER TABLE project ADD KEY clientID (clientID);
-ALTER TABLE projectPerson ADD KEY idx_person_project (projectID,personID);
-ALTER TABLE task ADD KEY taskName (taskName);
-ALTER TABLE task ADD KEY projectID (projectID);
-ALTER TABLE task ADD KEY parentTaskID (parentTaskID);
-ALTER TABLE task ADD KEY taskTypeID (taskTypeID);
-ALTER TABLE task ADD KEY taskStatus (taskStatus);
-ALTER TABLE task ADD KEY taskSubStatus (taskSubStatus);
-ALTER TABLE task ADD KEY dateCreated (dateCreated);
-ALTER TABLE auditItem ADD KEY idx_entityName (entityName);
-ALTER TABLE auditItem ADD KEY idx_entityID (entityID);
-ALTER TABLE tfPerson ADD INDEX idx_tfID (tfID);
-ALTER TABLE timeSheetItem ADD INDEX idx_timeSheetID (timeSheetID);
-ALTER TABLE timeSheetItem ADD INDEX idx_taskID (taskID);
-ALTER TABLE transaction ADD INDEX idx_timeSheetID (timeSheetID);
-ALTER TABLE transaction ADD INDEX idx_tfID (tfID);
-ALTER TABLE transaction ADD INDEX idx_invoiceItemID (invoiceItemID);
-ALTER TABLE transaction ADD INDEX idx_fromTfID (fromTfID);
-ALTER TABLE transaction ADD INDEX idx_productSaleID (productSaleID);
-ALTER TABLE transaction ADD INDEX idx_productSaleItemID (productSaleItemID);
-ALTER TABLE transaction ADD INDEX idx_transactionGroupID (transactionGroupID);
+CREATE INDEX clientName ON client (clientName);
+CREATE INDEX clientID ON clientContact (clientID);
+CREATE INDEX commentLinkID ON comment (commentLinkID);
+CREATE INDEX commentType ON comment (commentType);
+CREATE INDEX idx_personID ON history (personID);
+CREATE INDEX idx_invoiceID ON invoiceItem (invoiceID);
+CREATE INDEX tableName ON permission (tableName);
+CREATE INDEX projectName ON project (projectName);
+CREATE INDEX idx_clientID ON project (clientID);
+CREATE INDEX idx_person_project ON projectPerson (projectID,personID);
+CREATE INDEX taskName ON task (taskName);
+CREATE INDEX projectID ON task (projectID);
+CREATE INDEX parentTaskID ON task (parentTaskID);
+CREATE INDEX taskTypeID ON task (taskTypeID);
+CREATE INDEX taskStatus ON task (taskStatus);
+CREATE INDEX taskSubStatus ON task (taskSubStatus);
+CREATE INDEX dateCreated ON task (dateCreated);
+CREATE INDEX idx_entityName ON auditItem (entityName);
+CREATE INDEX idx_entityID ON auditItem (entityID);
+CREATE INDEX idx_tfPerson_tfID ON tfPerson (tfID);
+CREATE INDEX idx_timeSheetItem_timeSheetID ON timeSheetItem (timeSheetID);
+CREATE INDEX idx_taskID ON timeSheetItem (taskID);
+CREATE INDEX idx_transaction_timeSheetID ON transaction (timeSheetID);
+CREATE INDEX idx_transaction_tfID ON transaction (tfID);
+CREATE INDEX idx_invoiceItemID ON transaction (invoiceItemID);
+CREATE INDEX idx_fromTfID ON transaction (fromTfID);
+CREATE INDEX idx_productSaleID ON transaction (productSaleID);
+CREATE INDEX idx_productSaleItemID ON transaction (productSaleItemID);
+CREATE INDEX idx_transactionGroupID ON transaction (transactionGroupID);
 
 -- Unique key constraints
-ALTER TABLE config ADD UNIQUE KEY name (name);
-ALTER TABLE invoice ADD UNIQUE INDEX invoiceNum (invoiceNum);
-ALTER TABLE person ADD UNIQUE KEY username (username);
-ALTER TABLE token ADD UNIQUE INDEX tokenHash (tokenHash);
+CREATE UNIQUE INDEX name ON config (name);
+CREATE UNIQUE INDEX invoiceNum ON invoice (invoiceNum);
+CREATE UNIQUE INDEX username ON person (username);
+CREATE UNIQUE INDEX tokenHash ON token (tokenHash);
 
 -- Add the referential integrity to the lookup/metadata tables. These are
 -- all ON UPDATE CASCADE, so that changes in the lookup tables are reflected with

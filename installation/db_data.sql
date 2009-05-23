@@ -94,11 +94,11 @@ INSERT INTO productSaleStatus (productSaleStatusID, productSaleStatusSeq, produc
 
 
 --
--- Dumping data for table `permission`
+-- Dumping data for table permission
 --
 
 DELETE FROM permission;
-INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allow`, `sortKey`, `actions`, `comment`)
+INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, actions, comment)
 VALUES
 
  ('absence'                  ,-1 ,NULL ,'employee' ,'Y' ,NULL ,15    ,NULL)
@@ -215,19 +215,19 @@ VALUES
 ,('token'                    ,0  ,NULL ,''         ,'Y' ,NULL ,15    ,NULL)
 
 ,('transaction'              ,-1 ,NULL ,'employee' ,'Y' ,NULL ,15    ,NULL)
-,('transaction'              ,0  ,NULL ,'manage'   ,'Y' ,NULL ,8192  ,"Manager create pending transaction.")
+,('transaction'              ,0  ,NULL ,'manage'   ,'Y' ,NULL ,8192  ,'Manager create pending transaction.')
 ,('transaction'              ,0  ,NULL ,'admin'    ,'Y' ,NULL ,65295 ,NULL)
 
 ,('transactionRepeat'        ,-1 ,NULL ,'employee' ,'Y' ,NULL ,1     ,NULL)
 ,('transactionRepeat'        ,0  ,NULL ,'admin'    ,'Y' ,NULL ,15    ,NULL)
 
-,("auditItem"                ,0  ,NULL ,'employee' ,'Y', NULL, 8 + 1 ,"Allow employees to create and read audit items.")
+,('auditItem'                ,0  ,NULL ,'employee' ,'Y', NULL, 8 + 1 ,'Allow employees to create and read audit items.')
 
 ;
 
 
 --
--- Dumping data for table `config`
+-- Dumping data for table config
 --
 
 
@@ -254,76 +254,76 @@ INSERT INTO config (name, value, type) VALUES ('companyPercent','28.5','text');
 INSERT INTO config (name, value, type) VALUES ('paymentInsurancePercent','10','text');
 INSERT INTO config (name, value, type) VALUES ('payrollTaxPercent','5','text');
 INSERT INTO config (name, value, type) VALUES ('calendarFirstDay','Sun','text');
-INSERT INTO config (name,value,type) VALUES ("timeSheetPrint",'a:3:{i:0;s:24:"timeSheetPrintMode=items";i:1;s:24:"timeSheetPrintMode=units";i:2;s:24:"timeSheetPrintMode=money";}',"array");
-INSERT INTO config (name,value,type) VALUES ("timeSheetPrintOptions",'a:10:{s:24:"timeSheetPrintMode=items";s:7:"Default";s:36:"timeSheetPrintMode=items&printDesc=1";s:8:"Default+";s:24:"timeSheetPrintMode=units";s:5:"Units";s:36:"timeSheetPrintMode=units&printDesc=1";s:6:"Units+";s:24:"timeSheetPrintMode=money";s:7:"Invoice";s:36:"timeSheetPrintMode=money&printDesc=1";s:8:"Invoice+";s:36:"timeSheetPrintMode=items&format=html";s:12:"Default Html";s:48:"timeSheetPrintMode=items&format=html&printDesc=1";s:13:"Default Html+";s:27:"timeSheetPrintMode=estimate";s:8:"Estimate";s:39:"timeSheetPrintMode=estimate&printDesc=1";s:9:"Estimate+";}',"array"); 
-INSERT INTO config (name,value,type) VALUES ("allocEmailAdmin","","text");
-INSERT INTO config (name,value,type) VALUES ("allocEmailHost","","text");
-INSERT INTO config (name,value,type) VALUES ("allocEmailPort","143","text");
-INSERT INTO config (name,value,type) VALUES ("allocEmailUsername","","text");
-INSERT INTO config (name,value,type) VALUES ("allocEmailPassword","","text");
-INSERT INTO config (name,value,type) VALUES ("allocEmailProtocol","imap","text");
-INSERT INTO config (name,value,type) VALUES ("allocEmailFolder","INBOX","text");
-INSERT INTO config (name,value,type) VALUES ("allocEmailKeyMethod","headers","text");
-INSERT INTO config (name,value,type) VALUES ("allocEmailAddressMethod","to","text");
-INSERT INTO config (name,value,type) VALUES ("timeSheetMultipliers", "a:5:{i:1;a:2:{s:5:\"label\";s:13:\"Standard rate\";s:10:\"multiplier\";s:1:\"1\";}i:2;a:2:{s:5:\"label\";s:15:\"Time and a half\";s:10:\"multiplier\";s:3:\"1.5\";}i:3;a:2:{s:5:\"label\";s:11:\"Double time\";s:10:\"multiplier\";s:1:\"2\";}i:4;a:2:{s:5:\"label\";s:11:\"Triple time\";s:10:\"multiplier\";s:1:\"3\";}i:5;a:2:{s:5:\"label\";s:9:\"No charge\";s:10:\"multiplier\";s:1:\"0\";}}", "array");
-INSERT INTO config (name,value,type) VALUES ("taskPriorities",'a:5:{i:1;a:2:{s:5:"label";s:8:"Critical";s:6:"colour";s:7:"#ff0000";}i:2;a:2:{s:5:"label";s:9:"Important";s:6:"colour";s:7:"#ff7200";}i:3;a:2:{s:5:"label";s:6:"Normal";s:6:"colour";s:7:"#333333";}i:4;a:2:{s:5:"label";s:5:"Minor";s:6:"colour";s:7:"#666666";}i:5;a:2:{s:5:"label";s:8:"Wishlist";s:6:"colour";s:7:"#999999";}}',"array");
+INSERT INTO config (name,value,type) VALUES ('timeSheetPrint','a:3:{i:0;s:24:"timeSheetPrintMode=items";i:1;s:24:"timeSheetPrintMode=units";i:2;s:24:"timeSheetPrintMode=money";}','array');
+INSERT INTO config (name,value,type) VALUES ('timeSheetPrintOptions','a:10:{s:24:"timeSheetPrintMode=items";s:7:"Default";s:36:"timeSheetPrintMode=items&printDesc=1";s:8:"Default+";s:24:"timeSheetPrintMode=units";s:5:"Units";s:36:"timeSheetPrintMode=units&printDesc=1";s:6:"Units+";s:24:"timeSheetPrintMode=money";s:7:"Invoice";s:36:"timeSheetPrintMode=money&printDesc=1";s:8:"Invoice+";s:36:"timeSheetPrintMode=items&format=html";s:12:"Default Html";s:48:"timeSheetPrintMode=items&format=html&printDesc=1";s:13:"Default Html+";s:27:"timeSheetPrintMode=estimate";s:8:"Estimate";s:39:"timeSheetPrintMode=estimate&printDesc=1";s:9:"Estimate+";}','array'); 
+INSERT INTO config (name,value,type) VALUES ('allocEmailAdmin','','text');
+INSERT INTO config (name,value,type) VALUES ('allocEmailHost','','text');
+INSERT INTO config (name,value,type) VALUES ('allocEmailPort','143','text');
+INSERT INTO config (name,value,type) VALUES ('allocEmailUsername','','text');
+INSERT INTO config (name,value,type) VALUES ('allocEmailPassword','','text');
+INSERT INTO config (name,value,type) VALUES ('allocEmailProtocol','imap','text');
+INSERT INTO config (name,value,type) VALUES ('allocEmailFolder','INBOX','text');
+INSERT INTO config (name,value,type) VALUES ('allocEmailKeyMethod','headers','text');
+INSERT INTO config (name,value,type) VALUES ('allocEmailAddressMethod','to','text');
+INSERT INTO config (name,value,type) VALUES ('timeSheetMultipliers', 'a:5:{i:1;a:2:{s:5:"label";s:13:"Standard rate";s:10:"multiplier";s:1:"1";}i:2;a:2:{s:5:"label";s:15:"Time and a half";s:10:"multiplier";s:3:"1.5";}i:3;a:2:{s:5:"label";s:11:"Double time";s:10:"multiplier";s:1:"2";}i:4;a:2:{s:5:"label";s:11:"Triple time";s:10:"multiplier";s:1:"3";}i:5;a:2:{s:5:"label";s:9:"No charge";s:10:"multiplier";s:1:"0";}}', 'array');
+INSERT INTO config (name,value,type) VALUES ('taskPriorities','a:5:{i:1;a:2:{s:5:"label";s:8:"Critical";s:6:"colour";s:7:"#ff0000";}i:2;a:2:{s:5:"label";s:9:"Important";s:6:"colour";s:7:"#ff7200";}i:3;a:2:{s:5:"label";s:6:"Normal";s:6:"colour";s:7:"#333333";}i:4;a:2:{s:5:"label";s:5:"Minor";s:6:"colour";s:7:"#666666";}i:5;a:2:{s:5:"label";s:8:"Wishlist";s:6:"colour";s:7:"#999999";}}','array');
 
-INSERT INTO config (name,value,type) VALUES ("projectPriorities",'a:5:{i:1;a:2:{s:5:"label";s:8:"Critical";s:6:"colour";s:7:"#ff0000";}i:2;a:2:{s:5:"label";s:9:"Important";s:6:"colour";s:7:"#ff7200";}i:3;a:2:{s:5:"label";s:6:"Normal";s:6:"colour";s:7:"#333333";}i:4;a:2:{s:5:"label";s:5:"Minor";s:6:"colour";s:7:"#666666";}i:5;a:2:{s:5:"label";s:8:"Wishlist";s:6:"colour";s:7:"#999999";}}',"array");
+INSERT INTO config (name,value,type) VALUES ('projectPriorities','a:5:{i:1;a:2:{s:5:"label";s:8:"Critical";s:6:"colour";s:7:"#ff0000";}i:2;a:2:{s:5:"label";s:9:"Important";s:6:"colour";s:7:"#ff7200";}i:3;a:2:{s:5:"label";s:6:"Normal";s:6:"colour";s:7:"#333333";}i:4;a:2:{s:5:"label";s:5:"Minor";s:6:"colour";s:7:"#666666";}i:5;a:2:{s:5:"label";s:8:"Wishlist";s:6:"colour";s:7:"#999999";}}','array');
 
-INSERT INTO config (name,value,type) VALUES ("taskStatusOptions",'a:3:{s:4:"open";a:2:{s:10:"notstarted";a:2:{s:5:"label";s:11:"Not Started";s:6:"colour";s:25:"background-color:#8fe78f;";}s:10:"inprogress";a:2:{s:5:"label";s:11:"In Progress";s:6:"colour";s:25:"background-color:#8fe78f;";}}s:7:"pending";a:3:{s:4:"info";a:2:{s:5:"label";s:4:"Info";s:6:"colour";s:25:"background-color:#f9ca7f;";}s:7:"manager";a:2:{s:5:"label";s:7:"Manager";s:6:"colour";s:25:"background-color:#f9ca7f;";}s:6:"client";a:2:{s:5:"label";s:6:"Client";s:6:"colour";s:25:"background-color:#f9ca7f;";}}s:6:"closed";a:4:{s:7:"invalid";a:2:{s:5:"label";s:7:"Invalid";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:9:"duplicate";a:2:{s:5:"label";s:9:"Duplicate";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:10:"incomplete";a:2:{s:5:"label";s:10:"Incomplete";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:8:"complete";a:2:{s:5:"label";s:9:"Completed";s:6:"colour";s:25:"background-color:#e0e0e0;";}}}', 'array');
+INSERT INTO config (name,value,type) VALUES ('taskStatusOptions','a:3:{s:4:"open";a:2:{s:10:"notstarted";a:2:{s:5:"label";s:11:"Not Started";s:6:"colour";s:25:"background-color:#8fe78f;";}s:10:"inprogress";a:2:{s:5:"label";s:11:"In Progress";s:6:"colour";s:25:"background-color:#8fe78f;";}}s:7:"pending";a:3:{s:4:"info";a:2:{s:5:"label";s:4:"Info";s:6:"colour";s:25:"background-color:#f9ca7f;";}s:7:"manager";a:2:{s:5:"label";s:7:"Manager";s:6:"colour";s:25:"background-color:#f9ca7f;";}s:6:"client";a:2:{s:5:"label";s:6:"Client";s:6:"colour";s:25:"background-color:#f9ca7f;";}}s:6:"closed";a:4:{s:7:"invalid";a:2:{s:5:"label";s:7:"Invalid";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:9:"duplicate";a:2:{s:5:"label";s:9:"Duplicate";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:10:"incomplete";a:2:{s:5:"label";s:10:"Incomplete";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:8:"complete";a:2:{s:5:"label";s:9:"Completed";s:6:"colour";s:25:"background-color:#e0e0e0;";}}}', 'array');
 
-INSERT INTO config (name,value,type) VALUES ("defaultInterestedParties",'a:0:{}',"array");
-INSERT INTO config (name,value,type) VALUES ("task_email_header", "","text");
-INSERT INTO config (name,value,type) VALUES ("task_email_footer", "","text");
-INSERT INTO config (name,value,type) VALUES ("outTfID","","text");
-INSERT INTO config (name,value,type) VALUES ("inTfID","","text");
+INSERT INTO config (name,value,type) VALUES ('defaultInterestedParties','a:0:{}','array');
+INSERT INTO config (name,value,type) VALUES ('task_email_header', '','text');
+INSERT INTO config (name,value,type) VALUES ('task_email_footer', '','text');
+INSERT INTO config (name,value,type) VALUES ('outTfID','','text');
+INSERT INTO config (name,value,type) VALUES ('inTfID','','text');
 
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_taskComment", "Task Comment: %ti %tn [%tp]", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_dailyDigest", "Daily Digest", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_timeSheetToManager", "Time sheet %mi submitted for your approval", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_timeSheetFromManager", "Time sheet %mi rejected by manager", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_timeSheetFromAdministrator", "Time sheet %mi rejected by administrator", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_timeSheetToAdministrator", "Time sheet %mi submitted for your approval", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_timeSheetCompleted", "Time sheet %mi completed", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_reminderClient", "Client Reminder: %li %cc", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_reminderProject", "Project Reminder: %pi %pn", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_reminderTask", "Task Reminder: %ti %tn [%tp]", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("emailSubject_reminderOther", "Reminder: ", "text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("wikiMarkup", "Markdown","text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("wikiVCS", "git","text");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("singleSession","1","text");
-INSERT INTO config (name, value, type) VALUES ("clientCategories",'a:7:{i:0;a:2:{s:5:"label";s:6:"Client";s:5:"value";i:1;}i:1;a:2:{s:5:"label";s:6:"Vendor";s:5:"value";i:2;}i:2;a:2:{s:5:"label";s:8:"Supplier";s:5:"value";i:3;}i:3;a:2:{s:5:"label";s:10:"Consultant";s:5:"value";i:4;}i:4;a:2:{s:5:"label";s:10:"Government";s:5:"value";i:5;}i:5;a:2:{s:5:"label";s:10:"Non-profit";s:5:"value";i:6;}i:6;a:2:{s:5:"label";s:8:"Internal";s:5:"value";i:7;}}','array');
-INSERT INTO config (`name`,`value`,`type`) VALUES ("defaultTimeSheetManagerList", "a:0:{}", "array");
-INSERT INTO config (`name`,`value`,`type`) VALUES ("defaultTimeSheetAdminList", "a:0:{}", "array");
+INSERT INTO config (name,value,type) VALUES ('emailSubject_taskComment', 'Task Comment: %ti %tn [%tp]', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_dailyDigest', 'Daily Digest', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_timeSheetToManager', 'Time sheet %mi submitted for your approval', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_timeSheetFromManager', 'Time sheet %mi rejected by manager', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_timeSheetFromAdministrator', 'Time sheet %mi rejected by administrator', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_timeSheetToAdministrator', 'Time sheet %mi submitted for your approval', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_timeSheetCompleted', 'Time sheet %mi completed', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_reminderClient', 'Client Reminder: %li %cc', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_reminderProject', 'Project Reminder: %pi %pn', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_reminderTask', 'Task Reminder: %ti %tn [%tp]', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_reminderOther', 'Reminder: ', 'text');
+INSERT INTO config (name,value,type) VALUES ('wikiMarkup', 'Markdown','text');
+INSERT INTO config (name,value,type) VALUES ('wikiVCS', 'git','text');
+INSERT INTO config (name,value,type) VALUES ('singleSession','1','text');
+INSERT INTO config (name, value, type) VALUES ('clientCategories','a:7:{i:0;a:2:{s:5:"label";s:6:"Client";s:5:"value";i:1;}i:1;a:2:{s:5:"label";s:6:"Vendor";s:5:"value";i:2;}i:2;a:2:{s:5:"label";s:8:"Supplier";s:5:"value";i:3;}i:3;a:2:{s:5:"label";s:10:"Consultant";s:5:"value";i:4;}i:4;a:2:{s:5:"label";s:10:"Government";s:5:"value";i:5;}i:5;a:2:{s:5:"label";s:10:"Non-profit";s:5:"value";i:6;}i:6;a:2:{s:5:"label";s:8:"Internal";s:5:"value";i:7;}}','array');
+INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetManagerList', 'a:0:{}', 'array');
+INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetAdminList', 'a:0:{}', 'array');
 
 
 
 
 
 --
--- Dumping data for table `taskType`
+-- Dumping data for table taskType
 --
 
 
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (1,'Task',1,10);
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (2,'Parent',1,20);
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (3,'Message',1,30);
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (4,'Fault',1,40);
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (5,'Milestone',1,50);
+INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (1,'Task',true,10);
+INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (2,'Parent',true,20);
+INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (3,'Message',true,30);
+INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (4,'Fault',true,40);
+INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (5,'Milestone',true,50);
 
 --
--- Dumping data for table `timeUnit`
+-- Dumping data for table timeUnit
 --
 
 
-INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (1,'hour','Hours','Hourly',3600,1,10);
-INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (2,'day','Days','Daily',27000,1,20);
-INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (3,'week','Weeks','Weekly',135000,1,30);
-INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (4,'month','Months','Monthly',540000,1,40);
-INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (5,'fixed','Fixed Rate','Fixed Rate',0,1,50);
+INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (1,'hour','Hours','Hourly',3600,true,10);
+INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (2,'day','Days','Daily',27000,true,20);
+INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (3,'week','Weeks','Weekly',135000,true,30);
+INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (4,'month','Months','Monthly',540000,true,40);
+INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, timeUnitSeconds, timeUnitActive, timeUnitSequence) VALUES (5,'fixed','Fixed Rate','Fixed Rate',0,true,50);
 
 --
--- Dumping data for table `role`
+-- Dumping data for table role
 --
 
 
@@ -336,8 +336,8 @@ INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES 
 INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (7,'Employee','employee','person', 40);
 
 
-INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ("Add Comments to Task","task","add_comment_from_email");
-INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ("Add Comments to Comment","comment","add_comment_from_email");
+INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ('Add Comments to Task','task','add_comment_from_email');
+INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ('Add Comments to Comment','comment','add_comment_from_email');
 
 
 
