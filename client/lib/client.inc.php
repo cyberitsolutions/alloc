@@ -47,6 +47,26 @@ class client extends db_entity {
                              );
 
 
+  function delete() {
+    // delete all contacts and comments linked with this client as well
+    $db = new db_alloc;
+    $query = sprintf("SELECT * FROM clientContact WHERE clientID=%d", $this->get_id());
+    $db->query($query);
+    while ($db->next_record()) {
+      $clientContact = new clientContact;
+      $clientContact->read_db_record($db);
+      $clientContact->delete();
+    }
+    $query = sprintf("SELECT * FROM comment WHERE commentType = 'client' and commentLinkID=%d", $this->get_id());
+    $db->query($query);
+    while ($db->next_record()) {
+      $comment = new comment;
+      $comment->read_db_record($db);
+      $comment->delete();
+    }
+    return parent::delete();
+  }
+
   function has_attachment_permission($person) {
     // Placeholder for security check in shared/get_attchment.php
     return true;
