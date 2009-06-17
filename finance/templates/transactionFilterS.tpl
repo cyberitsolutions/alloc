@@ -11,7 +11,7 @@
         <tr>
           <td>
             <div id="advanced_search">
-            <form action="{$url_alloc_transactionList}" method="post">
+            <form action="{$url_alloc_transactionList}" method="get">
             <table>
               <tr>
                 <td align="left">Start Date</td>
