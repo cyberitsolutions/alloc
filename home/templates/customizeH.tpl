@@ -31,7 +31,7 @@
           <select name="topTasksNum">{$topTasksNumOptions}</select>
         </div>
         <div style="float:right; width:50%;">
-          <select name="topTasksStatus">{$topTasksStatusOptions}</select>
+          <select multiple name="topTasksStatus[]">{$topTasksStatusOptions}</select>
         </div>
       </div>
       <div class="view">

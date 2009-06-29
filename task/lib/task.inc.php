@@ -828,7 +828,20 @@ class task extends db_entity {
     }
 
     // Task status filtering
-    if ($filter["taskStatus"]) {
+    if (is_array($filter["taskStatus"])) {
+      $subsql = array();
+      foreach ($filter["taskStatus"] as $status) {
+        list($taskStatus,$taskSubStatus) = explode("_",$status);
+        if($taskStatus) {
+          if($taskSubStatus) {
+            $subsql[] = sprintf("(taskStatus = '%s' AND taskSubStatus = '%s')",db_esc($taskStatus),db_esc($taskSubStatus));
+          } else {
+            $subsql[] = sprintf("(taskStatus = '%s')",db_esc($taskStatus));
+          }
+        }
+      }
+      $sql[] = '(' . implode(" OR ", $subsql) . ')';
+    } elseif ($filter["taskStatus"]) {
       list($taskStatus,$taskSubStatus) = explode("_",$filter["taskStatus"]);
       $taskStatus    and $sql[] = sprintf("(taskStatus = '%s')",db_esc($taskStatus));
       $taskSubStatus and $sql[] = sprintf("(taskSubStatus = '%s')",db_esc($taskSubStatus));
