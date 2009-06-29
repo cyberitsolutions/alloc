@@ -4,7 +4,7 @@
   <td valign="top" width="10%"><nobr>{$timeSheetItem_dateTimeSheetItem}</nobr></td>
   <td valign="top" width="19%"><nobr>{$timeSheetItem_timeSheetItemDuration} {$unit} @ ${$timeSheetItem_rate} x {$timeSheetItem_multiplier}</nobr><br /></td>
   <td valign="top" width="8%"><b>${$timeSheetItem_unit_times_rate}</b></td>
-  <td valign="top">{$timeSheetItem_description}{$timeSheetItem_comment}</td>
+  <td valign="top">{$timeSheetItem_taskID} {$timeSheetItem_description}{$timeSheetItem_comment}</td>
   <td valign="top" align="right">{$timeSheetItem_status}<nobr>{$timeSheetItem_buttons}</nobr></td>
 </tr>
 </table>
