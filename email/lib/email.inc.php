@@ -83,10 +83,7 @@ class alloc_email {
   }
   function set_subject($subject=false) {
     $subject or $subject = $this->subject;
-    if (!preg_match("/^\[allocPSA\]/",$subject)) {
-      $extra = "[allocPSA] ";
-    }
-    $this->subject = $extra.$subject;
+    $this->subject = $subject;
     $this->del_header("subject");
   }
   function set_reply_to($email=false) {
