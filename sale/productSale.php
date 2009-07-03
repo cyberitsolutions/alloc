@@ -74,10 +74,10 @@ function show_productSale_list($productSaleID, $template) {
     $TPL["transactions"] = $productSale->get_transactions($productSaleItem->get_id());
  
     if ($taxName) {
-      $TPL["buyCostTax_check"] = sprintf(" <input type='checkbox' name='buyCostIncTax[]' value='1'%s> inc %s"
-                                      ,$productSaleItem->get_value("buyCostIncTax") ? ' checked':'',$taxName);
-      $TPL["sellPriceTax_check"] = sprintf(" <input type='checkbox' name='sellPriceIncTax[]' value='1'%s> inc %s"
-                                        ,$productSaleItem->get_value("sellPriceIncTax") ? ' checked':'',$taxName);
+      $TPL["buyCostTax_check"] = sprintf(" <input type='checkbox' name='buyCostIncTax[]' value='%d'%s> inc %s"
+                                      ,$productSaleItem->get_id(),$productSaleItem->get_value("buyCostIncTax") ? ' checked':'',$taxName);
+      $TPL["sellPriceTax_check"] = sprintf(" <input type='checkbox' name='sellPriceIncTax[]' value='%d'%s> inc %s"
+                                      ,$productSaleItem->get_id(),$productSaleItem->get_value("sellPriceIncTax") ? ' checked':'',$taxName);
       $TPL["buyCostTax_label"] = $productSaleItem->get_value("buyCostIncTax") ? " inc ".$taxName : " ex ".$taxName;
       $TPL["sellPriceTax_label"] = $productSaleItem->get_value("sellPriceIncTax") ? " inc ".$taxName : " ex ".$taxName;
     }
@@ -185,6 +185,8 @@ if ($_POST["save"]) {
   is_array($_POST["deleteProductSaleItem"]) or $_POST["deleteProductSaleItem"] = array();
 
   if (is_array($_POST["productSaleItemID"]) && count($_POST["productSaleItemID"])) {
+    is_array($_POST["sellPriceIncTax"]) or $_POST["sellPriceIncTax"] = array();
+    is_array($_POST["buyCostIncTax"]) or $_POST["buyCostIncTax"] = array();
 
     foreach ($_POST["productSaleItemID"] as $k => $productSaleItemID) {
       // Delete
@@ -198,8 +200,8 @@ if ($_POST["save"]) {
         $a = array("productID"=>$_POST["productID"][$k]
                   ,"buyCost"=>$_POST["buyCost"][$k]
                   ,"sellPrice"=>$_POST["sellPrice"][$k]
-                  ,"sellPriceIncTax"=>$_POST["sellPriceIncTax"][$k]
-                  ,"buyCostIncTax"=>$_POST["buyCostIncTax"][$k]
+                  ,"sellPriceIncTax"=>in_array($productSaleItemID, $_POST["sellPriceIncTax"])
+                  ,"buyCostIncTax"=>in_array($productSaleItemID, $_POST["buyCostIncTax"])
                   ,"quantity"=>$_POST["quantity"][$k]
                   ,"description"=>$_POST["description"][$k]
                   ,"productSaleID"=>$productSaleID
