@@ -194,7 +194,7 @@ class productSaleItem extends db_entity {
 
     $db2->query($query);
     while ($productCost_row = $db2->next_record()) {
-      $amount = $productCost_row["amount"];
+      $amount = $productCost_row["amount"] * $this->get_value("quantity");
       $description = "Product Cost: ".$productCost_row["productName"]." ".$productCost_row["description"];
       $this->create_transaction($productCost_row["fromTfID"], $productCost_row["tfID"], $amount, $description);
     }
