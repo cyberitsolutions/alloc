@@ -114,7 +114,7 @@ class db_entity {
                         FROM permission 
                         WHERE (tableName = '".$this->data_table."' OR tableName='')
                          AND (entityID = %d OR entityID = 0 OR entityID = -1)
-                         AND (personID = %d OR personID = 0)
+                         AND (personID = %d OR personID IS NULL)
                          AND (actions & %d = %d OR actions = 0)
                     ORDER BY sortKey"
                     ,$entity_id,$person_id,$action,$action);
@@ -136,7 +136,7 @@ class db_entity {
         continue;
       }
       // Read the value of the allow field to determine whether to grant the permission
-      $have_perm = $db->f("allow") == "Y";
+      $have_perm = $db->f("allow");
 
       // Cache the result in variables to prevent duplicate database lookups
       $permission_cache[$record_cache_key] = $have_perm;
