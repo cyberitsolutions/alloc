@@ -235,7 +235,7 @@ class db_entity {
     }
     $this->check_create_perms();
 
-    if (isset($this->data_fields[$this->data_table."CreatedUser"])) {
+    if (isset($this->data_fields[$this->data_table."CreatedUser"]) && $current_user_id) {
       $this->set_value($this->data_table."CreatedUser", $current_user_id);
     }
     if (isset($this->data_fields[$this->data_table."CreatedTime"])) {
