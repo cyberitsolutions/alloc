@@ -19,6 +19,17 @@ $(document).ready(function() {
   });
 });
 
+var tdNum = 0;
+
+function add_row() {
+    tdNum++;
+    var newId = "new" + tdNum;
+    $('#productSaleItem_footer').before('<tr id="' + newId + '">'+$('#productSaleItemRow').html()+'</tr>');
+    $('#' + newId).find('input[name="buyCostIncTax[]"]').val(newId);
+    $('#' + newId).find('input[name="sellPriceIncTax[]"]').val(newId);
+    $('#' + newId).find('input[name="productSaleItemID[]"]').val(newId);
+}
+
 function update_values(target) {
     var myTD = $(target).parent().parent();
     var productID = myTD.find('select[name="productID[]"]').val();
@@ -117,7 +128,7 @@ function update_values(target) {
           <th>Buy Cost</th>
           <th>Sell Price</th>
           <th>Description</th>
-          <th width="1%" class="right"><a href="#x" class="magic" onClick="$('#productSaleItem_footer').before('<tr>'+$('#productSaleItemRow').html()+'</tr>');">New</a></th>
+          <th width="1%" class="right"><a href="#x" class="magic" onClick="add_row();">New</a></th>
         </tr>
         {show_productSale_list($productSaleID, "templates/productSaleItemR.tpl")}
         {show_productSale_new("templates/productSaleItemR.tpl")}
