@@ -204,8 +204,12 @@ if ($_POST["save"]) {
                   ,"buyCostIncTax"=>in_array($productSaleItemID, $_POST["buyCostIncTax"])
                   ,"quantity"=>$_POST["quantity"][$k]
                   ,"description"=>$_POST["description"][$k]
-                  ,"productSaleID"=>$productSaleID
-                  ,"productSaleItemID"=>$productSaleItemID);
+                  ,"productSaleID"=>$productSaleID);
+
+        if(substr($productSaleItemID, 0, 3) == "new") {
+          $productSaleItemID = "";
+        }
+        $a["productSaleItemID"] = $productSaleItemID;
 
         $productSaleItem = new productSaleItem;
         $productSaleItem->read_array($a);
