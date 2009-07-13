@@ -1,11 +1,12 @@
 <?php
 
 
-// WARNING: You will need to run this patch a couple of times!
+// WARNING: You may need to run this patch a couple of times!
+// I.e. it may error out, but just go back and apply it again.
 
 // This patch contains lots of stuff that fixes up missing data. The
 // stuff that's wrapped in the if (config::for_cyber()) are Cybersource
-// specific data fixes. The rest of the patch should be ok for everyone else.
+// specific data fixes. The rest of the patch is ok for everyone elses data.
 
 $db = new db_alloc();
 $db2 = new db_alloc();
@@ -25,31 +26,31 @@ if (config::for_cyber()) {
 
   // 201 206 207 209 ?
   $people[1] = array("conzdefunct" ,"Con","Zymaris (not in use)");
-  $people[17] = array("mitch"      ,"Mitch");
+  $people[17] = array("mitch"      ,"Mitch","Davis");
   $people[18] = array("ldm"        ,"Lachlan","Mulcahy");
   $people[19] = array("asn"        ,"Andrew","Noble");
   $people[37] = array("djr"        ,"Darryl","Ross");
-  $people[42] = array("zoltan"     ,"Zoltan");
-  $people[48] = array("tim"        ,"Zoltan");
+  $people[42] = array("zoltan"     ,"Zoltan","Olah");
+  $people[48] = array("tim"        ,"","");
   $people[52] = array("pkl"        ,"","");
   $people[53] = array("ashridah"   ,"Andrew","Pilley");
-  $people[59] = array("jaws"       ,"Jen");
-  $people[65] = array("sharkey"    ,"Nicholas","Moore");
+  $people[59] = array("jaws"       ,"Jen","Shaw");
+  $people[65] = array("sharkey"    ,"Nick","Moore");
   $people[66] = array("alvin"      ,"Alvin","");
   $people[71] = array("army"       ,"Paul","Armstronf");
   $people[73] = array("robc"       ,"Rob","Chalmers");
-  $people[74] = array("fry"        ,"");
+  $people[74] = array("fry"        ,"Simon","Freiberg");
   $people[75] = array("jsg"        ,"Jonathan","Gray");
   $people[78] = array("mikec"      ,"Mike","Ciaverella");
   $people[79] = array("aeh"        ,"Andrew","Harris");
   $people[83] = array("rdaly"      ,"Richella","Daly");
   $people[85] = array("karl"       ,"Karl","Martindale-Vale");
   $people[86] = array("jens"       ,"Jens","Porup");
-  $people[93] = array("gv"         ,"George");
-  $people[95] = array("anshul"     ,"");
+  $people[93] = array("gv"         ,"George","Vlahoulis");
+  $people[95] = array("anshul"     ,"Anshul","Gupta");
   $people[96] = array("mattp"      ,"");
   $people[98] = array("likic"      ,"");
-  $people[99] = array("Sean"       ,"");
+  $people[99] = array("Sean"       ,"Sean","Hynes");
   $people[106] = array("ojw"       ,"","");
   $people[108] = array("benm"      ,"Ben","McGinnes");
   $people[110] = array("tony"      ,"Tony","Wood");
@@ -60,14 +61,14 @@ if (config::for_cyber()) {
   $people[136] = array("matt"      ,"","");
   $people[138] = array("pauld"     ,"","");
   $people[143] = array("pbd"       ,"Paul","Dwerryhouse");
-  $people[148] = array("anthonya"  ,"");
+  $people[148] = array("anthonya"  ,"Anthony","Agius");
 
   foreach ($people as $personID=>$info) {
     $q = sprintf("select * from person where personID = %d",$personID);
     $db->query($q);
     if (!$db->row()) {
       debug_echo("<br>Cyber only: Inserted new person: ".$personID." ".$info[0]." ".$info[1]." ".$info[2]);
-      $q = sprintf("INSERT INTO person (personID,personActive,username,firstName,surname) 
+      $q = sprintf("INSERT INTO person (personID,personActive,username,firstName,surname)
                           VALUES (".$personID.",0,'".$info[0]."','".$info[1]."','".$info[2]."')");
       #echo $q;
       $db2->query($q);
@@ -80,7 +81,7 @@ if (config::for_cyber()) {
   $q = "delete from loan where loanID = 23";
   $db->query($q);
 
-  
+
   $q = "select * from client where clientName = 'Cybersource Placeholder for Invoices that have no Client'";
   $db->query($q);
   if (!($row = $db->row())){
@@ -92,14 +93,14 @@ if (config::for_cyber()) {
   }
   $default_clientID = $row["clientID"];
 
-  $q = sprintf("update invoice set clientID = %d WHERE clientID = 0",$default_clientID);  
+  $q = sprintf("update invoice set clientID = %d WHERE clientID = 0",$default_clientID);
   $db->query($q);
 
   $q = "update timeSheet set personID = 155 where recipient_tfID = 104 and personID = 0";
   $db->query($q);
 
 }
-  
+
 $q = "select * from tf where tfComments = 'This tf represents the source tf for transactions that were created before alloc started using double-entry transactions.'";
 $db->query($q);
 if (!($row = $db->row())){
@@ -195,6 +196,7 @@ fix_fk("expenseForm.clientID", "client.clientID");
 fix_fk("expenseForm.expenseFormModifiedUser", "person.personID");
 fix_fk("expenseForm.expenseFormCreatedUser", "person.personID");
 fix_fk("expenseForm.transactionRepeatID", "transactionRepeat.transactionRepeatID");
+fix_fk("transaction.productSaleID", "productSale.productSaleID");
 
 function fix_fk ($c,$p) {
   list($child,$child_fk) = explode(".",$c);
@@ -203,9 +205,9 @@ function fix_fk ($c,$p) {
   $child_pk = $child.".".$child."ID";
   $parent_pk = $parent.".".$parent."ID";
 
-  $q = "select ".$child_pk.",".$c." 
-          from ".$child." 
-     left join ".$parent." on ".$c." = ".$p." 
+  $q = "select ".$child_pk.",".$c."
+          from ".$child."
+     left join ".$parent." on ".$c." = ".$p."
          where ".$c." is not null and ".$p." is null;";
   ###echo "<br><hr>".$q;
 
