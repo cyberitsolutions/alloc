@@ -125,7 +125,10 @@ $q = "delete from sess";
 $db->query($q);
 $q = "update task set parentTaskID = null where parentTaskID = 0";
 $db->query($q);
-
+$q = sprintf("update productCost set fromTfID = NULL where fromTfID = 0");
+$db->query($q);
+$q = sprintf("update productCost set tfID = NULL where tfID = 0");
+$db->query($q);
 
 $q = sprintf("select * from timeSheetItem where personID = 0");
 $db->query($q);
