@@ -197,6 +197,7 @@ fix_fk("expenseForm.expenseFormModifiedUser", "person.personID");
 fix_fk("expenseForm.expenseFormCreatedUser", "person.personID");
 fix_fk("expenseForm.transactionRepeatID", "transactionRepeat.transactionRepeatID");
 fix_fk("transaction.productSaleID", "productSale.productSaleID");
+fix_fk("transaction.productSaleItemID", "productSaleItem.productSaleItemID");
 
 function fix_fk ($c,$p) {
   list($child,$child_fk) = explode(".",$c);
