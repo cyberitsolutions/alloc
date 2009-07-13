@@ -1211,12 +1211,8 @@ EOD;
 
       $hash = $from["hash"];
 
-      if ($hash && config::get_config_item("allocEmailKeyMethod") == "headers") {
-        $email->set_message_id($hash);
-      } else if ($hash && config::get_config_item("allocEmailKeyMethod") == "subject") {
-        $email->set_message_id();
-        $subject_extra = "{Key:".$hash."}";
-      }
+      $email->set_message_id($hash);
+      $subject_extra = "{Key:".$hash."}";
 
       $project = $this->get_foreign_object("project");
 
