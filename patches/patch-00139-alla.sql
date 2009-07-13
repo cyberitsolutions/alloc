@@ -35,4 +35,8 @@ ALTER TABLE task ADD KEY dateCreated (dateCreated);
 ALTER TABLE auditItem CHANGE dateChanged dateChanged datetime NOT NULL;
 ALTER TABLE interestedParty CHANGE entity entity varchar(255) NOT NULL;
 
+-- Fix up productCost table
+ALTER TABLE productCost CHANGE tfID tfID integer DEFAULT NULL;
+ALTER TABLE productCost CHANGE fromTfID fromTfID integer DEFAULT NULL;
+
 
