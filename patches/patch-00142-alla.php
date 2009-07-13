@@ -198,6 +198,10 @@ fix_fk("expenseForm.expenseFormCreatedUser", "person.personID");
 fix_fk("expenseForm.transactionRepeatID", "transactionRepeat.transactionRepeatID");
 fix_fk("transaction.productSaleID", "productSale.productSaleID");
 fix_fk("transaction.productSaleItemID", "productSaleItem.productSaleItemID");
+fix_fk("productCost.tfID", "tf.tfID");
+fix_fk("productCost.fromTfID", "tf.tfID");
+fix_fk("productSaleItem.productID", "product.productID");
+fix_fk("productSaleItem.productSaleID", "productSale.productSaleID");
 
 function fix_fk ($c,$p) {
   list($child,$child_fk) = explode(".",$c);
