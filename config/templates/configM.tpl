@@ -160,11 +160,6 @@
     <td width="1%">{page::help("config_allocEmailFolder")}</td>
   </tr>
   <tr>
-    <td width="20%"><nobr>Mail Key Method</nobr></td>
-    <td><select name="allocEmailKeyMethod">{echo page::select_options(array("headers"=>"Email Headers","subject"=>"Email Subject"),$TPL["allocEmailKeyMethod"])}</select></td>
-    <td width="1%">{page::help("config_allocEmailKeyMethod")}</td>
-  </tr>
-  <tr>
     <td valign="top" width="20%">Task Email Header</td>
     <td><select name="task_email_header"><option value="">{$task_email_header_options}</select></td>
     <td width="1%">{page::help("config_taskEmailHeader")}</td>

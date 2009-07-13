@@ -1709,12 +1709,8 @@ class task extends db_entity {
 
       $hash = $from["hash"];
 
-      if ($hash && config::get_config_item("allocEmailKeyMethod") == "headers") {
-        $email->set_message_id($hash);
-      } else if ($hash && config::get_config_item("allocEmailKeyMethod") == "subject") {
-        $email->set_message_id();
-        $subject_extra = "{Key:".$hash."}";
-      }
+      $email->set_message_id($hash);
+      $subject_extra = "{Key:".$hash."}";
 
       if ($commentTemplateHeaderID = config::get_config_item("task_email_header")) {
         $commentTemplate = new commentTemplate;

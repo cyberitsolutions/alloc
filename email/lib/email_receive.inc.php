@@ -255,29 +255,24 @@ class alloc_email_receive {
     $headers or $headers = $this->mail_headers;
     $keys = array();
 
-    if (config::get_config_item("allocEmailKeyMethod") == "subject") {
-
-      if (preg_match("/\{Key:[A-Za-z0-9]{8}\}/i",$headers->subject,$m)) {
-        $key = $m[0];
-        $key = str_replace(array("{Key:","}"),"",$key);
-        $key and $keys[] = $key;
-      }
-
-    } else if (config::get_config_item("allocEmailKeyMethod") == "headers") {
-
-      $str = $headers->in_reply_to." ".$headers->references;
-
-      preg_match_all("/([A-Za-z0-9]{8})@/",$str,$m);
-
-      if (is_array($m[1])) {
-        $temp = array_flip($m[1]);// unique pls
-        foreach ($temp as $k => $v) {
-          $keys[] = $k;
-        }
-      } 
+    if (preg_match("/\{Key:[A-Za-z0-9]{8}\}/i",$headers->subject,$m)) {
+      $key = $m[0];
+      $key = str_replace(array("{Key:","}"),"",$key);
+      $key and $keys[] = $key;
     }
 
-    return $keys;
+    $str = $headers->in_reply_to." ".$headers->references;
+
+    preg_match_all("/([A-Za-z0-9]{8})@/",$str,$m);
+
+    if (is_array($m[1])) {
+      $temp = array_flip($m[1]);// unique pls
+      foreach ($temp as $k => $v) {
+        $keys[] = $k;
+      }
+    }
+
+    return array_unique((array)$keys);
   }
 
 
