@@ -247,6 +247,12 @@ class db_entity {
     if (isset($this->data_fields[$this->data_table."ModifiedTime"])) {
       #$this->set_value($this->data_table."ModifiedTime", date("Y-m-d H:i:s"));
     }
+
+    // Even if we're doing an insert, if a primary key is set, then insert the row with that PK.
+    if ($this->get_id()) {
+      $this->data_fields[] = $this->key_field;
+    }
+
     $query = "INSERT INTO $this->data_table (";
     $query.= $this->get_insert_fields($this->data_fields);
     $query.= ") VALUES (";
@@ -255,10 +261,7 @@ class db_entity {
     $this->debug and print "<br/>db_entity->insert() query: ".$query;
     $db = $this->get_db();
     $db->query($query);
-    if ($db->get_error()) {
-      die();
-    }
-  
+
     $id = mysql_insert_id();
     if ($id === 0) {
       $this->debug and print "<br/>db_entity->insert(): The previous query does not generate an AUTO_INCREMENT value`";
@@ -283,9 +286,11 @@ class db_entity {
     $this->check_update_perms();
 
     // retrieve a copy of this object with the old values from the database
-    $old_this = new $this;
-    $old_this->set_id($this->get_id());
-    $old_this->select();
+    if (class_exists($this->data_table)) {
+      $old_this = new $this->data_table;
+      $old_this->set_id($this->get_id());
+      $old_this->select();
+    }
 
     global $current_user;
     if (is_object($current_user) && $current_user->get_id()) {
@@ -304,17 +309,19 @@ class db_entity {
     }
 
     $write_fields = array();
+
     reset($this->data_fields);
     while (list(, $field) = each($this->data_fields)) {
       if ($this->can_write_field($field)) {
         $write_fields[] = $field;
 
         // auditing -- check if we audit this field, and if it's changed
-        if($field->is_audited() && $field->get_value() != $old_this->get_value($field->get_name())) {
+        if($field->is_audited() && is_object($old_this) && $field->get_value() != $old_this->get_value($field->get_name())) {
           $this->audit_updated_field($field, $old_this->get_value($field->get_name()));
         }
       }
     }
+
     $query = "UPDATE $this->data_table SET ".$this->get_name_equals_value($write_fields)." WHERE ";
     $query.= $this->get_name_equals_value(array($this->key_field));
     $db = $this->get_db();
@@ -331,7 +338,15 @@ class db_entity {
   }
 
   function is_new() {
-    return !$this->has_key_values();
+    if (!$this->has_key_values()) {
+      return true;
+    } else if ($this->key_field->has_value() && $this->key_field->get_name() && $this->key_field->get_value()) {
+      $db = $this->get_db();
+      $row = $db->qr("SELECT ".$this->key_field->get_name()."
+                        FROM ".$this->data_table."
+                       WHERE ".$this->key_field->get_name()." = '".db_esc($this->key_field->get_value())."'");
+      return !$row;
+    }
   }
 
   function save() {
@@ -683,8 +698,14 @@ class db_entity {
       $extra = $pkey_sql.$sel;
     }
 
-    if (is_object($this->data_fields[$this->data_table."Active"]) && !$where[$this->data_table."Active"]) {
+    // If they haven't specifically asked for inactive or all
+    // records, we default to giving them only active records.
+    if (is_object($this->data_fields[$this->data_table."Active"]) && !isset($where[$this->data_table."Active"])) {
       $where[$this->data_table."Active"] = 1;
+
+    // Else get all records
+    } else if ($where[$this->data_table."Active"] == "all") {
+      unset($where[$this->data_table."Active"]);
     }
 
     if (is_array($where) && count($where)) {
@@ -697,6 +718,8 @@ class db_entity {
 
     if (is_object($this->data_fields[$this->data_table."Sequence"])) {
       $q.= " ORDER BY ".$this->data_table."Sequence";
+    } else if (is_object($this->data_fields[$this->data_table."Seq"])) {
+      $q.= " ORDER BY ".$this->data_table."Seq";
     } else if ($value != "*") {
       $q.= " ORDER BY ".$value;
     }
