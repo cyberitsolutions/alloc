@@ -442,7 +442,7 @@ CREATE TABLE timeSheetItem (
   rate DECIMAL(19,2) DEFAULT '0.00',
   commentPrivate boolean default false,
   comment text,
-  multiplier integer NOT NULL DEFAULT '0'
+  multiplier decimal(9,2) default 1.00 NOT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS timeUnit;
@@ -739,6 +739,17 @@ CREATE TABLE productSaleStatus (
   productSaleStatusSeq integer NOT NULL,
   productSaleStatusActive boolean DEFAULT true
 )ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS timeSheetItemMultiplier;
+CREATE TABLE timeSheetItemMultiplier (
+  timeSheetItemMultiplierID decimal(9,2) PRIMARY KEY,
+  timeSheetItemMultiplierName varchar(255),
+  timeSheetItemMultiplierSeq integer NOT NULL,
+  timeSheetItemMultiplierActive boolean DEFAULT true
+)ENGINE=InnoDB PACK_KEYS=0;
+
 
 
 

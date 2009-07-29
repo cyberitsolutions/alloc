@@ -86,7 +86,11 @@ INSERT INTO productSaleStatus (productSaleStatusID, productSaleStatusSeq, produc
 INSERT INTO productSaleStatus (productSaleStatusID, productSaleStatusSeq, productSaleStatusActive) VALUES ('allocate',2,true);
 INSERT INTO productSaleStatus (productSaleStatusID, productSaleStatusSeq, productSaleStatusActive) VALUES ('admin',3,true);
 INSERT INTO productSaleStatus (productSaleStatusID, productSaleStatusSeq, productSaleStatusActive) VALUES ('finished',4,true);
-
+INSERT INTO timeSheetItemMultiplier (timeSheetItemMultiplierID, timeSheetItemMultiplierName, timeSheetItemMultiplierSeq, timeSheetItemMultiplierActive) VALUES (1.00,'Standard rate',1,true);
+INSERT INTO timeSheetItemMultiplier (timeSheetItemMultiplierID, timeSheetItemMultiplierName, timeSheetItemMultiplierSeq, timeSheetItemMultiplierActive) VALUES (1.50,'Time and a half',2,true);
+INSERT INTO timeSheetItemMultiplier (timeSheetItemMultiplierID, timeSheetItemMultiplierName, timeSheetItemMultiplierSeq, timeSheetItemMultiplierActive) VALUES (2.00,'Double time',3,true);
+INSERT INTO timeSheetItemMultiplier (timeSheetItemMultiplierID, timeSheetItemMultiplierName, timeSheetItemMultiplierSeq, timeSheetItemMultiplierActive) VALUES (3.00,'Triple time',4,true);
+INSERT INTO timeSheetItemMultiplier (timeSheetItemMultiplierID, timeSheetItemMultiplierName, timeSheetItemMultiplierSeq, timeSheetItemMultiplierActive) VALUES (0,'No charge',5,true);
 
 
 
