@@ -128,6 +128,7 @@ ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_timeSheetID FOREIGN KEY (
 ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_taskID FOREIGN KEY (taskID) REFERENCES task (taskID);
 ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_timeSheetItemDurationUnitID FOREIGN KEY (timeSheetItemDurationUnitID) REFERENCES timeUnit (timeUnitID);
+ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_multiplier FOREIGN KEY (multiplier) REFERENCES timeSheetItemMultiplier (timeSheetItemMultiplierID) ON UPDATE CASCADE;
 ALTER TABLE token ADD CONSTRAINT token_tokenActionID FOREIGN KEY (tokenActionID) REFERENCES tokenAction (tokenActionID);
 ALTER TABLE token ADD CONSTRAINT token_tokenCreatedBy FOREIGN KEY (tokenCreatedBy) REFERENCES person (personID);
 ALTER TABLE transaction ADD CONSTRAINT transaction_expenseFormID FOREIGN KEY (expenseFormID) REFERENCES expenseForm (expenseFormID);
