@@ -389,18 +389,6 @@
     <td width="1%">{page::help("config_taskPriorities.html")}</td>
   </tr>
   <tr>
-    <td valign="top" width="20%"><nobr>Timesheet Multipliers</nobr></td>
-    <td>
-      <a href="{$url_alloc_configEdit}configName=timeSheetMultipliers">Edit:</a>
-      {unset($br)}
-      {foreach $TPL["timeSheetMultipliers"] as $k => $arr}
-          {$br}{echo $arr["label"]} (&nbsp;&times;&nbsp;{$arr.multiplier})</span>
-          {$br = ", "}
-      {/}
-    </td>
-    <td width="1%">{page::help("config_timeSheetMultipliers")}</td>
-  </tr>
-  <tr>
     <td valign="top" width="20%" class="nobr">Task Status Options</td>
     <td>
       <a href="{$url_alloc_configEdit}configName=taskStatusOptions">Edit:</a>

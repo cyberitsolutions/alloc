@@ -269,7 +269,6 @@ INSERT INTO config (name,value,type) VALUES ('allocEmailProtocol','imap','text')
 INSERT INTO config (name,value,type) VALUES ('allocEmailFolder','INBOX','text');
 INSERT INTO config (name,value,type) VALUES ('allocEmailKeyMethod','headers','text');
 INSERT INTO config (name,value,type) VALUES ('allocEmailAddressMethod','to','text');
-INSERT INTO config (name,value,type) VALUES ('timeSheetMultipliers', 'a:5:{i:1;a:2:{s:5:"label";s:13:"Standard rate";s:10:"multiplier";s:1:"1";}i:2;a:2:{s:5:"label";s:15:"Time and a half";s:10:"multiplier";s:3:"1.5";}i:3;a:2:{s:5:"label";s:11:"Double time";s:10:"multiplier";s:1:"2";}i:4;a:2:{s:5:"label";s:11:"Triple time";s:10:"multiplier";s:1:"3";}i:5;a:2:{s:5:"label";s:9:"No charge";s:10:"multiplier";s:1:"0";}}', 'array');
 INSERT INTO config (name,value,type) VALUES ('taskPriorities','a:5:{i:1;a:2:{s:5:"label";s:8:"Critical";s:6:"colour";s:7:"#ff0000";}i:2;a:2:{s:5:"label";s:9:"Important";s:6:"colour";s:7:"#ff7200";}i:3;a:2:{s:5:"label";s:6:"Normal";s:6:"colour";s:7:"#333333";}i:4;a:2:{s:5:"label";s:5:"Minor";s:6:"colour";s:7:"#666666";}i:5;a:2:{s:5:"label";s:8:"Wishlist";s:6:"colour";s:7:"#999999";}}','array');
 
 INSERT INTO config (name,value,type) VALUES ('projectPriorities','a:5:{i:1;a:2:{s:5:"label";s:8:"Critical";s:6:"colour";s:7:"#ff0000";}i:2;a:2:{s:5:"label";s:9:"Important";s:6:"colour";s:7:"#ff7200";}i:3;a:2:{s:5:"label";s:6:"Normal";s:6:"colour";s:7:"#333333";}i:4;a:2:{s:5:"label";s:5:"Minor";s:6:"colour";s:7:"#666666";}i:5;a:2:{s:5:"label";s:8:"Wishlist";s:6:"colour";s:7:"#999999";}}','array');
