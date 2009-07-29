@@ -416,6 +416,20 @@
     </td> 
     <td width="1%">{page::help("config_clientCategories.html")}</td>
   </tr>
+
+  {$meta = new meta()}
+  {foreach (array)$meta->get_tables() as $table => $label} 
+    <tr>
+      <td>{$label}</td>
+      <td>
+      <a href="{$url_alloc_metaEdit}configName={$table}">Edit:</a>
+      {unset($br)}
+      {$t = new meta($table)}
+      {$rows = $t->get_list()}
+      {foreach $rows as $row}{echo $br.$row[$table."ID"]}{$br = ", "}{/}
+      </td>
+    </tr>
+  {/}
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>

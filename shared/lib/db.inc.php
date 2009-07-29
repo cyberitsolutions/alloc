@@ -49,19 +49,28 @@ class db {
   function connect() {
     if (!$this->link_id) {
       $this->link_id = mysql_connect($this->hostname,$this->username,$this->password);
-      if ($this->link_id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
+      if ($this->link_id && is_resource($this->link_id) && !$this->error) {
         $this->database && $this->select_db($this->database);
         function_exists("mysql_set_charset") && mysql_set_charset("utf8", $this->link_id); // this seems to fix data encoding for SOAP services
       } else {
-        $this->error("Unable to connect to database: ".mysql_error()."<br>");
+        $this->error("Unable to connect to database: ".mysql_error()."<br>",mysql_errno());
         unset($this->link_id);
       }
     }
     return $this->link_id;
   } 
 
-  function error($msg=false) {
-    strlen($msg) && $this->verbose and print "<br/>".$msg;
+  function error($msg=false,$errno=false) {
+    global $TPL;
+    if ($errno == 1451) { // referential integrity error 
+      $TPL["message"][] = " There are other records in the database that depend on the item you just tried to delete. 
+                            Remove those other records first and then try to delete this item again. 
+                            <a href='#x' class='magic' onclick='$(\".more_info_error\").toggle()'>Show error</a>
+                            <div class='hidden more_info_error'><br>".$msg."<br></div>";
+    } else if (strlen($msg)) {
+      $TPL["message"][] = "Error: ".$errno." ".$msg;
+      print $msg;
+    }
     $this->error = $msg;
   }
 
@@ -91,7 +100,7 @@ class db {
         $selected = $db;
         return true;
       } else {
-        $this->error("<b>Could not select database: ".$db."</b>"); 
+        $this->error("<b>Could not select database: ".$db."</b>",mysql_errno()); 
         return false;
       }
     }
@@ -118,15 +127,15 @@ class db {
     #echo "<br><pre>".print_r(debug_backtrace(),1)."</pre>";
 
     if ($query) {
-      $id = @mysql_query($query);
-      if ($id && is_resource($this->link_id) && !mysql_error($this->link_id)) {
+      if ($id = @mysql_query($query)) {
         $this->query_id = $id;
         $rtn = $this->query_id;
         $this->error();
-      } else {
+      } else if ($str = mysql_error()) {
         $rtn = false;
-        is_resource($this->link_id) and $str = mysql_error($this->link_id);
-        $this->error("Query failed: ".$str."<br><pre>".$query."</pre>");
+        $this->error("Query failed: ".$str."<br><pre>".$query."</pre>",mysql_errno());
+        unset($this->link_id);
+        mysql_close();
       }
     }
 
