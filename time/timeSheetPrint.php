@@ -204,7 +204,8 @@ define("DEFAULT_SEP","\n");
   function get_timeSheetItem_list_items($timeSheetID) {
     list($db,$customerBilledDollars,$timeSheet,$unit_array) = get_timeSheetItem_vars($timeSheetID);
 
-    $multiplier_strings = config::get_config_item("timeSheetMultipliers");
+    $m = new meta("timeSheetItemMultiplier");
+    $multipliers = $m->get_list();
 
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
@@ -217,7 +218,7 @@ define("DEFAULT_SEP","\n");
       $info["total"] += $num;
       $rows[$row_num]["date"] = $timeSheetItem->get_value("dateTimeSheetItem");
       $rows[$row_num]["units"] = $num." ".$unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")];
-      $rows[$row_num]["multiplier_string"] = $multiplier_strings[$timeSheetItem->get_value("multiplier")]["label"];
+      $rows[$row_num]["multiplier_string"] = $multipliers[$timeSheetItem->get_value("multiplier")]["timeSheetItemMultiplierName"];
 
       unset($str);
       $d = $timeSheetItem->get_value('description');

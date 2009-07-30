@@ -223,8 +223,9 @@ if (!$current_user->is_employee()) {
       $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$commentPrivateText.page::to_html($timeSheetItem->get_value("comment"));
       $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f", $timeSheetItem->calculate_item_charge());
 
-      $tsMultipliers = config::get_config_item("timeSheetMultipliers") or $tsMultipliers = array();
-      $timeSheetItem->get_value('multiplier') and $TPL["timeSheetItem_multiplier"] = $tsMultipliers[$timeSheetItem->get_value('multiplier')]['label'];
+      $m = new meta("timeSheetItemMultiplier");
+      $tsMultipliers = $m->get_list();
+      $timeSheetItem->get_value('multiplier') and $TPL["timeSheetItem_multiplier"] = $tsMultipliers[$timeSheetItem->get_value('multiplier')]['timeSheetItemMultiplierName'];
   
       $TPL["timeSheetItem_rate"] = sprintf("%0.2f",$TPL["timeSheetItem_rate"]);
 
@@ -300,14 +301,13 @@ if (!$current_user->is_employee()) {
       $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
       $TPL["tsi_unit_options"] = page::select_options($unit_array, $timeSheetItemDurationUnitID);
 
-      $timeSheetItemMultiplier  or $timeSheetItemMultiplier = 0;
-      $tsMultipliers = config::get_config_item("timeSheetMultipliers") or $tsMultipliers = array();
+      $m = new meta("timeSheetItemMultiplier");
+      $tsMultipliers = $m->get_list();
+
       foreach ($tsMultipliers as $k => $v) {
-        $multiplier_array[$k] = $v["label"];
+        $multiplier_array[$k] = $v["timeSheetItemMultiplierName"];
       }
       $TPL["tsi_multiplier_options"] = page::select_options($multiplier_array, $timeSheetItemMultiplier);
-
-      #$TPL["tsi_dateTimeSheetItem"] or $TPL["tsi_dateTimeSheetItem"] = date("Y-m-d");
 
       include_template($template);
     }
