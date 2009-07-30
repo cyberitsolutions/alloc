@@ -169,44 +169,38 @@ class timeSheet extends db_entity {
       $this->pay_info["customerBilledDollars"] = $this->get_value("customerBilledDollars");
     }
 
-    // Get duration for this timesheet/timeSheetItem
-    $db->query(sprintf("SELECT *, (timeSheetItemDuration * timeUnit.timeUnitSeconds) / 3600 AS hours
+    $q = "SELECT * FROM timeUnit ORDER BY timeUnitSequence DESC";
+    $db->query($q);
+    while ($row = $db->row()) { 
+      if ($row["timeUnitSeconds"]) {
+        $extra_sql[] = "SUM(IF(timeUnit.timeUnitLabelA = '".$row["timeUnitLabelA"]."',timeSheetItemDuration * timeUnit.timeUnitSeconds,0)) /".$row["timeUnitSeconds"]." as ".$row["timeUnitLabelA"];
+      }
+      $timeUnitRows[] = $row;
+    }
+
+    $extra_sql and $sql = ",".implode("\n,",$extra_sql);
+
+    // Get duration for this timesheet/timeSheetItems
+    $db->query(sprintf("SELECT SUM(timeSheetItemDuration) AS total_duration, 
+                               SUM((timeSheetItemDuration * timeUnit.timeUnitSeconds) / 3600) AS total_duration_hours,
+                               SUM(rate * timeSheetItemDuration * multiplier) AS total_dollars,
+                               SUM(%0.2f * timeSheetItemDuration * multiplier) AS total_customerBilledDollars
+                               ".$sql."
                           FROM timeSheetItem
                      LEFT JOIN timeUnit ON timeUnit.timeUnitID = timeSheetItem.timeSheetItemDurationUnitID
-                         WHERE timeSheetID = %d",$this->get_id()));
+                         WHERE timeSheetID = %d"
+                       ,$this->pay_info["customerBilledDollars"],$this->get_id()));
 
-    while ($db->next_record()) {
-      $this->pay_info["total_duration"] += $db->f("timeSheetItemDuration");
-      $this->pay_info["total_duration_hours"] += $db->f("hours");
-      $this->pay_info["duration"][$db->f("timeSheetItemID")] = $db->f("timeSheetItemDuration");
-      $tsi = new timeSheetItem();
-      $tsi->read_db_record($db);
-      $this->pay_info["total_dollars"] += $tsi->calculate_item_charge();
-      $db->f("rate") and $this->pay_info["timeSheetItem_rate"] = $db->f("rate");
+    $row = $db->row();
+    $this->pay_info = array_merge((array)$this->pay_info, (array)$row);
 
-      $this->pay_info["total_customerBilledDollars"] += $tsi->calculate_item_charge($this->pay_info["customerBilledDollars"]);
-      $summary_totals[$units[$db->f("timeSheetItemDurationUnitID")]] += $db->f("timeSheetItemDuration");
-    }
-
-    // Reorder unit data into months->weeks->days->hours
-    if (is_array($summary_totals) && count($summary_totals)) {
-      foreach ($units as $v) {
-        foreach ($summary_totals as $label => $amount) {
-          if ($v == $label) {
-            $summary_totals_ordered[$label] = $amount;
-          }
-        }
+    unset($commar);
+    foreach((array)$timeUnitRows as $r) {
+      if ($row[$r["timeUnitLabelA"]]!=0) {
+        $this->pay_info["summary_unit_totals"].= $commar.($row[$r["timeUnitLabelA"]] + 0)." ".$r["timeUnitLabelA"];
+        $commar = ", ";
       }
-      // Load up unit data
-      $this->pay_info["summary_unit_totals"] = "";
-      if (is_array($summary_totals_ordered) && count($summary_totals_ordered)) {
-        foreach ($summary_totals_ordered as $label => $amount) {
-          $this->pay_info["summary_unit_totals"] .= $br.$amount." ".$label;
-          $br = ", ";
-        }
-      } 
     }
-
 
     if (!isset($this->pay_info["total_dollars"])) {
       $this->pay_info["total_dollars"] = 0;
