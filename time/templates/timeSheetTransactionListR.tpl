@@ -16,7 +16,6 @@
 
 <input type="hidden" name="transaction_transactionID" value="{$transaction_transactionID}">
 <input type="hidden" name="transaction_invoiceItemID" value="{$transaction_invoiceItemID}">
-<input type="hidden" name="transaction_expenseFormID" value="0">
 <input type="hidden" name="transaction_quantity" value="1">
 <input type="hidden" name="timeSheetID" value="{$transaction_timeSheetID}">
 </form>
