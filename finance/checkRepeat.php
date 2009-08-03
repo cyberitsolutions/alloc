@@ -75,6 +75,7 @@ while ($db->next_record()) {
     $nextScheduled = timeWarp($mostRecentTransactionDate, $timeBasisString);
   }
 
+  echo "<br>Attempting repeating transaction: ".$transactionRepeat->get_value("product")." ... ";
   //echo '<br/><br/>$nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate';
   //echo "<br/>".$nextScheduled." <= ".$today." && ".$nextScheduled." >= ".$startDate." && ".$nextScheduled." <= ".$finishDate;
   while ($nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate) {
@@ -83,6 +84,7 @@ while ($db->next_record()) {
     $tf->set_id($transactionRepeat->get_value("tfID"));
     $tf->select();
     if (!$tf->get_value("tfActive")) {
+      echo "<br>Skipping because tf not active: ".$tf->get_value("tfName");
       continue 2;
     }
 
@@ -90,6 +92,7 @@ while ($db->next_record()) {
     $tf->set_id($transactionRepeat->get_value("fromTfID"));
     $tf->select();
     if (!$tf->get_value("tfActive")) {
+      echo "<br>Skipping because tf not active: ".$tf->get_value("tfName");
       continue 2;
     }
 
