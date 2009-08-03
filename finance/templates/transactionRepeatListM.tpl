@@ -13,7 +13,8 @@
           <th>Name</th>
           <th>Start Date</th>
           <th>End Date</th>
-          <th>TF</th>
+          <th>From TF</th>
+          <th>Dest TF</th>
           <th>Status</th>
         </tr>
         {show_expenseFormList("templates/transactionRepeatListR.tpl")}
