@@ -129,7 +129,6 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $transaction->set_value("companyDetails", "");
     $transaction->set_value("product", $account);
     $transaction->set_value("status", "approved");
-    $transaction->set_value("expenseFormID", "0");
     $transaction->set_value("quantity", 1);
     $transaction->set_value("transactionType", "salary");
     $transaction->save();
