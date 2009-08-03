@@ -1,6 +1,5 @@
 <form action="{$url_alloc_timeSheet}timeSheetID={$timeSheetID}" method="post">
 <input type="hidden" name="transaction_invoiceItemID" value="{$invoiceItemID}">
-<input type="hidden" name="transaction_expenseFormID" value="0">
 <input type="hidden" name="transaction_quantity" value="1">
 <input type="hidden" name="invoiceItemID" value="{$invoiceItemID}">
 <input type="hidden" name="timeSheetID" value="{$transaction_timeSheetID}">
