@@ -1,16 +1,16 @@
-<table width="100%" cellspacing="0" border="0" class="panel {$status} {$expense_class}">
+<table cellspacing="0" border="1" class="panel {$status} {$expense_class}">
 <tr>
   <td colspan="2">{$companyDetails}</td>
   <td colspan="2">{if $TPL["projectID"]}<a href="{$url_alloc_project}projectID={$projectID}">{$projectName}</a>{/}</td>
   <td width="1%" class="right nobr"><b>[{echo ucwords($TPL["status"])}]</b></td>
 </tr>
 <tr>
-  <td width="40%">{$product}</td>
-  <td width="25%" class="nobr">{$quantity}pcs. @ ${$amount} each  &nbsp;&nbsp;&nbsp;<b>${$lineTotal}</b></td>
+  <td>{$product}</td>
+  <td class="nobr">{$quantity}pcs. @ ${$amount} each  &nbsp;&nbsp;&nbsp;<b>${$lineTotal}</b></td>
   <td class="nobr">Source TF:{$fromTfIDLink} Dest TF: {$tfIDLink}</td>
   <td class="nobr" width="1%">{$transactionDate}</td> 
-  <td width="1%" align="right" class="nobr">
-	  &nbsp;&nbsp;{if check_optional_allow_edit()}
+  <td width="1%" class="right nobr">
+	  {if check_optional_allow_edit()}
     <form method="post" action="{$url_alloc_expenseForm}">
     <input type="hidden" name="expenseFormID" value="{$expenseFormID}">
     <input type="hidden" name="transactionID" value="{$transactionID}">
