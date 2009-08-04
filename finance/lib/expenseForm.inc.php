@@ -28,7 +28,7 @@ class expenseForm extends db_entity {
                              ,"paymentMethod"
                              ,"reimbursementRequired"=>array("empty_to_null"=>false)
                              ,"seekClientReimbursement"=>array("empty_to_null"=>false)
-                             ,"transactionRepeatID"=>array("empty_to_null"=>false)
+                             ,"transactionRepeatID"
                              ,"clientID"
                              ,"expenseFormCreatedUser"
                              ,"expenseFormCreatedTime"
