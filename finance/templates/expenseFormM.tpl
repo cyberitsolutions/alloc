@@ -37,7 +37,7 @@
   </tr>
   <tr>
     <td align="right" valign="top">Comment</td>
-    <td colspan="3" valign="top">{page::textarea("expenseFormComment",$expenseFormComment)}</td>
+    <td colspan="3" valign="top" style="padding-right:50px">{page::textarea("expenseFormComment",$expenseFormComment)}</td>
   </tr>
   <tr>
     <td colspan="4" align="center">
