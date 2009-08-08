@@ -300,7 +300,7 @@ class db_entity {
     }
 
     if (!$this->skip_modified_fields) {
-      if (isset($this->data_fields[$this->data_table."ModifiedUser"])) {
+      if (isset($this->data_fields[$this->data_table."ModifiedUser"]) && $current_user_id) {
         $this->set_value($this->data_table."ModifiedUser", $current_user_id);
       }
       if (isset($this->data_fields[$this->data_table."ModifiedTime"])) {
