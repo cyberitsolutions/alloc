@@ -160,7 +160,7 @@ require_once("../alloc.php");
       $query = sprintf("SELECT projectPerson.*, roleSequence
                           FROM projectPerson 
                      LEFT JOIN role ON role.roleID = projectPerson.roleID
-                         WHERE projectID=%d ORDER BY roleSequence DESC,personID ASC", $projectID);
+                         WHERE projectID=%d ORDER BY roleSequence DESC,projectPersonID ASC", $projectID);
       $db->query($query);
 
       while ($db->next_record()) {
