@@ -43,34 +43,35 @@ class timeSheetItem extends db_entity {
     $timeSheet->set_id($this->get_value("timeSheetID"));
     $timeSheet->select();
     $timeSheet->load_pay_info();
-    $total = $timeSheet->pay_info["total_customerBilledDollars"] or $total = $timeSheet->pay_info["total_dollars"];
+    list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated();
 
-    if ($timeSheet->pay_info["customerBilledDollars"] > 0) {
-      $total+= $this->get_value("timeSheetItemDuration") * $timeSheet->pay_info["customerBilledDollars"];
-    } else {
-      $total+= $this->get_value("timeSheetItemDuration") * $this->get_value("rate");
+    $_POST["timeSheetItem_commentPrivate"] and $this->set_value("commentPrivate", 1);
+    $this->set_value("comment",rtrim($this->get_value("comment")));
+
+    $amount_of_item = $this->calculate_item_charge($timeSheet->pay_info["customerBilledDollars"]);
+    if ($amount_allocated && ($amount_of_item + $amount_used) > $amount_allocated) {
+      return "Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice.<br>Time Sheet Item not saved.";
+    } 
+
+    if ($_POST["timeSheetItem_taskID"]) {
+      $selectedTask = new task();
+      $selectedTask->set_id($_POST["timeSheetItem_taskID"]);
+      $selectedTask->select();
+      $taskName = $selectedTask->get_task_name();
+
+      if (!$selectedTask->get_value("dateActualStart")) {
+        $selectedTask->set_value("dateActualStart", $this->get_value("dateTimeSheetItem"));
+      }
+      if ($selectedTask->get_value("taskSubStatus") == "notstarted") {
+        $selectedTask->set_value("taskSubStatus", "inprogress");
+      }
+      $selectedTask->skip_perms_check = true;
+      $selectedTask->save();
     }
 
-    $limit = $timeSheet->get_amount_allocated();
-
-    if ($limit && $total > $limit) {
-      return "Adding this Time Sheet Item would exceed the amount allocated for this Time Sheet.";
-      exit;
-    }
+    $this->set_value("description", $taskName);
 
     parent::save();
-
-    $db = new db_alloc();
-    if ($_POST["timeSheetItem_taskID"] != 0 && $_POST["timeSheetItem_taskID"]) {
-      $db->query("select taskName,dateActualStart from task where taskID = %d",$_POST["timeSheetItem_taskID"]);
-      $db->next_record();
-      $taskName = $db->f("taskName");
-      if (!$db->f("dateActualStart")) {
-        $q = sprintf("UPDATE task SET dateActualStart = '%s' WHERE taskID = %d",$this->get_value("dateTimeSheetItem"),$_POST["timeSheetItem_taskID"]);
-        $db->query($q);
-      }
-    }
-    $this->set_value("description", $taskName);
 
     $db = new db_alloc();
     $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) as count
