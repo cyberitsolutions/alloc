@@ -650,11 +650,8 @@ class task extends db_entity {
 
     if ($this->get_value("taskTypeID") == TT_PHASE && ($_FORM["return"] == "html" || $_FORM["return"] == "arrayAndHtml")) {
       $rtn = "<strong>".$id.$this->get_value("taskName")."</strong>";
-    } else if ($this->get_value("taskTypeID") == TT_PHASE) {
-      $rtn = $id.$this->get_value("taskName");
     } else {
-      substr($this->get_value("taskName"),0,140) != $this->get_value("taskName") and $dotdotdot = "...";
-      $rtn = $id.substr($this->get_value("taskName"),0,140).$dotdotdot;
+      $rtn = $id.$this->get_value("taskName");
     }
     return $rtn;
   }
