@@ -262,12 +262,14 @@ class task extends db_entity {
     // OR if this person is the Creator of this task.
     // OR if this person is the For Person of this task.
     // OR if this person has super 'manage' perms
+    // OR if we're skipping the perms checking because i.e. we're having our task status updated by a timesheet
     if (
        !$this->get_id() 
     || (is_object($p) && ($p->has_project_permission($person, array("isManager", "canEditTasks"))) 
     || $this->get_value("creatorID") == $person->get_id()
     || $this->get_value("personID") == $person->get_id()
     || $person->have_role("manage")
+    || $this->skip_perms_check
     )) {
       return true;
     }

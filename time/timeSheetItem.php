@@ -34,7 +34,6 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
   $timeSheet->set_id($timeSheetID);
   $timeSheet->select();
   $timeSheet->load_pay_info();
-  list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated();
 
   if ($timeSheet->get_value("status") == "edit") {
     $timeSheetItem = new timeSheetItem;
@@ -42,34 +41,8 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
     $timeSheetItem->read_globals("timeSheetItem_");
 
     if ($_POST["timeSheetItem_save"]) {
-
-      if ($_POST["timeSheetItem_taskID"]) {
-        $selectedTask = new task();
-        $selectedTask->set_id($_POST["timeSheetItem_taskID"]);
-        $selectedTask->select();
-        $taskName = $selectedTask->get_task_name();
-
-        if (!$selectedTask->get_value("dateActualStart")) {
-          $selectedTask->set_value("dateActualStart", $timeSheetItem->get_value("dateTimeSheetItem"));
-        }
-        if ($selectedTask->get_value("taskSubStatus") == "notstarted") {
-          $selectedTask->set_value("taskSubStatus", "inprogress");
-        }
-        $selectedTask->save();
-      }
-
-      $timeSheetItem->set_value("description", $taskName);
-      $_POST["timeSheetItem_commentPrivate"] and $timeSheetItem->set_value("commentPrivate", 1);
-      $timeSheetItem->set_value("comment",rtrim($timeSheetItem->get_value("comment")));
-
-      $amount_of_item = $timeSheetItem->calculate_item_charge($timeSheet->pay_info["customerBilledDollars"]);
-      if ($amount_allocated && ($amount_of_item + $amount_used) > $amount_allocated) {
-        $TPL["message"][] = "Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice.<br>Time Sheet Item not saved.";
-      } else {
-        $rtn = $timeSheetItem->save();
-        $rtn or $TPL["message_good"][] = "Time Sheet Item saved.";
-      }
-
+      $rtn = $timeSheetItem->save();
+      $rtn or $TPL["message_good"][] = "Time Sheet Item saved.";
       $rtn and $TPL["message"][] = $rtn;
       alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
 
