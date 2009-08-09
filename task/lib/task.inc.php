@@ -167,7 +167,7 @@ class task extends db_entity {
   }
 
   function open() {
-    $this->set_value("closerID",0);
+    $this->set_value("closerID",null);
     $this->set_value("dateClosed","");
     $this->set_value("dateActualCompletion","");
     $this->mark_reopened();
