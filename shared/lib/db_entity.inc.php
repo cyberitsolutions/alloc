@@ -442,6 +442,15 @@ class db_entity {
     } else {
       $have_perm = $this->have_perm(PERM_READ);
       if (!$have_perm) {
+  
+        // we don't bother doing read permission checking for all the meta tables
+        $m = new meta();
+        $meta_tables = (array)$m->get_tables();
+        $meta_tables = array_keys($meta_tables);
+        if (in_array($this->data_table,(array)$meta_tables)) {
+          return true;
+        }
+
         $this->clear();
       }
       return $have_perm;
