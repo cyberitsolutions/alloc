@@ -21,6 +21,8 @@
     });
   </script>
 
+  {page::messages()}
+
   <form action="{$url_alloc_login}" method="post" id="login_form">
 
   <div style="margin-top:40px; text-align:center;">
