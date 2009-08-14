@@ -450,7 +450,8 @@ CREATE TABLE timeSheetItem (
   rate DECIMAL(19,2) DEFAULT '0.00',
   commentPrivate boolean default false,
   comment text,
-  multiplier decimal(9,2) default 1.00 NOT NULL
+  multiplier decimal(9,2) default 1.00 NOT NULL,
+  emailUID varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS timeUnit;

@@ -438,11 +438,6 @@ class comment extends db_entity {
     } else if (!$from_name) {
       $from_name = $from_address;
     }
- 
-
-    // If user wants to un/subscribe to this comment
-    $subject = $decoded[0]["Headers"]["subject:"];
-    $ip_action = interestedParty::adjust_by_email_subject($subject,"comment",$this->get_id(),$from_name,$from_address,$personID,$clientContactID);
 
     // Load up some variables for later in send_emails()
     $from["email"] = $from_address;
@@ -461,6 +456,11 @@ class comment extends db_entity {
     $comment->save();
     $from["commentID"] = $comment->get_id();
 
+
+    // If user wants to un/subscribe to this comment
+    $subject = $decoded[0]["Headers"]["subject:"];
+    $ip_action = interestedParty::adjust_by_email_subject($subject,"comment",$this->get_id(),$from_name,$from_address,$personID,$clientContactID,$body,$email->msg_uid);
+
     $recipients[] = "interested";
 
     $class = $c->get_value("commentType");
@@ -477,15 +477,16 @@ class comment extends db_entity {
         $from["hash"] = $token->get_value("tokenHash");
       }
 
-      if ($ip_action == "subscribed") {
-        $comment->set_value("comment",$from_name." is now a party to this conversation.\n\n".$comment->get_value("comment"));
+      if ($ip_action["interestedParty"]) {
+        $comment->set_value("comment",$ip_action["interestedParty"]."\n\n".$comment->get_value("comment"));
         $comment->save();
-      } else if ($ip_action == "unsubscribed") {
-        $comment->set_value("comment",$from_name." is no longer a party to this conversation.\n\n".$comment->get_value("comment"));
+      }
+      if ($ip_action["timeSheet"]) {
+        $comment->set_value("comment",$ip_action["timeSheet"]."\n\n".$comment->get_value("comment"));
         $comment->save();
-      } 
+      }
 
-      if ($ip_action != "unsubscribed") { // no email sent for unsubscription requests
+      if (!$ip_action["quiet"]) { // only resend email if quiet hasn't been put in the subject line
         $successful_recipients = $obj->send_emails($recipients, $c->get_value("commentType")."_comments", $comment->get_value("comment"), $from);
       }
 
@@ -598,6 +599,22 @@ class comment extends db_entity {
                 ,"entityID"          => "The ID of the particular entity"
                 ,"showEditButtons"   => "Will fetch a form with edit comment buttons"
                 );
+  }
+
+  function get_parent_object() {
+    if (class_exists($this->get_value("commentType"))) {
+      $parent_type = $this->get_value("commentType");
+    
+      $o = new $parent_type;
+      $o->set_id($this->get_value("commentLinkID"));
+      $o->select();
+
+      if ($parent_type == "comment") {
+        return $o->get_parent_object();
+      } else {
+        return $o;
+      }
+    }
   }
 
 

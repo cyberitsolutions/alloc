@@ -139,25 +139,100 @@ class interestedParty extends db_entity {
     $db->query($q);
   }
 
-  function adjust_by_email_subject($subject="",$entity,$entityID,$fullName="",$emailAddress="",$personID="",$clientContactID="") {
+  function adjust_by_email_subject($subject="",$entity,$entityID,$fullName="",$emailAddress="",$personID="",$clientContactID="",$body="",$msg_uid="") {
+    global $current_user;
 
-    if (preg_match("/(unsub|unsubscribe)\s*$/i",$subject)) {
-      if (interestedParty::exists($entity, $entityID, $emailAddress)) {
-        interestedParty::delete_interested_party($entity, $entityID, $emailAddress);
-        $action = "unsubscribed";
+    // Load up the parent object that this comment refers to, be it task or timeSheet etc
+    if ($entity == "comment" && $entityID) {
+      $c = new comment();
+      $c->set_id($entityID);
+      $c->select();
+      $object = $c->get_parent_object();
+    } else if (class_exists($entity) && $entityID) {
+      $object = new $entity;
+      $object->set_id($entityID);
+      $object->select();
+    }
+
+    // If we're doing subject line magic, then we're only going to do it with
+    // subject lines that have a {Key:fdsFFeSD} in them.
+    preg_match("/\{Key:[A-Za-z0-9]{8}\}(.*)\s*$/i",$subject,$m);
+    $commands = explode(" ",trim($m[1]));
+
+    foreach((array)$commands as $command) {
+      $command = strtolower($command);
+
+      // If "quiet" in the subject line, then the email/comment won't be re-emailed out again
+      if ($command == "quiet") {
+        $action["quiet"] = true;
       }
 
-    } else if (preg_match("/(sub|subscribe)\s*$/i",$subject)) {
-      if (!interestedParty::exists($entity, $entityID, $emailAddress)) {
-        $interestedParty = new interestedParty;
-        $interestedParty->set_value("entity",$entity);
-        $interestedParty->set_value("entityID",$entityID);
-        $interestedParty->set_value("fullName",$fullName);
-        $interestedParty->set_value("emailAddress",$emailAddress);
-        $interestedParty->set_value("personID",$personID);
-        $interestedParty->set_value("clientContactID",$clientContactID);
-        $interestedParty->save();
-        $action = "subscribed";
+      // To unsubscribe from this conversation
+      if ($command == "unsub" || $command == "unsubscribe") {
+        if (interestedParty::exists($entity, $entityID, $emailAddress)) {
+          interestedParty::delete_interested_party($entity, $entityID, $emailAddress);
+          $action["interestedParty"] = $current_user->get_username(1)." is no longer a party to this conversation.";
+        }
+
+      // To subscribe to this conversation
+      } else if ($command == "sub" || $command == "subscribe") {
+        if (!interestedParty::exists($entity, $entityID, $emailAddress)) {
+          $interestedParty = new interestedParty;
+          $interestedParty->set_value("entity",$entity);
+          $interestedParty->set_value("entityID",$entityID);
+          $interestedParty->set_value("fullName",$fullName);
+          $interestedParty->set_value("emailAddress",$emailAddress);
+          $interestedParty->set_value("personID",$personID);
+          $interestedParty->set_value("clientContactID",$clientContactID);
+          $interestedParty->save();
+          $action["interestedParty"] = $current_user->get_username(1)." is now a party to this conversation.";
+        }
+      }
+
+      // Can only perform any of the other actions if they are being performed by a recognized user
+      if (is_object($current_user) && $current_user->get_id()) {
+
+        // To close the entity (i.e. the task)
+        if ($command == "close" || $command == "closed") {
+          if (is_object($object) && method_exists($object,"close") && $object->get_id()) {
+            $object->close();
+            $object->save();
+          }
+
+        // To open the entity (i.e. the task)
+        } else if ($command == "open") {
+          if (is_object($object) && method_exists($object,"open") && $object->get_id()) {
+            $object->open();
+            $object->save();
+          }
+        }
+
+        // If there's a number/duration then add some time to a time sheet
+        if (preg_match("/([\.\d]+)/i",$command,$m)) { 
+          $duration = $m[1];
+  
+          if (is_numeric($duration)) {
+
+            if (is_object($object) && $object->classname == "task" && $object->get_id() && $current_user->get_id()) {
+              $timeSheet = new timeSheet();
+              $tsi_row = $timeSheet->add_timeSheetItem_by_task($object->get_id(), $duration, $body, $msg_uid);
+
+              $timeUnit = new timeUnit;
+              $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
+              $unitLabel = $units[$tsi_row["timeSheetItemDurationUnitID"]];
+
+              $action["timeSheet"] = $current_user->get_username(1)." added ".$tsi_row["timeSheetItemDuration"]." ".$unitLabel;
+              $action["timeSheet"].= " to time sheet #".$tsi_row["timeSheetID"];
+            }
+
+            if (!$tsi_row || !$tsi_row["timeSheetID"] || !$tsi_row["timeSheetItemID"]) {
+              $action["timeSheet"] = "Failed to add time via email to a time sheet for ".$current_user->get_username(1);
+            }
+
+            $tsi_row["error_no_projectPerson"] and $action["timeSheet"].= "\n".$current_user->get_username(1)." has not been added to project ".$object->get_value("projectID").".";
+            $tsi_row["timeSheetItem_save_error"] and $action["timeSheet"].= "\nError saving time sheet item: ".$tsi_row["timeSheetItem_save_error"];
+          }
+        }
       }
     }
     return $action;

@@ -1066,7 +1066,7 @@ EOD;
     return $rtn;
   }
 
-  function add_timeSheetItem_by_task($taskID, $duration, $comments) {
+  function add_timeSheetItem_by_task($taskID, $duration, $comments, $emailUID=null) {
     global $current_user;
 
     $task = new task;
@@ -1077,6 +1077,8 @@ EOD;
                      WHERE status = 'edit' 
                        AND projectID = %d
                        AND personID = %d
+                  ORDER BY dateFrom
+                     LIMIT 1
                 ",$task->get_value("projectID"), $current_user->get_id());
       $db = new db_alloc();
       $db->query($q);
@@ -1113,17 +1115,24 @@ EOD;
         $tsi->set_value("dateTimeSheetItem",date("Y-m-d"));
         $tsi->set_value("timeSheetItemDuration",$duration);
         $tsi->set_value("timeSheetItemDurationUnitID", $row_projectPerson["rateUnitID"]);
-        $tsi->set_value("description",$task->get_value("taskName"));
+        $tsi->set_value("description",$task->get_task_name());
         $tsi->set_value("personID",$current_user->get_id());
         $tsi->set_value("taskID",sprintf("%d",$taskID));
         $tsi->set_value("rate",$row_projectPerson["rate"]);
         $tsi->set_value("multiplier",1);
         $tsi->set_value("comment",$comments);
+        $tsi->set_value("emailUID",$emailUID);
         $_POST["timeSheetItem_taskID"] = sprintf("%d",$taskID); // this gets used in timeSheetItem->save();
-        $tsi->save();
+        $err = $tsi->save();
+  
+        $id = $tsi->get_id();
+        $tsi->select();
+        $rtn = $tsi->row();
+        $row_projectPerson or $rtn["error_no_projectPerson"] = true;
+        $err and $rtn["timeSheetItem_save_error"] = $err;
       }
   
-      return $timeSheetID;
+      return $rtn;
     }
   }
 

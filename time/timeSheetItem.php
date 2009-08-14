@@ -39,6 +39,9 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
     $timeSheetItem = new timeSheetItem;
     $timeSheetItem->read_globals();
     $timeSheetItem->read_globals("timeSheetItem_");
+    if ($timeSheetItem->get_id()) {
+      $timeSheetItem->select();
+    }
 
     if ($_POST["timeSheetItem_save"]) {
       $rtn = $timeSheetItem->save();

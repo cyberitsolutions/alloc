@@ -112,20 +112,20 @@ class task extends db_entity {
 
 
     // If the tasks status has just moved to closed, close() the task.
-    if ($this->get_value("taskStatus") == "closed" && $this->all_row_fields["taskStatus"] != "closed") {
+    if (!$this->has_just_been_closed && $this->get_value("taskStatus") == "closed" && $this->all_row_fields["taskStatus"] != "closed") {
       $this->close();
 
     // Else if it was closed, and it has now been re-opened
-    } else if ($this->all_row_fields["taskStatus"] == "closed" && $this->get_value("taskStatus") != "closed" ) {
+    } else if (!$this->has_just_been_opened && $this->all_row_fields["taskStatus"] == "closed" && $this->get_value("taskStatus") != "closed" ) {
       $this->open();
     
     // if they have just set a dateActualCompletion, mark all children as
     // complete. (the $this->all_row_fields contains the *original* values)
-    } else if ($this->get_value("dateActualCompletion") && !$this->all_row_fields["dateActualCompletion"]) {
+    } else if (!$this->has_just_been_closed && $this->get_value("dateActualCompletion") && !$this->all_row_fields["dateActualCompletion"]) {
       $this->close();
 
     // Else if there was a dateActualCompletion and they have just *unset* it...
-    } else if ($this->all_row_fields["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
+    } else if (!$this->has_just_been_opened && $this->all_row_fields["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
       $this->open();
     }
 
@@ -181,13 +181,19 @@ class task extends db_entity {
     if ($this->get_value("taskTypeID") == TT_PHASE) {
       $this->close_off_children_recursive();
     }
+    $this->has_just_been_closed = true;
   }
 
-  function open() {
+  function open($taskSubStatus = "inprogress") {
     $this->set_value("closerID",null);
     $this->set_value("dateClosed","");
     $this->set_value("dateActualCompletion","");
+    if ($this->get_value("taskStatus") != "open") {
+      $this->set_value("taskStatus","open");
+      $this->set_value("taskSubStatus",$taskSubStatus);
+    }
     $this->mark_reopened();
+    $this->has_just_been_opened = true;
   }
 
   function close_off_children_recursive() {
