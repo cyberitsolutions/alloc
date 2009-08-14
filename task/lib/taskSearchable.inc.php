@@ -20,22 +20,14 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-define("NO_REDIRECT",1);
-require_once("../alloc.php");
-
-$tasks = search::by_fulltext("taskSearchable", "taskName", $_GET["taskName"], sprintf("projectID = %d",$_GET["projectID"])." AND ");
-foreach ($tasks as $task) {
-  $str.= "<div style='padding-bottom:3px'>";
-  $str.= "<a href=\"".$TPL["url_alloc_task"]."taskID=".$task["taskID"]."\">".$task["taskID"]." ".$task["taskName"]."</a>";
-  $status = "";
-  // $task["taskStatus"] == "closed" and $status = "[Closed ".$task["dateActualCompletion"]."]"; The taskSearchable table doesn't have these fields
-  $str.= " ".$status;
-  $str.= "</div>";
-}
-
-if ($str) {
-  echo $str;
+class taskSearchable extends db_entity {
+  public $classname = "taskSearchable";
+  public $data_table = "taskSearchable";
+  public $display_field_name = "taskName";
+  public $key_field = "taskID";
+  public $data_fields = array("taskName"
+                             ,"projectID"
+                             );
 }
 
 

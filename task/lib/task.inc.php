@@ -141,7 +141,24 @@ class task extends db_entity {
 
     $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
 
-    return parent::save();
+    $rtn = parent::save();
+
+    // Update the full-text compatible i.e. MyISAM version of the task table.
+    $taskSearchable = new taskSearchable;
+    $taskSearchable->set_id($this->get_id());
+    $taskSearchable->set_value("taskName",$this->get_value("taskName"));
+    $taskSearchable->set_value("projectID",$this->get_value("projectID"));
+    $taskSearchable->save();
+
+    return $rtn;
+  }
+
+  function delete() {
+    // Update the full-text compatible i.e. MyISAM version of the task table.
+    $taskSearchable = new taskSearchable;
+    $taskSearchable->set_id($this->get_id());
+    $taskSearchable->delete();
+    return parent::delete();
   }
 
   function validate() {
