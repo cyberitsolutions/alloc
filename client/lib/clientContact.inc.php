@@ -100,6 +100,19 @@ class clientContact extends db_entity {
     }
   }
 
+  function delete() {
+    // have to null out any records that point to this clientContact first to satisfy the referential integrity constraints
+    if ($this->get_id()) {
+      $db = new db_alloc();
+      $q = sprintf("UPDATE interestedParty SET clientContactID = NULL where clientContactID = %d",$this->get_id());
+      $db->query($q);
+      $q = sprintf("UPDATE comment SET commentCreatedUserClientContactID = NULL where commentCreatedUserClientContactID = %d",$this->get_id());
+      $db->query($q);
+      $q = sprintf("UPDATE project SET clientContactID = NULL where clientContactID = %d",$this->get_id());
+      $db->query($q);
+    }
+    return parent::delete();
+  }
 
 }
 
