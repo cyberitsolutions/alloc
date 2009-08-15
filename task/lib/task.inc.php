@@ -1933,11 +1933,11 @@ class task extends db_entity {
           case 'parentTaskID':
             task::load_entity("task", $oldValue, $oldTask);
             task::load_entity("task", $newValue, $newTask);
-            if(!$oldValue) {
+            if(!$oldValue && is_object($newTask)) {
               $changeDescription = sprintf("Task was set to a child of %d %s.", $newTask->get_id(), $newTask->get_task_link());
-            } elseif(!$newValue) {
+            } else if(!$newValue && is_object($oldTask)) {
               $changeDescription = sprintf("Task ceased to be a child of %d %s", $oldTask->get_id(), $oldTask->get_task_link());
-            } else {
+            } else if (is_object($oldTask) && is_object($newTask)) {
               $changeDescription = sprintf("Task ceased to be a child of %d %s and became a child of %d %s.", $oldTask->get_id(), $oldTask->get_task_link(), $newTask->get_id(), $newTask->get_task_link());
             }
           break;
