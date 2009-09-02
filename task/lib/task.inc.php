@@ -129,6 +129,17 @@ class task extends db_entity {
       $this->open();
     }
 
+    // If there is no dateActualStart, and the task status has just been changed to In Progress, then set the dateActualStart
+    if (!$this->get_value("dateActualStart") 
+    && $this->all_row_fields["taskSubStatus"] != "inprogress" && $this->get_value("taskSubStatus") == "inprogress") {
+      $this->set_value("dateActualStart",date("Y-m-d"));
+    
+    // If they've just plugged a dateActualStart in and the task is not closed, then change the status to Open: In Progress
+    } else if (!$this->all_row_fields["dateActualStart"] && $this->get_value("dateActualStart") && $this->get_value("taskStatus") != "closed") {
+      $this->set_value("taskStatus","open");
+      $this->set_value("taskSubStatus","inprogress");
+    }
+
     // If task exists and the personID has changed, update the dateAssigned
     if ($this->get_id()) {
       if (sprintf("%d",$this->get_value("personID")) != sprintf("%d",$this->all_row_fields["personID"])) {
