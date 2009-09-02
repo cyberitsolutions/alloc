@@ -60,39 +60,55 @@ class wiki_module extends module {
   function get_file($file, $rev="") {
     global $TPL;
 
-    // Get the regular revision ...
-    $disk_file = file_get_contents(wiki_module::get_wiki_path().$file) or $disk_file = "";
+    $f = realpath(wiki_module::get_wiki_path().urldecode($file));
 
-    $vcs = vcs::get();
-    //$vcs->debug = true;
+    if (path_under_path(dirname($f), wiki_module::get_wiki_path())) {
 
-    // Get a particular revision
-    if ($vcs) {
-      $vcs_file = $vcs->cat(urldecode(wiki_module::get_wiki_path().$file), urldecode($rev));
-    }
-
-    if ($vcs && wiki_module::nuke_trailing_spaces_from_all_lines($disk_file) != wiki_module::nuke_trailing_spaces_from_all_lines($vcs_file)) {
-
-      if (!$vcs_file) {
-        $TPL["msg"] = "<div class='message warn' style='margin-top:0px; margin-bottom:10px; padding:10px;'>
-                        Warning: This file may not be under version control.
-                       </div>";
-      } else {
-        $TPL["msg"] = "<div class='message warn' style='margin-top:0px; margin-bottom:10px; padding:10px;'>
-                        Warning: This file may not be the latest version.
-                       </div>";
+      $mt = get_mimetype($f);
+      if (strtolower($mt) != "text/plain") {
+        $s = "<h6>Download File</h6>";
+        $s.= "<a target='_BLANK' href='".$TPL["url_alloc_fileDownload"]."file=".urlencode($file)."'>".$file."</a>";
+        $TPL["str_html"] = $s;
+        include_template("templates/fileGetM.tpl");
+        exit();
       }
-    }
 
-    if ($rev && $vcs_file) {
-      $TPL["str"] = $vcs_file;
-    } else {
-      $TPL["str"] = $disk_file;
+      // Get the regular revision ...
+      $disk_file = file_get_contents($f) or $disk_file = "";
+
+      $vcs = vcs::get();
+      //$vcs->debug = true;
+
+      // Get a particular revision
+      if ($vcs) {
+        $vcs_file = $vcs->cat($f, urldecode($rev));
+      }
+
+      if ($vcs && wiki_module::nuke_trailing_spaces_from_all_lines($disk_file) != wiki_module::nuke_trailing_spaces_from_all_lines($vcs_file)) {
+
+        if (!$vcs_file) {
+          $TPL["msg"] = "<div class='message warn' style='margin-top:0px; margin-bottom:10px; padding:10px;'>
+                          Warning: This file may not be under version control.
+                         </div>";
+        } else {
+          $TPL["msg"] = "<div class='message warn' style='margin-top:0px; margin-bottom:10px; padding:10px;'>
+                          Warning: This file may not be the latest version.
+                         </div>";
+        }
+      }
+
+      if ($rev && $vcs_file) {
+        $TPL["str"] = $vcs_file;
+      } else {
+        $TPL["str"] = $disk_file;
+      }
+
+      $wikiMarkup = config::get_config_item("wikiMarkup");
+      $TPL["str_html"] = $wikiMarkup($TPL["str"]);
+      $TPL["rev"] = urlencode($rev);
+
+      include_template("templates/fileGetM.tpl");
     }
-    $wikiMarkup = config::get_config_item("wikiMarkup");
-    $TPL["str_html"] = $wikiMarkup($TPL["str"]);
-    $TPL["rev"] = urlencode($rev);
-    include_template("templates/fileGetM.tpl");
   }
 
 
