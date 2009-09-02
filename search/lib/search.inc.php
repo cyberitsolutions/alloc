@@ -125,7 +125,7 @@ class search {
           $rtn[] = $dir.$file;
 
         } else if (is_dir($dir.$file)) {
-          $rtn += search::get_recursive_dir_list($dir.$file);
+          $rtn = array_merge((array)$rtn, (array)search::get_recursive_dir_list($dir.$file));
         }
       }
     }
