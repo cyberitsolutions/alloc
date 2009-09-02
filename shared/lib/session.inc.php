@@ -44,7 +44,8 @@ class Session {
     $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
     #$this->session_life  = (5); 
-    $this->session_life  = (60*60*9); 
+    $this->session_life  = (config::get_config_item("allocSessionMinutes")*60); 
+    $this->session_life < 1 and $this->session_life = 1; // just in case.
     $this->session_data  = $this->UnEncode($this->GetSessionData());
     $this->mode          = $this->Get("session_mode"); 
 
