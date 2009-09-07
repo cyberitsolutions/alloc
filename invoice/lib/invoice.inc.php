@@ -216,15 +216,7 @@ class invoice extends db_entity {
     $footer = config::get_config_item("timeSheetPrintFooter");
     $taxName = config::get_config_item("taxName");
 
-
-    // Get billing period
-    $q = sprintf("SELECT max(iiDate) as maxDate, min(iiDate) as minDate
-                    FROM invoiceItem
-                   WHERE invoiceItem.invoiceID = %d
-                 ",$this->get_id());
-    $db->query($q);
-    $row = $db->row();
-    $period = format_date(DATE_FORMAT,$row["minDate"])." to ".format_date(DATE_FORMAT,$row["maxDate"]);
+    $period = $this->get_value("invoiceDateFrom")." to ".$this->get_value("invoiceDateTo");
 
     $default_header = "Tax Invoice";
     $default_id_label = "Invoice Number";
