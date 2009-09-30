@@ -8,7 +8,7 @@
 
   <div id="header_image">
     <img style="float:right; right:0px; top:7px; position:absolute;" src="{$url_alloc_images}/alloc_med.png" alt="allocPSA logo">
-    <br/>
+    <br>
     <h1>allocPSA Installation Helper</h1>
   </div>
 
@@ -35,7 +35,7 @@
   <div style="padding:10px;">
 
 {if show_tab_1()}
-<br/>
+<br>
 
 This will help you install allocPSA on your webserver. Please note that
 allocPSA is written in PHP, uses MySQL and runs best on a Linux server. If you
@@ -96,19 +96,19 @@ of a database and database user.
 
 
 {if show_tab_2()}
-<br/>
+<br>
 
 3). <b>If you need to create the allocPSA database and database user, run the
 following commands on your MySQL server</b>. Ensure you are logged in as a
 MySQL administrator user when you run them.
 
-<br/><br/>
+<br><br>
 
 <b>Note: </b> you do not need to run these commands if the database and user
 credentials you entered on the previous page are already setup on the MySQL
 server.
 
-<br/>
+<br>
 <table class="nice" cellspacing="0" border="0">
 <tr>
   <th>Database Administrator Commands</th>
@@ -118,7 +118,7 @@ server.
 </tr>
 </table>
 
-<br/>
+<br>
 4). Once that is done, you should test that everything worked ok by clicking the Test Database Connection button.
 <div class="buttons">
   <input type='submit' name='test_db_credentials' value='Test Database Connection'>
@@ -144,7 +144,7 @@ server.
 
 
 {if show_tab_3()}
-<br/>
+<br>
 5). Click the Install Database button to install the tables into the allocPSA database.
 <div class="buttons">
   <input type='submit' name='install_db' value='Install Database'>&nbsp;&nbsp;
@@ -171,9 +171,9 @@ server.
 
 
 {if show_tab_4()}
-<br/>
+<br>
 6). Verify that all the tests succeeded below, and click the Complete Installation button.
-<br/>
+<br>
 
 {$tests = array("db_connect"     =>"DB Connect" 
                ,"db_select"      =>"DB Install" 
@@ -225,7 +225,7 @@ server.
     {/}
 
     {if show_tab_4c()}
-    <b>One last thing...</b><br/>
+    <b>One last thing...</b><br>
     7). You can enable further functionality of allocPSA by installing these
     cron jobs onto the server:
 

@@ -25,21 +25,21 @@
 
 
     <div class="container" style="text-align:center;">
-      <h2>{$companyName}</h2><br/><h4>{$companyNos1}<br/>{$companyNos2}</h4>  
+      <h2>{$companyName}</h2><br><h4>{$companyNos1}<br>{$companyNos2}</h4>  
     </div>
 
     <div class="container">
       <div style="float:left">
-          <i>{echo config::get_config_item("companyName")}</i><br/>
-          <i>{echo config::get_config_item("companyContactAddress")}</i><br/>
-          <i>{echo config::get_config_item("companyContactAddress2")}</i><br/>
+          <i>{echo config::get_config_item("companyName")}</i><br>
+          <i>{echo config::get_config_item("companyContactAddress")}</i><br>
+          <i>{echo config::get_config_item("companyContactAddress2")}</i><br>
           <i>{echo config::get_config_item("companyContactAddress3")}</i>
       </div>
       <div style="float:right">
-          <i>Email: {echo config::get_config_item("companyContactEmail")}</i><br/>
-          <i>Web: {echo config::get_config_item("companyContactHomePage")}</i><br/>
-          <i>{$phone}</i><br/>
-          <i>{$fax}</i><br/>
+          <i>Email: {echo config::get_config_item("companyContactEmail")}</i><br>
+          <i>Web: {echo config::get_config_item("companyContactHomePage")}</i><br>
+          <i>{$phone}</i><br>
+          <i>{$fax}</i><br>
       </div>
     </div>
 
@@ -52,12 +52,12 @@
 
 
     <div class="container">
-      Client: {$clientName}<br/>
-      Project: {$timeSheet_projectName}<br/>
+      Client: {$clientName}<br>
+      Project: {$timeSheet_projectName}<br>
       Contractor: {$timeSheet_personName}
     </div>
 
-    <br/>
+    <br>
 
     {if $_GET["timeSheetPrintMode"] == "money"}
     <table border="1" cellspacing="0" cellpadding="2" width="100%">
@@ -121,7 +121,7 @@
     </table>
     {/}
  
-    <br/><br/>
+    <br><br>
 
     {echo config::get_config_item("timeSheetPrintFooter")}
 

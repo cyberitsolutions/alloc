@@ -66,12 +66,12 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $memo and $account.= " - ".$memo;
 
 
-    #echo "<br/>";
-    #echo "<br/>date: ".$transactionDate;
-    #echo "<br/>memo: ".$memo;
-    #echo "<br/>account: ".$account;
-    #echo "<br/>amount: ".$amount;
-    #echo "<br/>employeeNum: ".$employeeNum;
+    #echo "<br>";
+    #echo "<br>date: ".$transactionDate;
+    #echo "<br>memo: ".$memo;
+    #echo "<br>account: ".$account;
+    #echo "<br>amount: ".$amount;
+    #echo "<br>employeeNum: ".$employeeNum;
 
     // Ignore heading row, dividing lines and total rows
     if ($transactionDate == "Date" || !$transactionDate || eregi("_____", $transactionDate) || eregi("¯¯¯", $transactionDate) || eregi("total", $transactionDate)) {
@@ -133,7 +133,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $transaction->set_value("transactionType", "salary");
     $transaction->save();
 
-    $msg.= "\$$amount for employee $employeeNum $name on $transactionDate saved<br/>";
+    $msg.= "\$$amount for employee $employeeNum $name on $transactionDate saved<br>";
   }
   $TPL["msg"] = $msg;
 }

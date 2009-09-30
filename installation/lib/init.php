@@ -111,7 +111,7 @@ function perform_test($test) {
       }
     break;
     case "db_connect":
-      $arr["value"] = "User:".$_FORM["ALLOC_DB_USER"]."<br/>Password:".$_FORM["ALLOC_DB_PASS"]."<br/>Host:".$_FORM["ALLOC_DB_HOST"];
+      $arr["value"] = "User:".$_FORM["ALLOC_DB_USER"]."<br>Password:".$_FORM["ALLOC_DB_PASS"]."<br>Host:".$_FORM["ALLOC_DB_HOST"];
       $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
       if (!$_FORM["ALLOC_DB_USER"] || !$link) {
         $arr["remedy"] = "Unable to connect to the MySQL server. Check the credentials in the 'Input' step.";
@@ -144,8 +144,8 @@ function perform_test($test) {
       $arr["value"] = $_FORM["ATTACHMENTS_DIR"];
       if ($_FORM["ATTACHMENTS_DIR"] == "" || !is_dir($_FORM["ATTACHMENTS_DIR"]) || !is_writeable($_FORM["ATTACHMENTS_DIR"])) {
         $arr["remedy"] = "The directory specified for file uploads is either not defined or not writeable by the webserver process. Run:";
-        $arr["remedy"].= "<br/>mkdir ".$_FORM["ATTACHMENTS_DIR"];
-        $arr["remedy"].= "<br/>chmod a+w ".$_FORM["ATTACHMENTS_DIR"];
+        $arr["remedy"].= "<br>mkdir ".$_FORM["ATTACHMENTS_DIR"];
+        $arr["remedy"].= "<br>chmod a+w ".$_FORM["ATTACHMENTS_DIR"];
       }
     break;
 
@@ -153,9 +153,9 @@ function perform_test($test) {
       $arr["value"] = "alloc_config.php";
       if (!file_exists(ALLOC_CONFIG_PATH) || !is_writeable(ALLOC_CONFIG_PATH)) {
         $arr["remedy"] = "Please create an empty, webserver-writeable file: ";
-        $arr["remedy"].= "<br/><nobr>touch ".ALLOC_CONFIG_PATH."</nobr>";
-        $arr["remedy"].= "<br/><nobr>chmod 600 ".ALLOC_CONFIG_PATH."</nobr>";
-        $arr["remedy"].= "<br/><nobr>chown apache ".ALLOC_CONFIG_PATH."</nobr>";
+        $arr["remedy"].= "<br><nobr>touch ".ALLOC_CONFIG_PATH."</nobr>";
+        $arr["remedy"].= "<br><nobr>chmod 600 ".ALLOC_CONFIG_PATH."</nobr>";
+        $arr["remedy"].= "<br><nobr>chown apache ".ALLOC_CONFIG_PATH."</nobr>";
       }
     break;
   }

@@ -34,7 +34,7 @@
           </td>
         </tr>
         <tr>
-          <td>Emergency contact details<br /> while on leave.</td>
+          <td>Emergency contact details<br> while on leave.</td>
           <td>{page::textarea("absence_contactDetails",$TPL["absence_contactDetails"])}</td>
         </tr>
         <tr>

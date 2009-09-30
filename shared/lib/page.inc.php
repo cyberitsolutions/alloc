@@ -131,7 +131,7 @@ class page {
       $_GET[$type] and $TPL[$type][] = urldecode($_GET[$type]);
 
       if (is_array($TPL[$type]) && count($TPL[$type])) {
-        $arr[$label] = implode("<br/>",$TPL[$type]);
+        $arr[$label] = implode("<br>",$TPL[$type]);
       }
     }
 

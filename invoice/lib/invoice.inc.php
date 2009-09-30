@@ -294,7 +294,7 @@ class invoice extends db_entity {
     $y = $pdf->ezTable($totals,$cols3,"",$pdf_table_options4);
 
     $pdf->ezSetY($y-20);
-    $pdf->ezText(str_replace(array("<br/>","<br>","<br />"),"\n",$footer),10);
+    $pdf->ezText(str_replace(array("<br>","<br>","<br>"),"\n",$footer),10);
 
 
     // Add footer
@@ -701,7 +701,7 @@ class invoice extends db_entity {
         $m = $this->{"move_status_to_".$newstatus}($direction);
       }
       if (is_array($m)) {
-        return implode("<br/>",$m);
+        return implode("<br>",$m);
       }
     }
 

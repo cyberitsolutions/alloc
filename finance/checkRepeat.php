@@ -51,7 +51,7 @@ $db = new db_alloc;
 $dbMaxDate = new db_alloc;
 $today = mktime(0, 0, 0, date(m), date(d), date(Y));
 
-echo("<br/>".date("Y-m-d")."<br/>");
+echo("<br>".date("Y-m-d")."<br>");
 
 $db->query("select * from transactionRepeat WHERE status = 'approved'");
 
@@ -76,8 +76,8 @@ while ($db->next_record()) {
   }
 
   echo "<br>Attempting repeating transaction: ".$transactionRepeat->get_value("product")." ... ";
-  //echo '<br/><br/>$nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate';
-  //echo "<br/>".$nextScheduled." <= ".$today." && ".$nextScheduled." >= ".$startDate." && ".$nextScheduled." <= ".$finishDate;
+  //echo '<br><br>$nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate';
+  //echo "<br>".$nextScheduled." <= ".$today." && ".$nextScheduled." >= ".$startDate." && ".$nextScheduled." <= ".$finishDate;
   while ($nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate) {
 
     $tf = new tf;

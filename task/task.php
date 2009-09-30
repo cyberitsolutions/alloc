@@ -148,7 +148,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 
   interestedParty::make_interested_parties("task",$task->get_id(),$_POST["interestedParty"]);
 
-  count($msg) and $msg = "&message_good=".urlencode(implode("<br/>",$msg));
+  count($msg) and $msg = "&message_good=".urlencode(implode("<br>",$msg));
 
   if ($success) {
 
@@ -258,7 +258,7 @@ $q = sprintf("SELECT clientID FROM project LEFT JOIN task ON task.projectID = pr
 $db->query($q);
 $db->next_record();
 if ($db->f("clientID")) {
-  $TPL["new_client_contact_link"] = "<br/><br/><a href=\"".$TPL["url_alloc_client"]."clientID=".$db->f("clientID")."\">";
+  $TPL["new_client_contact_link"] = "<br><br><a href=\"".$TPL["url_alloc_client"]."clientID=".$db->f("clientID")."\">";
   $TPL["new_client_contact_link"].= "New Client Contact</a>";
   $TPL["task_clientID"] = $db->f("clientID");
 }

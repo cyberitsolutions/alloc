@@ -439,7 +439,7 @@ if ($timeSheetID) {
 
 
     $pdf->ezSetY($y -20);
-    $pdf->ezText(str_replace(array("<br/>","<br>","<br />"),"\n",$TPL["footer"]),10);
+    $pdf->ezText(str_replace(array("<br>","<br>","<br>"),"\n",$TPL["footer"]),10);
     $pdf->ezStream();
 
   // Else HTML format

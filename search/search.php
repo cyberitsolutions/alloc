@@ -32,12 +32,12 @@ $needle = trim($_POST["needle"]) or $needle = trim(urldecode($_GET["needle"]));
 $needle_esc = db_esc($needle);
 
 if (!$search) {
-  $str = "<br/><br/>";
-  $str.= "<b>Searching Tasks</b> looks for a match in each Task's Name, Description and Comments.<br /><br />";
-  $str.= "<b>Searching Projects</b> looks for a match in each Project's Name, Client and Comments.<br /><br />";  
-  $str.= "<b>Searching Time Sheets</b> looks for a match in each Time Sheets Billing Note, Comment and Project.<br /><br />";
-  $str.= "<b>Searching Items</b> looks for a matching Item Name.<br /><br />";
-  $str.= "<b>Searching Clients</b> looks for a match in each Client's Name, Contact Name, and Comments.<br /><br />";
+  $str = "<br><br>";
+  $str.= "<b>Searching Tasks</b> looks for a match in each Task's Name, Description and Comments.<br><br>";
+  $str.= "<b>Searching Projects</b> looks for a match in each Project's Name, Client and Comments.<br><br>";  
+  $str.= "<b>Searching Time Sheets</b> looks for a match in each Time Sheets Billing Note, Comment and Project.<br><br>";
+  $str.= "<b>Searching Items</b> looks for a matching Item Name.<br><br>";
+  $str.= "<b>Searching Clients</b> looks for a match in each Client's Name, Contact Name, and Comments.<br><br>";
   $str.= "<b>Redirection by ID</b> will cause a redirection to the task, project, etc. if the search key is a valid ID. Disable this to search for numerical strings.";
   $TPL["search_results"] = $str;
 
@@ -176,7 +176,7 @@ if (!$search) {
           }
           if (count($details)) {
             $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_client"]."clientID=".$TPL["client_clientID"]."\">".page::htmlentities($TPL["client_clientName"]);
-            $TPL["search_results"] .= "</a></b><br>".implode("<br/>",$details)."<br/>"."<br>";
+            $TPL["search_results"] .= "</a></b><br>".implode("<br>",$details)."<br>"."<br>";
           }
 
         }
@@ -404,7 +404,7 @@ if (!$search) {
 
         if (count($details)) {
           $TPL["search_results"] .= "<b><a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$TPL["timeSheet_timeSheetID"]."\">Time Sheet: ".page::htmlentities($TPL["timeSheet_timeSheetID"]);
-          $TPL["search_results"] .= "</a></b><br>".implode("<br/>",$details)."<br/>"."<br>";
+          $TPL["search_results"] .= "</a></b><br>".implode("<br>",$details)."<br>"."<br>";
         }
       }
     }

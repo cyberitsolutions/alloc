@@ -621,7 +621,7 @@ class task extends db_entity {
       $value = interestedParty::get_encoded_interested_party_identifier($db->f("fullName"), $db->f("emailAddress"));
       $TPL["interestedParty_hidden"].= $commar.$str."<input type=\"hidden\" name=\"interestedParty[]\" value=\"".$value."\">";
       $TPL["interestedParty_text"].= $commar.$str;
-      $commar = "<br/>";
+      $commar = "<br>";
     }
 
     $TPL["taskStatusLabel"] = $this->get_task_status("label");
@@ -1324,7 +1324,7 @@ class task extends db_entity {
         }
       }
       if (is_array($str) && count($str)) {
-        $str = "<br/>".implode("<br/>",$str);
+        $str = "<br>".implode("<br>",$str);
       }
     }
 

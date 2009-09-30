@@ -191,13 +191,13 @@ if ($_POST["do_step_2"]) {
   $TPL["dump_options"].= " with field separator ";
   $TPL["dump_options"].= "<input type=\"text\" name=\"field_separator\" size=\"5\" value=\"";
   $TPL["dump_options"].= $_POST["field_separator"]."\"> (type 'tab' for tab).";
-  $TPL["dump_options"].= "<br/>Quotes around fields: ";
+  $TPL["dump_options"].= "<br>Quotes around fields: ";
   $TPL["dump_options"].= "<select name=\"field_quotes\">";
   $TPL["dump_options"].= "<option value=\"\">None";
   $TPL["dump_options"].= "<option value=\"single\"".$s_q_sel.">Single";
   $TPL["dump_options"].= "<option value=\"double\"".$d_q_sel.">Double";
   $TPL["dump_options"].= "</select><br>";
-  $TPL["dump_options"].= "<br/><br/><input type=\"submit\" value=\"Generate Database Report\" name=\"do_step_3\">";
+  $TPL["dump_options"].= "<br><br><input type=\"submit\" value=\"Generate Database Report\" name=\"do_step_3\">";
 }
 
 
