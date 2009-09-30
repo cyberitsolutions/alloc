@@ -219,7 +219,7 @@ if (!$current_user->is_employee()) {
       }
       
       $text and $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
-      $text && $timeSheetItem->get_value("comment") and $br = "<br/>";
+      $text && $timeSheetItem->get_value("comment") and $br = "<br>";
       $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$commentPrivateText.page::to_html($timeSheetItem->get_value("comment"));
       $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f", $timeSheetItem->calculate_item_charge());
 

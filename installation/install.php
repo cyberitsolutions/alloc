@@ -351,10 +351,10 @@ foreach ($config_vars as $name => $arr) {
 
 
 is_array($text_tab_1) and $TPL["text_tab_1"] = implode("\n",$text_tab_1);
-is_array($text_tab_2a) and $TPL["text_tab_2a"] = implode("<br/>",$text_tab_2a);
-is_array($text_tab_2b) and $TPL["text_tab_2b"] = implode("<br/>",$text_tab_2b);
-is_array($text_tab_3b) and $TPL["text_tab_3b"] = implode("<br/>",$text_tab_3b);
-is_array($text_tab_4) and $TPL["text_tab_4"] = implode("<br/>",$text_tab_4);
+is_array($text_tab_2a) and $TPL["text_tab_2a"] = implode("<br>",$text_tab_2a);
+is_array($text_tab_2b) and $TPL["text_tab_2b"] = implode("<br>",$text_tab_2b);
+is_array($text_tab_3b) and $TPL["text_tab_3b"] = implode("<br>",$text_tab_3b);
+is_array($text_tab_4) and $TPL["text_tab_4"] = implode("<br>",$text_tab_4);
 
 
 $tab = $_GET["tab"] or $tab = $_POST["tab"] or $tab = $_FORM["tab"];

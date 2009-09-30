@@ -91,7 +91,7 @@ class db_entity {
     if ($person == "") {
       $person = $current_user;
     }
-    #echo "<br/>1.".$this->data_table . "->have_perm($action, " . (is_object($person) ? $person->get_id() : $person) . ", $assume_owner)";
+    #echo "<br>1.".$this->data_table . "->have_perm($action, " . (is_object($person) ? $person->get_id() : $person) . ", $assume_owner)";
     $entity_id = $this->get_id();
     if (!$entity_id) {
       $entity_id = 0;
@@ -127,12 +127,12 @@ class db_entity {
       // Ignore this record if it specifies a role the user doesn't have
       $required_role = $db->f("roleName");
       if ($required_role && !$person->have_role($required_role)) {
-#echo "<br/>here $required_role";
+#echo "<br>here $required_role";
         continue;
       }
       // Ignore this record if it specifies that the user must be the record's owner and they are not
       if ($db->f("entityID") == -1 && !$assume_owner && !$this->is_owner($person)) {
-#echo "<br/>also here: ";
+#echo "<br>also here: ";
         continue;
       }
       // Read the value of the allow field to determine whether to grant the permission
@@ -258,17 +258,17 @@ class db_entity {
     $query.= ") VALUES (";
     $query.= $this->get_insert_values($this->data_fields);
     $query.= ")";
-    $this->debug and print "<br/>db_entity->insert() query: ".$query;
+    $this->debug and print "<br>db_entity->insert() query: ".$query;
     $db = $this->get_db();
     $db->query($query);
 
     $id = mysql_insert_id();
     if ($id === 0) {
-      $this->debug and print "<br/>db_entity->insert(): The previous query does not generate an AUTO_INCREMENT value`";
+      $this->debug and print "<br>db_entity->insert(): The previous query does not generate an AUTO_INCREMENT value`";
     } else if ($id === FALSE) {
-      $this->debug and print "<br/>db_entity->insert(): No MySQL connection was established";
+      $this->debug and print "<br>db_entity->insert(): No MySQL connection was established";
     } else {
-      $this->debug and print "<br/>db_entity->insert(): New ID: ".$id;
+      $this->debug and print "<br>db_entity->insert(): New ID: ".$id;
     }
     $this->key_field->set_value($id);
 
@@ -325,7 +325,7 @@ class db_entity {
     $query = "UPDATE $this->data_table SET ".$this->get_name_equals_value($write_fields)." WHERE ";
     $query.= $this->get_name_equals_value(array($this->key_field));
     $db = $this->get_db();
-    $this->debug and print "<br/>db_entity->update() query: ".$query;
+    $this->debug and print "<br>db_entity->update() query: ".$query;
     $db->query($query);
     return true;
   }

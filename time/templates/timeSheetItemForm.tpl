@@ -54,7 +54,7 @@ function refreshTaskList(radiobutton) {
     {page::textarea("timeSheetItem_comment",$TPL["tsi_comment"])}
     Private Comment <input type="checkbox" name="timeSheetItem_commentPrivate"{$commentPrivateChecked}>
     </td>
-    <td colspan="1" valign="top" align="right"><br/>{$tsi_buttons}</td>
+    <td colspan="1" valign="top" align="right"><br>{$tsi_buttons}</td>
   </tr>
 </table>
 

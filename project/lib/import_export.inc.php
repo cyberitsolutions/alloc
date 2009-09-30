@@ -93,7 +93,7 @@ function import_gnome_planner($infile) {
     if(@$doc->load($filename) === FALSE) {
       // Something's wrong with the file, bail out
       $result[] = "The file does not seem to be a valid GNOME Planner XML file.";
-      $TPL['import_result'] = implode("<br />", $result);
+      $TPL['import_result'] = implode("<br>", $result);
       return;
     }
     // This function does two passes of each file. First, it does a set of basic tests to check the file is valid.

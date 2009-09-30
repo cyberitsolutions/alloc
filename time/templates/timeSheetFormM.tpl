@@ -120,7 +120,7 @@
         </tr>
         <tr>
           <td width="1%">{page::help("timesheet_buttons")}</td>
-          <td align="center">{$timeSheet_ChangeStatusButton}<br/><br/>{$timeSheet_status_text}</td>
+          <td align="center">{$timeSheet_ChangeStatusButton}<br><br>{$timeSheet_status_text}</td>
           <td>&nbsp;</td>
         </tr>
       </table>

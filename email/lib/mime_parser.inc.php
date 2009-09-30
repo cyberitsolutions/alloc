@@ -109,7 +109,7 @@ class mime_parser
 				2822 message or it is an archive that contain multiple messages in
 				the mbox format.</purpose>
 			<usage>Set this variable to <booleanvalue>1</booleanvalue> if it is
-				it is intended to parse an mbox message archive.<br />
+				it is intended to parse an mbox message archive.<br>
 				mbox archives may contain multiple messages. Each message starts
 				with the header <tt>From</tt>. Since all valid RFC 2822 headers
 				must with a colon, the class will fail to parse a mbox archive if
