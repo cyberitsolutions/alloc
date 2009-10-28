@@ -1,6 +1,5 @@
-{$errors}
 <h6 style="margin-top:0px;">Document</h6>
-<form action="{$url_alloc_file}" method="post" id="wikiform">
+<form action="{$url_alloc_file}" method="post">
   <input name="editName" type="text" id="editName" style="width:100%;" value="{$file}">
   <br><br>
   {page::textarea('wikitext',$str,array("height"=>"large","width"=>"100%","class"=>"processed"))}
@@ -13,7 +12,7 @@
   </div>
 </form>
 <script type="text/javascript" language="javascript">
-  preload_field("#editName", "Enter the documents filename...");
+  preload_field("#editName", "Enter the document's filename...");
   mySettings.previewParserPath="{$url_alloc_filePreview}"; 
   $("#wikitext").markItUp(mySettings);
   preload_field("#commit_msg", "Enter a brief description of your changes...");

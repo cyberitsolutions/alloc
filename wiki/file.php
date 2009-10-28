@@ -35,15 +35,23 @@ $vcs = vcs::get();
 
 if ($_POST["save"]) {
 
-  path_under_path(wiki_module::get_wiki_path().dirname($editName), wiki_module::get_wiki_path()) or $errors[] = "Bad filename.".$editName;
+  path_under_path(wiki_module::get_wiki_path().dirname($editName), wiki_module::get_wiki_path()) or $errors[] = "Bad filename: ".$editName;
   is_writeable(wiki_module::get_wiki_path().dirname($editName)) or $errors[] = "Path is not writeable.";
-  strlen($_POST["wikitext"]) or $errors[] = "File empty.";
+  strlen($_POST["wikitext"]) or $errors[] = "File contents empty.";
+  strlen($editName) or $errors[] = "Filename empty.";
   strlen($_POST["commit_msg"]) or $errors[] = "No description of changes entered.";
+
   if ($errors) {
-    $TPL["errors"] = "<div class='message warn noprint' style='margin-top:0px; margin-bottom:10px; padding:10px;'>";
-    $TPL["errors"].= implode("<br>",$errors);
-    $TPL["errors"].= "</div>";
-    include_template("templates/editFileS.tpl");
+    $error = "<div class='message warn noprint' style='margin-top:0px; margin-bottom:10px; padding:10px;'>";
+    $error.= implode("<br>",$errors);
+    $error.= "</div>";
+   
+    $TPL["loadErrorPage"] = 1;
+    $TPL["str"] = urlencode($_POST["wikitext"]);
+    $TPL["commit_msg"] = urlencode($_POST["commit_msg"]);
+    $TPL["file"] = urlencode($editName);
+    $TPL["msg"] = urlencode($error);
+    include_template("templates/wikiM.tpl");
 
   } else {
 
@@ -55,7 +63,7 @@ if ($_POST["save"]) {
         wiki_module::file_save(wiki_module::get_wiki_path().$editName, $text);
         $vcs->add(wiki_module::get_wiki_path().$editName);
         $vcs->commit(wiki_module::get_wiki_path().$editName, $_POST["commit_msg"]);
-        wiki_module::get_file($editName);
+        alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($editName));
 
       // Moving or renaming the file
       } else if ($file && $editName && $editName != $file) {
@@ -64,7 +72,7 @@ if ($_POST["save"]) {
         $err = $vcs->mv(wiki_module::get_wiki_path().$file, wiki_module::get_wiki_path().$editName, $msg);
         $TPL["message_good"][] = "File saved: ".$file;
         $TPL["file"] = $editName;
-        wiki_module::get_file($editName);
+        alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($editName));
 
       // Else just regular save
       } else {
@@ -74,16 +82,14 @@ if ($_POST["save"]) {
         $TPL["file"] = $file;
         $TPL["str"] = $text;
         $TPL["commit_msg"] = $_POST["commit_msg"];
-
-        wiki_module::get_file($file);
+        alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($editName));
       }
 
     // Else non-vcs save
     } else {
       wiki_module::file_save(wiki_module::get_wiki_path().$editName, $text);
       $TPL["message_good"][] = "File saved: ".$editName;
-      //alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($editName));
-      wiki_module::get_file($editName);
+      alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($editName));
     }
   }
 
@@ -94,8 +100,16 @@ if ($_POST["save"]) {
 } else if ($_REQUEST["newDirectory"]) {
   include_template("templates/newDirectoryM.tpl");
 
-} else if (is_file(wiki_module::get_wiki_path().$file) && is_readable(wiki_module::get_wiki_path().$file)) {
+} else if ($file && is_file(wiki_module::get_wiki_path().$file) && is_readable(wiki_module::get_wiki_path().$file)) {
   wiki_module::get_file($file, $_GET["rev"]);
+
+} else if ($_REQUEST["loadErrorPage"]) {
+  $TPL["loadErrorPage"] = $_REQUEST["loadErrorPage"];
+  $TPL["str"] = urldecode($_REQUEST["str"]);
+  $TPL["commit_msg"] = urldecode($_REQUEST["commit_msg"]);
+  $TPL["file"] = urldecode($_REQUEST["file"]);
+  $TPL["msg"] = urldecode($_REQUEST["msg"]);
+  include_template("templates/fileGetM.tpl");
 }
 
 
