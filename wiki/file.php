@@ -40,7 +40,7 @@ if ($_POST["save"]) {
   strlen($_POST["wikitext"]) or $errors[] = "File empty.";
   strlen($_POST["commit_msg"]) or $errors[] = "No description of changes entered.";
   if ($errors) {
-    $TPL["errors"] = "<div class='message warn' style='margin-top:0px; margin-bottom:10px; padding:10px;'>";
+    $TPL["errors"] = "<div class='message warn noprint' style='margin-top:0px; margin-bottom:10px; padding:10px;'>";
     $TPL["errors"].= implode("<br>",$errors);
     $TPL["errors"].= "</div>";
     include_template("templates/editFileS.tpl");
