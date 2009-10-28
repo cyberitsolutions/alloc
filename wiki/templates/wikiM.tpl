@@ -8,44 +8,46 @@
 
 <script type="text/javascript" language="javascript">
 
-
-$(document).ready(function() {
-
-  // Load the dynamic file tree
+function refresh_wiki(target,revision) {
+  // Draw the dynamic file tree and specify a function to get called when a node is clicked
   var ops = { script:'{$url_alloc_fileTree}'
              , folderEvent:'click'
              , expandSpeed:1
              , collapseSpeed:1
-             , target:'{$target}' };
+             , target:target };
 
   $('#jftTree').fileTree(ops, function(path, isFile) { 
     if (isFile) {
-      makeAjaxRequest('{$url_alloc_file}','jftFile',           { file: path, rev: '{$rev}' });
+      makeAjaxRequest('{$url_alloc_file}','jftFile', { file: path, rev: revision });
     }
-    makeAjaxRequest('{$url_alloc_fileHistory}','fileHistory',{ file: path, rev: '{$rev}' });
+    makeAjaxRequest('{$url_alloc_fileHistory}','fileHistory', { file: path, rev: revision });
   });
+}
 
+$(document).ready(function() {
+
+  // If the page has loaded, then load the tree
+  refresh_wiki('{$target}','{$rev}');
+
+  // If there was an error saving we need to manually load in the values that were submitted.
+  if ('{$loadErrorPage}') {
+    makeAjaxRequest('{$url_alloc_file}','jftFile', { loadErrorPage: '{$loadErrorPage}'
+                                                   , str: '{$str}' 
+                                                   , commit_msg: '{$commit_msg}' 
+                                                   , file: '{$file}' 
+                                                   , msg: '{$msg}' 
+                              
+    });
+  }
 
   // Menu links: New File, New Directory
-  $("#newDirectory").bind("click",function() {
+  $("#newDirectory").click(function() {
     makeAjaxRequest('{$url_alloc_file}','jftFile', { newDirectory: true });
     return false;
   });
 
   $("#newFile").click(function() {
     makeAjaxRequest('{$url_alloc_file}','jftFile', { newFile: true });
-    return false;
-  });
-
-  $("#wikiform").livequery("submit",function() {
-    $.post('{$url_alloc_file}',{ save       : true, 
-                                 commit_msg : $("#commit_msg").val(), 
-                                 wikitext   : $("#wikitext").val(), 
-                                 editName   : $("#editName").val(), 
-                                 file       : $("#file").val() }, function(data) {
-      $("#jftFile").html(data);
-      makeAjaxRequest('{$url_alloc_fileHistory}','fileHistory',{ file: $("#editName").val() });
-    });
     return false;
   });
 
