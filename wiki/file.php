@@ -97,9 +97,6 @@ if ($_POST["save"]) {
 } else if ($_REQUEST["newFile"]) {
   include_template("templates/newFileM.tpl");
 
-} else if ($_REQUEST["newDirectory"]) {
-  include_template("templates/newDirectoryM.tpl");
-
 } else if ($file && is_file(wiki_module::get_wiki_path().$file) && is_readable(wiki_module::get_wiki_path().$file)) {
   wiki_module::get_file($file, $_GET["rev"]);
 

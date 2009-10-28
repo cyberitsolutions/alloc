@@ -12,7 +12,7 @@
   </div>
 </form>
 <script type="text/javascript" language="javascript">
-  preload_field("#editName", "Enter the document's filename...");
+  preload_field("#editName", "Enter the document's filename eg: path/to/file.txt");
   mySettings.previewParserPath="{$url_alloc_filePreview}"; 
   $("#wikitext").markItUp(mySettings);
   preload_field("#commit_msg", "Enter a brief description of your changes...");

@@ -21,10 +21,12 @@
 */
 
 
-function path_under_path($path,$path2) {
-  // Checks that path is under the directory path2
-  $safe = realpath($path2);
-  $unsafe = realpath($path);
+function path_under_path($unsafe,$safe,$use_realpath=true) {
+  // Checks that the potentially unsafe path is under the safe path
+  if ($use_realpath) {
+    $unsafe = realpath($unsafe);
+    $safe = realpath($safe);
+  }
 
   // strip trailing slash
   substr($safe,-1,1) == DIRECTORY_SEPARATOR and $safe = substr($safe,0,-1);

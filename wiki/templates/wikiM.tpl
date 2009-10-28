@@ -39,10 +39,16 @@ $(document).ready(function() {
                               
     });
   }
+  if ('{$loadErrorPageDir}') {
+    makeAjaxRequest('{$url_alloc_directory}','jftDir', { loadErrorPageDir: '{$loadErrorPageDir}'
+                                                        , dirName: '{$dirName}' 
+                                                        , msg: '{$msg}' 
+    });
+  }
 
   // Menu links: New File, New Directory
   $("#newDirectory").click(function() {
-    makeAjaxRequest('{$url_alloc_file}','jftFile', { newDirectory: true });
+    makeAjaxRequest('{$url_alloc_directory}','jftFile', { newDirectory: true });
     return false;
   });
 
@@ -64,7 +70,7 @@ $(document).ready(function() {
   </tr>
   <tr>
     <td id="jftTreeTD" class="noprint"><h6 style="margin-top:0px;">Wiki Tree</h6><div id="jftTree"></div></td>
-    <td id="jftFileTD"><div id="jftFile"></div></td>
+    <td id="jftFileTD"><div id="jftFile"></div><div id="jftDir"></div></td>
     <td id="jftInfoTD" class="noprint"><h6 style="margin-top:0px;">History</h6><div id="fileHistory"></div></td>
   </tr>
 </table>
