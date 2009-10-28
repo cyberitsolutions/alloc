@@ -976,6 +976,12 @@ How do I Add Task/Fault Comments?
    the email to all the recipients listed with checkboxes, and will
    also be attached to this comment in this Task, for future reference.
 
+7. If your server is set up to receive email and you have configured allocPSA
+   correctly you should be able to send emails back and forthe to and from
+   clients, using only your regular email client, all the while having the emails
+   going through the alloc gateway and being logged to the relevant task or
+   fault.
+
 
 How do I Bookmark Task List Filters for Future Use?
 ---------------------------------------------------
@@ -1082,6 +1088,112 @@ How do I Mark a Task as a Duplicate?
    for record-keeping purposes.
 
 6. Save the task.
+
+
+How do I use the allocPSA Email Gateway?
+----------------------------------------
+
+1. Log in to allocPSA.
+
+2. Ensure allocPSA and your webserver is configured to send and receive emails. (Setup -> Email screen)
+
+3. Create a task, or open an existing task.
+
+4. Create a comment and select which recipients you would like to receive your comment.
+
+5. Hit the Save Comment button. Note that if you want to receive the
+   replies to that comment you will need to select your own name from the list of
+   recipients.
+
+6. You can also use certain keywords in your reply to access additional functionality via email.
+
+   The allocPSA task email subject lines currently look something like this:
+
+   [allocPSA] 12321 Task name goes here {Key:fds432fd}
+
+   When composing an email reply via your regular email client, you may
+   append certain keywords *after* the {Key:fdsfds} bit. The keywords are not
+   case-sensitive and can be in any order. You can use one-or-many of:
+
+   * sub
+   * subscribe
+   * unsub
+   * unsubscribe
+   * close
+   * open
+   * quiet
+   * 3.25 (i.e. a number, to two decimal places)
+
+   Sub/Subscribe add you to that alloc task conversation. Unsub/unsubscribe
+   remove you from that conversation. Some text will be prepended to the
+   comment saying what has happened eg: "Jonny Apple has been added to this 
+   conversation".
+
+   Close closes the associated task. Open opens the task. The Actual
+   Completion date is filled or unfilled and the Task Status moves to
+   Closed:Completed or Open:In progress. The action is logged on the Task
+   History tab.
+
+   Quiet means do not re-send this email. Previously only unsubscription
+   requests would *not* get re-sent. Now they *do* get re-emailed. You can
+   quell them with this "quiet" keyword. Likewise if you just want to add a
+   comment to the conversation thread without re-emailing everyone, quiet is
+   what you want.
+
+   A number. This number represents a time duration for a time sheet. This
+   way you can add time to a time sheet via email. If no time sheet exists,
+   one is automatically created. If you are not on the project, the time sheet
+   is still created and the time sheet item entry is still added, however your
+   rate will be set to zero, and you will have to fix it manually.
+   Additionally some text will be prepended to the top of the comment which
+   says eg "David Johnston has added 2.00 Hours to time sheet #34232." and/or
+   "David Johnston has not been added to project #22".  The body of the email is
+   added as the time sheet item comment. So it is best to keep the email
+   short. It probably makes sense to add the quiet keyword when adding time.
+
+   So if you reply to alloc with an email that has a subject line like this:
+
+   [allocPSA] 12321 Task name goes here {Key:fds432fd} 3.25 quiet close
+
+   then:
+
+   * 3.25 (hours/days/or whatever is specified at the project level) are added to your time sheet.
+   * No email is re-sent to people.
+   * The task is closed.
+
+   or eg this:
+
+   [allocPSA] 12321 Task name goes here {Key:fds432fd} open unsub 10
+
+   then:
+
+   * Task is re-opened (if it was closed).
+   * You are removed from that task conversation.
+   * 10 hours/days/etc are added to your time sheet for that task.
+
+   The system uses your From address to identify you. If you don't use a
+   from address that is recognized by alloc then your commands are mostly
+   ignored. However if the {Key:} is correct the comment will
+   still be added. So for example if a client sticks random numbers in the
+   subject line, it's not going to randomly create time sheets, but the
+   comment will still come across.
+
+   Everything up to the {Key:sfdsffs} is actually ignored, so the email could just look
+   like this:
+   
+   To: alloc@somewhere.com.au
+
+   From: ben@otherplace.com.au
+
+   Subject: {Key:fds432fd} close 3
+
+
+   All emails that alloc receives are stored and are available for
+   download (if need be) from the UI same as usual, headers intact. Ideally
+   you are also storing your sent-mail which should make reconciliation a
+   little easier. alloc also stores a new field on the back-end that tracks
+   which emails are responsible for which time sheet items.
+
 
 
 Useful Tips for using allocPSA
@@ -1898,7 +2010,7 @@ conducive to grabbing a hard-copy snapshot of the Task in totality.
 
    Task header, allowing you to specify the Project, Task name, description, interested parties and dates.
 
-Tasks have two editable views. The first view is the header view, where you can
+Tasks have two views. The first view is the header view, where you can
 establish a number of attributes which are normally immutable (or change rather
 infrequently.) The header view shows only a limited subset of all the
 information which is normally associated with a Task. Once you have supplied
@@ -2491,11 +2603,16 @@ will appear in the HISTORY section on the right, along with the name of
 the allocPSA making the changes (i.e., you) and the date-time of this
 change.
 
+Note that to make the HISTORY functionality work, you will need to have a
+file version control system installed on the server. Currently allocPSA
+supports git, mercurial or darcs for its VCS. Out of the box allocPSA is
+configured to try and use git. The config option called wikiVCS controls which
+VCS is used.
+
 Creating a New Wiki Page
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are a number of ways in which you can create a new wiki page; one
-is to click the *New File* link in the top right hand corner of the wiki
+Click the *New File* link in the top right hand corner of the wiki
 screen; you can also create a new file by linking to a file that doesn't
 exist, using the wiki-page link syntax: e.g., [[newfile.txt]] 
 
