@@ -87,11 +87,11 @@ class wiki_module extends module {
       if ($vcs && wiki_module::nuke_trailing_spaces_from_all_lines($disk_file) != wiki_module::nuke_trailing_spaces_from_all_lines($vcs_file)) {
 
         if (!$vcs_file) {
-          $TPL["msg"] = "<div class='message warn' style='margin-top:0px; margin-bottom:10px; padding:10px;'>
+          $TPL["msg"] = "<div class='message warn noprint' style='margin-top:0px; margin-bottom:10px; padding:10px;'>
                           Warning: This file may not be under version control.
                          </div>";
         } else {
-          $TPL["msg"] = "<div class='message warn' style='margin-top:0px; margin-bottom:10px; padding:10px;'>
+          $TPL["msg"] = "<div class='message warn noprint' style='margin-top:0px; margin-bottom:10px; padding:10px;'>
                           Warning: This file may not be the latest version.
                          </div>";
         }
