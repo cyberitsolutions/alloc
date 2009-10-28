@@ -67,7 +67,7 @@ class wiki_module extends module {
       $mt = get_mimetype($f);
       if (strtolower($mt) != "text/plain") {
         $s = "<h6>Download File</h6>";
-        $s.= "<a target='_BLANK' href='".$TPL["url_alloc_fileDownload"]."file=".urlencode($file)."'>".$file."</a>";
+        $s.= "<a href='".$TPL["url_alloc_fileDownload"]."file=".urlencode($file)."'>".$file."</a>";
         $TPL["str_html"] = $s;
         include_template("templates/fileGetM.tpl");
         exit();
