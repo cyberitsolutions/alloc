@@ -606,27 +606,29 @@ if (!function_exists('mime_content_type')) {
 
     // Or look for the suffix in our array
     if (array_key_exists($ext, $mime_types)) {
-      return $mime_types[$ext];
+      $mt = $mime_types[$ext];
 
     // Or if we have the PECL FileInfo stuff available, use that to determine mimetype
     } else if (function_exists('finfo_open')) {
       $finfo = finfo_open(FILEINFO_MIME);
       $mimetype = finfo_file($finfo, $filename);
       finfo_close($finfo);
-      return $mimetype;
+      $mt = $mimetype;
+      $mt = current(explode(" ",$mimetype));
 
     // Or if the file is an image, get mime type the old-fashioned way
     } else if ($size = @getimagesize($filename)) {
-      return $size['mime'];
+      $mt = $size['mime'];
 
     // Or if no suffix at all, return text/plain
     } else if (!$ext) {
-      return 'text/plain'; 
+      $mt = 'text/plain'; 
 
     // Else unrecognised suffix, force browser to offer download dialog
     } else {
-      return 'application/octet-stream';
+      $mt = 'application/octet-stream';
     }
+    return $mt;
   }
 }
 
