@@ -28,7 +28,7 @@
     <td align="right">Invoice Name: </td>
     <td>{$field_invoiceName}</td>
     <td align="right">Period: </td>
-    <td>{$invoiceDateFrom} to {$invoiceDateTo}</td>
+    <td>{$field_invoiceDateFrom}&nbsp;&nbsp;{$field_invoiceDateTo}</td>
   </tr>
   <tr>
     <td colspan="4" align="center">
