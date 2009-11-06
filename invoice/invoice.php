@@ -594,6 +594,8 @@ foreach ($statii as $s => $label) {
 $TPL["field_invoiceNum"] = '<input type="text" name="invoiceNum" value="'.$TPL["invoiceNum"].'">';
 $TPL["field_invoiceName"] = '<input type="text" name="invoiceName" value="'.$TPL["invoiceName"].'">';
 $TPL["field_maxAmount"] = '<input type="text" name="maxAmount" size="10" value="'.$invoice->get_value("maxAmount").'">';
+$TPL["field_invoiceDateFrom"] = page::calendar("invoiceDateFrom",$TPL["invoiceDateFrom"]);
+$TPL["field_invoiceDateTo"] = page::calendar("invoiceDateTo",$TPL["invoiceDateTo"]);
 
 $clientID = $invoice->get_value("clientID") or $clientID = $_GET["clientID"];
 $projectID = $invoice->get_value("projectID") or $projectID = $_GET["projectID"];
@@ -634,6 +636,8 @@ if ($current_user->have_role('admin')) {
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
     $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
+    $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
+    $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
 
   } else if ($invoice->get_value("invoiceStatus") == "finished") {
     $TPL["invoice_buttons"] = "<input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">";
@@ -642,6 +646,8 @@ if ($current_user->have_role('admin')) {
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
     $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
+    $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
+    $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
   }
 } else {
   $TPL["field_invoiceNum"] = $TPL["invoiceNum"];
@@ -649,6 +655,8 @@ if ($current_user->have_role('admin')) {
   $TPL["field_clientID"] = $client_link;
   $TPL["field_projectID"] = $project_link;
   $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
+  $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
+  $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
 }
 
 if (!$invoice->get_value("clientID")) {
