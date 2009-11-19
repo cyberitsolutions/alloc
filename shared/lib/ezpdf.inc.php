@@ -1197,7 +1197,7 @@ function ezProcessText($text){
   // purposes
   $search = array('<u>','<U>','</u>','</U>');
   $replace = array('<c:uline>','<c:uline>','</c:uline>','</c:uline>');
-  return str_replace($search,$replace,$text);
+  return str_replace($search,$replace,html_entity_decode($text, ENT_COMPAT,'Windows-1252'));
 }
 
 // ------------------------------------------------------------------------------

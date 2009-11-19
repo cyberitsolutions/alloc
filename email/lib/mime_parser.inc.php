@@ -597,7 +597,7 @@ class mime_parser
 								{
 									$decoded_header[]=array(
 										'Value'=>substr($value, $position),
-										'Encoding'=>'ASCII'
+										'Encoding'=>'UTF-8'
 									);
 								}
 							}
@@ -633,7 +633,7 @@ class mime_parser
 							{
 								$decoded_header[]=array(
 									'Value'=>substr($value, $position, $encoded - $position),
-									'Encoding'=>'ASCII'
+									'Encoding'=>'UTF-8'
 								);
 							}
 						}
@@ -683,7 +683,7 @@ class mime_parser
 										}
 									}
 									if(count($decoded_header)
-									&& (!strcmp($decoded_header[$last = count($decoded_header)-1]['Encoding'], 'ASCII'))
+									&& (!strcmp($decoded_header[$last = count($decoded_header)-1]['Encoding'], 'UTF-8'))
 									|| !strcmp($decoded_header[$last]['Encoding'], $encoding))
 									{
 										$decoded_header[$last]['Value'].= $decoded;
@@ -703,7 +703,7 @@ class mime_parser
 								{
 									$decoded=base64_decode(substr($value, $start, $end - $start));
 									if(count($decoded_header)
-									&& (!strcmp($decoded_header[$last = count($decoded_header)-1]['Encoding'], 'ASCII'))
+									&& (!strcmp($decoded_header[$last = count($decoded_header)-1]['Encoding'], 'UTF-8'))
 									|| !strcmp($decoded_header[$last]['Encoding'], $encoding))
 									{
 										$decoded_header[$last]['Value'].= $decoded;
@@ -1089,7 +1089,7 @@ class mime_parser
 							}
 							if(IsSet($part['Decoded'])
 							&& (count($part['Decoded'])>1
-							|| strcmp($part['Decoded'][0]['Encoding'],'ASCII')
+							|| strcmp($part['Decoded'][0]['Encoding'],'UTF-8')
 							|| strcmp($value, trim($part['Decoded'][0]['Value']))))
 							{
 								$p=$part['Decoded'];
