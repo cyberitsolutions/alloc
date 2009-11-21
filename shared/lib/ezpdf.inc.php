@@ -645,7 +645,10 @@ function ezTable(&$data,$cols='',$title='',$options=''){
   if (!is_array($data)){
     return;
   }
-  
+
+  // convert data to the required encoding
+  mb_convert_variables('Windows-1252','UTF-8,ASCII',$data);
+
   if (!is_array($cols)){
     // take the columns from the first row of the data set
     reset($data);
@@ -1195,9 +1198,10 @@ function ezTable(&$data,$cols='',$title='',$options=''){
 function ezProcessText($text){
   // this function will intially be used to implement underlining support, but could be used for a range of other
   // purposes
-  $search = array('<u>','<U>','</u>','</U>');
-  $replace = array('<c:uline>','<c:uline>','</c:uline>','</c:uline>');
-  return str_replace($search,$replace,html_entity_decode($text, ENT_COMPAT,'Windows-1252'));
+  $search = array('<u>','<U>','</u>','</U>','<br />');
+  $replace = array('<c:uline>','<c:uline>','</c:uline>','</c:uline>','');
+  $text = mb_convert_encoding($text, 'Windows-1252');
+  return str_replace($search,$replace,html_entity_decode($text, ENT_COMPAT));
 }
 
 // ------------------------------------------------------------------------------

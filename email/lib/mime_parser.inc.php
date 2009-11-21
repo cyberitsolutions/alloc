@@ -28,7 +28,7 @@ define('MIME_MESSAGE_GET_BODY_PART',    5);
 	<package>net.manuellemos.mimeparser</package>
 
 	<version>@(#) $Id: mime_parser.php,v 1.26 2007/02/16 18:43:45 mlemos Exp $</version>
-	<copyright>Copyright © (C) Manuel Lemos 2006</copyright>
+	<copyright>Copyright (C) Manuel Lemos 2006</copyright>
 	<title>MIME parser</title>
 	<author>Manuel Lemos</author>
 	<authoraddress>mlemos-at-acm.org</authoraddress>
