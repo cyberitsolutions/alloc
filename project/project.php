@@ -685,7 +685,9 @@ while ($db->next_record()) {
 
 
 $email_type_array = array("None"=>"None", "Assigned Tasks"=>"Assigned Tasks", "All Tasks"=>"All Tasks");
-$currency_array = array("AUD"=>"AUD", "USD"=>"USD", "NZD"=>"NZD", "CAD"=>"CAD");
+
+$t = new meta("currencyType");
+$currency_array = $t->get_assoc_array("currencyTypeID","currencyTypeID");
 $projectType_array = project::get_project_type_array();
 $projectStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
 $timeUnit = new timeUnit;
