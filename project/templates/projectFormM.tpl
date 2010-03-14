@@ -294,8 +294,8 @@ function clickClientStatus(e) {
   </tr>
   <tr>
     <td>Project Spend</td>
-    <td class="grand_total" width="10%">{$grand_total}</td>
-    <td>{$percentage}%</td>
+    <td class="right grand_total" width="10%">{$grand_total}</td>
+    <td>&nbsp;&nbsp;&nbsp;{$percentage}%</td>
   </tr>
   <tr>
     <td class="nobr">Task Time Estimate</td>

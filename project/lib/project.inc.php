@@ -524,7 +524,6 @@ class project extends db_entity {
                     FROM timeSheet 
                LEFT JOIN transaction on timeSheet.timeSheetID = transaction.timeSheetID 
                      AND transaction.status='approved' 
-                     AND amount>0  
                    WHERE timeSheet.projectID = %d
                 ",$this->get_id());
 
