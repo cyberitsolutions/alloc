@@ -18,7 +18,6 @@
       <td><input size="40" type="text" name="itemNotes" value="{$itemNotes}"></td>
       <td><select name="itemType" value="{$itemType}">{$itemTypes}</select></td>
       <td>
-        <input size="1" type="hidden" name="itemModifiedUser" value="joe">
         <input type="submit" name="save" value="save">
       </td>
     </tr>
