@@ -173,7 +173,7 @@ class timeSheet extends db_entity {
     $db->query($q);
     while ($row = $db->row()) { 
       if ($row["timeUnitSeconds"]) {
-        $extra_sql[] = "SUM(IF(timeUnit.timeUnitLabelA = '".$row["timeUnitLabelA"]."',timeSheetItemDuration * timeUnit.timeUnitSeconds,0)) /".$row["timeUnitSeconds"]." as ".$row["timeUnitLabelA"];
+        $extra_sql[] = "SUM(IF(timeUnit.timeUnitLabelA = '".$row["timeUnitLabelA"]."',multiplier * timeSheetItemDuration * timeUnit.timeUnitSeconds,0)) /".$row["timeUnitSeconds"]." as ".$row["timeUnitLabelA"];
       }
       $timeUnitRows[] = $row;
     }
