@@ -26,6 +26,7 @@ require_once(dirname(__FILE__)."/timeSheetItem.inc.php");
 require_once(dirname(__FILE__)."/pendingApprovalTimeSheetListHomeItem.inc.php");
 require_once(dirname(__FILE__)."/timeSheetListHomeItem.inc.php");
 require_once(dirname(__FILE__)."/timeSheetStatusHomeItem.inc.php");
+require_once(dirname(__FILE__)."/timeSheetPrint.inc.php");
 
 class time_module extends module
 {

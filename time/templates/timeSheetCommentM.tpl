@@ -8,6 +8,7 @@
     <td colspan="2">
 
       <form action="{$url_alloc_comment}" enctype="multipart/form-data" method="post">
+
       <div class="hidden" id="id_new_comment">
       <table align="left" width="100%" cellpadding="3">
         <tr>  
@@ -16,10 +17,20 @@
             <input type="hidden" name="entityID" value="{$timeSheetID}">
             <div id="comment_textarea">{page::textarea("comment",$TPL["comment"],array("height"=>"medium","width"=>"100%"))}
             </div>
-            <div id="file_attachment_dialog" style="display:inline; float:left">
-            </div>
+            <div id="file_attachment_dialog" style="display:inline; float:left;"></div>
             <div style="display:inline; float:left; clear:left;">
               <a href="#x" class="magic" onClick="$('#file_attachment_dialog').append('<input type=\'file\' name=\'attachment[]\'><br>');">Attach File</a>
+
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              Attach Time Sheet
+              {$timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions")}
+              {$timeSheetPrint = config::get_config_item("timeSheetPrint")}
+              {$ops[""] = "Format as..."}
+              {foreach $timeSheetPrint as $value}
+                {$ops[$value] = $timeSheetPrintOptions[$value]}
+              {/}
+              <select name="attach_timeSheet">{page::select_options($ops)}</select><br>
+
             </div>
             <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity=timeSheet&entityID={$timeSheetID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
           </td>
