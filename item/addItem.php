@@ -77,7 +77,8 @@ if ($_POST["remove_items"]) {
 $TPL["personID"] = $current_user->get_id(); 
 
 // item types
-$TPL["itemTypes"] = page::select_options(array("Book", "CD", "Other"), $item->get_value("itemType"));
+$itemType = new meta("itemType");
+$TPL["itemTypes"] = page::select_options($itemType->get_assoc_array("itemTypeID","itemTypeID"), $item->get_value("itemType"));
 
   // setup item list (for removals)
 $item_list = array();
@@ -112,7 +113,7 @@ if ($_POST["edit_items"]) {
      ."</tr><tr>\n"
      ."  <td>Type: </td>\n"
      ."  <td><select name=\"update_itemType\" value=\"".$item->get_value("itemType")."\">"
-     .        page::select_options(array("book"=>"Book", "cd"=>"CD", "other"=>"Other"), $item->get_value("itemType"))
+     .        page::select_options($itemType->get_assoc_array("itemTypeID","itemTypeID"), $item->get_value("itemType"))
      ."       </select>"
      ."    <input type=\"hidden\" name=\"update_itemID\" value=\"".$item->get_id()."\"></td>"
      ."  <td align=\"right\"><input type=\"submit\" name=\"update_item\" value=\"Save Changes\"></td>\n"
