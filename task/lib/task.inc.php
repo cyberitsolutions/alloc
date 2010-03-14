@@ -161,6 +161,11 @@ class task extends db_entity {
     $taskSearchable->set_value("projectID",$this->get_value("projectID"));
     $taskSearchable->save();
 
+    // If the task has just been closed, then audit the change.
+    if ($this->has_just_been_closed) {
+      $this->mark_closed();
+    }
+
     return $rtn;
   }
 
@@ -187,7 +192,6 @@ class task extends db_entity {
       $this->set_value("taskStatus","closed");
       $this->set_value("taskSubStatus",$taskSubStatus);
     }
-    $this->mark_closed();
 
     if ($this->get_value("taskTypeID") == TT_PHASE) {
       $this->close_off_children_recursive();
