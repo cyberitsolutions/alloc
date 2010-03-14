@@ -1,0 +1,5 @@
+^help/images/.*$
+^help/help.css
+^help/help.html
+^help/images
+
