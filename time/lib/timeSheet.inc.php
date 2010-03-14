@@ -699,11 +699,11 @@ class timeSheet extends db_entity {
       $_FORM["showDateFrom"]        and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showDateTo"]          and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showStatus"]          and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showDuration"]        and $summary[] = "  <td class=\"grand_total left\">".sprintf("%0.2f", $row["totalHours"])." hours</td>";
-      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["amountTotal"])."</td>";
-      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["customerBilledDollarsTotal"])."</td>";
-      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["transactionsPosTotal"])."</td>";
-      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["transactionsNegTotal"])."</td>";
+      $_FORM["showDuration"]        and $summary[] = "  <td class=\"grand_total left\">".sprintf("%0.2f", $row["totalHours"])." Hours</td>";
+      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["amountTotal"])."&nbsp;</td>";
+      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["customerBilledDollarsTotal"])."&nbsp;</td>";
+      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["transactionsPosTotal"])."&nbsp;</td>";
+      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["transactionsNegTotal"])."&nbsp;</td>";
       $summary[] = "</tr>";
       $summary[] = "</tfoot>";
       $summary = "\n".implode("\n",$summary);
