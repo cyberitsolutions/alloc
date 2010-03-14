@@ -556,6 +556,16 @@ function obj2array($obj) {
   }
   return $out;
 }
+function query_string_to_array($str="") {
+  $pairs = explode("&", $str);
+  foreach ($pairs as $pair) {
+      $nv = explode("=", $pair);
+      $name = urldecode($nv[0]);
+      $value = urldecode($nv[1]);
+      $vars[$name] = $value;
+  }
+  return (array)$vars;
+}
 if (!function_exists('mime_content_type')) {
   function mime_content_type($filename="") {
     $mime_types = array('txt'   => 'text/plain'

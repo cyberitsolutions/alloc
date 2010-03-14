@@ -118,6 +118,31 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
       move_attachment("comment",$comment->get_id());
     }
 
+    // if we're attaching an alloc generated file (i.e. a timesheet pdf)
+    if ($_POST["attach_timeSheet"]) {
+
+      // Begin buffering output to halt anything being sent to the web browser.
+      ob_start();
+      $t = new timeSheetPrint();
+      $ops = query_string_to_array($_POST["attach_timeSheet"]);
+      $t->get_printable_timeSheet_file($entityID,$ops["timeSheetPrintMode"],$ops["printDesc"],$ops["format"]);
+
+      // Capture the output into $str
+      $str = (string)ob_get_clean();
+
+      $suffix = ".html";
+      $ops["format"] != "html" and $suffix = ".pdf";
+
+      $timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions");
+      $dir = $TPL["url_alloc_attachments_dir"]."comment".DIRECTORY_SEPARATOR.$comment->get_id();
+      if (!is_dir($dir)) {
+        mkdir($dir, 0777);
+      }
+      $file = $dir.DIRECTORY_SEPARATOR."timeSheet_".$entityID.$suffix;
+      file_put_contents($file,$str);
+    }
+
+
     if ($emailRecipients) {
       if (is_object($e) && method_exists($e, "send_emails")) {
         $from["commentID"] = $comment->get_id();

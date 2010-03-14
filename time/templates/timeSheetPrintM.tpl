@@ -60,13 +60,13 @@
 
     <br>
 
-    {if $_GET["timeSheetPrintMode"] == "money"}
+    {if $timeSheetPrintMode == "money"}
     <table border="1" cellspacing="0" cellpadding="2" width="100%">
       <tr>
         <th>Description</th>
         <th>Charges</th>
       </tr>
-      {list($rows,$info) = get_timeSheetItem_list_money($TPL["timeSheetID"])}
+      {list($rows,$info) = $this_tsp->get_timeSheetItem_list_money($TPL["timeSheetID"])}
       {foreach $rows as $r}
       <tr>
         <td>{$r.desc}</td>
@@ -78,13 +78,13 @@
         <th align="right">{$info.total}</th>
       </tr>
     </table>
-    {else if $_GET["timeSheetPrintMode"] == "units"}
+    {else if $timeSheetPrintMode == "units"}
     <table border="1" cellspacing="0" cellpadding="2" width="100%">
       <tr>
         <th>Description</th>
         <th>Units</th>
       </tr>
-      {list($rows,$info) = get_timeSheetItem_list_units($TPL["timeSheetID"])}
+      {list($rows,$info) = $this_tsp->get_timeSheetItem_list_units($TPL["timeSheetID"])}
       {foreach $rows as $r}
       <tr>
         <td>{$r.desc}</td>
@@ -96,7 +96,7 @@
         <th align="right">{$info.total}</th>
       </tr>
     </table>
-    {else if $_GET["timeSheetPrintMode"] == "items"}
+    {else if $timeSheetPrintMode == "items"}
      <table border="1" cellspacing="0" cellpadding="2" width="100%">
       <tr>
         <th class="nobr" width="10%" valign="top">Date</th>
@@ -104,7 +104,7 @@
 	      <th class="nobr" width="1%" valign="top">Multiplier</th>
         <th valign="top">Description</th>
       </tr>
-      {list($rows,$info) = get_timeSheetItem_list_items($TPL["timeSheetID"])}
+      {list($rows,$info) = $this_tsp->get_timeSheetItem_list_items($TPL["timeSheetID"])}
       {foreach $rows as $r}
       <tr>
         <td class="nobr" valign="top">{$r.date}&nbsp;</td>
