@@ -34,17 +34,25 @@ if (isset($_GET["id"]) && $file && !bad_filename($file)) {
 
   $file = $TPL["url_alloc_attachments_dir"].$_GET["entity"]."/".$_GET["id"]."/".$file;
 
-  if ($entity->has_attachment_permission($current_user) && file_exists($file)) {
-    $fp = fopen($file, "rb");
-    $mimetype = get_mimetype($file);
+  if ($entity->has_attachment_permission($current_user)) {
+    if (file_exists($file)) {
+      $fp = fopen($file, "rb");
+      $mimetype = get_mimetype($file);
 
-    $disposition = "attachment";
-    preg_match("/jpe?g|gif|png/i",basename($file)) and $disposition = "inline";
+      $disposition = "attachment";
+      preg_match("/jpe?g|gif|png/i",basename($file)) and $disposition = "inline";
 
-    header('Content-Type: '.$mimetype);
-    header("Content-Length: ".filesize($file));
-    header('Content-Disposition: '.$disposition.'; filename="'.basename($file).'"');
-    fpassthru($fp);
+      header('Content-Type: '.$mimetype);
+      header("Content-Length: ".filesize($file));
+      header('Content-Disposition: '.$disposition.'; filename="'.basename($file).'"');
+      fpassthru($fp);
+      exit;
+    } else {
+      echo "File not found.";
+      exit;
+    }
+  } else {
+    echo "Permission denied.";
     exit;
   }
 }
