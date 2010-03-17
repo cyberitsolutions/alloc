@@ -58,10 +58,10 @@
     <part name="return" type="tns:array"/>
   </message>
   <message name="add_timeSheetItem_by_taskOutput">
-    <part name="return" type="xsd:int"/>
+    <part name="return" type="tns:array"/>
   </message>
   <message name="get_listOutput">
-    <part name="return" type="tns:mixed"/>
+    <part name="return" type="tns:array"/>
   </message>
   <message name="get_emailOutput">
     <part name="return" type="xsd:string"/>

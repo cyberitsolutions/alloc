@@ -88,7 +88,7 @@ class alloc_soap {
    * @param string $duration
    * @param string $date
    * @param string $comments
-   * @return int $timeSheetID
+   * @return array $timeSheetID
    */
   public function add_timeSheetItem_by_task($key, $task, $duration, $date="", $comments="") {
     global $current_user; // Always need this :(
@@ -100,7 +100,7 @@ class alloc_soap {
    * @param string $sessKey
    * @param string $entity
    * @param mixed $options
-   * @return mixed $list
+   * @return array $list
    */
   public function get_list($key, $entity, $options=array()) {
     global $current_user; // Always need this :(
@@ -113,7 +113,7 @@ class alloc_soap {
         $rtn = $e->get_list($options);
         $echoed = ob_get_contents();
         if (!$rtn && $echoed) {
-          return $echoed;
+          return array("error"=>$echoed);
         } else {
           return $rtn;
         }
