@@ -32,6 +32,7 @@
     <part name="sessKey" type="xsd:string"/>
     <part name="taskID" type="xsd:int"/>
     <part name="duration" type="xsd:string"/>
+    <part name="date" type="xsd:string"/>
     <part name="comments" type="xsd:string"/>
   </message>
   <message name="get_listInput">

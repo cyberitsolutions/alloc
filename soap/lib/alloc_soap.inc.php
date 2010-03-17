@@ -86,14 +86,14 @@ class alloc_soap {
    * @param string $sessKey
    * @param int $taskID
    * @param string $duration
+   * @param string $date
    * @param string $comments
    * @return int $timeSheetID
    */
-  public function add_timeSheetItem_by_task($key, $task, $duration, $comments) {
+  public function add_timeSheetItem_by_task($key, $task, $duration, $date="", $comments="") {
     global $current_user; // Always need this :(
     $current_user = $this->get_current_user($key);
-    $bits = timeSheet::add_timeSheetItem_by_task($task, $duration, $comments);
-    return $bits["timeSheetID"];
+    return timeSheet::add_timeSheetItem_by_task($task, $duration, $comments, null, $date);
   }
 
   /** The get_list function
