@@ -1066,7 +1066,7 @@ EOD;
     return $rtn;
   }
 
-  function add_timeSheetItem_by_task($taskID, $duration, $comments, $emailUID=null) {
+  function add_timeSheetItem_by_task($taskID, $duration, $comments, $emailUID=null, $date=null) {
     global $current_user;
 
     $task = new task;
@@ -1112,7 +1112,8 @@ EOD;
 
         $tsi = new timeSheetItem();
         $tsi->set_value("timeSheetID",$timeSheetID);
-        $tsi->set_value("dateTimeSheetItem",date("Y-m-d"));
+        $d = $date or $d = date("Y-m-d");
+        $tsi->set_value("dateTimeSheetItem",$d);
         $tsi->set_value("timeSheetItemDuration",$duration);
         $tsi->set_value("timeSheetItemDurationUnitID", $row_projectPerson["rateUnitID"]);
         $tsi->set_value("description",$task->get_task_name());
