@@ -1124,7 +1124,7 @@ class task extends db_entity {
     if ($_FORM["taskView"] == "prioritised") {
 
       if (is_array($tasks) && count($tasks)) {
-        usort($tasks, array("task", "priority_compare"));
+        uasort($tasks, array("task", "priority_compare"));
       } else {
         $tasks = array();
       }
@@ -1562,7 +1562,7 @@ class task extends db_entity {
   function get_list_vars() {
     $taskStatii = task::get_task_statii_array();
     foreach($taskStatii as $k => $v) {
-      $taskStatiiStr = $pipe.$k;
+      $taskStatiiStr.= $pipe.$k;
       $pipe = " | ";
     }
 
