@@ -508,6 +508,9 @@ class timeSheet extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
+    if ($filter["timeSheetID"]) {
+      $sql[] = sprintf("(timeSheet.timeSheetID = '%d')", $filter["timeSheetID"]);
+    }
     if ($filter["projectID"]) {
       $sql[] = sprintf("(timeSheet.projectID = '%d')", $filter["projectID"]);
     }
@@ -713,6 +716,7 @@ class timeSheet extends db_entity {
 
   function get_list_vars() {
     return array("return"                         => "[MANDATORY] eg: array | html"
+                ,"timeSheetID"                    => "Time Sheet that has this ID"
                 ,"projectID"                      => "Time Sheets that belong to this Project"
                 ,"taskID"                         => "Time Sheets that use this task"
                 ,"personID"                       => "Time Sheets for this person"
