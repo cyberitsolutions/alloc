@@ -35,6 +35,13 @@
     <part name="date" type="xsd:string"/>
     <part name="comments" type="xsd:string"/>
   </message>
+  <message name="add_timeSheetItem_by_projectInput">
+    <part name="sessKey" type="xsd:string"/>
+    <part name="projectID" type="xsd:int"/>
+    <part name="duration" type="xsd:string"/>
+    <part name="date" type="xsd:string"/>
+    <part name="comments" type="xsd:string"/>
+  </message>
   <message name="get_listInput">
     <part name="sessKey" type="xsd:string"/>
     <part name="entity" type="xsd:string"/>
@@ -58,6 +65,9 @@
     <part name="return" type="tns:array"/>
   </message>
   <message name="add_timeSheetItem_by_taskOutput">
+    <part name="return" type="tns:array"/>
+  </message>
+  <message name="add_timeSheetItem_by_projectOutput">
     <part name="return" type="tns:array"/>
   </message>
   <message name="get_listOutput">
@@ -88,6 +98,10 @@
     <operation name="add_timeSheetItem_by_task">
       <input message="tns:add_timeSheetItem_by_taskInput"/>
       <output message="tns:add_timeSheetItem_by_taskOutput"/>
+    </operation>
+    <operation name="add_timeSheetItem_by_project">
+      <input message="tns:add_timeSheetItem_by_projectInput"/>
+      <output message="tns:add_timeSheetItem_by_projectOutput"/>
     </operation>
     <operation name="get_list">
       <input message="tns:get_listInput"/>
@@ -133,6 +147,14 @@
       </output>
     </operation>
     <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="add_timeSheetItem_by_task">
+      <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="add_timeSheetItem_by_project">
       <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
         <soap-env:body xmlns="http://schemas.xmlsoap.org/wsdl/soap/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
       </input>

@@ -332,6 +332,9 @@ class project extends db_entity {
     if ($filter["personID"]) {
       $sql[] = sprintf("(projectPerson.personID=%d)", $filter["personID"]);
     }
+    if ($filter["projectID"]) {  
+      $sql[] = sprintf("(projectID = %d)", db_esc($filter["projectID"]));
+    }
     if ($filter["projectName"]) {
       $sql[] = sprintf("(projectName LIKE '%%%s%%')", db_esc($filter["projectName"]));
     }
@@ -447,6 +450,7 @@ class project extends db_entity {
   function get_list_vars() {
    
     return array("return"             => "[MANDATORY] eg: array | html | dropdown_options"
+                ,"projectID"          => "The Project ID"
                 ,"projectStatus"      => "Status of the project eg: current | potential | archived"
                 ,"clientID"           => "Show projects that are owned by this Client"
                 ,"projectType"        => "Type of project eg: contract | job | project"

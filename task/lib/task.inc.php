@@ -898,6 +898,10 @@ class task extends db_entity {
       $sql[] = sprintf("(taskTypeID = %d)",$filter["taskTypeID"]);
     }
 
+    // Filter on taskID
+    if ($filter["taskID"]) {     
+      $sql[] = sprintf("(taskID = %d)", db_esc($filter["taskID"]));
+    }
     // Filter on %taskName%
     if ($filter["taskName"]) {     
       $sql[] = sprintf("(taskName LIKE '%%%s%%')", db_esc($filter["taskName"]));
@@ -1582,6 +1586,7 @@ class task extends db_entity {
                 ,"taskTimeSheetStatus"  => "my_open | not_assigned | my_closed | my_recently_closed | all"
                 ,"taskTypeID"           => "1 = Task | 2 = Parent | 3 = Message | 4 = Fault | 5 = Milestone"
                 ,"current_user"         => "Lets us fake a current_user id for when generating task emails and there is no \$current_user object"
+                ,"taskID"               => "Task ID"
                 ,"taskName"             => "Task Name (eg: *install*)"
                 ,"creatorID"            => "Task creator"
                 ,"managerID"            => "The person managing task"

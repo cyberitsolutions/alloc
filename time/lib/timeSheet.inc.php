@@ -1070,12 +1070,22 @@ EOD;
     return $rtn;
   }
 
-  function add_timeSheetItem_by_task($taskID, $duration, $comments, $emailUID=null, $date=null) {
+  function add_timeSheetItem_by_project($projectID, $duration, $comments, $emailUID=null, $date=null) {
+    global $current_user;
+    return timeSheet::add_timeSheetItem_by_task(null, $duration, $comments, $emailUID, $date, $projectID);
+  }
+
+  function add_timeSheetItem_by_task($taskID=null, $duration, $comments, $emailUID=null, $date=null, $projectID=null) {
     global $current_user;
 
-    $task = new task;
-    $task->set_id($taskID);
-    if ($task->select() && $task->get_value("projectID")) {
+    if ($taskID) {
+      $task = new task;
+      $task->set_id($taskID);
+      $task->select();
+      $projectID = $task->get_value("projectID");
+    }
+
+    if ($projectID) {
       $q = sprintf("SELECT * 
                       FROM timeSheet 
                      WHERE status = 'edit' 
@@ -1083,7 +1093,7 @@ EOD;
                        AND personID = %d
                   ORDER BY dateFrom
                      LIMIT 1
-                ",$task->get_value("projectID"), $current_user->get_id());
+                ",$projectID, $current_user->get_id());
       $db = new db_alloc();
       $db->query($q);
       $row = $db->row();
@@ -1091,11 +1101,11 @@ EOD;
       // If no timeSheets add a new one
       if (!$row) {
         $project = new project();
-        $project->set_id($task->get_value("projectID"));
+        $project->set_id($projectID);
         $project->select();
 
         $timeSheet = new timeSheet();
-        $timeSheet->set_value("projectID",$task->get_value("projectID"));
+        $timeSheet->set_value("projectID",$projectID);
         $timeSheet->set_value("dateFrom",date("Y-m-d"));
         $timeSheet->set_value("dateTo",date("Y-m-d"));
         $timeSheet->set_value("status","edit");
@@ -1112,7 +1122,7 @@ EOD;
 
       // Add new time sheet item
       if ($timeSheetID) {
-        $row_projectPerson = projectPerson::get_projectPerson_row($task->get_value("projectID"), $current_user->get_id());
+        $row_projectPerson = projectPerson::get_projectPerson_row($projectID, $current_user->get_id());
 
         $tsi = new timeSheetItem();
         $tsi->set_value("timeSheetID",$timeSheetID);
@@ -1120,14 +1130,16 @@ EOD;
         $tsi->set_value("dateTimeSheetItem",$d);
         $tsi->set_value("timeSheetItemDuration",$duration);
         $tsi->set_value("timeSheetItemDurationUnitID", $row_projectPerson["rateUnitID"]);
-        $tsi->set_value("description",$task->get_task_name());
+        if (is_object($task)) {
+          $tsi->set_value("description",$task->get_task_name());
+          $tsi->set_value("taskID",sprintf("%d",$taskID));
+          $_POST["timeSheetItem_taskID"] = sprintf("%d",$taskID); // this gets used in timeSheetItem->save();
+        }
         $tsi->set_value("personID",$current_user->get_id());
-        $tsi->set_value("taskID",sprintf("%d",$taskID));
         $tsi->set_value("rate",$row_projectPerson["rate"]);
         $tsi->set_value("multiplier",1);
         $tsi->set_value("comment",$comments);
         $tsi->set_value("emailUID",$emailUID);
-        $_POST["timeSheetItem_taskID"] = sprintf("%d",$taskID); // this gets used in timeSheetItem->save();
         $err = $tsi->save();
   
         $id = $tsi->get_id();

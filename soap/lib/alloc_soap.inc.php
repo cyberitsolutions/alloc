@@ -96,6 +96,20 @@ class alloc_soap {
     return timeSheet::add_timeSheetItem_by_task($task, $duration, $comments, null, $date);
   }
 
+  /** The add_timeSheetItem_by_project function
+   * @param string $sessKey
+   * @param int $projectID
+   * @param string $duration
+   * @param string $date
+   * @param string $comments
+   * @return array $timeSheetID
+   */
+  public function add_timeSheetItem_by_project($key, $project, $duration, $date="", $comments="") {
+    global $current_user; // Always need this :(
+    $current_user = $this->get_current_user($key);
+    return timeSheet::add_timeSheetItem_by_project($project, $duration, $comments, null, $date);
+  }
+
   /** The get_list function
    * @param string $sessKey
    * @param string $entity
