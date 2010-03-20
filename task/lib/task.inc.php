@@ -1055,7 +1055,9 @@ class task extends db_entity {
         $_FORM["showDateStatus"] and $row["taskDateStatus"] = $task->get_dateStatus();
         $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
-        $_FORM["return"] == "arrayAndHtml" || $_FORM["return"] == "array" and $row["object"] = $task;
+        if (!$_FORM["skipObject"]) {
+          $_FORM["return"] == "arrayAndHtml" || $_FORM["return"] == "array" and $row["object"] = $task;
+        }
         $row["padding"] = $_FORM["padding"];
         $row["taskID"] = $task->get_id();
         $row["parentTaskID"] = $task->get_value("parentTaskID");
@@ -1121,7 +1123,9 @@ class task extends db_entity {
         $row["taskStatusLabel"] = $t->get_task_status("label");
         $row["taskStatusColour"] = $t->get_task_status("colour");
         $_FORM["showDateStatus"] and $row["taskDateStatus"] = $t->get_dateStatus($_FORM["return"]);
-        $row["object"] = $t;
+        if (!$_FORM["skipObject"]) {
+          $row["object"] = $t;
+        }
         $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
         $tasks[$row["taskID"]] = $row;
@@ -1598,6 +1602,7 @@ class task extends db_entity {
                 ,"url_form_action"      => "The submit action for the filter form"
                 ,"form_name"            => "The name of this form, i.e. a handle for referring to this saved form"
                 ,"dontSave"             => "Specify that the filter preferences should not be saved this time"
+                ,"skipObject"           => "Services coming over SOAP should set this true to minimize the amount of bandwidth"
                 ,"showDates"            => "Show dates 1-4"
                 ,"showDate1"            => "Date Target Start"
                 ,"showDate2"            => "Date Target Completion"
