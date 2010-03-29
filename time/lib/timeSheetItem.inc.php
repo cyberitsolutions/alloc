@@ -183,6 +183,83 @@ class timeSheetItem extends db_entity {
     }
   }
   
+  function get_list_filter($filter=array()) {
+
+    if ($filter["timeSheetID"]) {
+      $sql[] = sprintf("(timeSheetItem.timeSheetID = %d)",db_esc($filter["timeSheetID"]));
+    } 
+
+    if ($filter["projectID"]) {
+      $sql[] = sprintf("(timeSheet.projectID = %d)",db_esc($filter["projectID"]));
+    } 
+
+    if ($filter["taskID"]) {
+      $sql[] = sprintf("(timeSheetItem.taskID = %d)",db_esc($filter["taskID"]));
+    } 
+
+    if ($filter["date"]) {
+      $sql[] = sprintf("(timeSheetItem.dateTimeSheetItem = '%s')",db_esc($filter["date"]));
+    } 
+
+    if ($filter["personID"]) {
+      $sql[] = sprintf("(timeSheetItem.personID = %d)",db_esc($filter["personID"]));
+    } 
+
+    if ($filter["comment"]) {
+      $sql[] = sprintf("(timeSheetItem.comment LIKE '%%%s%%')",db_esc($filter["comment"]));
+    }
+
+    return $sql;
+  }
+
+  function get_list($_FORM) {
+    /*
+     * This is the definitive method of getting a list of timeSheetItems that need a sophisticated level of filtering
+     *
+     */
+   
+    global $TPL;
+    $filter = timeSheetItem::get_list_filter($_FORM);
+
+    $debug = $_FORM["debug"];
+    $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
+    $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
+    $_FORM["return"] or $_FORM["return"] = "html";
+
+    if (is_array($filter) && count($filter)) {
+      $filter = " WHERE ".implode(" AND ",$filter);
+    }
+
+    $q = "SELECT * FROM timeSheetItem
+       LEFT JOIN timeSheet ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                 ".$filter."
+        ORDER BY timeSheet.timeSheetID,dateTimeSheetItem asc";
+    $debug and print "Query: ".$q;
+    $db = new db_alloc;
+    $db->query($q);
+    while ($row = $db->next_record()) {
+      $print = true;
+      $t = new timeSheet();
+      $t->read_db_record($db);
+      $rows[$row["timeSheetItemID"]] = $row;
+    }
+
+    if ($print && $_FORM["return"] == "array") {
+      return $rows;
+    }
+  }
+
+  function get_list_vars() {
+    return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options"
+                ,"timeSheetID"              => "Show items for a particular time sheet"
+                ,"projectID"                => "Show items for a particular project"
+                ,"taskID"                   => "Show items for a particular task"
+                ,"date"                     => "Show items for a particular date"
+                ,"personID"                 => "Show items for a particular person"
+                ,"comment"                  => "Show items that have a comment like eg: *uick brown fox jump*"
+                );
+  }
+
   #function get_averages_past_fortnight($personID=false) {
    # $dateTimeSheetItem = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y")));
     // DON'T ERASE THIS!! This way will divide by the number of individual days worked
