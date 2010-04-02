@@ -7,7 +7,7 @@ define("NO_AUTH",1);
 require_once("../alloc.php");
 $options = array('features' => SOAP_USE_XSI_ARRAY_TYPE + SOAP_SINGLE_ELEMENT_ARRAYS);
 $server = new SoapServer(dirname(__FILE__)."/alloc.wsdl", $options); 
-$server->setClass("alloc_soap"); 
+$server->setClass("alloc_services"); 
 $data = file_get_contents('php://input');
 $server->handle($data);
 

@@ -21,10 +21,9 @@
 */
 
 
-require_once(dirname(__FILE__)."/alloc_soap.inc.php");
 require_once(dirname(__FILE__)."/WSDL_Gen.inc.php");
 
-class soap_module extends module {
+class services_module extends module {
 }
 
 ?>
