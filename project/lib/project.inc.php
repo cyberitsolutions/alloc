@@ -330,19 +330,19 @@ class project extends db_entity {
       $sql[] = sprintf("(project.clientID = %d)", $filter["clientID"]);
     }
     if ($filter["personID"]) {
-      $sql[] = sprintf("(projectPerson.personID=%d)", $filter["personID"]);
+      $sql[] = sprintf("(projectPerson.personID = %d)", $filter["personID"]);
     }
     if ($filter["projectID"]) {  
-      $sql[] = sprintf("(projectID = %d)", db_esc($filter["projectID"]));
+      $sql[] = sprintf("(project.projectID = %d)", db_esc($filter["projectID"]));
     }
     if ($filter["projectName"]) {
-      $sql[] = sprintf("(projectName LIKE '%%%s%%')", db_esc($filter["projectName"]));
+      $sql[] = sprintf("(project.projectName LIKE '%%%s%%')", db_esc($filter["projectName"]));
     }
     if ($filter["projectStatus"]) {
-      $sql[] = sprintf("(projectStatus = '%s')", db_esc($filter["projectStatus"]));
+      $sql[] = sprintf("(project.projectStatus = '%s')", db_esc($filter["projectStatus"]));
     }
     if ($filter["projectType"]) {
-      $sql[] = sprintf("(projectType = '%s')", db_esc($filter["projectType"]));
+      $sql[] = sprintf("(project.projectType = '%s')", db_esc($filter["projectType"]));
     }
 
     return $sql;
