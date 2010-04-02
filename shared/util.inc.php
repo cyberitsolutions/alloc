@@ -641,5 +641,21 @@ if (!function_exists('mime_content_type')) {
     return $mt;
   }
 }
+function alloc_json_encode($arr=array()) {
+  if (function_exists('json_encode')) {
+    return json_encode($arr);
+  } else {
+    $sj = new Services_JSON;
+    return $sj->encode($arr);
+  }
+}
+function alloc_json_decode($str="") {
+  if (function_exists('json_decode')) {
+    return json_decode($str,1);
+  } else {
+    $sj = new Services_JSON;
+    return $sj->decode($str);
+  }
+}
 
 ?>

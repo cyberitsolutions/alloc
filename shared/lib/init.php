@@ -35,6 +35,7 @@ require_once(dirname(__FILE__)."/PasswordHash.inc.php");
 require_once(dirname(__FILE__)."/interestedParty.inc.php");
 require_once(dirname(__FILE__)."/meta.inc.php");
 require_once(dirname(__FILE__)."/alloc_services.inc.php");
+require_once(dirname(__FILE__)."/solar_json.inc.php");
 
 class shared_module extends module {
   var $db_entities = array("sentEmailLog");
