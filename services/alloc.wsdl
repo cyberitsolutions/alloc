@@ -82,7 +82,7 @@
   <message name="get_list_helpOutput">
     <part name="return" type="xsd:string"/>
   </message>
-  <portType name="alloc_soapPortType">
+  <portType name="alloc_servicesPortType">
     <operation name="authenticate">
       <input message="tns:authenticateInput"/>
       <output message="tns:authenticateOutput"/>
@@ -120,7 +120,7 @@
       <output message="tns:get_list_helpOutput"/>
     </operation>
   </portType>
-  <binding name="alloc_soapBinding" type="tns:alloc_soapPortType">
+  <binding name="alloc_servicesBinding" type="tns:alloc_servicesPortType">
     <soap-env:binding xmlns="http://schemas.xmlsoap.org/wsdl/soap/" style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
     <operation xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="authenticate">
       <input xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/">
@@ -195,9 +195,9 @@
       </output>
     </operation>
   </binding>
-  <service name="alloc_soapService">
-    <port xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="alloc_soapPort" binding="tns:alloc_soapBinding">
-      <soap-env:address xmlns="http://schemas.xmlsoap.org/wsdl/soap/" location="http://leaf/alloc/soap/server.php"/>
+  <service name="alloc_servicesService">
+    <port xmlns:default="http://schemas.xmlsoap.org/wsdl/soap/" name="alloc_servicesPort" binding="tns:alloc_servicesBinding">
+      <soap-env:address xmlns="http://schemas.xmlsoap.org/wsdl/soap/" location="http://soy/alloc_dev/soap/server.php"/>
     </port>
   </service>
 </definitions>

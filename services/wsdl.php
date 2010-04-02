@@ -27,7 +27,7 @@ require_once("../alloc.php");
 // This script spits out a dynamically generated WSDL XML document, that enables
 // easy to handle SOAP service definitions.
 
-$wsdl = new WSDL_Gen('alloc_soap', config::get_config_item("allocURL").'soap/server.php', 'http://allocpsa.com/allocPSA');
+$wsdl = new WSDL_Gen('alloc_services', config::get_config_item("allocURL").'soap/server.php', 'http://allocpsa.com/allocPSA');
 $f = dirname(__FILE__)."/alloc.wsdl";
 $handle = fopen($f,"w+");
 fputs($handle,$wsdl->toXML());
