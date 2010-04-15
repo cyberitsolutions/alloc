@@ -1,5 +1,5 @@
 <tr id="productSaleItemRow{$productSaleItemID}" style="{$display}">
-  <td><select name="productID[]"><option value="">{$productList_dropdown}</select></td>
+  <td><select name="productID[]" onchange="set_values(this);"><option value="">{$productList_dropdown}</select></td>
   <td><input type="text" size="5" name="quantity[]" value="{$quantity}" onkeyup="update_values(this);"></td>
   <td><input type="text" size="10" name="buyCost[]" value="{$buyCost}">{$buyCostTax_check}</td>
   <td><input type="text" size="10" name="sellPrice[]" value="{$sellPrice}">{$sellPriceTax_check}</td>

@@ -30,6 +30,7 @@ function add_row() {
     $('#' + newId).find('input[name="productSaleItemID[]"]').val(newId);
 }
 
+// AJAX request to fill in product fields
 function update_values(target) {
     var myTD = $(target).parent().parent();
     var productID = myTD.find('select[name="productID[]"]').val();
@@ -44,6 +45,19 @@ function update_values(target) {
         myTD.find('input[name="sellPriceIncTax[]"]').attr('checked',$("priceTax",xml).text());
       }); 
    }
+}
+
+// When a product is selected set quantity and pre-fill
+function set_values(target) {
+    var myTD = $(target).parent().parent();
+    var productID = myTD.find('select[name="productID[]"]').val();
+    var quantityField = myTD.find('input[name="quantity[]"]');
+    var quantity = quantityField.val();
+
+    if (quantity == "") {
+        quantityField.val(1);
+    }
+    update_values(target);
 }
 </script>
 
