@@ -71,7 +71,6 @@ class person extends db_entity {
     $options["taskView"] = "prioritised";
     $options["return"] = $format;
     $options["taskStatus"] = "open";
-    $options["taskTypeID"] = array(TT_TASK,TT_MESSAGE,TT_FAULT,TT_MILESTONE);
 
     $summary = task::get_list($options);
 
