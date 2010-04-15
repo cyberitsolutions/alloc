@@ -42,7 +42,6 @@ class top_ten_tasks_home_item extends home_item {
     $options["showHeader"] = true;
     $options["showProject"] = true;
     $options["showTaskID"] = true;
-    $options["taskTypeID"] = array(TT_TASK,TT_MESSAGE,TT_FAULT,TT_MILESTONE);
 	  $options["showStatus"] = true;
 
     echo task::get_list($options);
