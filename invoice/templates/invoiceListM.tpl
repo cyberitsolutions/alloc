@@ -12,7 +12,6 @@
    </tr>
    <tr>
     <td colspan="2">
-      {$status_legend}
       {show_invoice_list()}
     </td>
   </tr>
