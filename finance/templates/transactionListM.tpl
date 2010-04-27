@@ -4,12 +4,13 @@
 <table class="box">
   <tr>
     <th class="nobr">{$title}</th>
+    <th class="right"><a class='magic toggleFilter' href=''>Show Filter</a></th>
   </tr>
   <tr>
-    <td align="center">{show_filter()}</td>
+    <td align="center" colspan="2">{show_filter()}</td>
   </tr>
   <tr>
-    <td>
+    <td colspan="2">
     <table align="center">
        <tr>
         <td align="right" class="transaction-approved"><strong>Balance:</strong></td> 
@@ -23,7 +24,7 @@
     </td>
   </tr>
   <tr>
-    <td>{show_transaction_list()}</td>
+    <td colspan="2">{show_transaction_list()}</td>
   </tr>
 </table>
 

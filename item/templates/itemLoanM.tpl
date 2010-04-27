@@ -3,7 +3,10 @@
 <table class="box">
   <tr>
     <th>Overdue Item Loans</th>
-    <th class="right" colspan="5"><a href="{$url_alloc_loanAndReturn}">New Loan/Return Item</a>&nbsp;&nbsp;<a href="{$url_alloc_addItem}">Add/Edit/Remove Item</a></th>
+    <th class="right" colspan="5">
+      <a href="{$url_alloc_loanAndReturn}">New Loan/Return Item</a>
+      <a href="{$url_alloc_addItem}">Add/Edit/Remove Item</a>
+    </th>
   </tr>
   <tr>
     <td colspan="6">

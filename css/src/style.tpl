@@ -53,12 +53,7 @@ a:hover {
 
 a.growshrink, a.magic {
   color:(TD_COLOR);
-  text-decoration:none;
-  border-bottom:1px dashed (BODY_COLOR);
   text-transform:none;
-}
-a.growshrink:hover, a.magic:hover {
-  border-bottom:1px solid (BODY_COLOR);
 }
 
 a.sidebyside {
@@ -199,6 +194,10 @@ hr {
 .right { 
   text-align:right; 
 } 
+.right a {
+  margin-left:4px;
+}
+
 .left { 
   text-align:left; 
 } 
@@ -387,6 +386,7 @@ table.filter {
   padding:4px; 
   margin-top:4px; 
   text-align:left;
+  display:none;
 }
 
 table.filter td {

@@ -4,7 +4,7 @@
   <tr>
     <th>Products</th>
     <th class="right">
-      <a href="{$url_alloc_product}">New Product</a>&nbsp;
+      <a href="{$url_alloc_product}">New Product</a>
       <a href="{$url_alloc_productSale}">New Sale</a>
     </th>
   </tr>

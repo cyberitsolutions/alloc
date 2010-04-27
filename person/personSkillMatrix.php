@@ -146,9 +146,6 @@ function show_skill_expertise() {
 $talent or $talent = $_POST["talent"];
 $skill_class or $skill_class = $_POST["skill_class"];
 
-$current_user->have_perm(PERM_PERSON_READ_MANAGEMENT) and $TPL["personAddSkill_link"] = "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_personSkillAdd"]."\">Edit Skill Items</a>";
-
-
 $TPL["main_alloc_title"] = "Skill Matrix - ".APPLICATION_NAME;
 include_template("templates/personSkillMatrix.tpl");
 

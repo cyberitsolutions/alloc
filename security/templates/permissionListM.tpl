@@ -4,7 +4,10 @@
 <table class="box">
   <tr>
     <th>Permissions</th>
-    <th class="right" colspan="8"><a href="{$url_alloc_permission}">New Permission</a></th>
+    <th class="right" colspan="8">
+      <a class='magic toggleFilter' href=''>Show Filter</a>
+      <a href="{$url_alloc_permission}">New Permission</a>
+    </th>
   </tr>
   <tr>
     <td colspan="9" align="center">

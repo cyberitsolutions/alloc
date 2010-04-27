@@ -3,7 +3,12 @@
 <table class="box">
   <tr>
     <th>Skill Matrix</th>
-    <th class="right">{$personAddSkill_link}</th>
+    <th class="right">
+      <a class='magic toggleFilter' href=''>Show Filter</a>
+      {if $current_user->have_perm(PERM_PERSON_READ_MANAGEMENT)}
+        <a href="{$url_alloc_personSkillAdd}">Edit Skill Items</a>
+      {/}
+    </th>
   </tr> 
   <tr>
     <td colspan="2" align="center">
