@@ -157,24 +157,6 @@ class productSaleItem extends db_entity {
     $taxTfID = config::get_config_item("taxTfID");
     $taxPercentDivisor = ($taxPercent/100) + 1;
 
-    // First transaction represents the transfer of money that is the
-    // amount paid by the company for the product. We model this by transferring
-    // the buyCost from the Projects TF (META: -1) to the Outgoing TF.
-    $this->create_transaction(-1, config::get_config_item("outTfID"),$this->get_value("buyCost"), "Product Acquisition: ".$productName);
-
-    // If this price includes tax, then perform a tax transfer from the
-    // outgoing tf to the tax tf.
-    if ($this->get_value("buyCostIncTax")) {
-      $amount_minus_tax = $this->get_value("buyCost") / $taxPercentDivisor;
-      $amount_of_tax = $this->get_value("buyCost") - $amount_minus_tax;
-      $this->create_transaction(config::get_config_item("outTfID"),$taxTfID,$amount_of_tax,"Product Acquisition ".$taxName.": ".$productName);
-    }
-
-    // Next transaction represents the amount that someone has paid the
-    // sellPrice amount for the product. This money is transferred from 
-    // the Incoming transactions TF, to the Projects TF (METE: -1).
-    $this->create_transaction(config::get_config_item("inTfID"), -1 ,$this->get_value("sellPrice"), "Product Sale: ".$productName);
-
     // If this price includes tax, then perform a tax transfer from the
     // outgoing tf to the tax tf.
     if ($this->get_value("sellPriceIncTax")) {
@@ -182,6 +164,26 @@ class productSaleItem extends db_entity {
       $amount_of_tax = $this->get_value("sellPrice") - $amount_minus_tax;
       $this->create_transaction(-1, $taxTfID ,$amount_of_tax, "Product Sale ".$taxName.": ".$productName);
     }
+
+
+    // If this cost includes tax, then perform a tax transfer from the
+    // tax tf to the incoming tf.
+    if ($this->get_value("buyCostIncTax")) {
+      $amount_minus_tax = $this->get_value("buyCost") / $taxPercentDivisor;
+      $amount_of_tax = $this->get_value("buyCost") - $amount_minus_tax;
+      $this->create_transaction($taxTfID, config::get_config_item("outTfID"),$amount_of_tax,"Product Acquisition ".$taxName.": ".$productName);
+    }
+
+    // Next transaction represents the transfer of money that is the
+    // amount paid by the company for the product. We model this by transferring
+    // the buyCost from the Projects TF (META: -1) to the Outgoing TF.
+    $this->create_transaction(-1, config::get_config_item("outTfID"),$this->get_value("buyCost"), "Product Acquisition: ".$productName);
+
+
+    // Next transaction represents the amount that someone has paid the
+    // sellPrice amount for the product. This money is transferred from 
+    // the Incoming transactions TF, to the Projects TF (METE: -1).
+    $this->create_transaction(config::get_config_item("inTfID"), -1 ,$this->get_value("sellPrice"), "Product Sale: ".$productName);
 
     // Now loop through all the productCosts for the sale items product.
     $query = sprintf("SELECT productCost.*, product.productName
