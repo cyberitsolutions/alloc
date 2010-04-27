@@ -72,6 +72,14 @@ class timeSheetItem extends db_entity {
 
     $this->set_value("description", $taskName);
 
+    // These fields were not updated on Edits
+    // TODO: Verify the correct way to do this on updates
+    $this->set_value("timeSheetItemDuration", $_POST["timeSheetItem_timeSheetItemDuration"]);
+    $this->set_value("taskID", $_POST["timeSheetItem_taskID"]);
+    $this->set_value("rate", $_POST["timeSheetItem_rate"]);
+    $this->set_value("multiplier", $_POST["timeSheetItem_multiplier"]);
+    $this->set_value("comment", $_POST["timeSheetItem_comment"]);
+
     parent::save();
 
     $db = new db_alloc();
