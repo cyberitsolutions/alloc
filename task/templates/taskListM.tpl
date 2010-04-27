@@ -4,7 +4,10 @@
 <table class="box">
   <tr>
     <th>Tasks</th>
-    <th class="right noprint"><nobr><a href="{$url_alloc_task}">New Task</a></nobr></th>
+    <th class="right noprint">
+      <a class='magic toggleFilter' href=''>Show Filter</a>
+      <a href="{$url_alloc_task}">New Task</a>
+    </th>
   </tr>
   <tr>
     <td colspan="2" class="noprint" >{show_filter()}</td>

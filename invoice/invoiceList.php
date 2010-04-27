@@ -69,11 +69,6 @@ function show_invoice_list() {
   echo invoice::get_list($_FORM);
 }
 
-if ($current_user->have_role("admin")) {
-  $TPL["invoice_links"] = "<a href=\"".$TPL["url_alloc_invoicesUpload"]."\">Upload Invoices</a>";
-  $TPL["invoice_links"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_invoice"]."\">New Invoice</a>";
-}
-
 if (!$current_user->prefs["invoiceList_filter"]) {
   $TPL["message_help"][] = "
 

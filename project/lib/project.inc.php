@@ -210,7 +210,7 @@ class project extends db_entity {
 
     // Join links up with space
     if (is_array($links)) {
-      return implode("&nbsp;&nbsp;",$links);
+      return implode(" ",$links);
     }
   }
 

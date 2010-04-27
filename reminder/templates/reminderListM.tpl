@@ -3,7 +3,10 @@
 <table class="box">
   <tr>
     <th colspan="3">Reminders</th>
-    <th class="right"><a href="{$url_alloc_reminderAdd}">Add Reminder</a></th>
+    <th class="right">
+      <a class='magic toggleFilter' href=''>Show Filter</a>
+      <a href="{$url_alloc_reminderAdd}">Add Reminder</a>
+    </th>
   </tr>
   <tr>
     <td align="center" colspan="4">{show_reminder_filter("../reminder/templates/reminderFilter.tpl")}</td>

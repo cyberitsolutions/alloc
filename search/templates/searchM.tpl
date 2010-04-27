@@ -8,8 +8,8 @@
   <tr>
     <td align="center">
 
-
-      <table class="filter" align="center">
+      <!-- We put display:table, because the default is for .filter's to be hidden -->
+      <table class="filter" align="center" style="display:table">
         <tr>
           <td><input size="30" name="needle" value="{$needle2}"></td>
           <td><select size="1" name="category">{$search_category_options}</select></td>

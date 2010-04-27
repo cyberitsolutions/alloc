@@ -3,7 +3,12 @@
 <table class="box">
   <tr>
     <th colspan="3">TF List</th>
-    <th class="right">{if have_entity_perm("tf", PERM_CREATE, $current_user, true)}<a href="{$url_alloc_tf}">New Tagged Fund</a>{/}</th>
+    <th class="right">
+      <a class='magic toggleFilter' href=''>Show Filter</a>
+      {if have_entity_perm("tf", PERM_CREATE, $current_user, true)}
+        <a href="{$url_alloc_tf}">New Tagged Fund</a>
+      {/}
+    </th>
   </tr>
   <tr>
     <td colspan="4" align="center">

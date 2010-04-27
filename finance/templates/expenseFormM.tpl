@@ -9,7 +9,7 @@
   <tr> 
     <th>Expense Form</th>
     <th class="right" colspan="3">
-      <a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>&nbsp;
+      <a href="{$url_alloc_expenseForm}expenseFormID={$expenseFormID}&printVersion=true" TARGET="_blank">Printer Friendly Version</a>
       <a href="{$url_alloc_expenseFormList}">Expense Form List</a>
     </th>
   </tr>

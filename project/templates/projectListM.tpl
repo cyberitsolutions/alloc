@@ -3,7 +3,10 @@
 <table class="box">
   <tr>
     <th>Projects</th>
-    <th class="right"><a href="{$url_alloc_project}">New Project</a></th>
+    <th class="right">
+      <a class='magic toggleFilter' href=''>Show Filter</a>
+      <a href="{$url_alloc_project}">New Project</a>
+    </th>
   </tr>
   <tr>
     <td colspan="2" align="center">{show_filter()}</td>

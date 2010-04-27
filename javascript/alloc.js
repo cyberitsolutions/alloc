@@ -143,6 +143,21 @@ $(document).ready(function() {
   // Add resize grippies to all textareas
   $('textarea:not(.processed)').TextAreaResizer();
 
+  // Add toggles for filters
+  $(".toggleFilter").click(function(){
+    var d = $(".filter").css("display");
+    if (d == "table") {
+      var l = "Show Filter";
+      var d = "none";
+    } else {
+      var l = "Hide Filter";
+      var d = "table";
+    }
+    $(".filter").css("display",d);
+    $(this).text(l);
+    return false;
+  });
+
 });
 
 

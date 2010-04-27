@@ -3,7 +3,10 @@
 <table class="box">
   <tr>
     <th>Time Sheets</th>
-    <th class="right"><a href="{$url_alloc_timeSheet}userID={$userID}">New Time Sheet</a></th>
+    <th class="right">
+      <a class='magic toggleFilter' href=''>Show Filter</a>
+      <a href="{$url_alloc_timeSheet}userID={$userID}">New Time Sheet</a>
+    </th>
   </tr>
   <tr>
     <td colspan="2" align="center">
