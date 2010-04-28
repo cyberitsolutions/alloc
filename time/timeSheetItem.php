@@ -44,6 +44,8 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
     }
 
     if ($_POST["timeSheetItem_save"]) {
+      $timeSheetItem->read_globals();
+      $timeSheetItem->read_globals("timeSheetItem_");
       $rtn = $timeSheetItem->save();
       $rtn or $TPL["message_good"][] = "Time Sheet Item saved.";
       $rtn and $TPL["message"][] = $rtn;
