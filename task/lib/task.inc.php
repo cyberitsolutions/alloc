@@ -1401,7 +1401,7 @@ class task extends db_entity {
         $results[$taskID] = $db->f("sum_of_time");
         return $db->f("sum_of_time");
       }
-      return "0.00";
+      return "";
     }
   }
 
