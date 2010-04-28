@@ -47,6 +47,17 @@ class config extends db_entity {
     return $db->f('configID');
   }
 
+  function get_config_logo($anew=false) {
+    $table = get_cached_table("config",$anew);
+    $val = '';
+    if(file_exists(ATTACHMENTS_DIR.'logos/logo.png')) {
+      $val = '<img src="/logo.php" alt="'.$table['companyName']['value'].'" height="30px" />';
+    } else {
+      $val = $table['companyName']['value'];
+    }
+    return $val;
+  }
+
   function for_cyber() {
     return config::get_config_item("companyHandle") == "cybersource";
   }

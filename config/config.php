@@ -83,6 +83,28 @@ if ($_POST["save"]) {
     $_POST["AllocFromEmailAddress"] = str_replace(">","",$_POST["AllocFromEmailAddress"]);
   }
 
+  if ($_FILES["companyLogo"] && !$_FILES["companyLogo"]["error"]) {
+    // Process image
+    $target_dir = ATTACHMENTS_DIR."logos/";
+    $target_small = $target_dir.'logo_small.png';
+    $target = $target_dir.'logo.png';
+    $uploaded_file = $_FILES["companyLogo"];
+    try {
+      $image = new Imagick();
+      $image->readImage($_FILES["companyLogo"]["tmp_name"]);
+      $image->setImageFormat("png");
+      if(!$image->writeImage($target)) {
+        // Failed so save company Logo
+      }
+      $image->resizeImage(0,30,imagick::FILTER_UNDEFINED,1);
+      if(!$image->writeImage($target_small)) {
+        // Failed so save company Logo small version
+      }
+    } catch(Exception $ex) {
+      // Imagick not installed or invalid file uploaded
+    }
+  }
+
   foreach ($_POST as $name => $value) {
 
     if (in_array($name,$fields_to_save)) {
