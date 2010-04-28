@@ -4,7 +4,7 @@
         <td>
           <table cellpadding="0" cellspacing="0" align="left" style="left:0px;">
             <tr>
-              <td style="font-size:17px;">{echo config::get_config_item("companyName")}</td>
+              <td style="font-size:17px;">{echo config::get_config_logo()}</td>
             </tr>
           </table>
         </td>

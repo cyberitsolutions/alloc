@@ -292,7 +292,7 @@
 </div>
 
 <div id="company_info">
-<form action="{$url_alloc_config}" method="post">
+<form action="{$url_alloc_config}" method="post" enctype="multipart/form-data">
 <table class="box">
   <tr>
     <th colspan="2">Company Information</th>
@@ -329,6 +329,11 @@
   <tr>
     <td>Company Address (line 3)</td>
     <td><input type="text" size="70" value="{$companyContactAddress3}" name="companyContactAddress3"></td> 
+  </tr>
+  <tr>
+    <td>Company Logo</td>
+    <td><input type="file" name="companyLogo" size="70"></td>
+    <td width="1%">{page::help("config_companyImage")}</td>
   </tr>
   <tr>
     <td>Invoice / Time Sheet PDF Header 2</td>
