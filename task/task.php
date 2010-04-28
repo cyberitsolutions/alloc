@@ -231,7 +231,7 @@ $task->set_option_tpl_values();
 
 $time_billed = $task->get_time_billed(false);
 $time_billed_label = seconds_to_display_format($time_billed);
-if ($time_billed > 0) {
+if ($time_billed != "") {
   $TPL["time_billed_link"] = "<a href=\"".$TPL["url_alloc_timeSheetList"]."taskID=".$task->get_id()."&dontSave=true&applyFilter=true\">".$time_billed_label."</a>";
 } 
 
