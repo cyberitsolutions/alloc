@@ -441,6 +441,9 @@ class timeSheetPrint {
 
       // Else HTML format
       } else {
+        if(file_exists(ATTACHMENTS_DIR.'logos/logo.png')) {
+          $TPL["companyName"] = '<img src="/logo.php?size=big" alt="'.$TPL["companyName"].'" height="70px" />';
+        }
         $TPL["this_tsp"] = $this;
         $TPL["main_alloc_title"] = "Time Sheet - ".APPLICATION_NAME;
         include_template(dirname(__FILE__)."/../templates/timeSheetPrintM.tpl");
