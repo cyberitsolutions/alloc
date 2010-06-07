@@ -32,6 +32,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_exportDoc"                      => $sess->url(SCRIPT_PATH."shared/get_export.php")
             ,"url_alloc_patch"                          => $sess->url(SCRIPT_PATH."installation/patch.php")
             ,"url_alloc_menuSubmit"                     => $sess->url(SCRIPT_PATH."shared/menuSubmit.php")
+            ,"url_alloc_logo"                           => $sess->url(SCRIPT_PATH."logo.php")
 
             ,"url_alloc_project"                        => $sess->url(SCRIPT_PATH."project/project.php")
             ,"url_alloc_projectList"                    => $sess->url(SCRIPT_PATH."project/projectList.php")

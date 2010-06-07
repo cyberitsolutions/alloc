@@ -88,20 +88,16 @@ if ($_POST["save"]) {
     $target_dir = ATTACHMENTS_DIR."logos/";
     $target_small = $target_dir.'logo_small.png';
     $target = $target_dir.'logo.png';
-    $uploaded_file = $_FILES["companyLogo"];
-    try {
-      $image = new Imagick();
-      $image->readImage($_FILES["companyLogo"]["tmp_name"]);
-      $image->setImageFormat("png");
-      if(!$image->writeImage($target)) {
-        // Failed so save company Logo
-      }
-      $image->resizeImage(0,30,imagick::FILTER_UNDEFINED,1);
-      if(!$image->writeImage($target_small)) {
-        // Failed so save company Logo small version
-      }
-    } catch(Exception $ex) {
-      // Imagick not installed or invalid file uploaded
+    $img = image_create_from_file($_FILES["companyLogo"]["tmp_name"]);
+    if ($img) {
+      imagepng($img, $target, 0);
+      $x = imagesx($img);
+      $y = imagesy($img);
+      $save = imagecreatetruecolor($x/($y/30), $y/($y/30));
+      imagecopyresized($save, $img, 0, 0, 0, 0, imagesx($save), imagesy($save), $x, $y);
+      imagepng($save, $target_small);
+      imagedestroy($img);
+      imagedestroy($save);
     }
   }
 
