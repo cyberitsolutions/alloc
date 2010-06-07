@@ -353,7 +353,7 @@ class timeSheetPrint {
         $cols_settings["two"] = array("justification"=>"right","width"=>80);
         $pdf_table_options4 = array("showLines"=>2,"shaded"=>0,"width"=>400, "showHeadings"=>0, "fontSize"=>10, "xPos"=>"center", "cols"=>$cols_settings,"lineCol"=>array(0.8, 0.8, 0.8));
 
-        $pdf =& new Cezpdf();
+        $pdf = new Cezpdf();
         $pdf->ezSetMargins(90,90,90,90);
 
         $pdf->selectFont($font1);
