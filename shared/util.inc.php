@@ -657,5 +657,29 @@ function alloc_json_decode($str="") {
     return $sj->decode($str);
   }
 }
-
+function image_create_from_file($path) {
+  $info = getimagesize($path);
+  if(!$info) {
+    echo "unable to determine getimagesize($path)";
+    return false;
+  }
+  $functions = array(
+    IMAGETYPE_GIF => 'imagecreatefromgif',
+    IMAGETYPE_JPEG => 'imagecreatefromjpeg',
+    IMAGETYPE_PNG => 'imagecreatefrompng',
+    IMAGETYPE_WBMP => 'imagecreatefromwbmp',
+    IMAGETYPE_XBM => 'imagecreatefromwxbm',
+  );
+  
+  if(!$functions[$info[2]]) {
+    echo "no function to handle $info[2]";
+    return false;
+  }
+  if(!function_exists($functions[$info[2]])) {
+    echo "no function exists to handle ".$functions[$info[2]];
+    return false;
+  }
+  $f = $functions[$info[2]];
+  return $f($path);
+}
 ?>
