@@ -139,7 +139,7 @@ class Session {
   }
 
   function url($url="") {
-    $url = ereg_replace("[&?]+$", "", $url);
+    $url = preg_replace("/[&?]+$/", "", $url);
 
     if ($this->mode == "get") {
       if (!strpos($url, "sess=") && $this->key) {
