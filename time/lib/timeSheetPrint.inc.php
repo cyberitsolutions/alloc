@@ -371,6 +371,7 @@ class timeSheetPrint {
         $TPL["fax"]                    and $contact_info[] = array($TPL["fax"]);
 
         $pdf->selectFont($font2);
+
         $y = $pdf->ezTable($contact_info,false,"",$pdf_table_options);
         $pdf->selectFont($font1);
 
@@ -380,7 +381,13 @@ class timeSheetPrint {
 
 
         $pdf->ezSetY(782);
-        $y = $pdf->ezText($TPL["companyName"],27, array("justification"=>"right"));
+        $image_jpg = ATTACHMENTS_DIR."logos/logo.jpg";
+        if (file_exists($image_jpg)) {
+          $pdf->ezImage($image_jpg,0,0,'none');
+          $y = 700;
+        } else {
+          $y = $pdf->ezText($TPL["companyName"],27, array("justification"=>"right"));
+        }
         $nos_y = $line_y + 22;
         $TPL["companyNos2"] and $nos_y = $line_y + 34;
         $pdf->ezSetY($nos_y);

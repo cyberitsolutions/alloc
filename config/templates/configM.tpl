@@ -336,6 +336,11 @@
     <td width="1%">{page::help("config_companyImage")}</td>
   </tr>
   <tr>
+    <td>Company Logo for PDF</td>
+    <td><input type="file" name="companyLogoPDF" size="70"></td>
+    <td width="1%">{page::help("config_companyImagePDF")}</td>
+  </tr>
+  <tr>
     <td>Invoice / Time Sheet PDF Header 2</td>
     <td><input type="text" size="70" value="{$companyACN}" name="companyACN"></td> 
   </tr>
