@@ -381,7 +381,7 @@ class timeSheetPrint {
 
 
         $pdf->ezSetY(782);
-        $image_jpg = ATTACHMENTS_DIR."logos/logo.jpg";
+        $image_jpg = ALLOC_LOGO;
         if (file_exists($image_jpg)) {
           $pdf->ezImage($image_jpg,0,0,'none');
           $y = 700;
@@ -448,8 +448,8 @@ class timeSheetPrint {
 
       // Else HTML format
       } else {
-        if(file_exists(ATTACHMENTS_DIR.'logos/logo.png')) {
-          $TPL["companyName"] = '<img src="'.$TPL["url_alloc_logo"].'size=big" alt="'.$TPL["companyName"].'" height="70px" />';
+        if(file_exists(ALLOC_LOGO)) {
+          $TPL["companyName"] = '<img src="'.$TPL["url_alloc_logo"].'" />';
         }
         $TPL["this_tsp"] = $this;
         $TPL["main_alloc_title"] = "Time Sheet - ".APPLICATION_NAME;

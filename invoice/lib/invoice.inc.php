@@ -263,7 +263,7 @@ class invoice extends db_entity {
 
 
     $pdf->ezSetY(782);
-    $image_jpg = ATTACHMENTS_DIR."logos/logo.jpg";
+    $image_jpg = ALLOC_LOGO;
     if (file_exists($image_jpg)) {
       $pdf->ezImage($image_jpg,0,0,'none');
       $y = 700;

@@ -51,8 +51,8 @@ class config extends db_entity {
     global $TPL;
     $table = get_cached_table("config",$anew);
     $val = '';
-    if(file_exists(ATTACHMENTS_DIR.'logos/logo.png')) {
-      $val = '<img src="'.$TPL["url_alloc_logo"].'" alt="'.$table['companyName']['value'].'" />';
+    if(file_exists(ALLOC_LOGO)) {
+      $val = '<img src="'.$TPL["url_alloc_logo"].'type=small" alt="'.$table['companyName']['value'].'" />';
     } else {
       $val = $table['companyName']['value'];
     }

@@ -147,6 +147,10 @@ if (file_exists(ALLOC_MOD_DIR."alloc_config.php")) {
   require_once(ALLOC_MOD_DIR."alloc_config.php");
 }
 
+// ATTACHMENTS_DIR is defined above in alloc_config.php
+define("ALLOC_LOGO", ATTACHMENTS_DIR."logos/logo.jpg");
+define("ALLOC_LOGO_SMALL", ATTACHMENTS_DIR."logos/logo_small.jpg");
+
 // If we're inside the installation process
 if (defined("IN_INSTALL_RIGHT_NOW")) {
 
