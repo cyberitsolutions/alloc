@@ -332,13 +332,11 @@
   </tr>
   <tr>
     <td>Company Logo</td>
-    <td><input type="file" name="companyLogo" size="70"></td>
-    <td width="1%">{page::help("config_companyImage")}</td>
-  </tr>
-  <tr>
-    <td>Company Logo for PDF</td>
-    <td><input type="file" name="companyLogoPDF" size="70"></td>
-    <td width="1%">{page::help("config_companyImagePDF")}</td>
+    <td>
+      <input type="file" name="companyLogo" size="70">
+      {if file_exists(ALLOC_LOGO)}<input type="submit" name="delete_logo" value="Delete Current Logo">{/}
+    </td>
+    <td width="1%">{page::help("config_companyLogo")}</td>
   </tr>
   <tr>
     <td>Invoice / Time Sheet PDF Header 2</td>

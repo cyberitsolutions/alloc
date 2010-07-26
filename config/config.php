@@ -83,21 +83,16 @@ if ($_POST["save"]) {
     $_POST["AllocFromEmailAddress"] = str_replace(">","",$_POST["AllocFromEmailAddress"]);
   }
 
+  // Save the companyLogo and a smaller version too.
   if ($_FILES["companyLogo"] && !$_FILES["companyLogo"]["error"]) {
-    // Process image
-    $target_dir = ATTACHMENTS_DIR."logos/";
-    $target_small = $target_dir.'logo_small.png';
-    $target = $target_dir.'logo.png';
     $img = image_create_from_file($_FILES["companyLogo"]["tmp_name"]);
     if ($img) {
-      imagepng($img, $target, 0);
+      imagejpeg($img, ALLOC_LOGO, 100);
       $x = imagesx($img);
       $y = imagesy($img);
-      $save = imagecreatetruecolor($x/($y/30), $y/($y/30));
+      $save = imagecreatetruecolor($x/($y/40), $y/($y/40));
       imagecopyresized($save, $img, 0, 0, 0, 0, imagesx($save), imagesy($save), $x, $y);
-      imagepng($save, $target_small);
-      imagedestroy($img);
-      imagedestroy($save);
+      imagejpeg($save, ALLOC_LOGO_SMALL, 100);
     }
   }
 
@@ -122,7 +117,20 @@ if ($_POST["save"]) {
     }
   }
   $TPL["message"] or $TPL["message_good"] = "Saved configuration.";
+
+} else if ($_POST["delete_logo"]) {
+  foreach (array(ALLOC_LOGO,ALLOC_LOGO_SMALL) as $logo) {
+    if (file_exists($logo)) {
+      if (unlink($logo)) {
+        $TPL["message_good"][] = "Deleted ".$logo;
+      }
+    }
+    if (file_exists($logo)) {
+      $TPL["message"][] = "Unable to delete ".$logo;
+    }
+  }
 }
+
 
 $config = new config;
 get_cached_table("config",true); // flush cache
