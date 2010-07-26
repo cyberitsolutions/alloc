@@ -2,4 +2,5 @@
 ^help/help.css
 ^help/help.html
 ^help/images
-
+.swp$
+^alloc_config.php$
