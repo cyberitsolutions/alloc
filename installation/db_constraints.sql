@@ -100,7 +100,6 @@ ALTER TABLE projectPerson ADD CONSTRAINT projectPerson_personID FOREIGN KEY (per
 ALTER TABLE projectPerson ADD CONSTRAINT projectPerson_roleID FOREIGN KEY (roleID) REFERENCES role (roleID);
 ALTER TABLE projectPerson ADD CONSTRAINT projectPerson_projectPersonModifiedUser FOREIGN KEY (projectPersonModifiedUser) REFERENCES person (personID);
 ALTER TABLE reminder ADD CONSTRAINT reminder_personID FOREIGN KEY (personID) REFERENCES person (personID);
-ALTER TABLE reminder ADD CONSTRAINT reminder_metaPerson FOREIGN KEY (metaPerson) REFERENCES person (personID);
 ALTER TABLE reminder ADD CONSTRAINT reminder_reminderModifiedUser FOREIGN KEY (reminderModifiedUser) REFERENCES person (personID);
 ALTER TABLE sentEmailLog ADD CONSTRAINT sentEmailLog_sentEmailLogCreatedUser FOREIGN KEY (sentEmailLogCreatedUser) REFERENCES person (personID);
 ALTER TABLE sess ADD CONSTRAINT sess_personID FOREIGN KEY (personID) REFERENCES person (personID);
