@@ -69,7 +69,7 @@
       {list($rows,$info) = $this_tsp->get_timeSheetItem_list_money($TPL["timeSheetID"])}
       {foreach $rows as $r}
       <tr>
-        <td>{$r.desc}</td>
+        <td>{echo nl2br($r["desc"])}</td>
         <td align="right" class="nobr">{$r.money}</td>
       </tr>
       {/}
@@ -87,7 +87,7 @@
       {list($rows,$info) = $this_tsp->get_timeSheetItem_list_units($TPL["timeSheetID"])}
       {foreach $rows as $r}
       <tr>
-        <td>{$r.desc}</td>
+        <td>{echo nl2br($r["desc"])}</td>
         <td align="right" class="nobr">{$r.units}</td>
       </tr>
       {/}
@@ -110,7 +110,7 @@
         <td class="nobr" valign="top">{$r.date}&nbsp;</td>
         <td align="right" class="nobr" valign="top">{$r.units}&nbsp;</td>
         <td class="nobr" valign="top">{$r.multiplier_string}&nbsp;</td>
-        <td valign="top">{$r.desc}&nbsp;</td>
+        <td valign="top">{echo nl2br($r["desc"])}&nbsp;</td>
       </tr>
       {/}
       <tr>
