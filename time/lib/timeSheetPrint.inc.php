@@ -44,6 +44,7 @@ class timeSheetPrint {
   }
 
   function get_timeSheetItem_list_money($timeSheetID) {
+    global $TPL;
     list($db,$customerBilledDollars,$timeSheet,$unit_array) = $this->get_timeSheetItem_vars($timeSheetID);
 
     $taxPercent = config::get_config_item("taxPercent");
@@ -88,7 +89,7 @@ class timeSheetPrint {
       $d && !$rows[$taskID]["desc"] and $str[] = $d;
 
       // Get task description
-      if ($taskID && $printDesc) {
+      if ($taskID && $TPL["printDesc"]) {
         $t = new task;
         $t->set_id($taskID);
         $t->select();
@@ -132,6 +133,7 @@ class timeSheetPrint {
   }
 
   function get_timeSheetItem_list_units($timeSheetID) {
+    global $TPL;
     list($db,$customerBilledDollars,$timeSheet,$unit_array) = $this->get_timeSheetItem_vars($timeSheetID);
 
     while ($db->next_record()) {
@@ -153,7 +155,7 @@ class timeSheetPrint {
 
 
       // Get task description
-      if ($taskID && $printDesc) {
+      if ($taskID && $TPL["printDesc"]) {
         $t = new task;
         $t->set_id($taskID);
         $t->select();
@@ -197,6 +199,7 @@ class timeSheetPrint {
   }
 
   function get_timeSheetItem_list_items($timeSheetID) {
+    global $TPL;
     list($db,$customerBilledDollars,$timeSheet,$unit_array) = $this->get_timeSheetItem_vars($timeSheetID);
 
     $m = new meta("timeSheetItemMultiplier");
@@ -220,7 +223,7 @@ class timeSheetPrint {
       $d && !$rows[$row_num]["desc"] and $str[] = $d;
 
       // Get task description
-      if ($taskID && $printDesc) {
+      if ($taskID && $TPL["printDesc"]) {
         $t = new task;
         $t->set_id($taskID);
         $t->select();
