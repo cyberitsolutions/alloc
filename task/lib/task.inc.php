@@ -230,21 +230,23 @@ class task extends db_entity {
 
   function create_task_reminder() {
     // Create a reminder for this task based on the priority.
+    global $current_user;
 
     // Get the task type
     $taskTypes = get_cached_table("taskType");
-    $taskTypeName = strtolower($taskTypes[$this->get_value("taskTypeID")]["taskTypeName"]);
-
+    $taskTypeName = $taskTypes[$this->get_value("taskTypeID")]["taskTypeName"];
     $label = $this->get_priority_label();
-
     $reminderInterval = "Day";
     $intervalValue = $this->get_value("priority");
+    strtolower($taskTypeName) == "parent" and $taskTypeName.= " Task";
 
-    $message = "A [".$label."] $taskTypeName has been created for you.  You will continue to receive these ";
-    $message.= "emails until you either delete this reminder on the task, or close the task by putting a date in its ";
-    $message.= "'Date Actual Completion' box.";
+    $subject = $taskTypeName." Reminder: ".$this->get_id()." ".$this->get_task_name()." [".$label."]";
+    $message = "\n\n".$subject;
+    $message.= "\n\n".$this->get_url(true);
+    $this->get_value("taskDescription") and $message.= "\n\n".$this->get_value("taskDescription");
+    $message.= "\n\n-- \nReminder created by ".$current_user->get_username(1)." at ".date("Y-m-d H:i:s");
     $people[] = $this->get_value("personID");
-    $this->create_reminders($people, $message, $reminderInterval, $intervalValue);
+    $this->create_reminder(null, $message, $reminderInterval, $intervalValue, REMINDER_METAPERSON_TASK_ASSIGNEE, $subject);
   }
 
   function create_reminders($people, $message, $reminderInterval, $intervalValue) {
@@ -260,9 +262,7 @@ class task extends db_entity {
     }
   }
 
-  function create_reminder($personID, $message, $reminderInterval, $intervalValue) {
-    global $current_user;
-
+  function create_reminder($personID=null, $message, $reminderInterval, $intervalValue, $metaPerson=null, $subject="") {
     $label = $this->get_priority_label();
 
     $reminder = new reminder;
@@ -270,17 +270,19 @@ class task extends db_entity {
     $reminder->set_value('reminderLinkID', $this->get_id());
     $reminder->set_value('reminderRecuringInterval', $reminderInterval);
     $reminder->set_value('reminderRecuringValue', $intervalValue);
-    $reminder->set_value('reminderSubject', "Task Reminder: ".$this->get_id()." ".$this->get_value("taskName")." [".$label."]");
-    $reminder->set_value('reminderContent', "\nReminder Created by ".$current_user->get_username(1)
-                         ."\n\n".$message."\n\n".$this->get_value("taskDescription"));
+    $reminder->set_value('reminderSubject', $subject);
+    $reminder->set_value('reminderContent', $message);
 
     $reminder->set_value('reminderAdvNoticeSent', "0");
     $reminder->set_value('reminderAdvNoticeInterval', "No");
     $reminder->set_value('reminderAdvNoticeValue', "0");
 
     $reminder->set_value('reminderTime', date("Y-m-d H:i:s"));
-    $reminder->set_value('personID', $personID);
-
+    if ($personID) {
+      $reminder->set_value('personID', $personID);
+    } else if ($metaPerson) {
+      $reminder->set_value('metaPerson', $metaPerson);
+    }
     $reminder->save();
   }
 
@@ -696,13 +698,13 @@ class task extends db_entity {
     return $rtn;
   }
 
-  function get_url() {
+  function get_url($absolute=false) {
     global $sess;
     $sess or $sess = new Session;
 
     $url = "task/task.php?taskID=".$this->get_id();
 
-    if ($sess->Started()) {
+    if ($sess->Started() && !$absolute) {
       $url = $sess->url(SCRIPT_PATH.$url);
 
     // This for urls that are emailed
