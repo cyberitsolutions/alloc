@@ -89,15 +89,16 @@ function show_productSale_new($template) {
   global $TPL, $productSaleItemsDoExist;
   $taxName = config::get_config_item("taxName");
   $productSaleItem = new productSaleItem;
+  $productSaleItem->set_id('new0');
   $productSaleItem->set_tpl_values(); // wipe clean
   $product = new product;
   $ops = $product->get_assoc_array("productID","productName");
   $TPL["productList_dropdown"] = page::select_options($ops, $productSaleItem->get_value("productID"));
   $productSaleItemsDoExist and $TPL["display"] = "display:none";
   if ($taxName) {
-    $TPL["buyCostTax_check"] = sprintf(" <input type='checkbox' name='buyCostIncTax[]' value='1'%s> inc %s"
+    $TPL["buyCostTax_check"] = sprintf(" <input type='checkbox' name='buyCostIncTax[]' value='new0'%s> inc %s"
                                     ,$productSaleItem->get_value("buyCostIncTax") ? ' checked':'',$taxName);
-    $TPL["sellPriceTax_check"] = sprintf(" <input type='checkbox' name='sellPriceIncTax[]' value='1'%s> inc %s"
+    $TPL["sellPriceTax_check"] = sprintf(" <input type='checkbox' name='sellPriceIncTax[]' value='new0'%s> inc %s"
                                       ,$productSaleItem->get_value("sellPriceIncTax") ? ' checked':'',$taxName);
   }
   include_template($template);
