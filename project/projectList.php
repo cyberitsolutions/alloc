@@ -31,6 +31,7 @@ $defaults = array("showHeader"=>true
                  ,"showClient"=>true
                  ,"showProjectType"=>true
                  ,"showProjectStatus"=>true
+                 ,"showProjectShortName"=>true
                  ,"showNavLinks"=>true
                  ,"url_form_action"=>$TPL["url_alloc_projectList"]
                  ,"form_name"=>"projectList_filter"

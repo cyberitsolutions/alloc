@@ -424,6 +424,7 @@ class project extends db_entity {
       $summary = "\n<tr>";
       $_FORM["showProjectName"]   and $summary.= "\n<th>Project</th>";
       $_FORM["showProjectLink"]   and $summary.= "\n<th>Project</th>";
+      $_FORM["showProjectShortName"] and $summary.= "\n<th>Nick</th>";
       $_FORM["showClient"]        and $summary.= "\n<th>Client</th>";
       $_FORM["showProjectType"]   and $summary.= "\n<th>Type</th>";
       $_FORM["showProjectStatus"] and $summary.= "\n<th>Status</th>";
@@ -437,6 +438,7 @@ class project extends db_entity {
     $summary[] = "<tr>";
     $_FORM["showProjectName"]     and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
     $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";
+    $_FORM["showProjectShortName"] and $summary[]= "  <td>".$row["projectShortName"]."</td>";
     $_FORM["showClient"]          and $summary[] = "  <td>".$row["clientName"]."&nbsp;</td>";
     $_FORM["showProjectType"]     and $summary[] = "  <td>".ucwords($row["projectType"])."&nbsp;</td>";
     $_FORM["showProjectStatus"]   and $summary[] = "  <td>".ucwords($row["projectStatus"])."&nbsp;</td>";
@@ -464,6 +466,7 @@ class project extends db_entity {
                 ,"showHeader"         => "A descriptive html header row"
                 ,"showProjectName"    => "Show the projects name"
                 ,"showProjectLink"    => "Show a link to the project"
+                ,"showProjectShortName" => "Show the projects abbreviated name."
                 ,"showClient"         => "Show the projects client"
                 ,"showProjectType"    => "Show the project type"
                 ,"showProjectStatus"  => "Show the project status"
