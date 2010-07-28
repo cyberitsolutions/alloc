@@ -20,15 +20,26 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/stats.inc.php");
-require_once(dirname(__FILE__)."/backups.inc.php");
-require_once(dirname(__FILE__)."/whatsnew.inc.php");
 
-class tools_module extends module {
+class whatsnew {
+
+  var $folders = array();
+
+  function whatsnew() {
+  }
+
+  function set_id() { // dummy so can re-use the get_attachment.php script
+    return true;
+  }
+
+  function select() { // dummy so can re-use the get_attachment.php script
+    return true;
+  }
+
+  function has_attachment_permission($person) {
+    return true;
+  }
 }
-
-
-
 
 
 ?>

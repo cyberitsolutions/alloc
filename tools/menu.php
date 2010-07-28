@@ -35,6 +35,7 @@ $misc_options = array(array("url"=>"reminderList"            ,"text"=>"Reminders
                      ,array("url"=>"backup"                  ,"text"=>"Database & File Backup","entity"=>""                   ,"function"=>"has_backup_perm")
                      ,array("url"=>"productList"             ,"text"=>"Products"              ,"entity"=>"product"            ,"action"=>PERM_READ_WRITE)
                      ,array("url"=>"sourceCodeList"          ,"text"=>"allocPSA Source Code"      ,"entity"=>"")
+                     ,array("url"=>"whatsnew"                ,"text"=>"allocPSA Deployment Changelog"      ,"entity"=>"", "function"=> "has_whatsnew_files")
                      );
 
   //,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
@@ -55,6 +56,15 @@ $finance_options = array(array("url"=>"tf", "params"=>"", "text"=>"New Tagged Fu
 
 
                         #,array("url"=>"reconciliationReport", "params"=>"", "text"=>"Reconciliation Report", "entity"=>"transaction", "action"=>PERM_FINANCE_RECONCILIATION_REPORT)
+
+function has_whatsnew_files() {
+ $rows = get_attachments("whatsnew", 0);
+  if (count($rows)) {
+    return true;
+  }
+}
+
+
 function show_misc_options($template) {
   global $misc_options, $TPL;
 
