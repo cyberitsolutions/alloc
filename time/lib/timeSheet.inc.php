@@ -62,13 +62,11 @@ class timeSheet extends db_entity {
       return true;
     } 
 
-    if ($this->get_value("status") == "manager") { 
-      $project = $this->get_foreign_object("project");
-      $managers = $project->get_timeSheetRecipients() or $managers = array();
-      if (in_array($current_user->get_id(), $managers)) {
-        return true;
-      }
-    } 
+    $project = $this->get_foreign_object("project");
+    $managers = $project->get_timeSheetRecipients() or $managers = array();
+    if (in_array($current_user->get_id(), $managers)) {
+      return true;
+    }
 
     // This allows people with transactions on this time sheet who may not
     // actually be this time sheets owner to view this time sheet.
@@ -1296,6 +1294,9 @@ EOD;
     }
   }
 
+  function has_attachment_permission() {
+    return $this->is_owner();
+  }
 
 }  
 

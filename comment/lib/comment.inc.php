@@ -61,6 +61,15 @@ class comment extends db_entity {
     $e = new $entity;
     $e->set_id($this->get_value("commentLinkID"));
     $e->select();
+    
+    // If the parent is a comment, then go up one more level
+    if ($entity == "comment") {
+      $entity = $e->get_value("commentType");
+      $pe = new $entity;
+      $pe->set_id($e->get_value("commentLinkID"));
+      $pe->select();
+      $e = $pe;
+    }
     return $e->is_owner($current_user);
   }
 
