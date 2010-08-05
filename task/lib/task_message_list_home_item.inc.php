@@ -31,10 +31,10 @@ class task_message_list_home_item extends home_item {
     global $current_user, $tasks_date;
     $q = sprintf("SELECT * 
                   FROM task 
-                  WHERE (task.taskStatus != 'closed' AND task.taskTypeID = %d) 
+                  WHERE (task.taskStatus != 'closed' AND task.taskTypeID = 'Message') 
                   AND (personID = %d) 
                   ORDER BY priority
-                 ",TT_MESSAGE,$current_user->get_id());
+                 ",$current_user->get_id());
 
     $db = new db_alloc;
     $db->query($q);

@@ -105,9 +105,9 @@ class task_graph
     $this->image = imageCreate($this->width, $this->height);
 
     // 'Constant' colours for task types
-    $this->task_colors = array(TT_TASK  => array("actual"=>imageColorAllocate($this->image, 133, 164, 241)
+    $this->task_colors = array('Task'   => array("actual"=>imageColorAllocate($this->image, 133, 164, 241)
                                                 ,"target"=>imageColorAllocate($this->image, 190, 219, 255))
-                              ,TT_PHASE => array("actual"=>imageColorAllocate($this->image, 153, 153, 153)
+                              ,'Parent' => array("actual"=>imageColorAllocate($this->image, 153, 153, 153)
                                                 ,"target"=>imageColorAllocate($this->image, 204, 204, 204)));
 
     // allocate all required colors
@@ -187,7 +187,7 @@ class task_graph
     $this->y = $y;              // Store Y back in class variable for another time
 
     // Register milestones
-    if ($t["taskTypeID"] == TT_MILESTONE && ($date_target_completion || $date_actual_completion)) {
+    if ($t["taskTypeID"] == 'Milestone' && ($date_target_completion || $date_actual_completion)) {
       if ($date_actual_completion) {
         $date_milestone = $date_actual_completion;
       } else {
@@ -316,22 +316,22 @@ class task_graph
     imagettftext($this->image, ALLOC_FONT_SIZE, 0,  $this->task_padding, $y+10, $this->color_text, ALLOC_FONT, "Legend:");
     $y += 20;
 
-    $this->draw_legend_bar($left_x, $y, "Target task period", $this->task_colors[TT_TASK]["target"], true);
-    $this->draw_legend_bar($center_x, $y, "Target phase period", $this->task_colors[TT_PHASE]["target"], true);
+    $this->draw_legend_bar($left_x, $y, "Target task period", $this->task_colors['Task']["target"], true);
+    $this->draw_legend_bar($center_x, $y, "Target phase period", $this->task_colors['Parent']["target"], true);
     $y += 12;
 
-    $this->draw_legend_bar($left_x, $y, "Actual task period", $this->task_colors[TT_TASK]["actual"], true);
-    $this->draw_legend_bar($center_x, $y, "Actual phase period", $this->task_colors[TT_PHASE]["actual"], true);
+    $this->draw_legend_bar($left_x, $y, "Actual task period", $this->task_colors['Task']["actual"], true);
+    $this->draw_legend_bar($center_x, $y, "Actual phase period", $this->task_colors['Parent']["actual"], true);
     $y += 12;
 
-    $this->draw_legend_bar($left_x, $y, "Forecast task period", $this->task_colors[TT_TASK]["actual"], false);
-    $this->draw_legend_bar($center_x, $y, "Forecast phase period", $this->task_colors[TT_PHASE]["actual"], false);
+    $this->draw_legend_bar($left_x, $y, "Forecast task period", $this->task_colors['Task']["actual"], false);
+    $this->draw_legend_bar($center_x, $y, "Forecast phase period", $this->task_colors['Parent']["actual"], false);
     $y += 12;
 
-    $this->draw_legend_marker($left_x, $y, "Start date (completion date not known)", $this->task_colors[TT_TASK]["actual"], true);
+    $this->draw_legend_marker($left_x, $y, "Start date (completion date not known)", $this->task_colors['Task']["actual"], true);
     $y += 12;
 
-    $this->draw_legend_marker($left_x, $y, "Completion date (start date not known)", $this->task_colors[TT_TASK]["actual"], false);
+    $this->draw_legend_marker($left_x, $y, "Completion date (start date not known)", $this->task_colors['Parent']["actual"], false);
     $y += 12;
 
     $this->y = $y;              // Store Y back in class variable for another time

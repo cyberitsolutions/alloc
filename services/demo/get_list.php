@@ -15,7 +15,7 @@ try {
 
   echo $alloc->get_help();
 
-  #$str = $alloc->get_list($key, "task", array('return'=>'array',"taskView"=>"byProject","personID"=>60, "taskTypeID"=>2));
+  #$str = $alloc->get_list($key, "task", array('return'=>'array',"taskView"=>"byProject","personID"=>60, "taskTypeID"=>"Parent"));
   #$str = $alloc->get_list($key, "transaction", array('return'=>'array', 'debug'=>0));
   #$str = $alloc->get_list($key, "comment", array('entity'=>'task', 'entityID'=>12643));
 

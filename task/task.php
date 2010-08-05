@@ -50,7 +50,7 @@ define("PAGE_IS_PRINTABLE",1);
 
   function show_task_children($template) {
     global $TPL, $task;
-    if ($task->get_value("taskTypeID") == TT_PHASE) {
+    if ($task->get_value("taskTypeID") == "Parent") {
       include_template($template);
     }
   }
@@ -251,8 +251,7 @@ if ($project->get_id()) {
 $parent_task = $task->get_foreign_object("task", "parentTaskID");
 $parent_task->set_tpl_values(DST_HTML_ATTRIBUTE, "parentTask_");
 
-$taskType = $task->get_foreign_object("taskType", "taskTypeID");
-$taskType->set_tpl_values(DST_HTML_ATTRIBUTE, "taskType_");
+$TPL["taskType_taskTypeID"] = $task->get_value("taskTypeID");
 
 $q = sprintf("SELECT clientID FROM project LEFT JOIN task ON task.projectID = project.projectID WHERE taskID = %d",$task->get_id());
 $db->query($q);
@@ -320,9 +319,7 @@ if ($task->get_id()) {
   $_GET["media"] == "print" and $options["showDescription"] = true;
   $_GET["media"] == "print" and $options["showComments"] = true;
   $TPL["task_children_summary"] = task::get_list($options);
-
-  $taskType = $task->get_foreign_object("taskType");
-  $TPL["task_taskType"] = $taskType->get_value("taskTypeName");
+  $TPL["task_taskType"] = $task->get_value("taskTypeID");
 } else {
   $TPL["task_children_summary"] = "";
   $TPL["task_taskType"] = "Task";

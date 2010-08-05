@@ -303,10 +303,10 @@ class person extends db_entity {
       $db = new db_alloc;
       $query = sprintf("SELECT * 
                           FROM task 
-                         WHERE taskTypeID = %d
+                         WHERE taskTypeID = 'Message'
                            AND personID = %d
                            AND taskStatus != 'closed'"
-                       ,TT_MESSAGE,$this->get_id());
+                       ,$this->get_id());
       $db->query($query);
       if ($db->next_record()) {
         return true;

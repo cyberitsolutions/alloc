@@ -75,8 +75,8 @@ class page {
     if (isset($modules["time"]) && $modules["time"]) {
       $str[] = "<option value=\"".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
     }
-    $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".TT_FAULT."\">New Fault</option>";
-    $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=".TT_MESSAGE."\">New Message</option>";
+    $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=Fault\">New Fault</option>";
+    $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=Message\">New Message</option>";
     if (have_entity_perm("project", PERM_CREATE, $current_user)) {
       $str[] = "<option value=\"".$TPL["url_alloc_project"]."\">New Project</option>";
     } 

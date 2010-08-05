@@ -45,11 +45,13 @@ class meta extends db_entity {
                      ,"transactionType"           => "Transaction Types"
                      ,"timeSheetItemMultiplier"   => "Time Sheet Multipliers"
                      #,"productSaleStatus"         => "Product Sale Statuses"
+                     #,"taskType"                 => "Task Types"
                      );
 
   function __construct($table="") {
     $this->classname = $table;
     $this->data_table = $table;
+    $this->display_field_name = $table."ID";
     $this->key_field = $table."ID";
     $this->data_fields = array($table."Seq"
                               ,$table."Active"

@@ -23,7 +23,6 @@
 
 require_once(dirname(__FILE__)."/task.inc.php");
 require_once(dirname(__FILE__)."/taskSearchable.inc.php");
-require_once(dirname(__FILE__)."/taskType.inc.php");
 require_once(dirname(__FILE__)."/task_calendar.inc.php");
 require_once(dirname(__FILE__)."/task_calendar_home_item.inc.php");
 require_once(dirname(__FILE__)."/top_ten_tasks_home_item.inc.php");

@@ -311,11 +311,11 @@ INSERT INTO config (name,value,type) VALUES ('allocSessionMinutes', '540', 'text
 --
 
 
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (1,'Task',true,10);
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (2,'Parent',true,20);
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (3,'Message',true,30);
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (4,'Fault',true,40);
-INSERT INTO taskType (taskTypeID, taskTypeName, taskTypeActive, taskTypeSequence) VALUES (5,'Milestone',true,50);
+INSERT INTO taskType (taskTypeID, taskTypeSeq, taskTypeActive) VALUES ('Task'     ,10,true);
+INSERT INTO taskType (taskTypeID, taskTypeSeq, taskTypeActive) VALUES ('Parent'   ,20,true);
+INSERT INTO taskType (taskTypeID, taskTypeSeq, taskTypeActive) VALUES ('Message'  ,30,true);
+INSERT INTO taskType (taskTypeID, taskTypeSeq, taskTypeActive) VALUES ('Fault'    ,40,true);
+INSERT INTO taskType (taskTypeID, taskTypeSeq, taskTypeActive) VALUES ('Milestone',50,true);
 
 --
 -- Dumping data for table timeUnit
