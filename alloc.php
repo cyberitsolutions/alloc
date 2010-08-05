@@ -56,13 +56,6 @@ define("ALLOC_GD_IMAGE_TYPE","PNG");
 
 define("DATE_FORMAT","d/m/Y");
 
-// Task type definitions, these are shared across modules, so we're specifying them here
-define("TT_TASK"     , 1);
-define("TT_PHASE"    , 2);
-define("TT_MESSAGE"  , 3);
-define("TT_FAULT"    , 4);
-define("TT_MILESTONE", 5);
-
 // Source and destination modifiers for various values
 define("SRC_DATABASE"       , 1);  // Reading the value from the database
 define("SRC_VARIABLE"       , 2);  // Reading the value from a PHP variable (except a form variable)

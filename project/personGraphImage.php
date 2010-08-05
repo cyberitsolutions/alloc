@@ -34,7 +34,7 @@ $options["taskStatus"] = "open";
 $options["showTaskID"] = true;
 
 if ($_GET["graph_type"] == "phases") {
-  $options["taskTypeID"] = TT_PHASE;
+  $options["taskTypeID"] = 'Parent';
 }
 
 $task_graph = new task_graph;

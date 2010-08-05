@@ -76,7 +76,7 @@ if ($_POST["run_mass_update"]) {
           $task->set_value("parentTaskID", $_POST["parentTaskID"]);
         }
         // If task is a parent, change the project of that tasks children
-        if ($_POST["projectID"] != $task->get_value("projectID") && $task->get_value("taskTypeID") == 2) { 
+        if ($_POST["projectID"] != $task->get_value("projectID") && $task->get_value("taskTypeID") == "Parent") { 
           $task->update_children("projectID",$_POST["projectID"]);   
         }
         $task->set_value("projectID", $_POST["projectID"]);

@@ -193,7 +193,7 @@ class task extends db_entity {
       $this->set_value("taskSubStatus",$taskSubStatus);
     }
 
-    if ($this->get_value("taskTypeID") == TT_PHASE) {
+    if ($this->get_value("taskTypeID") == "Parent") {
       $this->close_off_children_recursive();
     }
     $this->has_just_been_closed = true;
@@ -233,12 +233,11 @@ class task extends db_entity {
     global $current_user;
 
     // Get the task type
-    $taskTypes = get_cached_table("taskType");
-    $taskTypeName = $taskTypes[$this->get_value("taskTypeID")]["taskTypeName"];
+    $taskTypeName = $this->get_value("taskTypeID");
     $label = $this->get_priority_label();
     $reminderInterval = "Day";
     $intervalValue = $this->get_value("priority");
-    strtolower($taskTypeName) == "parent" and $taskTypeName.= " Task";
+    $taskTypeName == "Parent" and $taskTypeName.= " Task";
 
     $subject = $taskTypeName." Reminder: ".$this->get_id()." ".$this->get_task_name()." [".$label."]";
     $message = "\n\n".$subject;
@@ -332,7 +331,7 @@ class task extends db_entity {
       $t->read_db_record($db);
       $t->set_value($field,$value);
       $t->save();
-      if ($t->get_value("taskTypeID") == 2) { // 2==parent
+      if ($t->get_value("taskTypeID") == "Parent") {
         $t->update_children($field,$value);
       }
     }
@@ -354,7 +353,7 @@ class task extends db_entity {
       $query = sprintf("SELECT taskID AS value, taskName AS label
                         FROM task 
                         WHERE projectID= '%d' 
-                        AND taskTypeID = 2 
+                        AND taskTypeID = 'Parent'
                         AND (taskStatus != 'closed' or taskID = %d)
                         ORDER BY taskName", $projectID, $parentTaskID);
       $options = page::select_options($query, $parentTaskID,70);
@@ -597,8 +596,8 @@ class task extends db_entity {
     $TPL["managerPersonOptions"] = task::get_managerPersonList_dropdown($projectID);
 
     // TaskType Options
-    $taskType = new taskType;
-    $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
+    $taskType = new meta("taskType");
+    $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeID");
     $TPL["taskTypeOptions"] = page::select_options($taskType_array,$this->get_value("taskTypeID"));
 
     // Project dropdown
@@ -644,10 +643,7 @@ class task extends db_entity {
       $TPL["parentTask"] = $t->get_display_value();
 
       // Task Type label
-      $tt = new taskType;
-      $tt->set_id($this->get_value("taskTypeID"));
-      $tt->select();
-      $TPL["taskType"] = $tt->get_display_value();
+      $TPL["taskType"] = $this->get_value("taskTypeID"); 
 
       // Priority
       $TPL["priority"] = $this->get_value("priority");
@@ -682,15 +678,14 @@ class task extends db_entity {
 
   function get_task_image() {
     global $TPL;
-    $taskTypes = get_cached_table("taskType");
-    return "<img class=\"taskType\" title=\"".$taskTypes[$this->get_value("taskTypeID")]["taskTypeName"]."\" src=\"".$TPL["url_alloc_images"]."taskType_".$this->get_value("taskTypeID").".gif\">";
+    return "<img class=\"taskType\" title=\"".$this->get_value("taskTypeID")."\" src=\"".$TPL["url_alloc_images"]."taskType_".$this->get_value("taskTypeID").".gif\">";
   }
 
   function get_task_name($_FORM=array()) {
 
     $_FORM["prefixTaskID"] and $id = $this->get_id()." ";
 
-    if ($this->get_value("taskTypeID") == TT_PHASE && ($_FORM["return"] == "html" || $_FORM["return"] == "arrayAndHtml")) {
+    if ($this->get_value("taskTypeID") == "Parent" && ($_FORM["return"] == "html" || $_FORM["return"] == "arrayAndHtml")) {
       $rtn = "<strong>".$id.$this->get_value("taskName")."</strong>";
     } else {
       $rtn = $id.$this->get_value("taskName");
@@ -893,11 +888,11 @@ class task extends db_entity {
 
     // If many create an SQL taskTypeID in (set) 
     if (is_array($filter["taskTypeID"]) && count($filter["taskTypeID"])) {
-      $sql[] = "(taskTypeID in (".implode(",",$filter["taskTypeID"])."))";
+      $sql[] = "(taskTypeID in ('".implode("','",$filter["taskTypeID"])."'))";
     
     // Else if only one taskTypeID
     } else if ($filter["taskTypeID"]) {
-      $sql[] = sprintf("(taskTypeID = %d)",$filter["taskTypeID"]);
+      $sql[] = sprintf("(taskTypeID = '%s')",$filter["taskTypeID"]);
     }
 
     // Filter on taskID
@@ -1255,8 +1250,8 @@ class task extends db_entity {
       $dateActualCompletion = page::calendar("dateActualCompletion");
       $priority_options = task::get_task_priority_dropdown(3);
       $taskStatus_options = page::select_options(task::get_task_statii_array(true));
-      $taskType = new taskType;
-      $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
+      $taskType = new meta("taskType");
+      $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeID");
       $taskType_options = page::select_options($taskType_array);
       $js = "makeAjaxRequest('".$TPL["url_alloc_updateParentTasks"]."projectID='+$(this).val(), 'parentTaskDropdown')";
       $project_dropdown = "<select name=\"projectID\" id=\"projectID\" onChange=\"".$js."\"><option value=\"\">".task::get_project_options()."</select>";
@@ -1378,7 +1373,7 @@ class task extends db_entity {
 
   function get_new_subtask_link() {
     global $TPL;
-    if (is_object($this) && $this->get_value("taskTypeID") == TT_PHASE) {
+    if (is_object($this) && $this->get_value("taskTypeID") == "Parent") {
       return "<a class=\"noprint\" href=\"".$TPL["url_alloc_task"]."projectID=".$this->get_value("projectID")."&parentTaskID=".$this->get_id()."\">New Subtask</a>";
     }
   }
@@ -1590,7 +1585,7 @@ class task extends db_entity {
                 ,"dateOne"              => "From Date (must be used with a d_* taskDate option)"
                 ,"dateTwo"              => "To Date (must be used with a d_* taskDate option)"
                 ,"taskTimeSheetStatus"  => "my_open | not_assigned | my_closed | my_recently_closed | all"
-                ,"taskTypeID"           => "1 = Task | 2 = Parent | 3 = Message | 4 = Fault | 5 = Milestone"
+                ,"taskTypeID"           => "Task | Parent | Message | Fault | Milestone"
                 ,"current_user"         => "Lets us fake a current_user id for when generating task emails and there is no \$current_user object"
                 ,"taskID"               => "Task ID"
                 ,"taskName"             => "Task Name (eg: *install*)"
@@ -1694,8 +1689,8 @@ class task extends db_entity {
     $rtn["managerPersonOptions"] = "\n<option value=\"\"> ";
     $rtn["managerPersonOptions"].= page::select_options(person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
 
-    $taskType = new taskType;
-    $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeName");
+    $taskType = new meta("taskType");
+    $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeID");
     $rtn["taskTypeOptions"] = page::select_options($taskType_array,$_FORM["taskTypeID"]);
 
     $_FORM["taskView"] and $rtn["taskView_checked_".$_FORM["taskView"]] = " checked";
@@ -1927,8 +1922,6 @@ class task extends db_entity {
     $rows = array();
 
     $people_cache = get_cached_table("person");
-    $taskTypes = get_cached_table("taskType");
-
 
     $options = array("return"       => "array"
                     ,"entityType"   => "task"
@@ -1991,7 +1984,7 @@ class task extends db_entity {
             $changeDescription = "Task manager changed from " . $people_cache[$oldValue]["name"] . " to " . $people_cache[$newValue]["name"] . ".";
           break;
           case 'taskTypeID':
-            $changeDescription = "Task type was changed from " . $taskTypes[$oldValue]["taskTypeName"] . " to " . $taskTypes[$newValue]["taskTypeName"] . ".";
+            $changeDescription = "Task type was changed from " . $oldValue . " to " . $newValue . ".";
           break;
           case 'taskSubStatus':
             $taskStatii = task::get_task_statii_array(true);

@@ -341,7 +341,7 @@ CREATE TABLE task (
   personID integer default NULL,
   managerID integer default NULL,
   parentTaskID integer DEFAULT NULL,
-  taskTypeID integer NOT NULL default '1',
+  taskTypeID varchar(255) NOT NULL,
   taskModifiedUser integer DEFAULT NULL,
   taskCommentTemplateID integer default NULL,
   duplicateTaskID integer default NULL,
@@ -388,14 +388,6 @@ CREATE TABLE commentTemplate (
   commentTemplateText text,
   commentTemplateType varchar(255) DEFAULT NULL,
   commentTemplateModifiedTime datetime DEFAULT NULL
-) ENGINE=InnoDB PACK_KEYS=0;
-
-DROP TABLE IF EXISTS taskType;
-CREATE TABLE taskType (
-  taskTypeID integer NOT NULL auto_increment PRIMARY KEY,
-  taskTypeName varchar(255) default NULL,
-  taskTypeActive boolean default true,
-  taskTypeSequence integer default NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS tf;
@@ -703,6 +695,15 @@ CREATE TABLE skillProficiency (
   skillProficiencySeq integer NOT NULL,
   skillProficiencyActive boolean DEFAULT true
 )ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS taskType;
+CREATE TABLE taskType (
+  taskTypeID varchar(255) PRIMARY KEY,
+  taskTypeSeq integer NOT NULL,
+  taskTypeActive boolean default true
+) ENGINE=InnoDB PACK_KEYS=0;
 
 
 

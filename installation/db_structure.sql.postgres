@@ -316,7 +316,7 @@ CREATE TABLE task (
   personID integer default NULL,
   managerID integer default NULL,
   parentTaskID integer DEFAULT NULL,
-  taskTypeID integer NOT NULL default '1',
+  taskTypeID varchar(255) NOT NULL,
   taskModifiedUser integer DEFAULT NULL,
   taskCommentTemplateID integer default NULL,
   duplicateTaskID integer default NULL,
@@ -358,13 +358,6 @@ CREATE TABLE commentTemplate (
   commentTemplateText text,
   commentTemplateType varchar(255) DEFAULT NULL,
   commentTemplateModifiedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL
-) ;
-
-CREATE TABLE taskType (
-  taskTypeID serial PRIMARY KEY,
-  taskTypeName varchar(255) default NULL,
-  taskTypeActive boolean default true,
-  taskTypeSequence integer default NULL
 ) ;
 
 CREATE TABLE tf (
@@ -646,6 +639,14 @@ CREATE TABLE skillProficiency (
   skillProficiencySeq integer NOT NULL,
   skillProficiencyActive boolean DEFAULT true
 );
+
+
+
+CREATE TABLE taskType (
+  taskTypeID varchar(255) PRIMARY KEY,
+  taskTypeSeq integer default NULL,
+  taskTypeActive boolean default true
+) ;
 
 
 

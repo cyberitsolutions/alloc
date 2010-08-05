@@ -61,7 +61,7 @@ function import_csv($infile) {
         $task->set_value('creatorID', $current_user->get_id());
         $task->set_value('managerID', $projectManager);
         // Hardcoded defaults
-        $task->set_value('taskTypeID', '1');
+        $task->set_value('taskTypeID', 'Task');
         $task->set_value('priority', '3');
         $task->set_value('parentTaskID', '');
         $task->set_value('dateCreated', date('Y-m-d H:i:s'));
@@ -184,14 +184,10 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
       }
       $task->set_value('creatorID', $current_user->get_id());
       $task->set_value('managerID', $project_manager_ID);
-      // We make some (possibly wrong) assumptions about task type IDs here.
-      $task->set_value('taskTypeID', '15');
       if($taskXML->hasAttribute("type") and $taskXML->getAttribute("type") == "milestone") {
-        // Milestone task
-        $task->set_value('taskTypeID', '5');
+        $task->set_value('taskTypeID', 'Milestone');
       } else {
-        // Otherwise, a regular task
-        $task->set_value('taskTypeID', '1');
+        $task->set_value('taskTypeID', 'Task');
       }
       $task->set_value('taskStatus', 'open');
       $task->set_value('taskSubStatus', 'notstarted');
@@ -325,7 +321,7 @@ function export_gnome_planner($projectID) {
     $constraintNode->setAttribute("time", export_planner_date($taskStartDate));
     $taskNode->appendChild($constraintNode);
 
-    if($task["taskTypeID"] == "5") { // Milestone
+    if($task["taskTypeID"] == "Milestone") { 
       $taskNode->setAttribute("type", "milestone");
     }
 
