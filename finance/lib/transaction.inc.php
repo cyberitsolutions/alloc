@@ -233,12 +233,12 @@ class transaction extends db_entity {
 
   function get_transaction_link() {
     $rtn = "<a href=\"".$this->get_url()."\">";
-    $rtn.= $this->get_transaction_name();
+    $rtn.= $this->get_name();
     $rtn.= "</a>";
     return $rtn;
   }
 
-  function get_transaction_name() {
+  function get_name() {
     $rtn = $this->get_value("product");
     return $rtn;
   }
@@ -406,7 +406,7 @@ class transaction extends db_entity {
 
       $row["amount"] = $amount;
       $row["transactionURL"] = $t->get_url();
-      $row["transactionName"] = $t->get_transaction_name($_FORM);
+      $row["transactionName"] = $t->get_name($_FORM);
       $row["transactionLink"] = $t->get_transaction_link($_FORM);
       $row["transactionTypeLink"] = $t->get_transaction_type_link() or $row["transactionTypeLink"] = $row["transactionType"];
       $row["transactionSortDate"] = format_date("Y-m-d",$row["transactionSortDate"]); 

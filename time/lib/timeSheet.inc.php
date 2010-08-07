@@ -498,7 +498,7 @@ class timeSheet extends db_entity {
       $t = new task;
       $t->set_id($taskID);
       $t->select();
-      $tasks[$taskID] = $t->get_id()." ".$t->get_task_name();
+      $tasks[$taskID] = $t->get_id()." ".$t->get_name();
     }
 
     $dropdown_options = page::select_options($tasks, $taskID, 100);
@@ -593,8 +593,8 @@ class timeSheet extends db_entity {
 
       $p = new project();
       $p->read_db_record($db);
-      #$row["projectName"] = $p->get_project_name();
-      $row["projectLink"] = $t->get_link($p->get_project_name($_FORM["showShortProjectLink"]));
+      #$row["projectName"] = $p->get_name();
+      $row["projectLink"] = $t->get_link($p->get_name($_FORM["showShortProjectLink"]));
       $summary.= timeSheet::get_list_tr($row,$_FORM);
       $rows[$row["timeSheetID"]] = $row;
     }
@@ -1129,7 +1129,7 @@ EOD;
         $tsi->set_value("timeSheetItemDuration",$duration);
         $tsi->set_value("timeSheetItemDurationUnitID", $row_projectPerson["rateUnitID"]);
         if (is_object($task)) {
-          $tsi->set_value("description",$task->get_task_name());
+          $tsi->set_value("description",$task->get_name());
           $tsi->set_value("taskID",sprintf("%d",$taskID));
           $_POST["timeSheetItem_taskID"] = sprintf("%d",$taskID); // this gets used in timeSheetItem->save();
         }
@@ -1234,7 +1234,7 @@ EOD;
 
       $project = $this->get_foreign_object("project");
 
-      $subject = "Time Sheet Comment: ".$this->get_id()." ".$project->get_project_name(1)." ".$subject_extra;
+      $subject = "Time Sheet Comment: ".$this->get_id()." ".$project->get_name(1)." ".$subject_extra;
       $email->set_subject($subject);
       $email->set_body($body);
       $email->set_message_type($type);

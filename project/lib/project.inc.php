@@ -80,7 +80,7 @@ class project extends db_entity {
     return $url;
   }
 
-  function get_project_name($shortest=false) {
+  function get_name($shortest=false) {
     if ($shortest && $this->get_value("projectShortName")) {
       return $this->get_value("projectShortName");
     }
@@ -89,7 +89,7 @@ class project extends db_entity {
 
   function get_project_link($shortest=false) {
     global $TPL;
-    return "<a href=\"".$TPL["url_alloc_project"]."projectID=".$this->get_id()."\">".$this->get_project_name($shortest)."</a>";
+    return "<a href=\"".$TPL["url_alloc_project"]."projectID=".$this->get_id()."\">".$this->get_name($shortest)."</a>";
   }
 
   function is_owner($person = "") {
@@ -394,11 +394,11 @@ class project extends db_entity {
       $print = true;
       $p = new project;
       $p->read_db_record($db);
-      $row["projectName"] = $p->get_project_name();
+      $row["projectName"] = $p->get_name();
       $row["projectLink"] = $p->get_project_link();
       $row["navLinks"] = $p->get_navigation_links();
       $summary.= project::get_list_tr($row,$_FORM);
-      $label = $p->get_project_name();
+      $label = $p->get_name();
       $_FORM["showProjectType"] and $label.= " [".$p->get_project_type()."]";
       $summary_ops[$row["projectID"]] = $label; 
       $rows[$row["projectID"]] = $row;
