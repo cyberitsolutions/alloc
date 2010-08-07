@@ -81,7 +81,7 @@ class task extends db_entity {
       $othertask->set_id($this->get_value("duplicateTaskID"));
       $othertask->select();
       if ($othertask->get_value("duplicateTaskID")) {
-        $TPL["message"][] = "Task ".$this->get_value("duplicateTaskID")." ".$othertask->get_task_name()." is a duplicate. 
+        $TPL["message"][] = "Task ".$this->get_value("duplicateTaskID")." ".$othertask->get_name()." is a duplicate. 
                              Task may not be a duplicate of a duplicate.";
         alloc_redirect($TPL["url_alloc_task"]."taskID=".$this->get_id());
       }
@@ -239,7 +239,7 @@ class task extends db_entity {
     $intervalValue = $this->get_value("priority");
     $taskTypeName == "Parent" and $taskTypeName.= " Task";
 
-    $subject = $taskTypeName." Reminder: ".$this->get_id()." ".$this->get_task_name()." [".$label."]";
+    $subject = $taskTypeName." Reminder: ".$this->get_id()." ".$this->get_name()." [".$label."]";
     $message = "\n\n".$subject;
     $message.= "\n\n".$this->get_url(true);
     $this->get_value("taskDescription") and $message.= "\n\n".$this->get_value("taskDescription");
@@ -671,7 +671,7 @@ class task extends db_entity {
 
   function get_task_link($_FORM=array()) {
     $rtn = "<a href=\"".$this->get_url()."\">";
-    $rtn.= $this->get_task_name($_FORM);
+    $rtn.= $this->get_name($_FORM);
     $rtn.= "</a>";
     return $rtn;
   }
@@ -681,7 +681,7 @@ class task extends db_entity {
     return "<img class=\"taskType\" title=\"".$this->get_value("taskTypeID")."\" src=\"".$TPL["url_alloc_images"]."taskType_".$this->get_value("taskTypeID").".gif\">";
   }
 
-  function get_task_name($_FORM=array()) {
+  function get_name($_FORM=array()) {
 
     $_FORM["prefixTaskID"] and $id = $this->get_id()." ";
 
@@ -1043,7 +1043,7 @@ class task extends db_entity {
         $row["taskURL"] = $task->get_url();
         $row["project_name"] = $db->f("projectName");
         $row["projectPriority"] = $db->f("projectPriority");
-        $row["taskName"] = $task->get_task_name($_FORM);
+        $row["taskName"] = $task->get_name($_FORM);
         $row["taskLink"] = $task->get_task_link($_FORM);
         $row["taskTypeImage"] = $task->get_task_image();
         $row["taskStatusLabel"] = $task->get_task_status("label");
@@ -1113,7 +1113,7 @@ class task extends db_entity {
         $t = new task;
         $t->read_db_record($db);
         $row["taskURL"] = $t->get_url();
-        $row["taskName"] = $t->get_task_name($_FORM);
+        $row["taskName"] = $t->get_name($_FORM);
         $row["taskLink"] = $t->get_task_link($_FORM);
         $row["taskTypeImage"] = $t->get_task_image();
         $row["newSubTask"] = $t->get_new_subtask_link();

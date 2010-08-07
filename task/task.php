@@ -328,8 +328,8 @@ if ($task->get_id()) {
 
 if ($taskID) {
   $TPL["taskTypeImage"] = $task->get_task_image();
-  $TPL["taskSelfLink"] = "<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_task_name()."</a>";
-  $TPL["main_alloc_title"] = "Task " . $task->get_id() . ": " . $task->get_task_name()." - ".APPLICATION_NAME;
+  $TPL["taskSelfLink"] = "<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_name()."</a>";
+  $TPL["main_alloc_title"] = "Task " . $task->get_id() . ": " . $task->get_name()." - ".APPLICATION_NAME;
   $TPL["task_exists"] = true;
 } else {
   $TPL["taskSelfLink"] = "New Task";

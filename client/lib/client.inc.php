@@ -104,13 +104,13 @@ class client extends db_entity {
     return "<select id=\"clientContactID\" name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
   }
  
-  function get_client_name() {
+  function get_name() {
     return $this->get_value("clientName");
   }
 
   function get_client_link() {
     global $TPL;
-    return "<a href=\"".$TPL["url_alloc_client"]."clientID=".$this->get_id()."\">".$this->get_client_name()."</a>";
+    return "<a href=\"".$TPL["url_alloc_client"]."clientID=".$this->get_id()."\">".$this->get_name()."</a>";
   }
 
   function get_list_filter($filter=array()) {

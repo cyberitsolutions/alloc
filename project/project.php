@@ -754,9 +754,9 @@ DONE;
   $TPL["message_help"][] = $str;
 
 } else {
-  $TPL["main_alloc_title"] = "Project " . $project->get_id() . ": " . $project->get_project_name() . " - ".APPLICATION_NAME;
+  $TPL["main_alloc_title"] = "Project " . $project->get_id() . ": " . $project->get_name() . " - ".APPLICATION_NAME;
   $TPL["projectSelfLink"] = "<a href=\"". $project->get_url() . "\">";
-  $TPL["projectSelfLink"] .=  sprintf("%d %s", $project->get_id(), $project->get_project_name());
+  $TPL["projectSelfLink"] .=  sprintf("%d %s", $project->get_id(), $project->get_name());
   $TPL["projectSelfLink"] .= "</a>";
 }
 

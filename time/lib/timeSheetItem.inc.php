@@ -58,7 +58,7 @@ class timeSheetItem extends db_entity {
       $selectedTask = new task();
       $selectedTask->set_id($_POST["timeSheetItem_taskID"]);
       $selectedTask->select();
-      $taskName = $selectedTask->get_task_name();
+      $taskName = $selectedTask->get_name();
 
       if (!$selectedTask->get_value("dateActualStart")) {
         $selectedTask->set_value("dateActualStart", $this->get_value("dateTimeSheetItem"));

@@ -360,7 +360,7 @@ $TPL["seekClientReimbursementOption"] = $scr_label.$scr_hidden;
 $c = new client;
 $c->set_id($expenseForm->get_value("clientID"));
 $c->select();
-$clientName = $c->get_client_name();
+$clientName = $c->get_name();
 $clientName and $TPL["printer_clientID"] = $clientName;
 
 

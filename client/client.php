@@ -356,8 +356,8 @@ if (!$clientID) {
   $TPL["main_alloc_title"] = "New Client - ".APPLICATION_NAME;
   $TPL["clientSelfLink"] = "New Client";
 } else {
-  $TPL["main_alloc_title"] = "Client " . $client->get_id() . ": " . $client->get_client_name()." - ".APPLICATION_NAME;
-  $TPL["clientSelfLink"] = sprintf("<a href=\"%s\">%d %s</a>", $client->get_url(), $client->get_id(), $client->get_client_name());
+  $TPL["main_alloc_title"] = "Client " . $client->get_id() . ": " . $client->get_name()." - ".APPLICATION_NAME;
+  $TPL["clientSelfLink"] = sprintf("<a href=\"%s\">%d %s</a>", $client->get_url(), $client->get_id(), $client->get_name());
 }
 
 

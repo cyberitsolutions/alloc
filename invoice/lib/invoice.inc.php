@@ -367,13 +367,13 @@ class invoice extends db_entity {
     return $url;
   }
 
-  function get_invoice_name() {
+  function get_name() {
     return $this->get_value("invoiceNum");
   }
 
   function get_invoice_link() {
     global $TPL;
-    return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$this->get_id()."\">".$this->get_invoice_name()."</a>";
+    return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$this->get_id()."\">".$this->get_name()."</a>";
   }
 
   function get_list_filter($filter=array()) {
