@@ -32,7 +32,7 @@ $loanID = $_POST["loanID"] or $loanID = $_GET["loanID"];
 $item = new item;
 $loan = new loan;
 $db = new db_alloc;
-$db->query("select * from item where itemID=$itemID");
+$db->query(sprintf("select * from item where itemID=%d",$itemID));
 $db->next_record();
 $item->read_db_record($db);
 $item->set_tpl_values();
@@ -66,7 +66,7 @@ if ($loanID) {
 
 
 if ($_POST["borrowItem"]) {
-  $db->query("select * from loan where itemID=$itemID and dateReturned='0000-00-00'");
+  $db->query(sprintf("select * from loan where itemID=%d and dateReturned='0000-00-00'",$itemID));
 
   if ($db->next_record()) {     // if the item is already borrowed
     alloc_redirect($TPL["url_alloc_item"]."itemID=$itemID&badBorrow=true&error=already_borrowed");
@@ -101,25 +101,27 @@ if ($_POST["borrowItem"]) {
 if ($_POST["returnItem"]) {
 
   $dbTemp = new db_alloc;
-  $dbTemp->query("select * from loan where itemID=$itemID and dateReturned='0000-00-00'");
+  $dbTemp->query(sprintf("select * from loan where itemID=%d and dateReturned='0000-00-00'",$itemID));
 
-  $db->query("select * from loan where loan.itemID=$itemID and dateBorrowed>dateReturned");
+  $db = new db_alloc;
+  $db->query(sprintf("select * from loan where loan.itemID=%d and dateBorrowed>dateReturned",$itemID));
   $db->next_record();
-  $loan->read_db_record($db);
   $loan->set_id($db->f("loanID"));
-  $loan->select();
-  $loan->set_value("dateReturned", $today);
+  if ($loan->select()) {
+    $loan->set_value("dateReturned", $today);
+    $loan->set_value("itemID", $itemID);
 
-  // check to see if admin/manager returning someone elses item, and sent email
-  if ($loan->get_value("personID") != $current_user->get_id()) {
-    if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
-      $person = new person;
-      $person->set_id($loan->get_value("personID"));
-      $person->select();
+    // check to see if admin/manager returning someone elses item, and sent email
+    if ($loan->get_value("personID") != $current_user->get_id()) {
+      if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
+        $person = new person;
+        $person->set_id($loan->get_value("personID"));
+        $person->select();
+        $loan->save();
+      }
+    } else {
       $loan->save();
     }
-  } else {
-    $loan->save();
   }
 
   alloc_redirect($TPL["url_alloc_loanAndReturn"]);
