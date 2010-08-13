@@ -40,6 +40,16 @@ class wiki_module extends module {
       $handle = fopen($file,"w+b");
       fputs($handle,$body);
       fclose($handle);
+
+      // Update the search index for this file, if any
+      $index = Zend_Search_Lucene::open(ATTACHMENTS_DIR.'search/wiki');
+      $f = str_replace(wiki_module::get_wiki_path(),"",$file);
+      $hits = $index->find('id:' . $f);
+      foreach ($hits as $hit) {
+        $index->delete($hit->id);
+      }
+      wiki_module::update_search_index_doc($index,$f);
+      $index->commit();
     }
   }
 
@@ -111,7 +121,25 @@ class wiki_module extends module {
     }
   }
 
+  function update_search_index_doc(&$index, $file) {
+    // Attempt to parse pdfs
+    if (strtolower(substr($file,-4)) == ".pdf") {
+      $pdfstr = file_get_contents(wiki_module::get_wiki_path().$file);
+      $pdf_reader = new pdf_reader();
+      $pdfstr = $pdf_reader->pdf2txt($pdfstr);
 
+    // Else regular text
+    } else {
+      $str = file_get_contents(wiki_module::get_wiki_path().$file);
+    }
+
+    $doc = new Zend_Search_Lucene_Document();
+    $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$file));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$file));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$str));
+    $doc->addField(Zend_Search_Lucene_Field::UnStored('pdfstr',$pdfstr));
+    $index->addDocument($doc);
+  }
 }
 
 
