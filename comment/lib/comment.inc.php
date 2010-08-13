@@ -21,6 +21,7 @@
 */
 
 class comment extends db_entity {
+  public $classname = "comment";
   public $data_table = "comment";
   public $key_field = "commentID";
   public $data_fields = array("commentType"
@@ -626,7 +627,42 @@ class comment extends db_entity {
     }
   }
 
+  function update_search_index_doc(&$index) {
+    $arr["commentCreatedUserText"] = $this->get_value("commentCreatedUserText");
+    $arr["clientContactID"]        = $this->get_value("commentCreatedUserClientContactID");
+    $arr["personID"]               = $this->get_value("commentCreatedUser");
 
+    $name = $this->get_value("commentCreatedTime")." ";
+    $author = comment::get_comment_author($arr);
+    $name.= $author;
+
+    $entity = $this->get_value("commentType");
+    $entity_id = $this->get_value("commentLinkID");
+    $e = new $entity;
+    $e->set_id($entity_id);
+    $e->select();
+    $entity_name = $e->get_name();
+    // If the parent is a comment, then go up one more level
+    if ($entity == "comment") {
+      $entity = $e->get_value("commentType");
+      $entity_id = $e->get_value("commentLinkID");
+      $f = new $entity;
+      $f->set_id($entity_id);
+      $f->select();
+      $entity_name = $f->get_name();
+    }
+
+    $doc = new Zend_Search_Lucene_Document();
+    $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$name));
+    $doc->addField(Zend_Search_Lucene_Field::Text('type'    ,$entity));
+    $doc->addField(Zend_Search_Lucene_Field::Text('typeid'  ,$entity_id));
+    $doc->addField(Zend_Search_Lucene_Field::Text('typename',$entity_name));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("comment")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$author));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateCreated',str_replace("-","",$this->get_value("commentCreatedTime"))));
+    $index->addDocument($doc);
+  }
 }
 
 

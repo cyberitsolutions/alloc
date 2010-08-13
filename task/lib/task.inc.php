@@ -42,6 +42,7 @@ class task extends db_entity {
                              ,"dateActualCompletion" => array("audit"=>true)
                              ,"taskComments"
                              ,"taskStatus"
+                             ,"taskModifiedUser"
                              ,"taskSubStatus" => array("audit"=>true)
                              ,"projectID" => array("audit"=>true)
                              ,"parentTaskID" => array("audit"=>true)
@@ -2067,6 +2068,54 @@ class task extends db_entity {
     $ai->insert();
   }
 
+  function update_search_index_doc(&$index) {
+    $p = get_cached_table("person");
+    $creatorID = $this->get_value("creatorID");
+    $creator_field = $creatorID." ".$p[$creatorID]["username"]." ".$p[$creatorID]["name"];
+    $closerID = $this->get_value("closerID");
+    $closer_field = $closerID." ".$p[$closerID]["username"]." ".$p[$closerID]["name"];
+    $personID = $this->get_value("personID");
+    $person_field = $personID." ".$p[$personID]["username"]." ".$p[$personID]["name"];
+    $managerID = $this->get_value("managerID");
+    $manager_field = $managerID." ".$p[$managerID]["username"]." ".$p[$managerID]["name"];
+    $taskModifiedUser = $this->get_value("taskModifiedUser");
+    $taskModifiedUser_field = $taskModifiedUser." ".$p[$taskModifiedUser]["username"]." ".$p[$taskModifiedUser]["name"];
+    $status = $this->get_value("taskStatus");
+    $this->get_value("taskSubStatus") and $status.= " ".$this->get_value("taskSubStatus");
+
+    if ($this->get_value("projectID")) {
+      $project = new project();
+      $project->set_id($this->get_value("projectID"));
+      $project->select();
+      $projectName = $project->get_name();
+      $projectShortName = $project->get_name(true);
+      $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
+    }
+
+    $doc = new Zend_Search_Lucene_Document();
+    $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$this->get_value("taskName")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('project' ,$projectName));
+    $doc->addField(Zend_Search_Lucene_Field::Text('pid'     ,$this->get_value("projectID")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$creator_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('closer'  ,$closer_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('assignee',$person_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('manager' ,$manager_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$taskModifiedUser_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("taskDescription")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('priority',$this->get_value("priority")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('estimate',$this->get_value("timeEstimate")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('type',$this->get_value("taskTypeID")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('status',$status));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateCreated',str_replace("-","",$this->get_value("dateCreated"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateAssigned',str_replace("-","",$this->get_value("dateAssigned"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateClosed',str_replace("-","",$this->get_value("dateClosed"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateTargetStart',str_replace("-","",$this->get_value("dateTargetStart"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateTargetCompletion',str_replace("-","",$this->get_value("dateTargetCompletion"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateStart',str_replace("-","",$this->get_value("dateActualStart"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateCompletion',str_replace("-","",$this->get_value("dateActualCompletion"))));
+    $index->addDocument($doc);
+  }
 
 }
 

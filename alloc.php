@@ -25,11 +25,16 @@
 
 
 ini_set("error_reporting", E_ALL & ~E_NOTICE);
+ini_set('include_path',ini_get('include_path').":".dirname(__FILE__).DIRECTORY_SEPARATOR."zend");
 
 // Can't call this script directly..
 if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
   die();
 } 
+
+// Set the charset for Zend Lucene search indexer http://framework.zend.com/manual/en/zend.search.lucene.charset.html
+require_once("Zend/Search/Lucene.php");
+Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
 
 // Undo magic quotes if it's enabled
 if (get_magic_quotes_gpc()) {
@@ -95,7 +100,7 @@ $m = array("shared"
           );
 
 // Sub-dirs under ATTACHMENTS_DIR where upload, email and backup data can be stored
-$external_storage_directories = array("task","client","project","invoice","comment","backups","whatsnew","wiki","logos");
+$external_storage_directories = array("task","client","project","invoice","comment","backups","whatsnew","wiki","logos","search");
 
 // Helper functions
 require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."util.inc.php");

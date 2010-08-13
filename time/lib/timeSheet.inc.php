@@ -1298,6 +1298,62 @@ EOD;
     return $this->is_owner();
   }
 
+  function get_name() {
+    $project = new project();
+    $project->set_id($this->get_value("projectID"));
+    $project->select();
+    $p = get_cached_table("person");
+    return "Time Sheet for ".$project->get_name()." by ".$p[$this->get_value("personID")]["name"];
+  }
+
+  function update_search_index_doc(&$index) {
+    $p = get_cached_table("person");
+    $personID = $this->get_value("personID");
+    $person_field = $personID." ".$p[$personID]["username"]." ".$p[$personID]["name"];
+    $managerID = $this->get_value("approvedByManagerPersonID");
+    $manager_field = $managerID." ".$p[$managerID]["username"]." ".$p[$managerID]["name"];
+    $adminID = $this->get_value("approvedByAdminPersonID");
+    $admin_field = $adminID." ".$p[$adminID]["username"]." ".$p[$adminID]["name"];
+    $tf_field = $this->get_value("recipient_tfID")." ".tf::get_name($this->get_value("recipient_tfID"));
+
+    if ($this->get_value("projectID")) {
+      $project = new project();
+      $project->set_id($this->get_value("projectID"));
+      $project->select();
+      $projectName = $project->get_project_name();
+      $projectShortName = $project->get_project_name(true);
+      $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
+    }
+
+    $q = sprintf("SELECT dateTimeSheetItem, taskID, description, comment, commentPrivate 
+                    FROM timeSheetItem 
+                   WHERE timeSheetID = %d 
+                ORDER BY dateTimeSheetItem ASC",$this->get_id());
+    $db = new db_alloc;
+    $db->query($q);
+    while ($r = $db->row()) {
+      $desc.= $br.$r["dateTimeSheetItem"]." ".$r["taskID"]." ".$r["description"]."\n";
+      $r["comment"] && $r["commentPrivate"] or $desc.= $r["comment"]."\n";
+      $br = "\n";
+    }
+
+    $doc = new Zend_Search_Lucene_Document();
+    $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
+    $doc->addField(Zend_Search_Lucene_Field::Text('project' ,$projectName));
+    $doc->addField(Zend_Search_Lucene_Field::Text('pid'     ,$this->get_value("projectID")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$person_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$desc));
+    $doc->addField(Zend_Search_Lucene_Field::Text('status'  ,$this->get_value("status"))); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('tf'      ,$tf_field)); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('insurance',sprintf("%d",$this->get_value("payment_insurance")))); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('manager' ,$manager_field)); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('admin'   ,$admin_field)); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateManager',str_replace("-","",$this->get_value("dateSubmittedToManager"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateAdmin',str_replace("-","",$this->get_value("dateSubmittedToAdmin"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateFrom',str_replace("-","",$this->get_value("dateFrom"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateTo'  ,str_replace("-","",$this->get_value("dateTo"))));
+    $index->addDocument($doc);
+  }
 }  
 
 

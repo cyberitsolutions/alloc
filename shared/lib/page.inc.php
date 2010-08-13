@@ -148,7 +148,7 @@ class page {
     return $str;
   }
   function get_category_options($category="") {
-    $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients","Wiki"=>"Wiki");
+    $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients","Comment"=>"Comment","Wiki"=>"Wiki");
     return page::select_options($category_options, $category);
   } 
   function help($topic) {

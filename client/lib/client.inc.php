@@ -395,6 +395,49 @@ class client extends db_entity {
     return array($client_select, $client_link, $project_select, $project_link);
   }
 
+  function update_search_index_doc(&$index) {
+    $p = get_cached_table("person");
+    $clientModifiedUser = $this->get_value("clientModifiedUser");
+    $clientModifiedUser_field = $clientModifiedUser." ".$p[$clientModifiedUser]["username"]." ".$p[$clientModifiedUser]["name"];
+
+    $this->get_value("clientStreetAddressOne") and $postal[] = $this->get_value("clientStreetAddressOne");
+    $this->get_value("clientSuburbOne")        and $postal[] = $this->get_value("clientSuburbOne");
+    $this->get_value("clientStateOne")         and $postal[] = $this->get_value("clientStateOne");
+    $this->get_value("clientPostcodeOne")      and $postal[] = $this->get_value("clientPostcodeOne");
+    $this->get_value("clientCountryOne")       and $postal[] = $this->get_value("clientCountryOne");
+    $p = implode("\n",(array)$postal);
+    $p and $p = "Postal Address:\n".$p;
+
+    $this->get_value("clientStreetAddressTwo") and $street[] = $this->get_value("clientStreetAddressTwo");
+    $this->get_value("clientSuburbTwo")        and $street[] = $this->get_value("clientSuburbTwo");
+    $this->get_value("clientStateTwo")         and $street[] = $this->get_value("clientStateTwo");
+    $this->get_value("clientPostcodeTwo")      and $street[] = $this->get_value("clientPostcodeTwo");
+    $this->get_value("clientCountryTwo")       and $street[] = $this->get_value("clientCountryTwo");
+    $s = implode("\n",(array)$street);
+    $s and $s = "Street Address:\n".$s;
+
+    $p && $s and $p.= "\n\n";
+    $addresses = $p.$s;
+
+    $this->get_value("clientPhoneOne") and $ph = "Ph: ".$this->get_value("clientPhoneOne");
+    $this->get_value("clientFaxOne")   and $fx = "Fax: ".$this->get_value("clientFaxOne");
+
+    $ph and $ph = " ".$ph;
+    $fx and $fx = " ".$fx;
+    $name = $this->get_client_name().$ph.$fx;
+
+    $doc = new Zend_Search_Lucene_Document();
+    $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$name));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$addresses));
+    $doc->addField(Zend_Search_Lucene_Field::Text('status'  ,$this->get_value("clientStatus")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$clientModifiedUser_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateModified',str_replace("-","",$this->get_value("clientModifiedTime"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('category',$this->get_value("clientCategory")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateCreated',str_replace("-","",$this->get_value("clientCreatedTime"))));
+    $index->addDocument($doc);
+  }
+
 }
 
 

@@ -361,10 +361,20 @@ class db_entity {
     }
 
     if ($this->is_new()) {
-      return $this->insert();
+      $rtn = $this->insert();
     } else {
-      return $this->update();
+      $rtn = $this->update();
     }
+
+    // Update the search index for this entity, if any
+    if ($this->classname && is_dir(ATTACHMENTS_DIR.'search/'.$this->classname)) {
+      $index = Zend_Search_Lucene::open(ATTACHMENTS_DIR.'search/'.$this->classname);
+      $this->delete_search_index_doc($index);
+      $this->update_search_index_doc($index);
+      $index->commit();
+    }
+
+    return $rtn;
   }
 
   function validate() {
@@ -765,6 +775,16 @@ class db_entity {
 
   function get_name() {
     return $this->get_display_value();
+  }
+
+  function delete_search_index_doc(&$index) {
+    if ($this->get_id()) {
+      $hits = $index->find('id:' . $this->get_id());
+      foreach ($hits as $hit) {
+        $index->delete($hit->id);
+      }
+    }
+    return $index;
   }
 
 }

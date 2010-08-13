@@ -50,6 +50,7 @@ class project extends db_entity {
                              ,"cost_centre_tfID"
                              ,"customerBilledDollars"
                              ,"clientContactID"
+                             ,"projectModifiedUser"
                              );
 
   public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "view task allocations"
@@ -581,6 +582,41 @@ class project extends db_entity {
       }
     } 
     return $invoiceID;
+  }
+
+  function update_search_index_doc(&$index) {
+    $p = get_cached_table("person");
+    $projectModifiedUser = $this->get_value("projectModifiedUser");
+    $projectModifiedUser_field = $projectModifiedUser." ".$p[$projectModifiedUser]["username"]." ".$p[$projectModifiedUser]["name"];
+    $projectName = $this->get_project_name();
+    $projectShortName = $this->get_project_name(true);
+    $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
+
+    if ($this->get_value("clientID")) {
+      $c = new client();
+      $c->set_id($this->get_value("clientID"));
+      $c->select();
+      $clientName = $c->get_client_name();
+    }
+
+    $doc = new Zend_Search_Lucene_Document();
+    $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$projectName));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("projectComments")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('cid'     ,$this->get_value("clientID")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('client'  ,$clientName));
+    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$projectModifiedUser_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('type'    ,$this->get_value("projectType")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateTargetStart',str_replace("-","",$this->get_value("dateTargetStart"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateTargetCompletion',str_replace("-","",$this->get_value("dateTargetCompletion"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateStart',str_replace("-","",$this->get_value("dateActualStart"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateCompletion',str_replace("-","",$this->get_value("dateActualCompletion"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('status'   ,$this->get_value("projectStatus")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('priority' ,$this->get_value("projectPriority")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('tf'       ,$this->get_value("cost_centre_tfID")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('agency'   ,sprintf("%d",$this->get_value("is_agency"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('billed'   ,$this->get_value("customerBilledDollars")));
+    $index->addDocument($doc);
   }
 
 }

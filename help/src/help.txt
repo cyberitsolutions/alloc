@@ -3036,27 +3036,245 @@ scoped Projects.
 Search
 ``````
 
-.. figure:: images/search.png
+The search functionality within allocPSA searches various fields in the
+database and also the files in the wiki. It uses the Zend port of the Lucene
+search engine. 
 
-   allocPSA allows you to search most of the main data types.
-   Results will show highlighted text, relating to your search criteria.
+Any of the keyword fields that are indexed may be searched upon. Either by
+itself or in combination with other search terms. The default is to search
+across ALL keyword fields.
 
-allocPSA Search is a global search engine used for searching various fields in
-the database. For example, if you only remember some keywords in an
-announcement that was approximately noticed in these few days, you could use
-allocPSA Search to search for it rather than watching the announcement one by
-one. 
+For more information about the Zend search syntax please read this article:
+http://framework.zend.com/manual/en/zend.search.lucene.query-language.html
 
-Decide on what type of database entity you want to search on from the drop list
-within this page. This includes databases like Announcements, Clients ,
-Projects , Tasks etc. Then, enter the text you want to search for. And press
-the Search button. 
 
-The systems will now take a bit time, and will return a list of records, with
-the keyword you are searching for, highlighted for your convenience
+Examples
 
-You can now click the record you want to view in greater detail, and allocPSA
-will take you to this.
+.. list-table::
+
+   - - to be or not to be
+     - Searches for each of those words in isolation: i.e. to OR be OR or OR not OR to OR be
+   - - "to be or not to be"
+     - Searches for the exact phrase: "to be or not to be"
+   - - name:"to be or not to be"
+     - Only entities that have that phrase in their name will be searched.
+   - - name:to be or not to be
+     - Only entities with the word "to" in their name, or have: "be OR not OR to OR be" in any of their fields, i.e. this search probably doesn't do what you're intending.
+   - - creator:jsmith
+     - Only entities that were created by jsmith (i.e. username searched)
+   - - creator:41
+     - Only entities that were created by person with personID of 41 (i.e. personID searched)
+   - - creator:"John Smith"
+     - Only entities that were created by John Smith. (i.e. fullname searched)
+   - - dateCreated:20101214
+     - Only entities that were created on the exact date of 2010-12-14
+   - - dateCreated:[20101214 TO 20101220]
+     - Only entities that were created on an exact date in the week between 2010-12-14 to 2010-12-20
+   - - manager:jsmith AND dateTargetCompletion:[20100101 TO 20110101] AND status:open
+     - A search for all the tasks that are managed by jsmith and are targetted for completion in 2010 and have a status of open.
+   - - "to be completed asap" name:todo
+     - A search for "to be completed asap" across ALL the keyword fields, OR the task's name must contain the word todo.
+
+
+Indexed keyword fields for Tasks
+
+.. list-table::
+
+   - - id 
+     - The unique ID.
+   - - name
+     - The task's name.
+   - - project
+     - Which project the task belongs to.
+   - - pid 
+     - The ID of the project that the task belongs to.
+   - - creator
+     - The person who created the task.
+   - - closer
+     - The person who closed the task (if any).
+   - - assignee
+     - The person to whom the task is assigned to.
+   - - manager
+     - The manger of the task.
+   - - modifier
+     - The person who last modified the task.
+   - - desc
+     - The main task's description.
+   - - priority
+     - The priority of the task, stored as a number from 1-5.
+   - - estimate
+     - The number of hours the task has been estimated at.
+   - - type
+     - The type of the task, either: Task, Parent, Fault, Message, Milestone.
+   - - status
+     - The status of the task, any of: open, pending, closed, client, complete, duplicate, incomplete, info, inprogress, invalid, manager, notstarted.
+   - - dateCreated
+     - The date the task was created.
+   - - dateAssigned
+     - The date the task was assigned to a person.
+   - - dateClosed
+     - The date the task was closed (if any).
+   - - dateTargetStart
+     - The target start date for the task.
+   - - dateTargetCompletion
+     - The target completion date for the task.
+   - - dateStart
+     - The actual start date for the task.
+   - - dateCompletion
+     - The actual completion date for the task.
+
+
+Indexed keyword fields for Projects
+
+.. list-table::
+
+   - - id 
+     - The unique ID.
+   - - name
+     - The project's name.
+   - - desc
+     - The project's main description.
+   - - client
+     - The name of the project's client.
+   - - cid
+     - The id of the client for this project.
+   - - modifier
+     - The person who last modified the project.
+   - - type
+     - The type of the project i.e. contract, job, project
+   - - dateTargetStart
+     - The target start date for the project.
+   - - dateTargetCompletion
+     - The target completion date for the project.
+   - - dateStart
+     - The actual start date for the project.
+   - - dateCompletion
+     - The actual completion date for the project.
+   - - status
+     - The project's status i.e. archived, current, potential.
+   - - priority
+     - The priority of the project, stored as a number from 1-5.
+   - - tf
+     - The tf that the project uses.
+   - - agency
+     - Whether or not the project is through an agency i.e. 1, 0,
+   - - billed
+     - The monetary amount that the client is billed.
+
+
+Indexed keyword fields for Time Sheets
+
+.. list-table::
+
+   - - id 
+     - The unique ID.
+   - - project
+     - The time sheet's project stored as project name and project nickname.
+   - - pid
+     - The id of the time sheet's project.
+   - - creator
+     - The creator of the time sheet.
+   - - desc
+     - This is all the time sheet's items concatenated together with their date and task id.
+   - - status
+     - The time sheet's status i.e. edit, manager, admin, invoiced, finished.
+   - - tf
+     - The main recipient tf for this time sheet.
+   - - insurance
+     - Whether or not this time sheet uses the payment insurance functionality i.e. either 1 or 0.
+   - - manager
+     - The manager that approved the time sheet (if any).
+   - - admin
+     - The admin that approved the time sheet (if any).
+   - - dateManager
+     - The date that the manager approved the time sheet (if any).
+   - - dateAdmin
+     - The date that the admin approved the time sheet (if any).
+   - - dateFrom
+     - The earliest date of the time sheet items.
+   - - dateTo
+     - The latest date of the time sheet items.
+
+
+Indexed keyword fields for Loan Items
+
+.. list-table::
+
+   - - id 
+     - The unique ID.
+   - - name
+     - The name of the item 
+   - - desc
+     - The item's notes
+   - - type
+     - The item's type i.e. book, cd, other 
+   - - author
+     - The item's author
+   - - creator
+     - The person who created this item
+   - - modifier
+     - The last person to modify this item
+   - - dateModified
+     - The date the item was last modified
+ 
+
+Indexed keyword fields for Clients
+
+.. list-table::
+
+   - - id 
+     - The unique ID.
+   - - name
+     - The client's name with the phone number and fax number appended
+   - - desc
+     - The postal and street addresses
+   - - status
+     - The client status i.e. archived, current, potential
+   - - modifier
+     - The last person to modify the client
+   - - dateModified
+     - The date the client was last modified
+   - - category
+     - The category of the client i.e. Client, Vendor, Supplier, Consultant, Government, Non-profit, Internal
+   - - dateCreated
+     - The date the client was created
+  
+
+Indexed keyword fields for Comments
+
+.. list-table::
+
+   - - id 
+     - The unique ID.
+   - - name
+     - The created date along with the comment's author
+   - - type
+     - The type of the comment i.e. client, task, project, timeSheet
+   - - typeid
+     - The ID of the related comment type
+   - - typename
+     - The name of the related entity, eg the Task's name
+   - - desc
+     - The body of the comment text
+   - - creator
+     - The person who created the comment
+   - - dateCreated
+     - The date the comment was created
+ 
+
+Indexed keyword fields for the Wiki
+
+.. list-table::
+
+   - - id 
+     - The unique ID.
+   - - name 
+     - The path and file name
+   - - desc
+     - The body of the file
+   - - pdfstr
+     - If the file was a PDF then the body of the pdf may be specifically searched using this keyword
+    
 
 
 Company Skill Matrix

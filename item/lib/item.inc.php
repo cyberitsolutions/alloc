@@ -21,6 +21,7 @@
 */
 
 class item extends db_entity {
+  public $classname = "item";
   public $data_table = "item";
   public $display_field_name = "itemName";
   public $key_field = "itemID";
@@ -32,6 +33,25 @@ class item extends db_entity {
                              ,"itemType"
 			                       ,"personID"
                              );
+
+  function update_search_index_doc(&$index) {
+    $p = get_cached_table("person");
+    $personID = $this->get_value("personID");
+    $person_field = $personID." ".$p[$personID]["username"]." ".$p[$personID]["name"];
+    $itemModifiedUser = $this->get_value("itemModifiedUser");
+    $itemModifiedUser_field = $itemModifiedUser." ".$p[$itemModifiedUser]["username"]." ".$p[$itemModifiedUser]["name"];
+
+    $doc = new Zend_Search_Lucene_Document();
+    $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$this->get_value("itemName")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("itemNotes")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('type'    ,$this->get_value("itemType")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('author'  ,$this->get_value("itemAuthor")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$person_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$itemModifiedUser_field));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateModified',str_replace("-","",$this->get_value("itemModifiedTime"))));
+    $index->addDocument($doc);
+  }
 }
 
 
