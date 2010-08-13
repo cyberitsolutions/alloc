@@ -1320,8 +1320,8 @@ EOD;
       $project = new project();
       $project->set_id($this->get_value("projectID"));
       $project->select();
-      $projectName = $project->get_project_name();
-      $projectShortName = $project->get_project_name(true);
+      $projectName = $project->get_name();
+      $projectShortName = $project->get_name(true);
       $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
     }
 

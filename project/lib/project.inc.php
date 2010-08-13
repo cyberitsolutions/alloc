@@ -588,15 +588,15 @@ class project extends db_entity {
     $p = get_cached_table("person");
     $projectModifiedUser = $this->get_value("projectModifiedUser");
     $projectModifiedUser_field = $projectModifiedUser." ".$p[$projectModifiedUser]["username"]." ".$p[$projectModifiedUser]["name"];
-    $projectName = $this->get_project_name();
-    $projectShortName = $this->get_project_name(true);
+    $projectName = $this->get_name();
+    $projectShortName = $this->get_name(true);
     $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
 
     if ($this->get_value("clientID")) {
       $c = new client();
       $c->set_id($this->get_value("clientID"));
       $c->select();
-      $clientName = $c->get_client_name();
+      $clientName = $c->get_name();
     }
 
     $doc = new Zend_Search_Lucene_Document();

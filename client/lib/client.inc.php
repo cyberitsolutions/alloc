@@ -424,7 +424,7 @@ class client extends db_entity {
 
     $ph and $ph = " ".$ph;
     $fx and $fx = " ".$fx;
-    $name = $this->get_client_name().$ph.$fx;
+    $name = $this->get_name().$ph.$fx;
 
     $doc = new Zend_Search_Lucene_Document();
     $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
