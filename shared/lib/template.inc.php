@@ -59,9 +59,9 @@ function get_template($filename) {
   $replace = '<?php echo $${1}["${2}"]; ?>';
   $template = preg_replace($pattern,$replace,$template);
 
-  // Replace {$var_name} with echo $TPL["var_name"]; 
-  $pattern = '/{\$([\w|\d|_]+)}/i';
-  $replace = '<?php echo strlen($TPL["${1}"]) ? $TPL["${1}"] : $${1}; ?>';
+  // Replace {$var_name} with echo $var_name;
+  $pattern = '/{(\$[\w|\d|_]+)}/i';
+  $replace = '<?php echo ${1}; ?>';
   $template = preg_replace($pattern,$replace,$template);
 
 
