@@ -1246,7 +1246,7 @@ class task extends db_entity {
 
       $ret[] = "<tfoot>
                   <tr>
-                    <th colspan=\"20\" class=\"nobr noprint\" style=\"padding:2px;\">
+                    <th colspan=\"25\" class=\"nobr noprint\" style=\"padding:2px;\">
                       <div style=\"float:left\">
                         <select name=\"update_action\" onChange=\"$('.hidden').hide(); $('#'+$(this).val()+'_div').css('display','inline');\"> 
                           <option value=\"\">Modify Checked...</options>
