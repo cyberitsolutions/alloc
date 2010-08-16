@@ -349,14 +349,6 @@ CREATE TABLE task (
   taskSubStatus varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
-DROP TABLE IF EXISTS taskSearchable;
-CREATE TABLE taskSearchable (
-  taskID integer NOT NULL PRIMARY KEY,
-  taskName varchar(255) NOT NULL default '',
-  projectID integer DEFAULT NULL,
-  FULLTEXT KEY `taskSearchable_taskName` (`taskName`)
-) ENGINE=MyISAM;
-
 DROP TABLE IF EXISTS auditItem;
 CREATE TABLE auditItem (
   auditItemID integer NOT NULL auto_increment PRIMARY KEY,

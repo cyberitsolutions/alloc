@@ -24,27 +24,6 @@ define("PERM_PROJECT_READ_TASK_DETAIL", 256);
 
 class search {
 
-  function by_fulltext($entity, $fieldName, $criteria, $extra="") {
-    // FULLTEXT search only work on columns that have a FULLTEXT KEY added to them
-    // see patch-00123-alla.sql .. the table needs to be MyISAM as well.
-
-    $e = new $entity;
-    $rows = array();
-    $q = sprintf("SELECT * FROM %s WHERE %s MATCH(%s) AGAINST('%s') LIMIT 10"
-                ,$entity,$extra,$fieldName,db_esc($criteria));
-    $db = new db_alloc();
-    $db->query($q);
-    while ($row = $db->row()) {
-      $rows[$row[$e->key_field->get_name()]] = $row;
-    }
-    return $rows;
-
-
-    // This may be how you do this in postgres: http://www.postgresql.org/docs/8.3/static/textsearch-intro.html
-    // SELECT to_tsvector('fat cats ate fat rats') @@ to_tsquery('fat & rat');
-
-  }
-
   function by_explode($entity, $fieldName, $criteria, $extra="") {
     $bits = explode(" ",$criteria);
     if (is_array($bits) && count($bits)) {
