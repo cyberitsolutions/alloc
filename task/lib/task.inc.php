@@ -155,27 +155,12 @@ class task extends db_entity {
 
     $rtn = parent::save();
 
-    // Update the full-text compatible i.e. MyISAM version of the task table.
-    $taskSearchable = new taskSearchable;
-    $taskSearchable->set_id($this->get_id());
-    $taskSearchable->set_value("taskName",$this->get_value("taskName"));
-    $taskSearchable->set_value("projectID",$this->get_value("projectID"));
-    $taskSearchable->save();
-
     // If the task has just been closed, then audit the change.
     if ($this->has_just_been_closed) {
       $this->mark_closed();
     }
 
     return $rtn;
-  }
-
-  function delete() {
-    // Update the full-text compatible i.e. MyISAM version of the task table.
-    $taskSearchable = new taskSearchable;
-    $taskSearchable->set_id($this->get_id());
-    $taskSearchable->delete();
-    return parent::delete();
   }
 
   function validate() {

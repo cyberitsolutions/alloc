@@ -24,13 +24,16 @@
 define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
-$tasks = search::by_fulltext("taskSearchable", "taskName", $_GET["taskName"], sprintf("projectID = %d",$_GET["projectID"])." AND ");
-foreach ($tasks as $task) {
+$index = new Zend_Search_Lucene(ATTACHMENTS_DIR.'search/task');
+$index->setResultSetLimit(10);
+$needle = 'name:('.$_GET["taskName"].') AND pid:'.$_GET["projectID"];
+$query = Zend_Search_Lucene_Search_QueryParser::parse($needle);
+$hits = $index->find($needle);
+
+foreach ($hits as $hit) {
+  $d = $hit->getDocument();
   $str.= "<div style='padding-bottom:3px'>";
-  $str.= "<a href=\"".$TPL["url_alloc_task"]."taskID=".$task["taskID"]."\">".$task["taskID"]." ".$task["taskName"]."</a>";
-  $status = "";
-  // $task["taskStatus"] == "closed" and $status = "[Closed ".$task["dateActualCompletion"]."]"; The taskSearchable table doesn't have these fields
-  $str.= " ".$status;
+  $str.= "<a href=\"".$TPL["url_alloc_task"]."taskID=".$d->getFieldValue('id')."\">".$d->getFieldValue('id')." ".$d->getFieldValue('name')."</a>";
   $str.= "</div>";
 }
 
