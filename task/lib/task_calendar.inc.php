@@ -298,7 +298,7 @@ class calendar {
         foreach($tasks_to_start[$date] as $t) {
           unset($extra);
           $t["timeEstimate"] and $extra = " (".sprintf("Est %0.1fhrs",$t["timeEstimate"]).")";
-          $d->start_tasks[] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$t["taskID"].'">'.$t["taskName"].$extra."</a>";
+          $d->start_tasks[] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$t["taskID"].'">'.page::htmlentities($t["taskName"].$extra)."</a>";
         }
 
         // Tasks to be Completed
@@ -306,14 +306,14 @@ class calendar {
         foreach($tasks_to_complete[$date] as $t) {
           unset($extra);
           $t["timeEstimate"] and $extra = " (".sprintf("Est %0.1fhrs",$t["timeEstimate"]).")";
-          $d->complete_tasks[] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$t["taskID"].'">'.$t["taskName"].$extra."</a>";
+          $d->complete_tasks[] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$t["taskID"].'">'.page::htmlentities($t["taskName"].$extra)."</a>";
         }
 
         // Reminders
         $reminders[$date] or $reminders[$date] = array();
         foreach ($reminders[$date] as $r) {
           #if (date("Y-m-d",$r["reminderTime"]) == $date) {
-            $text = $r["reminderSubject"];
+            $text = page::htmlentities($r["reminderSubject"]);
             $r["reminderTime"] and $text = date("g:ia",$r["reminderTime"])." ".$text;
             $d->reminders[] = '<a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$text.'</a>';
           #}
@@ -322,7 +322,7 @@ class calendar {
         // Absences
         $absences[$date] or $absences[$date] = array();
         foreach ($absences[$date] as $a) {
-          $d->absences[] = '<a href="'.$TPL["url_alloc_absence"].'absenceID='.$a["absenceID"].'&returnToParent='.$this->rtp.'">'.$a["absenceType"].'</a>';
+          $d->absences[] = '<a href="'.$TPL["url_alloc_absence"].'absenceID='.$a["absenceID"].'&returnToParent='.$this->rtp.'">'.page::htmlentities($a["absenceType"]).'</a>';
         }
 
         $d->draw_day_html();
