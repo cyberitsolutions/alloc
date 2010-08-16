@@ -114,7 +114,7 @@ function get_template($filename) {
 
 
 // This is the publically callable function, used to include template files
-function include_template($filename) {
+function include_template($filename, $getString=false) {
   global $TPL, $current_user;
   $TPL["current_user"] = $current_user;
   #echo "<!-- Start $filename -->\n";
@@ -124,7 +124,19 @@ function include_template($filename) {
   // Make all variables available via $var
   is_array($TPL) && extract($TPL, EXTR_SKIP);
 
+  if ($getString) {
+    // Begin buffering output to halt anything being sent to the web browser.
+    ob_start();
+  }
+
   eval($template);
+
+  if ($getString) {
+    // Grab everything that was captured in the output buffer and return
+    // it as a string.
+    return (string)ob_get_clean();
+  }
+
   #echo "<!-- End $filename -->\n";
 } 
 

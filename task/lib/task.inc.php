@@ -1302,16 +1302,6 @@ class task extends db_entity {
   function get_list_tr($task,$_FORM) {
     global $TPL;
 
-    $today = date("Y-m-d");
-    $task["dateTargetStart"]      == $today and $task["dateTargetStart"]      = "<b>".$task["dateTargetStart"]."</b>";
-    $task["dateTargetCompletion"] == $today and $task["dateTargetCompletion"] = "<b>".$task["dateTargetCompletion"]."</b>";
-    $task["dateActualStart"]      == $today and $task["dateActualStart"]      = "<b>".$task["dateActualStart"]."</b>";
-    $task["dateActualCompletion"] == $today and $task["dateActualCompletion"] = "<b>".$task["dateActualCompletion"]."</b>";
-
-    $people_cache = $_FORM["people_cache"];
-    $timeUnit_cache = $_FORM["timeUnit_cache"];
-
-
     if ($_FORM["showDescription"] || $_FORM["showComments"]) {
       if ($task["taskDescription"]) {
         $str[] = $task["taskDescription"];
@@ -1327,34 +1317,11 @@ class task extends db_entity {
       }
     }
 
-    $task["timeEstimate"] !== NULL and $timeEstimate = $task["timeEstimate"]*60*60;
-
-                                  $summary[] = "<tr class=\"clickrow\" id=\"clickrow_".$task["taskID"]."\">"; // clickrow has onClick in init.js
-    $_FORM["showEdit"]        and $summary[] = "  <td class=\"nobr noprint\"><input type=\"checkbox\" id=\"checkbox_".$task["taskID"]."\" name=\"select[".$task["taskID"]."]\" class=\"task_checkboxes\"></td>";
-                                  $summary[] = "  <td sorttable_customkey=\"".$task["taskTypeID"]."\">".$task["taskTypeImage"]."</td>";
-    $_FORM["showTaskID"]      and $summary[] = "  <td>".$task["taskID"]."&nbsp;</td>";
-                                  $summary[] = "  <td style=\"padding-left:".($task["padding"]*25+6)."px\">".$task["taskLink"]."&nbsp;&nbsp;".$task["newSubTask"].$str."</td>";
-    $_FORM["showProject"]     and $summary[] = "  <td><a href=\"".$TPL["url_alloc_project"]."projectID=".$task["projectID"]."\">".$task["project_name"]."</a>&nbsp;</td>";
-    $_FORM["showPriority"]    and $summary[] = "  <td>".sprintf("%0.2f",$task["priorityFactor"])."&nbsp;</td>"; 
-    $_FORM["showPriority"]    and $summary[] = "  <td style=\"color:".$_FORM["taskPriorities"][$task["priority"]]["colour"]."\">".$_FORM["taskPriorities"][$task["priority"]]["label"]."&nbsp;</td>"; 
-    $_FORM["showPriority"]    and $summary[] = "  <td style=\"color:".$_FORM["projectPriorities"][$task["projectPriority"]]["colour"]."\">".$_FORM["projectPriorities"][$task["projectPriority"]]["label"]."&nbsp;</td>"; 
-    $_FORM["showDateStatus"]  and $summary[] = "  <td>".$task["taskDateStatus"]."&nbsp;</td>"; 
-    $_FORM["showCreator"]     and $summary[] = "  <td>".$people_cache[$task["creatorID"]]["name"]."&nbsp;</td>";
-    $_FORM["showManager"]     and $summary[] = "  <td>".$people_cache[$task["managerID"]]["name"]."&nbsp;</td>";
-    $_FORM["showAssigned"]    and $summary[] = "  <td>".$people_cache[$task["personID"]]["name"]."&nbsp;</td>";
-    $_FORM["showDate1"]       and $summary[] = "  <td class=\"nobr\">".$task["dateTargetStart"]."&nbsp;</td>";
-    $_FORM["showDate2"]       and $summary[] = "  <td class=\"nobr\">".$task["dateTargetCompletion"]."&nbsp;</td>";
-    $_FORM["showDate3"]       and $summary[] = "  <td class=\"nobr\">".$task["dateActualStart"]."&nbsp;</td>";
-    $_FORM["showDate4"]       and $summary[] = "  <td class=\"nobr\">".$task["dateActualCompletion"]."&nbsp;</td>";
-    $_FORM["showDate5"]       and $summary[] = "  <td class=\"nobr\">".$task["dateCreated"]."&nbsp;</td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format($timeEstimate)."&nbsp;</td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".seconds_to_display_format(task::get_time_billed($task["taskID"]))."&nbsp;</td>";
-    $_FORM["showTimes"]       and $summary[] = "  <td class=\"nobr\">".$task["percentComplete"]."&nbsp;</td>";
-    $_FORM["showStatus"]      and $summary[] = "  <td class=\"nobr\" style=\"width:1%; ".$task["taskStatusColour"]."\">".$task["taskStatusLabel"]."&nbsp;</td>";
-                                  $summary[] = "</tr>";
-
-    $summary = "\n".implode("\n",$summary);
-    return $summary;
+    $task["timeEstimate"] !== NULL and $task["timeEstimate"] = $task["timeEstimate"]*60*60;
+    $task["_FORM"] = $_FORM;
+    $task["str"] = $str;
+    $TPL = array_merge($TPL,(array)$task);
+    return include_template(dirname(__FILE__)."/../templates/taskListR.tpl", true);
   }  
 
   function get_new_subtask_link() {
