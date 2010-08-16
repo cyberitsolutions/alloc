@@ -64,6 +64,10 @@ function get_template($filename) {
   $replace = '<?php echo ${1}; ?>';
   $template = preg_replace($pattern,$replace,$template);
 
+  // Replace {=$var_name} with echo page::htmlentities($var_name);
+  $pattern = '/{=([^}]+)}/i';
+  $replace = '<?php echo page::htmlentities(${1}); ?>';
+  $template = preg_replace($pattern,$replace,$template);
 
   // Replace {if hey}    with if (hey) { 
   // Replace {while hey} with while (hey) { 
