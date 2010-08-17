@@ -3,11 +3,11 @@
       <table>
         <tr>
           <td colspan="3">
-            <b>Client Name:</b> {$client_clientName}<br>
-            <b>Phone:</b> {$client_clientPhoneOne}<br>
-            <b>Fax:</b> {$client_clientFaxOne}<br>
-            <b>Status:</b> {echo ucwords($client_clientStatus)}<br>
-            <b>Category:</b> {$client_clientCategoryLabel}
+            <b>Client Name:</b> {=$client_clientName}<br>
+            <b>Phone:</b> {=$client_clientPhoneOne}<br>
+            <b>Fax:</b> {=$client_clientFaxOne}<br>
+            <b>Status:</b> {=ucwords($client_clientStatus)}<br>
+            <b>Category:</b> {=$client_clientCategoryLabel}
           </td>
         </tr>
         <tr>

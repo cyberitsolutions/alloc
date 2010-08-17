@@ -104,13 +104,17 @@ class client extends db_entity {
     return "<select id=\"clientContactID\" name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
   }
  
-  function get_name() {
-    return $this->get_value("clientName");
+  function get_name($_FORM=array()) {
+    if ($_FORM["return"] == "html") { 
+      return $this->get_value("clientName",DST_HTML_DISPLAY);
+    } else {
+      return $this->get_value("clientName");
+    }
   }
 
-  function get_client_link() {
+  function get_client_link($_FORM=array()) {
     global $TPL;
-    return "<a href=\"".$TPL["url_alloc_client"]."clientID=".$this->get_id()."\">".$this->get_name()."</a>";
+    return "<a href=\"".$TPL["url_alloc_client"]."clientID=".$this->get_id()."\">".$this->get_name($_FORM)."</a>";
   }
 
   function get_list_filter($filter=array()) {
@@ -187,7 +191,7 @@ class client extends db_entity {
       $c->read_db_record($db);
 
       $row["clientCategoryLabel"] = $clientCategories[$c->get_value("clientCategory")];
-      $row["clientLink"] = $c->get_client_link();
+      $row["clientLink"] = $c->get_client_link($_FORM);
 
       if (!$row["clientContactName"]) {
         $q = sprintf("SELECT * FROM clientContact WHERE clientID = %d ORDER BY clientContactName LIMIT 1",$row["clientID"]);
