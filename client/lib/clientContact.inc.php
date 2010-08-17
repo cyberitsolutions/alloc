@@ -114,6 +114,17 @@ class clientContact extends db_entity {
     return parent::delete();
   }
 
+  function format_contact() {
+    $this->get_value("clientContactName")          and $str.= $this->get_value("clientContactName",DST_HTML_DISPLAY)."<br>";
+    $this->get_value("clientContactStreetAddress") and $str.= $this->get_value("clientContactStreetAddress",DST_HTML_DISPLAY)."<br>";  
+    $this->get_value("clientContactSuburb")        and $str.= $this->get_value("clientContactSuburb",DST_HTML_DISPLAY)."<br>";  
+    $this->get_value("clientContactPostcode")      and $str.= $this->get_value("clientContactPostcode",DST_HTML_DISPLAY)."<br>";  
+    $this->get_value("clientContactPhone")         and $str.= $this->get_value("clientContactPhone",DST_HTML_DISPLAY)."<br>";
+    $this->get_value("clientContactMobile")        and $str.= $this->get_value("clientContactMobile",DST_HTML_DISPLAY)."<br>";
+    $this->get_value("clientContactFax")           and $str.= $this->get_value("clientContactFax",DST_HTML_DISPLAY)."<br>";
+    $this->get_value("clientContactEmail")         and $str.= $this->get_value("clientContactEmail",DST_HTML_DISPLAY)."<br>";  
+    return $str;
+  }
 }
 
 

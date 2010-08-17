@@ -291,7 +291,7 @@ require_once("../alloc.php");
     while ($db->next_record()) {
       $reminder = new reminder;
       $reminder->read_db_record($db);
-      $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
+      $reminder->set_tpl_values(DST_HTML_DISPLAY, "reminder_");
 
       if ($reminder->get_value('reminderRecuringInterval') == "No") {
         $TPL["reminder_reminderRecurence"] = "&nbsp;";
@@ -524,57 +524,32 @@ $clientID = $project->get_value("clientID") or $clientID = $_GET["clientID"];
 $client = new client;
 $client->set_id($clientID);
 $client->select();
-$client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+$client->set_tpl_values(DST_HTML_DISPLAY, "client_");
 
 // If a client has been chosen
 if ($clientID) {
+
   $query = sprintf("SELECT * 
-                      FROM client 
-                 LEFT JOIN clientContact ON client.clientID = clientContact.clientID 
-                     WHERE client.clientID = %d AND clientContact.primaryContact = true"
+                      FROM clientContact
+                     WHERE clientContact.clientID = %d AND clientContact.primaryContact = true"
                    ,$clientID);
-
   $db->query($query);
-  $row = $db->next_record();
+  $cc = new clientContact();
+  $cc->read_db_record($db);
   
-  $row["clientStreetAddressOne"] and $one.= $row["clientStreetAddressOne"]."<br>";
-  $row["clientSuburbOne"]        and $one.= $row["clientSuburbOne"]."<br>";
-  $row["clientStateOne"]         and $one.= $row["clientStateOne"]."<br>";
-  $row["clientPostcodeOne"]      and $one.= $row["clientPostcodeOne"]."<br>";
-  $row["clientCountryOne"]       and $one.= $row["clientCountryOne"]."<br>";
-
-  $row["clientStreetAddressTwo"] and $two.= $row["clientStreetAddressTwo"]."<br>";
-  $row["clientSuburbTwo"]        and $two.= $row["clientSuburbTwo"]."<br>";
-  $row["clientStateTwo"]         and $two.= $row["clientStateTwo"]."<br>";
-  $row["clientPostcodeTwo"]      and $two.= $row["clientPostcodeTwo"]."<br>";
-  $row["clientCountryTwo"]       and $two.= $row["clientCountryTwo"]."<br>";
-
-  $row["clientContactName"]      and $thr.= $row["clientContactName"]."<br>";
-  $row["clientContactPhone"]     and $thr.= $row["clientContactPhone"]."<br>";
-  $row["clientContactMobile"]    and $thr.= $row["clientContactMobile"]."<br>";
-  $row["clientContactFax"]       and $thr.= $row["clientContactFax"]."<br>";
-  $row["clientContactEmail"]     and $thr.= $row["clientContactEmail"]."<br>";
-
-  $project->get_value("projectClientName")    and $fou.= $project->get_value("projectClientName")."<br>";
-  $project->get_value("projectClientAddress") and $fou.= $project->get_value("projectClientAddress")."<br>";
-  $project->get_value("projectClientPhone")   and $fou.= $project->get_value("projectClientPhone")."<br>";
-  $project->get_value("projectClientMobile")  and $fou.= $project->get_value("projectClientMobile")."<br>";
-  $project->get_value("projectClientEMail")   and $fou.= $project->get_value("projectClientEMail")."<br>";
+  $one = $client->format_address("postal");
+  $two = $client->format_address("street");
+  $thr = $cc->format_contact();
+  $fou = $project->format_client_old();  
 
   $temp = str_replace("<br>","",$fou);
   $temp and $thr = $fou;
 
   if ($project->get_value("clientContactID")) {
-    $q = sprintf("SELECT * FROM clientContact WHERE clientContactID = %d",$project->get_value("clientContactID"));  
-    $db->query($q);
-    $db->next_record();
-    $db->f("clientContactName")          and $fiv .= "<nobr>".$db->f("clientContactName")."</nobr><br>";
-    $db->f("clientContactStreetAddress") and $fiv .= $db->f("clientContactStreetAddress")."<br>";
-    $db->f("clientContactSuburb")        and $fiv .= $db->f("clientContactSuburb")."<br>";
-    $db->f("clientContactPostcode")      and $fiv .= $db->f("clientContactPostcode")."<br>";
-    $db->f("clientContactPhone")         and $fiv .= $db->f("clientContactPhone")."<br>";
-    $db->f("clientContactMobile")        and $fiv .= $db->f("clientContactMobile")."<br>";
-    $db->f("clientContactEmail")         and $fiv .= $db->f("clientContactEmail")."<br>";
+    $cc = new clientContact();
+    $cc->set_id($project->get_value("clientContactID"));
+    $cc->select();
+    $fiv = $cc->format_contact();
     $temp = str_replace("<br>","",$fiv);
     $temp and $thr = $fiv;
   }
@@ -756,7 +731,7 @@ DONE;
 } else {
   $TPL["main_alloc_title"] = "Project " . $project->get_id() . ": " . $project->get_name() . " - ".APPLICATION_NAME;
   $TPL["projectSelfLink"] = "<a href=\"". $project->get_url() . "\">";
-  $TPL["projectSelfLink"] .=  sprintf("%d %s", $project->get_id(), $project->get_name());
+  $TPL["projectSelfLink"] .=  sprintf("%d %s", $project->get_id(), $project->get_name(array("return"=>"html")));
   $TPL["projectSelfLink"] .= "</a>";
 }
 

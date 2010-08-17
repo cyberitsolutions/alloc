@@ -97,6 +97,7 @@ class project extends db_entity {
 
   function get_project_link($_FORM=array()) {
     global $TPL;
+    $_FORM["return"] or $_FORM["return"] = "html";
     return "<a href=\"".$TPL["url_alloc_project"]."projectID=".$this->get_id()."\">".$this->get_name($_FORM)."</a>";
   }
 
@@ -616,6 +617,15 @@ class project extends db_entity {
     $doc->addField(Zend_Search_Lucene_Field::Text('agency'   ,sprintf("%d",$this->get_value("is_agency"))));
     $doc->addField(Zend_Search_Lucene_Field::Text('billed'   ,$this->get_value("customerBilledDollars")));
     $index->addDocument($doc);
+  }
+
+  function format_client_old() {
+    $this->get_value("projectClientName")    and $str.= $this->get_value("projectClientName",DST_HTML_DISPLAY)."<br>";
+    $this->get_value("projectClientAddress") and $str.= $this->get_value("projectClientAddress",DST_HTML_DISPLAY)."<br>";
+    $this->get_value("projectClientPhone")   and $str.= $this->get_value("projectClientPhone",DST_HTML_DISPLAY)."<br>";
+    $this->get_value("projectClientMobile")  and $str.= $this->get_value("projectClientMobile",DST_HTML_DISPLAY)."<br>";
+    $this->get_value("projectClientEMail")   and $str.= $this->get_value("projectClientEMail",DST_HTML_DISPLAY)."<br>";
+    return $str;
   }
 
 }

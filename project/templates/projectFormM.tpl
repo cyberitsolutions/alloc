@@ -97,7 +97,7 @@ function clickClientStatus(e) {
 
         <div class="view">
           <h6>{$project_projectType}{page::mandatory($project_projectName)}</h6>
-          <h2 style="margin-bottom:0px; display:inline;">{$project_projectID} {$project_projectName}</h2>&nbsp;{$priorityLabel}
+          <h2 style="margin-bottom:0px; display:inline;">{$project_projectID} {=$project_projectName}</h2>&nbsp;{$priorityLabel}
         </div>
 
         <div class="edit">
@@ -150,7 +150,7 @@ function clickClientStatus(e) {
         <div class="view">
           <h6>Project Nickname<div>Status</div></h6>
           <div style="float:left; width:40%;">
-            {$project_projectShortName}
+            {=$project_projectShortName}
           </div>
           <div style="float:right; width:50%;">
             {echo ucwords($project_projectStatus)}
