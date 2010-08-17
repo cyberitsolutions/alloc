@@ -81,16 +81,23 @@ class project extends db_entity {
     return $url;
   }
 
-  function get_name($shortest=false) {
-    if ($shortest && $this->get_value("projectShortName")) {
-      return $this->get_value("projectShortName");
+  function get_name($_FORM=array()) {
+    if ($_FORM["showShortProjectLink"] && $this->get_value("projectShortName")) {
+      $field = "projectShortName";
+    } else {
+      $field = "projectName";
     }
-    return $this->get_value("projectName");
+
+    if ($_FORM["return"] == "html") {
+      return $this->get_value($field,DST_HTML_DISPLAY);
+    } else {
+      return $this->get_value($field);
+    }
   }
 
-  function get_project_link($shortest=false) {
+  function get_project_link($_FORM=array()) {
     global $TPL;
-    return "<a href=\"".$TPL["url_alloc_project"]."projectID=".$this->get_id()."\">".$this->get_name($shortest)."</a>";
+    return "<a href=\"".$TPL["url_alloc_project"]."projectID=".$this->get_id()."\">".$this->get_name($_FORM)."</a>";
   }
 
   function is_owner($person = "") {
@@ -395,11 +402,11 @@ class project extends db_entity {
       $print = true;
       $p = new project;
       $p->read_db_record($db);
-      $row["projectName"] = $p->get_name();
-      $row["projectLink"] = $p->get_project_link();
+      $row["projectName"] = $p->get_name($_FORM);
+      $row["projectLink"] = $p->get_project_link($_FORM);
       $row["navLinks"] = $p->get_navigation_links();
       $summary.= project::get_list_tr($row,$_FORM);
-      $label = $p->get_name();
+      $label = $p->get_name($_FORM);
       $_FORM["showProjectType"] and $label.= " [".$p->get_project_type()."]";
       $summary_ops[$row["projectID"]] = $label; 
       $rows[$row["projectID"]] = $row;
@@ -435,19 +442,11 @@ class project extends db_entity {
     }
   }
 
-  function get_list_tr($row,$_FORM) {
-    $summary[] = "<tr>";
-    $_FORM["showProjectName"]     and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
-    $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";
-    $_FORM["showProjectShortName"] and $summary[]= "  <td>".$row["projectShortName"]."</td>";
-    $_FORM["showClient"]          and $summary[] = "  <td>".$row["clientName"]."&nbsp;</td>";
-    $_FORM["showProjectType"]     and $summary[] = "  <td>".ucwords($row["projectType"])."&nbsp;</td>";
-    $_FORM["showProjectStatus"]   and $summary[] = "  <td>".ucwords($row["projectStatus"])."&nbsp;</td>";
-    $_FORM["showNavLinks"]        and $summary[] = "  <td class=\"nobr noprint\" align=\"right\">".$row["navLinks"]."&nbsp;</td>";
-    $summary[] = "</tr>";
-
-    $summary = "\n".implode("\n",$summary);
-    return $summary;
+  function get_list_tr($row,$_FORM=array()) {
+    global $TPL;
+    $TPL = array_merge($TPL,(array)$row);
+    $TPL["_FORM"] = $_FORM;
+    return include_template(dirname(__FILE__)."/../templates/projectListR.tpl", true);
   }
 
   function get_list_vars() {
@@ -589,7 +588,7 @@ class project extends db_entity {
     $projectModifiedUser = $this->get_value("projectModifiedUser");
     $projectModifiedUser_field = $projectModifiedUser." ".$p[$projectModifiedUser]["username"]." ".$p[$projectModifiedUser]["name"];
     $projectName = $this->get_name();
-    $projectShortName = $this->get_name(true);
+    $projectShortName = $this->get_name(array("showShortProjectLink"=>true));
     $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
 
     if ($this->get_value("clientID")) {

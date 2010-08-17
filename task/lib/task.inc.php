@@ -2040,7 +2040,7 @@ class task extends db_entity {
       $project->set_id($this->get_value("projectID"));
       $project->select();
       $projectName = $project->get_name();
-      $projectShortName = $project->get_name(true);
+      $projectShortName = $project->get_name(array("showShortProjectLink"=>true));
       $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
     }
 
