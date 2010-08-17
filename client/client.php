@@ -53,34 +53,10 @@ require_once("../alloc.php");
     global $TPL, $client, $clientID;
     if ($clientID && !$_POST["client_edit"] && !$TPL["message"]) {
       // setup formatted address output
-
-      // postal address
-      $TPL["client_clientPostalAddress"] = format_address($client->get_value('clientStreetAddressOne',DST_HTML_DISPLAY), $client->get_value('clientSuburbOne',DST_HTML_DISPLAY), $client->get_value('clientStateOne',DST_HTML_DISPLAY), $client->get_value('clientPostcodeOne',DST_HTML_DISPLAY), $client->get_value('clientCountryOne',DST_HTML_DISPLAY));
-      // street address
-      $TPL["client_clientStreetAddress"] = format_address($client->get_value('clientStreetAddressTwo',DST_HTML_DISPLAY), $client->get_value('clientSuburbTwo',DST_HTML_DISPLAY), $client->get_value('clientStateTwo',DST_HTML_DISPLAY), $client->get_value('clientPostcodeTwo',DST_HTML_DISPLAY), $client->get_value('clientCountryTwo',DST_HTML_DISPLAY));
+      $TPL["client_clientPostalAddress"] = $client->format_address("postal");
+      $TPL["client_clientStreetAddress"] = $client->format_address("street");
       include_template($template);
     }
-  }
-
-  function format_address($address, $suburb, $state, $postcode, $country) {
-    if ($address != "") {
-      $a = $address;
-      if ($suburb != "") {
-        $a.= "<br>".$suburb;
-      }
-      if ($state != "") {
-        $a.= " ".$state;
-      }
-      if ($postcode != "") {
-        $a.= " ".$postcode;
-      }
-      if ($country != "") {
-        $a.= "<br>".$country;
-      }
-    } else {
-      $a = "";
-    }
-    return $a;
   }
 
   function show_client_contacts() {
