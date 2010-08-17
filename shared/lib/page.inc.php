@@ -216,7 +216,7 @@ class page {
 EOD;
     return $str;
   }
-  function select_options($options,$selected_value=NULL,$max_length=45) {
+  function select_options($options,$selected_value=NULL,$max_length=45,$escape=true) {
     /**
      * Builds up options for use in a html select widget (works with multiple selected too)
      *
@@ -272,8 +272,12 @@ EOD;
         if (strlen($label) > $max_length) {
           $label = substr($label, 0, $max_length - 3)."...";
         } 
-#$label = page::htmlentities($label); nope!
-        $label = str_replace(" ","&nbsp;",$label);
+      
+        if ($escape) {
+          $label = page::htmlentities($label);
+        } else {
+          $label = str_replace(" ","&nbsp;",$label);
+        }
 
         $str.= "\n<option value=\"".$value."\"".$sel.">".$label."</option>";
       }
