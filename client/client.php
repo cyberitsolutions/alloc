@@ -55,9 +55,9 @@ require_once("../alloc.php");
       // setup formatted address output
 
       // postal address
-      $TPL["client_clientPostalAddress"] = format_address($client->get_value('clientStreetAddressOne'), $client->get_value('clientSuburbOne'), $client->get_value('clientStateOne'), $client->get_value('clientPostcodeOne'), $client->get_value('clientCountryOne'));
+      $TPL["client_clientPostalAddress"] = format_address($client->get_value('clientStreetAddressOne',DST_HTML_DISPLAY), $client->get_value('clientSuburbOne',DST_HTML_DISPLAY), $client->get_value('clientStateOne',DST_HTML_DISPLAY), $client->get_value('clientPostcodeOne',DST_HTML_DISPLAY), $client->get_value('clientCountryOne',DST_HTML_DISPLAY));
       // street address
-      $TPL["client_clientStreetAddress"] = format_address($client->get_value('clientStreetAddressTwo'), $client->get_value('clientSuburbTwo'), $client->get_value('clientStateTwo'), $client->get_value('clientPostcodeTwo'), $client->get_value('clientCountryTwo'));
+      $TPL["client_clientStreetAddress"] = format_address($client->get_value('clientStreetAddressTwo',DST_HTML_DISPLAY), $client->get_value('clientSuburbTwo',DST_HTML_DISPLAY), $client->get_value('clientStateTwo',DST_HTML_DISPLAY), $client->get_value('clientPostcodeTwo',DST_HTML_DISPLAY), $client->get_value('clientCountryTwo',DST_HTML_DISPLAY));
       include_template($template);
     }
   }
@@ -123,13 +123,13 @@ require_once("../alloc.php");
       }
 
       $col1 = array();
-      $clientContact->get_value('clientContactName') and $col1[] = "<b>".$clientContact->get_value('clientContactName')."</b>".$pc;
-      $clientContact->get_value('clientContactStreetAddress') and $col1[] = $clientContact->get_value('clientContactStreetAddress');
+      $clientContact->get_value('clientContactName') and $col1[] = "<b>".$clientContact->get_value('clientContactName',DST_HTML_DISPLAY)."</b>".$pc;
+      $clientContact->get_value('clientContactStreetAddress') and $col1[] = $clientContact->get_value('clientContactStreetAddress',DST_HTML_DISPLAY);
 
       $clientContact->get_value('clientContactSuburb') || $clientContact->get_value('clientContactState') || $clientContact->get_value('clientContactPostcode') and
-      $col1[] = $clientContact->get_value('clientContactSuburb').' '.$clientContact->get_value('clientContactState')." ".$clientContact->get_value('clientContactPostcode');
+      $col1[] = $clientContact->get_value('clientContactSuburb',DST_HTML_DISPLAY).' '.$clientContact->get_value('clientContactState',DST_HTML_DISPLAY)." ".$clientContact->get_value('clientContactPostcode',DST_HTML_DISPLAY);
 
-      $clientContact->get_value('clientContactCountry') and $col1[] = $clientContact->get_value('clientContactCountry');
+      $clientContact->get_value('clientContactCountry') and $col1[] = $clientContact->get_value('clientContactCountry',DST_HTML_DISPLAY);
 
 
       // find some gpl icons!
@@ -144,18 +144,20 @@ require_once("../alloc.php");
       $ico_f = "F: ";
 
       $col2 = array();
-      $email = $clientContact->get_value("clientContactEmail");
+      $email = $clientContact->get_value("clientContactEmail",DST_HTML_DISPLAY);
       $email = str_replace("<","",$email);
       $email = str_replace(">","",$email);
+      $email = str_replace("&lt;","",$email);
+      $email = str_replace("&gt;","",$email);
       $email and $col2[] = $ico_e."<a href=\"mailto:".$email."\">".$email."</a>";
 
-      $phone = $clientContact->get_value('clientContactPhone');
+      $phone = $clientContact->get_value('clientContactPhone',DST_HTML_DISPLAY);
       $phone and $col2[] = $ico_p.$phone;
 
-      $mobile = $clientContact->get_value('clientContactMobile');
+      $mobile = $clientContact->get_value('clientContactMobile',DST_HTML_DISPLAY);
       $mobile and $col2[] = $ico_m.$mobile;
 
-      $fax = $clientContact->get_value('clientContactFax');
+      $fax = $clientContact->get_value('clientContactFax',DST_HTML_DISPLAY);
       $fax and $col2[] = $ico_f.$fax;
 
       $buttons = "<nobr><input type=\"submit\" name=\"clientContact_edit\" value=\"Edit\"> 
@@ -168,7 +170,7 @@ require_once("../alloc.php");
       $rtn[] =  '<tr>';
       $rtn[] =  '  <td width="25%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col1).'</span></td>';
       $rtn[] =  '  <td width="20%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col2).'</span></td>';
-      $rtn[] =  '  <td rowspan="4" align="left" valign="top">'.nl2br($clientContact->get_value('clientContactOther')).'</td>';
+      $rtn[] =  '  <td rowspan="4" align="left" valign="top">'.nl2br($clientContact->get_value('clientContactOther',DST_HTML_DISPLAY)).'</td>';
       $rtn[] =  '  <th rowspan="2" align="right" style="float:right">'.$buttons.'</th>';
       $rtn[] =  '</tr>';
       $rtn[] =  '</table>';
@@ -208,7 +210,7 @@ require_once("../alloc.php");
     while ($db->next_record()) {
       $reminder = new reminder;
       $reminder->read_db_record($db);
-      $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
+      $reminder->set_tpl_values(DST_HTML_DISPLAY, "reminder_");
       if ($reminder->get_value('reminderRecuringInterval') == "No") {
         $TPL["reminder_reminderRecurence"] = "&nbsp;";
       } else {
@@ -357,7 +359,7 @@ if (!$clientID) {
   $TPL["clientSelfLink"] = "New Client";
 } else {
   $TPL["main_alloc_title"] = "Client " . $client->get_id() . ": " . $client->get_name()." - ".APPLICATION_NAME;
-  $TPL["clientSelfLink"] = sprintf("<a href=\"%s\">%d %s</a>", $client->get_url(), $client->get_id(), $client->get_name());
+  $TPL["clientSelfLink"] = sprintf("<a href=\"%s\">%d %s</a>", $client->get_url(), $client->get_id(), $client->get_name(array("return"=>"html")));
 }
 
 
