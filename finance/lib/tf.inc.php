@@ -117,9 +117,9 @@ class tf extends db_entity {
   function get_link() {
     global $current_user, $TPL;
     if (have_entity_perm("transaction", PERM_READ, $current_user, $this->is_owner())) {
-      return "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$this->get_id()."\">".$this->get_value("tfName")."</a>";
+      return "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$this->get_id()."\">".$this->get_value("tfName",DST_HTML_DISPLAY)."</a>";
     } else {
-      return $this->get_value("tfName");
+      return $this->get_value("tfName",DST_HTML_DISPLAY);
     }
   }
 
