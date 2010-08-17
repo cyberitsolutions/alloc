@@ -442,6 +442,34 @@ class client extends db_entity {
     $index->addDocument($doc);
   }
 
+  function format_address($type="street") {
+
+    if ($type == "postal") {
+      $f1 = $this->get_value("clientStreetAddressOne",DST_HTML_DISPLAY);
+      $f2 = $this->get_value("clientSuburbOne",DST_HTML_DISPLAY);
+      $f3 = $this->get_value("clientStateOne",DST_HTML_DISPLAY);
+      $f4 = $this->get_value("clientPostcodeOne",DST_HTML_DISPLAY);
+      $f5 = $this->get_value("clientCountryOne",DST_HTML_DISPLAY);
+
+    } else if ($type == "street") {
+      $f1 = $this->get_value("clientStreetAddressTwo",DST_HTML_DISPLAY);
+      $f2 = $this->get_value("clientSuburbTwo",DST_HTML_DISPLAY);
+      $f3 = $this->get_value("clientStateTwo",DST_HTML_DISPLAY);
+      $f4 = $this->get_value("clientPostcodeTwo",DST_HTML_DISPLAY);
+      $f5 = $this->get_value("clientCountryTwo",DST_HTML_DISPLAY);
+    }
+
+    if ($f1 != "") {
+      $str = $f1;
+      $f2 and $str.= "<br>".$f2;
+      $f3 and $str.= " ".$f3;
+      $f4 and $str.= " ".$f4;
+      $f5 and $str.= "<br>".$f5;
+    }
+
+    return $str;
+  }
+
 }
 
 
