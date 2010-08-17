@@ -593,8 +593,7 @@ class timeSheet extends db_entity {
 
       $p = new project();
       $p->read_db_record($db);
-      #$row["projectName"] = $p->get_name();
-      $row["projectLink"] = $t->get_link($p->get_name($_FORM["showShortProjectLink"]));
+      $row["projectLink"] = $t->get_link($p->get_name($_FORM));
       $summary.= timeSheet::get_list_tr($row,$_FORM);
       $rows[$row["timeSheetID"]] = $row;
     }
@@ -1234,7 +1233,7 @@ EOD;
 
       $project = $this->get_foreign_object("project");
 
-      $subject = "Time Sheet Comment: ".$this->get_id()." ".$project->get_name(1)." ".$subject_extra;
+      $subject = "Time Sheet Comment: ".$this->get_id()." ".$project->get_name(array("showShortProjectLink"=>true))." ".$subject_extra;
       $email->set_subject($subject);
       $email->set_body($body);
       $email->set_message_type($type);
@@ -1298,12 +1297,12 @@ EOD;
     return $this->is_owner();
   }
 
-  function get_name() {
+  function get_name($_FORM=array()) {
     $project = new project();
     $project->set_id($this->get_value("projectID"));
     $project->select();
     $p = get_cached_table("person");
-    return "Time Sheet for ".$project->get_name()." by ".$p[$this->get_value("personID")]["name"];
+    return "Time Sheet for ".$project->get_name($_FORM)." by ".$p[$this->get_value("personID")]["name"];
   }
 
   function update_search_index_doc(&$index) {
@@ -1321,7 +1320,7 @@ EOD;
       $project->set_id($this->get_value("projectID"));
       $project->select();
       $projectName = $project->get_name();
-      $projectShortName = $project->get_name(true);
+      $projectShortName = $project->get_name(array("showShortProjectLink"=>true));
       $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
     }
 
