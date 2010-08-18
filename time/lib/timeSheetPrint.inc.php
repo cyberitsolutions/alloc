@@ -85,7 +85,7 @@ class timeSheetPrint {
       $units[$taskID][$unit] += sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration"));
 
       unset($str);
-      $d = $timeSheetItem->get_value('description');
+      $d = $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
       $d && !$rows[$taskID]["desc"] and $str[] = $d;
 
       // Get task description
@@ -93,14 +93,14 @@ class timeSheetPrint {
         $t = new task;
         $t->set_id($taskID);
         $t->select();
-        $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription"));
+        $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription",DST_HTML_DISPLAY));
 
         $d2 && !$d2s[$taskID] and $str[] = $d2;
         $d2 and $d2s[$taskID] = true;
       }
 
       $c = str_replace("\r\n","\n",$timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = page::to_html($c);
+      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = page::htmlentities($c);
 
       is_array($str) and $rows[$taskID]["desc"].= trim(implode(DEFAULT_SEP,$str));
     }
@@ -150,7 +150,7 @@ class timeSheetPrint {
       $units[$taskID][$unit] += $num;
 
       unset($str);
-      $d = $timeSheetItem->get_value('description');
+      $d = $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
       $d && !$rows[$taskID]["desc"] and $str[] = $d;
 
 
@@ -159,14 +159,14 @@ class timeSheetPrint {
         $t = new task;
         $t->set_id($taskID);
         $t->select();
-        $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription"));
+        $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription",DST_HTML_DISPLAY));
 
         $d2 && !$d2s[$taskID] and $str[] = $d2;
         $d2 and $d2s[$taskID] = true;
       }
 
       $c = str_replace("\r\n","\n",$timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c  && !$cs[$c] and $str[] = page::to_html($c);
+      !$timeSheetItem->get_value("commentPrivate") && $c  && !$cs[$c] and $str[] = page::htmlentities($c);
       $cs[$c] = true;
 
       is_array($str) and $rows[$taskID]["desc"].= trim(implode(DEFAULT_SEP,$str));
@@ -219,7 +219,7 @@ class timeSheetPrint {
       $rows[$row_num]["multiplier_string"] = $multipliers[$timeSheetItem->get_value("multiplier")]["timeSheetItemMultiplierName"];
 
       unset($str);
-      $d = $timeSheetItem->get_value('description');
+      $d = $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
       $d && !$rows[$row_num]["desc"] and $str[] = $d;
 
       // Get task description
@@ -227,14 +227,14 @@ class timeSheetPrint {
         $t = new task;
         $t->set_id($taskID);
         $t->select();
-        $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription"));
+        $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription",DST_HTML_DISPLAY));
 
         $d2 && !$d2s[$taskID] and $str[] = $d2;
         $d2 and $d2s[$taskID] = true;
       }
 
       $c = str_replace("\r\n","\n",$timeSheetItem->get_value("comment"));
-      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = page::to_html($c);
+      !$timeSheetItem->get_value("commentPrivate") && $c and $str[] = page::htmlentities($c);
 
       is_array($str) and $rows[$row_num]["desc"].= trim(implode(DEFAULT_SEP,$str));
     }
@@ -261,23 +261,24 @@ class timeSheetPrint {
       $timeSheet = new timeSheet;
       $timeSheet->set_id($timeSheetID);
       $timeSheet->select();
-      $timeSheet->set_tpl_values();
+      $timeSheet->set_tpl_values(DST_HTML_DISPLAY);
 
 
       $person = $timeSheet->get_foreign_object("person");
       $TPL["timeSheet_personName"] = $person->get_username(1);
-      $timeSheet->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheet_");
+      $timeSheet->set_tpl_values(DST_HTML_DISPLAY, "timeSheet_");
 
 
       // Display the project name.
       $project = new project;
       $project->set_id($timeSheet->get_value("projectID"));
       $project->select();
-      $TPL["timeSheet_projectName"] = $project->get_value("projectName");
+      $TPL["timeSheet_projectName"] = $project->get_value("projectName",DST_HTML_DISPLAY);
 
       // Get client name
       $client = $project->get_foreign_object("client");
-      $TPL["clientName"] = $client->get_value("clientName");
+      $client->set_tpl_values(DST_HTML_DISPLAY);
+      $TPL["clientName"] = $client->get_value("clientName",DST_HTML_DISPLAY);
       $TPL["companyName"] = config::get_config_item("companyName");
 
       $TPL["companyNos1"] = config::get_config_item("companyACN");
