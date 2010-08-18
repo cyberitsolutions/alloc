@@ -59,9 +59,9 @@ if ($search && $needle && $category == "Projects") {
       $row["idx"] = $hit->id;
       $row["score"] = sprintf('%d%%', $hit->score*100);
       $row["title"] = $d->getFieldValue('id')." ".sprintf("<a href='%sprojectID=%d'>%s</a>"
-                      ,$TPL["url_alloc_project"], $d->getFieldValue('id'), $d->getFieldValue('name'));
+                      ,$TPL["url_alloc_project"], $d->getFieldValue('id'), page::htmlentities($d->getFieldValue('name')));
       $row["related"] = sprintf("<a href='%sclientID=%d'>%s</a>"
-                      ,$TPL["url_alloc_client"], $d->getFieldValue('cid'), $d->getFieldValue('client'));
+                      ,$TPL["url_alloc_client"], $d->getFieldValue('cid'), page::htmlentities($d->getFieldValue('client')));
       $row["desc"] = page::htmlentities($d->getFieldValue('desc'));
       $TPL["search_results"][] = $row;
     }
@@ -93,7 +93,7 @@ if ($search && $needle && $category == "Projects") {
       $row["idx"] = $hit->id;
       $row["score"] = sprintf('%d%%', $hit->score*100);
       $row["title"] = $d->getFieldValue('id')." ".sprintf("<a href='%sclientID=%d'>%s</a>"
-                      ,$TPL["url_alloc_client"], $d->getFieldValue('id'), $d->getFieldValue('name'));
+                      ,$TPL["url_alloc_client"], $d->getFieldValue('id'), page::htmlentities($d->getFieldValue('name')));
       //$row["related"] = sprintf("<a href='%sprojectID=%d'>%s</a>"
       //                ,$TPL["url_alloc_project"], $d->getFieldValue('pid'), $d->getFieldValue('project'));
       $row["desc"] = page::htmlentities($d->getFieldValue('desc'));
@@ -129,9 +129,9 @@ if ($search && $needle && $category == "Projects") {
       $row["idx"] = $hit->id;
       $row["score"] = sprintf('%d%%', $hit->score*100);
       $row["title"] = $d->getFieldValue('id')." ".sprintf("<a href='%staskID=%d'>%s</a>"
-                      ,$TPL["url_alloc_task"], $d->getFieldValue('id'), $d->getFieldValue('name'));
+                      ,$TPL["url_alloc_task"], $d->getFieldValue('id'), page::htmlentities($d->getFieldValue('name')));
       $row["related"] = sprintf("<a href='%sprojectID=%d'>%s</a>"
-                      ,$TPL["url_alloc_project"], $d->getFieldValue('pid'), $d->getFieldValue('project'));
+                      ,$TPL["url_alloc_project"], $d->getFieldValue('pid'), page::htmlentities($d->getFieldValue('project')));
       $row["desc"] = page::htmlentities($d->getFieldValue('desc'));
       $TPL["search_results"][] = $row;
     }
@@ -195,7 +195,7 @@ if ($search && $needle && $category == "Projects") {
         // Else you dont have permission to loan or return so just show status
         } else {
           
-          $name = $p[$loan->get_value("personID")]["name"];
+          $name = page::htmlentities($p[$loan->get_value("personID")]["name"]);
 
           if ($loan->get_value("dateToBeReturned") < $today) {
             $row["related"] = "Overdue from ".$name;
@@ -243,9 +243,9 @@ if ($search && $needle && $category == "Projects") {
       //$creator = implode(" ",array_shift(array_shift(explode(" ",$d->getFieldValue('creator')))));
       $row["title"] = $d->getFieldValue('id')." ".sprintf("<a href='%stimeSheetID=%d'>%s</a>"
                       ,$TPL["url_alloc_timeSheet"], $d->getFieldValue('id')
-                      ,"Time Sheet for ".$d->getFieldValue('project')." by ".$creator);
+                      ,"Time Sheet for ".page::htmlentities($d->getFieldValue('project'))." by ".page::htmlentities($creator));
       $row["related"] = sprintf("<a href='%sprojectID=%d'>%s</a>"
-                      ,$TPL["url_alloc_project"], $d->getFieldValue('pid'), $d->getFieldValue('project'));
+                      ,$TPL["url_alloc_project"], $d->getFieldValue('pid'), page::htmlentities($d->getFieldValue('project')));
 
       $row["desc"] = page::htmlentities($d->getFieldValue('desc'));
       $TPL["search_results"][] = $row;
@@ -278,10 +278,10 @@ if ($search && $needle && $category == "Projects") {
       $row = array();
       $row["idx"] = $hit->id;
       $row["score"] = sprintf('%d%%', $hit->score*100);
-      $row["title"] = $d->getFieldValue('name');
+      $row["title"] = page::htmlentities($d->getFieldValue('name'));
       $row["related"] = sprintf("<a href='%s%sID=%d'>%s</a>"
                       ,$TPL["url_alloc_".$d->getFieldValue('type')], $d->getFieldValue('type')
-                      ,$d->getFieldValue('typeid'), $d->getFieldValue('typename'));
+                      ,$d->getFieldValue('typeid'), page::htmlentities($d->getFieldValue('typename')));
       $row["desc"] = page::htmlentities($d->getFieldValue('desc'));
       $TPL["search_results"][] = $row;
     }
@@ -305,7 +305,7 @@ if ($search && $needle && $category == "Projects") {
     $row["score"] = sprintf('%d%%', $hit->score*100);
     $row["title"] = sprintf("<a href='%starget=%s'>%s</a>"
                     ,$TPL["url_alloc_wiki"], urlencode($d->getFieldValue('name'))
-                    ,$d->getFieldValue('name'));
+                    ,page::htmlentities($d->getFieldValue('name')));
     $row["desc"] = page::htmlentities($d->getFieldValue('desc'));
     $TPL["search_results"][] = $row;
   }
