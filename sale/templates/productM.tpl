@@ -26,7 +26,7 @@ $(document).ready(function() {
 
         <div class="view">
           <h6>Product Name{page::mandatory($productName)}</h6>
-          <h2 style="margin-bottom:0px; display:inline;">{$productName}</h2>
+          <h2 style="margin-bottom:0px; display:inline;">{=$productName}</h2>
         </div>
         <div class="edit">
           <h6>Product Name{page::mandatory($productName)}</h6>
@@ -36,7 +36,7 @@ $(document).ready(function() {
         {if $description}
         <div class="view">
           <h6>Description</h6>
-          {$description}
+          {=$description}
         </div>
         {/}
         <div class="edit">

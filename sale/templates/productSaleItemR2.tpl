@@ -13,7 +13,7 @@
     <td class="right nobr"></td><td class="right"></td>
   </tr>
   <tr>
-    <td class="right">Description:</td><td>{$description}</td>
+    <td class="right">Description:</td><td>{=$description}</td>
     <td class="right">Margin:</td><td class="right">{$itemMargin}</td>
     <td class="right nobr">Transactions Other:</td><td class="right">{$itemOther}</td>
     {$class = "good"}

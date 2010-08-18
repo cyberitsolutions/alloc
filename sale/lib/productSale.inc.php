@@ -278,18 +278,12 @@ class productSale extends db_entity {
     return implode("\n",$ret);
   }
 
-  function get_list_body($row,$_FORM=array()) {
-    $ret[] = "<tr>";
-    $ret[] = "  <td class=\"nobr\">".productSale::get_link($row)."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".$row["creatorLabel"]."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".$row["productSaleCreatedTime"]."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".$row["clientName"]."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".$row["projectName"]."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".$row["statusLabel"]."&nbsp;</td>";
-    $ret[] = "  <td class=\"right nobr\">".$row["amounts"]["total_margin"]."&nbsp;</td>";
-    $ret[] = "  <td class=\"right nobr\">".$row["amounts"]["total_unallocated"]."&nbsp;</td>";
-    $ret[] = "</tr>";
-    return implode("\n",$ret);
+  function get_list_body($sale,$_FORM=array()) {
+    global $TPL;
+    $TPL["_FORM"] = $_FORM;
+    $TPL["sale"] = $sale;
+    $TPL = array_merge($TPL,(array)$sale);
+    return include_template(dirname(__FILE__)."/../templates/productSaleListR.tpl", true);
   }
 
   function get_list_footer($_FORM=array()) {
