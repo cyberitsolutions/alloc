@@ -767,7 +767,7 @@ class db_entity {
       if ($field && $this->key_field->get_name() == $field) {
         $label = $this->get_id();
       } else if ($field) {
-        $label = $this->get_value($field);
+        $label = $this->get_value($field,DST_HTML_DISPLAY);
       }
       return "<a href=\"".$TPL["url_alloc_".$this->classname].$this->key_field->get_name()."=".$this->get_id()."\">".$label."</a>";
     }
