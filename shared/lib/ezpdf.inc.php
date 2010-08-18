@@ -1057,7 +1057,7 @@ function ezTable(&$data,$cols='',$title='',$options=''){
         }
         $this->y -= $options['rowGap'];
         foreach ($lines as $line){
-          $line = $this->ezProcessText($line);
+          //$line = $this->ezProcessText($line); // removed by alla
           $start=1;
 
           while (strlen($line) || $start){
@@ -1227,7 +1227,7 @@ function ezText($text,$size=0,$options=array(),$test=0){
   // if $test is set then this should just check if the text is going to flow onto a new page or not, returning true or false
   
   // apply the filtering which will make the underlining function.
-  $text = $this->ezProcessText($text);
+  //$text = $this->ezProcessText($text); // removed by alla
   
   $newPage=false;
   $store_y = $this->y;

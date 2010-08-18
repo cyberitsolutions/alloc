@@ -104,7 +104,7 @@ if (!$current_user->is_employee()) {
         while ($db->next_record()) {
           $transaction = new transaction;
           $transaction->read_db_record($db);
-          $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
+          $transaction->set_tpl_values(DST_HTML_DISPLAY, "transaction_");
 
           $TPL["tf_options"] = page::select_options($tf_array, $TPL["transaction_tfID"]);
           $TPL["from_tf_options"] = page::select_options($tf_array, $TPL["transaction_fromTfID"]);
@@ -132,7 +132,7 @@ if (!$current_user->is_employee()) {
         while ($db->next_record()) {
           $transaction = new transaction;
           $transaction->read_db_record($db,false);
-          $transaction->set_tpl_values(DST_HTML_ATTRIBUTE, "transaction_");
+          $transaction->set_tpl_values(DST_HTML_DISPLAY, "transaction_");
           unset($TPL["transaction_amount_pos"]);
           unset($TPL["transaction_amount_neg"]);
           $TPL["transaction_amount"] = "$".number_format($TPL["transaction_amount"], 2);
@@ -204,7 +204,7 @@ if (!$current_user->is_employee()) {
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
       $timeSheetItem->read_db_record($db,false);
-      $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheetItem_");
+      $timeSheetItem->set_tpl_values(DST_HTML_DISPLAY, "timeSheetItem_");
 
       $TPL["timeSheet_totalHours"] += $timeSheetItem->get_value("timeSheetItemDuration");
 
@@ -213,7 +213,7 @@ if (!$current_user->is_employee()) {
       $br = "";
       $commentPrivateText = "";
 
-      $text = $timeSheetItem->get_value('description');
+      $text = $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
       if ($timeSheetItem->get_value("commentPrivate")) {
         $commentPrivateText = "<b>[Private Comment]</b> ";
       }
