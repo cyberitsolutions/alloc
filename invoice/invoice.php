@@ -156,7 +156,7 @@ function show_invoiceItem_list() {
     if (!$invoiceItem->read_db_record($db,false)) {
       continue;
     }
-    $invoiceItem->set_tpl_values(DST_HTML_ATTRIBUTE, "invoiceItem_");
+    $invoiceItem->set_tpl_values(DST_HTML_DISPLAY, "invoiceItem_");
 
     unset($transaction_sum);
     unset($transaction_info);
@@ -632,7 +632,7 @@ if ($current_user->have_role('admin')) {
     <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Invoice to ".$statii["finished"]." --&gt;\">
     ";
     $TPL["field_invoiceNum"] = $TPL["invoiceNum"];
-    $TPL["field_invoiceName"] = $TPL["invoiceName"];
+    $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
     $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
@@ -642,7 +642,7 @@ if ($current_user->have_role('admin')) {
   } else if ($invoice->get_value("invoiceStatus") == "finished") {
     $TPL["invoice_buttons"] = "<input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">";
     $TPL["field_invoiceNum"] = $TPL["invoiceNum"];
-    $TPL["field_invoiceName"] = $TPL["invoiceName"];
+    $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
     $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
