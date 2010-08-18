@@ -268,7 +268,7 @@ class invoice extends db_entity {
       $pdf->ezImage($image_jpg,0,0,'none');
       $y = 700;
     } else {
-      $y = $pdf->ezText($TPL["companyName"],27, array("justification"=>"right"));
+      $y = $pdf->ezText($companyName,27, array("justification"=>"right"));
     }
     $nos_y = $line_y + 22;
     $companyNos2 and $nos_y = $line_y + 34;
