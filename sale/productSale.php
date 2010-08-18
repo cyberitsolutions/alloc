@@ -70,7 +70,7 @@ function show_productSale_list($productSaleID, $template) {
     $TPL["itemTotalUnallocated"] = $productSaleItem->get_amount_unallocated();
 
     $TPL["productList_dropdown"] = page::select_options($ops, $productSaleItem->get_value("productID"));
-    $TPL["productLink"] = "<a href=\"".$TPL["url_alloc_product"]."productID=".$productSaleItem->get_value("productID")."\">".$ops[$productSaleItem->get_value("productID")]."</a>";
+    $TPL["productLink"] = "<a href=\"".$TPL["url_alloc_product"]."productID=".$productSaleItem->get_value("productID")."\">".page::htmlentities($ops[$productSaleItem->get_value("productID")])."</a>";
     $TPL["transactions"] = $productSale->get_transactions($productSaleItem->get_id());
  
     if ($taxName) {

@@ -94,7 +94,7 @@ class product extends db_entity {
     global $TPL;
     $ret[] = "<tr>";
     $ret[] = "  <td class=\"nobr\">".product::get_link($row)."&nbsp;</td>";
-    $ret[] = "  <td>".$row["description"]."&nbsp;</td>";
+    $ret[] = "  <td>".page::htmlentities($row["description"])."&nbsp;</td>";
     $ret[] = "  <td class=\"nobr\">".$row["buyCost"]."&nbsp;</td>";
     $ret[] = "  <td class=\"nobr\">".$row["sellPrice"]."&nbsp;</td>";
     $ret[] = "</tr>";
@@ -109,9 +109,9 @@ class product extends db_entity {
   function get_link($row=array()) {
     global $TPL;
     if (is_object($this)) {
-      return "<a href=\"".$TPL["url_alloc_product"]."productID=".$this->get_id()."\">".$this->get_value("productName")."</a>";
+      return "<a href=\"".$TPL["url_alloc_product"]."productID=".$this->get_id()."\">".$this->get_value("productName",DST_HTML_DISPLAY)."</a>";
     } else {
-      return "<a href=\"".$TPL["url_alloc_product"]."productID=".$row["productID"]."\">".$row["productName"]."</a>";
+      return "<a href=\"".$TPL["url_alloc_product"]."productID=".$row["productID"]."\">".page::htmlentities($row["productName"])."</a>";
     } 
   }
 
