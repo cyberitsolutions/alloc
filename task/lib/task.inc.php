@@ -672,7 +672,9 @@ class task extends db_entity {
     $_FORM["prefixTaskID"] and $id = $this->get_id()." ";
 
     if ($this->get_value("taskTypeID") == "Parent" && ($_FORM["return"] == "html" || $_FORM["return"] == "arrayAndHtml")) {
-      $rtn = "<strong>".$id.$this->get_value("taskName")."</strong>";
+      $rtn = "<strong>".$id.$this->get_value("taskName",DST_HTML_DISPLAY)."</strong>";
+    } else if ($_FORM["return"] == "html" || $_FORM["return"] == "arrayAndHtml") {
+      $rtn = $id.$this->get_value("taskName",DST_HTML_DISPLAY);
     } else {
       $rtn = $id.$this->get_value("taskName");
     }
@@ -1304,7 +1306,7 @@ class task extends db_entity {
 
     if ($_FORM["showDescription"] || $_FORM["showComments"]) {
       if ($task["taskDescription"]) {
-        $str[] = $task["taskDescription"];
+        $str[] = page::htmlentities($task["taskDescription"]);
       }
       if ($_FORM["showComments"]) {
         $comments = comment::util_get_comments("task",$task["taskID"]);

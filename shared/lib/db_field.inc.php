@@ -71,6 +71,8 @@ class db_field {
       } else {
         return "NULL";
       }
+    } else if ($dest == DST_HTML_DISPLAY) {
+      return page::htmlentities($this->value);
     } else {
       return $this->value;
     }
