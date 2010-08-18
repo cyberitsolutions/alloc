@@ -238,22 +238,10 @@ class client extends db_entity {
   }
 
   function get_list_tr($client,$_FORM) {
-
-    $client["clientContactPhone"] or $client["clientContactPhone"] = $client["clientContactMobile"];
-    $client["clientContactEmail"] and $client["clientContactEmail"] = "<a href=\"mailto:".$client["clientContactEmail"]."\">".$client["clientContactEmail"]."</a>";
-
-    $summary[] = "<tr>";
-    $_FORM["showClientName"]          and $summary[] = "  <td>".$client["clientName"]."&nbsp;</td>";
-    $_FORM["showClientLink"]          and $summary[] = "  <td>".$client["clientLink"]."&nbsp;</td>";
-    $_FORM["showPrimaryContactName"]  and $summary[] = "  <td>".$client["clientContactName"]."&nbsp;</td>";
-    $_FORM["showPrimaryContactPhone"] and $summary[] = "  <td>".$client["clientContactPhone"]."&nbsp;</td>";
-    $_FORM["showPrimaryContactEmail"] and $summary[] = "  <td>".$client["clientContactEmail"]."&nbsp;</td>";
-    $_FORM["showClientStatus"]        and $summary[] = "  <td>".ucwords($client["clientStatus"])."&nbsp;</td>";
-    $_FORM["showClientCategory"]      and $summary[] = "  <td>".$client["clientCategoryLabel"]."&nbsp;</td>";
-    $summary[] = "</tr>";
-
-    $summary = "\n".implode("\n",$summary);
-    return $summary;
+    global $TPL;
+    $TPL["_FORM"] = $_FORM;
+    $TPL = array_merge($TPL,(array)$client);
+    return include_template(dirname(__FILE__)."/../templates/clientListR.tpl", true);
   }
 
   function get_list_vars() {
