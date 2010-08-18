@@ -151,7 +151,7 @@ class invoice extends db_entity {
       }
 
       unset($str);
-      $d = $invoiceItem->get_value('iiMemo');
+      $d = $invoiceItem->get_value('iiMemo',DST_HTML_DISPLAY);
       $str[] = $d;
 
       // Get task description
@@ -195,7 +195,7 @@ class invoice extends db_entity {
 
     // Get client name
     $client = $this->get_foreign_object("client");
-    $clientName = $client->get_value("clientName");
+    $clientName = $client->get_value("clientName",DST_HTML_DISPLAY);
 
     // Get cyber info
     $companyName = config::get_config_item("companyName");
@@ -367,13 +367,13 @@ class invoice extends db_entity {
     return $url;
   }
 
-  function get_name() {
+  function get_name($_FORM=array()) {
     return $this->get_value("invoiceNum");
   }
 
-  function get_invoice_link() {
+  function get_invoice_link($_FORM=array()) {
     global $TPL;
-    return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$this->get_id()."\">".$this->get_name()."</a>";
+    return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$this->get_id()."\">".$this->get_name($_FORM)."</a>";
   }
 
   function get_list_filter($filter=array()) {
@@ -530,11 +530,10 @@ class invoice extends db_entity {
   function get_list_tr($invoice,$_FORM) {
     global $TPL;
 
-    $statii = invoice::get_invoice_statii();
-    $currency = '$';
+    $TPL["statii"] = invoice::get_invoice_statii();
+    $TPL["currency"] = '$';
 
-    $payment_statii = invoice::get_invoice_statii_payment();
-    $payment_status = array();
+    $TPL["payment_statii"] = invoice::get_invoice_statii_payment();
 
     $invoice["amountPaidApproved"] == $invoice["iiAmountSum"] and $payment_status[] = "fully_paid";
     $invoice["amountPaidApproved"] > $invoice["iiAmountSum"] and $payment_status[] = "over_paid";
@@ -542,28 +541,14 @@ class invoice extends db_entity {
     #$invoice["amountPaidApproved"] > 0 && $invoice["amountPaidApproved"] < $invoice["iiAmountSum"] and $payment_status[] = "partly_paid";
     $invoice["amountPaidApproved"] < $invoice["iiAmountSum"] and $payment_status[] = "pending";
 
-    foreach ($payment_status as $ps) {
-      $image.= invoice::get_invoice_statii_payment_image($ps);
-      $status_label.= $ps;
+    foreach ((array)$payment_status as $ps) {
+      $invoice["image"].= invoice::get_invoice_statii_payment_image($ps);
+      $invoice["status_label"].= $ps;
     }
 
-
-    $summary[] = "<tr>";
-    $_FORM["showInvoiceNumber"]       and $summary[] = "  <td>".$invoice["invoiceLink"]."&nbsp;</td>";
-    $_FORM["showInvoiceClient"]       and $summary[] = "  <td>".$invoice["clientName"]."</td>";
-    $_FORM["showInvoiceName"]         and $summary[] = "  <td>".$invoice["invoiceName"]."&nbsp;</td>";
-    $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"nobr\">".$invoice["invoiceDateFrom"]."&nbsp;</td>";
-    $_FORM["showInvoiceDate"]         and $summary[] = "  <td class=\"nobr\">".$invoice["invoiceDateTo"]."&nbsp;</td>";
-    $_FORM["showInvoiceStatus"]       and $summary[] = "  <td class=\"nobr\">".$statii[$invoice["invoiceStatus"]]."&nbsp;</td>";
-    $_FORM["showInvoiceAmount"]       and $summary[] = "  <td>".$currency.sprintf("%0.2f",$invoice["iiAmountSum"])."&nbsp;</td>";
-    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td class=\"nobr\" sorttable_customkey=\"".$status_label."\">".$image."&nbsp;</td>";
-    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td>".$currency.sprintf("%0.2f",$invoice["amountPaidRejected"])."&nbsp;</td>";
-    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td>".$currency.sprintf("%0.2f",$invoice["amountPaidPending"])."&nbsp;</td>";
-    $_FORM["showInvoiceAmountPaid"]   and $summary[] = "  <td>".$currency.sprintf("%0.2f",$invoice["amountPaidApproved"])."&nbsp;</td>";
-    $summary[] = "</tr>";
-
-    $summary = "\n".implode("\n",$summary);
-    return $summary;
+    $TPL["_FORM"] = $_FORM;
+    $TPL = array_merge($TPL,(array)$invoice);
+    return include_template(dirname(__FILE__)."/../templates/invoiceListR.tpl", true);
   }
 
   function get_list_vars() {
