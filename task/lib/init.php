@@ -30,7 +30,6 @@ require_once(dirname(__FILE__)."/task_message_list_home_item.inc.php");
 class task_module extends module
 {
   var $db_entities = array("task"
-                         , "taskType"
                          );
 
   function register_home_items() {
