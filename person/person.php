@@ -100,7 +100,7 @@ require_once("../alloc.php");
     while ($db->next_record()) {
       $skill = new skill;
       $skill->read_db_record($db);
-      $skill->set_tpl_values();
+      $skill->set_tpl_values(DST_HTML_DISPLAY);
 
       $skillPrificiencys = new proficiency;
       $skillPrificiencys->read_db_record($db);
