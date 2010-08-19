@@ -119,10 +119,10 @@ function show_skill_expertise() {
       if (!isset($people_header)) {
         get_people_header();
       }
-      $class_header = sprintf("<tr class=\"highlighted\">\n<th width=\"5%%\">%s&nbsp;&nbsp;&nbsp;</th>\n", $skill->get_value('skillClass'));
+      $class_header = sprintf("<tr class=\"highlighted\">\n<th width=\"5%%\">%s&nbsp;&nbsp;&nbsp;</th>\n", $skill->get_value('skillClass',DST_HTML_DISPLAY));
       print $class_header.$people_header."</tr>\n";
     }
-    print sprintf("<tr>\n<th>%s</th>\n", $skill->get_value('skillName'));
+    print sprintf("<tr>\n<th>%s</th>\n", $skill->get_value('skillName',DST_HTML_DISPLAY));
     for ($i = 0; $i < count($people_ids); $i++) {
       $db2 = new db_alloc;
       $query = "SELECT * FROM proficiency";
