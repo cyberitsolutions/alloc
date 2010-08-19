@@ -50,7 +50,7 @@
     <td colspan="4"><b>Form ID:</b> {$transactionRepeatID}</td>
   </tr>
   <tr>
-    <td colspan="4"><b>Created By:</b> {$user}</td>
+    <td colspan="4"><b>Created By:</b> {=$user}</td>
   </tr>
   <tr>
     <td colspan="4"><b>Date Created:</b> {$transactionRepeatCreatedTime}</td>

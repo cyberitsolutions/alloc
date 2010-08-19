@@ -144,10 +144,6 @@ if ($_POST["add"]) {
   $_POST["fromTfID"]       or $TPL["message"][] = "You must enter the Source TF.";
   $_POST["quantity"]       or $_POST["quantity"] = 1;
 
-  if (!ereg("^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$", $_POST["transactionDate"])) {
-    $TPL["message"][] = "You must enter the Date Incurred in the format yyyy-mm-dd.";
-  }
-  
   if ($_POST["amount"] === "") {
     $TPL["message"][] = "You must enter the Price.";
   }
@@ -360,7 +356,7 @@ $TPL["seekClientReimbursementOption"] = $scr_label.$scr_hidden;
 $c = new client;
 $c->set_id($expenseForm->get_value("clientID"));
 $c->select();
-$clientName = $c->get_name();
+$clientName = page::htmlentities($c->get_name());
 $clientName and $TPL["printer_clientID"] = $clientName;
 
 
@@ -375,7 +371,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
   $ops = client::get_list($options);
-  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
+  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
   
@@ -394,7 +390,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $options["clientStatus"] = "current";
   $options["return"] = "dropdown_options";
   $ops = client::get_list($options);
-  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$TPL["clientID"])."</select>";
+  $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";
 }
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {

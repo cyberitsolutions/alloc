@@ -119,7 +119,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
   alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
 }
 
-$transaction->set_tpl_values();
+$transaction->set_tpl_values(DST_HTML_DISPLAY);
 
 $TPL["product"] = page::htmlentities($transaction->get_value("product"));
 $TPL["statusOptions"] = page::select_options(array("pending"=>"Pending", "rejected"=>"Rejected", "approved"=>"Approved"), $transaction->get_value("status"));
@@ -143,14 +143,21 @@ $TPL["fromTfIDOptions"] = page::select_options($options, $transaction->get_value
 $q = "SELECT projectID as value, projectName as label FROM project WHERE projectStatus = 'current' ORDER BY projectName";
 $TPL["projectIDOptions"] = page::select_options($q, $transaction->get_value("projectID"));
 
-$TPL["transactionModifiedUser"] = person::get_fullname($TPL["transactionModifiedUser"]);
-$TPL["transactionCreatedUser"] = person::get_fullname($TPL["transactionCreatedUser"]);
+$TPL["transactionModifiedUser"] = page::htmlentities(person::get_fullname($TPL["transactionModifiedUser"]));
+$TPL["transactionCreatedUser"] = page::htmlentities(person::get_fullname($TPL["transactionCreatedUser"]));
 
-$TPL["tf_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$TPL["tfID"]."\">".tf::get_name($TPL["tfID"])."</a>";
-$TPL["from_tf_link"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$TPL["fromTfID"]."\">".tf::get_name($TPL["fromTfID"])."</a>";
+$tf1 = new tf();
+$tf1->set_id($TPL["tfID"]);
+$tf1->select();
+$TPL["tf_link"] = $tf1->get_link();
+
+$tf2 = new tf();
+$tf2->set_id($TPL["fromTfID"]);
+$tf2->select();
+$TPL["from_tf_link"] = $tf2->get_link();
 
 $p = $transaction->get_foreign_object("project");
-$TPL["project_link"] = "<a href=\"".$TPL["url_alloc_project"]."projectID=".$p->get_id()."\">".$p->get_value("projectName")."</a>";
+$TPL["project_link"] = $p->get_link();
 
 $TPL["taxName"] = config::get_config_item("taxName");
 

@@ -231,16 +231,20 @@ class transaction extends db_entity {
     return $url;
   }
 
-  function get_transaction_link() {
+  function get_transaction_link($_FORM=array()) {
+    $_FORM["return"] or $_FORM["return"] = "html";
     $rtn = "<a href=\"".$this->get_url()."\">";
-    $rtn.= $this->get_name();
+    $rtn.= $this->get_name($_FORM);
     $rtn.= "</a>";
     return $rtn;
   }
 
-  function get_name() {
-    $rtn = $this->get_value("product");
-    return $rtn;
+  function get_name($_FORM=array()) {
+    if ($_FORM["return"] == "html") {
+      return $this->get_value("product",DST_HTML_DISPLAY);
+    } else {
+      return $this->get_value("product");
+    }
   }
 
   function get_transaction_type_link() {
@@ -512,7 +516,7 @@ class transaction extends db_entity {
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["tfIDLink"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionDate"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionSortDate"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]."\">".$row["product"]."&nbsp;</td>";
+    $str[] = "  <td class=\"transaction-".$row["status"]."\">".page::htmlentities($row["product"])."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["status"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["amount_positive"]."&nbsp;</td>";
     $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["amount_negative"]."&nbsp;</td>";
