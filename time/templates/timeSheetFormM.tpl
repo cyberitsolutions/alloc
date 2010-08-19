@@ -32,7 +32,7 @@
   <tr>
     <td>&nbsp;</td>
     <td width="20%" align="right">Created By:</td>
-    <td>{$timeSheet_personName}</td>
+    <td>{=$timeSheet_personName}</td>
     <td align="right">Client:</td>
 	  <td>{$show_client_options}</td>
   </tr>
@@ -50,7 +50,7 @@
     <td align="right">Client Billing:</td>
     <td><nobr>{$total_customerBilledDollars}{$ex_gst}</nobr></td>
     <td align="right">Time Sheet Manager{$manager_plural}:</td>
-    <td>{$managers}</td>
+    <td>{=$managers}</td>
   </tr>
 
   <tr>
@@ -64,9 +64,9 @@
 	<tr>
 	  <td>{page::help("which_tf_to_credit")}</td>
  	  <td align="right">TF:</td>
- 	  <td align="left">{$recipient_tfID_name}</td>
+ 	  <td align="left">{=$recipient_tfID_name}</td>
     <td align="right">Approved by Manager:</td>
-    <td>{$timeSheet_approvedByManagerPersonID_username}</td>
+    <td>{=$timeSheet_approvedByManagerPersonID_username}</td>
   </tr>
 
 	<tr>

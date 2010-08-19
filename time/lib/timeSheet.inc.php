@@ -670,23 +670,10 @@ class timeSheet extends db_entity {
   }
 
   function get_list_tr($row,$_FORM) {
-    $summary[] = "<tr>";
-    $_FORM["showTimeSheetID"]     and $summary[] = "  <td>".$row["timeSheetID"]."&nbsp;</td>";
-    $_FORM["showProject"]         and $summary[] = "  <td>".$row["projectName"]."&nbsp;</td>";
-    $_FORM["showProjectLink"]     and $summary[] = "  <td>".$row["projectLink"]."&nbsp;</td>";
-    $_FORM["showPerson"]          and $summary[] = "  <td>".$row["person"]."&nbsp;</td>";
-    $_FORM["showDateFrom"]        and $summary[] = "  <td>".$row["dateFrom"]."&nbsp;</td>";
-    $_FORM["showDateTo"]          and $summary[] = "  <td>".$row["dateTo"]."&nbsp;</td>";
-    $_FORM["showStatus"]          and $summary[] = "  <td>".$row["status"]."&nbsp;</td>";
-    $_FORM["showDuration"]        and $summary[] = "  <td>".$row["duration"]."&nbsp;</td>";
-    $_FORM["showAmount"]          and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["amount"])."&nbsp;</td>";
-    $_FORM["showCustomerBilledDollars"]  and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["customerBilledDollars"])."&nbsp;</td>";
-    $_FORM["showTransactionsPos"]  and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["transactionsPos"])."&nbsp;</td>";
-    $_FORM["showTransactionsNeg"]  and $summary[] = "  <td align=\"right\">".sprintf("$%0.2f",$row["transactionsNeg"])."&nbsp;</td>";
-    $summary[] = "</tr>";
-     
-    $summary = "\n".implode("\n",$summary);
-    return $summary;   
+    global $TPL;
+    $TPL["_FORM"] = $_FORM;
+    $TPL = array_merge($TPL,(array)$row);
+    return include_template(dirname(__FILE__)."/../templates/timeSheetListR.tpl", true);
   } 
 
   function get_list_tr_bottom($row,$_FORM) {
