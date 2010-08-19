@@ -29,7 +29,6 @@ $noRedirect = $_POST["idRedirect"]   or $noRedirect = $_GET["idRedirect"];
 $search     = $_POST["search"]       or $search     = $_GET["search"];
 $category   = $_POST["category"]     or $category   = $_GET["category"];
 $needle     = trim($_POST["needle"]) or $needle     = trim(urldecode($_GET["needle"]));
-$needle_esc = db_esc(trim($needle));
 
 $db = new db_alloc;
 
@@ -319,13 +318,6 @@ $TPL["needle"] = $needle;
 $TPL["needle2"] = $needle;
 if (!$needle || $noRedirect) {
   $TPL["redir"] = "checked=\"1\"";
-}
-
-if ($TPL["search_results"]) {
-  $TPL["search_results"] = str_replace("[[[","<em class=\"highlighted\">",$TPL["search_results"]);
-  $TPL["search_results"] = str_replace("]]]","</em>",$TPL["search_results"]);
-} else { 
-  $TPL["search_results"] = "No records found.";
 }
 
 $TPL["main_alloc_title"] = "Search - ".APPLICATION_NAME;
