@@ -140,7 +140,7 @@ class page {
       $str.= "<table cellspacing=\"0\">";
       foreach ($arr as $type => $info) {
         $str.= "<tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".png\"/><td/>";
-        $str.= "<td class=\"".$type."\" align=\"left\" width=\"99%\">".str_replace('\\','',$info)."</td></tr>";
+        $str.= "<td class=\"".$type."\" align=\"left\" width=\"99%\">".page::htmlentities(str_replace('\\','',$info))."</td></tr>";
       }
       $str.= "</table>";
       $str.= "</div></div>";
