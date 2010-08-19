@@ -1,11 +1,11 @@
 <table cellspacing="0" border="1" class="panel {$status} {$expense_class}">
 <tr>
-  <td colspan="2">{$companyDetails}</td>
-  <td colspan="2">{if $TPL["projectID"]}<a href="{$url_alloc_project}projectID={$projectID}">{$projectName}</a>{/}</td>
+  <td colspan="2">{=$companyDetails}</td>
+  <td colspan="2">{if $TPL["projectID"]}<a href="{$url_alloc_project}projectID={$projectID}">{=$projectName}</a>{/}</td>
   <td width="1%" class="right nobr"><b>[{echo ucwords($TPL["status"])}]</b></td>
 </tr>
 <tr>
-  <td>{$product}</td>
+  <td>{=$product}</td>
   <td class="nobr">{$quantity}pcs. @ ${$amount} each  &nbsp;&nbsp;&nbsp;<b>${$lineTotal}</b></td>
   <td class="nobr">Source TF:{$fromTfIDLink} Dest TF: {$tfIDLink}</td>
   <td class="nobr" width="1%">{$transactionDate}</td> 

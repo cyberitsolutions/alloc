@@ -3,7 +3,7 @@
 
 <table class="box">
   <tr>
-    <th class="nobr">{$title}</th>
+    <th class="nobr">{=$title}</th>
     <th class="right"><a class='magic toggleFilter' href=''>Show Filter</a></th>
   </tr>
   <tr>

@@ -21,7 +21,7 @@
   </tr>
   <tr>
     <td align="right">Created By:</td>
-    <td>{$user}</td>
+    <td>{=$user}</td>
     <td align="right" class="nobr">Seek Client Reimbursement:</td>
     <td>{$seekClientReimbursementOption}</td>
   </tr>
