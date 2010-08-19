@@ -1,6 +1,6 @@
 <tr>
-  <td>&nbsp;{$itemName}</td>
-  <td>&nbsp;{$itemType}</td>
-  <td>&nbsp;{$status} {$person}</td>
+  <td>{=$itemName}</td>
+  <td>{$itemType}</td>
+  <td>{$status} {$person}</td>
   {$itemAction}
 </tr>
