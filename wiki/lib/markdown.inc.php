@@ -3,8 +3,8 @@
 # Markdown  -  A text-to-HTML conversion tool for web writers
 #
 # PHP Markdown
-# Copyright (c) 2004-2008 Michel Fortin  
-# <http://www.michelf.com/projects/php-markdown/>
+# Copyright (c) 2004-2009 Michel Fortin  
+# <http://michelf.com/projects/php-markdown/>
 #
 # Original Markdown
 # Copyright (c) 2004-2006 John Gruber  
@@ -12,7 +12,7 @@
 #
 
 
-define( 'MARKDOWN_VERSION',  "1.0.1m" ); # Sat 21 Jun 2008
+define( 'MARKDOWN_VERSION',  "1.0.1n" ); # Sat 10 Oct 2009
 
 
 #
@@ -79,8 +79,8 @@ class Markdown_Parser {
 	var $tab_width = MARKDOWN_TAB_WIDTH;
 	
 	# Change to `true` to disallow markup or entities.
-	var $no_markup = false;
-	var $no_entities = false;
+	var $no_markup = true;
+	var $no_entities = true;
 	
 	# Predefined urls and titles for reference links and images.
 	var $predef_urls = array();
@@ -204,14 +204,18 @@ class Markdown_Parser {
 							  [ ]*
 							  \n?				# maybe *one* newline
 							  [ ]*
-							<?(\S+?)>?			# url = $2
+							(?:
+							  <(.+?)>			# url = $2
+							|
+							  (\S+?)			# url = $3
+							)
 							  [ ]*
 							  \n?				# maybe one newline
 							  [ ]*
 							(?:
 								(?<=\s)			# lookbehind for whitespace
 								["(]
-								(.*?)			# title = $3
+								(.*?)			# title = $4
 								[")]
 								[ ]*
 							)?	# title is optional
@@ -223,8 +227,10 @@ class Markdown_Parser {
 	}
 	function _stripLinkDefinitions_callback($matches) {
 		$link_id = strtolower($matches[1]);
-		$this->urls[$link_id] = $matches[2];
-		$this->titles[$link_id] =& $matches[3];
+		$url = $matches[2] == '' ? $matches[3] : $matches[2];
+    $url = str_ireplace("javascript:","",$url); // added by alla
+		$this->urls[$link_id] = $url;
+		$this->titles[$link_id] =& $matches[4];
 		return ''; # String that will replace the block
 	}
 
@@ -471,7 +477,10 @@ class Markdown_Parser {
 	# These are all the transformations that occur *within* block-level
 	# tags like paragraphs, headers, and list items.
 	#
-		"doWikiLinkAnchors"   =>  -35,
+
+    // added by alla
+    "doWikiLinkAnchors"   =>  -35,
+
 		# Process character escapes, code spans, and inline HTML
 		# in one shot.
 		"parseSpan"           => -30,
@@ -490,6 +499,26 @@ class Markdown_Parser {
 		"doItalicsAndBold"    =>  50,
 		"doHardBreaks"        =>  60,
 		);
+
+  function doWikiLinkAnchors($text) {
+  # Turn special WikiLinks [[link]] into regular html links
+          $text = preg_replace_callback('/\[\[([\w\._\/]+)\]\]/xs',
+                  array(&$this, '_doWikiLinkAnchors_reference_callback'), $text);
+          return $text;
+  }
+
+  function _doWikiLinkAnchors_reference_callback($matches) {
+    $file = $matches[1];
+    $file = str_ireplace("javascript:","",$file); // added by alla
+    if (file_exists(wiki_module::get_wiki_path().$file.".mdwn")) {
+      return '<a href="?target='.urlencode($file).'.mdwn">'.str_replace("_",'\_',$file).'</a>';
+    } else if (file_exists(wiki_module::get_wiki_path().$file)) {
+      return '<a href="?target='.urlencode($file).'">'.str_replace("_",'\_',$file).'</a>';
+    } else {
+      return str_replace("_",'\_',$file).'<a href="?op=new&target='.urlencode($file).'" title="Click here to create this file.">?</a>';
+    }
+    return $matches[1];
+  }
 
 	function runSpanGamut($text) {
 	#
@@ -512,24 +541,6 @@ class Markdown_Parser {
 		return $this->hashPart("<br$this->empty_element_suffix\n");
 	}
 
-	function doWikiLinkAnchors($text) {
-	# Turn special WikiLinks [[link]] into regular html links
-		$text = preg_replace_callback('/\[\[([\w\._\/]+)\]\]/xs',
-			array(&$this, '_doWikiLinkAnchors_reference_callback'), $text);
-		return $text;
-	}
-
-  function _doWikiLinkAnchors_reference_callback($matches) {
-    $file = $matches[1];
-    if (file_exists(wiki_module::get_wiki_path().$file.".mdwn")) {
-      return '<a href="?target='.urlencode($file).'.mdwn">'.str_replace("_",'\_',$file).'</a>';
-    } else if (file_exists(wiki_module::get_wiki_path().$file)) {
-      return '<a href="?target='.urlencode($file).'">'.str_replace("_",'\_',$file).'</a>';
-    } else {
-      return str_replace("_",'\_',$file).'<a href="?op=new&target='.urlencode($file).'" title="Click here to create this file.">?</a>';
-    }
-    return $matches[1];
-  }
 
 	function doAnchors($text) {
 	#
@@ -566,37 +577,37 @@ class Markdown_Parser {
 				('.$this->nested_brackets_re.')	# link text = $2
 			  \]
 			  \(			# literal paren
-				[ ]*
+				[ \n]*
 				(?:
-					<(\S*)>	# href = $3
+					<(.+?)>	# href = $3
 				|
 					('.$this->nested_url_parenthesis_re.')	# href = $4
 				)
-				[ ]*
+				[ \n]*
 				(			# $5
 				  ([\'"])	# quote char = $6
 				  (.*?)		# Title = $7
 				  \6		# matching quote
-				  [ ]*	# ignore any spaces/tabs between closing quote and )
+				  [ \n]*	# ignore any spaces/tabs between closing quote and )
 				)?			# title is optional
 			  \)
 			)
 			}xs',
-			array(&$this, '_DoAnchors_inline_callback'), $text);
+			array(&$this, '_doAnchors_inline_callback'), $text);
 
 		#
 		# Last, handle reference-style shortcuts: [link text]
-		# These must come last in case you've also got [link test][1]
-		# or [link test](/foo)
+		# These must come last in case you've also got [link text][1]
+		# or [link text](/foo)
 		#
-//		$text = preg_replace_callback('{
-//			(					# wrap whole match in $1
-//			  \[
-//				([^\[\]]+)		# link text = $2; can\'t contain [ or ]
-//			  \]
-//			)
-//			}xs',
-//			array(&$this, '_doAnchors_reference_callback'), $text);
+		$text = preg_replace_callback('{
+			(					# wrap whole match in $1
+			  \[
+				([^\[\]]+)		# link text = $2; can\'t contain [ or ]
+			  \]
+			)
+			}xs',
+			array(&$this, '_doAnchors_reference_callback'), $text);
 
 		$this->in_anchor = false;
 		return $text;
@@ -617,6 +628,7 @@ class Markdown_Parser {
 
 		if (isset($this->urls[$link_id])) {
 			$url = $this->urls[$link_id];
+      $url = str_ireplace("javascript:","",$url); // added by alla
 			$url = $this->encodeAttribute($url);
 			
 			$result = "<a href=\"$url\"";
@@ -629,8 +641,8 @@ class Markdown_Parser {
 			$link_text = $this->runSpanGamut($link_text);
 			$result .= ">$link_text</a>";
 			$result = $this->hashPart($result);
-
-		} else {
+		}
+		else {
 			$result = $whole_match;
 		}
 		return $result;
@@ -640,6 +652,8 @@ class Markdown_Parser {
 		$link_text		=  $this->runSpanGamut($matches[2]);
 		$url			=  $matches[3] == '' ? $matches[4] : $matches[3];
 		$title			=& $matches[7];
+
+    $url = str_ireplace("javascript:","",$url); // added by alla
 
 		$url = $this->encodeAttribute($url);
 
@@ -691,18 +705,18 @@ class Markdown_Parser {
 			  \]
 			  \s?			# One optional whitespace character
 			  \(			# literal paren
-				[ ]*
+				[ \n]*
 				(?:
 					<(\S*)>	# src url = $3
 				|
 					('.$this->nested_url_parenthesis_re.')	# src url = $4
 				)
-				[ ]*
+				[ \n]*
 				(			# $5
 				  ([\'"])	# quote char = $6
 				  (.*?)		# title = $7
 				  \6		# matching quote
-				  [ ]*
+				  [ \n]*
 				)?			# title is optional
 			  \)
 			)
@@ -723,6 +737,7 @@ class Markdown_Parser {
 		$alt_text = $this->encodeAttribute($alt_text);
 		if (isset($this->urls[$link_id])) {
 			$url = $this->encodeAttribute($this->urls[$link_id]);
+      $url = str_ireplace("javascript:","",$url); // added by alla
 			$result = "<img src=\"$url\" alt=\"$alt_text\"";
 			if (isset($this->titles[$link_id])) {
 				$title = $this->titles[$link_id];
@@ -743,6 +758,7 @@ class Markdown_Parser {
 		$whole_match	= $matches[1];
 		$alt_text		= $matches[2];
 		$url			= $matches[3] == '' ? $matches[4] : $matches[3];
+    $url = str_ireplace("javascript:","",$url); // added by alla
 		$title			=& $matches[7];
 
 		$alt_text = $this->encodeAttribute($alt_text);
@@ -815,19 +831,22 @@ class Markdown_Parser {
 		$marker_ol_re  = '\d+[.]';
 		$marker_any_re = "(?:$marker_ul_re|$marker_ol_re)";
 
-		$markers_relist = array($marker_ul_re, $marker_ol_re);
+		$markers_relist = array(
+			$marker_ul_re => $marker_ol_re,
+			$marker_ol_re => $marker_ul_re,
+			);
 
-		foreach ($markers_relist as $marker_re) {
+		foreach ($markers_relist as $marker_re => $other_marker_re) {
 			# Re-usable pattern to match any entirel ul or ol list:
 			$whole_list_re = '
 				(								# $1 = whole list
 				  (								# $2
-					[ ]{0,'.$less_than_tab.'}
-					('.$marker_re.')			# $3 = first list item marker
+					([ ]{0,'.$less_than_tab.'})	# $3 = number of spaces
+					('.$marker_re.')			# $4 = first list item marker
 					[ ]+
 				  )
 				  (?s:.+?)
-				  (								# $4
+				  (								# $5
 					  \z
 					|
 					  \n{2,}
@@ -835,6 +854,12 @@ class Markdown_Parser {
 					  (?!						# Negative lookahead for another list item marker
 						[ ]*
 						'.$marker_re.'[ ]+
+					  )
+					|
+					  (?=						# Lookahead for another kind of list
+					    \n
+						\3						# Must have the same indentation
+						'.$other_marker_re.'[ ]+
 					  )
 				  )
 				)
@@ -868,7 +893,7 @@ class Markdown_Parser {
 		$marker_any_re = "(?:$marker_ul_re|$marker_ol_re)";
 		
 		$list = $matches[1];
-		$list_type = preg_match("/$marker_ul_re/", $matches[3]) ? "ul" : "ol";
+		$list_type = preg_match("/$marker_ul_re/", $matches[4]) ? "ul" : "ol";
 		
 		$marker_any_re = ( $list_type == "ul" ? $marker_ul_re : $marker_ol_re );
 		
@@ -994,25 +1019,25 @@ class Markdown_Parser {
 
 
 	var $em_relist = array(
-		''  => '(?:(?<!\*)\*(?!\*)|(?<!_)_(?!_))(?=\S)(?![.,:;]\s)',
-		'*' => '(?<=\S)(?<!\*)\*(?!\*)',
-		'_' => '(?<=\S)(?<!_)_(?!_)',
+		''  => '(?:(?<!\*)\*(?!\*)|(?<!_)_(?!_))(?=\S|$)(?![.,:;]\s)',
+		'*' => '(?<=\S|^)(?<!\*)\*(?!\*)',
+		'_' => '(?<=\S|^)(?<!_)_(?!_)',
 		);
 	var $strong_relist = array(
-		''   => '(?:(?<!\*)\*\*(?!\*)|(?<!_)__(?!_))(?=\S)(?![.,:;]\s)',
-		'**' => '(?<=\S)(?<!\*)\*\*(?!\*)',
-		'__' => '(?<=\S)(?<!_)__(?!_)',
+		''   => '(?:(?<!\*)\*\*(?!\*)|(?<!_)__(?!_))(?=\S|$)(?![.,:;]\s)',
+		'**' => '(?<=\S|^)(?<!\*)\*\*(?!\*)',
+		'__' => '(?<=\S|^)(?<!_)__(?!_)',
 		);
 	var $em_strong_relist = array(
-		''    => '(?:(?<!\*)\*\*\*(?!\*)|(?<!_)___(?!_))(?=\S)(?![.,:;]\s)',
-		'***' => '(?<=\S)(?<!\*)\*\*\*(?!\*)',
-		'___' => '(?<=\S)(?<!_)___(?!_)',
+		''    => '(?:(?<!\*)\*\*\*(?!\*)|(?<!_)___(?!_))(?=\S|$)(?![.,:;]\s)',
+		'***' => '(?<=\S|^)(?<!\*)\*\*\*(?!\*)',
+		'___' => '(?<=\S|^)(?<!_)___(?!_)',
 		);
 	var $em_strong_prepared_relist;
 	
 	function prepareItalicsAndBold() {
 	#
-	# Prepare regular expressions for seraching emphasis tokens in any
+	# Prepare regular expressions for searching emphasis tokens in any
 	# context.
 	#
 		foreach ($this->em_relist as $em => $em_re) {
@@ -1047,7 +1072,7 @@ class Markdown_Parser {
 			$token_re = $this->em_strong_prepared_relist["$em$strong"];
 			
 			#
-			# Each loop iteration seach for the next emphasis token. 
+			# Each loop iteration search for the next emphasis token. 
 			# Each token is then passed to handleSpanToken.
 			#
 			$parts = preg_split($token_re, $text, 2, PREG_SPLIT_DELIM_CAPTURE);
@@ -1180,7 +1205,7 @@ class Markdown_Parser {
 		# These leading spaces cause problem with <pre> content, 
 		# so we need to fix that:
 		$bq = preg_replace_callback('{(\s*<pre>.+?</pre>)}sx', 
-			array(&$this, '_DoBlockQuotes_callback2'), $bq);
+			array(&$this, '_doBlockQuotes_callback2'), $bq);
 
 		return "\n". $this->hashBlock("<blockquote>\n$bq\n</blockquote>")."\n\n";
 	}
@@ -1302,9 +1327,17 @@ class Markdown_Parser {
 			<
 			(?:mailto:)?
 			(
-				[-.\w\x80-\xFF]+
+				(?:
+					[-!#$%&\'*+/=?^_`.{|}~\w\x80-\xFF]+
+				|
+					".*?"
+				)
 				\@
-				[-a-z0-9\x80-\xFF]+(\.[-a-z0-9\x80-\xFF]+)*\.[a-z]+
+				(?:
+					[-a-z0-9\x80-\xFF]+(\.[-a-z0-9\x80-\xFF]+)*\.[a-z]+
+				|
+					\[[\d.a-fA-F:]+\]	# IPv4 & IPv6
+				)
 			)
 			>
 			}xi',
@@ -1314,12 +1347,14 @@ class Markdown_Parser {
 	}
 	function _doAutoLinks_url_callback($matches) {
 		$url = $this->encodeAttribute($matches[1]);
+    $url = str_ireplace("javascript:","",$url); // added by alla
 		$link = "<a href=\"$url\">$url</a>";
 		return $this->hashPart($link);
 	}
 	function _doAutoLinks_email_callback($matches) {
 		$address = $matches[1];
 		$link = $this->encodeEmailAddress($address);
+    $link = str_ireplace("javascript:","",$link); // added by alla
 		return $this->hashPart($link);
 	}
 
@@ -1384,7 +1419,7 @@ class Markdown_Parser {
 				|
 					<\?.*?\?> | <%.*?%>		# processing instruction
 				|
-					<[/!$]?[-a-zA-Z0-9:]+	# regular tags
+					<[/!$]?[-a-zA-Z0-9:_]+	# regular tags
 					(?>
 						\s
 						(?>[^"\'>]+|"[^"]*"|\'[^\']*\')*
@@ -1561,8 +1596,8 @@ Copyright and License
 ---------------------
 
 PHP Markdown
-Copyright (c) 2004-2008 Michel Fortin  
-<http://www.michelf.com/>  
+Copyright (c) 2004-2009 Michel Fortin  
+<http://michelf.com/>  
 All rights reserved.
 
 Based on Markdown
