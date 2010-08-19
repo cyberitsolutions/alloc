@@ -16,11 +16,11 @@
   </tr>
   <tr>
     <td>Item</td>
-    <td>{$itemName}</td>
+    <td>{=$itemName}</td>
   </tr>
   <tr>
     <td>Notes</td>
-    <td>{$itemNotes}</td>
+    <td>{=$itemNotes}</td>
   </tr>
   <tr>
     <td colspan="2"><input type="submit" name="returnItem" value="Return Item"></td>

@@ -1,8 +1,8 @@
 <tr>
-  <td>&nbsp;{$itemName}</td>
-  <td>&nbsp;{$itemType}</td>
-  <td>&nbsp;{$person}</td>
-  <td>&nbsp;{$dateBorrowed}</td>
-  <td>&nbsp;{$dateToBeReturned}</td>
-  <td>&nbsp;{$overdue}</td>
+  <td>{=$itemName}</td>
+  <td>{$itemType}</td>
+  <td>{=$person}</td>
+  <td>{$dateBorrowed}</td>
+  <td>{$dateToBeReturned}</td>
+  <td>{$overdue}</td>
 </tr>

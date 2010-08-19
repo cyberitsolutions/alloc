@@ -14,11 +14,11 @@
   </tr>
   <tr>
     <td>Item Name</td>
-    <td>{$itemName}</td>
+    <td>{=$itemName}</td>
   </tr>
   <tr>
     <td>Notes</td>
-    <td>{$itemNotes}</td>
+    <td>{=$itemNotes}</td>
   </tr>
   <tr>
     <td>Borrower</td>
