@@ -74,7 +74,7 @@ $(document).ready(function() {
         {if $project_projectName} 
         <div class="view">
           <h6>Project</h6>
-          <a href="{$url_alloc_project}projectID={$project_projectID}">{$project_projectName}</a>
+          <a href="{$url_alloc_project}projectID={$project_projectID}">{=$project_projectName}</a>
         </div>
         {/}
         <div class="edit">
@@ -122,18 +122,18 @@ $(document).ready(function() {
         <div class="view">
           <h6>People<div>Status</div></h6>
           <div style="float:left; width:47%;">
-            Created by <b>{$task_createdBy}</b><br><span class="faint">{$task_dateCreated}</span>
+            Created by <b>{=$task_createdBy}</b><br><span class="faint">{$task_dateCreated}</span>
             {if $manager_username}
             <br>
-            Managed by <b>{$manager_username}</b>
+            Managed by <b>{=$manager_username}</b>
             {/}
             {if $person_username}
             <br>
-            Assigned to <b>{$person_username}</b><br><span class="faint">{$task_dateAssigned}</span>
+            Assigned to <b>{=$person_username}</b><br><span class="faint">{$task_dateAssigned}</span>
             {/}
             {if $task_closed_by}
             <br>
-            Closed by <b>{$task_closed_by}</b><br><span class="faint">{$task_closed_when}</span>
+            Closed by <b>{=$task_closed_by}</b><br><span class="faint">{$task_closed_when}</span>
             <br>
             {/}
           </div>
