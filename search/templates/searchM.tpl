@@ -78,7 +78,7 @@
           <span class="related">{$r.related}</span>
           <span class="desc" onClick='return set_grow_shrink("longText_{$r.idx}","shortText_{$r.idx}")'>
             <div id='shortText_{$r.idx}'>{echo substr($r["desc"],0,150)}</div>
-            <div style='display:none' id='longText_{$r.idx}'>{echo nl2br(trim($r["desc"]))}</div>
+            <div style='display:none' id='longText_{$r.idx}'>{echo nl2br(trim($r["desc"]))}{echo format_display_fields(nl2br(trim($r["desc2"])))}</div>
           </span>
         </div>
         {/}

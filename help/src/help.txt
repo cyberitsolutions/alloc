@@ -3228,6 +3228,8 @@ Indexed keyword fields for Clients
      - The client's name with the phone number and fax number appended
    - - desc
      - The postal and street addresses
+   - - contact
+     - The contacts' details for this client
    - - status
      - The client status i.e. archived, current, potential
    - - modifier

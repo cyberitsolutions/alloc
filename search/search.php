@@ -22,6 +22,25 @@
 
 require_once("../alloc.php");
 
+
+function format_display_fields($str="") {
+  if ($str) {
+    $lines = explode("|+|=|",$str); // arbitrary line delimiter, can't use newlines as data will contain newlines.
+    $t = "<table class='list'>";
+    foreach ($lines as $line) {
+      $t.= "<tr>";
+      $cells = explode("|",$line);
+      foreach ($cells as $cell) {
+        $t.= "<td>".str_replace(array("\n","\r","<br>","<br />")," ",substr($cell,0,200))."</td>";
+      }
+      $t.= "</tr>";
+    }
+    $t.= "</table>";
+    return "<div>".$t."</div>";
+  }
+}
+
+
 global $TPL;
 
 
@@ -95,7 +114,19 @@ if ($search && $needle && $category == "Projects") {
                       ,$TPL["url_alloc_client"], $d->getFieldValue('id'), page::htmlentities($d->getFieldValue('name')));
       //$row["related"] = sprintf("<a href='%sprojectID=%d'>%s</a>"
       //                ,$TPL["url_alloc_project"], $d->getFieldValue('pid'), $d->getFieldValue('project'));
-      $row["desc"] = page::htmlentities($d->getFieldValue('desc'));
+
+      unset($num_contact);
+      if ($d->getFieldValue('contact')) {
+        $num_contact = count((array)explode("|+|=|",$d->getFieldValue('contact')));
+        unset($s); $num_contact > 1 and $s = "s";
+        $num_contact and $num_contact = "\n\n".$num_contact." contact".$s.".\n";
+      }
+
+      $desc = page::htmlentities($d->getFieldValue('desc'));
+
+      $row["desc"] = $desc.$num_contact;
+      $row["desc2"] = page::htmlentities($d->getFieldValue('contact'));
+
       $TPL["search_results"][] = $row;
     }
 

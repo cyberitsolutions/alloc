@@ -40,6 +40,14 @@ class clientContact extends db_entity {
                              ,"primaryContact"
                              );
 
+  function save() {
+    $c = new client();
+    $c->set_id($this->get_value("clientID"));
+    $c->select();
+    $c->save();
+    return parent::save();
+  }
+
   function find_by_name($name=false,$projectID=false) {
 
     $stack1 = array();
