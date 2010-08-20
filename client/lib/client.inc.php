@@ -418,10 +418,34 @@ class client extends db_entity {
     $fx and $fx = " ".$fx;
     $name = $this->get_name().$ph.$fx;
 
+    $q = sprintf("SELECT * FROM clientContact WHERE clientID = %d",$this->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $c.= $nl.$row["clientContactName"];
+      $row["clientContactEmail"]         and $c.= " <".$row["clientContactEmail"].">";
+      $c.= " | ";
+      $row["clientContactStreetAddress"] and $c.= " ".$row["clientContactStreetAddress"];
+      $row["clientContactSuburb"]        and $c.= " ".$row["clientContactSuburb"];
+      $row["clientContactState"]         and $c.= " ".$row["clientContactState"];
+      $row["clientContactPostcode"]      and $c.= " ".$row["clientContactPostcode"];
+      $row["clientContactCountry"]       and $c.= " ".$row["clientContactCountry"];
+      $c.= " | ";
+      $row["clientContactPhone"]         and $c.= " Ph: ".$row["clientContactPhone"];
+      $row["clientContactMobile"]        and $c.= " Mob: ".$row["clientContactMobile"];
+      $row["clientContactFax"]           and $c.= " Fax: ".$row["clientContactFax"];
+      $row["primaryContact"]             and $c.= " Primary contact";
+      $c.= " | ";
+      $row["clientContactOther"]         and $c.= " ".$row["clientContactOther"];
+      $nl = "|+|=|";
+    }
+    $c and $contacts = $c;
+
     $doc = new Zend_Search_Lucene_Document();
     $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
     $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$name));
     $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$addresses));
+    $doc->addField(Zend_Search_Lucene_Field::Text('contact' ,$contacts));
     $doc->addField(Zend_Search_Lucene_Field::Text('status'  ,$this->get_value("clientStatus")));
     $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$clientModifiedUser_field));
     $doc->addField(Zend_Search_Lucene_Field::Text('dateModified',str_replace("-","",$this->get_value("clientModifiedTime"))));
