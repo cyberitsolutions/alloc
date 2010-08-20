@@ -272,7 +272,7 @@ if (!$current_user->is_employee()) {
         $timeSheetItem = new timeSheetItem;
         $timeSheetItem->set_id($timeSheetItemID);
         $timeSheetItem->select();
-        $timeSheetItem->set_tpl_values(DST_HTML_ATTRIBUTE, "tsi_");
+        $timeSheetItem->set_tpl_values(DST_VARIABLE, "tsi_");
         $taskID = $timeSheetItem->get_value("taskID");
         $TPL["tsi_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Save Time Sheet Item\">";
         $TPL["tsi_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
@@ -454,7 +454,7 @@ if ($_POST["save"]
 
 $person = $timeSheet->get_foreign_object("person");
 $TPL["timeSheet_personName"] = $person->get_username(1);
-$timeSheet->set_tpl_values(DST_HTML_ATTRIBUTE, "timeSheet_");
+$timeSheet->set_tpl_values(DST_VARIABLE, "timeSheet_");
 
 if (!$timeSheetID) {
   $timeSheet->set_value("personID", $current_user->get_id());

@@ -161,7 +161,7 @@ require_once("../alloc.php");
       $clientContact = new clientContact;
       $clientContact->set_id($_POST["clientContactID"]);
       $clientContact->select();
-      $clientContact->set_tpl_values(DST_HTML_ATTRIBUTE, "clientContact_");
+      $clientContact->set_tpl_values(DST_VARIABLE, "clientContact_");
       if ($clientContact->get_value("primaryContact")) {
         $TPL["primaryContact_checked"] = " checked";
       }
@@ -250,7 +250,7 @@ if ($_POST["save"]) {
   $client->read_globals();
   $client->set_value("clientModifiedTime", date("Y-m-d"));
   $clientID = $client->get_id();
-  $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+  $client->set_tpl_values(DST_VARIABLE, "client_");
 
   if (!$client->get_id()) {
     // New client.
@@ -261,7 +261,7 @@ if ($_POST["save"]) {
   if (!$TPL["message"]) {
     $client->save();
     $clientID = $client->get_id();
-    $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+    $client->set_tpl_values(DST_VARIABLE, "client_");
   }
   
 } else if ($_POST["save_attachment"]) {
@@ -279,7 +279,7 @@ if ($_POST["save"]) {
     $client->select();
   }
 
-  $client->set_tpl_values(DST_HTML_ATTRIBUTE, "client_");
+  $client->set_tpl_values(DST_VARIABLE, "client_");
 }
 
 $clientStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");

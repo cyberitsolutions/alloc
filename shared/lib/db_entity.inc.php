@@ -426,7 +426,7 @@ class db_entity {
     $array[$array_index] = $this->key_field->get_value($dest);
   }
 
-  function set_tpl_values($dest = DST_HTML_ATTRIBUTE, $tpl_key_prefix = "") {
+  function set_tpl_values($dest = DST_VARIABLE, $tpl_key_prefix = "") {
     $this->write_array($GLOBALS["TPL"], $dest, $tpl_key_prefix);
   }
 
