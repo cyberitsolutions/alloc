@@ -31,7 +31,7 @@ function show_people($template_name) {
     $person = new person();
     $person->read_db_record($db);
     $person->set_tpl_values(DST_VARIABLE, "person_");
-    $TPL["graphTitle"] = urlencode($person->get_username(1));
+    $TPL["graphTitle"] = urlencode($person->get_name());
     include_template($template_name);
   }
 }

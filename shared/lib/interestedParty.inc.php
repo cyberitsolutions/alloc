@@ -171,7 +171,7 @@ class interestedParty extends db_entity {
       if ($command == "unsub" || $command == "unsubscribe") {
         if (interestedParty::exists($entity, $entityID, $emailAddress)) {
           interestedParty::delete_interested_party($entity, $entityID, $emailAddress);
-          $action["interestedParty"] = $current_user->get_username(1)." is no longer a party to this conversation.";
+          $action["interestedParty"] = $current_user->get_name()." is no longer a party to this conversation.";
         }
 
       // To subscribe to this conversation
@@ -185,7 +185,7 @@ class interestedParty extends db_entity {
           $interestedParty->set_value("personID",$personID);
           $interestedParty->set_value("clientContactID",$clientContactID);
           $interestedParty->save();
-          $action["interestedParty"] = $current_user->get_username(1)." is now a party to this conversation.";
+          $action["interestedParty"] = $current_user->get_name()." is now a party to this conversation.";
         }
       }
 
@@ -221,15 +221,15 @@ class interestedParty extends db_entity {
               $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
               $unitLabel = $units[$tsi_row["timeSheetItemDurationUnitID"]];
 
-              $action["timeSheet"] = $current_user->get_username(1)." added ".$tsi_row["timeSheetItemDuration"]." ".$unitLabel;
+              $action["timeSheet"] = $current_user->get_name()." added ".$tsi_row["timeSheetItemDuration"]." ".$unitLabel;
               $action["timeSheet"].= " to time sheet #".$tsi_row["timeSheetID"];
             }
 
             if (!$tsi_row || !$tsi_row["timeSheetID"] || !$tsi_row["timeSheetItemID"]) {
-              $action["timeSheet"] = "Failed to add time via email to a time sheet for ".$current_user->get_username(1);
+              $action["timeSheet"] = "Failed to add time via email to a time sheet for ".$current_user->get_name();
             }
 
-            $tsi_row["error_no_projectPerson"] and $action["timeSheet"].= "\n".$current_user->get_username(1)." has not been added to project ".$object->get_value("projectID").".";
+            $tsi_row["error_no_projectPerson"] and $action["timeSheet"].= "\n".$current_user->get_name()." has not been added to project ".$object->get_value("projectID").".";
             $tsi_row["timeSheetItem_save_error"] and $action["timeSheet"].= "\nError saving time sheet item: ".$tsi_row["timeSheetItem_save_error"];
           }
         }

@@ -28,7 +28,7 @@ class vcs_darcs extends vcs {
     $this->name = "darcs ";
     $this->repodir = $repo;
     $this->repoprefix = " --repodir=".$repo." ";
-    $this->commit = " rec --author=".escapeshellarg($current_user->get_username(1)." <".$current_user->get_value("emailAddress").">")." --all -m ";
+    $this->commit = " rec --author=".escapeshellarg($current_user->get_name()." <".$current_user->get_value("emailAddress").">")." --all -m ";
     $this->log = " changes --xml-output ";
     $this->metadir = "_darcs";
     $this->add_everything = " add -r . ";

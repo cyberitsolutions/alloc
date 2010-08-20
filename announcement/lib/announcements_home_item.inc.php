@@ -28,8 +28,8 @@ class announcements_home_item extends home_item {
   function show_announcements($template_name) {
     global $current_user, $TPL;
 
-    $query = "SELECT announcement.*, person.username
-             FROM announcement LEFT JOIN person ON announcement.personID = person.personID
+    $query = "SELECT announcement.*
+             FROM announcement 
              WHERE displayFromDate <= CURDATE() AND displayToDate >= CURDATE()
              ORDER BY displayFromDate desc";
     $db = new db_alloc;
@@ -37,9 +37,9 @@ class announcements_home_item extends home_item {
     while ($db->next_record()) {
       $announcement = new announcement;
       $announcement->read_db_record($db);
-      $announcement->set_tpl_values();
-      $TPL["personName"] = $db->f("username");
-      $TPL["body"] = nl2br($db->f("body"));
+      $announcement->set_tpl_values(DST_HTML_DISPLAY);
+      $person = $announcement->get_foreign_object("person");
+      $TPL["personName"] = $person->get_name();
       include_template($this->get_template_dir().$template_name);
     }
   }

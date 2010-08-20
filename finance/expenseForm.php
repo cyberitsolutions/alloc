@@ -230,7 +230,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormCreatedUser")
   $p = new person;
   $p->set_id($expenseForm->get_value("expenseFormCreatedUser"));
   $p->select();
-  $TPL["user"] = $p->get_username(1);
+  $TPL["user"] = $p->get_name();
 }
 
 if ($_POST["cancel"]) {

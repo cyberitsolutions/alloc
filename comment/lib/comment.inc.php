@@ -331,7 +331,7 @@ class comment extends db_entity {
       $person = new person;
       $person->set_id($comment["personID"]);
       $person->select();
-      $author = $person->get_username(1);
+      $author = $person->get_name();
     }
     return $author;
   }

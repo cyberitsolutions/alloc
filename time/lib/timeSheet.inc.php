@@ -771,7 +771,7 @@ class timeSheet extends db_entity {
       $person = new person;
       $person->set_id($current_user->get_id());
       $person->select();
-      $person_array = array($current_user->get_id()=>$person->get_username(1));
+      $person_array = array($current_user->get_id()=>$person->get_name());
       $rtn["show_userID_options"] = page::select_options($person_array, $_FORM["personID"]);
     } 
 
@@ -1211,7 +1211,7 @@ EOD;
       $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
       $email->set_to_address($to_address);
 
-      $from_name = $from["name"] or $from_name = $current_user->get_username(1);
+      $from_name = $from["name"] or $from_name = $current_user->get_name();
 
       $hash = $from["hash"];
 

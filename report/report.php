@@ -289,7 +289,7 @@ if ($_POST["do_step_3"]) {
           $person->set_id($db->f($field));
           $person->select();
           
-          $result = $person->get_username();
+          $result = $person->get_name(array("format"=>"nick"));
         } else if (eregi("tfID", $field)) {
           $result = tf::get_name($db->f($field));
         } else {

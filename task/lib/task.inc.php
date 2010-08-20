@@ -229,7 +229,7 @@ class task extends db_entity {
     $message = "\n\n".$subject;
     $message.= "\n\n".$this->get_url(true);
     $this->get_value("taskDescription") and $message.= "\n\n".$this->get_value("taskDescription");
-    $message.= "\n\n-- \nReminder created by ".$current_user->get_username(1)." at ".date("Y-m-d H:i:s");
+    $message.= "\n\n-- \nReminder created by ".$current_user->get_name()." at ".date("Y-m-d H:i:s");
     $people[] = $this->get_value("personID");
     $this->create_reminder(null, $message, $reminderInterval, $intervalValue, REMINDER_METAPERSON_TASK_ASSIGNEE, $subject);
   }
@@ -1706,7 +1706,7 @@ class task extends db_entity {
       
       $email->set_to_address($to_address);
     
-      $from_name = $from["name"] or $from_name = $current_user->get_username(1);
+      $from_name = $from["name"] or $from_name = $current_user->get_name();
 
       // REMOVE ME!!
       $email->ignore_no_email_urls = true;

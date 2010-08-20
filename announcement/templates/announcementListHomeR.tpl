@@ -1,3 +1,3 @@
 <strong>{$heading}</strong><br>
-{$body}<br>
+{echo nl2br($body)}<br>
 <br>

@@ -11,7 +11,7 @@
         </tr>
 	      <tr>
 	        <td>User</td> 
-          <td>{$personName}</td>
+          <td>{=$personName}</td>
 	      </tr>
         <tr>
           <td>Date From</td>
