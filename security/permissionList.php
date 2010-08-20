@@ -35,7 +35,7 @@ function show_permission_list($template_name) {
   while ($db->next_record()) {
     $permission = new permission;
     $permission->read_db_record($db);
-    $permission->set_tpl_values(DST_HTML_ATTRIBUTE);
+    $permission->set_tpl_values(DST_VARIABLE);
     $TPL["actions"] = $permission->describe_actions();
     if ($permission->get_value("personID")) {
       $person = $permission->get_foreign_object("person");

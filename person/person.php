@@ -52,7 +52,7 @@ require_once("../alloc.php");
     $absence = new absence;
     while ($db->next_record()) {
       $absence->read_db_record($db);
-      $absence->set_tpl_values(DST_HTML_ATTRIBUTE, "absence_");
+      $absence->set_tpl_values(DST_VARIABLE, "absence_");
       include_template($template);
     }
   }
@@ -265,7 +265,7 @@ if ($_POST["save"]) {
 #$person = new person;
 #$person->set_id($personID);
 #$person->select();
-$person->set_tpl_values(DST_HTML_ATTRIBUTE, "person_");
+$person->set_tpl_values(DST_VARIABLE, "person_");
 
 if ($person->get_id()) {
   $q = sprintf("SELECT tfPerson.tfID AS value, tf.tfName AS label 

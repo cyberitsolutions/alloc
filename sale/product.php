@@ -171,7 +171,7 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
 
 
 $TPL["main_alloc_title"] = "Product: ".$product->get_value("productName")." - ".APPLICATION_NAME;
-$product->set_tpl_values(DST_HTML_ATTRIBUTE);
+$product->set_tpl_values(DST_VARIABLE);
 
 if (!$productID) {
   $TPL["main_alloc_title"] = "New Product - ".APPLICATION_NAME;

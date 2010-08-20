@@ -36,7 +36,7 @@ function show_reminders($template) {
   while ($db->next_record()) {
     $reminder = new reminder;
     $reminder->read_db_record($db);
-    $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
+    $reminder->set_tpl_values(DST_VARIABLE, "reminder_");
 
     // only show reminder in list if project/task/client arent archived/complete
     if ($reminder->is_alive()) {

@@ -32,7 +32,7 @@ function show_commentTemplate($template_name) {
   while ($db->next_record()) {
     $commentTemplate = new commentTemplate;
     $commentTemplate->read_db_record($db);
-    $commentTemplate->set_tpl_values(DST_HTML_ATTRIBUTE);
+    $commentTemplate->set_tpl_values(DST_VARIABLE);
     $TPL["odd_even"] = $TPL["odd_even"] == "even" ? "odd" : "even";
     include_template($template_name);
   }

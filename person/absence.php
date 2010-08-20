@@ -78,7 +78,7 @@ if ($_POST["save"]) {
 }
 
 
-$absence->set_tpl_values(DST_HTML_ATTRIBUTE, "absence_");
+$absence->set_tpl_values(DST_VARIABLE, "absence_");
 $_GET["date"] and $TPL["absence_dateFrom"] = $_GET["date"];
 
 $TPL["personName"] = $person->get_username(1);
