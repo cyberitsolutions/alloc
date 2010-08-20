@@ -35,7 +35,7 @@ $absence = new absence;
 if ($absenceID) {
   $absence->set_id($absenceID);
   $absence->select();
-  $absence->set_tpl_values();
+  $absence->set_values();
   $personID = $absence->get_value("personID");
 }
 
@@ -78,7 +78,7 @@ if ($_POST["save"]) {
 }
 
 
-$absence->set_tpl_values(DST_VARIABLE, "absence_");
+$absence->set_values("absence_");
 $_GET["date"] and $TPL["absence_dateFrom"] = $_GET["date"];
 
 $TPL["personName"] = $person->get_name();

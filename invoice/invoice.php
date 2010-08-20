@@ -43,7 +43,7 @@ function show_new_invoiceItem($template) {
       $invoiceItem = new invoiceItem;
       $invoiceItem->set_id($invoiceItemID);
       $invoiceItem->select();
-      $invoiceItem->set_tpl_values(DST_VARIABLE, "invoiceItem_");
+      $invoiceItem->set_values("invoiceItem_");
       $TPL["invoiceItem_buttons"] = "<input type=\"submit\" name=\"invoiceItem_save[".$invoiceItemID."]\" value=\"Save Invoice Item\">";
       $TPL["invoiceItem_buttons"].= "<input type=\"submit\" name=\"invoiceItem_delete[".$invoiceItemID."]\" value=\"Delete\">";
      
@@ -62,7 +62,7 @@ function show_new_invoiceItem($template) {
     // Else default values for creating a new invoiceItem
     } else {
       $invoiceItem = new invoiceItem;
-      $invoiceItem->set_tpl_values(DST_VARIABLE, "invoiceItem_");
+      $invoiceItem->set_values("invoiceItem_");
       $TPL["invoiceItem_buttons"] = "<input type=\"submit\" name=\"invoiceItem_save\" value=\"Add Invoice Item\">";
     }
 
@@ -156,7 +156,7 @@ function show_invoiceItem_list() {
     if (!$invoiceItem->read_db_record($db,false)) {
       continue;
     }
-    $invoiceItem->set_tpl_values(DST_HTML_DISPLAY, "invoiceItem_");
+    $invoiceItem->set_tpl_values("invoiceItem_");
 
     unset($transaction_sum);
     unset($transaction_info);
@@ -358,7 +358,7 @@ $invoice = new invoice;
 if ($invoiceID) {
   $invoice->set_id($invoiceID);
   $invoice->select();
-  $invoice->set_tpl_values();
+  $invoice->set_values();
   $invoiceItemIDs = invoice::get_invoiceItems($invoiceID);
 }
 
@@ -558,7 +558,7 @@ if ($invoiceID) {
 }
 
 
-$invoice->set_tpl_values();
+$invoice->set_values();
 
 $statii = invoice::get_invoice_statii();
 

@@ -43,7 +43,7 @@ function show_productSale_list($productSaleID, $template) {
   $productSale = new productSale;
   $productSale->set_id($productSaleID);
   $productSale->select();
-  $productSale->set_tpl_values();
+  $productSale->set_values();
 
   $taxName = config::get_config_item("taxName");
 
@@ -59,7 +59,7 @@ function show_productSale_list($productSaleID, $template) {
     $productSaleItemsDoExist = true;
     $productSaleItem = new productSaleItem;
     $productSaleItem->read_db_record($db);
-    $productSaleItem->set_tpl_values();
+    $productSaleItem->set_values();
 
     $TPL["itemBuyCost"] = $productSaleItem->get_value("buyCost");
     $TPL["itemSellPrice"] = $productSaleItem->get_value("sellPrice");
@@ -90,7 +90,7 @@ function show_productSale_new($template) {
   $taxName = config::get_config_item("taxName");
   $productSaleItem = new productSaleItem;
   $productSaleItem->set_id('new0');
-  $productSaleItem->set_tpl_values(); // wipe clean
+  $productSaleItem->set_values(); // wipe clean
   $product = new product;
   $ops = $product->get_assoc_array("productID","productName");
   $TPL["productList_dropdown"] = page::select_options($ops, $productSaleItem->get_value("productID"));
@@ -109,7 +109,7 @@ function show_transaction_list($transactions=array(), $template) {
   foreach ($transactions as $row) {
     $transaction = new transaction;
     $transaction->read_array($row);
-    $transaction->set_tpl_values();
+    $transaction->set_values();
     $TPL["display"] = "";
     $TPL["tfList_dropdown"] = page::select_options($tflist, $transaction->get_value("tfID"));
     $TPL["fromTfList_dropdown"] = page::select_options($tflist, $transaction->get_value("fromTfID"));
@@ -126,7 +126,7 @@ function show_transaction_list($transactions=array(), $template) {
 function show_transaction_new($template) {
   global $TPL, $tflist;
   $transaction = new transaction;
-  $transaction->set_tpl_values(); // wipe clean
+  $transaction->set_values(); // wipe clean
   $TPL["display"] = "display:none";
   $TPL["tfList_dropdown"] = page::select_options($tflist);
   $TPL["fromTfList_dropdown"] = page::select_options($tflist);
@@ -149,7 +149,7 @@ $productSale->read_globals();
 if ($productSaleID) {
   $productSale->set_id($productSaleID);
   $productSale->select();
-  $productSale->set_tpl_values();
+  $productSale->set_values();
   $clientID = $productSale->get_value("clientID");
   $projectID = $productSale->get_value("projectID");
   $productSaleID = $productSale->get_id();
@@ -297,7 +297,7 @@ $TPL["productSaleID"] = $productSale->get_id();
 
 $showCosts = $_POST["showCosts"] or $_showCosts = $_GET["showCosts"];
 
-$productSale->set_tpl_values();
+$productSale->set_values();
 
 
 list($client_select, $client_link, $project_select, $project_link) 

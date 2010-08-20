@@ -37,7 +37,7 @@ function show_productCost_list($productID, $template, $percent = false) {
     while ($db->next_record()) {
       $productCost = new productCost;
       $productCost->read_db_record($db);
-      $productCost->set_tpl_values();
+      $productCost->set_values();
       include_template($template);
     }
   }
@@ -46,7 +46,7 @@ function show_productCost_list($productID, $template, $percent = false) {
 function show_productCost_new($template) {
   global $TPL;
   $productCost = new productCost;
-  $productCost->set_tpl_values(); // wipe clean
+  $productCost->set_values(); // wipe clean
   $TPL["display"] = "display:none";
   include_template($template);
 }
@@ -123,7 +123,7 @@ if ($_POST["save"]) {
     }
     alloc_redirect($TPL["url_alloc_product"]."productID=".$productID);
   }
-  $product->set_tpl_values();
+  $product->set_values();
 
 } else if ($_POST["delete"]) {
   $product->read_globals();
@@ -171,7 +171,7 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
 
 
 $TPL["main_alloc_title"] = "Product: ".$product->get_value("productName")." - ".APPLICATION_NAME;
-$product->set_tpl_values(DST_VARIABLE);
+$product->set_values();
 
 if (!$productID) {
   $TPL["main_alloc_title"] = "New Product - ".APPLICATION_NAME;

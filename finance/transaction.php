@@ -51,12 +51,12 @@ $tf = $transaction->get_foreign_object("tf");
 $tf->check_perm();
 
 $invoice_item = $transaction->get_foreign_object("invoiceItem");
-$invoice_item->set_tpl_values();
+$invoice_item->set_values();
 $invoice = $invoice_item->get_foreign_object("invoice");
 if (!$invoice->get_id()) {
   $invoice = $transaction->get_foreign_object("invoice");
 }
-$invoice->set_tpl_values();
+$invoice->set_values();
 if ($invoice->get_id()) {
   $TPL["invoice_link"] = "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$invoice->get_id()."\">#".$invoice->get_value("invoiceNum");
   $TPL["invoice_link"].= " ".$invoice->get_value("invoiceDateFrom")." to ". $invoice->get_value("invoiceDateTo")."</a>";
@@ -72,7 +72,7 @@ if ($timeSheet->get_id()) {
   $TPL["timeSheet_link"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">#".$timeSheet->get_id()."</a>";
 }
 
-$transaction->set_tpl_values();
+$transaction->set_values();
 
 
 
@@ -110,7 +110,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
     if ($_POST["saveGoTf"]) {
       alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
     }
-    $transaction->set_tpl_values();
+    $transaction->set_values();
 
   }
     
@@ -119,7 +119,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
   alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
 }
 
-$transaction->set_tpl_values(DST_HTML_DISPLAY);
+$transaction->set_tpl_values();
 
 $TPL["product"] = page::htmlentities($transaction->get_value("product"));
 $TPL["statusOptions"] = page::select_options(array("pending"=>"Pending", "rejected"=>"Rejected", "approved"=>"Approved"), $transaction->get_value("status"));

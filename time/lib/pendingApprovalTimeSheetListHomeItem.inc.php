@@ -53,7 +53,7 @@ function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
   while ($db->next_record()) {
     $timeSheet = new timeSheet;
     $timeSheet->read_db_record($db);
-    $timeSheet->set_tpl_values();
+    $timeSheet->set_values();
 
     unset($date); 
     if ($timeSheet->get_value("status") == "manager") {

@@ -114,7 +114,7 @@ function show_transaction_list($transactionType) {
 
     $transaction = new transaction;
     $transaction->read_db_record($db);
-    $transaction->set_tpl_values();
+    $transaction->set_values();
 
     $TPL["tfName"] = $db->f("tfName");
     $TPL["total_amount"] += $transaction->get_value("amount");

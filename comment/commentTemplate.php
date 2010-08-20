@@ -47,7 +47,7 @@ if ($_POST["save"]) {
   exit();
 }
 // Load data for display in the template
-$commentTemplate->set_tpl_values();
+$commentTemplate->set_values();
 
 $ops = array(""=>"Comment Template Type","task"=>"Task","timeSheet"=>"Time Sheet");
 $TPL["commentTemplateTypeOptions"] = page::select_options($ops,$commentTemplate->get_value("commentTemplateType"));

@@ -52,7 +52,7 @@ require_once("../alloc.php");
     $absence = new absence;
     while ($db->next_record()) {
       $absence->read_db_record($db);
-      $absence->set_tpl_values(DST_VARIABLE, "absence_");
+      $absence->set_values("absence_");
       include_template($template);
     }
   }
@@ -100,11 +100,11 @@ require_once("../alloc.php");
     while ($db->next_record()) {
       $skill = new skill;
       $skill->read_db_record($db);
-      $skill->set_tpl_values(DST_HTML_DISPLAY);
+      $skill->set_tpl_values();
 
       $skillPrificiencys = new proficiency;
       $skillPrificiencys->read_db_record($db);
-      $skillPrificiencys->set_tpl_values();
+      $skillPrificiencys->set_values();
 
       # if tey do and there is no heading for this segment put a heading
       $thisSkillClass = $skill->get_value('skillClass');
@@ -265,7 +265,7 @@ if ($_POST["save"]) {
 #$person = new person;
 #$person->set_id($personID);
 #$person->select();
-$person->set_tpl_values(DST_VARIABLE, "person_");
+$person->set_values("person_");
 
 if ($person->get_id()) {
   $q = sprintf("SELECT tfPerson.tfID AS value, tf.tfName AS label 

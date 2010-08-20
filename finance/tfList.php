@@ -60,7 +60,7 @@ function show_tf($template_name) {
 
     $tf = new tf;
     $tf->read_db_record($db);
-    $tf->set_tpl_values();
+    $tf->set_values();
 
     if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {
       $TPL["tfBalance"] = sprintf("%0.2f",$tf->get_balance());

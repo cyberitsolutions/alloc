@@ -51,7 +51,7 @@ function show_expenseFormList($template_name) {
   while ($db->next_record()) {
     $i++;
     $transactionRepeat->read_db_record($db);
-    $transactionRepeat->set_tpl_values();
+    $transactionRepeat->set_values();
     $TPL["tfName"] = tf::get_name($transactionRepeat->get_value("tfID"));
     $TPL["fromTfName"] = tf::get_name($transactionRepeat->get_value("fromTfID"));
     include_template($template_name);

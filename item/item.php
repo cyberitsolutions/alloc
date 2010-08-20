@@ -35,7 +35,7 @@ $db = new db_alloc;
 $db->query(sprintf("select * from item where itemID=%d",$itemID));
 $db->next_record();
 $item->read_db_record($db);
-$item->set_tpl_values();
+$item->set_values();
 
 // new crap
 if ($current_user->have_role("admin") || $current_user->have_role("manage")) {

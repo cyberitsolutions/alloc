@@ -36,7 +36,7 @@ function show_transaction_list($template) {
   while ($row = $db->row()) {
     $transaction = new transaction;
     $transaction->read_array($row);
-    $transaction->set_tpl_values();
+    $transaction->set_values();
 
     $tflist = add_inactive_tf($transaction->get_value("tfID"), $tflist);
     $tflist = add_inactive_tf($transaction->get_value("fromTfID"), $tflist);
@@ -54,7 +54,7 @@ function show_transaction_list($template) {
 function show_transaction_new($template) {
   global $TPL, $tflist;
   $transaction = new transaction;
-  $transaction->set_tpl_values(); // wipe clean
+  $transaction->set_values(); // wipe clean
   $TPL["display"] = "display:none";
   $TPL["tfList_dropdown"] = page::select_options($tflist,NULL,500);
   $TPL["fromTfList_dropdown"] = page::select_options($tflist,NULL,500);

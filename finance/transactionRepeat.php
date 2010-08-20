@@ -35,7 +35,7 @@ $transactionRepeatID = $_POST["transactionRepeatID"] or $transactionRepeatID = $
 if ($transactionRepeatID) {
   $transactionRepeat->set_id($transactionRepeatID);
   $transactionRepeat->select();
-  $transactionRepeat->set_tpl_values();
+  $transactionRepeat->set_values();
 } 
 
 
@@ -82,7 +82,7 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
     $transactionRepeat->set_value("companyDetails",rtrim($transactionRepeat->get_value("companyDetails")));
     $transactionRepeat->save();
   }
-  $transactionRepeat->set_tpl_values();
+  $transactionRepeat->set_values();
 }                       
 
 

@@ -100,11 +100,11 @@ require_once("../alloc.php");
       while ($db->next_record()) {
         $transaction = new transaction;
         $transaction->read_db_record($db);
-        $transaction->set_tpl_values(DST_VARIABLE, "transaction_");
+        $transaction->set_values("transaction_");
 
         $tf = $transaction->get_foreign_object("tf");
-        $tf->set_tpl_values();
-        $tf->set_tpl_values(DST_VARIABLE, "tf_");
+        $tf->set_values();
+        $tf->set_values("tf_");
 
         $TPL["transaction_username"] = $db->f("username");
         $TPL["transaction_amount"] = number_format(($TPL["transaction_amount"]), 2);
@@ -130,7 +130,7 @@ require_once("../alloc.php");
       while ($db->next_record()) {
         $commission_item = new projectCommissionPerson;
         $commission_item->read_db_record($db);
-        $commission_item->set_tpl_values(DST_VARIABLE, "commission_");
+        $commission_item->set_values("commission_");
         $tf = $commission_item->get_foreign_object("tf");
         include_template($template_name);
       }
@@ -147,7 +147,7 @@ require_once("../alloc.php");
 
     $TPL["commission_list_buttons"] = "<input type=\"submit\" name=\"commission_save\" value=\"Add\">";
     $commission_item = new projectCommissionPerson;
-    $commission_item->set_tpl_values(DST_VARIABLE, "commission_");
+    $commission_item->set_values("commission_");
     $TPL["commission_projectID"] = $projectID;
     include_template($template_name);
   }
@@ -166,7 +166,7 @@ require_once("../alloc.php");
       while ($db->next_record()) {
         $projectPerson = new projectPerson;
         $projectPerson->read_db_record($db);
-        $projectPerson->set_tpl_values(DST_VARIABLE, "person_");
+        $projectPerson->set_values("person_");
         $person = $projectPerson->get_foreign_object("person");
         $TPL["person_username"] = $person->get_value("username");
         $TPL["person_emailType_options"] = page::select_options($email_type_array, $TPL["person_emailType"]);
@@ -206,7 +206,7 @@ require_once("../alloc.php");
       return;
     }
     $project_person = new projectPerson;
-    $project_person->set_tpl_values(DST_VARIABLE, "person_");
+    $project_person->set_values("person_");
     $TPL["person_emailType_options"] = page::select_options($email_type_array, $TPL["person_emailType"]);
     $TPL["person_role_options"] = page::select_options($project_person_role_array,false);
     $TPL["rateType_options"] = page::select_options($rate_type_array, $TPL["person_rateUnitID"]);
@@ -291,7 +291,7 @@ require_once("../alloc.php");
     while ($db->next_record()) {
       $reminder = new reminder;
       $reminder->read_db_record($db);
-      $reminder->set_tpl_values(DST_HTML_DISPLAY, "reminder_");
+      $reminder->set_tpl_values("reminder_");
 
       if ($reminder->get_value('reminderRecuringInterval') == "No") {
         $TPL["reminder_reminderRecurence"] = "&nbsp;";
@@ -511,7 +511,7 @@ if ($_POST["save_attachment"]) {
 }
 
 
-$project->set_tpl_values(DST_VARIABLE, "project_");
+$project->set_values("project_");
 
 $ops = array(""=>"","0"=>"No","1"=>"Yes");
 $TPL["is_agency_options"] = page::select_options($ops,$project->get_value("is_agency"));
@@ -524,7 +524,7 @@ $clientID = $project->get_value("clientID") or $clientID = $_GET["clientID"];
 $client = new client;
 $client->set_id($clientID);
 $client->select();
-$client->set_tpl_values(DST_HTML_DISPLAY, "client_");
+$client->set_tpl_values("client_");
 
 // If a client has been chosen
 if ($clientID) {

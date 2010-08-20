@@ -37,7 +37,7 @@ class announcements_home_item extends home_item {
     while ($db->next_record()) {
       $announcement = new announcement;
       $announcement->read_db_record($db);
-      $announcement->set_tpl_values(DST_HTML_DISPLAY);
+      $announcement->set_tpl_values();
       $person = $announcement->get_foreign_object("person");
       $TPL["personName"] = $person->get_name();
       include_template($this->get_template_dir().$template_name);
