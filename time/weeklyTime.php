@@ -46,14 +46,14 @@ function show_timeSheetItems($template_name) {
   while ($db->next_record()) {
     $timeSheetItem = new timeSheetItem;
     $timeSheetItem->read_db_record($db);
-    $timeSheetItem->set_tpl_values();
+    $timeSheetItem->set_values();
     if ($timeSheetItem->get_value("unit") == "Hour") {
       $TPL["daily_hours_total"] += $timeSheetItem->get_value("timeSheetItemDuration");
     }
 
     $project = new project;
     $project->read_db_record($db);
-    $project->set_tpl_values();
+    $project->set_values();
     if ($project->get_value("projectShortName")) {
       $TPL["item_description"] = $project->get_value("projectShortName");
     } else {

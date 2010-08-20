@@ -30,7 +30,7 @@ function show_people($template_name) {
   while ($db->next_record()) {
     $person = new person();
     $person->read_db_record($db);
-    $person->set_tpl_values(DST_VARIABLE, "person_");
+    $person->set_values("person_");
     $TPL["graphTitle"] = urlencode($person->get_name());
     include_template($template_name);
   }

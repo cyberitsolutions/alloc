@@ -43,7 +43,7 @@ function show_all_exp($template) {
 
       $transaction = new transaction;
       $transaction->read_db_record($db,false);
-      $transaction->set_tpl_values();
+      $transaction->set_values();
 
       $transaction->get_value("quantity") and $TPL["amount"] = $transaction->get_value("amount") / $transaction->get_value("quantity");
       $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);
@@ -178,7 +178,7 @@ if ($_POST["edit"] && $_POST["expenseFormID"] && $_POST["transactionID"]) {
   $TPL["transactionID"] = $_POST["transactionID"];
 }
 
-$transaction_to_edit->set_tpl_values();
+$transaction_to_edit->set_values();
 
 if ($transaction_to_edit->get_value("quantity")) {
   $TPL["amount"] = $transaction_to_edit->get_value("amount") / $transaction_to_edit->get_value("quantity");
@@ -222,7 +222,7 @@ $q = "SELECT projectID AS value, projectName AS label
 $TPL["projectOptions"] = page::select_options($q, $selectedProjectID);
 
 if (is_object($expenseForm)) { 
-  $expenseForm->set_tpl_values();
+  $expenseForm->set_values();
   $TPL["expenseFormID"] = $expenseForm->get_id();
 }
 

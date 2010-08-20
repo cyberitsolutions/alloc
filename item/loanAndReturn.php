@@ -54,7 +54,7 @@ function show_items($template_name) {
     $loan = new loan;
     $loan->read_db_record($db2);
 
-    $item->set_tpl_values();    // you need to have this repeated here for the a href bit below.
+    $item->set_values();    // you need to have this repeated here for the a href bit below.
 
     if ($loan->get_value("dateReturned") == "0000-00-00") {
 
@@ -91,8 +91,8 @@ function show_items($template_name) {
     }
 
 
-    $loan->set_tpl_values();
-    $item->set_tpl_values();
+    $loan->set_values();
+    $item->set_values();
     include_template($template_name);
   }
 

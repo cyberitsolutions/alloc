@@ -261,12 +261,12 @@ class timeSheetPrint {
       $timeSheet = new timeSheet;
       $timeSheet->set_id($timeSheetID);
       $timeSheet->select();
-      $timeSheet->set_tpl_values(DST_HTML_DISPLAY);
+      $timeSheet->set_tpl_values();
 
 
       $person = $timeSheet->get_foreign_object("person");
       $TPL["timeSheet_personName"] = $person->get_name();
-      $timeSheet->set_tpl_values(DST_HTML_DISPLAY, "timeSheet_");
+      $timeSheet->set_tpl_values("timeSheet_");
 
 
       // Display the project name.
@@ -277,7 +277,7 @@ class timeSheetPrint {
 
       // Get client name
       $client = $project->get_foreign_object("client");
-      $client->set_tpl_values(DST_HTML_DISPLAY);
+      $client->set_tpl_values();
       $TPL["clientName"] = $client->get_value("clientName",DST_HTML_DISPLAY);
       $TPL["companyName"] = config::get_config_item("companyName");
 

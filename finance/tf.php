@@ -37,7 +37,7 @@ function show_person_list($template) {
     while ($db->next_record()) {
       $tfPerson = new tfPerson;
       $tfPerson->read_db_record($db);
-      $tfPerson->set_tpl_values(DST_VARIABLE, "person_");
+      $tfPerson->set_values("person_");
       $person = $tfPerson->get_foreign_object("person");
       $TPL["person_username"] = $person->get_value("username");
       include_template($template);
@@ -50,7 +50,7 @@ function show_new_person($template) {
   $TPL["person_buttons"] = "
           <input type=\"submit\" name=\"person_save\" value=\"Add\">";
   $tfPerson = new tfPerson;
-  $tfPerson->set_tpl_values(DST_VARIABLE, "person_");
+  $tfPerson->set_values("person_");
   include_template($template);
 }
 
@@ -127,7 +127,7 @@ if ($_POST["person_save"] || $_POST["person_delete"]) {
 }
 
 
-$tf->set_tpl_values();
+$tf->set_values();
 
 
 $TPL["tfModifiedTime"] = $tf->get_value("tfModifiedTime");

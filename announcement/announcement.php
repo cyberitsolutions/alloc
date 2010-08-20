@@ -50,7 +50,7 @@ if ($_POST["save"]) {
 }
 
 // load data for display in the template
-$announcement->set_tpl_values();
+$announcement->set_values();
 
 $TPL["main_alloc_title"] = "Edit Announcement - ".APPLICATION_NAME;
 

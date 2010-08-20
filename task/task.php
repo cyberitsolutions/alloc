@@ -33,7 +33,7 @@ define("PAGE_IS_PRINTABLE",1);
     while ($db->next_record()) {
       $reminder = new reminder;
       $reminder->read_db_record($db);
-      $reminder->set_tpl_values(DST_HTML_DISPLAY, "reminder_");
+      $reminder->set_tpl_values("reminder_");
       if ($reminder->get_value('reminderRecuringInterval') == "No") {
         $TPL["reminder_reminderRecurence"] = "&nbsp;";
       } else {
@@ -185,7 +185,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 }
 
 // Start stuff here
-$task->set_tpl_values(DST_VARIABLE, "task_");
+$task->set_values("task_");
 
 $person = new person;
 $person->set_id($task->get_value("creatorID"));
@@ -241,7 +241,7 @@ $TPL["percentComplete"] = $task->get_percentComplete();
 
 // Generate navigation links
 $project = $task->get_foreign_object("project");
-$project->set_tpl_values(DST_VARIABLE, "project_");
+$project->set_values("project_");
 if ($project->get_id()) {
   $ops["taskID"] = $task->get_id();
   $ops["showProject"] = true;
@@ -249,7 +249,7 @@ if ($project->get_id()) {
 }
 
 $parent_task = $task->get_foreign_object("task", "parentTaskID");
-$parent_task->set_tpl_values(DST_VARIABLE, "parentTask_");
+$parent_task->set_values("parentTask_");
 
 $TPL["taskType_taskTypeID"] = $task->get_value("taskTypeID");
 
@@ -349,13 +349,13 @@ if ($_GET["media"] == "print") {
   $client = new client;
   $client->set_id($project->get_value("clientID"));
   $client->select();
-  $client->set_tpl_values(DST_VARIABLE, "client_");
+  $client->set_values("client_");
 
   $project = $task->get_foreign_object("project");
   $clientContact = new clientContact;
   $clientContact->set_id($project->get_value("clientContactID"));
   $clientContact->select();
-  $clientContact->set_tpl_values(DST_VARIABLE, "clientContact_");
+  $clientContact->set_values("clientContact_");
 
   // Need to html-ise taskName and description
   $TPL["task_taskName"] = page::htmlentities($task->get_value("taskName"));

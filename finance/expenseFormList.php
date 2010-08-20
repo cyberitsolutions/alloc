@@ -49,7 +49,7 @@ function show_expense_form_list($template_name) {
     $expenseForm = new expenseForm();
     if ($expenseForm->read_db_record($db, false)) {
       $i++;
-      $expenseForm->set_tpl_values();
+      $expenseForm->set_values();
       $TPL["formTotal"] = sprintf("%0.2f", -$db->f("formTotal"));
       $TPL["expenseFormModifiedUser"] = person::get_fullname($expenseForm->get_value("expenseFormModifiedUser"));
       $TPL["expenseFormModifiedTime"] = $expenseForm->get_value("expenseFormModifiedTime");
@@ -76,10 +76,10 @@ function show_pending_transaction_list($template_name) {
     $i++;
     $transaction = new transaction;
     $transaction->read_db_record($db);
-    $transaction->set_tpl_values();
+    $transaction->set_values();
     $transactionRepeat = new transactionRepeat;
     $transactionRepeat->read_db_record($db);
-    $transactionRepeat->set_tpl_values();
+    $transactionRepeat->set_values();
     $TPL["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];
     $TPL["formTotal"] = sprintf("%0.2f", -$db->f("amount"));
     $TPL["transactionModifiedTime"] = $transaction->get_value("transactionModifiedTime");

@@ -104,7 +104,7 @@ if (!$current_user->is_employee()) {
         while ($db->next_record()) {
           $transaction = new transaction;
           $transaction->read_db_record($db);
-          $transaction->set_tpl_values(DST_HTML_DISPLAY, "transaction_");
+          $transaction->set_tpl_values("transaction_");
 
           $TPL["tf_options"] = page::select_options($tf_array, $TPL["transaction_tfID"]);
           $TPL["from_tf_options"] = page::select_options($tf_array, $TPL["transaction_fromTfID"]);
@@ -132,7 +132,7 @@ if (!$current_user->is_employee()) {
         while ($db->next_record()) {
           $transaction = new transaction;
           $transaction->read_db_record($db,false);
-          $transaction->set_tpl_values(DST_HTML_DISPLAY, "transaction_");
+          $transaction->set_tpl_values("transaction_");
           unset($TPL["transaction_amount_pos"]);
           unset($TPL["transaction_amount_neg"]);
           $TPL["transaction_amount"] = "$".number_format($TPL["transaction_amount"], 2);
@@ -204,7 +204,7 @@ if (!$current_user->is_employee()) {
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
       $timeSheetItem->read_db_record($db,false);
-      $timeSheetItem->set_tpl_values(DST_HTML_DISPLAY, "timeSheetItem_");
+      $timeSheetItem->set_tpl_values("timeSheetItem_");
 
       $TPL["timeSheet_totalHours"] += $timeSheetItem->get_value("timeSheetItemDuration");
 
@@ -272,7 +272,7 @@ if (!$current_user->is_employee()) {
         $timeSheetItem = new timeSheetItem;
         $timeSheetItem->set_id($timeSheetItemID);
         $timeSheetItem->select();
-        $timeSheetItem->set_tpl_values(DST_VARIABLE, "tsi_");
+        $timeSheetItem->set_values("tsi_");
         $taskID = $timeSheetItem->get_value("taskID");
         $TPL["tsi_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Save Time Sheet Item\">";
         $TPL["tsi_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
@@ -338,7 +338,7 @@ if ($timeSheetID) {
   $timeSheet = new timeSheet;
   $timeSheet->set_id($timeSheetID);
   $timeSheet->select();
-  $timeSheet->set_tpl_values();
+  $timeSheet->set_values();
 } 
 
 
@@ -454,7 +454,7 @@ if ($_POST["save"]
 
 $person = $timeSheet->get_foreign_object("person");
 $TPL["timeSheet_personName"] = $person->get_name();
-$timeSheet->set_tpl_values(DST_VARIABLE, "timeSheet_");
+$timeSheet->set_values("timeSheet_");
 
 if (!$timeSheetID) {
   $timeSheet->set_value("personID", $current_user->get_id());

@@ -58,8 +58,8 @@ function show_overdue($template_name) {
     $loan = new loan;
     $item->read_db_record($db);
     $loan->read_db_record($db);
-    $item->set_tpl_values();
-    $loan->set_tpl_values();
+    $item->set_values();
+    $loan->set_values();
     $person = new person;
     $person->set_id($loan->get_value("personID"));
     $person->select();

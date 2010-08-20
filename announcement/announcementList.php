@@ -35,7 +35,7 @@ function show_announcements($template_name) {
   while ($db->next_record()) {
     $announcement = new announcement;
     $announcement->read_db_record($db);
-    $announcement->set_tpl_values();
+    $announcement->set_values();
     $person = $announcement->get_foreign_object("person");
     $TPL["personName"] = $person->get_name();
     $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";

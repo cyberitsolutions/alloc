@@ -40,7 +40,7 @@ if (is_array($actions_array)) {
 }
 
 $permission->read_globals();
-$permission->set_tpl_values();
+$permission->set_values();
 
 
 if (!$permission->get_value("tableName")) {

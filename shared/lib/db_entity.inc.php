@@ -426,8 +426,12 @@ class db_entity {
     $array[$array_index] = $this->key_field->get_value($dest);
   }
 
-  function set_tpl_values($dest = DST_VARIABLE, $tpl_key_prefix = "") {
-    $this->write_array($GLOBALS["TPL"], $dest, $tpl_key_prefix);
+  function set_values($tpl_key_prefix="") {
+    $this->write_array($GLOBALS["TPL"], DST_VARIABLE, $tpl_key_prefix);
+  }
+
+  function set_tpl_values($tpl_key_prefix = "") {
+    $this->write_array($GLOBALS["TPL"], DST_HTML_DISPLAY, $tpl_key_prefix);
   }
 
   function read_globals($prefix = "", $source = SRC_VARIABLE) {
