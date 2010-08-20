@@ -28,7 +28,7 @@ class vcs_mercurial extends vcs {
     $this->name = "hg ";
     $this->repodir = $repo;
     $this->repoprefix = " --cwd '".$repo."' ";
-    $this->commit = " commit --user='".$current_user->get_username(1)." <".$current_user->get_value("emailAddress").">' -m ";
+    $this->commit = " commit --user='".$current_user->get_name()." <".$current_user->get_value("emailAddress").">' -m ";
     $this->metadir = ".hg";
     $this->add_everything = " add "; 
     $this->cat = ' cat -r %2$s %1$s ';

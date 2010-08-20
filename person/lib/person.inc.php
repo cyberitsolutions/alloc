@@ -218,18 +218,23 @@ class person extends db_entity {
     return $people_cache[$personID]["name"];
   } 
 
-  function get_username($long_format=false) {
-    
-    // If id is a $person object
-    if ($this->get_value("username")) {
-      $firstName = $this->get_value("firstName");
-      $surname   = $this->get_value("surname");
-      $username  = $this->get_value("username");
-    } 
-    if ($long_format && $firstName && $surname){
-      return $firstName." ".$surname;
+  function get_name($_FORM=array()) {
+    $firstName = $this->get_value("firstName");
+    $surname   = $this->get_value("surname");
+    $username  = $this->get_value("username");
+
+    if ($_FORM["format"] == "nick") {
+      $rtn = $username;
+    } else if ($firstName && $surname) {
+      $rtn = $firstName." ".$surname;
     } else {
-      return $username;
+      $rtn = $username;
+    }
+
+    if ($_FORM["return"] == "html") {
+      return page::htmlentities($rtn);
+    } else {
+      return $rtn;
     }
   }
 
@@ -345,7 +350,7 @@ class person extends db_entity {
   }
 
   function get_from() {
-    $name = $this->get_username(1);
+    $name = $this->get_name();
     $email = $this->get_value("emailAddress");
     if ($email) {
       $str = $name;
@@ -440,8 +445,8 @@ class person extends db_entity {
       $_FORM["showHours"] and $row["hoursSum"] = $ts_hrs_col_1[$row["personID"]];
       $_FORM["showHours"] and $row["hoursAvg"] = $ts_hrs_col_2[$row["personID"]];
 
-      $row["name"] = $p->get_username(1);
-      $row["name_link"] = $p->get_link();
+      $row["name"] = $p->get_name();
+      $row["name_link"] = $p->get_link($_FORM);
       $row["personActive_label"] = $p->get_value("personActive") == 1 ? "Y":"";
       
       if ($_FORM["showSkills"]) {
@@ -452,11 +457,11 @@ class person extends db_entity {
         $novice_skills = $p->get_skills('Novice');
 
         $skills = array();
-        $senior_skills       and $skills[] = "<img src=\"../images/skill_senior.png\" alt=\"Senior=\"> ".$senior_skills;
-        $advanced_skills     and $skills[] = "<img src=\"../images/skill_advanced.png\" alt=\"Advanced=\"> ".$advanced_skills;
-        $intermediate_skills and $skills[] = "<img src=\"../images/skill_intermediate.png\" alt=\"Intermediate=\"> ".$intermediate_skills;
-        $junior_skills       and $skills[] = "<img src=\"../images/skill_junior.png\" alt=\"Junior=\"> ".$junior_skills;
-        $novice_skills       and $skills[] = "<img src=\"../images/skill_novice.png\" alt=\"Novice\"> ".$novice_skills;
+        $senior_skills       and $skills[] = "<img src=\"../images/skill_senior.png\" alt=\"Senior=\"> ".page::htmlentities($senior_skills);
+        $advanced_skills     and $skills[] = "<img src=\"../images/skill_advanced.png\" alt=\"Advanced=\"> ".page::htmlentities($advanced_skills);
+        $intermediate_skills and $skills[] = "<img src=\"../images/skill_intermediate.png\" alt=\"Intermediate=\"> ".page::htmlentities($intermediate_skills);
+        $junior_skills       and $skills[] = "<img src=\"../images/skill_junior.png\" alt=\"Junior=\"> ".page::htmlentities($junior_skills);
+        $novice_skills       and $skills[] = "<img src=\"../images/skill_novice.png\" alt=\"Novice\"> ".page::htmlentities($novice_skills);
         $row["skills_list"] = implode("<br>",$skills);
       }
   
@@ -509,18 +514,10 @@ class person extends db_entity {
   }
 
   function get_list_tr($row, $_FORM) {
-    $row["phoneNo1"] && $row["phoneNo2"] and $row["phoneNo1"].= " / ";
-    $summary[] = "<tr>";
-    $_FORM["showName"]    and $summary[] = "  <td>".$row["name_link"]."</td>";
-    $_FORM["showActive"]  and $summary[] = "  <td>".$row["personActive_label"]."</td>";
-    $_FORM["showNos"]     and $summary[] = "  <td>".$row["phoneNo1"].$row["phoneNo2"]."</td>";
-    $_FORM["showSkills"]  and $summary[] = "  <td>".$row["skills_list"]."</td>";
-    $_FORM["showHours"]   and $summary[] = "  <td>".sprintf("%0.1f",$row["hoursSum"])."</td>";
-    $_FORM["showHours"]   and $summary[] = "  <td>".sprintf("%0.1f",$row["hoursAvg"])."</td>";
-    $_FORM["showLinks"]   and $summary[] = "  <td class=\"nobr noprint\" align=\"right\" width=\"1%\">".$row["navLinks"]."</td>";
-    $summary[] = "</tr>";
-    $summary = "\n".implode("\n",$summary);
-    return $summary;
+    global $TPL;
+    $TPL["_FORM"] = $_FORM;
+    $TPL = array_merge($TPL,(array)$row);
+    return include_template(dirname(__FILE__)."/../templates/personListR.tpl", true);
   }
 
   function get_list_vars() {
@@ -598,9 +595,10 @@ class person extends db_entity {
     return $rtn;
   }
 
-  function get_link() {
+  function get_link($_FORM=array()) {
     global $TPL;
-    return "<a href=\"".$TPL["url_alloc_person"]."personID=".$this->get_id()."\">".$this->get_username(1)."</a>";
+    $_FORM["return"] or $_FORM["return"] = "html";
+    return "<a href=\"".$TPL["url_alloc_person"]."personID=".$this->get_id()."\">".$this->get_name($_FORM)."</a>";
   }
 
 }

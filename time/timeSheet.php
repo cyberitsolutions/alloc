@@ -453,7 +453,7 @@ if ($_POST["save"]
 
 
 $person = $timeSheet->get_foreign_object("person");
-$TPL["timeSheet_personName"] = $person->get_username(1);
+$TPL["timeSheet_personName"] = $person->get_name();
 $timeSheet->set_tpl_values(DST_VARIABLE, "timeSheet_");
 
 if (!$timeSheetID) {
@@ -511,7 +511,7 @@ if ($timeSheet->get_value("approvedByManagerPersonID")) {
   $person_approvedByManager = new person;
   $person_approvedByManager->set_id($timeSheet->get_value("approvedByManagerPersonID"));
   $person_approvedByManager->select();
-  $TPL["timeSheet_approvedByManagerPersonID_username"] = $person_approvedByManager->get_username(1);
+  $TPL["timeSheet_approvedByManagerPersonID_username"] = $person_approvedByManager->get_name();
   $TPL["timeSheet_approvedByManagerPersonID"] = $timeSheet->get_value("approvedByManagerPersonID");
 }
 
@@ -519,7 +519,7 @@ if ($timeSheet->get_value("approvedByAdminPersonID")) {
   $person_approvedByAdmin = new person;
   $person_approvedByAdmin->set_id($timeSheet->get_value("approvedByAdminPersonID"));
   $person_approvedByAdmin->select();
-  $TPL["timeSheet_approvedByAdminPersonID_username"] = $person_approvedByAdmin->get_username(1);
+  $TPL["timeSheet_approvedByAdminPersonID_username"] = $person_approvedByAdmin->get_name();
   $TPL["timeSheet_approvedByAdminPersonID"] = $timeSheet->get_value("approvedByAdminPersonID");
 }
 

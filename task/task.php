@@ -190,7 +190,7 @@ $task->set_tpl_values(DST_VARIABLE, "task_");
 $person = new person;
 $person->set_id($task->get_value("creatorID"));
 $person->select();
-$TPL["task_createdBy"] = $person->get_username(1);
+$TPL["task_createdBy"] = $person->get_name();
 $TPL["task_createdBy_personID"] = $person->get_id();
 
 if ($task->get_value("closerID") && $task->get_value("dateClosed")) {
@@ -201,13 +201,13 @@ if ($task->get_value("closerID") && $task->get_value("dateClosed")) {
 $person = new person;
 $person->set_id($task->get_value("personID"));
 $person->select();
-$TPL["person_username"] = $person->get_username(1);
+$TPL["person_username"] = $person->get_name();
 $TPL["person_username_personID"] = $person->get_id();
 
 $manager = new person;
 $manager->set_id($task->get_value("managerID"));
 $manager->select();
-$TPL["manager_username"] = $manager->get_username(1);
+$TPL["manager_username"] = $manager->get_name();
 $TPL["manager_username_personID"] = $manager->get_id();
 
 

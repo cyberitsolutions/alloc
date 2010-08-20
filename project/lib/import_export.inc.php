@@ -394,7 +394,7 @@ function export_csv($projectID) {
     $estimatedHours = $task['timeEstimate'];
     is_numeric($estimatedHours) or $estimatedHours = 0;
 
-    $retstr .= "\n" . export_escape_csv($task['taskName']) . ',' . export_escape_csv($estimatedHours) . ',' . export_escape_csv($assignee->get_username());
+    $retstr .= "\n" . export_escape_csv($task['taskName']) . ',' . export_escape_csv($estimatedHours) . ',' . export_escape_csv($assignee->get_name(array("format"=>"nick")));
   }
 
   return $retstr;

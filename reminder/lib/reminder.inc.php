@@ -86,7 +86,7 @@ class reminder extends db_entity {
     while ($db->next_record()) {
       $person = new person;
       $person->read_db_record($db);
-      $recipients[$person->get_id()] = $person->get_username(1);
+      $recipients[$person->get_id()] = $person->get_name();
     }
 
     return $recipients;
@@ -386,9 +386,9 @@ class reminder extends db_entity {
       $person->set_id($this->get_effective_person_id());
       $person->select();
       if($this->get_value("metaPerson") === null) {
-        return $person->get_username(1);
+        return $person->get_name();
       } else {
-        return sprintf("%s (%s)", reminder::get_metaperson_name($this->get_value("metaPerson")), $person->get_username(1));
+        return sprintf("%s (%s)", reminder::get_metaperson_name($this->get_value("metaPerson")), $person->get_name());
       }
   }
 

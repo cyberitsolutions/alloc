@@ -81,7 +81,7 @@ if ($_POST["save"]) {
 $absence->set_tpl_values(DST_VARIABLE, "absence_");
 $_GET["date"] and $TPL["absence_dateFrom"] = $_GET["date"];
 
-$TPL["personName"] = $person->get_username(1);
+$TPL["personName"] = $person->get_name();
 
 // Set up the options for the absence type.
 $absenceType_array = array('Annual Leave'=>'Annual Leave'

@@ -265,7 +265,7 @@ class timeSheetPrint {
 
 
       $person = $timeSheet->get_foreign_object("person");
-      $TPL["timeSheet_personName"] = $person->get_username(1);
+      $TPL["timeSheet_personName"] = $person->get_name();
       $timeSheet->set_tpl_values(DST_HTML_DISPLAY, "timeSheet_");
 
 
