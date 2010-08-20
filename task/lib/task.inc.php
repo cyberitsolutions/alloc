@@ -656,6 +656,7 @@ class task extends db_entity {
   }
 
   function get_task_link($_FORM=array()) {
+    $_FORM["return"] or $_FORM["return"] = "html";
     $rtn = "<a href=\"".$this->get_url()."\">";
     $rtn.= $this->get_name($_FORM);
     $rtn.= "</a>";
@@ -1886,15 +1887,15 @@ class task extends db_entity {
     // we record changes to taskName, taskDescription, priority, timeEstimate, projectID, dateActualCompletion, dateActualStart, dateTargetStart, dateTargetCompletion, personID, managerID, parentTaskID, taskTypeID, duplicateTaskID
     foreach($changes as $auditItem) {
       $changeDescription = "";
-      $oldValue = $auditItem->get_value('oldValue');
+      $oldValue = $auditItem->get_value('oldValue',DST_HTML_DISPLAY);
       if($auditItem->get_value('changeType') == 'FieldChange') {
-        $newValue = $auditItem->get_new_value();
+        $newValue = page::htmlentities($auditItem->get_new_value());
         switch($auditItem->get_value('fieldName')) {
           case 'taskName':
             $changeDescription = "Task name changed from '$oldValue' to '$newValue'.";
             break;
           case 'taskDescription':
-            $changeDescription = "Task description changed. <a class=\"magic\" href=\"#x\" onclick=\"$('#auditItem" . $auditItem->get_id() . "').slideToggle('fast');\">Show</a> <div class=\"hidden\" id=\"auditItem" . $auditItem->get_id() . "\"><div><b>Old Description</b><br>" . page::to_html($oldValue) . "</div><div><b>New Description</b><br>" . page::to_html($newValue) . "</div></div>";
+            $changeDescription = "Task description changed. <a class=\"magic\" href=\"#x\" onclick=\"$('#auditItem" . $auditItem->get_id() . "').slideToggle('fast');\">Show</a> <div class=\"hidden\" id=\"auditItem" . $auditItem->get_id() . "\"><div><b>Old Description</b><br>" .$oldValue. "</div><div><b>New Description</b><br>" .$newValue. "</div></div>";
             break;
           case 'priority':
             $priorities = config::get_config_item("taskPriorities");
@@ -1989,7 +1990,7 @@ class task extends db_entity {
       } elseif($auditItem->get_value('changeType') == 'TaskReopened') {
         $changeDescription = "The task was opened.";
       }
-      $rows[] = "<tr><td class=\"nobr\">" . $auditItem->get_value("dateChanged") . "</td><td>$changeDescription</td><td>" . $people_cache[$auditItem->get_value("personID")]["name"] . "</td></tr>";
+      $rows[] = "<tr><td class=\"nobr\">" . $auditItem->get_value("dateChanged") . "</td><td>$changeDescription</td><td>" . page::htmlentities($people_cache[$auditItem->get_value("personID")]["name"]) . "</td></tr>";
 
     }
 

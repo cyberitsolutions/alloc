@@ -33,7 +33,7 @@ define("PAGE_IS_PRINTABLE",1);
     while ($db->next_record()) {
       $reminder = new reminder;
       $reminder->read_db_record($db);
-      $reminder->set_tpl_values(DST_HTML_ATTRIBUTE, "reminder_");
+      $reminder->set_tpl_values(DST_HTML_DISPLAY, "reminder_");
       if ($reminder->get_value('reminderRecuringInterval') == "No") {
         $TPL["reminder_reminderRecurence"] = "&nbsp;";
       } else {
@@ -268,7 +268,7 @@ if (is_array($parentTaskIDs)) {
   $parentTaskIDs = array_reverse($parentTaskIDs,1);
 
   foreach ($parentTaskIDs as $tName => $tID) {
-    $TPL["hierarchy_links"] .= $br.$spaces."<a href=\"".$TPL["url_alloc_task"]."taskID=".$tID."\">".$tID." ".$tName."</a>";
+    $TPL["hierarchy_links"] .= $br.$spaces."<a href=\"".$TPL["url_alloc_task"]."taskID=".$tID."\">".$tID." ".page::htmlentities($tName)."</a>";
     $spaces.="&nbsp;&nbsp;&nbsp;&nbsp;";
     $br = "<br>";
   }
@@ -328,7 +328,7 @@ if ($task->get_id()) {
 
 if ($taskID) {
   $TPL["taskTypeImage"] = $task->get_task_image();
-  $TPL["taskSelfLink"] = "<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_name()."</a>";
+  $TPL["taskSelfLink"] = "<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_name(array("return"=>"html"))."</a>";
   $TPL["main_alloc_title"] = "Task " . $task->get_id() . ": " . $task->get_name()." - ".APPLICATION_NAME;
   $TPL["task_exists"] = true;
 } else {
