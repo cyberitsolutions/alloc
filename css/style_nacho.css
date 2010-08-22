@@ -425,6 +425,12 @@ img.taskType {
   border-collapse:separate; /* to prevent border-collapse:collapse being inherited */
 }
 
+.shadow {
+  -moz-box-shadow:4px 4px 5px #bbbbbb;
+  -webkit-box-shadow:4px 4px 5px #bbbbbb;
+  box-shadow:4px 4px 5px #bbbbbb;
+}
+
 .overdue { 
   color: #c84e12; 
 }
@@ -700,3 +706,49 @@ div.grippie:hover {
   width:100% !important; width:95%;
   height: 20%;
 }
+
+
+/* CSS for the login form */
+
+body#login {
+  background-color:#eeeeee;
+  background-image:none;
+  padding-top:40px;
+}
+
+body#login .width {
+  width:300px;
+  margin: 30px auto;
+  padding:15px;
+}
+
+body#login .whitely {
+  border:1px solid #cccccc;
+  background-color:#ffffff;
+}
+
+body#login #links {
+  background: transparent url(../images/roundbg.png) no-repeat bottom left;
+  text-align:right;
+  padding-bottom:30px;
+  margin-bottom:35px;
+}
+
+body#login span {
+  display:inline-block;
+  text-align:right;
+  white-space:nowrap;
+  width:37%;
+  margin:5px;
+}
+
+body#login input[type=text], body#login input[type=password] {
+  width:100%;
+}
+
+body#login #footer {
+  color:#999999;
+  text-align:center;
+  font-size:80%;
+}
+
