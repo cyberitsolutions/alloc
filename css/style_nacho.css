@@ -134,7 +134,7 @@ td {
 }
 ul { 
   display:inline; 
-  list-style:circle inside; 
+  list-style:disc outside none
 }
 
 form { 
