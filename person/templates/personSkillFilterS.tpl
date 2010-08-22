@@ -1,5 +1,5 @@
     <form action="{$url_alloc_personSkillMatrix}" method="get">
-    <table class="filter" align="center">
+    <table class="filter corner" align="center">
       <tr>
         <td colspan=2>Skill(s)</td>
 <!--

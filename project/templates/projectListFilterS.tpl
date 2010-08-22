@@ -1,5 +1,5 @@
     <form action="{$url_alloc_projectList}" method="get">
-      <table class="filter">
+      <table class="filter corner">
         <tr>
           <td>Status</td>
           <td>Type</td>

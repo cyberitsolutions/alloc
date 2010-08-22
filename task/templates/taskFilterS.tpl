@@ -12,7 +12,7 @@ $(document).ready(function() {
 </script>
 
 <form action="{$url_form_action}" method="get">
-<table align="center" class="filter">
+<table align="center" class="filter corner">
   <tr>
     <td>&nbsp;</td>
     <td>{page::expand_link("project_superset","Projects")}</td>

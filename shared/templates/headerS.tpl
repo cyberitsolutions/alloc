@@ -11,7 +11,6 @@
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print">
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.textarearesizer.js"></script>
-    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.curvycorners.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.livequery.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-en.js"></script>

@@ -12,7 +12,7 @@
   <tr>
     <td colspan="9" align="center">
       <form action="{$url_alloc_permissionList}" method="get">
-      <table class="filter" align="center">
+      <table class="filter corner" align="center">
         <tr>
           <td>Table Name</td>
           <td></td>

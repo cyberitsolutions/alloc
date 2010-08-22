@@ -275,7 +275,7 @@ hr {
 }
 
 .message { 
-  padding:0px 4px; 
+  padding:8px 4px; 
   margin:15px auto 0px auto; 
   border:1px solid #cccccc;
   background-color:#fffdf2;
@@ -378,7 +378,6 @@ table.alloc_calendar td:hover {
   background-color:#fffae8; 
 }
 
-
 /* Filters */
 table.filter { 
   background-color:#f4f4f4; 
@@ -417,6 +416,13 @@ tr.odd:hover, tr.even:hover {
 img.taskType {
   margin:0px 2px;
   padding:0px;
+}
+
+.corner {
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  border-collapse:separate; /* to prevent border-collapse:collapse being inherited */
 }
 
 .overdue { 

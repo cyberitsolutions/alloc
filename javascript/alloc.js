@@ -50,8 +50,8 @@ function sidebyside_activate(id,arr) {
 }
 
 function help_text_on(id, str) {
-  $('#main').append("<div id='helper' style='display:none'></div>");
-  $('#helper').hide().html(str).corner();
+  $('#main').append("<div id='helper' class='corner' style='display:none'></div>");
+  $('#helper').hide().html(str);
   
   offset = $('#'+id).offset();
   
@@ -117,7 +117,6 @@ $(document).ready(function() {
   // Give the tables alternating stripes
   $(".list tr:nth-child(even)").addClass("even");
   $(".list tr:nth-child(odd)").addClass("odd");
-  $(".corner").corner();
   $(".delete_button").bind("click", function(e){
     return confirm("Click OK to confirm deletion.");
   });

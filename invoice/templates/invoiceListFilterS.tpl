@@ -1,6 +1,6 @@
 
       <form action="{$url_alloc_invoiceList}" method="get">
-      <table class="filter" align="center" cellpadding="5" cellspacing="0">
+      <table class="filter corner" align="center" cellpadding="5" cellspacing="0">
         <tr>
           <td colspan="2">Client</td>
           <td>Invoice Name</td>

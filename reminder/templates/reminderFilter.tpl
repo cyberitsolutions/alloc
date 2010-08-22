@@ -1,5 +1,5 @@
       <form action="{$url_alloc_reminderList}" method="get">
-      <table class="filter">
+      <table class="filter corner">
         <tr>
           <td>Recipient</td>
           <td></td>

@@ -1,5 +1,5 @@
       <form action="{$url_alloc_timeSheetList}" method="get">
-      <table class="filter" align="center">
+      <table class="filter corner" align="center">
         <tr>
           <td>User Name</td>
           <td>Start Date From</td>

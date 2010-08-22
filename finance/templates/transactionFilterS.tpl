@@ -1,4 +1,4 @@
-      <table class="filter" align="center" class="center">
+      <table class="filter corner" align="center" class="center">
         <tr>
           <td colspan="6" class="center" style="padding-top:0px; padding-bottom:10px;">
             {$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"]}
