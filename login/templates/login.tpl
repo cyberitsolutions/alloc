@@ -1,73 +1,37 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="language" content="English-AU">
-    <title>allocPSA Login</title>
-    <link rel="stylesheet" href="{$url_alloc_stylesheets}login.css" type="text/css" />
-    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
-  </head>
-  <body>
-  <script>
-    // When the document has loaded...
-    $(document).ready(function() {
-      if (!$("#username").val()) {
-        $("#username").focus();
-      } else {
-        $("#password").focus();
-      }
-    });
-  </script>
+{page::header()}
 
-  {page::messages()}
+<div class="width">
+{page::messages()}
+</div>
 
-  <form action="{$url_alloc_login}" method="post" id="login_form">
-
-  <div style="margin-top:40px; text-align:center;">
-    {$ALLOC_SHOOER}{echo stripslashes(urldecode($_GET["msg"]))}
-
-    <div class="cssbox">
-      <div class="cssbox_head">
-        <h2 class="link"><b style="position:relative; top:-27px">{$links}</b></h2>
-      </div>
-      <div class="cssbox_body">
-
-        <table cellpadding="0" cellspacing="0" class="login">
-          <tr>   
-            <td colspan="2" class="message">
-              {$error}
-            </td>
-          </tr>
-          <tr>
-            <td class="right" style="width:100%">Username&nbsp;&nbsp;</td>
-            <td class="right"><input type="text" name="username" id="username" value="{$username}" size="20" maxlength="32"></td>
-          </tr>
-          <tr>
-            {$password_or_email_address_field}
-          </tr>
-          <tr>
-            <td></td>
-            <td style="text-align:right; padding:35px 0px 35px 0px;">{$login_or_send_pass_button}</td>
-          </tr>
-          <tr>
-            <td class="center" colspan="2">{$status_line}</td>
-            <td><input type="hidden" name="account" value="{$account}"></td>
-          </tr>
-        </table>
-
-      </div>
-    </div> 
+<form action="{$url_alloc_login}" method="post" id="login_form">
+<div class="width whitely corner shadow">
+  <div id="links"><a onclick="javascript:$('.toggleable').toggle(); return false;" href="">New Password</a></div>
+  
+  <div class="toggleable">
+    <span>Username</span>
+    <span><input type="text" name="username" id="username" value="{$username}" maxlength="32"></span>
+    <span>Password</span>
+    <span><input type="password" id="password" name="password" maxlength="32"></span>
+    <span>&nbsp;</span>
+    <span style="margin:25px 5px 30px 9px"><input type="submit" name="login" value="&nbsp;&nbsp;Login&nbsp;&nbsp;"></span>
+  </div>
+  
+  <div class="toggleable" style="display:none">
+    <span>Email</span>
+    <span><input type="text" name="email" size="20" maxlength="32"></span>
+    <span>&nbsp;</span>
+    <span style="margin:25px 5px 30px 9px"><input type="submit" name="new_pass" value="Send Password"></span>
   </div>
 
-  </form>
+  <div id="footer">{$status_line}<input type="hidden" name="account" value="{$account}"></div>
+</div>
+</form>
 
-  {if $TPL["latest_changes"]}
-  <div style="width:40%; margin-top:50px; margin-left:auto; margin-right:auto">
-    <div class="message help corner">
-      {$latest_changes}
-    </div>
-  </div>
-  {/}
+{if $TPL["latest_changes"]}
+<div class="width" style="font-size:90%">
+  {$latest_changes}
+</div>
+{/}
 
-  </body>
-</html>
+{page::footer()}

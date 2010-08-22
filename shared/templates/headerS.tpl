@@ -18,4 +18,4 @@
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}sorttable.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}alloc.js"></script>
   </head>
-  <body>
+  <body id="{$body_id}">

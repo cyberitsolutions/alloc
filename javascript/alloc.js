@@ -114,6 +114,16 @@ if (document.images) {
 
 // When the document has loaded...
 $(document).ready(function() {
+
+  // Focus the login form fields
+  if ($("#login_form").length) {
+    if (!$("#username").val()) {
+      $("#username").focus();
+    } else {
+      $("#password").focus();
+    }
+  }
+
   // Give the tables alternating stripes
   $(".list tr:nth-child(even)").addClass("even");
   $(".list tr:nth-child(odd)").addClass("odd");

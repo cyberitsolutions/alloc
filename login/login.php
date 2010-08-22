@@ -57,13 +57,13 @@ if ($sess->Started()) {
     $sess->Save();
     alloc_redirect($url);
   }
-  $error = "<p class='error'>Invalid Username or Password.</p>";
+  $error = "Invalid username or password.";
 
 } else if ($_POST["new_pass"]) {
 
   $db = new db_alloc;
-  $db->query(sprintf("SELECT * FROM person WHERE username = '%s' AND emailAddress = '%s'"
-                    ,db_esc($_POST["username"]), db_esc($_POST["email"])));
+  $db->query(sprintf("SELECT * FROM person WHERE emailAddress = '%s'"
+                    , db_esc($_POST["email"])));
 
   if ($db->next_record()) {
     // generate new random password
@@ -74,20 +74,20 @@ if ($sess->Started()) {
       $password.= substr($pwSource, rand(0, strlen($pwSource)), 1);
     }
 
-    $q = sprintf("UPDATE person SET password = '%s' WHERE username = '%s' AND emailAddress = '%s'
-                 ",encrypt_password($password),db_esc($_POST["username"]), db_esc($_POST["email"]));
+    $q = sprintf("UPDATE person SET password = '%s' WHERE emailAddress = '%s'
+                 ",encrypt_password($password), db_esc($_POST["email"]));
     $db2 = new db_alloc();
     $db2->query($q);
 
     $e = new alloc_email($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password");
     #echo "Your new temporary password: ".$password;
     if ($e->send()) {
-      $error = "New password sent to: ".$_POST["email"];
+      $TPL["message_good"][] = "New password sent to: ".$_POST["email"];
     } else {
-      $error = "<p class='error'>Unable to send email!</p>";
+      $error = "Unable to send email.";
     }
   } else {
-    $error = "<p class='error'>Invalid Username or Email Address.</p>";
+    $error = "Invalid email address.";
   }
 
 
@@ -98,21 +98,10 @@ if ($sess->Started()) {
   }
 }
 
+$error and $TPL["message"][] = $error;
+
 $account = $_POST["account"] or $account = $_GET["account"];
 $TPL["account"] = $account;
-
-if ($error) {
-  $TPL["error"] = $error; 
-} else {
-  $TPL["error"] = "Please enter your:";
-}
-
-
-if (!isset($account)) { 
-  $TPL["links"] = "Login | <a href=\"".$TPL["url_alloc_login"]."?account=true\">New Password</a>";
-} else {
-  $TPL["links"] = "<a href=\"".$TPL["url_alloc_login"]."\">Login</a> | New Password";
-}
 
 if (isset($_POST["username"])) {
   $TPL["username"] = $_POST["username"];
@@ -120,19 +109,7 @@ if (isset($_POST["username"])) {
   $TPL["username"] = $sess->TestCookie();
 }
 
-if (!isset($account)) { 
-  $TPL["password_or_email_address_field"] = "<td class=\"right\">Password&nbsp;&nbsp;</td>";
-  $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"password\" id=\"password\" name=\"password\" size=\"20\" maxlength=\"32\"></td>";
-  $TPL["login_or_send_pass_button"] = "<input type=\"submit\" name=\"login\" value=\"&nbsp;&nbsp;Login&nbsp;&nbsp;\">";
-} else { 
-  $TPL["password_or_email_address_field"] = "<td class=\"right\">Email Address&nbsp;&nbsp;</td>";
-  $TPL["password_or_email_address_field"].= "<td class=\"right\"><input type=\"text\" name=\"email\" size=\"20\" maxlength=\"32\"></td>";
-  $TPL["login_or_send_pass_button"] = "<input type=\"submit\" name=\"new_pass\" value=\"Send Password\">";
-}
-
-
 $TPL["status_line"] = APPLICATION_NAME." ".get_alloc_version()." &copy; ".date("Y")." <a href=\"http://www.cybersource.com.au\">Cybersource</a>"; 
-$TPL["ALLOC_SHOOER"] = ALLOC_SHOOER; 
 
 
 if (!is_dir($TPL["url_alloc_attachments_dir"]."whatsnew".DIRECTORY_SEPARATOR."0")) {
@@ -155,6 +132,8 @@ if (is_array($files) && count($files)) {
   $str and $TPL["latest_changes"] = $str;
 }
 
+$TPL["body_id"] = "login";
+$TPL["main_alloc_title"] = "allocPSA login";
 
 include_template("templates/login.tpl");
 
