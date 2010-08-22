@@ -1,5 +1,5 @@
     <form action="{$url_alloc_clientList}" method="get">
-      <table class="filter" align="center">
+      <table class="filter corner" align="center">
         <tr>
           <td>&nbsp;</td>
           <td>Status</td>

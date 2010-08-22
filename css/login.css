@@ -122,3 +122,9 @@ ul {
   margin-bottom:0px;
 }
 
+.corner {
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  border-collapse:separate; /* to prevent border-collapse:collapse being inherited */
+}

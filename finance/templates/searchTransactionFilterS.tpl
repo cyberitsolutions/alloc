@@ -1,6 +1,6 @@
 <form action="{$url_alloc_searchTransaction}" method="get">
   <!-- we need to have display:table because the default is for .filter's to be hidden -->
-  <table align="center" class="filter" style="display:table">
+  <table align="center" class="filter corner" style="display:table">
     <tr>
       <td>Source TF</td>
       <td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>

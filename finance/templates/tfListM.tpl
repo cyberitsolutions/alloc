@@ -13,7 +13,7 @@
   <tr>
     <td colspan="4" align="center">
       <form action="{$url_alloc_tfList}" method="get">
-      <table class="filter" align="center">
+      <table class="filter corner" align="center">
         <tr>
           <td><label for="owner">Owner</label> <input type="checkbox" id="owner" name="owner"{$owner_checked}>&nbsp;&nbsp;</td>
 	        <td><label for="showall">Show All</label> <input type="checkbox" id="showall" name="showall"{$showall_checked}></td>

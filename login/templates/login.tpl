@@ -6,7 +6,6 @@
     <title>allocPSA Login</title>
     <link rel="stylesheet" href="{$url_alloc_stylesheets}login.css" type="text/css" />
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
-    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.curvycorners.js"></script>
   </head>
   <body>
   <script>
@@ -17,7 +16,6 @@
       } else {
         $("#password").focus();
       }
-      $("div.message").corner();
     });
   </script>
 
@@ -65,7 +63,7 @@
 
   {if $TPL["latest_changes"]}
   <div style="width:40%; margin-top:50px; margin-left:auto; margin-right:auto">
-    <div class="message help">
+    <div class="message help corner">
       {$latest_changes}
     </div>
   </div>
