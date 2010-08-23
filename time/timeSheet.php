@@ -555,7 +555,7 @@ while ($db->row()) {
   $project_array[$db->f("projectID")] = $db->f("projectName");
 }
 $TPL["timeSheet_projectName"] = $project_array[$projectID];
-$TPL["projectID"] = $projectID;
+$TPL["timeSheet_projectID"] = $projectID;
 $TPL["taskID"] = $_GET["taskID"];
 
 
