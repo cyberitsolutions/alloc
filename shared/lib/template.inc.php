@@ -122,7 +122,7 @@ function include_template($filename, $getString=false) {
   #echo "<pre>".htmlspecialchars($template)."</pre>"; 
 
   // Make all variables available via $var
-  is_array($TPL) && extract($TPL, EXTR_SKIP);
+  is_array($TPL) && extract($TPL, EXTR_OVERWRITE);
 
   if ($getString) {
     // Begin buffering output to halt anything being sent to the web browser.
