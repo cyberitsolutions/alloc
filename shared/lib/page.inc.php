@@ -273,11 +273,8 @@ EOD;
           $label = substr($label, 0, $max_length - 3)."...";
         } 
       
-        if ($escape) {
-          $label = page::htmlentities($label);
-        } else {
-          $label = str_replace(" ","&nbsp;",$label);
-        }
+        $escape and $label = page::htmlentities($label);
+        $label = str_replace(" ","&nbsp;",$label);
 
         $str.= "\n<option value=\"".$value."\"".$sel.">".$label."</option>";
       }
