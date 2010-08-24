@@ -29,7 +29,7 @@ $(document).ready(function() {
   // If the page has loaded, then load the tree
   refresh_wiki('{$target}','{$rev}');
 
-  //if the user clicked a new page link...
+  // If the user clicked a new page link...
   if ('{$newFile}') {
     makeAjaxRequest('{$url_alloc_file}','jftFile', { newFile: true, file: '{$target}' });
   }
