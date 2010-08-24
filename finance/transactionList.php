@@ -98,7 +98,7 @@ $TPL["pending_amount"] = sprintf("%0.2f",$tf->get_balance(array("status"=>"pendi
 // Overall balance
 $TPL["balance"] = sprintf("%0.2f",$tf->get_balance());
 
-$TPL["title"] = "Statement for TF ".$tf->get_value("tfName");
+$TPL["main_alloc_title"] = "Statement for TF ".$tf->get_value("tfName") . " - " .APPLICATION_NAME;
 
 
 include_template("templates/transactionListM.tpl");
