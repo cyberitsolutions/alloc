@@ -29,6 +29,11 @@ $(document).ready(function() {
   // If the page has loaded, then load the tree
   refresh_wiki('{$target}','{$rev}');
 
+  //if the user clicked a new page link...
+  if ('{$newFile}') {
+    makeAjaxRequest('{$url_alloc_file}','jftFile', { newFile: true, file: '{$target}' });
+  }
+
   // If there was an error saving we need to manually load in the values that were submitted.
   if ('{$loadErrorPage}') {
     makeAjaxRequest('{$url_alloc_file}','jftFile', { loadErrorPage: '{$loadErrorPage}'

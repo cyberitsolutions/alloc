@@ -26,6 +26,12 @@ $TPL["target"] = $_GET["target"] or $TPL["target"] = $_POST["target"];
 $TPL["rev"] = $_GET["rev"];
 $TPL["wiki_tree"] = ATTACHMENTS_DIR."wiki";
 
+if ($_REQUEST['op'] == 'new') {
+  $TPL['newFile'] = 'true';
+} else {
+  $TPL['newFile'] = 'false';
+}
+
 include_template("templates/wikiM.tpl");
 
 ?>

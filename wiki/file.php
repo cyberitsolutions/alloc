@@ -95,9 +95,13 @@ if ($_POST["save"]) {
 
 
 } else if ($_REQUEST["newFile"]) {
+  if ($_REQUEST["file"]) {
+    $TPL['file'] = $_REQUEST["file"];
+  }
   include_template("templates/newFileM.tpl");
 
 } else if ($file && is_file(wiki_module::get_wiki_path().$file) && is_readable(wiki_module::get_wiki_path().$file)) {
+  $TPL['current_path'] = dirname($file);
   wiki_module::get_file($file, $_GET["rev"]);
 
 } else if ($_REQUEST["loadErrorPage"]) {
@@ -110,11 +114,7 @@ if ($_POST["save"]) {
 }
 
 
-
-
 $TPL["file"] = $file;
-
-
 
 
 ?>
