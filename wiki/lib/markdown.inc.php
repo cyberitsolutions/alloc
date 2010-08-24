@@ -478,9 +478,6 @@ class Markdown_Parser {
 	# tags like paragraphs, headers, and list items.
 	#
 
-    // added by alla
-    "doWikiLinkAnchors"   =>  -35,
-
 		# Process character escapes, code spans, and inline HTML
 		# in one shot.
 		"parseSpan"           => -30,
@@ -496,26 +493,40 @@ class Markdown_Parser {
 		"doAutoLinks"         =>  30,
 		"encodeAmpsAndAngles" =>  40,
 
+                # Must be before bold and italic
+		"doWikiLinkAnchors"   =>  45,
+
 		"doItalicsAndBold"    =>  50,
 		"doHardBreaks"        =>  60,
 		);
 
   function doWikiLinkAnchors($text) {
-  # Turn special WikiLinks [[link]] into regular html links
-          $text = preg_replace_callback('/\[\[([\w\._\/]+)\]\]/xs',
+  # Turn special WikiLinks [[link]] or [[name|link]] into regular html links
+          $text = preg_replace_callback('/\[\[([\w\._]+\|)?([\w\._\/]+)\]\]/xs',
                   array(&$this, '_doWikiLinkAnchors_reference_callback'), $text);
           return $text;
   }
 
   function _doWikiLinkAnchors_reference_callback($matches) {
-    $file = $matches[1];
+    global $TPL;
+
+    $file = $matches[2];
+    $name = $matches[1];
+
     $file = str_ireplace("javascript:","",$file); // added by alla
-    if (file_exists(wiki_module::get_wiki_path().$file.".mdwn")) {
-      return '<a href="?target='.urlencode($file).'.mdwn">'.str_replace("_",'\_',$file).'</a>';
-    } else if (file_exists(wiki_module::get_wiki_path().$file)) {
-      return '<a href="?target='.urlencode($file).'">'.str_replace("_",'\_',$file).'</a>';
+    
+    if (!empty($name)) {
+        $name = substr($name, 0, -1); //trim the trailing |
     } else {
-      return str_replace("_",'\_',$file).'<a href="?op=new&target='.urlencode($file).'" title="Click here to create this file.">?</a>';
+        $name = $file;
+    }
+
+    if (file_exists(wiki_module::get_wiki_path().$file.".mdwn")) {
+      return $this->hashPart('<a href="'.$TPL['url_alloc_wiki'].'?target='.urlencode($TPL['current_path'].DIRECTORY_SEPARATOR.$file).'.mdwn">'.$name.'</a>');
+    } else if (file_exists(wiki_module::get_wiki_path().$file)) {
+      return $this->hashPart('<a href="'.$TPL['url_alloc_wiki'].'?target='.urlencode($TPL['current_path'].DIRECTORY_SEPARATOR.$file).'">'.$name.'</a>');
+    } else {
+      return $this->hashPart($name.'<a href="?op=new&target='.urlencode($TPL['current_path'].DIRECTORY_SEPARATOR.$file).'" title="Click here to create this file.">?</a>');
     }
     return $matches[1];
   }
