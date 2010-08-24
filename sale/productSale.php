@@ -343,7 +343,7 @@ if (!$productSale->get_id()) {
   $TPL["message_help"][] = "To create a new Sale, optionally select a Client and/or Project and click the Create Sale button.";
 } else if ($productSale->get_value("status") == "edit") {
   $TPL["message_help"][] = "Add as many Sale Items as you like to this Sale by clicking the 'New' link multiple times, and then 
-                            clicking the Save Items button.<br><br>When you are done adding Sale Items click the 'Allocate --&gt;' button 
+                            clicking the Save Items button.<br><br>When you are done adding Sale Items click the 'Allocate -->' button
                             to setup the resulting transactions from this Sale.";
 
 } else if ($productSale->get_value("status") == "allocate") {

@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 if (!config::get_config_item("outTfID")) {
-  $TPL["message"][] = "Please select a default Outgoing TF from the Setup -&gt; Finance menu.";
+  $TPL["message"][] = "Please select a default Outgoing TF from the Setup -> Finance menu.";
 }
 
 #$field_map = array("transactionDate"=>0, "employeeNum"=>1, "name"=>2, ""=>3, ""=>4, ""=>5, ""=>6, ""=>7, ""=>8, ""=>9, "amount"=>10, ""=>11, ""=>12);

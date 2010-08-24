@@ -121,6 +121,7 @@ class page {
     $msgtypes["message"]      = "bad";
     $msgtypes["message_good"] = "good";
     $msgtypes["message_help"] = "help";
+    $msgtypes["message_help_no_esc"] = "help";
 
     foreach ($msgtypes as $type => $label) {
       if ($TPL[$type] && is_string($TPL[$type])) {
@@ -128,19 +129,29 @@ class page {
         unset($TPL[$type]);
         $TPL[$type][] = $t;
       }
-      $_GET[$type] and $TPL[$type][] = urldecode($_GET[$type]);
+      $_GET[$type] && $type != "message_help_no_esc" and $TPL[$type][] = urldecode($_GET[$type]);
 
       if (is_array($TPL[$type]) && count($TPL[$type])) {
-        $arr[$label] = implode("<br>",$TPL[$type]);
+        $arr[$label] = array("type"=>$type, "msg"=>implode("<br>",$TPL[$type]));
       }
     }
+
+    $search  = array("&lt;br&gt;","&lt;br /&gt;","&lt;b&gt;","&lt;/b&gt;","&lt;u&gt;","&lt;/u&gt;",'\\');
+    $replace = array("<br>"      ,"<br />"      ,"<b>"      ,"</b>"      ,"<u>"      ,"</u>"      ,'');
+
 
     if (is_array($arr) && count($arr)) {
       $str = "<div style=\"text-align:center;\"><div class=\"message corner\">";
       $str.= "<table cellspacing=\"0\">";
-      foreach ($arr as $type => $info) {
-        $str.= "<tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$type.".png\"/><td/>";
-        $str.= "<td class=\"".$type."\" align=\"left\" width=\"99%\">".page::htmlentities(str_replace('\\','',$info))."</td></tr>";
+      foreach ($arr as $class => $arr) {
+        $info = $arr["msg"];
+        $type = $arr["type"];
+
+        $type != "message_help_no_esc" and $info = page::htmlentities($info);
+        $info = str_replace($search,$replace,$info);
+
+        $str.= "<tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$class.".png\"/><td/>";
+        $str.= "<td class=\"".$class."\" align=\"left\" width=\"99%\">".$info."</td></tr>";
       }
       $str.= "</table>";
       $str.= "</div></div>";
