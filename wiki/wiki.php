@@ -29,7 +29,7 @@ $TPL["wiki_tree"] = ATTACHMENTS_DIR."wiki";
 if ($_REQUEST['op'] == 'new') {
   $TPL['newFile'] = 'true';
 } else {
-  $TPL['newFile'] = 'false';
+  $TPL['newFile'] = '';
 }
 
 include_template("templates/wikiM.tpl");
