@@ -25,7 +25,7 @@ require_once("../alloc.php");
 check_entity_perm("transaction", PERM_FINANCE_UPLOAD_EXPENSES_FILE);
 
 if (!config::get_config_item("mainTfID")) {
-  $TPL["message"][] = "This functionality will not work until you set a Finance TF on the Setup -&gt; Finance screen.";
+  $TPL["message"][] = "This functionality will not work until you set a Finance TF on the Setup -> Finance screen.";
 }
 
 

@@ -694,9 +694,9 @@ if ($new_project && !(is_object($project) && $project->get_id())) {
   $TPL["main_alloc_title"] = "New Project - ".APPLICATION_NAME;
   $TPL["projectSelfLink"] = "New Project";
   $p = new project;
-  $TPL["message_help"][] = "Create a new Project by inputting the Project Name and any other details, and clicking the Save button.";
-  $TPL["message_help"][] = "";
-  $TPL["message_help"][] = "<a href=\"#x\" class=\"magic\" id=\"copy_project_link\">Or copy an existing project</a>";
+  $TPL["message_help_no_esc"][] = "Create a new Project by inputting the Project Name and any other details, and clicking the Save button.";
+  $TPL["message_help_no_esc"][] = "";
+  $TPL["message_help_no_esc"][] = "<a href=\"#x\" class=\"magic\" id=\"copy_project_link\">Or copy an existing project</a>";
   $str =<<<DONE
     <div id="copy_project" style="display:none; margin-top:10px;">
       <form action="{$TPL["url_alloc_project"]}" method="post">
@@ -726,7 +726,7 @@ if ($new_project && !(is_object($project) && $project->get_id())) {
       </form>
     </div>
 DONE;
-  $TPL["message_help"][] = $str;
+  $TPL["message_help_no_esc"][] = $str;
 
 } else {
   $TPL["main_alloc_title"] = "Project " . $project->get_id() . ": " . $project->get_name() . " - ".APPLICATION_NAME;

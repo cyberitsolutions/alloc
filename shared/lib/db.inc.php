@@ -65,14 +65,12 @@ class db {
     if ($errno == 1451 || $errno == 1217) { 
       $TPL["message"][] = "Error: ".$errno." There are other records in the database that depend on the item you just tried to delete. 
                            Remove those other records first and then try to delete this item again. 
-                           <a href='#x' class='magic' onclick='$(\".more_info_error\").toggle()'>Show error</a>
-                           <div class='hidden more_info_error'><br>".$msg."<br></div>";
+                           <br><br>".$msg;
 
     } else if ($errno == 1216) {
       $TPL["message"][] = "Error: ".$errno." The parent record of the item you just tried to create does not exist in the database. 
                            Create that other record first and then try to create this item again. 
-                           <a href='#x' class='magic' onclick='$(\".more_info_error\").toggle()'>Show error</a>
-                           <div class='hidden more_info_error'><br>".$msg."<br></div>";
+                           <br><br>".$msg;
 
     } else if (strlen($msg)) {
       $TPL["message"][] = "Error: ".$errno." ".$msg;

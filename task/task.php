@@ -279,7 +279,7 @@ if ($dupeID) {
   $realtask = new task;
   $realtask->set_id($dupeID);
   $realtask->select();
-  $TPL["taskDuplicateLink"] = $realtask->get_task_link(array("prefixTaskID"=>1));
+  $TPL["taskDuplicateLink"] = $realtask->get_task_link(array("prefixTaskID"=>1,"return"=>"array"));
   $mesg = "This task is a duplicate of ".$TPL["taskDuplicateLink"];
   $TPL["message_help"][] = $mesg;
   $TPL["comments_disabled"] = true;
