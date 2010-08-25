@@ -101,7 +101,14 @@ if ($_POST["save"]) {
   include_template("templates/newFileM.tpl");
 
 } else if ($file && is_file(wiki_module::get_wiki_path().$file) && is_readable(wiki_module::get_wiki_path().$file)) {
+
   $TPL['current_path'] = dirname($file);
+  //dirname may return '.' if there's no dirname, need to get rid of it
+  if ($TPL['current_path'] == '.') {
+    $TPL['current_path'] = '';
+  } else {
+    $TPL['current_path'] .= DIRECTORY_SEPARATOR;
+  }
   wiki_module::get_file($file, $_GET["rev"]);
 
 } else if ($_REQUEST["loadErrorPage"]) {

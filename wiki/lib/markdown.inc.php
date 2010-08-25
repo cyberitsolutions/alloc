@@ -514,7 +514,8 @@ class Markdown_Parser {
     $name = $matches[1];
 
     $file = str_ireplace("javascript:","",$file); // added by alla
-    
+    $name = str_ireplace("javascript:","",$name);
+   
     if (!empty($name)) {
         $name = substr($name, 0, -1); //trim the trailing |
     } else {
@@ -522,11 +523,11 @@ class Markdown_Parser {
     }
 
     if (file_exists(wiki_module::get_wiki_path().$file.".mdwn")) {
-      return $this->hashPart('<a href="'.$TPL['url_alloc_wiki'].'?target='.urlencode($TPL['current_path'].DIRECTORY_SEPARATOR.$file).'.mdwn">'.$name.'</a>');
+      return $this->hashPart('<a href="'.$TPL['url_alloc_wiki'].'target='.urlencode($TPL['current_path'].$file).'.mdwn">'.$name.'</a>');
     } else if (file_exists(wiki_module::get_wiki_path().$file)) {
-      return $this->hashPart('<a href="'.$TPL['url_alloc_wiki'].'?target='.urlencode($TPL['current_path'].DIRECTORY_SEPARATOR.$file).'">'.$name.'</a>');
+      return $this->hashPart('<a href="'.$TPL['url_alloc_wiki'].'target='.urlencode($TPL['current_path'].$file).'">'.$name.'</a>');
     } else {
-      return $this->hashPart($name.'<a href="?op=new&target='.urlencode($TPL['current_path'].DIRECTORY_SEPARATOR.$file).'" title="Click here to create this file.">?</a>');
+      return $this->hashPart($name.'<a href="?op=new&target='.urlencode($TPL['current_path'].$file).'" title="Click here to create this file.">?</a>');
     }
     return $matches[1];
   }
