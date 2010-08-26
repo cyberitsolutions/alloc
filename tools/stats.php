@@ -36,7 +36,7 @@ $TPL["global_tasks_current"] = $tasks["current"]["total"];
 $TPL["global_tasks_total"] = $tasks["total"]["total"];
 $TPL["global_comments_total"] = $comments["total"]["total"];
 
-$TPL["global_graph"] = "<a href=\"".$TPL["url_alloc_statsImage"]."id=total&width=640&multiplier=8&labels=true\"><img src=\"".$TPL["url_alloc_statsImage"]."id=total&width=400&multiplier=2\"></a>";
+$TPL["global_graph"] = "<a href=\"".$TPL["url_alloc_statsImage"]."id=total&width=640&multiplier=8&labels=true\"><img alt=\"Global graph\" src=\"".$TPL["url_alloc_statsImage"]."id=total&width=400&multiplier=2\"></a>";
 
 include_template("templates/statsM.tpl");
 
@@ -93,7 +93,7 @@ function show_users_stats($template) {
     $TPL["user_comments_total"] = $comments["total"][$person->get_id()] + 0;
 
     $TPL["user_graph"] = "<a href=\"".$TPL["url_alloc_statsImage"]."id=".$person->get_id()."&width=640&multiplier=8&labels=true\">";
-    $TPL["user_graph"].= "<img src=\"".$TPL["url_alloc_statsImage"]."id=".$person->get_id()."&width=400&multiplier=2\"></a>";
+    $TPL["user_graph"].= "<img alt=\"User graph\" src=\"".$TPL["url_alloc_statsImage"]."id=".$person->get_id()."&width=400&multiplier=2\"></a>";
 
     if ($TPL["user_projects_total"] + $TPL["user_tasks_total"] + $TPL["user_comments_total"] > 0) {
       $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";

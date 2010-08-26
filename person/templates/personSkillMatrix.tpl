@@ -20,11 +20,11 @@
     </td>
   </tr>
   <tr>
-    <td colspan="2"><img src="../images/skill_senior.png" alt="S" align="absmiddle"> Senior,
-      <img src="../images/skill_advanced.png" alt="A" align="absmiddle"> Advanced,
-      <img src="../images/skill_intermediate.png" alt="I" align="absmiddle"> Intermediate,
-      <img src="../images/skill_junior.png" alt="J" align="absmiddle"> Junior,
-      <img src="../images/skill_novice.png" alt="N" align="absmiddle"> Novice
+    <td colspan="2"><img src="../images/skill_senior.png" alt="Senior" align="absmiddle"> Senior,
+      <img src="../images/skill_advanced.png" alt="Advanced" align="absmiddle"> Advanced,
+      <img src="../images/skill_intermediate.png" alt="Intermediate" align="absmiddle"> Intermediate,
+      <img src="../images/skill_junior.png" alt="Junior" align="absmiddle"> Junior,
+      <img src="../images/skill_novice.png" alt="Novice" align="absmiddle"> Novice
     </td>
   </tr>
   <tr>

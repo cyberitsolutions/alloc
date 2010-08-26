@@ -9,7 +9,7 @@
   <div class="{$default_one}">
     <div class="wikidoc">
       <div style="float:right; display:inline; width:30px; margin-top:10px; right:-10px; position:relative;" class="noprint">
-        <a target="_blank" href="{$url_alloc_wiki}media=print&target={$file}&rev={$rev}"><img class="noprint" border="0" src="{$url_alloc_images}printer.png"></a>
+        <a target="_blank" href="{$url_alloc_wiki}media=print&target={$file}&rev={$rev}"><img alt="Print" class="noprint" border="0" src="{$url_alloc_images}printer.png"></a>
       </div>
       {$str_html}
     </div>
