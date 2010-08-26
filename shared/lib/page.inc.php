@@ -150,7 +150,7 @@ class page {
         $type != "message_help_no_esc" and $info = page::htmlentities($info);
         $info = str_replace($search,$replace,$info);
 
-        $str.= "<tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$class.".png\"/><td/>";
+        $str.= "<tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$class.".png\" alt=\"$class\" /><td/>";
         $str.= "<td class=\"".$class."\" align=\"left\" width=\"99%\">".$info."</td></tr>";
       }
       $str.= "</table>";
@@ -168,7 +168,7 @@ class page {
     if (strlen($str)) {
       $img = "<div id='help_button_".$topic."' style='display:inline;'><a href=\"".$TPL["url_alloc_getHelp"]."topic=".$topic."\" target=\"_blank\">";
       $img.= "<img border='0' class='help_button' onmouseover=\"help_text_on('help_button_".$topic."','".$str."');\" onmouseout=\"help_text_off('help_button_".$topic."');\" src=\"";
-      $img.= $TPL["url_alloc_images"]."help.gif\"></a></div>";
+      $img.= $TPL["url_alloc_images"]."help.gif\" alt=\"Help\" /></a></div>";
     }
     return $img;
   }
@@ -218,7 +218,7 @@ class page {
     $year = date("Y");
     $str = <<<EOD
       <div class="calendar_container enclose nobr">
-      <input name="${name}" type="text" size="11" value="${default_value}" id="${name}" class="datefield"><img src="${images}cal${year}.png" id="button_${name}" title="Date Selector">
+      <input name="${name}" type="text" size="11" value="${default_value}" id="${name}" class="datefield"><img src="${images}cal${year}.png" id="button_${name}" title="Date Selector" alt="Date Selector">
       <script type="text/javascript">
       Calendar.setup( { inputField : "${name}", ifFormat : "%Y-%m-%d", button : "button_${name}", showOthers : 1, align : "Bl", firstDay : ${firstday}, step : 1, weekNumbers : 0 ${default} })
       </script>
@@ -321,7 +321,7 @@ EOD;
     }
 
     // argh, I am bad man, this activates the default option, because it's minutely better than putting in a body onload
-    $TPL["extra_footer_stuff"].= "<img src=\"".$TPL["url_alloc_images"]."pixel.gif\" onload=\"sidebyside_activate('".$default."',".$js_array.");\">";
+    $TPL["extra_footer_stuff"].= "<img alt=\"Dummy image\" src=\"".$TPL["url_alloc_images"]."pixel.gif\" onload=\"sidebyside_activate('".$default."',".$js_array.");\">";
 
     return "<div style=\"margin:20px 0px 0px 0px;\">".$str."</div>";
   }

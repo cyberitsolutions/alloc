@@ -58,7 +58,7 @@ class invoice extends db_entity {
     global $TPL;
     if ($payment_status) {
       $payment_statii = invoice::get_invoice_statii_payment();
-      return "<img src=\"".$TPL["url_alloc_images"]."invoice_".$payment_status.".png\" title=\"".$payment_statii[$payment_status]."\">";
+      return "<img src=\"".$TPL["url_alloc_images"]."invoice_".$payment_status.".png\" alt=\"".$payment_statii[$payment_status]."\" title=\"".$payment_statii[$payment_status]."\">";
     }
   }
 

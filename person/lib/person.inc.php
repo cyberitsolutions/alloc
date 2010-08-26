@@ -497,11 +497,11 @@ class person extends db_entity {
       if ($_FORM["showSkills"]) {
         $summary[] = "<th>";
         $summary[] = "Senior";
-        $summary[] = '<img src="../images/skill_senior.png" alt="S" align="absmiddle">';
-        $summary[] = '<img src="../images/skill_advanced.png" alt="A" align="absmiddle">';
-        $summary[] = '<img src="../images/skill_intermediate.png" alt="I" align="absmiddle">';
-        $summary[] = '<img src="../images/skill_junior.png" alt="J" align="absmiddle">';
-        $summary[] = '<img src="../images/skill_novice.png" alt="N" align="absmiddle"> Novice';
+        $summary[] = '<img src="../images/skill_senior.png" alt="Senior" align="absmiddle">';
+        $summary[] = '<img src="../images/skill_advanced.png" alt="Advanced" align="absmiddle">';
+        $summary[] = '<img src="../images/skill_intermediate.png" alt="Intermediate" align="absmiddle">';
+        $summary[] = '<img src="../images/skill_junior.png" alt="Junior" align="absmiddle">';
+        $summary[] = '<img src="../images/skill_novice.png" alt="Novice" align="absmiddle"> Novice';
         $summary[] = "</th>";
       }
       $_FORM["showHours"]   and $summary[] = "<th>Sum Prev Fort</th>";

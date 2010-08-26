@@ -453,7 +453,7 @@ class timeSheetPrint {
       // Else HTML format
       } else {
         if(file_exists(ALLOC_LOGO)) {
-          $TPL["companyName"] = '<img src="'.$TPL["url_alloc_logo"].'" />';
+          $TPL["companyName"] = '<img alt="Company logo" src="'.$TPL["url_alloc_logo"].'" />';
         }
         $TPL["this_tsp"] = $this;
         $TPL["main_alloc_title"] = "Time Sheet - ".APPLICATION_NAME;

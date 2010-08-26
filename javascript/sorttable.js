@@ -114,7 +114,7 @@ sorttable = {
         // mouse over -> show arrow
 	      dean_addEvent(headrow[i],"mouseover", function(e) {
           if (this.className.search(/\bsorttable_sorted\b/) == -1 && this.className.search(/\bsorttable_sorted_reverse\b/) == -1) {
-            this.getElementsByTagName('span')[0].innerHTML = '<img src="../images/arrow_faded.gif" border="0">';
+            this.getElementsByTagName('span')[0].innerHTML = '<img src="../images/arrow_faded.gif" alt="Sort" border="0">';
             return;
           }
         });
@@ -122,7 +122,7 @@ sorttable = {
         // mouse off -> hide arrow
         dean_addEvent(headrow[i],"mouseout", function(e) {
           if (this.className.search(/\bsorttable_sorted\b/) == -1 && this.className.search(/\bsorttable_sorted_reverse\b/) == -1) {
-            this.getElementsByTagName('span')[0].innerHTML = '<img src="../images/arrow_blank.gif" border="0">';
+            this.getElementsByTagName('span')[0].innerHTML = '<img src="../images/arrow_blank.gif" alt="Sort"  border="0">';
             return;
           }
         });
@@ -134,14 +134,14 @@ sorttable = {
           }
 
           // Switch all the other arrows off (uses jQuery)
-          $(".sort_arrows").html('<img src="../images/arrow_blank.gif" border="0">');
+          $(".sort_arrows").html('<img src="../images/arrow_blank.gif" alt="Sort"  border="0">');
 
           // if we're already sorted by this column, just reverse the table, which is quicker
           if (this.className.search(/\bsorttable_sorted\b/) != -1) {
             sorttable.reverse(this.sorttable_tbody);
             this.className = this.className.replace('sorttable_sorted', 'sorttable_sorted_reverse');
             arrow.className = 'sort_arrows';
-            arrow.innerHTML = '<img src="../images/arrow_up.gif" border="0">';
+            arrow.innerHTML = '<img src="../images/arrow_up.gif" alt="Sort ascending" border="0">';
             return;
           }
 
@@ -150,7 +150,7 @@ sorttable = {
             sorttable.reverse(this.sorttable_tbody);
             this.className = this.className.replace('sorttable_sorted_reverse', 'sorttable_sorted');
             arrow.className = 'sort_arrows';
-            arrow.innerHTML = '<img src="../images/arrow_down.gif" border="0">';
+            arrow.innerHTML = '<img src="../images/arrow_down.gif" alt="Sort descending" border="0">';
             return;
           }
           
@@ -166,7 +166,7 @@ sorttable = {
 
           this.className += ' sorttable_sorted';
           arrow.className = 'sort_arrows';
-          arrow.innerHTML = '<img src="../images/arrow_down.gif" border="0">';
+          arrow.innerHTML = '<img src="../images/arrow_down.gif" alt="Sort descending" border="0">';
 
 	        // build an array to sort. This is a Schwartzian transform thing,
 	        // i.e., we "decorate" each row with the actual sort key,
