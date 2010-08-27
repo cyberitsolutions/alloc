@@ -838,8 +838,16 @@ class timeSheet extends db_entity {
 
   function email_move_status_to_edit($direction,$info) { 
     // is possible to move backwards to "edit", from both "manager" and "admin"
+    // requires manager or APPROVE_TIMESHEET permission
     global $current_user;
+    $project = $this->get_foreign_object("project");
+    $projectManagers = $project->get_timeSheetRecipients();
     if ($direction == "backwards") {
+      if (!in_array($current_user->get_id(), $projectManagers) &&
+        !$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+          //error, go away
+          die("You do not have permission to change this timesheet.");
+      }
       $email = array();
       $email["type"] = "timesheet_reject";
       $email["to"] = $info["timeSheet_personID_email"];
@@ -866,8 +874,16 @@ EOD;
 
   function email_move_status_to_manager($direction,$info) { 
     global $current_user;
+    $project = $this->get_foreign_object("project");
+    $projectManagers = $project->get_timeSheetRecipients();
     // Can get forwards to "manager" only from "edit"
     if ($direction == "forwards") {
+      //forward to manager requires the timesheet to be owned by the current 
+      //user or TIME_INVOICE_TIMESHEETS
+      //project managers may not do this
+      if (!($this->get_value("personID") == $current_user->get_id() || $this->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
+        die("You do not have permission to change this timesheet.");
+      }
       $this->set_value("dateSubmittedToManager", date("Y-m-d"));
       // Check for time overrun
       $overrun_tasks = array();
@@ -911,6 +927,11 @@ EOD;
       }
     // Can get backwards to "manager" only from "admin"
     } else if ($direction == "backwards") {
+      //admin->manager requires INVOICE_TIMESHEETS
+      if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+        //no permission, go away
+        die("You do not have permission to change this timesheet.");
+      }
       $email = array();
       $email["type"] = "timesheet_reject";
       $email["to"] = $info["approvedByManagerPersonID_email"];
@@ -935,8 +956,21 @@ EOD;
 
   function email_move_status_to_admin($direction,$info) { 
     global $current_user;
+    $project = $this->get_foreign_object("project");
+    $projectManagers = $project->get_timeSheetRecipients();
     // Can get forwards to "admin" from "edit" and "manager"
     if ($direction == "forwards") {
+      //3 ways to have permission to do this
+      //project manager for the timesheet
+      //no project manager and owner of the timesheet
+      //the permission flag
+      if (!(in_array($current_user->get_id(), $projectManagers) || 
+        (empty($projectManagers) && $this->get_value("personID") == $current_user->get_id()) ||
+        $this->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
+          //error, go away
+        die("You do not have permission to change this timesheet.");
+      }
+
         if ($this->get_value("status") == "manager") { 
           $this->set_value("approvedByManagerPersonID",$current_user->get_id());
           $extra = " Approved By: ".person::get_fullname($current_user->get_id());
@@ -966,6 +1000,12 @@ EOD;
 
     // Can get backwards to "admin" from "invoiced" 
     } else {
+      //requires INVOICE_TIMESHEETS
+      if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+        //no permission, go away
+        die("You do not have permission to change this timesheet.");
+      }
+
       $this->set_value("approvedByAdminPersonID", "");
     }
     $this->set_value("status", "admin");
@@ -975,6 +1015,12 @@ EOD;
   function email_move_status_to_invoiced($direction,$info) { 
     global $current_user;
     // Can get forwards to "invoiced" from "admin" 
+    // requires INVOICE_TIMESHEETS
+    if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+        //no permission, go away
+      die("You do not have permission to change this timesheet.");
+    }
+
     if ($info["projectManagers"] 
     && !$this->get_value("approvedByManagerPersonID")) {
       $this->set_value("approvedByManagerPersonID", $current_user->get_id());
@@ -985,6 +1031,12 @@ EOD;
 
   function email_move_status_to_finished($direction,$info) {
     if ($direction == "forwards") {
+      //requires INVOICE_TIMESHEETS
+      if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+        //no permission, go away
+        die("You do not have permission to change this timesheet.");
+      }
+
       //transactions
       $q = sprintf("SELECT DISTINCT transaction.transactionDate, transaction.product, transaction.status
                       FROM transaction
@@ -1023,6 +1075,11 @@ EOD;
   }
 
   function pending_transactions_to_approved() {
+    if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+      //no permission, die
+      die("You do not have permission to approve transactions for this timesheet.");
+    }
+
     $db = new db_alloc();
     $q = sprintf("UPDATE transaction SET status = 'approved' WHERE timeSheetID = %d AND status = 'pending'",$this->get_id());
     $db->query($q);
