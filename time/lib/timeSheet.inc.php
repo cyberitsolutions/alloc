@@ -809,6 +809,14 @@ class timeSheet extends db_entity {
   }
 
   function change_status($direction) {
+    // access controls are partially disabled for timesheets. Make sure time sheet is really accessible by checking
+    // user ID - it's restricted to being NOT NULL in the DB. Not doing this check allows a user to overwrite
+    // an existing timesheet with a new one assigned to themself.
+
+    if (!$this->get_value("personID")) {
+      die("You do not have access to this timesheet.");
+    }
+
     $info = $this->get_email_vars();
     if (is_array($info["projectManagers"]) && count($info["projectManagers"])) {
       $steps["forwards"]["edit"] = "manager";
@@ -927,8 +935,8 @@ EOD;
       }
     // Can get backwards to "manager" only from "admin"
     } else if ($direction == "backwards") {
-      //admin->manager requires INVOICE_TIMESHEETS
-      if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+      //admin->manager requires APPROVE_TIMESHEETS
+      if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
         die("You do not have permission to change this timesheet.");
       }
@@ -1001,7 +1009,7 @@ EOD;
     // Can get backwards to "admin" from "invoiced" 
     } else {
       //requires INVOICE_TIMESHEETS
-      if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+      if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
         die("You do not have permission to change this timesheet.");
       }
@@ -1016,7 +1024,7 @@ EOD;
     global $current_user;
     // Can get forwards to "invoiced" from "admin" 
     // requires INVOICE_TIMESHEETS
-    if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+    if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
       die("You do not have permission to change this timesheet.");
     }
@@ -1032,7 +1040,7 @@ EOD;
   function email_move_status_to_finished($direction,$info) {
     if ($direction == "forwards") {
       //requires INVOICE_TIMESHEETS
-      if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+      if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
         die("You do not have permission to change this timesheet.");
       }
