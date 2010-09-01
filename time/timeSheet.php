@@ -405,6 +405,10 @@ if ($_POST["save"]
     // don't save or sql will complain
     $url = $TPL["url_alloc_timeSheet"];
 
+  } else if (!$timeSheet->get_value("personID") && $timeSheetID) {
+    //if TS ID is set but person ID is not, it's an existing timesheet this
+    // user doesn't have access to (and will overwrite). Don't proceed.
+    $url = $TPL["url_alloc_timeSheet"];
   } else if ($timeSheet->save()) {
 
     if ($add_timeSheet_to_invoiceID) {
