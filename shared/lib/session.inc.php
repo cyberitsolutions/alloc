@@ -40,7 +40,7 @@ class Session {
 
   // Constructor
   function Session($key="") {
-    $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"];
+    $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"] or $key = $_REQUEST["sessID"];
     $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
     #$this->session_life  = (5); 

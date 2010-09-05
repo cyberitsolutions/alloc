@@ -36,10 +36,15 @@
 
 class alloc_services {
 
+  public function __construct($sessID="") {
+    global $current_user; 
+    $current_user = $this->get_current_user($sessID);
+  }
+
   /** The authenticate function
    * @param string $username
    * @param string $password
-   * @return string $sessKey
+   * @return string $sessID
    */
   public function authenticate($username,$password) {
     $person = new person;
@@ -51,14 +56,14 @@ class alloc_services {
       $sess->Save();
       return $sess->GetKey();
     } else {
-      return "Authentication Failed(1)."; 
+      die("Authentication Failed(1)."); 
     }
   }  
 
-  private function get_current_user($key) {
-    $sess = new Session($key);
+  private function get_current_user($sessID) {
+    $sess = new Session($sessID);
     if (!$sess->Started()) {
-      return "Authentication Failed(2).";
+      die("Authentication Failed(2).");
     } else {
       $person = new person;
       $person->load_current_user($sess->Get("personID"));
@@ -67,13 +72,12 @@ class alloc_services {
   }
 
   /** The get_task_comments function
-   * @param string $sessKey
    * @param int $taskID
    * @return array $comments
    */
-  public function get_task_comments($key,$taskID) {
-    global $current_user; // Always need this :(
-    $current_user = $this->get_current_user($key);
+  public function get_task_comments($taskID) {
+    //global $current_user; // Always need this :(
+    //$current_user = $this->get_current_user($sessID);
     if ($taskID) {
       $task = new task;
       $task->set_id($taskID);
@@ -83,42 +87,39 @@ class alloc_services {
   }
 
   /** The add_timeSheetItem_by_task function
-   * @param string $sessKey
    * @param int $taskID
    * @param string $duration
    * @param string $date
    * @param string $comments
    * @return array $timeSheetID
    */
-  public function add_timeSheetItem_by_task($key, $task, $duration, $date="", $comments="") {
-    global $current_user; // Always need this :(
-    $current_user = $this->get_current_user($key);
-    return timeSheet::add_timeSheetItem_by_task($task, $duration, $comments, null, $date);
+  public function add_timeSheetItem_by_task($taskID, $duration, $date="", $comments="") {
+    //global $current_user; // Always need this :(
+    //$current_user = $this->get_current_user($sessID);
+    return timeSheet::add_timeSheetItem_by_task($taskID, $duration, $comments, null, $date);
   }
 
   /** The add_timeSheetItem_by_project function
-   * @param string $sessKey
    * @param int $projectID
    * @param string $duration
    * @param string $date
    * @param string $comments
    * @return array $timeSheetID
    */
-  public function add_timeSheetItem_by_project($key, $project, $duration, $date="", $comments="") {
-    global $current_user; // Always need this :(
-    $current_user = $this->get_current_user($key);
-    return timeSheet::add_timeSheetItem_by_project($project, $duration, $comments, null, $date);
+  public function add_timeSheetItem_by_project($projectID, $duration, $date="", $comments="") {
+    //global $current_user; // Always need this :(
+    //$current_user = $this->get_current_user($sessID);
+    return timeSheet::add_timeSheetItem_by_project($projectID, $duration, $comments, null, $date);
   }
 
   /** The get_list function
-   * @param string $sessKey
    * @param string $entity
    * @param mixed $options
    * @return array $list
    */
-  public function get_list($key, $entity, $options=array()) {
+  public function get_list($entity, $options=array()) {
     global $current_user; // Always need this :(
-    $current_user = $this->get_current_user($key);
+    //$current_user = $this->get_current_user($sessID);
     if (class_exists($entity)) {
       $options = obj2array($options);
       $e = new $entity;
@@ -132,21 +133,21 @@ class alloc_services {
           return $rtn;
         }
       } else {
-        return "Entity method '".$entity."->get_list()' does not exist."; 
+        die("Entity method '".$entity."->get_list()' does not exist."); 
       }
     } else {
-      return "Entity '".$entity."' does not exist."; 
+      die("Entity '".$entity."' does not exist."); 
     }
   }
 
   /** The get_email function
-   * @param string $sessKey
+   * @param string $sessID
    * @param string $emailUID
    * @return string $email
    */
-  public function get_email($key, $emailUID) {
+  public function get_email($emailUID) {
     global $current_user; // Always need this :(
-    $current_user = $this->get_current_user($key);
+    //$current_user = $this->get_current_user($sessID);
     if ($emailUID) {
       $lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
       $info["host"] = config::get_config_item("allocEmailHost");
@@ -169,10 +170,10 @@ class alloc_services {
    * @param string $topic
    * @return string $helptext
    */
-  public function get_help($method="") {
+  public function get_help($topic="") {
     $this_methods = get_class_methods($this);
 
-    if (!$method) {
+    if (!$topic) {
       foreach ($this_methods as $method) {
         $m = $method."_help";
         if (method_exists($this,$m)) {
@@ -180,26 +181,25 @@ class alloc_services {
           $commar = ", ";
         }
       }
-      return "Help is available for the following methods: ".$available_topics;
+      die("Help is available for the following methods: ".$available_topics);
 
     } else {
-      $m = $method."_help";
+      $m = $topic."_help";
       if (method_exists($this,$m)) {
         return $this->$m();
       } else {
-        return "No help exists for this method: ".$method; 
+        die("No help exists for this method: ".$topic); 
       }
     }
   }
 
   /** The help function for get_list
-   * @param string $sessKey
    * @return string $helptext
    */
   private function get_list_help() {
     # This function does not require authentication.
     #global $current_user; // Always need this :(
-    #$current_user = $this->get_current_user($key);
+    #$current_user = $this->get_current_user($sessID);
 
     global $modules;
     foreach ($modules as $name => $object) {  
@@ -223,7 +223,7 @@ class alloc_services {
         }
       }
     }
-    return "Usage: get_list(sessionKey, entity, options). The following entities are available: ".$rtn;
+    die("Usage: get_list(entity, options). The following entities are available: ".$rtn);
   }
 
 } 
