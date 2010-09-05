@@ -1190,13 +1190,16 @@ EOD;
         $tsi->set_value("comment",$comments);
         $tsi->set_value("emailUID",$emailUID);
         $err = $tsi->save();
-  
         $id = $tsi->get_id();
+
+        $tsi = new timeSheetItem();
+        $tsi->set_id($id);
         $tsi->select();
         $rtn = $tsi->row();
         $row_projectPerson or $rtn["error_no_projectPerson"] = true;
         $err and $rtn["timeSheetItem_save_error"] = $err;
-      }
+
+      } 
   
       return $rtn;
     }

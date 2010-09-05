@@ -194,7 +194,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // Some scripts don't require authentication
   if (!defined("NO_AUTH") && !$sess->Started()) { 
     if (defined("NO_REDIRECT")) {
-      exit();
+      // json.php
     } else {
       alloc_redirect($TPL["url_alloc_login"]);
       exit();
