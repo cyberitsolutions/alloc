@@ -55,12 +55,14 @@ function get_template($filename) {
   $template = preg_replace_callback($pattern,"fix_curly_braces",$template);
 
   // Replace {$arr.something} with echo $arr["something"]; 
-  $pattern = '/{\$([\w|\d|_]+)\.([^}]+)}/i';
+  $pattern = '/{\$([\w\d_|]+)\.([^}]+)}/i';
   $replace = '<?php echo $${1}["${2}"]; ?>';
   $template = preg_replace($pattern,$replace,$template);
 
   // Replace {$var_name} with echo $var_name;
-  $pattern = '/{(\$[\w|\d|_]+)}/i';
+  // The various []$'" are to allow for stuff like $_FORM["select"]['array'][$element].
+  // This is more flexible than the {$arr.blah} above
+  $pattern = '/{(\$[\w\d_"\'\[\]\$]+)}/i';
   $replace = '<?php echo ${1}; ?>';
   $template = preg_replace($pattern,$replace,$template);
 
