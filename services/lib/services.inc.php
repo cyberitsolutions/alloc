@@ -112,6 +112,20 @@ class alloc_services {
     return timeSheet::add_timeSheetItem_by_project($projectID, $duration, $comments, null, $date);
   }
 
+   /** The change_timeSheet_status function
+   * @param int $timeSheetID
+   * @param string $direction
+   * @return int $timeSheetID
+   */
+  public function change_timeSheet_status($timeSheetID,$direction) {
+    $timeSheet = new timeSheet();
+    $timeSheet->set_id($timeSheetID);
+    $timeSheet->select();
+    return $timeSheet->change_status($direction);
+  }
+
+ 
+
   /** The get_list function
    * @param string $entity
    * @param mixed $options

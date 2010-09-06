@@ -1,0 +1,77 @@
+#!/usr/local/bin/python
+
+from alloc import alloc
+
+#a = alloc('http://alloc_stage/services/json.php')
+a = alloc('http://soy/alloc_dev/services/json.php')
+
+# Setup the options that this cli can accept
+ops = []
+ops.append(('',  'help           ','Show this help.'))
+ops.append(('q' ,'quiet          ','Run with no output except errors.')) 
+ops.append(('v' ,'verbose        ','Show time sheet\'s items.')) 
+ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
+ops.append(('s:','status=STATUS  ','The time sheets\' status eg: edit, manager, admin, invoiced, finished.'))
+ops.append(('t:','time=ID        ','A time sheet ID.')) 
+ops.append(('o:','order=TS&TSI   ','The order the Time Sheets and Items are displayed in. Default: "Time Sheet ID&Date"')) 
+
+# Specify some header and footer text for the help text
+help_text = "usage: %s [OPTIONS]\n\n%s\n\nIf run without arguments this program will display all of your editable time sheets."
+
+# Get the command line arguments into a dictionary
+o, remainder = a.get_args(ops, help_text)
+
+# Got this far, then authenticate
+a.authenticate();
+
+# Initialize some variables
+a.quiet = o['quiet']
+personID = a.get_my_personID()
+projectID = ""
+timeSheetID = ""
+order1 = "Time Sheet ID"
+order2 = "Date"
+status = "edit"
+
+# Get a projectID either passed via command line, or figured out from a project name
+if a.is_num(o['project']):
+  projectID = o['project']
+elif o['project']:
+  projectID = a.search_for_project(o['project'],personID)
+
+if a.is_num(o['time']):
+  timeSheetID = o['time']
+
+if o['status']:
+  status = o['status']
+
+if o['order']:
+  if '&' not in o['order']: o['order']+='&'
+  order1,order2 = o['order'].split("&")
+
+if not order2: order2 = 'Date'
+
+ops = {}
+if timeSheetID:
+  ops['timeSheetID'] = timeSheetID
+else:
+  ops['personID'] = personID
+  ops['status'] = status
+  if projectID:
+    ops['projectID'] = projectID
+
+timeSheets = a.get_list("timeSheet",ops)
+
+if timeSheets:
+  if o['verbose']:
+    for id,t in timeSheets.items():
+      a.print_table({id:t}, a.row_timeSheet, sort=order1)
+      a.print_table(a.get_list("timeSheetItem",{"timeSheetID": id}), a.row_timeSheetItem, sort=order2)
+  else:
+    a.print_table(timeSheets, a.row_timeSheet, sort=order1)
+else:
+  a.msg("No time sheets found.")
+
+
+
+

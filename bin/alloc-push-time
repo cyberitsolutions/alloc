@@ -1,0 +1,68 @@
+#!/usr/local/bin/python
+
+from alloc import alloc
+
+#a = alloc('http://alloc_stage/services/json.php')
+a = alloc('http://soy/alloc_dev/services/json.php')
+
+# Setup the options that this cli can accept
+ops = []
+ops.append(('',  'help           ','Show this help.'))
+#ops.append(('v', 'verbose        ','Run with more output.'))
+ops.append(('n', 'dryrun         ','Perform a dry run, no data gets updated.'))
+ops.append(('q', 'quiet          ','Run with no output except errors.'))
+ops.append(('a' ,'all            ','Submit all time sheets that are in edit mode.'))
+ops.append(('t:','time=ID        ','A time sheet ID, for a time sheet to submit.'))
+ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
+
+# Specify some header and footer text for the help text
+help_text = "usage: %s [OPTIONS]\n\n%s\n\nThis program enables you to submit your time sheets."
+
+# Get the command line arguments into a dictionary
+o, remainder = a.get_args(ops, help_text)
+
+# Got this far, then authenticate
+a.authenticate();
+
+# Initialize some variables
+a.quiet = o['quiet']
+a.dryrun = o['dryrun']
+projectID = ""
+
+# Get a projectID either passed via command line, or figured out from a project name
+if a.is_num(o['project']):
+  projectID = o['project']
+elif o['project']:
+  projectID = a.search_for_project(o['project'],personID)
+
+filter = {}
+filter["personID"] = a.get_my_personID()
+filter["status"] = "edit"
+if o['time']:
+  filter["timeSheetID"] = o['time']
+elif o['project']:
+  filter["projectID"] = o['project']
+
+timeSheets = a.get_list("timeSheet",filter)
+
+if timeSheets:
+  a.msg("Attempting to submit the following time sheets:")
+  a.print_table(timeSheets,a.row_timeSheet,sort="Time Sheet ID")
+
+  for timeSheetID, row in timeSheets.items():
+    if o['dryrun']:
+      a.msg("Would attempt to submit time sheet: %s" % timeSheetID)
+    else:
+      a.make_request({"method":"change_timeSheet_status","timeSheetID":timeSheetID,"direction":"forwards"}) 
+
+else:
+  a.die("No time sheets found: %s" % filter)
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,67 @@
+#!/usr/local/bin/python
+
+from alloc import alloc
+
+#a = alloc('http://alloc_stage/services/json.php')
+a = alloc('http://soy/alloc_dev/services/json.php')
+
+# Setup the options that this cli can accept
+ops = []
+ops.append(('',  'help           ','Show this help.'))
+ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
+ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.'))
+
+# Specify some header and footer text for the help text
+help_text = "usage: %s [OPTIONS]\n\n%s\n\nIf called without arguments this program will display all your tasks."
+
+# Get the command line arguments into a dictionary
+o, remainder = a.get_args(ops, help_text)
+
+# Got this far, then authenticate
+a.authenticate();
+
+# Get my personID
+personID = a.get_my_personID()
+
+# Get a projectID either passed via command line, or figured out from a project name
+projects = {}
+projectIDs = []
+
+if a.is_num(o['project']):
+  projectIDs.append(o['project'])
+elif o['project']:
+  filter = {}
+  filter["personID"] = personID
+  filter["projectStatus"] = "current"
+  filter["projectName"] = o['project']
+  projects = a.get_list("project",filter)
+  if not projects or len(projects) == 0:
+    projectIDs.append(0)
+  if projects:
+    for pID,v in projects.items():
+      projectIDs.append(int(pID))
+  
+# Setup options for the task search
+ops = {}
+ops["projectIDs"] = projectIDs
+ops["taskView"] = "prioritised"
+ops["taskStatus"] = "open"
+ops["personID"] = personID
+
+# Get a taskID either passed via command line, or figured out from a task name
+if a.is_num(o['task']):
+  ops["taskID"] = o['task']
+  del ops["taskStatus"]
+  del ops["personID"]
+elif o['task']:
+  ops["taskName"] = o["task"]
+
+# Get list of tasks
+r = a.get_list("task",ops)
+
+if r:
+  a.print_table(r, {"taskID":"Task ID"
+                       ,"taskName":"Task"
+                       ,"projectName":"Project"
+                       },sort="Task")
+  

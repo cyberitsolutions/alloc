@@ -34,7 +34,6 @@ require_once(dirname(__FILE__)."/history.inc.php");
 require_once(dirname(__FILE__)."/PasswordHash.inc.php");
 require_once(dirname(__FILE__)."/interestedParty.inc.php");
 require_once(dirname(__FILE__)."/meta.inc.php");
-require_once(dirname(__FILE__)."/alloc_services.inc.php");
 require_once(dirname(__FILE__)."/solar_json.inc.php");
 require_once(dirname(__FILE__)."/pdf_reader.inc.php");
 
