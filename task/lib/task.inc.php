@@ -1644,7 +1644,7 @@ class task extends db_entity {
                         ,"d_actualStart"      => "Date Started".$arrow
                         ,"d_actualCompletion" => "Date Completed".$arrow
                         );
-    $rtn["taskDateOptions"] = page::select_options($taskDateOps, $_FORM["taskDate"]);
+    $rtn["taskDateOptions"] = page::select_options($taskDateOps, $_FORM["taskDate"], 45, false);
 
     if (!in_array($_FORM["taskDate"],array("new","due_today","overdue"))) {
       $rtn["dateOne"] = $_FORM["dateOne"];
