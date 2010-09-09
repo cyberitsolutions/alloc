@@ -37,6 +37,7 @@ class timeSheet extends db_entity {
                              ,"approvedByAdminPersonID"
                              ,"dateSubmittedToManager"
                              ,"dateSubmittedToAdmin"
+			     ,"dateRejected"
                              ,"billingNote"
                              ,"payment_insurance"
                              ,"recipient_tfID"
@@ -875,6 +876,7 @@ EOD;
       $this->set_value("approvedByAdminPersonID", "");   
       $this->set_value("dateSubmittedToManager", "");     
       $this->set_value("approvedByManagerPersonID", "");   
+      $this->set_value("dateRejected", date("Y-m-d"));
     }
     $this->set_value("status", "edit");
     return $msg;
@@ -893,6 +895,7 @@ EOD;
         die("You do not have permission to change this timesheet.");
       }
       $this->set_value("dateSubmittedToManager", date("Y-m-d"));
+      $this->set_value("dateRejected", "");
       // Check for time overrun
       $overrun_tasks = array();
       $db = new db_alloc();
@@ -955,6 +958,7 @@ EOD;
       $this->get_value("billingNote") 
       and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
       $msg[] = $this->shootEmail($email);
+      $this->set_value("dateRejected", date("Y-m-d"));
     }
     $this->set_value("status", "manager");
     $this->set_value("dateSubmittedToAdmin", "");
@@ -985,6 +989,7 @@ EOD;
         }
         $this->set_value("status", "admin");
         $this->set_value("dateSubmittedToAdmin", date("Y-m-d"));
+	$this->set_value("dateRejected", "");
         foreach($info["timeSheetAdministrators"] as $adminID)  {
           $email = array();
           $email["type"] = "timesheet_submit";
