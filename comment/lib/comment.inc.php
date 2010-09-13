@@ -663,6 +663,10 @@ class comment extends db_entity {
     $doc->addField(Zend_Search_Lucene_Field::Text('dateCreated',str_replace("-","",$this->get_value("commentCreatedTime"))));
     $index->addDocument($doc);
   }
+
+  function delete_search_index_doc(&$index) {
+    return $index;
+  }
 }
 
 
