@@ -376,12 +376,13 @@ class transaction extends db_entity {
 
   
     // Determine opening balance
-    if (is_array($_FORM['tfIDs'] && count($_FORM['tfIDs']))) {
+    if (is_array($_FORM['tfIDs']) && count($_FORM['tfIDs'])) {
       $q = sprintf("SELECT SUM(IF(fromTfID IN (%s),-amount,amount)) AS balance FROM transaction %s", implode(",", $_FORM['tfIDs']), $filter2);
       $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);
       $db->row();
+      $opening_balance = $db->f("balance");
       $running_balance = $db->f("balance");
     }
 
@@ -439,7 +440,7 @@ class transaction extends db_entity {
       }
 
 
-      if ($_FORM["return"] == "html") {
+      if ($_FORM["return"] == "html" || $_FORM["return"] == "htmlAndObj") {
         $row["object"] = $t;
         $summary.= transaction::get_list_tr($row,$_FORM);
 
@@ -459,6 +460,7 @@ class transaction extends db_entity {
     $_FORM["total_amount_positive"] = sprintf("%0.2f",$total_amount_positive);
     $_FORM["total_amount_negative"] = sprintf("%0.2f",$total_amount_negative);
     $_FORM["running_balance"] = sprintf("%0.2f",$running_balance);
+    $_FORM["opening_balance"] = sprintf("%0.2f",$opening_balance);
 
     // A header row
     $header_row = transaction::get_list_tr_header($_FORM);
@@ -466,6 +468,9 @@ class transaction extends db_entity {
 
     if ($print && $_FORM["return"] == "html") {
       return $header_row.$summary.$footer_row;
+
+    } else if ($print && $_FORM["return"] == "htmlAndObj") {
+      return array($_FORM, $header_row.$summary.$footer_row);
 
     } else if ($print && $_FORM["return"] == "csv") {
       return implode(",",array_map('export_escape_csv', $_FORM["csvHeaders"]))."\n".$csv;

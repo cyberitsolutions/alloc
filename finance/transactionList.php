@@ -22,12 +22,20 @@
 
 require_once("../alloc.php");
 
-$tfID = $_GET["tfID"] or $tfID = $_POST["tfID"];
-$startDate = $_GET["startDate"] or $startDate = $_POST["startDate"];
-$endDate = $_GET["endDate"] or $endDate = $_POST["endDate"];
-$monthDate = $_GET["monthDate"] or $monthDate = $_POST["monthDate"];
-$download = $_GET["download"] or $download = $_POST["download"];
-$applyFilter = $_GET["applyFilter"] or $applyFilter = $_POST["applyFilter"];
+function show_filter() {
+  global $TPL,$defaults;
+  $_FORM = transaction::load_form_data($defaults);
+  $arr = transaction::load_transaction_filter($_FORM);
+  is_array($arr) and $TPL = array_merge($TPL,$arr);
+  include_template("templates/transactionFilterS.tpl");
+}
+
+$tfID         = $_GET["tfID"]        or $tfID        = $_POST["tfID"];
+$startDate    = $_GET["startDate"]   or $startDate   = $_POST["startDate"];
+$endDate      = $_GET["endDate"]     or $endDate     = $_POST["endDate"];
+$monthDate    = $_GET["monthDate"]   or $monthDate   = $_POST["monthDate"];
+$download     = $_GET["download"]    or $download    = $_POST["download"];
+$applyFilter  = $_GET["applyFilter"] or $applyFilter = $_POST["applyFilter"];
 
 if (!$startDate && !$endDate && !$monthDate && !$applyFilter) {
   $monthDate = date("Y-m-d");
@@ -40,6 +48,7 @@ $defaults = array("url_form_action"=>$TPL["url_alloc_transactionList"]
                  ,"startDate"=>$startDate
                  ,"endDate"=>$endDate
                  ,"monthDate"=>$monthDate
+                 ,"return"=>"htmlAndObj"
                  );
 
 if ($download) {
@@ -54,53 +63,25 @@ if ($download) {
 }
 
 
-function show_filter() {
-  global $TPL,$defaults;
-  $_FORM = transaction::load_form_data($defaults);
-  $arr = transaction::load_transaction_filter($_FORM);
-  is_array($arr) and $TPL = array_merge($TPL,$arr);
-  include_template("templates/transactionFilterS.tpl");
-}
-
-function show_transaction_list() {
-  global $defaults;
-  $_FORM = transaction::load_form_data($defaults);
-  echo transaction::get_list($_FORM);
-}
-
-
 // Check perm of requested tf
 $tf = new tf;
 $tf->set_id($tfID);
 $tf->select();
 $tf->check_perm();
-$rtn["pending_amount"] = sprintf("%0.2f",$tf->get_balance(array("status"=>"pending")));
-$rtn["title"] = "Statement for TF ".$tf->get_value("tfName")." from ".$startDate." to ".$endDate;
 $TPL["tfID"] = $tfID;
 
-// Transaction status filter
-if ($status) {
-  $where["status"] = $status;
-}
+$_FORM = transaction::load_form_data($defaults);
+list($TPL["totals"], $TPL["list"]) = transaction::get_list($_FORM);
 
-// Transaction status filter
-if ($transactionType) {
-  $where["transactionType"] = $transactionType;
-}
-
-// WHERE transactionModifiedTime or transactionDate is <= end date
-$where[$sortTransactions] = array(" <= ",$statement_end_date);
-
-// Add pending transactions filter to get pending amount balance
-$where["status"] = "pending";
-$TPL["pending_amount"] = sprintf("%0.2f",$tf->get_balance(array("status"=>"pending")));
-
-// Overall balance
+// Total balance
 $TPL["balance"] = sprintf("%0.2f",$tf->get_balance());
 
-$TPL["main_alloc_title"] = "Statement for TF ".$tf->get_value("tfName") . " - " .APPLICATION_NAME;
+// Total balance pending
+$TPL["pending_amount"] = sprintf("%0.2f",$tf->get_balance(array("status"=>"pending")));
 
+// Page and header title
+$TPL["title"] = "Statement for tagged fund: ".$tf->get_value("tfName");
+$TPL["main_alloc_title"] =  "TF: ".$tf->get_value("tfName"). " - " .APPLICATION_NAME;
 
 include_template("templates/transactionListM.tpl");
-
 ?>
