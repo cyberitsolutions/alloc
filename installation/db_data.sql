@@ -280,6 +280,7 @@ INSERT INTO config (name,value,type) VALUES ('task_email_header', '','text');
 INSERT INTO config (name,value,type) VALUES ('task_email_footer', '','text');
 INSERT INTO config (name,value,type) VALUES ('outTfID','','text');
 INSERT INTO config (name,value,type) VALUES ('inTfID','','text');
+INSERT INTO config (name,value,type) VALUES ('expenseFormTfID','','text');
 
 INSERT INTO config (name,value,type) VALUES ('emailSubject_taskComment', '[allocPSA] Task Comment: %ti %tn [%tp]', 'text');
 INSERT INTO config (name,value,type) VALUES ('emailSubject_dailyDigest', '[allocPSA] Daily Digest', 'text');
