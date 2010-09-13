@@ -13,18 +13,22 @@
     <td colspan="2">
     <table align="center">
        <tr>
-        <td align="right" class="transaction-approved"><strong>Balance:</strong></td> 
+        <td align="right" class="transaction-approved"><strong>Total Balance:</strong></td> 
         <td align="left" class="transaction-approved">${$balance}</td>
       </tr>
       <tr>
-        <td align="right" class="transaction-pending"><strong>Pending:</strong></td> 
+        <td align="right" class="transaction-pending"><strong>Total Pending:</strong></td> 
         <td align="left" class="transaction-pending">${$pending_amount}</td>
+      </tr>
+      <tr>
+        <td align="right" class="transaction-approved"><strong>Opening Balance:</strong></td> 
+        <td align="left" class="transaction-approved">${$totals["opening_balance"]}</td>
       </tr>
     </table>
     </td>
   </tr>
   <tr>
-    <td colspan="2">{show_transaction_list()}</td>
+    <td colspan="2">{$list}</td>
   </tr>
 </table>
 
