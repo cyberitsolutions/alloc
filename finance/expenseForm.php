@@ -368,7 +368,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
   $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios; 
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
-  $options["clientStatus"] = "current";
+  $options["clientStatus"] = "Current";
   $options["return"] = "dropdown_options";
   $ops = client::get_list($options);
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";
@@ -387,7 +387,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
   $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios;
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
-  $options["clientStatus"] = "current";
+  $options["clientStatus"] = "Current";
   $options["return"] = "dropdown_options";
   $ops = client::get_list($options);
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";

@@ -623,7 +623,7 @@ class invoice extends db_entity {
     $rtn["invoiceNum"] = $_FORM["invoiceNum"];
     $rtn["invoiceItemID"] = $_FORM["invoiceItemID"];
 
-    $options["clientStatus"] = "current";
+    $options["clientStatus"] = "Current";
     $options["return"] = "dropdown_options";
     $ops = client::get_list($options);
     $rtn["clientOptions"] = page::select_options($ops,$_FORM["clientID"]);

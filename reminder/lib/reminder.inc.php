@@ -233,7 +233,7 @@ class reminder extends db_entity {
     } else if ($type == "client") {
       $client = new client;
       $client->set_id($this->get_value('reminderLinkID'));
-      if ($client->select() == false || $client->get_value('clientStatus') == "archived") {
+      if ($client->select() == false || $client->get_value('clientStatus') == "Archived") {
         return false;
       }
     }

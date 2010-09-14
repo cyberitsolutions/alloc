@@ -5,9 +5,9 @@ INSERT INTO absenceType (absenceTypeID, absenceTypeSeq, absenceTypeActive) VALUE
 INSERT INTO absenceType (absenceTypeID, absenceTypeSeq, absenceTypeActive) VALUES ('Holiday',2,true);
 INSERT INTO absenceType (absenceTypeID, absenceTypeSeq, absenceTypeActive) VALUES ('Illness',3,true);
 INSERT INTO absenceType (absenceTypeID, absenceTypeSeq, absenceTypeActive) VALUES ('Other',4,true);
-INSERT INTO clientStatus (clientStatusID, clientStatusSeq, clientStatusActive) VALUES ('current',1,true);
-INSERT INTO clientStatus (clientStatusID, clientStatusSeq, clientStatusActive) VALUES ('potential',2,true);
-INSERT INTO clientStatus (clientStatusID, clientStatusSeq, clientStatusActive) VALUES ('archived',3,true);
+INSERT INTO clientStatus (clientStatusID, clientStatusSeq, clientStatusActive) VALUES ('Current',1,true);
+INSERT INTO clientStatus (clientStatusID, clientStatusSeq, clientStatusActive) VALUES ('Potential',2,true);
+INSERT INTO clientStatus (clientStatusID, clientStatusSeq, clientStatusActive) VALUES ('Archived',3,true);
 INSERT INTO configType (configTypeID, configTypeSeq, configTypeActive) VALUES ('text',1,true);
 INSERT INTO configType (configTypeID, configTypeSeq, configTypeActive) VALUES ('array',2,true);
 INSERT INTO invoiceStatus (invoiceStatusID, invoiceStatusSeq, invoiceStatusActive) VALUES ('edit',1,true);

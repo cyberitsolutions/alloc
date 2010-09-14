@@ -282,7 +282,8 @@ if ($_POST["save"]) {
   $client->set_values("client_");
 }
 
-$clientStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
+$m = new meta("clientStatus");
+$clientStatus_array = $m->get_assoc_array("clientStatusID","clientStatusID");
 $TPL["clientStatusOptions"] = page::select_options($clientStatus_array, $client->get_value("clientStatus"));
 
 $clientCategories = config::get_config_item("clientCategories") or $clientCategories = array();

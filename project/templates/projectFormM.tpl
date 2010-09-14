@@ -128,13 +128,13 @@ function clickClientStatus(e) {
           <h6>Client</h6>
           {$clientHidden}
           <label for="client_status_current">Current Clients</label>
-          <input id="client_status_current" type="radio" name="client_status" value="current">
+          <input id="client_status_current" type="radio" name="client_status" value="Current">
           &nbsp;&nbsp;&nbsp;
           <label for="client_status_potential">Potential Clients</label>
-          <input id="client_status_potential" type="radio" name="client_status" value="potential">
+          <input id="client_status_potential" type="radio" name="client_status" value="Potential">
           &nbsp;&nbsp;&nbsp;
           <label for="client_status_archived">Archived Clients</label>
-          <input id="client_status_archived" type="radio" name="client_status" value="archived">
+          <input id="client_status_archived" type="radio" name="client_status" value="Archived">
           <div id="clientDropdown">
             {$clientDropdown}
           </div>

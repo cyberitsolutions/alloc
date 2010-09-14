@@ -247,7 +247,7 @@ class client extends db_entity {
   function get_list_vars() {
 
     return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options"
-                ,"clientStatus"             => "Client status eg: current | potential | archived"
+                ,"clientStatus"             => "Client status eg: Current | Potential | Archived"
                 ,"clientCategory"           => "Client category eg: 1-7"
                 ,"clientName"               => "Client name like *something*"
                 ,"contactName"              => "Client Contact name like *something*"
@@ -278,7 +278,7 @@ class client extends db_entity {
       $_FORM = $current_user->prefs[$_FORM["form_name"]];
       if (!isset($current_user->prefs[$_FORM["form_name"]])) {
         $_FORM["clientLetter"] = "A";
-        $_FORM["clientStatus"] = "current";
+        $_FORM["clientStatus"] = "Current";
       }
 
     } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
@@ -299,7 +299,9 @@ class client extends db_entity {
     // Load up the forms action url
     $rtn["url_form_action"] = $_FORM["url_form_action"];
 
-    $rtn["clientStatusOptions"] = page::select_options(array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived"), $_FORM["clientStatus"]);
+    $m = new meta("clientStatus");
+    $clientStatus_array = $m->get_assoc_array("clientStatusID","clientStatusID");
+    $rtn["clientStatusOptions"] = page::select_options($clientStatus_array, $_FORM["clientStatus"]);
     $rtn["clientName"] = $_FORM["clientName"];
     $rtn["contactName"] = $_FORM["contactName"];
     $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ALL");
@@ -371,7 +373,7 @@ class client extends db_entity {
     $client->set_id($clientID);
     $client->select();
 
-    $options["clientStatus"] = "current";
+    $options["clientStatus"] = "Current";
     $options["return"] = "dropdown_options";
     $ops = client::get_list($options);
 

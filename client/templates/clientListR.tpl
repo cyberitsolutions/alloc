@@ -8,7 +8,7 @@
 {if $_FORM["showPrimaryContactName"]}  <td>{=$clientContactName}</td>{/}
 {if $_FORM["showPrimaryContactPhone"]} <td>{=$clientContactPhone}</td>{/}
 {if $_FORM["showPrimaryContactEmail"]} <td>{$clientContactEmail}</td>{/}
-{if $_FORM["showClientStatus"]}        <td>{echo ucwords($clientStatus)}</td>{/}
+{if $_FORM["showClientStatus"]}        <td>{$clientStatus}</td>{/}
 {if $_FORM["showClientCategory"]}      <td>{$clientCategoryLabel}</td>{/}
 </tr>
 

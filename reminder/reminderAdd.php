@@ -60,7 +60,7 @@ case 2:
 
   $db = new db_alloc;
   if ($parentType == "client") {
-    $query = "SELECT * FROM client WHERE clientStatus!='archived' ORDER BY clientName";
+    $query = "SELECT * FROM client WHERE clientStatus!='Archived' ORDER BY clientName";
     $db->query($query);
     while ($db->next_record()) {
       $client = new client;
