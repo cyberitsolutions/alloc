@@ -383,7 +383,7 @@
       <a href="{$url_alloc_configEdit}configName=projectPriorities">Edit:</a>
       {unset($br)}
       {foreach $TPL["projectPriorities"] as $k => $arr}
-          {$br}<span style="color:{echo $arr["colour"]}">{echo $k." ".$arr["label"]}</span>
+          {$br}<span style="color:{$arr.colour}">{$k} {$arr.label}</span>
           {$br = ", "}
       {/}
     </td> 
@@ -395,7 +395,7 @@
       <a href="{$url_alloc_configEdit}configName=taskPriorities">Edit:</a>
       {unset($br)}
       {foreach $TPL["taskPriorities"] as $k => $arr}
-          {$br}<span style="color:{echo $arr["colour"]}">{echo $k." ".$arr["label"]}</span>
+          {$br}<span style="color:{$arr.colour}">{$k} {$arr.label}</span>
           {$br = ", "}
       {/}
     </td> 
@@ -423,7 +423,7 @@
       <a href="{$url_alloc_configEdit}configName=clientCategories">Edit:</a>
       {unset($br)}
       {foreach $TPL["clientCategories"] as $k => $arr}
-          {echo $br.$arr["label"]}
+          {$br}{$arr.label}
           {$br = ", "}
       {/}
     </td> 

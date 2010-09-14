@@ -23,8 +23,8 @@
         <tr class="tso_row">
           <td><input type="text" name="status[]" value="{$key}"></td>
           <td><input type="text" name="subStatus[]" value="{$subStatus}"></td>
-          <td><input type="text" name="label[]" value="{echo $data["label"]}"></td>
-          <td><input type="text" name="colour[]" value="{echo $data["colour"]}" size="40"></td>
+          <td><input type="text" name="label[]" value="{$data.label}"></td>
+          <td><input type="text" name="colour[]" value="{$data.colour}" size="40"></td>
           <td><a href="#x" class="magic" onClick="$(this).parent().parent().remove();">Remove</a></td>
         </tr>
           {/}

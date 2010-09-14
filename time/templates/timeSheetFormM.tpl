@@ -23,7 +23,7 @@
         {$timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions")}
         {$timeSheetPrint = config::get_config_item("timeSheetPrint")}
         {foreach $timeSheetPrint as $value}
-          <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&{$value}">{echo $timeSheetPrintOptions[$value]}</a>
+          <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&{$value}">{$timeSheetPrintOptions.$value}</a>
         {/}
       {/}
     </th>
