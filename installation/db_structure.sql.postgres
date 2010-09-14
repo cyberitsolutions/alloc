@@ -36,7 +36,7 @@ CREATE TABLE client (
   clientComment text,
   clientModifiedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
   clientModifiedUser integer DEFAULT NULL,
-  clientStatus varchar(255) NOT NULL default 'current',
+  clientStatus varchar(255) NOT NULL default 'Current',
   clientCategory integer DEFAULT 1,
   clientCreatedTime TIMESTAMP WITHOUT TIME ZONE default NULL
 ) ;

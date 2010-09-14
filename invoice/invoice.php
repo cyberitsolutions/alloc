@@ -619,7 +619,7 @@ if ($current_user->have_role('admin')) {
     <input type=\"submit\" name=\"save\" value=\"Save\"> 
     <input type=\"submit\" name=\"save_and_MoveForward\" value=\"".$statii["reconcile"]." --&gt;\"> 
     ";
-    $options["clientStatus"] = "current";
+    $options["clientStatus"] = "Current";
     $options["return"] = "dropdown_options";
     $ops = client::get_list($options);
     $TPL["field_clientID"] = $client_select;
@@ -660,7 +660,7 @@ if ($current_user->have_role('admin')) {
 }
 
 if (!$invoice->get_value("clientID")) {
-  $options["clientStatus"] = "current";
+  $options["clientStatus"] = "Current";
   $options["return"] = "dropdown_options";
   $ops = client::get_list($options);
   $TPL["field_clientID"] = $client_select;

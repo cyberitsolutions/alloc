@@ -39,7 +39,7 @@ CREATE TABLE client (
   clientComment text,
   clientModifiedTime datetime DEFAULT NULL,
   clientModifiedUser integer DEFAULT NULL,
-  clientStatus varchar(255) NOT NULL default 'current',
+  clientStatus varchar(255) NOT NULL default 'Current',
   clientCategory integer DEFAULT 1,
   clientCreatedTime datetime default NULL
 ) ENGINE=InnoDB PACK_KEYS=0;

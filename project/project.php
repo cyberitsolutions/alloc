@@ -355,8 +355,8 @@ if ($_POST["save"]) {
     $client = new client;
     $client->set_id($project->get_value("clientID"));
     $client->select();
-    if ($client->get_value("clientStatus") == 'potential') {
-      $client->set_value("clientStatus", "current");
+    if ($client->get_value("clientStatus") == 'Potential') {
+      $client->set_value("clientStatus", "Current");
       $client->save();
     }
    

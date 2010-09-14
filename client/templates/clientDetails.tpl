@@ -6,7 +6,7 @@
             <b>Client Name:</b> {=$client_clientName}<br>
             <b>Phone:</b> {=$client_clientPhoneOne}<br>
             <b>Fax:</b> {=$client_clientFaxOne}<br>
-            <b>Status:</b> {=ucwords($client_clientStatus)}<br>
+            <b>Status:</b> {=$client_clientStatus}<br>
             <b>Category:</b> {=$client_clientCategoryLabel}
           </td>
         </tr>
