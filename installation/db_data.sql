@@ -16,10 +16,10 @@ INSERT INTO invoiceStatus (invoiceStatusID, invoiceStatusSeq, invoiceStatusActiv
 INSERT INTO itemType (itemTypeID, itemTypeSeq, itemTypeActive) VALUES ('cd',1,true);
 INSERT INTO itemType (itemTypeID, itemTypeSeq, itemTypeActive) VALUES ('book',2,true);
 INSERT INTO itemType (itemTypeID, itemTypeSeq, itemTypeActive) VALUES ('other',3,true);
-INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('contract',1,true);
-INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('job',2,true);
-INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('project',3,true);
-INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('prepaid',4,true);
+INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('Project',1,true);
+INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('Contract',2,true);
+INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('Job',3,true);
+INSERT INTO projectType (projectTypeID, projectTypeSeq, projectTypeActive) VALUES ('Prepaid',4,true);
 INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('AUD',1,true);
 INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('USD',2,true);
 INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('NZD',3,true);
