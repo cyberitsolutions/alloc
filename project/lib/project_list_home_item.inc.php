@@ -33,7 +33,7 @@ class project_list_home_item extends home_item {
     }
     
     $options["showHeader"] = true;
-    $options["projectStatus"] = "current";
+    $options["projectStatus"] = "Current";
     $options["personID"] = $current_user->get_id();
     $options["showProjectLink"] = 1;
     if ($_GET["media"] != "print") {

@@ -467,7 +467,7 @@ class person extends db_entity {
   
       if ($_FORM["showLinks"]) {
         $row["navLinks"] = '<a href="'.$TPL["url_alloc_taskList"].'personID='.$row["personID"].'&taskView=byProject&applyFilter=1';
-        $row["navLinks"].= '&dontSave=1&taskStatus=open&projectType=curr">Tasks</a>&nbsp;&nbsp;';
+        $row["navLinks"].= '&dontSave=1&taskStatus=open&projectType=Current">Tasks</a>&nbsp;&nbsp;';
         $row["navLinks"].= '<a href="'.$TPL["url_alloc_personGraph"].'personID='.$row["personID"].'">Graph</a>&nbsp;&nbsp;';
         $row["navLinks"].= '<a href="'.$TPL["url_alloc_taskCalendar"].'personID='.$row["personID"].'">Calendar</a>';
       }

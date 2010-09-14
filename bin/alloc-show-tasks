@@ -32,7 +32,7 @@ if a.is_num(o['project']):
 elif o['project']:
   filter = {}
   filter["personID"] = personID
-  filter["projectStatus"] = "current"
+  filter["projectStatus"] = "Current"
   filter["projectName"] = o['project']
   projects = a.get_list("project",filter)
   if not projects or len(projects) == 0:

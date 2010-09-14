@@ -567,7 +567,7 @@ class task extends db_entity {
     $db = new db_alloc;
     $query = sprintf("SELECT projectID AS value, projectName AS label 
                         FROM project 
-                       WHERE projectStatus IN ('current', 'potential') 
+                       WHERE projectStatus IN ('Current', 'Potential') 
                     ORDER BY projectName");
     $str = page::select_options($query, $projectID, 60);
     return $str;
@@ -1549,7 +1549,7 @@ class task extends db_entity {
                 ,"managerID"            => "The person managing task"
                 ,"personID"             => "The person assigned to the task"
                 ,"parentTaskID"         => "ID of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0"
-                ,"projectType"          => "mine | pm | tsm | pmORtsm | curr | pote | arch | all"
+                ,"projectType"          => "mine | pm | tsm | pmORtsm | Current | Potential | Archived | all"
                 ,"applyFilter"          => "Saves this filter as the persons preference"
                 ,"padding"              => "Initial indentation level (useful for byProject lists)"
                 ,"url_form_action"      => "The submit action for the filter form"
@@ -1634,7 +1634,7 @@ class task extends db_entity {
     // Load up the filter bits
     $rtn["projectOptions"] = project::get_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
 
-    $_FORM["projectType"] and $rtn["projectType_checked_".$_FORM["projectType"]] = " checked"; 
+    $_FORM["projectType"] and $rtn["projectType_checked"][$_FORM["projectType"]] = " checked"; 
 
     $rtn["personOptions"] = "\n<option value=\"\"> ";
     $rtn["personOptions"].= page::select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);

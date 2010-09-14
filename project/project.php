@@ -664,7 +664,9 @@ $email_type_array = array("None"=>"None", "Assigned Tasks"=>"Assigned Tasks", "A
 $t = new meta("currencyType");
 $currency_array = $t->get_assoc_array("currencyTypeID","currencyTypeID");
 $projectType_array = project::get_project_type_array();
-$projectStatus_array = array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived");
+
+$m = new meta("projectStatus");
+$projectStatus_array = $m->get_assoc_array("projectStatusID","projectStatusID");
 $timeUnit = new timeUnit;
 $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
 $TPL["project_projectType"] = $projectType_array[$TPL["project_projectType"]];
@@ -703,13 +705,13 @@ if ($new_project && !(is_object($project) && $project->get_id())) {
           <tr>
             <td colspan="2">
               <label for="project_status_current">Current Projects</label>
-              <input id="project_status_current" type="radio" name="project_status"  value="curr" checked>
+              <input id="project_status_current" type="radio" name="project_status"  value="Current" checked>
               &nbsp;&nbsp;&nbsp;
               <label for="project_status_potential">Potential Projects</label>
-              <input id="project_status_potential" type="radio" name="project_status"  value="pote">
+              <input id="project_status_potential" type="radio" name="project_status"  value="Potential">
               &nbsp;&nbsp;&nbsp;
               <label for="project_status_archived">Archived Projects</label>
-              <input id="project_status_archived" type="radio" name="project_status"  value="arch">
+              <input id="project_status_archived" type="radio" name="project_status"  value="Archived">
             </td>
           </tr>
           <tr>

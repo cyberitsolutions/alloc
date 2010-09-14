@@ -33,7 +33,7 @@ $(document).ready(function() {
   // This opens up the copy_project div and loads the dropdown list
   $('#copy_project_link').bind("click", function(e) {
     $('#copy_project').slideToggle();
-    url = '{$url_alloc_updateCopyProjectList}projectStatus=curr';
+    url = '{$url_alloc_updateCopyProjectList}projectStatus=Current';
     makeAjaxRequest(url,'projectDropdown')
   });
 
@@ -153,7 +153,7 @@ function clickClientStatus(e) {
             {=$project_projectShortName}
           </div>
           <div style="float:right; width:50%;">
-            {echo ucwords($project_projectStatus)}
+            {$project_projectStatus}
           </div>
         </div>
 

@@ -529,7 +529,7 @@ if ($timeSheet->get_value("approvedByAdminPersonID")) {
 
 // display the project name.
 if ($timeSheet->get_value("status") == 'edit' && !$timeSheet->get_value("projectID")) {
-  $query = sprintf("SELECT * FROM project WHERE projectStatus = 'current' ORDER by projectName");
+  $query = sprintf("SELECT * FROM project WHERE projectStatus = 'Current' ORDER by projectName");
     #.sprintf("  LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ")
     #.sprintf("WHERE projectPerson.personID = '%d' ORDER BY projectName", $current_user->get_id());
 } else {
