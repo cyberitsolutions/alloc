@@ -382,7 +382,7 @@ if ($_POST["save"]
   }
 
   // If it's a Pre-paid project, join this time sheet onto an invoice
-  if (is_object($project) && $project->get_id() && $project->get_value("projectType") == "prepaid") {
+  if (is_object($project) && $project->get_id() && $project->get_value("projectType") == "Prepaid") {
     $invoiceID = $project->get_prepaid_invoice();
 
     if (!$invoiceID) {

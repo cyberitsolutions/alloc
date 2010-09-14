@@ -456,7 +456,7 @@ class project extends db_entity {
                 ,"projectID"          => "The Project ID"
                 ,"projectStatus"      => "Status of the project eg: current | potential | archived"
                 ,"clientID"           => "Show projects that are owned by this Client"
-                ,"projectType"        => "Type of project eg: contract | job | project"
+                ,"projectType"        => "Type of project eg: Contract | Job | Project | Prepaid"
                 ,"personID"           => "Projects that have this person on them."
                 ,"projectName"        => "Project name like *something*"
                 ,"limit"              => "Limit the number of records returned"
@@ -510,7 +510,7 @@ class project extends db_entity {
 
     $rtn["personSelect"] = $personSelect;
     $rtn["projectStatusOptions"] = page::select_options(array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived"), $_FORM["projectStatus"]);
-    $rtn["projectTypeOptions"] = page::select_options(array("project"=>"Project", "job"=>"Job", "contract"=>"Contract"), $_FORM["projectType"]);
+    $rtn["projectTypeOptions"] = page::select_options(project::get_project_type_array(), $_FORM["projectType"]);
     $rtn["projectName"] = $_FORM["projectName"];
 
 
@@ -543,7 +543,8 @@ class project extends db_entity {
   }
 
   function get_project_type_array() {
-    return  array("project"=>"Project", "job"=>"Job", "contract"=>"Contract", "prepaid"=>"Pre-Paid");
+    $m = new meta("projectType");
+    return $m->get_assoc_array("projectTypeID","projectTypeID");
   }
 
   function get_project_type() {
