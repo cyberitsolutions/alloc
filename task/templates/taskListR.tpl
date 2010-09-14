@@ -10,12 +10,12 @@
                              <td style="padding-left:{echo $padding*25+6}px">{$taskLink}&nbsp;&nbsp;{$newSubTask}{$str}</td>
 {if $_FORM["showProject"]}   <td><a href="{$url_alloc_project}projectID={$projectID}">{=$project_name}</a></td>{/}
 {if $_FORM["showPriority"]}  <td>{echo sprintf("%0.2f",$priorityFactor)}</td>{/}
-{if $_FORM["showPriority"]}  <td style="color:{$_FORM["taskPriorities"][$priority]["colour"]}">{$_FORM["taskPriorities"][$priority]["label"]}</td>{/}
-{if $_FORM["showPriority"]}  <td style="color:{$_FORM["projectPriorities"][$projectPriority]["colour"]}">{$_FORM["projectPriorities"][$projectPriority]["label"]}</td>{/}
+{if $_FORM["showPriority"]}  <td style="color:{$_FORM.taskPriorities.$priority.colour}">{$_FORM.taskPriorities.$priority.label}</td>{/}
+{if $_FORM["showPriority"]}  <td style="color:{$_FORM.projectPriorities.$projectPriority.colour}">{$_FORM.projectPriorities.$projectPriority.label}</td>{/}
 {if $_FORM["showDateStatus"]}<td>{$taskDateStatus}</td>{/}
-{if $_FORM["showCreator"]}   <td>{page::htmlentities($_FORM["people_cache"][$creatorID]["name"])}</td>{/}
-{if $_FORM["showManager"]}   <td>{page::htmlentities($_FORM["people_cache"][$managerID]["name"])}</td>{/}
-{if $_FORM["showAssigned"]}  <td>{page::htmlentities($_FORM["people_cache"][$personID]["name"])}</td>{/}
+{if $_FORM["showCreator"]}   <td>{=$_FORM.people_cache.$creatorID.name}</td>{/}
+{if $_FORM["showManager"]}   <td>{=$_FORM.people_cache.$managerID.name}</td>{/}
+{if $_FORM["showAssigned"]}  <td>{=$_FORM.people_cache.$personID.name}</td>{/}
 {if $_FORM["showDate1"]}     <td class="nobr">{$dateTargetStart}</td>{/}
 {if $_FORM["showDate2"]}     <td class="nobr">{$dateTargetCompletion}</td>{/}
 {if $_FORM["showDate3"]}     <td class="nobr">{$dateActualStart}</td>{/}

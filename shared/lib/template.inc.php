@@ -36,6 +36,34 @@ function fix_curly_braces($matches) {
   return $str;
 }
 
+
+// This function basically returns: echo $var; $var can be a multi-dimensional 
+// array. $var can also be html entity protected if prefixed with the equals sign.
+function echo_var($matches) {
+  $str = $matches[1];
+  if (substr($str,0,1) == "=") {
+    $str = preg_replace("/^=/","",$str);
+    $starts_with_equals = true;
+  }
+
+  // If it doesn't have periods in it, then explode will 
+  // return an array with one element, the entire string
+  $bits = explode(".",$str);
+
+  // Build up something like $var["little"][$colour]["riding"]["hood"]
+  // array_shift returns the 0th element, and shortens the array by one
+  $var = array_shift($bits); 
+  foreach ($bits as $b) {
+    $var.= substr($b,0,1)=='$' ? '['.$b.']' : '["'.$b.'"]';
+  }
+
+  if ($var && $starts_with_equals) {
+    return '<?php echo page::htmlentities('.$var.'); ?>';
+  } else if ($var) {
+    return '<?php echo '.$var.'; ?>';
+  }
+}
+
 // Read a template and return the mixed php/html, ready for processing
 function get_template($filename) {
 
@@ -54,22 +82,12 @@ function get_template($filename) {
   $pattern = "/<style.*<\/style>/Uis";
   $template = preg_replace_callback($pattern,"fix_curly_braces",$template);
 
-  // Replace {$arr.something} with echo $arr["something"]; 
-  $pattern = '/{\$([\w\d_|]+)\.([^}]+)}/i';
-  $replace = '<?php echo $${1}["${2}"]; ?>';
-  $template = preg_replace($pattern,$replace,$template);
-
-  // Replace {$var_name} with echo $var_name;
-  // The various []$'" are to allow for stuff like $_FORM["select"]['array'][$element].
-  // This is more flexible than the {$arr.blah} above
-  $pattern = '/{(\$[\w\d_"\'\[\]\$]+)}/i';
-  $replace = '<?php echo ${1}; ?>';
-  $template = preg_replace($pattern,$replace,$template);
-
-  // Replace {=$var_name} with echo page::htmlentities($var_name);
-  $pattern = '/{=([^}]+)}/i';
-  $replace = '<?php echo page::htmlentities(${1}); ?>';
-  $template = preg_replace($pattern,$replace,$template);
+  // Replace {$hello}           with: echo $hello
+  // Replace {=$hello}          with: echo page::htmlentities($hello)
+  // Replace {$arr.here.we.go}  with: echo $arr["here"]["we"]["go"]
+  // Replace {$arr.here.$we.go} with: echo $arr["here"][$we]["go"]
+  $pattern = '/{(=?\$[\w\d_\.\$]+)}/i';
+  $template = preg_replace_callback($pattern,"echo_var",$template);
 
   // Replace {if hey}    with if (hey) { 
   // Replace {while hey} with while (hey) { 
@@ -77,7 +95,6 @@ function get_template($filename) {
   $pattern = '/{(if|while|foreach){1} ([^}]*)}/i';
   $replace = '<?php ${1} (${2}) TPL_START_BRACE ?>';
   $template = preg_replace($pattern,$replace,$template);
-
   
   // Replace {else with {TPL_END_BRACE else
   $pattern = '{else';
@@ -119,7 +136,6 @@ function get_template($filename) {
 function include_template($filename, $getString=false) {
   global $TPL, $current_user;
   $TPL["current_user"] = $current_user;
-  #echo "<!-- Start $filename -->\n";
   $template = get_template($filename);
   #echo "<pre>".htmlspecialchars($template)."</pre>"; 
 
@@ -138,8 +154,6 @@ function include_template($filename, $getString=false) {
     // it as a string.
     return (string)ob_get_clean();
   }
-
-  #echo "<!-- End $filename -->\n";
 } 
 
 

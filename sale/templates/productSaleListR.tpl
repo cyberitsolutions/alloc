@@ -5,6 +5,6 @@
   <td class="nobr">{=$clientName}</td>
   <td class="nobr">{=$projectName}</td>
   <td class="nobr">{$statusLabel}</td>
-  <td class="right nobr">{echo $sale["amounts"]["total_margin"]}</td>
-  <td class="right nobr">{echo $sale["amounts"]["total_unallocated"]}</td>
+  <td class="right nobr">{$sale.amounts.total_margin}</td>
+  <td class="right nobr">{$sale.amounts.total_unallocated}</td>
 </tr>

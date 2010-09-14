@@ -22,7 +22,7 @@
       </tr>
       <tr>
         <td align="right" class="transaction-approved"><strong>Opening Balance:</strong></td> 
-        <td align="left" class="transaction-approved">${$totals["opening_balance"]}</td>
+        <td align="left" class="transaction-approved">${$totals.opening_balance}</td>
       </tr>
     </table>
     </td>
