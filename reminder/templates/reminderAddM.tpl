@@ -52,7 +52,7 @@
     </tr>
     <tr>
       <td valign="top">Content:</td>
-      <td colspan="2">{page::textarea("reminder_content",$TPL["reminder_default_content"],array("height"=>"medium"))}</td>
+      <td colspan="2">{page::textarea("reminder_content",$reminder_default_content,array("height"=>"medium"))}</td>
     </tr>
     <tr>
       <td colspan="4" align="center">{$reminder_buttons}&nbsp;&nbsp;&nbsp;{$reminder_goto_parent}</td>

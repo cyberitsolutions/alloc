@@ -19,7 +19,7 @@
   <tr>
     <th colspan="3">{page::help("timesheet_overview")}Time Sheet</th>  
     <th class="right" colspan="2">
-      {if $TPL["timeSheet_timeSheetID"]}
+      {if $timeSheet_timeSheetID}
         {$timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions")}
         {$timeSheetPrint = config::get_config_item("timeSheetPrint")}
         {foreach $timeSheetPrint as $value}
@@ -99,12 +99,12 @@
     <td><b>{$amount_used}{$amount_allocated}</b></td>
   </tr>
 
-  {if $TPL["timeSheet_billingNote"]}
+  {if $timeSheet_billingNote}
   <tr>
     <td valign="top"></td>
     <td align="right" valign="top">Billing Note</td>
-    <td colspan="2" valign="top">{if $TPL["timeSheet_status"] != "finished"}
-                                   {page::textarea("timeSheet_billingNote",$TPL["timeSheet_billingNote"])}
+    <td colspan="2" valign="top">{if $timeSheet_status != "finished"}
+                                   {page::textarea("timeSheet_billingNote",$timeSheet_billingNote)}
                                  {else}
                                    {$timeSheet_billingNote}
                                  {/}

@@ -12,15 +12,15 @@
   </tr>
   <tr>
     <td>Display From</td>
-    <td>{page::calendar("displayFromDate",$TPL["displayFromDate"])}</td>
+    <td>{page::calendar("displayFromDate",$displayFromDate)}</td>
   </tr>
   <tr>
     <td>Display To</td>
-    <td>{page::calendar("displayToDate",$TPL["displayToDate"])}</td>
+    <td>{page::calendar("displayToDate",$displayToDate)}</td>
   </tr>
   <tr>
     <td>Body</td>
-    <td>{page::textarea("body",$TPL["body"],array("height"=>"jumbo"))}</td>
+    <td>{page::textarea("body",$body,array("height"=>"jumbo"))}</td>
   </tr>
   <tr>
     <td colspan="2" align="center">

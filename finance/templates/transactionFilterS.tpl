@@ -22,8 +22,8 @@
                 <td align="left">&nbsp;</td>
               </tr>
               <tr>
-                <td>{page::calendar("startDate",$TPL["startDate"])}</td>
-                <td>{page::calendar("endDate",$TPL["endDate"])}</td>
+                <td>{page::calendar("startDate",$startDate)}</td>
+                <td>{page::calendar("endDate",$endDate)}</td>
                 <td><select name="transactionType"><option value=""> {$transactionTypeOptions}</select></td>
                 <td><select name="status"><option value=""> {$statusOptions}</select></td>
                 <td>

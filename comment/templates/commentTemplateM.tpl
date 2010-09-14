@@ -16,7 +16,7 @@
   </tr>
   <tr>
     <td class="top">Text</td>
-    <td class="top center">{page::textarea("commentTemplateText",$TPL["commentTemplateText"],array("height"=>"jumbo"))}
+    <td class="top center">{page::textarea("commentTemplateText",$commentTemplateText,array("height"=>"jumbo"))}
       <br>
       <input type="submit" value="Save" name="save">
       <input type="submit" value="Delete" name="delete" class="delete_button">

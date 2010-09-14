@@ -5,7 +5,7 @@
   <tr>
     <th colspan="4">Setup Item Edit</th>
   </tr>
-  {$rows = config::get_config_item($TPL["configName"],true) or $rows=array()}
+  {$rows = config::get_config_item($configName,true) or $rows=array()}
   {foreach $rows as $key => $value}
 
   {if is_array($value) && !isset($count_array)}

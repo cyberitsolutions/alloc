@@ -17,7 +17,7 @@
           <th>CSS Decoration</th>
           <th class="right"><a href="#x" class="magic" onClick="$('#tso_footer').before('<tr>'+$('.tso_row:last').html()+'</tr>');">New</a></th>
         </tr>
-        {$rows = config::get_config_item($TPL["configName"],true) or $rows=array()}
+        {$rows = config::get_config_item($configName,true) or $rows=array()}
         {foreach $rows as $key => $value}
           {foreach $value as $subStatus => $data}
         <tr class="tso_row">

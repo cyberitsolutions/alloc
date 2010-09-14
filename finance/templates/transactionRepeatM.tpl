@@ -17,8 +17,8 @@
   </tr>
   <tr>
     <td><select name="paymentBasis" value="{$paymentBasis}">{$basisOptions}</select></td>
-    <td>{page::calendar("transactionStartDate",$TPL["transactionStartDate"])}</td>
-    <td>{page::calendar("transactionFinishDate",$TPL["transactionFinishDate"])}</td>
+    <td>{page::calendar("transactionStartDate",$transactionStartDate)}</td>
+    <td>{page::calendar("transactionFinishDate",$transactionFinishDate)}</td>
   </tr>
 	<tr>
 	  <td><b>Product/Service{page::mandatory($product)}</b></td>
@@ -36,7 +36,7 @@
  	</tr>
 
   <tr>
-    <td colspan="2" rowspan="3" valign="top"><b>Company Details{page::mandatory($companyDetails)}</b><br>{page::textarea("companyDetails",$TPL["companyDetails"], array("cols"=>40))}</td>
+    <td colspan="2" rowspan="3" valign="top"><b>Company Details{page::mandatory($companyDetails)}</b><br>{page::textarea("companyDetails",$companyDetails, array("cols"=>40))}</td>
     <td rowspan="3" colspan="3">
       <nobr><b>Reminder email</b><br><input type="text" size="40" name="emailOne" value="{$emailOne}"></nobr><br>
       <nobr><b>Reminder email</b><br><input type="text" size="40" name="emailTwo" value="{$emailTwo}"></nobr>

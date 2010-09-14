@@ -62,7 +62,7 @@
   </tr>
   <tr>
     <td valign="top">Comment</td>
-    <td colspan="2" valign="top">{page::textarea("comment",$TPL["comment"])}</td>
+    <td colspan="2" valign="top">{page::textarea("comment",$comment)}</td>
   </tr>
   <tr>
     <td align="center" colspan="3">

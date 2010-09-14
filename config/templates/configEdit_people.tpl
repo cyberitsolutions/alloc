@@ -5,7 +5,7 @@
   <tr>
     <th colspan="4">Setup Item Edit</th>
   </tr>
-  {$rows = config::get_config_item($TPL["configName"],true) or $rows=array()}
+  {$rows = config::get_config_item($configName,true) or $rows=array()}
   {foreach $rows as $key => $value}
 
   <tr>
@@ -43,7 +43,7 @@
           <td></td>
           <td>
             <select name="value">
-              {echo page::select_options(person::get_username_list())};
+              {page::select_options(person::get_username_list())};
             </select>
           <td>
             <input type="submit" name="save" value="Add">

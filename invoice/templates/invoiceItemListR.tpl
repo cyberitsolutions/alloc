@@ -6,8 +6,8 @@
   <td class="nobr" align="right">{$status_label}</td>
 </tr>
 <tr>
-  {$str = $TPL["invoiceItem_buttons_top"].$TPL["invoiceItem_buttons"]}
-  {$str && $TPL["transaction_info"] and $TPL["transaction_info"] = "<br>".$TPL["transaction_info"]}
+  {$str = $invoiceItem_buttons_top.$invoiceItem_buttons}
+  {$str && $transaction_info and $transaction_info = "<br>".$transaction_info}
   <td colspan="4" class="right">{$invoiceItem_buttons_top}{$invoiceItem_buttons}{$transaction_info}</td>
 </tr>
 </table>
