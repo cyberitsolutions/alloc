@@ -221,8 +221,10 @@ if ($_POST["install_db"] && is_object($db)) {
   $db->select_db($_FORM["ALLOC_DB_NAME"]);
   #$link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
   #@mysql_select_db($_FORM["ALLOC_DB_NAME"], $link);
-
-  $files = array("../installation/db_structure.sql","../installation/db_data.sql");
+  $files = array();
+  $files[] = "../installation/db_structure.sql";
+  $files[] = "../installation/db_data.sql";
+  $files[] = "../installation/db_constraints.sql";
 
   foreach ($files as $file) {
     list($sql,$comments) = parse_sql_file($file);
@@ -272,14 +274,14 @@ To remove this announcement click on the Tools tab and then click the
 Announcements link.
 EOD;
 
-  // Insert new announcement
-  $query = "INSERT INTO announcement (heading, body, personID,displayFromDate,displayToDate) VALUES (\"Getting Started in allocPSA\",\"".db_esc($body)."\",1,'2000-01-01','2030-01-01')";
+  // Insert new person
+  $query = sprintf("INSERT INTO person (username,password,personActive,perms) VALUES ('alloc','%s',1,'god,admin,manage,employee')",encrypt_password("alloc"));
   if (!$db->query($query)) {
     $errors[] = "Error! (".mysql_error().").";
   }
 
-  // Insert new person
-  $query = sprintf("INSERT INTO person (username,password,personActive,perms) VALUES ('alloc','%s',1,'god,admin,manage,employee')",encrypt_password("alloc"));
+  // Insert new announcement
+  $query = "INSERT INTO announcement (heading, body, personID,displayFromDate,displayToDate) VALUES (\"Getting Started in allocPSA\",\"".db_esc($body)."\",1,'2000-01-01','2030-01-01')";
   if (!$db->query($query)) {
     $errors[] = "Error! (".mysql_error().").";
   }

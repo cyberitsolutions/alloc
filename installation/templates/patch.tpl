@@ -28,8 +28,8 @@
       </form>
     </td>
     <td valign="top" class="nobr">{$file}&nbsp;</td>
-    <td valign="top">{echo nl2br(page::htmlentities(implode("\n",$comments)))}&nbsp;</td>
-    <td valign="top">{echo nl2br(page::htmlentities(implode("\n",$code)))}&nbsp;</td>
+    <td valign="top">{page::to_html(implode("\n",$comments))}&nbsp;</td>
+    <td valign="top">{page::to_html(implode("\n",$code))}&nbsp;</td>
   </tr>
   {/}
 {/}
