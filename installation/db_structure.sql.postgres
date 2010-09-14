@@ -212,7 +212,7 @@ CREATE TABLE project (
   projectBudget DECIMAL(19,2) DEFAULT NULL,
   currencyType varchar(255) default NULL,
   projectShortName varchar(255) default NULL,
-  projectStatus varchar(255) NOT NULL default 'current',
+  projectStatus varchar(255) NOT NULL default 'Current',
   projectPriority integer default NULL,
   is_agency boolean default false,
   cost_centre_tfID integer default NULL,

@@ -221,7 +221,7 @@ class reminder extends db_entity {
     if ($type == "project") {
       $project = new project;
       $project->set_id($this->get_value('reminderLinkID'));
-      if ($project->select() == false || $project->get_value('projectStatus') == "archived") {
+      if ($project->select() == false || $project->get_value('projectStatus') == "Archived") {
         return false;
       }
     } else if ($type == "task") {

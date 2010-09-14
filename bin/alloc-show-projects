@@ -33,7 +33,7 @@ elif o['project']:
   filter["projectID"] = a.search_for_project(o['project'],personID)
 
 filter["personID"] = personID
-filter["projectStatus"] = "current"
+filter["projectStatus"] = "Current"
 
 projects = {}
 projects = a.get_list("project",filter)

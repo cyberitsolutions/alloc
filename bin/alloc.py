@@ -32,7 +32,7 @@ class alloc:
     if projectName:
       filter = {}
       filter["personID"] = personID
-      filter["projectStatus"] = "current"
+      filter["projectStatus"] = "Current"
       filter["projectName"] = projectName
       projects = self.get_list("project",filter)
       if len(projects) == 0:

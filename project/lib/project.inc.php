@@ -272,24 +272,18 @@ class project extends db_entity {
                   ORDER BY project.projectName"
                   ,$personID, $projectStatus_sql);
 
-    } else if ($type == "curr") {
-      $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = 'current' ORDER BY projectName");
-
-    } else if ($type == "pote") {
-      $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = 'potential' ORDER BY projectName");
-
-    } else if ($type == "arch") {
-      $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = 'archived' ORDER BY projectName");
-
     } else if ($type == "all") {
       $q = sprintf("SELECT projectID,projectName FROM project ORDER BY projectName");
+
+    } else if ($type) {
+      $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = '%s' ORDER BY projectName",db_esc($type));
     }
     return $q;
   }
 
   function get_list_by_client($clientID=false) {
     $clientID and $options["clientID"] = $clientID;
-    $options["projectStatus"] = "current";
+    $options["projectStatus"] = "Current";
     $options["showProjectType"] = true;
     $options["return"] = "dropdown_options";
     #global $current_user;
@@ -454,7 +448,7 @@ class project extends db_entity {
    
     return array("return"             => "[MANDATORY] eg: array | html | dropdown_options"
                 ,"projectID"          => "The Project ID"
-                ,"projectStatus"      => "Status of the project eg: current | potential | archived"
+                ,"projectStatus"      => "Status of the project eg: Current | Potential | Archived"
                 ,"clientID"           => "Show projects that are owned by this Client"
                 ,"projectType"        => "Type of project eg: Contract | Job | Project | Prepaid"
                 ,"personID"           => "Projects that have this person on them."
@@ -485,7 +479,7 @@ class project extends db_entity {
     if (!$_FORM["applyFilter"]) {
       $_FORM = $current_user->prefs[$_FORM["form_name"]];
       if (!isset($current_user->prefs[$_FORM["form_name"]])) {
-        $_FORM["projectStatus"] = "current";
+        $_FORM["projectStatus"] = "Current";
         $_FORM["personID"] = $current_user->get_id();
       }
 
@@ -509,7 +503,9 @@ class project extends db_entity {
     $personSelect.= "</select>";
 
     $rtn["personSelect"] = $personSelect;
-    $rtn["projectStatusOptions"] = page::select_options(array("current"=>"Current", "potential"=>"Potential", "archived"=>"Archived"), $_FORM["projectStatus"]);
+    $m = new meta("projectStatus");
+    $projectStatus_array = $m->get_assoc_array("projectStatusID","projectStatusID");
+    $rtn["projectStatusOptions"] = page::select_options($projectStatus_array, $_FORM["projectStatus"]);
     $rtn["projectTypeOptions"] = page::select_options(project::get_project_type_array(), $_FORM["projectType"]);
     $rtn["projectName"] = $_FORM["projectName"];
 

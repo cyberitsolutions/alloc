@@ -216,7 +216,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("clientID")) {
 
 $q = "SELECT projectID AS value, projectName AS label 
         FROM project 
-       WHERE projectStatus = 'current' 
+       WHERE projectStatus = 'Current' 
              ".$clientID_sql." 
     ORDER BY projectName";
 $TPL["projectOptions"] = page::select_options($q, $selectedProjectID);

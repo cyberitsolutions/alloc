@@ -24,9 +24,9 @@ INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) V
 INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('USD',2,true);
 INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('NZD',3,true);
 INSERT INTO currencyType (currencyTypeID, currencyTypeSeq, currencyTypeActive) VALUES ('CAD',4,true);
-INSERT INTO projectStatus (projectStatusID, projectStatusSeq, projectStatusActive) VALUES ('current',1,true);
-INSERT INTO projectStatus (projectStatusID, projectStatusSeq, projectStatusActive) VALUES ('potential',2,true);
-INSERT INTO projectStatus (projectStatusID, projectStatusSeq, projectStatusActive) VALUES ('archived',3,true);
+INSERT INTO projectStatus (projectStatusID, projectStatusSeq, projectStatusActive) VALUES ('Current',1,true);
+INSERT INTO projectStatus (projectStatusID, projectStatusSeq, projectStatusActive) VALUES ('Potential',2,true);
+INSERT INTO projectStatus (projectStatusID, projectStatusSeq, projectStatusActive) VALUES ('Archived',3,true);
 INSERT INTO roleLevel (roleLevelID, roleLevelSeq, roleLevelActive) VALUES ('person',1,true);
 INSERT INTO roleLevel (roleLevelID, roleLevelSeq, roleLevelActive) VALUES ('project',2,true);
 INSERT INTO reminderRecuringInterval (reminderRecuringIntervalID, reminderRecuringIntervalSeq, reminderRecuringIntervalActive) VALUES ('No',1,true);

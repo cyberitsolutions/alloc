@@ -69,13 +69,13 @@ case 2:
     }
   } else if ($parentType == "project") {
     if ($current_user->have_role("admin")) {
-      $query = "SELECT * FROM project WHERE projectStatus != 'archived' ORDER BY projectName";
+      $query = "SELECT * FROM project WHERE projectStatus != 'Archived' ORDER BY projectName";
     } else {
       $query = sprintf("SELECT * 
                           FROM project 
                      LEFT JOIN projectPerson ON project.projectID=projectPerson.projectID 
                          WHERE personID='%d' 
-                           AND projectStatus != 'archived'
+                           AND projectStatus != 'Archived'
                       ORDER BY projectName", $personID);
     }
     $db->query($query);

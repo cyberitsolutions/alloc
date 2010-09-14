@@ -140,7 +140,7 @@ $options = add_tf($transaction->get_value("fromTfID"), $options, "fromTfIDWarnin
 $TPL["tfIDOptions"] = page::select_options($options, $transaction->get_value("tfID"));
 $TPL["fromTfIDOptions"] = page::select_options($options, $transaction->get_value("fromTfID"));
 
-$q = "SELECT projectID as value, projectName as label FROM project WHERE projectStatus = 'current' ORDER BY projectName";
+$q = "SELECT projectID as value, projectName as label FROM project WHERE projectStatus = 'Current' ORDER BY projectName";
 $TPL["projectIDOptions"] = page::select_options($q, $transaction->get_value("projectID"));
 
 $TPL["transactionModifiedUser"] = page::htmlentities(person::get_fullname($TPL["transactionModifiedUser"]));
