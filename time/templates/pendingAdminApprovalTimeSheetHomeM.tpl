@@ -4,5 +4,5 @@
     <th>Person</th>
     <th class="right">Date</th>
   </tr>
-  {$TPL["this"]->show_pending_time_sheets("pendingApprovalTimeSheetHomeR.tpl",true)}
+  {$timeSheet->show_pending_time_sheets("pendingApprovalTimeSheetHomeR.tpl",true)}
 </table>

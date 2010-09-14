@@ -1,8 +1,8 @@
 <table cellspacing="0" border="1" class="panel {$status} {$expense_class}">
 <tr>
   <td colspan="2">{=$companyDetails}</td>
-  <td colspan="2">{if $TPL["projectID"]}<a href="{$url_alloc_project}projectID={$projectID}">{=$projectName}</a>{/}</td>
-  <td width="1%" class="right nobr"><b>[{echo ucwords($TPL["status"])}]</b></td>
+  <td colspan="2">{if $projectID}<a href="{$url_alloc_project}projectID={$projectID}">{=$projectName}</a>{/}</td>
+  <td width="1%" class="right nobr"><b>[{echo ucwords($status)}]</b></td>
 </tr>
 <tr>
   <td>{=$product}</td>

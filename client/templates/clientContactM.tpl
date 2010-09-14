@@ -17,7 +17,7 @@
             <td width="1%">Email</td>
             <td width="1%"><input type="text" name="clientContactEmail" value="{$clientContact_clientContactEmail}"></td>
             <td>Info</td>
-            <td rowspan="5" class="top right">{page::textarea("clientContactOther",$TPL["clientContact_clientContactOther"],array("height"=>"medium","width"=>"100%"))}</td>
+            <td rowspan="5" class="top right">{page::textarea("clientContactOther",$clientContact_clientContactOther,array("height"=>"medium","width"=>"100%"))}</td>
           </tr>
           <tr>
             <td>Address</td>

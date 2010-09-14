@@ -75,7 +75,7 @@
     <td><input type="text" size="5" name="quantity" value="{$quantity}"></td>
     <td><input type="text" size="9" name="amount" value="{$amount}"></td>
     <td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
-    <td><nobr>{page::calendar("transactionDate",$TPL["transactionDate"])}</nobr>
+    <td><nobr>{page::calendar("transactionDate",$transactionDate)}</nobr>
     <td class="right"><input type="submit" name="add" value="Add Expense Form Item"><input type="hidden" name="transactionID" value="{$transactionID}"></td>
   </tr>
 </table>

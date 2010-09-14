@@ -66,7 +66,7 @@
         <th>Description</th>
         <th>Charges</th>
       </tr>
-      {list($rows,$info) = $this_tsp->get_timeSheetItem_list_money($TPL["timeSheetID"])}
+      {list($rows,$info) = $this_tsp->get_timeSheetItem_list_money($timeSheetID)}
       {foreach $rows as $r}
       <tr>
         <td>{echo nl2br($r["desc"])}</td>
@@ -84,7 +84,7 @@
         <th>Description</th>
         <th>Units</th>
       </tr>
-      {list($rows,$info) = $this_tsp->get_timeSheetItem_list_units($TPL["timeSheetID"])}
+      {list($rows,$info) = $this_tsp->get_timeSheetItem_list_units($timeSheetID)}
       {foreach $rows as $r}
       <tr>
         <td>{echo nl2br($r["desc"])}</td>
@@ -104,7 +104,7 @@
 	      <th class="nobr" width="1%" valign="top">Multiplier</th>
         <th valign="top">Description</th>
       </tr>
-      {list($rows,$info) = $this_tsp->get_timeSheetItem_list_items($TPL["timeSheetID"])}
+      {list($rows,$info) = $this_tsp->get_timeSheetItem_list_items($timeSheetID)}
       {foreach $rows as $r}
       <tr>
         <td class="nobr" valign="top">{$r.date}&nbsp;</td>

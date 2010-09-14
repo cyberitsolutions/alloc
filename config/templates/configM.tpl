@@ -26,7 +26,7 @@
 <!-- 
   <tr>
     <td width="20%"><nobr>Time Zone</nobr></td>
-    <td><select name="allocTimezone">{echo page::select_options(get_timezone_array(),$TPL["allocTimezone"])}</select></td>
+    <td><select name="allocTimezone">{page::select_options(get_timezone_array(),$allocTimezone)}</select></td>
     <td width="1%">{page::help("config_allocTimezone")}</td>
   </tr>
   -->
@@ -43,9 +43,9 @@
   <tr>
     <td width="20%"><nobr>Email Addressing Method</nobr></td>
     <td>
-      <label for="eam_to">Use "To:"</label><input id="eam_to" type="radio" name="allocEmailAddressMethod" value="to"{$TPL["allocEmailAddressMethod"] == "to" and print " checked"}>&nbsp;&nbsp;&nbsp;&nbsp;
-      <label for="eam_bcc">Use "Bcc:"</label><input id="eam_bcc" type="radio" name="allocEmailAddressMethod" value="bcc"{$TPL["allocEmailAddressMethod"] == "bcc" and print " checked"}>&nbsp;&nbsp;&nbsp;&nbsp;
-      <label for="eam_tobcc">Use Both with special "To:"</label><input id="eam_tobcc" type="radio" name="allocEmailAddressMethod" value="tobcc"{$TPL["allocEmailAddressMethod"] == "tobcc" and print " checked"}>
+      <label for="eam_to">Use "To:"</label><input id="eam_to" type="radio" name="allocEmailAddressMethod" value="to"{$allocEmailAddressMethod == "to" and print " checked"}>&nbsp;&nbsp;&nbsp;&nbsp;
+      <label for="eam_bcc">Use "Bcc:"</label><input id="eam_bcc" type="radio" name="allocEmailAddressMethod" value="bcc"{$allocEmailAddressMethod == "bcc" and print " checked"}>&nbsp;&nbsp;&nbsp;&nbsp;
+      <label for="eam_tobcc">Use Both with special "To:"</label><input id="eam_tobcc" type="radio" name="allocEmailAddressMethod" value="tobcc"{$allocEmailAddressMethod == "tobcc" and print " checked"}>
     </td> 
     <td width="1%">{page::help("config_allocEmailAddressMethod")}</td>
   </tr>
@@ -156,7 +156,7 @@
   </tr>
   <tr>
     <td width="20%"><nobr>Mail Protocol</nobr></td>
-    <td><select name="allocEmailProtocol">{echo page::select_options(array("imap"=>"IMAP","pop3"=>"POP3"),$TPL["allocEmailProtocol"])}</select></td> 
+    <td><select name="allocEmailProtocol">{page::select_options(array("imap"=>"IMAP","pop3"=>"POP3"),$allocEmailProtocol)}</select></td> 
     <td width="1%">{page::help("config_allocEmailProtocol")}</td>
   </tr>
   <tr>
@@ -370,8 +370,8 @@
     <td valign="top" width="20%"><nobr>Extra Interested Parties Options</nobr></td>
     <td>
       <a href="{$url_alloc_configEdit}configName=defaultInterestedParties">Edit:</a>
-      {foreach $TPL["defaultInterestedParties"] as $k => $v}
-          {echo $br.$k." ".$v}
+      {foreach $defaultInterestedParties as $k => $v}
+          {$br}{$k} {$v}
           {$br = ", "}
       {/}
     </td> 
@@ -382,7 +382,7 @@
     <td>
       <a href="{$url_alloc_configEdit}configName=projectPriorities">Edit:</a>
       {unset($br)}
-      {foreach $TPL["projectPriorities"] as $k => $arr}
+      {foreach $projectPriorities as $k => $arr}
           {$br}<span style="color:{$arr.colour}">{$k} {$arr.label}</span>
           {$br = ", "}
       {/}
@@ -394,7 +394,7 @@
     <td>
       <a href="{$url_alloc_configEdit}configName=taskPriorities">Edit:</a>
       {unset($br)}
-      {foreach $TPL["taskPriorities"] as $k => $arr}
+      {foreach $taskPriorities as $k => $arr}
           {$br}<span style="color:{$arr.colour}">{$k} {$arr.label}</span>
           {$br = ", "}
       {/}
@@ -406,7 +406,7 @@
     <td>
       <a href="{$url_alloc_configEdit}configName=taskStatusOptions">Edit:</a>
       {unset($br)}
-      {foreach $TPL["taskStatusOptions"] as $k => $arr}
+      {foreach $taskStatusOptions as $k => $arr}
         {unset($br2)}
         {$br}
         {foreach $arr as $subStatus => $data}
@@ -422,7 +422,7 @@
     <td>
       <a href="{$url_alloc_configEdit}configName=clientCategories">Edit:</a>
       {unset($br)}
-      {foreach $TPL["clientCategories"] as $k => $arr}
+      {foreach $clientCategories as $k => $arr}
           {$br}{$arr.label}
           {$br = ", "}
       {/}

@@ -102,7 +102,7 @@ $(document).ready(function() {
 
         <div class="edit">
           <h6>Description</h6>
-          {page::textarea("taskDescription",$TPL["task_taskDescription"],array("height"=>"medium","width"=>"100%"))}
+          {page::textarea("taskDescription",$task_taskDescription,array("height"=>"medium","width"=>"100%"))}
         </div>
 
         {if !$task_taskID}
@@ -198,7 +198,7 @@ $(document).ready(function() {
             <input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5">
           </div>
           <div style="float:right;width:50%;">
-            {$time_billed_link} {if $TPL["percentComplete"] && $TPL["percentComplete"] != "0%"}({$percentComplete}){/}
+            {$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}
           </div>
         </div>
 

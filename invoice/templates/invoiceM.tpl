@@ -47,11 +47,11 @@
 </table>
 
 
-{if $TPL["invoiceID"]}
+{if $invoiceID}
 
   {show_new_invoiceItem("templates/invoiceItemForm.tpl")}
 
-  {if count(invoice::get_invoiceItems($TPL["invoiceID"]))}
+  {if count(invoice::get_invoiceItems($invoiceID))}
     <table class="box">
       <tr>
         <th>Invoice Items</th>
@@ -68,7 +68,7 @@
 </form>
 
 {if defined("SHOW_INVOICE_ATTACHMENTS") && SHOW_INVOICE_ATTACHMENTS}
-{show_attachments($TPL["invoiceID"])}
+{show_attachments($invoiceID)}
 {/}
 
 {page::footer()}

@@ -28,7 +28,7 @@
 </div>
 </form>
 
-{if $TPL["latest_changes"]}
+{if $latest_changes}
 <div class="width" style="font-size:90%">
   {$latest_changes}
 </div>

@@ -4,5 +4,5 @@
     <th class="right">Pending</th>
     <th class="right">Approved</th>
   </tr>
-{$TPL["this"]->show_tfList("templates/tfListR.tpl")}
+{$finance->show_tfList("templates/tfListR.tpl")}
 </table>

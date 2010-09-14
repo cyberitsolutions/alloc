@@ -1,4 +1,4 @@
-{if !$TPL["person_projectPersonID"]}{$display="display:none"}{/}
+{if !$person_projectPersonID}{$display="display:none"}{/}
 <div id="new_projectPerson{$person_projectPersonID}" style="{$display}">
 <table width="100%">
 <tr>
@@ -7,7 +7,7 @@
   <td>$<input type="text" size="7" name="person_rate[]" value="{$person_rate}" />(ex. {$taxName})</td>
   <td><select name="person_rateUnitID[]">{$rateType_options}</select></td>
   <td width="100px" align="right">
-    {if $TPL["person_projectPersonID"]}
+    {if $person_projectPersonID}
       <a href="#x" class="magic" onClick="$('#new_projectPerson{$person_projectPersonID}').remove();">Remove</a>
     {/}
   </td>

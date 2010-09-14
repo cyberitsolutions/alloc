@@ -1,1 +1,1 @@
-{$TPL["this"]->show_announcements("announcementListHomeR.tpl")}
+{$announcement->show_announcements("announcementListHomeR.tpl")}

@@ -2,7 +2,7 @@
 <table class="box">
   <tr>
     <th>{page::help("taskComment")} Comments</th>
-    <th class="right">{if (!$TPL["editing_disabled"])}{page::expand_link("id_new_task_comment")}{/}</th>
+    <th class="right">{if (!$editing_disabled)}{page::expand_link("id_new_task_comment")}{/}</th>
   </tr>
   <tr>
     <td colspan="2">
@@ -15,7 +15,7 @@
             <input type="hidden" name="entity" value="task">
             <input type="hidden" name="entityID" value="{$task_taskID}">
             <div id="comment_textarea">
-              {page::textarea("comment",$TPL["comment"],array("height"=>"medium","width"=>"100%"))}
+              {page::textarea("comment",$comment,array("height"=>"medium","width"=>"100%"))}
             </div>
             <div id="file_attachment_dialog" style="display:inline; float:left">
             </div>
@@ -27,7 +27,7 @@
 
           <td colspan="2" valign="top" style="padding-left:10px;">
             <div style="display:block; clear:both; padding-bottom:8px;"><u>Email Recipients</u></div>
-            {echo interestedParty::get_interested_parties_html($TPL["allTaskParties"])}
+            {echo interestedParty::get_interested_parties_html($allTaskParties)}
             <div style="float:left; clear:both; padding:10px 0px 8px 0px">{page::expand_link("email_other","Email Other Party")}</div>
             <div style="text-align:right; float:right; padding:10px 0px 8px 0px">{$comment_buttons}</div>
 
@@ -41,7 +41,7 @@
               </tr>
               <tr>
                 <td class="nobr">Email: <input type="text" name="eo_email" size="30"></td>
-                {if $TPL["task_clientID"]}
+                {if $task_clientID}
                 <td class="right nobr">
                   <label for="eo_add_client_contact">Add to Client Contacts </label> 
                   <input id="eo_add_client_contact" type="checkbox" name="eo_add_client_contact" value="1" checked>
@@ -64,7 +64,7 @@
       {$commentsR}
     </td>
   </tr>
-{if $TPL["editing_disabled"]}
+{if $editing_disabled}
   <tr>
     <td colspan="2">{$disabled_reason}</td>
   </tr>

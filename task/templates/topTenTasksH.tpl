@@ -1,1 +1,1 @@
-{$TPL["this"]->show_tasks()}
+{$task->show_tasks()}

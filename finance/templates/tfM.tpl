@@ -25,7 +25,7 @@
   </tr>
   <tr>
     <td valign="top">Comments: </td>
-    <td>{page::textarea("tfComments",$TPL["tfComments"],array("cols"=>30))}</td>
+    <td>{page::textarea("tfComments",$tfComments,array("cols"=>30))}</td>
   </tr>
   <tr>
     <td>Last modified by:</td>

@@ -45,7 +45,7 @@
     <td class="hint"></td>
   </tr>
     <td>Transaction Date{page::mandatory($transactionDate)}</td>
-    <td>{page::calendar("transactionDate",$TPL["transactionDate"])}</td>
+    <td>{page::calendar("transactionDate",$transactionDate)}</td>
     <td class="hint"></td>
   </tr>
   <tr>
