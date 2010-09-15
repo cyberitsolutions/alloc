@@ -404,6 +404,8 @@ Project Management
 
 9. Time Sheet history and comparison to budget estimates.
 
+10. Expenses and expense-forms which are related to this project.
+
 
 Tasks
 -----
@@ -416,9 +418,18 @@ Tasks
 
 4. Unlimited number of reminders/escalations per Task
 
-5. Escalation regime for priority Tasks not completed within time limits.
+5. Ability to establish time estimates, dates etc, per-task
 
-6. Task comment emails, both to and from allocPSA.
+6. Task comment emails, both to and from allocPSA, maintained in
+   threaded discussion form.
+
+7. Ability to attach documents to tasks.
+
+8. Ability to attach documents to emailed comments
+
+9. A full history of changes to task meta-data, so that management can
+   see who changed what attributes and when.
+
 
 Time Sheets
 -----------
@@ -432,6 +443,12 @@ Time Sheets
 
 4. Subsequently routes of Time Sheets (along with notification email) to
    financial administrators for invoicing/payroll.
+
+5. Ability to email notices and comments from timesheets.
+
+6. Ability to email timesheets (as PDFs or HTML files) to internal or
+   external recipients.
+
 
 Financials
 ----------
@@ -470,6 +487,7 @@ Clients
 
 7. Actual and potential Project revenue from this company.
 
+
 Wiki Knowledgebase
 ------------------
 
@@ -482,10 +500,12 @@ Wiki Knowledgebase
 4. Great for adding documentation related your services offerings,
    clients etc.
 
+
 Item Loans
 ----------
 
 1. Open-ended item loan, borrowing lists and overdue status.
+
 
 Personnel
 ---------
@@ -498,6 +518,9 @@ Personnel
 
 4. Overview of resource allocation, Tasks, overdue Tasks etc.
 
+5. Vacation tracking/notification functionality.
+
+
 Calendaring/Reminders
 ---------------------
 
@@ -507,6 +530,7 @@ Calendaring/Reminders
 
 3. Cyclical repeat reminders.
 
+
 Reporting
 ---------
 
@@ -515,18 +539,19 @@ Reporting
 2. Every field in the core component tables can be queried, filtered and
    exported.
 
+
 Fault & Issue Tracking
 ----------------------
 
 1. Integrated with the Projects and Task engine and therefore the Time Sheet
    system.
 
-2. Escalation engine sends email to specified staff on inactivity/overdue
-   status.
-
-3. Full email gateway facility, so that all task comments and responses
+2. Full email gateway facility, so that all task comments and responses
    to these can be routed to approprite internatl and external
    stake-holders associated with the task/fault.
+
+4. Visibility of billable-time spent on a per-task basis.
+
 
 Document Management
 -------------------
@@ -537,6 +562,7 @@ Document Management
 
 3. Customer-level document attachments.
 
+
 Products and Sales
 ------------------
 
@@ -545,6 +571,14 @@ Products and Sales
 2. Specify fixed product costs, as well as product margin commissions.
 
 3. Able to refine allocation on a per-sale basis.
+
+
+Database Backup and Restore
+---------------------------
+
+1. Web-based mechanism for download the complete database, for backups.
+
+2. Web-based mechanism for uploading/restoring previous database backups.
 
 
 How to Accomplish Common Tasks
@@ -593,8 +627,9 @@ There is a Logout link in the top right hand corner which will log you out
 immediately.  For security reasons, allocPSA will automatically time-out your
 login session, if you are inactive for a period of time. If you go out to
 lunch etc. when you next come to us allocPSA, you will be presented with the
-Login screen from above, and asked to re-authenticate. When you do so, you
-will be taken straight to the page where you left off.
+Login screen from above, and asked to re-authenticate. Note that you can
+change this 'timeout' period for inactivity from the Setup section of
+allocPSA.
 
 
 How do I Add New Users?
@@ -1064,7 +1099,8 @@ How do I Close a Task?
 You will note that if you mark the task Closed: Duplicate, then you will
 be prompted for the Task ID of the task which it's a duplicate of, for
 record-keeping purposes. This is covered in detail elsewhere in this
-documentation.
+documentation. allocPSA allows for one and only one 'duplicate' task to
+be linked to.
 
 You will also note that once you close a task, the Actual Completion
 date will be set to today's date.
@@ -1085,7 +1121,8 @@ How do I Mark a Task as a Duplicate?
 
 5. This will show a textbox beside the Status droplist, into which you
    sould enter the Task ID of the the task which it's a duplicate of,
-   for record-keeping purposes.
+   for record-keeping purposes. allocPSA allows for one and only one
+   'duplicate' task to be linked to.
 
 6. Save the task.
 
