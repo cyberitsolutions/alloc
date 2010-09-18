@@ -153,7 +153,7 @@ $(document).ready(function() {
             Assigned To <div id="taskPersonList" style="display:inline">{$personOptions}</div>
           </div>
           <div style="float:right; width:50%; text-align:left;">
-            <select name="taskStatus" onChange="$('#closed_duplicate_div').hide(); $('#'+$(this).val()+'_div').css('display','inline');">
+            <select name="taskStatuses" onChange="$('#closed_duplicate_div').hide(); $('#'+$(this).val()+'_div').css('display','inline');">
               {$taskStatusOptions}
             </select>
             {$class="inline"}

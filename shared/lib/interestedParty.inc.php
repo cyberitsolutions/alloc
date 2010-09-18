@@ -154,6 +154,18 @@ class interestedParty extends db_entity {
       $object->select();
     }
 
+    // Build up an array of task sub-statuses for email subject line changing
+    $rows = config::get_config_item("taskStatusOptions",true);
+    foreach ($rows as $status => $value) {
+      foreach ($value as $subStatus => $data) {
+        $subStatuses[$subStatus] = $status;
+      }
+    }
+    $statuses["close"] = "close";
+    $statuses["closed"] = "close";
+    $statuses["open"] = "open";
+    $statuses["pending"] = "pending";
+
     // If we're doing subject line magic, then we're only going to do it with
     // subject lines that have a {Key:fdsFFeSD} in them.
     preg_match("/\{Key:[A-Za-z0-9]{8}\}(.*)\s*$/i",$subject,$m);
@@ -161,6 +173,7 @@ class interestedParty extends db_entity {
 
     foreach((array)$commands as $command) {
       $command = strtolower($command);
+      list($command,$command2) = explode(":",$command); // for eg: duplicate:1234
 
       // If "quiet" in the subject line, then the email/comment won't be re-emailed out again
       if ($command == "quiet") {
@@ -192,17 +205,18 @@ class interestedParty extends db_entity {
       // Can only perform any of the other actions if they are being performed by a recognized user
       if (is_object($current_user) && $current_user->get_id()) {
 
-        // To close the entity (i.e. the task)
-        if ($command == "close" || $command == "closed") {
-          if (is_object($object) && method_exists($object,"close") && $object->get_id()) {
-            $object->close();
+        if (isset($statuses[$command])) {
+          $method = $statuses[$command];
+          if (is_object($object) && method_exists($object,$method) && $object->get_id()) {
+            $object->$method();
             $object->save();
           }
-
-        // To open the entity (i.e. the task)
-        } else if ($command == "open") {
-          if (is_object($object) && method_exists($object,"open") && $object->get_id()) {
-            $object->open();
+        } else if (isset($subStatuses[$command])) {
+          // method should be open(), close() or pending()
+          $method = $subStatuses[$command];
+          if (is_object($object) && method_exists($object,$method) && $object->get_id()) {
+            $command2 and $object->set_value("duplicateTaskID",$command2);
+            $object->$method($command);
             $object->save();
           }
         }

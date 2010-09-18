@@ -1115,24 +1115,27 @@ How do I use the allocPSA Email Gateway?
    append certain keywords *after* the {Key:fdsfds} bit. The keywords are not
    case-sensitive and can be in any order. You can use one-or-many of:
 
-   * sub
-   * subscribe
-   * unsub
-   * unsubscribe
-   * close
-   * open
+   * sub subscribe
+   * unsub unsubscribe
+   * close pending open
+   * notstarted inprogress info manager client invalid duplicate:1234 incomplete complete
    * quiet
    * 3.25 (i.e. a number, to two decimal places)
 
-   Sub/Subscribe add you to that alloc task conversation. Unsub/unsubscribe
-   remove you from that conversation. Some text will be prepended to the
+   Sub/Subscribe adds you to that alloc task conversation. Unsub/unsubscribe
+   removes you from that conversation. Some text will be prepended to the
    comment saying what has happened eg: "Jonny Apple has been added to this 
    conversation".
 
-   Close closes the associated task. Open opens the task. The Actual
-   Completion date is filled or unfilled and the Task Status moves to
-   Closed:Completed or Open:In progress. The action is logged on the Task
-   History tab.
+   Close closes the associated task. Open opens the task. And Pending makes the
+   task status pending. The Actual Completion date is filled or unfilled and the
+   Task Status moves to Closed:Completed or Open:In progress or Pending:Info. 
+   The action is logged on the Task History tab.
+
+   If you want to exert finer control over the Task Status, you may use one of
+   the specific Task Sub-Status keywords: notstarted, inprogress, info,
+   manager, client, invalid, duplicate, incomplete or complete. If the task is to
+   be a duplicate, specify the duplicate task ID after a colon eg: duplicate:1234
 
    Quiet means do not re-send this email. Previously only unsubscription
    requests would *not* get re-sent. Now they *do* get re-emailed. You can
@@ -1146,8 +1149,8 @@ How do I use the allocPSA Email Gateway?
    is still created and the time sheet item entry is still added, however your
    rate will be set to zero, and you will have to fix it manually.
    Additionally some text will be prepended to the top of the comment which
-   says eg "David Johnston has added 2.00 Hours to time sheet #34232." and/or
-   "David Johnston has not been added to project #22".  The body of the email is
+   says eg "Danielle Johnston has added 2.00 Hours to time sheet #34232." and/or
+   "Danielle Johnston has not been added to project #22".  The body of the email is
    added as the time sheet item comment. So it is best to keep the email
    short. It probably makes sense to add the quiet keyword when adding time.
 
@@ -1182,11 +1185,8 @@ How do I use the allocPSA Email Gateway?
    like this:
    
    To: alloc@somewhere.com.au
-
    From: ben@otherplace.com.au
-
    Subject: {Key:fds432fd} close 3
-
 
    All emails that alloc receives are stored and are available for
    download (if need be) from the UI same as usual, headers intact. Ideally
