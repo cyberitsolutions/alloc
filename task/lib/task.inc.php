@@ -55,95 +55,36 @@ class task extends db_entity {
 
   function save() {
     global $current_user, $TPL;
-    if (!$this->get_value("creatorID")) {
-      $this->set_value("creatorID",$current_user->get_id());
-    }
 
-    // Change a task status that might look like: open_notstarted into taskStatus:open and taskSubStatus:notstarted
-    if ($this->get_value("taskStatus") && preg_match("/_/",$this->get_value("taskStatus"))) {
-      list($taskStatus, $taskSubStatus) = explode("_",$this->get_value("taskStatus"));
-      $this->set_value("taskStatus",$taskStatus);
-      $this->set_value("taskSubStatus",$taskSubStatus);
-    } else if (!$this->get_value("taskStatus")) {
-      $this->set_value("taskStatus","open");
-      $this->set_value("taskSubStatus","notstarted");
-    }
+    // The data prior to the save
+    $old = $this->all_row_fields;
 
-    // Wipe the task.duplicateTaskID field if this isn't a duplicated task ...
-    if ($this->get_value("taskSubStatus") != "duplicate") {
-      $this->set_value("duplicateTaskID", "");
-    }
+    // Set the task creator
+    $this->get_value("creatorID") || $this->set_value("creatorID",$current_user->get_id());
 
-
-    // Marked as dupe?
-    if ($this->get_value("duplicateTaskID") && $this->get_value("duplicateTaskID") != $this->all_row_fields["duplicateTaskID"]) {
-
-      $othertask = new task;
-      $othertask->set_id($this->get_value("duplicateTaskID"));
-      $othertask->select();
-      if ($othertask->get_value("duplicateTaskID")) {
-        $TPL["message"][] = "Task ".$this->get_value("duplicateTaskID")." ".$othertask->get_name()." is a duplicate. 
-                             Task may not be a duplicate of a duplicate.";
-        alloc_redirect($TPL["url_alloc_task"]."taskID=".$this->get_id());
-      }
-      if ($othertask->get_id() == $this->get_id() || $othertask->get_id() == 0) {
-        $TPL["message"][] = "Error setting duplicate. Invalid Task ID.";
-        alloc_redirect($TPL["url_alloc_task"]."taskID=".$this->get_id());
-      } 
-
-      $this->set_value("duplicateTaskID", $this->get_value("duplicateTaskID"));
-      
-      // Note in the other task's history that this task was marked a duplicate of it
-      $ai = new auditItem;
-      $ai->audit_special_change($othertask, "TaskMarkedDuplicate", $this->get_id());
-      $ai->insert();
-      if ($this->all_row_fields["duplicateTaskID"]) {
-        // and, if we have a previous duplicate, note in that one that it's no longer a duplicate
-        $othertask = new task;
-        $othertask->set_id($this->all_row_fields["duplicateTaskID"]);
-        $othertask->select();
-        $ai = new auditItem;
-        $ai->audit_special_change($othertask, "TaskUnmarkedDuplicate", $this->get_id());
-        $ai->insert();
-      } 
-      // if dupe, close off the task
-      $this->set_value("taskStatus","closed");
-      $this->set_value("taskSubStatus","duplicate");
-    } 
-
-
-    // If the tasks status has just moved to closed, close() the task.
-    if (!$this->has_just_been_closed && $this->get_value("taskStatus") == "closed" && $this->all_row_fields["taskStatus"] != "closed") {
-      $this->close();
-
-    // Else if it was closed, and it has now been re-opened
-    } else if (!$this->has_just_been_opened && $this->all_row_fields["taskStatus"] == "closed" && $this->get_value("taskStatus") != "closed" ) {
-      $this->open();
-    
-    // if they have just set a dateActualCompletion, mark all children as
-    // complete. (the $this->all_row_fields contains the *original* values)
-    } else if (!$this->has_just_been_closed && $this->get_value("dateActualCompletion") && !$this->all_row_fields["dateActualCompletion"]) {
-      $this->close();
+    // If a dateActualCompletion has just been entered
+    if (!$old["dateActualCompletion"] && $this->get_value("dateActualCompletion")) {
+      $_REQUEST["taskStatuses"] = "closed_complete";
 
     // Else if there was a dateActualCompletion and they have just *unset* it...
-    } else if (!$this->has_just_been_opened && $this->all_row_fields["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
-      $this->open();
+    } else if ($old["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
+      $_REQUEST["taskStatuses"] = "open_inprogress";
     }
 
-    // If there is no dateActualStart, and the task status has just been changed to In Progress, then set the dateActualStart
-    if (!$this->get_value("dateActualStart") 
-    && $this->all_row_fields["taskSubStatus"] != "inprogress" && $this->get_value("taskSubStatus") == "inprogress") {
-      $this->set_value("dateActualStart",date("Y-m-d"));
-    
-    // If they've just plugged a dateActualStart in and the task is not closed, then change the status to Open: In Progress
-    } else if (!$this->all_row_fields["dateActualStart"] && $this->get_value("dateActualStart") && $this->get_value("taskStatus") != "closed") {
-      $this->set_value("taskStatus","open");
-      $this->set_value("taskSubStatus","inprogress");
+    // If they've just plugged a dateActualStart in and the task is notstarted, then change the status to Open: In Progress
+    if (!$old["dateActualStart"] && $this->get_value("dateActualStart") && $old["taskSubStatus"] == "notstarted") {
+      $_REQUEST["taskStatuses"] = "open_inprogress";
+    }
+
+    // Set the task's status and sub-status
+    list($taskStatus, $taskSubStatus) = explode("_",$_REQUEST["taskStatuses"]);
+    if (!$this->post_save_hook && in_array($taskStatus,array("closed","close","open","pending"))) {
+      $this->$taskStatus($taskSubStatus);
     }
 
     // If task exists and the personID has changed, update the dateAssigned
     if ($this->get_id()) {
-      if (sprintf("%d",$this->get_value("personID")) != sprintf("%d",$this->all_row_fields["personID"])) {
+      if (sprintf("%d",$this->get_value("personID")) != sprintf("%d",$old["personID"])) {
         $this->set_value("dateAssigned",date("Y-m-d H:i:s"));
       }
     // Else if task doesn't exist and there is a personID set, set the dateAssigned as well
@@ -155,9 +96,10 @@ class task extends db_entity {
 
     $rtn = parent::save();
 
-    // If the task has just been closed, then audit the change.
-    if ($this->has_just_been_closed) {
-      $this->mark_closed();
+    // If the task has just been closed, opened, pending or duplicated, then audit the change.
+    if ($this->post_save_hook) {
+      $psh = $this->post_save_hook;
+      $this->$psh();
     }
 
     return $rtn;
@@ -167,34 +109,65 @@ class task extends db_entity {
     $this->get_value("taskName") or $err[] = "Please enter a name for the Task.";
     return $err;
   }
-  
+
+  function closed($t="complete") { return $this->close($t); }  // wrapper
+ 
   function close($taskSubStatus = "complete") {
     global $current_user;
-    $this->get_value("dateActualStart")      || $this->set_value("dateActualStart", date("Y-m-d"));
-    $this->get_value("dateActualCompletion") || $this->set_value("dateActualCompletion", date("Y-m-d"));
-    $this->get_value("closerID")             || $this->set_value("closerID", $current_user->get_id());
-    $this->get_value("dateClosed")           || $this->set_value("dateClosed",date("Y-m-d H:i:s"));           
-    if ($this->get_value("taskStatus") != "closed") {
+    $duplicateTaskID = $this->get_value("duplicateTaskID");
+
+    $cur_status = $this->get_value("taskStatus").$this->get_value("taskSubStatus").$this->get_value("duplicateTaskID");
+    $new_status = "closed".$taskSubStatus.$duplicateTaskID;
+
+    if ($cur_status != $new_status) { 
+      $this->post_save_hook = "mark_closed";
+      $taskSubStatus == "duplicate" and $this->post_save_hook = "mark_dupe";
+      $this->get_value("dateActualStart")      || $this->set_value("dateActualStart", date("Y-m-d"));
+      $this->get_value("dateActualCompletion") || $this->set_value("dateActualCompletion", date("Y-m-d"));
+      $this->get_value("closerID")             || $this->set_value("closerID", $current_user->get_id());
+      $this->get_value("dateClosed")           || $this->set_value("dateClosed",date("Y-m-d H:i:s"));           
       $this->set_value("taskStatus","closed");
       $this->set_value("taskSubStatus",$taskSubStatus);
+      $this->set_value("duplicateTaskID",$duplicateTaskID);
+      if ($this->get_value("taskTypeID") == "Parent") {
+        $this->close_off_children_recursive();
+      }
     }
-
-    if ($this->get_value("taskTypeID") == "Parent") {
-      $this->close_off_children_recursive();
-    }
-    $this->has_just_been_closed = true;
   }
 
   function open($taskSubStatus = "inprogress") {
-    $this->set_value("closerID",null);
-    $this->set_value("dateClosed","");
-    $this->set_value("dateActualCompletion","");
-    if ($this->get_value("taskStatus") != "open") {
+    $cur_status = $this->get_value("taskStatus").$this->get_value("taskSubStatus");
+    $new_status = "open".$taskSubStatus;
+
+    if ($cur_status != $new_status) { 
+      if (!$this->get_value("taskStatus") || $this->get_value("taskStatus")!="open") {
+        $this->post_save_hook = "mark_reopened";
+      }
+      $this->set_value("closerID",null);
+      $this->set_value("dateClosed","");
+      $this->set_value("dateActualCompletion","");
+      $this->set_value("duplicateTaskID","");
       $this->set_value("taskStatus","open");
       $this->set_value("taskSubStatus",$taskSubStatus);
+      if (!$this->get_value("dateActualStart") && $taskSubStatus == "inprogress") {
+        $this->set_value("dateActualStart",date("Y-m-d"));
+      }
     }
-    $this->mark_reopened();
-    $this->has_just_been_opened = true;
+  }
+
+  function pending($taskSubStatus = "info") {
+    $cur_status = $this->get_value("taskStatus").$this->get_value("taskSubStatus");
+    $new_status = "pending".$taskSubStatus;
+
+    if ($cur_status != $new_status) { 
+      $this->post_save_hook = "mark_pending";
+      $this->set_value("dateActualCompletion", "");
+      $this->set_value("duplicateTaskID","");
+      $this->set_value("closerID",null);
+      $this->set_value("dateClosed","");
+      $this->set_value("taskStatus","pending");
+      $this->set_value("taskSubStatus",$taskSubStatus);
+    }
   }
 
   function close_off_children_recursive() {
@@ -1989,6 +1962,8 @@ class task extends db_entity {
         $changeDescription = "The task was closed.";
       } elseif($auditItem->get_value('changeType') == 'TaskReopened') {
         $changeDescription = "The task was opened.";
+      } elseif($auditItem->get_value('changeType') == 'TaskPending') {
+        $changeDescription = "The task was pending.";
       }
       $rows[] = "<tr><td class=\"nobr\">" . $auditItem->get_value("dateChanged") . "</td><td>$changeDescription</td><td>" . page::htmlentities($people_cache[$auditItem->get_value("personID")]["name"]) . "</td></tr>";
 
@@ -2006,10 +1981,6 @@ class task extends db_entity {
     }
   }
 
-  function audit_insert() {
-    $this->mark_reopened();
-  }
-
   function mark_closed() {
     // write a message into the log, closing this task
     $ai = new auditItem();
@@ -2017,9 +1988,39 @@ class task extends db_entity {
     $ai->insert();
   }
 
+  function mark_dupe($id=false) {
+    $id or $id = $this->get_value("duplicateTaskID"); 
+
+    if ($id) {
+      $othertask = new task;
+      $othertask->set_id($id);
+      $othertask->select();
+
+      // Note in the other task's history that this task was marked a duplicate of it
+      $ai = new auditItem;
+      $ai->audit_special_change($othertask, "TaskMarkedDuplicate", $this->get_id());
+      $ai->insert();
+      // If we have a previous duplicate, notify the previous dupe task that it's no longer a duplicate
+      if ($this->all_row_fields["duplicateTaskID"]) {
+        $othertask = new task;
+        $othertask->set_id($this->all_row_fields["duplicateTaskID"]);
+        $othertask->select();
+        $ai = new auditItem;
+        $ai->audit_special_change($othertask, "TaskUnmarkedDuplicate", $this->get_id());
+        $ai->insert();
+      } 
+    }
+  }
+
   function mark_reopened() {
     $ai = new auditItem();
     $ai->audit_special_change($this, "TaskReopened");
+    $ai->insert();
+  }
+
+  function mark_pending() {
+    $ai = new auditItem();
+    $ai->audit_special_change($this, "TaskPending");
     $ai->insert();
   }
 
