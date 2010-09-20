@@ -37,7 +37,9 @@ elif o['project']:
 filter = {}
 filter["personID"] = a.get_my_personID()
 filter["status"] = "edit"
-if o['time']:
+if o['all']:
+  pass
+elif o['time']:
   filter["timeSheetID"] = o['time']
 elif o['project']:
   filter["projectID"] = o['project']
@@ -49,10 +51,10 @@ if timeSheets:
   a.print_table(timeSheets,a.row_timeSheet,sort="Time Sheet ID")
 
   for timeSheetID, row in timeSheets.items():
-    if o['dryrun']:
-      a.msg("Would attempt to submit time sheet: %s" % timeSheetID)
-    else:
+    if not o['dryrun'] and (o['all'] or 'timeSheetID' in filter or 'projectID' in filter):
       a.make_request({"method":"change_timeSheet_status","timeSheetID":timeSheetID,"direction":"forwards"}) 
+    else:
+      a.msg("Would attempt to submit time sheet: %s" % timeSheetID)
 
 else:
   a.die("No time sheets found: %s" % filter)
