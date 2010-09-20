@@ -1,10 +1,8 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 
 from alloc import alloc
 
-#a = alloc('http://alloc_stage/services/json.php')
-a = alloc('http://soy/alloc_dev/services/json.php')
-
+a = alloc()
 
 # Setup the options that this cli can accept
 ops = []
