@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 
 import os
 import sys
@@ -21,7 +21,13 @@ class alloc:
   row_timeSheet = {"timeSheetID":"Time Sheet ID","projectID":"Project","status":"Status","person":"Owner","duration":"Duration","amount":"$"}
   row_timeSheetItem = {"timeSheetID":"Time Sheet ID","timeSheetItemID":"Item ID","dateTimeSheetItem":"Date","timeSheetItemDuration":"Hours","taskID":"taskID","comment":"Comment","rate":"$"}
 
-  def __init__(self,url):
+  def __init__(self,url=""):
+    if not url:
+      dir = sys.path[0].split("/")[-2]
+      if dir == "alloc":       url = "http://alloc/services/json.php"
+      if dir == "alloc_stage": url = "http://alloc_stage/services/json.php"
+      if dir == "alloc_dev":   url = "http://soy/alloc_dev/services/json.php"
+
     self.url = url
     self.username = ''
     self.quiet = ''
