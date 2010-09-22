@@ -4,3 +4,4 @@
 ^help/images
 .swp$
 ^alloc_config.php$
+^bin/.*\.pyc$
