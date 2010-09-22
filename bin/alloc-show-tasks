@@ -8,6 +8,7 @@ a = alloc()
 ops = []
 ops.append((''  ,'help           ','Show this help.'))
 ops.append((''  ,'nude           ','Don\'t display a border or header row in the results.'))
+ops.append(('v' ,'verbose        ','Print the tasks\' descriptions.'))
 ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
 ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.'))
 
@@ -60,9 +61,13 @@ elif o['task']:
 # Get list of tasks
 r = a.get_list("task",ops)
 
+fields =  {}
+fields["taskID"] = "Task ID"
+fields["taskName"] = "Task"
+fields["projectName"] = "Project"
+if o['verbose']:
+  fields["taskDescription"] = "Description"
+
 if r:
-  a.print_table(r, {"taskID":"Task ID"
-                       ,"taskName":"Task"
-                       ,"projectName":"Project"
-                       },sort="Task")
-  
+  a.print_table(r, fields,sort="Task")
+
