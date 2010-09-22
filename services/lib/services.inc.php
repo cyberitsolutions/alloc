@@ -96,7 +96,11 @@ class alloc_services {
   public function add_timeSheetItem_by_task($taskID, $duration, $date="", $comments="") {
     //global $current_user; // Always need this :(
     //$current_user = $this->get_current_user($sessID);
-    return timeSheet::add_timeSheetItem_by_task($taskID, $duration, $comments, null, $date);
+    $rtn = timeSheet::add_timeSheetItem_by_task($taskID, $duration, $comments, null, $date);
+    if ($rtn["timeSheetItem_save_error"]) {
+      die($rtn["timeSheetItem_save_error"]);
+    } 
+    return $rtn;
   }
 
   /** The add_timeSheetItem_by_project function

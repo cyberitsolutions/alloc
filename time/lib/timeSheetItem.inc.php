@@ -51,7 +51,7 @@ class timeSheetItem extends db_entity {
 
     $amount_of_item = $this->calculate_item_charge($timeSheet->pay_info["customerBilledDollars"]);
     if ($amount_allocated && ($amount_of_item + $amount_used) > $amount_allocated) {
-      return "Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice.<br>Time Sheet Item not saved.";
+      return "Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice. Time Sheet Item not saved.";
     } 
 
     if ($_POST["timeSheetItem_taskID"]) {
