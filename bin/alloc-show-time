@@ -6,7 +6,8 @@ a = alloc()
 
 # Setup the options that this cli can accept
 ops = []
-ops.append(('',  'help           ','Show this help.'))
+ops.append((''  ,'help           ','Show this help.'))
+ops.append((''  ,'nude           ','Don\'t display a border or header row in the results.'))
 ops.append(('q' ,'quiet          ','Run with no output except errors.')) 
 ops.append(('v' ,'verbose        ','Show time sheet\'s items.')) 
 ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
@@ -25,6 +26,7 @@ a.authenticate();
 
 # Initialize some variables
 a.quiet = o['quiet']
+a.nude = o['nude']
 personID = a.get_my_personID()
 projectID = ""
 timeSheetID = ""

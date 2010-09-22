@@ -31,6 +31,7 @@ class alloc:
     self.url = url
     self.username = ''
     self.quiet = ''
+    self.nude = False
     self.sessID = ''
 
   def search_for_project(self, projectName, personID):
@@ -145,7 +146,11 @@ class alloc:
     field_names = only_these_fields.values()
     table.set_field_names(field_names)
     #table.set_style(PLAIN_COLUMN)  n/a until prettytable 0.6
-  
+    #table.set_border_chars(vertical="",horizontal="",junction="")
+
+    # Hide the frame and header
+    n = not self.nude  
+
     for label in field_names:
       table.set_field_align(label, "l")
 
@@ -157,7 +162,7 @@ class alloc:
             row[v] = ""
           r.append(row[v])
         table.add_row(r)
-    table.printt(sortby=sort)
+    table.printt(sortby=sort,border=n, header=n)
 
   def is_num(self, obj):
     # There's got to be a better way to tell if something is a number 

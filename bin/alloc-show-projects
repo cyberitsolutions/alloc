@@ -6,7 +6,8 @@ a = alloc()
 
 # Setup the options that this cli can accept
 ops = []
-ops.append(('',  'help           ','Show this help.'))
+ops.append((''  ,'help           ','Show this help.'))
+ops.append((''  ,'nude           ','Don\'t display a border or header row in the results.'))
 ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
 
 # Specify some header and footer text for the help text
@@ -20,6 +21,7 @@ a.authenticate();
 
 # Initialize some variables
 #a.quiet = o['quiet']
+a.nude = o['nude']
 personID = a.get_my_personID()
 projectID = ""
 
