@@ -59,7 +59,7 @@ if timeSheets:
       a.msg("Would attempt to submit time sheet: %s" % timeSheetID)
 
 else:
-  a.die("No time sheets found: %s" % filter)
+  a.msg("No time sheets found: %s" % filter)
 
 
 

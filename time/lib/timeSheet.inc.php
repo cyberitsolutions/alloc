@@ -1134,6 +1134,8 @@ EOD;
       $projectID = $task->get_value("projectID");
     }
 
+    $projectID or $err[] = "No project found.";
+
     if ($projectID) {
       $q = sprintf("SELECT * 
                       FROM timeSheet 
@@ -1169,9 +1171,12 @@ EOD;
         $timeSheetID = $row["timeSheetID"];
       }   
 
+      $timeSheetID or $err[] = "Couldn't find or create a Time Sheet.";
+
       // Add new time sheet item
       if ($timeSheetID) {
         $row_projectPerson = projectPerson::get_projectPerson_row($projectID, $current_user->get_id());
+        $row_projectPerson or $err[] = "The person has not been added to the project.";
 
         $tsi = new timeSheetItem();
         $tsi->set_value("timeSheetID",$timeSheetID);
@@ -1189,20 +1194,19 @@ EOD;
         $tsi->set_value("multiplier",1);
         $tsi->set_value("comment",$comments);
         $tsi->set_value("emailUID",$emailUID);
-        $err = $tsi->save();
+        $str = $tsi->save();
+        $str and $err[] = $str;
         $id = $tsi->get_id();
 
         $tsi = new timeSheetItem();
         $tsi->set_id($id);
         $tsi->select();
         $rtn = $tsi->row();
-        $row_projectPerson or $rtn["error_no_projectPerson"] = true;
-        $err and $rtn["timeSheetItem_save_error"] = $err;
-
-      } 
-  
-      return $rtn;
+      }
     }
+    $rtn["timeSheetID"] or $err[] = "Time not added.";
+    $err and $rtn["timeSheetItem_save_error"] = implode(" ",(array)$err);
+    return $rtn;
   }
 
   function get_all_timeSheet_parties() {
