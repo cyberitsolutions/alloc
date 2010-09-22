@@ -37,7 +37,7 @@ class timeSheet extends db_entity {
                              ,"approvedByAdminPersonID"
                              ,"dateSubmittedToManager"
                              ,"dateSubmittedToAdmin"
-			     ,"dateRejected"
+			                       ,"dateRejected"
                              ,"billingNote"
                              ,"payment_insurance"
                              ,"recipient_tfID"
@@ -989,7 +989,7 @@ EOD;
         }
         $this->set_value("status", "admin");
         $this->set_value("dateSubmittedToAdmin", date("Y-m-d"));
-	$this->set_value("dateRejected", "");
+	      $this->set_value("dateRejected", "");
         foreach($info["timeSheetAdministrators"] as $adminID)  {
           $email = array();
           $email["type"] = "timesheet_submit";
