@@ -881,7 +881,7 @@ Sheets, you can view them from the 'Time Sheet' section of your 'Homepage'.
 How do I Authorise a Time Sheet?
 --------------------------------
 
-NOTE: You must be setup as a Project Manager + Time Sheet Recepient (on the Project
+NOTE: You must be setup as a Project Manager + Time Sheet Recipient (on the Project
 screen) or be setup as the Time Sheet Admin on the Setup screen in order to
 authorise Time Sheets.
 
