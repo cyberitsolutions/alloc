@@ -834,8 +834,18 @@ How do I Delete a Task?
 6. A dialog-box will appear asking you 'Are you sure to delete this record?',
    press 'OK' to confirm the deletion of the Task.
 
+NOTE: It is generally good practice *not* to delete data (like tasks)
+from allocPSA. If you want to make it so that a particular task is no
+longer 'visible' in day-to-day usage, it is best to edit the task, and
+to mark it as being Complete or Pending. You can make this change from
+the Status drop-list of the task header.
+
+
 How do I Create a New Time Sheet?
 ---------------------------------
+
+NOTE: In order to create a time sheet, you really need to have created a
+project and task(s) first.
 
 1. Log in to allocPSA.
 
@@ -867,10 +877,11 @@ section of your 'Homepage'.
 HINT: If you're a manager designated to receive requests to authorise Time
 Sheets, you can view them from the 'Time Sheet' section of your 'Homepage'.
 
+
 How do I Authorise a Time Sheet?
 --------------------------------
 
-You must be setup as a Project Manager + Time Sheet Recepient (on the Project
+NOTE: You must be setup as a Project Manager + Time Sheet Recepient (on the Project
 screen) or be setup as the Time Sheet Admin on the Setup screen in order to
 authorise Time Sheets.
 
@@ -881,6 +892,11 @@ authorise Time Sheets.
 
 3. If you're happy with the information contained on the Time Sheet, press the
    button to submit the Time Sheet to the next step in the workflow.
+
+Alternatively, if an organisation wants a default Time sheet manager,
+this is possible to configure via the Time Sheets tab in the Setup
+section. Simply edit the Time Sheet Manager to point to the person who
+should be the default.
 
 How do I Reject a Time Sheet?
 -----------------------------
@@ -895,6 +911,35 @@ How do I Reject a Time Sheet?
    then re-submit the Time Sheet, then press the '<-Back' button on the
    Time Sheet (not the web-browser's Back button). An email will be sent to the
    previous person in the Time Sheet workflow.
+
+How do I Send a Copy of a Time Sheet to Others?
+-----------------------------------------------
+
+1. Log in to allocPSA
+
+2. From either the Time Sheet section of your 'Home' page, or from the
+   timesheets visible in the Time tab, select a time sheet that you want
+   to send a copy of to someone.
+
+3. From inside the time sheet, click the New link near the bottom right.
+   This will expand the Comments functionality.
+
+4. Using either a boiler-plate comment template, or by adding your own
+   text text, provide a message in the Comment text box.
+
+5. Click the Attach Time Sheet drop-list and select from the options the
+   apprpriate content and document format for the time sheet you wish to
+   send. Unless you know otherwise, you can just select the Default
+   option.
+
+6. From the Email Recipients section, select the people who you want to
+   send a copy of this comment and attached time sheet to.
+
+7. If you want to add an additional recipient who doesn't appear on the
+   prepared list of recipients, you can add them by click-expanding the 
+   Email Other Party link, adding their details, and deciding about having 
+   them added permanently.
+
 
 How do I Find Client Information?
 ---------------------------------
@@ -982,6 +1027,23 @@ How do I Quickly Jump to a Task if I have the Task ID?
    can quickly jump to those by selecting the appropriate entity from
    the droplist associated with Quick Search.
 
+How do I Quickly Jump to a Time Sheet if I have the Time Sheet ID?
+------------------------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. If you have a valid time sheet ID (eg, '12762') then you can enter this
+   directly into the Quick Search textbox near the top right of the
+   allocPSA screen.
+
+3. Entering a number here indicates to allocPSA that you know its a time
+   sheet ID number and that you want to be taken straight to that task.
+   
+4. This same approach works for some of the other search items available 
+   under the Quick Search facility; given a Project or Task ID, you can 
+   quickly jump to those by selecting the appropriate entity from 
+   the droplist associated with Quick Search.
+
 
 How do I Add Task/Fault Comments?
 ---------------------------------
@@ -1017,6 +1079,25 @@ How do I Add Task/Fault Comments?
    going through the alloc gateway and being logged to the relevant task or
    fault.
 
+How do I Create a Task Comment Conversation Thread?
+---------------------------------------------------
+
+1. Open your email client.
+
+2. Find an email sent to you via allocPSA.
+
+3. You will notice that this has a particular structure in the Subject:
+   line, perhaps something like:
+
+   Task Comment: 16713 Investigate Anti-Virus options for Staff server [3. Normal] {Key:cijhkjuq}
+
+4. In order to continue with the discussion thread represented by this
+   email, you simply need to *reply* to this email. Note: group-reply is
+   *not-necessary* - allocPSA will already know who the Interested
+   Parties to the discussion thread are (based on the thread key
+   {Key:cijhkjuq}) and will ensure a copy of your reply reaches each of
+   them.
+
 
 How do I Bookmark Task List Filters for Future Use?
 ---------------------------------------------------
@@ -1045,6 +1126,13 @@ How do I Bookmark Task List Filters for Future Use?
 How do I Mark a Task as Pending?
 --------------------------------
 
+Note: Under some circumstances, there may be value in marking some tasks
+in such a way that they don't appear in the nornal, day-to-day views,
+but are still available just on the periphery. This might occur when
+where you're waiting on information, or waiting on customer approval or
+feedback. allocPSA provides a convenient way to manage such 'paused'
+tasks, through the Pending attribute.
+
 1. Log in to allocPSA.
 
 2. Open the task (fault, message) that you would like to mark as 
@@ -1066,9 +1154,13 @@ How do I Mark a Task as Pending?
 6. You can, at any point, change the Status back to Open: or any other
    setting using the approach outlined above.
 
-You will note that a task which has had its Status changed from Open: to
+Note: You will note that a task which has had its Status changed from Open: to
 Pending: may now not be included in the Task List filter or the Home
 Page filter, if these have been established to show only Open: tasks.
+
+Note: If a user selects to show only Open and not Open and Pending tasks
+in their allocPSA 'home' page, then tasks marked Pending will not appear
+in the 'home' page task list.
 
 
 How do I Close a Task?
@@ -1104,6 +1196,51 @@ be linked to.
 
 You will also note that once you close a task, the Actual Completion
 date will be set to today's date.
+
+
+How do I Make (Attribute) Changes to Many Tasks at Once?
+--------------------------------------------------------
+
+Note: While you are able to make changes to attributes (eg, Task
+Assignee, Task Priority, Completion Date etc.) on a per-task basis,
+allocPSA offers you a mechanism by which you can change these properties
+across many tasks at once.
+
+1. Log in to allocPSA.
+
+2. Go to the Tasks tab, and list the tasks you are interested in making
+   changes to. This may be a soper-set of the actual tasks you want to
+   change, for example, all Open tasks, or all tasks assigned to a
+   particular person for a select group of projects.
+
+3. Using the 'checkboxes' running along the left edge of the task list,
+   select the tasks you're interested in changing an attribute for.
+
+4. Once you've selected all the pertinent tasks, select the *type* of
+   attribute change action you want to make. Examples include:
+
+   - Assign to:
+   - Manager to:
+   - Estimate to:
+   - Task Priority to:
+   - Task Type to:
+   - Target Start Date to:
+   - Target Completion Date to:
+   - Actual Start Date to:
+   - Actual Completion Date to:
+   - Project and Parent Task to:
+
+5. For each of these attribute change actions, you will be given a
+   custom data entry field or pick list, from which you can select the
+   new attribute value to set for your list of selected tasks.
+
+6. Once you've set the new attribute value for the group, click the
+   Update Tasks button, to make the actual change across your list of 
+   selected tasks.
+
+7. If you more than one attribute change to make across this list of
+   tasks, follow the above steps, and change additional attributes.
+
 
 How do I Mark a Task as a Duplicate?
 ------------------------------------
@@ -1231,6 +1368,45 @@ How do I use the allocPSA Email Gateway?
    little easier. alloc also stores a new field on the back-end that tracks
    which emails are responsible for which time sheet items.
 
+How do I Monitor Tagged-Funds/Cost-Centres That I'm Interested In?
+------------------------------------------------------------------
+
+Note: allocPSA supports cost-centres (also-known-as tagged-funds) for
+projects and staff. These allow for the tracking and movement of monies
+within an organisation and amongst an organisation's project and staff
+'boundaries'. tagged-funds are used to determine and track expenses,
+time sheets, etc. Some people, particularly Admin and Manager users, may
+need to track many such tagged-funds at once. As such, thay may find it
+useful to have those particular tagged-funds display their current
+account balance on the 'home' page. To make this happen, follow these
+steps.
+
+1. Log in to allocPSA.
+
+2. Go to the Tools tab of the main menu.
+
+3. From the Finance list, click the List of Tagged Funds link. The 
+   Tagged Funds list will appear, but it make take a while, as allocPSA
+   has to perform quite a few calculations.
+
+4. If the list is too long, you can expand the Filter to allow you to
+   drill-down into the tagged funds you're interested in. To do so,
+   click the Show Filter link, near the top right.
+
+5. When you find the tagged fund that you want to add an account-balance
+   view of in your 'home' page, click the Edit TF link, at the right of
+   the selected tagged fund.
+
+6. Once inside the tagged fund, you will notice that it offers you a
+   drop-list to your name as one of the tagged fund owners, in the 
+   TF owners section of the page. Once you've selected your name from
+   the list, click the Add button.
+   
+7. You can now check that this additional tagged-fund/cost-centre is
+   visible to you from your 'home' page, by clicking on the Home tab of
+   the main menu, and checking that the new tagged fund account balance 
+   is being displayed in the Tagged Funds content block near the top
+   right.
 
 
 Useful Tips for using allocPSA
