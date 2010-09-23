@@ -18,8 +18,8 @@ class alloc:
   username = ''
   quiet = ''
   sessID = ''
-  row_timeSheet = {"timeSheetID":"Time Sheet ID","projectID":"Project","status":"Status","person":"Owner","duration":"Duration","amount":"$"}
-  row_timeSheetItem = {"timeSheetID":"Time Sheet ID","timeSheetItemID":"Item ID","dateTimeSheetItem":"Date","timeSheetItemDuration":"Hours","taskID":"taskID","comment":"Comment","rate":"$"}
+  row_timeSheet = ["timeSheetID","Time Sheet ID","projectID","Project","status","Status","person","Owner","duration","Duration","amount","$"]
+  row_timeSheetItem = ["timeSheetID","Time Sheet ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","timeSheetItemDuration","Hours","taskID","taskID","comment","Comment","rate","$"]
 
   def __init__(self,url=""):
     if not url:
@@ -45,9 +45,7 @@ class alloc:
       if len(projects) == 0:
         self.die("No project found matching: %s" % projectName)
       elif len(projects) > 1:
-        self.print_table(projects, {"projectID":"ID"
-                                   ,"projectName":"Project"
-                                   })
+        self.print_table(projects, ["projectID","ID","projectName","Project"])
         self.die("Found more than one project matching: %s" % projectName)
       elif len(projects) == 1:
         return projects.keys()[0]
@@ -60,10 +58,7 @@ class alloc:
       if not tasks:
         self.die("No task found matching: %s" % ops["taskName"])
       elif tasks and len(tasks) >1:
-        self.print_table(tasks, {"taskID":"ID"
-                                ,"taskName":"Task"
-                                ,"projectName":"Project"
-                                })
+        self.print_table(tasks, ["taskID","ID","taskName","Task","projectName","Project"])
         self.die("Found more than one task matching: %s" % ops["taskName"])
       elif len(tasks) == 1:      
         return tasks.keys()[0]   
@@ -73,11 +68,7 @@ class alloc:
     rtn = self.get_list("task",{"taskID": id})
 
     # Print it out
-    self.print_table(rtn, {"taskID":"Task ID"
-                          ,"projectID":"Project"
-                          ,"status":"Status"
-                          ,"person":"Owner"
-                          })
+    self.print_table(rtn, ["taskID","Task ID","projectID","Project","status","Status","person","Owner"])
 
   def get_args(self, ops, str):
     # This function allows us to handle the cli arguments elegantly
@@ -143,7 +134,7 @@ class alloc:
     if self.quiet: return
 
     table = PrettyTable()
-    field_names = only_these_fields.values()
+    field_names = only_these_fields[1::2]
     table.set_field_names(field_names)
     #table.set_style(PLAIN_COLUMN)  n/a until prettytable 0.6
     #table.set_border_chars(vertical="",horizontal="",junction="")
@@ -157,7 +148,7 @@ class alloc:
     if rows and type(rows) is dict:
       for k,row in rows.items():
         r = []
-        for v in only_these_fields: 
+        for v in only_these_fields[::2]: 
           if v not in row:
             row[v] = ""
           r.append(row[v])
