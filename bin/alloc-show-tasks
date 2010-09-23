@@ -61,13 +61,11 @@ elif o['task']:
 # Get list of tasks
 r = a.get_list("task",ops)
 
-fields =  {}
-fields["taskID"] = "Task ID"
-fields["taskName"] = "Task"
-fields["projectName"] = "Project"
+fields = ["taskID","Task ID","taskName","Task","projectName","Project"]
 if o['verbose']:
-  fields["taskDescription"] = "Description"
+  fields.append("taskDescription")
+  fields.append("Description")
 
 if r:
-  a.print_table(r, fields,sort="Task")
+  a.print_table(r,fields,sort="Task")
 

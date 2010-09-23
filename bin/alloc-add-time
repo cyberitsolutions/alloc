@@ -76,10 +76,7 @@ if taskID:
   a.msg("Attempting to add time for work done on this task: %s" % taskID)
   tasks = a.get_list("task",{"taskID":taskID,"taskView":"prioritised"})
   if tasks:
-    a.print_table(tasks, {"taskID":"ID"
-                         ,"taskName":"Task"
-                         ,"projectName":"Project"
-                         })
+    a.print_table(tasks, ["taskID","ID","taskName","Task","projectName","Project"])
   else:
     a.die("Unable to find task with taskID: %s" % taskID)
 
@@ -92,9 +89,7 @@ elif projectID:
   a.msg("Attempting to add time for work done on this project: %s" % projectID)
   projects = a.get_list("project",{"projectID":projectID})
   if projects:
-    a.print_table(projects, {"projectID":"ID"
-                            ,"projectName":"Project"
-                            })
+    a.print_table(projects, ["projectID","ID","projectName","Project"])
   else:
     a.die("Unable to find project with projectID: %s" % projectID)
 

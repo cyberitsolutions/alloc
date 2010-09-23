@@ -38,9 +38,7 @@ filter["projectStatus"] = "Current"
 projects = {}
 projects = a.get_list("project",filter)
 
-a.print_table(projects, {"projectID":"Project ID"
-                            ,"projectName":"Project Name"
-                            }, sort="Project Name")
+a.print_table(projects, ["projectID","Project ID","projectName","Project Name"], sort="Project Name")
   
 
 
