@@ -370,7 +370,9 @@ CREATE TABLE interestedParty (
   emailAddress text NOT NULL,
   personID integer DEFAULT NULL,
   clientContactID integer DEFAULT NULL,
-  external boolean DEFAULT NULL
+  external boolean DEFAULT NULL,
+  interestedPartyCreatedUser integer DEFAULT NULL,
+  interestedPartyCreatedTime datetime DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS commentTemplate;
