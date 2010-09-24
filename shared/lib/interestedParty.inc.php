@@ -34,6 +34,11 @@ class interestedParty extends db_entity {
                              ,"interestedPartyCreatedTime"
                              );
 
+  function is_owner() {
+    global $current_user;
+    return same_email_address($this->get_value("emailAddress"),$current_user->get_value("emailAddress"));
+  }
+
   function exists($entity, $entityID, $email) {
     $db = new db_alloc();
     $db->query("SELECT *

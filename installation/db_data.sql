@@ -128,7 +128,10 @@ VALUES
 
 ,('history'                  ,0  ,NULL ,''         ,true ,NULL ,8     ,NULL)
 
-,('interestedParty'          ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
+,('interestedParty'          ,0  ,NULL ,''         ,true ,NULL ,9     ,NULL)
+,('interestedParty'          ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
+,('interestedParty'          ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('interestedParty'          ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
 
 ,('invoice'                  ,-1 ,NULL ,''         ,true ,NULL ,3     ,'Update invoiceItem, can change invoice.')
 ,('invoice'                  ,-1 ,NULL ,'employee' ,true ,NULL ,17    ,NULL)

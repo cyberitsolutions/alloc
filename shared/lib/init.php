@@ -38,7 +38,7 @@ require_once(dirname(__FILE__)."/solar_json.inc.php");
 require_once(dirname(__FILE__)."/pdf_reader.inc.php");
 
 class shared_module extends module {
-  var $db_entities = array("sentEmailLog");
+  var $db_entities = array("sentEmailLog","interestedParty");
 }
 
 
