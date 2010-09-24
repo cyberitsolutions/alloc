@@ -103,7 +103,7 @@ class alloc:
     try:
       options, remainder = getopt.getopt(sys.argv[1:], short_ops, long_ops)
     except:
-      print str % (sys.argv[0], help_str.rstrip())
+      print str % (os.path.basename(sys.argv[0]), help_str.rstrip())
       sys.exit(0)
 
     for k,v in all_ops.items():
@@ -116,7 +116,7 @@ class alloc:
             rtn[k] = True
 
     if rtn['help']:
-      print str % (sys.argv[0], help_str.rstrip())
+      print str % (os.path.basename(sys.argv[0]), help_str.rstrip())
       sys.exit(0)
     
     return rtn, remainder
