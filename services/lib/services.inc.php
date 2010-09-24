@@ -211,6 +211,27 @@ class alloc_services {
     }
   }
 
+  public function save_interestedParty($options) {
+    // Python will submit None instead of ''
+    foreach ($options as $k=>$v) { strtolower($v) != 'none' and $data[$k] = $v; }
+
+    // Check we have the minimum of fields
+    if ($data["entity"] && $data["entityID"] && $data["emailAddress"]) {
+      interestedParty::delete_interested_party($data["entity"],$data["entityID"],$data["emailAddress"]);
+      interestedParty::add_interested_party($data);
+    }
+  }
+
+  public function delete_interestedParty($options) {
+    // Python will submit None instead of ''
+    foreach ($options as $k=>$v) { strtolower($v) != 'none' and $data[$k] = $v; }
+
+    // Delete existing entries
+    if ($data["entity"] && $data["entityID"] && $data["emailAddress"]) {
+      interestedParty::delete_interested_party($data["entity"],$data["entityID"],$data["emailAddress"]);
+    }
+  }
+
   /** The help function for get_list
    * @return string $helptext
    */
@@ -243,6 +264,8 @@ class alloc_services {
     }
     die("Usage: get_list(entity, options). The following entities are available: ".$rtn);
   }
+
+
 
 } 
 
