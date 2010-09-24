@@ -30,6 +30,8 @@ class interestedParty extends db_entity {
                              ,"personID"
                              ,"clientContactID"
                              ,"external"
+                             ,"interestedPartyCreatedUser"
+                             ,"interestedPartyCreatedTime"
                              );
 
   function exists($entity, $entityID, $email) {

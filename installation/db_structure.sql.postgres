@@ -343,7 +343,9 @@ CREATE TABLE interestedParty (
   emailAddress text NOT NULL,
   personID integer DEFAULT NULL,
   clientContactID integer DEFAULT NULL,
-  external boolean DEFAULT NULL
+  external boolean DEFAULT NULL,
+  interestedPartyCreatedUser integer DEFAULT NULL,
+  interestedPartyCreatedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL
 ) ;
 
 CREATE TABLE commentTemplate (
