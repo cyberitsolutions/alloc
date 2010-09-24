@@ -132,13 +132,33 @@ class interestedParty extends db_entity {
   }
 
   function delete_interested_party($entity, $entityID, $emailAddress) {
-    $q = sprintf("DELETE 
-                    FROM interestedParty 
-                   WHERE entity='%s' 
-                     AND entityID='%d' 
-                     AND emailAddress='%s'",db_esc($entity),$entityID,db_esc($emailAddress));
-    $db = new db_alloc();
-    $db->query($q);
+    // Delete existing entries
+    $row = interestedParty::exists($entity,$entityID,$emailAddress);
+    if ($row) {
+      $ip = new interestedParty();
+      $ip->read_row_record($row);
+      $ip->delete();
+    }
+  }
+  
+  function add_interested_party($data) {
+    // Add new entry
+    $ip = new interestedParty();
+    $ip->set_value("entity",$data["entity"]);
+    $ip->set_value("entityID",$data["entityID"]);
+    $ip->set_value("fullName",$data["fullName"]);
+    $ip->set_value("emailAddress",$data["emailAddress"]);
+    if ($data["personID"]) {
+      $ip->set_value("personID",$data["personID"]);
+    } else {
+      $q = sprintf("SELECT clientContactID FROM clientContact WHERE clientContactEmail = '%s'",$data["emailAddress"]);
+      $db = new db_alloc();
+      $db->query($q);
+      $row = $db->row();
+      $row and $ip->set_value("clientContactID",$row["clientContactID"]);
+      $row and $ip->set_value("external",1);
+    }
+    $ip->save();
   }
 
   function adjust_by_email_subject($subject="",$entity,$entityID,$fullName="",$emailAddress="",$personID="",$clientContactID="",$body="",$msg_uid="") {
@@ -254,6 +274,36 @@ class interestedParty extends db_entity {
     return $action;
   }
 
+  function get_list_filter($filter=array()) {
+    $filter["emailAddress"]    and $sql[] = sprintf("(interestedParty.emailAddress LIKE '%%%s%%')",db_esc($filter["emailAddress"]));
+    $filter["fullName"]        and $sql[] = sprintf("(interestedParty.fullName LIKE '%%%s%%')",db_esc($filter["fullName"]));
+    $filter["personID"]        and $sql[] = sprintf("(interestedParty.personID = %d)",db_esc($filter["personID"]));
+    $filter["clientContactID"] and $sql[] = sprintf("(interestedParty.clientContactID = %d)",db_esc($filter["clientContactID"]));
+    $filter["entity"]          and $sql[] = sprintf("(interestedParty.entity = '%s')",db_esc($filter["entity"]));
+    $filter["entityID"]        and $sql[] = sprintf("(interestedParty.entityID = %d)",db_esc($filter["entityID"]));
+    return $sql;
+  }
+
+  function get_list($_FORM) {
+    
+    $filter = interestedParty::get_list_filter($_FORM);
+    $_FORM["return"] or $_FORM["return"] = "html";
+    
+    if (is_array($filter) && count($filter)) {
+      $f = " WHERE ".implode(" AND ",$filter);
+    }
+    
+    $db = new db_alloc;
+    $q = "SELECT * FROM interestedParty ".$f;
+    
+    $db->query($q);
+    while ($row = $db->next_record()) {
+      $interestedParty = new interestedParty();
+      $interestedParty->read_db_record($db);
+      $rows[$interestedParty->get_id()] = $row;
+    }
+    return (array)$rows;
+  }
 
 }
 
