@@ -44,8 +44,11 @@ $permission->set_values();
 
 
 if (!$permission->get_value("tableName")) {
-  $table_name_options = get_entity_table_names();
-  asort($table_name_options);
+  $ops = get_entity_table_names();
+  asort($ops);
+  foreach ($ops as $v) {
+    $table_name_options[$v] = $v;
+  }
   $TPL["tableNameOptions"] = page::select_options($table_name_options, $permission->get_value("tableName"));
   include_template("templates/permissionTableM.tpl");
   exit();
@@ -62,10 +65,10 @@ if ($_POST["save"]) {
 }
 
 $TPL["personOptions"] = page::select_options("SELECT personID as value, username as label FROM person ORDER BY username", $permission->get_value("personID"));
-$TPL["roleNameOptions"] = page::select_options(array("god", "admin", "manage", "employee"), $permission->get_value("roleName"));
+$TPL["roleNameOptions"] = page::select_options(array("god"=>"god", "admin"=>"admin", "manage"=>"manage", "employee"=>"employee"), $permission->get_value("roleName"));
 $TPL["allowOptions"] = page::select_options(array("Y"=>"Yes", "N"=>"No"), $permission->get_value("allow"));
 
-$table_name = $permission->get_value("tableName");
+$table_name = $_POST["tableName"] or $table_name = $permission->get_value("tableName");
 $entity = new $table_name;
 
 foreach ($entity->permissions as $value => $label) {
