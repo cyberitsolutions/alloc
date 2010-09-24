@@ -26,7 +26,7 @@ class permission extends db_entity {
   public $key_field = "permissionID";
   public $data_fields = array("tableName"
                              ,"entityID"
-                             ,"personID"=>array("empty_to_null"=>false)
+                             ,"personID"=>array("empty_to_null"=>true)
                              ,"roleName"=>array("empty_to_null"=>false)
                              ,"actions"
                              ,"sortKey"
