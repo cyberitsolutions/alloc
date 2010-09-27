@@ -139,7 +139,7 @@ $(document).ready(function() {
           </div>
           <div style="float:right; width:50%; text-align:left;">
             {if $taskStatusLabel}
-              <span class="corner" style="display:block;width:200px;border:1px solid #aaaaaa;margin-top:8px;text-align:center;{$taskStatusColour};">
+              <span class="corner" style="display:block;width:10em;padding:5px;margin-top:8px;text-align:center;{$taskStatusColour};">
               {$taskStatusLabel}
               </span>
             {/}
