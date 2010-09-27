@@ -24,5 +24,9 @@
 {if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format($timeEstimate)}</td>{/}
 {if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format(task::get_time_billed($taskID))}</td>{/}
 {if $_FORM["showTimes"]}     <td class="nobr">{$percentComplete}</td>{/}
-{if $_FORM["showStatus"]}    <td class="nobr" style="width:1%; {$taskStatusColour}">{$taskStatusLabel}</td>{/}
+{if $_FORM["showStatus"]}    <td class="nobr" style="width:1%;">
+                               <span class="corner" style="display:block;width:10em;padding:5px;text-align:center;{$taskStatusColour};">
+                                 {$taskStatusLabel}
+                               </span>
+                             </td>{/}
 </tr>
