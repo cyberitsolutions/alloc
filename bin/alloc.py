@@ -18,8 +18,8 @@ class alloc:
   username = ''
   quiet = ''
   sessID = ''
-  row_timeSheet = ["timeSheetID","Time Sheet ID","projectID","Project","status","Status","person","Owner","duration","Duration","amount","$"]
-  row_timeSheetItem = ["timeSheetID","Time Sheet ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","timeSheetItemDuration","Hours","taskID","taskID","comment","Comment","rate","$"]
+  row_timeSheet = ["timeSheetID","ID","dateFrom","From","dateTo","To","status","Status","person","Owner","duration","Duration","totalHours","Hrs","amount","$","projectName","Project"]
+  row_timeSheetItem = ["timeSheetID","ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","timeSheetItemDuration","Hours","taskID","taskID","comment","Comment","rate","$"]
 
   def __init__(self,url=""):
     if not url:
@@ -143,7 +143,10 @@ class alloc:
     n = not self.nude  
 
     for label in field_names:
-      table.set_field_align(label, "l")
+      if '$' in label:
+        table.set_field_align(label, "r")
+      else:
+        table.set_field_align(label, "l")
 
     if rows and type(rows) is dict:
       for k,row in rows.items():

@@ -572,14 +572,20 @@ class timeSheet extends db_entity {
     $people_array = get_cached_table("person");
 
     while ($row = $db->next_record()) {
-      $print = true;
       $t = new timeSheet;
       $t->read_db_record($db);
       $t->load_pay_info();
+
+      if ($_FORM["timeSheetItemHours"] && !parse_operator_comparison($_FORM["timeSheetItemHours"],$t->pay_info["total_duration_hours"])) 
+        continue;
+
+      $print = true;
+
      
       $row["amount"] = sprintf("%0.2f",$t->pay_info["total_dollars"]);
       $extra["amountTotal"] += $row["amount"];
       $extra["totalHours"] += $t->pay_info["total_duration_hours"];
+      $row["totalHours"] += $t->pay_info["total_duration_hours"];
       $row["duration"] = $t->pay_info["summary_unit_totals"];
       $row["person"] = $people_array[$row["personID"]]["name"];
       $row["status"] = $status_array[$row["status"]];
@@ -708,6 +714,7 @@ class timeSheet extends db_entity {
                 ,"status"                         => "Time Sheet status eg: edit | manager | admin | invoiced | finished"
                 ,"dateFrom"                       => "Time Sheets from a particular date"
                 ,"dateTo"                         => "Time Sheets to a particular date"
+                ,"timeSheetItemHours"             => "Time Sheets that have a certain amount of hours billed eg: '>7 AND <10 OR =4 AND !=8'"
                 ,"url_form_action"                => "The submit action for the filter form"
                 ,"form_name"                      => "The name of this form, i.e. a handle for referring to this saved form"
                 ,"dontSave"                       => "Specify that the filter preferences should not be saved this time"
