@@ -10,11 +10,8 @@ ops = []
 ops.append((''  ,'help           ','Show this help.'))
 #ops.append((''  ,'nude           ','Don\'t display a border or header row in the results.'))
 #ops.append(('v', 'verbose        ','Run with more output.'))
-ops.append(('n' ,'dryrun         ','Perform a dry run, no data gets updated. This is on by default.'))
+ops.append(('n' ,'dryrun         ','Perform a dry run, no data gets updated.'))
 ops.append(('q' ,'quiet          ','Run with no output except errors.'))
-ops.append(('a' ,'all            ','Submit all time sheets that are in edit mode.'))
-ops.append(('t:','time=ID        ','A time sheet ID, for a time sheet to submit.'))
-ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
 
 # Specify some header and footer text for the help text
 help_text = '''usage: %s [OPTIONS]\n\n%s\n\nThis program enables you to submit your time sheets.
@@ -22,7 +19,6 @@ help_text = '''usage: %s [OPTIONS]\n\n%s\n\nThis program enables you to submit y
 Examples:
 
 alloc-push-time --dryrun
-alloc-push-time --all 
 alloc-show-time --nude | alloc-push-time --dryrun
 alloc-show-time --nude --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc-push-time'''
 
@@ -36,46 +32,15 @@ a.authenticate();
 a.quiet = o['quiet']
 #a.nude = o['nude']
 a.dryrun = o['dryrun']
-projectID = ""
 
-if o['project'] or o['time'] or o['all']:
-
-  # Get a projectID either passed via command line, or figured out from a project name
-  if a.is_num(o['project']):
-    projectID = o['project']
-  elif o['project']:
-    projectID = a.search_for_project(o['project'],personID)
-
-  filter = {}
-  filter["personID"] = a.get_my_personID()
-  filter["status"] = "edit"
-  if o['all']:
-    pass
-  elif o['time']:
-    filter["timeSheetID"] = o['time']
-  elif o['project']:
-    filter["projectID"] = o['project']
-
-  timeSheets = a.get_list("timeSheet",filter)
-
-  if timeSheets:
-    for timeSheetID, row in timeSheets.items():
-      if not o['dryrun']:
-        a.msg("Attempting to submit time sheet: "+timeSheetID)
-        a.make_request({"method":"change_timeSheet_status","timeSheetID":timeSheetID,"direction":"forwards"}) 
-      else:
-        a.msg("Dry-run, not attempting to submit time sheet: "+timeSheetID)
-
-else:
-  lines = sys.stdin.readlines()
-  for line in lines:
-    f = line.split()
-    timeSheetID = f[0]
-    if not o['dryrun']: 
-      a.msg("Attempting to submit time sheet: "+timeSheetID)
-      a.make_request({"method":"change_timeSheet_status","timeSheetID":timeSheetID,"direction":"forwards"})
-    else:
-      a.msg("Dry-run, not attempting to submit time sheet: "+timeSheetID)
-
-
+# Read entries from stdin
+lines = sys.stdin.readlines()
+for line in lines:
+  f = line.split()
+  timeSheetID = f[0]
+  if not o['dryrun']: 
+    a.msg("Attempting to submit time sheet: "+timeSheetID)
+    a.make_request({"method":"change_timeSheet_status","timeSheetID":timeSheetID,"direction":"forwards"})
+  else:
+    a.msg("Dry-run, not attempting to submit time sheet: "+timeSheetID)
 
