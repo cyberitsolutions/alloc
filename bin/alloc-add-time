@@ -104,7 +104,7 @@ else:
 
 # We should only have a timeSheetID if a new timeSheetItem was successfully added.
 if timeSheetID:
-  a.print_table(a.get_list("timeSheet",{"timeSheetID": timeSheetID}), a.row_timeSheet, sort="Time Sheet ID")
+  a.print_table(a.get_list("timeSheet",{"timeSheetID": timeSheetID}), a.row_timeSheet, sort="ID")
   a.print_table(a.get_list("timeSheetItem",{"timeSheetID": timeSheetID}), a.row_timeSheetItem, sort="Date")
   a.yay("Time added to time sheet: %s" % timeSheetID)
 elif not o['dryrun']:

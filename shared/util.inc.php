@@ -674,4 +674,52 @@ function image_create_from_file($path) {
   $f = $functions[$info[2]];
   return $f($path);
 }
+function operator_comparison($operator,$figure,$subject) {
+  if ($operator == '=')  { return $figure == $subject; }
+  if ($operator == '>')  { return $figure >  $subject; }
+  if ($operator == '>=') { return $figure >= $subject; }
+  if ($operator == '<')  { return $figure <  $subject; }
+  if ($operator == '<=') { return $figure <= $subject; }
+  if ($operator == '!=') { return $figure != $subject; }
+}
+function parse_operator_comparison($str,$figure) {
+  $operator_regex = "/\s*([><=!]*)\s*([\d\.]+)\s*/";
+
+  // 5
+  if (is_numeric($str)) {
+    $operator = '=';
+    $number = $str;
+    return operator_comparison($operator,$figure,$number);
+
+  // <5 OR =10
+  } else if (stristr($str,"OR")) {
+    $criterias = explode("OR",$str);
+    foreach ($criterias as $criteria) {
+      if (parse_operator_comparison($criteria,$figure)) {
+        return true;
+      }
+    }
+
+  // >5 AND <10
+  } else if (stristr($str,"AND")) {
+    $criterias = explode("AND",$str);
+    foreach ($criterias as $criteria) {
+      preg_match($operator_regex,$criteria,$matches);
+      $operator = $matches[1];
+      $number = $matches[2];
+      if (operator_comparison($operator,$figure,$number)) {
+        $alive = true;
+      } else {
+        $dead = true;
+      }
+    }
+    return $alive && !$dead;
+
+  // >5
+  } else if (preg_match($operator_regex,$str,$matches)) {
+    $operator = $matches[1];
+    $number = $matches[2];
+    return operator_comparison($operator,$figure,$number);
+  }
+}
 ?>
