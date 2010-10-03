@@ -14,12 +14,15 @@ ops.append(('n' ,'dryrun         ','Perform a dry run, no data gets updated.'))
 ops.append(('q' ,'quiet          ','Run with no output except errors.'))
 
 # Specify some header and footer text for the help text
-help_text = '''usage: %s [OPTIONS]\n\n%s\n\nThis program enables you to submit your time sheets.
+help_text = '''Usage: %s [OPTIONS]\nSubmit time sheets forwards. Reads the list of time sheets from standard in.\n\n%s
+
+This program enables you to submit your time sheets to managers, admins etc.
+The time sheet is moved from eg: Edit to Manager status. The time sheet may 
+no longer be editable once you have submitted it.
   
 Examples:
-
-alloc-push-time --dryrun
 alloc-show-time --nude | alloc-push-time --dryrun
+alloc-show-time --nude | alloc-push-time
 alloc-show-time --nude --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc-push-time'''
 
 # Get the command line arguments into a dictionary

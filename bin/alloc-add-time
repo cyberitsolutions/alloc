@@ -17,7 +17,13 @@ ops.append(('h:','hours=NUM      ','The number of hours worked.'))
 ops.append(('c:','comment=COMMENT','The time sheet item comment.')) 
 
 # Specify some header and footer text for the help text
-help_text = "usage: %s [OPTIONS]\n\n%s\n\nIf run without arguments this program will run interactively."
+help_text = """Usage: %s [OPTIONS]\nAdd time to a time sheet. Create the time sheet if necessary.\n\n%s
+
+If run without arguments this program will run interactively.
+
+Examples:
+alloc-add-time
+alloc-add-time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
 
 # Get the command line arguments into a dictionary
 o, remainder = a.get_args(ops, help_text)
