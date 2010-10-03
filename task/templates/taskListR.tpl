@@ -13,9 +13,9 @@
 {if $_FORM["showPriority"]}  <td style="color:{$_FORM.taskPriorities.$priority.colour}">{$_FORM.taskPriorities.$priority.label}</td>{/}
 {if $_FORM["showPriority"]}  <td style="color:{$_FORM.projectPriorities.$projectPriority.colour}">{$_FORM.projectPriorities.$projectPriority.label}</td>{/}
 {if $_FORM["showDateStatus"]}<td>{$taskDateStatus}</td>{/}
-{if $_FORM["showCreator"]}   <td>{=$_FORM.people_cache.$creatorID.name}</td>{/}
-{if $_FORM["showManager"]}   <td>{=$_FORM.people_cache.$managerID.name}</td>{/}
-{if $_FORM["showAssigned"]}  <td>{=$_FORM.people_cache.$personID.name}</td>{/}
+{if $_FORM["showCreator"]}   <td>{=$creator_name}</td>{/}
+{if $_FORM["showManager"]}   <td>{=$manager_name}</td>{/}
+{if $_FORM["showAssigned"]}  <td>{=$assignee_name}</td>{/}
 {if $_FORM["showDate1"]}     <td class="nobr">{$dateTargetStart}</td>{/}
 {if $_FORM["showDate2"]}     <td class="nobr">{$dateTargetCompletion}</td>{/}
 {if $_FORM["showDate3"]}     <td class="nobr">{$dateActualStart}</td>{/}

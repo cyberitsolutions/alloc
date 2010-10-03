@@ -152,9 +152,19 @@ class alloc:
       for k,row in rows.items():
         r = []
         for v in only_these_fields[::2]: 
-          if v not in row:
-            row[v] = ""
-          r.append(row[v])
+          str = ''
+      
+          for sep in ["|"," ","/"]:
+            if sep in v:
+              bits = v.split(sep)
+              str = sep.join([row[i] for i in bits])
+              
+          if v in row:
+            str = row[v]
+
+          if not str: str = ''
+
+          r.append(str)
         table.add_row(r)
     table.printt(sortby=sort,border=n, header=n)
 
