@@ -11,7 +11,7 @@ ops.append((''  ,'nude           ','Don\'t display a border or header row in the
 ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
 
 # Specify some header and footer text for the help text
-help_text = "usage: %s [OPTIONS]\n\n%s\n\nIf called without arguments this program will display all your tasks."
+help_text = "Usage: %s [OPTIONS]\nPrint a list of projects.\n\n%s\n\nIf called without arguments this program will display all of your projects."
 
 # Get the command line arguments into a dictionary
 o, remainder = a.get_args(ops, help_text)
