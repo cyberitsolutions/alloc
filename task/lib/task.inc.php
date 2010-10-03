@@ -850,32 +850,32 @@ class task extends db_entity {
 
     // If many create an SQL taskTypeID in (set) 
     if (is_array($filter["taskTypeID"]) && count($filter["taskTypeID"])) {
-      $sql[] = "(taskTypeID in ('".implode("','",$filter["taskTypeID"])."'))";
+      $sql[] = "(task.taskTypeID in ('".implode("','",$filter["taskTypeID"])."'))";
     
     // Else if only one taskTypeID
     } else if ($filter["taskTypeID"]) {
-      $sql[] = sprintf("(taskTypeID = '%s')",$filter["taskTypeID"]);
+      $sql[] = sprintf("(task.taskTypeID = '%s')",$filter["taskTypeID"]);
     }
 
     // Filter on taskID
     if ($filter["taskID"]) {     
-      $sql[] = sprintf("(taskID = %d)", db_esc($filter["taskID"]));
+      $sql[] = sprintf("(task.taskID = %d)", db_esc($filter["taskID"]));
     }
     // Filter on %taskName%
     if ($filter["taskName"]) {     
-      $sql[] = sprintf("(taskName LIKE '%%%s%%')", db_esc($filter["taskName"]));
+      $sql[] = sprintf("(task.taskName LIKE '%%%s%%')", db_esc($filter["taskName"]));
     }
     // If personID filter
     if ($filter["personID"]) {
-      $sql["personID"] = sprintf("(personID = %d)",$filter["personID"]);
+      $sql["personID"] = sprintf("(task.personID = %d)",$filter["personID"]);
     }
     // If creatorID filter
     if ($filter["creatorID"]) {
-      $sql["creatorID"] = sprintf("(creatorID = %d)",$filter["creatorID"]);
+      $sql["creatorID"] = sprintf("(task.creatorID = %d)",$filter["creatorID"]);
     }
     // If managerID filter
     if ($filter["managerID"]) {
-      $sql["managerID"] = sprintf("(managerID = %d)",$filter["managerID"]);
+      $sql["managerID"] = sprintf("(task.managerID = %d)",$filter["managerID"]);
     }
 
     // These filters are for the time sheet dropdown list
@@ -952,6 +952,7 @@ class task extends db_entity {
   }
 
   function get_list($_FORM) {
+    global $current_user;
 
     /*
      * This is the definitive method of getting a list of tasks that need a sophisticated level of filtering
@@ -989,13 +990,14 @@ class task extends db_entity {
         $f = " WHERE ".implode(" AND ",$filter);
       }
       $db = new db_alloc;
-      $q = sprintf("SELECT task.*, projectName, projectPriority
+      $q = sprintf("SELECT task.*, projectName, projectPriority, rate, rateUnitID
                       FROM task
                  LEFT JOIN project ON project.projectID = task.projectID
+                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
                            %s
                   GROUP BY task.taskID
                   ORDER BY projectName,taskName
-                   ",$f);
+                   ",$current_user->get_id(),$f);
       
       $_FORM["debug"] and print "\n<br>QUERY: ".$q;
       $db->query($q);
@@ -1010,10 +1012,16 @@ class task extends db_entity {
         $row["taskTypeImage"] = $task->get_task_image();
         $row["taskStatusLabel"] = $task->get_task_status("label");
         $row["taskStatusColour"] = $task->get_task_status("colour");
+        $row["creator_name"] = $_FORM["people_cache"][$row["creatorID"]]["name"];
+        $row["manager_name"] = $_FORM["people_cache"][$row["managerID"]]["name"];
+        $row["assignee_name"] = $_FORM["people_cache"][$row["personID"]]["name"];
         $row["newSubTask"] = $task->get_new_subtask_link();
         $_FORM["showDateStatus"] and $row["taskDateStatus"] = $task->get_dateStatus();
         $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
+        $_FORM["showTimes"] and $row["timeActual"] = $task->get_hours_billed();
+        $row["rate"] and $row["rate"] = $row["rate"]."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
+        $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
         if (!$_FORM["skipObject"]) {
           $_FORM["return"] == "arrayAndHtml" || $_FORM["return"] == "array" and $row["object"] = $task;
         }
@@ -1056,16 +1064,20 @@ class task extends db_entity {
         $filter = " WHERE ".implode(" AND ",$filter);
       }
 
-      $q = "SELECT task.*, projectName, projectShortName, clientID, projectPriority, 
-                   priority * POWER(projectPriority, 2) * 
-                       IF(task.dateTargetCompletion IS NULL, 
-                         8,
-                         ATAN(
-                              (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
-                             ) / 3.14 * 8 + 4
-                         ) / 10 as priorityFactor
-              FROM task LEFT JOIN project ON task.projectID = project.projectID 
-             ".$filter." ORDER BY priorityFactor ".$limit;
+      $q = sprintf("SELECT task.*, projectName, projectShortName, clientID, projectPriority, rate, rateUnitID,
+                           priority * POWER(projectPriority, 2) * 
+                               IF(task.dateTargetCompletion IS NULL, 
+                                 8,
+                                 ATAN(
+                                      (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
+                                     ) / 3.14 * 8 + 4
+                                 ) / 10 as priorityFactor
+                      FROM task 
+                 LEFT JOIN project ON task.projectID = project.projectID 
+                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
+                           ".$filter." 
+                  ORDER BY priorityFactor ".$limit
+            ,$current_user->get_id());
       $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);
@@ -1078,6 +1090,9 @@ class task extends db_entity {
         $row["taskName"] = $t->get_name($_FORM);
         $row["taskLink"] = $t->get_task_link($_FORM);
         $row["taskTypeImage"] = $t->get_task_image();
+        $row["creator_name"] = $_FORM["people_cache"][$row["creatorID"]]["name"];
+        $row["manager_name"] = $_FORM["people_cache"][$row["managerID"]]["name"];
+        $row["assignee_name"] = $_FORM["people_cache"][$row["personID"]]["name"];
         $row["newSubTask"] = $t->get_new_subtask_link();
         $row["taskStatusLabel"] = $t->get_task_status("label");
         $row["taskStatusColour"] = $t->get_task_status("colour");
@@ -1086,7 +1101,10 @@ class task extends db_entity {
           $row["object"] = $t;
         }
         $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
+        $_FORM["showTimes"] and $row["timeActual"] = $t->get_hours_billed();
+        $row["rate"] and $row["rate"] = $row["rate"]."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
+        $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
         $tasks[$row["taskID"]] = $row;
       }
     } 
@@ -1305,6 +1323,10 @@ class task extends db_entity {
     if (is_object($this) && $this->get_value("taskTypeID") == "Parent") {
       return "<a class=\"noprint\" href=\"".$TPL["url_alloc_task"]."projectID=".$this->get_value("projectID")."&parentTaskID=".$this->get_id()."\">New Subtask</a>";
     }
+  }
+
+  function get_hours_billed() {
+    return sprintf("%0.2f",$this->get_time_billed()/60/60);
   }
 
   function get_time_billed($taskID="", $recurse=false) {
