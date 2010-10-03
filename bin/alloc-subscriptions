@@ -8,7 +8,7 @@ a = alloc()
 # Setup the options that this cli can accept
 ops = []
 ops.append((''  ,'help           ','Show this help.'))
-ops.append((''  ,'nude           ','Don\'t display a border or header row in the results.'))
+ops.append((''  ,'csv            ','Return the results in CSV format.'))
 ops.append(('q' ,'quiet          ','Run with no output except errors.'))
 ops.append(('n' ,'dryrun         ','Perform a dry run, no data gets updated.'))
 ops.append(('e:','email=EMAIL    ','Output subscriptions with this email address. Use % for all.'))
@@ -20,7 +20,7 @@ help_text = """Usage: %s [OPTIONS] [FILE]\nModify interested party subscriptions
 
 Examples:
 alloc-subscriptions --email example@example.com 
-alloc-subscriptions --nude --email example@example.com > foo.txt
+alloc-subscriptions --csv --email example@example.com > foo.txt
 alloc-subscriptions --del < foo.txt
 alloc-subscriptions --add < foo.txt"""
 
@@ -31,7 +31,7 @@ o, remainder = a.get_args(ops, help_text)
 a.authenticate();
 
 # Initialize some variables
-a.nude = o['nude']
+a.csv = o['csv']
 a.quiet = o['quiet']
 a.dryrun = o['dryrun']
 personID = a.get_my_personID()
@@ -49,14 +49,13 @@ if o['email']:
 elif o['add'] or o['del']:
   lines = sys.stdin.readlines()
   for line in lines:
-    f = line.split()
+    f = line[:-1].split(",")
     party = {}
     party[keys[0]] = f[0]
     party[keys[1]] = f[1]
     party[keys[2]] = f[2]
     party[keys[3]] = f[3]
     party[keys[4]] = f[4]
-    if f[5]: party[keys[4]]+=' '+f[5]
     if o['add']: 
       if not o['dryrun']: a.make_request({"method":"save_interestedParty","options":party})
       a.msg("Adding:"+str(party))

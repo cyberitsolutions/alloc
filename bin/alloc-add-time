@@ -7,7 +7,7 @@ a = alloc()
 # Setup the options that this cli can accept
 ops = []
 ops.append((''  ,'help           ','Show this help.'))
-ops.append((''  ,'nude           ','Don\'t display a border or header row in the results.'))
+ops.append((''  ,'csv            ','Return the results in CSV format.'))
 ops.append(('q' ,'quiet          ','Run with no output except errors.'))
 ops.append(('n' ,'dryrun         ','Perform a dry run, no data gets updated.'))
 ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
@@ -49,7 +49,7 @@ if interactive and not remainder:
 
 # Initialize some variables
 a.quiet = o['quiet']
-a.nude = o['nude']
+a.csv = o['csv']
 a.dryrun = o['dryrun']
 timeSheetID = 0
 personID = a.get_my_personID()

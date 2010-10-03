@@ -31,7 +31,7 @@ class alloc:
     self.url = url
     self.username = ''
     self.quiet = ''
-    self.nude = False
+    self.csv = False
     self.sessID = ''
 
   def search_for_project(self, projectName, personID):
@@ -130,17 +130,17 @@ class alloc:
       return i
 
   def print_table(self, rows, only_these_fields, sort=False):
-    # Handy function for printing out results in a nice ascii table
+    # For printing out results in an ascii table or CSV format
     if self.quiet: return
 
     table = PrettyTable()
     field_names = only_these_fields[1::2]
     table.set_field_names(field_names)
-    #table.set_style(PLAIN_COLUMN)  n/a until prettytable 0.6
-    #table.set_border_chars(vertical="",horizontal="",junction="")
 
-    # Hide the frame and header
-    n = not self.nude  
+    # Hide the frame and header if --csv
+    if self.csv:
+      table.set_border_chars(vertical=",",horizontal="",junction="")
+      table.padding_width=0
 
     for label in field_names:
       if '$' in label:
@@ -159,14 +159,22 @@ class alloc:
               bits = v.split(sep)
               str = sep.join([row[i] for i in bits])
               
-          if v in row:
-            str = row[v]
-
+          if v in row: str = row[v]
           if not str: str = ''
 
           r.append(str)
         table.add_row(r)
-    table.printt(sortby=sort,border=n, header=n)
+    lines = table.get_string(sortby=sort, header=not self.csv)
+    # If csv, need to manually strip out the leading and trailing tab on
+    # each line as well as compress the whitespace in the fields
+    if self.csv:
+      s = ''
+      for line in lines[1:-1].split("\n"):
+        line = re.sub("\s+,",",",line) # strip out whitespace padding 
+        s+= line[1:-1]+"\n"            # strip out leading and trailing character
+      lines = s[:-1]
+
+    print lines
 
   def is_num(self, obj):
     # There's got to be a better way to tell if something is a number 

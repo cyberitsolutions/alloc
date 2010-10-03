@@ -7,7 +7,7 @@ a = alloc()
 # Setup the options that this cli can accept
 ops = []
 ops.append((''  ,'help           ','Show this help.'))
-ops.append((''  ,'nude           ','Don\'t display a border or header row in the results.'))
+ops.append((''  ,'csv            ','Return the results in CSV format.'))
 ops.append(('v' ,'verbose        ','Print the tasks\' descriptions.'))
 ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
 ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.'))
@@ -27,7 +27,7 @@ a.authenticate();
 
 # Get my personID
 personID = a.get_my_personID()
-a.nude = o['nude']
+a.csv = o['csv']
 order = "Priority"
 if o['order']: order = o['order']
 
