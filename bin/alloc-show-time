@@ -9,7 +9,7 @@ ops = []
 ops.append((''  ,'help           ','Show this help.'))
 ops.append((''  ,'csv            ','Return the results in CSV format.'))
 ops.append(('q' ,'quiet          ','Run with no output except errors.'))
-ops.append(('v' ,'verbose        ','Show time sheet\'s items.'))
+ops.append(('i' ,'items          ','Show time sheet\'s items.'))
 ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
 ops.append(('s:','status=STATUS  ','The time sheets\' status eg: edit, manager, admin, invoiced, finished. Default: edit'))
 ops.append(('t:','time=ID        ','A time sheet ID.'))
@@ -78,9 +78,8 @@ if o['date']:
 timeSheets = a.get_list("timeSheet",ops)
 
 if timeSheets:
-  if o['verbose']:
+  if o['items']:
     for id,t in timeSheets.items():
-      a.print_table({id:t}, a.row_timeSheet, sort=order1)
       a.print_table(a.get_list("timeSheetItem",{"timeSheetID": id}), a.row_timeSheetItem, sort=order2)
   else:
     a.print_table(timeSheets, a.row_timeSheet, sort=order1)
