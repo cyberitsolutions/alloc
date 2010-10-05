@@ -1409,6 +1409,96 @@ steps.
    right.
 
 
+How do I Quickly Jump Back to a Recent Task/Project/Timesheet Page?
+-------------------------------------------------------------------
+
+More often than not, you'll need to quickly jump back to a recently
+opened/created/modified data entity (task, project, timesheet, etc).
+allocPSA allows a speedy way to achieve this action.
+
+1. Log in to allocPSA.
+
+2. Open a task, timesheet, project or other mainstream data entity page.
+
+3. For the purposes of demonstration, you don't need to make any changes
+   to this data entity, but you can if you want to.
+
+4. Now, open another task, timesheet, project or other mainstream data
+   entity page.
+
+5. You can do this a few more times, building up a small list of
+   recently visited data entities.
+   
+6. You can now jump quickly back to each of these, by selected them from
+   the QuickList drop-list, near the top-right of the allocPSA screen.
+   The list of recently-visited data entities will appear just below the
+   group of New <Entity> options, shown at the top of the list.
+
+
+How do I Customise my Home Page?
+--------------------------------
+  
+1. Log in to allocPSA.
+
+2. Go to the Home page.
+
+3. On the lower-right of the Home page, you will see the Preferences
+   section; Click the Edit button within this section.
+
+4. Change the settings for Font size, Theme, Top Tasks etc.
+
+   - Font size will alter the default font allocPSA uses
+
+   - Theme will alter the colours (look and feel) of allocPSA
+
+   - Top tasks will alter how many tasks are shown in your Home page.
+
+   - Status allows you to select which tasks are shown on your Home
+     page, based on their status, It is possible to do
+     multiple-selections, for example, all Open and all Pending tasks.
+
+   - Calendar weeks allows you to specify how many weeks forward are
+     displayed on your Home page calender.
+
+   - Daily email is deprecated in use, but used-to send out a daily
+     summary of tasks to the user.
+
+   - Receive my comments allows the user to specify of they are sent
+     their own comments, as part of a task comment  discussion thread.
+
+   - Project list specifies how many projects that the user is assigned
+     to, are to be shown on the Home page.
+
+5. Once you've made the changes you need to make, click the Save button.
+   If you've made changes you dont want to keep, click the Cancel
+   button.
+
+
+How do I Sort Tables of Data?
+-----------------------------
+
+1. Log in to allocPSA.
+
+2. Bring up and of the mainstream data entity tables, such as the list
+   of tasks in the Home page, the list of clients in the Clients tab
+   page, the list of projects in the Projects tab page, Time, Invoices
+   etc.
+
+3. You will notice that if you hover your mouse pointer over the table
+   column headings, for instance, the ID table column heading on the
+   Tasks table, that a small up-down-arrow icon will appear. This is
+   there to tell you that you can click this table column heading text,
+   and allocPSA will sort the data in the table using this column as the
+   sorting criterion. 
+
+4. Click the same table column heading text again, and the sort order
+   will be reversed.
+
+5. Click on another table column heading text, for instance, TASK on the
+   Tasks table, and allocPSA will sort the data in the table using this
+   column as the sorting criterion.
+
+
 Useful Tips for using allocPSA
 ==============================
 
@@ -1613,10 +1703,29 @@ E-mail etc.
 allocPSA also allows for the attachment of documents which pertain to this
 Client, as well as any per-Client reminders that need to be added.
 
-To view the list of current Clients, you need to click on the 'Client' link in
-the allocPSA toolbar. You will then be taken to the Client module, where you
-will be shown a table of current Clients. You can view and edit details for
-each Client, by clicking on that Client's link. 
+To view the list of current Clients, you need to click on the 'Clients'
+tab in the allocPSA main menu. You will then be taken to the Clients tab
+page, where you will be shown a table of current Clients. 
+
+You can filter the list of clients shown in the Clients tab page, by
+clicking the Show Filter link, if this is presented, which will open up
+the filter segment of the page. Using this filter, you can select
+portions of a client name or a contact name within a client
+organisation, which you want to filter on, along with the client's
+Status (Current, Potential, Archived) and the client's Category (Client,
+Vendor, Supplier, Non-profit, etc). 
+
+Once you have selected the filter criteria, you click the Filter button,
+and allocPSA will show you the matching entries. You can remove a
+filter, by clearing out the values in the filter text boxes, and
+clicking the Filter button once more.
+
+You can also using the alphabetic quick-links shown at the bottom of the
+filter segment, to show all the client organisations which start with
+A, B, C etc.
+
+You can view and edit details for each Client, by clicking on that
+client's link. 
 
 Hint: When allocPSA lists the list of current Client's, you can use your
 browser's Find facility (often a Ctrl + F keystroke or available from the Edit
@@ -1749,6 +1858,22 @@ It might be in the production of a report, or the development of a new device
 or item of software. allocPSA is very flexible in terms of how it handles the
 concept of a Project, and how the life-cycle of a Project is handled in your
 organisation.
+
+To see a list of Projects in allocPSA, click on the Projects tab on the
+main menu. This will show you a tabulated view of (most likely) the
+currently active projects.
+
+You can filter the list of projects shown in the Projects tab page, by
+clicking the Show Filter link, if this is presented, which will open up
+the filter segment of the page. Using this filter, you can select to
+filter projects by Status (Current, Potential, Archived), Type (Project,
+Job, Contract), allocated to a particular person, and portions of a
+project's name.
+
+Once you have selected the filter criteria, you click the Filter button,
+and allocPSA will show you the matching entries. You can remove a
+filter, by clearing out the values in the filter text boxes, and
+clicking the Filter button once more.
 
 Much like a Task, a Project has a header component, which is not likely to
 change that frequently. Within this header component are informational details
@@ -1976,7 +2101,6 @@ the:
 The Project's phases and Tasks are then shown in a list below the graph. The
 child Tasks of any parent Task or phase are shown indented below that parent.
 Clicking on any of these will bring it to the screen.
-
 
 
 Task Allocation Report
