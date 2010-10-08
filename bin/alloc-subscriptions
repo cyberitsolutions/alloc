@@ -16,11 +16,11 @@ ops.append(('a' ,'add            ','Add the following subscriptions from stdin.'
 ops.append(('d' ,'del            ','Delete the following subscriptions from stdin.'))
 
 # Specify some header and footer text for the help text
-help_text = """Usage: %s [OPTIONS] [FILE]\nModify interested party subscriptions.\n\n%s
+help_text = """Usage: %s [OPTIONS] [FILE]\nModify interested party subscriptions for an email address.\n\n%s
 
 Examples:
 alloc-subscriptions --email example@example.com 
-alloc-subscriptions --csv --email example@example.com > foo.txt
+alloc-subscriptions --email example@example.com --csv > foo.txt
 alloc-subscriptions --del < foo.txt
 alloc-subscriptions --add < foo.txt"""
 
