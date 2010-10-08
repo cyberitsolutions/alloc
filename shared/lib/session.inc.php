@@ -23,7 +23,6 @@
 class Session {
   
   var $key;          # the unique key for the session 
-  var $key2;         # a per web browser key incase someone gets first key
   var $db;           # database object 
   var $session_data; # assoc array which holds all session data
   var $session_life; # number of seconds the session is alive for
@@ -41,7 +40,6 @@ class Session {
   // Constructor
   function Session($key="") {
     $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"] or $this->key = $_REQUEST["sessID"];
-    $this->key2          = md5("ung!uessibbble".$_SERVER['HTTP_USER_AGENT']);
     $this->db            = new db_alloc;
     #$this->session_life  = (5); 
     $this->session_life  = (config::get_config_item("allocSessionMinutes")*60); 
@@ -59,7 +57,6 @@ class Session {
   // Call this in a login page to start session 
   function Start($row,$nuke_prev_sessions=true) {
     $this->key = md5($row["personID"]."mix it up#@!".md5(mktime().md5(microtime())));
-    $this->Put("key2", $this->key2);
     $this->Put("session_started", mktime());
     if ($nuke_prev_sessions && config::get_config_item("singleSession")) {
       $this->db->query("DELETE FROM sess WHERE personID = %d",$row["personID"]);
@@ -73,7 +70,7 @@ class Session {
 
   // Test whether session has started 
   function Started() {
-    if ($this->Get("session_started") && $this->Get("key2") == $this->key2 && !$this->Expired())
+    if ($this->Get("session_started") && !$this->Expired())
       return true;
   }
 
