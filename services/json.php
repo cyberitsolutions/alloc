@@ -1,7 +1,7 @@
 <?php
 
 // enable error reporting
-define("NO_REDIRECT",1); 
+define("NO_AUTH",1); 
 require_once("../alloc.php");
 
 

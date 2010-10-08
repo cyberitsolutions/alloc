@@ -20,8 +20,7 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-define("NO_AUTH",1);
-require_once("alloc.php");
+require_once("./alloc.php");
 alloc_redirect($TPL["url_alloc_home"]);
 
 ?>

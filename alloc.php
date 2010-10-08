@@ -171,7 +171,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   $db->connect();
 
   // Check for existing session..
-  $sess = new Session;
+  $sess = new Session();
 
   // Include all the urls
   require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."global_tpl_values.inc.php");
@@ -189,19 +189,25 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // Setup a current_user person who will represent the logged in user
   $current_user = new person;
 
+  // If a script does not require authentication to take place, for example a
+  // script that runs from cron, or the JSON handler, it can define NO_AUTH
+  // before it includes alloc.php. This will circumvent the auth process.
 
-  // If the session hasn't started and we're not on the login screen, then redirect to login 
-  // Some scripts don't require authentication
-  if (!defined("NO_AUTH") && !$sess->Started()) { 
-    if (defined("NO_REDIRECT")) {
-      // json.php
-    } else {
+  // If an authenticated, logged-in, session expires, alloc will re-direct
+  // the web browser to the login page. However some scripts run from AJAX calls,
+  // and to respond with a re-direct when the web-browser is expecting a snippet of
+  // html causes the browser to load the login page inline to the current page. To
+  // avoid this, AJAX scripts should define NO_REDIRECT before they include alloc.php.
+
+  if (!defined("NO_AUTH") && !$sess->Started()) {
+    if (!defined("NO_REDIRECT")) {
       alloc_redirect($TPL["url_alloc_login"]);
+    } else {
       exit();
     }
   } 
   
-  if (!defined("NO_AUTH")) {
+  if ($sess->Get("personID")) {
     $current_user->load_current_user($sess->Get("personID"));
 
     // Save history entry
