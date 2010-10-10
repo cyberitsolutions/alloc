@@ -1064,20 +1064,20 @@ class task extends db_entity {
         $filter = " WHERE ".implode(" AND ",$filter);
       }
 
-      $q = sprintf("SELECT task.*, projectName, projectShortName, clientID, projectPriority, rate, rateUnitID,
-                           priority * POWER(projectPriority, 2) * 
-                               IF(task.dateTargetCompletion IS NULL, 
-                                 8,
-                                 ATAN(
-                                      (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
-                                     ) / 3.14 * 8 + 4
-                                 ) / 10 as priorityFactor
-                      FROM task 
-                 LEFT JOIN project ON task.projectID = project.projectID 
-                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
-                           ".$filter." 
-                  ORDER BY priorityFactor ".$limit
-            ,$current_user->get_id());
+      $q = "SELECT task.*, projectName, projectShortName, clientID, projectPriority, rate, rateUnitID,
+                  priority * POWER(projectPriority, 2) * 
+                      IF(task.dateTargetCompletion IS NULL, 
+                        8,
+                        ATAN(
+                             (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
+                            ) / 3.14 * 8 + 4
+                        ) / 10 as priorityFactor
+             FROM task 
+        LEFT JOIN project ON task.projectID = project.projectID 
+        LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '".$current_user->get_id()."'
+                  ".$filter." 
+         ORDER BY priorityFactor ".$limit
+            ;
       $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);
