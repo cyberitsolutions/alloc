@@ -34,11 +34,11 @@ class alloc:
     self.csv = False
     self.sessID = ''
 
-  def search_for_project(self, projectName, personID):
+  def search_for_project(self, projectName, personID=None):
     # Search for a project like *projectName*
     if projectName:
       filter = {}
-      filter["personID"] = personID
+      if personID: filter["personID"] = personID
       filter["projectStatus"] = "Current"
       filter["projectName"] = projectName
       projects = self.get_list("project",filter)
@@ -62,6 +62,19 @@ class alloc:
         self.die("Found more than one task matching: %s" % ops["taskName"])
       elif len(tasks) == 1:      
         return tasks.keys()[0]   
+
+  def search_for_client(self, ops):
+    # Search for a client like *clientName*
+    if "clientName" in ops:
+      clients = self.get_list("client",ops)
+
+      if not clients:
+        self.die("No client found matching: %s" % ops["clientName"])
+      elif clients and len(clients) >1:
+        self.print_table(clients, ["clientID","ID","clientName","Client"])
+        self.die("Found more than one client matching: %s" % ops["clientName"])
+      elif len(clients) == 1:
+        return clients.keys()[0]
 
   def print_task(self, id):
     # print a descriptive view of a task
@@ -266,6 +279,9 @@ class alloc:
     except:
       self.err("Error: %s" % rtn)
       self.die("Args: %s" % args)
+
+  def get_alloc_html(self,url):
+    return urllib.urlopen(url).read()
 
   def today(self):
     return datetime.date.today()
