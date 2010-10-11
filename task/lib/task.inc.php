@@ -1671,6 +1671,17 @@ class task extends db_entity {
       $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
       $from["precedence"] && $email->add_header("Precedence",$from["precedence"]);
       
+      $email->add_header("X-Alloc-Task", $this->get_value("taskName"));
+      $email->add_header("X-Alloc-TaskID", $this->get_id());
+
+      // On the off chance there's a task without a project
+      if ($this->get_value("projectID")) {
+        $p = $this->get_foreign_object("project");
+        $email->add_header("X-Alloc-Project", $p->get_value("projectName"));
+        $email->add_header("X-Alloc-ProjectID", $this->get_value("projectID"));
+      }
+
+      
       $email->set_to_address($to_address);
     
       $from_name = $from["name"] or $from_name = $current_user->get_name();
