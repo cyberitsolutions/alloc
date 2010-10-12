@@ -443,6 +443,11 @@
       </td>
     </tr>
   {/}
+  <tr>
+  <td>Map URL</td>
+  <td><input type="text" size="70" value="{$mapURL}" name="mapURL"></td>
+  <td width="1%">{page::help("config_mapURL")}</td>
+  </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>

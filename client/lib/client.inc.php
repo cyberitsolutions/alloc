@@ -456,7 +456,7 @@ class client extends db_entity {
     $index->addDocument($doc);
   }
 
-  function format_address($type="street") {
+  function format_address($type="street", $map_link=true) {
 
     if ($type == "postal") {
       $f1 = $this->get_value("clientStreetAddressOne",DST_HTML_DISPLAY);
@@ -479,6 +479,15 @@ class client extends db_entity {
       $f3 and $str.= " ".$f3;
       $f4 and $str.= " ".$f4;
       $f5 and $str.= "<br>".$f5;
+
+      // Create a map link, probably for google maps
+      // a street address and postcode works reasonably well
+      if ($map_link && !empty($f1) && !empty($f4)) {
+        $cfg = new config;
+        $map_base = $cfg->get_config_item('mapURL');
+        $address = str_replace("%ad", urlencode($f1 . "," . $f4), $map_base);
+        $str .= '<br><br><a href="' . $address . '">View map</a>';
+      }
     }
 
     return $str;
