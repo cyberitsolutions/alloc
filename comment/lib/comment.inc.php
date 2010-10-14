@@ -762,7 +762,11 @@ class comment extends db_entity {
       $rows[$row["taskID"]][$row["date"]][] = $row;
     }
 
+    // Note that timeSheetItemID is selected twice so that the perms checking can work
+    // timeSheetID is also used by the perms checking.
     $q2 = sprintf("SELECT timeSheetItemID as id
+                         ,timeSheetItemID
+                         ,timeSheetID
                          ,timeSheetItem.personID
                          ,dateTimeSheetItem as date
                          ,timeSheetItem.taskID
@@ -832,7 +836,7 @@ class comment extends db_entity {
   }
 
   function get_list_summary_footer($rows,$tasks) {
-    $ret[] = "</table>";
+    $rtn[] = "</table>";
     return implode("\n",$rtn);
   }
 
