@@ -81,8 +81,15 @@ define("PAGE_IS_PRINTABLE",1);
 
   function show_taskComments() {
     global $taskID, $TPL;
-    $options["showEditButtons"] = true;
-    $TPL["commentsR"] = comment::util_get_comments("task",$taskID,$options);
+
+    if ($_REQUEST["commentSummary"]) {
+      $_REQUEST["clients"] = true;
+      $TPL["commentsR"] = comment::get_list_summary($_REQUEST);
+    } else {
+      $options["showEditButtons"] = true;
+      $TPL["commentsR"] = comment::util_get_comments("task",$taskID,$options);
+    }
+
     if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
       $TPL["class_new_task_comment"] = "hidden";
     }
