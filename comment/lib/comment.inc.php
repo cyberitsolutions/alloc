@@ -683,6 +683,161 @@ class comment extends db_entity {
   function delete_search_index_doc(&$index) {
     return $index;
   }
+
+  function get_list_summary_filter($filter=array()) {
+    
+    // This takes care of projectID singular and plural
+    $projectIDs = project::get_projectID_sql($filter,"task");
+    $projectIDs and $sql1["projectIDs"] = $projectIDs;
+    $projectIDs and $sql2["projectIDs"] = $projectIDs;
+    $filter['taskID'] and $sql1[] = sprintf("(task.taskID = %d)", db_esc($filter["taskID"]));
+    $filter['taskID'] and $sql2[] = sprintf("(task.taskID = %d)", db_esc($filter["taskID"]));
+    $filter["fromDate"] and $sql1[] = sprintf("(date(commentCreatedTime) >= '%s')", db_esc($filter["fromDate"]));
+    $filter["fromDate"] and $sql2[] = sprintf("(dateTimeSheetItem >= '%s')", db_esc($filter["fromDate"]));
+    $filter["toDate"] and $sql1[] = sprintf("(date(commentCreatedTime) < '%s')", db_esc($filter["toDate"]));
+    $filter["toDate"] and $sql2[] = sprintf("(dateTimeSheetItem < '%s')", db_esc($filter["toDate"]));
+    $filter["personID"] and $sql1["personID"] = "(comment.commentCreatedUser IN (".implode(",",(array)$filter["personID"])."))";
+    $filter["personID"] and $sql2[] = "(timeSheetItem.personID IN (".implode(",",(array)$filter["personID"])."))";
+    $filter["clients"] or $sql1[] = "(commentCreatedUser IS NOT NULL)";
+    $filter["clients"] && $filter["personID"] and $sql1["personID"] = "(comment.commentCreatedUser IN (".implode(",",(array)$filter["personID"]).") OR comment.commentCreatedUser IS NULL)";
+
+    $filter["taskStatus"] and list($taskStatus,$taskSubStatus) = explode("_",$filter["taskStatus"]);
+    $taskStatus    and $sql1[] = sprintf("(task.taskStatus = '%s')",db_esc($taskStatus));
+    $taskSubStatus and $sql1[] = sprintf("(task.taskSubStatus = '%s')",db_esc($taskSubStatus));
+    $taskStatus    and $sql2[] = sprintf("(task.taskStatus = '%s')",db_esc($taskStatus));
+    $taskSubStatus and $sql2[] = sprintf("(task.taskSubStatus = '%s')",db_esc($taskSubStatus));
+
+    return array($sql1,$sql2);
+  }
+
+  function get_list_summary($_FORM=array()) {
+
+    //$_FORM["fromDate"] = "2010-08-20";
+    //$_FORM["projectID"] = "22";
+
+    $_FORM["maxCommentLength"] or $_FORM["maxCommentLength"] = 500;
+
+    list($filter1,$filter2) = comment::get_list_summary_filter($_FORM);
+
+    is_array($filter1) && count($filter1) and $filter1 = " AND ".implode(" AND ",$filter1);
+    is_array($filter2) && count($filter2) and $filter2 = " AND ".implode(" AND ",$filter2);
+
+    if ($_FORM["clients"]) {
+      $client_join = " LEFT JOIN clientContact on comment.commentCreatedUserClientContactID = clientContact.clientContactID";
+      $client_fields = " , clientContact.clientContactName";
+    }
+
+    $q = sprintf("SELECT commentID as id
+                       , commentCreatedUser as personID
+                       , date(commentCreatedTime) as date
+                       , commentMasterID as taskID
+                       , task.taskName
+                       , SUBSTRING(comment.comment,1,%d) AS comment_text
+                       , commentCreatedUserText
+                         ".$client_fields."
+                    FROM comment
+               LEFT JOIN task on comment.commentMasterID = task.taskID
+                         ".$client_join."
+                   WHERE commentMaster = 'task'
+                         ".$filter1."
+                ORDER BY commentCreatedTime, commentCreatedUser"
+                ,$_FORM["maxCommentLength"]);
+    $q.= " ";
+              
+    $people = get_cached_table("person");
+
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $row["id"] = "comment_".$row["id"];
+      $row["personID"] and $row["person"] = $people[$row["personID"]]["name"];
+      $row["clientContactName"] and $row["person"] = $row["clientContactName"];
+      $row["person"] or list($e,$row["person"]) = parse_email_address($row["commentCreatedUserText"]);
+      if (!$tasks[$row["taskID"]]) {
+        $t = new task;
+        $t->set_id($row["taskID"]);
+        $t->set_value("taskName",$row["taskName"]);
+        $tasks[$row["taskID"]] = $t->get_task_link(array("prefixTaskID"=>true));
+      }
+      $rows[$row["taskID"]][$row["date"]][] = $row;
+    }
+
+    $q2 = sprintf("SELECT timeSheetItemID as id
+                         ,timeSheetItem.personID
+                         ,dateTimeSheetItem as date
+                         ,timeSheetItem.taskID
+                         ,task.taskName
+                         ,timeSheetItemDuration as duration
+                         ,SUBSTRING(timeSheetItem.comment,1,%d) AS comment_text
+                     FROM timeSheetItem
+                LEFT JOIN task on timeSheetItem.taskID = task.taskID
+                    WHERE 1
+                          ".$filter2."
+                 ORDER BY dateTimeSheetItem"
+                 ,$_FORM["maxCommentLength"]);
+
+    $db->query($q2);
+    while ($row = $db->row()) {
+      $timeSheetItem = new timeSheetItem();
+      if (!$timeSheetItem->read_row_record($row,false))
+        continue;
+      $row["id"] = "timeitem_".$row["id"];
+      $row["person"] = $people[$row["personID"]]["name"];
+      if (!$tasks[$row["taskID"]]) {
+        $t = new task;
+        $t->set_id($row["taskID"]);
+        $t->set_value("taskName",$row["taskName"]);
+        $tasks[$row["taskID"]] = $t->get_task_link(array("prefixTaskID"=>true));
+      }
+      $totals[$row["taskID"]] += $row["duration"];
+      $rows[$row["taskID"]][$row["date"]][] = $row;
+    }
+
+    foreach ((array)$rows as $taskID => $dates) {
+      $rtn.= comment::get_list_summary_header($tasks[$taskID],$totals[$taskID],$_FORM);
+      foreach ($dates as $date => $more_rows) {
+        foreach ($more_rows as $row) {
+          $rtn.= comment::get_list_summary_body($row);
+        }
+      }
+      $rtn.= comment::get_list_summary_footer($rows,$tasks);
+    }
+    return $rtn;
+  }
+
+  function get_list_summary_header($task,$totals,$_FORM=array()) {
+  
+    if ($_FORM["showTaskHeader"]) {
+      $rtn[] = "<table class='list' style='border-bottom:0;'>";
+      $rtn[] = "<tr>";
+      $rtn[] = "<td style='font-size:130%'>".$task."</td>";
+      $rtn[] = "<td class='right bold'>".sprintf("%0.2f",$totals)."</td>";
+      $rtn[] = "</tr>";
+      $rtn[] = "</table>";
+    }
+    $rtn[] = "<table class=\"list sortable\" style='margin-bottom:10px'>";
+    $rtn[] = "<tr>";
+    $rtn[] = "<th>Date</th>";
+    $rtn[] = "<th>Person</th>";
+    $rtn[] = "<th>Comment</th>";
+    $rtn[] = "<th>Hours</th>";
+    $rtn[] ="</tr>";
+    return implode("\n",$rtn);
+  }
+
+  function get_list_summary_body($row) {
+    global $TPL;
+    $TPL["row"] = $row;
+    return include_template(dirname(__FILE__)."/../templates/summaryR.tpl", true);
+  }
+
+  function get_list_summary_footer($rows,$tasks) {
+    $ret[] = "</table>";
+    return implode("\n",$rtn);
+  }
+
+
+
 }
 
 
