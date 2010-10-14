@@ -2,7 +2,14 @@
 <table class="box">
   <tr>
     <th>{page::help("taskComment")} Comments</th>
-    <th class="right">{if (!$editing_disabled)}{page::expand_link("id_new_task_comment")}{/}</th>
+    <th class="right">
+      {if !$_REQUEST["commentSummary"]}
+      <a href="{$url_alloc_task}taskID={$task_taskID}&sbs_link=comments&commentSummary=true&maxCommentLength=50000000">Summary</a>
+      {else}
+      <a href="{$url_alloc_task}taskID={$task_taskID}&sbs_link=comments">Full</a>
+      {/}
+      {if (!$editing_disabled)}{page::expand_link("id_new_task_comment")}{/}
+    </th>
   </tr>
   <tr>
     <td colspan="2">
