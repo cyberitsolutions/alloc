@@ -2,6 +2,8 @@
 -- Indexes to speed up querying
 CREATE INDEX clientName ON client (clientName);
 CREATE INDEX clientID ON clientContact (clientID);
+CREATE INDEX commentMaster ON comment (commentMaster);
+CREATE INDEX commentMasterID ON comment (commentMasterID);
 CREATE INDEX commentLinkID ON comment (commentLinkID);
 CREATE INDEX commentType ON comment (commentType);
 CREATE INDEX idx_personID ON history (personID);

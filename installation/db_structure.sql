@@ -65,6 +65,8 @@ CREATE TABLE clientContact (
 DROP TABLE IF EXISTS comment;
 CREATE TABLE comment (
   commentID integer NOT NULL auto_increment PRIMARY KEY,
+  commentMaster varchar(255) NOT NULL default '',
+  commentMasterID integer NOT NULL,
   commentType varchar(255) NOT NULL default '',
   commentLinkID integer NOT NULL,
   commentCreatedTime datetime default NULL,
