@@ -60,6 +60,8 @@ CREATE TABLE clientContact (
 
 CREATE TABLE comment (
   commentID serial PRIMARY KEY,
+  commentMaster varchar(255) NOT NULL DEFAULT '',
+  commentMasterID integer NOT NULL,
   commentType varchar(255) NOT NULL default '',
   commentLinkID integer NOT NULL,
   commentCreatedTime TIMESTAMP WITHOUT TIME ZONE default NULL,

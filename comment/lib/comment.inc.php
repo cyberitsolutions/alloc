@@ -24,7 +24,9 @@ class comment extends db_entity {
   public $classname = "comment";
   public $data_table = "comment";
   public $key_field = "commentID";
-  public $data_fields = array("commentType"
+  public $data_fields = array("commentMaster"
+                             ,"commentMasterID"
+                             ,"commentType"
                              ,"commentLinkID"
                              ,"commentCreatedUser"
                              ,"commentCreatedTime"
@@ -36,6 +38,20 @@ class comment extends db_entity {
                              ,"commentEmailUID"
                              ,"comment"
                              );
+
+  function save() {
+    if ($this->get_value("commentType") == "comment") {
+      $parent_comment = new comment();
+      $parent_comment->set_id($this->get_value("commentLinkID"));
+      $parent_comment->select();
+      $this->set_value("commentMaster",$parent_comment->get_value("commentType"));
+      $this->set_value("commentMasterID",$parent_comment->get_value("commentLinkID"));
+    } else {
+      $this->set_value("commentMaster",$this->get_value("commentType"));
+      $this->set_value("commentMasterID",$this->get_value("commentLinkID"));
+    }
+    parent::save();
+  }
 
   function delete() {
   
