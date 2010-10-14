@@ -60,6 +60,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
  	          ,"url_alloc_updateTaskDupes"                => $sess->url(SCRIPT_PATH."task/updateTaskDupes.php")
 
             ,"url_alloc_comment"                        => $sess->url(SCRIPT_PATH."comment/comment.php")
+            ,"url_alloc_commentSummary"                 => $sess->url(SCRIPT_PATH."comment/summary.php")
             ,"url_alloc_downloadEmail"                  => $sess->url(SCRIPT_PATH."email/downloadEmail.php")
             ,"url_alloc_client"                         => $sess->url(SCRIPT_PATH."client/client.php")
             ,"url_alloc_clientList"                     => $sess->url(SCRIPT_PATH."client/clientList.php")

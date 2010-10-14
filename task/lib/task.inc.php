@@ -744,37 +744,9 @@ class task extends db_entity {
 
   function get_list_filter($filter=array()) {
 
-    if (!$filter["projectID"] && $filter["projectType"] && $filter["projectType"] != "all") {
-      $db = new db_alloc;
-      $q = project::get_project_type_query($filter["projectType"],$filter["current_user"],"current");
-      $db->query($q);
-      while ($db->next_record()) {
-        $filter["projectIDs"][] = $db->f("projectID");
-      }
-
-      // Oi! What a pickle. Need this flag for when someone doesn't have entries loaded in the above while loop.
-      $firstOption = true;
-
-    // If projectID is an array
-    } else if ($filter["projectID"] && is_array($filter["projectID"])) {
-      $filter["projectIDs"] = $filter["projectID"];
-
-    // Else a project has been specified in the url
-    } else if ($filter["projectID"] && is_numeric($filter["projectID"])) {
-      $filter["projectIDs"][] = $filter["projectID"];
-    }
-
-
-    // If passed array projectIDs then join them up with commars and put them in an sql subset
-    if (is_array($filter["projectIDs"]) && count($filter["projectIDs"])) {
-      $sql["projectIDs"] = "(project.projectID IN (".implode(",",$filter["projectIDs"])."))";
-
-    // If there are no projects in $filter["projectIDs"][] and we're attempting the first option..
-    } else if ($firstOption) {
-      $sql["projectIDs"] = "(project.projectID IN (0))";
-    }
-
-    // taskDate filtering ...
+    // This takes care of projectID singular and plural
+    $projectIDs = project::get_projectID_sql($filter);
+    $projectIDs and $sql["projectIDs"] = $projectIDs;
 
     // New Tasks
     if ($filter["taskDate"] == "new") {
