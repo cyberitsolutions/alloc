@@ -87,7 +87,8 @@ function add_row() \{
   </tr>
   <tr>
     <td class="right">Created:</td>
-    <td>{=person::get_fullname($productSaleCreatedUser)} {$productSaleCreatedTime}</td>
+    {$n = person::get_fullname($productSaleCreatedUser)}
+    <td>{=$n} {$productSaleCreatedTime}</td>
     <td class="right">Project:</td>
     <td width="30%">{$show_project_options}</td>
   </tr>
