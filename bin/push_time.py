@@ -1,0 +1,53 @@
+import sys
+from alloc import alloc
+
+class push_time(alloc):
+
+  one_line_help = "Submit time sheets forwards. Read time sheets from standard in."
+
+  # Setup the options that this cli can accept
+  ops = []
+  ops.append((''  ,'help           ','Show this help.'))
+  #ops.append((''  ,'csv            ','Return the results in CSV format.'))
+  #ops.append(('v', 'verbose        ','Run with more output.'))
+  ops.append(('n' ,'dryrun         ','Perform a dry run, no data gets updated.'))
+  ops.append(('q' ,'quiet          ','Run with no output except errors.'))
+
+  # Specify some header and footer text for the help text
+  help_text = "Usage: %s [OPTIONS]\n"
+  help_text+= one_line_help
+  help_text+= '''\n\n%s
+
+This program enables you to submit your time sheets to managers, admins etc.
+The time sheet is moved from eg: Edit to Manager status. The time sheet may 
+no longer be editable once you have submitted it.
+  
+Examples:
+alloc timesheets --csv | alloc push_time --dryrun
+alloc timesheets --csv | alloc push_time
+alloc timesheets --csv --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc push_time'''
+
+  def run(self):
+
+    # Get the command line arguments into a dictionary
+    o, remainder = self.get_args(self.ops, self.help_text)
+
+    # Got this far, then authenticate
+    self.authenticate();
+
+    # Initialize some variables
+    self.quiet = o['quiet']
+    #self.csv = o['csv']
+    self.dryrun = o['dryrun']
+
+    # Read entries from stdin
+    lines = sys.stdin.readlines()
+    for line in lines:
+      f = line[:-1].split(",")
+      timeSheetID = f[0]
+      if not o['dryrun']: 
+        self.msg("Attempting to submit time sheet: "+timeSheetID)
+        self.make_request({"method":"change_timeSheet_status","timeSheetID":timeSheetID,"direction":"forwards"})
+      else:
+        self.msg("Dry-run, not attempting to submit time sheet: "+timeSheetID)
+
