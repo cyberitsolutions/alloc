@@ -1671,6 +1671,7 @@ class task extends db_entity {
       $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
       $from["precedence"] && $email->add_header("Precedence",$from["precedence"]);
       
+      $email->add_header("X-Alloc-CommentID", $from["commentID"]);
       $email->add_header("X-Alloc-Task", $this->get_value("taskName"));
       $email->add_header("X-Alloc-TaskID", $this->get_id());
 
