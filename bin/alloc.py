@@ -12,7 +12,7 @@ from netrc import netrc
 from urlparse import urlparse
 from prettytable import PrettyTable
 
-class alloc:
+class alloc(object):
 
   url = ''
   username = ''
@@ -114,9 +114,9 @@ class alloc:
       all_ops[re.sub("=.*$","",x[1]).strip()] = ["-"+x[0].replace(":",""), "--"+re.sub("=.*$","",x[1]).strip()]
     
     try:
-      options, remainder = getopt.getopt(sys.argv[1:], short_ops, long_ops)
+      options, remainder = getopt.getopt(sys.argv[2:], short_ops, long_ops)
     except:
-      print str % (os.path.basename(sys.argv[0]), help_str.rstrip())
+      print str % (os.path.basename(" ".join(sys.argv[0:2])), help_str.rstrip())
       sys.exit(0)
 
     for k,v in all_ops.items():
@@ -129,7 +129,7 @@ class alloc:
             rtn[k] = True
 
     if rtn['help']:
-      print str % (os.path.basename(sys.argv[0]), help_str.rstrip())
+      print str % (os.path.basename(" ".join(sys.argv[0:2])), help_str.rstrip())
       sys.exit(0)
     
     return rtn, remainder
@@ -170,7 +170,7 @@ class alloc:
           for sep in ["|"," ","/"]:
             if sep in v:
               bits = v.split(sep)
-              str = sep.join([row[i] for i in bits])
+              str = sep.join([(row[i] or "") for i in bits])
               
           if v in row: str = row[v]
           if not str: str = ''
@@ -304,6 +304,41 @@ class alloc:
 class allocUserAgent(urllib.FancyURLopener):
   pass
 
+
+# This will basically call the relevant module's run() method.
+if __name__ == "__main__":
+  
+  try:
+    m = __import__(sys.argv[1])
+    subcommand = getattr(m, sys.argv[1])
+
+  except:
+    a = alloc()
+    print "Usage: alloc command [OPTIONS]"
+    print "Select one of the following commands:\n"
+    for f in os.listdir("/".join(sys.argv[0].split("/")[:-1])+"/"):
+      s = f[-4:].lower()
+      if s != ".pyc" and s != ".swp" and f != "alloc" and f != "alloc.py":
+        sc = f.replace(".py","")
+        module = __import__(sc)
+        # Print out the module's one_line_help variable
+        tabs = "\t "
+        if len(sc) <= 5: tabs = "\t\t "
+        print "  "+sc+ tabs+getattr(getattr(module, sc),"one_line_help")
+
+    print "\nEg: alloc command --help"
+
+    if len(sys.argv) >1:
+      a.die("Invalid command: "+sys.argv[1])
+    else:
+      a.die("Select a command to run.")
+
+  # Run the module
+  s = subcommand()
+  s.run()
+
+  
+  
 
 
 
