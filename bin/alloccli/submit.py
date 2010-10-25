@@ -1,7 +1,7 @@
 import sys
 from alloc import alloc
 
-class push_time(alloc):
+class submit(alloc):
 
   one_line_help = "Submit time sheets forwards. Read time sheets from standard in."
 
@@ -23,9 +23,9 @@ The time sheet is moved from eg: Edit to Manager status. The time sheet may
 no longer be editable once you have submitted it.
   
 Examples:
-alloc timesheets --csv | alloc push_time --dryrun
-alloc timesheets --csv | alloc push_time
-alloc timesheets --csv --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc push_time'''
+alloc timesheets --csv | alloc submit --dryrun
+alloc timesheets --csv | alloc submit
+alloc timesheets --csv --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc submit'''
 
   def run(self):
 
