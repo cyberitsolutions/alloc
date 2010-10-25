@@ -114,6 +114,10 @@ class alloc_email_receive {
     return imap_search($this->connection,"ALL");
   }
 
+  function get_emails_UIDs_search($str) {
+    return imap_search($this->connection,$str, SE_UID);
+  }
+
   function set_msg($x) {
     $this->msg_num = $x;
   }
@@ -149,8 +153,9 @@ class alloc_email_receive {
     if (is_array($result) && $result[0]->seen) { 
       $header = imap_fetchheader($this->connection,$msg_uid,FT_PREFETCHTEXT+FT_UID);
       $body = imap_body($this->connection,$msg_uid,FT_UID);
-      return $header.$body;
+      return array($header,$body);
     }
+    return array("","");
   }
 
   function save_email($file) {

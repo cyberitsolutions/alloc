@@ -158,6 +158,19 @@ class alloc_services {
     }
   }
 
+  public function init_email_info() {
+    global $current_user; // Always need this :(
+    $info["host"] = config::get_config_item("allocEmailHost");
+    $info["port"] = config::get_config_item("allocEmailPort");
+    $info["username"] = config::get_config_item("allocEmailUsername");
+    $info["password"] = config::get_config_item("allocEmailPassword");
+    $info["protocol"] = config::get_config_item("allocEmailProtocol");
+    if (!$info["host"]) {
+      die("Email mailbox host not defined, assuming email fetch function is inactive.");
+    }
+    return $info;
+  }
+
   /** The get_email function
    * @param string $sessID
    * @param string $emailUID
@@ -165,23 +178,32 @@ class alloc_services {
    */
   public function get_email($emailUID) {
     global $current_user; // Always need this :(
-    //$current_user = $this->get_current_user($sessID);
+    $lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
     if ($emailUID) {
-      $lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
-      $info["host"] = config::get_config_item("allocEmailHost");
-      $info["port"] = config::get_config_item("allocEmailPort");
-      $info["username"] = config::get_config_item("allocEmailUsername");
-      $info["password"] = config::get_config_item("allocEmailPassword");
-      $info["protocol"] = config::get_config_item("allocEmailProtocol");
-      if (!$info["host"]) {
-        die("Email mailbox host not defined, assuming email fetch function is inactive.");
-      }
+      $info = $this->init_email_info();
       $mail = new alloc_email_receive($info,$lockfile);
       $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
-      $str = $mail->get_raw_email_by_msg_uid($emailUID);
+      list($header,$body) = $mail->get_raw_email_by_msg_uid($emailUID);
       $mail->close();
-      return utf8_encode($str);
+      $m = new alloc_email();
+      $m->set_headers($header);
+      $timestamp = $m->get_header('Date');
+      $str = "From allocPSA ".date('D M  j G:i:s Y',strtotime($timestamp))."\r\n".$header.$body;
+      return utf8_encode(str_replace("\r\n","\n",$str));
     }
+  }
+
+  public function get_comment_email_uids_search($str) {
+    if ($str) { 
+      global $current_user; // Always need this :(
+      $lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
+      $info = $this->init_email_info();
+      $mail = new alloc_email_receive($info,$lockfile);
+      $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
+      $rtn = $mail->get_emails_UIDs_search($str);
+      $mail->close();
+    }
+    return (array)$rtn;
   }
 
   /** The get_help function
