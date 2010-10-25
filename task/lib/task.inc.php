@@ -1226,7 +1226,7 @@ class task extends db_entity {
                           <option value=\"dateActualStart\">Actual Start Date to ".$arr."</options>
                           <option value=\"dateActualCompletion\">Actual Completion Date to ".$arr."</options>
                           <option value=\"projectIDAndParentTaskID\">Project and Parent Task to ".$arr."</options>
-                          <option value=\"taskStatus\">Task Status to ".$arr."</option>
+                          <option value=\"taskStatuses\">Task Status to ".$arr."</option>
                         </select>
                       </div>
                       <div class=\"hidden\" id=\"dateTargetStart_div\">".$dateTargetStart."</div>
@@ -1239,7 +1239,7 @@ class task extends db_entity {
                       <div class=\"hidden\" id=\"priority_div\"><select name=\"priority\">".$priority_options."</select></div>
                       <div class=\"hidden\" id=\"taskTypeID_div\"><select name=\"taskTypeID\">".$taskType_options."</select></div>
                       <div class=\"hidden\" id=\"projectIDAndParentTaskID_div\">".$project_dropdown.$parentTask_div."</div>
-                      <div class=\"hidden\" id=\"taskStatus_div\"><select name=\"taskStatus\">".$taskStatus_options."</select></div>
+                      <div class=\"hidden\" id=\"taskStatuses_div\"><select name=\"taskStatuses\">".$taskStatus_options."</select></div>
                       <input type=\"submit\" name=\"run_mass_update\" value=\"Update Tasks\">
                     </th>
                   </tr>
