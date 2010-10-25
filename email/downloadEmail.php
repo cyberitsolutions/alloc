@@ -40,8 +40,8 @@ $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
 if ($_GET["msg_uid"]) {
   //header('Content-Disposition: attachment; filename="task_comment_email.txt"');
   header('Content-Type: text/plain; charset=utf-8');
-  echo $mail->get_raw_email_by_msg_uid($_GET["msg_uid"]);
+  list($h,$b) = $mail->get_raw_email_by_msg_uid($_GET["msg_uid"]);
 }
-
 $mail->close();
+echo $h.$b;
 ?>
