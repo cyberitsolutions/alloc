@@ -25,9 +25,9 @@ class timesheets(alloc):
 If run without arguments this program will display all of your editable time sheets.
 
 Examples:
-alloc time --hours "2" --date 2010-01-01
-alloc time --hours ">2 AND <10 OR >20 AND <=100"
-alloc time --status finished --hours ">=7" --date "$(date -d '10 week ago' +%%Y-%%m-%%d)"'''
+alloc timesheets --hours "2" --date 2010-01-01
+alloc timesheets --hours ">2 AND <10 OR >20 AND <=100"
+alloc timesheets --status finished --hours ">=7" --date "$(date -d '10 week ago' +%%Y-%%m-%%d)"'''
 
   def run(self):
 
