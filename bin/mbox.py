@@ -19,7 +19,13 @@ class mbox(alloc):
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
   help_text+= one_line_help
-  help_text+= "\n\n%s\n\nThis program will automatically fire up $MAILER if outputting to a TTY."
+  help_text+= '''\n\n%s
+
+This program will automatically run $MAILER on the mbox file, if outputting to a TTY.
+
+Examples:
+alloc mbox -t 1234
+alloc mbox -t 1234 > file.mbox'''
 
   def run(self):
 
@@ -27,6 +33,8 @@ class mbox(alloc):
     o, remainder = self.get_args(self.ops, self.help_text)
 
     self.quiet = o['quiet']
+    taskID = ''
+    emailUIDs = ''
 
     # Got this far, then authenticate
     self.authenticate();
