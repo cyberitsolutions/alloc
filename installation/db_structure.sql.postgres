@@ -386,6 +386,7 @@ CREATE TABLE timeSheet (
   approvedByAdminPersonID integer default NULL,
   dateSubmittedToManager date default NULL,
   dateSubmittedToAdmin date default NULL,
+  dateRejected date default NULL,
   invoiceDate date default NULL,
   billingNote text,
   payment_insurance boolean default false,
