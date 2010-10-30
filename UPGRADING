@@ -43,8 +43,8 @@ Generic Upgrade Instructions
 4. Finally, update your allocPSA database by going to this address in your web
    browser: http://YOUR_NEW_ALLOC_INSTALLATION/installation/patch.php
 
-   It is strongly recommended that you apply each patch/change separately,
-   starting from the top and working your way down.
+   Apply each patch separately, starting from the top and working your way down.
+   If you get errors stop the process and use the support forums.
 
 
 

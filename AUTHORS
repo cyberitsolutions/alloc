@@ -20,17 +20,18 @@ along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 
 allocPSA has been developed by:
 
-Alex Lance 
 Clancy Malcolm
+Alex Lance 
 Andrew Harris
 Jeremy Chin
 Kate Alisha Lanyon
 Andrew MacKinlay
 Dinis Lage
+Con Zymaris
+Patrick Clearwater
 
-
-Cybersource http://www.cybersource.com.au
-
+and continues to thrive due to the support and development effort
+contributed by Cybersource http://www.cybersource.com.au
 
 And in addition contains code from the following projects:
 
@@ -64,6 +65,8 @@ John Gruber
 jQuery File Tree Plugin (http://abeautifulsite.net/)
 Cory S.N. LaViska
 
+Zend Lucene Search (http://zend.com)
+Copyright (c) 2005-2010 Zend Technologies USA Inc.
 
 
 Incorporating software with different licenses? 
