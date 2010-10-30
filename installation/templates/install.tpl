@@ -9,7 +9,7 @@
   <div id="header_image">
     <img style="float:right; right:0px; top:7px; position:absolute;" src="{$url_alloc_images}/alloc_med.png" alt="allocPSA logo">
     <br>
-    <h1>allocPSA Installation Helper</h1>
+    <h1>allocPSA Installer</h1>
   </div>
 
   <div id="tabs">
