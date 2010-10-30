@@ -120,6 +120,13 @@ if ($_POST["submit_stage_4"]) {
     }
   }
 
+  // Create search indexes
+  $search_item_indexes = array("client", "comment", "item", "project", "task", "timeSheet", "wiki");
+  foreach ($search_item_indexes as $i) {
+    $index = Zend_Search_Lucene::create($_FORM["ATTACHMENTS_DIR"].'search/'.$i);
+    $index->commit();
+  }
+
   // Create alloc_config.php
   if (file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && filesize(ALLOC_CONFIG_PATH) <= 1) {
     $str[] = "<?php";
