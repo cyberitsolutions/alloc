@@ -19,6 +19,14 @@ Which should email the changes back to the correct place, at which point the
 changes will be given a once-over and then merged back into the development
 repository.
 
+When recording changes, don't use the darcs long comment, instead try to
+succinctly describe your change in one line of text. 
+
+You may prefix that commit message with one or more descriptive keywords,
+that are always uppercase. Currently we're using the following keywords: DOCS,
+COSMETIC, CLI, BUG, JSON, REFACTOR, SOAP you can also put in an issue id from
+the issue tracker if able.
+
 
 Rebuilding the CSS Files
 ------------------------
@@ -41,8 +49,9 @@ documents that are generated both for the html Help document that is linked to
 within allocPSA, and the PDF Help document that is available for download at
 sourceforge.
 
-Simply change the help.txt file and then run `make doc_html` or `make
-doc_pdf`. You will need to have docutils/rst2html installed.
+Simply change the help.txt file and then run `make doc_html` or `make doc_pdf`.
+You will need to have docutils/rst2html installed. On Ubuntu there is a package
+called python-docutils that will install rst2html.
 
 
 Vim Settings
