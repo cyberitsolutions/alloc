@@ -33,7 +33,7 @@ if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
 } 
 
 // Set the charset for Zend Lucene search indexer http://framework.zend.com/manual/en/zend.search.lucene.charset.html
-require_once("Zend/Search/Lucene.php");
+require_once("Zend".DIRECTORY_SEPARATOR."Search".DIRECTORY_SEPARATOR."Lucene.php");
 Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
 
 // Undo magic quotes if it's enabled
