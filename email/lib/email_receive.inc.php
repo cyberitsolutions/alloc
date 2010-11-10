@@ -32,7 +32,6 @@ class alloc_email_receive {
   var $connection;
   var $mail_headers;
   var $mail_structure;
-  var $msg_num;
   
   function alloc_email_receive($info,$lockfile) {
     $this->host     = $info["host"];
@@ -106,12 +105,12 @@ class alloc_email_receive {
     }
   }
 
-  function get_new_email_msg_nums() {
-    return imap_search($this->connection,"UNSEEN");
+  function get_new_email_msg_uids() {
+    return imap_search($this->connection,"UNSEEN",SE_UID);
   }
 
-  function get_all_email_msg_nums() {
-    return imap_search($this->connection,"ALL");
+  function get_all_email_msg_uids() {
+    return imap_search($this->connection,"ALL",SE_UID);
   }
 
   function get_emails_UIDs_search($str) {
@@ -119,30 +118,17 @@ class alloc_email_receive {
   }
 
   function set_msg($x) {
-    $this->msg_num = $x;
-  }
-
-  function set_uid($x) {
     $this->msg_uid = $x;
   }
 
-  function get_uid($msgno) {
-    static $cache;
-    if ($cache[$msgno]) {
-      return $cache[$msgno];
-    }
-    $cache[$msgno] = imap_uid($this->connection,$msgno);
-    return $cache[$msgno];
-  }
-
-  function get_msg_header($num=0) {
-    $num or $num = $this->msg_num;
-    $num and $this->mail_headers = imap_headerinfo($this->connection, $num);
+  function get_msg_header($uid=0) {
+    $uid or $uid = $this->msg_uid;
+    $uid and $this->mail_headers = imap_rfc822_parse_headers(imap_fetchheader($this->connection, $uid, FT_UID));
     return $this->mail_headers;
   }
 
   function load_structure() {
-    $this->mail_structure = imap_fetchstructure($this->connection,$this->msg_num);
+    $this->mail_structure = imap_fetchstructure($this->connection,$this->msg_uid,FT_UID);
   }
 
   function get_raw_email_by_msg_uid($msg_uid) {
@@ -159,8 +145,8 @@ class alloc_email_receive {
   }
 
   function save_email($file) {
-    $header = imap_fetchheader($this->connection,$this->msg_num,FT_PREFETCHTEXT);
-    $body = imap_body($this->connection,$this->msg_num);
+    $header = imap_fetchheader($this->connection,$this->msg_uid,FT_PREFETCHTEXT+FT_UID);
+    $body = imap_body($this->connection,$this->msg_uid,FT_UID);
     $fh = fopen($file,"w+");
     fputs($fh, $header.$body);
     fclose($fh);
@@ -196,13 +182,13 @@ class alloc_email_receive {
   }
 
   function mark_seen() {
-    imap_setflag_full($this->connection, $this->msg_num, "\\SEEN", FT_UID); // this doesn't work!
-    $body = imap_body($this->connection,$this->msg_num); // this seems to force it to be marked seen
+    imap_setflag_full($this->connection, $this->msg_uid, "\\SEEN", FT_UID); // this doesn't work!
+    $body = imap_body($this->connection,$this->msg_uid,FT_UID); // this seems to force it to be marked seen
   }
 
   function forward($address,$subject) {
-    $header = imap_fetchheader($this->connection,$this->msg_num);
-    $body = imap_body($this->connection,$this->msg_num);
+    $header = imap_fetchheader($this->connection,$this->msg_uid,FT_UID);
+    $body = imap_body($this->connection,$this->msg_uid,FT_UID);
 
     $email = new alloc_email();
     $email->set_headers($header);
@@ -246,9 +232,9 @@ class alloc_email_receive {
 
   function delete($x=0) {
     #return;
-    $x or $x = $this->msg_num;
+    $x or $x = $this->msg_uid;
     if ($this->connection) {
-      imap_delete($this->connection, $x);
+      imap_delete($this->connection, $x, FT_UID);
     }
   }
 
