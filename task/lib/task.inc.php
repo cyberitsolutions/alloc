@@ -1802,7 +1802,7 @@ class task extends db_entity {
 
     // If user wants to un/subscribe to this comment
     $subject = $decoded[0]["Headers"]["subject:"];
-    $ip_action = interestedParty::adjust_by_email_subject($subject,"task",$this->get_id(),$from_name,$from_address,$personID,$clientContactID);
+    interestedParty::adjust_by_email_subject($subject,"task",$this->get_id(),$from_name,$from_address,$personID,$clientContactID);
 
     // Load up some variables for later in send_emails()
     $from["email"] = $from_address;
@@ -1834,17 +1834,7 @@ class task extends db_entity {
       $from["hash"] = $token->get_value("tokenHash");
     }
 
-    if ($ip_action == "subscribed") {
-      $comment->set_value("comment",$from_name." is now a party to this conversation.\n\n".$comment->get_value("comment"));
-      $comment->save();
-    } else if ($ip_action == "unsubscribed") {
-      $comment->set_value("comment",$from_name." is no longer a party to this conversation.\n\n".$comment->get_value("comment"));
-      $comment->save();
-    }
-
-    if ($ip_action != "unsubscribed") { // no email sent for unsubscription requests
-      $successful_recipients = $this->send_emails($recipients,"task_comments",$comment->get_value("comment"),$from);
-    } 
+    $successful_recipients = $this->send_emails($recipients,"task_comments",$comment->get_value("comment"),$from);
 
     if ($successful_recipients) {
       $comment->set_value("commentEmailRecipients",$successful_recipients);
