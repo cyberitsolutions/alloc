@@ -47,8 +47,8 @@ $num_new_emails = $mail->get_num_new_emails();
 
 if ($num_new_emails >0) {
 
-  $msg_nums = $mail->get_new_email_msg_nums(); 
-  #$msg_nums = $mail->get_all_email_msg_nums(); // for debugging (and if degbugging don't forget to add a ||1 to the if statement above :)
+  $msg_nums = $mail->get_new_email_msg_uids(); 
+  #$msg_nums = $mail->get_all_email_msg_uids(); // for debugging (and if degbugging don't forget to add a ||1 to the if statement above :)
 
   $debug and print $nl.date("Y-m-d H:i:s")." Found ".count($msg_nums)." new/unseen emails.";
 
@@ -56,7 +56,6 @@ if ($num_new_emails >0) {
   foreach ($msg_nums as $num) {
     unset($bad_key,$done);
     $mail->set_msg($num);
-    $mail->set_uid($mail->get_uid($num)); // This is so that comments can start tracking the emails uid. 
     $headers = $mail->get_msg_header();
     $keys = $mail->get_hashes();
     $debug and print $nl.$nl."Keys: ".$nl.print_r($keys,1);
