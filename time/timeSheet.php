@@ -650,7 +650,11 @@ global $percent_array;
 if ($_POST["dont_send_email"]) {
   $TPL["dont_send_email_checked"] = " checked";
 } else {
-  $TPL["dont_send_email_checked"] = "";
+  // if this is the invoice -> completed step it should be checked by default
+  if ($timeSheet->get_value("status") == 'invoiced')
+    $TPL["dont_send_email_checked"] = " checked";
+  else
+    $TPL["dont_send_email_checked"] = "";
 }
 
 $timeSheet->load_pay_info();
