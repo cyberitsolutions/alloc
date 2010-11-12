@@ -18,6 +18,10 @@
         <tr>
           <th>Value</th>
           <th>Sequence</th>
+          {if $table == "taskStatus"}
+          <th>Label</th>
+          <th>Colour</th>
+          {/}
           <th colspan="2">Active</th>
           <th class="right">
             <a href="#x" class="magic" onClick="$('#rows_footer').before('<tr>'+$('#row').html()+'</tr>');">New</a>
@@ -31,6 +35,10 @@
             <input type="hidden" name="{$table}IDOrig[]" size="20" value="{echo $row[$table."ID"]}">
           </td>
           <td><input type="text" name="{$table}Seq[]" size="20" value="{echo $row[$table."Seq"]}"></td>
+          {if $table == "taskStatus"}
+          <td><input type="text" name="{$table}Label[]" size="20" value="{echo $row[$table."Label"]}"></td>
+          <td><input type="text" name="{$table}Colour[]" size="20" value="{echo $row[$table."Colour"]}"></td>
+          {/}
           {unset($checked)}
           {$row[$table."Active"] and $checked = " checked"}
           <td colspan="2"><input type="checkbox" name="{$table}Active[]" size="20" value="{echo $row[$table."ID"]}"{$checked}></td>
@@ -46,6 +54,10 @@
             <input type="text" name="{$table}ID[]" size="20" value="">
           </td>
           <td><input type="text" name="{$table}Seq[]" size="20" value=""></td>
+          {if $table == "taskStatus"}
+          <td><input type="text" name="{$table}Label[]" size="20" value=""></td>
+          <td><input type="text" name="{$table}Colour[]" size="20" value=""></td>
+          {/}
           <td colspan="2">
           <!-- <input type="checkbox" name="{$table}Active[]" size="20" value="1"> -->
           </td>
@@ -54,7 +66,7 @@
         </tr>
 
         <tr id="rows_footer">
-          <th colspan="5" class="center">
+          <th colspan="50" class="center">
             <input type="submit" name="save" value="Save">
           </th>
         </tr>

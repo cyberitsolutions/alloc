@@ -402,22 +402,6 @@
     <td width="1%">{page::help("config_taskPriorities.html")}</td>
   </tr>
   <tr>
-    <td valign="top" width="20%" class="nobr">Task Status Options</td>
-    <td>
-      <a href="{$url_alloc_configEdit}configName=taskStatusOptions">Edit:</a>
-      {unset($br)}
-      {foreach $taskStatusOptions as $k => $arr}
-        {unset($br2)}
-        {$br}
-        {foreach $arr as $subStatus => $data}
-          {$br2}{echo ucwords($k).": ".$data["label"]} 
-          {$br2 = ", "}
-        {/}
-        {$br = "<br>"}
-      {/}
-    </td>
-  </tr>
-  <tr>
     <td valign="top" width="20%"><nobr>Client Categories</nobr></td>
     <td>
       <a href="{$url_alloc_configEdit}configName=clientCategories">Edit:</a>

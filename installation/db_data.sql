@@ -285,8 +285,6 @@ INSERT INTO config (name,value,type) VALUES ('taskPriorities','a:5:{i:1;a:2:{s:5
 
 INSERT INTO config (name,value,type) VALUES ('projectPriorities','a:5:{i:1;a:2:{s:5:"label";s:8:"Critical";s:6:"colour";s:7:"#ff0000";}i:2;a:2:{s:5:"label";s:9:"Important";s:6:"colour";s:7:"#ff7200";}i:3;a:2:{s:5:"label";s:6:"Normal";s:6:"colour";s:7:"#333333";}i:4;a:2:{s:5:"label";s:5:"Minor";s:6:"colour";s:7:"#666666";}i:5;a:2:{s:5:"label";s:8:"Wishlist";s:6:"colour";s:7:"#999999";}}','array');
 
-INSERT INTO config (name,value,type) VALUES ('taskStatusOptions','a:3:{s:4:"open";a:2:{s:10:"notstarted";a:2:{s:5:"label";s:11:"Not Started";s:6:"colour";s:25:"background-color:#8fe78f;";}s:10:"inprogress";a:2:{s:5:"label";s:11:"In Progress";s:6:"colour";s:25:"background-color:#8fe78f;";}}s:7:"pending";a:3:{s:4:"info";a:2:{s:5:"label";s:4:"Info";s:6:"colour";s:25:"background-color:#f9ca7f;";}s:7:"manager";a:2:{s:5:"label";s:7:"Manager";s:6:"colour";s:25:"background-color:#f9ca7f;";}s:6:"client";a:2:{s:5:"label";s:6:"Client";s:6:"colour";s:25:"background-color:#f9ca7f;";}}s:6:"closed";a:4:{s:7:"invalid";a:2:{s:5:"label";s:7:"Invalid";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:9:"duplicate";a:2:{s:5:"label";s:9:"Duplicate";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:10:"incomplete";a:2:{s:5:"label";s:10:"Incomplete";s:6:"colour";s:25:"background-color:#e0e0e0;";}s:8:"complete";a:2:{s:5:"label";s:9:"Completed";s:6:"colour";s:25:"background-color:#e0e0e0;";}}}', 'array');
-
 INSERT INTO config (name,value,type) VALUES ('defaultInterestedParties','a:0:{}','array');
 INSERT INTO config (name,value,type) VALUES ('task_email_header', '','text');
 INSERT INTO config (name,value,type) VALUES ('task_email_footer', '','text');
