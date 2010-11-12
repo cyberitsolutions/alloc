@@ -172,13 +172,14 @@ class calendar {
 
   function get_cal_tasks_to_start() {
     
+    list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
     // Select all tasks which are targetted to start
     $query = sprintf("SELECT * 
                         FROM task 
                        WHERE personID = %d 
                          AND dateTargetStart >= '%s' 
                          AND dateTargetStart < '%s'
-                         AND taskStatus != 'closed'"
+                         AND taskStatus NOT IN (".$ts_closed.")"
                     ,$this->person->get_id()
                     ,$this->first_date
                     ,$this->last_date);
@@ -193,13 +194,14 @@ class calendar {
 
   function get_cal_tasks_to_complete() {
 
+    list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
     // Select all tasks which are targetted for completion
     $query = sprintf("SELECT * 
                         FROM task 
                        WHERE personID = %d 
                          AND dateTargetCompletion >= '%s' 
                          AND dateTargetCompletion < '%s'
-                         AND taskStatus != 'closed'"
+                         AND taskStatus NOT IN (".$ts_closed.")"
                     ,$this->person->get_id()
                     ,$this->first_date
                     ,$this->last_date);

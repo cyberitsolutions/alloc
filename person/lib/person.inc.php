@@ -305,12 +305,14 @@ class person extends db_entity {
 
   function has_messages() {
     if (is_object($this)) {
+      
+      list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
       $db = new db_alloc;
       $query = sprintf("SELECT * 
                           FROM task 
                          WHERE taskTypeID = 'Message'
                            AND personID = %d
-                           AND taskStatus != 'closed'"
+                           AND taskStatus NOT IN (".$ts_closed.")"
                        ,$this->get_id());
       $db->query($query);
       if ($db->next_record()) {

@@ -60,6 +60,15 @@ INSERT INTO skillProficiency (skillProficiencyID, skillProficiencySeq, skillProf
 INSERT INTO skillProficiency (skillProficiencyID, skillProficiencySeq, skillProficiencyActive) VALUES ('Intermediate',3,true);
 INSERT INTO skillProficiency (skillProficiencyID, skillProficiencySeq, skillProficiencyActive) VALUES ('Advanced',4,true);
 INSERT INTO skillProficiency (skillProficiencyID, skillProficiencySeq, skillProficiencyActive) VALUES ('Senior',5,true);
+INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("open_notstarted"  ,"Open: Not Started" ,"#b0d9b0", 10,true);
+INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("open_inprogress"  ,"Open: In Progress" ,"#66f066", 20,true);
+INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("pending_info"     ,"Pending: Info"     ,"#f9ca7f", 30,true);
+INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("pending_manager"  ,"Pending: Manager"  ,"#f9ca7f", 40,true);
+INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("pending_client"   ,"Pending: Client"   ,"#f9ca7f", 50,true);
+INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("closed_invalid"   ,"Closed: Invalid"   ,"#e0e0e0", 60,true);
+INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("closed_duplicate" ,"Closed: Duplicate" ,"#e0e0e0", 70,true);
+INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("closed_incomplete","Closed: Incomplete","#e0e0e0", 80,true);
+INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("closed_complete"  ,"Closed: Completed" ,"#e0e0e0", 90,true);
 INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('FieldChange',1,true);
 INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskMarkedDuplicate',2,true);
 INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskUnmarkedDuplicate',3,true);

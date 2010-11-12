@@ -41,9 +41,8 @@ class task extends db_entity {
                              ,"dateActualStart" => array("audit"=>true)
                              ,"dateActualCompletion" => array("audit"=>true)
                              ,"taskComments"
-                             ,"taskStatus"
+                             ,"taskStatus" => array("audit"=>true)
                              ,"taskModifiedUser"
-                             ,"taskSubStatus" => array("audit"=>true)
                              ,"projectID" => array("audit"=>true)
                              ,"parentTaskID" => array("audit"=>true)
                              ,"taskTypeID" => array("audit"=>true)
@@ -64,20 +63,20 @@ class task extends db_entity {
 
     // If a dateActualCompletion has just been entered
     if (!$old["dateActualCompletion"] && $this->get_value("dateActualCompletion")) {
-      $_REQUEST["taskStatuses"] = "closed_complete";
+      $this->set_value("taskStatus","closed_complete");
 
     // Else if there was a dateActualCompletion and they have just *unset* it...
     } else if ($old["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
-      $_REQUEST["taskStatuses"] = "open_inprogress";
+      $this->set_value("taskStatus","open_inprogress");
     }
 
     // If they've just plugged a dateActualStart in and the task is notstarted, then change the status to Open: In Progress
-    if (!$old["dateActualStart"] && $this->get_value("dateActualStart") && $old["taskSubStatus"] == "notstarted") {
-      $_REQUEST["taskStatuses"] = "open_inprogress";
+    if (!$old["dateActualStart"] && $this->get_value("dateActualStart") && $old["taskStatus"] == "open_notstarted") {
+      $this->set_value("taskStatus","open_inprogress");
     }
 
     // Set the task's status and sub-status
-    list($taskStatus, $taskSubStatus) = explode("_",$_REQUEST["taskStatuses"]);
+    list($taskStatus, $taskSubStatus) = explode("_",$this->get_value("taskStatus"));
     if (!$this->post_save_hook && in_array($taskStatus,array("closed","close","open","pending"))) {
       $this->$taskStatus($taskSubStatus);
     }
@@ -116,8 +115,8 @@ class task extends db_entity {
     global $current_user;
     $duplicateTaskID = $this->get_value("duplicateTaskID");
 
-    $cur_status = $this->get_value("taskStatus").$this->get_value("taskSubStatus").$this->get_value("duplicateTaskID");
-    $new_status = "closed".$taskSubStatus.$duplicateTaskID;
+    $cur_status = $this->get_value("taskStatus").$this->get_value("duplicateTaskID");
+    $new_status = "closed_".$taskSubStatus.$duplicateTaskID;
 
     if ($cur_status != $new_status) { 
       $this->post_save_hook = "mark_closed";
@@ -126,8 +125,7 @@ class task extends db_entity {
       $this->get_value("dateActualCompletion") || $this->set_value("dateActualCompletion", date("Y-m-d"));
       $this->get_value("closerID")             || $this->set_value("closerID", $current_user->get_id());
       $this->get_value("dateClosed")           || $this->set_value("dateClosed",date("Y-m-d H:i:s"));           
-      $this->set_value("taskStatus","closed");
-      $this->set_value("taskSubStatus",$taskSubStatus);
+      $this->set_value("taskStatus","closed_".$taskSubStatus);
       $this->set_value("duplicateTaskID",$duplicateTaskID);
       if ($this->get_value("taskTypeID") == "Parent") {
         $this->close_off_children_recursive();
@@ -136,19 +134,18 @@ class task extends db_entity {
   }
 
   function open($taskSubStatus = "inprogress") {
-    $cur_status = $this->get_value("taskStatus").$this->get_value("taskSubStatus");
-    $new_status = "open".$taskSubStatus;
+    $cur_status = $this->get_value("taskStatus");
+    $new_status = "open_".$taskSubStatus;
 
     if ($cur_status != $new_status) { 
-      if (!$this->get_value("taskStatus") || $this->get_value("taskStatus")!="open") {
+      if (!$this->get_value("taskStatus") || substr($this->get_value("taskStatus"),0,4)!="open") {
         $this->post_save_hook = "mark_reopened";
       }
       $this->set_value("closerID",null);
       $this->set_value("dateClosed","");
       $this->set_value("dateActualCompletion","");
       $this->set_value("duplicateTaskID","");
-      $this->set_value("taskStatus","open");
-      $this->set_value("taskSubStatus",$taskSubStatus);
+      $this->set_value("taskStatus","open_".$taskSubStatus);
       if (!$this->get_value("dateActualStart") && $taskSubStatus == "inprogress") {
         $this->set_value("dateActualStart",date("Y-m-d"));
       }
@@ -156,8 +153,8 @@ class task extends db_entity {
   }
 
   function pending($taskSubStatus = "info") {
-    $cur_status = $this->get_value("taskStatus").$this->get_value("taskSubStatus");
-    $new_status = "pending".$taskSubStatus;
+    $cur_status = $this->get_value("taskStatus");
+    $new_status = "pending_".$taskSubStatus;
 
     if ($cur_status != $new_status) { 
       $this->post_save_hook = "mark_pending";
@@ -165,8 +162,7 @@ class task extends db_entity {
       $this->set_value("duplicateTaskID","");
       $this->set_value("closerID",null);
       $this->set_value("dateClosed","");
-      $this->set_value("taskStatus","pending");
-      $this->set_value("taskSubStatus",$taskSubStatus);
+      $this->set_value("taskStatus","pending_".$taskSubStatus);
     }
   }
 
@@ -590,8 +586,8 @@ class task extends db_entity {
 
     $TPL["taskStatusLabel"] = $this->get_task_status("label");
     $TPL["taskStatusColour"] = $this->get_task_status("colour");
-    $TPL["taskStatusValue"] = $this->get_task_status("value");
-    $TPL["taskStatusOptions"] = page::select_options($this->get_task_statii_array(true),$this->get_value("taskStatus")."_".$this->get_value("taskSubStatus"));
+    $TPL["taskStatusValue"] = $this->get_value("taskStatus");
+    $TPL["taskStatusOptions"] = page::select_options($this->get_task_statii_array(true),$this->get_value("taskStatus"));
 
     // If we're viewing the printer friendly view
     if ($_GET["media"] == "print") {
@@ -674,15 +670,13 @@ class task extends db_entity {
   }
 
   function get_task_statii_array($flat=false) {
-    // This gets an array like that is useful for building the two types of
-    // dropdown lists that taskStatus+taskSubStatus use
+    // This gets an array that is useful for building the two types of dropdown lists that taskStatus uses
     $taskStatii = task::get_task_statii();
-
     if ($flat) {
-      foreach ($taskStatii as $status => $sub) {
-        foreach ($sub as $subStatus => $arr) {
-          $taskStatiiArray[$status."_".$subStatus] = ucwords($status).": ".$arr["label"];
-        }
+      $m = new meta("taskStatus");
+      $taskStatii = $m->get_assoc_array();
+      foreach ($taskStatii as $status => $arr) {
+        $taskStatiiArray[$status] = task::get_task_status_thing("label",$status);
       }
     } else {
       $taskStatiiArray[""] = ""; // blank entry
@@ -702,43 +696,62 @@ class task extends db_entity {
     //$arr["open"]["notstarted"] = array("label"=>"Not Started","colour"=>"#ffffff");
     //$arr["open"]["inprogress"] = array("label"=>"In Progress","colour"=>"#ffffff");
     //etc
-    $rtn = config::get_config_item("taskStatusOptions") or $rtn = array();
+    $m = new meta("taskStatus");
+    $rows = $m->get_assoc_array();
+    foreach ($rows as $taskStatusID => $arr) {
+      list($s,$ss) = explode("_",$taskStatusID);
+      $rtn[$s][$ss] = array("label"=>$arr["taskStatusLabel"],"colour"=>$arr["taskStatusColour"]);
+    }
     return $rtn;
   }
 
   function get_task_status($thing="") {
-    $taskStatus = $this->get_value("taskStatus");
-    $taskSubStatus = $this->get_value("taskSubStatus");
-    return task::get_task_status_thing($thing,$taskStatus,$taskSubStatus);
+    return task::get_task_status_thing($thing,$this->get_value("taskStatus"));
   }
 
-  function get_task_status_thing($thing="",$taskStatus="",$taskSubStatus="") {
-
-    $arr = config::get_config_item("taskStatusOptions");
-    if (!$taskSubStatus && $arr[$taskStatus]) {
-      return ucwords($taskStatus);
-
-    } else if ($thing && !$taskStatus && $taskSubStatus) {
-      foreach ($arr as $k => $arr2) {
-        foreach ($arr2 as $k2 => $arr3) {
-          if ($k2 == $taskSubStatus) {
-            if ($thing == "status") {
-              return $k;
-            } else if ($arr3[$thing]) {
-              return $arr3[$thing];
-            }
-          }
-        }
-      } 
-
-    } else if ($thing == "label" && $arr[$taskStatus][$taskSubStatus]["label"]) {
-      return ucwords($taskStatus).": ".$arr[$taskStatus][$taskSubStatus]["label"];
-
-    } else if ($thing == "value" && $arr[$taskStatus][$taskSubStatus]) {
-      return $taskStatus."_".$taskSubStatus;
-
-    } else if ($thing && $arr[$taskStatus][$taskSubStatus][$thing]) {
+  function get_task_status_thing($thing="",$status="") {
+    list($taskStatus,$taskSubStatus) = explode("_",$status);
+    $arr = task::get_task_statii();
+    if ($thing && $arr[$taskStatus][$taskSubStatus][$thing]) {
       return $arr[$taskStatus][$taskSubStatus][$thing];
+    }
+  }
+
+  function get_task_status_in_set_sql() {
+    $arr = task::get_task_statii();
+    foreach ($arr as $taskStatusID => $r) {
+      $id = strtolower(substr($taskStatusID,0,4));
+      if ($id == "open") {
+        $sql_open.= $commar1.'"'.$id.'"';
+        $commar1 = ",";
+      } else if ($id == "clos") {
+        $sql_clos.= $commar2.'"'.$id.'"';
+        $commar2 = ",";
+      } else if ($id == "pend") {
+        $sql_pend.= $commar3.'"'.$id.'"';
+        $commar3 = ",";
+      }
+    }
+    return array($sql_open,$sql_pend,$sql_clos);
+  }
+
+  function get_taskStatus_sql($s) {
+    if ($s) {
+      if (is_array($s)) {
+        $taskStatusArray = $s;
+      } else {
+        $taskStatusArray[] = $s;
+      }
+      $subsql = array();
+      foreach ($taskStatusArray as $status) {
+        list($taskStatus,$taskSubStatus) = explode("_",$status);
+        if($taskSubStatus) {
+          $subsql[] = sprintf("(task.taskStatus = '%s')",db_esc($status));
+        } else {
+          $subsql[] = sprintf("(SUBSTRING(task.taskStatus,1,%d) = '%s')",strlen($status),db_esc($status));
+        }
+      }
+      return '('.implode(" OR ",$subsql).')';
     }
   }
 
@@ -748,19 +761,21 @@ class task extends db_entity {
     $projectIDs = project::get_projectID_sql($filter);
     $projectIDs and $sql["projectIDs"] = $projectIDs;
 
+    list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
+
     // New Tasks
     if ($filter["taskDate"] == "new") {
       $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 2, date("Y")))." 00:00:00";
       date("D") == "Mon" and $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")))." 00:00:00";
-      $sql[] = sprintf("(task.taskStatus != 'closed' AND task.dateCreated >= '".$past."')");
+      $sql[] = sprintf("(task.taskStatus NOT IN (".$ts_closed.") AND task.dateCreated >= '".$past."')");
 
     // Due Today
     } else if ($filter["taskDate"] == "due_today") {
-      $sql[] = "(task.taskStatus != 'closed' AND task.dateTargetCompletion = '".date("Y-m-d")."')";
+      $sql[] = "(task.taskStatus NOT IN (".$ts_closed.") AND task.dateTargetCompletion = '".date("Y-m-d")."')";
 
     // Overdue
     } else if ($filter["taskDate"] == "overdue") {
-      $sql[] = "(task.taskStatus != 'closed'
+      $sql[] = "(task.taskStatus NOT IN (".$ts_closed.")
                 AND 
                 (task.dateTargetCompletion IS NOT NULL AND task.dateTargetCompletion != '' AND '".date("Y-m-d")."' > task.dateTargetCompletion))";
   
@@ -796,24 +811,7 @@ class task extends db_entity {
     }
 
     // Task status filtering
-    if (is_array($filter["taskStatus"])) {
-      $subsql = array();
-      foreach ($filter["taskStatus"] as $status) {
-        list($taskStatus,$taskSubStatus) = explode("_",$status);
-        if($taskStatus) {
-          if($taskSubStatus) {
-            $subsql[] = sprintf("(taskStatus = '%s' AND taskSubStatus = '%s')",db_esc($taskStatus),db_esc($taskSubStatus));
-          } else {
-            $subsql[] = sprintf("(taskStatus = '%s')",db_esc($taskStatus));
-          }
-        }
-      }
-      $sql[] = '(' . implode(" OR ", $subsql) . ')';
-    } elseif ($filter["taskStatus"]) {
-      list($taskStatus,$taskSubStatus) = explode("_",$filter["taskStatus"]);
-      $taskStatus    and $sql[] = sprintf("(taskStatus = '%s')",db_esc($taskStatus));
-      $taskSubStatus and $sql[] = sprintf("(taskSubStatus = '%s')",db_esc($taskSubStatus));
-    }
+    $filter["taskStatus"] and $sql[] = task::get_taskStatus_sql($filter["taskStatus"]);
 
     // Unset if they've only selected the topmost empty task type
     if (is_array($filter["taskTypeID"]) && count($filter["taskTypeID"])>=1 && !$filter["taskTypeID"][0]) {
@@ -853,11 +851,11 @@ class task extends db_entity {
     // These filters are for the time sheet dropdown list
     if ($filter["taskTimeSheetStatus"] == "open") {
       unset($sql["personID"]);
-      $sql[] = sprintf("(task.taskStatus != 'closed')");
+      $sql[] = sprintf("(task.taskStatus NOT IN (".$ts_closed."))");
 
     } else if ($filter["taskTimeSheetStatus"] == "not_assigned"){ 
       unset($sql["personID"]);
-      $sql[] = sprintf("((task.taskStatus != 'closed') AND personID != %d)",$filter["personID"]);
+      $sql[] = sprintf("((task.taskStatus NOT IN (".$ts_closed.")) AND personID != %d)",$filter["personID"]);
 
     } else if ($filter["taskTimeSheetStatus"] == "recent_closed"){
       unset($sql["personID"]);
@@ -1226,7 +1224,7 @@ class task extends db_entity {
                           <option value=\"dateActualStart\">Actual Start Date to ".$arr."</options>
                           <option value=\"dateActualCompletion\">Actual Completion Date to ".$arr."</options>
                           <option value=\"projectIDAndParentTaskID\">Project and Parent Task to ".$arr."</options>
-                          <option value=\"taskStatuses\">Task Status to ".$arr."</option>
+                          <option value=\"taskStatus\">Task Status to ".$arr."</option>
                         </select>
                       </div>
                       <div class=\"hidden\" id=\"dateTargetStart_div\">".$dateTargetStart."</div>
@@ -1239,7 +1237,7 @@ class task extends db_entity {
                       <div class=\"hidden\" id=\"priority_div\"><select name=\"priority\">".$priority_options."</select></div>
                       <div class=\"hidden\" id=\"taskTypeID_div\"><select name=\"taskTypeID\">".$taskType_options."</select></div>
                       <div class=\"hidden\" id=\"projectIDAndParentTaskID_div\">".$project_dropdown.$parentTask_div."</div>
-                      <div class=\"hidden\" id=\"taskStatuses_div\"><select name=\"taskStatuses\">".$taskStatus_options."</select></div>
+                      <div class=\"hidden\" id=\"taskStatus_div\"><select name=\"taskStatus\">".$taskStatus_options."</select></div>
                       <input type=\"submit\" name=\"run_mass_update\" value=\"Update Tasks\">
                     </th>
                   </tr>
@@ -1492,7 +1490,7 @@ class task extends db_entity {
   }
 
   function get_list_vars() {
-    $taskStatii = task::get_task_statii_array();
+    $taskStatii = task::get_task_statii_array(true);
     foreach($taskStatii as $k => $v) {
       $taskStatiiStr.= $pipe.$k;
       $pipe = " | ";
@@ -1911,17 +1909,12 @@ class task extends db_entity {
           case 'taskTypeID':
             $changeDescription = "Task type was changed from " . $oldValue . " to " . $newValue . ".";
           break;
-          case 'taskSubStatus':
-            $taskStatii = task::get_task_statii_array(true);
-            $statusParentNew = task::get_task_status_thing("status","",$newValue);
-            $statusParentNewColour = task::get_task_status_thing("colour","",$newValue);
-            $statusParentOld = task::get_task_status_thing("status","",$oldValue);
-            $statusParentOldColour = task::get_task_status_thing("colour","",$oldValue);
-            $changeDescription = sprintf('Task status changed from <span style="%s">%s</span> to <span style="%s">%s</span>.'
-                                        ,$statusParentOldColour
-                                        ,$taskStatii[$statusParentOld."_".$oldValue]
-                                        ,$statusParentNewColour
-                                        ,$taskStatii[$statusParentNew."_".$newValue]
+          case 'taskStatus':
+            $changeDescription = sprintf('Task status changed from <span style="background-color:%s">%s</span> to <span style="background-color:%s">%s</span>.'
+                                        ,task::get_task_status_thing("colour",$oldValue)
+                                        ,task::get_task_status_thing("label",$oldValue)
+                                        ,task::get_task_status_thing("colour",$newValue)
+                                        ,task::get_task_status_thing("label",$newValue)
                                         );
           break;
           case 'dateActualCompletion':
@@ -2033,7 +2026,6 @@ class task extends db_entity {
     $taskModifiedUser = $this->get_value("taskModifiedUser");
     $taskModifiedUser_field = $taskModifiedUser." ".$p[$taskModifiedUser]["username"]." ".$p[$taskModifiedUser]["name"];
     $status = $this->get_value("taskStatus");
-    $this->get_value("taskSubStatus") and $status.= " ".$this->get_value("taskSubStatus");
 
     if ($this->get_value("projectID")) {
       $project = new project();

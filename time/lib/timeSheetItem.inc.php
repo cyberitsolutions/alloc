@@ -63,8 +63,8 @@ class timeSheetItem extends db_entity {
       if (!$selectedTask->get_value("dateActualStart")) {
         $selectedTask->set_value("dateActualStart", $this->get_value("dateTimeSheetItem"));
       }
-      if ($selectedTask->get_value("taskSubStatus") == "notstarted") {
-        $selectedTask->set_value("taskSubStatus", "inprogress");
+      if ($selectedTask->get_value("taskStatus") == "open_notstarted") {
+        $selectedTask->set_value("taskStatus", "open_inprogress");
       }
       $selectedTask->skip_perms_check = true;
       $selectedTask->save();

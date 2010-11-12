@@ -112,11 +112,12 @@ class stats {
   function task_stats() {
     $db = new db_alloc;
 
+    list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
     // Get total amount of current tasks for every person
     $q = "SELECT person.personID, person.username, count(taskID) as tally
             FROM task 
        LEFT JOIN person ON task.personID = person.personID 
-           WHERE task.taskStatus != 'closed'
+           WHERE task.taskStatus NOT IN (".$ts_closed.")
         GROUP BY person.personID";
 
     $db->query($q);
@@ -129,7 +130,7 @@ class stats {
     $q = "SELECT person.personID, person.username, count(taskID) as tally
             FROM task 
        LEFT JOIN person ON task.personID = person.personID 
-           WHERE task.taskStatus != 'closed'
+           WHERE task.taskStatus NOT IN (".$ts_closed.")
         GROUP BY person.personID";
 
     $db->query($q);

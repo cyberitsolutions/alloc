@@ -61,7 +61,7 @@ if ($_POST["run_mass_update"]) {
   if ($_POST["select"]) {
 
     $allowed_auto_fields = array("dateTargetStart","dateTargetCompletion","dateActualStart","dateActualCompletion","managerID"
-                                ,"timeEstimate","priority","taskTypeID","taskStatuses","personID");  
+                                ,"timeEstimate","priority","taskTypeID","taskStatus","personID");  
 
     foreach($_POST["select"] as $taskID => $selected) { 
       $task = new task;
@@ -84,9 +84,7 @@ if ($_POST["run_mass_update"]) {
 
       // All other cases are generic and can be handled by a single clause
       } else if ($_POST["update_action"] && in_array($_POST["update_action"],$allowed_auto_fields)) {
-        if ($_POST["update_action"] != "taskStatuses") {
-          $task->set_value($_POST["update_action"], $_POST[$_POST["update_action"]]);
-        }
+        $task->set_value($_POST["update_action"], $_POST[$_POST["update_action"]]);
         $task->save();
       }
     }

@@ -347,8 +347,7 @@ CREATE TABLE task (
   taskModifiedUser integer DEFAULT NULL,
   taskCommentTemplateID integer default NULL,
   duplicateTaskID integer default NULL,
-  taskStatus varchar(255) NOT NULL,
-  taskSubStatus varchar(255) DEFAULT NULL
+  taskStatus varchar(255) NOT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS auditItem;
@@ -700,6 +699,17 @@ CREATE TABLE taskType (
   taskTypeID varchar(255) PRIMARY KEY,
   taskTypeSeq integer NOT NULL,
   taskTypeActive boolean default true
+) ENGINE=InnoDB PACK_KEYS=0;
+
+
+
+DROP TABLE IF EXISTS taskStatus;
+CREATE TABLE taskStatus (
+  taskStatusID varchar(255) PRIMARY KEY,
+  taskStatusLabel varchar(255) DEFAULT NULL,
+  taskStatusColour varchar(255) DEFAULT NULL,
+  taskStatusSeq integer NOT NULL,
+  taskStatusActive boolean default true
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 
