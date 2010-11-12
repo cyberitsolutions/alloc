@@ -116,6 +116,7 @@ ALTER TABLE task ADD CONSTRAINT task_projectID FOREIGN KEY (projectID) REFERENCE
 ALTER TABLE task ADD CONSTRAINT task_parentTaskID FOREIGN KEY (parentTaskID) REFERENCES task (taskID);
 ALTER TABLE task ADD CONSTRAINT task_taskTypeID FOREIGN KEY (taskTypeID) REFERENCES taskType (taskTypeID);
 ALTER TABLE task ADD CONSTRAINT task_duplicateTaskID FOREIGN KEY (duplicateTaskID) REFERENCES task (taskID);
+ALTER TABLE task ADD CONSTRAINT task_taskStatus FOREIGN KEY (taskStatus) REFERENCES taskStatus (taskStatusID);
 ALTER TABLE auditItem ADD CONSTRAINT auditItem_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE interestedParty ADD CONSTRAINT interestedParty_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE interestedParty ADD CONSTRAINT interestedParty_clientContactID FOREIGN KEY (clientContactID) REFERENCES clientContact (clientContactID);

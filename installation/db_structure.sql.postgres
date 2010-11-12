@@ -322,8 +322,7 @@ CREATE TABLE task (
   taskModifiedUser integer DEFAULT NULL,
   taskCommentTemplateID integer default NULL,
   duplicateTaskID integer default NULL,
-  taskStatus varchar(255) NOT NULL,
-  taskSubStatus varchar(255) DEFAULT NULL
+  taskStatus varchar(255) NOT NULL
 ) ;
 
 CREATE TABLE auditItem (
@@ -645,6 +644,16 @@ CREATE TABLE taskType (
   taskTypeID varchar(255) PRIMARY KEY,
   taskTypeSeq integer default NULL,
   taskTypeActive boolean default true
+) ;
+
+
+
+CREATE TABLE taskStatus (
+  taskStatusID varchar(255) PRIMARY KEY,
+  taskStatusLabel varchar(255) default NULL,
+  taskStatusColour varchar(255) default NULL,
+  taskStatusSeq integer default NULL,
+  taskStatusActive boolean default true
 ) ;
 
 

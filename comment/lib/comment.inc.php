@@ -701,11 +701,8 @@ class comment extends db_entity {
     $filter["clients"] or $sql1[] = "(commentCreatedUser IS NOT NULL)";
     $filter["clients"] && $filter["personID"] and $sql1["personID"] = "(comment.commentCreatedUser IN (".implode(",",(array)$filter["personID"]).") OR comment.commentCreatedUser IS NULL)";
 
-    $filter["taskStatus"] and list($taskStatus,$taskSubStatus) = explode("_",$filter["taskStatus"]);
-    $taskStatus    and $sql1[] = sprintf("(task.taskStatus = '%s')",db_esc($taskStatus));
-    $taskSubStatus and $sql1[] = sprintf("(task.taskSubStatus = '%s')",db_esc($taskSubStatus));
-    $taskStatus    and $sql2[] = sprintf("(task.taskStatus = '%s')",db_esc($taskStatus));
-    $taskSubStatus and $sql2[] = sprintf("(task.taskSubStatus = '%s')",db_esc($taskSubStatus));
+    $filter["taskStatus"] and $sql1[] = task::get_taskStatus_sql($filter["taskStatus"]);
+    $filter["taskStatus"] and $sql2[] = task::get_taskStatus_sql($filter["taskStatus"]);
 
     return array($sql1,$sql2);
   }

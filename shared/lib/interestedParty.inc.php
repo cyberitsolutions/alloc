@@ -182,11 +182,11 @@ class interestedParty extends db_entity {
     }
 
     // Build up an array of task sub-statuses for email subject line changing
-    $rows = config::get_config_item("taskStatusOptions",true);
-    foreach ($rows as $status => $value) {
-      foreach ($value as $subStatus => $data) {
-        $subStatuses[$subStatus] = $status;
-      }
+    $m = new meta("taskStatus");
+    $rows = $m->get_assoc_array();
+    foreach ($rows as $taskStatusID => $arr) {
+      list($s,$ss) = explode("_",$taskStatusID);
+      $subStatuses[$ss] = $s;
     }
     $statuses["close"] = "close";
     $statuses["closed"] = "close";
