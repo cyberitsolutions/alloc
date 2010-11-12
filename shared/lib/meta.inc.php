@@ -34,6 +34,7 @@ class meta extends db_entity {
                      ,"projectType"               => "Project Types"
                      ,"currencyType"              => "Currency Types"
                      ,"projectStatus"             => "Project Statuses"
+                     ,"taskStatus"                 => "Task Statuses"
                      #,"roleLevel"                 => "Role Levels"
                      #,"reminderRecuringInterval"  => "Reminder Intervals"
                      #,"reminderAdvNoticeInterval" => "Advanced Notice Int"
@@ -56,8 +57,11 @@ class meta extends db_entity {
     $this->data_fields = array($table."Seq"
                               ,$table."Active"
                               );
+    if ($table == "taskStatus") {
+      $this->data_fields[] = "taskStatusLabel";
+      $this->data_fields[] = "taskStatusColour";
+    }
     $this->t = $table; // for internal use
-
     return parent::__construct();
   }
 

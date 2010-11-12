@@ -48,13 +48,6 @@ if ($_POST["save"]) {
       $config->set_value("value",serialize($arr));
       $config->save();
     }
-  } elseif ($configName == "taskStatusOptions" && is_array($_POST["status"])) {
-    foreach($_POST["status"] as $k => $v) { 
-      $arr[$_POST["status"][$k]][$_POST["subStatus"][$k]]   = array("label"=>$_POST["label"][$k],"colour"=>$_POST["colour"][$k]);
-    }
-    $config->set_value("value",serialize($arr));
-    $config->save();
-
   } else {
     $arr = $config->get_config_item($configName);
     $arr[$_POST["key"]] = $_POST["value"];
