@@ -61,24 +61,24 @@ class task extends db_entity {
     // Set the task creator
     $this->get_value("creatorID") || $this->set_value("creatorID",$current_user->get_id());
 
-    // If a dateActualCompletion has just been entered
-    if (!$old["dateActualCompletion"] && $this->get_value("dateActualCompletion")) {
-      $this->set_value("taskStatus","closed_complete");
-
-    // Else if there was a dateActualCompletion and they have just *unset* it...
-    } else if ($old["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
-      $this->set_value("taskStatus","open_inprogress");
-    }
-
-    // If they've just plugged a dateActualStart in and the task is notstarted, then change the status to Open: In Progress
-    if (!$old["dateActualStart"] && $this->get_value("dateActualStart") && $old["taskStatus"] == "open_notstarted") {
-      $this->set_value("taskStatus","open_inprogress");
-    }
-
     // Set the task's status and sub-status
     list($taskStatus, $taskSubStatus) = explode("_",$this->get_value("taskStatus"));
     if (!$this->post_save_hook && in_array($taskStatus,array("closed","close","open","pending"))) {
       $this->$taskStatus($taskSubStatus);
+    }
+
+    // If a dateActualCompletion has just been entered
+    if (!$this->post_save_hook && !$old["dateActualCompletion"] && $this->get_value("dateActualCompletion")) {
+      $this->close("complete");
+
+    // Else if there was a dateActualCompletion and they have just *unset* it...
+    } else if (!$this->post_save_hook && $old["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
+      $this->open("inprogress");
+    }
+
+    // If they've just plugged a dateActualStart in and the task is notstarted, then change the status to Open: In Progress
+    if (!$this->post_save_hook && !$old["dateActualStart"] && $this->get_value("dateActualStart") && $old["taskStatus"] == "open_notstarted") {
+      $this->open("inprogress");
     }
 
     // If task exists and the personID has changed, update the dateAssigned
@@ -113,10 +113,9 @@ class task extends db_entity {
  
   function close($taskSubStatus = "complete") {
     global $current_user;
-    $duplicateTaskID = $this->get_value("duplicateTaskID");
-
-    $cur_status = $this->get_value("taskStatus").$this->get_value("duplicateTaskID");
-    $new_status = "closed_".$taskSubStatus.$duplicateTaskID;
+    $old = $this->all_row_fields;
+    $cur_status = $old["taskStatus"].$old["duplicateTaskID"];
+    $new_status = "closed_".$taskSubStatus.$this->get_value("duplicateTaskID");
 
     if ($cur_status != $new_status) { 
       $this->post_save_hook = "mark_closed";
@@ -126,7 +125,6 @@ class task extends db_entity {
       $this->get_value("closerID")             || $this->set_value("closerID", $current_user->get_id());
       $this->get_value("dateClosed")           || $this->set_value("dateClosed",date("Y-m-d H:i:s"));           
       $this->set_value("taskStatus","closed_".$taskSubStatus);
-      $this->set_value("duplicateTaskID",$duplicateTaskID);
       if ($this->get_value("taskTypeID") == "Parent") {
         $this->close_off_children_recursive();
       }
@@ -134,7 +132,8 @@ class task extends db_entity {
   }
 
   function open($taskSubStatus = "inprogress") {
-    $cur_status = $this->get_value("taskStatus");
+    $old = $this->all_row_fields;
+    $cur_status = $old["taskStatus"];
     $new_status = "open_".$taskSubStatus;
 
     if ($cur_status != $new_status) { 
@@ -153,7 +152,8 @@ class task extends db_entity {
   }
 
   function pending($taskSubStatus = "info") {
-    $cur_status = $this->get_value("taskStatus");
+    $old = $this->all_row_fields;
+    $cur_status = $old["taskStatus"];
     $new_status = "pending_".$taskSubStatus;
 
     if ($cur_status != $new_status) { 
