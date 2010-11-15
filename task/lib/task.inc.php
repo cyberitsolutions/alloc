@@ -718,17 +718,18 @@ class task extends db_entity {
   }
 
   function get_task_status_in_set_sql() {
-    $arr = task::get_task_statii();
+    $m = new meta("taskStatus");
+    $arr = $m->get_assoc_array();
     foreach ($arr as $taskStatusID => $r) {
       $id = strtolower(substr($taskStatusID,0,4));
       if ($id == "open") {
-        $sql_open.= $commar1.'"'.$id.'"';
+        $sql_open.= $commar1.'"'.$taskStatusID.'"';
         $commar1 = ",";
       } else if ($id == "clos") {
-        $sql_clos.= $commar2.'"'.$id.'"';
+        $sql_clos.= $commar2.'"'.$taskStatusID.'"';
         $commar2 = ",";
       } else if ($id == "pend") {
-        $sql_pend.= $commar3.'"'.$id.'"';
+        $sql_pend.= $commar3.'"'.$taskStatusID.'"';
         $commar3 = ",";
       }
     }
