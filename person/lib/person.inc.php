@@ -336,7 +336,7 @@ class person extends db_entity {
     $probable1_personID = key($stack1);
     $person_percent1 = current($stack1);
 
-    if ($probable1_personID && $person_percent1 > 70) {
+    if ($probable1_personID && $person_percent1 > 90) {
       return $probable1_personID;
     }
   }
