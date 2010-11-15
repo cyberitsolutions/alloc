@@ -65,22 +65,6 @@ class tf extends db_entity {
     return $db->f("balance");
   }
 
-  function delete() {
-    global $current_user, $TPL;
-    $db = new db_alloc;
-
-    if ($current_user->have_role("god") || $current_user->have_role("admin")) {
-      $query = sprintf("DELETE FROM transaction WHERE tfID=%d",$this->get_id());
-      $db->query($query);
-
-      $query = sprintf("DELETE FROM tfPerson WHERE tfID=%d",$this->get_id());
-      $db->query($query);
-      db_entity::delete();
-    } else {
-      $TPL["message"] = "Permission denied.";
-    }
-  }
-
   function is_owner($person = "") {
     global $current_user;
     if ($person == "") {
