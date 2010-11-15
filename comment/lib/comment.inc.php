@@ -432,8 +432,8 @@ class comment extends db_entity {
 
 
     $person = new person;
-    $personID = $person->find_by_name($from_name);
-    $personID or $personID = $person->find_by_email($from_address);
+    $personID = $person->find_by_email($from_address);
+    $personID or $personID = $person->find_by_name($from_name);
 
     if ($personID && (!is_object($current_user) || (is_object($current_user) && !$current_user->get_id()))) {
       global $current_user;
@@ -442,8 +442,8 @@ class comment extends db_entity {
     }
 
     $cc = new clientContact();
-    $clientContactID = $cc->find_by_name($from_name, $projectID);
-    $clientContactID or $clientContactID = $cc->find_by_email($from_address, $projectID);
+    $clientContactID = $cc->find_by_email($from_address, $projectID);
+    $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
 
     if ($personID) {
       $comment->set_value('commentCreatedUser', $personID);

@@ -78,7 +78,7 @@ class clientContact extends db_entity {
     $probable1_clientContactID = key($stack1);
     $person_percent1 = current($stack1);
 
-    if ($probable1_clientContactID && $person_percent1 > 70) {
+    if ($probable1_clientContactID && $person_percent1 > 90) {
       return $probable1_clientContactID;
     }
   }
