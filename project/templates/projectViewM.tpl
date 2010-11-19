@@ -10,6 +10,10 @@
     <td>{$project_projectName}</td>
   </tr>
   <tr>
+    <td>Priority</td>
+    <td>{$priorityLabel}</td>
+  </tr>
+  <tr>
     <td>Client</td>
     <td>{$client_clientName}</td>
   </tr>
