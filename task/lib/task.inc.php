@@ -305,14 +305,13 @@ class task extends db_entity {
 
     $db = new db_alloc;
     if ($projectID) {
+      list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
       // Status may be closed_<something>
-      // The helper function doesn't allow for a negated test in any easy way
-
       $query = sprintf("SELECT taskID AS value, taskName AS label
                         FROM task 
                         WHERE projectID= '%d' 
                         AND taskTypeID = 'Parent'
-                        AND (SUBSTRING(taskStatus, 1, 6) != 'closed' OR taskID = %d)
+                        AND (taskStatus NOT IN (".$ts_closed.") OR taskID = %d)
                         ORDER BY taskName", $projectID, $parentTaskID);
       $options = page::select_options($query, $parentTaskID,70);
     }
