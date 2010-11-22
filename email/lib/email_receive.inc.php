@@ -55,10 +55,10 @@ class alloc_email_receive {
   
   }
   
-  function open_mailbox($folder="") {
+  function open_mailbox($folder="",$ops=OP_HALFOPEN) {
     $connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.'/notls/norsh}';
     $this->connect_string = $connect_string;
-    $this->connection = imap_open($connect_string, $this->username, $this->password, OP_HALFOPEN) or die("Unable to access mail folder(1).");
+    $this->connection = imap_open($connect_string, $this->username, $this->password, $ops) or die("Unable to access mail folder(1).");
     $list = imap_list($this->connection, $connect_string, "*");
     if (!is_array($list) || !count($list)) { // || !in_array($connect_string.$folder,$list)) {
       $this->unlock();
@@ -146,6 +146,7 @@ class alloc_email_receive {
 
   function save_email($file) {
     $header = imap_fetchheader($this->connection,$this->msg_uid,FT_PREFETCHTEXT+FT_UID);
+    $header and $this->mail_headers = imap_rfc822_parse_headers($header);
     $body = imap_body($this->connection,$this->msg_uid,FT_UID);
     $fh = fopen($file,"w+");
     fputs($fh, $header.$body);

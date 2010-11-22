@@ -1299,7 +1299,7 @@ EOD;
 
       $hash = $from["hash"];
 
-      $email->set_message_id($hash);
+      $messageid = $email->set_message_id($hash);
       $subject_extra = "{Key:".$hash."}";
 
       $project = $this->get_foreign_object("project");
@@ -1328,7 +1328,7 @@ EOD;
       }
 
       if ($email->send(false)) {
-        return $successful_recipients;
+        return array($successful_recipients,$messageid);
       }
     }
   }

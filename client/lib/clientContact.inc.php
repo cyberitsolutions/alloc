@@ -52,20 +52,17 @@ class clientContact extends db_entity {
 
     $stack1 = array();
 
-    static $people;
-    if (!$people) {
-      $people = array();
-      $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactName
-                      FROM client
-                 LEFT JOIN clientContact ON client.clientID = clientContact.clientID
-                 LEFT JOIN project ON project.clientID = client.clientID 
-                     WHERE project.projectID = %d
-                   ",$projectID);
-      $db = new db_alloc();
-      $db->query($q);
-      while ($row = $db->row()) {
-        $people[$db->f("clientContactID")] = $row;
-      }
+    $people = array();
+    $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactName
+                    FROM client
+               LEFT JOIN clientContact ON client.clientID = clientContact.clientID
+               LEFT JOIN project ON project.clientID = client.clientID 
+                   WHERE project.projectID = %d
+                 ",$projectID);
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $people[$db->f("clientContactID")] = $row;
     }
   
     foreach ($people as $personID => $row) {
@@ -84,25 +81,22 @@ class clientContact extends db_entity {
   }
 
   function find_by_email($email=false,$projectID=false) {
-    static $people;
-    if (!$people) {
-      $people = array();
-      $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactEmail
-                      FROM client
-                 LEFT JOIN clientContact ON client.clientID = clientContact.clientID
-                 LEFT JOIN project ON project.clientID = client.clientID 
-                     WHERE project.projectID = %d
-                   ",$projectID);
-      $db = new db_alloc();
-      $db->query($q);
-      while ($row = $db->row()) {
-        $people[$db->f("clientContactID")] = $row;
-      }
+    $people = array();
+    $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactEmail
+                    FROM client
+               LEFT JOIN clientContact ON client.clientID = clientContact.clientID
+               LEFT JOIN project ON project.clientID = client.clientID 
+                   WHERE project.projectID = %d
+                 ",$projectID);
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $people[$db->f("clientContactID")] = $row;
     }
 
     $email = str_replace(array("<",">"),"",$email);
     foreach($people as $clientContactID => $row) {
-      if ($email == $row["clientContactEmail"]) {
+      if (strtolower($email) == strtolower($row["clientContactEmail"])) {
         return $clientContactID;
       }
     }

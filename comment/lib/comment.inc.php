@@ -36,6 +36,7 @@ class comment extends db_entity {
                              ,"commentCreatedUserText"
                              ,"commentEmailRecipients"
                              ,"commentEmailUID"
+                             ,"commentEmailMessageID"
                              ,"comment"
                              );
 
@@ -441,14 +442,13 @@ class comment extends db_entity {
       $current_user->load_current_user($personID);
     }
 
-    $cc = new clientContact();
-    $clientContactID = $cc->find_by_email($from_address, $projectID);
-    $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
-
     if ($personID) {
       $comment->set_value('commentCreatedUser', $personID);
-    } else if ($clientContactID) {
-      $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
+    } else {
+      $cc = new clientContact();
+      $clientContactID = $cc->find_by_email($from_address, $projectID);
+      $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
+      $clientContactID and $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
     }
 
     // If we don't have a $from_name, but we do have a personID or clientContactID, get proper $from_name
@@ -479,6 +479,7 @@ class comment extends db_entity {
     $body = trim(mime_parser::get_body_text($decoded));
     $comment->set_value("comment",$body);
     $comment->set_value("commentCreatedUserText",trim($decoded[0]["Headers"]["from:"]));
+    $comment->set_value("commentEmailMessageID",trim($decoded[0]["Headers"]["message-id:"]));
     $comment->save();
     $from["commentID"] = $comment->get_id();
 
@@ -513,10 +514,10 @@ class comment extends db_entity {
       }
 
       if (!$ip_action["quiet"]) { // only resend email if quiet hasn't been put in the subject line
-        $successful_recipients = $obj->send_emails($recipients, $c->get_value("commentType")."_comments", $comment->get_value("comment"), $from);
+        list($successful_recipients,$messageid) = $obj->send_emails($recipients, $c->get_value("commentType")."_comments", $comment->get_value("comment"), $from);
       }
-
-      if ($successful_recipients) {
+      if ($successful_recipients || $messageid) {
+        $comment->set_value("commentEmailMessageID",$messageid);
         $comment->set_value("commentEmailRecipients",$successful_recipients);
         $comment->save();
       }

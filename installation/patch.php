@@ -55,7 +55,7 @@ function apply_patch($f) {
   // Try for php file
   } else if (strtolower(substr($file,-4)) == ".php") {
     $str = execute_php_file("../patches/".$file);
-    if ($str) {
+    if ($str && !defined("FORCE_PATCH_SUCCEED_".$file)) {
       #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br>".$str;
       $failed = true;
       ob_end_clean();
@@ -85,7 +85,7 @@ if (!in_array("patch-00053-alla.php",$abc123_applied_patches)) {
 
 
 // Apply all patches
-if ($_GET["apply_patches"] || $_POST["apply_patches"]) {
+if ($_REQUEST["apply_patches"]) {
   foreach ($abc123_files as $abc123_file) {
     $abc123_f = ALLOC_MOD_DIR."patches/".$abc123_file;
     if (!in_array($abc123_file,$abc123_applied_patches)) {
@@ -94,8 +94,8 @@ if ($_GET["apply_patches"] || $_POST["apply_patches"]) {
   }
 
 // Apply a single patch
-} else if ($_POST["apply_patch"] && $_POST["patch_file"]) {
-  $abc123_f = ALLOC_MOD_DIR."patches/".$_POST["patch_file"];
+} else if ($_REQUEST["apply_patch"] && $_REQUEST["patch_file"]) {
+  $abc123_f = ALLOC_MOD_DIR."patches/".$_REQUEST["patch_file"];
   if (!in_array($abc123_file,$abc123_applied_patches)) {
     apply_patch($abc123_f);
   }
