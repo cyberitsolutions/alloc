@@ -1694,7 +1694,7 @@ class task extends db_entity {
 
       $hash = $from["hash"];
 
-      $email->set_message_id($hash);
+      $messageid = $email->set_message_id($hash);
       $subject_extra = "{Key:".$hash."}";
 
       if ($commentTemplateHeaderID = config::get_config_item("task_email_header")) {
@@ -1734,7 +1734,7 @@ class task extends db_entity {
       }
 
       if ($email->send(false)) {
-        return $successful_recipients;
+        return array($successful_recipients,$messageid);
       }
     }   
   }
@@ -1768,8 +1768,8 @@ class task extends db_entity {
     list($from_address,$from_name) = parse_email_address($decoded[0]["Headers"]["from:"]);
 
     $person = new person;
-    $personID = $person->find_by_name($from_name);
-    $personID or $personID = $person->find_by_email($from_address);
+    $personID = $person->find_by_email($from_address);
+    $personID or $personID = $person->find_by_name($from_name);
 
     if ($personID && (!is_object($current_user) || (is_object($current_user) && !$current_user->get_id()))) {
       global $current_user;
@@ -1777,14 +1777,13 @@ class task extends db_entity {
       $current_user->load_current_user($personID);
     }
 
-    $cc = new clientContact();
-    $clientContactID = $cc->find_by_name($from_name, $this->get_value("projectID"));
-    $clientContactID or $clientContactID = $cc->find_by_email($from_address, $this->get_value("projectID"));
-
     if ($personID) {
       $comment->set_value('commentCreatedUser', $personID);
-    } else if ($clientContactID) {
-      $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
+    } else {
+      $cc = new clientContact();
+      $clientContactID = $cc->find_by_email($from_address, $this->get_value("projectID"));
+      $clientContactID or $clientContactID = $cc->find_by_name($from_name, $this->get_value("projectID"));
+      $clientContactID and $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
     }
 
     // If we don't have a $from_name, but we do have a personID or clientContactID, get proper $from_name
@@ -1819,6 +1818,7 @@ class task extends db_entity {
     $body = trim(mime_parser::get_body_text($decoded));
     $comment->set_value("comment",$body);
     $comment->set_value("commentCreatedUserText",trim($decoded[0]["Headers"]["from:"]));
+    $comment->set_value("commentEmailMessageID",trim($decoded[0]["Headers"]["message-id:"]));
     $comment->save();
     $from["commentID"] = $comment->get_id();
     $from["parentCommentID"] = $comment->get_id();
@@ -1835,9 +1835,10 @@ class task extends db_entity {
       $from["hash"] = $token->get_value("tokenHash");
     }
 
-    $successful_recipients = $this->send_emails($recipients,"task_comments",$comment->get_value("comment"),$from);
+    list($successful_recipients,$messageid) = $this->send_emails($recipients,"task_comments",$comment->get_value("comment"),$from);
 
-    if ($successful_recipients) {
+    if ($successful_recipients || $messageid) {
+      $comment->set_value("commentEmailMessageID",$messageid);
       $comment->set_value("commentEmailRecipients",$successful_recipients);
       $comment->save();
     }

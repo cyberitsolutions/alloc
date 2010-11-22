@@ -77,6 +77,7 @@ CREATE TABLE comment (
   commentCreatedUserText varchar(255) DEFAULT NULL,
   commentEmailRecipients TEXT DEFAULT NULL,
   commentEmailUID VARCHAR(255) DEFAULT NULL,
+  commentEmailMessageID TEXT DEFAULT NULL,
   comment TEXT) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS config;
