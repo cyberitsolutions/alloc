@@ -133,6 +133,53 @@ class clientContact extends db_entity {
     $this->get_value("clientContactEmail")         and $str.= $this->get_value("clientContactEmail",DST_HTML_DISPLAY)."<br>";  
     return $str;
   }
+
+  function output_vcard() {
+
+    //array of mappings from DB field to vcard field
+    $fields = array( //clientContactName is special
+        "clientContactPhone" => "TEL;WORK;VOICE",
+        "clientContactMobile" => "TEL;CELL",
+        "clientContactFax" => "TEL;TYPE=WORK;FAX",
+        "clientContactEmail" => "EMAIL;WORK"
+    ); //address fields are handled specially because they're a composite of DB fields
+
+    $vcard = array();
+
+    // This could be templated, but there's not much point
+    // Based off the vcard output by Android 2.1
+    header("Content-type: text/x-vcard");
+    $filename = strtr($this->get_value("clientContactName"), " ", "_") . ".vcf";
+    header('Content-Disposition: attachment; filename="'.$filename.'"');
+
+    print("BEGIN:VCARD\nVERSION:2.1\n");
+
+    if ($this->get_value("clientContactName")) {
+      //vcard stuff requires N to be last name; first name
+      // Assume whatever comes after the last space is the last name
+      // cut the string up to get <last name>;<everything else>
+      $name = explode(" ",$this->get_value("clientContactName"));
+      $lastname = array_slice($name, -1);
+      $lastname = $lastname[0];
+
+      $rest = implode(array_slice($name, 0, -1));
+      print "N:" . $lastname . ";" . $rest . "\n";
+      print "FN:" . $this->get_value("clientContactName")."\n";
+
+    }
+
+    foreach ($fields as $db => $label) {
+      if ($this->get_value($db))
+        print $label . ":" . $this->get_value($db) . "\n";
+    }
+    if ($this->get_value("clientContactStreetAddress")) {
+        print "ADR;HOME:;;" . $this->get_value("clientContactStreetAddress") . ";" .
+            $this->get_value("clientContactSuburb") . ";;" . //county or something
+	    $this->get_value("clientContactPostcode") . ";" . 
+	    $this->get_value("clientContactCountry") . "\n";
+    }
+    print("END:VCARD\n");
+  }
 }
 
 

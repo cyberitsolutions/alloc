@@ -98,8 +98,10 @@ require_once("../alloc.php");
         $pc = " (Primary Contact)";
       }
 
+      $vcard = '<a href="'.$TPL["url_alloc_client"].'clientContactID='.$clientContact->get_id().'&get_vcard=1"><img style="padding-left: 10px" src="'.$TPL["url_alloc_images"].'icon_vcard.png" alt="Download VCard" ></a>';
+
       $col1 = array();
-      $clientContact->get_value('clientContactName') and $col1[] = "<b>".$clientContact->get_value('clientContactName',DST_HTML_DISPLAY)."</b>".$pc;
+      $clientContact->get_value('clientContactName') and $col1[] = "<b>".$clientContact->get_value('clientContactName',DST_HTML_DISPLAY)."</b>".$pc . $vcard;
       $clientContact->get_value('clientContactStreetAddress') and $col1[] = $clientContact->get_value('clientContactStreetAddress',DST_HTML_DISPLAY);
 
       $clientContact->get_value('clientContactSuburb') || $clientContact->get_value('clientContactState') || $clientContact->get_value('clientContactPostcode') and
@@ -125,7 +127,14 @@ require_once("../alloc.php");
       $email = str_replace(">","",$email);
       $email = str_replace("&lt;","",$email);
       $email = str_replace("&gt;","",$email);
-      $email and $col2[] = $ico_e."<a href=\"mailto:".$email."\">".$email."</a>";
+
+      $userName = $clientContact->get_value('clientContactName');
+      if ($userName) {
+          $mailto = '"' . $userName . '" <' . $email . ">";
+      } else {
+          $mailto = $email;
+      }
+      $email and $col2[] = $ico_e."<a href='mailto:".$mailto."'>".$email."</a>";
 
       $phone = $clientContact->get_value('clientContactPhone',DST_HTML_DISPLAY);
       $phone and $col2[] = $ico_p.$phone;
@@ -268,6 +277,12 @@ if ($_POST["save"]) {
   move_attachment("client",$clientID);
   alloc_redirect($TPL["url_alloc_client"]."clientID=".$clientID."&sbs_link=attachments");
 
+} else if ($_GET["get_vcard"]) {
+  $clientContact = new clientContact;
+  $clientContact->set_id($_GET["clientContactID"]);
+  $clientContact->select();
+  $clientContact->output_vcard();
+  return;
 } else {
 
   if ($_POST["delete"]) {
