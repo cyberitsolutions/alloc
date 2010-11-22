@@ -1,6 +1,6 @@
 
 {$clientContactPhone or $clientContactPhone = $clientContactMobile}
-{$clientContactEmail and $clientContactEmail = "<a href=\"mailto:".page::htmlentities($clientContactEmail)."\">".page::htmlentities($clientContactEmail)."</a>"}
+{$clientContactEmail and $clientContactEmail = "<a href=\"mailto:".page::htmlentities($clientName." <".$clientContactEmail.">")."\">".page::htmlentities($clientContactEmail)."</a>"}
 
 <tr>
 {if $_FORM["showClientName"]}          <td>{$clientName}</td>{/}
