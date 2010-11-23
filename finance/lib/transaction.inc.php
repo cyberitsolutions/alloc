@@ -600,18 +600,23 @@ class transaction extends db_entity {
 
     $display_format = "M";
 
-    $m = date("m");
-    $y = date("Y");
+    // Fiddle $_FORM["monthDate"]. It may be a real date (2010-11-23) so change the last 2 chars to "01".
+    $_FORM["monthDate"] = substr_replace($_FORM["monthDate"], "01", 8);
+
+    // If this month is January, go from last Feb to this Feb
+    $m = date("m") + 1;
+    if ($m == 13)
+    	$m = 1;
+    $y = date("Y") - 1;
     $label_monthDate = date($display_format);
 
-    while ($i < 12) {
-      $i++;
+    for ($j = 0;$j < 13;$j++) {
 
-      $label = date($display_format,mktime(0,0,0,$i,1,$y));
-      $monthDate = date("Y-m-d",mktime(0,0,0,$i,1,$y));
+      $label = date($display_format,mktime(0,0,0,$m,1,$y));
+      $monthDate = date("Y-m-d",mktime(0,0,0,$m,1,$y));
 
       $bold = false;
-      if ($label == format_date($display_format,$_FORM["monthDate"])) {
+      if ($monthDate == format_date("Y-m-d",$_FORM["monthDate"])) {
         $bold = true;
       } 
 
@@ -620,6 +625,13 @@ class transaction extends db_entity {
       $rtn["month_links"] .= $sp."<a href=\"".$link."\">".$label."</a>";
       $bold and $rtn["month_links"] .= "</b>";
       $sp = "&nbsp;&nbsp;";
+
+      if ($m == 12) {
+          $m = 1;
+          $y += 1;
+      } else {
+          $m += 1;
+      }
     }
 
     if ($_FORM["sortTransactions"] == "transactionSortDate") {
