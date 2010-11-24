@@ -3,7 +3,7 @@
 
 
 ==========================
-allocPSA v1.6 User Manual
+allocPSA v1.7 User Manual
 ==========================
 -----------------------------------------------------------------
 The Premier Open Source Professional Services Automation Solution
@@ -430,6 +430,8 @@ Tasks
 9. A full history of changes to task meta-data, so that management can
    see who changed what attributes and when.
 
+10. Ability to sort task commentary on a threaded or date basis, also incorporating time-sheet time entries.
+
 
 Time Sheets
 -----------
@@ -538,6 +540,8 @@ Reporting
 
 2. Every field in the core component tables can be queried, filtered and
    exported.
+
+3. Task Comment Summary, which provides the tools needed to determine if all work performed has been billed to the appropriate projects and customers.
 
 
 Fault & Issue Tracking
@@ -1497,6 +1501,244 @@ How do I Sort Tables of Data?
 5. Click on another table column heading text, for instance, TASK on the
    Tasks table, and allocPSA will sort the data in the table using this
    column as the sorting criterion.
+
+How do I Specify Annual Leave or Absence?
+-----------------------------------------
+
+1. Log in to allocPSA
+
+2. Click on the People tab
+
+3. Select/click your name from the list of people present. This will take you into your user record.
+
+4. At the bottom of this record, you will find a link called 'New absence form'. Click this.
+
+5. On the Absence Form which appers, nominate the Date From and the Date To for your leave of absence.
+
+6. Select the type of Leave (Annual Leave, Holiday, etc.)
+
+7. Add any new/additional emergency contact details or pertinent information that your colleagues may find valuable. 
+
+8. Click the Save button.
+
+
+How do I Check that I've Billed Completely on a Task?
+-----------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. Open the task you're interested in checking.
+
+3. Click onto the Comments tab.
+
+4. Click the Summary link on the top-right side of the task. This will switch the comments into summary mode, sorted on date.
+
+5. Review the summary items, checking to see if you've done work on this task, for which there isn't a corresponding time-sheet entry. 
+   The time-sheet entries are marked in **Bold**.
+
+6. If you find that there is unbilled work, then you can Click back into the Main task tab, and then click the Time Sheet link near 
+   the top-right side of this page. Now you can add an appropriately dated time-sheet item to an existing time-sheet, or create a new 
+   time-sheet and do the same.
+
+Note: You can 'expand' any of these task comments by clicking on them. This will help you establish the context of the actions taken, 
+and to help determine if this is indeed work that needed to be billed.
+
+
+How do I Sort Task Comments by Date Order?
+------------------------------------------
+
+1. Log in to allocPSA.
+
+2. Open the task you're interested in.
+
+3. Click onto the Comments tab.
+
+4. Click the Summary link on the top-right side of the task. This will switch the comments into summary mode, sorted on date.
+
+5. You can 'expand' any of these task comments by clicking on them.
+
+6. To get back to the normal, full threaded view of the task comments, click the Full link, on the top-right side of the task.
+
+
+How do Prepare an Un-billed Effort Exception Report?
+----------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. Click on the Tools tab.
+
+3. Click on the Task Comment Summary link. This will bring up the Task Comment Summary page.
+
+4. Click on the Show Filter link, near the top-right of this page, which will present you with the filter tool.
+
+5. Select/de-select the projects you're interested in preparing an un-billed effort exception report on.
+
+6. Select the time-sheeting person/people you're interested in including in this report.
+
+7. Select the Start Date for this report.
+
+8. Select the End Date for this report.
+
+9. Select the Task Status, for the types of task you want to check the un-billed effort on. It's often best to leave this 'blank'.
+
+10. For a full-overview of the actions taken and their context, you can also check the 'Include Client Comments' check-box, 
+    but this isn't often needed.
+
+11. Click the Filter button. You will now be presented with a list of tasks, which that person (or people) took actions on, along with 
+    any corresponding time-sheet entries. This list is grouped per-task, sorted on date. 
+
+12. You can 'expand' any of these task comments by clicking on them. This will help you establish the context of the actions taken,
+    and to help determine if this is indeed work that needed to be billed.
+
+13. Review the summary items, checking to see if you've done work on this task, for which there isn't a corresponding time-sheet entry.
+    The time-sheet entries are marked in **Bold**. A good rule-of-thumb is, if you see task comment entries, with no **bold** time-sheet 
+    line beneath them, this is possible an item of worked which hasn't been time-sheeted.
+
+14. If you determine that a user has under billed for work performed, you can right-mouse button click on the related task link, or
+    otherwise cause it to be opened in a new browser tab, go to the Comments tab, and add a new entry, including appropriate 
+    internal/external parties (specifically the user who under billed) and alert them to this possibility. 
+
+15. They can then review this, and remedy the situation by submitting a new time-sheet entry for this under (or non-) billed work.
+
+
+How do I Print a Task Ticket so I can take it with me on a Job?
+---------------------------------------------------------------
+
+Note: Assuming you want the total volume of information related to this task, it's history, the client it relates to, their address etc., allocPSA offers a mechanism to prepare a printer-friendly version of this information.
+
+1. Log in to allocPSA.
+
+2. Open the task you're interested in.
+
+3. Click on the Print link, which is situatied just to the side of the main screen tabs, along the top of the allocPSA page.
+
+4. This will bring up a full-detail, printer-friendly version of the information relating to this task, including the address and contact 
+   details of the client, which you can then print off your browser, and take with you on an on-site visit.
+
+5. To get back to your normal allocPSA page, just use your browser's Back button.
+
+
+How do I Print a Printer-Friendly Version of the Task List?
+-----------------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. Click on the Tasks tab.
+
+3. Use the filter tool to prepare a list of the tasks you're interested in
+
+4. Click on the Print link, which is situated just to the side of the main screen tabs, along the top of the allocPSA page.
+
+5. This will produce a more printer-friendly version of the list shown on-screen.
+
+6. Click on your browser's Print toolbar or select Print from your browser's File menu.
+
+7. To get back to your normal allocPSA page, just use your browser's Back button.
+
+
+How do I Print a Printer-Friendly Version of the Clients List?
+--------------------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. Click on the Clients tab. 
+
+3. Use the filter tool to prepare a list of the clients you're interested in
+
+4. Click on the Print link, which is situated just to the side of the main screen tabs, along the top of the allocPSA page.
+
+5. This will produce a more printer-friendly version of the list shown on-screen.
+
+6. Click on your browser's Print toolbar or select Print from your browser's File menu.
+
+7. To get back to your normal allocPSA page, just use your browser's Back button.
+
+
+How do I Print a Printer-Friendly Version of the Projects List?
+---------------------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. Click on the Projects tab. 
+
+3. Use the filter tool to prepare a list of the projects you're interested in.
+
+4. Click on the Print link, which is situated just to the side of the main screen tabs, along the top of the allocPSA page.
+
+5. This will produce a more printer-friendly version of the list shown on-screen.
+
+6. Click on your browser's Print toolbar or select Print from your browser's File menu.
+
+7. To get back to your normal allocPSA page, just use your browser's Back button.
+
+
+How do I Check to Ensure Users are Submitting Their Time-sheets in a Timely Manner?
+-----------------------------------------------------------------------------------
+
+Note: This process assumes that your organisation has a policy which outlines that time-sheets 
+should be submitted to time-sheet managers, in a timely manner. One example would be that time-sheets should be no older than 7 days.
+
+1. Log in to allocPSA.
+
+2. Click on to the Time tab.
+
+3. Click the Show Filter link, to reveal the filter tool.
+
+4. If you want to check a particular user's time-sheet, select that user, otherwise leave the User Name drop-list blank.
+
+5. Supply the Start Date From field. This sets the 'lower-bound' of what time-sheet item dates to include in the filter.
+
+6. Supply the Start Date To field. This sets the 'upper-bound' of what time-sheet item dates to include in the filter.
+
+7. In the Status drop-list, select Add Time, as this will show you the time-sheets that users have created, but not yet submitted to management.
+
+8. If you want to check time-sheets lodged with a particular project, select that project from the Project drop-list, otherwise leave it blank.
+
+9. Click the Filter button. This will generate a (possibly lengthy) list of time-sheets, assigned to projects, users etc.
+
+10. Sort the list by Start Date, by clicking on the START DATE column header. This will show you the time-sheet with the oldest time-sheet 
+    item at the top of the table.
+
+11. Check that this date is no further in the past than your organisations time-sheet submission policy allows for.
+
+12. If it is, and **if** you want to notify your user of this possible infraction, right-click on the record link (in the Project) column, 
+    and cause that time-sheet to be brought up on a new browser tab.
+
+13. In that new tab, review the time-sheet, confirm that it's now overdue, then go to the botton of the time-sheet, where you'll 
+    find the Comments section.
+
+14. Click the New link at the lower-right side of the time-sheet page. This will open up a modified form of the comments tool found in tasks.
+
+15. Select the time-sheet creattor/user, and any other interested parties (time-sheet managers, admin etc) from the list of Email Recipients.
+
+16. Using either a pre-scripted response (i.e, from the Comment Template drop-list) or entering your own message, send out a note saying that 
+    this time-sheet is old and should be submitted.
+
+17. When complete, click the Save Comment button. This email will now be sent to thes email recipients.
+
+18. Return to the previous tab, the one that listed the filtered time-sheets, (i.e, step 10. above) and work your way down the list.
+
+
+How do I Email a Time-Sheet to Customers?
+-----------------------------------------
+
+1. Log in to allocPSA.
+
+2. Go to the time-sheet that you want to send out.
+
+3. Go to the botton of the time-sheet, where you'll find the Comments section.
+
+4. Click the New link at the lower-right side of the time-sheet page. This will open up a modified form of the comments tool found in tasks.
+
+5. Select the appropriate interested parties (customer contact(s), time-sheet manager, admin etc) from the list of Email Recipients.
+
+6. Using either a pre-scripted response (i.e, from the Comment Template drop-list) or entering your own message, add text to the comment text box, 
+   letting everyone know the purpose of this message. 
+
+7. From the Attach Time Sheet drop-list, select one of the options. Unless you have reason to specify otherwise, select Default. This will cause 
+   a copy of the time-sheet to be attached to the outgoing email, as a PDF.
+
+8. When complete, click the Save Comment button. This email will now be sent to thes email recipients.
 
 
 Useful Tips for using allocPSA
