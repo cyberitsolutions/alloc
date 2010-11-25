@@ -516,8 +516,7 @@ class comment extends db_entity {
       if (!$ip_action["quiet"]) { // only resend email if quiet hasn't been put in the subject line
         list($successful_recipients,$messageid) = $obj->send_emails($recipients, $c->get_value("commentType")."_comments", $comment->get_value("comment"), $from);
       }
-      if ($successful_recipients || $messageid) {
-        $comment->set_value("commentEmailMessageID",$messageid);
+      if ($successful_recipients) {
         $comment->set_value("commentEmailRecipients",$successful_recipients);
         $comment->save();
       }
