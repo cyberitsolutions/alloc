@@ -1560,8 +1560,8 @@ How do I Sort Task Comments by Date Order?
 6. To get back to the normal, full threaded view of the task comments, click the Full link, on the top-right side of the task.
 
 
-How do Prepare an Un-billed Effort Exception Report?
-----------------------------------------------------
+How do I Prepare an Un-billed Effort Exception Report?
+------------------------------------------------------
 
 1. Log in to allocPSA.
 
@@ -1741,6 +1741,123 @@ How do I Email a Time-Sheet to Customers?
 8. When complete, click the Save Comment button. This email will now be sent to thes email recipients.
 
 
+How do I Manage Support and Help Desk Tasks
+-------------------------------------------
+
+**Note**: Some help-desk systems call suppprt tasks 'tickets'. In this
+documentation, tickets and tasks can be used inter-changeably.  While there are
+no functional differences between tasks assigned in 'help-desk' type projects
+or tasks assigned to more traditional 'life-cycle' projects, these are
+sometimes managed differently, or by different people within an organisation.
+Help-desk tasks/tickets are generally created and managed on an ad-hoc and
+on-going basis, and help-desk tasks are oft-times managed by more than one
+person within an organisation. The nature of the processes used to manage such
+tasks is therefore related to these attributes.
+
+1. Log in to allocPSA.
+
+2. As a help-desk manager, you are likely to want to manage all, or some
+   portion of the currently active open support tickets. You can best do this by
+   going to the Task tab.
+
+3. Within the Task list page, click on the Show Filter link, along the
+   top-right of the page.
+
+4. Within this filter, click the Projects link, situated just above the list of
+   projects. This will expand the different categories of Projects.
+
+5. From this list, click the Current option. This will then show you all the
+   current, active, open projects.
+
+6. To display all the relevant tasks, either select *all* of the projects
+   listed, or de-select them all, so that none are high-lighted in the list.
+
+7. To see the currently active tasks, select Open from the Task Status drop-list.
+
+8. To view the fault tasks/tickets, select Fault from the Task Type list.
+
+9. If you want to further filter down into particular task attributes, you can
+   choose these from the Created By, Managed By and Assigned To drop-lists. If you
+   don't have requirements for further filtering, leave these blank.
+
+10. You can now select to see a variety of fields on the list of tasks to be filtered. For instance, if you want to see all the details of each task, you can check the Desc & Comments. The following gives you more information about each of these options:
+
+- Desc & Comments: This will show you the description of each task listed, along with all the comments. **Note** Use this option carefully, as the volume of data may be substantial. In general, unless you know there are only a few tasks in the returned task list, don't check this checkbox. 
+
+- Task Dates: This gives you additional information on each task's Target Start, Target Completion,  Actual Start, Actual Completion and Task Created dates.
+
+- Task Creator: This will display the name of the user who created each task
+
+- Task Manager: This will display the name of the user who is set up on the task as the task manager.
+
+- Est, Act & Percent: This will display information on the task's time
+  Estimate, the Actual time time-sheeted thus far, and the overall percentage
+  of the time time-sheeted versus the estimate. *If* the amount of time
+  time-sheeted for this task is more than the time estimated, then the percentage
+  will be displayed in **red**.
+
+- Assigned To:  This will display the name of the user who this task is assigned to.
+
+- Priority Info: This will display each task's Project and Task priority, along
+  with an overall computed Priority, based on the age of the task, attributed
+  priorities, etc.
+
+- Date Status: This will display a computed date estimate to complete the task,
+  based on effort and time spent thus far. A typical output would be something
+  like 'Started 2010-06-30, forecast completion date of 2010-12-06'.
+ 
+11. You can also select to filter based on Task Date attributes, by selecting items from the Task Date droplist. Options include:
+
+- New Tasks:
+
+- Due Today:
+
+- Overdue:
+
+- Date Created and then supply a data range on which to filter: 
+
+- Date Assigned and then supply a data range on which to filter: 
+
+- Estimated Start and then supply a data range on which to filter: 
+
+- Estimated Completion and then supply a data range on which to filter: 
+
+- Date Started and then supply a data range on which to filter: 
+
+- Date Completed and then supply a data range on which to filter: 
+
+12. Once all the filter options have been selected, click the Filter button.
+    This will generate the list of tasks which match your filter criteria and
+    display the information on those tasks, based on your output options.
+
+13. The resulting table can be sorted on particular columns, for instance, task
+    ID or task Priority, in the usual manner, by clicking on the column header.
+    Click twice to reverse the sort order.
+
+14. You can 'drill-down' into specific tasks, by clicking on their corresponding task name.
+
+15. Using this Tasks page, you can filter and sort the tasks and faults which
+    are of interest to you, keeping tabs on when they're due, how they're
+    progressing, how much time is being time-sheeted against them, where there are
+    time-effort over-runs, etc.
+
+
+How do I Manage Project Tasks
+-----------------------------
+
+**Note**: While there are no functional differences between tasks assigned in
+'help desk' type projects or tasks assigned to more traditional 'life-cycle'
+projects, these are sometimes managed differently, or by different people
+within an organisation. Life-cycle projects generally have a beginning and
+middle and an end, and in general, are managed by a single project manager. The
+nature of the processes used to manage such tasks is therefore related to these
+attributes
+
+1. Log in to allocPSA.
+
+2. 
+
+
 Useful Tips for using allocPSA
 ==============================
 
@@ -1783,7 +1900,18 @@ in allocPSA. Therefore,
    establish a specific filter, with options, for showing Tasks,
    bookmark it, and recall the same filter settings on future occasions.
 
-A note on dates in allocPSA
+10. **Note** It is a good idea to bookmark at least allocPSA one page in your
+    web-browser, and this should be your regular, 'safe' and 'sane' view of tasks,
+    perhaps the list of currently open Faults or active and open Tasks, with
+    minimal output fields selected. The main reason to create such a book mark is
+    that if, by some chance, you select to display a very large result set, by
+    selecting perhaps too much output, or too liberal a filter, there could be a
+    huge volume of data returned. In some web-server <-> web-browser combinations,
+    this might cause timeouts. If you do find yourself in such a scenario, you can
+    use your 'sane' bookmark, to 'reset' the task filter into something manageable.
+
+A Note on Dates in allocPSA
+---------------------------
 
 As this system is intended for use in multiple countries, it has been designed
 to work with International Standards Organisation (ISO) standard dates, which
