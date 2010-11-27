@@ -24,8 +24,18 @@ function refreshTaskList(radiobutton) {
           <td>{page::calendar("timeSheetItem_dateTimeSheetItem",$tsi_dateTimeSheetItem)}</td>
           <td>
             <input type="text" size="5" name="timeSheetItem_timeSheetItemDuration" value="{$tsi_timeSheetItemDuration}">
-            <select name="timeSheetItem_timeSheetItemDurationUnitID">{$tsi_unit_options}</select>
-            &nbsp;@&nbsp;&nbsp;$<input type="text" size="7" name="timeSheetItem_rate" value="{$tsi_rate}">&nbsp;&times;&nbsp;<select name="timeSheetItem_multiplier">{$tsi_multiplier_options}</select>
+            {if $tsi_unit_label}
+              {$tsi_unit_label}
+            {else}
+              <select name="timeSheetItem_timeSheetItemDurationUnitID">{$tsi_unit_options}</select>
+            {/}
+            @
+            {if $tsi_rate == "" && $tsi_rate !== 0}
+              <input type="text" size="7" name="timeSheetItem_rate" value="{$tsi_rate}">
+            {else}
+              <input type="hidden" name="timeSheetItem_rate" value="{$tsi_rate}">{$tsi_rate}
+            {/}
+&nbsp;&times;&nbsp;<select name="timeSheetItem_multiplier">{$tsi_multiplier_options}</select>
           </td>
         </tr>
         <tr>
