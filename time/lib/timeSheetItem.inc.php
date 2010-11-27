@@ -80,6 +80,13 @@ class timeSheetItem extends db_entity {
     // $this->set_value("multiplier", $_POST["timeSheetItem_multiplier"]);
     // $this->set_value("comment", $_POST["timeSheetItem_comment"]);
 
+    if ($timeSheet->pay_info["project_rate"] || $timeSheet->pay_info["project_rate"] === 0) {
+      $this->set_value("rate", $timeSheet->pay_info["project_rate"]);
+    }
+    if ($timeSheet->pay_info["project_rateUnitID"]) {
+      $this->set_value("timeSheetItemDurationUnitID", $timeSheet->pay_info["project_rateUnitID"]);
+    }
+
     parent::save();
 
     $db = new db_alloc();
