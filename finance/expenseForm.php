@@ -116,6 +116,9 @@ function check_optional_show_line_item_add() {
   return (is_object($expenseForm) && $expenseForm->get_id() && $expenseForm->get_value("expenseFormFinalised")!=1);
 }
 
+if (!config::get_config_item("mainTfID")) {
+  $TPL["message"][] = "This functionality will not work until you set a Finance TF on the Setup -> Finance screen.";
+}
 
 $current_user->check_employee();
 
@@ -143,6 +146,7 @@ if ($_POST["add"]) {
   $_POST["companyDetails"] or $TPL["message"][] = "You must enter the Company Details.";
   $_POST["fromTfID"]       or $TPL["message"][] = "You must enter the Source TF.";
   $_POST["quantity"]       or $_POST["quantity"] = 1;
+  config::get_config_item("mainTfID") or $TPL["message"][] = "You must configure the Finance Tagged Fund on the Setup -> Finance screen.";
 
   if ($_POST["amount"] === "") {
     $TPL["message"][] = "You must enter the Price.";
