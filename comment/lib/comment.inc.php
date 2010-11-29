@@ -99,10 +99,12 @@ class comment extends db_entity {
     return $this->is_owner();
   }
 
-  function get_comments($commentType="",$commentLinkID="") {
+  function get_comments($commentMaster="",$commentMasterID="") {
     $rows = array();
-    if ($commentType && $commentLinkID) {
-      $q = sprintf("SELECT commentID, commentLinkID, commentType,
+    if ($commentMaster && $commentMasterID) {
+      $q = sprintf("SELECT commentID, 
+                           commentMaster, commentMasterID,
+                           commentLinkID, commentType,
                            commentCreatedUser as personID, 
                            commentCreatedTime as date, 
                            commentModifiedTime, 
@@ -113,16 +115,90 @@ class comment extends db_entity {
                            commentEmailRecipients,
                            commentEmailUID
                       FROM comment 
-                     WHERE commentType = '%s' AND commentLinkID = %d 
+                     WHERE commentMaster = '%s' AND commentMasterID = %d 
                   ORDER BY commentCreatedTime"
-                  ,$commentType, $commentLinkID);
+                  ,$commentMaster, $commentMasterID);
       $db = new db_alloc;
       $db->query($q);
       while ($row = $db->row()) {
-        $rows[] = $row;
+        if ($row["commentType"] == "comment") {
+          $rows[$row["commentLinkID"]]["children"][] = $row;
+        } else {
+          foreach ($row as $k=>$v) { // need to do it this way so that "children" doesn't get overriden
+            $rows[$row["commentID"]][$k] = $v;
+          }
+        }
       }
     }
+    # commentID    commmentMaster   commmentMasterID  commentType   commentLinkID
+    # 1            task             10                task          10
+    # 2            task             10                comment       1
+    # 3            task             10                comment       1
     return $rows;
+  }
+
+  function get_one_comment_array($v=array()) {
+    global $TPL, $current_user;
+    $new = $v;
+    $token = new token;
+    if ($token->select_token_by_entity_and_action("comment",$new["commentID"],"add_comment_from_email")) {
+      if ($token->get_value("tokenHash")) {
+        $new["hash"] = $token->get_value("tokenHash");
+        $new["hashKey"] = "{Key:".$new["hash"]."}";
+        $new["hashHTML"] = " <em class=\"faint\">".$new["hashKey"]."</em>";
+      }
+
+      $ip = interestedParty::get_interested_parties("comment",$new["commentID"]);
+      if (is_array($ip)) {
+        foreach($ip as $email => $info) {
+          if ($info["external"]) {
+            $new["external"] = " loud";
+            $new["external_label"] = "<em class='faint warn'>[&nbsp;External&nbsp;Conversation&nbsp;]</em>";
+          }
+        }
+      }
+      $new["external_label"] or $new["external_label"] = "<em class='faint'>[&nbsp;Internal&nbsp;Conversation&nbsp;]</em>";
+    }
+
+    if ($v["timeSheetID"]) {
+      $timeSheet = new timeSheet();
+      $timeSheet->set_id($v["timeSheetID"]);
+      $v["ts_label"] = " (Time Sheet #".$timeSheet->get_id().")";
+    }
+
+    $new["attribution"] = comment::get_comment_attribution($v);
+    $new["commentCreatedUserEmail"] = comment::get_comment_author_email($v);
+    $s = commentTemplate::populate_string(config::get_config_item("emailSubject_taskComment"), $entity, $id);
+    $new["commentEmailSubject"] = $s." ".$new["hashKey"];
+
+    if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
+
+      if ($options["showEditButtons"] && $new["comment_buttons"]) {
+        $new["form"] = '<form action="'.$TPL["url_alloc_comment"].'" method="post">';
+        $new["form"].= '<input type="hidden" name="entity" value="'.$v["commentType"].'">';
+        $new["form"].= '<input type="hidden" name="entityID" value="'.$v["commentLinkID"].'">';
+        $new["form"].= '<input type="hidden" name="commentID" value="'.$v["commentID"].'">';
+        $new["form"].= '<input type="hidden" name="comment_id" value="'.$v["commentID"].'">';
+        $new["form"].= $new["comment_buttons"];
+        $new["form"].= '</form>';
+      }
+  
+      if ($new["commentEmailUID"] && config::get_config_item("allocEmailHost")) { 
+        $new['downloadEmail'] = '<a class="noprint" href="'.$TPL["url_alloc_downloadEmail"].'msg_uid='.$new["commentEmailUID"].'">';
+        #$new['downloadEmail'].= '<img border="0" title="Download Email" src="'.$TPL["url_alloc_images"].'download_email.gif">';
+        $new['downloadEmail'].= 'Download</a>';
+      }
+
+      $files = get_attachments("comment",$v["commentID"],array("sep"=>"<br>"));
+      if (is_array($files)) {
+        foreach($files as $key => $file) {
+          $new["files"].= '<div align="center" style="float:left; display:inline; margin-right:14px;">'.$file["file"].'</div>';
+        }
+      }
+
+      $v["commentEmailRecipients"] and $new["emailed"] = 'Emailed to '.page::htmlentities($v["commentEmailRecipients"]);
+    }
+    return (array)$new;
   }
 
   function util_get_comments_array($entity, $id, $options=array()) {
@@ -143,95 +219,21 @@ class comment extends db_entity {
       $rows = comment::get_comments($entity,$id);
     }
 
-    foreach ($rows as $v) {
-      $new = $v;
-
-      if (!$v["comment"])
-        continue ;
-  
+    foreach ((array)$rows as $v) {
       unset($children);
-      $children = comment::util_get_comments_array("comment", $v["commentID"], $options);
-      is_array($children) && count($children) and $new["children"] = $children;
-
-
-      $token = new token;
-      if ($token->select_token_by_entity_and_action("comment",$new["commentID"],"add_comment_from_email")) {
-        if ($token->get_value("tokenHash")) {
-          $new["hash"] = $token->get_value("tokenHash");
-          $new["hashKey"] = "{Key:".$new["hash"]."}";
-          $new["hashHTML"] = " <em class=\"faint\">".$new["hashKey"]."</em>";
-        }
-  
-        $ip = interestedParty::get_interested_parties("comment",$new["commentID"]);
-        if (is_array($ip)) {
-          foreach($ip as $email => $info) {
-            if ($info["external"]) {
-              $new["external"] = " loud";
-              $new["external_label"] = "<em class='faint warn'>[&nbsp;External&nbsp;Conversation&nbsp;]</em>";
-            }
-          }
-        }
-        $new["external_label"] or $new["external_label"] = "<em class='faint'>[&nbsp;Internal&nbsp;Conversation&nbsp;]</em>";
-
-      #} else if ($token->select_token_by_entity_and_action($entity,$id,"add_comment_from_email")) {
-        #$token->get_value("tokenHash") and $new["hash"] = " <em class=\"faint\">{Key:".$token->get_value("tokenHash")."}</em>";
+      foreach ((array)$v["children"] as $c) {
+        $children[] = comment::get_one_comment_array($c);
       }
-
-
-      if ($v["timeSheetID"]) {
-        $timeSheet = new timeSheet();
-        $timeSheet->set_id($v["timeSheetID"]);
-        $v["ts_label"] = " (Time Sheet #".$timeSheet->get_id().")";
-
-      } else if (($v["personID"] == $current_user->get_id()) && $options["showEditButtons"] && $new["hash"]) {
-        //$new["comment_buttons"] = "<input type=\"submit\" name=\"comment_edit\" value=\"Edit\">";
-      //<input type=\"submit\" name=\"comment_delete\" value=\"Delete\" class=\"delete_button\">";
-      }
-
-      $new["attribution"] = comment::get_comment_attribution($v);
-      $new["commentCreatedUserEmail"] = comment::get_comment_author_email($v);
-      $s = commentTemplate::populate_string(config::get_config_item("emailSubject_taskComment"), $entity, $id);
-      $new["commentEmailSubject"] = $s." ".$new["hashKey"];
-
-      if (!$_GET["commentID"] || $_GET["commentID"] != $v["commentID"]) {
-
-        if ($options["showEditButtons"] && $new["comment_buttons"]) {
-          $new["form"] = '<form action="'.$TPL["url_alloc_comment"].'" method="post">';
-          $new["form"].= '<input type="hidden" name="entity" value="'.$v["commentType"].'">';
-          $new["form"].= '<input type="hidden" name="entityID" value="'.$v["commentLinkID"].'">';
-          $new["form"].= '<input type="hidden" name="commentID" value="'.$v["commentID"].'">';
-          $new["form"].= '<input type="hidden" name="comment_id" value="'.$v["commentID"].'">';
-          $new["form"].= $new["comment_buttons"];
-          $new["form"].= '</form>';
-        }
-    
-        if ($new["commentEmailUID"] && config::get_config_item("allocEmailHost")) { 
-          $new['downloadEmail'] = '<a class="noprint" href="'.$TPL["url_alloc_downloadEmail"].'msg_uid='.$new["commentEmailUID"].'">';
-          #$new['downloadEmail'].= '<img border="0" title="Download Email" src="'.$TPL["url_alloc_images"].'download_email.gif">';
-          $new['downloadEmail'].= 'Download</a>';
-        }
-
-        $files = get_attachments("comment",$v["commentID"],array("sep"=>"<br>"));
-        if (is_array($files)) {
-          foreach($files as $key => $file) {
-            $new["files"].= '<div align="center" style="float:left; display:inline; margin-right:14px;">'.$file["file"].'</div>';
-          }
-        }
-
-        $v["commentEmailRecipients"] and $new["emailed"] = 'Emailed to '.page::htmlentities($v["commentEmailRecipients"]);
-
-        $new_rows[] = $new;
-      }
+      $children and $v["children"] = $children;
+      $new_rows[] = comment::get_one_comment_array($v);
     }
-
-    return $new_rows;
+    return (array)$new_rows;
   }
 
   function util_get_comments($entity, $id, $options=array()) {
     global $TPL, $current_user;
     $rows = comment::util_get_comments_array($entity, $id, $options);
-    $rows or $rows = array();
-    foreach ($rows as $row) {
+    foreach ((array)$rows as $row) {
       $rtn.= comment::get_comment_html_table($row);
     }
     return $rtn;
