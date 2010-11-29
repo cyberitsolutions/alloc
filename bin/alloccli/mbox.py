@@ -51,31 +51,25 @@ alloc mbox -t 1234 > file.mbox'''
       taskID = self.search_for_task(tops)
 
     if taskID:
-      emailUIDs = self.make_request({"method":"get_comment_email_uids_search","str":'SUBJECT "Task Comment: '+taskID+' "'})
 
-    # If we're redirecting stdout eg -t 123 >task123.html
-    if not stdout.isatty() and emailUIDs:
-      for uid in emailUIDs:
-        if uid:
-          print self.make_request({"method":"get_email","emailUID":uid})
+      # If we're redirecting stdout eg -t 123 >task123.html
+      if not stdout.isatty():
+        print self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
 
 
-    elif emailUIDs:
-      if not 'MAILER' in os.environ or not os.environ['MAILER']:
-        self.die('The environment variable $MAILER has not been defined. Eg: export MAILER="mutt -f "')
+      elif:
+        if not 'MAILER' in os.environ or not os.environ['MAILER']:
+          self.die('The environment variable $MAILER has not been defined. Eg: export MAILER="mutt -f "')
 
-      str = ""
-      for uid in emailUIDs:
-        if uid:
-          str+= self.make_request({"method":"get_email","emailUID":uid})   
+        str = self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
 
-      fd, filepath = tempfile.mkstemp()
-      with closing(os.fdopen(fd, 'wb')) as tf:
-        tf.write(str)
+        fd, filepath = tempfile.mkstemp()
+        with closing(os.fdopen(fd, 'wb')) as tf:
+          tf.write(str)
 
-      command = os.environ['MAILER']+' "'+filepath+'"'
-      self.msg('Running: '+command)
-      os.system(command)
-      self.msg('Removing: '+filepath)
-      os.remove(filepath)
+        command = os.environ['MAILER']+' "'+filepath+'"'
+        self.msg('Running: '+command)
+        os.system(command)
+        self.msg('Removing: '+filepath)
+        os.remove(filepath)
 

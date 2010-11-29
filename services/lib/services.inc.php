@@ -158,6 +158,16 @@ class alloc_services {
     }
   }
 
+  public function search_emails($str) {
+    if ($str) {
+      $uids = $this->get_comment_email_uids_search($str);
+      foreach ((array)$uids as $uid) {
+        $emails.= $this->get_email($uid);
+      }
+    }
+    return $emails;
+  }
+
   public function init_email_info() {
     global $current_user; // Always need this :(
     $info["host"] = config::get_config_item("allocEmailHost");
@@ -182,7 +192,7 @@ class alloc_services {
     if ($emailUID) {
       $info = $this->init_email_info();
       $mail = new alloc_email_receive($info,$lockfile);
-      $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
+      $mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_HALFOPEN+OP_READONLY);
       list($header,$body) = $mail->get_raw_email_by_msg_uid($emailUID);
       $mail->close();
       $m = new alloc_email();
@@ -199,7 +209,7 @@ class alloc_services {
       $lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
       $info = $this->init_email_info();
       $mail = new alloc_email_receive($info,$lockfile);
-      $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
+      $mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_HALFOPEN+OP_READONLY);
       $rtn = $mail->get_emails_UIDs_search($str);
       $mail->close();
     }
