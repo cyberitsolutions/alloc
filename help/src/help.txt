@@ -2164,7 +2164,7 @@ Adding Documents to a Client
    You can upload documents like images, database files, contracts, etc.
 
 
-allocPSA allows you to add electronic documents to a Client's record These
+allocPSA allows you to add electronic documents to a Client's record. These
 documents could be contracts, letters, scanned images, business-plans, or
 database files. All forms of electronic document are supported (PDF files,
 ASCII, HTML, all graphics files, MS Word, Powerpoint, Excel and OpenOffice.org
@@ -2196,6 +2196,41 @@ specific Task) by clicking on the 'Add Reminder' link on the Client page.
 
 Reminders are a wonderfully useful facility in allocPSA. They can be set within
 the context of a Client, rather than a Project or Task.
+
+Listing and Adding Projects to Clients
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can view the existing, and add new projects to this client, by clicking
+into the Projects tab. This will show you the current, pending and archived
+projects related to this client. You can also create a new project, linked to
+this client, by clicking the New Project link, and then completing the
+process required to add a new project.
+
+
+Listing and Adding Invoices to Clients
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you use allocPSA to generate and manage your invoices to clients, you can
+manage these from the client's Invoices tab.  This will show you a list of
+invoices related to this client, and by clicking the New Invoice link, you will
+be able to add a new invoice to this list.
+
+
+Listing and Adding Sales to Clients
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can view the existing, and add new sales entities to this client, by
+clicking into the Sales tab. This will show you all the sales related to this
+client. You can also create a new sale item, linked to this client, by clicking
+the New Salelink, and then completing the process required to add a new sale.
+
+Finding the Client Address on a Map
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+allocPSA has been integrated with Google Maps, so you are able to jump straigh
+to any client address, by clicking on the View map link, shown on the main
+Client page. This will take you straight to the nominated client address, as
+rendered by Google maps.
 
 Modifying Client Information
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2549,7 +2584,6 @@ in a brighter colour for obvious recognition.
 
 
 
-
 New Task
 ~~~~~~~~
 
@@ -2661,11 +2695,15 @@ List when doing a 'List by Project'.
 Special Tasks: Faults
 ~~~~~~~~~~~~~~~~~~~~~
 
-In allocPSA a fault is a special kind of Task which exhibits particular
-behaviour with respect to the automatic setting of reminders for the Person to
-which the fault has been assigned, and to the Project's Manager (if any) listed
-in the Project in which this fault was attached to, as a form of safety-net
-escalation mechanism. 
+In allocPSA a fault is a special kind of Task which can be tracked specifically
+as the entity which relates to help-desk activities within allocPSA. 
+
+Outside this change in task 'type', faults are actioned, managed and behave
+like any standard task.
+
+Note: When you create a fault, you have the option of establishing an automated
+reminder for the assignee. The priority of the fault will determine how
+frequently these reminder emails are sent.
 
 While allocPSA does not purport to be a full Service Desk solution, the
 tracking of faults as part of the overall system framework provides quite a
@@ -2673,30 +2711,22 @@ powerful system for companies which provide service-level support to track,
 manage, filter and archive any issues or problems which arise in the day-to-day
 operation of any services organisation. 
 
-NOTE: Only if appropriate email addresses have been configured for the
-Project's Manager or the Person to whom the fault is assigned, will there be
-any email notification possible.
-
 Special Tasks: Messages
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-In allocPSA, a message is a special kind of Task which exhibits particular
-behaviour with respect to the automatic sending of the message via an email, as
-well as the setting of email reminders for the Person to which the message has
-been directed to, and to the Manager (if any) listed in the Project in which
-this message was associated with, as a form of safety-net escalation mechanism. 
+In allocPSA a message is a special kind of Task which can be tracked specifically 
+as the entity which relates to quick notes for users to take actions, such as calling others.
 
-Normally, in most offices, a majority of messages would be pasted onto a desk
-or computer screen by way of a sticky-note, or perhaps sent as a one off email.
-Use the message-Task facility in allocPSA when you want to ensure that the
-Person to whom you are sending this message to needs to sign-off on the Task,
-or that if they Task is not signed-off in a reasonable limit of time (as
-dictated by the Priority of the message) that an email will be sent to an
-administrator or the Project's Manager. 
+Outside this change in task 'type', messages are actioned, managed and behave
+like any standard task. With one exception. Any messages created for a user,
+will appear in a separate Messages segment of the user's Home page.
 
-NOTE: Only if appropriate email addresses have been configured for the
-Project's Manager or the Person to whom the message is directed to, will there
-be any email notification possible.
+Note: When you create a message, you have the option of establishing an
+automated reminder for the assignee. The priority of the message will determine
+how frequently these reminder emails are sent.
+
+General Tasks
+~~~~~~~~~~~~~
 
 Tasks in allocPSA have a number of view. When creating a new Task, you will be
 presented with a view which primarily shows the header information. Once this
@@ -2832,8 +2862,12 @@ Time Sheet submission policy.)
 Closing a Task When Complete
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once you have finished all aspects of a Task, you are able to mark it
-complete.  To do this, enter a date for Actual Completion. 
+Once you have finished all aspects of a Task, you are able to mark it complete.
+To do this, click the Edit Task button at bottom of the page, to enable changes
+to the task header, and enter a date for Actual Completion. As per-usual, you
+can add today's date in the Actual Completion field, by double-clicking on it
+with your mouse. Alternatively, you can select one of the Closed options from
+the Status drop-list.
 
 
 Time
