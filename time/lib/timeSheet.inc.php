@@ -42,6 +42,7 @@ class timeSheet extends db_entity {
                              ,"payment_insurance"
                              ,"recipient_tfID"
                              ,"customerBilledDollars"
+                             ,"currencyTypeID"
                              );
   public $permissions = array(PERM_TIME_APPROVE_TIMESHEETS => "approve"
                              ,PERM_TIME_INVOICE_TIMESHEETS => "invoice");
@@ -129,6 +130,7 @@ class timeSheet extends db_entity {
      * $this->pay_info["unit"]                                                 *
      * $this->pay_info["summary_unit_totals"]                                  *
      * $this->pay_info["total_dollars_not_null"] tot_custbilled/tot_dollars    *
+     * $this->pay_info["currency"]; according to timeSheet table               *
      *                                                                         *
      ***************************************************************************/
 
@@ -215,6 +217,7 @@ class timeSheet extends db_entity {
     $this->pay_info["total_dollars_minus_gst"] = $this->pay_info["total_dollars"] / $taxPercentDivisor;
     $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_customerBilledDollars"] / $taxPercentDivisor;
     $this->pay_info["total_dollars_not_null"] = $this->pay_info["total_customerBilledDollars"] or $this->pay_info["total_dollars_not_null"] = $this->pay_info["total_dollars"];
+    $this->pay_info["currency"] = page::currency($this->get_value("currencyTypeID"));
   }
 
   function destroyTransactions() {
@@ -271,11 +274,11 @@ class timeSheet extends db_entity {
         $agency_percentage = 0;
         if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
           $agency_percentage = $payrollTaxPercent;
-          $product = "Agency Percentage ".$agency_percentage."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"])." for timesheet #".$this->get_id();
+          $product = "Agency Percentage ".$agency_percentage."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"])." for timesheet #".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
         $percent = $companyPercent - $agency_percentage;
-        $product = "Company ".$percent."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"])." for timesheet #".$this->get_id();
+        $product = "Company ".$percent."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"])." for timesheet #".$this->get_id();
         $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
 
 
@@ -297,7 +300,7 @@ class timeSheet extends db_entity {
                     AND commissionPercent != 0");
         while ($db->next_record()) {
           $percent_so_far += $db->f("commissionPercent");
-          $product = "Commission ".$db->f("commissionPercent")."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"]);
+          $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"]);
           $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
           $rtn[$product] = $this->createTransaction($product
                                                   , $this->pay_info["total_dollars_minus_gst"]*($db->f("commissionPercent")/100)
@@ -309,7 +312,7 @@ class timeSheet extends db_entity {
         // 6. Employee gets commission if none were paid previously or the remainder of 5% commission if there is any
         if (!$percent_so_far || $percent_so_far < 5) {
           $percent = 5 - $percent_so_far;
-          $product = "Commission ".sprintf("%0.3f",$percent)."% of $".sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"]);
+          $product = "Commission ".sprintf("%0.3f",$percent)."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"]);
           $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
           $rtn[$product] = $this->createTransaction($product
                                                   , $this->pay_info["total_dollars_minus_gst"]*($percent/100)
@@ -359,13 +362,13 @@ class timeSheet extends db_entity {
         $agency_percentage = 0;
         if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
           $agency_percentage = $payrollTaxPercent;
-          $product = "Agency Percentage ".$agency_percentage."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"])." for timesheet #".$this->get_id();
+          $product = "Agency Percentage ".$agency_percentage."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"])." for timesheet #".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
 
         // 3. Do companies cut
         $percent = $companyPercent - $agency_percentage;
-        $product = "Company ".$percent."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"])." for timesheet #".$this->get_id();
+        $product = "Company ".$percent."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"])." for timesheet #".$this->get_id();
         $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
 
         // 4. Credit Employee TF
@@ -383,7 +386,7 @@ class timeSheet extends db_entity {
         while ($db->next_record()) {
 
           if ($db->f("commissionPercent") > 0) { 
-            $product = "Commission ".$db->f("commissionPercent")."% of $".sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"]);
+            $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"]);
             $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
             $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
             $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
@@ -442,6 +445,7 @@ class timeSheet extends db_entity {
       $transaction->set_value("transactionDate", date("Y-m-d"));
       $transaction->set_value("transactionType", $transactionType);
       $transaction->set_value("timeSheetID", $this->get_id());
+      $transaction->set_value("currencyTypeID", $this->get_value("currencyTypeID"));
       $transaction->save();
       return 1;
     }

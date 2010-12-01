@@ -422,7 +422,8 @@ CREATE TABLE timeSheet (
   billingNote text,
   payment_insurance boolean default false,
   recipient_tfID integer default NULL,
-  customerBilledDollars DECIMAL(19,2) DEFAULT NULL
+  customerBilledDollars DECIMAL(19,2) DEFAULT NULL,
+  currencyTypeID VARCHAR(255) DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS timeSheetItem;

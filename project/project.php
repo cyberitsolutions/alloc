@@ -605,8 +605,10 @@ if (is_object($project) && $project->get_id()) {
       } 
       $t["timeEstimate"] and $count_quoted_tasks++;
     }
-    $currency = '$';
-    $TPL["cost_remaining"] and $TPL["cost_remaining"] = $currency.sprintf("%0.2f",$TPL["cost_remaining"]);
+
+
+    $TPL["currency"] = $currency = page::currency($project->get_value("currencyType"));
+    $TPL["cost_remaining"] and $TPL["cost_remaining"] = sprintf("%0.2f",$TPL["cost_remaining"]);
     $TPL["time_remaining"] and $TPL["time_remaining"] = sprintf("%0.1f",$TPL["time_remaining"])." Hours.";
 
     $TPL["count_incomplete_tasks"] = count($tasks);
@@ -742,6 +744,7 @@ $TPL["taxName"] = config::get_config_item("taxName");
 $TPL["project_projectName_html"] = page::to_html($project->get_value("projectName"));
 $TPL["project_projectComments_html"] = page::to_html($project->get_value("projectComments"));
 
+$TPL["currency"] = page::currency($project->get_value("currencyType"));
 
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");

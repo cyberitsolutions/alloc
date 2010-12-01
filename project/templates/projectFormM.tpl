@@ -170,7 +170,7 @@ function clickClientStatus(e) {
 
         {if $project_projectBudget || $project_currencyType || $cost_centre_tfID_label}
         <div class="view">
-          <h6>Budget<div>Cost Centre TF</div></h6>
+          <h6>Budget / Currency<div>Cost Centre TF</div></h6>
           <div style="float:left; width:40%;">
             {$project_projectBudget} {$project_currencyType}{if $project_projectBudget && $taxName} (inc. {$taxName}){/}
           </div>
@@ -181,7 +181,7 @@ function clickClientStatus(e) {
         {/}
 
         <div class="edit">
-          <h6>Budget<div>Cost Centre TF</div></h6>
+          <h6>Budget / Currency<div>Cost Centre TF</div></h6>
           <div style="float:left; width:40%;">
             <input type="text" name="projectBudget" value="{$project_projectBudget}" size="10"> 
             <select name="currencyType"><option value="">{$currencyType_options}</select><br>
