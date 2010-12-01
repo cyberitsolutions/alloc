@@ -65,7 +65,7 @@ if (!$current_user->is_employee()) {
       if ($total != $timeSheet->pay_info["total_dollars_not_null"]) {
         $start_bad = "<span class=\"bad\">";
         $end_bad = "</span>";
-        $extra = " (allocate: ".sprintf("\$%0.2f",$timeSheet->pay_info["total_dollars_not_null"]-$total).")";
+        $extra = " (allocate: ".$timeSheet->pay_info["currency"].sprintf("%0.2f",$timeSheet->pay_info["total_dollars_not_null"]-$total).")";
       }
 
       $TPL["amount_msg"] = $start_bad.$extra.$end_bad;
@@ -106,10 +106,10 @@ if (!$current_user->is_employee()) {
           $transaction->read_db_record($db);
           $transaction->set_tpl_values("transaction_");
 
+          $TPL["currency"] = page::currency($transaction->get_value("currencyTypeID"));
           $TPL["tf_options"] = page::select_options($tf_array, $TPL["transaction_tfID"]);
           $TPL["from_tf_options"] = page::select_options($tf_array, $TPL["transaction_fromTfID"]);
           $TPL["status_options"] = page::select_options($status_options, $transaction->get_value("status"));
-          $TPL["transaction_amount"] = number_format($TPL["transaction_amount"], 2, ".", "");
           $TPL["transactionType_options"] = page::select_options($transactionType_options, $transaction->get_value("transactionType"));
           $TPL["percent_dropdown"] = page::select_options($percent_array, $empty);
           $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Save\">
@@ -135,7 +135,7 @@ if (!$current_user->is_employee()) {
           $transaction->set_tpl_values("transaction_");
           unset($TPL["transaction_amount_pos"]);
           unset($TPL["transaction_amount_neg"]);
-          $TPL["transaction_amount"] = "$".number_format($TPL["transaction_amount"], 2);
+          $TPL["currency"] = page::currency($transaction->get_value("currencyTypeID"));
           $TPL["transaction_fromTfID"] = tf::get_name($transaction->get_value("fromTfID"));
           $TPL["transaction_tfID"] = tf::get_name($transaction->get_value("tfID"));
           $TPL["transaction_transactionType"] = $transactionType_options[$transaction->get_value("transactionType")];
@@ -190,6 +190,8 @@ if (!$current_user->is_employee()) {
       $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_edit\" value=\"Edit\">";
       $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\" class=\"delete_button\">";
     }
+
+    $TPL["currency"] = page::currency($timeSheet->get_value("currencyTypeID"));
 
     $timeUnit = new timeUnit;
     $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
@@ -265,6 +267,7 @@ if (!$current_user->is_employee()) {
     if (is_object($timeSheet) && $timeSheet->get_value("status") == 'edit' 
     && ($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
 
+      $TPL["currency"] = page::currency($timeSheet->get_value("currencyTypeID"));
       // If we are editing an existing timeSheetItem
       $timeSheetItem_edit = $_POST["timeSheetItem_edit"] or $timeSheetItem_edit = $_GET["timeSheetItem_edit"];
       $timeSheetItemID = $_POST["timeSheetItemID"] or $timeSheetItemID = $_GET["timeSheetItemID"];
@@ -300,6 +303,7 @@ if (!$current_user->is_employee()) {
       $timeUnit = new timeUnit;
       $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
       $TPL["tsi_unit_options"] = page::select_options($unit_array, $timeSheetItemDurationUnitID);
+      $timeSheetItemDurationUnitID and $TPL["tsi_unit_label"] = $unit_array[$timeSheetItemDurationUnitID];
 
       $m = new meta("timeSheetItemMultiplier");
       $tsMultipliers = $m->get_list();
@@ -348,6 +352,7 @@ if ($_GET["CB"]) {
   $project->set_id($timeSheet->get_value("projectID"));
   $project->select();
   $timeSheet->set_value("customerBilledDollars",sprintf("%s",$project->get_value("customerBilledDollars")));
+  $timeSheet->set_value("currencyTypeID",$project->get_value("currencyType"));
   $timeSheet->save();
 }
 
@@ -374,6 +379,7 @@ if ($_POST["save"]
 
     if (!$timeSheet->get_id()) {
       $timeSheet->set_value("customerBilledDollars",$project->get_value("customerBilledDollars"));
+      $timeSheet->set_value("currencyTypeID",$project->get_value("currencyType"));
     }
   } else {
     $save_error=true;
@@ -603,7 +609,7 @@ list($client_select, $client_link, $project_select, $project_link)
   = client::get_client_and_project_dropdowns_and_links($clientID, $projectID);
 
 
-$currency = '$';
+$currency = page::currency($timeSheet->get_value("currencyTypeID"));
 $TPL["invoice_link"] = $timeSheet->get_invoice_link();
 list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated();
 if ($amount_allocated) {
@@ -832,11 +838,11 @@ if ($timeSheet->get_value("status") == "edit") {
 
 $timeSheet->load_pay_info();
 if ($timeSheet->pay_info["total_customerBilledDollars"]) {
-  $TPL["total_customerBilledDollars"] = "$".sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars"]);
-  config::get_config_item("taxPercent") and $TPL["ex_gst"] = " ($".sprintf("%s",sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars_minus_gst"]))." excl ".config::get_config_item("taxPercent")."% ".config::get_config_item("taxName").")";
+  $TPL["total_customerBilledDollars"] = $timeSheet->pay_info["currency"].sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars"]);
+  config::get_config_item("taxPercent") and $TPL["ex_gst"] = " (".$timeSheet->pay_info["currency"].sprintf("%s",sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars_minus_gst"]))." excl ".config::get_config_item("taxPercent")."% ".config::get_config_item("taxName").")";
 }
 if ($timeSheet->pay_info["total_dollars"]) {
-  $TPL["total_dollars"] = "$".sprintf("%0.2f",$timeSheet->pay_info["total_dollars"]);
+  $TPL["total_dollars"] = $timeSheet->pay_info["currency"].sprintf("%0.2f",$timeSheet->pay_info["total_dollars"]);
 }
 
 $TPL["total_units"] = $timeSheet->pay_info["summary_unit_totals"];

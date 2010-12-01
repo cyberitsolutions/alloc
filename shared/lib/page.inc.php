@@ -380,7 +380,11 @@ EOD;
   function htmlentities($str="") {
     return htmlentities($str,ENT_QUOTES,"UTF-8");
   }
-
+  function currency($c) {
+    $t = new meta("currencyType");
+    $currencies = $t->get_assoc_array("currencyTypeID","currencyTypeLabel");
+    return $currencies[$c];
+  }
 }
 
 ?>

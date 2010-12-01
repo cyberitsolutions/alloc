@@ -39,17 +39,17 @@ class timeSheetPrint {
     $db->query($q);
 
     $customerBilledDollars = $timeSheet->get_value("customerBilledDollars");
+    $currency = page::currency($timeSheet->get_value("currencyTypeID"));
 
-    return array($db, $customerBilledDollars,$timeSheet,$unit_array);
+    return array($db, $customerBilledDollars,$timeSheet,$unit_array,$currency);
   }
 
   function get_timeSheetItem_list_money($timeSheetID) {
     global $TPL;
-    list($db,$customerBilledDollars,$timeSheet,$unit_array) = $this->get_timeSheetItem_vars($timeSheetID);
+    list($db,$customerBilledDollars,$timeSheet,$unit_array,$currency) = $this->get_timeSheetItem_vars($timeSheetID);
 
     $taxPercent = config::get_config_item("taxPercent");
     $taxPercentDivisor = ($taxPercent/100) + 1;
-
 
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
@@ -122,11 +122,11 @@ class timeSheetPrint {
       $commar = ", ";
     }
 
-    $info["total_inc_gst"] = sprintf("$%0.2f",$info["total"]+$info["total_gst"]);
+    $info["total_inc_gst"] = $currency.sprintf("%0.2f",$info["total"]+$info["total_gst"]);
 
     // If we are in dollar mode, then prefix the total with a dollar sign
-    $info["total"] = sprintf("$%0.2f",$info["total"]);
-    $info["total_gst"] = sprintf("$%0.2f",$info["total_gst"]);
+    $info["total"] = $currency.sprintf("%0.2f",$info["total"]);
+    $info["total_gst"] = $currency.sprintf("%0.2f",$info["total_gst"]);
     $rows or $rows = array();
     $info or $info = array();
     return array($rows,$info);
@@ -134,7 +134,7 @@ class timeSheetPrint {
 
   function get_timeSheetItem_list_units($timeSheetID) {
     global $TPL;
-    list($db,$customerBilledDollars,$timeSheet,$unit_array) = $this->get_timeSheetItem_vars($timeSheetID);
+    list($db,$customerBilledDollars,$timeSheet,$unit_array,$currency) = $this->get_timeSheetItem_vars($timeSheetID);
 
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
@@ -200,7 +200,7 @@ class timeSheetPrint {
 
   function get_timeSheetItem_list_items($timeSheetID) {
     global $TPL;
-    list($db,$customerBilledDollars,$timeSheet,$unit_array) = $this->get_timeSheetItem_vars($timeSheetID);
+    list($db,$customerBilledDollars,$timeSheet,$unit_array,$currency) = $this->get_timeSheetItem_vars($timeSheetID);
 
     $m = new meta("timeSheetItemMultiplier");
     $multipliers = $m->get_list();

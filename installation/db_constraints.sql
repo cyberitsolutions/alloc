@@ -129,6 +129,7 @@ ALTER TABLE timeSheet ADD CONSTRAINT timeSheet_personID FOREIGN KEY (personID) R
 ALTER TABLE timeSheet ADD CONSTRAINT timeSheet_approvedByManagerPersonID FOREIGN KEY (approvedByManagerPersonID) REFERENCES person (personID);
 ALTER TABLE timeSheet ADD CONSTRAINT timeSheet_approvedByAdminPersonID FOREIGN KEY (approvedByAdminPersonID) REFERENCES person (personID);
 ALTER TABLE timeSheet ADD CONSTRAINT timeSheet_recipient_tfID FOREIGN KEY (recipient_tfID) REFERENCES tf (tfID);
+ALTER TABLE timeSheet ADD CONSTRAINT timeSheet_currencyTypeID FOREIGN KEY (currencyTypeID) REFERENCES currencyType (currencyTypeID);
 ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_timeSheetID FOREIGN KEY (timeSheetID) REFERENCES timeSheet (timeSheetID);
 ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_taskID FOREIGN KEY (taskID) REFERENCES task (taskID);
