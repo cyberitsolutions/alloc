@@ -79,6 +79,7 @@ ALTER TABLE expenseForm ADD CONSTRAINT expenseForm_transactionRepeatID FOREIGN K
 ALTER TABLE history ADD CONSTRAINT history_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE invoice ADD CONSTRAINT invoice_clientID FOREIGN KEY (clientID) REFERENCES client (clientID);
 ALTER TABLE invoice ADD CONSTRAINT invoice_projectID FOREIGN KEY (projectID) REFERENCES project (projectID);
+ALTER TABLE invoice ADD CONSTRAINT invoice_currencyTypeID FOREIGN KEY (currencyTypeID) REFERENCES currencyType (currencyTypeID);
 ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_invoiceID FOREIGN KEY (invoiceID) REFERENCES invoice (invoiceID);
 ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_timeSheetID FOREIGN KEY (timeSheetID) REFERENCES timeSheet (timeSheetID);
 ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_timeSheetItemID FOREIGN KEY (timeSheetItemID) REFERENCES timeSheetItem (timeSheetItemID);

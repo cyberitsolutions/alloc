@@ -115,6 +115,7 @@ CREATE TABLE invoice (
   invoiceNum integer NOT NULL,
   invoiceName varchar(255) NOT NULL default '',
   invoiceStatus varchar(255) NOT NULL DEFAULT 'edit',
+  currencyTypeID varchar(255) default NULL,
   maxAmount decimal(19,2) DEFAULT 0
 ) ;
 
