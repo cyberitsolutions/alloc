@@ -184,7 +184,7 @@ function clickClientStatus(e) {
           <h6>Budget / Currency<div>Cost Centre TF</div></h6>
           <div style="float:left; width:40%;">
             <input type="text" name="projectBudget" value="{$project_projectBudget}" size="10"> 
-            <select name="currencyType"><option value="">{$currencyType_options}</select><br>
+            <select name="currencyType">{$currencyType_options}</select><br>
           </div>
           <div style="float:right; width:50%;">
             <select name="cost_centre_tfID">

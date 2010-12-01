@@ -60,6 +60,9 @@ class meta extends db_entity {
     if ($table == "taskStatus") {
       $this->data_fields[] = "taskStatusLabel";
       $this->data_fields[] = "taskStatusColour";
+    } else if ($table == "currencyType") {
+      $this->data_fields[] = "currencyTypeLabel";
+      $this->data_fields[] = "currencyTypeName";
     }
     $this->t = $table; // for internal use
     return parent::__construct();

@@ -484,6 +484,7 @@ CREATE TABLE transaction (
   companyDetails text NOT NULL,
   product varchar(255) NOT NULL default '',
   amount DECIMAL(19,2) NOT NULL DEFAULT 0,
+  currencyTypeID VARCHAR(255) DEFAULT NULL,
   status varchar(255) NOT NULL DEFAULT 'pending',
   expenseFormID integer DEFAULT NULL,
   tfID integer NOT NULL,
@@ -523,6 +524,7 @@ CREATE TABLE transactionRepeat (
   transactionFinishDate date NOT NULL,
   paymentBasis varchar(255) NOT NULL default '',
   amount DECIMAL(19,2) NOT NULL DEFAULT 0,
+  currencyTypeID VARCHAR(255) DEFAULT NULL,
   product varchar(255) NOT NULL default '',
   status varchar(255) NOT NULL default 'pending',
   transactionType varchar(255) NOT NULL,
@@ -548,6 +550,7 @@ CREATE TABLE productCost (
   fromTfID integer NOT NULL,
   tfID integer NOT NULL,
   amount DECIMAL(19,2) NOT NULL DEFAULT 0,
+  currencyTypeID VARCHAR(255) DEFAULT NULL,
   isPercentage boolean NOT NULL default false,
   description varchar(255)
 ) ENGINE=InnoDB PACK_KEYS=0;
@@ -636,6 +639,8 @@ CREATE TABLE projectType (
 DROP TABLE IF EXISTS currencyType;
 CREATE TABLE currencyType (
   currencyTypeID varchar(255) PRIMARY KEY,
+  currencyTypeLabel VARCHAR(255) DEFAULT NULL,
+  currencyTypeName VARCHAR(255) DEFAULT NULL,
   currencyTypeSeq integer NOT NULL,
   currencyTypeActive boolean DEFAULT true
 )ENGINE=InnoDB PACK_KEYS=0;
