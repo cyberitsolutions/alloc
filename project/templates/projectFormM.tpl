@@ -168,11 +168,11 @@ function clickClientStatus(e) {
         </div>
 
 
-        {if $project_projectBudget || $project_currencyType || $cost_centre_tfID_label}
+        {if $project_projectBudget || $project_currencyTypeID || $cost_centre_tfID_label}
         <div class="view">
           <h6>Budget / Currency<div>Cost Centre TF</div></h6>
           <div style="float:left; width:40%;">
-            {$project_projectBudget} {$project_currencyType}{if $project_projectBudget && $taxName} (inc. {$taxName}){/}
+            {$project_projectBudget} {$project_currencyTypeID}{if $project_projectBudget && $taxName} (inc. {$taxName}){/}
           </div>
           <div style="float:right; width:50%;">
             {$cost_centre_tfID_label}
@@ -184,7 +184,7 @@ function clickClientStatus(e) {
           <h6>Budget / Currency<div>Cost Centre TF</div></h6>
           <div style="float:left; width:40%;">
             <input type="text" name="projectBudget" value="{$project_projectBudget}" size="10"> 
-            <select name="currencyType">{$currencyType_options}</select><br>
+            <select name="currencyTypeID">{$currencyType_options}</select><br>
           </div>
           <div style="float:right; width:50%;">
             <select name="cost_centre_tfID">
@@ -198,7 +198,7 @@ function clickClientStatus(e) {
         <div class="view">
           <h6>Client Billed At<div>Payroll Tax Exempt</div></h6>
           <div style="float:left; width:40%;">
-            {$project_customerBilledDollars}{if $project_customerBilledDollars} {$project_currencyType} (per unit{if $taxName}, inc. {$taxName}){/}{/}
+            {$project_customerBilledDollars}{if $project_customerBilledDollars} {$project_currencyTypeID} (per unit{if $taxName}, inc. {$taxName}){/}{/}
           </div>
           <div style="float:right; width:50%;">
             {$project_is_agency_label}

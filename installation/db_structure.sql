@@ -230,7 +230,7 @@ CREATE TABLE project (
   dateActualStart date default NULL,
   dateActualCompletion date default NULL,
   projectBudget DECIMAL(19,2) DEFAULT NULL,
-  currencyType varchar(255) default NULL,
+  currencyTypeID varchar(255) default NULL,
   projectShortName varchar(255) default NULL,
   projectStatus varchar(255) NOT NULL default 'Current',
   projectPriority integer default NULL,

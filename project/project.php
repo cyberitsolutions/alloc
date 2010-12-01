@@ -607,7 +607,7 @@ if (is_object($project) && $project->get_id()) {
     }
 
 
-    $TPL["currency"] = $currency = page::currency($project->get_value("currencyType"));
+    $TPL["currency"] = $currency = page::currency($project->get_value("currencyTypeID"));
     $TPL["cost_remaining"] and $TPL["cost_remaining"] = sprintf("%0.2f",$TPL["cost_remaining"]);
     $TPL["time_remaining"] and $TPL["time_remaining"] = sprintf("%0.1f",$TPL["time_remaining"])." Hours.";
 
@@ -687,7 +687,7 @@ $TPL["project_projectPriority"] and $TPL["priorityLabel"] = " <div style=\"displ
 
 
 
-$TPL["currencyType_options"] = page::select_options($currency_array, $TPL["project_currencyType"]);
+$TPL["currencyType_options"] = page::select_options($currency_array, $TPL["project_currencyTypeID"]);
 
 if ($_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]) {
   define("PROJECT_EXISTS",1);
@@ -744,7 +744,7 @@ $TPL["taxName"] = config::get_config_item("taxName");
 $TPL["project_projectName_html"] = page::to_html($project->get_value("projectName"));
 $TPL["project_projectComments_html"] = page::to_html($project->get_value("projectComments"));
 
-$TPL["currency"] = page::currency($project->get_value("currencyType"));
+$TPL["currency"] = page::currency($project->get_value("currencyTypeID"));
 
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");
