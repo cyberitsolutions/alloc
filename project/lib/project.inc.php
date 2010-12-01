@@ -43,7 +43,7 @@ class project extends db_entity {
                              ,"dateActualStart"
                              ,"dateActualCompletion"
                              ,"projectBudget"
-                             ,"currencyType"
+                             ,"currencyTypeID"
                              ,"projectPriority"
                              ,"projectStatus"
                              ,"is_agency"

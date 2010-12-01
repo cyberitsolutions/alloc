@@ -352,7 +352,7 @@ if ($_GET["CB"]) {
   $project->set_id($timeSheet->get_value("projectID"));
   $project->select();
   $timeSheet->set_value("customerBilledDollars",sprintf("%s",$project->get_value("customerBilledDollars")));
-  $timeSheet->set_value("currencyTypeID",$project->get_value("currencyType"));
+  $timeSheet->set_value("currencyTypeID",$project->get_value("currencyTypeID"));
   $timeSheet->save();
 }
 
@@ -379,7 +379,7 @@ if ($_POST["save"]
 
     if (!$timeSheet->get_id()) {
       $timeSheet->set_value("customerBilledDollars",$project->get_value("customerBilledDollars"));
-      $timeSheet->set_value("currencyTypeID",$project->get_value("currencyType"));
+      $timeSheet->set_value("currencyTypeID",$project->get_value("currencyTypeID"));
     }
   } else {
     $save_error=true;

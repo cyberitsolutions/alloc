@@ -51,7 +51,7 @@ ALTER TABLE config ADD CONSTRAINT config_configType FOREIGN KEY (type) REFERENCE
 ALTER TABLE invoice ADD CONSTRAINT invoice_invoiceStatus FOREIGN KEY (invoiceStatus) REFERENCES invoiceStatus (invoiceStatusID) ON UPDATE CASCADE;
 ALTER TABLE item ADD CONSTRAINT item_itemType FOREIGN KEY (itemType) REFERENCES itemType (itemTypeID) ON UPDATE CASCADE;
 ALTER TABLE project ADD CONSTRAINT project_projectType FOREIGN KEY (projectType) REFERENCES projectType (projectTypeID) ON UPDATE CASCADE;
-ALTER TABLE project ADD CONSTRAINT project_currencyType FOREIGN KEY (currencyType) REFERENCES currencyType (currencyTypeID) ON UPDATE CASCADE;
+ALTER TABLE project ADD CONSTRAINT project_currencyTypeID FOREIGN KEY (currencyTypeID) REFERENCES currencyType (currencyTypeID);
 ALTER TABLE project ADD CONSTRAINT project_projectStatus FOREIGN KEY (projectStatus) REFERENCES projectStatus (projectStatusID) ON UPDATE CASCADE;
 ALTER TABLE role ADD CONSTRAINT role_roleLevel FOREIGN KEY (roleLevel) REFERENCES roleLevel (roleLevelID) ON UPDATE CASCADE;
 ALTER TABLE reminder ADD CONSTRAINT reminder_reminderRecuringInterval FOREIGN KEY (reminderRecuringInterval) REFERENCES reminderRecuringInterval (reminderRecuringIntervalID) ON UPDATE CASCADE;
