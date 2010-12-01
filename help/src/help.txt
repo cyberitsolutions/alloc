@@ -1718,6 +1718,7 @@ should be submitted to time-sheet managers, in a timely manner. One example woul
 
 18. Return to the previous tab, the one that listed the filtered time-sheets, (i.e, step 10. above) and work your way down the list.
 
+.. _How_do_I_Email_a_Time-Sheet_to_Customers:
 
 How do I Email a Time-Sheet to Customers?
 -----------------------------------------
@@ -2784,13 +2785,11 @@ If you are creating a New Task, or are updating a Task, you may see any of the f
    - - Task Type
      - Select a Task type; Task, phase, message or fault. A phase is handled
        much the same as a Task, but displayed in different colour in charts.
-       Messages and faults are handled differently, and establish reminders for
-       service level escalation etc. etc., so as to be handled in a timely
-       manner.  Some Tasks or phases are (or have) milestones. For example,
+       Messages and faults are handled differently, Some Tasks or phases are (or have) milestones. For example,
        code releases or document deliverables. As such, they need to be clearly
        displayed as important date-points in online graphs. Setting a milestone
        for this Task will result in a special vertical bar to be drawn in the
-       Project Graph .
+       Project Graph.
    - - Interested Parties
      - allocPSA allows you to specify which other members of the Project (which
        the Task belongs to) as well as any Client contacts listed for the
@@ -2925,6 +2924,14 @@ This model works as follows.
    send it back to the user who created the Time Sheet for its rectification and
    re-submission.
 
+9. At any stage, a user has the option of sending an ado-hoc comment, from the
+   time-sheet, in a manner similar to comments email sent from tasks.
+
+10. Similarly, a user has the option of sending the contents of this
+    time-sheet, as either a PDF or as a HTML attachment, in a manner similar to
+    comments email sent from tasks, with attachments. 
+
+
 Adding New Time Sheet
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -2972,6 +2979,8 @@ Adding New Time Sheet
 Any submitted Time Sheet is and sent to either the Manager specified in the
 Project or to the financial Admin person as specified in the allocPSA
 configuration, for approval and to perhaps be Invoiced. 
+
+**NOTE:** You can, at any point, elect to send comment email to others, and even attach this time-sheet to that email. For information on this, see How do I Email a Time-Sheet to Customers? How_do_I_Email_a_Time-Sheet_to_Customers_ 
 
 Printing Time Sheets
 ~~~~~~~~~~~~~~~~~~~~
