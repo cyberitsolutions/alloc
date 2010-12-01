@@ -51,7 +51,11 @@ class db {
       $this->link_id = mysql_connect($this->hostname,$this->username,$this->password);
       if ($this->link_id && is_resource($this->link_id) && !$this->error) {
         $this->database && $this->select_db($this->database);
-        function_exists("mysql_set_charset") && mysql_set_charset("utf8", $this->link_id); // this seems to fix data encoding for SOAP services
+        // This line seems to break encoding display in web browsers and since
+        // it was only added because it fixed SOAP access and the SOAP interface
+        // is no more, we should be able to get rid of it.
+        //function_exists("mysql_set_charset") && mysql_set_charset("utf8", $this->link_id); 
+
       } else {
         $this->error("Unable to connect to database: ".mysql_error()."<br>",mysql_errno());
         unset($this->link_id);

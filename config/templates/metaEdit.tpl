@@ -18,10 +18,9 @@
         <tr>
           <th>Value</th>
           <th>Sequence</th>
-          {if $table == "taskStatus"}
-          <th>Label</th>
-          <th>Colour</th>
-          {/}
+          {if $t->data_fields[$table."Label"]}<th>Label</th>{/}
+          {if $t->data_fields[$table."Name"]}<th>Name</th>{/}
+          {if $t->data_fields[$table."Colour"]}<th>Colour</th>{/}
           <th colspan="2">Active</th>
           <th class="right">
             <a href="#x" class="magic" onClick="$('#rows_footer').before('<tr>'+$('#row').html()+'</tr>');">New</a>
@@ -35,10 +34,16 @@
             <input type="hidden" name="{$table}IDOrig[]" size="20" value="{echo $row[$table."ID"]}">
           </td>
           <td><input type="text" name="{$table}Seq[]" size="20" value="{echo $row[$table."Seq"]}"></td>
-          {if $table == "taskStatus"}
+          {if $t->data_fields[$table."Label"]}
           <td><input type="text" name="{$table}Label[]" size="20" value="{echo $row[$table."Label"]}"></td>
+          {/}
+          {if $t->data_fields[$table."Name"]}
+          <td><input type="text" name="{$table}Name[]" size="20" value="{echo $row[$table."Name"]}"></td>
+          {/}
+          {if $t->data_fields[$table."Colour"]}
           <td><input type="text" name="{$table}Colour[]" size="20" value="{echo $row[$table."Colour"]}"></td>
           {/}
+
           {unset($checked)}
           {$row[$table."Active"] and $checked = " checked"}
           <td colspan="2"><input type="checkbox" name="{$table}Active[]" size="20" value="{echo $row[$table."ID"]}"{$checked}></td>
@@ -54,8 +59,13 @@
             <input type="text" name="{$table}ID[]" size="20" value="">
           </td>
           <td><input type="text" name="{$table}Seq[]" size="20" value=""></td>
-          {if $table == "taskStatus"}
+          {if $t->data_fields[$table."Label"]}
           <td><input type="text" name="{$table}Label[]" size="20" value=""></td>
+          {/}
+          {if $t->data_fields[$table."Name"]}
+          <td><input type="text" name="{$table}Name[]" size="20" value=""></td>
+          {/}
+          {if $t->data_fields[$table."Colour"]}
           <td><input type="text" name="{$table}Colour[]" size="20" value=""></td>
           {/}
           <td colspan="2">

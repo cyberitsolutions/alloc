@@ -45,6 +45,7 @@ if ($_POST["save"]) {
       $a = array($table."ID"     => $tableID
                 ,$table."Seq"    => $_POST[$table."Seq"][$k]
                 ,$table."Label"  => $_POST[$table."Label"][$k]
+                ,$table."Name"   => $_POST[$table."Name"][$k]
                 ,$table."Colour" => $_POST[$table."Colour"][$k]
                 ,$table."Seq"    => $_POST[$table."Seq"][$k]
                 ,$table."Active" => in_array($tableID, $_POST[$table."Active"])

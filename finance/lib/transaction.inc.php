@@ -38,6 +38,7 @@ class transaction extends db_entity {
   public $data_fields = array("companyDetails" => array("empty_to_null"=>false)
                              ,"product" => array("empty_to_null"=>false)
                              ,"amount" 
+                             ,"currencyTypeID" 
                              ,"status"
                              ,"expenseFormID" 
                              ,"invoiceID"
