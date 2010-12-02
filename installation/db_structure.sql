@@ -642,6 +642,7 @@ CREATE TABLE currencyType (
   currencyTypeID varchar(255) PRIMARY KEY,
   currencyTypeLabel VARCHAR(255) DEFAULT NULL,
   currencyTypeName VARCHAR(255) DEFAULT NULL,
+  numberToBasic integer DEFAULT 0,
   currencyTypeSeq integer NOT NULL,
   currencyTypeActive boolean DEFAULT true
 )ENGINE=InnoDB PACK_KEYS=0;
