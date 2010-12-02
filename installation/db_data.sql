@@ -99,12 +99,12 @@ INSERT INTO timeSheetItemMultiplier (timeSheetItemMultiplierID, timeSheetItemMul
 
 
 -- The default active currencies
-INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive) VALUES ('USD','$','United States dollar','5',true);
-INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive) VALUES ('AUD','$','Australian dollar','10',true);
-INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive) VALUES ('GBP','£','British pound','15',true);
-INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive) VALUES ('CAD','$','Canadian dollar','20',true);
-INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive) VALUES ('NZD','$','New Zealand dollar','25',true);
-INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive) VALUES ('EUR','€','Euro','30',true);
+INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive, numberToBasic) VALUES ('USD','$','United States dollar','5',true,2);
+INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive, numberToBasic) VALUES ('AUD','$','Australian dollar','10',true,2);
+INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive, numberToBasic) VALUES ('GBP','£','British pound','15',true,2);
+INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive, numberToBasic) VALUES ('CAD','$','Canadian dollar','20',true,2);
+INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive, numberToBasic) VALUES ('NZD','$','New Zealand dollar','25',true,2);
+INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive, numberToBasic) VALUES ('EUR','€','Euro','30',true,2);
 
 -- The not-active currencies
 INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,currencyTypeSeq,currencyTypeActive) VALUES ('AED','د.إ','United Arab Emirates dirham','11200',false);

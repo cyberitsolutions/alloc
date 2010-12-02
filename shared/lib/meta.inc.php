@@ -63,6 +63,7 @@ class meta extends db_entity {
     } else if ($table == "currencyType") {
       $this->data_fields[] = "currencyTypeLabel";
       $this->data_fields[] = "currencyTypeName";
+      $this->data_fields[] = "numberToBasic";
     }
     $this->t = $table; // for internal use
     return parent::__construct();

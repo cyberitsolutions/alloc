@@ -48,6 +48,7 @@ if ($_POST["save"]) {
                 ,$table."Name"   => $_POST[$table."Name"][$k]
                 ,$table."Colour" => $_POST[$table."Colour"][$k]
                 ,$table."Seq"    => $_POST[$table."Seq"][$k]
+                ,"numberToBasic" => $_POST["numberToBasic"][$k] // currencyType field
                 ,$table."Active" => in_array($tableID, $_POST[$table."Active"])
                 );
 

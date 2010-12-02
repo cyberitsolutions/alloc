@@ -21,6 +21,7 @@
           {if $t->data_fields[$table."Label"]}<th>Label</th>{/}
           {if $t->data_fields[$table."Name"]}<th>Name</th>{/}
           {if $t->data_fields[$table."Colour"]}<th>Colour</th>{/}
+          {if $t->data_fields["numberToBasic"]}<th>No. to basic</th>{/}
           <th colspan="2">Active</th>
           <th class="right">
             <a href="#x" class="magic" onClick="$('#rows_footer').before('<tr>'+$('#row').html()+'</tr>');">New</a>
@@ -42,6 +43,9 @@
           {/}
           {if $t->data_fields[$table."Colour"]}
           <td><input type="text" name="{$table}Colour[]" size="20" value="{echo $row[$table."Colour"]}"></td>
+          {/}
+          {if $t->data_fields["numberToBasic"]}
+          <td><input type="text" name="numberToBasic[]" size="20" value="{echo $row["numberToBasic"]}"></td>
           {/}
 
           {unset($checked)}
@@ -67,6 +71,9 @@
           {/}
           {if $t->data_fields[$table."Colour"]}
           <td><input type="text" name="{$table}Colour[]" size="20" value=""></td>
+          {/}
+          {if $t->data_fields["numberToBasic"]}
+          <td><input type="text" name="numberToBasic[]" size="20" value=""></td>
           {/}
           <td colspan="2">
           <!-- <input type="checkbox" name="{$table}Active[]" size="20" value="1"> -->
