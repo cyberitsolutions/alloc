@@ -14,6 +14,7 @@ class subscriptions(alloc):
   ops.append(('e:','email=EMAIL    ','Output subscriptions with this email address. Use % for all.'))
   ops.append(('a' ,'add            ','Add the following subscriptions from stdin.'))
   ops.append(('d' ,'del            ','Delete the following subscriptions from stdin.'))
+  ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS] [FILE]\n"
@@ -24,7 +25,8 @@ Examples:
 alloc subscriptions --email example@example.com 
 alloc subscriptions --email example@example.com --csv > foo.txt
 alloc subscriptions --del < foo.txt
-alloc subscriptions --add < foo.txt"""
+alloc subscriptions --add < foo.txt
+alloc subscriptions --task 1234 --email example@example.com --csv > foo.txt"""
 
   def run(self):
 
@@ -45,8 +47,17 @@ alloc subscriptions --add < foo.txt"""
     keys = fields[::2]
     ops = {}
 
+
+    # Get a taskID either passed via command line, or figured out from a task name
+    if self.is_num(o['task']):
+      ops['taskID'] = o['task']
+    elif o['task']:
+      ops['taskID'] = self.search_for_task({"taskName":o["task"]})
+
     if o['email']:
       ops['emailAddress'] = o['email']
+
+    if 'taskID' in ops or 'email' in ops:
       parties = self.get_list("interestedParty",ops)
       self.print_table(parties,fields)
 

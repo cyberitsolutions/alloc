@@ -286,10 +286,16 @@ class interestedParty extends db_entity {
     $filter["clientContactID"] and $sql[] = sprintf("(interestedParty.clientContactID = %d)",db_esc($filter["clientContactID"]));
     $filter["entity"]          and $sql[] = sprintf("(interestedParty.entity = '%s')",db_esc($filter["entity"]));
     $filter["entityID"]        and $sql[] = sprintf("(interestedParty.entityID = %d)",db_esc($filter["entityID"]));
+    $filter["taskID"]          and $sql[] = sprintf("(comment.commentMaster='task' AND comment.commentMasterID=%d)",$filter["taskID"]);
     return $sql;
   }
 
   function get_list($_FORM) {
+
+    if ($_FORM["taskID"]) {
+      $join = " LEFT JOIN comment ON ((interestedParty.entity = comment.commentType AND interestedParty.entityID = comment.commentLinkID) OR (interestedParty.entity = 'comment' and interestedParty.entityID = comment.commentID))";
+      $groupby = ' GROUP BY interestedPartyID';
+    }
     
     $filter = interestedParty::get_list_filter($_FORM);
     $_FORM["return"] or $_FORM["return"] = "html";
@@ -299,8 +305,8 @@ class interestedParty extends db_entity {
     }
     
     $db = new db_alloc;
-    $q = "SELECT * FROM interestedParty ".$f;
-    
+    $q = "SELECT * FROM interestedParty ".$join.$f.$groupby;
+
     $db->query($q);
     while ($row = $db->next_record()) {
       $interestedParty = new interestedParty();
