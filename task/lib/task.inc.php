@@ -106,7 +106,7 @@ class task extends db_entity {
 
   function validate() {
     $this->get_value("taskName") or $err[] = "Please enter a name for the Task.";
-    return $err;
+    return parent::validate($err);
   }
 
   function closed($t="complete") { return $this->close($t); }  // wrapper

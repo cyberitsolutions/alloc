@@ -26,7 +26,7 @@ class meta extends db_entity {
 
   // This variable contains the definitive list of all the referential
   // integrity tables that the user is allowed to edit.
-  var $tables = array("absenceType"               => "Absence Types"
+  public static $tables = array("absenceType"     => "Absence Types"
                      ,"clientStatus"              => "Client Statuses"
                      #,"configType"                => "Config Types"
                      #,"invoiceStatus"             => "Invoice Statuses"
@@ -89,7 +89,7 @@ class meta extends db_entity {
   function validate() {
     $this->get_id() or $err[] = "Please enter a Value/ID for the ".$this->get_label();
     $this->get_value($this->t."Seq") or $err[] = "Please enter a Sequence Number for the ".$this->get_label();
-    return $err;
+    return parent::validate($err);
   }
 
 }

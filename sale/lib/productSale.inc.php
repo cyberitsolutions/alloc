@@ -48,7 +48,7 @@ class productSale extends db_entity {
         $rtn[] = "Unable to save Product Sale, user does not have correct permissions.";
       }
     }
-    return $rtn;
+    return parent::validate($rtn);
   }
  
   function is_owner() {

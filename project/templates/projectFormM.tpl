@@ -148,31 +148,33 @@ function clickClientStatus(e) {
       <div style="float:right; width:47%; padding:0px 12px; vertical-align:top;">
 
         <div class="view">
-          <h6>Project Nickname<div>Status</div></h6>
+          <h6>Project Nickname<div><span style='width:50%; display:inline-block;'>Currency</span><span>Status</span></div></h6>
           <div style="float:left; width:40%;">
             {=$project_projectShortName}
           </div>
           <div style="float:right; width:50%;">
-            {$project_projectStatus}
+            <span style='width:50%; display:inline-block;'>{page::money($project_currencyTypeID,0,"%n")}</span>
+            <span>{$project_projectStatus}</span>
           </div>
         </div>
 
         <div class="edit">
-          <h6>Project Nickname<div>Status</div></h6>
+          <h6>Project Nickname<div><span style='width:50%; display:inline-block;'>Currency</span><span>Status</span></div></h6>
           <div style="float:left; width:40%;">
             <input type="text" name="projectShortName" value="{$project_projectShortName}" size="10">
           </div>
           <div style="float:right; width:50%;">
-            <select name="projectStatus">{$projectStatus_options}</select>
+            <span style='width:50%; display:inline-block;'><select name="currencyTypeID">{$currencyType_options}</select></span>
+            <span><select name="projectStatus">{$projectStatus_options}</select></span>
           </div>
         </div>
 
-
-        {if $project_projectBudget || $project_currencyTypeID || $cost_centre_tfID_label}
+        {if imp($project_projectBudget) || $project_currencyTypeID || $cost_centre_tfID_label}
         <div class="view">
-          <h6>Budget / Currency<div>Cost Centre TF</div></h6>
+          <h6>Budget<div>Cost Centre TF</div></h6>
           <div style="float:left; width:40%;">
-            {$project_projectBudget} {$project_currencyTypeID}{if $project_projectBudget && $taxName} (inc. {$taxName}){/}
+            {page::money($project_currencyTypeID,$project_projectBudget,"%s%mo %c")}
+            {$taxName && imp($project_projectBudget) and print " (inc. $taxName)"}
           </div>
           <div style="float:right; width:50%;">
             {$cost_centre_tfID_label}
@@ -181,10 +183,10 @@ function clickClientStatus(e) {
         {/}
 
         <div class="edit">
-          <h6>Budget / Currency<div>Cost Centre TF</div></h6>
+          <h6>Budget<div>Cost Centre TF</div></h6>
           <div style="float:left; width:40%;">
-            <input type="text" name="projectBudget" value="{$project_projectBudget}" size="10"> 
-            <select name="currencyTypeID">{$currencyType_options}</select><br>
+            <input type="text" name="projectBudget" value="{page::money($project_currencyTypeID,$project_projectBudget,"%mo")}" size="10"> 
+            {$taxName and print " (inc. $taxName)"}
           </div>
           <div style="float:right; width:50%;">
             <select name="cost_centre_tfID">
@@ -193,12 +195,13 @@ function clickClientStatus(e) {
             </select>
           </div>
         </div>
-
-        {if $project_customerBilledDollars || $project_is_agency_label}
+        {$tax_string2 = sprintf(" (per unit%s)", $taxName ? ", inc. ".$taxName : "")}
+        {if imp($project_customerBilledDollars) || $project_is_agency_label}
         <div class="view">
           <h6>Client Billed At<div>Payroll Tax Exempt</div></h6>
           <div style="float:left; width:40%;">
-            {$project_customerBilledDollars}{if $project_customerBilledDollars} {$project_currencyTypeID} (per unit{if $taxName}, inc. {$taxName}){/}{/}
+            {page::money($project_currencyTypeID,$project_customerBilledDollars,"%s%mo %c")}
+            {imp($project_customerBilledDollars) and print $tax_string2}
           </div>
           <div style="float:right; width:50%;">
             {$project_is_agency_label}
@@ -209,7 +212,8 @@ function clickClientStatus(e) {
         <div class="edit">
           <h6>Client Billed At<div>Payroll Tax Exempt</div></h6>
           <div style="float:left; width:40%;">
-            <input type="text" name="customerBilledDollars" value="{$project_customerBilledDollars}" size="10"> (per unit, inc. {$taxName})
+            <input type="text" name="customerBilledDollars" value="{page::money($project_currencyTypeID,$project_customerBilledDollars,"%mo")}" size="10"> 
+            {$tax_string2}
           </div>
           <div style="float:right; width:50%;">
             <select name="is_agency">{$is_agency_options}</select>
@@ -286,20 +290,20 @@ function clickClientStatus(e) {
   </tr>
   <tr>
     <td>Time Sheets</td>
-    <td class="right">{$total_timesheet_transactions}</td>
+    <td class="right">{page::money($project_currencyTypeID,$total_timesheet_transactions)}</td>
   </tr>
   <tr>
     <td class="nobr">Other Transactions</td>
-    <td class="right">{$total_other_transactions}</td>
+    <td class="right">{page::money($project_currencyTypeID,$total_other_transactions)}</td>
   </tr>
   <tr>
     <td>Project Spend</td>
-    <td class="right grand_total" width="10%">{$grand_total}</td>
-    <td>&nbsp;&nbsp;&nbsp;{$percentage}%</td>
+    <td class="right grand_total" width="10%">{page::money($project_currencyTypeID, $total_timesheet_transactions+$total_other_transactions)}</td>
+    <td>&nbsp;&nbsp;&nbsp;{$project_projectBudget and print sprintf("%0.1f%%",($total_timesheet_transactions+$total_other_transactions) / $project_projectBudget*100)}</td>
   </tr>
   <tr>
     <td class="nobr">Task Time Estimate</td>
-    <td colspan="2">{$time_remaining} {$cost_remaining} {$count_not_quoted_tasks}</td>
+    <td colspan="2">{$time_remaining} {page::money($project_currencyTypeID,$cost_remaining)} {$count_not_quoted_tasks}</td>
   </tr>            
 </table>
 {/}

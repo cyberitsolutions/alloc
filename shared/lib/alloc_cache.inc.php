@@ -47,12 +47,17 @@ class alloc_cache {
     $db = new $this->db;
 
     if (!$this->cache[$table] || $anew) {
-      $db->query("SELECT * FROM ".$table);
-      while ($row = $db->next_record()) {
-        $this->cache[$table][$db->f($table."ID")] = $row;
+      if (meta::$tables[$table]) {
+        $m = new meta($table);
+        $this->cache[$table] = $m->get_list();
+
+      } else {
+        $db->query("SELECT * FROM ".$table);
+        while ($row = $db->next_record()) {
+          $this->cache[$table][$db->f($table."ID")] = $row;
+        }
       }
     }
-
   }
 
   function get_cached_table($table) {

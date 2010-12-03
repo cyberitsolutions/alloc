@@ -39,7 +39,7 @@ class timeSheetPrint {
     $db->query($q);
 
     $customerBilledDollars = $timeSheet->get_value("customerBilledDollars");
-    $currency = page::currency($timeSheet->get_value("currencyTypeID"));
+    $currency = page::money($timeSheet->get_value("currencyTypeID"),'',"%S");
 
     return array($db, $customerBilledDollars,$timeSheet,$unit_array,$currency);
   }

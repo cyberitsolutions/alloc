@@ -106,7 +106,7 @@ if (!$current_user->is_employee()) {
           $transaction->read_db_record($db);
           $transaction->set_tpl_values("transaction_");
 
-          $TPL["currency"] = page::currency($transaction->get_value("currencyTypeID"));
+          $TPL["currency"] = page::money($transaction->get_value("currencyTypeID"),'',"%S");
           $TPL["tf_options"] = page::select_options($tf_array, $TPL["transaction_tfID"]);
           $TPL["from_tf_options"] = page::select_options($tf_array, $TPL["transaction_fromTfID"]);
           $TPL["status_options"] = page::select_options($status_options, $transaction->get_value("status"));
@@ -135,7 +135,7 @@ if (!$current_user->is_employee()) {
           $transaction->set_tpl_values("transaction_");
           unset($TPL["transaction_amount_pos"]);
           unset($TPL["transaction_amount_neg"]);
-          $TPL["currency"] = page::currency($transaction->get_value("currencyTypeID"));
+          $TPL["currency"] = page::money($transaction->get_value("currencyTypeID"),'',"%S");
           $TPL["transaction_fromTfID"] = tf::get_name($transaction->get_value("fromTfID"));
           $TPL["transaction_tfID"] = tf::get_name($transaction->get_value("tfID"));
           $TPL["transaction_transactionType"] = $transactionType_options[$transaction->get_value("transactionType")];
@@ -191,7 +191,7 @@ if (!$current_user->is_employee()) {
       $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\" class=\"delete_button\">";
     }
 
-    $TPL["currency"] = page::currency($timeSheet->get_value("currencyTypeID"));
+    $TPL["currency"] = page::money($timeSheet->get_value("currencyTypeID"),'',"%S");
 
     $timeUnit = new timeUnit;
     $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
@@ -267,7 +267,7 @@ if (!$current_user->is_employee()) {
     if (is_object($timeSheet) && $timeSheet->get_value("status") == 'edit' 
     && ($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
 
-      $TPL["currency"] = page::currency($timeSheet->get_value("currencyTypeID"));
+      $TPL["currency"] = page::money($timeSheet->get_value("currencyTypeID"),'',"%S");
       // If we are editing an existing timeSheetItem
       $timeSheetItem_edit = $_POST["timeSheetItem_edit"] or $timeSheetItem_edit = $_GET["timeSheetItem_edit"];
       $timeSheetItemID = $_POST["timeSheetItemID"] or $timeSheetItemID = $_GET["timeSheetItemID"];
@@ -609,7 +609,7 @@ list($client_select, $client_link, $project_select, $project_link)
   = client::get_client_and_project_dropdowns_and_links($clientID, $projectID);
 
 
-$currency = page::currency($timeSheet->get_value("currencyTypeID"));
+$currency = page::money($timeSheet->get_value("currencyTypeID"),'',"%S");
 $TPL["invoice_link"] = $timeSheet->get_invoice_link();
 list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated();
 if ($amount_allocated) {

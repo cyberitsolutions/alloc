@@ -380,10 +380,46 @@ EOD;
   function htmlentities($str="") {
     return htmlentities($str,ENT_QUOTES,"UTF-8");
   }
-  function currency($c) {
-    $t = new meta("currencyType");
-    $currencies = $t->get_assoc_array("currencyTypeID","currencyTypeLabel");
-    return $currencies[$c];
+  function money_out($c,$amount=null) {
+    // AUD,100        -> 100.00
+    // AUD,0|''|false -> 0.00
+    $c or die("page::money(): no currency specified for amount $amount.");
+    if (imp($amount)) {
+      $currencies = get_cached_table("currencyType");
+      $n = $currencies[$c]["numberToBasic"];
+      // We can use foo * 10^-n to move the decimal point left
+      // Eg: sprintf(%0.2f, $amount * 10^-2) => 15000 becomes 150.00
+      // We use the numberToBasic number (eg 2) to a) move the decimal point, and b) dictate the sprintf string
+      return sprintf("%0.".$n."f",($amount * pow(10,-$n)));
+    }
+  }
+  function money_in($c, $amount=null) {
+    // AUD,100.00 -> 100
+    // AUD,0      -> 0
+    // AUD        ->
+    $c or die("page::money_in(): no currency specified for amount $amount.");
+    if (imp($amount)) {
+      $currencies = get_cached_table("currencyType");
+      $n = $currencies[$c]["numberToBasic"];
+      // We can use foo * 10^n to move the decimal point right
+      // Eg: $amount * 10^-2 => 150.00 becomes 15000
+      // We use the numberToBasic number (eg 2) to move the decimal point
+      return $amount * pow(10,$n);
+    }
+  }
+  function money($c, $amount=null, $fmt="%s%mo") {
+    // Money print
+    $currencies = get_cached_table("currencyType");
+    $fmt = str_replace("%mo",page::money_out($c,$amount),$fmt);                          //%mo = money_out        eg: 150.21
+    $fmt = str_replace("%mi",page::money_in($c,$amount),$fmt);                           //%mi = money_in         eg: 15021
+                     $fmt = str_replace("%S",$currencies[$c]["currencyTypeLabel"],$fmt); // %S = mandatory symbol eg: $
+    imp($amount) and $fmt = str_replace("%s",$currencies[$c]["currencyTypeLabel"],$fmt); // %s = optional symbol  eg: $
+                     $fmt = str_replace("%C",$c,$fmt);                                   // %C = mandatory code   eg: AUD
+    imp($amount) and $fmt = str_replace("%c",$c,$fmt);                                   // %c = optional code    eg: AUD
+                     $fmt = str_replace("%N",$currencies[$c]["currencyTypeName"],$fmt);  // %N = mandatory name   eg: Australian dollars
+    imp($amount) and $fmt = str_replace("%n",$currencies[$c]["currencyTypeName"],$fmt);  // %n = optional name    eg: Australian dollars
+    $fmt = str_replace(array("%mo","%mi","%S","%s","%C","%c","%N","%n"),"",$fmt); // strip leftovers away
+    return $fmt;
   }
 }
 

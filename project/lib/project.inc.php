@@ -42,13 +42,13 @@ class project extends db_entity {
                              ,"dateTargetCompletion"
                              ,"dateActualStart"
                              ,"dateActualCompletion"
-                             ,"projectBudget"
+                             ,"projectBudget" => array("type"=>"money")
                              ,"currencyTypeID"
                              ,"projectPriority"
                              ,"projectStatus"
                              ,"is_agency"
                              ,"cost_centre_tfID"
-                             ,"customerBilledDollars"
+                             ,"customerBilledDollars" => array("type"=>"money")
                              ,"clientContactID"
                              ,"projectModifiedUser"
                              );
