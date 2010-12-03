@@ -722,4 +722,9 @@ function parse_operator_comparison($str,$figure) {
     return operator_comparison($operator,$figure,$number);
   }
 }
+function imp($var) {
+  // This function exists because php equates zeroes to false values.
+  // imp == important == is this variable important == if imp($var)
+  return trim($var) !== '' && $var !== null && $var !== false && $var !== array();
+}
 ?>

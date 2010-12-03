@@ -217,7 +217,7 @@ class timeSheet extends db_entity {
     $this->pay_info["total_dollars_minus_gst"] = $this->pay_info["total_dollars"] / $taxPercentDivisor;
     $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_customerBilledDollars"] / $taxPercentDivisor;
     $this->pay_info["total_dollars_not_null"] = $this->pay_info["total_customerBilledDollars"] or $this->pay_info["total_dollars_not_null"] = $this->pay_info["total_dollars"];
-    $this->pay_info["currency"] = page::currency($this->get_value("currencyTypeID"));
+    $this->pay_info["currency"] = page::money($this->get_value("currencyTypeID"),'',"%S");
   }
 
   function destroyTransactions() {

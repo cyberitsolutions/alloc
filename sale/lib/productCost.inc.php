@@ -40,7 +40,7 @@ class productCost extends db_entity {
     $this->get_value("amount")       or $err[] = "Missing an amount.";
     #$this->get_value("isPercentage") or $err[] = "Missing the isPercentage field.";
     $this->get_value("tfID") == $this->get_value("fromTfID") and $err[] = "Can't have identical Source and Destination TF's.";
-    return $err;
+    return parent::validate($err);
   }
 
 

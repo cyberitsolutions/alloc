@@ -377,11 +377,13 @@ class db_entity {
     return $rtn;
   }
 
-  function validate() {
-    $message = array();
+  function validate($message=array()) {
+    if ($this->data_fields["currencyTypeID"]) {
+      $this->currency = $this->data_fields["currencyTypeID"]->get_value();
+    }
     reset($this->data_fields);
     while (list($field_index, $field) = each($this->data_fields)) {
-      $message[] = $field->validate();
+      $message[] = $field->validate($this);
     }
 
     $message = implode(" ",$message);

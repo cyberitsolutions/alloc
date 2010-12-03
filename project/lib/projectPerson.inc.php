@@ -30,7 +30,7 @@ class projectPerson extends db_entity {
                              ,"projectID"
                              ,"emailType"
                              ,"emailDateRegex"
-                             ,"rate"
+                             ,"rate" => array("type"=>"money")
                              ,"rateUnitID"
                              ,"projectPersonModifiedUser"
                              ,"roleID"

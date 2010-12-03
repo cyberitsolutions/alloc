@@ -45,7 +45,7 @@ class productSaleItem extends db_entity {
     $this->get_value("buyCost")       or $err[] = "Please enter a Buy Cost.";
     $this->get_value("sellPrice")     or $err[] = "Please enter a Sell Price.";
     $this->get_value("quantity")      or $err[] = "Please enter a Quantity.";
-    return $err;
+    return parent::validate($err);
   }
 
   function get_amount_spent() {

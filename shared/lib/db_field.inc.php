@@ -53,7 +53,7 @@ class db_field {
   }
 
   function has_value() {
-    return isset($this->value) && $this->value != "";
+    return isset($this->value) && imp($this->value);
   }
 
   function get_name() {
@@ -66,7 +66,7 @@ class db_field {
 
   function get_value($dest = DST_VARIABLE) {
     if ($dest == DST_DATABASE) {
-      if ((isset($this->value) && $this->value != "") || !$this->empty_to_null) {
+      if ((isset($this->value) && imp($this->value)) || $this->empty_to_null == false) {
         return "'".db_esc($this->value)."'";
       } else {
         return "NULL";
@@ -82,7 +82,15 @@ class db_field {
     unset($this->value);
   }
 
-  function validate() {
+  function validate($parent) {
+    global $TPL;
+    if ($this->type == "money") {
+      if (!$parent->currency) {
+        return "No currency specified for ".$parent->classname.".".$this->name." (currency:".$parent->currency.")";
+      } else {
+        $this->set_value(page::money_in($parent->currency,$this->value));
+      }
+    }
     // Holder
   }
 }

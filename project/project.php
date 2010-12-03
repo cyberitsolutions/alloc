@@ -325,6 +325,7 @@ $project = new project;
 
 if ($projectID) {
   $project->set_id($projectID);
+  $project->select();
   $project->check_perm();
   $new_project = false;
 } else {
@@ -367,6 +368,7 @@ if ($_POST["save"]) {
       $projectPerson->set_value("personID", $current_user->get_id());
       $projectPerson->save();
     }
+    alloc_redirect($TPL["url_alloc_project"]."projectID=".$project->get_id());
   }
 } else if ($_POST["delete"]) {
   $project->read_globals();
@@ -438,6 +440,7 @@ if ($projectID) {
       foreach ($_POST["person_personID"] as $k => $personID) {
         if ($personID) {
           $pp = new projectPerson;
+          $pp->currency = $project->get_value("currencyTypeID");
           $pp->set_value("projectID",$project->get_id());
           $pp->set_value("personID",$personID);
           $pp->set_value("roleID",$_POST["person_roleID"][$k]);
@@ -607,8 +610,6 @@ if (is_object($project) && $project->get_id()) {
     }
 
 
-    $TPL["currency"] = $currency = page::currency($project->get_value("currencyTypeID"));
-    $TPL["cost_remaining"] and $TPL["cost_remaining"] = sprintf("%0.2f",$TPL["cost_remaining"]);
     $TPL["time_remaining"] and $TPL["time_remaining"] = sprintf("%0.1f",$TPL["time_remaining"])." Hours.";
 
     $TPL["count_incomplete_tasks"] = count($tasks);
@@ -617,16 +618,6 @@ if (is_object($project) && $project->get_id()) {
   }
 
   list($TPL["total_timesheet_transactions"], $TPL["total_other_transactions"]) = $project->get_project_budget_spent();
-  $TPL["grand_total"] = sprintf("%0.2f",$TPL["total_timesheet_transactions"] + $TPL["total_other_transactions"]);
-  $TPL["project_projectBudget"] and $TPL["project_projectBudget"] = $pb = sprintf("%0.2f", $TPL["project_projectBudget"]);
-
-  // calculate percentage from grand total and project budget (pb)
-  if ($TPL["grand_total"] > 0 && $pb > 0) {
-    $p = $TPL["grand_total"] / $pb * 100;
-  } else {
-    $p = "0";
-  }
-  $TPL["percentage"] = sprintf("%0.1f",$p);
 }
 
 $TPL["navigation_links"] = $project->get_navigation_links();
@@ -743,8 +734,6 @@ $TPL["taxName"] = config::get_config_item("taxName");
 // Need to html-ise projectName and description
 $TPL["project_projectName_html"] = page::to_html($project->get_value("projectName"));
 $TPL["project_projectComments_html"] = page::to_html($project->get_value("projectComments"));
-
-$TPL["currency"] = page::currency($project->get_value("currencyTypeID"));
 
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");
