@@ -540,7 +540,7 @@ table.loud th {
 }
 table.panel td { 
   background:(PANEL_HARPO_BG_COLOR);
-  padding:6px; 
+  padding:4px; 
   border:0px solid black;
 }
 table.loud td {
