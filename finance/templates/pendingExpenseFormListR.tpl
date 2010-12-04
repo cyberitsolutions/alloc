@@ -3,5 +3,5 @@
   <td>{$expenseFormCreatedTime}</td>
   <td>{=$expenseFormCreatedUser}</td>
   <td>{$rr_label}</td>
-  <td align="right">&nbsp;${$formTotal}</td>
+  <td align="right">&nbsp;{$formTotal}</td>
 </tr>

@@ -247,7 +247,7 @@ function show_invoiceItem_list() {
       $TPL["status_label"] = "<b>[Paid in part]</b>";
       $TPL["box_class"] = " warn";
 
-    } else if (sprintf("%0.2f",$transaction_sum) > sprintf("%0.2f",$invoiceItem->get_value("iiAmount"))) {
+    } else if ($transaction_sum > $invoiceItem->get_value("iiAmount")) {
       $TPL["status_label"] = "<b>[Overpaid]</b>";
     }
 

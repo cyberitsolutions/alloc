@@ -36,21 +36,28 @@ function show_expense_form_list($template_name) {
   $expenseForm = new expenseForm;
   $transaction = new transaction;
 
-  $db->query("SELECT expenseForm.*, SUM(transaction.amount) as formTotal
+  $db->query("SELECT expenseForm.*, SUM(transaction.amount * pow(10,-currencyType.numberToBasic)) as formTotal, transaction.currencyTypeID
                 FROM expenseForm, transaction
+           LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                WHERE expenseForm.expenseFormID = transaction.expenseFormID
                  AND transaction.status = 'pending'
-            GROUP BY expenseForm.expenseFormID
+            GROUP BY expenseForm.expenseFormID, transaction.currencyTypeID
             ORDER BY expenseFormID");
 
   $rr_options = expenseForm::get_reimbursementRequired_array();
 
-  while ($db->next_record()) {
+  while ($row = $db->row()) {
+    $amounts[$row["expenseFormID"]].= $sp[$row["expenseFormID"]].page::money($row["currencyTypeID"],$row["formTotal"],"%s%m");
+    $sp[$row["expenseFormID"]] = " + ";
+    $rows[$row["expenseFormID"]] = $row;
+  }
+  foreach ($rows as $expenseFormID => $row) {
     $expenseForm = new expenseForm();
-    if ($expenseForm->read_db_record($db, false)) {
+    if ($expenseForm->read_row_record($row, false)) {
       $i++;
       $expenseForm->set_values();
-      $TPL["formTotal"] = sprintf("%0.2f", -$db->f("formTotal"));
+      //$TPL["formTotal"] =  -$db->f("formTotal");
+      $TPL["formTotal"] = $amounts[$expenseFormID];
       $TPL["expenseFormModifiedUser"] = person::get_fullname($expenseForm->get_value("expenseFormModifiedUser"));
       $TPL["expenseFormModifiedTime"] = $expenseForm->get_value("expenseFormModifiedTime");
       $TPL["expenseFormCreatedUser"] = person::get_fullname($expenseForm->get_value("expenseFormCreatedUser"));
@@ -81,7 +88,7 @@ function show_pending_transaction_list($template_name) {
     $transactionRepeat->read_db_record($db);
     $transactionRepeat->set_values();
     $TPL["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];
-    $TPL["formTotal"] = sprintf("%0.2f", -$db->f("amount"));
+    $TPL["formTotal"] =  -$db->f("amount");
     $TPL["transactionModifiedTime"] = $transaction->get_value("transactionModifiedTime");
     $TPL["transactionCreatedTime"] = $transaction->get_value("transactionCreatedTime");
     $TPL["transactionCreatedUser"] = person::get_fullname($transaction->get_value("transactionCreatedUser"));

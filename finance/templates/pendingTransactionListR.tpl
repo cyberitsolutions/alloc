@@ -3,5 +3,5 @@
   <td>{$transactionCreatedTime}</td>
   <td>{=$transactionCreatedUser}</td>
   <td>{$transactionType}</td>
-  <td align="right">&nbsp;${$formTotal}</td>
+  <td align="right">&nbsp;{page::money($currencyTypeID,$formTotal,"%s%mo")}</td>
 </tr>

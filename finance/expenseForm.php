@@ -46,9 +46,8 @@ function show_all_exp($template) {
       $transaction->set_values();
 
       $transaction->get_value("quantity") and $TPL["amount"] = $transaction->get_value("amount") / $transaction->get_value("quantity");
-      $TPL["amount"] = sprintf("%0.2f",$TPL["amount"]);
 
-      $TPL["lineTotal"] = sprintf("%0.2f",$TPL["amount"] * $transaction->get_value("quantity"));
+      $TPL["lineTotal"] = $TPL["amount"] * $transaction->get_value("quantity");
 
       $tf = new tf;
       $tf->set_id($transaction->get_value("fromTfID"));
@@ -151,9 +150,7 @@ if ($_POST["add"]) {
   if ($_POST["amount"] === "") {
     $TPL["message"][] = "You must enter the Price.";
   }
-  $_POST["amount"] = sprintf("%0.2f",$_POST["amount"]);
   $_POST["amount"] = $_POST["amount"] * $_POST["quantity"];
-  $_POST["amount"] = sprintf("%0.2f",$_POST["amount"]);
 
 
   $transaction = new transaction;
@@ -185,7 +182,7 @@ if ($_POST["edit"] && $_POST["expenseFormID"] && $_POST["transactionID"]) {
 $transaction_to_edit->set_values();
 
 if ($transaction_to_edit->get_value("quantity")) {
-  $TPL["amount"] = $transaction_to_edit->get_value("amount") / $transaction_to_edit->get_value("quantity");
+  $TPL["amount"] = $transaction_to_edit->get_value("amount",DST_HTML_DISPLAY) / $transaction_to_edit->get_value("quantity");
 }
 
 if ($_POST["delete"] && $_POST["expenseFormID"] && $_POST["transactionID"]) {
@@ -213,6 +210,11 @@ if ($transaction_to_edit->get_value("fromTfID")) {
 $tf = new tf;
 $options = $tf->get_assoc_array("tfID","tfName");
 $TPL["fromTfOptions"] = page::select_options($options, $selectedTfID);
+
+$m = new meta("currencyType");
+$currencyOps = $m->get_assoc_array("currencyTypeID","currencyTypeID");
+$TPL["currencyTypeOptions"] = page::select_options($currencyOps,$transaction_to_edit->get_value("currencyTypeID"));
+
 
 if (is_object($expenseForm) && $expenseForm->get_value("clientID")) { 
   $clientID_sql = sprintf(" AND clientID = %d",$expenseForm->get_value("clientID"));
@@ -399,9 +401,16 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {
   $db = new db_alloc;
-  $db->query(sprintf("SELECT SUM(amount) AS sum FROM transaction WHERE expenseFormID = %d",$expenseForm->get_id()));
-  $db->next_record();
-  $TPL["formTotal"] = sprintf("%0.2f",abs($db->f("sum")));
+  $db->query(sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS sum, transaction.currencyTypeID
+                        FROM transaction
+                   LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                       WHERE expenseFormID = %d
+                    GROUP BY transaction.currencyTypeID
+                  ",$expenseForm->get_id()));
+  while ($db->next_record()) {
+    $TPL["formTotal"].= $sp.page::money($db->f("currencyTypeID"),abs($db->f("sum")),"%s%m");
+    $sp = " + ";
+  }
 }
 
 if (is_object($expenseForm) && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION) 
