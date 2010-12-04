@@ -33,8 +33,28 @@ class invoice extends db_entity {
                               ,"invoiceNum"
                               ,"invoiceName"
                               ,"invoiceStatus"
+                              ,"currencyTypeID"
                               ,"maxAmount" => array("type"=>"money")
                               );
+
+  function save() {
+    global $TPL;
+    if (!$this->get_value("currencyTypeID")) {
+      if ($this->get_value("projectID")) {
+        $project = $this->get_foreign_object("project");
+        $currencyTypeID = $project->get_value("currencyTypeID");
+      } else if (config::get_config_item("currency")) {
+        $currencyTypeID = config::get_config_item("currency");
+      }
+
+      if ($currencyTypeID) {
+        $this->set_value("currencyTypeID", $currencyTypeID);
+      } else {
+        $TPL["message"][] = "Unable to save invoice. No currency is able to be determined. Either attach this invoice to a project, or set a Main Currency on the Setup -> Finance screen.";
+      } 
+    }
+    return parent::save();
+  }
 
   function get_invoice_statii() {
     return array("create"=>"Create"
@@ -115,38 +135,39 @@ class invoice extends db_entity {
   }
 
   function get_invoiceItem_list_for_file($verbose=false) {
+    $currency = $this->get_value("currencyTypeID");
+
     $q = sprintf("SELECT * from invoiceItem WHERE invoiceID=%d ", $this->get_id());
     $q.= sprintf("ORDER BY iiDate,invoiceItemID");
     $db = new db_alloc;
     $db->query($q);
     $taxPercent = config::get_config_item("taxPercent");
     $taxPercentDivisor = ($taxPercent/100) + 1;
-    $currency = '$';
 
     while ($db->next_record()) {
       $invoiceItem = new invoiceItem;
       $invoiceItem->read_db_record($db);
 
-      $num = sprintf("%0.2f",$invoiceItem->get_value("iiAmount"));
+      $num = page::money($currency,$invoiceItem->get_value("iiAmount"),"%mo");
 
       if ($taxPercent !== '') {
-        $num_minus_gst = sprintf("%0.2f",$num / $taxPercentDivisor);
-        $gst = sprintf("%0.2f",$num - $num_minus_gst);
+        $num_minus_gst = $num / $taxPercentDivisor;
+        $gst = $num - $num_minus_gst;
 
         if (($num_minus_gst + $gst) != $num) {
           $num_minus_gst += $num - ($num_minus_gst + $gst); // round it up.
         }
 
         $rows[$invoiceItem->get_id()]["quantity"] = $invoiceItem->get_value("iiQuantity");
-        $rows[$invoiceItem->get_id()]["unit"] = sprintf("%0.2f",$invoiceItem->get_value("iiUnitPrice"));
-        $rows[$invoiceItem->get_id()]["money"]+= $num_minus_gst;
-        $rows[$invoiceItem->get_id()]["gst"] += $gst;
+        $rows[$invoiceItem->get_id()]["unit"] = page::money($currency,$invoiceItem->get_value("iiUnitPrice"),"%mo");
+        $rows[$invoiceItem->get_id()]["money"] += page::money($currency,$num_minus_gst,"%m");
+        $rows[$invoiceItem->get_id()]["gst"] += page::money($currency,$gst,"%m");
         $info["total_gst"] += $gst;
         $info["total"] += $num_minus_gst;
       } else {
         $rows[$invoiceItem->get_id()]["quantity"] = $invoiceItem->get_value("iiQuantity");
-        $rows[$invoiceItem->get_id()]["unit"] = sprintf("%0.2f",$invoiceItem->get_value("iiUnitPrice"));
-        $rows[$invoiceItem->get_id()]["money"] += $num;
+        $rows[$invoiceItem->get_id()]["unit"] = page::money($currency,$invoiceItem->get_value("iiUnitPrice"),"%mo");
+        $rows[$invoiceItem->get_id()]["money"] += page::money($currency,$num,"%m");
         $info["total"] += $num;
       }
 
@@ -175,11 +196,11 @@ class invoice extends db_entity {
       }
       is_array($str) and $rows[$invoiceItem->get_id()]["desc"].= trim(implode(DEFAULT_SEP,$str));
     }
-    $info["total_inc_gst"] = sprintf("$%0.2f",$info["total"]+$info["total_gst"]);
+    $info["total_inc_gst"] = page::money($currency,$info["total"]+$info["total_gst"],"%s%m");
 
     // If we are in dollar mode, then prefix the total with a dollar sign
-    $info["total"] = $currency.sprintf("%0.2f",$info["total"]);
-    $info["total_gst"] = $currency.sprintf("%0.2f",$info["total_gst"]);
+    $info["total"] =     page::money($currency,$info["total"],"%s%m");
+    $info["total_gst"] = page::money($currency,$info["total_gst"],"%s%m");
     $rows or $rows = array();
     $info or $info = array();
     return array($rows,$info);
@@ -190,7 +211,7 @@ class invoice extends db_entity {
     require_once("../shared/lib/ezpdf.inc.php");
     $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
     $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
-
+  
     $db = new db_alloc;
 
     // Get client name
@@ -447,12 +468,13 @@ class invoice extends db_entity {
     is_array($filter2_having) && count($filter2_having) and $f2_having = " HAVING ".implode(" AND ",$filter2_having);
  
     $q1= "CREATE TEMPORARY TABLE invoice_details
-          SELECT SUM(invoiceItem.iiAmount) as iiAmountSum
+          SELECT SUM(invoiceItem.iiAmount * pow(10,-currencyType.numberToBasic)) as iiAmountSum
                , invoice.*
                , client.clientName
             FROM invoice
        LEFT JOIN invoiceItem on invoiceItem.invoiceID = invoice.invoiceID
        LEFT JOIN client ON invoice.clientID = client.clientID
+       LEFT JOIN currencyType on invoice.currencyTypeID = currencyType.currencyTypeID
               $f1_where
         GROUP BY invoice.invoiceID
         ORDER BY invoiceDateFrom";
@@ -467,9 +489,9 @@ class invoice extends db_entity {
                , SUM(transaction_rejected.amount) as amountPaidRejected
             FROM invoice_details
        LEFT JOIN invoiceItem on invoiceItem.invoiceID = invoice_details.invoiceID
-       LEFT JOIN transaction transaction_approved on invoiceItem.invoiceItemID = transaction_approved.invoiceItemID AND transaction_approved.status = 'approved'
-       LEFT JOIN transaction transaction_pending on invoiceItem.invoiceItemID = transaction_pending.invoiceItemID AND transaction_pending.status = 'pending'
-       LEFT JOIN transaction transaction_rejected on invoiceItem.invoiceItemID = transaction_rejected.invoiceItemID AND transaction_rejected.status = 'rejected'
+       LEFT JOIN transaction transaction_approved on invoiceItem.invoiceItemID = transaction_approved.invoiceItemID AND transaction_approved.status='approved'
+       LEFT JOIN transaction transaction_pending on invoiceItem.invoiceItemID = transaction_pending.invoiceItemID AND transaction_pending.status='pending'
+       LEFT JOIN transaction transaction_rejected on invoiceItem.invoiceItemID = transaction_rejected.invoiceItemID AND transaction_rejected.status='rejected'
        LEFT JOIN tfPerson ON tfPerson.tfID = transaction_approved.tfID OR tfPerson.tfID = transaction_pending.tfID OR tfPerson.tfID = transaction_rejected.tfID
               $f2_where
         GROUP BY invoice_details.invoiceID
@@ -485,6 +507,9 @@ class invoice extends db_entity {
       $print = true;
       $i = new invoice;
       $i->read_db_record($db,false);
+      $row["amountPaidApproved"] = page::money($row["currencyTypeID"],$row["amountPaidApproved"],"%mo");
+      $row["amountPaidPending"] = page::money($row["currencyTypeID"],$row["amountPaidPending"],"%mo");
+      $row["amountPaidRejected"] = page::money($row["currencyTypeID"],$row["amountPaidRejected"],"%mo");
       $row["invoiceLink"] = $i->get_invoice_link();
       $summary.= invoice::get_list_tr($row,$_FORM);
       $summary_ops[$i->get_id()] = $i->get_value("invoiceNum");

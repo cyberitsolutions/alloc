@@ -66,8 +66,6 @@ function show_new_invoiceItem($template) {
       $TPL["invoiceItem_buttons"] = "<input type=\"submit\" name=\"invoiceItem_save\" value=\"Add Invoice Item\">";
     }
 
-    $currency = '$';
-
     // Build dropdown lists for timeSheet and expenseForm options.
     if ($invoice->get_value("clientID")) {
 
@@ -97,7 +95,7 @@ function show_new_invoiceItem($template) {
           $t->read_db_record($db);
           $t->load_pay_info();
           $dollars = $t->pay_info["total_customerBilledDollars"] or $dollars = $t->pay_info["total_dollars"];
-          $timeSheetOptions[$row["timeSheetID"]] = "Time Sheet #".$t->get_id()." ".$row["dateFrom"]." ".$currency.sprintf("%0.2f",$dollars)." for ".person::get_fullname($row["personID"]).", Project: ".$row["projectName"]." [".$timeSheetStatii[$t->get_value("status")]."]";
+          $timeSheetOptions[$row["timeSheetID"]] = "Time Sheet #".$t->get_id()." ".$row["dateFrom"]." ".$dollars." for ".person::get_fullname($row["personID"]).", Project: ".$row["projectName"]." [".$timeSheetStatii[$t->get_value("status")]."]";
         }
 
         $TPL["timeSheetOptions"] = page::select_options($timeSheetOptions,$invoiceItem->get_value("timeSheetID"),150);
@@ -121,7 +119,7 @@ function show_new_invoiceItem($template) {
       }
 
       foreach ($r as $k => $dollars) {
-        $expenseFormOptions[$k] = sprintf($expenseFormOptions[$k],$currency.sprintf("%0.2f",abs($dollars)));
+        $expenseFormOptions[$k] = sprintf($expenseFormOptions[$k],abs($dollars));
       }
 
       if ($invoiceItem->get_value("expenseFormID")) {
@@ -140,7 +138,6 @@ function show_new_invoiceItem($template) {
 function show_invoiceItem_list() {
   global $invoiceID, $TPL, $invoice, $current_user;
 
-  $currency = '$';
   $template = "templates/invoiceItemListR.tpl";
 
   $db = new db_alloc();
@@ -153,6 +150,8 @@ function show_invoiceItem_list() {
   $db->query($q);
   while ($db->next_record()) {
     $invoiceItem = new invoiceItem;
+    $invoiceItem->currency = $invoice->get_value("currencyTypeID");
+  
     if (!$invoiceItem->read_db_record($db,false)) {
       continue;
     }
@@ -175,10 +174,12 @@ function show_invoiceItem_list() {
     }
     
     $q = sprintf("SELECT *
-                       , transaction.amount AS transaction_amount
+                       , transaction.amount * pow(10,-currencyType.numberToBasic) AS transaction_amount
                        , transaction.tfID AS transaction_tfID
                        , transaction.status AS transaction_status  
+                       , transaction.currencyTypeID
                     FROM transaction 
+               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                    WHERE transaction.invoiceItemID = %d",$invoiceItem->get_id());
     $db2->query($q);
     while ($db2->next_record()) {
@@ -206,7 +207,7 @@ function show_invoiceItem_list() {
       $transaction_info.= $br.ucwords($db2->f("transaction_status"))." Transaction ";
       $transaction_info.= "<a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$db2->f("transactionID")."\">#".$db2->f("transactionID")."</a>";
       $transaction_info.= " in TF <a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$db2->f("transaction_tfID")."\">".tf::get_name($db2->f("transaction_tfID"))."</a>";
-      $transaction_info.= " for <b>".$currency.sprintf("%0.2f",$db2->f("transaction_amount"))."</b>";
+      $transaction_info.= " for <b>".page::money($db2->f("currencyTypeID"),$db2->f("transaction_amount"),"%s%m")."</b>";
       $br = "<br>";
     }
 
@@ -242,7 +243,7 @@ function show_invoiceItem_list() {
       $TPL["status_label"] = "<b>[Paid]</b>";
     }
 
-    if ($transaction_sum > 0 && sprintf("%0.2f",$transaction_sum) < sprintf("%0.2f",$invoiceItem->get_value("iiAmount"))) {
+    if ($transaction_sum > 0 && $transaction_sum < $invoiceItem->get_value("iiAmount")) {
       $TPL["status_label"] = "<b>[Paid in part]</b>";
       $TPL["box_class"] = " warn";
 
@@ -257,9 +258,9 @@ function show_invoiceItem_list() {
     if ($invoice->get_value("invoiceStatus") == "reconcile") {
       
       if ($amounts[$invoiceItem->get_id()] === null) {
-        $amount = $invoiceItem->get_value("iiAmount");
+        $amount = $invoiceItem->get_value("iiAmount",DST_HTML_DISPLAY);
       } else {
-        $amount = $amounts[$invoiceItem->get_id()];
+        $amount = page::money($invoice->get_value("currencyTypeID"),$amounts[$invoiceItem->get_id()],"%m");
       }
       
       $selected_tfID = $db2->f("transaction_tfID");
@@ -279,7 +280,7 @@ function show_invoiceItem_list() {
 
       #$tf_options = page::select_options($tf_array, $selected_tfID);
       #$tf_options = "<select name=\"invoiceItemAmountPaidTfID[".$invoiceItem->get_id()."]\">".$tf_options."</select>";
-      #$TPL["invoiceItem_buttons"] = $currency."<input size=\"8\" type=\"text\" id=\"ap_".$invoiceItem->get_id()."\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
+      #$TPL["invoiceItem_buttons"] = "<input size=\"8\" type=\"text\" id=\"ap_".$invoiceItem->get_id()."\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
       #$TPL["invoiceItem_buttons"].= $tf_options;
 
 
@@ -331,9 +332,7 @@ function show_invoiceItem_list() {
       $TPL["invoiceItem_iiMemo"] = "<a href=\"".$TPL["url_alloc_expenseForm"]."expenseFormID=".$invoiceItem->get_value("expenseFormID")."\">".$invoiceItem->get_value("iiMemo")." (Currently: $".$total.", Status: ".$ep->get_status().")</a>";
     } 
 
-    $TPL["invoiceItem_iiUnitPrice"] = $currency.sprintf("%0.2f",$TPL["invoiceItem_iiUnitPrice"]);
-    $TPL["invoiceItem_iiAmount"] = $currency.sprintf("%0.2f",$TPL["invoiceItem_iiAmount"]);
-
+    $TPL["currency"] = $invoice->get_value("currencyTypeID");
     include_template($template);
   }
 
@@ -412,6 +411,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     if (is_array($_POST["invoiceItemStatus"])) {
       foreach ($_POST["invoiceItemStatus"] as $iiID => $status) {
         $ii = new invoiceItem;
+        $ii->currency = $invoice->get_value("currencyTypeID");
         $ii->set_id($iiID);
         $ii->select();
         $amount = $ii->get_value("iiAmount");
@@ -425,7 +425,8 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
           $transaction->select();
           #$amount = $transaction->get_value("amount");
         }
-        $transaction->set_value("amount",sprintf("%0.2f",$_POST["invoiceItemAmountPaid"][$iiID]));  
+        $transaction->set_value("amount",$_POST["invoiceItemAmountPaid"][$iiID]);  
+        $transaction->set_value("currencyTypeID",$invoice->get_value("currencyTypeID"));  
         $transaction->set_value("fromTfID",config::get_config_item("inTfID")); 
         $transaction->set_value("tfID",$_POST["invoiceItemAmountPaidTfID"][$iiID]);
         $transaction->set_value("status",$status);
@@ -472,6 +473,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
   is_array($_POST["invoiceItem_delete"]) and $invoiceItemID = key($_POST["invoiceItem_delete"]);
 
   $invoiceItem = new invoiceItem;
+  $invoiceItem->currency = $invoice->get_value("currencyTypeID");
   $invoiceItem->set_id($invoiceItemID);
   #echo $invoiceItem->get_id();
   $invoice->set_id($invoiceID);
@@ -534,27 +536,23 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
 
 
-if ($invoiceID) {
-  
-  $currency = '$';
-
-  $q = sprintf("SELECT sum(iiAmount) as sum_iiAmount
-                  FROM invoiceItem WHERE invoiceID = %d",$invoiceID);
+if ($invoiceID && $invoiceItemIDs) {
+  $currency = $invoice->get_value("currencyTypeID");
+  $q = sprintf("SELECT sum(iiAmount * pow(10,-currencyType.numberToBasic)) as sum_iiAmount
+                  FROM invoiceItem 
+             LEFT JOIN invoice on invoiceItem.invoiceID = invoice.invoiceID
+             LEFT JOIN currencyType on invoice.currencyTypeID = currencyType.currencyTypeID
+                 WHERE invoiceItem.invoiceID = %d",$invoiceID);
   $db->query($q);
-  $db->next_record();
-  $TPL["invoiceTotal"] = $currency.sprintf("%0.2f",$db->f("sum_iiAmount"));
+  $db->next_record() and $TPL["invoiceTotal"] = page::money($currency,$db->f("sum_iiAmount"),"%S%m");
 
-  if ($invoiceItemIDs) {
-    $q = sprintf("SELECT sum(amount) as sum_transaction_amount
-                    FROM transaction 
-                   WHERE status = 'approved' 
-                     AND invoiceItemID in (%s)",implode(",",$invoiceItemIDs));
-    $db->query($q);
-    $db->next_record();
-    $TPL["invoiceTotalPaid"] = $currency.sprintf("%0.2f",$db->f("sum_transaction_amount"));
-  }
-
-
+  $q = sprintf("SELECT sum(amount * pow(10,-currencyType.numberToBasic)) as sum_transaction_amount
+                  FROM transaction 
+             LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                 WHERE status = 'approved' 
+                   AND invoiceItemID in (%s)",implode(",",$invoiceItemIDs));
+  $db->query($q);
+  $db->next_record() and $TPL["invoiceTotalPaid"] = page::money($currency,$db->f("sum_transaction_amount"),"%S%m");
 }
 
 
@@ -593,7 +591,7 @@ foreach ($statii as $s => $label) {
 
 $TPL["field_invoiceNum"] = '<input type="text" name="invoiceNum" value="'.$TPL["invoiceNum"].'">';
 $TPL["field_invoiceName"] = '<input type="text" name="invoiceName" value="'.$TPL["invoiceName"].'">';
-$TPL["field_maxAmount"] = '<input type="text" name="maxAmount" size="10" value="'.$invoice->get_value("maxAmount").'">';
+$TPL["field_maxAmount"] = '<input type="text" name="maxAmount" size="10" value="'.$invoice->get_value("maxAmount",DST_HTML_DISPLAY).'">';
 $TPL["field_invoiceDateFrom"] = page::calendar("invoiceDateFrom",$TPL["invoiceDateFrom"]);
 $TPL["field_invoiceDateTo"] = page::calendar("invoiceDateTo",$TPL["invoiceDateTo"]);
 
@@ -635,7 +633,7 @@ if ($current_user->have_role('admin')) {
     $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
-    $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
+    $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%S%mo");
     $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
     $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
 
@@ -645,7 +643,7 @@ if ($current_user->have_role('admin')) {
     $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
-    $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
+    $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%S%mo");
     $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
     $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
   }
@@ -654,7 +652,7 @@ if ($current_user->have_role('admin')) {
   $TPL["field_invoiceName"] = $TPL["invoiceName"];
   $TPL["field_clientID"] = $client_link;
   $TPL["field_projectID"] = $project_link;
-  $TPL["field_maxAmount"] = $currency.$TPL["maxAmount"];
+  $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%S%mo");
   $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
   $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
 }
