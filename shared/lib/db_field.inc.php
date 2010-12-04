@@ -72,7 +72,7 @@ class db_field {
         return "NULL";
       }
     } else if ($dest == DST_HTML_DISPLAY) {
-      if ($this->type == "money") {
+      if ($this->type == "money" && imp($this->value)) {
         if (is_object($parent) && !$parent->currency) {
           die("db_field::get_value(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$parent->currency.")");
         } else if ($this->value == $parent->all_row_fields[$this->name]) {
