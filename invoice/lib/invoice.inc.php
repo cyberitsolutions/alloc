@@ -33,7 +33,7 @@ class invoice extends db_entity {
                               ,"invoiceNum"
                               ,"invoiceName"
                               ,"invoiceStatus"
-                              ,"maxAmount"
+                              ,"maxAmount" => array("type"=>"money")
                               );
 
   function get_invoice_statii() {

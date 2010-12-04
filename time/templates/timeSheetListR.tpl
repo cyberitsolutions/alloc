@@ -7,9 +7,9 @@
 {if $_FORM["showDateTo"]}                 <td>{$dateTo}</td>{/}
 {if $_FORM["showStatus"]}                 <td>{if $dateRejected}<span class="bad" title="This timesheet has been rejected.">{/}{$status}{if $dateRejected}</span>{/}</td>{/}
 {if $_FORM["showDuration"]}               <td>{$duration}</td>{/}
-{if $_FORM["showAmount"]}                 <td align="right">{echo sprintf("$%0.2f",$amount)}</td>{/}
-{if $_FORM["showCustomerBilledDollars"]}  <td align="right">{echo sprintf("$%0.2f",$customerBilledDollars)}</td>{/}
-{if $_FORM["showTransactionsPos"]}        <td align="right">{echo sprintf("$%0.2f",$transactionsPos)}</td>{/}
-{if $_FORM["showTransactionsNeg"]}        <td align="right">{echo sprintf("$%0.2f",$transactionsNeg)}</td>{/}
+{if $_FORM["showAmount"]}                 <td align="right">{page::money($currencyTypeID,$amount,"%s%m")}</td>{/}
+{if $_FORM["showCustomerBilledDollars"]}  <td align="right">{page::money($currencyTypeID,$customerBilledDollars,"%s%m")}</td>{/}
+{if $_FORM["showTransactionsPos"]}        <td align="right">{page::money($currencyTypeID,$transactionsPos,"%s%m")}</td>{/}
+{if $_FORM["showTransactionsNeg"]}        <td align="right">{page::money($currencyTypeID,$transactionsNeg,"%s%m")}</td>{/}
 </tr>
  

@@ -33,8 +33,8 @@ class invoiceItem extends db_entity {
                              ,"transactionID"
                              ,"iiMemo"
                              ,"iiQuantity"
-                             ,"iiUnitPrice"
-                             ,"iiAmount"
+                             ,"iiUnitPrice" => array("type"=>"money")
+                             ,"iiAmount" => array("type"=>"money")
                              ,"iiDate"
                              );
   public $permissions = array(PERM_FINANCE_UPDATE_APPROVED => "update approved transactions");
