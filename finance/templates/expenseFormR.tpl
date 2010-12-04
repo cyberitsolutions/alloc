@@ -6,7 +6,7 @@
 </tr>
 <tr>
   <td>{=$product}</td>
-  <td class="nobr">{$quantity}pcs. @ ${$amount} each  &nbsp;&nbsp;&nbsp;<b>${$lineTotal}</b></td>
+  <td class="nobr">{$quantity}pcs. @ {page::money($currencyTypeID,$amount,"%s%mo")} each  &nbsp;&nbsp;&nbsp;<b>{page::money($currencyTypeID,$lineTotal,"%s%mo")}</b></td>
   <td class="nobr">Source TF:{$fromTfIDLink} Dest TF: {$tfIDLink}</td>
   <td class="nobr" width="1%">{$transactionDate}</td> 
   <td width="1%" class="right nobr">

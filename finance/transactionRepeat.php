@@ -81,6 +81,7 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
     !$transactionRepeat->get_value("status") && $transactionRepeat->set_value("status","pending"); 
     $transactionRepeat->set_value("companyDetails",rtrim($transactionRepeat->get_value("companyDetails")));
     $transactionRepeat->save();
+    alloc_redirect($TPL["url_alloc_transactionRepeat"]."transactionRepeatID=".$transactionRepeat->get_id());
   }
   $transactionRepeat->set_values();
 }                       
@@ -131,6 +132,11 @@ $tf->set_id($transactionRepeat->get_value("fromTfID"));
 if ($tf->select() && !$tf->get_value("tfActive")) {
   $TPL["message_help"][] = "This expense is sourced from an inactive TF. It will not create transactions.";
 }
+
+
+$m = new meta("currencyType");
+$currencyOps = $m->get_assoc_array("currencyTypeID","currencyTypeID");
+$TPL["currencyTypeOptions"] = page::select_options($currencyOps,$transactionRepeat->get_value("currencyTypeID"));
 
 $TPL["tfOptions"] = page::select_options($q, $transactionRepeat->get_value("tfID"));
 $TPL["fromTfOptions"] = page::select_options($q, $transactionRepeat->get_value("fromTfID"));

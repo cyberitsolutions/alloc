@@ -14,24 +14,25 @@
     <td><b>Basis</b></td>
     <td><b>Start Date{page::mandatory($transactionStartDate)}</b></td>
     <td><b>Finish Date{page::mandatory($transactionFinishDate)}</b></td>
+    <td><b>Source TF{page::mandatory($fromTfID)}</b></td>
   </tr>
   <tr>
     <td><select name="paymentBasis" value="{$paymentBasis}">{$basisOptions}</select></td>
     <td>{page::calendar("transactionStartDate",$transactionStartDate)}</td>
     <td>{page::calendar("transactionFinishDate",$transactionFinishDate)}</td>
+   	<td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
   </tr>
 	<tr>
 	  <td><b>Product/Service{page::mandatory($product)}</b></td>
  	  <td><b>Amount{page::mandatory($amount)}</b></td>
  	  <td><b>Type</b></td>
-    <td><b>Source TF{page::mandatory($fromTfID)}</b></td>
     <td><b>Destination TF{page::mandatory($tfID)}</b></td>
 	</tr>
 	<tr>
  	  <td><input type="text" size="20" name="product" value="{$product}"></td>
- 	  <td><input type="text" size="9" name="amount" value="{$amount}"> (inc. {$taxName})</td>
+ 	  <td><input type="text" size="9" name="amount" value="{page::money($currencyTypeID,$amount,"%mo")}">
+   	    <select name="currencyTypeID">{$currencyTypeOptions}</select></td>
    	<td><select name="transactionType">{$transactionTypeOptions}</select></td>
-   	<td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
    	<td><select name="tfID"><option value="">{$tfOptions}</select></td>
  	</tr>
 

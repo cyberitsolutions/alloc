@@ -27,7 +27,7 @@
   </tr>
   <tr>
     <td align="right" valign="top">Total:</td>
-    <td valign="top">${$formTotal}</td>
+    <td valign="top">{$formTotal}</td>
     <td align="right" valign="top">Payment Status:</td>
     <td colspan="2">{$reimbursementRequiredOption}</td>
   </tr>
@@ -52,7 +52,7 @@
 
 <table class="box">
   <tr>
-    <th colspan="6">Create Expense Form Items</th>
+    <th colspan="7">Create Expense Form Items</th>
   </tr>
 
   <tr>
@@ -67,6 +67,7 @@
     <td>Product{page::mandatory($product)}</td>
     <td>Quantity</td>
     <td>Price{page::mandatory($amount)}</td>
+    <td>Currency{page::mandatory($currencyTypeID)}</td>
     <td>Source TF{page::mandatory($fromTfID)}</td>
     <td>Date Incurred{page::mandatory($transactionDate)}</td>
   </tr>
@@ -74,6 +75,7 @@
     <td><input type="text" size="25" name="product" value="{$product}"></td>
     <td><input type="text" size="5" name="quantity" value="{$quantity}"></td>
     <td><input type="text" size="9" name="amount" value="{$amount}"></td>
+    <td><select name="currencyTypeID">{$currencyTypeOptions}</select></td>
     <td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
     <td><nobr>{page::calendar("transactionDate",$transactionDate)}</nobr>
     <td class="right"><input type="submit" name="add" value="Add Expense Form Item"><input type="hidden" name="transactionID" value="{$transactionID}"></td>

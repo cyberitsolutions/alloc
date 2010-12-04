@@ -40,6 +40,7 @@ class transactionRepeat extends db_entity {
                              ,"transactionRepeatCreatedUser"
                              ,"paymentBasis"
                              ,"amount" => array("type"=>"money")
+                             ,"currencyTypeID"
                              ,"product"
                              ,"status"
                              ,"transactionType"
