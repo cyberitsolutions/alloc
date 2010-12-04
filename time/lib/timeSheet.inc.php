@@ -41,7 +41,7 @@ class timeSheet extends db_entity {
                              ,"billingNote"
                              ,"payment_insurance"
                              ,"recipient_tfID"
-                             ,"customerBilledDollars"
+                             ,"customerBilledDollars" => array("type"=>"money")
                              ,"currencyTypeID"
                              );
   public $permissions = array(PERM_TIME_APPROVE_TIMESHEETS => "approve"
@@ -135,13 +135,13 @@ class timeSheet extends db_entity {
      ***************************************************************************/
 
     static $rates;
-
     unset($this->pay_info);
     $db = new db_alloc;
 
     if (!$this->get_value("projectID") || !$this->get_value("personID")) {
       return false;
     }
+    $currency = $this->get_value("currencyTypeID");
     
     // The unit labels
     $timeUnit = new timeUnit;
@@ -151,23 +151,23 @@ class timeSheet extends db_entity {
       list($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]) = $rates[$this->get_value("projectID")][$this->get_value("personID")];
     } else {
       // Get rate for person for this particular project
-      $db->query("SELECT rate, rateUnitID 
+      $db->query("SELECT rate, rateUnitID, project.currencyTypeID
                     FROM projectPerson
-                   WHERE projectID = %d
-                     AND personID = %d"
+               LEFT JOIN project on projectPerson.projectID = project.projectID
+                   WHERE projectPerson.projectID = %d
+                     AND projectPerson.personID = %d"
                  ,$this->get_value("projectID")
                  ,$this->get_value("personID"));
 
       $db->next_record();
-      $this->pay_info["project_rate"] = $db->f("rate");
+      $this->pay_info["project_rate"] = page::money($db->f("currencyTypeID"),$db->f("rate"),"%mo");
       $this->pay_info["project_rateUnitID"] = $db->f("rateUnitID");
       $rates[$this->get_value("projectID")][$this->get_value("personID")] = array($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]);
     }
 
     // Get external rate, only load up customerBilledDollars if the field is actually set
-    if ($this->get_value("customerBilledDollars") !== "" && $this->get_value("customerBilledDollars") !== NULL 
-    && $this->get_value("customerBilledDollars") !== false) {
-      $this->pay_info["customerBilledDollars"] = $this->get_value("customerBilledDollars");
+    if (imp($this->get_value("customerBilledDollars"))) {
+      $this->pay_info["customerBilledDollars"] = page::money($currency,$this->get_value("customerBilledDollars"),"%mo");
     }
 
     $q = "SELECT * FROM timeUnit ORDER BY timeUnitSequence DESC";
@@ -184,16 +184,20 @@ class timeSheet extends db_entity {
     // Get duration for this timesheet/timeSheetItems
     $db->query(sprintf("SELECT SUM(timeSheetItemDuration) AS total_duration, 
                                SUM((timeSheetItemDuration * timeUnit.timeUnitSeconds) / 3600) AS total_duration_hours,
-                               SUM(rate * timeSheetItemDuration * multiplier) AS total_dollars,
-                               SUM(%0.2f * timeSheetItemDuration * multiplier) AS total_customerBilledDollars
+                               SUM((rate * pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_dollars,
+                               SUM((%0.2f* pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_customerBilledDollars
                                ".$sql."
                           FROM timeSheetItem
                      LEFT JOIN timeUnit ON timeUnit.timeUnitID = timeSheetItem.timeSheetItemDurationUnitID
-                         WHERE timeSheetID = %d"
-                       ,$this->pay_info["customerBilledDollars"],$this->get_id()));
+                     LEFT JOIN timeSheet on timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                     LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
+                         WHERE timeSheetItem.timeSheetID = %d"
+                       ,$this->get_value("customerBilledDollars"),$this->get_id()));
 
     $row = $db->row();
     $this->pay_info = array_merge((array)$this->pay_info, (array)$row);
+    $this->pay_info["total_customerBilledDollars"] = page::money($currency,$this->pay_info["total_customerBilledDollars"],"%m");
+    $this->pay_info["total_dollars"] = page::money($currency,$this->pay_info["total_dollars"],"%m");
 
     unset($commar);
     foreach((array)$timeUnitRows as $r) {
@@ -214,10 +218,10 @@ class timeSheet extends db_entity {
     }
     $taxPercent = config::get_config_item("taxPercent");
     $taxPercentDivisor = ($taxPercent/100) + 1;
-    $this->pay_info["total_dollars_minus_gst"] = $this->pay_info["total_dollars"] / $taxPercentDivisor;
-    $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_customerBilledDollars"] / $taxPercentDivisor;
+    $this->pay_info["total_dollars_minus_gst"] =               page::money($currency,$this->pay_info["total_dollars"] / $taxPercentDivisor,"%m");
+    $this->pay_info["total_customerBilledDollars_minus_gst"] = page::money($currency,$this->pay_info["total_customerBilledDollars"] / $taxPercentDivisor,"%m");
     $this->pay_info["total_dollars_not_null"] = $this->pay_info["total_customerBilledDollars"] or $this->pay_info["total_dollars_not_null"] = $this->pay_info["total_dollars"];
-    $this->pay_info["currency"] = page::money($this->get_value("currencyTypeID"),'',"%S");
+    $this->pay_info["currency"] = page::money($currency,'',"%S");
   }
 
   function destroyTransactions() {
@@ -274,11 +278,11 @@ class timeSheet extends db_entity {
         $agency_percentage = 0;
         if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
           $agency_percentage = $payrollTaxPercent;
-          $product = "Agency Percentage ".$agency_percentage."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"])." for timesheet #".$this->get_id();
+          $product = "Agency Percentage ".$agency_percentage."% of ".$this->pay_info["currency"].$this->pay_info["total_dollars_minus_gst"]." for timesheet #".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
         $percent = $companyPercent - $agency_percentage;
-        $product = "Company ".$percent."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"])." for timesheet #".$this->get_id();
+        $product = "Company ".$percent."% of ".$this->pay_info["currency"].$this->pay_info["total_dollars_minus_gst"]." for timesheet #".$this->get_id();
         $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
 
 
@@ -300,7 +304,7 @@ class timeSheet extends db_entity {
                     AND commissionPercent != 0");
         while ($db->next_record()) {
           $percent_so_far += $db->f("commissionPercent");
-          $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"]);
+          $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].$this->pay_info["total_dollars_minus_gst"];
           $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
           $rtn[$product] = $this->createTransaction($product
                                                   , $this->pay_info["total_dollars_minus_gst"]*($db->f("commissionPercent")/100)
@@ -312,7 +316,7 @@ class timeSheet extends db_entity {
         // 6. Employee gets commission if none were paid previously or the remainder of 5% commission if there is any
         if (!$percent_so_far || $percent_so_far < 5) {
           $percent = 5 - $percent_so_far;
-          $product = "Commission ".sprintf("%0.3f",$percent)."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_dollars_minus_gst"]);
+          $product = "Commission ".sprintf("%0.3f",$percent)."% of ".$this->pay_info["currency"].$this->pay_info["total_dollars_minus_gst"];
           $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
           $rtn[$product] = $this->createTransaction($product
                                                   , $this->pay_info["total_dollars_minus_gst"]*($percent/100)
@@ -362,13 +366,13 @@ class timeSheet extends db_entity {
         $agency_percentage = 0;
         if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
           $agency_percentage = $payrollTaxPercent;
-          $product = "Agency Percentage ".$agency_percentage."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"])." for timesheet #".$this->get_id();
+          $product = "Agency Percentage ".$agency_percentage."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet #".$this->get_id();
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
 
         // 3. Do companies cut
         $percent = $companyPercent - $agency_percentage;
-        $product = "Company ".$percent."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"])." for timesheet #".$this->get_id();
+        $product = "Company ".$percent."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet #".$this->get_id();
         $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
 
         // 4. Credit Employee TF
@@ -386,7 +390,7 @@ class timeSheet extends db_entity {
         while ($db->next_record()) {
 
           if ($db->f("commissionPercent") > 0) { 
-            $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].sprintf("%0.2f",$this->pay_info["total_customerBilledDollars_minus_gst"]);
+            $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"];
             $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
             $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
             $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
@@ -438,7 +442,7 @@ class timeSheet extends db_entity {
     } else {
       $transaction = new transaction;
       $transaction->set_value("product", $product);
-      $transaction->set_value("amount", sprintf("%0.2f", $amount));
+      $transaction->set_value("amount", $amount);
       $transaction->set_value("status", $status);
       $transaction->set_value("fromTfID", $fromTfID);
       $transaction->set_value("tfID", $tfID);
@@ -586,7 +590,8 @@ class timeSheet extends db_entity {
       $print = true;
 
      
-      $row["amount"] = sprintf("%0.2f",$t->pay_info["total_dollars"]);
+      $row["currencyTypeID"] = $t->get_value("currencyTypeID");
+      $row["amount"] = $t->pay_info["total_dollars"];
       $extra["amountTotal"] += $row["amount"];
       $extra["totalHours"] += $t->pay_info["total_duration_hours"];
       $row["totalHours"] += $t->pay_info["total_duration_hours"];
@@ -624,12 +629,18 @@ class timeSheet extends db_entity {
   function get_transaction_totals() {
   
     $db = new db_alloc();
-    $q = sprintf("SELECT SUM(amount) AS total FROM transaction WHERE amount>0 AND status = 'approved' AND timeSheetID = %d",$this->get_id());
+    $q = sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS total 
+                    FROM transaction 
+               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                   WHERE amount>0 AND status = 'approved' AND timeSheetID = %d",$this->get_id());
     $db->query($q);
     $row = $db->row();
     $pos = $row["total"];
 
-    $q = sprintf("SELECT SUM(amount) AS total FROM transaction WHERE amount<0 AND status = 'approved' AND timeSheetID = %d",$this->get_id());
+    $q = sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS total 
+                    FROM transaction 
+               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                   WHERE amount<0 AND status = 'approved' AND timeSheetID = %d",$this->get_id());
     $db->query($q);
     $row = $db->row();
     $neg = $row["total"];
@@ -698,10 +709,10 @@ class timeSheet extends db_entity {
       $_FORM["showDateTo"]          and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showStatus"]          and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showDuration"]        and $summary[] = "  <td class=\"grand_total left\">".sprintf("%0.2f", $row["totalHours"])." Hours</td>";
-      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["amountTotal"])."&nbsp;</td>";
-      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["customerBilledDollarsTotal"])."&nbsp;</td>";
-      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["transactionsPosTotal"])."&nbsp;</td>";
-      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total right\">".sprintf("$%0.2f",$row["transactionsNegTotal"])."&nbsp;</td>";
+      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total right\">".$row["amountTotal"]."&nbsp;</td>";
+      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total right\">".$row["customerBilledDollarsTotal"]."&nbsp;</td>";
+      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total right\">".$row["transactionsPosTotal"]."&nbsp;</td>";
+      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total right\">".$row["transactionsNegTotal"]."&nbsp;</td>";
       $summary[] = "</tr>";
       $summary[] = "</tfoot>";
       $summary = "\n".implode("\n",$summary);
@@ -1337,7 +1348,7 @@ EOD;
     }
   }
 
-  function get_amount_allocated() {
+  function get_amount_allocated($fmt="%s%mo") {
     // Return total amount used and total amount allocated
     if (is_object($this) && $this->get_id()) {
       $db = new db_alloc();
@@ -1355,16 +1366,16 @@ EOD;
         $invoice = new invoice;
         $invoice->set_id($invoiceID);
         $invoice->select();
-        $maxAmount = $invoice->get_value("maxAmount");
-      }
+        $maxAmount = page::money($invoice->get_value("currencyTypeID"),$invoice->get_value("maxAmount"),$fmt);
     
-      // Loop through all the other invoice items on that invoice
-      $q = sprintf("SELECT sum(iiAmount) AS totalUsed FROM invoiceItem WHERE invoiceID = %d",$invoiceID);
-      $db->query($q);
-      $row2 = $db->row();
+        // Loop through all the other invoice items on that invoice
+        $q = sprintf("SELECT sum(iiAmount) AS totalUsed FROM invoiceItem WHERE invoiceID = %d",$invoiceID);
+        $db->query($q);
+        $row2 = $db->row();
 
-      return array($row2["totalUsed"],$maxAmount);
+        return array(page::money($invoice->get_value("currencyTypeID"),$row2["totalUsed"],$fmt),$maxAmount);
 
+      }
     }
   }
 

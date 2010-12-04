@@ -378,9 +378,11 @@ class db_entity {
   }
 
   function validate($message=array()) {
-    if ($this->data_fields["currencyTypeID"]) {
-      $this->currency = $this->data_fields["currencyTypeID"]->get_value();
+    $c = $this->currency;
+    if (isset($this->data_fields["currencyTypeID"]) && imp($this->data_fields["currencyTypeID"]->get_value())) {
+      $c = $this->data_fields["currencyTypeID"]->get_value();
     }
+    $c and $this->currency = $c;
     reset($this->data_fields);
     while (list($field_index, $field) = each($this->data_fields)) {
       $message[] = $field->validate($this);
@@ -506,7 +508,13 @@ class db_entity {
     if (!$this->can_read_field($field_name)) {
       return "Permission denied to ".$this->permissions[$this->data_fields[$field_name]->read_perm_name]." of ".$this->data_table.".".$field_name;
     }
-    return $field->get_value($dest);
+
+    $c = $this->currency;
+    if (isset($this->data_fields["currencyTypeID"]) && imp($this->data_fields["currencyTypeID"]->get_value())) {
+      $c = $this->data_fields["currencyTypeID"]->get_value();
+    }
+    $c and $this->currency = $c;
+    return $field->get_value($dest,$this);
   }
 
   function get_row_value($field_name) {

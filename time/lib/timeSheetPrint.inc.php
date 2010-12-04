@@ -57,32 +57,28 @@ class timeSheetPrint {
 
       $taskID = sprintf("%d",$timeSheetItem->get_value("taskID"));
 
-      if ($customerBilledDollars > 0) {
-        $num = sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration") * $customerBilledDollars);
-      } else {
-        $num = sprintf("%0.2f",$timeSheetItem->calculate_item_charge());
-      }
+      $num = $timeSheetItem->calculate_item_charge($currency, $customerBilledDollars ? $customerBilledDollars : $timeSheetItem->get_value("rate"));
 
       if ($taxPercent !== '') {
-        $num_minus_gst = sprintf("%0.2f",$num / $taxPercentDivisor);
-        $gst = sprintf("%0.2f",$num - $num_minus_gst); 
+        $num_minus_gst = $num / $taxPercentDivisor;
+        $gst =           $num - $num_minus_gst; 
 
         if (($num_minus_gst + $gst) != $num) {
           $num_minus_gst += $num - ($num_minus_gst + $gst); // round it up.
         }
 
-        $rows[$taskID]["money"]+= $num_minus_gst;
-        $rows[$taskID]["gst"] += $gst;
+        $rows[$taskID]["money"]+= page::money($timeSheet->get_value("currencyTypeID"),$num_minus_gst,"%mo");
+        $rows[$taskID]["gst"] += page::money($timeSheet->get_value("currencyTypeID"),$gst,"%mo");
         $info["total_gst"] += $gst;
         $info["total"] += $num_minus_gst;
       } else {
-        $rows[$taskID]["money"] += $num;
+        $rows[$taskID]["money"] += page::money($timeSheet->get_value("currencyTypeID"),$num,"%mo");
         $info["total"] += $num;
       }
 
 
       $unit = $unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")];
-      $units[$taskID][$unit] += sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration"));
+      $units[$taskID][$unit] += sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration") * $timeSheetItem->get_value("multiplier"));
 
       unset($str);
       $d = $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
@@ -122,11 +118,11 @@ class timeSheetPrint {
       $commar = ", ";
     }
 
-    $info["total_inc_gst"] = $currency.sprintf("%0.2f",$info["total"]+$info["total_gst"]);
+    $info["total_inc_gst"] = page::money($timeSheet->get_value("currencyTypeID"),$info["total"]+$info["total_gst"],"%s%mo");
 
     // If we are in dollar mode, then prefix the total with a dollar sign
-    $info["total"] = $currency.sprintf("%0.2f",$info["total"]);
-    $info["total_gst"] = $currency.sprintf("%0.2f",$info["total_gst"]);
+    $info["total"] = page::money($timeSheet->get_value("currencyTypeID"),$info["total"],"%s%mo");
+    $info["total_gst"] = page::money($timeSheet->get_value("currencyTypeID"),$info["total_gst"],"%s%mo");
     $rows or $rows = array();
     $info or $info = array();
     return array($rows,$info);

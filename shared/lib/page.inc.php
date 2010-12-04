@@ -383,8 +383,8 @@ EOD;
   function money_out($c,$amount=null) {
     // AUD,100        -> 100.00
     // AUD,0|''|false -> 0.00
-    $c or die("page::money(): no currency specified for amount $amount.");
     if (imp($amount)) {
+      $c or die("page::money(): no currency specified for amount $amount.");
       $currencies = get_cached_table("currencyType");
       $n = $currencies[$c]["numberToBasic"];
       // We can use foo * 10^-n to move the decimal point left
@@ -397,8 +397,8 @@ EOD;
     // AUD,100.00 -> 100
     // AUD,0      -> 0
     // AUD        ->
-    $c or die("page::money_in(): no currency specified for amount $amount.");
     if (imp($amount)) {
+      $c or die("page::money_in(): no currency specified for amount $amount.");
       $currencies = get_cached_table("currencyType");
       $n = $currencies[$c]["numberToBasic"];
       // We can use foo * 10^n to move the decimal point right
@@ -412,13 +412,14 @@ EOD;
     $currencies = get_cached_table("currencyType");
     $fmt = str_replace("%mo",page::money_out($c,$amount),$fmt);                          //%mo = money_out        eg: 150.21
     $fmt = str_replace("%mi",page::money_in($c,$amount),$fmt);                           //%mi = money_in         eg: 15021
+    $fmt = str_replace("%m",sprintf("%0.".$currencies[$c]["numberToBasic"]."f",$amount),$fmt);// %m = format      eg: 150.2 => 150.20
                      $fmt = str_replace("%S",$currencies[$c]["currencyTypeLabel"],$fmt); // %S = mandatory symbol eg: $
     imp($amount) and $fmt = str_replace("%s",$currencies[$c]["currencyTypeLabel"],$fmt); // %s = optional symbol  eg: $
                      $fmt = str_replace("%C",$c,$fmt);                                   // %C = mandatory code   eg: AUD
     imp($amount) and $fmt = str_replace("%c",$c,$fmt);                                   // %c = optional code    eg: AUD
                      $fmt = str_replace("%N",$currencies[$c]["currencyTypeName"],$fmt);  // %N = mandatory name   eg: Australian dollars
     imp($amount) and $fmt = str_replace("%n",$currencies[$c]["currencyTypeName"],$fmt);  // %n = optional name    eg: Australian dollars
-    $fmt = str_replace(array("%mo","%mi","%S","%s","%C","%c","%N","%n"),"",$fmt); // strip leftovers away
+    $fmt = str_replace(array("%mo","%mi","%m","%S","%s","%C","%c","%N","%n"),"",$fmt); // strip leftovers away
     return $fmt;
   }
 }

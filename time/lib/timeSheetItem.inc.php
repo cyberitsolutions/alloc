@@ -28,7 +28,7 @@ class timeSheetItem extends db_entity {
                              ,"dateTimeSheetItem"
                              ,"timeSheetItemDuration"
                              ,"timeSheetItemDurationUnitID"
-                             ,"rate"
+                             ,"rate" => array("type"=>"money")
                              ,"personID"
                              ,"description"
                              ,"comment"
@@ -44,12 +44,12 @@ class timeSheetItem extends db_entity {
     $timeSheet->set_id($this->get_value("timeSheetID"));
     $timeSheet->select();
     $timeSheet->load_pay_info();
-    list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated();
+    list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated("%mo");
 
     $_POST["timeSheetItem_commentPrivate"] and $this->set_value("commentPrivate", 1);
     $this->set_value("comment",rtrim($this->get_value("comment")));
 
-    $amount_of_item = $this->calculate_item_charge($timeSheet->pay_info["customerBilledDollars"]);
+    $amount_of_item = $this->calculate_item_charge($timeSheet->get_value("currencyTypeID"),$timeSheet->get_value("customerBilledDollars"));
     if ($amount_allocated && ($amount_of_item + $amount_used) > $amount_allocated) {
       return "Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice. Time Sheet Item not saved.";
     } 
@@ -80,7 +80,7 @@ class timeSheetItem extends db_entity {
     // $this->set_value("multiplier", $_POST["timeSheetItem_multiplier"]);
     // $this->set_value("comment", $_POST["timeSheetItem_comment"]);
 
-    if ($timeSheet->pay_info["project_rate"] || $timeSheet->pay_info["project_rate"] === 0) {
+    if (imp($timeSheet->pay_info["project_rate"])) {
       $this->set_value("rate", $timeSheet->pay_info["project_rate"]);
     }
     if ($timeSheet->pay_info["project_rateUnitID"]) {
@@ -112,9 +112,8 @@ class timeSheetItem extends db_entity {
     }
   } 
 
-  function calculate_item_charge($rate=false) {
-    $rate === false and $rate = $this->get_value("rate");
-    return $rate * $this->get_value("timeSheetItemDuration") * $this->get_value("multiplier");
+  function calculate_item_charge($currency,$rate=0) {
+    return page::money($currency, $rate * $this->get_value("timeSheetItemDuration") * $this->get_value("multiplier"), "%mo");
   }
 
   function delete() {
@@ -289,7 +288,7 @@ class timeSheetItem extends db_entity {
 
   function get_averages($dateTimeSheetItem, $personID=false, $divisor="") {
 
-    $personID and $personID_sql = sprintf(" AND personID = '%d'", $personID);
+    $personID and $personID_sql = sprintf(" AND timeSheetItem.personID = '%d'", $personID);
 
     $q = sprintf("SELECT personID
                        , SUM(timeSheetItemDuration*timeUnitSeconds) %s AS avg
@@ -308,13 +307,15 @@ class timeSheetItem extends db_entity {
     }
 
     //Calculate the dollar values
-    $q = sprintf("SELECT * FROM timeSheetItem WHERE dateTimeSheetItem > '%s' %s", $dateTimeSheetItem, $personID_sql);
+    $q = sprintf("SELECT timeSheetItem.*,timeSheet.currencyTypeID FROM timeSheetItem 
+               LEFT JOIN timeSheet on timeSheetItem.timeSheetID = timeSheet.timeSheetID
+                WHERE dateTimeSheetItem > '%s' %s", $dateTimeSheetItem, $personID_sql);
     $db->query($q);
     $rows_dollars = array();
     while($db->next_record()) {
       $tsi = new timeSheetItem();
       $tsi->read_db_record($db);
-      $rows_dollars[$db->f("personID")] += $tsi->calculate_item_charge();
+      $rows_dollars[$db->f("personID")] += $tsi->calculate_item_charge($db->f("currencyTypeID"),$db->f("rate"));
     }
     return array($rows,$rows_dollars);
   }

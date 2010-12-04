@@ -58,14 +58,16 @@ if (!$current_user->is_employee()) {
       }
 
       $db = new db_alloc;
-      $db->query("SELECT SUM(amount) as total FROM transaction WHERE transactionType != 'insurance' AND timeSheetID = %d",$timeSheet->get_id());
+      $db->query("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) as total FROM transaction 
+               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                 WHERE transactionType != 'insurance' AND transaction.timeSheetID = %d",$timeSheet->get_id());
       $db->next_record();
       $total = $db->f("total");
 
       if ($total != $timeSheet->pay_info["total_dollars_not_null"]) {
         $start_bad = "<span class=\"bad\">";
         $end_bad = "</span>";
-        $extra = " (allocate: ".$timeSheet->pay_info["currency"].sprintf("%0.2f",$timeSheet->pay_info["total_dollars_not_null"]-$total).")";
+        $extra = " (allocate: ".page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_dollars_not_null"]-$total,"%s%m").")";
       }
 
       $TPL["amount_msg"] = $start_bad.$extra.$end_bad;
@@ -205,8 +207,10 @@ if (!$current_user->is_employee()) {
 
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
+      $timeSheetItem->currency = $timeSheet->get_value("currencyTypeID");
       $timeSheetItem->read_db_record($db,false);
       $timeSheetItem->set_tpl_values("timeSheetItem_");
+      
 
       $TPL["timeSheet_totalHours"] += $timeSheetItem->get_value("timeSheetItemDuration");
 
@@ -223,14 +227,12 @@ if (!$current_user->is_employee()) {
       $text and $TPL["timeSheetItem_description"] = "<a href=\"".$TPL["url_alloc_task"]."taskID=".$timeSheetItem->get_value('taskID')."\">".$text."</a>";
       $text && $timeSheetItem->get_value("comment") and $br = "<br>";
       $timeSheetItem->get_value("comment") and $TPL["timeSheetItem_comment"] = $br.$commentPrivateText.page::to_html($timeSheetItem->get_value("comment"));
-      $TPL["timeSheetItem_unit_times_rate"] = sprintf("%0.2f", $timeSheetItem->calculate_item_charge());
+      $TPL["timeSheetItem_unit_times_rate"] = $timeSheetItem->calculate_item_charge($timeSheet->get_value("currencyTypeID"),$timeSheetItem->get_value("rate"));
 
       $m = new meta("timeSheetItemMultiplier");
       $tsMultipliers = $m->get_list();
       $timeSheetItem->get_value('multiplier') and $TPL["timeSheetItem_multiplier"] = $tsMultipliers[$timeSheetItem->get_value('multiplier')]['timeSheetItemMultiplierName'];
   
-      $TPL["timeSheetItem_rate"] = sprintf("%0.2f",$TPL["timeSheetItem_rate"]);
-
       // Check to see if this tsi is part of an overrun
       $TPL["timeSheetItem_class"] = "panel";
       $TPL["timeSheetItem_status"] = "";
@@ -351,7 +353,7 @@ if ($_GET["CB"]) {
   $project = new project;
   $project->set_id($timeSheet->get_value("projectID"));
   $project->select();
-  $timeSheet->set_value("customerBilledDollars",sprintf("%s",$project->get_value("customerBilledDollars")));
+  $timeSheet->set_value("customerBilledDollars",page::money($project->get_value("currencyTypeID"),$project->get_value("customerBilledDollars"),"%mo"));
   $timeSheet->set_value("currencyTypeID",$project->get_value("currencyTypeID"));
   $timeSheet->save();
 }
@@ -378,7 +380,7 @@ if ($_POST["save"]
     $projectManagers = $project->get_timeSheetRecipients();
 
     if (!$timeSheet->get_id()) {
-      $timeSheet->set_value("customerBilledDollars",$project->get_value("customerBilledDollars"));
+      $timeSheet->set_value("customerBilledDollars",page::money($project->get_value("currencyTypeID"),$project->get_value("customerBilledDollars"),"%mo"));
       $timeSheet->set_value("currencyTypeID",$project->get_value("currencyTypeID"));
     }
   } else {
@@ -506,7 +508,7 @@ if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeShe
     if (is_numeric($_POST["percent_dropdown"])) {
       $transaction->set_value("amount", $_POST["percent_dropdown"]);
     }
-
+    $transaction->set_value("currencyTypeID",$timeSheet->get_value("currencyTypeID"));
     $transaction->save();
   } else if ($_POST["transaction_delete"]) {
     $transaction->delete();
@@ -609,13 +611,12 @@ list($client_select, $client_link, $project_select, $project_link)
   = client::get_client_and_project_dropdowns_and_links($clientID, $projectID);
 
 
-$currency = page::money($timeSheet->get_value("currencyTypeID"),'',"%S");
 $TPL["invoice_link"] = $timeSheet->get_invoice_link();
 list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated();
 if ($amount_allocated) {
   $TPL["amount_allocated_label"] = "Amount Used / Allocated:";
-  $TPL["amount_allocated"] = $currency.sprintf("%0.2f",$amount_allocated);
-  $TPL["amount_used"] = $currency.sprintf("%0.2f",$amount_used)." / ";
+  $TPL["amount_allocated"] = $amount_allocated;
+  $TPL["amount_used"] = $amount_used." / ";
 }
 
 
@@ -838,11 +839,15 @@ if ($timeSheet->get_value("status") == "edit") {
 
 $timeSheet->load_pay_info();
 if ($timeSheet->pay_info["total_customerBilledDollars"]) {
-  $TPL["total_customerBilledDollars"] = $timeSheet->pay_info["currency"].sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars"]);
-  config::get_config_item("taxPercent") and $TPL["ex_gst"] = " (".$timeSheet->pay_info["currency"].sprintf("%s",sprintf("%0.2f",$timeSheet->pay_info["total_customerBilledDollars_minus_gst"]))." excl ".config::get_config_item("taxPercent")."% ".config::get_config_item("taxName").")";
+  $TPL["total_customerBilledDollars"] = $timeSheet->pay_info["currency"].$timeSheet->pay_info["total_customerBilledDollars"];
+  config::get_config_item("taxPercent") and 
+
+$TPL["ex_gst"] = " (".$timeSheet->pay_info["currency"].$timeSheet->pay_info["total_customerBilledDollars_minus_gst"]." excl ".config::get_config_item("taxPercent")."% ".config::get_config_item("taxName").")";
+
+
 }
 if ($timeSheet->pay_info["total_dollars"]) {
-  $TPL["total_dollars"] = $timeSheet->pay_info["currency"].sprintf("%0.2f",$timeSheet->pay_info["total_dollars"]);
+  $TPL["total_dollars"] = $timeSheet->pay_info["currency"].$timeSheet->pay_info["total_dollars"];
 }
 
 $TPL["total_units"] = $timeSheet->pay_info["summary_unit_totals"];

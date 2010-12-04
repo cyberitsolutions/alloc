@@ -64,7 +64,7 @@ class db_field {
     return $this->audit;
   }
 
-  function get_value($dest = DST_VARIABLE) {
+  function get_value($dest = DST_VARIABLE,$parent=null) {
     if ($dest == DST_DATABASE) {
       if ((isset($this->value) && imp($this->value)) || $this->empty_to_null == false) {
         return "'".db_esc($this->value)."'";
@@ -72,6 +72,13 @@ class db_field {
         return "NULL";
       }
     } else if ($dest == DST_HTML_DISPLAY) {
+      if ($this->type == "money") {
+        if (is_object($parent) && !$parent->currency) {
+          die("db_field::get_value(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$parent->currency.")");
+        } else if ($this->value == $parent->all_row_fields[$this->name]) {
+          return page::money($parent->currency,$this->value,"%mo");
+        }
+      }
       return page::htmlentities($this->value);
     } else {
       return $this->value;
@@ -86,12 +93,11 @@ class db_field {
     global $TPL;
     if ($this->type == "money") {
       if (!$parent->currency) {
-        return "No currency specified for ".$parent->classname.".".$this->name." (currency:".$parent->currency.")";
-      } else {
-        $this->set_value(page::money_in($parent->currency,$this->value));
+        return "db_field::validate(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$parent->currency.")";
+      } else if ($this->value != $parent->all_row_fields[$this->name]) {
+        $this->set_value(page::money($parent->currency,$this->value,"%mi"));
       }
     }
-    // Holder
   }
 }
 

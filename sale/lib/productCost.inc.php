@@ -28,7 +28,7 @@ class productCost extends db_entity {
   public $data_fields = array("tfID"
                              ,"fromTfID"
                              ,"productID"
-                             ,"amount"
+                             ,"amount" => array("type"=>"money")
                              ,"isPercentage"=> array("empty_to_null"=>false)
                              ,"description"
                              );
