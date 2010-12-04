@@ -242,7 +242,7 @@ if (!$current_user->is_employee()) {
           $total_billed_time = ($task->get_time_billed(false)) / 3600;    // get_time_billed returns seconds, estimated hours is in hours
           if($total_billed_time > floatval($task->get_value('timeEstimate'))) {
             $TPL["timeSheetItem_class"] = "panel loud";
-            $TPL["timeSheetItem_status"] = "<em class='faint warn nobr'>[ Exceeds time estimate ]</em>";
+            $TPL["timeSheetItem_status"] = "<em class='faint warn nobr'>[ Exceeds estimate ]</em>";
           }
         }
       }
