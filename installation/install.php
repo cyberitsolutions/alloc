@@ -128,7 +128,7 @@ if ($_POST["submit_stage_4"]) {
   }
 
   // Create alloc_config.php
-  if (file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && filesize(ALLOC_CONFIG_PATH) <= 1) {
+  if (file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && filesize(ALLOC_CONFIG_PATH) <= 5) {
     $str[] = "<?php";
     foreach ($config_vars as $name => $arr) {
       $name != "allocURL" and $str[] = "define(\"".$name."\",\"".$_FORM[$name]."\");";
