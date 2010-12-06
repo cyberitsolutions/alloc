@@ -33,6 +33,10 @@ function fix_curly_braces($matches) {
   $str = preg_replace('/{$/m',"TPL_START_BRACE",$str);
   $str = preg_replace('/ }/'," TPL_END_BRACE",$str);
   $str = preg_replace('/^}/m',"TPL_END_BRACE",$str);
+
+  // added because windows doesn't always respect $
+  $str = preg_replace('/{'.PHP_EOL.'/m',"TPL_START_BRACE",$str); 
+
   return $str;
 }
 
