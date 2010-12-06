@@ -74,8 +74,8 @@ $config_vars = array("ALLOC_DB_NAME"     => array("default"=>"alloc",           
 foreach($config_vars as $name => $arr) {
   $val = $_POST[$name] or $val = $_GET[$name];
   $val == "" && !isset($_GET[$name]) && !isset($_POST[$name]) and $val = $arr["default"];
-  $name == "ATTACHMENTS_DIR" && $val && !preg_match("/\/$/",$val) and $val.= "/";
-  $name == "allocURL" && $val && !preg_match("/\/$/",$val) and $val.= "/";
+  $name == "ATTACHMENTS_DIR" && $val and $val = rtrim($val,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  $name == "allocURL" && $val and $val = rtrim($val,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   $_FORM[$name] = $val;
   $get[] = $name."=".urlencode($val);
   $hidden[] = "<input type='hidden' name='".$name."' value='".$val."'>";
@@ -123,7 +123,7 @@ if ($_POST["submit_stage_4"]) {
   // Create search indexes
   $search_item_indexes = array("client", "comment", "item", "project", "task", "timeSheet", "wiki");
   foreach ($search_item_indexes as $i) {
-    $index = Zend_Search_Lucene::create($_FORM["ATTACHMENTS_DIR"].'search/'.$i);
+    $index = Zend_Search_Lucene::create($_FORM["ATTACHMENTS_DIR"].'search'.DIRECTORY_SEPARATOR.$i);
     $index->commit();
   }
 
