@@ -24,11 +24,8 @@
 // requested_script.php -> alloc.php -> alloc_config.php -> more includes -> back to requested_script.php
 
 
-$include_path_separator = ":";
-strtolower(reset(explode(' ',php_uname('s')))) == "windows" and $include_path_separator = ";";
-
 ini_set("error_reporting", E_ALL & ~E_NOTICE);
-ini_set('include_path',ini_get('include_path').$include_path_separator.dirname(__FILE__).DIRECTORY_SEPARATOR."zend");
+ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).DIRECTORY_SEPARATOR."zend");
 
 // Can't call this script directly..
 if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
