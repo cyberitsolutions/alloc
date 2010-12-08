@@ -100,6 +100,7 @@ if ($_POST["upload"]) {
       $invoiceID = $db->f("invoiceID");
     } else {
       $invoice = new invoice;
+      $invoice->set_value("currencyTypeID", config::get_config_item("currency"));
       $invoice->set_value("invoiceDateFrom", $date);
       $invoice->set_value("invoiceDateTo", $date);
       $invoice->set_value("invoiceNum", $num);
@@ -127,7 +128,7 @@ if ($_POST["upload"]) {
     $query = sprintf("SELECT invoiceItemID
                         FROM invoiceItem
                         WHERE invoiceID=%d AND iiMemo='%s'
-						AND iiAmount=%f AND iiDate='%s'", $invoiceID, db_esc($memo), $amount, $date);
+						AND iiAmount=%d AND iiDate='%s'", $invoiceID, db_esc($memo), page::money(config::get_config_item("currency"),$amount,"%mi"), $date);
 
     #$msg[] = $query;
     $db->query($query);
@@ -138,6 +139,7 @@ if ($_POST["upload"]) {
     }
     // Create a invoice_item object and then save it
     $invoice_item = new invoiceItem;
+    $invoice_item->currency = config::get_config_item("currency");
     $invoice_item->set_value("invoiceID", $invoiceID);
     $invoice_item->set_value("iiMemo", $memo);
     $invoice_item->set_value("iiQuantity", $quantity);
@@ -151,8 +153,9 @@ if ($_POST["upload"]) {
     $transactionAmount = $amount;
 
     $transactionNew = new transaction;
+    $transactionNew->set_value("currencyTypeID", config::get_config_item("currency"));
     $transactionNew->set_value("status", "pending");
-    $transactionNew->set_value("amount", sprintf("%f", $transactionAmount));
+    $transactionNew->set_value("amount", $transactionAmount);
     $transactionNew->set_value("quantity", $quantity);
     $transactionNew->set_value("invoiceID", $invoice_item->get_value("invoiceID"));
     $transactionNew->set_value("invoiceItemID", $invoice_item->get_id());
