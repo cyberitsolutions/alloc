@@ -18,7 +18,6 @@ CREATE INDEX projectID ON task (projectID);
 CREATE INDEX parentTaskID ON task (parentTaskID);
 CREATE INDEX taskTypeID ON task (taskTypeID);
 CREATE INDEX taskStatus ON task (taskStatus);
-CREATE INDEX taskSubStatus ON task (taskSubStatus);
 CREATE INDEX dateCreated ON task (dateCreated);
 CREATE INDEX idx_entityName ON auditItem (entityName);
 CREATE INDEX idx_entityID ON auditItem (entityID);
