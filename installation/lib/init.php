@@ -75,6 +75,10 @@ function perform_test($test) {
   $extensions = get_loaded_extensions();
 
   switch ($test) {
+    case "php_mbstring":
+      $arr["value"] = defined("MB_OVERLOAD_MAIL") ? "Enabled" : "";
+      $arr["value"] or $arr["remedy"] = "Your installation of PHP does not have the mbstring extension.";
+    break;
     case "php_version":
       $arr["value"] = phpversion();
       if (!version_compare(phpversion(), "5.2.6", ">=")) {
