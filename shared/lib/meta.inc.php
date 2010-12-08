@@ -70,7 +70,7 @@ class meta extends db_entity {
   }
 
   function get_tables() {
-    return $this->tables;
+    return self::$tables;
   }
 
   function get_list($include_inactive=false) {
@@ -82,7 +82,7 @@ class meta extends db_entity {
 
   function get_label() {
     if ($this->data_table) {
-      return $this->tables[$this->data_table];
+      return self::$tables[$this->data_table];
     }
   }
 
