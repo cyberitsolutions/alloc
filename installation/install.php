@@ -68,6 +68,7 @@ $config_vars = array("ALLOC_DB_NAME"     => array("default"=>"alloc",           
                     ,"ATTACHMENTS_DIR"   => array("default"=>"/var/local/alloc/",  "info"=>"Enter the full path to a directory that can be used for file upload storage, 
                                                                                           (The path must be outside the web document root)")
                     ,"allocURL"          => array("default"=>$default_allocURL,    "info"=>"Enter the base URL that people will use to access allocPSA, eg: http://example.com/alloc/")
+                    ,"currency"          => array("default"=>"USD",                "info"=>"Enter the default currency code that will be used by this instance of allocPSA.")
                     );
 
 
@@ -76,6 +77,7 @@ foreach($config_vars as $name => $arr) {
   $val == "" && !isset($_GET[$name]) && !isset($_POST[$name]) and $val = $arr["default"];
   $name == "ATTACHMENTS_DIR" && $val and $val = rtrim($val,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   $name == "allocURL" && $val and $val = rtrim($val,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  $name == "currency" and $val = trim(strtoupper($val));
   $_FORM[$name] = $val;
   $get[] = $name."=".urlencode($val);
   $hidden[] = "<input type='hidden' name='".$name."' value='".$val."'>";
@@ -131,7 +133,7 @@ if ($_POST["submit_stage_4"]) {
   if (file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && filesize(ALLOC_CONFIG_PATH) <= 5) {
     $str[] = "<?php";
     foreach ($config_vars as $name => $arr) {
-      $name != "allocURL" and $str[] = "define(\"".$name."\",\"".$_FORM[$name]."\");";
+      $name != "allocURL" && $name != "currency" and $str[] = "define(\"".$name."\",\"".$_FORM[$name]."\");";
     }
     $str[] = "?>";
     $str = implode("\n",$str);
@@ -151,6 +153,19 @@ if ($_POST["submit_stage_4"]) {
 
   } else {
     $text_tab_4[] = "Unable to create(2): ".ALLOC_CONFIG_PATH;
+    $failed = 1;
+  }
+
+  // Insert config data
+  $query = "UPDATE config SET value = '".$_FORM["currency"]."' WHERE name = 'currency'";
+  if (!$db->query($query)) {
+    $errors[] = "Error! (".mysql_error().").";
+    $failed = 1;
+  }
+
+  $query = "UPDATE currencyType SET currencyTypeActive = true WHERE currencyTypeID = '".$_FORM["currency"]."'";
+  if (!$db->query($query)) {
+    $errors[] = "Error! (".mysql_error().").";
     $failed = 1;
   }
 
