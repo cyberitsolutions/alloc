@@ -153,6 +153,20 @@ function perform_test($test) {
       }
     break;
 
+    case "valid_currency":
+      $arr["value"] = $_FORM["currency"];
+      $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
+      $qid = @mysql_query("SELECT * FROM currencyType WHERE currencyTypeID = '".$_FORM["currency"]."'",$link);
+      if (is_resource($qid)) {
+        if ($row = mysql_fetch_array($qid)) {
+          $arr["value"].= " ".$row["currencyTypeName"];
+        } else {
+          $failed = 1;
+        }
+      }
+      $failed and $arr["remedy"] = "The currency code you entered is not valid.";
+    break;
+
     case "alloc_config":
       $arr["value"] = "alloc_config.php";
       if (!file_exists(ALLOC_CONFIG_PATH) || !is_writeable(ALLOC_CONFIG_PATH)) {

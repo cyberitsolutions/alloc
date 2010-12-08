@@ -180,6 +180,7 @@ server.
                ,"db_select"      =>"DB Install" 
                ,"db_tables"      =>"DB Tables"  
                ,"attachments_dir"=>"Upload Dir" 
+               ,"valid_currency" =>"Valid Currency" 
                ,"alloc_config"   =>"Config File")}
 
 
