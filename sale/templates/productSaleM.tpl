@@ -60,18 +60,6 @@ function set_values(target) {
     update_values(target);
 }
 </script>
-<script type="text/javascript">
-var tdNum = 0;
-
-function add_row() \{
-    tdNum++;
-    var newId = "new" + tdNum;
-    $('#productSaleItem_footer').before('<tr id="' + newId + '">'+$('#productSaleItemRownew0').html()+'</tr>');
-    $('#' + newId).find('input[name="buyCostIncTax[]"]').val(newId);
-    $('#' + newId).find('input[name="sellPriceIncTax[]"]').val(newId);
-    $('#' + newId).find('input[name="productSaleItemID[]"]').val(newId);
-\}
-</script>
 
 <form action="{$url_alloc_productSale}" method="post">
 <input type="hidden" name="productSaleID" value="{$productSaleID}">
