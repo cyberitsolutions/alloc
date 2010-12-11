@@ -28,8 +28,10 @@ class product extends db_entity {
   public $key_field = "productID";
   public $data_fields = array("productName"
                              ,"buyCost"
+                             ,"buyCostCurrencyTypeID"
                              ,"buyCostIncTax" => array("empty_to_null"=>false)
                              ,"sellPrice"
+                             ,"sellPriceCurrencyTypeID"
                              ,"sellPriceIncTax" => array("empty_to_null"=>false)
                              ,"description"
                              ,"comment"
