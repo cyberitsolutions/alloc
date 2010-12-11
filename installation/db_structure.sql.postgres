@@ -499,8 +499,10 @@ CREATE TABLE product (
   productID serial PRIMARY KEY,
   productName varchar(255) NOT NULL DEFAULT '',
   buyCost DECIMAL(19,2) NOT NULL DEFAULT 0,
+  buyCostCurrencyTypeID varchar(255) DEFAULT NULL,
   buyCostIncTax boolean NOT NULL default false,
   sellPrice DECIMAL(19,2) NOT NULL DEFAULT 0,
+  sellPriceCurrencyTypeID varchar(255) DEFAULT NULL,
   sellPriceIncTax boolean NOT NULL default false,
   description varchar(255),
   comment TEXT
@@ -533,8 +535,10 @@ CREATE TABLE productSaleItem (
   productID integer NOT NULL,
   productSaleID integer NOT NULL,
   buyCost DECIMAL(19,2) NOT NULL DEFAULT 0,
+  buyCostCurrencyTypeID varchar(255) DEFAULT NULL,
   buyCostIncTax boolean NOT NULL default false,
   sellPrice DECIMAL(19,2) NOT NULL DEFAULT 0,
+  sellPriceCurrencyTypeID varchar(255) DEFAULT NULL,
   sellPriceIncTax boolean NOT NULL default false,
   quantity integer NOT NULL DEFAULT 1,
   description varchar(255)
