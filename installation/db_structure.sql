@@ -125,7 +125,7 @@ CREATE TABLE invoice (
   invoiceName varchar(255) NOT NULL default '',
   invoiceStatus varchar(255) NOT NULL DEFAULT 'edit',
   currencyTypeID varchar(255) default NULL,
-  maxAmount decimal(19,2) DEFAULT 0
+  maxAmount BIGINT DEFAULT 0
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS invoiceItem;
@@ -138,8 +138,8 @@ CREATE TABLE invoiceItem (
   transactionID integer DEFAULT NULL,
   iiMemo text DEFAULT NULL,
   iiQuantity DECIMAL(19,2) DEFAULT NULL,
-  iiUnitPrice DECIMAL(19,2) DEFAULT NULL,
-  iiAmount DECIMAL(19,2) DEFAULT NULL,
+  iiUnitPrice BIGINT DEFAULT NULL,
+  iiAmount BIGINT DEFAULT NULL,
   iiDate date DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
@@ -229,14 +229,14 @@ CREATE TABLE project (
   dateTargetCompletion date default NULL,
   dateActualStart date default NULL,
   dateActualCompletion date default NULL,
-  projectBudget DECIMAL(19,2) DEFAULT NULL,
+  projectBudget BIGINT DEFAULT NULL,
   currencyTypeID varchar(255) default NULL,
   projectShortName varchar(255) default NULL,
   projectStatus varchar(255) NOT NULL default 'Current',
   projectPriority integer default NULL,
   is_agency boolean default false,
   cost_centre_tfID integer default NULL,
-  customerBilledDollars DECIMAL(19,2) DEFAULT NULL
+  customerBilledDollars BIGINT DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS projectCommissionPerson;
@@ -255,7 +255,7 @@ CREATE TABLE projectPerson (
   personID integer NOT NULL,
   roleID integer NOT NULL,
   emailType varchar(255) default NULL,
-  rate DECIMAL(19,2) DEFAULT '0.00',
+  rate BIGINT DEFAULT 0,
   rateUnitID integer default NULL,
   projectPersonModifiedUser integer DEFAULT NULL,
   emailDateRegex varchar(255) default NULL
@@ -423,7 +423,7 @@ CREATE TABLE timeSheet (
   billingNote text,
   payment_insurance boolean default false,
   recipient_tfID integer default NULL,
-  customerBilledDollars DECIMAL(19,2) DEFAULT NULL,
+  customerBilledDollars BIGINT DEFAULT NULL,
   currencyTypeID VARCHAR(255) DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
@@ -438,7 +438,7 @@ CREATE TABLE timeSheetItem (
   location text,
   personID integer NOT NULL,
   taskID integer default NULL,
-  rate DECIMAL(19,2) DEFAULT '0.00',
+  rate BIGINT DEFAULT 0,
   commentPrivate boolean default false,
   comment text,
   multiplier decimal(9,2) default 1.00 NOT NULL,
@@ -484,7 +484,7 @@ CREATE TABLE transaction (
   transactionID integer NOT NULL auto_increment PRIMARY KEY,
   companyDetails text NOT NULL,
   product varchar(255) NOT NULL default '',
-  amount DECIMAL(19,2) NOT NULL DEFAULT 0,
+  amount BIGINT NOT NULL DEFAULT 0,
   currencyTypeID VARCHAR(255) DEFAULT NULL,
   status varchar(255) NOT NULL DEFAULT 'pending',
   expenseFormID integer DEFAULT NULL,
@@ -524,7 +524,7 @@ CREATE TABLE transactionRepeat (
   transactionStartDate date NOT NULL,
   transactionFinishDate date NOT NULL,
   paymentBasis varchar(255) NOT NULL default '',
-  amount DECIMAL(19,2) NOT NULL DEFAULT 0,
+  amount BIGINT NOT NULL DEFAULT 0,
   currencyTypeID VARCHAR(255) DEFAULT NULL,
   product varchar(255) NOT NULL default '',
   status varchar(255) NOT NULL default 'pending',
@@ -536,10 +536,10 @@ DROP TABLE IF EXISTS product;
 CREATE TABLE product (
   productID integer NOT NULL auto_increment PRIMARY KEY,
   productName varchar(255) NOT NULL DEFAULT '',
-  buyCost DECIMAL(19,2) NOT NULL DEFAULT 0,
+  buyCost BIGINT NOT NULL DEFAULT 0,
   buyCostCurrencyTypeID varchar(255) DEFAULT NULL,
   buyCostIncTax boolean NOT NULL default false,
-  sellPrice DECIMAL(19,2) NOT NULL DEFAULT 0,
+  sellPrice BIGINT NOT NULL DEFAULT 0,
   sellPriceCurrencyTypeID varchar(255) DEFAULT NULL,
   sellPriceIncTax boolean NOT NULL default false,
   description varchar(255),
@@ -552,7 +552,7 @@ CREATE TABLE productCost (
   productID integer NOT NULL,
   fromTfID integer NOT NULL,
   tfID integer NOT NULL,
-  amount DECIMAL(19,2) NOT NULL DEFAULT 0,
+  amount BIGINT NOT NULL DEFAULT 0,
   currencyTypeID VARCHAR(255) DEFAULT NULL,
   isPercentage boolean NOT NULL default false,
   description varchar(255)
@@ -575,10 +575,10 @@ CREATE TABLE productSaleItem (
   productSaleItemID integer NOT NULL auto_increment PRIMARY KEY,
   productID integer NOT NULL,
   productSaleID integer NOT NULL,
-  buyCost DECIMAL(19,2) NOT NULL DEFAULT 0,
+  buyCost BIGINT NOT NULL DEFAULT 0,
   buyCostCurrencyTypeID varchar(255) DEFAULT NULL,
   buyCostIncTax boolean NOT NULL default false,
-  sellPrice DECIMAL(19,2) NOT NULL DEFAULT 0,
+  sellPrice BIGINT NOT NULL DEFAULT 0,
   sellPriceCurrencyTypeID varchar(255) DEFAULT NULL,
   sellPriceIncTax boolean NOT NULL default false,
   quantity integer NOT NULL DEFAULT 1,
