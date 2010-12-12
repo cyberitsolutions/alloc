@@ -35,52 +35,91 @@ if ($_REQUEST["showall"]) {
   $TPL["showall_checked"] = " checked";
 } else {
   $filter[] = "tfActive = 1";
+  $filter2[] = "tfActive = 1";
 }
 
 $TPL["main_alloc_title"] = "TF List - ".APPLICATION_NAME;
 
 include_template("templates/tfListM.tpl");
 
-function show_tf($template_name) {
-  global $TPL, $filter;
+
+
+
+
+
+
+
+
+
+
+function show_tf_list($template_name) {
+  global $TPL, $filter, $filter2;
 
   if (is_array($filter) && count($filter)) {
-    $f = " WHERE ".implode(" AND ",$filter);
+    $f = " AND ".implode(" AND ",$filter);
+  }
+  if (is_array($filter) && count($filter)) {
+    $f2 = " AND ".implode(" AND ",$filter);
   }
 
+  
   $db = new db_alloc;
+  $q = sprintf("SELECT transaction.tfID as id, tf.tfName, transactionID,
+                       sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                  FROM transaction
+             LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+             LEFT JOIN tf on transaction.tfID = tf.tfID
+                 WHERE 1 AND transaction.status = 'approved' %s
+              GROUP BY transaction.tfID"
+              ,$f2);
+  $db->query($q);
+  while ($row = $db->row()) {
+    $adds[$row["id"]] = $row["balance"];
+  }
+
+      
+  $q = sprintf("SELECT transaction.fromTfID as id, tf.tfName, transactionID,
+                       sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                  FROM transaction
+             LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+             LEFT JOIN tf on transaction.fromTfID = tf.tfID
+                 WHERE 1 AND transaction.status = 'approved' %s
+              GROUP BY transaction.fromTfID"
+              ,$f2);
+  $db->query($q);
+  while ($row = $db->row()) {
+    $subs[$row["id"]] = $row["balance"];
+  }
+
   $q = sprintf("SELECT tf.* 
                   FROM tf 
-             LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID %s 
+             LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID 
+                 WHERE 1 %s 
               GROUP BY tf.tfID 
               ORDER BY tf.tfName",$f);  
+
   $db->query($q);
-
   while ($db->next_record()) {
-
     $tf = new tf;
     $tf->read_db_record($db);
     $tf->set_values();
 
+    $total = $adds[$db->f("tfID")] - $subs[$db->f("tfID")];
+
     if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {
-      $TPL["tfBalance"] = sprintf("%0.2f",$tf->get_balance());
-      $grand_total += $tf->get_balance();
+      $TPL["tfBalance"] = page::money(config::get_config_item("currency"),$total,"%s%m %c");
+      $TPL["grand_total"] += $total;
     } else {
       $TPL["tfBalance"] = "not available";
     }
-    $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
 
+    $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
     $nav_links = $tf->get_nav_links();
     $TPL["nav_links"] = implode(" ", $nav_links);
-
     $TPL["tfActive_label"] = "";
     $tf->get_value("tfActive") and $TPL["tfActive_label"] = "Y";
-
     include_template($template_name);
   }
-
-  $TPL["grand_total"] = sprintf("%0.2f",$grand_total);
-
 }
 
 

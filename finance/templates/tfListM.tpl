@@ -33,11 +33,11 @@
           <th class="right">Balance</th>
           <th></th>
         </tr>
-        {show_tf("templates/tfListR.tpl")}
+        {show_tf_list("templates/tfListR.tpl")}
         <tfoot>
         <tr>
-          <td colspan="2">&nbsp;</td>
-          <td class="grand_total">${$grand_total}</td>
+          <td colspan="3">&nbsp;</td>
+          <td class="grand_total right">{page::money(config::get_config_item("currency"),$grand_total,"%s%m %c")}</td>
           <td>&nbsp;</td>
         </tr>
         </tfoot>
