@@ -380,7 +380,12 @@ EOD;
   function htmlentities($str="") {
     return htmlentities($str,ENT_QUOTES,"UTF-8");
   }
-  function money_out($c,$amount=null,$exchangeRate=null) {
+  function money_fmt($c,$amount=null) {
+    $currencies = get_cached_table("currencyType");
+    $n = $currencies[$c]["numberToBasic"];
+    return sprintf("%0.".$n."f",$amount);
+  }
+  function money_out($c,$amount=null) {
     // AUD,100        -> 100.00
     // AUD,0|''|false -> 0.00
     if (imp($amount)) {
@@ -388,19 +393,13 @@ EOD;
       $currencies = get_cached_table("currencyType");
       $n = $currencies[$c]["numberToBasic"];
 
-      // If there's an exchange rate, then MULTIPLY the amount by it.
-      // Note that if the exchange rate is ===zero then it will
-      // cause the amount to be zero. Which will help in tracking cases where
-      // we're missing an exchange rate for a particular date.
-      imp($exchangeRate) and $amount = $amount * $exchangeRate;
-
       // We can use foo * 10^-n to move the decimal point left
       // Eg: sprintf(%0.2f, $amount * 10^-2) => 15000 becomes 150.00
       // We use the numberToBasic number (eg 2) to a) move the decimal point, and b) dictate the sprintf string
-      return sprintf("%0.".$n."f",($amount * pow(10,-$n)));
+      return page::money_fmt($c, ($amount * pow(10,-$n)));
     }
   }
-  function money_in($c, $amount=null,$exchangeRate=null) {
+  function money_in($c, $amount=null) {
     // AUD,100.00 -> 100
     // AUD,0      -> 0
     // AUD        ->
@@ -409,24 +408,18 @@ EOD;
       $currencies = get_cached_table("currencyType");
       $n = $currencies[$c]["numberToBasic"];
 
-      // If there's an exchange rate, then DIVIDE the amount by it. Note
-      // that if the exchange rate is ===zero then it will BREAK. Which
-      // will help in tracking cases where we're missing an exchange rate
-      // for a particular date.
-      imp($exchangeRate) and $amount = $amount / $exchangeRate;
-
       // We can use foo * 10^n to move the decimal point right
       // Eg: $amount * 10^-2 => 150.00 becomes 15000
       // We use the numberToBasic number (eg 2) to move the decimal point
       return $amount * pow(10,$n);
     }
   }
-  function money($c, $amount=null, $fmt="%s%mo", $exchangeRate=null) {
+  function money($c, $amount=null, $fmt="%s%mo") {
     // Money print
     $currencies = get_cached_table("currencyType");
-    $fmt = str_replace("%mo",page::money_out($c,$amount,$exchangeRate),$fmt);            //%mo = money_out        eg: 150.21
-    $fmt = str_replace("%mi",page::money_in($c,$amount,$exchangeRate),$fmt);             //%mi = money_in         eg: 15021
-    $fmt = str_replace("%m",sprintf("%0.".$currencies[$c]["numberToBasic"]."f",$amount),$fmt);// %m = format      eg: 150.2 => 150.20
+    $fmt = str_replace("%mo",page::money_out($c,$amount),$fmt);                          //%mo = money_out        eg: 150.21
+    $fmt = str_replace("%mi",page::money_in($c,$amount),$fmt);                           //%mi = money_in         eg: 15021
+    $fmt = str_replace("%m", page::money_fmt($c,$amount),$fmt);                          // %m = format           eg: 150.2 => 150.20
                      $fmt = str_replace("%S",$currencies[$c]["currencyTypeLabel"],$fmt); // %S = mandatory symbol eg: $
     imp($amount) and $fmt = str_replace("%s",$currencies[$c]["currencyTypeLabel"],$fmt); // %s = optional symbol  eg: $
                      $fmt = str_replace("%C",$c,$fmt);                                   // %C = mandatory code   eg: AUD
