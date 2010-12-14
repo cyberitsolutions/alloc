@@ -20,24 +20,27 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/tf.inc.php");
-require_once(dirname(__FILE__)."/transaction.inc.php");
-require_once(dirname(__FILE__)."/expenseForm.inc.php");
-require_once(dirname(__FILE__)."/tfPerson.inc.php");
-require_once(dirname(__FILE__)."/transactionRepeat.inc.php");
-require_once(dirname(__FILE__)."/tfList_home_item.inc.php");
-require_once(dirname(__FILE__)."/exchangeRate.inc.php");
+require_once("../alloc.php");
 
-class finance_module extends module {
-  var $db_entities = array("tf", "transaction", "expenseForm", "tfPerson", "transactionRepeat");
+// Get default currency
+$default_currency = config::get_config_item("currency");
 
-  function register_home_items() {
-    register_home_item(new tfList_home_item);
-  } 
+// Get list of active currencies
+$meta = new meta("currencyType");
+$currencies = $meta->get_list();
+
+foreach ((array)$currencies as $code => $currency) {
+  $rate = get_exchange_rate($code,$default_currency);
+  if ($rate) {
+    $er = new exchangeRate();
+    $er->set_value("exchangeRateCreatedDate",date("Y-m-d"));
+    $er->set_value("fromCurrency",$code);
+    $er->set_value("toCurrency",$default_currency);
+    $er->set_value("exchangeRate",$rate);
+    $er->save();
+  } else {
+    echo date("Y-m-d H:i:s")."Unable to obtain exchange rate information for ".$code." to ".$default_currency."!";
+  }
 }
-
-
-
-
 
 ?>

@@ -39,7 +39,10 @@ class transaction extends db_entity {
                              ,"product" => array("empty_to_null"=>false)
                              ,"amount" => array("type"=>"money") 
                              ,"currencyTypeID" 
+                             ,"destCurrencyTypeID" 
+                             ,"exchangeRate" 
                              ,"status"
+                             ,"dateApproved"
                              ,"expenseFormID" 
                              ,"invoiceID"
                              ,"invoiceItemID"
@@ -70,6 +73,47 @@ class transaction extends db_entity {
                                ,PERM_FINANCE_CREATE_PENDING_TRANSACTION => "create pending transaction"
                                );
 
+
+  function save() {
+
+    // The data prior to the save
+    $old = $this->all_row_fields;
+    if ($old["status"] != $this->get_value("status") && $this->get_value("status") == "approved") {
+      $this->set_value("dateApproved",date("Y-m-d"));
+      $field_changed = true;
+    } else if ($this->get_value("status") != "approved") {
+      $this->set_value("dateApproved","");
+    }
+
+    if ($old["currencyTypeID"] != $this->get_value("currencyTypeID")) {
+      $field_changed = true;
+    }
+    if ($old["destCurrencyTypeID"] != $this->get_value("destCurrencyTypeID")) {
+      $field_changed = true;
+    }
+    $db = new db_alloc();
+
+    // If there already is an exchange rate set for an approved
+    // transaction, then there's no need to update the exchange rate
+    if ($this->get_value("exchangeRate") && $this->get_value("dateApproved") && !$field_changed) {
+
+    // Else update the transaction's exchange rate
+    } else {
+      $this->get_value("transactionCreatedTime")  and $date = format_date("Y-m-d",$this->get_value("transactionCreatedTime"));
+      $this->get_value("transactionModifiedTime") and $date = format_date("Y-m-d",$this->get_value("transactionModifiedTime"));
+      $this->get_value("transactionDate")         and $date = $this->get_value("transactionDate");
+      $this->get_value("dateApproved")            and $date = $this->get_value("dateApproved");
+
+      $er = exchangeRate::get_er($this->get_value("currencyTypeID"), $this->get_value("destCurrencyTypeID"), $date);
+      if (!$er) {
+        $TPL["message"][] = "Unable to determine exchange rate for ".$this->get_value("currencyTypeID")." to ".$this->get_value("destCurrencyTypeID")." for date: ".$date;
+      } else {
+        $this->set_value("exchangeRate",$er);
+      }
+    }
+
+    return parent::save();
+  }
 
   function check_view_perms() {
     if ($this->get_value("transactionType") == "sale" && $this->get_value("status") == "pending") {
@@ -135,6 +179,9 @@ class transaction extends db_entity {
     $this->get_value("fromTfID") && $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".$this->get_value("fromTfID").") being the same as the Destination TF (".$this->get_value("tfID").")";
     $this->get_value("quantity") or $this->set_value("quantity",1);
     $this->get_value("transactionDate") or $this->set_value("transactionDate",date("Y-m-d"));
+    $this->get_value("currencyTypeID") or $this->set_value("currencyTypeID",config::get_config_item("currency"));
+    $this->get_value("destCurrencyTypeID") or $this->set_value("destCurrencyTypeID",config::get_config_item("currency"));
+
     return parent::validate($err);
   }
 
@@ -373,22 +420,29 @@ class transaction extends db_entity {
     $_FORM["sortTransactions"] or $_FORM["sortTransactions"] = "transactionDate";
     $order_by = "ORDER BY ".$_FORM["sortTransactions"];
 
-    $_FORM["csvHeaders"] or $_FORM["csvHeaders"] = array("transactionID", "transactionType", "fromTfID", "tfID", "transactionDate", "transactionSortDate", "product", "status", "amount_positive", "amount_negative", "running_balance");
+    $_FORM["csvHeaders"] or $_FORM["csvHeaders"] = array("transactionID", "transactionType", "fromTfID", "tfID", "transactionDate", "transactionSortDate", "product", "status", "currencyTypeID", "exchangeRate", "destCurrencyTypeID", "amount_positive", "amount_negative", "running_balance");
 
   
     // Determine opening balance
     if (is_array($_FORM['tfIDs']) && count($_FORM['tfIDs'])) {
-      $q = sprintf("SELECT SUM(IF(fromTfID IN (%s),-amount,amount)) AS balance FROM transaction %s", implode(",", $_FORM['tfIDs']), $filter2);
+      $q = sprintf("SELECT SUM( IF(fromTfID IN (%s),-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                      FROM transaction 
+                 LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+                    %s", implode(",", $_FORM['tfIDs']), $filter2);
       $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);
       $db->row();
-      $opening_balance = $db->f("balance");
+      $_FORM["opening_balance"] = $db->f("balance");
       $running_balance = $db->f("balance");
     }
 
-    $q = "SELECT *, if(transactionModifiedTime,transactionModifiedTime,transactionCreatedTime) AS transactionSortDate 
+    $q = "SELECT *, 
+                 (amount * pow(10,-currencyType.numberToBasic)) as amount1,
+                 (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount2,
+                 if(transactionModifiedTime,transactionModifiedTime,transactionCreatedTime) AS transactionSortDate 
             FROM transaction 
+       LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
          ".$filter." 
          ".$order_by;
 
@@ -405,9 +459,10 @@ class transaction extends db_entity {
       $print = true;
   
       // If the destination of this TF is not the current TfID, then invert the $amount
-      $amount = $t->get_value("amount");
+      $amount = $row["amount2"];
       if (!in_array($row["tfID"],$_FORM["tfIDs"])) {
         $amount = -$amount;
+        $row["amount1"] = -$row["amount1"];
       }
 
       $row["amount"] = $amount;
@@ -429,14 +484,16 @@ class transaction extends db_entity {
 
       if ($t->get_value("status") == "approved") {
         $running_balance += $amount;
-        $row["running_balance"] = sprintf("%0.2f",$running_balance);
+        $row["running_balance"] = page::money(config::get_config_item("currency"),$running_balance,"%m %c");
       }
  
       if ($amount > 0) {
-        $row["amount_positive"] = sprintf("%0.2f",$amount);
-        $total_amount_positive += sprintf("%0.2f",$amount);
+        #$row["amount_positive"] = page::money(config::get_config_item("currency"),$amount,"%m %c");
+        $row["amount_positive"] = page::money($row["currencyTypeID"],$row["amount1"],"%m %c");
+        $total_amount_positive += $amount;
       } else {
-        $row["amount_negative"] = sprintf("%0.2f",$amount);
+        #$row["amount_negative"] = page::money(config::get_config_item("currency"),$amount,"%m %c");
+        $row["amount_negative"] = page::money($row["currencyTypeID"],$row["amount1"],"%m %c");
         $total_amount_negative += $amount;
       }
 
@@ -458,10 +515,9 @@ class transaction extends db_entity {
         $transactions[$row["transactionID"]] = $row;
       }
     }
-    $_FORM["total_amount_positive"] = sprintf("%0.2f",$total_amount_positive);
-    $_FORM["total_amount_negative"] = sprintf("%0.2f",$total_amount_negative);
-    $_FORM["running_balance"] = sprintf("%0.2f",$running_balance);
-    $_FORM["opening_balance"] = sprintf("%0.2f",$opening_balance);
+    $_FORM["total_amount_positive"] = page::money(config::get_config_item("currency"),$total_amount_positive,"%s%m %c");
+    $_FORM["total_amount_negative"] = page::money(config::get_config_item("currency"),$total_amount_negative,"%s%m %c");
+    $_FORM["running_balance"] =       page::money(config::get_config_item("currency"),$running_balance,"%s%m %c");
 
     // A header row
     $header_row = transaction::get_list_tr_header($_FORM);

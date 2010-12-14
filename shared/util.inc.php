@@ -725,6 +725,30 @@ function parse_operator_comparison($str,$figure) {
 function imp($var) {
   // This function exists because php equates zeroes to false values.
   // imp == important == is this variable important == if imp($var)
-  return trim($var) !== '' && $var !== null && $var !== false && $var !== array();
+  return $var !== array() && trim($var) !== '' && $var !== null && $var !== false;
+}
+function get_exchange_rate($from, $to) {
+  $debug = $_REQUEST["debug"];
+
+  usleep(500000); // So we don't hit their servers too hard
+  $debug and print "<br>";
+
+  $url = 'http://finance.yahoo.com/d/quotes.csv?f=l1d1t1&s='.$from.$to.'=X';
+  $data = file_get_contents($url);
+  $debug and print "<br>Y: ".htmlentities($data);
+  $results = explode(",",$data);
+  $rate = $results[0];
+  $debug and print "<br>Yahoo says 5 ".$from." is worth ".($rate*5)." ".$to." at this exchange rate: ".$rate;
+
+  if (!$rate) {
+    $url = 'http://www.google.com/ig/calculator?hl=en&q='.urlencode('1'.$from.'=?'.$to);
+    $data = file_get_contents($url);
+    $debug and print "<br>G: ".htmlentities($data);
+    $arr = alloc_json_decode($data);
+    $rate = current(explode(" ",$arr["rhs"]));
+    $debug and print "<br>Google says 5 ".$from." is worth ".($rate*5)." ".$to." at this exchange rate: ".$rate;
+  }
+
+  return trim($rate);
 }
 ?>

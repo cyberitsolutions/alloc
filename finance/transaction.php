@@ -76,6 +76,7 @@ $transaction->set_values();
 
 
 
+
 if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 /*
   if ($transaction->get_value("status") != "pending") {
@@ -92,6 +93,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
   $transaction->get_value("fromTfID")        or $TPL["message"][] = "You must select a Source Tagged Fund to take this transaction from";
   $transaction->get_value("tfID")            or $TPL["message"][] = "You must select a Destination Tagged Fund to add this transaction against";
   $transaction->get_value("transactionType") or $TPL["message"][] = "You must set a transaction type";
+  $transaction->get_value("currencyTypeID")  or $TPL["message"][] = "You must set a transaction currency";
   #$transaction->get_value("projectID")       or $TPL["message"][] = "You must select a project";
   #$transaction->get_value("companyDetails")  or $TPL["message"][] = "You must enter the company details";
 
@@ -110,8 +112,8 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
     if ($_POST["saveGoTf"]) {
       alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
     }
-    $transaction->set_values();
 
+    alloc_redirect($TPL["url_alloc_transaction"]."transactionID=".$transaction->get_id());
   }
     
 } else if ($_POST["delete"]) {
@@ -121,6 +123,9 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 
 $transaction->set_tpl_values();
 
+$t = new meta("currencyType");
+$currency_array = $t->get_assoc_array("currencyTypeID","currencyTypeID");
+$TPL["currencyOptions"] = page::select_options($currency_array,$transaction->get_value("currencyTypeID"));
 $TPL["product"] = page::htmlentities($transaction->get_value("product"));
 $TPL["statusOptions"] = page::select_options(array("pending"=>"Pending", "rejected"=>"Rejected", "approved"=>"Approved"), $transaction->get_value("status"));
 $transactionTypes = transaction::get_transactionTypes();
