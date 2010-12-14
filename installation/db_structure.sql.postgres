@@ -82,6 +82,15 @@ CREATE TABLE config (
   type varchar(255) NOT NULL default 'text'
 ) ;
 
+CREATE TABLE exchangeRate (
+  exchangeRateID serial PRIMARY KEY,
+  exchangeRateCreatedDate date NOT NULL,
+  exchangeRateCreatedTime TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  fromCurrency varchar(3) NOT NULL,
+  toCurrency   varchar(3) NOT NULL,
+  exchangeRate DECIMAL(14,5) NOT NULL DEFAULT 0
+) ;
+
 CREATE TABLE expenseForm (
   expenseFormID serial PRIMARY KEY,
   clientID integer DEFAULT NULL,
@@ -450,7 +459,10 @@ CREATE TABLE transaction (
   product varchar(255) NOT NULL default '',
   amount BIGINT NOT NULL DEFAULT 0,
   currencyTypeID VARCHAR(255) DEFAULT NULL,
+  destCurrencyTypeID varchar(255) DEFAULT NULL,
+  exchangeRate DECIMAL (14,5) NOT NULL DEFAULT 1,
   status varchar(255) NOT NULL DEFAULT 'pending',
+  dateApproved DATE DEFAULT NULL,
   expenseFormID integer DEFAULT NULL,
   tfID integer NOT NULL,
   fromTfID integer NOT NULL,

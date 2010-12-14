@@ -74,10 +74,10 @@ $_FORM = transaction::load_form_data($defaults);
 list($TPL["totals"], $TPL["list"]) = transaction::get_list($_FORM);
 
 // Total balance
-$TPL["balance"] = sprintf("%0.2f",$tf->get_balance());
+$TPL["balance"] = $tf->get_balance();
 
 // Total balance pending
-$TPL["pending_amount"] = sprintf("%0.2f",$tf->get_balance(array("status"=>"pending")));
+$TPL["pending_amount"] = $tf->get_balance(array("status"=>"pending"));
 
 // Page and header title
 $TPL["title"] = "Statement for tagged fund: ".$tf->get_value("tfName");

@@ -88,6 +88,16 @@ CREATE TABLE config (
   type varchar(255) NOT NULL default 'text'
 ) ENGINE=InnoDB PACK_KEYS=0;
 
+DROP TABLE IF EXISTS exchangeRate;
+CREATE TABLE exchangeRate (
+  exchangeRateID integer NOT NULL auto_increment PRIMARY KEY,
+  exchangeRateCreatedDate date NOT NULL,
+  exchangeRateCreatedTime datetime NOT NULL,
+  fromCurrency varchar(3) NOT NULL,
+  toCurrency   varchar(3) NOT NULL,
+  exchangeRate DECIMAL(14,5) NOT NULL DEFAULT 0
+) ENGINE=InnoDB PACK_KEYS=0;
+
 DROP TABLE IF EXISTS expenseForm;
 CREATE TABLE expenseForm (
   expenseFormID integer NOT NULL auto_increment PRIMARY KEY,
@@ -486,7 +496,10 @@ CREATE TABLE transaction (
   product varchar(255) NOT NULL default '',
   amount BIGINT NOT NULL DEFAULT 0,
   currencyTypeID VARCHAR(255) DEFAULT NULL,
+  destCurrencyTypeID varchar(255) DEFAULT NULL,
+  exchangeRate DECIMAL (14,5) NOT NULL DEFAULT 1,
   status varchar(255) NOT NULL DEFAULT 'pending',
+  dateApproved DATE DEFAULT NULL,
   expenseFormID integer DEFAULT NULL,
   tfID integer NOT NULL,
   fromTfID integer NOT NULL,

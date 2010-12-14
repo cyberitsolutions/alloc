@@ -44,8 +44,9 @@ class tf extends db_entity {
 
     // Get belance
     $db = new db_alloc;
-    $query = sprintf("SELECT sum(if(fromTfID=%d,-amount,amount)) AS balance 
+    $query = sprintf("SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance 
                         FROM transaction 
+                   LEFT JOIN currencyType ON transaction.currencyTypeID = currencyType.currencyTypeID
                        WHERE (tfID = %d or fromTfID = %d) "
                     ,$this->get_id(),$this->get_id(),$this->get_id());
 

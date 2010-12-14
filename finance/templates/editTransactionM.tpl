@@ -60,7 +60,7 @@
   </tr>
   <tr>
     <td>Amount{page::mandatory($amount)}</td>
-    <td><input type="text" name="amount" size="20" value="{$amount}"></td>
+    <td><input type="text" name="amount" size="20" value="{$amount}"><select name="currencyTypeID">{$currencyOptions}</select></td>
     <td class="hint">{page::help("transaction_amount")}</td>
   </tr>
   <tr>
@@ -68,16 +68,18 @@
     <td><select name="status">
           {$statusOptions}
         </select>
+      {if $dateApproved} Date Approved: {$dateApproved}{/}
     </td>      
     <td class="hint">{page::help("transaction_status")}</td>
   </tr>
   <tr>
     <td>Transaction Type{page::mandatory($transactionType)}</td>
-    <td><select name="transactionType">
-        <option value="">
-        {$transactionTypeOptions}
-</select>
-    </td>      
+    <td><select name="transactionType"><option value="">{$transactionTypeOptions}</select></td>      
+    <td class="hint"></td>
+  </tr>
+  <tr>
+    <td>Exchange Rate{page::mandatory($exchangeRate)}</td>
+    <td><input type="text" name="exchangeRate" size="20" value="{$exchangeRate}"> ({$currencyTypeID} to {echo config::get_config_item("currency")})</td>
     <td class="hint"></td>
   </tr>
   <tr>

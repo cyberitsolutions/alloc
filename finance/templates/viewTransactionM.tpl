@@ -34,11 +34,11 @@
   </tr>
   <tr>
     <td>Amount</td>
-    <td>{$amount}</td>
+    <td>{$amount} {$currencyTypeID} {if $currencyTypeID != $destCurrencyTypeID}(exchange rate from {$currencyTypeID} to {$destCurrencyTypeID} is {$exchangeRate}){/}</td>
   </tr>
   <tr>
     <td>Status</td>
-    <td>{$status}</td>
+    <td>{$status} {$dateApproved}</td>
   </tr>
   <tr>
     <td>Transaction Type</td>
