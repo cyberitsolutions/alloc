@@ -64,6 +64,37 @@ while ($db->next_record()) {
 
 #echo "<pre>".print_r($_POST,1)."</pre>";
 
+if ($_POST["update_currencyless_transactions"] && $_POST["currency"]) {
+  $db = new db_alloc();
+  $q = sprintf("UPDATE transaction SET currencyTypeID = '%s' WHERE currencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+  $q = sprintf("UPDATE transactionRepeat SET currencyTypeID = '%s' WHERE currencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+  $q = sprintf("UPDATE product SET buyCostCurrencyTypeID = '%s' WHERE buyCostCurrencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+  $q = sprintf("UPDATE product SET sellPriceCurrencyTypeID = '%s' WHERE sellPriceCurrencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+  $q = sprintf("UPDATE productCost SET currencyTypeID = '%s' WHERE currencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+  $q = sprintf("UPDATE productSaleItem SET buyCostCurrencyTypeID = '%s' WHERE buyCostCurrencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+  $q = sprintf("UPDATE productSaleItem SET sellPriceCurrencyTypeID = '%s' WHERE sellPriceCurrencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+  $q = sprintf("UPDATE project SET currencyTypeID = '%s' WHERE currencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+  $q = sprintf("UPDATE timeSheet SET currencyTypeID = '%s' WHERE currencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+  $q = sprintf("UPDATE invoice SET invoice.currencyTypeID = '%s' WHERE invoice.currencyTypeID IS NULL",$_POST["currency"]);
+  $db->query($q);
+
+  // Update currencyType table too
+  $q = sprintf("UPDATE currencyType SET currencyTypeSeq = 1, currencyTypeActive = true WHERE currencyTypeID = '%s'",$_POST["currency"]);
+  $db->query($q);
+  $_POST["save"] = true;
+}
+
+
+
 if ($_POST["save"]) {
 
   if ($_POST["hoursInDay"]) {
@@ -142,6 +173,10 @@ $TPL["outTfOptions"] = page::select_options($options, $config->get_config_item("
 $TPL["inTfOptions"] = page::select_options($options, $config->get_config_item("inTfID"));
 $TPL["taxTfOptions"] = page::select_options($options, $config->get_config_item("taxTfID"));
 $TPL["expenseFormTfOptions"] = page::select_options($options, $config->get_config_item("expenseFormTfID"));
+
+$m = new meta("currencyType");
+$currencyOptions = $m->get_assoc_array("currencyTypeID","currencyTypeName");
+$TPL["currencyOptions"] = page::select_options($currencyOptions, $config->get_config_item("currency"));
 
 $db = new db_alloc;
 $display = array("", "username", ", ", "emailAddress");
