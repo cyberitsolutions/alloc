@@ -68,6 +68,11 @@
     <th colspan="3">Finance Setup</th>
   </tr>
   <tr>
+    <td width="20%">Main Currency</td>
+    <td><select name="currency">{$currencyOptions}</select><input type="submit" name="update_currencyless_transactions" value="Update Transactions That Have No Currency"></td>
+    <td width="1%">{page::help("config_currency")}</td>
+  </tr>
+  <tr>
     <td width="20%"><nobr>Finance Tagged Fund</nobr></td>
     <td><select name="mainTfID"><option value="">{$mainTfOptions}</select></td>
     <td width="1%">{page::help("config_mainTfID")}</td>

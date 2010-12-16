@@ -399,7 +399,7 @@ VALUES
 -- Dumping data for table config
 --
 
-
+INSERT INTO config (name, value, type) VALUES ('currency', '', 'text');
 INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','','text');
 INSERT INTO config (name, value, type) VALUES ('mainTfID','','text');
 INSERT INTO config (name, value, type) VALUES ('companyName','Your Business Here','text');
