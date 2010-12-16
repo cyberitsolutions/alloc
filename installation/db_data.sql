@@ -399,9 +399,13 @@ VALUES
 -- Dumping data for table config
 --
 
+INSERT INTO tf (tfID,tfName,tfActive) VALUES (1,"Main Funds",1);
+INSERT INTO tf (tfID,tfName,tfActive) VALUES (2,"Incoming Funds",1);
+INSERT INTO tf (tfID,tfName,tfActive) VALUES (3,"Outgoing Funds",1);
+
 INSERT INTO config (name, value, type) VALUES ('currency', '', 'text');
 INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','','text');
-INSERT INTO config (name, value, type) VALUES ('mainTfID','','text');
+INSERT INTO config (name, value, type) VALUES ('mainTfID','1','text');
 INSERT INTO config (name, value, type) VALUES ('companyName','Your Business Here','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactPhone','+61 3 9621 2377','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactFax','+61 3 9621 2477','text');
@@ -441,8 +445,8 @@ INSERT INTO config (name,value,type) VALUES ('projectPriorities','a:5:{i:1;a:2:{
 INSERT INTO config (name,value,type) VALUES ('defaultInterestedParties','a:0:{}','array');
 INSERT INTO config (name,value,type) VALUES ('task_email_header', '','text');
 INSERT INTO config (name,value,type) VALUES ('task_email_footer', '','text');
-INSERT INTO config (name,value,type) VALUES ('outTfID','','text');
-INSERT INTO config (name,value,type) VALUES ('inTfID','','text');
+INSERT INTO config (name,value,type) VALUES ('inTfID','2','text');
+INSERT INTO config (name,value,type) VALUES ('outTfID','3','text');
 INSERT INTO config (name,value,type) VALUES ('expenseFormTfID','','text');
 
 INSERT INTO config (name,value,type) VALUES ('emailSubject_taskComment', '[allocPSA] Task Comment: %ti %tn [%tp]', 'text');
