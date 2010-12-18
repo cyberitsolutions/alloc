@@ -82,6 +82,8 @@ function set_values(target) {
   <tr>
     <td class="right">Total Sell Price:</td>
     <td>{$total_sellPrice}</td>
+    <td class="right">Salesperson:</td>
+    <td>{$show_person_options}</td>
   </tr>
   <tr>
     <td class="right">Total Margin:</td>

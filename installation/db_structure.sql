@@ -573,6 +573,7 @@ CREATE TABLE productSale (
   productSaleID integer NOT NULL auto_increment PRIMARY KEY,
   clientID integer DEFAULT NULL,
   projectID integer DEFAULT NULL,
+  personID integer DEFAULT NULL,
   status varchar(255) NOT NULL,
   productSaleCreatedTime datetime default NULL,
   productSaleCreatedUser integer default NULL,
