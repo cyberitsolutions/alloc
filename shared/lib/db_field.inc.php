@@ -73,10 +73,16 @@ class db_field {
       }
     } else if ($dest == DST_HTML_DISPLAY) {
       if ($this->type == "money" && imp($this->value)) {
-        if (is_object($parent) && !$parent->currency) {
-          die("db_field::get_value(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$parent->currency.")");
+
+        $c = $parent->currency;
+        if ($this->currency && isset($parent->data_fields[$this->currency])) {
+          $c = $parent->get_value($this->currency);
+        }
+
+        if (!$c) {
+          die("db_field::get_value(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$c.")");
         } else if ($this->value == $parent->all_row_fields[$this->name]) {
-          return page::money($parent->currency,$this->value,"%mo");
+          return page::money($c,$this->value,"%mo");
         }
       }
       return page::htmlentities($this->value);
@@ -91,11 +97,15 @@ class db_field {
 
   function validate($parent) {
     global $TPL;
-    if ($this->type == "money") {
-      if (!$parent->currency) {
-        return "db_field::validate(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$parent->currency.")";
+    if ($parent->doMoney && $this->type == "money") {
+      $c = $parent->currency;
+      if ($this->currency && isset($parent->data_fields[$this->currency])) {
+        $c = $parent->get_value($this->currency);
+      }
+      if (!$c) {
+        return "db_field::validate(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$c.")";
       } else if ($this->value != $parent->all_row_fields[$this->name]) {
-        $this->set_value(page::money($parent->currency,$this->value,"%mi"));
+        $this->set_value(page::money($c,$this->value,"%mi"));
       }
     }
   }

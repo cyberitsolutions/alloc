@@ -76,6 +76,11 @@ class transaction extends db_entity {
 
   function save() {
 
+    // These need to be in here instead of validate(), because
+    // validate is called after save() and we need these values set for save().
+    $this->get_value("currencyTypeID") or $this->set_value("currencyTypeID",config::get_config_item("currency"));
+    $this->get_value("destCurrencyTypeID") or $this->set_value("destCurrencyTypeID",config::get_config_item("currency"));
+
     // The data prior to the save
     $old = $this->all_row_fields;
     if ($old["status"] != $this->get_value("status") && $this->get_value("status") == "approved") {
@@ -179,8 +184,6 @@ class transaction extends db_entity {
     $this->get_value("fromTfID") && $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".$this->get_value("fromTfID").") being the same as the Destination TF (".$this->get_value("tfID").")";
     $this->get_value("quantity") or $this->set_value("quantity",1);
     $this->get_value("transactionDate") or $this->set_value("transactionDate",date("Y-m-d"));
-    $this->get_value("currencyTypeID") or $this->set_value("currencyTypeID",config::get_config_item("currency"));
-    $this->get_value("destCurrencyTypeID") or $this->set_value("destCurrencyTypeID",config::get_config_item("currency"));
 
     return parent::validate($err);
   }
@@ -744,7 +747,7 @@ class transaction extends db_entity {
       $amount >0 and $sum+=$amount;
     }
 
-    return sprintf("%0.2f",$sum);
+    return $sum;
     
     # for debugging
     #$rows[] = array("amount"=>"20","fromTfID"=>"alla","tfID"=>"twb");

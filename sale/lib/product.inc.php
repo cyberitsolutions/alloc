@@ -27,10 +27,10 @@ class product extends db_entity {
   public $display_field_name = "productName";
   public $key_field = "productID";
   public $data_fields = array("productName"
-                             ,"buyCost"
+                             ,"buyCost" => array("type"=>"money","currency"=>"buyCostCurrencyTypeID")
                              ,"buyCostCurrencyTypeID"
                              ,"buyCostIncTax" => array("empty_to_null"=>false)
-                             ,"sellPrice"
+                             ,"sellPrice" => array("type"=>"money","currency"=>"sellPriceCurrencyTypeID")
                              ,"sellPriceCurrencyTypeID"
                              ,"sellPriceIncTax" => array("empty_to_null"=>false)
                              ,"description"
@@ -97,8 +97,8 @@ class product extends db_entity {
     $ret[] = "<tr>";
     $ret[] = "  <td class=\"nobr\">".product::get_link($row)."&nbsp;</td>";
     $ret[] = "  <td>".page::htmlentities($row["description"])."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".$row["buyCost"]."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".$row["sellPrice"]."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".page::money($row["buyCostCurrencyTypeID"],$row["buyCost"],"%s%mo %c")."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".page::money($row["sellPriceCurrencyTypeID"],$row["sellPrice"],"%s%mo %c")."&nbsp;</td>";
     $ret[] = "</tr>";
     return implode("\n",$ret);
   }

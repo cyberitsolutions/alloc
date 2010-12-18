@@ -26,6 +26,10 @@ function show_productCost_list($productID, $template, $percent = false) {
   global $TPL;
   unset($TPL["display"]); // otherwise the commissions don't display.
   if ($productID) {
+
+    $t = new meta("currencyType");
+    $currency_array = $t->get_assoc_array("currencyTypeID","currencyTypeID");
+
     $db = new db_alloc();
     $query = sprintf("SELECT * 
                         FROM productCost 
@@ -37,7 +41,8 @@ function show_productCost_list($productID, $template, $percent = false) {
     while ($db->next_record()) {
       $productCost = new productCost;
       $productCost->read_db_record($db);
-      $productCost->set_values();
+      $productCost->set_tpl_values();
+      $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
       include_template($template);
     }
   }
@@ -45,15 +50,22 @@ function show_productCost_list($productID, $template, $percent = false) {
 
 function show_productCost_new($template) {
   global $TPL;
+  $t = new meta("currencyType");
+  $currency_array = $t->get_assoc_array("currencyTypeID","currencyTypeID");
   $productCost = new productCost;
   $productCost->set_values(); // wipe clean
+  $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
   $TPL["display"] = "display:none";
   include_template($template);
 }
 
-function tf_list($selected="") {
+function tf_list($selected="",$remove_these=array()) {
   global $tflist;
-  echo page::select_options($tflist, $selected);
+  $temp = $tflist;
+  foreach ($remove_these as $dud) {
+    unset($temp[$dud]);
+  }
+  echo page::select_options($temp, $selected);
   return;
 }
 
@@ -80,6 +92,8 @@ $TPL["companyTF"] = $tflist[config::get_config_item("mainTfID")];
 $TPL["taxTF"] = $tflist[config::get_config_item("taxTfID")];
 $taxRate = config::get_config_item("taxPercent") / 100.0;
 $TPL["taxRate"] = $taxRate;
+
+
 
 if ($_POST["save"]) {
   $product->read_globals();
@@ -146,8 +160,8 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
         $productCost->set_id($productCostID);
         $productCost->delete();
 
-      } else {
-    
+      } else if (imp($_POST["amount"][$k])) {
+
         $a = array("productCostID"=>$productCostID
                   ,"productID"=>$productID
                   ,"fromTfID"=>$_POST["fromTfID"][$k]
@@ -155,11 +169,12 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
                   ,"amount"=>$_POST["amount"][$k]
                   ,"isPercentage"=>$_POST["save_commissions"] ? 1 : 0
                   ,"description"=>$_POST["description"][$k]
+                  ,"currencyTypeID"=>$_POST["currencyTypeID"][$k] ? $_POST["currencyTypeID"][$k] : config::get_config_item("currency")
                   );
 
         $productCost = new productCost;
         $productCost->read_array($a);
-        $errs = $productCost->validate();
+        //$errs = $productCost->validate();
         if (!$errs) {
           $productCost->save();
         }
@@ -169,9 +184,14 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
   alloc_redirect($TPL["url_alloc_product"]."productID=".$product->get_id());
 }
 
+$m = new meta("currencyType");
+$ops = $m->get_assoc_array("currencyTypeID","currencyTypeID");
+$TPL["buyCostCurrencyOptions"] = page::select_options($ops,$product->get_value("buyCostCurrencyTypeID"));
+$TPL["sellPriceCurrencyOptions"] = page::select_options($ops,$product->get_value("sellPriceCurrencyTypeID"));
 
 $TPL["main_alloc_title"] = "Product: ".$product->get_value("productName")." - ".APPLICATION_NAME;
 $product->set_values();
+$product->set_tpl_values();
 
 if (!$productID) {
   $TPL["main_alloc_title"] = "New Product - ".APPLICATION_NAME;

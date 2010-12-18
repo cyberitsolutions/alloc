@@ -125,17 +125,42 @@ class productSale extends db_entity {
     foreach ($rows as $row) {
       $productSaleItem = new productSaleItem;
       $productSaleItem->read_row_record($row);
-      $rtn["total_spent"] += $productSaleItem->get_amount_spent();
-      $rtn["total_earnt"] += $productSaleItem->get_amount_earnt();
-      $rtn["total_other"] += $productSaleItem->get_amount_other();
-      $rtn["total_buyCost"] += $productSaleItem->get_value("buyCost");
-      $rtn["total_sellPrice"] += $productSaleItem->get_value("sellPrice");
-      $rtn["total_margin"] += $productSaleItem->get_amount_margin();
-      $rtn["total_unallocated"] += $productSaleItem->get_amount_unallocated();
+      //$rtn["total_spent"] += $productSaleItem->get_amount_spent();
+      //$rtn["total_earnt"] += $productSaleItem->get_amount_earnt();
+      //$rtn["total_other"] += $productSaleItem->get_amount_other();
+      list($bc,$bccur,$sp,$spcur) = array($productSaleItem->get_value("buyCost"),$productSaleItem->get_value("buyCostCurrencyTypeID")
+                                         ,$productSaleItem->get_value("sellPrice"),$productSaleItem->get_value("sellPriceCurrencyTypeID"));
+
+      $buyCostCurr[$bccur]   += page::money($bccur,$bc,"%m");
+      $sellPriceCurr[$spcur] += page::money($spcur,$sp,"%m");
+      $total_buyCost   += exchangeRate::convert($bccur,$bc);
+      $total_sellPrice += exchangeRate::convert($spcur,$sp);
+      $total_margin += $productSaleItem->get_amount_margin();
+      $total_unallocated += $productSaleItem->get_amount_unallocated();
     }    
-    foreach ($rtn as $k => $v) {
-      $rtn[$k] = sprintf("%0.2f",$v);
+
+    foreach ((array)$buyCostCurr as $code => $amount) {
+      $label.= $sep.page::money($code,$amount,"%s%mo %c");
+      $sep = " + ";
+      $code != config::get_config_item("currency") and $show = true;
     }
+    $show && $label and $buyCost_label = " (".$label.")";
+
+    unset($sep,$label,$show);
+
+    foreach ((array)$sellPriceCurr as $code => $amount) {
+      $label.= $sep.page::money($code,$amount,"%s%mo %c");
+      $sep = " + ";
+      $code != config::get_config_item("currency") and $show = true;
+    }
+    $show && $label and $sellPrice_label = " (".$label.")";
+
+    $rtn["total_buyCost"] = page::money(config::get_config_item("currency"),$total_buyCost,"%s%mo %c").$buyCost_label;
+    $rtn["total_sellPrice"] = page::money(config::get_config_item("currency"),$total_sellPrice,"%s%mo %c").$sellPrice_label;
+    $rtn["total_margin"] = page::money(config::get_config_item("currency"),$total_margin,"%s%mo %c");
+    $rtn["total_unallocated"] = page::money(config::get_config_item("currency"),$total_unallocated,"%s%mo %c");
+    $rtn["total_unallocated_number"] = page::money(config::get_config_item("currency"),$total_unallocated,"%mo");
+
     return $rtn;
   }
 
@@ -301,7 +326,7 @@ class productSale extends db_entity {
   }
 
   function get_statii() {
-    return array("create"=>"Create", "edit"=>"Add Sale Items", "allocate" =>"Allocate", "admin"=>"Administrator", "finished"=>"Finished");
+    return array("create"=>"Create", "edit"=>"Add Sale Items", "allocate" =>"Allocate", "admin"=>"Administrator", "finished"=>"Completed");
   }
 
 }

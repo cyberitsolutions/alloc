@@ -351,6 +351,7 @@ class db_entity {
 
   function save() {
     global $TPL;
+    $this->doMoney = true;
     $error = $this->validate();
     if (is_array($error) && count($error)) {
       $TPL["message"] = $error;
@@ -392,7 +393,7 @@ class db_entity {
     if ($message && preg_match("/[a-zA-Z0-9]+/",$message)) 
     return $message;
   }
- 
+
   function set_field_value(&$field, $value, $source = SRC_VARIABLE) {
     $field->set_value($value, $source);
   }

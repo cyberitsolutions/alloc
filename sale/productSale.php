@@ -43,7 +43,7 @@ function show_productSale_list($productSaleID, $template) {
   $productSale = new productSale;
   $productSale->set_id($productSaleID);
   $productSale->select();
-  $productSale->set_values();
+  $productSale->set_tpl_values();
 
   $taxName = config::get_config_item("taxName");
 
@@ -59,7 +59,7 @@ function show_productSale_list($productSaleID, $template) {
     $productSaleItemsDoExist = true;
     $productSaleItem = new productSaleItem;
     $productSaleItem->read_db_record($db);
-    $productSaleItem->set_values();
+    $productSaleItem->set_tpl_values();
 
     $TPL["itemBuyCost"] = $productSaleItem->get_value("buyCost");
     $TPL["itemSellPrice"] = $productSaleItem->get_value("sellPrice");
@@ -110,6 +110,11 @@ function show_transaction_list($transactions=array(), $template) {
     $transaction->read_array($row);
     $transaction->set_values();
     $TPL["display"] = "";
+
+
+    $m = new meta("currencyType");
+    $currencyOptions = $m->get_assoc_array("currencyTypeID", "currencyTypeID");
+    $TPL["currencyOptions"] = page::select_options($currencyOptions, $transaction->get_value("currencyTypeID"));
     $TPL["tfList_dropdown"] = page::select_options($tflist, $transaction->get_value("tfID"));
     $TPL["fromTfList_dropdown"] = page::select_options($tflist, $transaction->get_value("fromTfID"));
     $TPL["tfID_label"] = $tflist[$transaction->get_value("tfID")];
@@ -127,6 +132,9 @@ function show_transaction_new($template) {
   $transaction = new transaction;
   $transaction->set_values(); // wipe clean
   $TPL["display"] = "display:none";
+  $m = new meta("currencyType");
+  $currencyOptions = $m->get_assoc_array("currencyTypeID", "currencyTypeID");
+  $TPL["currencyOptions"] = page::select_options($currencyOptions);
   $TPL["tfList_dropdown"] = page::select_options($tflist);
   $TPL["fromTfList_dropdown"] = page::select_options($tflist);
   if (CAN_APPROVE_TRANSACTIONS && $TPL["productSale_status"] == "admin") {
@@ -199,7 +207,9 @@ if ($_POST["save"]) {
       } else {
         $a = array("productID"=>$_POST["productID"][$k]
                   ,"buyCost"=>$_POST["buyCost"][$k]
+                  ,"buyCostCurrencyTypeID"=>$_POST["buyCostCurrencyTypeID"][$k]
                   ,"sellPrice"=>$_POST["sellPrice"][$k]
+                  ,"sellPriceCurrencyTypeID"=>$_POST["sellPriceCurrencyTypeID"][$k]
                   ,"sellPriceIncTax"=>in_array($productSaleItemID, $_POST["sellPriceIncTax"])
                   ,"buyCostIncTax"=>in_array($productSaleItemID, $_POST["buyCostIncTax"])
                   ,"quantity"=>$_POST["quantity"][$k]
@@ -237,7 +247,7 @@ if ($_POST["save"]) {
         $transaction->delete();
 
       // Save
-      } else {
+      } else if (imp($_POST["amount"][$k])) {
         $a = array("amount"            => $_POST["amount"][$k]
                   ,"tfID"              => $_POST["tfID"][$k]
                   ,"fromTfID"          => $_POST["fromTfID"][$k]
@@ -248,6 +258,7 @@ if ($_POST["save"]) {
                   ,"transactionType"   => 'sale'
                   ,"transactionDate"   => date("Y-m-d")
                   ,"status"            => 'pending'
+                  ,"currencyTypeID"    => $_POST["currencyTypeID"][$k]
                   ,"transactionID"     => $transactionID);
   
         if (CAN_APPROVE_TRANSACTIONS && $_POST["status"][$k]) {
@@ -359,7 +370,7 @@ if (!$productSale->get_id()) {
 
 } else if ($productSale->get_value("status") == "admin" && $productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)) {
   $TPL["message_help"][] = "Please review the Sale Transactions carefully. If they are accurate <b>approve and save the transactions</b> 
-                            and move this Sale to status 'Finished'.";
+                            and move this Sale to status 'Completed'.";
 } else if ($productSale->get_value("status") == "admin") {
   $TPL["message_help"][] = "This Sale is awaiting approval from the Administrator.";
 }
