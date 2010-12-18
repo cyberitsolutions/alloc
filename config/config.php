@@ -70,13 +70,9 @@ if ($_POST["update_currencyless_transactions"] && $_POST["currency"]) {
   $db->query($q);
   $q = sprintf("UPDATE transactionRepeat SET currencyTypeID = '%s' WHERE currencyTypeID IS NULL",$_POST["currency"]);
   $db->query($q);
-  $q = sprintf("UPDATE product SET buyCostCurrencyTypeID = '%s' WHERE buyCostCurrencyTypeID IS NULL",$_POST["currency"]);
-  $db->query($q);
   $q = sprintf("UPDATE product SET sellPriceCurrencyTypeID = '%s' WHERE sellPriceCurrencyTypeID IS NULL",$_POST["currency"]);
   $db->query($q);
   $q = sprintf("UPDATE productCost SET currencyTypeID = '%s' WHERE currencyTypeID IS NULL",$_POST["currency"]);
-  $db->query($q);
-  $q = sprintf("UPDATE productSaleItem SET buyCostCurrencyTypeID = '%s' WHERE buyCostCurrencyTypeID IS NULL",$_POST["currency"]);
   $db->query($q);
   $q = sprintf("UPDATE productSaleItem SET sellPriceCurrencyTypeID = '%s' WHERE sellPriceCurrencyTypeID IS NULL",$_POST["currency"]);
   $db->query($q);

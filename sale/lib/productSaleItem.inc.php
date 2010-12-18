@@ -27,9 +27,6 @@ class productSaleItem extends db_entity {
   public $key_field = "productSaleItemID";
   public $data_fields = array("productID"
                              ,"productSaleID"
-                             ,"buyCost" => array("type"=>"money", "currency"=>"buyCostCurrencyTypeID")
-                             ,"buyCostCurrencyTypeID"
-                             ,"buyCostIncTax" => array("empty_to_null"=>false)
                              ,"sellPrice" => array("type"=>"money", "currency"=>"sellPriceCurrencyTypeID")
                              ,"sellPriceCurrencyTypeID"
                              ,"sellPriceIncTax" => array("empty_to_null"=>false)
@@ -44,7 +41,6 @@ class productSaleItem extends db_entity {
   function validate() {
     $this->get_value("productID")     or $err[] = "Please select a Product.";
     $this->get_value("productSaleID") or $err[] = "Please select a Product Sale.";
-    $this->get_value("buyCost")       or $err[] = "Please enter a Buy Cost.";
     $this->get_value("sellPrice")     or $err[] = "Please enter a Sell Price.";
     $this->get_value("quantity")      or $err[] = "Please enter a Quantity.";
     return parent::validate($err);
@@ -122,15 +118,17 @@ class productSaleItem extends db_entity {
 
     $taxPercent = config::get_config_item("taxPercent");
     $taxPercentDivisor = ($taxPercent/100) + 1;
+
+    $p = new product();
+    $p->set_id($this->get_value("productID"));
     
-    $buyCost = $this->get_value("buyCost");
+    $buyCost = $p->get_buy_cost();
     $sellPrice = $this->get_value("sellPrice");
 
-    $this->get_value("buyCostIncTax") and $buyCost = $buyCost / $taxPercentDivisor;
     $this->get_value("sellPriceIncTax") and $sellPrice = $sellPrice / $taxPercentDivisor;
 
     return exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"),$sellPrice) - 
-           exchangeRate::convert($this->get_value("buyCostCurrencyTypeID"),$buyCost);
+           exchangeRate::convert(config::get_config_item("currency"),$buyCost);
   }
 
   function get_amount_unallocated() {
@@ -174,25 +172,9 @@ class productSaleItem extends db_entity {
     if ($this->get_value("sellPriceIncTax")) {
       $amount_minus_tax = $this->get_value("sellPrice") / $taxPercentDivisor;
       $amount_of_tax = $this->get_value("sellPrice") - $amount_minus_tax;
-      $amount_of_tax = exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"),$amount_of_tax);
+      $amount_of_tax = exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"),$amount_of_tax,null,null,"%mo");
       $this->create_transaction(-1, $taxTfID ,$amount_of_tax, "Product Sale ".$taxName.": ".$productName);
     }
-
-
-    // If this cost includes tax, then perform a tax transfer from the
-    // tax tf to the incoming tf.
-    if ($this->get_value("buyCostIncTax")) {
-      $amount_minus_tax = $this->get_value("buyCost") / $taxPercentDivisor;
-      $amount_of_tax = $this->get_value("buyCost") - $amount_minus_tax;
-      $amount_of_tax = exchangeRate::convert($this->get_value("buyCostCurrencyTypeID"),$amount_of_tax);
-      $this->create_transaction($taxTfID, config::get_config_item("outTfID"),$amount_of_tax,"Product Acquisition ".$taxName.": ".$productName);
-    }
-
-    // Next transaction represents the transfer of money that is the
-    // amount paid by the company for the product. We model this by transferring
-    // the buyCost from the Projects TF (META: -1) to the Outgoing TF.
-    $this->create_transaction(-1, config::get_config_item("outTfID"),page::money($this->get_value("buyCostCurrencyTypeID"),$this->get_value("buyCost"),"%mo"), "Product Acquisition: ".$productName,$this->get_value("buyCostCurrencyTypeID"));
-
 
     // Next transaction represents the amount that someone has paid the
     // sellPrice amount for the product. This money is transferred from 

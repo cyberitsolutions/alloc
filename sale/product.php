@@ -98,43 +98,11 @@ $TPL["taxRate"] = $taxRate;
 if ($_POST["save"]) {
   $product->read_globals();
   !$product->get_value("productName") and $TPL["message"][] = "Please enter a Product Name.";
-  !$product->get_value("buyCost")     and $TPL["message"][] = "Please enter a Buy Cost.";
   !$product->get_value("sellPrice")   and $TPL["message"][] = "Please enter a Sell Price.";
 
   if (!$TPL["message"]) {
     $product->save();
     $productID = $product->get_id();
-
-    // If there are no costs set up for this product, create the default costs 
-    $q = sprintf("SELECT count(*) AS total FROM productCost WHERE productID = %d",$productID);
-    $db = new db_alloc();
-    $db->query($q);
-    $row = $db->row();
-
-    if ($row["total"] == 0) {
-
-      // First transaction/productCost represents the transfer of money
-      // that is the amount paid by Cyber for the product. We model this 
-      // by transferring the buyCost from the Projects TF to the Outgoing TF.
-      #$productCost = new productCost;
-      #$productCost->set_value("productID", $product->get_id());
-      #$productCost->set_value("fromTfID", -1);
-      #$productCost->set_value("tfID", config::get_config_item("outTfID"));
-      #$productCost->set_value("amount", $product->get_value("buyCost"));
-      #$productCost->set_value("description", "Product acquisition: ".$product->get_value("productName"));
-      #$productCost->save();
-
-      // Next transaction represents the amount that someone has paid the
-      // sellPrice amount for the product. This money is transferred from 
-      // the Incoming transactions TF, to the Projects TF.
-      #$productCost = new productCost;
-      #$productCost->set_value("productID", $product->get_id());
-      #$productCost->set_value("fromTfID", config::get_config_item("inTfID"));
-      #$productCost->set_value("tfID", -1);
-      #$productCost->set_value("amount", $product->get_value("sellPrice"));
-      #$productCost->set_value("description", "Product sale: ".$product->get_value("productName"));
-      #$productCost->save();
-    }
     alloc_redirect($TPL["url_alloc_product"]."productID=".$productID);
   }
   $product->set_values();
@@ -186,7 +154,6 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
 
 $m = new meta("currencyType");
 $ops = $m->get_assoc_array("currencyTypeID","currencyTypeID");
-$TPL["buyCostCurrencyOptions"] = page::select_options($ops,$product->get_value("buyCostCurrencyTypeID"));
 $TPL["sellPriceCurrencyOptions"] = page::select_options($ops,$product->get_value("sellPriceCurrencyTypeID"));
 
 $TPL["main_alloc_title"] = "Product: ".$product->get_value("productName")." - ".APPLICATION_NAME;
@@ -195,7 +162,7 @@ $product->set_tpl_values();
 
 if (!$productID) {
   $TPL["main_alloc_title"] = "New Product - ".APPLICATION_NAME;
-  $TPL["message_help"][] = "To create a new Product enter its Name, Buy Cost and Sell Price."; 
+  $TPL["message_help"][] = "To create a new Product enter its Name and Sell Price."; 
 } else {
   $TPL["message_help"][] = "Every sale of this Product can result in customised Cost and Commission transactions being automatically generated. 
                             <br><br>Click the 'New' link in the Costs/Commissions boxes below to add fixed Costs and percentage Commissions."; 
