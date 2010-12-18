@@ -383,7 +383,9 @@ EOD;
   function money_fmt($c,$amount=null) {
     $currencies = get_cached_table("currencyType");
     $n = $currencies[$c]["numberToBasic"];
-    return sprintf("%0.".$n."f",$amount);
+    $num = sprintf("%0.".$n."f",$amount);
+    $num == sprintf("%0.".$n."f",-0) and $num = sprintf("%0.".$n."f",0); // *sigh* to prevent -0.00
+    return $num;
   }
   function money_out($c,$amount=null) {
     // AUD,100        -> 100.00

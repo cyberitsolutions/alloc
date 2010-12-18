@@ -43,6 +43,10 @@ function update_values(target) {
         myTD.find('input[name="description[]"]').val($("description",xml).text());
         myTD.find('input[name="buyCostIncTax[]"]').attr('checked', $("costTax",xml).text());
         myTD.find('input[name="sellPriceIncTax[]"]').attr('checked',$("priceTax",xml).text());
+        myTD.find('label[name="costCurrency"]').html($("costCurrency",xml).text());
+        myTD.find('label[name="priceCurrency"]').html($("priceCurrency",xml).text());
+        myTD.find('input[name="buyCostCurrencyTypeID[]"]').val($("costCurrency",xml).text());
+        myTD.find('input[name="sellPriceCurrencyTypeID[]"]').val($("priceCurrency",xml).text());
       }); 
    }
 }
@@ -93,7 +97,7 @@ function set_values(target) {
     <td>{$total_margin}</td>
   </tr>
     {$class = "good"}
-    {$total_unallocated != 0 and $class="bad"}
+    {$total_unallocated_number != 0 and $class="bad"}
   <tr>
     <td class="right {$class}">Total Unallocated:</td>
     <td class="{$class}">{$total_unallocated}</td>

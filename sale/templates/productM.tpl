@@ -79,20 +79,22 @@ $(document).ready(function() {
         <div class="view">
           <h6>Buy Cost{$buyCost_label}{page::mandatory($buyCost)}<div>Sell Price{$sellPrice_label}{page::mandatory($sellPrice)}</div></h6>
           <div style="float:left; width:30%;">
-            {$buyCost}
+            {$buyCost} {$buyCostCurrencyTypeID}
           </div>
           <div style="float:right;width:50%;">
-            {$sellPrice}
+            {$sellPrice} {$sellPriceCurrencyTypeID}
           </div>
         </div>
         <div class="edit">
           <h6>Buy Cost{$taxLabel}{page::mandatory($buyCost)}<div>Sell Price{$taxLabel}{page::mandatory($sellPrice)}</div></h6>
-          <div style="float:left; width:30%;">
+          <div style="float:left; width:30%;" class="nobr">
             <input type="text" size="8" name="buyCost" id="buyCost" value="{$buyCost}">
+            <select name="buyCostCurrencyTypeID">{$buyCostCurrencyOptions}</select>
             {$buyCost_check} 
           </div>
-          <div style="float:right;width:50%;">
+          <div style="float:right;width:50%;" class="nobr">
             <input type="text" size="8" name="sellPrice" id="sellPrice" value="{$sellPrice}">
+            <select name="sellPriceCurrencyTypeID">{$sellPriceCurrencyOptions}</select>
             {$sellPrice_check} 
           </div>
         </div>
