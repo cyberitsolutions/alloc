@@ -27,9 +27,6 @@ class product extends db_entity {
   public $display_field_name = "productName";
   public $key_field = "productID";
   public $data_fields = array("productName"
-                             ,"buyCost" => array("type"=>"money","currency"=>"buyCostCurrencyTypeID")
-                             ,"buyCostCurrencyTypeID"
-                             ,"buyCostIncTax" => array("empty_to_null"=>false)
                              ,"sellPrice" => array("type"=>"money","currency"=>"sellPriceCurrencyTypeID")
                              ,"sellPriceCurrencyTypeID"
                              ,"sellPriceIncTax" => array("empty_to_null"=>false)
@@ -86,7 +83,6 @@ class product extends db_entity {
     $ret[] = "<tr>";
     $ret[] = "  <th>Product</th>";
     $ret[] = "  <th>Description</th>";
-    $ret[] = "  <th>Buy Cost</th>";
     $ret[] = "  <th>Sell Price</th>";
     $ret[] = "</tr>";
     return implode("\n",$ret);
@@ -97,7 +93,6 @@ class product extends db_entity {
     $ret[] = "<tr>";
     $ret[] = "  <td class=\"nobr\">".product::get_link($row)."&nbsp;</td>";
     $ret[] = "  <td>".page::htmlentities($row["description"])."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".page::money($row["buyCostCurrencyTypeID"],$row["buyCost"],"%s%mo %c")."&nbsp;</td>";
     $ret[] = "  <td class=\"nobr\">".page::money($row["sellPriceCurrencyTypeID"],$row["sellPrice"],"%s%mo %c")."&nbsp;</td>";
     $ret[] = "</tr>";
     return implode("\n",$ret);
@@ -120,6 +115,21 @@ class product extends db_entity {
   function get_list_vars() {
     // stub function for one day when you can specify list parameters
     return array();
+  }
+
+  function get_buy_cost($id=false) {
+    $id or $id = $this->get_id();
+    $db = new db_alloc();
+    $q = sprintf("SELECT amount, currencyTypeID
+                    FROM productCost
+                   WHERE isPercentage != 1
+                     AND productID = %d
+                 ",$id);
+    $db->query($q);
+    while ($row = $db->row()) {
+      $amount += exchangeRate::convert($row["currencyTypeID"],$row["amount"]);
+    }
+    return $amount;
   }
 
 }

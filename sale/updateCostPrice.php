@@ -33,12 +33,8 @@ $p->set_id($product);
 $p->select();
 $p->set_tpl_values();
 
-
 // Probably not valid XML, but jQuery will parse it.
 echo "<data>\n";
-echo "<cost>".page::money($TPL["buyCostCurrencyTypeID"],$TPL["buyCost"]*$quantity,"%m")."</cost>\n";
-echo "<costCurrency>".$TPL["buyCostCurrencyTypeID"]."</costCurrency>\n";
-echo "<costTax>".($TPL["buyCostIncTax"] ? "1" : "")."</costTax>\n";
 echo "<price>".page::money($TPL["sellPriceCurrencyTypeID"],$TPL["sellPrice"]*$quantity,"%m")."</price>\n";
 echo "<priceCurrency>".$TPL["sellPriceCurrencyTypeID"]."</priceCurrency>\n";
 echo "<priceTax>".($TPL["sellPriceIncTax"] ? "1" : "")."</priceTax>\n";

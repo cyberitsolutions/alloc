@@ -25,7 +25,6 @@ function add_row() {
     tdNum++;
     var newId = "new" + tdNum;
     $('#productSaleItem_footer').before('<tr id="' + newId + '">'+$('#productSaleItemRow').html()+'</tr>');
-    $('#' + newId).find('input[name="buyCostIncTax[]"]').val(newId);
     $('#' + newId).find('input[name="sellPriceIncTax[]"]').val(newId);
     $('#' + newId).find('input[name="productSaleItemID[]"]').val(newId);
 }
@@ -38,14 +37,10 @@ function update_values(target) {
     
     if (productID != 0) {
       $.get("{$url_alloc_updateCostPrice}product="+productID+"&quantity="+quantity, function(xml) {
-        myTD.find('input[name="buyCost[]"]').val($("cost", xml).text());
         myTD.find('input[name="sellPrice[]"]').val($("price",xml).text());
         myTD.find('input[name="description[]"]').val($("description",xml).text());
-        myTD.find('input[name="buyCostIncTax[]"]').attr('checked', $("costTax",xml).text());
         myTD.find('input[name="sellPriceIncTax[]"]').attr('checked',$("priceTax",xml).text());
-        myTD.find('label[name="costCurrency"]').html($("costCurrency",xml).text());
         myTD.find('label[name="priceCurrency"]').html($("priceCurrency",xml).text());
-        myTD.find('input[name="buyCostCurrencyTypeID[]"]').val($("costCurrency",xml).text());
         myTD.find('input[name="sellPriceCurrencyTypeID[]"]').val($("priceCurrency",xml).text());
       }); 
    }
@@ -83,10 +78,6 @@ function set_values(target) {
     <td>{=$n} {$productSaleCreatedTime}</td>
     <td class="right">Project:</td>
     <td width="30%">{$show_project_options}</td>
-  </tr>
-  <tr>
-    <td class="right">Total Buy Cost:</td>
-    <td>{$total_buyCost}</td>
   </tr>
   <tr>
     <td class="right">Total Sell Price:</td>
@@ -144,7 +135,6 @@ function set_values(target) {
         <tr>
           <th>Product</th>
           <th>Quantity</th>
-          <th>Buy Cost</th>
           <th>Sell Price</th>
           <th>Description</th>
           <th width="1%" class="right"><a href="#x" class="magic" onClick="add_row();">New</a></th>

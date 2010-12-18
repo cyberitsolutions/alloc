@@ -61,12 +61,12 @@ function show_productSale_list($productSaleID, $template) {
     $productSaleItem->read_db_record($db);
     $productSaleItem->set_tpl_values();
 
-    $TPL["itemBuyCost"] = $productSaleItem->get_value("buyCost");
     $TPL["itemSellPrice"] = $productSaleItem->get_value("sellPrice");
     $TPL["itemMargin"] = $productSaleItem->get_amount_margin();
     $TPL["itemSpent"] = $productSaleItem->get_amount_spent();
     $TPL["itemEarnt"] = $productSaleItem->get_amount_earnt();
     $TPL["itemOther"] = $productSaleItem->get_amount_other();
+    $TPL["itemCosts"] = page::money(config::get_config_item("currency"),product::get_buy_cost($productSaleItem->get_value("productID")),"%s%mo %c");
     $TPL["itemTotalUnallocated"] = $productSaleItem->get_amount_unallocated();
 
     $TPL["productList_dropdown"] = page::select_options($ops, $productSaleItem->get_value("productID"));
@@ -74,11 +74,8 @@ function show_productSale_list($productSaleID, $template) {
     $TPL["transactions"] = $productSale->get_transactions($productSaleItem->get_id());
  
     if ($taxName) {
-      $TPL["buyCostTax_check"] = sprintf(" <input type='checkbox' name='buyCostIncTax[]' value='%d'%s> inc %s"
-                                      ,$productSaleItem->get_id(),$productSaleItem->get_value("buyCostIncTax") ? ' checked':'',$taxName);
       $TPL["sellPriceTax_check"] = sprintf(" <input type='checkbox' name='sellPriceIncTax[]' value='%d'%s> inc %s"
                                       ,$productSaleItem->get_id(),$productSaleItem->get_value("sellPriceIncTax") ? ' checked':'',$taxName);
-      $TPL["buyCostTax_label"] = $productSaleItem->get_value("buyCostIncTax") ? " inc ".$taxName : " ex ".$taxName;
       $TPL["sellPriceTax_label"] = $productSaleItem->get_value("sellPriceIncTax") ? " inc ".$taxName : " ex ".$taxName;
     }
    include_template($template);
@@ -95,8 +92,6 @@ function show_productSale_new($template) {
   $TPL["productList_dropdown"] = page::select_options($ops, $productSaleItem->get_value("productID"));
   $productSaleItemsDoExist and $TPL["display"] = "display:none";
   if ($taxName) {
-    $TPL["buyCostTax_check"] = sprintf(" <input type='checkbox' name='buyCostIncTax[]' value='1'%s> inc %s"
-                                    ,$productSaleItem->get_value("buyCostIncTax") ? ' checked':'',$taxName);
     $TPL["sellPriceTax_check"] = sprintf(" <input type='checkbox' name='sellPriceIncTax[]' value='1'%s> inc %s"
                                       ,$productSaleItem->get_value("sellPriceIncTax") ? ' checked':'',$taxName);
   }
@@ -194,7 +189,6 @@ if ($_POST["save"]) {
 
   if (is_array($_POST["productSaleItemID"]) && count($_POST["productSaleItemID"])) {
     is_array($_POST["sellPriceIncTax"]) or $_POST["sellPriceIncTax"] = array();
-    is_array($_POST["buyCostIncTax"]) or $_POST["buyCostIncTax"] = array();
 
     foreach ($_POST["productSaleItemID"] as $k => $productSaleItemID) {
       // Delete
@@ -206,12 +200,9 @@ if ($_POST["save"]) {
       // Save
       } else {
         $a = array("productID"=>$_POST["productID"][$k]
-                  ,"buyCost"=>$_POST["buyCost"][$k]
-                  ,"buyCostCurrencyTypeID"=>$_POST["buyCostCurrencyTypeID"][$k]
                   ,"sellPrice"=>$_POST["sellPrice"][$k]
                   ,"sellPriceCurrencyTypeID"=>$_POST["sellPriceCurrencyTypeID"][$k]
                   ,"sellPriceIncTax"=>in_array($productSaleItemID, $_POST["sellPriceIncTax"])
-                  ,"buyCostIncTax"=>in_array($productSaleItemID, $_POST["buyCostIncTax"])
                   ,"quantity"=>$_POST["quantity"][$k]
                   ,"description"=>$_POST["description"][$k]
                   ,"productSaleID"=>$productSaleID);
@@ -362,9 +353,9 @@ if (!$productSale->get_id()) {
                             you're done, submit this Sale to the Adminstrator, you will no longer be able to edit this Sale once 
                             it has been pushed to Admin.
 
-                            <br><br> As a rough guide, things are generally good if the: 'Buy Cost' = 'Transactions Outgoing';
-                            and 'Sell Price' = 'Transactions Incoming'; and 'Margin' = 'Transactions Other'. <br><br>If those
-                            last two match up then the 'Total Unallocated' field should be down to zero, which indicates that 
+                            <br><br> As a rough guide, things are generally good if the:
+                            'Sell Price' = 'Transactions Incoming'; and 'Margin' = 'Transactions Other'. <br><br>If those
+                            two match up then the 'Total Unallocated' field should be down to zero, which indicates that 
                             you have allocated all the funds that this Sale will generate.";
 
 

@@ -61,14 +61,7 @@ $(document).ready(function() {
       <div style="float:right; width:47%; padding:0px 12px; vertical-align:top;">
 
       {if $taxName}
-        {$buyCost_check = sprintf("<input type='checkbox' name='buyCostIncTax' value='1'%s> inc %s" ,$buyCostIncTax ? ' checked':'',$taxName)}
         {$sellPrice_check = sprintf("<input type='checkbox' name='sellPriceIncTax' value='1'%s> inc %s" ,$sellPriceIncTax ? ' checked':'',$taxName)}
-        {if $buyCostIncTax}
-          {$buyCost_label = " (inc ".$taxName.")"}
-        {else}
-          {$buyCost_label = " (ex ".$taxName.")"}
-        {/} 
-
         {if $sellPriceIncTax}
           {$sellPrice_label = " (inc ".$taxName.")"}
         {else}
@@ -77,22 +70,14 @@ $(document).ready(function() {
       {/}
 
         <div class="view">
-          <h6>Buy Cost{$buyCost_label}{page::mandatory($buyCost)}<div>Sell Price{$sellPrice_label}{page::mandatory($sellPrice)}</div></h6>
-          <div style="float:left; width:30%;">
-            {$buyCost} {$buyCostCurrencyTypeID}
-          </div>
-          <div style="float:right;width:50%;">
+          <h6>Sell Price{$sellPrice_label}{page::mandatory($sellPrice)}</h6>
+          <div style="float:left; width:50%;">
             {$sellPrice} {$sellPriceCurrencyTypeID}
           </div>
         </div>
         <div class="edit">
-          <h6>Buy Cost{$taxLabel}{page::mandatory($buyCost)}<div>Sell Price{$taxLabel}{page::mandatory($sellPrice)}</div></h6>
-          <div style="float:left; width:30%;" class="nobr">
-            <input type="text" size="8" name="buyCost" id="buyCost" value="{$buyCost}">
-            <select name="buyCostCurrencyTypeID">{$buyCostCurrencyOptions}</select>
-            {$buyCost_check} 
-          </div>
-          <div style="float:right;width:50%;" class="nobr">
+          <h6>Sell Price{$taxLabel}{page::mandatory($sellPrice)}</h6>
+          <div style="float:left; width:50%;" class="nobr">
             <input type="text" size="8" name="sellPrice" id="sellPrice" value="{$sellPrice}">
             <select name="sellPriceCurrencyTypeID">{$sellPriceCurrencyOptions}</select>
             {$sellPrice_check} 
