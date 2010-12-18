@@ -532,6 +532,7 @@ CREATE TABLE productSale (
   productSaleID serial PRIMARY KEY,
   clientID integer DEFAULT NULL,
   projectID integer DEFAULT NULL,
+  personID integer DEFAULT NULL,
   status varchar(255) NOT NULL,
   productSaleCreatedTime TIMESTAMP WITHOUT TIME ZONE default NULL,
   productSaleCreatedUser integer default NULL,

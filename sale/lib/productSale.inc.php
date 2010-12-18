@@ -28,6 +28,7 @@ class productSale extends db_entity {
   public $key_field = "productSaleID";
   public $data_fields = array("clientID"
                              ,"projectID"
+                             ,"personID"
                              ,"status"
                              ,"productSaleCreatedTime"
                              ,"productSaleCreatedUser"
@@ -90,16 +91,16 @@ class productSale extends db_entity {
 
     // -2 == META: Salesperson TF
     } else if ($tfID == -2) {
-      if ($this->get_value("productSaleCreatedUser")) {
+      if ($this->get_value("personID")) {
         $person = new person();
-        $person->set_id($this->get_value("productSaleCreatedUser")); 
+        $person->set_id($this->get_value("personID")); 
         $person->select();
         $tfID = $person->get_value("preferred_tfID");
         if (!$tfID) {
-          $TPL["message_bad"][] = "Unable to use META: Salesperson TF. Please ensure the Sale creator has a Preferred Payment TF.";
+          $TPL["message_bad"][] = "Unable to use META: Salesperson TF. Please ensure the Saleperson has a Preferred Payment TF.";
         }
       } else {
-        $TPL["message_bad"][] = "Unable to use META: Salesperson TF. No productSaleCreatedUser set.";
+        $TPL["message_bad"][] = "Unable to use META: Salesperson TF. No product salesperson set.";
       }
     }
     return $tfID;
