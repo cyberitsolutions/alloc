@@ -94,9 +94,9 @@ $taxRate = config::get_config_item("taxPercent") / 100.0;
 $TPL["taxRate"] = $taxRate;
 
 
-
 if ($_POST["save"]) {
   $product->read_globals();
+  $product->set_value("productActive", isset($_POST["productActive"]) ? 1 : 0);
   !$product->get_value("productName") and $TPL["message"][] = "Please enter a Product Name.";
   !$product->get_value("sellPrice")   and $TPL["message"][] = "Please enter a Sell Price.";
 

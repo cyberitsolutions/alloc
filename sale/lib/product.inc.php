@@ -32,6 +32,7 @@ class product extends db_entity {
                              ,"sellPriceIncTax" => array("empty_to_null"=>false)
                              ,"description"
                              ,"comment"
+                             ,"productActive"
                              );
 
   function delete() {
@@ -57,6 +58,9 @@ class product extends db_entity {
     if (is_array($filter) && count($filter)) {
       $f = " WHERE ".implode(" AND ",$filter);
     }
+
+    // Put the inactive ones down the bottom.
+    $f .= " ORDER BY productActive DESC"; 
 
     $query = sprintf("SELECT * FROM product ".$f);
     $db = new db_alloc;
@@ -84,6 +88,7 @@ class product extends db_entity {
     $ret[] = "  <th>Product</th>";
     $ret[] = "  <th>Description</th>";
     $ret[] = "  <th>Sell Price</th>";
+    $ret[] = "  <th>Active</th>";
     $ret[] = "</tr>";
     return implode("\n",$ret);
   }
@@ -94,6 +99,7 @@ class product extends db_entity {
     $ret[] = "  <td class=\"nobr\">".product::get_link($row)."&nbsp;</td>";
     $ret[] = "  <td>".page::htmlentities($row["description"])."&nbsp;</td>";
     $ret[] = "  <td class=\"nobr\">".page::money($row["sellPriceCurrencyTypeID"],$row["sellPrice"],"%s%mo %c")."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".($row["productActive"] ? "Yes" : "No")."</td>";
     $ret[] = "</tr>";
     return implode("\n",$ret);
   }
