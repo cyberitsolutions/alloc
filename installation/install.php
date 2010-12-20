@@ -266,6 +266,8 @@ if ($_POST["install_db"] && is_object($db)) {
   }
 
 
+$rand = sprintf("%02d",rand(0,59));
+$rand2 = sprintf("%d",rand(1,5));
 
   $body = <<<EOD
 If you're new to allocPSA, just follow the tabs across left to right at the
@@ -276,6 +278,9 @@ when there are Time Sheets.
 Here are the cron jobs from the installation in case you hadn't installed
 them yet. You will need to install at least the first one to enable the very
 useful automated reminders functionality. 
+
+# Check every day in the early hours for the exchange rates
+{$rand} {$rand2} * * * wget -q -O /dev/null {$allocURL}finance/updateExchangeRates.php
 
 # Check every 10 minutes for any allocPSA Reminders to send
 */10 * * * * wget -q -O /dev/null {$_FORM["allocURL"]}reminder/sendReminders.php
