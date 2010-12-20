@@ -34,6 +34,7 @@ class productSale extends db_entity {
                              ,"productSaleCreatedUser"
                              ,"productSaleModifiedTime"
                              ,"productSaleModifiedUser"
+                             ,"productSaleDate"
                              );
   public $permissions = array(PERM_APPROVE_PRODUCT_TRANSACTIONS => "approve product transactions");
 
@@ -262,6 +263,8 @@ class productSale extends db_entity {
     if (is_array($filter) && count($filter)) {
       $f = " WHERE ".implode(" AND ",$filter);
     }
+
+    $f.= " ORDER BY productSaleDate DESC";
 
     $db = new db_alloc();
     $query = sprintf("SELECT productSale.*, project.projectName, client.clientName
