@@ -103,7 +103,13 @@ if ($_POST["save"]) {
   if (!$TPL["message"]) {
     $product->save();
     $productID = $product->get_id();
-    alloc_redirect($TPL["url_alloc_product"]."productID=".$productID);
+
+    // If they were in the middle of creating a sale, return them back there
+    if ($_REQUEST["productSaleID"]) {
+      alloc_redirect($TPL["url_alloc_productSale"]."productSaleID=".$_REQUEST["productSaleID"]);
+    } else {
+      alloc_redirect($TPL["url_alloc_product"]."productID=".$productID);
+    }
   }
   $product->set_values();
 

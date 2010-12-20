@@ -83,7 +83,7 @@ function show_productSale_list($productSaleID, $template) {
 }
 
 function show_productSale_new($template) {
-  global $TPL, $productSaleItemsDoExist;
+  global $TPL, $productSaleItemsDoExist, $productSaleID;
   $taxName = config::get_config_item("taxName");
   $productSaleItem = new productSaleItem;
   $productSaleItem->set_values(); // wipe clean
@@ -95,6 +95,7 @@ function show_productSale_new($template) {
     $TPL["sellPriceTax_check"] = sprintf(" <input type='checkbox' name='sellPriceIncTax[]' value='1'%s> inc %s"
                                       ,$productSaleItem->get_value("sellPriceIncTax") ? ' checked':'',$taxName);
   }
+  $TPL["psid"] = $productSaleID; // poorly named template variable to prevent clobbering
   include_template($template);
 }
 
