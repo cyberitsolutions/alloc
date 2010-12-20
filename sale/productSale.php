@@ -308,6 +308,7 @@ list($client_select, $client_link, $project_select, $project_link)
 $TPL["show_client_options"] = $client_link;
 $TPL["show_project_options"] = $project_link;
 $TPL["show_person_options"] = person::get_fullname($productSale->get_value("personID"));
+$TPL["show_date"] = $productSale->get_value("productSaleDate");
 
 if (!$productSale->get_id() || $productSale->get_value("status") != "finished" && !($productSale->get_value("status") == "admin" && !CAN_APPROVE_TRANSACTIONS)) {
   $TPL["show_client_options"] = $client_select;
@@ -315,6 +316,8 @@ if (!$productSale->get_id() || $productSale->get_value("status") != "finished" &
 
   $personID = $productSale->get_value("personID");
   $TPL["show_person_options"] = "<select name='personID'>".page::select_options(person::get_username_list($personID), $personID)."</select>";
+
+  $TPL["show_date"] = page::calendar("productSaleDate", $productSale->get_value("productSaleDate"));
 }
 
 

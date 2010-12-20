@@ -72,6 +72,8 @@ function set_values(target) {
   <tr>
     <td class="right">Total Margin:</td>
     <td>{$total_margin}</td>
+    <td class="right">Sale Date:</td>
+    <td>{$show_date}</td>
   </tr>
     {$class = "good"}
     {$total_unallocated_number != 0 and $class="bad"}
