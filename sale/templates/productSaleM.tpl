@@ -3,22 +3,6 @@
 
 <script type="text/javascript">
 
-$(document).ready(function() {
-  // For marking all boxes
-  $('.allPending').bind("click", function(event) {
-    $(this).parent().parent().parent().find('.txStatus').val("pending");
-    return false;
-  });
-  $('.allApproved').bind("click", function(event) {
-    $(this).parent().parent().parent().find('.txStatus').val("approved");
-    return false;
-  });
-  $('.allRejected').bind("click", function(event) {
-    $(this).parent().parent().parent().find('.txStatus').val("rejected");
-    return false;
-  });
-});
-
 var tdNum = 0;
 
 function add_row() {
@@ -111,6 +95,7 @@ function set_values(target) {
     <input type="submit" name="move_backwards" value="&lt;-- Allocate">
     <input type="submit" name="save" value="Save">
     <input type="submit" name="move_forwards" value="Completed --&gt;">
+    <select name='changeTransactionStatus'><option value="">Transaction Status<option value='approved'>Approve<option value="rejected">Reject</select>
     {else if $status == "finished" && CAN_APPROVE_TRANSACTIONS}
     <input type="submit" name="move_backwards" value="&lt;-- Administrator">
     {/}

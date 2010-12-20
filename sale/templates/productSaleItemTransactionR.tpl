@@ -10,13 +10,7 @@
     <th>Source TF</th>
     <th>Destination TF</th>
     <th>Description</th>
-    <th>Status
-      {if $status == "admin" && CAN_APPROVE_TRANSACTIONS}
-      <a href="##" class="magic allPending">P</a>&nbsp;
-      <a href="##" class="magic allApproved">A</a>&nbsp;
-      <a href="##" class="magic allRejected">R</a>&nbsp;
-      {/}
-    </th>
+    <th>Status</th>
     <th class="right">
       <a href="#x" class="magic" onClick="$('#transactions_footer_{$productSaleItemID}').before('<tr>'+$('#transactionRow').html()+'</tr>');">New</a>
     </th>

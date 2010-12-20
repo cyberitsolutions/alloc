@@ -192,6 +192,20 @@ class productSale extends db_entity {
 
     } else if ($status == "admin" && $this->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)) {
       $this->set_value("status", "finished");
+      if ($_REQUEST["changeTransactionStatus"]) {
+        $rows = $this->get_productSaleItems();
+        foreach ($rows as $row) {
+          $ids[] = $row["productSaleItemID"];
+        }
+        if ($ids) {
+          $ids = implode(",",$ids);
+          $q = sprintf("UPDATE transaction SET status = '%s' WHERE productSaleItemID in (%s)",db_esc($_REQUEST["changeTransactionStatus"]),$ids);
+          $db = new db_alloc();
+          $db->query($q);
+        }
+        
+      }
+
     }
   }
 
