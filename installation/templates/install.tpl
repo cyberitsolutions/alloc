@@ -237,7 +237,12 @@ server.
       </tr>
       <tr>
         <td>
+{$rand = sprintf("%02d",rand(0,59))}
+{$rand2 = sprintf("%d",rand(1,5))}
           <pre>
+# Check every day in the early hours for the exchange rates
+{$rand} {$rand2} * * * wget -q -O /dev/null {$allocURL}finance/updateExchangeRates.php
+
 # Check every 10 minutes for any allocPSA Reminders to send
 */10 * * * * wget -q -O /dev/null {$allocURL}reminder/sendReminders.php
 
