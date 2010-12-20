@@ -553,7 +553,8 @@ CREATE TABLE product (
   sellPriceCurrencyTypeID varchar(255) DEFAULT NULL,
   sellPriceIncTax boolean NOT NULL default false,
   description varchar(255),
-  comment TEXT
+  comment TEXT,
+  productActive boolean NOT NULL default true
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS productCost;

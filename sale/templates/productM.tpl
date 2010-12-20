@@ -70,17 +70,23 @@ $(document).ready(function() {
       {/}
 
         <div class="view">
-          <h6>Sell Price{$sellPrice_label}{page::mandatory($sellPrice)}</h6>
-          <div style="float:left; width:50%;">
+          <h6>Sell Price{$sellPrice_label}{page::mandatory($sellPrice)}<div>Active</div></h6>
+          <div style="float:left; width:30%;">
             {$sellPrice} {$sellPriceCurrencyTypeID}
+          </div>
+          <div style="float:right; width:50%;">
+            {if $productActive}Yes{else}No{/}
           </div>
         </div>
         <div class="edit">
-          <h6>Sell Price{$taxLabel}{page::mandatory($sellPrice)}</h6>
-          <div style="float:left; width:50%;" class="nobr">
+          <h6>Sell Price{$taxLabel}{page::mandatory($sellPrice)}<div>Active</div></h6>
+          <div style="float:left; width:30%;" class="nobr">
             <input type="text" size="8" name="sellPrice" id="sellPrice" value="{$sellPrice}">
             <select name="sellPriceCurrencyTypeID">{$sellPriceCurrencyOptions}</select>
             {$sellPrice_check} 
+          </div>
+          <div style="float:right; width:50%;" class="nobr">
+            <input type="checkbox" name="productActive" {if $productActive || !$productID}checked="checked"{/}>
           </div>
         </div>
     

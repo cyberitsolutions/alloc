@@ -514,7 +514,8 @@ CREATE TABLE product (
   sellPriceCurrencyTypeID varchar(255) DEFAULT NULL,
   sellPriceIncTax boolean NOT NULL default false,
   description varchar(255),
-  comment TEXT
+  comment TEXT,
+  productActive boolean NOT NULL default true
 ) ;
 
 CREATE TABLE productCost (
