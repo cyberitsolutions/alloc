@@ -96,7 +96,6 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_reconciliationReport"           => $sess->url(SCRIPT_PATH."finance/reconciliationReport.php")
             ,"url_alloc_expenseUpload"                  => $sess->url(SCRIPT_PATH."finance/expenseUpload.php")
             ,"url_alloc_expenseUploadResults"           => $sess->url(SCRIPT_PATH."finance/expenseUploadResults.php")
-            ,"url_alloc_invoicesUpload"                 => $sess->url(SCRIPT_PATH."invoice/invoicesUpload.php")
             ,"url_alloc_invoiceList"                    => $sess->url(SCRIPT_PATH."invoice/invoiceList.php")
             ,"url_alloc_invoice"                        => $sess->url(SCRIPT_PATH."invoice/invoice.php")
             ,"url_alloc_config"                         => $sess->url(SCRIPT_PATH."config/config.php")
