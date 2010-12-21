@@ -4,8 +4,6 @@
    &nbsp; | &nbsp;
   <a href="{$url_alloc_invoiceList}mode=allocate">Allocate Invoices to TFs</a>
    &nbsp; | &nbsp;
-  <a href="{$url_alloc_invoicesUpload}">Upload Invoices File</a>
-   &nbsp; | &nbsp;
   <a href="{$url_alloc_invoiceList}">Search Invoices</a>
 
 <br>

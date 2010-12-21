@@ -3078,29 +3078,6 @@ first installed. This model works as follows.
    Invoice is moved to status Completed. 
 
 
-
-Upload Invoices File
-~~~~~~~~~~~~~~~~~~~~
-
-allocPSA allows you to upload Invoices from your accounting
-system so the revenue can be allocated to the various Project and staff
-cost-centres. Although allocPSA default factory settings are for Quicken
-Interchange format QIF, Cybersource can customize this facility to meet the
-individual allocPSA customer needs.
-
-
-1. Click the Invoices tab, and the click the Upload Invoice link in the
-top-right hand corner.
-
-2. Press the 'Browse' button to search the file
-
-3. Press the 'Upload' button after you have chosen the file
-
-allocPSA will now take a few seconds to upload the file and add the data to the
-Project accounting system and will then return to the main 'Finance' page when
-finish uploading.
-
-
 Reviewing Existing Invoices
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3409,7 +3386,7 @@ by allocPSA.
 Non-privileged users will be offered these items: TF List, New Expense Form,
 Search Invoices, View Pending Expense Forms and Search Transactions. Privileged
 users can also see the following items: Approve Invoices, Allocate Invoices,
-Upload Invoices File, New Transaction, Upload Expenses File, New TF, Push
+New Transaction, Upload Expenses File, New TF, Push
 Repeating Expenses Through, Upload Wages Files, Reconciliation Report, View
 Pending Transaction.
 
