@@ -431,6 +431,28 @@ EOD;
     $fmt = str_replace(array("%mo","%mi","%m","%S","%s","%C","%c","%N","%n"),"",$fmt); // strip leftovers away
     return $fmt;
   }
+  function money_print($rows=array()) {
+    $mainCurrency = config::get_config_item("currency");
+    foreach ($rows as $row) {
+      $sums[$row["currency"]] += $row["amount"];
+    }
+    foreach ((array)$sums as $currency => $amount) {
+      $str.= $sep.page::money($currency,$amount,"%s%m %c");
+      $sep = " + ";
+      if ($mainCurrency == $currency) {
+        $total += $amount;
+      } else {
+        $total += exchangeRate::convert($currency,$amount);
+      }
+    }
+    $total = page::money($mainCurrency,$total,"%s%m %c");
+    if ($str && $str != $total) { 
+      $str.= " = <b>".$total."</b>";
+    } else if ($str) {
+      $str = "<b>".$str."</b>";
+    }
+    return $str;
+  }
 }
 
 ?>
