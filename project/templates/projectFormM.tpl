@@ -188,11 +188,12 @@ function clickClientStatus(e) {
             <input type="text" name="projectBudget" value="{page::money($project_currencyTypeID,$project_projectBudget,"%mo")}" size="10"> 
             {$taxName and print " (inc. $taxName)"}
           </div>
-          <div style="float:right; width:50%;">
-            <select name="cost_centre_tfID">
+          <div style="float:right; width:50%;" class="nobr">
+            <select name="cost_centre_tfID" style="width:95%">
               <option value="">&nbsp;</option>
               {$cost_centre_tfID_options}
             </select>
+            {page::help("project_cost_centre_tf")}
           </div>
         </div>
         {$tax_string2 = sprintf(" (per unit%s)", $taxName ? ", inc. ".$taxName : "")}
@@ -286,24 +287,23 @@ function clickClientStatus(e) {
 <table class="box">
   <tr>
     <th class="nobr" width="10%">Financial Summary</th>
-    <th class="right" colspan="2">{page::help("project_financial_summary")}</th>
+    <th class="right" colspan="3">{page::help("project_financial_summary")}</th>
   </tr>
   <tr>
-    <td>Time Sheets</td>
-    <td class="right">{page::money($project_currencyTypeID,$total_timesheet_transactions)}</td>
+    <td class="right nobr">Outstanding Invoices</td>
+    <td class="right">{$total_invoice_transactions_pending}</td>
+    <td class="right">Paid Invoices</td>
+    <td class="right">{$total_invoice_transactions_approved}</td>
   </tr>
   <tr>
-    <td class="nobr">Other Transactions</td>
-    <td class="right">{page::money($project_currencyTypeID,$total_other_transactions)}</td>
+    <td class="right nobr">Pending time sheets</td>
+    <td class="right">{$total_timeSheet_transactions_pending}</td>
+    <td class="right">Paid time sheets</td>
+    <td class="right">{$total_timeSheet_transactions_approved}</td>
   </tr>
   <tr>
-    <td>Project Spend</td>
-    <td class="right grand_total" width="10%">{page::money($project_currencyTypeID, $total_timesheet_transactions+$total_other_transactions)}</td>
-    <td>&nbsp;&nbsp;&nbsp;{$project_projectBudget and print sprintf("%0.1f%%",($total_timesheet_transactions+$total_other_transactions) / $project_projectBudget*100)}</td>
-  </tr>
-  <tr>
-    <td class="nobr">Task Time Estimate</td>
-    <td colspan="2">{$time_remaining} {page::money($project_currencyTypeID,$cost_remaining)} {$count_not_quoted_tasks}</td>
+    <td class="right nobr">Task Time Estimate</td>
+    <td class="right" colspan="3">{$time_remaining} {page::money($project_currencyTypeID,$cost_remaining)} {$count_not_quoted_tasks}</td>
   </tr>            
 </table>
 {/}

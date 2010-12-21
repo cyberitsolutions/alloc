@@ -616,8 +616,6 @@ if (is_object($project) && $project->get_id()) {
     $not_quoted = count($tasks) - $count_quoted_tasks;
     $not_quoted and $TPL["count_not_quoted_tasks"] = "(".sprintf("%d",$not_quoted)." tasks not included in estimate)";
   }
-
-  list($TPL["total_timesheet_transactions"], $TPL["total_other_transactions"]) = $project->get_project_budget_spent();
 }
 
 $TPL["navigation_links"] = $project->get_navigation_links();
@@ -734,6 +732,75 @@ $TPL["taxName"] = config::get_config_item("taxName");
 // Need to html-ise projectName and description
 $TPL["project_projectName_html"] = page::to_html($project->get_value("projectName"));
 $TPL["project_projectComments_html"] = page::to_html($project->get_value("projectComments"));
+
+$db = new db_alloc();
+
+$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+                  AS amount, transaction.currencyTypeID as currency
+                FROM transaction
+           LEFT JOIN timeSheet on timeSheet.timeSheetID = transaction.timeSheetID
+           LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
+               WHERE timeSheet.projectID = %d
+                 AND transaction.status = 'pending'
+            GROUP BY transaction.currencyTypeID
+              ",$project->get_id());
+$db->query($q);
+unset($rows);
+while ($row = $db->row()) {
+  $rows[] = $row;
+}
+$TPL["total_timeSheet_transactions_pending"] = page::money_print($rows);
+
+$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+                  AS amount, transaction.currencyTypeID as currency
+                FROM transaction
+           LEFT JOIN timeSheet on timeSheet.timeSheetID = transaction.timeSheetID
+           LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
+               WHERE timeSheet.projectID = %d
+                 AND transaction.status = 'approved'
+            GROUP BY transaction.currencyTypeID
+              ",$project->get_id());
+$db->query($q);
+unset($rows);
+while ($row = $db->row()) {
+  $rows[] = $row;
+}
+$TPL["total_timeSheet_transactions_approved"] = page::money_print($rows);
+
+$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+                  AS amount, transaction.currencyTypeID as currency
+                FROM transaction
+           LEFT JOIN invoiceItem on invoiceItem.invoiceItemID = transaction.invoiceItemID
+           LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID
+           LEFT JOIN currencyType on currencyType.currencyTypeID = invoice.currencyTypeID
+               WHERE invoice.projectID = %d
+                 AND transaction.status = 'pending'
+            GROUP BY transaction.currencyTypeID
+              ",$project->get_id());
+$db->query($q);
+unset($rows);
+while ($row = $db->row()) {
+  $rows[] = $row;
+}
+$TPL["total_invoice_transactions_pending"] = page::money_print($rows);
+
+$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+                  AS amount, transaction.currencyTypeID as currency
+                FROM transaction
+           LEFT JOIN invoiceItem on invoiceItem.invoiceItemID = transaction.invoiceItemID
+           LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID
+           LEFT JOIN currencyType on currencyType.currencyTypeID = invoice.currencyTypeID
+               WHERE invoice.projectID = %d
+                 AND transaction.status = 'approved'
+            GROUP BY transaction.currencyTypeID
+              ",$project->get_id());
+$db->query($q);
+unset($rows);
+while ($row = $db->row()) {
+  $rows[] = $row;
+}
+$TPL["total_invoice_transactions_approved"] = page::money_print($rows);
+
 
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");
