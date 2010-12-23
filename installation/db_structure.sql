@@ -134,7 +134,7 @@ CREATE TABLE invoice (
   invoiceNum integer NOT NULL,
   invoiceName varchar(255) NOT NULL default '',
   invoiceStatus varchar(255) NOT NULL DEFAULT 'edit',
-  currencyTypeID varchar(255) default NULL,
+  currencyTypeID varchar(3) NOT NULL,
   maxAmount BIGINT DEFAULT 0
 ) ENGINE=InnoDB PACK_KEYS=0;
 
@@ -240,7 +240,7 @@ CREATE TABLE project (
   dateActualStart date default NULL,
   dateActualCompletion date default NULL,
   projectBudget BIGINT DEFAULT NULL,
-  currencyTypeID varchar(255) default NULL,
+  currencyTypeID varchar(3) NOT NULL,
   projectShortName varchar(255) default NULL,
   projectStatus varchar(255) NOT NULL default 'Current',
   projectPriority integer default NULL,
@@ -434,7 +434,7 @@ CREATE TABLE timeSheet (
   payment_insurance boolean default false,
   recipient_tfID integer default NULL,
   customerBilledDollars BIGINT DEFAULT NULL,
-  currencyTypeID VARCHAR(255) DEFAULT NULL
+  currencyTypeID VARCHAR(3) NOT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS timeSheetItem;
@@ -495,8 +495,8 @@ CREATE TABLE transaction (
   companyDetails text NOT NULL,
   product varchar(255) NOT NULL default '',
   amount BIGINT NOT NULL DEFAULT 0,
-  currencyTypeID VARCHAR(255) DEFAULT NULL,
-  destCurrencyTypeID varchar(255) DEFAULT NULL,
+  currencyTypeID VARCHAR(3) NOT NULL,
+  destCurrencyTypeID varchar(3) NOT NULL,
   exchangeRate DECIMAL (14,5) NOT NULL DEFAULT 1,
   status varchar(255) NOT NULL DEFAULT 'pending',
   dateApproved DATE DEFAULT NULL,
@@ -538,7 +538,7 @@ CREATE TABLE transactionRepeat (
   transactionFinishDate date NOT NULL,
   paymentBasis varchar(255) NOT NULL default '',
   amount BIGINT NOT NULL DEFAULT 0,
-  currencyTypeID VARCHAR(255) DEFAULT NULL,
+  currencyTypeID VARCHAR(3) NOT NULL,
   product varchar(255) NOT NULL default '',
   status varchar(255) NOT NULL default 'pending',
   transactionType varchar(255) NOT NULL,
@@ -550,7 +550,7 @@ CREATE TABLE product (
   productID integer NOT NULL auto_increment PRIMARY KEY,
   productName varchar(255) NOT NULL DEFAULT '',
   sellPrice BIGINT NOT NULL DEFAULT 0,
-  sellPriceCurrencyTypeID varchar(255) DEFAULT NULL,
+  sellPriceCurrencyTypeID varchar(3) NOT NULL,
   sellPriceIncTax boolean NOT NULL default false,
   description varchar(255),
   comment TEXT,
@@ -564,7 +564,7 @@ CREATE TABLE productCost (
   fromTfID integer NOT NULL,
   tfID integer NOT NULL,
   amount BIGINT NOT NULL DEFAULT 0,
-  currencyTypeID VARCHAR(255) DEFAULT NULL,
+  currencyTypeID VARCHAR(3) NOT NULL,
   isPercentage boolean NOT NULL default false,
   description varchar(255)
 ) ENGINE=InnoDB PACK_KEYS=0;
@@ -589,7 +589,7 @@ CREATE TABLE productSaleItem (
   productID integer NOT NULL,
   productSaleID integer NOT NULL,
   sellPrice BIGINT NOT NULL DEFAULT 0,
-  sellPriceCurrencyTypeID varchar(255) DEFAULT NULL,
+  sellPriceCurrencyTypeID varchar(3) NOT NULL,
   sellPriceIncTax boolean NOT NULL default false,
   quantity integer NOT NULL DEFAULT 1,
   description varchar(255)
@@ -653,7 +653,7 @@ CREATE TABLE projectType (
 
 DROP TABLE IF EXISTS currencyType;
 CREATE TABLE currencyType (
-  currencyTypeID varchar(255) PRIMARY KEY,
+  currencyTypeID varchar(3) PRIMARY KEY,
   currencyTypeLabel VARCHAR(255) DEFAULT NULL,
   currencyTypeName VARCHAR(255) DEFAULT NULL,
   numberToBasic integer DEFAULT 0,
