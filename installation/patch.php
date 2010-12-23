@@ -42,7 +42,7 @@ function apply_patch($f) {
   // We MUST ensure that the user has a currency set before applying this patch.
   if ($file == "patch-00188-alla.sql") {
     if (!config::get_config_item('currency')) {
-      die("No default currency is set! Login to alloc (ignore any errors) go to Setup -> Finance and select a Main Currency. And then click the 'Update Transactions That Have No Currency' button. Then return here and apply this patch (patch-188). IT IS REALLY IMPORTANT THAT YOU FOLLOW THESE INSTRUCTIONS as the storage format for monetary amounts has changed.");
+      die("No default currency is set! Login to alloc (ignore any errors, you may need to manually change the url to config/config.php after logging in) go to Setup -> Finance and select a Main Currency. And then click the 'Update Transactions That Have No Currency' button. Then return here and apply this patch (patch-188). IT IS REALLY IMPORTANT THAT YOU FOLLOW THESE INSTRUCTIONS as the storage format for monetary amounts has changed.");
     }
   }
 
