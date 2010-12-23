@@ -665,9 +665,14 @@ class transaction extends db_entity {
 
     // If this month is January, go from last Feb to this Feb
     $m = date("m") + 1;
+    $y = date("Y");
+
+    // jump back a year iff it's December now
     if ($m == 13)
     	$m = 1;
-    $y = date("Y") - 1;
+    else
+        $y -= 1;
+
     $label_monthDate = date($display_format);
 
     for ($j = 0;$j < 13;$j++) {
