@@ -185,14 +185,14 @@ class timeSheet extends db_entity {
     $db->query(sprintf("SELECT SUM(timeSheetItemDuration) AS total_duration, 
                                SUM((timeSheetItemDuration * timeUnit.timeUnitSeconds) / 3600) AS total_duration_hours,
                                SUM((rate * pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_dollars,
-                               SUM((%0.2f* pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_customerBilledDollars
+                               SUM((IFNULL(timeSheet.customerBilledDollars,0) * pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_customerBilledDollars
                                ".$sql."
                           FROM timeSheetItem
                      LEFT JOIN timeUnit ON timeUnit.timeUnitID = timeSheetItem.timeSheetItemDurationUnitID
                      LEFT JOIN timeSheet on timeSheet.timeSheetID = timeSheetItem.timeSheetID
                      LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
                          WHERE timeSheetItem.timeSheetID = %d"
-                       ,$this->get_value("customerBilledDollars"),$this->get_id()));
+                       ,$this->get_id()));
 
     $row = $db->row();
     $this->pay_info = array_merge((array)$this->pay_info, (array)$row);
@@ -592,19 +592,29 @@ class timeSheet extends db_entity {
      
       $row["currencyTypeID"] = $t->get_value("currencyTypeID");
       $row["amount"] = $t->pay_info["total_dollars"];
-      $extra["amountTotal"] += $row["amount"];
+      $amount_tallies[] = array("amount"=>$row["amount"],"currency"=>$row["currencyTypeID"]);
+      $extra["amountTotal"] += exchangeRate::convert($row["currencyTypeID"],$row["amount"]);
       $extra["totalHours"] += $t->pay_info["total_duration_hours"];
       $row["totalHours"] += $t->pay_info["total_duration_hours"];
       $row["duration"] = $t->pay_info["summary_unit_totals"];
       $row["person"] = $people_array[$row["personID"]]["name"];
       $row["status"] = $status_array[$row["status"]];
       $row["customerBilledDollars"] = $t->pay_info["total_customerBilledDollars"];
-      $extra["customerBilledDollarsTotal"] += $t->pay_info["total_customerBilledDollars"];
+      $extra["customerBilledDollarsTotal"] += exchangeRate::convert($row["currencyTypeID"],$t->pay_info["total_customerBilledDollars"]);
+      $billed_tallies[] = array("amount"=>$row["customerBilledDollars"],"currency"=>$row["currencyTypeID"]);
 
       if ($_FORM["showTransactionsNeg"] || $_FORM["showTransactionsPos"]) {
-        list($row["transactionsPos"],$row["transactionsNeg"]) = $t->get_transaction_totals();
-        $extra["transactionsPosTotal"] += $row["transactionsPos"];
-        $extra["transactionsNegTotal"] += $row["transactionsNeg"];
+        list($pos,$neg) = $t->get_transaction_totals();
+
+        $row["transactionsPos"] = page::money_print($pos);
+        $row["transactionsNeg"] = page::money_print($neg);
+
+        foreach ((array)$pos as $v) {
+          $pos_tallies[] = $v;
+        }
+        foreach ((array)$neg as $v) {
+          $neg_tallies[] = $v;
+        }
       }
 
       $p = new project();
@@ -613,6 +623,11 @@ class timeSheet extends db_entity {
       $summary.= timeSheet::get_list_tr($row,$_FORM);
       $rows[$row["timeSheetID"]] = $row;
     }
+
+    $_FORM["amount_tallies"] = page::money_print($amount_tallies);
+    $_FORM["billed_tallies"] = page::money_print($billed_tallies);
+    $_FORM["positive_tallies"] = page::money_print($pos_tallies);
+    $_FORM["negative_tallies"] = page::money_print($neg_tallies);
 
     if ($print && $_FORM["return"] == "array") {
       return $rows;
@@ -629,21 +644,33 @@ class timeSheet extends db_entity {
   function get_transaction_totals() {
   
     $db = new db_alloc();
-    $q = sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS total 
+    $q = sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount,
+                         transaction.currencyTypeID as currency
                     FROM transaction 
                LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                   WHERE amount>0 AND status = 'approved' AND timeSheetID = %d",$this->get_id());
+                   WHERE amount>0
+                     AND status = 'approved' 
+                     AND timeSheetID = %d
+                GROUP BY transaction.currencyTypeID
+                 ",$this->get_id());
     $db->query($q);
-    $row = $db->row();
-    $pos = $row["total"];
+    while($row = $db->row()) {
+      $pos[] = $row;
+    }
 
-    $q = sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS total 
+    $q = sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount,
+                         transaction.currencyTypeID as currency
                     FROM transaction 
                LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                   WHERE amount<0 AND status = 'approved' AND timeSheetID = %d",$this->get_id());
+                   WHERE amount<0
+                     AND status = 'approved'
+                     AND timeSheetID = %d
+                GROUP BY transaction.currencyTypeID
+                 ",$this->get_id());
     $db->query($q);
-    $row = $db->row();
-    $neg = $row["total"];
+    while ($row = $db->row()) {
+      $neg[] = $row;
+    }
 
     return array($pos,$neg);
   }
@@ -683,9 +710,9 @@ class timeSheet extends db_entity {
       $_FORM["showStatus"]        and $summary.= "\n<th>Status</th>";
       $_FORM["showDuration"]      and $summary.= "\n<th>Duration</th>";
       $_FORM["showAmount"]        and $summary.= "\n<th class=\"right\">Amount</th>";
-      $_FORM["showCustomerBilledDollars"] and $summary.= "\n<th class=\"right\">Customer Billed</th>";
-      $_FORM["showTransactionsPos"] and $summary.= "\n<th class=\"right\">Sum $ &gt;0</th>";
-      $_FORM["showTransactionsNeg"] and $summary.= "\n<th class=\"right\">Sum $ &lt;0</th>";
+      $_FORM["showCustomerBilledDollars"] and $summary.= "\n<th class=\"right\">Client Billed</th>";
+      $_FORM["showTransactionsPos"] and $summary.= "\n<th class=\"right\">Sum &gt;0</th>";
+      $_FORM["showTransactionsNeg"] and $summary.= "\n<th class=\"right\">Sum &lt;0</th>";
       $summary.="\n</tr>";
       return $summary;
     }
@@ -709,10 +736,10 @@ class timeSheet extends db_entity {
       $_FORM["showDateTo"]          and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showStatus"]          and $summary[] = "  <td>&nbsp;</td>";
       $_FORM["showDuration"]        and $summary[] = "  <td class=\"grand_total left\">".sprintf("%0.2f", $row["totalHours"])." Hours</td>";
-      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total right\">".$row["amountTotal"]."&nbsp;</td>";
-      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total right\">".$row["customerBilledDollarsTotal"]."&nbsp;</td>";
-      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total right\">".$row["transactionsPosTotal"]."&nbsp;</td>";
-      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total right\">".$row["transactionsNegTotal"]."&nbsp;</td>";
+      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total right\">".$_FORM["amount_tallies"]."</td>";
+      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total right nobr\">".$_FORM["billed_tallies"]."</td>";
+      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total right nobr\">".$_FORM["positive_tallies"]."</td>";
+      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total right nobr\">".$_FORM["negative_tallies"]."</td>";
       $summary[] = "</tr>";
       $summary[] = "</tfoot>";
       $summary = "\n".implode("\n",$summary);

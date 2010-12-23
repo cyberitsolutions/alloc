@@ -32,6 +32,10 @@ class exchangeRate extends db_entity {
                              );
 
   function get_er($from, $to, $date="") {
+    static $cache;
+    if (imp($cache[$from][$to][$date])) {
+      return $cache[$from][$to][$date];
+    }
     $db = new db_alloc();
     if ($date) {
       $q = sprintf("SELECT *
@@ -60,6 +64,7 @@ class exchangeRate extends db_entity {
       $db->query($q);
       $row = $db->row();
     }
+    $cache[$from][$to][$date] = $row["exchangeRate"];
     return $row["exchangeRate"];
   }
 
