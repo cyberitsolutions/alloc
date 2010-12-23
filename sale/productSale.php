@@ -203,7 +203,7 @@ if ($_POST["save"]) {
         $a = array("productID"=>$_POST["productID"][$k]
                   ,"sellPrice"=>$_POST["sellPrice"][$k]
                   ,"sellPriceCurrencyTypeID"=>$_POST["sellPriceCurrencyTypeID"][$k]
-                  ,"sellPriceIncTax"=>in_array($productSaleItemID, $_POST["sellPriceIncTax"])
+                  ,"sellPriceIncTax"=>in_array($productSaleItemID, $_POST["sellPriceIncTax"]) || isset($_POST["sellPriceIncTax"][$k])
                   ,"quantity"=>$_POST["quantity"][$k]
                   ,"description"=>$_POST["description"][$k]
                   ,"productSaleID"=>$productSaleID);
