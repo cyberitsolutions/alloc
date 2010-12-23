@@ -26,7 +26,6 @@ class productCost extends db_entity {
   public $data_table = "productCost";
   public $key_field = "productCostID";
   public $data_fields = array("tfID"
-                             ,"fromTfID"
                              ,"productID"
                              ,"amount" => array("type"=>"money")
                              ,"isPercentage"=> array("empty_to_null"=>false)
@@ -36,11 +35,8 @@ class productCost extends db_entity {
 
   function validate() {
     $this->get_value("productID")    or $err[] = "Missing a Product.";
-    $this->get_value("fromTfID")     or $err[] = "Missing a Source TF.";
     $this->get_value("tfID")         or $err[] = "Missing a Destination TF.";
     $this->get_value("amount")       or $err[] = "Missing an amount.";
-    #$this->get_value("isPercentage") or $err[] = "Missing the isPercentage field.";
-    $this->get_value("tfID") == $this->get_value("fromTfID") and $err[] = "Can't have identical Source and Destination TF's.";
     return parent::validate($err);
   }
 

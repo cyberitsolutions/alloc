@@ -138,7 +138,6 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
 
         $a = array("productCostID"=>$productCostID
                   ,"productID"=>$productID
-                  ,"fromTfID"=>$_POST["fromTfID"][$k]
                   ,"tfID"=>$_POST["tfID"][$k]
                   ,"amount"=>$_POST["amount"][$k]
                   ,"isPercentage"=>$_POST["save_commissions"] ? 1 : 0
