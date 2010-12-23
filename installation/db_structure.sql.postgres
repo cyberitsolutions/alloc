@@ -521,7 +521,6 @@ CREATE TABLE product (
 CREATE TABLE productCost (
   productCostID serial PRIMARY KEY,
   productID integer NOT NULL,
-  fromTfID integer NOT NULL,
   tfID integer NOT NULL,
   amount BIGINT NOT NULL DEFAULT 0,
   currencyTypeID VARCHAR(3) NOT NULL,

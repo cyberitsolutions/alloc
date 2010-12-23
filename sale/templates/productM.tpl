@@ -124,7 +124,6 @@ $(document).ready(function() {
       <table class="list">
         <tr>
           <th width="15%">Amount</th>
-          <th width="35%">Source TF</th>
           <th width="35%">Destination TF</th>
           <th>Description</th>
           <th class="right"><a href="#x" class="magic" onClick="$('#product_cost_footer').before('<tr>'+$('#product_cost_row').html()+'</tr>');">New</a></th>
@@ -155,7 +154,6 @@ $(document).ready(function() {
       <table class="list">
         <tr>
           <th width="15%">Percentage</th>
-          <th width="35%">Source TF</th>
           <th width="35%">Destination TF</th>
           <th>Description</th>
           <th class="right"><a href="#x" class="magic" onClick="$('#product_commission_footer').before('<tr>'+$('#product_commission_row').html()+'</tr>');">New</a></th>

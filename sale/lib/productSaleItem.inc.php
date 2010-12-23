@@ -178,7 +178,7 @@ class productSaleItem extends db_entity {
 
     // Next transaction represents the amount that someone has paid the
     // sellPrice amount for the product. This money is transferred from 
-    // the Incoming transactions TF, to the Projects TF (META: -1).
+    // the Incoming transactions TF, to the Project's TF (META: -1).
     $this->create_transaction(config::get_config_item("inTfID"), -1 ,page::money($this->get_value("sellPriceCurrencyTypeID"),$this->get_value("sellPrice"),"%mo"), "Product Sale: ".$productName,$this->get_value("sellPriceCurrencyTypeID"));
 
     // Now loop through all the productCosts for the sale items product.
@@ -194,7 +194,7 @@ class productSaleItem extends db_entity {
     while ($productCost_row = $db2->next_record()) {
       $amount = page::money($productCost_row["currencyTypeID"],$productCost_row["amount"] * $this->get_value("quantity"),"%mo");
       $description = "Product Cost: ".$productCost_row["productName"]." ".$productCost_row["description"];
-      $this->create_transaction($productCost_row["fromTfID"], $productCost_row["tfID"], $amount, $description, $productCost_row["currencyTypeID"]);
+      $this->create_transaction(-1, $productCost_row["tfID"], $amount, $description, $productCost_row["currencyTypeID"]);
     }
 
     // Need to do the percentages separately because they rely on the $totalUnallocated figure
@@ -215,7 +215,7 @@ class productSaleItem extends db_entity {
     while ($productCommission_row = $db2->next_record()) {
       $amount = page::money($productCommission_row["currencyTypeID"],page::money(config::get_config_item("currency"),$totalUnallocated,"%mo") * $productCommission_row["amount"]/100,"%mo");
       $description = "Product Commission: ".$productCommission_row["productName"]." ".$productCommission_row["description"];
-      $this->create_transaction($productCommission_row["fromTfID"], $productCommission_row["tfID"], $amount, $description, config::get_config_item("currency"));
+      $this->create_transaction(-1, $productCommission_row["tfID"], $amount, $description, config::get_config_item("currency"));
     }
   }
 

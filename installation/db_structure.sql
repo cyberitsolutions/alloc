@@ -561,7 +561,6 @@ DROP TABLE IF EXISTS productCost;
 CREATE TABLE productCost (
   productCostID integer NOT NULL auto_increment PRIMARY KEY,
   productID integer NOT NULL,
-  fromTfID integer NOT NULL,
   tfID integer NOT NULL,
   amount BIGINT NOT NULL DEFAULT 0,
   currencyTypeID VARCHAR(3) NOT NULL,
