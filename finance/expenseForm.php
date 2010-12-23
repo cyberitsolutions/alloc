@@ -401,16 +401,17 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {
   $db = new db_alloc;
-  $db->query(sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS sum, transaction.currencyTypeID
+  $db->query(sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount, 
+                             transaction.currencyTypeID as currency
                         FROM transaction
                    LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                        WHERE expenseFormID = %d
                     GROUP BY transaction.currencyTypeID
                   ",$expenseForm->get_id()));
-  while ($db->next_record()) {
-    $TPL["formTotal"].= $sp.page::money($db->f("currencyTypeID"),abs($db->f("sum")),"%s%m");
-    $sp = " + ";
+  while ($row = $db->row()) {
+    $rows[] = $row;
   }
+  $TPL["formTotal"] = page::money_print($rows);
 }
 
 if (is_object($expenseForm) && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION) 
