@@ -162,28 +162,32 @@ class page {
     $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients","Comment"=>"Comment","Wiki"=>"Wiki");
     return page::select_options($category_options, $category);
   } 
-  function help($topic) {
+  function help($topic, $hovertext=false) {
     global $TPL;
-    $str = page::get_help_string($topic);
+    $str = page::prepare_help_string(@file_get_contents($TPL["url_alloc_help"].$topic.".html"));
     if (strlen($str)) {
       $img = "<div id='help_button_".$topic."' style='display:inline;'><a href=\"".$TPL["url_alloc_getHelp"]."topic=".$topic."\" target=\"_blank\">";
       $img.= "<img border='0' class='help_button' onmouseover=\"help_text_on('help_button_".$topic."','".$str."');\" onmouseout=\"help_text_off('help_button_".$topic."');\" src=\"";
       $img.= $TPL["url_alloc_images"]."help.gif\" alt=\"Help\" /></a></div>";
+    } else if ($topic) {
+      $str = page::prepare_help_string($topic);
+      $img = "<div id='help_button_".md5($topic)."' style='display:inline;'>";
+      if ($hovertext) {
+        $img.= "<span onmouseover=\"help_text_on('help_button_".md5($topic)."','".$str."');\" onmouseout=\"help_text_off('help_button_".md5($topic)."');\">";
+        $img.= $hovertext."</span>";
+      } else {
+        $img.= "<img border='0' class='help_button' onmouseover=\"help_text_on('help_button_".md5($topic)."','".$str."');\" ";
+        $img.= "onmouseout=\"help_text_off('help_button_".md5($topic)."');\" src=\"".$TPL["url_alloc_images"]."help.gif\" alt=\"Help\" />";
+      }
+      $img.= "</div>";
     }
     return $img;
   }
-  function get_help_string($topic) {
-    $str = page::htmlentities(addslashes(page::get_raw_help_string($topic)));
+  function prepare_help_string($str) {
+    $str = page::htmlentities(addslashes($str));
     $str = str_replace("\r"," ",$str);
     $str = str_replace("\n"," ",$str);
     return $str;
-  }
-  function get_raw_help_string($topic) {
-    global $TPL;
-    $file = $TPL["url_alloc_help"].$topic.".html";
-    if (file_exists($file)) {
-      return file_get_contents($file);
-    } 
   }
   function textarea($name, $default_value="", $ops=array()) {
     $heights = array("small"=>40, "medium"=>100, "large"=>340, "jumbo"=>440);
@@ -334,6 +338,16 @@ EOD;
       return "<b style=\"font-weight:bold;font-size:100%;color:red;display:inline;top:-5px !important;top:-3px;position:relative;\">".$star."</b>";
     }
   }
+  function exclaim($field="") {
+    $star = "&lowast;";
+    if (stristr($_SERVER["HTTP_USER_AGENT"],"MSIE")) {
+      $star = "*";
+    }
+    if ($field == "") {
+      return "<b style=\"font-weight:bold;font-size:100%;color:green;display:inline;top:-5px !important;top:-3px;position:relative;\">".$star."</b>";
+    }
+  }
+
   function stylesheet() {
     if ($_GET["media"] == "print") {
       return "print.css";
@@ -433,9 +447,17 @@ EOD;
   }
   function money_print($rows=array()) {
     $mainCurrency = config::get_config_item("currency");
-    foreach ($rows as $row) {
+    foreach ((array)$rows as $row) {
       $sums[$row["currency"]] += $row["amount"];
+      $k = $row["currency"];
     }
+
+    // If there's only one currency, then just return that figure.
+    if (count($sums) == 1) {
+      return page::money($k,$sums[$k],"%s%m %c");
+    }
+
+    // Else if there's more than one currency, we'll provide a tooltip of the aggregation.
     foreach ((array)$sums as $currency => $amount) {
       $str.= $sep.page::money($currency,$amount,"%s%m %c");
       $sep = " + ";
@@ -447,11 +469,11 @@ EOD;
     }
     $total = page::money($mainCurrency,$total,"%s%m %c");
     if ($str && $str != $total) { 
-      $str.= " = <b>".$total."</b>";
+      $rtn = page::help(page::exclaim()."<b>Approximate currency conversion</b><br>".$str." = ".$total,page::exclaim().$total);
     } else if ($str) {
-      $str = "<b>".$str."</b>";
+      $rtn = $str;
     }
-    return $str;
+    return $rtn;
   }
 }
 
