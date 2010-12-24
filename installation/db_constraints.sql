@@ -32,6 +32,7 @@ CREATE INDEX idx_fromTfID ON transaction (fromTfID);
 CREATE INDEX idx_productSaleID ON transaction (productSaleID);
 CREATE INDEX idx_productSaleItemID ON transaction (productSaleItemID);
 CREATE INDEX idx_transactionGroupID ON transaction (transactionGroupID);
+CREATE INDEX idx_interestedParty_entityID ON interestedParty (entityID);
 
 -- Unique key constraints
 CREATE UNIQUE INDEX name ON config (name);
