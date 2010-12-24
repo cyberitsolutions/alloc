@@ -275,8 +275,8 @@ $rand2 = sprintf("%d",rand(1,5));
 
   $body = <<<EOD
 If you're new to allocPSA, just follow the tabs across left to right at the
-top of the page, ie: Clients have Projects &gt; Projects have Tasks &gt; Time
-Sheet are billed against Tasks &gt; and the Finance section will help you out
+top of the page, ie: Clients have Projects > Projects have Tasks > Time
+Sheet are billed against Tasks > and the Finance section will help you out
 when there are Time Sheets.
 
 Here are the cron jobs from the installation in case you hadn't installed
@@ -298,7 +298,7 @@ useful automated reminders functionality.
 # Check for allocPSA Repeating Expenses once a day at 4:40am
 40 4 * * * wget -q -O /dev/null {$_FORM["allocURL"]}finance/checkRepeat.php
 
-Please feel free to contact us at Cybersource &lt;info@cyber.com.au&gt; or just use
+Please feel free to contact us at Cybersource <info@cyber.com.au> or just use
 the forums at http://sourceforge.net/projects/allocpsa/ if you have any questions.
 
 To remove this announcement click on the Tools tab and then click the
