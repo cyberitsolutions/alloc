@@ -23,6 +23,10 @@
 define("IN_INSTALL_RIGHT_NOW",1);
 require_once("../alloc.php");
 
+// The user hasn't set their timezone, so pull up the default and suppress the warning
+$timeZone = @date_default_timezone_get();
+date_default_timezone_set($timeZone);
+
 define("IMG_TICK","<img src=\"".$TPL["url_alloc_images"]."tick.gif\" alt=\"Good\">");
 define("IMG_CROSS","<img src=\"".$TPL["url_alloc_images"]."cross.gif\" alt=\"Bad\">");
 $TPL["IMG_TICK"] = IMG_TICK;
@@ -322,6 +326,11 @@ EOD;
     }
   }
 
+  // Set up the default timezone
+  $query = sprintf("INSERT INTO config (name, value, type) VALUES ('allocTimezone', '%s', 'text')", db_esc($timeZone));
+  if ($db->query($query)) {
+    $errors[] = "Error! (".mysql_error().").";
+  }
 
   if (!is_array($errors) && !count($errors)) {
     $text_tab_3b[] = "Database import successful!";

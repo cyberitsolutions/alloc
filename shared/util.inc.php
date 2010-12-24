@@ -39,45 +39,43 @@ function path_under_path($unsafe,$safe,$use_realpath=true) {
     }
   }
 }
+
+// Format a time offset in seconds to (+|-)HH:MM
+function format_offset($secs) {
+  // sign will be included in the hours
+  $sign = $secs < 0 ? '' : '+';
+  $h = $secs / 3600;
+  $m = $secs % 3600 / 60;
+  
+  return sprintf('%s%2d:%02d', $sign,$h,$m);
+}
+
+// List of Timezone => Offset Timezone
+// i.e. Australia/Melbourne => +11:00 Australia/Melbourne
+// Ordered by GMT offset
 function get_timezone_array() {
-  return array("-12"  => "-12"
-              ,"-11"  => "-11"
-              ,"-10"  => "-10"
-              ,"-9.5" => "-09.5"
-              ,"-9"   => "-09"
-              ,"-8.5" => "-08.5"
-              ,"-8"   => "-08 PST"
-              ,"-7"   => "-07 MST"
-              ,"-6"   => "-06 CST"
-              ,"-5"   => "-05 EST"
-              ,"-4"   => "-04 AST"
-              ,"-3.5" => "-03.5"
-              ,"-3"   => "-03 ADT"
-              ,"-2"   => "-02"
-              ,"-1"   => "-01"
-              ,"0"    => "00 GMT"
-              ,"1"    => "+01 CET"
-              ,"2"    => "+02"
-              ,"3"    => "+03"
-              ,"3.5"  => "+03.5"
-              ,"4"    => "+04"
-              ,"4.5"  => "+04.5"
-              ,"5"    => "+05"
-              ,"5.5"  => "+05.5"
-              ,"6"    => "+06"
-              ,"6.5"  => "+06.5"
-              ,"7"    => "+07"
-              ,"8"    => "+08"
-              ,"9"    => "+09"
-              ,"9.5"  => "+09.5"
-              ,"10"   => "+10"
-              ,"10.5" => "+10.5"
-              ,"11"   => "+11"
-              ,"11.5" => "+11.5"
-              ,"12"   => "+12"
-              ,"13"   => "+13"
-              ,"14"   => "+14"
-              );
+  $zones = timezone_identifiers_list();
+  $zonelist = array();
+
+  // List format suitable for sorting
+  $now = new DateTime();
+
+  $idx = 0; //to distinguish timezones on the same offset
+  foreach ($zones as $zone) {
+    $tz = new DateTimeZone($zone);
+    $offset = $tz->getOffset($now);
+    // Index is [actual offset]+[arbitrary index]{3}
+    $zonelist[$offset * 10000 + $idx++] = array($zone, format_offset($offset) . " " . $zone);
+  }
+
+  // Sort and unpack
+  $list = array();
+  ksort($zonelist);
+  foreach ($zonelist as $zone) {
+    $list[$zone[0]] = $zone[1];
+  }
+
+  return $list;
 }
 function format_date($format="Y/m/d", $date="") {
 

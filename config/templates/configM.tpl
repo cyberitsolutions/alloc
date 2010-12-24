@@ -23,13 +23,13 @@
     <td><input type="text" size="70" value="{$allocURL}" name="allocURL"></td> 
     <td width="1%">{page::help("config_allocURL")}</td>
   </tr>
-<!-- 
+ 
   <tr>
     <td width="20%"><nobr>Time Zone</nobr></td>
     <td><select name="allocTimezone">{page::select_options(get_timezone_array(),$allocTimezone)}</select></td>
     <td width="1%">{page::help("config_allocTimezone")}</td>
   </tr>
-  -->
+  
   <tr>
     <td width="20%"><nobr>Calendar 1st Day</nobr></td>
     <td><select name="calendarFirstDay">{$calendarFirstDayOptions}</select></td>
