@@ -20,6 +20,7 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+define("NO_AUTH",true);
 require_once("../alloc.php");
 
 // Get default currency
