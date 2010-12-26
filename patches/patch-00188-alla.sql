@@ -117,6 +117,8 @@ WHERE sellPriceCurrencyTypeID = currencyType.currencyTypeID;
 ALTER table productSaleItem CHANGE sellPrice sellPrice BIGINT DEFAULT 0;
 
 
+-- Also need to update product.buyCostCurrencyTypeID, in this file, as we can only be sure a currency is set, now.
+UPDATE product,config SET product.buyCostCurrencyTypeID = config.value where config.name = 'currency';
 
 
 
