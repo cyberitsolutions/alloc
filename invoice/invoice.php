@@ -367,16 +367,19 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
   $invoice->read_globals();
 
   // Validation
-  if (!$invoice->get_value("clientID")) {
-    if ($invoice->get_value("projectID")) {
-      $project = $invoice->get_foreign_object("project");
-      $invoice->set_value("clientID",$project->get_value("clientID"));
-    }
+  if ($invoice->get_value("projectID")) {
+    $project = $invoice->get_foreign_object("project");
+    $currency = $project->get_value("currencyTypeID");
+    $invoice->set_value("clientID",$project->get_value("clientID"));
   }
 
   if (!$invoice->get_value("clientID")) {
     $TPL["message"][] = "Please select a Client.";
   }
+
+  $currency or $currency = config::get_config_item("currency");
+  $invoice->set_value("currencyTypeID",$currency);
+
 
   if (!$invoice->get_value("invoiceNum") || !is_numeric($invoice->get_value("invoiceNum"))) {
     #$TPL["message"][] = "Please enter a unique Invoice Number.";

@@ -363,6 +363,7 @@ if ($_POST["save"]) {
    
     if ($definately_new_project) {
       $projectPerson = new projectPerson;
+      $projectPerson->currency = $project->get_value("currencyTypeID");
       $projectPerson->set_value("projectID", $projectID);
       $projectPerson->set_value_role("isManager");
       $projectPerson->set_value("personID", $current_user->get_id());

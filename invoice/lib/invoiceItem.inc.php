@@ -139,6 +139,7 @@ class invoiceItem extends db_entity {
       $this->set_value("iiUnitPrice",$iiUnitPrice);
       $this->set_value("iiAmount",$amount);
       $this->set_value("iiDate",$date);
+      $this->currency = $timeSheet->get_value("currencyTypeID");
       $this->save();
     } else {
       $TPL["message"][] = "Unable to update related Invoice (ID:".$this->get_value("invoiceID")."), Invoice has been completed.";

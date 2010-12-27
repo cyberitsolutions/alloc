@@ -432,6 +432,7 @@ EOD;
   }
   function money($c, $amount=null, $fmt="%s%mo") {
     // Money print
+    $c or $c = config::get_config_item('currency');
     $currencies = get_cached_table("currencyType");
     $fmt = str_replace("%mo",page::money_out($c,$amount),$fmt);                          //%mo = money_out        eg: 150.21
     $fmt = str_replace("%mi",page::money_in($c,$amount),$fmt);                           //%mi = money_in         eg: 15021
