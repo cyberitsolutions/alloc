@@ -796,6 +796,14 @@ class comment extends db_entity {
       $rows[$row["taskID"]][$row["date"]][] = $row;
     }
 
+    // If there is a time sheet entry for 2010-10-10 but there is no comment entry
+    // for that date, then the time sheet entry will appear out of sequence i.e. at
+    // the very end of the whole list. So we need to manually sort them.
+    foreach ($rows as $tid => $arr) {
+      ksort($arr);
+      $rows[$tid] = $arr;
+    }
+
     foreach ((array)$rows as $taskID => $dates) {
       $rtn.= comment::get_list_summary_header($tasks[$taskID],$totals[$taskID],$_FORM);
       foreach ($dates as $date => $more_rows) {
