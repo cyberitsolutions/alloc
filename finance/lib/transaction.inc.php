@@ -181,7 +181,7 @@ class transaction extends db_entity {
     //the chance to click "approve"/"reject")
     $this->is_final() && !$this->get_value("expenseFormID") and $err[] = "Cannot save transaction. Transaction has been finalised.";
     $this->get_value("fromTfID") or $err[] = "Unable to save transaction without a Source TF.";
-    $this->get_value("fromTfID") && $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".$this->get_value("fromTfID").") being the same as the Destination TF (".$this->get_value("tfID").")";
+    $this->get_value("fromTfID") && $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".$this->get_value("fromTfID").") being the same as the Destination TF (".$this->get_value("tfID").") \"".$this->get_value("product")."\"";
     $this->get_value("quantity") or $this->set_value("quantity",1);
     $this->get_value("transactionDate") or $this->set_value("transactionDate",date("Y-m-d"));
 
