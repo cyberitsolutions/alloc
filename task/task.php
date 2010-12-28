@@ -79,7 +79,7 @@ define("PAGE_IS_PRINTABLE",1);
     util_show_attachments("task",$taskID);
   }
 
-  function show_taskComments() {
+  function show_comments() {
     global $taskID, $TPL, $task;
 
     if ($_REQUEST["commentSummary"]) {
@@ -95,7 +95,8 @@ define("PAGE_IS_PRINTABLE",1);
     $TPL["allParties"] = $task->get_all_parties($task->get_value("projectID")) or $TPL["allParties"] = array();
     $TPL["entity"] = "task";
     $TPL["entityID"] = $task->get_id();
-    $TPL["clientID"] = is_object($project) ? $project->get_value("clientID") : "";
+    $project = $task->get_foreign_object("project");
+    $TPL["clientID"] = $project->get_value("clientID");
 
     $commentTemplate = new commentTemplate();
     $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"task"));
@@ -297,28 +298,8 @@ if ($dupeID) {
   $TPL["taskDuplicateLink"] = $realtask->get_name(array("prefixTaskID"=>1,"return"=>"array"));
   $mesg = "This task is a duplicate of ".$TPL["taskDuplicateLink"];
   $TPL["message_help"][] = $mesg;
-  $TPL["comments_disabled"] = true;
   $TPL["editing_disabled"] = true;
-  #$TPL["disabled_reason"] = "Posting comments for this task is disabled because it has been marked as a duplicate.";
 }
-
-
-if ($_GET["commentID"] && $_GET["comment_edit"]) {
-  $comment = new comment();
-  $comment->set_id($_GET["commentID"]);
-  $comment->select();
-  $TPL["comment"] = $comment->get_value('comment');
-  $TPL["commentEmailRecipients"] = $comment->get_value('commentEmailRecipients');
-  $TPL["comment_buttons"] = sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_GET["commentID"]);
-  //$TPL["comment_buttons"].= "<label for=\"email_comment\">Send Email</label> ";
-  //$TPL["comment_buttons"].= "<input id=\"email_comment\" type=\"checkbox\" name=\"email_comment\" value=\"1\" checked>&nbsp;";
-  $TPL["comment_buttons"].= "<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
-} else {
-  //$TPL["comment_buttons"] = "<label for=\"email_comment\">Send Email</label> ";
-  //$TPL["comment_buttons"].= "<input id=\"email_comment\" type=\"checkbox\" name=\"email_comment\" value=\"1\" checked>&nbsp;";
-  $TPL["comment_buttons"].= "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
-}
-
 
 if ($task->get_id()) {
   $options["parentTaskID"] = $task->get_id();
