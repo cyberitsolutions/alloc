@@ -362,37 +362,7 @@ class task extends db_entity {
     }
 
     if ($projectID) {
-      // Get primary client contact from Project page
-      $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
-      $db->query($q);
-      $db->next_record();
-      $interestedPartyOptions[$db->f("projectClientEMail")] = array("name"=>$db->f("projectClientName"),"external"=>"1");
-  
-      // Get all other client contacts from the Client pages for this Project
-      $q = sprintf("SELECT clientID FROM project WHERE projectID = %d",$projectID);
-      $db->query($q);
-      $db->next_record();
-      $clientID = $db->f("clientID");
-      $q = sprintf("SELECT clientContactName, clientContactEmail, clientContactID 
-                      FROM clientContact 
-                     WHERE clientID = %d",$clientID);
-      $db->query($q);
-      while ($db->next_record()) {
-        $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
-      }
-
-      // Get all the project people for this tasks project
-      $q = sprintf("SELECT emailAddress, firstName, surname, person.personID, username
-                     FROM projectPerson 
-                LEFT JOIN person on projectPerson.personID = person.personID 
-                    WHERE projectPerson.projectID = %d AND person.personActive = 1 ",$projectID);
-      $db->query($q);
-      while ($db->next_record()) {
-        unset($name);
-        $db->f("firstName") && $db->f("surname") and $name = $db->f("firstName")." ".$db->f("surname");
-        $name or $name = $db->f("username");
-        $interestedPartyOptions[$db->f("emailAddress")] = array("name"=>$name,"personID"=>$db->f("personID"));
-      }
+      $interestedPartyOptions = project::get_all_parties($projectID);
     }
 
     $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();

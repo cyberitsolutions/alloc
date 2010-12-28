@@ -636,6 +636,98 @@ class project extends db_entity {
   
   }
 
+  function get_all_parties($projectID=false) {
+    if (!$projectID && is_object($this)) {
+      $projectID = $this->get_id();
+    }
+    if ($projectID) {
+      // Get primary client contact from Project page
+      $db = new db_alloc();
+      $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
+      $db->query($q);
+      $db->next_record();
+      $interestedPartyOptions[$db->f("projectClientEMail")] = array("name"=>$db->f("projectClientName"),"external"=>"1");
+  
+      // Get all other client contacts from the Client pages for this Project
+      $q = sprintf("SELECT clientID FROM project WHERE projectID = %d",$projectID);
+      $db->query($q);
+      $db->next_record();
+      $clientID = $db->f("clientID");
+      $q = sprintf("SELECT clientContactName, clientContactEmail, clientContactID 
+                      FROM clientContact 
+                     WHERE clientID = %d",$clientID);
+      $db->query($q);
+      while ($db->next_record()) {
+        $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
+      }
+
+      // Get all the project people for this tasks project
+      $q = sprintf("SELECT emailAddress, firstName, surname, person.personID, username
+                     FROM projectPerson 
+                LEFT JOIN person on projectPerson.personID = person.personID 
+                    WHERE projectPerson.projectID = %d AND person.personActive = 1 ",$projectID);
+      $db->query($q);
+      while ($db->next_record()) {
+        unset($name);
+        $db->f("firstName") && $db->f("surname") and $name = $db->f("firstName")." ".$db->f("surname");
+        $name or $name = $db->f("username");
+        $interestedPartyOptions[$db->f("emailAddress")] = array("name"=>$name,"personID"=>$db->f("personID"));
+      }
+    }
+    return (array)$interestedPartyOptions;
+  }
+
+  function send_emails($selected_option, $type="", $body="", $from=array()) {
+    global $current_user;
+
+    $recipients = comment::get_email_recipients($selected_option,$from);
+    list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from);
+
+    if ($successful_recipients) {
+      $email = new alloc_email();
+      $bcc && $email->add_header("Bcc",$bcc);
+      $from["references"] && $email->add_header("References",$from["references"]);
+      $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
+      $email->set_to_address($to_address);
+
+      $from_name = $from["name"] or $from_name = $current_user->get_name();
+
+      $hash = $from["hash"];
+
+      $messageid = $email->set_message_id($hash);
+      $subject_extra = "{Key:".$hash."}";
+
+      $subject = "Project Comment: ".$this->get_id()." ".$this->get_name(array("showShortProjectLink"=>true))." ".$subject_extra;
+      $email->set_subject($subject);
+      $email->set_body($body);
+      $email->set_message_type($type);
+
+      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
+        $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
+        $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
+      } else {
+        $f = $current_user->get_from() or $f = config::get_config_item("allocEmailAdmin");
+        $email->set_reply_to($f);
+        $email->set_from($f);
+      }
+
+      if ($from["commentID"]) {
+        $files = get_attachments("comment",$from["commentID"]);
+        if (is_array($files)) {
+          foreach ($files as $file) {
+            $email->add_attachment($file["path"]);
+          }
+        }
+      }
+
+      if ($email->send(false)) {
+        return array($successful_recipients,$messageid);
+      }
+    }
+  }
+
+
+
 }
 
 

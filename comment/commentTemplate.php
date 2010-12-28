@@ -49,7 +49,7 @@ if ($_POST["save"]) {
 // Load data for display in the template
 $commentTemplate->set_values();
 
-$ops = array(""=>"Comment Template Type","task"=>"Task","timeSheet"=>"Time Sheet");
+$ops = array(""=>"Comment Template Type","task"=>"Task","timeSheet"=>"Time Sheet","project"=>"Project");
 $TPL["commentTemplateTypeOptions"] = page::select_options($ops,$commentTemplate->get_value("commentTemplateType"));
 
 $TPL["main_alloc_title"] = "Edit Comment Template - ".APPLICATION_NAME;
