@@ -324,7 +324,7 @@ if (!$current_user->is_employee()) {
     if ($timeSheetID) {
       $TPL["commentsR"] = comment::util_get_comments("timeSheet",$timeSheetID);
       $TPL["class_new_comment"] = "hidden";
-      $TPL["allParties"] = $timeSheet->get_all_timeSheet_parties($timeSheet->get_value("projectID")) or $TPL["allTimeSheetParties"] = array();
+      $TPL["allParties"] = $timeSheet->get_all_parties($timeSheet->get_value("projectID")) or $TPL["allParties"] = array();
       $TPL["entity"] = "timeSheet";
       $TPL["entityID"] = $timeSheet->get_id();
       $p = $timeSheet->get_foreign_object('project');
