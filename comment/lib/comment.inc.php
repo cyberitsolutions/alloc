@@ -516,7 +516,7 @@ class comment extends db_entity {
       }
 
       if (!$ip_action["quiet"]) { // only resend email if quiet hasn't been put in the subject line
-        list($successful_recipients,$messageid) = $obj->send_emails($recipients, $c->get_value("commentType")."_comments", $comment->get_value("comment"), $from);
+        list($successful_recipients,$messageid) = comment::send_emails($obj, $recipients, $c->get_value("commentType")."_comments", $comment->get_value("comment"), $from);
       }
       if ($successful_recipients) {
         $comment->set_value("commentEmailRecipients",$successful_recipients);
@@ -611,6 +611,86 @@ class comment extends db_entity {
     }
     return array($to_address, $bcc, $successful_recipients);
   }
+
+  function send_emails($e, $selected_option, $type="", $body="", $from=array()) {
+    global $current_user;
+
+    $recipients = comment::get_email_recipients($selected_option,$from);
+    list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from);
+
+    if ($successful_recipients) {
+      $email = new alloc_email();
+      $bcc && $email->add_header("Bcc",$bcc);
+      $from["references"] && $email->add_header("References",$from["references"]);
+      $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
+      $from["precedence"] && $email->add_header("Precedence",$from["precedence"]);
+      
+      $email->add_header("X-Alloc-CommentID", $from["commentID"]);
+      $email->add_header("X-Alloc-".ucwords($e->classname), $e->get_name(DST_VARIABLE));
+      $email->add_header("X-Alloc-".ucwords($e->key_field), $e->get_id());
+
+      // Add project header too, if possible
+      if ($e->classname != "project" && isset($e->data_fields["projectID"])) {
+        $p = $e->get_foreign_object("project");
+        $email->add_header("X-Alloc-Project", $p->get_value("projectName"));
+        $email->add_header("X-Alloc-ProjectID", $p->get_id());
+      }
+      
+      $email->set_to_address($to_address);
+    
+      $from_name = $from["name"] or $from_name = $current_user->get_name();
+
+      $hash = $from["hash"];
+
+      $messageid = $email->set_message_id($hash);
+      $subject_extra = "{Key:".$hash."}";
+
+      if ($commentTemplateHeaderID = config::get_config_item($e->classname."_email_header")) {
+        $commentTemplate = new commentTemplate;
+        $commentTemplate->set_id($commentTemplateHeaderID);
+        $commentTemplate->select();
+        $body_header = $commentTemplate->get_populated_template($e->classname, $e->get_id());
+      }
+      if ($commentTemplateFooterID = config::get_config_item($e->classname."_email_footer")) {
+        $commentTemplate = new commentTemplate;
+        $commentTemplate->set_id($commentTemplateFooterID);
+        $commentTemplate->select();
+        $body_footer = $commentTemplate->get_populated_template($e->classname, $e->get_id());
+      }
+
+
+      $tpl = config::get_config_item("emailSubject_".$e->classname."Comment");
+      $tpl and $subject = commentTemplate::populate_string($tpl, $e->classname, $e->get_id());
+      $subject or $subject = "Comment: ".$e->get_id()." ".$e->get_name(DST_VARIABLE);
+
+      $email->set_subject($subject . " " . $subject_extra);
+      $email->set_body($body_header.$body.$body_footer);
+      $email->set_message_type($type);
+
+      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
+        $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
+        $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
+      } else {
+        $f = $current_user->get_from() or $f = config::get_config_item("allocEmailAdmin");
+        $email->set_reply_to($f);
+        $email->set_from($f);
+      }
+
+      if ($from["commentID"]) {
+        $files = get_attachments("comment",$from["commentID"]);
+        if (is_array($files)) {
+          foreach ($files as $file) {
+            $email->add_attachment($file["path"]);
+          }
+        }
+      }
+
+      if ($email->send(false)) {
+        return array($successful_recipients,$messageid);
+      }
+    }   
+  }
+
 
   function get_list($_FORM=array()) {
     if ($_FORM["entity"] && in_array($_FORM["entity"],array("project","client","task","timeSheet")) && $_FORM["entityID"]) {

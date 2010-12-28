@@ -144,7 +144,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
 
 
     if ($emailRecipients) {
-      if (is_object($e) && method_exists($e, "send_emails")) {
+      if (is_object($e)) {
         $from["commentID"] = $comment->get_id();
         $from["parentCommentID"] = $comment->get_id();
         $from["entity"] = "comment";
@@ -169,7 +169,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
           }
         }
 
-        list($successful_recipients,$messageid) = $e->send_emails($emailRecipients, $entity."_comments", $comment->get_value("comment"), $from);
+        list($successful_recipients,$messageid) = comment::send_emails($e, $emailRecipients, $entity."_comments", $comment->get_value("comment"), $from);
  
         // Append success to end of the comment
         if ($successful_recipients && is_object($comment)) {
