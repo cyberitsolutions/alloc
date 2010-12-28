@@ -1,7 +1,7 @@
 
 <table class="box">
   <tr>
-    <th>{page::help("taskComment")} Comments</th>
+    <th>{page::help("comment")} Comments</th>
     <th class="right">
       {$extra_page_links}
       {page::expand_link("id_new_comment")}
@@ -33,7 +33,7 @@
             <div style="display:block; clear:both; padding-bottom:8px;"><u>Email Recipients</u></div>
             {echo interestedParty::get_interested_parties_html($allParties)}
             <div style="float:left; clear:both; padding:10px 0px 8px 0px">{page::expand_link("email_other","Email Other Party")}</div>
-            <div style="text-align:right; float:right; padding:10px 0px 8px 0px">{$comment_buttons}</div>
+            <div style="text-align:right; float:right; padding:10px 0px 8px 0px"><input type="submit" name="comment_save" value="Save Comment"></div>
 
             <table id="email_other" style="clear:both; display:none" width="100%" cellpadding="4" cellspacing="0">
               <tr>

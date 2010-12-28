@@ -311,7 +311,7 @@ $(document).ready(function() {
 </div>
 
 <div id="comments">
-{show_taskComments()}
+{show_comments()}
 </div>
 
 <div id="history">
