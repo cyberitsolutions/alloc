@@ -340,12 +340,44 @@ function show_invoiceItem_list() {
 
 function show_attachments($invoiceID) {
   global $TPL;
-  $options["bottom_button"] = "<form action=\"".$TPL["url_alloc_invoice"]."\" method=\"post\">";
-  $options["bottom_button"].= "<input type=\"submit\" value=\"Generate Invoice PDF\" name=\"generate_pdf\">";
-  $options["bottom_button"].= "<input type=\"submit\" value=\"Generate Invoice PDF (verbose)\" name=\"generate_pdf_verbose\">";
-  $options["bottom_button"].= "<input type=\"hidden\" value=\"".$invoiceID."\" name=\"invoiceID\">";
-  $options["bottom_button"].= "</form>";
+  $options["hide_buttons"] = true;
   util_show_attachments("invoice",$invoiceID, $options);
+}
+
+function show_comments() {
+  global $invoiceID, $TPL, $invoice;
+  if ($invoiceID) {
+    $TPL["commentsR"] = comment::util_get_comments("invoice",$invoiceID);
+    $TPL["class_new_comment"] = "hidden";
+  
+    if ($invoice->get_value("projectID")) {
+      $project = $invoice->get_foreign_object("project");
+      $interestedPartyOptions = $project->get_all_parties($invoice->get_value("projectID"));
+      $client = $project->get_foreign_object("client");
+      $clientID = $client->get_id();
+
+    } else if ($invoice->get_value("clientID")) {
+      $client = $invoice->get_foreign_object("client");
+      $interestedPartyOptions = $client->get_all_parties($invoice->get_value("clientID"));
+      $clientID = $client->get_id();
+    }
+
+    $interestedPartyOptions = interestedParty::get_interested_parties("invoice",$invoice->get_id()
+                                                                     ,$interestedPartyOptions);
+    $TPL["allParties"] = $interestedPartyOptions or $TPL["allParties"] = array();
+    $TPL["entity"] = "invoice";
+    $TPL["entityID"] = $invoice->get_id();
+    $TPL["clientID"] = $clientID;
+    $commentTemplate = new commentTemplate();
+    $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"invoice"));
+    $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
+
+    $ops = array(""=>"Format as...","generate_pdf" => "PDF Invoice","generate_pdf_verbose"=>"PDF Invoice - verbose");
+    $TPL["attach_extra_files"] = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    $TPL["attach_extra_files"].= "Attach Invoice ";
+    $TPL["attach_extra_files"].= '<select name="attach_invoice">'.page::select_options($ops).'</select><br>';
+    include_template("../comment/templates/commentM.tpl");
+  }
 }
 
 $invoiceID = $_POST["invoiceID"] or $invoiceID = $_GET["invoiceID"];

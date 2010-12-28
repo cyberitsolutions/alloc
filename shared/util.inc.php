@@ -216,8 +216,12 @@ function util_show_attachments($entity, $id, $options=array()) {
   $TPL["entity_key_name"] = $entity."ID";
   $TPL["entity_key_value"] = $id;
   $TPL["bottom_button"] = $options["bottom_button"];
+  $TPL["show_buttons"] = !$options["hide_buttons"];
 
   $rows = get_attachments($entity, $id);
+  if (!$rows && $options["hide_buttons"]) {
+    return; // no rows, and no buttons, leave the whole thing out.
+  }
   $rows or $rows = array();
   foreach ($rows as $row) {
     $TPL["attachments"].= "<tr><td>".$row["file"]."</td><td class=\"nobr\">".$row["mtime"]."</td><td>".$row["size"]."</td>";

@@ -61,12 +61,14 @@
       </tr>
     </table>
   {/}
-
 {/}
 
 
 </form>
 
+{if $invoiceID}
+{show_comments()}
+{/}
 {if defined("SHOW_INVOICE_ATTACHMENTS") && SHOW_INVOICE_ATTACHMENTS}
 {show_attachments($invoiceID)}
 {/}

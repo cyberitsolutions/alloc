@@ -140,6 +140,27 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
       }
       $file = $dir.DIRECTORY_SEPARATOR."timeSheet_".$entityID.$suffix;
       file_put_contents($file,$str);
+
+
+    } else if ($_POST["attach_invoice"]) {
+      // Begin buffering output to halt anything being sent to the web browser.
+      ob_start();
+      $invoice = new invoice();
+      $invoice->set_id($entityID);
+      $invoice->select();
+      $invoice->generate_invoice_file($_REQUEST["generate_pdf_verbose"],true);
+
+      // Capture the output into $str
+      $str = (string)ob_get_clean();
+
+      $suffix = ".pdf";
+
+      $dir = $TPL["url_alloc_attachments_dir"]."comment".DIRECTORY_SEPARATOR.$comment->get_id();
+      if (!is_dir($dir)) {
+        mkdir($dir, 0777);
+      }
+      $file = $dir.DIRECTORY_SEPARATOR."invoice_".$entityID.$suffix;
+      file_put_contents($file,$str);
     }
 
 
