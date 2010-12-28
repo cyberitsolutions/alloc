@@ -653,12 +653,8 @@ class project extends db_entity {
       $db->query($q);
       $db->next_record();
       $clientID = $db->f("clientID");
-      $q = sprintf("SELECT clientContactName, clientContactEmail, clientContactID 
-                      FROM clientContact 
-                     WHERE clientID = %d",$clientID);
-      $db->query($q);
-      while ($db->next_record()) {
-        $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
+      if ($clientID) {
+        $interestedPartyOptions = array_merge((array)$interestedPartyOptions, (array)client::get_all_parties($clientID));
       }
 
       // Get all the project people for this tasks project

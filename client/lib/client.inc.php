@@ -67,6 +67,11 @@ class client extends db_entity {
     return parent::delete();
   }
 
+  function is_owner() {
+    global $current_user;
+    return $current_user->is_employee();
+  }
+
   function has_attachment_permission($person) {
     // Placeholder for security check in shared/get_attchment.php
     return true;
@@ -491,6 +496,24 @@ class client extends db_entity {
     }
 
     return $str;
+  }
+
+  function get_all_parties($clientID=false) {
+    if (!$clientID && is_object($this)) {
+      $clientID = $this->get_id();
+    }
+    if ($clientID) {
+      // Get all client contacts 
+      $db = new db_alloc();
+      $q = sprintf("SELECT clientContactName, clientContactEmail, clientContactID 
+                      FROM clientContact 
+                     WHERE clientID = %d",$clientID);
+      $db->query($q);
+      while ($db->next_record()) {
+        $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
+      }
+    }
+    return (array)$interestedPartyOptions;
   }
 
 }

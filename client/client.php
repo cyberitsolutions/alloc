@@ -215,14 +215,21 @@ require_once("../alloc.php");
   }
  
   function show_comments() {
-    global $clientID, $TPL;
-    $options["showEditButtons"] = true;
-    $TPL["commentsR"] = comment::util_get_comments("client",$clientID,$options);
-  
-    if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
-      $TPL["class_new_client_comment"] = "hidden";
-    }
-    include_template("templates/clientCommentM.tpl");
+    global $clientID, $TPL, $client;
+    $TPL["commentsR"] = comment::util_get_comments("client",$clientID);
+    $TPL["commentsR"] and $TPL["class_new_comment"] = "hidden";
+    $interestedPartyOptions = $client->get_all_parties();
+    $interestedPartyOptions = interestedParty::get_interested_parties("client",$client->get_id()
+                                                                     ,$interestedPartyOptions);
+    $TPL["allParties"] = $interestedPartyOptions or $TPL["allParties"] = array();
+    $TPL["entity"] = "client";
+    $TPL["entityID"] = $client->get_id();
+    $TPL["clientID"] = $client->get_id();
+
+    $commentTemplate = new commentTemplate();
+    $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"client"));
+    $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
+    include_template("../comment/templates/commentM.tpl");
   }
 
   function show_invoices() {
@@ -324,26 +331,6 @@ if ($_POST["clientContact_save"] || $_POST["clientContact_delete"]) {
     $clientContact->delete();
   }
 }
-
-
-
-
-
-// Comments
-if ($_GET["commentID"] && $_GET["comment_edit"]) {
-  $comment = new comment();
-  $comment->set_id($_GET["commentID"]);
-  $comment->select();
-  $TPL["comment"] = $comment->get_value('comment');
-  $TPL["comment_buttons"] =
-    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_GET["commentID"])
-           ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
-
-
-} else {
-  $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
-}
-
 
 if (!$clientID) {
   $TPL["message_help"][] = "Create a new Client by inputting the Client Name and other details and clicking the Create New Client button.";
