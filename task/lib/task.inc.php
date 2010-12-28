@@ -323,9 +323,9 @@ class task extends db_entity {
     $interestedPartyOptions = array();
     
     if (is_object($this)) {
-      $interestedPartyOptions = $this->get_all_task_parties($projectID);
+      $interestedPartyOptions = $this->get_all_parties($projectID);
     } else {
-      $interestedPartyOptions = task::get_all_task_parties($projectID);
+      $interestedPartyOptions = task::get_all_parties($projectID);
     }
 
     #echo "<pre>".print_r($interestedPartyOptions,1)."</pre>";
@@ -351,7 +351,7 @@ class task extends db_entity {
     return $str;
   }
 
-  function get_all_task_parties($projectID="") {
+  function get_all_parties($projectID="") {
     $db = new db_alloc;
     $interestedPartyOptions = array();
   
@@ -1629,86 +1629,6 @@ class task extends db_entity {
     return $rtn;
   }
 
-  function send_emails($selected_option, $type="", $body="", $from=array()) {
-    global $current_user;
-
-    $recipients = comment::get_email_recipients($selected_option,$from);
-    list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from);
-
-    if ($successful_recipients) {
-      $email = new alloc_email();
-      $bcc && $email->add_header("Bcc",$bcc);
-      $from["references"] && $email->add_header("References",$from["references"]);
-      $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
-      $from["precedence"] && $email->add_header("Precedence",$from["precedence"]);
-      
-      $email->add_header("X-Alloc-CommentID", $from["commentID"]);
-      $email->add_header("X-Alloc-Task", $this->get_value("taskName"));
-      $email->add_header("X-Alloc-TaskID", $this->get_id());
-
-      // On the off chance there's a task without a project
-      if ($this->get_value("projectID")) {
-        $p = $this->get_foreign_object("project");
-        $email->add_header("X-Alloc-Project", $p->get_value("projectName"));
-        $email->add_header("X-Alloc-ProjectID", $this->get_value("projectID"));
-      }
-
-      
-      $email->set_to_address($to_address);
-    
-      $from_name = $from["name"] or $from_name = $current_user->get_name();
-
-      // REMOVE ME!!
-      $email->ignore_no_email_urls = true;
-      $email->ignore_no_email_hosts = true;
-
-      $hash = $from["hash"];
-
-      $messageid = $email->set_message_id($hash);
-      $subject_extra = "{Key:".$hash."}";
-
-      if ($commentTemplateHeaderID = config::get_config_item("task_email_header")) {
-        $commentTemplate = new commentTemplate;
-        $commentTemplate->set_id($commentTemplateHeaderID);
-        $commentTemplate->select();
-        $body_header = $commentTemplate->get_populated_template("task", $this->get_id());
-      }
-      if ($commentTemplateFooterID = config::get_config_item("task_email_footer")) {
-        $commentTemplate = new commentTemplate;
-        $commentTemplate->set_id($commentTemplateFooterID);
-        $commentTemplate->select();
-        $body_footer = $commentTemplate->get_populated_template("task", $this->get_id());
-      }
-
-      $subject = commentTemplate::populate_string(config::get_config_item("emailSubject_taskComment"), "task", $this->get_id());
-      $email->set_subject($subject . " " . $subject_extra);
-      $email->set_body($body_header.$body.$body_footer);
-      $email->set_message_type($type);
-
-      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
-        $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
-        $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
-      } else {
-        $f = $current_user->get_from() or $f = config::get_config_item("allocEmailAdmin");
-        $email->set_reply_to($f);
-        $email->set_from($f);
-      }
-
-      if ($from["commentID"]) {
-        $files = get_attachments("comment",$from["commentID"]);
-        if (is_array($files)) {
-          foreach ($files as $file) {
-            $email->add_attachment($file["path"]);
-          }
-        }
-      }
-
-      if ($email->send(false)) {
-        return array($successful_recipients,$messageid);
-      }
-    }   
-  }
-
   function add_comment_from_email($email) {
  
     // Skip over emails that are from alloc. These emails are kept only for
@@ -1805,7 +1725,7 @@ class task extends db_entity {
       $from["hash"] = $token->get_value("tokenHash");
     }
 
-    list($successful_recipients,$messageid) = $this->send_emails($recipients,"task_comments",$comment->get_value("comment"),$from);
+    list($successful_recipients,$messageid) = comment::send_emails($this, $recipients,"task_comments",$comment->get_value("comment"),$from);
 
     if ($successful_recipients || $messageid) {
       $comment->set_value("commentEmailMessageID",$messageid);

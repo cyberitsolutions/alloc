@@ -566,7 +566,7 @@ class db_entity {
     return $this->filter_class;
   }
 
-  function get_display_value() {
+  function get_display_value($dst=DST_HTML_DISPLAY) {
     if ($this->display_field_name) {
       if (!$this->fields_loaded) {
         $found = $this->select();
@@ -574,7 +574,7 @@ class db_entity {
           return "";
         }
       }
-      return $this->get_value($this->display_field_name, DST_HTML_DISPLAY);
+      return $this->get_value($this->display_field_name, $dst);
     } else {
       return "#".$this->get_id();
     }
@@ -788,8 +788,8 @@ class db_entity {
     }
   }
 
-  function get_name() {
-    return $this->get_display_value();
+  function get_name($dst=null) {
+    return $this->get_display_value($dst);
   }
 
   function delete_search_index_doc(&$index) {

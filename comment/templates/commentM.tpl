@@ -3,24 +3,20 @@
   <tr>
     <th>{page::help("taskComment")} Comments</th>
     <th class="right">
-      {if !$_REQUEST["commentSummary"]}
-      <a href="{$url_alloc_task}taskID={$task_taskID}&sbs_link=comments&commentSummary=true&maxCommentLength=50000000">Summary</a>
-      {else}
-      <a href="{$url_alloc_task}taskID={$task_taskID}&sbs_link=comments">Full</a>
-      {/}
-      {if (!$editing_disabled)}{page::expand_link("id_new_task_comment")}{/}
+      {$extra_page_links}
+      {page::expand_link("id_new_comment")}
     </th>
   </tr>
   <tr>
     <td colspan="2">
 
-      <form action="{$url_alloc_comment}" enctype="multipart/form-data" method="post" id="taskCommentForm">
-      <div class="{$class_new_task_comment}" id="id_new_task_comment">
+      <form action="{$url_alloc_comment}" enctype="multipart/form-data" method="post" id="commentForm">
+      <div class="{$class_new_comment}" id="id_new_comment">
       <table align="left" width="100%" cellpadding="3">
         <tr>  
           <td valign="top" align="right" style="width:50%">
-            <input type="hidden" name="entity" value="task">
-            <input type="hidden" name="entityID" value="{$task_taskID}">
+            <input type="hidden" name="entity" value="{$entity}">
+            <input type="hidden" name="entityID" value="{$entityID}">
             <div id="comment_textarea">
               {page::textarea("comment",$comment,array("height"=>"medium","width"=>"100%"))}
             </div>
@@ -29,12 +25,12 @@
             <div style="display:inline; float:left; clear:left;">
               <a href="#x" class="magic" onClick="$('#file_attachment_dialog').append('<input type=\'file\' name=\'attachment[]\'><br>');">Attach File</a>
             </div>
-            <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity=task&entityID={$task_taskID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
+            <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity={$entity}&entityID={$entityID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
           </td>
 
           <td colspan="2" valign="top" style="padding-left:10px;">
             <div style="display:block; clear:both; padding-bottom:8px;"><u>Email Recipients</u></div>
-            {echo interestedParty::get_interested_parties_html($allTaskParties)}
+            {echo interestedParty::get_interested_parties_html($allParties)}
             <div style="float:left; clear:both; padding:10px 0px 8px 0px">{page::expand_link("email_other","Email Other Party")}</div>
             <div style="text-align:right; float:right; padding:10px 0px 8px 0px">{$comment_buttons}</div>
 
@@ -48,11 +44,11 @@
               </tr>
               <tr>
                 <td class="nobr">Email: <input type="text" name="eo_email" size="30"></td>
-                {if $task_clientID}
+                {if $clientID}
                 <td class="right nobr">
                   <label for="eo_add_client_contact">Add to Client Contacts </label> 
                   <input id="eo_add_client_contact" type="checkbox" name="eo_add_client_contact" value="1" checked>
-                  <input type="hidden" name="eo_client_id" value="{$task_clientID}">
+                  <input type="hidden" name="eo_client_id" value="{$clientID}">
                 </td>
               {/}
               </tr>
@@ -71,10 +67,5 @@
       {$commentsR}
     </td>
   </tr>
-{if $editing_disabled}
-  <tr>
-    <td colspan="2">{$disabled_reason}</td>
-  </tr>
-{/}
 </table>
 

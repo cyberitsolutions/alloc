@@ -80,26 +80,29 @@ define("PAGE_IS_PRINTABLE",1);
   }
 
   function show_taskComments() {
-    global $taskID, $TPL;
+    global $taskID, $TPL, $task;
 
     if ($_REQUEST["commentSummary"]) {
       $_REQUEST["clients"] = true;
       $TPL["commentsR"] = comment::get_list_summary($_REQUEST);
+      $TPL["extra_page_links"] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$TPL["task_taskID"].'&sbs_link=comments">Full</a>';
     } else {
-      $options["showEditButtons"] = true;
-      $TPL["commentsR"] = comment::util_get_comments("task",$taskID,$options);
+      $TPL["commentsR"] = comment::util_get_comments("task",$taskID);
+      $TPL["extra_page_links"] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$TPL["task_taskID"];
+      $TPL["extra_page_links"].= '&sbs_link=comments&commentSummary=true&maxCommentLength=50000000">Summary</a>';
     }
-
-    if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
-      $TPL["class_new_task_comment"] = "hidden";
-    }
-    include_template("templates/taskCommentM.tpl");
+    $TPL["commentsR"] and $TPL["class_new_comment"] = "hidden";
+    $TPL["allParties"] = $task->get_all_parties($task->get_value("projectID")) or $TPL["allParties"] = array();
+    $TPL["entity"] = "task";
+    $TPL["entityID"] = $task->get_id();
+    $TPL["clientID"] = is_object($project) ? $project->get_value("clientID") : "";
+    include_template("../comment/templates/commentM.tpl");
   }
 
   function show_taskCommentsPrinter() {
     global $taskID, $TPL;
     $TPL["commentsR"] = comment::util_get_comments("task",$taskID,$options);
-    include_template("templates/taskPrinterCommentsM.tpl");
+    include_template("../comment/templates/commentP.tpl");
   }
 
   function show_taskHistory() {
@@ -343,12 +346,9 @@ if ($taskID) {
   $TPL["main_alloc_title"] = "New Task - ".APPLICATION_NAME;
 }
 
-$TPL["allTaskParties"] = $task->get_all_task_parties($task->get_value("projectID")) or $TPL["allTaskParties"] = array();
-
 if (!$task->get_id()) {
   $TPL["message_help"][] = "Enter a Task Name and click the \"Save\" button to create a new Task.";
 }
-
 
 // Printer friendly view
 if ($_GET["media"] == "print") {
