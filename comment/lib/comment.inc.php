@@ -627,7 +627,7 @@ class comment extends db_entity {
       
       $email->add_header("X-Alloc-CommentID", $from["commentID"]);
       $email->add_header("X-Alloc-".ucwords($e->classname), $e->get_name(DST_VARIABLE));
-      $email->add_header("X-Alloc-".ucwords($e->key_field), $e->get_id());
+      $email->add_header("X-Alloc-".ucwords($e->key_field->get_name()), $e->get_id());
 
       // Add project header too, if possible
       if ($e->classname != "project" && isset($e->data_fields["projectID"])) {
@@ -661,7 +661,7 @@ class comment extends db_entity {
 
       $tpl = config::get_config_item("emailSubject_".$e->classname."Comment");
       $tpl and $subject = commentTemplate::populate_string($tpl, $e->classname, $e->get_id());
-      $subject or $subject = "Comment: ".$e->get_id()." ".$e->get_name(DST_VARIABLE);
+      $subject or $subject = ucwords($e->classname)." Comment: ".$e->get_id()." ".$e->get_name(DST_VARIABLE);
 
       $email->set_subject($subject . " " . $subject_extra);
       $email->set_body($body_header.$body.$body_footer);

@@ -677,57 +677,6 @@ class project extends db_entity {
     return (array)$interestedPartyOptions;
   }
 
-  function send_emails($selected_option, $type="", $body="", $from=array()) {
-    global $current_user;
-
-    $recipients = comment::get_email_recipients($selected_option,$from);
-    list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from);
-
-    if ($successful_recipients) {
-      $email = new alloc_email();
-      $bcc && $email->add_header("Bcc",$bcc);
-      $from["references"] && $email->add_header("References",$from["references"]);
-      $from["in-reply-to"] && $email->add_header("In-Reply-To",$from["in-reply-to"]);
-      $email->set_to_address($to_address);
-
-      $from_name = $from["name"] or $from_name = $current_user->get_name();
-
-      $hash = $from["hash"];
-
-      $messageid = $email->set_message_id($hash);
-      $subject_extra = "{Key:".$hash."}";
-
-      $subject = "Project Comment: ".$this->get_id()." ".$this->get_name(array("showShortProjectLink"=>true))." ".$subject_extra;
-      $email->set_subject($subject);
-      $email->set_body($body);
-      $email->set_message_type($type);
-
-      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
-        $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
-        $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
-      } else {
-        $f = $current_user->get_from() or $f = config::get_config_item("allocEmailAdmin");
-        $email->set_reply_to($f);
-        $email->set_from($f);
-      }
-
-      if ($from["commentID"]) {
-        $files = get_attachments("comment",$from["commentID"]);
-        if (is_array($files)) {
-          foreach ($files as $file) {
-            $email->add_attachment($file["path"]);
-          }
-        }
-      }
-
-      if ($email->send(false)) {
-        return array($successful_recipients,$messageid);
-      }
-    }
-  }
-
-
-
 }
 
 

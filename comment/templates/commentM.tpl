@@ -24,6 +24,7 @@
             </div>
             <div style="display:inline; float:left; clear:left;">
               <a href="#x" class="magic" onClick="$('#file_attachment_dialog').append('<input type=\'file\' name=\'attachment[]\'><br>');">Attach File</a>
+              {$attach_timeSheet}
             </div>
             <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity={$entity}&entityID={$entityID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
           </td>

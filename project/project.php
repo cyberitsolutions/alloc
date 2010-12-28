@@ -244,9 +244,22 @@ require_once("../alloc.php");
   }
 
   function show_comments() {
-    global $projectID, $TPL;
-    $TPL["commentsR"] = comment::util_get_comments("project",$projectID,$options);
-    include_template("templates/projectCommentM.tpl");
+    global $projectID, $TPL, $project;
+    $TPL["commentsR"] = comment::util_get_comments("project",$projectID);
+    $TPL["commentsR"] and $TPL["class_new_comment"] = "hidden";
+    $interestedPartyOptions = $project->get_all_parties();
+    $interestedPartyOptions = interestedParty::get_interested_parties("project",$project->get_id()
+                                                                     ,$interestedPartyOptions);
+    $TPL["allParties"] = $interestedPartyOptions or $TPL["allParties"] = array();
+    $TPL["entity"] = "project";
+    $TPL["entityID"] = $project->get_id();
+    $TPL["clientID"] = $project->get_value("clientID");
+
+    $commentTemplate = new commentTemplate();
+    $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"project"));
+    $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
+
+    include_template("../comment/templates/commentM.tpl");
   }
 
   function show_tasks() {
@@ -785,10 +798,6 @@ while ($row = $db->row()) {
   $rows[] = $row;
 }
 $TPL["total_invoice_transactions_approved"] = page::money_print($rows);
-
-$interestedPartyOptions = $project->get_all_parties();
-$interestedPartyOptions = interestedParty::get_interested_parties("project",$project->get_id(),$interestedPartyOptions);
-$TPL["allParties"] = $interestedPartyOptions or $TPL["allParties"] = array();
 
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");
