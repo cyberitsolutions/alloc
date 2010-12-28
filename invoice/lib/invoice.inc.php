@@ -22,6 +22,7 @@
 
 define("DEFAULT_SEP","\n");
 class invoice extends db_entity {
+  public $classname = "invoice";
   public $data_table = "invoice";
   public $display_field_name = "invoiceName";
   public $key_field = "invoiceID";
@@ -206,7 +207,7 @@ class invoice extends db_entity {
     return array($rows,$info);
   }
 
-  function generate_invoice_file($verbose=false) {
+  function generate_invoice_file($verbose=false, $stream=false) {
     // Build PDF document
     require_once("../shared/lib/ezpdf.inc.php");
     $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
@@ -332,34 +333,34 @@ class invoice extends db_entity {
     #$pdf->closeObject();
     #$pdf->addObject($all,'all');
 
-    $dir = ATTACHMENTS_DIR."invoice".DIRECTORY_SEPARATOR.$this->get_id();
-    if (!is_dir($dir)) {
-      mkdir($dir);
-    }
+    if ($stream) {
+      $pdf->ezStream();
+    } else {
 
-    $rows = get_attachments("invoice",$this->get_id());
-    $rows or $rows = array();
-    foreach ($rows as $row) {
-      if (preg_match("/-[0-9]+\.pdf$/",$row["text"])) {
-        $file = preg_replace("/-([0-9]+)\.pdf$/e","sprintf('-%d.pdf',\\1 + 1)",$row["text"]);
+      $dir = ATTACHMENTS_DIR."invoice".DIRECTORY_SEPARATOR.$this->get_id();
+      if (!is_dir($dir)) {
+        mkdir($dir);
+      }
+
+      $rows = get_attachments("invoice",$this->get_id());
+      $rows or $rows = array();
+      foreach ($rows as $row) {
+        if (preg_match("/-[0-9]+\.pdf$/",$row["text"])) {
+          $file = preg_replace("/-([0-9]+)\.pdf$/e","sprintf('-%d.pdf',\\1 + 1)",$row["text"]);
+        }
+      }
+
+      if (!$file) {
+        $file = $this->get_value("invoiceNum")."-0.pdf";
+      }
+
+      //$debug = true;
+      if (!$debug) {
+        $fh = fopen($dir.DIRECTORY_SEPARATOR.$file,"w+");
+        fputs($fh, $pdf->ezOutput());
+        fclose($fh);
       }
     }
-
-    if (!$file) {
-      $file = $this->get_value("invoiceNum")."-0.pdf";
-    }
-
-
-    //$debug = true;
-    if (!$debug) {
-      $fh = fopen($dir.DIRECTORY_SEPARATOR.$file,"w+");
-      fputs($fh, $pdf->ezOutput());
-      fclose($fh);
-    } else {
-      $pdf->ezStream();
-    }
-
-
   }
 
   function has_attachment_permission($person) {

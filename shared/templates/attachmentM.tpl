@@ -10,6 +10,7 @@
     <td align="right"></td>
   </tr>
 {$attachments}
+{if $show_buttons}
   <tr>
     <td colspan="1" class="left" style="padding:5px;">
       {$bottom_button}
@@ -23,5 +24,6 @@
       </form>
     </td>
   </tr>
+{/}
 </table>
 

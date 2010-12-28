@@ -339,9 +339,9 @@ if (!$current_user->is_employee()) {
       foreach ($timeSheetPrint as $value) {
         $ops[$value] = $timeSheetPrintOptions[$value];
       }
-      $TPL["attach_timeSheet"] = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-      $TPL["attach_timeSheet"].= "Attach Time Sheet ";
-      $TPL["attach_timeSheet"].= '<select name="attach_timeSheet">'.page::select_options($ops).'</select><br>';
+      $TPL["attach_extra_files"] = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+      $TPL["attach_extra_files"].= "Attach Time Sheet ";
+      $TPL["attach_extra_files"].= '<select name="attach_timeSheet">'.page::select_options($ops).'</select><br>';
       include_template("../comment/templates/commentM.tpl");
     }
   }
