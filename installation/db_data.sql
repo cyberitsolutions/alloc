@@ -509,7 +509,6 @@ INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES 
 INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (7,'Employee','employee','person', 40);
 
 
-INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ('Add Comments to Task','task','add_comment_from_email');
 INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ('Add Comments to Comment','comment','add_comment_from_email');
 
 
