@@ -320,11 +320,29 @@ if (!$current_user->is_employee()) {
   }
 
   function show_comments() {
-    global $timeSheetID, $TPL;
+    global $timeSheetID, $TPL, $timeSheet;
     if ($timeSheetID) {
-      $options["showEditButtons"] = true;
-      $TPL["commentsR"] = comment::util_get_comments("timeSheet",$timeSheetID,$options);
-      include_template("templates/timeSheetCommentM.tpl");
+      $TPL["commentsR"] = comment::util_get_comments("timeSheet",$timeSheetID);
+      $TPL["class_new_comment"] = "hidden";
+      $TPL["allParties"] = $timeSheet->get_all_timeSheet_parties($timeSheet->get_value("projectID")) or $TPL["allTimeSheetParties"] = array();
+      $TPL["entity"] = "timeSheet";
+      $TPL["entityID"] = $timeSheet->get_id();
+      $p = $timeSheet->get_foreign_object('project');
+      $TPL["clientID"] = $p->get_value("clientID");
+      $commentTemplate = new commentTemplate();
+      $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"timeSheet"));
+      $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
+
+      $timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions");
+      $timeSheetPrint = config::get_config_item("timeSheetPrint");
+      $ops = array(""=>"Format as...");
+      foreach ($timeSheetPrint as $value) {
+        $ops[$value] = $timeSheetPrintOptions[$value];
+      }
+      $TPL["attach_timeSheet"] = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+      $TPL["attach_timeSheet"].= "Attach Time Sheet ";
+      $TPL["attach_timeSheet"].= '<select name="attach_timeSheet">'.page::select_options($ops).'</select><br>';
+      include_template("../comment/templates/commentM.tpl");
     }
   }
 
@@ -881,11 +899,6 @@ if ($timeSheetID) {
 
 $TPL["taxName"] = config::get_config_item("taxName");
 
-$TPL["allTimeSheetParties"] = $timeSheet->get_all_timeSheet_parties($timeSheet->get_value("projectID")) or $TPL["allTimeSheetParties"] = array();
-
-$commentTemplate = new commentTemplate();
-$ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"timeSheet"));
-$TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
 
 
 include_template("templates/timeSheetFormM.tpl");

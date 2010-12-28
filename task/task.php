@@ -96,6 +96,11 @@ define("PAGE_IS_PRINTABLE",1);
     $TPL["entity"] = "task";
     $TPL["entityID"] = $task->get_id();
     $TPL["clientID"] = is_object($project) ? $project->get_value("clientID") : "";
+
+    $commentTemplate = new commentTemplate();
+    $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"task"));
+    $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
+
     include_template("../comment/templates/commentM.tpl");
   }
 
