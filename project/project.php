@@ -245,13 +245,7 @@ require_once("../alloc.php");
 
   function show_comments() {
     global $projectID, $TPL;
-    $options["showEditButtons"] = true;
     $TPL["commentsR"] = comment::util_get_comments("project",$projectID,$options);
-
-    if ($TPL["commentsR"] && !$_GET["comment_edit"]) {
-      $TPL["class_new_project_comment"] = "hidden";
-    }
-
     include_template("templates/projectCommentM.tpl");
   }
 
@@ -495,17 +489,7 @@ if ($projectID) {
 }
 
 // Comments
-if ($_GET["commentID"] && $_GET["comment_edit"]) {
-  $comment = new comment();
-  $comment->set_id($_GET["commentID"]);
-  $comment->select();
-  $TPL["comment"] = $comment->get_value('comment');
-  $TPL["comment_buttons"] =
-    sprintf("<input type=\"hidden\" name=\"comment_id\" value=\"%d\">", $_GET["commentID"])
-           ."<input type=\"submit\" name=\"comment_update\" value=\"Save Comment\">";
-} else {
-  $TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
-}
+$TPL["comment_buttons"] = "<input type=\"submit\" name=\"comment_save\" value=\"Save Comment\">";
 
 
 // if someone uploads an attachment
@@ -802,6 +786,9 @@ while ($row = $db->row()) {
 }
 $TPL["total_invoice_transactions_approved"] = page::money_print($rows);
 
+$interestedPartyOptions = $project->get_all_parties();
+$interestedPartyOptions = interestedParty::get_interested_parties("project",$project->get_id(),$interestedPartyOptions);
+$TPL["allParties"] = $interestedPartyOptions or $TPL["allParties"] = array();
 
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");
