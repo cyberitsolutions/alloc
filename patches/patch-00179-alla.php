@@ -101,8 +101,8 @@ $info["username"] = config::get_config_item("allocEmailUsername");
 $info["password"] = config::get_config_item("allocEmailPassword");
 $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
-if (!$info["host"]) {
-  //die("Email mailbox host not defined, assuming email receive function is inactive.");
+if (true) {
+  // regular users probably won't need to apply this patch, so let them skip it
   define("FORCE_PATCH_SUCCEED_patch-00179-alla.php",1);
 } else {
 
