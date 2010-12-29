@@ -180,7 +180,7 @@ if ($_POST["submit_stage_4"]) {
     define("INSTALL_SUCCESS",1);
     $TPL["img_install_result"] = IMG_TICK;
     $TPL["url_alloc_login"][strlen($TPL["url_alloc_login"])-1] != "?" and $qm = "?";
-    $TPL["msg_install_result"] = "The allocPSA installation has completed successfully. <a href=\"".$TPL["url_alloc_login"].$qm."msg=".urlencode("Default login username/password: <b>alloc</b><br>You should change both the username and password of this administrator account ASAP.")."\">Click here</a> and login with the username and password of 'alloc'.";
+    $TPL["msg_install_result"] = "The allocPSA installation has completed successfully. <a href=\"".$TPL["url_alloc_login"].$qm."message_help=".urlencode("Default login username/password: <b>alloc</b><br>You should change both the username and password of this administrator account ASAP.")."\">Click here</a> and login with the username and password of 'alloc'.";
   }
 
   $_GET["tab"] = 4;
