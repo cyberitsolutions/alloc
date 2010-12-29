@@ -248,7 +248,7 @@ class timeSheet extends db_entity {
       return "ERROR: Status of the timesheet must be 'invoiced' to Create Transactions.  The status is currently: ".$this->get_value("status");
 
     } else if ($this->get_value("recipient_tfID") == "") {
-      return "ERROR: There is no recipient TF to credit for this timesheet.";
+      return "ERROR: There is no recipient Tagged Fund to credit for this timesheet. Go to Tools -> New Tagged Fund, add a new TF and add the owner. Then go to People -> Select the user and set their Preferred Payment TF.";
 
     } else if (!$cost_centre || $cost_centre == 0) {
       return "ERROR: There is no cost centre associated with the project.";

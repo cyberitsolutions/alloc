@@ -847,6 +847,7 @@ if ($timeSheet->get_value("status") == "edit") {
   } else {
     $TPL["recipient_tfID_name"] = "No Preferred Payment TF nominated.";
     $TPL["recipient_tfID"] = "";
+    $TPL["recipient_tfID_class"] = "bad";
   }
 
 } else {

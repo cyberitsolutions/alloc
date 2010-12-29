@@ -63,8 +63,8 @@
 
 	<tr>
 	  <td>{page::help("which_tf_to_credit")}</td>
- 	  <td align="right">TF:</td>
- 	  <td align="left">{=$recipient_tfID_name}</td>
+ 	  <td align="right">Tagged Fund:</td>
+ 	  <td align="left" class='{$recipient_tfID_class}'>{=$recipient_tfID_name}</td>
     <td align="right">Approved by Manager:</td>
     <td>{=$timeSheet_approvedByManagerPersonID_username}</td>
   </tr>
