@@ -68,6 +68,7 @@ class tf extends db_entity {
 
   function is_owner($person = "") {
     global $current_user;
+    static $owners;
     if ($person == "") {
       $person = $current_user;
     }
@@ -75,10 +76,20 @@ class tf extends db_entity {
     if (!$this->get_id()) {
       return false;
     }
-    $query = sprintf("SELECT * FROM tfPerson WHERE tfID=%d AND personID=%d",$this->get_id(),$person->get_id());
+  
+    // optimization
+    if (isset($owners[$person->get_id()])) {
+      return in_array($this->get_id(),$owners[$person->get_id()]);
+    }
+
+    $query = sprintf("SELECT * FROM tfPerson WHERE personID=%d",$person->get_id());
     $db = new db_alloc;
     $db->query($query);
-    return $db->next_record();
+    $owners[$person->get_id()][] = 0;
+    while ($row = $db->row()) {
+      $owners[$person->get_id()][] = $row["tfID"];
+    }
+    return in_array($this->get_id(),$owners[$person->get_id()]);
   }
 
   function get_nav_links() {

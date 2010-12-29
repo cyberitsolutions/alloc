@@ -27,6 +27,7 @@ check_entity_perm("announcement", PERM_READ_WRITE);
 function show_announcements($template_name) {
   global $TPL;
 
+  $people = get_cached_table("person");
   $query = "SELECT announcement.* 
               FROM announcement 
               ORDER BY displayFromDate";
@@ -36,8 +37,7 @@ function show_announcements($template_name) {
     $announcement = new announcement;
     $announcement->read_db_record($db);
     $announcement->set_values();
-    $person = $announcement->get_foreign_object("person");
-    $TPL["personName"] = $person->get_name();
+    $TPL["personName"] = $people[$announcement->get_value("personID")]["name"];
     $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
     include_template($template_name);
   }

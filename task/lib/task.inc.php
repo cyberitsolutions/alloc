@@ -664,8 +664,11 @@ class task extends db_entity {
     //$arr["open"]["notstarted"] = array("label"=>"Not Started","colour"=>"#ffffff");
     //$arr["open"]["inprogress"] = array("label"=>"In Progress","colour"=>"#ffffff");
     //etc
-    $m = new meta("taskStatus");
-    $rows = $m->get_assoc_array();
+    static $rows;
+    if (!$rows) {
+      $m = new meta("taskStatus");
+      $rows = $m->get_assoc_array();
+    }
     foreach ($rows as $taskStatusID => $arr) {
       list($s,$ss) = explode("_",$taskStatusID);
       $rtn[$s][$ss] = array("label"=>$arr["taskStatusLabel"],"colour"=>$arr["taskStatusColour"]);

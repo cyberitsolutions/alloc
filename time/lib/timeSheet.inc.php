@@ -644,32 +644,20 @@ class timeSheet extends db_entity {
   function get_transaction_totals() {
   
     $db = new db_alloc();
-    $q = sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount,
+    $q = sprintf("SELECT amount * pow(10,-currencyType.numberToBasic) AS amount,
                          transaction.currencyTypeID as currency
                     FROM transaction 
                LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                   WHERE amount>0
-                     AND status = 'approved' 
+                   WHERE status = 'approved' 
                      AND timeSheetID = %d
-                GROUP BY transaction.currencyTypeID
                  ",$this->get_id());
     $db->query($q);
     while($row = $db->row()) {
-      $pos[] = $row;
-    }
-
-    $q = sprintf("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount,
-                         transaction.currencyTypeID as currency
-                    FROM transaction 
-               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                   WHERE amount<0
-                     AND status = 'approved'
-                     AND timeSheetID = %d
-                GROUP BY transaction.currencyTypeID
-                 ",$this->get_id());
-    $db->query($q);
-    while ($row = $db->row()) {
-      $neg[] = $row;
+      if ($row["amount"] > 0) {
+        $pos[] = $row;
+      } else {
+        $neg[] = $row;
+      }
     }
 
     return array($pos,$neg);
