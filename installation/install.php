@@ -284,7 +284,7 @@ them yet. You will need to install at least the first one to enable the very
 useful automated reminders functionality. 
 
 # Check every day in the early hours for the exchange rates
-{$rand} {$rand2} * * * wget -q -O /dev/null {$allocURL}finance/updateExchangeRates.php
+{$rand} {$rand2} * * * wget -q -O /dev/null {$_FORM["allocURL"]}finance/updateExchangeRates.php
 
 # Check every 10 minutes for any allocPSA Reminders to send
 */10 * * * * wget -q -O /dev/null {$_FORM["allocURL"]}reminder/sendReminders.php
