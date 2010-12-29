@@ -153,6 +153,7 @@ class db {
       $TPL["slowest_query"] = $query;
       $TPL["slowest_query_time"] = $result;
     }
+    $TPL["all_page_queries"][] = array("time"=>$result, "query"=>$query);
     return $rtn;
   } 
 
