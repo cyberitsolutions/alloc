@@ -173,7 +173,8 @@ function perform_test($test) {
         $arr["remedy"] = "Please create an empty, webserver-writeable file: ";
         $arr["remedy"].= "<br><nobr>touch ".ALLOC_CONFIG_PATH."</nobr>";
         $arr["remedy"].= "<br><nobr>chmod 600 ".ALLOC_CONFIG_PATH."</nobr>";
-        $arr["remedy"].= "<br><nobr>chown apache ".ALLOC_CONFIG_PATH."</nobr>";
+        $server_user = getenv("APACHE_RUN_USER") or $server_user = "apache";
+        $arr["remedy"].= "<br><nobr>chown ".$server_user." ".ALLOC_CONFIG_PATH."</nobr>";
       }
     break;
   }
