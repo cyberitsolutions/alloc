@@ -365,8 +365,6 @@ VALUES
 ,('task'                     ,0  ,NULL ,'manage'   ,true ,NULL ,287   ,NULL)
 ,('task'                     ,0  ,NULL ,'admin'    ,true ,NULL ,257   ,NULL)
 
-,('taskType'                 ,0  ,NULL ,''         ,true ,NULL ,17    ,NULL)
-
 ,('tf'                       ,0  ,NULL ,'employee' ,true ,NULL ,1     ,NULL)
 ,('tf'                       ,0  ,NULL ,'manage'   ,true ,NULL ,1     ,NULL)
 ,('tf'                       ,0  ,NULL ,'admin'    ,true ,NULL ,31    ,NULL)
