@@ -312,11 +312,24 @@ To remove this announcement click on the Tools tab and then click the
 Announcements link.
 EOD;
 
-  // Insert new person
-  $query = sprintf("INSERT INTO person (username,password,personActive,perms) VALUES ('alloc','%s',1,'god,admin,manage,employee')",encrypt_password("alloc"));
+  // Insert new tf - note we're relying on the tfID being 6 because of the 5 previous tfs that are inserted in db_data.sql. Yes this is dumb.
+  $query = "INSERT INTO tf (tfID,tfName,tfActive) VALUES (6,'My Funds',1)";
   if (!$db->query($query)) {
     $errors[] = "(5)Error! (".mysql_error().").";
   }
+
+  // Insert new person
+  $query = sprintf("INSERT INTO person (personID,username,password,personActive,perms,preferred_tfID) VALUES (1,'alloc','%s',1,'god,admin,manage,employee',6)",encrypt_password("alloc"));
+  if (!$db->query($query)) {
+    $errors[] = "(5.1)Error! (".mysql_error().").";
+  }
+
+  // Insert new tfPerson - note the reliance on IDs, as above
+  $query = "INSERT INTO tfPerson (tfID,personID) VALUES (6,1)";
+  if (!$db->query($query)) {
+    $errors[] = "(5.2)Error! (".mysql_error().").";
+  }
+
 
   // Insert new announcement
   $query = "INSERT INTO announcement (heading, body, personID,displayFromDate,displayToDate) VALUES (\"Getting Started in allocPSA\",\"".db_esc($body)."\",1,'2000-01-01','2030-01-01')";

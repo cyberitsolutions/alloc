@@ -403,6 +403,8 @@ VALUES
 INSERT INTO tf (tfID,tfName,tfActive) VALUES (1,"Main Funds",1);
 INSERT INTO tf (tfID,tfName,tfActive) VALUES (2,"Incoming Funds",1);
 INSERT INTO tf (tfID,tfName,tfActive) VALUES (3,"Outgoing Funds",1);
+INSERT INTO tf (tfID,tfName,tfActive) VALUES (4,"Expense Funds",1);
+INSERT INTO tf (tfID,tfName,tfActive) VALUES (5,"Tax Funds",1);
 
 INSERT INTO config (name, value, type) VALUES ('currency', '', 'text');
 INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','','text');
@@ -423,7 +425,7 @@ INSERT INTO config (name, value, type) VALUES ('companyContactAddress3','Austral
 INSERT INTO config (name, value, type) VALUES ('timeSheetPrintFooter','Authorisation (please print):<br><br>Authorisation (signature):<br><br>Date:','text');
 INSERT INTO config (name, value, type) VALUES ('taxName','GST','text');
 INSERT INTO config (name, value, type) VALUES ('taxPercent','10','text');
-INSERT INTO config (name, value, type) VALUES ('taxTfID', '0', 'text');
+INSERT INTO config (name, value, type) VALUES ('taxTfID', '5', 'text');
 INSERT INTO config (name, value, type) VALUES ('companyPercent','28.5','text');
 INSERT INTO config (name, value, type) VALUES ('paymentInsurancePercent','10','text');
 INSERT INTO config (name, value, type) VALUES ('payrollTaxPercent','5','text');
@@ -448,7 +450,7 @@ INSERT INTO config (name,value,type) VALUES ('task_email_header', '','text');
 INSERT INTO config (name,value,type) VALUES ('task_email_footer', '','text');
 INSERT INTO config (name,value,type) VALUES ('inTfID','2','text');
 INSERT INTO config (name,value,type) VALUES ('outTfID','3','text');
-INSERT INTO config (name,value,type) VALUES ('expenseFormTfID','','text');
+INSERT INTO config (name,value,type) VALUES ('expenseFormTfID','4','text');
 
 INSERT INTO config (name,value,type) VALUES ('emailSubject_taskComment', '[allocPSA] Task Comment: %ti %tn [%tp]', 'text');
 INSERT INTO config (name,value,type) VALUES ('emailSubject_dailyDigest', '[allocPSA] Daily Digest', 'text');
