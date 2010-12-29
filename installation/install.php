@@ -167,7 +167,7 @@ if ($_POST["submit_stage_4"]) {
     $failed = 1;
   }
 
-  $query = "UPDATE currencyType SET currencyTypeActive = true WHERE currencyTypeID = '".$_FORM["currency"]."'";
+  $query = "UPDATE currencyType SET currencyTypeActive = true, currencyTypeSeq = 1 WHERE currencyTypeID = '".$_FORM["currency"]."'";
   if (!$db->query($query)) {
     $errors[] = "(2)Error! (".mysql_error().").";
     $failed = 1;
