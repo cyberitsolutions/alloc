@@ -173,6 +173,13 @@ if ($_POST["submit_stage_4"]) {
     $failed = 1;
   }
 
+  $query = sprintf("INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ('%s','%s','%s','%s',%d)",date("Y-m-d"),date("Y-m-d H:i:s"),$_FORM["currency"],$_FORM["currency"],1);
+  if (!$db->query($query)) {
+    $errors[] = "(2.5)Error! (".mysql_error().").";
+    $failed = 1;
+  }
+
+
   if ($failed) {
     $TPL["img_install_result"] = IMG_CROSS;
     $TPL["msg_install_result"] = "The allocPSA installation has not completed successfully.";
