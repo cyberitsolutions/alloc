@@ -517,8 +517,13 @@ class project extends db_entity {
   }
 
   function get_project_type_array() {
-    $m = new meta("projectType");
-    return $m->get_assoc_array("projectTypeID","projectTypeID");
+    // optimization
+    static $rows;
+    if (!$rows) {
+      $m = new meta("projectType");
+      $rows = $m->get_assoc_array("projectTypeID","projectTypeID");
+    }
+    return $rows;
   }
 
   function get_project_type() {

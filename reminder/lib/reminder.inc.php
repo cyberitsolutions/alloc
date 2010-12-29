@@ -382,13 +382,12 @@ class reminder extends db_entity {
 
   // gets a human-friendly description of the recipient, either the recipient name or in the form Task Manager (Bob)
   function get_recipient_description() {
-      $person = new person;
-      $person->set_id($this->get_effective_person_id());
-      $person->select();
+      $people = get_cached_table("person");
+      $name = $people[$this->get_effective_person_id()]["name"];
       if($this->get_value("metaPerson") === null) {
-        return $person->get_name();
+        return $name;
       } else {
-        return sprintf("%s (%s)", reminder::get_metaperson_name($this->get_value("metaPerson")), $person->get_name());
+        return sprintf("%s (%s)", reminder::get_metaperson_name($this->get_value("metaPerson")), $name);
       }
   }
 
