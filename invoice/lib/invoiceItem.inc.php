@@ -225,10 +225,11 @@ class invoiceItem extends db_entity {
     // It checks for approved transactions and only approves the timesheets
     // or expenseforms that are completely paid for by an invoice item.
     $db = new db_alloc();
-    $q = sprintf("SELECT sum(amount) as total FROM transaction WHERE invoiceItemID = %d AND status = 'approved'",$this->get_id());
+    $q = sprintf("SELECT sum(amount) as total, currencyTypeID FROM transaction WHERE invoiceItemID = %d AND status = 'approved'",$this->get_id());
     $db->query($q);
     $row = $db->row();
     $total = $row["total"];
+    $currency = $row["currencyTypeID"];
 
     $timeSheetID = $this->get_value("timeSheetID");
     $expenseFormID = $this->get_value("expenseFormID");
@@ -239,18 +240,21 @@ class invoiceItem extends db_entity {
       $timeSheet->select();
       
       $db = new db_alloc();
-      $q = sprintf("SELECT SUM(amount) AS total FROM transaction WHERE timeSheetID = %d AND amount >0",$timeSheet->get_id());
+      $q = sprintf("SELECT SUM(amount) AS total FROM transaction WHERE timeSheetID = %d AND status != 'rejected' AND invoiceItemID IS NULL",$timeSheet->get_id());
       $db->query($q);
       $row = $db->row();
       $total_timeSheet = $row["total"];
 
       if ($timeSheet->get_value("status") == "invoiced") {
-        if ($total == $total_timeSheet) {
+        if ($total >= $total_timeSheet) {
           $timeSheet->pending_transactions_to_approved();
           $timeSheet->change_status("forwards");
           $TPL["message_good"][] = "Closed Time Sheet #".$timeSheet->get_id()." and approved it's Transactions.";
         } else {
-          $TPL["message_help"][] = "Unable to close Time Sheet #".$timeSheet->get_id()." the sum of Time Sheet *Transactions* does not equal the Invoice Item Transaction.";
+          $TPL["message_help"][] = "Unable to close Time Sheet #".$timeSheet->get_id()." the sum of the Time Sheet's *Transactions* ("
+                                   .page::money($timeSheet->get_value("currencyTypeID"),$total_timeSheet,"%s%mo %c")
+                                   .") is greater than the Invoice Item Transaction ("
+                                   .page::money($currency,$total,"%s%mo %c").")";
         }
       }
     
@@ -271,7 +275,31 @@ class invoiceItem extends db_entity {
 
   }
 
-
+  function create_transaction($amount,$tfID,$status) {
+    $invoice = $this->get_foreign_object("invoice");
+    $this->currency = $invoice->get_value("currencyTypeID");
+    $q = sprintf("SELECT * FROM transaction WHERE invoiceItemID = %d ORDER BY transactionCreatedTime DESC LIMIT 1",$this->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    $db->next_record();
+    $transaction = new transaction;
+    if ($db->f("transactionID")) {
+      $transaction->set_id($db->f("transactionID"));
+      $transaction->select();
+    }
+    $transaction->set_value("amount",$amount);  
+    $transaction->set_value("currencyTypeID",$this->currency);  
+    $transaction->set_value("fromTfID",config::get_config_item("inTfID")); 
+    $transaction->set_value("tfID",$tfID);
+    $transaction->set_value("status",$status);
+    $transaction->set_value("invoiceID",$this->get_value("invoiceID"));
+    $transaction->set_value("invoiceItemID",$this->get_id());
+    $transaction->set_value("transactionDate",$this->get_value("iiDate"));
+    $transaction->set_value("transactionType","invoice");
+    $transaction->set_value("product",sprintf("%s",$this->get_value("iiMemo")));
+    $this->get_value("timeSheetID") && $transaction->set_value("timeSheetID",$this->get_value("timeSheetID"));
+    $transaction->save();
+  }
 
 
 
