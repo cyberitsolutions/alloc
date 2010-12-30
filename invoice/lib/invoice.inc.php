@@ -745,7 +745,7 @@ class invoice extends db_entity {
     $newstatus = $this->next_status($direction);
     if ($direction == "forwards" && $newstatus == "finished") {
       if ($this->has_pending_transactions()) {
-        $TPL["message"][] = "There are still Invoice Items in dispute. This Invoice cannot be marked completed.";
+        $TPL["message"][] = "There are still Invoice Items pending. This Invoice cannot be marked completed.";
         return false;
       }
     }

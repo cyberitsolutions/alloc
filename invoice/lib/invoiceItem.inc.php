@@ -225,11 +225,17 @@ class invoiceItem extends db_entity {
     // It checks for approved transactions and only approves the timesheets
     // or expenseforms that are completely paid for by an invoice item.
     $db = new db_alloc();
-    $q = sprintf("SELECT sum(amount) as total, currencyTypeID FROM transaction WHERE invoiceItemID = %d AND status = 'approved'",$this->get_id());
+    $q = sprintf("SELECT amount, currencyTypeID, status 
+                    FROM transaction 
+                   WHERE invoiceItemID = %d 
+                ORDER BY transactionCreatedTime DESC 
+                   LIMIT 1
+                 ",$this->get_id());
     $db->query($q);
     $row = $db->row();
-    $total = $row["total"];
+    $total = $row["amount"];
     $currency = $row["currencyTypeID"];
+    $status = $row["status"];
 
     $timeSheetID = $this->get_value("timeSheetID");
     $expenseFormID = $this->get_value("expenseFormID");
@@ -240,16 +246,40 @@ class invoiceItem extends db_entity {
       $timeSheet->select();
       
       $db = new db_alloc();
-      $q = sprintf("SELECT SUM(amount) AS total FROM transaction WHERE timeSheetID = %d AND status != 'rejected' AND invoiceItemID IS NULL",$timeSheet->get_id());
-      $db->query($q);
-      $row = $db->row();
-      $total_timeSheet = $row["total"];
 
       if ($timeSheet->get_value("status") == "invoiced") {
+
+        // If the time sheet doesn't have any transactions and it is in
+        // status invoiced, then we'll simulate the "Create Default Transactions"
+        // button being pressed.
+        $q = sprintf("SELECT count(*) as num_transactions 
+                        FROM transaction 
+                       WHERE timeSheetID = %d 
+                         AND invoiceItemID IS NULL
+                     ",$timeSheet->get_id());
+        $db->query($q);
+        $row = $db->row();
+        if ($row["num_transactions"]==0) {
+          $_POST["create_transactions_default"] = true;
+          $timeSheet->createTransactions($status);
+          $TPL["message_good"][] = "Automatically created time sheet transactions.";
+        }
+
+        // Get total of all time sheet transactions.
+        $q = sprintf("SELECT SUM(amount) AS total 
+                        FROM transaction 
+                       WHERE timeSheetID = %d 
+                         AND status != 'rejected' 
+                         AND invoiceItemID IS NULL
+                     ",$timeSheet->get_id());
+        $db->query($q);
+        $row = $db->row();
+        $total_timeSheet = $row["total"];
+
         if ($total >= $total_timeSheet) {
           $timeSheet->pending_transactions_to_approved();
           $timeSheet->change_status("forwards");
-          $TPL["message_good"][] = "Closed Time Sheet #".$timeSheet->get_id()." and approved it's Transactions.";
+          $TPL["message_good"][] = "Closed Time Sheet #".$timeSheet->get_id()." and marked its Transactions: ".$status;
         } else {
           $TPL["message_help"][] = "Unable to close Time Sheet #".$timeSheet->get_id()." the sum of the Time Sheet's *Transactions* ("
                                    .page::money($timeSheet->get_value("currencyTypeID"),$total_timeSheet,"%s%mo %c")
@@ -276,17 +306,37 @@ class invoiceItem extends db_entity {
   }
 
   function create_transaction($amount,$tfID,$status) {
+    $transaction = new transaction;
     $invoice = $this->get_foreign_object("invoice");
     $this->currency = $invoice->get_value("currencyTypeID");
-    $q = sprintf("SELECT * FROM transaction WHERE invoiceItemID = %d ORDER BY transactionCreatedTime DESC LIMIT 1",$this->get_id());
     $db = new db_alloc();
+
+    // If there already a transaction for this invoiceItem, use it instead of creating a new one
+    $q = sprintf("SELECT * FROM transaction WHERE invoiceItemID = %d ORDER BY transactionCreatedTime DESC LIMIT 1",$this->get_id());
     $db->query($q);
-    $db->next_record();
-    $transaction = new transaction;
-    if ($db->f("transactionID")) {
+    if ($db->row()) {
       $transaction->set_id($db->f("transactionID"));
       $transaction->select();
     }
+
+    // If there already a transaction for this timeSheet, use it instead of creating a new one
+    if ($this->get_value("timeSheetID")) {
+      $q = sprintf("SELECT * 
+                      FROM transaction 
+                     WHERE timeSheetID = %d 
+                       AND fromTfID = %d
+                       AND tfID = %d
+                       AND amount = %d
+                  ORDER BY transactionCreatedTime DESC LIMIT 1
+                         ",$this->get_value("timeSheetID"),config::get_config_item("inTfID")
+                          ,$tfID,page::money($this->currency,$amount,"%mi"));
+      $db->query($q);
+      if ($db->row()) {
+        $transaction->set_id($db->f("transactionID"));
+        $transaction->select();
+      }
+    }
+
     $transaction->set_value("amount",$amount);  
     $transaction->set_value("currencyTypeID",$this->currency);  
     $transaction->set_value("fromTfID",config::get_config_item("inTfID")); 

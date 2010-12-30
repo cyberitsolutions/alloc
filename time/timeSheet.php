@@ -63,7 +63,7 @@ if (!$current_user->is_employee()) {
                  WHERE fromTfID != %d AND transactionType != 'insurance' AND transaction.timeSheetID = %d",config::get_config_item("inTfID"),$timeSheet->get_id());
       $db->next_record();
       $t = $db->f("total");
-      $TPL["amount_msg"] = " (".page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_dollars_not_null"]-$t,"%s%m")." remaining)";
+      $TPL["amount_msg"] = " (".page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_dollars_not_null"]-$t,"%s%m %c")." remaining)";
 
       include_template($template_name);
     }
@@ -679,7 +679,7 @@ if ($_POST["dont_send_email"]) {
 $timeSheet->load_pay_info();
 
 
-$percent_array = array(""=>"",
+$percent_array = array(""=>"Calculate %",
                        "A"=>"Standard",
                        sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 1)=>"100%",
                        sprintf("%0.2f", $timeSheet->pay_info["total_dollars"] * 0.715)=>"71.5%",
@@ -852,7 +852,7 @@ if ($timeSheet->get_value("status") == "edit") {
 
 $timeSheet->load_pay_info();
 if ($timeSheet->pay_info["total_customerBilledDollars"]) {
-  $TPL["total_customerBilledDollars"] = $timeSheet->pay_info["currency"].$timeSheet->pay_info["total_customerBilledDollars"];
+  $TPL["total_customerBilledDollars"] = page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_customerBilledDollars"],"%s%m %c");
   config::get_config_item("taxPercent") and 
 
 $TPL["ex_gst"] = " (".$timeSheet->pay_info["currency"].$timeSheet->pay_info["total_customerBilledDollars_minus_gst"]." excl ".config::get_config_item("taxPercent")."% ".config::get_config_item("taxName").")";
@@ -860,7 +860,7 @@ $TPL["ex_gst"] = " (".$timeSheet->pay_info["currency"].$timeSheet->pay_info["tot
 
 }
 if ($timeSheet->pay_info["total_dollars"]) {
-  $TPL["total_dollars"] = $timeSheet->pay_info["currency"].$timeSheet->pay_info["total_dollars"];
+  $TPL["total_dollars"] = page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_dollars"],"%s%m %c");
 }
 
 $TPL["total_units"] = $timeSheet->pay_info["summary_unit_totals"];
