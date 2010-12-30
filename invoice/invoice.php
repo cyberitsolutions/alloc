@@ -176,6 +176,7 @@ function show_invoiceItem_list() {
     $q = sprintf("SELECT *
                        , transaction.amount * pow(10,-currencyType.numberToBasic) AS transaction_amount
                        , transaction.tfID AS transaction_tfID
+                       , transaction.fromTfID AS transaction_fromTfID
                        , transaction.status AS transaction_status  
                        , transaction.currencyTypeID
                     FROM transaction 
@@ -206,7 +207,9 @@ function show_invoiceItem_list() {
       $transaction_sum+= $db2->f("transaction_amount");
       $transaction_info.= $br.ucwords($db2->f("transaction_status"))." Transaction ";
       $transaction_info.= "<a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$db2->f("transactionID")."\">#".$db2->f("transactionID")."</a>";
-      $transaction_info.= " in TF <a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$db2->f("transaction_tfID")."\">".tf::get_name($db2->f("transaction_tfID"))."</a>";
+      $transaction_info.= " from ";
+      $transaction_info.= "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$db2->f("transaction_fromTfID")."\">".tf::get_name($db2->f("transaction_fromTfID"))."</a>";
+      $transaction_info.= " to <a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$db2->f("transaction_tfID")."\">".tf::get_name($db2->f("transaction_tfID"))."</a>";
       $transaction_info.= " for <b>".page::money($db2->f("currencyTypeID"),$db2->f("transaction_amount"),"%s%m")."</b>";
       $br = "<br>";
     }
@@ -237,7 +240,7 @@ function show_invoiceItem_list() {
       $TPL["status_label"] = "<b>[Not Going To Be Paid]</b>";
 
     } else if ($sel["pending"]) {
-      $TPL["status_label"] = "<b>[In Dispute]</b>";
+      $TPL["status_label"] = "<b>[Pending]</b>";
 
     } else if ($sel["approved"]) {
       $TPL["status_label"] = "<b>[Paid]</b>";
@@ -290,7 +293,7 @@ function show_invoiceItem_list() {
       $radio_buttons.= "<input type=\"radio\" id=\"invoiceItemStatus_rejected_".$invoiceItem->get_id()."\" name=\"invoiceItemStatus[".$invoiceItem->get_id()."]\"";
       $radio_buttons.= " value=\"rejected\"".$sel["rejected"].">";
 
-      $radio_buttons.= "&nbsp;&nbsp;&nbsp;<label for=\"invoiceItemStatus_pending_".$invoiceItem->get_id()."\">In Dispute</label> ";
+      $radio_buttons.= "&nbsp;&nbsp;&nbsp;<label for=\"invoiceItemStatus_pending_".$invoiceItem->get_id()."\">Pending</label> ";
       $radio_buttons.= "<input type=\"radio\" id=\"invoiceItemStatus_pending_".$invoiceItem->get_id()."\" name=\"invoiceItemStatus[".$invoiceItem->get_id()."]\"";
       $radio_buttons.= " value=\"pending\"".$sel["pending"].">";
 
@@ -446,31 +449,9 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     if (is_array($_POST["invoiceItemStatus"])) {
       foreach ($_POST["invoiceItemStatus"] as $iiID => $status) {
         $ii = new invoiceItem;
-        $ii->currency = $invoice->get_value("currencyTypeID");
         $ii->set_id($iiID);
         $ii->select();
-        $amount = $ii->get_value("iiAmount");
-        $q = sprintf("SELECT * FROM transaction WHERE invoiceItemID = %d",$iiID);
-        $db = new db_alloc();
-        $db->query($q);
-        $db->next_record();
-        $transaction = new transaction;
-        if ($db->f("transactionID")) {
-          $transaction->set_id($db->f("transactionID"));
-          $transaction->select();
-          #$amount = $transaction->get_value("amount");
-        }
-        $transaction->set_value("amount",$_POST["invoiceItemAmountPaid"][$iiID]);  
-        $transaction->set_value("currencyTypeID",$invoice->get_value("currencyTypeID"));  
-        $transaction->set_value("fromTfID",config::get_config_item("inTfID")); 
-        $transaction->set_value("tfID",$_POST["invoiceItemAmountPaidTfID"][$iiID]);
-        $transaction->set_value("status",$status);
-        $transaction->set_value("invoiceID",$ii->get_value("invoiceID"));
-        $transaction->set_value("invoiceItemID",$iiID);
-        $transaction->set_value("transactionDate",$ii->get_value("iiDate"));
-        $transaction->set_value("transactionType","invoice");
-        $transaction->set_value("product",sprintf("%s",$ii->get_value("iiMemo")));
-        $transaction->save();
+        $ii->create_transaction($_POST["invoiceItemAmountPaid"][$iiID],$_POST["invoiceItemAmountPaidTfID"][$iiID],$status);
       }
     }
     if (!$TPL["message"]) {

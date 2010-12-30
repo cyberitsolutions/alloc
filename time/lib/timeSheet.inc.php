@@ -239,6 +239,7 @@ class timeSheet extends db_entity {
     $db = new db_alloc;
     $project = $this->get_foreign_object("project");
     $projectName = $project->get_value("projectName");
+    $personName = person::get_fullname($this->get_value("personID"));
     $company_tfID = config::get_config_item("mainTfID");
     $cost_centre = $project->get_value("cost_centre_tfID") or $cost_centre = $company_tfID;
     $this->fromTfID = $cost_centre;
@@ -256,7 +257,7 @@ class timeSheet extends db_entity {
     } else {
       $taxName = config::get_config_item("taxName");
       $taxPercent = config::get_config_item("taxPercent");
-      $taxTfID = config::get_config_item("taxTfID") or $taxTfID = $cost_centre;
+      $taxTfID = config::get_config_item("taxTfID");
       $taxPercentDivisor = ($taxPercent/100) + 1;
       $payrollTaxPercent = config::get_config_item("payrollTaxPercent");
       $companyPercent = config::get_config_item("companyPercent");
@@ -358,6 +359,23 @@ class timeSheet extends db_entity {
             whatever is left of the $110 goes to the 0% commissions
         */
         
+        // 0. If this time sheet is not attached to an invoice, add an incoming transaction
+        $rows = $this->get_invoice_rows();
+        if (!$rows) {
+          //$product = "Incoming funds for timesheet #".$this->get_id();
+          $product = "Time Sheet #".$this->get_id()." for ".$personName.", Project: ".$projectName;
+          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars"], $cost_centre, "timesheet",null,config::get_config_item("inTfID"));
+        } else {
+          foreach ($rows as $row) {
+            if ($row["invoiceItemID"]) {
+              $ii = new invoiceItem;
+              $ii->set_id($row["invoiceItemID"]);
+              $ii->select();
+              $ii->create_transaction($this->pay_info["total_customerBilledDollars"],$cost_centre, "pending");
+            }
+          }
+        }
+
         // 1. Credit TAX/GST Cost Centre
         $product = $taxName." ".$taxPercent."% for timesheet #".$this->get_id();
         $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "tax");
@@ -370,10 +388,12 @@ class timeSheet extends db_entity {
           $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
         }
 
-        // 3. Do companies cut
-        $percent = $companyPercent - $agency_percentage;
-        $product = "Company ".$percent."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet #".$this->get_id();
-        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
+        // 3. We only do the companies cut, if the project has a dedicated fund, otherwise we just omit the companies cut
+        if ($project->get_value("cost_centre_tfID") && $project->get_value("cost_centre_tfID") != $company_tfID) {
+          $percent = $companyPercent - $agency_percentage;
+          $product = "Company ".$percent."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet #".$this->get_id();
+          $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet",null,$project->get_value("cost_centre_tfID"));
+        }
 
         // 4. Credit Employee TF
         $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
@@ -413,7 +433,7 @@ class timeSheet extends db_entity {
       }
       if ($errmsg) {
         $this->destroyTransactions();
-        $rtnmsg.= "<br> <h1>Failed to create transactions...</h1> ".$errmsg;
+        $rtnmsg.= "<br>Failed to create transactions... ".$errmsg;
       }
       return $rtnmsg;
     }
@@ -832,18 +852,26 @@ class timeSheet extends db_entity {
 
   function get_invoice_link() {
     global $TPL;
+    $rows = $this->get_invoice_rows();
+    foreach ($rows as $row) {
+      $str.= $sp."<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$row["invoiceID"]."\">".$row["invoiceNum"]."</a>";
+      $sp = "&nbsp;&nbsp;";
+    }
+    return $str;
+  }
+
+  function get_invoice_rows() {
     if (is_object($this) && $this->get_id()) {
       $db = new db_alloc();
-      $db->query("SELECT invoice.* 
+      $db->query("SELECT invoice.*, invoiceItemID
                     FROM invoiceItem 
                LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID 
-                   WHERE timeSheetID = %s",$this->get_id());
-      while ($row = $db->next_record()) { 
-        $str.= $sp."<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$row["invoiceID"]."\">".$row["invoiceNum"]."</a>";
-        $sp = "&nbsp;&nbsp;";
+                   WHERE timeSheetID = %s ORDER BY iiDate DESC",$this->get_id());
+      while ($row = $db->row()) { 
+        $rows[] = $row;
       }
-      return $str;
     }
+    return (array)$rows;
   }
 
   function change_status($direction) {

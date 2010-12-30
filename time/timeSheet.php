@@ -60,17 +60,10 @@ if (!$current_user->is_employee()) {
       $db = new db_alloc;
       $db->query("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) as total FROM transaction 
                LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                 WHERE transactionType != 'insurance' AND transaction.timeSheetID = %d",$timeSheet->get_id());
+                 WHERE fromTfID != %d AND transactionType != 'insurance' AND transaction.timeSheetID = %d",config::get_config_item("inTfID"),$timeSheet->get_id());
       $db->next_record();
-      $total = $db->f("total");
-
-      if ($total != $timeSheet->pay_info["total_dollars_not_null"]) {
-        $start_bad = "<span class=\"bad\">";
-        $end_bad = "</span>";
-        $extra = " (allocate: ".page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_dollars_not_null"]-$total,"%s%m").")";
-      }
-
-      $TPL["amount_msg"] = $start_bad.$extra.$end_bad;
+      $t = $db->f("total");
+      $TPL["amount_msg"] = " (".page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_dollars_not_null"]-$t,"%s%m")." remaining)";
 
       include_template($template_name);
     }
@@ -109,6 +102,7 @@ if (!$current_user->is_employee()) {
           $transaction->set_tpl_values("transaction_");
 
           $TPL["currency"] = page::money($transaction->get_value("currencyTypeID"),'',"%S");
+          $TPL["currency_code"] = page::money($transaction->get_value("currencyTypeID"),'',"%C");
           $TPL["tf_options"] = page::select_options($tf_array, $TPL["transaction_tfID"]);
           $TPL["from_tf_options"] = page::select_options($tf_array, $TPL["transaction_fromTfID"]);
           $TPL["status_options"] = page::select_options($status_options, $transaction->get_value("status"));
@@ -137,7 +131,7 @@ if (!$current_user->is_employee()) {
           $transaction->set_tpl_values("transaction_");
           unset($TPL["transaction_amount_pos"]);
           unset($TPL["transaction_amount_neg"]);
-          $TPL["currency"] = page::money($transaction->get_value("currencyTypeID"),'',"%S");
+          $TPL["currency_amount"] = page::money($transaction->get_value("currencyTypeID"),$transaction->get_value("amount"),"%S%mo %c");
           $TPL["transaction_fromTfID"] = tf::get_name($transaction->get_value("fromTfID"));
           $TPL["transaction_tfID"] = tf::get_name($transaction->get_value("tfID"));
           $TPL["transaction_transactionType"] = $transactionType_options[$transaction->get_value("transactionType")];

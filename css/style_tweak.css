@@ -509,7 +509,7 @@ table.panel {
   background:#e8eeff; 
   margin-bottom:5px; 
   margin-top:0px;
-  table-layout:fixed; /* nested divs that are overflow:auto no longer scroll off the screen */
+  /* table-layout:fixed; nested divs that are overflow:auto no longer scroll off the screen */
 }
 table.loud {
   border:1px solid #e7ba98; 
