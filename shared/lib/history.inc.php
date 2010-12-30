@@ -208,7 +208,7 @@ class history extends db_entity {
   }
 
   function strip_get_session($str="") {
-    return preg_replace("/sess=[A-Za-z0-9]{32}/","",$str);
+    return (string)preg_replace("/sess=[A-Za-z0-9]{32}/","",$str);
   }
 
 
