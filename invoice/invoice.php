@@ -204,7 +204,7 @@ function show_invoiceItem_list() {
 
       $amounts[$invoiceItem->get_id()]+= $db2->f("transaction_amount");
 
-      $transaction_sum+= $db2->f("transaction_amount");
+      $db2->f("transaction_status") != "rejected" and $transaction_sum+= $db2->f("transaction_amount");
       $transaction_info.= $br.ucwords($db2->f("transaction_status"))." Transaction ";
       $transaction_info.= "<a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$db2->f("transactionID")."\">#".$db2->f("transactionID")."</a>";
       $transaction_info.= " from ";
@@ -246,7 +246,7 @@ function show_invoiceItem_list() {
       $TPL["status_label"] = "<b>[Paid]</b>";
     }
 
-    if ($transaction_sum > 0 && $transaction_sum < $invoiceItem->get_value("iiAmount")) {
+    if ($transaction_sum > 0 && $transaction_sum < $invoiceItem->get_value("iiAmount",DST_HTML_DISPLAY)) {
       $TPL["status_label"] = "<b>[Paid in part]</b>";
       $TPL["box_class"] = " warn";
 
@@ -560,7 +560,7 @@ if ($invoiceID && $invoiceItemIDs) {
              LEFT JOIN currencyType on invoice.currencyTypeID = currencyType.currencyTypeID
                  WHERE invoiceItem.invoiceID = %d",$invoiceID);
   $db->query($q);
-  $db->next_record() and $TPL["invoiceTotal"] = page::money($currency,$db->f("sum_iiAmount"),"%S%m");
+  $db->next_record() and $TPL["invoiceTotal"] = page::money($currency,$db->f("sum_iiAmount"),"%S%m %c");
 
   $q = sprintf("SELECT sum(amount * pow(10,-currencyType.numberToBasic)) as sum_transaction_amount
                   FROM transaction 
@@ -568,7 +568,7 @@ if ($invoiceID && $invoiceItemIDs) {
                  WHERE status = 'approved' 
                    AND invoiceItemID in (%s)",implode(",",$invoiceItemIDs));
   $db->query($q);
-  $db->next_record() and $TPL["invoiceTotalPaid"] = page::money($currency,$db->f("sum_transaction_amount"),"%S%m");
+  $db->next_record() and $TPL["invoiceTotalPaid"] = page::money($currency,$db->f("sum_transaction_amount"),"%S%m %c");
 }
 
 
@@ -607,7 +607,8 @@ foreach ($statii as $s => $label) {
 
 $TPL["field_invoiceNum"] = '<input type="text" name="invoiceNum" value="'.$TPL["invoiceNum"].'">';
 $TPL["field_invoiceName"] = '<input type="text" name="invoiceName" value="'.$TPL["invoiceName"].'">';
-$TPL["field_maxAmount"] = '<input type="text" name="maxAmount" size="10" value="'.$invoice->get_value("maxAmount",DST_HTML_DISPLAY).'">';
+$TPL["field_maxAmount"] = '<input type="text" name="maxAmount" size="10" value="'.$invoice->get_value("maxAmount",DST_HTML_DISPLAY).'"> ';
+$TPL["field_maxAmount"].= page::help('invoice_maxAmount');
 $TPL["field_invoiceDateFrom"] = page::calendar("invoiceDateFrom",$TPL["invoiceDateFrom"]);
 $TPL["field_invoiceDateTo"] = page::calendar("invoiceDateTo",$TPL["invoiceDateTo"]);
 
@@ -649,7 +650,7 @@ if ($current_user->have_role('admin')) {
     $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
-    $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%S%mo");
+    $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%s%mo %c");
     $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
     $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
 
@@ -659,7 +660,7 @@ if ($current_user->have_role('admin')) {
     $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
-    $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%S%mo");
+    $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%s%mo %c");
     $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
     $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
   }
@@ -668,7 +669,7 @@ if ($current_user->have_role('admin')) {
   $TPL["field_invoiceName"] = $TPL["invoiceName"];
   $TPL["field_clientID"] = $client_link;
   $TPL["field_projectID"] = $project_link;
-  $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%S%mo");
+  $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%s%mo %c");
   $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
   $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
 }
