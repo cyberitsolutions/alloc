@@ -17,8 +17,9 @@
 
 <table class="box">
   <tr>
-    <th colspan="3">{page::help("timesheet_overview")}Time Sheet</th>  
-    <th class="right" colspan="2">
+    <th colspan="1">{page::help("timesheet_overview")}</th>
+    <th colspan="4">Time Sheet
+      <span style="float:right">
       {if $timeSheet_timeSheetID}
         {$timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions")}
         {$timeSheetPrint = config::get_config_item("timeSheetPrint")}
@@ -26,6 +27,7 @@
           <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&{$value}">{$timeSheetPrintOptions.$value}</a>
         {/}
       {/}
+      </span>
     </th>
   </tr>
 
