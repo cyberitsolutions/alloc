@@ -88,12 +88,13 @@ function clickClientStatus(e) {
 <input type="hidden" name="projectID" value="{$project_projectID}">
 <table class="box">
   <tr>
-    <th class="nobr" colspan="2">{$projectSelfLink}</th>
-    <th class="right" colspan="3">{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</th>
+    <th colspan="5">{$projectSelfLink}
+    <span style='float:right'>{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</span>
+    </th>
   </tr>
   <tr>
     <td colspan="5" valign="top">
-      <div style="float:left; width:47%; padding:0px 12px; vertical-align:top;">
+      <div style="min-width:400px; width:47%; float:left; padding:0px 12px; vertical-align:top;">
 
         <div class="view">
           <h6>{$project_projectType}{page::mandatory($project_projectName)}</h6>
@@ -145,7 +146,7 @@ function clickClientStatus(e) {
           
       </div>
 
-      <div style="float:right; width:47%; padding:0px 12px; vertical-align:top;">
+      <div style="min-width:400px; width:47%; float:left; margin:0px 12px; vertical-align:top;">
 
         <div class="view">
           <h6>Project Nickname<div><span style='width:50%; display:inline-block;'>Currency</span><span>Status</span></div></h6>

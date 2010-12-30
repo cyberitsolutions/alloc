@@ -45,8 +45,7 @@ $(document).ready(function() {
 <input type="hidden" name="taskID" value="{$task_taskID}">
 <table class="box">
   <tr>
-    <th class="nobr" colspan="2">{$taskSelfLink}</th>
-    <th class="right nobr" colspan="3">{$navigation_links}</th>
+    <th colspan="5">{$taskSelfLink}<span style="float:right">{$navigation_links}</span></th>
   </tr>
   <tr>
     <td colspan="5" valign="top">
