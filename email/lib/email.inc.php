@@ -49,6 +49,7 @@ class alloc_email {
   var $default_headers = ""; 
   var $subject = "";
   var $body = ""; 
+  var $body_without_attachments = ""; 
 
   function alloc_email($to_address="",$subject="",$body="",$message_type="") {
     $this->default_headers = "X-Mailer: allocPSA ".get_alloc_version();
@@ -66,6 +67,7 @@ class alloc_email {
   function set_body($body=false) {
     $body or $body = $this->body;
     $this->body = $body;
+    $this->body_without_attachments = $body;
   }
   function set_message_type($message_type=false) {
     $message_type or $message_type = $this->message_type;
@@ -188,7 +190,7 @@ class alloc_email {
     $to = $this->to_address or $to = $this->get_header("Cc") or $to = $this->get_header("Bcc");
     $sentEmailLog->set_value("sentEmailTo",$to);
     $sentEmailLog->set_value("sentEmailSubject",$this->subject);
-    $sentEmailLog->set_value("sentEmailBody",$this->body);
+    $sentEmailLog->set_value("sentEmailBody",$this->body_without_attachments);
     $sentEmailLog->set_value("sentEmailHeader",$this->headers);
     $sentEmailLog->set_value("sentEmailType",$this->message_type);
     $sentEmailLog->save();
