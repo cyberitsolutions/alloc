@@ -506,15 +506,6 @@ class comment extends db_entity {
         $from["hash"] = $token->get_value("tokenHash");
       }
 
-      if ($ip_action["interestedParty"]) {
-        $comment->set_value("comment",$ip_action["interestedParty"]."\n\n".$comment->get_value("comment"));
-        $comment->save();
-      }
-      if ($ip_action["timeSheet"]) {
-        $comment->set_value("comment",$ip_action["timeSheet"]."\n\n".$comment->get_value("comment"));
-        $comment->save();
-      }
-
       if (!$ip_action["quiet"]) { // only resend email if quiet hasn't been put in the subject line
         list($successful_recipients,$messageid) = comment::send_emails($obj, $recipients, $c->get_value("commentType")."_comments", $comment->get_value("comment"), $from);
       }
