@@ -214,7 +214,13 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   if (!defined("NO_AUTH") && !$sess->Started()) {
     if (!defined("NO_REDIRECT")) {
-      alloc_redirect($TPL["url_alloc_login"]);
+      // if the user was trying to do something, store the URL so they can get back to it
+      // POST requests will disappear, unfortunately.
+      $forward = "";
+      if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != '/') {
+        $forward = '?forward=' . urlencode($_SERVER['REQUEST_URI']);
+      }
+      alloc_redirect($TPL["url_alloc_login"] . $forward);
     } else {
       exit();
     }
