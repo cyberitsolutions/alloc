@@ -32,8 +32,8 @@ class timeSheetStatusHomeItem extends home_item {
     list($hours_avg,$dollars_avg) = $t->get_fortnightly_average($current_user->get_id());
     $TPL["hours_sum"] = sprintf("%d",$hours_sum[$current_user->get_id()]);
     $TPL["hours_avg"] = sprintf("%d",$hours_avg[$current_user->get_id()]);
-    $TPL["dollars_sum"] = sprintf("%d",$dollars_sum[$current_user->get_id()]);
-    $TPL["dollars_avg"] = sprintf("%d",$dollars_avg[$current_user->get_id()]);
+    $TPL["dollars_sum"] = page::money_print($dollars_sum[$current_user->get_id()]);
+    $TPL["dollars_avg"] = page::money(config::get_config_item("currency"),$dollars_avg[$current_user->get_id()],"%s%m %c");
   }
 
 }

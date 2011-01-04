@@ -182,9 +182,19 @@ class timeSheetItem extends db_entity {
       $rtn[$id] = $avg / $how_many_fortnights[$id];
       #echo "<br>".$id." ".$how_many_fortnights[$id];
     }
-    foreach ($rows_dollars as $id => $dollars) {
-      $rtn_dollars[$id] = $dollars / $how_many_fortnights[$id];
+
+    // Convert all the monies into native currency
+    foreach ($rows_dollars as $id => $arr) {
+      foreach ($arr as $r) {
+        $alex[$id] += exchangeRate::convert($r["currency"],$r["amount"]);
+      }
     }
+
+    // Get the averages for each
+    foreach ($alex as $id => $sum) {
+      $rtn_dollars[$id] = $sum / $how_many_fortnights[$id];
+    }
+
     return array($rtn,$rtn_dollars);
   }
 
@@ -307,15 +317,19 @@ class timeSheetItem extends db_entity {
     }
 
     //Calculate the dollar values
-    $q = sprintf("SELECT timeSheetItem.*,timeSheet.currencyTypeID FROM timeSheetItem 
+    $q = sprintf("SELECT (rate * POW(10, -currencyType.numberToBasic) * timeSheetItemDuration * multiplier) as amount
+                       , timeSheet.currencyTypeID as currency 
+                       , timeSheetItem.personID as personID, timeSheetItem.timeSheetItemID
+                    FROM timeSheetItem 
                LEFT JOIN timeSheet on timeSheetItem.timeSheetID = timeSheet.timeSheetID
+               LEFT JOIN currencyType ON timeSheet.currencyTypeID = currencyType.currencyTypeID
                 WHERE dateTimeSheetItem > '%s' %s", $dateTimeSheetItem, $personID_sql);
     $db->query($q);
     $rows_dollars = array();
-    while($db->next_record()) {
+    while($row = $db->row()) {
       $tsi = new timeSheetItem();
       $tsi->read_db_record($db);
-      $rows_dollars[$db->f("personID")] += $tsi->calculate_item_charge($db->f("currencyTypeID"),$db->f("rate"));
+      $rows_dollars[$row["personID"]][] = $row;
     }
     return array($rows,$rows_dollars);
   }
