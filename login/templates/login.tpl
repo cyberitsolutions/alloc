@@ -5,6 +5,9 @@
 </div>
 
 <form action="{$url_alloc_login}" method="post" id="login_form">
+{if $forward_url}
+<input type="hidden" name="forwardUrl" value="{$forward_url}" />
+{/}
 <div class="width whitely corner shadow">
   <div id="links"><a onclick="javascript:$('.toggleable').toggle(); return false;" href="">New Password</a></div>
   

@@ -53,7 +53,10 @@ if ($sess->Started()) {
       $sess->UseGet();
     }
 
-    $url = $sess->GetUrl($TPL["url_alloc_home"]);
+    if (isset($_POST["forwardUrl"]))
+      $url = $_POST["forwardUrl"];
+    else
+      $url = $sess->GetUrl($TPL["url_alloc_home"]);
     $sess->Save();
     alloc_redirect($url);
   }
@@ -107,6 +110,10 @@ if (isset($_POST["username"])) {
   $TPL["username"] = $_POST["username"];
 } else if ($sess->TestCookie() != "alloc_test_cookie") {
   $TPL["username"] = $sess->TestCookie();
+}
+
+if (isset($_GET["forward"])) {
+  $TPL["forward_url"] = strip_tags($_GET["forward"]);
 }
 
 $TPL["status_line"] = APPLICATION_NAME." ".get_alloc_version()." &copy; ".date("Y")." <a href=\"http://www.cybersource.com.au\">Cybersource</a>"; 
