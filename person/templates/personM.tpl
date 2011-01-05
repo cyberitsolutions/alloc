@@ -66,9 +66,16 @@
     <th class="right"><a href="{$absence_url}">New absence form</a></th>
   </tr>
   <tr>
-    <td>Start Date</td>
-    <td>End Date</td>
+    <td>
+      <table class="sortable list">
+        <tr>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Absence Type</th>
+        </tr>
+        {show_absence_forms("templates/personAbsenceR.tpl")}
+      </table>
+    </td>
   </tr>
-  {show_absence_forms("templates/personAbsenceR.tpl")}
 </table>
 {page::footer()}
