@@ -30,7 +30,7 @@ function show_announcements($template_name) {
   $people = get_cached_table("person");
   $query = "SELECT announcement.* 
               FROM announcement 
-              ORDER BY displayFromDate";
+              ORDER BY displayFromDate DESC";
   $db = new db_alloc();
   $db->query($query);
   while ($db->next_record()) {
