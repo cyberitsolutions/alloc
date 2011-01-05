@@ -102,11 +102,11 @@ require_once("../alloc.php");
       $skill->read_db_record($db);
       $skill->set_tpl_values();
 
-      $skillPrificiencys = new proficiency;
-      $skillPrificiencys->read_db_record($db);
-      $skillPrificiencys->set_values();
+      $skillProficiencys = new proficiency;
+      $skillProficiencys->read_db_record($db);
+      $skillProficiencys->set_values();
 
-      # if tey do and there is no heading for this segment put a heading
+      # if they do and there is no heading for this segment put a heading
       $thisSkillClass = $skill->get_value('skillClass');
       if ($currSkillClass != $thisSkillClass) {
         $currSkillClass = $thisSkillClass;
@@ -114,7 +114,7 @@ require_once("../alloc.php");
       } else {
         $skill_header = false;
       }
-      $skill_prof = $skillPrificiencys->get_value('skillProficiency');
+      $skill_prof = $skillProficiencys->get_value('skillProficiency');
       $TPL["skill_proficiencys"] = page::select_options($proficiencys, $skill_prof);
 
       # display rating if there is one
