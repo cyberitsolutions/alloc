@@ -1,4 +1,5 @@
-      <table class="filter corner" align="center" class="center">
+      <!-- we need to have display:table because the default is for .filter's to be hidden -->
+      <table align="center" class="filter corner" style="display:table">
         <tr>
           <td colspan="6" class="center" style="padding-top:0px; padding-bottom:10px;">
             {$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"]}
