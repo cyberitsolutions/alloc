@@ -345,7 +345,7 @@ function clickClientStatus(e) {
 <div id="commissions">
 <table class="box">
   <tr>
-    <th align="left" colspan="4">Time Sheet Commission</th>
+    <th align="left">{page::help("timesheet_commission")}Time Sheet Commissions</th>
   </tr>
   <tr>
     <td colspan="4">Enter TF and commision amount or 0 to indicate "All Remaining Funds"</td>
