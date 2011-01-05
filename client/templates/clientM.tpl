@@ -36,7 +36,7 @@
 </div>
 
 {if check_optional_client_exists()}
-<div id="reminders" class="hidden">
+<div id="reminders">
   <table class="box">
     <tr>
       <th>Reminders</th>
@@ -52,15 +52,15 @@
   </table>
 </div>
   
-<div id="comments" class="hidden">
+<div id="comments">
   {show_comments()}
 </div>
 
-<div id="attachments" class="hidden">
+<div id="attachments">
   {show_attachments()}
 </div>
 
-<div id="projects" class="hidden">
+<div id="projects">
   <table class="box">
     <tr>
       <th colspan="2">Projects</th>
@@ -82,7 +82,7 @@
   </table>
 </div>
 
-<div id="invoices" class="hidden">
+<div id="invoices">
   <table class="box">
     <tr>
       <th>Invoices</th>
@@ -96,7 +96,7 @@
   </table>
 </div>
 
-<div id="sales" class="hidden">
+<div id="sales">
 <table class="box">
   <tr>
     <th>Sales</th>

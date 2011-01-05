@@ -314,7 +314,7 @@ function clickClientStatus(e) {
 {if defined("PROJECT_EXISTS")}
 
 
-<div id="people" class="hidden">
+<div id="people">
 <form action="{$url_alloc_project}" method="post">
 <table class="box">
   <tr>
@@ -337,12 +337,12 @@ function clickClientStatus(e) {
 </form>
 </div>
 
-<div id="comments" class="hidden">
+<div id="comments">
 {show_comments()}
 </div>
 
 
-<div id="commissions" class="hidden">
+<div id="commissions">
 <table class="box">
   <tr>
     <th align="left" colspan="4">Time Sheet Commission</th>
@@ -356,15 +356,15 @@ function clickClientStatus(e) {
 </div>
 
 
-<div id="attachments" class="hidden">
+<div id="attachments">
 {show_attachments()}
 </div>
 
-<div id="tasks" class="hidden">
+<div id="tasks">
 {show_tasks()}
 </div>
 
-<div id="reminders" class="hidden">
+<div id="reminders">
 <table class="box">  
   <tr>
     <th colspan="4">Reminders</th>
@@ -386,15 +386,15 @@ function clickClientStatus(e) {
 </table>
 </div>
 
-<div id="time" class="hidden">
+<div id="time">
 {show_time_sheets("templates/projectTimeSheetS.tpl")}
 </div>
 
-<div id="transactions" class="hidden">
+<div id="transactions">
 {show_transactions("templates/projectTransactionS.tpl")}
 </div>
 
-<div id="prodsales" class="hidden">
+<div id="prodsales">
 <table class="box">
   <tr>
     <th>Product Sales</th>
@@ -408,7 +408,7 @@ function clickClientStatus(e) {
 </table>
 </div>
 
-<div id="importexport" class="hidden">
+<div id="importexport">
 {show_import_export("templates/projectImportExportM.tpl")}
 </div>
 
