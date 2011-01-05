@@ -76,8 +76,8 @@ function clickClientStatus(e) {
                                ,"reminders"=>"Reminders"
                                ,"time"=>"Time Sheets"
                                ,"transactions"=>"Transactions"
+                               ,"sales"=>"Sales"
                                ,"importexport"=>"Import/Export"
-                               ,"prodsales"=>"Sales"
                                ,"sbsAll"=>"All")
                           ,$sbs_link
                           ,$url_alloc_project."projectID=".$project_projectID)}
@@ -394,7 +394,7 @@ function clickClientStatus(e) {
 {show_transactions("templates/projectTransactionS.tpl")}
 </div>
 
-<div id="prodsales">
+<div id="sales">
 <table class="box">
   <tr>
     <th>Product Sales</th>
