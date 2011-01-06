@@ -756,3 +756,10 @@ body#login #footer {
   font-size:80%;
 }
 
+body#login #slowest_query_1,
+body#login #slowest_query_2,
+body#login #all_page_queries_1,
+body#login #all_page_queries_2 {
+  display:none;
+}
+
