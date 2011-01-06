@@ -25,7 +25,11 @@ $(document).ready(function() {
 <input type="hidden" name="transactionGroupID" value="{$transactionGroupID}">
 <table class="box">
   <tr>
-    <th>Transaction Group {$transactionGroupID}</th>
+    <th class="header">Transaction Group {$transactionGroupID}
+      <span>
+        <a href="#x" class="magic" onClick="$('#transactions_footer').before('<tr>'+$('#transactionRow').html()+'</tr>');">New</a>
+      </span>
+    </th>
   </tr>
   <tr>
     <td>
@@ -43,9 +47,7 @@ $(document).ready(function() {
             <a href="##" class="magic allApproved">A</a>&nbsp;
             <a href="##" class="magic allRejected">R</a>&nbsp;
           </th>
-          <th class="right">
-            <a href="#x" class="magic" onClick="$('#transactions_footer').before('<tr>'+$('#transactionRow').html()+'</tr>');">New</a>
-          </th>
+          <th></th>
         </tr>
         {show_transaction_list("templates/transactionGroupR.tpl")}
         {show_transaction_new("templates/transactionGroupR.tpl")}

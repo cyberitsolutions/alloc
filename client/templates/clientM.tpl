@@ -39,16 +39,25 @@
 <div id="reminders">
   <table class="box">
     <tr>
-      <th>Reminders</th>
-      <th class="right" colspan="3"><a href="{$url_alloc_reminderAdd}step=3&parentType=client&parentID={$client_clientID}&returnToParent=client">Add Reminder</a></th>
+      <th class="header">Reminders
+        <span>
+          <a href="{$url_alloc_reminderAdd}step=3&parentType=client&parentID={$client_clientID}&returnToParent=client">Add Reminder</a>
+        </span>
+      </th>
     </tr>
     <tr>
-      <td>Recipient</td>
-      <td>Date / Time</td>
-      <td>Subject</td>
-      <td>Repeat</td>
+      <td>
+        <table class="sortable list">
+          <tr>
+            <th>Recipient</th>
+            <th>Date / Time</th>
+            <th>Subject</th>
+            <th>Repeat</th>
+          </tr>
+          {show_reminders("../reminder/templates/reminderR.tpl")}
+        </table>
+      </td>
     </tr>
-    {show_reminders("../reminder/templates/reminderR.tpl")}
   </table>
 </div>
   
@@ -63,11 +72,14 @@
 <div id="projects">
   <table class="box">
     <tr>
-      <th colspan="2">Projects</th>
-      <th class="right"><a href="{$url_alloc_project}clientID={$client_clientID}">New Project</a></th>
+      <th class="header">Projects
+        <span>
+          <a href="{$url_alloc_project}clientID={$client_clientID}">New Project</a>
+        </span>
+      </th>
     </tr>
     <tr>
-      <td colspan="3">
+      <td>
         {echo project::get_list(array("showHeader"=>true
                                      ,"showProjectLink"=>true
                                      ,"showClient"=>true
@@ -85,11 +97,14 @@
 <div id="invoices">
   <table class="box">
     <tr>
-      <th>Invoices</th>
-      <th class="right">{$invoice_links}</th>
+      <th class="header">Invoices
+        <span>
+          {$invoice_links}
+        </span>
+      </th>
     </tr>
-     <tr>
-      <td colspan="2">
+    <tr>
+      <td>
         {show_invoices()}
       </td>
     </tr>
@@ -99,11 +114,14 @@
 <div id="sales">
 <table class="box">
   <tr>
-    <th>Sales</th>
-    <th class="right"><a href="{$url_alloc_productSale}clientID={$client_clientID}">New Sale</a></th>
+    <th class="header">Sales
+      <span>
+        <a href="{$url_alloc_productSale}clientID={$client_clientID}">New Sale</a>
+      </span>
+    </th>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
       {echo productSale::get_list(array("clientID"=>$client_clientID))}
     </td>
   </tr>

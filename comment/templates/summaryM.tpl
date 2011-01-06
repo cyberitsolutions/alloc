@@ -3,11 +3,14 @@
 
 <table class="box">
   <tr>
-    <th class="nobr">Task Comment Summary</th>
-    <th class="right nobr"><a class='magic toggleFilter' href=''>Show Filter</a></th>
+    <th class="header nobr">Task Comment Summary
+      <span>
+        <a class='magic toggleFilter' href=''>Show Filter</a>
+      </span>
+    </th>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
           
         <form action="{$url_alloc_commentSummary}" method="get">
         <table align="center" class="filter corner">
@@ -38,7 +41,7 @@
     </td>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
       {if $_REQUEST["filter"]}
         {$_REQUEST["showTaskHeader"] = true}
         {echo comment::get_list_summary($_REQUEST)}

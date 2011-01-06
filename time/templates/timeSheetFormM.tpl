@@ -18,8 +18,8 @@
 <table class="box">
   <tr>
     <th colspan="1">{page::help("timesheet_overview")}</th>
-    <th colspan="4">Time Sheet
-      <span style="float:right">
+    <th class="header" colspan="4">Time Sheet
+      <span>
       {if $timeSheet_timeSheetID}
         {$timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions")}
         {$timeSheetPrint = config::get_config_item("timeSheetPrint")}

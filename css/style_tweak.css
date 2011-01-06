@@ -330,6 +330,10 @@ table.box td {
   padding:3px;
 }
 
+table.box th.header span {
+  float:right;
+}
+
 
 /* Calendar */
 table.alloc_calendar { 

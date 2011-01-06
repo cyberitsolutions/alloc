@@ -114,11 +114,14 @@ function set_values(target) {
 <input type="hidden" name="productSaleID" value="{$productSaleID}">
 <table class="box">
   <tr>
-    <th>Sale Items</th>
-    <th class="right"></th>
+    <th class="header">Sale Items
+      <span>
+        <a href="#x" class="magic" onClick="add_row();">New</a>
+      </span>
+    </th>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
 
       <table class="list">
         <tr>
@@ -126,7 +129,7 @@ function set_values(target) {
           <th>Quantity</th>
           <th>Sell Price</th>
           <th>Description</th>
-          <th width="1%" class="right"><a href="#x" class="magic" onClick="add_row();">New</a></th>
+          <th width="1%" class="right"></th>
         </tr>
         {show_productSale_list($productSaleID, "templates/productSaleItemR.tpl")}
         {show_productSale_new("templates/productSaleItemR.tpl")}

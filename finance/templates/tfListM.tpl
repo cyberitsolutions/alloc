@@ -2,16 +2,17 @@
 {page::toolbar()}
 <table class="box">
   <tr>
-    <th colspan="3">TF List</th>
-    <th class="right">
-      <a class='magic toggleFilter' href=''>Show Filter</a>
-      {if have_entity_perm("tf", PERM_CREATE, $current_user, true)}
-        <a href="{$url_alloc_tf}">New Tagged Fund</a>
-      {/}
+    <th class="header">TF List
+      <span>
+        <a class='magic toggleFilter' href=''>Show Filter</a>
+        {if have_entity_perm("tf", PERM_CREATE, $current_user, true)}
+          <a href="{$url_alloc_tf}">New Tagged Fund</a>
+        {/}
+      </span>
     </th>
   </tr>
   <tr>
-    <td colspan="4" align="center">
+    <td align="center">
       <form action="{$url_alloc_tfList}" method="get">
       <table class="filter corner" align="center">
         <tr>
@@ -24,7 +25,7 @@
     </td>
   </tr>
   <tr>
-    <td colspan="4">
+    <td>
       <table class="list sortable">
         <tr>
           <th>TF Name</th>

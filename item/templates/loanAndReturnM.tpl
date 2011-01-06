@@ -4,11 +4,14 @@
 <form method="post" action="{$url_alloc_newLoan}">
 <table class="box">
   <tr>
-    <th>New Loan</th>
-    <th class="right" colspan="3"><a href="{$url_alloc_loans}">Return To Main Items</a></th>
+    <th class="header">New Loan
+      <span>
+        <a href="{$url_alloc_loans}">Return To Main Items</a>
+      </span>
+    </th>
   </tr>
   <tr>
-    <td colspan="4">
+    <td>
       <table class="list sortable">
         <tr>
           <th>Item</th>

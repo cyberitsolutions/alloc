@@ -2,21 +2,22 @@
 {page::toolbar()}
 <table class="box">
   <tr>
-    <th>People</th> 
-    <th class="right" colspan="8">
-      <a class='magic toggleFilter' href=''>Show Filter</a>
-      <a href={$url_alloc_personGraph}>Person Graphs</a>
-      <a href={$url_alloc_personSkillMatrix}>Skill Matrix</a>
-      <a href="{$url_alloc_person}">New Person</a>
+    <th class="header">People
+      <span>
+        <a class='magic toggleFilter' href=''>Show Filter</a>
+        <a href={$url_alloc_personGraph}>Person Graphs</a>
+        <a href={$url_alloc_personSkillMatrix}>Skill Matrix</a>
+        <a href="{$url_alloc_person}">New Person</a>
+      </span>
     </th>
   </tr>
   <tr>
-    <td colspan="9" align="center">
+    <td align="center">
       {show_filter()}
     </td>
   </tr>
   <tr>
-    <td colspan="9">
+    <td>
       {show_people()}
     </td>
   </tr>

@@ -1,15 +1,24 @@
 <table class="box">
   <tr>
-    <th colspan="5">Transactions</th>
-    <th class="right"><a href="{$url_alloc_expenseForm}">New Expense Form</a></th>
+    <th class="header">Transactions
+      <span>
+        <a href="{$url_alloc_expenseForm}">New Expense Form</a>
+      </span>
+    </th>
   </tr>
   <tr>
-    <td>User Name</td>
-    <td>Date Modified</td>
-    <td>Type</td>
-    <td>Status</td>
-    <td>Amount</td>
+    <td>
+      <table class="list">
+        <tr>
+          <th>User Name</th>
+          <th>Date Modified</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Amount</th>
+        </tr>
+        {show_transaction("templates/project_transactionItemR.tpl")}
+      </table>
+    </td>
   </tr>
-{show_transaction("templates/project_transactionItemR.tpl")}
 </table>
 

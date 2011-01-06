@@ -67,10 +67,11 @@ $(document).ready(function() {
 
 <table class="box">
   <tr>
-    <th colspan="2" class="noprint">Wiki</th>
-    <th colspan="1" class="right noprint">
-      <a id="newFile" href="{$url_alloc_wiki}">New File</a>
-      <a id="newDirectory" href="{$url_alloc_wiki}">New Directory</a>
+    <th colspan="3" class="header noprint">Wiki
+      <span>
+        <a id="newFile" href="{$url_alloc_wiki}">New File</a>
+        <a id="newDirectory" href="{$url_alloc_wiki}">New Directory</a>
+      </span>
     </th>
   </tr>
   <tr>

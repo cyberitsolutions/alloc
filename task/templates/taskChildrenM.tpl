@@ -1,12 +1,13 @@
 <table class="box">
     <tr>
-      <th>Child Tasks</th>
-      <th class="right">
-        <a href="{$url_alloc_task}projectID={$task_projectID}&parentTaskID={$task_taskID}">New Subtask</a>
+      <th class="header">Child Tasks
+        <span>
+          <a href="{$url_alloc_task}projectID={$task_projectID}&parentTaskID={$task_taskID}">New Subtask</a>
+        </span>
       </th>
     </tr>
     <tr>
-      <td colspan="2">{$task_children_summary}</td>
+      <td>{$task_children_summary}</td>
     </tr>
 </table>
 

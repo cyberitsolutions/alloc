@@ -4,8 +4,11 @@
 <form action="{$url_alloc_personSkillAdd}" method="post">
 <table class="box">
   <tr>
-    <th colspan="2">Add/Delete New Skill</th>
-    <th class="right"><a href={$url_alloc_personSkillMatrix}>Skill Matrix</a></th>
+    <th class="header" colspan="3">Add/Delete New Skill
+      <span>
+        <a href={$url_alloc_personSkillMatrix}>Skill Matrix</a>
+      </span>
+    </th>
   </tr>
   <tr>
     <td>Skill Class</td>

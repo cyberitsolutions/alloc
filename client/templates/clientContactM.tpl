@@ -1,7 +1,10 @@
   <table class="box">
     <tr>
-      <th>Client Contacts</th>
-      <th class="right">{page::expand_link("id_new_client_contact")}</th>
+      <th class="header">Client Contacts
+        <span>
+          {page::expand_link("id_new_client_contact")}
+        </span>
+      </th>
     </tr>
     <tr>
       <td colspan="2">

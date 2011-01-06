@@ -88,8 +88,10 @@ function clickClientStatus(e) {
 <input type="hidden" name="projectID" value="{$project_projectID}">
 <table class="box">
   <tr>
-    <th colspan="5">{$projectSelfLink}
-    <span style='float:right'>{if defined("PROJECT_EXISTS")}{$navigation_links}{/}</span>
+    <th class="header" colspan="5">{$projectSelfLink}
+      <span>
+        {if defined("PROJECT_EXISTS")}{$navigation_links}{/}
+      </span>
     </th>
   </tr>
   <tr>
@@ -316,24 +318,39 @@ function clickClientStatus(e) {
 
 <div id="people">
 <form action="{$url_alloc_project}" method="post">
+
+
 <table class="box">
   <tr>
-    <th align="left">Project People</th>
-    <th class="right"><a href="#x" class="magic" onClick="$('#projectPersonContainer').append($('#new_projectPerson').html());">New</a></th>
+    <th class="header" align="left">Project People
+      <span>
+        <a href="#x" class="magic" onClick="$('#project_people_footer').before('<tr>'+$('#new_projectPerson').html()+'</tr>');">New</a>
+      </span>
+    </th>
   </tr>
   <tr>
-    <td colspan="2" id="projectPersonContainer">
+    <td>
+      <table class="list">
+        <tr>
+          <th>Person</th>
+          <th>Role</th>
+          <th>Rate</th>
+          <th colspan="2">Unit</th>
+        </tr>
 {show_person_list("templates/projectPersonListR.tpl")}
 {show_new_person("templates/projectPersonListR.tpl")}
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="right">
-      <input type="submit" name="person_save" value="Save Project People">
-      <input type="hidden" name="projectID" value="{$project_projectID}">
+        <tr id="project_people_footer">
+          <td colspan="5" class="center">
+            <input type="submit" name="person_save" value="Save Project People">
+            <input type="hidden" name="projectID" value="{$project_projectID}">
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
 </table>
+
+
 </form>
 </div>
 
@@ -348,10 +365,17 @@ function clickClientStatus(e) {
     <th align="left">{page::help("timesheet_commission")}Time Sheet Commissions</th>
   </tr>
   <tr>
-    <td colspan="4">Enter TF and commision amount or 0 to indicate "All Remaining Funds"</td>
-  </tr>
+    <td>
+      <table class="list">
+        <tr>
+          <th>Tagged Fund</th>
+          <th colspan="3">Percentage</th>
+        </tr>
 {show_commission_list("templates/commissionListR.tpl")}
 {show_new_commission("templates/commissionListR.tpl")}
+      </table>
+    </td>
+  </tr>
 </table>
 </div>
 
@@ -367,22 +391,25 @@ function clickClientStatus(e) {
 <div id="reminders">
 <table class="box">  
   <tr>
-    <th colspan="4">Reminders</th>
-    <th class="right">
-      <a href="{$url_alloc_reminderAdd}step=3&parentType=project&parentID={$project_projectID}&returnToParent=project">
-      New Reminder</a>
+    <th class="header">Reminders
+      <span>
+        <a href="{$url_alloc_reminderAdd}step=3&parentType=project&parentID={$project_projectID}&returnToParent=project">New Reminder</a>
+      </span>
     </th>
   </tr>
   <tr>
-    <td>Recipient</td>
-    <td>Date / Time</td>
-    <td>Subject</td>
-    <td>Repeat</td>
+    <td>
+      <table class="list">
+        <tr>
+          <th>Recipient</th>
+          <th>Date / Time</th>
+          <th>Subject</th>
+          <th>Repeat</th>
+        </tr>
+        {show_reminders("../reminder/templates/reminderR.tpl")}
+      </table>
+    </td>
   </tr>
-  <form action="{$url_alloc_project}" method=post>
-  <input type="hidden" name="projectID" value="{$project_projectID}">
-  {show_reminders("../reminder/templates/reminderR.tpl")}
-  </form>
 </table>
 </div>
 
@@ -397,11 +424,14 @@ function clickClientStatus(e) {
 <div id="sales">
 <table class="box">
   <tr>
-    <th>Product Sales</th>
-    <th class="right"><a href="{$url_alloc_productSale}projectID={$project_projectID}">New Sale</a></th>
+    <th class="header">Product Sales
+      <span>
+        <a href="{$url_alloc_productSale}projectID={$project_projectID}">New Sale</a>
+      </span>
+    </th>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
       {echo productSale::get_list(array("projectID"=>$project_projectID))}
     </td>
   </tr>
