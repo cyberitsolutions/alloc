@@ -2,14 +2,15 @@
 {page::toolbar()}
 <table class="box">
   <tr>
-    <th>Products</th>
-    <th class="right">
-      <a href="{$url_alloc_product}">New Product</a>
-      <a href="{$url_alloc_productSale}">New Sale</a>
+    <th class="header">Products
+      <span>
+        <a href="{$url_alloc_product}">New Product</a>
+        <a href="{$url_alloc_productSale}">New Sale</a>
+      </span>
     </th>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
       {echo product::get_list()}
     </td>
   </tr>

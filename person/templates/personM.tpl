@@ -62,8 +62,11 @@
   
 <table class="box">
   <tr>
-    <th colspan="2">Absence Forms</th>
-    <th class="right"><a href="{$absence_url}">New absence form</a></th>
+    <th class="header">Absence Forms
+      <span>
+        <a href="{$absence_url}">New absence form</a>
+      </span>
+    </th>
   </tr>
   <tr>
     <td>

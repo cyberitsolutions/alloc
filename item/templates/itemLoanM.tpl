@@ -2,14 +2,15 @@
 {page::toolbar()}
 <table class="box">
   <tr>
-    <th>Overdue Item Loans</th>
-    <th class="right" colspan="5">
-      <a href="{$url_alloc_loanAndReturn}">New Loan/Return Item</a>
-      <a href="{$url_alloc_addItem}">Add/Edit/Remove Item</a>
+    <th class="header">Overdue Item Loans
+      <span>
+        <a href="{$url_alloc_loanAndReturn}">New Loan/Return Item</a>
+        <a href="{$url_alloc_addItem}">Add/Edit/Remove Item</a>
+      </span>
     </th>
   </tr>
   <tr>
-    <td colspan="6">
+    <td>
       <table class="list sortable">
         <tr>  
           <th>Item Name</th>

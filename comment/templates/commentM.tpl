@@ -1,14 +1,15 @@
 
 <table class="box">
   <tr>
-    <th>{page::help("comment")} Comments</th>
-    <th class="right">
-      {$extra_page_links}
-      {page::expand_link("id_new_comment")}
+    <th class="header">{page::help("comment")} Comments
+      <span>
+        {$extra_page_links}
+        {page::expand_link("id_new_comment")}
+      </span>
     </th>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
 
       <form action="{$url_alloc_comment}" enctype="multipart/form-data" method="post" id="commentForm">
       <div class="{$class_new_comment}" id="id_new_comment">
@@ -64,7 +65,7 @@
     </td>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
       {$commentsR}
     </td>
   </tr>

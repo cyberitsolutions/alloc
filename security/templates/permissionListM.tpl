@@ -3,14 +3,15 @@
 
 <table class="box">
   <tr>
-    <th>Permissions</th>
-    <th class="right" colspan="8">
-      <a class='magic toggleFilter' href=''>Show Filter</a>
-      <a href="{$url_alloc_permission}">New Permission</a>
+    <th class="header">Permissions
+      <span>
+        <a class='magic toggleFilter' href=''>Show Filter</a>
+        <a href="{$url_alloc_permission}">New Permission</a>
+      </span>
     </th>
   </tr>
   <tr>
-    <td colspan="9" align="center">
+    <td align="center">
       <form action="{$url_alloc_permissionList}" method="get">
       <table class="filter corner" align="center">
         <tr>
@@ -26,7 +27,7 @@
     </td>
   </tr>
   <tr>
-    <td colspan="9">
+    <td>
       <table class="list sortable">
         <tr>
           <th>Table</th>

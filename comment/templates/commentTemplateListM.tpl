@@ -2,18 +2,21 @@
 {page::toolbar()}
 <table class="box">
   <tr>
-    <th>Comment Templates</th>
-    <th class="right"><a href="{$url_alloc_commentTemplate}">New Comment Template</a></th>
+    <th class="header">Comment Templates
+      <span>
+        <a href="{$url_alloc_commentTemplate}">New Comment Template</a>
+      </span>
+    </th>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
       <table class="list sortable">
         <tr>
           <th width="1%" class="sorttable_numeric">ID</th>
           <th>Template</th>
           <th>Type</th>
         </tr>
-      {show_commentTemplate("templates/commentTemplateListR.tpl")}
+        {show_commentTemplate("templates/commentTemplateListR.tpl")}
       </table>
     </td>
   </tr>

@@ -45,7 +45,9 @@ $(document).ready(function() {
 <input type="hidden" name="taskID" value="{$task_taskID}">
 <table class="box">
   <tr>
-    <th colspan="5">{$taskSelfLink}<span style="float:right">{$navigation_links}</span></th>
+    <th class="header" colspan="5">{$taskSelfLink}
+      <span>{$navigation_links}</span>
+    </th>
   </tr>
   <tr>
     <td colspan="5" valign="top">
@@ -290,18 +292,25 @@ $(document).ready(function() {
 <div id="reminders">
 <table class="box">
   <tr>
-    <th>Reminders</th>
-    <th class="right" colspan="3">
-      <a href="{$url_alloc_reminderAdd}step=3&parentType=task&parentID={$task_taskID}&returnToParent=task">Add Reminder</a>
+    <th class="header">Reminders
+      <span>
+        <a href="{$url_alloc_reminderAdd}step=3&parentType=task&parentID={$task_taskID}&returnToParent=task">Add Reminder</a>
+      </span>
     </th>
   </tr>
   <tr>
-    <td>Recipient</td>
-    <td>Date / Time</td>
-    <td>Subject</td>
-    <td>Repeat</td>
+    <td>
+      <table class="sortable list">
+        <tr>
+          <th>Recipient</th>
+          <th>Date / Time</th>
+          <th>Subject</th>
+          <th>Repeat</th>
+        </tr>
+        {show_reminders("../reminder/templates/reminderR.tpl")}
+      </table>
+    </td>
   </tr>
-  {show_reminders("../reminder/templates/reminderR.tpl")}
 </table>
 </div>
 

@@ -11,19 +11,27 @@
 
 <table class="box">
   <tr>
-    <th>Return Item</th>
-    <th class="right"><a href="{$url_alloc_loanAndReturn}">Back to Loans and Returns</a></th>
+    <th class="header">Return Item
+      <span>
+        <a href="{$url_alloc_loanAndReturn}">Back to Loans and Returns</a>
+      </span>
+    </th>
   </tr>
   <tr>
-    <td>Item</td>
-    <td>{=$itemName}</td>
-  </tr>
-  <tr>
-    <td>Notes</td>
-    <td>{=$itemNotes}</td>
-  </tr>
-  <tr>
-    <td colspan="2"><input type="submit" name="returnItem" value="Return Item"></td>
+    <td>
+      <table class="list">
+        <tr>
+          <th>Item</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+        <tr>
+          <td>{=$itemName}</td>
+          <td>{=$itemNotes}</td>
+          <td class="right"><input type="submit" name="returnItem" value="Return Item"></td>
+        </tr>
+      </table>
+    </td>
   </tr>
 </table>
 

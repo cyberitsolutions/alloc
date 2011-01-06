@@ -1,6 +1,7 @@
 .noprint,
 #menu,
 #tabs,
+table.box th.header span,
 table.box th.right,
 table.filter,
 table.alloc_calendar img {
@@ -135,3 +136,11 @@ table {
   margin:0px !important;
   padding:0px !important;
 }
+
+.corner {
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  border-collapse:separate; /* to prevent border-collapse:collapse being inherited */
+}
+

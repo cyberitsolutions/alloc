@@ -115,18 +115,22 @@ $(document).ready(function() {
 <input type="hidden" name="productID" value="{$productID}">
 <table class="box">
   <tr>
-    <th>Product Costs</th>
-    <th width="1%">{page::help("product_fixedCost")}</th>
+    <th class="header">Product Costs
+      <span>
+        <a href="#x" class="magic" onClick="$('#product_cost_footer').before('<tr>'+$('#product_cost_row').html()+'</tr>');">New</a>
+        {page::help("product_fixedCost")}
+      </span>
+    </th>
   </tr>
   <tr>
-    <td colspan="2">
+    <td>
 
       <table class="list">
         <tr>
           <th width="15%">Amount</th>
           <th width="35%">Destination TF</th>
           <th>Description</th>
-          <th class="right"><a href="#x" class="magic" onClick="$('#product_cost_footer').before('<tr>'+$('#product_cost_row').html()+'</tr>');">New</a></th>
+          <th></th>
         </tr>
         {show_productCost_list($productID, "templates/productCostR.tpl")}
         {show_productCost_new("templates/productCostR.tpl")}
@@ -145,8 +149,12 @@ $(document).ready(function() {
 <input type="hidden" name="productID" value="{$productID}">
 <table class="box">
   <tr>  
-    <th>Product Commissions</th>
-    <th width="1%">{page::help("product_percentageCost")}</th>
+    <th class="header">Product Commissions
+      <span>
+        <a href="#x" class="magic" onClick="$('#product_commission_footer').before('<tr>'+$('#product_commission_row').html()+'</tr>');">New</a>
+        {page::help("product_percentageCost")}
+      </span>
+    </th>
   </tr>
   <tr>
     <td colspan="2">
@@ -156,7 +164,7 @@ $(document).ready(function() {
           <th width="15%">Percentage</th>
           <th width="35%">Destination TF</th>
           <th>Description</th>
-          <th class="right"><a href="#x" class="magic" onClick="$('#product_commission_footer').before('<tr>'+$('#product_commission_row').html()+'</tr>');">New</a></th>
+          <th></th>
         </tr>
         {show_productCost_list($productID, "templates/productCommissionR.tpl", true)}
         {show_productCost_new("templates/productCommissionR.tpl")}

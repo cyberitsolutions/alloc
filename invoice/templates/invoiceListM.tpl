@@ -2,21 +2,22 @@
 {page::toolbar()}
 <table class="box">
   <tr>
-    <th>Invoices</th>
-    <th class="right">
-      <a class='magic toggleFilter' href=''>Show Filter</a>
-      {if $current_user->have_role("admin")}
-        <a href="{$url_alloc_invoice}">New Invoice</a>
-      {/}
+    <th class="header">Invoices
+      <span>
+        <a class='magic toggleFilter' href=''>Show Filter</a>
+        {if $current_user->have_role("admin")}
+          <a href="{$url_alloc_invoice}">New Invoice</a>
+        {/}
+      </span>
     </th>
   </tr>
   <tr>
-    <td align="center" colspan="2">
+    <td align="center">
       {show_filter()}
     </td>
    </tr>
    <tr>
-    <td colspan="2">
+    <td>
       {show_invoice_list()}
     </td>
   </tr>
