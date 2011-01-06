@@ -4,7 +4,7 @@
     <th class="header">{page::help("comment")} Comments
       <span>
         {$extra_page_links}
-        {page::expand_link("id_new_comment")}
+        {page::expand_link("id_new_comment","New Comment")}
       </span>
     </th>
   </tr>

@@ -2,7 +2,7 @@
     <tr>
       <th class="header">Client Contacts
         <span>
-          {page::expand_link("id_new_client_contact")}
+          {page::expand_link("id_new_client_contact","New Client Contact")}
         </span>
       </th>
     </tr>

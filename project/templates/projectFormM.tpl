@@ -324,7 +324,7 @@ function clickClientStatus(e) {
   <tr>
     <th class="header" align="left">Project People
       <span>
-        <a href="#x" class="magic" onClick="$('#project_people_footer').before('<tr>'+$('#new_projectPerson').html()+'</tr>');">New</a>
+        <a href="#x" class="magic" onClick="$('#project_people_footer').before('<tr>'+$('#new_projectPerson').html()+'</tr>');">New Project Person</a>
       </span>
     </th>
   </tr>
