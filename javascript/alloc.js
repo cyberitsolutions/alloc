@@ -167,6 +167,15 @@ $(document).ready(function() {
     return false;
   });
 
+  $(".calendar_links").hide();
+  $(".calendar_day").bind('mouseover',function(){
+    $(".calendar_links").hide();
+    $(this).find(".calendar_links").show();
+  });
+  $(".alloc_calendar").bind('mouseout',function() {
+    $(".calendar_links").hide();
+  });
+
 });
 
 

@@ -75,8 +75,8 @@ class calendar_day {
       $rows[] = implode("<br>",$this->reminders);
     }
 
-    echo "\n<td class=\"".$this->class."\">";
-    echo "<h1>".$this->links.$this->display_date."</h1>";
+    echo "\n<td class=\"calendar_day ".$this->class."\">";
+    echo "<h1><span class='calendar_links'>".$this->links."</span>".$this->display_date."</h1>";
 
     if (count($rows)) {
       echo implode("<br>",$rows);
