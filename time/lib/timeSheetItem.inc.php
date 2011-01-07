@@ -319,7 +319,7 @@ class timeSheetItem extends db_entity {
     //Calculate the dollar values
     $q = sprintf("SELECT (rate * POW(10, -currencyType.numberToBasic) * timeSheetItemDuration * multiplier) as amount
                        , timeSheet.currencyTypeID as currency 
-                       , timeSheetItem.personID as personID, timeSheetItem.timeSheetItemID
+                       , timeSheetItem.*
                     FROM timeSheetItem 
                LEFT JOIN timeSheet on timeSheetItem.timeSheetID = timeSheet.timeSheetID
                LEFT JOIN currencyType ON timeSheet.currencyTypeID = currencyType.currencyTypeID
