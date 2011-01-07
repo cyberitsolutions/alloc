@@ -305,12 +305,11 @@ table.box {
   border-spacing:0px;
 } 
 table.box th { 
-  (TABLE_BOX_TH_BACKGROUND); 
   color:(TABLE_BOX_TH_COLOR); 
   font-size:110%; 
-  border-bottom:1px solid (TABLE_TH_UNDERLINE_COLOR);
   padding:3px;
   font-weight:normal;
+  (TABLE_BOX_TH_BACKGROUND); 
 } 
 table.box th.center { 
   text-align:center; 
@@ -333,7 +332,10 @@ table.box td {
 table.box th.header span {
   float:right;
 }
-
+table.box th.header span a {
+  margin-left:0.2em;
+  font-size:90%;
+}
 
 /* Calendar */
 table.alloc_calendar { 
@@ -612,7 +614,6 @@ table.rejected {
   padding:0px;
   text-align:left;
   font-size:12px; /* hardcoded */
-  font-weight:bold;
   color:(TABLE_MENU_A_COLOR);
 }
 
@@ -626,7 +627,6 @@ table.rejected {
 }
 
 div#tabs {
-  width:100%;
   margin:0px;
   padding:0px !important; padding:0px 16px;
   border:1px;
@@ -643,12 +643,12 @@ div#tabs {
 div.tab {
   float:left;
   position:absolute;
-  background:url(../images/tab_unselected.gif) top no-repeat;
   display:inline;
   width:80px;
   height:27px;
   text-align:center;
   font-size:12px; /* hardcoded */
+  (DIV_TAB_BACKGROUND)
 }
 
 /* Active tabs use this class as well */
@@ -657,7 +657,6 @@ div.active {
 }
 
 div.tab a {
-  font-weight:bold;
   text-decoration:none;
   position:relative;
   top:8px !important; top:7px;
@@ -672,6 +671,15 @@ p#extra_links a:link    { color:(TABLE_MENU_EXTRA_A_COLOR);  }
 p#extra_links a:visited { color:(TABLE_MENU_EXTRA_A_COLOR);  }
 p#extra_links a:hover   { color:(TABLE_MENU_EXTRA_A_HOVER_COLOR);}
 
+p#extra_links a:link,
+p#extra_links a:visited,
+p#extra_links a:hover {
+  text-decoration:none;
+  position:relative;
+  top:8px !important; top:7px;
+  padding: 5px 0px;
+}
+
 div.active a:link, div.active a:visited {
   color:(TABLE_MENU_A_ACTIVE_COLOR);
 }
@@ -679,14 +687,14 @@ div.active a:link, div.active a:visited {
 p#extra_links {
   font-size:12px; /* hardcoded */
   font-weight:normal;
-  display:inline; 
   z-index:-1; 
   position:relative; 
   float:right;
   right:0px !important; right:-16px; 
-  top:9px; 
-  padding:0px;
+  padding:0px !important; padding:0px 16px;
+  height:27px;
   margin:0px;
+  clear:both;
 }
 
 div.grippie {

@@ -6,9 +6,9 @@
  */
 
 body { 
-  background:url(../images/wallpaper_tweak.jpg) repeat-x #5a0000; 
+  background:url(../images/bg_rams.png) repeat-x #ccc; 
   font-family:arial,helvetica,sans-serif; 
-  color:#666666; 
+  color:#333; 
   padding:0px;
   width:auto !important; width:95%;
   margin:0px 14px;
@@ -45,10 +45,10 @@ div#main2 {
 }
 
 a:link, a:visited { 
-  color:#0674f1;
+  color:#1b6cb7;
 }
 a:hover { 
-  color:#f60101; 
+  color:#8aafd2; 
 }
 
 a.growshrink, a.magic {
@@ -58,21 +58,21 @@ a.growshrink, a.magic {
 
 a.sidebyside {
   padding:5px;
-  background-color: #f6ffff;
+  background-color: #fff;
   border:1px solid #cccccc;
   text-decoration:none;
-  color:#e77070;
+  color:#6e8eb5;
   font-size:100%; 
 }
 a.sidebyside:hover {
-  background:#ffd2d2;
-  color:#e77070;
-  border:1px solid #e77070;
+  background:#e7eff9;
+  color:#6e8eb5;
+  border:1px solid #6e8eb5;
 }
 a.sidebyside_active {
-  background:#ffd2d2;
-  color:#e77070;
-  border:1px solid #e77070;
+  background:#e7eff9;
+  color:#6e8eb5;
+  border:1px solid #6e8eb5;
   text-decoration:none;
   padding:5px;
   font-size:100%; 
@@ -101,7 +101,7 @@ h6 {
   font-size:90%;
   font-weight:normal;
   text-transform:uppercase;
-  color:#e77070;
+  color:#aaa;
   border-bottom:1px solid #cccccc;
   padding:0px;
   margin:20px 0px 10px 0px;
@@ -179,7 +179,7 @@ select:focus.bad
 }
 input[readonly="true"], input[readonly="true"]:focus {
   border:1px solid #e0e0e0;
-  background-color:#f6ffff;
+  background-color:#fff;
   color:#777777;
 }
 
@@ -281,11 +281,11 @@ hr {
   background-color:#fffdf2;
 }
 .bad { 
-  color:#c84e12; 
+  color:red; 
   font-size:100%; 
 }
 .good { 
-  color:#6e883b; 
+  color:green; 
   font-size:100%; 
 }
 .help { 
@@ -296,8 +296,8 @@ hr {
 
 /* Main content boxes */ 
 table.box { 
-  border:1px solid #70a5e7; 
-  background-color:#f6ffff; 
+  border:0px; 
+  background-color:#fff; 
   vertical-align:top; 
   width:100%; 
   margin:14px 0px 0px 0px;
@@ -305,11 +305,11 @@ table.box {
   border-spacing:0px;
 } 
 table.box th { 
-  color:#ffffff; 
+  color:#333; 
   font-size:110%; 
   padding:3px;
   font-weight:normal;
-  background: url(../images/bg_tweak.jpg) repeat-x; border-bottom:1px solid #e0e0e0;; 
+  background: #fff; font-size:130%;; 
 } 
 table.box th.center { 
   text-align:center; 
@@ -319,11 +319,11 @@ table.box th.right table {
 } 
 table.box th a:link, table.box th a:visited { 
   font-weight:normal; 
-  color:#ffffff; 
+  color:red; 
 }
 table.box th a:hover { 
   font-weight:normal; 
-  color:#f60101; 
+  color:#ed742c; 
 }
 table.box td {
   padding:3px;
@@ -340,21 +340,21 @@ table.box th.header span a {
 /* Calendar */
 table.alloc_calendar { 
   width:100%; 
-  border-right:1px solid #ff9797; 
-  border-bottom:1px solid #ff9797;
+  border-right:1px solid #cccccc; 
+  border-bottom:1px solid #cccccc;
 } 
 table.alloc_calendar td { 
-  background-color:#f6ffff; 
-  border-left:1px solid #ff9797;
-  border-top:1px solid #ff9797; 
+  background-color:#fff; 
+  border-left:1px solid #cccccc;
+  border-top:1px solid #cccccc; 
   width:10%; vertical-align:top;
 }
 table.alloc_calendar td.today { 
   background-color:#fffdf2;
-  border-top:2px solid #ff9797;
-  border-left:2px solid #ff9797;
-  border-right:1px solid #ff9797;
-  border-bottom:1px solid #ff9797; 
+  border-top:2px solid #cccccc;
+  border-left:2px solid #cccccc;
+  border-right:1px solid #cccccc;
+  border-bottom:1px solid #cccccc; 
 }
 table.alloc_calendar td.today h1 {
   font-weight:bold;
@@ -381,13 +381,13 @@ table.alloc_calendar img {
   margin:0px;
 }
 table.alloc_calendar td:hover { 
-  background-color:#fff8d2; 
+  background-color:#fffdde; 
 }
 
 /* Filters */
 table.filter { 
-  background-color:#e8eeff; 
-  border:1px solid #ff9797; 
+  background-color:#f4f4f4; 
+  border:1px solid #cccccc; 
   padding:4px; 
   margin-top:4px; 
   text-align:left;
@@ -395,15 +395,15 @@ table.filter {
 }
 
 table.filter td {
-  color:#e77070; 
+  color:#6e8eb5; 
 }
 
 .filter table td { 
-  color:#e77070; 
+  color:#6e8eb5; 
 }
 .filter table th { 
   font-weight:bold; 
-  background-color:#e8eeff; 
+  background-color:#f4f4f4; 
   color:#444444; 
   border-bottom:0px solid #ffffff; 
   text-align:center; 
@@ -413,10 +413,10 @@ tr.odd {
   background-color:#ffffff; 
 }
 tr.even { 
-  background-color:#ffeaea; 
+  background-color:#f7fbff; 
 }
 tr.odd:hover, tr.even:hover {
-  background-color:#fff8d2; 
+  background-color:#fffdde; 
 }
 
 img.taskType {
@@ -438,59 +438,59 @@ img.taskType {
 }
 
 .overdue { 
-  color: #c84e12; 
+  color: red; 
 }
 .really_overdue { 
   font-weight:bold; 
-  color: #c84e12;
+  color: red;
 }
 .behind-target { 
   color: #ccaa00; 
 }
 .transaction-approved { 
-  color: #6e883b; 
+  color: green; 
 }
 .transaction-pending { 
   color: #666666; 
 }
 .transaction-rejected { 
-  color: #c84e12; 
+  color: red; 
 }
 
 .highlighted { 
   font-weight:normal; 
   font-style:normal; 
-  background-color:#fffeb7; 
+  background-color:#e7eff9; 
   padding:0px 3px;
 }
 
 table.list { 
   width:100%; 
-  border-left:1px solid #ff9797; 
-  border-right:1px solid #ff9797; 
-  border-bottom:1px solid #ff9797;
+  border-left:1px solid #cccccc; 
+  border-right:1px solid #cccccc; 
+  border-bottom:1px solid #cccccc;
   border-collapse:collapse;
   border-spacing:0px;
 }
 td.list { 
-  background-color: #e8eeff; 
+  background-color: #f4f4f4; 
   padding:4px; 
 }
 table.list th, table.alloc_calendar th { 
   border-bottom:0px; 
   font-weight:normal; 
   white-space:nowrap; 
-  background:#ffd2d2; 
-  color:#e77070; 
+  background:#e7eff9; 
+  color:#6e8eb5; 
   font-size:90%;
   text-transform:uppercase;
 }
 table.list td, table.list th, table.alloc_calendar th { 
-  border-top:1px solid #ff9797; 
+  border-top:1px solid #cccccc; 
   padding:4px;
 }
 table.alloc_calendar th { 
-  border-left:1px solid #ff9797; 
+  border-left:1px solid #cccccc; 
 }
 .sort_arrows {
   padding:0px 3px;
@@ -511,28 +511,28 @@ table.panel div.hidden_text {
   font-style:italic;
 }
 table.panel { 
-  border:1px solid #ff9797; 
-  background:#e8eeff; 
+  border:1px solid #cccccc; 
+  background:#f4f4f4; 
   margin-bottom:5px; 
   margin-top:0px;
   /* table-layout:fixed; nested divs that are overflow:auto no longer scroll off the screen */
 }
 table.loud {
-  border:1px solid #e7ba98; 
-  background:#fff7ed; 
+  border:1px solid #e0caa3; 
+  background:#fff7ea; 
 }
 table.panel table.panel {
-  border:1px solid #e5e8d9; 
+  border:1px solid #c6defb; 
   background:#ffffff; 
   margin-bottom:6px; 
 }
 table.loud table.panel {
-  border:1px solid #ffe5c4; 
+  border:1px solid #fbe1c6; 
   background:#ffffff; 
 }
 table.panel th { 
   text-align:left; 
-  background:#e8eeff; 
+  background:#f4f4f4; 
   vertical-align:top; 
   color:#444444; 
   font-weight:normal; 
@@ -542,15 +542,15 @@ table.panel th {
   font-size:100%;
 }
 table.loud th {
-  background:#fff7ed; 
+  background:#fff7ea; 
 }
 table.panel td { 
-  background:#e8eeff;
+  background:#f4f4f4;
   padding:4px; 
   border:0px solid black;
 }
 table.loud td {
-  background:#fff7ed;
+  background:#fff7ea;
 }
 table.panel td table.panel { 
   background:#ffffff; 
@@ -582,20 +582,20 @@ table.loud td table.panel td {
   color:#e17a00;
 }
 table.pending { 
-  background-color:#e8eeff; 
-  border:1px solid #ff9797; 
+  background-color:#f4f4f4; 
+  border:1px solid #cccccc; 
 }
 table.warn { 
-  background-color:#fff7ed; 
-  border:1px solid #e7ba98; 
+  background-color:#fbf6e6; 
+  border:1px solid #e3b375; 
 }
 table.approved { 
-  background-color:#dde5cf; 
-  border:1px solid #849d58; 
+  background-color:#eefff0; 
+  border:1px solid #96d28a; 
 }
 table.rejected { 
-  background-color:#f7e9e8; 
-  border:1px solid #be9a9e; 
+  background-color:#ffeaea; 
+  border:1px solid #e0a6a3; 
 }
 
 #menu {
@@ -614,11 +614,11 @@ table.rejected {
   padding:0px;
   text-align:left;
   font-size:12px; /* hardcoded */
-  color:#0674f1;
+  color:#1b6cb7;
 }
 
 #menu table td {
-  color:#ffffff;
+  color:#666;
 }
 
 #menu select {
@@ -648,7 +648,7 @@ div.tab {
   height:27px;
   text-align:center;
   font-size:12px; /* hardcoded */
-  background:url(../images/tab_unselected.gif) top no-repeat;
+  background:none;
 }
 
 /* Active tabs use this class as well */
@@ -663,13 +663,13 @@ div.tab a {
   padding: 5px 10px;
 }
 
-div.tab a:link    { color:#0674f1;  }
-div.tab a:visited { color:#0674f1;  }
-div.tab a:hover   { color:#f60101;}
+div.tab a:link    { color:#1b6cb7;  }
+div.tab a:visited { color:#1b6cb7;  }
+div.tab a:hover   { color:#4587c4;}
 
-p#extra_links a:link    { color:#ffffff;  }
-p#extra_links a:visited { color:#ffffff;  }
-p#extra_links a:hover   { color:#0674f1;}
+p#extra_links a:link    { color:#1b6cb7;  }
+p#extra_links a:visited { color:#1b6cb7;  }
+p#extra_links a:hover   { color:#4587c4;}
 
 p#extra_links a:link,
 p#extra_links a:visited,
@@ -681,7 +681,7 @@ p#extra_links a:hover {
 }
 
 div.active a:link, div.active a:visited {
-  color:#f60101;
+  color:#4587c4;
 }
 
 p#extra_links {
