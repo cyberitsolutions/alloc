@@ -265,6 +265,18 @@ class timeSheetItem extends db_entity {
       $print = true;
       $t = new timeSheet();
       $t->read_db_record($db);
+      
+      $tsi = new timeSheetItem();
+      $tsi->read_db_record($db);
+
+      if ($tsi->get_value("taskID")) {
+        $task = $tsi->get_foreign_object('task');
+        $row["secondsBilled"] = $task->get_time_billed();
+        $row["hoursBilled"] = sprintf("%0.2f",$row["secondsBilled"] / 60 / 60);
+        $task->get_value('timeLimit') && $row["hoursBilled"] > $task->get_value('timeLimit') and $row["limitWarning"] = 'Exceeds Limit!';
+        $row["taskLimit"] = $task->get_value("timeLimit");
+      }
+
       $rows[$row["timeSheetItemID"]] = $row;
     }
 

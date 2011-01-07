@@ -19,7 +19,7 @@ class alloc(object):
   quiet = ''
   sessID = ''
   row_timeSheet = ["timeSheetID","ID","dateFrom","From","dateTo","To","status","Status","person","Owner","duration","Duration","totalHours","Hrs","amount","$","projectName","Project"]
-  row_timeSheetItem = ["timeSheetID","ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","timeSheetItemDuration","Hours","taskID","taskID","comment","Comment","rate","$"]
+  row_timeSheetItem = ["timeSheetID","ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","timeSheetItemDuration","Hours","taskID","taskID","comment","Comment","rate","$","hoursBilled","Total","taskLimit","Limit","limitWarning","Warning"]
 
   def __init__(self,url=""):
     if not url:
@@ -142,7 +142,7 @@ class alloc(object):
     for i in rtn:
       return i
 
-  def print_table(self, rows, only_these_fields, sort=False):
+  def print_table(self, rows, only_these_fields, sort=False, transforms={}):
     # For printing out results in an ascii table or CSV format
     if self.quiet: return
 
@@ -173,8 +173,11 @@ class alloc(object):
               str = sep.join([(row[i] or "") for i in bits])
               
           if v in row: str = row[v]
-          if not str: str = ''
+  
+          if v in transforms:
+            str = transforms[v](str)
 
+          if not str: str = ''
           r.append(str)
         table.add_row(r)
     lines = table.get_string(sortby=sort, header=not self.csv)

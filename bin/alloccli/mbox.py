@@ -57,7 +57,7 @@ alloc mbox -t 1234 > file.mbox'''
         print self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
 
 
-      elif:
+      else:
         if not 'MAILER' in os.environ or not os.environ['MAILER']:
           self.die('The environment variable $MAILER has not been defined. Eg: export MAILER="mutt -f "')
 

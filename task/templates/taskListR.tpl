@@ -21,9 +21,12 @@
 {if $_FORM["showDate3"]}     <td class="nobr">{$dateActualStart}</td>{/}
 {if $_FORM["showDate4"]}     <td class="nobr">{$dateActualCompletion}</td>{/}
 {if $_FORM["showDate5"]}     <td class="nobr">{$dateCreated}</td>{/}
-{if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format($timeEstimate)}</td>{/}
-{if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format(task::get_time_billed($taskID))}</td>{/}
+{if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format($timeBest)}</td>{/}
+{if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format($timeWorst)}</td>{/}
+{if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format($timeExpected)}</td>{/}
+{if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format($timeActual)}</td>{/}
 {if $_FORM["showTimes"]}     <td class="nobr">{$percentComplete}</td>{/}
+{if $_FORM["showTimes"]}     <td class="nobr{$timeActual > $timeLimit and print ' bad'}">{echo seconds_to_display_format($timeLimit)}</td>{/}
 {if $_FORM["showStatus"]}    <td class="nobr" style="width:1%;">
                                <span class="corner" style="display:block;width:10em;padding:5px;text-align:center;background-color:{$taskStatusColour};">
                                  {$taskStatusLabel}

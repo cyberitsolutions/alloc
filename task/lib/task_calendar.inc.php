@@ -299,7 +299,7 @@ class calendar {
         $tasks_to_start[$date] or $tasks_to_start[$date] = array();
         foreach($tasks_to_start[$date] as $t) {
           unset($extra);
-          $t["timeEstimate"] and $extra = " (".sprintf("Est %0.1fhrs",$t["timeEstimate"]).")";
+          $t["timeLimit"] and $extra = " (".sprintf("Limit %0.1fhrs",$t["timeLimit"]).")";
           $d->start_tasks[] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$t["taskID"].'">'.page::htmlentities($t["taskName"].$extra)."</a>";
         }
 
@@ -307,7 +307,7 @@ class calendar {
         $tasks_to_complete[$date] or $tasks_to_complete[$date] = array();
         foreach($tasks_to_complete[$date] as $t) {
           unset($extra);
-          $t["timeEstimate"] and $extra = " (".sprintf("Est %0.1fhrs",$t["timeEstimate"]).")";
+          $t["timeLimit"] and $extra = " (".sprintf("Limit %0.1fhrs",$t["timeLimit"]).")";
           $d->complete_tasks[] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$t["taskID"].'">'.page::htmlentities($t["taskName"].$extra)."</a>";
         }
 

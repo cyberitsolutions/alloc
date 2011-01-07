@@ -234,11 +234,11 @@ if (!$current_user->is_employee()) {
         $task = new task;
         $task->set_id($timeSheetItem->get_value('taskID'));
         $task->select();
-        if(floatval($task->get_value('timeEstimate')) > 0) {
-          $total_billed_time = ($task->get_time_billed(false)) / 3600;    // get_time_billed returns seconds, estimated hours is in hours
-          if($total_billed_time > floatval($task->get_value('timeEstimate'))) {
+        if($task->get_value('timeLimit') > 0) {
+          $total_billed_time = ($task->get_time_billed(false)) / 3600;    // get_time_billed returns seconds, limit hours is in hours
+          if($total_billed_time > $task->get_value('timeLimit')) {
             $TPL["timeSheetItem_class"] = "panel loud";
-            $TPL["timeSheetItem_status"] = "<em class='faint warn nobr'>[ Exceeds estimate ]</em>";
+            $TPL["timeSheetItem_status"] = "<em class='faint warn nobr'>[ Exceeds Limit ]</em>";
           }
         }
       }
