@@ -181,25 +181,33 @@ $(document).ready(function() {
           {page::help("task_interested_parties")}
         </div>
 
-        {if $task_timeEstimate || $time_billed_link || ($percentComplete && $percentComplete != "0%")}
+        {if $task_timeLimit || $task_timeBest || $task_timeWorst || $task_timeExpected || $time_billed_link || ($percentComplete && $percentComplete != "0%")}
         <div class="view">
-          <h6>Estimated Hours<div>Actual Hours</div></h6>
-          <div style="float:left; width:30%;">
-            {$task_timeEstimate} {if $task_timeEstimate} hrs &nbsp;&nbsp;{/}
+          <h6>Best / Worst / Expected Hours<div><span style='width:50%; display:inline-block;'>Actual Hours</span><span>Effort Limited To</span></div></h6>
+          <div style="float:left; width:40%;">
+            {foreach array($task_timeBest,$task_timeWorst,$task_timeExpected) as $i}
+              {$div}
+              {print imp($i) ? $i : " --- "}
+              {$div = " / "}
+            {/}
           </div>
           <div style="float:right;width:50%;">
-            {$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}
+            <span style='width:50%; display:inline-block;'>{$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}</span>
+            <span>{$task_timeLimit} {if $task_timeLimit} hrs{/}</span>
           </div>
         </div>
         {/}
 
         <div class="edit">
-          <h6>Estimated Hours<div>Actual Hours</div></h6>
-          <div style="float:left; width:30%">
-            <input type="text" name="timeEstimate" value="{$task_timeEstimate}" size="5">
+          <h6>Best / Worst / Expected Hours<div><span style='width:50%; display:inline-block;'>Actual Hours</span><span>Effort Limited To</span></div></h6>
+          <div style="float:left; width:40%">
+            <input type="text" name="timeBest" value="{$task_timeBest}" size="5"> /
+            <input type="text" name="timeWorst" value="{$task_timeWorst}" size="5"> /
+            <input type="text" name="timeExpected" value="{$task_timeExpected}" size="5"> {page::help("task_estimates")}
           </div>
           <div style="float:right;width:50%;">
-            {$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}
+            <span style='width:50%; display:inline-block;'>{$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}</span>
+            <span><input type="text" name="timeLimit" value="{$task_timeLimit}" size="5"> {page::help("task_timeLimit")}</span>
           </div>
         </div>
 

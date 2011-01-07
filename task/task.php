@@ -251,7 +251,10 @@ if ($time_billed != "") {
   $TPL["time_billed_link"] = "<a href=\"".$TPL["url_alloc_timeSheetList"]."taskID=".$task->get_id()."&dontSave=true&applyFilter=true\">".$time_billed_label."</a>";
 } 
 
-$TPL["task_timeEstimate"] or $TPL["task_timeEstimate"] = "";
+$TPL["task_timeLimit"]    or $TPL["task_timeLimit"] = "";
+$TPL["task_timeBest"]     or $TPL["task_timeBest"] = "";
+$TPL["task_timeWorst"]    or $TPL["task_timeWorst"] = "";
+$TPL["task_timeExpected"] or $TPL["task_timeExpected"] = "";
 $TPL["percentComplete"] = $task->get_percentComplete();
 
 

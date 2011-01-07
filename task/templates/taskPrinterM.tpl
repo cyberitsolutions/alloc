@@ -64,8 +64,14 @@
     <td class="overline">{$priority}&nbsp;</td>
   </tr>
   <tr>
-    <td class="overline">Time Estimate</td>
-    <td class="overline">{$task_timeEstimate}&nbsp;</td>
+    <td class="overline">Time Estimates</td>
+    <td class="overline">{$task_timeBest} / {$task_timeWorst} / {$task_timeExpected}</td>
+    <td class="overline">Actual Hours</td>
+    <td class="overline">{$time_billed_link}&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="overline">Effort Limited To</td>
+    <td class="overline">{$task_timeLimit}&nbsp;</td>
     <td class="overline">Percent Complete</td>
     <td class="overline">{$percentComplete}&nbsp;</td>
   </tr>

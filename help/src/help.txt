@@ -418,7 +418,7 @@ Tasks
 
 4. Unlimited number of reminders/escalations per Task
 
-5. Ability to establish time estimates, dates etc, per-task
+5. Ability to establish time estimates (best, worst, expected), dates etc, per-task
 
 6. Task comment emails, both to and from allocPSA, maintained in
    threaded discussion form.
@@ -1225,7 +1225,7 @@ across many tasks at once.
 
    - Assign to:
    - Manager to:
-   - Estimate to:
+   - Time Limit to:
    - Task Priority to:
    - Task Type to:
    - Target Start Date to:
@@ -2799,11 +2799,14 @@ If you are creating a New Task, or are updating a Task, you may see any of the f
        external resource briefed on the Task status.  NOTE: Naturally, your and
        your staff need to be mindful of what messages are sent to these
        external resources.
-   - - Time Estimate (Hours)
+   - - Time Estimate Hours (Best/Worst/Expected)
      - Time estimated to finish this Task. It is measured in terms of hour
        units. This figure helps allocPSA produce Project timeline estimates and
        forecasts. It does not need to be the same as the final time effort
        which results in an entry in a Time Sheet.
+   - - Time Limit Hours
+     - Work that is time sheeted for Tasks that have a Time Limit set will
+       be flagged red if they go over their Time Limit Hours.
    - - Percent Complete
      - This is an autocalculated field bases on the Estimated Hours versus the
        Hours that have actually been billed against this Task in the time
@@ -3805,8 +3808,14 @@ Indexed keyword fields for Tasks
      - The main task's description.
    - - priority
      - The priority of the task, stored as a number from 1-5.
-   - - estimate
-     - The number of hours the task has been estimated at.
+   - - limit
+     - The number of hours the task's work effort is limited at.
+   - - best
+     - The most optimistic number of hours the task has been estimated at.
+   - - worst
+     - The least optimistic number of hours the task has been estimated at.
+   - - expected
+     - The number of hours the task will probably take.
    - - type
      - The type of the task, either: Task, Parent, Fault, Message, Milestone.
    - - status

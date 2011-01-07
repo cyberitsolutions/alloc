@@ -199,28 +199,31 @@ function clickClientStatus(e) {
             {page::help("project_cost_centre_tf")}
           </div>
         </div>
+
         {$tax_string2 = sprintf(" (per unit%s)", $taxName ? ", inc. ".$taxName : "")}
-        {if imp($project_customerBilledDollars) || $project_is_agency_label}
+        {if imp($project_customerBilledDollars) || imp($project_defaultTaskLimit) || $project_is_agency_label}
         <div class="view">
-          <h6>Client Billed At<div>Payroll Tax Exempt</div></h6>
+          <h6>Client Billed At<div><span style='width:50%; display:inline-block;'>Payroll Tax Exempt</span><span>Default Task Limit</span></div></h6>
           <div style="float:left; width:40%;">
             {page::money($project_currencyTypeID,$project_customerBilledDollars,"%s%mo %c")}
             {imp($project_customerBilledDollars) and print $tax_string2}
           </div>
           <div style="float:right; width:50%;">
-            {$project_is_agency_label}
+            <span style='width:50%; display:inline-block;'>{$project_is_agency_label}</span>
+            <span>{$project_defaultTaskLimit}</span>
           </div>
         </div>
         {/}
 
         <div class="edit">
-          <h6>Client Billed At<div>Payroll Tax Exempt</div></h6>
+          <h6>Client Billed At<div><span style='width:50%; display:inline-block;'>Payroll Tax Exempt</span><span>Default Task Limit</span></div></h6>
           <div style="float:left; width:40%;">
             <input type="text" name="customerBilledDollars" value="{page::money($project_currencyTypeID,$project_customerBilledDollars,"%mo")}" size="10"> 
             {$tax_string2}
           </div>
           <div style="float:right; width:50%;">
-            <select name="is_agency">{$is_agency_options}</select>
+            <span style='width:50%; display:inline-block;'><select name="is_agency">{$is_agency_options}</select></span>
+            <span><input type="text" size="5" name="defaultTaskLimit" value="{$project_defaultTaskLimit}"> {page::help("project_defaultTaskLimit")}</span>
           </div>
         </div>
 

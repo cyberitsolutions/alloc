@@ -49,7 +49,7 @@ function import_csv($infile) {
         $task->set_value('projectID', $projectID);
         // Fields are: Task, Hours, Assigned Engineer
         $task->set_value('taskName', trim($row[0]));
-        $task->set_value('timeEstimate', $row[1]);
+        $task->set_value('timeExpected', $row[1]);
         $assignee = import_find_username(array($row[2]));
         if($assignee) {
           $task->set_value('personID', $assignee->get_id());
@@ -191,7 +191,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
       $task->set_value('taskStatus', 'open_notstarted');
       $task->set_value('priority', '3');
       $task->set_value('parentTaskID', ($parentTaskId == 0 ? "" : $parentTaskId));
-      // The following fields we leave at their default values: duplicateTaskID, dateActualCompletion, dateActualStart, closerID, timeEstimate, dateClosed, taskComments, parentTaskID, taskCommentTemplateID, taskModifiedUser
+      // The following fields we leave at their default values: duplicateTaskID, dateActualCompletion, dateActualStart, closerID, timeExpected, dateClosed, taskComments, parentTaskID, taskCommentTemplateID, taskModifiedUser
 
       // Handle task assignment
       if(isset($task_allocation[$planner_taskid])) {
@@ -389,7 +389,7 @@ function export_csv($projectID) {
     $assignee->set_id($task['personID']);
     $assignee->select();
 
-    $estimatedHours = $task['timeEstimate'];
+    $estimatedHours = $task['timeExpected'];
     is_numeric($estimatedHours) or $estimatedHours = 0;
 
     $retstr .= "\n" . export_escape_csv($task['taskName']) . ',' . export_escape_csv($estimatedHours) . ',' . export_escape_csv($assignee->get_name(array("format"=>"nick")));

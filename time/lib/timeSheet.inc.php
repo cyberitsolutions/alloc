@@ -972,10 +972,10 @@ EOD;
         $task = new task;
         $task->read_db_record($db, false);
         $task->select();
-        if(floatval($task->get_value('timeEstimate')) > 0) {
+        if($task->get_value('timeLimit') > 0) {
           $total_billed_time = ($task->get_time_billed(false)) / 3600;
-          if($total_billed_time > floatval($task->get_value('timeEstimate'))) {
-            $overrun_tasks[] = sprintf(" * %d %s (estimated: %.02f hours, billed so far: %.02f hours)", $task->get_id(), $task->get_value('taskName'), floatval($task->get_value('timeEstimate')), $total_billed_time);
+          if($total_billed_time > $task->get_value('timeLimit')) {
+            $overrun_tasks[] = sprintf(" * %d %s (limit: %.02f hours, billed so far: %.02f hours)", $task->get_id(), $task->get_value('taskName'), $task->get_value('timeLimit'), $total_billed_time);
           }
         }
       }

@@ -595,7 +595,7 @@ if (is_object($project) && $project->get_id()) {
   if (is_array($tasks)) { // $tasks is a global defined in show_tasks() for performance reasons
     foreach ($tasks as $tid => $t) {
       $hourly_rate = get_projectPerson_hourly_rate($t["personID"],$t["projectID"]);
-      $time_remaining = $t["timeEstimate"] - (task::get_time_billed($t["taskID"])/60/60);
+      $time_remaining = $t["timeLimit"] - (task::get_time_billed($t["taskID"])/60/60);
 
       $cost_remaining = $hourly_rate * $time_remaining;
 
@@ -604,7 +604,7 @@ if (is_object($project) && $project->get_id()) {
         $TPL["cost_remaining"] += $cost_remaining; 
         $TPL["time_remaining"] += $time_remaining;
       } 
-      $t["timeEstimate"] and $count_quoted_tasks++;
+      $t["timeLimit"] and $count_quoted_tasks++;
     }
 
 

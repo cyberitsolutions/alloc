@@ -79,7 +79,8 @@ class tasks(alloc):
              ,"taskTypeID","Type"
              ,"taskStatusLabel","Status"
              ,"priority projectPriority priorityFactor","Priority"
-             ,"timeEstimate","Est"
+             ,"timeExpected","Est"
+             ,"timeLimit","Limit"
              ,"timeActual","Act"
              ,"rate","Rate"
              ,"projectName","Project"
@@ -97,5 +98,9 @@ class tasks(alloc):
       fields.append("Assigned")
 
     if r:
-      self.print_table(r,fields,sort=order)
+      def seconds_to_hours(x):
+        if self.is_num(x):
+          return float(x) / 60 / 60
+      transforms = { "timeActual" : seconds_to_hours }
+      self.print_table(r,fields,order,transforms)
 

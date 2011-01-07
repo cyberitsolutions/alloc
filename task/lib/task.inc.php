@@ -32,7 +32,10 @@ class task extends db_entity {
                              ,"creatorID"
                              ,"closerID"
                              ,"priority" => array("audit"=>true)
-                             ,"timeEstimate" => array("audit"=>true)
+                             ,"timeLimit" => array("audit"=>true)
+                             ,"timeBest" => array("audit"=>true)
+                             ,"timeWorst" => array("audit"=>true)
+                             ,"timeExpected" => array("audit"=>true)
                              ,"dateCreated"
                              ,"dateAssigned"
                              ,"dateClosed"
@@ -92,6 +95,13 @@ class task extends db_entity {
     }
 
     $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
+
+    if (!imp($this->get_value("timeLimit"))) {
+      $project = $this->get_foreign_object("project");
+      if ($project && imp($project->get_value("defaultTaskLimit"))) {
+        $this->set_value("timeLimit",$project->get_value("defaultTaskLimit"));
+      }
+    }
 
     $rtn = parent::save();
 
@@ -960,7 +970,7 @@ class task extends db_entity {
         $row["newSubTask"] = $task->get_new_subtask_link();
         $_FORM["showDateStatus"] and $row["taskDateStatus"] = $task->get_dateStatus();
         $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
-        $_FORM["showTimes"] and $row["timeActual"] = $task->get_hours_billed();
+        $_FORM["showTimes"] and $row["timeActual"] = $task->get_time_billed();
         $row["rate"] and $row["rate"] = $row["rate"]."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
         $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
@@ -1043,7 +1053,7 @@ class task extends db_entity {
           $row["object"] = $t;
         }
         $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
-        $_FORM["showTimes"] and $row["timeActual"] = $t->get_hours_billed();
+        $_FORM["showTimes"] and $row["timeActual"] = $t->get_time_billed();
         $row["rate"] and $row["rate"] = $row["rate"]."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
         $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
@@ -1142,9 +1152,12 @@ class task extends db_entity {
       $_FORM["showDate3"]    and $summary[] = "<th>Act Start</th>";
       $_FORM["showDate4"]    and $summary[] = "<th>Act Compl</th>";
       $_FORM["showDate5"]    and $summary[] = "<th>Task Created</th>";
-      $_FORM["showTimes"]    and $summary[] = "<th>Estimate</th>";
+      $_FORM["showTimes"]    and $summary[] = "<th>Best</th>";
+      $_FORM["showTimes"]    and $summary[] = "<th>Worst</th>";
+      $_FORM["showTimes"]    and $summary[] = "<th>Expect</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>Actual</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>%</th>";
+      $_FORM["showTimes"]    and $summary[] = "<th>Limit</th>";
       $_FORM["showStatus"]   and $summary[] = "<th>Status</th>";
       $summary[] ="</tr>";
 
@@ -1188,7 +1201,10 @@ class task extends db_entity {
                           <option value=\"\">Modify Checked...</options>
                           <option value=\"personID\">Assign to ".$arr."</options>
                           <option value=\"managerID\">Manager to ".$arr."</options>
-                          <option value=\"timeEstimate\">Estimate to ".$arr."</options>
+                          <option value=\"timeLimit\">Limit to ".$arr."</options>
+                          <option value=\"timeBest\">Best to ".$arr."</options>
+                          <option value=\"timeWorst\">Worst to ".$arr."</options>
+                          <option value=\"timeExpected\">Expected to ".$arr."</options>
                           <option value=\"priority\">Task Priority to ".$arr."</options>
                           <option value=\"taskTypeID\">Task Type to ".$arr."</options>
                           <option value=\"dateTargetStart\">Target Start Date to ".$arr."</options>
@@ -1205,7 +1221,10 @@ class task extends db_entity {
                       <div class=\"hidden\" id=\"dateActualCompletion_div\">".$dateActualCompletion."</div>
                       <div class=\"hidden\" id=\"personID_div\">".$assignee_dropdown."</div>
                       <div class=\"hidden\" id=\"managerID_div\">".$manager_dropdown."</div>
-                      <div class=\"hidden\" id=\"timeEstimate_div\"><input name=\"timeEstimate\" type=\"text\" size=\"5\"></div>
+                      <div class=\"hidden\" id=\"timeLimit_div\"><input name=\"timeLimit\" type=\"text\" size=\"5\"></div>
+                      <div class=\"hidden\" id=\"timeBest_div\"><input name=\"timeBest\" type=\"text\" size=\"5\"></div>
+                      <div class=\"hidden\" id=\"timeWorst_div\"><input name=\"timeWorst\" type=\"text\" size=\"5\"></div>
+                      <div class=\"hidden\" id=\"timeExpected_div\"><input name=\"timeExpected\" type=\"text\" size=\"5\"></div>
                       <div class=\"hidden\" id=\"priority_div\"><select name=\"priority\">".$priority_options."</select></div>
                       <div class=\"hidden\" id=\"taskTypeID_div\"><select name=\"taskTypeID\">".$taskType_options."</select></div>
                       <div class=\"hidden\" id=\"projectIDAndParentTaskID_div\">".$project_dropdown.$parentTask_div."</div>
@@ -1253,7 +1272,10 @@ class task extends db_entity {
       }
     }
 
-    $task["timeEstimate"] !== NULL and $task["timeEstimate"] = $task["timeEstimate"]*60*60;
+    $task["timeLimit"] !== NULL    and $task["timeLimit"] = $task["timeLimit"]*60*60;
+    $task["timeBest"] !== NULL     and $task["timeBest"] = $task["timeBest"]*60*60;
+    $task["timeWorst"] !== NULL    and $task["timeWorst"] = $task["timeWorst"]*60*60;
+    $task["timeExpected"] !== NULL and $task["timeExpected"] = $task["timeExpected"]*60*60;
     $task["_FORM"] = $_FORM;
     $task["str"] = $str;
     $TPL = array_merge($TPL,(array)$task);
@@ -1267,11 +1289,7 @@ class task extends db_entity {
     }
   }
 
-  function get_hours_billed() {
-    return sprintf("%0.2f",$this->get_time_billed()/60/60);
-  }
-
-  function get_time_billed($taskID="", $recurse=false) {
+  function get_time_billed($taskID="") {
     static $results;
     if (is_object($this) && !$taskID) {
       $taskID = $this->get_id();
@@ -1298,11 +1316,11 @@ class task extends db_entity {
   function get_percentComplete($get_num=false) {
 
     $timeActual = sprintf("%0.2f",$this->get_time_billed());
-    $timeEstimate = sprintf("%0.2f",$this->get_value("timeEstimate")*60*60);
+    $timeExpected = sprintf("%0.2f",$this->get_value("timeExpected")*60*60);
 
-    if ($timeEstimate>0 && is_object($this)) {
+    if ($timeExpected>0 && is_object($this)) {
 
-      $percent = $timeActual / $timeEstimate * 100;
+      $percent = $timeActual / $timeExpected * 100;
       $this->get_value("dateActualCompletion") and $closed_text = "<del>" and $closed_text_end = "</del> Closed";
  
       // Return number
@@ -1639,7 +1657,7 @@ class task extends db_entity {
                     ,"entityID"     => $this->get_id());
     $changes = auditItem::get_list($options);
 
-    // we record changes to taskName, taskDescription, priority, timeEstimate, projectID, dateActualCompletion, dateActualStart, dateTargetStart, dateTargetCompletion, personID, managerID, parentTaskID, taskTypeID, duplicateTaskID
+    // we record changes to taskName, taskDescription, priority, timeLimit, projectID, dateActualCompletion, dateActualStart, dateTargetStart, dateTargetCompletion, personID, managerID, parentTaskID, taskTypeID, duplicateTaskID
     foreach($changes as $auditItem) {
       $changeDescription = "";
       $oldValue = $auditItem->get_value('oldValue',DST_HTML_DISPLAY);
@@ -1709,14 +1727,20 @@ class task extends db_entity {
           case 'dateActualStart':
           case 'dateTargetStart':
           case 'dateTargetCompletion':
-          case 'timeEstimate':
-            // these four cases are more or less identical
+          case 'timeLimit':
+          case 'timeBest':
+          case 'timeWorst':
+          case 'timeExpected':
+            // these cases are more or less identical
             switch($auditItem->get_value('fieldName')) {
               case 'dateActualCompletion': $fieldDesc = "actual completion date"; break;
               case 'dateActualStart': $fieldDesc = "actual start date"; break;
               case 'dateTargetStart': $fieldDesc = "estimate/target start date"; break;
               case 'dateTargetCompletion': $fieldDesc = "estimate/target completion date"; break;
-              case 'timeEstimate': $fieldDesc = "estimated time";
+              case 'timeLimit': $fieldDesc = "hours worked limit"; break;
+              case 'timeBest': $fieldDesc = "best estimate"; break;
+              case 'timeWorst': $fieldDesc = "worst estimate"; break;
+              case 'timeExpected': $fieldDesc = "expected estimate";
             }
             if(!$oldValue) {
               $changeDescription = "The $fieldDesc was set to $newValue.";
@@ -1836,7 +1860,10 @@ class task extends db_entity {
     $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$taskModifiedUser_field));
     $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("taskDescription")));
     $doc->addField(Zend_Search_Lucene_Field::Text('priority',$this->get_value("priority")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('estimate',$this->get_value("timeEstimate")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('limit'   ,$this->get_value("timeLimit")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('best'    ,$this->get_value("timeBest")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('worst'   ,$this->get_value("timeWorst")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('expected',$this->get_value("timeExpected")));
     $doc->addField(Zend_Search_Lucene_Field::Text('type',$this->get_value("taskTypeID")));
     $doc->addField(Zend_Search_Lucene_Field::Text('status',$status));
     $doc->addField(Zend_Search_Lucene_Field::Text('dateCreated',str_replace("-","",$this->get_value("dateCreated"))));
