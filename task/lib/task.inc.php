@@ -103,7 +103,7 @@ class task extends db_entity {
     }
 
     // If we don't have a taskLimit try and inherit the project's defaultTaskLimit
-    if (!imp($this->get_value("timeLimit"))) {
+    if (!$this->get_id() && !imp($this->get_value("timeLimit"))) {
       $project = $this->get_foreign_object("project");
       if ($project && imp($project->get_value("defaultTaskLimit"))) {
         $this->set_value("timeLimit",$project->get_value("defaultTaskLimit"));
