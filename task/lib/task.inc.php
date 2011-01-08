@@ -96,6 +96,13 @@ class task extends db_entity {
 
     $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
 
+
+    // Copy the taskExpected over to the taskLimit if we're creating the task and taskLimit isn't set
+    if (!$this->get_id() && !imp($this->get_value("timeLimit")) && imp($this->get_value("timeExpected"))) {
+      $this->set_value("timeLimit",$this->get_value("timeExpected"));
+    }
+
+    // If we don't have a taskLimit try and inherit the project's defaultTaskLimit
     if (!imp($this->get_value("timeLimit"))) {
       $project = $this->get_foreign_object("project");
       if ($project && imp($project->get_value("defaultTaskLimit"))) {
