@@ -144,6 +144,12 @@ class alloc_email_receive {
     return array("","");
   }
 
+  function raw_body() {
+    $header = imap_fetchheader($this->connection,$this->msg_uid,FT_PREFETCHTEXT+FT_UID);
+    $body = imap_body($this->connection,$this->msg_uid,FT_UID);
+    return $body;
+  }
+
   function save_email($file) {
     $header = imap_fetchheader($this->connection,$this->msg_uid,FT_PREFETCHTEXT+FT_UID);
     $header and $this->mail_headers = imap_rfc822_parse_headers($header);
