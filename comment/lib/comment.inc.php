@@ -485,6 +485,7 @@ class comment extends db_entity {
     $comment->save();
     $from["commentID"] = $comment->get_id();
 
+    $mimetype = $decoded[0]["Headers"]["content-type:"];
 
     // If user wants to un/subscribe to this comment
     $subject = $decoded[0]["Headers"]["subject:"];
@@ -507,7 +508,62 @@ class comment extends db_entity {
       }
 
       if (!$ip_action["quiet"]) { // only resend email if quiet hasn't been put in the subject line
-        list($successful_recipients,$messageid) = comment::send_emails($obj, $recipients, $c->get_value("commentType")."_comments", $comment->get_value("comment"), $from);
+
+        //iff the message is multipart/mixed, decorate it differently
+        //This is handy for signed messages and attachments, amongst other
+        //things. Digest and the other types are too troublesome, so treat them
+        //the old way.
+        $multipart = false;
+        if (stripos($mimetype, "multipart/mixed") === 0) {
+          $multipart = true;
+          // if it's multipart there must be a boundary, find it
+          preg_match('/boundary="([^"]+)"/', $mimetype, $matches);
+          $mime_sep = $matches[1];
+          if (empty($mime_sep)) {
+            $multipart = false;
+            $mimetype = "text/plain";
+          }
+        }
+
+        if ($multipart) {
+          $body = $email->raw_body();
+        }
+
+        if ($commentTemplateHeaderID = config::get_config_item($obj->classname."_email_header")) {
+          $commentTemplate = new commentTemplate;
+          $commentTemplate->set_id($commentTemplateHeaderID);
+          $commentTemplate->select();
+          $headertext = $commentTemplate->get_populated_template($obj->classname, $obj->get_id());
+          // for multipart messages, drop the text into a separate mime block
+          if ($multipart) {
+            $body_header = "\n--" . $mime_sep . "\n";
+            $body_header .= "Content-Type: text/plain\nContent-Disposition: inline\n\n" .
+              $headertext."\n";
+          } else {
+            $body_header = $headertext;
+          }
+        }
+
+        if ($commentTemplateFooterID = config::get_config_item($obj->classname."_email_footer")) {
+          $commentTemplate = new commentTemplate;
+          $commentTemplate->set_id($commentTemplateFooterID);
+          $commentTemplate->select();
+          $footertext = $commentTemplate->get_populated_template($obj->classname, $obj->get_id());
+          if ($multipart) {
+            $body_footer = "Content-Type: text/plain\nContent-Disposition: inline\n\n" .
+              $footertext . "\n\n--" . $mime_sep. "--\n";
+
+            // the body ends with $mime_sep--, chop off everything after to 
+            // replace it with the new footer
+            // see RFC 1341
+            $body = preg_replace("/$mime_sep--\r?\n.*/", "$mime_sep", $body);
+          } else {
+            $body_footer = $footertext;
+          }
+        }
+        $body = $body_header . $body . $body_footer;
+
+        list($successful_recipients,$messageid) = comment::send_emails($obj, $recipients, $c->get_value("commentType")."_comments", $body, $from, $mimetype);
       }
       if ($successful_recipients) {
         $comment->set_value("commentEmailRecipients",$successful_recipients);
@@ -603,7 +659,7 @@ class comment extends db_entity {
     return array($to_address, $bcc, $successful_recipients);
   }
 
-  function send_emails($e, $selected_option, $type="", $body="", $from=array()) {
+  function send_emails($e, $selected_option, $type="", $body="", $from=array(), $mimetype="text/plain; charset=utf-8") {
     global $current_user;
 
     $recipients = comment::get_email_recipients($selected_option,$from);
@@ -636,18 +692,11 @@ class comment extends db_entity {
       $messageid = $email->set_message_id($hash);
       $subject_extra = "{Key:".$hash."}";
 
-      if ($commentTemplateHeaderID = config::get_config_item($e->classname."_email_header")) {
-        $commentTemplate = new commentTemplate;
-        $commentTemplate->set_id($commentTemplateHeaderID);
-        $commentTemplate->select();
-        $body_header = $commentTemplate->get_populated_template($e->classname, $e->get_id());
+      if (stripos($mimetype, "multipart/mixed") === 0) {
+        $email->add_header("Mime-Version", "1.0");
+        $multipart = true;
       }
-      if ($commentTemplateFooterID = config::get_config_item($e->classname."_email_footer")) {
-        $commentTemplate = new commentTemplate;
-        $commentTemplate->set_id($commentTemplateFooterID);
-        $commentTemplate->select();
-        $body_footer = $commentTemplate->get_populated_template($e->classname, $e->get_id());
-      }
+      $email->add_header("Content-Type", $mimetype);
 
 
       $tpl = config::get_config_item("emailSubject_".$e->classname."Comment");
@@ -655,7 +704,7 @@ class comment extends db_entity {
       $subject or $subject = ucwords($e->classname)." Comment: ".$e->get_id()." ".$e->get_name(DST_VARIABLE);
 
       $email->set_subject($subject . " " . $subject_extra);
-      $email->set_body($body_header.$body.$body_footer);
+      $email->set_body($body);
       $email->set_message_type($type);
 
       if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
@@ -667,7 +716,9 @@ class comment extends db_entity {
         $email->set_from($f);
       }
 
-      if ($from["commentID"]) {
+      // if we're bouncing a complete email body the attachments are already 
+      // included
+      if ($from["commentID"] && !$multipart) {
         $files = get_attachments("comment",$from["commentID"]);
         if (is_array($files)) {
           foreach ($files as $file) {
