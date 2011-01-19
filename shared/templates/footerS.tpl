@@ -24,5 +24,13 @@
         {/}
       </pre>
     </div> 
+    <script language="javascript" type="text/javascript">
+function readyHook() {
+    {foreach $onLoad as $code}
+    {$code}
+    {/}
+}
+    </script>
+
   </body>
 </html>

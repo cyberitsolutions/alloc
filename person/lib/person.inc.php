@@ -275,6 +275,7 @@ class person extends db_entity {
     isset($this->prefs["tasksGraphPlotHome"]) or $this->prefs["tasksGraphPlotHome"] = "4";
     isset($this->prefs["tasksGraphPlotHomeStart"]) or $this->prefs["tasksGraphPlotHomeStart"] = "1";
     isset($this->prefs["receiveOwnTaskComments"]) or $this->prefs["receiveOwnTaskComments"] = "no";
+    isset($this->prefs["showFilters"]) or $this->prefs["showFilters"] = "no";
   }
 
   function store_prefs() {

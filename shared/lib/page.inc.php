@@ -26,10 +26,19 @@ class page {
   function page() {
   }
   function header() {
+    global $TPL, $current_user;
+
+    if ($current_user->prefs["showFilters"] == "yes") {
+      $TPL["onLoad"] []= "show_filter();";
+    }
+
+    $TPL["onLoad"] or $TPL["onLoad"] = array();
+
     include_template(ALLOC_MOD_DIR."shared/templates/headerS.tpl");
   }
   function footer() {
     global $current_user;
+
     include_template(ALLOC_MOD_DIR."shared/templates/footerS.tpl");
     // close page
     $sess = new Session;
