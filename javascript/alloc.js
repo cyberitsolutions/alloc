@@ -95,6 +95,10 @@ function preload_field(element, text) {
   });
 }
 
+function show_filter() {
+  if ($(".filter").css("display") == "none")
+    $(".toggleFilter").trigger("click");
+}
 
 
 // Preload mouseover images
@@ -175,6 +179,8 @@ $(document).ready(function() {
   $(".alloc_calendar").bind('mouseout',function() {
     $(".calendar_links").hide();
   });
+
+  readyHook && readyHook(); // don't error if the function doesn't exist
 
 });
 

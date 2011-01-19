@@ -45,6 +45,8 @@ class customize_alloc_home_item extends home_item {
       $current_user->prefs["dailyTaskEmail"] = $_POST["dailyTaskEmail"];
       $current_user->prefs["receiveOwnTaskComments"] = $_POST["receiveOwnTaskComments"];
 
+      $current_user->prefs["showFilters"] = $_POST["showFilters"];
+
     }
 
     $customizedFont_array = page::get_customizedFont_array();
@@ -84,6 +86,9 @@ class customize_alloc_home_item extends home_item {
 
     $TPL["receiveOwnTaskCommentsOptions"] = page::select_options($dailyTEO, $current_user->prefs["receiveOwnTaskComments"]);
     $TPL["receiveOwnTaskCommentsLabel"] = $dailyTEO[$current_user->prefs["receiveOwnTaskComments"]];
+
+    $TPL["showFiltersOptions"] = page::select_options($dailyTEO, $current_user->prefs["showFilters"]);
+    $TPL["showFiltersLabel"] = $dailyTEO[$current_user->prefs["showFilters"]];
   }
 
 

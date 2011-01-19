@@ -83,9 +83,27 @@
       </div>
 
       <div class="edit">
-        <h6>Project List<div></div></h6> 
+        <h6>Project List<div>Show Filters</div></h6> 
         <div style="float:left; width:30%;">
           <select name="projectListNum">{$projectListNumOptions}</select>
+        </div>
+        <div style="float:right; width:50%;">
+	  <select name="showFilters">{$showFiltersOptions}</select>
+        </div>
+      </div>
+      <div class="view">
+        <h6>Project List<div>Show Filters</div></h6> 
+        <div style="float:left; width:30%;">
+          {$projectListNumLabel}
+        </div>
+        <div style="float:right; width:50%;">
+	{$showFiltersLabel}
+        </div>
+      </div>
+
+      <div class="edit">
+        <h6><div></div></h6> 
+        <div style="float:left; width:30%;">
         </div>
         <div style="float:right; width:50%;" class="right">
           <input type="button" value="Cancel" onClick="$('.edit').hide();$('.view').show();">
@@ -93,9 +111,8 @@
         </div>
       </div>
       <div class="view">
-        <h6>Project List<div></div></h6> 
+        <h6><div></div></h6> 
         <div style="float:left; width:30%;">
-          {$projectListNumLabel}
         </div>
         <div style="float:right; width:50%;" class="right">
           <input type="button" value="Edit" onClick="$('.view').hide();$('.edit').show();">
