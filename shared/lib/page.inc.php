@@ -333,8 +333,7 @@ EOD;
       $sp = "&nbsp;";
     }
 
-    // argh, I am bad man, this activates the default option, because it's minutely better than putting in a body onload
-    $TPL["extra_footer_stuff"].= "<img alt=\"Dummy image\" src=\"".$TPL["url_alloc_images"]."pixel.gif\" onload=\"sidebyside_activate('".$default."',".$js_array.");\">";
+    $TPL["onLoad"] []= "sidebyside_activate('".$default."',".$js_array.");";
 
     return "<div style=\"margin:20px 0px 0px 0px;\">".$str."</div>";
   }
