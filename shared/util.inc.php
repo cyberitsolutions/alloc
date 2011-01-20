@@ -294,6 +294,7 @@ function get_attachments($entity, $id, $ops=array()) {
                             <input type=\"hidden\" name=\"file\" value=\"".$file."\">
                             <input type=\"hidden\" name=\"entity\" value=\"".$entity."\">
                             <input type=\"submit\" name=\"delete_file_attachment\" value=\"Delete\" class=\"delete_button\">
+                            <input type=\"hidden\" name=\"sbs_link\" value=\"attachments\">
                             </form>";
 
 

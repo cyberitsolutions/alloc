@@ -1,4 +1,3 @@
-{$extra_footer_stuff}&nbsp;
       </div> <!-- end #main2 -->
     </div> <!-- end #main -->
     {if $slowest_query_time >1}
@@ -24,13 +23,6 @@
         {/}
       </pre>
     </div> 
-    <script language="javascript" type="text/javascript">
-function readyHook() {
-    {foreach $onLoad as $code}
-    {$code}
-    {/}
-}
-    </script>
 
   </body>
 </html>

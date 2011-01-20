@@ -17,5 +17,15 @@
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar-setup.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}sorttable.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}alloc.js"></script>
+    <script language="javascript" type="text/javascript">
+      // return a value that is populated from PHP
+      function get_alloc_var(key) {
+      var values = {
+                    "side_by_side_link" : "{$_REQUEST.sbs_link}"
+                   ,"show_filters"      : "{print is_object($current_user) ? $current_user->prefs["showFilters"] : ""}"
+                   }
+      return values[key];
+    }
+    </script>
   </head>
   <body id="{$body_id}">

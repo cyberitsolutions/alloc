@@ -5,11 +5,9 @@
   </tr>
   <tr>
     <td colspan="6">
-      {$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"]}
       {page::side_by_side_links(array("generic_ii"=>"Generic"
                                      ,"timeSheet_ii"=>"From Time Sheet"
                                      ,"expenseForm_ii"=>"From Expense Form")
-                               ,$sbs_link
                                ,$url_alloc_invoice."invoiceID=".$invoiceID)}    
     </td>
   </tr>

@@ -23,9 +23,6 @@ $(document).ready(function() {
 });
 </script>
 
-{$_POST["delete_file_attachment"] || $_POST["save_attachment"] and $_POST["sbs_link"] = "attachments"}
-
-{$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"] or $sbs_link = "task"}
 {if $task_taskID}
 {$first_div="hidden"}
 {page::side_by_side_links(array("task"=>"Main"
@@ -34,7 +31,6 @@ $(document).ready(function() {
                                ,"attachments"=>"Attachments"
                                ,"history"=>"History"
                                ,"sbsAll"=>"All")
-                          ,$sbs_link
                           ,$url_alloc_task."taskID=".$task_taskID)}
 {/}
 

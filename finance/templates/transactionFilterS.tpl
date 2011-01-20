@@ -2,10 +2,8 @@
       <table align="center" class="filter corner" style="display:table">
         <tr>
           <td colspan="6" class="center" style="padding-top:0px; padding-bottom:10px;">
-            {$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"]}
             {page::side_by_side_links(array("simple_search"=>"Simple"
                                            ,"advanced_search"=>"Advanced")
-                                     ,$sbs_link
                                      ,$url_alloc_transactionList."tfID=".$tfID)}
           </td>
         </tr>

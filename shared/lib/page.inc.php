@@ -311,30 +311,17 @@ EOD;
     $str = "<a class=\"growshrink nobr\" href=\"#x\" onClick=\"$('#".$id."').slideToggle('fast');".$extra."\">".$text."</a>";
     return $str;
   }
-  function side_by_side_links($items=array(),$default=false, $url) {
-    global $TPL;
-
-    foreach ($items as $id => $label) {
-      $default or $default = $id; // first option is default
-      $ids[] = $id; 
-    }
-
-    $js_array = "['".implode("','",$ids)."']";
-
+  function side_by_side_links($items=array(),$url) {
     $url = preg_replace("/[&?]+$/", "", $url);
     if (strpos($url, "?")) {
       $url.= "&";
     } else {
       $url.= "?";
     }
-
     foreach ($items as $id => $label) {
-      $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"".$url."sbs_link=".$id."\" class=\"sidebyside\" onClick=\"sidebyside_activate('".$id."',".$js_array."); return false;\">".$label."</a>";
+      $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"".$url."sbs_link=".$id."\" class=\"sidebyside\">".$label."</a>";
       $sp = "&nbsp;";
     }
-
-    $TPL["onLoad"] []= "sidebyside_activate('".$default."',".$js_array.");";
-
     return "<div style=\"margin:20px 0px 0px 0px;\">".$str."</div>";
   }
   function mandatory($field="") {
