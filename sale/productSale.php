@@ -66,7 +66,7 @@ function show_productSale_list($productSaleID, $template) {
     $TPL["itemSpent"] = $productSaleItem->get_amount_spent();
     $TPL["itemEarnt"] = $productSaleItem->get_amount_earnt();
     $TPL["itemOther"] = $productSaleItem->get_amount_other();
-    $TPL["itemCosts"] = page::money(config::get_config_item("currency"),product::get_buy_cost($productSaleItem->get_value("productID")),"%s%mo %c");
+    $TPL["itemCosts"] = page::money(config::get_config_item("currency"),product::get_buy_cost($productSaleItem->get_value("productID")) * $productSaleItem->get_value("quantity"),"%s%mo %c");
     $TPL["itemTotalUnallocated"] = $productSaleItem->get_amount_unallocated();
 
     $TPL["productList_dropdown"] = page::select_options($ops, $productSaleItem->get_value("productID"));

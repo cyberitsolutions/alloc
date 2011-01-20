@@ -122,7 +122,7 @@ class productSaleItem extends db_entity {
     $p = new product();
     $p->set_id($this->get_value("productID"));
     
-    $buyCost = $p->get_buy_cost();
+    $buyCost = $p->get_buy_cost() * $this->get_value("quantity");
     $sellPrice = $this->get_value("sellPrice");
 
     $this->get_value("sellPriceIncTax") and $sellPrice = $sellPrice / $taxPercentDivisor;
