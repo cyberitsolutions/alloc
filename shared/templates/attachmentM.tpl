@@ -24,6 +24,7 @@
             <input type="hidden" name="{$entity_key_name}" value="{$entity_key_value}">
             <input type="file" name="attachment" />
             <input type="submit" value="Upload Attachment" name="save_attachment">
+            <input type="hidden" name="sbs_link" value="attachments">
             </form>
           </td>
         </tr>

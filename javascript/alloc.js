@@ -24,7 +24,19 @@ function set_grow_shrink(id, id_to_hide, use_classes_instead_of_ids) {
   return false;
 }
 
-function sidebyside_activate(id,arr) {
+function sidebyside_activate(id) {
+  var arr = [];
+  $.each($(".sidebyside"), function(k,v) {
+    arr[arr.length] = v.id.replace("sbs_link_","");
+  });
+
+  if (!id) {
+    id = get_alloc_var("side_by_side_link");
+  }
+  if (!id) {
+    id = arr[0];
+  }
+
   if (id == "sbsAll") {
     for (var i=0; i<arr.length; i++) {
       if (arr[i] != "sbsAll") {
@@ -93,11 +105,6 @@ function preload_field(element, text) {
       }
     });
   });
-}
-
-function show_filter() {
-  if ($(".filter").css("display") == "none")
-    $(".toggleFilter").trigger("click");
 }
 
 
@@ -171,6 +178,12 @@ $(document).ready(function() {
     return false;
   });
 
+  // Activate user preference for displaying filters
+  if (get_alloc_var("show_filters") != "no") {
+    $(".toggleFilter").trigger("click");
+  }
+
+
   $(".calendar_links").hide();
   $(".calendar_day").bind('mouseover',function(){
     $(".calendar_links").hide();
@@ -180,7 +193,13 @@ $(document).ready(function() {
     $(".calendar_links").hide();
   });
 
-  readyHook && readyHook(); // don't error if the function doesn't exist
+
+  // Activate side by side links/tabs, if any
+  $(".sidebyside").click(function(e) {
+    sidebyside_activate(e.target.id.replace("sbs_link_",""));
+    return false;
+  });
+  sidebyside_activate();
 
 });
 

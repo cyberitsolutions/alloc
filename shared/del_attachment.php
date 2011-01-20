@@ -53,6 +53,6 @@ if ($id && $file
 }
 
 // return by default
-alloc_redirect($TPL["url_alloc_".$entity].$entity."ID=".$id);
+alloc_redirect($TPL["url_alloc_".$entity].$entity."ID=".$id."&sbs_link=attachments");
 
 ?>

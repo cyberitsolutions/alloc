@@ -60,11 +60,6 @@ function clickClientStatus(e) {
 
 </script>
 
-{$_POST["person_save"] and $_POST["sbs_link"] = "people"}
-{$_POST["commission_delete"] || $_POST["commission_save"] and $_POST["sbs_link"] = "commissions"}
-{$_POST["delete_file_attachment"] || $_POST["save_attachment"] and $_POST["sbs_link"] = "attachments"}
-
-{$sbs_link = $_POST["sbs_link"] or $sbs_link = $_GET["sbs_link"] or $sbs_link = "project"}
 {if defined("PROJECT_EXISTS")}
 {$first_div="hidden"}
 {page::side_by_side_links(array("project"=>"Main"
@@ -79,7 +74,6 @@ function clickClientStatus(e) {
                                ,"sales"=>"Sales"
                                ,"importexport"=>"Import/Export"
                                ,"sbsAll"=>"All")
-                          ,$sbs_link
                           ,$url_alloc_project."projectID=".$project_projectID)}
 {/}
 
@@ -346,6 +340,7 @@ function clickClientStatus(e) {
           <td colspan="5" class="center">
             <input type="submit" name="person_save" value="Save Project People">
             <input type="hidden" name="projectID" value="{$project_projectID}">
+            <input type="hidden" name="sbs_link" value="people">
           </td>
         </tr>
       </table>
