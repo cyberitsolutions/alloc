@@ -510,8 +510,8 @@ INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES 
 INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (6,'Project Manager','manage', 'person', 30);
 INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (7,'Employee','employee','person', 40);
 
-
-INSERT INTO tokenAction (tokenAction,tokenActionType,tokenActionMethod) VALUES ('Add Comments to Comment','comment','add_comment_from_email');
+-- Has to be tokenActionID of 2 for reverse compatibility 
+INSERT INTO tokenAction (tokenActionID,tokenAction,tokenActionType,tokenActionMethod) VALUES (2,'Add Comments to Comment','comment','add_comment_from_email');
 
 
 
