@@ -41,9 +41,10 @@ function show_new_invoiceItem($template) {
     if (is_array($_POST["invoiceItem_edit"])) {
       $invoiceItemID = key($_POST["invoiceItem_edit"]);
       $invoiceItem = new invoiceItem;
+      $invoiceItem->currency = $invoice->get_value("currencyTypeID");
       $invoiceItem->set_id($invoiceItemID);
       $invoiceItem->select();
-      $invoiceItem->set_values("invoiceItem_");
+      $invoiceItem->set_tpl_values("invoiceItem_");
       $TPL["invoiceItem_buttons"] = "<input type=\"submit\" name=\"invoiceItem_save[".$invoiceItemID."]\" value=\"Save Invoice Item\">";
       $TPL["invoiceItem_buttons"].= "<input type=\"submit\" name=\"invoiceItem_delete[".$invoiceItemID."]\" value=\"Delete\">";
      
