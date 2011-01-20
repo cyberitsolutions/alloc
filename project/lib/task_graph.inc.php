@@ -349,7 +349,7 @@ class task_graph
 
     $graph_time_width = format_date("U",$graph_completion_date) - format_date("U",$graph_start_date);
     $time_offset = $date - format_date("U",$graph_start_date);
-    $decimal_pos = $time_offset / $graph_time_width;
+    $graph_time_width and $decimal_pos = $time_offset / $graph_time_width;
     $working_width = $this->width - $this->left_margin - $this->right_margin;
     $x_pos = $this->left_margin + $decimal_pos * $working_width;
 
