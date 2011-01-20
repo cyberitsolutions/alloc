@@ -1664,6 +1664,9 @@ class task extends db_entity {
                     ,"entityID"     => $this->get_id());
     $changes = auditItem::get_list($options);
 
+    // Insert the creation event into the table to make the history complete.
+    $rows []= '<tr><td class="nobr">' . $this->get_value("dateCreated") . '</td><td>The task was created.</td><td>' . page::htmlentities($people_cache[$this->get_value("creatorID")]["name"]) . "</td></tr>";
+
     // we record changes to taskName, taskDescription, priority, timeLimit, projectID, dateActualCompletion, dateActualStart, dateTargetStart, dateTargetCompletion, personID, managerID, parentTaskID, taskTypeID, duplicateTaskID
     foreach($changes as $auditItem) {
       $changeDescription = "";
