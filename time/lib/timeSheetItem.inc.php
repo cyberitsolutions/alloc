@@ -191,7 +191,7 @@ class timeSheetItem extends db_entity {
     }
 
     // Get the averages for each
-    foreach ($alex as $id => $sum) {
+    foreach ((array)$alex as $id => $sum) {
       $rtn_dollars[$id] = $sum / $how_many_fortnights[$id];
     }
 
