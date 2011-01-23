@@ -180,7 +180,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     } else if ($_POST["save_and_new"]) {
       $url = $TPL["url_alloc_task"]."projectID=".$task->get_value("projectID")."&parentTaskID=".$task->get_value("parentTaskID");
     } else if ($_POST["timeSheet_save"]) {
-      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$_POST["timeSheetID"];
+      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$_POST["timeSheetID"]."&taskID=".$task->get_id();
     } else {
       die("Unexpected save button");
     }
