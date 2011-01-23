@@ -267,7 +267,10 @@ $(document).ready(function() {
           <br>
           <label for="createTaskReminder"><input type="checkbox" name="createTaskReminder" id="createTaskReminder" value="true" /> Create reminder for assignee</label> {page::help("task_create_reminder")}<br><br>
           {/}
-        {$timeSheet_save}
+          {if $_GET["timeSheetID"]}
+          <input type="submit" name="timeSheet_save" value="Save and Return to Time Sheet">
+          <input type="hidden" name="timeSheetID" value="{$_GET.timeSheetID}">
+          {/}
         <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
         <input type="submit" name="save_and_new" value="Save &amp; New">
         <input type="submit" name="delete" value="Delete" class="delete_button">
