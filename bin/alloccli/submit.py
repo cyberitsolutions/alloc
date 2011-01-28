@@ -23,9 +23,9 @@ The time sheet is moved from eg: Edit to Manager status. The time sheet may
 no longer be editable once you have submitted it.
   
 Examples:
-alloc timesheets --csv | alloc submit --dryrun
-alloc timesheets --csv | alloc submit
-alloc timesheets --csv --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc submit'''
+alloc timesheets | alloc submit --dryrun
+alloc timesheets | alloc submit
+alloc timesheets --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc submit'''
 
   def run(self):
 
