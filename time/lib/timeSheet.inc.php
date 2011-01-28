@@ -1234,7 +1234,8 @@ EOD;
         $timeSheet->set_value("status","edit");
         $timeSheet->set_value("personID", $current_user->get_id());
         $timeSheet->set_value("recipient_tfID",$current_user->get_value("preferred_tfID"));
-        $timeSheet->set_value("customerBilledDollars",$project->get_value("customerBilledDollars"));
+        $timeSheet->set_value("customerBilledDollars",page::money($project->get_value("currencyTypeID"),$project->get_value("customerBilledDollars"),"%mo"));
+        $timeSheet->set_value("currencyTypeID",$project->get_value("currencyTypeID"));
         $timeSheet->save();
         $timeSheetID = $timeSheet->get_id();
 
@@ -1247,10 +1248,15 @@ EOD;
 
       // Add new time sheet item
       if ($timeSheetID) {
+        $timeSheet = new timeSheet();
+        $timeSheet->set_id($timeSheetID);
+        $timeSheet->select();
+
         $row_projectPerson = projectPerson::get_projectPerson_row($projectID, $current_user->get_id());
         $row_projectPerson or $err[] = "The person has not been added to the project.";
 
         $tsi = new timeSheetItem();
+        $tsi->currency = $timeSheet->get_value("currencyTypeID");
         $tsi->set_value("timeSheetID",$timeSheetID);
         $d = $date or $d = date("Y-m-d");
         $tsi->set_value("dateTimeSheetItem",$d);
