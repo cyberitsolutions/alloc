@@ -80,7 +80,7 @@ foreach($config_vars as $name => $arr) {
   $val = $_POST[$name] or $val = $_GET[$name];
   $val == "" && !isset($_GET[$name]) && !isset($_POST[$name]) and $val = $arr["default"];
   $name == "ATTACHMENTS_DIR" && $val and $val = rtrim($val,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-  $name == "allocURL" && $val and $val = rtrim($val,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  $name == "allocURL" && $val and $val = rtrim($val,"/")."/";
   $name == "currency" and $val = trim(strtoupper($val));
   $_FORM[$name] = $val;
   $get[] = $name."=".urlencode($val);
