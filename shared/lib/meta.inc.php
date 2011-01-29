@@ -46,7 +46,7 @@ class meta extends db_entity {
                      ,"transactionType"           => "Transaction Types"
                      ,"timeSheetItemMultiplier"   => "Time Sheet Multipliers"
                      #,"productSaleStatus"         => "Product Sale Statuses"
-                     #,"taskType"                 => "Task Types"
+                     ,"taskType"                 => "Task Types"
                      );
 
   function __construct($table="") {
