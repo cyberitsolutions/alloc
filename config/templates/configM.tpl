@@ -168,6 +168,11 @@
     <td width="1%">{page::help("config_allocEmailFolder")}</td>
   </tr>
   <tr>
+    <td width="20%"><nobr>Email Connect Extra</nobr></td>
+    <td><input type="text" size="70" value="{$allocEmailExtra}" name="allocEmailExtra"></td> 
+    <td width="1%">{page::help("config_allocEmailExtra")}</td>
+  </tr>
+  <tr>
     <td valign="top" width="20%">Task Email Header</td>
     <td><select name="task_email_header"><option value="">{$task_email_header_options}</select></td>
     <td width="1%">{page::help("config_taskEmailHeader")}</td>
