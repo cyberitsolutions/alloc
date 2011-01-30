@@ -56,7 +56,7 @@ class alloc_email_receive {
   }
   
   function open_mailbox($folder="",$ops=OP_HALFOPEN) {
-    $connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.'/notls/norsh}';
+    $connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.config::get_config_item("allocEmailExtra").'}';
     $this->connect_string = $connect_string;
     $this->connection = imap_open($connect_string, $this->username, $this->password, $ops) or die("Unable to access mail folder(1).");
     $list = imap_list($this->connection, $connect_string, "*");
