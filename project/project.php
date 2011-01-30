@@ -391,7 +391,6 @@ if ($_POST["save"]) {
   if ($p->select()) {
     $p2 = new project;
     $p2->read_row_record($p->row());
-    $p2->set_id("");
     $p2->set_value("projectName",$_POST["copy_project_name"]);
     $p2->save();
     $TPL["message_good"][] = "Project details copied successfully.";
@@ -402,8 +401,8 @@ if ($_POST["save"]) {
     $db->query($q);
     while ($row = $db->row()) {
       $projectPerson = new projectPerson;
+      $projectPerson->currency = $p->get_value("currencyTypeID");
       $projectPerson->read_row_record($row);
-      $projectPerson->set_id("");
       $projectPerson->set_value("projectID",$p2->get_id());
       $projectPerson->save();
       $TPL["message_good"]["projectPeople"] = "Project people copied successfully.";
