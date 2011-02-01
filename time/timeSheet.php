@@ -269,9 +269,11 @@ if (!$current_user->is_employee()) {
       $timeSheetItemID = $_POST["timeSheetItemID"] or $timeSheetItemID = $_GET["timeSheetItemID"];
       if ($timeSheetItemID && $timeSheetItem_edit) {
         $timeSheetItem = new timeSheetItem;
+        $timeSheetItem->currency = $timeSheet->get_value("currencyTypeID");
         $timeSheetItem->set_id($timeSheetItemID);
         $timeSheetItem->select();
         $timeSheetItem->set_values("tsi_");
+        $TPL["tsi_rate"] = $timeSheetItem->get_value("rate",DST_HTML_DISPLAY);
         $taskID = $timeSheetItem->get_value("taskID");
         $TPL["tsi_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Save Time Sheet Item\">";
         $TPL["tsi_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
