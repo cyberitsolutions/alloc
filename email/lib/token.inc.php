@@ -127,6 +127,28 @@ class token extends db_entity {
     }
   }
 
+  function get_list_filter($filter=array()) {
+    $filter["tokenEntity"]   and $sql[] = sprintf("(token.tokenEntity = '%s')", $filter["tokenEntity"]);
+    $filter["tokenEntityID"] and $sql[] = sprintf("(token.tokenEntityID = '%d')", $filter["tokenEntityID"]);
+    $filter["tokenHash"]     and $sql[] = sprintf("(token.tokenHash = '%s')", $filter["tokenHash"]);
+    return $sql;
+  }
+  
+  function get_list($_FORM) {
+    $filter = token::get_list_filter($_FORM);
+    
+    if (is_array($filter) && count($filter)) {
+      $filter = " WHERE ".implode(" AND ",$filter);
+    }
+
+    $q = "SELECT * FROM token ".$filter; 
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->next_record()) {
+      $rows[] = $row;
+    }
+    return (array)$rows;
+  }
 
 
 }

@@ -301,6 +301,28 @@ class alloc(object):
   def die(self,str):
     self.err(str)
     sys.exit(1)
+
+  def parse_email(self, email):
+    addr = ''
+    name = ''
+    bits = email.split(' ')
+
+    if len(bits) == 1:
+      if '@' in bits[0]:
+        addr = bits[0].replace('<','').replace('>','')
+      else:
+        name = bits[0]
+
+    elif len(bits) > 1:
+
+      if '@' in bits[-1:][0]:
+        addr = bits[-1:][0].replace('<','').replace('>','')
+        name = ' '.join(bits[:-1])
+      else:
+        name = ' '.join(bits)
+
+    return addr, name
+  
   
 
 # Specify the user-agent 

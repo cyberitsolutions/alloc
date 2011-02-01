@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+#
+# This script is just a convenience wrapper around the `alloc subscriptions` functionality. E.g:
+#
+# echo "comment,123,,email@example.com,Jon Stewart" | alloc subscriptions --key abcd1234 --add
+#
+# The sed expression just rejigs "Full Name <email@address.com>" into email@address.com,Full Name 
+#
+
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "Usage: $0 abcd1234 'Full Name <email@address.com>'"; exit 1 ; 
+fi
+
+alloc="$(dirname $0)/alloc"
+
+echo "$($alloc subscriptions --key $1 | head -n 1 | cut -d ',' -f 1-2),,$(echo $2 | sed -r 's/^(.* )(.*)/\2,\1/gi')" | $alloc subscriptions --key $1 --add
