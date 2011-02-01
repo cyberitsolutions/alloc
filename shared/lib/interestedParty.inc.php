@@ -147,6 +147,10 @@ class interestedParty extends db_entity {
   }
   
   function add_interested_party($data) {
+    static $people;
+
+    $data["emailAddress"] = str_replace(array("<",">"),"",$data["emailAddress"]);
+
     // Add new entry
     $ip = new interestedParty();
     $ip->set_value("entity",$data["entity"]);
@@ -155,7 +159,17 @@ class interestedParty extends db_entity {
     $ip->set_value("emailAddress",$data["emailAddress"]);
     if ($data["personID"]) {
       $ip->set_value("personID",$data["personID"]);
+
     } else {
+      $people or $people = get_cached_table("person");
+      foreach ($people as $personID => $p) {
+        if ($data["emailAddress"] && str_replace(array("<",">"),"",$p["emailAddress"]) == $data["emailAddress"]) {
+          $ip->set_value("personID",$personID);
+        }
+      }
+    }
+
+    if (!$ip->get_value("personID")) {
       $q = sprintf("SELECT clientContactID FROM clientContact WHERE clientContactEmail = '%s'",$data["emailAddress"]);
       $db = new db_alloc();
       $db->query($q);
