@@ -93,7 +93,7 @@ alloc subscriptions --add < foo.txt"""
         party[keys[1]] = f[1]
         party[keys[2]] = f[2]
         party[keys[3]] = f[3]
-        if 4 in f: party[keys[4]] = f[4]
+        party[keys[4]] = f[4]
         if o['add'] and 'emailAddress' in party and party['emailAddress']: 
           if not o['dryrun']: self.make_request({"method":"save_interestedParty","options":party})
           self.msg("Adding:"+str(party))
