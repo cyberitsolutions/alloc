@@ -137,7 +137,7 @@ if ($_POST["submit_stage_4"]) {
   if (file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && filesize(ALLOC_CONFIG_PATH) <= 5) {
     $str[] = "<?php";
     foreach ($config_vars as $name => $arr) {
-      $name != "allocURL" && $name != "currency" and $str[] = "define(\"".$name."\",\"".$_FORM[$name]."\");";
+      $name != "allocURL" && $name != "currency" and $str[] = "define(\"".$name."\",\"".addslashes($_FORM[$name])."\");";
     }
     $str[] = "?>";
     $str = implode("\n",$str);
