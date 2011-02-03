@@ -102,7 +102,7 @@ class alloc(object):
       # These are used to build up the help text for --help
       c = " " #spacing
       s = "    " #spacing
-      l = "                   " # spacing
+      l = "                   " #spacing
       if x[0] and x[1]: c = ","
       if x[0]: s = "  -"+x[0].replace(":","")
       if x[1].strip(): l = c+" --"+x[1]
@@ -322,7 +322,24 @@ class alloc(object):
         name = ' '.join(bits)
 
     return addr, name
-  
+
+  def person_to_personID(self,name):
+
+    if type(name) == type('string'):
+      ops = {}
+      if ' ' in name:
+        ops['firstName'], ops['surname'] = name.split(" ")
+      else:
+        ops["username"] = name
+
+      rtn = self.get_list("person",ops)
+      if rtn:
+        for i in rtn:
+          return i
+
+    # If they don't want all the records, then return an impossible personID
+    if name != '%' and name != '*' and name.lower() != 'all':
+      return '1000000000000000000' # returning just zero doesn't work
   
 
 # Specify the user-agent 
