@@ -13,6 +13,8 @@ class tasks(alloc):
   ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.'))
   ops.append(('s:','status=NAME    ','A task\'s status, eg: "open_inprogress" eg: "pending". Default: "open"'))
   ops.append((''  ,'type=NAME      ','A task\'s type, eg: "Task" eg: "Fault"'))
+  ops.append(('a:','assignee=NAME  ','A task\'s assignee, username or first and surname" Default: you.'))
+  ops.append(('m:','manager=NAME   ','A task\'s manager, username or first and surname".'))
   ops.append((''  ,'people         ','Show the task\'s creator, manager and assignee.'))
   ops.append(('o:','order=NAME     ','The order the Tasks are displayed in. Default: "Priority"')) 
 
@@ -29,11 +31,19 @@ class tasks(alloc):
     # Got this far, then authenticate
     self.authenticate();
 
-    # Get my personID
-    personID = self.get_my_personID()
     self.csv = o['csv']
     order = "Priority"
     if o['order']: order = o['order']
+
+    # Get personID, either assignee or logged in user
+    if o['assignee']:
+      personID = self.person_to_personID(o['assignee'])
+    else:
+      personID = self.get_my_personID()
+
+    managerID = ''
+    if o['manager']:
+      managerID = self.person_to_personID(o['manager'])
 
     # Get a projectID either passed via command line, or figured out from a project name
     projects = {}
@@ -56,6 +66,7 @@ class tasks(alloc):
     # Setup options for the task search
     ops = {}
     ops["personID"] = personID
+    ops["managerID"] = managerID
     ops["projectIDs"] = projectIDs
     ops["taskView"] = "prioritised"
     ops["showTimes"] = True
