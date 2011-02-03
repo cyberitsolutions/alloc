@@ -18,6 +18,25 @@ class alloc(object):
   username = ''
   quiet = ''
   sessID = ''
+  field_names = {"taskID":"Task ID"
+                ,"taskTypeID":"Type"
+                ,"taskStatusLabel":"Status"
+                ,"priority":"Pri"
+                ,"projectPriority":"Proj Pri"
+                ,"priorityFactor":"Priority"
+                ,"timeExpected":"Est"
+                ,"timeLimit":"Limit"
+                ,"timeActual":"Act"
+                ,"rate":"Rate"
+                ,"projectName":"Project"
+                ,"taskName":"Task"
+                ,"taskDescription": "Description"
+                ,"creator_name": "Creator"
+                ,"manager_name": "Manager"
+                ,"assignee_name": "Assigned"
+                }
+
+
   row_timeSheet = ["timeSheetID","ID","dateFrom","From","dateTo","To","status","Status","person","Owner","duration","Duration","totalHours","Hrs","amount","$","projectName","Project"]
   row_timeSheetItem = ["timeSheetID","ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","timeSheetItemDuration","Hours","taskID","taskID","comment","Comment","rate","$","hoursBilled","Total","taskLimit","Limit","limitWarning","Warning"]
 
@@ -147,6 +166,37 @@ class alloc(object):
     if self.quiet: return
 
     table = PrettyTable()
+
+
+    inverted_field_names = dict([[v,k] for k,v in self.field_names.items()])
+
+    # Allow the display of custom fields
+    if type(only_these_fields) == type("string"):
+      if only_these_fields.lower() == "all":
+        only_these_fields = []
+        for k,v in rows.items():
+          for name,value in v.items():
+            only_these_fields.append(name)
+            if name in self.field_names:
+              only_these_fields.append(self.field_names[name])
+            else:
+              only_these_fields.append(name)
+          break
+      else:
+        f = only_these_fields.split(",")
+        only_these_fields = []
+        for name in f:
+  
+          if name in inverted_field_names:
+            name = inverted_field_names[name]
+
+          only_these_fields.append(name)
+          if name in self.field_names:
+            only_these_fields.append(self.field_names[name])
+          else:
+            only_these_fields.append(name)
+
+    
     field_names = only_these_fields[1::2]
     table.set_field_names(field_names)
 

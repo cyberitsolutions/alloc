@@ -8,15 +8,14 @@ class tasks(alloc):
   ops = []
   ops.append((''  ,'help           ','Show this help.'))
   ops.append((''  ,'csv            ','Return the results in CSV format.'))
-  ops.append(('v' ,'verbose        ','Print the tasks\' descriptions.'))
   ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
   ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.'))
   ops.append(('s:','status=NAME    ','A task\'s status, eg: "open_inprogress" eg: "pending". Default: "open"'))
   ops.append((''  ,'type=NAME      ','A task\'s type, eg: "Task" eg: "Fault"'))
   ops.append(('a:','assignee=NAME  ','A task\'s assignee, username or first and surname" Default: you.'))
   ops.append(('m:','manager=NAME   ','A task\'s manager, username or first and surname".'))
-  ops.append((''  ,'people         ','Show the task\'s creator, manager and assignee.'))
   ops.append(('o:','order=NAME     ','The order the Tasks are displayed in. Default: "Priority"')) 
+  ops.append(('f:','fields=LIST    ','The commar separated list of fields you would like printed. eg: "all" eg: "taskID,Status,taskStatus,Proj Pri"')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -32,7 +31,7 @@ class tasks(alloc):
     self.authenticate();
 
     self.csv = o['csv']
-    order = "Priority"
+    order = ''
     if o['order']: order = o['order']
 
     # Get personID, either assignee or logged in user
@@ -86,27 +85,22 @@ class tasks(alloc):
     # Get list of tasks
     r = self.get_list("task",ops)
 
-    fields = ["taskID","Task ID"
-             ,"taskTypeID","Type"
-             ,"taskStatusLabel","Status"
-             ,"priority projectPriority priorityFactor","Priority"
-             ,"timeExpected","Est"
-             ,"timeLimit","Limit"
-             ,"timeActual","Act"
-             ,"rate","Rate"
-             ,"projectName","Project"
-             ,"taskName","Task"
-             ]
-    if o['verbose']:
-      fields.append("taskDescription")
-      fields.append("Description")
-    if o['people']:
-      fields.append("creator_name")
-      fields.append("Creator")
-      fields.append("manager_name")
-      fields.append("Manager")
-      fields.append("assignee_name")
-      fields.append("Assigned")
+    
+    if not o['fields']:
+      if not order: order = "Priority"
+      fields = ["taskID","Task ID"
+               ,"taskTypeID","Type"
+               ,"taskStatusLabel","Status"
+               ,"priority projectPriority priorityFactor","Priority"
+               ,"timeExpected","Est"
+               ,"timeLimit","Limit"
+               ,"timeActual","Act"
+               ,"rate","Rate"
+               ,"projectName","Project"
+               ,"taskName","Task"
+               ]
+    else:
+      fields = o["fields"]
 
     if r:
       def seconds_to_hours(x):
