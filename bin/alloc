@@ -3,6 +3,8 @@
 import sys
 import os
 
+url = os.environ.get("ALLOC_URL") or ''
+
 # This will basically call the relevant alloc module's run() method.
 try:
   m = sys.argv[1]
@@ -11,7 +13,7 @@ try:
 
 except:
   from alloccli import *
-  a = alloc.alloc()
+  a = alloc.alloc(url)
   print "Usage: alloc command [OPTIONS]"
   print "Select one of the following commands:\n"
   for f in os.listdir("/".join(sys.argv[0].split("/")[:-1])+"/alloccli/"):
@@ -35,5 +37,5 @@ except:
 
 
 # All clear, run the module
-s = subcommand()
+s = subcommand(url)
 s.run()
