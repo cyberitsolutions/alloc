@@ -209,8 +209,18 @@ class timeSheetItem extends db_entity {
   
   function get_list_filter($filter=array()) {
 
-    if ($filter["timeSheetID"]) {
-      $sql[] = sprintf("(timeSheetItem.timeSheetID = %d)",db_esc($filter["timeSheetID"]));
+    // If timeSheetID is an array
+    if ($filter["timeSheetID"] && is_array($filter["timeSheetID"])) {
+      $timeSheetIDs = $filter["timeSheetID"];
+
+    // Else
+    } else if ($filter["timeSheetID"] && is_numeric($filter["timeSheetID"])) {
+      $timeSheetIDs[] = $filter["timeSheetID"];
+    }
+
+    if (is_array($timeSheetIDs) && count($timeSheetIDs)) {
+      foreach ($timeSheetIDs as $tid) { $t[] = db_esc($tid); }
+      $sql[] = "(timeSheetItem.timeSheetID IN (".implode(",",$t)."))";
     } 
 
     if ($filter["projectID"]) {
@@ -268,6 +278,7 @@ class timeSheetItem extends db_entity {
       
       $tsi = new timeSheetItem();
       $tsi->read_db_record($db);
+      $tsi->currency = $t->get_value("currencyTypeID");
 
       if ($tsi->get_value("taskID")) {
         $task = $tsi->get_foreign_object('task');
@@ -276,6 +287,8 @@ class timeSheetItem extends db_entity {
         $task->get_value('timeLimit') && $row["hoursBilled"] > $task->get_value('timeLimit') and $row["limitWarning"] = 'Exceeds Limit!';
         $row["taskLimit"] = $task->get_value("timeLimit");
       }
+      $row["rate"] = $tsi->get_value("rate",DST_HTML_DISPLAY);
+      $row["worth"] = page::money($tsi->currency, $row["rate"] * $tsi->get_value("multiplier") * $tsi->get_value("timeSheetItemDuration"),"%m");
 
       $rows[$row["timeSheetItemID"]] = $row;
     }
