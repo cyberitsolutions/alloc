@@ -83,8 +83,11 @@ alloc timesheets --status finished --hours ">=7" --date "$(date -d '10 week ago'
 
     if timeSheets:
       if o['items']:
+        tids = []
         for id,t in timeSheets.items():
-          self.print_table(self.get_list("timeSheetItem",{"timeSheetID": id}), self.row_timeSheetItem, sort=order2)
+          tids.append(id)
+        if tids:
+          self.print_table(self.get_list("timeSheetItem",{"timeSheetID": tids}), self.row_timeSheetItem, sort=order2)
       else:
         self.print_table(timeSheets, self.row_timeSheet, sort=order1)
 

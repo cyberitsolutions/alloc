@@ -38,7 +38,7 @@ class alloc(object):
 
 
   row_timeSheet = ["timeSheetID","ID","dateFrom","From","dateTo","To","status","Status","person","Owner","duration","Duration","totalHours","Hrs","amount","$","projectName","Project"]
-  row_timeSheetItem = ["timeSheetID","ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","timeSheetItemDuration","Hours","taskID","taskID","comment","Comment","rate","$","hoursBilled","Total","taskLimit","Limit","limitWarning","Warning"]
+  row_timeSheetItem = ["timeSheetID","ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","taskID","taskID","comment","Comment","timeSheetItemDuration","Hours","rate","$","worth","Worth","hoursBilled","Total","taskLimit","Limit","limitWarning","Warning"]
 
   def __init__(self,url=""):
     if not url:
