@@ -161,41 +161,44 @@ class alloc(object):
     for i in rtn:
       return i
 
+  def get_only_these_fields(self,rows,only_these_fields):
+    rtn = []
+    inverted_field_names = dict([[v,k] for k,v in self.field_names.items()])
+
+    # Allow the display of custom fields
+    if type(only_these_fields) == type("string"):
+      # Print all fields
+      if only_these_fields.lower() == "all":
+        for k,v in rows.items():
+          for name,value in v.items():
+            rtn.append(name)
+            if name in self.field_names:
+              rtn.append(self.field_names[name])
+            else:
+              rtn.append(name)
+          break
+      # Print a selection of fields
+      else:
+        f = only_these_fields.split(",")
+        for name in f:
+          if name in inverted_field_names:
+            name = inverted_field_names[name]
+          rtn.append(name)
+          if name in self.field_names:
+            rtn.append(self.field_names[name])
+          else:
+            rtn.append(name)
+      return rtn;
+    return only_these_fields
+
+
   def print_table(self, rows, only_these_fields, sort=False, transforms={}):
     # For printing out results in an ascii table or CSV format
     if self.quiet: return
 
     table = PrettyTable()
 
-
-    inverted_field_names = dict([[v,k] for k,v in self.field_names.items()])
-
-    # Allow the display of custom fields
-    if type(only_these_fields) == type("string"):
-      if only_these_fields.lower() == "all":
-        only_these_fields = []
-        for k,v in rows.items():
-          for name,value in v.items():
-            only_these_fields.append(name)
-            if name in self.field_names:
-              only_these_fields.append(self.field_names[name])
-            else:
-              only_these_fields.append(name)
-          break
-      else:
-        f = only_these_fields.split(",")
-        only_these_fields = []
-        for name in f:
-  
-          if name in inverted_field_names:
-            name = inverted_field_names[name]
-
-          only_these_fields.append(name)
-          if name in self.field_names:
-            only_these_fields.append(self.field_names[name])
-          else:
-            only_these_fields.append(name)
-
+    only_these_fields = self.get_only_these_fields(rows,only_these_fields)
     
     field_names = only_these_fields[1::2]
     table.set_field_names(field_names)
