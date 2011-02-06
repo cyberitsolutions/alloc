@@ -949,7 +949,7 @@ class task extends db_entity {
         $f = " WHERE ".implode(" AND ",$filter);
       }
       $db = new db_alloc;
-      $q = sprintf("SELECT task.*, projectName, projectPriority, rate, rateUnitID
+      $q = sprintf("SELECT task.*, projectName, projectPriority, project.currencyTypeID as currency, rate, rateUnitID
                       FROM task
                  LEFT JOIN project ON project.projectID = task.projectID
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
@@ -978,7 +978,7 @@ class task extends db_entity {
         $_FORM["showDateStatus"] and $row["taskDateStatus"] = $task->get_dateStatus();
         $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
         $_FORM["showTimes"] and $row["timeActual"] = $task->get_time_billed();
-        $row["rate"] and $row["rate"] = $row["rate"]."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
+        $row["rate"] and $row["rate"] = page::money($row["currency"],$row["rate"],"%mo")."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
         $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
         if (!$_FORM["skipObject"]) {
@@ -1023,7 +1023,7 @@ class task extends db_entity {
         $filter = " WHERE ".implode(" AND ",$filter);
       }
 
-      $q = "SELECT task.*, projectName, projectShortName, clientID, projectPriority, rate, rateUnitID,
+      $q = "SELECT task.*, projectName, projectShortName, clientID, projectPriority, project.currencyTypeID as currency, rate, rateUnitID,
                   priority * POWER(projectPriority, 2) * 
                       IF(task.dateTargetCompletion IS NULL, 
                         8,
@@ -1061,7 +1061,7 @@ class task extends db_entity {
         }
         $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
         $_FORM["showTimes"] and $row["timeActual"] = $t->get_time_billed();
-        $row["rate"] and $row["rate"] = $row["rate"]."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
+        $row["rate"] and $row["rate"] = page::money($row["currency"],$row["rate"],"%mo")."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
         $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
         $tasks[$row["taskID"]] = $row;
