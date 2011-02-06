@@ -13,7 +13,7 @@ class time(alloc):
   ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
   ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.')) 
   ops.append(('d:','date=YYYY-MM-DD','The date that the work was performed.')) 
-  ops.append(('h:','hours=NUM      ','The number of hours worked.')) 
+  ops.append(('h:','hours=NUM      ','The amount of time worked. Eg: 2.5 eg: 150m')) 
   ops.append(('c:','comment=COMMENT','The time sheet item comment.')) 
 
   # Specify some header and footer text for the help text
@@ -62,6 +62,18 @@ alloc time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
 
     if not o['hours']:
       self.die('No quantity of hours has been specified.')
+  
+    # If the time period is expressed like 30m then convert the minutes into hours
+    elif o['hours'][-1].lower() == "m":
+      o['hours'] = o['hours'][:-1]
+      o['hours'] = float(o['hours'])/60
+
+    elif o['hours'][-1].lower() == "h":
+      o['hours'] = o['hours'][:-1]
+
+    if float(o['hours']) % .25 != 0:
+      self.msg('The hours billed is not a multiple of 15 minutes. Continuing.')
+
 
     # Get a projectID either passed via command line, or figured out from a project name
     if self.is_num(o['project']):
@@ -115,7 +127,7 @@ alloc time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
     # We should only have a timeSheetID if a new timeSheetItem was successfully added.
     if timeSheetID:
       self.print_table(self.get_list("timeSheet",{"timeSheetID": timeSheetID}), self.row_timeSheet, sort="ID")
-      self.print_table(self.get_list("timeSheetItem",{"timeSheetID": timeSheetID}), self.row_timeSheetItem, sort="Date")
+      self.print_table(self.get_list("timeSheetItem",{"timeSheetID": timeSheetID}), self.row_timeSheetItem, sort="dateTimeSheetItem,timeSheetItemID")
       self.yay("Time added to time sheet: %s" % timeSheetID)
     elif not o['dryrun']:
       self.die("No time was added.")
