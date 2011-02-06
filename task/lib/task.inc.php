@@ -978,7 +978,8 @@ class task extends db_entity {
         $_FORM["showDateStatus"] and $row["taskDateStatus"] = $task->get_dateStatus();
         $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
         $_FORM["showTimes"] and $row["timeActual"] = $task->get_time_billed();
-        $row["rate"] and $row["rate"] = page::money($row["currency"],$row["rate"],"%mo")."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
+        $row["rate"] = page::money($row["currency"],$row["rate"],"%mo");
+        $row["rateUnit"] = $_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
         $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
         $row["priorityLabel"] = $t->get_priority_label();
@@ -1062,7 +1063,8 @@ class task extends db_entity {
         }
         $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
         $_FORM["showTimes"] and $row["timeActual"] = $t->get_time_billed();
-        $row["rate"] and $row["rate"] = page::money($row["currency"],$row["rate"],"%mo")."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
+        $row["rate"] = page::money($row["currency"],$row["rate"],"%mo");
+        $row["rateUnit"] = $_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
         $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
         $row["priorityLabel"] = $t->get_priority_label();
