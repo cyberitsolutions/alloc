@@ -981,6 +981,7 @@ class task extends db_entity {
         $row["rate"] and $row["rate"] = page::money($row["currency"],$row["rate"],"%mo")."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
         $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
+        $row["priorityLabel"] = $t->get_priority_label();
         if (!$_FORM["skipObject"]) {
           $_FORM["return"] == "arrayAndHtml" || $_FORM["return"] == "array" and $row["object"] = $task;
         }
@@ -1064,6 +1065,7 @@ class task extends db_entity {
         $row["rate"] and $row["rate"] = page::money($row["currency"],$row["rate"],"%mo")."/".$_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"], $row["dateTargetCompletion"]);
         $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
+        $row["priorityLabel"] = $t->get_priority_label();
         $tasks[$row["taskID"]] = $row;
       }
     } 
@@ -1348,7 +1350,8 @@ class task extends db_entity {
   }
 
   function get_priority_label() {
-    $taskPriorities = config::get_config_item("taskPriorities");
+    static $taskPriorities;
+    $taskPriorities or $taskPriorities = config::get_config_item("taskPriorities");
     return $taskPriorities[$this->get_value("priority")]["label"];
   }
 
