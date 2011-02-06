@@ -21,9 +21,10 @@ class alloc(object):
   field_names = {"taskID":"Task ID"
                 ,"taskTypeID":"Type"
                 ,"taskStatusLabel":"Status"
-                ,"priority":"Pri"
+                ,"priority":"Task Pri"
                 ,"projectPriority":"Proj Pri"
-                ,"priorityFactor":"Priority"
+                ,"priorityFactor":"Pri Factor"
+                ,"priorityLabel": "Priority"
                 ,"timeExpected":"Est"
                 ,"timeLimit":"Limit"
                 ,"timeActual":"Act"
@@ -35,6 +36,41 @@ class alloc(object):
                 ,"manager_name": "Manager"
                 ,"assignee_name": "Assigned"
                 }
+
+                #Other task fields, that may one day require labels
+                #personID
+                #closerID
+                #creatorID
+                #managerID
+                #projectID
+                #parentTaskID
+                #duplicateTaskID
+                #clientID
+                #taskStatusColour
+                #rateUnit
+                #rateUnitID
+                #currency
+                #taskComments
+                #percentComplete
+                #timeWorst
+                #taskTypeImage
+                #dateTargetCompletion
+                #projectShortName
+                #taskStatus
+                #dateAssigned
+                #project_name
+                #dateClosed
+                #dateCreated    
+                #dateTargetStart
+                #newSubTask
+                #taskLink                                          
+                #taskURL                                 
+                #dateActualStart
+                #taskModifiedUser
+                #dateActualCompletion
+                #timeBest
+
+
 
 
   row_timeSheet = ["timeSheetID","ID","dateFrom","From","dateTo","To","status","Status","person","Owner","duration","Duration","totalHours","Hrs","amount","$","projectName","Project"]
@@ -191,6 +227,40 @@ class alloc(object):
       return rtn;
     return only_these_fields
 
+  def get_sorted_rows(self,rows,sortby,fields):
+    rows = rows.items()
+    if not sortby:
+      return rows
+    inverted_field_names = dict([[v,k] for k,v in self.field_names.items()])
+
+    sortby = sortby.split(",")
+    sortby.reverse()    
+
+    def sort_func(row):
+      try: val = row[1][inverted_field_names[f]]
+      except:
+        try: val = row[1][self.field_names[f]]
+        except:
+          try: val = row[1][f]
+          except:
+            return ''
+
+      try: return int(val)
+      except:
+        try: return float(val)
+        except:
+          try: return val.lower()
+          except:
+            return val
+
+    for f in sortby:
+      if f:
+        reverse = False
+        if f[0] == "_":
+          reverse = True
+          f = f[1:]
+        rows = sorted(rows, key=sort_func, reverse=reverse)
+    return rows
 
   def print_table(self, rows, only_these_fields, sort=False, transforms={}):
     # For printing out results in an ascii table or CSV format
@@ -199,9 +269,11 @@ class alloc(object):
     table = PrettyTable()
 
     only_these_fields = self.get_only_these_fields(rows,only_these_fields)
-    
     field_names = only_these_fields[1::2]
     table.set_field_names(field_names)
+
+    # Re-order the table, this changes the dict to a list i.e. dict.items().
+    rows = self.get_sorted_rows(rows,sort,only_these_fields)
 
     # Hide the frame and header if --csv
     if self.csv:
@@ -214,8 +286,8 @@ class alloc(object):
       else:
         table.set_field_align(label, "l")
 
-    if rows and type(rows) is dict:
-      for k,row in rows.items():
+    if rows:
+      for k,row in rows:
         r = []
         for v in only_these_fields[::2]: 
           str = ''
@@ -233,7 +305,7 @@ class alloc(object):
           if not str: str = ''
           r.append(str)
         table.add_row(r)
-    lines = table.get_string(sortby=sort, header=not self.csv)
+    lines = table.get_string(header=not self.csv)
     # If csv, need to manually strip out the leading and trailing tab on
     # each line as well as compress the whitespace in the fields
     if self.csv:

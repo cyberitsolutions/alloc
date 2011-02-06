@@ -14,8 +14,8 @@ class tasks(alloc):
   ops.append((''  ,'type=NAME      ','A task\'s type, eg: "Task" eg: "Fault"'))
   ops.append(('a:','assignee=NAME  ','A task\'s assignee, username or first and surname" Default: you.'))
   ops.append(('m:','manager=NAME   ','A task\'s manager, username or first and surname".'))
-  ops.append(('o:','order=NAME     ','The order the Tasks are displayed in. Default: "Priority"')) 
-  ops.append(('f:','fields=LIST    ','The commar separated list of fields you would like printed. eg: "all" eg: "taskID,Status,taskStatus,Proj Pri"')) 
+  ops.append(('o:','order=NAME     ','The order the Tasks are displayed in. Default: "Priority,Type,_Rate,status". (Underscore is for descending sort).')) 
+  ops.append(('f:','fields=LIST    ','The commar separated list of fields you would like printed, eg: "all" eg: "taskID,Status,taskStatus,Proj Pri"')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -87,11 +87,11 @@ class tasks(alloc):
 
     
     if not o['fields']:
-      if not order: order = "Priority"
+      if not order: order = "Priority,Type,_Rate,status"
       fields = ["taskID","Task ID"
                ,"taskTypeID","Type"
                ,"taskStatusLabel","Status"
-               ,"priority projectPriority priorityFactor","Priority"
+               ,"priorityLabel","Priority"
                ,"timeExpected","Est"
                ,"timeLimit","Limit"
                ,"timeActual","Act"
