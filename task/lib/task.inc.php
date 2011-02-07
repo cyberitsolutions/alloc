@@ -982,7 +982,7 @@ class task extends db_entity {
         $row["rateUnit"] = $_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
         $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
         $row["priorityFactor"] and $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
-        $row["priorityLabel"] = $t->get_priority_label();
+        $row["priorityLabel"] = $task->get_priority_label();
         if (!$_FORM["skipObject"]) {
           $_FORM["return"] == "arrayAndHtml" || $_FORM["return"] == "array" and $row["object"] = $task;
         }
