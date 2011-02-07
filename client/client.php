@@ -98,7 +98,7 @@ require_once("../alloc.php");
         $pc = " (Primary Contact)";
       }
 
-      $vcard = '<a href="'.$TPL["url_alloc_client"].'clientContactID='.$clientContact->get_id().'&get_vcard=1"><img style="padding-left: 10px" src="'.$TPL["url_alloc_images"].'icon_vcard.png" alt="Download VCard" ></a>';
+      $vcard = '<a href="'.$TPL["url_alloc_client"].'clientContactID='.$clientContact->get_id().'&get_vcard=1"><img style="padding-left: 10px;border: none" src="'.$TPL["url_alloc_images"].'icon_vcard.png" alt="Download VCard" ></a>';
 
       $col1 = array();
       $clientContact->get_value('clientContactName') and $col1[] = "<b>".$clientContact->get_value('clientContactName',DST_HTML_DISPLAY)."</b>".$pc . $vcard;
