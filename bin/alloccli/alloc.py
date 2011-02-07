@@ -421,7 +421,7 @@ class alloc(object):
     if not self.quiet: print ":-)",str
 
   def err(self,str):
-    print "!!!",str
+    sys.stderr.write("!!! "+str+"\n")
 
   def die(self,str):
     self.err(str)
