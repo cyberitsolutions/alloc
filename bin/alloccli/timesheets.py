@@ -15,7 +15,7 @@ class timesheets(alloc):
   ops.append(('t:','time=ID        ','A time sheet ID.'))
   ops.append(('h:','hours=NUM      ','The time sheets must have this many hours recorded eg: "7" eg: ">7 AND <10 OR =4 AND !=8"'))
   ops.append(('d:','date=YYYY-MM-DD','The from date of the earliest time sheet item.'))
-  ops.append(('o:','order=TS&TSI   ','The order the Time Sheets and Items are displayed in. Default: "ID&Date"'))
+  ops.append(('o:','order=NAME     ','The order the Time Sheets or Items are displayed in. Default for time sheets: "From,ID" Default for items: "Date,Item ID"'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -43,8 +43,8 @@ alloc timesheets --status finished --hours ">=7" --date "$(date -d '10 week ago'
     personID = self.get_my_personID()
     projectID = ""
     timeSheetID = ""
-    order1 = "ID"
-    order2 = "Date"
+    order_ts = "From,ID"
+    order_tsi = "Date,Item ID"
     status = "edit"
 
     # Get a projectID either passed via command line, or figured out from a project name
@@ -62,10 +62,11 @@ alloc timesheets --status finished --hours ">=7" --date "$(date -d '10 week ago'
       status = o['status']
 
     if o['order']:
-      if '&' not in o['order']: o['order']+='&'
-      order1,order2 = o['order'].split("&")
-
-    if not order2: order2 = 'Date'
+      order = o['order']
+    elif o['items']:
+      order = order_tsi
+    else:
+      order = order_ts
 
     ops = {}
     if timeSheetID:
@@ -89,9 +90,9 @@ alloc timesheets --status finished --hours ">=7" --date "$(date -d '10 week ago'
         for id,t in timeSheets.items():
           tids.append(id)
         if tids:
-          self.print_table(self.get_list("timeSheetItem",{"timeSheetID": tids}), self.row_timeSheetItem, sort=order2)
+          self.print_table(self.get_list("timeSheetItem",{"timeSheetID": tids}), self.row_timeSheetItem, sort=order)
       else:
-        self.print_table(timeSheets, self.row_timeSheet, sort=order1)
+        self.print_table(timeSheets, self.row_timeSheet, sort=order)
 
 
 
