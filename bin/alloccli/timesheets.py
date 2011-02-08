@@ -77,7 +77,7 @@ alloc timesheets --status finished --hours ">=7" --date "$(date -d '10 week ago'
     if o['hours']:
       ops['timeSheetItemHours'] = o['hours']
     if o['date']:
-      ops['dateFrom'] = o['date']
+      ops['dateTo'] = o['date']
 
     timeSheets = self.get_list("timeSheet",ops)
 
