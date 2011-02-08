@@ -60,8 +60,9 @@ alloc subscriptions --add < foo.txt"""
     if o['key']:
       tokens = self.get_list("token",{ "tokenHash" : o['key'] })
       if tokens:
-        searchops['entity'] = tokens[0]['tokenEntity']
-        searchops['entityID'] = tokens[0]['tokenEntityID']
+        k,v = tokens.popitem()
+        searchops['entity'] = v['tokenEntity']
+        searchops['entityID'] = v['tokenEntityID']
       else:
         self.die("No key found: "+o['key'])
 

@@ -165,6 +165,9 @@ class interestedParty extends db_entity {
       foreach ($people as $personID => $p) {
         if ($data["emailAddress"] && str_replace(array("<",">"),"",$p["emailAddress"]) == $data["emailAddress"]) {
           $ip->set_value("personID",$personID);
+          if (!$data["fullName"]) {
+            $ip->set_value("fullName",$p["name"]);
+          }
         }
       }
     }

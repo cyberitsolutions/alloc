@@ -145,7 +145,7 @@ class token extends db_entity {
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->next_record()) {
-      $rows[] = $row;
+      $rows[$row["tokenID"]] = $row;
     }
     return (array)$rows;
   }
