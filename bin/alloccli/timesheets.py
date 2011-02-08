@@ -11,7 +11,7 @@ class timesheets(alloc):
   ops.append(('q' ,'quiet          ','Run with no output except errors.'))
   ops.append(('i' ,'items          ','Show time sheet\'s items.'))
   ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
-  ops.append(('s:','status=STATUS  ','The time sheets\' status eg: edit, manager, admin, invoiced, finished. Default: edit'))
+  ops.append(('s:','status=STATUS  ','The time sheets\' status. Can accept multiple values, eg: "edit,manager,admin,invoiced,finished" Default: edit'))
   ops.append(('t:','time=ID        ','A time sheet ID.'))
   ops.append(('h:','hours=NUM      ','The time sheets must have this many hours recorded eg: "7" eg: ">7 AND <10 OR =4 AND !=8"'))
   ops.append(('d:','date=YYYY-MM-DD','The from date of the earliest time sheet item.'))
@@ -56,7 +56,9 @@ alloc timesheets --status finished --hours ">=7" --date "$(date -d '10 week ago'
     if self.is_num(o['time']):
       timeSheetID = o['time']
 
-    if o['status']:
+    if ',' in o['status']:
+      status = o['status'].split(',')
+    elif o['status']:
       status = o['status']
 
     if o['order']:
