@@ -243,7 +243,9 @@ class alloc(object):
         except:
           try: val = row[1][f]
           except:
-            return ''
+            try: val = row[1][fields[fields.index(f)-1]]
+            except:
+              return ''
 
       try: return int(val)
       except:
