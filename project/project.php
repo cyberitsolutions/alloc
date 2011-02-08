@@ -488,7 +488,11 @@ if ($projectID) {
         import_gnome_planner('import');
       break;
       case 'csv':
-        import_csv('import');
+	$fn = store_csv($_FILES['import']['tmp_name']);
+	if ($fn) {
+	  alloc_redirect($TPL["url_alloc_importCSV"]."projectID=".$projectID."&filename=$fn");
+	}
+	$TPL['message'] = "There was an error processing the uploaded file.";
       break;
     }
   }

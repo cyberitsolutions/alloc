@@ -45,6 +45,7 @@ $TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
             ,"url_alloc_updateProjectClientContactList" => $sess->url(SCRIPT_PATH."project/updateProjectClientContactList.php")
             ,"url_alloc_personGraph"                    => $sess->url(SCRIPT_PATH."project/personGraph.php")
             ,"url_alloc_personGraphImage"               => $sess->url(SCRIPT_PATH."project/personGraphImage.php")
+            ,"url_alloc_importCSV"                      => $sess->url(SCRIPT_PATH."project/parseCSV.php")
 
             ,"url_alloc_task"                           => $sess->url(SCRIPT_PATH."task/task.php")
             ,"url_alloc_updateParentTasks"              => $sess->url(SCRIPT_PATH."task/updateParentTasks.php")
