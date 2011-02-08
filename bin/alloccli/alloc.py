@@ -267,6 +267,7 @@ class alloc(object):
   def print_table(self, rows, only_these_fields, sort=False, transforms={}):
     # For printing out results in an ascii table or CSV format
     if self.quiet: return
+    if not rows: return 
 
     table = PrettyTable()
 
