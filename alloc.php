@@ -98,7 +98,7 @@ $m = array("shared"
           );
 
 // Sub-dirs under ATTACHMENTS_DIR where upload, email and backup data can be stored
-$external_storage_directories = array("task","client","project","invoice","comment","backups","whatsnew","wiki","logos","search");
+$external_storage_directories = array("task","client","project","invoice","comment","backups","whatsnew","wiki","logos","search","tmp");
 
 // Helper functions
 require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."util.inc.php");

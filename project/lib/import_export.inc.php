@@ -22,63 +22,199 @@
 
 ////IMPORT FUNCTIONS
 
-function import_csv($infile) {
+define('CSV_EXPIRY', 60*30); //30 mins
+
+function store_csv($file) {
+
+  // Before storing it, go through the tmp directory and clean up any old files.
+  // This is the only point where the number of files should increase, so this
+  // is a good time to limit the expansion.
+  $dir = ATTACHMENTS_DIR . 'tmp' . DIRECTORY_SEPARATOR;
+  $files = glob($dir . "csv_*");
+
+  $expiry = time() - CSV_EXPIRY;
+  foreach ($files as $fn) {
+    // read the timestamp out of the filename... or maybe stat it?
+    $props = stat($fn);
+    if ($props['mtime'] < $expiry) {
+      unlink($fn);
+    }
+  }
+
+  if (!is_uploaded_file($file)) {
+    //client messing around
+    error_log("CSV Upload: '$file' was not an uploaded file.");
+    return false;
+  }
+
+  $filename = "csv_" . time();
+  if (!move_uploaded_file($file, $dir . $filename)) {
+    error_log("CSV Upload: Couldn't move file $file to " . $dir . $filename);
+    return false;
+  }
+
+  return $filename;
+}
+
+// Sort out the list of interested parties and add them to the task.
+function add_ips($parties, $taskID, $projectID) {
+  // each ip can be either a username or an email address. If it's a username, 
+  // look them up. If it's an email address, see if it belongs to anybody. If 
+  // the email doesn't match a client contact, drop it - if it's added as an IP 
+  // their name can't be changed later.
+  
+  foreach ($parties as $party) {
+    $ipdata = array('entity' => 'task',
+      'entityID' => $taskID);
+    // same logic as the real interested parties code - if the name contains an 
+    // '@', it's an email address. Otherwise, it's a login.
+    if (strpos($party, '@') === false) {
+      $person = import_find_username(array($party));
+      if (!$person) {
+        continue;
+      }
+      $ipdata['personID'] = $person->get_id();
+      $ipdata['fullName'] = person::get_fullname($person->get_id());
+      $ipdata['emailAddress'] = $person->get_value("emailAddress");
+    } else {
+      $ipdata['emailAddress'] = $party;
+      // add_client_contact will figure out the rest
+    }
+    interestedparty::add_interested_party($ipdata);
+  }
+}
+
+function import_csv($infile, $mapping, $header = true) {
   global $TPL, $projectID, $current_user;
+
+  /* Make sure the user isn't messing around and inserting ../../ into the 
+   * filename.
+   */
+
+  $rp = realpath(ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR.$infile);
+  if ($rp === FALSE || strpos($rp, ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR) !== 0)
+    die("Illegal file path."); //should occur through user dodginess
+
+  $db = new db_alloc(); //import_find_username needs it
   //Import a CSV file
   $project = new project;
   $project->set_id($projectID);
   $project->select();
 
-  $filename = $_FILES[$infile]['tmp_name'];
+  $filename = $rp;
   $result = array();
-  if(is_uploaded_file($filename)) {
-    $fh = @fopen($filename, 'rb');
-    if($fh === FALSE) {
-      $result[] = "There was a problem reading the uploaded file.";
-    } else {
-      // Find the project manager
-      $projectManager = $project->get_project_manager();
-      fgetcsv($fh, 8192);               // Skip the header line
-      while($row = fgetcsv($fh, 8192)) {
-        $warning = false;
-        if(strlen($row[0]) == 0) {
-          //blank line (or blank enough that we don't want to create a task with no name)
-          continue;
-        }
-        $task = new task;
-        $task->set_value('projectID', $projectID);
-        // Fields are: Task, Hours, Assigned Engineer
-        $task->set_value('taskName', trim($row[0]));
-        $task->set_value('timeExpected', $row[1]);
-        $assignee = import_find_username(array($row[2]));
-        if($assignee) {
-          $task->set_value('personID', $assignee->get_id());
-        } else {
-          //We don't know who the assignee is, so assign it to the project manager
-          $task->set_value('personID', $projectManager);
-          $warning = sprintf('<li class="warn">Warning for task %%d: Unable to find a username corresponding to "%s", assigning task to project manager.</li>', $row[2]);
-        }
-        $task->set_value('creatorID', $current_user->get_id());
-        $task->set_value('managerID', $projectManager);
-        // Hardcoded defaults
-        $task->set_value('taskTypeID', 'Task');
-        $task->set_value('priority', '3');
-        $task->set_value('parentTaskID', '');
-        $task->set_value('dateCreated', date('Y-m-d H:i:s'));
-        $task->set_value('dateAssigned', date('Y-m-d H:i:s'));
-        $task->set_value('dateTargetStart', date('Y-m-d H:i:s')); // Target start is today
-        $task->set_value('taskStatus', 'open_notstarted');
-        $task->save();
-
-        $result[] = sprintf('<li>Created task <a href="%s">%d %s</a>.</li>', $task->get_url(), $task->get_id(), $task->get_value('taskName'));
-        $warning and $result[] = sprintf($warning, $task->get_id());
-      }
-      fclose($fh);
-    }
+  $result[0] = array();
+  $fh = @fopen($filename, 'rb');
+  if ($fh === FALSE) {
+    $result[0] = "There was a problem reading the uploaded file.";
   } else {
-    $result[] = "There was a problem with the upload.";
+
+    $line = 1;
+    // Find the project manager
+    $projectManager = $project->get_project_manager();
+    if ($header) {
+      fgetcsv($fh, 8192);               // Skip the header line
+      $line++;
+    }
+    
+    while($row = fgetcsv($fh, 8192)) {
+      $warning = false;
+
+      $task_result = array();
+
+      $task = new task;
+      $ips = array();
+      for ($i = 0;$i < count($row);$i++) {
+        switch($mapping[$i]) {
+        case 'ignore':
+          break;
+        case 'name':
+          $task->set_value('taskName', $row[$i]);
+          break;
+        case 'description':
+          $task->set_value('taskDescription', $row[$i]);
+          break;
+        case 'assignee':
+          $assignee = import_find_username(array($row[$i]));
+          if($assignee) {
+            $task->set_value('personID', $assignee->get_id());
+          } else {
+            //We don't know who the manager is, so assign it to the project manager
+            $task->set_value('personID', $projectManager);
+            $task_result []= sprintf('Warning: Unable to find a username corresponding to "%s", assigning task to project manager.', $row[$i]);
+          }
+          break;
+        case 'manager':
+          $manager = import_find_username(array($row[$i]));
+          if($manager) {
+            $task->set_value('managerID', $manager->get_id());
+          } else {
+            //We don't know who the manager is, so assign it to the project manager
+            $task->set_value('managerID', $projectManager);
+            $task_result []= sprintf('Warning: Unable to find a username corresponding to "%s", setting task manager to project manager.', $row[$i]);
+          }
+          break;
+        case 'limit':
+          $task->set_value('timeLimit', $row[$i]);
+          break;
+        case 'timeBest':
+          $task->set_value('timeBest', $row[$i]);
+          break;
+        case 'timeWorst':
+          $task->set_value('timeWorst', $row[$i]);
+          break;
+        case 'timeExpected':
+          $task->set_value('timeExpected', $row[$i]);
+          break;
+        case 'startDate':
+          $task->set_value('dateTargetStart', $row[$i]);
+          break;
+        case 'completionDate':
+          $task->set_value('dateTargetCompletion', $row[$i]);
+          break;
+        case 'interestedParties':
+          // Field is a grouped list of names
+          $ips = explode(" ", $row[$i]);
+          break;
+	}
+      }
+      $task->set_value('projectID', $projectID);
+      // if no manager set, use the uploader
+
+      // Having a blank assignee actually works, but set it back to the 
+      // project manager
+      if (!$task->get_value('personID')) {
+        $task->set_value('personID', $projectManager);
+      }
+      if (!$task->get_value('taskName')) {
+        $result[0] []= "Line " . $line . ": Task has no name, creation failed.";
+        $line++;
+        continue;
+      }
+      // Hardcoded defaults
+      $task->set_value('taskTypeID', 'Task');
+
+      $task->set_value('priority', '3');
+      $task->set_value('dateCreated', date('Y-m-d H:i:s'));
+      $task->set_value('dateAssigned', date('Y-m-d H:i:s'));
+      $task->set_value('taskStatus', 'open_notstarted');
+      $task->save();
+
+      $task_result []= "Task ".$task->get_value('taskName') . " created";
+
+      // can only add interested parties after the task has an ID
+      if ($ips) {
+        add_ips($ips, $task->get_id(), $projectID);
+      }
+
+      $result[$task->get_id()] = $task_result;
+      $line++;
+    }
+
+    fclose($fh);
+    unlink($filename);
   }
-  $TPL['import_result'] = "<ul>" . implode("", $result) . "</ul>";
+  return $result;
 }
 
 function import_gnome_planner($infile) {
