@@ -25,8 +25,8 @@
 {if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format($timeWorst)}</td>{/}
 {if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format($timeExpected)}</td>{/}
 {if $_FORM["showTimes"]}     <td class="nobr">{echo seconds_to_display_format($timeActual)}</td>{/}
-{if $_FORM["showTimes"]}     <td class="nobr">{$percentComplete}</td>{/}
 {if $_FORM["showTimes"]}     <td class="nobr{$timeActual > $timeLimit and print ' bad'}">{echo seconds_to_display_format($timeLimit)}</td>{/}
+{if $_FORM["showPercent"]}     <td class="nobr">{$percentComplete}</td>{/}
 {if $_FORM["showStatus"]}    <td class="nobr" style="width:1%;">
                                <span class="corner" style="display:block;width:10em;padding:5px;text-align:center;background-color:{$taskStatusColour};">
                                  {$taskStatusLabel}

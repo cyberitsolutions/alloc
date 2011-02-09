@@ -975,8 +975,8 @@ class task extends db_entity {
         $row["manager_name"] = $_FORM["people_cache"][$row["managerID"]]["name"];
         $row["assignee_name"] = $_FORM["people_cache"][$row["personID"]]["name"];
         $row["newSubTask"] = $task->get_new_subtask_link();
-        $_FORM["showDateStatus"] and $row["taskDateStatus"] = $task->get_dateStatus();
-        $_FORM["showTimes"] and $row["percentComplete"] = $task->get_percentComplete();
+	$_FORM["showDateStatus"] and $row["taskDateStatus"] = $task->get_dateStatus();
+        $_FORM["showPercent"] and $row["percentComplete"] = $task->get_percentComplete();
         $_FORM["showTimes"] and $row["timeActual"] = $task->get_time_billed();
         $row["rate"] = page::money($row["currency"],$row["rate"],"%mo");
         $row["rateUnit"] = $_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
@@ -1061,7 +1061,7 @@ class task extends db_entity {
         if (!$_FORM["skipObject"]) {
           $row["object"] = $t;
         }
-        $_FORM["showTimes"] and $row["percentComplete"] = $t->get_percentComplete();
+        $_FORM["showPercent"] and $row["percentComplete"] = $t->get_percentComplete();
         $_FORM["showTimes"] and $row["timeActual"] = $t->get_time_billed();
         $row["rate"] = page::money($row["currency"],$row["rate"],"%mo");
         $row["rateUnit"] = $_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
@@ -1167,8 +1167,8 @@ class task extends db_entity {
       $_FORM["showTimes"]    and $summary[] = "<th>Worst</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>Expect</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>Actual</th>";
-      $_FORM["showTimes"]    and $summary[] = "<th>%</th>";
       $_FORM["showTimes"]    and $summary[] = "<th>Limit</th>";
+      $_FORM["showPercent"]    and $summary[] = "<th>%</th>";
       $_FORM["showStatus"]   and $summary[] = "<th>Status</th>";
       $summary[] ="</tr>";
 

@@ -34,16 +34,21 @@ $(document).ready(function() {
           <td><input type="checkbox" id="showManager" name="showManager"{$showManager_checked}></td>
         </tr>
         <tr>
-          <td align="right"><label for="showTimes" class="nobr">Est, Act &amp; Percent</label></td>
+          <td align="right"><label for="showTimes" class="nobr">Estimates</label></td>
           <td><input type="checkbox" id="showTimes" name="showTimes"{$showTimes_checked}></td>
           <td align="right"><label for="showAssigned" class="nobr">Assigned To</label></td>
           <td><input type="checkbox" id="showAssigned" name="showAssigned"{$showAssigned_checked}></td>
         </tr>
         <tr>
-          <td align="right"><label for="showPriority" class="nobr">Priority Info</label></td>
-          <td><input type="checkbox" id="showPriority" name="showPriority"{$showPriority_checked}></td>
+          <td align="right"><label for="showPercent" class="nobr">Progress</label></td>
+          <td><input type="checkbox" id="showPercent" name="showPercent"{$showPercent_checked}></td>
           <td align="right"><label for="showDateStatus" class="nobr">Date Status</label></td>
           <td><input type="checkbox" id="showDateStatus" name="showDateStatus"{$showDateStatus_checked}></td>
+        </tr>
+	<tr>
+          <td align="right"><label for="showPriority" class="nobr">Priority Info</label></td>
+          <td><input type="checkbox" id="showPriority" name="showPriority"{$showPriority_checked}></td>
+          <td colspan="2"></td>
         </tr>
       </table>
     
