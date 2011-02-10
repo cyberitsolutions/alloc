@@ -6,4 +6,3 @@ $dir = ATTACHMENTS_DIR . 'tmp';
 @mkdir($dir, 0777);
 
 ?>
-
