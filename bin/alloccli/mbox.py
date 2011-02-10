@@ -65,7 +65,7 @@ alloc mbox -t 1234 > file.mbox'''
 
         fd, filepath = tempfile.mkstemp()
         with closing(os.fdopen(fd, 'wb')) as tf:
-          tf.write(str)
+          tf.write(unicode(str).encode('utf-8'))
 
         command = os.environ['MAILER']+' "'+filepath+'"'
         self.msg('Running: '+command)
