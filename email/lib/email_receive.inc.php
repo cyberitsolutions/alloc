@@ -33,7 +33,7 @@ class alloc_email_receive {
   var $mail_headers;
   var $mail_structure;
   
-  function alloc_email_receive($info,$lockfile) {
+  function alloc_email_receive($info,$lockfile=false) {
     $this->host     = $info["host"];
     $this->port     = $info["port"];
     $this->username = $info["username"];
@@ -43,13 +43,13 @@ class alloc_email_receive {
 
 
     // Nuke lock files that are more that 30 min old 
-    if (file_exists($this->lockfile) && (time() - filemtime($this->lockfile)) > 1800) {
+    if ($this->lockfile && file_exists($this->lockfile) && (time() - filemtime($this->lockfile)) > 1800) {
       $this->unlock();
     } 
 
-    if (file_exists($this->lockfile)) {
+    if ($this->lockfile && file_exists($this->lockfile)) {
       die("Mailbox is locked. Remove ".$this->lockfile." to unlock.");
-    } else {
+    } else if ($this->lockfile) {
       $this->lock();
     }
   
