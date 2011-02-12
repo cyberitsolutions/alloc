@@ -23,14 +23,7 @@
 require_once("../alloc.php");
 
 
-$defaults = array("showHeader"=>true
-                 ,"showClientLink"=>true
-                 ,"showClientStatus"=>true
-                 ,"showClientCategory"=>true
-                 ,"showPrimaryContactName"=>true
-                 ,"showPrimaryContactPhone"=>true
-                 ,"showPrimaryContactEmail"=>true
-                 ,"url_form_action"=>$TPL["url_alloc_clientList"]
+$defaults = array("url_form_action"=>$TPL["url_alloc_clientList"]
                  ,"form_name"=>"clientList_filter"
                  );
 
@@ -44,12 +37,8 @@ function show_filter() {
 }
 
 
-function show_client_list() {
-  global $defaults;
-  $_FORM = client::load_form_data($defaults);
-  echo client::get_list($_FORM);
-}
-
+$_FORM = client::load_form_data($defaults);
+$TPL["clientListRows"] = client::get_list($_FORM);
 
 if (!$current_user->prefs["clientList_filter"]) {
   $TPL["message_help"][] = "
