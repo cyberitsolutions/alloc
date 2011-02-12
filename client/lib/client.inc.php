@@ -165,10 +165,6 @@ class client extends db_entity {
   
     $_FORM["return"] or $_FORM["return"] = "html";
 
-    // A header row
-    $summary.= client::get_list_tr_header($_FORM);
-
-
     if (is_array($filter) && count($filter)) {
       $filter = " WHERE ".implode(" AND ",$filter);
     }
@@ -206,53 +202,17 @@ class client extends db_entity {
         $row["clientContactPhone"] = $cc["clientContactPhone"];
         $row["clientContactEmail"] = $cc["clientContactEmail"];
       }
+      $row["clientContactPhone"] or $row["clientContactPhone"] = $row["clientContactMobile"];
+      $row["clientContactEmail"] and $row["clientContactEmail"] = "<a href=\"mailto:".page::htmlentities($row["clientName"]." <".$row["clientContactEmail"].">")."\">".page::htmlentities($row["clientContactEmail"])."</a>";
 
-      $summary.= client::get_list_tr($row,$_FORM);
-      $summary_ops[$c->get_id()] = $c->get_value("clientName");
       $rows[$c->get_id()] = $row;
     }
-
-    if ($print && $_FORM["return"] == "html") {
-      return "<table class=\"list sortable\">".$summary."</table>";
-
-    } else if ($print && $_FORM["return"] == "dropdown_options") {
-      return $summary_ops;
-
-    } else if ($print && $_FORM["return"] == "array") {
-      return $rows;
-
-    } else if (!$print && $_FORM["return"] == "html") {
-      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Clients Found</b></td></tr></table>";
-    }
-
-  }
-
-  function get_list_tr_header($_FORM) {
-    if ($_FORM["showHeader"]) {
-      $summary = "\n<tr>";
-      $_FORM["showClientName"]          and $summary.= "\n<th>Client</th>";
-      $_FORM["showClientLink"]          and $summary.= "\n<th>Client</th>";
-      $_FORM["showPrimaryContactName"]  and $summary.= "\n<th>Contact Name</th>";
-      $_FORM["showPrimaryContactPhone"] and $summary.= "\n<th>Contact Phone</th>";
-      $_FORM["showPrimaryContactEmail"] and $summary.= "\n<th>Contact Email</th>";
-      $_FORM["showClientStatus"]        and $summary.= "\n<th>Status</th>";
-      $_FORM["showClientCategory"]      and $summary.= "\n<th>Category</th>";
-      $summary.="\n</tr>";
-      return $summary;
-    }
-  }
-
-  function get_list_tr($client,$_FORM) {
-    global $TPL;
-    $TPL["_FORM"] = $_FORM;
-    $TPL = array_merge($TPL,(array)$client);
-    return include_template(dirname(__FILE__)."/../templates/clientListR.tpl", true);
+    return (array)$rows;
   }
 
   function get_list_vars() {
 
-    return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options"
-                ,"clientStatus"             => "Client status eg: Current | Potential | Archived"
+    return array("clientStatus"             => "Client status eg: Current | Potential | Archived"
                 ,"clientCategory"           => "Client category eg: 1-7"
                 ,"clientName"               => "Client name like *something*"
                 ,"contactName"              => "Client Contact name like *something*"
@@ -261,14 +221,6 @@ class client extends db_entity {
                 ,"form_name"                => "The name of this form, i.e. a handle for referring to this saved form"
                 ,"dontSave"                 => "Specify that the filter preferences should not be saved this time"
                 ,"applyFilter"              => "Saves this filter as the persons preference"
-                ,"showHeader"               => "A descriptive html header row"
-                ,"showClientName"           => "Shows the clients name"
-                ,"showClientLink"           => "Shows a client link"
-                ,"showClientStatus"         => "Shows the clients status"
-                ,"showClientCategory"       => "Shows the clients category"
-                ,"showPrimaryContactName"   => "Shows the primary contacts name"
-                ,"showPrimaryContactPhone"  => "Shows the primary contacts phone"
-                ,"showPrimaryContactEmail"  => "Shows the primary contacts email"
                 );
   }
 
@@ -379,9 +331,8 @@ class client extends db_entity {
     $client->select();
 
     $options["clientStatus"] = "Current";
-    $options["return"] = "dropdown_options";
     $ops = client::get_list($options);
-
+    $ops = array_kv($ops,"clientID","clientName");
     $client_select = "<select size=\"1\" id=\"clientID\" name=\"clientID\" onChange=\"makeAjaxRequest('".$TPL["url_alloc_updateProjectListByClient"]."clientID='+$('#clientID').attr('value'),'projectDropdown')\"><option></option>";
     $client_select.= page::select_options($ops,$clientID,100)."</select>";
 

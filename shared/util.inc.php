@@ -754,4 +754,10 @@ function get_exchange_rate($from, $to) {
 
   return trim($rate);
 }
+function array_kv($arr,$k,$v) {
+  foreach ((array)$arr as $key => $value) {
+    $rtn[$value[$k]] = $value[$v];
+  }
+  return $rtn;
+}
 ?>

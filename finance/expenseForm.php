@@ -375,8 +375,8 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios; 
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
   $options["clientStatus"] = "Current";
-  $options["return"] = "dropdown_options";
   $ops = client::get_list($options);
+  $ops = array_kv($ops,"clientID","clientName");
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
@@ -394,8 +394,8 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios;
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
   $options["clientStatus"] = "Current";
-  $options["return"] = "dropdown_options";
   $ops = client::get_list($options);
+  $ops = array_kv($ops,"clientID","clientName");
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";
 }
 
