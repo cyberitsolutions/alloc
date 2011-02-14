@@ -770,7 +770,14 @@ class timeSheet extends db_entity {
     $status_array = timeSheet::get_timeSheet_statii();
     unset($status_array["create"]);
 
-    $rtn["show_status_options"] = page::select_options($status_array, $_FORM["status"]);
+    if (!$_FORM["status"]) {
+      $_FORM["status"][] = 'edit';
+    }
+
+    foreach ($status_array as $k=>$v) {
+      $rtn["show_status_options"].= $br.$v."<input type='checkbox' name='status[]' value='".$k."'".(in_array($k,$_FORM["status"])?" checked" : "").">";
+      $br="&nbsp;&nbsp;&nbsp;";
+    }
 
     // display the date from filter value
     $rtn["dateFrom"] = $_FORM["dateFrom"];
