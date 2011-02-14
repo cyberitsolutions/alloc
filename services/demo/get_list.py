@@ -28,7 +28,7 @@ print 'Session key: '+key
 
 print alloc.get_help("get_list")
 
-a = { 'return' : "array", 'showProjectName' : "1", 'applyFilter' : "1" }
+a = { 'return' : "array", 'applyFilter' : "1" }
 
 #r = alloc.get_list(key, "project", a)
 

@@ -25,16 +25,9 @@ require_once("../alloc.php");
 
 
 
-$defaults = array("showHeader"=>true
-                 ,"showProjectLink"=>true
-                 ,"showClient"=>true
-                 ,"showProjectType"=>true
-                 ,"showProjectStatus"=>true
-                 ,"showProjectShortName"=>true
-                 ,"showNavLinks"=>true
+$defaults = array("showProjectType"=>true
                  ,"url_form_action"=>$TPL["url_alloc_projectList"]
                  ,"form_name"=>"projectList_filter"
-                 ,"return"=>"html"
                  );
 
 function show_filter() {
@@ -46,13 +39,10 @@ function show_filter() {
   include_template("templates/projectListFilterS.tpl");
 }
 
-function show_project_list() {
-  global $defaults;
 
-  $_FORM = project::load_form_data($defaults);
-  #echo "<pre>".print_r($_FORM,1)."</pre>";
-  echo project::get_list($_FORM);
-}
+$_FORM = project::load_form_data($defaults);
+$TPL["projectListRows"] = project::get_list($_FORM);
+$TPL["_FORM"] = $_FORM;
 
 
 if (!$current_user->prefs["projectList_filter"]) {
