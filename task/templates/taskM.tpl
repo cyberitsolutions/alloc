@@ -135,9 +135,9 @@ $(document).ready(function() {
             {/}
           </div>
           <div style="float:right; width:50%; text-align:left;">
-            {if $taskStatusLabel}
-              <span class="corner" style="display:block;width:10em;padding:5px;margin-top:8px;text-align:center;background-color:{$taskStatusColour};">
-              {$taskStatusLabel}
+            {if $task_taskStatusLabel}
+              <span class="corner" style="display:block;width:10em;padding:5px;margin-top:8px;text-align:center;background-color:{$task_taskStatusColour};">
+              {$task_taskStatusLabel}
               </span>
             {/}
           </div>
@@ -151,7 +151,7 @@ $(document).ready(function() {
           </div>
           <div style="float:right; width:50%; text-align:left;">
             <select name="taskStatus" onChange="$('#closed_duplicate_div').hide(); $('#'+$(this).val()+'_div').css('display','inline');">
-              {$taskStatusOptions}
+              {$task_taskStatusOptions}
             </select>
             {$class="inline"}
             {if !$task_duplicateTaskID}
