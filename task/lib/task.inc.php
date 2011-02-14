@@ -569,10 +569,10 @@ class task extends db_entity {
       $commar = "<br>";
     }
 
-    $TPL["taskStatusLabel"] = $this->get_task_status("label");
-    $TPL["taskStatusColour"] = $this->get_task_status("colour");
-    $TPL["taskStatusValue"] = $this->get_value("taskStatus");
-    $TPL["taskStatusOptions"] = page::select_options($this->get_task_statii_array(true),$this->get_value("taskStatus"));
+    $TPL["task_taskStatusLabel"] = $this->get_task_status("label");
+    $TPL["task_taskStatusColour"] = $this->get_task_status("colour");
+    $TPL["task_taskStatusValue"] = $this->get_value("taskStatus");
+    $TPL["task_taskStatusOptions"] = page::select_options($this->get_task_statii_array(true),$this->get_value("taskStatus"));
 
     // If we're viewing the printer friendly view
     if ($_GET["media"] == "print") {
