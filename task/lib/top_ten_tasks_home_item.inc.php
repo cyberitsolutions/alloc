@@ -24,11 +24,7 @@ class top_ten_tasks_home_item extends home_item {
   var $date;
 
   function top_ten_tasks_home_item() {
-    home_item::home_item("top_ten_tasks", "Tasks", "task", "topTenTasksH.tpl","standard",20);
-  }
-
-  function show_tasks() {
-    global $current_user, $tasks_date;
+    global $current_user, $tasks_date, $TPL;
     
     $options["taskStatus"] = $current_user->prefs["topTasksStatus"];
     $current_user->prefs["topTasksNum"] != "all" and $options["limit"] = $current_user->prefs["topTasksNum"];
@@ -44,7 +40,10 @@ class top_ten_tasks_home_item extends home_item {
     $options["showTaskID"] = true;
 	  $options["showStatus"] = true;
 
-    echo task::get_list($options);
+    $TPL["taskListRows"] = task::get_list($options);
+    $TPL["taskListOptions"] = $options;
+
+    home_item::home_item("top_ten_tasks", "Tasks", "task", "topTenTasksH.tpl","standard",20);
   }
 }
 

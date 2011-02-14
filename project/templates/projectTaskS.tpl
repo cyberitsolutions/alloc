@@ -8,7 +8,7 @@
   </tr>
   <tr>
     <td>
-    {$task_summary}
+      {task::get_list_html($taskListRows,$_FORM)}
     </td>
   </tr>
 </table>

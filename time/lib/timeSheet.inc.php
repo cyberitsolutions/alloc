@@ -521,9 +521,12 @@ class timeSheet extends db_entity {
     $options["projectID"] = $projectID;
     $options["personID"] = $personID;
     $options["taskView"] = "byProject";
-    $options["return"] = "dropdown_options";
+    $options["return"] = "array";
     $options["taskTimeSheetStatus"] = $status;
-    $tasks = task::get_list($options) or $tasks = array();
+    $taskrows = task::get_list($options);
+    foreach ((array)$taskrows as $tid => $row) {
+      $tasks[$tid] = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$row["padding"]).$tid." ".$row["taskName"];
+    }
 
     if ($taskID) {
       $t = new task;
@@ -532,7 +535,7 @@ class timeSheet extends db_entity {
       $tasks[$taskID] = $t->get_id()." ".$t->get_name();
     }
 
-    $dropdown_options = page::select_options($tasks, $taskID, 100);
+    $dropdown_options = page::select_options((array)$tasks, $taskID, 100);
     return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\"><option value=\"\">".$dropdown_options."</select>";
   }
 

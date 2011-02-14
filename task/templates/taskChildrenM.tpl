@@ -7,7 +7,9 @@
       </th>
     </tr>
     <tr>
-      <td>{$task_children_summary}</td>
+      <td>
+        {task::get_list_html($taskListRows,$taskListOptions)}
+      </td>
     </tr>
 </table>
 

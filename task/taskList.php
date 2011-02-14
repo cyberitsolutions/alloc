@@ -42,17 +42,13 @@ function show_filter() {
   include_template("templates/taskFilterS.tpl");
 }
 
-function show_task_list() {
-  global $defaults,$_FORM;
-
-  #echo "<pre>".print_r($_FORM,1)."</pre>";
-  echo task::get_list($_FORM);
-}
 
 $TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;
 
 //Load form
 $_FORM = task::load_form_data($defaults);
+$TPL["taskListRows"] = task::get_list($_FORM);
+$TPL["_FORM"] = $_FORM;
 
 // Check for updates
 if ($_POST["run_mass_update"]) {
@@ -88,6 +84,7 @@ if ($_POST["run_mass_update"]) {
       }
     }
     $TPL["message_good"][] = "Tasks updated.";
+    alloc_redirect($TPL["url_alloc_taskList"]);
   }
 }
 
