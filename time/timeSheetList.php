@@ -22,20 +22,6 @@
 
 require_once("../alloc.php");
 
-
-$defaults = array("showHeader"=>true
-                 ,"showProjectLink"=>true
-                 ,"showAmount"=>true
-                 ,"showAmountTotal"=>true
-                 ,"showDuration"=>true
-                 ,"showPerson"=>true
-                 ,"showDateFrom"=>true
-                 ,"showDateTo"=>true
-                 ,"showStatus"=>true
-                 ,"url_form_action"=>$TPL["url_alloc_timeSheetList"]
-                 ,"form_name"=>"timeSheetList_filter"
-                 );
-
 function show_filter() {
   global $TPL,$defaults;
   $_FORM = timeSheet::load_form_data($defaults);
@@ -44,11 +30,15 @@ function show_filter() {
   include_template("templates/timeSheetListFilterS.tpl");
 }
 
-function show_timeSheet_list() {
-  global $defaults;
-  $_FORM = timeSheet::load_form_data($defaults);
-  echo timeSheet::get_list($_FORM);
-}
+$defaults = array("url_form_action"=>$TPL["url_alloc_timeSheetList"]
+                 ,"form_name"=>"timeSheetList_filter"
+                 ,"showFinances"=>$_REQUEST["showFinances"]
+                 );
+
+$_FORM = timeSheet::load_form_data($defaults);
+$rtn = timeSheet::get_list($_FORM);
+$TPL["timeSheetListRows"] = $rtn["rows"];
+$TPL["timeSheetListExtra"] = $rtn["extra"];
 
 if (!$current_user->prefs["timeSheetList_filter"]) {
   $TPL["message_help"][] = "
