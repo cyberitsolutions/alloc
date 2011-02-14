@@ -128,6 +128,95 @@ class tf extends db_entity {
     }
   }
 
+  function get_list_filter($_FORM=array()) {
+    global $current_user;
+    $_FORM["owner"] and $filter1[] = sprintf("(tfPerson.personID = %d)",$current_user->get_id());
+    $_FORM["showall"] or $filter1[] = "(tf.tfActive = 1)";
+    $_FORM["showall"] or $filter2[] = "(tf.tfActive = 1)";
+    return array($filter1,$filter2);
+  }
+
+  function get_list($_FORM=array()) {
+    global $current_user;
+
+    list($filter1,$filter2) = tf::get_list_filter($_FORM);
+
+    if (is_array($filter1) && count($filter1)) {
+      $f = " AND ".implode(" AND ",$filter1);
+    }
+    if (is_array($filter2) && count($filter2)) {
+      $f2 = " AND ".implode(" AND ",$filter2);
+    }
+  
+    $db = new db_alloc;
+    $q = sprintf("SELECT transaction.tfID as id, tf.tfName, transactionID, transaction.status,
+                         sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                    FROM transaction
+               LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+               LEFT JOIN tf on transaction.tfID = tf.tfID
+                   WHERE 1 AND transaction.status != 'rejected' %s
+                GROUP BY transaction.status,transaction.tfID"
+                ,$f2);
+    $db->query($q);
+    while ($row = $db->row()) {
+      if ($row["status"] == "approved") {
+        $adds[$row["id"]] = $row["balance"];
+      } else if ($row["status"] == "pending") {
+        $pending_adds[$row["id"]] = $row["balance"];
+      }
+    }
+
+        
+    $q = sprintf("SELECT transaction.fromTfID as id, tf.tfName, transactionID, transaction.status,
+                         sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                    FROM transaction
+               LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+               LEFT JOIN tf on transaction.fromTfID = tf.tfID
+                   WHERE 1 AND transaction.status != 'rejected' %s
+                GROUP BY transaction.status,transaction.fromTfID"
+                ,$f2);
+    $db->query($q);
+    while ($row = $db->row()) {
+      if ($row["status"] == "approved") {
+        $subs[$row["id"]] = $row["balance"];
+      } else if ($row["status"] == "pending") {
+        $pending_subs[$row["id"]] = $row["balance"];
+      }
+    }
+
+    $q = sprintf("SELECT tf.* 
+                    FROM tf 
+               LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID 
+                   WHERE 1 %s 
+                GROUP BY tf.tfID 
+                ORDER BY tf.tfName",$f);  
+
+    $db->query($q);
+    while ($row = $db->row()) {
+      $tf = new tf;
+      $tf->read_db_record($db);
+      $tf->set_values();
+
+      $total = $adds[$db->f("tfID")] - $subs[$db->f("tfID")];
+      $pending_total = $pending_adds[$db->f("tfID")] - $pending_subs[$db->f("tfID")];
+
+      if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {
+        $row["tfBalance"] = page::money(config::get_config_item("currency"),$total,"%s%m %c");
+        $row["tfBalancePending"] = page::money(config::get_config_item("currency"),$pending_total,"%s%m %c");
+        $row["total"] = $total;
+        $row["pending_total"] = $pending_total;
+      } else {
+        $row["tfBalance"] = "not available";
+      }
+
+      $nav_links = $tf->get_nav_links();
+      $row["nav_links"] = implode(" ", $nav_links);
+      $row["tfActive_label"] = "";
+      $tf->get_value("tfActive") and $row["tfActive_label"] = "Y";
+      $rows[$tf->get_id()] = $row;
+    }
+    return (array)$rows;
+  }
 
 
 }
