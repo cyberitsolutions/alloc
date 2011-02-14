@@ -3,6 +3,7 @@
 <table class="box">
   <tr>
     <th class="header">TF List
+      <b> - {print count($tfListRows)} records</b>
       <span>
         <a class='magic toggleFilter' href=''>Show Filter</a>
         {if have_entity_perm("tf", PERM_CREATE, $current_user, true)}

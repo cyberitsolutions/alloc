@@ -336,6 +336,10 @@ table.box th.header span a {
   margin-left:0.2em;
   font-size:90%;
 }
+table.box th.header b {
+  font-weight:normal;
+  font-size:90%;
+}
 
 /* Calendar */
 table.alloc_calendar { 

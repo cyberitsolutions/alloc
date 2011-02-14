@@ -3,6 +3,7 @@
 <table class="box">
   <tr>
     <th class="header">Projects
+      <b> - {print count($projectListRows)} records</b>
       <span>
         <a class='magic toggleFilter' href=''>Show Filter</a>
         <a href="{$url_alloc_project}">New Project</a>
