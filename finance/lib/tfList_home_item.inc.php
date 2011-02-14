@@ -22,49 +22,11 @@
 
 class tfList_home_item extends home_item {
   function tfList_home_item() {
+    global $TPL;
+    $ops["owner"] = 1;
+    $TPL["tfListRows"] = tf::get_list($ops);
     home_item::home_item("", "Tagged Funds", "finance", "tfListH.tpl", "narrow",20);
   }
-
-
-  function show_tfList($template_name) {
-    global $TPL, $current_user;
-
-    $db = new db_alloc;
-    $q = sprintf("SELECT * FROM tfPerson WHERE personID = %d",$current_user->get_id());
-    $db->query($q);
-
-    while ($db->next_record()) {
-      $tf = new tf;
-      $tf->set_id($db->f("tfID"));
-      $tf->select();
-
-      if (!$tf->get_value("tfActive")) {
-        continue;
-      }
-
-      $tf->set_values();
-
-      if (have_entity_perm("transaction", PERM_READ, $current_user, $tf->is_owner())) {
-        $TPL["tfBalance"] = $tf->get_balance();
-        $TPL["pending_amount"] = $tf->get_balance(array("status"=>"pending"));
-        $grand_total += $tf->get_balance();
-      } else {
-        $TPL["tfBalance"] = "not available";
-      }
-      $TPL["odd_even"] = $TPL["odd_even"] == "even" ? "odd" : "even";
-
-      $nav_links = $tf->get_nav_links();
-      $TPL["data"] = implode(" | ", $nav_links);
-      include_template($template_name);
-    }
-
-    $TPL["grand_total"] = number_format($grand_total, 2);
-
-  }
-
-
-
-
 }
 
 
