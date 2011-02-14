@@ -2,7 +2,8 @@
 {page::toolbar()}
 <table class="box">
   <tr>
-    <th class="header">Clients
+    <th class="header">Clients 
+      <b> - {print count($clientListRows)} records</b>
       <span>
         <a class='magic toggleFilter' href=''>Show Filter</a>
         <a href="{$url_alloc_client}">New Client</a>

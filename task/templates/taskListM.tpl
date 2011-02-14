@@ -4,6 +4,7 @@
 <table class="box">
   <tr>
     <th class="header">Tasks
+      <b> - {print count($taskListRows)} records</b>
       <span>
         <a class='magic toggleFilter' href=''>Show Filter</a>
         <a href="{$url_alloc_task}">New Task</a>
