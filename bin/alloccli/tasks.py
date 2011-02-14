@@ -108,9 +108,10 @@ class tasks(alloc):
       fields = o["fields"]
 
     if r:
-      def seconds_to_hours(x):
-        if self.is_num(x):
-          return float(x) / 60 / 60
-      transforms = { "timeActual" : seconds_to_hours }
+      #def seconds_to_hours(x):
+      #  if self.is_num(x):
+      #    return float(x) / 60 / 60
+      #transforms = { "timeActual" : seconds_to_hours }
+      transforms = {}
       self.print_table(r,fields,order,transforms)
 
