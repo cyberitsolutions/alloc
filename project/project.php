@@ -263,7 +263,7 @@ require_once("../alloc.php");
   }
 
   function show_tasks() {
-    global $tasks, $TPL, $project;
+    global $TPL, $project;
     $options["showHeader"] = true;
     $options["taskView"] = "byProject";
     $options["projectIDs"] = array($project->get_id());   
@@ -274,9 +274,10 @@ require_once("../alloc.php");
     $options["showManager"] = true;
     $options["showDates"] = true;
     #$options["showTimes"] = true; // performance hit
-    $options["return"] = "arrayAndHtml";
-    // $tasks is used for the budget estimatation outside of this function
-    list($tasks,$TPL["task_summary"]) = task::get_list($options); 
+    $options["return"] = "html";
+    // $TPL["taskListRows"] is used for the budget estimatation outside of this function
+    $TPL["taskListRows"] = task::get_list($options); 
+    $TPL["_FORM"] = $options;
     include_template("templates/projectTaskS.tpl"); 
   }
 
@@ -597,8 +598,8 @@ function get_projectPerson_hourly_rate($personID,$projectID) {
 }
 
 if (is_object($project) && $project->get_id()) {
-  if (is_array($tasks)) { // $tasks is a global defined in show_tasks() for performance reasons
-    foreach ($tasks as $tid => $t) {
+  if (is_array($TPL["taskListRows"])) { // $tasks is a global defined in show_tasks() for performance reasons
+    foreach ($TPL["taskListRows"] as $tid => $t) {
       $hourly_rate = get_projectPerson_hourly_rate($t["personID"],$t["projectID"]);
       $time_remaining = $t["timeLimit"] - (task::get_time_billed($t["taskID"])/60/60);
 
@@ -615,8 +616,8 @@ if (is_object($project) && $project->get_id()) {
 
     $TPL["time_remaining"] and $TPL["time_remaining"] = sprintf("%0.1f",$TPL["time_remaining"])." Hours.";
 
-    $TPL["count_incomplete_tasks"] = count($tasks);
-    $not_quoted = count($tasks) - $count_quoted_tasks;
+    $TPL["count_incomplete_tasks"] = count($TPL["taskListRows"]);
+    $not_quoted = count($TPL["taskListRows"]) - $count_quoted_tasks;
     $not_quoted and $TPL["count_not_quoted_tasks"] = "(".sprintf("%d",$not_quoted)." tasks not included in estimate)";
   }
 }

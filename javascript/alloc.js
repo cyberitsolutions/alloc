@@ -190,6 +190,11 @@ $(document).ready(function() {
     $(".calendar_links").hide();
   });
 
+  $('input.toggler').click(function(){
+    return $('.task_checkboxes').each(function() {
+      this.checked = !this.checked 
+    });
+  });
 
   // Activate side by side links/tabs, if any
   $(".sidebyside").click(function(e) {

@@ -61,38 +61,65 @@ class person extends db_entity {
 
   function get_tasks_for_email() {
 
-    $format = "text";
-
     $options = array();
     #$options["projectType"] = "mine";
     $options["limit"] = 3;
     $options["current_user"] = $this->get_id();
     $options["personID"] = $this->get_id();
     $options["taskView"] = "prioritised";
-    $options["return"] = $format;
     $options["taskStatus"] = "open";
 
-    $summary = task::get_list($options);
+    $tasks = task::get_list($options);
+
+    foreach ($tasks as $task) {
+      $s[] = "";
+      $s[] = "";
+      $s[] = "Project: ".$task["project_name"];
+      $s[] = "Task: ".$task["taskName"];
+      $s[] = $task["taskStatusLabel"];
+      $s[] = $task["taskURL"];
+    }
+    $summary = implode("\n",$s);
 
     if ($summary) {
       $topThree = "\n\nTop Three Tasks";
       $topThree.= $summary;
     } 
 
-    unset($summary);
+    unset($summary,$s);
     unset($options["limit"]);
     $options["taskDate"] = "due_today";
-    $summary = task::get_list($options);
+    $tasks = task::get_list($options);
+
+    foreach ($tasks as $task) {
+      $s[] = "";
+      $s[] = "";
+      $s[] = "Project: ".$task["project_name"];
+      $s[] = "Task: ".$task["taskName"];
+      $s[] = $task["taskStatusLabel"];
+      $s[] = $task["taskURL"];
+    }
+    $summary = implode("\n",$s);
 
     if ($summary) {
       $dueToday = "\n\nTasks Due Today";
       $dueToday.= $summary;
     } 
 
-    unset($summary);
+    unset($summary,$s);
     unset($options["limit"]);
     $options["taskDate"] = "new";
-    $summary = task::get_list($options);
+    $tasks = task::get_list($options);
+
+    foreach ($tasks as $task) {
+      $s[] = "";
+      $s[] = "";
+      $s[] = "Project: ".$task["project_name"];
+      $s[] = "Task: ".$task["taskName"];
+      $s[] = $task["taskStatusLabel"];
+      $s[] = $task["taskURL"];
+    }
+    $summary = implode("\n",$s);
 
     if ($summary) {
       $newTasks = "\n\nNew Tasks";
