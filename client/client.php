@@ -346,6 +346,11 @@ if ($current_user->have_role("admin")) {
   $TPL["invoice_links"].= "<a href=\"".$TPL["url_alloc_invoice"]."clientID=".$clientID."\">New Invoice</a>";
 }
 
+$projectListOps = array("showProjectType"=>true
+                       ,"clientID"=>$client->get_id()
+                       );
+
+$TPL["projectListRows"] = project::get_list($projectListOps);
 
 
 include_template("templates/clientM.tpl");

@@ -286,10 +286,10 @@ class project extends db_entity {
     $clientID and $options["clientID"] = $clientID;
     $options["projectStatus"] = "Current";
     $options["showProjectType"] = true;
-    $options["return"] = "dropdown_options";
     #global $current_user;
     #$options["personID"] = $current_user->get_id();
-    return project::get_list($options);
+    $ops = project::get_list($options);
+    return array_kv($ops,"projectID","label");
   }
 
   function get_list_dropdown($type="mine",$projectIDs=array()) {
@@ -367,9 +367,6 @@ class project extends db_entity {
   
     $_FORM["return"] or $_FORM["return"] = "html";
 
-    // A header row
-    $summary.= project::get_list_tr_header($_FORM);
-
     if ($_FORM["personID"]) { 
       $from.= " LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ";
     }
@@ -401,54 +398,18 @@ class project extends db_entity {
       $row["projectName"] = $p->get_name($_FORM);
       $row["projectLink"] = $p->get_project_link($_FORM);
       $row["navLinks"] = $p->get_navigation_links();
-      $summary.= project::get_list_tr($row,$_FORM);
       $label = $p->get_name($_FORM);
       $_FORM["showProjectType"] and $label.= " [".$p->get_project_type()."]";
-      $summary_ops[$row["projectID"]] = $label; 
+      $row["label"] = $label;
       $rows[$row["projectID"]] = $row;
     }
 
-    $rows or $rows = array();
-    if ($print && $_FORM["return"] == "array") {
-      return $rows;
-
-    } else if ($print && $_FORM["return"] == "html") {
-      return "<table class=\"list sortable\">".$summary."</table>";
-    
-    } else if ($print && $_FORM["return"] == "dropdown_options") {
-      return $summary_ops;
-
-    } else if (!$print && $_FORM["return"] == "html") {
-      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Projects Found</b></td></tr></table>";
-    }
-  }
-
-  function get_list_tr_header($_FORM) {
-    if ($_FORM["showHeader"]) {
-      $summary = "\n<tr>";
-      $_FORM["showProjectName"]   and $summary.= "\n<th>Project</th>";
-      $_FORM["showProjectLink"]   and $summary.= "\n<th>Project</th>";
-      $_FORM["showProjectShortName"] and $summary.= "\n<th>Nick</th>";
-      $_FORM["showClient"]        and $summary.= "\n<th>Client</th>";
-      $_FORM["showProjectType"]   and $summary.= "\n<th>Type</th>";
-      $_FORM["showProjectStatus"] and $summary.= "\n<th>Status</th>";
-      $_FORM["showNavLinks"]      and $summary.= "\n<th class=\"noprint\">&nbsp;</th>";
-      $summary.="\n</tr>";
-      return $summary;
-    }
-  }
-
-  function get_list_tr($row,$_FORM=array()) {
-    global $TPL;
-    $TPL = array_merge($TPL,(array)$row);
-    $TPL["_FORM"] = $_FORM;
-    return include_template(dirname(__FILE__)."/../templates/projectListR.tpl", true);
+    return (array)$rows;
   }
 
   function get_list_vars() {
    
-    return array("return"             => "[MANDATORY] eg: array | html | dropdown_options"
-                ,"projectID"          => "The Project ID"
+    return array("projectID"          => "The Project ID"
                 ,"projectStatus"      => "Status of the project eg: Current | Potential | Archived"
                 ,"clientID"           => "Show projects that are owned by this Client"
                 ,"projectType"        => "Type of project eg: Contract | Job | Project | Prepaid"
@@ -459,14 +420,7 @@ class project extends db_entity {
                 ,"form_name"          => "The name of this form, i.e. a handle for referring to this saved form"
                 ,"dontSave"           => "A flag that allows the user to specify that the filter preferences should not be saved this time"
                 ,"applyFilter"        => "Saves this filter as the persons preference"
-                ,"showHeader"         => "A descriptive html header row"
-                ,"showProjectName"    => "Show the projects name"
-                ,"showProjectLink"    => "Show a link to the project"
-                ,"showProjectShortName" => "Show the projects abbreviated name."
-                ,"showClient"         => "Show the projects client"
                 ,"showProjectType"    => "Show the project type"
-                ,"showProjectStatus"  => "Show the project status"
-                ,"showNavLinks"       => "Show the projects navigation links"
                 );
   }
 
