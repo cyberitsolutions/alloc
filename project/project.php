@@ -42,42 +42,6 @@ require_once("../alloc.php");
     }
   }
 
-  function show_timeSheet_list() {
-    global $TPL, $projectID, $current_user, $project;
-
-    if ($projectID) {
-
-      $defaults = array("showHeader"=>true
-                       ,"showProjectLink"=>true
-                       ,"showAmount"=>true
-                       ,"showAmountTotal"=>true
-                       ,"showCustomerBilledDollars"=>true
-                       ,"showCustomerBilledDollarsTotal"=>true
-                       ,"showTransactionsPos"=>true
-                       ,"showTransactionsNeg"=>true
-                       ,"showDuration"=>true
-                       ,"showPerson"=>true
-                       ,"showDateFrom"=>true
-                       ,"showDateTo"=>true
-                       ,"showStatus"=>true
-                       ,"projectID"=>$projectID
-                       );
-
-      // Limit to the owner's timesheets if necessary
-      //This is to be corrected when the new permissions system is in place.
-      //The full display should not appear to normal users.
-
-      if (!$project->have_perm(PERM_READ_WRITE)) {
-        $defaults["personID"] = $current_user->get_id();
-        unset($defaults["showTransactionsPos"]);
-        unset($defaults["showTransactionsNeg"]);
-        unset($defaults["showCustomerBilledDollars"]);
-        unset($defaults["showCustomerBilledDollarsTotal"]);
-      }
-      echo timeSheet::get_list($defaults);
-    }
-  }
-
   function show_transaction($template) {
     global $db, $TPL, $projectID, $current_user;
 
@@ -804,6 +768,21 @@ while ($row = $db->row()) {
   $rows[] = $row;
 }
 $TPL["total_invoice_transactions_approved"] = page::money_print($rows);
+
+
+
+if ($project->get_id()) {
+  $defaults["projectID"] = $project->get_id();
+  $defaults["showFinances"] = true;
+  if (!$project->have_perm(PERM_READ_WRITE)) {
+    $defaults["personID"] = $current_user->get_id();
+  }
+  $rtn = timeSheet::get_list($defaults);
+  $TPL["timeSheetListRows"] = $rtn["rows"];
+  $TPL["timeSheetListExtra"] = $rtn["extra"];
+}
+
+
 
 if ($project->have_perm(PERM_READ_WRITE)) {
   include_template("templates/projectFormM.tpl");

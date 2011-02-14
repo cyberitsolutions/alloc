@@ -148,7 +148,11 @@ class alloc_services {
         if (!$rtn && $echoed) {
           return array("error"=>$echoed);
         } else {
-          return $rtn;
+          if (isset($rtn["rows"])) {
+            return $rtn["rows"];
+          } else {
+            return $rtn;
+          }
         }
       } else {
         die("Entity method '".$entity."->get_list()' does not exist."); 

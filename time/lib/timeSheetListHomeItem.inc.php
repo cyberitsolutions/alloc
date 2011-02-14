@@ -24,17 +24,16 @@ class timeSheetListHomeItem extends home_item {
 
   function timeSheetListHomeItem() {
     global $current_user, $TPL;
-    home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
 
-    $ops["showHeader"] = "true";
     $ops["showShortProjectLink"] = "true";
-    $ops["showAmount"] = "true";
-    $ops["showAmountTotal"] = "true";
-    $ops["showStatus"] = "true";
     $ops["personID"] = $current_user->get_id();
     $ops["status"] = array('edit','manager','admin','invoiced');
 
-    $TPL["time_sheet_list"] = timeSheet::get_list($ops);
+    $rtn = timeSheet::get_list($ops);
+    $TPL["timeSheetListRows"] = $rtn["rows"];
+    $TPL["timeSheetListExtra"] = $rtn["extra"];
+
+    home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
   }
 }
 

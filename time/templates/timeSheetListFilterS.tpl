@@ -5,7 +5,7 @@
           <td>Start Date From</td>
           <td>Start Date To</td>
           <td>Status</td>
-          <td>&nbsp;</td>
+          <td>Money</td>
         </tr>
         <tr>
            <td>
@@ -22,12 +22,13 @@
               {$show_status_options}
             </select>
           </td>
+          <td><input type="checkbox" name="showFinances" value="1" {print $showFinances ? " checked" : ""}></td>
         </tr>
         <tr>
          <td>Project</td>
         </tr>
         <tr>
-          <td colspan="3">
+          <td colspan="4">
             <select name="projectID">
               <option value=""> </option>
               {$show_project_options}

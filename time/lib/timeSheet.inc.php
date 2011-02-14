@@ -576,14 +576,14 @@ class timeSheet extends db_entity {
     $_FORM["showShortProjectLink"] and $_FORM["showProjectLink"] = true;
     $filter = timeSheet::get_list_filter($_FORM);
 
+    // Used in timeSheetListS.tpl
+    $extra["showFinances"] = $_FORM["showFinances"];
+
     $debug = $_FORM["debug"];
     $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
     $debug and print "<pre>filter: ".print_r($filter,1)."</pre>";
 
     $_FORM["return"] or $_FORM["return"] = "html";
-
-    // A header row
-    $summary.= timeSheet::get_list_tr_header($_FORM);
 
     if (is_array($filter) && count($filter)) {
       $filter = " WHERE ".implode(" AND ",$filter);
@@ -612,9 +612,6 @@ class timeSheet extends db_entity {
       if ($_FORM["timeSheetItemHours"] && !parse_operator_comparison($_FORM["timeSheetItemHours"],$t->pay_info["total_duration_hours"])) 
         continue;
 
-      $print = true;
-
-     
       $row["currencyTypeID"] = $t->get_value("currencyTypeID");
       $row["amount"] = $t->pay_info["total_dollars"];
       $amount_tallies[] = array("amount"=>$row["amount"],"currency"=>$row["currencyTypeID"]);
@@ -628,12 +625,10 @@ class timeSheet extends db_entity {
       $extra["customerBilledDollarsTotal"] += exchangeRate::convert($row["currencyTypeID"],$t->pay_info["total_customerBilledDollars"]);
       $billed_tallies[] = array("amount"=>$row["customerBilledDollars"],"currency"=>$row["currencyTypeID"]);
 
-      if ($_FORM["showTransactionsNeg"] || $_FORM["showTransactionsPos"]) {
+      if ($_FORM["showFinances"]) {
         list($pos,$neg) = $t->get_transaction_totals();
-
         $row["transactionsPos"] = page::money_print($pos);
         $row["transactionsNeg"] = page::money_print($neg);
-
         foreach ((array)$pos as $v) {
           $pos_tallies[] = $v;
         }
@@ -645,25 +640,22 @@ class timeSheet extends db_entity {
       $p = new project();
       $p->read_db_record($db);
       $row["projectLink"] = $t->get_link($p->get_name($_FORM));
-      $summary.= timeSheet::get_list_tr($row,$_FORM);
       $rows[$row["timeSheetID"]] = $row;
     }
 
-    $_FORM["amount_tallies"] = page::money_print($amount_tallies);
-    $_FORM["billed_tallies"] = page::money_print($billed_tallies);
-    $_FORM["positive_tallies"] = page::money_print($pos_tallies);
-    $_FORM["negative_tallies"] = page::money_print($neg_tallies);
+    $extra["amount_tallies"] = page::money_print($amount_tallies);
+    $extra["billed_tallies"] = page::money_print($billed_tallies);
+    $extra["positive_tallies"] = page::money_print($pos_tallies);
+    $extra["negative_tallies"] = page::money_print($neg_tallies);
 
-    if ($print && $_FORM["return"] == "array") {
-      return $rows;
+    return array("rows"=>(array)$rows,"extra"=>$extra);
+  }
 
-    } else if ($print && $_FORM["return"] == "html") {
-      $summary.= timeSheet::get_list_tr_bottom($extra,$_FORM);
-      return "<table class=\"list sortable\">".$summary."</table>";
-
-    } else if (!$print && $_FORM["return"] == "html") {
-      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Time Sheets Found</b></td></tr></table>";
-    }
+  function get_list_html($rows=array(),$extra=array()) {
+    global $TPL;
+    $TPL["timeSheetListRows"] = $rows;
+    $TPL["extra"] = $extra;
+    include_template(dirname(__FILE__)."/../templates/timeSheetListS.tpl");
   }
 
   function get_transaction_totals() {
@@ -711,55 +703,6 @@ class timeSheet extends db_entity {
     return "<a href=\"".$this->get_url()."\">".$text."</a>";
   }
 
-  function get_list_tr_header($_FORM) {
-    if ($_FORM["showHeader"]) {
-      $summary = "\n<tr>";
-      $_FORM["showTimeSheetID"]   and $summary.= "\n<th class=\"sorttable_numeric\">ID</th>";
-      $_FORM["showProject"]       and $summary.= "\n<th>Project</th>";
-      $_FORM["showProjectLink"]   and $summary.= "\n<th>Project</th>";
-      $_FORM["showPerson"]        and $summary.= "\n<th>Owner</th>";
-      $_FORM["showDateFrom"]      and $summary.= "\n<th>Start Date</th>";
-      $_FORM["showDateTo"]        and $summary.= "\n<th>End Date</th>";
-      $_FORM["showStatus"]        and $summary.= "\n<th>Status</th>";
-      $_FORM["showDuration"]      and $summary.= "\n<th>Duration</th>";
-      $_FORM["showAmount"]        and $summary.= "\n<th class=\"right\">Amount</th>";
-      $_FORM["showCustomerBilledDollars"] and $summary.= "\n<th class=\"right\">Client Billed</th>";
-      $_FORM["showTransactionsPos"] and $summary.= "\n<th class=\"right\">Sum &gt;0</th>";
-      $_FORM["showTransactionsNeg"] and $summary.= "\n<th class=\"right\">Sum &lt;0</th>";
-      $summary.="\n</tr>";
-      return $summary;
-    }
-  }
-
-  function get_list_tr($row,$_FORM) {
-    global $TPL;
-    $TPL["_FORM"] = $_FORM;
-    $TPL = array_merge($TPL,(array)$row);
-    return include_template(dirname(__FILE__)."/../templates/timeSheetListR.tpl", true);
-  } 
-
-  function get_list_tr_bottom($row,$_FORM) {
-    if ($_FORM["showAmountTotal"]) {
-      $summary[] = "<tfoot>";
-      $summary[] = "<tr>";
-      $_FORM["showProject"]         and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showProjectLink"]     and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showPerson"]          and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showDateFrom"]        and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showDateTo"]          and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showStatus"]          and $summary[] = "  <td>&nbsp;</td>";
-      $_FORM["showDuration"]        and $summary[] = "  <td class=\"grand_total left\">".sprintf("%0.2f", $row["totalHours"])." Hours</td>";
-      $_FORM["showAmountTotal"]     and $summary[] = "  <td class=\"grand_total right\">".$_FORM["amount_tallies"]."</td>";
-      $_FORM["showCustomerBilledDollarsTotal"]     and $summary[] = "  <td class=\"grand_total right nobr\">".$_FORM["billed_tallies"]."</td>";
-      $_FORM["showTransactionsPos"] and $summary[] = "  <td class=\"grand_total right nobr\">".$_FORM["positive_tallies"]."</td>";
-      $_FORM["showTransactionsNeg"] and $summary[] = "  <td class=\"grand_total right nobr\">".$_FORM["negative_tallies"]."</td>";
-      $summary[] = "</tr>";
-      $summary[] = "</tfoot>";
-      $summary = "\n".implode("\n",$summary);
-    }
-    return $summary;   
-  } 
-
   function get_list_vars() {
     return array("return"                         => "[MANDATORY] eg: array | html"
                 ,"timeSheetID"                    => "Time Sheet that has this ID"
@@ -774,23 +717,8 @@ class timeSheet extends db_entity {
                 ,"form_name"                      => "The name of this form, i.e. a handle for referring to this saved form"
                 ,"dontSave"                       => "Specify that the filter preferences should not be saved this time"
                 ,"applyFilter"                    => "Saves this filter as the persons preference"
-                ,"showHeader"                     => "A descriptive html header row"
-                ,"showProject"                    => "The Time Sheets Project"
-                ,"showProjectLink"                => "Show a link to the Time Sheets Project"
                 ,"showShortProjectLink"           => "Show short Project link"
-                ,"showAmount"                     => "Show the total to the engineer of the time sheet"
-                ,"showAmountTotal"                => "Put a footer row on the html showing the totals"
-                ,"showCustomerBilledDollars"      => "Show the total that the customer is billed for this time sheet"
-                ,"showCustomerBilledDollarsTotal" => "Put the grand total of customer billed in the footer"
-                ,"showTransactionsPos"            => "Sum of transactions > 0 [OBSOLETE]"
-                ,"showTransactionsPosTotal"       => "Put the grand total of sum transactions > 0 in the footer [OBSOLETE]"
-                ,"showTransactionsNeg"            => "Sum of transactions < 0 [OBSOLETE]"
-                ,"showTransactionsNegTotal"       => "Put the grand total of sum transactions < 0 in the footer [OBSOLETE]"
-                ,"showDuration"                   => "The time length of the Time Sheet"
-                ,"showPerson"                     => "The owner of the Time Sheet"
-                ,"showDateFrom"                   => "The start date of the Time Sheet"
-                ,"showDateTo"                     => "The end date of the Time Sheet"
-                ,"showStatus"                     => "The Time Sheet status"
+                ,"showFinances"                   => "Shortcut for displaying the transactions and the totals"
                 );
   }
 
@@ -848,6 +776,7 @@ class timeSheet extends db_entity {
     $rtn["dateFrom"] = $_FORM["dateFrom"];
     $rtn["dateTo"] = $_FORM["dateTo"];
     $rtn["userID"] = $current_user->get_id();
+    $rtn["showFinances"] = $_FORM["showFinances"];
 
     // Get
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
