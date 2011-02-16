@@ -252,7 +252,7 @@ class comment extends db_entity {
     $rtn[] = '  <td colspan="2" style="padding-top:0px; white-space:normal;">'.preg_replace("/<[^>]>/","",$row["emailed"])."</td>";
     $rtn[] = '</tr>';
     $rtn[] = '<tr>';
-    $rtn[] = '  <td colspan="2" onClick="'.$onClick.'"><div style="overflow:auto">'.$comment.'</div></td>';
+    $rtn[] = '  <td colspan="2" onClick="'.$onClick.'"><div style="overflow:auto;white-space: pre-wrap">'.$comment.'</div></td>';
     $rtn[] = '</tr>';
     $row["children"] and $rtn[] = comment::get_comment_children($row["children"]);
     $row["files"] and $rtn[] = '<tr>';
