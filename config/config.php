@@ -195,8 +195,6 @@ $TPL["timeSheetPrintOptions"] = page::select_options($TPL["timeSheetPrintOptions
 
 $commentTemplate = new commentTemplate;
 $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName");
-$TPL["task_email_header_options"] = page::select_options($ops,$config->get_config_item("task_email_header"));
-$TPL["task_email_footer_options"] = page::select_options($ops,$config->get_config_item("task_email_footer"));
 
 $TPL["main_alloc_title"] = "Setup - ".APPLICATION_NAME;
 include_template("templates/configM.tpl");

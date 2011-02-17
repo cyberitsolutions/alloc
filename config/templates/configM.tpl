@@ -172,15 +172,6 @@
     <td><input type="text" size="70" value="{$allocEmailExtra}" name="allocEmailExtra"></td> 
     <td width="1%">{page::help("config_allocEmailExtra")}</td>
   </tr>
-  <tr>
-    <td valign="top" width="20%">Task Email Header</td>
-    <td><select name="task_email_header"><option value="">{$task_email_header_options}</select></td>
-    <td width="1%">{page::help("config_taskEmailHeader")}</td>
-  </tr>
-  <tr>
-    <td valign="top" width="20%">Task Email Footer</td>
-    <td><select name="task_email_footer"><option value="">{$task_email_footer_options}</select></td>
-  </tr>
   <tr>  
     <td colspan="3" align="center">
       <input type="submit" name="save" value="Save">
