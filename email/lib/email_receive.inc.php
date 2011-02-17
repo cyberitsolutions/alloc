@@ -144,10 +144,10 @@ class alloc_email_receive {
     return array("","");
   }
 
-  function raw_body() {
+  function raw_header_and_body() {
     $header = imap_fetchheader($this->connection,$this->msg_uid,FT_PREFETCHTEXT+FT_UID);
     $body = imap_body($this->connection,$this->msg_uid,FT_UID);
-    return $body;
+    return array($header,$body);
   }
 
   function save_email($file) {
