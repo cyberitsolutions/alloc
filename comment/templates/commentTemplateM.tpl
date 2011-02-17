@@ -40,6 +40,9 @@
           %tn = Name<br>
           %td = Description<br>
           %tp = Priority<br>
+	  %teb = Best estimate<br>
+	  %tem = Most likely estimate<br>
+	  %tew = Worst estimate<br>
           </td>
         </tr>
         <tr>

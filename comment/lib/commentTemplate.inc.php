@@ -108,6 +108,12 @@ class commentTemplate extends db_entity {
       $swap["tu"] = config::get_config_item("allocURL")."task/task.php?taskID=".$task->get_id();
       $swap["tp"] = $task->get_priority_label();
       $swap["ts"] = $task->get_task_status("label");
+
+      $swap["teb"] = $task->get_value("timeBest");
+      $swap["tem"] = $task->get_value("timeExpected");
+      $swap["tew"] = $task->get_value("timeWorst");
+      // $swap["tep"] = person::get_fullname($task->get_value("")); //time estimate person, when it's implemented
+
       $projectID = $task->get_value("projectID");
     }
 
