@@ -199,6 +199,16 @@ if (!$current_user->is_employee()) {
     $item_query.= sprintf(" GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
     $db->query($item_query);
 
+    if (is_object($timeSheet) {
+      $project = $timeSheet->get_foreign_object("project");
+      $row_projectPerson = projectPerson::get_projectPerson_row($project->get_id(), $timeSheet->get_value("personID"));
+      $default_rate = array();
+      if ($row_projectPerson && $row_projectPerson['rate'] > 0) {
+        $default_rate['rate'] = $row_projectPerson['rate'];
+        $default_rate['unit'] = $row_projectPerson['rateUnitID'];
+      }
+    }
+
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
       $timeSheetItem->currency = $timeSheet->get_value("currencyTypeID");
@@ -230,6 +240,7 @@ if (!$current_user->is_employee()) {
       // Check to see if this tsi is part of an overrun
       $TPL["timeSheetItem_class"] = "panel";
       $TPL["timeSheetItem_status"] = "";
+      $row_messages = array();
       if($timeSheetItem->get_value('taskID')) {
         $task = new task;
         $task->set_id($timeSheetItem->get_value('taskID'));
@@ -237,10 +248,22 @@ if (!$current_user->is_employee()) {
         if($task->get_value('timeLimit') > 0) {
           $total_billed_time = ($task->get_time_billed(false)) / 3600;    // get_time_billed returns seconds, limit hours is in hours
           if($total_billed_time > $task->get_value('timeLimit')) {
-            $TPL["timeSheetItem_class"] = "panel loud";
-            $TPL["timeSheetItem_status"] = "<em class='faint warn nobr'>[ Exceeds Limit ]</em>";
+            $row_messages []= "<em class='faint warn nobr'>[ Exceeds Limit ]</em>";
           }
         }
+      }
+
+      // Highlight the rate if the project person has a non-zero rate and it doesn't match the item's rate
+      if ($default_rate) {
+        if ($timeSheetItem->get_value('rate') != $default_rate['rate'] ||
+          $timeSheetItem->get_value('timeSheetItemDurationUnitID') != $default_rate['unit']) {
+            $row_messages []= "<em class='faint warn nobr'>[ Modified rate ]</em>";
+          }
+      }
+
+      if ($row_messages) {
+        $TPL["timeSheetItem_status"] = implode("<br />", $row_messages);
+        $TPL["timeSheetItem_class"] = "panel loud";
       }
 
       include_template($template);
