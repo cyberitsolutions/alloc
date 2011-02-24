@@ -199,7 +199,7 @@ if (!$current_user->is_employee()) {
     $item_query.= sprintf(" GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
     $db->query($item_query);
 
-    if (is_object($timeSheet) {
+    if (is_object($timeSheet)) {
       $project = $timeSheet->get_foreign_object("project");
       $row_projectPerson = projectPerson::get_projectPerson_row($project->get_id(), $timeSheet->get_value("personID"));
       $default_rate = array();
@@ -304,6 +304,8 @@ if (!$current_user->is_employee()) {
         $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
         $TPL["tsi_commentPrivate"] and $TPL["commentPrivateChecked"] = " checked";
 
+	$TPL["ts_rate_editable"] = $timeSheet->can_edit_rate();
+
         $timeSheetItemMultiplier = $timeSheetItem->get_value("multiplier");
 
       // Else default values for creating a new timeSheetItem
@@ -312,7 +314,8 @@ if (!$current_user->is_employee()) {
         $TPL["tsi_personID"] = $current_user->get_id();
         $timeSheet->load_pay_info();
         $TPL["tsi_rate"] = $timeSheet->pay_info["project_rate"];
-        $timeSheetItemDurationUnitID = $timeSheet->pay_info["project_rateUnitID"];
+	$timeSheetItemDurationUnitID = $timeSheet->pay_info["project_rateUnitID"];
+	$TPL["ts_rate_editable"] = $timeSheet->can_edit_rate();
       }
 
       $taskID or $taskID = $_GET["taskID"];
