@@ -30,7 +30,7 @@ function refreshTaskList(radiobutton) {
               <select name="timeSheetItem_timeSheetItemDurationUnitID">{$tsi_unit_options}</select>
             {/}
             @
-            {if $tsi_rate == "" && $tsi_rate !== 0}
+            {if $ts_rate_editable}
             {$currency} <input type="text" size="7" name="timeSheetItem_rate" value="{$tsi_rate}">
             {else}
               <input type="hidden" name="timeSheetItem_rate" value="{$tsi_rate}">{$currency}{$tsi_rate}

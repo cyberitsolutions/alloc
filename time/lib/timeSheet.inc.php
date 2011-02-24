@@ -1354,6 +1354,31 @@ EOD;
     $doc->addField(Zend_Search_Lucene_Field::Text('dateTo'  ,str_replace("-","",$this->get_value("dateTo"))));
     $index->addDocument($doc);
   }
+
+  function can_edit_rate() {
+    global $current_user;
+
+    $can_edit = config::get_config_item("timeSheetEditors");
+
+    if ($can_edit == "all")
+      return true;
+    $projectPerson = projectPerson::get_projectPerson_row($this->get_value("projectID"), $this->get_value("personID"));
+    if (!$projectPerson) {
+      return false;
+    }
+
+    if (!$projectPerson['rate'])
+      return true;
+
+    $project = $this->get_foreign_object('project');
+
+    if ($can_edit == "managers" && 
+      ($current_user->have_role("manage") || $project->has_project_permission("", array("isManager")))) {
+        return true;
+    }
+    return false;
+  }
+
 }  
 
 
