@@ -469,6 +469,7 @@ INSERT INTO config (name, value, type) VALUES ('clientCategories','a:7:{i:0;a:2:
 INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetManagerList', 'a:0:{}', 'array');
 INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetAdminList', 'a:0:{}', 'array');
 INSERT INTO config (name,value,type) VALUES ('allocSessionMinutes', '540', 'text');
+INSERT INTO config (name,value,type) VALUES ('timeSheetEditors', 'none', 'text');
 
 
 
