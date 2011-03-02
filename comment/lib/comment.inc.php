@@ -509,6 +509,10 @@ class comment extends db_entity {
         $comment->set_value("commentEmailRecipients",$successful_recipients);
         $comment->save();
       }
+
+      if (method_exists($obj, 'add_comment_hook')) {
+        $obj->add_comment_hook($comment);
+      }
     }
 
   }
