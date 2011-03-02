@@ -173,7 +173,10 @@ require_once("../alloc.php");
     $project_person->set_values("person_");
     $TPL["person_emailType_options"] = page::select_options($email_type_array, $TPL["person_emailType"]);
     $TPL["person_role_options"] = page::select_options($project_person_role_array,false);
-    $TPL["rateType_options"] = page::select_options($rate_type_array, $TPL["person_rateUnitID"]);
+
+    //roundabout dance to extract the key of the first array element (the time unit with the lowest sequence)
+    reset($rate_type_array);
+    $TPL["rateType_options"] = page::select_options($rate_type_array, key($rate_type_array));
     include_template($template);
   }
 
