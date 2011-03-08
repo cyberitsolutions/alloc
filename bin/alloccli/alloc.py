@@ -339,14 +339,13 @@ class alloc(object):
     if username is None or password is None:
       try:
         (username, _, password) = netrc().hosts[urlparse(self.url).hostname]
-      except exceptions.IOError, e:
+      except:
         pass
     
     if username is None or password is None:
-      print "    The settings ALLOC_USER and ALLOC_PASS are required."
-      print "    Set them either in the environment or in your ~/.netrc eg:"
-      print "    machine alloc login $USER password $PASS"
-      sys.exit(1)
+      self.err("The settings ALLOC_USER and ALLOC_PASS are required.")
+      self.err("Set them either in the environment or in your ~/.netrc eg:")
+      self.die("machine alloc login $USER password $PASS")
 
     return username, password
     
