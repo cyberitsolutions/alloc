@@ -221,7 +221,11 @@ $manager->select();
 $TPL["manager_username"] = $manager->get_name();
 $TPL["manager_username_personID"] = $manager->get_id();
 
-
+$estimator = new person;
+$estimator->set_id($task->get_value("estimatorID"));
+$estimator->select();
+$TPL["estimator_username"] = $estimator->get_name();
+$TPL["estimator_username_personID"] = $estimator->get_id();
 
 
 
