@@ -112,7 +112,7 @@ class commentTemplate extends db_entity {
       $swap["teb"] = $task->get_value("timeBest");
       $swap["tem"] = $task->get_value("timeExpected");
       $swap["tew"] = $task->get_value("timeWorst");
-      // $swap["tep"] = person::get_fullname($task->get_value("")); //time estimate person, when it's implemented
+      $swap["tep"] = person::get_fullname($task->get_value("estimatorID")); //time estimate person, when it's implemented
 
       $projectID = $task->get_value("projectID");
     }
