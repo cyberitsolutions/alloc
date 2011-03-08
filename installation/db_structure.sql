@@ -363,6 +363,7 @@ CREATE TABLE task (
   taskModifiedUser integer DEFAULT NULL,
   taskCommentTemplateID integer default NULL,
   duplicateTaskID integer default NULL,
+  estimatorID integer DEFAULT NULL,
   taskStatus varchar(255) NOT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 

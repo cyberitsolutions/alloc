@@ -51,6 +51,7 @@ class task extends db_entity {
                              ,"taskTypeID" => array("audit"=>true)
                              ,"personID" => array("audit"=>true)
                              ,"managerID" => array("audit"=>true)
+                             ,"estimatorID" => array("audit"=>true)
                              ,"duplicateTaskID" => array("audit"=>true)
                              );
   public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "read details");
@@ -421,7 +422,7 @@ class task extends db_entity {
     return unserialize(base64_decode(urldecode($blob)));
   }
 
-  function get_personList_dropdown($projectID,$taskID=false) {
+  function get_personList_dropdown($projectID,$field,$taskID=false) {
     global $current_user;
  
     $db = new db_alloc;
@@ -432,14 +433,14 @@ class task extends db_entity {
       $db->next_record();
       $owner = $db->f("personID");
 
-    } else if (is_object($this) && $this->get_value("personID")) {
-      $owner = $this->get_value("personID");
+    } else if (is_object($this) && $this->get_value($field)) {
+      $owner = $this->get_value($field);
 
     } else if ($taskID) {
       $t = new task;
       $t->set_id($taskID);
       $t->select();
-      $owner = $t->get_value("personID");
+      $owner = $t->get_value($field);
 
     } else if (!is_object($this) || !$this->get_id()) {
       $owner = $current_user->get_id();
@@ -469,56 +470,6 @@ class task extends db_entity {
     return $str;
   }
 
-  function get_managerPersonList_dropdown($projectID,$taskID=false) {
-    global $current_user;
- 
-    $db = new db_alloc;
-
-    if ($_GET["timeSheetID"]) {
-      $ts_query = sprintf("SELECT * FROM timeSheet WHERE timeSheetID = %d",$_GET["timeSheetID"]);
-      $db->query($ts_query);
-      $db->next_record();
-      $owner = $db->f("personID");
-
-    } else if (is_object($this) && $this->get_value("managerID")) {
-      $owner = $this->get_value("managerID");
-
-    } else if ($taskID) {
-      $t = new task;
-      $t->set_id($taskID);
-      $t->select();
-      $owner = $t->get_value("managerID");
-
-    } else if (!is_object($this) || !$this->get_id()) {
-      $owner = $current_user->get_id();
-    }
-
-    $peoplenames = person::get_username_list($owner);
-
-    if ($projectID) {
-      $q = sprintf("SELECT * 
-                      FROM projectPerson 
-                 LEFT JOIN person ON person.personID = projectPerson.personID 
-                     WHERE person.personActive = 1 
-                       AND projectID = %d
-                  ORDER BY firstName, username
-                   ",$projectID);
-      $db->query($q);
-      while ($row = $db->row()) {
-        $ops[$row["personID"]] = $peoplenames[$row["personID"]];
-      }
-    } else {
-      $ops = $peoplenames;
-    }
-
-    $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
-   
-    $str = '<select name="managerID"><option value="">';
-    $str.= page::select_options($ops, $owner);
-    $str.= '</select>';
-    return $str;
-  }
-  
   function get_project_options($projectID="") {
     $projectID or $projectID = $_GET["projectID"];
     // Project Options - Select all projects 
@@ -536,8 +487,9 @@ class task extends db_entity {
     global $TPL, $current_user, $isMessage;
     $db = new db_alloc;
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
-    $TPL["personOptions"] = "<select name=\"personID\"><option value=\"\">".task::get_personList_dropdown($projectID)."</select>";
-    $TPL["managerPersonOptions"] = task::get_managerPersonList_dropdown($projectID);
+    $TPL["personOptions"] = "<select name=\"personID\"><option value=\"\">".task::get_personList_dropdown($projectID, "personID")."</select>";
+    $TPL["managerPersonOptions"] = "<select name=\"managerID\"><option value=\"\">".task::get_personList_dropdown($projectID, "managerID")."</select>";
+    $TPL["estimatorPersonOptions"] = "<select name=\"estimatorID\"><option value=\"\">".task::get_personList_dropdown($projectID, "estimatorID")."</select>";
 
     // TaskType Options
     $taskType = new meta("taskType");
