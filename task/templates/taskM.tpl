@@ -208,10 +208,12 @@ $(document).ready(function() {
 
         {if $task_timeLimit || $time_billed_link || ($percentComplete && $percentComplete != "0%")}
         <div class="view">
-        <h6>Actual Hours<div>Effort Limited To</div></h6>
+          <h6>Actual Hours<div>Effort Limited To</div></h6>
           <div style="float:left;width:50%;">
-            <span style='width:50%;'>{$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}</span>
-            <span>{$task_timeLimit} {if $task_timeLimit} hrs{/}</span>
+            {$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}
+          </div>
+          <div style="float:right;width:50%;">
+            {$task_timeLimit} {if $task_timeLimit} hrs{/}
           </div>
         </div>
         {/}
