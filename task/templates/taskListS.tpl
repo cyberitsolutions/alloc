@@ -47,8 +47,8 @@
                                </td>
   {if $_FORM["showProject"]}   <td><a href="{$url_alloc_project}projectID={$r.projectID}">{=$r.project_name}</a></td>{/}
   {if $_FORM["showPriority"]}  <td>{$r.priorityFactor}</td>{/}
-  {if $_FORM["showPriority"]}  <td style="color:{$_FORM.taskPriorities.$r.priority.colour}">{$_FORM.taskPriorities.$r.priority.label}</td>{/}
-  {if $_FORM["showPriority"]}  <td style="color:{$_FORM.projectPriorities.$r.projectPriority.colour}">{$_FORM.projectPriorities.$r.projectPriority.label}</td>{/}
+  {if $_FORM["showPriority"]}  <td style="color:{echo $taskPriorities[$r["priority"]]["colour"]}">{echo $taskPriorities[$r["priority"]]["label"]}</td>{/}
+  {if $_FORM["showPriority"]}  <td style="color:{echo $projectPriorities[$r["projectPriority"]]["colour"]}">{echo $projectPriorities[$r["projectPriority"]]["label"]}</td>{/}
   {if $_FORM["showDateStatus"]}<td>{$r.taskDateStatus}</td>{/}
   {if $_FORM["showCreator"]}   <td>{=$r.creator_name}</td>{/}
   {if $_FORM["showManager"]}   <td>{=$r.manager_name}</td>{/}
