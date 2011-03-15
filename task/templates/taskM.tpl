@@ -231,7 +231,7 @@ $(document).ready(function() {
         {if $task_dateTargetStart || $task_dateTargetCompletion}
         <div class="view">
           <h6>Estimated Start<div>Estimated Completion</div></h6>
-          <div style="float:left; width:30%">
+          <div style="float:left; width:50%">
             {$task_dateTargetStart}
           </div>
           <div style="float:left; width:50%">
