@@ -26,8 +26,8 @@
   {if $_FORM["showDate4"]}<th>Act Compl</th>{/}
   {if $_FORM["showDate5"]}<th>Task Created</th>{/}
   {if $_FORM["showTimes"]}<th>Best</th>{/}
+  {if $_FORM["showTimes"]}<th>Likely</th>{/}
   {if $_FORM["showTimes"]}<th>Worst</th>{/}
-  {if $_FORM["showTimes"]}<th>Expect</th>{/}
   {if $_FORM["showTimes"]}<th>Actual</th>{/}
   {if $_FORM["showTimes"]}<th>Limit</th>{/}
   {if $_FORM["showPercent"]}<th>%</th>{/}
@@ -60,8 +60,8 @@
   {if $_FORM["showDate4"]}     <td class="nobr">{print $dac==$n ? "<b>".$dac."</b>" : $dac}</td>{/}
   {if $_FORM["showDate5"]}     <td class="nobr">{$r.dateCreated}</td>{/}
   {if $_FORM["showTimes"]}     <td class="nobr">{$r.timeBestLabel}</td>{/}
-  {if $_FORM["showTimes"]}     <td class="nobr">{$r.timeWorstLabel}</td>{/}
   {if $_FORM["showTimes"]}     <td class="nobr">{$r.timeExpectedLabel}</td>{/}
+  {if $_FORM["showTimes"]}     <td class="nobr">{$r.timeWorstLabel}</td>{/}
   {if $_FORM["showTimes"]}     <td class="nobr">{$r.timeActualLabel}</td>{/}
   {if $_FORM["showTimes"]}     <td class="nobr{$r["timeActual"] > $r["timeLimit"] and print ' bad'}">{$r.timeLimitLabel}</td>{/}
   {if $_FORM["showPercent"]}     <td class="nobr">{$r.percentComplete}</td>{/}
