@@ -870,8 +870,6 @@ class task extends db_entity {
 
     $_FORM["people_cache"] = get_cached_table("person");
     $_FORM["timeUnit_cache"] = get_cached_table("timeUnit");
-    $_FORM["taskPriorities"] = config::get_config_item("taskPriorities");
-    $_FORM["projectPriorities"] = config::get_config_item("projectPriorities");
 
     // Get a hierarchical list of tasks
     if ($_FORM["taskView"] == "byProject") {
@@ -983,6 +981,8 @@ class task extends db_entity {
     global $TPL;
     $TPL["taskListRows"] = $tasks;
     $TPL["_FORM"] = $ops;
+    $TPL["taskPriorities"] = config::get_config_item("taskPriorities");
+    $TPL["projectPriorities"] =  config::get_config_item("projectPriorities");
     include_template(dirname(__FILE__)."/../templates/taskListS.tpl");
   }
 
