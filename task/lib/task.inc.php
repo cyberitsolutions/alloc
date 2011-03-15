@@ -1452,6 +1452,9 @@ class task extends db_entity {
           case 'managerID':
             $changeDescription = "Task manager changed from " . $people_cache[$oldValue]["name"] . " to " . $people_cache[$newValue]["name"] . ".";
           break;
+          case 'estimatorID':
+            $changeDescription = "Task estimator changed from " . $people_cache[$oldValue]["name"] . " to " . $people_cache[$newValue]["name"] . ".";
+          break;
           case 'taskTypeID':
             $changeDescription = "Task type was changed from " . $oldValue . " to " . $newValue . ".";
           break;
