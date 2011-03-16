@@ -9,7 +9,7 @@
   <tr>
     <th class="header" colspan="7">Create Repeating Expense{$statusLabel}
       <span>
-        <a href="{$url_alloc_transactionRepeatList}tfID={$tfID}">Return to Repeating Expenses List</a>
+        <a href="{$url_alloc_transactionRepeatList}">Return to Repeating Expenses List</a>
       </span>
     </th>
   </tr>
