@@ -344,6 +344,10 @@ class db {
     return 1;
   }
 
+  function get_encoding() {
+    return mysql_client_encoding($this->link_id);
+  }
+
   function get_db_version() {
     $link_id = $this->link_id;
     if (!$link_id) {
