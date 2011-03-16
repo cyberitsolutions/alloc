@@ -476,6 +476,17 @@ class comment extends db_entity {
 
     // Update comment with the text body and the creator
     $body = trim(mime_parser::get_body_text($decoded));
+
+    // if the email has a different encoding, change it to the DB connection encoding so mysql doesn't choke
+    $enctype_matches = array();
+    //this pattern covers all encoding names supported in PHP
+    if ($contenttype = preg_match("/charset=([[:alnum:]-]+)/i", $decoded[0]["Headers"]["content-type:"], $enctype_matches)) {
+      $encoding = $enctype_matches[1];
+      $db = new db_alloc;
+      $db->connect();
+      $body = mb_convert_encoding($body, $db->get_encoding(), $encoding);
+    }
+
     $comment->set_value("comment",$body);
     $comment->set_value("commentCreatedUserText",trim($decoded[0]["Headers"]["from:"]));
     $comment->set_value("commentEmailMessageID",trim($decoded[0]["Headers"]["message-id:"]));
