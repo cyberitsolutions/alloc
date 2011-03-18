@@ -37,7 +37,7 @@ class timeSheet extends db_entity {
                              ,"approvedByAdminPersonID"
                              ,"dateSubmittedToManager"
                              ,"dateSubmittedToAdmin"
-			                       ,"dateRejected"
+			                       ,"dateRejected" => array("empty_to_null"=>true)
                              ,"billingNote"
                              ,"payment_insurance"
                              ,"recipient_tfID"
@@ -552,11 +552,30 @@ class timeSheet extends db_entity {
     if ($filter["personID"]) {
       $sql[] = sprintf("(timeSheet.personID = '%d')", $filter["personID"]);
     }
-    if ($filter["status"] && is_array($filter["status"]) && count($filter["status"])) {
-      $sql[] = sprintf("(timeSheet.status in ('%s'))", implode("','",$filter["status"]));
-    } else if ($filter["status"]) {
-      $sql[] = sprintf("(timeSheet.status = '%s')", db_esc($filter["status"]));
+    if ($filter["status"]) { 
+      if (is_array($filter["status"]) && count($filter["status"])) {
+        foreach ($filter["status"] as $s) {
+          if ($s == "rejected") {
+            $rejected = true;
+          } else {
+            $statuses[] = db_esc($s);
+          }
+        }
+      } else {
+        if ($filter["status"] == "rejected") {
+          $rejected = true;
+        } else {
+          $statuses[] = db_esc($filter["status"]);
+        }
+      }
     }
+
+    if ($rejected) {
+      $sql[] = sprintf("(timeSheet.dateRejected IS NOT NULL OR timeSheet.status in ('%s'))", implode("','",$statuses));
+    } else if ($statuses) {
+      $sql[] = sprintf("(timeSheet.dateRejected IS NULL AND timeSheet.status in ('%s'))", implode("','",$statuses));
+    }
+
     if ($filter["dateFrom"]) {
       $sql[] = sprintf("(timeSheet.dateFrom >= '%s')", db_esc($filter["dateFrom"]));
     }
@@ -769,6 +788,7 @@ class timeSheet extends db_entity {
     // display a list of status
     $status_array = timeSheet::get_timeSheet_statii();
     unset($status_array["create"]);
+    $status_array["rejected"] = 'Rejected';
 
     if (!$_FORM["status"]) {
       $_FORM["status"][] = 'edit';
