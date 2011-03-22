@@ -187,7 +187,7 @@ class alloc(object):
       print str % (os.path.basename(" ".join(sys.argv[0:2])), help_str.rstrip())
       sys.exit(0)
     
-    return rtn, remainder
+    return rtn, " ".join(remainder)
 
   def get_my_personID(self):
     # Get current user's personID

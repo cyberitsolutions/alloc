@@ -124,6 +124,10 @@ class task extends db_entity {
 
   function validate() {
     $this->get_value("taskName") or $err[] = "Please enter a name for the Task.";
+    $this->get_value("priority")    || $this->set_value("priority",3);
+    $this->get_value("dateCreated") || $this->set_value("dateCreated",date("Y-m-d H:i:s"));
+    $this->get_value("taskStatus")  || $this->set_value("taskStatus","open_notstarted");
+    $this->get_value("taskTypeID")  || $this->set_value("taskTypeID","Task");
     return parent::validate($err);
   }
 

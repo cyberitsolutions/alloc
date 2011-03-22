@@ -301,7 +301,110 @@ class alloc_services {
     die("Usage: get_list(entity, options). The following entities are available: ".$rtn);
   }
 
+  
+  public function edit_entity($entity,$id,$package=false) {
 
+    $people = get_cached_table("person");
+    foreach ($people as $personID => $person) {
+      $people_by_username[$person["username"]] = $person;
+    }
+
+    $task_fields = array(
+      "status"    => array("taskStatus",      "inprogress, notstarted, info, client, manager, invalid, duplicate, incomplete, complete; or: open, pending, closed")
+     ,"name"      => array("taskName",        "The task's title")
+     ,"assign"    => array("personID",        "The username of the person that the task is assigned to")
+     ,"manage"    => array("managerID",       "The username of the person that the task is managed by")
+     ,"desc"      => array("taskDescription", "The task's long description")
+     ,"priority"  => array("priority",        "1, 2, 3, 4 or 5")
+     ,"limit"     => array("timeLimit",       "The limit in hours for effort spend on this task")
+     ,"best"      => array("timeBest",        "The shortest estimate of how many hours of effort this task will task")
+     ,"likely"    => array("timeExpected",    "The most likely amount of hours of effort this task will task")
+     ,"worst"     => array("timeWorst",       "The longest estimate of how many hours of effort this task will task")
+     ,"project"   => array("projectID",       "The task's project ID")
+     ,"type"      => array("taskTypeID",      "Task, Fault, Message, Milestone or Parent")
+     ,"dupe"      => array("duplicateTaskID", "If the task status is duplicate, then this should be set to the task ID of the related dupe")
+    );
+
+    // Default
+    $status = 'die';
+    $message = 'Not sure what to do with entity: '.$entity.', id: '.$id.' and package: '.$package;
+
+    // If editing a task
+    if ($entity == "task") {
+  
+      // Perhaps just return help info
+      if ($id == "help") {
+        $message = "Task fields:";
+        foreach ($task_fields as $k => $arr) {
+          $message.= "\n      ".$k.":\t".$arr[1];
+        }
+        $status = 'msg';
+
+      // Else create or update a task
+      } else if ($id && $package) {
+        $package = alloc_json_decode($package);
+
+        $task = new task;
+        if (strtolower($id) != "new") {
+          $task->set_id($id);
+        }
+        $task->select();
+        foreach ($package as $k => $v) {
+
+          // Validate/coerce the fields
+          if ($k == "status") {
+            $v == "inprogress" and $v = "open_inprogress";
+            $v == "notstarted" and $v = "open_notstarted";
+            $v == "info"       and $v = "pending_info";
+            $v == "client"     and $v = "pending_client";
+            $v == "manager"    and $v = "pending_manager";
+            $v == "invalid"    and $v = "closed_invalid";
+            $v == "duplicate"  and $v = "closed_duplicate";
+            $v == "incomplete" and $v = "closed_incomplete";
+            $v == "complete"   and $v = "closed_complete";
+            $v == "open"       and $v = "open_inprogress";
+            $v == "pending"    and $v = "pending_info";
+            $v == "close"      and $v = "closed_complete";
+            $v == "closed"     and $v = "closed_complete";
+          } else if ($k == "assign") {
+            $v = sprintf("%d",$people_by_username[$v]["personID"]);
+          } else if ($k == "manage") {
+            $v = sprintf("%d",$people_by_username[$v]["personID"]);
+          } else if ($k == "priority") {
+            in_array($v,array(1,2,3,4,5)) or $err[] = "Invalid priority.";
+          } else if ($k == "type") {
+            $v = ucwords($v);
+            in_array($v,array("Task","Fault","Message","Milestone","Parent")) or $err[] = "Invalid Task Type.";
+          }
+
+          // Plug the value in
+          $task->set_value($task_fields[$k][0],$v);
+        }
+
+        // Save task
+        if (!$err && $task->save()) {
+          $status = "yay";
+          $message = "Task updated.";
+          strtolower($id) == "new" and $message = "Task ".$task->get_id()." created.";
+
+        // Problems
+        } else {
+          $status = "err";
+          $message = "Problem updating task: ".implode("\n",(array)$err);
+        }
+      }
+  
+    } else if ($entity == "project") {
+      // TODO
+    } else if ($entity == "timesheet") {
+      // TODO
+    } else if ($entity == "item") {
+      // TODO
+    }
+
+    // Status will be yay, msg, err or die, i.e. tied to the alloc-cli messaging system
+    return array("status"=>$status,"message"=>$message);
+  }
 
 } 
 
