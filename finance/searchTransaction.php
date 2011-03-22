@@ -28,7 +28,6 @@ $applyFilter = $_GET["applyFilter"] or $applyFilter = $_POST["applyFilter"];
 $defaults = array("url_form_action"=>$TPL["url_alloc_searchTransaction"]
                  ,"form_name"=>"searchTransaction_filter"
                  ,"applyFilter"=>$applyFilter
-                 ,"return"=>"html"
                  );
 
 function show_filter() {
@@ -39,20 +38,10 @@ function show_filter() {
   include_template("templates/searchTransactionFilterS.tpl");
 }
 
-function show_transaction_list() {
-  global $defaults;
-  $_FORM = transaction::load_form_data($defaults);
-  if ($_FORM["applyFilter"]) {
-    #echo "<pre>".print_r($_FORM,1)."</pre>";
-    echo transaction::get_list($_FORM);
-  }
-}
-
-
 if ($download) {
   $_FORM = transaction::load_form_data($defaults);
-  $_FORM["return"] = "csv";
-  $csv = transaction::get_list($_FORM);
+  list($totals,$rows) = transaction::get_list($_FORM);
+  $csv = transaction::arr_to_csv($rows);
   header('Content-Type: application/octet-stream');
   header("Content-Length: ".strlen($csv));
   header('Content-Disposition: attachment; filename="'.date("Ymd_His").'.csv"');
@@ -60,7 +49,10 @@ if ($download) {
   exit();
 }
 
-
+if ($applyFilter) {
+  $_FORM = transaction::load_form_data($defaults);
+  list($TPL["totals"], $TPL["transactionListRows"]) = transaction::get_list($_FORM);
+}
 
 $TPL["main_alloc_title"] = "Search Transactions - ".APPLICATION_NAME;
 include_template("templates/searchTransactionM.tpl");

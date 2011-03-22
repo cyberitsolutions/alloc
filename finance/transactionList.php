@@ -48,20 +48,18 @@ $defaults = array("url_form_action"=>$TPL["url_alloc_transactionList"]
                  ,"startDate"=>$startDate
                  ,"endDate"=>$endDate
                  ,"monthDate"=>$monthDate
-                 ,"return"=>"htmlAndObj"
                  );
 
 if ($download) {
   $_FORM = transaction::load_form_data($defaults);
-  $_FORM["return"] = "csv";
-  $csv = transaction::get_list($_FORM);
+  list($totals,$rows) = transaction::get_list($_FORM);
+  $csv = transaction::arr_to_csv($rows);
   header('Content-Type: application/octet-stream');
   header("Content-Length: ".strlen($csv));
   header('Content-Disposition: attachment; filename="'.date("Ymd_His").'.csv"');
   echo $csv;
   exit();
 }
-
 
 // Check perm of requested tf
 $tf = new tf;
@@ -71,7 +69,7 @@ $tf->check_perm();
 $TPL["tfID"] = $tfID;
 
 $_FORM = transaction::load_form_data($defaults);
-list($TPL["totals"], $TPL["list"]) = transaction::get_list($_FORM);
+list($TPL["totals"], $TPL["transactionListRows"]) = transaction::get_list($_FORM);
 
 // Total balance
 $TPL["balance"] = $tf->get_balance();
