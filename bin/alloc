@@ -18,7 +18,7 @@ except:
   print "Select one of the following commands:\n"
   for f in os.listdir("/".join(sys.argv[0].split("/")[:-1])+"/alloccli/"):
     s = f[-4:].lower()
-    if s!=".pyc" and s!=".swp" and f!="alloc" and f!="alloc.py" and f!="__init__.py":
+    if s!=".pyc" and s!=".swp" and s!=".swo" and f!="alloc" and f!="alloc.py" and f!="__init__.py":
       m = f.replace(".py","")
       alloccli = __import__("alloccli."+m)
       subcommand = getattr(getattr(alloccli,m), m)
