@@ -232,7 +232,8 @@ class timeSheetItem extends db_entity {
     } 
 
     if ($filter["date"]) {
-      $sql[] = sprintf("(timeSheetItem.dateTimeSheetItem = '%s')",db_esc($filter["date"]));
+      in_array($filter["dateComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateComparator"] = '=';
+      $sql[] = sprintf("(timeSheetItem.dateTimeSheetItem %s '%s')",$filter["dateComparator"],db_esc($filter["date"]));
     } 
 
     if ($filter["personID"]) {

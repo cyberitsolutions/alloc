@@ -14,7 +14,7 @@ class timesheets(alloc):
   ops.append(('s:','status=STATUS  ','The time sheets\' status. Can accept multiple values, eg: "edit,manager,admin,invoiced,finished,rejected" Default: edit'))
   ops.append(('t:','time=ID        ','A time sheet ID.'))
   ops.append(('h:','hours=NUM      ','The time sheets must have this many hours recorded eg: "7" eg: ">7 AND <10 OR =4 AND !=8"'))
-  ops.append(('d:','date=YYYY-MM-DD','The from date of the earliest time sheet item.'))
+  ops.append(('d:','date=YYYY-MM-DD','If --items is specified, then match against the items\' date. Else match against the date of the time sheet\'s earliest item.'))
   ops.append(('o:','order=NAME     ','The order the Time Sheets or Items are displayed in. Default for time sheets: "From,ID" Default for items: "Date,Item ID"'))
 
   # Specify some header and footer text for the help text
@@ -27,7 +27,11 @@ If run without arguments this program will display all of your editable time she
 Examples:
 alloc timesheets --hours "2" --date 2010-01-01
 alloc timesheets --hours ">2 AND <10 OR >20 AND <=100"
-alloc timesheets --status finished --hours ">=7" --date "$(date -d '10 week ago' +%%Y-%%m-%%d)"'''
+alloc timesheets --status finished --hours ">=7" --date "<=$(date -d '1 week ago' +%%Y-%%m-%%d)"
+
+alloc timesheets --date "2010-10-10"
+alloc timesheets --date "<=2010-10-10"
+alloc timesheets --date ">=2010-10-10" --items'''
 
   def run(self):
 
@@ -79,21 +83,26 @@ alloc timesheets --status finished --hours ">=7" --date "$(date -d '10 week ago'
 
     if o['hours']:
       ops['timeSheetItemHours'] = o['hours']
-    if o['date']:
-      ops['dateTo'] = o['date']
 
-    timeSheets = self.get_list("timeSheet",ops)
-
-    if timeSheets:
-      if o['items']:
+    if o['items']:
+      timeSheets = self.get_list("timeSheet",ops)
+      if timeSheets:
         tids = []
         for id,t in timeSheets.items():
           tids.append(id)
         if tids:
-          self.print_table(self.get_list("timeSheetItem",{"timeSheetID": tids}), self.row_timeSheetItem, sort=order)
-      else:
-        self.print_table(timeSheets, self.row_timeSheet, sort=order)
+          ops = {"timeSheetID": tids}
+          if o['date']:
+            # >=
+            ops['date'],ops['dateComparator'] = self.parse_date_comparator(o['date'])
+          timeSheetItems = self.get_list("timeSheetItem",ops)
+          self.print_table(timeSheetItems, self.row_timeSheetItem, sort=order)
 
-
-
+    else:
+      if o['date']:
+        # <=
+        ops['dateFrom'],ops['dateComparator'] = self.parse_date_comparator(o['date'])
+      timeSheets = self.get_list("timeSheet",ops)
+      self.print_table(timeSheets, self.row_timeSheet, sort=order)
+  
 
