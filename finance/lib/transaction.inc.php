@@ -423,8 +423,6 @@ class transaction extends db_entity {
     $_FORM["sortTransactions"] or $_FORM["sortTransactions"] = "transactionDate";
     $order_by = "ORDER BY ".$_FORM["sortTransactions"];
 
-    $_FORM["csvHeaders"] or $_FORM["csvHeaders"] = array("transactionID", "transactionType", "fromTfID", "tfID", "transactionDate", "transactionSortDate", "product", "status", "currencyTypeID", "exchangeRate", "destCurrencyTypeID", "amount_positive", "amount_negative", "running_balance");
-
   
     // Determine opening balance
     if (is_array($_FORM['tfIDs']) && count($_FORM['tfIDs'])) {
@@ -456,9 +454,9 @@ class transaction extends db_entity {
       #echo "<pre>".print_r($row,1)."</pre>";
       $i++;
       $t = new transaction;
-      if (!$t->read_db_record($db,false)) {
+      if (!$t->read_db_record($db,false))
         continue;
-      }
+
       $print = true;
   
       // If the destination of this TF is not the current TfID, then invert the $amount
@@ -491,103 +489,49 @@ class transaction extends db_entity {
       }
  
       if ($amount > 0) {
-        #$row["amount_positive"] = page::money(config::get_config_item("currency"),$amount,"%m %c");
         $row["amount_positive"] = page::money($row["currencyTypeID"],$row["amount1"],"%m %c");
         $total_amount_positive += $amount;
       } else {
-        #$row["amount_negative"] = page::money(config::get_config_item("currency"),$amount,"%m %c");
         $row["amount_negative"] = page::money($row["currencyTypeID"],$row["amount1"],"%m %c");
         $total_amount_negative += $amount;
       }
 
-
-      if ($_FORM["return"] == "html" || $_FORM["return"] == "htmlAndObj") {
-        $row["object"] = $t;
-        $summary.= transaction::get_list_tr($row,$_FORM);
-
-      } else if ($_FORM["return"] == "csv") {
-        $csv_data = array();
-        foreach($_FORM["csvHeaders"] as $header) {  //suck out the data in the right order
-          $csv_data[] = $row[$header];
-        }
-        $csv.= $nl.implode(",",array_map('export_escape_csv', $csv_data));
-        $nl = "\n";
-
-      } else if ($_FORM["return"] == "array") {
-        #$row["object"] = $t; // this is really too large to return via soap
-        $transactions[$row["transactionID"]] = $row;
-      }
+      $transactions[$row["transactionID"]] = $row;
     }
+
     $_FORM["total_amount_positive"] = page::money(config::get_config_item("currency"),$total_amount_positive,"%s%m %c");
     $_FORM["total_amount_negative"] = page::money(config::get_config_item("currency"),$total_amount_negative,"%s%m %c");
     $_FORM["running_balance"] =       page::money(config::get_config_item("currency"),$running_balance,"%s%m %c");
 
-    // A header row
-    $header_row = transaction::get_list_tr_header($_FORM);
-    $footer_row = transaction::get_list_tr_footer($_FORM);
-
-    if ($print && $_FORM["return"] == "html") {
-      return $header_row.$summary.$footer_row;
-
-    } else if ($print && $_FORM["return"] == "htmlAndObj") {
-      return array($_FORM, $header_row.$summary.$footer_row);
-
-    } else if ($print && $_FORM["return"] == "csv") {
-      return implode(",",array_map('export_escape_csv', $_FORM["csvHeaders"]))."\n".$csv;
-
-    } else if ($print && $_FORM["return"] == "array") {
-      return $transactions;
-    } 
+    return array($_FORM, (array)$transactions);
   }
 
-  function get_list_tr_header($_FORM) {
-    global $TPL;
-    $str[] = "<table class=\"list sortable\">";
-    $str[] = "<tr>";
-    $str[] = "  <th width=\"1%\">ID</th>";
-    $str[] = "  <th width=\"1%\">Type</th>";
-    $str[] = "  <th width=\"1%\">Source TF</th>";
-    $str[] = "  <th width=\"1%\">Dest TF</th>";
-    $str[] = "  <th width=\"1%\">Date</th>";
-    $str[] = "  <th width=\"1%\">Modified</th>";
-    $str[] = "  <th>Product</th>";
-    $str[] = "  <th width=\"1%\">Status</th>";
-    $str[] = "  <th class=\"right\" width=\"1%\">Credit</th>";
-    $str[] = "  <th class=\"right\" width=\"1%\">Debit</th>";
-    $str[] = "  <th class=\"right\" width=\"1%\">Balance</th>";
-    $str[] = "</tr>";
-    return implode("\n",$str);
-  }
-
-  function get_list_tr_footer($_FORM) {
-    $str[] = "<tfoot>";
-    $str[] = "<tr>";
-    $str[] = "  <td colspan=\"8\">&nbsp;</td>";
-    $str[] = "  <td class=\"grand_total nobr right\">".$_FORM["total_amount_positive"]."&nbsp;</td>";
-    $str[] = "  <td class=\"grand_total nobr right\">".$_FORM["total_amount_negative"]."&nbsp;</td>";
-    $str[] = "  <td class=\"grand_total nobr right transaction-approved\">".$_FORM["running_balance"]."&nbsp;</td>";
-    $str[] = "</tr>";
-    $str[] = "</tfoot>";
-    $str[] = "</table>";
-    return implode("\n",$str);
-  }
-
-  function get_list_tr($row) {
-    global $TPL;
-    $str[] = "<tr class=\"".$row["class"]."\">";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\"><a href=\"".$TPL["url_alloc_transaction"]."transactionID=".$row["transactionID"]."\">".$row["transactionID"]."</a></td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionTypeLink"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["fromTfIDLink"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["tfIDLink"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionDate"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["transactionSortDate"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]."\">".page::htmlentities($row["product"])."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr\">".$row["status"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["amount_positive"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["amount_negative"]."&nbsp;</td>";
-    $str[] = "  <td class=\"transaction-".$row["status"]." nobr right\">".$row["running_balance"]."&nbsp;</td>";
-    $str[] = "</tr>";
-    return implode("\n",$str);
+  function arr_to_csv($rows=array()) {
+       
+    $csvHeaders = array("transactionID"
+                       ,"transactionType"
+                       ,"fromTfID"
+                       ,"tfID"
+                       ,"transactionDate"
+                       ,"transactionSortDate"
+                       ,"product"
+                       ,"status"
+                       ,"currencyTypeID"
+                       ,"exchangeRate"
+                       ,"destCurrencyTypeID"
+                       ,"amount_positive"
+                       ,"amount_negative"
+                       ,"running_balance");
+    
+    foreach ($rows as $row) {
+      $csv_data = array();
+      foreach($csvHeaders as $header) {  
+        $csv_data[] = $row[$header];
+      }
+      $csv.= $nl.implode(",",array_map('export_escape_csv', $csv_data));
+      $nl = "\n";
+    }
+    return implode(",",array_map('export_escape_csv', $csvHeaders))."\n".$csv;
   }
 
   function get_list_vars() {
@@ -611,7 +555,6 @@ class transaction extends db_entity {
                 ,"transactionID"     => "A Transaction by ID"
                 ,"product"           => "Transactions with a description like *something* (fuzzy)"
                 ,"amount"            => "Get Transactions that are for a certain amount"
-                ,"csvHeaders"        => "An array of columns to include in the output, when generating CSV"
                 );
   }
 
