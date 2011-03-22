@@ -467,7 +467,16 @@ class alloc(object):
     # If they don't want all the records, then return an impossible personID
     if name != '%' and name != '*' and name.lower() != 'all':
       return '1000000000000000000' # returning just zero doesn't work
+
+  # split a comparator and a date eg: '>=2011-10-10' becomes ['>=','2011-10-10']
+  def parse_date_comparator(self,date):
+    try:
+      comparator, d = re.findall(r'[\d|-]+|\D+', date)
+    except:
+      comparator = '='
+      d = date
   
+    return d.strip(),comparator.strip() 
 
 # Specify the user-agent 
 class allocUserAgent(urllib.FancyURLopener):

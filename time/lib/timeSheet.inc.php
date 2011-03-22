@@ -577,10 +577,12 @@ class timeSheet extends db_entity {
     }
 
     if ($filter["dateFrom"]) {
-      $sql[] = sprintf("(timeSheet.dateFrom >= '%s')", db_esc($filter["dateFrom"]));
+      in_array($filter["dateComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateComparator"] = '=';
+      $sql[] = sprintf("(timeSheet.dateFrom %s '%s')",$filter['dateComparator'],db_esc($filter["dateFrom"]));
     }
     if ($filter["dateTo"]) {
-      $sql[] = sprintf("(timeSheet.dateFrom <= '%s')", db_esc($filter["dateTo"]));
+      in_array($filter["dateComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateComparator"] = '=';
+      $sql[] = sprintf("(timeSheet.dateTo %s '%s')",$filter['dateComparator'],db_esc($filter["dateTo"]));
     }
     return $sql;
   }
