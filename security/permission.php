@@ -64,6 +64,9 @@ if ($_POST["save"]) {
   alloc_redirect($TPL["url_alloc_permissionList"]);
 }
 
+// necessary
+$permission->select();
+
 $TPL["personOptions"] = page::select_options("SELECT personID as value, username as label FROM person ORDER BY username", $permission->get_value("personID"));
 $TPL["roleNameOptions"] = page::select_options(array("god"=>"god", "admin"=>"admin", "manage"=>"manage", "employee"=>"employee"), $permission->get_value("roleName"));
 $TPL["allowOptions"] = page::select_options(array("Y"=>"Yes", "N"=>"No"), $permission->get_value("allow"));
