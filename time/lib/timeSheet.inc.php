@@ -70,6 +70,10 @@ class timeSheet extends db_entity {
       return true;
     }
 
+    if ($current_user->have_role("admin")) {
+      return true;
+    }
+
     // This allows people with transactions on this time sheet who may not
     // actually be this time sheets owner to view this time sheet.
     if ($this->get_value("status") != "edit") { 

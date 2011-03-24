@@ -39,24 +39,26 @@ class timeSheetItem extends db_entity {
                              );
 
   function save() {
-  
+    global $current_user;
     $timeSheet = new timeSheet;
     $timeSheet->set_id($this->get_value("timeSheetID"));
     $timeSheet->select();
+
     $timeSheet->load_pay_info();
     list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated("%mo");
 
-    $_POST["timeSheetItem_commentPrivate"] and $this->set_value("commentPrivate", 1);
+    $this->currency = $timeSheet->get_value("currencyTypeID");
+
     $this->set_value("comment",rtrim($this->get_value("comment")));
 
     $amount_of_item = $this->calculate_item_charge($timeSheet->get_value("currencyTypeID"),$timeSheet->get_value("customerBilledDollars"));
     if ($amount_allocated && ($amount_of_item + $amount_used) > $amount_allocated) {
-      return "Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice. Time Sheet Item not saved.";
+      die("Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice. Time Sheet Item not saved.");
     } 
 
-    if ($_POST["timeSheetItem_taskID"]) {
+    if ($this->get_value("taskID")) {
       $selectedTask = new task();
-      $selectedTask->set_id($_POST["timeSheetItem_taskID"]);
+      $selectedTask->set_id($this->get_value("taskID"));
       $selectedTask->select();
       $taskName = $selectedTask->get_name();
 
@@ -72,22 +74,39 @@ class timeSheetItem extends db_entity {
 
     $this->set_value("description", $taskName);
 
-    // These fields were not updated on Edits - Dinis
-    // This has been fixed in time/timeSheetItem.php now - Alex
-    // $this->set_value("timeSheetItemDuration", $_POST["timeSheetItem_timeSheetItemDuration"]);
-    // $this->set_value("taskID", $_POST["timeSheetItem_taskID"]);
-    // $this->set_value("rate", $_POST["timeSheetItem_rate"]);
-    // $this->set_value("multiplier", $_POST["timeSheetItem_multiplier"]);
-    // $this->set_value("comment", $_POST["timeSheetItem_comment"]);
+    // If rate is changed via CLI
+    if ($this->get_value("rate") && $timeSheet->pay_info["project_rate"] != $this->get_value("rate") && !$timeSheet->can_edit_rate()) {
+      die("Not permitted to edit time sheet item rate.");
+    }
 
-    if (imp($timeSheet->pay_info["project_rate"])) {
+    if (!imp($this->get_value("rate")) && imp($timeSheet->pay_info["project_rate"])) {
       $this->set_value("rate", $timeSheet->pay_info["project_rate"]);
     }
-    if ($timeSheet->pay_info["project_rateUnitID"]) {
+
+    // If unit is changed via CLI
+    if ($this->get_value("timeSheetItemDurationUnitID") && $timeSheet->pay_info["project_rateUnitID"] != $this->get_value("timeSheetItemDurationUnitID") && !$timeSheet->can_edit_rate()) {
+      die("Not permitted to edit time sheet item unit.");
+    }
+
+    if (!$this->get_value("timeSheetItemDurationUnitID") && $timeSheet->pay_info["project_rateUnitID"]) {
       $this->set_value("timeSheetItemDurationUnitID", $timeSheet->pay_info["project_rateUnitID"]);
     }
 
-    parent::save();
+    $this->get_value("personID") || $this->set_value("personID",$current_user->get_id());
+    $this->get_value("multiplier") || $this->set_value("multiplier",1);
+
+    // Last ditch perm checking - useful for the CLI
+    if (!is_object($timeSheet) || !$timeSheet->get_id()) {
+      die("Unknown time sheet.");
+    }
+    if ($timeSheet->get_value("status") != "edit") {
+      die("Time sheet is not at status edit");
+    }
+    if (!$this->is_owner()) {
+      die("Time sheet is not editable for you.");
+    }
+
+    $rtn = parent::save();
 
     $db = new db_alloc();
     $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) as count
@@ -110,6 +129,7 @@ class timeSheetItem extends db_entity {
       $ii->select();
       $ii->add_timeSheet($row["invoiceID"],$this->get_value("timeSheetID"));  // will update the existing invoice item
     }
+    return $rtn;
   } 
 
   function calculate_item_charge($currency,$rate=0) {
@@ -117,6 +137,11 @@ class timeSheetItem extends db_entity {
   }
 
   function delete() {
+
+    $timeSheet = $this->get_foreign_object("timeSheet");
+    if ($timeSheet->get_value("status") != "edit") {
+      die("Time sheet is not at status edit");
+    }
 
     $timeSheetID = $this->get_value("timeSheetID");
 
