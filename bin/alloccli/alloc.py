@@ -420,7 +420,7 @@ class alloc(object):
     if not self.quiet: print "---",str
 
   def yay(self,str):
-    if not self.quiet: print ":-)",str
+    if not self.quiet: print ":-]",str
 
   def err(self,str):
     sys.stderr.write("!!! "+str+"\n")
