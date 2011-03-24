@@ -325,6 +325,19 @@ class alloc_services {
      ,"dupe"      => array("duplicateTaskID", "If the task status is duplicate, then this should be set to the task ID of the related dupe")
     );
 
+    $timeSheetItem_fields = array(
+      "tsid"      => array("timeSheetID",           "time sheet that this item belongs to")
+     ,"date"      => array("dateTimeSheetItem",     "time sheet item's date")
+     ,"duration"  => array("timeSheetItemDuration", "time sheet item's duration")
+     ,"unit"      => array("timeSheetItemDurationUnitID", "time sheet item's unit of duration eg: 1=hours 2=days 3=week 4=month 5=fixed")
+     ,"task"      => array("taskID",                "ID of the time sheet item's task")
+     ,"rate"      => array("rate",                  "\$rate of the time sheet item's")
+     ,"private"   => array("commentPrivate",        "privacy setting of the time sheet item's comment eg: 1=private 0=normal")
+     ,"comment"   => array("comment",               "time sheet item comment")
+     ,"mult"      => array("multiplier",            "time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time 3=triple-time 0=no-charge")
+    );
+
+
     // Default
     $status = 'die';
     $message = 'Not sure what to do with entity: '.$entity.', id: '.$id.' and package: '.$package;
@@ -399,7 +412,55 @@ class alloc_services {
     } else if ($entity == "timesheet") {
       // TODO
     } else if ($entity == "item") {
-      // TODO
+  
+      // Perhaps just return help info
+      if ($id == "help") {
+        $message = "Time sheet item fields:";
+        foreach ($timeSheetItem_fields as $k => $arr) {
+          $message.= "\n      ".$k.":\t".$arr[1];
+        }
+        $status = 'msg';
+
+      // Else create or update a timeSheetItem
+      } else if ($id && $package) {
+        $package = alloc_json_decode($package);
+
+        $timeSheetItem = new timeSheetItem;
+        if (strtolower($id) != "new") {
+          $timeSheetItem->set_id($id);
+        }
+        $timeSheetItem->select();
+        $timeSheet = $timeSheetItem->get_foreign_object("timeSheet");
+        foreach ($package as $k => $v) {
+
+          // Validate/coerce the fields
+          if ($k == "unit") {
+            in_array($v,array(1,2,3,4,5)) or $err[] = "Invalid unit. Try a number from 1-5.";
+          } else if ($k == "task") {
+            $t = new task;
+            $t->set_id($v);
+            $t->select();
+            is_object($timeSheet) && $timeSheet->get_id() && $t->get_value("projectID") != $timeSheet->get_value("projectID") and $err[] = "Invalid task. Task belongs to different project.";
+          }
+
+          // Plug the value in
+          $timeSheetItem->set_value($timeSheetItem_fields[$k][0],$v);
+        }
+
+        // Save task
+        if (!$err && $timeSheetItem->save()) {
+          $status = "yay";
+          $message = "Time sheet item updated.";
+          strtolower($id) == "new" and $message = "Time sheet item ".$timeSheetItem->get_id()." created.";
+
+        // Problems
+        } else {
+          $status = "err";
+          $message = "Problem updating time sheet item: ".implode("\n",(array)$err);
+        }
+      }
+
+
     }
 
     // Status will be yay, msg, err or die, i.e. tied to the alloc-cli messaging system

@@ -2,13 +2,13 @@ from alloc import alloc
 
 class edit(alloc):
 
-  one_line_help = "Modify an alloc entity, eg a task."
+  one_line_help = "Modify an alloc entity."
 
   # Setup the options that this cli can accept
   ops = []
   ops.append((''  ,'help           ','Show this help.'))
   ops.append(('t:','task=ID|new    ','An existing task\'s ID or the word "new" to create a new task.'))
-  ops.append(('i:','item=ID        ','[NOT OPERATIONAL] An existing time sheet item\'s ID.'))
+  ops.append(('i:','item=ID|new    ','An existing time sheet item\'s ID.'))
   ops.append(('p:','project=ID     ','[NOT OPERATIONAL] An existing project\'s ID.'))
   ops.append(('s:','timesheet=ID   ','[NOT OPERATIONAL] An existing time sheet\'s ID.'))
 
@@ -17,7 +17,7 @@ class edit(alloc):
   help_text+= one_line_help
   help_text+= """\n\n%s
 
-This program allows you to edit the fields on a task and eventually other entities.
+This program allows editing of the fields on an alloc entity, like a task.
 
 Examples:
 
@@ -31,12 +31,20 @@ alloc edit --task 1234 ^status:closed ^name:New name for the task. ^assign:alla
 # Create a new task
 alloc edit --task new ^name:This task is fooed in the bar 
 
-
 # Note that the ^field:values must be the final arguments. I.e. this WON'T work:
 alloc edit ^name:nope --task 1234  <-- NO
-
 # It should be this:
-alloc edit --task 1234 ^name:yep   <-- YES"""
+alloc edit --task 1234 ^name:yep   <-- YES
+
+
+# Display all the different fields that can be edited on a time sheet item
+alloc edit --item help
+
+# Edit an existing time sheet item.
+alloc edit -i 1234 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^private:1 ^task:15180
+
+# Create a new time sheet item. Note that ^tsid is mandatory in this case
+alloc edit -i new ^tsid:7941 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^task:15180"""
 
   def run(self):
 

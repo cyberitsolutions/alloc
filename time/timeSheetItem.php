@@ -35,32 +35,28 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
   $timeSheet->select();
   $timeSheet->load_pay_info();
 
-  if ($timeSheet->get_value("status") == "edit") {
-    $timeSheetItem = new timeSheetItem;
+  $timeSheetItem = new timeSheetItem;
+  if ($timeSheetItem->get_id()) {
+    $timeSheetItem->select();
+  }
+  $timeSheetItem->read_globals();
+  $timeSheetItem->read_globals("timeSheetItem_");
+
+  if ($_POST["timeSheetItem_save"]) {
     $timeSheetItem->read_globals();
     $timeSheetItem->read_globals("timeSheetItem_");
-    if ($timeSheetItem->get_id()) {
-      $timeSheetItem->select();
-    }
+    $rtn = $timeSheetItem->save();
+    $rtn and $TPL["message_good"][] = "Time Sheet Item saved.";
+    alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
 
-    if ($_POST["timeSheetItem_save"]) {
-      $timeSheetItem->read_globals();
-      $timeSheetItem->read_globals("timeSheetItem_");
-      $timeSheetItem->currency = $timeSheet->get_value("currencyTypeID");
-      $rtn = $timeSheetItem->save();
-      $rtn or $TPL["message_good"][] = "Time Sheet Item saved.";
-      $rtn and $TPL["message"][] = $rtn;
-      alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
+  } else if ($_POST["timeSheetItem_edit"]) {
+    alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID."&timeSheetItem_edit=true&timeSheetItemID=".$timeSheetItem->get_id());
 
-    } else if ($_POST["timeSheetItem_edit"]) {
-      alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID."&timeSheetItem_edit=true&timeSheetItemID=".$timeSheetItem->get_id());
-
-    } else if ($_POST["timeSheetItem_delete"]) {
-      $timeSheetItem->select();
-      $timeSheetItem->delete();
-      $TPL["message_good"][] = "Time Sheet Item deleted.";
-      alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
-    }
+  } else if ($_POST["timeSheetItem_delete"]) {
+    $timeSheetItem->select();
+    $timeSheetItem->delete();
+    $TPL["message_good"][] = "Time Sheet Item deleted.";
+    alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID);
   }
 }
 
