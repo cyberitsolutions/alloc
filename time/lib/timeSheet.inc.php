@@ -581,12 +581,12 @@ class timeSheet extends db_entity {
     }
 
     if ($filter["dateFrom"]) {
-      in_array($filter["dateComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateComparator"] = '=';
-      $sql[] = sprintf("(timeSheet.dateFrom %s '%s')",$filter['dateComparator'],db_esc($filter["dateFrom"]));
+      in_array($filter["dateFromComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateFromComparator"] = '=';
+      $sql[] = sprintf("(timeSheet.dateFrom %s '%s')",$filter['dateFromComparator'],db_esc($filter["dateFrom"]));
     }
     if ($filter["dateTo"]) {
-      in_array($filter["dateComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateComparator"] = '=';
-      $sql[] = sprintf("(timeSheet.dateTo %s '%s')",$filter['dateComparator'],db_esc($filter["dateTo"]));
+      in_array($filter["dateToComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateToComparator"] = '=';
+      $sql[] = sprintf("(timeSheet.dateTo %s '%s')",$filter['dateToComparator'],db_esc($filter["dateTo"]));
     }
     return $sql;
   }
@@ -736,7 +736,9 @@ class timeSheet extends db_entity {
                 ,"personID"                       => "Time Sheets for this person"
                 ,"status"                         => "Time Sheet status eg: edit | manager | admin | invoiced | finished"
                 ,"dateFrom"                       => "Time Sheets from a particular date"
+                ,"dateFromComparator"             => "The comparison operator: >, >=, <, <=, =, !="
                 ,"dateTo"                         => "Time Sheets to a particular date"
+                ,"dateToComparator"               => "The comparison operator: >, >=, <, <=, =, !="
                 ,"timeSheetItemHours"             => "Time Sheets that have a certain amount of hours billed eg: '>7 AND <10 OR =4 AND !=8'"
                 ,"url_form_action"                => "The submit action for the filter form"
                 ,"form_name"                      => "The name of this form, i.e. a handle for referring to this saved form"

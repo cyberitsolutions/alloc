@@ -101,7 +101,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
     else:
       if o['date']:
         # <=
-        ops['dateFrom'],ops['dateComparator'] = self.parse_date_comparator(o['date'])
+        ops['dateFrom'],ops['dateFromComparator'] = self.parse_date_comparator(o['date'])
       timeSheets = self.get_list("timeSheet",ops)
       self.print_table(timeSheets, self.row_timeSheet, sort=order)
   
