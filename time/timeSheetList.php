@@ -33,6 +33,8 @@ function show_filter() {
 $defaults = array("url_form_action"=>$TPL["url_alloc_timeSheetList"]
                  ,"form_name"=>"timeSheetList_filter"
                  ,"showFinances"=>$_REQUEST["showFinances"]
+                 ,"dateFromComparator"=>">="
+                 ,"dateToComparator"=>"<="
                  );
 
 $_FORM = timeSheet::load_form_data($defaults);
