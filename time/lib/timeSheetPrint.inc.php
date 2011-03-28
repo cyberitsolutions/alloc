@@ -81,8 +81,8 @@ class timeSheetPrint {
       $units[$taskID][$unit] += sprintf("%0.2f",$timeSheetItem->get_value("timeSheetItemDuration") * $timeSheetItem->get_value("multiplier"));
 
       unset($str);
-      $d = $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
-      $d && !$rows[$taskID]["desc"] and $str[] = $d;
+      $d = $timeSheetItem->get_value('taskID', DST_HTML_DISPLAY) . ": " . $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
+      $d && !$rows[$taskID]["desc"] and $str[] = "<b>".$d."</b>"; //inline because the PDF needs it that way
 
       // Get task description
       if ($taskID && $TPL["printDesc"]) {
@@ -90,6 +90,7 @@ class timeSheetPrint {
         $t->set_id($taskID);
         $t->select();
         $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription",DST_HTML_DISPLAY));
+	$d2 .= "\n";
 
         $d2 && !$d2s[$taskID] and $str[] = $d2;
         $d2 and $d2s[$taskID] = true;
@@ -146,8 +147,8 @@ class timeSheetPrint {
       $units[$taskID][$unit] += $num;
 
       unset($str);
-      $d = $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
-      $d && !$rows[$taskID]["desc"] and $str[] = $d;
+      $d = $timeSheetItem->get_value('taskID', DST_HTML_DISPLAY) . ": " . $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
+      $d && !$rows[$taskID]["desc"] and $str[] = "<b>".$d."</b>";
 
 
       // Get task description
@@ -156,6 +157,7 @@ class timeSheetPrint {
         $t->set_id($taskID);
         $t->select();
         $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription",DST_HTML_DISPLAY));
+	$d2 .= "\n";
 
         $d2 && !$d2s[$taskID] and $str[] = $d2;
         $d2 and $d2s[$taskID] = true;
@@ -215,8 +217,8 @@ class timeSheetPrint {
       $rows[$row_num]["multiplier_string"] = $multipliers[$timeSheetItem->get_value("multiplier")]["timeSheetItemMultiplierName"];
 
       unset($str);
-      $d = $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
-      $d && !$rows[$row_num]["desc"] and $str[] = $d;
+      $d = $timeSheetItem->get_value('taskID', DST_HTML_DISPLAY) . ": " . $timeSheetItem->get_value('description',DST_HTML_DISPLAY);
+      $d && !$rows[$row_num]["desc"] and $str[] = "<b>".$d."</b>";
 
       // Get task description
       if ($taskID && $TPL["printDesc"]) {
@@ -224,6 +226,7 @@ class timeSheetPrint {
         $t->set_id($taskID);
         $t->select();
         $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription",DST_HTML_DISPLAY));
+	$d2 .= "\n";
 
         $d2 && !$d2s[$taskID] and $str[] = $d2;
         $d2 and $d2s[$taskID] = true;
