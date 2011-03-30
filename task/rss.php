@@ -18,6 +18,15 @@ function gen_key($prefix = 0) {
   return '!' . $prefix . sprintf("%04d", $subidx++);
 }
 
+// a single '&' can't be inserted into the XML stream because it's used to 
+// create a character (&amp;, &lt;, etc). SimpleXML doesn't escape it, probably 
+// for that reason. There should be no HTML in task titles so this should be 
+// safe.
+function escape_xml($string) {
+  return str_replace('&', '&amp;', $string);
+}
+
+
 $people = get_cached_table('person');
 
 //the task history
@@ -47,14 +56,15 @@ while ($row = $db->next_record()) {
   } else {
     $name = $people[$row['personID']]['username'];
   }
-  
+
+  $taskName = escape_xml($row['taskName']);
   if ($summary) {
-    $el['desc'] = sprintf('%s: %d "%s" %s', $name, $row['entityID'], $row['taskName'], $row['taskStatus']);
+    $el['desc'] = sprintf('%s: %d "%s" %s', $name, $row['entityID'], $taskName, $row['taskStatus']);
   } else {
     if ($row['fieldName'] == "taskStatus") {
-      $el['desc'] = sprintf('Task #%d "%s" status changed to %s', $row['entityID'], $row['taskName'], $row['taskStatus']);
+      $el['desc'] = sprintf('Task #%d "%s" status changed to %s', $row['entityID'], $taskName, $row['taskStatus']);
     } else if ($row['fieldName'] == "personID") {
-      $el['desc'] = sprintf('Task #%d "%s" assigned to %s', $row['entityID'], $row['taskName'], $name);
+      $el['desc'] = sprintf('Task #%d "%s" assigned to %s', $row['entityID'], $taskName, $name);
     } else {
       $el['desc'] = "error!";
     }
@@ -65,7 +75,6 @@ while ($row = $db->next_record()) {
   
   $events[$key] = $el;
 }
-
 
 // Task creation events aren't stored in the audit table, so they have to be 
 // queried separately. This has to be done at the end, after the historical task 
@@ -85,11 +94,12 @@ while ($row = $db->next_record()) {
   } else {
     $name = $people[$row['personID']]['username'];
   }
-  
+
+  $taskName = escape_xml($row['taskName']);
   if ($summary)
-    $desc = sprintf('%s: %d "%s" %s', $name, $row['taskID'], $row['taskName'], $row['taskStatus']);
+    $desc = sprintf('%s: %d "%s" %s', $name, $row['taskID'], $taskName, $row['taskStatus']);
   else
-    $desc = sprintf('Task #%d "%s" created.', $row['taskID'], $row['taskName']);
+    $desc = sprintf('Task #%d "%s" created.', $row['taskID'], $taskName);
 
   $events[$row['dateCreated'].gen_key(0)]= array("date" => $row['dateCreated'],
     "desc" => $desc);
