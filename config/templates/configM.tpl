@@ -7,6 +7,7 @@
                                ,"time_sheets"=>"Time Sheets"
                                ,"email_gateway"=>"Email Gateway"
                                ,"email_subject"=>"Email Subject Lines"
+                               ,"rss"=>"RSS Feed"
                                ,"misc"=>"Miscellaneous")
                           ,$url_alloc_config)}
 
@@ -365,6 +366,34 @@
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="company_info">
+</form>
+</div>
+
+<div id="rss">
+<form action="{$url_alloc_config}" method="post">
+<table class="box">
+  <tr>
+    <th colspan="2">RSS Feed Setup</th>
+    <th>{page::help('config_rssFeed')}</th>
+  </tr>
+  <tr>
+    <td>Number of entries</td>
+    <td><input type="text" size="70" value="{$rssEntries}" name="rssEntries"></td> 
+    <td width="1%">{page::help('config_rssEntries')}</tr>
+  </tr>
+  <tr>
+    <td>Status changes to include</td>
+    <td><select size="9" name="rssStatusFilter[]" multiple><option value="">{$rssStatusFilterOptions}</select></td>
+    <td width="1%">{page::help('config_rssStatusFilter')}</td>
+  <tr>
+    <td>Show project name in feed</td>
+    <td><input type="checkbox" name="rssShowProject" {if $rssShowProject}checked="checked"{/}></td>
+    <td></td>
+  <tr>  
+    <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
+  </tr>
+</table>
+<input type="hidden" name="sbs_link" value="rss">
 </form>
 </div>
 

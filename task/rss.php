@@ -2,7 +2,8 @@
 
 include_once('../alloc.php');
 
-$max_events = 10; //should probably be replaced by a config item later
+$max_events = config::get_config_item('rssEntries');
+$show_project = config::get_config_item('rssShowProject');
 
 // generate the RSS feed based on the audit table and some task creation data
 // output will be
@@ -35,8 +36,11 @@ $trace = array();
 $summary = $_GET['summary'] ? true : false;
 // summary mode is the abbreviated version for the IRC bot
 
+$status_types = config::get_config_item('rssStatusFilter');
+// can't be filtered in the query because it would break the history playback
+
 // find the last max_events audit events that are status change or reassignment
-$query = sprintf("SELECT entityID, fieldName, changeType, dateChanged, oldValue, taskName, taskStatus, task.personID
+$query = sprintf("SELECT entityID, fieldName, changeType, dateChanged, oldValue, taskName, taskStatus, task.personID, projectID
                     FROM auditItem LEFT JOIN task as task ON entityID = taskID
                    WHERE entityName = 'task' AND changeType = 'FieldChange' AND fieldName IN ('taskStatus', 'personID')
                 ORDER BY dateChanged DESC
@@ -57,30 +61,42 @@ while ($row = $db->next_record()) {
     $name = $people[$row['personID']]['username'];
   }
 
-  $taskName = escape_xml($row['taskName']);
-  if ($summary) {
-    $el['desc'] = sprintf('%s: %d "%s" %s', $name, $row['entityID'], $taskName, $row['taskStatus']);
-  } else {
-    if ($row['fieldName'] == "taskStatus") {
-      $el['desc'] = sprintf('Task #%d "%s" status changed to %s', $row['entityID'], $taskName, $row['taskStatus']);
-    } else if ($row['fieldName'] == "personID") {
-      $el['desc'] = sprintf('Task #%d "%s" assigned to %s', $row['entityID'], $taskName, $name);
-    } else {
-      $el['desc'] = "error!";
+  if ($row['fieldName'] != "taskStatus" || array_search($row['taskStatus'], $status_types) !== FALSE) {
+    $taskName = escape_xml($row['taskName']);
+    $project = null;
+    if ($show_project) {
+      $project = new project;
+      $project->set_id($row['projectID']);
+      $project->select();
     }
+    if ($summary) {
+      if ($show_project) {
+        $projectName = $project->get_value('projectShortName');
+      }
+      $el['desc'] = sprintf('%s: %d %s "%s" %s', $name, $row['entityID'], $projectName, $taskName, $row['taskStatus']);
+    } else {
+      if ($show_project) {
+        $projectName = "(".$project->get_value("projectName").")";
+      }
+      if ($row['fieldName'] == "taskStatus") {
+        $el['desc'] = sprintf('Task #%d "%s" %s status changed to %s', $row['entityID'], $taskName, $projectName, $row['taskStatus']);
+      } else if ($row['fieldName'] == "personID") {
+        $el['desc'] = sprintf('Task #%d "%s" %s assigned to %s', $row['entityID'], $taskName, $projectName, $name);
+      } else {
+        $el['desc'] = "error!";
+      }
+    }
+    $events[$key] = $el;
   }
-
   //record the history 
   $trace[$db->f('entityID')][$db->f('fieldName')] = $db->f('oldValue');
-  
-  $events[$key] = $el;
 }
 
 // Task creation events aren't stored in the audit table, so they have to be 
 // queried separately. This has to be done at the end, after the historical task 
 // status has been retrieved.
 
-$query = sprintf("SELECT taskID, dateCreated, taskName, personID, taskStatus
+$query = sprintf("SELECT taskID, dateCreated, taskName, personID, taskStatus, projectID
                    FROM task
                ORDER BY dateCreated DESC
                   LIMIT %d", $max_events);
@@ -94,12 +110,23 @@ while ($row = $db->next_record()) {
   } else {
     $name = $people[$row['personID']]['username'];
   }
-
+  if ($show_project) {
+    $project = new project;
+    $project->set_id($row['projectID']);
+    $project->select();
+  }
   $taskName = escape_xml($row['taskName']);
-  if ($summary)
-    $desc = sprintf('%s: %d "%s" %s', $name, $row['taskID'], $taskName, $row['taskStatus']);
-  else
-    $desc = sprintf('Task #%d "%s" created.', $row['taskID'], $taskName);
+  if ($summary) {
+    if ($show_project) {
+      $projectName = $project->get_value('projectShortName');
+    }
+    $desc = sprintf('%s: %d %s "%s" %s', $name, $row['taskID'], $projectName, $taskName, $row['taskStatus']);
+  } else {
+    if ($show_project) {
+      $projectName = "(".$project->get_value("projectName").")";
+    }
+    $desc = sprintf('Task #%d "%s" %s created.', $row['taskID'], $taskName, $projectName);
+   }
 
   $events[$row['dateCreated'].gen_key(0)]= array("date" => $row['dateCreated'],
     "desc" => $desc);
