@@ -149,6 +149,18 @@ if ($_POST["save"]) {
       $TPL["message_good"] = "Saved configuration.";
     }
   }
+
+  // Handle the only checkbox specially. If more checkboxes are added this 
+  // should be rewritten.
+  echo var_dump($_POST);
+  if ($_POST['sbs_link'] == "rss" && !$_POST['rssShowProject']) {
+    $c = new config;
+    $c->set_id($config->get_config_item_id('rssShowProject'));
+    $c->select();
+    $c->set_value("value", '0');
+    $c->save();
+  }
+
   $TPL["message"] or $TPL["message_good"] = "Saved configuration.";
 
 } else if ($_POST["delete_logo"]) {
@@ -204,6 +216,8 @@ $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateNam
 
 $tsEditors = array("all"=>"All users", "managers"=>"Managers only", "none"=>"Empty rate only");
 $TPL["timeSheetEditOptions"] = page::select_options($tsEditors, $config->get_config_item("timeSheetEditors"));
+
+$TPL["rssStatusFilterOptions"] = page::select_options(task::get_task_statii_array(true), $config->get_config_item("rssStatusFilter"));
 
 $TPL["main_alloc_title"] = "Setup - ".APPLICATION_NAME;
 include_template("templates/configM.tpl");
