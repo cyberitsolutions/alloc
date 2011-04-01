@@ -481,34 +481,6 @@ class timeSheet extends db_entity {
     }
   }
 
-  function shootEmail($email) {
-    
-    $addr = $email["to"];
-    $msg = $email["body"];
-    $sub = $email["subject"];
-    $type = $email["type"];
-    $dummy = $_POST["dont_send_email"];
-    
-    // New email object wrapper takes care of logging etc.
-    $email = new alloc_email($addr,$sub,$msg,$type);
-
-    // REMOVE ME!!
-    #$email->ignore_no_email_urls = true;
-
-
-    if ($dummy) {
-      return "Elected not to send email.";
-    } else if (!$email->is_valid_url()) {
-      return "Almost sent email to: ".$email->to_address;
-    } else if (!$email->to_address) {
-      return "Could not send email, invalid email address: ".$email->to_address;
-    } else if ($email->send()) {
-      return "Sent email to: ".$email->to_address;
-    } else {
-      return "Problem sending email to: ".$email->to_address;
-    }
-  }
-
   function get_task_list_dropdown($status,$timeSheetID,$taskID="") {
 
     if (is_object($this)) {
@@ -852,7 +824,9 @@ class timeSheet extends db_entity {
       die("You do not have access to this timesheet.");
     }
 
-    $info = $this->get_email_vars();
+    $project = $this->get_foreign_object("project");
+    $info["projectManagers"] = $project->get_timeSheetRecipients();
+
     if (is_array($info["projectManagers"]) && count($info["projectManagers"])) {
       $steps["forwards"]["edit"] = "manager";
       $steps["backwards"]["admin"] = "manager";
@@ -883,29 +857,12 @@ class timeSheet extends db_entity {
     // is possible to move backwards to "edit", from both "manager" and "admin"
     // requires manager or APPROVE_TIMESHEET permission
     global $current_user;
-    $project = $this->get_foreign_object("project");
-    $projectManagers = $project->get_timeSheetRecipients();
     if ($direction == "backwards") {
-      if (!in_array($current_user->get_id(), $projectManagers) &&
+      if (!in_array($current_user->get_id(), $info["projectManagers"]) &&
         !$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
           //error, go away
           die("You do not have permission to change this timesheet.");
       }
-      $email = array();
-      $email["type"] = "timesheet_reject";
-      $email["to"] = $info["timeSheet_personID_email"];
-      $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetFromManager"), "timeSheet", $this->get_id());
-      $email["body"] = <<<EOD
-         To: {$info["timeSheet_personID_name"]}
- Time Sheet: {$info["url"]}
-For Project: {$info["projectName"]}
-Rejected By: {$info["people_cache"][$current_user->get_id()]["name"]}
-
-EOD;
-      $this->get_value("billingNote") 
-      and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
-      $msg[] = $this->shootEmail($email);
-
       $this->set_value("dateSubmittedToAdmin", "");   
       $this->set_value("approvedByAdminPersonID", "");   
       $this->set_value("dateSubmittedToManager", "");     
@@ -918,8 +875,6 @@ EOD;
 
   function email_move_status_to_manager($direction,$info) { 
     global $current_user;
-    $project = $this->get_foreign_object("project");
-    $projectManagers = $project->get_timeSheetRecipients();
     // Can get forwards to "manager" only from "edit"
     if ($direction == "forwards") {
       //forward to manager requires the timesheet to be owned by the current 
@@ -930,46 +885,7 @@ EOD;
       }
       $this->set_value("dateSubmittedToManager", date("Y-m-d"));
       $this->set_value("dateRejected", "");
-      // Check for time overrun
-      $overrun_tasks = array();
-      $db = new db_alloc();
-      $task_id_query = sprintf("SELECT DISTINCT taskID FROM timeSheetItem WHERE timeSheetID=%d ORDER BY dateTimeSheetItem, timeSheetItemID", $this->get_id());
-      $db->query($task_id_query);
-      while($db->next_record()) {
-        $task = new task;
-        $task->read_db_record($db, false);
-        $task->select();
-        if($task->get_value('timeLimit') > 0) {
-          $total_billed_time = ($task->get_time_billed(false)) / 3600;
-          if($total_billed_time > $task->get_value('timeLimit')) {
-            $overrun_tasks[] = sprintf(" * %d %s (limit: %.02f hours, billed so far: %.02f hours)", $task->get_id(), $task->get_value('taskName'), $task->get_value('timeLimit'), $total_billed_time);
-          }
-        }
-      }
-      if(count($overrun_tasks)) {
-        $overrun_notice = "\n\nThe following tasks billed on this timesheet have exceeded their time estimates:\n";
-        $overrun_notice .= implode("\n", $overrun_tasks);
-      }
-      foreach ($info["projectManagers"] as $pm) {
-        $email = array();
-        $email["type"] = "timesheet_submit";
-        $email["to"] = $info["people_cache"][$pm]["emailAddress"];
-        $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetToManager"), "timeSheet", $this->get_id());
-        $email["body"] = <<<EOD
-  To Manager: {$info["people_cache"][$pm]["name"]}
-  Time Sheet: {$info["url"]}
-Submitted By: {$info["timeSheet_personID_name"]}
- For Project: {$info["projectName"]}
 
-A timesheet has been submitted for your approval. If it is satisfactory,
-submit the timesheet to the Administrator. If not, make it editable again for
-re-submission.$overrun_notice
-
-EOD;
-        $this->get_value("billingNote") and 
-        $email["body"].= "\n\nBilling Note: ".$this->get_value("billingNote");
-        $msg[] = $this->shootEmail($email);
-      }
     // Can get backwards to "manager" only from "admin"
     } else if ($direction == "backwards") {
       //admin->manager requires APPROVE_TIMESHEETS
@@ -977,21 +893,6 @@ EOD;
         //no permission, go away
         die("You do not have permission to change this timesheet.");
       }
-      $email = array();
-      $email["type"] = "timesheet_reject";
-      $email["to"] = $info["approvedByManagerPersonID_email"];
-      $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetFromAdministrator"), "timeSheet", $this->get_id());
-      $email["body"] = <<<EOD
-  To Manager: {$info["approvedByManagerPersonID_name"]}
-  Time Sheet: {$info["url"]}
-Submitted By: {$info["timeSheet_personID_name"]}
- For Project: {$info["projectName"]}
- Rejected By: {$info["people_cache"][$current_user->get_id()]["name"]}
-
-EOD;
-      $this->get_value("billingNote") 
-      and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
-      $msg[] = $this->shootEmail($email);
       $this->set_value("dateRejected", date("Y-m-d"));
     }
     $this->set_value("status", "manager");
@@ -1002,48 +903,25 @@ EOD;
 
   function email_move_status_to_admin($direction,$info) { 
     global $current_user;
-    $project = $this->get_foreign_object("project");
-    $projectManagers = $project->get_timeSheetRecipients();
     // Can get forwards to "admin" from "edit" and "manager"
     if ($direction == "forwards") {
       //3 ways to have permission to do this
       //project manager for the timesheet
       //no project manager and owner of the timesheet
       //the permission flag
-      if (!(in_array($current_user->get_id(), $projectManagers) || 
-        (empty($projectManagers) && $this->get_value("personID") == $current_user->get_id()) ||
+      if (!(in_array($current_user->get_id(), $info["projectManagers"]) || 
+        (empty($info["projectManagers"]) && $this->get_value("personID") == $current_user->get_id()) ||
         $this->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
           //error, go away
         die("You do not have permission to change this timesheet.");
       }
 
-        if ($this->get_value("status") == "manager") { 
-          $this->set_value("approvedByManagerPersonID",$current_user->get_id());
-          $extra = " Approved By: ".person::get_fullname($current_user->get_id());
-        }
-        $this->set_value("status", "admin");
-        $this->set_value("dateSubmittedToAdmin", date("Y-m-d"));
-	      $this->set_value("dateRejected", "");
-        foreach($info["timeSheetAdministrators"] as $adminID)  {
-          $email = array();
-          $email["type"] = "timesheet_submit";
-          $email["to"] = $info["people_cache"][$adminID]["emailAddress"];
-          $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetToAdministrator"), "timeSheet", $this->get_id());
-          $email["body"] = <<<EOD
-    To Admin: {$info["admin_name"]}
-  Time Sheet: {$info["url"]}
-Submitted By: {$info["timeSheet_personID_name"]}
- For Project: {$info["projectName"]}
-{$extra}
-
-A timesheet has been submitted for your approval. If it is not
-satisfactory, make it editable again for re-submission.
-
-EOD;
-          $this->get_value("billingNote") 
-          and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
-          $msg[] = $this->shootEmail($email);
-        }
+      if ($this->get_value("status") == "manager") { 
+        $this->set_value("approvedByManagerPersonID",$current_user->get_id());
+      }
+      $this->set_value("status", "admin");
+      $this->set_value("dateSubmittedToAdmin", date("Y-m-d"));
+      $this->set_value("dateRejected", "");
 
     // Can get backwards to "admin" from "invoiced" 
     } else {
@@ -1052,7 +930,6 @@ EOD;
         //no permission, go away
         die("You do not have permission to change this timesheet.");
       }
-
       $this->set_value("approvedByAdminPersonID", "");
     }
     $this->set_value("status", "admin");
@@ -1083,39 +960,6 @@ EOD;
         //no permission, go away
         die("You do not have permission to change this timesheet.");
       }
-
-      //transactions
-      $q = sprintf("SELECT DISTINCT transaction.transactionDate, transaction.product, transaction.status
-                      FROM transaction
-                      JOIN tf ON tf.tfID = transaction.tfID OR tf.tfID = transaction.fromTfID
-                RIGHT JOIN tfPerson ON tfPerson.personID = %d AND tfPerson.tfID = tf.tfID
-                     WHERE transaction.timeSheetID = %d
-                   ", $this->get_value('personID'), $this->get_id());
-      $db = new db_alloc();
-      $db->query($q);
-
-      //the email itself
-      $email = array();
-      $email["type"] = "timesheet_finished";
-      $email["to"] = $info["timeSheet_personID_email"];
-      $email["subject"] = commentTemplate::populate_string(config::get_config_item("emailSubject_timeSheetCompleted"), "timeSheet", $this->get_id());
-      $email["body"] = <<<EOD
-         To: {$info["timeSheet_personID_name"]}
- Time Sheet: {$info["url"]}
-For Project: {$info["projectName"]}
-
-Your timesheet has been completed by {$info["current_user_name"]}.
-
-EOD;
-
-      if($db->num_rows() > 0) {
-        $email["body"] .= "Transaction summary:\n";
-        $status_ops = array("pending" => "Pending", "approved" => "Approved", "rejected" => "Rejected");
-        while($db->next_record()) {
-          $email["body"] .= $db->f("transactionDate") . " for " . $db->f("product") . ": " . $status_ops[$db->f("status")] . "\n";
-        }
-      }
-      $msg[] = $this->shootEmail($email);
       $this->set_value("status", "finished");
       return $msg;
     } 
@@ -1130,32 +974,6 @@ EOD;
     $db = new db_alloc();
     $q = sprintf("UPDATE transaction SET status = 'approved' WHERE timeSheetID = %d AND status = 'pending'",$this->get_id());
     $db->query($q);
-  }
-
-  function get_email_vars() {
-    global $current_user;
-    static $rtn;
-    if ($rtn) {
-      return $rtn;
-    }
-    // Get vars for the emails below
-    $rtn["people_cache"] = $people_cache = get_cached_table("person");
-    $project = $this->get_foreign_object("project");
-    $rtn["projectManagers"] = $project->get_timeSheetRecipients();
-    $rtn["projectName"] = $project->get_value("projectName");
-    $rtn["timeSheet_personID_email"] = $people_cache[$this->get_value("personID")]["emailAddress"];
-    $rtn["timeSheet_personID_name"]  = $people_cache[$this->get_value("personID")]["name"];
-
-    $config = new config;
-    $rtn["url"] = $config->get_config_item("allocURL")."time/timeSheet.php?timeSheetID=".$this->get_id();
-
-    $rtn["timeSheetAdministrators"] = $config->get_config_item('defaultTimeSheetAdminList');
-    $rtn["approvedByManagerPersonID_email"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["emailAddress"];
-    $rtn["approvedByManagerPersonID_name"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["name"];
-    $rtn["approvedByAdminPersonID_name"] = $people_cache[$this->get_value("approvedByAdminPersonID")]["name"];
-    $rtn["current_user_name"] = $people_cache[$current_user->get_id()]["name"];
-    
-    return $rtn;
   }
 
   function add_timeSheetItem_by_project($projectID, $duration, $comments, $emailUID=null, $date=null) {

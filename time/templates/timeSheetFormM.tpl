@@ -118,9 +118,6 @@
     <td colspan="5">
       <table width="100%" align="center" cellpadding="0" cellspacing="0">
         <tr>
-          <td align="center" colspan="3">{$radio_email}</td>
-        </tr>
-        <tr>
           <td width="1%">{page::help("timesheet_buttons")}</td>
           <td align="center">{$timeSheet_ChangeStatusButton}<br><br>{$timeSheet_status_text}</td>
           <td>&nbsp;</td>
