@@ -23,25 +23,6 @@
 define("NO_AUTH",true);
 require_once("../alloc.php");
 
-// Get default currency
-$default_currency = config::get_config_item("currency");
-
-// Get list of active currencies
-$meta = new meta("currencyType");
-$currencies = $meta->get_list();
-
-foreach ((array)$currencies as $code => $currency) {
-  $rate = get_exchange_rate($code,$default_currency);
-  if ($rate) {
-    $er = new exchangeRate();
-    $er->set_value("exchangeRateCreatedDate",date("Y-m-d"));
-    $er->set_value("fromCurrency",$code);
-    $er->set_value("toCurrency",$default_currency);
-    $er->set_value("exchangeRate",$rate);
-    $er->save();
-  } else {
-    echo date("Y-m-d H:i:s")."Unable to obtain exchange rate information for ".$code." to ".$default_currency."!";
-  }
-}
+exchangeRate::download();
 
 ?>
