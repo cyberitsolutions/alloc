@@ -11,11 +11,11 @@ The Premier Open Source Professional Services Automation Solution
 
 .. figure:: images/icon_alloc.png
 
-**Cybersource Pty Ltd.  ACN 053 904 082  ABN 13 053 904 082**
+**Cyber IT Solutions Pty Ltd.  ACN 053 904 082  ABN 13 053 904 082**
 
 **1/130-132 Stawell St Richmond, Victoria 3121 Australia**
 
-http://www.cybersource.com.au/
+http://www.cyber.com.au/
 
 **allocPSA Pty Ltd.  ACN 127 299 503  ABN 2712 7299 503**
 
@@ -24,15 +24,15 @@ http://www.allocpsa.com
 
 THIS DOCUMENT IS PROVIDED FOR INFORMATIONAL PURPOSES ONLY.
 
-The information furnished in this document, believed by Cybersource to be
-accurate as of the date of its publication, is subject to change without
-notice. Cybersource assumes no responsibility for any errors or omissions in
-this document and shall have no obligation to you as a result of having made
-this document available to you or based upon the information it contains. 
+The information furnished in this document, believed by Cyber IT Solutions to be
+accurate as of the date of its publication, is subject to change without notice.
+Cyber IT Solutions assumes no responsibility for any errors or omissions in this
+document and shall have no obligation to you as a result of having made this
+document available to you or based upon the information it contains. 
 
-Cybersource and allocPSA are registered trademarks of Cybersource Pty. Ltd.
-All other products and services are the registered trademarks of their
-respective holders. 
+Cyber IT Solutions and allocPSA are registered trademarks of Cyber IT Solutions
+Pty. Ltd.  All other products and services are the registered trademarks of
+their respective holders. 
 
 This document was written by: Kei, Con Zymaris, Alex Lance, Jeremy Chin,
 Robbie, Erick Fabre, Trent Buck, Manjula Arulananther.
@@ -81,10 +81,10 @@ allocPSA is open source software, meaning you can gain access to the latest
 versions of the product directly from the project's website:
 http://www.allocpsa.org/
 
-How to Contact Cybersource
-==========================
+How to Contact Cyber IT Solutions
+=================================
 
-Full contact details are available from http://www.cybersource.com.au/ or by
+Full contact details are available from http://www.cyber.com.au/ or by
 emailing `info@cyber.com.au <mailto:info@cyber.com.au>`_
 
 .. list-table::
@@ -104,7 +104,7 @@ emailing `info@cyber.com.au <mailto:info@cyber.com.au>`_
    - - Email
      - info@cyber.com.au
    - - Web
-     - http://www.cybersource.com.au/
+     - http://www.cyber.com.au/
 
 Product Support Community
 ===============================
@@ -132,14 +132,14 @@ any manner you like. This includes:
 
 If you have the technical skill in-house or can hire them, you may be happy to
 support and maintain this product on your own. However, allocPSA was developed
-and is commercially supported by Cybersource Pty. Ltd., based in Melbourne,
+and is commercially supported by Cyber IT Solutions Pty. Ltd., based in Melbourne,
 Australia.
 
-Cybersource has been providing commercial support since 1991 and has been the
-allocPSA product developer and maintainer since 2000. As such, we can offer
+Cyber IT Solutions has been providing commercial support since 1991 and has been
+the allocPSA product developer and maintainer since 2000. As such, we can offer
 your firm high-quality support. In addition, because allocPSA is open source
 software, and any other competent web-development firm can also elect to offer
-commercial support for it, Cybersource must also offer great value in its
+commercial support for it, Cyber IT Solutions must also offer great value in its
 support services.
 
 
@@ -149,7 +149,7 @@ Per Incident
 
 The first level of support is on a per-incident basis. Per-incident support is
 offered on a best-effort basis and is capped at two (2) hours actual
-expended effort. Contact Cybersource for pricing.
+expended effort. Contact Cyber IT for pricing.
 
 
 Service Level Agreement Pre-Purchase Block
@@ -163,7 +163,7 @@ work towards resolving your support incident within two hours of initial
 notification. This is during AEST (UTC +10) standard business hours, Monday to
 Friday, 9:00am to 5:00pm, excluding public holidays. 
 
-Contact Cybersource to discuss your commercial support needs.
+Contact Cyber IT Solutions to discuss your commercial support needs.
 
 
 
@@ -173,7 +173,7 @@ Pre-installed Server Appliance
 .. figure:: images/allocPSA_server_appliance.png
 
 If you would like to have allocPSA professionally installed on
-production-quality server hardware, Cybersource makes available the allocPSA
+production-quality server hardware, Cyber IT makes available the allocPSA
 Server Appliance. 
 
 The server appliance contains the operating system platform, SQL database
@@ -187,7 +187,7 @@ Customisation
 
 No two services businesses work the same way. To provide for this reality,
 allocPSA was designed and is intended to be customised for each site. To that
-end, Cybersource offers your firm a complete customisation service, whereby
+end, Cyber IT offers your firm a complete customisation service, whereby
 allocPSA can be optimised for your work processes, your firm's accounting and
 billing practices and the software used to implement these, or any other
 site-specific requirements.
@@ -227,7 +227,7 @@ to the allocPSA project. This will provide two benefits:
 Integration
 -----------
 
-Cybersource maintains a full integration, support and development team which is
+Cyber IT maintains a full integration, support and development team which is
 able to assist you in integrating allocPSA into your organisation's information
 system architecture. In fact, if you've purchased the allocPSA server
 appliance, the price for allocPSA includes a pre-purchased quanta of
@@ -236,8 +236,8 @@ installation, customisation and support services.
 Online Web Hosting
 ------------------
 
-Cybersource in partnership with allocPSA Pty Ltd is now proud to offer
-online hosting of the allocPSA application. For more information see 
+Cyber IT Solutions in partnership with allocPSA Pty Ltd is now proud to offer
+online hosting of the allocPSA application. For more information see
 http://www.allocpsa.com
 
 
@@ -374,7 +374,7 @@ historical and current business activity, as well as an open-ended and
 customisable report generator which allows you to extract data to a web-page or
 CSV file, ready for mail-merges or exporting.
 
-For more information, please contact Cybersource.
+For more information, please contact Cyber IT Solutions.
 
 Home
 ----
