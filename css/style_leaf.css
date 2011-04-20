@@ -14,6 +14,10 @@ body {
   margin:0px 14px;
 }
 
+/* This should match the body font */
+pre.comment {
+  font-family: arial, helvetica, sans-serif;
+}
 /* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
 body table {
   font-size:100%;
