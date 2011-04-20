@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2006, 2007, 2008 Alex Lance, Clancy Malcolm, Cybersource
+ * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
  * 
  * This file is part of the allocPSA application <info@cyber.com.au>.
