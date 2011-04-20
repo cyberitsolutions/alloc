@@ -413,7 +413,7 @@ INSERT INTO config (name, value, type) VALUES ('companyName','Your Business Here
 INSERT INTO config (name, value, type) VALUES ('companyContactPhone','+61 3 9621 2377','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactFax','+61 3 9621 2477','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactEmail','info@cyber.com.au','text');
-INSERT INTO config (name, value, type) VALUES ('companyContactHomePage','http://www.cybersource.com.au','text');
+INSERT INTO config (name, value, type) VALUES ('companyContactHomePage','http://www.cyber.com.au','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactAddress','Level 4, 10-16 Queen St','text');
 INSERT INTO config (name, value, type) VALUES ('companyACN','ACN 053 904 082','text');
 INSERT INTO config (name, value, type) VALUES ('hoursInDay','7.5','text');

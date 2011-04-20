@@ -305,7 +305,7 @@ useful automated reminders functionality.
 # Check for allocPSA Repeating Expenses once a day at 4:40am
 40 4 * * * wget -q -O /dev/null {$_FORM["allocURL"]}finance/checkRepeat.php
 
-Please feel free to contact us at Cybersource <info@cyber.com.au> or just use
+Please feel free to contact us at Cyber IT Solutions <info@cyber.com.au> or just use
 the forums at http://sourceforge.net/projects/allocpsa/ if you have any questions.
 
 To remove this announcement click on the Tools tab and then click the
