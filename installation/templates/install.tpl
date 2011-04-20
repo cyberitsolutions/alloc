@@ -275,7 +275,7 @@ server.
     </div>
 
     <div style="text-align:center; font-size:70%; color:#666666;">
-      allocPSA {get_alloc_version()} &copy; {echo date("Y")} <a style="color:#666666" href="http://www.cybersource.com.au">Cybersource</a>
+      allocPSA {get_alloc_version()} &copy; {echo date("Y")} <a style="color:#666666" href="http://www.cyber.com.au">Cyber IT Solutions</a>
     </div>
 
   </body>
