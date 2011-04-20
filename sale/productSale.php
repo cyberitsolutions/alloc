@@ -1,7 +1,7 @@
 <?php
 
   /*
- * Copyright (C) 2006, 2007, 2008 Alex Lance, Clancy Malcolm, Cybersource
+ * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
  * 
  * This file is part of the allocPSA application <info@cyber.com.au>.
@@ -282,7 +282,7 @@ if ($_POST["save"]) {
 
 } else if ($_POST["delete_productSale"]) {
   $productSale->delete();
-  alloc_redirect($TPL["url_alloc_productList"]);
+  alloc_redirect($TPL["url_alloc_productSaleList"]);
 }
 
 

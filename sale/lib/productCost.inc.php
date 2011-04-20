@@ -2,7 +2,7 @@
 
 /*
  *
- * Copyright 2006, Alex Lance, Clancy Malcolm, Cybersource Pty. Ltd.
+ * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions Pty. Ltd.
  * 
  * This file is part of allocPSA <info@cyber.com.au>.
  * 
