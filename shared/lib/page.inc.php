@@ -387,7 +387,7 @@ EOD;
     return $str;
   }
   function htmlentities($str="") {
-    return htmlentities($str,ENT_QUOTES,"UTF-8");
+    return htmlentities($str,ENT_QUOTES | ENT_IGNORE,"UTF-8");
   }
   function money_fmt($c,$amount=null) {
     $currencies = get_cached_table("currencyType");
