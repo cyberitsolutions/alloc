@@ -390,7 +390,7 @@ class timeSheetItem extends db_entity {
     $rows = array();
 
     // Get list of comments from timeSheetItem table
-    $query = sprintf("SELECT timeSheetID, dateTimeSheetItem AS date, comment, personID
+    $query = sprintf("SELECT timeSheetID, dateTimeSheetItem AS date, comment, personID, timeSheetItemDuration as duration
                         FROM timeSheetItem
                        WHERE timeSheetItem.taskID = %d AND (commentPrivate != 1 OR commentPrivate IS NULL) AND emailUID is NULL
                     ORDER BY dateTimeSheetItem,timeSheetItemID

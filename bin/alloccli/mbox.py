@@ -54,14 +54,16 @@ alloc mbox -t 1234 > file.mbox'''
 
       # If we're redirecting stdout eg -t 123 >task123.html
       if not stdout.isatty():
-        print self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
-
+        str = self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
+        str += "\n\n" + self.make_request({"method":"get_timeSheetItem_comments","taskID":taskID})
+        print str
 
       else:
         if not 'MAILER' in os.environ or not os.environ['MAILER']:
           self.die('The environment variable $MAILER has not been defined. Eg: export MAILER="mutt -f "')
 
         str = self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
+        str += "\n\n" + self.make_request({"method":"get_timeSheetItem_comments","taskID":taskID})
 
         fd, filepath = tempfile.mkstemp()
         with closing(os.fdopen(fd, 'wb')) as tf:

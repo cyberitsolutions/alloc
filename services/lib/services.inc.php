@@ -172,6 +172,19 @@ class alloc_services {
     return $emails;
   }
 
+  public function get_timeSheetItem_comments($taskID) {
+    $people = get_cached_table("person");
+    $rows = timeSheetItem::get_timeSheetItemComments($taskID);
+    foreach ($rows as $row) {
+      $timestamp = format_date("U",$row["date"]);
+      $name = $people[$row["personID"]]["name"];
+      $str.= $br."From allocPSA ".date('D M  j G:i:s Y',$timestamp);
+      $str.= "\n".$name." ".$row["duration"]." ".$row["comment"];
+      $br = "\n\n";
+    } 
+    return $str;
+  }
+
   public function init_email_info() {
     global $current_user; // Always need this :(
     $info["host"] = config::get_config_item("allocEmailHost");
