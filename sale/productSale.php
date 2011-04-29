@@ -180,6 +180,7 @@ if ($_POST["move_forwards"]) {
 // Code to respond to form buttons 
 if ($_POST["save"]) {
   !$productSaleID && $productSale->set_value("status", "edit");
+  $productSale->read_globals();
   $productSale->save(); 
   $productSaleID = $productSale->get_id();
   alloc_redirect($TPL["url_alloc_productSale"]."productSaleID=".$productSaleID);
