@@ -1360,6 +1360,7 @@ class task extends db_entity {
     $_FORM["showDateStatus"]  and $rtn["showDateStatus_checked"]  = " checked";
     $_FORM["showTaskID"]      and $rtn["showTaskID_checked"]      = " checked";
     $_FORM["showManager"]     and $rtn["showManager_checked"]     = " checked";
+    $_FORM["showProject"]     and $rtn["showProject_checked"]     = " checked";
     
     $arrow = " --&gt;";
     $taskDateOps = array(""                   => ""

@@ -24,7 +24,6 @@ require_once("../alloc.php");
 
 
 $defaults = array("showHeader"=>true
-                 ,"showProject"=>true
                  ,"showTaskID"=>true
                  ,"showEdit"=>true
                  ,"taskView" => "byProject"
