@@ -1048,7 +1048,7 @@ class task extends db_entity {
   function get_percentComplete($get_num=false) {
 
     $timeActual = sprintf("%0.2f",$this->get_time_billed());
-    $timeExpected = sprintf("%0.2f",$this->get_value("timeExpected")*60*60);
+    $timeExpected = sprintf("%0.2f",$this->get_value("timeLimit")*60*60);
 
     if ($timeExpected>0 && is_object($this)) {
 
