@@ -1206,22 +1206,40 @@ class timeSheet extends db_entity {
 
     $can_edit = config::get_config_item("timeSheetEditors");
 
-    if ($can_edit == "all")
+    // If everyone can edit the rate
+    if ($can_edit == "all") {
       return true;
+    }
+
+    // If the person is not on the project, then false
     $projectPerson = projectPerson::get_projectPerson_row($this->get_value("projectID"), $this->get_value("personID"));
     if (!$projectPerson) {
       return false;
     }
 
-    if (!$projectPerson['rate'])
+    // If the rate is not set
+    if ($projectPerson['rate'] === "") {
       return true;
+    }
 
     $project = $this->get_foreign_object('project');
 
+    // If rates can be edited by managers and the current user is a manager
     if ($can_edit == "managers" && 
       ($current_user->have_role("manage") || $project->has_project_permission("", array("isManager")))) {
         return true;
     }
+
+    // If the values can be edited provided they're blank at the project level
+    if ($can_edit == "none" && $projectPerson['rate'] === "") {
+      return true;
+    }
+
+    // Fallback since finance admins should be able to do anything
+    if ($current_user->have_role("admin") || $current_user->have_role("god")) {
+      return true;
+    }
+
     return false;
   }
 

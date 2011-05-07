@@ -99,7 +99,7 @@ class timeSheetItem extends db_entity {
     if (!is_object($timeSheet) || !$timeSheet->get_id()) {
       die("Unknown time sheet.");
     }
-    if ($timeSheet->get_value("status") != "edit") {
+    if ($timeSheet->get_value("status") != "edit" && !$this->skip_tsi_status_check) {
       die("Time sheet is not at status edit");
     }
     if (!$this->is_owner()) {
