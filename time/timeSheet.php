@@ -388,14 +388,34 @@ if ($timeSheetID) {
 } 
 
 
-// Hack to manually update the Client Billing field
-if ($_GET["CB"]) {
+// Manually update the Client Billing field
+if ($_REQUEST["updateCB"] && $timeSheet->get_id() && $timeSheet->can_edit_rate()) {
   $project = new project;
   $project->set_id($timeSheet->get_value("projectID"));
   $project->select();
   $timeSheet->set_value("customerBilledDollars",page::money($project->get_value("currencyTypeID"),$project->get_value("customerBilledDollars"),"%mo"));
   $timeSheet->set_value("currencyTypeID",$project->get_value("currencyTypeID"));
   $timeSheet->save();
+}
+// Manually update the person's rate
+if ($_REQUEST["updateRate"] && $timeSheet->get_id() && $timeSheet->can_edit_rate()) {
+  $row_projectPerson = projectPerson::get_projectPerson_row($timeSheet->get_value("projectID"), $current_user->get_id());
+  if (!$row_projectPerson) {
+    $TPL["message"][] = "The person has not been added to the project.";
+  } else {
+    $q = sprintf("SELECT timeSheetItemID from timeSheetItem WHERE timeSheetID = %d",$timeSheet->get_id()); 
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $tsi = new timeSheetItem();
+      $tsi->set_id($row["timeSheetItemID"]);
+      $tsi->select();
+      $tsi->set_value("timeSheetItemDurationUnitID", $row_projectPerson["rateUnitID"]);
+      $tsi->set_value("rate",page::money($timeSheet->get_value("currencyTypeID"),$row_projectPerson["rate"],"%mo"));
+      $tsi->skip_tsi_status_check = true;
+      $tsi->save();
+    }
+  }
 }
 
 
@@ -900,6 +920,7 @@ if ($timeSheetID) {
 }
 
 $TPL["taxName"] = config::get_config_item("taxName");
+$TPL["ts_rate_editable"] = $timeSheet->can_edit_rate();
 
 
 

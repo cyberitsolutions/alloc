@@ -40,17 +40,27 @@
   </tr>
 
   <tr>
-    <td>&nbsp;</td>
+	  <td>{page::help("engineer_amount")}</td>
     <td align="right">Amount:</td>
-    <td>{$total_dollars}</td>
+    <td>{$total_dollars}
+      {if $timeSheet_status && $timeSheet_status != "finished" && $timeSheet_status != "edit" && $ts_rate_editable}
+        <input type="submit" name="updateRate" value="Update">
+      {/}
+    </td>
     <td align="right">Project:{page::mandatory($timeSheet_projectID)}</td>
 	  <td width="30%" class="nobr"><div id="projectDropdown" style="display:inline">{$show_project_options}</div></td>
   </tr>
 
   <tr>
-	  <td>&nbsp;</td>
+	  <td>{page::help("client_billing")}</td>
     <td align="right">Client Billing:</td>
-    <td><nobr>{$total_customerBilledDollars}{$ex_gst}</nobr></td>
+    <td>
+      <nobr>{$total_customerBilledDollars}{$ex_gst}
+      {if $timeSheet_status && $timeSheet_status != "finished" && $timeSheet_status != "edit" && $ts_rate_editable}
+        <input type="submit" name="updateCB" value="Update">
+      {/}
+      </nobr>
+    </td>
     <td align="right">Time Sheet Manager{$manager_plural}:</td>
     <td>{=$managers}</td>
   </tr>
