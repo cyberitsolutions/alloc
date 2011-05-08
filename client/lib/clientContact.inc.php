@@ -49,9 +49,7 @@ class clientContact extends db_entity {
   }
 
   function find_by_name($name=false,$projectID=false) {
-
     $stack1 = array();
-
     $people = array();
     $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactName
                     FROM client
@@ -80,25 +78,17 @@ class clientContact extends db_entity {
     }
   }
 
-  function find_by_email($email=false,$projectID=false) {
-    $people = array();
-    $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactEmail
-                    FROM client
-               LEFT JOIN clientContact ON client.clientID = clientContact.clientID
-               LEFT JOIN project ON project.clientID = client.clientID 
-                   WHERE project.projectID = %d
-                 ",$projectID);
-    $db = new db_alloc();
-    $db->query($q);
-    while ($row = $db->row()) {
-      $people[$db->f("clientContactID")] = $row;
-    }
-
+  function find_by_email($email=false) {
     $email = str_replace(array("<",">"),"",$email);
-    foreach($people as $clientContactID => $row) {
-      if (strtolower($email) == strtolower($row["clientContactEmail"])) {
-        return $clientContactID;
-      }
+    if ($email) {
+      $q = sprintf("SELECT clientContactID
+                      FROM clientContact
+                     WHERE replace(replace(clientContactEmail,'<',''),'>','') = '%s'
+                   ",db_esc($email));
+      $db = new db_alloc();
+      $db->query($q);
+      $row = $db->row();
+      return $row["clientContactID"];
     }
   }
 
