@@ -2,6 +2,7 @@ from __future__ import with_statement
 import tempfile
 import sys
 import os
+import subprocess
 from sys import stdout
 from contextlib import closing
 from alloc import alloc
@@ -59,19 +60,14 @@ alloc mbox -t 1234 > file.mbox'''
         print str
 
       else:
-        if not 'MAILER' in os.environ or not os.environ['MAILER']:
-          self.die('The environment variable $MAILER has not been defined. Eg: export MAILER="mutt -f "')
-
         str = self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
         str += "\n\n" + self.make_request({"method":"get_timeSheetItem_comments","taskID":taskID})
 
-        fd, filepath = tempfile.mkstemp()
-        with closing(os.fdopen(fd, 'wb')) as tf:
-          tf.write(unicode(str).encode('utf-8'))
-
-        command = os.environ['MAILER']+' "'+filepath+'"'
-        self.msg('Running: '+command)
-        os.system(command)
-        self.msg('Removing: '+filepath)
-        os.remove(filepath)
+        try:
+          fd, filepath = tempfile.mkstemp(prefix="alloc-%s_" % taskID, suffix=".mbox")
+          with closing(os.fdopen(fd, 'wb')) as tf:
+            tf.write(unicode(str).encode('utf-8'))
+          subprocess.check_call ([os.getenv ("MAILER") or "mutt", "-f", filepath])
+        finally:
+          os.remove(filepath)
 
