@@ -722,6 +722,19 @@ while ($row = $db->row()) {
 }
 $TPL["total_timeSheet_transactions_pending"] = page::money_print($rows);
 
+$q = sprintf("SELECT SUM(customerBilledDollars * timeSheetItemDuration * multiplier * pow(10,-currencyType.numberToBasic))
+                  AS amount, timeSheet.currencyTypeID as currency
+                FROM timeSheetItem 
+           LEFT JOIN timeSheet ON timeSheetItem.timeSheetID = timeSheet.timeSheetID
+           LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
+               WHERE timeSheet.projectID = %d",$project->get_id());
+$db->query($q);
+unset($rows);
+while ($row = $db->row()) {
+  $rows[] = $row;
+}
+$TPL["total_timeSheet_customerBilledDollars"] = page::money_print($rows);
+
 $q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
@@ -772,6 +785,21 @@ while ($row = $db->row()) {
 }
 $TPL["total_invoice_transactions_approved"] = page::money_print($rows);
 
+
+$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+                  AS amount, transaction.currencyTypeID as currency
+                FROM transaction
+           LEFT JOIN currencyType on currencyType.currencyTypeID = transaction.currencyTypeID
+               WHERE transaction.projectID = %d
+                 AND transaction.status = 'approved'
+            GROUP BY transaction.currencyTypeID
+              ",$project->get_id());
+$db->query($q);
+unset($rows);
+while ($row = $db->row()) {
+  $rows[] = $row;
+}
+$TPL["total_expenses_transactions_approved"] = page::money_print($rows);
 
 
 if ($project->get_id()) {

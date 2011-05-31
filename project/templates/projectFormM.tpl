@@ -292,18 +292,24 @@ function clickClientStatus(e) {
   <tr>
     <td class="right nobr">Outstanding Invoices</td>
     <td class="right">{$total_invoice_transactions_pending}</td>
-    <td class="right">Paid Invoices</td>
-    <td class="right">{$total_invoice_transactions_approved}</td>
-  </tr>
-  <tr>
     <td class="right nobr">Pending time sheets</td>
     <td class="right">{$total_timeSheet_transactions_pending}</td>
+  </tr>
+  <tr>
+    <td class="right">Paid Invoices</td>
+    <td class="right">{$total_invoice_transactions_approved}</td>
     <td class="right">Paid time sheets</td>
     <td class="right">{$total_timeSheet_transactions_approved}</td>
   </tr>
   <tr>
     <td class="right nobr">Task Time Estimate</td>
-    <td class="right" colspan="3">{$time_remaining} {page::money($project_currencyTypeID,$cost_remaining)} {$count_not_quoted_tasks}</td>
+    <td class="right">{$time_remaining} {page::money($project_currencyTypeID,$cost_remaining)} {$count_not_quoted_tasks}</td>
+    <td class="right">Sum Customer Billed for Time Sheets</td>
+    <td class="right">{$total_timeSheet_customerBilledDollars}</td>
+  </tr>            
+  <tr>
+    <td class="right nobr">Expenses</td>
+    <td class="right">{$total_expenses_transactions_approved}</td>
   </tr>            
 </table>
 {/}
