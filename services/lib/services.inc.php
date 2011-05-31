@@ -86,6 +86,43 @@ class alloc_services {
     }
   }
 
+  public function get_people($people="") {
+    $person_table = get_cached_table("person");
+
+    $people = explode(",",$people);
+    foreach ($people as $person) {
+      // personID
+      if (is_numeric($person)) {
+        $rtn[$person] = $person_table[$person];
+
+      // username
+      } else if (strpos($person," ") === false) {
+        foreach ($person_table as $pid => $data) {
+          strtolower($person) == strtolower($data["username"]) and $rtn[$pid] = $data;
+        }
+  
+      // full name
+      } else {
+        foreach ($person_table as $pid => $data) {
+          strtolower($person) == strtolower($data["name"]) and $rtn[$pid] = $data;
+        }
+      }
+    }
+    foreach ($rtn as $pid => $p) {
+      $rtn[$pid] = $this->reduce_person_info($p);
+    }
+    return (array)$rtn;
+  }
+
+  function reduce_person_info($person) {
+    $rtn["personID"] = $person["personID"];
+    $rtn["username"] = $person["username"];
+    $rtn["name"]     = $person["name"];
+    $rtn["emailAddress"] = $person["emailAddress"];
+    return $rtn;
+  }
+
+
   /** The add_timeSheetItem_by_task function
    * @param int $taskID
    * @param string $duration
