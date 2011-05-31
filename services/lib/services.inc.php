@@ -134,9 +134,11 @@ class alloc_services {
     //global $current_user; // Always need this :(
     //$current_user = $this->get_current_user($sessID);
     $rtn = timeSheet::add_timeSheetItem_by_task($taskID, $duration, $comments, null, $date);
-    if ($rtn["timeSheetItem_save_error"]) {
-      die($rtn["timeSheetItem_save_error"]);
-    } 
+    if ($rtn["status"] == "err") {
+      die($rtn["message"]);
+    } else if ($rtn["status"] == "yay") {
+      return $rtn["message"];
+    }
     return $rtn;
   }
 
