@@ -293,7 +293,7 @@ EOD;
         }
 
         $label = str_replace("&nbsp;"," ",$label);
-        if (strlen($label) > $max_length) {
+        if (strlen((string)$label) > $max_length) {
           $label = substr($label, 0, $max_length - 3)."...";
         } 
       

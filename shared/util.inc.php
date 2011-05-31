@@ -728,7 +728,7 @@ function parse_operator_comparison($str,$figure) {
 function imp($var) {
   // This function exists because php equates zeroes to false values.
   // imp == important == is this variable important == if imp($var)
-  return $var !== array() && trim($var) !== '' && $var !== null && $var !== false;
+  return $var !== array() && trim((string)$var) !== '' && $var !== null && $var !== false;
 }
 function get_exchange_rate($from, $to) {
   $debug = $_REQUEST["debug"];
