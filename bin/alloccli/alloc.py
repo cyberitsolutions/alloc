@@ -410,6 +410,12 @@ class alloc(object):
       self.err("Error: %s" % rtn)
       self.die("Args: %s" % args)
 
+  def get_people(people):
+    args = {}
+    args["people"] = people
+    args["method"] = "get_people"
+    return self.make_request(args)
+
   def get_alloc_html(self,url):
     return urllib.urlopen(url).read()
 
