@@ -79,7 +79,7 @@ alloc edit -i new ^tsid:7941 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^task:1
       if bit:
         chunks = bit.split(":")
         key = chunks[0].strip()
-        val = " ".join(chunks[1:]).strip()
+        val = ":".join(chunks[1:]).strip()
         package[key] = val
 
     args['package'] = package
