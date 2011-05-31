@@ -350,7 +350,7 @@ class person extends db_entity {
     return false;
   } 
 
-  function find_by_name($name=false) {
+  function find_by_name($name=false,$certainty=90) {
 
     $stack1 = array();
     $people = get_cached_table("person");
@@ -364,7 +364,7 @@ class person extends db_entity {
     $probable1_personID = key($stack1);
     $person_percent1 = current($stack1);
 
-    if ($probable1_personID && $person_percent1 > 90) {
+    if ($probable1_personID && $person_percent1 >= $certainty) {
       return $probable1_personID;
     }
   }
@@ -629,6 +629,14 @@ class person extends db_entity {
     global $TPL;
     $_FORM["return"] or $_FORM["return"] = "html";
     return "<a href=\"".$TPL["url_alloc_person"]."personID=".$this->get_id()."\">".$this->get_name($_FORM)."</a>";
+  }
+
+  function get_people_by_username($field="username") {
+    $people = get_cached_table("person");
+    foreach ($people as $personID => $person) {
+      $people_by_username[$person[$field]] = $person;
+    }
+    return $people_by_username;
   }
 
 }
