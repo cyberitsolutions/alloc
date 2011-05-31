@@ -1067,9 +1067,13 @@ class timeSheet extends db_entity {
         $rtn = $tsi->row();
       }
     }
-    $rtn["timeSheetID"] or $err[] = "Time not added.";
-    $err and $rtn["timeSheetItem_save_error"] = implode(" ",(array)$err);
-    return $rtn;
+
+    if (!$err && $rtn["timeSheetID"]) {
+      return array("status"=>"yay","message"=>$rtn["timeSheetID"]);
+    } else {
+      $rtn["timeSheetID"] or $err[] = "Time not added.";
+      return array("status"=>"err","message"=>implode(" ",(array)$err));
+    }
   }
 
   function get_all_parties($projectID="") {
