@@ -128,6 +128,15 @@ class tf extends db_entity {
     }
   }
 
+  function get_tfID($name="") {
+    if ($name) {
+      $db = new db_alloc;
+      $db->query(sprintf("SELECT tfID FROM tf WHERE tfName='%s'",db_esc($name)));
+      $db->next_record();
+      return $db->f("tfID");
+    }
+  }
+
   function get_list_filter($_FORM=array()) {
     global $current_user;
     $_FORM["owner"] and $filter1[] = sprintf("(tfPerson.personID = %d)",$current_user->get_id());

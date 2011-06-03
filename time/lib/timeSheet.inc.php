@@ -519,6 +519,9 @@ class timeSheet extends db_entity {
     if ($filter["timeSheetID"]) {
       $sql[] = sprintf("(timeSheet.timeSheetID = '%d')", $filter["timeSheetID"]);
     }
+    if ($filter["tfID"]) {
+      $sql[] = sprintf("(timeSheet.recipient_tfID = '%d')", $filter["tfID"]);
+    }
     if ($filter["projectID"]) {
       $sql[] = sprintf("(timeSheet.projectID = '%d')", $filter["projectID"]);
     }
@@ -720,6 +723,7 @@ class timeSheet extends db_entity {
                 ,"applyFilter"                    => "Saves this filter as the persons preference"
                 ,"showShortProjectLink"           => "Show short Project link"
                 ,"showFinances"                   => "Shortcut for displaying the transactions and the totals"
+                ,"tfID"                           => "Time sheets that belong to this TF"
                 );
   }
 

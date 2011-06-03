@@ -167,7 +167,9 @@ class alloc_services {
     return $timeSheet->change_status($direction);
   }
 
- 
+  public function get_tfID($name) {
+    return tf::get_tfID($name);
+  } 
 
   /** The get_list function
    * @param string $entity
