@@ -383,6 +383,7 @@ VALUES
 ,('timeSheetItem'            ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
 
 ,('token'                    ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
+,('tokenAction'              ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
 
 ,('transaction'              ,-1 ,NULL ,'employee' ,true ,NULL ,15    ,NULL)
 ,('transaction'              ,0  ,NULL ,'manage'   ,true ,NULL ,8192  ,'Manager create pending transaction.')
