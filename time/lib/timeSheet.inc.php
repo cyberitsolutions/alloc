@@ -603,7 +603,9 @@ class timeSheet extends db_entity {
 
     while ($row = $db->next_record()) {
       $t = new timeSheet;
-      $t->read_db_record($db);
+      if (!$t->read_db_record($db,false))
+        continue;
+
       $t->load_pay_info();
 
       if ($_FORM["timeSheetItemHours"] && !parse_operator_comparison($_FORM["timeSheetItemHours"],$t->pay_info["total_duration_hours"])) 
