@@ -189,10 +189,13 @@ class alloc(object):
     
     return rtn, " ".join(remainder)
 
-  def get_my_personID(self):
+  def get_my_personID(self, nick=None):
     # Get current user's personID
     ops = {}
     ops["username"] = self.username
+    if nick:
+      ops["username"] = nick
+    
     rtn = self.get_list("person",ops)
     for i in rtn:
       return i
