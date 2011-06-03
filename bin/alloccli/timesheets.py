@@ -12,6 +12,7 @@ class timesheets(alloc):
   ops.append(('i' ,'items          ','Show time sheet\'s items.'))
   ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
   ops.append(('s:','status=STATUS  ','The time sheets\' status. Can accept multiple values, eg: "edit,manager,admin,invoiced,finished,rejected" Default: edit'))
+  ops.append(('a:','account=TF     ','The time sheets\' TF name.'))
   ops.append(('t:','time=ID        ','A time sheet ID.'))
   ops.append(('h:','hours=NUM      ','The time sheets must have this many hours recorded eg: "7" eg: ">7 AND <10 OR =4 AND !=8"'))
   ops.append(('d:','date=YYYY-MM-DD','If --items is specified, then match against the items\' date. Else match against the date of the time sheet\'s earliest item.'))
@@ -50,6 +51,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
     order_ts = "From,ID"
     order_tsi = "Date,Item ID"
     status = "edit"
+    account = ""
 
     # Get a projectID either passed via command line, or figured out from a project name
     if self.is_num(o['project']):
@@ -76,8 +78,16 @@ alloc timesheets --date ">=2010-10-10" --items'''
     if timeSheetID:
       ops['timeSheetID'] = timeSheetID
     else:
-      ops['personID'] = personID
       ops['status'] = status
+
+      if 'account' in o and o['account']:
+        tfargs = {}
+        tfargs['method'] = 'get_tfID'
+        tfargs['name'] = o['account']
+        ops['tfID'] = self.make_request(tfargs)
+      else:
+        ops['personID'] = personID
+
       if projectID:
         ops['projectID'] = projectID
 
