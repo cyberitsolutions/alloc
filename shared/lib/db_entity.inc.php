@@ -84,7 +84,7 @@ class db_entity {
   }
 
   function have_perm($action = 0, $person = "", $assume_owner = false) {
-    if ((defined("NO_AUTH") && NO_AUTH) || $this->is_god()) {
+    if ($this->is_god()) {
       return true;
     }
     global $current_user, $permission_cache;
