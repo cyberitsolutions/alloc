@@ -13,6 +13,7 @@ class timesheets(alloc):
   ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
   ops.append(('s:','status=STATUS  ','The time sheets\' status. Can accept multiple values, eg: "edit,manager,admin,invoiced,finished,rejected" Default: edit'))
   ops.append(('a:','account=TF     ','The time sheets\' TF name.'))
+  ops.append(('c:','creator=NICK   ','The time sheets\' creator username.'))
   ops.append(('t:','time=ID        ','A time sheet ID.'))
   ops.append(('h:','hours=NUM      ','The time sheets must have this many hours recorded eg: "7" eg: ">7 AND <10 OR =4 AND !=8"'))
   ops.append(('d:','date=YYYY-MM-DD','If --items is specified, then match against the items\' date. Else match against the date of the time sheet\'s earliest item.'))
@@ -85,6 +86,8 @@ alloc timesheets --date ">=2010-10-10" --items'''
         tfargs['method'] = 'get_tfID'
         tfargs['name'] = o['account']
         ops['tfID'] = self.make_request(tfargs)
+      elif o['creator']:
+        ops['personID'] = self.get_my_personID(o['creator'])
       else:
         ops['personID'] = personID
 
