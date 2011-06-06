@@ -11,7 +11,7 @@ class timesheets(alloc):
   ops.append(('q' ,'quiet          ','Run with no output except errors.'))
   ops.append(('i' ,'items          ','Show time sheet\'s items.'))
   ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
-  ops.append(('s:','status=STATUS  ','The time sheets\' status. Can accept multiple values, eg: "edit,manager,admin,invoiced,finished,rejected" Default: edit'))
+  ops.append(('s:','status=STATUS  ','The time sheets\' status. Can accept multiple values, eg: "edit,manager,admin,invoiced,finished,rejected" or "all". Default: edit'))
   ops.append(('a:','account=TF     ','The time sheets\' TF name.'))
   ops.append(('c:','creator=NICK   ','The time sheets\' creator username.'))
   ops.append(('t:','time=ID        ','A time sheet ID.'))
@@ -65,6 +65,8 @@ alloc timesheets --date ">=2010-10-10" --items'''
 
     if ',' in o['status']:
       status = o['status'].split(',')
+    elif o['status'] == 'all':
+      status = 'edit,manager,admin,invoiced,finished,rejected'.split(',')
     elif o['status']:
       status = o['status']
 
