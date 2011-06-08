@@ -411,6 +411,7 @@ class alloc(object):
       return simplejson.loads(rtn)
     except:
       self.err("Error: %s" % rtn)
+      if args and 'password' in args: args['password'] = '********'
       self.die("Args: %s" % args)
 
   def get_people(people):
