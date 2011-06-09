@@ -313,7 +313,7 @@ class comment extends db_entity {
 
     $sig_num_lines_hidden = count($new_lines2)-1-$sig_start_position;
   
-    if ($sig_started && $sig_num_lines_hidden > 3){
+    if ($sig_started && $sig_num_lines_hidden > 1){
       $new_lines2[$sig_start_position-1].= "<div style=\"display:inline;\" class=\"hidden_text button_".$class."\"> --- ".$sig_num_lines_hidden." lines hidden (signature) --- <br></div>";
       $new_lines2[$sig_start_position-1].= "<div style=\"display:none;\" class=\"hidden_text ".$class."\">"; 
       $new_lines2[count($new_lines2)].= "</div>";
