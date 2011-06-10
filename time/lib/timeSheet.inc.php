@@ -1005,6 +1005,7 @@ class timeSheet extends db_entity {
                      WHERE status = 'edit' 
                        AND projectID = %d
                        AND personID = %d
+                       AND dateRejected IS NULL
                   ORDER BY dateFrom
                      LIMIT 1
                 ",$projectID, $current_user->get_id());
