@@ -122,6 +122,7 @@ class timeSheet extends db_entity {
      *                                                                         *
      * load_pay_info() loads these vars:                                       *
      * $this->pay_info["project_rate"];	    according to projectPerson table   *
+     * $this->pay_info["project_rate_orig"];before the currency transform      *
      * $this->pay_info["timeSheetItem_rate"];according to timeSheetItem table  *
      * $this->pay_info["customerBilledDollars"];                               *
      * $this->pay_info["project_rateUnitID"];	according to projectPerson table *
@@ -164,6 +165,7 @@ class timeSheet extends db_entity {
                  ,$this->get_value("personID"));
 
       $db->next_record();
+      $this->pay_info["project_rate_orig"] = $db->f("rate");
       $this->pay_info["project_rate"] = page::money($db->f("currencyTypeID"),$db->f("rate"),"%mo");
       $this->pay_info["project_rateUnitID"] = $db->f("rateUnitID");
       $rates[$this->get_value("projectID")][$this->get_value("personID")] = array($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]);
@@ -1064,22 +1066,22 @@ class timeSheet extends db_entity {
         $tsi->set_value("multiplier",$rate);
         $tsi->set_value("comment",$comments);
         $tsi->set_value("emailUID",$emailUID);
-        $str = $tsi->save();
-        $str and $err[] = $str;
+        $tsi->save();
         $id = $tsi->get_id();
 
         $tsi = new timeSheetItem();
         $tsi->set_id($id);
         $tsi->select();
-        $rtn = $tsi->row();
+        $ID = $tsi->get_value("timeSheetID");
       }
     }
 
-    if (!$err && $rtn["timeSheetID"]) {
-      return array("status"=>"yay","message"=>$rtn["timeSheetID"]);
+    if (!$err && $ID) {
+      return array("status"=>"yay","message"=>$ID);
     } else {
-      $rtn["timeSheetID"] or $err[] = "Time not added.";
-      return array("status"=>"err","message"=>implode(" ",(array)$err));
+      $ID or $err[] = "Time not added.";
+      $e = implode(" ",(array)$err);
+      return array("status"=>"err","message"=>$e);
     }
   }
 
@@ -1215,39 +1217,37 @@ class timeSheet extends db_entity {
   function can_edit_rate() {
     global $current_user;
 
+    // This function dictates whether it the current_user is permitted
+    // to override a timesheet's rate.
+
     $can_edit = config::get_config_item("timeSheetEditors");
+
+    // $can_edit will be one of:
+    // all      = all users can override their rate
+    // managers = only manager users get to override their rate
+    // none     = no users can override their rate
+
+    // Additionally, any user may override their rate if it hasn't been specified at the project level.
 
     // If everyone can edit the rate
     if ($can_edit == "all") {
       return true;
     }
 
-    // If the person is not on the project, then false
-    $projectPerson = projectPerson::get_projectPerson_row($this->get_value("projectID"), $this->get_value("personID"));
-    if (!$projectPerson) {
-      return false;
-    }
-
     // If the rate is not set
-    if ($projectPerson['rate'] === "") {
+    $projectPerson = projectPerson::get_projectPerson_row($this->get_value("projectID"), $this->get_value("personID"));
+    if ($projectPerson && $projectPerson['rate'] === "") {
       return true;
     }
 
-    $project = $this->get_foreign_object('project');
-
     // If rates can be edited by managers and the current user is a manager
-    if ($can_edit == "managers" && 
-      ($current_user->have_role("manage") || $project->has_project_permission("", array("isManager")))) {
-        return true;
-    }
-
-    // If the values can be edited provided they're blank at the project level
-    if ($can_edit == "none" && $projectPerson['rate'] === "") {
+    $project = $this->get_foreign_object('project');
+    if ($can_edit == "managers" && ($current_user->have_role("manage") || $project->has_project_permission($current_user, array("isManager")))) {
       return true;
     }
 
     // Fallback since finance admins should be able to do anything
-    if ($current_user->have_role("admin") || $current_user->have_role("god")) {
+    if ($current_user->have_role("admin")) {
       return true;
     }
 
