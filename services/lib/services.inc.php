@@ -130,29 +130,15 @@ class alloc_services {
    * @param string $comments
    * @return array $timeSheetID
    */
-  public function add_timeSheetItem_by_task($taskID, $duration, $rate, $date="", $comments="") {
+  public function add_timeSheetItem($options) {
     //global $current_user; // Always need this :(
     //$current_user = $this->get_current_user($sessID);
-    $rtn = timeSheet::add_timeSheetItem_by_task($taskID, $duration, $comments, null, $date, null, $rate);
+    $rtn = timeSheet::add_timeSheetItem($options);
     if ($rtn["status"] == "yay") {
       return $rtn["message"];
     } else {
       die(print_r($rtn,1));
     }
-    return $rtn;
-  }
-
-  /** The add_timeSheetItem_by_project function
-   * @param int $projectID
-   * @param string $duration
-   * @param string $date
-   * @param string $comments
-   * @return array $timeSheetID
-   */
-  public function add_timeSheetItem_by_project($projectID, $duration, $rate, $date="", $comments="") {
-    //global $current_user; // Always need this :(
-    //$current_user = $this->get_current_user($sessID);
-    return timeSheet::add_timeSheetItem_by_project($projectID, $duration, $comments, null, $date, $rate);
   }
 
    /** The change_timeSheet_status function
