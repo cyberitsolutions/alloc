@@ -984,22 +984,27 @@ class timeSheet extends db_entity {
     $db->query($q);
   }
 
-  function add_timeSheetItem_by_project($projectID, $duration, $comments, $emailUID=null, $date=null, $rate) {
+  function add_timeSheetItem($stuff) {
     global $current_user;
-    return timeSheet::add_timeSheetItem_by_task(null, $duration, $comments, $emailUID, $date, $projectID, $rate);
-  }
 
-  function add_timeSheetItem_by_task($taskID=null, $duration, $comments, $emailUID=null, $date=null, $projectID=null, $rate) {
-    global $current_user;
+    $taskID = $stuff["taskID"];
+    $projectID = $stuff["projectID"];
+    $duration = $stuff["duration"];
+    $comment = $stuff["comment"];
+    $emailUID = $stuff["msg_uid"];
+    $date = $stuff["date"];
+    $unit = $stuff["unit"];
+    $multiplier = $stuff["multiplier"];
 
     if ($taskID) {
       $task = new task;
       $task->set_id($taskID);
       $task->select();
       $projectID = $task->get_value("projectID");
+      $extra = " for task ".$taskID;
     }
 
-    $projectID or $err[] = "No project found.";
+    $projectID or $err[] = sprintf("No project found%s.",$extra);
 
     if ($projectID) {
       $q = sprintf("SELECT * 
@@ -1023,8 +1028,6 @@ class timeSheet extends db_entity {
 
         $timeSheet = new timeSheet();
         $timeSheet->set_value("projectID",$projectID);
-        $timeSheet->set_value("dateFrom",date("Y-m-d"));
-        $timeSheet->set_value("dateTo",date("Y-m-d"));
         $timeSheet->set_value("status","edit");
         $timeSheet->set_value("personID", $current_user->get_id());
         $timeSheet->set_value("recipient_tfID",$current_user->get_value("preferred_tfID"));
@@ -1062,9 +1065,9 @@ class timeSheet extends db_entity {
           $_POST["timeSheetItem_taskID"] = sprintf("%d",$taskID); // this gets used in timeSheetItem->save();
         }
         $tsi->set_value("personID",$current_user->get_id());
-        $tsi->set_value("rate",$row_projectPerson["rate"]);
-        $tsi->set_value("multiplier",$rate);
-        $tsi->set_value("comment",$comments);
+        $tsi->set_value("rate",page::money($timeSheet->get_value("currencyTypeID"),$row_projectPerson["rate"],"%mo"));
+        $tsi->set_value("multiplier",$multiplier);
+        $tsi->set_value("comment",$comment);
         $tsi->set_value("emailUID",$emailUID);
         $tsi->save();
         $id = $tsi->get_id();
