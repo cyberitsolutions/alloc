@@ -14,6 +14,7 @@ class time(alloc):
   ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.')) 
   ops.append(('d:','date=YYYY-MM-DD','The date that the work was performed.')) 
   ops.append(('h:','hours=NUM      ','The amount of time worked. Eg: 2.5 eg: 150m')) 
+  ops.append(('r:','rate=NUM       ','The rate for the time worked. Eg: 0=no-charge, 1=standard, 1.5=time-and-a-half, 2=double-time, 3=triple-time. Default: 1')) 
   ops.append(('c:','comment=COMMENT','The time sheet item comment.')) 
 
   # Specify some header and footer text for the help text
@@ -47,6 +48,7 @@ alloc time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
       if not o['task']:
         o['project'] = raw_input("Project ID or some text from a project's name: ")
       o['hours'] = raw_input("The number of hours you are billing: ")
+      o['rate'] = raw_input("The rate multiplier (0, 1, 1.5, 2, 3), or hit ENTER for 1: ")
       o['date'] = raw_input("The date that the work was performed, or hit ENTER for %s: " % self.today())
       o['comment'] = raw_input("Comments: ")
 
@@ -59,6 +61,9 @@ alloc time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
     personID = self.get_my_personID()
     projectID = 0
     taskID = 0
+
+    if not o['rate']:
+      o['rate'] = 1
 
     if not o['hours']:
       self.die('No quantity of hours has been specified.')
@@ -103,7 +108,7 @@ alloc time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
         self.die("Unable to find task with taskID: %s" % taskID)
 
       # Add time sheet item
-      rtn = self.add_time_by_task(taskID, o['hours'], o['date'], o['comment'])
+      rtn = self.add_time_by_task(taskID, o['hours'], o['rate'], o['date'], o['comment'])
       timeSheetID = rtn['timeSheetID']
 
     # Or of we're just adding time that's not related to a particular task ...
@@ -116,7 +121,7 @@ alloc time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
         self.die("Unable to find project with projectID: %s" % projectID)
 
       # Add time sheet item
-      rtn = self.add_time_by_project(projectID, o['hours'], o['date'], o['comment'])
+      rtn = self.add_time_by_project(projectID, o['hours'], o['rate'], o['date'], o['comment'])
       timeSheetID = rtn['timeSheetID']
 
     # No task or project means we don't add the time

@@ -352,23 +352,25 @@ class alloc(object):
 
     return username, password
     
-  def add_time_by_task(self, taskID, duration, date, comments):
+  def add_time_by_task(self, taskID, duration, rate, date, comments):
     # Add time to a time sheet using a task as reference
     if self.dryrun: return {'timeSheetID':''}
     args = {}
     args["taskID"] = taskID
     args["duration"] = duration
+    args["rate"] = rate
     args["date"] = date
     args["comments"] = comments
     args["method"] = "add_timeSheetItem_by_task"
     return self.make_request(args)
 
-  def add_time_by_project(self, projectID, duration, date, comments):
+  def add_time_by_project(self, projectID, duration, rate, date, comments):
     # Add time to a time sheet using a project as reference
     if self.dryrun: return {'timeSheetID':''}
     args = {}
     args["projectID"] = projectID
     args["duration"] = duration
+    args["rate"] = rate
     args["date"] = date
     args["comments"] = comments
     args["method"] = "add_timeSheetItem_by_project"

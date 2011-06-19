@@ -93,7 +93,7 @@ class timeSheetItem extends db_entity {
     }
 
     $this->get_value("personID") || $this->set_value("personID",$current_user->get_id());
-    $this->get_value("multiplier") || $this->set_value("multiplier",1);
+    //$this->get_value("multiplier") || $this->set_value("multiplier",1);
 
     // Last ditch perm checking - useful for the CLI
     if (!is_object($timeSheet) || !$timeSheet->get_id()) {
