@@ -982,12 +982,12 @@ class timeSheet extends db_entity {
     $db->query($q);
   }
 
-  function add_timeSheetItem_by_project($projectID, $duration, $comments, $emailUID=null, $date=null) {
+  function add_timeSheetItem_by_project($projectID, $duration, $comments, $emailUID=null, $date=null, $rate) {
     global $current_user;
-    return timeSheet::add_timeSheetItem_by_task(null, $duration, $comments, $emailUID, $date, $projectID);
+    return timeSheet::add_timeSheetItem_by_task(null, $duration, $comments, $emailUID, $date, $projectID, $rate);
   }
 
-  function add_timeSheetItem_by_task($taskID=null, $duration, $comments, $emailUID=null, $date=null, $projectID=null) {
+  function add_timeSheetItem_by_task($taskID=null, $duration, $comments, $emailUID=null, $date=null, $projectID=null, $rate) {
     global $current_user;
 
     if ($taskID) {
@@ -1061,7 +1061,7 @@ class timeSheet extends db_entity {
         }
         $tsi->set_value("personID",$current_user->get_id());
         $tsi->set_value("rate",$row_projectPerson["rate"]);
-        $tsi->set_value("multiplier",1);
+        $tsi->set_value("multiplier",$rate);
         $tsi->set_value("comment",$comments);
         $tsi->set_value("emailUID",$emailUID);
         $str = $tsi->save();
