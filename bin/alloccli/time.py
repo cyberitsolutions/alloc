@@ -108,8 +108,7 @@ alloc time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
         self.die("Unable to find task with taskID: %s" % taskID)
 
       # Add time sheet item
-      rtn = self.add_time_by_task(taskID, o['hours'], o['rate'], o['date'], o['comment'])
-      timeSheetID = rtn['timeSheetID']
+      timeSheetID = self.add_time_by_task(taskID, o['hours'], o['rate'], o['date'], o['comment'])
 
     # Or of we're just adding time that's not related to a particular task ...
     elif projectID:
@@ -121,8 +120,7 @@ alloc time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
         self.die("Unable to find project with projectID: %s" % projectID)
 
       # Add time sheet item
-      rtn = self.add_time_by_project(projectID, o['hours'], o['rate'], o['date'], o['comment'])
-      timeSheetID = rtn['timeSheetID']
+      timeSheetID = self.add_time_by_project(projectID, o['hours'], o['rate'], o['date'], o['comment'])
 
     # No task or project means we don't add the time
     else:

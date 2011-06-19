@@ -134,10 +134,10 @@ class alloc_services {
     //global $current_user; // Always need this :(
     //$current_user = $this->get_current_user($sessID);
     $rtn = timeSheet::add_timeSheetItem_by_task($taskID, $duration, $comments, null, $date, null, $rate);
-    if ($rtn["status"] == "err") {
-      die($rtn["message"]);
-    } else if ($rtn["status"] == "yay") {
+    if ($rtn["status"] == "yay") {
       return $rtn["message"];
+    } else {
+      die(print_r($rtn,1));
     }
     return $rtn;
   }
