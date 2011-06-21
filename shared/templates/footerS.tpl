@@ -19,7 +19,7 @@
       All page queries: {page::expand_link("all_page_queries_2", "Page queries: ".count($all_page_queries)." Time: ".$sum, "all_page_queries_1")}
       <pre class='message left noprint'>
         {foreach $all_page_queries as $info}
-<b>{$info.time}</b>   {$info.query}<br>
+<b>{$info.time}</b>   {=$info.query}<br>
         {/}
       </pre>
     </div> 
