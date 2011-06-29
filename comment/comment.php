@@ -104,11 +104,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
     // original email is kept. The receiveEmail.php script will see that this
     // email is *from* the same address, and will then skip over it, when going
     // through the new emails.
-    // 
-    // This comment only gets emailed to the default from address, if it is
-    // getting emailed to others as well...
-    $ips = interestedParty::get_interested_parties("comment",$comment->get_id());
-    if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS && is_array($ips) && count($ips)) {
+    if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
       list($from_address,$from_name) = parse_email_address(ALLOC_DEFAULT_FROM_ADDRESS);
       $emailRecipients[] = $from_address;
     }
