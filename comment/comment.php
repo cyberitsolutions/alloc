@@ -48,6 +48,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
   
 
   $comment = new comment;
+  $comment->updateSearchIndexLater = true;
 
   if ($_POST["comment_update"]) {
     $comment->set_id($_POST["comment_id"]);

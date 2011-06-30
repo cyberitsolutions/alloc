@@ -755,10 +755,6 @@ class comment extends db_entity {
     $index->addDocument($doc);
   }
 
-  function delete_search_index_doc(&$index) {
-    return $index;
-  }
-
   function get_list_summary_filter($filter=array()) {
     
     // This takes care of projectID singular and plural
