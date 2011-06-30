@@ -234,7 +234,7 @@ require_once("../alloc.php");
     $options["showHeader"] = true;
     $options["taskView"] = "byProject";
     $options["projectIDs"] = array($project->get_id());   
-    $options["taskStatus"] = "open";
+    $options["taskStatus"] = array("open","pending");
     $options["showTaskID"] = true;
     $options["showAssigned"] = true;
     $options["showStatus"] = true;
