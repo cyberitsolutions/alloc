@@ -124,6 +124,13 @@ CREATE TABLE history (
   the_label varchar(255) default ''
 ) ENGINE=InnoDB PACK_KEYS=0;
 
+DROP TABLE IF EXISTS indexQueue;
+CREATE TABLE indexQueue (
+  indexQueueID integer NOT NULL auto_increment PRIMARY KEY,
+  entity varchar(255) NOT NULL,
+  entityID integer NOT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
+
 DROP TABLE IF EXISTS invoice;
 CREATE TABLE invoice (
   invoiceID integer NOT NULL auto_increment PRIMARY KEY,

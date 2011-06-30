@@ -41,6 +41,7 @@ CREATE UNIQUE INDEX username ON person (username);
 CREATE UNIQUE INDEX tokenHash ON token (tokenHash);
 CREATE UNIQUE INDEX commentEmailUID ON comment (commentEmailUID);
 CREATE UNIQUE INDEX date_currency ON exchangeRate (exchangeRateCreatedDate,fromCurrency,toCurrency);
+CREATE UNIQUE INDEX entity_entityID ON indexQueue (entity,entityID);
 
 -- Add the referential integrity to the lookup/metadata tables. These are
 -- all ON UPDATE CASCADE, so that changes in the lookup tables are reflected with
