@@ -70,6 +70,7 @@ class project extends db_entity {
         $task = new task;
         $task->read_row_record($row);
         $task->close("archived",false);
+        $task->updateSearchIndexLater = true;
         $task->save();
         $ids.= $commar.$task->get_id();
         $commar = ", ";
@@ -97,6 +98,7 @@ class project extends db_entity {
         $task = new task;
         $task->read_row_record($row);
         $task->{$method}($arg);
+        $task->updateSearchIndexLater = true;
         $task->save();
         $ids.= $commar.$task->get_id();
         $commar = ", ";
