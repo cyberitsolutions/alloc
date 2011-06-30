@@ -480,8 +480,8 @@ class task extends db_entity {
     $db = new db_alloc;
     $query = sprintf("SELECT projectID AS value, projectName AS label 
                         FROM project 
-                       WHERE projectStatus IN ('Current', 'Potential') 
-                    ORDER BY projectName");
+                       WHERE projectStatus IN ('Current', 'Potential') OR projectID = %d
+                    ORDER BY projectName",$projectID);
     $str = page::select_options($query, $projectID, 60);
     return $str;
   }
