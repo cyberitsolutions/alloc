@@ -77,6 +77,33 @@ class project extends db_entity {
       $ids and $TPL["message_good"][] = "All open and pending Tasks (".$ids.") have had their status changed to Closed: Archived.";
     }
 
+    // If we're un-archiving the project, then un-archive the tasks.
+    if ($old["projectStatus"] == "Archived" && $this->get_value("projectStatus") != "Archived") {
+      $db = new db_alloc();
+      $t = new task;
+      $rows = $t->get(array("projectID"=>$this->get_id(),"taskStatus"=>"closed_archived"));
+      foreach ($rows as $row) {
+        $q = sprintf("SELECT * FROM auditItem
+                       WHERE entityName = 'task'
+                         AND entityID = %d
+                         AND changeType = 'FieldChange'
+                         AND fieldName = 'taskStatus'
+                    ORDER BY auditItemID DESC
+                       LIMIT 1
+                    ",$row["taskID"]);
+        $db->query($q);
+        $r = $db->row();
+        list($method, $arg) = explode("_",$r["oldValue"]);
+        $task = new task;
+        $task->read_row_record($row);
+        $task->{$method}($arg);
+        $task->save();
+        $ids.= $commar.$task->get_id();
+        $commar = ", ";
+      }
+      $ids and $TPL["message_good"][] = "All archived Tasks (".$ids.") have been set back to their former task status.";
+    }
+
     $TPL["message"] or $TPL["message_good"][] = "Project saved.";
     return parent::save();
   }
