@@ -57,6 +57,30 @@ class project extends db_entity {
   public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "view task allocations"
                              ,PERM_PROJECT_ADD_TASKS => "add tasks");
 
+  function save() {
+    global $TPL;
+    // The data prior to the save
+    $old = $this->all_row_fields;
+
+    // If we're archiving the project, then archive the tasks.
+    if ($old["projectStatus"] != "Archived" && $this->get_value("projectStatus") == "Archived") {
+      $t = new task;
+      $rows = $t->get(array("projectID"=>$this->get_id(),"SUBSTRING(taskStatus,1,6) != " => "closed"));
+      foreach ($rows as $row) {
+        $task = new task;
+        $task->read_row_record($row);
+        $task->close("archived",false);
+        $task->save();
+        $ids.= $commar.$task->get_id();
+        $commar = ", ";
+      }
+      $ids and $TPL["message_good"][] = "All open and pending Tasks (".$ids.") have had their status changed to Closed: Archived.";
+    }
+
+    $TPL["message"] or $TPL["message_good"][] = "Project saved.";
+    return parent::save();
+  }
+
   function delete() { 
     $q = sprintf("DELETE from projectPerson WHERE projectID = %d",$this->get_id()); 
     $db = new db_alloc();
