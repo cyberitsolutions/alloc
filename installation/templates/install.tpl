@@ -246,6 +246,9 @@ server.
 # Check every 10 minutes for any allocPSA Reminders to send
 */10 * * * * wget -q -O /dev/null {$allocURL}reminder/sendReminders.php
 
+# Check every 5 minutes to update the search index
+*/5 * * * * wget -q -O /dev/null {$allocURL}search/updateIndex.php
+
 # Check every 5 minutes for any new emails to import into allocPSA
 */5 * * * * wget -q -O /dev/null {$allocURL}email/receiveEmail.php
 

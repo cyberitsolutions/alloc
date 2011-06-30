@@ -20,14 +20,12 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-
-class search_module extends module {
+class indexQueue extends db_entity {
+  public $classname = "indexQueue";
+  public $data_table = "indexQueue";
+  public $key_field = "indexQueueID";
+  public $data_fields = array("entity"
+                             ,"entityID"
+                             );
 }
-
-require_once(dirname(__FILE__)."/search.inc.php");
-require_once(dirname(__FILE__)."/indexQueue.inc.php");
-
-
-
 ?>
