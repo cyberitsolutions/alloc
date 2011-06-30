@@ -131,9 +131,9 @@ class task extends db_entity {
     return parent::validate($err);
   }
 
-  function closed($t="complete") { return $this->close($t); }  // wrapper
+  function closed($t="complete",$closeChildren=true) { return $this->close($t,$closeChildren); }  // wrapper
  
-  function close($taskSubStatus = "complete") {
+  function close($taskSubStatus = "complete",$closeChildren=true) {
     global $current_user;
     $old = $this->all_row_fields;
     $cur_status = $old["taskStatus"].$old["duplicateTaskID"];
@@ -147,8 +147,8 @@ class task extends db_entity {
       $this->get_value("closerID")             || $this->set_value("closerID", $current_user->get_id());
       $this->get_value("dateClosed")           || $this->set_value("dateClosed",date("Y-m-d H:i:s"));           
       $this->set_value("taskStatus","closed_".$taskSubStatus);
-      if ($this->get_value("taskTypeID") == "Parent") {
-        $this->close_off_children_recursive();
+      if ($closeChildren) {
+        $this->close_off_children_recursive($taskSubStatus);
       }
     }
   }
@@ -188,18 +188,18 @@ class task extends db_entity {
     }
   }
 
-  function close_off_children_recursive() {
+  function close_off_children_recursive($taskSubStatus='') {
     // mark all children as complete
     global $current_user;
-    $db = new db_alloc;
-    if ($this->get_id()) {
+    if ($this->get_id() && $this->get_value("taskTypeID") == "Parent") {
+      $db = new db_alloc;
       $query = sprintf("SELECT * FROM task WHERE parentTaskID = %d",$this->get_id());
       $db->query($query);
                                                                                                                                
       while ($db->next_record()) {
         $task = new task;
         $task->read_db_record($db);
-        $task->close();
+        $task->close($taskSubStatus);
         $task->save();
       }
     }

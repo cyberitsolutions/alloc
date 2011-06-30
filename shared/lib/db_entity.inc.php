@@ -42,6 +42,9 @@ class db_entity {
 
 
   function __construct($id = false) {
+
+    $this->data_table or $this->data_table = get_class($this);
+    $this->classname  or $this->classname  = get_class($this);
   
     $this->permissions[PERM_READ]   = "Read";
     $this->permissions[PERM_UPDATE] = "Update";
@@ -70,6 +73,37 @@ class db_entity {
     if ($id) {
       $this->set_id($id);
       $this->select();
+    }
+  }
+
+  function get($id=array()) {
+    if ($id && is_numeric($id)) {
+      $db = $this->get_db();
+      $q = sprintf("SELECT * FROM ".$this->data_table." WHERE id = %d",$id);
+      $db->query($q);
+      return $db->row();
+
+    } else {
+      $db = $this->get_db();
+      foreach ((array)$id as $field=>$value) {
+        unset($op,$quotes);
+        // look for "field !=" etc
+        preg_match("/(>|<|=|!=|>=|<=|<>)\s*$/",$field,$m);
+        isset($m[1]) or $op = "=";
+      
+        // all strings (except null) should be surrounded in quotes
+        !is_numeric($value) && $value !== null and $quotes = '"';
+
+        $str .= $and." ".$field." ".$op." ".$quotes.$db->esc($value).$quotes;
+        $and = " AND ";
+      }
+      $str and $str = " WHERE ".$str;
+      $q = sprintf("SELECT * FROM ".$this->data_table.$str);
+      $db->query($q);
+      while ($row = $db->row()) {
+        $rows[] = $row;
+      }
+      return (array)$rows;
     }
   }
 
