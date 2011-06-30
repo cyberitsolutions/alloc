@@ -652,6 +652,7 @@ class invoice extends db_entity {
     $options["clientStatus"] = "Current";
     $options["return"] = "dropdown_options";
     $ops = client::get_list($options);
+    $ops = array_kv($ops,"clientID","clientName");
     $rtn["clientOptions"] = page::select_options($ops,$_FORM["clientID"]);
 
     // Get
