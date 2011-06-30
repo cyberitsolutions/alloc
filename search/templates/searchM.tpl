@@ -54,7 +54,7 @@
       <!-- We put display:table, because the default is for .filter's to be hidden -->
       <table class="filter corner" align="center" style="display:table">
         <tr>
-          <td><input type="text" size="70" name="needle" value="{$needle2}"></td>
+          <td><input type="text" size="70" name="needle" value="{=$needle2}"></td>
           <td><select size="1" name="category">{$search_category_options}</select></td>
           <td><input type="submit" name="search" value="Search"></td>
 	        <td><input type="checkbox" name="idRedirect" {$redir} />Disable redirection by ID</td>
