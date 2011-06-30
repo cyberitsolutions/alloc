@@ -294,6 +294,7 @@ class db_entity {
     $query.= ")";
     $this->debug and print "<br>db_entity->insert() query: ".$query;
     $db = $this->get_db();
+    $db->ignored_errors = $this->ignored_errors;
     $db->query($query);
 
     $id = mysql_insert_id();
@@ -359,6 +360,7 @@ class db_entity {
     $query = "UPDATE $this->data_table SET ".$this->get_name_equals_value($write_fields)." WHERE ";
     $query.= $this->get_name_equals_value(array($this->key_field));
     $db = $this->get_db();
+    $db->ignored_errors = $this->ignored_errors;
     $this->debug and print "<br>db_entity->update() query: ".$query;
     $db->query($query);
     return true;
@@ -403,10 +405,22 @@ class db_entity {
 
     // Update the search index for this entity, if any
     if ($this->classname && is_dir(ATTACHMENTS_DIR.'search/'.$this->classname)) {
-      $index = Zend_Search_Lucene::open(ATTACHMENTS_DIR.'search/'.$this->classname);
-      $this->delete_search_index_doc($index);
-      $this->update_search_index_doc($index);
-      $index->commit();
+
+      // Update the index asynchronously (later from a job running search/updateIndex.php)
+      if ($this->updateSearchIndexLater) {
+        $i = new indexQueue();
+        $i->set_value("entity",$this->classname);
+        $i->set_value("entityID",$this->get_id());
+        $i->ignored_errors = array(1062); // don't need to see unique key errors
+        $i->save();
+
+      // Update the index right now
+      } else {
+        $index = Zend_Search_Lucene::open(ATTACHMENTS_DIR.'search/'.$this->classname);
+        $this->delete_search_index_doc($index);
+        $this->update_search_index_doc($index);
+        $index->commit();
+      }
     }
 
     return $rtn;

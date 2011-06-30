@@ -66,6 +66,11 @@ class db {
 
   function error($msg=false,$errno=false) {
     global $TPL;
+
+    if (in_array($errno,(array)$this->ignored_errors)) {
+      return;
+    }
+
     if ($errno == 1451 || $errno == 1217) { 
       $TPL["message"][] = "Error: ".$errno." There are other records in the database that depend on the item you just tried to delete. 
                            Remove those other records first and then try to delete this item again. 
