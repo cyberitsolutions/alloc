@@ -239,6 +239,12 @@ class alloc(object):
     sortby = sortby.split(",")
     sortby.reverse()    
 
+    # Check that any attempted sortby columns are actually in the table
+    for k in sortby:
+      # Strip leading underscore (used in reverse sorting eg: _Rate)
+      if re.sub("^_","",k) not in fields:
+        self.die("Sort column not found: "+k)
+
     def sort_func(row):
       try: val = row[1][inverted_field_names[f]]
       except:
