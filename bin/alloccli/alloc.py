@@ -297,18 +297,22 @@ class alloc(object):
         r = []
         for v in only_these_fields[::2]: 
           str = ''
-      
-          for sep in ["|"," ","/"]:
-            if sep in v:
-              bits = v.split(sep)
-              str = sep.join([(row[i] or "") for i in bits])
+          success = False
               
-          if v in row: str = row[v]
+          if v in row:
+            str = row[v]
+            success = True
   
           if v in transforms:
             str = transforms[v](str)
+            success = True
 
-          if not str: str = ''
+          if not success:
+            self.die('Bad field name: '+v)
+
+          if not str:
+            str = ''
+
           r.append(str)
         table.add_row(r)
     lines = table.get_string(header=not self.csv)
