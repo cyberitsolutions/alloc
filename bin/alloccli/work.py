@@ -1,6 +1,6 @@
 from alloc import alloc
 
-class time(alloc):
+class work(alloc):
 
   one_line_help = "Add time to a time sheet. Create the time sheet if necessary."
 
@@ -25,8 +25,8 @@ class time(alloc):
 If run without arguments this program will run interactively.
 
 Examples:
-alloc time
-alloc time --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
+alloc work
+alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
 
   def run(self):
 
