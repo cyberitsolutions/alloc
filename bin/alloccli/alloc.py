@@ -193,40 +193,44 @@ class alloc(object):
     # Print it out
     self.print_table(rtn, ["taskID","Task ID","projectID","Project","status","Status","person","Owner"])
 
-  def get_args(self, ops, str):
+  def get_subcommand_help(self, command_list, ops, str):
+    # Get help text for a subcommand.
+    help_str = ""
+    for x in ops:
+      # These are used to build up the help text for --help
+      c = " "
+      s = "    "
+      l = "                   "
+      if x[0] and x[1]: c = ","
+      if x[0]: s = "  -"+x[0].replace(":","")
+      if x[1].strip(): l = c+" --"+x[1]
+      # eg:  -q, --quiet             Run with less output.
+      help_str += s+l+"   "+x[2]+"\n"
+    return str % (os.path.basename(" ".join(command_list[0:2])), help_str.rstrip())
+    
+  def get_args(self, command_list, ops, str):
     # This function allows us to handle the cli arguments elegantly
     short_ops = ""
     long_ops = []
-    help_str = ""
     options = []
     all_ops = {}
     rtn = {}
     remainder = ""
     
-    for x in ops:
+    help_string = self.get_subcommand_help(command_list, ops, str)
 
+    for x in ops:
       # These args go straight to getops
       short_ops += x[0]
       long_ops.append(re.sub("=.*$","=",x[1]).strip())
-
-      # These are used to build up the help text for --help
-      c = " " #spacing
-      s = "    " #spacing
-      l = "                   " #spacing
-      if x[0] and x[1]: c = ","
-      if x[0]: s = "  -"+x[0].replace(":","")
-      if x[1].strip(): l = c+" --"+x[1]
-
-      # eg:  -q, --quiet             Run with less output.
-      help_str += s+l+"   "+x[2]+"\n"
 
       # And this is used below to build up a dictionary to return
       all_ops[re.sub("=.*$","",x[1]).strip()] = ["-"+x[0].replace(":",""), "--"+re.sub("=.*$","",x[1]).strip()]
     
     try:
-      options, remainder = getopt.getopt(sys.argv[2:], short_ops, long_ops)
+      options, remainder = getopt.getopt(command_list[2:], short_ops, long_ops)
     except:
-      print str % (os.path.basename(" ".join(sys.argv[0:2])), help_str.rstrip())
+      print help_string
       sys.exit(0)
 
     for k,v in all_ops.items():
@@ -239,7 +243,7 @@ class alloc(object):
             rtn[k] = True
 
     if rtn['help']:
-      print str % (os.path.basename(" ".join(sys.argv[0:2])), help_str.rstrip())
+      print help_string
       sys.exit(0)
     
     return rtn, " ".join(remainder)

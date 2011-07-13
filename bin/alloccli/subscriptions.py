@@ -37,10 +37,10 @@ alloc subscriptions --email example@example.com --key 1234abcd > foo.txt
 alloc subscriptions --del < foo.txt
 alloc subscriptions --add < foo.txt"""
 
-  def run(self):
+  def run(self, command_list):
 
     # Get the command line arguments into a dictionary
-    o, remainder = self.get_args(self.ops, self.help_text)
+    o, remainder = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
     self.authenticate();

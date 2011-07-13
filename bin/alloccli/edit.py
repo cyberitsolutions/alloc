@@ -46,10 +46,10 @@ alloc edit -i 1234 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^private:1 ^task:
 # Create a new time sheet item. Note that ^tsid is mandatory in this case
 alloc edit -i new ^tsid:7941 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^task:15180"""
 
-  def run(self):
+  def run(self, command_list):
 
     # Get the command line arguments into a dictionary
-    o, remainder = self.get_args(self.ops, self.help_text)
+    o, remainder = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
     self.authenticate();
