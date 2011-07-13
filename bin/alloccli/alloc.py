@@ -8,6 +8,7 @@ import getopt
 import re
 import urllib
 import datetime
+import ConfigParser
 from netrc import netrc
 from urlparse import urlparse
 from prettytable import PrettyTable
@@ -18,6 +19,8 @@ class alloc(object):
   username = ''
   quiet = ''
   sessID = ''
+  alloc_dir = os.path.join(os.environ['HOME'], '.alloc/')
+  config = {}
   field_names = {"taskID":"Task ID"
                 ,"taskTypeID":"Type"
                 ,"taskStatusLabel":"Status"
@@ -77,17 +80,69 @@ class alloc(object):
   row_timeSheetItem = ["timeSheetID","ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","taskID","taskID","comment","Comment","timeSheetItemDuration","Hours","rate","$","worth","Worth","hoursBilled","Total","taskLimit","Limit","limitWarning","Warning"]
 
   def __init__(self,url=""):
+
+    # Create ~/.alloc if necessary
+    if not os.path.exists(self.alloc_dir):
+      self.msg("Creating: "+self.alloc_dir)
+      os.mkdir(self.alloc_dir)
+
+    # Create ~/.alloc/config
+    if not os.path.exists(self.alloc_dir+"config"):
+      self.create_config(self.alloc_dir+"config")
+
+    # Load ~/.alloc/config into self.config{}
+    self.load_config(self.alloc_dir+"config")
+
     if not url:
-      dir = sys.path[0].split("/")[-2]
-      if dir == "alloc":       url = "http://alloc/services/json.php"
-      if dir == "alloc_stage": url = "http://alloc_stage/services/json.php"
-      if dir == "alloc_dev":   url = "http://soy/alloc_dev/services/json.php"
+      if "url" in self.config and self.config["url"]:
+        url = self.config["url"]
+      if not url:
+        self.die("No alloc url specified!")
+
+    # Grab session ~/.alloc/session
+    if os.path.exists(self.alloc_dir+"session"):
+      self.sessID = self.load_session(self.alloc_dir+"session")
 
     self.url = url
     self.username = ''
     self.quiet = ''
     self.csv = False
-    self.sessID = ''
+
+  def create_config(self,f):
+    self.msg("Creating and populating: "+f)
+    str = "[main]\nurl: http://alloc/services/json.php\n"
+    # Write it out to a file
+    fd = open(f,'w')
+    fd.write(str)
+    fd.close()
+
+  def load_config(self,f):
+    config = ConfigParser.ConfigParser()
+    config.read([f])
+    sections = config.sections()
+    # Loop through each section
+    for section in sections:
+      options = config.options(section)
+      for option in options:
+        self.config[option] = config.get(section,option)
+
+  def create_session(self,sessID):
+    old_sessID = self.load_session(self.alloc_dir+"session")
+    if not old_sessID or old_sessID != sessID:
+      self.msg("Writing to: "+self.alloc_dir+"session")
+      # Write it out to a file
+      fd = open(self.alloc_dir+"session",'w')
+      fd.write(sessID)
+      fd.close()
+
+  def load_session(self,f):
+    try:
+      fd = open(f)
+      sessID = fd.read().strip()
+      fd.close()
+    except:
+      sessID = ""
+    return sessID
 
   def search_for_project(self, projectName, personID=None):
     # Search for a project like *projectName*
@@ -392,10 +447,15 @@ class alloc(object):
     allocUserAgent.version = 'alloc-cli %s' % username
     urllib._urlopener = allocUserAgent()
     args =  { "username": username, "password" : password }
-    rtn = self.make_request(args)
+    if not self.sessID:
+      rtn = self.make_request(args)
+    else:
+      rtn = {"sessID":self.sessID}
+
     if "sessID" in rtn and rtn["sessID"]:
       self.sessID = rtn["sessID"]
       self.username = username
+      self.create_session(self.sessID)
       return self.sessID
     else:
       self.die("Error authenticating: %s" % rtn)
