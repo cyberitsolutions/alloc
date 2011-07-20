@@ -178,7 +178,7 @@ $(document).ready(function() {
           {page::help("task_interested_parties")}
         </div>
 
-        {if $task_timeBest || $task_timeWorst || $task_timeExpected }
+        {if $task_timeBest || $task_timeWorst || $task_timeExpected || $estimator_username}
         <div class="view">
           <h6>Best / Most Likely / Worst Hours<div>Estimator</div></h6>
           <div style="float:left; width:40%;">
