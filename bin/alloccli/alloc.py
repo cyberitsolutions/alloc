@@ -21,6 +21,7 @@ class alloc(object):
   sessID = ''
   alloc_dir = os.path.join(os.environ['HOME'], '.alloc/')
   config = {}
+  user_transforms = {}
   field_names = {"taskID":"Task ID"
                 ,"taskTypeID":"Type"
                 ,"taskStatusLabel":"Status"
@@ -90,8 +91,15 @@ class alloc(object):
     if not os.path.exists(self.alloc_dir+"config"):
       self.create_config(self.alloc_dir+"config")
 
+    # Create ~/.alloc/transforms
+    if not os.path.exists(self.alloc_dir+"transforms"):
+      self.create_transforms(self.alloc_dir+"transforms")
+
     # Load ~/.alloc/config into self.config{}
     self.load_config(self.alloc_dir+"config")
+
+    # Load any user-customizations to table print output
+    self.load_transforms(self.alloc_dir+"transforms")
 
     if not url:
       if "url" in self.config and self.config["url"]:
@@ -125,6 +133,22 @@ class alloc(object):
       options = config.options(section)
       for option in options:
         self.config[option] = config.get(section,option)
+
+  def create_transforms(self,f):
+    self.msg("Creating example transforms file: "+f)
+    str = "# Add any field customisations here. eg:\n#\n# global user_transforms\n# user_transforms = { 'Priority' : lambda x,row: x[3:] }\n\n"
+    # Write it out to a file
+    fd = open(f,'w')
+    fd.write(str)
+    fd.close()
+
+  def load_transforms(self,f):
+    try:
+      # yee-haw!
+      execfile(f)
+      self.user_transforms = user_transforms
+    except:
+      pass
 
   def create_session(self,sessID):
     old_sessID = self.load_session(self.alloc_dir+"session")
@@ -372,6 +396,16 @@ class alloc(object):
             str = transforms[v](str)
             success = True
 
+          if v in self.user_transforms:
+            str = self.user_transforms[v](str,row)
+            success = True
+
+          if v in self.field_names:
+            other_v = self.field_names[v]
+            if other_v in self.user_transforms:
+              str = self.user_transforms[other_v](str,row)
+              success = True
+
           if not success:
             self.die('Bad field name: '+v)
 
@@ -402,6 +436,17 @@ class alloc(object):
       pass
 
     return False
+
+  def to_num(self,obj):
+    rtn = obj
+    try:
+      rtn = float(obj)
+    except:
+      try:
+        rtn = int(obj)
+      except:
+        rtn = 0
+    return rtn
 
   def get_credentials(self):
     # Obtain the user's alloc login credentials
