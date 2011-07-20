@@ -22,7 +22,9 @@ class alloc(object):
   alloc_dir = os.path.join(os.environ['HOME'], '.alloc/')
   config = {}
   user_transforms = {}
-  field_names = {"taskID":"Task ID"
+  field_names = {
+                # task fields
+                "taskID":"Task ID"
                 ,"taskTypeID":"Type"
                 ,"taskStatusLabel":"Status"
                 ,"priority":"Task Pri"
@@ -39,6 +41,30 @@ class alloc(object):
                 ,"creator_name": "Creator"
                 ,"manager_name": "Manager"
                 ,"assignee_name": "Assigned"
+
+                # time sheet fields
+                ,"timeSheetID":"ID"
+                ,"dateFrom":"From"
+                ,"dateTo":"To"
+                ,"status":"Status"
+                ,"person":"Owner"
+                ,"duration":"Duration"
+                ,"totalHours":"Hrs"
+                ,"amount":"$"
+                ,"projectName":"Project"
+ 
+                # time sheet item fields
+                ,"timeSheetID":"ID"
+                ,"timeSheetItemID":"Item ID"
+                ,"dateTimeSheetItem":"Date"
+                ,"taskID":"taskID"
+                ,"comment":"Comment"
+                ,"timeSheetItemDuration":"Hours"
+                ,"rate":"$"
+                ,"worth":"Worth"
+                ,"hoursBilled":"Total"
+                ,"taskLimit":"Limit"
+                ,"limitWarning":"Warning"
                 }
 
                 #Other task fields, that may one day require labels
