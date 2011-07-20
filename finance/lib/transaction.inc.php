@@ -343,9 +343,24 @@ class transaction extends db_entity {
   }
 
   function get_list_filter($_FORM) {
+    global $current_user;
+
+    if ($_FORM["tfName"]) {
+      $q = sprintf("SELECT * FROM tf WHERE tfName = '%s'",db_esc($_FORM["tfName"]));
+      $db = new db_alloc();
+      $db->query($q);
+      $db->next_record();
+      $_FORM["tfIDs"][] = $db->f("tfID");
+    }
+
+    if ($_FORM["tfID"]) {
+      $_FORM["tfIDs"][] = $_FORM["tfID"];
+    }
+
+    $_FORM["tfIDs"] = tf::get_permitted_tfs($_FORM["tfIDs"]);
 
     if (is_array($_FORM["tfIDs"]) && count($_FORM["tfIDs"])) {
-      foreach ($_FORM["tfIDs"] as $tfID) {
+      foreach ((array)$_FORM["tfIDs"] as $tfID) {
         $str.= $commar.db_esc($tfID);
         $commar=",";
       }
@@ -386,20 +401,6 @@ class transaction extends db_entity {
      * This is the definitive method of getting a list of transactions that need a sophisticated level of filtering
      *
      */
-
-    if ($_FORM["tfName"]) {
-      $q = sprintf("SELECT * FROM tf WHERE tfName = '%s'",db_esc($_FORM["tfName"]));
-      $db = new db_alloc();
-      $db->query($q);
-      $db->next_record();
-      $_FORM["tfIDs"][] = $db->f("tfID");
-    }
-
-    if ($_FORM["tfID"]) {
-      $_FORM["tfIDs"][] = $_FORM["tfID"];
-    }
-
-    $_FORM["tfIDs"] or $_FORM["tfIDs"] = array();
 
     $filter = transaction::get_list_filter($_FORM);
     $debug = $_FORM["debug"];
@@ -461,7 +462,7 @@ class transaction extends db_entity {
   
       // If the destination of this TF is not the current TfID, then invert the $amount
       $amount = $row["amount2"];
-      if (!in_array($row["tfID"],$_FORM["tfIDs"])) {
+      if (!in_array($row["tfID"],(array)$_FORM["tfIDs"])) {
         $amount = -$amount;
         $row["amount1"] = -$row["amount1"];
       }
@@ -476,11 +477,13 @@ class transaction extends db_entity {
       $tf = new tf;
       $tf->set_id($t->get_value("fromTfID"));
       $tf->select();
+      $row["fromTfName"] = $tf->get_value("tfName");
       $row["fromTfIDLink"] = $tf->get_link();
 
       $tf = new tf;
       $tf->set_id($t->get_value("tfID"));
       $tf->select();
+      $row["tfName"] = $tf->get_value("tfName");
       $row["tfIDLink"] = $tf->get_link();
 
       if ($t->get_value("status") == "approved") {
@@ -503,7 +506,7 @@ class transaction extends db_entity {
     $_FORM["total_amount_negative"] = page::money(config::get_config_item("currency"),$total_amount_negative,"%s%m %c");
     $_FORM["running_balance"] =       page::money(config::get_config_item("currency"),$running_balance,"%s%m %c");
 
-    return array($_FORM, (array)$transactions);
+    return array("totals"=>$_FORM, "rows"=>(array)$transactions);
   }
 
   function arr_to_csv($rows=array()) {
