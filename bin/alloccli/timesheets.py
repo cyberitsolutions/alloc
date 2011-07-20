@@ -18,6 +18,7 @@ class timesheets(alloc):
   ops.append(('h:','hours=NUM      ','The time sheets must have this many hours recorded eg: "7" eg: ">7 AND <10 OR =4 AND !=8"'))
   ops.append(('d:','date=YYYY-MM-DD','If --items is specified, then match against the items\' date. Else match against the date of the time sheet\'s earliest item.'))
   ops.append(('o:','order=NAME     ','The order the Time Sheets or Items are displayed in. Default for time sheets: "From,ID" Default for items: "Date,Item ID"'))
+  ops.append(('f:','fields=LIST    ','The commar separated list of fields you would like printed, eg: "all" eg: "timeSheetID,timeSheetItemID,taskID,comment"')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -111,13 +112,13 @@ alloc timesheets --date ">=2010-10-10" --items'''
             # >=
             ops['date'],ops['dateComparator'] = self.parse_date_comparator(o['date'])
           timeSheetItems = self.get_list("timeSheetItem",ops)
-          self.print_table(timeSheetItems, self.row_timeSheetItem, sort=order)
+          self.print_table(timeSheetItems, o["fields"] or self.row_timeSheetItem, sort=order)
 
     else:
       if o['date']:
         # <=
         ops['dateFrom'],ops['dateFromComparator'] = self.parse_date_comparator(o['date'])
       timeSheets = self.get_list("timeSheet",ops)
-      self.print_table(timeSheets, self.row_timeSheet, sort=order)
+      self.print_table(timeSheets, o["fields"] or self.row_timeSheet, sort=order)
   
 
