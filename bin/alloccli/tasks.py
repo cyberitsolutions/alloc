@@ -92,7 +92,7 @@ class tasks(alloc):
 
     
     if not o['fields']:
-      if not order: order = "Priority,Type,_Rate,status"
+      if not order: order = "Priority,Type,_Rate,Status"
       fields = ["taskID","Task ID"
                ,"taskTypeID","Type"
                ,"taskStatusLabel","Status"
