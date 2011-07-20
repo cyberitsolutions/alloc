@@ -306,6 +306,7 @@ class timeSheetItem extends db_entity {
       $tsi->read_db_record($db);
       $tsi->currency = $t->get_value("currencyTypeID");
 
+      $row["secondsBilled"] = $row["hoursBilled"] = $row["taskLimit"] = $row["limitWarning"] = ""; # set these for the CLI
       if ($tsi->get_value("taskID")) {
         $task = $tsi->get_foreign_object('task');
         $row["secondsBilled"] = $task->get_time_billed();
