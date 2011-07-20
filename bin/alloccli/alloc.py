@@ -352,7 +352,7 @@ class alloc(object):
     for k in sortby:
       # Strip leading underscore (used in reverse sorting eg: _Rate)
       if re.sub("^_","",k) not in fields:
-        self.die("Sort column not found: "+k)
+        self.err("Sort column not found: "+k)
 
     def sort_func(row):
       try: val = row[1][inverted_field_names[f]]
@@ -433,7 +433,7 @@ class alloc(object):
               success = True
 
           if not success:
-            self.die('Bad field name: '+v)
+            self.err('Bad field name: '+v)
 
           if not str:
             str = ''
