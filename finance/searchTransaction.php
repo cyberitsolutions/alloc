@@ -40,7 +40,9 @@ function show_filter() {
 
 if ($download) {
   $_FORM = transaction::load_form_data($defaults);
-  list($totals,$rows) = transaction::get_list($_FORM);
+  $rtn = transaction::get_list($_FORM);
+  $totals = $rtn["totals"];
+  $rows = $rtn["rows"];
   $csv = transaction::arr_to_csv($rows);
   header('Content-Type: application/octet-stream');
   header("Content-Length: ".strlen($csv));
@@ -51,7 +53,9 @@ if ($download) {
 
 if ($applyFilter) {
   $_FORM = transaction::load_form_data($defaults);
-  list($TPL["totals"], $TPL["transactionListRows"]) = transaction::get_list($_FORM);
+  $rtn = transaction::get_list($_FORM);
+  $TPL["totals"] = $rtn["totals"];
+  $TPL["transactionListRows"] = $rtn["rows"];
 }
 
 $TPL["main_alloc_title"] = "Search Transactions - ".APPLICATION_NAME;

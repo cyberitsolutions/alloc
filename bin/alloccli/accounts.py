@@ -8,8 +8,8 @@ class accounts(alloc):
   # Setup the options that this cli can accept
   ops = []
   ops.append((''  ,'help           ','Show this help.'))
-  #ops.append(('q' ,'quiet          ','Run with no output except errors.'))
-  #ops.append(('i' ,'items          ','Show accounts\' transactions.'))
+  ops.append(('i' ,'items          ','Show accounts\' transactions.'))
+  ops.append(('a:','account=TF     ','Show a particular TF. Default to your TFs.'))
   #ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
   #ops.append(('s:','status=STATUS  ','The transactions\' status. Can accept multiple values, eg: "pending,approved,rejected" Default: approved'))
   #ops.append(('t:','time=ID        ','A time sheet ID.'))
@@ -34,17 +34,41 @@ class accounts(alloc):
     #self.quiet = o['quiet']
     self.csv = not stdout.isatty()
     order = 'Name'
-    ops = {'owner':True}
-    tfs = self.get_list("tf",ops)
-
-    if o['fields']:
-      fields = o['fields']
-    else:
-      fields = ['tfID','ID'
-               ,'tfName','Name'
-               ,'tfBalancePending','Pending'
-               ,'tfBalance','Approved']
-
-    if tfs:
-      self.print_table(tfs, fields, order)
+    ops = {}
     
+    if 'account' in o and o['account']:
+      ops['tfIDs'] = self.make_request({'method':'get_tfID','name':o['account']})
+
+    # Get transactions
+    if 'items' in o and o['items']:
+      if o['fields']:
+        fields = o['fields']
+      else:
+        fields = ['transactionID','ID'
+                 ,'fromTfName','From'
+                 ,'tfName','TF'
+                 ,'amount','Amount'
+                 ,'status','Status'
+                 ,'transactionDate','Date']
+
+      transactions = self.get_list("transaction",ops)
+      if transactions:
+        self.print_table(transactions,fields,"Date")
+        print "num rows:",len(transactions)
+ 
+    # Get tf
+    else:
+      if o['fields']:
+        fields = o['fields']
+      else:
+        fields = ['tfID','ID'
+                 ,'tfName','Name'
+                 ,'tfBalancePending','Pending'
+                 ,'tfBalance','Approved']
+
+      tfs = self.get_list("tf",ops)
+      if tfs:
+        self.print_table(tfs, fields, order)
+
+
+   

@@ -52,7 +52,9 @@ $defaults = array("url_form_action"=>$TPL["url_alloc_transactionList"]
 
 if ($download) {
   $_FORM = transaction::load_form_data($defaults);
-  list($totals,$rows) = transaction::get_list($_FORM);
+  $rtn = transaction::get_list($_FORM);
+  $totals = $rtn["totals"];
+  $rows = $rtn["rows"];
   $csv = transaction::arr_to_csv($rows);
   header('Content-Type: application/octet-stream');
   header("Content-Length: ".strlen($csv));
@@ -69,7 +71,10 @@ $tf->check_perm();
 $TPL["tfID"] = $tfID;
 
 $_FORM = transaction::load_form_data($defaults);
-list($TPL["totals"], $TPL["transactionListRows"]) = transaction::get_list($_FORM);
+$rtn = transaction::get_list($_FORM);
+$TPL["totals"] = $rtn["totals"];
+$TPL["transactionListRows"] = $rtn["rows"];
+
 
 // Total balance
 $TPL["balance"] = $tf->get_balance();

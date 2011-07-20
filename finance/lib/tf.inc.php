@@ -81,15 +81,18 @@ class tf extends db_entity {
     if (isset($owners[$person->get_id()])) {
       return in_array($this->get_id(),$owners[$person->get_id()]);
     }
+    $owners[$person->get_id()] = $this->get_tfs_for_person($person->get_id());
+    return in_array($this->get_id(),$owners[$person->get_id()]);
+  }
 
-    $query = sprintf("SELECT * FROM tfPerson WHERE personID=%d",$person->get_id());
+  function get_tfs_for_person($personID) {
+    $query = sprintf("SELECT * FROM tfPerson WHERE personID=%d",$personID);
     $db = new db_alloc;
     $db->query($query);
-    $owners[$person->get_id()][] = 0;
     while ($row = $db->row()) {
-      $owners[$person->get_id()][] = $row["tfID"];
+      $owners[] = $row["tfID"];
     }
-    return in_array($this->get_id(),$owners[$person->get_id()]);
+    return $owners;
   }
 
   function get_nav_links() {
@@ -137,11 +140,42 @@ class tf extends db_entity {
     }
   }
 
+  function get_permitted_tfs($requested_tfs=array()) {
+    global $current_user;
+    $rtn = (array)$requested_tfs;
+    if (!$current_user->have_role('admin')) {
+      $allowed_tfs = (array)tf::get_tfs_for_person($current_user->get_id());
+      foreach ((array)$requested_tfs as $tf) {
+        if (in_array($tf,$allowed_tfs)) {
+          $rtn[] = $tf;
+        }
+      }
+      if (!$rtn) {
+        $rtn = $allowed_tfs;
+      }
+    }
+
+    foreach ((array)$rtn as $tf) {
+      $r[] = db_esc($tf);
+    }
+    return (array)$r;
+  }
+
   function get_list_filter($_FORM=array()) {
     global $current_user;
+
+    if (!$_FORM["tfIDs"] && !$current_user->have_role('admin')) {
+      $_FORM["owner"] = true;
+    }
     $_FORM["owner"] and $filter1[] = sprintf("(tfPerson.personID = %d)",$current_user->get_id());
+
+    $tfIDs = tf::get_permitted_tfs($_FORM["tfIDs"]);
+    $tfIDs and $filter1[] = sprintf("(tf.tfID IN (%s))",implode(",",$tfIDs));
+    $tfIDs and $filter2[] = sprintf("(tf.tfID IN (%s))",implode(",",$tfIDs));
+
     $_FORM["showall"] or $filter1[] = "(tf.tfActive = 1)";
     $_FORM["showall"] or $filter2[] = "(tf.tfActive = 1)";
+
     return array($filter1,$filter2);
   }
 
