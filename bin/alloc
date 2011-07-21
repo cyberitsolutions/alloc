@@ -1,41 +1,40 @@
 #!/usr/bin/env python
 
+import cmd
 import sys
 import os
-
-url = os.environ.get("ALLOC_URL") or ''
-
-# This will basically call the relevant alloc module's run() method.
-try:
-  m = sys.argv[1]
-  alloccli = __import__("alloccli."+m)
-  subcommand = getattr(getattr(alloccli,m), m)
-
-except:
-  from alloccli import *
-  a = alloc.alloc(url)
-  print "Usage: alloc command [OPTIONS]"
-  print "Select one of the following commands:\n"
-  for f in os.listdir("/".join(sys.argv[0].split("/")[:-1])+"/alloccli/"):
-    s = f[-4:].lower()
-    if s!=".pyc" and s!=".swp" and s!=".swo" and f!="alloc" and f!="alloc.py" and f!="__init__.py":
-      m = f.replace(".py","")
-      alloccli = __import__("alloccli."+m)
-      subcommand = getattr(getattr(alloccli,m), m)
-
-      # Print out the module's one_line_help variable
-      tabs = "\t "
-      if len(m) <= 5: tabs = "\t\t "
-      print "  "+m+tabs+getattr(subcommand,"one_line_help")
-
-  print "\nEg: alloc command --help"
-
-  if len(sys.argv) >1:
-    a.die("Invalid command: "+sys.argv[1])
-  else:
-    a.die("Select a command to run.")
+from alloccli import alloc
 
 
-# All clear, run the module
-s = subcommand(url)
-s.run(sys.argv)
+# If alloc is called without arguments, then run interactively
+if len(sys.argv) == 1:
+
+  def run_cmd_loop():
+    try:
+      # file alloc.py -> class allocCmd() -> method cmdloop()
+      alloc.allocCmd(os.environ.get("ALLOC_URL") or '').cmdloop()
+    except KeyboardInterrupt:
+      print ""
+      alloc.alloc().msg("To exit use ctrl-d or quit")
+      run_cmd_loop()
+
+  run_cmd_loop()
+
+# Else attempt to run the relevant module
+else:
+
+  # Try to import relevant module
+  try:
+    m = sys.argv[1]
+    alloccli = __import__("alloccli."+m)
+    subcommand = getattr(getattr(alloccli,m), m)
+
+  # Else bomb out with help message
+  except:
+    # file alloc.py -> class alloc(url) -> method get_cli_help()
+    alloc.alloc().get_cli_help()
+
+
+  # All clear, run the module
+  s = subcommand(os.environ.get("ALLOC_URL") or '')
+  s.run(sys.argv)

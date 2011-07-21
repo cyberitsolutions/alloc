@@ -2,6 +2,7 @@
 
 import os
 import sys
+import cmd
 import exceptions
 import simplejson
 import getopt
@@ -619,8 +620,143 @@ class alloc(object):
   
     return d.strip(),comparator.strip() 
 
+  def get_alloc_modules(self):
+    modules = []
+    for f in os.listdir("/".join(sys.argv[0].split("/")[:-1])+"/alloccli/"):
+      s = f[-4:].lower()
+      if s!=".pyc" and s!=".swp" and s!=".swo" and f!="alloc" and f!="alloc.py" and f!="__init__.py":
+        m = f.replace(".py","")
+        modules.append(m) 
+    return modules
+
+  def get_cli_help(self, halt_on_error=True):
+    print "Usage: alloc command [OPTIONS]"
+    print "Select one of the following commands:\n"
+    for m in self.get_alloc_modules():
+      alloccli = __import__("alloccli."+m)
+      subcommand = getattr(getattr(alloccli,m), m)
+
+      # Print out the module's one_line_help variable
+      tabs = "\t "
+      if len(m) <= 5: tabs = "\t\t "
+      print "  "+m+tabs+getattr(subcommand,"one_line_help")
+
+    print "\nEg: alloc command --help"
+
+    if halt_on_error:
+      if len(sys.argv) >1:
+        self.die("Invalid command: "+sys.argv[1])
+      else:
+        self.die("Select a command to run.")
+    else:
+      if len(sys.argv) >1:
+        self.err("Invalid command: "+sys.argv[1])
+      else:
+        self.err("Select a command to run.")
+
+  def get_cmd_help(self):
+    print "Select one of the following commands:\n"
+    for m in self.get_alloc_modules():
+      alloccli = __import__("alloccli."+m)
+      subcommand = getattr(getattr(alloccli,m), m)
+
+      # Print out the module's one_line_help variable
+      tabs = "\t "
+      if len(m) <= 5: tabs = "\t\t "
+      print "  "+m+tabs+getattr(subcommand,"one_line_help")
+
+    print "\nEg: tasks -t 1234"
+
+
+
 # Specify the user-agent 
 class allocUserAgent(urllib.FancyURLopener):
   pass
+
+
+# Interactive handler for alloccli
+class allocCmd(cmd.Cmd):
+
+  prompt = "alloc> "
+  alloc = None
+  url = ""
+  modules = {}
+  worklog = None
+
+  def __init__(self,url):
+    self.url = url
+    self.alloc = alloc(self.url)
+    self.alloc.authenticate()
+    alloc.sessID = self.alloc.sessID
+    self.worklog = worklog()
+  
+    # Import all the alloc modules so they are available as eg self.tasks
+    for m in self.alloc.get_alloc_modules():
+      alloccli = __import__("alloccli."+m)
+      subcommand = getattr(getattr(alloccli,m), m)
+      setattr(self,m,subcommand(self.url))
+    return cmd.Cmd.__init__(self);
+
+  def emptyline(self):
+    """Go to new empty prompt if an empty line is entered."""
+    pass
+
+  def default(self,line):
+    """Print an error if an unrecognized command is entered."""
+    self.alloc.err("Unrecognized command: '"+line+"', hit TAB and try 'help COMMAND'.")
+
+  def do_EOF(self,line):
+    """Exit if ctrl-d is pressed."""
+    print "" # newline
+    sys.exit(0)
+
+  def do_quit(self,line):
+    """Exit if quit is entered."""
+    sys.exit(0)
+
+  def do_exit(self,line):
+    """Exit if exit is entered."""
+    sys.exit(0)
+
+  def do_help(self,line):
+    """Provide help information if 'help' or 'help COMMAND' are entered."""
+    bits = line.split()
+    if len(bits) == 1:
+      if (bits[0].lower() == "command"):
+        print "Try eg: help timesheets"
+      else:
+        try:
+          cmdbits = ["alloc", bits[0], "--help"]
+          subcommand = getattr(self,bits[0])
+          print subcommand.get_subcommand_help(cmdbits, subcommand.ops, subcommand.help_text)
+        except:
+          self.alloc.err("Unrecognized command: '"+bits[0]+"', hit TAB and try one of those.")
+    else:
+      self.alloc.get_cmd_help()
+
+
+  
+# Create some class methods called do_MODULE eg do_tasks, and
+# dynamically add those methods to the allocCmd class. This will expose
+# all the alloc modules to the allocCmd interface without having to
+# duplicate the list of modules.
+def make_func(m):
+  def func(obj,line):
+    bits = line.split()
+    bits.insert(0,m)
+    bits.insert(0,"alloc")
+    subcommand = getattr(obj,m)
+    # Putting this in an exception block lets us continue when the subcommands call die().
+    try: 
+      subcommand.run(bits)
+    except BaseException,Err:
+      pass
+  return func
+
+# Add the methods to allocCmd
+for m in alloc().get_alloc_modules():
+  setattr(allocCmd, "do_"+m, make_func(m))
+
+
 
 
