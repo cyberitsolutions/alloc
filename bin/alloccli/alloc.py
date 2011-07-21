@@ -451,7 +451,7 @@ class alloc(object):
         s+= line[1:-1]+"\n"            # strip out leading and trailing character
       lines = s[:-1]
 
-    print lines
+    print unicode(lines).encode('utf-8')
 
   def is_num(self, obj):
     # There's got to be a better way to tell if something is a number 
