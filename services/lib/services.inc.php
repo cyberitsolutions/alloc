@@ -163,10 +163,6 @@ class alloc_services {
    * @return array $list
    */
   public function get_list($entity, $options=array()) {
-
-    if ($entity == "tf" || $entity == "transaction")
-      die("Functionality disabled, pending security review.");
-
     global $current_user; // Always need this :(
     //$current_user = $this->get_current_user($sessID);
     if (class_exists($entity)) {
