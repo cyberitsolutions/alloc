@@ -142,21 +142,24 @@ class tf extends db_entity {
 
   function get_permitted_tfs($requested_tfs=array()) {
     global $current_user;
-    $rtn = (array)$requested_tfs;
-    if (!$current_user->have_role('admin')) {
+
+    // If admin, just use the requested tfs
+    if ($current_user->have_role('admin')) {
+      $rtn = $requested_tfs;
+
+    // If not admin, then remove the items from $requested_tfs that the user can't access
+    } else {
       $allowed_tfs = (array)tf::get_tfs_for_person($current_user->get_id());
       foreach ((array)$requested_tfs as $tf) {
         if (in_array($tf,$allowed_tfs)) {
           $rtn[] = $tf;
         }
       }
-      if (!$rtn) {
-        $rtn = $allowed_tfs;
-      }
     }
-
+    
+    // db_esc everything
     foreach ((array)$rtn as $tf) {
-      $r[] = db_esc($tf);
+      $r[$tf] = db_esc($tf);
     }
     return (array)$r;
   }
