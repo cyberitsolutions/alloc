@@ -342,22 +342,22 @@ class transaction extends db_entity {
     return $str;
   }
 
-  function get_list_filter($_FORM) {
-    global $current_user;
-
+  function reduce_tfs($_FORM) {
     if ($_FORM["tfName"]) {
       $q = sprintf("SELECT * FROM tf WHERE tfName = '%s'",db_esc($_FORM["tfName"]));
       $db = new db_alloc();
       $db->query($q);
       $db->next_record();
-      $_FORM["tfIDs"][] = $db->f("tfID");
+      $tfIDs[] = $db->f("tfID");
     }
-
     if ($_FORM["tfID"]) {
-      $_FORM["tfIDs"][] = $_FORM["tfID"];
+      $tfIDs[] = $_FORM["tfID"];
     }
+    return tf::get_permitted_tfs($tfIDs);
+  }
 
-    $_FORM["tfIDs"] = tf::get_permitted_tfs($_FORM["tfIDs"]);
+  function get_list_filter($_FORM) {
+    global $current_user;
 
     if (is_array($_FORM["tfIDs"]) && count($_FORM["tfIDs"])) {
       foreach ((array)$_FORM["tfIDs"] as $tfID) {
@@ -402,6 +402,7 @@ class transaction extends db_entity {
      *
      */
 
+    $_FORM["tfIDs"] = transaction::reduce_tfs($_FORM);
     $filter = transaction::get_list_filter($_FORM);
     $debug = $_FORM["debug"];
     $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
@@ -451,6 +452,7 @@ class transaction extends db_entity {
     $debug and print "\n<br>QUERY2: ".$q;
     $db = new db_alloc;
     $db->query($q);
+
     while ($row = $db->next_record()) {
       #echo "<pre>".print_r($row,1)."</pre>";
       $i++;
