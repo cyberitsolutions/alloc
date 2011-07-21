@@ -38,4 +38,4 @@ except:
 
 # All clear, run the module
 s = subcommand(url)
-s.run()
+s.run(sys.argv)
