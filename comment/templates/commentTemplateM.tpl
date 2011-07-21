@@ -11,8 +11,14 @@
   </tr>
   <tr>
     <td>Name</td>
-    <td><input type="text" name="commentTemplateName" size="60" value="{$commentTemplateName}"></td>  
-    <td><select name="commentTemplateType">{$commentTemplateTypeOptions}</select></td>
+    <td>
+      <input type="text" name="commentTemplateName" size="60" value="{$commentTemplateName}">
+      <span style="float:right">
+        Template Type&nbsp;&nbsp;
+        <select name="commentTemplateType">{$commentTemplateTypeOptions}</select>
+      </span>
+    </td>
+    <td> </td>
   </tr>
   <tr>
     <td class="top">Text</td>
