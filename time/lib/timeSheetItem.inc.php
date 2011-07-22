@@ -75,7 +75,7 @@ class timeSheetItem extends db_entity {
     $this->set_value("description", $taskName);
 
     // If rate is changed via CLI
-    if ($this->get_value("rate") && $timeSheet->pay_info["project_rate_orig"] != $this->get_value("rate") && !$timeSheet->can_edit_rate()) {
+    if ($this->get_value("rate") && $timeSheet->pay_info["project_rate"] != $this->get_value("rate") && !$timeSheet->can_edit_rate()) {
       die("Not permitted to edit time sheet item rate.");
     }
 
