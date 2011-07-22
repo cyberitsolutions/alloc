@@ -165,7 +165,6 @@ class timeSheet extends db_entity {
                  ,$this->get_value("personID"));
 
       $db->next_record();
-      $this->pay_info["project_rate_orig"] = $db->f("rate");
       $this->pay_info["project_rate"] = page::money($db->f("currencyTypeID"),$db->f("rate"),"%mo");
       $this->pay_info["project_rateUnitID"] = $db->f("rateUnitID");
       $rates[$this->get_value("projectID")][$this->get_value("personID")] = array($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]);

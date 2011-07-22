@@ -110,7 +110,7 @@ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
       # Add time sheet item
       stuff = {}
       stuff['taskID'] = taskID
-      stuff['hours'] = o['hours']
+      stuff['duration'] = o['hours']
       stuff['multiplier'] = o['multiplier']
       stuff['date'] = o['date']
       stuff['comment'] = o['comment']
