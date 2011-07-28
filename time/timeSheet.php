@@ -492,7 +492,7 @@ if ($_POST["save"]
       $url = $TPL["url_alloc_project"]."projectID=".$timeSheet->get_value("projectID");
     } else {
       $msg = page::htmlentities(urlencode($msg));
-      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."&msg=".$msg;
+      $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."&msg=".$msg."&dont_send_email=".$_POST["dont_send_email"];
       # Pass the taskID forward if we came from a task
       $url .= "&taskID=".$_POST["taskID"];
     }
@@ -714,7 +714,18 @@ $msg and $TPL["message_good"][] = $msg;
 
 
 global $percent_array;
+if ($_POST["dont_send_email"]) {
+  $TPL["dont_send_email_checked"] = " checked";
+} else {
+  // if this is the invoice -> completed step it should be checked by default
+  if ($timeSheet->get_value("status") == 'invoiced')
+    $TPL["dont_send_email_checked"] = " checked";
+  else
+    $TPL["dont_send_email_checked"] = "";
+}
+
 $timeSheet->load_pay_info();
+
 
 $percent_array = array(""=>"Calculate %",
                        "A"=>"Standard",
@@ -743,6 +754,8 @@ $percent_array = array(""=>"Calculate %",
 if (!$timeSheet->get_id()) {
   $TPL["timeSheet_ChangeStatusButton"] = "<input type=\"submit\" name=\"save\" value=\"Create Time Sheet\"> ";
 }
+
+$radio_email = "<input type=\"checkbox\" id=\"dont_send_email\" name=\"dont_send_email\" value=\"1\"".$TPL["dont_send_email_checked"]."> <label for=\"dont_send_email\">Don't send email</label><br>";
 
 $payment_insurance_checked = $timeSheet->get_value("payment_insurance") ? " checked" : "";
 $payment_insurance = "<input type=\"checkbox\" name=\"timeSheet_payment_insurance\" value=\"1\"".$payment_insurance_checked.">";
@@ -805,6 +818,7 @@ case 'manager':
         <input type=\"submit\" name=\"save\" value=\"Save\">
         <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Admin --&gt;\">
         ";
+    $TPL["radio_email"] = $radio_email;
   }
   break;
 
@@ -823,6 +837,9 @@ case 'admin':
           <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Invoiced --&gt;\">
           ";
     }
+
+    $TPL["radio_email"] = $radio_email;
+
   }
   break;
 
@@ -832,6 +849,10 @@ case 'invoiced':
         <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
         <input type=\"submit\" name=\"save\" value=\"Save\">
         <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Complete -&gt;\">";
+
+    $TPL["radio_email"] = $radio_email;
+    
+
   }
   break;
 
