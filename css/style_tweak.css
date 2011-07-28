@@ -489,6 +489,9 @@ table.list th, table.alloc_calendar th {
   font-size:90%;
   text-transform:uppercase;
 }
+table.list tr:last-child th {
+  font-size:100%;
+}
 table.list td, table.list th, table.alloc_calendar th { 
   border-top:1px solid #ff9797; 
   padding:4px;
