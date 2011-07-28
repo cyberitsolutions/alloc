@@ -152,7 +152,7 @@ if ($_POST["save"]) {
 
   // Handle the only checkbox specially. If more checkboxes are added this 
   // should be rewritten.
-  echo var_dump($_POST);
+  #echo var_dump($_POST);
   if ($_POST['sbs_link'] == "rss" && !$_POST['rssShowProject']) {
     $c = new config;
     $c->set_id($config->get_config_item_id('rssShowProject'));
