@@ -24,6 +24,17 @@ $(document).ready(function() {
 });
 </script>
 
+<style>
+.task_pane {
+  min-width:400px;
+  width:47%;
+  float:left;
+  margin:0px 12px;
+  vertical-align:top;
+}
+</style>
+
+
 {if $task_taskID}
 {$first_div="hidden"}
 {page::side_by_side_links(array("task"=>"Main"
@@ -42,82 +53,30 @@ $(document).ready(function() {
 <input type="hidden" name="taskID" value="{$task_taskID}">
 <table class="box">
   <tr>
-    <th class="header" colspan="5">{$taskSelfLink}
+    <th class="header">{$taskSelfLink}
       <span>{$navigation_links}</span>
     </th>
   </tr>
-  <tr>
-    <td colspan="5" valign="top">
-
-      <div style="min-width:400px; width:47%; float:left; margin:0px 12px; vertical-align:top;">
-
-        <div class="view">
-          <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
-          <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {$task_taskName_html}</h2>&nbsp;{$priorityLabel}
-        </div>
-        <div class="edit">
-          <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
-          <div style="width:100%" class="">
-            <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" maxlength="75" size="35">
-            <select name="priority">
-              {$priorityOptions}
-            </select>
-            <select name="taskTypeID">
-              {$taskTypeOptions}
-            </select>
-            {page::help("taskType")}
-          </div>
-        </div>
-
+  <tr class="view">
+    <td valign="top">
+      <div class="task_pane">
+        <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
+        <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {$task_taskName_html}</h2>&nbsp;{$priorityLabel}
         {if $project_projectName} 
-        <div class="view">
           <h6>Project</h6>
           <a href="{$url_alloc_project}projectID={$project_projectID}">{=$project_projectName}</a>
-        </div>
         {/}
-        <div class="edit">
-          <h6>Project</h6>
-          <select id="projectID" name="projectID" style="width:100%" onChange="updateStuffWithAjax()"><option value="">{$projectOptions}</select>
-        </div>
-
         {if $hierarchy_links} 
-        <div class="view">
           <h6>Parent Task</h6>
           {$hierarchy_links}
-        </div>
         {/}
-        <div class="edit">
-          <h6>Parent Task</h6>
-          <div id="parentTaskDropdown">{$parentTaskOptions}</div>
-        </div>
-
         {if $task_taskDescription_html}
-        <div class="view">
           <h6>Description</h6>
           {$task_taskDescription_html}
-        </div>
         {/}
-
-        <div class="edit">
-          <h6>Description</h6>
-          {page::textarea("taskDescription",$task_taskDescription,array("height"=>"medium","width"=>"100%"))}
-        </div>
-
-        {if !$task_taskID}
-        <div class="edit">
-          <h6>Possible Duplicates</h6>
-          <div class="message" style="padding:4px 2px; width:100%; height:70px; border:1px solid #cccccc; overflow:auto;">
-            <div id="taskDupes"></div>
-          </div>
-        </div>
-        {/}
-
       </div>
-
-
-      <div style="min-width:400px; width:47%; float:left; margin:0px 12px; vertical-align:top;">
-
-        <div class="view">
+      <div class="task_pane">
+        <div class="enclose">
           <h6>People<div>Status</div></h6>
           <div style="float:left; width:47%;">
             Created by <b>{=$task_createdBy}</b><br><span class="faint">{$task_dateCreated}</span>
@@ -135,7 +94,7 @@ $(document).ready(function() {
             <br>
             {/}
           </div>
-          <div style="float:right; width:50%; text-align:left;">
+          <div style="float:right; width:50%;">
             {if $task_taskStatusLabel}
               <span class="corner" style="display:block;width:10em;padding:5px;margin-top:8px;text-align:center;background-color:{$task_taskStatusColour};">
               {$task_taskStatusLabel}
@@ -143,7 +102,96 @@ $(document).ready(function() {
             {/}
           </div>
         </div>
-        <div class="edit">
+
+        {if $interestedParty_text}
+          <h6>Interested Parties</h6> 
+          {$interestedParty_text}
+        {/}
+        {if $task_timeBest || $task_timeWorst || $task_timeExpected || $estimator_username}
+          <div class="enclose">
+            <h6>Best / Most Likely / Worst Hours<div>Estimator</div></h6>
+            <div style="float:left; width:40%;">
+              {foreach array($task_timeBest,$task_timeExpected,$task_timeWorst) as $i}
+                {$div}
+                {print imp($i) ? $i : " --- "}
+                {$div = " / "}
+              {/}
+            </div>
+            <div style="float:right;width:50%;">
+             {=$estimator_username}
+            </div>
+          </div>
+        {/}
+        {if $task_timeLimit || $time_billed_link || ($percentComplete && $percentComplete != "0%")}
+          <div class="enclose">
+            <h6>Actual Hours<div>Effort Limited To</div></h6>
+            <div style="float:left;width:50%;">
+              {$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}
+            </div>
+            <div style="float:right;width:50%;">
+              {$task_timeLimit} {if $task_timeLimit} hrs{/}
+            </div>
+          </div>
+        {/}
+        {if $task_dateTargetStart || $task_dateTargetCompletion}
+          <div class="enclose">
+            <h6>Estimated Start<div>Estimated Completion</div></h6>
+            <div style="float:left; width:50%">
+              {$task_dateTargetStart}
+            </div>
+            <div style="float:left; width:50%">
+              {$task_dateTargetCompletion}
+            </div>
+          </div>
+        {/}
+
+        {if $task_dateActualStart || $task_dateActualCompletion}
+          <div class="enclose">
+            <h6>Actual Start<div>Actual Completion</div></h6>
+            <div style="float:left; width:30%">
+              {$task_dateActualStart}
+            </div>
+            <div style="float:right; width:50%">
+              {$task_dateActualCompletion}
+            </div>
+          </div>
+        {/}
+      </div>
+    </td>
+  </tr>
+  <tr class="edit">
+    <td valign="top">
+      <div class="task_pane">
+        <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
+        <div style="width:100%" class="">
+          <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" maxlength="75" size="35">
+          <select name="priority">
+            {$priorityOptions}
+          </select>
+          <select name="taskTypeID">
+            {$taskTypeOptions}
+          </select>
+          {page::help("taskType")}
+        </div>
+
+        <h6>Project</h6>
+        <select id="projectID" name="projectID" style="width:100%" onChange="updateStuffWithAjax()"><option value="">{$projectOptions}</select>
+
+        <h6>Parent Task</h6>
+        <div id="parentTaskDropdown">{$parentTaskOptions}</div>
+
+        <h6>Description</h6>
+        {page::textarea("taskDescription",$task_taskDescription,array("height"=>"medium","width"=>"100%"))}
+
+        {if !$task_taskID}
+          <h6>Possible Duplicates</h6>
+          <div class="message" style="padding:4px 2px; width:100%; height:70px; border:1px solid #cccccc; overflow:auto;">
+            <div id="taskDupes"></div>
+          </div>
+        {/}
+      </div>
+      <div class="task_pane">
+        <div class="enclose">
           <h6>People<div>Status</div></h6>
           <div style="float:left; width:47%;">
             Managed By <div id="taskManagerPersonList" style="display:inline">{$managerPersonOptions}</div>
@@ -165,36 +213,13 @@ $(document).ready(function() {
           </div>
         </div>
 
-        {if $interestedParty_text}
-        <div class="view">
-          <h6>Interested Parties</h6> 
-          {$interestedParty_text}
-        </div>
-        {/}
-
-        <div class="edit nobr">
+        <div class="nobr">
           <h6>Interested Parties</h6> 
           <div id="interestedPartyDropdown" style="display:inline">{$interestedPartyOptions}</div>
           {page::help("task_interested_parties")}
         </div>
 
-        {if $task_timeBest || $task_timeWorst || $task_timeExpected || $estimator_username}
-        <div class="view">
-          <h6>Best / Most Likely / Worst Hours<div>Estimator</div></h6>
-          <div style="float:left; width:40%;">
-            {foreach array($task_timeBest,$task_timeExpected,$task_timeWorst) as $i}
-              {$div}
-              {print imp($i) ? $i : " --- "}
-              {$div = " / "}
-            {/}
-          </div>
-          <div style="float:right;width:50%;">
-           {=$estimator_username}
-          </div>
-        </div>
-        {/}
-
-        <div class="edit">
+        <div class="enclose">
           <h6>Best / Most Likely / Worst Hours<div>Estimator</div></h6>
           <div style="float:left; width:40%">
             <input type="text" name="timeBest" value="{$task_timeBest}" size="4"> /
@@ -206,19 +231,7 @@ $(document).ready(function() {
           </div>
         </div>
 
-        {if $task_timeLimit || $time_billed_link || ($percentComplete && $percentComplete != "0%")}
-        <div class="view">
-          <h6>Actual Hours<div>Effort Limited To</div></h6>
-          <div style="float:left;width:50%;">
-            {$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}
-          </div>
-          <div style="float:right;width:50%;">
-            {$task_timeLimit} {if $task_timeLimit} hrs{/}
-          </div>
-        </div>
-        {/}
-
-        <div class="edit">
+        <div class="enclose">
           <h6>Actual Hours<div>Effort Limited To</div></h6>
           <div style="float:left;width:50%;">
             {$time_billed_link} {if $percentComplete && $percentComplete != "0%"}({$percentComplete}){/}
@@ -228,19 +241,7 @@ $(document).ready(function() {
           </div>
         </div>
 
-        {if $task_dateTargetStart || $task_dateTargetCompletion}
-        <div class="view">
-          <h6>Estimated Start<div>Estimated Completion</div></h6>
-          <div style="float:left; width:50%">
-            {$task_dateTargetStart}
-          </div>
-          <div style="float:left; width:50%">
-            {$task_dateTargetCompletion}
-          </div>
-        </div>
-        {/}
-
-        <div class="edit">
+        <div class="enclose">
           <h6>Estimated Start<div>Estimated Completion</div></h6>
           <div style="float:left; width:30%">
             {page::calendar("dateTargetStart",$task_dateTargetStart)}
@@ -250,19 +251,7 @@ $(document).ready(function() {
           </div>
         </div>
 
-        {if $task_dateActualStart || $task_dateActualCompletion}
-        <div class="view">
-          <h6>Actual Start<div>Actual Completion</div></h6>
-          <div style="float:left; width:30%">
-            {$task_dateActualStart}
-          </div>
-          <div style="float:right; width:50%">
-            {$task_dateActualCompletion}
-          </div>
-        </div>
-        {/}
-
-        <div class="edit">
+        <div class="enclose">
           <h6>Actual Start<div>Actual Completion</div></h6>
           <div style="float:left; width:30%">
             {page::calendar("dateActualStart",$task_dateActualStart)}
@@ -271,15 +260,11 @@ $(document).ready(function() {
             {page::calendar("dateActualCompletion",$task_dateActualCompletion)}
           </div>
         </div>
-
       </div>
-
-
-
     </td>
   </tr>
   <tr>
-    <td colspan="5" align="center" class="padded">
+    <td align="center" class="padded">
       <div class="view" style="margin:20px">
         <input type="button" id="editTask" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
       </div>
