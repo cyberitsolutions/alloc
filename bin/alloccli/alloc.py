@@ -16,6 +16,7 @@ from prettytable import PrettyTable
 
 class alloc(object):
 
+  client_version = "1.7.4"
   url = ''
   username = ''
   quiet = ''
@@ -537,6 +538,7 @@ class alloc(object):
       self.die("Error authenticating: %s" % rtn)
 
   def make_request(self, args):
+    args["client_version"] = self.client_version
     args["sessID"] = self.sessID
     rtn = urllib.urlopen(self.url, urllib.urlencode(args)).read()
     try:

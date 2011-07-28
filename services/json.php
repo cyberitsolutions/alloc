@@ -11,6 +11,9 @@ function g($var) {
   return $rtn;
 }
 
+if (!version_compare(g("client_version"),get_alloc_version(),">=")) {
+  die("Your alloc client needs to be upgraded.");
+}
 
 $key = g("sessID");
 
