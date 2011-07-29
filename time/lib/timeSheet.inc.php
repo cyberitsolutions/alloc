@@ -810,7 +810,7 @@ class timeSheet extends db_entity {
     }
 
     foreach ($status_array as $k=>$v) {
-      $rtn["show_status_options"].= $br.$v."<input type='checkbox' name='status[]' value='".$k."'".(in_array($k,$_FORM["status"])?" checked" : "").">";
+      $rtn["show_status_options"].= $br.$v."<input type='checkbox' name='status[]' value='".$k."'".(in_array($k,(array)$_FORM["status"])?" checked" : "").">";
       $br="&nbsp;&nbsp;&nbsp;";
     }
 
