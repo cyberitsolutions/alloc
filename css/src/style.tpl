@@ -52,7 +52,6 @@ a:hover {
 }
 
 a.growshrink, a.magic {
-  color:(TD_COLOR);
   text-transform:none;
 }
 
