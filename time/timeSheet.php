@@ -31,14 +31,29 @@ if (!$current_user->is_employee()) {
     global $timeSheet, $TPL;
 
     $db = new db_alloc;
-    $db->query(sprintf("SELECT * FROM transaction WHERE timeSheetID = %d",$timeSheet->get_id()));
 
-    if ($db->next_record() || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
+    $db->query(sprintf("SELECT SUM(amount) as total_incoming FROM transaction WHERE timeSheetID = %d AND fromTfID = %d",$timeSheet->get_id(),config::get_config_item("inTfID")));
+    $row = $db->row();
+    $total_incoming = $row["total_incoming"];
+    $TPL["total_incoming"] = page::money($timeSheet->get_value("currencyTypeID"),$total_incoming,"%s%mo %c");
+
+    $db->query(sprintf("SELECT * FROM transaction WHERE timeSheetID = %d AND fromTfID != %d",$timeSheet->get_id(),config::get_config_item("inTfID")));
+
+    while ($row = $db->row()) {
+      $has_transactions = true;
+      $rows[] = $row;
+    }
+    $total_allocated = transaction::get_actual_amount_used($rows);
+    $TPL["total_allocated"] = page::money($timeSheet->get_value("currencyTypeID"),$total_allocated,"%s%mo %c");
+    $TPL["total_dollars"] =   page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_dollars_not_null"],"%s%m %c");
+    $TPL["total_remaining"] = page::money($timeSheet->get_value("currencyTypeID"),$total_incoming - $total_allocated,"%mo"); // used in js preload_field()
+
+    if ($has_transactions || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
 
       if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS) && $timeSheet->get_value("status") == "invoiced") {
-        $p_button = "<input type=\"submit\" name=\"p_button\" value=\"P\">";
-        $a_button = "<input type=\"submit\" name=\"a_button\" value=\"A\">";
-        $r_button = "<input type=\"submit\" name=\"r_button\" value=\"R\">";
+        $p_button = "<input style=\"padding:1px 4px\" type=\"submit\" name=\"p_button\" value=\"P\" title=\"Mark transactions pending\">&nbsp;";
+        $a_button = "<input style=\"padding:1px 4px\" type=\"submit\" name=\"a_button\" value=\"A\" title=\"Mark transactions approved\">&nbsp;";
+        $r_button = "<input style=\"padding:1px 4px\" type=\"submit\" name=\"r_button\" value=\"R\" title=\"Mark transactions rejected\">&nbsp;";
         $TPL["p_a_r_buttons"] = "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button."</form>";
 
         // If cyber is client
@@ -57,13 +72,8 @@ if (!$current_user->is_employee()) {
         $TPL["create_transaction_buttons"].= "</form></tr></tr>";
       }
 
-      $db = new db_alloc;
-      $db->query("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) as total FROM transaction 
-               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                 WHERE fromTfID != %d AND transactionType != 'insurance' AND transaction.timeSheetID = %d",config::get_config_item("inTfID"),$timeSheet->get_id());
-      $db->next_record();
-      $t = $db->f("total");
-      $TPL["amount_msg"] = " (".page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_dollars_not_null"]-$t,"%s%m %c")." remaining)";
+
+      
 
       include_template($template_name);
     }

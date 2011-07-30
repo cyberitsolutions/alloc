@@ -21,7 +21,8 @@
     </select>
   </td>
 
-  <td><input type="text" name="transaction_amount" size="8" style="width:48%">
+  <script>preload_field("#transaction_amount","{$total_remaining}")</script>
+  <td><input id="transaction_amount" type="text" name="transaction_amount" size="8" style="width:48%" value="">
   <select name="percent_dropdown" onChange="this.form.transaction_amount.value=this.options[this.selectedIndex].value;" style="width:48%">
   {$percent_dropdown}
   </select>	  

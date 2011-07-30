@@ -83,23 +83,25 @@ function help_text_off(id) {
   $('#helper').remove();
 } 
 function preload_field(element, text) {
-  $(element).bind("focus", function(e){
-    if (this.value == text) {
-      this.style.color = "#333333";
-      this.value = "";
-    }
-  });
-  $(element).each(function(){
-    if (this.value == "") {
-      this.style.color = "#bbbbbb";
-      this.value = text;
-    }
-  });
-  $('form').submit(function(){
-    $(element).each(function(){
+  $(document).ready(function() {
+    $(element).bind("focus", function(e){
       if (this.value == text) {
+        this.style.color = "#333333";
         this.value = "";
       }
+    });
+    $(element).each(function(){
+      if (this.value == "") {
+        this.style.color = "#bbbbbb";
+        this.value = text;
+      }
+    });
+    $('form').submit(function(){
+      $(element).each(function(){
+        if (this.value == text) {
+          this.value = "";
+        }
+      });
     });
   });
 }

@@ -1,6 +1,14 @@
 <table class="box">
 <tr>
-  <th colspan="8">Transactions</th>
+  <th class="header">Transactions
+    <span>
+      <div class="center">
+        Amount required: {$total_dollars}&nbsp;&nbsp;&nbsp;
+        Amount incoming: {$total_incoming}&nbsp;&nbsp;&nbsp;
+        Amount allocated: {$total_allocated}
+      </div>
+    </span>
+  </th>
 </tr>
 <tr>
   <td>
@@ -12,7 +20,7 @@
         <th>Dest TF</th>
         <th>Amount{$amount_msg}</th>
         <th>Type</th> 
-        <th class="nobr">{$p_a_r_buttons}</th>
+        <th class="nobr" style="font-size:80%">{$p_a_r_buttons}</th>
         <th>&nbsp;</th>
       </tr>
       {show_transaction_listR("templates/timeSheetTransactionListR.tpl")}
