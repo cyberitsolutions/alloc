@@ -98,7 +98,7 @@ function clickClientStatus(e) {
         </div>
 
         <div class="edit">
-          <h6>{$project_projectType}{page::mandatory($project_projectName)}</h6>
+          <h6>{print $project_projectType ? $project_projectType : "Project"}{page::mandatory($project_projectName)}</h6>
           <input type="text" name="projectName" id="projectName" value="{$project_projectName_html}" size="45">
           <select name="projectPriority">{$projectPriority_options}</select>
           <select name="projectType">{$projectType_options}</select>
