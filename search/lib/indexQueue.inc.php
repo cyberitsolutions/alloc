@@ -27,5 +27,17 @@ class indexQueue extends db_entity {
   public $data_fields = array("entity"
                              ,"entityID"
                              );
+
+  
+  function save() {
+    $q = sprintf("SELECT * FROM indexQueue WHERE entity = '%s' AND entityID = %d"
+                ,db_esc($this->get_value("entity")),$this->get_value("entityID"));
+    $db = new db_alloc();
+    $db->query($q);
+    if (!$db->row()) {
+      return parent::save();
+    }
+  }
+
 }
 ?>
