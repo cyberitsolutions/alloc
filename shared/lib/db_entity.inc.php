@@ -294,10 +294,9 @@ class db_entity {
     $query.= ")";
     $this->debug and print "<br>db_entity->insert() query: ".$query;
     $db = $this->get_db();
-    $db->ignored_errors = $this->ignored_errors;
     $db->query($query);
 
-    $id = mysql_insert_id();
+    $id = mysql_insert_id($db->link_id);
     if ($id === 0) {
       $this->debug and print "<br>db_entity->insert(): The previous query does not generate an AUTO_INCREMENT value`";
     } else if ($id === FALSE) {
@@ -360,7 +359,6 @@ class db_entity {
     $query = "UPDATE $this->data_table SET ".$this->get_name_equals_value($write_fields)." WHERE ";
     $query.= $this->get_name_equals_value(array($this->key_field));
     $db = $this->get_db();
-    $db->ignored_errors = $this->ignored_errors;
     $this->debug and print "<br>db_entity->update() query: ".$query;
     $db->query($query);
     return true;
@@ -411,7 +409,6 @@ class db_entity {
         $i = new indexQueue();
         $i->set_value("entity",$this->classname);
         $i->set_value("entityID",$this->get_id());
-        $i->ignored_errors = array(1062); // don't need to see unique key errors
         $i->save();
 
       // Update the index right now
