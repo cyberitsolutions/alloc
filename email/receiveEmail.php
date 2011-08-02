@@ -55,6 +55,11 @@ if ($num_new_emails >0) {
   // fetch and parse email
   foreach ($msg_nums as $num) {
     unset($bad_key,$done);
+
+    // wrap all db queries in a transaction
+    $db = new db_alloc();
+    $db->start_transaction();
+
     $mail->set_msg($num);
     $headers = $mail->get_msg_header();
     $keys = $mail->get_hashes();
@@ -82,6 +87,8 @@ if ($num_new_emails >0) {
         $mail->forward(config::get_config_item("allocEmailAdmin"), "Email sent to ".config::get_config_item("AllocFromEmailAddress"));
       }
     }
+
+    $db->commit();
   }
 }
 
