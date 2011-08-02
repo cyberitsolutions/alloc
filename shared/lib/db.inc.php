@@ -32,6 +32,7 @@ class db {
   var $row = array();
   var $error;
   var $verbose = 1;
+  public static $started_transaction = false;
 
   function db($username="",$password="",$hostname="",$database="") { // Constructor
     $this->username = $username;
@@ -63,6 +64,18 @@ class db {
     }
     return $this->link_id;
   } 
+
+  function start_transaction() {
+    $this->query("SET autocommit=0");
+    $this->query("START TRANSACTION");
+    self::$started_transaction = true;
+  }
+
+  function commit() {
+    if (self::$started_transaction) {
+      $this->query("COMMIT");
+    }
+  }
 
   function error($msg=false,$errno=false) {
     global $TPL;
@@ -144,6 +157,10 @@ class db {
       } else if ($str = mysql_error()) {
         $rtn = false;
         $this->error("Query failed: ".$str."<br><pre>".$query."</pre>",mysql_errno());
+        if (self::$started_transaction) {
+          mysql_query("ROLLBACK");
+          self::$started_transaction = false;
+        }
         unset($this->link_id);
         mysql_close();
       }
