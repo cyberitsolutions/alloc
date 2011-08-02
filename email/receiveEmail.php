@@ -62,6 +62,19 @@ if ($num_new_emails >0) {
 
     $mail->set_msg($num);
     $headers = $mail->get_msg_header();
+
+    list($from_address,$from_name) = parse_email_address($mail->mail_headers->fromaddress);
+    $person = new person;
+    $personID = $person->find_by_email($from_address);
+    $personID or $personID = $person->find_by_name($from_name);
+
+    // If we've determined a personID from the $from_address, set $current_user
+    if ($personID) {
+      global $current_user;
+      $current_user = new person;
+      $current_user->load_current_user($personID);
+    }
+
     $keys = $mail->get_hashes();
     $debug and print $nl.$nl."Keys: ".$nl.print_r($keys,1);
     
