@@ -412,6 +412,10 @@ class comment extends db_entity {
     $comment->save();
     $commentID = $comment->get_id();
 
+    if (!$commentID) {
+      return;
+    }
+
     $c = new comment();
     $c->set_id($comment->get_value("commentLinkID"));
     $c->select();
