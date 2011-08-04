@@ -614,7 +614,7 @@ if (!function_exists('mime_content_type')) {
                        ,'ods'   => 'application/vnd.oasis.opendocument.spreadsheet'
     );
 
-    $bits = explode('.',$filename);
+    $bits = explode('.',basename($filename));
     count($bits) > 1 and $ext = strtolower(end($bits));
 
     // Or look for the suffix in our array
