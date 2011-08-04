@@ -731,6 +731,12 @@ function imp($var) {
   return $var !== array() && trim((string)$var) !== '' && $var !== null && $var !== false;
 }
 function get_exchange_rate($from, $to) {
+
+  // eg: AUD to AUD == 1
+  if ($from == $to) {
+    return 1;
+  }
+
   $debug = $_REQUEST["debug"];
 
   usleep(500000); // So we don't hit their servers too hard
