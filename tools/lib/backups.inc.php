@@ -72,13 +72,13 @@ class backups {
     global $TPL; 
     require_once("../shared/lib/pclzip.inc.php");
 
-    if (!is_dir($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0")) {
-      mkdir($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0", 0777);
+    if (!is_dir(ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0")) {
+      mkdir(ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0", 0777);
     }
 
     $archivename = "backup_" . date("Ymd_His") . ".zip";
-    $zipfile = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR . $archivename;
-    $dumpfile = $TPL["url_alloc_attachments_dir"] . "database.sql";
+    $zipfile = ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR . $archivename;
+    $dumpfile = ATTACHMENTS_DIR . "database.sql";
     is_file($dumpfile) && unlink($dumpfile);
 
     $archive = new PclZip($zipfile);
@@ -95,12 +95,12 @@ class backups {
     
       // load up all the attachment dirs
       foreach ($this->folders as $folder) {
-        $files[] = $TPL["url_alloc_attachments_dir"].$folder;
+        $files[] = ATTACHMENTS_DIR.$folder;
       }
 
       // add everything to the archive
       $archive->add($files,
-                    PCLZIP_OPT_REMOVE_PATH, $TPL["url_alloc_attachments_dir"]); // again, nuke leading path
+                    PCLZIP_OPT_REMOVE_PATH, ATTACHMENTS_DIR); // again, nuke leading path
 
       is_file($dumpfile) && unlink($dumpfile);
       $TPL["message_good"][] = "Backup created: " . $archivename;
@@ -112,18 +112,18 @@ class backups {
 
     require_once("../shared/lib/pclzip.inc.php");
 
-    $file = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $archivename;
+    $file = ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $archivename;
 
     $archive = new PclZip($file);
 
     # Clear out the folder list
     foreach($this->folders as $folder) {
-      $this->empty_dir($TPL["url_alloc_attachments_dir"] . $folder);
+      $this->empty_dir(ATTACHMENTS_DIR . $folder);
     }
 
-    $archive->extract($TPL["url_alloc_attachments_dir"]);
+    $archive->extract(ATTACHMENTS_DIR);
 
-    list($sql, $commends) = parse_sql_file($TPL["url_alloc_attachments_dir"] . "database.sql");
+    list($sql, $commends) = parse_sql_file(ATTACHMENTS_DIR . "database.sql");
 
     $db = new db_alloc();
     foreach($sql as $q) {
@@ -133,7 +133,7 @@ class backups {
     }
 
     is_array($errors) and $TPL["message"][] = implode("<br>",$errors);
-    unlink($TPL["url_alloc_attachments_dir"] . "database.sql");
+    unlink(ATTACHMENTS_DIR . "database.sql");
     if (!count($errors)) {
       return true;
     }

@@ -119,8 +119,8 @@ if (isset($_GET["forward"])) {
 $TPL["status_line"] = APPLICATION_NAME." ".get_alloc_version()." &copy; ".date("Y")." <a href=\"http://www.cyber.com.au\">Cyber IT Solutions</a>"; 
 
 
-if (!is_dir($TPL["url_alloc_attachments_dir"]."whatsnew".DIRECTORY_SEPARATOR."0")) {
-  mkdir($TPL["url_alloc_attachments_dir"]."whatsnew".DIRECTORY_SEPARATOR."0");
+if (!is_dir(ATTACHMENTS_DIR."whatsnew".DIRECTORY_SEPARATOR."0")) {
+  mkdir(ATTACHMENTS_DIR."whatsnew".DIRECTORY_SEPARATOR."0");
 }
 
 $files = get_attachments("whatsnew",0);

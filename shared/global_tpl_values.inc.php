@@ -23,8 +23,8 @@
 
 
 // This file basically provides static template values that are used throughout the application and is included by alloc.php
-$TPL2 = array("url_alloc_attachments_dir"               => ATTACHMENTS_DIR
-            ,"url_alloc_logout"                         => $sess->url(SCRIPT_PATH."login/logout.php")
+$TPL2 = array(
+             "url_alloc_logout"                         => $sess->url(SCRIPT_PATH."login/logout.php")
             ,"url_alloc_home"                           => $sess->url(SCRIPT_PATH."home/home.php")
             ,"url_alloc_history"                        => $sess->url(SCRIPT_PATH."home/history.php")
             ,"url_alloc_getDoc"                         => $sess->url(SCRIPT_PATH."shared/get_attachment.php")

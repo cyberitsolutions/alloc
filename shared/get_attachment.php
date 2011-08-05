@@ -32,7 +32,7 @@ if (isset($_GET["id"]) && $file && !bad_filename($file)) {
   $entity->set_id(sprintf("%d",$_GET["id"]));
   $entity->select();
 
-  $file = $TPL["url_alloc_attachments_dir"].$_GET["entity"]."/".$_GET["id"]."/".$file;
+  $file = ATTACHMENTS_DIR.$_GET["entity"]."/".$_GET["id"]."/".$file;
 
   if ($entity->has_attachment_permission($current_user)) {
     if (file_exists($file)) {

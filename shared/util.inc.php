@@ -265,7 +265,7 @@ function get_attachments($entity, $id, $ops=array()) {
   
   global $TPL;
   $rows = array();
-  $dir = $TPL["url_alloc_attachments_dir"].$entity.DIRECTORY_SEPARATOR.$id;
+  $dir = ATTACHMENTS_DIR.$entity.DIRECTORY_SEPARATOR.$id;
 
   if (isset($id)) {
     #if (!is_dir($dir)) {
@@ -348,7 +348,7 @@ function move_attachment($entity, $id=false) {
   
       if (is_uploaded_file($file["tmp_name"])) {
 
-        $dir = $TPL["url_alloc_attachments_dir"].$entity.DIRECTORY_SEPARATOR.$id;
+        $dir = ATTACHMENTS_DIR.$entity.DIRECTORY_SEPARATOR.$id;
         if (!is_dir($dir)) {
           mkdir($dir, 0777);
         }

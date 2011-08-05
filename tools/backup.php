@@ -55,11 +55,11 @@ if ($_POST["delete_backup"]) {
   if (bad_filename($file)) {
     die("File delete error: Name contains slashes.");
   }
-  $path = $TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $file;
+  $path = ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $file;
   if (!is_file($path)) {
     die("File delete error: Not a file.");
   }
-  if (dirname($TPL["url_alloc_attachments_dir"] . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR.".") != dirname($path)) {
+  if (dirname(ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR.".") != dirname($path)) {
     die("File delete error: Bad path.");
   }
 
