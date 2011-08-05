@@ -131,7 +131,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
       $ops["format"] != "html" and $suffix = ".pdf";
 
       $timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions");
-      $dir = $TPL["url_alloc_attachments_dir"]."comment".DIRECTORY_SEPARATOR.$comment->get_id();
+      $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$comment->get_id();
       if (!is_dir($dir)) {
         mkdir($dir, 0777);
       }
@@ -152,7 +152,7 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
 
       $suffix = ".pdf";
 
-      $dir = $TPL["url_alloc_attachments_dir"]."comment".DIRECTORY_SEPARATOR.$comment->get_id();
+      $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$comment->get_id();
       if (!is_dir($dir)) {
         mkdir($dir, 0777);
       }
