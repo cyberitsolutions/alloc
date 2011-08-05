@@ -21,7 +21,6 @@
 */
 
 
-require_once(dirname(__FILE__)."/WSDL_Gen.inc.php");
 require_once(dirname(__FILE__)."/services.inc.php");
 
 class services_module extends module {
