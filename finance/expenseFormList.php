@@ -51,7 +51,7 @@ function show_expense_form_list($template_name) {
     $sp[$row["expenseFormID"]] = " + ";
     $rows[$row["expenseFormID"]] = $row;
   }
-  foreach ($rows as $expenseFormID => $row) {
+  foreach ((array)$rows as $expenseFormID => $row) {
     $expenseForm = new expenseForm();
     if ($expenseForm->read_row_record($row, false)) {
       $i++;
