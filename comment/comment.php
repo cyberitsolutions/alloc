@@ -78,15 +78,20 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
       $emailRecipients[] = $str;
 
       // Add a new client contact
-      if ($_POST["eo_add_client_contact"] && $_POST["eo_client_id"]) {
-        $cc = new clientContact;
-        $cc->set_value("clientContactName",trim($_POST["eo_name"]));
-        $cc->set_value("clientContactEmail",trim($_POST["eo_email"]));
-        $cc->set_value("clientID",sprintf("%d",$_POST["eo_client_id"]));
-        $cc->save();
+      if ($_POST["eo_client_id"]) {
+        $q = sprintf("SELECT * FROM clientContact WHERE clientID = %d AND clientContactEmail = '%s'"
+                    ,$_POST["eo_client_id"],db_esc(trim($_POST["eo_email"])));
+        $db = new db_alloc();
+        if (!$db->qr($q)) {
+          $cc = new clientContact;
+          $cc->set_value("clientContactName",trim($_POST["eo_name"]));
+          $cc->set_value("clientContactEmail",trim($_POST["eo_email"]));
+          $cc->set_value("clientID",sprintf("%d",$_POST["eo_client_id"]));
+          $cc->save();
+        }
       }
       // Add the person to the interested parties list
-      if ($_POST["eo_add_interested_party"]) {
+      if (!interestedParty::exists("comment",$comment->get_id(),trim($_POST["eo_email"]))) {
         $interestedParty = new interestedParty;
         $interestedParty->set_value("fullName",trim($_POST["eo_name"]));
         $interestedParty->set_value("emailAddress",trim($_POST["eo_email"]));
@@ -98,7 +103,6 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
         }
         $interestedParty->save();
       }
-
     }
 
     // We send this email to the default from address, so that a copy of the
