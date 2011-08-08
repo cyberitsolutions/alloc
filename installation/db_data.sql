@@ -281,7 +281,8 @@ VALUES
 ,('client'                   ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
 ,('clientContact'            ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
 
-,('comment'                  ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
+,('comment'                  ,0  ,NULL ,'employee' ,true ,NULL ,15    ,NULL)
+,('comment'                  ,0  ,NULL ,'client'   ,true ,NULL ,15    ,NULL)
 
 ,('commentTemplate'          ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
 ,('commentTemplate'          ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
@@ -293,6 +294,8 @@ VALUES
 ,('expenseForm'              ,0  ,NULL ,'admin'    ,true ,NULL ,31    ,NULL)
 
 ,('history'                  ,0  ,NULL ,''         ,true ,NULL ,8     ,NULL)
+
+,('indexQueue'               ,0  ,NULL ,'employee' ,true ,NULL ,15    ,NULL)
 
 ,('interestedParty'          ,0  ,NULL ,''         ,true ,NULL ,9     ,NULL)
 ,('interestedParty'          ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
@@ -386,9 +389,8 @@ VALUES
 ,('token'                    ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
 ,('tokenAction'              ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
 
-,('transaction'              ,-1 ,NULL ,'employee' ,true ,NULL ,15    ,NULL)
-,('transaction'              ,0  ,NULL ,'manage'   ,true ,NULL ,8192  ,'Manager create pending transaction.')
-,('transaction'              ,0  ,NULL ,'admin'    ,true ,NULL ,65295 ,NULL)
+,('transaction'              ,-1 ,NULL ,''         ,true ,NULL ,15    ,'Allow everyone to modify PENDING transactions that they own.')
+,('transaction'              ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,'Allow admin to do everything with transactions.')
 
 ,('transactionRepeat'        ,-1 ,NULL ,'employee' ,true ,NULL ,1     ,NULL)
 ,('transactionRepeat'        ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)

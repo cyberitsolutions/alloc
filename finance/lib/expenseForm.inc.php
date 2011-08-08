@@ -49,13 +49,12 @@ class expenseForm extends db_entity {
 
     if ($this->get_id()) {
       // Return true if any of the transactions on the expense form are accessible by the current user
+      $current_user_tfIDs = $current_user->get_tfIDs();
       $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d",$this->get_id());
       $db = new db_alloc;
       $db->query($query);
       while ($db->next_record()) {
-        $transaction = new transaction;
-        $transaction->read_db_record($db, false);
-        if ($transaction->is_owner($person)) {
+        if (is_array($current_user_tfIDs) && (in_array($db->f("tfID"),$current_user_tfIDs) || in_array($db->f("fromTfID"),$current_user_tfIDs))) {
           return true;
         }
       }
@@ -65,7 +64,7 @@ class expenseForm extends db_entity {
       return true;
     }
 
-    if ($current_user->have_role("admin") || $current_user->have_role("god")) {
+    if ($current_user->have_role("admin")) {
       return true;
     }
 

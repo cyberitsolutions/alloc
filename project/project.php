@@ -301,7 +301,7 @@ $project = new project;
 if ($projectID) {
   $project->set_id($projectID);
   $project->select();
-  $project->check_perm();
+  $project->check_perm() or die();
   $new_project = false;
 } else {
   $new_project = true;

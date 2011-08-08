@@ -49,7 +49,7 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
 
   $transactionRepeat->read_globals();
 
-  if (have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) { 
+  if ($current_user->have_role("admin")) { 
     if ($_POST["pending"]) {
       $transactionRepeat->set_value("status","pending");
       $TPL["message_good"][] = "Repeating Expense form Pending.";
@@ -149,7 +149,7 @@ $TPL["basisOptions"] = page::select_options(array("weekly"     =>"weekly"
 
 $TPL["transactionTypeOptions"] = page::select_options(transaction::get_transactionTypes(), $transactionRepeat->get_value("transactionType"));
 
-if (is_object($transactionRepeat) && $transactionRepeat->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
+if (is_object($transactionRepeat) && $transactionRepeat->get_id() && $current_user->have_role("admin")) {
   $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"pending\" value=\"Pending\">";
   $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"approved\" value=\"Approve\">";
   $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"rejected\" value=\"Reject\">";

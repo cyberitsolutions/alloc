@@ -21,6 +21,7 @@
 */
 
 define("NO_AUTH",true);
+define("IS_GOD",true);
 require_once("../alloc.php");
 
 
@@ -43,7 +44,9 @@ function timeWarp($mostRecent, $basis) {
   }
 }
 
-
+if (!$current_user->have_role("admin")) {
+  die();
+}
 
 global $current_user;
 

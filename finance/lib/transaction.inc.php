@@ -20,15 +20,6 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-define("PERM_FINANCE_WRITE_INVOICE_TRANSACTION", 256);
-define("PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION", 512);
-define("PERM_FINANCE_WRITE_WAGE_TRANSACTION", 1024);
-define("PERM_FINANCE_CREATE_TRANSACTION_FROM_REPEAT", 2048);
-define("PERM_FINANCE_WRITE_APPROVED_TRANSACTION", 4096);
-define("PERM_FINANCE_CREATE_PENDING_TRANSACTION", 8192);
-define("PERM_FINANCE_UPLOAD_EXPENSES_FILE", 16384);
-define("PERM_FINANCE_RECONCILIATION_REPORT", 32768);
-
 
 class transaction extends db_entity {
   public $classname = "transaction";
@@ -62,17 +53,6 @@ class transaction extends db_entity {
                              ,"transactionRepeatID"
                              ,"transactionGroupID"
                              );
-
-    public $permissions = array(PERM_FINANCE_WRITE_INVOICE_TRANSACTION => "add/update/delete invoice transaction"
-                               ,PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION => "add/update/delete free-form transaction"
-                               ,PERM_FINANCE_WRITE_WAGE_TRANSACTION => "add/update/delete wage transaction"
-                               ,PERM_FINANCE_CREATE_TRANSACTION_FROM_REPEAT => "create from repeating transactions"
-                               ,PERM_FINANCE_WRITE_APPROVED_TRANSACTION => "approve/reject transactions"
-                               ,PERM_FINANCE_UPLOAD_EXPENSES_FILE => "upload expenses file"
-                               ,PERM_FINANCE_RECONCILIATION_REPORT => "view reconciliation report"
-                               ,PERM_FINANCE_CREATE_PENDING_TRANSACTION => "create pending transaction"
-                               );
-
 
   function save() {
 
@@ -118,103 +98,26 @@ class transaction extends db_entity {
     }
 
     return parent::save();
-  }
 
-  function check_view_perms() {
-    if ($this->get_value("transactionType") == "sale" && $this->get_value("status") == "pending") {
-      $this->check_perm(PERM_FINANCE_CREATE_PENDING_TRANSACTION);
-      $skip_default = true;
-    }
-    return $skip_default;
-  }
-
-  function check_write_perms() {
-    if ($this->get_value("transactionType") == "sale" && $this->get_value("status") == "pending") {
-      $this->check_perm(PERM_FINANCE_CREATE_PENDING_TRANSACTION);
-      $skip_default = true;
-    }
-    if ($this->get_value("status") != "pending") {
-      $this->check_perm(PERM_FINANCE_WRITE_APPROVED_TRANSACTION);
-    }
-    if ($this->get_value("transactionType") == "invoice") {
-      $this->check_perm(PERM_FINANCE_WRITE_INVOICE_TRANSACTION);
-    }
-    if ($this->get_value("transactionType") == "salary") {
-      $this->check_perm(PERM_FINANCE_WRITE_WAGE_TRANSACTION);
-    }
-    return $skip_default;
-  }
-
-  function check_create_perms() {
-    $skip_default = $this->check_write_perms();
-    if (!$skip_default) {
-      parent::check_create_perms();
-    }
-  }
-
-  function check_update_perms() {
-    $skip_default = $this->check_write_perms();
-    if (!$skip_default) {
-      parent::check_update_perms();
-    }
-  }
-
-  function check_delete_perms() {
-    $skip_default = $this->check_write_perms();
-    if (!$skip_default) {
-      parent::check_delete_perms();
-    }
-  }
-
-  function check_read_perms() {
-    $skip_default = $this->check_view_perms();
-    if (!$skip_default) {
-      parent::check_read_perms();
-    }
   }
 
   function validate() {
-    //The transaction may not be modified if the timesheet or invoice
-    //it is attached to has been completed.
-    //Special case: transactions attached to expense forms can be modified
-    //regardless (because the expense form is finalised before the user gets
-    //the chance to click "approve"/"reject")
-    $this->is_final() && !$this->get_value("expenseFormID") and $err[] = "Cannot save transaction. Transaction has been finalised.";
+    global $current_user;
+    
     $this->get_value("fromTfID") or $err[] = "Unable to save transaction without a Source TF.";
     $this->get_value("fromTfID") && $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".$this->get_value("fromTfID").") being the same as the Destination TF (".$this->get_value("tfID").") \"".$this->get_value("product")."\"";
     $this->get_value("quantity") or $this->set_value("quantity",1);
     $this->get_value("transactionDate") or $this->set_value("transactionDate",date("Y-m-d"));
 
-    return parent::validate($err);
-  }
-
-  function is_final() {
-    if ($this->get_value("expenseFormID")) {
-      $expenseForm = new expenseForm;
-      $expenseForm->set_id($this->get_value("expenseFormID"));
-      $expenseForm->select();
-      if ($expenseForm->get_value("expenseFormFinalised")) {
-        return true;
-      }
-    } else if ($this->get_value("invoiceItemID")) {
-      $invoiceItem = new invoiceItem;
-      $invoiceItem->set_id($this->get_value("invoiceItemID"));
-      $invoiceItem->select();
-      $invoice = new invoice;
-      $invoice->set_id($invoiceItem->get_value("invoiceID"));
-      $invoice->select();
-      if ($invoice->get_value("invoiceStatus") == "finished") {
-        return true;
-      }
-    } else if ($this->get_value("timeSheetID")) {
-      $ts = new timeSheet;
-      $ts->set_id($this->get_value("timeSheetID"));
-      $ts->select();
-      if ($ts->get_value("status") == "finished") {
-        return true;
-      }
+    $old = $this->all_row_fields;
+    $status = $old["status"] or $status = $this->get_value("status");
+    if ($status != "pending" && !$current_user->have_role("admin")) {
+      $err[] = "Unable to save transaction unless status is pending.";
     }
-    return false;
+    if ($old["status"] == "pending" && $old["status"] != $this->get_value("status") && !$current_user->have_role("admin")) {
+      $err[] = "Unable to change transaction status unless you have admin perm.";
+    }
+    return parent::validate($err);
   }
 
   function is_owner($person = "") {
@@ -223,11 +126,11 @@ class transaction extends db_entity {
       $person = $current_user;
     }
 
-    if($person->have_role("employee") && $this->get_value('expenseFormID') && $this->get_value('fromTfID') == config::get_config_item('expenseFormTfID')) {
-      // employees have implicit ownership of the expenseFormTfID for expense forms
-      return true;
-    }
 
+    if ($this->get_value("expenseFormID")) {
+      $expenseForm = $this->get_foreign_object("expenseForm");
+      return $expenseForm->is_owner($person);
+    }
     if ($this->get_value("timeSheetID")) {
       $timeSheet = $this->get_foreign_object("timeSheet");
       return $timeSheet->is_owner($person);

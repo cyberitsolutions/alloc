@@ -68,7 +68,7 @@ if ($_POST["save"]) {
 $permission->select();
 
 $TPL["personOptions"] = page::select_options("SELECT personID as value, username as label FROM person ORDER BY username", $permission->get_value("personID"));
-$TPL["roleNameOptions"] = page::select_options(array("god"=>"god", "admin"=>"admin", "manage"=>"manage", "employee"=>"employee"), $permission->get_value("roleName"));
+$TPL["roleNameOptions"] = page::select_options(array("god"=>"god", "admin"=>"admin", "manage"=>"manage", "employee"=>"employee","client"=>"client"), $permission->get_value("roleName"));
 $TPL["allowOptions"] = page::select_options(array("1"=>"Yes", "0"=>"No"), $permission->get_value("allow"));
 
 $table_name = $_POST["tableName"] or $table_name = $permission->get_value("tableName");

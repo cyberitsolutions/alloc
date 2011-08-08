@@ -48,7 +48,7 @@ if ($transactionID && !$_GET["new"]) {
 }
 
 $tf = $transaction->get_foreign_object("tf");
-$tf->check_perm();
+$tf->check_perm() or die();
 
 $invoice_item = $transaction->get_foreign_object("invoiceItem");
 $invoice_item->set_values();
@@ -98,7 +98,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
   #$transaction->get_value("companyDetails")  or $TPL["message"][] = "You must enter the company details";
 
   if (!count($TPL["message"]))  {
-    $transaction->check_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION);
+    $transaction->check_perm(PERM_CREATE) or die();
     $transaction->set_value("amount",str_replace(array("$",","),"",$transaction->get_value("amount")));
     $transaction->save();
     if (!count($TPL["message"]))  { // need to check this again as transaction->save might have triggered an error
@@ -166,12 +166,12 @@ $TPL["project_link"] = $p->get_link();
 
 $TPL["taxName"] = config::get_config_item("taxName");
 
-if ($transaction->have_perm(PERM_FINANCE_WRITE_FREE_FORM_TRANSACTION) && !$transaction->is_final()) {
-  $TPL["main_alloc_title"] = "Create Transaction - ".APPLICATION_NAME;
-  include_template("templates/editTransactionM.tpl");
-} else {
+if (is_object($current_user) && !$current_user->have_role("admin") && is_object($transaction) && in_array($transaction->get_value("status"),array("approved","rejected"))) {
   $TPL["main_alloc_title"] = "View Transaction - ".APPLICATION_NAME;
   include_template("templates/viewTransactionM.tpl");
+} else {
+  $TPL["main_alloc_title"] = "Create Transaction - ".APPLICATION_NAME;
+  include_template("templates/editTransactionM.tpl");
 }
 
 

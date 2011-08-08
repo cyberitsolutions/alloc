@@ -38,7 +38,7 @@ function show_expenseFormList($template_name) {
   $db = new db_alloc;
   $transactionRepeat = new transactionRepeat;
 
-  if (!$_GET["tfID"] && !have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
+  if (!$_GET["tfID"] && !$current_user->have_role("admin")) {
     $tfIDs = $current_user->get_tfIDs();
     $tfIDs and $sql = "WHERE tfID in (".implode(",",$tfIDs).")";
 

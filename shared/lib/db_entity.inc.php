@@ -37,6 +37,7 @@ class db_entity {
   public $debug = false;
   public $display_field_name;        // Set this to the field to be used by the get_display_value function
   public $cache;                     // Cache associative array stored by primary key index
+  public static $errors_fatal = true;
   
   private $fields_loaded = false;    // This internal flag just specifies whether a row from the db was loaded
 
@@ -76,6 +77,18 @@ class db_entity {
     }
   }
 
+  function skip_errors() {
+    self::$errors_fatal = false;
+  }
+
+  function err($str) {
+    if (self::$errors_fatal) {
+      die($str);
+    } else {
+      echo $str;
+    }
+  }
+
   function get($id=array()) {
     if ($id && is_numeric($id)) {
       $db = $this->get_db();
@@ -109,11 +122,13 @@ class db_entity {
 
   function is_god() {
     global $current_user;
-    $perms = explode(",", $current_user->get_value("perms"));
-    if (in_array("god", $perms)) {
-      return true;
-    } else {
-      return false;
+    if (is_object($current_user)) {
+      $perms = explode(",", $current_user->get_value("perms"));
+      if (in_array("god", $perms)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -121,25 +136,29 @@ class db_entity {
     if ($this->is_god() || defined("IS_GOD")) {
       return true;
     }
-    global $current_user, $permission_cache;
+    global $current_user, $permission_cache, $current_client;
+
     if ($person == "") {
-      $person = $current_user;
+      $current_client and $person = $current_client;
+      $current_user and $person = $current_user;
     }
-    #echo "<br>1.".$this->data_table . "->have_perm($action, " . (is_object($person) ? $person->get_id() : $person) . ", $assume_owner)";
+
     $entity_id = $this->get_id();
     if (!$entity_id) {
       $entity_id = 0;
     }
-    $person_id = $person->get_id();
-    $record_cache_key = $this->data_table.":".$entity_id.":".$action.":".$person_id.":".$assume_owner;
-    $table_cache_key = $this->data_table.":T:".$action.":".$person_id.":".$assume_owner;
+    
+    if (is_object($person)) {
+      $person_id = $person->get_id();
+      $person_type = $person->classname;
+    }
+
+    $record_cache_key = $this->data_table.":".$entity_id.":".$action.":".$person_type."_".$person_id.":".$assume_owner;
+    $table_cache_key = $this->data_table.":T:".$action.":"."$person_type"."_".$person_id.":".$assume_owner;
 
     if (isset($permission_cache[$table_cache_key])) {
-      #echo "cache[$table_cache_key] = " . $cache[$table_cache_key] . "<br>";
       return $permission_cache[$table_cache_key];
-
     } else if (isset($permission_cache[$record_cache_key])) {
-      #echo "cache[$record_cache_key] = " . $cache[$record_cache_key] . "<br>";
       return $permission_cache[$record_cache_key];
     }
 
@@ -154,31 +173,30 @@ class db_entity {
                     ,$entity_id,$person_id,$action,$action);
     $db->query($query);
     
-#$action == 4 and print $query;
-
     while ($db->next_record()) {
 
-      // Ignore this record if it specifies a role the user doesn't have
-      $required_role = $db->f("roleName");
-      if ($required_role && !$person->have_role($required_role)) {
-#echo "<br>here $required_role";
+      // If the permission specifies a role, not having a $person is the same as having no roles
+      if ($db->f("roleName") && !is_object($person)) {
         continue;
       }
+
+      // Ignore this record if it specifies a role the user doesn't have
+      if ($db->f("roleName") && is_object($person) && !$person->have_role($db->f("roleName"))) {
+        continue;
+      }
+
       // Ignore this record if it specifies that the user must be the record's owner and they are not
       if ($db->f("entityID") == -1 && !$assume_owner && !$this->is_owner($person)) {
-#echo "<br>also here: ";
         continue;
       }
-      // Read the value of the allow field to determine whether to grant the permission
-      $have_perm = $db->f("allow");
 
       // Cache the result in variables to prevent duplicate database lookups
-      $permission_cache[$record_cache_key] = $have_perm;
+      $permission_cache[$record_cache_key] = $db->f("allow");
       if ($db->f("entityID") == 0) {
-        $permission_cache[$table_cache_key] = $have_perm;
+        $permission_cache[$table_cache_key] = $db->f("allow");
       }
-      // Return the result
-      return $have_perm;
+
+      return $db->f("allow");
     }
 
     // No matching records - return false
@@ -187,12 +205,17 @@ class db_entity {
   }
 
   function check_perm($action = 0, $person = "", $assume_owner = false) {
-    if (!$this->have_perm($action, $person, $assume_owner)) {
+    if ($this->have_perm($action, $person, $assume_owner)) {
+      return true;
+
+    } else {
       $description = $this->permissions[$action];
       if (!$description) {
         $description = $action;
       }
-      die("You do not have permission '$description' for ".$this->data_table." #".$this->get_id());
+
+      $this->err("You do not have permission '$description' for ".$this->data_table." #".$this->get_id());
+      return false;
     }
   }
 
@@ -213,14 +236,6 @@ class db_entity {
     }
   }
  
-  function check_create_perms() {
-    $this->check_perm(PERM_CREATE);
-  }
-
-  function check_read_perms() {
-    $this->check_perm(PERM_READ);
-  }
-
   function perm_cleanup(&$row=array()) {
     foreach ($row as $field_name => $object) {
       if (!$this->can_read_field($field_name)) {
@@ -231,16 +246,10 @@ class db_entity {
     return $row;
   }
 
-  function check_update_perms() {
-    $this->check_perm(PERM_UPDATE);
-  }
-
-  function check_delete_perms() {
-    $this->check_perm(PERM_DELETE);
-  }
-
   function delete() {
-    $this->check_delete_perms();
+    if (!$this->check_perm(PERM_DELETE)) {
+      return false;
+    }
     if (!$this->has_key_values()) {
       return false;
     }
@@ -267,7 +276,9 @@ class db_entity {
     } else {
       $current_user_id = "0";
     }
-    $this->check_create_perms();
+    if (!$this->check_perm(PERM_CREATE)) {
+      return false;
+    }
 
     if (isset($this->data_fields[$this->data_table."CreatedUser"]) && $current_user_id) {
       $this->set_value($this->data_table."CreatedUser", $current_user_id);
@@ -317,7 +328,10 @@ class db_entity {
   }
 
   function update() {
-    $this->check_update_perms();
+
+    if (!$this->check_perm(PERM_UPDATE)) {
+      return false;
+    }
 
     // retrieve a copy of this object with the old values from the database
     if (class_exists($this->data_table)) {
@@ -501,12 +515,14 @@ class db_entity {
     $this->read_array($db->row, "", SRC_DATABASE);
     $this->all_row_fields = $db->row;
     if ($errors_fatal) {
-      $this->check_read_perms();
+      if (!$this->check_perm(PERM_READ)) {
+        $this->clear();
+        return false;
+      }
       return true;
     } else {
       $have_perm = $this->have_perm(PERM_READ);
       if (!$have_perm) {
-  
         // we don't bother doing read permission checking for all the meta tables
         $m = new meta();
         $meta_tables = (array)$m->get_tables();
@@ -526,7 +542,10 @@ class db_entity {
     $this->read_array($row, "", SRC_DATABASE);
     $this->all_row_fields = $row;
     if ($errors_fatal) {
-      $this->check_read_perms();
+      if (!$this->check_perm(PERM_READ)) {
+        $this->clear();
+        return false;
+      }
       return true;
     } else {
       $have_perm = $this->have_perm(PERM_READ);
@@ -542,14 +561,19 @@ class db_entity {
   }
 
   function set_value($field_name, $value, $source = SRC_VARIABLE) {
-    is_object($this->data_fields[$field_name]) || die("Cannot set field value - field not found: ".$field_name);
-    $this->set_field_value($this->data_fields[$field_name], $value, $source);
+    if (is_object($this->data_fields[$field_name])) {
+      $this->set_field_value($this->data_fields[$field_name], $value, $source);
+    } else {
+      $this->err("Cannot set field value - field not found: ".$field_name);
+    }
   }
 
   function get_value($field_name, $dest = DST_VARIABLE) {
     $field = $this->data_fields[$field_name];
     if (!is_object($field)) {
-      die("Field $field_name does not exist in ".$this->data_table);
+      $msg = "Field $field_name does not exist in ".$this->data_table;
+      $this->err($msg);
+      return $msg;
     }
     if (!$this->can_read_field($field_name)) {
       return "Permission denied to ".$this->permissions[$this->data_fields[$field_name]->read_perm_name]." of ".$this->data_table.".".$field_name;
@@ -643,20 +667,15 @@ class db_entity {
 
   function is_owner($person = "") {
     global $current_user;
-    if ($person == "") {
-      $person = $current_user;
-    }
-    if (isset($this->data_fields["personID"])) {
-
-      #echo "data_table: " .$this->data_table. ",  data field: " .$this->get_value("personID") . " == " . $person->get_id() . "<br>";
-      #echo "HERE: ".$this->get_value("personID"). " - ".$person->get_id();
-      return $this->get_value("personID") == $person->get_id();
-    } else if ($this->key_field->get_name() == "personID") {
-
-      #echo "key field " . $this->get_id() . " == " . $person->get_id() . "<br>";
-      return $this->get_id() == $person->get_id();
-    } else {
-      echo "Warning: could not determine owner for ".$this->data_table."<br>";
+    $person or $person = $current_user;
+    if (is_object($person) && $person->classname == "person") {
+      if (isset($this->data_fields["personID"])) {
+        return $this->get_value("personID") == $person->get_id();
+      } else if ($this->key_field->get_name() == "personID") {
+        return $this->get_id() == $person->get_id();
+      } else {
+        echo "Warning: could not determine owner for ".$this->data_table."<br>";
+      }
     }
   }
 
@@ -847,16 +866,6 @@ class db_entity {
     return $index;
   }
 
-}
-
-
-// Check that the person speicified by $person (default current user) has the
-// permission specified by $perm_name for the data entity class specified by
-// $class_name.  If they do not have permission then an error is displayed.
-function check_entity_perm($class_name, $perm_name = 0, $person = "", $assume_owner = false) {
-  $entity = new $class_name;
-  $entity->set_id(0);
-  $entity->check_perm($perm_name, $person, $assume_owner);
 }
 
 

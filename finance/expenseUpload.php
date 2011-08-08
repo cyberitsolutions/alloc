@@ -22,12 +22,9 @@
 
 require_once("../alloc.php");
 
-check_entity_perm("transaction", PERM_FINANCE_UPLOAD_EXPENSES_FILE);
-
 if (!config::get_config_item("mainTfID")) {
   $TPL["message"][] = "This functionality will not work until you set a Finance TF on the Setup -> Finance screen.";
 }
-
 
 $field_map = array("date"=>0, "account"=>1, "num"=>2, "description"=>3, "memo"=>4, "category"=>5, "clr"=>6, "amount"=>7);
 
