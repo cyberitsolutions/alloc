@@ -301,7 +301,7 @@ if ($_POST["cancel"]) {
   alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
-} else if ($_POST["attach_transactions_to_invoice"] && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
+} else if ($_POST["attach_transactions_to_invoice"] && $current_user->have_role("admin")) {
   $expenseForm->save_to_invoice($_POST["attach_to_invoiceID"]);
 }
 
@@ -364,7 +364,7 @@ $c->set_id($expenseForm->get_value("clientID"));
 $c->select();
 $clientName = page::htmlentities($c->get_name());
 $clientName and $TPL["printer_clientID"] = $clientName;
-
+$TPL["field_expenseFormComment"] = $expenseForm->get_value("expenseFormComment");
 
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
 
@@ -378,8 +378,9 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $ops = client::get_list($options);
   $ops = array_kv($ops,"clientID","clientName");
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";
+  $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment"));
 
-} else if (is_object($expenseForm) && $expenseForm->get_id() && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION)) {
+} else if (is_object($expenseForm) && $expenseForm->get_id() && $current_user->have_role("admin")) {
   
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"unfinalise\" value=\"&lt;- Edit\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save\">";
@@ -387,6 +388,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"approve\" value=\"Approve\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"reject\" value=\"Reject\">";
   $TPL["field_clientID"] = $clientName;
+  $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment"));
 
 } else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Create Expense Form\">";
@@ -397,6 +399,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $ops = client::get_list($options);
   $ops = array_kv($ops,"clientID","clientName");
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";
+  $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment"));
 }
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {
@@ -414,7 +417,7 @@ if (is_object($expenseForm) && $expenseForm->get_id()) {
   $TPL["formTotal"] = page::money_print($rows);
 }
 
-if (is_object($expenseForm) && have_entity_perm("transaction", PERM_FINANCE_WRITE_APPROVED_TRANSACTION) 
+if (is_object($expenseForm) && $current_user->have_role("admin")
 && !$expenseForm->get_invoice_link() && $expenseForm->get_value("expenseFormFinalised") && $expenseForm->get_value("seekClientReimbursement")) {
 
   $ops["invoiceStatus"] = "edit";

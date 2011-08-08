@@ -184,11 +184,6 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   $TPL["current_date"] = date("Y-m-d H:i:s");
   $TPL["today"] = date("Y-m-d");
 
-  // Check for existing session..
-  $sess = new Session();
-
-  // Include all the urls
-  require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."global_tpl_values.inc.php");
 
   // The default From: email address 
   define("ALLOC_DEFAULT_FROM_ADDRESS", "allocPSA ".add_brackets(config::get_config_item("AllocFromEmailAddress")));
@@ -200,37 +195,38 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // The default email bounce address
   define("ALLOC_DEFAULT_RETURN_PATH_ADDRESS",config::get_config_item("allocEmailAdmin"));
 
-  // Setup a current_user person who will represent the logged in user
-  $current_user = new person;
 
-  // If a script does not require authentication to take place, for example a
-  // script that runs from cron, or the JSON handler, it can define NO_AUTH
-  // before it includes alloc.php. This will circumvent the auth process.
+  // If a script has NO_AUTH enabled, then it will perform its own
+  // authentication. And will be responsible for setting up any of:
+  // $current_user, $current_client and $sess.
+  if (!defined("NO_AUTH")) {
 
-  // If an authenticated, logged-in, session expires, alloc will re-direct
-  // the web browser to the login page. However some scripts run from AJAX calls,
-  // and to respond with a re-direct when the web-browser is expecting a snippet of
-  // html causes the browser to load the login page inline to the current page. To
-  // avoid this, AJAX scripts should define NO_REDIRECT before they include alloc.php.
+    $current_user = new person();
+    $sess = new Session();
 
-  if (!defined("NO_AUTH") && !$sess->Started()) {
-    if (!defined("NO_REDIRECT")) {
-      // if the user was trying to do something, store the URL so they can get back to it
-      // POST requests will disappear, unfortunately.
-      $forward = "";
-      if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != '/') {
-        $forward = '?forward=' . urlencode($_SERVER['REQUEST_URI']);
-      }
-      alloc_redirect($TPL["url_alloc_login"] . $forward);
-    } else {
-      exit();
+    // If session hasn't been started re-direct to login page
+    if (!$sess->Started()) {
+      defined("NO_REDIRECT") && exit();
+      alloc_redirect($TPL["url_alloc_login"] . ($_SERVER['REQUEST_URI'] != '/' ? '?forward='.urlencode($_SERVER['REQUEST_URI']) : ''));
+
+    // Else load up the current_user and continue
+    } else if ($sess->Get("personID")) {
+      $current_user->load_current_user($sess->Get("personID"));
     }
-  } 
-  
-  if ($sess->Get("personID")) {
-    $current_user->load_current_user($sess->Get("personID"));
+  }
 
-    // Save history entry
+  // Setup all the urls
+  require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."global_tpl_values.inc.php");
+  foreach ($alloc_urls as $k=>$v) {
+    if (is_object($sess)) {
+      $TPL[$k] = $sess->url(SCRIPT_PATH.$v);
+    } else {
+      $TPL[$k] = SCRIPT_PATH.$v;
+    }
+  }
+
+  // Add user's navigation to quick list dropdown
+  if (is_object($current_user) && $current_user->get_id()) {
     $history = new history;
     $history->save_history();
   }

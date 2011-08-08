@@ -21,7 +21,10 @@
 */
 
 require_once("../alloc.php");
-check_entity_perm("transaction", PERM_FINANCE_RECONCILIATION_REPORT);
+
+if (!$current_user->have_role("admin")) {
+  die();
+}
 
 function load_transaction_total($info_field, $transaction_type) {
   global $tf_info;

@@ -24,6 +24,8 @@
 define("NO_AUTH",1);
 require_once("../alloc.php");
 
+$sess = new Session();
+
 // If we already have a session
 if ($sess->Started()) {
   $url = $sess->GetUrl($TPL["url_alloc_home"]);

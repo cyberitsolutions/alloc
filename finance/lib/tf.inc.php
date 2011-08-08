@@ -39,8 +39,9 @@ class tf extends db_entity {
     // If no status is requested then default to approved.  
     $where["status"] or $where["status"] = "approved";
     
-    // Check the current_user has PERM_READ for this
-    check_entity_perm("transaction", PERM_READ, $current_user, $this->is_owner());
+    if (!$this->is_owner() && !$current_user->have_role("admin")) {
+      return false;
+    }
 
     // Get belance
     $db = new db_alloc;

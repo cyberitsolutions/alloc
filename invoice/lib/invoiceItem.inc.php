@@ -20,8 +20,6 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-define("PERM_FINANCE_UPDATE_APPROVED", 256);
-
 class invoiceItem extends db_entity {
   public $data_table = "invoiceItem";
   public $display_field_name = "iiMemo";
@@ -37,7 +35,6 @@ class invoiceItem extends db_entity {
                              ,"iiAmount" => array("type"=>"money")
                              ,"iiDate"
                              );
-  public $permissions = array(PERM_FINANCE_UPDATE_APPROVED => "update approved transactions");
 
   function is_owner($person = "") {
     global $current_user;

@@ -51,7 +51,7 @@ class comment extends db_entity {
       $this->set_value("commentMaster",$this->get_value("commentType"));
       $this->set_value("commentMasterID",$this->get_value("commentLinkID"));
     }
-    parent::save();
+    return parent::save();
   }
 
   function delete() {
@@ -396,6 +396,7 @@ class comment extends db_entity {
   }
 
   function add_comment_from_email($email) {
+    global $current_user, $current_client;
 
     // Skip over emails that are from alloc. These emails are kept only for
     // posterity and should not be parsed and downloaded and re-emailed etc.
@@ -437,24 +438,12 @@ class comment extends db_entity {
     // Try figure out and populate the commentCreatedUser/commentCreatedUserClientContactID fields
     list($from_address,$from_name) = parse_email_address($decoded[0]["Headers"]["from:"]);
 
-
-    $person = new person;
-    $personID = $person->find_by_email($from_address);
-    $personID or $personID = $person->find_by_name($from_name);
-
-    if ($personID && (!is_object($current_user) || (is_object($current_user) && !$current_user->get_id()))) {
-      global $current_user;
-      $current_user = new person;
-      $current_user->load_current_user($personID);
-    }
-
-    if ($personID) {
+    if (is_object($current_user) && $current_user->get_id()) {
+      $personID = $current_user->get_id();
       $comment->set_value('commentCreatedUser', $personID);
-    } else {
-      $cc = new clientContact();
-      $clientContactID = $cc->find_by_email($from_address, $projectID);
-      $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
-      $clientContactID and $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
+    } else if (is_object($current_client) && $current_client->get_id()) {
+      $clientContactID = $current_client->get_id();
+      $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
     }
 
     // If we don't have a $from_name, but we do have a personID or clientContactID, get proper $from_name
@@ -462,10 +451,7 @@ class comment extends db_entity {
       $from_name = person::get_fullname($personID);
 
     } else if (!$from_name && $clientContactID) {
-      $cc = new clientContact;
-      $cc->set_id($clientContactID);
-      $cc->select();
-      $from_name = $cc->get_value("clientContactName");
+      $from_name = $current_client->get_value("clientContactName");
 
     } else if (!$from_name) {
       $from_name = $from_address;
@@ -654,7 +640,8 @@ class comment extends db_entity {
       }
       
       $email->set_to_address($to_address);
-      $from_name = $from["name"] or $from_name = $current_user->get_name();
+      $from_name = $from["name"];
+      is_object($current_user) && !$from_name and $from_name = $current_user->get_name();
       $hash = $from["hash"];
       $messageid = $email->set_message_id($hash);
       $subject_extra = "{Key:".$hash."}";
@@ -743,10 +730,12 @@ class comment extends db_entity {
     if ($entity == "comment") {
       $entity = $e->get_value("commentType");
       $entity_id = $e->get_value("commentLinkID");
-      $f = new $entity;
-      $f->set_id($entity_id);
-      $f->select();
-      $entity_name = $f->get_name();
+      if (class_exists($entity)) {
+        $f = new $entity;
+        $f->set_id($entity_id);
+        $f->select();
+        $entity_name = $f->get_name();
+      }
     }
 
     $doc = new Zend_Search_Lucene_Document();

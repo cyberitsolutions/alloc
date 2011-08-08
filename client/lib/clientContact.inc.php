@@ -164,6 +164,10 @@ class clientContact extends db_entity {
     }
     print("END:VCARD\n");
   }
+
+  function have_role($role="") {
+    return in_array($role, array("","client"));
+  }
 }
 
 

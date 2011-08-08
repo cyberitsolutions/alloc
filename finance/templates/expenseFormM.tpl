@@ -37,8 +37,8 @@
     <td valign="top" class="nobr">{$attach_to_invoice_button}{$invoice_link}</td>
   </tr>
   <tr>
-    <td align="right" valign="top">Comment</td>
-    <td colspan="3" valign="top" style="padding-right:50px">{page::textarea("expenseFormComment",$expenseFormComment)}</td>
+    <td align="right" valign="top">Comment:</td>
+    <td colspan="3" valign="top" style="padding-right:50px">{=$field_expenseFormComment}</td>
   </tr>
   <tr>
     <td colspan="4" align="center">

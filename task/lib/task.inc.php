@@ -263,6 +263,37 @@ class task extends db_entity {
   }
 
   function is_owner($person = "") {
+
+    if (!is_object($person)) {
+      return false;
+    }
+
+    // If person is a client
+    if ($person->classname == "clientContact") {
+
+      // Check if person is a recognized client
+      $p = $this->get_foreign_object("project");
+      if ($person->get_value("clientID") == $p->get_value("clientID")) {
+        return true;
+      }
+  
+      // Or see if the person is in this task's interested parties
+      $q = sprintf("SELECT commentID FROM comment WHERE commentMaster = 'task' AND commentMasterID = '%d'",$this->get_id());
+      $db = new db_alloc();
+      $db->query($q);
+      while ($row = $db->row()) {
+        $commentIDs.= $commar.$row["commentID"];
+        $commar = ",";
+      }
+
+      if ($commentIDs) {
+        $q = sprintf("SELECT * FROM interestedParty WHERE entity = 'comment' AND commentID in (%s) AND emailAddress='%s'",$commentIDs,$person->get_value("clientContactEmail"));
+        $db->query($q);
+        return $db->row();
+      }
+      return false;
+    }
+
     // A user owns a task if the 'own' the project
     if ($this->get_id()) {
       // Check for existing task

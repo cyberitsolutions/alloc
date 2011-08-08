@@ -56,6 +56,9 @@ if ($num_new_emails >0) {
   foreach ($msg_nums as $num) {
     unset($bad_key,$done);
 
+    // Don't die() on errors
+    db_entity::skip_errors();
+
     // wrap all db queries in a transaction
     $db = new db_alloc();
     $db->start_transaction();
@@ -73,6 +76,16 @@ if ($num_new_emails >0) {
       global $current_user;
       $current_user = new person;
       $current_user->load_current_user($personID);
+    } else {
+      global $current_client;
+      $cc = new clientContact();
+      $clientContactID = $cc->find_by_email($from_address, $projectID);
+      $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
+      if ($clientContactID) {
+        $current_client = new clientContact();
+        $current_client->set_id($clientContactID);
+        $current_client->select();
+      }
     }
 
     $keys = $mail->get_hashes();

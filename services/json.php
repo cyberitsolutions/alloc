@@ -1,6 +1,5 @@
 <?php
 
-// enable error reporting
 define("NO_AUTH",1); 
 require_once("../alloc.php");
 

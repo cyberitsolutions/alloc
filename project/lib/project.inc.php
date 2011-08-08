@@ -164,25 +164,27 @@ class project extends db_entity {
       return true;
 
     // Else check that user has isManager permission for this project
-    return $person->have_role("manage") || $this->has_project_permission($person, array("isManager"));
+    return is_object($person) && ($person->have_role("manage") || $this->has_project_permission($person, array("isManager")));
   }
 
   function has_project_permission($person = "", $permissions = array()) {
     // Check that user has permission for this project
     global $current_user;
     $person or $person = $current_user;
-    $permissions and $p = " AND ppr.roleHandle in ('".implode("','",$permissions)."')";
+    if (is_object($person)) {
+      $permissions and $p = " AND ppr.roleHandle in ('".implode("','",$permissions)."')";
 
-    $query = sprintf("SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
-                        FROM projectPerson pp 
-                   LEFT JOIN role ppr ON ppr.roleID = pp.roleID 
-                       WHERE projectID = '%d' and personID = '%d' %s"
-                    ,$this->get_id(), $person->get_id(), $p);
-    #echo "<br><br>".$query;
+      $query = sprintf("SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
+                          FROM projectPerson pp 
+                     LEFT JOIN role ppr ON ppr.roleID = pp.roleID 
+                         WHERE projectID = '%d' and personID = '%d' %s"
+                      ,$this->get_id(), $person->get_id(), $p);
+      #echo "<br><br>".$query;
 
-    $db = new db_alloc;
-    $db->query($query);
-    return $db->next_record();
+      $db = new db_alloc;
+      $db->query($query);
+      return $db->next_record();
+    }
   }
 
   function get_timeSheetRecipients() {

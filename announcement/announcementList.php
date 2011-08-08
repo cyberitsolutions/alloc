@@ -22,8 +22,6 @@
 
 require_once("../alloc.php");
 
-check_entity_perm("announcement", PERM_READ_WRITE);
-
 function show_announcements($template_name) {
   global $TPL;
 

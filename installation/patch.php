@@ -21,6 +21,7 @@
 */
 
 define("NO_AUTH",1);
+define("IS_GOD",true);
 require_once("../alloc.php");
 
 function apply_patch($f) {

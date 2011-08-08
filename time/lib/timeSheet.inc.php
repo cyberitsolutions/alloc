@@ -82,7 +82,7 @@ class timeSheet extends db_entity {
       $db = new db_alloc();
       $db->query($q);
       while ($db->next_record()) {
-        if (is_array($current_user_tfIDs) && in_array($db->f("tfID"),$current_user_tfIDs)) {
+        if (is_array($current_user_tfIDs) && (in_array($db->f("tfID"),$current_user_tfIDs) || in_array($db->f("fromTfID"),$current_user_tfIDs))) {
           return true;
         }
       }
