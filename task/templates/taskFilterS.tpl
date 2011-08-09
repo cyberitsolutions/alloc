@@ -48,7 +48,7 @@ $(document).ready(function() {
 	<tr>
           <td align="right"><label for="showPriority" class="nobr">Priority Info</label></td>
           <td><input type="checkbox" id="showPriority" name="showPriority"{$showPriority_checked}></td>
-          <td alight="right"><label for="showProject" class="nobr">Project</label></td>
+          <td align="right"><label for="showProject" class="nobr">Project</label></td>
 	  <td><input type="checkbox" id="showProject" name="showProject"{$showProject_checked}></td>
         </tr>
       </table>
