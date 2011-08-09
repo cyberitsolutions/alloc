@@ -4,6 +4,7 @@
   <td width="15%"><select name="fromTfID[]" style="width:100%"><option value="">{$fromTfList_dropdown}</select></td>
   <td width="15%"><select name="tfID[]" style="width:100%"><option value="">{$tfList_dropdown}</select></td>
   <td width="40%"><input name="product[]" style="width:100%" value="{$product}"></td>
+  <td>{page::Calendar("transactionDate[]",$transactionDate)}</td>
   <td><select name="transactionType[]">{$transactionType_dropdown}</select></td>
   <td><select name='status[]' class='txStatus'>{$status_dropdown}</select></td>
   <td class="right nobr">
