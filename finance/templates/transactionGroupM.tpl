@@ -41,6 +41,7 @@ $(document).ready(function() {
           <th>Source TF</th>
           <th>Destination TF</th>
           <th>Description</th>
+	  <th>Date</th>
           <th>Type</th>
           <th>Status
             <a href="##" class="magic allPending">P</a>&nbsp;
@@ -52,7 +53,7 @@ $(document).ready(function() {
         {show_transaction_list("templates/transactionGroupR.tpl")}
         {show_transaction_new("templates/transactionGroupR.tpl")}
         <tr id="transactions_footer">
-          <th colspan="8" class="center">
+          <th colspan="9" class="center">
             <input type="submit" name="save_transactions" value="Save Transactions">
           </th>
         </tr>
