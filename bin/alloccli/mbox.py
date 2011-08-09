@@ -53,16 +53,19 @@ alloc mbox -t 1234 > file.mbox'''
 
     if taskID:
 
-      # If we're redirecting stdout eg -t 123 >task123.html
+      str = ''
+      str1 = self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
+      str2 = self.make_request({"method":"get_timeSheetItem_comments","taskID":taskID})
+      if str1:
+        str+= str1+"\n\n"
+      if str2:
+        str+= str2
+
+      # If we're redirecting stdout eg alloc mbox -t 123 >task123.html
       if not stdout.isatty():
-        str = self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
-        str += "\n\n" + self.make_request({"method":"get_timeSheetItem_comments","taskID":taskID})
         print str
 
       else:
-        str = self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
-        str += "\n\n" + self.make_request({"method":"get_timeSheetItem_comments","taskID":taskID})
-
         try:
           fd, filepath = tempfile.mkstemp(prefix="alloc-%s_" % taskID, suffix=".mbox")
           with closing(os.fdopen(fd, 'wb')) as tf:
