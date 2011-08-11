@@ -71,7 +71,9 @@ require_once("../alloc.php");
         $tf->set_values("tf_");
 
         $TPL["transaction_username"] = $db->f("username");
-        $TPL["transaction_amount"] = number_format(($TPL["transaction_amount"]), 2);
+        $TPL["transaction_amount"] = page::money($TPL["transaction_currenyTypeID"],$TPL["transaction_amount"],"%s%mo");
+        $TPL["transaction_type_link"] = $transaction->get_transaction_type_link() or $TPL["transaction_link"] = $transaction->get_value("transactionType");
+
         include_template($template);
 
       }
@@ -79,6 +81,10 @@ require_once("../alloc.php");
 
     }
   }
+
+  
+  
+
 
   function show_commission_list($template_name) {
     global $TPL, $db, $projectID;

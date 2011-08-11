@@ -10,9 +10,11 @@
     <td>
       <table class="list">
         <tr>
-          <th>User Name</th>
-          <th>Date Modified</th>
+          <th>ID</th>
           <th>Type</th>
+          <th>TF</th>
+          <th>Description</th>
+          <th>Date Modified</th>
           <th>Status</th>
           <th>Amount</th>
         </tr>
