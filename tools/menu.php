@@ -109,12 +109,8 @@ function show_finance_options($template) {
         $TPL["url"] = $TPL["url_alloc_".$option["url"]];
         $TPL["params"] = $option["params"];
         $TPL["text"] = $option["text"];
-        $TPL["br"] = "";
-        if ($option["br"]) {
-          $TPL["br"] = "<br><br>\n";
-        } else {
-          $TPL["br"] = "<br>\n";
-        }
+        $TPL["br"] = "<br>\n";
+        $option["br"] and $TPL["br"] = "<br><br>\n";
 
         include_template($template);
       }
@@ -124,6 +120,8 @@ function show_finance_options($template) {
         $TPL["url"] = $TPL["url_alloc_".$option["url"]];
         $TPL["params"] = $option["params"];
         $TPL["text"] = $option["text"];
+        $TPL["br"] = "<br>\n";
+        $option["br"] and $TPL["br"] = "<br><br>\n";
         include_template($template);
       }
     } 
