@@ -364,7 +364,7 @@ $c->set_id($expenseForm->get_value("clientID"));
 $c->select();
 $clientName = page::htmlentities($c->get_name());
 $clientName and $TPL["printer_clientID"] = $clientName;
-$TPL["field_expenseFormComment"] = $expenseForm->get_value("expenseFormComment");
+$TPL["field_expenseFormComment"] = $expenseForm->get_value("expenseFormComment",DST_HTML_DISPLAY);
 
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
 
@@ -378,7 +378,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $ops = client::get_list($options);
   $ops = array_kv($ops,"clientID","clientName");
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";
-  $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment"));
+  $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment",DST_HTML_DISPLAY));
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && $current_user->have_role("admin")) {
   
@@ -388,7 +388,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"approve\" value=\"Approve\">";
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"reject\" value=\"Reject\">";
   $TPL["field_clientID"] = $clientName;
-  $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment"));
+  $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment",DST_HTML_DISPLAY));
 
 } else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
   $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Create Expense Form\">";
@@ -399,7 +399,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $ops = client::get_list($options);
   $ops = array_kv($ops,"clientID","clientName");
   $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops,$expenseForm->get_value("clientID"))."</select>";
-  $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment"));
+  $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment",DST_HTML_DISPLAY));
 }
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {
