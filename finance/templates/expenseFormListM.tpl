@@ -15,7 +15,7 @@
           <th>Payment Method</th>
           <th class="right">Form Total</th>
         </tr>
-        {show_expense_form_list("templates/pendingExpenseFormListR.tpl")}
+        {expenseForm::show_expense_form_list("templates/pendingExpenseFormListR.tpl")}
       </table>
     </td>
   </tr>
@@ -36,7 +36,7 @@
           <th>Transaction Type</th>
           <th class="right">Form Total</th>
         </tr>
-        {show_pending_transaction_list("templates/pendingTransactionListR.tpl")}
+        {expenseForm::show_pending_transaction_list("templates/pendingTransactionListR.tpl")}
       </table>
     </td>
   </tr>
