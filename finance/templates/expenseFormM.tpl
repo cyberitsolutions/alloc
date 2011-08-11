@@ -38,7 +38,7 @@
   </tr>
   <tr>
     <td align="right" valign="top">Comment:</td>
-    <td colspan="3" valign="top" style="padding-right:50px">{=$field_expenseFormComment}</td>
+    <td colspan="3" valign="top" style="padding-right:50px">{$field_expenseFormComment}</td>
   </tr>
   <tr>
     <td colspan="4" align="center">
