@@ -16,6 +16,7 @@
     <input type="hidden" name="transactionID" value="{$transactionID}">
     <input type="submit" name="edit" value="Edit">
     <input type="submit" name="delete" value="Delete" class="delete_button">
+    <input type="hidden" name="sessID" value="{$sessID}">
     </form>
     {/}
   </td>

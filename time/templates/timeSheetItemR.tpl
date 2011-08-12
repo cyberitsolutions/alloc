@@ -10,5 +10,6 @@
 </table>
 <input type="hidden" name="timeSheetItem_timeSheetItemID" value="{$timeSheetItem_timeSheetItemID}">
 <input type="hidden" name="timeSheetID" value="{$timeSheetItem_timeSheetID}">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 

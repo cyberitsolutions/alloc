@@ -56,6 +56,7 @@
         </tr>
       </table>
       </div>
+      <input type="hidden" name="sessID" value="{$sessID}">
       </form>
 
     </td>

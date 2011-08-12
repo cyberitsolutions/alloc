@@ -30,5 +30,6 @@
   </tr>
 </table>
 <input type="hidden" name="announcementID" value="{$announcementID}">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 {page::footer()}

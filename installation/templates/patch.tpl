@@ -6,6 +6,7 @@
 
 <form action="{$url_alloc_patch}" method="post">
 <input type='submit' name='apply_patches' value='Apply All Patches'>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 <table class="box">
@@ -25,6 +26,7 @@
       <form action="{$url_alloc_patch}" method="post">
       <input type='submit' name='apply_patch' value='Apply Patch'>
       <input type='hidden' name='patch_file' value='{$file}'>&nbsp;
+      <input type="hidden" name="sessID" value="{$sessID}">
       </form>
     </td>
     <td valign="top" class="nobr">{$file}&nbsp;</td>

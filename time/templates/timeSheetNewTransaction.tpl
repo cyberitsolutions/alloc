@@ -43,4 +43,5 @@
 
   <td>{$transaction_buttons}</td>
 </tr>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>

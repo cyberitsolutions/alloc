@@ -29,5 +29,6 @@
           <input type="submit" name="applyFilter" value="Filter" style="margin-left:5px; margin-top:5px;"></td>
         </tr>
       </table>
+      <input type="hidden" name="sessID" value="{$sessID}">
       </form>
 

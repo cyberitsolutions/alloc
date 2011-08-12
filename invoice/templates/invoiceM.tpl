@@ -64,6 +64,7 @@
 {/}
 
 
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 {if $invoiceID}

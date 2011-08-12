@@ -108,6 +108,7 @@ function set_values(target) {
     </td>
   </tr>
 </table>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 
@@ -143,6 +144,7 @@ function set_values(target) {
     </td>
   </tr>
 </table>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 {else if DISPLAY == DISPLAY_PRODUCT_SALE_ITEM_TRANSACTION_EDIT}

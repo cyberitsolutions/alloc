@@ -281,6 +281,7 @@ function clickClientStatus(e) {
     </td>
   </tr>
 </table>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 {if defined("PROJECT_EXISTS")}
@@ -355,6 +356,7 @@ function clickClientStatus(e) {
 </table>
 
 
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 </div>
 

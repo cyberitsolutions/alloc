@@ -67,6 +67,7 @@
   <input type="hidden" name="personID" value="{$personID}">
 
 
+  <input type="hidden" name="sessID" value="{$sessID}">
   </form>
 
 {page::footer()}

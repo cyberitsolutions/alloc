@@ -22,6 +22,7 @@
           <td><input type="submit" name="apply_filter" value="Filter"></td>
         </tr>
       </table>
+      <input type="hidden" name="sessID" value="{$sessID}">
       </form>
     </td>
   </tr>

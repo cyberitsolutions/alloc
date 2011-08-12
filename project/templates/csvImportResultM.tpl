@@ -38,5 +38,6 @@
   <a href="{$url_alloc_project}projectID={$projectID}">Return to project</a>
   </td></tr>
 </table>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 {page::footer()}

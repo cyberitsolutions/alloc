@@ -107,6 +107,7 @@ $(document).ready(function() {
     </td>
   </tr>
 </table>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 {if $productID}
@@ -142,6 +143,7 @@ $(document).ready(function() {
     </td>
   </tr>
 </table>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 
@@ -176,6 +178,7 @@ $(document).ready(function() {
     </td>
   </tr>
 </table>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 {/}

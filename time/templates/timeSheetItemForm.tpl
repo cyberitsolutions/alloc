@@ -72,5 +72,6 @@ function refreshTaskList(radiobutton) {
 <input type="hidden" name="timeSheetItem_timeSheetItemID" value="{$tsi_timeSheetItemID}">
 <input type="hidden" name="timeSheetID" value="{$tsi_timeSheetID}">
 <input type="hidden" name="timeSheetItem_personID" value="{$tsi_personID}">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 

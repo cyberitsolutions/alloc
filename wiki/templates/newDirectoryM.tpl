@@ -6,6 +6,7 @@
   <div style="text-align:center; margin-top:20px;">
     <input type="submit" id="save" name="save" value="Create New Directory">
   </div>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 <script type="text/javascript" language="javascript">
   preload_field("#dirName", "Enter the directory's name eg: path/to/new/dir");

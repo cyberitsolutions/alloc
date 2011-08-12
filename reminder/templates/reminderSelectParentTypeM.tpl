@@ -14,6 +14,7 @@
         
         <input type="hidden" name="step" value="2">
         <input type="submit" name="submitParentType" value="Next">
+      <input type="hidden" name="sessID" value="{$sessID}">
       </form>
     </td>
   </tr>

@@ -36,6 +36,7 @@
             <td class="top"><input type="submit" value="Filter" name="filter">
           </tr>
         </table>
+        <input type="hidden" name="sessID" value="{$sessID}">
         </form>
 
     </td>

@@ -13,4 +13,5 @@
         <td><input type="submit" value="Filter"></td>
       </tr>
     </table>
+    <input type="hidden" name="sessID" value="{$sessID}">
     </form>

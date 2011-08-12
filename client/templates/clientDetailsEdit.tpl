@@ -80,4 +80,5 @@
           <td colspan="2" align="right" class="nobr">{$clientDetails_buttons}</td>
         </tr>
       </table>
+    <input type="hidden" name="sessID" value="{$sessID}">
     </form>
