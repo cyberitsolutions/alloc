@@ -22,6 +22,7 @@
       </td>
     </tr>
   </table>
+  <input type="hidden" name="sessID" value="{$sessID}">
   </form>
 
   <br><br>
@@ -49,6 +50,7 @@
       <td><input type="submit" name="import_from_file" value="Import From File"><td>
     </tr>
   </table>
+  <input type="hidden" name="sessID" value="{$sessID}">
   </form>
 
   <br><hr><br>
@@ -69,6 +71,7 @@
       </td>
     </tr>
   </table>
+  <input type="hidden" name="sessID" value="{$sessID}">
   </form>
 </td>
 </tr>

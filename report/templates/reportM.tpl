@@ -11,6 +11,7 @@
       <form action="{$url_alloc_report}" method="post">
         <select name="mod" size="1">{$module_options}</select>
         <input type="submit" value="Show Fields" name="do_step_2">
+      <input type="hidden" name="sessID" value="{$sessID}">
       </form>
 
       <form action="{$url_alloc_report}" method="post">
@@ -22,6 +23,7 @@
       <input type="hidden" value="{$mod}" name="mod">
       <br>
       {$dump_options}
+      <input type="hidden" name="sessID" value="{$sessID}">
       </form>
 
 

@@ -57,6 +57,7 @@
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
 </table>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 </div>
 
@@ -128,6 +129,7 @@
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="finance">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 </div>
 
@@ -186,6 +188,7 @@
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="email_gateway">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 </div>
 
@@ -250,6 +253,7 @@
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="email_subject">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 </div>
 
@@ -298,6 +302,7 @@
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="time_sheets">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 </div>
 
@@ -366,6 +371,7 @@
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="company_info">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 </div>
 
@@ -394,6 +400,7 @@
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="rss">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 </div>
 
@@ -475,6 +482,7 @@
   </tr>
 </table>
 <input type="hidden" name="sbs_link" value="misc">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 </div>
 

@@ -692,6 +692,7 @@ if ($new_project && !(is_object($project) && $project->get_id())) {
             <td colspan="2" align="center"><input type="submit" name="copy_project_save" value="Copy Project"></td>
           </tr>
         </table>
+      <input type="hidden" name="sessID" value="{$TPL["sessID"]}">
       </form>
     </div>
 DONE;

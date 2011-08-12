@@ -18,5 +18,6 @@
 <input type="hidden" name="transaction_invoiceItemID" value="{$transaction_invoiceItemID}">
 <input type="hidden" name="transaction_quantity" value="1">
 <input type="hidden" name="timeSheetID" value="{$transaction_timeSheetID}">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 

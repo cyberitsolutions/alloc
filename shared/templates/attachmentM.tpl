@@ -25,6 +25,7 @@
             <input type="file" name="attachment" />
             <input type="submit" value="Upload Attachment" name="save_attachment">
             <input type="hidden" name="sbs_link" value="attachments">
+            <input type="hidden" name="sessID" value="{$sessID}">
             </form>
           </td>
         </tr>

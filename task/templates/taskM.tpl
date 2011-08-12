@@ -302,6 +302,7 @@ $(document).ready(function() {
   </tr>
 </table>
 
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 

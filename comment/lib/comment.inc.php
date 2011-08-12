@@ -180,6 +180,7 @@ class comment extends db_entity {
         $new["form"].= '<input type="hidden" name="commentID" value="'.$v["commentID"].'">';
         $new["form"].= '<input type="hidden" name="comment_id" value="'.$v["commentID"].'">';
         $new["form"].= $new["comment_buttons"];
+        $new["form"].= '<input type="hidden" name="sessID" value="'.$TPL["sessID"].'">';
         $new["form"].= '</form>';
       }
   

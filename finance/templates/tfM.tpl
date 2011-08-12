@@ -36,6 +36,7 @@
     <input type="submit" name="delete" value="Delete" class="delete_button"></td>
   </tr>
 </table>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 {if $tfID}

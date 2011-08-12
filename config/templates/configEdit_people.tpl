@@ -27,6 +27,7 @@
           </td>
         </tr>
       </table>
+      <input type="hidden" name="sessID" value="{$sessID}">
       </form>
 
     </td>
@@ -54,6 +55,7 @@
         <tr>
         </tr>
       </table>
+      <input type="hidden" name="sessID" value="{$sessID}">
       </form>
 
     </td>

@@ -54,7 +54,8 @@ if (!$current_user->is_employee()) {
         $p_button = "<input style=\"padding:1px 4px\" type=\"submit\" name=\"p_button\" value=\"P\" title=\"Mark transactions pending\">&nbsp;";
         $a_button = "<input style=\"padding:1px 4px\" type=\"submit\" name=\"a_button\" value=\"A\" title=\"Mark transactions approved\">&nbsp;";
         $r_button = "<input style=\"padding:1px 4px\" type=\"submit\" name=\"r_button\" value=\"R\" title=\"Mark transactions rejected\">&nbsp;";
-        $TPL["p_a_r_buttons"] = "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button."</form>";
+        $session  = "<input type=\"hidden\" name=\"sessID\" value=\"".$TPL["sessID"]."\">";
+        $TPL["p_a_r_buttons"] = "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button.$session"</form>";
 
         // If cyber is client
         $project = $timeSheet->get_foreign_object("project");
@@ -69,7 +70,7 @@ if (!$current_user->is_employee()) {
         $TPL["create_transaction_buttons"].= "&nbsp;";
         config::for_cyber() and $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_old\" value=\"Create Old Style Transactions".$cyber_is_client."\">&nbsp;";
         $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"delete_all_transactions\" value=\"Delete Transactions\" class=\"delete_button\"></td>";
-        $TPL["create_transaction_buttons"].= "</form></tr></tr>";
+        $TPL["create_transaction_buttons"].= "<input type=\"hidden\" name=\"sessID\" value=\"".$TPL["sessID"]."\"></form></tr></tr>";
       }
 
 

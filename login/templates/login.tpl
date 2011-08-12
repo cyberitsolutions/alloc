@@ -29,6 +29,7 @@
 
   <div id="footer">{$status_line}<input type="hidden" name="account" value="{$account}"></div>
 </div>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 {if $latest_changes}

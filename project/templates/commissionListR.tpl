@@ -14,4 +14,5 @@
 <input type="hidden" name="commission_projectCommissionPersonID" value="{$commission_projectCommissionPersonID}">
 <input type="hidden" name="projectID" value="{$commission_projectID}">
 <input type="hidden" name="sbs_link" value="commissions">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>

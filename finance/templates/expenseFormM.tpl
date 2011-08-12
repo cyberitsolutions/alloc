@@ -86,6 +86,7 @@
 
 <input type="hidden" name="status" value="pending">
 <input type="hidden" name="expenseFormID" value="{$expenseFormID}">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 {if check_optional_has_line_items()}

@@ -121,6 +121,7 @@
 <br><br>
 
 
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 
 

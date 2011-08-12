@@ -25,4 +25,5 @@
       <div style="text-align:center">
         <input type="submit" name="client_edit" value="Edit Client">
       </div>
+    <input type="hidden" name="sessID" value="{$sessID}">
     </form>

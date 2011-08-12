@@ -159,6 +159,7 @@ require_once("../alloc.php");
       $rtn[] =  '  <td rowspan="2" align="right" style="float:right">'.$buttons.'</td>';
       $rtn[] =  '</tr>';
       $rtn[] =  '</table>';
+      $rtn[] =  '<input type="hidden" name="sessID" value="'.$TPL["sessID"].'">';
       $rtn[] =  '</form>';
 
     }

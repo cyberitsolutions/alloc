@@ -10,6 +10,7 @@
     <input type="hidden" id="file" name="file" value="{$file}">
     <input type="submit" id="save" name="save" value="Save Document">
   </div>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 <script type="text/javascript" language="javascript">
   preload_field("#editName", "Enter the document's filename eg: path/to/file.txt");

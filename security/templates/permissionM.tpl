@@ -73,6 +73,7 @@
   </table>
 
     <input type="hidden" name="permissionID" value="{$permissionID}">
+  <input type="hidden" name="sessID" value="{$sessID}">
   </form>
 
 

@@ -12,4 +12,5 @@
 </tr>
 <input type="hidden" name="person_tfPersonID" value="{$person_tfPersonID}">
 <input type="hidden" name="tfID" value="{$tfID}">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>

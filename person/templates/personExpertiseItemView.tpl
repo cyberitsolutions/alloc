@@ -18,4 +18,5 @@
     <nobr>{$personExpertiseItem_buttons}</nobr>
   </td>
 </tr>
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>

@@ -99,6 +99,7 @@
 
 <input type="hidden" name="commentTemplateID" value="{$commentTemplateID}">
 <input type="hidden" name="commentTemplateModifiedTime" value="{$displayFromDate}">
+<input type="hidden" name="sessID" value="{$sessID}">
 </form>
 {page::footer()}
 										    

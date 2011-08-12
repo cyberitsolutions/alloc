@@ -126,6 +126,7 @@
       </th>
     </tr>
   </tfoot>
+  <input type="hidden" name="sessID" value="{$sessID}">
   </form>
   {/}
 

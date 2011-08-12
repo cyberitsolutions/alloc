@@ -22,4 +22,5 @@
           <td align="center" colspan="6"><nobr>{$alphabet_filter}</nobr></td>
         </tr>
       </table>
+    <input type="hidden" name="sessID" value="{$sessID}">
     </form>

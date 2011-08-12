@@ -20,6 +20,7 @@
               <td width="18px">{page::help("quicklist_and_search")}</td>
             </tr>
           </table>
+          <input type="hidden" name="sessID" value="{$sessID}">
           </form>
         </td>
       </tr>
