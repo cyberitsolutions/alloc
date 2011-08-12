@@ -135,6 +135,7 @@ if (isset($taskID)) {
 // Creating a new record
 } else {
   $_POST["dateCreated"] = date("Y-m-d H:i:s");
+  $_POST["dateTargetStart"] = date("Y-m-d");
   $task->read_globals();
   $taskID = $task->get_id();
   if ($task->get_value("projectID")) {
