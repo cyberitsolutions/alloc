@@ -16,7 +16,7 @@ from prettytable import PrettyTable
 
 class alloc(object):
 
-  client_version = "1.8.0"
+  client_version = "1.8.1"
   url = ''
   username = ''
   quiet = ''
