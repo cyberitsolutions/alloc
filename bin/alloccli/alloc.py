@@ -712,7 +712,7 @@ class allocCmd(cmd.Cmd):
     self.alloc = alloc(self.url)
     self.alloc.authenticate()
     alloc.sessID = self.alloc.sessID
-    self.worklog = worklog()
+    #self.worklog = worklog()
   
     # Import all the alloc modules so they are available as eg self.tasks
     for m in self.alloc.get_alloc_modules():
