@@ -112,7 +112,7 @@ class alloc(object):
 
     # Create ~/.alloc if necessary
     if not os.path.exists(self.alloc_dir):
-      self.msg("Creating: "+self.alloc_dir)
+      self.dbg("Creating: "+self.alloc_dir)
       os.mkdir(self.alloc_dir)
 
     # Create ~/.alloc/config
@@ -145,7 +145,7 @@ class alloc(object):
     self.csv = False
 
   def create_config(self,f):
-    self.msg("Creating and populating: "+f)
+    self.dbg("Creating and populating: "+f)
     str = "[main]\nurl: http://alloc/services/json.php\n"
     # Write it out to a file
     fd = open(f,'w')
@@ -163,7 +163,7 @@ class alloc(object):
         self.config[option] = config.get(section,option)
 
   def create_transforms(self,f):
-    self.msg("Creating example transforms file: "+f)
+    self.dbg("Creating example transforms file: "+f)
     str = "# Add any field customisations here. eg:\n#\n# global user_transforms\n# user_transforms = { 'Priority' : lambda x,row: x[3:] }\n\n"
     # Write it out to a file
     fd = open(f,'w')
@@ -181,7 +181,7 @@ class alloc(object):
   def create_session(self,sessID):
     old_sessID = self.load_session(self.alloc_dir+"session")
     if not old_sessID or old_sessID != sessID:
-      self.msg("Writing to: "+self.alloc_dir+"session")
+      self.dbg("Writing to: "+self.alloc_dir+"session: "+sessID)
       # Write it out to a file
       fd = open(self.alloc_dir+"session",'w')
       fd.write(sessID)
@@ -518,13 +518,15 @@ class alloc(object):
     return self.make_request(args)
 
   def authenticate(self):
+    self.dbg("calling authenticate()")
     username, password = self.get_credentials()
     # The user-agent must be identical between authenticated
     # requests, alloc uses the u-a for secondary auth
     allocUserAgent.version = 'alloc-cli %s' % username
     urllib._urlopener = allocUserAgent()
-    args =  { "username": username, "password" : password }
+    args =  { "authenticate": True, "username": username, "password" : password }
     if not self.sessID:
+      self.dbg("ATTEMPTING AUTHENTICATION.")
       rtn = self.make_request(args)
     else:
       rtn = {"sessID":self.sessID}
@@ -542,11 +544,27 @@ class alloc(object):
     args["sessID"] = self.sessID
     rtn = urllib.urlopen(self.url, urllib.urlencode(args)).read()
     try:
-      return simplejson.loads(rtn)
+      rtn = simplejson.loads(rtn)
     except:
-      self.err("Error: %s" % rtn)
+      self.err("Error(1): %s" % rtn)
       if args and 'password' in args: args['password'] = '********'
       self.die("Args: %s" % args)
+
+    # Handle session expiration by re-authenticating 
+    if rtn and 'reauthenticate' in rtn and 'authenticate' not in args:
+      self.dbg("Session dead, reauthenticating.")
+      self.sessID = ''
+      self.authenticate()
+      args['sessID'] = self.sessID
+      self.dbg("executing: %s" % args)
+      rtn2 = urllib.urlopen(self.url, urllib.urlencode(args)).read()
+      try:
+        return simplejson.loads(rtn2)
+      except:
+        self.err("Error(2): %s" % rtn2)
+        if args and 'password' in args: args['password'] = '********'
+        self.die("Args: %s" % args)
+    return rtn
 
   def get_people(people):
     args = {}
@@ -572,6 +590,10 @@ class alloc(object):
   def die(self,str):
     self.err(str)
     sys.exit(1)
+
+  def dbg(self,str):
+    #print "DBG",str
+    pass
 
   def parse_email(self, email):
     addr = ''
