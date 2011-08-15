@@ -44,9 +44,7 @@ class alloc_services {
 
   private function get_current_user($sessID) {
     $sess = new Session($sessID);
-    if (!$sess->Started()) {
-      die("Authentication Failed(2).");
-    } else {
+    if ($sess->Started()) {
       $person = new person;
       $person->load_current_user($sess->Get("personID"));
       return $person;
