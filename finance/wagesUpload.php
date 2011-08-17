@@ -59,8 +59,9 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
       continue;
     }
    
-    // Remove leading guff "789 - " 
-    $account = preg_replace("/^\d+\s.\s/","",$account);
+    // Remove leading guff "789 - "
+    // The dash isn't an ASCII dash, hence non-greedy anything match
+    $account = preg_replace("/^\d+\s.*?\s/","",$account);
 
     // If there's a memo field then append it to account
     $memo and $account.= " - ".$memo;
@@ -74,7 +75,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     #echo "<br>employeeNum: ".$employeeNum;
 
     // Ignore heading row, dividing lines and total rows
-    if ($transactionDate == "Date" || !$transactionDate || eregi("_____", $transactionDate) || eregi("¯¯¯", $transactionDate) || eregi("total", $transactionDate)) {
+    if ($transactionDate == "Date" || !$transactionDate || strpos("_____", $transactionDate) !== FALSE || strpos("¯¯¯", $transactionDate) !== FALSE || stripos("total", $transactionDate) !== FALSE) {
       continue;
     }
     // If the employeeNum field is blank use the previous employeeNum
@@ -93,7 +94,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $fromTfID = $db->f("tfID");
 
     // Convert the date to yyyy-mm-dd
-    if (!eregi("^([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})$", $transactionDate, $matches)) {
+    if (!preg_match("|^([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})$|i", $transactionDate, $matches)) {
       $msg.= "<b>Warning: Could not convert date '$transactionDate'</b><br>";
       continue;
     }
@@ -101,8 +102,8 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
 
 
     // Strip $ and , from amount
-    $amount = ereg_replace("[\$,]", "", $amount);
-    if (!ereg("^[-]?[0-9]+(\\.[0-9]+)?$", $amount)) {
+    $amount = str_replace(array('$',','), array(), $amount);
+    if (!preg_match("/^[-]?[0-9]+(\\.[0-9]+)?$/", $amount)) {
       $msg.= "<b>Warning: Could not convert amount '$amount'</b><br>";
       continue;
     }

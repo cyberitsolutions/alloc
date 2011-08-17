@@ -284,13 +284,13 @@ if ($_POST["do_step_3"]) {
       $TPL["result_row"].= sprintf($start_row_separator,$odd_even);
       foreach($fields as $k=>$field) {
         $field = end(explode(".", $field));
-        if (eregi("ModifiedUser", $field) || eregi("personID", $field)) {
+        if (stripos("ModifiedUser", $field) !== FALSE || stripos("personID", $field) !== FALSE) {
           $person = new person;
           $person->set_id($db->f($field));
           $person->select();
           
           $result = $person->get_name(array("format"=>"nick"));
-        } else if (eregi("tfID", $field)) {
+        } else if (stripos("tfID", $field) !== FALSE) {
           $result = tf::get_name($db->f($field));
         } else {
           $result = $db->f($field);

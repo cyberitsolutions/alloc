@@ -36,7 +36,7 @@ if ($_POST["upload"]) {
   reset($lines);
   while (list(, $line) = each($lines)) {
     // Ignore blank lines
-    if (eregi("^(\\t)*$", trim($line))) {
+    if (trim($line) == "") {
       continue;
     }
     // Read field values from the line
@@ -54,11 +54,11 @@ if ($_POST["upload"]) {
     // Idenitify lines containing totals as the date field will contain the text TOTAL
     // Identify the column headings as the date field will be "Date"
     // Ignore ignore these lines
-    if (eregi("total", $date) || $date == "Date") {
+    if (stripos("total", $date) !== FALSE || $date == "Date") {
       continue;
     }
     // Convert the date to yyyy-mm-dd
-    if (!eregi("^([0-9]{1,2})/([0-9]{1,2})'([0-9])$", $date, $matches)) {
+    if (!preg_match("|^([0-9]{1,2})/([0-9]{1,2})'([0-9])$|i", $date, $matches)) {
       $msg.= "<b>Warning: Could not convert date '$date'</b><br>";
       continue;
     }
@@ -66,8 +66,8 @@ if ($_POST["upload"]) {
 
 
     // Strip $ and , from amount
-    $amount = ereg_replace("[\$,]", "", $amount);
-    if (!ereg("^-?[0-9]+(\\.[0-9]+)?$", $amount)) {
+    $amount = str_replace(array('$',','), array(), $amount);
+    if (!preg_match("/^-?[0-9]+(\\.[0-9]+)?$/", $amount)) {
       $msg.= "<b>Warning: Could not convert amount '$amount'</b><br>";
       continue;
     }
