@@ -102,8 +102,9 @@
       </div>
 
       <div class="edit">
-        <h6><div></div></h6> 
+        <h6>Private Mode<div></div></h6> 
         <div style="float:left; width:30%;">
+          <input type="checkbox" name="privateMode" value="1" {$privateMode and print "checked"}>
         </div>
         <div style="float:right; width:50%;" class="right">
           <input type="button" value="Cancel" onClick="$('.edit').hide();$('.view').show();">
@@ -111,8 +112,9 @@
         </div>
       </div>
       <div class="view">
-        <h6><div></div></h6> 
+        <h6>Private Mode<div></div></h6> 
         <div style="float:left; width:30%;">
+          {print $privateMode ? "Yes" : "No"}
         </div>
         <div style="float:right; width:50%;" class="right">
           <input type="button" value="Edit" onClick="$('.view').hide();$('.edit').show();">

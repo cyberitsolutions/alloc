@@ -784,3 +784,13 @@ body#login #all_page_queries_2 {
   display:none;
 }
 
+body.obfus .obfuscate {
+  color:#e0e0e0 !important;
+  background-color:#e0e0e0 !important;
+}
+
+body.obfus .obfuscate:hover {
+  color:(BODY_COLOR) !important;
+  background-color:transparent !important;
+}
+

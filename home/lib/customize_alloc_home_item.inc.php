@@ -46,6 +46,7 @@ class customize_alloc_home_item extends home_item {
       $current_user->prefs["receiveOwnTaskComments"] = $_POST["receiveOwnTaskComments"];
 
       $current_user->prefs["showFilters"] = $_POST["showFilters"];
+      $current_user->prefs["privateMode"] = $_POST["privateMode"];
 
     }
 
@@ -89,6 +90,9 @@ class customize_alloc_home_item extends home_item {
 
     $TPL["showFiltersOptions"] = page::select_options($dailyTEO, $current_user->prefs["showFilters"]);
     $TPL["showFiltersLabel"] = $dailyTEO[$current_user->prefs["showFilters"]];
+
+    $TPL["privateMode"] = $current_user->prefs["privateMode"];
+    $TPL["privateMode"] and $TPL["body_class"] = "obfus";
   }
 
 
