@@ -28,4 +28,4 @@
     }
     </script>
   </head>
-  <body id="{$body_id}">
+  <body id="{$body_id}" class="{$body_class}">
