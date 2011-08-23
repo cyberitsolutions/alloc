@@ -55,7 +55,7 @@ if (!$current_user->is_employee()) {
         $a_button = "<input style=\"padding:1px 4px\" type=\"submit\" name=\"a_button\" value=\"A\" title=\"Mark transactions approved\">&nbsp;";
         $r_button = "<input style=\"padding:1px 4px\" type=\"submit\" name=\"r_button\" value=\"R\" title=\"Mark transactions rejected\">&nbsp;";
         $session  = "<input type=\"hidden\" name=\"sessID\" value=\"".$TPL["sessID"]."\">";
-        $TPL["p_a_r_buttons"] = "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button.$session"</form>";
+        $TPL["p_a_r_buttons"] = "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button.$session."</form>";
 
         // If cyber is client
         $project = $timeSheet->get_foreign_object("project");
