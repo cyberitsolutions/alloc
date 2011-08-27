@@ -17,8 +17,8 @@ class timesheets(alloc):
   ops.append(('t:','time=ID        ','A time sheet ID.'))
   ops.append(('h:','hours=NUM      ','The time sheets must have this many hours recorded eg: "7" eg: ">7 AND <10 OR =4 AND !=8"'))
   ops.append(('d:','date=YYYY-MM-DD','If --items is specified, then match against the items\' date. Else match against the date of the time sheet\'s earliest item.'))
-  ops.append(('o:','order=NAME     ','The order the Time Sheets or Items are displayed in. Default for time sheets: "From,ID" Default for items: "Date,Item ID"'))
-  ops.append(('f:','fields=LIST    ','The commar separated list of fields you would like printed, eg: "all" eg: "timeSheetID,timeSheetItemID,taskID,comment"')) 
+  ops.append(('o:','order=NAME     ','The order the Time Sheets or Items are displayed in. Default for time sheets: "From,Time ID" Default for items: "Date,Item ID"'))
+  ops.append(('f:','fields=LIST    ','The commar separated list of fields you would like printed, eg: "all" eg: "Time ID,Item ID,Task ID,Comment"')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -50,7 +50,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
     personID = self.get_my_personID()
     projectID = ""
     timeSheetID = ""
-    order_ts = "From,ID"
+    order_ts = "From,Time ID"
     order_tsi = "Date,Item ID"
     status = "edit"
     account = ""

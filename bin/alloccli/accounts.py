@@ -33,7 +33,6 @@ class accounts(alloc):
     # Initialize some variables
     #self.quiet = o['quiet']
     self.csv = not stdout.isatty()
-    order = 'Name'
     ops = {}
     
     if 'account' in o and o['account']:
@@ -44,16 +43,11 @@ class accounts(alloc):
       if o['fields']:
         fields = o['fields']
       else:
-        fields = ['transactionID','ID'
-                 ,'fromTfName','From'
-                 ,'tfName','TF'
-                 ,'amount','Amount'
-                 ,'status','Status'
-                 ,'transactionDate','Date']
+        fields = "transactionID,fromTfName,tfName,amount,status,transactionDate"
 
       transactions = self.get_list("transaction",ops)
       if transactions:
-        self.print_table(transactions,fields,"Date")
+        self.print_table(transactions,fields,"transactionDate")
         print "num rows:",len(transactions)
  
     # Get tf
@@ -61,14 +55,11 @@ class accounts(alloc):
       if o['fields']:
         fields = o['fields']
       else:
-        fields = ['tfID','ID'
-                 ,'tfName','Name'
-                 ,'tfBalancePending','Pending'
-                 ,'tfBalance','Approved']
+        fields = "tfID,tfName,tfBalancePending,tfBalance"
 
       tfs = self.get_list("tf",ops)
       if tfs:
-        self.print_table(tfs, fields, order)
+        self.print_table(tfs, fields, "tfName")
 
 
    
