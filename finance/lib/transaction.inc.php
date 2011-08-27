@@ -256,6 +256,9 @@ class transaction extends db_entity {
     if ($_FORM["tfID"]) {
       $tfIDs[] = $_FORM["tfID"];
     }
+    if ($_FORM["tfIDs"]) {
+      $tfIDs = array_merge((array)$tfIDs,(array)$_FORM["tfIDs"]);
+    }
     return tf::get_permitted_tfs($tfIDs);
   }
 
@@ -306,6 +309,12 @@ class transaction extends db_entity {
      */
 
     $_FORM["tfIDs"] = transaction::reduce_tfs($_FORM);
+
+    // Non-admin users must specify a valid TF
+    if (!$current_user->have_role("admin") && !$_FORM["tfIDs"]) {
+      return;
+    }
+
     $filter = transaction::get_list_filter($_FORM);
     $debug = $_FORM["debug"];
     $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
