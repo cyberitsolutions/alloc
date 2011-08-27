@@ -90,28 +90,12 @@ class tasks(alloc):
     # Get list of tasks
     r = self.get_list("task",ops)
 
-    
     if not o['fields']:
-      if not order: order = "Priority,Type,_Rate,Status"
-      fields = ["taskID","Task ID"
-               ,"taskTypeID","Type"
-               ,"taskStatusLabel","Status"
-               ,"priorityLabel","Priority"
-               ,"timeExpected","Est"
-               ,"timeLimit","Limit"
-               ,"timeActual","Act"
-               ,"rate","Rate"
-               ,"projectName","Project"
-               ,"taskName","Task"
-               ]
+      if not order: order = "priorityLabel,taskTypeID,_rate,taskStatusLabel"
+      fields = "taskID,taskTypeID,taskStatusLabel,priorityLabel,timeExpected,timeLimit,timeActual,rate,projectName,taskName"
     else:
       fields = o["fields"]
 
     if r:
-      #def seconds_to_hours(x):
-      #  if self.is_num(x):
-      #    return float(x) / 60 / 60
-      #transforms = { "timeActual" : seconds_to_hours }
-      transforms = {}
-      self.print_table(r,fields,order,transforms)
+      self.print_table(r,fields,order)
 

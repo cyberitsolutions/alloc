@@ -26,87 +26,101 @@ class alloc(object):
   user_transforms = {}
   field_names = {
                 # task fields
-                "taskID":"Task ID"
-                ,"taskTypeID":"Type"
-                ,"taskStatusLabel":"Status"
-                ,"priority":"Task Pri"
-                ,"projectPriority":"Proj Pri"
-                ,"priorityFactor":"Pri Factor"
-                ,"priorityLabel": "Priority"
-                ,"timeExpected":"Est"
-                ,"timeLimit":"Limit"
-                ,"timeActual":"Act"
-                ,"rate":"Rate"
-                ,"projectName":"Project"
-                ,"taskName":"Task"
-                ,"taskDescription": "Description"
-                ,"creator_name": "Creator"
-                ,"manager_name": "Manager"
-                ,"assignee_name": "Assigned"
+                 "taskID"                   :"Task ID"
+                ,"taskTypeID"               :"Type"
+                ,"taskStatusLabel"          :"Status"
+                ,"taskStatusColour"         :"Colour"
+                ,"priority"                 :"Task Pri"
+                ,"projectPriority"          :"Proj Pri"
+                ,"priorityFactor"           :"Pri Factor"
+                ,"priorityLabel"            :"Priority"
+                ,"rate"                     :"Rate"
+                ,"projectName"              :"Project"
+                ,"taskName"                 :"Task"
+                ,"taskDescription"          :"Description"
+                ,"creator_name"             :"Creator"
+                ,"manager_name"             :"Manager"
+                ,"assignee_name"            :"Assigned"
+                ,"projectShortName"         :"Proj Nick"
+                ,"currency"                 :"Curr"
+                ,"taskComments"             :"Comments"
+                ,"timeActualLabel"          :"Act Label"
+                ,"timeBest"                 :"Best"
+                ,"timeWorst"                :"Worst"
+                ,"timeExpected"             :"Est"
+                ,"timeLimit"                :"Limit"
+                ,"timeActual"               :"Act"
+                ,"dateTargetCompletion"     :"Targ Compl"
+                ,"dateTargetStart"          :"Targ Start"
+                ,"dateActualCompletion"     :"Act Compl"
+                ,"dateActualStart"          :"Act Start"
+                ,"taskStatus"               :"Stat"
+                ,"dateAssigned"             :"Date Assigned"
+                ,"project_name"             :"Proj Name"
+                ,"dateClosed"               :"Closed"
+                ,"dateCreated"              :"Created"
 
                 # time sheet fields
-                ,"timeSheetID":"ID"
-                ,"dateFrom":"From"
-                ,"dateTo":"To"
-                ,"status":"Status"
-                ,"person":"Owner"
-                ,"duration":"Duration"
-                ,"totalHours":"Hrs"
-                ,"amount":"$"
-                ,"projectName":"Project"
+                ,"timeSheetID"              :"Time ID"
+                ,"dateFrom"                 :"From"
+                ,"dateTo"                   :"To"
+                ,"status"                   :"Status"
+                ,"person"                   :"Owner"
+                ,"duration"                 :"Duration"
+                ,"totalHours"               :"Hrs"
+                ,"amount"                   :"Amount"
+                ,"projectName"              :"Project"
+                ,"currencyTypeID"           :"Currency"
+                ,"customerBilledDollars"    :"Bill"
+                ,"dateRejected"             :"Rejected"
+                ,"dateSubmittedToManager"   :"Submitted"
+                ,"dateSubmittedToAdmin"     :"Submitted Admin"
+                ,"invoiceDate"              :"Invoiced"
+                ,"billingNote"              :"Notes"
+                ,"payment_insurance"        :"Insurance"
+                ,"recipient_tfID"           :"TFID"
+                ,"commentPrivate"           :"Comm Priv"
  
                 # time sheet item fields
-                ,"timeSheetID":"ID"
-                ,"timeSheetItemID":"Item ID"
-                ,"dateTimeSheetItem":"Date"
-                ,"taskID":"taskID"
-                ,"comment":"Comment"
-                ,"timeSheetItemDuration":"Hours"
-                ,"rate":"$"
-                ,"worth":"Worth"
-                ,"hoursBilled":"Total"
-                ,"taskLimit":"Limit"
-                ,"limitWarning":"Warning"
+                ,"timeSheetID"              :"Time ID"
+                ,"timeSheetItemID"          :"Item ID"
+                ,"dateTimeSheetItem"        :"Date"
+                ,"taskID"                   :"Task ID"
+                ,"comment"                  :"Comment"
+                ,"timeSheetItemDuration"    :"Hours"
+                ,"rate"                     :"Rate"
+                ,"worth"                    :"Worth"
+                ,"hoursBilled"              :"Total"
+                ,"timeLimit"                :"Limit"
+                ,"limitWarning"             :"Warning"
+                ,"description"              :"Desc"
+                ,"secondsBilled"            :"Seconds"
+                ,"multiplier"               :"Mult"
+                ,"approvedByManagerPersonID":"Managed"
+                ,"approvedByAdminPersonID"  :"Admin"
+
+                # transaction fields
+                ,"transactionID"            :"Transaction ID"
+                ,"fromTfName"               :"From TF"
+                ,"tfName"                   :"Dest TF"
+                ,"amount"                   :"Amount"
+                ,"status"                   :"Status"
+                ,"transactionDate"          :"Transaction Date"
+  
+                # tf fields
+                ,"tfID"                     :"TF ID"
+                ,"tfBalancePending"         :"Pending"
+                ,"tfBalance"                :"Approved"
+
+                # project fields
+                ,"projectID"                :"Proj ID"
+                ,"projectName"              :"Proj Name"
+
                 }
 
-                #Other task fields, that may one day require labels
-                #personID
-                #closerID
-                #creatorID
-                #managerID
-                #projectID
-                #parentTaskID
-                #duplicateTaskID
-                #clientID
-                #taskStatusColour
-                #rateUnit
-                #rateUnitID
-                #currency
-                #taskComments
-                #percentComplete
-                #timeWorst
-                #taskTypeImage
-                #dateTargetCompletion
-                #projectShortName
-                #taskStatus
-                #dateAssigned
-                #project_name
-                #dateClosed
-                #dateCreated    
-                #dateTargetStart
-                #newSubTask
-                #taskLink                                          
-                #taskURL                                 
-                #dateActualStart
-                #taskModifiedUser
-                #dateActualCompletion
-                #timeBest
 
-
-
-
-  row_timeSheet = ["timeSheetID","ID","dateFrom","From","dateTo","To","status","Status","person","Owner","duration","Duration","totalHours","Hrs","amount","$","projectName","Project"]
-  row_timeSheetItem = ["timeSheetID","ID","timeSheetItemID","Item ID","dateTimeSheetItem","Date","taskID","taskID","comment","Comment","timeSheetItemDuration","Hours","rate","$","worth","Worth","hoursBilled","Total","taskLimit","Limit","limitWarning","Warning"]
+  row_timeSheet = "timeSheetID,dateFrom,dateTo,status,person,duration,totalHours,amount,projectName"
+  row_timeSheetItem = "timeSheetID,timeSheetItemID,dateTimeSheetItem,taskID,comment,timeSheetItemDuration,rate,worth,hoursBilled,timeLimit,limitWarning"
 
   def __init__(self,url=""):
 
@@ -341,7 +355,7 @@ class alloc(object):
       return rtn;
     return only_these_fields
 
-  def get_sorted_rows(self,rows,sortby,fields):
+  def get_sorted_rows(self,rows,sortby):
     rows = rows.items()
     if not sortby:
       return rows
@@ -350,10 +364,14 @@ class alloc(object):
     sortby = sortby.split(",")
     sortby.reverse()    
 
+    # load up fields
+    for k,fields in rows:
+      pass
+
     # Check that any attempted sortby columns are actually in the table
     for k in sortby:
       # Strip leading underscore (used in reverse sorting eg: _Rate)
-      if re.sub("^_","",k) not in fields:
+      if re.sub("^_","",k) not in fields and re.sub("^_","",k) not in inverted_field_names:
         self.err("Sort column not found: "+k)
 
     def sort_func(row):
@@ -396,7 +414,7 @@ class alloc(object):
     table.set_field_names(field_names)
 
     # Re-order the table, this changes the dict to a list i.e. dict.items().
-    rows = self.get_sorted_rows(rows,sort,only_these_fields)
+    rows = self.get_sorted_rows(rows,sort)
 
     # Hide the frame and header if --csv
     if self.csv:

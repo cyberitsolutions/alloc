@@ -9,6 +9,7 @@ class projects(alloc):
   ops.append((''  ,'help           ','Show this help.'))
   ops.append((''  ,'csv            ','Return the results in CSV format.'))
   ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
+  ops.append(('f:','fields=LIST    ','The commar separated list of fields you would like printed, eg: "all" eg: "projectID,projectName"')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -40,10 +41,12 @@ class projects(alloc):
     filter["personID"] = personID
     filter["projectStatus"] = "Current"
 
+    fields = o["fields"] or "projectID,projectName"
+
     projects = {}
     projects = self.get_list("project",filter)
 
-    self.print_table(projects, ["projectID","Project ID","projectName","Project Name"], sort="Project Name")
+    self.print_table(projects, fields, sort="projectName")
       
 
 

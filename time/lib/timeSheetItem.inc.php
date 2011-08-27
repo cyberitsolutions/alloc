@@ -306,13 +306,13 @@ class timeSheetItem extends db_entity {
       $tsi->read_db_record($db);
       $tsi->currency = $t->get_value("currencyTypeID");
 
-      $row["secondsBilled"] = $row["hoursBilled"] = $row["taskLimit"] = $row["limitWarning"] = ""; # set these for the CLI
+      $row["secondsBilled"] = $row["hoursBilled"] = $row["timeLimit"] = $row["limitWarning"] = ""; # set these for the CLI
       if ($tsi->get_value("taskID")) {
         $task = $tsi->get_foreign_object('task');
         $row["secondsBilled"] = $task->get_time_billed();
         $row["hoursBilled"] = sprintf("%0.2f",$row["secondsBilled"] / 60 / 60);
         $task->get_value('timeLimit') && $row["hoursBilled"] > $task->get_value('timeLimit') and $row["limitWarning"] = 'Exceeds Limit!';
-        $row["taskLimit"] = $task->get_value("timeLimit");
+        $row["timeLimit"] = $task->get_value("timeLimit");
       }
       $row["rate"] = $tsi->get_value("rate",DST_HTML_DISPLAY);
       $row["worth"] = page::money($tsi->currency, $row["rate"] * $tsi->get_value("multiplier") * $tsi->get_value("timeSheetItemDuration"),"%m");
