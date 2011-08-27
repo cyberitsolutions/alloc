@@ -270,7 +270,7 @@ class transaction extends db_entity {
         $str.= $commar.db_esc($tfID);
         $commar=",";
       }
-      $sql["tfIDs"] = sprintf("(tfID in (%s) or fromTfID in (%s))",$str,$str);
+      $sql["tfIDs"] = sprintf("(transaction.tfID in (%s) or transaction.fromTfID in (%s))",$str,$str);
     }
 
     if ($_FORM["monthDate"]) {
@@ -301,7 +301,7 @@ class transaction extends db_entity {
   }
 
   function get_list($_FORM) {
-    global $current_user;
+    global $current_user, $TPL;
 
     /*
      * This is the definitive method of getting a list of transactions that need a sophisticated level of filtering
@@ -355,9 +355,13 @@ class transaction extends db_entity {
     $q = "SELECT *, 
                  (amount * pow(10,-currencyType.numberToBasic)) as amount1,
                  (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount2,
-                 if(transactionModifiedTime,transactionModifiedTime,transactionCreatedTime) AS transactionSortDate 
+                 if(transactionModifiedTime,transactionModifiedTime,transactionCreatedTime) AS transactionSortDate,
+                 tf1.tfName as fromTfName,
+                 tf2.tfName as tfName
             FROM transaction 
        LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+       LEFT JOIN tf tf1 ON transaction.fromTfID = tf1.tfID
+       LEFT JOIN tf tf2 ON transaction.tfID = tf2.tfID
          ".$filter." 
          ".$order_by;
 
@@ -388,17 +392,8 @@ class transaction extends db_entity {
       $row["transactionTypeLink"] = $t->get_transaction_type_link() or $row["transactionTypeLink"] = $row["transactionType"];
       $row["transactionSortDate"] = format_date("Y-m-d",$row["transactionSortDate"]); 
 
-      $tf = new tf;
-      $tf->set_id($t->get_value("fromTfID"));
-      $tf->select();
-      $row["fromTfName"] = $tf->get_value("tfName");
-      $row["fromTfIDLink"] = $tf->get_link();
-
-      $tf = new tf;
-      $tf->set_id($t->get_value("tfID"));
-      $tf->select();
-      $row["tfName"] = $tf->get_value("tfName");
-      $row["tfIDLink"] = $tf->get_link();
+      $row["fromTfIDLink"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$row["fromTfID"]."\">".page::htmlentities($row["fromTfName"])."</a>";
+      $row["tfIDLink"] = "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$row["tfID"]."\">".page::htmlentities($row["tfName"])."</a>";
 
       if ($t->get_value("status") == "approved") {
         $running_balance += $amount;
