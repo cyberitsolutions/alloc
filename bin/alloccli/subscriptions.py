@@ -90,11 +90,11 @@ alloc subscriptions --add < foo.txt"""
       for line in lines:
         f = line[:-1].split(",")
         party = {}
-        party[keys[0]] = f[0]
-        party[keys[1]] = f[1]
-        party[keys[2]] = f[2]
-        party[keys[3]] = f[3]
-        party[keys[4]] = f[4]
+        if len(f) > 0: party[keys[0]] = f[0]
+        if len(f) > 1: party[keys[1]] = f[1]
+        if len(f) > 2: party[keys[2]] = f[2]
+        if len(f) > 3: party[keys[3]] = f[3]
+        if len(f) > 4: party[keys[4]] = f[4]
         if o['add'] and 'emailAddress' in party and party['emailAddress']: 
           if not o['dryrun']: self.make_request({"method":"save_interestedParty","options":party})
           self.msg("Adding:"+str(party))
