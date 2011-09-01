@@ -51,13 +51,14 @@ $(document).ready(function() {
 
 <form action="{$url_alloc_task}" method="post">
 <input type="hidden" name="taskID" value="{$task_taskID}">
-<table class="box">
+
+<table class="box view">
   <tr>
     <th class="header">{$taskSelfLink}
       <span>{$navigation_links}</span>
     </th>
   </tr>
-  <tr class="view">
+  <tr>
     <td valign="top">
       <div class="task_pane">
         <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
@@ -159,7 +160,22 @@ $(document).ready(function() {
       </div>
     </td>
   </tr>
-  <tr class="edit">
+  <tr>
+    <td align="center" class="padded">
+      <div style="margin:20px">
+        <input type="button" id="editTask" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
+      </div>
+    </td>
+  </tr>
+</table>
+
+<table class="box edit">
+  <tr>
+    <th class="header">{$taskSelfLink}
+      <span>{$navigation_links}</span>
+    </th>
+  </tr>
+  <tr>
     <td valign="top">
       <div class="task_pane">
         <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
@@ -265,10 +281,7 @@ $(document).ready(function() {
   </tr>
   <tr>
     <td align="center" class="padded">
-      <div class="view" style="margin:20px">
-        <input type="button" id="editTask" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
-      </div>
-      <div class="edit" style="margin:20px">
+      <div style="margin:20px">
           {if !$task_taskID}
           <br>
           <label for="createTaskReminder"><input type="checkbox" name="createTaskReminder" id="createTaskReminder" value="true" /> Create reminder for assignee</label> {page::help("task_create_reminder")}<br><br>
