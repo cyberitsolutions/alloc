@@ -136,10 +136,9 @@ class db_entity {
     if ($this->is_god() || defined("IS_GOD")) {
       return true;
     }
-    global $current_user, $permission_cache, $current_client;
+    global $current_user, $permission_cache;
 
     if ($person == "") {
-      $current_client and $person = $current_client;
       $current_user and $person = $current_user;
     }
 

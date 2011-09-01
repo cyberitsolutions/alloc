@@ -397,7 +397,7 @@ class comment extends db_entity {
   }
 
   function add_comment_from_email($email) {
-    global $current_user, $current_client;
+    global $current_user;
 
     // Skip over emails that are from alloc. These emails are kept only for
     // posterity and should not be parsed and downloaded and re-emailed etc.
@@ -442,8 +442,10 @@ class comment extends db_entity {
     if (is_object($current_user) && $current_user->get_id()) {
       $personID = $current_user->get_id();
       $comment->set_value('commentCreatedUser', $personID);
-    } else if (is_object($current_client) && $current_client->get_id()) {
-      $clientContactID = $current_client->get_id();
+    } else {
+      $cc = new clientContact();
+      $clientContactID = $cc->find_by_email($from_address, $projectID);
+      $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
       $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
     }
 
@@ -452,7 +454,10 @@ class comment extends db_entity {
       $from_name = person::get_fullname($personID);
 
     } else if (!$from_name && $clientContactID) {
-      $from_name = $current_client->get_value("clientContactName");
+      $cc = new clientContact();
+      $cc->set_id($clientContactID);
+      $cc->select();
+      $from_name = $cc->get_value("clientContactName");
 
     } else if (!$from_name) {
       $from_name = $from_address;

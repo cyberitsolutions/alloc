@@ -282,7 +282,6 @@ VALUES
 ,('clientContact'            ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
 
 ,('comment'                  ,0  ,NULL ,'employee' ,true ,NULL ,15    ,NULL)
-,('comment'                  ,0  ,NULL ,'client'   ,true ,NULL ,15    ,NULL)
 
 ,('commentTemplate'          ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
 ,('commentTemplate'          ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
