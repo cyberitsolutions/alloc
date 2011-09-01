@@ -198,7 +198,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // If a script has NO_AUTH enabled, then it will perform its own
   // authentication. And will be responsible for setting up any of:
-  // $current_user, $current_client and $sess.
+  // $current_user and $sess.
   if (!defined("NO_AUTH")) {
 
     $current_user = new person();

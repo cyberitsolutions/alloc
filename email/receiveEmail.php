@@ -76,16 +76,6 @@ if ($num_new_emails >0) {
       global $current_user;
       $current_user = new person;
       $current_user->load_current_user($personID);
-    } else {
-      global $current_client;
-      $cc = new clientContact();
-      $clientContactID = $cc->find_by_email($from_address, $projectID);
-      $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
-      if ($clientContactID) {
-        $current_client = new clientContact();
-        $current_client->set_id($clientContactID);
-        $current_client->select();
-      }
     }
 
     $keys = $mail->get_hashes();
