@@ -397,7 +397,7 @@ class comment extends db_entity {
   }
 
   function add_comment_from_email($email) {
-    global $current_user;
+    global $current_user, $guest_permission_cache;
 
     // Skip over emails that are from alloc. These emails are kept only for
     // posterity and should not be parsed and downloaded and re-emailed etc.
@@ -417,6 +417,9 @@ class comment extends db_entity {
     if (!$commentID) {
       return;
     }
+
+    // Have to allow guest users to update their newly created comment
+    $guest_permission_cache[] = array("entity"=>"comment","entityID"=>$commentID,"perms"=>15);
 
     $c = new comment();
     $c->set_id($comment->get_value("commentLinkID"));
