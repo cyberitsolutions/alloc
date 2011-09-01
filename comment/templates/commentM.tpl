@@ -40,12 +40,16 @@
               <tr>
                 <td class="nobr">Name: <input type="text" name="eo_name" size="30"></td>
                 <td class="right nobr"> 
+                  <label for="eo_add_interested_party">Add to Interested Parties </label>
+                  <input id="eo_add_interested_party" type="checkbox" name="eo_add_interested_party" value="1" checked>
                 </td>
               </tr>
               <tr>
                 <td class="nobr">Email: <input type="text" name="eo_email" size="30"></td>
                 <td class="right nobr">
                   {if $clientID}
+                  <label for="eo_add_client_contact">Add to Client Contacts </label>
+                  <input id="eo_add_client_contact" type="checkbox" name="eo_add_client_contact" value="1" checked>
                   <input type="hidden" name="eo_client_id" value="{$clientID}">
                   {/}
                 </td>
