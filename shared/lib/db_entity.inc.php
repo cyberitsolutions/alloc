@@ -133,10 +133,10 @@ class db_entity {
   }
 
   function have_perm($action = 0, $person = "", $assume_owner = false) {
+    global $current_user, $permission_cache, $guest_permission_cache;
     if ($this->is_god() || defined("IS_GOD")) {
       return true;
     }
-    global $current_user, $permission_cache;
 
     if ($person == "") {
       $current_user and $person = $current_user;
@@ -150,10 +150,19 @@ class db_entity {
     if (is_object($person)) {
       $person_id = $person->get_id();
       $person_type = $person->classname;
+      $person_id and $person_flag = $person_type."_".$person_id;
     }
 
-    $record_cache_key = $this->data_table.":".$entity_id.":".$action.":".$person_type."_".$person_id.":".$assume_owner;
-    $table_cache_key = $this->data_table.":T:".$action.":"."$person_type"."_".$person_id.":".$assume_owner;
+    $record_cache_key = $this->data_table.":".$entity_id.":".$action.":".$person_flag.":".$assume_owner;
+    $table_cache_key = $this->data_table.":T:".$action.":".$person_flag.":".$assume_owner;
+
+    // This allows us to hardcode a (guest) user's perms, see receiveEmail.php
+    foreach ((array)$guest_permission_cache as $r) {
+      if ($this->data_table == $r["entity"] && $entity_id == $r["entityID"] && ($r["perms"] & $action == $action)) {
+        $permission_cache[$record_cache_key] = true;
+        $permission_cache[$table_cache_key] = true;
+      }
+    }
 
     if (isset($permission_cache[$table_cache_key])) {
       return $permission_cache[$table_cache_key];

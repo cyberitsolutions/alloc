@@ -54,7 +54,7 @@ if ($num_new_emails >0) {
 
   // fetch and parse email
   foreach ($msg_nums as $num) {
-    unset($bad_key,$done);
+    unset($bad_key,$done,$personID,$current_user);
 
     // Don't die() on errors
     db_entity::skip_errors();
@@ -79,21 +79,37 @@ if ($num_new_emails >0) {
     }
 
     $keys = $mail->get_hashes();
-    $debug and print $nl.$nl."Keys: ".$nl.print_r($keys,1);
-    
-    foreach ($keys as $key) {
-      $token = new token;
-      $debug and print $nl."Attempting key: ".$key;
-      if ($token->set_hash($key)) {
-        $debug and print $nl."Executing with key ".$key;
-        $debug and print $nl."  From: ".$mail->mail_headers->fromaddress;
-        $debug and print $nl."  Subject: ".$mail->mail_headers->subject;
-        $debug and print $nl."  To: ".$mail->mail_headers->toaddress;
-        $token->execute($mail);
-        $done = true;
-      } else {
-        $debug and print $nl."Unable to set key to: ".$key;
+    $key = $keys[0];
+    $debug and print $nl.$nl."Keys: ".$nl.print_r($keys,1)." (Attempting key: ".$key.")";
+    $token = new token;
+    if ($token->set_hash($key)) {
+      $debug and print $nl."Executing with key ".$key;
+      $debug and print $nl."  From: ".$mail->mail_headers->fromaddress;
+      $debug and print $nl."  Subject: ".$mail->mail_headers->subject;
+      $debug and print $nl."  To: ".$mail->mail_headers->toaddress;
+
+      // If sent from a client or someone we don't recognize, we need to imbue this process with guest perms
+      if (!$personID) {
+        $comment = $token->get_value("tokenEntity");
+        $commentID = $token->get_value("tokenEntityID");
+        $q = sprintf("SELECT commentMaster,commentMasterID FROM comment WHERE commentID = %d",$commentID);
+        $r = $db->qr($q);
+        $master = $r["commentMaster"];
+        $masterID = $r["commentMasterID"];
+
+        // Used in db_entity::have_perm();
+        global $guest_permission_cache;
+
+        // Hard code some additional permissions for this guest user (just enough to create a comment)
+        $guest_permission_cache[] = array("entity"=>$comment,"entityID"=>$commentID,"perms"=>15);
+        $guest_permission_cache[] = array("entity"=>$comment,"entityID"=>0,"perms"=>15);
+        $guest_permission_cache[] = array("entity"=>$master ,"entityID"=>$masterID,"perms"=>15);
       }
+
+      $token->execute($mail);
+      $done = true;
+    } else {
+      $debug and print $nl."Unable to set key to: ".$key;
     }
 
     if (!$done) {
