@@ -69,13 +69,8 @@ class tasks(alloc):
     ops["projectIDs"] = projectIDs
     ops["taskView"] = "prioritised"
     ops["showTimes"] = True
-    ops["taskStatus"] = "open"
-
-    if ',' in o['status']:
-      ops['taskStatus'] = o['status'].split(',')
-    elif o['status']:
-      ops['taskStatus'] = o['status']
-
+    o["status"] = o["status"] or "open"
+    ops['taskStatus'] = o['status'].split(',')
     if o["type"]: ops["taskTypeID"] = o["type"]
 
     # Get a taskID either passed via command line, or figured out from a task name
