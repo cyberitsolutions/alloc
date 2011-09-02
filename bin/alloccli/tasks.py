@@ -11,7 +11,7 @@ class tasks(alloc):
   ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
   ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.'))
   ops.append(('s:','status=NAME    ','A task\'s status. Can accept multiple values, eg: "open,pending" eg: "open,pending_info". Default: "open"'))
-  ops.append((''  ,'type=NAME      ','A task\'s type, eg: "Task" eg: "Fault"'))
+  ops.append((''  ,'type=NAME      ','A task\'s type, eg: "Task" eg: "Fault,Message"'))
   ops.append(('a:','assignee=NAME  ','A task\'s assignee, username or first and surname" Default: you.'))
   ops.append(('m:','manager=NAME   ','A task\'s manager, username or first and surname".'))
   ops.append(('o:','order=NAME     ','The order the Tasks are displayed in. Default: "Priority,Type,_Rate,status". (Underscore is for descending sort).')) 
@@ -71,7 +71,7 @@ class tasks(alloc):
     ops["showTimes"] = True
     o["status"] = o["status"] or "open"
     ops['taskStatus'] = o['status'].split(',')
-    if o["type"]: ops["taskTypeID"] = o["type"]
+    ops['taskTypeID'] = o['type'].split(',')
 
     # Get a taskID either passed via command line, or figured out from a task name
     if self.is_num(o['task']):
