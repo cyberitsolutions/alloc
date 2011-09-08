@@ -24,15 +24,16 @@ http://www.allocpsa.com
 
 THIS DOCUMENT IS PROVIDED FOR INFORMATIONAL PURPOSES ONLY.
 
-The information furnished in this document, believed by Cyber IT Solutions to be
-accurate as of the date of its publication, is subject to change without notice.
-Cyber IT Solutions assumes no responsibility for any errors or omissions in this
-document and shall have no obligation to you as a result of having made this
-document available to you or based upon the information it contains. 
+The information furnished in this document, believed by Cyber IT
+Solutions to be accurate as of the date of its publication, is subject
+to change without notice.  Cyber IT Solutions assumes no responsibility
+for any errors or omissions in this document and shall have no
+obligation to you as a result of having made this document available to
+you or based upon the information it contains.
 
 Cyber IT Solutions and allocPSA are registered trademarks of Cyber IT Solutions
 Pty. Ltd.  All other products and services are the registered trademarks of
-their respective holders. 
+their respective holders 
 
 This document was written by: Kei, Con Zymaris, Alex Lance, Jeremy Chin,
 Robbie, Erick Fabre, Trent Buck, Manjula Arulananther.
@@ -43,7 +44,6 @@ This documentation is released under the GNU Affero General Public License.
 
 .. sectnum::
 .. contents:: Table of Contents
-
 
 
 
@@ -61,7 +61,7 @@ The original administration account on allocPSA is:
      - alloc
 
 NOTE: You should change this password promptly. Instructions on how to
-change this password are shown later in this manual. 
+change this password are shown later in this manual.
 
 
 Purpose and Audience
@@ -111,7 +111,7 @@ Product Support Community
 
 Free, community support for allocPSA is available here:
 
-http://sourceforge.net/forum/forum.php?forum_id=562148
+https://sourceforge.net/projects/allocpsa/forums/forum/773745
 
 This is a web forum system where you can join, post your queries and get
 responses from the allocPSA user community.
@@ -161,25 +161,9 @@ save through a price discount and you are also placed on a Service Level
 Agreement (SLA). The service level agreement guarantees that we will actively
 work towards resolving your support incident within two hours of initial
 notification. This is during AEST (UTC +10) standard business hours, Monday to
-Friday, 9:00am to 5:00pm, excluding public holidays. 
+Friday, 9:00am to 5:00pm, excluding public holidays.
 
 Contact Cyber IT Solutions to discuss your commercial support needs.
-
-
-
-Pre-installed Server Appliance
-------------------------------
-
-.. figure:: images/allocPSA_server_appliance.png
-
-If you would like to have allocPSA professionally installed on
-production-quality server hardware, Cyber IT makes available the allocPSA
-Server Appliance. 
-
-The server appliance contains the operating system platform, SQL database
-server, web server, application server and allocPSA suite pre-installed. The
-server appliance comes bundled with 10 hours of installation, data migration
-and operational support.
 
 
 Customisation
@@ -238,15 +222,13 @@ Online Web Hosting
 
 Cyber IT Solutions in partnership with allocPSA Pty Ltd is now proud to offer
 online hosting of the allocPSA application. For more information see
-http://www.allocpsa.com
-
-
+http://www.allocpsa.com/
 
 
 Introduction
 ============
 
-Welcome to the user-level documentation for allocPSA. 
+Welcome to the user-level documentation for allocPSA.
 
 allocPSA is an on-line, web-based Professional Services Automation
 system. allocPSA provides a suite of integrated applications designed for
@@ -254,7 +236,7 @@ organisations which provide services to Clients. It enables services personnel
 to become more productive and profitable by increasing their efficiency through
 increased utilisation and productive time, improved planning and integrated
 knowledge management. It reduces the likelihood of slip-ups and increases the
-traceability and manageability of projects, expenses, Tasks and people. 
+traceability and manageability of projects, expenses, Tasks and people.
 
 allocPSA can streamline the process of allocating staff resources to key
 projects, managing strategic initiatives at a granular level, and can offer a
@@ -273,7 +255,7 @@ allocPSA is intended for use in daily organisational operations, such as
 client contact, project management, task and resource allocation, skills
 tracking, time-sheeting, issues tracking, calendaring, reminders and
 escalation, item loans, cost expenses and centres as well as integration with
-existing external accounts and billing systems. 
+existing external accounts and billing systems.
 
 allocPSA is made available as a server-based appliance. By deploying an
 allocPSA system into your network, all staff can access the application from
@@ -300,14 +282,10 @@ Deployment
 
 allocPSA is supplied as in a number of 'formats':
 
-1. As a self-contained server appliance unit. The server appliance contains the
-   operating system platform, SQL server, web server and core allocPSA
-   applications.
-
-2. As a download from http://www.allocpsa.org/ which will need to be installed
+1. As a download from http://www.allocpsa.org/ which will need to be installed
    on a web application server.
 
-3. As a paid hosted service available from http://www.allocpsa.com. 
+2. As a paid hosted service available from http://www.allocpsa.com.
 
 
 Installation and Configuration
@@ -334,19 +312,18 @@ other business problems. allocPSA can help track and manage customer requests,
 problems, complaints, Tasks and any other projects that need to be tracked.
 Web-based action tracking offers the best and most simple way to gain control
 over information, issues and Tasks for a group or department, or throughout an
-organization worldwide. 
+organization worldwide.
 
-With the increasing business requirement that information management systems
-provide substantial and immediate return on investment, 
-
-allocPSA is the answer to many of your service-industry information management
+With the increasing business requirement that information management
+systems provide substantial and immediate return on investment, allocPSA
+is the answer to many of your service-industry information management
 concerns.
 
 Among other features, allocPSA provides a comprehensive multilevel,
 multi-project planning, scheduling and reporting engine scalable to thousands
 of projects. The ability to search for qualified and available resources,
 assign Tasks and manage staff with a powerful resource search engine across
-single or multiple projects. 
+single or multiple projects.
 
 allocPSA also offers cost-control management and project graphical and
 milestone-enabled Gantt-style bar chart reporting capabilities. This makes
@@ -354,7 +331,7 @@ allocPSA a valuable platform for managing the priorities and objectives that
 drive your business.
 
 Using proven project management disciplines and processes, allocPSA helps you
-optimize resources and manage activities to meet project deadlines and budgets. 
+optimize resources and manage activities to meet project deadlines and budgets.
 
 allocPSA automatically generates customizable outgoing email alerts to
 instantly notify relevant assignees, managers and other people involved with
@@ -381,7 +358,7 @@ Home
 
 One-stop overview of user's daily/weekly calendar, company announcements,
 reminders, Tasks, Projects, cost-centre balances, submitted or Time Sheets
-pending approval. 
+pending approval.
 
 Project Management
 ------------------
@@ -432,6 +409,14 @@ Tasks
 
 10. Ability to sort task commentary on a threaded or date basis, also incorporating time-sheet time entries.
 
+11. Ability to set task status (Open, Pending, Closed) in a granular
+    manner.
+
+12. Ability to set Best/Most-Likely/Worst 3-point Time Estimates
+    per-task.
+
+13. Ability to set Time Budget figures, per-task, which are then used to
+    highlight tasks which overrun that time budget.
 
 Time Sheets
 -----------
@@ -471,6 +456,7 @@ Financials
 7. Reconciliation report.
 
 8. Integration with external payroll and accounting systems.
+
 
 Clients
 -------
@@ -604,7 +590,7 @@ the Username and your Password in the login screen of allocPSA, as shown here.
 When you point your web-browser to the URL which contains allocPSA, you
 should see the Login screen. Enter your username and your password, then click
 on the Login button. allocPSA should then take you to the main allocPSA Home
-page. 
+page.
 
 
 
@@ -674,7 +660,7 @@ How do I Create a New Project?
    beforehand, you will need to add that Client. You can do this either by
    using the steps outlined in this section on Adding a New Client, or by
    clicking the 'New Client' link in the Project Details form, and following
-   the same steps. 
+   the same steps.
 
 5. Select the Client contact for that Client, for this Project.
 
@@ -940,8 +926,8 @@ How do I Send a Copy of a Time Sheet to Others?
    send a copy of this comment and attached time sheet to.
 
 7. If you want to add an additional recipient who doesn't appear on the
-   prepared list of recipients, you can add them by click-expanding the 
-   Email Other Party link, adding their details, and deciding about having 
+   prepared list of recipients, you can add them by click-expanding the
+   Email Other Party link, adding their details, and deciding about having
    them added permanently.
 
 
@@ -1021,10 +1007,10 @@ How do I Quickly Jump to a Task if I have the Task ID?
 
 2. If you have a valid task ID (eg, '12762') then you can enter this
    directly into the Quick Search textbox near the top right of the
-   allocPSA screen. 
-   
-3. Entering a number here indicates to allocPSA that you know its a 
-   Task ID number and that you want to be taken straight to that task. 
+   allocPSA screen.
+
+3. Entering a number here indicates to allocPSA that you know its a
+   Task ID number and that you want to be taken straight to that task.
 
 4. This same approach works for some of the other search items available
    under the Quick Search facility; given a Project or Timesheet ID, you
@@ -1139,7 +1125,7 @@ tasks, through the Pending attribute.
 
 1. Log in to allocPSA.
 
-2. Open the task (fault, message) that you would like to mark as 
+2. Open the task (fault, message) that you would like to mark as
    Pending.
 
 3. From the Main (or All) task tab, click the Edit Task button. This
@@ -1172,7 +1158,7 @@ How do I Close a Task?
 
 1. Log in to allocPSA.
 
-2. Open the task (fault, message) that you would like to mark as 
+2. Open the task (fault, message) that you would like to mark as
    Closed.
 
 3. From the Main (or All) task tab, click the Edit Task button. This
@@ -1182,7 +1168,7 @@ How do I Close a Task?
 4. Select one of the Closed options from the Status droplist. For example,
    Closed: Invalid, which means that the task was incorrectly added to
    allocPSA, or Closed: Duplicate, which means that the task is a
-   duplicate of another, existing task, or Closed: Incomplete, which means 
+   duplicate of another, existing task, or Closed: Incomplete, which means
    that the task could not be completed, or the issue resolved, or
    Closed: Completed, which means that task was completed or the
    fault/issue resolved.
@@ -1239,7 +1225,7 @@ across many tasks at once.
    new attribute value to set for your list of selected tasks.
 
 6. Once you've set the new attribute value for the group, click the
-   Update Tasks button, to make the actual change across your list of 
+   Update Tasks button, to make the actual change across your list of
    selected tasks.
 
 7. If you more than one attribute change to make across this list of
@@ -1251,7 +1237,7 @@ How do I Mark a Task as a Duplicate?
 
 1. Log in to allocPSA.
 
-2. Open the task (fault, message) that you would like to mark as 
+2. Open the task (fault, message) that you would like to mark as
    as a duplicate.
 
 3. From the Main (or All) task tab, click the Edit Task button. This
@@ -1361,7 +1347,7 @@ How do I use the allocPSA Email Gateway?
 
    Everything up to the {Key:sfdsffs} is actually ignored, so the email could just look
    like this:
-   
+
    To: alloc@somewhere.com.au
    From: ben@otherplace.com.au
    Subject: {Key:fds432fd} close 3
@@ -1389,7 +1375,7 @@ steps.
 
 2. Go to the Tools tab of the main menu.
 
-3. From the Finance list, click the List of Tagged Funds link. The 
+3. From the Finance list, click the List of Tagged Funds link. The
    Tagged Funds list will appear, but it make take a while, as allocPSA
    has to perform quite a few calculations.
 
@@ -1402,13 +1388,13 @@ steps.
    the selected tagged fund.
 
 6. Once inside the tagged fund, you will notice that it offers you a
-   drop-list to your name as one of the tagged fund owners, in the 
+   drop-list to your name as one of the tagged fund owners, in the
    TF owners section of the page. Once you've selected your name from
    the list, click the Add button.
-   
+
 7. You can now check that this additional tagged-fund/cost-centre is
    visible to you from your 'home' page, by clicking on the Home tab of
-   the main menu, and checking that the new tagged fund account balance 
+   the main menu, and checking that the new tagged fund account balance
    is being displayed in the Tagged Funds content block near the top
    right.
 
@@ -1432,7 +1418,7 @@ allocPSA allows a speedy way to achieve this action.
 
 5. You can do this a few more times, building up a small list of
    recently visited data entities.
-   
+
 6. You can now jump quickly back to each of these, by selected them from
    the QuickList drop-list, near the top-right of the allocPSA screen.
    The list of recently-visited data entities will appear just below the
@@ -1441,7 +1427,7 @@ allocPSA allows a speedy way to achieve this action.
 
 How do I Customise my Home Page?
 --------------------------------
-  
+
 1. Log in to allocPSA.
 
 2. Go to the Home page.
@@ -1493,7 +1479,7 @@ How do I Sort Tables of Data?
    Tasks table, that a small up-down-arrow icon will appear. This is
    there to tell you that you can click this table column heading text,
    and allocPSA will sort the data in the table using this column as the
-   sorting criterion. 
+   sorting criterion.
 
 4. Click the same table column heading text again, and the sort order
    will be reversed.
@@ -1517,7 +1503,7 @@ How do I Specify Annual Leave or Absence?
 
 6. Select the type of Leave (Annual Leave, Holiday, etc.)
 
-7. Add any new/additional emergency contact details or pertinent information that your colleagues may find valuable. 
+7. Add any new/additional emergency contact details or pertinent information that your colleagues may find valuable.
 
 8. Click the Save button.
 
@@ -1533,14 +1519,14 @@ How do I Check that I've Billed Completely on a Task?
 
 4. Click the Summary link on the top-right side of the task. This will switch the comments into summary mode, sorted on date.
 
-5. Review the summary items, checking to see if you've done work on this task, for which there isn't a corresponding time-sheet entry. 
+5. Review the summary items, checking to see if you've done work on this task, for which there isn't a corresponding time-sheet entry.
    The time-sheet entries are marked in **Bold**.
 
-6. If you find that there is unbilled work, then you can Click back into the Main task tab, and then click the Time Sheet link near 
-   the top-right side of this page. Now you can add an appropriately dated time-sheet item to an existing time-sheet, or create a new 
+6. If you find that there is unbilled work, then you can Click back into the Main task tab, and then click the Time Sheet link near
+   the top-right side of this page. Now you can add an appropriately dated time-sheet item to an existing time-sheet, or create a new
    time-sheet and do the same.
 
-Note: You can 'expand' any of these task comments by clicking on them. This will help you establish the context of the actions taken, 
+Note: You can 'expand' any of these task comments by clicking on them. This will help you establish the context of the actions taken,
 and to help determine if this is indeed work that needed to be billed.
 
 
@@ -1581,22 +1567,22 @@ How do I Prepare an Un-billed Effort Exception Report?
 
 9. Select the Task Status, for the types of task you want to check the un-billed effort on. It's often best to leave this 'blank'.
 
-10. For a full-overview of the actions taken and their context, you can also check the 'Include Client Comments' check-box, 
+10. For a full-overview of the actions taken and their context, you can also check the 'Include Client Comments' check-box,
     but this isn't often needed.
 
-11. Click the Filter button. You will now be presented with a list of tasks, which that person (or people) took actions on, along with 
-    any corresponding time-sheet entries. This list is grouped per-task, sorted on date. 
+11. Click the Filter button. You will now be presented with a list of tasks, which that person (or people) took actions on, along with
+    any corresponding time-sheet entries. This list is grouped per-task, sorted on date.
 
 12. You can 'expand' any of these task comments by clicking on them. This will help you establish the context of the actions taken,
     and to help determine if this is indeed work that needed to be billed.
 
 13. Review the summary items, checking to see if you've done work on this task, for which there isn't a corresponding time-sheet entry.
-    The time-sheet entries are marked in **Bold**. A good rule-of-thumb is, if you see task comment entries, with no **bold** time-sheet 
+    The time-sheet entries are marked in **Bold**. A good rule-of-thumb is, if you see task comment entries, with no **bold** time-sheet
     line beneath them, this is possible an item of worked which hasn't been time-sheeted.
 
 14. If you determine that a user has under billed for work performed, you can right-mouse button click on the related task link, or
-    otherwise cause it to be opened in a new browser tab, go to the Comments tab, and add a new entry, including appropriate 
-    internal/external parties (specifically the user who under billed) and alert them to this possibility. 
+    otherwise cause it to be opened in a new browser tab, go to the Comments tab, and add a new entry, including appropriate
+    internal/external parties (specifically the user who under billed) and alert them to this possibility.
 
 15. They can then review this, and remedy the situation by submitting a new time-sheet entry for this under (or non-) billed work.
 
@@ -1641,7 +1627,7 @@ How do I Print a Printer-Friendly Version of the Clients List?
 
 1. Log in to allocPSA.
 
-2. Click on the Clients tab. 
+2. Click on the Clients tab.
 
 3. Use the filter tool to prepare a list of the clients you're interested in
 
@@ -1659,7 +1645,7 @@ How do I Print a Printer-Friendly Version of the Projects List?
 
 1. Log in to allocPSA.
 
-2. Click on the Projects tab. 
+2. Click on the Projects tab.
 
 3. Use the filter tool to prepare a list of the projects you're interested in.
 
@@ -1675,8 +1661,10 @@ How do I Print a Printer-Friendly Version of the Projects List?
 How do I Check to Ensure Users are Submitting Their Time-sheets in a Timely Manner?
 -----------------------------------------------------------------------------------
 
-Note: This process assumes that your organisation has a policy which outlines that time-sheets 
-should be submitted to time-sheet managers, in a timely manner. One example would be that time-sheets should be no older than 7 days.
+Note: This process assumes that your organisation has a policy which
+outlines that time-sheets should be submitted to time-sheet managers, in
+a timely manner. One example would be that time-sheets should be no
+older than 7 days.
 
 1. Log in to allocPSA.
 
@@ -1696,22 +1684,22 @@ should be submitted to time-sheet managers, in a timely manner. One example woul
 
 9. Click the Filter button. This will generate a (possibly lengthy) list of time-sheets, assigned to projects, users etc.
 
-10. Sort the list by Start Date, by clicking on the START DATE column header. This will show you the time-sheet with the oldest time-sheet 
+10. Sort the list by Start Date, by clicking on the START DATE column header. This will show you the time-sheet with the oldest time-sheet
     item at the top of the table.
 
 11. Check that this date is no further in the past than your organisations time-sheet submission policy allows for.
 
-12. If it is, and **if** you want to notify your user of this possible infraction, right-click on the record link (in the Project) column, 
+12. If it is, and **if** you want to notify your user of this possible infraction, right-click on the record link (in the Project) column,
     and cause that time-sheet to be brought up on a new browser tab.
 
-13. In that new tab, review the time-sheet, confirm that it's now overdue, then go to the botton of the time-sheet, where you'll 
+13. In that new tab, review the time-sheet, confirm that it's now overdue, then go to the botton of the time-sheet, where you'll
     find the Comments section.
 
 14. Click the New link at the lower-right side of the time-sheet page. This will open up a modified form of the comments tool found in tasks.
 
 15. Select the time-sheet creattor/user, and any other interested parties (time-sheet managers, admin etc) from the list of Email Recipients.
 
-16. Using either a pre-scripted response (i.e, from the Comment Template drop-list) or entering your own message, send out a note saying that 
+16. Using either a pre-scripted response (i.e, from the Comment Template drop-list) or entering your own message, send out a note saying that
     this time-sheet is old and should be submitted.
 
 17. When complete, click the Save Comment button. This email will now be sent to thes email recipients.
@@ -1734,7 +1722,7 @@ How do I Email a Time-Sheet to Customers?
 5. Select the appropriate interested parties (customer contact(s), time-sheet manager, admin etc) from the list of Email Recipients.
 
 6. Using either a pre-scripted response (i.e, from the Comment Template drop-list) or entering your own message, add text to the comment text box, 
-   letting everyone know the purpose of this message. 
+   letting everyone know the purpose of this message.
 
 7. From the Attach Time Sheet drop-list, select one of the options. Unless you have reason to specify otherwise, select Default. This will cause 
    a copy of the time-sheet to be attached to the outgoing email, as a PDF.
@@ -1806,7 +1794,7 @@ tasks is therefore related to these attributes.
 - Date Status: This will display a computed date estimate to complete the task,
   based on effort and time spent thus far. A typical output would be something
   like 'Started 2010-06-30, forecast completion date of 2010-12-06'.
- 
+
 11. You can also select to filter based on Task Date attributes, by selecting items from the Task Date droplist. Options include:
 
 - New Tasks:
@@ -1815,17 +1803,17 @@ tasks is therefore related to these attributes.
 
 - Overdue:
 
-- Date Created and then supply a data range on which to filter: 
+- Date Created and then supply a data range on which to filter:
 
-- Date Assigned and then supply a data range on which to filter: 
+- Date Assigned and then supply a data range on which to filter:
 
-- Estimated Start and then supply a data range on which to filter: 
+- Estimated Start and then supply a data range on which to filter:
 
-- Estimated Completion and then supply a data range on which to filter: 
+- Estimated Completion and then supply a data range on which to filter:
 
-- Date Started and then supply a data range on which to filter: 
+- Date Started and then supply a data range on which to filter:
 
-- Date Completed and then supply a data range on which to filter: 
+- Date Completed and then supply a data range on which to filter:
 
 12. Once all the filter options have been selected, click the Filter button.
     This will generate the list of tasks which match your filter criteria and
@@ -1846,6 +1834,9 @@ tasks is therefore related to these attributes.
 How do I Manage Project Tasks
 -----------------------------
 
+Managing project tasks is essentially a similar exercise to managint
+Help Desk tasks.
+
 **Note**: While there are no functional differences between tasks assigned in
 'help desk' type projects or tasks assigned to more traditional 'life-cycle'
 projects, these are sometimes managed differently, or by different people
@@ -1854,9 +1845,6 @@ middle and an end, and in general, are managed by a single project manager. The
 nature of the processes used to manage such tasks is therefore related to these
 attributes
 
-1. Log in to allocPSA.
-
-2. 
 
 
 Useful Tips for using allocPSA
@@ -1864,7 +1852,7 @@ Useful Tips for using allocPSA
 
 Firstly, remember that allocPSA is a web-based application. As such, all the
 normal behaviour that you would expect from a web-browser functions correctly
-in allocPSA. Therefore, 
+in allocPSA. Therefore:
 
 1. When you are viewing a page which is larger than the web-browser window, you
    can always scroll down (and up) with the scrollbar or Page Up or Page Down
@@ -1891,7 +1879,7 @@ in allocPSA. Therefore,
 
 7. You can (with some care) send others within your organisation the current
    web-browser address (i.e. URL) of a particularly interesting page in
-   allocPSA that you want them to see. 
+   allocPSA that you want them to see.
 
 8. Your organisation can make some parts of allocPSA available to outsiders,
    via an extranet system, which may help them better understand how their
@@ -1926,8 +1914,6 @@ allocPSA has a strict notion of what functions are visible and permissible to
 various user levels. While this manual describes all functions which are
 available, some (or many) may not be visible to users who do not have the
 appropriate access privileges.
-
-
 
 
 allocPSA Tab Menu
@@ -2000,7 +1986,7 @@ Project List
 allocPSA allows for the management of Projects, among other things. Within your
 Home page, allocPSA shows Projects which are allocated to you, the user. The
 list shows you the Client that the Project belongs to, which can be an internal
-Client, within your organisation, or an external Client. 
+Client, within your organisation, or an external Client.
 
 The Project name, which you can click on to jump to that particular Project, a
 link to the list of Tasks for that particular Project, as well as link to the
@@ -2016,7 +2002,7 @@ Cost Centres & TF (Tagged Fund)
 
 allocPSA uses the concept of Cost Centres (called Tagged Funds or just TFs) to
 show the maintain and track the financial state of each Project's or Person's
-accounts. 
+accounts.
 
 As a Professional Services Automation system, allocPSA must keep track of both
 the expenses and revenues of a Project as well as cost-centres for individual
@@ -2047,12 +2033,12 @@ Time Sheet.
 Customize Interface
 ~~~~~~~~~~~~~~~~~~~
 
-The appearance and font-size of allocPSA can be changed to suit the user's taste. 
+The appearance and font-size of allocPSA can be changed to suit the user's taste.
 Additionally the Top Tasks, Calendar and Project List on the home page can be
 customized to individual preference.
 
 Settings can be changed by making a selection from the respective
-drop-lists. When satisfied, press the 'Save' button to confirm the changes. 
+drop-lists. When satisfied, press the 'Save' button to confirm the changes.
 
 
 Clients
@@ -2069,14 +2055,14 @@ with. allocPSA has the ability to track all current, potential and archived
 (i.e. lapsed) Clients. Besides the core organisational information, any number
 of contacts can also be entered for each organisation tracked. The information
 maintained includes the Client Name, Contact Name, Contact Phone, Contact
-E-mail etc. 
+E-mail etc.
 
 allocPSA also allows for the attachment of documents which pertain to this
 Client, as well as any per-Client reminders that need to be added.
 
 To view the list of current Clients, you need to click on the 'Clients'
 tab in the allocPSA main menu. You will then be taken to the Clients tab
-page, where you will be shown a table of current Clients. 
+page, where you will be shown a table of current Clients.
 
 You can filter the list of clients shown in the Clients tab page, by
 clicking the Show Filter link, if this is presented, which will open up
@@ -2084,7 +2070,7 @@ the filter segment of the page. Using this filter, you can select
 portions of a client name or a contact name within a client
 organisation, which you want to filter on, along with the client's
 Status (Current, Potential, Archived) and the client's Category (Client,
-Vendor, Supplier, Non-profit, etc). 
+Vendor, Supplier, Non-profit, etc).
 
 Once you have selected the filter criteria, you click the Filter button,
 and allocPSA will show you the matching entries. You can remove a
@@ -2096,7 +2082,7 @@ filter segment, to show all the client organisations which start with
 A, B, C etc.
 
 You can view and edit details for each Client, by clicking on that
-client's link. 
+client's link.
 
 Hint: When allocPSA lists the list of current Client's, you can use your
 browser's Find facility (often a Ctrl + F keystroke or available from the Edit
@@ -2183,7 +2169,7 @@ repository. When you have selected the file you want to upload, and are back to
 allocPSA's Project page, you should see the file path specified in the
 file-upload textbox. You can then click the 'Save Document' button, and your
 web-browser will upload the file to allocPSA. This process may take a moment,
-particularly if you have a large file. 
+particularly if you have a large file.
 
 Adding Reminders to Clients
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
