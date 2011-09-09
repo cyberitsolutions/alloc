@@ -2037,6 +2037,31 @@ The appearance and font-size of allocPSA can be changed to suit the user's taste
 Additionally the Top Tasks, Calendar and Project List on the home page can be
 customized to individual preference.
 
+The list of items which can be configured on a per-user basis includes:
+
+.. list-table::
+
+  - - Setting
+    - What it affects
+  - - Font Size
+    - the size of the standard font to use. 
+  - - Theme 
+    - the visual theme the user prefers.
+  - - Top tasks 
+    - the number of the user's tasks to show in the Home page.
+  - - Status 
+    - used to nominate which tasks (selected by status) the user
+      wants displayed in their Home page.
+  - - Calendar Weeks 
+    - the number of (forward) weeks displayed in the Calendar.
+  - - Weeks Back 
+    - the number of preceding weeks displayed in the Calendar.
+  - - Project List 
+    - the number of the user's projects to show in the Home page.
+  - - Show Filters 
+    - on pages which have filters, shows the 'filter' section of the form by default when you go to pages with a filter, e.g. the
+      task list, etc.
+
 Settings can be changed by making a selection from the respective
 drop-lists. When satisfied, press the 'Save' button to confirm the changes.
 
