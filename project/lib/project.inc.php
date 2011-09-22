@@ -656,6 +656,12 @@ class project extends db_entity {
       $projectID = $this->get_id();
     }
     if ($projectID) {
+
+      $extra_interested_parties = config::get_config_item("defaultInterestedParties");
+      foreach ((array)$extra_interested_parties as $name => $email) {
+        $interestedPartyOptions[$email] = array("name"=>$name);
+      }
+
       // Get primary client contact from Project page
       $db = new db_alloc();
       $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
