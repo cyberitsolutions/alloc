@@ -44,11 +44,6 @@ function timeWarp($mostRecent, $basis) {
   }
 }
 
-if (!$current_user->have_role("admin")) {
-  die();
-}
-
-global $current_user;
 
 $db = new db_alloc;
 $dbMaxDate = new db_alloc;
