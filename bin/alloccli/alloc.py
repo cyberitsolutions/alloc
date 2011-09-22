@@ -422,7 +422,7 @@ class alloc(object):
       table.padding_width=0
 
     for label in field_names:
-      if '$' in label:
+      if not self.csv and '$' in label:
         table.set_field_align(label, "r")
       else:
         table.set_field_align(label, "l")
