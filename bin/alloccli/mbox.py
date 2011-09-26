@@ -54,8 +54,12 @@ alloc mbox -t 1234 > file.mbox'''
     if taskID:
 
       str = ''
+      str0 = "From allocPSA Thu Jan  1 10:00:01 1970\r\n" + self.print_task(taskID)
       str1 = self.make_request({"method":"search_emails","str":'SUBJECT "Task Comment: '+taskID+' "'})
       str2 = self.make_request({"method":"get_timeSheetItem_comments","taskID":taskID})
+
+      if str0:
+        str+= str0+"\n\n"
       if str1:
         str+= str1+"\n\n"
       if str2:
