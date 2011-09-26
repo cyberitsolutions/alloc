@@ -953,12 +953,15 @@ class task extends db_entity {
       $row["taskLink"] = $task->get_task_link($_FORM);
       $row["project_name"] = $row["projectShortName"]  or  $row["project_name"] = $row["projectName"];
       $row["projectPriority"] = $db->f("projectPriority");
+      $row["projectPriorityLabel"] = project::get_priority_label($db->f("projectPriority"));
       $row["taskTypeImage"] = $task->get_task_image();
       $row["taskStatusLabel"] = $task->get_task_status("label");
       $row["taskStatusColour"] = $task->get_task_status("colour");
       $row["creator_name"] = $_FORM["people_cache"][$row["creatorID"]]["name"];
       $row["manager_name"] = $_FORM["people_cache"][$row["managerID"]]["name"];
       $row["assignee_name"] = $_FORM["people_cache"][$row["personID"]]["name"];
+      $row["closer_name"] = $_FORM["people_cache"][$row["closerID"]]["name"];
+      $row["estimator_name"] = $_FORM["people_cache"][$row["estimatorID"]]["name"];
       $row["newSubTask"] = $task->get_new_subtask_link();
       $_FORM["showDateStatus"] and $row["taskDateStatus"] = $task->get_dateStatus();
       $_FORM["showPercent"] and $row["percentComplete"] = $task->get_percentComplete();
@@ -974,6 +977,7 @@ class task extends db_entity {
       $row["padding"] = $_FORM["padding"];
       $row["taskID"] = $task->get_id();
       $row["parentTaskID"] = $task->get_value("parentTaskID");
+      $row["timeLimitLabel"] = $row["timeBestLabel"] = $row["timeWorstLabel"] = $row["timeExpectedLabel"] = $row["timeActualLabel"] = "";
       $row["timeLimit"] !== NULL    and $row["timeLimitLabel"]    = seconds_to_display_format($row["timeLimit"]*60*60);
       $row["timeBest"] !== NULL     and $row["timeBestLabel"]     = seconds_to_display_format($row["timeBest"]*60*60);
       $row["timeWorst"] !== NULL    and $row["timeWorstLabel"]    = seconds_to_display_format($row["timeWorst"]*60*60);
