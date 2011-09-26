@@ -13,6 +13,7 @@ import ConfigParser
 from netrc import netrc
 from urlparse import urlparse
 from prettytable import PrettyTable
+from textwrap import wrap
 
 class alloc(object):
 
@@ -253,11 +254,47 @@ class alloc(object):
         return clients.keys()[0]
 
   def print_task(self, id):
-    # print a descriptive view of a task
-    rtn = self.get_list("task",{"taskID": id})
+    # view of a task
+    rtn = self.get_list("task",{"taskID": id, "taskView": "prioritised","showTimes":True})
 
-    # Print it out
-    self.print_table(rtn, ["taskID","Task ID","projectID","Project","status","Status","person","Owner"])
+    for k,r in rtn.items():
+      pass
+
+    underline_length = len(r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"])
+
+    str = "\n"+r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"]
+    str+= "\n".ljust(underline_length+1,"=")
+    str+= "\n"
+    if r["priorityLabel"]: str+= "\n"+"Priority: "+r["priorityLabel"].ljust(26)+r["taskStatusLabel"]
+    str+= "\n"
+    if r["projectName"]:  str+= "\nProject: "+r["projectName"]+" ["+r["projectPriorityLabel"]+"]"
+    if r["parentTaskID"]: str+= "\nParent Task: "+r["parentTaskID"]
+    if r["projectName"] or r["parentTaskID"]: str+= "\n"
+    if r["creator_name"]:  str+= "\nCreator:  "+r["creator_name"].ljust(25)+" "+r["dateCreated"]
+    if r["assignee_name"]: str+= "\nAssigned: "+r["assignee_name"].ljust(25)+" "+r["dateAssigned"]
+    if r["manager_name"]:  str+= "\nManager:  "+r["manager_name"].ljust(25)
+    if r["dateClosed"]:
+      str+= "\nCloser:   "+r["closer_name"].ljust(25)+" "+r["dateClosed"]
+    str+= "\n"
+    str+= "\nB/E/W Estimates:  "+(r["timeBestLabel"] or "--")+" / "+(r["timeExpectedLabel"] or "--")+" / "+(r["timeWorstLabel"] or "--")+"  "+(r["estimator_name"] or "")
+    str+= "\nActual/Limit Hrs: %s / %s " % (r["timeActualLabel"] or "--", r["timeLimitLabel"] or "--")
+    str+= "\n"
+
+    if r["dateTargetStart"] or r["dateTargetCompletion"]:
+      str+= "\nTarget Start: %-18s Target Completion: %-18s " % (r["dateTargetStart"], r["dateTargetCompletion"])
+    if r["dateActualStart"] or r["dateActualCompletion"]:
+      str+= "\nActual Start: %-18s Actual Completion: %-18s " % (r["dateActualStart"], r["dateActualCompletion"])
+
+    if r["taskDescription"]:
+      str+= "\n"
+      str+= "\nDescription"
+      str+= "\n-----------"
+      str+= "\n"
+      #str+= "\n".join(wrap(r["taskDescription"],75))+"\n" # this seems to not work very well.
+      str+= "\n"+r["taskDescription"]
+
+    str+= "\n"
+    return str
 
   def get_subcommand_help(self, command_list, ops, str):
     # Get help text for a subcommand.

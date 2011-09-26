@@ -694,6 +694,15 @@ class project extends db_entity {
     return (array)$interestedPartyOptions;
   }
 
+  function get_priority_label($p="") {
+    $projectPriorities = config::get_config_item("projectPriorities") or $projectPriorities = array();
+    $pp = array();
+    foreach($projectPriorities as $key => $arr) {
+      $pp[$key] = $arr["label"];
+    }
+    return $pp[$p];
+  }
+
 }
 
 
