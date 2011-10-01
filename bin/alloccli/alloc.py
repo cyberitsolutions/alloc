@@ -316,6 +316,7 @@ class alloc(object):
     short_ops = ""
     long_ops = []
     options = []
+    no_arg_ops = {}
     all_ops = {}
     rtn = {}
     remainder = ""
@@ -327,9 +328,17 @@ class alloc(object):
       short_ops += x[0]
       long_ops.append(re.sub("=.*$","=",x[1]).strip())
 
+      # track which ops don't require an argument eg -q
+      if x[0] and x[0][-1] != ':':
+        no_arg_ops["-"+x[0]] = True
+
+      # or eg --help
+      if not x[0] and '=' not in x[1]:
+        no_arg_ops["--"+x[1].strip()] = True
+
       # And this is used below to build up a dictionary to return
       all_ops[re.sub("=.*$","",x[1]).strip()] = ["-"+x[0].replace(":",""), "--"+re.sub("=.*$","",x[1]).strip()]
-    
+
     try:
       options, remainder = getopt.getopt(command_list[2:], short_ops, long_ops)
     except:
@@ -337,13 +346,16 @@ class alloc(object):
       sys.exit(0)
 
     for k,v in all_ops.items():
-      rtn[k] = ""
+      rtn[k] = ''
       for opt, val in options:
         if opt in v:
-          if val != "": # have to do it like this for eg -q which has no args
-            rtn[k] = val
-          else:
+          # eg -q
+          if opt in no_arg_ops and val == '':
             rtn[k] = True
+
+          # eg -x argument
+          else:
+            rtn[k] = val
 
     if rtn['help']:
       print help_string
