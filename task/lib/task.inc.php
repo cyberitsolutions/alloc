@@ -811,10 +811,14 @@ class task extends db_entity {
     if ($filter["taskName"]) {     
       $sql[] = sprintf("(task.taskName LIKE '%%%s%%')", db_esc($filter["taskName"]));
     }
+
     // If personID filter
-    if ($filter["personID"]) {
+    if ($filter["personID"] == "NULL") {
+      $sql["personID"] = "(task.personID IS NULL)";
+    } else if ($filter["personID"]) {
       $sql["personID"] = sprintf("(task.personID = %d)",$filter["personID"]);
     }
+
     // If creatorID filter
     if ($filter["creatorID"]) {
       $sql["creatorID"] = sprintf("(task.creatorID = %d)",$filter["creatorID"]);

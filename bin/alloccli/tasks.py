@@ -12,7 +12,7 @@ class tasks(alloc):
   ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.'))
   ops.append(('s:','status=NAME    ','A task\'s status. Can accept multiple values, eg: "open,pending" eg: "open,pending_info". Default: "open"'))
   ops.append((''  ,'type=NAME      ','A task\'s type, eg: "Task" eg: "Fault,Message"'))
-  ops.append(('a:','assignee=NAME  ','A task\'s assignee, username or first and surname" Default: you.'))
+  ops.append(('a:','assignee=NAME  ','A task\'s assignee, username or first and surname, Eg: "jon" Eg: "all" Eg: "NULL". Defaults to yourself.'))
   ops.append(('m:','manager=NAME   ','A task\'s manager, username or first and surname".'))
   ops.append(('o:','order=NAME     ','The order the Tasks are displayed in. Default: "Priority,Type,_Rate,status". (Underscore is for descending sort).')) 
   ops.append(('f:','fields=LIST    ','The commar separated list of fields you would like printed, eg: "all" eg: "taskID,Status,taskStatus,Proj Pri"')) 
@@ -35,10 +35,13 @@ class tasks(alloc):
     if o['order']: order = o['order']
 
     # Get personID, either assignee or logged in user
-    if o['assignee']:
-      personID = self.person_to_personID(o['assignee'])
-    else:
+    personID = ''
+    if o['assignee'].lower() == 'null':
+      personID = 'NULL'
+    elif not o['assignee']:
       personID = self.get_my_personID()
+    elif o['assignee'] != 'all':
+      personID = self.person_to_personID(o['assignee'])
 
     managerID = ''
     if o['manager']:
