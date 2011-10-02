@@ -16,7 +16,7 @@ $(document).ready(function() {
   <tr>
     <td>&nbsp;</td>
     <td>{page::expand_link("project_superset","Projects")}</td>
-    <td>Task Status {page::help("taskList_taskStatus")}</td>
+    <td>Task Status</td>
     <td>Created By</td> 
     <td rowspan="6" valign="top" colspan="3" class="right">
     
