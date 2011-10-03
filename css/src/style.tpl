@@ -5,13 +5,18 @@
  * Good web browsers obey the first declaration "90%", IE5/6 will obey the latter. 
  */
 
+html {
+  height:100%;
+}
+
 body { 
   (BODY_BACKGROUND); 
   font-family:arial,helvetica,sans-serif; 
   color:(BODY_COLOR); 
-  padding:0px;
+  padding:0px 14px;
   width:auto !important; width:95%;
-  margin:0px 14px;
+  margin:0px;
+  height:100%;
 }
 
 /* This should match the body font */
