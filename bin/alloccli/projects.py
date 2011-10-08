@@ -46,7 +46,7 @@ class projects(alloc):
     projects = {}
     projects = self.get_list("project",filter)
 
-    self.print_table(projects, fields, sort="projectName")
+    self.print_table("project", projects, fields, sort="projectName")
       
 
 

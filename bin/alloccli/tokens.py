@@ -46,6 +46,6 @@ alloc token --key 1234abcd"""
     if o['key'] or o['id']:
       tokens = self.get_list("token",searchops)
       if tokens:
-        self.print_table(tokens,fields)
+        self.print_table("token",tokens,fields)
 
 

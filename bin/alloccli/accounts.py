@@ -47,7 +47,7 @@ class accounts(alloc):
 
       transactions = self.get_list("transaction",ops)
       if transactions:
-        self.print_table(transactions,fields,"transactionDate")
+        self.print_table("transaction",transactions,fields,"transactionDate")
         print "num rows:",len(transactions)
  
     # Get tf
@@ -59,7 +59,7 @@ class accounts(alloc):
 
       tfs = self.get_list("tf",ops)
       if tfs:
-        self.print_table(tfs, fields, "tfName")
+        self.print_table("tf", tfs, fields, "tfName")
 
 
    
