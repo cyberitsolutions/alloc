@@ -112,13 +112,13 @@ alloc timesheets --date ">=2010-10-10" --items'''
             # >=
             ops['date'],ops['dateComparator'] = self.parse_date_comparator(o['date'])
           timeSheetItems = self.get_list("timeSheetItem",ops)
-          self.print_table(timeSheetItems, o["fields"] or self.row_timeSheetItem, sort=order)
+          self.print_table("timeSheetItem",timeSheetItems, o["fields"] or self.row_timeSheetItem, sort=order)
 
     else:
       if o['date']:
         # <=
         ops['dateFrom'],ops['dateFromComparator'] = self.parse_date_comparator(o['date'])
       timeSheets = self.get_list("timeSheet",ops)
-      self.print_table(timeSheets, o["fields"] or self.row_timeSheet, sort=order)
+      self.print_table("timeSheet",timeSheets, o["fields"] or self.row_timeSheet, sort=order)
   
 

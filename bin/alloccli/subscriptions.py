@@ -81,7 +81,7 @@ alloc subscriptions --add < foo.txt"""
     # Look for the interested parties, using the criteria from above
     if not o['add'] and not o['del']:
       parties = self.get_list("interestedParty",searchops)
-      self.print_table(parties,fields)
+      self.print_table("interestedParty",parties,fields)
 
     # Else if we're adding or deleting
     else:

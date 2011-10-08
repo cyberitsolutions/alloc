@@ -103,7 +103,7 @@ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
       self.msg("Attempting to add time for work done on this task: %s" % taskID)
       tasks = self.get_list("task",{"taskID":taskID,"taskView":"prioritised"})
       if tasks:
-        self.print_table(tasks, ["taskID","ID","taskName","Task","projectName","Project"])
+        self.print_table("task", tasks, ["taskID","ID","taskName","Task","projectName","Project"])
       else:
         self.die("Unable to find task with taskID: %s" % taskID)
 
@@ -121,7 +121,7 @@ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
       self.msg("Attempting to add time for work done on this project: %s" % projectID)
       projects = self.get_list("project",{"projectID":projectID})
       if projects:
-        self.print_table(projects, ["projectID","ID","projectName","Project"])
+        self.print_table("project", projects, ["projectID","ID","projectName","Project"])
       else:
         self.die("Unable to find project with projectID: %s" % projectID)
 
@@ -141,8 +141,8 @@ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
 
     # We should only have a timeSheetID if a new timeSheetItem was successfully added.
     if timeSheetID:
-      self.print_table(self.get_list("timeSheet",{"timeSheetID": timeSheetID}), self.row_timeSheet, sort="ID")
-      self.print_table(self.get_list("timeSheetItem",{"timeSheetID": timeSheetID}), self.row_timeSheetItem, sort="dateTimeSheetItem,timeSheetItemID")
+      self.print_table("timeSheet", self.get_list("timeSheet",{"timeSheetID": timeSheetID}), self.row_timeSheet, sort="ID")
+      self.print_table("timeSheetItem", self.get_list("timeSheetItem",{"timeSheetID": timeSheetID}), self.row_timeSheetItem, sort="dateTimeSheetItem,timeSheetItemID")
       self.yay("Time added to time sheet: %s" % timeSheetID)
     elif not o['dryrun']:
       self.die("No time was added.")

@@ -101,5 +101,5 @@ class tasks(alloc):
       fields = o["fields"]
 
     if r:
-      self.print_table(r,fields,order)
+      self.print_table("task",r,fields,order)
 

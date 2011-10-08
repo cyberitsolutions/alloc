@@ -26,98 +26,103 @@ class alloc(object):
   config = {}
   user_transforms = {}
   field_names = {
-                # task fields
-                 "taskID"                   :"Task ID"
-                ,"taskTypeID"               :"Type"
-                ,"taskStatusLabel"          :"Status"
-                ,"taskStatusColour"         :"Colour"
-                ,"priority"                 :"Task Pri"
-                ,"projectPriority"          :"Proj Pri"
-                ,"priorityFactor"           :"Pri Factor"
-                ,"priorityLabel"            :"Priority"
-                ,"rate"                     :"Rate"
-                ,"projectName"              :"Project"
-                ,"taskName"                 :"Task"
-                ,"taskDescription"          :"Description"
-                ,"creator_name"             :"Creator"
-                ,"manager_name"             :"Manager"
-                ,"assignee_name"            :"Assigned"
-                ,"projectShortName"         :"Proj Nick"
-                ,"currency"                 :"Curr"
-                ,"taskComments"             :"Comments"
-                ,"timeActualLabel"          :"Act Label"
-                ,"timeBest"                 :"Best"
-                ,"timeWorst"                :"Worst"
-                ,"timeExpected"             :"Est"
-                ,"timeLimit"                :"Limit"
-                ,"timeActual"               :"Act"
-                ,"dateTargetCompletion"     :"Targ Compl"
-                ,"dateTargetStart"          :"Targ Start"
-                ,"dateActualCompletion"     :"Act Compl"
-                ,"dateActualStart"          :"Act Start"
-                ,"taskStatus"               :"Stat"
-                ,"dateAssigned"             :"Date Assigned"
-                ,"project_name"             :"Proj Name"
-                ,"dateClosed"               :"Closed"
-                ,"dateCreated"              :"Created"
+    "task" : {
+      "taskID"                   :"Task ID"
+     ,"taskTypeID"               :"Type"
+     ,"taskStatusLabel"          :"Status"
+     ,"taskStatusColour"         :"Colour"
+     ,"priority"                 :"Task Pri"
+     ,"projectPriority"          :"Proj Pri"
+     ,"priorityFactor"           :"Pri Factor"
+     ,"priorityLabel"            :"Priority"
+     ,"rate"                     :"Rate"
+     ,"projectName"              :"Project"
+     ,"taskName"                 :"Task"
+     ,"taskDescription"          :"Description"
+     ,"creator_name"             :"Creator"
+     ,"manager_name"             :"Manager"
+     ,"assignee_name"            :"Assigned"
+     ,"projectShortName"         :"Proj Nick"
+     ,"currency"                 :"Curr"
+     ,"taskComments"             :"Comments"
+     ,"timeActualLabel"          :"Act Label"
+     ,"timeBest"                 :"Best"
+     ,"timeWorst"                :"Worst"
+     ,"timeExpected"             :"Est"
+     ,"timeLimit"                :"Limit"
+     ,"timeActual"               :"Act"
+     ,"dateTargetCompletion"     :"Targ Compl"
+     ,"dateTargetStart"          :"Targ Start"
+     ,"dateActualCompletion"     :"Act Compl"
+     ,"dateActualStart"          :"Act Start"
+     ,"taskStatus"               :"Stat"
+     ,"dateAssigned"             :"Date Assigned"
+     ,"project_name"             :"Proj Name"
+     ,"dateClosed"               :"Closed"
+     ,"dateCreated"              :"Created"
+    },
 
-                # time sheet fields
-                ,"timeSheetID"              :"Time ID"
-                ,"dateFrom"                 :"From"
-                ,"dateTo"                   :"To"
-                ,"status"                   :"Status"
-                ,"person"                   :"Owner"
-                ,"duration"                 :"Duration"
-                ,"totalHours"               :"Hrs"
-                ,"amount"                   :"Amount"
-                ,"projectName"              :"Project"
-                ,"currencyTypeID"           :"Currency"
-                ,"customerBilledDollars"    :"Bill"
-                ,"dateRejected"             :"Rejected"
-                ,"dateSubmittedToManager"   :"Submitted"
-                ,"dateSubmittedToAdmin"     :"Submitted Admin"
-                ,"invoiceDate"              :"Invoiced"
-                ,"billingNote"              :"Notes"
-                ,"payment_insurance"        :"Insurance"
-                ,"recipient_tfID"           :"TFID"
-                ,"commentPrivate"           :"Comm Priv"
- 
-                # time sheet item fields
-                ,"timeSheetID"              :"Time ID"
-                ,"timeSheetItemID"          :"Item ID"
-                ,"dateTimeSheetItem"        :"Date"
-                ,"taskID"                   :"Task ID"
-                ,"comment"                  :"Comment"
-                ,"timeSheetItemDuration"    :"Hours"
-                ,"rate"                     :"Rate"
-                ,"worth"                    :"Worth"
-                ,"hoursBilled"              :"Total"
-                ,"timeLimit"                :"Limit"
-                ,"limitWarning"             :"Warning"
-                ,"description"              :"Desc"
-                ,"secondsBilled"            :"Seconds"
-                ,"multiplier"               :"Mult"
-                ,"approvedByManagerPersonID":"Managed"
-                ,"approvedByAdminPersonID"  :"Admin"
+    "timeSheet" : {
+      "timeSheetID"              :"Time ID"
+     ,"dateFrom"                 :"From"
+     ,"dateTo"                   :"To"
+     ,"status"                   :"Status"
+     ,"person"                   :"Owner"
+     ,"duration"                 :"Duration"
+     ,"totalHours"               :"Hrs"
+     ,"amount"                   :"Amount"
+     ,"projectName"              :"Project"
+     ,"currencyTypeID"           :"Currency"
+     ,"customerBilledDollars"    :"Bill"
+     ,"dateRejected"             :"Rejected"
+     ,"dateSubmittedToManager"   :"Submitted"
+     ,"dateSubmittedToAdmin"     :"Submitted Admin"
+     ,"invoiceDate"              :"Invoiced"
+     ,"billingNote"              :"Notes"
+     ,"payment_insurance"        :"Insurance"
+     ,"recipient_tfID"           :"TFID"
+     ,"commentPrivate"           :"Comm Priv"
+    },
 
-                # transaction fields
-                ,"transactionID"            :"Transaction ID"
-                ,"fromTfName"               :"From TF"
-                ,"tfName"                   :"Dest TF"
-                ,"amount"                   :"Amount"
-                ,"status"                   :"Status"
-                ,"transactionDate"          :"Transaction Date"
+    "timeSheetItem" : {
+      "timeSheetID"              :"Time ID"
+     ,"timeSheetItemID"          :"Item ID"
+     ,"dateTimeSheetItem"        :"Date"
+     ,"taskID"                   :"Task ID"
+     ,"comment"                  :"Comment"
+     ,"timeSheetItemDuration"    :"Hours"
+     ,"rate"                     :"Rate"
+     ,"worth"                    :"Worth"
+     ,"hoursBilled"              :"Total"
+     ,"timeLimit"                :"Limit"
+     ,"limitWarning"             :"Warning"
+     ,"description"              :"Desc"
+     ,"secondsBilled"            :"Seconds"
+     ,"multiplier"               :"Mult"
+     ,"approvedByManagerPersonID":"Managed"
+     ,"approvedByAdminPersonID"  :"Admin"
+    },
+
+    "transaction" : {
+      "transactionID"            :"Transaction ID"
+     ,"fromTfName"               :"From TF"
+     ,"tfName"                   :"Dest TF"
+     ,"amount"                   :"Amount"
+     ,"status"                   :"Status"
+     ,"transactionDate"          :"Transaction Date"
+    },
   
-                # tf fields
-                ,"tfID"                     :"TF ID"
-                ,"tfBalancePending"         :"Pending"
-                ,"tfBalance"                :"Approved"
-
-                # project fields
-                ,"projectID"                :"Proj ID"
-                ,"projectName"              :"Proj Name"
-
-                }
+    "tf" : {
+      "tfID"                     :"TF ID"
+     ,"tfBalancePending"         :"Pending"
+     ,"tfBalance"                :"Approved"
+    },
+        
+    "project" : {
+      "projectID"                :"Proj ID"
+     ,"projectName"              :"Proj Name"
+    }
+  }
 
 
   row_timeSheet = "timeSheetID,dateFrom,dateTo,status,person,duration,totalHours,amount,projectName"
@@ -222,7 +227,7 @@ class alloc(object):
       if len(projects) == 0:
         self.die("No project found matching: %s" % projectName)
       elif len(projects) > 1:
-        self.print_table(projects, ["projectID","ID","projectName","Project"])
+        self.print_table("project", projects, ["projectID","ID","projectName","Project"])
         self.die("Found more than one project matching: %s" % projectName)
       elif len(projects) == 1:
         return projects.keys()[0]
@@ -235,7 +240,7 @@ class alloc(object):
       if not tasks:
         self.die("No task found matching: %s" % ops["taskName"])
       elif tasks and len(tasks) >1:
-        self.print_table(tasks, ["taskID","ID","taskName","Task","projectName","Project"])
+        self.print_table("task", tasks, ["taskID","ID","taskName","Task","projectName","Project"])
         self.die("Found more than one task matching: %s" % ops["taskName"])
       elif len(tasks) == 1:      
         return tasks.keys()[0]   
@@ -248,7 +253,7 @@ class alloc(object):
       if not clients:
         self.die("No client found matching: %s" % ops["clientName"])
       elif clients and len(clients) >1:
-        self.print_table(clients, ["clientID","ID","clientName","Client"])
+        self.print_table("client", clients, ["clientID","ID","clientName","Client"])
         self.die("Found more than one client matching: %s" % ops["clientName"])
       elif len(clients) == 1:
         return clients.keys()[0]
@@ -374,9 +379,9 @@ class alloc(object):
     for i in rtn:
       return i
 
-  def get_only_these_fields(self,rows,only_these_fields):
+  def get_only_these_fields(self,entity,rows,only_these_fields):
     rtn = []
-    inverted_field_names = dict([[v,k] for k,v in self.field_names.items()])
+    inverted_field_names = dict([[v,k] for k,v in self.field_names[entity].items()])
 
     # Allow the display of custom fields
     if type(only_these_fields) == type("string"):
@@ -385,8 +390,8 @@ class alloc(object):
         for k,v in rows.items():
           for name,value in v.items():
             rtn.append(name)
-            if name in self.field_names:
-              rtn.append(self.field_names[name])
+            if name in self.field_names[entity]:
+              rtn.append(self.field_names[entity][name])
             else:
               rtn.append(name)
           break
@@ -397,18 +402,18 @@ class alloc(object):
           if name in inverted_field_names:
             name = inverted_field_names[name]
           rtn.append(name)
-          if name in self.field_names:
-            rtn.append(self.field_names[name])
+          if name in self.field_names[entity]:
+            rtn.append(self.field_names[entity][name])
           else:
             rtn.append(name)
       return rtn;
     return only_these_fields
 
-  def get_sorted_rows(self,rows,sortby):
+  def get_sorted_rows(self,entity,rows,sortby):
     rows = rows.items()
     if not sortby:
       return rows
-    inverted_field_names = dict([[v,k] for k,v in self.field_names.items()])
+    inverted_field_names = dict([[v,k] for k,v in self.field_names[entity].items()])
 
     sortby = sortby.split(",")
     sortby.reverse()    
@@ -426,7 +431,7 @@ class alloc(object):
     def sort_func(row):
       try: val = row[1][inverted_field_names[f]]
       except:
-        try: val = row[1][self.field_names[f]]
+        try: val = row[1][self.field_names[entity][f]]
         except:
           try: val = row[1][f]
           except:
@@ -451,19 +456,19 @@ class alloc(object):
         rows = sorted(rows, key=sort_func, reverse=reverse)
     return rows
 
-  def print_table(self, rows, only_these_fields, sort=False, transforms={}):
+  def print_table(self, entity, rows, only_these_fields, sort=False, transforms={}):
     # For printing out results in an ascii table or CSV format
     if self.quiet: return
     if not rows: return 
 
     table = PrettyTable()
 
-    only_these_fields = self.get_only_these_fields(rows,only_these_fields)
+    only_these_fields = self.get_only_these_fields(entity,rows,only_these_fields)
     field_names = only_these_fields[1::2]
     table.set_field_names(field_names)
 
     # Re-order the table, this changes the dict to a list i.e. dict.items().
-    rows = self.get_sorted_rows(rows,sort)
+    rows = self.get_sorted_rows(entity,rows,sort)
 
     # Hide the frame and header if --csv
     if self.csv:
@@ -495,8 +500,8 @@ class alloc(object):
             str = self.user_transforms[v](str,row)
             success = True
 
-          if v in self.field_names:
-            other_v = self.field_names[v]
+          if v in self.field_names[entity]:
+            other_v = self.field_names[entity][v]
             if other_v in self.user_transforms:
               str = self.user_transforms[other_v](str,row)
               success = True
