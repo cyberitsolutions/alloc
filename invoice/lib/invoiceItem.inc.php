@@ -180,11 +180,11 @@ class invoiceItem extends db_entity {
     $expenseForm->set_id($expenseFormID);
     $expenseForm->select();
     $db = new db_alloc();
-    $db->query("SELECT sum(amount) as sum_amount, max(transactionDate) as maxDate
-                  FROM transaction WHERE expenseFormID = %s",$expenseFormID);
+    $db->query("SELECT max(transactionDate) as maxDate
+                  FROM transaction
+                 WHERE expenseFormID = %s",$expenseFormID);
     $row = $db->row();
-    $amount = abs($row["sum_amount"]);
-
+    $amount = $expenseForm->get_abs_sum_transactions();
     $this->set_value("invoiceID",$invoiceID);
     $this->set_value("expenseFormID",$expenseForm->get_id());
     $this->set_value("iiMemo","Expense Form #".$expenseForm->get_id()." for ".person::get_fullname($expenseForm->get_value("expenseFormCreatedUser")));

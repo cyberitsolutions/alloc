@@ -24,7 +24,7 @@
     <td align="right">Created By:</td>
     <td>{=$user}</td>
     <td align="right" class="nobr">Seek Client Reimbursement:</td>
-    <td>{$seekClientReimbursementOption}</td>
+    <td>{$seekClientReimbursementOption}{page::help("expenseForm_seek_reimbursement")}</td>
   </tr>
   <tr>
     <td align="right" valign="top">Total:</td>
