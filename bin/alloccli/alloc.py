@@ -365,6 +365,9 @@ class alloc(object):
     if rtn['help']:
       print help_string
       sys.exit(0)
+
+    if 'csv' in rtn and rtn['csv']:
+      self.csv = True
     
     return rtn, " ".join(remainder)
 

@@ -27,7 +27,6 @@ class projects(alloc):
 
     # Initialize some variables
     #self.quiet = o['quiet']
-    self.csv = o['csv']
     personID = self.get_my_personID()
     projectID = ""
 

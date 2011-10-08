@@ -55,7 +55,6 @@ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
 
     # Initialize some variables
     self.quiet = o['quiet']
-    self.csv = o['csv']
     self.dryrun = o['dryrun']
     timeSheetID = 0
     personID = self.get_my_personID()

@@ -8,7 +8,6 @@ class submit(alloc):
   # Setup the options that this cli can accept
   ops = []
   ops.append((''  ,'help           ','Show this help.'))
-  #ops.append((''  ,'csv            ','Return the results in CSV format.'))
   #ops.append(('v', 'verbose        ','Run with more output.'))
   ops.append(('n' ,'dryrun         ','Perform a dry run, no data gets updated.'))
   ops.append(('q' ,'quiet          ','Run with no output except errors.'))
@@ -23,9 +22,9 @@ The time sheet is moved from eg: Edit to Manager status. The time sheet may
 no longer be editable once you have submitted it.
   
 Examples:
-alloc timesheets | alloc submit --dryrun
-alloc timesheets | alloc submit
-alloc timesheets --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc submit'''
+alloc timesheets --csv | alloc submit --dryrun
+alloc timesheets --csv | alloc submit
+alloc timesheets --csv --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc submit'''
 
   def run(self, command_list):
 
@@ -37,7 +36,6 @@ alloc timesheets --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y
 
     # Initialize some variables
     self.quiet = o['quiet']
-    #self.csv = o['csv']
     self.dryrun = o['dryrun']
 
     # Read entries from stdin
