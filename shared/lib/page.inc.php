@@ -308,7 +308,7 @@ EOD;
   function expand_link($id, $text="New ",$id_to_hide="") {
     global $TPL;
     $id_to_hide and $extra = "$('#".$id_to_hide."').slideToggle('fast');";
-    $str = "<a class=\"growshrink nobr\" href=\"#x\" onClick=\"$('#".$id."').slideToggle('fast');".$extra."\">".$text."</a>";
+    $str = "<a class=\"growshrink nobr\" href=\"#x\" onClick=\"$('#".$id."').fadeToggle();".$extra."\">".$text."</a>";
     return $str;
   }
   function side_by_side_links($items=array(),$url) {

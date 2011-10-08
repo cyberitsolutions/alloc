@@ -107,7 +107,7 @@
           <input type="checkbox" name="privateMode" value="1" {$privateMode and print "checked"}>
         </div>
         <div style="float:right; width:50%;" class="right">
-          <input type="button" value="Cancel" onClick="$('.edit').hide();$('.view').show();">
+          <input type="button" value="Cancel" onClick="toggle_view_edit();">
           <input type="submit" name="customize_save" value="Save">
         </div>
       </div>
@@ -117,7 +117,7 @@
           {print $privateMode ? "Yes" : "No"}
         </div>
         <div style="float:right; width:50%;" class="right">
-          <input type="button" value="Edit" onClick="$('.view').hide();$('.edit').show();">
+          <input type="button" value="Edit" onClick="toggle_view_edit();">
         </div>
       </div>
 

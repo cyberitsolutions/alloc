@@ -10,6 +10,8 @@
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}calendar.css" type="text/css" media="screen">
     <link rel="StyleSheet" href="{$url_alloc_stylesheets}print.css" type="text/css" media="print">
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.ui.js"></script>
+    <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.dropdownchecklist.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.textarearesizer.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}jquery.livequery.js"></script>
     <script language="javascript" type="text/javascript" src="{$url_alloc_javascript}calendar.js"></script>
