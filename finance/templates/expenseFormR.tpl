@@ -6,9 +6,9 @@
 </tr>
 <tr>
   <td>{=$product}</td>
-  <td class="nobr">{$quantity}pcs. @ {page::money($currencyTypeID,$amount,"%s%mo")} each  &nbsp;&nbsp;&nbsp;<b>{page::money($currencyTypeID,$lineTotal,"%s%mo")}</b></td>
-  <td class="nobr">Source TF:{$fromTfIDLink} Dest TF: {$tfIDLink}</td>
-  <td class="nobr" width="1%">{$transactionDate}</td> 
+  <td class="nobr" width="20%">{$quantity}pcs. @ {page::money($currencyTypeID,$amount,"%s%mo")} each  &nbsp;&nbsp;&nbsp;<b>{page::money($currencyTypeID,$lineTotal,"%s%mo %C")}</b></td>
+  <td class="nobr" width="20%">Source TF:{$fromTfIDLink} Dest TF: {$tfIDLink}</td>
+  <td class="nobr" width="10%">{$transactionDate}</td> 
   <td width="1%" class="right nobr">
 	  {if check_optional_allow_edit()}
     <form method="post" action="{$url_alloc_expenseForm}">

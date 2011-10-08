@@ -104,23 +104,15 @@ function show_new_invoiceItem($template) {
 
       // Expense Form dropdown
       $db = new db_alloc();
-      $q = sprintf("SELECT expenseForm.*,transaction.* 
-                      FROM transaction 
-                 LEFT JOIN expenseForm ON transaction.expenseFormID = expenseForm.expenseFormID 
+      $q = sprintf("SELECT expenseFormID, expenseFormCreatedUser
+                      FROM expenseForm 
                      WHERE expenseFormFinalised = 1 
                        AND seekClientReimbursement = 1
                        AND clientID = %d
-                  ORDER BY expenseForm.expenseFormID, transaction.transactionDate",$invoice->get_value("clientID"));
+                  ORDER BY expenseForm.expenseFormCreatedTime",$invoice->get_value("clientID"));
       $db->query($q);
-      $r = array();
       while ($row = $db->row()) {
-        $r[$row["expenseFormID"]] += $row["amount"];
-        !$done[$row["expenseFormID"]] and $expenseFormOptions[$row["expenseFormID"]] = "Expense Form #".$row["expenseFormID"]."  %s  ".person::get_fullname($row["expenseFormCreatedUser"]);
-        $done[$row["expenseFormID"]] = true;
-      }
-
-      foreach ($r as $k => $dollars) {
-        $expenseFormOptions[$k] = sprintf($expenseFormOptions[$k],abs($dollars));
+        $expenseFormOptions[$row["expenseFormID"]] = "Expense Form #".$row["expenseFormID"]." ".page::money(config::get_config_item("currency"),expenseForm::get_abs_sum_transactions($row["expenseFormID"]),"%s%m %c")." ".person::get_fullname($row["expenseFormCreatedUser"]);
       }
 
       if ($invoiceItem->get_value("expenseFormID")) {
@@ -333,7 +325,7 @@ function show_invoiceItem_list() {
     } else if ($invoiceItem->get_value("expenseFormID")) {
       $ep = $invoiceItem->get_foreign_object("expenseForm");
       $total = $ep->get_abs_sum_transactions();
-      $TPL["invoiceItem_iiMemo"] = "<a href=\"".$TPL["url_alloc_expenseForm"]."expenseFormID=".$invoiceItem->get_value("expenseFormID")."\">".$invoiceItem->get_value("iiMemo")." (Currently: $".$total.", Status: ".$ep->get_status().")</a>";
+      $TPL["invoiceItem_iiMemo"] = "<a href=\"".$TPL["url_alloc_expenseForm"]."expenseFormID=".$invoiceItem->get_value("expenseFormID")."\">".$invoiceItem->get_value("iiMemo")." (Currently: ".page::money(config::get_config_item("currency"),$total,"%s%m %c").", Status: ".$ep->get_status().")</a>";
     } 
 
     $TPL["currency"] = $invoice->get_value("currencyTypeID");

@@ -200,12 +200,18 @@ class expenseForm extends db_entity {
     return $url;
   }
 
-  function get_abs_sum_transactions() {
+  function get_abs_sum_transactions($id=false) {
+    if (is_object($this)) {
+      $id = $this->get_id();
+    }
     $db = new db_alloc();
-    $q = sprintf("SELECT SUM(amount) as total FROM transaction WHERE expenseFormID = %d",$this->get_id());
+    $q = sprintf("SELECT sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS amount
+                    FROM transaction 
+               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                   WHERE expenseFormID = %d",$id);
     $db->query($q);
     $row = $db->row();
-    return abs($row["total"]);
+    return $row["amount"];
   } 
 
   function show_expense_form_list($template_name,$status="pending",$projectID=null) {
