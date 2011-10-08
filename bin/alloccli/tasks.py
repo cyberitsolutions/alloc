@@ -14,13 +14,14 @@ class tasks(alloc):
   ops.append((''  ,'type=NAME      ','A task\'s type, eg: "Task" eg: "Fault,Message"'))
   ops.append(('a:','assignee=NAME  ','A task\'s assignee, username or first and surname, Eg: "jon" Eg: "all" Eg: "NULL". Defaults to yourself.'))
   ops.append(('m:','manager=NAME   ','A task\'s manager, username or first and surname".'))
+  ops.append(('c:','creator=NAME   ','A task\'s creator, username or first and surname".'))
   ops.append(('o:','order=NAME     ','The order the Tasks are displayed in. Default: "Priority,Type,_Rate,status". (Underscore is for descending sort).')) 
   ops.append(('f:','fields=LIST    ','The commar separated list of fields you would like printed, eg: "all" eg: "taskID,Status,taskStatus,Proj Pri"')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
   help_text+= one_line_help
-  help_text+= "\n\n%s\n\nIf called without arguments this program will display all your tasks."
+  help_text+= "\n\n%s\n\nIf called without arguments this program will display all tasks that are assigned to you."
 
   def run(self, command_list):
 
@@ -47,6 +48,10 @@ class tasks(alloc):
     if o['manager']:
       managerID = self.person_to_personID(o['manager'])
 
+    creatorID = ''
+    if o['creator']:
+      creatorID = self.person_to_personID(o['creator'])
+
     # Get a projectID either passed via command line, or figured out from a project name
     projects = {}
     projectIDs = []
@@ -69,6 +74,7 @@ class tasks(alloc):
     ops = {}
     ops["personID"] = personID
     ops["managerID"] = managerID
+    ops["creatorID"] = creatorID
     ops["projectIDs"] = projectIDs
     ops["taskView"] = "prioritised"
     ops["showTimes"] = True
