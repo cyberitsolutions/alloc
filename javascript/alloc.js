@@ -1,9 +1,28 @@
-function makeAjaxRequest(url,entityid,extra_fields) {
-  $("#"+entityid).html('<img src="../images/ticker2.gif" alt="Updating field..." title="Updating field...">');
+function redraw_multiple_selects(container) {
+  if (container) {
+    var c = "#"+container
+  }
+  $("select[multiple]",c).dropdownchecklist("destroy");
+  $("select[multiple]",c).dropdownchecklist( { "maxDropHeight":450 } );
+}
+
+function toggle_view_edit() {
+  $(".view").toggle();
+  $(".edit").toggle();
+  redraw_multiple_selects();
+}
+
+function makeAjaxRequest(url,entityid,extra_fields,redraw) {
+  $("#"+entityid).html('<img class="ticker" src="../images/ticker2.gif" alt="Updating field..." title="Updating field...">');
   jQuery.get(url,extra_fields,function(data) {
     $("#"+entityid).hide();
     $("#"+entityid).html(data);
     $("#"+entityid).fadeIn("fast");
+
+    // We may need to redraw the select widgets
+    if (redraw) {
+      redraw_multiple_selects(entityid);
+    }
   })
 }
 
@@ -174,6 +193,7 @@ $(document).ready(function() {
     }
     $(".filter").css("display",d);
     $(this).text(l);
+    redraw_multiple_selects();
     return false;
   });
 
@@ -205,6 +225,11 @@ $(document).ready(function() {
   });
   sidebyside_activate();
 
+  // unfortunately the multi-select-checkbox functionality doesn't    s.
+  // render correctly in hidden container so first render the selects,s.
+  // and then hide the .edit items.
+  redraw_multiple_selects("");
+  $(".edit").hide();
 });
 
 

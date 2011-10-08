@@ -2,7 +2,7 @@
 // Make the XML request thing, specify the callback function 
 function refreshProjectList(radiobutton) {
   url = '{$url_alloc_updateProjectList}projectType='+radiobutton.value;
-  makeAjaxRequest(url, 'projectListDropdown')
+  makeAjaxRequest(url, 'projectListDropdown','',1)
 }
 $(document).ready(function() {
   if ('{$dateOne}' || '{$dateTwo}') {
@@ -16,7 +16,6 @@ $(document).ready(function() {
   <tr>
     <td>&nbsp;</td>
     <td>{page::expand_link("project_superset","Projects")}</td>
-    <td>Task Status</td>
     <td>Created By</td> 
     <td rowspan="6" valign="top" colspan="3" class="right">
     
@@ -72,41 +71,42 @@ $(document).ready(function() {
       </div>
       &nbsp;
     </td>
-    <td valign="top" rowspan="8" style="width:275px"><div id="projectListDropdown">{$projectOptions}</div></td>
-    <td valign="top"><select name="taskStatus" size="1">{$taskStatusOptions}</select></td>
+    <td valign="top" style="width:275px"><div id="projectListDropdown">{$projectOptions}</div></td>
     <td valign="top"><select name="creatorID">{$creatorPersonOptions}</select></td>  
   </tr>
   <tr>
-    <td>Task Type</td>
+    <td>Task Status</td>
     <td>Managed By</td>
   </tr>
   <tr>
-    <td valign="top" rowspan="6"><select name="taskTypeID[]" size="6" multiple="true">{$taskTypeOptions}</select></td>
+    <td valign="top"><select name="taskStatus[]" multiple="true">{$taskStatusOptions}</select></td>
     <td><select name="managerID">{$managerPersonOptions}</select></td>
   </tr>
   <tr>
+    <td>Task Type</td>
     <td>Assigned To</td>
   </tr>
   <tr>
+    <td valign="top"><select name="taskTypeID[]" size="6" multiple="true">{$taskTypeOptions}</select></td>
     <td valign="top"><select id="personID" name="personID">{$personOptions}</select></td>
   </tr>
   <tr>
-    <td>Task Date</td>
-    <td rowspan="2" valign="bottom">
-      <div style="width:100%" class="hidden d_created d_assigned d_targetStart d_targetCompletion d_actualStart d_actualCompletion d_dates">
-        {page::calendar("dateOne",$dateOne);}<div style="display:inline; float:left;">&nbsp;to&nbsp;</div>
-        {page::calendar("dateTwo",$dateTwo);}
-      </div>
+    <td colspan="2">Task Date</td>
+    <td class="right" valign="bottom" rowspan="2">
+      &nbsp;&nbsp;<input type="submit" name="applyFilter" value="Filter"> {page::help("taskList_filter")}
     </td>
   </tr>
   <tr>
-    <td class="nobr" colspan="1" valign="bottom">
-      <select name="taskDate" onChange="$('.hidden').hide(); if ($(this).val()) $('.'+$(this).val()).slideDown('fast');">
-        {$taskDateOptions}
-      </select>
-    </td>
-    <td class="right" valign="bottom">
-      &nbsp;&nbsp;<input type="submit" name="applyFilter" value="Filter"> {page::help("taskList_filter")}
+    <td class="nobr" colspan="2" valign="bottom">
+      <span style="float:left">
+        <select name="taskDate" onChange="$('.hidden').hide(); if ($(this).val()) $('.'+$(this).val()).slideDown('fast');">
+          {$taskDateOptions}
+        </select>
+      </span>
+      <span style="float:right;" class="hidden d_created d_assigned d_targetStart d_targetCompletion d_actualStart d_actualCompletion d_dates">
+        {page::calendar("dateOne",$dateOne);}<div style="display:inline; float:left;">&nbsp;&nbsp;to&nbsp;&nbsp;</div>
+        {page::calendar("dateTwo",$dateTwo);}
+      </span>
     </td>
   </tr>
 </table>

@@ -799,3 +799,55 @@ body.obfus .obfuscate:hover {
   background-color:transparent !important;
 }
 
+
+/* CSS for multi-selects */
+.ui-dropdownchecklist {
+  font-size: 100%;
+  color: black;
+}
+.ui-dropdownchecklist-selector {
+  color: black;
+  height: 12px;
+  border: 1px solid #cccccc;
+  background: url(../images/arrow_faded_ms.gif) center right no-repeat #fcfcfc;
+}
+.ui-state-active {
+  border: 1px solid #666666;
+  background-color: #ffffff;
+}
+.ui-dropdownchecklist-dropcontainer {
+  background-color: #fff;
+  border: 1px solid #999;
+}
+.ui-dropdownchecklist-item:hover {
+  background-color:#e7eff9;
+}
+.ui-state-hover {
+}
+.ui-state-disabled label {
+  color: #ccc;
+}
+.ui-dropdownchecklist-group {
+  font-weight: bold;
+  font-style: italic;
+}
+.ui-dropdownchecklist-indent {
+  padding-left: 7px;
+}
+/* Font size of 0 on the -selector and an explicit medium on -text required to eliminate
+   descender problems within the containers and still have a valid size for the text */
+.ui-dropdownchecklist-selector-wrapper {
+  vertical-align: middle;
+}
+.ui-dropdownchecklist-selector {
+  padding: 1px 2px 2px 2px;
+  padding-right:12px;
+}
+.ui-dropdownchecklist-text {
+  font-size: 100%;
+  /* line-height: 20px; */
+}
+.ui-dropdownchecklist-group {
+  padding: 1px 2px 2px 2px;
+}
+

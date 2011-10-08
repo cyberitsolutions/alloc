@@ -72,7 +72,10 @@ class customize_alloc_home_item extends home_item {
     $task_status_array = task::get_task_statii_array();
     $TPL["topTasksStatusOptions"] = page::select_options($task_status_array, $current_user->prefs["topTasksStatus"]);
     if(count($current_user->prefs["topTasksStatus"]) > 1) {
-      $TPL["topTasksStatusLabel"] = "(multiple)";
+      foreach ((array)$current_user->prefs["topTasksStatus"] as $v) {
+        $TPL["topTasksStatusLabel"].= $sep.str_replace("&nbsp;"," ",$task_status_array[$v]);
+        $sep = ", ";
+      }
     } else {
       $TPL["topTasksStatusLabel"] = $task_status_array[$current_user->prefs["topTasksStatus"][0]];
     }

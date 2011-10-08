@@ -5,7 +5,7 @@
 function updateStuffWithAjax() {
   id = $("#projectID").attr("value")
   makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+id, 'parentTaskDropdown')
-  makeAjaxRequest('{$url_alloc_updateInterestedParties}projectID='+id+'&taskID={$task_taskID}', 'interestedPartyDropdown')
+  makeAjaxRequest('{$url_alloc_updateInterestedParties}projectID='+id+'&taskID={$task_taskID}', 'interestedPartyDropdown','',1)
   makeAjaxRequest('{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}', 'taskPersonList')
   makeAjaxRequest('{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}', 'taskManagerPersonList')
   makeAjaxRequest('{$url_alloc_updateEstimatorPersonList}projectID='+id+'&taskID={$task_taskID}', 'taskEstimatorPersonList')
@@ -15,8 +15,7 @@ function updateStuffWithAjax() {
 }
 $(document).ready(function() {
   {if !$task_taskID}
-    $('.view').hide();
-    $('.edit').show();
+    toggle_view_edit();
     $('#taskName').focus();
   {else}
     $('#editTask').focus();
@@ -163,7 +162,7 @@ $(document).ready(function() {
   <tr>
     <td align="center" class="padded">
       <div style="margin:20px">
-        <input type="button" id="editTask" value="Edit Task" onClick="$('.view').hide();$('.edit').show();">
+        <input type="button" id="editTask" value="Edit Task" onClick="toggle_view_edit();">
       </div>
     </td>
   </tr>
@@ -294,7 +293,7 @@ $(document).ready(function() {
         <input type="submit" name="save_and_new" value="Save &amp; New">
         <input type="submit" name="delete" value="Delete" class="delete_button">
         <input type='hidden' name='view' value='brief'>
-        <input type="button" value="Cancel Edit" onClick="$('.edit').hide();$('.view').show();">
+        <input type="button" value="Cancel Edit" onClick="toggle_view_edit();">
       </div>
     </td>
   </tr>
