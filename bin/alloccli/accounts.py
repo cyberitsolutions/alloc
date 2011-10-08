@@ -8,6 +8,7 @@ class accounts(alloc):
   # Setup the options that this cli can accept
   ops = []
   ops.append((''  ,'help           ','Show this help.'))
+  ops.append((''  ,'csv            ','Return the results in CSV format.'))
   ops.append(('i' ,'items          ','Show accounts\' transactions.'))
   ops.append(('a:','account=TF     ','Show a particular TF. Default to your TFs.'))
   #ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
@@ -32,7 +33,6 @@ class accounts(alloc):
 
     # Initialize some variables
     #self.quiet = o['quiet']
-    self.csv = not stdout.isatty()
     ops = {}
     
     if 'account' in o and o['account']:

@@ -8,6 +8,7 @@ class timesheets(alloc):
   # Setup the options that this cli can accept
   ops = []
   ops.append((''  ,'help           ','Show this help.'))
+  ops.append((''  ,'csv            ','Return the results in CSV format.'))
   ops.append(('q' ,'quiet          ','Run with no output except errors.'))
   ops.append(('i' ,'items          ','Show time sheet\'s items.'))
   ops.append(('p:','project=ID|NAME','A project ID, or a fuzzy match for a project name.'))
@@ -46,7 +47,6 @@ alloc timesheets --date ">=2010-10-10" --items'''
 
     # Initialize some variables
     self.quiet = o['quiet']
-    self.csv = not stdout.isatty()
     personID = self.get_my_personID()
     projectID = ""
     timeSheetID = ""

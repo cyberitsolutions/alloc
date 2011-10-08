@@ -9,6 +9,7 @@ class tokens(alloc):
   # Setup the options that this cli can accept
   ops = []
   ops.append((''  ,'help           ','Show this help.'))
+  ops.append((''  ,'csv            ','Return the results in CSV format.'))
   ops.append(('q' ,'quiet          ','Run with no output except errors.'))
   ops.append(('k:','key=KEY        ','An 8 character email subject line key.'))
   ops.append(('i:','id=ID          ','A comment id.'))
@@ -32,7 +33,6 @@ alloc token --key 1234abcd"""
     self.authenticate();
 
     # Initialize some variables
-    self.csv = not stdout.isatty()
     self.quiet = o['quiet']
     personID = self.get_my_personID()
 

@@ -9,6 +9,7 @@ class subscriptions(alloc):
   # Setup the options that this cli can accept
   ops = []
   ops.append((''  ,'help           ','Show this help.'))
+  ops.append((''  ,'csv            ','Return the results in CSV format.'))
   ops.append(('q' ,'quiet          ','Run with no output except errors.'))
   ops.append(('n' ,'dryrun         ','Perform a dry run, no data gets updated.'))
   ops.append(('k:','key=KEY        ','An 8 character email subject line key.'))
@@ -29,8 +30,8 @@ alloc subscriptions --key 1234abcd
 alloc subscriptions --task 321
 alloc subscriptions --email example@example.com 
 
-# When the list is output to a file it will be auto-converted to CSV
-alloc subscriptions --email example@example.com --key 1234abcd > foo.txt
+# Output the list in CSV format to a file
+alloc subscriptions --csv --email example@example.com --key 1234abcd > foo.txt
 
 # That CSV file can be manually edited, then read back in to add or delete interested parties.
 # Note the same file can be read in multiple times, it won't create duplicate records.
@@ -46,7 +47,6 @@ alloc subscriptions --add < foo.txt"""
     self.authenticate();
 
     # Initialize some variables
-    self.csv = not stdout.isatty()
     self.quiet = o['quiet']
     self.dryrun = o['dryrun']
     personID = self.get_my_personID()

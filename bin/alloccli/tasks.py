@@ -31,7 +31,6 @@ class tasks(alloc):
     # Got this far, then authenticate
     self.authenticate();
 
-    self.csv = o['csv']
     order = ''
     if o['order']: order = o['order']
 
