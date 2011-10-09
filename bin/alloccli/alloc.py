@@ -10,6 +10,7 @@ import re
 import urllib
 import datetime
 import ConfigParser
+import csv
 from netrc import netrc
 from urlparse import urlparse
 from prettytable import PrettyTable
@@ -473,10 +474,8 @@ class alloc(object):
     # Re-order the table, this changes the dict to a list i.e. dict.items().
     rows = self.get_sorted_rows(entity,rows,sort)
 
-    # Hide the frame and header if --csv
     if self.csv:
-      table.set_border_chars(vertical=",",horizontal="",junction="")
-      table.padding_width=0
+      csv_table = csv.writer(sys.stdout)
 
     for label in field_names:
       if not self.csv and '$' in label:
@@ -488,46 +487,43 @@ class alloc(object):
       for k,row in rows:
         r = []
         for v in only_these_fields[::2]: 
-          str = ''
+          value = ''
           success = False
               
           if v in row:
-            str = row[v]
+            value = row[v]
             success = True
   
           if v in transforms:
-            str = transforms[v](str)
+            value = transforms[v](value)
             success = True
 
           if v in self.user_transforms:
-            str = self.user_transforms[v](str,row)
+            value = self.user_transforms[v](value,row)
             success = True
 
           if v in self.field_names[entity]:
             other_v = self.field_names[entity][v]
             if other_v in self.user_transforms:
-              str = self.user_transforms[other_v](str,row)
+              value = self.user_transforms[other_v](value,row)
               success = True
 
           if not success:
             self.err('Bad field name: '+v)
 
-          if not str:
-            str = ''
+          if not value:
+            value = ''
 
-          r.append(str)
-        table.add_row(r)
-    lines = table.get_string(header=not self.csv)
-    # If csv, need to manually strip out the leading and trailing tab on
-    # each line as well as compress the whitespace in the fields
-    if self.csv:
-      s = ''
-      for line in lines[1:-1].split("\n"):
-        line = re.sub("\s+,",",",line) # strip out whitespace padding 
-        s+= line[1:-1]+"\n"            # strip out leading and trailing character
-      lines = s[:-1]
+          r.append(value)
 
-    print unicode(lines).encode('utf-8')
+        if self.csv:
+          csv_table.writerow([unicode(s).encode('utf-8') for s in r])
+        else:
+          table.add_row(r)
+
+    if not self.csv:
+      lines = table.get_string(header=True)
+      print unicode(lines).encode('utf-8')
 
   def is_num(self, obj):
     # There's got to be a better way to tell if something is a number 
