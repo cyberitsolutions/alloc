@@ -10,6 +10,10 @@ function g($var) {
   return $rtn;
 }
 
+if (g("get_server_version")) {
+  die(alloc_json_encode(array("version"=>get_alloc_version())));
+}
+
 if (!version_compare(g("client_version"),get_alloc_version(),">=")) {
   die("Your alloc client needs to be upgraded.");
 }
