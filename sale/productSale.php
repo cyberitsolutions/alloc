@@ -353,25 +353,22 @@ if ($productSaleID && $status == "edit") {
 if (!$productSale->get_id()) {
   $TPL["message_help"][] = "To create a new Sale, optionally select a Client and/or Project and click the Create Sale button.";
 } else if ($productSale->get_value("status") == "edit") {
-  $TPL["message_help"][] = "Add as many Sale Items as you like to this Sale by clicking the 'New' link multiple times, and then 
-                            clicking the Save Items button.<br><br>When you are done adding Sale Items click the 'Allocate -->' button
+  $TPL["message_help"][] = "Add as many Sale Items as you like by clicking the 'New' link multiple times, and then clicking the
+                            Save Items button.<br><br>When you are done adding Sale Items click the 'Allocate -->' button
                             to setup the resulting transactions from this Sale.";
 
 } else if ($productSale->get_value("status") == "allocate") {
-  $TPL["message_help"][] = "Adjust the Sale Item Transactions if necessary below. Note that you should keep allocating money 
-                            by creating transactions until the 'Total Unallocated' amount equals zero and turns green.<br>When 
-                            you're done, submit this Sale to the Adminstrator, you will no longer be able to edit this Sale once 
-                            it has been pushed to Admin.
+  $TPL["message_help"][] = "If necessary, adjust the transactions below. When you're done, submit this Sale
+                            to the Adminstrator, you will no longer be able to edit this Sale.
 
-                            <br><br> As a rough guide, things are generally good if the:
-                            'Sell Price' = 'Transactions Incoming'; and 'Margin' = 'Transactions Other'. <br><br>If those
-                            two match up then the 'Total Unallocated' field should be down to zero, which indicates that 
-                            you have allocated all the funds that this Sale will generate.";
+                            <br><br>Generally, the transactions for the Sale Items will add up correctly if the
+                            <b>Sell Price</b> is equal to <b>Transactions Incoming</b>, and the <b>Margin</b> is
+                            equal to <b>Transactions Other</b>.";
 
 
 } else if ($productSale->get_value("status") == "admin" && $productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)) {
-  $TPL["message_help"][] = "Please review the Sale Transactions carefully. If they are accurate <b>approve and save the transactions</b> 
-                            and move this Sale to status 'Completed'.";
+  $TPL["message_help"][] = "Please review the Sale Transactions carefully. If accurate <b>approve</b> and save the transactions,
+                            then move this Sale to status 'Completed'.";
 } else if ($productSale->get_value("status") == "admin") {
   $TPL["message_help"][] = "This Sale is awaiting approval from the Administrator.";
 }
