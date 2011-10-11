@@ -410,7 +410,7 @@ if ($_REQUEST["updateCB"] && $timeSheet->get_id() && $timeSheet->can_edit_rate()
 }
 // Manually update the person's rate
 if ($_REQUEST["updateRate"] && $timeSheet->get_id() && $timeSheet->can_edit_rate()) {
-  $row_projectPerson = projectPerson::get_projectPerson_row($timeSheet->get_value("projectID"), $current_user->get_id());
+  $row_projectPerson = projectPerson::get_projectPerson_row($timeSheet->get_value("projectID"), $timeSheet->get_value("personID"));
   if (!$row_projectPerson) {
     $TPL["message"][] = "The person has not been added to the project.";
   } else {
