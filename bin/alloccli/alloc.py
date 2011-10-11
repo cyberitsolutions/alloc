@@ -216,12 +216,10 @@ class alloc(object):
   def load_config(self,f):
     config = ConfigParser.ConfigParser()
     config.read([f])
-    sections = config.sections()
-    # Loop through each section
-    for section in sections:
-      options = config.options(section)
-      for option in options:
-        self.config[option.lower()] = config.get(section,option)
+    section = os.environ.get('ALLOC') or 'main'
+    options = config.options(section)
+    for option in options:
+      self.config[option.lower()] = config.get(section,option)
 
   def create_transforms(self,f):
     self.dbg("Creating example transforms file: "+f)
