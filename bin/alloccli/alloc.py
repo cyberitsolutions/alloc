@@ -23,7 +23,7 @@ class alloc(object):
   username = ''
   quiet = ''
   sessID = ''
-  alloc_dir = os.path.join(os.environ['HOME'], '.alloc/')
+  alloc_dir = os.environ.get('ALLOC_HOME') or os.path.join(os.environ['HOME'], '.alloc/')
   config = {}
   user_transforms = {}
   field_names = {
@@ -130,6 +130,10 @@ class alloc(object):
   row_timeSheetItem = "timeSheetID,timeSheetItemID,dateTimeSheetItem,taskID,comment,timeSheetItemDuration,rate,worth,hoursBilled,timeLimit,limitWarning"
 
   def __init__(self,url=""):
+
+    # Grab a storage dir to work in
+    if self.alloc_dir[-1:] != '/':
+      self.alloc_dir += "/"
 
     # Create ~/.alloc if necessary
     if not os.path.exists(self.alloc_dir):
