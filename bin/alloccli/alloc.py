@@ -8,10 +8,10 @@ import simplejson
 import getopt
 import re
 import urllib
+import urllib2
 import datetime
 import ConfigParser
 import csv
-from netrc import netrc
 from urlparse import urlparse
 from prettytable import PrettyTable
 from textwrap import wrap
@@ -169,9 +169,45 @@ class alloc(object):
     self.quiet = ''
     self.csv = False
 
+    self.username, self.password = self.get_credentials()
+    self.http_username, self.http_password = self.get_http_credentials()
+    self.initialize_http_connection()
+
+  def initialize_http_connection(self):
+    # This is for a https connection with basic http auth,
+    # it is not the actual alloc user login credentials
+    if self.http_password or self.http_username:
+      # create a password manager
+      top_level_url = "/".join(self.url.split("/")[0:3])
+      password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+      password_mgr.add_password(None, top_level_url, self.http_username, self.http_password)
+      handler = urllib2.HTTPBasicAuthHandler(password_mgr)
+      opener = urllib2.build_opener(handler)
+    else:
+      opener = urllib2.build_opener()
+
+    try:
+      opener.open(self.url)
+    except urllib2.HTTPError, e:
+      self.err(str(e))
+      self.err("Possibly a bad username or password for HTTP AUTH")
+      self.err("The settings ALLOC_HTTP_USER and ALLOC_HTTP_PASS are required.")
+      self.die("Set them either in the shell environment or in your ~/.alloc/config")
+    except Exception,e:
+      self.die(str(e))
+
+    opener.addheaders = [('User-agent', 'alloc-cli %s' % self.username)]
+    urllib2.install_opener(opener)
+
   def create_config(self,f):
     self.dbg("Creating and populating: "+f)
-    str = "[main]\nurl: http://alloc/services/json.php\n"
+    str = """[main]
+  url: http://alloc/services/json.php
+  #alloc_user: $ALLOC_USER
+  #alloc_pass: $ALLOC_PASS
+  #alloc_http_user: $ALLOC_HTTP_USER
+  #alloc_http_pass: $ALLOC_HTTP_PASS
+"""
     # Write it out to a file
     fd = open(f,'w')
     fd.write(str)
@@ -185,7 +221,7 @@ class alloc(object):
     for section in sections:
       options = config.options(section)
       for option in options:
-        self.config[option] = config.get(section,option)
+        self.config[option.lower()] = config.get(section,option)
 
   def create_transforms(self,f):
     self.dbg("Creating example transforms file: "+f)
@@ -553,22 +589,25 @@ class alloc(object):
 
   def get_credentials(self):
     # Obtain the user's alloc login credentials
-    username = os.environ.get('ALLOC_USER')
-    password = os.environ.get('ALLOC_PASS')
-      
-    if username is None or password is None:
-      try:
-        (username, _, password) = netrc().hosts[urlparse(self.url).hostname]
-      except:
-        pass
-    
-    if username is None or password is None:
+    u = os.environ.get('ALLOC_USER')
+    p = os.environ.get('ALLOC_PASS')
+    if u is None or p is None:
+      if 'alloc_user' in self.config: u = self.config['alloc_user']
+      if 'alloc_pass' in self.config: p = self.config['alloc_pass']
+    if u is None or p is None:
       self.err("The settings ALLOC_USER and ALLOC_PASS are required.")
-      self.err("Set them either in the environment or in your ~/.netrc eg:")
-      self.die("machine alloc login $USER password $PASS")
-
-    return username, password
+      self.err("Set them either in the environment or in your ~/.alloc/config")
+    return u, p
     
+  def get_http_credentials(self):
+    # credentials for https with basic http auth
+    u = os.environ.get('ALLOC_HTTP_USER')
+    p = os.environ.get('ALLOC_HTTP_PASS')
+    if u is None or p is None:
+      if 'alloc_http_user' in self.config: u = self.config['alloc_http_user']
+      if 'alloc_http_pass' in self.config: p = self.config['alloc_http_pass']
+    return u, p
+
   def add_time(self, stuff):
     # Add time to a time sheet using a task as reference
     if self.dryrun: return ''
@@ -594,12 +633,7 @@ class alloc(object):
 
   def authenticate(self):
     self.dbg("calling authenticate()")
-    username, password = self.get_credentials()
-    # The user-agent must be identical between authenticated
-    # requests, alloc uses the u-a for secondary auth
-    allocUserAgent.version = 'alloc-cli %s' % username
-    urllib._urlopener = allocUserAgent()
-    args =  { "authenticate": True, "username": username, "password" : password }
+    args =  { "authenticate": True, "username": self.username, "password" : self.password }
     if not self.sessID:
       self.dbg("ATTEMPTING AUTHENTICATION.")
       rtn = self.make_request(args)
@@ -608,16 +642,16 @@ class alloc(object):
 
     if "sessID" in rtn and rtn["sessID"]:
       self.sessID = rtn["sessID"]
-      self.username = username
       self.create_session(self.sessID)
       return self.sessID
     else:
       self.die("Error authenticating: %s" % rtn)
 
   def make_request(self, args):
+
     args["client_version"] = self.client_version
     args["sessID"] = self.sessID
-    rtn = urllib.urlopen(self.url, urllib.urlencode(args)).read()
+    rtn = urllib2.urlopen(self.url, urllib.urlencode(args)).read()
     try:
       rtn = simplejson.loads(rtn)
     except:
@@ -632,7 +666,7 @@ class alloc(object):
       self.authenticate()
       args['sessID'] = self.sessID
       self.dbg("executing: %s" % args)
-      rtn2 = urllib.urlopen(self.url, urllib.urlencode(args)).read()
+      rtn2 = urllib2.urlopen(self.url, urllib.urlencode(args)).read()
       try:
         return simplejson.loads(rtn2)
       except:
@@ -648,7 +682,7 @@ class alloc(object):
     return self.make_request(args)
 
   def get_alloc_html(self,url):
-    return urllib.urlopen(url).read()
+    return urllib2.urlopen(url).read()
 
   def today(self):
     return datetime.date.today()
@@ -765,12 +799,6 @@ class alloc(object):
       print "  "+m+tabs+getattr(subcommand,"one_line_help")
 
     print "\nEg: tasks -t 1234"
-
-
-
-# Specify the user-agent 
-class allocUserAgent(urllib.FancyURLopener):
-  pass
 
 
 # Interactive handler for alloccli
