@@ -50,6 +50,7 @@ class transaction extends db_entity {
                              ,"timeSheetID"
                              ,"productSaleID"
                              ,"productSaleItemID"
+                             ,"productCostID"
                              ,"transactionRepeatID"
                              ,"transactionGroupID"
                              );

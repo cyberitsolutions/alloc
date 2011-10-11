@@ -43,6 +43,9 @@ function show_productCost_list($productID, $template, $percent = false) {
       $productCost->read_db_record($db);
       $productCost->set_tpl_values();
       $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
+
+      // Hardcoded AUD because productCost table uses percent and dollars in same field
+      $percent and $TPL["amount"] = page::money("AUD",$productCost->get_value("amount"),"%mo");
       include_template($template);
     }
   }
@@ -144,6 +147,9 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
                   ,"description"=>$_POST["description"][$k]
                   ,"currencyTypeID"=>$_POST["currencyTypeID"][$k] ? $_POST["currencyTypeID"][$k] : config::get_config_item("currency")
                   );
+
+        // Hardcoded AUD because productCost table uses percent and dollars in same field
+        $_POST["save_commissions"] and $a["currencyTypeID"] = "AUD";
 
         $productCost = new productCost;
         $productCost->read_array($a);

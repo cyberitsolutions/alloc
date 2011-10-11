@@ -7,9 +7,10 @@
 <table class="list" style="margin:3px 0px 10px 0px;">
   <tr>
     <th>Amount</th>
+    <th>&nbsp;</th>
     <th>Source TF</th>
     <th>Destination TF</th>
-    <th>Description</th>
+    <th style="width:100%">Description</th>
     <th>Status</th>
     <th class="right">
       <a href="#x" class="magic" onClick="$('#transactions_footer_{$productSaleItemID}').before('<tr>'+$('#transactionRow').html()+'</tr>');">New</a>

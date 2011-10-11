@@ -119,6 +119,22 @@ function show_transaction_list($transactions=array(), $template) {
       $TPL["status"] = "<select name='status[]' class='txStatus'>";
       $TPL["status"].= page::select_options(transaction::get_transactionStatii(),$transaction->get_value("status"))."</select>";
     }
+
+    $TPL["pc_productCostID"] = $row["pc_productCostID"];
+    $TPL["pc_amount"]        = $row["pc_amount"];   
+    $TPL["pc_isPercentage"]  = $row["pc_isPercentage"];
+    $TPL["pc_currency"]      = $row["pc_currency"];
+
+    $TPL["amountClass"] = '';
+    if ($TPL["pc_productCostID"]) {
+      $TPL["amountClass"] = $TPL["pc_isPercentage"] ? "aPerc" : "aCost";
+    } else if (!$done && $transaction->get_value("transactionType") == "sale") {
+      $done = true;
+      $TPL["amountClass"] = "sellPrice";
+    } else if ($transaction->get_value("transactionType") == "tax") {
+      $TPL["amountClass"] = "tax";
+    }
+
     include_template($template);
   }
 }
@@ -137,6 +153,11 @@ function show_transaction_new($template) {
     $TPL["status"] = "<select name='status[]' class='txStatus'>";
     $TPL["status"].= page::select_options(transaction::get_transactionStatii())."</select>";
   }
+  $TPL["pc_productCostID"] = '';
+  $TPL["pc_amount"]        = '';
+  $TPL["pc_isPercentage"]  = '';
+  $TPL["pc_currency"]      = '';
+  $TPL["amountClass"]      = '';
   include_template($template);
 }
 
@@ -248,6 +269,7 @@ if ($_POST["save"]) {
                   ,"description"       => $_POST["description"][$k]
                   ,"productSaleID"     => $productSaleID
                   ,"productSaleItemID" => $_POST["productSaleItemID"]
+                  ,"productCostID"     => $_POST["productCostID"][$k]
                   ,"transactionType"   => 'sale'
                   ,"transactionDate"   => date("Y-m-d")
                   ,"status"            => 'pending'

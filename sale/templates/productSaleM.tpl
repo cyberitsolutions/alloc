@@ -42,6 +42,50 @@ function set_values(target) {
     }
     update_values(target);
 }
+
+
+function get_item_margin(obj) {
+  // then get sum of all costs
+  var sum_of_costs = 0
+  $(obj).find("input.aCost").each(function(){
+    sum_of_costs += parseFloat($(this).val());
+  });
+  // calculate the new margin: sellPrice - gst - sum_of_costs
+  var sellPrice = $(obj).find("input.sellPrice").val();
+  var tax = $(obj).find("input.tax").val();
+  if (tax) {
+    sellPrice = parseFloat(sellPrice) - parseFloat(tax);
+  }
+  return parseFloat(sellPrice) - parseFloat(sum_of_costs);
+}
+
+
+$(document).ready(function() {
+  $("input.amountField").live('keyup', function(event){
+
+    // Only update when a number or period is entered
+    var c = String.fromCharCode(event.keyCode);
+    if (!c.match(/\d/) && !c.match(/\./)) {
+      return true;
+    }
+
+    // If we've changed a fixed product cost
+    if ($(this).hasClass("sellPrice") || $(this).hasClass("aCost") || $(this).hasClass("tax")) {
+      var margin = get_item_margin($(this).parent().parent().parent());
+
+      // calculate the new product commissions based on that new margin
+      $(this).parent().parent().parent().find("input.aPerc").each(function(){
+        var percent = parseFloat($(this).attr("data-pc-amount"));
+        var newval = percent/100*margin;
+        if (!isNaN(newval)) {
+          $(this).css({ "background-color":"#fffaa2" })
+          $(this).val(newval);
+        }
+      });
+    }
+  });
+});
+
 </script>
 
 <form action="{$url_alloc_productSale}" method="post">
