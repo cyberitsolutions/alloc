@@ -528,6 +528,7 @@ CREATE TABLE transaction (
   timeSheetID integer default NULL,
   productSaleID integer default NULL,
   productSaleItemID integer default NULL,
+  productCostID integer default NULL,
   transactionRepeatID integer default NULL,
   transactionGroupID integer default NULL
 ) ENGINE=InnoDB PACK_KEYS=0;

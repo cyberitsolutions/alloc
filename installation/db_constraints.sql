@@ -31,6 +31,7 @@ CREATE INDEX idx_invoiceItemID ON transaction (invoiceItemID);
 CREATE INDEX idx_fromTfID ON transaction (fromTfID);
 CREATE INDEX idx_productSaleID ON transaction (productSaleID);
 CREATE INDEX idx_productSaleItemID ON transaction (productSaleItemID);
+CREATE INDEX idx_productCostID ON transaction (productCostID);
 CREATE INDEX idx_transactionGroupID ON transaction (transactionGroupID);
 CREATE INDEX idx_interestedParty_entityID ON interestedParty (entityID);
 
@@ -152,6 +153,7 @@ ALTER TABLE transaction ADD CONSTRAINT transaction_invoiceItemID FOREIGN KEY (in
 ALTER TABLE transaction ADD CONSTRAINT transaction_timeSheetID FOREIGN KEY (timeSheetID) REFERENCES timeSheet (timeSheetID);
 ALTER TABLE transaction ADD CONSTRAINT transaction_productSaleID FOREIGN KEY (productSaleID) REFERENCES productSale (productSaleID);
 ALTER TABLE transaction ADD CONSTRAINT transaction_productSaleItemID FOREIGN KEY (productSaleItemID) REFERENCES productSaleItem (productSaleItemID);
+ALTER TABLE transaction ADD CONSTRAINT transaction_productCostID FOREIGN KEY (productCostID) REFERENCES productCost (productCostID);
 ALTER TABLE transaction ADD CONSTRAINT transaction_transactionRepeatID FOREIGN KEY (transactionRepeatID) REFERENCES transactionRepeat (transactionRepeatID);
 ALTER TABLE transaction ADD CONSTRAINT transaction_currencyTypeID FOREIGN KEY (currencyTypeID) REFERENCES currencyType (currencyTypeID);
 ALTER TABLE transactionRepeat ADD CONSTRAINT transactionRepeat_tfID FOREIGN KEY (tfID) REFERENCES tf (tfID);

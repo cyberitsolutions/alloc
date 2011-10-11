@@ -135,7 +135,7 @@ class productSaleItem extends db_entity {
     return $this->get_amount_margin() - $this->get_amount_other();
   }
 
-  function create_transaction($fromTfID, $tfID, $amount, $description, $currency=false) {
+  function create_transaction($fromTfID, $tfID, $amount, $description, $currency=false, $productCostID=false,$transactionType='sale') {
     global $TPL;
     $currency or $currency = config::get_config_item("currency");
     $productSale = $this->get_foreign_object("productSale");
@@ -144,13 +144,14 @@ class productSaleItem extends db_entity {
     $transaction = new transaction;
     $transaction->set_value("productSaleID", $this->get_value("productSaleID"));
     $transaction->set_value("productSaleItemID", $this->get_id());
+    $transaction->set_value("productCostID",$productCostID);
     $transaction->set_value("fromTfID", $fromTfID);
     $transaction->set_value("tfID", $tfID);
     $transaction->set_value("amount", $amount);
     $transaction->set_value("currencyTypeID", $currency);
     $transaction->set_value("status", 'pending');
     $transaction->set_value("transactionDate", date("Y-m-d"));
-    $transaction->set_value("transactionType", 'sale');
+    $transaction->set_value("transactionType", $transactionType);
     $transaction->set_value("product", $description);
     $transaction->save();
   }
@@ -173,7 +174,7 @@ class productSaleItem extends db_entity {
       $amount_minus_tax = $this->get_value("sellPrice") / $taxPercentDivisor;
       $amount_of_tax = $this->get_value("sellPrice") - $amount_minus_tax;
       $amount_of_tax = exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"),$amount_of_tax,null,null,"%mo");
-      $this->create_transaction(-1, $taxTfID ,$amount_of_tax, "Product Sale ".$taxName.": ".$productName);
+      $this->create_transaction(-1, $taxTfID, $amount_of_tax, "Product Sale ".$taxName.": ".$productName, false, false, 'tax');
     }
 
     // Next transaction represents the amount that someone has paid the
@@ -194,7 +195,7 @@ class productSaleItem extends db_entity {
     while ($productCost_row = $db2->next_record()) {
       $amount = page::money($productCost_row["currencyTypeID"],$productCost_row["amount"] * $this->get_value("quantity"),"%mo");
       $description = "Product Cost: ".$productCost_row["productName"]." ".$productCost_row["description"];
-      $this->create_transaction(-1, $productCost_row["tfID"], $amount, $description, $productCost_row["currencyTypeID"]);
+      $this->create_transaction(-1, $productCost_row["tfID"], $amount, $description, $productCost_row["currencyTypeID"],$productCost_row["productCostID"]);
     }
 
     // Need to do the percentages separately because they rely on the $totalUnallocated figure
@@ -215,7 +216,7 @@ class productSaleItem extends db_entity {
     while ($productCommission_row = $db2->next_record()) {
       $amount = page::money($productCommission_row["currencyTypeID"],page::money(config::get_config_item("currency"),$totalUnallocated,"%mo") * $productCommission_row["amount"]/100,"%mo");
       $description = "Product Commission: ".$productCommission_row["productName"]." ".$productCommission_row["description"];
-      $this->create_transaction(-1, $productCommission_row["tfID"], $amount, $description, config::get_config_item("currency"));
+      $this->create_transaction(-1, $productCommission_row["tfID"], $amount, $description, config::get_config_item("currency"),$productCommission_row["productCostID"]);
     }
   }
 

@@ -180,11 +180,12 @@ class productSale extends db_entity {
   function move_forwards() {
     global $current_user;
     $status = $this->get_value("status");
+    $db = new db_alloc();
 
     if ($status == "edit") {
       $this->set_value("status", "allocate");
       
-      if (count($this->get_transactions()) == 0) {
+      if (!$db->qr("SELECT transactionID FROM transaction WHERE productSaleID = %d",$this->get_id())) {
         $this->create_transactions();
       }
 
@@ -212,14 +213,18 @@ class productSale extends db_entity {
 
   function get_transactions($productSaleItemID=false) {
     $rows = array();
-    $productSaleItemID and $productSaleItemID_sql = sprintf("AND productSaleItemID = %d",$productSaleItemID);
-    $query = sprintf("SELECT * 
+    $query = sprintf("SELECT transaction.*
+                            ,productCost.productCostID  as pc_productCostID
+                            ,productCost.amount         as pc_amount
+                            ,productCost.isPercentage   as pc_isPercentage
+                            ,productCost.currencyTypeID as pc_currency
                         FROM transaction 
+                   LEFT JOIN productCost on transaction.productCostID = productCost.productCostID
                        WHERE productSaleID = %d
-                          %s
+                         AND productSaleItemID = %d
                     ORDER BY transactionID"
                     ,$this->get_id()
-                    ,$productSaleItemID_sql);
+                    ,$productSaleItemID);
     $db = new db_alloc();
     $db->query($query);
     while ($row = $db->row()) {
