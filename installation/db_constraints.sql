@@ -162,7 +162,6 @@ ALTER TABLE transactionRepeat ADD CONSTRAINT transactionRepeat_transactionRepeat
 ALTER TABLE transactionRepeat ADD CONSTRAINT transactionRepeat_transactionRepeatCreatedUser FOREIGN KEY (transactionRepeatCreatedUser) REFERENCES person (personID);
 ALTER TABLE transactionRepeat ADD CONSTRAINT transactionRepeat_currencyTypeID FOREIGN KEY (currencyTypeID) REFERENCES currencyType (currencyTypeID);
 ALTER TABLE productCost ADD CONSTRAINT productCost_productID FOREIGN KEY (productID) REFERENCES product (productID);
-ALTER TABLE productCost ADD CONSTRAINT productCost_tfID FOREIGN KEY (tfID) REFERENCES tf (tfID);
 ALTER TABLE productCost ADD CONSTRAINT productCost_currencyTypeID FOREIGN KEY (currencyTypeID) REFERENCES currencyType (currencyTypeID);
 ALTER TABLE productSale ADD CONSTRAINT productSale_clientID FOREIGN KEY (clientID) REFERENCES client (clientID);
 ALTER TABLE productSale ADD CONSTRAINT productSale_projectID FOREIGN KEY (projectID) REFERENCES project (projectID);
