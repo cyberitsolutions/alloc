@@ -225,10 +225,15 @@ if ($_POST["save"]) {
         $a = array("productID"=>$_POST["productID"][$k]
                   ,"sellPrice"=>$_POST["sellPrice"][$k]
                   ,"sellPriceCurrencyTypeID"=>$_POST["sellPriceCurrencyTypeID"][$k]
-                  ,"sellPriceIncTax"=>in_array($productSaleItemID, $_POST["sellPriceIncTax"]) || isset($_POST["sellPriceIncTax"][$k])
                   ,"quantity"=>$_POST["quantity"][$k]
                   ,"description"=>$_POST["description"][$k]
                   ,"productSaleID"=>$productSaleID);
+
+        if ($productSaleItemID) {
+          $a["sellPriceIncTax"] = sprintf("%d",in_array($productSaleItemID, $_POST["sellPriceIncTax"]));
+        } else {
+          $a["sellPriceIncTax"] = sprintf("%d",isset($_POST["sellPriceIncTax"][$k]));
+        }
 
         if(substr($productSaleItemID, 0, 3) == "new") {
           $productSaleItemID = "";
