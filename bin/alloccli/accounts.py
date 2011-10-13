@@ -1,5 +1,4 @@
 from alloc import alloc
-from sys import stdout
 
 class accounts(alloc):
 

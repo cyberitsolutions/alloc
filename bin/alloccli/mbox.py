@@ -1,6 +1,5 @@
 from __future__ import with_statement
 import tempfile
-import sys
 import os
 import subprocess
 from sys import stdout
@@ -35,7 +34,6 @@ alloc mbox -t 1234 > file.mbox'''
 
     self.quiet = o['quiet']
     taskID = ''
-    emailUIDs = ''
 
     # Got this far, then authenticate
     self.authenticate();

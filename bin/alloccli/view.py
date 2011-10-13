@@ -32,8 +32,6 @@ alloc view --task 1234"""
     # Got this far, then authenticate
     self.authenticate();
 
-    args = {}
-
     if o['task']:
       print self.print_task(o['task']) 
 

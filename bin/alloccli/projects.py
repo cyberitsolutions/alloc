@@ -28,7 +28,6 @@ class projects(alloc):
     # Initialize some variables
     #self.quiet = o['quiet']
     personID = self.get_my_personID()
-    projectID = ""
 
     # Get a projectID either passed via command line, or figured out from a project name
     filter = {}
