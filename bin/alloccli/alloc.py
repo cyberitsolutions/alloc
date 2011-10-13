@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+""" alloc library module """
 import os
 import sys
 import cmd
@@ -14,11 +13,13 @@ import csv
 from prettytable import PrettyTable
 
 class alloc(object):
+  """Provide a parent class from which the alloc subcommands can extend"""
 
   client_version = "1.8.2"
   url = ''
   username = ''
   quiet = ''
+  dryrun = ''
   sessID = ''
   alloc_dir = os.environ.get('ALLOC_HOME') or os.path.join(os.environ['HOME'], '.alloc/')
   config = {}
@@ -124,9 +125,10 @@ class alloc(object):
 
 
   row_timeSheet = "timeSheetID,dateFrom,dateTo,status,person,duration,totalHours,amount,projectName"
-  row_timeSheetItem = "timeSheetID,timeSheetItemID,dateTimeSheetItem,taskID,comment,timeSheetItemDuration,rate,worth,hoursBilled,timeLimit,limitWarning"
+  row_timeSheetItem = "timeSheetID,timeSheetItemID,dateTimeSheetItem,taskID,comment,timeSheetItemDuration,"
+  row_timeSheetItem += "rate,worth,hoursBilled,timeLimit,limitWarning"
 
-  def __init__(self,url=""):
+  def __init__(self, url=""):
 
     # Grab a storage dir to work in
     if self.alloc_dir[-1:] != '/':
@@ -171,8 +173,8 @@ class alloc(object):
     self.initialize_http_connection()
 
   def initialize_http_connection(self):
-    # This is for a https connection with basic http auth,
-    # it is not the actual alloc user login credentials
+    """This is for a https connection with basic http auth,
+       it is not the actual alloc user login credentials"""
     if self.http_password or self.http_username:
       # create a password manager
       top_level_url = "/".join(self.url.split("/")[0:3])
@@ -190,15 +192,16 @@ class alloc(object):
       self.err("Possibly a bad username or password for HTTP AUTH")
       self.err("The settings ALLOC_HTTP_USER and ALLOC_HTTP_PASS are required.")
       self.die("Set them either in the shell environment or in your ~/.alloc/config")
-    except Exception,e:
+    except Exception, e:
       self.die(str(e))
 
     opener.addheaders = [('User-agent', 'alloc-cli %s' % self.username)]
     urllib2.install_opener(opener)
 
-  def create_config(self,f):
+  def create_config(self, f):
+    """Create a default ~/.alloc/config file."""
     self.dbg("Creating and populating: "+f)
-    str = """[main]
+    default = """[main]
   url: http://alloc/services/json.php
   #alloc_user: $ALLOC_USER
   #alloc_pass: $ALLOC_PASS
@@ -207,26 +210,30 @@ class alloc(object):
 """
     # Write it out to a file
     fd = open(f,'w')
-    fd.write(str)
+    fd.write(default)
     fd.close()
 
-  def load_config(self,f):
+  def load_config(self, f):
+    """Read the ~/.alloc/config file and load it into self.config[]."""
     config = ConfigParser.ConfigParser()
     config.read([f])
     section = os.environ.get('ALLOC') or 'main'
     options = config.options(section)
     for option in options:
-      self.config[option.lower()] = config.get(section,option)
+      self.config[option.lower()] = config.get(section, option)
 
-  def create_transforms(self,f):
+  def create_transforms(self, f):
+    """Create a default ~/.alloc/transforms file for field manipulation."""
     self.dbg("Creating example transforms file: "+f)
-    str = "# Add any field customisations here. eg:\n#\n# global user_transforms\n# user_transforms = { 'Priority' : lambda x,row: x[3:] }\n\n"
+    default = "# Add any field customisations here. eg:\n#\n# global user_transforms\n"
+    default += "# user_transforms = { 'Priority' : lambda x,row: x[3:] }\n\n"
     # Write it out to a file
-    fd = open(f,'w')
-    fd.write(str)
+    fd = open(f, 'w')
+    fd.write(default)
     fd.close()
 
-  def load_transforms(self,f):
+  def load_transforms(self, f):
+    """Load the ~/.alloc/transforms file into self.user_transforms[]."""
     user_transforms = {}
     try:
       # yee-haw!
@@ -235,16 +242,18 @@ class alloc(object):
     except:
       pass
 
-  def create_session(self,sessID):
+  def create_session(self, sessID):
+    """Create a ~/.alloc/session file to store the alloc session key."""
     old_sessID = self.load_session(self.alloc_dir+"session")
     if not old_sessID or old_sessID != sessID:
       self.dbg("Writing to: "+self.alloc_dir+"session: "+sessID)
       # Write it out to a file
-      fd = open(self.alloc_dir+"session",'w')
+      fd = open(self.alloc_dir+"session", 'w')
       fd.write(sessID)
       fd.close()
 
-  def load_session(self,f):
+  def load_session(self, f):
+    """Read the ~/.alloc/session and return the alloc session ID."""
     try:
       fd = open(f)
       sessID = fd.read().strip()
@@ -254,92 +263,92 @@ class alloc(object):
     return sessID
 
   def search_for_project(self, projectName, personID=None):
-    # Search for a project like *projectName*
+    """Search for a project like *projectName*."""
     if projectName:
-      filter = {}
-      if personID: filter["personID"] = personID
-      filter["projectStatus"] = "Current"
-      filter["projectName"] = projectName
-      projects = self.get_list("project",filter)
+      ops = {}
+      if personID:
+        ops["personID"] = personID
+      ops["projectStatus"] = "Current"
+      ops["projectName"] = projectName
+      projects = self.get_list("project", ops)
       if len(projects) == 0:
         self.die("No project found matching: %s" % projectName)
       elif len(projects) > 1:
-        self.print_table("project", projects, ["projectID","ID","projectName","Project"])
+        self.print_table("project", projects, ["projectID", "ID", "projectName", "Project"])
         self.die("Found more than one project matching: %s" % projectName)
       elif len(projects) == 1:
         return projects.keys()[0]
         
   def search_for_task(self, ops):
-    # Search for a task like *taskName*
+    """Search for a task like *taskName*."""
     if "taskName" in ops:
-      tasks = self.get_list("task",ops)
+      tasks = self.get_list("task", ops)
       
       if not tasks:
         self.die("No task found matching: %s" % ops["taskName"])
       elif tasks and len(tasks) >1:
-        self.print_table("task", tasks, ["taskID","ID","taskName","Task","projectName","Project"])
+        self.print_table("task", tasks, ["taskID", "ID", "taskName", "Task", "projectName", "Project"])
         self.die("Found more than one task matching: %s" % ops["taskName"])
       elif len(tasks) == 1:      
         return tasks.keys()[0]   
 
   def search_for_client(self, ops):
-    # Search for a client like *clientName*
+    """Search for a client like *clientName*."""
     if "clientName" in ops:
-      clients = self.get_list("client",ops)
+      clients = self.get_list("client", ops)
 
       if not clients:
         self.die("No client found matching: %s" % ops["clientName"])
       elif clients and len(clients) >1:
-        self.print_table("client", clients, ["clientID","ID","clientName","Client"])
+        self.print_table("client", clients, ["clientID", "ID", "clientName", "Client"])
         self.die("Found more than one client matching: %s" % ops["clientName"])
       elif len(clients) == 1:
         return clients.keys()[0]
 
-  def print_task(self, id):
-    # view of a task
-    rtn = self.get_list("task",{"taskID": id, "taskView": "prioritised","showTimes":True})
+  def print_task(self, taskID):
+    """Return a plaintext view of a task and its details."""
+    rtn = self.get_list("task", {"taskID":taskID, "taskView":"prioritised", "showTimes":True})
 
-    for k,r in rtn.items():
-      pass
-
+    k, r = rtn.popitem()
     underline_length = len(r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"])
 
-    str = "\n"+r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"]
-    str+= "\n".ljust(underline_length+1,"=")
-    str+= "\n"
-    if r["priorityLabel"]: str+= "\n"+"Priority: "+r["priorityLabel"].ljust(26)+r["taskStatusLabel"]
-    str+= "\n"
-    if r["projectName"]:  str+= "\nProject: "+r["projectName"]+" ["+r["projectPriorityLabel"]+"]"
-    if r["parentTaskID"]: str+= "\nParent Task: "+r["parentTaskID"]
-    if r["projectName"] or r["parentTaskID"]: str+= "\n"
-    if r["creator_name"]:  str+= "\nCreator:  "+r["creator_name"].ljust(25)+" "+r["dateCreated"]
-    if r["assignee_name"]: str+= "\nAssigned: "+r["assignee_name"].ljust(25)+" "+r["dateAssigned"]
-    if r["manager_name"]:  str+= "\nManager:  "+r["manager_name"].ljust(25)
+    s = "\n"+r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"]
+    s += "\n".ljust(underline_length+1,"=")
+    s += "\n"
+    if r["priorityLabel"]: s += "\n"+"Priority: "+r["priorityLabel"].ljust(26)+r["taskStatusLabel"]
+    s += "\n"
+    if r["projectName"]:  s += "\nProject: "+r["projectName"]+" ["+r["projectPriorityLabel"]+"]"
+    if r["parentTaskID"]: s += "\nParent Task: "+r["parentTaskID"]
+    if r["projectName"] or r["parentTaskID"]: s += "\n"
+    if r["creator_name"]:  s += "\nCreator:  "+r["creator_name"].ljust(25)+" "+r["dateCreated"]
+    if r["assignee_name"]: s += "\nAssigned: "+r["assignee_name"].ljust(25)+" "+r["dateAssigned"]
+    if r["manager_name"]:  s += "\nManager:  "+r["manager_name"].ljust(25)
     if r["dateClosed"]:
-      str+= "\nCloser:   "+r["closer_name"].ljust(25)+" "+r["dateClosed"]
-    str+= "\n"
-    str+= "\nB/E/W Estimates:  "+(r["timeBestLabel"] or "--")+" / "+(r["timeExpectedLabel"] or "--")+" / "+(r["timeWorstLabel"] or "--")+"  "+(r["estimator_name"] or "")
-    str+= "\nActual/Limit Hrs: %s / %s " % (r["timeActualLabel"] or "--", r["timeLimitLabel"] or "--")
-    str+= "\n"
+      s += "\nCloser:   "+r["closer_name"].ljust(25)+" "+r["dateClosed"]
+    s += "\n"
+    s += "\nB/E/W Estimates:  "+(r["timeBestLabel"] or "--")+" / "+(r["timeExpectedLabel"] or "--")
+    s += " / "+(r["timeWorstLabel"] or "--")+"  "+(r["estimator_name"] or "")
+    s += "\nActual/Limit Hrs: %s / %s " % (r["timeActualLabel"] or "--", r["timeLimitLabel"] or "--")
+    s += "\n"
 
     if r["dateTargetStart"] or r["dateTargetCompletion"]:
-      str+= "\nTarget Start: %-18s Target Completion: %-18s " % (r["dateTargetStart"], r["dateTargetCompletion"])
+      s += "\nTarget Start: %-18s Target Completion: %-18s " % (r["dateTargetStart"], r["dateTargetCompletion"])
     if r["dateActualStart"] or r["dateActualCompletion"]:
-      str+= "\nActual Start: %-18s Actual Completion: %-18s " % (r["dateActualStart"], r["dateActualCompletion"])
+      s += "\nActual Start: %-18s Actual Completion: %-18s " % (r["dateActualStart"], r["dateActualCompletion"])
 
     if r["taskDescription"]:
-      str+= "\n"
-      str+= "\nDescription"
-      str+= "\n-----------"
-      str+= "\n"
-      #str+= "\n".join(wrap(r["taskDescription"],75))+"\n" # this seems to not work very well.
-      str+= "\n"+r["taskDescription"]
+      s += "\n"
+      s += "\nDescription"
+      s += "\n-----------"
+      s += "\n"
+      #s += "\n".join(wrap(r["taskDescription"],75))+"\n" # this seems to not work very well.
+      s += "\n"+r["taskDescription"]
 
-    str+= "\n"
-    return str
+    s += "\n"
+    return s
 
-  def get_subcommand_help(self, command_list, ops, str):
-    # Get help text for a subcommand.
+  def get_subcommand_help(self, command_list, ops, text):
+    """Get help text for a subcommand."""
     help_str = ""
     for x in ops:
       # These are used to build up the help text for --help
@@ -351,24 +360,18 @@ class alloc(object):
       if x[1].strip(): l = c+" --"+x[1]
       # eg:  -q, --quiet             Run with less output.
       help_str += s+l+"   "+x[2]+"\n"
-    return str % (os.path.basename(" ".join(command_list[0:2])), help_str.rstrip())
+    return text % (os.path.basename(" ".join(command_list[0:2])), help_str.rstrip())
     
-  def get_args(self, command_list, ops, str):
-    # This function allows us to handle the cli arguments elegantly
+  def parse_args(self, ops):
+    """Return four dictionaries that disambiguate the types of command line args. Don't use this, use alloc.get_args."""
     short_ops = ""
     long_ops = []
-    options = []
     no_arg_ops = {}
     all_ops = {}
-    rtn = {}
-    remainder = ""
-    
-    help_string = self.get_subcommand_help(command_list, ops, str)
-
     for x in ops:
       # These args go straight to getops
       short_ops += x[0]
-      long_ops.append(re.sub("=.*$","=",x[1]).strip())
+      long_ops.append(re.sub("=.*$", "=", x[1]).strip())
 
       # track which ops don't require an argument eg -q
       if x[0] and x[0][-1] != ':':
@@ -379,15 +382,24 @@ class alloc(object):
         no_arg_ops["--"+x[1].strip()] = True
 
       # And this is used below to build up a dictionary to return
-      all_ops[re.sub("=.*$","",x[1]).strip()] = ["-"+x[0].replace(":",""), "--"+re.sub("=.*$","",x[1]).strip()]
+      all_ops[re.sub("=.*$", "", x[1]).strip()] = ["-"+x[0].replace(":", ""), "--"+re.sub("=.*$", "", x[1]).strip()]
+    return short_ops, long_ops, no_arg_ops, all_ops
+
+  def get_args(self, command_list, ops, s):
+    """This function allows us to handle the cli arguments elegantly."""
+    options = []
+    rtn = {}
+    remainder = ""
+    
+    short_ops, long_ops, no_arg_ops, all_ops = self.parse_args(ops)
 
     try:
       options, remainder = getopt.getopt(command_list[2:], short_ops, long_ops)
     except:
-      print help_string
+      print self.get_subcommand_help(command_list, ops, s)
       sys.exit(0)
 
-    for k,v in all_ops.items():
+    for k, v in all_ops.items():
       rtn[k] = ''
       for opt, val in options:
         if opt in v:
@@ -400,7 +412,7 @@ class alloc(object):
             rtn[k] = val
 
     if rtn['help']:
-      print help_string
+      print self.get_subcommand_help(command_list, ops, s)
       sys.exit(0)
 
     if 'csv' in rtn and rtn['csv']:
@@ -409,26 +421,27 @@ class alloc(object):
     return rtn, " ".join(remainder)
 
   def get_my_personID(self, nick=None):
-    # Get current user's personID
+    """Get current user's personID."""
     ops = {}
     ops["username"] = self.username
     if nick:
       ops["username"] = nick
     
-    rtn = self.get_list("person",ops)
+    rtn = self.get_list("person", ops)
     for i in rtn:
       return i
 
-  def get_only_these_fields(self,entity,rows,only_these_fields):
+  def get_only_these_fields(self, entity, rows, only_these_fields):
+    """Reduce a list by removing certain columns/fields."""
     rtn = []
-    inverted_field_names = dict([[v,k] for k,v in self.field_names[entity].items()])
+    inverted_field_names = dict([[v, k] for k, v in self.field_names[entity].items()])
 
     # Allow the display of custom fields
     if type(only_these_fields) == type("string"):
       # Print all fields
       if only_these_fields.lower() == "all":
-        for k,v in rows.items():
-          for name,value in v.items():
+        for k, v in rows.items():
+          for name, value in v.items():
             rtn.append(name)
             if name in self.field_names[entity]:
               rtn.append(self.field_names[entity][name])
@@ -446,29 +459,30 @@ class alloc(object):
             rtn.append(self.field_names[entity][name])
           else:
             rtn.append(name)
-      return rtn;
+      return rtn
     return only_these_fields
 
-  def get_sorted_rows(self,entity,rows,sortby):
+  def get_sorted_rows(self, entity, rows, sortby):
+    """Sort the rows of a list."""
     rows = rows.items()
     if not sortby:
       return rows
-    inverted_field_names = dict([[v,k] for k,v in self.field_names[entity].items()])
+    inverted_field_names = dict([[v, k] for k, v in self.field_names[entity].items()])
 
     sortby = sortby.split(",")
     sortby.reverse()    
 
     # load up fields
-    for k,fields in rows:
-      pass
+    k, fields = rows[0]
 
     # Check that any attempted sortby columns are actually in the table
     for k in sortby:
       # Strip leading underscore (used in reverse sorting eg: _Rate)
-      if re.sub("^_","",k) not in fields and re.sub("^_","",k) not in inverted_field_names:
+      if re.sub("^_", "", k) not in fields and re.sub("^_", "", k) not in inverted_field_names:
         self.err("Sort column not found: "+k)
 
     def sort_func(row):
+      """Callback function to return the actual value that should be sorted on."""
       try: val = row[1][inverted_field_names[f]]
       except:
         try: val = row[1][self.field_names[entity][f]]
@@ -497,18 +511,18 @@ class alloc(object):
     return rows
 
   def print_table(self, entity, rows, only_these_fields, sort=False, transforms={}):
-    # For printing out results in an ascii table or CSV format
+    """For printing out results in an ascii table or CSV format."""
     if self.quiet: return
     if not rows: return 
 
     table = PrettyTable()
 
-    only_these_fields = self.get_only_these_fields(entity,rows,only_these_fields)
+    only_these_fields = self.get_only_these_fields(entity, rows, only_these_fields)
     field_names = only_these_fields[1::2]
     table.set_field_names(field_names)
 
     # Re-order the table, this changes the dict to a list i.e. dict.items().
-    rows = self.get_sorted_rows(entity,rows,sort)
+    rows = self.get_sorted_rows(entity, rows, sort)
 
     if self.csv:
       csv_table = csv.writer(sys.stdout)
@@ -520,7 +534,7 @@ class alloc(object):
         table.set_field_align(label, "l")
 
     if rows:
-      for k,row in rows:
+      for k, row in rows:
         r = []
         for v in only_these_fields[::2]: 
           value = ''
@@ -535,13 +549,13 @@ class alloc(object):
             success = True
 
           if v in self.user_transforms:
-            value = self.user_transforms[v](value,row)
+            value = self.user_transforms[v](value, row)
             success = True
 
           if v in self.field_names[entity]:
             other_v = self.field_names[entity][v]
             if other_v in self.user_transforms:
-              value = self.user_transforms[other_v](value,row)
+              value = self.user_transforms[other_v](value, row)
               success = True
 
           if not success:
@@ -562,17 +576,19 @@ class alloc(object):
       print unicode(lines).encode('utf-8')
 
   def is_num(self, obj):
+    """Return True is the obj is numeric looking."""
     # There's got to be a better way to tell if something is a number 
     # isinstance of float or int didn't do the job (for some reason ...)
     try:
       if obj is not None and float(obj) >= 0:
-        return True;
+        return True
     except:
       pass
 
     return False
 
-  def to_num(self,obj):
+  def to_num(self, obj):
+    """Gently coerce obj into a number."""
     rtn = obj
     try:
       rtn = float(obj)
@@ -584,7 +600,7 @@ class alloc(object):
     return rtn
 
   def get_credentials(self):
-    # Obtain the user's alloc login credentials
+    """Obtain the user's alloc login credentials."""
     u = os.environ.get('ALLOC_USER')
     p = os.environ.get('ALLOC_PASS')
     if u is None or p is None:
@@ -596,7 +612,7 @@ class alloc(object):
     return u, p
     
   def get_http_credentials(self):
-    # credentials for https with basic http auth
+    """Obtain the credentials for https with basic http auth."""
     u = os.environ.get('ALLOC_HTTP_USER')
     p = os.environ.get('ALLOC_HTTP_PASS')
     if u is None or p is None:
@@ -605,14 +621,15 @@ class alloc(object):
     return u, p
 
   def add_time(self, stuff):
-    # Add time to a time sheet using a task as reference
+    """Add time to a time sheet using a task as reference."""
     if self.dryrun: return ''
     args = {}
     args["method"] = "add_timeSheetItem"
-    args["options"] = stuff;
+    args["options"] = stuff
     return self.make_request(args)
 
   def get_list(self, entity, options):
+    """The canonical method of retrieving a list of entities from alloc."""
     options["skipObject"] = '1'
     options["return"] = "array"
     args = {}
@@ -622,14 +639,16 @@ class alloc(object):
     return self.make_request(args)
 
   def get_help(self, topic): 
+    """Retrieve a help message from the alloc server regarding its API."""
     args = {}
     args["topic"] = topic
     args["method"] = "get_help"
     return self.make_request(args)
 
   def authenticate(self):
+    """Perform an authentication against the alloc server."""
     self.dbg("calling authenticate()")
-    args =  { "authenticate": True, "username": self.username, "password" : self.password }
+    args =  { "authenticate":True, "username":self.username, "password":self.password }
     if not self.sessID:
       self.dbg("ATTEMPTING AUTHENTICATION.")
       rtn = self.make_request(args)
@@ -644,7 +663,7 @@ class alloc(object):
       self.die("Error authenticating: %s" % rtn)
 
   def make_request(self, args):
-
+    """Perform an HTTP request to the alloc server."""
     args["client_version"] = self.client_version
     args["sessID"] = self.sessID
     rtn = urllib2.urlopen(self.url, urllib.urlencode(args)).read()
@@ -671,36 +690,45 @@ class alloc(object):
         self.die("Args: %s" % args)
     return rtn
 
-  def get_people(self,people):
+  def get_people(self, people):
+    """Get a list of people."""
     args = {}
     args["people"] = people
     args["method"] = "get_people"
     return self.make_request(args)
 
-  def get_alloc_html(self,url):
+  def get_alloc_html(self, url):
+    """Perform a direct fetch of an alloc page, ala wget/curl."""
     return urllib2.urlopen(url).read()
 
   def today(self):
+    """Wrapper to return the date, so I don't have to import datetime into all the modules."""
     return datetime.date.today()
 
-  def msg(self,str):
-    if not self.quiet: print "---",str
+  def msg(self, s):
+    """Print a message to the screen (stdout)."""
+    if not self.quiet: print "---", s
 
-  def yay(self,str):
-    if not self.quiet: print ":-]",str
+  def yay(self, s):
+    """Print a success message to the screen (stdout)."""
+    if not self.quiet: print ":-]", s
 
-  def err(self,str):
-    sys.stderr.write("!!! "+str+"\n")
+  def err(self, s):
+    """Print a failure message to the screen (stderr)."""
+    sys.stderr.write("!!! "+s+"\n")
 
-  def die(self,str):
-    self.err(str)
+  def die(self, s):
+    """Print a failure message to the screen (stderr) and the halt."""
+    self.err(s)
     sys.exit(1)
 
-  def dbg(self,str):
-    #print "DBG",str
+  def dbg(self, s):
+    """Print a message to the screen (stdout) for debugging only."""
+    #print "DBG", s
     pass
 
   def parse_email(self, email):
+    """Parse an email address from this: Jon Smit <js@example.com> into: addr, name."""
     addr = ''
     name = ''
     bits = email.split(' ')
@@ -714,15 +742,15 @@ class alloc(object):
     elif len(bits) > 1:
 
       if '@' in bits[-1:][0]:
-        addr = bits[-1:][0].replace('<','').replace('>','')
+        addr = bits[-1:][0].replace('<', '').replace('>', '')
         name = ' '.join(bits[:-1])
       else:
         name = ' '.join(bits)
 
     return addr, name
 
-  def person_to_personID(self,name):
-
+  def person_to_personID(self, name):
+    """Convert a person's name into their alloc personID."""
     if type(name) == type('string'):
       ops = {}
       if ' ' in name:
@@ -730,7 +758,7 @@ class alloc(object):
       else:
         ops["username"] = name
 
-      rtn = self.get_list("person",ops)
+      rtn = self.get_list("person", ops)
       if rtn:
         for i in rtn:
           return i
@@ -739,36 +767,37 @@ class alloc(object):
     if name != '%' and name != '*' and name.lower() != 'all':
       return '1000000000000000000' # returning just zero doesn't work
 
-  # split a comparator and a date eg: '>=2011-10-10' becomes ['>=','2011-10-10']
-  def parse_date_comparator(self,date):
+  def parse_date_comparator(self, date):
+    """Split a comparator and a date eg: '>=2011-10-10' becomes ['>=','2011-10-10']."""
     try:
       comparator, d = re.findall(r'[\d|-]+|\D+', date)
     except:
       comparator = '='
       d = date
-  
-    return d.strip(),comparator.strip() 
+    return d.strip(), comparator.strip() 
 
   def get_alloc_modules(self):
+    """Get all the alloc subcommands/modules."""
     modules = []
     for f in os.listdir("/".join(sys.argv[0].split("/")[:-1])+"/alloccli/"):
       s = f[-4:].lower()
-      if s!=".pyc" and s!=".swp" and s!=".swo" and f!="alloc" and f!="alloc.py" and f!="__init__.py":
-        m = f.replace(".py","")
+      if s != ".pyc" and s != ".swp" and s != ".swo" and f != "alloc" and f != "alloc.py" and f != "__init__.py":
+        m = f.replace(".py", "")
         modules.append(m) 
     return modules
 
   def get_cli_help(self, halt_on_error=True):
+    """Get the command line help."""
     print "Usage: alloc command [OPTIONS]"
     print "Select one of the following commands:\n"
     for m in self.get_alloc_modules():
       alloccli = __import__("alloccli."+m)
-      subcommand = getattr(getattr(alloccli,m), m)
+      subcommand = getattr(getattr(alloccli, m), m)
 
       # Print out the module's one_line_help variable
       tabs = "\t "
       if len(m) <= 5: tabs = "\t\t "
-      print "  "+m+tabs+getattr(subcommand,"one_line_help")
+      print "  "+m+tabs+getattr(subcommand, "one_line_help")
 
     print "\nEg: alloc command --help"
 
@@ -784,21 +813,23 @@ class alloc(object):
         self.err("Select a command to run.")
 
   def get_cmd_help(self):
+    """Get help for a particular command."""
     print "Select one of the following commands:\n"
     for m in self.get_alloc_modules():
       alloccli = __import__("alloccli."+m)
-      subcommand = getattr(getattr(alloccli,m), m)
+      subcommand = getattr(getattr(alloccli, m), m)
 
       # Print out the module's one_line_help variable
       tabs = "\t "
       if len(m) <= 5: tabs = "\t\t "
-      print "  "+m+tabs+getattr(subcommand,"one_line_help")
+      print "  "+m+tabs+getattr(subcommand, "one_line_help")
 
     print "\nEg: tasks -t 1234"
 
 
 # Interactive handler for alloccli
 class allocCmd(cmd.Cmd):
+  """This allows us to have an alloc shell of sorts."""
 
   prompt = "alloc> "
   alloc = None
@@ -806,7 +837,7 @@ class allocCmd(cmd.Cmd):
   modules = {}
   worklog = None
 
-  def __init__(self,url):
+  def __init__(self, url):
     self.url = url
     self.alloc = alloc(self.url)
     self.alloc.authenticate()
@@ -816,32 +847,32 @@ class allocCmd(cmd.Cmd):
     # Import all the alloc modules so they are available as eg self.tasks
     for m in self.alloc.get_alloc_modules():
       alloccli = __import__("alloccli."+m)
-      subcommand = getattr(getattr(alloccli,m), m)
-      setattr(self,m,subcommand(self.url))
-    return cmd.Cmd.__init__(self);
+      subcommand = getattr(getattr(alloccli, m), m)
+      setattr(self, m, subcommand(self.url))
+    return cmd.Cmd.__init__(self)
 
   def emptyline(self):
     """Go to new empty prompt if an empty line is entered."""
     pass
 
-  def default(self,line):
+  def default(self, line):
     """Print an error if an unrecognized command is entered."""
     self.alloc.err("Unrecognized command: '"+line+"', hit TAB and try 'help COMMAND'.")
 
-  def do_EOF(self,line):
+  def do_EOF(self, line):
     """Exit if ctrl-d is pressed."""
     print "" # newline
     sys.exit(0)
 
-  def do_quit(self,line):
+  def do_quit(self, line):
     """Exit if quit is entered."""
     sys.exit(0)
 
-  def do_exit(self,line):
+  def do_exit(self, line):
     """Exit if exit is entered."""
     sys.exit(0)
 
-  def do_help(self,line):
+  def do_help(self, line):
     """Provide help information if 'help' or 'help COMMAND' are entered."""
     bits = line.split()
     if len(bits) == 1:
@@ -850,7 +881,7 @@ class allocCmd(cmd.Cmd):
       else:
         try:
           cmdbits = ["alloc", bits[0], "--help"]
-          subcommand = getattr(self,bits[0])
+          subcommand = getattr(self, bits[0])
           print subcommand.get_subcommand_help(cmdbits, subcommand.ops, subcommand.help_text)
         except:
           self.alloc.err("Unrecognized command: '"+bits[0]+"', hit TAB and try one of those.")
@@ -859,16 +890,20 @@ class allocCmd(cmd.Cmd):
 
 
   
-# Create some class methods called do_MODULE eg do_tasks, and
-# dynamically add those methods to the allocCmd class. This will expose
-# all the alloc modules to the allocCmd interface without having to
-# duplicate the list of modules.
 def make_func(m):
-  def func(obj,line):
+  """Create some class methods called do_MODULE eg do_tasks.
+
+  This will dynamically add methods to the allocCmd class. This will expose
+  all the alloc modules to the allocCmd interface without having to
+  duplicate the list of modules.
+  """
+
+  def func(obj, line):
+    """Run a subcommand/module's run() method."""
     bits = line.split()
-    bits.insert(0,m)
-    bits.insert(0,"alloc")
-    subcommand = getattr(obj,m)
+    bits.insert(0, m)
+    bits.insert(0, "alloc")
+    subcommand = getattr(obj, m)
     # Putting this in an exception block lets us continue when the subcommands call die().
     try: 
       subcommand.run(bits)
@@ -877,8 +912,8 @@ def make_func(m):
   return func
 
 # Add the methods to allocCmd
-for m in alloc().get_alloc_modules():
-  setattr(allocCmd, "do_"+m, make_func(m))
+for module in alloc().get_alloc_modules():
+  setattr(allocCmd, "do_"+module, make_func(module))
 
 
 
