@@ -193,15 +193,14 @@ class alloc(object):
   def create_config(self, f):
     """Create a default ~/.alloc/config file."""
     self.dbg("Creating and populating: "+f)
-    default = """[main]
-  url: http://alloc/services/json.php
-  #alloc_user: $ALLOC_USER
-  #alloc_pass: $ALLOC_PASS
-  #alloc_http_user: $ALLOC_HTTP_USER
-  #alloc_http_pass: $ALLOC_HTTP_PASS
-"""
+    default = "[main]"
+    default += "\n  url: http://alloc/services/json.php"
+    default += "\n  #alloc_user: $ALLOC_USER"
+    default += "\n  #alloc_pass: $ALLOC_PASS"
+    default += "\n  #alloc_http_user: $ALLOC_HTTP_USER"
+    default += "\n  #alloc_http_pass: $ALLOC_HTTP_PASS"
     # Write it out to a file
-    fd = open(f,'w')
+    fd = open(f, 'w')
     fd.write(default)
     fd.close()
 
@@ -302,6 +301,7 @@ class alloc(object):
     rtn = self.get_list("task", {"taskID":taskID, "taskView":"prioritised", "showTimes":True})
 
     k, r = rtn.popitem()
+    del(k)
     underline_length = len(r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"])
 
     s = "\n"+r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"]
@@ -354,7 +354,7 @@ class alloc(object):
       help_str += s+l+"   "+x[2]+"\n"
     return text % (os.path.basename(" ".join(command_list[0:2])), help_str.rstrip())
     
-  def parse_args(self, ops):
+  def __parse_args(self, ops):
     """Return four dictionaries that disambiguate the types of command line args. Don't use this, use alloc.get_args."""
     short_ops = ""
     long_ops = []
@@ -383,7 +383,7 @@ class alloc(object):
     rtn = {}
     remainder = ""
     
-    short_ops, long_ops, no_arg_ops, all_ops = self.parse_args(ops)
+    short_ops, long_ops, no_arg_ops, all_ops = self.__parse_args(ops)
 
     try:
       options, remainder = getopt.getopt(command_list[2:], short_ops, long_ops)
@@ -423,7 +423,7 @@ class alloc(object):
     for i in rtn:
       return i
 
-  def get_only_these_fields(self, entity, rows, only_these_fields):
+  def __get_only_these_fields(self, entity, rows, only_these_fields):
     """Reduce a list by removing certain columns/fields."""
     rtn = []
     inverted_field_names = dict([[v, k] for k, v in self.field_names[entity].items()])
@@ -434,6 +434,7 @@ class alloc(object):
       if only_these_fields.lower() == "all":
         for k, v in rows.items():
           for name, value in v.items():
+            del(value) # pylint
             rtn.append(name)
             if name in self.field_names[entity]:
               rtn.append(self.field_names[entity][name])
@@ -454,8 +455,9 @@ class alloc(object):
       return rtn
     return only_these_fields
 
-  def get_sorted_rows(self, entity, rows, sortby):
+  def __get_sorted_rows(self, entity, rows, sortby):
     """Sort the rows of a list."""
+    f = '' # satisfy pylint
     rows = rows.items()
     if not sortby:
       return rows
@@ -503,70 +505,73 @@ class alloc(object):
       rows = sorted(rows, key=sort_func, reverse=reverse)
     return rows
 
-  def print_table(self, entity, rows, only_these_fields, sort=False, transforms={}):
+  def print_table(self, entity, rows, only_these_fields, sort=False, transforms=None):
     """For printing out results in an ascii table or CSV format."""
     if self.quiet: return
     if not rows: return 
 
-    table = PrettyTable()
-
-    only_these_fields = self.get_only_these_fields(entity, rows, only_these_fields)
+    only_these_fields = self.__get_only_these_fields(entity, rows, only_these_fields)
     field_names = only_these_fields[1::2]
-    table.set_field_names(field_names)
 
     # Re-order the table, this changes the dict to a list i.e. dict.items().
-    rows = self.get_sorted_rows(entity, rows, sort)
+    rows = self.__get_sorted_rows(entity, rows, sort)
 
     if self.csv:
       csv_table = csv.writer(sys.stdout)
-
-    for label in field_names:
-      if not self.csv and '$' in label:
-        table.set_field_align(label, "r")
-      else:
-        table.set_field_align(label, "l")
+    else:
+      table = PrettyTable()
+      table.set_field_names(field_names)
+      for label in field_names:
+        if '$' in label:
+          table.set_field_align(label, "r")
+        else:
+          table.set_field_align(label, "l")
 
     if rows:
       for k, row in rows:
-        r = []
-        for v in only_these_fields[::2]: 
-          value = ''
-          success = False
-              
-          if v in row:
-            value = row[v]
-            success = True
-  
-          if v in transforms:
-            value = transforms[v](value)
-            success = True
-
-          if v in self.user_transforms:
-            value = self.user_transforms[v](value, row)
-            success = True
-
-          if v in self.field_names[entity]:
-            other_v = self.field_names[entity][v]
-            if other_v in self.user_transforms:
-              value = self.user_transforms[other_v](value, row)
-              success = True
-
-          if not success:
-            self.err('Bad field name: '+v)
-
-          if not value:
-            value = ''
-
-          r.append(value)
-
+        del(k)
+        r = self.__get_row(entity, row, only_these_fields, transforms)
         if self.csv:
           csv_table.writerow([unicode(s).encode('utf-8') for s in r])
         else:
           table.add_row(r)
 
     if not self.csv:
-      lines = table.get_string(header=True)
-      print unicode(lines).encode('utf-8')
+      print unicode(table.get_string(header=True)).encode('utf-8')
+
+  def __get_row(self, entity, row, only_these_fields, transforms=None):
+    """Load up the items for one row for a pretty table or csv output."""
+    r = []
+    for v in only_these_fields[::2]: 
+      value = ''
+      success = False
+          
+      if v in row:
+        value = row[v]
+        success = True
+
+      if transforms and v in transforms:
+        value = transforms[v](value)
+        success = True
+
+      if v in self.user_transforms:
+        value = self.user_transforms[v](value, row)
+        success = True
+
+      if v in self.field_names[entity]:
+        other_v = self.field_names[entity][v]
+        if other_v in self.user_transforms:
+          value = self.user_transforms[other_v](value, row)
+          success = True
+
+      if not success:
+        self.err('Bad field name: '+str(v))
+
+      if not value:
+        value = ''
+
+      r.append(value)
+    return r
 
   def is_num(self, obj):
     """Return True is the obj is numeric looking."""
@@ -612,14 +617,6 @@ class alloc(object):
       if 'alloc_http_user' in self.config: u = self.config['alloc_http_user']
       if 'alloc_http_pass' in self.config: p = self.config['alloc_http_pass']
     return u, p
-
-  def add_time(self, stuff):
-    """Add time to a time sheet using a task as reference."""
-    if self.dryrun: return ''
-    args = {}
-    args["method"] = "add_timeSheetItem"
-    args["options"] = stuff
-    return self.make_request(args)
 
   def get_list(self, entity, options):
     """The canonical method of retrieving a list of entities from alloc."""
@@ -852,7 +849,7 @@ class allocCmd(cmd.Cmd):
       alloccli = __import__("alloccli."+m)
       subcommand = getattr(getattr(alloccli, m), m)
       setattr(self, m, subcommand(self.url))
-    return cmd.Cmd.__init__(self)
+    cmd.Cmd.__init__(self)
 
   def emptyline(self):
     """Go to new empty prompt if an empty line is entered."""
@@ -864,15 +861,18 @@ class allocCmd(cmd.Cmd):
 
   def do_EOF(self, line):
     """Exit if ctrl-d is pressed."""
+    del(line)
     print "" # newline
     sys.exit(0)
 
   def do_quit(self, line):
     """Exit if quit is entered."""
+    del(line)
     sys.exit(0)
 
   def do_exit(self, line):
     """Exit if exit is entered."""
+    del(line)
     sys.exit(0)
 
   def do_help(self, line):
@@ -891,8 +891,6 @@ class allocCmd(cmd.Cmd):
     else:
       self.alloc.get_cmd_help()
 
-
-  
 def make_func(m):
   """Create some class methods called do_MODULE eg do_tasks.
 
@@ -916,7 +914,5 @@ def make_func(m):
 # Add the methods to allocCmd
 for module in alloc().get_alloc_modules():
   setattr(allocCmd, "do_"+module, make_func(module))
-
-
 
 

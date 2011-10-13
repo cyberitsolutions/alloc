@@ -146,4 +146,12 @@ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
     elif not o['dryrun']:
       self.die("No time was added.")
 
+  def add_time(self, stuff):
+    """Add time to a time sheet using a task as reference."""
+    if self.dryrun: return ''
+    args = {}
+    args["method"] = "add_timeSheetItem"
+    args["options"] = stuff
+    return self.make_request(args)
+
 
