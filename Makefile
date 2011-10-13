@@ -53,7 +53,7 @@ doc_pdf:
 doc_clean:
 	rm -rf ./help/src/help.aux ./help/src/help.log ./help/src/help.out ./help/src/help.tex ./help/src/images ./help/src/help.gif.txt
 
-dist: 
+dist: test
 	if [ -d ./src ]; then rm -rf ./src; fi;
 	darcs get . ./src/
 	rm -rf ./src/_darcs
