@@ -10,6 +10,7 @@ import urllib2
 import datetime
 import ConfigParser
 import csv
+import shlex
 from prettytable import PrettyTable
 
 class alloc(object):
@@ -901,9 +902,8 @@ def make_func(m):
 
   def func(obj, line):
     """Run a subcommand/module's run() method."""
-    bits = line.split()
-    bits.insert(0, m)
-    bits.insert(0, "alloc")
+    line = "alloc "+m+" "+line
+    bits = shlex.split(line)
     subcommand = getattr(obj, m)
     # Putting this in an exception block lets us continue when the subcommands call die().
     try: 
