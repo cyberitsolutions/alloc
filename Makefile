@@ -115,3 +115,8 @@ install: ;
 
 .PHONY: css help doc services
 
+# Currently only tests Python.  Requires pyflakes.
+.PHONY: test
+test:
+	pyflakes bin/alloc
+	find -iname '*.py' -exec pyflakes {} +
