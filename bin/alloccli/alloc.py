@@ -24,6 +24,7 @@ class alloc(object):
   alloc_dir = os.environ.get('ALLOC_HOME') or os.path.join(os.environ['HOME'], '.alloc/')
   config = {}
   user_transforms = {}
+  url_opener = None
   field_names = {
     "task" : {
       "taskID"                   :"Task ID"
@@ -181,22 +182,12 @@ class alloc(object):
       password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
       password_mgr.add_password(None, top_level_url, self.http_username, self.http_password)
       handler = urllib2.HTTPBasicAuthHandler(password_mgr)
-      opener = urllib2.build_opener(handler)
+      self.url_opener = urllib2.build_opener(handler)
     else:
-      opener = urllib2.build_opener()
+      self.url_opener = urllib2.build_opener()
 
-    try:
-      opener.open(self.url)
-    except urllib2.HTTPError, e:
-      self.err(str(e))
-      self.err("Possibly a bad username or password for HTTP AUTH")
-      self.err("The settings ALLOC_HTTP_USER and ALLOC_HTTP_PASS are required.")
-      self.die("Set them either in the shell environment or in your ~/.alloc/config")
-    except Exception, e:
-      self.die(str(e))
-
-    opener.addheaders = [('User-agent', 'alloc-cli %s' % self.username)]
-    urllib2.install_opener(opener)
+    self.url_opener.addheaders = [('User-agent', 'alloc-cli %s' % self.username)]
+    urllib2.install_opener(self.url_opener)
 
   def create_config(self, f):
     """Create a default ~/.alloc/config file."""
@@ -664,6 +655,16 @@ class alloc(object):
 
   def make_request(self, args):
     """Perform an HTTP request to the alloc server."""
+    try:
+      self.url_opener.open(self.url)
+    except urllib2.HTTPError, e:
+      self.err(str(e))
+      self.err("Possibly a bad username or password for HTTP AUTH")
+      self.err("The settings ALLOC_HTTP_USER and ALLOC_HTTP_PASS are required.")
+      self.die("Set them either in the shell environment or in your ~/.alloc/config")
+    except Exception, e:
+      self.die(str(e))
+
     args["client_version"] = self.client_version
     args["sessID"] = self.sessID
     rtn = urllib2.urlopen(self.url, urllib.urlencode(args)).read()
