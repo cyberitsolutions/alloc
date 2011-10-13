@@ -1,6 +1,4 @@
-import sys
 from alloc import alloc
-from sys import stdout
 
 class tokens(alloc):
 
@@ -34,7 +32,6 @@ alloc token --key 1234abcd"""
 
     # Initialize some variables
     self.quiet = o['quiet']
-    personID = self.get_my_personID()
 
     # This is the data format that is exported and imported
     fields = ["tokenEntity","Entity","tokenEntityID","ID","tokenHash","Key"]

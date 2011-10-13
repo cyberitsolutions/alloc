@@ -1,6 +1,5 @@
 import sys
 from alloc import alloc
-from sys import stdout
 
 class subscriptions(alloc):
 
@@ -49,7 +48,6 @@ alloc subscriptions --add < foo.txt"""
     # Initialize some variables
     self.quiet = o['quiet']
     self.dryrun = o['dryrun']
-    personID = self.get_my_personID()
 
     # This is the data format that is exported and imported
     fields = ["entity","Entity","entityID","ID","personID","Person ID","emailAddress","Email","fullName","Name"]

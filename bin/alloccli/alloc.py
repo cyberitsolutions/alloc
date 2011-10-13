@@ -3,7 +3,6 @@
 import os
 import sys
 import cmd
-import exceptions
 import simplejson
 import getopt
 import re
@@ -12,9 +11,7 @@ import urllib2
 import datetime
 import ConfigParser
 import csv
-from urlparse import urlparse
 from prettytable import PrettyTable
-from textwrap import wrap
 
 class alloc(object):
 
@@ -230,6 +227,7 @@ class alloc(object):
     fd.close()
 
   def load_transforms(self,f):
+    user_transforms = {}
     try:
       # yee-haw!
       execfile(f)
@@ -673,7 +671,7 @@ class alloc(object):
         self.die("Args: %s" % args)
     return rtn
 
-  def get_people(people):
+  def get_people(self,people):
     args = {}
     args["people"] = people
     args["method"] = "get_people"
@@ -874,7 +872,7 @@ def make_func(m):
     # Putting this in an exception block lets us continue when the subcommands call die().
     try: 
       subcommand.run(bits)
-    except BaseException,Err:
+    except BaseException:
       pass
   return func
 

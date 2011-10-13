@@ -1,5 +1,4 @@
 from alloc import alloc
-from sys import stdout
 
 class timesheets(alloc):
 
@@ -53,7 +52,6 @@ alloc timesheets --date ">=2010-10-10" --items'''
     order_ts = "From,Time ID"
     order_tsi = "Date,Item ID"
     status = "edit"
-    account = ""
 
     # Get a projectID either passed via command line, or figured out from a project name
     if self.is_num(o['project']):
