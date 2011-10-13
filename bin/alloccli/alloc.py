@@ -475,31 +475,32 @@ class alloc(object):
 
     def sort_func(row):
       """Callback function to return the actual value that should be sorted on."""
-      try: val = row[1][inverted_field_names[f]]
+      try:
+        val = row[1][f]
       except:
-        try: val = row[1][self.field_names[entity][f]]
+        try:
+          val = row[1][inverted_field_names[f]]
         except:
-          try: val = row[1][f]
-          except:
-            try: val = row[1][fields[fields.index(f)-1]]
-            except:
-              return ''
+          return ''
 
-      try: return int(val)
+      # val is the actual value in the field
+      try:
+        return int(val)
       except:
-        try: return float(val)
+        try:
+          return float(val)
         except:
-          try: return val.lower()
+          try:
+            return val.lower()
           except:
             return val
 
     for f in sortby:
-      if f:
-        reverse = False
-        if f[0] == "_":
-          reverse = True
-          f = f[1:]
-        rows = sorted(rows, key=sort_func, reverse=reverse)
+      reverse = False
+      if f and f[0] == "_":
+        reverse = True
+        f = f[1:] # chop leading underscore
+      rows = sorted(rows, key=sort_func, reverse=reverse)
     return rows
 
   def print_table(self, entity, rows, only_these_fields, sort=False, transforms={}):
