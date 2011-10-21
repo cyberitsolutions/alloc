@@ -24,7 +24,7 @@ class alloc(object):
   quiet = ''
   dryrun = ''
   sessID = ''
-  alloc_dir = os.environ.get('ALLOC_HOME') or os.path.join(os.environ['HOME'], '.alloc/')
+  alloc_dir = os.environ.get('ALLOC_HOME') or os.path.join(os.environ['HOME'], '.alloc')
   debug = os.environ.get('ALLOC_DEBUG')
   config = {}
   user_transforms = {}
@@ -136,8 +136,8 @@ class alloc(object):
   def __init__(self, url=""):
 
     # Grab a storage dir to work in
-    if self.alloc_dir[-1:] != '/':
-      self.alloc_dir += "/"
+    if self.alloc_dir[-1:] != os.sep:
+      self.alloc_dir += os.sep
 
     # Create ~/.alloc if necessary
     if not os.path.exists(self.alloc_dir):
