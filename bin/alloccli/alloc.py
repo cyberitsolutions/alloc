@@ -12,6 +12,8 @@ import ConfigParser
 import csv
 import shlex
 from prettytable import PrettyTable
+from netrc import netrc
+from urlparse import urlparse
 
 class alloc(object):
   """Provide a parent class from which the alloc subcommands can extend"""
@@ -170,14 +172,13 @@ class alloc(object):
     self.quiet = ''
     self.csv = False
 
-    self.username, self.password = self.get_credentials()
-    self.http_username, self.http_password = self.get_http_credentials()
+    self.username, self.password, self.http_username, self.http_password = self.get_credentials()
     self.initialize_http_connection()
 
   def initialize_http_connection(self):
     """This is for a https connection with basic http auth,
        it is not the actual alloc user login credentials"""
-    if self.http_password or self.http_username:
+    if self.http_password:
       # create a password manager
       top_level_url = "/".join(self.url.split("/")[0:3])
       password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
@@ -194,11 +195,11 @@ class alloc(object):
     """Create a default ~/.alloc/config file."""
     self.dbg("Creating and populating: "+f)
     default = "[main]"
-    default += "\n  url: http://alloc/services/json.php"
-    default += "\n  #alloc_user: $ALLOC_USER"
-    default += "\n  #alloc_pass: $ALLOC_PASS"
-    default += "\n  #alloc_http_user: $ALLOC_HTTP_USER"
-    default += "\n  #alloc_http_pass: $ALLOC_HTTP_PASS"
+    default += "\nurl: http://alloc/services/json.php"
+    default += "\n#alloc_user: $ALLOC_USER"
+    default += "\n#alloc_pass: $ALLOC_PASS"
+    default += "\n#alloc_http_user: $ALLOC_HTTP_USER"
+    default += "\n#alloc_http_pass: $ALLOC_HTTP_PASS"
     # Write it out to a file
     fd = open(f, 'w')
     fd.write(default)
@@ -598,25 +599,40 @@ class alloc(object):
     return rtn
 
   def get_credentials(self):
-    """Obtain the user's alloc login credentials."""
-    u = os.environ.get('ALLOC_USER')
-    p = os.environ.get('ALLOC_PASS')
-    if u is None or p is None:
-      if 'alloc_user' in self.config: u = self.config['alloc_user']
-      if 'alloc_pass' in self.config: p = self.config['alloc_pass']
+    """Obtain user's alloc login and http auth credentials."""
+    env_u  = os.environ.get('ALLOC_USER')
+    env_p  = os.environ.get('ALLOC_PASS')
+    env_hu = os.environ.get('ALLOC_HTTP_USER')
+    env_hp = os.environ.get('ALLOC_HTTP_PASS')
+
+    con_u  = self.config.get('alloc_user')
+    con_p  = self.config.get('alloc_pass')
+    con_hu = self.config.get('alloc_http_user')
+    con_hp = self.config.get('alloc_http_pass')
+
+    try:
+      net = netrc().hosts[urlparse(self.url).hostname]
+    except:
+      net = ('','','')
+      pass
+
+    net_u  = net[0]
+    net_p  = net[2]
+    net_hu = net[0]
+    net_hp = net[1]
+
+    # Priority: Shell vars, ~/.alloc/config, ~/.netrc
+    u  = env_u  or con_u  or net_u
+    p  = env_p  or con_p  or net_p
+    hu = env_hu or con_hu or net_hu
+    hp = env_hp or con_hp or net_hp
+
     if u is None or p is None:
       self.err("The settings ALLOC_USER and ALLOC_PASS are required.")
-      self.err("Set them either in the environment or in your ~/.alloc/config")
-    return u, p
-    
-  def get_http_credentials(self):
-    """Obtain the credentials for https with basic http auth."""
-    u = os.environ.get('ALLOC_HTTP_USER')
-    p = os.environ.get('ALLOC_HTTP_PASS')
-    if u is None or p is None:
-      if 'alloc_http_user' in self.config: u = self.config['alloc_http_user']
-      if 'alloc_http_pass' in self.config: p = self.config['alloc_http_pass']
-    return u, p
+      self.err("The settings ALLOC_HTTP_USER and ALLOC_HTTP_PASS are optional.")
+      self.err("Set any of them either in the environment as shell variables,")
+      self.err("or in your ~/.netrc or your ~/.alloc/config.")
+    return u, p, hu, hp
 
   def get_list(self, entity, options):
     """The canonical method of retrieving a list of entities from alloc."""
