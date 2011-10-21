@@ -1,3 +1,4 @@
+"""alloccli subcommand for editing alloc entities."""
 from alloc import alloc
 
 class edit(alloc):

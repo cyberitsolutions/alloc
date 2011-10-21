@@ -1,3 +1,4 @@
+"""alloccli subcommand for viewing a list of tokens."""
 from alloc import alloc
 
 class tokens(alloc):

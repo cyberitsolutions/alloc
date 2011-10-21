@@ -1,3 +1,4 @@
+"""alloccli subcommand for submitting time sheets."""
 import sys
 from alloc import alloc
 

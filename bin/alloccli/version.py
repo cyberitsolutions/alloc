@@ -1,4 +1,4 @@
-"""Sub-module to fetch alloc-cli and server versions."""
+"""alloccli subcommand for viewing the alloc-cli and server versions."""
 from alloc import alloc
 import sys
 import os
