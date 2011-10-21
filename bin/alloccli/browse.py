@@ -1,3 +1,4 @@
+"""alloccli subcommand for launching your $BROWSER at alloc."""
 import os
 from sys import stdout
 from alloc import alloc

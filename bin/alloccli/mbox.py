@@ -1,3 +1,4 @@
+"""alloccli subcommand for downloading alloc comments to mbox file."""
 from __future__ import with_statement
 import tempfile
 import os

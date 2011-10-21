@@ -1,3 +1,4 @@
+"""alloccli subcommand for viewing a list of timesheets."""
 from alloc import alloc
 
 class timesheets(alloc):

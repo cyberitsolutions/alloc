@@ -1,3 +1,4 @@
+"""alloccli subcommand for TF accounts."""
 from alloc import alloc
 
 class accounts(alloc):

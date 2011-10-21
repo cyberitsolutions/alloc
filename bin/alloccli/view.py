@@ -1,3 +1,4 @@
+"""alloccli subcommand for viewing the details of a single entity."""
 from alloc import alloc
 
 class view(alloc):

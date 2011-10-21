@@ -1,3 +1,4 @@
+"""alloccli subcommand for billing time for work done."""
 from alloc import alloc
 
 class work(alloc):
