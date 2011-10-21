@@ -115,8 +115,31 @@ install: ;
 
 .PHONY: css help doc services
 
-# Currently only tests Python.  Requires pyflakes.
+# Currently only tests Python.  Requires pyflakes and pylint.
 .PHONY: test
 test:
 	pyflakes bin/alloc
 	find -iname '*.py' -exec pyflakes {} +
+	# C0321: Too many inline statements eg: if hey: print hey
+	# W0702: No exception type(s) specified
+	# R0201: Method could be a function
+	# R0904: Too many public methods
+	PYTHONPATH=$$PYTHONPATH:./bin/alloccli                  \
+	find -iname '*.py' -exec                                \
+	  pylint --indent-string   '  '                         \
+	         --disable-msg     C0321                        \
+	         --disable-msg     W0702                        \
+	         --disable-msg     R0201                        \
+	         --disable-msg     R0904                        \
+	         --max-locals      20                           \
+	         --max-args        8                            \
+	         --max-attributes  50                           \
+	         --max-line-length 120                          \
+	         --max-branchs     20                           \
+	         --method-rgx      '[a-z_][a-zA-Z0-9_]{2,30}$$' \
+	         --variable-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \
+	         --attr-rgx        '[a-z_][a-zA-Z0-9_]{2,30}$$' \
+	         --class-rgx       '[a-zA-Z_][a-zA-Z0-9]+$$'    \
+	         --argument-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \
+	  {} +
+
