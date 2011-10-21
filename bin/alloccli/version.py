@@ -8,13 +8,13 @@ class version(alloc):
 
   # Setup the options that this cli can accept
   ops = []
-  ops.append((''  ,'help           ','Show this help.'))
-  ops.append(('u:','url=URL        ','The alloc-server\'s URL'))
+  ops.append((''  , 'help           ', 'Show this help.'))
+  ops.append(('u:', 'url=URL        ', 'The alloc-server\'s URL'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= __doc__
-  help_text+= """\n\n%s
+  help_text += __doc__
+  help_text += """\n\n%s
 
 This program allows you to view the version number of the alloc-cli and alloc-server.
 You can use the --url option to override the default alloc-server.
@@ -26,6 +26,7 @@ alloc version
 alloc version --url http://alloc.example.com/services/json.php"""
 
   def run(self, command_list):
+    """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
     o, remainder = self.get_args(command_list, self.ops, self.help_text)

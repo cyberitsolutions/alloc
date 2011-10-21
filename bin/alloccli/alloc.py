@@ -1,4 +1,4 @@
-""" alloc library module """
+"""alloc library"""
 import os
 import sys
 import cmd
@@ -307,7 +307,7 @@ class alloc(object):
     underline_length = len(r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"])
 
     s = "\n"+r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"]
-    s += "\n".ljust(underline_length+1,"=")
+    s += "\n".ljust(underline_length+1, "=")
     s += "\n"
     if r["priorityLabel"]: s += "\n"+"Priority: "+r["priorityLabel"].ljust(26)+r["taskStatusLabel"]
     s += "\n"
@@ -335,7 +335,7 @@ class alloc(object):
       s += "\nDescription"
       s += "\n-----------"
       s += "\n"
-      #s += "\n".join(wrap(r["taskDescription"],75))+"\n" # this seems to not work very well.
+      #s += "\n".join(wrap(r["taskDescription"], 75))+"\n" # this seems to not work very well.
       s += "\n"+r["taskDescription"]
 
     s += "\n"
@@ -350,10 +350,10 @@ class alloc(object):
       s = "    "
       l = "                   "
       if x[0] and x[1]: c = ","
-      if x[0]: s = "  -"+x[0].replace(":","")
+      if x[0]: s = "  -"+x[0].replace(":", "")
       if x[1].strip(): l = c+" --"+x[1]
       # eg:  -q, --quiet             Run with less output.
-      help_str += s+l+"   "+x[2]+"\n"
+      help_str += s+l+"   "+x[2].replace("\n", "\n" + (" " * 26))+"\n"
     return text % (os.path.basename(" ".join(command_list[0:2])), help_str.rstrip())
     
   def __parse_args(self, ops):
@@ -614,8 +614,7 @@ class alloc(object):
     try:
       net = netrc().hosts[urlparse(self.url).hostname]
     except:
-      net = ('','','')
-      pass
+      net = ('', '', '')
 
     net_u  = net[0]
     net_p  = net[2]
@@ -753,7 +752,7 @@ class alloc(object):
 
     if len(bits) == 1:
       if '@' in bits[0]:
-        addr = bits[0].replace('<','').replace('>','')
+        addr = bits[0].replace('<', '').replace('>', '')
       else:
         name = bits[0]
 
