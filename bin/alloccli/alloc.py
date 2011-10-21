@@ -25,6 +25,7 @@ class alloc(object):
   dryrun = ''
   sessID = ''
   alloc_dir = os.environ.get('ALLOC_HOME') or os.path.join(os.environ['HOME'], '.alloc/')
+  debug = os.environ.get('ALLOC_DEBUG')
   config = {}
   user_transforms = {}
   url_opener = None
@@ -671,6 +672,7 @@ class alloc(object):
   def make_request(self, args):
     """Perform an HTTP request to the alloc server."""
     try:
+      self.dbg("make_request(): "+str(args))
       self.url_opener.open(self.url)
     except urllib2.HTTPError, e:
       self.err(str(e))
@@ -740,8 +742,8 @@ class alloc(object):
 
   def dbg(self, s):
     """Print a message to the screen (stdout) for debugging only."""
-    #print "DBG", s
-    pass
+    if self.debug:
+      print "DBG", s
 
   def parse_email(self, email):
     """Parse an email address from this: Jon Smit <js@example.com> into: addr, name."""
