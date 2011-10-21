@@ -2,8 +2,7 @@ import sys
 from alloc import alloc
 
 class submit(alloc):
-
-  one_line_help = "Submit time sheets forwards. Read time sheets from standard in."
+  """Submit time sheets forwards. Read time sheets from standard in."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -14,7 +13,7 @@ class submit(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= '''\n\n%s
 
 This program enables you to submit your time sheets to managers, admins etc.

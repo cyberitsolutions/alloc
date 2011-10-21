@@ -1,8 +1,7 @@
 from alloc import alloc
 
 class view(alloc):
-
-  one_line_help = "View a single alloc entity."
+  """View a single alloc entity."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -14,7 +13,7 @@ class view(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= """\n\n%s
 
 This program allows you to view a single alloc entity, like a task.

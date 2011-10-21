@@ -1,10 +1,10 @@
+"""Sub-module to fetch alloc-cli and server versions."""
 from alloc import alloc
 import sys
 import os
 
 class version(alloc):
-
-  one_line_help = "View the version of the alloc-cli and alloc-server."
+  """View the version of the alloc-cli and alloc-server."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -13,7 +13,7 @@ class version(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= """\n\n%s
 
 This program allows you to view the version number of the alloc-cli and alloc-server.

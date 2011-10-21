@@ -1,8 +1,7 @@
 from alloc import alloc
 
 class tasks(alloc):
-
-  one_line_help = "Print a list of tasks."
+  """Print a list of tasks."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -20,7 +19,7 @@ class tasks(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= "\n\n%s\n\nIf called without arguments this program will display all tasks that are assigned to you."
 
   def run(self, command_list):

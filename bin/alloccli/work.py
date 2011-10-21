@@ -1,8 +1,7 @@
 from alloc import alloc
 
 class work(alloc):
-
-  one_line_help = "Add time to a time sheet. Create the time sheet if necessary."
+  """Add time to a time sheet. Create the time sheet if necessary."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -19,7 +18,7 @@ class work(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= """\n\n%s
 
 If run without arguments this program will run interactively.

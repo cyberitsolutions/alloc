@@ -1,8 +1,7 @@
 from alloc import alloc
 
 class tokens(alloc):
-
-  one_line_help = "Retrieve alloc token information."
+  """Retrieve alloc token information."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -14,7 +13,7 @@ class tokens(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS] [FILE]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= """\n\n%s
 
 Examples:
