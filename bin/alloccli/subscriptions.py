@@ -7,20 +7,21 @@ class subscriptions(alloc):
 
   # Setup the options that this cli can accept
   ops = []
-  ops.append((''  ,'help           ','Show this help.'))
-  ops.append((''  ,'csv            ','Return the results in CSV format.'))
-  ops.append(('q' ,'quiet          ','Run with no output except errors.'))
-  ops.append(('n' ,'dryrun         ','Perform a dry run, no data gets updated.'))
-  ops.append(('k:','key=KEY        ','An 8 character email subject line key.'))
-  ops.append(('t:','task=ID|NAME   ','A task ID, or a fuzzy match for a task name.'))
-  ops.append(('e:','email=EMAIL    ','The name and/or email address. Any part of "Full Name <email@address.com>". Use % for wildcard.'))
-  ops.append(('a' ,'add            ','Add the following subscriptions from stdin.'))
-  ops.append(('d' ,'del            ','Delete the following subscriptions from stdin.'))
+  ops.append((''  , 'help           ', 'Show this help.'))
+  ops.append((''  , 'csv            ', 'Return the results in CSV format.'))
+  ops.append(('q' , 'quiet          ', 'Run with no output except errors.'))
+  ops.append(('n' , 'dryrun         ', 'Perform a dry run, no data gets updated.'))
+  ops.append(('k:', 'key=KEY        ', 'An 8 character email subject line key.'))
+  ops.append(('t:', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
+  ops.append(('e:', 'email=EMAIL    ', 'The email address. Any part of "Full Name \n'
+                                       '<email@address.com>". Use % for wildcard.'))
+  ops.append(('a' , 'add            ', 'Add the following subscriptions from stdin.'))
+  ops.append(('d' , 'del            ', 'Delete the following subscriptions from stdin.'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS] [FILE]\n"
-  help_text+= __doc__
-  help_text+= """\n\n%s
+  help_text += __doc__
+  help_text += """\n\n%s
 
 Examples:
 
@@ -38,27 +39,29 @@ alloc subscriptions --del < foo.txt
 alloc subscriptions --add < foo.txt"""
 
   def run(self, command_list):
+    """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
     o, remainder = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
-    self.authenticate();
+    self.authenticate()
 
     # Initialize some variables
     self.quiet = o['quiet']
     self.dryrun = o['dryrun']
 
     # This is the data format that is exported and imported
-    fields = ["entity","Entity","entityID","ID","personID","Person ID","emailAddress","Email","fullName","Name"]
+    fields = ["entity", "Entity", "entityID", "ID", "personID",
+              "Person ID", "emailAddress", "Email", "fullName", "Name"]
     keys = fields[::2]
     searchops = {}
 
     # If we're looking for interested parties and we have a {key:something}
     if o['key']:
-      tokens = self.get_list("token",{ "tokenHash" : o['key'] })
+      tokens = self.get_list("token", { "tokenHash" : o['key'] })
       if tokens:
-        k,v = tokens.popitem()
+        k, v = tokens.popitem()
         searchops['entity'] = v['tokenEntity']
         searchops['entityID'] = v['tokenEntityID']
       else:
@@ -78,8 +81,8 @@ alloc subscriptions --add < foo.txt"""
 
     # Look for the interested parties, using the criteria from above
     if not o['add'] and not o['del']:
-      parties = self.get_list("interestedParty",searchops)
-      self.print_table("interestedParty",parties,fields)
+      parties = self.get_list("interestedParty", searchops)
+      self.print_table("interestedParty", parties, fields)
 
     # Else if we're adding or deleting
     else:
@@ -94,9 +97,9 @@ alloc subscriptions --add < foo.txt"""
         if len(f) > 3: party[keys[3]] = f[3]
         if len(f) > 4: party[keys[4]] = f[4]
         if o['add'] and 'emailAddress' in party and party['emailAddress']: 
-          if not o['dryrun']: self.make_request({"method":"save_interestedParty","options":party})
+          if not o['dryrun']: self.make_request({"method":"save_interestedParty", "options":party})
           self.msg("Adding:"+str(party))
         elif o['del'] and 'emailAddress' in party and party['emailAddress']: 
-          if not o['dryrun']: self.make_request({"method":"delete_interestedParty","options":party})
+          if not o['dryrun']: self.make_request({"method":"delete_interestedParty", "options":party})
           self.msg("Deleting:"+str(party))
 

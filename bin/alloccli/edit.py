@@ -6,16 +6,16 @@ class edit(alloc):
 
   # Setup the options that this cli can accept
   ops = []
-  ops.append((''  ,'help           ','Show this help.'))
-  ops.append(('t:','task=ID|new    ','An existing task\'s ID or the word "new" to create a new task.'))
-  ops.append(('i:','item=ID|new    ','An existing time sheet item\'s ID.'))
-  ops.append(('p:','project=ID     ','[NOT OPERATIONAL] An existing project\'s ID.'))
-  ops.append(('s:','timesheet=ID   ','[NOT OPERATIONAL] An existing time sheet\'s ID.'))
+  ops.append((''  , 'help           ', 'Show this help.'))
+  ops.append(('t:', 'task=ID|new    ', 'An existing task\'s ID or the word "new" to create a new task.'))
+  ops.append(('i:', 'item=ID|new    ', 'An existing time sheet item\'s ID.'))
+  ops.append(('p:', 'project=ID     ', '[NOT OPERATIONAL] An existing project\'s ID.'))
+  ops.append(('s:', 'timesheet=ID   ', '[NOT OPERATIONAL] An existing time sheet\'s ID.'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= __doc__
-  help_text+= """\n\n%s
+  help_text += __doc__
+  help_text += """\n\n%s
 
 This program allows editing of the fields on an alloc entity, like a task.
 
@@ -47,12 +47,13 @@ alloc edit -i 1234 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^private:1 ^task:
 alloc edit -i new ^tsid:7941 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^task:15180"""
 
   def run(self, command_list):
+    """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
     o, remainder = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
-    self.authenticate();
+    self.authenticate()
 
     args = {}
     if o['project']:
@@ -88,7 +89,7 @@ alloc edit -i new ^tsid:7941 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^task:1
 
     # If server returns a message, print it out
     if rtn and 'status' in rtn and 'message' in rtn:
-      meth = getattr(self,rtn['status'])
+      meth = getattr(self, rtn['status'])
       meth(rtn['message'])
 
 
