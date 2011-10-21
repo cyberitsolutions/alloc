@@ -31,7 +31,7 @@ class alloc(object):
   url_opener = None
   field_names = {
     "task" : {
-      "taskID"                   :"Task ID"
+      "taskID"                   :"ID"
      ,"taskTypeID"               :"Type"
      ,"taskStatusLabel"          :"Status"
      ,"taskStatusColour"         :"Colour"
@@ -67,7 +67,7 @@ class alloc(object):
     },
 
     "timeSheet" : {
-      "timeSheetID"              :"Time ID"
+      "timeSheetID"              :"ID"
      ,"dateFrom"                 :"From"
      ,"dateTo"                   :"To"
      ,"status"                   :"Status"
@@ -89,7 +89,7 @@ class alloc(object):
     },
 
     "timeSheetItem" : {
-      "timeSheetID"              :"Time ID"
+      "timeSheetID"              :"ID"
      ,"timeSheetItemID"          :"Item ID"
      ,"dateTimeSheetItem"        :"Date"
      ,"taskID"                   :"Task ID"
@@ -108,7 +108,7 @@ class alloc(object):
     },
 
     "transaction" : {
-      "transactionID"            :"Transaction ID"
+      "transactionID"            :"ID"
      ,"fromTfName"               :"From TF"
      ,"tfName"                   :"Dest TF"
      ,"amount"                   :"Amount"
@@ -117,13 +117,13 @@ class alloc(object):
     },
   
     "tf" : {
-      "tfID"                     :"TF ID"
+      "tfID"                     :"ID"
      ,"tfBalancePending"         :"Pending"
      ,"tfBalance"                :"Approved"
     },
         
     "project" : {
-      "projectID"                :"Proj ID"
+      "projectID"                :"ID"
      ,"projectName"              :"Proj Name"
     }
   }
