@@ -1,11 +1,9 @@
 import os
 from sys import stdout
-
 from alloc import alloc
 
 class browse(alloc):
-
-  one_line_help = "Provide web browser access to particular entities."
+  """Provide web browser access to particular entities."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -18,7 +16,7 @@ class browse(alloc):
 
   # Specify some header and footer text for the help text
   help_text = 'Usage: %s [OPTIONS] ID|NAME\n'
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= '''\n\n%s
 
 This program allows you to quickly jump to a particular alloc web page. It fires up 

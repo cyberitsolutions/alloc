@@ -812,10 +812,10 @@ class alloc(object):
       alloccli = __import__("alloccli."+m)
       subcommand = getattr(getattr(alloccli, m), m)
 
-      # Print out the module's one_line_help variable
+      # Print out the module's doc
       tabs = "\t "
       if len(m) <= 5: tabs = "\t\t "
-      print "  "+m+tabs+getattr(subcommand, "one_line_help")
+      print "  "+m+tabs+str(subcommand.__doc__)
 
     print "\nEg: alloc command --help"
 
@@ -837,10 +837,10 @@ class alloc(object):
       alloccli = __import__("alloccli."+m)
       subcommand = getattr(getattr(alloccli, m), m)
 
-      # Print out the module's one_line_help variable
+      # Print out the module's doc
       tabs = "\t "
       if len(m) <= 5: tabs = "\t\t "
-      print "  "+m+tabs+getattr(subcommand, "one_line_help")
+      print "  "+m+tabs+str(subcommand.__doc__)
 
     print "\nEg: tasks -t 1234"
 

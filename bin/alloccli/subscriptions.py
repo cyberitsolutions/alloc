@@ -2,8 +2,7 @@ import sys
 from alloc import alloc
 
 class subscriptions(alloc):
-
-  one_line_help = "Modify interested party subscriptions for an email address."
+  """Modify interested party subscriptions for an email address."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -19,7 +18,7 @@ class subscriptions(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS] [FILE]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= """\n\n%s
 
 Examples:

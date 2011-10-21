@@ -7,8 +7,7 @@ from contextlib import closing
 from alloc import alloc
 
 class mbox(alloc):
-
-  one_line_help = "Download a task's emails to an mbox file."
+  """Download a task's emails to an mbox file."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -18,7 +17,7 @@ class mbox(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= '''\n\n%s
 
 This program will automatically run $MAILER on the mbox file, if outputting to a TTY.

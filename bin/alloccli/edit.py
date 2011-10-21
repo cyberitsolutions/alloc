@@ -1,8 +1,7 @@
 from alloc import alloc
 
 class edit(alloc):
-
-  one_line_help = "Modify an alloc entity."
+  """Modify an alloc entity."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -14,7 +13,7 @@ class edit(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= """\n\n%s
 
 This program allows editing of the fields on an alloc entity, like a task.

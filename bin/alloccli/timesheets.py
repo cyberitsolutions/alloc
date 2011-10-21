@@ -1,8 +1,7 @@
 from alloc import alloc
 
 class timesheets(alloc):
-
-  one_line_help = "Print a list of time sheets."
+  """Print a list of time sheets."""
 
   # Setup the options that this cli can accept
   ops = []
@@ -22,7 +21,7 @@ class timesheets(alloc):
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
-  help_text+= one_line_help
+  help_text+= __doc__
   help_text+= '''\n\n%s
 
 If run without arguments this program will display all of your editable time sheets.
