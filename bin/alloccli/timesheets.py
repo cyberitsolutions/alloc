@@ -49,7 +49,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
     personID = self.get_my_personID()
     projectID = ""
     timeSheetID = ""
-    order_ts = "From,Time ID"
+    order_ts = "From,ID"
     order_tsi = "Date,Item ID"
     status = "edit"
 
