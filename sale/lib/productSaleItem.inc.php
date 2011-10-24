@@ -99,8 +99,8 @@ class productSaleItem extends db_entity {
                      AND tfID != %d
                      AND tfID != %d
                      AND productSaleID = %d
-                     AND status != 'rejected'
                      AND productSaleItemID = %d
+                     AND status != 'rejected'
                 ",config::get_config_item("inTfID")
                  ,config::get_config_item("outTfID")
                  ,config::get_config_item("taxTfID")
@@ -116,19 +116,17 @@ class productSaleItem extends db_entity {
 
   function get_amount_margin() {
 
-    $taxPercent = config::get_config_item("taxPercent");
-    $taxPercentDivisor = ($taxPercent/100) + 1;
+    $productSale = $this->get_foreign_object("productSale");
+    $transactions = $productSale->get_transactions($this->get_id());
 
-    $p = new product();
-    $p->set_id($this->get_value("productID"));
-    
-    $buyCost = $p->get_buy_cost() * $this->get_value("quantity");
-    $sellPrice = $this->get_value("sellPrice");
-
-    $this->get_value("sellPriceIncTax") and $sellPrice = $sellPrice / $taxPercentDivisor;
-
-    return exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"),$sellPrice) - 
-           exchangeRate::convert(config::get_config_item("currency"),$buyCost);
+    // margin = sellPrice - GST - costs
+    foreach ($transactions as $row) {
+      $row["saleTransactionType"] == "sellPrice" and $sellPrice = exchangeRate::convert($row["currencyTypeID"],$row["amount"]);
+      $row["saleTransactionType"] == "tax"       and $tax      += exchangeRate::convert($row["currencyTypeID"],$row["amount"]);
+      $row["saleTransactionType"] == "aCost"     and $costs    += exchangeRate::convert($row["currencyTypeID"],$row["amount"]);
+    }
+    $margin = $sellPrice - $tax - $costs;
+    return $margin;
   }
 
   function get_amount_unallocated() {

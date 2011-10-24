@@ -1,14 +1,19 @@
 <tr id="transactionRow{$transactionID}" style="{$display}">
+  <td class="right">
+    {if $amountClass == "tax"}
+      {echo config::get_config_item("taxName")}
+      <input type="hidden" name="transactionType[]" value="tax">
+    {else if $amountClass == "sellPrice"}
+      Price
+    {else if $amountClass == "aCost"}
+      Cost
+    {else if $amountClass == "aPerc"}
+      {// Hardcoded AUD because productCost table uses percent and dollars in same field}
+      {page::money("AUD",$pc_amount,"%mo")}%
+    {/}
+  </td>
   <td class="nobr"><input data-pc-amount="{page::money("AUD",$pc_amount,"%mo")}" class="amountField {$amountClass}" name="amount[]" size="10" value="{page::money($currencyTypeID,$amount,"%mo")}">
       <select name="currencyTypeID[]">{$currencyOptions}</select>
-  </td>
-  <td class="faint">
-    {if $amountClass == "tax"}
-      ( {echo config::get_config_item("taxName")} )
-    {else if $pc_isPercentage}
-      {// Hardcoded AUD because productCost table uses percent and dollars in same field}
-      ( {page::money("AUD",$pc_amount,"%mo")}% )
-    {/}
   </td>
   <td><select name="fromTfID[]"><option value="">{$fromTfList_dropdown}</select></td>
   <td><select name="tfID[]"><option value="">{$tfList_dropdown}</select></td>
