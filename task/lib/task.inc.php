@@ -428,19 +428,19 @@ class task extends db_entity {
         $p = new person;
         $p->set_id($this->get_value("creatorID"));
         $p->select();
-        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"creator", "personID"=>$this->get_value("creatorID"));
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "role"=>"creator", "personID"=>$this->get_value("creatorID"));
       }
       if ($this->get_value("personID")) {
         $p = new person;
         $p->set_id($this->get_value("personID"));
         $p->select();
-        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"assignee", "selected"=>true, "personID"=>$this->get_value("personID"));
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "role"=>"assignee", "selected"=>true, "personID"=>$this->get_value("personID"));
       }
       if ($this->get_value("managerID")) {
         $p = new person;
         $p->set_id($this->get_value("managerID"));
         $p->select();
-        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"manager", "selected"=>true, "personID"=>$this->get_value("managerID"));
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "role"=>"manager", "selected"=>true, "personID"=>$this->get_value("managerID"));
       }
       $this_id = $this->get_id();
     }
