@@ -6,8 +6,8 @@
 
 <table class="list" style="margin:3px 0px 10px 0px;">
   <tr>
-    <th>Amount</th>
     <th>&nbsp;</th>
+    <th>Amount</th>
     <th>Source TF</th>
     <th>Destination TF</th>
     <th style="width:100%">Description</th>

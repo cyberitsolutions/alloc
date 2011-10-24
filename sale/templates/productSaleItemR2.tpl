@@ -21,9 +21,7 @@
     <td class="right">Description:</td><td>{=$description}</td>
     <td class="right">Margin:</td><td class="right nobr">{page::money(config::get_config_item("currency"),$itemMargin,"%s%mo %c")}</td>
     <td class="right nobr">Transactions Other:</td><td class="right nobr">{page::money(config::get_config_item("currency"),$itemOther,"%s%mo %c")}</td>
-    {$class = "good"}
-    {0 != page::money(config::get_config_item("currency"),$itemTotalUnallocated,"%mo") and $class="bad"}
-    <td class="right nobr {$class}">Total Unallocated:</td><td class="right nobr {$class}">{page::money(config::get_config_item("currency"),$itemTotalUnallocated,"%s%mo %c")}</td>
+    <td class="right nobr">Total for Company:</td><td class="right nobr">{page::money(config::get_config_item("currency"),$itemTotalUnallocated,"%s%mo %c")}</td>
   </tr>
   <tr>
   </tr>

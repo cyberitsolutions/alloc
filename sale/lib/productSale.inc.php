@@ -228,6 +228,14 @@ class productSale extends db_entity {
     $db = new db_alloc();
     $db->query($query);
     while ($row = $db->row()) {
+      if ($row["pc_productCostID"]) {
+        $row["saleTransactionType"] = $row["pc_isPercentage"] ? "aPerc" : "aCost";
+      } else if (!$done && $row["transactionType"] == "sale" && !$row["productCostID"]) {
+        $done = true;
+        $row["saleTransactionType"] = "sellPrice";
+      } else if ($row["transactionType"] == "tax") {
+        $row["saleTransactionType"] = "tax";
+      }
       $rows[] = $row;
     }
     return $rows;

@@ -119,12 +119,10 @@ $(document).ready(function() {
     <td class="right">Sale Date:</td>
     <td>{$show_date}</td>
   </tr>
-    {$class = "good"}
-    {$total_unallocated_number != 0 and $class="bad"}
   {if in_array($status,array("allocate","admin","finished"))}
   <tr>
-    <td class="right {$class}">Total Unallocated:</td>
-    <td class="{$class}">{$total_unallocated}</td>
+    <td class="right">Total for Company:</td>
+    <td class="">{$total_unallocated}</td>
   </tr>
   {/}
   <tr>
