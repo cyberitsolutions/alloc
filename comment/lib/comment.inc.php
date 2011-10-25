@@ -534,7 +534,7 @@ class comment extends db_entity {
       if ($selected_option == "interested") {
         $db = new db_alloc;
         if ($from["entity"] && $from["entityID"]) {
-          $q = sprintf("SELECT * FROM interestedParty WHERE entity = '%s' AND entityID = %d",$from["entity"],$from["entityID"]);
+          $q = sprintf("SELECT * FROM interestedParty WHERE entity = '%s' AND entityID = %d AND interestedPartyActive = 1",$from["entity"],$from["entityID"]);
         }
         $db->query($q);
         while($row = $db->next_record()) {

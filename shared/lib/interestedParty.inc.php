@@ -32,14 +32,26 @@ class interestedParty extends db_entity {
                              ,"external"
                              ,"interestedPartyCreatedUser"
                              ,"interestedPartyCreatedTime"
+                             ,"interestedPartyActive"
                              );
+
+  function delete() {
+    $this->set_value("interestedPartyActive",0);
+    $this->save();
+  }
 
   function is_owner() {
     global $current_user;
     return same_email_address($this->get_value("emailAddress"),$current_user->get_value("emailAddress"));
   }
 
+  function save() {
+    $this->set_value("emailAddress", str_replace(array("<",">"),"",$this->get_value("emailAddress")));
+    return parent::save();
+  }
+
   function exists($entity, $entityID, $email) {
+    $email = str_replace(array("<",">"),"",$email);
     $db = new db_alloc();
     $db->query("SELECT *
                   FROM interestedParty
@@ -50,27 +62,40 @@ class interestedParty extends db_entity {
     return $db->row();
   }
 
+  function active($entity, $entityID, $email) {
+    $email = str_replace(array("<",">"),"",$email);
+    $db = new db_alloc();
+    $db->query("SELECT *
+                  FROM interestedParty
+                 WHERE entityID = %d
+                   AND entity = '%s'
+                   AND emailAddress = '%s'
+                   AND interestedPartyActive = 1
+               ",$entityID,db_esc($entity),db_esc($email));
+    return $db->row();
+  }
+
   function make_interested_parties($entity,$entityID,$encoded_parties=array()) {
     // Nuke entries from interestedParty
-    $q = sprintf("DELETE FROM interestedParty WHERE entity = '%s' AND entityID = %d",db_esc($entity),$entityID);
     $db = new db_alloc();
+    $db->start_transaction();
+    $q = sprintf("UPDATE interestedParty
+                     SET interestedPartyActive = 0
+                   WHERE entity = '%s'
+                     AND entityID = %d",db_esc($entity),$entityID);
     $db->query($q);
 
     // Add entries to interestedParty
     if (is_array($encoded_parties)) {
       foreach ($encoded_parties as $encoded) {
         $info = interestedParty::get_decoded_interested_party_identifier($encoded);
-        $interestedParty = new interestedParty;
-        $interestedParty->set_value("entity",$entity);
-        $interestedParty->set_value("entityID",$entityID);
-        $interestedParty->set_value("fullName",$info["name"]);
-        $interestedParty->set_value("emailAddress",$info["email"]);
-        $interestedParty->set_value("personID",$info["personID"]);
-        $interestedParty->set_value("clientContactID",$info["clientContactID"]);
-        $info["external"] and $interestedParty->set_value("external","1");
-        $interestedParty->save();
+        $info["entity"] = $entity;
+        $info["entityID"] = $entityID;
+        $info["emailAddress"] = $info["email"];
+        interestedParty::add_interested_party($info);
       }
     }
+    $db->commit();
   }
 
   function sort_interested_parties($a, $b) {
@@ -91,7 +116,7 @@ class interestedParty extends db_entity {
       while ($db->row()) {
         $ops[$db->f("emailAddress")]["name"] = $db->f("fullName");
         $ops[$db->f("emailAddress")]["role"] = "interested";
-        $ops[$db->f("emailAddress")]["selected"] = true;
+        $ops[$db->f("emailAddress")]["selected"] = $db->f("interestedPartyActive") ? true : false;
         $ops[$db->f("emailAddress")]["personID"] = $db->f("personID");
         $ops[$db->f("emailAddress")]["clientContactID"] = $db->f("clientContactID");
         $ops[$db->f("emailAddress")]["external"] = $db->f("external");
@@ -138,7 +163,8 @@ class interestedParty extends db_entity {
 
   function delete_interested_party($entity, $entityID, $emailAddress) {
     // Delete existing entries
-    $row = interestedParty::exists($entity,$entityID,$emailAddress);
+    $emailAddress = str_replace(array("<",">"),"",$emailAddress);
+    $row = interestedParty::active($entity,$entityID,$emailAddress);
     if ($row) {
       $ip = new interestedParty();
       $ip->read_row_record($row);
@@ -148,30 +174,33 @@ class interestedParty extends db_entity {
   
   function add_interested_party($data) {
     static $people;
-
     $data["emailAddress"] = str_replace(array("<",">"),"",$data["emailAddress"]);
-
     // Add new entry
-    $ip = new interestedParty();
+
+    $ip = new interestedParty;
+    $existing = interestedParty::exists($data["entity"], $data["entityID"], $data["emailAddress"]);
+    if ($existing) {
+      $ip->set_id($existing["interestedPartyID"]);
+      $ip->select();
+    }
     $ip->set_value("entity",$data["entity"]);
     $ip->set_value("entityID",$data["entityID"]);
     $ip->set_value("fullName",$data["fullName"]);
     $ip->set_value("emailAddress",$data["emailAddress"]);
+    $ip->set_value("interestedPartyActive",1);
     if ($data["personID"]) {
       $ip->set_value("personID",$data["personID"]);
+      $ip->set_value("fullName",person::get_fullname($data["personID"]));
 
     } else {
       $people or $people = get_cached_table("person");
       foreach ($people as $personID => $p) {
-        if ($data["emailAddress"] && str_replace(array("<",">"),"",$p["emailAddress"]) == $data["emailAddress"]) {
+        if ($data["emailAddress"] && same_email_address($p["emailAddress"], $data["emailAddress"])) {
           $ip->set_value("personID",$personID);
-          if (!$data["fullName"]) {
-            $ip->set_value("fullName",$p["name"]);
-          }
+          $ip->set_value("fullName",$p["name"]);
         }
       }
     }
-
     if (!$ip->get_value("personID")) {
       $q = sprintf("SELECT clientContactID FROM clientContact WHERE clientContactEmail = '%s'",$data["emailAddress"]);
       $db = new db_alloc();
@@ -226,20 +255,29 @@ class interestedParty extends db_entity {
 
       // To unsubscribe from this conversation
       if ($command == "unsub" || $command == "unsubscribe") {
-        if (interestedParty::exists($entity, $entityID, $emailAddress)) {
+        if (interestedParty::active($entity, $entityID, $emailAddress)) {
           interestedParty::delete_interested_party($entity, $entityID, $emailAddress);
         }
 
       // To subscribe to this conversation
       } else if ($command == "sub" || $command == "subscribe") {
-        if (!interestedParty::exists($entity, $entityID, $emailAddress)) {
+        $ip = interestedParty::exists($entity, $entityID, $emailAddress);
+
+        if (!$ip) {
+          $data = array("entity"         => $entity
+                       ,"entityID"       => $entityID
+                       ,"fullName"       => $fullName
+                       ,"emailAddress"   => $emailAddress
+                       ,"personID"       => $personID
+                       ,"clientContactID"=> $clientContactID);
+          interestedParty::add_interested_party($data);
+
+        // Else reactivate existing IP
+        } else if (!interestedParty::active($entity, $entityID, $emailAddress)) {
           $interestedParty = new interestedParty;
-          $interestedParty->set_value("entity",$entity);
-          $interestedParty->set_value("entityID",$entityID);
-          $interestedParty->set_value("fullName",$fullName);
-          $interestedParty->set_value("emailAddress",$emailAddress);
-          $interestedParty->set_value("personID",$personID);
-          $interestedParty->set_value("clientContactID",$clientContactID);
+          $interestedParty->set_id($ip["interestedPartyID"]);
+          $interestedParty->select();
+          $interestedParty->set_value("interestedPartyActive",1);
           $interestedParty->save();
         }
       }
@@ -283,12 +321,14 @@ class interestedParty extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
+    $filter["emailAddress"] = str_replace(array("<",">"),"",$filter["emailAddress"]);
     $filter["emailAddress"]    and $sql[] = sprintf("(interestedParty.emailAddress LIKE '%%%s%%')",db_esc($filter["emailAddress"]));
     $filter["fullName"]        and $sql[] = sprintf("(interestedParty.fullName LIKE '%%%s%%')",db_esc($filter["fullName"]));
     $filter["personID"]        and $sql[] = sprintf("(interestedParty.personID = %d)",db_esc($filter["personID"]));
     $filter["clientContactID"] and $sql[] = sprintf("(interestedParty.clientContactID = %d)",db_esc($filter["clientContactID"]));
     $filter["entity"]          and $sql[] = sprintf("(interestedParty.entity = '%s')",db_esc($filter["entity"]));
     $filter["entityID"]        and $sql[] = sprintf("(interestedParty.entityID = %d)",db_esc($filter["entityID"]));
+    $filter["active"]          and $sql[] = sprintf("(interestedParty.interestedPartyActive = %d)",db_esc($filter["active"]));
     $filter["taskID"]          and $sql[] = sprintf("(comment.commentMaster='task' AND comment.commentMasterID=%d)",$filter["taskID"]);
     return $sql;
   }

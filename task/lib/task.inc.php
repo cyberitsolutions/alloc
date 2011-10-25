@@ -547,7 +547,12 @@ class task extends db_entity {
     $TPL["parentTaskOptions"] = $this->get_parent_task_select();
     $TPL["interestedPartyOptions"] = $this->get_task_cc_list_select();
 
-    $db->query(sprintf("SELECT fullName,emailAddress FROM interestedParty WHERE entity='task' AND entityID = %d ORDER BY fullName",$this->get_id()));
+    $db->query(sprintf("SELECT fullName,emailAddress
+                          FROM interestedParty
+                         WHERE entity='task' 
+                           AND entityID = %d
+                           AND interestedPartyActive = 1
+                      ORDER BY fullName",$this->get_id()));
     while ($db->next_record()) {
       $str = trim(page::htmlentities($db->f("fullName")." <".$db->f("emailAddress").">"));
       $value = interestedParty::get_encoded_interested_party_identifier($db->f("fullName"), $db->f("emailAddress"));

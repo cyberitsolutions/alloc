@@ -397,7 +397,8 @@ CREATE TABLE interestedParty (
   clientContactID integer DEFAULT NULL,
   external boolean DEFAULT NULL,
   interestedPartyCreatedUser integer DEFAULT NULL,
-  interestedPartyCreatedTime datetime DEFAULT NULL
+  interestedPartyCreatedTime datetime DEFAULT NULL,
+  interestedPartyActive boolean DEFAULT true
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS commentTemplate;
