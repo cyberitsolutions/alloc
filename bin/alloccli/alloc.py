@@ -121,7 +121,33 @@ class alloc(object):
      ,"tfBalancePending"         :"Pending"
      ,"tfBalance"                :"Approved"
     },
+
+    "client" : {
+      "clientID"                 :"ID"
+     ,"clientName"               :"Name"
+    },
         
+    "token" : {
+      "tokenID"                  :"ID"
+     ,"tokenHash"                :"Key"
+    },
+
+    "interestedParty" : {
+      "interestedPartyID"        :"ID"
+     ,"entity"                   :"Entity"
+     ,"entityID"                 :"Entity ID"
+     ,"fullName"                 :"Name"
+     ,"emailAddress"             :"Email"
+    },
+
+    "person" : {
+      "personID"                 :"ID"
+     ,"firstName"                :"First Name"
+     ,"surname"                  :"Surname"
+     ,"username"                 :"Username"
+     ,"emailAddress"             :"Email"
+    },
+
     "project" : {
       "projectID"                :"ID"
      ,"projectName"              :"Proj Name"
