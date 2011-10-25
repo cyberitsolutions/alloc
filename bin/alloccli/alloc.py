@@ -398,7 +398,7 @@ class alloc(object):
         no_arg_ops["-"+x[0]] = True
 
       # or eg --help
-      if not x[0] and '=' not in x[1]:
+      if ':' not in x[0] and '=' not in x[1]:
         no_arg_ops["--"+x[1].strip()] = True
 
       # And this is used below to build up a dictionary to return
