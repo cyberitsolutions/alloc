@@ -804,6 +804,7 @@ body.obfus .obfuscate:hover {
 .ui-dropdownchecklist {
   font-size: 100%;
   color: black;
+  text-align:left;
 }
 .ui-dropdownchecklist-selector {
   color: black;
