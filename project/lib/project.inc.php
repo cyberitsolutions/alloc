@@ -652,6 +652,7 @@ class project extends db_entity {
   }
 
   function get_all_parties($projectID=false) {
+    global $current_user;
     if (!$projectID && is_object($this)) {
       $projectID = $this->get_id();
     }
@@ -691,6 +692,11 @@ class project extends db_entity {
         $interestedPartyOptions[$db->f("emailAddress")] = array("name"=>$name,"personID"=>$db->f("personID"));
       }
     }
+
+    if (is_object($current_user) && $current_user->get_id()) {
+      $interestedPartyOptions[$current_user->get_value("emailAddress")] = array("name"=>$current_user->get_name(),"personID"=>$current_user->get_id());
+    }
+
     return (array)$interestedPartyOptions;
   }
 

@@ -147,10 +147,19 @@ class interestedParty extends db_entity {
   }
 
   function get_interested_parties_html($parties=array()) {
+    global $current_user;
+    if (is_object($current_user) && $current_user->get_id()) {
+      $current_user_email = $current_user->get_value("emailAddress");
+    }
     foreach ($parties as $email => $info) {
       if ($info["name"]) {
         unset($sel,$c);
         $counter++;
+
+        if ($current_user_email && same_email_address($current_user_email,$email)) {
+          $sel = " checked";
+        }
+
         $info["selected"] and $sel = " checked";
         $info["external"] and $c.= " warn";
         $str.= "<div width=\"150px\" class=\"nobr ".$c."\" id=\"td_ect_".$counter."\" style=\"float:left; width:150px; margin-bottom:5px;\">";
