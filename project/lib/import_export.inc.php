@@ -170,7 +170,7 @@ function import_csv($infile, $mapping, $header = true) {
           $task->set_value('dateTargetStart', date("Y-m-d", strtotime($row[$i])));
           break;
         case 'completionDate':
-          $task->set_value('dateTargetCompletion', strtotime($row[$i]));
+          $task->set_value('dateTargetCompletion', date("Y-m-d", strtotime($row[$i])));
           break;
         case 'interestedParties':
           // Field is a grouped list of names
