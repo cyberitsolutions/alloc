@@ -16,7 +16,7 @@ body {
   padding:0px 14px;
   width:auto !important; width:95%;
   margin:0px;
-  height:100%;
+  min-height:100%;
 }
 
 /* This should match the body font */
