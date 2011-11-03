@@ -167,10 +167,9 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
 
     if ($emailRecipients) {
       if (is_object($e)) {
-        $from["commentID"] = $comment->get_id();
-        $from["parentCommentID"] = $comment->get_id();
-        $from["entity"] = "comment";
-        $from["entityID"] = $comment->get_id();
+        $comment->from["commentID"] = $comment->get_id();
+        $comment->from["entity"] = "comment";
+        $comment->from["entityID"] = $comment->get_id();
 
         $token = new token;
 
@@ -179,19 +178,19 @@ if ($_POST["comment_save"] || $_POST["comment_update"]) {
           $c->set_id($comment->get_value("commentLinkID"));
           $c->select();
           if ($token->select_token_by_entity_and_action("comment",$c->get_id(),"add_comment_from_email")) {
-            $from["hash"] = $token->get_value("tokenHash");
+            $comment->from["hash"] = $token->get_value("tokenHash");
           }
         }
   
-        if (!$from["hash"]) {
+        if (!$comment->from["hash"]) {
           if ($token->select_token_by_entity_and_action("comment",$comment->get_id(),"add_comment_from_email")) {
-            $from["hash"] = $token->get_value("tokenHash");
+            $comment->from["hash"] = $token->get_value("tokenHash");
           } else {
-            $from["hash"] = $comment->make_token_add_comment_from_email();
+            $comment->from["hash"] = $comment->make_token_add_comment_from_email();
           }
         }
 
-        list($successful_recipients,$messageid) = comment::send_emails($e, $emailRecipients, $entity."_comments", $comment->get_value("comment"), $from);
+        list($successful_recipients,$messageid) = $comment->send_emails($emailRecipients);
  
         // Append success to end of the comment
         if ($successful_recipients && is_object($comment)) {
