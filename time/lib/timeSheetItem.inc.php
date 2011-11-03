@@ -132,6 +132,41 @@ class timeSheetItem extends db_entity {
     return $rtn;
   } 
 
+  function parse_time_string($str) {
+    preg_match("/^"
+              ."([\d-\/]{8,10})?"   # date
+              ."\s*"              
+              ."([\d\.]+)"          # duration
+              ."\s*"
+              ."(hours|hour|hrs|hr|days|day|weeks|week|months|month|fixed)?" # unit
+              ."\s*"
+              ."(x\s*[\d\.]+)?"     # multiplier eg: x 1.5
+              ."\s*"
+              ."(\d+)?"             # task id
+              ."\s*"
+              ."(.*)"               # comment
+              ."\s*"
+              #."(private)?"        # whether the comment is private 
+              ."$/i",$str,$m);
+
+    $rtn["date"] = $m[1] or $rtn["date"] = date("Y-m-d");
+    $rtn["duration"] = $m[2];
+    $rtn["unit"] = $m[3];
+    $rtn["multiplier"] = str_replace(array("x","X"," "),"",$m[4]) or $rtn["multiplier"] = 1;
+    $rtn["taskID"] = $m[5];
+    $rtn["comment"] = $m[6];
+    //$rtn["private"] = $m[7];
+
+    // use the first letter of the unit for the lookup
+    $tu = array("h"=>1,"d"=>2,"w"=>3,"m"=>4,"f"=>5);
+    $rtn["unit"] = $tu[$rtn["unit"][0]] or $rtn["unit"] = 1;
+
+    // change 2010/10/27 to 2010-10-27
+    $rtn["date"] = str_replace("/","-",$rtn["date"]);
+
+    return $rtn;
+  }
+
   function calculate_item_charge($currency,$rate=0) {
     return page::money($currency, $rate * $this->get_value("timeSheetItemDuration") * $this->get_value("multiplier"), "%mo");
   }
