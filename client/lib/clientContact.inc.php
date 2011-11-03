@@ -48,7 +48,7 @@ class clientContact extends db_entity {
     return parent::save();
   }
 
-  function find_by_name($name=false,$projectID=false) {
+  function find_by_name($name=false,$projectID=false,$percent=90) {
     $stack1 = array();
     $people = array();
 
@@ -81,7 +81,7 @@ class clientContact extends db_entity {
     $probable1_clientContactID = key($stack1);
     $person_percent1 = current($stack1);
 
-    if ($probable1_clientContactID && $person_percent1 > 90) {
+    if ($probable1_clientContactID && $person_percent1 >= $percent) {
       return $probable1_clientContactID;
     }
   }
