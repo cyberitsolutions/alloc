@@ -51,12 +51,20 @@ class clientContact extends db_entity {
   function find_by_name($name=false,$projectID=false) {
     $stack1 = array();
     $people = array();
+
+    if ($projectID) {
+      $extra = sprintf("LEFT JOIN project ON project.clientID = clientContact.clientID 
+                            WHERE project.projectID = %d
+                       ",$projectID);
+    } else {
+      $extra = sprintf("WHERE clientContactName = '%s'",db_esc($name));
+    }
+
     $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactName
-                    FROM client
-               LEFT JOIN clientContact ON client.clientID = clientContact.clientID
-               LEFT JOIN project ON project.clientID = client.clientID 
-                   WHERE project.projectID = %d
-                 ",$projectID);
+                    FROM clientContact
+                      %s
+                 ",$extra);
+               
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
