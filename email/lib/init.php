@@ -27,6 +27,7 @@ require_once(dirname(__FILE__)."/email.inc.php");
 require_once(dirname(__FILE__)."/email_receive.inc.php");
 require_once(dirname(__FILE__)."/mime_parser.inc.php");
 require_once(dirname(__FILE__)."/sentEmailLog.inc.php");
+require_once(dirname(__FILE__)."/command.inc.php");
 
 
 class email_module extends module {

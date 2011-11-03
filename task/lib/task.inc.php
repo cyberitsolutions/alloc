@@ -123,11 +123,34 @@ class task extends db_entity {
   }
 
   function validate() {
+    // Validate/coerce the fields
+    $this->get_value("taskStatus") == "inprogress" && $this->set_value("taskStatus","open_inprogress");
+    $this->get_value("taskStatus") == "notstarted" && $this->set_value("taskStatus","open_notstarted");
+    $this->get_value("taskStatus") == "info"       && $this->set_value("taskStatus","pending_info");
+    $this->get_value("taskStatus") == "client"     && $this->set_value("taskStatus","pending_client");
+    $this->get_value("taskStatus") == "manager"    && $this->set_value("taskStatus","pending_manager");
+    $this->get_value("taskStatus") == "invalid"    && $this->set_value("taskStatus","closed_invalid");
+    $this->get_value("taskStatus") == "duplicate"  && $this->set_value("taskStatus","closed_duplicate");
+    $this->get_value("taskStatus") == "incomplete" && $this->set_value("taskStatus","closed_incomplete");
+    $this->get_value("taskStatus") == "complete"   && $this->set_value("taskStatus","closed_complete");
+    $this->get_value("taskStatus") == "open"       && $this->set_value("taskStatus","open_inprogress");
+    $this->get_value("taskStatus") == "pending"    && $this->set_value("taskStatus","pending_info");
+    $this->get_value("taskStatus") == "close"      && $this->set_value("taskStatus","closed_complete");
+    $this->get_value("taskStatus") == "closed"     && $this->set_value("taskStatus","closed_complete");
+    $this->get_value("taskStatus") || $this->set_value("taskStatus","open_notstarted");
+
+    $this->get_value("priority") || $this->set_value("priority",3);
+    in_array($this->get_value("priority"),array(1,2,3,4,5)) or $err[] = "Invalid priority.";
+
+    $this->get_value("taskTypeID") || $this->set_value("taskTypeID","Task");
+    in_array(ucwords($this->get_value("taskTypeID")),array("Task","Fault","Message","Milestone","Parent")) or $err[] = "Invalid Task Type.";
+
     $this->get_value("taskName") or $err[] = "Please enter a name for the Task.";
-    $this->get_value("priority")    || $this->set_value("priority",3);
     $this->get_value("dateCreated") || $this->set_value("dateCreated",date("Y-m-d H:i:s"));
-    $this->get_value("taskStatus")  || $this->set_value("taskStatus","open_notstarted");
-    $this->get_value("taskTypeID")  || $this->set_value("taskTypeID","Task");
+
+    $this->get_value("personID") || $this->set_value("personID","");
+    $this->get_value("managerID") || $this->set_value("managerID","");
+
     return parent::validate($err);
   }
 
