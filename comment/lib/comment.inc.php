@@ -610,8 +610,13 @@ class comment extends db_entity {
     return array($to_address, $bcc, $successful_recipients);
   }
 
-  function send_emails($e, $selected_option, $type="", $body="", $from=array(), $email_receive=false) {
+  function send_emails($selected_option, $email_receive=false) {
     global $current_user;
+
+    $e = $this->get_parent_object();
+    $type = $e->classname."_comments";
+    $body = $this->get_value("comment");
+    $from = $this->from;
 
     $recipients = comment::get_email_recipients($selected_option,$from);
     list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from);
