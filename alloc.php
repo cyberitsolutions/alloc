@@ -186,7 +186,10 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
 
   // The default From: email address 
-  define("ALLOC_DEFAULT_FROM_ADDRESS", "allocPSA ".add_brackets(config::get_config_item("AllocFromEmailAddress")));
+  if (config::get_config_item("AllocFromEmailAddress")) {
+    define("ALLOC_DEFAULT_FROM_ADDRESS", "allocPSA ".add_brackets(config::get_config_item("AllocFromEmailAddress")));
+  }
+
 
 //  // The default To: email address -- this is no longer used anywhere. If you revive it, you'll need to add a new config option to get around the fact there may be multiple time sheet administrators
 //  $p = get_cached_table("person");
