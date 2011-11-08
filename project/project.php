@@ -734,7 +734,9 @@ $q = sprintf("SELECT SUM(customerBilledDollars * timeSheetItemDuration * multipl
                 FROM timeSheetItem 
            LEFT JOIN timeSheet ON timeSheetItem.timeSheetID = timeSheet.timeSheetID
            LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
-               WHERE timeSheet.projectID = %d",$project->get_id());
+               WHERE timeSheet.projectID = %d
+            GROUP BY timeSheetItemID
+                ",$project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
