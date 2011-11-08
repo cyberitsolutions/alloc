@@ -231,6 +231,11 @@ sorttable = {
   },
   
   getInnerText: function(node) {
+
+    // colspans() and text nodes break this, work around.
+    if (node == null)
+	    return '';
+
     // gets the text we want to use for sorting for a cell.
     // strips leading and trailing whitespace.
     // this is *not* a generic getInnerText function; it's special to sorttable.
@@ -239,8 +244,9 @@ sorttable = {
     
     hasInputs = (typeof node.getElementsByTagName == 'function') &&
                  node.getElementsByTagName('input').length;
-    
-    if (node.getAttribute("sorttable_customkey") != null) {
+   
+    // type 3 (text) nodes don't support getAttribute
+    if (node.nodeType != 3 && node.getAttribute("sorttable_customkey") != null) {
       return node.getAttribute("sorttable_customkey");
     }
     else if (typeof node.textContent != 'undefined' && !hasInputs) {
