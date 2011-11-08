@@ -69,7 +69,7 @@
     </xsl:variable>
 
     <item>
-      <title>alloc-repo: <xsl:value-of select="name"/></title>
+      <title><xsl:value-of select="name"/></title>
       <link><xsl:value-of select="$annotate-href"/></link>
       <author><xsl:value-of select="@author"/></author>
       <description><xsl:value-of select="comment"/></description>
