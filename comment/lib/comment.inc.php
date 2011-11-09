@@ -633,8 +633,6 @@ class comment extends db_entity {
         $email->del_header("Cc");
       } else {
         $email->set_body($body);
-	      // Date: Tue, 07 Jun 2011 15:37:32 +1000
-	      $email->add_header("Date", date("D, d M Y H:i:s O"));
       }
 
       $bcc && $email->add_header("Bcc",$bcc);

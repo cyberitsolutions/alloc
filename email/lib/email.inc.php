@@ -92,6 +92,11 @@ class alloc_email {
     $email or $email = ALLOC_DEFAULT_FROM_ADDRESS;
     $this->add_header("Reply-To",$email);
   }
+  function set_date($date=false) {
+    // Date: Tue, 07 Jun 2011 15:37:32 +1000
+    $date or $date = date("D, d M Y H:i:s O");
+    $this->add_header("Date", $date);
+  }
   function set_message_id($hash=false) {
     $hash and $hash = ".".$hash;
     list($usec, $sec) = explode(" ", microtime());
@@ -115,6 +120,7 @@ class alloc_email {
       $this->set_content_type();
       $this->set_subject();
       $this->set_reply_to();
+      $this->set_date();
       $this->set_message_id();
     }
 
