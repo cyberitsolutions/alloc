@@ -91,7 +91,7 @@ class interestedParty extends db_entity {
         $info = interestedParty::get_decoded_interested_party_identifier($encoded);
         $info["entity"] = $entity;
         $info["entityID"] = $entityID;
-        $info["emailAddress"] = $info["email"];
+        $info["emailAddress"] or $info["emailAddress"] = $info["email"];
         interestedParty::add_interested_party($info);
       }
     }
@@ -211,12 +211,14 @@ class interestedParty extends db_entity {
       }
     }
     if (!$ip->get_value("personID")) {
-      $q = sprintf("SELECT clientContactID FROM clientContact WHERE clientContactEmail = '%s'",$data["emailAddress"]);
+      $q = sprintf("SELECT * FROM clientContact WHERE clientContactEmail = '%s'",$data["emailAddress"]);
       $db = new db_alloc();
       $db->query($q);
-      $row = $db->row();
-      $row and $ip->set_value("clientContactID",$row["clientContactID"]);
-      $row and $ip->set_value("external",1);
+      if ($row = $db->row()) {
+        $ip->set_value("clientContactID",$row["clientContactID"]);
+        $ip->set_value("fullName",$row["clientContactName"]);
+        $ip->set_value("external",1);
+      }
     }
     $ip->save();
   }
@@ -367,6 +369,16 @@ class interestedParty extends db_entity {
     }
     return (array)$rows;
   }
+
+  function is_external($entity, $entityID) {
+    $ips = interestedParty::get_interested_parties($entity,$entityID);
+    foreach ($ips as $email => $info) {
+      if ($info["external"] && $info["selected"]) {
+        return true;
+      }
+    }
+  }
+
 
 }
 

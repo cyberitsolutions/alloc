@@ -137,7 +137,7 @@ class comment extends db_entity {
     return $rows;
   }
 
-  function get_one_comment_array($v=array()) {
+  function get_one_comment_array($v=array(),$all_parties=array()) {
     global $TPL, $current_user;
     $new = $v;
     $token = new token;
@@ -149,15 +149,42 @@ class comment extends db_entity {
       }
 
       $ip = interestedParty::get_interested_parties("comment",$new["commentID"]);
-      if (is_array($ip)) {
-        foreach($ip as $email => $info) {
-          if ($info["external"]) {
-            $new["external"] = " loud";
-            $new["external_label"] = "<em class='faint warn'>[&nbsp;External&nbsp;Conversation&nbsp;]</em>";
-          }
+      foreach((array)$ip as $email => $info) {
+        if ($info["selected"]) {
+          $sel[] = $email;
         }
       }
-      $new["external_label"] or $new["external_label"] = "<em class='faint'>[&nbsp;Internal&nbsp;Conversation&nbsp;]</em>";
+      foreach ($all_parties as $email=>$i) {
+        in_array($email,(array)$sel) and $recipient_selected[] = $i["identifier"];
+      }
+
+      if (interestedParty::is_external("comment",$new["commentID"])) {
+        $new["external"] = " loud";
+        $label = "<em class='faint warn'>[ External Conversation ]</em>";
+      } else {
+        $label = "<em class='faint'>[ Internal Conversation ]</em>";
+      }
+
+      foreach((array)$all_parties as $email => $info) {
+        $recipient_ops[$info["identifier"]] = $info["name"]. " <".$email.">";
+      }
+  
+      $new["recipient_editor"] = "<span class='nobr' style='width:100%;display:inline;' class='recipient_editor'>";
+
+      $new["recipient_editor"].= "<span class='hidden' id='recipient_dropdown_".$new["commentID"]."'>
+                                    <form action='' method='post'>
+                                      <select name='comment_recipients[]' multiple='true'>
+                                      ".page::select_options($recipient_ops,$recipient_selected)."
+                                      </select>
+                                      <input type='hidden' name='recipient_entityID' value='".$new["commentID"]."'>
+                                      <span style='position:relative; top:3px;' class='spinner'></span>
+                                    </form>
+                                  </span>";
+
+      $new["recipient_editor"].= "<a class='magic recipient_editor_link' id='r_e_".$new["commentID"]."' style='text-decoration:none' href='#x'>".$label."</a>";
+
+      $new["recipient_editor"].= "</span>";
+
     }
 
     if ($v["timeSheetID"]) {
@@ -220,13 +247,18 @@ class comment extends db_entity {
       $rows = comment::get_comments($entity,$id);
     }
 
+    $e = new $entity;
+    $e->set_id($id);
+    $e->select();
+    $all_parties = $e->get_all_parties();
+      
     foreach ((array)$rows as $v) {
       unset($children);
       foreach ((array)$v["children"] as $c) {
-        $children[] = comment::get_one_comment_array($c);
+        $children[] = comment::get_one_comment_array($c,$all_parties);
       }
       $children and $v["children"] = $children;
-      $new_rows[] = comment::get_one_comment_array($v);
+      $new_rows[] = comment::get_one_comment_array($v,$all_parties);
     }
     return (array)$new_rows;
   }
@@ -246,8 +278,8 @@ class comment extends db_entity {
     $onClick = "return set_grow_shrink('comment_".$row["commentID"]."','button_comment_".$row["commentID"]."','true');";
     $rtn[] = '<table width="100%" cellspacing="0" border="0" class="panel'.$row["external"].'">';
     $rtn[] = '<tr>';
-    $rtn[] = '  <td style="width:75%; padding-bottom:0px; white-space:normal" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].'</td>';
-    $rtn[] = '  <td align="right" style="padding-bottom:0px;">'.$row["form"].$row["downloadEmail"].$row["external_label"].'</td>';
+    $rtn[] = '  <td style="padding-bottom:0px; white-space:normal" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].'</td>';
+    $rtn[] = '  <td align="right" style="padding-bottom:0px;" class="nobr">'.$row["form"].$row["downloadEmail"].$row["recipient_editor"].'</td>';
     $rtn[] = '</tr>';
     $rtn[] = '<tr>';
     $rtn[] = '  <td colspan="2" style="padding-top:0px; white-space:normal;">'.preg_replace("/<[^>]>/","",$row["emailed"])."</td>";

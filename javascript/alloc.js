@@ -1,9 +1,9 @@
-function redraw_multiple_selects(container) {
+function redraw_multiple_selects(container, funct) {
   if (container) {
     var c = "#"+container
   }
   $("select[multiple]",c).dropdownchecklist("destroy");
-  $("select[multiple]",c).dropdownchecklist( { "maxDropHeight":450 } );
+  $("select[multiple]",c).dropdownchecklist( { "maxDropHeight":450, "onComplete": funct } );
 }
 
 function toggle_view_edit() {
@@ -125,6 +125,32 @@ function preload_field(element, text) {
   });
 }
 
+function save_recipients(selector) {
+  p = $(selector).parent()
+  var values = [];
+  for( i=0; i < selector.options.length; i++ ) {
+    if (selector.options[i].selected && (selector.options[i].value != "")) {
+      values[values.length] = selector.options[i].value;
+    }
+  }
+  var commentID = p.find("input[name=recipient_entityID]").val();
+  p.find("span.spinner").html('<img class="ticker" src="../images/spinner.gif" alt="Updating field..." title="Updating field...">');
+  jQuery.post("../comment/updateRecipients.php",{ "commentID":commentID, "comment_recipients": values},function(data) {
+    $(selector).parent().find("span.spinner").html('<img src="../images/icon_message_good.png" alt="Saved" title="Saved">');
+    setTimeout(function() {
+      p.find("span.spinner").html("");
+      p.parent().hide();
+      if (data == 'external') {
+        var label = '<em class="faint warn">[ External Conversation ]</em>'
+        p.parents("table.panel").addClass("loud");
+      } else {
+        var label = '<em class="faint">[ Internal Conversation ]</em>'
+        p.parents("table.panel").removeClass("loud");
+      }
+      p.parent().parent().find("a.recipient_editor_link").html(label).show();
+    },1200);
+  });
+}
 
 // Preload mouseover images
 if (document.images) {
@@ -138,6 +164,8 @@ if (document.images) {
   pic4.src="../images/arrow_up.gif";
   pic5= new Image(119,13);
   pic5.src="../images/ticker2.gif";
+  pic6= new Image(16,16);
+  pic6.src="../images/spinner.gif";
 }
 
 
@@ -230,6 +258,16 @@ $(document).ready(function() {
   // and then hide the .edit items.
   redraw_multiple_selects("");
   $(".edit").hide();
+
+  // Interested Parties recipients editor
+  $(".recipient_editor_link").click(function(){
+    var commentID = this.id.split("_")[2]
+    $(this).toggle();
+    $("#recipient_dropdown_"+commentID).slideToggle("fast");
+    redraw_multiple_selects("recipient_dropdown_"+commentID,save_recipients);
+    return false;
+  });
+
 });
 
 
