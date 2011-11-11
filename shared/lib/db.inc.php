@@ -73,6 +73,7 @@ class db {
 
   function commit() {
     if (self::$started_transaction) {
+      $this->query("SET autocommit=1");
       $this->query("COMMIT");
     }
   }
