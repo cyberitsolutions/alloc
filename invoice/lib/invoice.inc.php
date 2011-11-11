@@ -783,6 +783,27 @@ class invoice extends db_entity {
     }  
   }
 
+  function get_all_parties($projectID="") {
+    $db = new db_alloc;
+    $interestedPartyOptions = array();
+
+    if (!$projectID && is_object($this)) {
+      $projectID = $this->get_value("projectID");
+    }
+
+    if ($projectID) {
+      $interestedPartyOptions = project::get_all_parties($projectID);
+    }
+  
+    $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
+    foreach ($extra_interested_parties as $name => $email) {
+      $interestedPartyOptions[$email] = array("name"=>$name);
+    }
+
+    // return an aggregation of the current task/proj/client parties + the existing interested parties
+    $interestedPartyOptions = interestedParty::get_interested_parties("invoice",$this->get_id(),$interestedPartyOptions);
+    return $interestedPartyOptions;
+  }
 
 }
 
