@@ -62,30 +62,106 @@ class alloc_services {
     }
   }
 
-  public function get_people($people="") {
+  public function get_people($people="", $entity="", $entityID="") {
     $person_table = get_cached_table("person");
 
     $people = explode(",",$people);
     foreach ($people as $person) {
+      $person = trim($person);
+
+      if ($entity && $entityID) {
+        if (strtolower($person) == "default") {
+          $default_recipients = interestedParty::get_interested_parties($entity,$entityID);
+        }
+        if (strtolower($person) == "internal") {
+          $internal_recipients = interestedParty::get_interested_parties($entity,$entityID);
+        }
+      }
+    }
+
+    foreach ((array)$default_recipients as $email => $info) {
+      if ($info["selected"]) {
+        $rtn[$email] = $this->reduce_person_info($info);
+      }
+    }
+
+    foreach ((array)$internal_recipients as $email => $info) {
+      if ($info["selected"] && !$info["external"]) {
+        $rtn[$email] = $this->reduce_person_info($info);
+      }
+    }
+
+    foreach ((array)$people as $person) {
+      $person = trim($person);
+
       // personID
       if (is_numeric($person)) {
-        $rtn[$person] = $person_table[$person];
+        if ($person_table[$person]["personActive"]) {
+          $rtn[$person_table[$person]["emailAddress"]] = $person_table[$person];
+          continue;
+        }
 
       // username
-      } else if (strpos($person," ") === false) {
+      } else if (!in_str(" ",$person) && !in_str("@",$person)) {
         foreach ($person_table as $pid => $data) {
-          strtolower($person) == strtolower($data["username"]) and $rtn[$pid] = $data;
+          if (strtolower($person) == strtolower($data["username"]) && $data["personActive"]) {
+            $rtn[$data["emailAddress"]] = $data;
+            continue 2;
+          }
+        }
+        
+        if ($ccID = clientContact::find_by_name($person)) {
+          $cc = new clientContact();
+          $cc->set_id($ccID);
+          $cc->select();
+          $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
+          continue;
+        }
+
+      // email
+      } else if (!in_str(" ",$person) && in_str("@",$person)) {
+        foreach ($person_table as $pid => $data) {
+          if (same_email_address($person,$data["emailAddress"]) && $data["personActive"]) {
+            $rtn[$data["emailAddress"]] = $data;
+            continue 2;
+          }
+        }
+        
+        if ($ccID = clientContact::find_by_email($person)) {
+          $cc = new clientContact();
+          $cc->set_id($ccID);
+          $cc->select();
+          $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
+          continue;
+        } else {
+          $rtn[$person] = array("emailAddress"=>$person, "name"=>"");
+          continue;
         }
   
       // full name
       } else {
         foreach ($person_table as $pid => $data) {
-          strtolower($person) == strtolower($data["name"]) and $rtn[$pid] = $data;
+          if (strtolower($person) == strtolower($data["name"]) && $data["personActive"]) {
+            $rtn[$data["emailAddress"]] = $data;
+            continue 2;
+          }
+        }
+
+        if ($ccID = clientContact::find_by_name($person)) {
+          $cc = new clientContact();
+          $cc->set_id($ccID);
+          $cc->select();
+          $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
+          continue;
+        } else {
+          list($e, $n) = parse_email_address($person);
+          $rtn[$e] = array("emailAddress"=>$e, "name"=>$n);
+          continue;
         }
       }
     }
-    foreach ($rtn as $pid => $p) {
-      $rtn[$pid] = $this->reduce_person_info($p);
+    foreach ((array)$rtn as $id => $p) {
+      $rtn[$id] = $this->reduce_person_info($p);
     }
     return (array)$rtn;
   }
@@ -93,8 +169,9 @@ class alloc_services {
   public function reduce_person_info($person) {
     $rtn["personID"] = $person["personID"];
     $rtn["username"] = $person["username"];
-    $rtn["name"]     = $person["name"];
-    $rtn["emailAddress"] = $person["emailAddress"];
+    $rtn["name"]     = $person["name"]             or $rtn["name"] = $person["clientContactName"];
+    $rtn["emailAddress"] = $person["emailAddress"] or $rtn["emailAddress"] = $person["clientContactEmail"] or $rtn["emailAddress"] = $person["email"];
+    $rtn["clientContactID"] = $person["clientContactID"];
     return $rtn;
   }
 

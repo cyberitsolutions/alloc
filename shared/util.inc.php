@@ -767,4 +767,7 @@ function array_kv($arr,$k,$v) {
   }
   return $rtn;
 }
+function in_str($in,$str) {
+  return strpos($str,$in) !== false;
+}
 ?>

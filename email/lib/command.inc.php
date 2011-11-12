@@ -225,6 +225,21 @@ class command {
         $message[] = "Problem updating task: ".implode("\n",(array)$err);
       }
 
+
+    // Adding a comment from CLI
+    } else if ($commands["comment"] == "new") {
+      $commentID = comment::add_comment($commands["entity"], $commands["entityID"], $commands["comment_text"]);
+
+      // add interested parties
+      foreach((array)$commands["ip"] as $k => $info) {
+        $info["entity"] = "comment";
+        $info["entityID"] = $commentID;
+        $info["fullName"] = $info["name"];
+        interestedParty::add_interested_party($info);
+      }
+
+      // Re-email the comment out
+      comment::send_comment($commentID,array("interested"));
     }
 
 

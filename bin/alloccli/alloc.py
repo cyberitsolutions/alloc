@@ -733,11 +733,13 @@ class alloc(object):
         self.die("Args: %s" % args)
     return rtn
 
-  def get_people(self, people):
+  def get_people(self, people, entity="", entityID=""):
     """Get a list of people."""
     args = {}
     args["people"] = people
     args["method"] = "get_people"
+    args["entity"] = entity
+    args["entityID"] = entityID
     return self.make_request(args)
 
   def get_alloc_html(self, url):
