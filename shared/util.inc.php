@@ -770,4 +770,20 @@ function array_kv($arr,$k,$v) {
 function in_str($in,$str) {
   return strpos($str,$in) !== false;
 }
+function rmdir_if_empty($dir) {
+  if (is_dir($dir)) {
+    $handle = opendir($dir);
+    clearstatcache();
+    while (false !== ($file = readdir($handle))) {
+      if ($file != "." && $file != "..") {
+        $num_files++;
+        clearstatcache();
+      }
+    }
+    // Nuke dir if empty
+    if (!$num_files) {
+      rmdir($dir);
+    }
+  }
+}
 ?>

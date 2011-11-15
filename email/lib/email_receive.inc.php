@@ -32,6 +32,11 @@ class alloc_email_receive {
   var $connection;
   var $mail_headers;
   var $mail_structure;
+  var $mail_text;
+  var $mail_parts;
+  var $mail_info;
+  var $dir;
+  var $mime_types = array("text", "multipart", "message", "application", "audio", "image", "video", "other");
   
   function alloc_email_receive($info,$lockfile=false) {
     $this->host     = $info["host"];
@@ -40,7 +45,6 @@ class alloc_email_receive {
     $this->password = $info["password"];
     $this->protocol = $info["protocol"] or $this->protocol = "imap";
     $this->lockfile = $lockfile;
-
 
     // Nuke lock files that are more that 30 min old 
     if ($this->lockfile && file_exists($this->lockfile) && (time() - filemtime($this->lockfile)) > 1800) {
@@ -52,7 +56,6 @@ class alloc_email_receive {
     } else if ($this->lockfile) {
       $this->lock();
     }
-  
   }
   
   function open_mailbox($folder="",$ops=OP_HALFOPEN) {
@@ -80,28 +83,28 @@ class alloc_email_receive {
   }
 
   function get_num_emails() {
-    if (!$this->mailbox_info) {
+    if (!$this->mail_info) {
       $this->check_mail();
     }
-    if (is_object($this->mailbox_info)) {
-      return $this->mailbox_info->messages;
+    if (is_object($this->mail_info)) {
+      return $this->mail_info->messages;
     }
   }
 
   function get_num_new_emails() {
-    if (!$this->mailbox_info) {
+    if (!$this->mail_info) {
       $this->check_mail();
     }
-    if (is_object($this->mailbox_info)) {
-      return $this->mailbox_info->unseen;
+    if (is_object($this->mail_info)) {
+      return $this->mail_info->unseen;
     }
   }
 
   function check_mail() {
     if ($this->connection) {
-      $this->mailbox_info = imap_status($this->connection, $this->connect_string, SA_ALL);
+      $this->mail_info = imap_status($this->connection, $this->connect_string, SA_ALL);
     } else { 
-      unset($this->mailbox_info);
+      unset($this->mail_info);
     }
   }
 
@@ -119,6 +122,7 @@ class alloc_email_receive {
 
   function set_msg($x) {
     $this->msg_uid = $x;
+    $this->mail_headers = $this->mail_structure = $this->mail_text = $this->mail_parts = $this->mail_info = $this->dir = "";
   }
 
   function get_msg_header($uid=0) {
@@ -127,8 +131,15 @@ class alloc_email_receive {
     return $this->mail_headers;
   }
 
+  function download_email_part($num,$encoding) {
+    $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $num, FT_UID & FT_INTERNAL & FT_PEEK);
+    return $this->decode_part($encoding,$raw_data);
+  }
+
   function load_structure() {
-    $this->mail_structure = imap_fetchstructure($this->connection,$this->msg_uid,FT_UID);
+    if (!$this->mail_structure) {
+      $this->mail_structure = imap_fetchstructure($this->connection,$this->msg_uid,FT_UID);
+    }
   }
 
   function get_raw_email_by_msg_uid($msg_uid) {
@@ -137,65 +148,70 @@ class alloc_email_receive {
     // we might view an email before it has been downloaded by
     // receiveEmail.php
     if (is_array($result) && $result[0]->seen) { 
-      $header = imap_fetchheader($this->connection,$msg_uid,FT_PREFETCHTEXT+FT_UID);
-      $body = imap_body($this->connection,$msg_uid,FT_UID);
-      return array($header,$body);
+      return $this->get_raw_header_and_body($msg_uid);
     }
     return array("","");
   }
 
-  function raw_header_and_body() {
-    $header = imap_fetchheader($this->connection,$this->msg_uid,FT_PREFETCHTEXT+FT_UID);
-    $body = imap_body($this->connection,$this->msg_uid,FT_UID);
-    return array($header,$body);
+  function get_raw_header_and_body($msg_uid=false) {
+    $msg_uid or $msg_uid = $this->msg_uid;
+    static $cache;
+    if ($cache[$msg_uid]) {
+      return $cache[$msg_uid];
+    }
+    $header = imap_fetchheader($this->connection,$msg_uid, FT_UID);
+    $body = imap_body($this->connection,$msg_uid,FT_UID & FT_INTERNAL);
+    $cache[$msg_uid] = array($header,$body);
+    return $cache[$msg_uid];
   }
 
-  function save_email($file) {
-    $header = imap_fetchheader($this->connection,$this->msg_uid,FT_PREFETCHTEXT+FT_UID);
-    $header and $this->mail_headers = imap_rfc822_parse_headers($header);
-    $body = imap_body($this->connection,$this->msg_uid,FT_UID);
-    $fh = fopen($file,"w+");
-    fputs($fh, $header.$body);
-    fclose($fh);
+  function save_email($dir) {
+    if ($dir && !is_dir($dir)) {
+      mkdir($dir, 0777);
+    }
+    $dir && $dir[strlen($dir)-1] != DIRECTORY_SEPARATOR and $dir.=DIRECTORY_SEPARATOR;
+    $this->dir = $dir;
 
-    $mime = new mime_parser;
-    $mime->decode_bodies = 1;
-    $mime->ignore_syntax_errors = 1;
-    $parameters = array('File'=>$file, "SaveBody"=>dirname($file));
-    $mime->Decode($parameters, $decoded);
-    #echo "<pre>".print_r($decoded,1)."</pre>";
+    $this->load_structure();
+    $this->load_parts($this->mail_structure);
 
-    // remove email.eml file and remove file called 1, which should just be the textual message body
-    $dir = dirname($file);
-    file_exists($file) && unlink($file);
-    #file_exists($dir.DIRECTORY_SEPARATOR."1") && unlink($dir.DIRECTORY_SEPARATOR."1"); 
+    foreach ($this->mail_parts as $v) {
+      $s = $v["part_object"]; // structure
+      $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $v["part_number"],FT_UID & FT_INTERNAL & FT_PEEK); 
+      $thing = $this->decode_part($s->encoding,$raw_data);
 
-    if (is_dir($dir)) {
-      $handle = opendir($dir);
-      clearstatcache();
-      while (false !== ($file = readdir($handle))) {
-        if ($file != "." && $file != "..") {
-          $num_files++;
-          clearstatcache();
+      if (!$this->mail_text && strtolower($this->mime_types[$s->type]."/".$s->subtype) == "text/plain") {
+        $this->mail_text = $thing;
+      } else {
+        $filename = $this->get_parameter_attribute_value($s->parameters,"name");
+        $filename or $filename = $this->get_parameter_attribute_value($s->parameters,"filename");
+        $filename or $filename = $this->get_parameter_attribute_value($s->dparameters,"name");
+        $filename or $filename = $this->get_parameter_attribute_value($s->dparameters,"filename");
+
+        //$filename or $filename = $v["part_number"]; // we're only storing attachments that have filenames.
+        if ($filename) {
+          $fh = fopen($dir.$filename,"wb");
+          fputs($fh, $thing);
+          fclose($fh);
         }
       }
-    }
-    // Nuke dir if empty
-    if (!$num_files) {
-      rmdir($dir);
-    }
+    } 
 
-    return $decoded;
+    rmdir_if_empty($dir);
   }
 
   function mark_seen() {
     imap_setflag_full($this->connection, $this->msg_uid, "\\SEEN", FT_UID); // this doesn't work!
-    $body = imap_body($this->connection,$this->msg_uid,FT_UID); // this seems to force it to be marked seen
+    $body = imap_body($this->connection,$this->msg_uid,FT_UID & FT_INTERNAL); // this seems to force it to be marked seen
+  }
+
+  function mark_unseen() {
+    imap_clearflag_full($this->connection, $this->msg_uid, "\\SEEN", ST_UID);
   }
 
   function forward($address,$subject) {
     $header = imap_fetchheader($this->connection,$this->msg_uid,FT_UID);
-    $body = imap_body($this->connection,$this->msg_uid,FT_UID);
+    $body = imap_body($this->connection,$this->msg_uid,FT_UID & FT_INTERNAL);
 
     $email = new alloc_email();
     $email->set_headers($header);
@@ -208,7 +224,9 @@ class alloc_email_receive {
     $email->del_header("cc");
     $email->del_header("bcc");
 
-    $email->set_subject($subject." [".trim($orig_subject)."]");    
+    $orig_subject and $s = " [".trim($orig_subject)."]";
+
+    $email->set_subject($subject.$s);    
     $email->set_to_address($address);
     $email->set_message_type("orphan");
     $email->set_body($body);
@@ -253,9 +271,9 @@ class alloc_email_receive {
     $headers or $headers = $this->mail_headers;
     $keys = array();
 
-    if (preg_match("/\{Key:[A-Za-z0-9]{8}\}/i",$headers->subject,$m)) {
+    if (preg_match("/\{Key:[A-Za-z0-9]{8}/i",$headers->subject,$m)) {
       $key = $m[0];
-      $key = str_replace(array("{Key:","}"),"",$key);
+      $key = str_replace("{Key:","",$key);
       $key and $keys[] = $key;
     }
 
@@ -273,8 +291,210 @@ class alloc_email_receive {
     return array_unique((array)$keys);
   }
 
+  function get_commands($commands=array()) {
+    list($header,$body) = $this->get_raw_header_and_body();
+    $header and $header_obj = imap_rfc822_parse_headers($header);
+    $subject = $header_obj->subject;
+    
+    $e = new alloc_email();
+    $e->set_headers($header);
+  
+    // We now have: $header,$body,$subject
+    if ($commands) {
+      /* Disabled ...
+      // Look for commands in the email's header
+      foreach ($commands as $k=>$v) {
+        $h = trim($e->get_header("x-alloc-".$k));
+        $h and $rtn[strtolower($k)][] = $h;
+      }
 
+      // Look for commands in the email's body
+      $lines = explode("\n",$this->mail_text);
+
+      #echo "Lines: ".print_r($lines,1);
+      #echo "<br>Com:".print_r($commands,1);
+
+      // Loop through the email backwards, we're looking for the final paragraph of commands
+      for($i=count($lines);$i>0;$i--){
+        #echo "<br>line: [".$i."]:".$lines[$i]." go:".sprintf("%d",$go)." starting_line: ".$starting_line;
+        $lines[$i] and $go = true;
+        $go && !$lines[$i] and $starting_line = $i;
+      }
+
+      // Loop forwards and accumulate the commands
+      for($i=$starting_line-1;$i<=count($lines);$i++) {
+        foreach ($commands as $k=>$v) {
+          preg_match("/^".$k.":\s*(.*)$/i",$lines[$i],$matches);
+          if ($matches[1]) {
+            $rtn[strtolower($k)][] = trim($matches[1]);
+          }
+        }
+      }
+      */ 
+      // Look for commands in the email's subject line
+      preg_match("/{(Key:[^}]*)}/i",$subject,$matches);
+      $subject = $matches[1];
+      $bits = explode("^",$subject);
+      foreach ($bits as $bit) {
+        if ($bit) {
+          // ^something: value
+          $chunks = explode(":",$bit);
+          $key = trim(array_shift($chunks));
+          $val = trim(implode(":",$chunks)); 
+          if ($commands[strtolower($key)] && $val) {
+            $rtn[strtolower($key)][] = trim($val);
+          }
+        }
+      }
+    }
+  
+    // we can have multiple time: entries in an email
+    // all other commands are only used once per email
+    foreach ((array)$rtn as $k => $v) {
+      if ($k == "time") {
+        $r[$k] = $v;
+      } else {
+        $r[$k] = end($v);
+      }
+    }
+
+    return (array)$r; 
+  }
+  
+  function decode_part($encoding, $thing) {
+    if ($encoding == 0) { 
+      // 7bit
+    } else if ($encoding == 1) { 
+      // 8bit
+    } else if ($encoding == 2) { 
+      // 8bit
+    } else if ($encoding == 3) { 
+      $thing = imap_base64($thing);  // Decodes base64
+    } else if ($encoding == 4) { 
+      $thing = imap_qprint($thing);  // quoted-printable to 8bit
+    } else if ($encoding == 5) { 
+      // ietf-token
+    }
+    return $thing;
+  }
+
+  function load_parts($struct) {
+    if (!$this->mail_parts) {
+      if (sizeof($struct->parts) > 0) {
+        foreach ($struct->parts as $count => $part) {
+          $this->add_part_to_array($part, ($count+1));
+        }
+      // Email does not have a seperate mime attachment for text
+      } else {
+        $this->mail_parts[] = array('part_number'=>'1', 'part_object'=>$struct);
+      }
+    }
+    return $this->mail_parts;
+  }
+
+  function add_part_to_array($struct, $partno) {
+    $this->mail_parts[] = array('part_number'=>$partno, 'part_object'=>$struct);
+
+    // Check to see if the part is an attached email message, as in the RFC-822 type
+    if ($struct->type == 2) {
+      if (sizeof($struct->parts) > 0) {
+        foreach ($struct->parts as $count => $part) {
+
+          // Iterate here again to compensate for the broken way that imap_fetchbody() handles attachments
+          if (sizeof($part->parts) > 0) {
+            foreach ($part->parts as $count2 => $part2) {
+              $this->add_part_to_array($part2, $partno.".".($count2+1));
+            }
+
+          // Attached email does not have a seperate mime attachment for text
+          } else {
+            $this->mail_parts[] = array('part_number'=>$partno.'.'.($count+1), 'part_object'=>$struct);
+          }
+        }
+
+      // Not sure if this is possible
+      } else {
+        $this->mail_parts[] = array('part_number'=>$prefix.'.1', 'part_object'=>$struct);
+      }
+    // If there are more sub-parts, expand them out.
+    } else {
+      if (sizeof($struct->parts) > 0) {
+        foreach ($struct->parts as $count => $p) {
+          $this->add_part_to_array($p, $partno.".".($count+1));
+        }
+      }
+    }
+  }
+
+  function get_charset() {
+    if (!$this->mail_structure) {
+      $this->load_structure();
+    }
+    return $this->get_parameter_attribute_value($this->mail_structure->parameters,"charset");
+  }
+
+  function get_parameter_attribute_value($parameters,$needle) {
+    foreach ($parameters as $v) {
+      if (strtolower($v->attribute) == $needle) {
+        $rtn = $v->value;
+      }
+    }
+    return $rtn;
+  }
+
+  function get_converted_encoding() {
+    // Update comment with the text body and the creator
+    $body = trim($this->mail_text);
+
+    // if the email has a different encoding, change it to the DB connection encoding so mysql doesn't choke
+    $enc = $this->get_charset();
+    if ($enc) {
+      $db = new db_alloc;
+      $db->connect();
+      $body = mb_convert_encoding($body, $db->get_encoding(), $enc);
+    }
+    return $body;
+  }
 }
+
+
+// Tests
+if (basename($_SERVER["PHP_SELF"]) == "email_receive.inc.php") {
+  define("NO_AUTH",1);
+  require_once("alloc.php");
+  //require_once("emailsettings.php");
+
+  $num = 30;
+
+  $e = new alloc_email_receive($info);
+  $e->open_mailbox("INBOX");
+
+  echo "\nNum emails: ".$e->get_num_emails();
+  echo "\nNew emails: ".$e->get_num_new_emails();
+  echo "\ncheck_mail(): ".str_replace("\n"," ",print_r($e->mail_info,1));
+  echo "\nget_new_email_msg_uids(): ".str_replace("\n"," ",print_r($e->get_new_email_msg_uids(),1));
+  echo "\nget_all_email_msg_uids(): ".str_replace("\n"," ",print_r($e->get_all_email_msg_uids(),1));
+  //exit();
+  echo "\nget_emails_UIDs_search(): ".str_replace("\n"," ",print_r($e->get_emails_UIDs_search("SUBJECT alloc"),1));
+  //echo "\nget_msg_header(): ".str_replace("\n"," ",print_r($e->get_msg_header($num),1));
+
+  echo "\n";
+  $e->set_msg($num);
+  $e->load_structure();
+  echo "\nload_structure(): ".str_replace(" "," ",print_r($e->mail_structure,1));
+  echo "\nget_charset(): ".$e->get_charset();
+  //exit();
+
+  list($h,$b) = $e->get_raw_email_by_msg_uid($num);
+  //echo "\nget_raw_email_by_msg_uid(): "."HEADER: ".$h."\nBODY: ".$b;
+
+  echo "\nsave_email(): ".$e->save_email("/tmp/email");
+  //echo "\nload_parts(): ".print_r($e->mail_parts,1);
+  echo "\nmail_text (plaintext version): ".$e->mail_text;
+  echo "\nget_commands(): ".print_r($e->get_commands(task::get_exposed_fields()),1);
+  echo "\n";
+}
+
 
 
 
