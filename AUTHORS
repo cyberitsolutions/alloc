@@ -38,9 +38,6 @@ And in addition contains code from the following projects:
 cpdf (public domain)
 Wayne Munro <pdf@ros.co.nz> http://www.ros.co.nz/pdf
 
-mime_parser (BSD license) 
-Copyright © (C) Manuel Lemos 2006 <mlemos-at-acm.org> 
-
 phpass (public domain)
 Solar Designer <solar at openwall.com> http://www.openwall.com/phpass/
 
