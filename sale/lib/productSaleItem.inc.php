@@ -101,6 +101,7 @@ class productSaleItem extends db_entity {
                      AND productSaleID = %d
                      AND productSaleItemID = %d
                      AND status != 'rejected'
+                     AND productCostID IS NULL
                 ",config::get_config_item("inTfID")
                  ,config::get_config_item("outTfID")
                  ,config::get_config_item("taxTfID")
