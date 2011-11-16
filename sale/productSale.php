@@ -335,7 +335,7 @@ if (!$productSale->get_id() || $productSale->get_value("status") != "finished" &
   $TPL["show_client_options"] = $client_select;
   $TPL["show_project_options"] = $project_select;
 
-  $personID = $productSale->get_value("personID");
+  $personID = $productSale->get_value("personID") or $personID = $current_user->get_id();
   $TPL["show_person_options"] = "<select name='personID'>".page::select_options(person::get_username_list($personID), $personID)."</select>";
 
   $TPL["show_date"] = page::calendar("productSaleDate", $productSale->get_value("productSaleDate"));
