@@ -58,16 +58,13 @@ class token extends db_entity {
     }
   }
 
-  function execute($arg=false) {
-
+  function execute() {
     if ($this->get_id()) {
-
       if ($this->get_value("tokenActionID")) {
         $tokenAction = new tokenAction;
         $tokenAction->set_id($this->get_value("tokenActionID"));    
         $tokenAction->select();
       }
-
       if ($this->get_value("tokenEntity")) {
         $class = $this->get_value("tokenEntity");
         $entity = new $class;
@@ -76,12 +73,13 @@ class token extends db_entity {
           $entity->select();
         }
         $method = $tokenAction->get_value("tokenActionMethod");
-        $rtn = $entity->{$method}($arg);
+        $this->increment_tokenUsed(); 
+        if ($entity->get_id()) {
+          return array($entity,$method);
+        }
       }
-
-      $this->increment_tokenUsed(); 
     }
-    return $rtn;
+    return array(false,false);
   }
 
   function increment_tokenUsed() {

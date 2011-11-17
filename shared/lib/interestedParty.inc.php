@@ -63,7 +63,7 @@ class interestedParty extends db_entity {
   }
 
   function active($entity, $entityID, $email) {
-    $email = str_replace(array("<",">"),"",$email);
+    list($email,$name) = parse_email_address($email);
     $db = new db_alloc();
     $db->query("SELECT *
                   FROM interestedParty
@@ -170,10 +170,10 @@ class interestedParty extends db_entity {
     return $str;
   }
 
-  function delete_interested_party($entity, $entityID, $emailAddress) {
+  function delete_interested_party($entity, $entityID, $email) {
     // Delete existing entries
-    $emailAddress = str_replace(array("<",">"),"",$emailAddress);
-    $row = interestedParty::active($entity,$entityID,$emailAddress);
+    list($email,$name) = parse_email_address($email);
+    $row = interestedParty::active($entity,$entityID,$email);
     if ($row) {
       $ip = new interestedParty();
       $ip->read_row_record($row);
@@ -223,8 +223,16 @@ class interestedParty extends db_entity {
     $ip->save();
   }
 
-  function adjust_by_email_subject($subject="",$entity,$entityID,$fullName="",$emailAddress="",$personID="",$clientContactID="",$body="",$msg_uid="") {
+  function adjust_by_email_subject($email_receive,$e) {
     global $current_user;
+
+    $entity = $e->classname;
+    $entityID = $e->get_id();
+    $subject = trim($email_receive->mail_headers->subject);
+    $body = $email_receive->get_converted_encoding();
+    $msg_uid = $email_receive->msg_uid;
+    list($emailAddress,$fullName) = parse_email_address($email_receive->mail_headers->fromaddress);
+    list($personID,$clientContactID,$fullName) = comment::get_person_and_client($emailAddress,$fullName,$e->get_project_id());
 
     // Load up the parent object that this comment refers to, be it task or timeSheet etc
     if ($entity == "comment" && $entityID) {
@@ -261,7 +269,7 @@ class interestedParty extends db_entity {
 
       // If "quiet" in the subject line, then the email/comment won't be re-emailed out again
       if ($command == "quiet") {
-        $action["quiet"] = true;
+        $quiet = true;
       }
 
       // To unsubscribe from this conversation
@@ -328,7 +336,7 @@ class interestedParty extends db_entity {
         }
       }
     }
-    return $action;
+    return $quiet;
   }
 
   function get_list_filter($filter=array()) {
@@ -375,6 +383,71 @@ class interestedParty extends db_entity {
     foreach ($ips as $email => $info) {
       if ($info["external"] && $info["selected"]) {
         return true;
+      }
+    }
+  }
+
+  function expand_ip($ip,$projectID=null) {
+
+    // jon               alloc username
+    // jon@jon.com       alloc username or client or stranger
+    // Jon <jon@jon.com> alloc username or client or stranger
+    // Jon Smith         alloc fullname or client fullname
+    
+    // username
+    $people or $people = person::get_people_by_username();
+    if (preg_match("/^\w+$/i",$ip)) {
+      return array($people[$ip]["personID"],$people[$ip]["name"],$people[$ip]["emailAddress"]);
+    } 
+
+    // email address
+    $people = person::get_people_by_username("emailAddress");
+    list($email,$name) = parse_email_address($ip);
+    if ($people[$email]) {
+      return array($people[$email]["personID"],$people[$email]["name"],$people[$email]["emailAddress"]);
+    }
+
+    // Jon smith
+    if (preg_match("/^[\w\s]+$/i",$ip)) {
+      $personID = person::find_by_name($ip,100);
+      if ($personID) {
+        $people = person::get_people_by_username("personID");
+        return array($personID,$people[$personID]["name"],$people[$personID]["emailAddress"]);
+      }
+
+      $ccid = clientContact::find_by_name($ip,$projectID,100);
+      if ($ccid) {
+        $cc = new clientContact();
+        $cc->set_id($ccid);
+        $cc->select();
+        $name = $cc->get_value("clientContactName");
+        $email = $cc->get_value("clientContactEmail");
+      }
+    }
+    return array(null,$name,$email);
+  }
+
+  function add_remove_ips($ip,$entity,$entityID,$projectID=null) {
+    $parties = explode(",",$ip);
+    foreach ($parties as $party) {
+      $party = trim($party);
+
+      // remove an ip
+      if ($party[0] == "-") {
+        list($personID,$name,$email) = interestedParty::expand_ip(implode("",array_slice(str_split($party),1)),$projectID);
+        interestedParty::delete_interested_party($entity, $entityID, $email);
+
+      // add an ip
+      } else {
+        list($personID,$name,$email) = interestedParty::expand_ip($party,$projectID);
+        if (!$email || strpos($email,"@") === false) {
+          return array("status"=>"err","message"=>"Unable to add interested party: ".$party);
+        }
+        interestedParty::add_interested_party(array("entity"      => $entity
+                                                   ,"entityID"    => $entityID
+                                                   ,"fullName"    => $name
+                                                   ,"emailAddress"=> $email
+                                                   ,"personID"    => $personID));
       }
     }
   }

@@ -81,22 +81,56 @@ class command {
     return $types[$type];
   }
 
-  function load_email($email_receive) {
-    $fields = $this->get_fields();
-    $this->commands = $email_receive->get_commands($fields);
-    $this->email_receive = $email_receive;
-  }
-
-  function run_commands($extra_fields=array()) {
+  function run_commands($commands=array(), $email_receive=false) {
     global $current_user;
-    $commands = array_merge((array)$this->commands,(array)$extra_fields);
-    $fields = $this->get_fields();
     $task_fields = $this->get_fields("task");
     $item_fields = $this->get_fields("item");
-    $email_receive = $this->email_receive;
+
+    // If there's Key in the email, then add a comment with the contents of the email.
+    if ($commands["key"]) {
+      $token = new token;
+      if ($token->set_hash($commands["key"])) {
+
+        global $guest_permission_cache, $current_user;
+        // If sent from a client or someone we don't recognize, we need to imbue this process with guest perms
+        $comment = $token->get_value("tokenEntity");
+        $commentID = $token->get_value("tokenEntityID");
+        $q = sprintf("SELECT commentMaster,commentMasterID FROM comment WHERE commentID = %d",$commentID);
+        $db = new db_alloc();
+        $r = $db->qr($q);
+        $master = $r["commentMaster"];
+        $masterID = $r["commentMasterID"];
+
+        if (!$current_user) {
+          // Used in db_entity::have_perm();
+          global $guest_permission_cache;
+          // Hard code some additional permissions for this guest user (just enough to create a comment)
+          $guest_permission_cache[] = array("entity"=>$comment,"entityID"=>$commentID,"perms"=>15);
+          $guest_permission_cache[] = array("entity"=>$comment,"entityID"=>0,"perms"=>15);
+          $guest_permission_cache[] = array("entity"=>$master ,"entityID"=>$masterID,"perms"=>15);
+          $guest_permission_cache[] = array("entity"=>"indexQueue","entityID"=>0,"perms"=>15);
+        }
+
+        list($entity,$method) = $token->execute();
+        if (is_object($entity) && $method == "add_comment_from_email") {
+
+          $c = comment::add_comment_from_email($email_receive,$entity);
+          $quiet = interestedParty::adjust_by_email_subject($email_receive,$entity);
+
+          if ($commands["ip"]) {
+            $rtn = interestedParty::add_remove_ips($commands["ip"],$entity->classname,$entity->get_id(),$entity->get_project_id());
+          }
+
+          if (!$quiet) {
+            comment::send_comment($c->get_id(),array("interested"),$email_receive);
+          }
+        }
+      }
+    }
+
 
     // If there's a number/duration then add some time to a time sheet
-    if ($commands["time"]) { 
+    if ($commands["time"]) {
 
       // CLI passes time along as a string, email passes time along as an array
       if (!is_array($commands["time"])) {
@@ -110,7 +144,7 @@ class command {
 
         if (is_numeric($t["duration"]) && $current_user->get_id()) {
           $timeSheet = new timeSheet();
-          is_object($this->email_receive) and $t["msg_uid"] = $this->email_receive->msg_uid;
+          is_object($email_receive) and $t["msg_uid"] = $email_receive->msg_uid;
           $tsi_row = $timeSheet->add_timeSheetItem($t);
           $status[] = $tsi_row["status"];
           $message[] = $tsi_row["message"];
@@ -199,8 +233,8 @@ class command {
       }
 
       if (strtolower($commands["task"]) == "new") {
-        if (!$commands["desc"] && is_object($this->email_receive)) {
-          $task->set_value("taskDescription",$this->email_receive->get_converted_encoding());
+        if (!$commands["desc"] && is_object($email_receive)) {
+          $task->set_value("taskDescription",$email_receive->get_converted_encoding());
         }
       }
 
@@ -243,67 +277,16 @@ class command {
     }
 
 
-    //
-    // Always add a comment with the contents of the email.
-    //
-    //
-    if ($commands["key"]) {
-      $token = new token;
-      if ($token->set_hash($commands["key"])) {
-
-        global $guest_permission_cache, $current_user;
-        // If sent from a client or someone we don't recognize, we need to imbue this process with guest perms
-        if (!$current_user) {
-          $comment = $token->get_value("tokenEntity");
-          $commentID = $token->get_value("tokenEntityID");
-          $q = sprintf("SELECT commentMaster,commentMasterID FROM comment WHERE commentID = %d",$commentID);
-          $r = $db->qr($q);
-          $master = $r["commentMaster"];
-          $masterID = $r["commentMasterID"];
-
-          // Used in db_entity::have_perm();
-          global $guest_permission_cache;
-
-          // Hard code some additional permissions for this guest user (just enough to create a comment)
-          $guest_permission_cache[] = array("entity"=>$comment,"entityID"=>$commentID,"perms"=>15);
-          $guest_permission_cache[] = array("entity"=>$comment,"entityID"=>0,"perms"=>15);
-          $guest_permission_cache[] = array("entity"=>$master ,"entityID"=>$masterID,"perms"=>15);
-        }
-
-
-        list($entity,$method) = $token->execute();
-      }
-    }
-
+    // Figure out if success or failure
     foreach ((array)$status as $k => $v) {
       if ($v == "err") {
         $status = "err";
       }
     }
-  
     $status == "err" or $status = "yay";
 
-    // Status will be yay, msg, err or die, i.e. tied to the alloc-cli messaging system
+    // Status will be yay, msg, err or die, i.e. mirrored with the alloc-cli messaging system
     return array("status"=>$status,"message"=>implode(" ",(array)$message));
-  }
-
-  function add_comment($entity,$commands) {
-    if (!$this->email_receive) {
-      return;
-    } 
-    $comment = $entity->add_comment_from_email($this->email_receive,$entity);
-    if ($commands["ip"]) {
-      $rtn = interestedParty::add_remove_ips($commands["ip"],$entity->classname,$entity->get_id(),$entity->get_project_id());
-    }
-    if (!$commands["quiet"]) {
-      $comment->from["entity"] = $entity->classname;
-      $comment->from["entityID"] = $entity->get_id();
-      $comment->from["hash"] = $commands["key"];
-      list($successful_recipients,$messageid) = $comment->send_emails(array("interested"),$this->email_receive);
-    }
-    $comment->set_value("commentEmailRecipients",$successful_recipients);
-    $comment->skip_modified_fields = true;
-    $comment->save();
   }
 
 
