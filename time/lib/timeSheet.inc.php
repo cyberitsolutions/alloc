@@ -1239,7 +1239,7 @@ EOD;
         $d = $date or $d = date("Y-m-d");
         $tsi->set_value("dateTimeSheetItem",$d);
         $tsi->set_value("timeSheetItemDuration",$duration);
-        $tsi->set_value("timeSheetItemDurationUnitID", $row_projectPerson["rateUnitID"]);
+        $tsi->set_value("timeSheetItemDurationUnitID", $unit);
         if (is_object($task)) {
           $tsi->set_value("description",$task->get_name());
           $tsi->set_value("taskID",sprintf("%d",$taskID));
@@ -1438,6 +1438,9 @@ EOD;
     return false;
   }
 
+  function get_project_id() {
+    return $this->get_value("projectID");
+  }
 }  
 
 

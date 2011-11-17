@@ -1710,6 +1710,15 @@ class task extends db_entity {
     $index->addDocument($doc);
   }
 
+  function add_comment_from_email($email_receive,$ignorethis) {
+    return comment::add_comment_from_email($email_receive,$this);
+  }
+
+  function get_project_id() {
+    return $this->get_value("projectID");
+  }
+
+
 }
 
 

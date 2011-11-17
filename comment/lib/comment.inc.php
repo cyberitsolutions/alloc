@@ -425,138 +425,41 @@ class comment extends db_entity {
     return $hash;
   }
 
-  function add_comment_from_email($email) {
+  function add_comment_from_email($email_receive,$entity) {
     global $current_user, $guest_permission_cache;
 
-    // Skip over emails that are from alloc. These emails are kept only for
-    // posterity and should not be parsed and downloaded and re-emailed etc.
-    if (same_email_address($email->mail_headers->fromaddress, ALLOC_DEFAULT_FROM_ADDRESS)) {
-      $email->mark_seen();
-      return;
-    }
+    $commentID = comment::add_comment($entity->classname,$entity->get_id(),$email_receive->get_converted_encoding());
 
-    // Make a new comment
     $comment = new comment;
-    $comment->set_value("commentType","comment");
-    $comment->set_value("commentLinkID",$this->get_id());
-    $comment->set_value("commentEmailUID",$email->msg_uid);
-    $comment->save();
-    $commentID = $comment->get_id();
-
-    if (!$commentID) {
-      return;
-    }
+    $comment->set_id($commentID);
+    $comment->select();
+    $comment->set_value("commentEmailUID",$email_receive->msg_uid);
 
     // Have to allow guest users to update their newly created comment
-    $guest_permission_cache[] = array("entity"=>"comment","entityID"=>$commentID,"perms"=>15);
+    $guest_permission_cache[] = array("entity"=>"comment","entityID"=>$comment->get_id(),"perms"=>15);
 
-    $c = new comment();
-    $c->set_id($comment->get_value("commentLinkID"));
-    $c->select();
-    if ($c->get_value("commentType") == "task" && $c->get_value("commentLinkID")) {
-      $t = new task;
-      $t->set_id($c->get_value("commentLinkID"));
-      $t->select();
-      $projectID = $t->get_value("projectID");
-    }
-
-    // Save the email attachments into a directory
-    $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$comment->get_id();
-    if (!is_dir($dir)) {
-      mkdir($dir, 0777);
-    }
-    $file = $dir.DIRECTORY_SEPARATOR."mail.eml";
-    $decoded = $email->save_email($file);
+    $comment->rename_email_attachment_dir($email_receive->dir);
 
     // Try figure out and populate the commentCreatedUser/commentCreatedUserClientContactID fields
-    list($from_address,$from_name) = parse_email_address($decoded[0]["Headers"]["from:"]);
+    list($from_address,$from_name) = parse_email_address($email_receive->mail_headers->fromaddress);
+    list($personID,$clientContactID,$from_name) = comment::get_person_and_client($from_address,$from_name,$entity->get_project_id());
+    $personID and $comment->set_value('commentCreatedUser', $personID);
+    $clientContactID and $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
 
-    if (is_object($current_user) && $current_user->get_id()) {
-      $personID = $current_user->get_id();
-      $comment->set_value('commentCreatedUser', $personID);
-    } else {
-      $cc = new clientContact();
-      $clientContactID = $cc->find_by_email($from_address, $projectID);
-      $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
-      $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
+    $comment->set_value("commentCreatedUserText",trim($email_receive->mail_headers->fromaddress));
+    $comment->set_value("commentEmailMessageID",trim($email_receive->mail_headers->message_id));
+
+    if (method_exists($entity, 'add_comment_hook')) {
+      $entity->add_comment_hook($comment);
     }
 
-    // If we don't have a $from_name, but we do have a personID or clientContactID, get proper $from_name
-    if (!$from_name && $personID) {
-      $from_name = person::get_fullname($personID);
-
-    } else if (!$from_name && $clientContactID) {
-      $cc = new clientContact();
-      $cc->set_id($clientContactID);
-      $cc->select();
-      $from_name = $cc->get_value("clientContactName");
-
-    } else if (!$from_name) {
-      $from_name = $from_address;
-    }
-
-    // Load up some variables for later in send_emails()
-    $from["email"] = $from_address;
-    $from["name"] = $from_name;
-
-    // Don't update last modified fields for the second save()
+    $comment->updateSearchIndexLater = true;
     $comment->skip_modified_fields = true;
-
-    // Update comment with the text body and the creator
-    $body = trim(mime_parser::get_body_text($decoded));
-
-    // if the email has a different encoding, change it to the DB connection encoding so mysql doesn't choke
-    $enctype_matches = array();
-    //this pattern covers all encoding names supported in PHP
-    if ($contenttype = preg_match("/charset=([[:alnum:]-]+)/i", $decoded[0]["Headers"]["content-type:"], $enctype_matches)) {
-      $encoding = $enctype_matches[1];
-      $db = new db_alloc;
-      $db->connect();
-      $body = mb_convert_encoding($body, $db->get_encoding(), $encoding);
-    }
-
-    $comment->set_value("comment",$body);
-    $comment->set_value("commentCreatedUserText",trim($decoded[0]["Headers"]["from:"]));
-    $comment->set_value("commentEmailMessageID",trim($decoded[0]["Headers"]["message-id:"]));
     $comment->save();
-    $from["commentID"] = $comment->get_id();
-
-    // If user wants to un/subscribe to this comment
-    $subject = $decoded[0]["Headers"]["subject:"];
-    $ip_action = interestedParty::adjust_by_email_subject($subject,"comment",$this->get_id(),$from_name,$from_address,$personID,$clientContactID,$body,$email->msg_uid);
-
-    $recipients[] = "interested";
-
-    $class = $c->get_value("commentType");
-    if (class_exists($class)) {
-      $obj = new $class;
-      $obj->set_id($c->get_value("commentLinkID"));
-      $obj->select();
-      $from["parentCommentID"] = $c->get_id();
-      $from["entity"] = "comment";
-      $from["entityID"] = $c->get_id();
-
-      $token = new token;
-      if ($token->select_token_by_entity_and_action("comment",$comment->get_value("commentLinkID"),"add_comment_from_email")) {
-        $from["hash"] = $token->get_value("tokenHash");
-      }
-
-      if (!$ip_action["quiet"]) { // only resend email if quiet hasn't been put in the subject line
-        list($successful_recipients,$messageid) = comment::send_emails($obj, $recipients, $c->get_value("commentType")."_comments", $body, $from, $email);
-      }
-      if ($successful_recipients) {
-        $comment->set_value("commentEmailRecipients",$successful_recipients);
-        $comment->save();
-      }
-
-      if (method_exists($obj, 'add_comment_hook')) {
-        $obj->add_comment_hook($comment);
-      }
-    }
-
+    return $comment;
   }
 
-  function get_email_recipients($options=array(),$from=array()) {
+  function get_email_recipients($options=array(),$entity,$entityID) {
     $recipients = array();
     $people = get_cached_table("person");
 
@@ -565,8 +468,8 @@ class comment extends db_entity {
       // Determine recipients 
       if ($selected_option == "interested") {
         $db = new db_alloc;
-        if ($from["entity"] && $from["entityID"]) {
-          $q = sprintf("SELECT * FROM interestedParty WHERE entity = '%s' AND entityID = %d AND interestedPartyActive = 1",$from["entity"],$from["entityID"]);
+        if ($entity && $entityID) {
+          $q = sprintf("SELECT * FROM interestedParty WHERE entity = '%s' AND entityID = %d AND interestedPartyActive = 1",$entity,$entityID);
         }
         $db->query($q);
         while($row = $db->next_record()) {
@@ -585,7 +488,7 @@ class comment extends db_entity {
     return $recipients;
   }
 
-  function get_email_recipient_headers($recipients, $from) {
+  function get_email_recipient_headers($recipients, $from_address) {
     global $current_user;
 
     $emailMethod = config::get_config_item("allocEmailAddressMethod");
@@ -605,7 +508,7 @@ class comment extends db_entity {
       if ($recipient["emailAddress"] && !$done[$recipient["emailAddress"]]) {
 
         // If the person does *not* want to receive their own emails, skip adding them as a recipient
-        if ($current_user->prefs["receiveOwnTaskComments"] == 'no' && same_email_address($recipient["emailAddress"],$from["email"])) {
+        if ($current_user->prefs["receiveOwnTaskComments"] == 'no' && same_email_address($recipient["emailAddress"],$from_address)) {
           continue;
         }
 
@@ -642,34 +545,45 @@ class comment extends db_entity {
     return array($to_address, $bcc, $successful_recipients);
   }
 
-  function send_emails($selected_option, $email_receive=false) {
+  function send_emails($selected_option, $email_receive=false, $hash="", $is_a_reply_comment=false) {
     global $current_user;
 
     $e = $this->get_parent_object();
     $type = $e->classname."_comments";
     $body = $this->get_value("comment");
-    $from = $this->from;
 
-    $recipients = comment::get_email_recipients($selected_option,$from);
-    list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from);
+    if (is_object($email_receive)) {
+      list($from_address,$from_name) = parse_email_address($email_receive->mail_headers->fromaddress);
+    }
+
+    if ($is_a_reply_comment) {
+      $id = $this->get_value("commentLinkID");
+    } else {
+      $id = $this->get_id();
+    } 
+
+    $recipients = comment::get_email_recipients($selected_option,"comment",$id);
+    list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from_address);
 
     if ($successful_recipients) {
       $email = new alloc_email();
 
       if ($email_receive) {
-        list($email_receive_header,$email_receive_body) = $email_receive->raw_header_and_body();
+        list($email_receive_header,$email_receive_body) = $email_receive->get_raw_header_and_body();
         $email->set_headers($email_receive_header); 
         $email->set_body($email_receive_body); 
         // Remove any existing To/Cc header, to prevent the email getting sent to the same recipients again.
         $email->del_header("To");
         $email->del_header("Cc");
+        $subject = $email->get_header("subject");
+        $subject = trim(preg_replace("/{Key:[^}]*}.*$/i","",$subject));
       } else {
         $email->set_body($body);
       }
 
       $bcc && $email->add_header("Bcc",$bcc);
       
-      $email->add_header("X-Alloc-CommentID", $from["commentID"]);
+      $email->add_header("X-Alloc-CommentID", $this->get_id());
       $email->add_header("X-Alloc-".ucwords($e->classname), $e->get_name(DST_VARIABLE));
       $email->add_header("X-Alloc-".ucwords($e->key_field->get_name()), $e->get_id());
 
@@ -681,17 +595,17 @@ class comment extends db_entity {
       }
       
       $email->set_to_address($to_address);
-      $from_name = $from["name"];
       is_object($current_user) && !$from_name and $from_name = $current_user->get_name();
-      $hash = $from["hash"];
       $messageid = $email->set_message_id($hash);
       $subject_extra = "{Key:".$hash."}";
 
-      $tpl = config::get_config_item("emailSubject_".$e->classname."Comment");
-      $tpl and $subject = commentTemplate::populate_string($tpl, $e->classname, $e->get_id());
-      $subject or $subject = ucwords($e->classname)." Comment: ".$e->get_id()." ".$e->get_name(DST_VARIABLE);
+      if (!$subject) {
+        $tpl = config::get_config_item("emailSubject_".$e->classname."Comment");
+        $tpl and $subject = commentTemplate::populate_string($tpl, $e->classname, $e->get_id());
+        $subject or $subject = ucwords($e->classname)." Comment: ".$e->get_id()." ".$e->get_name(DST_VARIABLE);
+      }
 
-      $email->set_subject($subject . " " . $subject_extra);
+      $email->set_subject($subject." ".$subject_extra);
       $email->set_message_type($type);
 
       if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
@@ -704,8 +618,8 @@ class comment extends db_entity {
       }
 
       // if we're bouncing a complete email body the attachments are already included
-      if ($from["commentID"] && !$email_receive) {
-        $files = get_attachments("comment",$from["commentID"]);
+      if ($id && !$email_receive) {
+        $files = get_attachments("comment",$id);
         if (is_array($files)) {
           foreach ($files as $file) {
             $email->add_attachment($file["path"]);
@@ -771,12 +685,10 @@ class comment extends db_entity {
     if ($entity == "comment") {
       $entity = $e->get_value("commentType");
       $entity_id = $e->get_value("commentLinkID");
-      if (class_exists($entity)) {
-        $f = new $entity;
-        $f->set_id($entity_id);
-        $f->select();
-        $entity_name = $f->get_name();
-      }
+      $f = new $entity;
+      $f->set_id($entity_id);
+      $f->select();
+      $entity_name = $f->get_name();
     }
 
     $doc = new Zend_Search_Lucene_Document();
@@ -952,6 +864,60 @@ class comment extends db_entity {
     return implode("\n",$rtn);
   }
 
+  function get_project_id() {
+    $this->select();
+    if ($this->get_value("commentType") == "task" && $this->get_value("commentLinkID")) {
+      $t = new task;
+      $t->set_id($this->get_value("commentLinkID"));
+      $t->select();
+      $projectID = $t->get_value("projectID");
+    } else if ($this->get_value("commentType") == "project" && $this->get_value("commentLinkID")) {
+      $projectID = $this->get_value("commentLinkID");
+    } else if ($this->get_value("commentType") == "timeSheet" && $this->get_value("commentLinkID")) {
+      $t = new timeSheet;
+      $t->set_id($this->get_value("commentLinkID"));
+      $t->select();
+      $projectID = $t->get_value("projectID");
+    }
+    return $projectID;
+  }
+
+  function get_person_and_client($from_address,$from_name,$projectID=null) {
+    global $current_user;
+    $person = new person;
+    $personID = $person->find_by_email($from_address);
+    $personID or $personID = $person->find_by_name($from_name);
+
+    if (!$personID) {
+      $cc = new clientContact();
+      $clientContactID = $cc->find_by_email($from_address);
+      $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
+    }
+
+    // If we don't have a $from_name, but we do have a personID or clientContactID, get proper $from_name
+    if (!$from_name) {
+      if ($personID) {
+        $from_name = person::get_fullname($personID);
+      } else if ($clientContactID) {
+        $cc = new clientContact;
+        $cc->set_id($clientContactID);
+        $cc->select();
+        $from_name = $cc->get_value("clientContactName");
+      } else {
+        $from_name = $from_address;
+      }
+    }
+    return array($personID,$clientContactID,$from_name);
+  }
+
+  function rename_email_attachment_dir($dir) {
+    if ($dir && is_dir($dir)) {
+      $b = basename($dir);
+      $newdir = dirname($dir).DIRECTORY_SEPARATOR.$this->get_id();
+      rename($dir, $newdir);
+      rmdir_if_empty($newdir);
+    }
+  }
 
 
   // All you need to add a comment, add interested parties, attachments, and re-email it out
@@ -983,7 +949,7 @@ class comment extends db_entity {
     $emailRecipients[] = "interested";
 
     // Other parties that are added on-the-fly
-    foreach ($op as $email => $info) {
+    foreach ((array)$op as $email => $info) {
       if ($email && in_str("@",$email)) {
         unset($lt,$gt); // used above
         $str = $info["name"];
@@ -1025,14 +991,11 @@ class comment extends db_entity {
     return $emailRecipients;
   }
 
-  function send_comment($commentID, $emailRecipients) {
+  function send_comment($commentID, $emailRecipients, $email_receive=false) {
 
     $comment = new comment();
     $comment->set_id($commentID);
     $comment->select();
-    $comment->from["commentID"] = $comment->get_id();
-    $comment->from["entity"] = "comment";
-    $comment->from["entityID"] = $comment->get_id();
 
     $token = new token;
 
@@ -1040,23 +1003,24 @@ class comment extends db_entity {
       $c = new comment;
       $c->set_id($comment->get_value("commentLinkID"));
       $c->select();
+      $is_a_reply_comment = true;
       if ($token->select_token_by_entity_and_action("comment",$c->get_id(),"add_comment_from_email")) {
-        $comment->from["hash"] = $token->get_value("tokenHash");
+        $hash = $token->get_value("tokenHash");
       }
     }
 
-    if (!$comment->from["hash"]) {
+    if (!$hash) {
       if ($token->select_token_by_entity_and_action("comment",$comment->get_id(),"add_comment_from_email")) {
-        $comment->from["hash"] = $token->get_value("tokenHash");
+        $hash = $token->get_value("tokenHash");
       } else {
-        $comment->from["hash"] = $comment->make_token_add_comment_from_email();
+        $hash = $comment->make_token_add_comment_from_email();
       }
     }
 
-    list($successful_recipients,$messageid) = $comment->send_emails($emailRecipients);
+    list($successful_recipients,$messageid) = $comment->send_emails($emailRecipients,$email_receive,$hash,$is_a_reply_comment);
 
     // Append success to end of the comment
-    if ($successful_recipients && is_object($comment)) {
+    if ($successful_recipients) {
       $append_comment_text = "Email sent to: ".$successful_recipients;
       $message_good.= $append_comment_text;
       $comment->set_value("commentEmailMessageID",$messageid);
@@ -1064,6 +1028,7 @@ class comment extends db_entity {
     }
 
     $comment->skip_modified_fields = true;
+    $comment->updateSearchIndexLater = true;
     $comment->save();
   }
 
