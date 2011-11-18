@@ -318,7 +318,6 @@ class productSale extends db_entity {
     $ret[] = "  <th>Project</th>";
     $ret[] = "  <th>Status</th>";
     $ret[] = "  <th class=\"right\">Margin</th>";
-    $ret[] = "  <th class=\"right\">Unallocated</th>";
     $ret[] = "</tr>";
     return implode("\n",$ret);
   }

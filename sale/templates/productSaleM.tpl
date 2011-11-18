@@ -105,7 +105,7 @@ $(document).ready(function() {
     {$n = person::get_fullname($productSaleCreatedUser)}
     <td>{=$n} {$productSaleCreatedTime}</td>
     <td class="right">Project:</td>
-    <td width="30%">{$show_project_options}</td>
+    <td width="30%">{$show_project_options}{$project_tfID}</td>
   </tr>
   <tr>
     <td class="right">Total Sell Price:</td>
@@ -119,12 +119,6 @@ $(document).ready(function() {
     <td class="right">Sale Date:</td>
     <td>{$show_date}</td>
   </tr>
-  {if in_array($status,array("allocate","admin","finished"))}
-  <tr>
-    <td class="right">Total for Company:</td>
-    <td class="">{$total_unallocated}</td>
-  </tr>
-  {/}
   <tr>
     <td colspan="6" class="center">
     {if !$productSaleID}

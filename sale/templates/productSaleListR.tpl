@@ -6,6 +6,4 @@
   <td class="nobr">{=$projectName}</td>
   <td class="nobr">{$statusLabel}</td>
   <td class="right nobr">{$sale.amounts.total_margin}</td>
-  {$TPL["sale"]["amounts"]["total_unallocated_number"] != 0 and $class=" bad"}
-  <td class="right nobr{$class}">{$sale.amounts.total_unallocated}</td>
 </tr>
