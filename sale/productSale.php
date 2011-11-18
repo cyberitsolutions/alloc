@@ -394,6 +394,16 @@ if (!$productSale->get_id()) {
 }
 
 
+if ($productSale->get_value("projectID")) {
+  $project = new project();
+  $project->set_id($productSale->get_value("projectID"));
+  $project->select();
+  $ptf = $project->get_value("cost_centre_tfID");
+  $ptf and $TPL["project_tfID"] = " (TF: ".tf::get_name($ptf).")";
+  $ptf or $TPL["project_tfID"] = " (No project TF)";
+}
+
+
 $TPL["main_alloc_title"] = "Sale";
 include_template("templates/productSaleM.tpl");
 
