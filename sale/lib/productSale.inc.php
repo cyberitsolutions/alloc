@@ -86,8 +86,8 @@ class productSale extends db_entity {
         $project->select();
         $tfID = $project->get_value("cost_centre_tfID");
       }
-      if ($tfID == -1) {
-        $tfID = config::get_config_item("mainTfID");
+      if (!$tfID) {
+        $TPL["message_bad"][] = "Unable to use META: Project TF. Please ensure the project has a TF set, or adjust the transactions.";
       }
 
     // -2 == META: Salesperson TF

@@ -167,19 +167,18 @@ class productSaleItem extends db_entity {
     $taxTfID = config::get_config_item("taxTfID");
     $taxPercentDivisor = ($taxPercent/100) + 1;
 
-    // If this price includes tax, then perform a tax transfer from the
-    // outgoing tf to the tax tf.
+    // If this price includes tax, then perform a tax transfer
     if ($this->get_value("sellPriceIncTax")) {
       $amount_minus_tax = $this->get_value("sellPrice") / $taxPercentDivisor;
       $amount_of_tax = $this->get_value("sellPrice") - $amount_minus_tax;
       $amount_of_tax = exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"),$amount_of_tax,null,null,"%mo");
-      $this->create_transaction(-1, $taxTfID, $amount_of_tax, "Product Sale ".$taxName.": ".$productName, false, false, 'tax');
+      $this->create_transaction(config::get_config_item("mainTfID"), $taxTfID, $amount_of_tax, "Product Sale ".$taxName.": ".$productName, false, false, 'tax');
     }
 
     // Next transaction represents the amount that someone has paid the
     // sellPrice amount for the product. This money is transferred from 
-    // the Incoming transactions TF, to the Project's TF (META: -1).
-    $this->create_transaction(config::get_config_item("inTfID"), -1 ,page::money($this->get_value("sellPriceCurrencyTypeID"),$this->get_value("sellPrice"),"%mo"), "Product Sale: ".$productName,$this->get_value("sellPriceCurrencyTypeID"));
+    // the Incoming transactions TF, to the Main Finance TF.
+    $this->create_transaction(config::get_config_item("inTfID"),config::get_config_item("mainTfID"),page::money($this->get_value("sellPriceCurrencyTypeID"),$this->get_value("sellPrice"),"%mo"), "Product Sale: ".$productName,$this->get_value("sellPriceCurrencyTypeID"));
 
     // Now loop through all the productCosts for the sale items product.
     $query = sprintf("SELECT productCost.*, product.productName
@@ -194,7 +193,7 @@ class productSaleItem extends db_entity {
     while ($productCost_row = $db2->next_record()) {
       $amount = page::money($productCost_row["currencyTypeID"],$productCost_row["amount"] * $this->get_value("quantity"),"%mo");
       $description = "Product Cost: ".$productCost_row["productName"]." ".$productCost_row["description"];
-      $this->create_transaction(-1, $productCost_row["tfID"], $amount, $description, $productCost_row["currencyTypeID"],$productCost_row["productCostID"]);
+      $this->create_transaction(config::get_config_item("mainTfID"), $productCost_row["tfID"], $amount, $description, $productCost_row["currencyTypeID"],$productCost_row["productCostID"]);
     }
 
     // Need to do the percentages separately because they rely on the $totalUnallocated figure
@@ -215,7 +214,7 @@ class productSaleItem extends db_entity {
     while ($productCommission_row = $db2->next_record()) {
       $amount = page::money($productCommission_row["currencyTypeID"],page::money(config::get_config_item("currency"),$totalUnallocated,"%mo") * $productCommission_row["amount"]/100,"%mo");
       $description = "Product Commission: ".$productCommission_row["productName"]." ".$productCommission_row["description"];
-      $this->create_transaction(-1, $productCommission_row["tfID"], $amount, $description, config::get_config_item("currency"),$productCommission_row["productCostID"]);
+      $this->create_transaction(config::get_config_item("mainTfID"), $productCommission_row["tfID"], $amount, $description, config::get_config_item("currency"),$productCommission_row["productCostID"]);
     }
   }
 
