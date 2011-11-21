@@ -348,6 +348,44 @@ class productSale extends db_entity {
     return array("create"=>"Create", "edit"=>"Add Sale Items", "allocate" =>"Allocate", "admin"=>"Administrator", "finished"=>"Completed");
   }
 
+  function get_all_parties($projectID="") {
+    $db = new db_alloc;
+    $interestedPartyOptions = array();
+
+    if (!$projectID && is_object($this)) {
+      $projectID = $this->get_value("projectID");
+    }
+
+    if ($projectID) {
+      $interestedPartyOptions = project::get_all_parties($projectID);
+    }
+
+    $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
+    foreach ($extra_interested_parties as $name => $email) {
+      $interestedPartyOptions[$email] = array("name"=>$name);
+    }
+
+    if (is_object($this)) {
+      if ($this->get_value("personID")) {
+        $p = new person;
+        $p->set_id($this->get_value("personID"));
+        $p->select();
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "selected"=>true, "personID"=>$this->get_value("personID"));
+      }
+      if ($this->get_value("productSaleCreatedUser")) {
+        $p = new person;
+        $p->set_id($this->get_value("productSaleCreatedUser"));
+        $p->select();
+        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "selected"=>true, "personID"=>$this->get_value("productSaleCreatedUser"));
+      }
+      $this_id = $this->get_id();
+    }
+    // return an aggregation of the current proj/client parties + the existing interested parties
+    $interestedPartyOptions = interestedParty::get_interested_parties("productSale",$this_id,$interestedPartyOptions);
+    return $interestedPartyOptions;
+  }
+
+
 }
 
 
