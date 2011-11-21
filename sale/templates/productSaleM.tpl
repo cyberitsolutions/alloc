@@ -210,7 +210,7 @@ $(document).ready(function() {
 </table>
 {/}
 
-
+{show_comments()}
 
 {page::footer()}
 

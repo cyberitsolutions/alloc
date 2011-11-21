@@ -151,6 +151,23 @@ function show_transaction_new($template) {
   include_template($template);
 }
 
+  function show_comments() {
+    global $productSaleID, $TPL, $productSale;
+    if ($productSaleID) {
+      $TPL["commentsR"] = comment::util_get_comments("productSale",$productSaleID);
+      $TPL["class_new_comment"] = "hidden";
+      $TPL["entity"] = "productSale";
+      $TPL["entityID"] = $productSale->get_id();
+      $project = $productSale->get_foreign_object('project');
+      $TPL["clientID"] = $project->get_value("clientID");
+      $TPL["allParties"] = $productSale->get_all_parties($productSale->get_value("projectID")) or $TPL["allParties"] = array();
+      $commentTemplate = new commentTemplate();
+      $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"productSale"));
+      $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
+      include_template("../comment/templates/commentM.tpl");
+    }
+  }
+
 
 $productID = $_GET["productID"] or $productID = $_POST["productID"];
 $productSaleID = $_GET["productSaleID"] or $productSaleID = $_POST["productSaleID"];
