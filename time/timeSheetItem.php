@@ -27,6 +27,7 @@ if (!$current_user->is_employee()) {
 }
 
 $timeSheetID = $_POST["timeSheetID"];
+$timeSheetItemID = $_POST["timeSheetItem_timeSheetItemID"];
 
 if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["timeSheetItem_delete"]) && $timeSheetID) {
 
@@ -36,7 +37,8 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
   $timeSheet->load_pay_info();
 
   $timeSheetItem = new timeSheetItem;
-  if ($timeSheetItem->get_id()) {
+  if ($timeSheetItemID) {
+    $timeSheetItem->set_id($timeSheetItemID);
     $timeSheetItem->select();
   }
   $timeSheetItem->read_globals();
