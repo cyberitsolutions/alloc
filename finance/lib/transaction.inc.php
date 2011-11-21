@@ -161,6 +161,7 @@ class transaction extends db_entity {
                 ,'timesheet'=>'Time Sheet'
                 ,'adjustment'=>'Adjustment'
                 ,'insurance'=>'Insurance'
+                ,'sale'=>'Sale'
                 ,'tax'=>$taxName);
   }
 
