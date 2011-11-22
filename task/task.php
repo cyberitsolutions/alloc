@@ -342,29 +342,17 @@ if (!$task->get_id()) {
 
 // Printer friendly view
 if ($_GET["media"] == "print") {
-
   $client = new client;
   $client->set_id($project->get_value("clientID"));
   $client->select();
   $client->set_values("client_");
-
   $project = $task->get_foreign_object("project");
   $clientContact = new clientContact;
   $clientContact->set_id($project->get_value("clientContactID"));
   $clientContact->select();
   $clientContact->set_values("clientContact_");
-
-  // Need to html-ise taskName and description
-  $TPL["task_taskName"] = page::htmlentities($task->get_value("taskName"));
-  $TPL["task_taskDescription"] = page::to_html($task->get_value("taskDescription"));
-
   include_template("templates/taskPrinterM.tpl");
-
 } else {
-  // Need to html-ise taskName and description
-  $TPL["task_taskName_html"] = page::to_html($task->get_value("taskName"));
-  $TPL["task_taskDescription_html"] = page::to_html($task->get_value("taskDescription"));
-
   include_template("templates/taskM.tpl");
 }
 

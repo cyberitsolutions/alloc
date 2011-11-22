@@ -61,7 +61,7 @@ $(document).ready(function() {
     <td valign="top">
       <div class="task_pane">
         <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
-        <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {$task_taskName_html}</h2>&nbsp;{$priorityLabel}
+        <h2 style="margin-bottom:0px; display:inline;">{$taskTypeImage} {$task_taskID} {=$task_taskName}</h2>&nbsp;{$priorityLabel}
         {if $project_projectName} 
           <h6>Project</h6>
           <a href="{$url_alloc_project}projectID={$project_projectID}">{=$project_projectName}</a>
@@ -70,9 +70,9 @@ $(document).ready(function() {
           <h6>Parent Task</h6>
           {$hierarchy_links}
         {/}
-        {if $task_taskDescription_html}
+        {if $task_taskDescription}
           <h6>Description</h6>
-          {$task_taskDescription_html}
+          <pre class="comment">{=$task_taskDescription}</pre>
         {/}
       </div>
       <div class="task_pane">
@@ -179,7 +179,7 @@ $(document).ready(function() {
       <div class="task_pane">
         <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
         <div style="width:100%" class="">
-          <input type="text" id="taskName" name="taskName" value="{$task_taskName_html}" maxlength="75" size="35">
+          <input type="text" id="taskName" name="taskName" value="{=$task_taskName}" maxlength="75" size="35">
           <select name="priority">
             {$priorityOptions}
           </select>
