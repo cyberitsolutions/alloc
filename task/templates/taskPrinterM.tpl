@@ -33,19 +33,19 @@
   </tr>  
   <tr>
     <td class="overline">Task Name</td>
-    <td class="overline" colspan="3">#{$task_taskID} {$task_taskName}&nbsp;</td>
+    <td class="overline" colspan="3">#{$task_taskID} {=$task_taskName}&nbsp;</td>
   </tr>
   <tr>
     <td>Project</td>
-    <td colspan="3">{$project_projectName}&nbsp;</td>
+    <td colspan="3">{=$project_projectName}&nbsp;</td>
   </tr>
   <tr>
     <td>Parent Task</td>
-    <td colspan="3">{$parentTask_taskName}&nbsp;</td>
+    <td colspan="3">{=$parentTask_taskName}&nbsp;</td>
   </tr>
   <tr>
     <td valign="top">Description</td>
-    <td colspan="3">{$task_taskDescription}&nbsp;</td>
+    <td colspan="3"><pre class="comment">{=$task_taskDescription}</pre>&nbsp;</td>
   </tr>
   <tr>
     <td valign="top">Managed By</td>
