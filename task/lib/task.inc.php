@@ -938,40 +938,31 @@ class task extends db_entity {
     $_FORM["people_cache"] = get_cached_table("person");
     $_FORM["timeUnit_cache"] = get_cached_table("timeUnit");
 
-    // Get a hierarchical list of tasks
-    if ($_FORM["taskView"] == "byProject") {
-      if (is_array($filter) && count($filter)) {
-        $f = " WHERE ".implode(" AND ",$filter);
-      }
-      $q = sprintf("SELECT task.*, projectName, projectPriority, project.currencyTypeID as currency, rate, rateUnitID
-                      FROM task
-                 LEFT JOIN project ON project.projectID = task.projectID
-                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
-                           %s
-                  GROUP BY task.taskID
-                  ORDER BY projectName,taskName
-                   ",$current_user->get_id(),$f);
-
-    } else if ($_FORM["taskView"] == "prioritised") {
+    if ($_FORM["taskView"] == "prioritised") {
       unset($filter["parentTaskID"]);
-      if (is_array($filter) && count($filter)) {
-        $filter = " WHERE ".implode(" AND ",$filter);
-      }
-
-      $q = "SELECT task.*, projectName, projectShortName, clientID, projectPriority, project.currencyTypeID as currency, rate, rateUnitID,
-                  priority * POWER(projectPriority, 2) * 
-                      IF(task.dateTargetCompletion IS NULL, 
-                        8,
-                        ATAN(
-                             (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
-                            ) / 3.14 * 8 + 4
-                        ) / 10 as priorityFactor
-              FROM task 
-         LEFT JOIN project ON task.projectID = project.projectID 
-         LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '".$current_user->get_id()."'
-                   ".$filter." 
-          ORDER BY priorityFactor ".$limit;
+      $order_limit = " ORDER BY priorityFactor ".$limit;
+    } else {
+      $order_limit = " ORDER BY projectName,taskName ".$limit;
     }
+
+    // Get a hierarchical list of tasks
+    if (is_array($filter) && count($filter)) {
+      $f = " WHERE ".implode(" AND ",$filter).$order_limit;
+    }
+    $q = sprintf("SELECT task.*, projectName, projectShortName, clientID, projectPriority, project.currencyTypeID as currency, rate, rateUnitID,
+                         priority * POWER(projectPriority, 2) * 
+                         IF(task.dateTargetCompletion IS NULL, 
+                           8,
+                           ATAN(
+                                (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
+                               ) / 3.14 * 8 + 4
+                           ) / 10 as priorityFactor
+ 
+                    FROM task
+               LEFT JOIN project ON project.projectID = task.projectID
+               LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
+                         %s
+                 ",$current_user->get_id(),$f);
       
     $debug and print "\n<br>QUERY: ".$q;
     $_FORM["debug"] and print "\n<br>QUERY: ".$q;
@@ -1000,7 +991,6 @@ class task extends db_entity {
       $_FORM["showTimes"] and $row["timeActual"] = $task->get_time_billed()/60/60;
       $row["rate"] = page::money($row["currency"],$row["rate"],"%mo");
       $row["rateUnit"] = $_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
-      $_FORM["showPriority"] and $row["priorityFactor"] = task::get_overall_priority($row["projectPriority"], $row["priority"] ,$row["dateTargetCompletion"]);
       $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
       $row["priorityLabel"] = $task->get_priority_label();
       if (!$_FORM["skipObject"]) {
@@ -1039,9 +1029,6 @@ class task extends db_entity {
         }
       }
     } else if ($_FORM["taskView"] == "prioritised") {
-      if (is_array($rows) && count($rows)) {
-        uasort($rows, array("task", "priority_compare"));
-      }
       $tasks = $rows;
     }
 
@@ -1055,22 +1042,6 @@ class task extends db_entity {
     $TPL["taskPriorities"] = config::get_config_item("taskPriorities");
     $TPL["projectPriorities"] =  config::get_config_item("projectPriorities");
     include_template(dirname(__FILE__)."/../templates/taskListS.tpl");
-  }
-
-  function priority_compare($a, $b) {
-    return $a["priorityFactor"] > $b["priorityFactor"];
-  }
-
-  function get_overall_priority($projectPriority=0,$taskPriority=0,$dateTargetCompletion) {
-    if ($dateTargetCompletion) {
-      $daysUntilDue = (format_date("U",$dateTargetCompletion) - mktime()) / 60 / 60 / 24;
-      $mult = atan($daysUntilDue / 20) / 3.14 * 8 + 4;
-    } else {
-      $mult = 8;
-    }
-
-    $priorityFactor = ($taskPriority * pow($projectPriority,2)) * $mult / 10;
-    return $priorityFactor;
   }
 
   function get_task_priority_dropdown($priority=false) {
