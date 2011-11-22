@@ -619,13 +619,13 @@ class timeSheet extends db_entity {
     }
 
     $q = "SELECT timeSheet.*, person.personID, projectName, projectShortName
-          FROM timeSheet 
-          LEFT JOIN person ON timeSheet.personID = person.personID
-          LEFT JOIN project ON timeSheet.projectID = project.projectID
-          LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID 
-          ".$filter."
-          GROUP BY timeSheet.timeSheetID
-          ORDER BY dateFrom,projectName,timeSheet.status,surname";
+            FROM timeSheet 
+       LEFT JOIN person ON timeSheet.personID = person.personID
+       LEFT JOIN project ON timeSheet.projectID = project.projectID
+       LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID 
+                 ".$filter."
+        GROUP BY timeSheet.timeSheetID
+        ORDER BY dateFrom,projectName,timeSheet.status,surname";
 
     $debug and print "Query: ".$q;
     $db = new db_alloc();
