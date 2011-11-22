@@ -8,6 +8,23 @@ table.alloc_calendar img {
   display: none;
 }
 
+body {
+  font-family:arial,helvetica,sans-serif;
+  font-size:100%;
+}
+
+h6 {
+  font-size:100%;
+  margin:3px 0px;
+}
+
+/* This should match the body font */
+pre.comment {
+  font-family:arial,helvetica,sans-serif;
+  overflow:auto;
+  white-space:pre-wrap;
+}
+
 a {
   text-decoration:none;
   color:black;
