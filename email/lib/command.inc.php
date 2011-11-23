@@ -62,7 +62,7 @@ class command {
      ,"assign"    => array("personID",        "username of the person that the task is assigned to")
      ,"manage"    => array("managerID",       "username of the person that the task is managed by")
      ,"desc"      => array("taskDescription", "task's long description")
-     ,"priority"  => array("priority",        "1, 2, 3, 4 or 5")
+     ,"priority"  => array("priority",        "1, 2, 3, 4 or 5; or one of Wishlist, Minor, Normal, Important or Critical")
      ,"limit"     => array("timeLimit",       "limit in hours for effort spend on this task")
      ,"best"      => array("timeBest",        "shortest estimate of how many hours of effort this task will take")
      ,"likely"    => array("timeExpected",    "most likely amount of hours of effort this task will take")
@@ -212,6 +212,11 @@ class command {
     // Task commands
     } else if ($commands["task"]) {
 
+      $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
+      foreach ($taskPriorities as $k => $v) {
+        $priorities[strtolower($v["label"])] = $k;
+      }
+
       $people_by_username = person::get_people_by_username();
 
       // Else edit/create the task ...
@@ -226,6 +231,12 @@ class command {
         if ($k == "assign" || $k == "manage") {
           $v = $people_by_username[$v]["personID"];
         }
+
+        // transform from priority label to priority ID
+        if ($k == "priority" && !is_numeric($v)) {
+          $v = $priorities[strtolower($v)];
+        }
+
         // Plug the value in
         if ($task_fields[$k][0]) {
           $task->set_value($task_fields[$k][0],sprintf("%s",$v));
