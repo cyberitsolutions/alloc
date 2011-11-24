@@ -172,12 +172,13 @@ class comment extends db_entity {
       $new["recipient_editor"] = "<span class='nobr' style='width:100%;display:inline;' class='recipient_editor'>";
 
       $new["recipient_editor"].= "<span class='hidden' id='recipient_dropdown_".$new["commentID"]."'>
-                                    <form action='' method='post'>
+                                    <form action='".$TPL["url_alloc_updateRecipients"]."' method='post'>
                                       <select name='comment_recipients[]' multiple='true'>
                                       ".page::select_options($recipient_ops,$recipient_selected)."
                                       </select>
-                                      <input type='hidden' name='recipient_entityID' value='".$new["commentID"]."'>
+                                      <input type='hidden' name='commentID' value='".$new["commentID"]."'>
                                       <span style='position:relative; top:3px;' class='spinner'></span>
+                                      <input type='submit' value='Go' style='display:none'>
                                     </form>
                                   </span>";
 
