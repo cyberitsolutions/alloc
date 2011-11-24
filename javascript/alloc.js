@@ -133,7 +133,7 @@ function save_recipients(selector) {
       values[values.length] = selector.options[i].value;
     }
   }
-  var commentID = p.find("input[name=recipient_entityID]").val();
+  var commentID = p.find("input[name=commentID]").val();
   p.find("span.spinner").html('<img class="ticker" src="../images/spinner.gif" alt="Updating field..." title="Updating field...">');
   jQuery.post("../comment/updateRecipients.php",{ "commentID":commentID, "comment_recipients": values},function(data) {
     $(selector).parent().find("span.spinner").html('<img src="../images/icon_message_good.png" alt="Saved" title="Saved">');
