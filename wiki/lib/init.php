@@ -135,9 +135,9 @@ class wiki_module extends module {
 
     $doc = new Zend_Search_Lucene_Document();
     $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$file));
-    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$file));
-    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$str));
-    $doc->addField(Zend_Search_Lucene_Field::UnStored('pdfstr',$pdfstr));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$file,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$str,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::UnStored('pdfstr',$pdfstr,"utf-8"));
     $index->addDocument($doc);
   }
 }

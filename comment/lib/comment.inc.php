@@ -693,13 +693,13 @@ class comment extends db_entity {
 
     $doc = new Zend_Search_Lucene_Document();
     $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
-    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$name));
-    $doc->addField(Zend_Search_Lucene_Field::Text('type'    ,$entity));
-    $doc->addField(Zend_Search_Lucene_Field::Text('typeid'  ,$entity_id));
-    $doc->addField(Zend_Search_Lucene_Field::Text('typename',$entity_name));
-    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("comment")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$author));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateCreated',str_replace("-","",$this->get_value("commentCreatedTime"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$name,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('type'    ,$entity,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('typeid'  ,$entity_id,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('typename',$entity_name,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("comment"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$author,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateCreated',str_replace("-","",$this->get_value("commentCreatedTime")),"utf-8"));
     $index->addDocument($doc);
   }
 
