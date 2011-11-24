@@ -401,14 +401,14 @@ class client extends db_entity {
 
     $doc = new Zend_Search_Lucene_Document();
     $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
-    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$name));
-    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$addresses));
-    $doc->addField(Zend_Search_Lucene_Field::Text('contact' ,$contacts));
-    $doc->addField(Zend_Search_Lucene_Field::Text('status'  ,$this->get_value("clientStatus")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$clientModifiedUser_field));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateModified',str_replace("-","",$this->get_value("clientModifiedTime"))));
-    $doc->addField(Zend_Search_Lucene_Field::Text('category',$this->get_value("clientCategory")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateCreated',str_replace("-","",$this->get_value("clientCreatedTime"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$name,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$addresses,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('contact' ,$contacts,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('status'  ,$this->get_value("clientStatus"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$clientModifiedUser_field,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateModified',str_replace("-","",$this->get_value("clientModifiedTime")),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('category',$this->get_value("clientCategory"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateCreated',str_replace("-","",$this->get_value("clientCreatedTime")),"utf-8"));
     $index->addDocument($doc);
   }
 

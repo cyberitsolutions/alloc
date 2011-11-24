@@ -1382,19 +1382,19 @@ EOD;
 
     $doc = new Zend_Search_Lucene_Document();
     $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
-    $doc->addField(Zend_Search_Lucene_Field::Text('project' ,$projectName));
-    $doc->addField(Zend_Search_Lucene_Field::Text('pid'     ,$this->get_value("projectID")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$person_field));
-    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$desc));
-    $doc->addField(Zend_Search_Lucene_Field::Text('status'  ,$this->get_value("status"))); 
-    $doc->addField(Zend_Search_Lucene_Field::Text('tf'      ,$tf_field)); 
-    $doc->addField(Zend_Search_Lucene_Field::Text('insurance',sprintf("%d",$this->get_value("payment_insurance")))); 
-    $doc->addField(Zend_Search_Lucene_Field::Text('manager' ,$manager_field)); 
-    $doc->addField(Zend_Search_Lucene_Field::Text('admin'   ,$admin_field)); 
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateManager',str_replace("-","",$this->get_value("dateSubmittedToManager"))));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateAdmin',str_replace("-","",$this->get_value("dateSubmittedToAdmin"))));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateFrom',str_replace("-","",$this->get_value("dateFrom"))));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateTo'  ,str_replace("-","",$this->get_value("dateTo"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('project' ,$projectName,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('pid'     ,$this->get_value("projectID"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$person_field,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$desc,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('status'  ,$this->get_value("status"),"utf-8")); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('tf'      ,$tf_field,"utf-8")); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('insurance',sprintf("%d",$this->get_value("payment_insurance")),"utf-8")); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('manager' ,$manager_field,"utf-8")); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('admin'   ,$admin_field,"utf-8")); 
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateManager',str_replace("-","",$this->get_value("dateSubmittedToManager")),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateAdmin',str_replace("-","",$this->get_value("dateSubmittedToAdmin")),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateFrom',str_replace("-","",$this->get_value("dateFrom")),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateTo'  ,str_replace("-","",$this->get_value("dateTo")),"utf-8"));
     $index->addDocument($doc);
   }
 

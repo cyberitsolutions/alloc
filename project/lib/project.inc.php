@@ -591,21 +591,21 @@ class project extends db_entity {
 
     $doc = new Zend_Search_Lucene_Document();
     $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
-    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$projectName));
-    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("projectComments")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('cid'     ,$this->get_value("clientID")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('client'  ,$clientName));
-    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$projectModifiedUser_field));
-    $doc->addField(Zend_Search_Lucene_Field::Text('type'    ,$this->get_value("projectType")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateTargetStart',str_replace("-","",$this->get_value("dateTargetStart"))));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateTargetCompletion',str_replace("-","",$this->get_value("dateTargetCompletion"))));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateStart',str_replace("-","",$this->get_value("dateActualStart"))));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateCompletion',str_replace("-","",$this->get_value("dateActualCompletion"))));
-    $doc->addField(Zend_Search_Lucene_Field::Text('status'   ,$this->get_value("projectStatus")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('priority' ,$this->get_value("projectPriority")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('tf'       ,$this->get_value("cost_centre_tfID")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('agency'   ,sprintf("%d",$this->get_value("is_agency"))));
-    $doc->addField(Zend_Search_Lucene_Field::Text('billed'   ,$this->get_value("customerBilledDollars")));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$projectName,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("projectComments"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('cid'     ,$this->get_value("clientID"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('client'  ,$clientName,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$projectModifiedUser_field,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('type'    ,$this->get_value("projectType"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateTargetStart',str_replace("-","",$this->get_value("dateTargetStart")),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateTargetCompletion',str_replace("-","",$this->get_value("dateTargetCompletion")),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateStart',str_replace("-","",$this->get_value("dateActualStart")),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateCompletion',str_replace("-","",$this->get_value("dateActualCompletion")),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('status'   ,$this->get_value("projectStatus"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('priority' ,$this->get_value("projectPriority"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('tf'       ,$this->get_value("cost_centre_tfID"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('agency'   ,sprintf("%d",$this->get_value("is_agency")),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('billed'   ,$this->get_value("customerBilledDollars"),"utf-8"));
     $index->addDocument($doc);
   }
 

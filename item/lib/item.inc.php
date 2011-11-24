@@ -43,13 +43,13 @@ class item extends db_entity {
 
     $doc = new Zend_Search_Lucene_Document();
     $doc->addField(Zend_Search_Lucene_Field::Keyword('id'   ,$this->get_id()));
-    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$this->get_value("itemName")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("itemNotes")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('type'    ,$this->get_value("itemType")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('author'  ,$this->get_value("itemAuthor")));
-    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$person_field));
-    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$itemModifiedUser_field));
-    $doc->addField(Zend_Search_Lucene_Field::Text('dateModified',str_replace("-","",$this->get_value("itemModifiedTime"))));
+    $doc->addField(Zend_Search_Lucene_Field::Text('name'    ,$this->get_value("itemName"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$this->get_value("itemNotes"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('type'    ,$this->get_value("itemType"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('author'  ,$this->get_value("itemAuthor"),"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('creator' ,$person_field,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('modifier',$itemModifiedUser_field,"utf-8"));
+    $doc->addField(Zend_Search_Lucene_Field::Text('dateModified',str_replace("-","",$this->get_value("itemModifiedTime")),"utf-8"));
     $index->addDocument($doc);
   }
 }
