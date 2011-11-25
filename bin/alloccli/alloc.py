@@ -14,6 +14,7 @@ import shlex
 from prettytable import PrettyTable
 from netrc import netrc
 from urlparse import urlparse
+from sys import stdout
 
 class alloc(object):
   """Provide a parent class from which the alloc subcommands can extend"""
@@ -411,6 +412,16 @@ class alloc(object):
     rtn = {}
     remainder = ""
     
+    # The options parser cannot handle long args that have optional parameters
+    # If --csv is used, replace it with --csv=auto
+    if '--csv' in command_list:
+      idx = command_list.index('--csv')
+      if len(command_list) > idx+1 and command_list[idx+1] in ['always','never','auto']:
+        command_list[idx] = '--csv='+ command_list[idx+1] 
+        del command_list[idx+1]
+      else:
+        command_list[idx] = '--csv=always'
+
     short_ops, long_ops, no_arg_ops, all_ops = self.__parse_args(ops)
 
     try:
@@ -435,7 +446,14 @@ class alloc(object):
       print self.get_subcommand_help(command_list, ops, s)
       sys.exit(0)
 
+    # Deal with --csv=[auto|always|never]
     if 'csv' in rtn and rtn['csv']:
+      self.csv = True
+      if rtn['csv'] == 'auto' and stdout.isatty():
+        self.csv = False
+      if rtn['csv'] == 'never':
+        self.csv = False
+    elif not stdout.isatty():
       self.csv = True
     
     return rtn, " ".join(remainder)
