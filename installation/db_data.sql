@@ -298,7 +298,7 @@ VALUES
 
 ,('indexQueue'               ,0  ,NULL ,'employee' ,true ,NULL ,15    ,NULL)
 
-,('interestedParty'          ,0  ,NULL ,''         ,true ,NULL ,9     ,NULL)
+,('interestedParty'          ,0  ,NULL ,''         ,true ,NULL ,11    ,NULL)
 ,('interestedParty'          ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
 ,('interestedParty'          ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
 ,('interestedParty'          ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
