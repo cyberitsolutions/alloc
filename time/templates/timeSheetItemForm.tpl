@@ -9,13 +9,12 @@ function refreshTaskList(radiobutton) {
 <form action="{$url_alloc_timeSheetItem}" method="post">
 <table class="box">
   <tr>
-    <th colspan="5">Create Time Sheet Item</th>
+    <th colspan="4">Create Time Sheet Item</th>
   </tr>
   <tr>
-    <td>&nbsp;</td>
     <td colspan="4">
 
-      <table cellpadding="0" cellspacing="5" border="0">
+      <table cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td valign="bottom">Date</td>
           <td valign="bottom">Duration</td>
@@ -58,7 +57,6 @@ function refreshTaskList(radiobutton) {
     </td>
   </tr>
   <tr>
-    <td valign="top"></td>
     <td colspan="3" valign="top">
     Comments<br>
     {page::textarea("timeSheetItem_comment",$tsi_comment)}
