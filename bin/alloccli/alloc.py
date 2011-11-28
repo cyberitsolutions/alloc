@@ -157,8 +157,8 @@ class alloc(object):
 
 
   row_timeSheet = "timeSheetID,dateFrom,dateTo,status,person,duration,totalHours,amount,projectName"
-  row_timeSheetItem = "timeSheetID,timeSheetItemID,dateTimeSheetItem,taskID,comment,timeSheetItemDuration,"
-  row_timeSheetItem += "rate,worth,hoursBilled,timeLimit,limitWarning"
+  row_timeSheetItem = "timeSheetID,timeSheetItemID,dateTimeSheetItem,taskID,timeSheetItemDuration,"
+  row_timeSheetItem += "rate,worth,hoursBilled,timeLimit,limitWarning,comment"
 
   def __init__(self, url=""):
 
@@ -551,19 +551,86 @@ class alloc(object):
       rows = sorted(rows, key=sort_func, reverse=reverse)
     return rows
 
+  def __get_widest_field_lengths(self, rows, field_names):
+    """Obtain max lengths of rows of fields."""
+    # Note that an empty field's column header can still have additional
+    # padding, if another value in its column is wider.
+    x = 0
+    lengths = {}
+    for row in rows:
+      for v in row:
+        v = str(v)
+        fn = str(field_names[x])
+        if len(v) < len(fn):
+          v = fn
+        if fn not in lengths or (fn in lengths and len(v) > int(lengths[fn])):
+          lengths[fn] = len(v)
+        x += 1
+      x = 0
+    return lengths
+
+  def __fit_rows_to_screen(self, rows, field_names, width):
+    """Truncate the final column in a table so that it fits on the screen."""
+    lengths = self.__get_widest_field_lengths(rows, field_names)
+    rows2 = []
+    for row in rows:
+      s = ''
+      sep = ''
+      x = 0
+      for v in row:
+        v = str(v)
+        fn = str(field_names[x])
+        if len(v) < len(fn):
+          v = fn
+        if len(v) < lengths[fn]:
+          v = v.ljust(lengths[fn])
+        s += sep+v
+        sep = ' | '
+        x += 1
+
+      # Simulate a normal row in the table
+      s = '| '+s+' |'
+
+      # Useful for debugging
+      # print s
+
+      # fn will be the final cell in the row
+      sum_of_bits = 0
+      for k, l in lengths.items():
+        if k != fn:
+          sum_of_bits += l+3
+
+      # If the row is wider than the width of the terminal
+      if len(s) > width and sum_of_bits+len(fn)+3 < width:
+        end = len(row)-1
+        row[end] = row[end].ljust(lengths[fn])[:-(len(s)-width)]
+      rows2.append(row)
+    return rows2
+
   def print_table(self, entity, rows, only_these_fields, sort=False, transforms=None):
     """For printing out results in an ascii table or CSV format."""
     if self.quiet: return
     if not rows: return 
 
+    height, width = os.popen('stty size', 'r').read().split()
+    width = int(width)
     only_these_fields = self.__get_only_these_fields(entity, rows, only_these_fields)
     field_names = only_these_fields[1::2]
 
     # Re-order the table, this changes the dict to a list i.e. dict.items().
     rows = self.__get_sorted_rows(entity, rows, sort)
-
+    if rows:
+      rows2 = []
+      for k, row in rows:
+        row = self.__get_row(entity, row, only_these_fields, transforms)
+        rows2.append(row)
+      rows = rows2
+     
     if self.csv:
       csv_table = csv.writer(sys.stdout)
+      for row in rows:
+        csv_table.writerow([unicode(s).encode('utf-8') for s in row])
+
     else:
       table = PrettyTable()
       table.set_field_names(field_names)
@@ -572,17 +639,9 @@ class alloc(object):
           table.set_field_align(label, "r")
         else:
           table.set_field_align(label, "l")
-
-    if rows:
-      for k, row in rows:
-        del(k)
-        r = self.__get_row(entity, row, only_these_fields, transforms)
-        if self.csv:
-          csv_table.writerow([unicode(s).encode('utf-8') for s in r])
-        else:
-          table.add_row(r)
-
-    if not self.csv:
+      rows = self.__fit_rows_to_screen(rows,field_names,width)
+      for row in rows:
+        table.add_row(row)
       print unicode(table.get_string(header=True)).encode('utf-8')
 
   def __get_row(self, entity, row, only_these_fields, transforms=None):
