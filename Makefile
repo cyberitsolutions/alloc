@@ -127,10 +127,10 @@ test:
 	PYTHONPATH=$$PYTHONPATH:./bin/alloccli                  \
 	find -iname '*.py' -exec                                \
 	  pylint --indent-string   '  '                         \
-	         --disable-msg     C0321                        \
-	         --disable-msg     W0702                        \
-	         --disable-msg     R0201                        \
-	         --disable-msg     R0904                        \
+	         --disable         C0321                        \
+	         --disable         W0702                        \
+	         --disable         R0201                        \
+	         --disable         R0904                        \
 	         --max-locals      20                           \
 	         --max-args        8                            \
 	         --max-attributes  50                           \
