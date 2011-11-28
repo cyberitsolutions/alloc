@@ -131,6 +131,7 @@ $TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.ph
             ,"url_alloc_stylesheets"                    => SCRIPT_PATH."css/"
             ,"url_alloc_javascript"                     => SCRIPT_PATH."javascript/"
             ,"url_alloc_images"                         => SCRIPT_PATH."images/"
+            ,"url_alloc_cache"                          => SCRIPT_PATH."cache_".get_alloc_version()."/"
             ,"url_alloc_help"                           => ALLOC_MOD_DIR."help".DIRECTORY_SEPARATOR
             ,"alloc_help_link_name"                     => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
             ,"script_path"                              => SCRIPT_PATH

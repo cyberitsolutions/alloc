@@ -59,6 +59,7 @@ dist: test
 	rm -rf ./src/_darcs
 	cd ./src && $(MAKE) doc_html; 
 	cd ./src && $(MAKE) doc_clean; 
+	cd ./src && $(MAKE) cache;
 	if [ -d "./src/help/src" ]; then rm -rf ./src/help/src; fi;
 	mv ./src ./allocPSA-`cat util/alloc_version`
 	tar -czvf allocPSA-`cat util/alloc_version`.tgz allocPSA-`cat util/alloc_version`; 
@@ -69,6 +70,7 @@ services:
 
 css: css/src/*
 	./util/make_stylesheets.py
+	$(MAKE) cache
 
 clean: ;
 
@@ -113,10 +115,8 @@ none: ;
 all: ;
 install: ;
 
-.PHONY: css help doc services
 
 # Currently only tests Python.  Requires pyflakes and pylint.
-.PHONY: test
 test:
 	pyflakes bin/alloc
 	find -iname '*.py' -exec pyflakes {} +
@@ -143,3 +143,14 @@ test:
 	         --argument-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \
 	  {} +
 
+cache:
+	rm -rf cache_`cat util/alloc_version`
+	mkdir cache_`cat util/alloc_version`
+	cp css/*.css cache_`cat util/alloc_version`/
+	for i in jquery.js jquery.ui.js jquery.dropdownchecklist.js jquery.textarearesizer.js \
+	jquery.livequery.js calendar.js calendar-en.js calendar-setup.js sorttable.js alloc.js; do\
+	  cat javascript/$$i >> cache_`cat util/alloc_version`/javascript.js;\
+	done
+
+
+.PHONY: css help doc services test cache
