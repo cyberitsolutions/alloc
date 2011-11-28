@@ -13,11 +13,13 @@
   </tr>
   {/}
   {if count($timeSheetListRows)>1}
+  <tfoot>
   <tr>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td class="grand_total right nobr obfuscate">{$timeSheetListExtra.amount_tallies}</td>
   </tr>
+  </tfoot>
   {/}
 </table>
 {else}

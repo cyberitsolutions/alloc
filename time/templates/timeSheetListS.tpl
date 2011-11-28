@@ -32,6 +32,7 @@
     {/}
   </tr>
   {/}
+  <tfoot>
   <tr>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -47,6 +48,7 @@
     <td class="grand_total right nobr">{$timeSheetListExtra.negative_tallies}</td>
     {/}
   </tr>
+  </tfoot>
 </table>
 {else}
   <b>No Time Sheets Found.</b>
