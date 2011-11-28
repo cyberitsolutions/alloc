@@ -19,7 +19,7 @@ from sys import stdout
 class alloc(object):
   """Provide a parent class from which the alloc subcommands can extend"""
 
-  client_version = "1.8.2"
+  client_version = "1.8.3"
   url = ''
   username = ''
   quiet = ''
