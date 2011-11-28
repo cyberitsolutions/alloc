@@ -1,7 +1,7 @@
 """alloccli subcommand for viewing a list of tokens."""
 from alloc import alloc
 
-class tokens(alloc):
+class ktokens(alloc):
   """Retrieve alloc token information."""
 
   # Setup the options that this cli can accept
