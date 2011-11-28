@@ -1,6 +1,6 @@
 <html>
   <head>
-    <link rel="stylesheet" href="{$url_alloc_stylesheets}install.css" type="text/css" />
+    <link rel="stylesheet" href="{$url_alloc_cache}install.css" type="text/css" />
   </head>
   <body>
 
