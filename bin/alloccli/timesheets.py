@@ -12,6 +12,7 @@ class timesheets(alloc):
   ops.append(('q' , 'quiet          ', 'Run with no output except errors.'))
   ops.append(('i' , 'items          ', 'Show time sheet\'s items.'))
   ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
+  ops.append((''  , 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
   ops.append(('s:', 'status=STATUS  ', 'The time sheets\' status. Can accept multiple values.\n'
                                        '(eg: "edit,manager,admin,invoiced,finished,rejected" or "all". Default: edit)'))
   ops.append(('a:', 'account=TF     ', 'The time sheets\' TF name.'))
@@ -55,6 +56,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
     self.quiet = o['quiet']
     personID = self.get_my_personID()
     projectID = ""
+    taskID = ""
     timeSheetID = ""
     order_ts = "From,ID"
     order_tsi = "Date,Item ID"
@@ -65,6 +67,11 @@ alloc timesheets --date ">=2010-10-10" --items'''
       projectID = o['project']
     elif o['project']:
       projectID = self.search_for_project(o['project'], personID)
+
+    if self.is_num(o['task']):
+      taskID = o['task']
+    elif o['task']:
+      taskID = self.search_for_task({ 'taskName': o['task'], 'taskView': 'prioritised' })
 
     if self.is_num(o['time']):
       timeSheetID = o['time']
@@ -101,6 +108,8 @@ alloc timesheets --date ">=2010-10-10" --items'''
 
       if projectID:
         ops['projectID'] = projectID
+      if taskID:
+        ops['taskID'] = taskID
 
     if o['hours']:
       ops['timeSheetItemHours'] = o['hours']
@@ -112,7 +121,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
         for i, t in timeSheets.items():
           tids.append(i)
         if tids:
-          ops = {"timeSheetID": tids}
+          ops["timeSheetID"] = tids
           if o['date']:
             # >=
             ops['date'], ops['dateComparator'] = self.parse_date_comparator(o['date'])
