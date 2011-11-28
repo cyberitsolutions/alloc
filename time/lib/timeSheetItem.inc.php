@@ -304,6 +304,28 @@ class timeSheetItem extends db_entity {
       $sql[] = sprintf("(timeSheetItem.comment LIKE '%%%s%%')",db_esc($filter["comment"]));
     }
 
+    if ($filter["status"]) { 
+      if (is_array($filter["status"]) && count($filter["status"])) {
+        foreach ($filter["status"] as $s) {
+          if ($s == "rejected") {
+            $rejected = true;
+          } else {
+            $statuses[] = db_esc($s);
+          }
+        }
+      } else {
+        if ($filter["status"] == "rejected") {
+          $rejected = true;
+        } else {
+          $statuses[] = db_esc($filter["status"]);
+        }
+      }
+    }
+
+    if ($filter["tfID"]) {
+      $sql[] = sprintf("(timeSheet.recipient_tfID = '%d')", $filter["tfID"]);
+    }
+
     return $sql;
   }
 
