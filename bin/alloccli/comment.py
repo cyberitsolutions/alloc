@@ -1,10 +1,6 @@
 """alloccli subcommand for adding comments."""
 from alloc import alloc
 import sys
-import threading
-import time
-import Queue
-import signal
 
 
 class comment(alloc):
@@ -71,6 +67,9 @@ In this example the recipients are going to be internal only, except for Clyde
     projectID = 0
     timeSheetID = 0
     clientID = 0
+    entity = ''
+    entityID = 0
+    recipients = []
 
     # Get a taskID either passed via command line, or figured out from a task name
     if self.is_num(o['task']):
@@ -138,7 +137,8 @@ In this example the recipients are going to be internal only, except for Clyde
       to += comma + self.username
 
     # Magic
-    recipients = self.get_people(to, entity, entityID)
+    if entity and entityID:
+      recipients = self.get_people(to, entity, entityID)
 
     # Print recipients
     comma = ""
@@ -156,7 +156,7 @@ In this example the recipients are going to be internal only, except for Clyde
       sys.exit(0)
 
     # Send message
-    if comment_text:
+    if comment_text and entity and entityID:
       package = {}
       package['ip'] = recipients
       package['comment_text'] = comment_text
