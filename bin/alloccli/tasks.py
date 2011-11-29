@@ -32,7 +32,7 @@ class tasks(alloc):
     """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
-    o, remainder = self.get_args(command_list, self.ops, self.help_text)
+    o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
     self.authenticate()
@@ -72,7 +72,7 @@ class tasks(alloc):
       if not projects or len(projects) == 0:
         projectIDs.append(0)
       if projects:
-        for pID, v in projects.items():
+        for pID, v_ in projects.items():
           projectIDs.append(int(pID))
       
     # Setup options for the task search

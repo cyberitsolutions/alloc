@@ -53,12 +53,13 @@ In this example the recipients are going to be internal only, except for Clyde
 """
 
   def run(self, command_list):
+    """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
-    o, remainder = self.get_args(command_list, self.ops, self.help_text)
+    o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
-    self.authenticate();
+    self.authenticate()
 
     self.msg('Enter comment (ctrl-c to cancel, ctrl-d to send)')
 
@@ -69,7 +70,7 @@ In this example the recipients are going to be internal only, except for Clyde
     clientID = 0
     entity = ''
     entityID = 0
-    recipients = []
+    recipients = {}
 
     # Get a taskID either passed via command line, or figured out from a task name
     if self.is_num(o['task']):
@@ -81,7 +82,7 @@ In this example the recipients are going to be internal only, except for Clyde
     if self.is_num(o['project']):
       projectID = o['project']
     elif o['project']:
-      projectID = self.search_for_project(o['project'],personID)
+      projectID = self.search_for_project(o['project'], personID)
 
     # Get a clientID either passed via command line, or figured out from a client name
     if self.is_num(o['client']):
@@ -97,28 +98,28 @@ In this example the recipients are going to be internal only, except for Clyde
     if taskID:
       entity = 'task'
       entityID = taskID
-      k, v = self.get_list(entity,{ entity+'ID' : entityID, 'taskView' : 'prioritised' }).popitem()
+      k_, v = self.get_list(entity, { entity+'ID' : entityID, 'taskView' : 'prioritised' }).popitem()
       self.msg(v['taskTypeID']+': '+v['taskID']+' '+v['taskName'])
     elif projectID:
       entity = 'project'
       entityID = projectID
-      k, v = self.get_list(entity,{ entity+'ID' : entityID }).popitem()
+      k_, v = self.get_list(entity, { entity+'ID' : entityID }).popitem()
       self.msg(v['projectType']+': '+v['projectID']+' '+v['projectName'])
     elif timeSheetID:
       entity = 'timeSheet'
       entityID = timeSheetID
-      k, v = self.get_list(entity,{ entity+'ID' : entityID }).popitem()
+      k_, v = self.get_list(entity, { entity+'ID' : entityID }).popitem()
       self.msg('Time Sheet: '+v['timeSheetID']+' '+v['projectName'] +' '+ v['amount'])
     elif clientID:
       entity = 'client'
       entityID = clientID
-      k, v = self.get_list(entity,{ entity+'ID' : entityID }).popitem()
+      k_, v = self.get_list(entity, { entity+'ID' : entityID }).popitem()
       self.msg('Client: '+v['clientID']+' '+v['clientName'])
 
 
     # Assume 'default' if there's no --to
     if not o['to']:
-     o['to'] = 'default'
+      o['to'] = 'default'
 
     # Sort out recipients
     nobody = False
@@ -144,7 +145,7 @@ In this example the recipients are going to be internal only, except for Clyde
     comma = ""
     text = ""
     if recipients:
-      for k, info in recipients.items():
+      for k_, info in recipients.items():
         text += comma + str(info["name"])+ " <"+info["emailAddress"]+">"
         comma = ", "
     self.msg("To: " + text)

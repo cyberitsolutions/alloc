@@ -30,7 +30,7 @@ alloc timesheets --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y
     """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
-    o, remainder = self.get_args(command_list, self.ops, self.help_text)
+    o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
     self.authenticate()

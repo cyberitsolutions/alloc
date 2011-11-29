@@ -47,7 +47,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
     """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
-    o, remainder = self.get_args(command_list, self.ops, self.help_text)
+    o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
     self.authenticate()
@@ -118,7 +118,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
       timeSheets = self.get_list("timeSheet", ops)
       if timeSheets:
         tids = []
-        for i, t in timeSheets.items():
+        for i, t_ in timeSheets.items():
           tids.append(i)
         if tids:
           ops["timeSheetID"] = tids

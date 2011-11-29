@@ -416,7 +416,7 @@ class alloc(object):
     # If --csv is used, replace it with --csv=auto
     if '--csv' in command_list:
       idx = command_list.index('--csv')
-      if len(command_list) > idx+1 and command_list[idx+1] in ['always','never','auto']:
+      if len(command_list) > idx+1 and command_list[idx+1] in ['always', 'never', 'auto']:
         command_list[idx] = '--csv='+ command_list[idx+1] 
         del command_list[idx+1]
       else:
@@ -612,7 +612,7 @@ class alloc(object):
     if self.quiet: return
     if not rows: return 
 
-    height, width = os.popen('stty size', 'r').read().split()
+    height_, width = os.popen('stty size', 'r').read().split()
     width = int(width)
     only_these_fields = self.__get_only_these_fields(entity, rows, only_these_fields)
     field_names = only_these_fields[1::2]
@@ -621,7 +621,7 @@ class alloc(object):
     rows = self.__get_sorted_rows(entity, rows, sort)
     if rows:
       rows2 = []
-      for k, row in rows:
+      for k_, row in rows:
         row = self.__get_row(entity, row, only_these_fields, transforms)
         rows2.append(row)
       rows = rows2
@@ -639,7 +639,7 @@ class alloc(object):
           table.set_field_align(label, "r")
         else:
           table.set_field_align(label, "l")
-      rows = self.__fit_rows_to_screen(rows,field_names,width)
+      rows = self.__fit_rows_to_screen(rows, field_names, width)
       for row in rows:
         table.add_row(row)
       print unicode(table.get_string(header=True)).encode('utf-8')
