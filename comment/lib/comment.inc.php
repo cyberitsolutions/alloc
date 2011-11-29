@@ -150,6 +150,7 @@ class comment extends db_entity {
 
       $ip = interestedParty::get_interested_parties("comment",$new["commentID"]);
       foreach((array)$ip as $email => $info) {
+        $all_parties += $ip;
         if ($info["selected"]) {
           $sel[] = $email;
         }
