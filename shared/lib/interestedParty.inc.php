@@ -211,13 +211,13 @@ class interestedParty extends db_entity {
       }
     }
     if (!$ip->get_value("personID")) {
+      $ip->set_value("external",1);
       $q = sprintf("SELECT * FROM clientContact WHERE clientContactEmail = '%s'",$data["emailAddress"]);
       $db = new db_alloc();
       $db->query($q);
       if ($row = $db->row()) {
         $ip->set_value("clientContactID",$row["clientContactID"]);
         $ip->set_value("fullName",$row["clientContactName"]);
-        $ip->set_value("external",1);
       }
     }
     $ip->save();
