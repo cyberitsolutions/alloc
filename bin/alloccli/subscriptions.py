@@ -43,7 +43,7 @@ alloc subscriptions --add < foo.txt"""
     """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
-    o, remainder = self.get_args(command_list, self.ops, self.help_text)
+    o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
     self.authenticate()
@@ -62,7 +62,7 @@ alloc subscriptions --add < foo.txt"""
     if o['key']:
       tokens = self.get_list("token", { "tokenHash" : o['key'] })
       if tokens:
-        k, v = tokens.popitem()
+        k_, v = tokens.popitem()
         searchops['entity'] = v['tokenEntity']
         searchops['entityID'] = v['tokenEntityID']
       else:

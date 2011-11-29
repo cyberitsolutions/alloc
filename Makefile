@@ -124,6 +124,8 @@ test:
 	# W0702: No exception type(s) specified
 	# R0201: Method could be a function
 	# R0904: Too many public methods
+	# E1103: Disable poor type inference
+	# R0801: Duplicate line checking
 	PYTHONPATH=$$PYTHONPATH:./bin/alloccli                  \
 	find -iname '*.py' -exec                                \
 	  pylint --indent-string   '  '                         \
@@ -131,16 +133,21 @@ test:
 	         --disable         W0702                        \
 	         --disable         R0201                        \
 	         --disable         R0904                        \
-	         --max-locals      20                           \
+	         --disable         E1103                        \
+	         --disable         R0801                        \
+	         --max-locals      30                           \
 	         --max-args        8                            \
 	         --max-attributes  50                           \
 	         --max-line-length 120                          \
-	         --max-branchs     20                           \
+	         --max-branchs     50                           \
 	         --method-rgx      '[a-z_][a-zA-Z0-9_]{2,30}$$' \
 	         --variable-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \
 	         --attr-rgx        '[a-z_][a-zA-Z0-9_]{2,30}$$' \
 	         --class-rgx       '[a-zA-Z_][a-zA-Z0-9]+$$'    \
 	         --argument-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \
+	         --dummy-variables-rgx 'dummy|.+_$$'            \
+	         --max-statements  100                          \
+	         --max-module-lines 1200                        \
 	  {} +
 
 cache:
