@@ -228,6 +228,7 @@ class alloc(object):
     default += "\n#alloc_pass: $ALLOC_PASS"
     default += "\n#alloc_http_user: $ALLOC_HTTP_USER"
     default += "\n#alloc_http_pass: $ALLOC_HTTP_PASS"
+    default += "\n#alloc_trunc: 1" 
     # Write it out to a file
     fd = open(f, 'w')
     fd.write(default)
@@ -241,6 +242,7 @@ class alloc(object):
     options = config.options(section)
     for option in options:
       self.config[option.lower()] = config.get(section, option)
+    if 'ALLOC_TRUNC' in os.environ: self.config['alloc_trunc'] = os.environ.get('ALLOC_TRUNC')
 
   def create_transforms(self, f):
     """Create a default ~/.alloc/transforms file for field manipulation."""
@@ -571,6 +573,11 @@ class alloc(object):
 
   def __fit_rows_to_screen(self, rows, field_names, width):
     """Truncate the final column in a table so that it fits on the screen."""
+
+    # We only truncate the rows if we've been configured to
+    if 'alloc_trunc' not in self.config or not self.config['alloc_trunc']:
+      return rows
+
     lengths = self.__get_widest_field_lengths(rows, field_names)
     rows2 = []
     for row in rows:
