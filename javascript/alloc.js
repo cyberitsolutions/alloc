@@ -75,6 +75,7 @@ function sidebyside_activate(id) {
     $('#sbs_link_' + id).addClass("sidebyside_active");
     $("#"+id).show();
   }
+  redraw_multiple_selects();
 }
 
 function help_text_on(id, str) {
