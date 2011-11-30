@@ -389,7 +389,7 @@
   </tr>
   <tr>
     <td>Status changes to include</td>
-    <td><select size="9" name="rssStatusFilter[]" multiple><option value="">{$rssStatusFilterOptions}</select></td>
+    <td><select size="9" name="rssStatusFilter[]" multiple>{$rssStatusFilterOptions}</select></td>
     <td width="1%">{page::help('config_rssStatusFilter')}</td>
   <tr>
     <td>Show project name in feed</td>
