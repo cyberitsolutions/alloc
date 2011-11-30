@@ -111,6 +111,13 @@ class task extends db_entity {
       }
     }
 
+    // If there are no estimates, then wipe the estimatorID person setting
+    if (!imp($this->get_value("timeBest")) && !imp($this->get_value("timeWorst")) && !imp($this->get_value("timeExpected"))) {
+      $this->set_value("estimatorID","");
+    } else if (!$this->get_value("estimatorID")) {
+      $this->set_value("estimatorID",$current_user->get_id());
+    }
+
     $rtn = parent::save();
 
     // If the task has just been closed, opened, pending or duplicated, then audit the change.
