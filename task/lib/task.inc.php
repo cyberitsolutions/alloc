@@ -67,6 +67,15 @@ class task extends db_entity {
 
     // Set the task's status and sub-status
     list($taskStatus, $taskSubStatus) = explode("_",$this->get_value("taskStatus"));
+
+    // Edge-case for people who open tasks with a dateActualCompletion set, i.e. simultaneous task create and close.
+    if (!$this->get_id() && $this->get_value("dateActualCompletion")) {
+      if ($taskStatus != "closed" && $taskStatus != "close") {
+        $taskStatus = "close";
+        $taskSubStatus = "complete";
+      }
+    }
+
     if (!$this->post_save_hook && in_array($taskStatus,array("closed","close","open","pending"))) {
       $this->$taskStatus($taskSubStatus);
     }
