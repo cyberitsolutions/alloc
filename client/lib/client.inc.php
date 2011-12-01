@@ -464,6 +464,8 @@ class client extends db_entity {
         $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
       }
     }
+    // return an aggregation of the current task/proj/client parties + the existing interested parties
+    $interestedPartyOptions = interestedParty::get_interested_parties("client",$clientID,$interestedPartyOptions);
     return (array)$interestedPartyOptions;
   }
 

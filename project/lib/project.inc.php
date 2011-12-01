@@ -697,6 +697,8 @@ class project extends db_entity {
       $interestedPartyOptions[$current_user->get_value("emailAddress")] = array("name"=>$current_user->get_name(),"personID"=>$current_user->get_id());
     }
 
+    // return an aggregation of the current task/proj/client parties + the existing interested parties
+    $interestedPartyOptions = interestedParty::get_interested_parties("project",$projectID,$interestedPartyOptions);
     return (array)$interestedPartyOptions;
   }
 
