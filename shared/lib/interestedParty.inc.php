@@ -152,6 +152,7 @@ class interestedParty extends db_entity {
       $current_user_email = $current_user->get_value("emailAddress");
     }
     foreach ($parties as $email => $info) {
+      $info["name"] or $info["name"] = $email;
       if ($info["name"]) {
         unset($sel,$c);
         $counter++;
