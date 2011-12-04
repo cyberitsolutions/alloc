@@ -115,6 +115,14 @@ CREATE TABLE history (
   the_label varchar(255) default ''
 ) ;
 
+
+CREATE TABLE indexQueue (
+  indexQueueID serial PRIMARY KEY,
+  entity varchar(255) NOT NULL,
+  entityID integer NOT NULL
+) ;
+
+
 CREATE TABLE invoice (
   invoiceID serial PRIMARY KEY,
   clientID integer NOT NULL,
@@ -337,6 +345,7 @@ CREATE TABLE task (
   taskModifiedUser integer DEFAULT NULL,
   taskCommentTemplateID integer default NULL,
   duplicateTaskID integer default NULL,
+  estimatorID integer DEFAULT NULL,
   taskStatus varchar(255) NOT NULL
 ) ;
 
@@ -362,6 +371,7 @@ CREATE TABLE interestedParty (
   external boolean DEFAULT NULL,
   interestedPartyCreatedUser integer DEFAULT NULL,
   interestedPartyCreatedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL
+  interestedPartyActive boolean DEFAULT true
 ) ;
 
 CREATE TABLE commentTemplate (
@@ -483,6 +493,7 @@ CREATE TABLE transaction (
   timeSheetID integer default NULL,
   productSaleID integer default NULL,
   productSaleItemID integer default NULL,
+  productCostID integer default NULL,
   transactionRepeatID integer default NULL,
   transactionGroupID integer default NULL
 ) ;
@@ -667,7 +678,7 @@ CREATE TABLE skillProficiency (
 
 CREATE TABLE taskType (
   taskTypeID varchar(255) PRIMARY KEY,
-  taskTypeSeq integer default NULL,
+  taskTypeSeq integer NOT NULL,
   taskTypeActive boolean default true
 ) ;
 
@@ -675,9 +686,9 @@ CREATE TABLE taskType (
 
 CREATE TABLE taskStatus (
   taskStatusID varchar(255) PRIMARY KEY,
-  taskStatusLabel varchar(255) default NULL,
-  taskStatusColour varchar(255) default NULL,
-  taskStatusSeq integer default NULL,
+  taskStatusLabel varchar(255) DEFAULT NULL,
+  taskStatusColour varchar(255) DEFAULT NULL,
+  taskStatusSeq integer NOT NULL,
   taskStatusActive boolean default true
 ) ;
 
