@@ -95,6 +95,7 @@ class db {
       $TPL["message"][] = "Error: ".$errno." ".$msg;
       print $msg;
     }
+    error_log("Query failed: $msg");
     $this->error = $msg;
   }
 
