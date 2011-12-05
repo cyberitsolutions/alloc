@@ -600,6 +600,7 @@ class comment extends db_entity {
       is_object($current_user) && !$from_name and $from_name = $current_user->get_name();
       $messageid = $email->set_message_id($hash);
       $subject_extra = "{Key:".$hash."}";
+      $email->set_date();
 
       if (!$subject) {
         $tpl = config::get_config_item("emailSubject_".$e->classname."Comment");
