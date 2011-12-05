@@ -70,6 +70,7 @@ if ($num_new_emails >0) {
     // posterity and should not be parsed and downloaded and re-emailed etc.
     if (same_email_address($email_receive->mail_headers->fromaddress, ALLOC_DEFAULT_FROM_ADDRESS)) {
       $email_receive->mark_seen();
+      $email_receive->archive();
       continue;
     }
 
@@ -101,12 +102,16 @@ if ($num_new_emails >0) {
     $rtn = $command->run_commands($commands,$email_receive);
     if ($rtn["status"]=="err") {
       send_error($email_receive, "Email command failed: ".$rtn["message"]);
+
+    // Commit the db, and move the email into its storage location eg: INBOX.task1234
     } else {
       $db->commit();
+      $email_receive->archive();
     }
   }
 }
 
+$email_receive->expunge();
 $email_receive->close();
 
 function send_error($email_receive,$msg) {

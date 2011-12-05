@@ -115,14 +115,17 @@ class command {
         if (is_object($entity) && $method == "add_comment_from_email") {
 
           $c = comment::add_comment_from_email($email_receive,$entity);
-          $quiet = interestedParty::adjust_by_email_subject($email_receive,$entity);
 
-          if ($commands["ip"]) {
-            $rtn = interestedParty::add_remove_ips($commands["ip"],$entity->classname,$entity->get_id(),$entity->get_project_id());
-          }
+          if (is_object($c) && $c->get_id()) {
+            $quiet = interestedParty::adjust_by_email_subject($email_receive,$entity);
 
-          if (!$quiet) {
-            comment::send_comment($c->get_id(),array("interested"),$email_receive);
+            if ($commands["ip"]) {
+              $rtn = interestedParty::add_remove_ips($commands["ip"],$entity->classname,$entity->get_id(),$entity->get_project_id());
+            }
+
+            if (!$quiet) {
+              comment::send_comment($c->get_id(),array("interested"),$email_receive);
+            }
           }
         }
       }

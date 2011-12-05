@@ -108,6 +108,17 @@ class alloc_email_receive {
     }
   }
 
+  function create_mailbox($name) {
+    $name = $this->connect_string.$name;
+    if (!imap_status($this->connection,$name,SA_ALL)) {
+      return imap_createmailbox($this->connection, imap_utf7_encode($name));
+    }
+  }
+
+  function move_mail($uid,$mailbox) {
+    return imap_mail_move($this->connection, $uid, $mailbox ,CP_UID);
+  }
+
   function get_new_email_msg_uids() {
     return imap_search($this->connection,"UNSEEN",SE_UID);
   }
@@ -252,6 +263,27 @@ class alloc_email_receive {
     if ($this->connection) {
       #imap_close($this->connection);
       imap_close($this->connection,CL_EXPUNGE); // expunge messages marked for deletion
+    }
+  }
+
+  function archive() {
+    $keys = $this->get_hashes();
+    $token = new token;
+    if ($token->set_hash($keys[0])) {
+      if ($token->get_value("tokenEntity") == "comment") {
+        $db = new db_alloc();
+        $row = $db->qr("SELECT commentMaster,commentMasterID 
+                          FROM comment
+                         WHERE commentID = %d"
+                      ,$token->get_value("tokenEntityID"));
+        $m = $row["commentMaster"];
+        $mID = $row["commentMasterID"];
+      } else {
+        $m = $token->get_value("tokenEntity");
+        $mID = $token->get_value("tokenEntityID");
+      }
+      $this->create_mailbox("INBOX.".$m.$mID);
+      $this->move_mail($this->msg_uid,"INBOX.".$m.$mID);
     }
   }
 
