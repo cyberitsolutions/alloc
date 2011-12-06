@@ -169,8 +169,6 @@ class client extends db_entity {
       $filter = " WHERE ".implode(" AND ",$filter);
     }
 
-    $join = sprintf("LEFT JOIN clientContact ON client.clientID = clientContact.clientID");
-
     $cc = config::get_config_item("clientCategories");
     foreach ($cc as $k => $v) {
       $clientCategories[$v["value"]] = $v["label"];
@@ -178,7 +176,7 @@ class client extends db_entity {
 
     $q = "SELECT client.*,clientContactName, clientContactEmail, clientContactPhone, clientContactMobile
             FROM client 
-                 ".$join." 
+       LEFT JOIN clientContact ON client.clientID = clientContact.clientID AND clientContact.clientContactActive = 1
                  ".$filter." 
         GROUP BY client.clientID 
         ORDER BY clientName,clientContact.primaryContact asc";
@@ -190,18 +188,8 @@ class client extends db_entity {
       $print = true;
       $c = new client;
       $c->read_db_record($db);
-
       $row["clientCategoryLabel"] = $clientCategories[$c->get_value("clientCategory")];
       $row["clientLink"] = $c->get_client_link($_FORM);
-
-      if (!$row["clientContactName"]) {
-        $q = sprintf("SELECT * FROM clientContact WHERE clientID = %d ORDER BY clientContactName LIMIT 1",$row["clientID"]);
-        $db2->query($q);  
-        $cc = $db2->row();
-        $row["clientContactName"] = $cc["clientContactName"];
-        $row["clientContactPhone"] = $cc["clientContactPhone"];
-        $row["clientContactEmail"] = $cc["clientContactEmail"];
-      }
       $row["clientContactPhone"] or $row["clientContactPhone"] = $row["clientContactMobile"];
       $row["clientContactEmail"] and $row["clientContactEmail"] = "<a href=\"mailto:".page::htmlentities($row["clientName"]." <".$row["clientContactEmail"].">")."\">".page::htmlentities($row["clientContactEmail"])."</a>";
 
