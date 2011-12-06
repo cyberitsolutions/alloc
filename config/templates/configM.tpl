@@ -9,7 +9,8 @@
                                ,"email_subject"=>"Email Subject Lines"
                                ,"rss"=>"RSS Feed"
                                ,"misc"=>"Miscellaneous")
-                          ,$url_alloc_config)}
+                          ,$url_alloc_config
+                          ,true)}
 
 <div id="basic">
 <form action="{$url_alloc_config}" method="post">
