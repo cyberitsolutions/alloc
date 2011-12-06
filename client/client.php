@@ -80,7 +80,7 @@ require_once("../alloc.php");
     $query = sprintf("SELECT * 
                         FROM clientContact
                        WHERE clientID=%d    
-                    ORDER BY primaryContact desc, clientContactName", $clientID);
+                    ORDER BY clientContactActive DESC, primaryContact DESC, clientContactName", $clientID);
 
     $db = new db_alloc;
     $db->query($query);
@@ -95,13 +95,16 @@ require_once("../alloc.php");
 
       $pc = "";
       if ($clientContact->get_value("primaryContact")) {
-        $pc = " (Primary Contact)";
+        $pc = " [Primary]";
       }
 
-      $vcard = '<a href="'.$TPL["url_alloc_client"].'clientContactID='.$clientContact->get_id().'&get_vcard=1"><img style="padding-left: 10px;border: none" src="'.$TPL["url_alloc_images"].'icon_vcard.png" alt="Download VCard" ></a>';
+      $vcard_img = "icon_vcard.png";
+      $clientContact->get_value("clientContactActive") or $vcard_img = "icon_vcard_faded.png";
+
+      $vcard = '<a href="'.$TPL["url_alloc_client"].'clientContactID='.$clientContact->get_id().'&get_vcard=1"><img style="vertical-align:middle; padding:3px 6px 3px 3px;border: none" src="'.$TPL["url_alloc_images"].$vcard_img.'" alt="Download VCard" ></a>';
 
       $col1 = array();
-      $clientContact->get_value('clientContactName') and $col1[] = "<b>".$clientContact->get_value('clientContactName',DST_HTML_DISPLAY)."</b>".$pc . $vcard;
+      $clientContact->get_value('clientContactName') and $col1[] = "<h2 style='margin:0px; display:inline;'>".$vcard.$clientContact->get_value('clientContactName',DST_HTML_DISPLAY)."</h2>".$pc;
       $clientContact->get_value('clientContactStreetAddress') and $col1[] = $clientContact->get_value('clientContactStreetAddress',DST_HTML_DISPLAY);
 
       $clientContact->get_value('clientContactSuburb') || $clientContact->get_value('clientContactState') || $clientContact->get_value('clientContactPostcode') and
@@ -145,18 +148,24 @@ require_once("../alloc.php");
       $fax = $clientContact->get_value('clientContactFax',DST_HTML_DISPLAY);
       $fax and $col2[] = $ico_f.$fax;
 
+      if ($clientContact->get_value("clientContactActive")) {
+        $class_extra = " loud";
+      } else {
+        $class_extra = " quiet";
+      }
+
       $buttons = "<nobr><input type=\"submit\" name=\"clientContact_edit\" value=\"Edit\"> 
                         <input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\" class=\"delete_button\"></nobr>";
 
       $rtn[] =  '<form action="'.$TPL["url_alloc_client"].'" method="post">';
       $rtn[] =  '<input type="hidden" name="clientContactID" value="'.$clientContact->get_id().'">';
       $rtn[] =  '<input type="hidden" name="clientID" value="'.$clientID.'">';
-      $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="panel loud">';
+      $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="panel'.$class_extra.'">';
       $rtn[] =  '<tr>';
-      $rtn[] =  '  <td width="25%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col1).'</span></td>';
-      $rtn[] =  '  <td width="20%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col2).'</span></td>';
-      $rtn[] =  '  <td rowspan="4" align="left" valign="top">'.nl2br($clientContact->get_value('clientContactOther',DST_HTML_DISPLAY)).'</td>';
-      $rtn[] =  '  <td rowspan="2" align="right" style="float:right">'.$buttons.'</td>';
+      $rtn[] =  '  <td width="25%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col1).'</span>&nbsp;</td>';
+      $rtn[] =  '  <td width="20%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col2).'</span>&nbsp;</td>';
+      $rtn[] =  '  <td width="50%" align="left" valign="top">'.nl2br($clientContact->get_value('clientContactOther',DST_HTML_DISPLAY)).'&nbsp;</td>';
+      $rtn[] =  '  <td align="right" class="right nobr">'.$buttons.'</td>';
       $rtn[] =  '</tr>';
       $rtn[] =  '</table>';
       $rtn[] =  '<input type="hidden" name="sessID" value="'.$TPL["sessID"].'">';
@@ -174,6 +183,9 @@ require_once("../alloc.php");
       $clientContact->set_values("clientContact_");
       if ($clientContact->get_value("primaryContact")) {
         $TPL["primaryContact_checked"] = " checked";
+      }
+      if ($clientContact->get_value("clientContactActive")) {
+        $TPL["clientContactActive_checked"] = " checked";
       }
     } else if ($rtn) {
       $TPL["class_new_client_contact"] = "hidden";

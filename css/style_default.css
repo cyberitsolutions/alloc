@@ -567,6 +567,13 @@ table.panel td {
   padding:4px; 
   border:0px solid black;
 }
+table.quiet {
+  border: 1px solid #e0e0e0;
+}
+table.quiet td, table.quiet a { 
+  background:#f9f9f9;
+  color:#aaaaaa;
+}
 table.loud td {
   background:#fff7ea;
 }
