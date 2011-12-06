@@ -2,8 +2,12 @@ function redraw_multiple_selects(container, funct) {
   if (container) {
     var c = "#"+container
   }
-  $("select[multiple]",c).dropdownchecklist("destroy");
-  $("select[multiple]",c).dropdownchecklist( { "maxDropHeight":450, "onComplete": funct } );
+  $("select[multiple]",c).each(function(){
+    if (this.length < 30) {
+      $(this).dropdownchecklist("destroy");
+      $(this).dropdownchecklist( { "maxDropHeight":450, "onComplete": funct } );
+    }
+  });
 }
 
 function toggle_view_edit() {
