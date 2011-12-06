@@ -59,7 +59,8 @@ CREATE TABLE clientContact (
   clientContactEmail varchar(255) default NULL,
   clientContactOther text,
   clientContactCountry varchar(255) default NULL,
-  primaryContact boolean default false
+  primaryContact boolean default false,
+  clientContactActive boolean default true
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS comment;

@@ -38,6 +38,7 @@ class clientContact extends db_entity {
                              ,"clientContactEmail"
                              ,"clientContactOther"
                              ,"primaryContact"
+                             ,"clientContactActive"
                              );
 
   function save() {

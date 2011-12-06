@@ -48,7 +48,9 @@
           </tr>
           <tr>
             <td colspan="6" class="right">
-             Primary Contact <input type="checkbox" name="primaryContact" value="1"{$primaryContact_checked}> {$clientContactItem_buttons}
+             <label for="cca">Enabled</label> <input id="cca" type="checkbox" name="clientContactActive" value="1"{$clientContactActive_checked}>&nbsp;&nbsp;
+             <label for="pcc">Primary Contact</label> <input id="pcc" type="checkbox" name="primaryContact" value="1"{$primaryContact_checked}>
+             {$clientContactItem_buttons}
             </td>
           </tr>
         </table>

@@ -55,7 +55,8 @@ CREATE TABLE clientContact (
   clientContactEmail varchar(255) default NULL,
   clientContactOther text,
   clientContactCountry varchar(255) default NULL,
-  primaryContact boolean default false
+  primaryContact boolean default false,
+  clientContactActive boolean default true
 ) ;
 
 CREATE TABLE comment (
