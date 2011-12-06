@@ -43,7 +43,7 @@ function set_grow_shrink(id, id_to_hide, use_classes_instead_of_ids) {
   return false;
 }
 
-function sidebyside_activate(id) {
+function sidebyside_activate(id,redraw) {
   var arr = [];
   $.each($(".sidebyside"), function(k,v) {
     arr[arr.length] = v.id.replace("sbs_link_","");
@@ -75,7 +75,11 @@ function sidebyside_activate(id) {
     $('#sbs_link_' + id).addClass("sidebyside_active");
     $("#"+id).show();
   }
-  redraw_multiple_selects();
+
+  // allows us to target particular pages for redraw_multiple_selects();
+  if (redraw) {
+    redraw_multiple_selects();
+  }
 }
 
 function help_text_on(id, str) {
@@ -249,7 +253,8 @@ $(document).ready(function() {
 
   // Activate side by side links/tabs, if any
   $(".sidebyside").click(function(e) {
-    sidebyside_activate(e.target.id.replace("sbs_link_",""));
+    var redraw = $(this).attr("data-sbs-redraw");
+    sidebyside_activate(e.target.id.replace("sbs_link_",""),redraw);
     return false;
   });
   sidebyside_activate();

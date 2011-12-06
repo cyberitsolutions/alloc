@@ -311,7 +311,7 @@ EOD;
     $str = "<a class=\"growshrink nobr\" href=\"#x\" onClick=\"$('#".$id."').fadeToggle();".$extra."\">".$text."</a>";
     return $str;
   }
-  function side_by_side_links($items=array(),$url) {
+  function side_by_side_links($items=array(),$url,$redraw="") {
     $url = preg_replace("/[&?]+$/", "", $url);
     if (strpos($url, "?")) {
       $url.= "&";
@@ -319,7 +319,7 @@ EOD;
       $url.= "?";
     }
     foreach ($items as $id => $label) {
-      $str.= $sp."<a id=\"sbs_link_".$id."\" href=\"".$url."sbs_link=".$id."\" class=\"sidebyside\">".$label."</a>";
+      $str.= $sp."<a id=\"sbs_link_".$id."\" data-sbs-redraw='".$redraw."' href=\"".$url."sbs_link=".$id."\" class=\"sidebyside\">".$label."</a>";
       $sp = "&nbsp;";
     }
     return "<div style=\"margin:20px 0px 0px 0px;\">".$str."</div>";
