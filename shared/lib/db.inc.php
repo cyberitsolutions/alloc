@@ -94,8 +94,8 @@ class db {
     } else if (strlen($msg)) {
       $TPL["message"][] = "Error: ".$errno." ".$msg;
       print $msg;
+      error_log("Query failed: $msg");
     }
-    error_log("Query failed: $msg");
     $this->error = $msg;
   }
 
