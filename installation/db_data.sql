@@ -332,11 +332,11 @@ VALUES
 ,('productCost'              ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
 
 ,('productSale'              ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
-,('productSale'              ,-1 ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
+,('productSale'              ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
 ,('productSale'              ,0  ,NULL ,'admin'    ,true ,NULL ,271   ,NULL)
 
 ,('productSaleItem'          ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
-,('productSaleItem'          ,-1 ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
+,('productSaleItem'          ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
 ,('productSaleItem'          ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
 
 ,('project'                  ,0  ,NULL ,''         ,true ,100  ,513   ,'Allow all to read projects for searches.')
