@@ -116,8 +116,7 @@ class interestedParty extends db_entity {
       while ($db->row()) {
         $ops[$db->f("emailAddress")]["name"] = $db->f("fullName");
         $ops[$db->f("emailAddress")]["role"] = "interested";
-	// Don't overwrite pre-selected manager/assignee boxes
-        $ops[$db->f("emailAddress")]["selected"] = ($ops[$db->f("emailAddress")] || $db->f("interestedPartyActive") ) ? true : false;
+        $ops[$db->f("emailAddress")]["selected"] = $db->f("interestedPartyActive") ? true : false;
         $ops[$db->f("emailAddress")]["personID"] = $db->f("personID");
         $ops[$db->f("emailAddress")]["clientContactID"] = $db->f("clientContactID");
         $ops[$db->f("emailAddress")]["external"] = $db->f("external");
