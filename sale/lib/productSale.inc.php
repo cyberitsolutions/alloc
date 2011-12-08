@@ -55,7 +55,9 @@ class productSale extends db_entity {
  
   function is_owner() {
     global $current_user;
-    return !$this->get_id() || $this->get_value("productSaleCreatedUser") == $current_user->get_id();
+    return !$this->get_id()
+           || $this->get_value("productSaleCreatedUser") == $current_user->get_id()
+           || $this->get_value("personID") == $current_user->get_id();
   } 
 
   function delete() {
