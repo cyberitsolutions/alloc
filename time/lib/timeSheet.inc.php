@@ -601,7 +601,7 @@ class timeSheet extends db_entity {
      *
      */
   
-    global $TPL;
+    global $TPL, $current_user;
     $_FORM["showShortProjectLink"] and $_FORM["showProjectLink"] = true;
     $filter = timeSheet::get_list_filter($_FORM);
 
@@ -650,6 +650,16 @@ class timeSheet extends db_entity {
       $extra["totalHours"] += $t->pay_info["total_duration_hours"];
       $row["totalHours"] += $t->pay_info["total_duration_hours"];
       $row["duration"] = $t->pay_info["summary_unit_totals"];
+
+      if (imp($current_user->prefs["timeSheetHoursWarn"])
+      && $t->pay_info["total_duration_hours"] >= $current_user->prefs["timeSheetHoursWarn"]) {
+        $row["hoursWarn"] = "bad";
+      }
+      if (imp($current_user->prefs["timeSheetDaysWarn"]) 
+      && (mktime()-format_date("U",$t->get_value("dateFrom")))/60/60/24 >= $current_user->prefs["timeSheetDaysWarn"]) {
+        $row["daysWarn"] = "bad";
+      }
+
       $row["person"] = $people_array[$row["personID"]]["name"];
       $row["status"] = $status_array[$row["status"]];
       $row["customerBilledDollars"] = $t->pay_info["total_customerBilledDollars"];

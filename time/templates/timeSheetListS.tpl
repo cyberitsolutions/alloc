@@ -16,19 +16,20 @@
     {/}
   </tr>
   {foreach $timeSheetListRows as $r}
+  {$bad = $r["daysWarn"] or $bad = $r["hoursWarn"]}
   <tr>
-    <td>{$r.timeSheetID}</td>
-    <td>{$r.projectLink}</td>
-    <td>{=$r.person}</td>
-    <td>{$r.dateFrom}</td>
-    <td>{$r.dateTo}</td>
-    <td>{if $r["dateRejected"]}<span class="bad" title="This timesheet has been rejected.">{/}{$r.status}{if $r["dateRejected"]}</span>{/}</td>
-    <td>{$r.duration}</td>
-    <td class="nobr right">{page::money($r["currencyTypeID"],$r["amount"],"%s%m %c")}</td>
+    <td class="{$bad}">{$r.timeSheetID}</td>
+    <td class="{$bad}">{$r.projectLink}</td>
+    <td class="{$bad}">{=$r.person}</td>
+    <td class="{$bad}">{$r.dateFrom}</td>
+    <td class="{$bad}">{$r.dateTo}</td>
+    <td class="{$bad}">{if $r["dateRejected"]}<span class="bad" title="This timesheet has been rejected.">{/}{$r.status}{if $r["dateRejected"]}</span>{/}</td>
+    <td class="{$bad}">{$r.duration}</td>
+    <td class="{$bad} nobr right">{page::money($r["currencyTypeID"],$r["amount"],"%s%m %c")}</td>
     {if $timeSheetListExtra["showFinances"]}
-    <td class="nobr right">{page::money($r["currencyTypeID"],$r["customerBilledDollars"],"%s%m %c")}</td>
-    <td class="nobr right">{$r.transactionsPos}</td>
-    <td class="nobr right">{$r.transactionsNeg}</td>
+    <td class="{$bad} nobr right">{page::money($r["currencyTypeID"],$r["customerBilledDollars"],"%s%m %c")}</td>
+    <td class="{$bad} nobr right">{$r.transactionsPos}</td>
+    <td class="{$bad} nobr right">{$r.transactionsNeg}</td>
     {/}
   </tr>
   {/}
