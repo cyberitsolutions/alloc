@@ -48,6 +48,8 @@ class customize_alloc_home_item extends home_item {
       $current_user->prefs["showFilters"] = $_POST["showFilters"];
       $current_user->prefs["privateMode"] = $_POST["privateMode"];
 
+      $current_user->prefs["timeSheetHoursWarn"] = $_POST["timeSheetHoursWarn"];
+      $current_user->prefs["timeSheetDaysWarn"] = $_POST["timeSheetDaysWarn"];
     }
 
     $customizedFont_array = page::get_customizedFont_array();
@@ -96,6 +98,9 @@ class customize_alloc_home_item extends home_item {
 
     $TPL["privateMode"] = $current_user->prefs["privateMode"];
     $TPL["privateMode"] and $TPL["body_class"] = "obfus";
+
+    $TPL["timeSheetHoursWarn"] = $current_user->prefs["timeSheetHoursWarn"];
+    $TPL["timeSheetDaysWarn"] = $current_user->prefs["timeSheetDaysWarn"];
   }
 
 

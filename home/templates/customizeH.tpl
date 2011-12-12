@@ -18,10 +18,10 @@
       <div class="view">
         <h6>Font Size<div>Theme</div></h6>
         <div style="float:left; width:30%;">
-          {$fontLabel}
+          {$fontLabel}&nbsp;
         </div>
         <div style="float:right; width:50%;">
-          {$themeLabel}
+          {$themeLabel}&nbsp;
         </div>
       </div>
 
@@ -37,10 +37,10 @@
       <div class="view">
         <h6>Top Tasks<div>Status</div></h6> 
         <div style="float:left; width:30%;">
-          {$topTasksNumLabel}
+          {$topTasksNumLabel}&nbsp;
         </div>
         <div style="float:right; width:50%;">
-          {$topTasksStatusLabel}
+          {$topTasksStatusLabel}&nbsp;
         </div>
       </div>
 
@@ -56,10 +56,10 @@
       <div class="view">
         <h6>Calendar Weeks<div>Weeks Back</div></h6> 
         <div style="float:left; width:30%;">
-          {$weeksLabel}
+          {$weeksLabel}&nbsp;
         </div>
         <div style="float:right; width:50%;">
-          {$weeksBackLabel}
+          {$weeksBackLabel}&nbsp;
         </div>
       </div>
 
@@ -75,10 +75,10 @@
       <div class="view">
         <h6>Daily Email<div>Receive My Comments</div></h6> 
         <div style="float:left; width:30%;">
-          {$dailyTaskEmailLabel}
+          {$dailyTaskEmailLabel}&nbsp;
         </div>
         <div style="float:right; width:50%;">
-          {$receiveOwnTaskCommentsLabel}
+          {$receiveOwnTaskCommentsLabel}&nbsp;
         </div>
       </div>
 
@@ -88,16 +88,35 @@
           <select name="projectListNum">{$projectListNumOptions}</select>
         </div>
         <div style="float:right; width:50%;">
-	  <select name="showFilters">{$showFiltersOptions}</select>
+	        <select name="showFilters">{$showFiltersOptions}</select>
         </div>
       </div>
       <div class="view">
         <h6>Project List<div>Show Filters</div></h6> 
         <div style="float:left; width:30%;">
-          {$projectListNumLabel}
+          {$projectListNumLabel}&nbsp;
         </div>
         <div style="float:right; width:50%;">
-	{$showFiltersLabel}
+	        {$showFiltersLabel}&nbsp;
+        </div>
+      </div>
+
+      <div class="edit">
+        <h6>Time Sheet Hours<div>Time Sheet Days</div></h6> 
+        <div style="float:left; width:30%;">
+          <input type="text" size="5" name="timeSheetHoursWarn" value="{$timeSheetHoursWarn}">
+        </div>
+        <div style="float:right; width:50%;">
+	        <input type="text" size="5" name="timeSheetDaysWarn" value="{$timeSheetDaysWarn}">
+        </div>
+      </div>
+      <div class="view">
+        <h6>Time Sheet Hours<div>Time Sheet Days</div></h6> 
+        <div style="float:left; width:30%;">
+          {$timeSheetHoursWarn}&nbsp;
+        </div>
+        <div style="float:right; width:50%;">
+	        {$timeSheetDaysWarn}&nbsp;
         </div>
       </div>
 
@@ -114,7 +133,7 @@
       <div class="view">
         <h6>Private Mode<div></div></h6> 
         <div style="float:left; width:30%;">
-          {print $privateMode ? "Yes" : "No"}
+          {print $privateMode ? "Yes" : "No"}&nbsp;
         </div>
         <div style="float:right; width:50%;" class="right">
           <input type="button" value="Edit" onClick="toggle_view_edit();">
