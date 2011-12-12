@@ -54,6 +54,7 @@ $alloc_urls = array(
             ,"url_alloc_updateRecipients"               => "comment/updateRecipients.php"
             ,"url_alloc_updateProjectList"              => "task/updateProjectList.php"
             ,"url_alloc_taskList"                       => "task/taskList.php"
+            ,"url_alloc_taskListPrint"                  => "task/taskListPrint.php"
             ,"url_alloc_commentTemplate"                => "comment/commentTemplate.php"
             ,"url_alloc_commentTemplateList"            => "comment/commentTemplateList.php"
             ,"url_alloc_taskCalendar"                   => "task/taskCalendar.php"
