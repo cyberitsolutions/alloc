@@ -138,6 +138,12 @@ class task extends db_entity {
     return $rtn;
   }
 
+  function delete() {
+    if ($this->can_be_deleted()) {
+      return parent::delete();
+    }
+  }
+
   function validate() {
     // Validate/coerce the fields
     $this->get_value("taskStatus") == "inprogress" && $this->set_value("taskStatus","open_inprogress");
@@ -1705,6 +1711,14 @@ class task extends db_entity {
     return $this->get_value("projectID");
   }
 
+  function can_be_deleted() {
+    if (is_object($this) && $this->get_id()) {
+      $db = new db_alloc;
+      $q = sprintf("SELECT * FROM auditItem WHERE entityName = 'task' AND entityID = %d",$this->get_id());
+      $db->query($q);
+      return $this->have_perm(PERM_DELETE) && !$db->row();
+    }
+  }
 
 }
 
