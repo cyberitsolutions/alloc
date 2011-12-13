@@ -190,9 +190,13 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 
 // If deleting a record
 } else if ($_POST["delete"]) {
-  $task->read_globals();
-  $task->delete();
-  alloc_redirect($TPL["url_alloc_taskList"]);
+  if ($task->can_be_deleted()) {
+    $task->read_globals();
+    $task->delete();
+    alloc_redirect($TPL["url_alloc_taskList"]);
+  } else {
+    $TPL["message"][] = "This task cannot be deleted. You either don't have permission, or this task has history items.";
+  }
 }
 
 // Start stuff here
@@ -339,6 +343,8 @@ if (!$task->get_id()) {
   $TPL["message_help"][] = "Enter a Task Name and click the \"Save\" button to create a new Task.";
   $TPL["task_dateTargetStart"] = date("Y-m-d");
 }
+
+$TPL["task"] = $task;
 
 // Printer friendly view
 if ($_GET["media"] == "print") {
