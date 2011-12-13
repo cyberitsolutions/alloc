@@ -342,7 +342,13 @@ EOD;
       return "<b style=\"font-weight:bold;font-size:100%;color:green;display:inline;top:-5px !important;top:-3px;position:relative;\">".$star."</b>";
     }
   }
-
+  function warn() {
+    $star = "&lowast;";
+    if (stristr($_SERVER["HTTP_USER_AGENT"],"MSIE")) {
+      $star = "*";
+    }
+    return "<b style=\"font-weight:bold;font-size:100%;color:orange;display:inline;top:-5px !important;top:-3px;position:relative;\">".$star."</b>";
+  }
   function stylesheet() {
     if ($_GET["media"] == "print") {
       return "print.css";
