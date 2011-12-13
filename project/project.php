@@ -232,6 +232,12 @@ require_once("../alloc.php");
     $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"project"));
     $TPL["commentTemplateOptions"] = "<option value=\"\">Comment Templates</option>".page::select_options($ops);
 
+    $ops = array(""=>"Format as...","pdf"=>"PDF","pdf_plus"=>"PDF+","html"=>"HTML","html_plus"=>"HTML+");
+
+    $TPL["attach_extra_files"] = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    $TPL["attach_extra_files"].= "Attach Task Report ";
+    $TPL["attach_extra_files"].= '<select name="attach_tasks">'.page::select_options($ops).'</select><br>';
+
     include_template("../comment/templates/commentM.tpl");
   }
 
