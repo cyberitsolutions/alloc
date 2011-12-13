@@ -651,13 +651,13 @@ class timeSheet extends db_entity {
       $row["totalHours"] += $t->pay_info["total_duration_hours"];
       $row["duration"] = $t->pay_info["summary_unit_totals"];
 
-      if (imp($current_user->prefs["timeSheetHoursWarn"])
+      if ($t->get_value("status") == "edit" && imp($current_user->prefs["timeSheetHoursWarn"])
       && $t->pay_info["total_duration_hours"] >= $current_user->prefs["timeSheetHoursWarn"]) {
-        $row["hoursWarn"] = "bad";
+        $row["hoursWarn"] = page::help("This time sheet has gone over ".$current_user->prefs["timeSheetHoursWarn"]." hours.",page::warn());
       }
-      if (imp($current_user->prefs["timeSheetDaysWarn"]) 
+      if ($t->get_value("status") == "edit" && imp($current_user->prefs["timeSheetDaysWarn"]) 
       && (mktime()-format_date("U",$t->get_value("dateFrom")))/60/60/24 >= $current_user->prefs["timeSheetDaysWarn"]) {
-        $row["daysWarn"] = "bad";
+        $row["daysWarn"] = page::help("This time sheet is over ".$current_user->prefs["timeSheetDaysWarn"]." days old.",page::warn());
       }
 
       $row["person"] = $people_array[$row["personID"]]["name"];

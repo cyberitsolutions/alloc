@@ -6,11 +6,10 @@
     <th class="right">Amount</th>
   </tr>
   {foreach $timeSheetListRows as $r}
-  {$bad = $r["daysWarn"] or $bad = $r["hoursWarn"]}
   <tr>
-    <td class="{$bad}">{$r.projectLink}</td>
-    <td class="{$bad}">{if $r["dateRejected"]}<span class="bad" title="This timesheet has been rejected.">{/}{$r.status}{if $r["dateRejected"]}</span>{/}</td>
-    <td class="{$bad} nobr right obfuscate">{page::money($r["currencyTypeID"],$r["amount"],"%s%m %c")}</td>
+    <td>{$r.hoursWarn}{$r.daysWarn}{$r.projectLink}</td>
+    <td>{if $r["dateRejected"]}<span class="bad" title="This timesheet has been rejected.">{/}{$r.status}{if $r["dateRejected"]}</span>{/}</td>
+    <td class="nobr right obfuscate">{page::money($r["currencyTypeID"],$r["amount"],"%s%m %c")}</td>
   </tr>
   {/}
   {if count($timeSheetListRows)>1}
