@@ -54,6 +54,12 @@ if ($_REQUEST["attach_invoice"]) {
   comment::attach_invoice($commentID,$_REQUEST["entityID"],$_REQUEST["generate_pdf_verbose"]);
 }
 
+// Attach any alloc generated tasks pdf
+if ($_REQUEST["attach_tasks"]) {
+  comment::attach_tasks($commentID,$_REQUEST["entityID"],$_REQUEST["attach_tasks"]);
+}
+
+
 // Re-email the comment out, including any attachments
 comment::send_comment($commentID,$emailRecipients);
 

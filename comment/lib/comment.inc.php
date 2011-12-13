@@ -1079,6 +1079,52 @@ class comment extends db_entity {
     file_put_contents($file,$str);
   }
 
+  function attach_tasks($commentID, $entityID, $options) {
+
+    $c = new comment();
+    $c->set_id($commentID);
+    $c->select();
+    $projectID = $c->get_project_id();
+
+    if ($projectID) {
+      // Begin buffering output to halt anything being sent to the web browser.
+      ob_start();
+      $t = new taskListPrint();
+        
+      $defaults = array("showAssigned"=>true
+                       ,"showDate1"=>true
+                       ,"showDate2"=>true
+                       ,"showDate3"=>true
+                       ,"showDate4"=>true
+                       ,"showDate5"=>true
+                       ,"showPercent"=>true
+                       ,"showStatus"=>true
+                       ,"taskView"=>"prioritised"
+                       ,"projectID"=>$projectID
+                       ,"format"=>$options
+                       );
+
+      if ($options == "pdf_plus" || $options == "html_plus") {
+        $defaults["showTimes"] = true;
+      }
+
+      $t->get_printable_file($defaults);
+
+      // Capture the output into $str
+      $str = (string)ob_get_clean();
+
+      $suffix = ".html";
+      $options != "html" && $options != "html_plus" and $suffix = ".pdf";
+
+      $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$commentID;
+      if (!is_dir($dir)) {
+        mkdir($dir, 0777);
+      }
+      $file = $dir.DIRECTORY_SEPARATOR."taskList_".$entityID.$suffix;
+      file_put_contents($file,$str);
+    }
+  }
+
   function move_attachment($entity, $entityID) {
     move_attachment($entity, $entityID);
   }
