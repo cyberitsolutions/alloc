@@ -2,8 +2,9 @@ function redraw_multiple_selects(container, funct) {
   if (container) {
     var c = "#"+container
   }
+  var blacklist = get_alloc_var("ddcl_blacklist");
   $("select[multiple]",c).each(function(){
-    if (this.length < 30) {
+    if ($.inArray(this.name,blacklist)==-1) {
       $(this).dropdownchecklist("destroy");
       $(this).dropdownchecklist( { "maxDropHeight":450, "onComplete": funct } );
     }
@@ -276,6 +277,12 @@ $(document).ready(function() {
     $("#recipient_dropdown_"+commentID).slideToggle("fast");
     redraw_multiple_selects("recipient_dropdown_"+commentID,save_recipients);
     return false;
+  });
+
+  $("select[multiple]").live('dblclick',function(){
+    $.get(get_alloc_var("url")+"shared/save_ddcl_blacklist.php",{ "unset" : this.name });
+    $(this).dropdownchecklist("destroy");
+    $(this).dropdownchecklist( { "maxDropHeight":450 } );
   });
 
 });
