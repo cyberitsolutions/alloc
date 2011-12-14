@@ -18,8 +18,8 @@
             <td>Project</td><td>People</td><td>From Date</td><td>To Date</td><td>Task Status</td>
           </tr>
           <tr>
-            <td>{echo project::get_list_dropdown("current",$_REQUEST["projectID"])}</td>
-            <td>
+            <td style='vertical-align:top'>{echo project::get_list_dropdown("current",$_REQUEST["projectID"])}</td>
+            <td style='vertical-align:top'>
             {$people = get_cached_table("person")}
             {foreach $people as $personID => $person}{if $person["personActive"]}{$ops[$personID] = $person["name"]}{/}{/}
               <select name="personID[]" multiple="true" size="9">
