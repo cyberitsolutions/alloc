@@ -14,8 +14,10 @@
       // return a value that is populated from PHP
       function get_alloc_var(key) {
       var values = {
-                    "side_by_side_link" : "{$_REQUEST.sbs_link}"
+                    "url"               : "{$script_path}"
+                   ,"side_by_side_link" : "{$_REQUEST.sbs_link}"
                    ,"show_filters"      : "{print is_object($current_user) ? $current_user->prefs["showFilters"] : ""}"
+                   ,"ddcl_blacklist"    : new Array("{print is_object($current_user)?implode('","',(array)$current_user->prefs['ddcl_blacklist']):''}")
                    }
       return values[key];
     }

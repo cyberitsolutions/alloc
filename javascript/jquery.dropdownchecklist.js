@@ -210,6 +210,14 @@
                     self._toggleDropContainer( !self.dropWrapper.isOpen );
                 }
             });
+
+            // Added by alla
+            wrapper.dblclick(function(event){
+                $(this).parent().find("select[multiple]").each(function() {
+                  $.get(get_alloc_var("url")+"shared/save_ddcl_blacklist.php",{ "name" : this.name });
+                });
+                self.destroy();
+            });
             wrapper.insertAfter(sourceSelect);
 
 			// Watch for a window resize and adjust the control if open
