@@ -11,6 +11,7 @@ import datetime
 import ConfigParser
 import csv
 import shlex
+import subprocess
 from prettytable import PrettyTable
 from netrc import netrc
 from urlparse import urlparse
@@ -619,8 +620,6 @@ class alloc(object):
     if self.quiet: return
     if not rows: return 
 
-    height_, width = os.popen('stty size', 'r').read().split()
-    width = int(width)
     only_these_fields = self.__get_only_these_fields(entity, rows, only_these_fields)
     field_names = only_these_fields[1::2]
 
@@ -632,7 +631,7 @@ class alloc(object):
         row = self.__get_row(entity, row, only_these_fields, transforms)
         rows2.append(row)
       rows = rows2
-     
+ 
     if self.csv:
       csv_table = csv.writer(sys.stdout)
       for row in rows:
@@ -646,7 +645,14 @@ class alloc(object):
           table.set_field_align(label, "r")
         else:
           table.set_field_align(label, "l")
-      rows = self.__fit_rows_to_screen(rows, field_names, width)
+
+      if stdout.isatty():
+        proc = subprocess.Popen(['stty', 'size'], stdout=subprocess.PIPE, stderr=open("/dev/null", "w"))
+        ret = proc.wait()
+        if ret == 0:
+          height_, width = proc.communicate()[0].split()
+          width = int(width)
+          rows = self.__fit_rows_to_screen(rows, field_names, width)
       for row in rows:
         table.add_row(row)
       print unicode(table.get_string(header=True)).encode('utf-8')
