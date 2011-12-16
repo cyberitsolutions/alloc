@@ -70,11 +70,16 @@ class alloc_services {
       $person = trim($person);
 
       if ($entity && $entityID) {
-        if (strtolower($person) == "default") {
-          $default_recipients = interestedParty::get_interested_parties($entity,$entityID);
-        }
-        if (strtolower($person) == "internal") {
-          $internal_recipients = interestedParty::get_interested_parties($entity,$entityID);
+        if (strtolower($person) == "default") { 
+          $e = new $entity;
+          $e->set_id($entityID);
+          $e->select();
+          $default_recipients = $e->get_all_parties();
+        } else if (strtolower($person) == "internal") {
+          $e = new $entity;
+          $e->set_id($entityID);
+          $e->select();
+          $internal_recipients = $e->get_all_parties();
         }
       }
     }
