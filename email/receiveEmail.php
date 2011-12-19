@@ -118,17 +118,13 @@ function send_error($email_receive,$msg) {
   $db = new db_alloc();
   $db->query("ROLLBACK");
 
-  $to = $email_receive->mail_headers->fromaddress;
-
   print "<br><br>Sending error.";
-  print "<br>To: ".$to."<br>Error: ".$msg;
+  print "<br>Error: ".$msg;
   print "<br>Email: <br>".$email_receive->mail_text;
 
   // Forward to admin
-  // if (config::get_config_item("allocEmailAdmin")) {
-  //   $email_receive->forward(config::get_config_item("allocEmailAdmin"), $msg);
-  // }
-  $email_receive->forward($to, $msg);
-  $email_receive->close();
+  if (config::get_config_item("allocEmailAdmin")) {
+    $email_receive->forward(config::get_config_item("allocEmailAdmin"), $msg);
+  }
 }
 ?>

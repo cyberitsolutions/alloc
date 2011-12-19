@@ -129,6 +129,9 @@ class command {
           }
         }
       }
+    // No key, then error
+    } else {
+      return array("status"=>"err","message"=>"No key found. Unable to process email.");
     }
 
 

@@ -221,27 +221,26 @@ class alloc_email_receive {
   }
 
   function forward($address,$subject) {
-    $header = imap_fetchheader($this->connection,$this->msg_uid,FT_UID);
-    $body = imap_body($this->connection,$this->msg_uid,FT_UID | FT_INTERNAL);
-
-    $email = new alloc_email();
-    $email->set_headers($header);
-
-    $orig_subject = $email->get_header("subject");
-  
-    // Nuke certain headers from the email
-    $email->del_header("to");
-    $email->del_header("subject");
-    $email->del_header("cc");
-    $email->del_header("bcc");
-
+    list($header,$body) = $this->get_raw_header_and_body();
+    $header and $header_obj = imap_rfc822_parse_headers($header);
+    $orig_subject = $header_obj->subject;
     $orig_subject and $s = " [".trim($orig_subject)."]";
 
+    $dir = ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR;
+    $filename = md5($header.$body);
+    $fh = fopen($dir.$filename,"wb");
+    fputs($fh, $header.$body);
+    fclose($fh);
+
+    $email = new alloc_email();
+    $email->set_from(config::get_config_item("AllocFromEmailAddress"));
     $email->set_subject($subject.$s);    
     $email->set_to_address($address);
     $email->set_message_type("orphan");
-    $email->set_body($body);
+    $email->add_attachment($dir.$filename);
     $email->send(false);
+
+    unlink($dir.$filename);
   }
 
   function lock() {
