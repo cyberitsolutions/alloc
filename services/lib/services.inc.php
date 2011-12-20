@@ -20,7 +20,13 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+/**
+* alloc API
+*
+* A public interface for alloc code
+* @author Alex Lance
+* @version 1.0
+*/
 class alloc_services {
 
   public function __construct($sessID="") {
@@ -28,6 +34,12 @@ class alloc_services {
     $current_user = $this->get_current_user($sessID);
   }
 
+  /**
+  * Perform an authentication check, start a new session
+  * @param string $username
+  * @param string $password
+  * @return string the session key
+  */
   public function authenticate($username,$password) {
     $person = new person;
     $sess = new Session;
@@ -51,6 +63,11 @@ class alloc_services {
     }
   }
 
+  /**
+  * Get all the commments on a task
+  * @param string $taskID
+  * @return array an array of comments
+  */
   public function get_task_comments($taskID) {
     //global $current_user; // Always need this :(
     //$current_user = $this->get_current_user($sessID);
@@ -62,6 +79,13 @@ class alloc_services {
     }
   }
 
+  /**
+  * Convert a comma separated string of names, into an array with email addresses
+  * @param string $people
+  * @param string $entity the related entity that can assist in the look up
+  * @param integer $entityID the id of the related entity
+  * @return array an array of people, indexed by their email address
+  */
   public function get_people($people="", $entity="", $entityID="") {
     $person_table = get_cached_table("person");
 
@@ -171,7 +195,7 @@ class alloc_services {
     return (array)$rtn;
   }
 
-  public function reduce_person_info($person) {
+  private function reduce_person_info($person) {
     $rtn["personID"] = $person["personID"];
     $rtn["username"] = $person["username"];
     $rtn["name"]     = $person["name"]             or $rtn["name"] = $person["clientContactName"];
@@ -180,6 +204,11 @@ class alloc_services {
     return $rtn;
   }
 
+  /**
+  * Add a timesheet item
+  * @param array $options
+  * @return string a success message
+  */
   public function add_timeSheetItem($options) {
     //global $current_user; // Always need this :(
     //$current_user = $this->get_current_user($sessID);
@@ -191,6 +220,12 @@ class alloc_services {
     }
   }
 
+  /**
+  * Move a time sheet to a different status
+  * @param integer $timeSheetID the time sheet to change
+  * @param string $direction the direction to move the timesheet eg "forwards" or "backwards"
+  * @return string a success message
+  */
   public function change_timeSheet_status($timeSheetID,$direction) {
     $timeSheet = new timeSheet();
     $timeSheet->set_id($timeSheetID);
@@ -198,10 +233,21 @@ class alloc_services {
     return $timeSheet->change_status($direction);
   }
 
+  /**
+  * Convert a tf from its name to its tf ID
+  * @param string $name a tf name
+  * @return integer the tf's ID
+  */
   public function get_tfID($name) {
     return tf::get_tfID($name);
   } 
 
+  /**
+  * Get a list of entities, eg one of: tasks, comments, timeSheets, projects et al. See also this::get_list_help()
+  * @param string $entity the entity of which to get a list
+  * @param array $options the various filter options to apply see: ${entity}/lib/${entity}.inc.php -> get_list_filter().
+  * @return array the list of entities
+  */
   public function get_list($entity, $options=array()) {
     global $current_user; // Always need this :(
     //$current_user = $this->get_current_user($sessID);
@@ -229,6 +275,11 @@ class alloc_services {
     }
   }
 
+  /**
+  * Run a search across all emails, using PHP's IMAP search syntax http://php.net/imap_search and RFC2060 6.4.4
+  * @param string $str the search string
+  * @return string of mbox format emails
+  */
   public function search_emails($str) {
     if ($str) {
       $uids = $this->get_comment_email_uids_search($str);
@@ -239,6 +290,11 @@ class alloc_services {
     return $emails;
   }
 
+  /**
+  * Get all time sheet item comments in a faked mbox format
+  * @param integer $taskID which task the time sheet item comments relate to
+  * @return string of mbox format emails
+  */
   public function get_timeSheetItem_comments($taskID) {
     $people = get_cached_table("person");
     $rows = timeSheetItem::get_timeSheetItemComments($taskID);
@@ -252,7 +308,7 @@ class alloc_services {
     return $str;
   }
 
-  public function init_email_info() {
+  private function init_email_info() {
     global $current_user; // Always need this :(
     $info["host"] = config::get_config_item("allocEmailHost");
     $info["port"] = config::get_config_item("allocEmailPort");
@@ -265,6 +321,11 @@ class alloc_services {
     return $info;
   }
 
+  /**
+  * Get a single email, add an mbox date header line
+  * @param integer $emailUID the IMAP UID of an email
+  * @return string a single email in mbox format
+  */
   public function get_email($emailUID) {
     global $current_user; // Always need this :(
     //$lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
@@ -282,6 +343,11 @@ class alloc_services {
     }
   }
 
+  /**
+  * Get a list of IMAP email UIDs, based on a string search
+  * @param string $str the search string
+  * @return array an array of email UIDs
+  */
   public function get_comment_email_uids_search($str) {
     if ($str) { 
       global $current_user; // Always need this :(
@@ -295,6 +361,11 @@ class alloc_services {
     return (array)$rtn;
   }
 
+  /**
+  * A now defunct method to obtain help about this class
+  * @param string $topic the name of the class method, eg "get_list"
+  * @return string the help information
+  */
   public function get_help($topic="") {
     $this_methods = get_class_methods($this);
 
@@ -318,6 +389,10 @@ class alloc_services {
     }
   }
 
+  /**
+  * Add an interested party
+  * @param array $options see shared/lib/interestedParty.inc.php [add|delete]_interested_party()
+  */
   public function save_interestedParty($options) {
     // Python will submit None instead of ''
     foreach ($options as $k=>$v) { strtolower($v) != 'none' and $data[$k] = $v; }
@@ -329,6 +404,10 @@ class alloc_services {
     }
   }
 
+  /**
+  * Deactivate (not delete) an interested party
+  * @param array $options see shared/lib/interestedParty.inc.php [add|delete]_interested_party()
+  */
   public function delete_interestedParty($options) {
     // Python will submit None instead of ''
     foreach ($options as $k=>$v) { strtolower($v) != 'none' and $data[$k] = $v; }
@@ -339,6 +418,10 @@ class alloc_services {
     }
   }
 
+  /**
+  * An introspective method to display all the various get_list options across all the different entities
+  * @return string the help text
+  */
   private function get_list_help() {
     # This function does not require authentication.
     #global $current_user; // Always need this :(
@@ -369,6 +452,13 @@ class alloc_services {
     die("Usage: get_list(entity, options). The following entities are available: ".$rtn);
   }
 
+  /**
+  * A generic method to edit entities
+  * @param string $entity which type of entity to edit
+  * @param integer $id the id of the entity
+  * @param array $package a JSON encoded bundle of edit options see email/lib/command.inc.php for the various options
+  * @return array success or failure object
+  */
   public function edit_entity($entity,$id,$package=false) {
     $commands = alloc_json_decode($package);
     $commands[$entity] = $id;
