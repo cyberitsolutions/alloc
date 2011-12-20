@@ -74,7 +74,7 @@ function add_ips($parties, $taskID, $projectID) {
         continue;
       }
       $ipdata['personID'] = $person->get_id();
-      $ipdata['fullName'] = person::get_fullname($person->get_id());
+      $ipdata['name'] = person::get_fullname($person->get_id());
       $ipdata['emailAddress'] = $person->get_value("emailAddress");
     } else {
       $ipdata['emailAddress'] = $party;
