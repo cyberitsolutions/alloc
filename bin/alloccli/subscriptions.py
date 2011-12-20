@@ -54,7 +54,7 @@ alloc subscriptions --add < foo.txt"""
 
     # This is the data format that is exported and imported
     fields = ["entity", "Entity", "entityID", "ID", "personID",
-              "Person ID", "emailAddress", "Email", "fullName", "Name", "interestedPartyActive", "Active"]
+              "Person ID", "emailAddress", "Email", "name", "Name", "interestedPartyActive", "Active"]
     keys = fields[::2]
     searchops = {}
 
