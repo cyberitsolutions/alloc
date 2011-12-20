@@ -83,7 +83,7 @@ alloc edit -i new ^tsid:7941 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^task:1
         val = ":".join(chunks[1:]).strip()
         package[key] = val
 
-    args['package'] = package
+    args['options'] = package
     args['method'] = 'edit_entity'
     rtn = self.make_request(args)
 
