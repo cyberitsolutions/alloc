@@ -195,7 +195,7 @@ class interestedParty extends db_entity {
     }
     $ip->set_value("entity",$data["entity"]);
     $ip->set_value("entityID",$data["entityID"]);
-    $ip->set_value("fullName",$data["fullName"]);
+    $ip->set_value("fullName",$data["name"]);
     $ip->set_value("emailAddress",$data["emailAddress"]);
     $ip->set_value("interestedPartyActive",1);
     if ($data["personID"]) {

@@ -285,7 +285,6 @@ class command {
       foreach((array)$commands["ip"] as $k => $info) {
         $info["entity"] = "comment";
         $info["entityID"] = $commentID;
-        $info["fullName"] = $info["name"];
         interestedParty::add_interested_party($info);
       }
 
