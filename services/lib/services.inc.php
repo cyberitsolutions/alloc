@@ -456,17 +456,16 @@ class alloc_services {
   * A generic method to edit entities
   * @param string $entity which type of entity to edit
   * @param integer $id the id of the entity
-  * @param array $package a JSON encoded bundle of edit options see email/lib/command.inc.php for the various options
+  * @param array $options the edit options see email/lib/command.inc.php for the various options
   * @return array success or failure object
   */
-  public function edit_entity($entity,$id,$package=false) {
-    $commands = alloc_json_decode($package);
-    $commands[$entity] = $id;
-    if (strtolower($commands[$entity]) == "help") {
+  public function edit_entity($entity,$id,$options=false) {
+    $options[$entity] = $id;
+    if (strtolower($options[$entity]) == "help") {
       return array("status"=>"msg","message"=>command::get_help($entity));
-    } else if ($commands) {
+    } else if ($options) {
       $command = new command();
-      return $command->run_commands($commands);
+      return $command->run_commands($options);
     }
   }
 
