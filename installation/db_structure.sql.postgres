@@ -61,7 +61,7 @@ CREATE TABLE clientContact (
 
 CREATE TABLE comment (
   commentID serial PRIMARY KEY,
-  commentMaster varchar(255) NOT NULL DEFAULT '',
+  commentMaster varchar(255) NOT NULL default '',
   commentMasterID integer NOT NULL,
   commentType varchar(255) NOT NULL default '',
   commentLinkID integer NOT NULL,
@@ -116,13 +116,11 @@ CREATE TABLE history (
   the_label varchar(255) default ''
 ) ;
 
-
 CREATE TABLE indexQueue (
   indexQueueID serial PRIMARY KEY,
   entity varchar(255) NOT NULL,
   entityID integer NOT NULL
 ) ;
-
 
 CREATE TABLE invoice (
   invoiceID serial PRIMARY KEY,
@@ -371,7 +369,7 @@ CREATE TABLE interestedParty (
   clientContactID integer DEFAULT NULL,
   external boolean DEFAULT NULL,
   interestedPartyCreatedUser integer DEFAULT NULL,
-  interestedPartyCreatedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL
+  interestedPartyCreatedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
   interestedPartyActive boolean DEFAULT true
 ) ;
 
