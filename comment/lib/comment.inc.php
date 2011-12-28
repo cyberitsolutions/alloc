@@ -277,7 +277,8 @@ class comment extends db_entity {
     global $TPL;
     $comment = comment::add_shrinky_divs(page::htmlentities($row["comment"]),$row["commentID"]);
     $onClick = "return set_grow_shrink('comment_".$row["commentID"]."','button_comment_".$row["commentID"]."','true');";
-    $rtn[] = '<table width="100%" cellspacing="0" border="0" class="panel'.$row["external"].'">';
+    $rtn[] = '<div class="panel'.$row["external"].' corner">';
+    $rtn[] = '<table width="100%" cellspacing="0" border="0">';
     $rtn[] = '<tr>';
     $rtn[] = '  <td style="padding-bottom:0px; white-space:normal" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].'</td>';
     $rtn[] = '  <td align="right" style="padding-bottom:0px;" class="nobr">'.$row["form"].$row["downloadEmail"].$row["recipient_editor"].'</td>';
@@ -293,6 +294,7 @@ class comment extends db_entity {
     $row["files"] and $rtn[] = '  <td valign="bottom" align="left" colspan="2">'.$row["files"].'</td>';
     $row["files"] and $rtn[] = '</tr>';
     $rtn[] = '</table>';
+    $rtn[] = '</div>';
     return implode("\n",$rtn);
   }
 

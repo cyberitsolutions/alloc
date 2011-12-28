@@ -160,7 +160,8 @@ require_once("../alloc.php");
       $rtn[] =  '<form action="'.$TPL["url_alloc_client"].'" method="post">';
       $rtn[] =  '<input type="hidden" name="clientContactID" value="'.$clientContact->get_id().'">';
       $rtn[] =  '<input type="hidden" name="clientID" value="'.$clientID.'">';
-      $rtn[] =  '<table width="100%" cellspacing="0" border="0" class="panel'.$class_extra.'">';
+      $rtn[] =  '<div class="panel'.$class_extra.' corner">';
+      $rtn[] =  '<table width="100%" cellspacing="0" border="0">';
       $rtn[] =  '<tr>';
       $rtn[] =  '  <td width="25%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col1).'</span>&nbsp;</td>';
       $rtn[] =  '  <td width="20%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col2).'</span>&nbsp;</td>';
@@ -168,6 +169,7 @@ require_once("../alloc.php");
       $rtn[] =  '  <td align="right" class="right nobr">'.$buttons.'</td>';
       $rtn[] =  '</tr>';
       $rtn[] =  '</table>';
+      $rtn[] =  '</div>';
       $rtn[] =  '<input type="hidden" name="sessID" value="'.$TPL["sessID"].'">';
       $rtn[] =  '</form>';
 

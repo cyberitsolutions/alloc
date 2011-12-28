@@ -1,4 +1,5 @@
-<table cellspacing="0" border="1" class="panel {$status} {$expense_class}">
+<div class="panel {$status} {$expense_class} corner">
+<table cellspacing="0" border="0">
 <tr>
   <td colspan="2">{=$companyDetails}</td>
   <td colspan="2">{if $projectID}<a href="{$url_alloc_project}projectID={$projectID}">{=$projectName}</a>{/}</td>
@@ -22,4 +23,5 @@
   </td>
 </tr>
 </table>
+</div>
 
