@@ -193,6 +193,10 @@ require_once("../alloc.php");
       $TPL["class_new_client_contact"] = "hidden";
     }
 
+    if (!$_POST["clientContactID"] || $_POST["clientContact_save"]) {
+      $TPL["clientContactActive_checked"] = " checked";
+    }
+
     include_template("templates/clientContactM.tpl");
   }
 
