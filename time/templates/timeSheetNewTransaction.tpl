@@ -7,28 +7,28 @@
   <td><input type="text" name="transaction_transactionDate" value="{$transaction_transactionDate}" size="10"></td>
 
 
-  <td><input type="text" name="transaction_product" value="{$transaction_product}" size="20"></td>
+  <td><input type="text" name="transaction_product" value="{$transaction_product}" style="width:100%"></td>
   <td>
-    <select name="transaction_fromTfID" style="width:100%">
+    <select name="transaction_fromTfID">
     <option value="">
     {$tf_options}
     </select>
   </td>
   <td>
-    <select name="transaction_tfID" style="width:100%">
+    <select name="transaction_tfID">
     <option value="">
     {$tf_options}
     </select>
   </td>
 
   <script>preload_field("#transaction_amount","{$total_remaining}")</script>
-  <td><input id="transaction_amount" type="text" name="transaction_amount" size="8" style="width:48%" value="">
-  <select name="percent_dropdown" onChange="this.form.transaction_amount.value=this.options[this.selectedIndex].value;" style="width:48%">
+  <td class="nobr"><input id="transaction_amount" type="text" name="transaction_amount" size="8" value="">
+  <select name="percent_dropdown" onChange="this.form.transaction_amount.value=this.options[this.selectedIndex].value;">
   {$percent_dropdown}
   </select>	  
   </td>
 
-  <td><select name="transactionType" style="width:100%">
+  <td><select name="transactionType">
       <option value="">
       {$transactionType_options}
       </select>
