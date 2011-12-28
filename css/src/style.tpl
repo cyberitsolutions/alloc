@@ -24,6 +24,7 @@ pre.comment {
   font-family:arial,helvetica,sans-serif;
   overflow:auto;
   white-space:pre-wrap;
+  margin:0px;
 }
 
 /* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
@@ -524,75 +525,80 @@ table.list td.grand_total, .grand_total {
    When a table has .panel and .loud (Groucho), then the table has an orange border with a light
    orange background. And correspondingly, any inner .panel's (Zeppo) render more lightly.
 */
-table.panel div.hidden_text {
+
+.panel {
+  border:1px solid (PANEL_HARPO_FRAME_COLOR); 
+  background:(PANEL_HARPO_BG_COLOR); 
+  margin-bottom:10px; 
+  margin-top:10px;
+  margin-left:10px;
+  margin-right:10px;
+  padding:8px;
+}
+
+.panel div.hidden_text {
   color:(COMMENT_HIDDEN_TEXT_COLOR);
   font-style:italic;
 }
-table.panel { 
-  border:1px solid (PANEL_HARPO_FRAME_COLOR); 
-  background:(PANEL_HARPO_BG_COLOR); 
-  margin-bottom:5px; 
-  margin-top:0px;
-  /* table-layout:fixed; nested divs that are overflow:auto no longer scroll off the screen */
-}
-table.loud {
+.loud {
   border:1px solid (PANEL_GROUCHO_FRAME_COLOR); 
   background:(PANEL_GROUCHO_BG_COLOR); 
 }
-table.panel table.panel {
+.panel .panel {
   border:1px solid (PANEL_CHICO_FRAME_COLOR); 
   background:(PANEL_CHICO_BG_COLOR); 
-  margin-bottom:6px; 
+  margin-top:3px; 
+  margin-bottom:3px; 
+  margin-left:0px;
+  margin-right:0px;
 }
-table.loud table.panel {
+.loud .panel {
   border:1px solid (PANEL_ZEPPO_FRAME_COLOR); 
   background:(PANEL_ZEPPO_BG_COLOR); 
 }
-table.panel th { 
+.panel th { 
   text-align:left; 
   background:(PANEL_HARPO_BG_COLOR); 
   vertical-align:top; 
   color:(TD_COLOR); 
   font-weight:normal; 
-  padding:4px; 
   border:0px solid black;
   text-transform:none; /* list.th turns these uppercase */
   font-size:100%;
 }
-table.loud th {
+.loud th {
   background:(PANEL_GROUCHO_BG_COLOR); 
 }
-table.panel td { 
+.panel td { 
   background:(PANEL_HARPO_BG_COLOR);
-  padding:4px; 
   border:0px solid black;
 }
-table.quiet {
+.quiet {
   border: 1px solid #e0e0e0;
 }
-table.quiet td, table.quiet a { 
+.quiet, .quiet td, .quiet a { 
   background:#f9f9f9;
   color:#aaaaaa;
 }
-table.loud td {
+.loud td {
   background:(PANEL_GROUCHO_BG_COLOR);
 }
-table.panel td table.panel { 
+.panel td .panel { 
   background:(PANEL_CHICO_BG_COLOR); 
 }
-table.loud td table.panel { 
+.loud td .panel { 
   background:(PANEL_ZEPPO_BG_COLOR); 
 }
-table.panel td table.panel th { 
+.panel td .panel th { 
   background:(PANEL_CHICO_BG_COLOR);
 }
-table.loud td table.panel th { 
+.loud td .panel th { 
   background:(PANEL_ZEPPO_BG_COLOR);
 }
-table.panel td table.panel td { 
+.panel td .panel td { 
   background:(PANEL_CHICO_BG_COLOR);
 }
-table.loud td table.panel td { 
+.loud td .panel td { 
   background:(PANEL_ZEPPO_BG_COLOR);
 }
 
@@ -606,22 +612,27 @@ table.loud td table.panel td {
 .warn { 
   color:(WARN_COLOR);
 }
-table.pending { 
+.pending { 
   background-color:(PANEL_HARPO_BG_COLOR); 
   border:1px solid (PANEL_HARPO_FRAME_COLOR); 
 }
-table.warn { 
+div.warn { 
   background-color:(WARN_BG_COLOR); 
   border:1px solid (WARN_FRAME_COLOR); 
 }
-table.approved { 
+.approved { 
   background-color:(APPROVED_BG_COLOR); 
   border:1px solid (APPROVED_FRAME_COLOR); 
 }
-table.rejected { 
+.rejected { 
   background-color:(REJECTED_BG_COLOR); 
   border:1px solid (REJECTED_FRAME_COLOR); 
 }
+
+.pending table td, .warn table td, .approved table td, .rejected table td {
+  background-color:transparent !important;
+}
+
 
 #menu {
   margin:0px;

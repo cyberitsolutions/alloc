@@ -173,10 +173,10 @@ function save_recipients(selector) {
     p.parent().hide();
     if (data == 'external') {
       var label = '<em class="faint warn">[ External Conversation ]</em>'
-      p.parents("table.panel").addClass("loud");
+      p.parents(".panel").addClass("loud");
     } else {
       var label = '<em class="faint">[ Internal Conversation ]</em>'
-      p.parents("table.panel").removeClass("loud");
+      p.parents(".panel").removeClass("loud");
     }
     p.parent().parent().find("a.recipient_editor_link").html(label).show();
   });
