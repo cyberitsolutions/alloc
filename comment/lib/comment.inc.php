@@ -178,7 +178,6 @@ class comment extends db_entity {
                                       ".page::select_options($recipient_ops,$recipient_selected)."
                                       </select>
                                       <input type='hidden' name='commentID' value='".$new["commentID"]."'>
-                                      <span style='position:relative; top:3px;' class='spinner'></span>
                                       <input type='submit' value='Go' style='display:none'>
                                     </form>
                                   </span>";
