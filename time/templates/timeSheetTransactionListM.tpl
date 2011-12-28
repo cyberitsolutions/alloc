@@ -14,14 +14,14 @@
   <td>
     <table class='sortable list'>
       <tr>
-        <th>Date</th>
+        <th width="1%">Date</th>
         <th>Product</th>
-        <th>Source TF</th>
-        <th>Dest TF</th>
-        <th>Amount{$amount_msg}</th>
-        <th>Type</th> 
-        <th class="nobr" style="font-size:80%">{$p_a_r_buttons}</th>
-        <th>&nbsp;</th>
+        <th width="1%">Source TF</th>
+        <th width="1%">Dest TF</th>
+        <th width="1%">Amount{$amount_msg}</th>
+        <th width="1%">Type</th> 
+        <th width="1%" class="nobr" style="font-size:80%">{$p_a_r_buttons}</th>
+        <th width="1%">&nbsp;</th>
       </tr>
       {show_transaction_listR("templates/timeSheetTransactionListR.tpl")}
       {show_new_transaction("templates/timeSheetNewTransaction.tpl")}
