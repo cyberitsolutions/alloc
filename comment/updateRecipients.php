@@ -23,7 +23,6 @@
 define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
-sleep(0.5);
 interestedParty::make_interested_parties('comment',$_POST['commentID'],$_POST['comment_recipients']);
 
 if (interestedParty::is_external('comment',$_POST['commentID'])) {

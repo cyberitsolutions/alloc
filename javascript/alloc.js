@@ -1,3 +1,4 @@
+ddclchanges = [];
 function redraw_multiple_selects(container, funct) {
   if (container) {
     var c = "#"+container
@@ -6,7 +7,20 @@ function redraw_multiple_selects(container, funct) {
   $("select[multiple]",c).each(function(){
     if ($.inArray(this.name,blacklist)==-1) {
       $(this).dropdownchecklist("destroy");
-      $(this).dropdownchecklist( { "maxDropHeight":450, "onComplete": funct } );
+      $(this).dropdownchecklist( {
+        "maxDropHeight":450,
+        "onComplete": funct,
+        "onItemClick": function (checkbox,selector) {
+          var commentID = $(selector).parent().find("input[name=commentID]").val();
+          var v = checkbox.val();
+          if (!$.isArray(ddclchanges[commentID])) { ddclchanges[commentID] = []; }
+          if ($.inArray(v,ddclchanges[commentID]) != "-1") {
+            ddclchanges[commentID] = $.grep(ddclchanges[commentID], function(value,key){ return value != v; }); // delete item from array
+          } else {
+            ddclchanges[commentID][ddclchanges[commentID].length] = v;
+          }
+        }
+      });
     }
   });
 }
@@ -136,29 +150,35 @@ function preload_field(element, text) {
 }
 
 function save_recipients(selector) {
-  p = $(selector).parent()
+  var p = $(selector).parent()
+  var commentID = p.find("input[name=commentID]").val();
+
+  if (!$.isArray(ddclchanges[commentID])) { ddclchanges[commentID] = []; }
+  // No changes, then don't save.
+  if (!ddclchanges[commentID].length) {
+    $("#recipient_dropdown_"+commentID).hide();
+    $("#r_e_"+commentID).show();
+    return;
+  }
+  ddclchanges[commentID] = [];
+
   var values = [];
   for( i=0; i < selector.options.length; i++ ) {
     if (selector.options[i].selected && (selector.options[i].value != "")) {
       values[values.length] = selector.options[i].value;
     }
   }
-  var commentID = p.find("input[name=commentID]").val();
   p.find("span.spinner").html('<img class="ticker" src="../images/spinner.gif" alt="Updating field..." title="Updating field...">');
   jQuery.post("../comment/updateRecipients.php",{ "commentID":commentID, "comment_recipients": values},function(data) {
-    $(selector).parent().find("span.spinner").html('<img src="../images/icon_message_good.png" alt="Saved" title="Saved">');
-    setTimeout(function() {
-      p.find("span.spinner").html("");
-      p.parent().hide();
-      if (data == 'external') {
-        var label = '<em class="faint warn">[ External Conversation ]</em>'
-        p.parents("table.panel").addClass("loud");
-      } else {
-        var label = '<em class="faint">[ Internal Conversation ]</em>'
-        p.parents("table.panel").removeClass("loud");
-      }
-      p.parent().parent().find("a.recipient_editor_link").html(label).show();
-    },1200);
+    p.parent().hide();
+    if (data == 'external') {
+      var label = '<em class="faint warn">[ External Conversation ]</em>'
+      p.parents("table.panel").addClass("loud");
+    } else {
+      var label = '<em class="faint">[ Internal Conversation ]</em>'
+      p.parents("table.panel").removeClass("loud");
+    }
+    p.parent().parent().find("a.recipient_editor_link").html(label).show();
   });
 }
 
