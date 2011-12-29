@@ -4,13 +4,38 @@ from alloc import alloc
 class edit(alloc):
   """Modify an alloc entity."""
 
-  # Setup the options that this cli can accept
+     # Setup the options that this cli can accept
   ops = []
-  ops.append((''  , 'help           ', 'Show this help.'))
-  ops.append(('t:', 'task=ID|new    ', 'An existing task\'s ID or the word "new" to create a new task.'))
-  ops.append(('i:', 'item=ID|new    ', 'An existing time sheet item\'s ID.'))
-  ops.append(('p:', 'project=ID     ', '[NOT OPERATIONAL] An existing project\'s ID.'))
-  ops.append(('s:', 'timesheet=ID   ', '[NOT OPERATIONAL] An existing time sheet\'s ID.'))
+  ops.append((''  , 'help           ', 'Show this help.\n'))
+  ops.append(('t:', '               ', 'Edit a task. Specify an ID or the word "new" to create.'))
+
+  ops.append((''  , 'name=TEXT      ', 'task\'s title'))
+  ops.append((''  , 'assign=USERNAME', 'username of the person that the task is assigned to'))
+  ops.append((''  , 'manage=USERNAME', 'username of the person that the task is managed by'))
+  ops.append((''  , 'desc=TEXT      ', 'task\'s long description'))
+  ops.append((''  , 'priority=PRI   ', '1, 2, 3, 4 or 5; or one of Wishlist, Minor, Normal, Important or Critical'))
+  ops.append((''  , 'limit=HOURS    ', 'limit in hours for effort spend on this task'))
+  ops.append((''  , 'best=HOURS     ', 'shortest estimate of how many hours of effort this task will take'))
+  ops.append((''  , 'likely=HOURS   ', 'most likely amount of hours of effort this task will take'))
+  ops.append((''  , 'worst=HOURS    ', 'longest estimate of how many hours of effort this task will take'))
+  ops.append((''  , 'project=ID     ', 'task\'s project ID'))
+  ops.append((''  , 'type=TYPE      ', 'Task, Fault, Message, Milestone or Parent'))
+  ops.append((''  , 'dupe=ID        ', 'task ID of the related dupe'))
+  ops.append((''  , 'status=STATUS  ', 'inprogress, notstarted, info, client, manager, invalid, duplicate,\n'
+                                       'incomplete, complete; or: open, pending, closed\n'))
+
+  ops.append(('i:', '               ', 'Edit a time sheet item. Specify an ID or the word "new" to create.'))
+  ops.append((''  , 'tsid=ID        ', 'time sheet that this item belongs to'))
+  ops.append((''  , 'date=YYYY-MM-DD', 'time sheet item date'))
+  ops.append((''  , 'duration=HOURS ', 'time sheet item duration'))
+  ops.append((''  , 'unit=NUM       ', 'time sheet item unit of duration eg: 1=hours 2=days 3=week 4=month 5=fixed'))
+  ops.append((''  , 'task=ID        ', 'ID of the time sheet item\'s task'))
+  ops.append((''  , 'rate=NUM       ', '$rate of the time sheet item'))
+  ops.append((''  , 'private=1|0    ', 'privacy setting of the time sheet item\'s comment eg: 1=private 0=normal'))
+  ops.append((''  , 'comment=TEXT   ', 'time sheet item comment'))
+  ops.append((''  , 'multiplier=NUM ', 'time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time 3=triple-time 0=no-charge'))
+  ops.append((''  , 'delete=1       ', 'set this to 1 to delete the time sheet item'))
+
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -21,30 +46,14 @@ This program allows editing of the fields on an alloc entity, like a task.
 
 Examples:
 
-# Display all the different fields that can be edited on a task
-alloc edit --task help
+# Edit a particular task.
+alloc edit -t 1234 --status closed --name 'New name for the task.' --assign alla
 
-# Edit a particular task. Each field name must be prefixed with a caret character: ^
-# which unfortunately means that carets can't be used anywhere else for this command.
-alloc edit --task 1234 ^status:closed ^name:New name for the task. ^assign:alla
+# Create a new task.
+alloc edit -t new --name 'This task is fooed in the bar' --project 22
 
-# Create a new task
-alloc edit --task new ^name:This task is fooed in the bar 
-
-# Note that the ^field:values must be the final arguments. I.e. this WON'T work:
-alloc edit ^name:nope --task 1234  <-- NO
-# It should be this:
-alloc edit --task 1234 ^name:yep   <-- YES
-
-
-# Display all the different fields that can be edited on a time sheet item
-alloc edit --item help
-
-# Edit an existing time sheet item.
-alloc edit -i 1234 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^private:1 ^task:15180
-
-# Create a new time sheet item. Note that ^tsid is mandatory in this case
-alloc edit -i new ^tsid:7941 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^task:15180"""
+# Create a new time sheet item. Note that tsid is mandatory.
+alloc edit -i new --tsid 7941 --duration 3.5 --date 2011-07-24 --comment hey --task 15180"""
 
   def run(self, command_list):
     """Execute subcommand."""
@@ -56,31 +65,20 @@ alloc edit -i new ^tsid:7941 ^duration:3.5 ^date:2011-07-24 ^comment:hey ^task:1
     self.authenticate()
 
     args = {}
-    if o['project']:
-      args['entity'] = 'project'
-      args['id'] = o['project']
-
-    elif o['task']:
+    if o['t']:
       args['entity'] = 'task'
-      args['id'] = o['task']
+      args['id'] = o['t']
 
-    elif o['timesheet']:
-      args['entity'] = 'timesheet'
-      args['id'] = o['timesheet']
-
-    elif o['item']:
+    elif o['i']:
       args['entity'] = 'item'
-      args['id'] = o['item']
+      args['id'] = o['i']
+
+    else:
+      self.die("Use either -t to edit a task, or -i to edit a time sheet item.")
   
     package = {}
-
-    # parse ^field:value into a dict {"field":"value"}
-    bits = remainder.split("^")
-    for bit in bits:
-      if bit:
-        chunks = bit.split(":")
-        key = chunks[0].strip()
-        val = ":".join(chunks[1:]).strip()
+    for key,val in o.items():
+      if val:
         package[key] = val
 
     args['options'] = package
