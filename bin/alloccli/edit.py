@@ -53,7 +53,10 @@ alloc edit -t 1234 --status closed --name 'New name for the task.' --assign alla
 alloc edit -t new --name 'This task is fooed in the bar' --project 22
 
 # Create a new time sheet item. Note that tsid is mandatory.
-alloc edit -i new --tsid 7941 --duration 3.5 --date 2011-07-24 --comment hey --task 15180"""
+alloc edit -i new --tsid 7941 --duration 3.5 --date 2011-07-24 --comment hey --task 15180
+
+# Note that 'null' can be used to unset a field.
+alloc edit -t 1234 --assignee null"""
 
   def run(self, command_list):
     """Execute subcommand."""
@@ -80,6 +83,8 @@ alloc edit -i new --tsid 7941 --duration 3.5 --date 2011-07-24 --comment hey --t
     for key,val in o.items():
       if val:
         package[key] = val
+      if val.lower() == 'null':
+        package[key] = ''
 
     args['options'] = package
     args['method'] = 'edit_entity'
