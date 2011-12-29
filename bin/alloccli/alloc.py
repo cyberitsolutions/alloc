@@ -406,8 +406,14 @@ class alloc(object):
       if ':' not in x[0] and '=' not in x[1]:
         no_arg_ops["--"+x[1].strip()] = True
 
+      # Handle cases where there is no long arg (eg -t in alloc edit)
+      if len(x[1].strip()) == 0:
+        key = x[0].replace(":", "").strip()
+      else:
+        key = re.sub("=.*$", "", x[1]).strip()
+
       # And this is used below to build up a dictionary to return
-      all_ops[re.sub("=.*$", "", x[1]).strip()] = ["-"+x[0].replace(":", ""), "--"+re.sub("=.*$", "", x[1]).strip()]
+      all_ops[key] = ["-"+x[0].replace(":", ""), "--"+key]
     return short_ops, long_ops, no_arg_ops, all_ops
 
   def get_args(self, command_list, ops, s):
