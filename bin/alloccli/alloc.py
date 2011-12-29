@@ -330,46 +330,46 @@ class alloc(object):
 
   def print_task(self, taskID):
     """Return a plaintext view of a task and its details."""
-    rtn = self.get_list("task", {"taskID":taskID, "taskView":"prioritised", "showTimes":True})
+    rtn = self.get_list('task', {'taskID':taskID, 'taskView':'prioritised', 'showTimes':True})
 
     k, r = rtn.popitem()
     del(k)
-    underline_length = len(r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"])
+    underline_length = len(r['taskTypeID']+': '+r['taskID']+' '+r['taskName'])
 
-    s = "\n"+r["taskTypeID"]+": "+r["taskID"]+" "+r["taskName"]
-    s += "\n".ljust(underline_length+1, "=")
-    s += "\n"
-    if r["priorityLabel"]: s += "\n"+"Priority: "+r["priorityLabel"].ljust(26)+r["taskStatusLabel"]
-    s += "\n"
-    if r["projectName"]:  s += "\nProject: "+r["projectName"]
-    if "projectPriorityLabel" in r and r["projectPriorityLabel"]: s += " ["+r["projectPriorityLabel"]+"]"
-    if r["parentTaskID"]: s += "\nParent Task: "+r["parentTaskID"]
-    if r["projectName"] or r["parentTaskID"]: s += "\n"
-    if r["creator_name"]:  s += "\nCreator:  "+r["creator_name"].ljust(25)+" "+r["dateCreated"]
-    if r["assignee_name"]: s += "\nAssigned: "+r["assignee_name"].ljust(25)+" "+r["dateAssigned"]
-    if r["manager_name"]:  s += "\nManager:  "+r["manager_name"].ljust(25)
-    if r["dateClosed"]:
-      s += "\nCloser:   "+r["closer_name"].ljust(25)+" "+r["dateClosed"]
-    s += "\n"
-    s += "\nB/E/W Estimates:  "+(r["timeBestLabel"] or "--")+" / "+(r["timeExpectedLabel"] or "--")
-    s += " / "+(r["timeWorstLabel"] or "--")+"  "+(r["estimator_name"] or "")
-    s += "\nActual/Limit Hrs: %s / %s " % (r["timeActualLabel"] or "--", r["timeLimitLabel"] or "--")
-    s += "\n"
+    s = '\n'+r['taskTypeID']+': '+r['taskID']+' '+r['taskName']
+    s += '\n'.ljust(underline_length+1, '=')
+    s += '\n'
+    if r['priorityLabel']: s += '\n'+'Priority: '+r['priorityLabel'].ljust(26)+r['taskStatusLabel']
+    s += '\n'
+    if r['projectName']:  s += '\nProject: '+r['projectName']
+    if 'projectPriorityLabel' in r and r['projectPriorityLabel']: s += ' ['+r['projectPriorityLabel']+']'
+    if r['parentTaskID']: s += '\nParent Task: '+r['parentTaskID']
+    if r['projectName'] or r['parentTaskID']: s += '\n'
+    if r['creator_name']:  s += '\nCreator:  '+r['creator_name'].ljust(25)+' '+r['dateCreated']
+    if r['assignee_name']: s += '\nAssigned: '+r['assignee_name'].ljust(25)+' '+r['dateAssigned']
+    if r['manager_name']:  s += '\nManager:  '+r['manager_name'].ljust(25)
+    if r['dateClosed']:
+      s += '\nCloser:   '+r['closer_name'].ljust(25)+' '+r['dateClosed']
+    s += '\n'
+    s += '\nB/E/W Estimates:  '+(r['timeBestLabel'] or '--')+' / '+(r['timeExpectedLabel'] or '--')
+    s += ' / '+(r['timeWorstLabel'] or '--')+'  '+(r['estimator_name'] or '')
+    s += '\nActual/Limit Hrs: %s / %s ' % (r['timeActualLabel'] or '--', r['timeLimitLabel'] or '--')
+    s += '\n'
 
-    if r["dateTargetStart"] or r["dateTargetCompletion"]:
-      s += "\nTarget Start: %-18s Target Completion: %-18s " % (r["dateTargetStart"], r["dateTargetCompletion"])
-    if r["dateActualStart"] or r["dateActualCompletion"]:
-      s += "\nActual Start: %-18s Actual Completion: %-18s " % (r["dateActualStart"], r["dateActualCompletion"])
+    if r['dateTargetStart'] or r['dateTargetCompletion']:
+      s += '\nTarget Start: %-18s Target Completion: %-18s ' % (r['dateTargetStart'], r['dateTargetCompletion'])
+    if r['dateActualStart'] or r['dateActualCompletion']:
+      s += '\nActual Start: %-18s Actual Completion: %-18s ' % (r['dateActualStart'], r['dateActualCompletion'])
 
-    if r["taskDescription"]:
-      s += "\n"
-      s += "\nDescription"
-      s += "\n-----------"
-      s += "\n"
-      #s += "\n".join(wrap(r["taskDescription"], 75))+"\n" # this seems to not work very well.
-      s += "\n"+r["taskDescription"]
+    if r['taskDescription']:
+      s += '\n'
+      s += '\nDescription'
+      s += '\n-----------'
+      s += '\n'
+      #s += '\n'.join(wrap(r['taskDescription'], 75))+'\n' # this seems to not work very well.
+      s += '\n'+r['taskDescription']
 
-    s += "\n"
+    s += '\n'
     return s
 
   def get_subcommand_help(self, command_list, ops, text):
