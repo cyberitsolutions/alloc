@@ -341,7 +341,8 @@ class alloc(object):
     s += "\n"
     if r["priorityLabel"]: s += "\n"+"Priority: "+r["priorityLabel"].ljust(26)+r["taskStatusLabel"]
     s += "\n"
-    if r["projectName"]:  s += "\nProject: "+r["projectName"]+" ["+r["projectPriorityLabel"]+"]"
+    if r["projectName"]:  s += "\nProject: "+r["projectName"]
+    if "projectPriorityLabel" in r and r["projectPriorityLabel"]: s += " ["+r["projectPriorityLabel"]+"]"
     if r["parentTaskID"]: s += "\nParent Task: "+r["parentTaskID"]
     if r["projectName"] or r["parentTaskID"]: s += "\n"
     if r["creator_name"]:  s += "\nCreator:  "+r["creator_name"].ljust(25)+" "+r["dateCreated"]
