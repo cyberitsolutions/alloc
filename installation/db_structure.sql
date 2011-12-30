@@ -198,9 +198,7 @@ CREATE TABLE permission (
   permissionID integer NOT NULL auto_increment PRIMARY KEY,
   tableName varchar(255) default NULL,
   entityID integer default NULL,
-  personID integer default NULL,
   roleName varchar(255) default NULL,
-  allow boolean default true,
   sortKey integer default '100',
   actions integer default NULL,
   comment text

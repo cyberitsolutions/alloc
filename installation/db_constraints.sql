@@ -93,7 +93,6 @@ ALTER TABLE item ADD CONSTRAINT item_personID FOREIGN KEY (personID) REFERENCES 
 ALTER TABLE loan ADD CONSTRAINT loan_itemID FOREIGN KEY (itemID) REFERENCES item (itemID);
 ALTER TABLE loan ADD CONSTRAINT loan_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE loan ADD CONSTRAINT loan_loanModifiedUser FOREIGN KEY (loanModifiedUser) REFERENCES person (personID);
-ALTER TABLE permission ADD CONSTRAINT permission_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE person ADD CONSTRAINT person_personModifiedUser FOREIGN KEY (personModifiedUser) REFERENCES person (personID);
 ALTER TABLE person ADD CONSTRAINT person_preferred_tfID FOREIGN KEY (preferred_tfID) REFERENCES tf (tfID);
 ALTER TABLE project ADD CONSTRAINT project_clientID FOREIGN KEY (clientID) REFERENCES client (clientID);

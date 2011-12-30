@@ -33,11 +33,9 @@
         <tr>
           <th>Table</th>
           <th>Record ID</th>
-          <th>User</th>
           <th>Role</th>
           <th>Actions</th>
           <th>Sort Key</th>
-          <th>Allow?</th>
           <th>Comments</th>
           <th>&nbsp;</th>
         </tr>

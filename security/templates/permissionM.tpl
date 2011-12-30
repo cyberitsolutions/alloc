@@ -18,16 +18,6 @@
     <td>Enter the ID of a record set the permission on a specific record.  Use 0 or leave this blank to indicate all records.  Use -1 to indicate records owned by the user.</td>
   </tr>
   <tr>
-    <td>Person</td>
-    <td>
-      <select name="personID">
-        <option value="">All
-        {$personOptions}
-      </select>
-    </td>
-    <td></td>
-  </tr>
-  <tr>
     <td>Role name</td>
     <td>
       <select name="roleName">
@@ -42,15 +32,6 @@
     <td>
       <select name="actions_array[]" size="5" multiple>
         {$actionOptions}
-      </select>
-    </td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Allow</td>
-    <td>
-      <select name="allow">
-        {$allowOptions}
       </select>
     </td>
     <td></td>
