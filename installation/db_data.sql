@@ -270,133 +270,133 @@ INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,curr
 --
 
 DELETE FROM permission;
-INSERT INTO permission (tableName, entityID, personID, roleName, allow, sortKey, actions, comment)
+INSERT INTO permission (tableName, entityID, roleName, sortKey, actions, comment)
 VALUES
 
- ('absence'                  ,-1 ,NULL ,'employee' ,true ,NULL ,15    ,NULL)
-,('absence'                  ,0  ,NULL ,'manage'   ,true ,NULL ,31    ,NULL)
-,('absence'                  ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+ ('absence'                  ,-1 ,'employee' ,NULL ,15    ,NULL)
+,('absence'                  ,0  ,'manage'   ,NULL ,31    ,NULL)
+,('absence'                  ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('announcement'             ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
-,('announcement'             ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('announcement'             ,0  ,''         ,NULL ,1     ,NULL)
+,('announcement'             ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('client'                   ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
-,('clientContact'            ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
+,('client'                   ,0  ,''         ,NULL ,15    ,NULL)
+,('clientContact'            ,0  ,''         ,NULL ,15    ,NULL)
 
-,('comment'                  ,0  ,NULL ,'employee' ,true ,NULL ,15    ,NULL)
+,('comment'                  ,0  ,'employee' ,NULL ,15    ,NULL)
 
-,('commentTemplate'          ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
-,('commentTemplate'          ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
+,('commentTemplate'          ,0  ,''         ,NULL ,1     ,NULL)
+,('commentTemplate'          ,0  ,'manage'   ,NULL ,15    ,NULL)
 
-,('config'                   ,0  ,NULL ,''         ,true ,NULL ,17    ,NULL)
-,('config'                   ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('config'                   ,0  ,''         ,NULL ,17    ,NULL)
+,('config'                   ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('expenseForm'              ,-1 ,NULL ,'employee' ,true ,NULL ,31    ,NULL)
-,('expenseForm'              ,0  ,NULL ,'admin'    ,true ,NULL ,31    ,NULL)
+,('expenseForm'              ,-1 ,'employee' ,NULL ,31    ,NULL)
+,('expenseForm'              ,0  ,'admin'    ,NULL ,31    ,NULL)
 
-,('history'                  ,0  ,NULL ,''         ,true ,NULL ,8     ,NULL)
+,('history'                  ,0  ,''         ,NULL ,8     ,NULL)
 
-,('indexQueue'               ,0  ,NULL ,'employee' ,true ,NULL ,15    ,NULL)
+,('indexQueue'               ,0  ,'employee' ,NULL ,15    ,NULL)
 
-,('interestedParty'          ,0  ,NULL ,''         ,true ,NULL ,11    ,NULL)
-,('interestedParty'          ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
-,('interestedParty'          ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
-,('interestedParty'          ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
+,('interestedParty'          ,0  ,''         ,NULL ,11    ,NULL)
+,('interestedParty'          ,0  ,'manage'   ,NULL ,15    ,NULL)
+,('interestedParty'          ,0  ,'admin'    ,NULL ,15    ,NULL)
+,('interestedParty'          ,-1 ,''         ,NULL ,15    ,NULL)
 
-,('invoice'                  ,-1 ,NULL ,''         ,true ,NULL ,3     ,'Update invoiceItem, can change invoice.')
-,('invoice'                  ,-1 ,NULL ,'employee' ,true ,NULL ,17    ,NULL)
-,('invoice'                  ,0  ,NULL ,'admin'    ,true ,NULL ,31    ,NULL)
+,('invoice'                  ,-1 ,''         ,NULL ,3     ,'Update invoiceItem, can change invoice.')
+,('invoice'                  ,-1 ,'employee' ,NULL ,17    ,NULL)
+,('invoice'                  ,0  ,'admin'    ,NULL ,31    ,NULL)
 
-,('invoiceItem'              ,-1 ,NULL ,''         ,true ,NULL ,11    ,'Update time sheet, can change invoice item.')
-,('invoiceItem'              ,-1 ,NULL ,'employee' ,true ,NULL ,17    ,NULL)
-,('invoiceItem'              ,0  ,NULL ,'admin'    ,true ,NULL ,271   ,NULL)
+,('invoiceItem'              ,-1 ,''         ,NULL ,11    ,'Update time sheet, can change invoice item.')
+,('invoiceItem'              ,-1 ,'employee' ,NULL ,17    ,NULL)
+,('invoiceItem'              ,0  ,'admin'    ,NULL ,271   ,NULL)
 
-,('item'                     ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
-,('item'                     ,0  ,NULL ,'employee' ,true ,NULL ,11    ,NULL)
-,('item'                     ,0  ,NULL ,'admin'    ,true ,NULL ,31    ,NULL)
+,('item'                     ,-1 ,''         ,NULL ,15    ,NULL)
+,('item'                     ,0  ,'employee' ,NULL ,11    ,NULL)
+,('item'                     ,0  ,'admin'    ,NULL ,31    ,NULL)
 
-,('loan'                     ,0  ,NULL ,'employee' ,true ,NULL ,17    ,NULL)
-,('loan'                     ,-1 ,NULL ,'employee' ,true ,NULL ,31    ,NULL)
-,('loan'                     ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('loan'                     ,0  ,'employee' ,NULL ,17    ,NULL)
+,('loan'                     ,-1 ,'employee' ,NULL ,31    ,NULL)
+,('loan'                     ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('person'                   ,-1 ,NULL ,''         ,true ,NULL ,259   ,NULL)
-,('person'                   ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
-,('person'                   ,0  ,NULL ,'admin'    ,true ,NULL ,7951  ,NULL)
+,('person'                   ,-1 ,''         ,NULL ,259   ,NULL)
+,('person'                   ,0  ,''         ,NULL ,1     ,NULL)
+,('person'                   ,0  ,'admin'    ,NULL ,7951  ,NULL)
 
-,('product'                  ,0  ,NULL ,''         ,true ,0    ,1     ,NULL)
-,('product'                  ,0  ,NULL ,'manage'   ,true ,100  ,15    ,NULL)
-,('product'                  ,0  ,NULL ,'admin'    ,true ,100  ,15    ,NULL)
+,('product'                  ,0  ,''         ,0    ,1     ,NULL)
+,('product'                  ,0  ,'manage'   ,100  ,15    ,NULL)
+,('product'                  ,0  ,'admin'    ,100  ,15    ,NULL)
 
-,('productCost'              ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
-,('productCost'              ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
-,('productCost'              ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('productCost'              ,0  ,''         ,NULL ,1     ,NULL)
+,('productCost'              ,0  ,'manage'   ,NULL ,15    ,NULL)
+,('productCost'              ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('productSale'              ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
-,('productSale'              ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
-,('productSale'              ,0  ,NULL ,'admin'    ,true ,NULL ,271   ,NULL)
+,('productSale'              ,0  ,''         ,NULL ,1     ,NULL)
+,('productSale'              ,-1 ,''         ,NULL ,15    ,NULL)
+,('productSale'              ,0  ,'admin'    ,NULL ,271   ,NULL)
 
-,('productSaleItem'          ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
-,('productSaleItem'          ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
-,('productSaleItem'          ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('productSaleItem'          ,0  ,''         ,NULL ,1     ,NULL)
+,('productSaleItem'          ,-1 ,''         ,NULL ,15    ,NULL)
+,('productSaleItem'          ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('project'                  ,0  ,NULL ,''         ,true ,100  ,513   ,'Allow all to read projects for searches.')
-,('project'                  ,-1 ,NULL ,'employee' ,true ,100  ,769   ,NULL)
-,('project'                  ,-1 ,NULL ,'employee' ,true ,99   ,271   ,NULL)
-,('project'                  ,-1 ,NULL ,'manage'   ,true ,100  ,783   ,NULL)
-,('project'                  ,0  ,NULL ,'admin'    ,true ,100  ,783   ,NULL)
+,('project'                  ,0  ,''         ,100  ,513   ,'Allow all to read projects for searches.')
+,('project'                  ,-1 ,'employee' ,100  ,769   ,NULL)
+,('project'                  ,-1 ,'employee' ,99   ,271   ,NULL)
+,('project'                  ,-1 ,'manage'   ,100  ,783   ,NULL)
+,('project'                  ,0  ,'admin'    ,100  ,783   ,NULL)
 
-,('projectPerson'            ,-1 ,NULL ,''         ,true ,NULL ,17    ,NULL)
-,('projectPerson'            ,-1 ,NULL ,'employee' ,true ,NULL ,15    ,'Allow employee PMs to add other people.')
-,('projectPerson'            ,-1 ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
-,('projectPerson'            ,0  ,NULL ,'admin'    ,true ,NULL ,31    ,NULL)
+,('projectPerson'            ,-1 ,''         ,NULL ,17    ,NULL)
+,('projectPerson'            ,-1 ,'employee' ,NULL ,15    ,'Allow employee PMs to add other people.')
+,('projectPerson'            ,-1 ,'manage'   ,NULL ,15    ,NULL)
+,('projectPerson'            ,0  ,'admin'    ,NULL ,31    ,NULL)
 
-,('projectCommissionPerson'  ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
-,('projectCommissionPerson'  ,-1 ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
-,('projectCommissionPerson'  ,0  ,NULL ,'admin'    ,true ,NULL ,31    ,NULL)
+,('projectCommissionPerson'  ,-1 ,''         ,NULL ,15    ,NULL)
+,('projectCommissionPerson'  ,-1 ,'manage'   ,NULL ,15    ,NULL)
+,('projectCommissionPerson'  ,0  ,'admin'    ,NULL ,31    ,NULL)
 
-,('reminder'                 ,0  ,NULL ,''         ,true ,NULL ,15    ,'Will have to change this later?')
+,('reminder'                 ,0  ,''         ,NULL ,15    ,'Will have to change this later?')
 
-,('sentEmailLog'             ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
+,('sentEmailLog'             ,0  ,''         ,NULL ,15    ,NULL)
 
-,('skill'                    ,0  ,NULL ,'employee' ,true ,NULL ,1     ,NULL)
-,('skill'                    ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('skill'                    ,0  ,'employee' ,NULL ,1     ,NULL)
+,('skill'                    ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('proficiency'              ,0  ,NULL ,'employee' ,true ,NULL ,1     ,NULL)
-,('proficiency'              ,-1 ,NULL ,'employee' ,true ,NULL ,14    ,NULL)
-,('proficiency'              ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
+,('proficiency'              ,0  ,'employee' ,NULL ,1     ,NULL)
+,('proficiency'              ,-1 ,'employee' ,NULL ,14    ,NULL)
+,('proficiency'              ,0  ,'manage'   ,NULL ,15    ,NULL)
 
-,('task'                     ,-1 ,NULL ,'employee' ,true ,NULL ,287   ,NULL)
-,('task'                     ,0  ,NULL ,'employee' ,true ,NULL ,1     ,'Allow read all task records for searches.')
-,('task'                     ,0  ,NULL ,'manage'   ,true ,NULL ,287   ,NULL)
-,('task'                     ,0  ,NULL ,'admin'    ,true ,NULL ,257   ,NULL)
+,('task'                     ,-1 ,'employee' ,NULL ,287   ,NULL)
+,('task'                     ,0  ,'employee' ,NULL ,1     ,'Allow read all task records for searches.')
+,('task'                     ,0  ,'manage'   ,NULL ,287   ,NULL)
+,('task'                     ,0  ,'admin'    ,NULL ,257   ,NULL)
 
-,('tf'                       ,0  ,NULL ,'employee' ,true ,NULL ,1     ,NULL)
-,('tf'                       ,0  ,NULL ,'manage'   ,true ,NULL ,1     ,NULL)
-,('tf'                       ,0  ,NULL ,'admin'    ,true ,NULL ,31    ,NULL)
+,('tf'                       ,0  ,'employee' ,NULL ,1     ,NULL)
+,('tf'                       ,0  ,'manage'   ,NULL ,1     ,NULL)
+,('tf'                       ,0  ,'admin'    ,NULL ,31    ,NULL)
 
-,('tfPerson'                 ,-1 ,NULL ,'employee' ,true ,NULL ,1     ,'Allow employee to read own tfPerson.')
-,('tfPerson'                 ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('tfPerson'                 ,-1 ,'employee' ,NULL ,1     ,'Allow employee to read own tfPerson.')
+,('tfPerson'                 ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('timeUnit'                 ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
+,('timeUnit'                 ,0  ,''         ,NULL ,1     ,NULL)
 
-,('timeSheet'                ,-1 ,NULL ,'employee' ,true ,NULL ,31    ,NULL)
-,('timeSheet'                ,0  ,NULL ,'manage'   ,true ,NULL ,287   ,NULL)
-,('timeSheet'                ,0  ,NULL ,'admin'    ,true ,NULL ,783   ,NULL)
+,('timeSheet'                ,-1 ,'employee' ,NULL ,31    ,NULL)
+,('timeSheet'                ,0  ,'manage'   ,NULL ,287   ,NULL)
+,('timeSheet'                ,0  ,'admin'    ,NULL ,783   ,NULL)
 
-,('timeSheetItem'            ,-1 ,NULL ,''         ,true ,NULL ,15    ,NULL)
-,('timeSheetItem'            ,0  ,NULL ,'manage'   ,true ,NULL ,15    ,NULL)
-,('timeSheetItem'            ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('timeSheetItem'            ,-1 ,''         ,NULL ,15    ,NULL)
+,('timeSheetItem'            ,0  ,'manage'   ,NULL ,15    ,NULL)
+,('timeSheetItem'            ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('token'                    ,0  ,NULL ,''         ,true ,NULL ,15    ,NULL)
-,('tokenAction'              ,0  ,NULL ,''         ,true ,NULL ,1     ,NULL)
+,('token'                    ,0  ,''         ,NULL ,15    ,NULL)
+,('tokenAction'              ,0  ,''         ,NULL ,1     ,NULL)
 
-,('transaction'              ,-1 ,NULL ,''         ,true ,NULL ,15    ,'Allow everyone to modify PENDING transactions that they own.')
-,('transaction'              ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,'Allow admin to do everything with transactions.')
+,('transaction'              ,-1 ,''         ,NULL ,15    ,'Allow everyone to modify PENDING transactions that they own.')
+,('transaction'              ,0  ,'admin'    ,NULL ,15    ,'Allow admin to do everything with transactions.')
 
-,('transactionRepeat'        ,-1 ,NULL ,'employee' ,true ,NULL ,1     ,NULL)
-,('transactionRepeat'        ,0  ,NULL ,'admin'    ,true ,NULL ,15    ,NULL)
+,('transactionRepeat'        ,-1 ,'employee' ,NULL ,1     ,NULL)
+,('transactionRepeat'        ,0  ,'admin'    ,NULL ,15    ,NULL)
 
-,('auditItem'                ,0  ,NULL ,'employee' ,true ,NULL ,8 + 1 ,'Allow employees to create and read audit items.')
+,('auditItem'                ,0  ,'employee' ,NULL ,8 + 1 ,'Allow employees to create and read audit items.')
 
 ;
 

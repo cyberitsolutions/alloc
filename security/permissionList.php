@@ -35,12 +35,6 @@ function show_permission_list($template_name) {
     $permission->read_db_record($db);
     $permission->set_values();
     $TPL["actions"] = $permission->describe_actions();
-    if ($permission->get_value("personID")) {
-      $person = $permission->get_foreign_object("person");
-      $TPL["username"] = $person->get_value("username");
-    } else {
-      $TPL["username"] = "(all)";
-    }
     $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
     include_template($template_name);
   }

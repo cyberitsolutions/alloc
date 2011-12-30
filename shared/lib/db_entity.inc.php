@@ -176,10 +176,9 @@ class db_entity {
                         FROM permission 
                         WHERE (tableName = '".$this->data_table."' OR tableName='')
                          AND (entityID = %d OR entityID = 0 OR entityID = -1)
-                         AND (personID = %d OR personID IS NULL)
-                         AND (actions & %d = %d OR actions = 0)
+                         AND (actions & %d = %d)
                     ORDER BY sortKey"
-                    ,$entity_id,$person_id,$action,$action);
+                    ,$entity_id,$action,$action);
     $db->query($query);
     
     while ($db->next_record()) {
@@ -200,12 +199,12 @@ class db_entity {
       }
 
       // Cache the result in variables to prevent duplicate database lookups
-      $permission_cache[$record_cache_key] = $db->f("allow");
+      $permission_cache[$record_cache_key] = true;
       if ($db->f("entityID") == 0) {
-        $permission_cache[$table_cache_key] = $db->f("allow");
+        $permission_cache[$table_cache_key] = true;
       }
 
-      return $db->f("allow");
+      return true;
     }
 
     // No matching records - return false
