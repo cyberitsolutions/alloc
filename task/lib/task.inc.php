@@ -925,6 +925,8 @@ class task extends db_entity {
     $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
     $debug and print "\n<pre>filter: ".print_r($filter,1)."</pre>";
 
+    $_FORM["taskView"] or $_FORM["taskView"] = 'prioritised';
+
     // Zero is a valid limit
     if ($_FORM["limit"] || $_FORM["limit"] === 0 || $_FORM["limit"] === "0") {
       $limit = sprintf("limit %d",$_FORM["limit"]); 
