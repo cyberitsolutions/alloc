@@ -143,7 +143,7 @@ class db {
   }
 
   function query() {
-    global $TPL;
+    global $TPL, $current_user;
     $start = microtime();
     $this->connect();
     $args = func_get_args();
@@ -152,7 +152,14 @@ class db {
     #echo "<br><pre>".print_r(debug_backtrace(),1)."</pre>";
 
     if ($query) {
-      if ($id = @mysql_query($query)) {
+
+      if (is_object($current_user) && $current_user->get_id()) {
+        $id = mysql_query(sprintf("SET @personID = %d",$current_user->get_id()),$this->link_id);
+      }
+
+      $id = @mysql_query($query,$this->link_id);
+
+      if ($id) {
         $this->query_id = $id;
         $rtn = $this->query_id;
         $this->error();

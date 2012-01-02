@@ -109,15 +109,6 @@ class timeSheetItem extends db_entity {
     $rtn = parent::save();
 
     $db = new db_alloc();
-    $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) as count
-                        FROM timeSheetItem WHERE timeSheetID=%d ", $this->get_value("timeSheetID")));
-    $db->next_record();
-    $timeSheet = new timeSheet;
-    $timeSheet->set_id($this->get_value("timeSheetID"));
-    $timeSheet->select();
-    $timeSheet->set_value("dateFrom", $db->f("minDate"));
-    $timeSheet->set_value("dateTo", $db->f("maxDate"));
-    $status2 = $timeSheet->save();
 
     // Update the related invoiceItem
     $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
@@ -172,27 +163,10 @@ class timeSheetItem extends db_entity {
   }
 
   function delete() {
-
-    $timeSheet = $this->get_foreign_object("timeSheet");
-    if ($timeSheet->get_value("status") != "edit") {
-      die("Time sheet is not at status edit");
-    }
-
     $timeSheetID = $this->get_value("timeSheetID");
-
     parent::delete();
 
     $db = new db_alloc();
-    $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) as count
-                        FROM timeSheetItem WHERE timeSheetID=%d ", $this->get_value("timeSheetID")));
-    $db->next_record();
-    $timeSheet = new timeSheet;
-    $timeSheet->set_id($timeSheetID);
-    $timeSheet->select();
-    $timeSheet->set_value("dateFrom", $db->f("minDate"));
-    $timeSheet->set_value("dateTo", $db->f("maxDate"));
-    $status2 = $timeSheet->save();
-
     $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$timeSheetID);
     $db->query($q);
     $row = $db->row();

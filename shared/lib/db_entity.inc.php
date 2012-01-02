@@ -719,24 +719,20 @@ class db_entity {
     return $this->db;
   }
   function get_insert_fields($fields) {
-    $rtn = "";
-    reset($fields);
-    while (list(, $field) = each($fields)) {
-      if ($rtn) {
-        $rtn.= ",";
+    foreach((array)$fields as $k=>$field) {
+      if (strtolower($field->get_value(DST_DATABASE)) != "null") {
+        $rtn.= $comma.$field->get_name();
+        $comma = ",";
       }
-      $rtn.= $field->get_name();
     }
     return $rtn;
   }
   function get_insert_values($fields) {
-    $rtn = "";
-    reset($fields);
-    while (list(, $field) = each($fields)) {
-      if ($rtn) {
-        $rtn.= ",";
+    foreach((array)$fields as $k=>$field) {
+      if (strtolower($field->get_value(DST_DATABASE)) != "null") {
+        $rtn.= $comma.$field->get_value(DST_DATABASE);
+        $comma = ",";
       }
-      $rtn.= $field->get_value(DST_DATABASE);
     }
     return $rtn;
   }
