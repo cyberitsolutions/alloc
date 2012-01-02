@@ -34,48 +34,6 @@ class auditItem extends db_entity {
                              );
   var $newValue;
 
-  function audit_field_change($field, $entity, $old_value) {
-    // sets the values of this audit history instance to those appropriate for a field changing from the given field and entity
-
-    global $current_user;
-    if (is_object($current_user) && $current_user->get_id()) {
-      $current_user_id = $current_user->get_id();
-    } else {
-      $current_user_id = "0";
-    }
-
-
-    $this->set_value("entityName", $entity->data_table);
-    $this->set_value("entityID", $entity->get_id());
-    $this->set_value("personID", $current_user_id);
-    $this->set_value("dateChanged", date('Y-m-d H:i:s'));
-    $this->set_value("changeType", "FieldChange");
-    $this->set_value("fieldName", $field->get_name());
-    $this->set_value("oldValue", $old_value);
-
-  }
-
-  function audit_special_change($entity, $change_type, $old_value = "") {
-    // sets the values of this auditItem instances to those appropriate for one of the special categories of change
-    // valid change types, at the moment, are TaskMarkedDuplicate, TaskUnmarkedDuplicate, TaskClosed and TaskReopened (obviously, these changes make sense only for tasks)
-    // we use $old_value as a hackish way of storing additional information about the change (e.g., the taskID of the *other* task in a duplicate-of relationship)
-
-    global $current_user;
-    if (is_object($current_user) && $current_user->get_id()) {
-      $current_user_id = $current_user->get_id();
-    } else {
-      $current_user_id = "0";
-    }
-
-    $this->set_value("entityName", $entity->data_table);
-    $this->set_value("entityID", $entity->get_id());
-    $this->set_value("personID", $current_user_id);
-    $this->set_value("dateChanged", date('Y-m-d H:i:s'));
-    $this->set_value("changeType", $change_type);
-    $this->set_value("oldValue", $old_value);
-
-  }
-
   function get_list($_FORM) {
     /*
      *
