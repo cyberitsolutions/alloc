@@ -274,6 +274,10 @@ class timeSheetItem extends db_entity {
       $sql[] = sprintf("(timeSheetItem.personID = %d)",db_esc($filter["personID"]));
     } 
 
+    if ($filter["timeSheetItemID"]) {
+      $sql[] = sprintf("(timeSheetItem.timeSheetItemID = %d)",db_esc($filter["timeSheetItemID"]));
+    }
+
     if ($filter["comment"]) {
       $sql[] = sprintf("(timeSheetItem.comment LIKE '%%%s%%')",db_esc($filter["comment"]));
     }
