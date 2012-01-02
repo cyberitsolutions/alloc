@@ -47,19 +47,13 @@ class timeSheet extends db_entity {
   public $permissions = array(PERM_TIME_APPROVE_TIMESHEETS => "approve"
                              ,PERM_TIME_INVOICE_TIMESHEETS => "invoice");
 
-  function save() {
-    global $current_user;
-  
-    if (!$this->get_value("personID")) {
-      $this->set_value("personID", $current_user->get_id());
-    }
-
-    $status = parent::save();
-    return $status;
-  }
-
   function is_owner() {
     global $current_user;
+
+    if (!$this->get_id()) {
+      return true;
+    }
+
     if ($this->get_value("personID") == $current_user->get_id()) {
       return true;
     } 
@@ -106,14 +100,6 @@ class timeSheet extends db_entity {
   function get_timeSheet_status() {
     $statii = $this->get_timeSheet_statii();
     return $statii[$this->get_value("status")];
-  }
-
-  function delete() {
-    $db = new db_alloc;
-    $db->query(sprintf("DELETE FROM timeSheetItem where timeSheetID = %d",$this->get_id()));  
-    $db->query(sprintf("DELETE FROM transaction where timeSheetID = %d",$this->get_id()));  
-    $db->query(sprintf("DELETE FROM invoiceItem where timeSheetID = %d",$this->get_id()));  
-    db_entity::delete();
   }
 
   function load_pay_info() {

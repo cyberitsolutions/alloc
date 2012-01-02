@@ -929,12 +929,7 @@ $TPL["total_units"] = $timeSheet->pay_info["summary_unit_totals"];
 
 
 if ($timeSheetID) {
-  $db->query(sprintf("SELECT max(dateTimeSheetItem) AS maxDate, min(dateTimeSheetItem) AS minDate, count(timeSheetItemID) AS count
-        FROM timeSheetItem WHERE timeSheetID=%d ", $timeSheetID));
-  $db->next_record();
-  if ($db->f("minDate") || $db->f("maxDate")) {
-    $TPL["period"] = $db->f("minDate")." to ".$db->f("maxDate");
-  }
+  $TPL["period"] = $timeSheet->get_value("dateFrom")." to ".$timeSheet->get_value("dateTo");
 
   if ($timeSheet->get_value("status") == "edit" && $db->f("count") == 0) {
     $TPL["message_help"][] = "Enter Time Sheet Items and click the Add Time Sheet Item Button.";
