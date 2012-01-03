@@ -1,0 +1,43 @@
+
+Certain functionality in alloc can be accessed by POSTing requests to
+http://alloc/services/json.php. Results will be returned in JSON.
+
+The first step that must be performed is authentication:
+
+    curl http://alloc/services/json.php --data \
+      'client_version=1.8.3&authenticate=1&username=USERNAME&password=PASSWORD'
+
+You should get a JSON encoded session id in response:
+
+    {"sessID":"73ae3733d3492f356d4f5cd1c8634205"}
+
+Future requests should use this session ID, to affirm your identity to alloc.
+
+Now that we have a session ID, let's attempt to use one of the methods that is
+in the services class (alloc/services/lib/services.inc.php). As documented here:
+http://alloc/services/doc/alloc_services.html
+
+Eg: get_task_comments(taskID), returns an array of all the comments for a
+particular task. That functionality can be accessed like:
+
+    curl http://alloc/services/json.php --data \
+      'client_version=1.8.3&sessID=73ae3733d3492f356d4f5cd1c8634205&method=get_task_comments&taskID=TASKID'
+
+
+Please note:
+
+* The "taskID" name is specified in the methods arguments in the
+  documentation.
+
+* Clients should check for the possibility that their request has returned
+  {"reauthenticate":"true"}, this will indicate that their session has expired
+  and that the client should re-authenticate as specified above.
+
+* Occasionally various methods will require an array of options to be passed across.
+  That array should be JSON encoded.
+
+
+
+
+
+
