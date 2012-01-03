@@ -89,6 +89,11 @@ CREATE TABLE config (
   type varchar(255) NOT NULL default 'text'
 ) ENGINE=InnoDB PACK_KEYS=0;
 
+DROP TABLE IF EXISTS error;
+CREATE TABLE error (
+  errorID varchar(255) NOT NULL PRIMARY KEY
+) ENGINE=InnoDB PACK_KEYS=0;
+
 DROP TABLE IF EXISTS exchangeRate;
 CREATE TABLE exchangeRate (
   exchangeRateID integer NOT NULL auto_increment PRIMARY KEY,
