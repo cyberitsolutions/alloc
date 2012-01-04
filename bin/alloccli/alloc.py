@@ -920,19 +920,15 @@ class alloc(object):
 
   def get_alloc_modules(self):
     """Get all the alloc subcommands/modules."""
-    modules = []
-    for f in os.listdir("/".join(sys.argv[0].split("/")[:-1])+"/alloccli/"):
-      s = f[-4:].lower()
-      if s != ".pyc" and s != ".swp" and s != ".swo" and f != "alloc" and f != "alloc.py" and f != "__init__.py":
-        m = f.replace(".py", "")
-        modules.append(m) 
-    return modules
+    return sys.modules['alloccli'].__all__
 
   def get_cli_help(self, halt_on_error=True):
     """Get the command line help."""
     print "Usage: alloc command [OPTIONS]"
     print "Select one of the following commands:\n"
     for m in self.get_alloc_modules():
+      if m == 'alloc':
+        continue
       alloccli = __import__("alloccli."+m)
       subcommand = getattr(getattr(alloccli, m), m)
 
@@ -958,6 +954,8 @@ class alloc(object):
     """Get help for a particular command."""
     print "Select one of the following commands:\n"
     for m in self.get_alloc_modules():
+      if m == 'alloc':
+        continue
       alloccli = __import__("alloccli."+m)
       subcommand = getattr(getattr(alloccli, m), m)
 
