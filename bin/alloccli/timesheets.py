@@ -37,7 +37,7 @@ If run without arguments this program will display all of your editable time she
 Examples:
 alloc timesheets --hours "2" --date 2010-01-01
 alloc timesheets --hours ">2 AND <10 OR >20 AND <=100"
-alloc timesheets --status finished --hours ">=7" --date "<=$(date -d '1 week ago' +%%Y-%%m-%%d)"
+alloc timesheets --status finished --hours ">=7" --date "<=1 week ago"
 
 alloc timesheets --date "2010-10-10"
 alloc timesheets --date "<=2010-10-10"
@@ -61,6 +61,9 @@ alloc timesheets --date ">=2010-10-10" --items'''
     order_ts = "From,ID"
     order_tsi = "Date,Item ID"
     status = "edit"
+
+    if o['date']:
+      o['date'] = self.parse_date(o['date'])
 
     # Get a projectID either passed via command line, or figured out from a project name
     if self.is_num(o['project']):

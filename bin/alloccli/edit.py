@@ -79,6 +79,9 @@ alloc edit -t 1234 --assignee null"""
     else:
       self.die("Use either -t to edit a task, or -i to edit a time sheet item.")
   
+    if o['date']:
+      o['date'] = self.parse_date(o['date'])
+
     package = {}
     for key,val in o.items():
       if val:

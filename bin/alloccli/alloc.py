@@ -891,6 +891,31 @@ class alloc(object):
 
     return addr, name
 
+  def parse_date(self, text):
+    """Convert a human readable date string into YYYY-MM-DD format."""
+    if text:
+      prefix = ''
+
+      # YYYY-MM-DD
+      if re.match(r'^\d{4}-\d{1,2}-\d{1,2}$', text):
+        return text
+
+      # The date string may be prefixed with a comparator eg >= or != etc.
+      # [><=!]some date string
+      m = re.match(r'([><=!]+)(.*)', text)
+      if m:
+        prefix = m.group(1)
+        text = m.group(2)
+
+      p = subprocess.Popen(['date', '-d', text, '+%F'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+      output, errors = p.communicate()
+      output = output.strip()
+      errors = errors.strip()
+      if re.match(r'^\d{4}-\d{1,2}-\d{1,2}$', output):
+        return prefix+output
+      else:
+        self.die("Couldn't convert date: "+text+" (returned: "+output+" "+errors+")")
+
   def person_to_personID(self, name):
     """Convert a person's name into their alloc personID."""
     if type(name) == type('string'):
