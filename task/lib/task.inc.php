@@ -198,7 +198,7 @@ class task extends db_entity {
       if (!$this->get_value("taskStatus") || substr($this->get_value("taskStatus"),0,4)!="open") {
         $this->save_action_performed = true;
       }
-      $this->set_value("closerID",null);
+      $this->set_value("closerID","");
       $this->set_value("dateClosed","");
       $this->set_value("dateActualCompletion","");
       $this->set_value("duplicateTaskID","");
@@ -218,7 +218,7 @@ class task extends db_entity {
       $this->save_action_performed = true;
       $this->set_value("dateActualCompletion", "");
       $this->set_value("duplicateTaskID","");
-      $this->set_value("closerID",null);
+      $this->set_value("closerID","");
       $this->set_value("dateClosed","");
       $this->set_value("taskStatus","pending_".$taskSubStatus);
     }
