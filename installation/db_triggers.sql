@@ -138,6 +138,13 @@ CREATE TRIGGER before_insert_timeSheetItem BEFORE INSERT ON timeSheetItem
 FOR EACH ROW
 BEGIN
   call check_edit_timeSheet(NEW.timeSheetID);
+
+  SELECT DATE(NEW.dateTimeSheetItem) INTO @validDate;
+  IF (@validDate = '0000-00-00') THEN
+    call alloc_error("Invalid date.");
+    -- SET NEW.dateTimeSheetItem = NULL;
+  END IF;
+
   SET NEW.personID = personID();
   SELECT projectID INTO @projectID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
   SELECT rate,rateUnitID INTO @rate,@rateUnitID FROM projectPerson WHERE projectID = @projectID AND personID = personID();
@@ -159,6 +166,13 @@ CREATE TRIGGER before_update_timeSheetItem BEFORE UPDATE ON timeSheetItem
 FOR EACH ROW
 BEGIN
   call check_edit_timeSheet(OLD.timeSheetID);
+
+  SELECT DATE(NEW.dateTimeSheetItem) INTO @validDate;
+  IF (@validDate = '0000-00-00') THEN
+    call alloc_error("Invalid date.");
+    -- SET NEW.dateTimeSheetItem = NULL;
+  END IF;
+
   SET NEW.personID = OLD.personID;
   SELECT projectID INTO @projectID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
   SELECT rate,rateUnitID INTO @rate,@rateUnitID FROM projectPerson WHERE projectID = @projectID AND personID = OLD.personID;
