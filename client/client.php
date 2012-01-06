@@ -131,7 +131,7 @@ require_once("../alloc.php");
       $email = str_replace("&lt;","",$email);
       $email = str_replace("&gt;","",$email);
 
-      $userName = $clientContact->get_value('clientContactName');
+      $userName = $clientContact->get_value('clientContactName', DST_HTML_DISPLAY);
       if ($userName) {
           $mailto = '"' . $userName . '" <' . $email . ">";
       } else {
