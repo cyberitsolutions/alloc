@@ -65,6 +65,9 @@ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
     projectID = 0
     taskID = 0
 
+    if o['date']:
+      o['date'] = self.parse_date(o['date'])
+
     if not o['multiplier']:
       o['multiplier'] = 1
 
