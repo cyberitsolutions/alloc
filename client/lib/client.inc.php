@@ -446,7 +446,9 @@ class client extends db_entity {
       $db = new db_alloc();
       $q = sprintf("SELECT clientContactName, clientContactEmail, clientContactID 
                       FROM clientContact 
-                     WHERE clientID = %d",$clientID);
+                     WHERE clientID = %d
+                       AND clientContactActive = 1
+                     ",$clientID);
       $db->query($q);
       while ($db->next_record()) {
         $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
