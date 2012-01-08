@@ -258,6 +258,7 @@ if ($_POST["install_db"] && is_object($db)) {
   $files[] = "../installation/db_structure.sql";
   $files[] = "../installation/db_data.sql";
   $files[] = "../installation/db_constraints.sql";
+  $files[] = "../installation/db_triggers.sql";
 
   foreach ($files as $file) {
     list($sql,$comments) = parse_sql_file($file);
