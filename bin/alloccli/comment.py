@@ -49,7 +49,7 @@ The words 'default' and 'internal' can be used in place of an email address.
 
 In this example the recipients are going to be internal only, except for Clyde
 
-  $ alloc comment --task 1234 --to "internal,Clyde Client <cm@example.com>"
+  $ alloc comment --task 1234 --to "internal,Clyde Client <cc@example.com>"
 """
 
   def run(self, command_list):
@@ -150,11 +150,17 @@ In this example the recipients are going to be internal only, except for Clyde
         comma = ", "
     self.msg("To: " + text)
   
+    if not entity and not entityID:
+      self.die("Exiting. No entity specified (eg --task ID).")
+
     # Grab stdin
     try:
       comment_text = sys.stdin.read()
+    except (IOError):
+      self.die("Exiting. No message specified.")
     except (KeyboardInterrupt):
-      sys.exit(0)
+      self.die("Exiting. No message specified.")
+
 
     # Send message
     if comment_text and entity and entityID:
