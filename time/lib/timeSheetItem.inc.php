@@ -56,24 +56,6 @@ class timeSheetItem extends db_entity {
       die("Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice. Time Sheet Item not saved.");
     } 
 
-    if ($this->get_value("taskID")) {
-      $selectedTask = new task();
-      $selectedTask->set_id($this->get_value("taskID"));
-      $selectedTask->select();
-      $taskName = $selectedTask->get_name();
-
-      if (!$selectedTask->get_value("dateActualStart")) {
-        $selectedTask->set_value("dateActualStart", $this->get_value("dateTimeSheetItem"));
-      }
-      if ($selectedTask->get_value("taskStatus") == "open_notstarted") {
-        $selectedTask->set_value("taskStatus", "open_inprogress");
-      }
-      $selectedTask->skip_perms_check = true;
-      $selectedTask->save();
-    }
-
-    $this->set_value("description", $taskName);
-
     // If rate is changed via CLI
     if ($this->get_value("rate") && $timeSheet->pay_info["project_rate"] != $this->get_value("rate") && !$timeSheet->can_edit_rate()) {
       die("Not permitted to edit time sheet item rate.");
@@ -91,9 +73,6 @@ class timeSheetItem extends db_entity {
     if (!$this->get_value("timeSheetItemDurationUnitID") && $timeSheet->pay_info["project_rateUnitID"]) {
       $this->set_value("timeSheetItemDurationUnitID", $timeSheet->pay_info["project_rateUnitID"]);
     }
-
-    $this->get_value("personID") || $this->set_value("personID",$current_user->get_id());
-    //$this->get_value("multiplier") || $this->set_value("multiplier",1);
 
     // Last ditch perm checking - useful for the CLI
     if (!is_object($timeSheet) || !$timeSheet->get_id()) {

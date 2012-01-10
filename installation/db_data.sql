@@ -529,6 +529,7 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete ti
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.\n\n");
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n");
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid date.\n\n");
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n");
 
 
 

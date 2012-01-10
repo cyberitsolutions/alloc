@@ -152,13 +152,26 @@ BEGIN
     SET NEW.rate = @rate;
     SET NEW.timeSheetItemDurationUnitID = @rateUnitID;
   END IF;
+
+  IF (NEW.taskID) THEN
+    SELECT taskName INTO @taskName FROM task WHERE taskID = NEW.taskID;
+    SET NEW.description = @taskName;
+  END IF;
+
 END
 $$
 
 DROP TRIGGER IF EXISTS after_insert_timeSheetItem $$
 CREATE TRIGGER after_insert_timeSheetItem AFTER INSERT ON timeSheetItem
 FOR EACH ROW
+BEGIN
   call updateTimeSheetDates(NEW.timeSheetID);
+
+  SELECT count(*) INTO @isTask FROM task WHERE taskID = NEW.taskID AND taskStatus = 'open_notstarted';
+  IF (@isTask) THEN
+    UPDATE TASK SET taskStatus = 'open_inprogress' WHERE taskID = NEW.taskID;
+  END IF;
+END
 $$
 
 DROP TRIGGER IF EXISTS before_update_timeSheetItem $$
@@ -231,13 +244,136 @@ BEGIN
 END
 $$
 
+DROP PROCEDURE IF EXISTS check_delete_task $$
+CREATE PROCEDURE check_delete_task(IN id INTEGER)
+BEGIN
+  IF (!can_delete_task(id)) THEN
+    call alloc_error('Task is not deletable.');
+  END IF;
+END
+$$
+
+-- This function is used in PHP land as well
+DROP FUNCTION IF EXISTS can_delete_task $$
+CREATE FUNCTION can_delete_task(id INTEGER) RETURNS BOOLEAN READS SQL DATA
+BEGIN
+  SELECT COUNT(*) INTO @num_audits FROM auditItem WHERE entityName = 'task' AND entityID = id;
+  -- perm delete = 4
+  IF (NOT @num_audits AND has_perm(personID(),4,"task")) THEN
+    RETURN TRUE;
+  END IF;
+  RETURN FALSE;
+END
+$$
+
 -- task
+
+DROP TRIGGER IF EXISTS before_insert_task $$
+CREATE TRIGGER before_insert_task BEFORE INSERT ON task
+FOR EACH ROW
+BEGIN
+  call check_edit_task(NEW.projectID);
+
+  SET NEW.creatorID = personID();
+  SET NEW.dateCreated = current_timestamp();
+
+  -- inserted closed edge-case
+  IF (NEW.dateActualCompletion AND neq(substring(NEW.taskStatus,1,5), 'close')) THEN
+    SET NEW.taskStatus = 'closed_complete';
+  END IF;
+
+  IF (empty(NEW.taskStatus)) THEN SET NEW.taskStatus = 'open_notstarted'; END IF;
+  IF (empty(NEW.priority)) THEN SET NEW.priority = 3; END IF;
+  IF (empty(NEW.taskTypeID)) THEN SET NEW.taskTypeID = 'Task'; END IF;
+  IF (NEW.personID) THEN SET NEW.dateAssigned = current_timestamp(); END IF;
+  IF (NEW.closerID) THEN SET NEW.dateClosed = current_timestamp(); END IF;
+  IF (empty(NEW.timeLimit)) THEN SET NEW.timeLimit = NEW.timeExpected; END IF;
+  
+  IF (empty(NEW.timeLimit) AND NEW.projectID) THEN
+    SELECT defaultTaskLimit INTO @defaultTaskLimit FROM project WHERE projectID = NEW.projectID;
+    SET NEW.timeLimit = @defaultTaskLimit;
+  END IF;
+ 
+  IF (empty(NEW.estimatorID) AND (NEW.timeWorst OR NEW.timeBest OR NEW.timeExpected)) THEN
+    SET NEW.estimatorID = personID();
+  END IF;
+
+  IF (empty(NEW.timeWorst) AND empty(NEW.timeBest) AND empty(NEW.timeExpected)) THEN
+    SET NEW.estimatorID = NULL;
+  END IF;
+
+  IF (NEW.taskStatus = 'open_inprogress' AND empty(NEW.dateActualStart)) THEN
+    SET NEW.dateActualStart = current_date();
+  END IF;
+
+
+END
+$$
 
 DROP TRIGGER IF EXISTS before_update_task $$
 CREATE TRIGGER before_update_task BEFORE UPDATE ON task
 FOR EACH ROW
 BEGIN
   call check_edit_task(OLD.projectID);
+
+  SET NEW.taskID = OLD.taskID;
+  SET NEW.creatorID = OLD.creatorID;
+  SET NEW.dateCreated = OLD.dateCreated;
+  SET NEW.taskModifiedUser = personID();
+
+  IF (empty(NEW.taskStatus)) THEN
+    SET NEW.taskStatus = OLD.taskStatus;
+  END IF;
+
+  IF (empty(NEW.taskStatus)) THEN
+    SET NEW.taskStatus = 'open_notstarted';
+  END IF;
+
+  IF (NEW.taskStatus = 'open_inprogress' AND neq(NEW.taskStatus, OLD.taskStatus) AND empty(NEW.dateActualStart)) THEN
+    SET NEW.dateActualStart = current_date();
+  END IF;
+
+  IF ((SUBSTRING(NEW.taskStatus,1,4) = 'open' OR SUBSTRING(NEW.taskStatus,1,4) = 'pend') AND neq(NEW.taskStatus, OLD.taskStatus)) THEN
+    SET NEW.closerID = NULL;  
+    SET NEW.dateClosed = NULL;  
+    SET NEW.dateActualCompletion = NULL;  
+    SET NEW.duplicateTaskID = NULL;  
+  END IF;
+
+  IF (SUBSTRING(NEW.taskStatus,1,4) = 'clos' AND neq(NEW.taskStatus, OLD.taskStatus)) THEN
+    IF (empty(NEW.dateActualStart)) THEN SET NEW.dateActualStart = current_date(); END IF;
+    IF (empty(NEW.dateActualCompletion)) THEN SET NEW.dateActualCompletion = current_date(); END IF;
+    IF (empty(NEW.dateClosed)) THEN SET NEW.dateClosed = current_timestamp(); END IF;
+    IF (empty(NEW.closerID)) THEN SET NEW.closerID = personID(); END IF;
+
+    -- MySQL don't like this unfortunately.
+    -- IF (NEW.taskTypeID = 'Parent') THEN
+    --   UPDATE task SET taskStatus = NEW.taskStatus WHERE parentTaskID = NEW.taskID;
+    -- END IF;
+
+  END IF;
+
+
+  IF (NEW.personID AND neq(NEW.personID, OLD.personID)) THEN
+    SET NEW.dateAssigned = current_timestamp();
+  ELSEIF (empty(NEW.personID)) THEN
+    SET NEW.dateAssigned = NULL;
+  END IF;
+
+  IF (NEW.closerID AND neq(NEW.closerID, OLD.closerID)) THEN
+    SET NEW.dateClosed = current_timestamp();
+  ELSEIF (empty(NEW.closerID)) THEN
+    SET NEW.dateClosed = NULL;
+  END IF;
+
+  IF (neq(NEW.timeWorst, OLD.timeWorst) OR neq(NEW.timeBest, OLD.timeBest) OR neq(NEW.timeExpected, OLD.timeExpected)) THEN
+    SET NEW.estimatorID = personID();
+  END IF;
+
+  IF (empty(NEW.timeWorst) AND empty(NEW.timeBest) AND empty(NEW.timeExpected)) THEN
+    SET NEW.estimatorID = NULL;
+  END IF;
+
 END
 $$
 
@@ -246,6 +382,7 @@ CREATE TRIGGER before_delete_task BEFORE DELETE ON task
 FOR EACH ROW
 BEGIN
   call check_edit_task(OLD.projectID);
+  call check_delete_task(OLD.taskID);
 END
 $$
 

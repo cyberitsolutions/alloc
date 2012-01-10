@@ -62,70 +62,31 @@ class task extends db_entity {
     // The data prior to the save
     $old = $this->all_row_fields;
 
-    // Set the task creator
-    $this->get_value("creatorID") || $this->set_value("creatorID",$current_user->get_id());
-
     // Set the task's status and sub-status
     list($taskStatus, $taskSubStatus) = explode("_",$this->get_value("taskStatus"));
 
     // Edge-case for people who open tasks with a dateActualCompletion set, i.e. simultaneous task create and close.
     if (!$this->get_id() && $this->get_value("dateActualCompletion")) {
       if ($taskStatus != "closed" && $taskStatus != "close") {
-        $taskStatus = "close";
-        $taskSubStatus = "complete";
+        $this->set_value("taskStatus","closed_complete");
       }
-    }
-
-    if (!$this->save_action_performed && in_array($taskStatus,array("closed","close","open","pending"))) {
-      $this->$taskStatus($taskSubStatus);
     }
 
     // If a dateActualCompletion has just been entered
-    if (!$this->save_action_performed && !$old["dateActualCompletion"] && $this->get_value("dateActualCompletion")) {
-      $this->close("complete");
+    if (!$old["dateActualCompletion"] && $this->get_value("dateActualCompletion")) {
+      $this->set_value("taskStatus","closed_complete");
 
     // Else if there was a dateActualCompletion and they have just *unset* it...
-    } else if (!$this->save_action_performed && $old["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
-      $this->open("inprogress");
+    } else if ($old["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
+      $this->set_value("taskStatus","open_inprogress");
     }
 
     // If they've just plugged a dateActualStart in and the task is notstarted, then change the status to Open: In Progress
-    if (!$this->save_action_performed && !$old["dateActualStart"] && $this->get_value("dateActualStart") && $old["taskStatus"] == "open_notstarted") {
-      $this->open("inprogress");
-    }
-
-    // If task exists and the personID has changed, update the dateAssigned
-    if ($this->get_id()) {
-      if (sprintf("%d",$this->get_value("personID")) != sprintf("%d",$old["personID"])) {
-        $this->set_value("dateAssigned",date("Y-m-d H:i:s"));
-      }
-    // Else if task doesn't exist and there is a personID set, set the dateAssigned as well
-    } else if ($this->get_value("personID")) {
-      $this->set_value("dateAssigned",date("Y-m-d H:i:s"));
+    if (!$old["dateActualStart"] && $this->get_value("dateActualStart") && $old["taskStatus"] == "open_notstarted") {
+      $this->set_value("taskStatus","open_inprogress");
     }
 
     $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
-
-
-    // Copy the taskExpected over to the taskLimit if we're creating the task and taskLimit isn't set
-    if (!$this->get_id() && !imp($this->get_value("timeLimit")) && imp($this->get_value("timeExpected"))) {
-      $this->set_value("timeLimit",$this->get_value("timeExpected"));
-    }
-
-    // If we don't have a taskLimit try and inherit the project's defaultTaskLimit
-    if (!$this->get_id() && !imp($this->get_value("timeLimit"))) {
-      $project = $this->get_foreign_object("project");
-      if ($project && imp($project->get_value("defaultTaskLimit"))) {
-        $this->set_value("timeLimit",$project->get_value("defaultTaskLimit"));
-      }
-    }
-
-    // If there are no estimates, then wipe the estimatorID person setting
-    if (!imp($this->get_value("timeBest")) && !imp($this->get_value("timeWorst")) && !imp($this->get_value("timeExpected"))) {
-      $this->set_value("estimatorID","");
-    } else if (!$this->get_value("estimatorID")) {
-      $this->set_value("estimatorID",$current_user->get_id());
-    }
 
     return parent::save();
   }
@@ -151,94 +112,11 @@ class task extends db_entity {
     $this->get_value("taskStatus") == "pending"    && $this->set_value("taskStatus","pending_info");
     $this->get_value("taskStatus") == "close"      && $this->set_value("taskStatus","closed_complete");
     $this->get_value("taskStatus") == "closed"     && $this->set_value("taskStatus","closed_complete");
-    $this->get_value("taskStatus") || $this->set_value("taskStatus","open_notstarted");
 
-    $this->get_value("priority") || $this->set_value("priority",3);
     in_array($this->get_value("priority"),array(1,2,3,4,5)) or $err[] = "Invalid priority.";
-
-    $this->get_value("taskTypeID") || $this->set_value("taskTypeID","Task");
     in_array(ucwords($this->get_value("taskTypeID")),array("Task","Fault","Message","Milestone","Parent")) or $err[] = "Invalid Task Type.";
-
     $this->get_value("taskName") or $err[] = "Please enter a name for the Task.";
-    $this->get_value("dateCreated") || $this->set_value("dateCreated",date("Y-m-d H:i:s"));
-
-    $this->get_value("personID") || $this->set_value("personID","");
-    $this->get_value("managerID") || $this->set_value("managerID","");
-
     return parent::validate($err);
-  }
-
-  function closed($t="complete",$closeChildren=true) { return $this->close($t,$closeChildren); }  // wrapper
- 
-  function close($taskSubStatus = "complete",$closeChildren=true) {
-    global $current_user;
-    $old = $this->all_row_fields;
-    $cur_status = $old["taskStatus"].$old["duplicateTaskID"];
-    $new_status = "closed_".$taskSubStatus.$this->get_value("duplicateTaskID");
-
-    if ($cur_status != $new_status) { 
-      $this->save_action_performed = true;
-      $this->get_value("dateActualStart")      || $this->set_value("dateActualStart", date("Y-m-d"));
-      $this->get_value("dateActualCompletion") || $this->set_value("dateActualCompletion", date("Y-m-d"));
-      $this->get_value("closerID")             || $this->set_value("closerID", $current_user->get_id());
-      $this->get_value("dateClosed")           || $this->set_value("dateClosed",date("Y-m-d H:i:s"));           
-      $this->set_value("taskStatus","closed_".$taskSubStatus);
-      if ($closeChildren) {
-        $this->close_off_children_recursive($taskSubStatus);
-      }
-    }
-  }
-
-  function open($taskSubStatus = "inprogress") {
-    $old = $this->all_row_fields;
-    $cur_status = $old["taskStatus"];
-    $new_status = "open_".$taskSubStatus;
-
-    if ($cur_status != $new_status) { 
-      if (!$this->get_value("taskStatus") || substr($this->get_value("taskStatus"),0,4)!="open") {
-        $this->save_action_performed = true;
-      }
-      $this->set_value("closerID","");
-      $this->set_value("dateClosed","");
-      $this->set_value("dateActualCompletion","");
-      $this->set_value("duplicateTaskID","");
-      $this->set_value("taskStatus","open_".$taskSubStatus);
-      if (!$this->get_value("dateActualStart") && $taskSubStatus == "inprogress") {
-        $this->set_value("dateActualStart",date("Y-m-d"));
-      }
-    }
-  }
-
-  function pending($taskSubStatus = "info") {
-    $old = $this->all_row_fields;
-    $cur_status = $old["taskStatus"];
-    $new_status = "pending_".$taskSubStatus;
-
-    if ($cur_status != $new_status) { 
-      $this->save_action_performed = true;
-      $this->set_value("dateActualCompletion", "");
-      $this->set_value("duplicateTaskID","");
-      $this->set_value("closerID","");
-      $this->set_value("dateClosed","");
-      $this->set_value("taskStatus","pending_".$taskSubStatus);
-    }
-  }
-
-  function close_off_children_recursive($taskSubStatus='') {
-    // mark all children as complete
-    global $current_user;
-    if ($this->get_id() && $this->get_value("taskTypeID") == "Parent") {
-      $db = new db_alloc;
-      $query = sprintf("SELECT * FROM task WHERE parentTaskID = %d",$this->get_id());
-      $db->query($query);
-                                                                                                                               
-      while ($db->next_record()) {
-        $task = new task;
-        $task->read_db_record($db);
-        $task->close($taskSubStatus);
-        $task->save();
-      }
-    }
   }
 
   function create_task_reminder() {
@@ -1623,9 +1501,10 @@ class task extends db_entity {
   function can_be_deleted() {
     if (is_object($this) && $this->get_id()) {
       $db = new db_alloc;
-      $q = sprintf("SELECT * FROM auditItem WHERE entityName = 'task' AND entityID = %d",$this->get_id());
+      $q = sprintf("SELECT can_delete_task(%d) as rtn",$this->get_id());
       $db->query($q);
-      return $this->have_perm(PERM_DELETE) && !$db->row();
+      $row = $db->row();
+      return $row['rtn'];
     }
   }
 
