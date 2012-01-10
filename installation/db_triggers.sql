@@ -14,6 +14,16 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n
 
 DELIMITER $$
 
+-- if (NOT something) doesn't work for NULLs
+DROP FUNCTION IF EXISTS empty $$
+CREATE FUNCTION empty(str text) RETURNS BOOLEAN DETERMINISTIC
+BEGIN RETURN str = '' OR str IS NULL; END $$
+
+-- if (null != 'something') evaluates falsely
+DROP FUNCTION IF EXISTS neq $$
+CREATE FUNCTION neq(str1 text, str2 text) RETURNS BOOLEAN DETERMINISTIC
+BEGIN RETURN IFNULL(str1,'') != IFNULL(str2,''); END $$
+
 -- returns true if we're accessing alloc from a single-user database of views
 DROP FUNCTION IF EXISTS using_views $$
 CREATE FUNCTION using_views() RETURNS BOOLEAN DETERMINISTIC
@@ -66,6 +76,20 @@ CREATE PROCEDURE alloc_error(msg varchar(255))
 $$
 
 
+-- audit 
+
+DROP PROCEDURE IF EXISTS log $$
+CREATE PROCEDURE log(entityName VARCHAR(255), entityID INTEGER, fieldName VARCHAR(255), oldValue TEXT, newValue TEXT)
+BEGIN
+  IF (neq(oldValue,newValue)) THEN
+    INSERT INTO auditItem (entityName,entityID,personID,dateChanged,changeType,fieldName,oldValue) VALUES
+    (entityName,entityID,personID(),NOW(),"FieldChange",fieldName,oldValue);
+  END IF;
+END
+$$
+
+
+
 -- triggers for timeSheet
 
 DROP TRIGGER IF EXISTS before_insert_timeSheet $$
@@ -96,11 +120,12 @@ BEGIN
     SELECT 1 INTO @null;
   ELSEIF (OLD.status = 'manage' AND NEW.status = 'admin' AND has_perm(personID(),256,"timeSheet")) THEN
     SELECT 1 INTO @null;
-  ELSEIF (OLD.status != 'edit') THEN
+  ELSEIF (neq(OLD.status, 'edit')) THEN
     call alloc_error('Time sheet is not editable.');
-  ELSEIF (NEW.status != 'edit') THEN
+  ELSEIF (neq(NEW.status, 'edit')) THEN
     call alloc_error('Not permitted to change time sheet status.');
   ELSE
+    SET NEW.timeSheetID = OLD.timeSheetID;
     SET NEW.personID = OLD.personID;
     SET NEW.status = 'edit';
     SELECT preferred_tfID INTO @preferred_tfID FROM person WHERE personID = OLD.personID;
@@ -116,10 +141,11 @@ DROP TRIGGER IF EXISTS before_delete_timeSheet $$
 CREATE TRIGGER before_delete_timeSheet BEFORE DELETE ON timeSheet
 FOR EACH ROW
 BEGIN
-  IF (OLD.status != 'edit') THEN
+  IF (neq(OLD.status, 'edit')) THEN
     call alloc_error('Not permitted to delete time sheet unless status is edit.');
-  ELSE
-    DELETE FROM timeSheetItem WHERE timeSheetID = OLD.timeSheetID;
+  -- ELSE
+    -- This don't work.
+    -- DELETE FROM timeSheetItem WHERE timeSheetID = OLD.timeSheetID;
   END IF;
 END
 $$
@@ -138,7 +164,7 @@ DROP PROCEDURE IF EXISTS check_edit_timeSheet $$
 CREATE PROCEDURE check_edit_timeSheet(IN id INTEGER)
 BEGIN
   SELECT status INTO @timeSheetStatus FROM timeSheet WHERE timeSheetID = id;
-  if (@timeSheetStatus != "edit") THEN
+  if (neq(@timeSheetStatus, "edit")) THEN
     call alloc_error('Time sheet is not editable.');
   END IF;
 END
@@ -197,6 +223,7 @@ BEGIN
     -- SET NEW.dateTimeSheetItem = NULL;
   END IF;
 
+  SET NEW.timeSheetItemID = OLD.timeSheetItemID;
   SET NEW.personID = OLD.personID;
   SELECT projectID INTO @projectID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
   SELECT rate,rateUnitID INTO @rate,@rateUnitID FROM projectPerson WHERE projectID = @projectID AND personID = OLD.personID;
@@ -225,19 +252,6 @@ DROP TRIGGER IF EXISTS after_delete_timeSheetItem $$
 CREATE TRIGGER after_delete_timeSheetItem AFTER DELETE ON timeSheetItem
 FOR EACH ROW
   call updateTimeSheetDates(OLD.timeSheetID);
-$$
-
-
--- audit 
-
-DROP PROCEDURE IF EXISTS log $$
-CREATE PROCEDURE log(entityName VARCHAR(255), entityID INTEGER, fieldName VARCHAR(255), oldValue TEXT, newValue TEXT)
-BEGIN
-  IF (oldValue != newValue) THEN
-    INSERT INTO auditItem (entityName,entityID,personID,dateChanged,changeType,fieldName,oldValue) VALUES
-    (entityName,entityID,personID(),NOW(),"FieldChange",fieldName,oldValue);
-  END IF;
-END
 $$
 
 -- task perm
@@ -410,7 +424,6 @@ BEGIN
   call log("task", OLD.taskID, "timeExpected",         OLD.timeExpected,         NEW.timeExpected);
   call log("task", OLD.taskID, "dateTargetStart",      OLD.dateTargetStart,      NEW.dateTargetStart);
   call log("task", OLD.taskID, "dateActualStart",      OLD.dateActualStart,      NEW.dateActualStart);
-  call log("task", OLD.taskID, "taskStatus",           OLD.taskStatus,           NEW.taskStatus);
   call log("task", OLD.taskID, "projectID",            OLD.projectID,            NEW.projectID);
   call log("task", OLD.taskID, "parentTaskID",         OLD.parentTaskID,         NEW.parentTaskID);
   call log("task", OLD.taskID, "taskTypeID",           OLD.taskTypeID,           NEW.taskTypeID);
@@ -420,6 +433,7 @@ BEGIN
   call log("task", OLD.taskID, "duplicateTaskID",      OLD.duplicateTaskID,      NEW.duplicateTaskID);
   call log("task", OLD.taskID, "dateTargetCompletion", OLD.dateTargetCompletion, NEW.dateTargetCompletion);
   call log("task", OLD.taskID, "dateActualCompletion", OLD.dateActualCompletion, NEW.dateActualCompletion);
+  call log("task", OLD.taskID, "taskStatus",           OLD.taskStatus,           NEW.taskStatus);
 END
 $$
 
