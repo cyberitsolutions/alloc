@@ -523,13 +523,4 @@ INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES 
 INSERT INTO tokenAction (tokenActionID,tokenAction,tokenActionType,tokenActionMethod) VALUES (2,'Add Comments to Comment','comment','add_comment_from_email');
 
 
--- Error messages for mysql
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to change time sheet status.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete time sheet unless status is edit.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid date.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n");
-
-
 
