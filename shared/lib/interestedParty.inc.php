@@ -305,18 +305,19 @@ class interestedParty extends db_entity {
       // Can only perform any of the other actions if they are being performed by a recognized user
       if (is_object($current_user) && $current_user->get_id()) {
 
+
         if (isset($statuses[$command])) {
           $method = $statuses[$command];
-          if (is_object($object) && method_exists($object,$method) && $object->get_id()) {
-            $object->$method();
+          if (is_object($object) && $object->get_id()) {
+            $object->set_value("taskStatus",$method);
             $object->save();
           }
         } else if (isset($subStatuses[$command])) {
           // method should be open(), close() or pending()
           $method = $subStatuses[$command];
-          if (is_object($object) && method_exists($object,$method) && $object->get_id()) {
+          if (is_object($object) && $object->get_id()) {
             $command2 and $object->set_value("duplicateTaskID",$command2);
-            $object->$method($command);
+            $object->set_value("taskStatus",$method."_".$command);
             $object->save();
           }
         }
