@@ -6,7 +6,8 @@ class edit(alloc):
 
      # Setup the options that this cli can accept
   ops = []
-  ops.append((''  , 'help           ', 'Show this help.\n'))
+  ops.append((''  , 'help           ', 'Show this help.'))
+  ops.append(('v' , 'verbose        ', 'Run with more output.\n'))
   ops.append(('t:', '               ', 'Edit a task. Specify an ID or the word "new" to create.'))
 
   ops.append((''  , 'name=TEXT      ', 'task\'s title'))
@@ -86,7 +87,7 @@ alloc edit -t 1234 --assignee null"""
     for key,val in o.items():
       if val:
         package[key] = val
-      if val.lower() == 'null':
+      if type(val)==type("") and val.lower() == 'null':
         package[key] = ''
 
     args['options'] = package
@@ -95,7 +96,17 @@ alloc edit -t 1234 --assignee null"""
 
     # If server returns a message, print it out
     if rtn and 'status' in rtn and 'message' in rtn:
-      meth = getattr(self, rtn['status'])
-      meth(rtn['message'])
+
+      if type(rtn["status"]) == type([]):
+        k = 0
+        for v in rtn["status"]:
+          if (v == 'msg' and o['verbose']) or (v == 'yay' and o['verbose']) or v == 'err' or v == 'die':
+            meth = getattr(self, v)
+            meth(rtn['message'][k])
+          k += 1
+
+      else:
+        meth = getattr(self, rtn['status'])
+        meth(rtn['message'])
 
 

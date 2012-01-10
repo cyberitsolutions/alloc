@@ -170,17 +170,14 @@ class command {
       $timeSheetItem->currency = $timeSheet->get_value("currencyTypeID");
       $timeSheetItem->set_value("rate",$timeSheetItem->get_value("rate",DST_HTML_DISPLAY));
 
-      // This has to be here for CLI, as multiplier === 0 is valid.
-      if (!isset($commands["multiplier"])) {
-        $commands["multiplier"] = 1;
-      }
-
       foreach ($commands as $k => $v) {
 
         // Validate/coerce the fields
         if ($k == "unit") {
+          $changes[$k] = "timeSheetItemDurationUnitID";
           in_array($v,array(1,2,3,4,5)) or $err[] = "Invalid unit. Try a number from 1-5.";
         } else if ($k == "task") {
+          $changes[$k] = "taskID";
           $t = new task;
           $t->set_id($v);
           $t->select();
@@ -189,9 +186,13 @@ class command {
 
         // Plug the value in
         if ($item_fields[$k][0]) {
+          $changes[$k] = $item_fields[$k][0];
           $timeSheetItem->set_value($item_fields[$k][0],sprintf("%s",$v));
         }
       }
+      $str = $this->condense_changes($changes,$timeSheetItem->row());
+      $str and $status[] = "msg";
+      $str and $message[] = "Before: ".$str.".";
 
       if ($commands["delete"]) {
         $id = $timeSheetItem->get_id();
@@ -201,6 +202,10 @@ class command {
 
       // Save timeSheetItem
       } else if (!$err && $commands["item"] && $timeSheetItem->save()) {
+        $timeSheetItem->select();
+        $str = $this->condense_changes($changes,$timeSheetItem->row());
+        $str and $status[] = "msg";
+        $str and $message[] = "After:  ".$str.".";
         $status[] = "yay";
         if (strtolower($commands["item"]) == "new") {
           $message[] = "Time sheet item ".$timeSheetItem->get_id()." created.";
@@ -217,6 +222,7 @@ class command {
 
     // Task commands
     } else if ($commands["task"]) {
+      unset($changes);
 
       $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
       foreach ($taskPriorities as $k => $v) {
@@ -234,17 +240,25 @@ class command {
 
       foreach ($commands as $k => $v) {
         // transform from username to personID
-        if ($k == "assign" || $k == "manage") {
+        if ($k == "assign") {
+          $changes[$k] = "personID";
+          $v = $people_by_username[$v]["personID"];
+        }
+        
+        if ($k == "manage") {
+          $changes[$k] = "managerID";
           $v = $people_by_username[$v]["personID"];
         }
 
         // transform from priority label to priority ID
         if ($k == "priority" && !is_numeric($v)) {
+          $changes[$k] = "managerID";
           $v = $priorities[strtolower($v)];
         }
 
         // Plug the value in
         if ($task_fields[$k][0]) {
+          $changes[$k] = $task_fields[$k][0];
           $task->set_value($task_fields[$k][0],sprintf("%s",$v));
         }
       }
@@ -255,9 +269,17 @@ class command {
         }
       }
 
+      $str = $this->condense_changes($changes,$task->row());
+      $str and $status[] = "msg";
+      $str and $message[] = "Before: ".$str.".";
+
       // Save task
       $err = $task->validate();
       if (!$err && $task->save()) {
+        $task->select();
+        $str = $this->condense_changes($changes,$task->row());
+        $str and $status[] = "msg";
+        $str and $message[] = "After: ".$str.".";
 
         if ($commands["taskip"]) {
           $rtn = interestedParty::add_remove_ips($commands["taskip"],"task",$task->get_id(),$task->get_value("projectID"));
@@ -292,19 +314,17 @@ class command {
       comment::send_comment($commentID,array("interested"));
     }
 
-
-    // Figure out if success or failure
-    foreach ((array)$status as $k => $v) {
-      if ($v == "err") {
-        $status = "err";
-      }
-    }
-    $status == "err" or $status = "yay";
-
     // Status will be yay, msg, err or die, i.e. mirrored with the alloc-cli messaging system
-    return array("status"=>$status,"message"=>implode(" ",(array)$message));
+    return array("status"=>$status,"message"=>$message);
   }
 
+  function condense_changes($changes, $fields) {
+    foreach ((array)$changes as $label => $field) {
+      $str.= $sep.$label.": ".$fields[$field];
+      $sep = ", ";
+    }
+    return $str;
+  }
 
 }
 
