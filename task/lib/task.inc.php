@@ -139,19 +139,6 @@ class task extends db_entity {
     $this->create_reminder(null, $message, $reminderInterval, $intervalValue, REMINDER_METAPERSON_TASK_ASSIGNEE, $subject);
   }
 
-  function create_reminders($people, $message, $reminderInterval, $intervalValue) {
-    if (is_array($people)) {
-      foreach($people as $personID) {
-        $person = new person;
-        $person->set_id($personID);
-        $person->select();
-        if ($person->get_value("emailAddress")) {
-          $this->create_reminder($personID, $message, $reminderInterval, $intervalValue);
-        }
-      }
-    }
-  }
-
   function create_reminder($personID=null, $message, $reminderInterval, $intervalValue, $metaPerson=null, $subject="") {
     $label = $this->get_priority_label();
 
