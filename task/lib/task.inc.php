@@ -136,10 +136,7 @@ class task extends db_entity {
     $this->get_value("taskDescription") and $message.= "\n\n".$this->get_value("taskDescription");
     $message.= "\n\n-- \nReminder created by ".$current_user->get_name()." at ".date("Y-m-d H:i:s");
     $people[] = $this->get_value("personID");
-    $this->create_reminder(null, $message, $reminderInterval, $intervalValue, REMINDER_METAPERSON_TASK_ASSIGNEE, $subject);
-  }
 
-  function create_reminder($personID=null, $message, $reminderInterval, $intervalValue, $metaPerson=null, $subject="") {
     $label = $this->get_priority_label();
 
     $reminder = new reminder;
@@ -149,17 +146,18 @@ class task extends db_entity {
     $reminder->set_value('reminderRecuringValue', $intervalValue);
     $reminder->set_value('reminderSubject', $subject);
     $reminder->set_value('reminderContent', $message);
-
     $reminder->set_value('reminderAdvNoticeSent', "0");
-    $reminder->set_value('reminderAdvNoticeInterval', "No");
-    $reminder->set_value('reminderAdvNoticeValue', "0");
-
-    $reminder->set_value('reminderTime', date("Y-m-d H:i:s"));
-    if ($personID) {
-      $reminder->set_value('personID', $personID);
-    } else if ($metaPerson) {
-      $reminder->set_value('metaPerson', $metaPerson);
+    if ($this->get_value("dateTargetStart") && $this->get_value("dateTargetStart") != date("Y-m-d")) {
+      $date = $this->get_value("dateTargetStart")." 09:00:00";
+      $reminder->set_value('reminderAdvNoticeInterval', "Hour");
+      $reminder->set_value('reminderAdvNoticeValue', "24");
+    } else {
+      $date = date("Y-m-d")." 09:00:00";
+      $reminder->set_value('reminderAdvNoticeInterval', "No");
+      $reminder->set_value('reminderAdvNoticeValue', "0");
     }
+    $reminder->set_value('reminderTime', $date);
+    $reminder->set_value('metaPerson', REMINDER_METAPERSON_TASK_ASSIGNEE);
     $reminder->save();
   }
 
