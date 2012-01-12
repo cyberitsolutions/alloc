@@ -104,6 +104,8 @@ class alloc_services {
           $e->set_id($entityID);
           $e->select();
           $internal_recipients = $e->get_all_parties();
+        } else {
+          $clean_people[] = $person;
         }
       }
     }
@@ -129,7 +131,7 @@ class alloc_services {
       }
     }
 
-    foreach ((array)$people as $person) {
+    foreach ((array)$clean_people as $person) {
       $bad_person = true;
       $person = trim($person);
 
