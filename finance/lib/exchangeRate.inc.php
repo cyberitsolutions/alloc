@@ -75,6 +75,21 @@ class exchangeRate extends db_entity {
     return page::money($destCurrency,$amount*$er,$format);
   }
 
+  function update_rate($from, $to) {
+    $rate = get_exchange_rate($from,$to);
+    if ($rate) {
+      $er = new exchangeRate();
+      $er->set_value("exchangeRateCreatedDate",date("Y-m-d"));
+      $er->set_value("fromCurrency",$from);
+      $er->set_value("toCurrency",$to);
+      $er->set_value("exchangeRate",$rate);
+      $er->save();
+      return $from." -> ".$to.":".$rate." ";
+    } else {
+      echo date("Y-m-d H:i:s")."Unable to obtain exchange rate information for ".$from." to ".$to."!";
+    }
+  }
+
   function download() {
     // Get default currency
     $default_currency = config::get_config_item("currency");
@@ -84,18 +99,13 @@ class exchangeRate extends db_entity {
     $currencies = $meta->get_list();
 
     foreach ((array)$currencies as $code => $currency) {
-      $rate = get_exchange_rate($code,$default_currency);
-      if ($rate) {
-        $er = new exchangeRate();
-        $er->set_value("exchangeRateCreatedDate",date("Y-m-d"));
-        $er->set_value("fromCurrency",$code);
-        $er->set_value("toCurrency",$default_currency);
-        $er->set_value("exchangeRate",$rate);
-        $er->save();
-        $rtn[] = $code." -> ".$default_currency.":".$rate." ";
-      } else {
-        echo date("Y-m-d H:i:s")."Unable to obtain exchange rate information for ".$code." to ".$default_currency."!";
-      }
+      if ($code == $default_currency)
+      	continue;
+      if ($ret = exchangeRate::update_rate($code, $default_currency))
+      	$rtn []= $ret;
+      if ($ret = exchangeRate::update_rate($default_currency, $code))
+      	$rtn []= $ret;
+
     }
     return $rtn;
   }
