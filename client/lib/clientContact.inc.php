@@ -87,6 +87,18 @@ class clientContact extends db_entity {
     }
   }
 
+  function find_by_nick($name=false,$clientID=false) {
+    $q = sprintf("SELECT clientContactID
+                    FROM clientContact
+                   WHERE SUBSTRING(clientContactEmail,1,LOCATE('@',clientContactEmail)-1) = '%s'
+                     AND clientID = %d LIMIT 1
+                  ",db_esc($name),$clientID);
+    $db = new db_alloc();
+    $db->query($q);
+    $row = $db->row();
+    return $row["clientContactID"];
+  }
+
   function find_by_email($email=false) {
     $email = str_replace(array("<",">"),"",$email);
     if ($email) {

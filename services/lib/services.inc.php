@@ -108,6 +108,15 @@ class alloc_services {
       }
     }
 
+    if (is_object($e)) {
+      $projectID = $e->get_project_id();
+      $p = new project();
+      $p->set_id($projectID);
+      $p->select();
+      $client = $p->get_foreign_object("client");
+      $clientID = $client->get_id();
+    }
+
     foreach ((array)$default_recipients as $email => $info) {
       if ($info["selected"]) {
         $rtn[$email] = $this->reduce_person_info($info);
@@ -138,7 +147,16 @@ class alloc_services {
             continue 2;
           }
         }
-        
+
+        if ($ccID = clientContact::find_by_nick($person,$clientID)) {
+          $cc = new clientContact();
+          $cc->set_id($ccID);
+          $cc->select();
+          $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
+          $bad_person = false;
+          continue;
+        }
+
         if ($ccID = clientContact::find_by_name($person)) {
           $cc = new clientContact();
           $cc->set_id($ccID);
