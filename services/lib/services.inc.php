@@ -130,12 +130,14 @@ class alloc_services {
     }
 
     foreach ((array)$people as $person) {
+      $bad_person = true;
       $person = trim($person);
 
       // personID
       if (is_numeric($person)) {
         if ($person_table[$person]["personActive"]) {
           $rtn[$person_table[$person]["emailAddress"]] = $person_table[$person];
+          $bad_person = false;
           continue;
         }
 
@@ -144,6 +146,7 @@ class alloc_services {
         foreach ($person_table as $pid => $data) {
           if (strtolower($person) == strtolower($data["username"]) && $data["personActive"]) {
             $rtn[$data["emailAddress"]] = $data;
+            $bad_person = false;
             continue 2;
           }
         }
@@ -162,14 +165,16 @@ class alloc_services {
           $cc->set_id($ccID);
           $cc->select();
           $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
+          $bad_person = false;
           continue;
         }
-
+       
       // email
       } else if (!in_str(" ",$person) && in_str("@",$person)) {
         foreach ($person_table as $pid => $data) {
           if (same_email_address($person,$data["emailAddress"]) && $data["personActive"]) {
             $rtn[$data["emailAddress"]] = $data;
+            $bad_person = false;
             continue 2;
           }
         }
@@ -179,9 +184,11 @@ class alloc_services {
           $cc->set_id($ccID);
           $cc->select();
           $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
+          $bad_person = false;
           continue;
         } else {
           $rtn[$person] = array("emailAddress"=>$person, "name"=>"");
+          $bad_person = false;
           continue;
         }
   
@@ -190,6 +197,7 @@ class alloc_services {
         foreach ($person_table as $pid => $data) {
           if (strtolower($person) == strtolower($data["name"]) && $data["personActive"]) {
             $rtn[$data["emailAddress"]] = $data;
+            $bad_person = false;
             continue 2;
           }
         }
@@ -199,12 +207,18 @@ class alloc_services {
           $cc->set_id($ccID);
           $cc->select();
           $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
+          $bad_person = false;
           continue;
         } else {
           list($e, $n) = parse_email_address($person);
           $rtn[$e] = array("emailAddress"=>$e, "name"=>$n);
+          $bad_person = false;
           continue;
         }
+      }
+
+      if ($bad_person) {
+        die("Unable to find person: ".$person);
       }
     }
     foreach ((array)$rtn as $id => $p) {
