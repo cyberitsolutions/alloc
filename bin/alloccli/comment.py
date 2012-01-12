@@ -127,10 +127,11 @@ In this example the recipients are going to be internal only, except for Clyde
     comma = ""
     people = o['to'].split(",")
     for p in people:
-      p = p.strip()
-      to += comma + p
-      comma = ','
-      if p.lower() == 'nobody':
+      if p.lower() != 'nobody':
+        p = p.strip()
+        to += comma + p
+        comma = ','
+      else:
         nobody = True
 
     # We only append current user if they haven't specified 'nobody'
@@ -146,7 +147,7 @@ In this example the recipients are going to be internal only, except for Clyde
     text = ""
     if recipients:
       for k_, info in recipients.items():
-        text += comma + str(info["name"])+ " <"+info["emailAddress"]+">"
+        text += comma + (info.get('name') or '')+ " <"+(info.get('emailAddress') or '')+">"
         comma = ", "
     self.msg("To: " + text)
   
@@ -173,7 +174,7 @@ In this example the recipients are going to be internal only, except for Clyde
       args = {}
       args['entity'] = 'comment'
       args['id'] = 'new'
-      args['package'] = package
+      args['options'] = package
       args['method'] = 'edit_entity'
       self.make_request(args)
     else:
