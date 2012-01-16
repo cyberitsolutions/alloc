@@ -37,7 +37,7 @@ class timeSheet extends db_entity {
                              ,"approvedByAdminPersonID"
                              ,"dateSubmittedToManager"
                              ,"dateSubmittedToAdmin"
-			                       ,"dateRejected" => array("empty_to_null"=>true)
+                             ,"dateRejected" => array("empty_to_null"=>true)
                              ,"billingNote"
                              ,"payment_insurance"
                              ,"recipient_tfID"
@@ -749,6 +749,7 @@ class timeSheet extends db_entity {
                 ,"showShortProjectLink"           => "Show short Project link"
                 ,"showFinances"                   => "Shortcut for displaying the transactions and the totals"
                 ,"tfID"                           => "Time sheets that belong to this TF"
+                ,"showAllProjects"                => "Show archived and potential projects"
                 );
   }
 
@@ -781,7 +782,10 @@ class timeSheet extends db_entity {
 
     // display the list of project name.
     $db = new db_alloc();
-    $query = sprintf("SELECT projectID AS value, projectName AS label FROM project ORDER by projectName");
+    if (!$_FORM['showAllProjects']) {
+      $filter = "WHERE projectStatus = 'Current' ";
+    }
+    $query = sprintf("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
     $rtn["show_project_options"] = page::select_options($query, $_FORM["projectID"],70);
 
     // display the list of user name.
@@ -811,6 +815,7 @@ class timeSheet extends db_entity {
     $rtn["dateTo"] = $_FORM["dateTo"];
     $rtn["userID"] = $current_user->get_id();
     $rtn["showFinances"] = $_FORM["showFinances"];
+    $rtn["showAllProjects"] = $_FORM["showAllProjects"];
 
     // Get
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));

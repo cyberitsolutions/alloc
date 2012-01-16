@@ -1,4 +1,13 @@
-      <form action="{$url_alloc_timeSheetList}" method="get">
+<script type="text/javascript" language="javascript">
+// Make the XML request thing, specify the callback function 
+function refreshProjectList(show_all) {
+  url = '{$url_alloc_updateTimeSheetProjectList}'+(!show_all.checked?'current=true':'');
+  makeAjaxRequest(url,'projectDropdown');
+}
+</script>
+
+
+<form action="{$url_alloc_timeSheetList}" method="get">
       <table class="filter corner" align="center">
         <tr>
           <td>User Name</td>
@@ -22,10 +31,14 @@
         </tr>
         <tr>
           <td colspan="3">
+            <span id="projectDropdown">
             <select name="projectID">
               <option value=""> </option>
               {$show_project_options}
             </select>
+            </span>
+              <input id="showAllProjects" type="checkbox" name="showAllProjects" onclick="refreshProjectList(this);" {print $showAllProjects ? " checked" : ""}>
+              <label for="showAllProjects">Show all projects</label>
           </td>
           <td class="right">
             <label for="showFinances">Money</label>
