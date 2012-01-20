@@ -529,7 +529,6 @@ class task extends db_entity {
         $taskStatiiArray[$status] = task::get_task_status_thing("label",$status);
       }
     } else {
-      $taskStatiiArray[""] = ""; // blank entry
       foreach ($taskStatii as $status => $sub) {
         $taskStatiiArray[$status] = ucwords($status);
         foreach ($sub as $subStatus => $arr) {
