@@ -68,14 +68,14 @@ if ($num_new_emails >0) {
 
     // Skip over emails that are from alloc. These emails are kept only for
     // posterity and should not be parsed and downloaded and re-emailed etc.
-    if (same_email_address($email_receive->mail_headers->fromaddress, ALLOC_DEFAULT_FROM_ADDRESS)) {
+    if (same_email_address($email_receive->mail_headers["from"], ALLOC_DEFAULT_FROM_ADDRESS)) {
       $email_receive->mark_seen();
       $email_receive->archive();
       continue;
     }
 
-    list($from_address,$from_name) = parse_email_address($email_receive->mail_headers->fromaddress);
-    if (!$email_receive->mail_headers->fromaddress || !$from_address) {
+    list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
+    if (!$email_receive->mail_headers["from"] || !$from_address) {
       send_error($email_receive, "No from address. Skipping email.");
       continue;
     }
@@ -92,7 +92,7 @@ if ($num_new_emails >0) {
     } 
 
     // Save the email's attachments into a directory, (which also loads up $email_receive->mail_text)
-    $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR."tmp-".md5($email_receive->mail_headers->message_id);
+    $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR."tmp-".md5($email_receive->mail_headers["message-id"]);
     $email_receive->save_email($dir.DIRECTORY_SEPARATOR);
 
     // Run any commands that have been embedded in the email
