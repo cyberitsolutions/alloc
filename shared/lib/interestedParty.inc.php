@@ -230,10 +230,10 @@ class interestedParty extends db_entity {
 
     $entity = $e->classname;
     $entityID = $e->get_id();
-    $subject = trim($email_receive->mail_headers->subject);
+    $subject = trim($email_receive->mail_headers["subject"]);
     $body = $email_receive->get_converted_encoding();
     $msg_uid = $email_receive->msg_uid;
-    list($emailAddress,$fullName) = parse_email_address($email_receive->mail_headers->fromaddress);
+    list($emailAddress,$fullName) = parse_email_address($email_receive->mail_headers["from"]);
     list($personID,$clientContactID,$fullName) = comment::get_person_and_client($emailAddress,$fullName,$e->get_project_id());
 
     // Load up the parent object that this comment refers to, be it task or timeSheet etc

@@ -444,13 +444,13 @@ class comment extends db_entity {
     $comment->rename_email_attachment_dir($email_receive->dir);
 
     // Try figure out and populate the commentCreatedUser/commentCreatedUserClientContactID fields
-    list($from_address,$from_name) = parse_email_address($email_receive->mail_headers->fromaddress);
+    list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
     list($personID,$clientContactID,$from_name) = comment::get_person_and_client($from_address,$from_name,$entity->get_project_id());
     $personID and $comment->set_value('commentCreatedUser', $personID);
     $clientContactID and $comment->set_value('commentCreatedUserClientContactID', $clientContactID);
 
-    $comment->set_value("commentCreatedUserText",trim($email_receive->mail_headers->fromaddress));
-    $comment->set_value("commentEmailMessageID",trim($email_receive->mail_headers->message_id));
+    $comment->set_value("commentCreatedUserText",$email_receive->mail_headers["from"]);
+    $comment->set_value("commentEmailMessageID",$email_receive->mail_headers["message-id"]);
 
     $e = $entity->get_parent_object();
     if (method_exists($e, 'add_comment_hook')) {
@@ -557,7 +557,7 @@ class comment extends db_entity {
     $body = $this->get_value("comment");
 
     if (is_object($email_receive)) {
-      list($from_address,$from_name) = parse_email_address($email_receive->mail_headers->fromaddress);
+      list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
     }
 
     if ($is_a_reply_comment) {

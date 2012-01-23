@@ -138,8 +138,26 @@ class alloc_email_receive {
 
   function get_msg_header($uid=0) {
     $uid or $uid = $this->msg_uid;
-    $uid and $this->mail_headers = imap_rfc822_parse_headers(imap_fetchheader($this->connection, $uid, FT_UID));
+    $uid and $this->mail_headers = $this->parse_headers(imap_fetchheader($this->connection, $uid, FT_UID));
     return $this->mail_headers;
+  }
+
+  function parse_headers($headers="") {
+    $lines = preg_split("/(\r?\n|\r)/", $headers);
+    foreach ($lines as $line) {
+      // start new header
+      if (preg_match('/^[A-Za-z]/', $line)) {
+        preg_match('/([^:]+): ?(.*)$/', $line, $matches);
+        $newHeader = strtolower($matches[1]);
+        $rtn[$newHeader] = trim($matches[2]);
+        $currentHeader = $newHeader;
+
+      // continue header
+      } else if ($line && $currentHeader) {
+        $rtn[$currentHeader] .= " ".trim($line);
+      }
+    }
+    return (array)$rtn;
   }
 
   function download_email_part($num,$encoding) {
@@ -222,8 +240,8 @@ class alloc_email_receive {
 
   function forward($address,$subject) {
     list($header,$body) = $this->get_raw_header_and_body();
-    $header and $header_obj = imap_rfc822_parse_headers($header);
-    $orig_subject = $header_obj->subject;
+    $header and $header_obj = $this->parse_headers($header);
+    $orig_subject = $header_obj["subject"];
     $orig_subject and $s = " [".trim($orig_subject)."]";
 
     $dir = ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR;
@@ -302,13 +320,13 @@ class alloc_email_receive {
     $headers or $headers = $this->mail_headers;
     $keys = array();
 
-    if (preg_match("/\{Key:[A-Za-z0-9]{8}/i",$headers->subject,$m)) {
+    if (preg_match("/\{Key:[A-Za-z0-9]{8}/i",$headers["subject"],$m)) {
       $key = $m[0];
       $key = str_replace("{Key:","",$key);
       $key and $keys[] = $key;
     }
 
-    $str = $headers->in_reply_to." ".$headers->references;
+    $str = $headers["in-reply-to"]." ".$headers["references"];
 
     preg_match_all("/([A-Za-z0-9]{8})@/",$str,$m);
 
@@ -324,8 +342,8 @@ class alloc_email_receive {
 
   function get_commands($commands=array()) {
     list($header,$body) = $this->get_raw_header_and_body();
-    $header and $header_obj = imap_rfc822_parse_headers($header);
-    $subject = $header_obj->subject;
+    $header and $header_obj = $this->parse_headers($header);
+    $subject = $header_obj["subject"];
     
     $e = new alloc_email();
     $e->set_headers($header);
