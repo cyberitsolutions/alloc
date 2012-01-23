@@ -625,7 +625,11 @@ class comment extends db_entity {
         $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
         $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
       } else {
-        $f = $current_user->get_from() or $f = config::get_config_item("allocEmailAdmin");
+        if (is_object($current_user) && $current_user->get_from()) {
+          $f = $current_user->get_from();
+        } else {
+          $f = config::get_config_item("allocEmailAdmin");
+        }
         $email->set_reply_to($f);
         $email->set_from($f);
       }
