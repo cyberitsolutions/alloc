@@ -586,6 +586,12 @@ class comment extends db_entity {
       }
 
       $bcc && $email->add_header("Bcc",$bcc);
+
+      // nuke bounce headers - mail won't send properly otherwise
+      $email->del_header("Resent-From");
+      $email->del_header("Resent-Date");
+      $email->del_header("Resent-Message-ID");
+      $email->del_header("Resent-To");
       
       $email->add_header("X-Alloc-CommentID", $this->get_id());
       $email->add_header("X-Alloc-".ucwords($e->classname), $e->get_name(DST_VARIABLE));
