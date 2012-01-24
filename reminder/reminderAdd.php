@@ -138,7 +138,7 @@ case 3:
   // recipients
   $TPL["reminder_recipients"] = $reminder->get_recipient_options();
   // date/time
-  $_GET["reminderTime"] && $reminder->set_value("reminderTime",urldecode($_GET["reminderTime"]));
+  $_GET["reminderTime"] && $reminder->set_value("reminderTime",$_GET["reminderTime"]);
   $TPL["reminder_months"] = $reminder->get_month_options();
   $TPL["reminder_days"] = $reminder->get_day_options();
   $TPL["reminder_years"] = $reminder->get_year_options();

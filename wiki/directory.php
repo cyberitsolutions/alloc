@@ -86,8 +86,8 @@ if ($_POST["save"]) {
 
 } else if ($_REQUEST["loadErrorPageDir"]) {
   $TPL["loadErrorPageDir"] = $_REQUEST["loadErrorPageDir"];
-  $TPL["dirName"] = urldecode($_REQUEST["dirName"]);
-  $TPL["msg"] = urldecode($_REQUEST["msg"]);
+  $TPL["dirName"] = $_REQUEST["dirName"];
+  $TPL["msg"] = $_REQUEST["msg"];
   include_template("templates/newDirectoryM.tpl");
 }
 

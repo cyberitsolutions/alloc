@@ -5,7 +5,7 @@ require_once("../alloc.php");
 
 
 function g($var) {
-  $rtn = urldecode($_GET[$var]) or $rtn = $_POST[$var] or $rtn = $_REQUEST[$var];
+  $rtn = $_GET[$var] or $rtn = $_POST[$var] or $rtn = $_REQUEST[$var];
   $var == "options"    and $rtn = alloc_json_decode($_POST[$var]); 
   return $rtn;
 }

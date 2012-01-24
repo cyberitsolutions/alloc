@@ -22,7 +22,7 @@
 
 require_once("../alloc.php");
 
-$file = $_POST["file"] or $file = urldecode($_GET["file"]);
+$file = $_POST["file"] or $file = $_GET["file"];
 $TPL["file"] = $file;
 $editName = $_POST["editName"];
 
@@ -113,10 +113,10 @@ if ($_POST["save"]) {
 
 } else if ($_REQUEST["loadErrorPage"]) {
   $TPL["loadErrorPage"] = $_REQUEST["loadErrorPage"];
-  $TPL["str"] = urldecode($_REQUEST["str"]);
-  $TPL["commit_msg"] = urldecode($_REQUEST["commit_msg"]);
-  $TPL["file"] = urldecode($_REQUEST["file"]);
-  $TPL["msg"] = urldecode($_REQUEST["msg"]);
+  $TPL["str"] = $_REQUEST["str"];
+  $TPL["commit_msg"] = $_REQUEST["commit_msg"];
+  $TPL["file"] = $_REQUEST["file"];
+  $TPL["msg"] = $_REQUEST["msg"];
   include_template("templates/fileGetM.tpl");
 }
 

@@ -138,7 +138,7 @@ class page {
         unset($TPL[$type]);
         $TPL[$type][] = $t;
       }
-      $_GET[$type] && $type != "message_help_no_esc" and $TPL[$type][] = urldecode($_GET[$type]);
+      $_GET[$type] && $type != "message_help_no_esc" and $TPL[$type][] = $_GET[$type];
 
       if (is_array($TPL[$type]) && count($TPL[$type])) {
         $arr[$label] = array("type"=>$type, "msg"=>implode("<br>",$TPL[$type]));

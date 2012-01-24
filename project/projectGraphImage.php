@@ -27,7 +27,7 @@ global $current_user, $show_weeks, $for_home_item;
 
 
 
-$options = unserialize(urldecode(stripslashes($_GET["FORM"])));
+$options = unserialize(stripslashes($_GET["FORM"]));
 $options["return"] = "array";
 $options["padding"] = 0;
 $options["debug"] = 0;
