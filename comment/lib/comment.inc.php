@@ -212,12 +212,6 @@ class comment extends db_entity {
         $new["form"].= '</form>';
       }
   
-      if ($new["commentEmailUID"] && config::get_config_item("allocEmailHost")) { 
-        $new['downloadEmail'] = '<a class="noprint" href="'.$TPL["url_alloc_downloadEmail"].'msg_uid='.$new["commentEmailUID"].'">';
-        #$new['downloadEmail'].= '<img border="0" title="Download Email" src="'.$TPL["url_alloc_images"].'download_email.gif">';
-        $new['downloadEmail'].= 'Download</a>';
-      }
-
       $files = get_attachments("comment",$v["commentID"],array("sep"=>"<br>"));
       if (is_array($files)) {
         foreach($files as $key => $file) {
@@ -281,7 +275,7 @@ class comment extends db_entity {
     $rtn[] = '<table width="100%" cellspacing="0" border="0">';
     $rtn[] = '<tr>';
     $rtn[] = '  <td style="padding-bottom:0px; white-space:normal" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].'</td>';
-    $rtn[] = '  <td align="right" style="padding-bottom:0px;" class="nobr">'.$row["form"].$row["downloadEmail"].$row["recipient_editor"].'</td>';
+    $rtn[] = '  <td align="right" style="padding-bottom:0px;" class="nobr">'.$row["form"].$row["recipient_editor"].'</td>';
     $rtn[] = '</tr>';
     $rtn[] = '<tr>';
     $rtn[] = '  <td colspan="2" style="padding-top:0px; white-space:normal;">'.preg_replace("/<[^>]>/","",$row["emailed"])."</td>";
