@@ -1404,25 +1404,6 @@ class task extends db_entity {
     }
   }
 
-  // Called when a comment is added to this task via email
-  function add_comment_hook($comment) {
-    // If status is pending or closed and this comment came from an external 
-    // party, re-open the task.
-    $status = $this->get_value('taskStatus');
-    if (substr($status, 0, 4) == "open") {
-      return;
-    }
-
-    // if ClientContactID is set it's a client email - reopen the task.
-    // I tried to use commentCreatedUserID, but it's always set for some reason
-    if (!$comment->get_value('commentCreatedUserClientContactID')) {
-      return;
-    }
-
-    $this->open();
-    $this->save();
-  }
-
   function update_search_index_doc(&$index) {
     $p = get_cached_table("person");
     $creatorID = $this->get_value("creatorID");

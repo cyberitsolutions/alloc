@@ -451,12 +451,6 @@ class comment extends db_entity {
 
     $comment->set_value("commentCreatedUserText",$email_receive->mail_headers["from"]);
     $comment->set_value("commentEmailMessageID",$email_receive->mail_headers["message-id"]);
-
-    $e = $entity->get_parent_object();
-    if (method_exists($e, 'add_comment_hook')) {
-      $e->add_comment_hook($comment);
-    }
-
     $comment->updateSearchIndexLater = true;
     $comment->skip_modified_fields = true;
     $comment->save();
