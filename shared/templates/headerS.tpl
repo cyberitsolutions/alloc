@@ -9,8 +9,8 @@
     <link rel="StyleSheet" href="{$url_alloc_cache}{page::stylesheet()}" type="text/css" media="screen">
     <link rel="StyleSheet" href="{$url_alloc_cache}calendar.css" type="text/css" media="screen">
     <link rel="StyleSheet" href="{$url_alloc_cache}print.css" type="text/css" media="print">
-    <script language="javascript" src="{$url_alloc_cache}javascript.js" type="text/javascript"></script>
-    <script language="javascript" type="text/javascript">
+    <script type="text/javascript" src="{$url_alloc_cache}javascript.js"></script>
+    <script type="text/javascript">
       // return a value that is populated from PHP
       function get_alloc_var(key) {
       var values = {
