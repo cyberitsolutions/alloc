@@ -23,7 +23,7 @@
 define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
-$file = realpath(wiki_module::get_wiki_path().urldecode($_GET["file"]));
+$file = realpath(wiki_module::get_wiki_path().$_GET["file"]);
 
 if (path_under_path(dirname($file), wiki_module::get_wiki_path())) {
   $fp = fopen($file, "rb");

@@ -25,7 +25,7 @@ require_once("../alloc.php");
 
 $file = $_GET["file"];
 $rev = $_GET["rev"];
-$pathfile = realpath(wiki_module::get_wiki_path().urldecode($file));
+$pathfile = realpath(wiki_module::get_wiki_path().$file);
 
 if (path_under_path(dirname($pathfile), wiki_module::get_wiki_path())) {
 
@@ -38,7 +38,7 @@ if (path_under_path(dirname($pathfile), wiki_module::get_wiki_path())) {
     foreach ($logs as $id => $bits) {
       unset($class);
       if (is_file($pathfile)) {
-        urldecode($rev) == $id and $class = "highlighted";
+        $rev == $id and $class = "highlighted";
         !$rev && !$done and $done = $class = "highlighted";
       }
       echo "<div class=\"".$class."\" style=\"padding:3px; margin-bottom:10px;\">";

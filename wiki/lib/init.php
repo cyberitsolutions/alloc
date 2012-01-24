@@ -70,7 +70,7 @@ class wiki_module extends module {
   function get_file($file, $rev="") {
     global $TPL;
 
-    $f = realpath(wiki_module::get_wiki_path().urldecode($file));
+    $f = realpath(wiki_module::get_wiki_path().$file);
 
     if (path_under_path(dirname($f), wiki_module::get_wiki_path())) {
 
@@ -91,7 +91,7 @@ class wiki_module extends module {
 
       // Get a particular revision
       if ($vcs) {
-        $vcs_file = $vcs->cat($f, urldecode($rev));
+        $vcs_file = $vcs->cat($f, $rev);
       }
 
       if ($vcs && wiki_module::nuke_trailing_spaces_from_all_lines($disk_file) != wiki_module::nuke_trailing_spaces_from_all_lines($vcs_file)) {

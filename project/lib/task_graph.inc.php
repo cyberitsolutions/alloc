@@ -132,7 +132,7 @@ class task_graph
   }
 
   function set_title($title) {
-    $this->title = strip_tags(str_replace('\\','',urldecode($title)));
+    $this->title = strip_tags(str_replace('\\','',$title));
   }
 
   function draw_task($t) {

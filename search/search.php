@@ -47,7 +47,7 @@ global $TPL;
 $noRedirect = $_POST["idRedirect"]   or $noRedirect = $_GET["idRedirect"];
 $search     = $_POST["search"]       or $search     = $_GET["search"];
 $category   = $_POST["category"]     or $category   = $_GET["category"];
-$needle     = trim($_POST["needle"]) or $needle     = trim(urldecode($_GET["needle"]));
+$needle     = trim($_POST["needle"]) or $needle     = trim($_GET["needle"]);
 
 $db = new db_alloc;
 

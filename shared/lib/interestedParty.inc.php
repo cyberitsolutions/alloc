@@ -140,11 +140,11 @@ class interestedParty extends db_entity {
   }
 
   function get_encoded_interested_party_identifier($info=array()) {
-    return urlencode(base64_encode(serialize($info)));
+    return base64_encode(serialize($info));
   }
 
   function get_decoded_interested_party_identifier($blob) {
-    return unserialize(base64_decode(urldecode($blob)));
+    return unserialize(base64_decode($blob));
   }
 
   function get_interested_parties_html($parties=array()) {

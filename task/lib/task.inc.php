@@ -327,7 +327,7 @@ class task extends db_entity {
   }
 
   function get_decoded_interested_party_identifier($blob) {
-    return unserialize(base64_decode(urldecode($blob)));
+    return unserialize(base64_decode($blob));
   }
 
   function get_personList_dropdown($projectID,$field,$taskID=false) {
