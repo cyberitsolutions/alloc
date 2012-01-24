@@ -24,7 +24,7 @@
 
 require_once("../alloc.php");
 
-$file = urldecode($_GET["file"]);
+$file = $_GET["file"];
 
 if (isset($_GET["id"]) && $file && !bad_filename($file)) {
 
