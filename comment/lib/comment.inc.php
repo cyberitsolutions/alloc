@@ -610,8 +610,8 @@ class comment extends db_entity {
       $email->set_message_type($type);
 
       if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
-        $email->set_reply_to("All parties via ".ALLOC_DEFAULT_FROM_ADDRESS);
-        $email->set_from($from_name." via ".ALLOC_DEFAULT_FROM_ADDRESS);
+        $email->set_reply_to("All parties ".ALLOC_DEFAULT_FROM_ADDRESS);
+        $email->set_from($from_name." ".ALLOC_DEFAULT_FROM_ADDRESS);
       } else {
         if (is_object($current_user) && $current_user->get_from()) {
           $f = $current_user->get_from();
