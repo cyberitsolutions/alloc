@@ -188,7 +188,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // The default From: email address 
   if (config::get_config_item("AllocFromEmailAddress")) {
-    define("ALLOC_DEFAULT_FROM_ADDRESS", "allocPSA ".add_brackets(config::get_config_item("AllocFromEmailAddress")));
+    define("ALLOC_DEFAULT_FROM_ADDRESS", add_brackets(config::get_config_item("AllocFromEmailAddress")));
   }
 
 
