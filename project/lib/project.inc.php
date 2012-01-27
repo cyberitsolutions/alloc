@@ -52,6 +52,8 @@ class project extends db_entity {
                              ,"clientContactID"
                              ,"projectModifiedUser"
                              ,"defaultTaskLimit"
+                             ,"defaultTimeSheetRate" => array("type"=>"money")
+                             ,"defaultTimeSheetRateUnitID"
                              );
 
   public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "view task allocations"

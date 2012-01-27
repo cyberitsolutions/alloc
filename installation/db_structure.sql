@@ -229,7 +229,9 @@ CREATE TABLE person (
   sessData text,
   phoneNo1 varchar(255) default '',
   phoneNo2 varchar(255) default '',
-  emergencyContact varchar(255) default ''
+  emergencyContact varchar(255) default '',
+  defaultTimeSheetRate BIGINT DEFAULT NULL,
+  defaultTimeSheetRateUnitID int(11) DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS project;
@@ -258,7 +260,9 @@ CREATE TABLE project (
   is_agency boolean default false,
   cost_centre_tfID integer default NULL,
   customerBilledDollars BIGINT DEFAULT NULL,
-  defaultTaskLimit DECIMAL(7,2) DEFAULT NULL
+  defaultTaskLimit DECIMAL(7,2) DEFAULT NULL,
+  defaultTimeSheetRate BIGINT DEFAULT NULL,
+  defaultTimeSheetRateUnitID int(11) DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS projectCommissionPerson;

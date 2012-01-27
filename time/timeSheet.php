@@ -213,11 +213,7 @@ if (!$current_user->is_employee()) {
     if (is_object($timeSheet)) {
       $project = $timeSheet->get_foreign_object("project");
       $row_projectPerson = projectPerson::get_projectPerson_row($project->get_id(), $timeSheet->get_value("personID"));
-      $default_rate = array();
-      if ($row_projectPerson && $row_projectPerson['rate'] > 0) {
-        $default_rate['rate'] = $row_projectPerson['rate'];
-        $default_rate['unit'] = $row_projectPerson['rateUnitID'];
-      }
+      $default_rate = projectPerson::get_rate($project->get_id(), $timeSheet->get_value("personID"));
     }
 
     while ($db->next_record()) {
@@ -923,8 +919,7 @@ if ($timeSheet->pay_info["total_dollars"]) {
 }
 
 $TPL["total_units"] = $timeSheet->pay_info["summary_unit_totals"];
-
-
+$TPL["rate_source"] = $timeSheet->pay_info["rate_source"];
 
 
 

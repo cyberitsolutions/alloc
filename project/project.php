@@ -656,8 +656,9 @@ $TPL["projectPriority_options"] = page::select_options($tp,$TPL["project_project
 $TPL["project_projectPriority"] and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$projectPriorities[$TPL["project_projectPriority"]]["colour"]."\">[".$tp[$TPL["project_projectPriority"]]."]</div>";
 
 
-
-
+$TPL["defaultTimeSheetRate"] = $project->get_value("defaultTimeSheetRate");
+$TPL["defaultTimeSheetUnit_options"] = page::select_options($rate_type_array, $project->get_value("defaultTimeSheetRateUnitID"));
+$TPL["defaultTimeSheetRateUnits"] = $rate_type_array[$project->get_value("defaultTimeSheetRateUnitID")];
 
 $TPL["currencyType_options"] = page::select_options($currency_array, $TPL["project_currencyTypeID"]);
 

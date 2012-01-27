@@ -47,8 +47,11 @@ class person extends db_entity {
                              ,"personActive"
                              ,"sessData"          => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
                              ,"phoneNo1"
-			                       ,"phoneNo2"
-      			                 ,"emergencyContact"
+                             ,"phoneNo2"
+                             ,"emergencyContact"
+
+                             ,"defaultTimeSheetRate"  => array("type"=>"money")
+                             ,"defaultTimeSheetRateUnitID"
                              );
   
   public $prefs = array();

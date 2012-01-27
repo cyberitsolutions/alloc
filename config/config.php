@@ -139,8 +139,14 @@ if ($_POST["save"]) {
       $c->select();
 
       if ($types[$name] == "text") {
-        $c->set_value("value",$_POST[$name]);
-        $TPL[$name] = page::htmlentities($_POST[$name]);
+        //current special case for the only money field
+        if ($name == "defaultTimeSheetRate") {
+          $value = page::money(0, $_POST[$name], "%mi");
+          $c->set_value("value",$value);
+        } else {
+          $c->set_value("value",$_POST[$name]);
+        }
+        $TPL[$name] = page::htmlentities($value);
       } else if ($types[$name] == "array") {
         $c->set_value("value",serialize($_POST[$name]));
         $TPL[$name] = $_POST[$name];
@@ -218,6 +224,11 @@ $tsEditors = array("all"=>"All users", "managers"=>"Managers only", "none"=>"Emp
 $TPL["timeSheetEditOptions"] = page::select_options($tsEditors, $config->get_config_item("timeSheetEditors"));
 
 $TPL["rssStatusFilterOptions"] = page::select_options(task::get_task_statii_array(true), $config->get_config_item("rssStatusFilter"));
+
+
+$timeUnit = new timeUnit;
+$rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
+$TPL["timesheetRate_options"] = page::select_options($rate_type_array, $config->get_config_item("defaultTimeSheetUnit"));
 
 $TPL["main_alloc_title"] = "Setup - ".APPLICATION_NAME;
 include_template("templates/configM.tpl");

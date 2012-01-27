@@ -475,6 +475,8 @@ INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetManagerList', 'a:0
 INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetAdminList', 'a:0:{}', 'array');
 INSERT INTO config (name,value,type) VALUES ('allocSessionMinutes', '540', 'text');
 INSERT INTO config (name,value,type) VALUES ('timeSheetEditors', 'none', 'text');
+INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetRate', '', 'text');
+INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetUnit', 1, 'text'); -- ref timeUnit below
 INSERT INTO config (name,value,type) VALUES ('mapURL', 'http://maps.google.com.au/?q=%ad', 'text');
 INSERT INTO config (name,value,type) VALUES ('rssStatusFilter', 'a:7:{i:0;s:12:"pending_info";i:1;s:15:"pending_manager";i:2;s:14:"pending_client";i:3;s:14:"closed_invalid";i:4;s:16:"closed_duplicate";i:5;s:17:"closed_incomplete";i:6;s:15:"closed_complete";}', 'array');
 INSERT INTO config (name,value,type) VALUES ('rssEntries', '20', 'text');
