@@ -73,20 +73,27 @@
     <td>{$timeSheet_dateSubmittedToManager}</td>
   </tr>
 
+  <tr><td>&nbsp;</td>
+  <td align="right">Rate source:</td>
+  <td>{$rate_source}</td>
+    <td align="right">Approved by Manager:</td>
+    <td>{=$timeSheet_approvedByManagerPersonID_username}</td>
+  </tr>
+
 	<tr>
 	  <td>{page::help("which_tf_to_credit")}</td>
  	  <td align="right">Tagged Fund:</td>
  	  <td align="left" class='{$recipient_tfID_class}'>{=$recipient_tfID_name}</td>
-    <td align="right">Approved by Manager:</td>
-    <td>{=$timeSheet_approvedByManagerPersonID_username}</td>
+          <td align="right">Date Submitted to Admin:</td>
+          <td>{$timeSheet_dateSubmittedToAdmin}</td>
   </tr>
 
 	<tr>
 	  <td>&nbsp;</td>
     <td align="right">Period:</td>
     <td><nobr>{$period}</nobr></td>
-    <td align="right">Date Submitted to Admin:</td>
-    <td>{$timeSheet_dateSubmittedToAdmin}</td>
+    <td align="right">Approved by Admin:</td> 
+    <td>{$timeSheet_approvedByAdminPersonID_username}</td>
 	</tr>
 
 	<tr>
@@ -99,8 +106,8 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     {/}
-    <td align="right">Approved by Admin:</td> 
-    <td>{$timeSheet_approvedByAdminPersonID_username}</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
   </tr>
 
 	<tr>

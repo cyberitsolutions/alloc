@@ -294,6 +294,16 @@
     <td width="1%">{page::help("config_paymentInsurancePercent")}</td>
   </tr>
   <tr>
+    <td>Default timesheet rate</td>
+    <td><input type="text" size="70" value="{page::money(0, $defaultTimeSheetRate, "%mo")}" name="defaultTimeSheetRate"></td>
+    <td width="1%"></td>
+  </tr>
+  <tr>
+    <td>Default timesheet unit</td>
+    <td><select name="defaultTimeSheetUnit">{$timesheetRate_options}</select></td>
+    <td width="1%"></td>
+  </tr>
+  <tr>
     <td valign="top">Time Sheet Print Options</td>
     <td><select size="9" name="timeSheetPrint[]" multiple><option value="">{$timeSheetPrintOptions}</select><a href="{$url_alloc_configEdit}configName=timeSheetPrintOptions">Edit</a></td>
     <td width="1%" valign="top">{page::help("config_timeSheetPrint")}</td>

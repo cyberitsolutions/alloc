@@ -139,21 +139,20 @@ class timeSheet extends db_entity {
     $units = array_reverse($timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA"),true);
 
     if ($rates[$this->get_value("projectID")][$this->get_value("personID")]) {
-      list($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]) = $rates[$this->get_value("projectID")][$this->get_value("personID")];
+      list($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"], $this->pay_info["rate_source"]) = $rates[$this->get_value("projectID")][$this->get_value("personID")];
     } else {
-      // Get rate for person for this particular project
-      $db->query("SELECT rate, rateUnitID, project.currencyTypeID
-                    FROM projectPerson
-               LEFT JOIN project on projectPerson.projectID = project.projectID
-                   WHERE projectPerson.projectID = %d
-                     AND projectPerson.personID = %d"
-                 ,$this->get_value("projectID")
-                 ,$this->get_value("personID"));
+      $project = $this->get_foreign_object("project");
 
-      $db->next_record();
-      $this->pay_info["project_rate"] = page::money($db->f("currencyTypeID"),$db->f("rate"),"%mo");
-      $this->pay_info["project_rateUnitID"] = $db->f("rateUnitID");
-      $rates[$this->get_value("projectID")][$this->get_value("personID")] = array($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]);
+      //TODO: make this account for pre-processed exchange rate
+      $person_rate = projectPerson::get_rate($this->get_value("projectID"), $this->get_value("personID"));
+      if ($person_rate) {
+        $this->pay_info["project_rate"] = page::money($project->get_value("currencyTypeID"),$person_rate["rate"],"%mo");
+	$this->pay_info["project_rateUnitID"] = $person_rate["unit"];
+	$this->pay_info["rate_source"] = $person_rate["source"];
+      } else {
+        $this->pay_info["rate_source"] = "None available";
+      }
+      $rates[$this->get_value("projectID")][$this->get_value("personID")] = array($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"], $this->pay_info["rate_source"]);
     }
 
     // Get external rate, only load up customerBilledDollars if the field is actually set
@@ -1408,16 +1407,14 @@ EOD;
     // managers = only manager users get to override their rate
     // none     = no users can override their rate
 
-    // Additionally, any user may override their rate if it hasn't been specified at the project level.
+    // Additionally, any user may override their rate if the system can't find one for them (see get_rate())
 
     // If everyone can edit the rate
-    if ($can_edit == "all") {
-      return true;
-    }
+    if ($can_edit == "all")
+        return true;
 
-    // If the rate is not set
-    $projectPerson = projectPerson::get_projectPerson_row($this->get_value("projectID"), $this->get_value("personID"));
-    if ($projectPerson && $projectPerson['rate'] === "") {
+    // Finance admins should be able to do anything
+    if ($current_user->have_role("admin")) {
       return true;
     }
 
@@ -1427,11 +1424,12 @@ EOD;
       return true;
     }
 
-    // Fallback since finance admins should be able to do anything
-    if ($current_user->have_role("admin")) {
+    // no rate - user must be able to enter their own
+    $rate = projectPerson::get_rate($this->get_value("projectID"), $this->get_value("personID"));
+    if ($rate == null)
       return true;
-    }
 
+    // they've got a rate from somewhere, cannot edit
     return false;
   }
 

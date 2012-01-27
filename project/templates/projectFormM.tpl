@@ -39,6 +39,23 @@ $(document).ready(function() {
 
 });
 
+function updatePersonRate(dropdown) {
+  var personID = dropdown.value;
+  var tr = $(dropdown).parent().parent();
+  var ratebox = tr.find('input[name=person_rate\\[\\]]');
+  var rateunit = tr.find('select[name=person_rateUnitID\\[\\]]');
+
+  // ratebox.data['value'] is the auto-set value - only change it if the user
+  // hasn't touched it.
+  if (!ratebox[0].value || !ratebox.data('value') || ratebox[0].value == ratebox.data('value')) {
+    $.getJSON('{$url_alloc_updateProjectPersonRate}project={$project_projectID}&person=' + personID, function(data) {
+      ratebox[0].value = data['rate'];
+      rateunit[0].selectedIndex = data['unit'];
+      ratebox.data('value', data['rate']);
+      });
+  }
+}
+
 function clickClientStatus(e) {
 
   if (!$('input[name=client_status]:checked').val()) {
@@ -221,6 +238,27 @@ function clickClientStatus(e) {
           </div>
         </div>
 
+        <div class="view">
+          <h6>Default timesheet rate<div>Default timesheet rate units</div></h6>
+          <div style="float:left; width:40%;">
+            {page::money($project_currencyTypeID, $project_defaultTimeSheetRate)}
+          </div>
+          <div style="float:right; width:50%;">
+            {$defaultTimeSheetRateUnits}
+          </div>
+        </div>
+
+        <div class="edit">
+          <h6>Default timesheet rate<div>Default timesheet rate units</div></h6>
+          <div style="float:left; width:40%;">
+            <input type="text" name="defaultTimeSheetRate"
+	    value="{page::money($project_currencyTypeID, $project_defaultTimeSheetRate)}" size="10"> 
+          </div>
+          <div style="float:right; width:50%;">
+            <select name="defaultTimeSheetRateUnitID">{$defaultTimeSheetUnit_options}</select>
+          </div>
+        </div>
+
         {if $project_dateTargetStart || $project_dateTargetCompletion}
         <div class="view">
           <h6>Estimated Start<div>Estimated Completion</div></h6>
@@ -311,6 +349,7 @@ function clickClientStatus(e) {
   <tr>
     <td class="right nobr">Expenses</td>
     <td class="right">{$total_expenses_transactions_approved}</td>
+    <td colspan="2"></td>
   </tr>            
 </table>
 {/}

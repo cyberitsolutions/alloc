@@ -43,6 +43,7 @@ $alloc_urls = array(
             ,"url_alloc_updateCopyProjectList"          => "project/updateProjectList.php"
             ,"url_alloc_updateProjectClientList"        => "project/updateProjectClientList.php"
             ,"url_alloc_updateProjectClientContactList" => "project/updateProjectClientContactList.php"
+            ,"url_alloc_updateProjectPersonRate"        => "project/updateProjectPersonRate.php"
             ,"url_alloc_personGraph"                    => "project/personGraph.php"
             ,"url_alloc_personGraphImage"               => "project/personGraphImage.php"
             ,"url_alloc_importCSV"                      => "project/parseCSV.php"
