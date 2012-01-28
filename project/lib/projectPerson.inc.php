@@ -75,62 +75,44 @@ class projectPerson extends db_entity {
     return $db->row();
   }
 
-  // person_first causes person and project to be inverted
-  function get_rate($projectID, $personID, $person_first=false) {
-    $db = new db_alloc();
-    // Highest priority: directly assigned project person
-    $q = sprintf("SELECT rate, rateUnitID as unit
-                    FROM projectPerson 
-                   WHERE projectID = %d AND personID = %d"
-                ,$projectID,$personID);
-    $db->query($q);
-    if ($db->num()) {
-      $row = $db->row();
-      $row['source'] = "Project person";
-      return $row;
-    }
+  function get_rate($projectID, $personID) {
+    // Try to get the person's rate from the following sources:
+    // project.defaultTimeSheetRate
+    // person.defaultTimeSheetRate
+    // config.name == defaultTimeSheetRate
 
     $project = new Project;
     $project->set_id($projectID);
     $project->select();
 
     // Next priority: Project
-
     $row = array('rate' => $project->get_value("defaultTimeSheetRate"),
-        'unit' => $project->get_value("defaultTimeSheetRateUnitID"));
+                 'unit' => $project->get_value("defaultTimeSheetRateUnitID"));
 
-    if ($row['rate'] > 0 && $row['unit']) {
-      $row['source'] = 'Project';
-      if (!$person_first)
-        return $row;
-      else
-        $project_row = $row;
+    if (imp($row['rate']) && $row['unit']) {
+      return $row;
     }
 
     // Next priority: person
     // person and global rate are in global currency rather than project currency - conversion required
+    $db = new db_alloc();
     $q = sprintf("SELECT defaultTimeSheetRate as rate, defaultTimeSheetRateUnitID as unit FROM person WHERE personID = %d", $personID);
     $db->query($q);
     $row = $db->row();
-    if ($row['rate'] > 0) {
+    if (imp($row['rate']) && $row['unit']) {
       if ($project->get_value("currencyTypeID") != config::get_config_item("currency")) {
         $row['rate'] = exchangeRate::convert(config::get_config_item("currency"), $row["rate"], $project->get_value("currencyTypeID"));
       }
-      $row['source'] = 'Person';
       return $row;
-    } else if ($person_first && $project_row) {
-      return $project_row;
     }
  
     // Lowest priority: global
     $rate = config::get_config_item("defaultTimeSheetRate");
     $unit = config::get_config_item("defaultTimeSheetUnit");
-    if ($rate > 0 && $unit) {
+    if (imp($rate) && $unit) {
       $rate = exchangeRate::convert(config::get_config_item("currency"), $rate, $project->get_value("currencyTypeID"));
-      return array('rate' => $rate, 'unit' => $unit, 'source' => 'Global rate');
+      return array('rate' => $rate, 'unit' => $unit);
     }
-
-    return null;
   }
 }
 
