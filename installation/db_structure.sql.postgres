@@ -209,7 +209,7 @@ CREATE TABLE person (
   phoneNo2 varchar(255) default '',
   emergencyContact varchar(255) default '',
   defaultTimeSheetRate BIGINT DEFAULT NULL,
-  defaultTimeSheetRateUnitID int(11) DEFAULT NULL
+  defaultTimeSheetRateUnitID integer DEFAULT NULL
 ) ;
 
 CREATE TABLE project (
@@ -239,7 +239,7 @@ CREATE TABLE project (
   customerBilledDollars BIGINT DEFAULT NULL,
   defaultTaskLimit DECIMAL(7,2) DEFAULT NULL,
   defaultTimeSheetRate BIGINT DEFAULT NULL,
-  defaultTimeSheetRateUnitID int(11) DEFAULT NULL
+  defaultTimeSheetRateUnitID integer DEFAULT NULL
 ) ;
 
 CREATE TABLE projectCommissionPerson (
