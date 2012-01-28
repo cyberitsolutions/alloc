@@ -240,7 +240,7 @@ function clickClientStatus(e) {
 
         {if $project_defaultTimeSheetRate || $defaultTimeSheetRateUnits}
         <div class="view">
-          <h6>Default timesheet rate<div>Default timesheet rate units</div></h6>
+          <h6>Default timesheet rate<div>Default timesheet unit</div></h6>
           <div style="float:left; width:40%;">
             {page::money($project_currencyTypeID, $project_defaultTimeSheetRate)}
           </div>
@@ -251,7 +251,7 @@ function clickClientStatus(e) {
         {/}
 
         <div class="edit">
-          <h6>Default timesheet rate<div>Default timesheet rate units</div></h6>
+          <h6>Default timesheet rate<div>Default timesheet unit</div></h6>
           <div style="float:left; width:40%;">
             <input type="text" name="defaultTimeSheetRate"
 	    value="{page::money($project_currencyTypeID, $project_defaultTimeSheetRate)}" size="10"> 
