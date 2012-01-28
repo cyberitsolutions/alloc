@@ -238,6 +238,7 @@ function clickClientStatus(e) {
           </div>
         </div>
 
+        {if $project_defaultTimeSheetRate || $defaultTimeSheetRateUnits}
         <div class="view">
           <h6>Default timesheet rate<div>Default timesheet rate units</div></h6>
           <div style="float:left; width:40%;">
@@ -247,6 +248,7 @@ function clickClientStatus(e) {
             {$defaultTimeSheetRateUnits}
           </div>
         </div>
+        {/}
 
         <div class="edit">
           <h6>Default timesheet rate<div>Default timesheet rate units</div></h6>
