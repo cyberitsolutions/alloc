@@ -206,7 +206,7 @@ BEGIN
 
   SELECT count(*) INTO @isTask FROM task WHERE taskID = NEW.taskID AND taskStatus = 'open_notstarted';
   IF (@isTask) THEN
-    UPDATE TASK SET taskStatus = 'open_inprogress' WHERE taskID = NEW.taskID;
+    UPDATE task SET taskStatus = 'open_inprogress' WHERE taskID = NEW.taskID;
   END IF;
 END
 $$
