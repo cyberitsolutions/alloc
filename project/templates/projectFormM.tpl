@@ -254,10 +254,10 @@ function clickClientStatus(e) {
           <h6>Default timesheet rate<div>Default timesheet unit</div></h6>
           <div style="float:left; width:40%;">
             <input type="text" name="defaultTimeSheetRate"
-	    value="{page::money($project_currencyTypeID, $project_defaultTimeSheetRate)}" size="10"> 
+	    value="{page::money($project_currencyTypeID, $project_defaultTimeSheetRate,"%mo")}" size="10"> 
           </div>
           <div style="float:right; width:50%;">
-            <select name="defaultTimeSheetRateUnitID">{$defaultTimeSheetUnit_options}</select>
+            <select name="defaultTimeSheetRateUnitID"><option value="">{$defaultTimeSheetUnit_options}</select>
           </div>
         </div>
 
