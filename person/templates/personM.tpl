@@ -44,6 +44,11 @@
         <tr>
           <td valign="top">Special Permissions</td>
           <td>{show_perm_select()}</td>
+          <td class="top">Default Rate</td>
+          <td class="top">
+            <input size="10" type="text" name="defaultTimeSheetRate" value={page::money(config::get_config_item('currency'),$person_defaultTimeSheetRate,"%mo")}>
+            <select name="defaultTimeSheetRateUnitID"><option value="">{$timeSheetRateUnit_select}</select>
+          </td>
         </tr>
         {include_employee_fields()}
         {include_management_fields()}
