@@ -281,7 +281,7 @@ CREATE TABLE projectPerson (
   personID integer NOT NULL,
   roleID integer NOT NULL,
   emailType varchar(255) default NULL,
-  rate BIGINT DEFAULT 0,
+  rate BIGINT DEFAULT NULL,
   rateUnitID integer default NULL,
   projectPersonModifiedUser integer DEFAULT NULL,
   emailDateRegex varchar(255) default NULL
