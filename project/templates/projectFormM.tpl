@@ -183,7 +183,7 @@ function clickClientStatus(e) {
           </div>
         </div>
 
-        {if imp($project_projectBudget) || $project_currencyTypeID || $cost_centre_tfID_label}
+        {if imp($project_projectBudget) || $cost_centre_tfID_label}
         <div class="view">
           <h6>Budget<div>Cost Centre TF</div></h6>
           <div style="float:left; width:40%;">
