@@ -50,8 +50,8 @@ class person extends db_entity {
                              ,"phoneNo2"
                              ,"emergencyContact"
 
-                             ,"defaultTimeSheetRate"  => array("type"=>"money")
-                             ,"defaultTimeSheetRateUnitID"
+                             ,"defaultTimeSheetRate"  => array("type"=>"money","write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
+                             ,"defaultTimeSheetRateUnitID" => array("write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
                              );
   
   public $prefs = array();
