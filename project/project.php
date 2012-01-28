@@ -327,7 +327,7 @@ if ($_POST["save"]) {
 
 
   if (!$project->get_id()) {    // brand new project
-    $definately_new_project = true;
+    $definitely_new_project = true;
   }
 
   if (!$project->get_value("projectName")) {  
@@ -348,7 +348,7 @@ if ($_POST["save"]) {
       $client->save();
     }
    
-    if ($definately_new_project) {
+    if ($definitely_new_project) {
       $projectPerson = new projectPerson;
       $projectPerson->currency = $project->get_value("currencyTypeID");
       $projectPerson->set_value("projectID", $projectID);
