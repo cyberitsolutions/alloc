@@ -52,7 +52,7 @@ function updatePersonRate(dropdown) {
       ratebox[0].value = data['rate'];
       rateunit[0].selectedIndex = data['unit'];
       ratebox.data('value', data['rate']);
-      });
+    });
   }
 }
 
