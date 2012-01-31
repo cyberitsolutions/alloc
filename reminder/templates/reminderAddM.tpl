@@ -37,11 +37,15 @@
     </tr>
     <tr>
       <td>Recipient:</td>
-      <td colspan="3">
+      <td>
         <select name="reminder_recipient">
           {$reminder_recipients}
         </select>
         {page::help("reminder_recipient")}
+      </td>
+      <td>Reminder Active</td>
+      <td>
+        <input type="checkbox" value="1" name="reminderActive" {$reminderActive and print "checked"}>
       </td>
     </tr>
     <tr>

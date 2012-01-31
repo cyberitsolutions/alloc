@@ -180,7 +180,7 @@ case 3:
   $TPL["reminder_default_content"].= "\n".$reminder->get_value('reminderContent');
   $TPL["parentType"] = $parentType;
   $TPL["parentID"] = $parentID;
-
+  $TPL["reminderActive"] = $reminder->get_value("reminderActive");
   include_template("templates/reminderAddM.tpl");
   break;
 
@@ -249,6 +249,7 @@ case 4:
       }
       $reminder->set_value('reminderSubject', $_POST["reminder_subject"]);
       $reminder->set_value('reminderContent', rtrim($_POST["reminder_content"]));
+      $reminder->set_value('reminderActive', sprintf("%d",$_POST["reminderActive"]));
       $reminder->save();
     }
 
