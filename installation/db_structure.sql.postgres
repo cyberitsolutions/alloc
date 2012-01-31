@@ -285,7 +285,8 @@ CREATE TABLE reminder (
   reminderSubject varchar(255) NOT NULL default '',
   reminderContent text,
   reminderModifiedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
-  reminderModifiedUser integer DEFAULT NULL
+  reminderModifiedUser integer DEFAULT NULL,
+  reminderActive BOOLEAN NOT NULL DEFAULT true
 ) ;
 
 CREATE TABLE sentEmailLog (

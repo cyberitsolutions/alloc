@@ -312,7 +312,8 @@ CREATE TABLE reminder (
   reminderSubject varchar(255) NOT NULL default '',
   reminderContent text,
   reminderModifiedTime datetime DEFAULT NULL,
-  reminderModifiedUser integer DEFAULT NULL
+  reminderModifiedUser integer DEFAULT NULL,
+  reminderActive BOOLEAN NOT NULL DEFAULT true
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS sentEmailLog;
