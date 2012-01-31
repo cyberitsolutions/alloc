@@ -41,6 +41,7 @@ class reminder extends db_entity {
                              ,"reminderContent"
                              ,"reminderModifiedTime"
                              ,"reminderModifiedUser"
+                             ,"reminderActive" => array("empty_to_null"=>true)
                              );
 
   // set the modified time to now
