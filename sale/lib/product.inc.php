@@ -124,7 +124,7 @@ class product extends db_entity {
   function get_buy_cost($id=false) {
     $id or $id = $this->get_id();
     $db = new db_alloc();
-    $q = sprintf("SELECT amount, currencyTypeID
+    $q = sprintf("SELECT amount, currencyTypeID, tax
                     FROM productCost
                    WHERE isPercentage != 1
                      AND productID = %d
@@ -132,6 +132,10 @@ class product extends db_entity {
                  ",$id);
     $db->query($q);
     while ($row = $db->row()) {
+      if ($row["tax"]) {
+        list($amount_minus_tax,$amount_of_tax) = tax($row["amount"]);
+        $row["amount"] = $amount_minus_tax;
+      }
       $amount += exchangeRate::convert($row["currencyTypeID"],$row["amount"]);
     }
     return $amount;
