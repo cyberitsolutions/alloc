@@ -52,7 +52,7 @@ function show_productCost_list($productID, $template, $percent = false) {
   }
 }
 
-function show_productCost_new($template) {
+function show_productCost_new($template, $percent = false) {
   global $TPL;
   $t = new meta("currencyType");
   $currency_array = $t->get_assoc_array("currencyTypeID","currencyTypeID");
@@ -61,6 +61,7 @@ function show_productCost_new($template) {
   $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
   $TPL["taxOptions"] = page::select_options(array(""=>"Exempt",1=>"Included",0=>"Excluded"),"");
   $TPL["display"] = "display:none";
+  $percent or $TPL["tfID"] = config::get_config_item("outTfID");
   include_template($template);
 }
 
