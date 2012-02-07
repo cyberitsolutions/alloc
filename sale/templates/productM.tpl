@@ -131,6 +131,9 @@ $(document).ready(function() {
           <th width="15%">Amount</th>
           <th width="35%">Destination TF</th>
           <th>Description</th>
+          {if config::get_config_item("taxName")}
+            <th>{echo config::get_config_item("taxName")}</th>
+          {/}
           <th></th>
         </tr>
         {show_productCost_list($productID, "templates/productCostR.tpl")}

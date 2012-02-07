@@ -31,6 +31,7 @@ class productCost extends db_entity {
                              ,"isPercentage"=> array("empty_to_null"=>false)
                              ,"description"
                              ,"currencyTypeID"
+                             ,"tax"
                              );
 
   function validate() {
