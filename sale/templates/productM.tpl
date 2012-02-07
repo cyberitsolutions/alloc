@@ -172,7 +172,7 @@ $(document).ready(function() {
           <th></th>
         </tr>
         {show_productCost_list($productID, "templates/productCommissionR.tpl", true)}
-        {show_productCost_new("templates/productCommissionR.tpl")}
+        {show_productCost_new("templates/productCommissionR.tpl", true)}
         <tr id="product_commission_footer">
           <th colspan="5" class="center"><input type="submit" name="save_commissions" value="Save Commissions"></th>
         </tr>
