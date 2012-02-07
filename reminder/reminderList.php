@@ -27,18 +27,28 @@ function show_reminders($template) {
 
   // show all reminders for this project
   $db = new db_alloc;
-  if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
-    $query = sprintf("SELECT * FROM reminder WHERE personID = %d ORDER BY reminderTime,reminderType", $_REQUEST["filter_recipient"]);
+
+  $query = "SELECT * FROM reminder WHERE 1";
+
+  if ($_REQUEST["filter_recipient"] && ($current_user->have_role("admin") || $current_user->have_role("manage"))) {
+    $query.= sprintf(" AND personID = %d", $_REQUEST["filter_recipient"]);
   } else {
-    $query = sprintf("SELECT * FROM reminder WHERE personID = %d ORDER BY reminderType,reminderTime", $current_user->get_id());
+    $query.= sprintf(" AND personID = %d", $current_user->get_id());
   }
+
+  if (imp($_REQUEST["filter_reminderActive"])) {
+    $query.= sprintf(" AND reminderActive = %d",$_REQUEST["filter_reminderActive"]);
+  }
+
+  $query.= " ORDER BY reminderTime,reminderType";
+
   $db->query($query);
   while ($db->next_record()) {
     $reminder = new reminder;
     $reminder->read_db_record($db);
     $reminder->set_values("reminder_");
 
-    // only show reminder in list if project/task/client arent archived/complete
+    // only show reminder in list if project/task/client aren't archived/complete
     if ($reminder->is_alive()) {
 
       if ($reminder->get_value('reminderRecuringInterval') == "No") {
@@ -65,8 +75,10 @@ function show_reminder_filter($template) {
       $_REQUEST["filter_recipient"] = $current_user->get_id();
     }
 
+    $TPL["reminderActiveOptions"] = page::select_options(array("1"=>"Active","0"=>"Inactive"),$_REQUEST["filter_reminderActive"]);
+
     $db = new db_alloc;
-    $db->query("select username,personID from person order by username");
+    $db->query("SELECT username,personID FROM person ORDER BY username");
     while ($db->next_record()) {
       $recipientOptions[$db->f("personID")] = $db->f("username");
     }
