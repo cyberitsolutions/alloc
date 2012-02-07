@@ -28,9 +28,9 @@ function show_reminders($template) {
   // show all reminders for this project
   $db = new db_alloc;
   if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
-    $query = sprintf("SELECT * FROM reminder WHERE personID like '%s' ORDER BY reminderTime,reminderType", $_REQUEST["filter_recipient"]);
+    $query = sprintf("SELECT * FROM reminder WHERE personID = %d ORDER BY reminderTime,reminderType", $_REQUEST["filter_recipient"]);
   } else {
-    $query = sprintf("SELECT * FROM reminder WHERE personID = '%s' ORDER BY reminderType,reminderTime", $current_user->get_id());
+    $query = sprintf("SELECT * FROM reminder WHERE personID = %d ORDER BY reminderType,reminderTime", $current_user->get_id());
   }
   $db->query($query);
   while ($db->next_record()) {
