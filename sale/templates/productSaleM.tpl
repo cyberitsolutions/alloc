@@ -52,7 +52,10 @@ function get_item_margin(obj) {
   });
   // calculate the new margin: sellPrice - gst - sum_of_costs
   var sellPrice = $(obj).find("input.sellPrice").val();
-  var tax = $(obj).find("input.tax").val();
+  var tax = 0;
+  $(obj).find("input.tax").each(function(){
+    tax += parseFloat($(this).val());
+  });
   if (tax) {
     sellPrice = parseFloat(sellPrice) - parseFloat(tax);
   }
