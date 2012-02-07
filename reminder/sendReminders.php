@@ -27,7 +27,7 @@ require_once("../alloc.php");
 $db = new db_alloc;
 
   // do reminders
-$query = "SELECT * FROM reminder";
+$query = "SELECT * FROM reminder WHERE reminderActive = 1";
 $db->query($query);
 while ($db->next_record()) {
   $reminder = new reminder;

@@ -247,7 +247,8 @@ class reminder extends db_entity {
   function mail_reminder() {
     // if no longer alive then dont send, just delete
     if (!$this->is_alive()) {
-      $this->delete();
+      $this->set_value("reminderActive",0);
+      $this->save();
     } else {
     
 
@@ -269,10 +270,10 @@ class reminder extends db_entity {
 
           // Update reminder
           if ($this->get_value('reminderRecuringInterval') == "No") {
-            if ($this->delete()) {
+              $this->set_value("reminderActive",0);
+              $this->save();
               $e = new alloc_email($email, $subject, $content, "reminder");
               $e->send();
-            }
           } else if ($this->get_value('reminderRecuringValue') != 0) {
 
             $interval = $this->get_value('reminderRecuringValue');

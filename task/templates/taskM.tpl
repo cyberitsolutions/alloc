@@ -334,6 +334,7 @@ $(document).ready(function() {
           <th>Date / Time</th>
           <th>Subject</th>
           <th>Repeat</th>
+          <th>Active</th>
         </tr>
         {show_reminders("../reminder/templates/reminderR.tpl")}
       </table>

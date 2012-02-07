@@ -181,6 +181,9 @@ case 3:
   $TPL["parentType"] = $parentType;
   $TPL["parentID"] = $parentID;
   $TPL["reminderActive"] = $reminder->get_value("reminderActive");
+  if (!is_object($reminder) || !$reminder->get_id()) {
+    $TPL["reminderActive"] = true;
+  }
   include_template("templates/reminderAddM.tpl");
   break;
 

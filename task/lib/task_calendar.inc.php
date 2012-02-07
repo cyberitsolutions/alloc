@@ -315,9 +315,15 @@ class calendar {
         $reminders[$date] or $reminders[$date] = array();
         foreach ($reminders[$date] as $r) {
           #if (date("Y-m-d",$r["reminderTime"]) == $date) {
+            unset($wrap_start,$wrap_end);
+            if (!$r["reminderActive"]) {
+              $wrap_start = "<strike>";
+              $wrap_end = "</strike>";
+            }
+
             $text = page::htmlentities($r["reminderSubject"]);
             $r["reminderTime"] and $text = date("g:ia",$r["reminderTime"])." ".$text;
-            $d->reminders[] = '<a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$text.'</a>';
+            $d->reminders[] = '<a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$wrap_start.$text.$wrap_end.'</a>';
           #}
         }
 
