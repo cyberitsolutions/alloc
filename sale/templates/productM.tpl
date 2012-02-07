@@ -101,7 +101,6 @@ $(document).ready(function() {
       <div class="edit" style="margin-top:20px">
         <input type="hidden" name="productSaleID" value="{$_REQUEST.productSaleID}">
         <input type="submit" name="save" value="Save">
-        <input type="submit" name="delete" value="Delete" class="delete_button">
         <input type="button" value="Cancel Edit" onClick="$('.edit').hide();$('.view').show();">
       </div>
     </td>
