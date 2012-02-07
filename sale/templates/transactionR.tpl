@@ -5,11 +5,14 @@
       <input type="hidden" name="transactionType[]" value="tax">
     {else if $amountClass == "sellPrice"}
       Price
+      <input type="hidden" name="transactionType[]" value="sale">
     {else if $amountClass == "aCost"}
       Cost
+      <input type="hidden" name="transactionType[]" value="sale">
     {else if $amountClass == "aPerc"}
       {// Hardcoded AUD because productCost table uses percent and dollars in same field}
       {page::money("AUD",$pc_amount,"%mo")}%
+      <input type="hidden" name="transactionType[]" value="sale">
     {/}
   </td>
   <td class="nobr"><input data-pc-amount="{page::money("AUD",$pc_amount,"%mo")}" class="amountField {$amountClass}" name="amount[]" size="10" value="{page::money($currencyTypeID,$amount,"%mo")}">
