@@ -35,6 +35,7 @@ function show_productCost_list($productID, $template, $percent = false) {
                         FROM productCost 
                        WHERE productID = %d 
                          AND isPercentage = %d
+                         AND productCostActive = true
                     ORDER BY productCostID"
                     ,$productID, $percent);
     $db->query($query);
@@ -129,38 +130,36 @@ if ($_POST["save"]) {
 # Fixed costs
 if ($_POST["save_costs"] || $_POST["save_commissions"]) {
 
-  is_array($_POST["deleteCost"]) or $_POST["deleteCost"] = array();
+  foreach ((array)$_POST["productCostID"] as $k => $productCostID) {
+    // Delete
+    if (in_array($productCostID, (array)$_POST["deleteCost"])) {
+      $productCost = new productCost;
+      $productCost->set_id($productCostID);
+      $productCost->select();
+      $productCost->delete();
 
-  if (is_array($_POST["productCostID"])) {
+    // Save
+    } else if (imp($_POST["amount"][$k])) {
 
-    foreach ($_POST["productCostID"] as $k => $productCostID) {
-      // Save
-      if (in_array($productCostID, $_POST["deleteCost"])) {
-        $productCost = new productCost;
-        $productCost->set_id($productCostID);
-        $productCost->delete();
+      $a = array("productCostID"=>$productCostID
+                ,"productID"=>$productID
+                ,"tfID"=>$_POST["tfID"][$k]
+                ,"amount"=>$_POST["amount"][$k]
+                ,"isPercentage"=>$_POST["save_commissions"] ? 1 : 0
+                ,"description"=>$_POST["description"][$k]
+                ,"currencyTypeID"=>$_POST["currencyTypeID"][$k] ? $_POST["currencyTypeID"][$k] : config::get_config_item("currency")
+                ,"tax"=>$_POST["tax"][$k]
+                ,"productCostActive"=>1
+                );
 
-      } else if (imp($_POST["amount"][$k])) {
+      // Hardcode AUD for commissions because productCost table uses percent and dollars in same field
+      $_POST["save_commissions"] and $a["currencyTypeID"] = "AUD";
 
-        $a = array("productCostID"=>$productCostID
-                  ,"productID"=>$productID
-                  ,"tfID"=>$_POST["tfID"][$k]
-                  ,"amount"=>$_POST["amount"][$k]
-                  ,"isPercentage"=>$_POST["save_commissions"] ? 1 : 0
-                  ,"description"=>$_POST["description"][$k]
-                  ,"currencyTypeID"=>$_POST["currencyTypeID"][$k] ? $_POST["currencyTypeID"][$k] : config::get_config_item("currency")
-                  ,"tax"=>$_POST["tax"][$k]
-                  );
-
-        // Hardcoded AUD because productCost table uses percent and dollars in same field
-        $_POST["save_commissions"] and $a["currencyTypeID"] = "AUD";
-
-        $productCost = new productCost;
-        $productCost->read_array($a);
-        //$errs = $productCost->validate();
-        if (!$errs) {
-          $productCost->save();
-        }
+      $productCost = new productCost;
+      $productCost->read_array($a);
+      //$errs = $productCost->validate();
+      if (!$errs) {
+        $productCost->save();
       }
     }
   }

@@ -32,6 +32,7 @@ class productCost extends db_entity {
                              ,"description"
                              ,"currencyTypeID"
                              ,"tax"
+                             ,"productCostActive"
                              );
 
   function validate() {
@@ -41,6 +42,12 @@ class productCost extends db_entity {
     return parent::validate($err);
   }
 
+  function delete() {
+    if ($this->get_id()) {
+      $this->set_value("productCostActive",0);
+      return $this->save();
+    }
+  }
 
 
 

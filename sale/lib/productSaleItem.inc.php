@@ -186,6 +186,7 @@ class productSaleItem extends db_entity {
                    LEFT JOIN product ON product.productID = productCost.productID
                        WHERE productCost.productID = %d 
                          AND isPercentage != 1
+                         AND productCostActive = true
                     ORDER BY productCostID"
                     , $this->get_value("productID"));
 
@@ -207,6 +208,7 @@ class productSaleItem extends db_entity {
                    LEFT JOIN product ON product.productID = productCost.productID
                        WHERE productCost.productID = %d 
                          AND isPercentage = 1
+                         AND productCostActive = true
                     ORDER BY productCostID"
                     , $this->get_value("productID"));
 

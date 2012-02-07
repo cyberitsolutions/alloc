@@ -589,7 +589,8 @@ CREATE TABLE productCost (
   currencyTypeID VARCHAR(3) NOT NULL,
   isPercentage boolean NOT NULL default false,
   description varchar(255),
-  tax boolean DEFAULT NULL
+  tax boolean DEFAULT NULL,
+  productCostActive boolean NOT NULL DEFAULT true
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS productSale;

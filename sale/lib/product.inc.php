@@ -36,10 +36,8 @@ class product extends db_entity {
                              );
 
   function delete() {
-    $db = new db_alloc;
-    $query = sprintf("DELETE FROM productCost WHERE productID = %d",$this->get_id());
-    $db->query($query);
-    return parent::delete();
+    $this->set_value("productActive",0);
+    $this->save();
   }
 
   function get_list_filter($filter) {
@@ -130,6 +128,7 @@ class product extends db_entity {
                     FROM productCost
                    WHERE isPercentage != 1
                      AND productID = %d
+                     AND productCostActive = true
                  ",$id);
     $db->query($q);
     while ($row = $db->row()) {
