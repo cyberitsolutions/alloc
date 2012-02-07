@@ -24,7 +24,7 @@ require_once("../alloc.php");
 
 function show_productCost_list($productID, $template, $percent = false) {
   global $TPL;
-  unset($TPL["display"]); // otherwise the commissions don't display.
+  unset($TPL["display"],$TPL["taxOptions"]); // otherwise the commissions don't display.
   if ($productID) {
 
     $t = new meta("currencyType");
@@ -43,6 +43,7 @@ function show_productCost_list($productID, $template, $percent = false) {
       $productCost->read_db_record($db);
       $productCost->set_tpl_values();
       $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
+      $TPL["taxOptions"] = page::select_options(array(""=>"Exempt",1=>"Included",0=>"Excluded"),$productCost->get_value("tax"));
 
       // Hardcoded AUD because productCost table uses percent and dollars in same field
       $percent and $TPL["amount"] = page::money("AUD",$productCost->get_value("amount"),"%mo");
@@ -58,6 +59,7 @@ function show_productCost_new($template) {
   $productCost = new productCost;
   $productCost->set_values(); // wipe clean
   $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
+  $TPL["taxOptions"] = page::select_options(array(""=>"Exempt",1=>"Included",0=>"Excluded"),"");
   $TPL["display"] = "display:none";
   include_template($template);
 }
@@ -146,6 +148,7 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
                   ,"isPercentage"=>$_POST["save_commissions"] ? 1 : 0
                   ,"description"=>$_POST["description"][$k]
                   ,"currencyTypeID"=>$_POST["currencyTypeID"][$k] ? $_POST["currencyTypeID"][$k] : config::get_config_item("currency")
+                  ,"tax"=>$_POST["tax"][$k]
                   );
 
         // Hardcoded AUD because productCost table uses percent and dollars in same field
