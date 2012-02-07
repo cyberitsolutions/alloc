@@ -163,14 +163,11 @@ class productSaleItem extends db_entity {
     $productName = $product->get_value("productName");
 
     $taxName = config::get_config_item("taxName");
-    $taxPercent = config::get_config_item("taxPercent");
     $taxTfID = config::get_config_item("taxTfID");
-    $taxPercentDivisor = ($taxPercent/100) + 1;
 
     // If this price includes tax, then perform a tax transfer
     if ($this->get_value("sellPriceIncTax")) {
-      $amount_minus_tax = $this->get_value("sellPrice") / $taxPercentDivisor;
-      $amount_of_tax = $this->get_value("sellPrice") - $amount_minus_tax;
+      list($amount_minus_tax,$amount_of_tax) = tax($this->get_value("sellPrice"));
       $amount_of_tax = exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"),$amount_of_tax,null,null,"%mo");
       $this->create_transaction(config::get_config_item("mainTfID"), $taxTfID, $amount_of_tax, "Product Sale ".$taxName.": ".$productName, false, false, 'tax');
     }
@@ -192,8 +189,17 @@ class productSaleItem extends db_entity {
 
     $db2->query($query);
     while ($productCost_row = $db2->next_record()) {
-      $amount = page::money($productCost_row["currencyTypeID"],$productCost_row["amount"] * $this->get_value("quantity"),"%mo");
       $description = "Product Cost: ".$productCost_row["productName"]." ".$productCost_row["description"];
+
+      if ($productCost_row["tax"]) {
+        list($amount_minus_tax,$amount_of_tax) = tax($productCost_row["amount"]);
+        $amount_of_tax = exchangeRate::convert($productCost_row["currencyTypeID"],$amount_of_tax,null,null,"%mo");
+        $productCost_row["amount"] = $amount_minus_tax;
+        $this->create_transaction(config::get_config_item("mainTfID"), $taxTfID, $amount_of_tax * $this->get_value("quantity")
+                                 ,"Product Cost ".$taxName.": ".$productName, false, false, 'tax');
+      }
+
+      $amount = page::money($productCost_row["currencyTypeID"],$productCost_row["amount"] * $this->get_value("quantity"),"%mo");
       $this->create_transaction(config::get_config_item("mainTfID"), $productCost_row["tfID"], $amount, $description, $productCost_row["currencyTypeID"],$productCost_row["productCostID"]);
     }
 
