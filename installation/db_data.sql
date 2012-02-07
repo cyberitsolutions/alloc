@@ -71,11 +71,6 @@ INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskSta
 INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("closed_archived"  ,"Closed: Archived"  ,"#e0e0e0", 85,true);
 INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("closed_complete"  ,"Closed: Completed" ,"#e0e0e0", 90,true);
 INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('FieldChange',1,true);
-INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskMarkedDuplicate',2,true);
-INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskUnmarkedDuplicate',3,true);
-INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskClosed',4,true);
-INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskReopened',5,true);
-INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('TaskPending',6,true);
 INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('edit',1,true);
 INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('manager',2,true);
 INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('admin',3,true);
