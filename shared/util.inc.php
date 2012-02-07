@@ -786,4 +786,12 @@ function rmdir_if_empty($dir) {
     }
   }
 }
+function tax($amount,$taxPercent=null) {
+  // take a tax included amount and return the untaxed amount, and the amount of tax
+  // eg: 500 including 10% tax, returns array(454.54, 45.45)
+  imp($taxPercent) or $taxPercent = config::get_config_item("taxPercent");
+  $amount_minus_tax = $amount / (($taxPercent/100) + 1);
+  $amount_of_tax    = $amount / ((100/$taxPercent) + 1);
+  return array($amount_minus_tax, $amount_of_tax);
+}
 ?>
