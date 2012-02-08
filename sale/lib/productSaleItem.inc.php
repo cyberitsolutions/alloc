@@ -160,10 +160,11 @@ class productSaleItem extends db_entity {
     $db2 = new db_alloc();
 
     $product = $this->get_foreign_object("product");
+    $productSale = $this->get_foreign_object("productSale");
     $productName = $product->get_value("productName");
     $taxName = config::get_config_item("taxName");
     $taxTfID = config::get_config_item("taxTfID");
-    $mainTfID = config::get_config_item("mainTfID");
+    $mainTfID = $productSale->get_value("tfID");
 
     // If this price includes tax, then perform a tax transfer
     if ($this->get_value("sellPriceIncTax")) {

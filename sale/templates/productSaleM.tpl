@@ -113,12 +113,18 @@ $(document).ready(function() {
   <tr>
     <td class="right">Total Sell Price:</td>
     <td>{$total_sellPrice}</td>
-    <td class="right">Salesperson:</td>
-    <td>{$show_person_options}</td>
+    <td class="right">Sale TF:</td>
+    <td>{$show_tf_options}</td>
   </tr>
   <tr>
     <td class="right">Total Margin:</td>
     <td>{$total_margin}</td>
+    <td class="right">Salesperson:</td>
+    <td>{$show_person_options}</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
     <td class="right">Sale Date:</td>
     <td>{$show_date}</td>
   </tr>

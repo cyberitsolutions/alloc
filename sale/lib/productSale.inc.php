@@ -29,6 +29,7 @@ class productSale extends db_entity {
   public $data_fields = array("clientID"
                              ,"projectID"
                              ,"personID"
+                             ,"tfID"
                              ,"status"
                              ,"productSaleCreatedTime"
                              ,"productSaleCreatedUser"

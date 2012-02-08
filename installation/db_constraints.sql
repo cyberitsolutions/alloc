@@ -169,6 +169,7 @@ ALTER TABLE productSale ADD CONSTRAINT productSale_projectID FOREIGN KEY (projec
 ALTER TABLE productSale ADD CONSTRAINT productSale_productSaleCreatedUser FOREIGN KEY (productSaleCreatedUser) REFERENCES person (personID);
 ALTER TABLE productSale ADD CONSTRAINT productSale_productSaleModifiedUser FOREIGN KEY (productSaleModifiedUser) REFERENCES person (personID);
 ALTER TABLE productSale ADD CONSTRAINT productSale_personID FOREIGN KEY (personID) REFERENCES person (personID);
+ALTER TABLE productSale ADD CONSTRAINT productSale_tfID FOREIGN KEY (tfID) REFERENCES tf (tfID);
 ALTER TABLE productSaleItem ADD CONSTRAINT productSaleItem_productID FOREIGN KEY (productID) REFERENCES product (productID);
 ALTER TABLE productSaleItem ADD CONSTRAINT productSaleItem_productSaleID FOREIGN KEY (productSaleID) REFERENCES productSale (productSaleID);
 
