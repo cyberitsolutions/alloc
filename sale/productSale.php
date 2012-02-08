@@ -345,12 +345,23 @@ list($client_select, $client_link, $project_select, $project_link)
 
 $TPL["show_client_options"] = $client_link;
 $TPL["show_project_options"] = $project_link;
+
+$tf = new tf();
+if ($productSale->get_value("tfID")) {
+  $tf->set_id($productSale->get_value("tfID"));
+  $tf->select();
+  $TPL["show_tf_options"] = $tf->get_link();
+  $tf_sel = $productSale->get_value("tfID");
+}
+$tf_sel or $tf_sel = config::get_config_item("mainTfID");
+$tf_select = "<select name='tfID'>".page::select_options($tflist,$tf_sel)."</select>";
 $TPL["show_person_options"] = person::get_fullname($productSale->get_value("personID"));
 $TPL["show_date"] = $productSale->get_value("productSaleDate");
 
 if (!$productSale->get_id() || $productSale->get_value("status") != "finished" && !($productSale->get_value("status") == "admin" && !CAN_APPROVE_TRANSACTIONS)) {
   $TPL["show_client_options"] = $client_select;
   $TPL["show_project_options"] = $project_select;
+  $TPL["show_tf_options"] = $tf_select;
 
   $personID = $productSale->get_value("personID") or $personID = $current_user->get_id();
   $TPL["show_person_options"] = "<select name='personID'>".page::select_options(person::get_username_list($personID), $personID)."</select>";

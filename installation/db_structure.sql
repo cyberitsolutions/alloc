@@ -599,6 +599,7 @@ CREATE TABLE productSale (
   clientID integer DEFAULT NULL,
   projectID integer DEFAULT NULL,
   personID integer DEFAULT NULL,
+  tfID INTEGER NOT NULL,
   status varchar(255) NOT NULL,
   productSaleCreatedTime datetime default NULL,
   productSaleCreatedUser integer default NULL,
