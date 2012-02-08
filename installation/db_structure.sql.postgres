@@ -558,7 +558,9 @@ CREATE TABLE productSale (
   productSaleCreatedUser integer default NULL,
   productSaleModifiedTime TIMESTAMP WITHOUT TIME ZONE default NULL,
   productSaleModifiedUser integer default NULL,
-  productSaleDate date default NULL
+  productSaleDate date default NULL,
+  extRef VARCHAR(255) DEFAULT NULL,
+  extRefDate date DEFAULT NULL
 ) ;
 
 CREATE TABLE productSaleItem (

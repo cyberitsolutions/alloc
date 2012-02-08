@@ -36,6 +36,8 @@ class productSale extends db_entity {
                              ,"productSaleModifiedTime"
                              ,"productSaleModifiedUser"
                              ,"productSaleDate"
+                             ,"extRef"
+                             ,"extRefDate"
                              );
   public $permissions = array(PERM_APPROVE_PRODUCT_TRANSACTIONS => "approve product transactions");
 

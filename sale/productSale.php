@@ -358,6 +358,9 @@ $tf_select = "<select name='tfID'>".page::select_options($tflist,$tf_sel)."</sel
 $TPL["show_person_options"] = person::get_fullname($productSale->get_value("personID"));
 $TPL["show_date"] = $productSale->get_value("productSaleDate");
 
+$TPL["show_extRef"] = $productSale->get_value("extRef");
+$TPL["show_extRefDate"] = $productSale->get_value("extRefDate");
+
 if (!$productSale->get_id() || $productSale->get_value("status") != "finished" && !($productSale->get_value("status") == "admin" && !CAN_APPROVE_TRANSACTIONS)) {
   $TPL["show_client_options"] = $client_select;
   $TPL["show_project_options"] = $project_select;
@@ -367,6 +370,8 @@ if (!$productSale->get_id() || $productSale->get_value("status") != "finished" &
   $TPL["show_person_options"] = "<select name='personID'>".page::select_options(person::get_username_list($personID), $personID)."</select>";
 
   $TPL["show_date"] = page::calendar("productSaleDate", $productSale->get_value("productSaleDate"));
+  $TPL["show_extRef"] = "<input type='text' name='extRef' value='".$productSale->get_value("extRef")."' size='10'>";
+  $TPL["show_extRefDate"] = page::calendar("extRefDate", $productSale->get_value("extRefDate"));
 }
 
 

@@ -123,8 +123,13 @@ $(document).ready(function() {
     <td>{$show_person_options}</td>
   </tr>
   <tr>
+    {if config::for_cyber()}
+    <td class="top right">External Reference:</td>
+    <td><span style='float:left;margin-right:4px;'>{$show_extRef}</span><span>{$show_extRefDate}</span></td>
+    {else}
     <td></td>
     <td></td>
+    {/}
     <td class="right">Sale Date:</td>
     <td>{$show_date}</td>
   </tr>
