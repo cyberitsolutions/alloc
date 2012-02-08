@@ -605,7 +605,9 @@ CREATE TABLE productSale (
   productSaleCreatedUser integer default NULL,
   productSaleModifiedTime datetime default NULL,
   productSaleModifiedUser integer default NULL,
-  productSaleDate date default NULL
+  productSaleDate date default NULL,
+  extRef VARCHAR(255) DEFAULT NULL,
+  extRefDate date DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS productSaleItem;
