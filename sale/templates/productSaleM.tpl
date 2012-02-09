@@ -108,7 +108,7 @@ $(document).ready(function() {
     {$n = person::get_fullname($productSaleCreatedUser)}
     <td>{=$n} {$productSaleCreatedTime}</td>
     <td class="right">Project:</td>
-    <td width="30%">{$show_project_options}{$project_tfID}</td>
+    <td width="30%">{$show_project_options}</td>
   </tr>
   <tr>
     <td class="right">Total Sell Price:</td>
