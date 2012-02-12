@@ -1,5 +1,20 @@
 """alloccli subcommand for billing time for work done."""
 from alloc import alloc
+import sys
+import datetime
+import time
+import threading
+
+class timer(threading.Thread):
+  """Stopwatch, the timer should stop counting when ctrl-z/paused"""
+  started = datetime.datetime.now()
+  seconds = 0
+
+  def run(self):
+    while True:
+      self.seconds += 1
+      time.sleep(1)
+
 
 class work(alloc):
   """Add time to a time sheet. Create the time sheet if necessary."""
@@ -19,17 +34,36 @@ class work(alloc):
                                        '(eg: 0=no-charge, 1=standard, 1.5=time-and-a-half,\n'
                                        '2=double-time, 3=triple-time). Default: 1')) 
   ops.append(('c:', 'comment=COMMENT', 'The time sheet item comment.')) 
+  ops.append(('i' , 'interactive    ', 'Run a live work timer interactively.')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
   help_text += __doc__
   help_text += """\n\n%s
 
-If run without arguments this program will run interactively.
+If run without arguments this program will prompt for information.
 
 Examples:
-alloc work
-alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
+
+Get information manually:
+$ alloc work
+
+Specify information on command line:
+$ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'
+
+Run a live work timer interactively:
+$ alloc work -i -t 1234
+--- Timer started. Enter comment:
+--- (ctrl-z/fg to pause, ctrl-c to cancel, ctrl-d to create time sheet item.
+--- Task: 1234 Do some stuff...
+* worked on stuff
+* did something good
+* did something bad
+<ctrl-d>
+$
+(note that you can use ctrl-z and fg to pause and unpause the timer.
+Unfortunately doing so appears to flush the input buffer!)
+"""
 
   def run(self, command_list):
     """Execute subcommand."""
@@ -40,14 +74,14 @@ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
     # Got this far, then authenticate
     self.authenticate()
 
-    # Or are we running this script interactively?
-    interactive = True
+    # Gather information manually?
+    prompt = True
     for k, v in o.items():
-      if v and k != 'dryrun' and k != 'quiet':
-        interactive = False
+      if v and (k != 'dryrun' and k != 'quiet' and k != 'interactive'):
+        prompt = False
 
-    # Get vars interactively
-    if interactive and not remainder:
+    # Get vars manually
+    if prompt and not remainder:
       o['task'] = raw_input("Task ID or some text from a task's name, or hit ENTER for none: ")
       if not o['task']:
         o['project'] = raw_input("Project ID or some text from a project's name: ")
@@ -56,6 +90,29 @@ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'"""
       o['date'] = raw_input("The date that the work was performed, or hit ENTER for %s: " % self.today())
       o['comment'] = raw_input("Comments: ")
 
+    # If we're running interactively
+    if o['interactive']:
+      t = timer()
+      t.daemon = True
+      t.start()
+      self.msg('Timer started at '+str(t.started.replace(microsecond=0)))
+      self.msg('Enter comment (ctrl-z to pause, ctrl-c to cancel, ctrl-d to create)')
+      try:
+        k_, v = self.get_list('task', { 'taskID' : o['task'], 'taskView' : 'prioritised' }).popitem()
+      except:
+        self.die("Task not found.")
+      self.msg(v['taskTypeID']+': '+v['taskID']+' '+v['taskName'])
+
+      # Grab stdin
+      try:
+        o['comment'] = sys.stdin.read()
+      except (IOError):
+        self.die("Exiting.")
+      except (KeyboardInterrupt):
+        self.die("Exiting.")
+
+      o['date'] = str(t.started.date())
+      o['hours'] = str(t.seconds / 60.0 / 60.0)
 
     # Initialize some variables
     self.quiet = o['quiet']
