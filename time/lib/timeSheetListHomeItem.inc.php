@@ -32,8 +32,9 @@ class timeSheetListHomeItem extends home_item {
     $rtn = timeSheet::get_list($ops);
     $TPL["timeSheetListRows"] = $rtn["rows"];
     $TPL["timeSheetListExtra"] = $rtn["extra"];
-
-    home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
+    if ($TPL["timeSheetListRows"]) {
+      home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
+    }
   }
 }
 
