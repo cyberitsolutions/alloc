@@ -21,18 +21,27 @@
 */
 
 class project_list_home_item extends home_item {
-  function project_list_home_item() {
-    global $current_user, $TPL;
 
+  function project_list_home_item() {
+    home_item::home_item("project_list", "Project List", "project", "projectListH.tpl", "standard", 40);
+  }
+
+  function visible() {
+    global $current_user;
+    return (sprintf("%d",$current_user->prefs["projectListNum"]) > 0 || $current_user->prefs["projectListNum"] == "all");
+  }
+
+  function render() {
+    global $current_user, $TPL;
     if (isset($current_user->prefs["projectListNum"]) && $current_user->prefs["projectListNum"] != "all") {
       $options["limit"] = sprintf("%d",$current_user->prefs["projectListNum"]);
     }
-    
     $options["projectStatus"] = "Current";
     $options["personID"] = $current_user->get_id();
     $TPL["projectListRows"] = project::get_list($options);
-
-    home_item::home_item("project_list", "Project List", "project", "projectListH.tpl", "standard", 40);
+    if ($TPL["projectListRows"]) {
+      return true;
+    }
   }
 }
 

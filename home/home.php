@@ -22,30 +22,65 @@
 
 require_once("../alloc.php");
 
-function show_home_items($width) {
-  global $home_items, $current_home_item, $TPL;
+function sort_home_items($a, $b) {
+  return $a->seq > $b->seq;
+}
 
-  $home_items or $home_items = array();
-  reset($home_items);
+function show_home_items($width,$home_items) {
+  global $TPL;
+  $items = array();
 
+  foreach ($home_items as $item) {
+    $i = new $item();
+    $items[] = $i;
+  }
 
-  $arr = $home_items[$width] or $arr = array();
-  ksort($arr);
+  uasort($items,"sort_home_items");
 
-  foreach ($arr as $current_home_item) {
-    if ($_GET["media"] != "print" || $current_home_item->print) {
-      $TPL["item_title"] = $current_home_item->get_title();
-      include_template("templates/homeItemS.tpl");
+  foreach ((array)$items as $item) {
+    if ($item->width == $width && $item->visible()) {
+      $TPL["item"] = $item;
+      if ($item->render()) {
+        include_template("templates/homeItemS.tpl");
+      }
     }
   }
 }
 
-function show_item() {
-  global $current_home_item;
-  $current_home_item->show();
+global $modules, $current_user;
+foreach ($modules as $module_name => $module) {
+  if ($module->home_items) {
+    $home_items = array_merge((array)$home_items,$module->home_items);
+  }
+}
+$TPL["home_items"] = $home_items;
+
+
+if ($_POST["customize_save"]) {
+  $current_user->prefs["customizedFont"] = sprintf("%d",$_POST["font"]);
+  $current_user->prefs["customizedTheme2"] = $_POST["theme"];
+
+  $current_user->prefs["tasksGraphPlotHome"] = $_POST["weeks"];
+  $current_user->prefs["tasksGraphPlotHomeStart"] = $_POST["weeksBack"];
+
+  $current_user->prefs["topTasksNum"] = $_POST["topTasksNum"];
+  $current_user->prefs["topTasksStatus"] = $_POST["topTasksStatus"];
+
+  $current_user->prefs["projectListNum"] = $_POST["projectListNum"];
+
+  $current_user->prefs["dailyTaskEmail"] = $_POST["dailyTaskEmail"];
+  $current_user->prefs["receiveOwnTaskComments"] = $_POST["receiveOwnTaskComments"];
+
+  $current_user->prefs["showFilters"] = $_POST["showFilters"];
+  $current_user->prefs["privateMode"] = $_POST["privateMode"];
+
+  $current_user->prefs["timeSheetHoursWarn"] = $_POST["timeSheetHoursWarn"];
+  $current_user->prefs["timeSheetDaysWarn"] = $_POST["timeSheetDaysWarn"];
+  $current_user->store_prefs();
+  alloc_redirect($TPL["url_alloc_home"]);
 }
 
-register_home_items();
+
 $TPL["main_alloc_title"]="Home Page - ".APPLICATION_NAME;
 if ($_GET["media"] == "print") {
 	include_template("templates/homePrintableM.tpl");

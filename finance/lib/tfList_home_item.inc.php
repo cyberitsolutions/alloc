@@ -22,10 +22,18 @@
 
 class tfList_home_item extends home_item {
   function tfList_home_item() {
+    home_item::home_item("", "Tagged Funds", "finance", "tfListH.tpl", "narrow",20);
+  }
+
+  function visible() {
+    return true;
+  }
+
+  function render() {
     global $TPL;
     $ops["owner"] = 1;
     $TPL["tfListRows"] = tf::get_list($ops);
-    home_item::home_item("", "Tagged Funds", "finance", "tfListH.tpl", "narrow",20);
+    return true;
   }
 }
 

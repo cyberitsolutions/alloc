@@ -22,13 +22,10 @@
 
 class module {
   var $db_entities = array();   // A list of db_entity class names implemented by this module
+  var $home_items = array();    // A list of all the home page items implemented by this module
 
   // Allow a module to load its libraries at the start of a request
   function load_libararies() {
-  }
-
-  // Called to instruct the module to register any home page items using the register_home_item function
-  function register_home_items() {
   }
 
 }

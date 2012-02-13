@@ -329,6 +329,7 @@ class person extends db_entity {
     if ($save || (!is_array($old_prefs) || !count($old_prefs))) {
       $arr = serialize($this->prefs);
       $p->set_value("sessData",$arr);
+      $p->currency = config::get_config_item('currency');
       $p->save();
     }
 

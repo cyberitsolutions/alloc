@@ -58,6 +58,14 @@ class home_item {
     }  
   }
 
+  function visible() {
+    return true;
+  }
+
+  function render() {
+    return false;
+  }
+
   function get_label() {
     return $this->label;
   }
@@ -76,24 +84,5 @@ class home_item {
     }
   }
 }
-
-function register_home_item($home_item) {
-  global $home_items;
-  $home_items[$home_item->get_width()][$home_item->get_seq()] = $home_item;
-}
-
-function register_home_items() {
-  global $modules, $home_items;
-
-  $home_items = array();
-
-  reset($modules);
-  while (list($module_name, $module) = each($modules)) {
-    $module->register_home_items();
-  }
-}
-
-
-
 
 ?>
