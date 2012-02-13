@@ -267,6 +267,20 @@ class productSale extends db_entity {
     if ($filter["clientID"]) {
       $sql[] = sprintf("(productSale.clientID = %d)",$filter["clientID"]);
     }
+    if ($filter["personID"]) {
+      $sql[] = sprintf("(productSale.personID = %d)",$filter["personID"]);
+    }
+
+    if (is_array($filter['status'])) {
+      $statusArray = $filter['status'];
+    } else {
+      $statusArray[] = $filter['status'];
+    }
+    foreach ((array)$statusArray as $status) {
+      $status and $subsql[] = sprintf("(productSale.status = '%s')",db_esc($status));
+    }
+    $subsql and $sql[] = '('.implode(" OR ",$subsql).')';
+    
     return $sql;
   }
 
@@ -282,7 +296,7 @@ class productSale extends db_entity {
       $f = " WHERE ".implode(" AND ",$filter);
     }
 
-    $f.= " ORDER BY productSaleDate DESC";
+    $f.= " ORDER BY productSaleDate";
 
     $db = new db_alloc();
     $query = sprintf("SELECT productSale.*, project.projectName, client.clientName
@@ -300,7 +314,13 @@ class productSale extends db_entity {
       $row["amounts"] = $productSale->get_amounts();
       $row["statusLabel"] = $statii[$row["status"]];
       $row["creatorLabel"] = $people[$row["productSaleCreatedUser"]]["name"];
+      $row["productSaleLink"] = $productSale->get_link();
       $body.= productSale::get_list_body($row,$_FORM);
+      $rows[] = $row;
+    }
+
+    if ($_FORM['return'] == 'array') {
+      return $rows;
     }
 
     $header = productSale::get_list_header($_FORM);

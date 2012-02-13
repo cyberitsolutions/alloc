@@ -25,6 +25,8 @@ require_once(dirname(__FILE__)."/product.inc.php");
 require_once(dirname(__FILE__)."/productCost.inc.php");
 require_once(dirname(__FILE__)."/productSale.inc.php");
 require_once(dirname(__FILE__)."/productSaleItem.inc.php");
+require_once(dirname(__FILE__)."/saleListHomeItem.inc.php");
+require_once(dirname(__FILE__)."/saleListHomeItemAdmin.inc.php");
 
 class sale_module extends module {
   var $db_entities = array("product"
@@ -32,6 +34,7 @@ class sale_module extends module {
                           ,"productSale"
                           ,"productSaleItem"
                           );
+  var $home_items = array("saleListHomeItemAdmin","saleListHomeItem");
 }
 
 ?>
