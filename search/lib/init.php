@@ -20,14 +20,11 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-
-class search_module extends module {
-}
-
 require_once(dirname(__FILE__)."/search.inc.php");
 require_once(dirname(__FILE__)."/indexQueue.inc.php");
 
+class search_module extends module {
+}
 
 
 ?>

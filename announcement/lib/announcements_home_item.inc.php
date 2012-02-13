@@ -25,13 +25,22 @@ class announcements_home_item extends home_item {
     home_item::home_item("announcements", "Announcements", "announcement", "announcementsH.tpl", "standard", 10);
   }
 
+  function visible() {
+    $announcement = new announcement;
+    return $announcement->has_announcements();
+  }
+
+  function render() {
+    return true;
+  }
+
   function show_announcements($template_name) {
     global $current_user, $TPL;
 
-    $query = "SELECT announcement.*
-             FROM announcement 
-             WHERE displayFromDate <= CURDATE() AND displayToDate >= CURDATE()
-             ORDER BY displayFromDate desc";
+    $query = "SELECT *
+                FROM announcement 
+               WHERE displayFromDate <= CURDATE() AND displayToDate >= CURDATE()
+            ORDER BY displayFromDate desc";
     $db = new db_alloc;
     $db->query($query);
     while ($db->next_record()) {

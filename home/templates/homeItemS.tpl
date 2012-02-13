@@ -1,8 +1,8 @@
 <table class="box">
   <tr>
-    <th colspan="3">{$item_title}</th>
+    <th colspan="3">{echo $item->get_title()}</th>
   </tr>
   <tr>
-    <td>{show_item()}</td>
+    <td>{$item->show()}</td>
   </tr>
 </table>

@@ -30,30 +30,8 @@ require_once(dirname(__FILE__)."/task_list_print.inc.php");
 
 class task_module extends module
 {
-  var $db_entities = array("task"
-                         );
-
-  function register_home_items() {
-    global $current_user;
-
-    if (isset($current_user->prefs["tasksGraphPlotHome"]) && sprintf("%d",$current_user->prefs["tasksGraphPlotHome"]) > 0) {
-      register_home_item(new task_calendar_home_item());
-    }
-
-    if (isset($current_user->prefs["topTasksNum"]) && (sprintf("%d",$current_user->prefs["topTasksNum"]) > 0 || $current_user->prefs["topTasksNum"] == "all")) {
-      if (have_entity_perm("task", PERM_READ_WRITE, $current_user, true)) {
-        register_home_item(new top_ten_tasks_home_item());
-        flush();
-      } 
-    }
-
-    if ($current_user->has_messages()) {
-      register_home_item(new task_message_list_home_item());
-    }
-  }
+  var $db_entities = array("task");
+  var $home_items = array("task_calendar_home_item","top_ten_tasks_home_item","task_message_list_home_item");
 }
-
-
-
 
 ?>

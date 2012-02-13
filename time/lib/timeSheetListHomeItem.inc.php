@@ -23,8 +23,16 @@
 class timeSheetListHomeItem extends home_item {
 
   function timeSheetListHomeItem() {
-    global $current_user, $TPL;
+    home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
+  }
 
+  function visible() {
+    global $current_user;
+    return isset($current_user) && $current_user->is_employee();
+  }
+
+  function render() {
+    global $current_user, $TPL;
     $ops["showShortProjectLink"] = "true";
     $ops["personID"] = $current_user->get_id();
     $ops["status"] = array('edit','manager','admin','invoiced','rejected');
@@ -33,7 +41,7 @@ class timeSheetListHomeItem extends home_item {
     $TPL["timeSheetListRows"] = $rtn["rows"];
     $TPL["timeSheetListExtra"] = $rtn["extra"];
     if ($TPL["timeSheetListRows"]) {
-      home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
+      return true;
     }
   }
 }

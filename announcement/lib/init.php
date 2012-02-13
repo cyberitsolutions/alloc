@@ -25,17 +25,7 @@ require_once(dirname(__FILE__)."/announcements_home_item.inc.php");
 
 class announcement_module extends module {
   var $db_entities = array("announcement");
-
-  function register_home_items() {
-    $announcement = new announcement;
-    if ($announcement->has_announcements()) {
-      register_home_item(new announcements_home_item());
-    } 
-  }
-
+  var $home_items = array("announcements_home_item");
 }
-
-
-
 
 ?>

@@ -31,31 +31,7 @@ require_once(dirname(__FILE__)."/timeSheetPrint.inc.php");
 class time_module extends module
 {
   var $db_entities = array("timeSheet", "timeSheetItem","timeUnit");
-
-  function register_home_items() {
-    global $current_user;
-
-    if (isset($current_user) && $current_user->is_employee()) {
-      register_home_item(new timeSheetListHomeItem);
-      if (has_pending_timesheet()) {
-        register_home_item(new pendingApprovalTimeSheetListHomeItem);
-      }
-
-      register_home_item(new timeSheetStatusHomeItem);
-
-      $timeSheetAdminPersonIDs = config::get_config_item("defaultTimeSheetAdminList");
-      
-      if (in_array($current_user->get_id(), $timeSheetAdminPersonIDs) && has_pending_admin_timesheet()) {
-        register_home_item(new pendingAdminApprovalTimeSheetListHomeItem);
-      }
-    }
-  }
-
+  var $home_items = array("timeSheetListHomeItem","pendingApprovalTimeSheetListHomeItem","timeSheetStatusHomeItem","pendingAdminApprovalTimeSheetListHomeItem");
 }
-
-
-
-
-
 
 ?>

@@ -21,36 +21,18 @@
 */
 
 class customize_alloc_home_item extends home_item {
+
   function customize_alloc_home_item() {
-    global $TPL, $current_user;
-
     home_item::home_item("", "Preferences", "home", "customizeH.tpl", "narrow",60, false);
+  }
 
-    if (!is_object($current_user)) {
-      return false;
-    }
+  function visible() {
+    global $current_user;
+    return is_object($current_user);
+  }
 
-    if ($_POST["customize_save"]) {
-      $current_user->prefs["customizedFont"] = sprintf("%d",$_POST["font"]);
-      $current_user->prefs["customizedTheme2"] = $_POST["theme"];
-
-      $current_user->prefs["tasksGraphPlotHome"] = $_POST["weeks"];
-      $current_user->prefs["tasksGraphPlotHomeStart"] = $_POST["weeksBack"];
-
-      $current_user->prefs["topTasksNum"] = $_POST["topTasksNum"];
-      $current_user->prefs["topTasksStatus"] = $_POST["topTasksStatus"];
-
-      $current_user->prefs["projectListNum"] = $_POST["projectListNum"];
-
-      $current_user->prefs["dailyTaskEmail"] = $_POST["dailyTaskEmail"];
-      $current_user->prefs["receiveOwnTaskComments"] = $_POST["receiveOwnTaskComments"];
-
-      $current_user->prefs["showFilters"] = $_POST["showFilters"];
-      $current_user->prefs["privateMode"] = $_POST["privateMode"];
-
-      $current_user->prefs["timeSheetHoursWarn"] = $_POST["timeSheetHoursWarn"];
-      $current_user->prefs["timeSheetDaysWarn"] = $_POST["timeSheetDaysWarn"];
-    }
+  function render() {
+    global $TPL, $current_user;
 
     $customizedFont_array = page::get_customizedFont_array();
     $TPL["fontOptions"] = page::select_options($customizedFont_array, $current_user->prefs["customizedFont"]);
@@ -97,19 +79,11 @@ class customize_alloc_home_item extends home_item {
     $TPL["showFiltersLabel"] = $dailyTEO[$current_user->prefs["showFilters"]];
 
     $TPL["privateMode"] = $current_user->prefs["privateMode"];
-    $TPL["privateMode"] and $TPL["body_class"] = "obfus";
 
     $TPL["timeSheetHoursWarn"] = $current_user->prefs["timeSheetHoursWarn"];
     $TPL["timeSheetDaysWarn"] = $current_user->prefs["timeSheetDaysWarn"];
+    return true;
   }
-
-
-  function show_customization($template_name) {
-    global $TPL, $current_user;
-    include_template($template_name);
-  }
-
-
 }
 
 

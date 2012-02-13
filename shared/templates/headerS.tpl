@@ -23,4 +23,4 @@
     }
     </script>
   </head>
-  <body id="{$body_id}" class="{$body_class}">
+  <body id="{$body_id}" class="{$current_user->prefs["privateMode"] and print "obfus"}">

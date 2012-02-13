@@ -1,9 +1,9 @@
 {page::header()}
   {page::toolbar()}
   <div style="float:left; width:72%; vertical-align:top; padding:0; margin:0px; margin-right:1%; min-width:400px;">
-    {show_home_items("standard")}
+    {show_home_items("standard",$home_items)}
   </div>
   <div style="float:left; width:27%; vertical-align:top; padding:0; margin:0px;">
-    {show_home_items("narrow")}
+    {show_home_items("narrow",$home_items)}
   </div>
 {page::footer()}

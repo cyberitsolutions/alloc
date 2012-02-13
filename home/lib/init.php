@@ -25,13 +25,7 @@ require_once(dirname(__FILE__)."/customize_alloc_home_item.inc.php");
 
 class home_module extends module {
   var $db_entities = array("history");
-
-  function register_home_items() {
-    register_home_item(new customize_alloc_home_item);
-  }
+  var $home_items = array("customize_alloc_home_item");
 }
-
-
-
 
 ?>

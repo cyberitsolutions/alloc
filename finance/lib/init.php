@@ -30,14 +30,7 @@ require_once(dirname(__FILE__)."/exchangeRate.inc.php");
 
 class finance_module extends module {
   var $db_entities = array("tf", "transaction", "expenseForm", "tfPerson", "transactionRepeat");
-
-  function register_home_items() {
-    register_home_item(new tfList_home_item);
-  } 
+  var $home_items = array("tfList_home_item");
 }
-
-
-
-
 
 ?>

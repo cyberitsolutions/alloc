@@ -24,11 +24,18 @@ class top_ten_tasks_home_item extends home_item {
   var $date;
 
   function top_ten_tasks_home_item() {
+    home_item::home_item("top_ten_tasks", "Tasks", "task", "topTenTasksH.tpl","standard",20);
+  }
+
+  function visible() {
+    global $current_user;
+    return ((isset($current_user->prefs["topTasksNum"]) && (sprintf("%d",$current_user->prefs["topTasksNum"]) > 0 || $current_user->prefs["topTasksNum"] == "all")) && have_entity_perm("task", PERM_READ_WRITE, $current_user, true));
+  }
+
+  function render() {
     global $current_user, $tasks_date, $TPL;
-    
     $options["taskStatus"] = $current_user->prefs["topTasksStatus"];
     $current_user->prefs["topTasksNum"] != "all" and $options["limit"] = $current_user->prefs["topTasksNum"];
-
     $options["taskView"] = "prioritised";
     #$options["projectType"] = "mine";
     $options["personID"] = $current_user->get_id();
@@ -38,12 +45,10 @@ class top_ten_tasks_home_item extends home_item {
     $options["showHeader"] = true;
     $options["showProject"] = true;
     $options["showTaskID"] = true;
-	  $options["showStatus"] = true;
-
+    $options["showStatus"] = true;
     $TPL["taskListRows"] = task::get_list($options);
     $TPL["taskListOptions"] = $options;
-
-    home_item::home_item("top_ten_tasks", "Tasks", "task", "topTenTasksH.tpl","standard",20);
+    return true;
   }
 }
 

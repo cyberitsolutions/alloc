@@ -23,9 +23,16 @@
 class timeSheetStatusHomeItem extends home_item {
 
   function timeSheetStatusHomeItem() {
-    global $current_user, $TPL;
     home_item::home_item("time_status_list", "Time Sheet Statistics", "time", "timeSheetStatusHomeM.tpl", "narrow", 29);
+  }
 
+  function visible() {
+    global $current_user;
+    return (isset($current_user) && $current_user->is_employee());
+  }
+
+  function render() {
+    global $current_user, $TPL;
     // Get averages for hours worked over the past fortnight and year
     $t = new timeSheetItem;
     list($hours_sum,$dollars_sum) = $t->get_averages(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y"))),$current_user->get_id());
@@ -34,8 +41,8 @@ class timeSheetStatusHomeItem extends home_item {
     $TPL["hours_avg"] = sprintf("%d",$hours_avg[$current_user->get_id()]);
     $TPL["dollars_sum"] = page::money_print($dollars_sum[$current_user->get_id()]);
     $TPL["dollars_avg"] = page::money(config::get_config_item("currency"),$dollars_avg[$current_user->get_id()],"%s%m %c");
+    return true;
   }
-
 }
 
 ?>

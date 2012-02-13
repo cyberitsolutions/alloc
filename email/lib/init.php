@@ -31,14 +31,6 @@ require_once(dirname(__FILE__)."/command.inc.php");
 
 class email_module extends module {
   var $db_entities = array("token");
-
-  function register_home_items() {
-    global $current_user;
-
-  }
 }
-
-
-
 
 ?>

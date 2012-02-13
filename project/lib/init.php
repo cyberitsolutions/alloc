@@ -33,17 +33,7 @@ class project_module extends module
                          , "projectPerson"
                          , "projectCommissionPerson"
                          );
-
-  function register_home_items() {
-    global $current_user;
-    if (sprintf("%d",$current_user->prefs["projectListNum"]) > 0 || $current_user->prefs["projectListNum"] == "all") {
-      register_home_item(new project_list_home_item());
-    }
-  }
-
+  var $home_items = array("project_list_home_item");
 }
-
-
-
 
 ?>
