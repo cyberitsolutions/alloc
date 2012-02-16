@@ -296,7 +296,7 @@ class productSale extends db_entity {
       $f = " WHERE ".implode(" AND ",$filter);
     }
 
-    $f.= " ORDER BY productSaleDate";
+    $f.= " ORDER BY IFNULL(productSaleDate,productSaleCreatedTime)";
 
     $db = new db_alloc();
     $query = sprintf("SELECT productSale.*, project.projectName, client.clientName
