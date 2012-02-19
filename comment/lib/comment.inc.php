@@ -51,6 +51,7 @@ class comment extends db_entity {
       $this->set_value("commentMaster",$this->get_value("commentType"));
       $this->set_value("commentMasterID",$this->get_value("commentLinkID"));
     }
+    $this->set_value("comment",str_replace("\r\n","\n",$this->get_value("comment")));
     return parent::save();
   }
 
@@ -316,7 +317,7 @@ class comment extends db_entity {
         $num_lines_hidden = $k-$start_position;
 
         if ($num_lines_hidden > 3) {
-          $new_lines[$start_position-1].= "<div style=\"display:inline;\" class=\"hidden_text button_".$class."\"> --- ".$num_lines_hidden." lines hidden --- <br></div>";
+          $new_lines[$start_position-1].= "<div class=\"hidden_text button_".$class."\"> --- ".$num_lines_hidden." lines hidden --- </div>";
           $new_lines[$start_position-1].= "<div style=\"display:none;\" class=\"hidden_text ".$class."\">";
           $new_lines[$k] = "</div>".$line;
     
