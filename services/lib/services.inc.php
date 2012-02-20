@@ -325,6 +325,34 @@ class alloc_services {
   }
 
   /**
+  * Grab all emails from a task mail box
+  * @param integer $taskID the task id
+  * @return string of mbox format emails
+  */
+  public function get_task_emails($taskID) {
+    global $current_user; // Always need this :(
+    if ($taskID) {
+      $folder = config::get_config_item("allocEmailFolder").".task".$taskID;
+      $info = $this->init_email_info();
+      $mail = new alloc_email_receive($info);
+      $mail->open_mailbox($folder,OP_READONLY);
+      $uids = $mail->get_all_email_msg_uids();
+      foreach ((array)$uids as $uid) {
+        list($header,$body) = $mail->get_raw_email_by_msg_uid($uid);
+        if ($header && $body) {
+          $m = new alloc_email();
+          $m->set_headers($header);
+          $timestamp = $m->get_header('Date');
+          $str = "\r\nFrom allocPSA ".date('D M  j G:i:s Y',strtotime($timestamp))."\r\n".$header.$body;
+          $emails.= utf8_encode(str_replace("\r\n","\n",$str));
+        }
+      }
+      $mail->close();
+    }
+    return $emails;
+  }
+
+  /**
   * Get all time sheet item comments in a faked mbox format
   * @param integer $taskID which task the time sheet item comments relate to
   * @return string of mbox format emails
