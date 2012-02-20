@@ -136,9 +136,19 @@ class alloc_email_receive {
     $this->mail_headers = $this->mail_structure = $this->mail_text = $this->mail_parts = $this->mail_info = $this->dir = "";
   }
 
+  function set_msg_text($text) {
+    $this->set_msg(null);
+    $this->msg_text = $text;
+  }
+
   function get_msg_header($uid=0) {
     $uid or $uid = $this->msg_uid;
-    $uid and $this->mail_headers = $this->parse_headers(imap_fetchheader($this->connection, $uid, FT_UID));
+    if ($uid) {
+      $this->mail_headers = $this->parse_headers(imap_fetchheader($this->connection, $uid, FT_UID));
+    } else if ($this->msg_text) {
+      $bits = preg_split("/\r\n\r\n|\n\n/", $this->msg_text);
+      $this->mail_headers = $this->parse_headers($bits[0]);
+    }
     return $this->mail_headers;
   }
 
@@ -166,8 +176,14 @@ class alloc_email_receive {
   }
 
   function load_structure() {
-    if (!$this->mail_structure) {
+    if ($this->msg_uid && !$this->mail_structure) {
       $this->mail_structure = imap_fetchstructure($this->connection,$this->msg_uid,FT_UID);
+    } else if ($this->msg_text) {
+      $m = new Mail_mimeDecode($this->msg_text);
+      $params['include_bodies'] = true;
+      $params['decode_bodies']  = true;
+      $params['decode_headers'] = true;
+      $this->mail_structure = $m->decode($params);
     }
   }
 
@@ -185,13 +201,18 @@ class alloc_email_receive {
   function get_raw_header_and_body($msg_uid=false) {
     $msg_uid or $msg_uid = $this->msg_uid;
     static $cache;
-    if ($cache[$msg_uid]) {
+
+    if ($msg_uid) {
+      if ($cache[$msg_uid]) {
+        return $cache[$msg_uid];
+      }
+      $header = imap_fetchheader($this->connection,$msg_uid, FT_UID);
+      $body = imap_body($this->connection,$msg_uid,FT_UID | FT_INTERNAL);
+      $cache[$msg_uid] = array($header,$body);
       return $cache[$msg_uid];
+    } else if ($this->msg_text) {
+      return Mail_mimeDecode::_splitBodyHeader($this->msg_text);
     }
-    $header = imap_fetchheader($this->connection,$msg_uid, FT_UID);
-    $body = imap_body($this->connection,$msg_uid,FT_UID | FT_INTERNAL);
-    $cache[$msg_uid] = array($header,$body);
-    return $cache[$msg_uid];
   }
 
   function save_email($dir) {
@@ -229,9 +250,70 @@ class alloc_email_receive {
     rmdir_if_empty($dir);
   }
 
+  function parse_mime($structure) {
+    foreach ((array)$structure->parts as $part) {
+      if ($part->disposition == 'attachment') {
+        $i++;
+        $attachments[$i]['body'] = $part->body;
+        unset($name);
+        $name = $part->ctype_parameters['name'];
+        $name or $name = $part->ctype_parameters['filename'];
+        if (property_exists($part,"d_parameters") && is_array($part->d_parameters)) {
+          $name or $name = $part->d_parameters["name"];
+          $name or $name = $part->d_parameters["filename"];
+        }
+
+        $attachments[$i]['name'] = $name;
+      } else {
+        if(count($part->parts)>0) {
+          foreach($part->parts as $sp) {
+            if(strpos($sp->headers['content-type'],'text/plain')!==false) {
+              $plain = $sp->body;
+            }
+            if(strpos($sp->headers['content-type'],'text/html')!==false) {
+              $html = $sp->body;
+            }
+          }
+        } else {
+          if(strpos($part->headers['content-type'],'text/plain')!==false) {
+            $plain = $part->body;
+          }
+          if(strpos($part->headers['content-type'],'text/html')!==false) {
+            $html = $part->body;
+          }
+        }
+      }
+    }
+    if(trim($plain)=='') {
+      $plain = $structure->body;
+    }
+    return array($plain, $attachments);
+  }
+
+  function save_email_from_text($text, $dir) {
+    if ($dir && !is_dir($dir)) {
+      mkdir($dir, 0777);
+    }
+    $dir && $dir[strlen($dir)-1] != DIRECTORY_SEPARATOR and $dir.=DIRECTORY_SEPARATOR;
+    $this->dir = $dir;
+    $this->load_structure();
+    list($this->mail_text,$attachments) = $this->parse_mime($this->mail_structure);
+
+    foreach ((array)$attachments as $v) {
+      if ($v["name"]) {
+        $fh = fopen($dir.$v["name"],"wb");
+        fputs($fh, $v["body"]);
+        fclose($fh);
+      }
+    }
+    rmdir_if_empty($dir);
+  }
+
   function mark_seen() {
-    imap_setflag_full($this->connection, $this->msg_uid, "\\SEEN", FT_UID); // this doesn't work!
-    $body = imap_body($this->connection,$this->msg_uid,FT_UID | FT_INTERNAL); // this seems to force it to be marked seen
+    if ($this->msg_uid) {
+      imap_setflag_full($this->connection, $this->msg_uid, "\\SEEN", FT_UID); // this doesn't work!
+      $body = imap_body($this->connection, $this->msg_uid,FT_UID | FT_INTERNAL); // this seems to force it to be marked seen
+    }
   }
 
   function mark_unseen() {
@@ -283,7 +365,7 @@ class alloc_email_receive {
     }
   }
 
-  function archive() {
+  function archive($mailbox=null) {
     $keys = $this->get_hashes();
     $token = new token;
     if ($token->set_hash($keys[0])) {
@@ -295,13 +377,24 @@ class alloc_email_receive {
                       ,$token->get_value("tokenEntityID"));
         $m = $row["commentMaster"];
         $mID = $row["commentMasterID"];
+        $mailbox = "INBOX.".$m.$mID;
       } else {
         $m = $token->get_value("tokenEntity");
         $mID = $token->get_value("tokenEntityID");
       }
-      $this->create_mailbox("INBOX.".$m.$mID);
-      $this->move_mail($this->msg_uid,"INBOX.".$m.$mID);
     }
+    if ($mailbox) { 
+      $this->create_mailbox($mailbox);
+      if ($this->msg_uid) {
+        $this->move_mail($this->msg_uid,$mailbox);
+      } else if ($this->msg_text) {
+        $this->append($mailbox,$this->msg_text);
+      }
+    }
+  }
+
+  function append($mailbox,$text) {
+    imap_append($this->connection,$this->connect_string.$mailbox,$text);
   }
 
   function delete($x=0) {
@@ -348,6 +441,16 @@ class alloc_email_receive {
     $e = new alloc_email();
     $e->set_headers($header);
   
+
+    $str = $header_obj["in-reply-to"]." ".$header_obj["references"];
+    preg_match_all("/\.alloc\.key\.([A-Za-z0-9]{8})@/",$str,$m);
+    if (is_array($m[1])) {
+      $temp = array_flip($m[1]);// unique pls
+      foreach ($temp as $k => $v) {
+        $rtn["key"][] = $k;
+      }
+    }
+
     // We now have: $header,$body,$subject
     if ($commands) {
       /* Disabled ...
@@ -479,11 +582,17 @@ class alloc_email_receive {
     if (!$this->mail_structure) {
       $this->load_structure();
     }
-    return $this->get_parameter_attribute_value($this->mail_structure->parameters,"charset");
+
+    if (property_exists($this->mail_structure,"parameters")) {
+      return $this->get_parameter_attribute_value($this->mail_structure->parameters,"charset");
+
+    } else if (property_exists($this->mail_structure,"ctype_parameters") && is_array($this->mail_structure->ctype_parameters)) {
+      return $this->mail_structure->ctype_parameters["charset"];
+    }
   }
 
   function get_parameter_attribute_value($parameters,$needle) {
-    foreach ($parameters as $v) {
+    foreach ((array)$parameters as $v) {
       if (strtolower($v->attribute) == $needle) {
         $rtn = $v->value;
       }
