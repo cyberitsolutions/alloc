@@ -64,10 +64,10 @@ class alloc_email {
     $this->to_address = $to;
     $this->del_header("to");
   }
-  function set_body($body=false) {
+  function set_body($body=false,$body_without_attachments="") {
     $body or $body = $this->body;
     $this->body = $body;
-    $this->body_without_attachments = $body;
+    $this->body_without_attachments = $body_without_attachments;
   }
   function set_message_type($message_type=false) {
     $message_type or $message_type = $this->message_type;
@@ -98,7 +98,7 @@ class alloc_email {
     $this->add_header("Date", $date);
   }
   function set_message_id($hash=false) {
-    $hash and $hash = ".".$hash;
+    $hash and $hash = ".alloc.key.".$hash;
     list($usec, $sec) = explode(" ", microtime());
     $time = $sec.$usec;
     $time = base_convert($time,10,36);
@@ -131,6 +131,8 @@ class alloc_email {
         $this->body.= $this->get_bottom_mime_header();
       }
 
+      $this->to_address or $this->to_address = null;
+
       $this->headers = $this->default_headers."\n".trim($this->headers);
 
       # echo "<pre><br>HEADERS:\n".page::htmlentities($this->headers)."</pre>";
@@ -153,7 +155,7 @@ class alloc_email {
   }
   function set_headers($headers="") {
     $headers or $headers = $this->headers;
-    $headers = preg_replace("/\r\n\s+/"," ",$headers);
+    $headers = preg_replace("/\r?\n\s+/"," ",$headers);
     $this->headers = $headers;
   }
   function get_headers() {

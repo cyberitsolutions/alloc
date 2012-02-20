@@ -435,7 +435,8 @@ CREATE TABLE timeSheetItem (
   commentPrivate boolean default false,
   comment text,
   multiplier decimal(9,2) default 1.00 NOT NULL,
-  emailUID varchar(255) DEFAULT NULL
+  emailUID varchar(255) DEFAULT NULL,
+  emailMessageID varchar(255) DEFAULT NULL
 ) ;
 
 CREATE TABLE timeUnit (

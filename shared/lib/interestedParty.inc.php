@@ -330,7 +330,7 @@ class interestedParty extends db_entity {
           if (is_numeric($duration)) {
             if (is_object($object) && $object->classname == "task" && $object->get_id() && $current_user->get_id()) {
               $timeSheet = new timeSheet();
-              $tsi_row = $timeSheet->add_timeSheetItem(array("taskID"=>$object->get_id(), "duration"=>$duration, "comment"=>$body, "msg_uid"=>$msg_uid, "multiplier"=>1));
+              $tsi_row = $timeSheet->add_timeSheetItem(array("taskID"=>$object->get_id(), "duration"=>$duration, "comment"=>$body, "msg_uid"=>$msg_uid, "msg_id"=>$email_receive->mail_headers["message-id"], "multiplier"=>1));
               $timeUnit = new timeUnit;
               $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
               $unitLabel = $units[$tsi_row["timeSheetItemDurationUnitID"]];

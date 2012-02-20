@@ -36,6 +36,7 @@ class timeSheetItem extends db_entity {
                              ,"multiplier"
                              ,"commentPrivate"
                              ,"emailUID"
+                             ,"emailMessageID"
                              );
 
   function save() {
@@ -407,7 +408,9 @@ class timeSheetItem extends db_entity {
     // Get list of comments from timeSheetItem table
     $query = sprintf("SELECT timeSheetID, dateTimeSheetItem AS date, comment, personID, timeSheetItemDuration as duration
                         FROM timeSheetItem
-                       WHERE timeSheetItem.taskID = %d AND (commentPrivate != 1 OR commentPrivate IS NULL) AND emailUID is NULL
+                       WHERE timeSheetItem.taskID = %d AND (commentPrivate != 1 OR commentPrivate IS NULL)
+                         AND emailUID is NULL
+                         AND emailMessageID is NULL
                     ORDER BY dateTimeSheetItem,timeSheetItemID
                      ",$taskID);
 

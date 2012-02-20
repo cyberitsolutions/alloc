@@ -432,6 +432,7 @@ class comment extends db_entity {
     $comment->set_id($commentID);
     $comment->select();
     $comment->set_value("commentEmailUID",$email_receive->msg_uid);
+    $comment->set_value("commentEmailMessageID",$email_receive->mail_headers["message-id"]);
 
     // Have to allow guest users to update their newly created comment
     $guest_permission_cache[] = array("entity"=>"comment","entityID"=>$comment->get_id(),"perms"=>15);
@@ -566,7 +567,7 @@ class comment extends db_entity {
       if ($email_receive) {
         list($email_receive_header,$email_receive_body) = $email_receive->get_raw_header_and_body();
         $email->set_headers($email_receive_header); 
-        $email->set_body($email_receive_body); 
+        $email->set_body($email_receive_body,$email_receive->mail_text); 
         // Remove any existing To/Cc header, to prevent the email getting sent to the same recipients again.
         $email->del_header("To");
         $email->del_header("Cc");
@@ -1029,7 +1030,7 @@ class comment extends db_entity {
     if ($successful_recipients) {
       $append_comment_text = "Email sent to: ".$successful_recipients;
       $message_good.= $append_comment_text;
-      $comment->set_value("commentEmailMessageID",$messageid);
+      //$comment->set_value("commentEmailMessageID",$messageid); that's the outbound message-id :-(
       $comment->set_value("commentEmailRecipients",$successful_recipients);
     }
 

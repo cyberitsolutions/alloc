@@ -1171,6 +1171,7 @@ EOD;
     $duration = $stuff["duration"];
     $comment = $stuff["comment"];
     $emailUID = $stuff["msg_uid"];
+    $emailMessageID = $stuff["msg_id"];
     $date = $stuff["date"];
     $unit = $stuff["unit"];
     $multiplier = $stuff["multiplier"];
@@ -1248,6 +1249,7 @@ EOD;
         $tsi->set_value("multiplier",$multiplier);
         $tsi->set_value("comment",$comment);
         $tsi->set_value("emailUID",$emailUID);
+        $tsi->set_value("emailMessageID",$emailMessageID);
         $tsi->save();
         $id = $tsi->get_id();
 
