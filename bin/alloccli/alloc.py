@@ -849,11 +849,15 @@ class alloc(object):
 
   def msg(self, s):
     """Print a message to the screen (stdout)."""
-    if not self.quiet: print "---", s
+    if not self.quiet:
+      print "--- " + s
+      sys.stdout.flush()
 
   def yay(self, s):
     """Print a success message to the screen (stdout)."""
-    if not self.quiet: print ":-]", s
+    if not self.quiet:
+      print ":-] " + s
+      sys.stdout.flush()
 
   def err(self, s):
     """Print a failure message to the screen (stderr)."""
@@ -867,7 +871,8 @@ class alloc(object):
   def dbg(self, s):
     """Print a message to the screen (stdout) for debugging only."""
     if self.debug:
-      print "DBG", s
+      print "DBG " + s
+      sys.stdout.flush()
 
   def parse_email(self, email):
     """Parse an email address from this: Jon Smit <js@example.com> into: addr, name."""
