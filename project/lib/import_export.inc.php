@@ -327,7 +327,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
       $task->set_value('taskStatus', 'open_notstarted');
       $task->set_value('priority', '3');
       $task->set_value('parentTaskID', ($parentTaskId == 0 ? "" : $parentTaskId));
-      // The following fields we leave at their default values: duplicateTaskID, dateActualCompletion, dateActualStart, closerID, timeExpected, dateClosed, taskComments, parentTaskID, taskCommentTemplateID, taskModifiedUser
+      // The following fields we leave at their default values: duplicateTaskID, dateActualCompletion, dateActualStart, closerID, timeExpected, dateClosed, parentTaskID, taskCommentTemplateID, taskModifiedUser
 
       // Handle task assignment
       if(isset($task_allocation[$planner_taskid])) {

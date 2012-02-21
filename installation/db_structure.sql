@@ -367,7 +367,6 @@ CREATE TABLE task (
   dateAssigned datetime default NULL,
   dateClosed datetime default NULL,
   dateTargetCompletion date default NULL,
-  taskComments text,
   projectID integer DEFAULT NULL,
   dateActualCompletion date default NULL,
   dateActualStart date default NULL,

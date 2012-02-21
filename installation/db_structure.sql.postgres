@@ -335,7 +335,6 @@ CREATE TABLE task (
   dateAssigned TIMESTAMP WITHOUT TIME ZONE default NULL,
   dateClosed TIMESTAMP WITHOUT TIME ZONE default NULL,
   dateTargetCompletion date default NULL,
-  taskComments text,
   projectID integer DEFAULT NULL,
   dateActualCompletion date default NULL,
   dateActualStart date default NULL,

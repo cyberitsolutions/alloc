@@ -43,7 +43,6 @@ class task extends db_entity {
                              ,"dateTargetCompletion"
                              ,"dateActualStart"
                              ,"dateActualCompletion"
-                             ,"taskComments"
                              ,"taskStatus"
                              ,"taskModifiedUser"
                              ,"projectID"

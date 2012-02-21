@@ -50,7 +50,6 @@ class alloc(object):
      ,"assignee_name"            :"Assigned"
      ,"projectShortName"         :"Proj Nick"
      ,"currency"                 :"Curr"
-     ,"taskComments"             :"Comments"
      ,"timeActualLabel"          :"Act Label"
      ,"timeBest"                 :"Best"
      ,"timeWorst"                :"Worst"
