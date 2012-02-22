@@ -15,11 +15,13 @@
   {$grand_total_pending += $r["pending_total"]}
   {/}
   {if count($tfListRows) > 1}
+  <tfoot>
   <tr>
     <td>&nbsp;</td>
     <td class="grand_total right transaction-pending obfuscate">{page::money(config::get_config_item("currency"),$grand_total_pending,"%s%m %c")}</td>
     <td class="grand_total right transaction-approved obfuscate">{page::money(config::get_config_item("currency"),$grand_total,"%s%m %c")}</td>
   </tr>
+  </tfoot>
   {/}
 </table>
 
