@@ -198,7 +198,7 @@ class alloc_email {
     $to = $this->to_address or $to = $this->get_header("Cc") or $to = $this->get_header("Bcc");
     $sentEmailLog->set_value("sentEmailTo",$to);
     $sentEmailLog->set_value("sentEmailSubject",$this->subject);
-    $sentEmailLog->set_value("sentEmailBody",$this->body_without_attachments);
+    $sentEmailLog->set_value("sentEmailBody",substr($this->body_without_attachments,0,65000)); // length of a TEXT column
     $sentEmailLog->set_value("sentEmailHeader",$this->headers);
     $sentEmailLog->set_value("sentEmailType",$this->message_type);
     $sentEmailLog->save();
