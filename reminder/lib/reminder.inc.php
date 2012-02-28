@@ -375,7 +375,7 @@ class reminder extends db_entity {
         }
       } else {
         // we should never actually get here...
-        die("Unknown metaperson.");
+        alloc_die("Unknown metaperson.");
       }
     } else {
       return $this->get_value('personID');

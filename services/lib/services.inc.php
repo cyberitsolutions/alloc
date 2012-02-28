@@ -50,7 +50,7 @@ class alloc_services {
       $sess->Save();
       return $sess->GetKey();
     } else {
-      die("Authentication Failed(1)."); 
+      alloc_die("Authentication Failed(1)."); 
     }
   }  
 
@@ -220,7 +220,7 @@ class alloc_services {
       }
 
       if ($bad_person) {
-        die("Unable to find person: ".$person);
+        alloc_die("Unable to find person: ".$person);
       }
     }
     foreach ((array)$rtn as $id => $p) {
@@ -250,7 +250,7 @@ class alloc_services {
     if ($rtn["status"] == "yay") {
       return $rtn["message"];
     } else {
-      die(print_r($rtn,1));
+      alloc_die(print_r($rtn,1));
     }
   }
 
@@ -302,10 +302,10 @@ class alloc_services {
           }
         }
       } else {
-        die("Entity method '".$entity."->get_list()' does not exist."); 
+        alloc_die("Entity method '".$entity."->get_list()' does not exist."); 
       }
     } else {
-      die("Entity '".$entity."' does not exist."); 
+      alloc_die("Entity '".$entity."' does not exist."); 
     }
   }
 
@@ -378,7 +378,7 @@ class alloc_services {
     $info["password"] = config::get_config_item("allocEmailPassword");
     $info["protocol"] = config::get_config_item("allocEmailProtocol");
     if (!$info["host"]) {
-      die("Email mailbox host not defined, assuming email fetch function is inactive.");
+      alloc_die("Email mailbox host not defined, assuming email fetch function is inactive.");
     }
     return $info;
   }
@@ -439,14 +439,14 @@ class alloc_services {
           $commar = ", ";
         }
       }
-      die("Help is available for the following methods: ".$available_topics);
+      alloc_die("Help is available for the following methods: ".$available_topics);
 
     } else {
       $m = $topic."_help";
       if (method_exists($this,$m)) {
         return $this->$m();
       } else {
-        die("No help exists for this method: ".$topic); 
+        alloc_die("No help exists for this method: ".$topic); 
       }
     }
   }
@@ -511,7 +511,7 @@ class alloc_services {
         }
       }
     }
-    die("Usage: get_list(entity, options). The following entities are available: ".$rtn);
+    alloc_die("Usage: get_list(entity, options). The following entities are available: ".$rtn);
   }
 
   /**

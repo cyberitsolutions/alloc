@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 if (!$current_user->is_employee()) {
-  die("You do not have permission to access time sheets");
+  alloc_die("You do not have permission to access time sheets");
 }
 
 $timeSheetID = $_POST["timeSheetID"];

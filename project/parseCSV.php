@@ -36,11 +36,11 @@ if ($_POST['import']) {
 $basepath = ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR;
 $rp = realpath($basepath.$_GET['filename']);
 if ($rp === FALSE || strpos($rp, $basepath) !== 0)
-  die("Illegal path");
+  alloc_die("Illegal path");
 
 $fh = fopen($rp, "r");
 if ($fh === false) {
-  die("File won't open.");
+  alloc_die("File won't open.");
 }
 
 $rows = array();

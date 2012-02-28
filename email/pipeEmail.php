@@ -79,7 +79,7 @@ if (preg_match("/^From /i",$email[0])) {
 $email = implode("", (array)$email);
 $email or die_bad("Empty email message, halting.");
 
-// Don't die() on errors. Static call to permeate all instances of db_entity objects.
+// Don't alloc_die() on errors. Static call to permeate all instances of db_entity objects.
 db_entity::skip_errors();
 
 // wrap db queries in a transaction

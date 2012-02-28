@@ -67,7 +67,7 @@ if ($download) {
 $tf = new tf;
 $tf->set_id($tfID);
 $tf->select();
-$tf->check_perm() or die();
+$tf->check_perm() or alloc_die();
 $TPL["tfID"] = $tfID;
 
 $_FORM = transaction::load_form_data($defaults);

@@ -854,7 +854,7 @@ class timeSheet extends db_entity {
     // an existing timesheet with a new one assigned to themself.
 
     if (!$this->get_value("personID")) {
-      die("You do not have access to this timesheet.");
+      alloc_die("You do not have access to this timesheet.");
     }
 
     $info = $this->get_email_vars();
@@ -894,7 +894,7 @@ class timeSheet extends db_entity {
       if (!in_array($current_user->get_id(), $projectManagers) &&
         !$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
           //error, go away
-          die("You do not have permission to change this timesheet.");
+          alloc_die("You do not have permission to change this timesheet.");
       }
       $email = array();
       $email["type"] = "timesheet_reject";
@@ -931,7 +931,7 @@ EOD;
       //user or TIME_INVOICE_TIMESHEETS
       //project managers may not do this
       if (!($this->get_value("personID") == $current_user->get_id() || $this->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
-        die("You do not have permission to change this timesheet.");
+        alloc_die("You do not have permission to change this timesheet.");
       }
       $this->set_value("dateSubmittedToManager", date("Y-m-d"));
       $this->set_value("dateRejected", "");
@@ -980,7 +980,7 @@ EOD;
       //admin->manager requires APPROVE_TIMESHEETS
       if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
-        die("You do not have permission to change this timesheet.");
+        alloc_die("You do not have permission to change this timesheet.");
       }
       $email = array();
       $email["type"] = "timesheet_reject";
@@ -1019,7 +1019,7 @@ EOD;
         (empty($projectManagers) && $this->get_value("personID") == $current_user->get_id()) ||
         $this->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
           //error, go away
-        die("You do not have permission to change this timesheet.");
+        alloc_die("You do not have permission to change this timesheet.");
       }
 
         if ($this->get_value("status") == "manager") { 
@@ -1055,7 +1055,7 @@ EOD;
       //requires INVOICE_TIMESHEETS
       if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
-        die("You do not have permission to change this timesheet.");
+        alloc_die("You do not have permission to change this timesheet.");
       }
 
       $this->set_value("approvedByAdminPersonID", "");
@@ -1070,7 +1070,7 @@ EOD;
     // requires INVOICE_TIMESHEETS
     if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
-      die("You do not have permission to change this timesheet.");
+      alloc_die("You do not have permission to change this timesheet.");
     }
 
     if ($info["projectManagers"] 
@@ -1086,7 +1086,7 @@ EOD;
       //requires INVOICE_TIMESHEETS
       if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
-        die("You do not have permission to change this timesheet.");
+        alloc_die("You do not have permission to change this timesheet.");
       }
 
       //transactions
@@ -1129,7 +1129,7 @@ EOD;
   function pending_transactions_to_approved() {
     if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
       //no permission, die
-      die("You do not have permission to approve transactions for this timesheet.");
+      alloc_die("You do not have permission to approve transactions for this timesheet.");
     }
 
     $db = new db_alloc();

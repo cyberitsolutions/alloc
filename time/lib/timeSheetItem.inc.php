@@ -54,12 +54,12 @@ class timeSheetItem extends db_entity {
 
     $amount_of_item = $this->calculate_item_charge($timeSheet->get_value("currencyTypeID"),$timeSheet->get_value("customerBilledDollars"));
     if ($amount_allocated && ($amount_of_item + $amount_used) > $amount_allocated) {
-      die("Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice. Time Sheet Item not saved.");
+      alloc_die("Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice. Time Sheet Item not saved.");
     } 
 
     // If rate is changed via CLI
     if ($this->get_value("rate") && $timeSheet->pay_info["project_rate"] != $this->get_value("rate") && !$timeSheet->can_edit_rate()) {
-      die("Not permitted to edit time sheet item rate.");
+      alloc_die("Not permitted to edit time sheet item rate.");
     }
 
     if (!imp($this->get_value("rate")) && imp($timeSheet->pay_info["project_rate"])) {
@@ -68,7 +68,7 @@ class timeSheetItem extends db_entity {
 
     // If unit is changed via CLI
     if ($this->get_value("timeSheetItemDurationUnitID") && $timeSheet->pay_info["project_rateUnitID"] != $this->get_value("timeSheetItemDurationUnitID") && !$timeSheet->can_edit_rate()) {
-      die("Not permitted to edit time sheet item unit.");
+      alloc_die("Not permitted to edit time sheet item unit.");
     }
 
     if (!$this->get_value("timeSheetItemDurationUnitID") && $timeSheet->pay_info["project_rateUnitID"]) {
@@ -77,13 +77,13 @@ class timeSheetItem extends db_entity {
 
     // Last ditch perm checking - useful for the CLI
     if (!is_object($timeSheet) || !$timeSheet->get_id()) {
-      die("Unknown time sheet.");
+      alloc_die("Unknown time sheet.");
     }
     if ($timeSheet->get_value("status") != "edit" && !$this->skip_tsi_status_check) {
-      die("Time sheet is not at status edit");
+      alloc_die("Time sheet is not at status edit");
     }
     if (!$this->is_owner()) {
-      die("Time sheet is not editable for you.");
+      alloc_die("Time sheet is not editable for you.");
     }
 
     $rtn = parent::save();

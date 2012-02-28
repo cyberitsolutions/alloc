@@ -80,7 +80,7 @@ class db_field {
         }
 
         if (!$c) {
-          die("db_field::get_value(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$c.")");
+          alloc_die("db_field::get_value(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$c.")");
         } else if ($this->value == $parent->all_row_fields[$this->name]) {
           return page::money($c,$this->value,"%mo");
         }

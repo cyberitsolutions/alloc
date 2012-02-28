@@ -26,7 +26,7 @@ require_once("../alloc.php");
 
 
 if (date("D") == "Sat" || date("D") == "Sun") {
-  die("IT'S THE WEEKEND - GET OUTTA HERE");
+  alloc_die("IT'S THE WEEKEND - GET OUTTA HERE");
 }
 
 

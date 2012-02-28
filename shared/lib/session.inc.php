@@ -200,7 +200,7 @@ class Session {
   
   // errors fix me 
   function Error($msg) {
-    die($msg);
+    alloc_die($msg);
   }
 }
 

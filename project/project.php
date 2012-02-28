@@ -313,7 +313,7 @@ $project = new project;
 if ($projectID) {
   $project->set_id($projectID);
   $project->select();
-  $project->check_perm() or die();
+  $project->check_perm() or alloc_die();
   $new_project = false;
 } else {
   $new_project = true;
@@ -478,7 +478,7 @@ if ($projectID) {
   }
   // Displaying a record
   $project->set_id($projectID);
-  $project->select() || die("Could not load project $projectID");
+  $project->select() || alloc_die("Could not load project $projectID");
 } else {
   // Creating a new record
   $project->read_globals();

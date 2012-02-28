@@ -52,7 +52,7 @@ class alloc_email_receive {
     } 
 
     if ($this->lockfile && file_exists($this->lockfile)) {
-      die("Mailbox is locked. Remove ".$this->lockfile." to unlock.");
+      alloc_die("Mailbox is locked. Remove ".$this->lockfile." to unlock.");
     } else if ($this->lockfile) {
       $this->lock();
     }
@@ -61,18 +61,18 @@ class alloc_email_receive {
   function open_mailbox($folder="",$ops=OP_HALFOPEN) {
     $connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.config::get_config_item("allocEmailExtra").'}';
     $this->connect_string = $connect_string;
-    $this->connection = imap_open($connect_string, $this->username, $this->password, $ops) or die("Unable to access mail folder(1).");
+    $this->connection = imap_open($connect_string, $this->username, $this->password, $ops) or alloc_die("Unable to access mail folder(1).");
     $list = imap_list($this->connection, $connect_string, "*");
     if (!is_array($list) || !count($list)) { // || !in_array($connect_string.$folder,$list)) {
       $this->unlock();
       imap_close($this->connection); 
-      die("Unable to access mail folder(2).");
+      alloc_die("Unable to access mail folder(2).");
     } else {
       $connect_string.= $folder;
       $rtn = imap_reopen($this->connection, $connect_string);
       if (!$rtn) {
         imap_close($this->connection); 
-        die("Unable to access mail folder(3).");
+        alloc_die("Unable to access mail folder(3).");
       }
     }
 

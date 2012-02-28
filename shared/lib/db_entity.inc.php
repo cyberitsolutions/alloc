@@ -84,7 +84,7 @@ class db_entity {
   function err($str) {
     error_log($str);
     if (self::$errors_fatal) {
-      die($str);
+      alloc_die($str);
     } else {
       echo $str;
     }

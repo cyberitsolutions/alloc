@@ -36,7 +36,7 @@ $info["password"] = config::get_config_item("allocEmailPassword");
 $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
 if (!$info["host"]) {
-  die("Email mailbox host not defined, assuming email receive function is inactive.");
+  alloc_die("Email mailbox host not defined, assuming email receive function is inactive.");
 }
 
 $email_receive = new alloc_email_receive($info,$lockfile);
@@ -56,7 +56,7 @@ if ($num_new_emails >0) {
   foreach ($msg_nums as $num) {
     unset($current_user);
 
-    // Don't die() on errors. Static call to permeate all instances of db_entity objects.
+    // Don't alloc_die() on errors. Static call to permeate all instances of db_entity objects.
     db_entity::skip_errors();
 
     // wrap db queries in a transaction

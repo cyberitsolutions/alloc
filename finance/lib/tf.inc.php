@@ -63,7 +63,7 @@ class tf extends db_entity {
 
     #echo "<br>".$debug." q: ".$query;
     $db->query($query);
-    $db->next_record() || die("TF $tfID not found in tf::get_balance");
+    $db->next_record() || alloc_die("TF $tfID not found in tf::get_balance");
     return $db->f("balance");
   }
 
