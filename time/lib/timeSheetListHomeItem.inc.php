@@ -23,7 +23,7 @@
 class timeSheetListHomeItem extends home_item {
 
   function timeSheetListHomeItem() {
-    home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetHomeM.tpl", "narrow", 30);
+    home_item::home_item("time_list", "Current Time Sheets", "time", "timeSheetListH.tpl", "narrow", 30);
   }
 
   function visible() {
