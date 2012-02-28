@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 if (!$current_user->have_role("admin")) {
-  die();
+  alloc_die();
 }
 
 function load_transaction_total($info_field, $transaction_type) {

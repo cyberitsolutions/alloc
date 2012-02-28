@@ -169,7 +169,7 @@ class person extends db_entity {
 
   function check_role($perm_name) {
     if (!$this->have_role($perm_name)) {
-      die("Pemission denied");
+      alloc_die("Pemission denied");
     }
   }
 
@@ -189,7 +189,7 @@ class person extends db_entity {
   function check_employee() {
     // Ensure the current user is an employee
     if (!$this->is_employee()) {
-      die("You must be an employee to access this function");
+      alloc_die("You must be an employee to access this function");
     }
   }
 

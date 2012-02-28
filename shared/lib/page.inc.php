@@ -406,7 +406,7 @@ EOD;
     // AUD,100        -> 100.00
     // AUD,0|''|false -> 0.00
     if (imp($amount)) {
-      $c or die("page::money(): no currency specified for amount $amount.");
+      $c or alloc_die("page::money(): no currency specified for amount $amount.");
       $currencies = get_cached_table("currencyType");
       $n = $currencies[$c]["numberToBasic"];
 
@@ -421,7 +421,7 @@ EOD;
     // AUD,0      -> 0
     // AUD        ->
     if (imp($amount)) {
-      $c or die("page::money_in(): no currency specified for amount $amount.");
+      $c or alloc_die("page::money_in(): no currency specified for amount $amount.");
       $currencies = get_cached_table("currencyType");
       $n = $currencies[$c]["numberToBasic"];
 

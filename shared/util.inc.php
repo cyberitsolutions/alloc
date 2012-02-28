@@ -362,24 +362,24 @@ function move_attachment($entity, $id=false) {
 
         if (!preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)) {
           if (!move_uploaded_file($file["tmp_name"], $dir.DIRECTORY_SEPARATOR.$newname)) {
-            die("Could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
+            alloc_die("Could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
           } else {
             chmod($dir.DIRECTORY_SEPARATOR.$newname, 0777);
           }
         } else {
-          die("Error uploading file. Bad filename.");
+          alloc_die("Error uploading file. Bad filename.");
         }
   
       } else {
         switch($file['error']){
           case 0: 
-            die("There was a problem with your upload.");
+            alloc_die("There was a problem with your upload.");
             break;
           case 1: // upload_max_filesize in php.ini
-            die("The file you are trying to upload is too big(1).");
+            alloc_die("The file you are trying to upload is too big(1).");
             break;
           case 2: // MAX_FILE_SIZE
-            die("The file you are trying to upload is too big(2).");
+            alloc_die("The file you are trying to upload is too big(2).");
             break;
           case 3: 
             echo "The file you are trying upload was only partially uploaded.";
@@ -793,5 +793,9 @@ function tax($amount,$taxPercent=null) {
   $amount_minus_tax = $amount / (($taxPercent/100) + 1);
   $amount_of_tax    = $amount / ((100/$taxPercent) + 1);
   return array($amount_minus_tax, $amount_of_tax);
+}
+function alloc_die($str="") {
+  echo($str);
+  exit(1); // for CLI/email gateway where exit status is relevant
 }
 ?>

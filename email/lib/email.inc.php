@@ -139,7 +139,7 @@ class alloc_email {
       # echo "<pre><br>TO:\n".page::htmlentities($this->to_address)."</pre>";
       # echo "<pre><br>SUBJECT:\n".page::htmlentities($this->subject)."</pre>";
       # echo "<pre><br>BODY:\n".page::htmlentities($this->body)."</pre>";
-      # die();
+      # alloc_die();
     
       if (defined("ALLOC_DEFAULT_RETURN_PATH_ADDRESS") && ALLOC_DEFAULT_RETURN_PATH_ADDRESS) {
         $return_path = "-f".ALLOC_DEFAULT_RETURN_PATH_ADDRESS;

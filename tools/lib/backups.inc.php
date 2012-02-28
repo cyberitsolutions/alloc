@@ -87,7 +87,7 @@ class backups {
     $db->dump_db($dumpfile);
 
     if (!file_exists($dumpfile)) { 
-      die("Couldn't backup database to ".$dumpfile);
+      alloc_die("Couldn't backup database to ".$dumpfile);
     } else {
 
       // database dump

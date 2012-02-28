@@ -11,25 +11,25 @@ function g($var) {
 }
 
 if (g("get_server_version")) {
-  die(alloc_json_encode(array("version"=>get_alloc_version())));
+  alloc_die(alloc_json_encode(array("version"=>get_alloc_version())));
 }
 
 if (!version_compare(g("client_version"),get_alloc_version(),">=")) {
-  die("Your alloc client needs to be upgraded.");
+  alloc_die("Your alloc client needs to be upgraded.");
 }
 
 $sessID = g("sessID");
 
 if (g("authenticate") && g("username") && g("password")) {
   $sessID = alloc_services::authenticate(g("username"), g("password"));
-  die(alloc_json_encode(array("sessID"=>$sessID)));
+  alloc_die(alloc_json_encode(array("sessID"=>$sessID)));
 }
 
 
 $alloc_services = new alloc_services($sessID);
 global $current_user;
 if (!$current_user || !is_object($current_user) || !$current_user->get_id()) {
-  die(alloc_json_encode(array("reauthenticate"=>"true")));
+  alloc_die(alloc_json_encode(array("reauthenticate"=>"true")));
 }
 
 

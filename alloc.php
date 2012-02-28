@@ -29,7 +29,7 @@ ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).
 
 // Can't call this script directly..
 if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
-  die();
+  alloc_die();
 } 
 
 // Set the charset for Zend Lucene search indexer http://framework.zend.com/manual/en/zend.search.lucene.charset.html

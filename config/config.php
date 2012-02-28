@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 if (!have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
-  die("Permission denied.");
+  alloc_die("Permission denied.");
 }
 
 if ($_POST["test_email_gateway"]) {
