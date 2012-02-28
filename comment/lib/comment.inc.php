@@ -450,6 +450,21 @@ class comment extends db_entity {
     $comment->updateSearchIndexLater = true;
     $comment->skip_modified_fields = true;
     $comment->save();
+
+
+    // CYBER-ONLY: Re-open task, if comment has been made by an external party.
+    if (config::for_cyber() && !$comment->get_value('commentCreatedUser')) {
+      $e = $entity->get_parent_object();
+      if ($e->classname == "task" && substr($e->get_value("taskStatus"),0,4) != "open") {
+        $tmp = $current_user;
+        $current_user = new person();
+        $current_user->load_current_user($e->get_value("managerID")); // fake identity
+        $e->set_value("taskStatus","open_inprogress");
+        $e->save();
+        $current_user = $tmp;
+      }
+    }
+
     return $comment;
   }
 
