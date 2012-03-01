@@ -33,7 +33,9 @@ class tfList_home_item extends home_item {
     global $TPL;
     $ops["owner"] = 1;
     $TPL["tfListRows"] = tf::get_list($ops);
-    return true;
+    if ($TPL["tfListRows"]) {
+      return true;
+    }
   }
 }
 

@@ -48,7 +48,9 @@ class top_ten_tasks_home_item extends home_item {
     $options["showStatus"] = true;
     $TPL["taskListRows"] = task::get_list($options);
     $TPL["taskListOptions"] = $options;
-    return true;
+    if (count($TPL["taskListRows"])) {
+      return true;
+    }
   }
 }
 
