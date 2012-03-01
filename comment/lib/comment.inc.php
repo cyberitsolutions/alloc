@@ -410,6 +410,9 @@ class comment extends db_entity {
 
   function make_token_add_comment_from_email() {
     global $current_user;
+    if (!is_object($current_user) || !$current_user->get_id()) {
+      alloc_die("Cannot make token, current_user is not set.");
+    }
     $token = new token;
     $token->set_value("tokenEntity","comment");
     $token->set_value("tokenEntityID",$this->get_id());
