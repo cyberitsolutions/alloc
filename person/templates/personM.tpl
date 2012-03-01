@@ -21,7 +21,7 @@
           <td>Login Username</td>
           <td><input type="text" name="username" value="{$person_username}"></td>
           <td>User Enabled</td>
-          <td><input type="checkbox" name="personActive" value="1"{$personActive}>&nbsp;&nbsp;(last login:{$person_lastLoginDate})</td>
+          <td><input type="checkbox" name="personActive" value="1"{$personActive}>&nbsp;&nbsp;{if $person_lastLoginDate}(last login:{$person_lastLoginDate}){/}</td>
         </tr>
         <tr>
           <td>Password</td>
