@@ -20,19 +20,21 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/timeUnit.inc.php");
-require_once(dirname(__FILE__)."/timeSheet.inc.php");
-require_once(dirname(__FILE__)."/timeSheetItem.inc.php");
-require_once(dirname(__FILE__)."/pendingApprovalTimeSheetListHomeItem.inc.php");
-require_once(dirname(__FILE__)."/timeSheetHomeItem.inc.php");
-require_once(dirname(__FILE__)."/timeSheetListHomeItem.inc.php");
-require_once(dirname(__FILE__)."/timeSheetStatusHomeItem.inc.php");
-require_once(dirname(__FILE__)."/timeSheetPrint.inc.php");
+class timeSheetHomeItem extends home_item {
 
-class time_module extends module
-{
-  var $db_entities = array("timeSheet", "timeSheetItem","timeUnit");
-  var $home_items = array("timeSheetHomeItem","timeSheetListHomeItem","pendingApprovalTimeSheetListHomeItem","timeSheetStatusHomeItem","pendingAdminApprovalTimeSheetListHomeItem");
+  function timeSheetHomeItem() {
+    home_item::home_item("time_edit", "New Time Sheet Item", "time", "timeSheetH.tpl", "narrow", 24);
+  }
+
+  function visible() {
+    global $current_user;
+    return isset($current_user) && $current_user->is_employee();
+  }
+
+  function render() {
+    global $current_user, $TPL;
+    return true;
+  }
 }
 
 ?>

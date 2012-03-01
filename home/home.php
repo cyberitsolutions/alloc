@@ -80,6 +80,22 @@ if ($_POST["customize_save"]) {
   alloc_redirect($TPL["url_alloc_home"]);
 }
 
+if (isset($_POST["time_item"])) {
+
+  $t = timeSheetItem::parse_time_string($_POST["time_item"]);
+
+  if (is_numeric($t["duration"]) && $current_user->get_id()) {
+    $timeSheet = new timeSheet();
+    $tsi_row = $timeSheet->add_timeSheetItem($t);
+    if ($tsi_row["status"] == "err") {
+      $TPL["message"][] = $tsi_row["message"];
+    } 
+  } else {
+    $TPL["message"][] = "Time not added. No duration set.";
+    $TPL["message"][] = print_r($t,1);
+  }
+}
+
 
 $TPL["main_alloc_title"]="Home Page - ".APPLICATION_NAME;
 if ($_GET["media"] == "print") {
