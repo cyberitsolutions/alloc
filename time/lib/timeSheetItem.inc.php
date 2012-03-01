@@ -105,9 +105,8 @@ class timeSheetItem extends db_entity {
 
   function parse_time_string($str) {
     preg_match("/^"
-              ."([\d-\/]{8,10})?"   # date
-              ."\s*"              
-              ."([\d\.]+)"          # duration
+              ."(\d\d\d\d\-\d\d?\-\d\d?\s+)?"   # date
+              ."([\d\.]+)?"          # duration
               ."\s*"
               ."(hours|hour|hrs|hr|days|day|weeks|week|months|month|fixed)?" # unit
               ."\s*"
@@ -120,7 +119,7 @@ class timeSheetItem extends db_entity {
               #."(private)?"        # whether the comment is private 
               ."$/i",$str,$m);
 
-    $rtn["date"] = $m[1] or $rtn["date"] = date("Y-m-d");
+    $rtn["date"] = trim($m[1]) or $rtn["date"] = date("Y-m-d");
     $rtn["duration"] = $m[2];
     $rtn["unit"] = $m[3];
     $rtn["multiplier"] = str_replace(array("x","X"," "),"",$m[4]) or $rtn["multiplier"] = 1;
