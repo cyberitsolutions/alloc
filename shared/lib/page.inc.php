@@ -43,7 +43,7 @@ class page {
     // close page
     $sess = new Session;
     $sess->Save();
-    if (is_object($current_user) && $current_user->get_id()) {
+    if (is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
       $current_user->store_prefs();
     }
   }
