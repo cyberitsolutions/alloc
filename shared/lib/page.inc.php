@@ -355,6 +355,9 @@ EOD;
     } else {
       global $current_user;
       $themes = page::get_customizedTheme_array();
+      if (!isset($current_user->prefs["customizedTheme2"])) {
+        $current_user->prefs["customizedTheme2"] = 4;
+      }
       $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme2"])]);
       return "style_".$style.".css";
     }
