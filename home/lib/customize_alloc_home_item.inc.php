@@ -39,6 +39,9 @@ class customize_alloc_home_item extends home_item {
     $TPL["fontLabel"] = $customizedFont_array[$current_user->prefs["customizedFont"]];
 
     $customizedTheme_array = page::get_customizedTheme_array();
+    if (!isset($current_user->prefs["customizedTheme2"])) {
+      $current_user->prefs["customizedTheme2"] = 4;
+    }
     $TPL["themeOptions"] = page::select_options($customizedTheme_array, $current_user->prefs["customizedTheme2"]);
     $TPL["themeLabel"] = $customizedTheme_array[$current_user->prefs["customizedTheme2"]];
 
