@@ -1,6 +1,6 @@
 <table class="box">
     <tr>
-      <th>Task History</th>
+      <th class="header">Task History</th>
     </tr>
     <tr>
       <td>

@@ -409,7 +409,12 @@ function clickClientStatus(e) {
 <div id="commissions">
 <table class="box">
   <tr>
-    <th align="left">{page::help("timesheet_commission")}Time Sheet Commissions</th>
+    <th class="header">
+    Time Sheet Commissions
+    <span>
+    {page::help("timesheet_commission")}
+    </span>
+    </th>
   </tr>
   <tr>
     <td>

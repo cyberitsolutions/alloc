@@ -1,7 +1,7 @@
 
 <table class="box">
   <tr>
-    <th>Attachments</th>
+    <th class="header">Attachments</th>
   </tr>
   <tr>
     <td>
