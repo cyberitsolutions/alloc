@@ -326,13 +326,14 @@ class alloc_services {
 
   /**
   * Grab all emails from a task mail box
-  * @param integer $taskID the task id
+  * @param integer $taskID the task (or other entity) id
+  * @param string $entity the particular entity: task, client, project, etc
   * @return string of mbox format emails
   */
-  public function get_task_emails($taskID) {
+  public function get_task_emails($taskID, $entity="task") {
     global $current_user; // Always need this :(
     if ($taskID) {
-      $folder = config::get_config_item("allocEmailFolder").".task".$taskID;
+      $folder = config::get_config_item("allocEmailFolder").".".$entity.$taskID;
       $info = $this->init_email_info();
       $mail = new alloc_email_receive($info);
       $mail->open_mailbox($folder,OP_READONLY);
@@ -364,7 +365,9 @@ class alloc_services {
       $timestamp = format_date("U",$row["date"]);
       $name = $people[$row["personID"]]["name"];
       $str.= $br."From allocPSA ".date('D M  j G:i:s Y',$timestamp);
-      $str.= "\n".$name." ".$row["duration"]." ".$row["comment"];
+      $str.= "\nFrom: ".$name;
+      $str.= "\nDate: ".date("D, d M Y H:i:s O",$timestamp);
+      $str.= "\n\n".$name." ".$row["duration"]." ".$row["comment"];
       $br = "\n\n";
     } 
     return $str;

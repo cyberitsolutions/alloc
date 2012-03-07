@@ -188,14 +188,14 @@ class alloc_email_receive {
   }
 
   function get_raw_email_by_msg_uid($msg_uid) {
-    $result = imap_fetch_overview($this->connection,$msg_uid,FT_UID);
+    // $result = imap_fetch_overview($this->connection,$msg_uid,FT_UID);
     // only view emails that *have* been seen before otherwise 
     // we might view an email before it has been downloaded by
     // receiveEmail.php
-    if (is_array($result) && $result[0]->seen) { 
-      return $this->get_raw_header_and_body($msg_uid);
-    }
-    return array("","");
+    //if (is_array($result) && $result[0]->seen) { 
+
+    // Now we don't care if it's been seen before, since we're not polling IMAP anymore
+    return $this->get_raw_header_and_body($msg_uid);
   }
 
   function get_raw_header_and_body($msg_uid=false) {

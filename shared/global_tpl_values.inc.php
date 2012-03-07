@@ -67,6 +67,7 @@ $alloc_urls = array(
             ,"url_alloc_comment"                        => "comment/comment.php"
             ,"url_alloc_commentSummary"                 => "comment/summary.php"
             ,"url_alloc_downloadEmail"                  => "email/downloadEmail.php"
+            ,"url_alloc_downloadComments"               => "email/downloadComments.php"
             ,"url_alloc_client"                         => "client/client.php"
             ,"url_alloc_clientList"                     => "client/clientList.php"
             ,"url_alloc_personList"                     => "person/personList.php"
