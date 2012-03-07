@@ -177,6 +177,9 @@ FOR EACH ROW
 BEGIN
   call check_edit_timeSheet(NEW.timeSheetID);
 
+  SET NEW.timeSheetItemCreatedUser = personID();
+  SET NEW.timeSheetItemCreatedTime = current_timestamp();
+
   SELECT DATE(NEW.dateTimeSheetItem) INTO @validDate;
   IF (@validDate = '0000-00-00') THEN
     call alloc_error("Invalid date.");
@@ -217,6 +220,9 @@ CREATE TRIGGER before_update_timeSheetItem BEFORE UPDATE ON timeSheetItem
 FOR EACH ROW
 BEGIN
   call check_edit_timeSheet(OLD.timeSheetID);
+
+  SET NEW.timeSheetItemModifiedUser = personID();
+  SET NEW.timeSheetItemModifiedTime = current_timestamp();
 
   SELECT DATE(NEW.dateTimeSheetItem) INTO @validDate;
   IF (@validDate = '0000-00-00') THEN
