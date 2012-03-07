@@ -37,6 +37,10 @@ class timeSheetItem extends db_entity {
                              ,"commentPrivate"
                              ,"emailUID"
                              ,"emailMessageID"
+                             ,"timeSheetItemCreatedTime"
+                             ,"timeSheetItemCreatedUser"
+                             ,"timeSheetItemModifiedTime"
+                             ,"timeSheetItemModifiedUser"
                              );
 
   function save() {

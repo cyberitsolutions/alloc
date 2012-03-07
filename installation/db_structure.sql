@@ -473,7 +473,11 @@ CREATE TABLE timeSheetItem (
   comment text,
   multiplier decimal(9,2) default 1.00 NOT NULL,
   emailUID varchar(255) DEFAULT NULL,
-  emailMessageID varchar(255) DEFAULT NULL
+  emailMessageID varchar(255) DEFAULT NULL,
+  timeSheetItemCreatedTime datetime default NULL,
+  timeSheetItemCreatedUser integer default NULL,
+  timeSheetItemModifiedTime datetime DEFAULT NULL,
+  timeSheetItemModifiedUser integer DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS timeUnit;
