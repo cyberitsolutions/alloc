@@ -69,7 +69,7 @@ Unfortunately doing so appears to flush the input buffer!)
     """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
-    o, remainder = self.get_args(command_list, self.ops, self.help_text)
+    o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
 
     # Got this far, then authenticate
     self.authenticate()
@@ -81,7 +81,7 @@ Unfortunately doing so appears to flush the input buffer!)
         prompt = False
 
     # Get vars manually
-    if prompt and not remainder:
+    if prompt:
       o['task'] = raw_input("Task ID or some text from a task's name, or hit ENTER for none: ")
       if not o['task']:
         o['project'] = raw_input("Project ID or some text from a project's name: ")
