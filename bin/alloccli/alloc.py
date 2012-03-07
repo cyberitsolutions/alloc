@@ -689,6 +689,27 @@ class alloc(object):
     print "\nEg: tasks -t 1234"
 
 
+  def which(self, name, flags=os.X_OK):
+    """Search PATH for executable files with the given name."""
+    result = []
+    exts = filter(None, os.environ.get('PATHEXT', '').split(os.pathsep))
+    path = os.environ.get('PATH', None)
+    if path is None:
+      return ''
+    for p in os.environ.get('PATH', '').split(os.pathsep):
+      p = os.path.join(p, name)
+      if os.access(p, flags):
+        result.append(p)
+      for e in exts:
+        pext = p + e
+        if os.access(pext, flags):
+          result.append(pext)
+    if len(result) >= 1:
+      return result[0]
+    else:
+      return ''
+
+
 # Interactive handler for alloccli
 class allocCmd(cmd.Cmd):
   """This allows us to have an alloc shell of sorts."""
