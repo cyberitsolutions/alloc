@@ -7,6 +7,7 @@ DELETE FROM error;
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to change time sheet status.\n\n");
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete time sheet unless status is edit.\n\n");
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.\n\n");
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.(2)\n\n");
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n");
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid date.\n\n");
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n");
@@ -121,7 +122,7 @@ BEGIN
   ELSEIF (OLD.status = 'manage' AND NEW.status = 'admin' AND has_perm(personID(),256,"timeSheet")) THEN
     SELECT 1 INTO @null;
   ELSEIF (neq(OLD.status, 'edit')) THEN
-    call alloc_error('Time sheet is not editable.');
+    call alloc_error('Time sheet is not editable(2).');
   ELSEIF (neq(NEW.status, 'edit')) THEN
     call alloc_error('Not permitted to change time sheet status.');
   ELSE
@@ -237,7 +238,9 @@ $$
 DROP TRIGGER IF EXISTS after_update_timeSheetItem $$
 CREATE TRIGGER after_update_timeSheetItem AFTER UPDATE ON timeSheetItem
 FOR EACH ROW
-  call updateTimeSheetDates(NEW.timeSheetID);
+  IF (neq(OLD.dateTimeSheetItem, NEW.dateTimeSheetItem)) THEN
+    call updateTimeSheetDates(NEW.timeSheetID);
+  END IF;
 $$
 
 DROP TRIGGER IF EXISTS before_delete_timeSheetItem $$
