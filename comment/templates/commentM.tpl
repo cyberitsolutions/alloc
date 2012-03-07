@@ -1,10 +1,11 @@
 
 <table class="box">
   <tr>
-    <th class="header">{page::help("comment")} Comments
+    <th class="header">Comments
       <span>
         {$extra_page_links}
         {page::expand_link("id_new_comment","New Comment")}
+        {page::help("comment")}
       </span>
     </th>
   </tr>
