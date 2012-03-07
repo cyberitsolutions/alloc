@@ -21,7 +21,8 @@ class browse(alloc):
   help_text += '''\n\n%s
 
 This program allows you to quickly jump to a particular alloc web page. It fires up 
-$BROWSER on the location, or if the output is not a TTY it captures the output instead.
+$BROWSER/sensible-browser/lynx/elinks on the location, or if the output is not a TTY
+it redirects to stdout instead.
   
 Examples:
 alloc browse --task 123
@@ -87,10 +88,24 @@ alloc browse --time 213'''
       print self.get_alloc_html(url)
 
     elif url:
-      if not 'BROWSER' in os.environ or not os.environ['BROWSER']:
-        self.die('The environment variable $BROWSER has not been defined.')
+      browser = ''
+      brow_lynx = self.which('lynx')
+      brow_elinks = self.which('elinks')
+      brow_sensible = self.which('sensible-browser')
+
+      if 'BROWSER' in os.environ and os.environ['BROWSER']:
+        browser = os.environ['BROWSER']
+      elif brow_sensible:
+        browser = brow_sensible
+      elif brow_lynx:
+        browser = brow_lynx
+      elif brow_elinks:
+        browser = brow_elinks
+     
+      if not browser:
+        self.die('$BROWSER not defined, and sensible-browser and lynx weren\'t found in PATH.')
       elif url:
-        command = os.environ['BROWSER']+' "'+url+'"'
+        command = browser+' "'+url+'"'
         if o['quiet']: command += ' >/dev/null'
         self.msg('Running: '+command)
         os.system(command)
