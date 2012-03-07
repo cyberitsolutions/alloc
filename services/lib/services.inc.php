@@ -362,7 +362,8 @@ class alloc_services {
     $people = get_cached_table("person");
     $rows = timeSheetItem::get_timeSheetItemComments($taskID);
     foreach ($rows as $row) {
-      $timestamp = format_date("U",$row["date"]);
+      $d = $row["timeSheetItemCreatedTime"] or $d = $row["date"];
+      $timestamp = format_date("U",$d);
       $name = $people[$row["personID"]]["name"];
       $str.= $br."From allocPSA ".date('D M  j G:i:s Y',$timestamp);
       $str.= "\nFrom: ".$name;
