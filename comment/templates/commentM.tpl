@@ -3,7 +3,10 @@
   <tr>
     <th class="header">Comments
       <span>
+        {if $commentsR}
+        <a href="{$url_alloc_downloadComments}entity={$entity}&entityID={$entityID}" class="noprint">Download</a>
         {$extra_page_links}
+        {/}
         {page::expand_link("id_new_comment","New Comment")}
         {page::help("comment")}
       </span>
