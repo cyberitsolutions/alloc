@@ -138,6 +138,7 @@ class productSaleItem extends db_entity {
     global $TPL;
     $currency or $currency = config::get_config_item("currency");
     $productSale = $this->get_foreign_object("productSale");
+    $date = $productSale->get_value("productSaleDate") or $date = date("Y-m-d");
     $tfID = $productSale->translate_meta_tfID($tfID);
     $fromTfID = $productSale->translate_meta_tfID($fromTfID);
     $transaction = new transaction;
@@ -149,7 +150,7 @@ class productSaleItem extends db_entity {
     $transaction->set_value("amount", $amount);
     $transaction->set_value("currencyTypeID", $currency);
     $transaction->set_value("status", 'pending');
-    $transaction->set_value("transactionDate", date("Y-m-d"));
+    $transaction->set_value("transactionDate", $date);
     $transaction->set_value("transactionType", $transactionType);
     $transaction->set_value("product", $description);
     $transaction->save();
