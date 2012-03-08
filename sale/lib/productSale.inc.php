@@ -198,18 +198,20 @@ class productSale extends db_entity {
       $this->set_value("status", "admin");
 
       // from salesperson to admin
-      $name = "Sale ".$this->get_id().": raise an invoice";
-      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
-      if (config::for_cyber() && !$db->qr($q)) {
-        $task = new task();
-        $task->set_value("projectID",$this->get_value("projectID"));
-        $task->set_value("taskName",$name);
-        $task->set_value("managerID",$this->get_value("personID")); // salesperson
-        $task->set_value("personID",69); // steve
-        $task->set_value("priority",3);
-        $task->set_value("taskTypeID","Task");
-        $task->save();
-        $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
+      if ($this->get_value("projectID")) {
+        $name = "Sale ".$this->get_id().": raise an invoice";
+        $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
+        if (config::for_cyber() && !$db->qr($q)) {
+          $task = new task();
+          $task->set_value("projectID",$this->get_value("projectID"));
+          $task->set_value("taskName",$name);
+          $task->set_value("managerID",$this->get_value("personID")); // salesperson
+          $task->set_value("personID",69); // steve
+          $task->set_value("priority",3);
+          $task->set_value("taskTypeID","Task");
+          $task->save();
+          $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
+        }
       }
 
     } else if ($status == "admin" && $this->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)) {
@@ -228,33 +230,35 @@ class productSale extends db_entity {
       }
 
       // from admin to salesperson
-      $name = "Sale ".$this->get_id().": place an order to the supplier";
-      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
-      if (config::for_cyber() && !$db->qr($q)) {
-        $task = new task();
-        $task->set_value("projectID",$this->get_value("projectID"));
-        $task->set_value("taskName",$name);
-        $task->set_value("managerID",69); // steve
-        $task->set_value("personID",$this->get_value("personID")); // salesperson
-        $task->set_value("priority",3);
-        $task->set_value("taskTypeID","Task");
-        $task->save();
-        $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
-      }
+      if ($this->get_value("projectID")) {
+        $name = "Sale ".$this->get_id().": place an order to the supplier";
+        $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
+        if (config::for_cyber() && !$db->qr($q)) {
+          $task = new task();
+          $task->set_value("projectID",$this->get_value("projectID"));
+          $task->set_value("taskName",$name);
+          $task->set_value("managerID",69); // steve
+          $task->set_value("personID",$this->get_value("personID")); // salesperson
+          $task->set_value("priority",3);
+          $task->set_value("taskTypeID","Task");
+          $task->save();
+          $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
+        }
 
-      // from admin to salesperson
-      $name = "Sale ".$this->get_id().": pay the supplier";
-      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
-      if (config::for_cyber() && !$db->qr($q)) {
-        $task = new task();
-        $task->set_value("projectID",$this->get_value("projectID"));
-        $task->set_value("taskName",$name);
-        $task->set_value("managerID",69); // steve
-        $task->set_value("personID",$this->get_value("personID")); // salesperson
-        $task->set_value("priority",3);
-        $task->set_value("taskTypeID","Task");
-        $task->save();
-        $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
+        // from admin to salesperson
+        $name = "Sale ".$this->get_id().": pay the supplier";
+        $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
+        if (config::for_cyber() && !$db->qr($q)) {
+          $task = new task();
+          $task->set_value("projectID",$this->get_value("projectID"));
+          $task->set_value("taskName",$name);
+          $task->set_value("managerID",69); // steve
+          $task->set_value("personID",$this->get_value("personID")); // salesperson
+          $task->set_value("priority",3);
+          $task->set_value("taskTypeID","Task");
+          $task->save();
+          $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
+        }
       }
     }
   }
