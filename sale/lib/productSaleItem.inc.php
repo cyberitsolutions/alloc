@@ -152,6 +152,7 @@ class productSaleItem extends db_entity {
     $transaction->set_value("status", 'pending');
     $transaction->set_value("transactionDate", $date);
     $transaction->set_value("transactionType", $transactionType);
+    $productSale->get_value("extRef") and $description.= " (ext ref: ".$productSale->get_value("extRef").")";
     $transaction->set_value("product", $description);
     $transaction->save();
   }
