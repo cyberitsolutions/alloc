@@ -1,0 +1,5 @@
+
+DROP TABLE IF EXISTS error;
+CREATE TABLE error (
+  errorID varchar(255) NOT NULL PRIMARY KEY
+) ENGINE=InnoDB PACK_KEYS=0;
