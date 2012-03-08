@@ -65,10 +65,8 @@ function get_item_margin(obj) {
 
 $(document).ready(function() {
   $("input.amountField").live('keyup', function(event){
-
-    // Only update when a number or period is entered
-    var c = String.fromCharCode(event.keyCode);
-    if (!c.match(/\d/) && !c.match(/\./)) {
+    // Don't update for left/right arrow movements
+    if (event.which == 37 || event.which == 39) {
       return true;
     }
 
