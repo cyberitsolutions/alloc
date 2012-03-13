@@ -42,11 +42,12 @@ class clientContact extends db_entity {
                              );
 
   function save() {
+    $rtn = parent::save();
     $c = new client();
     $c->set_id($this->get_value("clientID"));
     $c->select();
     $c->save();
-    return parent::save();
+    return $rtn;
   }
 
   function find_by_name($name=false,$projectID=false,$percent=90) {
