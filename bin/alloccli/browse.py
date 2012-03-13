@@ -78,7 +78,9 @@ alloc browse --time 213'''
     elif clientID:
       url = base+"/client/client.php?sessID="+self.sessID+"&clientID="+clientID
     elif o['time']:
-      url = base+"/time/timeSheet.php?sessID="+self.sessID+"&timeSheetID="+o['time']
+      url = base+"/time/timeSheet.php?sessID="+self.sessID+"&timeSheetID="+str(o['time'])
+    elif not o['task'] and not o['project'] and not o['client'] and not o['time']:
+      url = base+"/index.php?sessID="+self.sessID
     else: 
       self.die('Specify one of -t, -p, -c, etc.')
 
