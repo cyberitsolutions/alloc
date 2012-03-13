@@ -89,6 +89,19 @@ BEGIN
 END
 $$
 
+-- search index
+
+DROP PROCEDURE IF EXISTS update_search_index $$
+CREATE PROCEDURE update_search_index(eName VARCHAR(255), eID INTEGER)
+BEGIN
+  IF (using_views()) THEN
+    SELECT count(indexQueueID) INTO @num FROM indexQueue WHERE entity = eName AND entityID = eID;
+    IF (@num = 0) THEN
+      INSERT INTO indexQueue (entity,entityID) VALUES (eName, eID);
+    END IF;
+  END IF;
+END
+$$
 
 
 -- triggers for timeSheet
@@ -420,6 +433,14 @@ BEGIN
 END
 $$
 
+DROP TRIGGER IF EXISTS after_insert_task $$
+CREATE TRIGGER after_insert_task AFTER INSERT ON task
+FOR EACH ROW
+BEGIN
+  call update_search_index("task",NEW.taskID);
+END
+$$
+
 DROP TRIGGER IF EXISTS after_update_task $$
 CREATE TRIGGER after_update_task AFTER UPDATE ON task
 FOR EACH ROW
@@ -443,6 +464,7 @@ BEGIN
   call log("task", OLD.taskID, "dateTargetCompletion", OLD.dateTargetCompletion, NEW.dateTargetCompletion);
   call log("task", OLD.taskID, "dateActualCompletion", OLD.dateActualCompletion, NEW.dateActualCompletion);
   call log("task", OLD.taskID, "taskStatus",           OLD.taskStatus,           NEW.taskStatus);
+  call update_search_index("task",NEW.taskID);
 END
 $$
 
