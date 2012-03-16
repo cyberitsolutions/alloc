@@ -1,11 +1,29 @@
 <?php
 
 function printorlog($str,$color="") {
-  #$str == "\n" and $br = "<br>";
-  #$str = $br.htmlentities($str);
-  #$color and $str = "<b style='color:".$color."'>".$str."</b>";
-  #print $str."&nbsp;";
+  // un comment this to see what's happening!
+  //$str == "\n" and $br = "<br>";
+  //$str = $br.htmlentities($str);
+  //$color and $str = "<b style='color:".$color."'>".$str."</b>";
+  //print $str."&nbsp;";
 }
+
+function hash_to_entity($hash="") {
+  global $db;
+  if ($hash) {
+    $q = sprintf("select * from token WHERE tokenHash = '%s'",$hash);
+    $row = $db->qr($q);
+    if ($row["tokenEntity"] == "comment") {
+      $q = sprintf("SELECT commentMaster,commentMasterID FROM comment WHERE commentID = %d",$row["tokenEntityID"]);
+      $r = $db->qr($q);
+      return $r["commentMaster"].$r["commentMasterID"];
+    } else {
+      return $row["tokenEntity"].$row["tokenEntityID"];
+    }
+  }
+}
+
+$db = new db_alloc();
 
 // nuke output buffering
 @apache_setenv('no-gzip', 1);
@@ -23,7 +41,7 @@ $info["password"] = config::get_config_item("allocEmailPassword");
 $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
 $mail = new alloc_email_receive($info);
-$mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_HALFOPEN+OP_READONLY);
+$mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_HALFOPEN | CL_EXPUNGE);
 $mail->check_mail();
 
 $msg_nums = $mail->get_all_email_msg_uids(); 
@@ -31,50 +49,34 @@ $msg_nums = $mail->get_all_email_msg_uids();
 printorlog("\n");
 printorlog(date("Y-m-d H:i:s")." Found ".count($msg_nums)." emails.");
 
-$db = new db_alloc();
-
-// Get list of tokens and the task that they are related to
-// This query may need to be optimized
-// Try: ALTER TABLE comment ADD INDEX typelinkidx (commentType,commentLinkID);
-$q = "SELECT tokenHash, tokenEntity, tokenEntityID, commentMaster, commentMasterID
-        FROM token
-   LEFT JOIN comment ON (tokenEntity = commentType AND tokenEntityID = commentLinkID)
-                     OR (tokenEntity = 'comment' and tokenEntityID = commentID)
-       GROUP by tokenHash;";
-$db->query($q);
-
-while ($row = $db->row()) {
-  if ($row["tokenEntity"] && $row["tokenEntity"] != "comment") {
-    $entityIDs[$row["tokenHash"]] = $row["tokenEntity"].$row["tokenEntityID"];
-
-  } else if ($row["commentMaster"] && $row["commentMaster"] != "comment") {
-    $entityIDs[$row["tokenHash"]] = $row["commentMaster"].$row["commentMasterID"];
-  }
-}
-
-printorlog("\n");
-printorlog("Gathered this many tokens:".count($entityIDs));
-
 // fetch and parse email
 foreach ($msg_nums as $num) {
+  $x++;
+
   // this will stream output
   flush();
-
-  // So we don't kill the server
-  usleep(2500);
 
   $mail->set_msg($num);
   $mail->get_msg_header($num);
   $keys = $mail->get_hashes();
-  $entityID = $entityIDs[$keys[0]];
+  $mailbox = hash_to_entity(end($keys));
 
-  if (!$entityID) {
+  if (!$mailbox) {
     continue;
   }
-  printorlog("INBOX.".$entityID);
-  $mail->create_mailbox("INBOX.".$entityID);
-  $mail->move_mail($num,"INBOX.".$entityID);
+  printorlog("\n");
+  printorlog("INBOX.".$mailbox);
+  $mail->create_mailbox("INBOX.".$mailbox);
+  $mail->move_mail($num,"INBOX.".$mailbox);
+
+  if ($x % 100 == 0) {
+    printorlog("\n");
+    printorlog("expunging at ".$x);
+    $mail->expunge();
+  }
 }
+printorlog("\n");
+printorlog("Done at ".$x);
 $mail->expunge();
 $mail->close();
 printorlog(date("Y-m-d H:i:s")." DONE.");
