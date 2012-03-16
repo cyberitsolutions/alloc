@@ -168,7 +168,6 @@ function save_recipients(selector) {
       values[values.length] = selector.options[i].value;
     }
   }
-  p.find("span.spinner").html('<img class="ticker" src="../images/spinner.gif" alt="Updating field..." title="Updating field...">');
   jQuery.post("../comment/updateRecipients.php",{ "commentID":commentID, "comment_recipients": values},function(data) {
     p.parent().hide();
     if (data == 'external') {
