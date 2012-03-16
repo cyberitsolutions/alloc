@@ -304,6 +304,23 @@ $(document).ready(function() {
     $(this).dropdownchecklist( { "maxDropHeight":450 } );
   });
 
+  $(".commentreply").click(function(e){
+    $("#interested_parties_selector").hide();
+    $(this).parents(".pcomment").append($("#id_new_comment").css( { "display" : "inline-table" } ));
+    $("#id_new_comment").find("input[name=entity]").val("comment");
+    $("#id_new_comment").find("input[name=entityID]").val($(this).parents(".pcomment").attr("data-comment-id"));
+    return false;
+  });
+
+  $(".commentnew").click(function(e){
+    $("#interested_parties_selector").show();
+    $("#id_new_comment").find("input[name=entity]").val($("#id_new_comment").find("input[name=commentMaster]").val());
+    $("#id_new_comment").find("input[name=entityID]").val($("#id_new_comment").find("input[name=commentMasterID]").val());
+    $("#new_comment_container").append($("#id_new_comment").css( { "display" : "inline-table" } ));
+    return false;
+  });
+
+
 });
 
 

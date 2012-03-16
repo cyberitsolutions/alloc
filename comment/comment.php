@@ -26,7 +26,8 @@ global $TPL, $current_user;
 
 
 // add a comment
-$commentID = comment::add_comment($_REQUEST["entity"], $_REQUEST["entityID"], $_REQUEST["comment"]);
+$commentID = comment::add_comment($_REQUEST["entity"], $_REQUEST["entityID"], $_REQUEST["comment"], 
+                                  $_REQUEST["commentMaster"], $_REQUEST["commentMasterID"]);
 
 // add additional interested parties
 if ($_REQUEST["eo_email"]) {
@@ -67,7 +68,7 @@ comment::send_comment($commentID,$emailRecipients);
 // Re-direct browser back home
 $TPL["message_good"][] = $message_good;
 $extra.= "&sbs_link=comments";
-alloc_redirect($TPL["url_alloc_".$_REQUEST["entity"]].$_REQUEST["entity"]."ID=".$_REQUEST["entityID"].$extra);
+alloc_redirect($TPL["url_alloc_".$_REQUEST["commentMaster"]].$_REQUEST["commentMaster"]."ID=".$_REQUEST["commentMasterID"].$extra);
 
 
 ?>
