@@ -537,26 +537,25 @@ class comment extends db_entity {
         }
 
         if ($emailMethod == "to") {
-          $to_address.= $commar.$name_and_email;
-          $successful_recipients.= $commar.$name_and_email;
-          $commar = ", ";
+          $to_address[] = $name_and_email;
+          $successful_recipients[] = $name_and_email;
 
         } else if ($emailMethod == "bcc") {
-          $bcc.= $commar.$email_without_name;
-          $successful_recipients.= $commar.$name_and_email;
-          $commar = ", ";
+          $bcc[] = $email_without_name;
+          $successful_recipients[] = $name_and_email;
 
         // The To address contains no actual email addresses, ie "Alex Lance": ; all the real recipients are in the Bcc.
         } else if ($emailMethod == "tobcc") {
-          $to_address.= $commar.'"'.$name.'": ;';
-          $bcc.= $commar.$email_without_name;
-          $successful_recipients.= $commar.$name_and_email;
-          $commar = ", ";
+          if (!same_email_address(ALLOC_DEFAULT_FROM_ADDRESS,$email_without_name)) {
+            $to_address[] = '"'.$name.'": ;';
+            $successful_recipients[] = $name_and_email;
+          }
+          $bcc[] = $email_without_name;
         }
 
       }
     }
-    return array($to_address, $bcc, $successful_recipients);
+    return array(implode(", ",(array)$to_address), implode(", ",(array)$bcc), implode(", ",(array)$successful_recipients));
   }
 
   function send_emails($selected_option, $email_receive=false, $hash="", $is_a_reply_comment=false) {
