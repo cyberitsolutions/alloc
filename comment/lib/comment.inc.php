@@ -187,6 +187,7 @@ class comment extends db_entity {
 
       $new["recipient_editor"].= "</span>";
 
+      $new["reply"] = '<a href="" class="commentreply">reply</a>';
     }
 
     if ($v["timeSheetID"]) {
@@ -272,7 +273,7 @@ class comment extends db_entity {
     global $TPL;
     $comment = comment::add_shrinky_divs(page::htmlentities($row["comment"]),$row["commentID"]);
     $onClick = "return set_grow_shrink('comment_".$row["commentID"]."','button_comment_".$row["commentID"]."','true');";
-    $rtn[] = '<div class="panel'.$row["external"].' corner">';
+    $rtn[] = '<div class="panel'.$row["external"].' corner pcomment" data-comment-id="'.$row["commentID"].'">';
     $rtn[] = '<table width="100%" cellspacing="0" border="0">';
     $rtn[] = '<tr>';
     $rtn[] = '  <td style="padding-bottom:0px; white-space:normal" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].'</td>';
@@ -285,9 +286,13 @@ class comment extends db_entity {
     $rtn[] = '  <td colspan="2" onClick="'.$onClick.'"><div><pre class="comment">'.$comment.'</pre></div></td>';
     $rtn[] = '</tr>';
     $row["children"] and $rtn[] = comment::get_comment_children($row["children"]);
-    $row["files"] and $rtn[] = '<tr>';
-    $row["files"] and $rtn[] = '  <td valign="bottom" align="left" colspan="2">'.$row["files"].'</td>';
-    $row["files"] and $rtn[] = '</tr>';
+    if ($row["files"] || $row["reply"]) {
+      $rtn[] = '<tr>';
+      $row["files"] and $rtn[] = '  <td valign="bottom" align="left">'.$row["files"].'</td>';
+      $row["files"] or $cs = 2;
+      $row["reply"] and $rtn[] = '  <td valign="bottom" align="right" colspan="'.$cs.'">'.$row["reply"].'</td>';
+      $rtn[] = '</tr>';
+    }
     $rtn[] = '</table>';
     $rtn[] = '</div>';
     return implode("\n",$rtn);
@@ -675,18 +680,12 @@ class comment extends db_entity {
   }
 
   function get_parent_object() {
-    if (class_exists($this->get_value("commentType"))) {
-      $parent_type = $this->get_value("commentType");
-    
+    if (class_exists($this->get_value("commentMaster"))) {
+      $parent_type = $this->get_value("commentMaster");
       $o = new $parent_type;
-      $o->set_id($this->get_value("commentLinkID"));
+      $o->set_id($this->get_value("commentMasterID"));
       $o->select();
-
-      if ($parent_type == "comment") {
-        return $o->get_parent_object();
-      } else {
-        return $o;
-      }
+      return $o;
     }
   }
 
@@ -946,12 +945,14 @@ class comment extends db_entity {
 
   // All you need to add a comment, add interested parties, attachments, and re-email it out
 
-  function add_comment($entity,$entityID,$comment_text) {
-    if ($entity && $entityID && $comment_text) {
+  function add_comment($commentType,$commentLinkID,$comment_text,$commentMaster=null,$commentMasterID=null) {
+    if ($commentType && $commentLinkID && $comment_text) {
       $comment = new comment;
       $comment->updateSearchIndexLater = true;
-      $comment->set_value('commentType', $entity);
-      $comment->set_value('commentLinkID', $entityID);
+      $commentMaster   and $comment->set_value('commentMaster', $commentMaster);
+      $commentMasterID and $comment->set_value('commentMasterID', $commentMasterID);
+      $comment->set_value('commentType', $commentType);
+      $comment->set_value('commentLinkID', $commentLinkID);
       $comment->set_value('comment', rtrim($comment_text));
       $comment->save();
       return $comment->get_id();

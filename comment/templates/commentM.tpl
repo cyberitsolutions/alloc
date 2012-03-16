@@ -7,19 +7,20 @@
         <a href="{$url_alloc_downloadComments}entity={$entity}&entityID={$entityID}" class="noprint">Download</a>
         {$extra_page_links}
         {/}
-        {page::expand_link("id_new_comment","New Comment")}
+        <a class="growshrink nobr noprint commentnew" href="#x">New Comment</a>
         {page::help("comment")}
       </span>
     </th>
   </tr>
   <tr>
-    <td>
-
+    <td id="new_comment_container" style="width:100%;">
+      <div class="{$class_new_comment}" id="id_new_comment" style="width:99%">
       <form action="{$url_alloc_comment}" enctype="multipart/form-data" method="post" id="commentForm">
-      <div class="{$class_new_comment}" id="id_new_comment">
       <table align="left" width="100%" cellpadding="3">
         <tr>  
           <td valign="top" align="right" style="width:50%">
+            <input type="hidden" name="commentMaster" value="{$entity}">
+            <input type="hidden" name="commentMasterID" value="{$entityID}">
             <input type="hidden" name="entity" value="{$entity}">
             <input type="hidden" name="entityID" value="{$entityID}">
             <div id="comment_textarea">
@@ -34,11 +35,10 @@
             <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity={$entity}&entityID={$entityID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
           </td>
 
-          <td colspan="2" valign="top" style="padding-left:10px;">
+          <td colspan="2" valign="top" style="padding-left:10px;" id="interested_parties_selector">
             <div style="display:block; clear:both; padding-bottom:8px;"><u>Email Recipients</u></div>
             {echo interestedParty::get_interested_parties_html($allParties)}
             <div style="float:left; clear:both; padding:10px 0px 8px 0px">{page::expand_link("email_other","Email Other Party")}</div>
-            <div style="text-align:right; float:right; padding:10px 0px 8px 0px"><input type="submit" name="comment_save" value="Save Comment"></div>
 
             <table id="email_other" style="clear:both; display:none" width="100%" cellpadding="4" cellspacing="0">
               <tr>
@@ -63,10 +63,12 @@
           </td>
         </tr>
       </table>
-      </div>
       <input type="hidden" name="sessID" value="{$sessID}">
+            <div style="text-align:right; float:right; padding:10px 0px 8px 0px">
+              <input type="submit" name="comment_save" value="Save Comment">
+            </div>
       </form>
-
+      </div>
     </td>
   </tr>
   <tr>
