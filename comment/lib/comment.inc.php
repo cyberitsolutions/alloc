@@ -294,9 +294,9 @@ class comment extends db_entity {
   }
 
   function get_comment_attribution($comment=array()) {
-    $str = '<b>'.comment::get_comment_author($comment).'</b> <span class="comment_date">'.$comment["date"]."</span>";
+    $str = '<b>'.comment::get_comment_author($comment).'</b> <span class="comment_date">'.format_date("Y-m-d g:ia",$comment["date"])."</span>";
       if ($comment["commentModifiedTime"] || $comment["commentModifiedUser"]) {
-        $str.= ", last modified by <b>".person::get_fullname($comment["commentModifiedUser"])."</b> ".$comment["commentModifiedTime"];
+        $str.= ", last modified by <b>".person::get_fullname($comment["commentModifiedUser"])."</b> ".format_date("Y-m-d g:ia",$comment["commentModifiedTime"]);
       }
       $str.= $comment["ts_label"];
     return $str;
