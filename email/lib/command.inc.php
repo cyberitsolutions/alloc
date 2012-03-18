@@ -131,7 +131,7 @@ class command {
       }
     // No key, then error
     } else if ($email_receive) {
-      return array("status"=>"err","message"=>"No key found. Unable to process email.");
+      return array("status"=>"msg","message"=>"No key found. Unable to process email.");
     }
 
 
