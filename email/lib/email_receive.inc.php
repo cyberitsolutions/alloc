@@ -368,7 +368,7 @@ class alloc_email_receive {
   function archive($mailbox=null) {
     $keys = $this->get_hashes();
     $token = new token;
-    if ($token->set_hash($keys[0])) {
+    if ($token->set_hash(end($keys[0]))) {
       if ($token->get_value("tokenEntity") == "comment") {
         $db = new db_alloc();
         $row = $db->qr("SELECT commentMaster,commentMasterID 
@@ -383,6 +383,7 @@ class alloc_email_receive {
         $mID = $token->get_value("tokenEntityID");
       }
     }
+    $mailbox or $mailbox = "INBOX";
     if ($mailbox) { 
       $this->create_mailbox($mailbox);
       if ($this->msg_uid) {
