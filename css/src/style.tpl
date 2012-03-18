@@ -548,9 +548,13 @@ table.list td.grand_total, .grand_total {
   border:1px solid (PANEL_CHICO_FRAME_COLOR); 
   background:(PANEL_CHICO_BG_COLOR); 
   margin-top:3px; 
-  margin-bottom:3px; 
+  margin-bottom:8px; 
   margin-left:0px;
   margin-right:0px;
+  -webkit-box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+     -moz-box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+   -opera-box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+          box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
 .loud .panel {
   border:1px solid (PANEL_ZEPPO_FRAME_COLOR); 
