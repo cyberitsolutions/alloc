@@ -627,7 +627,8 @@ class comment extends db_entity {
       if (!$subject) {
         $tpl = config::get_config_item("emailSubject_".$e->classname."Comment");
         $tpl and $subject = commentTemplate::populate_string($tpl, $e->classname, $e->get_id());
-        $subject or $subject = ucwords($e->classname)." Comment: ".$e->get_id()." ".$e->get_name(DST_VARIABLE);
+        $e->classname != "task" and $prefix = ucwords($e->classname)." Comment: ";
+        $subject or $subject = $prefix.$e->get_id()." ".$e->get_name(DST_VARIABLE);
       }
 
       $email->set_subject($subject." ".$subject_extra);
