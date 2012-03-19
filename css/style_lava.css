@@ -756,6 +756,8 @@ div.grippie:hover {
   margin-bottom:0pt;
   width:100% !important; width:95%;
   height: 20%;
+  padding-left:0px;
+  padding-right:0px;
 }
 
 
