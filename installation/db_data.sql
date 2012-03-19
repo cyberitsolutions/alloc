@@ -451,7 +451,7 @@ INSERT INTO config (name,value,type) VALUES ('inTfID','2','text');
 INSERT INTO config (name,value,type) VALUES ('outTfID','3','text');
 INSERT INTO config (name,value,type) VALUES ('expenseFormTfID','4','text');
 
-INSERT INTO config (name,value,type) VALUES ('emailSubject_taskComment', '[allocPSA] Task Comment: %ti %tn [%tp]', 'text');
+INSERT INTO config (name,value,type) VALUES ('emailSubject_taskComment', '[allocPSA] %ti %tn [%tp]', 'text');
 INSERT INTO config (name,value,type) VALUES ('emailSubject_dailyDigest', '[allocPSA] Daily Digest', 'text');
 INSERT INTO config (name,value,type) VALUES ('emailSubject_timeSheetToManager', '[allocPSA] Time sheet %ti submitted for your approval', 'text');
 INSERT INTO config (name,value,type) VALUES ('emailSubject_timeSheetFromManager', '[allocPSA] Time sheet %ti rejected by manager', 'text');
