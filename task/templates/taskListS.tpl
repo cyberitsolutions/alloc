@@ -82,47 +82,47 @@
   <tfoot>
     <tr>
       <th colspan="25" class="nobr noprint" style="padding:2px;">
-        <div style="float:left">
-          <select name="update_action" onChange="$('.hidden').hide(); $('#'+$(this).val()+'_div').css('display','inline');"> 
-            <option value="">Modify Checked...</options>
-            <option value="personID">Assign to --&gt;</options>
-            <option value="managerID">Manager to --&gt;</options>
-            <option value="timeLimit">Limit to --&gt;</options>
-            <option value="timeBest">Best to --&gt;</options>
-            <option value="timeWorst">Worst to --&gt;</options>
-            <option value="timeExpected">Expected to --&gt;</options>
-            <option value="priority">Task Priority to --&gt;</options>
-            <option value="taskTypeID">Task Type to --&gt;</options>
-            <option value="dateTargetStart">Target Start Date to --&gt;</options>
-            <option value="dateTargetCompletion">Target Completion Date to --&gt;</options>
-            <option value="dateActualStart">Actual Start Date to --&gt;</options>
-            <option value="dateActualCompletion">Actual Completion Date to --&gt;</options>
-            <option value="projectIDAndParentTaskID">Project and Parent Task to --&gt;</options>
-            <option value="taskStatus">Task Status to --&gt;</option>
+        <span style="margin-right:5px;">
+          <select name="update_action" onChange="$('.hidden').hide();$('#'+$(this).val()+'_span').show();$('#mass_update').show();"> 
+            <option value="">Modify Checked...
+            <option value="personID">Assign to --&gt;
+            <option value="managerID">Manager to --&gt;
+            <option value="timeLimit">Limit to --&gt;
+            <option value="timeBest">Best to --&gt;
+            <option value="timeWorst">Worst to --&gt;
+            <option value="timeExpected">Expected to --&gt;
+            <option value="priority">Task Priority to --&gt;
+            <option value="taskTypeID">Task Type to --&gt;
+            <option value="dateTargetStart">Target Start Date to --&gt;
+            <option value="dateTargetCompletion">Target Completion Date to --&gt;
+            <option value="dateActualStart">Actual Start Date to --&gt;
+            <option value="dateActualCompletion">Actual Completion Date to --&gt;
+            <option value="projectIDAndParentTaskID">Project and Parent Task to --&gt;
+            <option value="taskStatus">Task Status to --&gt;
           </select>
-        </div>
-        <div class="hidden" id="dateTargetStart_div">{page::calendar("dateTargetStart")}</div>
-        <div class="hidden" id="dateTargetCompletion_div">{page::calendar("dateTargetCompletion")}</div>
-        <div class="hidden" id="dateActualStart_div">{page::calendar("dateActualStart")}</div>
-        <div class="hidden" id="dateActualCompletion_div">{page::calendar("dateActualCompletion")}</div>
-        <div class="hidden" id="personID_div"><select name="personID"><option value="">{$person_options}</select></div>
-        <div class="hidden" id="managerID_div"><select name="managerID"><option value="">{$person_options}</select></div>
-        <div class="hidden" id="timeLimit_div"><input name="timeLimit" type="text" size="5"></div>
-        <div class="hidden" id="timeBest_div"><input name="timeBest" type="text" size="5"></div>
-        <div class="hidden" id="timeWorst_div"><input name="timeWorst" type="text" size="5"></div>
-        <div class="hidden" id="timeExpected_div"><input name="timeExpected" type="text" size="5"></div>
-        <div class="hidden" id="priority_div"><select name="priority">{echo task::get_task_priority_dropdown(3)}</select></div>
-        <div class="hidden" id="taskTypeID_div"><select name="taskTypeID">{page::select_options($taskType_array)}</select></div>
-        <div class="hidden" id="projectIDAndParentTaskID_div">
+        </span>
+        <span class="hidden" id="dateTargetStart_span">{page::calendar("dateTargetStart")}</span>
+        <span class="hidden" id="dateTargetCompletion_span">{page::calendar("dateTargetCompletion")}</span>
+        <span class="hidden" id="dateActualStart_span">{page::calendar("dateActualStart")}</span>
+        <span class="hidden" id="dateActualCompletion_span">{page::calendar("dateActualCompletion")}</span>
+        <span class="hidden" id="personID_span"><select name="personID"><option value="">{$person_options}</select></span>
+        <span class="hidden" id="managerID_span"><select name="managerID"><option value="">{$person_options}</select></span>
+        <span class="hidden" id="timeLimit_span"><input name="timeLimit" type="text" size="5"></span>
+        <span class="hidden" id="timeBest_span"><input name="timeBest" type="text" size="5"></span>
+        <span class="hidden" id="timeWorst_span"><input name="timeWorst" type="text" size="5"></span>
+        <span class="hidden" id="timeExpected_span"><input name="timeExpected" type="text" size="5"></span>
+        <span class="hidden" id="priority_span"><select name="priority">{echo task::get_task_priority_dropdown(3)}</select></span>
+        <span class="hidden" id="taskTypeID_span"><select name="taskTypeID">{page::select_options($taskType_array)}</select></span>
+        <span class="hidden" id="projectIDAndParentTaskID_span">
           <select name="projectID" id="projectID" 
                   onChange="makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+$(this).val(),'parentTaskDropdown')">
             <option value="">
             {echo task::get_project_options()}
           </select>
-          <div style="display:inline" id="parentTaskDropdown"></div>
-        </div>
-        <div class="hidden" id="taskStatus_div"><select name="taskStatus">{page::select_options(task::get_task_statii_array(true))}</select></div>
-        <input type="submit" name="run_mass_update" value="Update Tasks">
+          <span style="display:inline" id="parentTaskDropdown"></span>
+        </span>
+        <span class="hidden" id="taskStatus_span"><select name="taskStatus">{page::select_options(task::get_task_statii_array(true))}</select></span>
+        <input class="hidden" type="submit" id="mass_update" name="mass_update" value="Update Tasks" style="margin-left:5px">
       </th>
     </tr>
   </tfoot>
