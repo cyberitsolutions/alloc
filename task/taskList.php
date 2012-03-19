@@ -50,7 +50,7 @@ $TPL["taskListRows"] = task::get_list($_FORM);
 $TPL["_FORM"] = $_FORM;
 
 // Check for updates
-if ($_POST["run_mass_update"]) {
+if ($_POST["mass_update"]) {
 
   if ($_POST["select"]) {
 

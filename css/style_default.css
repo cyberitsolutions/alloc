@@ -267,7 +267,6 @@ hr {
   padding:0px; 
   margin:0px; 
   display:inline; 
-  float:left;
 }
 .calendar_container img {
   vertical-align:text-bottom;

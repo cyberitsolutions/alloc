@@ -230,12 +230,12 @@ class page {
     $images = $TPL["url_alloc_images"];
     $year = date("Y");
     $str = <<<EOD
-      <div class="calendar_container enclose nobr">
+      <span class="calendar_container nobr">
       <input name="${name}" type="text" size="11" value="${default_value}" id="${name}" class="datefield"><img src="${images}cal${year}.png" id="button_${name}" title="Date Selector" alt="Date Selector">
       <script type="text/javascript">
       Calendar.setup( { inputField : "${name}", ifFormat : "%Y-%m-%d", button : "button_${name}", showOthers : 1, align : "Bl", firstDay : ${firstday}, step : 1, weekNumbers : 0 ${default} })
       </script>
-      </div>
+      </span>
 
 EOD;
     return $str;
