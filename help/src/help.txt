@@ -55,9 +55,9 @@ The original administration account on allocPSA is:
 
 .. list-table::
 
-   - - username: 
+   - - username:
      - alloc
-   - - password: 
+   - - password:
      - alloc
 
 NOTE: You should change this password promptly. Instructions on how to
@@ -1845,6 +1845,124 @@ middle and an end, and in general, are managed by a single project manager. The
 nature of the processes used to manage such tasks is therefore related to these
 attributes
 
+
+How do I Modify a Task's Interested Parties List for an Existing Comment Thread?
+--------------------------------------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. Go to the Task that you want to modify the list of Interested Parties
+   for.
+
+3. Click on the Comments tab for this Task, to be taken to the Comments
+   page.
+
+4. Find the beginning of the conversation thread that you want to
+   modify, as denoted by [ External Conversation ] or [ Internal
+   Conversation ]
+
+5. Click on the [ External Conversation ] or [ Internal Conversation ]
+   text, to reveal a drop-down list-box.
+
+6. Click on the drop-down list-box to reveal a list of Interested
+   Parties which can be associated with this comment thread.
+
+7. Work your way through this list, checking and un-checking the people
+   you want to include or remove from the thread.
+
+8. Once done, click on the 'top' of the drop-down list-box, or anywhere
+   outside of the list-box; the list-box will 'collapse' once more, and
+   a small tick will appear beside it, confirming that your changes have
+   been made.
+
+
+How does a Task Re-Open Automatically on New Activity?
+------------------------------------------------------
+
+If you've placed a Task in Pending or Closed, that task will be
+re-activated if an email is received by the email gateway, from one of
+the potential *external* Interested Parties (as defined by the list of
+email addresses in the Interested Parties list on the main page of that
+Task. Email from an *internal* address will not trigger this
+state-change.
+
+
+How do I Import Project Tasks From External Applications?
+---------------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. Go to the Project that you want to import Tasks into.
+
+3. Click into the Import/Export tab.
+
+4. Presently, allocPSA allows you to import a specifically formatted
+   Comma Separated Value (CSV) text file, or a project from a Gnome
+   Planner ( http://live.gnome.org/Planner ). You can select what type
+   of file you're about to import into the project using the File Type
+   drop-list. The information link beside this drop-list provides more
+   details about the options.
+
+5. You can nominate the file you want to inport from, via the Import
+   File field. Either click on the field, or click on the Choose...
+   button to be offered a File Open dialog box, with which you can
+   navigate to the file that you want to import, and select it.
+
+6. Once you've nominated the file to import and the type of file, click
+   on the Import button. This will now now add the tasks nominated in
+   the import file, into this Project.
+
+
+How do I Export Project Tasks?
+------------------------------
+
+1. Log in to allocPSA.
+
+2. Go to the Project that you want to Export Task data from.
+
+3. Click into the Import/Export tab.
+
+4. Presently, allocPSA allows you to export a specifically formatted
+   Comma Separated Value (CSV) text file, or a project file compatible with
+   Gnome Planner ( http://live.gnome.org/Planner ).
+
+5. To export the Project's task data as a Gnome Project file, click on
+   the 'GNOME Planner format XML file' link. This will present you with a
+   File Save dialog, with which you can save your project data file or open
+   it in Gnome Project.
+
+6. To export the Project's task data as a Comma Separated Value (CSV)
+   text file, click on the 'comma separated values (task names, estimated
+   hours, engineers)' link. This will present you with a File Save dialog,
+   with which you can save your project data file or open it in a text
+   editor.
+
+
+Using allocPSA via the Command Line
+===================================
+
+allocPSA has a powerful and very functional command-line interface.
+Using this command-line tool, you can 
+
+
+- ktokens        :Retrieve alloc token information.
+- comment        :Add a new comment to a task, project, time sheet or client.
+- timesheets     :Print a list of time sheets.
+- projects       :Print a list of projects.
+- view           :View a single alloc entity.
+- version        :View the version of the alloc-cli and alloc-server.
+- subscriptions  :Modify interested party subscriptions for an email address.
+- browse         :Provide web browser access to particular entities.
+- tasks          :Print a list of tasks.
+- accounts       :Print a list of your TF accounts.
+- submit         :Submit time sheets forwards. Read time sheets from standard in.
+- work           :Add time to a time sheet. Create the time sheet if necessary.
+- mbox           :Download a task's emails to an mbox file.
+- edit           :Modify an alloc entity.
+
+
+For more information on the ``alloc`` command-line tool, you can issue
+the help command: ``alloc help``
 
 
 Useful Tips for using allocPSA
