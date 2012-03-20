@@ -1870,10 +1870,8 @@ How do I Modify a Task's Interested Parties List for an Existing Comment Thread?
 7. Work your way through this list, checking and un-checking the people
    you want to include or remove from the thread.
 
-8. Once done, click on the 'top' of the drop-down list-box, or anywhere
-   outside of the list-box; the list-box will 'collapse' once more, and
-   a small tick will appear beside it, confirming that your changes have
-   been made.
+8. Once done, click outside of the list-box; the list-box will 'collapse'
+   and your changes will be saved.
 
 
 How does a Task Re-Open Automatically on New Activity?
