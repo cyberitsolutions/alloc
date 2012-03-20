@@ -40,7 +40,8 @@ function refreshTaskList(radiobutton) {
         <tr>
           <td valign="bottom" colspan="2"><a tabindex="100" href="{$url_alloc_task}projectID={$projectID}&timeSheetID={$timeSheet_timeSheetID}">New Task</a></td>
           <td valign="bottom" rowspan="2"> 
-            <label for="task_type_open">Open Tasks</label><input id="task_type_open" type="radio" name="task_type" tabindex="100" value="open" onClick="refreshTaskList(this)" checked>
+            <label for="task_type_mine">My Tasks</label><input id="task_type_mine" type="radio" name="task_type" tabindex="100" value="mine" onClick="refreshTaskList(this)" checked>
+            <label for="task_type_open">Open Tasks</label><input id="task_type_open" type="radio" name="task_type" tabindex="100" value="open" onClick="refreshTaskList(this)">
             <label for="task_type_recent_closed">Recently Closed</label><input id="task_type_recent_closed" type="radio" name="task_type" tabindex="100" value="recent_closed" onClick="refreshTaskList(this)">
             <label for="task_type_all">All Tasks</label><input id="task_type_all" type="radio" name="task_type" tabindex="100" value="all" onClick="refreshTaskList(this)">
           </td>

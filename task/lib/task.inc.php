@@ -709,9 +709,14 @@ class task extends db_entity {
       unset($sql["personID"]);
       $sql[] = sprintf("(task.taskStatus NOT IN (".$ts_closed."))");
 
+    } else if ($filter["taskTimeSheetStatus"] == "mine"){ 
+      global $current_user;
+      unset($sql["personID"]);
+      $sql[] = sprintf("((task.taskStatus NOT IN (".$ts_closed.")) AND task.personID = %d)",$current_user->get_id());
+
     } else if ($filter["taskTimeSheetStatus"] == "not_assigned"){ 
       unset($sql["personID"]);
-      $sql[] = sprintf("((task.taskStatus NOT IN (".$ts_closed.")) AND personID != %d)",$filter["personID"]);
+      $sql[] = sprintf("((task.taskStatus NOT IN (".$ts_closed.")) AND task.personID != %d)",$filter["personID"]);
 
     } else if ($filter["taskTimeSheetStatus"] == "recent_closed"){
       unset($sql["personID"]);
