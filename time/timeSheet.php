@@ -332,7 +332,7 @@ if (!$current_user->is_employee()) {
       $taskID or $taskID = $_GET["taskID"];
 
       $TPL["taskListDropdown_taskID"] = $taskID;
-      $TPL["taskListDropdown"] = $timeSheet->get_task_list_dropdown("open",$timeSheet->get_id(),$taskID);
+      $TPL["taskListDropdown"] = $timeSheet->get_task_list_dropdown("mine",$timeSheet->get_id(),$taskID);
       $TPL["tsi_timeSheetID"] = $timeSheet->get_id();
 
       $timeUnit = new timeUnit;
