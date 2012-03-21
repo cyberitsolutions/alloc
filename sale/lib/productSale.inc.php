@@ -190,8 +190,14 @@ class productSale extends db_entity {
     if ($status == "edit") {
       $this->set_value("status", "allocate");
       
-      if (!$db->qr("SELECT transactionID FROM transaction WHERE productSaleID = %d",$this->get_id())) {
-        $this->create_transactions();
+      $items = $this->get_productSaleItems();
+      foreach ($items as $r) {
+        $psi = new productSaleItem();
+        $psi->set_id($r["productSaleItemID"]);
+        $psi->select();
+        if (!$db->qr("SELECT transactionID FROM transaction WHERE productSaleItemID = %d",$psi->get_id())) {
+          $psi->create_transactions();
+        }
       }
 
     } else if ($status == "allocate") {
