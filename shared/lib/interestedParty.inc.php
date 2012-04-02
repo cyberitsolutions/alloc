@@ -212,7 +212,8 @@ class interestedParty extends db_entity {
         }
       }
     }
-    if (!$ip->get_value("personID")) {
+    $extra_interested_parties = config::get_config_item("defaultInterestedParties");
+    if (!$ip->get_value("personID") && !in_array($data["emailAddress"],(array)$extra_interested_parties)) {
       $ip->set_value("external",1);
       $q = sprintf("SELECT * FROM clientContact WHERE clientContactEmail = '%s'",$data["emailAddress"]);
       $db = new db_alloc();
