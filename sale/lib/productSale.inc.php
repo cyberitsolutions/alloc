@@ -108,6 +108,9 @@ class productSale extends db_entity {
       } else {
         $TPL["message_bad"][] = "Unable to use META: Salesperson TF. No product salesperson set.";
       }
+    } else if ($tfID == -3) {
+      $tfID = $this->get_value("tfID");
+      $tfID or $TPL["message_bad"][] = "Unable to use META: Sale TF not set.";
     }
     return $tfID;
   }
