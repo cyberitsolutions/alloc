@@ -128,7 +128,7 @@ $(document).ready(function() {
       <table class="list">
         <tr>
           <th width="15%">Amount</th>
-          <th width="35%">Destination TF</th>
+          <th width="35%">Source TF</th>
           <th>Description</th>
           {if config::get_config_item("taxName")}
             <th>{echo config::get_config_item("taxName")}</th>

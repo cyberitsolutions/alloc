@@ -210,7 +210,7 @@ class productSaleItem extends db_entity {
       }
 
       $amount = page::money($productCost_row["currencyTypeID"],$productCost_row["amount"] * $this->get_value("quantity"),"%mo");
-      $this->create_transaction($mainTfID, $productCost_row["tfID"]
+      $this->create_transaction($productCost_row["tfID"],config::get_config_item("outTfID")
                                ,$amount
                                ,"Product Cost: ".$productCost_row["productName"]." ".$productCost_row["description"]
                                ,$productCost_row["currencyTypeID"],$productCost_row["productCostID"]);

@@ -62,7 +62,6 @@ function show_productCost_new($template, $percent = false) {
   $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
   $TPL["taxOptions"] = page::select_options(array(""=>"Exempt",1=>"Included",0=>"Excluded"),"");
   $TPL["display"] = "display:none";
-  $percent or $TPL["tfID"] = config::get_config_item("outTfID");
   include_template($template);
 }
 
@@ -86,7 +85,9 @@ if ($productID) {
 
 $tf = new tf();
 $tflist = $tf->get_assoc_array("tfID","tfName");
-$extra_options = array("-1"=>"META: Project TF"
+$extra_options = array(
+                       "-3"=>"META: Sale TF"
+                      ,"-1"=>"META: Project TF"
                       ,"-2"=>"META: Salesperson TF"
                       ,config::get_config_item("mainTfID") => "Main Finance TF (".tf::get_name(config::get_config_item("mainTfID")).")"
                       ,config::get_config_item("outTfID") => "Outgoing Funds TF (".tf::get_name(config::get_config_item("outTfID")).")"
