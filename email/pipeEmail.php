@@ -34,7 +34,17 @@ define("NO_AUTH",1);
 require_once(dirname(__FILE__)."/../alloc.php");
 unset($current_user);
 
-function fail($msg) {
+function die_bad($msg) {
+  echo $msg;
+  exit(1);
+}
+
+function die_good($msg) {
+  echo $msg;
+  exit(0);
+}
+
+function die_rollback($msg) {
   $db = new db_alloc();
   $db->query("ROLLBACK");
   echo $msg;
@@ -42,16 +52,6 @@ function fail($msg) {
   if ($email_receive) {
     $email_receive->archive("INBOX");
   }
-}
-
-function die_bad($msg) {
-  fail($msg);
-  exit(1);
-}
-
-function die_good($msg) {
-  fail($msg);
-  exit(0);
 }
 
 $info["host"] = config::get_config_item("allocEmailHost");
@@ -126,7 +126,7 @@ $fields = $command->get_fields();
 $commands = $email_receive->get_commands($fields);
 $rtn = $command->run_commands($commands,$email_receive);
 if ($rtn["status"] == "err") {
-  die_bad("Email command failed: ".$rtn["message"]);
+  die_rollback("Email command failed: ".$rtn["message"]);
 
 // Commit the db, and move the email into its storage location eg: INBOX.task1234
 } else {
