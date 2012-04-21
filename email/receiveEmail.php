@@ -84,7 +84,7 @@ if ($num_new_emails >0) {
     $personID = $person->find_by_email($from_address);
     $personID or $personID = $person->find_by_name($from_name);
 
-    // If we've determined a personID from the $from_address and $current_user->get_id() isn't set
+    // If we've determined a personID from the $from_address
     if ($personID) {
       global $current_user;
       $current_user = new person;
