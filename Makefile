@@ -143,11 +143,13 @@ test:
 	         --method-rgx      '[a-z_][a-zA-Z0-9_]{2,30}$$' \
 	         --variable-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \
 	         --attr-rgx        '[a-z_][a-zA-Z0-9_]{2,30}$$' \
-	         --class-rgx       '[a-zA-Z_][a-zA-Z0-9]+$$'    \
+	         --class-rgx       '[a-zA-Z_][a-zA-Z0-9_]+$$'    \
 	         --argument-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \
 	         --dummy-variables-rgx 'dummy|.+_$$'            \
-	         --max-statements  100                          \
-	         --max-module-lines 1200                        \
+	         --max-statements     100                       \
+	         --max-module-lines   1200                      \
+	         --min-public-methods 1                         \
+	         --max-statement      200                       \
 	  {} +
 
 cache:

@@ -8,12 +8,10 @@ import urllib
 import urllib2
 import datetime
 import ConfigParser
-import csv
 import shlex
 import subprocess
 from netrc import netrc
 from urlparse import urlparse
-from sys import stdout
 from alloc_output_handler import alloc_output_handler
 from alloc_cli_arg_handler import alloc_cli_arg_handler
 
@@ -372,10 +370,12 @@ class alloc(object):
     return s
 
   def get_args(self, command_list, ops, s):
+    """Wrapper for handling command line arguments."""
     a = alloc_cli_arg_handler()
     return a.get_args(self, command_list, ops, s)
 
   def print_table(self, entity, rows, only_these_fields, sort=False, transforms=None):
+    """Wrapper for printing the output to the screen in a table or csv."""
     t = alloc_output_handler()
     return t.print_table(self, entity, rows, only_these_fields, sort, transforms)
 
@@ -692,7 +692,7 @@ class alloc(object):
   def which(self, name, flags=os.X_OK):
     """Search PATH for executable files with the given name."""
     result = []
-    exts = filter(None, os.environ.get('PATHEXT', '').split(os.pathsep))
+    exts = [item for item in os.environ.get('PATHEXT', '').split(os.pathsep) if item]
     path = os.environ.get('PATH', None)
     if path is None:
       return ''

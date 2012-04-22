@@ -6,6 +6,12 @@ import re
 from sys import stdout
 
 class alloc_cli_arg_handler:
+  """alloc library for handling command line arguments"""
+  
+  def __init__(self):
+    """Not necessary."""
+    pass
+
   def get_subcommand_help(self, command_list, ops, text):
     """Get help text for a subcommand."""
     help_str = ""
