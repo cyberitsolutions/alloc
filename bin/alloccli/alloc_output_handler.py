@@ -7,6 +7,12 @@ from prettytable import PrettyTable
 from sys import stdout
 
 class alloc_output_handler:
+  """alloc library for outputting ascii or csv tables"""
+
+  def __init__(self):
+    """Not necessary."""
+    pass
+
   def __get_only_these_fields(self, alloc, entity, rows, only_these_fields):
     """Reduce a list by removing certain columns/fields."""
     rtn = []
@@ -57,7 +63,7 @@ class alloc_output_handler:
     for k in sortby:
       # Strip leading underscore (used in reverse sorting eg: _Rate)
       if re.sub("^_", "", k) not in fields and re.sub("^_", "", k) not in inverted_field_names:
-        self.err("Sort column not found: "+k)
+        alloc.err("Sort column not found: "+k)
 
     def sort_func(row):
       """Callback function to return the actual value that should be sorted on."""

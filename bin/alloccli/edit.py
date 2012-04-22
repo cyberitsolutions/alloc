@@ -34,7 +34,8 @@ class edit(alloc):
   ops.append((''  , 'rate=NUM       ', '$rate of the time sheet item'))
   ops.append((''  , 'private=1|0    ', 'privacy setting of the time sheet item\'s comment eg: 1=private 0=normal'))
   ops.append((''  , 'comment=TEXT   ', 'time sheet item comment'))
-  ops.append((''  , 'multiplier=NUM ', 'time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time 3=triple-time 0=no-charge'))
+  ops.append((''  , 'multiplier=NUM ', 'time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time\n'
+                                       '3=triple-time 0=no-charge'))
   ops.append((''  , 'delete=1       ', 'set this to 1 to delete the time sheet item'))
 
 
@@ -84,7 +85,7 @@ alloc edit -t 1234 --assignee null"""
       o['date'] = self.parse_date(o['date'])
 
     package = {}
-    for key,val in o.items():
+    for key, val in o.items():
       if val:
         package[key] = val
       if type(val)==type("") and val.lower() == 'null':
