@@ -250,36 +250,18 @@ if ($_POST["test_db_credentials"] && is_object($db)) {
 
 if ($_POST["install_db"] && is_object($db)) {
   unset($failed);
-  $link = $db->connect();
-  $db->select_db($_FORM["ALLOC_DB_NAME"]);
-  #$link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
-  #@mysql_select_db($_FORM["ALLOC_DB_NAME"], $link);
-  $files = array();
-  $files[] = "../installation/db_structure.sql";
-  $files[] = "../installation/db_data.sql";
-  $files[] = "../installation/db_constraints.sql";
-  $files[] = "../installation/db_triggers.sql";
-
-  foreach ($files as $file) {
-    list($sql,$comments) = parse_sql_file($file);
-
-    foreach($sql as $q) {
-      if (!$db->query($q)) {
-        $errors[] = "(3)Error! (".mysql_error().").";
-      }
-    }   
-  }    
-  
 
   // Insert config data
+  $link = $db->connect();
+  $db->select_db($_FORM["ALLOC_DB_NAME"]);
   $query = "INSERT INTO config (name, value, type) VALUES ('allocURL','".$_FORM["allocURL"]."','text')";
   if (!$db->query($query)) {
     $errors[] = "(4)Error! (".mysql_error().").";
   }
 
 
-$rand = sprintf("%02d",rand(0,59));
-$rand2 = sprintf("%d",rand(1,5));
+  $rand = sprintf("%02d",rand(0,59));
+  $rand2 = sprintf("%d",rand(1,5));
 
   $body = <<<EOD
 If you're new to allocPSA, just follow the tabs across left to right at the
@@ -391,7 +373,6 @@ EOD;
 // Tab 2 Text
 if ($_FORM["ALLOC_DB_NAME"] && $_FORM["ALLOC_DB_USER"]) {
   $text_tab_2a[] = "DROP DATABASE IF EXISTS ".$_FORM["ALLOC_DB_NAME"].";";
-  $text_tab_2a[] = "";
   $text_tab_2a[] = "CREATE DATABASE ".$_FORM["ALLOC_DB_NAME"].";";
 
   if ($_FORM["ALLOC_DB_USER"] != 'root') {
@@ -400,9 +381,14 @@ if ($_FORM["ALLOC_DB_NAME"] && $_FORM["ALLOC_DB_USER"]) {
     $text_tab_2a[] = "GRANT ALL ON ".$_FORM["ALLOC_DB_NAME"].".* TO '".$_FORM["ALLOC_DB_USER"]."'@'".$_FORM["ALLOC_DB_HOST"]."' IDENTIFIED BY '".$_FORM["ALLOC_DB_PASS"]."';";
   }
 
-  $text_tab_2a[] = "";
   $text_tab_2a[] = "FLUSH PRIVILEGES;";
-
+  $text_tab_2a[] = "";
+  $text_tab_2a[] = "USE ".$_FORM["ALLOC_DB_NAME"].";";
+  $text_tab_2a[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_structure.sql;";
+  $text_tab_2a[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_data.sql;";
+  $text_tab_2a[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_constraints.sql;";
+  $text_tab_2a[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_triggers.sql;";
+  $text_tab_2a[] = "";
 }
 
 

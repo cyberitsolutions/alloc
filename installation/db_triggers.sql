@@ -1,19 +1,18 @@
 -- This script should be imported into the main production alloc database
 -- It can be re-imported repeatedly and it should rebuild clean every time
 
+DELIMITER $$
 
 -- Error messages for mysql
-DELETE FROM error;
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to change time sheet status.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete time sheet unless status is edit.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.(2)\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid date.\n\n");
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n");
+DELETE FROM error$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to change time sheet status.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete time sheet unless status is edit.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.(2)\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid date.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n")$$
 
-
-DELIMITER $$
 
 -- if (NOT something) doesn't work for NULLs
 DROP FUNCTION IF EXISTS empty $$
@@ -467,9 +466,6 @@ BEGIN
   call update_search_index("task",NEW.taskID);
 END
 $$
-
-
-
 
 
 DELIMITER ;

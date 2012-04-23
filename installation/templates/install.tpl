@@ -99,15 +99,8 @@ of a database and database user.
 {if show_tab_2()}
 <br>
 
-3). <b>If you need to create the allocPSA database and database user, run the
-following commands on your MySQL server</b>. Ensure you are logged in as a
+3). <b>Run the following commands on your MySQL server</b>. Ensure you are logged in as a
 MySQL administrator user when you run them.
-
-<br><br>
-
-<b>Note: </b> you do not need to run these commands if the database and user
-credentials you entered on the previous page are already setup on the MySQL
-server.
 
 <br>
 <table class="nice" cellspacing="0" border="0">
@@ -146,7 +139,7 @@ server.
 
 {if show_tab_3()}
 <br>
-5). Click the Install Database button to install the tables into the allocPSA database.
+5). Click the Install Database button to complete the database installation.
 <div class="buttons">
   <input type='submit' name='install_db' value='Install Database'>&nbsp;&nbsp;
   <!-- <input type='submit' name='patch_db' value='Patch Existing Database'> -->
