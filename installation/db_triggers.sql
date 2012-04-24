@@ -10,6 +10,7 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete ti
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.(2)\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable: user not a project member.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid date.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n")$$
 
@@ -284,7 +285,11 @@ BEGIN
     FROM project LEFT JOIN projectPerson ON projectPerson.projectID = project.projectID 
    WHERE project.projectID = id AND projectPerson.personID = personID();
 
-  IF (@count_project = 0 OR NOT has_perm(personID(),15,"task")) THEN
+  IF (id AND @count_project = 0) THEN
+    call alloc_error('Task is not editable: user not a project member.');
+  END IF;
+
+  IF (id AND (@count_project = 0 OR NOT has_perm(personID(),15,"task"))) THEN
     call alloc_error('Task is not editable.');
   END IF;
 END
