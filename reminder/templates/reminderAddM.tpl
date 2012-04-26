@@ -9,9 +9,7 @@
     <tr>
       <td>Date:</td>
       <td>
-        <select name="reminder_month">{$reminder_months}</select>
-        <select name="reminder_day">{$reminder_days}</select>
-        <select name="reminder_year">{$reminder_years}</select>
+        {page::calendar("reminder_date",$reminder_date)}
       </td>
       <td>Time:</td>
       <td>

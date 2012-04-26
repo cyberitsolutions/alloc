@@ -139,9 +139,10 @@ case 3:
   $TPL["reminder_recipients"] = $reminder->get_recipient_options();
   // date/time
   $_GET["reminderTime"] && $reminder->set_value("reminderTime",$_GET["reminderTime"]);
-  $TPL["reminder_months"] = $reminder->get_month_options();
-  $TPL["reminder_days"] = $reminder->get_day_options();
-  $TPL["reminder_years"] = $reminder->get_year_options();
+
+  list($d,$t) = explode(" ",$reminder->get_value("reminderTime"));
+  $TPL["reminder_date"] = $d or $TPL["reminder_date"] = date("Y-m-d");
+
   $TPL["reminder_hours"] = $reminder->get_hour_options();
   $TPL["reminder_minutes"] = $reminder->get_minute_options();
   $TPL["reminder_meridians"] = $reminder->get_meridian_options();
@@ -223,12 +224,8 @@ case 4:
       $reminder->set_value('reminderModifiedUser', $current_user->get_id());
       $reminder->set_modified_time();
 
-      $reminder->set_value('reminderTime', date("Y-m-d H:i:s", mktime($_POST["reminder_hour"]
-                                                                     ,$_POST["reminder_minute"]
-                                                                     ,0
-                                                                     ,$_POST["reminder_month"]
-                                                                     ,$_POST["reminder_day"]
-                                                                     ,$_POST["reminder_year"])));
+      $reminder->set_value('reminderTime',$_POST["reminder_date"]." ".$_POST["reminder_hour"].":".$_POST["reminder_minute"].":00");
+      
       if (isset($_POST["reminder_update"])) {
         $reminder->set_id($_POST["reminder_id"]);
       }
