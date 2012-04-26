@@ -4,7 +4,9 @@
   <tr>
     <th class="header">Reminders
       <span>
+        {if $current_user->have_role("admin") || $current_user->have_role("manage")}
         <a class='magic toggleFilter' href=''>Show Filter</a>
+        {/}
         <a href="{$url_alloc_reminderAdd}">Add Reminder</a>
       </span>
     </th>
