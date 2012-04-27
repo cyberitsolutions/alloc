@@ -52,6 +52,11 @@ DROP FUNCTION IF EXISTS has_perm $$
 CREATE FUNCTION has_perm(pID INTEGER, action INTEGER, tableN VARCHAR(255)) RETURNS BOOLEAN READS SQL DATA
 BEGIN
   SELECT perms INTO @perms FROM person WHERE personID = pID;
+
+  IF (find_in_set('god',@perms)>0) THEN
+    RETURN 1;
+  END IF;
+
   SELECT count(*) INTO @rtn
     FROM permission
    WHERE tableName = tableN
@@ -289,7 +294,7 @@ BEGIN
     call alloc_error('Task is not editable: user not a project member.');
   END IF;
 
-  IF (id AND (@count_project = 0 OR NOT has_perm(personID(),15,"task"))) THEN
+  IF (id AND NOT has_perm(personID(),15,"task")) THEN
     call alloc_error('Task is not editable.');
   END IF;
 END
