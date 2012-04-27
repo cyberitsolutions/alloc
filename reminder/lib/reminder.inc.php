@@ -123,7 +123,7 @@ class reminder extends db_entity {
         $recipient = $current_user->get_id();
       }
     }
-    return page::select_options($recipients, $recipient);
+    return array($recipients, $recipient);
   }
 
   function get_hour_options() {

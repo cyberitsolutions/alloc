@@ -130,10 +130,13 @@ h6 div {
   right:0px !important; right:12px;
 }
 
-textarea, input, select, textarea { 
+textarea, input, select { 
   font-size:100%; 
   font-family:arial,helvetica,sans-serif; 
   font-weight:normal;
+  -webkit-box-sizing:border-box;
+     -moz-box-sizing:border-box;
+          box-sizing:border-box;
 }
 th { 
   color:#444444; 
@@ -746,6 +749,9 @@ div.grippie {
   width:100% !important; width:95%;
   overflow:hidden;
   margin-bottom:5px;
+  -webkit-box-sizing:border-box;
+     -moz-box-sizing:border-box;
+          box-sizing:border-box;
 }
 div.grippie:hover {
   background:#fffae8 url(../images/grippie.png) no-repeat scroll center 2px;
