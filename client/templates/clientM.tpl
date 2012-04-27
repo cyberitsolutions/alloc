@@ -39,7 +39,7 @@
     <tr>
       <th class="header">Reminders
         <span>
-          <a href="{$url_alloc_reminderAdd}step=3&parentType=client&parentID={$client_clientID}&returnToParent=client">Add Reminder</a>
+          <a href="{$url_alloc_reminder}step=3&parentType=client&parentID={$client_clientID}&returnToParent=client">Add Reminder</a>
         </span>
       </th>
     </tr>

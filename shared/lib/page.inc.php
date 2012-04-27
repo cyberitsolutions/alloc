@@ -95,7 +95,7 @@ class page {
     if (isset($modules["finance"]) && $modules["finance"]) {
       $str[] = "<option value=\"".$TPL["url_alloc_expenseForm"]."\">New Expense Form</option>";
     }
-    $str[] = "<option value=\"".$TPL["url_alloc_reminderAdd"]."parentType=general&step=2\">New Reminder</option>";
+    $str[] = "<option value=\"".$TPL["url_alloc_reminder"]."parentType=general&step=2\">New Reminder</option>";
     if (have_entity_perm("person", PERM_CREATE, $current_user)) {
       $str[] = "<option value=\"".$TPL["url_alloc_person"]."\">New Person</option>";
     }
