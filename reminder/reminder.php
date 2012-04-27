@@ -114,14 +114,21 @@ case 3:
     $parentType = $reminder->get_value('reminderType');
     $parentID = $reminder->get_value('reminderLinkID');
     $TPL["reminder_title"] = "Edit Reminder";
-    $TPL["reminder_buttons"] =
-      sprintf("<input type=\"hidden\" name=\"reminder_id\" value=\"%d\">", $reminderID).
-      "<input type=\"submit\" name=\"reminder_update\" value=\"Update\">&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"reminder_delete\" value=\"Delete\">&nbsp;&nbsp;&nbsp;"."<input type=\"submit\" name=\"reminder_cancel\" value=\"Cancel\">";
+    $TPL["reminder_buttons"] = <<<EOD
+<input type="hidden" name="reminder_id" value="{$reminderID}">
+<input type="submit" name="reminder_update" value="Save">
+<input type="submit" name="reminder_delete" value="Delete" class="delete_button">
+<input type="button" value="Cancel Edit" onClick="toggle_view_edit();">
+EOD;
+      
   } else {
     $reminder->set_value('reminderType', $parentType);
     $reminder->set_value('reminderLinkID', $parentID);
     $TPL["reminder_title"] = "New Reminder";
-    $TPL["reminder_buttons"] = "<input type=\"submit\" name=\"reminder_save\" value=\"Save\">"."<input type=\"submit\" name=\"reminder_cancel\" value=\"Cancel\">";
+    $TPL["reminder_buttons"] = <<<EOD2
+<input type="submit" name="reminder_save" value="Save">
+<input type="submit" name="reminder_cancel" value="Cancel">
+EOD2;
   }
 
   // link to parent
@@ -136,9 +143,13 @@ case 3:
     $TPL["reminder_goto_parent"] = "<a href=\"".$TPL["return_address"]."\">Goto Task</a>";
   }
   // recipients
-  $TPL["reminder_recipients"] = $reminder->get_recipient_options();
+  list($TPL["reminder_recipients"],$TPL["reminder_recipient"]) = $reminder->get_recipient_options();
   // date/time
   $_GET["reminderTime"] && $reminder->set_value("reminderTime",$_GET["reminderTime"]);
+  $TPL["reminderTime"] = $reminder->get_value("reminderTime");
+  $TPL["reminderAdvNoticeInterval"] = $reminder->get_value("reminderAdvNoticeInterval");
+  $TPL["reminderRecuringInterval"] = $reminder->get_value("reminderRecuringInterval");
+  $TPL["reminderID"] = $reminder->get_id();
 
   list($d,$t) = explode(" ",$reminder->get_value("reminderTime"));
   $TPL["reminder_date"] = $d or $TPL["reminder_date"] = date("Y-m-d");
@@ -146,16 +157,9 @@ case 3:
   $TPL["reminder_hours"] = $reminder->get_hour_options();
   $TPL["reminder_minutes"] = $reminder->get_minute_options();
   $TPL["reminder_meridians"] = $reminder->get_meridian_options();
-  // recuring?
-  if ($reminder->get_value('reminderRecuringInterval') != "No" && $reminder->get_value('reminderRecuringInterval') != "" && $reminder->get_value('reminderRecuringValue') > 0) {
-    $TPL["reminder_recuring"] = "checked";
-  }
   $TPL["reminder_recuring_value"] = $reminder->get_value('reminderRecuringValue');
   $TPL["reminder_recuring_intervals"] = $reminder->get_recuring_interval_options();
   // advanced notice?
-  if ($reminder->get_value('reminderAdvNoticeInterval') != "No" && $reminder->get_value('reminderAdvNoticeInterval') != "" && $reminder->get_value('reminderAdvNoticeValue') > 0) {
-    $TPL["reminder_advnotice"] = "checked";
-  }
   $TPL["reminder_advnotice_value"] = $reminder->get_value('reminderAdvNoticeValue');
   $TPL["reminder_advnotice_intervals"] = $reminder->get_advnotice_interval_options();
   // subject
@@ -229,7 +233,7 @@ case 4:
       if (isset($_POST["reminder_update"])) {
         $reminder->set_id($_POST["reminder_id"]);
       }
-      if (!$_POST["reminder_recuring"] || !$_POST["reminder_recuring_value"]) {
+      if (!$_POST["reminder_recuring_value"]) {
         $reminder->set_value('reminderRecuringInterval', 'No');
         $reminder->set_value('reminderRecuringValue', '0');
       } else {
@@ -240,7 +244,7 @@ case 4:
         $reminder->set_value('reminderRecuringValue', $_POST["reminder_recuring_value"]);
       }
       $reminder->set_value('reminderAdvNoticeSent', '0');
-      if (!$_POST["reminder_advnotice"] || !$_POST["reminder_advnotice_value"]) {
+      if (!$_POST["reminder_advnotice_value"]) {
         $reminder->set_value('reminderAdvNoticeInterval', 'No');
         $reminder->set_value('reminderAdvNoticeValue', '0');
       } else {
@@ -251,6 +255,9 @@ case 4:
       $reminder->set_value('reminderContent', rtrim($_POST["reminder_content"]));
       $reminder->set_value('reminderActive', sprintf("%d",$_POST["reminderActive"]));
       $reminder->save();
+      $returnToParent = "reminder";
+      $reminderID = $reminder->get_id();
+      $TPL["message_good"][] = "Reminder saved.";
     }
 
   } else if ($_POST["reminder_delete"] && $_POST["reminder_id"]) {
@@ -265,6 +272,7 @@ case 4:
                   ,"home"     => $TPL["url_alloc_home"]
                   ,"calendar" => $TPL["url_alloc_taskCalendar"]."personID=".$_POST["personID"]
                   ,"list"     => $TPL["url_alloc_reminderList"]
+                  ,"reminder" => $TPL["url_alloc_reminder"]."reminderID=".$reminderID."&step=3"
                   ,""         => $TPL["url_alloc_reminderList"]
                   );
 
