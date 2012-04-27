@@ -185,7 +185,7 @@ case 3:
   if (!is_object($reminder) || !$reminder->get_id()) {
     $TPL["reminderActive"] = true;
   }
-  include_template("templates/reminderAddM.tpl");
+  include_template("templates/reminderM.tpl");
   break;
 
 case 4:

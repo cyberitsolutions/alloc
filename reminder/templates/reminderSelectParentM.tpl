@@ -6,7 +6,7 @@
   </tr>
   <tr>
     <td>
-      <form action="{$url_alloc_reminderAdd}" method="post">
+      <form action="{$url_alloc_reminder}" method="post">
       {$parentType}:
       <select name="parentID">
         {$parentNameOptions}

@@ -323,7 +323,7 @@ class calendar {
 
             $text = page::htmlentities($r["reminderSubject"]);
             $r["reminderTime"] and $text = date("g:ia",$r["reminderTime"])." ".$text;
-            $d->reminders[] = '<a href="'.$TPL["url_alloc_reminderAdd"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$wrap_start.$text.$wrap_end.'</a>';
+            $d->reminders[] = '<a href="'.$TPL["url_alloc_reminder"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$wrap_start.$text.$wrap_end.'</a>';
           #}
         }
 
@@ -385,7 +385,7 @@ class calendar {
   function get_link_new_reminder($date) {
     global $TPL;
     $time = urlencode($date." 9:00am");
-    $link = '<a href="'.$TPL["url_alloc_reminderAdd"].'parentType=general&step=2&returnToParent='.$this->rtp.'&reminderTime='.$time;
+    $link = '<a href="'.$TPL["url_alloc_reminder"].'parentType=general&step=2&returnToParent='.$this->rtp.'&reminderTime='.$time;
     $link.= '&personID='.$this->person->get_id().'">';
     $link.= $this->get_img_new_reminder();
     $link.= "</a>";

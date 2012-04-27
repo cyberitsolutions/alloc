@@ -445,7 +445,7 @@ function clickClientStatus(e) {
   <tr>
     <th class="header">Reminders
       <span>
-        <a href="{$url_alloc_reminderAdd}step=3&parentType=project&parentID={$project_projectID}&returnToParent=project">New Reminder</a>
+        <a href="{$url_alloc_reminder}step=3&parentType=project&parentID={$project_projectID}&returnToParent=project">New Reminder</a>
       </span>
     </th>
   </tr>
