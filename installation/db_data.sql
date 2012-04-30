@@ -275,6 +275,8 @@ VALUES
 ,('announcement'             ,0  ,''         ,NULL ,1     ,NULL)
 ,('announcement'             ,0  ,'admin'    ,NULL ,15    ,NULL)
 
+,('auditItem'                ,0  ,''         ,NULL ,8 + 1 ,'Allow all to create and read audit items.')
+
 ,('client'                   ,0  ,''         ,NULL ,15    ,NULL)
 ,('clientContact'            ,0  ,''         ,NULL ,15    ,NULL)
 
@@ -291,7 +293,7 @@ VALUES
 
 ,('history'                  ,0  ,''         ,NULL ,8     ,NULL)
 
-,('indexQueue'               ,0  ,'employee' ,NULL ,15    ,NULL)
+,('indexQueue'               ,0  ,''         ,NULL ,15    ,'Allow all to indexQueue.')
 
 ,('interestedParty'          ,0  ,''         ,NULL ,11    ,NULL)
 ,('interestedParty'          ,0  ,'manage'   ,NULL ,15    ,NULL)
@@ -390,8 +392,6 @@ VALUES
 
 ,('transactionRepeat'        ,-1 ,'employee' ,NULL ,1     ,NULL)
 ,('transactionRepeat'        ,0  ,'admin'    ,NULL ,15    ,NULL)
-
-,('auditItem'                ,0  ,'employee' ,NULL ,8 + 1 ,'Allow employees to create and read audit items.')
 
 ;
 
