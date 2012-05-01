@@ -377,6 +377,16 @@ BEGIN
   SET NEW.dateCreated = OLD.dateCreated;
   SET NEW.taskModifiedUser = personID();
 
+  IF (empty(OLD.dateActualCompletion) AND NOT empty(NEW.dateActualCompletion)) THEN
+    SET NEW.taskStatus = 'closed_complete';
+  ELSEIF (NOT empty(OLD.dateActualCompletion) AND empty(NEW.dateActualCompletion)) THEN
+    SET NEW.taskStatus = 'open_notstarted';
+  END IF;
+
+  IF (empty(OLD.dateActualStart) AND NOT empty(NEW.dateActualStart) AND OLD.taskStatus = "open_notstarted") THEN
+    SET NEW.taskStatus = 'open_inprogress';
+  END IF;
+
   IF (empty(NEW.taskStatus)) THEN
     SET NEW.taskStatus = OLD.taskStatus;
   END IF;

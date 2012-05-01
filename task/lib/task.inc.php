@@ -57,36 +57,7 @@ class task extends db_entity {
 
   function save() {
     global $current_user, $TPL;
-
-    // The data prior to the save
-    $old = $this->all_row_fields;
-
-    // Set the task's status and sub-status
-    list($taskStatus, $taskSubStatus) = explode("_",$this->get_value("taskStatus"));
-
-    // Edge-case for people who open tasks with a dateActualCompletion set, i.e. simultaneous task create and close.
-    if (!$this->get_id() && $this->get_value("dateActualCompletion")) {
-      if ($taskStatus != "closed" && $taskStatus != "close") {
-        $this->set_value("taskStatus","closed_complete");
-      }
-    }
-
-    // If a dateActualCompletion has just been entered
-    if (!$old["dateActualCompletion"] && $this->get_value("dateActualCompletion")) {
-      $this->set_value("taskStatus","closed_complete");
-
-    // Else if there was a dateActualCompletion and they have just *unset* it...
-    } else if ($old["dateActualCompletion"] && !$this->get_value("dateActualCompletion")) {
-      $this->set_value("taskStatus","open_inprogress");
-    }
-
-    // If they've just plugged a dateActualStart in and the task is notstarted, then change the status to Open: In Progress
-    if (!$old["dateActualStart"] && $this->get_value("dateActualStart") && $old["taskStatus"] == "open_notstarted") {
-      $this->set_value("taskStatus","open_inprogress");
-    }
-
     $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
-
     return parent::save();
   }
 
