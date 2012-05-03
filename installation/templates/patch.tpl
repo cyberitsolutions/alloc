@@ -21,18 +21,18 @@
   {list($code,$comments) = parse_patch_file(ALLOC_MOD_DIR."patches/".$file)}
 
   {if !in_array($file,$applied_patches)}
+  <form action="{$url_alloc_patch}" method="post">
   <tr>
     <td valign="top">
-      <form action="{$url_alloc_patch}" method="post">
       <input type='submit' name='apply_patch' value='Apply Patch'>
       <input type='hidden' name='patch_file' value='{$file}'>&nbsp;
       <input type="hidden" name="sessID" value="{$sessID}">
-      </form>
     </td>
     <td valign="top" class="nobr">{$file}&nbsp;</td>
-    <td valign="top">{page::to_html(implode("\n",$comments))}&nbsp;</td>
+    <td valign="top">{echo implode("<br>",$comments)}&nbsp;</td>
     <td valign="top">{page::to_html(implode("\n",$code))}&nbsp;</td>
   </tr>
+  </form>
   {/}
 {/}
 </table>

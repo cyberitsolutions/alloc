@@ -448,7 +448,7 @@ function parse_php_file($file) {
 
   foreach ($lines as $line) {
     if (preg_match("/^[\s]*(\/\/[^\n]*)$/", $line, $m)) {
-      $comments[] = str_replace("// ","",trim($m[1]));
+      $comments[] = str_replace("//","",trim($m[1]));
     } else if (!empty($line) && substr($line,0,2) != "//" && $line) {
       $php[] = trim($line);
     }
