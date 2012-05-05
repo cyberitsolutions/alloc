@@ -9,6 +9,7 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to change ti
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete time sheet unless status is edit.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.(2)\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet's rate is not editable.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable: user not a project member.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid date.\n\n")$$
@@ -53,7 +54,7 @@ CREATE FUNCTION has_perm(pID INTEGER, action INTEGER, tableN VARCHAR(255)) RETUR
 BEGIN
   SELECT perms INTO @perms FROM person WHERE personID = pID;
 
-  IF (find_in_set('god',@perms)>0) THEN
+  IF (have_role(pID,'god')) THEN
     RETURN 1;
   END IF;
 
@@ -63,6 +64,49 @@ BEGIN
      AND (actions & action = action)
      AND (roleName IS NULL OR roleName = '' OR find_in_set(roleName,@perms)>0);
   return @rtn;
+END
+$$
+
+DROP FUNCTION IF EXISTS have_role $$
+CREATE FUNCTION have_role(pID INTEGER, role VARCHAR(255)) RETURNS BOOLEAN READS SQL DATA
+BEGIN
+  SELECT count(personID) INTO @num FROM person WHERE personID = pID AND (find_in_set(role,perms) OR find_in_set('god',perms));
+  RETURN @num;
+END
+$$
+
+DROP FUNCTION IF EXISTS have_project_role $$
+CREATE FUNCTION have_project_role(pID INTEGER, projID INTEGER, roles VARCHAR(255)) RETURNS BOOLEAN READS SQL DATA
+BEGIN
+  SELECT count(projectPersonID) INTO @num
+    FROM projectPerson pp 
+    LEFT JOIN role ppr ON ppr.roleID = pp.roleID 
+   WHERE projectID = projID and personID = pID
+     AND ppr.roleHandle in (roles);
+  RETURN @num;
+END
+$$
+
+DROP FUNCTION IF EXISTS can_edit_rate $$
+CREATE FUNCTION can_edit_rate(pID INTEGER, projID INTEGER) RETURNS BOOLEAN READS SQL DATA
+BEGIN
+  SELECT rate INTO @rate FROM projectPerson WHERE projectID = projID AND personID = pID;
+  IF (@rate IS NULL) THEN
+    RETURN 1;
+  END IF;
+  IF (have_role(personID(), 'manage')) THEN
+    RETURN 1;
+  END IF;
+  IF (have_role(personID(), 'admin')) THEN
+    RETURN 1;
+  END IF;
+  IF (have_project_role(personID(), projID, 'isManager')) THEN
+    RETURN 1;
+  END IF;
+  IF (have_project_role(personID(), projID, 'timeSheetRecipient')) THEN
+    RETURN 1;
+  END IF;
+  RETURN 0;
 END
 $$
 
@@ -207,7 +251,13 @@ BEGIN
   SET NEW.personID = personID();
   SELECT projectID INTO @projectID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
   SELECT rate,rateUnitID INTO @rate,@rateUnitID FROM projectPerson WHERE projectID = @projectID AND personID = personID();
-  IF (@rate) THEN
+
+  -- if rate is neq project-person rate AND they're don't have perm halt with error about rate
+  IF (neq(NEW.rate,@rate) AND NOT can_edit_rate(personID(),@projectID)) THEN
+    call alloc_error("Time sheet's rate is not editable.");
+  END IF;
+
+  IF (NEW.rate IS NULL AND @rate) THEN
     SET NEW.rate = @rate;
     SET NEW.timeSheetItemDurationUnitID = @rateUnitID;
   END IF;
@@ -252,7 +302,13 @@ BEGIN
   SET NEW.personID = OLD.personID;
   SELECT projectID INTO @projectID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
   SELECT rate,rateUnitID INTO @rate,@rateUnitID FROM projectPerson WHERE projectID = @projectID AND personID = OLD.personID;
-  IF (@rate) THEN
+
+  -- if rate is neq project-person rate AND they're don't have perm halt with error about rate
+  IF (neq(NEW.rate,@rate) AND NOT can_edit_rate(personID(),@projectID)) THEN
+    call alloc_error("Time sheet's rate is not editable.");
+  END IF;
+
+  IF (NEW.rate IS NULL AND @rate) THEN
     SET NEW.rate = @rate;
     SET NEW.timeSheetItemDurationUnitID = @rateUnitID;
   END IF;

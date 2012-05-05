@@ -315,7 +315,7 @@ if (!$current_user->is_employee()) {
         $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
         $TPL["tsi_commentPrivate"] and $TPL["commentPrivateChecked"] = " checked";
 
-	$TPL["ts_rate_editable"] = $timeSheet->can_edit_rate();
+        $TPL["ts_rate_editable"] = $timeSheet->can_edit_rate();
 
         $timeSheetItemMultiplier = $timeSheetItem->get_value("multiplier");
 
@@ -325,8 +325,8 @@ if (!$current_user->is_employee()) {
         $TPL["tsi_personID"] = $current_user->get_id();
         $timeSheet->load_pay_info();
         $TPL["tsi_rate"] = $timeSheet->pay_info["project_rate"];
-	$timeSheetItemDurationUnitID = $timeSheet->pay_info["project_rateUnitID"];
-	$TPL["ts_rate_editable"] = $timeSheet->can_edit_rate();
+	      $timeSheetItemDurationUnitID = $timeSheet->pay_info["project_rateUnitID"];
+	      $TPL["ts_rate_editable"] = $timeSheet->can_edit_rate();
       }
 
       $taskID or $taskID = $_GET["taskID"];

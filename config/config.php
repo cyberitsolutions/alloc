@@ -220,9 +220,6 @@ $TPL["timeSheetPrintOptions"] = page::select_options($TPL["timeSheetPrintOptions
 $commentTemplate = new commentTemplate;
 $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName");
 
-$tsEditors = array("all"=>"All users", "managers"=>"Managers only", "none"=>"Empty rate only");
-$TPL["timeSheetEditOptions"] = page::select_options($tsEditors, $config->get_config_item("timeSheetEditors"));
-
 $TPL["rssStatusFilterOptions"] = page::select_options(task::get_task_statii_array(true), $config->get_config_item("rssStatusFilter"));
 
 

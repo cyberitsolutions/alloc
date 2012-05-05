@@ -279,11 +279,6 @@
     <td width="1%">{page::help("config_timeSheetAdminEmail")}</td>
   </tr>
   <tr>
-    <td>Classes Capable of Editing Rates</td>
-    <td><select name="timeSheetEditors">{$timeSheetEditOptions}</select></td>
-    <td width="1%" valign="top">{page::help("config_timeSheetEdit")}</td>
-  </tr>
-  <tr>
     <td>Hours in a Working Day</td>
     <td><input type="text" size="70" value="{$hoursInDay}" name="hoursInDay"></td> 
     <td width="1%">{page::help("config_hoursInDay")}</td>
