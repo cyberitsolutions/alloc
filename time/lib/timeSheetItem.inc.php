@@ -61,17 +61,9 @@ class timeSheetItem extends db_entity {
       alloc_die("Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice. Time Sheet Item not saved.");
     } 
 
-    // If rate is changed via CLI
-    if ($this->get_value("rate") && $timeSheet->pay_info["project_rate"] != $this->get_value("rate") && !$timeSheet->can_edit_rate()) {
-      alloc_die("Not permitted to edit time sheet item rate.");
-    }
-
-    if (!imp($this->get_value("rate")) && imp($timeSheet->pay_info["project_rate"])) {
-      $this->set_value("rate", $timeSheet->pay_info["project_rate"]);
-    }
-
     // If unit is changed via CLI
-    if ($this->get_value("timeSheetItemDurationUnitID") && $timeSheet->pay_info["project_rateUnitID"] != $this->get_value("timeSheetItemDurationUnitID") && !$timeSheet->can_edit_rate()) {
+    if ($this->get_value("timeSheetItemDurationUnitID") && $timeSheet->pay_info["project_rateUnitID"]
+    && $timeSheet->pay_info["project_rateUnitID"] != $this->get_value("timeSheetItemDurationUnitID") && !$timeSheet->can_edit_rate()) {
       alloc_die("Not permitted to edit time sheet item unit.");
     }
 

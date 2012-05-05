@@ -1400,42 +1400,9 @@ EOD;
 
   function can_edit_rate() {
     global $current_user;
-
-    // This function dictates whether it the current_user is permitted
-    // to override a timesheet's rate.
-
-    $can_edit = config::get_config_item("timeSheetEditors");
-
-    // $can_edit will be one of:
-    // all      = all users can override their rate
-    // managers = only manager users get to override their rate
-    // none     = no users can override their rate
-
-    // Additionally, any user may override their rate if it hasn't been specified at the project level.
-
-    // If everyone can edit the rate
-    if ($can_edit == "all") {
-      return true;
-    }
-
-    // If the rate is not set
-    $projectPerson = projectPerson::get_projectPerson_row($this->get_value("projectID"), $this->get_value("personID"));
-    if ($projectPerson && $projectPerson['rate'] === "") {
-      return true;
-    }
-
-    // If rates can be edited by managers and the current user is a manager
-    $project = $this->get_foreign_object('project');
-    if ($can_edit == "managers" && ($current_user->have_role("manage") || $project->has_project_permission($current_user, array("isManager")))) {
-      return true;
-    }
-
-    // Fallback since finance admins should be able to do anything
-    if ($current_user->have_role("admin")) {
-      return true;
-    }
-
-    return false;
+    $db = new db_alloc();
+    $row = $db->qr(sprintf("SELECT can_edit_rate(%d,%d) as allow",$current_user->get_id(),$this->get_value("projectID")));
+    return $row["allow"];
   }
 
   function get_project_id() {

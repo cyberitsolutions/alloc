@@ -469,7 +469,6 @@ INSERT INTO config (name, value, type) VALUES ('clientCategories','a:7:{i:0;a:2:
 INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetManagerList', 'a:0:{}', 'array');
 INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetAdminList', 'a:0:{}', 'array');
 INSERT INTO config (name,value,type) VALUES ('allocSessionMinutes', '540', 'text');
-INSERT INTO config (name,value,type) VALUES ('timeSheetEditors', 'none', 'text');
 INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetRate', '', 'text');
 INSERT INTO config (name,value,type) VALUES ('defaultTimeSheetUnit', 1, 'text'); -- ref timeUnit below
 INSERT INTO config (name,value,type) VALUES ('mapURL', 'http://maps.google.com/?q=%ad', 'text');
