@@ -634,10 +634,18 @@ class comment extends db_entity {
       $email->set_subject($subject." ".$subject_extra);
       $email->set_message_type($type);
 
+      // If from name is empty, then use the email address instead
+      // eg: From: jon@jonny.com -> From: "jon@jonny.com via allocPSA" <alloc@cyber.com>
+      $from_name or $from_name = $from_address;
+
       if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
-        config::for_cyber() and $via = "via ";
-        $email->set_reply_to("All parties ".$via.ALLOC_DEFAULT_FROM_ADDRESS);
-        $email->set_from($from_name." ".$via.ALLOC_DEFAULT_FROM_ADDRESS);
+        if (config::for_cyber()) {
+          $email->set_reply_to('"All parties via allocPSA" '.ALLOC_DEFAULT_FROM_ADDRESS);
+          $email->set_from('"'.$from_name.' via allocPSA" '.ALLOC_DEFAULT_FROM_ADDRESS);
+        } else {
+          $email->set_reply_to('"All parties" '.ALLOC_DEFAULT_FROM_ADDRESS);
+          $email->set_from('"'.$from_name.'" '.ALLOC_DEFAULT_FROM_ADDRESS);
+        }
       } else {
         if (is_object($current_user) && $current_user->get_from()) {
           $f = $current_user->get_from();

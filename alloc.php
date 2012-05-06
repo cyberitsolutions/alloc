@@ -188,9 +188,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // The default From: email address 
   if (config::get_config_item("AllocFromEmailAddress")) {
-    config::for_cyber() and $extra = "allocPSA ";
-    define("ALLOC_DEFAULT_FROM_ADDRESS", $extra.add_brackets(config::get_config_item("AllocFromEmailAddress")));
-    unset($extra);
+    define("ALLOC_DEFAULT_FROM_ADDRESS", add_brackets(config::get_config_item("AllocFromEmailAddress")));
   }
 
 
