@@ -494,11 +494,12 @@ function has_backup_perm() {
 function parse_email_address($email="") {
   // Takes Alex Lance <alla@cyber.com.au> and returns array("alla@cyber.com.au", "Alex Lance");
   if ($email) {
-    $bits = explode(" ",$email);
-    $last_bit = array_pop($bits);
-    $address = str_replace(array("<",">"),"",$last_bit);
-    is_array($bits) && count($bits) and $name = implode(" ",$bits);
-    return array($address, $name);
+    $structure = Mail_RFC822::parseAddressList($email);
+    $name = (string)$structure[0]->personal;
+    if ($structure[0]->mailbox && $structure[0]->host) {
+      $addr = (string)$structure[0]->mailbox."@".(string)$structure[0]->host;
+    }
+    return array($addr, $name);
   }
   return array();
 }
