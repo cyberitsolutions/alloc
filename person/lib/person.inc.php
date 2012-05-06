@@ -385,6 +385,7 @@ class person extends db_entity {
 
   function get_from() {
     $name = $this->get_name();
+    $name and $name = '"'.$name.'"';
     $email = $this->get_value("emailAddress");
     if ($email) {
       $str = $name;
