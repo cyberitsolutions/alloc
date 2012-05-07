@@ -74,20 +74,10 @@ class alloc_cli_arg_handler:
 
     short_ops, long_ops, no_arg_ops, all_ops = self.__parse_args(ops)
 
-    for i in command_list[1:]:
-      found = False
-      if i[0:1] == "-":
-        for k, v in all_ops.items():
-          if i == v[0] or i == v[1]:
-            found = True
-        if not found and not i[:5] == "--csv":
-          alloc.die("Unrecognized option: "+i)
-
     try:
       options, remainder = getopt.getopt(command_list[2:], short_ops, long_ops)
-    except:
-      print self.get_subcommand_help(command_list, ops, s)
-      sys.exit(0)
+    except getopt.GetoptError, e:
+      alloc.die(str(e))
 
     for k, v in all_ops.items():
       rtn[k] = ''
