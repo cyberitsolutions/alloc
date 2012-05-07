@@ -166,12 +166,20 @@ BEGIN
   SELECT customerBilledDollars,currencyTypeID INTO @cbd,@cur FROM project WHERE projectID = NEW.projectID;
   SET NEW.customerBilledDollars = @cbd;
   SET NEW.currencyTypeID = @cur;
+  SET NEW.dateFrom = null;
+  SET NEW.dateTo = null;
+  SET NEW.approvedByManagerPersonID = null;
+  SET NEW.approvedByAdminPersonID = null;
+  SET NEW.dateSubmittedToManager = null;
+  SET NEW.dateSubmittedToAdmin = null;
+  SET NEW.dateRejected = null;
+  SET NEW.invoiceDate = null;
 END
 $$
 
 
--- define("PERM_TIME_INVOICE_TIMESHEETS", 512);
--- define("PERM_TIME_APPROVE_TIMESHEETS", 256);
+-- define("PERM_TIME_INVOICE_TIMESHEETS", 512); = admin
+-- define("PERM_TIME_APPROVE_TIMESHEETS", 256); = manager and admin
 
 DROP TRIGGER IF EXISTS before_update_timeSheet $$
 CREATE TRIGGER before_update_timeSheet BEFORE UPDATE ON timeSheet
@@ -185,17 +193,25 @@ BEGIN
     SELECT 1 INTO @null;
   ELSEIF (neq(OLD.status, 'edit')) THEN
     call alloc_error('Time sheet is not editable(2).');
-  ELSEIF (neq(NEW.status, 'edit')) THEN
+  ELSEIF (neq(NEW.status, 'edit') AND using_views()) THEN
     call alloc_error('Not permitted to change time sheet status.');
-  ELSE
+  ELSEIF (using_views()) THEN
+    -- People using views can't modify the following fields
     SET NEW.timeSheetID = OLD.timeSheetID;
     SET NEW.personID = OLD.personID;
     SET NEW.status = 'edit';
-    SELECT preferred_tfID INTO @preferred_tfID FROM person WHERE personID = OLD.personID;
-    SET NEW.recipient_tfID = @preferred_tfID;
-    SELECT customerBilledDollars,currencyTypeID INTO @cbd,@cur FROM project WHERE projectID = NEW.projectID;
-    SET NEW.customerBilledDollars = @cbd;
-    SET NEW.currencyTypeID = @cur;
+    SET NEW.recipient_tfID = OLD.recipient_tfID;
+    SET NEW.customerBilledDollars = OLD.customerBilledDollars;
+    SET NEW.currencyTypeID = OLD.currencyTypeID;
+    SET NEW.dateFrom = OLD.dateFrom;
+    SET NEW.dateTo = OLD.dateTo;
+    SET NEW.approvedByManagerPersonID = OLD.approvedByManagerPersonID;
+    SET NEW.approvedByAdminPersonID = OLD.approvedByAdminPersonID;
+    SET NEW.dateSubmittedToManager = OLD.dateSubmittedToManager;
+    SET NEW.dateSubmittedToAdmin = OLD.dateSubmittedToAdmin;
+    SET NEW.dateRejected = OLD.dateRejected;
+    SET NEW.invoiceDate = OLD.invoiceDate;
+    SET NEW.payment_insurance = OLD.payment_insurance;
   END IF;
 END
 $$
