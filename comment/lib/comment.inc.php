@@ -299,7 +299,9 @@ class comment extends db_entity {
   }
 
   function get_comment_attribution($comment=array()) {
-    $str = '<b>'.comment::get_comment_author($comment).'</b> <span class="comment_date">'.format_date("Y-m-d g:ia",$comment["date"])."</span>";
+    $d = $comment["date"];
+    strlen($comment["date"]) > 10 and $d = format_date("Y-m-d g:ia",$comment["date"]);
+    $str = '<b>'.comment::get_comment_author($comment).'</b> <span class="comment_date">'.$d."</span>";
       if ($comment["commentModifiedTime"] || $comment["commentModifiedUser"]) {
         $str.= ", last modified by <b>".person::get_fullname($comment["commentModifiedUser"])."</b> ".format_date("Y-m-d g:ia",$comment["commentModifiedTime"]);
       }
@@ -803,6 +805,7 @@ class comment extends db_entity {
       $row["personID"] and $row["person"] = $people[$row["personID"]]["name"];
       $row["clientContactName"] and $row["person"] = $row["clientContactName"];
       $row["person"] or list($e,$row["person"]) = parse_email_address($row["commentCreatedUserText"]);
+      $row["displayDate"] = format_date("Y-m-d g:ia",$row["displayDate"]);
       if (!$tasks[$row["taskID"]]) {
         $t = new task;
         $t->set_id($row["taskID"]);
