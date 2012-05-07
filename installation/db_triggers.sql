@@ -362,7 +362,7 @@ BEGIN
     FROM project LEFT JOIN projectPerson ON projectPerson.projectID = project.projectID 
    WHERE project.projectID = id AND projectPerson.personID = personID();
 
-  IF (id AND @count_project = 0) THEN
+  IF (id AND @count_project = 0 AND NOT has_perm(personID(),15,"task")) THEN
     call alloc_error('Task is not editable: user not a project member.');
   END IF;
 
