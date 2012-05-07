@@ -779,6 +779,7 @@ class comment extends db_entity {
     $q = sprintf("SELECT commentID as id
                        , commentCreatedUser as personID
                        , date(commentCreatedTime) as date
+                       , commentCreatedTime as displayDate
                        , commentMasterID as taskID
                        , task.taskName
                        , SUBSTRING(comment.comment,1,%d) AS comment_text
@@ -818,6 +819,7 @@ class comment extends db_entity {
                          ,timeSheetID
                          ,timeSheetItem.personID
                          ,dateTimeSheetItem as date
+                         ,dateTimeSheetItem as displayDate
                          ,timeSheetItem.taskID
                          ,task.taskName
                          ,timeSheetItemDuration as duration
