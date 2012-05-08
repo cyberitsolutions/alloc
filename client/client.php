@@ -137,7 +137,7 @@ require_once("../alloc.php");
       } else {
           $mailto = $email;
       }
-      $email and $col2[] = $ico_e."<a href='mailto:".$mailto."'>".$email."</a>";
+      $email and $col2[] = $ico_e."<a href='mailto:".rawurlencode($mailto)."'>".$email."</a>";
 
       $phone = $clientContact->get_value('clientContactPhone',DST_HTML_DISPLAY);
       $phone and $col2[] = $ico_p.$phone;
