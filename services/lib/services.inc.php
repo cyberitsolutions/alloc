@@ -332,6 +332,7 @@ class alloc_services {
   */
   public function get_task_emails($taskID, $entity="task") {
     global $current_user; // Always need this :(
+    $entity or $entity = "task";
     if ($taskID) {
       $folder = config::get_config_item("allocEmailFolder").".".$entity.$taskID;
       $info = $this->init_email_info();
