@@ -59,7 +59,7 @@ foreach ($msg_nums as $num) {
   $mail->set_msg($num);
   $mail->get_msg_header($num);
   $keys = $mail->get_hashes();
-  $mailbox = hash_to_entity(end($keys));
+  $mailbox = hash_to_entity($keys[0]);
 
   if (!$mailbox) {
     continue;
