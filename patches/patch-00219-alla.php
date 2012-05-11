@@ -62,7 +62,14 @@ foreach ($msg_nums as $num) {
   $mailbox = hash_to_entity($keys[0]);
 
   if (!$mailbox) {
-    continue;
+    printorlog("\n");
+    printorlog("keys[0] not found. Trying keys[1]: ");
+    $mailbox = hash_to_entity($keys[1]);
+
+    if (!$mailbox) {
+      printorlog("Failed: ".print_r($keys,1));
+      continue;
+    }
   }
   printorlog("\n");
   printorlog("INBOX.".$mailbox);
