@@ -377,11 +377,11 @@ class alloc_email_receive {
                       ,$token->get_value("tokenEntityID"));
         $m = $row["commentMaster"];
         $mID = $row["commentMasterID"];
-        $mailbox = "INBOX.".$m.$mID;
+        $mailbox = "INBOX/".$m.$mID;
       } else {
         $m = $token->get_value("tokenEntity");
         $mID = $token->get_value("tokenEntityID");
-        $mailbox = "INBOX.".$m.$mID;
+        $mailbox = "INBOX/".$m.$mID;
       }
     }
     $mailbox or $mailbox = "INBOX";
