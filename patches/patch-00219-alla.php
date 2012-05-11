@@ -41,7 +41,7 @@ $info["password"] = config::get_config_item("allocEmailPassword");
 $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
 $mail = new alloc_email_receive($info);
-$mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_HALFOPEN | CL_EXPUNGE);
+$mail->open_mailbox(config::get_config_item("allocEmailFolder"), CL_EXPUNGE);
 $mail->check_mail();
 
 $msg_nums = $mail->get_all_email_msg_uids(); 
@@ -73,8 +73,8 @@ foreach ($msg_nums as $num) {
   }
   printorlog("\n");
   printorlog("INBOX.".$mailbox);
-  $mail->create_mailbox("INBOX.".$mailbox);
-  $mail->move_mail($num,"INBOX.".$mailbox);
+  $mail->create_mailbox("INBOX/".$mailbox);
+  $mail->move_mail($num,"INBOX/".$mailbox);
 
   if ($x % 100 == 0) {
     printorlog("\n");
