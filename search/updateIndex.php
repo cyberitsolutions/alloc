@@ -24,11 +24,24 @@ define("NO_AUTH",true);
 define("IS_GOD",true);
 require_once("../alloc.php");
 
+ini_set('max_execution_time',180000); 
+ini_set('memory_limit',"512M");
+
+
 function echoo($str) {
   $nl = "<br>";
   $nl = "\n";
   echo $nl.$str;
 }
+
+
+foreach (array("client","comment","item","project","task","timeSheet","wiki") as $i) {
+  if (!is_dir(ATTACHMENTS_DIR.'search/'.$i)) {
+    $index = Zend_Search_Lucene::create(ATTACHMENTS_DIR.'search/'.$i);
+    $index->commit();
+  }
+}
+
 
 $q = "SELECT * FROM indexQueue ORDER BY entity";
 
@@ -38,6 +51,13 @@ $db->query($q);
 echoo("Beginning ...");
 
 while ($row = $db->row()) {
+
+  $z++;
+  if ($z % 1000 == 0 && is_object($index)) {
+    echoo($z." Committing index: ".$current_index);
+    $index->commit();
+    flush();
+  }
 
   if (!$current_index || $current_index != $row["entity"]) {
 
