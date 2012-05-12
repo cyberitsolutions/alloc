@@ -399,7 +399,7 @@ class alloc_services {
     if ($emailUID) {
       $info = $this->init_email_info();
       $mail = new alloc_email_receive($info);
-      $mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_HALFOPEN+OP_READONLY);
+      $mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_READONLY);
       list($header,$body) = $mail->get_raw_email_by_msg_uid($emailUID);
       $mail->close();
       $m = new alloc_email();
@@ -421,7 +421,7 @@ class alloc_services {
       //$lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
       $info = $this->init_email_info();
       $mail = new alloc_email_receive($info);
-      $mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_HALFOPEN+OP_READONLY);
+      $mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_READONLY);
       $rtn = $mail->get_emails_UIDs_search($str);
       $mail->close();
     }
