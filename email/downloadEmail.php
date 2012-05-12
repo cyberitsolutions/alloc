@@ -51,7 +51,7 @@ if ($_REQUEST["commentID"]) {
   $entityID = $c->get_value("commentMasterID");
 
   $mail = new alloc_email_receive($info);
-  $mail->open_mailbox(config::get_config_item("allocEmailFolder").".".$entity.$entityID);
+  $mail->open_mailbox(config::get_config_item("allocEmailFolder")."/".$entity.$entityID);
 
   if ($_REQUEST["uid"]) {
     header('Content-Type: text/plain; charset=utf-8');
