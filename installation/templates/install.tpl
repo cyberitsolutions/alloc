@@ -51,7 +51,7 @@ href="http://www.allocpsa.org/installing_alloc_under_windows/">Installing allocP
                ,"php_memory"   =>"PHP memory_limit &gt;= 32M"
                ,"php_gd"       =>"PHP GD image library"      
                ,"php_mbstring"     =>"PHP Multibyte string" 
-               ,"mysql_version"=>"MySQL &gt;= 3.23"          
+               ,"mysql_version"=>"MySQL &gt;= 5"          
                ,"mail_exists"  =>"Mail")}
 
 <table class="nice" cellspacing="0" border="0">
