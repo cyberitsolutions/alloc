@@ -73,6 +73,11 @@ alloc edit -t 1234 --assignee null"""
     if o['t']:
       args['entity'] = 'task'
       args['id'] = o['t']
+      if o['t'] == "new":
+        if not o['type']:
+          o['type'] = "Task"
+        if not o['priority']:
+          o['priority'] = "Normal"
 
     elif o['i']:
       args['entity'] = 'item'
