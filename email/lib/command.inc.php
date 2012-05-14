@@ -216,7 +216,7 @@ class command {
         if (strtolower($commands["item"]) == "new") {
           $message[] = "Time sheet item ".$timeSheetItem->get_id()." created.";
         } else {
-          $message[] = "Time sheet item updated.";
+          $message[] = "Time sheet item ".$timeSheetItem->get_id()." updated.";
         }
 
       // Problems
@@ -298,10 +298,14 @@ class command {
             return $rtn;
           }
         }
-
-        $status[] = "yay";
-        $message[] = "Task updated.";
-        strtolower($commands["task"]) == "new" and $message[] = "Task ".$task->get_id()." created.";
+  
+        if (strtolower($commands["task"]) == "new") {
+          $status[] = "yay";
+          $message[] = "Task ".$task->get_id()." created.";
+        } else {
+          $status[] = "yay";
+          $message[] = "Task ".$task->get_id()." updated.";
+        }
 
       // Problems
       } else {
