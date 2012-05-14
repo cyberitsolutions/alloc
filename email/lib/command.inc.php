@@ -190,9 +190,15 @@ class command {
           $timeSheetItem->set_value($item_fields[$k][0],sprintf("%s",$v));
         }
       }
-      $str = $this->condense_changes($changes,$timeSheetItem->row());
-      $str and $status[] = "msg";
-      $str and $message[] = "Before: ".$str.".";
+
+      $after_label2 = "After:  ";
+      if (strtolower($commands["item"]) != "new") {
+        $str = $this->condense_changes($changes,$timeSheetItem->row());
+        $str and $status[] = "msg";
+        $str and $message[] = "Before: ".$str.".";
+      } else {
+        $after_label2 = "Fields: ";
+      }
 
       if ($commands["delete"]) {
         $id = $timeSheetItem->get_id();
@@ -205,7 +211,7 @@ class command {
         $timeSheetItem->select();
         $str = $this->condense_changes($changes,$timeSheetItem->row());
         $str and $status[] = "msg";
-        $str and $message[] = "After:  ".$str.".";
+        $str and $message[] = $after_label2.$str.".";
         $status[] = "yay";
         if (strtolower($commands["item"]) == "new") {
           $message[] = "Time sheet item ".$timeSheetItem->get_id()." created.";
@@ -269,9 +275,14 @@ class command {
         }
       }
 
-      $str = $this->condense_changes($changes,$task->row());
-      $str and $status[] = "msg";
-      $str and $message[] = "Before: ".$str.".";
+      $after_label = "After:  ";
+      if (strtolower($commands["task"]) != "new") {
+        $str = $this->condense_changes($changes,$task->row());
+        $str and $status[] = "msg";
+        $str and $message[] = "Before: ".$str.".";
+      } else {
+        $after_label = "Fields: ";
+      }
 
       // Save task
       $err = $task->validate();
@@ -279,7 +290,7 @@ class command {
         $task->select();
         $str = $this->condense_changes($changes,$task->row());
         $str and $status[] = "msg";
-        $str and $message[] = "After: ".$str.".";
+        $str and $message[] = $after_label.$str.".";
 
         if ($commands["taskip"]) {
           $rtn = interestedParty::add_remove_ips($commands["taskip"],"task",$task->get_id(),$task->get_value("projectID"));
