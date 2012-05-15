@@ -296,6 +296,8 @@ BEGIN
   IF (@isTask) THEN
     UPDATE task SET taskStatus = 'open_inprogress' WHERE taskID = NEW.taskID;
   END IF;
+  UPDATE task SET dateActualStart = (SELECT min(dateTimeSheetItem) FROM timeSheetItem WHERE taskID = NEW.taskID)
+   WHERE taskID = NEW.taskID AND dateActualStart IS NULL;
 END
 $$
 
@@ -334,9 +336,13 @@ $$
 DROP TRIGGER IF EXISTS after_update_timeSheetItem $$
 CREATE TRIGGER after_update_timeSheetItem AFTER UPDATE ON timeSheetItem
 FOR EACH ROW
+BEGIN
   IF (neq(OLD.dateTimeSheetItem, NEW.dateTimeSheetItem)) THEN
     call updateTimeSheetDates(NEW.timeSheetID);
   END IF;
+  UPDATE task SET dateActualStart = (SELECT min(dateTimeSheetItem) FROM timeSheetItem WHERE taskID = NEW.taskID)
+   WHERE taskID = NEW.taskID AND dateActualStart IS NULL;
+END
 $$
 
 DROP TRIGGER IF EXISTS before_delete_timeSheetItem $$
@@ -350,7 +356,11 @@ $$
 DROP TRIGGER IF EXISTS after_delete_timeSheetItem $$
 CREATE TRIGGER after_delete_timeSheetItem AFTER DELETE ON timeSheetItem
 FOR EACH ROW
+BEGIN
   call updateTimeSheetDates(OLD.timeSheetID);
+  UPDATE task SET dateActualStart = (SELECT min(dateTimeSheetItem) FROM timeSheetItem WHERE taskID = OLD.taskID)
+   WHERE taskID = OLD.taskID AND dateActualStart IS NULL;
+END
 $$
 
 -- task perm
