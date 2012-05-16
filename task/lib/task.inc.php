@@ -643,11 +643,11 @@ class task extends db_entity {
 
     // If many create an SQL taskTypeID in (set) 
     if (is_array($filter["taskTypeID"]) && count($filter["taskTypeID"])) {
-      $sql[] = "(task.taskTypeID in ('".implode("','",$filter["taskTypeID"])."'))";
+      $sql[] = "(task.taskTypeID in ('".esc_implode("','",$filter["taskTypeID"],"%s")."'))";
     
     // Else if only one taskTypeID
     } else if ($filter["taskTypeID"]) {
-      $sql[] = sprintf("(task.taskTypeID = '%s')",$filter["taskTypeID"]);
+      $sql[] = sprintf("(task.taskTypeID = '%s')",db_esc($filter["taskTypeID"]));
     }
 
     // Filter on taskID

@@ -174,7 +174,7 @@ class project extends db_entity {
     global $current_user;
     $person or $person = $current_user;
     if (is_object($person)) {
-      $permissions and $p = " AND ppr.roleHandle in ('".implode("','",$permissions)."')";
+      $permissions and $p = " AND ppr.roleHandle in ('".esc_implode("','",$permissions,"%s")."')";
 
       $query = sprintf("SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
                           FROM projectPerson pp 
@@ -644,7 +644,7 @@ class project extends db_entity {
 
     // If passed array projectIDs then join them up with commars and put them in an sql subset
     if (is_array($filter["projectIDs"]) && count($filter["projectIDs"])) {
-      return sprintf("(%s.projectID IN (".implode(",",$filter["projectIDs"])."))",$table);
+      return sprintf("(%s.projectID IN (".esc_implode(",",$filter["projectIDs"])."))",$table);
 
     // If there are no projects in $filter["projectIDs"][] and we're attempting the first option..
     } else if ($firstOption) {

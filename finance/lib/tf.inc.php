@@ -174,8 +174,8 @@ class tf extends db_entity {
     $_FORM["owner"] and $filter1[] = sprintf("(tfPerson.personID = %d)",$current_user->get_id());
 
     $tfIDs = tf::get_permitted_tfs($_FORM["tfIDs"]);
-    $tfIDs and $filter1[] = sprintf("(tf.tfID IN (%s))",implode(",",$tfIDs));
-    $tfIDs and $filter2[] = sprintf("(tf.tfID IN (%s))",implode(",",$tfIDs));
+    $tfIDs and $filter1[] = sprintf("(tf.tfID IN (%s))",esc_implode(",",$tfIDs));
+    $tfIDs and $filter2[] = sprintf("(tf.tfID IN (%s))",esc_implode(",",$tfIDs));
 
     $_FORM["showall"] or $filter1[] = "(tf.tfActive = 1)";
     $_FORM["showall"] or $filter2[] = "(tf.tfActive = 1)";

@@ -345,7 +345,7 @@ class transaction extends db_entity {
       $q = sprintf("SELECT SUM( IF(fromTfID IN (%s),-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
                       FROM transaction 
                  LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
-                    %s", implode(",", $_FORM['tfIDs']), $filter2);
+                    %s", esc_implode(",", $_FORM['tfIDs']), $filter2);
       $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);

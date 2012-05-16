@@ -421,7 +421,7 @@ class invoice extends db_entity {
       } else {
         $filter["tfIDs"] = array(0);
       }
-      $sql[] = sprintf("(tfPerson.tfID in (".implode(",",$filter["tfIDs"])."))");
+      $sql[] = sprintf("(tfPerson.tfID in (".esc_implode(",",$filter["tfIDs"])."))");
       $sql[] = sprintf("(tfPerson.personID = %d)",$filter["personID"]);
     }
 

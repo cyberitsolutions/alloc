@@ -86,7 +86,7 @@ function show_new_invoiceItem($template) {
                          AND timeSheet.status != 'finished'
                     GROUP BY timeSheet.timeSheetID
                     ORDER BY timeSheetID
-                     ",implode(", ",$projectIDs));
+                     ",esc_implode(", ",$projectIDs));
         $db->query($q);
     
         $timeSheetStatii = timeSheet::get_timeSheet_statii();
@@ -462,9 +462,9 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
   
   if ($invoiceItemIDs) {
     $db = new db_alloc();
-    $q = sprintf("DELETE FROM transaction WHERE invoiceItemID in (%s)",implode(",",$invoiceItemIDs));
+    $q = sprintf("DELETE FROM transaction WHERE invoiceItemID in (%s)",esc_implode(",",$invoiceItemIDs));
     $db->query($q);
-    $q = sprintf("DELETE FROM invoiceItem WHERE invoiceItemID in (%s)",implode(",",$invoiceItemIDs));
+    $q = sprintf("DELETE FROM invoiceItem WHERE invoiceItemID in (%s)",esc_implode(",",$invoiceItemIDs));
     $db->query($q);
   }
 
@@ -559,7 +559,7 @@ if ($invoiceID && $invoiceItemIDs) {
                   FROM transaction 
              LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                  WHERE status = 'approved' 
-                   AND invoiceItemID in (%s)",implode(",",$invoiceItemIDs));
+                   AND invoiceItemID in (%s)",esc_implode(",",$invoiceItemIDs));
   $db->query($q);
   $db->next_record() and $TPL["invoiceTotalPaid"] = page::money($currency,$db->f("sum_transaction_amount"),"%S%m %c");
 }

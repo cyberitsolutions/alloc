@@ -799,4 +799,10 @@ function alloc_die($str="") {
   echo($str);
   exit(1); // for CLI/email gateway where exit status is relevant
 }
+function esc_implode($str,$arr,$fmt="%d") {
+  foreach ((array)$arr as $v) {
+    $out[] = db_esc(sprintf($fmt,$v));
+  }
+  return implode($str,(array)$out);
+}
 ?>

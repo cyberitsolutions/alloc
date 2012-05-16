@@ -142,7 +142,7 @@ function get_pending_timesheet_db() {
       $bad_projectIDs[$row["projectID"]] = $row["projectID"];
     }
 
-    $bad_projectIDs and $bad_projectIDs_sql = " AND timeSheet.projectID not in (".implode(",",$bad_projectIDs).")";
+    $bad_projectIDs and $bad_projectIDs_sql = " AND timeSheet.projectID not in (".esc_implode(",",$bad_projectIDs).")";
 
     $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
                            , COALESCE(projectShortName, projectName) as projectName
