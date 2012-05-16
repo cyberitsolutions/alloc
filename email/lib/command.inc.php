@@ -325,8 +325,15 @@ class command {
         interestedParty::add_interested_party($info);
       }
 
+      $emailRecipients = array();
+      $emailRecipients[] = "interested";
+      if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
+        list($from_address,$from_name) = parse_email_address(ALLOC_DEFAULT_FROM_ADDRESS);
+        $emailRecipients[] = $from_address;
+      }
+
       // Re-email the comment out
-      comment::send_comment($commentID,array("interested"));
+      comment::send_comment($commentID,$emailRecipients);
     }
 
     // Status will be yay, msg, err or die, i.e. mirrored with the alloc-cli messaging system
