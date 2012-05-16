@@ -231,7 +231,7 @@ class productSale extends db_entity {
           $ids[] = $row["productSaleItemID"];
         }
         if ($ids) {
-          $ids = implode(",",$ids);
+          $ids = esc_implode(",",$ids);
           $q = sprintf("UPDATE transaction SET status = '%s' WHERE productSaleItemID in (%s)",db_esc($_REQUEST["changeTransactionStatus"]),$ids);
           $db = new db_alloc();
           $db->query($q);

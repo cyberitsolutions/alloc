@@ -229,7 +229,7 @@ class timeSheetItem extends db_entity {
 
     if (is_array($timeSheetIDs) && count($timeSheetIDs)) {
       foreach ($timeSheetIDs as $tid) { $t[] = db_esc($tid); }
-      $sql[] = "(timeSheetItem.timeSheetID IN (".implode(",",$t)."))";
+      $sql[] = "(timeSheetItem.timeSheetID IN (".esc_implode(",",$t)."))";
     } 
 
     if ($filter["projectID"]) {

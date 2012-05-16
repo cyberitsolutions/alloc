@@ -40,7 +40,7 @@ function show_expenseFormList($template_name) {
 
   if (!$_GET["tfID"] && !$current_user->have_role("admin")) {
     $tfIDs = $current_user->get_tfIDs();
-    $tfIDs and $sql = "WHERE tfID in (".implode(",",$tfIDs).")";
+    $tfIDs and $sql = "WHERE tfID in (".esc_implode(",",$tfIDs).")";
 
   } else if ($_GET["tfID"]) {
     $sql = sprintf("WHERE tfID = %d",$_GET["tfID"]);

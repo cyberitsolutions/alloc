@@ -750,10 +750,10 @@ class comment extends db_entity {
     $filter["fromDate"] and $sql2[] = sprintf("(dateTimeSheetItem >= '%s')", db_esc($filter["fromDate"]));
     $filter["toDate"] and $sql1[] = sprintf("(date(commentCreatedTime) < '%s')", db_esc($filter["toDate"]));
     $filter["toDate"] and $sql2[] = sprintf("(dateTimeSheetItem < '%s')", db_esc($filter["toDate"]));
-    $filter["personID"] and $sql1["personID"] = "(comment.commentCreatedUser IN (".implode(",",(array)$filter["personID"])."))";
-    $filter["personID"] and $sql2[] = "(timeSheetItem.personID IN (".implode(",",(array)$filter["personID"])."))";
+    $filter["personID"] and $sql1["personID"] = "(comment.commentCreatedUser IN (".esc_implode(",",$filter["personID"])."))";
+    $filter["personID"] and $sql2[] = "(timeSheetItem.personID IN (".esc_implode(",",$filter["personID"])."))";
     $filter["clients"] or $sql1[] = "(commentCreatedUser IS NOT NULL)";
-    $filter["clients"] && $filter["personID"] and $sql1["personID"] = "(comment.commentCreatedUser IN (".implode(",",(array)$filter["personID"]).") OR comment.commentCreatedUser IS NULL)";
+    $filter["clients"] && $filter["personID"] and $sql1["personID"] = "(comment.commentCreatedUser IN (".esc_implode(",",$filter["personID"]).") OR comment.commentCreatedUser IS NULL)";
 
     $filter["taskStatus"] and $sql1[] = task::get_taskStatus_sql($filter["taskStatus"]);
     $filter["taskStatus"] and $sql2[] = task::get_taskStatus_sql($filter["taskStatus"]);
