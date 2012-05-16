@@ -388,7 +388,11 @@ class alloc_email_receive {
     if ($mailbox) { 
       $this->create_mailbox($mailbox);
       if ($this->msg_uid) {
-        $this->move_mail($this->msg_uid,$mailbox);
+        $success = $this->move_mail($this->msg_uid,$mailbox);
+        if (!$success) {
+          $mailbox = str_replace("/",".",$mailbox);
+          $success = $this->move_mail($this->msg_uid,$mailbox);
+        }
       } else if ($this->msg_text) {
         $this->append($mailbox,$this->msg_text);
       }
