@@ -385,22 +385,25 @@ class alloc_email_receive {
       }
     }
     $mailbox or $mailbox = "INBOX";
+
+    // Some IMAP servers like dot-separated mail folders, some like slash-separated
     if ($mailbox) { 
-      $this->create_mailbox($mailbox);
+      $created = $this->create_mailbox($mailbox);
+      $created or $created = $this->create_mailbox(str_replace("/",".",$mailbox));
+
       if ($this->msg_uid) {
-        $success = $this->move_mail($this->msg_uid,$mailbox);
-        if (!$success) {
-          $mailbox = str_replace("/",".",$mailbox);
-          $success = $this->move_mail($this->msg_uid,$mailbox);
-        }
+        $moved = $this->move_mail($this->msg_uid,$mailbox);
+        $moved or $moved = $this->move_mail($this->msg_uid,str_replace("/",".",$mailbox));
+
       } else if ($this->msg_text) {
-        $this->append($mailbox,$this->msg_text);
+        $appended = $this->append($mailbox,$this->msg_text);
+        $appended or $appended = $this->append(str_replace("/",".",$mailbox),$this->msg_text);
       }
     }
   }
 
   function append($mailbox,$text) {
-    imap_append($this->connection,$this->connect_string.$mailbox,$text);
+    return imap_append($this->connection,$this->connect_string.$mailbox,$text);
   }
 
   function delete($x=0) {
