@@ -75,7 +75,7 @@ class alloc_email {
   }
   function set_from($from=false) {
     $from or $from = $this->from;
-    $from or $from = ALLOC_DEFAULT_FROM_ADDRESS;
+    $from or $from = "allocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
     $this->add_header("From",$from);
     $this->from = $from;
   }
