@@ -58,28 +58,41 @@ class alloc_email_receive {
     }
   }
   
-  function open_mailbox($folder="",$ops=OP_HALFOPEN) {
-    $connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.config::get_config_item("allocEmailExtra").'}';
-    $this->connect_string = $connect_string;
-    $this->connection = imap_open($connect_string, $this->username, $this->password, $ops) or alloc_die("Unable to access mail folder(1).");
-    $list = imap_list($this->connection, $connect_string, "*");
+  function open_mailbox($folder="",$ops=OP_HALFOPEN, $fatal=true) {
+    if ($this->connection) {
+      imap_close($this->connection); 
+    }
+    $this->connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.config::get_config_item("allocEmailExtra").'}';
+    $this->connection = imap_open($this->connect_string, $this->username, $this->password, $ops);
+    if (!$this->connection && $fatal) {
+      alloc_die("Unable to access mail folder(1).");
+    }
+    $list = imap_list($this->connection, $this->connect_string, "*");
     if (!is_array($list) || !count($list)) { // || !in_array($connect_string.$folder,$list)) {
       $this->unlock();
       imap_close($this->connection); 
-      alloc_die("Unable to access mail folder(2).");
+      if ($fatal) {
+        alloc_die("Unable to access mail folder(2).");
+      }
     } else {
-      $connect_string.= $folder;
-      $rtn = imap_reopen($this->connection, $connect_string);
+      $rtn = imap_reopen($this->connection, $this->connect_string.$folder);
+
+      $errs = print_r(imap_errors(),1);
+      if (!$rtn || preg_match("/Invalid mailbox name/i",$errs) || preg_match("/Mailbox does not exist/i",$errs)) {
+        $rtn = imap_reopen($this->connection, $this->connect_string.str_replace("/",".",$folder));
+      }
+
       if (!$rtn) {
         imap_close($this->connection); 
-        alloc_die("Unable to access mail folder(3).");
+        if ($fatal) {
+          alloc_die("Unable to access mail folder(3).");
+        }
       }
     }
-
-    if (!$this->connection) {
-      echo "<pre>".print_r(imap_errors(),1)."</pre>"; 
-      echo "<pre>".print_r(imap_alerts(),1)."</pre>"; 
+    if (!$rtn && $fatal) {
+      alloc_die("<pre>IMAP errors: ".print_r(imap_errors(),1).print_r(imap_alerts(),1)."</pre>");
     }
+    return $rtn;
   }
 
   function get_num_emails() {
