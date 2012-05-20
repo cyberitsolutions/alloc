@@ -138,8 +138,8 @@ class db {
     // sprintf is applied! sprintf arguments will be automatically escaped!
     $args = func_get_args();
     $query = $this->get_escaped_query_str($args);
-    $this->query($query);
-    return $this->row();
+    $id = $this->query($query);
+    return $this->row($id);
   }
 
   function query() {
