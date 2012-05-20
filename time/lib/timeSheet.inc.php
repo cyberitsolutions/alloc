@@ -877,7 +877,7 @@ class timeSheet extends db_entity {
     $newstatus = $steps[$direction][$status];
     if ($newstatus) {
       $m = $this->{"email_move_status_to_".$newstatus}($direction,$info);
-      $this->save();
+      //$this->save();
       if (is_array($m)) { 
         return implode("<br>",$m);
       }
