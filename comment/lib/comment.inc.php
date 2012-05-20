@@ -585,7 +585,7 @@ class comment extends db_entity {
     $recipients = comment::get_email_recipients($selected_option,"comment",$id);
     list($to_address,$bcc,$successful_recipients) = comment::get_email_recipient_headers($recipients, $from_address);
 
-    if ($successful_recipients) {
+    if ($to_address || $bcc || $successful_recipients) {
       $email = new alloc_email();
 
       if ($email_receive) {
