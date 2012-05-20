@@ -173,15 +173,15 @@ class alloc(object):
     if not os.path.exists(self.alloc_dir+"config"):
       self.create_config(self.alloc_dir+"config")
 
-    # Create ~/.alloc/transforms
-    if not os.path.exists(self.alloc_dir+"transforms"):
-      self.create_transforms(self.alloc_dir+"transforms")
+    # Create ~/.alloc/transforms.py
+    if not os.path.exists(self.alloc_dir+"transforms.py"):
+      self.create_transforms(self.alloc_dir+"transforms.py")
 
     # Load ~/.alloc/config into self.config{}
     self.load_config(self.alloc_dir+"config")
 
     # Load any user-customizations to table print output
-    self.load_transforms(self.alloc_dir+"transforms")
+    self.load_transforms()
 
     if not url:
       if "url" in self.config and self.config["url"]:
@@ -243,24 +243,29 @@ class alloc(object):
     if 'ALLOC_TRUNC' in os.environ: self.config['alloc_trunc'] = os.environ.get('ALLOC_TRUNC')
 
   def create_transforms(self, f):
-    """Create a default ~/.alloc/transforms file for field manipulation."""
-    self.dbg("Creating example transforms file: "+f)
-    default = "# Add any field customisations here. eg:\n#\n# global user_transforms\n"
-    default += "# user_transforms = { 'Priority' : lambda x,row: x[3:] }\n\n"
-    # Write it out to a file
-    fd = open(f, 'w')
-    fd.write(default)
-    fd.close()
+    """Create a default ~/.alloc/transforms.py file for field manipulation."""
+    if os.path.exists(self.alloc_dir+"transforms") and not os.path.exists(self.alloc_dir+"transforms.py"):
+      # upgrade old transforms to transforms.py
+      self.dbg("Renaming: "+self.alloc_dir+"transforms"+" to "+self.alloc_dir+"transforms.py")
+      os.rename(self.alloc_dir+"transforms",self.alloc_dir+"transforms.py")
+    else:
+      # else create an example transforms.py
+      self.dbg("Creating example transforms.py file: "+f)
+      default = "# Add any field customisations here. eg:\n"
+      default += "# user_transforms = { 'Priority' : lambda x,row: x[3:] }\n\n"
+      # Write it out to a file
+      fd = open(f, 'w')
+      fd.write(default)
+      fd.close()
 
-  def load_transforms(self, f):
-    """Load the ~/.alloc/transforms file into self.user_transforms[]."""
-    user_transforms = {}
+  def load_transforms(self):
+    """Load the ~/.alloc/transforms.py module into self.user_transforms."""
     try:
-      # yee-haw!
-      execfile(f)
+      sys.path.append(self.alloc_dir)
+      from transforms import user_transforms
       self.user_transforms = user_transforms
     except:
-      pass
+      self.user_transforms = {}
 
   def create_session(self, sessID):
     """Create a ~/.alloc/session file to store the alloc session key."""
