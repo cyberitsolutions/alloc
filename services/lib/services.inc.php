@@ -264,7 +264,9 @@ class alloc_services {
     $timeSheet = new timeSheet();
     $timeSheet->set_id($timeSheetID);
     $timeSheet->select();
-    return $timeSheet->change_status($direction);
+    $rtn = $timeSheet->change_status($direction);
+    $timeSheet->save();
+    return $rtn;
   }
 
   /**
