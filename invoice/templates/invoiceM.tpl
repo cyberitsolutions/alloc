@@ -4,7 +4,14 @@
 <form action="{$url_alloc_invoice}" method="post">
 <table class="box">
   <tr>
-    <th colspan="4">Invoice</th>
+    <th class="header" colspan="4">Invoice
+      <span>
+      {if $invoiceID}
+        <a href="{$url_alloc_invoicePrint}invoiceID={$invoiceID}">PDF</a>
+        <a href="{$url_alloc_invoicePrint}invoiceID={$invoiceID}&verbose=1">PDF+</a>
+      {/}
+      </span>
+    </th>
   </tr>  
   <tr>
     <td align="right" width="30%">Client:{page::mandatory($clientID)} </td>
