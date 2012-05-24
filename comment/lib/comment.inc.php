@@ -1070,6 +1070,8 @@ class comment extends db_entity {
     $comment->skip_modified_fields = true;
     $comment->updateSearchIndexLater = true;
     $comment->save();
+
+    return $successful_recipients;
   }
 
   function attach_timeSheet($commentID, $entityID, $options) {
