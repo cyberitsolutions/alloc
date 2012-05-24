@@ -62,7 +62,9 @@ if ($_REQUEST["attach_tasks"]) {
 
 
 // Re-email the comment out, including any attachments
-comment::send_comment($commentID,$emailRecipients);
+if (!comment::send_comment($commentID,$emailRecipients)) {
+  $TPL["message"][] = "Email failed to send.";
+}
 
 
 // Re-direct browser back home
