@@ -76,24 +76,20 @@ class comment extends db_entity {
 
   function is_owner() {
     global $current_user;
-    $entity = $this->get_value("commentType");
+    $entity = $this->get_value("commentMaster");
     $e = new $entity;
-    $e->set_id($this->get_value("commentLinkID"));
+    $e->set_id($this->get_value("commentMasterID"));
     $e->select();
-    
-    // If the parent is a comment, then go up one more level
-    if ($entity == "comment") {
-      $entity = $e->get_value("commentType");
-      $pe = new $entity;
-      $pe->set_id($e->get_value("commentLinkID"));
-      $pe->select();
-      $e = $pe;
-    }
     return $e->is_owner($current_user);
   }
 
   function has_attachment_permission($person) {
-    return $this->is_owner();
+    global $current_user;
+    $entity = $this->get_value("commentMaster");
+    $e = new $entity;
+    $e->set_id($this->get_value("commentMasterID"));
+    $e->select();
+    return $e->has_attachment_permission($person);
   }
 
   function has_attachment_permission_delete($person) {
