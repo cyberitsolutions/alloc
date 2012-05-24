@@ -1057,7 +1057,11 @@ class comment extends db_entity {
       }
     }
 
-    list($successful_recipients,$messageid) = $comment->send_emails($emailRecipients,$email_receive,$hash,$is_a_reply_comment);
+    $rtn = $comment->send_emails($emailRecipients,$email_receive,$hash,$is_a_reply_comment);
+    if (is_array($rtn)) {
+      $email_sent = true;
+      list($successful_recipients,$messageid) = $rtn;
+    }
 
     // Append success to end of the comment
     if ($successful_recipients) {
@@ -1071,7 +1075,7 @@ class comment extends db_entity {
     $comment->updateSearchIndexLater = true;
     $comment->save();
 
-    return $successful_recipients;
+    return $email_sent;
   }
 
   function attach_timeSheet($commentID, $entityID, $options) {
