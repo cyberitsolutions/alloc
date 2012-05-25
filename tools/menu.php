@@ -26,7 +26,6 @@ $misc_options = array(array("url"=>"reminderList"            ,"text"=>"Reminders
                      ,array("url"=>"announcementList"        ,"text"=>"Announcements"         ,"entity"=>"announcement"       ,"action"=>PERM_READ_WRITE)
                      ,array("url"=>"commentSummary"          ,"text"=>"Task Comment Summary"  ,"entity"=>""                   ,"action"=>true)
                      ,array("url"=>"permissionList"          ,"text"=>"Security"              ,"entity"=>"permission"         ,"action"=>PERM_READ_WRITE)
-                     ,array("url"=>"costtime"                ,"text"=>"Cost & Time Estimater" ,"entity"=>"project"            ,"action"=>true)
                      ,array("url"=>"search"                  ,"text"=>"Search"                ,"entity"=>""                   ,"action"=>true)
                      ,array("url"=>"personSkillMatrix"       ,"text"=>"Company Skill Matrix"  ,"entity"=>"person"             ,"action"=>true)
                      ,array("url"=>"personSkillAdd"          ,"text"=>"Edit Skill Items"      ,"entity"=>"person"             ,"action"=>PERM_PERSON_READ_MANAGEMENT)
