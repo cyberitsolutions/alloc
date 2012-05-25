@@ -322,7 +322,7 @@ EOD;
       $str.= $sp."<a id=\"sbs_link_".$id."\" data-sbs-redraw='".$redraw."' href=\"".$url."sbs_link=".$id."\" class=\"sidebyside\">".$label."</a>";
       $sp = "&nbsp;";
     }
-    return "<div style=\"margin:20px 0px 0px 0px;\">".$str."</div>";
+    return "<div class=\"noprint\" style=\"margin:20px 0px 0px 0px;\">".$str."</div>";
   }
   function mandatory($field="") {
     $star = "&lowast;";
