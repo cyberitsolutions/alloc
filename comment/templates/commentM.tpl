@@ -13,7 +13,7 @@
     </th>
   </tr>
   <tr>
-    <td id="new_comment_container" style="width:100%;">
+    <td id="new_comment_container" class="noprint" style="width:100%;">
       <div class="{$class_new_comment}" id="id_new_comment" style="width:99%">
       <form action="{$url_alloc_comment}" enctype="multipart/form-data" method="post" id="commentForm">
       <table align="left" width="100%" cellpadding="3">
