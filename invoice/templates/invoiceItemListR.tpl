@@ -9,7 +9,7 @@
 <tr>
   {$str = $invoiceItem_buttons_top.$invoiceItem_buttons}
   {$str && $transaction_info and $transaction_info = "<br>".$transaction_info}
-  <td colspan="4" class="right">{$invoiceItem_buttons_top}{$invoiceItem_buttons}{$transaction_info}</td>
+  <td colspan="4" class="right"><div style='padding:10px 0px;'>{$invoiceItem_buttons_top}{$invoiceItem_buttons}</div>{$transaction_info}</td>
 </tr>
 </table>
 </div>

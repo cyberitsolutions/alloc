@@ -282,20 +282,25 @@ function show_invoiceItem_list() {
 
       unset($radio_buttons);
       if ($current_user->have_role('admin')) {
-      $radio_buttons = "<label for=\"invoiceItemStatus_rejected_".$invoiceItem->get_id()."\">Not Going To Be Paid</label> ";
+      $radio_buttons = "<label class='radio corner' for=\"invoiceItemStatus_rejected_".$invoiceItem->get_id()."\">Not Going To Be Paid";
       $radio_buttons.= "<input type=\"radio\" id=\"invoiceItemStatus_rejected_".$invoiceItem->get_id()."\" name=\"invoiceItemStatus[".$invoiceItem->get_id()."]\"";
       $radio_buttons.= " value=\"rejected\"".$sel["rejected"].">";
+      $radio_buttons.= "</label>";
 
-      $radio_buttons.= "&nbsp;&nbsp;&nbsp;<label for=\"invoiceItemStatus_pending_".$invoiceItem->get_id()."\">Pending</label> ";
+      $radio_buttons.= "&nbsp;&nbsp;";
+      $radio_buttons.= "<label class='radio corner' for=\"invoiceItemStatus_pending_".$invoiceItem->get_id()."\">Pending";
       $radio_buttons.= "<input type=\"radio\" id=\"invoiceItemStatus_pending_".$invoiceItem->get_id()."\" name=\"invoiceItemStatus[".$invoiceItem->get_id()."]\"";
       $radio_buttons.= " value=\"pending\"".$sel["pending"].">";
+      $radio_buttons.= "</label>";
 
-      $radio_buttons.= "&nbsp;&nbsp;&nbsp;<label for=\"invoiceItemStatus_approved_".$invoiceItem->get_id()."\">Paid</label> "; 
+      $radio_buttons.= "&nbsp;&nbsp;";
+      $radio_buttons.= "<label class='radio corner' for=\"invoiceItemStatus_approved_".$invoiceItem->get_id()."\">Paid"; 
       $radio_buttons.= "<input type=\"radio\" id=\"invoiceItemStatus_approved_".$invoiceItem->get_id()."\" name=\"invoiceItemStatus[".$invoiceItem->get_id()."]\"";
       $radio_buttons.= " value=\"approved\"".$sel["approved"].">";
+      $radio_buttons.= "</label>";
 
       $TPL["invoiceItem_buttons_top"] = $radio_buttons;
-      $TPL["invoiceItem_buttons_top"].= "<input type=\"text\" size=\"7\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
+      $TPL["invoiceItem_buttons_top"].= "&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"text\" size=\"7\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
       $TPL["invoiceItem_buttons_top"].= "<input type=\"hidden\" name=\"invoiceItemAmountPaidTfID[".$invoiceItem->get_id()."]\" value=\"".$selected_tfID."\">";
       }
 
