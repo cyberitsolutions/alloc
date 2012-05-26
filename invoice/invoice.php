@@ -299,6 +299,7 @@ function show_invoiceItem_list() {
       $radio_buttons.= " value=\"approved\"".$sel["approved"].">";
       $radio_buttons.= "</label>";
 
+
       $TPL["invoiceItem_buttons_top"] = $radio_buttons;
       $TPL["invoiceItem_buttons_top"].= "&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"text\" size=\"7\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
       $TPL["invoiceItem_buttons_top"].= "<input type=\"hidden\" name=\"invoiceItemAmountPaidTfID[".$invoiceItem->get_id()."]\" value=\"".$selected_tfID."\">";
@@ -444,14 +445,20 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
       $invoice->set_value("invoiceStatus","edit");
     }
     // Save invoice Item approved/rejected info
-    if (is_array($_POST["invoiceItemStatus"])) {
-      foreach ($_POST["invoiceItemStatus"] as $iiID => $status) {
-        $ii = new invoiceItem;
-        $ii->set_id($iiID);
-        $ii->select();
-        $ii->create_transaction($_POST["invoiceItemAmountPaid"][$iiID],$_POST["invoiceItemAmountPaidTfID"][$iiID],$status);
+    $invoiceItemIDs = $invoice->get_invoiceItems();
+    foreach ($invoiceItemIDs as $iiID) {
+      $status = $_POST["invoiceItemStatus"][$iiID];
+      if ($status || $_POST["changeTransactionStatus"]) {
+        $_POST["changeTransactionStatus"] and $status = $_POST["changeTransactionStatus"];
+        if ($status) {
+          $ii = new invoiceItem;
+          $ii->set_id($iiID);
+          $ii->select();
+          $ii->create_transaction($_POST["invoiceItemAmountPaid"][$iiID],$_POST["invoiceItemAmountPaidTfID"][$iiID],$status);
+        }
       }
     }
+
     if (!$TPL["message"]) {
       $invoice->change_status($direction);
     }
@@ -643,6 +650,7 @@ if ($current_user->have_role('admin')) {
     <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
     <input type=\"submit\" name=\"save\" value=\"Save\">
     <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Invoice to ".$statii["finished"]." --&gt;\">
+    <select name=\"changeTransactionStatus\"><option value=\"\">Transaction Status<option value=\"approved\">Approve<option value=\"rejected\">Reject</select>
     ";
     $TPL["field_invoiceNum"] = $TPL["invoiceNum"];
     $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
