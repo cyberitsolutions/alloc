@@ -112,7 +112,7 @@
       <input type="submit" name="save" value="Save">
       <input type="submit" name="saveAndNew" value="Save and New">
       <input type="submit" name="saveGoTf" value="Save and go to Dest TF">
-      <input type="submit" name="delete" value="Delete">
+      <input type="submit" name="delete" class="delete_button" value="Delete">
     </td>
   </tr>
   
