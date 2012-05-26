@@ -198,6 +198,15 @@ input[readonly="true"], input[readonly="true"]:focus {
   color:#777777;
 }
 
+label.radio {
+  background:white;
+  border:1px solid #999;
+  padding:8px;
+}
+label.radio:hover {
+  background-color:(HIGHLIGHTED_BACKGROUND_COLOR);
+}
+
 hr {
   border:0px;
   width: 100%;
