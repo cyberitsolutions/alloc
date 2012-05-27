@@ -122,15 +122,12 @@ $(document).ready(function() {
           <th width="15%">Amount</th>
           <th width="35%">Source TF</th>
           <th>Description</th>
-          {if config::get_config_item("taxName")}
-            <th>{echo config::get_config_item("taxName")}</th>
-          {/}
           <th></th>
         </tr>
         {show_productCost_list($productID, "templates/productCostR.tpl")}
         {show_productCost_new("templates/productCostR.tpl")}
         <tr id="product_cost_footer">
-          <th colspan="5" class="center"><input type="submit" name="save_costs" value="Save Costs"></th>
+          <th colspan="4" class="center"><input type="submit" name="save_costs" value="Save Costs"></th>
         </tr>
       </table>
 
