@@ -60,17 +60,8 @@ $(document).ready(function() {
       
       <div style="float:right; width:47%; padding:0px 12px; vertical-align:top;">
 
-      {if $taxName}
-        {$sellPrice_check = sprintf("<input type='checkbox' name='sellPriceIncTax' value='1'%s> inc %s" ,$sellPriceIncTax ? ' checked':'',$taxName)}
-        {if $sellPriceIncTax}
-          {$sellPrice_label = " (inc ".$taxName.")"}
-        {else}
-          {$sellPrice_label = " (ex ".$taxName.")"}
-        {/}
-      {/}
-
         <div class="view">
-          <h6>Sell Price{$sellPrice_label}{page::mandatory($sellPrice)}<div>Active</div></h6>
+          <h6>Sell Price{$taxName and print " (ex ".$taxName.")"}{page::mandatory($sellPrice)}<div>Active</div></h6>
           <div style="float:left; width:30%;">
             {$sellPrice} {$sellPriceCurrencyTypeID}
           </div>
@@ -79,11 +70,10 @@ $(document).ready(function() {
           </div>
         </div>
         <div class="edit">
-          <h6>Sell Price{$taxLabel}{page::mandatory($sellPrice)}<div>Active</div></h6>
+          <h6>Sell Price{$taxName and print " (ex ".$taxName.")"}{page::mandatory($sellPrice)}<div>Active</div></h6>
           <div style="float:left; width:30%;" class="nobr">
             <input type="text" size="8" name="sellPrice" id="sellPrice" value="{$sellPrice}">
             <select name="sellPriceCurrencyTypeID">{$sellPriceCurrencyOptions}</select>
-            {$sellPrice_check} 
           </div>
           <div style="float:right; width:50%;" class="nobr">
             <input type="checkbox" name="productActive" {if $productActive || !$productID}checked="checked"{/}>
