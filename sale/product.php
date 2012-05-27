@@ -60,7 +60,7 @@ function show_productCost_new($template, $percent = false) {
   $productCost = new productCost;
   $productCost->set_values(); // wipe clean
   $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
-  $TPL["taxOptions"] = page::select_options(array(""=>"Exempt",1=>"Included",0=>"Excluded"),"");
+  $TPL["taxOptions"] = page::select_options(array(""=>"Exempt",1=>"Included",0=>"Excluded"),"1");
   $TPL["display"] = "display:none";
   include_template($template);
 }
