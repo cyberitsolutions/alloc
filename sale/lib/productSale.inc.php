@@ -190,6 +190,24 @@ class productSale extends db_entity {
     $status = $this->get_value("status");
     $db = new db_alloc();
 
+
+    if ($this->get_value("clientID")) {
+      $c = $this->get_foreign_object("client");
+      $taskDesc[] = "Client: ".$c->get_name();
+      $taskDesc[] = "";
+    }
+    $taskDesc[] = "Sale items:";
+    $taskDesc[] = "";
+    foreach((array)$this->get_productSaleItems() as $psiID => $psi_row) {
+      $p = new product();
+      $p->set_id($psi_row["productID"]);
+      $taskDesc[] = "  * ".$p->get_name();
+    }
+
+    $taskDesc[] = "";
+    $taskDesc[] = "Refer to the sale in alloc for up-to-date information.";
+    $taskDesc = implode("\n",$taskDesc);
+
     if ($status == "edit") {
       $this->set_value("status", "allocate");
       
@@ -212,14 +230,36 @@ class productSale extends db_entity {
         $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
         if (config::for_cyber() && !$db->qr($q)) {
           $task = new task();
-          $task->set_value("projectID",$this->get_value("projectID"));
+          $task->set_value("projectID",59); // Cyber Admin Project
           $task->set_value("taskName",$name);
           $task->set_value("managerID",$this->get_value("personID")); // salesperson
-          $task->set_value("personID",69); // steve
+          $task->set_value("personID",67); // Cyber Support people (jane)
           $task->set_value("priority",3);
           $task->set_value("taskTypeID","Task");
+          $task->set_value("taskDescription",$taskDesc);
           $task->save();
           $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
+
+          $p1 = new person();
+          $p1->set_id($this->get_value("personID"));
+          $p1->select();
+          $p2 = new person();
+          $p2->set_id(67);
+          $p2->select();
+          $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name()); 
+          $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name()); 
+
+          $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
+          $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
+          $emailRecipients = comment::add_interested_parties($commentID, null, $recipients);
+
+          // Re-email the comment out, including any attachments
+          if (!comment::send_comment($commentID,$emailRecipients)) {
+            $TPL["message"][] = "Email failed to send.";
+          } else {
+            $TPL["message_good"][] = "Emailed task comment to ".$p1->get_value("emailAddress").", ".$p2->get_value("emailAddress").".";
+          }
+
         }
       }
 
@@ -238,35 +278,114 @@ class productSale extends db_entity {
         }
       }
 
-      // from admin to salesperson
       if ($this->get_value("projectID")) {
-        $name = "Sale ".$this->get_id().": place an order to the supplier";
-        $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
-        if (config::for_cyber() && !$db->qr($q)) {
-          $task = new task();
-          $task->set_value("projectID",$this->get_value("projectID"));
-          $task->set_value("taskName",$name);
-          $task->set_value("managerID",69); // steve
-          $task->set_value("personID",$this->get_value("personID")); // salesperson
-          $task->set_value("priority",3);
-          $task->set_value("taskTypeID","Task");
-          $task->save();
-          $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
-        }
 
-        // from admin to salesperson
+        // from salesperson to admin
         $name = "Sale ".$this->get_id().": pay the supplier";
         $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
         if (config::for_cyber() && !$db->qr($q)) {
           $task = new task();
-          $task->set_value("projectID",$this->get_value("projectID"));
+          $task->set_value("projectID",59); // Cyber Admin Project
           $task->set_value("taskName",$name);
-          $task->set_value("managerID",69); // steve
+          $task->set_value("managerID",$this->get_value("personID")); // salesperson
+          $task->set_value("personID",67); // Cyber Support people
+          $task->set_value("priority",3);
+          $task->set_value("taskTypeID","Task");
+          $task->set_value("taskDescription",$taskDesc);
+          $task->save();
+          $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
+
+          $p1 = new person();
+          $p1->set_id($this->get_value("personID"));
+          $p1->select();
+          $p2 = new person();
+          $p2->set_id(67);
+          $p2->select();
+          $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name()); 
+          $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name()); 
+
+          $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
+          $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
+          $emailRecipients = comment::add_interested_parties($commentID, null, $recipients);
+
+          // Re-email the comment out, including any attachments
+          if (!comment::send_comment($commentID,$emailRecipients)) {
+            $TPL["message"][] = "Email failed to send.";
+          } else {
+            $TPL["message_good"][] = "Emailed task comment to ".$p1->get_value("emailAddress").", ".$p2->get_value("emailAddress").".";
+          }
+        }
+
+        // from admin to salesperson
+        $name = "Sale ".$this->get_id().": place an order to the supplier";
+        $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
+        if (config::for_cyber() && !$db->qr($q)) {
+          $task = new task();
+          $task->set_value("projectID",59); // Cyber Admin Project
+          $task->set_value("taskName",$name);
+          $task->set_value("managerID",67); // Cyber Support people
           $task->set_value("personID",$this->get_value("personID")); // salesperson
           $task->set_value("priority",3);
           $task->set_value("taskTypeID","Task");
+          $task->set_value("taskDescription",$taskDesc);
           $task->save();
           $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
+
+          $p1 = new person();
+          $p1->set_id($this->get_value("personID"));
+          $p1->select();
+          $p2 = new person();
+          $p2->set_id(67);
+          $p2->select();
+          $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name()); 
+          $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name()); 
+
+          $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
+          $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
+          $emailRecipients = comment::add_interested_parties($commentID, null, $recipients);
+
+          // Re-email the comment out, including any attachments
+          if (!comment::send_comment($commentID,$emailRecipients)) {
+            $TPL["message"][] = "Email failed to send.";
+          } else {
+            $TPL["message_good"][] = "Emailed task comment to ".$p1->get_value("emailAddress").", ".$p2->get_value("emailAddress").".";
+          }
+        }
+
+        // from admin to salesperson
+        $name = "Sale ".$this->get_id().": action this sale";
+        $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$this->get_value("projectID"),db_esc($name));
+        if (config::for_cyber() && !$db->qr($q)) {
+          $task = new task();
+          $task->set_value("projectID",59); // Cyber Admin Project
+          $task->set_value("taskName",$name);
+          $task->set_value("managerID",67); // Cyber Support people
+          $task->set_value("personID",$this->get_value("personID")); // salesperson
+          $task->set_value("priority",3);
+          $task->set_value("taskTypeID","Task");
+          $task->set_value("taskDescription",$taskDesc);
+          $task->save();
+          $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
+
+          $p1 = new person();
+          $p1->set_id($this->get_value("personID"));
+          $p1->select();
+          $p2 = new person();
+          $p2->set_id(67);
+          $p2->select();
+          $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name()); 
+          $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name()); 
+
+          $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
+          $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
+          $emailRecipients = comment::add_interested_parties($commentID, null, $recipients);
+
+          // Re-email the comment out, including any attachments
+          if (!comment::send_comment($commentID,$emailRecipients)) {
+            $TPL["message"][] = "Email failed to send.";
+          } else {
+            $TPL["message_good"][] = "Emailed task comment to ".$p1->get_value("emailAddress").", ".$p2->get_value("emailAddress").".";
+          }
         }
       }
     }
