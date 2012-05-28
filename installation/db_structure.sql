@@ -254,7 +254,7 @@ CREATE TABLE project (
   dateActualCompletion date default NULL,
   projectBudget BIGINT DEFAULT NULL,
   currencyTypeID varchar(3) NOT NULL,
-  projectShortName varchar(255) default NULL,
+  projectShortName varchar(255) default NULL UNIQUE,
   projectStatus varchar(255) NOT NULL default 'Current',
   projectPriority integer default NULL,
   is_agency boolean default false,
