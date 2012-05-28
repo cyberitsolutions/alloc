@@ -329,6 +329,17 @@ if ($_POST["save"]) {
     $TPL["message"][] = "Please enter a name for the Project.";
   }  
 
+  // enforced at the database, but show a friendlier error here if possible
+  $query = sprintf("SELECT COUNT(*) as count FROM project WHERE projectShortName = '%s'", $db->esc($project->get_value("projectShortName")));
+  if (!$definitely_new_project) {
+    $query .= sprintf(" AND projectID != %d", $project->get_id());
+  }
+  $db->query($query);
+  $db->next_record();
+  if ($db->f('count') > 0) {
+    $TPL["message"][] = "A project with that nickname already exists.";
+  }
+
   if (!$TPL["message"]) {
 
     $project->set_value("projectComments",rtrim($project->get_value("projectComments")));
