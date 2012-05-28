@@ -36,9 +36,9 @@ class person extends db_entity {
                              ,"password"          => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
                              ,"perms"             => array("write_perm_name"=>PERM_PERSON_WRITE_ROLES)
                              ,"emailAddress"
-                             ,"availability"      => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
-                             ,"areasOfInterest"   => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
-                             ,"comments"          => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
+                             ,"availability"
+                             ,"areasOfInterest"
+                             ,"comments"
                              ,"managementComments"=> array("read_perm_name"=>PERM_PERSON_READ_MANAGEMENT
                                                           ,"write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
                              ,"firstName"
