@@ -243,7 +243,7 @@ DROP PROCEDURE IF EXISTS check_edit_timeSheet $$
 CREATE PROCEDURE check_edit_timeSheet(IN id INTEGER)
 BEGIN
   SELECT status INTO @timeSheetStatus FROM timeSheet WHERE timeSheetID = id;
-  if (neq(@timeSheetStatus, "edit")) THEN
+  if (neq(@timeSheetStatus, "edit") AND NOT has_perm(personID(),512,"timeSheet")) THEN
     call alloc_error('Time sheet is not editable.');
   END IF;
 END
