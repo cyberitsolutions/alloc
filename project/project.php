@@ -51,13 +51,13 @@ require_once("../alloc.php");
       if (have_entity_perm("transaction", PERM_READ, $current_user, false)) {
         $query = sprintf("SELECT transaction.* ")
           .sprintf("FROM transaction ")
-          .sprintf("WHERE transaction.projectID = '%d'", $projectID)
+          .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
           .sprintf("ORDER BY transactionModifiedTime desc");
       } else {
         $query = sprintf("SELECT transaction.* ")
           .sprintf("FROM transaction ")
           .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
-          .sprintf(" AND transaction.tfID = %d", $current_user->get_id())
+          .sprintf(" AND transaction.tfID = %d ", $current_user->get_id())
           .sprintf("ORDER BY transactionModifiedTime desc");
       }
       $db->query($query);
