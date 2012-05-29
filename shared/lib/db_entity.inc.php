@@ -596,7 +596,7 @@ class db_entity {
       $key_name = $this->key_field->get_name();
     }
     $foreign_objects = array();
-    $query = "SELECT * FROM $class_name WHERE $key_name=".$this->get_id();
+    $query = sprintf("SELECT * FROM %s WHERE %s = %d",db_esc($class_name),db_esc($key_name),$this->get_id());
     $db = new db_alloc;
     $db->query($query);
     while ($db->next_record()) {
@@ -771,7 +771,7 @@ class db_entity {
         $extra.= $pkey_sql.sprintf("%d",$s);
       }
     } else if ($sel) {
-      $extra = $pkey_sql.$sel;
+      $extra = $pkey_sql.db_esc($sel);
     }
 
     // If they haven't specifically asked for inactive or all
