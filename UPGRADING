@@ -30,7 +30,7 @@ http://YOUR_ALLOC_INSTALLATION/util/alloc_version
 Generic Upgrade Instructions
 ----------------------------
 
-1. Backup your allocPSA database. 
+1. Backup your allocPSA database. DO IT NOW.
 
 
 2. Unpack the new allocPSA source code alongside your current installation.
