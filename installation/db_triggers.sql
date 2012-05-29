@@ -187,9 +187,9 @@ FOR EACH ROW
 BEGIN
   IF (has_perm(personID(),512,"timeSheet")) THEN
     SELECT 1 INTO @null;
-  ELSEIF (OLD.status = 'manage' AND NEW.status = 'edit' AND has_perm(personID(),256,"timeSheet")) THEN
+  ELSEIF (OLD.status = 'manager' AND NEW.status = 'edit' AND has_perm(personID(),256,"timeSheet")) THEN
     SELECT 1 INTO @null;
-  ELSEIF (OLD.status = 'manage' AND NEW.status = 'admin' AND has_perm(personID(),256,"timeSheet")) THEN
+  ELSEIF (OLD.status = 'manager' AND NEW.status = 'admin' AND has_perm(personID(),256,"timeSheet")) THEN
     SELECT 1 INTO @null;
   ELSEIF (neq(OLD.status, 'edit')) THEN
     call alloc_error('Time sheet is not editable(2).');
