@@ -91,6 +91,9 @@ class db {
                            Create that other record first and then try to create this item again. 
                            <br><br>".$msg;
 
+    } else if ($errno == 1062 && preg_match("/(ALLOC ERROR:(.*)\n\n)/m",$msg,$matches)) {
+      $TPL["message"][] = "Error: ".$matches[2];
+
     } else if (strlen($msg)) {
       $TPL["message"][] = "Error: ".$errno." ".$msg;
       print $msg;
