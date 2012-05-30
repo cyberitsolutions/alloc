@@ -162,7 +162,7 @@ $(document).ready(function() {
   <tr>
     <td align="center" class="padded">
       <div style="margin:20px">
-        <input type="button" id="editTask" value="Edit Task" onClick="toggle_view_edit();">
+        <button type="button" id="editTask" value="1" onClick="toggle_view_edit();">Edit Task<i class="icon-edit"></i></button>
       </div>
     </td>
   </tr>
@@ -286,19 +286,19 @@ $(document).ready(function() {
           <label for="createTaskReminder"><input type="checkbox" name="createTaskReminder" id="createTaskReminder" value="true" /> Create reminder for assignee</label> {page::help("task_create_reminder")}<br><br>
           {/}
           {if $_GET["timeSheetID"]}
-          <input type="submit" name="timeSheet_save" value="Save and Return to Time Sheet">
+          <button type="submit" name="timeSheet_save" value="1" class="save_button">Save and Return to Time Sheet<i class="icon-arrow-left"></i></button>
           <input type="hidden" name="timeSheetID" value="{$_GET.timeSheetID}">
           {/}
-        <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
-        <input type="submit" name="save_and_new" value="Save &amp; New">
+         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+         <button type="submit" name="save_and_new" value="1" class="save_button">Save &amp; New<i class="icon-plus-sign"></i></button>
         {if $task_taskID}
-        <input type="submit" name="close_task" value="Save &amp; Close">
+        <button type="submit" name="close_task" value="1" class="save_button">Save &amp; Close<i class="icon-remove-sign"></i></button>
         <br><br>
         {if $task->can_be_deleted()}
-        <input type="submit" name="delete" value="Delete" class="delete_button">
+        <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
         {/}
         <input type='hidden' name='view' value='brief'>
-        <input type="button" value="Cancel Edit" onClick="toggle_view_edit();">
+        &nbsp;&nbsp;<a href="" onClick="toggle_view_edit();return false;">Cancel edit</a>
         {/}
       </div>
     </td>
