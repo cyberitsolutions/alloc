@@ -947,7 +947,8 @@ if ($timeSheetID) {
 $TPL["taxName"] = config::get_config_item("taxName");
 $TPL["ts_rate_editable"] = $timeSheet->can_edit_rate();
 
-
+$TPL["is_manager"] = $timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS);
+$TPL["is_admin"] = $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS);
 
 include_template("templates/timeSheetFormM.tpl");
 
