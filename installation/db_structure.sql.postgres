@@ -349,6 +349,12 @@ CREATE TABLE task (
   taskStatus varchar(255) NOT NULL
 ) ;
 
+CREATE TABLE pendingTask (
+  taskID integer NOT NULL,
+  pendingTaskID integer NOT NULL,
+  PRIMARY KEY(taskID, pendingTaskID)
+) ;
+
 CREATE TABLE auditItem (
   auditItemID serial PRIMARY KEY,
   entityName varchar(255) default NULL,

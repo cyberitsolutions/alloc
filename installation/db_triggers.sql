@@ -1,6 +1,9 @@
 -- This script should be imported into the main production alloc database
 -- It can be re-imported repeatedly and it should rebuild clean every time
 
+-- Permit limited recursion in the change_task_status procedure
+set max_sp_recursion_depth = 10; 
+
 DELIMITER $$
 
 -- Error messages for mysql
@@ -14,6 +17,9 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n"
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable: user not a project member.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid date.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task has pending tasks.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Must use: call change_task_status(taskID,status)\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task cannot be pending itself.\n\n")$$
 
 
 -- if (NOT something) doesn't work for NULLs
@@ -454,20 +460,14 @@ FOR EACH ROW
 BEGIN
   call check_edit_task(OLD.projectID);
 
+  IF (neq(@in_change_task_status,1) AND neq(OLD.taskStatus,NEW.taskStatus)) THEN
+    call alloc_error('Must use: call change_task_status(taskID,status)');
+  END IF;
+
   SET NEW.taskID = OLD.taskID;
   SET NEW.creatorID = OLD.creatorID;
   SET NEW.dateCreated = OLD.dateCreated;
   SET NEW.taskModifiedUser = personID();
-
-  IF (empty(OLD.dateActualCompletion) AND NOT empty(NEW.dateActualCompletion)) THEN
-    SET NEW.taskStatus = 'closed_complete';
-  ELSEIF (NOT empty(OLD.dateActualCompletion) AND empty(NEW.dateActualCompletion)) THEN
-    SET NEW.taskStatus = 'open_notstarted';
-  END IF;
-
-  IF (empty(OLD.dateActualStart) AND NOT empty(NEW.dateActualStart) AND OLD.taskStatus = "open_notstarted") THEN
-    SET NEW.taskStatus = 'open_inprogress';
-  END IF;
 
   IF (empty(NEW.taskStatus)) THEN
     SET NEW.taskStatus = OLD.taskStatus;
@@ -476,6 +476,20 @@ BEGIN
   IF (empty(NEW.taskStatus)) THEN
     SET NEW.taskStatus = 'open_notstarted';
   END IF;
+
+  -- if this task is at pending_tasks, and you try and change it to a different status, but we're still
+  -- waiting on other tasks to complete, then bomb out with an error
+  IF (OLD.taskStatus = 'pending_tasks' AND neq(NEW.taskStatus, OLD.taskStatus)) THEN
+    SELECT count(pendingTask.taskID) INTO @num_pending_tasks FROM pendingTask
+ LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
+     WHERE pendingTask.taskID = NEW.taskID
+       AND SUBSTRING(task.taskStatus,1,6) != 'closed';
+
+    IF (@num_pending_tasks > 0 AND neq(@in_change_task_status,1)) THEN
+      call alloc_error('Task has pending tasks.');
+    END IF;
+  END IF;
+
 
   IF (NEW.taskStatus = 'open_inprogress' AND neq(NEW.taskStatus, OLD.taskStatus) AND empty(NEW.dateActualStart)) THEN
     SET NEW.dateActualStart = current_date();
@@ -493,14 +507,7 @@ BEGIN
     IF (empty(NEW.dateActualCompletion)) THEN SET NEW.dateActualCompletion = current_date(); END IF;
     IF (empty(NEW.dateClosed)) THEN SET NEW.dateClosed = current_timestamp(); END IF;
     IF (empty(NEW.closerID)) THEN SET NEW.closerID = personID(); END IF;
-
-    -- MySQL don't like this unfortunately.
-    -- IF (NEW.taskTypeID = 'Parent') THEN
-    --   UPDATE task SET taskStatus = NEW.taskStatus WHERE parentTaskID = NEW.taskID;
-    -- END IF;
-
   END IF;
-
 
   IF (NEW.personID AND neq(NEW.personID, OLD.personID)) THEN
     SET NEW.dateAssigned = current_timestamp();
@@ -531,6 +538,7 @@ FOR EACH ROW
 BEGIN
   call check_edit_task(OLD.projectID);
   call check_delete_task(OLD.taskID);
+  DELETE FROM pendingTask WHERE taskID = OLD.taskID OR pendingTaskID = OLD.taskID;
 END
 $$
 
@@ -568,6 +576,162 @@ BEGIN
   call update_search_index("task",NEW.taskID);
 END
 $$
+
+-- pendingTask
+
+DROP PROCEDURE IF EXISTS update_pending_task $$
+CREATE PROCEDURE update_pending_task(tID INTEGER, status varchar(255))
+BEGIN
+  -- declare statements must be at the top
+  DECLARE task_that_is_pending INTEGER;
+  DECLARE pending_tasks_cursor CURSOR FOR SELECT taskID FROM pendingTask WHERE pendingTaskID = tID;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET @no_more_rows = TRUE;
+
+  OPEN pending_tasks_cursor;
+  the_loop: LOOP
+
+    FETCH pending_tasks_cursor INTO task_that_is_pending;
+
+    SELECT count(pendingTask.taskID) INTO @num_records
+      FROM pendingTask
+ LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
+     WHERE pendingTask.taskID = task_that_is_pending
+       AND pendingTask.pendingTaskID != tID
+       AND SUBSTRING(task.taskStatus,1,6) != 'closed';
+
+    IF (@num_records = 0) THEN
+      call change_task_status(task_that_is_pending,status);
+      -- this needs to be set again
+      SET @in_change_task_status = 1; 
+    END IF;
+
+    IF @no_more_rows THEN
+      CLOSE pending_tasks_cursor;
+      LEAVE the_loop;
+    END IF;
+  END LOOP the_loop;
+END
+$$
+
+DROP PROCEDURE IF EXISTS change_task_status $$
+CREATE PROCEDURE change_task_status(tID INTEGER, new_status varchar(255))
+BEGIN
+
+  SET max_sp_recursion_depth = 10; 
+  SET @in_change_task_status = 1;
+
+  SELECT taskStatus INTO @old_status FROM task WHERE taskID = tID;
+  IF (neq(@old_status,new_status)) THEN
+
+    -- If just moved to closed
+    IF (neq(SUBSTRING(@old_status,1,6),'closed') AND SUBSTRING(new_status,1,6) = 'closed') THEN
+
+      call update_pending_task(tID, "open_notstarted");
+      SET @in_change_task_status = 1; 
+
+    -- Else if just re-opened
+    ELSEIF (SUBSTRING(@old_status,1,6) = 'closed' AND neq(SUBSTRING(new_status,1,6),'closed')) THEN
+      UPDATE task SET taskStatus = 'pending_tasks'
+       WHERE taskStatus = 'open_notstarted'
+         AND taskID IN (SELECT taskID FROM pendingTask WHERE pendingTaskID = tID);
+
+    END IF;
+
+    -- And finally, update the task
+    UPDATE task SET taskStatus = new_status WHERE taskID = tID;
+  END IF;
+
+  SET @in_change_task_status = 0;
+END
+$$
+
+DROP TRIGGER IF EXISTS before_insert_pendingTask $$
+CREATE TRIGGER before_insert_pendingTask BEFORE INSERT ON pendingTask
+FOR EACH ROW
+BEGIN
+  SELECT projectID INTO @pID FROM task WHERE taskID = NEW.taskID;
+  call check_edit_task(@pID);
+  IF (NEW.taskID = NEW.pendingTaskID) THEN
+    call alloc_error('Task cannot be pending itself.');
+  END IF;
+END
+$$
+
+DROP TRIGGER IF EXISTS after_insert_pendingTask $$
+CREATE TRIGGER after_insert_pendingTask AFTER INSERT ON pendingTask
+FOR EACH ROW
+BEGIN
+  DECLARE num_rows INTEGER;
+  DECLARE t1status varchar(255);
+  DECLARE t2status varchar(255);
+
+  -- inserted a new dependency relationship, might need to make the task pending
+  SELECT taskStatus INTO t1status FROM task WHERE taskID = NEW.taskID;
+  SELECT taskStatus INTO t2status FROM task WHERE taskID = NEW.pendingTaskID;
+  IF (neq(t1status,"pending_tasks") AND neq(SUBSTRING(t2status,1,6),"closed")) THEN
+    call change_task_status(NEW.taskID,"pending_tasks");
+  END IF;
+
+  -- or might have inserted a closed task, so if there's no open dependencies, open the task
+  IF (t1status = "pending_tasks") THEN
+    SELECT count(pendingTask.taskID) INTO num_rows FROM pendingTask
+ LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
+     WHERE pendingTask.taskID = NEW.taskID
+       AND SUBSTRING(task.taskStatus,1,6) != "closed";
+  
+    IF (num_rows = 0) THEN
+      call change_task_status(NEW.taskID,"open_notstarted");
+    END IF;
+  END IF;
+END
+$$
+
+DROP TRIGGER IF EXISTS before_update_pendingTask $$
+CREATE TRIGGER before_update_pendingTask BEFORE UPDATE ON pendingTask
+FOR EACH ROW
+BEGIN
+  SELECT projectID INTO @pID FROM task WHERE taskID = NEW.taskID;
+  call check_edit_task(@pID);
+
+  IF (NEW.taskID = NEW.pendingTaskID) THEN
+    call alloc_error('Task cannot be pending itself.');
+  END IF;
+END
+$$
+
+DROP TRIGGER IF EXISTS before_delete_pendingTask $$
+CREATE TRIGGER before_delete_pendingTask BEFORE DELETE ON pendingTask
+FOR EACH ROW
+BEGIN
+  SELECT projectID INTO @pID FROM task WHERE taskID = OLD.taskID;
+  call check_edit_task(@pID);
+END
+$$
+
+DROP TRIGGER IF EXISTS after_delete_pendingTask $$
+CREATE TRIGGER after_delete_pendingTask AFTER DELETE ON pendingTask
+FOR EACH ROW
+BEGIN
+
+  DECLARE num_rows INTEGER;
+  DECLARE t1status varchar(255);
+
+  SELECT taskStatus INTO t1status FROM task WHERE taskID = OLD.taskID;
+  IF (t1status = "pending_tasks") THEN
+
+    -- if all the others are closed, then move task from pending to open
+    SELECT count(pendingTask.taskID) INTO num_rows FROM pendingTask
+ LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
+     WHERE pendingTask.taskID = OLD.taskID
+       AND SUBSTRING(task.taskStatus,1,6) != "closed";
+  
+    IF (num_rows = 0) THEN
+      call change_task_status(OLD.taskID,"open_notstarted");
+    END IF;
+  END IF;
+END
+$$
+
 
 
 DELIMITER ;

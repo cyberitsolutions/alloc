@@ -22,6 +22,7 @@ class edit(alloc):
   ops.append((''  , 'project=ID     ', 'task\'s project ID'))
   ops.append((''  , 'type=TYPE      ', 'Task, Fault, Message, Milestone or Parent'))
   ops.append((''  , 'dupe=ID        ', 'task ID of the related dupe'))
+  ops.append((''  , 'pend=IDS       ', 'task ID(s), commar separated, that block this task.'))
   ops.append((''  , 'status=STATUS  ', 'inprogress, notstarted, info, client, manager, invalid, duplicate,\n'
                                        'incomplete, complete; or: open, pending, closed\n'))
 

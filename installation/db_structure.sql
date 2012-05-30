@@ -381,6 +381,13 @@ CREATE TABLE task (
   taskStatus varchar(255) NOT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
+DROP TABLE IF EXISTS pendingTask;
+CREATE TABLE pendingTask (
+  taskID integer NOT NULL,
+  pendingTaskID integer NOT NULL,
+  PRIMARY KEY(taskID, pendingTaskID)
+) ENGINE=InnoDB PACK_KEYS=0;
+
 DROP TABLE IF EXISTS auditItem;
 CREATE TABLE auditItem (
   auditItemID integer NOT NULL auto_increment PRIMARY KEY,

@@ -70,6 +70,7 @@ class command {
      ,"project"   => array("projectID",       "task's project ID")
      ,"type"      => array("taskTypeID",      "Task, Fault, Message, Milestone or Parent")
      ,"dupe"      => array("duplicateTaskID", "If the task status is duplicate, then this should be set to the task ID of the related dupe")
+     ,"pend"      => array("",                "The task ID(s), commar separated, that block this task")
      ,"task"      => array("",                "A task ID, or the word 'new' to create a new task.")
      ,"taskip"    => array("",                "Add some interested parties and send the desc to them.")
     );
@@ -269,6 +270,10 @@ class command {
         }
       }
 
+      if (isset($commands["pend"])) {
+        $changes["pend"] = implode(",",(array)$task->get_pending_tasks());
+      }
+
       if (strtolower($commands["task"]) == "new") {
         if (!$commands["desc"] && is_object($email_receive)) {
           $task->set_value("taskDescription",$email_receive->get_converted_encoding());
@@ -288,6 +293,12 @@ class command {
       $err = $task->validate();
       if (!$err && $task->save()) {
         $task->select();
+
+        if (isset($commands["pend"])) {
+          $task->add_pending_tasks($commands["pend"]);
+          $changes["pend"] = implode(",",(array)$task->get_pending_tasks());
+        }
+
         $str = $this->condense_changes($changes,$task->row());
         $str and $status[] = "msg";
         $str and $message[] = $after_label.$str;
@@ -342,7 +353,8 @@ class command {
 
   function condense_changes($changes, $fields) {
     foreach ((array)$changes as $label => $field) {
-      $str.= $sep.$label.": ".$fields[$field];
+      $v = $fields[$field] or $v = $field;
+      $str.= $sep.$label.": ".$v;
       $sep = ", ";
     }
     return $str;
