@@ -291,11 +291,15 @@ $(document).ready(function() {
           {/}
         <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
         <input type="submit" name="save_and_new" value="Save &amp; New">
+        {if $task_taskID}
+        <input type="submit" name="close_task" value="Save &amp; Close">
+        <br><br>
         {if $task->can_be_deleted()}
         <input type="submit" name="delete" value="Delete" class="delete_button">
         {/}
         <input type='hidden' name='view' value='brief'>
         <input type="button" value="Cancel Edit" onClick="toggle_view_edit();">
+        {/}
       </div>
     </td>
   </tr>
