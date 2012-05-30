@@ -195,7 +195,7 @@ class command {
       if (strtolower($commands["item"]) != "new") {
         $str = $this->condense_changes($changes,$timeSheetItem->row());
         $str and $status[] = "msg";
-        $str and $message[] = "Before: ".$str.".";
+        $str and $message[] = "Before: ".$str;
       } else {
         $after_label2 = "Fields: ";
       }
@@ -211,7 +211,7 @@ class command {
         $timeSheetItem->select();
         $str = $this->condense_changes($changes,$timeSheetItem->row());
         $str and $status[] = "msg";
-        $str and $message[] = $after_label2.$str.".";
+        $str and $message[] = $after_label2.$str;
         $status[] = "yay";
         if (strtolower($commands["item"]) == "new") {
           $message[] = "Time sheet item ".$timeSheetItem->get_id()." created.";
@@ -279,7 +279,7 @@ class command {
       if (strtolower($commands["task"]) != "new") {
         $str = $this->condense_changes($changes,$task->row());
         $str and $status[] = "msg";
-        $str and $message[] = "Before: ".$str.".";
+        $str and $message[] = "Before: ".$str;
       } else {
         $after_label = "Fields: ";
       }
@@ -290,7 +290,7 @@ class command {
         $task->select();
         $str = $this->condense_changes($changes,$task->row());
         $str and $status[] = "msg";
-        $str and $message[] = $after_label.$str.".";
+        $str and $message[] = $after_label.$str;
 
         if ($commands["taskip"]) {
           $rtn = interestedParty::add_remove_ips($commands["taskip"],"task",$task->get_id(),$task->get_value("projectID"));
