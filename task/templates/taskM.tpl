@@ -269,10 +269,10 @@ $(document).ready(function() {
         <div class="enclose">
           <h6>Actual Start<div>Actual Completion</div></h6>
           <div style="float:left; width:30%">
-            {page::calendar("dateActualStart",$task_dateActualStart)}
+            {$task_dateActualStart}
           </div>
           <div style="float:right; width:50%">
-            {page::calendar("dateActualCompletion",$task_dateActualCompletion)}
+            {$task_dateActualCompletion}
           </div>
         </div>
       </div>
