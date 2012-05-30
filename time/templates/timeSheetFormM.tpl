@@ -43,7 +43,7 @@
 	  <td>{page::help("engineer_amount")}</td>
     <td align="right">Amount:</td>
     <td>{$total_dollars}
-      {if $timeSheet_status && $timeSheet_status != "finished" && $timeSheet_status != "edit" && $ts_rate_editable}
+      {if $timeSheet_status && $timeSheet_status != "finished" && $timeSheet_status != "edit" && $ts_rate_editable && ($is_manager || $is_admin)}
         <input type="submit" name="updateRate" value="Update">
       {/}
     </td>
@@ -56,7 +56,7 @@
     <td align="right">Client Billing:</td>
     <td>
       <nobr>{$total_customerBilledDollars}{$ex_gst}
-      {if $timeSheet_status && $timeSheet_status != "finished" && $timeSheet_status != "edit" && $ts_rate_editable}
+      {if $timeSheet_status && $timeSheet_status != "finished" && $timeSheet_status != "edit" && $ts_rate_editable && ($is_manager || $is_admin)}
         <input type="submit" name="updateCB" value="Update">
       {/}
       </nobr>
