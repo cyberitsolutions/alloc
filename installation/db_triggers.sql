@@ -300,10 +300,10 @@ BEGIN
 
   SELECT count(*) INTO @isTask FROM task WHERE taskID = NEW.taskID AND taskStatus = 'open_notstarted';
   IF (@isTask) THEN
-    UPDATE task SET taskStatus = 'open_inprogress' WHERE taskID = NEW.taskID;
+    call change_task_status(NEW.taskID,'open_inprogress');
   END IF;
   UPDATE task SET dateActualStart = (SELECT min(dateTimeSheetItem) FROM timeSheetItem WHERE taskID = NEW.taskID)
-   WHERE taskID = NEW.taskID AND dateActualStart IS NULL;
+   WHERE taskID = NEW.taskID;
 END
 $$
 
@@ -347,7 +347,7 @@ BEGIN
     call updateTimeSheetDates(NEW.timeSheetID);
   END IF;
   UPDATE task SET dateActualStart = (SELECT min(dateTimeSheetItem) FROM timeSheetItem WHERE taskID = NEW.taskID)
-   WHERE taskID = NEW.taskID AND dateActualStart IS NULL;
+   WHERE taskID = NEW.taskID;
 END
 $$
 
@@ -365,7 +365,7 @@ FOR EACH ROW
 BEGIN
   call updateTimeSheetDates(OLD.timeSheetID);
   UPDATE task SET dateActualStart = (SELECT min(dateTimeSheetItem) FROM timeSheetItem WHERE taskID = OLD.taskID)
-   WHERE taskID = OLD.taskID AND dateActualStart IS NULL;
+   WHERE taskID = OLD.taskID;
 END
 $$
 
@@ -495,18 +495,16 @@ BEGIN
     SET NEW.dateActualStart = current_date();
   END IF;
 
-  IF ((SUBSTRING(NEW.taskStatus,1,4) = 'open' OR SUBSTRING(NEW.taskStatus,1,4) = 'pend') AND neq(NEW.taskStatus, OLD.taskStatus)) THEN
+  IF ((SUBSTRING(NEW.taskStatus,1,4) = 'open' OR SUBSTRING(NEW.taskStatus,1,4) = 'pend')) THEN
     SET NEW.closerID = NULL;  
     SET NEW.dateClosed = NULL;  
     SET NEW.dateActualCompletion = NULL;  
     SET NEW.duplicateTaskID = NULL;  
-  END IF;
-
-  IF (SUBSTRING(NEW.taskStatus,1,4) = 'clos' AND neq(NEW.taskStatus, OLD.taskStatus)) THEN
+  ELSEIF (SUBSTRING(NEW.taskStatus,1,6) = 'closed' AND neq(NEW.taskStatus, OLD.taskStatus)) THEN
     IF (empty(NEW.dateActualStart)) THEN SET NEW.dateActualStart = current_date(); END IF;
-    IF (empty(NEW.dateActualCompletion)) THEN SET NEW.dateActualCompletion = current_date(); END IF;
     IF (empty(NEW.dateClosed)) THEN SET NEW.dateClosed = current_timestamp(); END IF;
     IF (empty(NEW.closerID)) THEN SET NEW.closerID = personID(); END IF;
+    SET NEW.dateActualCompletion = current_date();
   END IF;
 
   IF (NEW.personID AND neq(NEW.personID, OLD.personID)) THEN

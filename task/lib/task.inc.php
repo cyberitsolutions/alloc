@@ -63,8 +63,21 @@ class task extends db_entity {
     if ($existing["taskStatus"] != $this->get_value("taskStatus")) {
       $db = new db_alloc();
       $db->query(sprintf("call change_task_status(%d,'%s')",$this->get_id(),db_esc($this->get_value("taskStatus"))));
-      $row = $db->qr("SELECT taskStatus FROM task WHERE taskID = %d",$this->get_id());
+      $row = $db->qr("SELECT taskStatus
+                            ,dateActualCompletion
+                            ,dateActualStart
+                            ,dateClosed
+                            ,closerID
+                        FROM task
+                       WHERE taskID = %d",$this->get_id());
+      // Changing a task's status changes these fields.
+      // Unfortunately the call to save() below erroneously nukes these fields.
+      // So we manually set them to whatever change_task_status() has dictated.
       $this->set_value("taskStatus",$row["taskStatus"]);
+      $this->set_value("dateActualCompletion",$row["dateActualCompletion"]);
+      $this->set_value("dateActualStart",$row["dateActualStart"]);
+      $this->set_value("dateClosed",$row["dateClosed"]);
+      $this->set_value("closerID",$row["closerID"]);
     }
 
     return parent::save();
