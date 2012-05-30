@@ -58,6 +58,15 @@ class task extends db_entity {
   function save() {
     global $current_user, $TPL;
     $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
+
+    $existing = $this->all_row_fields;
+    if ($existing["taskStatus"] != $this->get_value("taskStatus")) {
+      $db = new db_alloc();
+      $db->query(sprintf("call change_task_status(%d,'%s')",$this->get_id(),db_esc($this->get_value("taskStatus"))));
+      $row = $db->qr("SELECT taskStatus FROM task WHERE taskID = %d",$this->get_id());
+      $this->set_value("taskStatus",$row["taskStatus"]);
+    }
+
     return parent::save();
   }
 
@@ -87,6 +96,42 @@ class task extends db_entity {
     in_array(ucwords($this->get_value("taskTypeID")),array("Task","Fault","Message","Milestone","Parent")) or $err[] = "Invalid Task Type.";
     $this->get_value("taskName") or $err[] = "Please enter a name for the Task.";
     return parent::validate($err);
+  }
+
+  function add_pending_tasks($str) {
+    $db = new db_alloc();
+    $db->query(sprintf("SELECT * FROM pendingTask WHERE taskID = %d",$this->get_id()));
+    $rows = array();
+    while ($row = $db->row()) {
+      $rows[] = $row["pendingTaskID"]; 
+    }
+    asort($rows);
+
+    $bits = preg_split("/\b/",$str);
+    $bits or $bits = array();
+    asort($bits);
+
+    $str1 = implode(",",(array)$rows);
+    $str2 = implode(",",(array)$bits);
+
+    if ($str1 != $str2) {
+      $db->qr(sprintf("DELETE FROM pendingTask WHERE taskID = %d",$this->get_id()));
+      foreach ((array)$bits as $id) {
+        if (is_numeric($id)) {
+          $db->query("INSERT INTO pendingTask (taskID,pendingTaskID) VALUES (%d,%d)",$this->get_id(),$id);
+        }
+      }
+    }
+  }
+
+  function get_pending_tasks($invert=false) {
+    $db = new db_alloc();
+    $q = sprintf("SELECT * FROM pendingTask WHERE %s = %d",($invert ? "pendingTaskID" : "taskID"),$this->get_id());
+    $db->query($q);
+    while ($row = $db->row()) {
+      $rows[] = $row[($invert ? "taskID" : "pendingTaskID")];
+    }
+    return (array)$rows;
   }
 
   function create_task_reminder() {
@@ -773,20 +818,28 @@ class task extends db_entity {
 
     // Get a hierarchical list of tasks
     if (is_array($filter) && count($filter)) {
-      $f = " WHERE ".implode(" AND ",$filter).$order_limit;
+      $f = " WHERE ".implode(" AND ",$filter)." GROUP BY task.taskID ".$order_limit;
     }
-    $q = sprintf("SELECT task.*, projectName, projectShortName, clientID, projectPriority, project.currencyTypeID as currency, rate, rateUnitID,
-                         priority * POWER(projectPriority, 2) * 
+    $q = sprintf("SELECT task.*
+                        ,projectName
+                        ,projectShortName
+                        ,clientID
+                        ,projectPriority
+                        ,project.currencyTypeID as currency
+                        ,rate
+                        ,rateUnitID
+                        ,GROUP_CONCAT(pendingTask.pendingTaskID) as pendingTaskIDs
+                        ,priority * POWER(projectPriority, 2) * 
                          IF(task.dateTargetCompletion IS NULL, 
                            8,
                            ATAN(
                                 (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
                                ) / 3.14 * 8 + 4
                            ) / 10 as priorityFactor
- 
                     FROM task
                LEFT JOIN project ON project.projectID = task.projectID
                LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
+               LEFT JOIN pendingTask ON pendingTask.taskID = task.taskID
                          %s
                  ",$current_user->get_id(),$f);
       

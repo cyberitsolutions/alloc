@@ -163,6 +163,8 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 
   if ($success) {
 
+    $task->add_pending_tasks($_POST["pendingTasksIDs"]);
+
     // Create reminders if necessary
     if($_POST["createTaskReminder"] == true) {
       $task->create_task_reminder();
@@ -307,6 +309,45 @@ if ($dupeID) {
   $TPL["editing_disabled"] = true;
 }
 
+$rows = $task->get_pending_tasks();
+foreach ((array)$rows as $pendingTaskID) {
+  $realtask = new task;
+  $realtask->set_id($pendingTaskID);
+  $realtask->select();
+  unset($st1,$st2);
+  if (substr($realtask->get_value("taskStatus"),0,6) == "closed") {
+    $st1 = "<strike>";
+    $st2 = "</strike>";
+  } else {
+    $wasopen = true;
+  }
+  $pendingTaskLinks[] = $st1.$realtask->get_task_link(array("prefixTaskID"=>1,"return"=>"html")).$st2;
+}
+$is = "was";
+$wasopen and $is = "is";
+$pendingTaskLinks and $TPL["message_help_no_esc"][] = "This task ".$is." pending the completion of:<br>".implode("<br>",$pendingTaskLinks);
+
+$rows = $task->get_pending_tasks(true);
+foreach ((array)$rows as $tID) {
+  $realtask = new task;
+  $realtask->set_id($tID);
+  $realtask->select();
+  unset($st1,$st2);
+  if (substr($realtask->get_value("taskStatus"),0,6) == "closed") {
+    $st1 = "<strike>";
+    $st2 = "</strike>";
+  } else {
+    $wasopen = true;
+  }
+  $blockTaskLinks[] = $st1.$realtask->get_task_link(array("prefixTaskID"=>1,"return"=>"html")).$st2;
+}
+$is = "was";
+$wasopen and $is = "is";
+$blockTaskLinks and $TPL["message_help_no_esc"][] = "This task ".$is." blocking the start of:<br>".implode("<br>",$blockTaskLinks);
+
+
+
+
 if ($task->get_id()) {
   $options["parentTaskID"] = $task->get_id();
   $options["taskView"] = "byProject";
@@ -334,6 +375,12 @@ if ($taskID) {
   $TPL["taskSelfLink"] = "<a href=\"".$task->get_url()."\">".$task->get_id()." ".$task->get_name(array("return"=>"html"))."</a>";
   $TPL["main_alloc_title"] = "Task " . $task->get_id() . ": " . $task->get_name()." - ".APPLICATION_NAME;
   $TPL["task_exists"] = true;
+
+  $q = sprintf("SELECT GROUP_CONCAT(pendingTaskID) as pendingTaskIDs FROM pendingTask WHERE taskID = %d",$task->get_id());
+  $db->query($q);
+  $row = $db->row();
+  $TPL["task_pendingTaskIDs"] = $row["pendingTaskIDs"];
+
 } else {
   $TPL["taskSelfLink"] = "New Task";
   $TPL["main_alloc_title"] = "New Task - ".APPLICATION_NAME;

@@ -54,6 +54,7 @@ CREATE OR REPLACE VIEW alloc_${username}.skillProficiency AS SELECT * FROM alloc
 CREATE OR REPLACE VIEW alloc_${username}.task             AS SELECT * FROM alloc.task;
 CREATE OR REPLACE VIEW alloc_${username}.taskStatus       AS SELECT * FROM alloc.taskStatus;
 CREATE OR REPLACE VIEW alloc_${username}.taskType         AS SELECT * FROM alloc.taskType;
+CREATE OR REPLACE VIEW alloc_${username}.pendingTask      AS SELECT * FROM alloc.pendingTask;
 CREATE OR REPLACE VIEW alloc_${username}.timeSheetItemMultiplier AS SELECT * FROM alloc.timeSheetItemMultiplier;
 CREATE OR REPLACE VIEW alloc_${username}.timeSheetStatus  AS SELECT * FROM alloc.timeSheetStatus;
 CREATE OR REPLACE VIEW alloc_${username}.timeUnit         AS SELECT * FROM alloc.timeUnit;
@@ -108,6 +109,7 @@ GRANT CREATE VIEW ON alloc_${username}.* TO ${username};
 GRANT INSERT,UPDATE,DELETE ON alloc_${username}.timeSheet TO ${username};
 GRANT INSERT,UPDATE,DELETE ON alloc_${username}.timeSheetItem TO ${username};
 GRANT INSERT,UPDATE,DELETE ON alloc_${username}.task TO ${username};
+GRANT INSERT,UPDATE,DELETE ON alloc_${username}.pendingTask TO ${username};
 -- expenseForm should be writable ?
 -- reminder    should be writable ?
 

@@ -214,16 +214,16 @@ $(document).ready(function() {
             Assigned To <div id="taskPersonList" style="display:inline">{$personOptions}</div>
           </div>
           <div style="float:right; width:50%; text-align:left;">
-            <select name="taskStatus" onChange="$('#closed_duplicate_div').hide(); $('#'+$(this).val()+'_div').css('display','inline');">
+            <select name="taskStatus" onChange="$('.hidden_field').hide(); $('#'+$(this).val()+'_div').css('display','inline');">
               {$task_taskStatusOptions}
             </select>
-            {$class="inline"}
-            {if !$task_duplicateTaskID}
-              {$class="hidden"}
-            {/}
-            <div id="closed_duplicate_div" class="{$class}">
-              <input type="text" name="duplicateTaskID" value="{$task_duplicateTaskID}" size="10">
+            <div id="closed_duplicate_div" class="hidden_field {print $task_duplicateTaskID ? "inline" : "hidden"}">
+              <input type="text" name="duplicateTaskID" value="{$task_duplicateTaskID}" size="20">
               {page::help("task_duplicate")}
+            </div>
+            <div id="pending_tasks_div" class="hidden_field {print $task_pendingTaskIDs ? "inline" : "hidden"}">
+              <input type="text" name="pendingTasksIDs" value="{$task_pendingTaskIDs}" size="20">
+              {page::help("task_pending_tasks")}
             </div>
           </div>
         </div>
