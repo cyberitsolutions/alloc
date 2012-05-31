@@ -116,7 +116,7 @@ if ($_POST["do_step_2"]) {
 
   $query["start"] = " SELECT ";
   $query["where"] = " WHERE 1=1 ";
-  $query["from"] = " FROM ".$db_tables[0];
+  $query["from"] = " FROM ".db_esc($db_tables[0]);
 
 
 
@@ -206,7 +206,7 @@ if ($_POST["do_step_2"]) {
 if ($_POST["do_step_3"]) {
 
   if (!is_array($table_fields)) {
-    alloc_die("did not get table_fields array bugger");
+    alloc_die("Did not get table_fields array.");
     $table_fields = array();
   }
 
@@ -214,28 +214,28 @@ if ($_POST["do_step_3"]) {
   foreach($table_fields as $v) {
 
     if ($_POST["table_name"][$v] != "") {
-      $query["select"].= $commar.$_POST["table_name"][$v];
+      $query["select"].= $commar.db_esc($_POST["table_name"][$v]);
       $commar = ",";          // no commar the first time
 
       if ($_POST["table_like"][$v] != "") {
-        $query["where"].= " AND ".$_POST["table_name"][$v]." LIKE '".$_POST["table_like"][$v]."'";
+        $query["where"].= " AND ".db_esc($_POST["table_name"][$v])." LIKE '".db_esc($_POST["table_like"][$v])."'";
       }
 
       if ($_POST["table_num_op_1"][$v] != "") {
-        $query["where"].= " AND ".$_POST["table_name"][$v]." ".$_POST["table_num_op_1"][$v];
+        $query["where"].= " AND ".db_esc($_POST["table_name"][$v])." ".db_esc($_POST["table_num_op_1"][$v]);
       }
 
       if ($_POST["table_num_op_2"][$v] != "") {
-        $query["where"].= " AND ".$_POST["table_name"][$v]." ".$_POST["table_num_op_2"][$v];
+        $query["where"].= " AND ".db_esc($_POST["table_name"][$v])." ".db_esc($_POST["table_num_op_2"][$v]);
       }
     }
   }
 
   if ($_POST["table_groupby"] != "") {
     if (!isset($query["group"])) {
-      $query["group"] = " GROUP BY ".$_POST["table_groupby"];
+      $query["group"] = " GROUP BY ".db_esc($_POST["table_groupby"]);
     } else {
-      $query["group"].= ",".$_POST["table_groupby"];
+      $query["group"].= ",".db_esc($_POST["table_groupby"]);
     }
   }
 
