@@ -25,8 +25,8 @@ require_once("../alloc.php");
 function show_permission_list($template_name) {
   global $TPL;
 
-  if ($_POST["submit"] || $_POST["filter"] != "") {
-    $where = " where tableName like '".$_POST["filter"]."%' ";   // TODO: Add filtering to permission list
+  if ($_REQUEST["submit"] || $_REQUEST["filter"] != "") {
+    $where = " where tableName like '%".db_esc($_REQUEST["filter"])."%' ";   // TODO: Add filtering to permission list
   }
   $db = new db_alloc;
   $db->query("SELECT * FROM permission $where ORDER BY tableName, sortKey");
