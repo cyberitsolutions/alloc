@@ -11,7 +11,7 @@ DELETE FROM error$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to change time sheet status.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete time sheet unless status is edit.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.\n\n")$$
-INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.(2)\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable(2).\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet's rate is not editable.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable: user not a project member.\n\n")$$
@@ -58,46 +58,51 @@ $$
 DROP FUNCTION IF EXISTS has_perm $$
 CREATE FUNCTION has_perm(pID INTEGER, action INTEGER, tableN VARCHAR(255)) RETURNS BOOLEAN READS SQL DATA
 BEGIN
-  SELECT perms INTO @perms FROM person WHERE personID = pID;
+  DECLARE perms varchar(255);
+  DECLARE rtn BOOLEAN;
+  SELECT perms INTO perms FROM person WHERE personID = pID;
 
   IF (have_role(pID,'god')) THEN
     RETURN 1;
   END IF;
 
-  SELECT count(*) INTO @rtn
+  SELECT count(*) INTO rtn
     FROM permission
    WHERE tableName = tableN
      AND (actions & action = action)
-     AND (roleName IS NULL OR roleName = '' OR find_in_set(roleName,@perms)>0);
-  return @rtn;
+     AND (roleName IS NULL OR roleName = '' OR find_in_set(roleName,perms)>0);
+  return rtn;
 END
 $$
 
 DROP FUNCTION IF EXISTS have_role $$
 CREATE FUNCTION have_role(pID INTEGER, role VARCHAR(255)) RETURNS BOOLEAN READS SQL DATA
 BEGIN
-  SELECT count(personID) INTO @num FROM person WHERE personID = pID AND (find_in_set(role,perms) OR find_in_set('god',perms));
-  RETURN @num;
+  DECLARE num INTEGER;
+  SELECT count(personID) INTO num FROM person WHERE personID = pID AND (find_in_set(role,perms) OR find_in_set('god',perms));
+  RETURN num;
 END
 $$
 
 DROP FUNCTION IF EXISTS have_project_role $$
 CREATE FUNCTION have_project_role(pID INTEGER, projID INTEGER, roles VARCHAR(255)) RETURNS BOOLEAN READS SQL DATA
 BEGIN
-  SELECT count(projectPersonID) INTO @num
+  DECLARE num INTEGER;
+  SELECT count(projectPersonID) INTO num
     FROM projectPerson pp 
     LEFT JOIN role ppr ON ppr.roleID = pp.roleID 
    WHERE projectID = projID and personID = pID
      AND ppr.roleHandle in (roles);
-  RETURN @num;
+  RETURN num;
 END
 $$
 
 DROP FUNCTION IF EXISTS can_edit_rate $$
 CREATE FUNCTION can_edit_rate(pID INTEGER, projID INTEGER) RETURNS BOOLEAN READS SQL DATA
 BEGIN
-  SELECT rate INTO @rate FROM projectPerson WHERE projectID = projID AND personID = pID;
-  IF (@rate IS NULL) THEN
+  DECLARE r BIGINT(20);
+  SELECT rate INTO r FROM projectPerson WHERE projectID = projID AND personID = pID;
+  IF (r IS NULL) THEN
     RETURN 1;
   END IF;
   IF (have_role(personID(), 'manage')) THEN
@@ -149,9 +154,10 @@ $$
 DROP PROCEDURE IF EXISTS update_search_index $$
 CREATE PROCEDURE update_search_index(eName VARCHAR(255), eID INTEGER)
 BEGIN
+  DECLARE num INTEGER;
   IF (using_views()) THEN
-    SELECT count(indexQueueID) INTO @num FROM indexQueue WHERE entity = eName AND entityID = eID;
-    IF (@num = 0) THEN
+    SELECT count(indexQueueID) INTO num FROM indexQueue WHERE entity = eName AND entityID = eID;
+    IF (num = 0) THEN
       INSERT INTO indexQueue (entity,entityID) VALUES (eName, eID);
     END IF;
   END IF;
@@ -165,13 +171,16 @@ DROP TRIGGER IF EXISTS before_insert_timeSheet $$
 CREATE TRIGGER before_insert_timeSheet BEFORE INSERT ON timeSheet
 FOR EACH ROW
 BEGIN
+  DECLARE preferred_tfID INTEGER;
+  DECLARE cbd BIGINT(20);
+  DECLARE cur VARCHAR(3);
   SET NEW.personID = personID();
   SET NEW.status = 'edit';
-  SELECT preferred_tfID INTO @preferred_tfID FROM person WHERE personID = personID();
-  SET NEW.recipient_tfID = @preferred_tfID;
-  SELECT customerBilledDollars,currencyTypeID INTO @cbd,@cur FROM project WHERE projectID = NEW.projectID;
-  SET NEW.customerBilledDollars = @cbd;
-  SET NEW.currencyTypeID = @cur;
+  SELECT preferred_tfID INTO preferred_tfID FROM person WHERE personID = personID();
+  SET NEW.recipient_tfID = preferred_tfID;
+  SELECT customerBilledDollars,currencyTypeID INTO cbd,cur FROM project WHERE projectID = NEW.projectID;
+  SET NEW.customerBilledDollars = cbd;
+  SET NEW.currencyTypeID = cur;
   SET NEW.dateFrom = null;
   SET NEW.dateTo = null;
   SET NEW.approvedByManagerPersonID = null;
@@ -228,9 +237,6 @@ FOR EACH ROW
 BEGIN
   IF (neq(OLD.status, 'edit')) THEN
     call alloc_error('Not permitted to delete time sheet unless status is edit.');
-  -- ELSE
-    -- This don't work.
-    -- DELETE FROM timeSheetItem WHERE timeSheetID = OLD.timeSheetID;
   END IF;
 END
 $$
@@ -248,8 +254,9 @@ $$
 DROP PROCEDURE IF EXISTS check_edit_timeSheet $$
 CREATE PROCEDURE check_edit_timeSheet(IN id INTEGER)
 BEGIN
-  SELECT status INTO @timeSheetStatus FROM timeSheet WHERE timeSheetID = id;
-  if (neq(@timeSheetStatus, "edit") AND NOT has_perm(personID(),512,"timeSheet")) THEN
+  DECLARE timeSheetStatus VARCHAR(255);
+  SELECT status INTO timeSheetStatus FROM timeSheet WHERE timeSheetID = id;
+  if (neq(timeSheetStatus, "edit") AND NOT has_perm(personID(),512,"timeSheet")) THEN
     call alloc_error('Time sheet is not editable.');
   END IF;
 END
@@ -259,34 +266,38 @@ DROP TRIGGER IF EXISTS before_insert_timeSheetItem $$
 CREATE TRIGGER before_insert_timeSheetItem BEFORE INSERT ON timeSheetItem
 FOR EACH ROW
 BEGIN
+  DECLARE validDate DATE;
+  DECLARE pID INTEGER;
+  DECLARE rate BIGINT(20);
+  DECLARE rateUnitID INTEGER;
+  DECLARE description VARCHAR(255);
   call check_edit_timeSheet(NEW.timeSheetID);
 
   SET NEW.timeSheetItemCreatedUser = personID();
   SET NEW.timeSheetItemCreatedTime = current_timestamp();
 
-  SELECT DATE(NEW.dateTimeSheetItem) INTO @validDate;
-  IF (@validDate = '0000-00-00') THEN
+  SELECT DATE(NEW.dateTimeSheetItem) INTO validDate;
+  IF (validDate = '0000-00-00') THEN
     call alloc_error("Invalid date.");
-    -- SET NEW.dateTimeSheetItem = NULL;
   END IF;
 
   SET NEW.personID = personID();
-  SELECT projectID INTO @projectID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
-  SELECT rate,rateUnitID INTO @rate,@rateUnitID FROM projectPerson WHERE projectID = @projectID AND personID = personID();
+  SELECT projectID INTO pID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
+  SELECT rate,rateUnitID INTO rate,rateUnitID FROM projectPerson WHERE projectID = pID AND personID = personID();
 
   -- if rate is neq project-person rate AND they're don't have perm halt with error about rate
-  IF (neq(NEW.rate,@rate) AND NOT can_edit_rate(personID(),@projectID)) THEN
+  IF (neq(NEW.rate,rate) AND NOT can_edit_rate(personID(),pID)) THEN
     call alloc_error("Time sheet's rate is not editable.");
   END IF;
 
-  IF (NEW.rate IS NULL AND @rate) THEN
-    SET NEW.rate = @rate;
-    SET NEW.timeSheetItemDurationUnitID = @rateUnitID;
+  IF (NEW.rate IS NULL AND rate) THEN
+    SET NEW.rate = rate;
+    SET NEW.timeSheetItemDurationUnitID = rateUnitID;
   END IF;
 
   IF (NEW.taskID) THEN
-    SELECT taskName INTO @taskName FROM task WHERE taskID = NEW.taskID;
-    SET NEW.description = @taskName;
+    SELECT taskName INTO description FROM task WHERE taskID = NEW.taskID;
+    SET NEW.description = description;
   END IF;
 
 END
@@ -296,10 +307,11 @@ DROP TRIGGER IF EXISTS after_insert_timeSheetItem $$
 CREATE TRIGGER after_insert_timeSheetItem AFTER INSERT ON timeSheetItem
 FOR EACH ROW
 BEGIN
+  DECLARE isTask BOOLEAN;
   call updateTimeSheetDates(NEW.timeSheetID);
 
-  SELECT count(*) INTO @isTask FROM task WHERE taskID = NEW.taskID AND taskStatus = 'open_notstarted';
-  IF (@isTask) THEN
+  SELECT count(*) INTO isTask FROM task WHERE taskID = NEW.taskID AND taskStatus = 'open_notstarted';
+  IF (isTask) THEN
     call change_task_status(NEW.taskID,'open_inprogress');
   END IF;
   UPDATE task SET dateActualStart = (SELECT min(dateTimeSheetItem) FROM timeSheetItem WHERE taskID = NEW.taskID)
@@ -311,30 +323,33 @@ DROP TRIGGER IF EXISTS before_update_timeSheetItem $$
 CREATE TRIGGER before_update_timeSheetItem BEFORE UPDATE ON timeSheetItem
 FOR EACH ROW
 BEGIN
+  DECLARE validDate DATE;
+  DECLARE pID INTEGER;
+  DECLARE rate BIGINT(20);
+  DECLARE rateUnitID INTEGER;
   call check_edit_timeSheet(OLD.timeSheetID);
 
   SET NEW.timeSheetItemModifiedUser = personID();
   SET NEW.timeSheetItemModifiedTime = current_timestamp();
 
-  SELECT DATE(NEW.dateTimeSheetItem) INTO @validDate;
-  IF (@validDate = '0000-00-00') THEN
+  SELECT DATE(NEW.dateTimeSheetItem) INTO validDate;
+  IF (validDate = '0000-00-00') THEN
     call alloc_error("Invalid date.");
-    -- SET NEW.dateTimeSheetItem = NULL;
   END IF;
 
   SET NEW.timeSheetItemID = OLD.timeSheetItemID;
   SET NEW.personID = OLD.personID;
-  SELECT projectID INTO @projectID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
-  SELECT rate,rateUnitID INTO @rate,@rateUnitID FROM projectPerson WHERE projectID = @projectID AND personID = OLD.personID;
+  SELECT projectID INTO pID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
+  SELECT rate,rateUnitID INTO rate,rateUnitID FROM projectPerson WHERE projectID = pID AND personID = OLD.personID;
 
   -- if rate is neq project-person rate AND they're don't have perm halt with error about rate
-  IF (neq(NEW.rate,@rate) AND NOT can_edit_rate(personID(),@projectID)) THEN
+  IF (neq(NEW.rate,rate) AND NOT can_edit_rate(personID(),pID)) THEN
     call alloc_error("Time sheet's rate is not editable.");
   END IF;
 
-  IF (NEW.rate IS NULL AND @rate) THEN
-    SET NEW.rate = @rate;
-    SET NEW.timeSheetItemDurationUnitID = @rateUnitID;
+  IF (NEW.rate IS NULL AND rate) THEN
+    SET NEW.rate = rate;
+    SET NEW.timeSheetItemDurationUnitID = rateUnitID;
   END IF;
 END
 $$
@@ -374,11 +389,12 @@ $$
 DROP PROCEDURE IF EXISTS check_edit_task $$
 CREATE PROCEDURE check_edit_task(IN id INTEGER)
 BEGIN
-  SELECT count(project.projectID) INTO @count_project
+  DECLARE count_project INTEGER;
+  SELECT count(project.projectID) INTO count_project
     FROM project LEFT JOIN projectPerson ON projectPerson.projectID = project.projectID 
    WHERE project.projectID = id AND projectPerson.personID = personID();
 
-  IF (id AND @count_project = 0 AND NOT has_perm(personID(),15,"task")) THEN
+  IF (id AND count_project = 0 AND NOT has_perm(personID(),15,"task")) THEN
     call alloc_error('Task is not editable: user not a project member.');
   END IF;
 
@@ -401,9 +417,10 @@ $$
 DROP FUNCTION IF EXISTS can_delete_task $$
 CREATE FUNCTION can_delete_task(id INTEGER) RETURNS BOOLEAN READS SQL DATA
 BEGIN
-  SELECT COUNT(*) INTO @num_audits FROM auditItem WHERE entityName = 'task' AND entityID = id;
+  DECLARE num_audits INTEGER;
+  SELECT COUNT(*) INTO num_audits FROM auditItem WHERE entityName = 'task' AND entityID = id;
   -- perm delete = 4
-  IF (NOT @num_audits AND has_perm(personID(),4,"task")) THEN
+  IF (NOT num_audits AND has_perm(personID(),4,"task")) THEN
     RETURN TRUE;
   END IF;
   RETURN FALSE;
@@ -416,13 +433,14 @@ DROP TRIGGER IF EXISTS before_insert_task $$
 CREATE TRIGGER before_insert_task BEFORE INSERT ON task
 FOR EACH ROW
 BEGIN
+  DECLARE defaultTaskLimit DECIMAL(7,2);
   call check_edit_task(NEW.projectID);
 
   SET NEW.creatorID = personID();
   SET NEW.dateCreated = current_timestamp();
 
   -- inserted closed edge-case
-  IF (NEW.dateActualCompletion AND neq(substring(NEW.taskStatus,1,5), 'close')) THEN
+  IF (NEW.dateActualCompletion AND neq(substring(NEW.taskStatus,1,6), 'closed')) THEN
     SET NEW.taskStatus = 'closed_complete';
   END IF;
 
@@ -434,8 +452,8 @@ BEGIN
   IF (empty(NEW.timeLimit)) THEN SET NEW.timeLimit = NEW.timeExpected; END IF;
   
   IF (empty(NEW.timeLimit) AND NEW.projectID) THEN
-    SELECT defaultTaskLimit INTO @defaultTaskLimit FROM project WHERE projectID = NEW.projectID;
-    SET NEW.timeLimit = @defaultTaskLimit;
+    SELECT defaultTaskLimit INTO defaultTaskLimit FROM project WHERE projectID = NEW.projectID;
+    SET NEW.timeLimit = defaultTaskLimit;
   END IF;
  
   IF (empty(NEW.estimatorID) AND (NEW.timeWorst OR NEW.timeBest OR NEW.timeExpected)) THEN
@@ -449,8 +467,6 @@ BEGIN
   IF (NEW.taskStatus = 'open_inprogress' AND empty(NEW.dateActualStart)) THEN
     SET NEW.dateActualStart = current_date();
   END IF;
-
-
 END
 $$
 
@@ -458,6 +474,7 @@ DROP TRIGGER IF EXISTS before_update_task $$
 CREATE TRIGGER before_update_task BEFORE UPDATE ON task
 FOR EACH ROW
 BEGIN
+  DECLARE num_pending_tasks INTEGER;
   call check_edit_task(OLD.projectID);
 
   IF (neq(@in_change_task_status,1) AND neq(OLD.taskStatus,NEW.taskStatus)) THEN
@@ -480,16 +497,15 @@ BEGIN
   -- if this task is at pending_tasks, and you try and change it to a different status, but we're still
   -- waiting on other tasks to complete, then bomb out with an error
   IF (OLD.taskStatus = 'pending_tasks' AND neq(NEW.taskStatus, OLD.taskStatus)) THEN
-    SELECT count(pendingTask.taskID) INTO @num_pending_tasks FROM pendingTask
+    SELECT count(pendingTask.taskID) INTO num_pending_tasks FROM pendingTask
  LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
      WHERE pendingTask.taskID = NEW.taskID
        AND SUBSTRING(task.taskStatus,1,6) != 'closed';
 
-    IF (@num_pending_tasks > 0 AND neq(@in_change_task_status,1)) THEN
+    IF (num_pending_tasks > 0 AND neq(@in_change_task_status,1)) THEN
       call alloc_error('Task has pending tasks.');
     END IF;
   END IF;
-
 
   IF (NEW.taskStatus = 'open_inprogress' AND neq(NEW.taskStatus, OLD.taskStatus) AND empty(NEW.dateActualStart)) THEN
     SET NEW.dateActualStart = current_date();
@@ -581,29 +597,31 @@ DROP PROCEDURE IF EXISTS update_pending_task $$
 CREATE PROCEDURE update_pending_task(tID INTEGER, status varchar(255))
 BEGIN
   -- declare statements must be at the top
+  DECLARE no_more_rows BOOLEAN;
+  DECLARE num_records INTEGER;
   DECLARE task_that_is_pending INTEGER;
   DECLARE pending_tasks_cursor CURSOR FOR SELECT taskID FROM pendingTask WHERE pendingTaskID = tID;
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET @no_more_rows = TRUE;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET no_more_rows = TRUE;
 
   OPEN pending_tasks_cursor;
   the_loop: LOOP
 
     FETCH pending_tasks_cursor INTO task_that_is_pending;
 
-    SELECT count(pendingTask.taskID) INTO @num_records
+    SELECT count(pendingTask.taskID) INTO num_records
       FROM pendingTask
  LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
      WHERE pendingTask.taskID = task_that_is_pending
        AND pendingTask.pendingTaskID != tID
        AND SUBSTRING(task.taskStatus,1,6) != 'closed';
 
-    IF (@num_records = 0) THEN
+    IF (num_records = 0) THEN
       call change_task_status(task_that_is_pending,status);
       -- this needs to be set again
       SET @in_change_task_status = 1; 
     END IF;
 
-    IF @no_more_rows THEN
+    IF no_more_rows THEN
       CLOSE pending_tasks_cursor;
       LEAVE the_loop;
     END IF;
@@ -614,21 +632,21 @@ $$
 DROP PROCEDURE IF EXISTS change_task_status $$
 CREATE PROCEDURE change_task_status(tID INTEGER, new_status varchar(255))
 BEGIN
-
+  DECLARE old_status VARCHAR(255);
   SET max_sp_recursion_depth = 10; 
   SET @in_change_task_status = 1;
 
-  SELECT taskStatus INTO @old_status FROM task WHERE taskID = tID;
-  IF (neq(@old_status,new_status)) THEN
+  SELECT taskStatus INTO old_status FROM task WHERE taskID = tID;
+  IF (neq(old_status,new_status)) THEN
 
     -- If just moved to closed
-    IF (neq(SUBSTRING(@old_status,1,6),'closed') AND SUBSTRING(new_status,1,6) = 'closed') THEN
+    IF (neq(SUBSTRING(old_status,1,6),'closed') AND SUBSTRING(new_status,1,6) = 'closed') THEN
 
       call update_pending_task(tID, "open_notstarted");
       SET @in_change_task_status = 1; 
 
     -- Else if just re-opened
-    ELSEIF (SUBSTRING(@old_status,1,6) = 'closed' AND neq(SUBSTRING(new_status,1,6),'closed')) THEN
+    ELSEIF (SUBSTRING(old_status,1,6) = 'closed' AND neq(SUBSTRING(new_status,1,6),'closed')) THEN
       UPDATE task SET taskStatus = 'pending_tasks'
        WHERE taskStatus = 'open_notstarted'
          AND taskID IN (SELECT taskID FROM pendingTask WHERE pendingTaskID = tID);
@@ -647,8 +665,9 @@ DROP TRIGGER IF EXISTS before_insert_pendingTask $$
 CREATE TRIGGER before_insert_pendingTask BEFORE INSERT ON pendingTask
 FOR EACH ROW
 BEGIN
-  SELECT projectID INTO @pID FROM task WHERE taskID = NEW.taskID;
-  call check_edit_task(@pID);
+  DECLARE pID INTEGER;
+  SELECT projectID INTO pID FROM task WHERE taskID = NEW.taskID;
+  call check_edit_task(pID);
   IF (NEW.taskID = NEW.pendingTaskID) THEN
     call alloc_error('Task cannot be pending itself.');
   END IF;
@@ -688,8 +707,9 @@ DROP TRIGGER IF EXISTS before_update_pendingTask $$
 CREATE TRIGGER before_update_pendingTask BEFORE UPDATE ON pendingTask
 FOR EACH ROW
 BEGIN
-  SELECT projectID INTO @pID FROM task WHERE taskID = NEW.taskID;
-  call check_edit_task(@pID);
+  DECLARE pID INTEGER;
+  SELECT projectID INTO pID FROM task WHERE taskID = NEW.taskID;
+  call check_edit_task(pID);
 
   IF (NEW.taskID = NEW.pendingTaskID) THEN
     call alloc_error('Task cannot be pending itself.');
@@ -701,8 +721,9 @@ DROP TRIGGER IF EXISTS before_delete_pendingTask $$
 CREATE TRIGGER before_delete_pendingTask BEFORE DELETE ON pendingTask
 FOR EACH ROW
 BEGIN
-  SELECT projectID INTO @pID FROM task WHERE taskID = OLD.taskID;
-  call check_edit_task(@pID);
+  DECLARE pID INTEGER;
+  SELECT projectID INTO pID FROM task WHERE taskID = OLD.taskID;
+  call check_edit_task(pID);
 END
 $$
 
@@ -710,7 +731,6 @@ DROP TRIGGER IF EXISTS after_delete_pendingTask $$
 CREATE TRIGGER after_delete_pendingTask AFTER DELETE ON pendingTask
 FOR EACH ROW
 BEGIN
-
   DECLARE num_rows INTEGER;
   DECLARE t1status varchar(255);
 
