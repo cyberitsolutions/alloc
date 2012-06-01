@@ -31,8 +31,8 @@
           <select name="topTasksNum">{$topTasksNumOptions}</select>
           {page::help("<b>Top Tasks</b><br><br>Control the number of tasks displayed on the home page.")}
         </div>
-        <div style="float:right; width:50%;">
-          <select multiple name="topTasksStatus[]">{$topTasksStatusOptions}</select>
+        <div style="float:right; width:50%;" class="nobr">
+          <select multiple="true" name="topTasksStatus[]">{$topTasksStatusOptions}</select>
           {page::help("<b>Status</b><br><br>Control the status of the tasks that are displayed on the home page.")}
         </div>
       </div>
