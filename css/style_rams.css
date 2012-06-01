@@ -130,7 +130,7 @@ h6 div {
   right:0px !important; right:12px;
 }
 
-textarea, input, select { 
+textarea, input, select, button { 
   font-size:100%; 
   font-family:arial,helvetica,sans-serif; 
   font-weight:normal;
@@ -158,8 +158,9 @@ form {
   margin:0px;
 }
 div#main input[type="submit"],
-div#main input[type="button"] {
-  padding:4px;
+div#main input[type="button"],
+div#main button {
+  padding:4px 8px;
 }
 input[type="text"], 
 input[type="password"], 
@@ -196,6 +197,19 @@ input[readonly="true"], input[readonly="true"]:focus {
   border:1px solid #e0e0e0;
   background-color:#fff;
   color:#777777;
+}
+button {
+  text-shadow:#fff 0px 1px 0px;
+  text-transform:none !important;
+}
+button.delete_button:hover {
+  color:#dc0606;
+}
+button.save_button:hover {
+  color:#10ae00;
+}
+button.filter_button:hover {
+  color:#ef8849;
 }
 
 label.radio {
