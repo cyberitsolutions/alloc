@@ -70,7 +70,7 @@ $(document).ready(function() {
     <th colspan="3" class="header noprint">Wiki
       <span>
         <a id="newFile" href="{$url_alloc_wiki}">New File</a>
-        <a id="newDirectory" href="{$url_alloc_wiki}">New Directory</a>
+        <a id="newDirectory" href="{$url_alloc_wiki}">New Folder</a>
       </span>
     </th>
   </tr>
