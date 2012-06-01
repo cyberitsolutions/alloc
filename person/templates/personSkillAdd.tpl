@@ -25,8 +25,8 @@
       <input name="other_new_skill_name" type="text">
     </td>
     <td>
-      <input type="submit" name="add_skill" value="Add">
-      <input type="submit" name="delete_skill" value="Delete">
+      <button type="submit" name="add_skill" value="1" class="save_button">Add<i class="icon-plus-sign"></i></button>
+      <button type="submit" name="delete_skill" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
     </td>
   </tr>
 </table>

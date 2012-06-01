@@ -137,8 +137,8 @@
           {page::help("<b>Private Mode</b><br><br>Prevent someone who is standing over your shoulder from seeing financial amounts on the homepage.")}
         </div>
         <div style="float:right; width:50%;" class="right">
-          <input type="button" value="Cancel" onClick="toggle_view_edit();">
-          <input type="submit" name="customize_save" value="Save">
+          <a href="" onClick="toggle_view_edit();return false;">Cancel edit</a>&nbsp;&nbsp;
+          <button type="submit" name="customize_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         </div>
       </div>
       <div class="view">
@@ -147,7 +147,7 @@
           {print $privateMode ? "Yes" : "No"}&nbsp;
         </div>
         <div style="float:right; width:50%;" class="right">
-          <input type="button" value="Edit" onClick="toggle_view_edit();">
+          <button type="button" onClick="toggle_view_edit();">Edit<i class="icon-edit"></i></button>
         </div>
       </div>
 

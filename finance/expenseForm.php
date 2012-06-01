@@ -249,21 +249,21 @@ if ($_POST["cancel"]) {
     $TPL["message"][] = "Unable to delete Expense Form";
   }
 
-} else if ($_POST["pend"]) {
+} else if ($_POST["changeTransactionStatus"] == "pending") {
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("pending");
   alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
-} else if ($_POST["approve"]) {
+} else if ($_POST["changeTransactionStatus"] == "approved") {
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("approved");
   alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
   exit();
 
-} else if ($_POST["reject"]) {
+} else if ($_POST["changeTransactionStatus"] == "rejected") {
   $expenseForm->set_value("expenseFormComment",rtrim($expenseForm->get_value("expenseFormComment")));
   $expenseForm->save();
   $expenseForm->set_status("rejected");
@@ -367,10 +367,12 @@ $clientName and $TPL["printer_clientID"] = $clientName;
 $TPL["field_expenseFormComment"] = $expenseForm->get_value("expenseFormComment",DST_HTML_DISPLAY);
 
 if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_edit()) {
+  $TPL["expenseFormButtons"].= '
+  <button type="submit" name="cancel" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+  <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+  <button type="submit" name="finalise" value="1" class="save_button">To Admin<i class="icon-arrow-right"></i></button>
+  ';
 
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"cancel\" value=\"Delete\" class=\"delete_button\">";
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save\">";
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"finalise\" value=\"To Admin -&gt;\">";
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
   $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios; 
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;
@@ -381,17 +383,20 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment",DST_HTML_DISPLAY));
 
 } else if (is_object($expenseForm) && $expenseForm->get_id() && $current_user->have_role("admin")) {
-  
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"unfinalise\" value=\"&lt;- Edit\">";
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Save\">";
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"pend\" value=\"Pending\">";
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"approve\" value=\"Approve\">";
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"reject\" value=\"Reject\">";
+
+  $TPL["expenseFormButtons"].= '
+  <button type="submit" name="unfinalise" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px;"></i>Edit</button>
+  <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+  <select name="changeTransactionStatus"><option value="">Transaction Status<option value="approved">Approve<option value="rejected">Reject<option value="pending">Pending</select>
+  ';
+
+
   $TPL["field_clientID"] = $clientName;
   $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment",$expenseForm->get_value("expenseFormComment",DST_HTML_DISPLAY));
 
 } else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
-  $TPL["expenseFormButtons"].= "&nbsp;<input type=\"submit\" name=\"save\" value=\"Create Expense Form\">";
+  $TPL["expenseFormButtons"].= '&nbsp;
+         <button type="submit" name="save" value="1" class="save_button">Create Expense Form<i class="icon-ok-sign"></i></button>';
   $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";
   $TPL["reimbursementRequiredOption"] = $reimbursementRequiredRadios;
   $TPL["seekClientReimbursementOption"] = $seekClientReimbursementOption;

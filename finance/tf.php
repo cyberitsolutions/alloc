@@ -25,10 +25,10 @@ require_once("../alloc.php");
 function show_person_list($template) {
   global $TPL, $tf;
   $db = new db_alloc;
+  $TPL["person_buttons"] = '
+        <button type="submit" name="person_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="person_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>';
 
-  $TPL["person_buttons"] = "
-          <input type=\"submit\" name=\"person_save\" value=\"Save\">
-          <input type=\"submit\" name=\"person_delete\" value=\"Delete\">";
   $tfID = $tf->get_id();
 
   if ($tfID) {
@@ -47,8 +47,9 @@ function show_person_list($template) {
 
 function show_new_person($template) {
   global $TPL;
-  $TPL["person_buttons"] = "
-          <input type=\"submit\" name=\"person_save\" value=\"Add\">";
+  $TPL["person_buttons"] = '
+        <button type="submit" name="person_save" value="1" class="save_button">Add<i class="icon-plus-sign"></i></button>';
+
   $tfPerson = new tfPerson;
   $tfPerson->set_values("person_");
   include_template($template);

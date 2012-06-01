@@ -65,7 +65,7 @@
       </table>
       <input type="hidden" name="sessID" value="{$sessID}">
             <div style="text-align:right; float:right; padding:10px 0px 8px 0px">
-              <input type="submit" name="comment_save" value="Save Comment">
+              <button type="submit" name="comment_save" value="1" class="save_button">Save Comment<i class="icon-comment"></i></button>
             </div>
       </form>
       </div>

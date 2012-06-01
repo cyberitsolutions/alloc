@@ -86,13 +86,13 @@ $(document).ready(function() {
   <tr>
     <td colspan="2" align="center" class="padded">
       <div class="view" style="margin-top:20px">
-        <input type="button" id="editProduct" value="Edit Product" onClick="$('.view').hide();$('.edit').show();">
+        <button type="button" id="editProduct" value="1" onClick="toggle_view_edit();">Edit Product<i class="icon-edit"></i></button>
       </div>
       <div class="edit" style="margin-top:20px">
         <input type="hidden" name="productSaleID" value="{$_REQUEST.productSaleID}">
-        <input type="submit" name="save" value="Save">
+        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         {if $productID}
-        <input type="button" value="Cancel Edit" onClick="$('.edit').hide();$('.view').show();">
+        <a href="" onClick="toggle_view_edit();">Cancel edit</a>
         {/}
       </div>
     </td>
@@ -127,7 +127,9 @@ $(document).ready(function() {
         {show_productCost_list($productID, "templates/productCostR.tpl")}
         {show_productCost_new("templates/productCostR.tpl")}
         <tr id="product_cost_footer">
-          <th colspan="4" class="center"><input type="submit" name="save_costs" value="Save Costs"></th>
+          <th colspan="4" class="center">
+            <button type="submit" name="save_costs" value="1" class="save_button">Save Costs<i class="icon-ok-sign"></i></button>
+          </th>
         </tr>
       </table>
 
@@ -162,7 +164,9 @@ $(document).ready(function() {
         {show_productCost_list($productID, "templates/productCommissionR.tpl", true)}
         {show_productCost_new("templates/productCommissionR.tpl", true)}
         <tr id="product_commission_footer">
-          <th colspan="5" class="center"><input type="submit" name="save_commissions" value="Save Commissions"></th>
+          <th colspan="5" class="center">
+            <button type="submit" name="save_commissions" value="1" class="save_button">Save Commissions<i class="icon-ok-sign"></i></button>
+          </th>
         </tr>
       </table>
 

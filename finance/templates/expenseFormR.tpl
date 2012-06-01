@@ -15,8 +15,8 @@
     <form method="post" action="{$url_alloc_expenseForm}">
     <input type="hidden" name="expenseFormID" value="{$expenseFormID}">
     <input type="hidden" name="transactionID" value="{$transactionID}">
-    <input type="submit" name="edit" value="Edit">
-    <input type="submit" name="delete" value="Delete" class="delete_button">
+    <button type="submit" name="edit" value="1">Edit<i class="icon-edit"></i></button>
+    <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
     <input type="hidden" name="sessID" value="{$sessID}">
     </form>
     {/}

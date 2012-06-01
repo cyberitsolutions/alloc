@@ -7,7 +7,7 @@
         {if $current_user->have_role("admin") || $current_user->have_role("manage")}
         <a class='magic toggleFilter' href=''>Show Filter</a>
         {/}
-        <a href="{$url_alloc_reminder}">Add Reminder</a>
+        <a href="{$url_alloc_reminder}">New Reminder</a>
       </span>
     </th>
   </tr>

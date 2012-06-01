@@ -19,7 +19,9 @@
         <tr>
           <td><label for="owner">Owner</label> <input type="checkbox" id="owner" name="owner"{$owner_checked}>&nbsp;&nbsp;</td>
 	        <td><label for="showall">Show All</label> <input type="checkbox" id="showall" name="showall"{$showall_checked}></td>
-          <td><input type="submit" name="apply_filter" value="Filter"></td>
+          <td>
+            <button type="submit" name="apply_filter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button>
+          </td>
         </tr>
       </table>
       <input type="hidden" name="sessID" value="{$sessID}">

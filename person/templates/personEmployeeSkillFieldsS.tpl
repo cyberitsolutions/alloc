@@ -2,7 +2,7 @@
 <tr>
   <th class="header">Areas of Expertise
     <span>
-      <a href={$url_alloc_personSkillMatrix}>Full Skill Matrix </a>
+      <a href={$url_alloc_personSkillMatrix}>Skill Matrix</a>
     </span>
   </th>
 </tr>
@@ -32,7 +32,7 @@
           </select>
         </td>
         <td class="right" width="20%">
-          <input type="submit" name="personExpertiseItem_add" value="Add">
+          <button type="submit" name="personExpertiseItem_add" value="1" class="save_button">Add<i class="icon-plus-sign"></i></button>
         </td>
       </tr>
     </table>

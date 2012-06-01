@@ -20,7 +20,9 @@
         </tr>
         <tr>
           <td><input type="text" size="30" name="filter"></td>
-          <td><input type="submit" name="submit" value="Filter"></td>
+          <td>
+            <button type="submit" name="submit" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button>
+          </td>
         </tr>
       </table>
       <input type="hidden" name="sessID" value="{$sessID}">

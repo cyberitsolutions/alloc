@@ -13,7 +13,7 @@
       </select>
       <input type="hidden" name="parentType" value="{$parentType}">
       <input type="hidden" name="step" value="3">
-      <input type="submit" name="submitParentName" value="Next">
+      <button type="submit" name="submitParentName" value="1" class="save_button">Next<i class="icon-arrow-right"></i></button>
       <input type="hidden" name="sessID" value="{$sessID}">
       </form>
     </td>

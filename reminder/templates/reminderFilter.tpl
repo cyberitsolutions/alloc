@@ -8,7 +8,9 @@
         <tr>
           <td><select name="filter_recipient"><option value="">{$recipientOptions}</select></td>
           <td><select name="filter_reminderActive"><option value="">{$reminderActiveOptions}</select></td>
-          <td><input type="submit" name="filter" value="Filter"></td>
+          <td>
+            <button type="submit" name="filter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button>
+          </td>
         </tr>
       </table>
       <input type="hidden" name="sessID" value="{$sessID}">

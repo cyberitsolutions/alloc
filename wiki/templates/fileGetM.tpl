@@ -16,7 +16,7 @@
     <br><br>
     <div class="noprint" style="text-align:center">
       {if is_file(wiki_module::get_wiki_path().$file) && is_writable(wiki_module::get_wiki_path().$file)}
-      <input type="button" value="Edit Document" onClick="$('.view').hide();$('.edit').show();">
+      <button type="button" value="1" onClick="toggle_view_edit();">Edit Document<i class="icon-edit"></i></button>
       {/}
     </div>
   </div>

@@ -89,10 +89,6 @@ require_once("../alloc.php");
   function show_commission_list($template_name) {
     global $TPL, $db, $projectID;
 
-    $TPL["commission_list_buttons"] = "
-      <input type=\"submit\" name=\"commission_save\" value=\"Save\">
-      <input type=\"submit\" name=\"commission_delete\" value=\"Delete\">";
-
     if ($projectID) {
       $query = sprintf("SELECT * from projectCommissionPerson WHERE projectID= %d", $projectID);
       $db->query($query);
@@ -114,8 +110,7 @@ require_once("../alloc.php");
     if (!$projectID) {
       return;
     }
-
-    $TPL["commission_list_buttons"] = "<input type=\"submit\" name=\"commission_save\" value=\"Add\">";
+    $TPL["commission_new"] = true;
     $commission_item = new projectCommissionPerson;
     $commission_item->set_values("commission_");
     $TPL["commission_projectID"] = $projectID;

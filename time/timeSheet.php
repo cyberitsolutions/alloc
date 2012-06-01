@@ -66,10 +66,18 @@ if (!$current_user->is_employee()) {
 
         $TPL["create_transaction_buttons"] = "<tr><td colspan=\"8\" align=\"center\" style=\"padding:10px;\">";
         $TPL["create_transaction_buttons"].= "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">";
-        $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_default\" value=\"Create Default Transactions\">";
-        $TPL["create_transaction_buttons"].= "&nbsp;";
-        config::for_cyber() and $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"create_transactions_old\" value=\"Create Old Style Transactions".$cyber_is_client."\">&nbsp;";
-        $TPL["create_transaction_buttons"].= "<input type=\"submit\" name=\"delete_all_transactions\" value=\"Delete Transactions\" class=\"delete_button\"></td>";
+
+        $TPL["create_transaction_buttons"].= '
+         <button type="submit" name="create_transactions_default" value="1" class="save_button">Create Default Transactions<i class="icon-cogs"></i></button>
+        ';
+
+        config::for_cyber() and $TPL["create_transaction_buttons"].= '
+         <button type="submit" name="create_transactions_old" value="1" class="save_button">Create Old Style Transactions<i class="icon-cogs"></i></button>';
+
+        $TPL["create_transaction_buttons"] .= '
+        <button type="submit" name="delete_all_transactions" value="1" class="delete_button">Delete Transactions<i class="icon-trash"></i></button>
+        ';
+
         $TPL["create_transaction_buttons"].= "<input type=\"hidden\" name=\"sessID\" value=\"".$TPL["sessID"]."\"></form></tr></tr>";
       }
 
@@ -119,8 +127,10 @@ if (!$current_user->is_employee()) {
           $TPL["status_options"] = page::select_options($status_options, $transaction->get_value("status"));
           $TPL["transactionType_options"] = page::select_options($transactionType_options, $transaction->get_value("transactionType"));
           $TPL["percent_dropdown"] = page::select_options($percent_array, $empty);
-          $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Save\">
-                                         <input type=\"submit\" name=\"transaction_delete\" value=\"Delete\">";
+          $TPL["transaction_buttons"] = '
+            <button type="submit" name="transaction_save" value="1" class="save_button">Save<i class="icon-plus-sign"></i></button>
+            <button type="submit" name="transaction_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+          ';
           include_template($template_name);
         }
 
@@ -168,7 +178,9 @@ if (!$current_user->is_employee()) {
       $TPL["transaction_timeSheetID"] = $timeSheet->get_id();
       $TPL["transaction_transactionDate"] = date("Y-m-d");
       $TPL["transaction_product"] = "";
-      $TPL["transaction_buttons"] = "<input type=\"submit\" name=\"transaction_save\" value=\"Add\">";
+      $TPL["transaction_buttons"] = '
+            <button type="submit" name="transaction_save" value="1" class="save_button">Add<i class="icon-plus-sign"></i></button>
+      ';
       $TPL["percent_dropdown"] = page::select_options($percent_array, $empty);
       include_template($template);
     }
@@ -194,8 +206,9 @@ if (!$current_user->is_employee()) {
     $db_task = new db_alloc;
 
     if (is_object($timeSheet) && $timeSheet->get_value("status") == "edit") {
-      $TPL["timeSheetItem_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_edit\" value=\"Edit\">";
-      $TPL["timeSheetItem_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\" class=\"delete_button\">";
+      $TPL["timeSheetItem_buttons"] = '
+        <button type="submit" name="timeSheetItem_edit" value="1">Edit<i class="icon-edit"></i></button>
+        <button type="submit" name="timeSheetItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>';
     }
 
     $TPL["currency"] = page::money($timeSheet->get_value("currencyTypeID"),'',"%S");
@@ -309,8 +322,9 @@ if (!$current_user->is_employee()) {
         $timeSheetItem->set_values("tsi_");
         $TPL["tsi_rate"] = $timeSheetItem->get_value("rate",DST_HTML_DISPLAY);
         $taskID = $timeSheetItem->get_value("taskID");
-        $TPL["tsi_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Save Time Sheet Item\">";
-        $TPL["tsi_buttons"].= "<input type=\"submit\" name=\"timeSheetItem_delete\" value=\"Delete\">";
+        $TPL["tsi_buttons"] = '
+         <button type="submit" name="timeSheetItem_save" value="1" class="save_button">Save Item<i class="icon-ok-sign"></i></button>
+         <button type="submit" name="timeSheetItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>';
 
         $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
         $TPL["tsi_commentPrivate"] and $TPL["commentPrivateChecked"] = " checked";
@@ -321,7 +335,8 @@ if (!$current_user->is_employee()) {
 
       // Else default values for creating a new timeSheetItem
       } else {
-        $TPL["tsi_buttons"] = "<input type=\"submit\" name=\"timeSheetItem_save\" value=\"Add Time Sheet Item\">";
+        $TPL["tsi_buttons"] = '<button type="submit" name="timeSheetItem_save" value="1" class="save_button">Add Item<i class="icon-plus-sign"></i></button>';
+
         $TPL["tsi_personID"] = $current_user->get_id();
         $timeSheet->load_pay_info();
         $TPL["tsi_rate"] = $timeSheet->pay_info["project_rate"];
@@ -763,7 +778,7 @@ $percent_array = array(""=>"Calculate %",
 // display the buttons to move timesheet forward and backward.
 
 if (!$timeSheet->get_id()) {
-  $TPL["timeSheet_ChangeStatusButton"] = "<input type=\"submit\" name=\"save\" value=\"Create Time Sheet\"> ";
+  $TPL["timeSheet_ChangeStatusButton"] = '<button type="submit" name="save" value="1" class="save_button">Create Time Sheet<i class="icon-ok-sign"></i></button>';
 }
 
 $radio_email = "<input type=\"checkbox\" id=\"dont_send_email\" name=\"dont_send_email\" value=\"1\"".$TPL["dont_send_email_checked"]."> <label for=\"dont_send_email\">Don't send email</label><br>";
@@ -805,17 +820,14 @@ switch ($timeSheet->get_value("status")) {
 
 case 'edit':
   if (($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) && ($timeSheetID)) {
-    if ($projectManagers) {
-      $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">
-          <input type=\"submit\" name=\"save\" value=\"Save\"> 
-          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Manager --&gt;\"> ";
-    } else {
-      $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">
-          <input type=\"submit\" name=\"save\" value=\"Save\"> 
-          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Admin --&gt;\"> ";
-    }
+
+    $destlabel = "Admin";
+    $projectManagers and $destlabel = "Manager";
+    $TPL["timeSheet_ChangeStatusButton"] = '
+        <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="save_and_MoveForward" value="1" class="save_button">Time Sheet to '.$destlabel.'<i class="icon-arrow-right"></i></button>';
+
   $TPL["payment_insurance"] = $payment_insurance;
   }
   break;
@@ -824,30 +836,21 @@ case 'manager':
   if (in_array($current_user->get_id(),$projectManagers)
       || ($timeSheet->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
 
-    $TPL["timeSheet_ChangeStatusButton"] = "
-        <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
-        <input type=\"submit\" name=\"save\" value=\"Save\">
-        <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet to Admin --&gt;\">
-        ";
+    $TPL["timeSheet_ChangeStatusButton"] = '
+        <button type="submit" name="save_and_MoveBack" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Back</button>
+        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="save_and_MoveForward" value="1" class="save_button">Time Sheet to Admin<i class="icon-arrow-right"></i></button>';
+
     $TPL["radio_email"] = $radio_email;
   }
   break;
 
 case 'admin':
   if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-    if ($projectManagers) {
-      $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
-          <input type=\"submit\" name=\"save\" value=\"Save\">
-          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Invoiced --&gt;\">
-          ";
-    } else {
-      $TPL["timeSheet_ChangeStatusButton"] = "
-          <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
-          <input type=\"submit\" name=\"save\" value=\"Save\">
-          <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Invoiced --&gt;\">
-          ";
-    }
+    $TPL["timeSheet_ChangeStatusButton"] = '
+        <button type="submit" name="save_and_MoveBack" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Back</button>
+        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="save_and_MoveForward" value="1" class="save_button">Time Sheet to Invoiced<i class="icon-arrow-right"></i></button>';
 
     $TPL["radio_email"] = $radio_email;
 
@@ -856,20 +859,20 @@ case 'admin':
 
 case 'invoiced':
   if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-    $TPL["timeSheet_ChangeStatusButton"] = "
-        <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
-        <input type=\"submit\" name=\"save\" value=\"Save\">
-        <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Time Sheet Complete -&gt;\">";
+    $TPL["timeSheet_ChangeStatusButton"] = '
+        <button type="submit" name="save_and_MoveBack" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Back</button>
+        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="save_and_MoveForward" value="1" class="save_button">Time Sheet Complete<i class="icon-arrow-right"></i></button>';
 
     $TPL["radio_email"] = $radio_email;
-    
-
   }
   break;
 
 case 'finished':
   if ($timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-    $TPL["timeSheet_ChangeStatusButton"] = "<input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">";
+    $TPL["timeSheet_ChangeStatusButton"] = '
+        <button type="submit" name="save_and_MoveBack" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Back</button>';
+
   }
   break;
 

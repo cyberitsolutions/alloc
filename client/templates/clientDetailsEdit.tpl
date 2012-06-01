@@ -77,7 +77,15 @@
         </tr>
         <tr>
           <td></td>
-          <td colspan="2" align="right" class="nobr">{$clientDetails_buttons}</td>
+          <td colspan="2" align="right" class="nobr">
+          {if $client_clientID}
+          <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+          <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+          &nbsp;&nbsp;<a href="{$url_alloc_client}clientID={$client_clientID}">Cancel edit</a>
+          {else}
+          <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+          {/}
+          </td>
         </tr>
       </table>
     <input type="hidden" name="sessID" value="{$sessID}">

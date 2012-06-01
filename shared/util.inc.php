@@ -293,10 +293,9 @@ function get_attachments($entity, $id, $ops=array()) {
                             <input type=\"hidden\" name=\"id\" value=\"".$id."\">
                             <input type=\"hidden\" name=\"file\" value=\"".$file."\">
                             <input type=\"hidden\" name=\"entity\" value=\"".$entity."\">
-                            <input type=\"submit\" name=\"delete_file_attachment\" value=\"Delete\" class=\"delete_button\">
                             <input type=\"hidden\" name=\"sbs_link\" value=\"attachments\">
-                            <input type=\"hidden\" name=\"sessID\" value=\"{$sessID}\">
-                            </form>";
+                            <input type=\"hidden\" name=\"sessID\" value=\"{$sessID}\">"
+                          .'<button type="submit" name="delete_file_attachment" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>'."</form>";
 
 
           $row["mtime"] = date("Y-m-d H:i:s",filemtime($dir.DIRECTORY_SEPARATOR.$file));

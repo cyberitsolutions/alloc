@@ -50,13 +50,13 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
   $transactionRepeat->read_globals();
 
   if ($current_user->have_role("admin")) { 
-    if ($_POST["pending"]) {
+    if ($_POST["changeTransactionStatus"] == "pending") {
       $transactionRepeat->set_value("status","pending");
       $TPL["message_good"][] = "Repeating Expense form Pending.";
-    } else if ($_POST["approved"]) {
+    } else if ($_POST["changeTransactionStatus"] == "approved") {
       $transactionRepeat->set_value("status","approved");
       $TPL["message_good"][] = "Repeating Expense form Approved!";
-    } else if ($_POST["rejected"]) {
+    } else if ($_POST["changeTransactionStatus"] == "rejected") {
       $transactionRepeat->set_value("status","rejected");
       $TPL["message_good"][] = "Repeating Expense form  Rejected.";
     }
@@ -150,9 +150,9 @@ $TPL["basisOptions"] = page::select_options(array("weekly"     =>"weekly"
 $TPL["transactionTypeOptions"] = page::select_options(transaction::get_transactionTypes(), $transactionRepeat->get_value("transactionType"));
 
 if (is_object($transactionRepeat) && $transactionRepeat->get_id() && $current_user->have_role("admin")) {
-  $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"pending\" value=\"Pending\">";
-  $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"approved\" value=\"Approve\">";
-  $TPL["adminButtons"].= "&nbsp;<input type=\"submit\" name=\"rejected\" value=\"Reject\">";
+  $TPL["adminButtons"].= '
+  <select name="changeTransactionStatus"><option value="">Transaction Status<option value="approved">Approve<option value="rejected">Reject<option value="pending">Pending</select>
+  ';
 }
 
 if (is_object($transactionRepeat) && $transactionRepeat->get_id() && $transactionRepeat->get_value("status") == "pending") {

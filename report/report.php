@@ -197,7 +197,9 @@ if ($_POST["do_step_2"]) {
   $TPL["dump_options"].= "<option value=\"single\"".$s_q_sel.">Single";
   $TPL["dump_options"].= "<option value=\"double\"".$d_q_sel.">Double";
   $TPL["dump_options"].= "</select><br>";
-  $TPL["dump_options"].= "<br><br><input type=\"submit\" value=\"Generate Database Report\" name=\"do_step_3\">";
+  $TPL["dump_options"].= '<br><br>
+  <button type="submit" name="do_step_3" value="1" class="filter_button">Generate Database Report<i class="icon-cogs"></i></button>
+  ';
 }
 
 

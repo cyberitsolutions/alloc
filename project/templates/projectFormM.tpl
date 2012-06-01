@@ -311,12 +311,12 @@ function clickClientStatus(e) {
   <tr>
     <td align="center" colspan="5">
       <div class="view" style="margin-top:20px">
-        <input type="button" id="editProject" value="Edit Project" onClick="$('.view').hide();$('.edit').show();clickClientStatus();">
+        <button type="button" id="editProject" value="1" onClick="$('.view').hide();$('.edit').show();clickClientStatus();">Edit Project<i class="icon-edit"></i></button>
       </div>
       <div class="edit" style="margin-top:20px">
-        <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
-        <input type="submit" name="delete" value="Delete" class="delete_button">
-        <input type="button" value="Cancel Edit" onClick="$('.edit').hide();$('.view').show();">
+        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+        &nbsp;&nbsp;<a href="" onClick="$('.edit').hide();$('.view').show();return false;">Cancel edit</a>
       </div>
     </td>
   </tr>
@@ -386,7 +386,7 @@ function clickClientStatus(e) {
 {show_new_person("templates/projectPersonListR.tpl")}
         <tr id="project_people_footer">
           <td colspan="5" class="center">
-            <input type="submit" name="person_save" value="Save Project People">
+            <button type="submit" name="person_save" value="1" class="save_button">Save Project People<i class="icon-ok-sign"></i></button>
             <input type="hidden" name="projectID" value="{$project_projectID}">
             <input type="hidden" name="sbs_link" value="people">
           </td>

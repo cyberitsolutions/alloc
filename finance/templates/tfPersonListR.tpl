@@ -1,12 +1,12 @@
 <form action="{$url_alloc_tf}" method="post">
 <tr>
-  <td>
+  <td style="width:1%;">
     <select name="person_personID">
       <option value="">
       {show_person_options()}
     </select>
   </td>
-  <td align="center">
+  <td align="left">
     {$person_buttons}
   </td>
 </tr>

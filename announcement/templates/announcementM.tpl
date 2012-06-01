@@ -24,8 +24,8 @@
   </tr>
   <tr>
     <td colspan="2" align="center">
-      <input type="submit" value="Save" name="save">
-      <input type="submit" value="Delete" name="delete" class="delete_button">
+      <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+      <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
     </td>
   </tr>
 </table>

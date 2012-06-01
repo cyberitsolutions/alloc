@@ -10,7 +10,7 @@
 
       <form action="{$url_alloc_report}" method="post">
         <select name="mod" size="1">{$module_options}</select>
-        <input type="submit" value="Show Fields" name="do_step_2">
+        <button type="submit" name="do_step_2" value="1" class="save_button">Show Fields<i class="icon-arrow-right"></i></button>
       <input type="hidden" name="sessID" value="{$sessID}">
       </form>
 

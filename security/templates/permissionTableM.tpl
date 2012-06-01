@@ -10,7 +10,7 @@
     <td width="10%">Table</td>
     <td>
       <select name="tableName">{$tableNameOptions}</select>
-      <input type="submit" value="Next" name="next">
+      <button type="submit" name="next" value="1" class="save_button">Next<i class="icon-arrow-right"></i></button>
     </td>
   </tr>
 </table>

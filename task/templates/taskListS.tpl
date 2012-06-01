@@ -122,7 +122,7 @@
           <span style="display:inline" id="parentTaskDropdown"></span>
         </span>
         <span class="hidden" id="taskStatus_span"><select name="taskStatus">{page::select_options(task::get_task_statii_array(true))}</select></span>
-        <input class="hidden" type="submit" id="mass_update" name="mass_update" value="Update Tasks" style="margin-left:5px">
+        <button type="submit" id="mass_update" name="mass_update" value="1" class="hidden save_button" style="margin-left:5px;text-transform:none !important;">Update Tasks<i class="icon-ok-sign"></i></button>
       </th>
     </tr>
   </tfoot>

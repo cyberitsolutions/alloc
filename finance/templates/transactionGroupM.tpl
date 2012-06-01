@@ -54,7 +54,7 @@ $(document).ready(function() {
         {show_transaction_new("templates/transactionGroupR.tpl")}
         <tr id="transactions_footer">
           <th colspan="9" class="center">
-            <input type="submit" name="save_transactions" value="Save Transactions">
+            <button type="submit" name="save_transactions" value="1" class="save_button">Save Transactions<i class="icon-ok-sign"></i></button>
           </th>
         </tr>
       </table>
