@@ -10,7 +10,9 @@
       <tr>
         <td><select name="skill_class">{$skill_classes}</select></td>
         <td><select name="talent">{$skills}</select></td>
-        <td><input type="submit" value="Filter"></td>
+        <td>
+          <button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button>
+        </td>
       </tr>
     </table>
     <input type="hidden" name="sessID" value="{$sessID}">

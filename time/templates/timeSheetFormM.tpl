@@ -41,11 +41,14 @@
 
   <tr>
 	  <td>{page::help("engineer_amount")}</td>
-    <td align="right">Amount:</td>
-    <td>{$total_dollars}
+    <td align="right" style="vertical-align:top;">Amount:</td>
+    <td>
+      <span style="float:left">{$total_dollars}&nbsp;</span>
       {if $timeSheet_status && $timeSheet_status != "finished" && $timeSheet_status != "edit" && $ts_rate_editable && ($is_manager || $is_admin)}
-        <input type="submit" name="updateRate" value="Update">
+        <button type="submit" name="updateRate" value="1" class="filter_button"
+        style="float:left;font-size:80%;padding:1px;"><i class="icon-repeat" style="margin:0px;"></i></button>
       {/}
+
     </td>
     <td align="right">Project:{page::mandatory($timeSheet_projectID)}</td>
 	  <td width="30%" class="nobr"><div id="projectDropdown" style="display:inline">{$show_project_options}</div></td>
@@ -53,13 +56,13 @@
 
   <tr>
 	  <td>{page::help("client_billing")}</td>
-    <td align="right">Client Billing:</td>
+    <td align="right" style="vertical-align:top;">Client Billing:</td>
     <td>
-      <nobr>{$total_customerBilledDollars}{$ex_gst}
+      <span style="float:left" class="nobr">{$total_customerBilledDollars}{$ex_gst}&nbsp;</span>
       {if $timeSheet_status && $timeSheet_status != "finished" && $timeSheet_status != "edit" && $ts_rate_editable && ($is_manager || $is_admin)}
-        <input type="submit" name="updateCB" value="Update">
+        <button type="submit" name="updateCB" value="1" class="filter_button"
+        style="float:left; font-size:80%;padding:1px;"><i class="icon-repeat" style="margin:0px;"></i></button>
       {/}
-      </nobr>
     </td>
     <td align="right">Time Sheet Manager{$manager_plural}:</td>
     <td>{=$managers}</td>

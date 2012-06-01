@@ -116,9 +116,9 @@ case 3:
     $TPL["reminder_title"] = "Edit Reminder";
     $TPL["reminder_buttons"] = <<<EOD
 <input type="hidden" name="reminder_id" value="{$reminderID}">
-<input type="submit" name="reminder_update" value="Save">
-<input type="submit" name="reminder_delete" value="Delete" class="delete_button">
-<input type="button" value="Cancel Edit" onClick="toggle_view_edit();">
+<button type="submit" name="reminder_update" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+<button type="submit" name="reminder_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+&nbsp;&nbsp;<a href="" onClick="toggle_view_edit();return false;">Cancel edit</a>
 EOD;
       
   } else {
@@ -126,8 +126,7 @@ EOD;
     $reminder->set_value('reminderLinkID', $parentID);
     $TPL["reminder_title"] = "New Reminder";
     $TPL["reminder_buttons"] = <<<EOD2
-<input type="submit" name="reminder_save" value="Save">
-<input type="submit" name="reminder_cancel" value="Cancel">
+<button type="submit" name="reminder_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
 EOD2;
   }
 

@@ -56,7 +56,9 @@
         <tr>
           <td><input type="text" size="70" name="needle" value="{=$needle2}"></td>
           <td><select size="1" name="category">{$search_category_options}</select></td>
-          <td><input type="submit" name="search" value="Search"></td>
+          <td>
+          <button type="submit" name="search" value="1" class="filter_button">Search<i class="icon-info-sign"></i></button>
+          </td>
 	        <td><input type="checkbox" name="idRedirect" {$redir} />Disable redirection by ID</td>
 	        <td><a href="{$url_alloc_helpfile}#search">Help</a></td>
         </tr>

@@ -18,7 +18,7 @@
               </tr>
             </table>
           </td>
-          <td><input type="submit" name="applyFilter" value="Filter"></td>
+          <td><button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button></td>
         </tr>
         <tr>
         </tr>

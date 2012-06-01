@@ -59,16 +59,10 @@ require_once("../alloc.php");
 
   function show_action_buttons() {
     global $person, $TPL;
-
-    echo "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">";
-
+    echo '<button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button> ';
     if ($person->have_perm(PERM_DELETE)) {
-      echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-      echo "<input type=\"submit\" name=\"delete\" value=\"Delete Record\" onClick=\"return confirm('Deleting users will have adverse affects on any projects/tasks/etc that the user was associated with. It is recommended to disable the user account instead. Are you sure you want to delete this user?')\">"; 
+      echo '<button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button> ';
     } 
-
-    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    echo "<a href=\"".$TPL["url_alloc_personList"]."\">Return to Person List</a>"; 
   }
 
   function include_employee_fields() {
@@ -85,8 +79,10 @@ require_once("../alloc.php");
   function show_person_areasOfExpertise($template) {
     global $TPL, $personID, $skill_header, $skill_prof, $skills_got;
 
-    $TPL["personExpertiseItem_buttons"] = "<input type=\"submit\" name=\"personExpertiseItem_save\" value=\"Save\">
-            <input type=\"submit\" name=\"personExpertiseItem_delete\" value=\"Delete\">";
+    $TPL["personExpertiseItem_buttons"] = '
+       <button type="submit" name="personExpertiseItem_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+       <button type="submit" name="personExpertiseItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+         ';
     $proficiencys = array("Novice"=>"Novice", "Junior"=>"Junior", "Intermediate"=>"Intermediate", "Advanced"=>"Advanced", "Senior"=>"Senior");
 
     # step through the list of skills ordered by skillclass

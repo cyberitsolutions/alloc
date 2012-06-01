@@ -45,9 +45,10 @@ function show_new_invoiceItem($template) {
       $invoiceItem->set_id($invoiceItemID);
       $invoiceItem->select();
       $invoiceItem->set_tpl_values("invoiceItem_");
-      $TPL["invoiceItem_buttons"] = "<input type=\"submit\" name=\"invoiceItem_save[".$invoiceItemID."]\" value=\"Save Invoice Item\">";
-      $TPL["invoiceItem_buttons"].= "<input type=\"submit\" name=\"invoiceItem_delete[".$invoiceItemID."]\" value=\"Delete\">";
-     
+      $TPL["invoiceItem_buttons"] = '
+        <button type="submit" name="invoiceItem_save['.$invoiceItemID.']" value="1">Save Item<i class="icon-edit"></i></button>
+        <button type="submit" name="invoiceItem_delete['.$invoiceItemID.']" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+      ';
       
       if ($invoiceItem->get_value("timeSheetID")) {
         unset($TPL["div2"]);
@@ -64,7 +65,9 @@ function show_new_invoiceItem($template) {
     } else {
       $invoiceItem = new invoiceItem;
       $invoiceItem->set_values("invoiceItem_");
-      $TPL["invoiceItem_buttons"] = "<input type=\"submit\" name=\"invoiceItem_save\" value=\"Add Invoice Item\">";
+      $TPL["invoiceItem_buttons"] = '
+         <button type="submit" name="invoiceItem_save" value="1" class="save_button">Add Item<i class="icon-plus-sign"></i></button>
+      ';
     }
 
     // Build dropdown lists for timeSheet and expenseForm options.
@@ -314,8 +317,10 @@ function show_invoiceItem_list() {
       
 
     } else if (is_object($invoice) && $invoice->get_value("invoiceStatus") == "edit") {
-      $TPL["invoiceItem_buttons"] = "<input type=\"submit\" name=\"invoiceItem_edit[".$invoiceItem->get_id()."]\" value=\"Edit\">";
-      $TPL["invoiceItem_buttons"].= "<input type=\"submit\" name=\"invoiceItem_delete[".$invoiceItem->get_id()."]\" value=\"Delete\" class=\"delete_button\">";
+      $TPL["invoiceItem_buttons"] = '
+        <button type="submit" name="invoiceItem_edit['.$invoiceItem->get_id().']" value="1">Edit<i class="icon-edit"></i></button>
+        <button type="submit" name="invoiceItem_delete['.$invoiceItem->get_id().']" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+      ';
     }
 
     if ($invoiceItem->get_value("timeSheetID")) {
@@ -629,16 +634,18 @@ if ($current_user->have_role('admin')) {
 
   if (!$invoiceID) {
     $_GET["clientID"] and $TPL["clientID"] = $_GET["clientID"];
-    $TPL["invoice_buttons"] = "<input type=\"submit\" name=\"save\" value=\"Create Invoice\">";
+    $TPL["invoice_buttons"] = '
+         <button type="submit" name="save" value="1" class="save_button">Create Invoice<i class="icon-ok-sign"></i></button>
+    ';
     $TPL["field_clientID"] = $client_select;
     $TPL["field_projectID"] = $project_select;
 
   } else if ($invoice->get_value("invoiceStatus") == "edit") {
-    $TPL["invoice_buttons"] = "
-    <input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">
-    <input type=\"submit\" name=\"save\" value=\"Save\"> 
-    <input type=\"submit\" name=\"save_and_MoveForward\" value=\"".$statii["reconcile"]." --&gt;\"> 
-    ";
+    $TPL["invoice_buttons"] = '
+        <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="save_and_MoveForward" value="1" class="save_button">'.$statii["reconcile"].'<i class="icon-arrow-right"></i></button>
+    ';
     $options["clientStatus"] = "Current";
     $options["return"] = "dropdown_options";
     $ops = client::get_list($options);
@@ -646,12 +653,13 @@ if ($current_user->have_role('admin')) {
     $TPL["field_projectID"] = $project_select;
 
   } else if ($invoice->get_value("invoiceStatus") == "reconcile") {
-    $TPL["invoice_buttons"] = "
-    <input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">
-    <input type=\"submit\" name=\"save\" value=\"Save\">
-    <input type=\"submit\" name=\"save_and_MoveForward\" value=\"Invoice to ".$statii["finished"]." --&gt;\">
-    <select name=\"changeTransactionStatus\"><option value=\"\">Transaction Status<option value=\"approved\">Approve<option value=\"rejected\">Reject</select>
-    ";
+
+    $TPL["invoice_buttons"] = '
+        <button type="submit" name="save_and_MoveBack" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Back</button>
+        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="save_and_MoveForward" value="1" class="save_button">Invoice to '.$statii["finished"].'<i class="icon-arrow-right"></i></button>
+        <select name="changeTransactionStatus"><option value="">Transaction Status<option value="approved">Approve<option value="rejected">Reject</select>';
+
     $TPL["field_invoiceNum"] = $TPL["invoiceNum"];
     $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;
@@ -661,7 +669,9 @@ if ($current_user->have_role('admin')) {
     $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
 
   } else if ($invoice->get_value("invoiceStatus") == "finished") {
-    $TPL["invoice_buttons"] = "<input type=\"submit\" name=\"save_and_MoveBack\" value=\"&lt;-- Back\">";
+    $TPL["invoice_buttons"] = '
+        <button type="submit" name="save_and_MoveBack" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Back</button>
+    ';
     $TPL["field_invoiceNum"] = $TPL["invoiceNum"];
     $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;

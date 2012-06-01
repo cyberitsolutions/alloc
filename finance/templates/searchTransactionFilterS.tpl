@@ -29,8 +29,8 @@
         <label for="st_td">Transaction Date</label>
       </td>
       <td>
-        <input type="submit" name="download" value="CSV">
-        <input type="submit" name="applyFilter" value="Filter">
+        <button type="submit" name="download" value="1" class="filter_button">CSV<i class="icon-download"></i></button>
+        <button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button>
       </td>
     </tr>
     <tr>

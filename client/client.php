@@ -29,22 +29,7 @@ require_once("../alloc.php");
 
   function show_client_details_edit($template) {
     global $TPL, $clientID;
-
-    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save Client Contact\">";
-
     if (!isset($clientID) || $_POST["client_edit"] || $TPL["message"]) {
-
-      // If new client
-      if (!$clientID) {
-        $TPL["clientDetails_buttons"] = "<input type=\"submit\" name=\"save\" value=\"Create New Client\">";
-          
-      // Else just editing
-      } else {
-        $TPL["clientDetails_buttons"] =
-          "<input type=\"submit\" name=\"save\" value=\"&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;\">
-           <input type=\"submit\" name=\"delete\" value=\"Delete\" class=\"delete_button\">
-           <input type=\"submit\" name=\"cancel\" value=\"Cancel Edit\">";
-      }
       include_template($template);
     }
   }
@@ -73,8 +58,6 @@ require_once("../alloc.php");
     $client = new client;
     $client->set_id($clientID);
     $client->select();
-
-    $TPL["clientContactItem_buttons"] = "<input type=\"submit\" name=\"clientContact_save\" value=\"Save Client Contact\">";
 
     // other contacts
     $query = sprintf("SELECT * 
@@ -154,8 +137,10 @@ require_once("../alloc.php");
         $class_extra = " quiet";
       }
 
-      $buttons = "<nobr><input type=\"submit\" name=\"clientContact_edit\" value=\"Edit\"> 
-                        <input type=\"submit\" name=\"clientContact_delete\" value=\"Delete\" class=\"delete_button\"></nobr>";
+      $buttons = '<nobr>
+      <button type="submit" name="clientContact_edit" value="1"">Edit<i class="icon-edit"></i></button>
+      <button type="submit" name="clientContact_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+      </nobr>';
 
       $rtn[] =  '<form action="'.$TPL["url_alloc_client"].'" method="post">';
       $rtn[] =  '<input type="hidden" name="clientContactID" value="'.$clientContact->get_id().'">';

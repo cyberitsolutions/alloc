@@ -23,7 +23,7 @@
         </tr>
       </table>
       <div style="text-align:center">
-        <input type="submit" name="client_edit" value="Edit Client">
+        <button type="submit" name="client_edit" value="1">Edit Client<i class="icon-edit"></i></button>
       </div>
     <input type="hidden" name="sessID" value="{$sessID}">
     </form>

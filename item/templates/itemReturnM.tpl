@@ -28,7 +28,9 @@
         <tr>
           <td>{=$itemName}</td>
           <td>{=$itemNotes}</td>
-          <td class="right"><input type="submit" name="returnItem" value="Return Item"></td>
+          <td class="right">
+            <button type="submit" name="returnItem" value="1" class="save_button">Return Item<i class="icon-ok-sign"></i></button>
+          </td>
         </tr>
       </table>
     </td>

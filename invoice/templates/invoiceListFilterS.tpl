@@ -26,7 +26,9 @@
         <tr>
           <td colspan="4">Note: Only user accounts with Financial Administrator privileges can see the full totals of invoices.
           <br>{$status_legend}
-          <input type="submit" name="applyFilter" value="Filter" style="margin-left:5px; margin-top:5px;"></td>
+          <button type="submit" name="applyFilter" value="1" class="filter_button" style="margin-left:5px; margin-top:5px;">Filter<i class="icon-cogs"></i></button>
+          </td>
+
         </tr>
       </table>
       <input type="hidden" name="sessID" value="{$sessID}">

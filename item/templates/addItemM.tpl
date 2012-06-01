@@ -18,7 +18,7 @@
       <td><input size="40" type="text" name="itemNotes" value="{$itemNotes}"></td>
       <td><select name="itemType" value="{$itemType}">{$itemTypes}</select></td>
       <td>
-        <input type="submit" name="save" value="save">
+        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
       </td>
     </tr>
   </table>
@@ -47,7 +47,9 @@
         <input size="40" type="file" name="import_file">
       </td>
       <td><select name="itemType" value="{$itemType}">{$itemTypes}</select></td>
-      <td><input type="submit" name="import_from_file" value="Import From File"><td>
+      <td>
+        <button type="submit" name="import_from_file" value="1" class="save_button">Import From File<i class="icon-upload"></i></button>
+      <td>
     </tr>
   </table>
   <input type="hidden" name="sessID" value="{$sessID}">
@@ -66,8 +68,8 @@
       <td><select name="itemID[]" multiple size="8">{$item_list}</select></td>
       <td>
         {$edit_options}
-        <input type="submit" name="edit_items" value="Edit">
-        <input type="submit" name="remove_items" value="Remove">
+        <button type="submit" name="edit_items" value="1">Edit<i class="icon-edit"></i></button>
+        <button type="submit" name="remove_items" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
       </td>
     </tr>
   </table>

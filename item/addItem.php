@@ -116,7 +116,9 @@ if ($_POST["edit_items"]) {
      .        page::select_options($itemType->get_assoc_array("itemTypeID","itemTypeID"), $item->get_value("itemType"))
      ."       </select>"
      ."    <input type=\"hidden\" name=\"update_itemID\" value=\"".$item->get_id()."\"></td>"
-     ."  <td align=\"right\"><input type=\"submit\" name=\"update_item\" value=\"Save Changes\"></td>\n"
+     ."  <td align=\"right\">"
+     .'    <button type="submit" name="update_item" value="1" class="save_button">Save Changes<i class="icon-ok-sign"></i></button>'
+     ." </td>\n"
      ."</tr><td colspan=\"3\"><hr></td></tr>\n"
      ."</tr></table>\n";
   }

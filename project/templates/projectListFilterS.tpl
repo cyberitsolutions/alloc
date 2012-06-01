@@ -13,7 +13,7 @@
           <td><select name="projectType"><option value=""> {$projectTypeOptions}</select></td>
           <td>{$personSelect}</td>
           <td><input type="text" name="projectName" value="{$projectName}"></td>
-          <td><input type="submit" name="applyFilter" value="Filter"></td>
+          <td><button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button></td>
         </tr>
       </table>
     <input type="hidden" name="sessID" value="{$sessID}">

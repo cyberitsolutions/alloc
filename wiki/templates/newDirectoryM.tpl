@@ -4,7 +4,7 @@
   <input name="dirName" type="text" id="dirName" style="width:100%;" value="{$dirName}">
   <br><br>
   <div style="text-align:center; margin-top:20px;">
-    <input type="submit" id="save" name="save" value="Create New Directory">
+    <button type="submit" id="save" name="save" value="1" class="save_button">Create New Folder<i class="icon-ok-sign"></i></button>
   </div>
 <input type="hidden" name="sessID" value="{$sessID}">
 </form>

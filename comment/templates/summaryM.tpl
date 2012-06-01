@@ -33,7 +33,9 @@
               <br><br>
               Include Client Comments <input type="checkbox" name="clients" value="clients"{if $_REQUEST["clients"]} checked{/}>
             </td>
-            <td class="top"><input type="submit" value="Filter" name="filter">
+            <td class="top">
+              <button type="submit" name="filter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button>
+            </td>
           </tr>
         </table>
         <input type="hidden" name="sessID" value="{$sessID}">

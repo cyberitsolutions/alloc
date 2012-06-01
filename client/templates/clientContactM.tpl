@@ -50,7 +50,8 @@
             <td colspan="6" class="right">
              <label for="cca">Enabled</label> <input id="cca" type="checkbox" name="clientContactActive" value="1"{$clientContactActive_checked}>&nbsp;&nbsp;
              <label for="pcc">Primary Contact</label> <input id="pcc" type="checkbox" name="primaryContact" value="1"{$primaryContact_checked}>
-             {$clientContactItem_buttons}
+             <button type="submit" name="clientContact_save" value="1" class="save_button">Save Client Contact<i class="icon-ok-sign"></i></button>
+
             </td>
           </tr>
         </table>

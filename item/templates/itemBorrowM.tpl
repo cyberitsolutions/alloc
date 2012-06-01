@@ -29,7 +29,9 @@
     <td><input type="text" size="3" name="timePeriod" value="1"></td>
   </tr>
   <tr>
-    <td colspan="2"><input type="submit" name="borrowItem" value="Borrow Item"></td>
+    <td colspan="2">
+      <button type="submit" name="borrowItem" value="1" class="save_button">Borrow Item<i class="icon-ok-sign"></i></button>
+    </td>
   </tr>
 </table>
 

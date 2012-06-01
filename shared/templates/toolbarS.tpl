@@ -16,7 +16,9 @@
               <td width="6px">&nbsp;&nbsp;or&nbsp;&nbsp;</td>
               <td width="30px"><input size="35" type="text" name="needle" id="menu_form_needle" value="{$needle}"></td>
               <td width="30px"><select size="1" name="category">{$category_options}</select></td>
-              <td width="30px"><input type="submit" name="search" value="Search"></td>
+              <td width="30px">
+              <input type="submit" name="search" value="Search" class="filter_button">
+              </td>
               <td width="18px">{page::help("quicklist_and_search")}</td>
             </tr>
           </table>

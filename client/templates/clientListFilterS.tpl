@@ -15,7 +15,7 @@
           <td><input type="text" name="clientName" value="{$clientName}"></td>
           <td><input type="text" name="contactName" value="{$contactName}"></td>
           <td><select name="clientCategory"><option value="">{$clientCategoryOptions}</select></td>
-          <td><input type="submit" name="applyFilter" value="Filter"></td>
+          <td><button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button></td>
           <td>{page::help("clientListFilter")}</td> 
         </tr>
         <tr>

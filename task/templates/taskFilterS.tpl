@@ -93,7 +93,9 @@ $(document).ready(function() {
   <tr>
     <td colspan="2">Task Date</td>
     <td class="right" valign="bottom" rowspan="2">
-      &nbsp;&nbsp;<input type="submit" name="applyFilter" value="Filter"> {page::help("taskList_filter")}
+      &nbsp;&nbsp;
+      <button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button>
+      {page::help("taskList_filter")}
     </td>
   </tr>
   <tr>

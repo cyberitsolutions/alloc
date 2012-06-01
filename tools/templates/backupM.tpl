@@ -21,8 +21,8 @@
           <td>{$row.size}</td>
           <td class="right" style="padding:5px;">
             <form action="{$url_alloc_backup}" method="post">
-            <input type="submit" value="Restore" name="restore_backup" class="confirm_button"/>
-            <input type="submit" value="Delete"  name="delete_backup" class="delete_button"/>
+            <button type="submit" name="restore_backup" value="1" class="confirm_button">Restore<i class="icon-refresh"></i></button>
+            <button type="submit" name="delete_backup" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
             <input type="hidden" value="{$row.restore_name}" name="file" />
             <input type="hidden" name="sessID" value="{$sessID}">
             </form>
@@ -33,14 +33,14 @@
         <tr>
           <td colspan="1" class="left" style="padding:5px;">
             <form action="{$url_alloc_backup}" method="post">
-            <input type="submit" value="Create New Backup" name="create_backup" />
+            <button type="submit" name="create_backup" value="1" class="filter_button">Create New Backup<i class="icon-cogs"></i></button>
             <input type="hidden" name="sessID" value="{$sessID}">
             </form>
           </td>
           <td colspan="3" class="right nobr" style="padding:5px;">
             <form enctype="multipart/form-data" action="{$url_alloc_backup}" method="post">
             <input type="file" name="attachment" />
-            <input type="submit" value="Upload Backup Zip File" name="save_attachment" />
+            <button type="submit" name="save_attachment" value="1" class="save_button">Upload Backup Zip File<i class="icon-upload"></i></button>
             <input type="hidden" name="sessID" value="{$sessID}">
             </form>
           </td>

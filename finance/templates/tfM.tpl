@@ -32,8 +32,10 @@
     <td>{=$tfModifiedUser} {$tfModifiedTime}</td>
   </tr>
   <tr>
-    <td colspan="2" align="center"><input type="submit" name="save" value="Save">
-    <input type="submit" name="delete" value="Delete" class="delete_button"></td>
+    <td colspan="2" align="center">
+    <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+    <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+    </td>
   </tr>
 </table>
 <input type="hidden" name="sessID" value="{$sessID}">

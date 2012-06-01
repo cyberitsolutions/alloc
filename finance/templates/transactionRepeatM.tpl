@@ -68,9 +68,9 @@
   </tr>
   <tr>
     <td align="center" colspan="6">
+    <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+    <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
     {$adminButtons}
-    <input type="submit" name="save" value="&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;">
-    <input type="submit" name="delete" value="Delete" class="delete_button"></td>
   </tr>
 </table>
 

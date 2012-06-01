@@ -109,10 +109,10 @@
   </tr>
   <tr>
     <td align="center" colspan="3">
-      <input type="submit" name="save" value="Save">
-      <input type="submit" name="saveAndNew" value="Save and New">
-      <input type="submit" name="saveGoTf" value="Save and go to Dest TF">
-      <input type="submit" name="delete" class="delete_button" value="Delete">
+      <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+      <button type="submit" name="saveAndNew" value="1" class="save_button">Save &amp; New<i class="icon-plus-sign"></i></button>
+      <button type="submit" name="saveGoTf" value="1" class="save_button">Save &amp; go to Dest TF<i class="icon-arrow-right"></i></button>
+      <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
     </td>
   </tr>
   

@@ -47,7 +47,7 @@ function refreshProjectList(show_all) {
         </tr>
         <tr>
           <td colspan="4">&nbsp;</td>
-          <td class="right"><input type="submit" name="applyFilter" value="Filter"></td>
+          <td class="right"><button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button></td>
         </tr>
       </table>
       <input type="hidden" name="sessID" value="{$sessID}">
