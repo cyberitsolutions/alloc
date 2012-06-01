@@ -8,6 +8,7 @@
     <style type="text/css" media="screen">body { font-size:{page::default_font_size()}px }</style>
     <link rel="StyleSheet" href="{$url_alloc_cache}{page::stylesheet()}" type="text/css" media="screen">
     <link rel="StyleSheet" href="{$url_alloc_cache}calendar.css" type="text/css" media="screen">
+    <link rel="StyleSheet" href="{$url_alloc_cache}font.css" type="text/css" media="screen">
     <link rel="StyleSheet" href="{$url_alloc_cache}print.css" type="text/css" media="print">
     <script type="text/javascript" src="{$url_alloc_cache}javascript.js"></script>
     <script type="text/javascript">
