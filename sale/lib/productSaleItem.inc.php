@@ -126,7 +126,7 @@ class productSaleItem extends db_entity {
       $row["saleTransactionType"] == "tax"       and $tax      += exchangeRate::convert($row["currencyTypeID"],$row["amount"]);
       $row["saleTransactionType"] == "aCost"     and $costs    += exchangeRate::convert($row["currencyTypeID"],$row["amount"]);
     }
-    $margin = $sellPrice - $tax - $costs;
+    $margin = $sellPrice - $costs;
     return $margin;
   }
 
@@ -168,16 +168,6 @@ class productSaleItem extends db_entity {
     $taxTfID = config::get_config_item("taxTfID");
     $mainTfID = $productSale->get_value("tfID");
 
-    // If this price includes tax, then perform a tax transfer
-    if ($this->get_value("sellPriceIncTax")) {
-      list($amount_minus_tax,$amount_of_tax) = tax($this->get_value("sellPrice"));
-      $amount_of_tax = exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"),$amount_of_tax,null,null,"%mo");
-      $this->create_transaction($mainTfID, $taxTfID
-                               ,$amount_of_tax
-                               ,"Product Sale ".$taxName.": ".$productName
-                               ,false, false, 'tax');
-    }
-
     // Next transaction represents the amount that someone has paid the
     // sellPrice amount for the product. This money is transferred from 
     // the Incoming transactions TF, to the Main Finance TF.
@@ -198,17 +188,6 @@ class productSaleItem extends db_entity {
 
     $db2->query($query);
     while ($productCost_row = $db2->next_record()) {
-
-      if ($productCost_row["tax"]) {
-        list($amount_minus_tax,$amount_of_tax) = tax($productCost_row["amount"]);
-        $amount_of_tax = exchangeRate::convert($productCost_row["currencyTypeID"],$amount_of_tax,null,null,"%mo");
-        $productCost_row["amount"] = $amount_minus_tax;
-        $this->create_transaction($mainTfID, $taxTfID
-                                 ,$amount_of_tax * $this->get_value("quantity")
-                                 ,"Product Cost ".$taxName.": ".$productCost_row["productName"]." ".$productCost_row["description"]
-                                 ,false,$productCost_row["productCostID"],'tax');
-      }
-
       $amount = page::money($productCost_row["currencyTypeID"],$productCost_row["amount"] * $this->get_value("quantity"),"%mo");
       $this->create_transaction($productCost_row["tfID"],config::get_config_item("outTfID")
                                ,$amount
@@ -236,6 +215,49 @@ class productSaleItem extends db_entity {
                                ,$amount
                                ,"Product Commission: ".$productComm_row["productName"]." ".$productComm_row["description"]
                                ,config::get_config_item("currency"),$productComm_row["productCostID"]);
+    }
+  }
+
+  function create_transactions_tax() {
+    $db = new db_alloc();
+    $db2 = new db_alloc();
+
+    $product = $this->get_foreign_object("product");
+    $productSale = $this->get_foreign_object("productSale");
+    $productName = $product->get_value("productName");
+    $taxName = config::get_config_item("taxName");
+    $taxTfID = config::get_config_item("taxTfID");
+    $mainTfID = $productSale->get_value("tfID");
+    $taxPercent = config::get_config_item("taxPercent");
+
+
+    // If this price includes tax, then perform a tax transfer
+    $amount_of_tax = $this->get_value("sellPrice") * ($taxPercent/100);
+    $amount_of_tax = exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"),$amount_of_tax,null,null,"%mo");
+    $this->create_transaction($mainTfID, $taxTfID
+                             ,$amount_of_tax
+                             ,"Product Sale ".$taxName.": ".$productName
+                             ,false, false, 'tax');
+
+    // Now loop through all the productCosts for the sale items product.
+    $query = sprintf("SELECT productCost.*, product.productName
+                        FROM productCost 
+                   LEFT JOIN product ON product.productID = productCost.productID
+                       WHERE productCost.productID = %d 
+                         AND isPercentage != 1
+                         AND productCostActive = true
+                    ORDER BY productCostID"
+                    , $this->get_value("productID"));
+
+    $db2->query($query);
+    while ($productCost_row = $db2->next_record()) {
+      $amount_of_tax = $productCost_row["amount"] * ($taxPercent/100);
+      $amount_of_tax = exchangeRate::convert($productCost_row["currencyTypeID"],$amount_of_tax,null,null,"%mo");
+      $productCost_row["amount"] = $amount_minus_tax;
+      $this->create_transaction($mainTfID, $taxTfID
+                               ,$amount_of_tax * $this->get_value("quantity")
+                               ,"Product Cost ".$taxName.": ".$productCost_row["productName"]." ".$productCost_row["description"]
+                               ,false,$productCost_row["productCostID"],'tax');
     }
   }
 

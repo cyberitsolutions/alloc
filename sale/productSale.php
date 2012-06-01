@@ -312,6 +312,12 @@ if ($_POST["save"]) {
   $productSaleItem->select();
   $productSaleItem->create_transactions();
 
+} else if ($_POST["add_tax"] && $_POST["productSaleItemID"]) {
+  $productSaleItem = new productSaleItem();
+  $productSaleItem->set_id($_POST["productSaleItemID"]);
+  $productSaleItem->select();
+  $productSaleItem->create_transactions_tax();
+
 } else if ($_POST["delete_transactions"] && $_POST["productSaleItemID"]) {
   $productSaleItem = new productSaleItem();
   $productSaleItem->set_id($_POST["productSaleItemID"]);
@@ -436,6 +442,7 @@ if ($productSale->get_value("projectID")) {
   $ptf or $TPL["project_tfID"] = " (No project TF)";
 }
 
+$TPL["taxName"] = config::get_config_item("taxName");
 
 $TPL["main_alloc_title"] = "Sale";
 include_template("templates/productSaleM.tpl");

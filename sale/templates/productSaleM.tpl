@@ -9,7 +9,6 @@ function add_row() {
     tdNum++;
     var newId = "new" + tdNum;
     $('#productSaleItem_footer').before('<tr id="' + newId + '">'+$('#productSaleItemRow').html()+'</tr>');
-    $('#' + newId).find('input[name="sellPriceIncTax[]"]').val(newId);
     $('#' + newId).find('input[name="productSaleItemID[]"]').val(newId);
 }
 
@@ -23,7 +22,6 @@ function update_values(target) {
       $.get("{$url_alloc_updateCostPrice}product="+productID+"&quantity="+quantity, function(xml) {
         myTD.find('input[name="sellPrice[]"]').val($("price",xml).text());
         myTD.find('input[name="description[]"]').val($("description",xml).text());
-        myTD.find('input[name="sellPriceIncTax[]"]').attr('checked',$("priceTax",xml).text());
         myTD.find('label[name="priceCurrency"]').html($("priceCurrency",xml).text());
         myTD.find('input[name="sellPriceCurrencyTypeID[]"]').val($("priceCurrency",xml).text());
       }); 
@@ -59,7 +57,7 @@ function get_item_margin(obj) {
   if (tax) {
     sellPrice = parseFloat(sellPrice) - parseFloat(tax);
   }
-  return parseFloat(sellPrice) - parseFloat(sum_of_costs);
+  return Math.round((parseFloat(sellPrice) - parseFloat(sum_of_costs))*100)/100;
 }
 
 
@@ -79,7 +77,7 @@ $(document).ready(function() {
         var percent = parseFloat($(this).attr("data-pc-amount"));
         var newval = percent/100*margin;
         if (!isNaN(newval)) {
-          $(this).css({ "background-color":"#fffaa2" })
+          $(this).css({ "background-color":"#ddf6e0" })
           $(this).val(newval);
         }
       });
@@ -110,7 +108,7 @@ $(document).ready(function() {
   </tr>
   <tr>
     <td class="right">Total Sell Price:</td>
-    <td>{$total_sellPrice}</td>
+    <td>{$total_sellPrice} {if $taxName}/ {$total_sellPrice_plus_gst} inc. {$taxName}{/}</td>
     <td class="right">Sale TF:</td>
     <td>{$show_tf_options}</td>
   </tr>
@@ -178,7 +176,7 @@ $(document).ready(function() {
         <tr>
           <th>Product</th>
           <th>Quantity</th>
-          <th>Sell Price</th>
+          <th>Sell Price{if $taxName} (Ex {$taxName}){/}</th>
           <th>Description</th>
           <th width="1%" class="right"></th>
         </tr>

@@ -1,10 +1,11 @@
 <tr id="product_cost_row{$productCostID}" style="{$display}">
-  <td><input type="hidden" name="productCostID[]" value="{$productCostID}"><input type="text" size="7" name="amount[]" value="{$amount}">
+  <td class="nobr">
+    <input type="hidden" name="productCostID[]" value="{$productCostID}"><input type="text" class="amount" size="7" name="amount[]" value="{$amount}">
       <select name="currencyTypeID[]">{$currencyOptions}</select>
-      {if config::get_config_item("taxName")}
-        <select name="tax[]">{$taxOptions}</select>
+      {if $taxName}
+         <button type="button" class="cost_gstbutton" class="filter_button" style="font-size:70%;padding:1px;">&nbsp;- {$taxName}</button>
       {/}
-      </td>
+  </td>
   <td><select name="tfID[]"><option value="">{tf_list($tfID,array(config::get_config_item("outTfID")))}</select></td>
   <td><input type="text" size="43" name="description[]" value="{$description}"></td>
   <td class="right nobr">

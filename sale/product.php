@@ -185,6 +185,7 @@ if (!$productID) {
 
 
 $TPL["taxName"] = config::get_config_item("taxName");
+$TPL["taxPercent"] = config::get_config_item("taxPercent");
 
 include_template("templates/productM.tpl");
 
