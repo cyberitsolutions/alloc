@@ -25,10 +25,16 @@ function redraw_multiple_selects(container, funct) {
   });
 }
 
+function deduct_gst(value) {
+  var tax_percent = get_alloc_var("tax_percent");
+  return Math.round(value / (tax_percent/100 +1)*100)/100;
+}
+
 function toggle_view_edit() {
   $(".view").toggle();
   $(".edit").toggle();
   redraw_multiple_selects();
+  return false;
 }
 
 function makeAjaxRequest(url,entityid,extra_fields,redraw) {

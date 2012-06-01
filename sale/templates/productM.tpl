@@ -10,6 +10,16 @@ $(document).ready(function() {
   {else}
   $('#editProduct').focus();
   {/}
+
+  $("#gstbutton").click(function(){
+    $("#sellPrice").val(deduct_gst($("#sellPrice").val()));
+  });
+
+  $(".cost_gstbutton").live('click',function(){
+    var elem = $(this).parent().find(".amount");
+    $(elem).val(deduct_gst($(elem).val()));
+  });
+
 });
 </script>
 
@@ -74,6 +84,9 @@ $(document).ready(function() {
           <div style="float:left; width:30%;" class="nobr">
             <input type="text" size="8" name="sellPrice" id="sellPrice" value="{$sellPrice}">
             <select name="sellPriceCurrencyTypeID">{$sellPriceCurrencyOptions}</select>
+            {if $taxName}
+            <button type="button" id="gstbutton" class="filter_button" style="font-size:70%;padding:1px;">&nbsp;- {$taxName}</button>
+            {/}
           </div>
           <div style="float:right; width:50%;" class="nobr">
             <input type="checkbox" name="productActive" {if $productActive || !$productID}checked="checked"{/}>
@@ -92,7 +105,7 @@ $(document).ready(function() {
         <input type="hidden" name="productSaleID" value="{$_REQUEST.productSaleID}">
         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         {if $productID}
-        <a href="" onClick="toggle_view_edit();">Cancel edit</a>
+        <a href="" onClick="return toggle_view_edit();">Cancel edit</a>
         {/}
       </div>
     </td>
@@ -119,7 +132,7 @@ $(document).ready(function() {
 
       <table class="list">
         <tr>
-          <th width="15%">Amount</th>
+          <th width="15%">Amount{if $taxName} (Ex {$taxName}){/}</th>
           <th width="35%">Source TF</th>
           <th>Description</th>
           <th></th>

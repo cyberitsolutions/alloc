@@ -17,6 +17,7 @@
       var values = {
                     "url"               : "{$script_path}"
                    ,"side_by_side_link" : "{$_REQUEST.sbs_link}"
+                   ,"tax_percent"       : "{echo config::get_config_item('taxPercent')}"
                    ,"show_filters"      : "{print is_object($current_user) ? $current_user->prefs["showFilters"] : ""}"
                    ,"ddcl_blacklist"    : new Array("{print is_object($current_user)?implode('","',(array)$current_user->prefs['ddcl_blacklist']):''}")
                    }
