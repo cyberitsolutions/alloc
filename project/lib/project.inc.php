@@ -713,6 +713,12 @@ class project extends db_entity {
     return $pp[$p];
   }
 
+  function get_list_html($rows=array(),$ops=array()) {
+    global $TPL;
+    $TPL["projectListRows"] = $rows;
+    $TPL["_FORM"] = $ops;
+    include_template(dirname(__FILE__)."/../templates/projectListS.tpl");
+  }
 }
 
 
