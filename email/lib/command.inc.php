@@ -258,8 +258,7 @@ class command {
         }
 
         // transform from priority label to priority ID
-        if ($k == "priority" && !is_numeric($v)) {
-          $changes[$k] = "managerID";
+        if ($k == "priority" && !in_array($v,array(1,2,3,4,5))) {
           $v = $priorities[strtolower($v)];
         }
 
