@@ -48,7 +48,7 @@ function makeAjaxRequest(url,entityid,extra_fields,redraw) {
     if (redraw) {
       redraw_multiple_selects(entityid);
     }
-  })
+  });
 }
 
 // This is a generic show/hide for anything
