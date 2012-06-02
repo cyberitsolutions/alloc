@@ -459,6 +459,12 @@ class client extends db_entity {
     return (array)$interestedPartyOptions;
   }
 
+  function get_list_html($rows=array(),$ops=array()) {
+    global $TPL;
+    $TPL["clientListRows"] = $rows;
+    $TPL["_FORM"] = $ops;
+    include_template(dirname(__FILE__)."/../templates/clientListS.tpl");
+  }
 }
 
 
