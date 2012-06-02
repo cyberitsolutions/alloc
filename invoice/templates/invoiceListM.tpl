@@ -3,6 +3,7 @@
 <table class="box">
   <tr>
     <th class="header">Invoices
+      <b> - {print count($invoiceListRows)} records</b>
       <span>
         <a class='magic toggleFilter' href=''>Show Filter</a>
         {if $current_user->have_role("admin")}
@@ -18,7 +19,7 @@
    </tr>
    <tr>
     <td>
-      {show_invoice_list()}
+      {invoice::get_list_html($invoiceListRows,$_FORM)}
     </td>
   </tr>
 </table>

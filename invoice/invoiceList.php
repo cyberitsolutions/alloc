@@ -53,20 +53,15 @@ function show_filter() {
   include_template("templates/invoiceListFilterS.tpl");
 }
 
-function show_invoice_list() {
-  global $defaults, $current_user;
 
-  $_FORM = invoice::load_form_data($defaults);
+$_FORM = invoice::load_form_data($defaults);
 
-  #$_FORM["debug"] = true;
-
-  // Restrict non-admin users records
-  if (!$current_user->have_role("admin")) {
-    $_FORM["personID"] = $current_user->get_id();
-  }
-
-  echo invoice::get_list($_FORM);
+// Restrict non-admin users records
+if (!$current_user->have_role("admin")) {
+  $_FORM["personID"] = $current_user->get_id();
 }
+$TPL["invoiceListRows"] = invoice::get_list($_FORM);
+$TPL["_FORM"] = $_FORM;
 
 if (!$current_user->prefs["invoiceList_filter"]) {
   $TPL["message_help"][] = "
