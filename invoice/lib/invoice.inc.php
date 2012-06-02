@@ -461,9 +461,6 @@ class invoice extends db_entity {
 
     $_FORM["return"] or $_FORM["return"] = "html";
 
-    // A header row
-    $summary.= invoice::get_list_tr_header($_FORM);
-
     is_array($filter1_where) && count($filter1_where) and $f1_where = " WHERE ".implode(" AND ",$filter1_where);
     is_array($filter2_where) && count($filter2_where) and $f2_where = " WHERE ".implode(" AND ",$filter2_where);
     is_array($filter2_having) && count($filter2_having) and $f2_having = " HAVING ".implode(" AND ",$filter2_having);
@@ -512,11 +509,29 @@ class invoice extends db_entity {
       $row["amountPaidPending"] = page::money($row["currencyTypeID"],$row["amountPaidPending"],"%mo");
       $row["amountPaidRejected"] = page::money($row["currencyTypeID"],$row["amountPaidRejected"],"%mo");
       $row["invoiceLink"] = $i->get_invoice_link();
-      $summary.= invoice::get_list_tr($row,$_FORM);
+
+      $payment_status = array();
+      $row["statii"] = invoice::get_invoice_statii();
+      $row["payment_statii"] = invoice::get_invoice_statii_payment();
+      $row["amountPaidApproved"] == $row["iiAmountSum"] and $payment_status[] = "fully_paid";
+      $row["amountPaidApproved"] > $row["iiAmountSum"] and $payment_status[] = "over_paid";
+      $row["amountPaidRejected"] > 0 and $payment_status[] = "rejected";
+      #$row["amountPaidApproved"] > 0 && $row["amountPaidApproved"] < $row["iiAmountSum"] and $payment_status[] = "partly_paid";
+      $row["amountPaidApproved"] < $row["iiAmountSum"] and $payment_status[] = "pending";
+
+      foreach ((array)$payment_status as $ps) {
+        $row["image"].= invoice::get_invoice_statii_payment_image($ps);
+        $row["status_label"].= $ps;
+      }
+
+      $row["_FORM"] = $_FORM;
+      $row = array_merge($TPL,(array)$row);
+
       $summary_ops[$i->get_id()] = $i->get_value("invoiceNum");
       $rows[$row["invoiceID"]] = $row;
     }
 
+    return $rows;
     if ($print && $_FORM["return"] == "html") {
       return "<table class=\"list sortable\">".$summary."</table>";
 
@@ -530,51 +545,6 @@ class invoice extends db_entity {
       return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Invoices Found</b></td></tr></table>";
     }
 
-  }
-
-  function get_list_tr_header($_FORM) {
-    global $TPL;
-    if ($_FORM["showHeader"]) {
-
-      $summary.= "\n<tr>";
-      $_FORM["showInvoiceNumber"]       and $summary.= "\n<th>Invoice Number</th>";
-      $_FORM["showInvoiceClient"]       and $summary.= "\n<th>Client</th>";
-      $_FORM["showInvoiceName"]         and $summary.= "\n<th>Name</th>";
-      $_FORM["showInvoiceDate"]         and $summary.= "\n<th>From</th>";
-      $_FORM["showInvoiceDate"]         and $summary.= "\n<th>To</th>";
-      $_FORM["showInvoiceStatus"]       and $summary.= "\n<th>Status</th>";
-      $_FORM["showInvoiceAmount"]       and $summary.= "\n<th>Amount</th>";
-      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th>&nbsp;</th>";
-      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th>Rejected</th>";
-      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th>Pending</th>";
-      $_FORM["showInvoiceAmountPaid"]   and $summary.= "\n<th>Approved</th>";
-      $summary.="\n</tr>";
-      return $summary;
-    }
-  }
-
-  function get_list_tr($invoice,$_FORM) {
-    global $TPL;
-
-    $TPL["statii"] = invoice::get_invoice_statii();
-    $TPL["currency"] = '$';
-
-    $TPL["payment_statii"] = invoice::get_invoice_statii_payment();
-
-    $invoice["amountPaidApproved"] == $invoice["iiAmountSum"] and $payment_status[] = "fully_paid";
-    $invoice["amountPaidApproved"] > $invoice["iiAmountSum"] and $payment_status[] = "over_paid";
-    $invoice["amountPaidRejected"] > 0 and $payment_status[] = "rejected";
-    #$invoice["amountPaidApproved"] > 0 && $invoice["amountPaidApproved"] < $invoice["iiAmountSum"] and $payment_status[] = "partly_paid";
-    $invoice["amountPaidApproved"] < $invoice["iiAmountSum"] and $payment_status[] = "pending";
-
-    foreach ((array)$payment_status as $ps) {
-      $invoice["image"].= invoice::get_invoice_statii_payment_image($ps);
-      $invoice["status_label"].= $ps;
-    }
-
-    $TPL["_FORM"] = $_FORM;
-    $TPL = array_merge($TPL,(array)$invoice);
-    return include_template(dirname(__FILE__)."/../templates/invoiceListR.tpl", true);
   }
 
   function get_list_vars() {
@@ -805,6 +775,12 @@ class invoice extends db_entity {
     return $interestedPartyOptions;
   }
 
+  function get_list_html($rows=array(),$ops=array()) {
+    global $TPL;
+    $TPL["invoiceListRows"] = $rows;
+    $TPL["_FORM"] = $ops;
+    include_template(dirname(__FILE__)."/../templates/invoiceListS.tpl");
+  }
 }
 
 
