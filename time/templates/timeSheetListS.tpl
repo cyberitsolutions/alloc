@@ -15,6 +15,7 @@
     <th class="right">Sum &gt;0</th>
     <th class="right">Sum &lt;0</th>
     {/}
+    <th width="1%" style="font-size:120%"><i class="icon-star"></i></th>
   </tr>
   {foreach $timeSheetListRows as $r}
   <tr>
@@ -32,8 +33,12 @@
     <td class="nobr right">{$r.transactionsPos}</td>
     <td class="nobr right">{$r.transactionsNeg}</td>
     {/}
+    <td width="1%">
+      {page::star("timeSheet",$r["timeSheetID"])}
+    </td>
   </tr>
   {/}
+  {if !$extra["noextra"]}
   <tfoot>
   <tr>
     <td></td>
@@ -52,6 +57,7 @@
     {/}
   </tr>
   </tfoot>
+  {/}
 </table>
 {else}
   <b>No Time Sheets Found.</b>
