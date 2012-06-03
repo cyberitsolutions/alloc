@@ -401,7 +401,27 @@ class invoice extends db_entity {
   function get_list_filter($filter=array()) {
     global $current_user;
     $sql = array();
-    $filter["invoiceID"]     and $sql[] = sprintf("(invoice.invoiceID = %d)",$filter["invoiceID"]);
+
+    // If they want starred, load up the invoiceID filter element
+    if ($filter["starred"]) {
+      foreach ((array)$current_user->prefs["stars"]["invoice"] as $k=>$v) {
+        $filter["invoiceID"][] = $k;
+      }
+      is_array($filter["invoiceID"]) or $filter["invoiceID"][] = -1;
+    }
+
+    // Filter oinvoiceID
+    if ($filter["invoiceID"] && is_array($filter["invoiceID"])) {
+      $sql[] = "(invoice.invoiceID in ('".esc_implode("','",$filter["invoiceID"])."'))";
+    } else if ($filter["invoiceID"]) {     
+      $sql[] = sprintf("(invoice.invoiceID = %d)", db_esc($filter["invoiceID"]));
+    }
+
+    // No point continuing if primary key specified, so return
+    if ($filter["invoiceID"] || $filter["starred"]) {
+      return $sql;
+    }
+
     $filter["clientID"]      and $sql[] = sprintf("(invoice.clientID = %d)",$filter["clientID"]);
     $filter["invoiceNum"]    and $sql[] = sprintf("(invoice.invoiceNum = %d)",$filter["invoiceNum"]);
     $filter["dateOne"]       and $sql[] = sprintf("(invoice.invoiceDateFrom>='%s')",db_esc($filter["dateOne"]));
