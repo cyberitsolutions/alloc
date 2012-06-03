@@ -59,6 +59,8 @@ class alloc_services {
     if ($sess->Started()) {
       $person = new person;
       $person->load_current_user($sess->Get("personID"));
+      // update session_started, which affects session lifetime
+      $sess->Save();
       return $person;
     }
   }
