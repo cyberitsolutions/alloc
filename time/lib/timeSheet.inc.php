@@ -532,9 +532,28 @@ class timeSheet extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    if ($filter["timeSheetID"]) {
-      $sql[] = sprintf("(timeSheet.timeSheetID = '%d')", $filter["timeSheetID"]);
+    global $current_user;
+
+    // If they want starred, load up the timeSheetID filter element
+    if ($filter["starred"]) {
+      foreach ((array)$current_user->prefs["stars"]["timeSheet"] as $k=>$v) {
+        $filter["timeSheetID"][] = $k;
+      }
+      is_array($filter["timeSheetID"]) or $filter["timeSheetID"][] = -1;
     }
+
+    // Filter otimeSheetID
+    if ($filter["timeSheetID"] && is_array($filter["timeSheetID"])) {
+      $sql[] = "(timeSheet.timeSheetID in ('".esc_implode("','",$filter["timeSheetID"])."'))";
+    } else if ($filter["timeSheetID"]) {     
+      $sql[] = sprintf("(timeSheet.timeSheetID = %d)", db_esc($filter["timeSheetID"]));
+    }
+
+    // No point continuing if primary key specified, so return
+    if ($filter["timeSheetID"] || $filter["starred"]) {
+      return $sql;
+    }
+
     if ($filter["tfID"]) {
       $sql[] = sprintf("(timeSheet.recipient_tfID = '%d')", $filter["tfID"]);
     }
@@ -676,7 +695,11 @@ class timeSheet extends db_entity {
     $extra["positive_tallies"] = page::money_print($pos_tallies);
     $extra["negative_tallies"] = page::money_print($neg_tallies);
 
-    return array("rows"=>(array)$rows,"extra"=>$extra);
+    if (!$_FORM["noextra"]) {
+      return array("rows"=>(array)$rows,"extra"=>$extra);
+    } else {
+      return (array)$rows;
+    }
   }
 
   function get_list_html($rows=array(),$extra=array()) {
@@ -734,6 +757,7 @@ class timeSheet extends db_entity {
   function get_list_vars() {
     return array("return"                         => "[MANDATORY] eg: array | html"
                 ,"timeSheetID"                    => "Time Sheet that has this ID"
+                ,"starred"                        => "Time Sheet that have been starred"
                 ,"projectID"                      => "Time Sheets that belong to this Project"
                 ,"taskID"                         => "Time Sheets that use this task"
                 ,"personID"                       => "Time Sheets for this person"
