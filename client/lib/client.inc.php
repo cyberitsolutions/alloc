@@ -123,7 +123,28 @@ class client extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    
+    global $current_user;
+
+    // If they want starred, load up the clientID filter element
+    if ($filter["starred"]) {
+      foreach ((array)$current_user->prefs["stars"]["client"] as $k=>$v) {
+        $filter["clientID"][] = $k;
+      }
+      is_array($filter["clientID"]) or $filter["clientID"][] = -1;
+    }
+
+    // Filter on taskID
+    if ($filter["clientID"] && is_array($filter["clientID"])) {
+      $sql[] = "(client.clientID in ('".esc_implode("','",$filter["clientID"])."'))";
+    } else if ($filter["clientID"]) {     
+      $sql[] = sprintf("(client.clientID = %d)", db_esc($filter["clientID"]));
+    }
+
+    // No point continuing if primary key specified, so return
+    if ($filter["clientID"] || $filter["starred"]) {
+      return $sql;
+    }
+
     if ($filter["clientStatus"]) {
       $sql[] = sprintf("(clientStatus = '%s')",db_esc($filter["clientStatus"]));
     } 
