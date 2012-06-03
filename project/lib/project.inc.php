@@ -386,15 +386,33 @@ class project extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
+    global $current_user;
+
+    // If they want starred, load up the projectID filter element
+    if ($filter["starred"]) {
+      foreach ((array)$current_user->prefs["stars"]["project"] as $k=>$v) {
+        $filter["projectID"][] = $k;
+      }
+      is_array($filter["projectID"]) or $filter["projectID"][] = -1;
+    }
+
+    // Filter oprojectID
+    if ($filter["projectID"] && is_array($filter["projectID"])) {
+      $sql[] = "(project.projectID in ('".esc_implode("','",$filter["projectID"])."'))";
+    } else if ($filter["projectID"]) {     
+      $sql[] = sprintf("(project.projectID = %d)", db_esc($filter["projectID"]));
+    }
+
+    // No point continuing if primary key specified, so return
+    if ($filter["projectID"] || $filter["starred"]) {
+      return $sql;
+    }
 
     if ($filter["clientID"]) {
       $sql[] = sprintf("(project.clientID = %d)", $filter["clientID"]);
     }
     if ($filter["personID"]) {
       $sql[] = sprintf("(projectPerson.personID = %d)", $filter["personID"]);
-    }
-    if ($filter["projectID"]) {  
-      $sql[] = sprintf("(project.projectID = %d)", db_esc($filter["projectID"]));
     }
     if ($filter["projectName"]) {
       $sql[] = sprintf("(project.projectName LIKE '%%%s%%')", db_esc($filter["projectName"]));
