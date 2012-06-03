@@ -396,23 +396,37 @@ class timeSheetItem extends db_entity {
     return array($rows,$rows_dollars);
   }
 
-  function get_timeSheetItemComments($taskID="") {
+  function get_timeSheetItemComments($taskID="",$starred=false) {
     // Init
     $rows = array();
 
+    if ($taskID) {
+      $where = sprintf("timeSheetItem.taskID = %d",$taskID);
+    } else if ($starred) {
+      global $current_user;
+      $timeSheetItemIDs = array();
+      foreach ((array)$current_user->prefs["stars"]["timeSheetItem"] as $k=>$v) {
+        $timeSheetItemIDs[] = $k;
+      }
+      $where = "(timeSheetItem.timeSheetItemID in ('".esc_implode("','",$timeSheetItemIDs)."'))";
+    }
+    
+
     // Get list of comments from timeSheetItem table
     $query = sprintf("SELECT timeSheetID
+                           , timeSheetItemID
                            , dateTimeSheetItem AS date
                            , comment
                            , personID
+                           , taskID
                            , timeSheetItemDuration as duration
                            , timeSheetItemCreatedTime
                         FROM timeSheetItem
-                       WHERE timeSheetItem.taskID = %d AND (commentPrivate != 1 OR commentPrivate IS NULL)
+                       WHERE %s AND (commentPrivate != 1 OR commentPrivate IS NULL)
                          AND emailUID is NULL
                          AND emailMessageID is NULL
                     ORDER BY dateTimeSheetItem,timeSheetItemID
-                     ",$taskID);
+                     ",$where);
 
     $db = new db_alloc;
     $db->query($query);
