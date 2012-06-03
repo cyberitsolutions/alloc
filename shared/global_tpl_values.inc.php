@@ -34,6 +34,7 @@ $alloc_urls = array(
             ,"url_alloc_menuSubmit"                     => "shared/menuSubmit.php"
             ,"url_alloc_logo"                           => "logo.php"
             ,"url_alloc_star"                           => "shared/star.php"
+            ,"url_alloc_starList"                       => "shared/starList.php"
 
             ,"url_alloc_project"                        => "project/project.php"
             ,"url_alloc_projectList"                    => "project/projectList.php"

@@ -110,6 +110,7 @@ class page {
   }
   function extra_links() {
     global $current_user, $TPL, $sess;
+    $str = "<a href=\"".$TPL["url_alloc_starList"]."\" class=\"icon-star\"></a>&nbsp;&nbsp;&nbsp;";
     $str.= $current_user->get_link()."&nbsp;&nbsp;&nbsp;";
     if (defined("PAGE_IS_PRINTABLE") && PAGE_IS_PRINTABLE) {
       $sess or $sess = new Session;
@@ -479,6 +480,23 @@ EOD;
       $rtn = $str;
     }
     return $rtn;
+  }
+  function star($entity,$entityID) {
+    global $current_user, $TPL;
+    if ($current_user->prefs["stars"][$entity][$entityID]) {
+      $star_sort = 1;
+      $star_hot = " hot";
+      $star_icon = "icon-star";
+      $star_text = "<b style='display:none'>*</b>";
+    } else {
+      $star_sort = 2;
+      $star_hot = "";
+      $star_icon = "icon-star-empty";
+      $star_text = "<b style='display:none'>.</b>";
+    }
+    return '<input type="hidden" value="'.$star_sort.'">'
+          .'<a sorttable_customkey="'.$star_sort.'" class="star'.$star_hot.'" href="'.$TPL["url_alloc_star"]
+          .'entity='.$entity.'&entityID='.$entityID.'"><b class="'.$star_icon.'">'.$star_text.'</b></a>';
   }
 }
 
