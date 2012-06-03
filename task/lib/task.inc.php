@@ -637,6 +637,27 @@ class task extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
+    global $current_user;
+
+    // If they want starred, load up the taskID filter element
+    if ($filter["starred"]) {
+      foreach ((array)$current_user->prefs["stars"]["task"] as $k=>$v) {
+        $filter["taskID"][] = $k;
+      }
+      is_array($filter["taskID"]) or $filter["taskID"][] = -1;
+    }
+
+    // Filter on taskID
+    if ($filter["taskID"] && is_array($filter["taskID"])) {
+      $sql[] = "(task.taskID in ('".esc_implode("','",$filter["taskID"])."'))";
+    } else if ($filter["taskID"]) {     
+      $sql[] = sprintf("(task.taskID = %d)", db_esc($filter["taskID"]));
+    }
+
+    // No point continuing if primary key specified, so return
+    if ($filter["taskID"]) {
+      return $sql;
+    }
 
     // This takes care of projectID singular and plural
     $projectIDs = project::get_projectID_sql($filter);
@@ -708,10 +729,6 @@ class task extends db_entity {
       $sql[] = sprintf("(task.taskTypeID = '%s')",db_esc($filter["taskTypeID"]));
     }
 
-    // Filter on taskID
-    if ($filter["taskID"]) {     
-      $sql[] = sprintf("(task.taskID = %d)", db_esc($filter["taskID"]));
-    }
     // Filter on %taskName%
     if ($filter["taskName"]) {     
       $sql[] = sprintf("(task.taskName LIKE '%%%s%%')", db_esc($filter["taskName"]));
@@ -1162,6 +1179,7 @@ class task extends db_entity {
                 ,"taskTypeID"           => "Task | Parent | Message | Fault | Milestone"
                 ,"current_user"         => "Lets us fake a current_user id for when generating task emails and there is no \$current_user object"
                 ,"taskID"               => "Task ID"
+                ,"starred"              => "Tasks that you have starred"
                 ,"taskName"             => "Task Name (eg: *install*)"
                 ,"creatorID"            => "Task creator"
                 ,"managerID"            => "The person managing task"
