@@ -32,6 +32,7 @@
   {if $_FORM["showTimes"]}<th>Limit</th>{/}
   {if $_FORM["showPercent"]}<th>%</th>{/}
   {if $_FORM["showStatus"]}<th>Status</th>{/}
+  {if $_FORM["showEdit"] || $_FORM["showStarred"]}<th width="1%" style="font-size:120%"><i class="icon-star"></i></th>{/}
   </tr>
   
   <!-- Rows -->
@@ -70,6 +71,12 @@
                                    {$r.taskStatusLabel}
                                  </span>
                                </td>{/}
+  {if $_FORM["showEdit"] || $_FORM["showStarred"]}
+    <td width="1%">
+      {page::star("task",$r["taskID"])}
+    </td>
+  {/}
+
   </tr>
   {/}
 
@@ -81,7 +88,7 @@
   {$taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeID")}
   <tfoot>
     <tr>
-      <th colspan="25" class="nobr noprint" style="padding:2px;">
+      <th colspan="26" class="nobr noprint" style="padding:2px;">
         <span style="margin-right:5px;">
           <select name="update_action" onChange="$('.hidden').hide();$('#'+$(this).val()+'_span').show();$('#mass_update').show();"> 
             <option value="">Modify Checked...

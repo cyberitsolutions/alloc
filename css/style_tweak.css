@@ -543,6 +543,15 @@ table.list td.grand_total, .grand_total {
   border-top:1px solid black;
 }
 
+a.star {
+  font-size:130%;
+  text-decoration:none;
+  color:#ccc;
+}
+a.star:hover, a.hot {
+  color:#ff6000 !important;
+}
+
 /* .panel tables (Harpo) have a blue border and a light blue background in the default theme.
    When a .panel table is inside another .panel table (Chico), the border and the background 
    are lighter.

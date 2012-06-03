@@ -326,6 +326,17 @@ $(document).ready(function() {
     return false;
   });
 
+  $("a.star").click(function(){
+    if ($("b",$(this)).hasClass('icon-star-empty')) {
+      $("b",$(this)).removeClass('icon-star-empty').addClass('icon-star');
+      $(this).addClass("hot");
+    } else {
+      $("b",$(this)).removeClass('icon-star hot').addClass('icon-star-empty');
+      $(this).removeClass("hot");
+    }
+    $.get($(this).attr("href"));   
+    return false;
+  });
 
 });
 
