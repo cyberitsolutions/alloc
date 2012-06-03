@@ -190,8 +190,61 @@ class clientContact extends db_entity {
   function have_role($role="") {
     return in_array($role, array("","client"));
   }
+
+  function get_list_filter($filter=array()) {
+    global $current_user;
+
+    // If they want starred, load up the clientContactID filter element
+    if ($filter["starred"]) {
+      foreach ((array)$current_user->prefs["stars"]["clientContact"] as $k=>$v) {
+        $filter["clientContactID"][] = $k;
+      }
+      is_array($filter["clientContactID"]) or $filter["clientContactID"][] = -1;
+    }
+
+    // Filter on clientContactID
+    if ($filter["clientContactID"] && is_array($filter["clientContactID"])) {
+      $sql[] = "(clientContact.clientContactID in ('".esc_implode("','",$filter["clientContactID"])."'))";
+    } else if ($filter["clientContactID"]) {     
+      $sql[] = sprintf("(clientContact.clientContactID = %d)", db_esc($filter["clientContactID"]));
+    }
+
+    // No point continuing if primary key specified, so return
+    if ($filter["clientContactID"] || $filter["starred"]) {
+      return $sql;
+    }
+  }
+
+  function get_list($_FORM) {
+    global $TPL;
+    $filter = clientContact::get_list_filter($_FORM);
+    if (is_array($filter) && count($filter)) {
+      $filter = " WHERE ".implode(" AND ",$filter);
+    }
+
+    $q = "SELECT clientContact.*, client.*
+            FROM clientContact
+       LEFT JOIN client ON client.clientID = clientContact.clientID
+                 ".$filter." 
+        GROUP BY clientContact.clientContactID 
+        ORDER BY clientContactName,clientContact.primaryContact asc";
+    $db = new db_alloc;
+    $db->query($q);
+    while ($row = $db->next_record()) {
+      $c = new client;
+      $c->read_db_record($db);
+      $row["clientLink"] = $c->get_client_link($_FORM);
+      $row["clientContactEmail"] and $row["clientContactEmail"] = "<a href=\"mailto:".page::htmlentities($row["clientName"]." <".$row["clientContactEmail"].">")."\">".page::htmlentities($row["clientContactEmail"])."</a>";
+      $rows[] = $row;
+    }
+    return $rows;
+  }
+
+  function get_list_html($rows=array(),$ops=array()) {
+    global $TPL;
+    $TPL["clientContactListRows"] = $rows;
+    $TPL["_FORM"] = $ops;
+    include_template(dirname(__FILE__)."/../templates/clientContactListS.tpl");
+  }
 }
-
-
-
 ?>
