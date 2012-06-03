@@ -274,18 +274,23 @@ class comment extends db_entity {
     $rtn[] = '<tr>';
     $rtn[] = '  <td style="padding-bottom:0px; white-space:normal" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].'</td>';
     $rtn[] = '  <td align="right" style="padding-bottom:0px;" class="nobr">'.$row["form"].$row["recipient_editor"].'</td>';
+    if ($row["commentID"]) {
+      $rtn[] = '  <td align="right" width="1%">'.page::star("comment",$row["commentID"]).'</td>';
+    } else if ($row["timeSheetItemID"]){
+      $rtn[] = '  <td align="right" width="1%">'.page::star("timeSheetItem",$row["timeSheetItemID"]).'</td>';
+    }
     $rtn[] = '</tr>';
     $rtn[] = '<tr>';
-    $rtn[] = '  <td colspan="2" style="padding-top:0px; white-space:normal;">'.preg_replace("/<[^>]>/","",$row["emailed"])."</td>";
+    $rtn[] = '  <td colspan="3" style="padding-top:0px; white-space:normal;">'.preg_replace("/<[^>]>/","",$row["emailed"])."</td>";
     $rtn[] = '</tr>';
     $rtn[] = '<tr>';
-    $rtn[] = '  <td colspan="2" onClick="'.$onClick.'"><div><pre class="comment">'.$comment.'</pre></div></td>';
+    $rtn[] = '  <td colspan="3" onClick="'.$onClick.'"><div><pre class="comment">'.$comment.'</pre></div></td>';
     $rtn[] = '</tr>';
     $row["children"] and $rtn[] = comment::get_comment_children($row["children"]);
     if ($row["files"] || $row["reply"]) {
       $rtn[] = '<tr>';
       $row["files"] and $rtn[] = '  <td valign="bottom" align="left">'.$row["files"].'</td>';
-      $row["files"] or $cs = 2;
+      $row["files"] or $cs = 3;
       $row["reply"] and $rtn[] = '  <td valign="bottom" align="right" colspan="'.$cs.'">'.$row["reply"].'</td>';
       $rtn[] = '</tr>';
     }
@@ -361,7 +366,7 @@ class comment extends db_entity {
     $rtn = array();
     foreach($children as $child) {
       // style=\"padding:0px; padding-left:".($padding*15+5)."px; padding-right:6px;\"
-      $rtn[] = "<tr><td colspan=\"2\" style=\"padding:0px; padding-left:6px; padding-right:6px;\">".comment::get_comment_html_table($child)."</td></tr>";
+      $rtn[] = "<tr><td colspan=\"3\" style=\"padding:0px; padding-left:6px; padding-right:6px;\">".comment::get_comment_html_table($child)."</td></tr>";
       if (is_array($child["children"]) && count($child["children"])) {
         $padding += 1;
         $rtn[] = comment::get_comment_children($child["children"],$padding);
@@ -670,14 +675,86 @@ class comment extends db_entity {
     }   
   }
 
+  function get_list_filter($filter=array()) {
+    global $current_user;
+
+    // If they want starred, load up the commentID filter element
+    if ($filter["starred"]) {
+      foreach ((array)$current_user->prefs["stars"]["comment"] as $k=>$v) {
+        $filter["commentID"][] = $k;
+      }
+      is_array($filter["commentID"]) or $filter["commentID"][] = -1;
+    }
+
+    // Filter ocommentID
+    if ($filter["commentID"] && is_array($filter["commentID"])) {
+      $sql[] = "(comment.commentID in ('".esc_implode("','",$filter["commentID"])."'))";
+    } else if ($filter["commentID"]) {     
+      $sql[] = sprintf("(comment.commentID = %d)", db_esc($filter["commentID"]));
+    }
+
+    // No point continuing if primary key specified, so return
+    if ($filter["commentID"] || $filter["starred"]) {
+      return $sql;
+    }
+  }
+
   function get_list($_FORM=array()) {
+
+    // Two modes, 1: get all comments for an entity, eg a task
     if ($_FORM["entity"] && in_array($_FORM["entity"],array("project","client","task","timeSheet")) && $_FORM["entityID"]) {
       $e = new $_FORM["entity"];
       $e->set_id($_FORM["entityID"]);
       if ($e->select()) { // this ensures that the user can read the entity
         return comment::util_get_comments_array($_FORM["entity"],$_FORM["entityID"],$_FORM);
       }
+
+    // Or 2: get all starred comments
+    } else if ($_FORM["starred"]){
+      $filter = comment::get_list_filter($_FORM);
+      if (is_array($filter) && count($filter)) {
+        $filter = " WHERE ".implode(" AND ",$filter);
+      }
+
+      $q = "SELECT comment.*, commentCreatedUser as personID, clientContact.clientContactName
+              FROM comment 
+         LEFT JOIN clientContact on comment.commentCreatedUserClientContactID = clientContact.clientContactID
+                 ".$filter." 
+          ORDER BY commentCreatedTime";
+      $db = new db_alloc;
+      $db->query($q);
+      $people = get_cached_table("person");
+      while ($row = $db->next_record()) {
+        $e = new $row["commentMaster"];
+        $e->set_id($row["commentMasterID"]);
+        $e->select();
+        $row["entity_link"] = $e->get_link();
+        $row["personID"] and $row["person"] = $people[$row["personID"]]["name"];
+        $row["clientContactName"] and $row["person"] = $row["clientContactName"];
+        $rows[] = $row;
+      }
+      $tsi_rows = timeSheetItem::get_timeSheetItemComments(null,true);
+      foreach ((array)$tsi_rows as $row) {
+        $t = new task();
+        $t->set_id($row["taskID"]);
+        $t->select();
+        $row["entity_link"] = $t->get_link();
+        $row["commentMaster"] = "Task";
+        $row["commentMasterID"] = $row["taskID"];
+        $row["commentCreatedTime"] = $row["date"];
+        $row["personID"] and $row["person"] = $people[$row["personID"]]["name"];
+        $rows[] = $row;
+      }
+
+      return (array)$rows;
     }
+  }
+
+  function get_list_html($rows=array(),$ops=array()) {
+    global $TPL;
+    $TPL["commentListRows"] = $rows;
+    $TPL["_FORM"] = $ops;
+    include_template(dirname(__FILE__)."/../templates/commentListS.tpl");
   }
 
   function get_list_vars() {
