@@ -151,6 +151,7 @@ require_once("../alloc.php");
       $rtn[] =  '  <td width="25%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col1).'</span>&nbsp;</td>';
       $rtn[] =  '  <td width="20%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col2).'</span>&nbsp;</td>';
       $rtn[] =  '  <td width="50%" align="left" valign="top">'.nl2br($clientContact->get_value('clientContactOther',DST_HTML_DISPLAY)).'&nbsp;</td>';
+      $rtn[] =  '  <td align="right" class="right nobr" width="1%">'.page::star("clientContact",$clientContact->get_id()).'</td>';
       $rtn[] =  '  <td align="right" class="right nobr">'.$buttons.'</td>';
       $rtn[] =  '</tr>';
       $rtn[] =  '</table>';
