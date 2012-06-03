@@ -14,6 +14,7 @@
 {if $_FORM["showInvoiceAmountPaid"]}   <th>Rejected</th>{/}
 {if $_FORM["showInvoiceAmountPaid"]}   <th>Pending</th>{/}
 {if $_FORM["showInvoiceAmountPaid"]}   <th>Approved</th>{/}
+<th width="1%" style="font-size:120%"><i class="icon-star"></i></th>
 </tr>
 {/}
 
@@ -30,6 +31,9 @@
 {if $_FORM["showInvoiceAmountPaid"]} <td>{page::money($r["currencyTypeID"],$r["amountPaidRejected"],"%S%m")}</td>{/}
 {if $_FORM["showInvoiceAmountPaid"]} <td>{page::money($r["currencyTypeID"],$r["amountPaidPending"],"%S%m")}</td>{/}
 {if $_FORM["showInvoiceAmountPaid"]} <td>{page::money($r["currencyTypeID"],$r["amountPaidApproved"],"%S%m")}</td>{/}
+  <td width="1%">
+    {page::star("invoice",$r["invoiceID"])}
+  </td>
 </tr>
 {/}
 
