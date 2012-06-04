@@ -446,6 +446,28 @@ class productSale extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
+    global $current_user;
+
+    // If they want starred, load up the productSaleID filter element
+    if ($filter["starred"]) {
+      foreach ((array)$current_user->prefs["stars"]["productSale"] as $k=>$v) {
+        $filter["productSaleID"][] = $k;
+      }
+      is_array($filter["productSaleID"]) or $filter["productSaleID"][] = -1;
+    }
+
+    // Filter oproductSaleID
+    if ($filter["productSaleID"] && is_array($filter["productSaleID"])) {
+      $sql[] = "(productSale.productSaleID in ('".esc_implode("','",$filter["productSaleID"])."'))";
+    } else if ($filter["productSaleID"]) {     
+      $sql[] = sprintf("(productSale.productSaleID = %d)", db_esc($filter["productSaleID"]));
+    }
+
+    // No point continuing if primary key specified, so return
+    if ($filter["clientID"] || $filter["starred"]) {
+      return $sql;
+    }
+
     if ($filter["projectID"]) {
       $sql[] = sprintf("(productSale.projectID = %d)",$filter["projectID"]);
     }
@@ -498,51 +520,14 @@ class productSale extends db_entity {
       $productSale->read_db_record($db);
       $row["amounts"] = $productSale->get_amounts();
       $row["statusLabel"] = $statii[$row["status"]];
+      $row["salespersonLabel"] = $people[$row["personID"]]["name"];
       $row["creatorLabel"] = $people[$row["productSaleCreatedUser"]]["name"];
       $row["productSaleLink"] = $productSale->get_link();
-      $body.= productSale::get_list_body($row,$_FORM);
+      $row["_FORM"] = $_FORM;
       $rows[] = $row;
     }
 
-    if ($_FORM['return'] == 'array') {
-      return $rows;
-    }
-
-    $header = productSale::get_list_header($_FORM);
-    $footer = productSale::get_list_footer($_FORM);
-
-    if ($body) {
-      return $header.$body.$footer;
-    } else {
-      return "<table style=\"width:100%\"><tr><td style=\"text-align:center\"><b>No Product Sales Found</b></td></tr></table>";
-    }
-  }
-
-  function get_list_header($_FORM=array()) {
-    $ret[] = "<table class=\"list sortable\">";
-    $ret[] = "<tr>";
-    $ret[] = "  <th class=\"sorttable_numeric\">ID</th>";
-    $ret[] = "  <th>Creator</th>";
-    $ret[] = "  <th>Date</th>";
-    $ret[] = "  <th>Client</th>";
-    $ret[] = "  <th>Project</th>";
-    $ret[] = "  <th>Status</th>";
-    $ret[] = "  <th class=\"right\">Margin</th>";
-    $ret[] = "</tr>";
-    return implode("\n",$ret);
-  }
-
-  function get_list_body($sale,$_FORM=array()) {
-    global $TPL;
-    $TPL["_FORM"] = $_FORM;
-    $TPL["sale"] = $sale;
-    $TPL = array_merge($TPL,(array)$sale);
-    return include_template(dirname(__FILE__)."/../templates/productSaleListR.tpl", true);
-  }
-
-  function get_list_footer($_FORM=array()) {
-    $ret[] = "</table>";
-    return implode("\n",$ret);
+    return $rows;
   }
 
   function get_link($row=array()) {
@@ -595,7 +580,88 @@ class productSale extends db_entity {
     return $interestedPartyOptions;
   }
 
+  function get_list_vars() {
+    return array("return"                         => "[MANDATORY] eg: array | html"
+                ,"productSaleID"                  => "Sale that has this ID"
+                ,"starred"                        => "Sale that have been starred"
+                ,"projectID"                      => "Sales that belong to this Project"
+                ,"personID"                       => "Saless for this person"
+                ,"status"                         => "Sale status eg: edit | allocate | admin | finished"
+                ,"url_form_action"                => "The submit action for the filter form"
+                ,"form_name"                      => "The name of this form, i.e. a handle for referring to this saved form"
+                ,"dontSave"                       => "Specify that the filter preferences should not be saved this time"
+                ,"applyFilter"                    => "Saves this filter as the persons preference"
+                );
+  }
 
+  function load_form_data($defaults=array()) {
+    global $current_user;
+
+    $page_vars = array_keys(productSale::get_list_vars());
+
+    $_FORM = get_all_form_data($page_vars,$defaults);
+
+    if (!$_FORM["applyFilter"]) {
+      $_FORM = $current_user->prefs[$_FORM["form_name"]];
+      if (!isset($current_user->prefs[$_FORM["form_name"]])) {
+        $_FORM["status"] = "edit";
+        $_FORM["personID"] = $current_user->get_id();
+      }
+
+    } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+      $url = $_FORM["url_form_action"];
+      unset($_FORM["url_form_action"]);
+      $current_user->prefs[$_FORM["form_name"]] = $_FORM;
+      $_FORM["url_form_action"] = $url;
+    }
+
+    return $_FORM;
+  }
+
+  function load_productSale_filter($_FORM) {
+    global $current_user;
+
+    // display the list of project name.
+    $db = new db_alloc();
+    if (!$_FORM['showAllProjects']) {
+      $filter = "WHERE projectStatus = 'Current' ";
+    }
+    $query = sprintf("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
+    $rtn["show_project_options"] = page::select_options($query, $_FORM["projectID"],70);
+
+    // display the list of user name.
+    if (have_entity_perm("productSale", PERM_READ, $current_user, false)) {
+      $rtn["show_userID_options"] = page::select_options(person::get_username_list(), $_FORM["personID"]);
+      
+    } else {
+      $person = new person;
+      $person->set_id($current_user->get_id());
+      $person->select();
+      $person_array = array($current_user->get_id()=>$person->get_name());
+      $rtn["show_userID_options"] = page::select_options($person_array, $_FORM["personID"]);
+    } 
+
+    // display a list of status
+    $status_array = productSale::get_statii();
+    unset($status_array["create"]);
+
+    $rtn["show_status_options"] = page::select_options($status_array,$_FORM["status"]);
+
+    // display the date from filter value
+    $rtn["showAllProjects"] = $_FORM["showAllProjects"];
+
+    // Get
+    $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
+
+    return $rtn;
+  }
+
+  function get_list_html($rows=array(),$extra=array()) {
+    global $TPL;
+    $TPL["productSaleListRows"] = $rows;
+    $TPL["extra"] = $extra;
+    include_template(dirname(__FILE__)."/../templates/productSaleListS.tpl");
+  }
 }
 
 
