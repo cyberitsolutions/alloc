@@ -25,10 +25,15 @@ define("NO_AUTH",1);
 require_once("../alloc.php");
 
 $sess = new Session();
+if (isset($_POST["forwardUrl"]))
+  $url = $_POST["forwardUrl"];
+else if (isset($_GET["forward"]))
+  $url = $_GET["forward"];
+else
+  $url = $sess->GetUrl($TPL["url_alloc_home"]);
 
 // If we already have a session
 if ($sess->Started()) {
-  $url = $sess->GetUrl($TPL["url_alloc_home"]);
   alloc_redirect($url);
   exit();
 
@@ -55,10 +60,6 @@ if ($sess->Started()) {
       $sess->UseGet();
     }
 
-    if (isset($_POST["forwardUrl"]))
-      $url = $_POST["forwardUrl"];
-    else
-      $url = $sess->GetUrl($TPL["url_alloc_home"]);
     $sess->Save();
     alloc_redirect($url);
   }
