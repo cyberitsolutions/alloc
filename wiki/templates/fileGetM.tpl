@@ -8,9 +8,12 @@
   {$msg}
   <div class="{$default_one}">
     <div class="wikidoc">
-      <div style="float:right; display:inline; width:30px; margin-top:10px; right:-10px; position:relative;" class="noprint">
+      <span style="float:right; margin-top:10px;" class="noprint">
+        {page::star("wiki",base64_encode($file))}
+      </span>
+      <span style="float:right; margin-top:10px;" class="noprint">
         <a target="_blank" href="{$url_alloc_wiki}media=print&target={$file}&rev={$rev}"><img alt="Print" class="noprint" border="0" src="{$url_alloc_images}printer.png"></a>
-      </div>
+      </span>
       {$str_html}
     </div>
     <br><br>
