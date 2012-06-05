@@ -356,7 +356,7 @@ table.box th.right table {
 } 
 table.box th a:link, table.box th a:visited { 
   font-weight:normal; 
-  color:red; 
+  color:#c26832; 
 }
 table.box th a:hover { 
   font-weight:normal; 
