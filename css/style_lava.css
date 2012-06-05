@@ -549,7 +549,7 @@ a.star {
   color:#ccc;
 }
 a.star:hover, a.hot {
-  color:#ff6000 !important;
+  color:#f1965f !important;
 }
 
 /* .panel tables (Harpo) have a blue border and a light blue background in the default theme.
