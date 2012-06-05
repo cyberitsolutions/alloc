@@ -21,6 +21,7 @@
 */
 
 
+require_once(dirname(__FILE__)."/wiki.inc.php");
 require_once(dirname(__FILE__)."/markdown.inc.php");
 require_once(dirname(__FILE__)."/vcs.inc.php");
 require_once(dirname(__FILE__)."/vcs_darcs.inc.php");
