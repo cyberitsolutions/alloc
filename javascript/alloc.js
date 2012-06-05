@@ -326,7 +326,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $("a.star").click(function(){
+  $("a.star").live('click',function(){
     if ($("b",$(this)).hasClass('icon-star-empty')) {
       $("b",$(this)).removeClass('icon-star-empty').addClass('icon-star');
       $(this).addClass("hot");
