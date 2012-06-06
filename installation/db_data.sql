@@ -326,6 +326,7 @@ VALUES
 ,('person'                   ,-1 ,''         ,NULL ,259   ,NULL)
 ,('person'                   ,0  ,''         ,NULL ,1     ,NULL)
 ,('person'                   ,0  ,'admin'    ,NULL ,7951  ,NULL)
+,('person'                   ,0  ,'god'      ,NULL ,7951  ,NULL)
 
 ,('product'                  ,0  ,''         ,0    ,1     ,NULL)
 ,('product'                  ,0  ,'manage'   ,100  ,15    ,NULL)
