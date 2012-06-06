@@ -58,15 +58,15 @@ $$
 DROP FUNCTION IF EXISTS has_perm $$
 CREATE FUNCTION has_perm(pID INTEGER, action INTEGER, tableN VARCHAR(255)) RETURNS BOOLEAN READS SQL DATA
 BEGIN
-  DECLARE perms varchar(255);
+  DECLARE p varchar(255);
   DECLARE rtn BOOLEAN;
-  SELECT perms INTO perms FROM person WHERE personID = pID;
+  SELECT perms INTO p FROM person WHERE personID = pID;
 
   SELECT count(*) INTO rtn
     FROM permission
    WHERE tableName = tableN
      AND (actions & action = action)
-     AND (roleName IS NULL OR roleName = '' OR find_in_set(roleName,perms)>0);
+     AND (roleName IS NULL OR roleName = '' OR find_in_set(roleName,p)>0);
   return rtn;
 END
 $$
@@ -167,13 +167,13 @@ DROP TRIGGER IF EXISTS before_insert_timeSheet $$
 CREATE TRIGGER before_insert_timeSheet BEFORE INSERT ON timeSheet
 FOR EACH ROW
 BEGIN
-  DECLARE preferred_tfID INTEGER;
+  DECLARE pref_tfID INTEGER;
   DECLARE cbd BIGINT(20);
   DECLARE cur VARCHAR(3);
   SET NEW.personID = personID();
   SET NEW.status = 'edit';
-  SELECT preferred_tfID INTO preferred_tfID FROM person WHERE personID = personID();
-  SET NEW.recipient_tfID = preferred_tfID;
+  SELECT preferred_tfID INTO pref_tfID FROM person WHERE personID = personID();
+  SET NEW.recipient_tfID = pref_tfID;
   SELECT customerBilledDollars,currencyTypeID INTO cbd,cur FROM project WHERE projectID = NEW.projectID;
   SET NEW.customerBilledDollars = cbd;
   SET NEW.currencyTypeID = cur;
@@ -264,8 +264,8 @@ FOR EACH ROW
 BEGIN
   DECLARE validDate DATE;
   DECLARE pID INTEGER;
-  DECLARE rate BIGINT(20);
-  DECLARE rateUnitID INTEGER;
+  DECLARE r BIGINT(20);
+  DECLARE rUnitID INTEGER;
   DECLARE description VARCHAR(255);
   call check_edit_timeSheet(NEW.timeSheetID);
 
@@ -279,16 +279,16 @@ BEGIN
 
   SET NEW.personID = personID();
   SELECT projectID INTO pID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
-  SELECT rate,rateUnitID INTO rate,rateUnitID FROM projectPerson WHERE projectID = pID AND personID = personID();
+  SELECT rate,rateUnitID INTO r,rUnitID FROM projectPerson WHERE projectID = pID AND personID = personID();
 
   -- if rate is neq project-person rate AND they're don't have perm halt with error about rate
-  IF (neq(NEW.rate,rate) AND NOT can_edit_rate(personID(),pID)) THEN
+  IF (neq(NEW.rate,r) AND NOT can_edit_rate(personID(),pID)) THEN
     call alloc_error("Time sheet's rate is not editable.");
   END IF;
 
-  IF (NEW.rate IS NULL AND rate) THEN
-    SET NEW.rate = rate;
-    SET NEW.timeSheetItemDurationUnitID = rateUnitID;
+  IF (NEW.rate IS NULL AND r) THEN
+    SET NEW.rate = r;
+    SET NEW.timeSheetItemDurationUnitID = rUnitID;
   END IF;
 
   IF (NEW.taskID) THEN
@@ -321,8 +321,8 @@ FOR EACH ROW
 BEGIN
   DECLARE validDate DATE;
   DECLARE pID INTEGER;
-  DECLARE rate BIGINT(20);
-  DECLARE rateUnitID INTEGER;
+  DECLARE r BIGINT(20);
+  DECLARE rUnitID INTEGER;
   call check_edit_timeSheet(OLD.timeSheetID);
 
   SET NEW.timeSheetItemModifiedUser = personID();
@@ -336,16 +336,16 @@ BEGIN
   SET NEW.timeSheetItemID = OLD.timeSheetItemID;
   SET NEW.personID = OLD.personID;
   SELECT projectID INTO pID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
-  SELECT rate,rateUnitID INTO rate,rateUnitID FROM projectPerson WHERE projectID = pID AND personID = OLD.personID;
+  SELECT rate,rateUnitID INTO r,rUnitID FROM projectPerson WHERE projectID = pID AND personID = OLD.personID;
 
   -- if rate is neq project-person rate AND they're don't have perm halt with error about rate
-  IF (neq(NEW.rate,rate) AND NOT can_edit_rate(personID(),pID)) THEN
+  IF (neq(NEW.rate,r) AND NOT can_edit_rate(personID(),pID)) THEN
     call alloc_error("Time sheet's rate is not editable.");
   END IF;
 
-  IF (NEW.rate IS NULL AND rate) THEN
-    SET NEW.rate = rate;
-    SET NEW.timeSheetItemDurationUnitID = rateUnitID;
+  IF (NEW.rate IS NULL AND r) THEN
+    SET NEW.rate = r;
+    SET NEW.timeSheetItemDurationUnitID = rUnitID;
   END IF;
 END
 $$
@@ -429,7 +429,7 @@ DROP TRIGGER IF EXISTS before_insert_task $$
 CREATE TRIGGER before_insert_task BEFORE INSERT ON task
 FOR EACH ROW
 BEGIN
-  DECLARE defaultTaskLimit DECIMAL(7,2);
+  DECLARE defTaskLimit DECIMAL(7,2);
   call check_edit_task(NEW.projectID);
 
   SET NEW.creatorID = personID();
@@ -448,8 +448,8 @@ BEGIN
   IF (empty(NEW.timeLimit)) THEN SET NEW.timeLimit = NEW.timeExpected; END IF;
   
   IF (empty(NEW.timeLimit) AND NEW.projectID) THEN
-    SELECT defaultTaskLimit INTO defaultTaskLimit FROM project WHERE projectID = NEW.projectID;
-    SET NEW.timeLimit = defaultTaskLimit;
+    SELECT defaultTaskLimit INTO defTaskLimit FROM project WHERE projectID = NEW.projectID;
+    SET NEW.timeLimit = defTaskLimit;
   END IF;
  
   IF (empty(NEW.estimatorID) AND (NEW.timeWorst OR NEW.timeBest OR NEW.timeExpected)) THEN
