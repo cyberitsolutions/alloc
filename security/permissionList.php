@@ -25,6 +25,8 @@ require_once("../alloc.php");
 function show_permission_list($template_name) {
   global $TPL;
 
+  $roles = permission::get_roles();
+
   if ($_REQUEST["submit"] || $_REQUEST["filter"] != "") {
     $where = " where tableName like '%".db_esc($_REQUEST["filter"])."%' ";   // TODO: Add filtering to permission list
   }
@@ -36,6 +38,7 @@ function show_permission_list($template_name) {
     $permission->set_values();
     $TPL["actions"] = $permission->describe_actions();
     $TPL["odd_even"] = $TPL["odd_even"] == "odd" ? "even" : "odd";
+    $TPL["roleName"] = $roles[$TPL["roleName"]];
     include_template($template_name);
   }
 }

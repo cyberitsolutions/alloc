@@ -62,10 +62,6 @@ BEGIN
   DECLARE rtn BOOLEAN;
   SELECT perms INTO perms FROM person WHERE personID = pID;
 
-  IF (have_role(pID,'god')) THEN
-    RETURN 1;
-  END IF;
-
   SELECT count(*) INTO rtn
     FROM permission
    WHERE tableName = tableN
@@ -79,7 +75,7 @@ DROP FUNCTION IF EXISTS have_role $$
 CREATE FUNCTION have_role(pID INTEGER, role VARCHAR(255)) RETURNS BOOLEAN READS SQL DATA
 BEGIN
   DECLARE num INTEGER;
-  SELECT count(personID) INTO num FROM person WHERE personID = pID AND (find_in_set(role,perms) OR find_in_set('god',perms));
+  SELECT count(personID) INTO num FROM person WHERE personID = pID AND find_in_set(role,perms);
   RETURN num;
 END
 $$
