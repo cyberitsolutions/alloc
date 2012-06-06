@@ -191,7 +191,7 @@ require_once("../alloc.php");
 
     // show all reminders for this project
     $db = new db_alloc;
-    if ($current_user->have_role("manage") || $current_user->have_role("admin") || $current_user->have_role("god")) {
+    if ($current_user->have_role("manage")) {
       $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d", $clientID);
     } else {
       $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d AND personID='%d'", $clientID, $current_user->get_id());

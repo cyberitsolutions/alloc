@@ -164,7 +164,7 @@ class person extends db_entity {
 
   function have_role($perm_name) {
     $perms = explode(",",$this->get_value("perms"));
-    return (in_array("god",$perms) || in_array($perm_name,$perms));
+    return in_array($perm_name,$perms);
   }
 
   function check_role($perm_name) {

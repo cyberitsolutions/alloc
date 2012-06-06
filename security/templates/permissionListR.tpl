@@ -1,7 +1,7 @@
 <tr>
   <td>{$tableName}</td>
   <td>{$entityID}</td>
-  <td>{$roleName}</td>
+  <td class="nobr">{$roleName}</td>
   <td>{$actions}</td>
   <td>{$sortKey}</td>
   <td>{=$comment}</td>

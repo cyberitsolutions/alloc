@@ -264,6 +264,11 @@ INSERT INTO currencyType (currencyTypeID,currencyTypeLabel,currencyTypeName,curr
 --
 -- Dumping data for table permission
 --
+-- define("PERM_READ", 1);
+-- define("PERM_UPDATE", 2);
+-- define("PERM_DELETE", 4);
+-- define("PERM_CREATE", 8);
+-- define("PERM_READ_WRITE", PERM_READ + PERM_UPDATE + PERM_DELETE + PERM_CREATE);
 
 DELETE FROM permission;
 INSERT INTO permission (tableName, entityID, roleName, sortKey, actions, comment)
@@ -286,8 +291,7 @@ VALUES
 ,('commentTemplate'          ,0  ,''         ,NULL ,1     ,NULL)
 ,('commentTemplate'          ,0  ,'manage'   ,NULL ,15    ,NULL)
 
-,('config'                   ,0  ,''         ,NULL ,17    ,NULL)
-,('config'                   ,0  ,'admin'    ,NULL ,15    ,NULL)
+,('config'                   ,0  ,'god'      ,NULL ,15    ,NULL)
 
 ,('expenseForm'              ,-1 ,'employee' ,NULL ,31    ,NULL)
 ,('expenseForm'              ,0  ,'admin'    ,NULL ,31    ,NULL)
@@ -316,6 +320,8 @@ VALUES
 ,('loan'                     ,0  ,'employee' ,NULL ,17    ,NULL)
 ,('loan'                     ,-1 ,'employee' ,NULL ,31    ,NULL)
 ,('loan'                     ,0  ,'admin'    ,NULL ,15    ,NULL)
+
+,('permission'               ,0  ,'god'      ,NULL ,15    ,NULL)
 
 ,('person'                   ,-1 ,''         ,NULL ,259   ,NULL)
 ,('person'                   ,0  ,''         ,NULL ,1     ,NULL)

@@ -67,7 +67,7 @@ if ($_POST["save"]) {
 // necessary
 $permission->select();
 
-$TPL["roleNameOptions"] = page::select_options(array("god"=>"god", "admin"=>"admin", "manage"=>"manage", "employee"=>"employee","client"=>"client"), $permission->get_value("roleName"));
+$TPL["roleNameOptions"] = page::select_options(permission::get_roles(), $permission->get_value("roleName"));
 
 $table_name = $_POST["tableName"] or $table_name = $permission->get_value("tableName");
 $entity = new $table_name;

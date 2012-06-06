@@ -52,6 +52,15 @@ class permission extends db_entity {
 
     return $description;
   }
+
+  function get_roles() {
+    return array("god"=>"Super User"
+                ,"admin"=>"Finance Admin"
+                ,"manage"=>"Project Manager"
+                ,"employee"=>"Employee"
+                ,"client"=>"Client");
+  }
+
 }
 
 

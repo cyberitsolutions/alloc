@@ -121,21 +121,9 @@ class db_entity {
     }
   }
 
-  function is_god() {
-    global $current_user;
-    if (is_object($current_user)) {
-      $perms = explode(",", $current_user->get_value("perms"));
-      if (in_array("god", $perms)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
   function have_perm($action = 0, $person = "", $assume_owner = false) {
     global $current_user, $permission_cache, $guest_permission_cache;
-    if ($this->is_god() || defined("IS_GOD")) {
+    if (defined("IS_GOD")) {
       return true;
     }
 
