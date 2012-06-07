@@ -20,6 +20,15 @@ $(document).ready(function() {
   {else}
     $('#editTask').focus();
   {/}
+  $('#dateTargetStart, #dateTargetCompletion').keydown(function(evt) {
+    // ctrl + enter
+    if (evt.which == 13 && evt.ctrlKey) {
+      var date = new Date();
+      // date.print is an extension from the DHTML calendar
+      evt.target.value = date.print("%Y-%m-%d");
+      evt.preventDefault();
+    }
+    });
 });
 </script>
 
