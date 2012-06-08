@@ -301,8 +301,6 @@ CREATE TABLE reminder (
   reminderID integer NOT NULL auto_increment PRIMARY KEY,
   reminderType varchar(255) default NULL,
   reminderLinkID integer NOT NULL,
-  personID integer NULL default NULL,
-  metaPerson integer NULL default NULL,
   reminderTime datetime NOT NULL,
   reminderRecuringInterval varchar(255) NOT NULL default 'No',
   reminderRecuringValue integer NOT NULL default '0',
@@ -315,6 +313,14 @@ CREATE TABLE reminder (
   reminderModifiedUser integer DEFAULT NULL,
   reminderActive BOOLEAN NOT NULL DEFAULT true
 ) ENGINE=InnoDB PACK_KEYS=0;
+
+DROP TABLE IF EXISTS reminderRecipient;
+CREATE TABLE reminderRecipient (
+  reminderRecipientID integer NOT NULL auto_increment PRIMARY KEY,
+  reminderID integer NOT NULL,
+  personID integer,
+  metaPersonID integer
+) ENGINE=InnoDB PACK_KEYS = 0;
 
 DROP TABLE IF EXISTS sentEmailLog;
 CREATE TABLE sentEmailLog (

@@ -20,6 +20,7 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+// -1 used to be ALL, but was made redundant with the multiselect
 define("REMINDER_METAPERSON_TASK_ASSIGNEE", 2);
 define("REMINDER_METAPERSON_TASK_MANAGER", 3);
 
@@ -29,8 +30,6 @@ class reminder extends db_entity {
   public $key_field = "reminderID";
   public $data_fields = array("reminderType"
                              ,"reminderLinkID"
-                             ,"personID"
-                             ,"metaPerson"
                              ,"reminderTime"
                              ,"reminderRecuringInterval"
                              ,"reminderRecuringValue"
@@ -51,7 +50,6 @@ class reminder extends db_entity {
 
   function get_recipients() {
     $db = new db_alloc;
-    $recipients = array("-1"=>"-- all --");
     $type = $this->get_value('reminderType');
     if ($type == "project") {
       $query = sprintf("SELECT * 
@@ -63,8 +61,7 @@ class reminder extends db_entity {
     } else if ($type == "task") {
       // Modified query option: to send to all people on the project that this task is from.
       $recipients = array("-3" => "Task Manager"
-                         ,"-2" => "Task Assignee"
-                         ,"-1" => "-- all --");
+                         ,"-2" => "Task Assignee");
 
       $db->query("SELECT projectID FROM task WHERE taskID = %s",$this->get_value('reminderLinkID'));
       $db->next_record();
@@ -95,33 +92,23 @@ class reminder extends db_entity {
 
   function get_recipient_options() {
     global $current_user;
-    $fail = false;
 
     $recipients = $this->get_recipients();
     $type = $this->get_value('reminderType');
-    $recipient = -1 * $this->get_value('metaPerson');
-    $recipient or $recipient = $this->get_value('personID');
-    
-    //project reminder
-    if (!$recipient && $type == "project") {
 
-    //task reminder
-    } else if(!$recipient && $type == "task") {
-      $task = new task;
-      $task->set_id($this->get_value('reminderLinkID'));
-      $task->select();
-      //get the task assignee
-      $recipient = $task->get_value('personID');
-      //if the assignee is not part of the project choose the project manager
-    } 
+    $recipient = array();
+    $db = new db_alloc;
+    $query = "SELECT * from reminderRecipient WHERE reminderID = %d";
+    $db->query($query, $this->get_id());
+    while ($db->next_record()) {
+      if ($db->f('metaPersonID'))
+        $recipient []= $db->f('metaPersonID');
+      else
+        $recipient []= $db->f('personID');
+    }
 
-    //default -  set to logged in user
-    if(!$recipient) {
-      if ($_GET["personID"]){
-        $recipient = $_GET["personID"];
-      } else {
-        $recipient = $current_user->get_id();
-      }
+    if(!$recipient && $_GET["personID"]) {
+      $recipient[] = $_GET["personID"];
     }
     return array($recipients, $recipient);
   }
@@ -210,30 +197,29 @@ class reminder extends db_entity {
       $this->set_value("reminderActive",0);
       $this->save();
     } else {
-    
-
       $date = strtotime($this->get_value('reminderTime'));
       // Only send reminder if it is time to send it
       if (date("YmdHis", $date) <= date("YmdHis")) {
-     
-        $people = get_cached_table("person");
-        $person = $people[$this->get_effective_person_id()];
-    
-        if ($person['emailAddress']) {
-          $email = sprintf("%s %s <%s>"
+
+        $recipients = $this->get_all_recipients();
+        foreach ($recipients as $person) {
+
+          if ($person['emailAddress']) {
+            $email = sprintf("%s %s <%s>"
                           , $person['firstName']
                           , $person['surname']
                           , $person['emailAddress']);
 
-          $subject = $this->get_value('reminderSubject');
-          $content = $this->get_value('reminderContent');
+            $subject = $this->get_value('reminderSubject');
+            $content = $this->get_value('reminderContent');
 
+            $e = new alloc_email($email, $subject, $content, "reminder");
+            $e->send();
+          }
           // Update reminder
           if ($this->get_value('reminderRecuringInterval') == "No") {
               $this->set_value("reminderActive",0);
               $this->save();
-              $e = new alloc_email($email, $subject, $content, "reminder");
-              $e->send();
           } else if ($this->get_value('reminderRecuringValue') != 0) {
 
             $interval = $this->get_value('reminderRecuringValue');
@@ -243,10 +229,7 @@ class reminder extends db_entity {
             $this->set_value('reminderTime', date("Y-m-d H:i:s", $newtime));
             // reset advanced notice
             $this->set_value('reminderAdvNoticeSent', 0);
-            if ($this->save()) {
-              $e = new alloc_email($email, $subject, $content, "reminder");
-              $e->send();
-            }
+            $this->save();
           }
         } 
       }
@@ -289,36 +272,34 @@ class reminder extends db_entity {
 
       // only sent advanced notice if it is time to send it
       if (date("YmdHis", $advnotice_time) <= date("YmdHis")) {
+        $recipients = $this->get_all_recipients();
 
-        $people = get_cached_table("person");
-        $person = $people[$this->get_effective_person_id()];
+        $subject = sprintf("Adv Notice: %s"
+                          ,$this->get_value('reminderSubject'));
+        $content = $this->get_value('reminderContent');
 
-
-        if ($person['emailAddress'] != "") {
-          $email = sprintf("%s %s <%s>"
+	foreach ($recipients as $person) {
+          if ($person['emailAddress']) {
+            $email = sprintf("%s %s <%s>"
                           ,$person['firstName']
                           ,$person['surname']
                           ,$person['emailAddress']);
-
-          $subject = sprintf("Adv Notice: %s"
-                            ,$this->get_value('reminderSubject'));
-          $content = $this->get_value('reminderContent');
-          
-          $e = new alloc_email($email, $subject, $content, "reminder_advnotice");
-          $e->send();
-          $this->set_value('reminderAdvNoticeSent', 1);
-          $this->save();
-        } 
+            $e = new alloc_email($email, $subject, $content, "reminder_advnotice");
+            $e->send();
+          }
+        }
+        $this->set_value('reminderAdvNoticeSent', 1);
+        $this->save();
       }
     }
   }
 
   // get the personID of the person who'll actually recieve this reminder
   // (i.e., convert "Task Assignee" into "Bob")
-  function get_effective_person_id() {
-    if($this->get_value('personID') === null) {
+  function get_effective_person_id($recipient) {
+    if($recipient->get_value('personID') == null) { //nulls don't come through correctly?
       // OK, slightly more complicated, we need to get the relevant link entity
-      $metaperson = $this->get_value('metaPerson');
+      $metaperson = -$recipient->get_value('metaPersonID');
       $type = $this->get_value("reminderType");
       if($type == "task") {
         $task = new task;
@@ -338,7 +319,7 @@ class reminder extends db_entity {
         alloc_die("Unknown metaperson.");
       }
     } else {
-      return $this->get_value('personID');
+      return $recipient->get_value('personID');
     }
   }
 
@@ -363,6 +344,40 @@ class reminder extends db_entity {
         return "Task Manager";
       break;
     }
+  }
+
+  function get_all_recipients() {
+    $db = new db_alloc;
+    $query = "SELECT * FROM reminderRecipient WHERE reminderID = %d";
+    $db->query($query, $this->get_id());
+    $people = get_cached_table("person");
+    $recipients = array();
+    $person = new reminderRecipient;
+    while ($db->next_record()) {
+      $person->read_db_record($db);
+      $id = $this->get_effective_person_id($person);
+      // hash on person ID prevents multiple emails to the same person
+      $recipients[$id] = $people[$id];
+    }
+    return $recipients;
+  }
+
+  function update_recipients($recipients) {
+    $db = new db_alloc;
+    $query = "DELETE FROM reminderRecipient WHERE reminderID = %d";
+    $db->query($query, $this->get_id());
+    foreach ($recipients as $r) {
+      $recipient = new reminderRecipient;
+      $recipient->set_value('reminderID', $this->get_id());
+      if ($r < 0) {
+        $recipient->set_value('metaPersonID', $r);
+        $recipient->set_value('personID', null);
+      } else {
+        $recipient->set_value('personID', $r);
+      }
+      $recipient->save();
+    }
+    return;
   }
 
 }
