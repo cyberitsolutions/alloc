@@ -51,9 +51,9 @@ $(document).ready(function() {
 
       <div class="pane">
         <div class="enclose">
-          <h6>Recipient<div>When</div></h6>
+          <h6>Recipients<div>When</div></h6>
           <div style="float:left; width:47%;">
-            {echo page::htmlentities($reminder_recipients[$reminder_recipient])}
+            {echo page::htmlentities($recipients_display)}
           </div>
           <div style="float:right; width:50%; text-align:left;">
             {$reminderTime}
@@ -112,9 +112,9 @@ $(document).ready(function() {
       <div class="pane">
 
         <div class="enclose">
-          <h6>Recipient<div>When</div></h6>
+          <h6>Recipients<div>When</div></h6>
           <div style="float:left; width:47%;">
-            <select name="reminder_recipient">{page::select_options($reminder_recipients,$reminder_recipient)}</select>
+            <select name="reminder_recipient[]" multiple="true">{page::select_options($reminder_recipients,$selected_recipients)}</select>
             {page::help("reminder_recipient")}
           </div>
           <div style="float:right; width:50%; text-align:left;">

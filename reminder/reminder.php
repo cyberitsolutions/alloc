@@ -120,7 +120,7 @@ case 3:
 <button type="submit" name="reminder_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
 &nbsp;&nbsp;<a href="" onClick="toggle_view_edit();return false;">Cancel edit</a>
 EOD;
-      
+
   } else {
     $reminder->set_value('reminderType', $parentType);
     $reminder->set_value('reminderLinkID', $parentID);
@@ -142,7 +142,12 @@ EOD2;
     $TPL["reminder_goto_parent"] = "<a href=\"".$TPL["return_address"]."\">Goto Task</a>";
   }
   // recipients
-  list($TPL["reminder_recipients"],$TPL["reminder_recipient"]) = $reminder->get_recipient_options();
+  list($TPL["reminder_recipients"],$TPL["selected_recipients"]) = $reminder->get_recipient_options();
+  $recipients_display = array();
+  foreach ($TPL["selected_recipients"] as $recipient) {
+    $recipients_display []= $TPL["reminder_recipients"][$recipient];
+  }
+  $TPL['recipients_display'] = implode($recipients_display, ", ");
   // date/time
   $_GET["reminderTime"] && $reminder->set_value("reminderTime",$_GET["reminderTime"]);
   $TPL["reminderTime"] = $reminder->get_value("reminderTime");
@@ -195,18 +200,7 @@ case 4:
   // save and return to list
   if ($_POST["reminder_save"] || $_POST["reminder_update"]) {
 
-    // -- all -- option
-    if ($_POST["reminder_recipient"] == -1) {
-      $reminder = new reminder;
-      $reminder->set_value('reminderType', $parentType);
-      $reminder->set_value('reminderLinkID', $parentID);
-      $recipients = $reminder->get_recipients();
-      $recipient_keys = array_keys($recipients);
-      array_shift($recipient_keys);
-    } else {
-      $recipient_keys = array($_POST["reminder_recipient"]);
-    }
-
+    $recipient_keys = $_POST["reminder_recipient"];
     // make 24 hour with 12am = 0 -> 11am = 11 -> 12pm = 12 -> 11pm = 23
     if ($_POST["reminder_hour"] == 12) {
       $_POST["reminder_hour"] = 0;
@@ -214,50 +208,43 @@ case 4:
     if ($_POST["reminder_meridian"] == "pm") {
       $_POST["reminder_hour"] += 12;
     }
-    // process list of all or list of one
-    for ($i = 0; $i < count($recipient_keys); $i++) {
-      $reminder = new reminder;
-      $reminder->set_value('reminderType', $parentType);
-      $reminder->set_value('reminderLinkID', $parentID);
-      if($recipient_keys[$i] < -1) {    // special case for meta people
-        $reminder->set_value('metaPerson', -1 * intval($recipient_keys[$i]));
-      } else {
-        $reminder->set_value('personID', $recipient_keys[$i]);
-      }
-      $reminder->set_value('reminderModifiedUser', $current_user->get_id());
-      $reminder->set_modified_time();
+    $reminder = new reminder;
+    $reminder->set_value('reminderType', $parentType);
+    $reminder->set_value('reminderLinkID', $parentID);
+    $reminder->set_value('reminderModifiedUser', $current_user->get_id());
+    $reminder->set_modified_time();
 
-      $reminder->set_value('reminderTime',$_POST["reminder_date"]." ".$_POST["reminder_hour"].":".$_POST["reminder_minute"].":00");
+    $reminder->set_value('reminderTime',$_POST["reminder_date"]." ".$_POST["reminder_hour"].":".$_POST["reminder_minute"].":00");
       
-      if (isset($_POST["reminder_update"])) {
-        $reminder->set_id($_POST["reminder_id"]);
-      }
-      if (!$_POST["reminder_recuring_value"]) {
-        $reminder->set_value('reminderRecuringInterval', 'No');
-        $reminder->set_value('reminderRecuringValue', '0');
-      } else {
-        if ($_POST["reminder_recuring_value"] == 0 && $_POST["reminder_recuring_interval"] && $_POST["reminder_recuring_interval"] != 'No') {
-          $_POST["reminder_recuring_value"] = 1;
-        }
-        $reminder->set_value('reminderRecuringInterval', $_POST["reminder_recuring_interval"]);
-        $reminder->set_value('reminderRecuringValue', $_POST["reminder_recuring_value"]);
-      }
-      $reminder->set_value('reminderAdvNoticeSent', '0');
-      if (!$_POST["reminder_advnotice_value"]) {
-        $reminder->set_value('reminderAdvNoticeInterval', 'No');
-        $reminder->set_value('reminderAdvNoticeValue', '0');
-      } else {
-        $reminder->set_value('reminderAdvNoticeInterval', $_POST["reminder_advnotice_interval"]);
-        $reminder->set_value('reminderAdvNoticeValue', $_POST["reminder_advnotice_value"]);
-      }
-      $reminder->set_value('reminderSubject', $_POST["reminder_subject"]);
-      $reminder->set_value('reminderContent', rtrim($_POST["reminder_content"]));
-      $reminder->set_value('reminderActive', sprintf("%d",$_POST["reminderActive"]));
-      $reminder->save();
-      $returnToParent = "reminder";
-      $reminderID = $reminder->get_id();
-      $TPL["message_good"][] = "Reminder saved.";
+    if (isset($_POST["reminder_update"])) {
+      $reminder->set_id($_POST["reminder_id"]);
     }
+    if (!$_POST["reminder_recuring_value"]) {
+      $reminder->set_value('reminderRecuringInterval', 'No');
+      $reminder->set_value('reminderRecuringValue', '0');
+    } else {
+      if ($_POST["reminder_recuring_value"] == 0 && $_POST["reminder_recuring_interval"] && $_POST["reminder_recuring_interval"] != 'No') {
+        $_POST["reminder_recuring_value"] = 1;
+      }
+      $reminder->set_value('reminderRecuringInterval', $_POST["reminder_recuring_interval"]);
+      $reminder->set_value('reminderRecuringValue', $_POST["reminder_recuring_value"]);
+    }
+    $reminder->set_value('reminderAdvNoticeSent', '0');
+    if (!$_POST["reminder_advnotice_value"]) {
+      $reminder->set_value('reminderAdvNoticeInterval', 'No');
+      $reminder->set_value('reminderAdvNoticeValue', '0');
+    } else {
+      $reminder->set_value('reminderAdvNoticeInterval', $_POST["reminder_advnotice_interval"]);
+      $reminder->set_value('reminderAdvNoticeValue', $_POST["reminder_advnotice_value"]);
+    }
+    $reminder->set_value('reminderSubject', $_POST["reminder_subject"]);
+    $reminder->set_value('reminderContent', rtrim($_POST["reminder_content"]));
+    $reminder->set_value('reminderActive', sprintf("%d",$_POST["reminderActive"]));
+    $reminder->save();
+    $reminder->update_recipients($recipient_keys);
+    $returnToParent = "reminder";
+    $reminderID = $reminder->get_id();
+    $TPL["message_good"][] = "Reminder saved.";
 
   } else if ($_POST["reminder_delete"] && $_POST["reminder_id"]) {
     $reminder = new reminder;

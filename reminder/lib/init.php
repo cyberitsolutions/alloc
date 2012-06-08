@@ -21,9 +21,10 @@
 */
 
 require_once(dirname(__FILE__)."/reminder.inc.php");
+require_once(dirname(__FILE__)."/reminderRecipient.inc.php");
 
 class reminder_module extends module {
-  var $db_entities = array("reminder");
+  var $db_entities = array("reminder", "reminderRecipient");
 }
 
 

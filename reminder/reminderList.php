@@ -28,10 +28,12 @@ function show_reminders($template) {
   // show all reminders for this project
   $db = new db_alloc;
 
-  $query = "SELECT * FROM reminder WHERE 1";
+  $query = "SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE 1";
 
-  if ($_REQUEST["filter_recipient"] && ($current_user->have_role("admin") || $current_user->have_role("manage"))) {
-    $query.= sprintf(" AND personID = %d", $_REQUEST["filter_recipient"]);
+  if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
+    if ($_REQUEST["filter_recipient"]) {
+      $query.= sprintf(" AND personID = %d", $_REQUEST["filter_recipient"]);
+    }
   } else {
     $query.= sprintf(" AND personID = %d", $current_user->get_id());
   }
@@ -40,7 +42,7 @@ function show_reminders($template) {
     $query.= sprintf(" AND reminderActive = %d",$_REQUEST["filter_reminderActive"]);
   }
 
-  $query.= " ORDER BY reminderTime,reminderType";
+  $query.= " GROUP BY reminder.reminderID ORDER BY reminderTime,reminderType";
 
   $db->query($query);
   while ($db->next_record()) {
@@ -57,7 +59,6 @@ function show_reminders($template) {
         $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
           ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
       }
-      $TPL["reminder_reminderRecipient"] = $reminder->get_recipient_description();
       $TPL["returnToParent"] = "list";
       $TPL["odd_even"] = $TPL["odd_even"] == "even" ? "odd" : "even";
 
@@ -69,11 +70,6 @@ function show_reminders($template) {
 function show_reminder_filter($template) {
   global $current_user, $TPL;
   if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
-
-    // Set default filter parameter
-    if (!$_REQUEST["filter_recipient"]) {
-      $_REQUEST["filter_recipient"] = $current_user->get_id();
-    }
 
     $TPL["reminderActiveOptions"] = page::select_options(array("1"=>"Active","0"=>"Inactive"),$_REQUEST["filter_reminderActive"]);
 

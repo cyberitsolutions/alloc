@@ -360,6 +360,7 @@ VALUES
 ,('projectCommissionPerson'  ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 
 ,('reminder'                 ,0  ,''         ,NULL ,1+2+4+8    ,'Will have to change this later?')
+,('reminderRecipient'        ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 
 ,('sentEmailLog'             ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 
