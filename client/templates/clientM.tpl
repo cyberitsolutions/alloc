@@ -47,7 +47,6 @@
       <td>
         <table class="sortable list">
           <tr>
-            <th>Recipient</th>
             <th>Date / Time</th>
             <th>Subject</th>
             <th>Repeat</th>

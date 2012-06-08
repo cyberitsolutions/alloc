@@ -28,7 +28,7 @@ define("PAGE_IS_PRINTABLE",1);
 
     // show all reminders for this project
     $db = new db_alloc;
-    $query = sprintf("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d", $taskID);
+    $query = sprintf("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d AND reminderActive = 1", $taskID);
     $db->query($query);
     while ($db->next_record()) {
       $reminder = new reminder;
@@ -41,7 +41,6 @@ define("PAGE_IS_PRINTABLE",1);
           ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
       }
 
-      $TPL["reminder_reminderRecipient"] = $reminder->get_recipient_description();
       $TPL["returnToParent"] = "task";
 
       include_template($template);

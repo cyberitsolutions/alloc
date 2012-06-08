@@ -453,7 +453,6 @@ function clickClientStatus(e) {
     <td>
       <table class="list">
         <tr>
-          <th>Recipient</th>
           <th>Date / Time</th>
           <th>Subject</th>
           <th>Repeat</th>

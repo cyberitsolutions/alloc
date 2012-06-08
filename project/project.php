@@ -263,9 +263,10 @@ require_once("../alloc.php");
     $permissions = explode(",", $current_user->get_value("perms"));
 
     if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
-      $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d", $projectID);
+      $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d AND reminderActive = 1", $projectID);
     } else {
-      $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d AND personID='%s'", $projectID, $current_user->get_id());
+      // Apparently not used anywhere.
+      $query = sprintf("SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE reminderType='project' AND reminderLinkID=%d AND personID='%s' AND reminderActive = 1 GROUP BY reminder.reminderID", $projectID, $current_user->get_id());
     }
 
     $db->query($query);
@@ -282,7 +283,6 @@ require_once("../alloc.php");
           ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
       }
 
-      $TPL["reminder_reminderRecipient"] = $reminder->get_recipient_description();
       $TPL["returnToParent"] = "project";
 
       include_template($template);
