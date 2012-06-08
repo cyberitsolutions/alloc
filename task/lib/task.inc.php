@@ -185,8 +185,9 @@ class task extends db_entity {
       $reminder->set_value('reminderAdvNoticeValue', "0");
     }
     $reminder->set_value('reminderTime', $date);
-    $reminder->set_value('metaPerson', REMINDER_METAPERSON_TASK_ASSIGNEE);
     $reminder->save();
+    // the negative is due to ugly reminder internals
+    $reminder->update_recipients(array(-REMINDER_METAPERSON_TASK_ASSIGNEE));
   }
 
   function is_owner($person = "") {
