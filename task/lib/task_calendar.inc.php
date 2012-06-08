@@ -137,8 +137,10 @@ class calendar {
 
     // Get persons reminders
     $query = sprintf("SELECT * 
-                        FROM reminder 
-                       WHERE personID = %d", $this->person->get_id());
+                        FROM reminder
+                        JOIN reminderRecipient ON reminderRecipient.reminderID = reminder.reminderID
+                       WHERE personID = %d
+                       GROUP BY reminder.reminderID", $this->person->get_id());
     $this->db->query($query);
     $reminders = array();
     while ($row = $this->db->row()) {
