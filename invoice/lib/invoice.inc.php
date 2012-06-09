@@ -91,7 +91,7 @@ class invoice extends db_entity {
     }
 
     $db = new db_alloc();
-    $db->query("SELECT * FROM invoiceItem WHERE invoiceID=".$this->get_id());
+    $db->query("SELECT * FROM invoiceItem WHERE invoiceID=%d",$this->get_id());
     while ($db->next_record()) {
       $invoice_item = new invoiceItem();
       if ($invoice_item->read_db_record($db, false)) {
