@@ -147,6 +147,7 @@ class invoiceItem extends db_entity {
     $timeSheet = new timeSheet;
     $timeSheet->set_id($timeSheetID);
     $timeSheet->select();
+    $currency = $timeSheet->get_value("currencyTypeID");
     $timeSheet->load_pay_info();
     $amount = $timeSheet->pay_info["total_customerBilledDollars"] or $amount = $timeSheet->pay_info["total_dollars"];
 
@@ -157,12 +158,13 @@ class invoiceItem extends db_entity {
     $db->query(sprintf("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$timeSheetID));
     while ($row = $db->row()) {
       $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
-      $iiUnitPrice >0 or $iiUnitPrice = $row["rate"];
+      imp($timeSheet->pay_info["customerBilledDollars"]) or $iiUnitPrice = $row["rate"];
       unset($str);
       if ($row["comment"] && !$row["commentPrivate"]) {
         $str = $row["comment"];
       }
       $ii = new invoiceItem;
+      $ii->currency = $currency;
       $ii->set_value("invoiceID",$invoiceID);
       $ii->set_value("timeSheetID",$timeSheet->get_id());
       $ii->set_value("timeSheetItemID",$row["timeSheetItemID"]);

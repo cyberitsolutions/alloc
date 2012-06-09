@@ -513,7 +513,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     $invoiceItem->read_globals("invoiceItem_");
 
     if ($_POST["timeSheetID"] && $_POST["split_timeSheet"]) {
-      #$invoiceItem->add_timeSheetItems($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
+      $invoiceItem->add_timeSheetItems($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
 
     } else if ($_POST["timeSheetID"]) {
       $invoiceItem->add_timeSheet($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);

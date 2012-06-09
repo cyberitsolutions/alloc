@@ -39,7 +39,10 @@
         <td>Create Item from Time Sheet</td>
       </tr>
       <tr>
-        <td><select name="timeSheetID"><option value=""></option>{$timeSheetOptions}</select></td>
+        <td>
+          <select name="timeSheetID"><option value=""></option>{$timeSheetOptions}</select>
+          <input type='checkbox' name='split_timeSheet' value='1'>Use Time Sheet Items
+        </td>
         <td align="right">{$invoiceItem_buttons}</td>
       </tr>
       </table>
