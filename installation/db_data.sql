@@ -286,7 +286,7 @@ VALUES
 ,('client'                   ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 ,('clientContact'            ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 
-,('comment'                  ,0  ,'employee' ,NULL ,1+2+4+8    ,NULL)
+,('comment'                  ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 
 ,('commentTemplate'          ,0  ,''         ,NULL ,1          ,NULL)
 ,('commentTemplate'          ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
