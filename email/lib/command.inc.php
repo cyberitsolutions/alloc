@@ -92,25 +92,9 @@ class command {
       $token = new token;
       if ($token->set_hash($commands["key"])) {
 
-        global $guest_permission_cache, $current_user;
-        // If sent from a client or someone we don't recognize, we need to imbue this process with guest perms
+        $db = new db_alloc();
         $comment = $token->get_value("tokenEntity");
         $commentID = $token->get_value("tokenEntityID");
-        $q = sprintf("SELECT commentMaster,commentMasterID FROM comment WHERE commentID = %d",$commentID);
-        $db = new db_alloc();
-        $r = $db->qr($q);
-        $master = $r["commentMaster"];
-        $masterID = $r["commentMasterID"];
-
-        if (!$current_user) {
-          // Used in db_entity::have_perm();
-          global $guest_permission_cache;
-          // Hard code some additional permissions for this guest user (just enough to create a comment)
-          $guest_permission_cache[] = array("entity"=>$comment,"entityID"=>$commentID,"perms"=>15);
-          $guest_permission_cache[] = array("entity"=>$comment,"entityID"=>0,"perms"=>15);
-          $guest_permission_cache[] = array("entity"=>$master ,"entityID"=>$masterID,"perms"=>15);
-          $guest_permission_cache[] = array("entity"=>"indexQueue","entityID"=>0,"perms"=>15);
-        }
 
         list($entity,$method) = $token->execute();
         if (is_object($entity) && $method == "add_comment_from_email") {

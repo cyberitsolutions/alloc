@@ -435,7 +435,7 @@ class comment extends db_entity {
   }
 
   function add_comment_from_email($email_receive,$entity) {
-    global $current_user, $guest_permission_cache;
+    global $current_user;
 
     $commentID = comment::add_comment($entity->classname,$entity->get_id(),$email_receive->get_converted_encoding());
 
@@ -444,9 +444,6 @@ class comment extends db_entity {
     $comment->select();
     $comment->set_value("commentEmailUID",$email_receive->msg_uid);
     $comment->set_value("commentEmailMessageID",$email_receive->mail_headers["message-id"]);
-
-    // Have to allow guest users to update their newly created comment
-    $guest_permission_cache[] = array("entity"=>"comment","entityID"=>$comment->get_id(),"perms"=>15);
 
     $comment->rename_email_attachment_dir($email_receive->dir);
 
