@@ -131,10 +131,7 @@ class db_entity {
       $current_user and $person = $current_user;
     }
 
-    $entity_id = $this->get_id();
-    if (!$entity_id) {
-      $entity_id = 0;
-    }
+    $entity_id = 0;
     
     if (is_object($person)) {
       $person_id = $person->get_id();
@@ -162,19 +159,13 @@ class db_entity {
     $db = new db_alloc;
     $query = sprintf("SELECT * 
                         FROM permission 
-                        WHERE (tableName = '".$this->data_table."' OR tableName='')
-                         AND (entityID = %d OR entityID = 0 OR entityID = -1)
+                        WHERE (tableName = '".db_esc($this->data_table)."')
                          AND (actions & %d = %d)
-                    ORDER BY sortKey"
-                    ,$entity_id,$action,$action);
+                    ORDER BY entityID DESC"
+                    ,$action,$action);
     $db->query($query);
     
     while ($db->next_record()) {
-
-      // If the permission specifies a role, not having a $person is the same as having no roles
-      if ($db->f("roleName") && !is_object($person)) {
-        continue;
-      }
 
       // Ignore this record if it specifies a role the user doesn't have
       if ($db->f("roleName") && is_object($person) && !$person->have_role($db->f("roleName"))) {
