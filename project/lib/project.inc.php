@@ -66,9 +66,10 @@ class project extends db_entity {
 
     // If we're archiving the project, then archive the tasks.
     if ($old["projectStatus"] != "Archived" && $this->get_value("projectStatus") == "Archived") {
-      $t = new task;
-      $rows = $t->get(array("projectID"=>$this->get_id(),"SUBSTRING(taskStatus,1,6) != " => "closed"));
-      foreach ($rows as $row) {
+      $db = new db_alloc();
+      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND SUBSTRING(taskStatus,1,6) != 'closed'",$this->get_id());
+      $db->query($q);
+      while ($row = $db->row()) {
         $task = new task;
         $task->read_row_record($row);
         $task->set_value("taskStatus","closed_archived");
@@ -83,9 +84,9 @@ class project extends db_entity {
     // If we're un-archiving the project, then un-archive the tasks.
     if ($old["projectStatus"] == "Archived" && $this->get_value("projectStatus") != "Archived") {
       $db = new db_alloc();
-      $t = new task;
-      $rows = $t->get(array("projectID"=>$this->get_id(),"taskStatus"=>"closed_archived"));
-      foreach ($rows as $row) {
+      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskStatus = 'closed_archived'",$this->get_id());
+      $id = $db->query($q);
+      while ($row = $db->row($id)) {
         $q = sprintf("SELECT * FROM auditItem
                        WHERE entityName = 'task'
                          AND entityID = %d
