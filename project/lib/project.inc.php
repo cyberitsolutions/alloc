@@ -94,12 +94,11 @@ class project extends db_entity {
                     ORDER BY auditItemID DESC
                        LIMIT 1
                     ",$row["taskID"]);
-        $db->query($q);
-        $r = $db->row();
-        list($method, $arg) = explode("_",$r["oldValue"]);
+        $id2 = $db->query($q);
+        $r = $db->row($id2);
         $task = new task;
         $task->read_row_record($row);
-        $task->{$method}($arg);
+        $task->set_value("taskStatus",$r["oldValue"]);
         $task->updateSearchIndexLater = true;
         $task->save();
         $ids.= $commar.$task->get_id();
