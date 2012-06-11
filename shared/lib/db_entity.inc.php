@@ -90,37 +90,6 @@ class db_entity {
     }
   }
 
-  function get($id=array()) {
-    if ($id && is_numeric($id)) {
-      $db = $this->get_db();
-      $q = sprintf("SELECT * FROM ".$this->data_table." WHERE id = %d",$id);
-      $db->query($q);
-      return $db->row();
-
-    } else {
-      $db = $this->get_db();
-      foreach ((array)$id as $field=>$value) {
-        unset($op,$quotes);
-        // look for "field !=" etc
-        preg_match("/(>|<|=|!=|>=|<=|<>)\s*$/",$field,$m);
-        isset($m[1]) or $op = "=";
-      
-        // all strings (except null) should be surrounded in quotes
-        !is_numeric($value) && $value !== null and $quotes = '"';
-
-        $str .= $and." ".$field." ".$op." ".$quotes.$db->esc($value).$quotes;
-        $and = " AND ";
-      }
-      $str and $str = " WHERE ".$str;
-      $q = sprintf("SELECT * FROM ".$this->data_table.$str);
-      $db->query($q);
-      while ($row = $db->row()) {
-        $rows[] = $row;
-      }
-      return (array)$rows;
-    }
-  }
-
   function have_perm($action = 0, $person = "", $assume_owner = false) {
     global $current_user, $permission_cache, $guest_permission_cache;
     if (defined("IS_GOD")) {
@@ -210,7 +179,7 @@ class db_entity {
     if (!$this->has_key_values()) {
       return false;
     }
-    $query = "SELECT * FROM $this->data_table WHERE ".$this->get_name_equals_value(array($this->key_field), " AND ");
+    $query = "SELECT * FROM ".db_esc($this->data_table)." WHERE ".$this->get_name_equals_value(array($this->key_field), " AND ");
     if ($this->debug)
       echo "db_entity->select query: $query<br>\n";
     $db = $this->get_db();
@@ -240,7 +209,7 @@ class db_entity {
     if (!$this->has_key_values()) {
       return false;
     }
-    $query = "DELETE FROM $this->data_table WHERE ".$this->get_name_equals_value(array($this->key_field), " AND ");
+    $query = "DELETE FROM ".db_esc($this->data_table)." WHERE ".$this->get_name_equals_value(array($this->key_field), " AND ");
     if ($this->debug)
       echo "db_entity->delete query: $query<br>\n";
     $db = $this->get_db();
@@ -278,7 +247,7 @@ class db_entity {
       $this->data_fields[] = $this->key_field;
     }
 
-    $query = "INSERT INTO $this->data_table (";
+    $query = "INSERT INTO ".db_esc($this->data_table)." (";
     $query.= $this->get_insert_fields($this->data_fields);
     $query.= ") VALUES (";
     $query.= $this->get_insert_values($this->data_fields);
@@ -338,7 +307,7 @@ class db_entity {
       }
     }
 
-    $query = "UPDATE $this->data_table SET ".$this->get_name_equals_value($write_fields)." WHERE ";
+    $query = "UPDATE ".db_esc($this->data_table)." SET ".$this->get_name_equals_value($write_fields)." WHERE ";
     $query.= $this->get_name_equals_value(array($this->key_field));
     $db = $this->get_db();
     $this->debug and print "<br>db_entity->update() query: ".$query;
@@ -351,9 +320,9 @@ class db_entity {
       return true;
     } else if ($this->key_field->has_value() && $this->key_field->get_name() && $this->key_field->get_value()) {
       $db = $this->get_db();
-      $row = $db->qr("SELECT ".$this->key_field->get_name()."
-                        FROM ".$this->data_table."
-                       WHERE ".$this->key_field->get_name()." = '".db_esc($this->key_field->get_value())."'");
+      $row = $db->qr("SELECT ".db_esc($this->key_field->get_name())."
+                        FROM ".db_esc($this->data_table)."
+                       WHERE ".db_esc($this->key_field->get_name())." = '".db_esc($this->key_field->get_value())."'");
       return !$row;
     }
   }
@@ -557,7 +526,7 @@ class db_entity {
   }
 
   function set_id($id) {
-    $this->key_field->set_value($id);
+    $this->key_field->set_value(db_esc($id));
   }
 
   function get_foreign_object($class_name, $key_name = "") {
@@ -586,12 +555,6 @@ class db_entity {
     return $foreign_objects;
   }
 
-  function get_calculated_value($name) {
-    $code = "return \$this->calculate_$name();";
-    #$code = "echo '<br>'.\$this->classname;";
-    eval($code);
-
-  }
   function get_filter_class() {
     return $this->filter_class;
   }
@@ -655,11 +618,6 @@ class db_entity {
     $this->fields_loaded = false;
   }
 
-  // Called when this object should generate calculated values
-  // This function should be overridden if calculated values apply to this entity
-  function recalculate() {
-  }
-
   /**************************************************************************
   'Private' utilitity functions These functions probably won't be useful to
   users of this class but are used by the other functions in the class
@@ -701,50 +659,15 @@ class db_entity {
     return $query;
   }
 
-
-  /***************************************************************************
-  Array utilitity functions I have included these inside the class to avoid
-  potential name conflicts with functions defined in individual applications
-  ****************************************************************************/
-  function copy_array(&$source, &$dest_array, $source_prefix = "", $clear_dest = false) {
-    reset($dest_array);
-    while (list($field_name, $field_value) = each($dest_array)) {
-      if (isset($source[$source_prefix.$field_name])) {
-        $dest_array[$field_name] = $source[$source_prefix.$field_name];
-      } else if ($clear_dest) {
-        $dest_array[$field_name] = "";
-      }
-      if ($this->debug)
-        echo "db_entity->copy_array dest_array[$field_name]: ".$dest_array[$field_name]."<br>\n";
-    }
-  }
-  function append_array(&$source, &$dest_array, $dest_key_prefix = "") {
-    reset($source);
-    while (list($field_name, $field_value) = each($source)) {
-      if ($this->debug)
-        echo "append_array: $dest_key_prefix$field_name=> ".$source[$field_name]."<br>\n";
-      $dest_array[$dest_key_prefix.$field_name] = $source[$field_name];
-    }
-  }
-  function array_has_values($array) {
-    reset($array);
-    while (list($field_name, $field_value) = each($array)) {
-      if (isset($field_value) && $field_value != "") {
-        return true;
-      }
-    }
-    return false;
-  }
-
   function get_assoc_array($key=false,$value=false,$sel=false, $where=array()){
-    $key or $key = $this->key_field->name;
+    $key or $key = $this->key_field->get_name();
     $value or $value = "*";
     $value != "*" and $key_sql = $key.",";
 
     $q = sprintf('SELECT %s %s FROM %s WHERE 1=1 '
-                ,$key_sql,$value,$this->data_table);
+                ,db_esc($key_sql),db_esc($value),db_esc($this->data_table));
 
-    $pkey_sql = " OR ".$this->key_field->name." = ";
+    $pkey_sql = " OR ".$this->key_field->get_name()." = ";
     if (is_array($sel) && count($sel)) {
       foreach ($sel as $s) {
         $extra.= $pkey_sql.sprintf("%d",$s);
@@ -772,11 +695,11 @@ class db_entity {
     $q.= $extra;
 
     if (is_object($this->data_fields[$this->data_table."Sequence"])) {
-      $q.= " ORDER BY ".$this->data_table."Sequence";
+      $q.= " ORDER BY ".db_esc($this->data_table)."Sequence";
     } else if (is_object($this->data_fields[$this->data_table."Seq"])) {
-      $q.= " ORDER BY ".$this->data_table."Seq";
+      $q.= " ORDER BY ".db_esc($this->data_table)."Seq";
     } else if ($value != "*") {
-      $q.= " ORDER BY ".$value;
+      $q.= " ORDER BY ".db_esc($value);
     }
 
     $db = new db_alloc;
@@ -826,42 +749,12 @@ class db_entity {
 }
 
 
-// Determine if the person speicified by $person (default current user) has
-// the permission specified by $perm_name for the data entity class specified 
-// by $class_name.  Returns true if the user has the person has the 
-// permission.
+// Statically callable version of $entity->have_perm();
 function have_entity_perm($class_name, $perm_name = "", $person = "", $assume_owner = false) {
   $entity = new $class_name;
   $entity->set_id(0);
   return $entity->have_perm($perm_name, $person, $assume_owner);
 }
-
-
-// Returns an array of all the entities
-function get_entities() {
-  global $modules;
-  $entities = array();
-  reset($modules);
-  while (list($module_name, $module) = each($modules)) {
-    $mod_entities = $module->db_entities;
-    $entities = array_merge($entities, $mod_entities);
-  }
-  return $entities;
-}
-
-
-// Returns an array of all table names used by entities
-function get_entity_table_names() {
-  $entities = get_entities();
-  $table_names = array();
-  reset($entities);
-  while (list(, $entity_name) = each($entities)) {
-    $entity = new $entity_name;
-    $table_names[] = $entity->data_table;
-  }
-  return $table_names;
-}
-
 
 
 ?>

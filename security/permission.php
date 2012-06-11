@@ -44,7 +44,22 @@ $permission->set_values();
 
 
 if (!$permission->get_value("tableName")) {
-  $ops = get_entity_table_names();
+  global $modules;
+  $entities = array();
+  reset($modules);
+  while (list($module_name, $module) = each($modules)) {
+    $mod_entities = $module->db_entities;
+    $entities = array_merge($entities, $mod_entities);
+  }
+
+  $table_names = array();
+  reset($entities);
+  while (list(, $entity_name) = each($entities)) {
+    $entity = new $entity_name;
+    $table_names[] = $entity->data_table;
+  }
+
+  $ops = $table_names;
   asort($ops);
   foreach ($ops as $v) {
     $table_name_options[$v] = $v;
