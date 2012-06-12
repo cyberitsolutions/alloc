@@ -39,19 +39,15 @@ if (isset($_GET["id"]) && $file && !bad_filename($file)) {
       $fp = fopen($file, "rb");
       $mimetype = get_mimetype($file);
 
-      $disposition = "attachment";
-      preg_match("/jpe?g|gif|png/i",basename($file)) and $disposition = "inline";
-
       // Forge html for the whatsnew files
       if (basename(dirname(dirname($file))) == "whatsnew") {
-        $disposition = "inline";
         $forged_suffix = ".html";
         $mimetype="text/html";
       }
 
       header('Content-Type: '.$mimetype);
       header("Content-Length: ".filesize($file));
-      header('Content-Disposition: '.$disposition.'; filename="'.basename($file).$forged_suffix.'"');
+      header('Content-Disposition: inline; filename="'.basename($file).$forged_suffix.'"');
       fpassthru($fp);
       exit;
     } else {
