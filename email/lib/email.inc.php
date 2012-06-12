@@ -133,7 +133,8 @@ class alloc_email {
 
       $this->to_address or $this->to_address = null;
 
-      $this->headers = $this->default_headers."\n".trim($this->headers);
+      $this->headers = trim($this->headers)."\n".trim($this->default_headers);
+      $this->headers = str_replace("\r\n","\n",$this->headers);
 
       # echo "<pre><br>HEADERS:\n".page::htmlentities($this->headers)."</pre>";
       # echo "<pre><br>TO:\n".page::htmlentities($this->to_address)."</pre>";
@@ -171,11 +172,11 @@ class alloc_email {
     $this->headers = preg_replace("/\r?\n".$header.":\s*.*/i","",$this->headers);
   }
   function get_header($header) {
-    preg_match("/\n".$header.":(.*)/i",$this->headers,$matches);
+    preg_match("/\r?\n".$header.":(.*)/i",$this->headers,$matches);
     return $matches[1];
   }
   function header_exists($header) {
-    return preg_match("/\n".$header.":(.*)/i",$this->headers);
+    return preg_match("/\r?\n".$header.":(.*)/i",$this->headers);
   }
   function is_valid_url() {
 

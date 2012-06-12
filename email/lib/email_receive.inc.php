@@ -184,7 +184,7 @@ class alloc_email_receive {
   }
 
   function download_email_part($num,$encoding) {
-    $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $num, FT_UID | FT_INTERNAL | FT_PEEK);
+    $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $num, FT_UID | FT_PEEK);
     return $this->decode_part($encoding,$raw_data);
   }
 
@@ -220,7 +220,7 @@ class alloc_email_receive {
         return $cache[$msg_uid];
       }
       $header = imap_fetchheader($this->connection,$msg_uid, FT_UID);
-      $body = imap_body($this->connection,$msg_uid,FT_UID | FT_INTERNAL);
+      $body = imap_body($this->connection,$msg_uid,FT_UID);
       $cache[$msg_uid] = array($header,$body);
       return $cache[$msg_uid];
     } else if ($this->msg_text) {
@@ -240,7 +240,7 @@ class alloc_email_receive {
 
     foreach ($this->mail_parts as $v) {
       $s = $v["part_object"]; // structure
-      $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $v["part_number"],FT_UID | FT_INTERNAL | FT_PEEK); 
+      $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $v["part_number"],FT_UID | FT_PEEK);
       $thing = $this->decode_part($s->encoding,$raw_data);
 
       if (!$this->mail_text && strtolower($this->mime_types[$s->type]."/".$s->subtype) == "text/plain") {
@@ -325,7 +325,7 @@ class alloc_email_receive {
   function mark_seen() {
     if ($this->msg_uid) {
       imap_setflag_full($this->connection, $this->msg_uid, "\\SEEN", FT_UID); // this doesn't work!
-      $body = imap_body($this->connection, $this->msg_uid,FT_UID | FT_INTERNAL); // this seems to force it to be marked seen
+      $body = imap_body($this->connection, $this->msg_uid,FT_UID); // this seems to force it to be marked seen
     }
   }
 
