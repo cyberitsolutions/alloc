@@ -65,7 +65,23 @@ alloc edit -t 1234 --assignee null"""
     """Execute subcommand."""
 
     # Get the command line arguments into a dictionary
-    o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
+    o, remainder = self.get_args(command_list, self.ops, self.help_text)
+
+    # handle obsolete method
+    if remainder:
+      # parse ^field:value into a dict {"field":"value"}
+      bits = remainder.split("^")
+      st = ''
+      for bit in bits:
+        if bit:
+          chunks = bit.split(":")
+          key = chunks[0].strip()
+          val = ":".join(chunks[1:]).strip()
+          if key and val:
+            st += ' --'+key+' "'+val+'"'
+      if st:
+        st = " Perhaps try:"+st
+      self.die("Trailing arguments not supported."+st)
 
     # Got this far, then authenticate
     self.authenticate()
