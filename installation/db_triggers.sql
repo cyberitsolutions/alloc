@@ -323,6 +323,7 @@ BEGIN
   DECLARE pID INTEGER;
   DECLARE r BIGINT(20);
   DECLARE rUnitID INTEGER;
+  DECLARE taskTitle varchar(255);
   call check_edit_timeSheet(OLD.timeSheetID);
 
   SET NEW.timeSheetItemModifiedUser = personID();
@@ -347,6 +348,8 @@ BEGIN
     SET NEW.rate = r;
     SET NEW.timeSheetItemDurationUnitID = rUnitID;
   END IF;
+  SELECT taskName INTO taskTitle FROM task WHERE taskID = NEW.taskID;
+  SET NEW.description = taskTitle;
 END
 $$
 
