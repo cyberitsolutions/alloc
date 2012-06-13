@@ -794,6 +794,9 @@ function tax($amount,$taxPercent=null) {
   $amount_of_tax    = $amount / ((100/$taxPercent) + 1);
   return array($amount_minus_tax, $amount_of_tax);
 }
+function add_tax($amount=0) {
+  return $amount * (config::get_config_item("taxPercent")/100 +1);
+}
 function alloc_die($str="") {
   echo($str);
   exit(1); // for CLI/email gateway where exit status is relevant

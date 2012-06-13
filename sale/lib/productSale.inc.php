@@ -155,7 +155,7 @@ class productSale extends db_entity {
     }
     $show && $label and $sellPrice_label = " (".$label.")";
 
-    $total_sellPrice_plus_gst = $total_sellPrice * (config::get_config_item("taxPercent")/100 +1);
+    $total_sellPrice_plus_gst = add_tax($total_sellPrice);
 
     $rtn["total_sellPrice"] = page::money(config::get_config_item("currency"),$total_sellPrice,"%s%mo %c").$sellPrice_label;
     $rtn["total_sellPrice_plus_gst"] = page::money(config::get_config_item("currency"),$total_sellPrice_plus_gst,"%s%mo %c").$sellPrice_label;
