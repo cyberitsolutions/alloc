@@ -134,13 +134,14 @@ $(document).ready(function() {
         <tr>
           <th width="15%">Amount{if $taxName} (Ex {$taxName}){/}</th>
           <th width="35%">Source TF</th>
+          <th width="35%">Destination TF</th>
           <th>Description</th>
           <th></th>
         </tr>
         {show_productCost_list($productID, "templates/productCostR.tpl")}
         {show_productCost_new("templates/productCostR.tpl")}
         <tr id="product_cost_footer">
-          <th colspan="4" class="center">
+          <th colspan="5" class="center">
             <button type="submit" name="save_costs" value="1" class="save_button">Save Costs<i class="icon-ok-sign"></i></button>
           </th>
         </tr>
@@ -170,6 +171,7 @@ $(document).ready(function() {
       <table class="list">
         <tr>
           <th width="15%">Percentage</th>
+          <th width="35%">Source TF</th>
           <th width="35%">Destination TF</th>
           <th>Description</th>
           <th></th>
