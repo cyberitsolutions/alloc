@@ -523,7 +523,6 @@ class productSale extends db_entity {
       $row["salespersonLabel"] = $people[$row["personID"]]["name"];
       $row["creatorLabel"] = $people[$row["productSaleCreatedUser"]]["name"];
       $row["productSaleLink"] = $productSale->get_link();
-      $row["_FORM"] = $_FORM;
       $rows[] = $row;
     }
 
@@ -656,10 +655,11 @@ class productSale extends db_entity {
     return $rtn;
   }
 
-  function get_list_html($rows=array(),$extra=array()) {
+  function get_list_html($rows=array(),$_FORM=array()) {
     global $TPL;
     $TPL["productSaleListRows"] = $rows;
-    $TPL["extra"] = $extra;
+    $_FORM["taxName"] = config::get_config_item("taxName");
+    $TPL["_FORM"] = $_FORM;
     include_template(dirname(__FILE__)."/../templates/productSaleListS.tpl");
   }
 }
