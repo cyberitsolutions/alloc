@@ -7,6 +7,7 @@
       {/}
   </td>
   <td><select name="tfID[]"><option value="">{tf_list($tfID,array(config::get_config_item("outTfID")))}</select></td>
+  <td>Sale TF</td>
   <td><input type="text" size="43" name="description[]" value="{$description}"></td>
   <td class="right nobr">
     <input type="checkbox" name=deleteCost[] value="{$productCostID}" id="deletefixed{$productCostID}">
