@@ -58,7 +58,9 @@ class product extends db_entity {
     }
 
     // Put the inactive ones down the bottom.
-    $f .= " ORDER BY productActive DESC"; 
+    $f .= " ORDER BY productActive DESC, productName"; 
+
+    $taxName = config::get_config_item("taxName");
 
     $query = sprintf("SELECT * FROM product ".$f);
     $db = new db_alloc;
@@ -66,6 +68,7 @@ class product extends db_entity {
     while ($row = $db->next_record()) {
       $product = new product;
       $product->read_db_record($db);
+      $row["taxName"] = $taxName;
       $body.= product::get_list_body($row,$_FORM);
     }
 
@@ -85,7 +88,8 @@ class product extends db_entity {
     $ret[] = "<tr>";
     $ret[] = "  <th>Product</th>";
     $ret[] = "  <th>Description</th>";
-    $ret[] = "  <th>Sell Price</th>";
+    $ret[] = "  <th width='1%' class='nobr'>Price</th>";
+    $ret[] = "  <th></th>";
     $ret[] = "  <th>Active</th>";
     $ret[] = "</tr>";
     return implode("\n",$ret);
@@ -93,10 +97,18 @@ class product extends db_entity {
 
   function get_list_body($row,$_FORM=array()) {
     global $TPL;
+    if ($row["taxName"]) {
+      $str = page::money($row["sellPriceCurrencyTypeID"],add_tax($row["sellPrice"]),"%s%mo %c");
+      $str.= " inc ".$row["taxName"];
+    }
+
+    $sorter = $row["productActive"] ? "1" : "2";
+
     $ret[] = "<tr>";
-    $ret[] = "  <td class=\"nobr\">".product::get_link($row)."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\" sorttable_customkey=\"".$sorter.$row["productName"]."\">".product::get_link($row)."&nbsp;</td>";
     $ret[] = "  <td>".page::htmlentities($row["description"])."&nbsp;</td>";
     $ret[] = "  <td class=\"nobr\">".page::money($row["sellPriceCurrencyTypeID"],$row["sellPrice"],"%s%mo %c")."&nbsp;</td>";
+    $ret[] = "  <td class=\"nobr\">".$str."&nbsp;</td>";
     $ret[] = "  <td class=\"nobr\">".($row["productActive"] ? "Yes" : "No")."</td>";
     $ret[] = "</tr>";
     return implode("\n",$ret);
