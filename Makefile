@@ -135,6 +135,7 @@ test:
 	         --disable         R0904                        \
 	         --disable         E1103                        \
 	         --disable         R0801                        \
+	         --disable         F0401                        \
 	         --max-locals      30                           \
 	         --max-args        8                            \
 	         --max-attributes  50                           \

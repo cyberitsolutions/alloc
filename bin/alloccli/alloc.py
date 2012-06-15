@@ -247,7 +247,7 @@ class alloc(object):
     if os.path.exists(self.alloc_dir+"transforms") and not os.path.exists(self.alloc_dir+"transforms.py"):
       # upgrade old transforms to transforms.py
       self.dbg("Renaming: "+self.alloc_dir+"transforms"+" to "+self.alloc_dir+"transforms.py")
-      os.rename(self.alloc_dir+"transforms",self.alloc_dir+"transforms.py")
+      os.rename(self.alloc_dir+"transforms", self.alloc_dir+"transforms.py")
     else:
       # else create an example transforms.py
       self.dbg("Creating example transforms.py file: "+f)
