@@ -55,6 +55,7 @@
     <td class="grand_total right nobr">{$timeSheetListExtra.positive_tallies}</td>
     <td class="grand_total right nobr">{$timeSheetListExtra.negative_tallies}</td>
     {/}
+    <td>&nbsp;</td>
   </tr>
   </tfoot>
   {/}

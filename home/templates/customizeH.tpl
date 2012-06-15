@@ -68,18 +68,18 @@
       </div>
 
       <div class="edit">
-        <h6>Daily Email<div>Receive My Comments</div></h6> 
+        <h6>Daily Email<div>Self Mail</div></h6> 
         <div style="float:left; width:30%;">
           <select name="dailyTaskEmail">{$dailyTaskEmailOptions}</select>
           {page::help("<b>Daily Email</b><br><br>Control whether or not you receive a daily task email.")}
         </div>
         <div style="float:right; width:50%;">
           <select name="receiveOwnTaskComments">{$receiveOwnTaskCommentsOptions}</select>
-          {page::help("<b>Receive My Comments</b><br><br>Control whether or not you receive a copy of your own comments in email discussion threads.")}
+          {page::help("<b>Self Mail</b><br><br>Control whether or not you receive a copy of your own comments in email discussion threads.")}
         </div>
       </div>
       <div class="view">
-        <h6>Daily Email<div>Receive My Comments</div></h6> 
+        <h6>Daily Email<div>Self Mail</div></h6> 
         <div style="float:left; width:30%;">
           {$dailyTaskEmailLabel}&nbsp;
         </div>
