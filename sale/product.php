@@ -86,8 +86,8 @@ if ($productID) {
 $tf = new tf();
 $tflist = $tf->get_assoc_array("tfID","tfName");
 $extra_options = array(
-                       "-3"=>"META: Sale TF"
-                      ,"-1"=>"META: Project TF"
+                       //"-3"=>"META: Sale TF"
+                      "-1"=>"META: Project TF"
                       ,"-2"=>"META: Salesperson TF"
                       ,config::get_config_item("mainTfID") => "Main Finance TF (".tf::get_name(config::get_config_item("mainTfID")).")"
                       ,config::get_config_item("outTfID") => "Outgoing Funds TF (".tf::get_name(config::get_config_item("outTfID")).")"
