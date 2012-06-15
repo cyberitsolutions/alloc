@@ -110,6 +110,12 @@ if ($_REQUEST["apply_patches"]) {
   if (!in_array($abc123_file,$abc123_applied_patches)) {
     apply_patch($abc123_f);
   }
+} else if ($_REQUEST["remove_patch"] && $_REQUEST["patch_file"]) {
+  $abc123_f = ALLOC_MOD_DIR."patches/".$_REQUEST["patch_file"];
+  $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
+                VALUES ('%s','%s','%s')",db_esc($_REQUEST["patch_file"]), db_esc("Patch not applied."), date("Y-m-d H:i:s"));
+  $db = new db_alloc();
+  $db->query($q);
 }
 
 
