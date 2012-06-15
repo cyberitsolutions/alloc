@@ -23,8 +23,9 @@
   {if !in_array($file,$applied_patches)}
   <form action="{$url_alloc_patch}" method="post">
   <tr>
-    <td valign="top">
-      <input type='submit' name='apply_patch' value='Apply Patch'>
+    <td valign="top" class="nobr">
+      <button type="submit" name="apply_patch" value="1" class="save_button">Apply Patch<i class="icon-ok-sign"></i></button>
+      <button type="submit" name="remove_patch" value="1" class="delete_button">Delete Patch<i class="icon-trash"></i></button>
       <input type='hidden' name='patch_file' value='{$file}'>&nbsp;
       <input type="hidden" name="sessID" value="{$sessID}">
     </td>
