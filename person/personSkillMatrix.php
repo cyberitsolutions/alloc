@@ -65,7 +65,7 @@ function show_skills() {
 }
 
 function get_people_header() {
-  global $TPL, $people_ids, $people_header, $talent, $skill_class, $show_all;
+  global $TPL, $people_ids, $people_header, $talent, $skill_class;
 
   $people_ids = array();
 
@@ -74,9 +74,6 @@ function get_people_header() {
   $query = "SELECT * FROM person";
   $query.= " LEFT JOIN proficiency ON person.personID=proficiency.personID";
   $query.= " LEFT JOIN skill ON proficiency.skillID=skill.skillID WHERE personActive = 1 ";
-  if (!isset($show_all)) {
-    $query.= " AND proficiency.skillProficiency";
-  }
   if ($talent) {
     $query.= sprintf(" AND skill.skillID=%d", $talent);
 
