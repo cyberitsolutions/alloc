@@ -2,9 +2,6 @@
     <table class="filter corner" align="center">
       <tr>
         <td colspan=2>Skill(s)</td>
-<!--
-        <td rowspan=2><input name="show_all" type="checkbox">Force all</td>
--->
         <td></td>
       </tr>
       <tr>
