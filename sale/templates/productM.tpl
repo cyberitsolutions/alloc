@@ -27,8 +27,14 @@ $(document).ready(function() {
 <input type="hidden" name="productID" value="{$productID}">
 <table class="box">
   <tr>
-    <th>Product</th>
-    <th class="right">{page::help("product")}</th>
+    <th class="header">Product
+      <span>
+        <a href="{$url_alloc_productList}">Products</a>
+        <a href="{$url_alloc_product}">New Product</a>
+        <a href="{$url_alloc_productSale}">New Sale</a>
+        {page::help("product")}
+      </span>
+    </th>
   </tr>
   <tr>
     <td colspan="2" valign="top">
