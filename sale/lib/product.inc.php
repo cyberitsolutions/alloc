@@ -69,54 +69,10 @@ class product extends db_entity {
       $product = new product;
       $product->read_db_record($db);
       $row["taxName"] = $taxName;
-      $body.= product::get_list_body($row,$_FORM);
+      $rows[] = $row;
     }
 
-    $header = product::get_list_header($_FORM);
-    $footer = product::get_list_footer($_FORM);
-    
-    if ($body) {
-      return $header.$body.$footer;
-    } else {
-      return "<table style=\"width:100%\"><tr><td style=\"text-align:center\"><b>No Products Found</b></td></tr></table>";
-    }
-  }
-
-  function get_list_header($_FORM=array()) {
-    global $TPL;
-    $ret[] = "<table class=\"list sortable\">";
-    $ret[] = "<tr>";
-    $ret[] = "  <th>Product</th>";
-    $ret[] = "  <th>Description</th>";
-    $ret[] = "  <th width='1%' class='nobr'>Price</th>";
-    $ret[] = "  <th></th>";
-    $ret[] = "  <th>Active</th>";
-    $ret[] = "</tr>";
-    return implode("\n",$ret);
-  }
-
-  function get_list_body($row,$_FORM=array()) {
-    global $TPL;
-    if ($row["taxName"]) {
-      $str = page::money($row["sellPriceCurrencyTypeID"],add_tax($row["sellPrice"]),"%s%mo %c");
-      $str.= " inc ".$row["taxName"];
-    }
-
-    $sorter = $row["productActive"] ? "1" : "2";
-
-    $ret[] = "<tr>";
-    $ret[] = "  <td class=\"nobr\" sorttable_customkey=\"".$sorter.$row["productName"]."\">".product::get_link($row)."&nbsp;</td>";
-    $ret[] = "  <td>".page::htmlentities($row["description"])."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".page::money($row["sellPriceCurrencyTypeID"],$row["sellPrice"],"%s%mo %c")."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".$str."&nbsp;</td>";
-    $ret[] = "  <td class=\"nobr\">".($row["productActive"] ? "Yes" : "No")."</td>";
-    $ret[] = "</tr>";
-    return implode("\n",$ret);
-  }
-
-  function get_list_footer($_FORM=array()) {
-    $ret[] = "</table>";
-    return implode("\n",$ret);
+    return $rows;
   }
 
   function get_link($row=array()) {
@@ -151,6 +107,14 @@ class product extends db_entity {
       $amount += exchangeRate::convert($row["currencyTypeID"],$row["amount"]);
     }
     return $amount;
+  }
+
+  function get_list_html($rows=array(),$_FORM=array()) {
+    global $TPL;
+    $TPL["productListRows"] = $rows;
+    $_FORM["taxName"] = config::get_config_item("taxName");
+    $TPL["_FORM"] = $_FORM;
+    include_template(dirname(__FILE__)."/../templates/productListS.tpl");
   }
 
 }

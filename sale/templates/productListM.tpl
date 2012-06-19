@@ -3,6 +3,7 @@
 <table class="box">
   <tr>
     <th class="header">Products
+      <b> - {print count($productListRows)} records</b>
       <span>
         <a href="{$url_alloc_product}">New Product</a>
         <a href="{$url_alloc_productSale}">New Sale</a>
@@ -11,7 +12,7 @@
   </tr>
   <tr>
     <td>
-      {echo product::get_list()}
+      {product::get_list_html($productListRows)}
     </td>
   </tr>
 </table>
