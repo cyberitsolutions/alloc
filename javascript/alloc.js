@@ -232,7 +232,7 @@ $(document).ready(function() {
 
   $('tr.clickrow').bind('click',function(e){                                                                                                     
     var id = this.id.split('_')[1]; // clickrow_43242
-    if (id && !$(e.target).is('input:checkbox') && !$(e.target).is('a')) {
+    if (id && !$(e.target).is('input:checkbox') && !$(e.target).is('a') && !$(e.target).is('b')) {
       $('#checkbox_'+id).attr('checked',!$('#checkbox_'+id).attr('checked'));
     }
   });
