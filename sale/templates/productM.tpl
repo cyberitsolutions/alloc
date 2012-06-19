@@ -105,6 +105,7 @@ $(document).ready(function() {
         <input type="hidden" name="productSaleID" value="{$_REQUEST.productSaleID}">
         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         {if $productID}
+        <br><br>
         <a href="" onClick="return toggle_view_edit();">Cancel edit</a>
         {/}
       </div>
