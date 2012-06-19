@@ -8,11 +8,6 @@
   <th>Client</th>
   <th>Project</th>
   <th>Status</th>
-  <th>Margin</th>
-  <th width="1%">Price</th>
-  {if $_FORM["taxName"]}
-  <th></th>
-  {/}
   <th width="1%" style="font-size:120%"><i class="icon-star"></i></th>
 </tr>
  
@@ -25,11 +20,6 @@
   <td class="nobr">{=$r.clientName}</td>
   <td class="nobr">{=$r.projectName}</td>
   <td class="nobr">{$r.statusLabel}</td>
-  <td class="nobr">{$r.amounts.total_margin}</td>
-  <td class="nobr">{$r.amounts.total_sellPrice}</td>
-  {if $_FORM["taxName"]}
-    <td class="nobr">{$r.amounts.total_sellPrice_plus_gst} inc {$_FORM.taxName}</td>
-  {/}
   <td width="1%">
     {page::star("productSale",$r["productSaleID"])}
   </td>
