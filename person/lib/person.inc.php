@@ -143,25 +143,6 @@ class person extends db_entity {
     return $announcement;
   }
 
-  function get_project_persons($extra_condition = "") {
-    // Return an array of project_person objects that this user is associated with
-    // $extra_condition: A SQL expression added to the WHERE clause of the query
-    $query = "SELECT * FROM projectPerson WHERE projectPerson.personID=".$this->get_id();
-    if ($extra_condition) {
-      $query.= " AND (".$extra_condition.")";
-    }
-    $db = new db_alloc;
-    $db->query($query);
-    $rtn = array();
-    while ($db->next_record()) {
-      $project_person = new projectPerson;
-      $project_person->read_db_record($db);
-      $rtn[] = $project_person;
-    }
-
-    return $rtn;
-  }
-
   function have_role($perm_name) {
     $perms = explode(",",$this->get_value("perms"));
     return in_array($perm_name,$perms);
@@ -196,7 +177,7 @@ class person extends db_entity {
   function get_skills($proficiency) {
     // Return a string of skills with a given proficiency
     $query = "SELECT * FROM proficiency LEFT JOIN skill on proficiency.skillID=skill.skillID";
-    $query.= sprintf(" WHERE personID=%d AND skillProficiency='%s' ORDER BY skillName", $this->get_id(), $proficiency);
+    $query.= sprintf(" WHERE personID=%d AND skillProficiency='%s' ORDER BY skillName", $this->get_id(), db_esc($proficiency));
 
     $db = new db_alloc;
     $db->query($query);

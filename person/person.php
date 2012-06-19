@@ -190,7 +190,7 @@ if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $
         $proficiency->set_value('personID', $personID);
 
         $db = new db_alloc;
-        $query = "SELECT * FROM proficiency WHERE personID = $personID";
+        $query = sprintf("SELECT * FROM proficiency WHERE personID = %d", $personID);
         $query.= sprintf(" AND skillID = %d", $_POST["skillID"][$i]);
         $db->query($query);
         if (!$db->next_record()) {

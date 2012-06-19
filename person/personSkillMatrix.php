@@ -49,7 +49,7 @@ function show_skills() {
   $skills = array(""=>"Any skill");
   $query = "SELECT * FROM skill";
   if ($skill_class != "") {
-    $query.= sprintf(" WHERE skillClass='%s'", $skill_class);
+    $query.= sprintf(" WHERE skillClass='%s'", db_esc($skill_class));
   }
   $query.= " ORDER BY skillClass,skillName";
   $db->query($query);
@@ -81,7 +81,7 @@ function get_people_header() {
     $query.= sprintf(" AND skill.skillID=%d", $talent);
 
   } else if ($skill_class) {
-    $query.= sprintf(" AND skill.skillClass='%s'", $skill_class);
+    $query.= sprintf(" AND skill.skillClass='%s'", db_esc($skill_class));
   }
   $query.= " GROUP BY username ORDER BY username";
   $db->query($query);
@@ -105,7 +105,7 @@ function show_skill_expertise() {
     if ($talent != "") {
       $query.= sprintf(" WHERE proficiency.skillID=%d", $talent);
     } else {
-      $query.= sprintf(" WHERE skillClass='%s'", $skill_class);
+      $query.= sprintf(" WHERE skillClass='%s'", db_esc($skill_class));
     }
   }
   $query.= " GROUP BY skillName ORDER BY skillClass,skillName";
