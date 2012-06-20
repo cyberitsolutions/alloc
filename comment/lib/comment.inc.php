@@ -1089,7 +1089,7 @@ class comment extends db_entity {
           $interestedParty->set_value("emailAddress",trim($email));
           $interestedParty->set_value("entityID",$commentID);
           $interestedParty->set_value("entity","comment");
-          $interestedParty->set_value("external","1");
+          $interestedParty->set_value("external",$info["internal"] ? "0" : "1");
           $interestedParty->set_value("interestedPartyActive","1");
           if (is_object($cc) && $cc->get_id()) {
             $interestedParty->set_value("clientContactID",$cc->get_id());

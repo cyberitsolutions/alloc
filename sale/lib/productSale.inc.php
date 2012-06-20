@@ -248,8 +248,8 @@ class productSale extends db_entity {
         $p2 = new person();
         $p2->set_id(67);
         $p2->select();
-        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name()); 
-        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name()); 
+        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name(),"addIP"=>true,"internal"=>true);
+        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name(),"addIP"=>true,"internal"=>true);
 
         $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
         $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
@@ -309,8 +309,8 @@ class productSale extends db_entity {
         $p2 = new person();
         $p2->set_id(67);
         $p2->select();
-        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name()); 
-        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name()); 
+        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name(),"addIP"=>true,"internal"=>true);
+        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name(),"addIP"=>true,"internal"=>true);
 
         $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
         $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
@@ -347,8 +347,8 @@ class productSale extends db_entity {
         $p2 = new person();
         $p2->set_id(67);
         $p2->select();
-        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name()); 
-        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name()); 
+        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name(),"addIP"=>true,"internal"=>true);
+        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name(),"addIP"=>true,"internal"=>true);
 
         $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
         $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
@@ -384,8 +384,8 @@ class productSale extends db_entity {
         $p2 = new person();
         $p2->set_id(67);
         $p2->select();
-        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name()); 
-        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name()); 
+        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name(),"addIP"=>true,"internal"=>true);
+        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name(),"addIP"=>true,"internal"=>true);
 
         $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
         $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
