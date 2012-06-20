@@ -439,8 +439,8 @@ BEGIN
   SET NEW.dateCreated = current_timestamp();
 
   -- inserted closed edge-case
-  IF (NEW.dateActualCompletion AND neq(substring(NEW.taskStatus,1,6), 'closed')) THEN
-    SET NEW.taskStatus = 'closed_complete';
+  IF (substring(NEW.taskStatus,1,6) = 'closed') THEN
+    SET NEW.dateActualCompletion = current_date();
   END IF;
 
   IF (empty(NEW.taskStatus)) THEN SET NEW.taskStatus = 'open_notstarted'; END IF;
