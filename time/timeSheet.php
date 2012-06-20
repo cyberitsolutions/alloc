@@ -71,9 +71,6 @@ if (!$current_user->is_employee()) {
          <button type="submit" name="create_transactions_default" value="1" class="save_button">Create Default Transactions<i class="icon-cogs"></i></button>
         ';
 
-        config::for_cyber() and $TPL["create_transaction_buttons"].= '
-         <button type="submit" name="create_transactions_old" value="1" class="save_button">Create Old Style Transactions<i class="icon-cogs"></i></button>';
-
         $TPL["create_transaction_buttons"] .= '
         <button type="submit" name="delete_all_transactions" value="1" class="delete_button">Delete Transactions<i class="icon-trash"></i></button>
         ';
@@ -559,7 +556,7 @@ if (!$timeSheetID) {
 } 
 
 
-if (($_POST["create_transactions_default"] || $_POST["create_transactions_old"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+if ($_POST["create_transactions_default"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
   $msg.= $timeSheet->createTransactions();
 
 } else if ($_POST["delete_all_transactions"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
