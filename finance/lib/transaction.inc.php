@@ -370,7 +370,7 @@ class transaction extends db_entity {
     $debug and print "\n<br>QUERY2: ".$q;
     $db = new db_alloc;
     $db->query($q);
-
+    $for_cyber = config::for_cyber();
     while ($row = $db->next_record()) {
       #echo "<pre>".print_r($row,1)."</pre>";
       $i++;
@@ -408,6 +408,15 @@ class transaction extends db_entity {
       } else {
         $row["amount_negative"] = page::money($row["currencyTypeID"],$row["amount1"],"%m %c");
         $total_amount_negative += $amount;
+      }
+
+      // Cyber only hackery for ext ref field on product sales
+      if ($for_cyber && $row["productSaleID"]) {
+        $ps = new productSale();
+        $ps->set_id($row["productSaleID"]);
+        if ($ps->select(false)) {
+          $ps->get_value("extRef") and $row["product"].= " (Ext ref: ".$ps->get_value("extRef").")";
+        }
       }
 
       $transactions[$row["transactionID"]] = $row;
