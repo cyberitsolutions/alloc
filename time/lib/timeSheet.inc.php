@@ -263,67 +263,8 @@ class timeSheet extends db_entity {
       
       $rtn = array();
 
-      if ($_POST["create_transactions_old"]) {
-
-        // 1. Credit TAX/GST Cost Centre
-        $product = $taxName." ".$taxPercent."% for timesheet #".$this->get_id();
-        $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_dollars"]-$this->pay_info["total_dollars_minus_gst"]), $taxTfID, "tax");
-
-        // 2. Credit Cyber Percentage and do agency percentage if necessary
-        $agency_percentage = 0;
-        if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
-          $agency_percentage = $payrollTaxPercent;
-          $product = "Agency Percentage ".$agency_percentage."% of ".$this->pay_info["currency"].$this->pay_info["total_dollars_minus_gst"]." for timesheet #".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet");
-        }
-        $percent = $companyPercent - $agency_percentage;
-        $product = "Company ".$percent."% of ".$this->pay_info["currency"].$this->pay_info["total_dollars_minus_gst"]." for timesheet #".$this->get_id();
-        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"]*($percent/100), $company_tfID, "timesheet");
-
-
-        // 3. Credit Employee TF
-        $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
-        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * .665, $recipient_tfID, "timesheet", $insur_trans_status);
-
-
-        // 4. Payment Insurance
-        if ($this->get_value("payment_insurance") && $paymentInsurancePercent) {
-          $product = "Payment Insurance ".$paymentInsurancePercent."% for timesheet #".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars_minus_gst"] * $paymentInsurancePercentMult, $company_tfID, "insurance", $insur_trans_status,$recipient_tfID);
-        }
-
-        
-        // 5. Credit Project Commissions
-        $db->query("SELECT * FROM projectCommissionPerson 
-                     WHERE projectID = ".$this->get_value("projectID")." 
-                    AND commissionPercent != 0");
-        while ($db->next_record()) {
-          $percent_so_far += $db->f("commissionPercent");
-          $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].$this->pay_info["total_dollars_minus_gst"];
-          $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
-          $rtn[$product] = $this->createTransaction($product
-                                                  , $this->pay_info["total_dollars_minus_gst"]*($db->f("commissionPercent")/100)
-                                                  , $db->f("tfID")
-                                                  , "commission"
-                                                  );
-        }
-    
-        // 6. Employee gets commission if none were paid previously or the remainder of 5% commission if there is any
-        if (!$percent_so_far || $percent_so_far < 5) {
-          $percent = 5 - $percent_so_far;
-          $product = "Commission ".sprintf("%0.3f",$percent)."% of ".$this->pay_info["currency"].$this->pay_info["total_dollars_minus_gst"];
-          $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
-          $rtn[$product] = $this->createTransaction($product
-                                                  , $this->pay_info["total_dollars_minus_gst"]*($percent/100)
-                                                  , $recipient_tfID
-                                                  , "commission"
-                                                  );
-        } 
-
-
       // This is just for internal transactions
-      } else if ($_POST["create_transactions_default"] && $this->pay_info["total_customerBilledDollars"] == 0) {
-
+      if ($_POST["create_transactions_default"] && $this->pay_info["total_customerBilledDollars"] == 0) {
         $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_dollars"];
 
         // 1. Credit Employee TF
