@@ -40,6 +40,7 @@ function add_tf($tfID, $options, $warningKey, $warningValue) {
 
 $db = new db_alloc;
 $transaction = new transaction;
+$transaction->read_globals();
 $transactionID = $_POST["transactionID"] or $transactionID = $_GET["transactionID"];
 
 if ($transactionID && !$_GET["new"]) {
@@ -103,17 +104,17 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
     $transaction->save();
     if (!count($TPL["message"]))  { // need to check this again as transaction->save might have triggered an error
       $TPL["message_good"][] = "Transaction Saved";
-    }
 
-    if ($_POST["saveAndNew"]) {
-      alloc_redirect($TPL["url_alloc_transaction"]."new=true");
-    }
+      if ($_POST["saveAndNew"]) {
+        alloc_redirect($TPL["url_alloc_transaction"]."new=true");
+      }
 
-    if ($_POST["saveGoTf"]) {
-      alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
-    }
+      if ($_POST["saveGoTf"]) {
+        alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
+      }
 
-    alloc_redirect($TPL["url_alloc_transaction"]."transactionID=".$transaction->get_id());
+      alloc_redirect($TPL["url_alloc_transaction"]."transactionID=".$transaction->get_id());
+    }
   }
     
 } else if ($_POST["delete"]) {
@@ -131,7 +132,7 @@ $TPL["statusOptions"] = page::select_options(array("pending"=>"Pending", "reject
 $transactionTypes = transaction::get_transactionTypes();
 $TPL["transactionTypeOptions"] = page::select_options($transactionTypes, $transaction->get_value("transactionType"));
 
-is_object($transaction) and $TPL["transactionType"] = $transaction->get_transaction_type_link();
+is_object($transaction) and $TPL["transactionTypeLink"] = $transaction->get_transaction_type_link();
 
 $db = new db_alloc;
 
