@@ -750,7 +750,6 @@ p#extra_links a:visited,
 p#extra_links a:hover {
   text-decoration:none;
   position:relative;
-  top:8px !important; top:7px;
   padding: 5px 0px;
 }
 

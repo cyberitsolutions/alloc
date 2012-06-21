@@ -10,6 +10,7 @@
     <link rel="StyleSheet" href="{$url_alloc_cache}calendar.css" type="text/css" media="screen">
     <link rel="StyleSheet" href="{$url_alloc_cache}font.css" type="text/css" media="screen">
     <link rel="StyleSheet" href="{$url_alloc_cache}print.css" type="text/css" media="print">
+    <!--[if IE 7]><link rel="stylesheet" href="{$url_alloc_cache}font-awesome-ie7.css"><![endif]-->
     <script type="text/javascript" src="{$url_alloc_cache}javascript.js"></script>
     <script type="text/javascript">
       // return a value that is populated from PHP
