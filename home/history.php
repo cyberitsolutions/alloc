@@ -29,7 +29,7 @@ $historyID = $_POST["historyID"] or $historyID = $_GET["historyID"];
 if ($historyID) {
   if (is_numeric($historyID)) {
     $db = new db_alloc;
-    $query = sprintf("SELECT * FROM history WHERE historyID = %d", $historyID);
+    $query = prepare("SELECT * FROM history WHERE historyID = %d", $historyID);
     $db->query($query);
     $db->next_record();
     alloc_redirect($sess->url($TPL[$db->f("the_place")]."historyID=".$historyID).$db->f("the_args"));

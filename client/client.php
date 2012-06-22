@@ -60,7 +60,7 @@ require_once("../alloc.php");
     $client->select();
 
     // other contacts
-    $query = sprintf("SELECT * 
+    $query = prepare("SELECT * 
                         FROM clientContact
                        WHERE clientID=%d    
                     ORDER BY clientContactActive DESC, primaryContact DESC, clientContactName", $clientID);
@@ -192,9 +192,9 @@ require_once("../alloc.php");
     // show all reminders for this project
     $db = new db_alloc;
     if ($current_user->have_role("manage")) {
-      $query = sprintf("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d AND reminderActive = 1", $clientID);
+      $query = prepare("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d AND reminderActive = 1", $clientID);
     } else {
-      $query = sprintf("SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE reminderType='client' AND reminderLinkID=%d AND personID='%d' AND reminderActive = 1 GROUP BY reminder.reminderID", $clientID, $current_user->get_id());
+      $query = prepare("SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE reminderType='client' AND reminderLinkID=%d AND personID='%d' AND reminderActive = 1 GROUP BY reminder.reminderID", $clientID, $current_user->get_id());
     }
     $db->query($query);
     while ($db->next_record()) {

@@ -805,6 +805,37 @@ function esc_implode($str,$arr,$fmt="%d") {
   foreach ((array)$arr as $v) {
     $out[] = db_esc(sprintf($fmt,$v));
   }
-  return implode($str,(array)$out);
+  $rtn = implode($str,(array)$out);
+  if ($rtn == '') {
+    // this stops problems like
+    // "WHERE field IN ()"   -> parse error
+    // "WHERE field IN ('')" -> ok
+    $rtn = "''"; 
+  }
+  return $rtn;
+}
+function prepare() {
+  $args = func_get_args();
+
+  if (count($args) == 1) {
+    return $args[0];
+  }
+
+  // First element of $args get assigned to zero index of $clean_args
+  // Array_shift removes the first value and returns it..
+  $clean_args[] = array_shift($args);
+
+  // The rest of $args are escaped and then assigned to $clean_args
+  foreach ($args as $arg) {
+    if (is_array($arg)) {
+      $clean_args[] = esc_implode(",",$arg);
+    } else {
+      $clean_args[] = db_esc($arg);
+    }
+  }
+
+  // Have to use this coz we don't know how many args we're gonna pass to sprintf..
+  $query = call_user_func_array("sprintf",$clean_args);
+  return $query;
 }
 ?>

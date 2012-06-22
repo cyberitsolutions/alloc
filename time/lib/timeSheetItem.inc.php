@@ -87,7 +87,7 @@ class timeSheetItem extends db_entity {
     $db = new db_alloc();
 
     // Update the related invoiceItem
-    $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
+    $q = prepare("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
     $db->query($q);
     $row = $db->row();
     if ($row) {
@@ -142,7 +142,7 @@ class timeSheetItem extends db_entity {
     parent::delete();
 
     $db = new db_alloc();
-    $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$timeSheetID);
+    $q = prepare("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$timeSheetID);
     $db->query($q);
     $row = $db->row();
     if ($row) {
@@ -166,14 +166,14 @@ class timeSheetItem extends db_entity {
     }
 
     $dateTimeSheetItem = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-365,date("Y")));
-    $personID and $personID_sql = sprintf(" AND personID = '%d'", $personID);
+    $personID and $personID_sql = prepare(" AND personID = %d", $personID);
 
-    $q = sprintf("SELECT DISTINCT dateTimeSheetItem, personID
+    $q = prepare("SELECT DISTINCT dateTimeSheetItem, personID
                     FROM timeSheetItem 
                    WHERE dateTimeSheetItem > '%s'
-                      %s
+                      ".$personID_sql."
                 GROUP BY dateTimeSheetItem,personID
-                 ",$dateTimeSheetItem,$personID_sql);
+                 ",$dateTimeSheetItem);
 
     $db = new db_alloc;
     $db->query($q);
@@ -228,55 +228,36 @@ class timeSheetItem extends db_entity {
     }
 
     if (is_array($timeSheetIDs) && count($timeSheetIDs)) {
-      foreach ($timeSheetIDs as $tid) { $t[] = db_esc($tid); }
-      $sql[] = "(timeSheetItem.timeSheetID IN (".esc_implode(",",$t)."))";
+      $sql[] = prepare("(timeSheetItem.timeSheetID IN (%s))",$timeSheetIDs);
     } 
 
     if ($filter["projectID"]) {
-      $sql[] = sprintf("(timeSheet.projectID = %d)",db_esc($filter["projectID"]));
+      $sql[] = prepare("(timeSheet.projectID = %d)",$filter["projectID"]);
     } 
 
     if ($filter["taskID"]) {
-      $sql[] = sprintf("(timeSheetItem.taskID = %d)",db_esc($filter["taskID"]));
+      $sql[] = prepare("(timeSheetItem.taskID = %d)",$filter["taskID"]);
     } 
 
     if ($filter["date"]) {
       in_array($filter["dateComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateComparator"] = '=';
-      $sql[] = sprintf("(timeSheetItem.dateTimeSheetItem %s '%s')",$filter["dateComparator"],db_esc($filter["date"]));
+      $sql[] = prepare("(timeSheetItem.dateTimeSheetItem ".$filter["dateComparator"]." '%s')",$filter["date"]);
     } 
 
     if ($filter["personID"]) {
-      $sql[] = sprintf("(timeSheetItem.personID = %d)",db_esc($filter["personID"]));
+      $sql[] = prepare("(timeSheetItem.personID = %d)",$filter["personID"]);
     } 
 
     if ($filter["timeSheetItemID"]) {
-      $sql[] = sprintf("(timeSheetItem.timeSheetItemID = %d)",db_esc($filter["timeSheetItemID"]));
+      $sql[] = prepare("(timeSheetItem.timeSheetItemID = %d)",$filter["timeSheetItemID"]);
     }
 
     if ($filter["comment"]) {
-      $sql[] = sprintf("(timeSheetItem.comment LIKE '%%%s%%')",db_esc($filter["comment"]));
-    }
-
-    if ($filter["status"]) { 
-      if (is_array($filter["status"]) && count($filter["status"])) {
-        foreach ($filter["status"] as $s) {
-          if ($s == "rejected") {
-            $rejected = true;
-          } else {
-            $statuses[] = db_esc($s);
-          }
-        }
-      } else {
-        if ($filter["status"] == "rejected") {
-          $rejected = true;
-        } else {
-          $statuses[] = db_esc($filter["status"]);
-        }
-      }
+      $sql[] = prepare("(timeSheetItem.comment LIKE '%%%s%%')",$filter["comment"]);
     }
 
     if ($filter["tfID"]) {
-      $sql[] = sprintf("(timeSheet.recipient_tfID = '%d')", $filter["tfID"]);
+      $sql[] = prepare("(timeSheet.recipient_tfID = %d)", $filter["tfID"]);
     }
 
     return $sql;
@@ -360,16 +341,16 @@ class timeSheetItem extends db_entity {
 
   function get_averages($dateTimeSheetItem, $personID=false, $divisor="") {
 
-    $personID and $personID_sql = sprintf(" AND timeSheetItem.personID = '%d'", $personID);
+    $personID and $personID_sql = prepare(" AND timeSheetItem.personID = %d", $personID);
 
-    $q = sprintf("SELECT personID
-                       , SUM(timeSheetItemDuration*timeUnitSeconds) %s AS avg
+    $q = prepare("SELECT personID
+                       , SUM(timeSheetItemDuration*timeUnitSeconds) ".$divisor." AS avg
                     FROM timeSheetItem 
                LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID 
                    WHERE dateTimeSheetItem > '%s'
-                      %s
+                      ".$personID_sql."
                 GROUP BY personID
-                 ",$divisor, $dateTimeSheetItem, $personID_sql);
+                 ", $dateTimeSheetItem);
 
     $db = new db_alloc;
     $db->query($q);
@@ -379,13 +360,13 @@ class timeSheetItem extends db_entity {
     }
 
     //Calculate the dollar values
-    $q = sprintf("SELECT (rate * POW(10, -currencyType.numberToBasic) * timeSheetItemDuration * multiplier) as amount
+    $q = prepare("SELECT (rate * POW(10, -currencyType.numberToBasic) * timeSheetItemDuration * multiplier) as amount
                        , timeSheet.currencyTypeID as currency 
                        , timeSheetItem.*
                     FROM timeSheetItem 
                LEFT JOIN timeSheet on timeSheetItem.timeSheetID = timeSheet.timeSheetID
                LEFT JOIN currencyType ON timeSheet.currencyTypeID = currencyType.currencyTypeID
-                WHERE dateTimeSheetItem > '%s' %s", $dateTimeSheetItem, $personID_sql);
+                WHERE dateTimeSheetItem > '%s' ".$personID_sql, $dateTimeSheetItem);
     $db->query($q);
     $rows_dollars = array();
     while($row = $db->row()) {
@@ -401,19 +382,20 @@ class timeSheetItem extends db_entity {
     $rows = array();
 
     if ($taskID) {
-      $where = sprintf("timeSheetItem.taskID = %d",$taskID);
+      $where = prepare("timeSheetItem.taskID = %d",$taskID);
     } else if ($starred) {
       global $current_user;
       $timeSheetItemIDs = array();
       foreach ((array)$current_user->prefs["stars"]["timeSheetItem"] as $k=>$v) {
         $timeSheetItemIDs[] = $k;
       }
-      $where = "(timeSheetItem.timeSheetItemID in ('".esc_implode("','",$timeSheetItemIDs)."'))";
+      $where = prepare("(timeSheetItem.timeSheetItemID in (%s))",$timeSheetItemIDs);
     }
     
+    $where or $where = " 1 ";
 
     // Get list of comments from timeSheetItem table
-    $query = sprintf("SELECT timeSheetID
+    $query = prepare("SELECT timeSheetID
                            , timeSheetItemID
                            , dateTimeSheetItem AS date
                            , comment
@@ -422,11 +404,11 @@ class timeSheetItem extends db_entity {
                            , timeSheetItemDuration as duration
                            , timeSheetItemCreatedTime
                         FROM timeSheetItem
-                       WHERE %s AND (commentPrivate != 1 OR commentPrivate IS NULL)
+                       WHERE ".$where." AND (commentPrivate != 1 OR commentPrivate IS NULL)
                          AND emailUID is NULL
                          AND emailMessageID is NULL
                     ORDER BY dateTimeSheetItem,timeSheetItemID
-                     ",$where);
+                     ");
 
     $db = new db_alloc;
     $db->query($query);

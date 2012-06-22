@@ -64,12 +64,12 @@ if (config::for_cyber()) {
   $people[148] = array("anthonya"  ,"Anthony","Agius");
 
   foreach ($people as $personID=>$info) {
-    $q = sprintf("select * from person where personID = %d",$personID);
+    $q = prepare("select * from person where personID = %d",$personID);
     $db->query($q);
     if (!$db->row()) {
       debug_echo("<br>Cyber only: Inserted new person: ".$personID." ".$info[0]." ".$info[1]." ".$info[2]);
-      $q = sprintf("INSERT INTO person (personID,personActive,username,firstName,surname)
-                          VALUES (".$personID.",0,'".$info[0]."','".$info[1]."','".$info[2]."')");
+      $q = prepare("INSERT INTO person (personID,personActive,username,firstName,surname)
+                          VALUES (%d,0,'%s','%s','%s')",$personID,$info[0],$info[1],$info[2]);
       #echo $q;
       $db2->query($q);
     }
@@ -93,7 +93,7 @@ if (config::for_cyber()) {
   }
   $default_clientID = $row["clientID"];
 
-  $q = sprintf("update invoice set clientID = %d WHERE clientID = 0",$default_clientID);
+  $q = prepare("update invoice set clientID = %d WHERE clientID = 0",$default_clientID);
   $db->query($q);
 
   $q = "update timeSheet set personID = 155 where recipient_tfID = 104 and personID = 0";
@@ -113,11 +113,11 @@ if (!($row = $db->row())){
 
 $tfID = $row["tfID"];
 
-$q = sprintf("update transaction set fromTfID = %d where fromTfID = 0",$tfID);
+$q = prepare("update transaction set fromTfID = %d where fromTfID = 0",$tfID);
 $db->query($q);
-$q = sprintf("update transactionRepeat set fromTfID = %d where fromTfID = 0",$tfID);
+$q = prepare("update transactionRepeat set fromTfID = %d where fromTfID = 0",$tfID);
 $db->query($q);
-$q = sprintf("update productCost set fromTfID = %d where fromTfID = 0",$tfID);
+$q = prepare("update productCost set fromTfID = %d where fromTfID = 0",$tfID);
 $db->query($q);
 $q = "update person set personModifiedUser = null where personModifiedUser = 0";
 $db->query($q);
@@ -125,19 +125,19 @@ $q = "delete from sess";
 $db->query($q);
 $q = "update task set parentTaskID = null where parentTaskID = 0";
 $db->query($q);
-$q = sprintf("update productCost set fromTfID = NULL where fromTfID = 0");
+$q = prepare("update productCost set fromTfID = NULL where fromTfID = 0");
 $db->query($q);
-$q = sprintf("update productCost set tfID = NULL where tfID = 0");
+$q = prepare("update productCost set tfID = NULL where tfID = 0");
 $db->query($q);
 
-$q = sprintf("select * from timeSheetItem where personID = 0");
+$q = prepare("select * from timeSheetItem where personID = 0");
 $db->query($q);
 while($row = $db->row()) {
   if ($row["timeSheetID"]) {
-    $q = sprintf("select personID from timeSheet where timeSheetID = %d",$row["timeSheetID"]);
+    $q = prepare("select personID from timeSheet where timeSheetID = %d",$row["timeSheetID"]);
     $db2->query($q);
     if ($r = $db2->row()) {
-      $q = sprintf("update timeSheetItem set personID = %d where timeSheetItemID = %d",$r["personID"],$row["timeSheetItemID"]);
+      $q = prepare("update timeSheetItem set personID = %d where timeSheetItemID = %d",$r["personID"],$row["timeSheetItemID"]);
       $db3->query($q);
     }
   }
@@ -223,7 +223,7 @@ function fix_fk ($c,$p) {
   $db2 = new db_alloc();
   $db->query($q);
   while ($row = $db->row()) {
-    $q = sprintf("UPDATE ".$child." SET ".$c." = NULL WHERE ".$child_pk." = ".$row[$child."ID"]);
+    $q = prepare("UPDATE ".$child." SET ".$c." = NULL WHERE ".$child_pk." = ".$row[$child."ID"]);
     debug_echo("<br>&nbsp;&nbsp;&nbsp;".$q);
     $db2->query($q);
   }

@@ -58,7 +58,7 @@ class projectPerson extends db_entity {
   // Role methodology.. role handle is canEditTasks, or isManager atm
   function set_value_role($roleHandle) {
     $db = new db_alloc;
-    $db->query(sprintf("SELECT * FROM role WHERE roleHandle = '%s' AND roleLevel = 'project'",$roleHandle));
+    $db->query(prepare("SELECT * FROM role WHERE roleHandle = '%s' AND roleLevel = 'project'",$roleHandle));
     $db->next_record();
     $this->set_value("roleID",$db->f("roleID"));
   }
@@ -66,7 +66,7 @@ class projectPerson extends db_entity {
 
   //deprecated in favour of get_rate
   function get_projectPerson_row($projectID, $personID) {
-    $q = sprintf("SELECT * 
+    $q = prepare("SELECT * 
                     FROM projectPerson 
                    WHERE projectID = %d AND personID = %d"
                 ,$projectID,$personID);
@@ -96,7 +96,7 @@ class projectPerson extends db_entity {
     // Next priority: person
     // person and global rate are in global currency rather than project currency - conversion required
     $db = new db_alloc();
-    $q = sprintf("SELECT defaultTimeSheetRate as rate, defaultTimeSheetRateUnitID as unit FROM person WHERE personID = %d", $personID);
+    $q = prepare("SELECT defaultTimeSheetRate as rate, defaultTimeSheetRateUnitID as unit FROM person WHERE personID = %d", $personID);
     $db->query($q);
     $row = $db->row();
     if (imp($row['rate']) && $row['unit']) {

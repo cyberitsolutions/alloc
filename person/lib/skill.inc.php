@@ -33,8 +33,8 @@ class skill extends db_entity {
   // and update fields of current if it does exist
   function skill_exists() {
     $query = "SELECT * FROM skill";
-    $query.= sprintf(" WHERE skillName='%s'", db_esc($this->get_value('skillName')));
-    $query.= sprintf(" AND skillClass='%s'", db_esc($this->get_value('skillClass')));
+    $query.= prepare(" WHERE skillName='%s'", $this->get_value('skillName'));
+    $query.= prepare(" AND skillClass='%s'", $this->get_value('skillClass'));
     $db = new db_alloc;
     $db->query($query);
     if ($db->next_record()) {
@@ -67,7 +67,7 @@ class skill extends db_entity {
     $skills = array(""=>"Any Skill");
     $query = "SELECT * FROM skill";
     if ($skill_class != "") {
-      $query.= sprintf(" WHERE skillClass='%s'", db_esc($skill_class));
+      $query.= prepare(" WHERE skillClass='%s'", $skill_class);
     }
     $query.= " ORDER BY skillClass,skillName";
     $db = new db_alloc;

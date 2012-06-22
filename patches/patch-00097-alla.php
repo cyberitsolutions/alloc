@@ -1,6 +1,6 @@
 <?php
 
-$q = sprintf("SELECT * FROM person WHERE dailyTaskEmail = 'yes'");
+$q = prepare("SELECT * FROM person WHERE dailyTaskEmail = 'yes'");
 $db = new db_alloc();
 $db->query($q);
 

@@ -11,10 +11,10 @@ function printorlog($str,$color="") {
 function hash_to_entity($hash="") {
   global $db;
   if ($hash) {
-    $q = sprintf("select * from token WHERE tokenHash = '%s'",$hash);
+    $q = prepare("select * from token WHERE tokenHash = '%s'",$hash);
     $row = $db->qr($q);
     if ($row["tokenEntity"] == "comment") {
-      $q = sprintf("SELECT commentMaster,commentMasterID FROM comment WHERE commentID = %d",$row["tokenEntityID"]);
+      $q = prepare("SELECT commentMaster,commentMasterID FROM comment WHERE commentID = %d",$row["tokenEntityID"]);
       $r = $db->qr($q);
       return $r["commentMaster"].$r["commentMasterID"];
     } else {

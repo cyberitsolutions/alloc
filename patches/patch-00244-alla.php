@@ -75,7 +75,7 @@ while ($row = $db->row($qid)) {
     $entity != "task" and $prefix = ucwords($entity)." Comment: ";
     $subject or $subject = $prefix.$entityID." ".$e->get_name(DST_VARIABLE);
 
-    $r = $db->qr(sprintf("SELECT tokenHash FROM token WHERE tokenEntity = 'comment' AND tokenEntityID = %d",$row["commentID"]));
+    $r = $db->qr("SELECT tokenHash FROM token WHERE tokenEntity = 'comment' AND tokenEntityID = %d",$row["commentID"]);
     $subject_header = "Subject: ".$subject." {Key:".$r["tokenHash"]."}";
     $eml[] = $subject_header;
 

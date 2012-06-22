@@ -85,7 +85,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     #$prev_employeeNum = $employeeNum;
 
     // Find the TF for the wage
-    $query = sprintf("SELECT * FROM tf WHERE qpEmployeeNum=%d", $employeeNum);
+    $query = prepare("SELECT * FROM tf WHERE qpEmployeeNum=%d", $employeeNum);
     $db->query($query);
     if (!$db->next_record()) {
       $msg.= "<b>Warning: Could not find TF for employee number '$employeeNum' $name</b><br>";
@@ -112,9 +112,9 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $amount = -$amount;
 
     // Check for an existing transaction for this wage - note we have to use a range or amount because it is floating point
-    $query = sprintf("SELECT transactionID
+    $query = prepare("SELECT transactionID
                         FROM transaction
-                        WHERE fromTfID=%d AND transactionDate='%s' AND amount=%d", $fromTfID, db_esc($transactionDate), page::money(config::get_config_item("currency"),$amount,"%mi"));
+                        WHERE fromTfID=%d AND transactionDate='%s' AND amount=%d", $fromTfID, $transactionDate, page::money(config::get_config_item("currency"),$amount,"%mi"));
     $db->query($query);
     if ($db->next_record()) {
       $msg.= "Warning: Salary for employee #$employeeNum $name on $transactionDate already exists as transaction #".$db->f("transactionID")."<br>";

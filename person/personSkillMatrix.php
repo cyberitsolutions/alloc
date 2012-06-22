@@ -49,7 +49,7 @@ function show_skills() {
   $skills = array(""=>"Any skill");
   $query = "SELECT * FROM skill";
   if ($skill_class != "") {
-    $query.= sprintf(" WHERE skillClass='%s'", db_esc($skill_class));
+    $query.= prepare(" WHERE skillClass='%s'", $skill_class);
   }
   $query.= " ORDER BY skillClass,skillName";
   $db->query($query);
@@ -75,10 +75,10 @@ function get_people_header() {
   $query.= " LEFT JOIN proficiency ON person.personID=proficiency.personID";
   $query.= " LEFT JOIN skill ON proficiency.skillID=skill.skillID WHERE personActive = 1 ";
   if ($talent) {
-    $query.= sprintf(" AND skill.skillID=%d", $talent);
+    $query.= prepare(" AND skill.skillID=%d", $talent);
 
   } else if ($skill_class) {
-    $query.= sprintf(" AND skill.skillClass='%s'", db_esc($skill_class));
+    $query.= prepare(" AND skill.skillClass='%s'", $skill_class);
   }
   $query.= " GROUP BY username ORDER BY username";
   $db->query($query);
@@ -100,9 +100,9 @@ function show_skill_expertise() {
   $query.= " LEFT JOIN skill ON proficiency.skillID=skill.skillID";
   if ($talent != "" || $skill_class != "") {
     if ($talent != "") {
-      $query.= sprintf(" WHERE proficiency.skillID=%d", $talent);
+      $query.= prepare(" WHERE proficiency.skillID=%d", $talent);
     } else {
-      $query.= sprintf(" WHERE skillClass='%s'", db_esc($skill_class));
+      $query.= prepare(" WHERE skillClass='%s'", $skill_class);
     }
   }
   $query.= " GROUP BY skillName ORDER BY skillClass,skillName";
@@ -123,7 +123,7 @@ function show_skill_expertise() {
     for ($i = 0; $i < count($people_ids); $i++) {
       $db2 = new db_alloc;
       $query = "SELECT * FROM proficiency";
-      $query.= sprintf(" WHERE skillID=%d AND personID=%d", $skill->get_id(), $people_ids[$i]);
+      $query.= prepare(" WHERE skillID=%d AND personID=%d", $skill->get_id(), $people_ids[$i]);
       $db2->query($query);
       if ($db2->next_record()) {
         $proficiency = new proficiency;

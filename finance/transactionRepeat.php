@@ -101,7 +101,7 @@ if ($transactionRepeat->get_value("transactionRepeatModifiedUser")) {
 
 if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
   // Person can access all TF records
-  $q = sprintf("SELECT tfID AS value, tfName AS label 
+  $q = prepare("SELECT tfID AS value, tfName AS label 
                   FROM tf 
                  WHERE tfActive = 1 
                     OR tf.tfID = %d 
@@ -110,7 +110,7 @@ if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
               , $transactionRepeat->get_value("tfID"), $transactionRepeat->get_value("fromTfID"));
 } else if (have_entity_perm("tf", PERM_READ, $current_user, true)) {
   // Person can only read TF records that they own
-  $q = sprintf("SELECT tf.tfID AS value, tf.tfName AS label
+  $q = prepare("SELECT tf.tfID AS value, tf.tfName AS label
                   FROM tf, tfPerson 
                  WHERE tfPerson.personID=%d 
                    AND tf.tfID=tfPerson.tfID 

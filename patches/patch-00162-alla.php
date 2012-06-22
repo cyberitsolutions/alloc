@@ -4,7 +4,7 @@ ini_set('max_execution_time',180000);
 ini_set('memory_limit',"256M");
 $index = Zend_Search_Lucene::create(ATTACHMENTS_DIR.'search/client');
 $db = new db_alloc();
-$q = sprintf("SELECT * FROM client");
+$q = prepare("SELECT * FROM client");
 $db->query($q);
 while ($db->row()) {
   $client = new client;

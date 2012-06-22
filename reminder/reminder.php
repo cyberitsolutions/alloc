@@ -71,7 +71,7 @@ case 2:
     if ($current_user->have_role("admin")) {
       $query = "SELECT * FROM project WHERE projectStatus != 'Archived' ORDER BY projectName";
     } else {
-      $query = sprintf("SELECT * 
+      $query = prepare("SELECT * 
                           FROM project 
                      LEFT JOIN projectPerson ON project.projectID=projectPerson.projectID 
                          WHERE personID='%d' 
@@ -89,7 +89,7 @@ case 2:
     if ($current_user->have_role("admin")) {
       $query = "SELECT * FROM task";
     } else {
-      $query = sprintf("SELECT * FROM task WHERE personID='%d' ORDER BY taskName", $personID);
+      $query = prepare("SELECT * FROM task WHERE personID=%d ORDER BY taskName", $personID);
     }
     $db->query($query);
     while ($db->next_record()) {

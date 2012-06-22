@@ -41,13 +41,13 @@ class token extends db_entity {
     
     $validate and $extra = " AND tokenActive = 1";
     $validate and $extra.= " AND (tokenUsed < tokenMaxUsed OR tokenMaxUsed IS NULL OR tokenMaxUsed = 0)";
-    $validate and $extra.= sprintf(" AND (tokenExpirationDate > '%s' OR tokenExpirationDate IS NULL)",date("Y-m-d H:i:s"));
+    $validate and $extra.= prepare(" AND (tokenExpirationDate > '%s' OR tokenExpirationDate IS NULL)",date("Y-m-d H:i:s"));
     
 
-    $q = sprintf("SELECT * FROM token 
+    $q = prepare("SELECT * FROM token 
                    WHERE tokenHash = '%s'
                   $extra
-                 ",db_esc($hash));
+                 ",$hash);
     #echo "<br><br>".$q;
     $db = new db_alloc();
     $db->query($q);
@@ -83,7 +83,7 @@ class token extends db_entity {
   }
 
   function increment_tokenUsed() {
-    $q = sprintf("UPDATE token SET tokenUsed = coalesce(tokenUsed,0) + 1 WHERE tokenID = %d",$this->get_id());
+    $q = prepare("UPDATE token SET tokenUsed = coalesce(tokenUsed,0) + 1 WHERE tokenID = %d",$this->get_id());
     $db = new db_alloc();
     $db->query($q);
   }
@@ -109,7 +109,7 @@ class token extends db_entity {
   }
 
   function select_token_by_entity_and_action($entity,$entityID,$action) {
-    $q = sprintf("SELECT token.*, tokenAction.*
+    $q = prepare("SELECT token.*, tokenAction.*
                     FROM token 
                LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID 
                    WHERE tokenEntity = '%s' 
@@ -126,9 +126,9 @@ class token extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    $filter["tokenEntity"]   and $sql[] = sprintf("(token.tokenEntity = '%s')", $filter["tokenEntity"]);
-    $filter["tokenEntityID"] and $sql[] = sprintf("(token.tokenEntityID = '%d')", $filter["tokenEntityID"]);
-    $filter["tokenHash"]     and $sql[] = sprintf("(token.tokenHash = '%s')", $filter["tokenHash"]);
+    $filter["tokenEntity"]   and $sql[] = prepare("(token.tokenEntity = '%s')", $filter["tokenEntity"]);
+    $filter["tokenEntityID"] and $sql[] = prepare("(token.tokenEntityID = '%d')", $filter["tokenEntityID"]);
+    $filter["tokenHash"]     and $sql[] = prepare("(token.tokenHash = '%s')", $filter["tokenHash"]);
     return $sql;
   }
   

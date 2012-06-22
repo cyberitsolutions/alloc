@@ -45,7 +45,7 @@ class tf extends db_entity {
 
     // Get belance
     $db = new db_alloc;
-    $query = sprintf("SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance 
+    $query = prepare("SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance 
                         FROM transaction 
                    LEFT JOIN currencyType ON transaction.currencyTypeID = currencyType.currencyTypeID
                        WHERE (tfID = %d or fromTfID = %d) "
@@ -87,7 +87,7 @@ class tf extends db_entity {
   }
 
   function get_tfs_for_person($personID) {
-    $query = sprintf("SELECT * FROM tfPerson WHERE personID=%d",$personID);
+    $query = prepare("SELECT * FROM tfPerson WHERE personID=%d",$personID);
     $db = new db_alloc;
     $db->query($query);
     while ($row = $db->row()) {
@@ -126,7 +126,7 @@ class tf extends db_entity {
   function get_name($tfID=false) {
     if ($tfID) {
       $db = new db_alloc;
-      $db->query(sprintf("SELECT tfName FROM tf WHERE tfID=%d",$tfID));
+      $db->query(prepare("SELECT tfName FROM tf WHERE tfID=%d",$tfID));
       $db->next_record();
       return $db->f("tfName");
     }
@@ -135,7 +135,7 @@ class tf extends db_entity {
   function get_tfID($name="") {
     if ($name) {
       $db = new db_alloc;
-      $db->query(sprintf("SELECT tfID FROM tf WHERE tfName='%s'",db_esc($name)));
+      $db->query(prepare("SELECT tfID FROM tf WHERE tfName='%s'",$name));
       $db->next_record();
       return $db->f("tfID");
     }
@@ -171,11 +171,11 @@ class tf extends db_entity {
     if (!$_FORM["tfIDs"] && !$current_user->have_role('admin')) {
       $_FORM["owner"] = true;
     }
-    $_FORM["owner"] and $filter1[] = sprintf("(tfPerson.personID = %d)",$current_user->get_id());
+    $_FORM["owner"] and $filter1[] = prepare("(tfPerson.personID = %d)",$current_user->get_id());
 
     $tfIDs = tf::get_permitted_tfs($_FORM["tfIDs"]);
-    $tfIDs and $filter1[] = sprintf("(tf.tfID IN (%s))",esc_implode(",",$tfIDs));
-    $tfIDs and $filter2[] = sprintf("(tf.tfID IN (%s))",esc_implode(",",$tfIDs));
+    $tfIDs and $filter1[] = prepare("(tf.tfID IN (%s))",$tfIDs);
+    $tfIDs and $filter2[] = prepare("(tf.tfID IN (%s))",$tfIDs);
 
     $_FORM["showall"] or $filter1[] = "(tf.tfActive = 1)";
     $_FORM["showall"] or $filter2[] = "(tf.tfActive = 1)";
@@ -196,14 +196,14 @@ class tf extends db_entity {
     }
   
     $db = new db_alloc;
-    $q = sprintf("SELECT transaction.tfID as id, tf.tfName, transactionID, transaction.status,
+    $q = prepare("SELECT transaction.tfID as id, tf.tfName, transactionID, transaction.status,
                          sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
                     FROM transaction
                LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                LEFT JOIN tf on transaction.tfID = tf.tfID
-                   WHERE 1 AND transaction.status != 'rejected' %s
+                   WHERE 1 AND transaction.status != 'rejected' ".$f2."
                 GROUP BY transaction.status,transaction.tfID"
-                ,$f2);
+                );
     $db->query($q);
     while ($row = $db->row()) {
       if ($row["status"] == "approved") {
@@ -214,14 +214,14 @@ class tf extends db_entity {
     }
 
         
-    $q = sprintf("SELECT transaction.fromTfID as id, tf.tfName, transactionID, transaction.status,
+    $q = prepare("SELECT transaction.fromTfID as id, tf.tfName, transactionID, transaction.status,
                          sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
                     FROM transaction
                LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                LEFT JOIN tf on transaction.fromTfID = tf.tfID
-                   WHERE 1 AND transaction.status != 'rejected' %s
+                   WHERE 1 AND transaction.status != 'rejected' ".$f2."
                 GROUP BY transaction.status,transaction.fromTfID"
-                ,$f2);
+                );
     $db->query($q);
     while ($row = $db->row()) {
       if ($row["status"] == "approved") {
@@ -231,12 +231,12 @@ class tf extends db_entity {
       }
     }
 
-    $q = sprintf("SELECT tf.* 
+    $q = prepare("SELECT tf.* 
                     FROM tf 
                LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID 
-                   WHERE 1 %s 
+                   WHERE 1 ".$f."
                 GROUP BY tf.tfID 
-                ORDER BY tf.tfName",$f);  
+                ORDER BY tf.tfName");  
 
     $db->query($q);
     while ($row = $db->row()) {

@@ -4,7 +4,7 @@ ini_set('max_execution_time',180000);
 ini_set('memory_limit',"256M");
 $index = Zend_Search_Lucene::create(ATTACHMENTS_DIR.'search/comment');
 $db = new db_alloc();
-$q = sprintf("SELECT * FROM comment");
+$q = prepare("SELECT * FROM comment");
 $db->query($q);
 while ($db->row()) {
   $comment = new comment;

@@ -58,7 +58,7 @@ class interestedParty extends db_entity {
                  WHERE entityID = %d
                    AND entity = '%s'
                    AND emailAddress = '%s'
-               ",$entityID,db_esc($entity),db_esc($email));
+               ",$entityID,$entity,$email);
     return $db->row();
   }
 
@@ -71,7 +71,7 @@ class interestedParty extends db_entity {
                    AND entity = '%s'
                    AND emailAddress = '%s'
                    AND interestedPartyActive = 1
-               ",$entityID,db_esc($entity),db_esc($email));
+               ",$entityID,$entity,$email);
     return $db->row();
   }
 
@@ -79,10 +79,10 @@ class interestedParty extends db_entity {
     // Nuke entries from interestedParty
     $db = new db_alloc();
     $db->start_transaction();
-    $q = sprintf("UPDATE interestedParty
+    $q = prepare("UPDATE interestedParty
                      SET interestedPartyActive = 0
                    WHERE entity = '%s'
-                     AND entityID = %d",db_esc($entity),$entityID);
+                     AND entityID = %d",$entity,$entityID);
     $db->query($q);
 
     // Add entries to interestedParty
@@ -107,11 +107,11 @@ class interestedParty extends db_entity {
 
     if ($entityID) {
       $db = new db_alloc();
-      $q = sprintf("SELECT *
+      $q = prepare("SELECT *
                       FROM interestedParty
                      WHERE entity='%s'
                        AND entityID = %d
-                  ",db_esc($entity),$entityID);
+                  ",$entity,$entityID);
       $db->query($q);
       while ($db->row()) {
         $ops[$db->f("emailAddress")]["name"] = $db->f("fullName");
@@ -215,7 +215,7 @@ class interestedParty extends db_entity {
     $extra_interested_parties = config::get_config_item("defaultInterestedParties");
     if (!$ip->get_value("personID") && !in_array($data["emailAddress"],(array)$extra_interested_parties)) {
       $ip->set_value("external",1);
-      $q = sprintf("SELECT * FROM clientContact WHERE clientContactEmail = '%s'",$data["emailAddress"]);
+      $q = prepare("SELECT * FROM clientContact WHERE clientContactEmail = '%s'",$data["emailAddress"]);
       $db = new db_alloc();
       $db->query($q);
       if ($row = $db->row()) {
@@ -345,14 +345,14 @@ class interestedParty extends db_entity {
 
   function get_list_filter($filter=array()) {
     $filter["emailAddress"] = str_replace(array("<",">"),"",$filter["emailAddress"]);
-    $filter["emailAddress"]    and $sql[] = sprintf("(interestedParty.emailAddress LIKE '%%%s%%')",db_esc($filter["emailAddress"]));
-    $filter["fullName"]        and $sql[] = sprintf("(interestedParty.fullName LIKE '%%%s%%')",db_esc($filter["fullName"]));
-    $filter["personID"]        and $sql[] = sprintf("(interestedParty.personID = %d)",db_esc($filter["personID"]));
-    $filter["clientContactID"] and $sql[] = sprintf("(interestedParty.clientContactID = %d)",db_esc($filter["clientContactID"]));
-    $filter["entity"]          and $sql[] = sprintf("(interestedParty.entity = '%s')",db_esc($filter["entity"]));
-    $filter["entityID"]        and $sql[] = sprintf("(interestedParty.entityID = %d)",db_esc($filter["entityID"]));
-    $filter["active"]          and $sql[] = sprintf("(interestedParty.interestedPartyActive = %d)",db_esc($filter["active"]));
-    $filter["taskID"]          and $sql[] = sprintf("(comment.commentMaster='task' AND comment.commentMasterID=%d)",$filter["taskID"]);
+    $filter["emailAddress"]    and $sql[] = prepare("(interestedParty.emailAddress LIKE '%%%s%%')",$filter["emailAddress"]);
+    $filter["fullName"]        and $sql[] = prepare("(interestedParty.fullName LIKE '%%%s%%')",$filter["fullName"]);
+    $filter["personID"]        and $sql[] = prepare("(interestedParty.personID = %d)",$filter["personID"]);
+    $filter["clientContactID"] and $sql[] = prepare("(interestedParty.clientContactID = %d)",$filter["clientContactID"]);
+    $filter["entity"]          and $sql[] = prepare("(interestedParty.entity = '%s')",$filter["entity"]);
+    $filter["entityID"]        and $sql[] = prepare("(interestedParty.entityID = %d)",$filter["entityID"]);
+    $filter["active"]          and $sql[] = prepare("(interestedParty.interestedPartyActive = %d)",$filter["active"]);
+    $filter["taskID"]          and $sql[] = prepare("(comment.commentMaster='task' AND comment.commentMasterID=%d)",$filter["taskID"]);
     return $sql;
   }
 

@@ -249,7 +249,7 @@ class transaction extends db_entity {
 
   function reduce_tfs($_FORM) {
     if ($_FORM["tfName"]) {
-      $q = sprintf("SELECT * FROM tf WHERE tfName = '%s'",db_esc($_FORM["tfName"]));
+      $q = prepare("SELECT * FROM tf WHERE tfName = '%s'",$_FORM["tfName"]);
       $db = new db_alloc();
       $db->query($q);
       $db->next_record();
@@ -268,11 +268,7 @@ class transaction extends db_entity {
     global $current_user;
 
     if (is_array($_FORM["tfIDs"]) && count($_FORM["tfIDs"])) {
-      foreach ((array)$_FORM["tfIDs"] as $tfID) {
-        $str.= $commar.db_esc($tfID);
-        $commar=",";
-      }
-      $sql["tfIDs"] = sprintf("(transaction.tfID in (%s) or transaction.fromTfID in (%s))",$str,$str);
+      $sql["tfIDs"] = prepare("(transaction.tfID in (%s) or transaction.fromTfID in (%s))",$_FORM["tfIDs"],$_FORM["tfIDs"]);
     }
 
     if ($_FORM["monthDate"]) {
@@ -287,17 +283,17 @@ class transaction extends db_entity {
       $_FORM["sortTransactions"] = "if(transactionModifiedTime,transactionModifiedTime,transactionCreatedTime)";
     }
 
-    $_FORM["startDate"]       and $sql["startDate"]       = "(".$_FORM["sortTransactions"]." >= '".db_esc($_FORM["startDate"])."')";
-    $_FORM["startDate"]       and $sql["prevBalance"]     = "(".$_FORM["sortTransactions"]." < '".db_esc($_FORM["startDate"])."')";
-    $_FORM["endDate"]         and $sql["endDate"]         = "(".$_FORM["sortTransactions"]." < '".db_esc($_FORM["endDate"])."')";
-    $_FORM["status"]          and $sql["status"]          = "(status = '".db_esc($_FORM["status"])."')";
-    $_FORM["transactionType"] and $sql["transactionType"] = "(transactionType = '".db_esc($_FORM["transactionType"])."')";
+    $_FORM["startDate"]       and $sql["startDate"]       = prepare("(%s >= '%s')",$_FORM["sortTransactions"],$_FORM["startDate"]);
+    $_FORM["startDate"]       and $sql["prevBalance"]     = prepare("(%s < '%s')",$_FORM["sortTransactions"],$_FORM["startDate"]);
+    $_FORM["endDate"]         and $sql["endDate"]         = prepare("(%s < '%s')",$_FORM["sortTransactions"],$_FORM["endDate"]);
+    $_FORM["status"]          and $sql["status"]          = prepare("(status = '%s')",$_FORM["status"]);
+    $_FORM["transactionType"] and $sql["transactionType"] = prepare("(transactionType = '%s')",$_FORM["transactionType"]);
 
-    $_FORM["fromTfID"]        and $sql["fromTfID"]        = sprintf("(fromTfID=%d)",db_esc($_FORM["fromTfID"]));
-    $_FORM["expenseFormID"]   and $sql["expenseFormID"]   = sprintf("(expenseFormID=%d)",db_esc($_FORM["expenseFormID"]));
-    $_FORM["transactionID"]   and $sql["transactionID"]   = sprintf("(transactionID=%d)",db_esc($_FORM["transactionID"]));
-    $_FORM["product"]         and $sql["product"]         = sprintf("(product LIKE \"%%%s%%\")",db_esc($_FORM["product"]));
-    $_FORM["amount"]          and $sql["amount"]          = sprintf("(amount = '%s')",db_esc($_FORM["amount"]));
+    $_FORM["fromTfID"]        and $sql["fromTfID"]        = prepare("(fromTfID=%d)",$_FORM["fromTfID"]);
+    $_FORM["expenseFormID"]   and $sql["expenseFormID"]   = prepare("(expenseFormID=%d)",$_FORM["expenseFormID"]);
+    $_FORM["transactionID"]   and $sql["transactionID"]   = prepare("(transactionID=%d)",$_FORM["transactionID"]);
+    $_FORM["product"]         and $sql["product"]         = prepare("(product LIKE \"%%%s%%\")",$_FORM["product"]);
+    $_FORM["amount"]          and $sql["amount"]          = prepare("(amount = '%s')",$_FORM["amount"]);
 
     return $sql;
   }
@@ -342,10 +338,10 @@ class transaction extends db_entity {
   
     // Determine opening balance
     if (is_array($_FORM['tfIDs']) && count($_FORM['tfIDs'])) {
-      $q = sprintf("SELECT SUM( IF(fromTfID IN (%s),-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+      $q = prepare("SELECT SUM( IF(fromTfID IN (%s),-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
                       FROM transaction 
                  LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
-                    %s", esc_implode(",", $_FORM['tfIDs']), $filter2);
+                    ".$filter2, $_FORM['tfIDs']);
       $debug and print "\n<br>QUERY: ".$q;
       $db = new db_alloc;
       $db->query($q);

@@ -32,14 +32,14 @@ function show_reminders($template) {
 
   if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
     if ($_REQUEST["filter_recipient"]) {
-      $query.= sprintf(" AND personID = %d", $_REQUEST["filter_recipient"]);
+      $query.= prepare(" AND personID = %d", $_REQUEST["filter_recipient"]);
     }
   } else {
-    $query.= sprintf(" AND personID = %d", $current_user->get_id());
+    $query.= prepare(" AND personID = %d", $current_user->get_id());
   }
 
   if (imp($_REQUEST["filter_reminderActive"])) {
-    $query.= sprintf(" AND reminderActive = %d",$_REQUEST["filter_reminderActive"]);
+    $query.= prepare(" AND reminderActive = %d",$_REQUEST["filter_reminderActive"]);
   }
 
   $query.= " GROUP BY reminder.reminderID ORDER BY reminderTime,reminderType";

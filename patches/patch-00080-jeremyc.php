@@ -234,7 +234,7 @@ $db = new db_alloc();
 $db2 = new db_alloc();
 
 foreach ($tables as $table) {
-	$q = sprintf("SELECT * FROM %s;", $table);
+	$q = prepare("SELECT * FROM %s", $table);
 	$db->query($q);
 	if ($table == "skillList") {
 		$keyField = "skillID";
@@ -247,21 +247,21 @@ foreach ($tables as $table) {
   } 
 
   while ($row = $db->row()) {
-    $q = sprintf("UPDATE %s SET ", $table);
+    $q = prepare("UPDATE %s SET ", $table);
     $join = "";
     $update = False;
     foreach ($fields[$table] as $field) {
         /* history.the_label was double escaped before. */
         if ($table == "history" && $field == "the_label") {
-          $q.= sprintf($join."$field = \"%s\"",	db_esc(stripslashes(stripslashes($row[$field]))));
+          $q.= prepare($join."$field = \"%s\"",	stripslashes(stripslashes($row[$field])));
         } else {
-          $q.= sprintf($join."$field = \"%s\"",	db_esc(stripslashes($row[$field])));
+          $q.= prepare($join."$field = \"%s\"",	stripslashes($row[$field]));
         }
         $join = ", ";
         $update = True;
         /*      }*/
     }
-    $q.= sprintf(" WHERE %s = %d;",	$keyField, $row[$keyField]);
+    $q.= prepare(" WHERE %s = %d;",	$keyField, $row[$keyField]);
     $update and $db2->query($q);
 	}
 }

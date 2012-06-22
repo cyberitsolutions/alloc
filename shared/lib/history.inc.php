@@ -40,7 +40,7 @@ class history extends db_entity {
     global $current_user;
     if (is_object($current_user)) {
       $db = new db_alloc;
-      $query = sprintf("SELECT *, historyID AS value, the_label AS label 
+      $query = prepare("SELECT *, historyID AS value, the_label AS label 
                          FROM history 
                         WHERE personID = %d 
                      GROUP BY the_label 
@@ -118,7 +118,7 @@ class history extends db_entity {
             if (is_object($newClass->key_field) && $newClass->key_field->get_name() == $KEY_FIELD) {
               // The primary key for this db table is the same as 
               // our KEY_FIELD var which was extracted from url.
-              $query = sprintf("SELECT * FROM %s WHERE %s = %d", $CLASS_NAME, $KEY_FIELD, $ID);
+              $query = prepare("SELECT * FROM %s WHERE %s = %d", $CLASS_NAME, $KEY_FIELD, $ID);
               $db->query($query);
               $db->next_record();
               // return that particular classes _default_ display field
@@ -163,13 +163,13 @@ class history extends db_entity {
       return;
     }
     $db = new db_alloc;
-    $query = sprintf("SELECT count(*) AS total FROM history WHERE personID = %d",$current_user->get_id());
+    $query = prepare("SELECT count(*) AS total FROM history WHERE personID = %d",$current_user->get_id());
     $db->query($query);
     $row = $db->row();
     if ($row["total"] >= (3*$this->max_to_display)) {
       // Can only use DELETE FROM .. ORDER BY syntax from mysql >= 4.0
       if (version_compare($db->get_db_version(),"4.0",">=")) {
-        $query  = sprintf("DELETE FROM history WHERE personID = %d ORDER BY the_time LIMIT %d",$current_user->get_id(),$this->max_to_display, (2*$this->max_to_display));
+        $query  = prepare("DELETE FROM history WHERE personID = %d ORDER BY the_time LIMIT %d",$current_user->get_id(),$this->max_to_display, (2*$this->max_to_display));
         $db->query($query);
       }
     }

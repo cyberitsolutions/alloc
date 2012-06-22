@@ -49,7 +49,7 @@ function show_productSale_list($productSaleID, $template) {
 
   $product = new product;
   $ops = $product->get_assoc_array("productID","productName");
-  $query = sprintf("SELECT *
+  $query = prepare("SELECT *
                       FROM productSaleItem 
                      WHERE productSaleID = %d"
                   , $productSaleID);

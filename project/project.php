@@ -49,16 +49,17 @@ require_once("../alloc.php");
 
     if (isset($projectID) && $projectID) {
       if (have_entity_perm("transaction", PERM_READ, $current_user, false)) {
-        $query = sprintf("SELECT transaction.* ")
-          .sprintf("FROM transaction ")
-          .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
-          .sprintf("ORDER BY transactionModifiedTime desc");
+        $query = prepare("SELECT transaction.*
+                            FROM transaction
+                           WHERE transaction.projectID = %d
+                        ORDER BY transactionModifiedTime desc
+                         ", $projectID);
       } else {
-        $query = sprintf("SELECT transaction.* ")
-          .sprintf("FROM transaction ")
-          .sprintf("WHERE transaction.projectID = '%d' ", $projectID)
-          .sprintf(" AND transaction.tfID = %d ", $current_user->get_id())
-          .sprintf("ORDER BY transactionModifiedTime desc");
+        $query = prepare("SELECT transaction.* ")
+          .prepare("FROM transaction ")
+          .prepare("WHERE transaction.projectID = '%d' ", $projectID)
+          .prepare(" AND transaction.tfID = %d ", $current_user->get_id())
+          .prepare("ORDER BY transactionModifiedTime desc");
       }
       $db->query($query);
       while ($db->next_record()) {
@@ -90,7 +91,7 @@ require_once("../alloc.php");
     global $TPL, $db, $projectID;
 
     if ($projectID) {
-      $query = sprintf("SELECT * from projectCommissionPerson WHERE projectID= %d", $projectID);
+      $query = prepare("SELECT * from projectCommissionPerson WHERE projectID= %d", $projectID);
       $db->query($query);
 
       while ($db->next_record()) {
@@ -122,7 +123,7 @@ require_once("../alloc.php");
     global $email_type_array, $rate_type_array, $project_person_role_array;
 
     if ($projectID) {
-      $query = sprintf("SELECT projectPerson.*, roleSequence
+      $query = prepare("SELECT projectPerson.*, roleSequence
                           FROM projectPerson 
                      LEFT JOIN role ON role.roleID = projectPerson.roleID
                          WHERE projectID=%d ORDER BY roleSequence DESC,projectPersonID ASC", $projectID);
@@ -147,7 +148,7 @@ require_once("../alloc.php");
     $template = "templates/projectPersonSummaryViewR.tpl";
 
     if ($projectID) {
-      $query = sprintf("SELECT personID, roleName
+      $query = prepare("SELECT personID, roleName
                           FROM projectPerson
                      LEFT JOIN role ON role.roleID = projectPerson.roleID
                          WHERE projectID = %d AND roleHandle IN ('isManager', 'timeSheetRecipient')
@@ -263,10 +264,10 @@ require_once("../alloc.php");
     $permissions = explode(",", $current_user->get_value("perms"));
 
     if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
-      $query = sprintf("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d AND reminderActive = 1", $projectID);
+      $query = prepare("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d AND reminderActive = 1", $projectID);
     } else {
       // Apparently not used anywhere.
-      $query = sprintf("SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE reminderType='project' AND reminderLinkID=%d AND personID='%s' AND reminderActive = 1 GROUP BY reminder.reminderID", $projectID, $current_user->get_id());
+      $query = prepare("SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE reminderType='project' AND reminderLinkID=%d AND personID='%s' AND reminderActive = 1 GROUP BY reminder.reminderID", $projectID, $current_user->get_id());
     }
 
     $db->query($query);
@@ -330,9 +331,9 @@ if ($_POST["save"]) {
   }  
 
   // enforced at the database, but show a friendlier error here if possible
-  $query = sprintf("SELECT COUNT(*) as count FROM project WHERE projectShortName = '%s'", $db->esc($project->get_value("projectShortName")));
+  $query = prepare("SELECT COUNT(*) as count FROM project WHERE projectShortName = '%s'", $db->esc($project->get_value("projectShortName")));
   if (!$definitely_new_project) {
-    $query .= sprintf(" AND projectID != %d", $project->get_id());
+    $query .= prepare(" AND projectID != %d", $project->get_id());
   }
   $db->query($query);
   $db->next_record();
@@ -383,7 +384,7 @@ if ($_POST["save"]) {
     $TPL["message_good"][] = "Project details copied successfully.";
 
     // Copy project people
-    $q = sprintf("SELECT * FROM projectPerson WHERE projectID = %d",$p->get_id());
+    $q = prepare("SELECT * FROM projectPerson WHERE projectID = %d",$p->get_id());
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
@@ -397,7 +398,7 @@ if ($_POST["save"]) {
     }
 
     // Copy commissions
-    $q = sprintf("SELECT * FROM projectCommissionPerson WHERE projectID = %d",$p->get_id());
+    $q = prepare("SELECT * FROM projectCommissionPerson WHERE projectID = %d",$p->get_id());
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
@@ -421,7 +422,7 @@ if ($_POST["save"]) {
 if ($projectID) {
 
   if ($_POST["person_save"]) {
-    $q = sprintf("SELECT * FROM projectPerson WHERE projectID = %d",$project->get_id());
+    $q = prepare("SELECT * FROM projectPerson WHERE projectID = %d",$project->get_id());
     $db = new db_alloc();
     $db->query($q);
     while ($db->next_record()) {
@@ -521,7 +522,7 @@ $client->set_tpl_values("client_");
 // If a client has been chosen
 if ($clientID) {
 
-  $query = sprintf("SELECT * 
+  $query = prepare("SELECT * 
                       FROM clientContact
                      WHERE clientContact.clientID = %d AND clientContact.primaryContact = true"
                    ,$clientID);
@@ -571,7 +572,7 @@ $TPL["clientHidden"].= "<input type=\"hidden\" id=\"clientContactID\" name=\"cli
 // Gets $ per hour, even if user uses metric like $200 Daily
 function get_projectPerson_hourly_rate($personID,$projectID) {
   $db = new db_alloc;
-  $q = sprintf("SELECT rate,rateUnitID FROM projectPerson WHERE personID = %d AND projectID = %d",$personID,$projectID);
+  $q = prepare("SELECT rate,rateUnitID FROM projectPerson WHERE personID = %d AND projectID = %d",$personID,$projectID);
   $db->query($q);
   $db->next_record();
   $rate = $db->f("rate");
@@ -609,7 +610,7 @@ if (is_object($project) && $project->get_id()) {
 
 $TPL["navigation_links"] = $project->get_navigation_links();
 
-$query = sprintf("SELECT tfID AS value, tfName AS label 
+$query = prepare("SELECT tfID AS value, tfName AS label 
                     FROM tf 
                    WHERE tfActive = 1
                 ORDER BY tfName");
@@ -630,7 +631,7 @@ if ($TPL["project_cost_centre_tfID"]) {
 
 
 
-$query = sprintf("SELECT roleName,roleID FROM role WHERE roleLevel = 'project' ORDER BY roleSequence");
+$query = prepare("SELECT roleName,roleID FROM role WHERE roleLevel = 'project' ORDER BY roleSequence");
 $db->query($query);
 #$project_person_role_array[] = "";
 while ($db->next_record()) {
@@ -726,7 +727,7 @@ $TPL["project_projectComments_html"] = page::to_html($project->get_value("projec
 
 $db = new db_alloc();
 
-$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN timeSheet on timeSheet.timeSheetID = transaction.timeSheetID
@@ -742,7 +743,7 @@ while ($row = $db->row()) {
 }
 $TPL["total_timeSheet_transactions_pending"] = page::money_print($rows);
 
-$q = sprintf("SELECT SUM(customerBilledDollars * timeSheetItemDuration * multiplier * pow(10,-currencyType.numberToBasic))
+$q = prepare("SELECT SUM(customerBilledDollars * timeSheetItemDuration * multiplier * pow(10,-currencyType.numberToBasic))
                   AS amount, timeSheet.currencyTypeID as currency
                 FROM timeSheetItem 
            LEFT JOIN timeSheet ON timeSheetItem.timeSheetID = timeSheet.timeSheetID
@@ -757,7 +758,7 @@ while ($row = $db->row()) {
 }
 $TPL["total_timeSheet_customerBilledDollars"] = page::money_print($rows);
 
-$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN timeSheet on timeSheet.timeSheetID = transaction.timeSheetID
@@ -773,7 +774,7 @@ while ($row = $db->row()) {
 }
 $TPL["total_timeSheet_transactions_approved"] = page::money_print($rows);
 
-$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN invoiceItem on invoiceItem.invoiceItemID = transaction.invoiceItemID
@@ -790,7 +791,7 @@ while ($row = $db->row()) {
 }
 $TPL["total_invoice_transactions_pending"] = page::money_print($rows);
 
-$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN invoiceItem on invoiceItem.invoiceItemID = transaction.invoiceItemID
@@ -808,7 +809,7 @@ while ($row = $db->row()) {
 $TPL["total_invoice_transactions_approved"] = page::money_print($rows);
 
 
-$q = sprintf("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN currencyType on currencyType.currencyTypeID = transaction.currencyTypeID

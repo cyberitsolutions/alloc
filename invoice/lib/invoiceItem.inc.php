@@ -44,7 +44,7 @@ class invoiceItem extends db_entity {
     }
 
     $db = new db_alloc();
-    $q = sprintf("SELECT * FROM transaction WHERE invoiceItemID = %d OR transactionID = %d",$this->get_id(),$this->get_value("transactionID"));
+    $q = prepare("SELECT * FROM transaction WHERE invoiceItemID = %d OR transactionID = %d",$this->get_id(),$this->get_value("transactionID"));
     $db->query($q);
     while ($db->next_record()) {
       $transaction = new transaction();
@@ -55,7 +55,7 @@ class invoiceItem extends db_entity {
     }
 
     if ($this->get_value("timeSheetID")) {
-      $q = sprintf("SELECT * FROM timeSheet WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
+      $q = prepare("SELECT * FROM timeSheet WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
       $db->query($q);
       while ($db->next_record()) {
         $timeSheet = new timeSheet();
@@ -67,7 +67,7 @@ class invoiceItem extends db_entity {
     }
 
     if ($this->get_value("expenseFormID")) {
-      $q = sprintf("SELECT * FROM expenseForm WHERE expenseFormID = %d",$this->get_value("expenseFormID"));
+      $q = prepare("SELECT * FROM expenseForm WHERE expenseFormID = %d",$this->get_value("expenseFormID"));
       $db->query($q);
       while ($db->next_record()) {
         $expenseForm = new expenseForm();
@@ -84,7 +84,7 @@ class invoiceItem extends db_entity {
   function delete() {
 
     $db = new db_alloc();
-    $q = sprintf("DELETE FROM transaction WHERE invoiceItemID = %d",$this->get_id());
+    $q = prepare("DELETE FROM transaction WHERE invoiceItemID = %d",$this->get_id());
     $db->query($q);
 
     $invoiceID = $this->get_value("invoiceID");
@@ -155,7 +155,7 @@ class invoiceItem extends db_entity {
     $client = $project->get_foreign_object("client");
 
     $db = new db_alloc();
-    $db->query(sprintf("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$timeSheetID));
+    $db->query(prepare("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$timeSheetID));
     while ($row = $db->row()) {
       $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
       imp($timeSheet->pay_info["customerBilledDollars"]) or $iiUnitPrice = $row["rate"];
@@ -184,7 +184,7 @@ class invoiceItem extends db_entity {
     $db = new db_alloc();
     $db->query("SELECT max(transactionDate) as maxDate
                   FROM transaction
-                 WHERE expenseFormID = %s",$expenseFormID);
+                 WHERE expenseFormID = %d",$expenseFormID);
     $row = $db->row();
     $amount = $expenseForm->get_abs_sum_transactions();
     $this->set_value("invoiceID",$invoiceID);
@@ -202,7 +202,7 @@ class invoiceItem extends db_entity {
     $expenseForm->set_id($expenseFormID);
     $expenseForm->select();
     $db = new db_alloc();
-    $db->query(sprintf("SELECT * FROM transaction WHERE expenseFormID = %d",$expenseFormID));
+    $db->query("SELECT * FROM transaction WHERE expenseFormID = %d",$expenseFormID);
     while ($row = $db->row()) {
       $amount = abs($row["amount"]);
       $ii = new invoiceItem;
@@ -224,7 +224,7 @@ class invoiceItem extends db_entity {
     // It checks for approved transactions and only approves the timesheets
     // or expenseforms that are completely paid for by an invoice item.
     $db = new db_alloc();
-    $q = sprintf("SELECT amount, currencyTypeID, status 
+    $q = prepare("SELECT amount, currencyTypeID, status 
                     FROM transaction 
                    WHERE invoiceItemID = %d 
                 ORDER BY transactionCreatedTime DESC 
@@ -251,7 +251,7 @@ class invoiceItem extends db_entity {
         // If the time sheet doesn't have any transactions and it is in
         // status invoiced, then we'll simulate the "Create Default Transactions"
         // button being pressed.
-        $q = sprintf("SELECT count(*) as num_transactions 
+        $q = prepare("SELECT count(*) as num_transactions 
                         FROM transaction 
                        WHERE timeSheetID = %d 
                          AND invoiceItemID IS NULL
@@ -265,7 +265,7 @@ class invoiceItem extends db_entity {
         }
 
         // Get total of all time sheet transactions.
-        $q = sprintf("SELECT SUM(amount) AS total 
+        $q = prepare("SELECT SUM(amount) AS total 
                         FROM transaction 
                        WHERE timeSheetID = %d 
                          AND status != 'rejected' 
@@ -311,7 +311,7 @@ class invoiceItem extends db_entity {
     $db = new db_alloc();
 
     // If there already a transaction for this invoiceItem, use it instead of creating a new one
-    $q = sprintf("SELECT * FROM transaction WHERE invoiceItemID = %d ORDER BY transactionCreatedTime DESC LIMIT 1",$this->get_id());
+    $q = prepare("SELECT * FROM transaction WHERE invoiceItemID = %d ORDER BY transactionCreatedTime DESC LIMIT 1",$this->get_id());
     $db->query($q);
     if ($db->row()) {
       $transaction->set_id($db->f("transactionID"));
@@ -320,7 +320,7 @@ class invoiceItem extends db_entity {
 
     // If there already a transaction for this timeSheet, use it instead of creating a new one
     if ($this->get_value("timeSheetID")) {
-      $q = sprintf("SELECT * 
+      $q = prepare("SELECT * 
                       FROM transaction 
                      WHERE timeSheetID = %d 
                        AND fromTfID = %d

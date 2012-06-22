@@ -25,7 +25,7 @@ require_once("../alloc.php");
 function show_transaction_list($template) {
   global $TPL, $tflist, $transactionGroupID;
 
-  $q = sprintf("SELECT *, amount * pow(10,-currencyType.numberToBasic) as amount
+  $q = prepare("SELECT *, amount * pow(10,-currencyType.numberToBasic) as amount
                   FROM transaction
              LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                  WHERE transactionGroupID = %d

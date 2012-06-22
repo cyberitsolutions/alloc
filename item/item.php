@@ -32,7 +32,7 @@ $loanID = $_POST["loanID"] or $loanID = $_GET["loanID"];
 $item = new item;
 $loan = new loan;
 $db = new db_alloc;
-$db->query(sprintf("select * from item where itemID=%d",$itemID));
+$db->query("select * from item where itemID=%d",$itemID);
 $db->next_record();
 $item->read_db_record($db);
 $item->set_values();
@@ -66,7 +66,7 @@ if ($loanID) {
 
 
 if ($_POST["borrowItem"]) {
-  $db->query(sprintf("select * from loan where itemID=%d and dateReturned='0000-00-00'",$itemID));
+  $db->query("select * from loan where itemID=%d and dateReturned='0000-00-00'",$itemID);
 
   if ($db->next_record()) {     // if the item is already borrowed
     alloc_redirect($TPL["url_alloc_item"]."itemID=$itemID&badBorrow=true&error=already_borrowed");
@@ -101,10 +101,10 @@ if ($_POST["borrowItem"]) {
 if ($_POST["returnItem"]) {
 
   $dbTemp = new db_alloc;
-  $dbTemp->query(sprintf("select * from loan where itemID=%d and dateReturned='0000-00-00'",$itemID));
+  $dbTemp->query("select * from loan where itemID=%d and dateReturned='0000-00-00'",$itemID);
 
   $db = new db_alloc;
-  $db->query(sprintf("select * from loan where loan.itemID=%d and dateBorrowed>dateReturned",$itemID));
+  $db->query("select * from loan where loan.itemID=%d and dateBorrowed>dateReturned",$itemID);
   $db->next_record();
   $loan->set_id($db->f("loanID"));
   if ($loan->select()) {

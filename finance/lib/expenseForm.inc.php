@@ -50,7 +50,7 @@ class expenseForm extends db_entity {
     if ($this->get_id()) {
       // Return true if any of the transactions on the expense form are accessible by the current user
       $current_user_tfIDs = $current_user->get_tfIDs();
-      $query = sprintf("SELECT * FROM transaction WHERE expenseFormID=%d",$this->get_id());
+      $query = prepare("SELECT * FROM transaction WHERE expenseFormID=%d",$this->get_id());
       $db = new db_alloc;
       $db->query($query);
       while ($db->next_record()) {
@@ -91,7 +91,7 @@ class expenseForm extends db_entity {
   }
 
   function get_status() {
-    $q = sprintf("SELECT status FROM transaction WHERE expenseFormID = %d",$this->get_id());
+    $q = prepare("SELECT status FROM transaction WHERE expenseFormID = %d",$this->get_id());
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
@@ -108,11 +108,11 @@ class expenseForm extends db_entity {
   function delete_transactions($transactionID="") {
     global $TPL;
 
-    $transactionID and $extra_sql = sprintf("AND transactionID = %d",$transactionID);
+    $transactionID and $extra_sql = prepare("AND transactionID = %d",$transactionID);
 
     $db = new db_alloc;
     if ($this->is_owner()) {
-      $db->query(sprintf("DELETE FROM transaction WHERE expenseFormID = %d %s",$this->get_id(),$extra_sql));
+      $db->query(prepare("DELETE FROM transaction WHERE expenseFormID = %d ".$extra_sql,$this->get_id()));
       $transactionID and $TPL["message_good"][] = "Expense Form Line Item deleted.";
     }
   }
@@ -121,7 +121,7 @@ class expenseForm extends db_entity {
     global $TPL;
     $db = new db_alloc();
     if ($this->get_id()) {
-      $db->query("SELECT invoice.* FROM invoiceItem LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID WHERE expenseFormID = %s",$this->get_id());
+      $db->query("SELECT invoice.* FROM invoiceItem LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID WHERE expenseFormID = %d",$this->get_id());
       while ($row = $db->next_record()) {
         $str.= $sp."<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$row["invoiceID"]."\">".$row["invoiceNum"]."</a>";
         $sp = "&nbsp;&nbsp;";
@@ -133,10 +133,10 @@ class expenseForm extends db_entity {
   function save_to_invoice($invoiceID=false) {
 
     if ($this->get_value("clientID")) {
-      $invoiceID and $extra = sprintf(" AND invoiceID = %d",$invoiceID);
+      $invoiceID and $extra = prepare(" AND invoiceID = %d",$invoiceID);
       $client = $this->get_foreign_object("client");
       $db = new db_alloc;
-      $q = sprintf("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit' %s",$this->get_value("clientID"),$extra);
+      $q = prepare("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit' ".$extra,$this->get_value("clientID"));
       $db->query($q);
 
       // Create invoice
@@ -168,7 +168,7 @@ class expenseForm extends db_entity {
 
   function get_min_date() {
     $db = new db_alloc();
-    $q = sprintf("SELECT min(transactionDate) as date FROM transaction WHERE expenseFormID = '%s'",$this->get_id());
+    $q = prepare("SELECT min(transactionDate) as date FROM transaction WHERE expenseFormID = %d",$this->get_id());
     $db->query($q);
     $db->next_record();
     return $db->f('date');
@@ -176,7 +176,7 @@ class expenseForm extends db_entity {
 
   function get_max_date() {
     $db = new db_alloc();
-    $q = sprintf("SELECT max(transactionDate) as date FROM transaction WHERE expenseFormID = '%s'",$this->get_id());
+    $q = prepare("SELECT max(transactionDate) as date FROM transaction WHERE expenseFormID = %d",$this->get_id());
     $db->query($q);
     $db->next_record();
     return $db->f('date');
@@ -205,7 +205,7 @@ class expenseForm extends db_entity {
       $id = $this->get_id();
     }
     $db = new db_alloc();
-    $q = sprintf("SELECT sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS amount
+    $q = prepare("SELECT sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS amount
                     FROM transaction 
                LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                    WHERE expenseFormID = %d",$id);
@@ -224,17 +224,17 @@ class expenseForm extends db_entity {
     $expenseForm = new expenseForm;
     $transaction = new transaction;
 
-    $projectID and $projectID_sql = sprintf(" AND transaction.projectID = %d",$projectID);
-    $status    and $status_sql    = sprintf(" AND transaction.status = '%s'",db_esc($status));
+    $projectID and $projectID_sql = prepare(" AND transaction.projectID = %d",$projectID);
+    $status    and $status_sql    = prepare(" AND transaction.status = '%s'",$status);
 
-    $q= sprintf("SELECT expenseForm.*, SUM(transaction.amount * pow(10,-currencyType.numberToBasic)) as formTotal, transaction.currencyTypeID
+    $q= prepare("SELECT expenseForm.*, SUM(transaction.amount * pow(10,-currencyType.numberToBasic)) as formTotal, transaction.currencyTypeID
                    FROM expenseForm, transaction
               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                   WHERE expenseForm.expenseFormID = transaction.expenseFormID
-                        %s
-                        %s
+                        ".$projectID_sql."
+                        ".$status_sql."
                GROUP BY expenseForm.expenseFormID, transaction.currencyTypeID
-               ORDER BY expenseFormID",$projectID_sql,$status_sql);
+               ORDER BY expenseFormID");
 
     $db->query($q);
 

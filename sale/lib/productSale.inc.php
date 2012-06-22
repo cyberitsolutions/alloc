@@ -65,7 +65,7 @@ class productSale extends db_entity {
 
   function delete() {
     $db = new db_alloc;
-    $query = sprintf("SELECT * 
+    $query = prepare("SELECT * 
                         FROM productSaleItem 
                        WHERE productSaleID = %d"
                     , $this->get_id());
@@ -116,7 +116,7 @@ class productSale extends db_entity {
   }
   
   function get_productSaleItems() {
-    $q = sprintf("SELECT * FROM productSaleItem WHERE productSaleID = %d",$this->get_id());
+    $q = prepare("SELECT * FROM productSaleItem WHERE productSaleID = %d",$this->get_id());
     $db = new db_alloc();
     $db->query($q);
     $rows = array();
@@ -229,7 +229,7 @@ class productSale extends db_entity {
 
       // 1. from salesperson to admin
       $name = "Sale ".$this->get_id().": raise an invoice";
-      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,db_esc($name));
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,$name);
       if (config::for_cyber() && !$db->qr($q)) {
         $task = new task();
         $task->set_value("projectID",59); // Cyber Admin Project
@@ -272,8 +272,7 @@ class productSale extends db_entity {
           $ids[] = $row["productSaleItemID"];
         }
         if ($ids) {
-          $ids = esc_implode(",",$ids);
-          $q = sprintf("UPDATE transaction SET status = '%s' WHERE productSaleItemID in (%s)",db_esc($_REQUEST["changeTransactionStatus"]),$ids);
+          $q = prepare("UPDATE transaction SET status = '%s' WHERE productSaleItemID in (%s)",$_REQUEST["changeTransactionStatus"],$ids);
           $db = new db_alloc();
           $db->query($q);
         }
@@ -281,7 +280,7 @@ class productSale extends db_entity {
 
       // 2. from admin to salesperson
       $name = "Sale ".$this->get_id().": place an order to the supplier";
-      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,db_esc($name));
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,$name);
       if (config::for_cyber() && !$db->qr($q)) {
         $task = new task();
         $task->set_value("projectID",59); // Cyber Admin Project
@@ -293,8 +292,8 @@ class productSale extends db_entity {
         $task->set_value("taskDescription",$taskDesc);
         $task->save();
 
-        $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'"
-                    ,59,db_esc("Sale ".$this->get_id().": raise an invoice"));
+        $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'"
+                    ,59,"Sale ".$this->get_id().": raise an invoice");
         $rai_row = $db->qr($q);
         if ($rai_row) {
           $task->add_pending_tasks($rai_row["taskID"]);
@@ -326,7 +325,7 @@ class productSale extends db_entity {
 
       // 3. from salesperson to admin
       $name = "Sale ".$this->get_id().": pay the supplier";
-      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,db_esc($name));
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,$name);
       if (config::for_cyber() && !$db->qr($q)) {
         $task = new task();
         $task->set_value("projectID",59); // Cyber Admin Project
@@ -364,7 +363,7 @@ class productSale extends db_entity {
 
       // 4. from admin to salesperson
       $name = "Sale ".$this->get_id().": deliver the goods / action the work";
-      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,db_esc($name));
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,$name);
       if (config::for_cyber() && !$db->qr($q)) {
         $task = new task();
         $task->set_value("projectID",59); // Cyber Admin Project
@@ -403,7 +402,7 @@ class productSale extends db_entity {
 
   function get_transactions($productSaleItemID=false) {
     $rows = array();
-    $query = sprintf("SELECT transaction.*
+    $query = prepare("SELECT transaction.*
                             ,productCost.productCostID  as pc_productCostID
                             ,productCost.amount         as pc_amount
                             ,productCost.isPercentage   as pc_isPercentage
@@ -458,9 +457,9 @@ class productSale extends db_entity {
 
     // Filter oproductSaleID
     if ($filter["productSaleID"] && is_array($filter["productSaleID"])) {
-      $sql[] = "(productSale.productSaleID in ('".esc_implode("','",$filter["productSaleID"])."'))";
+      $sql[] = prepare("(productSale.productSaleID in (%s))",$filter["productSaleID"]);
     } else if ($filter["productSaleID"]) {     
-      $sql[] = sprintf("(productSale.productSaleID = %d)", db_esc($filter["productSaleID"]));
+      $sql[] = prepare("(productSale.productSaleID = %d)", $filter["productSaleID"]);
     }
 
     // No point continuing if primary key specified, so return
@@ -469,13 +468,13 @@ class productSale extends db_entity {
     }
 
     if ($filter["projectID"]) {
-      $sql[] = sprintf("(productSale.projectID = %d)",$filter["projectID"]);
+      $sql[] = prepare("(productSale.projectID = %d)",$filter["projectID"]);
     }
     if ($filter["clientID"]) {
-      $sql[] = sprintf("(productSale.clientID = %d)",$filter["clientID"]);
+      $sql[] = prepare("(productSale.clientID = %d)",$filter["clientID"]);
     }
     if ($filter["personID"]) {
-      $sql[] = sprintf("(productSale.personID = %d)",$filter["personID"]);
+      $sql[] = prepare("(productSale.personID = %d)",$filter["personID"]);
     }
 
     if (is_array($filter['status'])) {
@@ -484,7 +483,7 @@ class productSale extends db_entity {
       $statusArray[] = $filter['status'];
     }
     foreach ((array)$statusArray as $status) {
-      $status and $subsql[] = sprintf("(productSale.status = '%s')",db_esc($status));
+      $status and $subsql[] = prepare("(productSale.status = '%s')",$status);
     }
     $subsql and $sql[] = '('.implode(" OR ",$subsql).')';
     
@@ -506,7 +505,7 @@ class productSale extends db_entity {
     $f.= " ORDER BY IFNULL(productSaleDate,productSaleCreatedTime)";
 
     $db = new db_alloc();
-    $query = sprintf("SELECT productSale.*, project.projectName, client.clientName
+    $query = prepare("SELECT productSale.*, project.projectName, client.clientName
                         FROM productSale 
                    LEFT JOIN client ON productSale.clientID = client.clientID
                    LEFT JOIN project ON productSale.projectID = project.projectID
@@ -625,7 +624,7 @@ class productSale extends db_entity {
     if (!$_FORM['showAllProjects']) {
       $filter = "WHERE projectStatus = 'Current' ";
     }
-    $query = sprintf("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
+    $query = prepare("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
     $rtn["show_project_options"] = page::select_options($query, $_FORM["projectID"],70);
 
     // display the list of user name.

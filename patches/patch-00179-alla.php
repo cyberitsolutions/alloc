@@ -23,7 +23,7 @@ function fix_this_comment($r,$num,$from,$messageid) {
   if ($r["commentEmailUIDORIG"] != $num) {
     unset($projectID);
     if ($r["commentMaster"]=="task" && $r["commentMasterID"]) {
-      $q = sprintf("select projectID from task where taskID = %d",$r["commentMasterID"]);
+      $q = prepare("select projectID from task where taskID = %d",$r["commentMasterID"]);
       $db->query($q);
       $task_row = $db->row();
       $projectID = $task_row["projectID"];
@@ -37,23 +37,23 @@ function fix_this_comment($r,$num,$from,$messageid) {
     $personID or $personID = $person->find_by_name($from_name);
 
     $sql = array();
-    $sql[] = sprintf("commentEmailUID = '%s'",trim($num));
+    $sql[] = prepare("commentEmailUID = '%s'",trim($num));
     if ($personID) {
-      $sql[] = sprintf("commentCreatedUser = %d",$personID);
+      $sql[] = prepare("commentCreatedUser = %d",$personID);
       $sql[] = "commentCreatedUserClientContactID = NULL";
     } else {
       $sql[] = "commentCreatedUser = NULL";
       $cc = new clientContact();
       $clientContactID = $cc->find_by_email($from_address, $projectID);
       $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
-      $clientContactID and $sql[] = sprintf("commentCreatedUserClientContactID = %d",$clientContactID);
+      $clientContactID and $sql[] = prepare("commentCreatedUserClientContactID = %d",$clientContactID);
     }
 
-    $sql[] = sprintf("commentCreatedUserText = '%s'",db_esc(trim($from)));
-    $sql[] = sprintf("commentEmailMessageID = '%s'",db_esc(trim($messageid)));
+    $sql[] = prepare("commentCreatedUserText = '%s'",trim($from));
+    $sql[] = prepare("commentEmailMessageID = '%s'",trim($messageid));
 
     if (!in_array($from_address,$alloc_from_addresses2)) { // don't update items that are from alloc
-      $q = sprintf("UPDATE comment SET ".implode(",",$sql)." WHERE commentID = %d",$r["commentID"]);
+      $q = prepare("UPDATE comment SET ".implode(",",$sql)." WHERE commentID = %d",$r["commentID"]);
       $db->query($q);
       printorlog("FIXED: ".$q." (old uid: ".$r["commentEmailUIDORIG"].")","blue");
     }
@@ -63,9 +63,9 @@ function fix_this_comment($r,$num,$from,$messageid) {
     list($from_address,$from_name) = parse_email_address($from);
     if (!in_array($from_address,$alloc_from_addresses2)) { // don't update items that are from alloc
       $sql = array();
-      $sql[] = sprintf("commentEmailUID = '%s'",trim($num));
-      $sql[] = sprintf("commentEmailMessageID = '%s'",db_esc(trim($messageid)));
-      $q = sprintf("UPDATE comment SET ".implode(",",$sql)." WHERE commentID = %d",$r["commentID"]);
+      $sql[] = prepare("commentEmailUID = '%s'",trim($num));
+      $sql[] = prepare("commentEmailMessageID = '%s'",trim($messageid));
+      $q = prepare("UPDATE comment SET ".implode(",",$sql)." WHERE commentID = %d",$r["commentID"]);
       $db->query($q);
       printorlog("GOOD: ".$q,"green");
     }
@@ -157,12 +157,12 @@ if (true) {
     // First try and get a Key: from the subject line, or message-id
     $key = current($keys);
     if ($key && strlen($key) == 8) {
-      $db->query("SELECT * FROM token WHERE tokenHash = '".db_esc($key)."'");
+      $db->query("SELECT * FROM token WHERE tokenHash = '%s'",$key);
       $row = $db->row();
       printorlog("Using key: ".$key." relates to: ".$row["tokenEntity"].":".$row["tokenEntityID"]);
       // lookup the entity for that key eg: comment 1234 or task 123
       if ($row) {
-        $q = sprintf("SELECT * 
+        $q = prepare("SELECT * 
                         FROM comment 
                        WHERE commentEmailUID IS NULL 
                          AND ((commentID = %d AND '%s'='comment') OR (commentLinkID = %d AND commentType='%s'))"
@@ -172,11 +172,11 @@ if (true) {
     // Failing a key, try and get a "Task Comment: 213" from the email subject
     } else if (preg_match("/Task Comment: (\d+)/", $subject, $matches)) {
       printorlog("Using subject line: ".$matches[1]." relates to task:".$matches[1]);
-      $q = sprintf("SELECT *
+      $q = prepare("SELECT *
                       FROM comment 
                      WHERE commentEmailUID IS NULL 
                        AND commentMaster = 'task' 
-                       AND commentMasterID = '%d'",db_esc($matches[1]));
+                       AND commentMasterID = '%d'",$matches[1]);
     } else {
       printorlog("WTF:".$num." ".$from.": ".print_r($mail->mail_headers,1).$body);
     }

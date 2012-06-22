@@ -77,7 +77,7 @@ if ($_POST["upload"]) {
       continue;
     }
     // Find the TF ID for the expense
-    $query = sprintf("SELECT * FROM tf WHERE tfActive = 1 AND quickenAccount='%s'", db_esc($account));
+    $query = prepare("SELECT * FROM tf WHERE tfActive = 1 AND quickenAccount='%s'", $account);
     echo $query;
     $db->query($query);
     if ($db->next_record()) {
@@ -88,7 +88,7 @@ if ($_POST["upload"]) {
     }
 
     // Check for an existing transaction
-    $query = sprintf("SELECT * FROM transaction WHERE transactionType='expense' AND transactionDate='%s' AND product='%s' AND amount > %0.3f and amount < %0.3f", db_esc($date), db_esc($memo), $amount - 0.004, $amount + 0.004);
+    $query = prepare("SELECT * FROM transaction WHERE transactionType='expense' AND transactionDate='%s' AND product='%s' AND amount > %0.3f and amount < %0.3f", $date, $memo, $amount - 0.004, $amount + 0.004);
     $db->query($query);
     if ($db->next_record()) {
       $msg.= "Warning: Expense '$memo' on $date already exixsts.<br>";

@@ -24,26 +24,6 @@ define("PERM_PROJECT_READ_TASK_DETAIL", 256);
 
 class search {
 
-  function by_explode($entity, $fieldName, $criteria, $extra="") {
-    $bits = explode(" ",$criteria);
-    if (is_array($bits) && count($bits)) {
-      foreach ($bits as $bit) {
-        $sql[] = $fieldName." = '".db_esc($bit)."'";
-      }
-      $criteria = " OR (".implode(" OR ",$sql);
-    }
-
-    $rows = array();
-    $q = sprintf("SELECT * FROM %s WHERE %s %s"
-                , $entity, $extra, $criteria);
-    $db = new db_alloc();
-    $db->query($q);
-    while ($row = $db->row()) {
-      $rows[$row[$entity."ID"]] = $row;
-    }
-    return $rows;
-  }
-
   function by_file($file, $needle) {
     if (file_exists($file) && is_readable($file) && !is_dir($file)) {
       $rtn = array();

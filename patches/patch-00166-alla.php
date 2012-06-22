@@ -8,12 +8,12 @@
 
 // If the patch 162 isn't found in the patchLog table then it has yet to be applied.
 
-$q = sprintf("SELECT * FROM patchLog WHERE patchName = 'patch-00162-alla.php'");
+$q = prepare("SELECT * FROM patchLog WHERE patchName = 'patch-00162-alla.php'");
 $db = new db_alloc();
 $db->query($q);
 
 if ($db->row()) {
-  $q = sprintf("DELETE FROM patchLog WHERE patchName = 'patch-00162-alla.php'");
+  $q = prepare("DELETE FROM patchLog WHERE patchName = 'patch-00162-alla.php'");
   $db->query($q);
 }
 ?>

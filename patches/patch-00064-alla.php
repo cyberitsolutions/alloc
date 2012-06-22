@@ -3,32 +3,32 @@
 
   $db2 = new db_alloc();
 
-  $q = sprintf("SELECT invoiceID FROM invoiceItem WHERE status = 'paid'");
+  $q = prepare("SELECT invoiceID FROM invoiceItem WHERE status = 'paid'");
   $db = new db_alloc();
   $db->query($q);
 
   while ($db->next_record()) {
-    $q = sprintf("UPDATE invoice SET invoiceStatus = 'finished' WHERE invoiceID = %d",$db->f("invoiceID"));
+    $q = prepare("UPDATE invoice SET invoiceStatus = 'finished' WHERE invoiceID = %d",$db->f("invoiceID"));
     $db2->query($q);
   }
 
 
-  $q = sprintf("SELECT invoiceID FROM invoiceItem WHERE status = 'allocated'");
+  $q = prepare("SELECT invoiceID FROM invoiceItem WHERE status = 'allocated'");
   $db = new db_alloc();
   $db->query($q);
 
   while ($db->next_record()) {
-    $q = sprintf("UPDATE invoice SET invoiceStatus = 'allocate' WHERE invoiceID = %d",$db->f("invoiceID"));
+    $q = prepare("UPDATE invoice SET invoiceStatus = 'allocate' WHERE invoiceID = %d",$db->f("invoiceID"));
     $db2->query($q);
   }
 
 
-  $q = sprintf("SELECT invoiceID FROM invoiceItem WHERE status = 'pending'");
+  $q = prepare("SELECT invoiceID FROM invoiceItem WHERE status = 'pending'");
   $db = new db_alloc();
   $db->query($q);
 
   while ($db->next_record()) {
-    $q = sprintf("UPDATE invoice SET invoiceStatus = 'edit' WHERE invoiceID = %d",$db->f("invoiceID"));
+    $q = prepare("UPDATE invoice SET invoiceStatus = 'edit' WHERE invoiceID = %d",$db->f("invoiceID"));
     $db2->query($q);
   }
 ?>

@@ -32,12 +32,12 @@ if (!$current_user->is_employee()) {
 
     $db = new db_alloc;
 
-    $db->query(sprintf("SELECT SUM(amount) as total_incoming FROM transaction WHERE timeSheetID = %d AND fromTfID = %d",$timeSheet->get_id(),config::get_config_item("inTfID")));
+    $db->query(prepare("SELECT SUM(amount) as total_incoming FROM transaction WHERE timeSheetID = %d AND fromTfID = %d",$timeSheet->get_id(),config::get_config_item("inTfID")));
     $row = $db->row();
     $total_incoming = $row["total_incoming"];
     $TPL["total_incoming"] = page::money($timeSheet->get_value("currencyTypeID"),$total_incoming,"%s%mo %c");
 
-    $db->query(sprintf("SELECT * FROM transaction WHERE timeSheetID = %d AND fromTfID != %d",$timeSheet->get_id(),config::get_config_item("inTfID")));
+    $db->query(prepare("SELECT * FROM transaction WHERE timeSheetID = %d AND fromTfID != %d",$timeSheet->get_id(),config::get_config_item("inTfID")));
 
     while ($row = $db->row()) {
       $has_transactions = true;
@@ -89,7 +89,7 @@ if (!$current_user->is_employee()) {
 
     global $timeSheet, $TPL, $current_user, $percent_array;
     $db = new db_alloc;
-    $db->query(sprintf("SELECT * FROM transaction WHERE timeSheetID = %d",$timeSheet->get_id()));
+    $db->query("SELECT * FROM transaction WHERE timeSheetID = %d",$timeSheet->get_id());
 
     if ($db->next_record() || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
 
@@ -136,7 +136,7 @@ if (!$current_user->is_employee()) {
         // If you don't have perm INVOICE TIMESHEETS then only select 
         // transactions which you have permissions to see. 
 
-        $query = sprintf("SELECT * 
+        $query = prepare("SELECT * 
                             FROM transaction 
                            WHERE timeSheetID = %d
                         ORDER BY transactionID", $timeSheet->get_id());
@@ -188,7 +188,7 @@ if (!$current_user->is_employee()) {
     if (!$timeSheet->get_id()) return;
     
     $db = new db_alloc;
-    $q = sprintf("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d AND timeSheetItemID != %d",$timeSheet->get_id(),$_POST["timeSheetItem_timeSheetItemID"]);
+    $q = prepare("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d AND timeSheetItemID != %d",$timeSheet->get_id(),$_POST["timeSheetItem_timeSheetItemID"]);
     $db->query($q);
     $db->next_record();
     if ($db->f("tally")) {
@@ -213,11 +213,11 @@ if (!$current_user->is_employee()) {
     $timeUnit = new timeUnit;
     $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
     
-    $item_query = sprintf("SELECT * from timeSheetItem WHERE timeSheetID=%d", $timeSheetID);
+    $item_query = prepare("SELECT * from timeSheetItem WHERE timeSheetID=%d", $timeSheetID);
     // If editing a timeSheetItem then don't display it in the list
     $timeSheetItemID = $_POST["timeSheetItemID"] or $timeSheetItemID = $_GET["timeSheetItemID"];
-    $timeSheetItemID and $item_query.= sprintf(" AND timeSheetItemID != %d",$timeSheetItemID);
-    $item_query.= sprintf(" GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
+    $timeSheetItemID and $item_query.= prepare(" AND timeSheetItemID != %d",$timeSheetItemID);
+    $item_query.= prepare(" GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
     $db->query($item_query);
 
     if (is_object($timeSheet)) {
@@ -426,7 +426,7 @@ if ($_REQUEST["updateRate"] && $timeSheet->get_id() && $timeSheet->can_edit_rate
   if (!$row_projectPerson) {
     $TPL["message"][] = "The person has not been added to the project.";
   } else {
-    $q = sprintf("SELECT timeSheetItemID from timeSheetItem WHERE timeSheetID = %d",$timeSheet->get_id()); 
+    $q = prepare("SELECT timeSheetItemID from timeSheetItem WHERE timeSheetID = %d",$timeSheet->get_id()); 
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
@@ -577,7 +577,7 @@ if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeShe
     $status = "rejected";
   }
 
-  $query = sprintf("UPDATE transaction SET status = '%s' WHERE timeSheetID = %d", $status, $timeSheet->get_id());
+  $query = prepare("UPDATE transaction SET status = '%s' WHERE timeSheetID = %d", $status, $timeSheet->get_id());
   $db = new db_alloc;
   $db->query($query);
   $db->next_record();
@@ -620,11 +620,11 @@ if ($timeSheet->get_value("approvedByAdminPersonID")) {
 
 // display the project name.
 if ($timeSheet->get_value("status") == 'edit' && !$timeSheet->get_value("projectID")) {
-  $query = sprintf("SELECT * FROM project WHERE projectStatus = 'Current' ORDER by projectName");
-    #.sprintf("  LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ")
-    #.sprintf("WHERE projectPerson.personID = '%d' ORDER BY projectName", $current_user->get_id());
+  $query = prepare("SELECT * FROM project WHERE projectStatus = 'Current' ORDER by projectName");
+    #.prepare("  LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ")
+    #.prepare("WHERE projectPerson.personID = '%d' ORDER BY projectName", $current_user->get_id());
 } else {
-  $query = sprintf("SELECT * FROM project ORDER by projectName");
+  $query = prepare("SELECT * FROM project ORDER by projectName");
 }
 
 // This needs to be just above the newTimeSheet_projectID logic
@@ -637,7 +637,7 @@ if ($_GET["newTimeSheet_projectID"] && !$projectID) {
 
   $projectID = $_GET["newTimeSheet_projectID"];
   $db = new db_alloc;
-  $q = sprintf("SELECT * FROM timeSheet WHERE status = 'edit' AND personID = %d AND projectID = %d",$current_user->get_id(),$projectID);
+  $q = prepare("SELECT * FROM timeSheet WHERE status = 'edit' AND personID = %d AND projectID = %d",$current_user->get_id(),$projectID);
   $db->query($q);
   if ($db->next_record()) {
     alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID").$tid);
@@ -720,7 +720,7 @@ if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_
   $ops["clientID"] = $p->get_value("clientID");
   $ops["return"] = "dropdown_options";
   $invoice_list = invoice::get_list($ops);
-  $q = sprintf("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$timeSheet->get_id());
+  $q = prepare("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$timeSheet->get_id());
   $db = new db_alloc();
   $db->query($q);
   $row = $db->row();
@@ -882,7 +882,7 @@ case 'finished':
 if ($timeSheet->get_value("status") == "edit") {
 
   $tf_db = new db_alloc;
-  $tf_db->query("select preferred_tfID from person where personID = %s",$timeSheet->get_value("personID"));
+  $tf_db->query("select preferred_tfID from person where personID = %d",$timeSheet->get_value("personID"));
   $tf_db->next_record();
 
   if ($preferred_tfID = $tf_db->f("preferred_tfID")) {

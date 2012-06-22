@@ -32,7 +32,7 @@ class role extends db_entity {
   function get_roles_array($level="person") {
     $rows = array();
     $db = new db_alloc();
-    $q = sprintf("SELECT * FROM role WHERE roleLevel = '%s' ORDER BY roleSequence",db_esc($level));
+    $q = prepare("SELECT * FROM role WHERE roleLevel = '%s' ORDER BY roleSequence",$level);
     $db->query($q);
     while ($row = $db->row()) {
       $rows[$row["roleHandle"]] = $row["roleName"];

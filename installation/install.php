@@ -161,19 +161,19 @@ if ($_POST["submit_stage_4"]) {
   }
 
   // Insert config data
-  $query = "UPDATE config SET value = '".$_FORM["currency"]."' WHERE name = 'currency'";
+  $query = prepare("UPDATE config SET value = '%s' WHERE name = 'currency'",$_FORM["currency"]);
   if (!$db->query($query)) {
     $errors[] = "(1)Error! (".mysql_error().").";
     $failed = 1;
   }
 
-  $query = "UPDATE currencyType SET currencyTypeActive = true, currencyTypeSeq = 1 WHERE currencyTypeID = '".$_FORM["currency"]."'";
+  $query = prepare("UPDATE currencyType SET currencyTypeActive = true, currencyTypeSeq = 1 WHERE currencyTypeID = '%s'",$_FORM["currency"]);
   if (!$db->query($query)) {
     $errors[] = "(2)Error! (".mysql_error().").";
     $failed = 1;
   }
 
-  $query = sprintf("INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ('%s','%s','%s','%s',%d)",date("Y-m-d"),date("Y-m-d H:i:s"),$_FORM["currency"],$_FORM["currency"],1);
+  $query = prepare("INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ('%s','%s','%s','%s',%d)",date("Y-m-d"),date("Y-m-d H:i:s"),$_FORM["currency"],$_FORM["currency"],1);
   if (!$db->query($query)) {
     $errors[] = "(2.5)Error! (".mysql_error().").";
     $failed = 1;
@@ -254,7 +254,7 @@ if ($_POST["install_db"] && is_object($db)) {
   // Insert config data
   $link = $db->connect();
   $db->select_db($_FORM["ALLOC_DB_NAME"]);
-  $query = "INSERT INTO config (name, value, type) VALUES ('allocURL','".$_FORM["allocURL"]."','text')";
+  $query = prepare("INSERT INTO config (name, value, type) VALUES ('allocURL','%s','text')",$_FORM["allocURL"]);
   if (!$db->query($query)) {
     $errors[] = "(4)Error! (".mysql_error().").";
   }
@@ -305,7 +305,7 @@ EOD;
   }
 
   // Insert new person
-  $query = sprintf("INSERT INTO person (personID,username,password,personActive,perms,preferred_tfID) VALUES (1,'alloc','%s',1,'god,admin,manage,employee',6)",encrypt_password("alloc"));
+  $query = prepare("INSERT INTO person (personID,username,password,personActive,perms,preferred_tfID) VALUES (1,'alloc','%s',1,'god,admin,manage,employee',6)",encrypt_password("alloc"));
   if (!$db->query($query)) {
     $errors[] = "(5.1)Error! (".mysql_error().").";
   }
@@ -326,14 +326,14 @@ EOD;
   // Insert patch data
   $files = get_patch_file_list();
   foreach ($files as $f) {
-    $query = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('%s','','%s')",db_esc($f), date("Y-m-d H:i:s"));
+    $query = prepare("INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('%s','','%s')",$f, date("Y-m-d H:i:s"));
     if (!$db->query($query)) {
       $errors[] = "(7)Error! (".mysql_error().").";
     }
   }
 
   // Set up the default timezone
-  $query = sprintf("INSERT INTO config (name, value, type) VALUES ('allocTimezone', '%s', 'text')", db_esc($timeZone));
+  $query = prepare("INSERT INTO config (name, value, type) VALUES ('allocTimezone', '%s', 'text')", $timeZone);
   if (!$db->query($query)) {
     $errors[] = "(8)Error! (".mysql_error().").";
   }

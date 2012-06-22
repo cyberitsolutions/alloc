@@ -76,8 +76,8 @@ function apply_patch($f) {
     }
   }
   if (!$failed) {
-    $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
-                  VALUES ('%s','%s','%s')",db_esc($file), db_esc(implode(" ",$comments)), date("Y-m-d H:i:s"));
+    $q = prepare("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
+                  VALUES ('%s','%s','%s')",$file, implode(" ",$comments), date("Y-m-d H:i:s"));
     $db->query($q);
   }
 }
@@ -112,8 +112,8 @@ if ($_REQUEST["apply_patches"]) {
   }
 } else if ($_REQUEST["remove_patch"] && $_REQUEST["patch_file"]) {
   $abc123_f = ALLOC_MOD_DIR."patches/".$_REQUEST["patch_file"];
-  $q = sprintf("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
-                VALUES ('%s','%s','%s')",db_esc($_REQUEST["patch_file"]), db_esc("Patch not applied."), date("Y-m-d H:i:s"));
+  $q = prepare("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
+                VALUES ('%s','%s','%s')",$_REQUEST["patch_file"], "Patch not applied.", date("Y-m-d H:i:s"));
   $db = new db_alloc();
   $db->query($q);
 }
