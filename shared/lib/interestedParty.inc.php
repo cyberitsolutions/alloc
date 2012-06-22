@@ -312,6 +312,9 @@ class interestedParty extends db_entity {
           $method = $statuses[$command];
           if (is_object($object) && $object->get_id()) {
             $object->set_value("taskStatus",$method);
+            if (method_exists($object,"validate")) {
+              $object->validate();
+            }
             $object->save();
           }
         } else if (isset($subStatuses[$command])) {
