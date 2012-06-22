@@ -38,7 +38,7 @@ function show_overdue($template_name) {
   $temp = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
   $today = date("Y", $temp)."-".date("m", $temp)."-".date("d", $temp);
 
-  $q = sprintf("SELECT itemName,itemType,item.itemID,dateBorrowed,dateToBeReturned,loan.personID 
+  $q = prepare("SELECT itemName,itemType,item.itemID,dateBorrowed,dateToBeReturned,loan.personID 
                   FROM loan,item 
                  WHERE dateToBeReturned < '%s' 
 					         AND dateReturned = '0000-00-00' 
@@ -46,7 +46,7 @@ function show_overdue($template_name) {
                ",$today);
 
   if (!have_entity_perm("loan", PERM_READ, $current_user, false)) {
-    $q .= sprintf("AND loan.personID = %d",$current_user->get_id());
+    $q .= prepare("AND loan.personID = %d",$current_user->get_id());
   }
 
   $db->query($q);

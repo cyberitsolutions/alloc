@@ -47,7 +47,7 @@ require_once("../alloc.php");
     global $personID;
 
     $db = new db_alloc;
-    $query = sprintf("SELECT * FROM absence WHERE personID=%d", $personID);
+    $query = prepare("SELECT * FROM absence WHERE personID=%d", $personID);
     $db->query($query);
     $absence = new absence;
     while ($db->next_record()) {
@@ -89,7 +89,7 @@ require_once("../alloc.php");
     $db = new db_alloc;
     // $query = "SELECT * FROM skill ORDER BY skillClass,skillName";
     $query = "SELECT * FROM skill LEFT JOIN proficiency ON skill.skillID=proficiency.skillID";
-    $query.= sprintf(" WHERE proficiency.personID=%d", $personID);
+    $query.= prepare(" WHERE proficiency.personID=%d", $personID);
     $query.= " ORDER BY skillClass,skillName";
     $db->query($query);
     $currSkillClass = null;
@@ -122,7 +122,7 @@ require_once("../alloc.php");
     global $TPL, $personID, $skills;
 
     $db = new db_alloc;
-    $query = sprintf("SELECT * FROM proficiency WHERE personID=%d", $personID);
+    $query = prepare("SELECT * FROM proficiency WHERE personID=%d", $personID);
     $db->query($query);
     $skills_got = array();
     while ($db->next_record()) {
@@ -190,8 +190,8 @@ if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $
         $proficiency->set_value('personID', $personID);
 
         $db = new db_alloc;
-        $query = sprintf("SELECT * FROM proficiency WHERE personID = %d", $personID);
-        $query.= sprintf(" AND skillID = %d", $_POST["skillID"][$i]);
+        $query = prepare("SELECT * FROM proficiency WHERE personID = %d", $personID);
+        $query.= prepare(" AND skillID = %d", $_POST["skillID"][$i]);
         $db->query($query);
         if (!$db->next_record()) {
           $proficiency->save();
@@ -221,7 +221,7 @@ if ($_POST["save"]) {
 
 
   if ($_POST["username"]) {
-    $q = sprintf("SELECT personID FROM person WHERE username = '%s'",db_esc($_POST["username"]));
+    $q = prepare("SELECT personID FROM person WHERE username = '%s'",$_POST["username"]);
     $db = new db_alloc();
     $db->query($q);
     $num_rows = $db->num_rows();
@@ -265,7 +265,7 @@ if ($_POST["save"]) {
 $person->set_values("person_");
 
 if ($person->get_id()) {
-  $q = sprintf("SELECT tfPerson.tfID AS value, tf.tfName AS label 
+  $q = prepare("SELECT tfPerson.tfID AS value, tf.tfName AS label 
                   FROM tf, tfPerson 
   				       WHERE tf.tfID = tfPerson.tfID 
                    AND tfPerson.personID = %d 

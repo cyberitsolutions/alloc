@@ -7,7 +7,7 @@ $db = new db_alloc();
 $db->query("DELETE FROM config WHERE name = 'allocTimezone'");
 
 // Put a new entry in for timezone using the default for the server eg: Australia/Melbourne
-$query = sprintf("INSERT INTO config (name, value, type) VALUES ('allocTimezone', '%s', 'text')", db_esc($timezone));
+$query = prepare("INSERT INTO config (name, value, type) VALUES ('allocTimezone', '%s', 'text')", $timezone);
 $db->query($query);
 
 ?>

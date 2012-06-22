@@ -72,7 +72,7 @@ class timeSheet extends db_entity {
     // actually be this time sheets owner to view this time sheet.
     if ($this->get_value("status") != "edit") { 
       $current_user_tfIDs = $current_user->get_tfIDs();
-      $q = sprintf("SELECT * FROM transaction WHERE timeSheetID = %d",$this->get_id());
+      $q = prepare("SELECT * FROM transaction WHERE timeSheetID = %d",$this->get_id());
       $db = new db_alloc();
       $db->query($q);
       while ($db->next_record()) {
@@ -174,7 +174,7 @@ class timeSheet extends db_entity {
     $extra_sql and $sql = ",".implode("\n,",$extra_sql);
 
     // Get duration for this timesheet/timeSheetItems
-    $db->query(sprintf("SELECT SUM(timeSheetItemDuration) AS total_duration, 
+    $db->query(prepare("SELECT SUM(timeSheetItemDuration) AS total_duration, 
                                SUM((timeSheetItemDuration * timeUnit.timeUnitSeconds) / 3600) AS total_duration_hours,
                                SUM((rate * pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_dollars,
                                SUM((IFNULL(timeSheet.customerBilledDollars,0) * pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_customerBilledDollars
@@ -218,7 +218,7 @@ class timeSheet extends db_entity {
 
   function destroyTransactions() {
     $db = new db_alloc;
-    $query = sprintf("DELETE FROM transaction where timeSheetID = %d", $this->get_id());
+    $query = prepare("DELETE FROM transaction where timeSheetID = %d", $this->get_id());
     $db->query($query);
     $db->next_record();
   }
@@ -485,9 +485,9 @@ class timeSheet extends db_entity {
 
     // Filter otimeSheetID
     if ($filter["timeSheetID"] && is_array($filter["timeSheetID"])) {
-      $sql[] = "(timeSheet.timeSheetID in ('".esc_implode("','",$filter["timeSheetID"])."'))";
+      $sql[] = prepare("(timeSheet.timeSheetID in (%s))",$filter["timeSheetID"]);
     } else if ($filter["timeSheetID"]) {     
-      $sql[] = sprintf("(timeSheet.timeSheetID = %d)", db_esc($filter["timeSheetID"]));
+      $sql[] = prepare("(timeSheet.timeSheetID = %d)", $filter["timeSheetID"]);
     }
 
     // No point continuing if primary key specified, so return
@@ -496,16 +496,16 @@ class timeSheet extends db_entity {
     }
 
     if ($filter["tfID"]) {
-      $sql[] = sprintf("(timeSheet.recipient_tfID = '%d')", $filter["tfID"]);
+      $sql[] = prepare("(timeSheet.recipient_tfID = %d)", $filter["tfID"]);
     }
     if ($filter["projectID"]) {
-      $sql[] = sprintf("(timeSheet.projectID = '%d')", $filter["projectID"]);
+      $sql[] = prepare("(timeSheet.projectID = %d)", $filter["projectID"]);
     }
     if ($filter["taskID"]) {
-      $sql[] = sprintf("(timeSheetItem.taskID = '%d')", $filter["taskID"]);
+      $sql[] = prepare("(timeSheetItem.taskID = %d)", $filter["taskID"]);
     }
     if ($filter["personID"]) {
-      $sql[] = sprintf("(timeSheet.personID = '%d')", $filter["personID"]);
+      $sql[] = prepare("(timeSheet.personID = %d)", $filter["personID"]);
     }
     if ($filter["status"]) { 
       if (is_array($filter["status"]) && count($filter["status"])) {
@@ -513,31 +513,31 @@ class timeSheet extends db_entity {
           if ($s == "rejected") {
             $rejected = true;
           } else {
-            $statuses[] = db_esc($s);
+            $statuses[] = $s;
           }
         }
       } else {
         if ($filter["status"] == "rejected") {
           $rejected = true;
         } else {
-          $statuses[] = db_esc($filter["status"]);
+          $statuses[] = $filter["status"];
         }
       }
     }
 
     if ($rejected) {
-      $sql[] = sprintf("(timeSheet.dateRejected IS NOT NULL OR timeSheet.status in ('%s'))", esc_implode("','",$statuses,"%s"));
+      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR timeSheet.status in ('%s'))", esc_implode("','",$statuses,"%s"));
     } else if ($statuses) {
-      $sql[] = sprintf("(timeSheet.dateRejected IS NULL AND timeSheet.status in ('%s'))", esc_implode("','",$statuses,"%s"));
+      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND timeSheet.status in ('%s'))", esc_implode("','",$statuses,"%s"));
     }
 
     if ($filter["dateFrom"]) {
       in_array($filter["dateFromComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateFromComparator"] = '=';
-      $sql[] = sprintf("(timeSheet.dateFrom %s '%s')",$filter['dateFromComparator'],db_esc($filter["dateFrom"]));
+      $sql[] = prepare("(timeSheet.dateFrom ".$filter['dateFromComparator']." '%s')",$filter["dateFrom"]);
     }
     if ($filter["dateTo"]) {
       in_array($filter["dateToComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateToComparator"] = '=';
-      $sql[] = sprintf("(timeSheet.dateTo %s '%s')",$filter['dateToComparator'],db_esc($filter["dateTo"]));
+      $sql[] = prepare("(timeSheet.dateTo ".$filter['dateToComparator']." '%s')",$filter["dateTo"]);
     }
     return $sql;
   }
@@ -653,7 +653,7 @@ class timeSheet extends db_entity {
   function get_transaction_totals() {
   
     $db = new db_alloc();
-    $q = sprintf("SELECT amount * pow(10,-currencyType.numberToBasic) AS amount,
+    $q = prepare("SELECT amount * pow(10,-currencyType.numberToBasic) AS amount,
                          transaction.currencyTypeID as currency
                     FROM transaction 
                LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
@@ -751,7 +751,7 @@ class timeSheet extends db_entity {
     if (!$_FORM['showAllProjects']) {
       $filter = "WHERE projectStatus = 'Current' ";
     }
-    $query = sprintf("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
+    $query = prepare("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
     $rtn["show_project_options"] = page::select_options($query, $_FORM["projectID"],70);
 
     // display the list of user name.
@@ -805,7 +805,7 @@ class timeSheet extends db_entity {
       $db->query("SELECT invoice.*, invoiceItemID
                     FROM invoiceItem 
                LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID 
-                   WHERE timeSheetID = %s ORDER BY iiDate DESC",$this->get_id());
+                   WHERE timeSheetID = %d ORDER BY iiDate DESC",$this->get_id());
       while ($row = $db->row()) { 
         $rows[] = $row;
       }
@@ -903,7 +903,7 @@ EOD;
       // Check for time overrun
       $overrun_tasks = array();
       $db = new db_alloc();
-      $task_id_query = sprintf("SELECT DISTINCT taskID FROM timeSheetItem WHERE timeSheetID=%d ORDER BY dateTimeSheetItem, timeSheetItemID", $this->get_id());
+      $task_id_query = prepare("SELECT DISTINCT taskID FROM timeSheetItem WHERE timeSheetID=%d ORDER BY dateTimeSheetItem, timeSheetItemID", $this->get_id());
       $db->query($task_id_query);
       while($db->next_record()) {
         $task = new task;
@@ -1055,7 +1055,7 @@ EOD;
       }
 
       //transactions
-      $q = sprintf("SELECT DISTINCT transaction.transactionDate, transaction.product, transaction.status
+      $q = prepare("SELECT DISTINCT transaction.transactionDate, transaction.product, transaction.status
                       FROM transaction
                       JOIN tf ON tf.tfID = transaction.tfID OR tf.tfID = transaction.fromTfID
                 RIGHT JOIN tfPerson ON tfPerson.personID = %d AND tfPerson.tfID = tf.tfID
@@ -1098,7 +1098,7 @@ EOD;
     }
 
     $db = new db_alloc();
-    $q = sprintf("UPDATE transaction SET status = 'approved' WHERE timeSheetID = %d AND status = 'pending'",$this->get_id());
+    $q = prepare("UPDATE transaction SET status = 'approved' WHERE timeSheetID = %d AND status = 'pending'",$this->get_id());
     $db->query($q);
   }
 
@@ -1152,7 +1152,7 @@ EOD;
     $projectID or $err[] = sprintf("No project found%s.",$extra);
 
     if ($projectID) {
-      $q = sprintf("SELECT * 
+      $q = prepare("SELECT * 
                       FROM timeSheet 
                      WHERE status = 'edit' 
                        AND projectID = %d
@@ -1276,7 +1276,7 @@ EOD;
     if (is_object($this) && $this->get_id()) {
       $db = new db_alloc();
       // Get most recent invoiceItem that this time sheet belongs to.
-      $q = sprintf("SELECT invoiceID
+      $q = prepare("SELECT invoiceID
                       FROM invoiceItem
                      WHERE invoiceItem.timeSheetID = %d
                   ORDER BY invoiceItem.iiDate DESC
@@ -1292,7 +1292,7 @@ EOD;
         $maxAmount = page::money($invoice->get_value("currencyTypeID"),$invoice->get_value("maxAmount"),$fmt);
     
         // Loop through all the other invoice items on that invoice
-        $q = sprintf("SELECT sum(iiAmount) AS totalUsed FROM invoiceItem WHERE invoiceID = %d",$invoiceID);
+        $q = prepare("SELECT sum(iiAmount) AS totalUsed FROM invoiceItem WHERE invoiceID = %d",$invoiceID);
         $db->query($q);
         $row2 = $db->row();
 
@@ -1333,7 +1333,7 @@ EOD;
       $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
     }
 
-    $q = sprintf("SELECT dateTimeSheetItem, taskID, description, comment, commentPrivate 
+    $q = prepare("SELECT dateTimeSheetItem, taskID, description, comment, commentPrivate 
                     FROM timeSheetItem 
                    WHERE timeSheetID = %d 
                 ORDER BY dateTimeSheetItem ASC",$this->get_id());
@@ -1366,7 +1366,7 @@ EOD;
   function can_edit_rate() {
     global $current_user;
     $db = new db_alloc();
-    $row = $db->qr(sprintf("SELECT can_edit_rate(%d,%d) as allow",$current_user->get_id(),$this->get_value("projectID")));
+    $row = $db->qr("SELECT can_edit_rate(%d,%d) as allow",$current_user->get_id(),$this->get_value("projectID"));
     return $row["allow"];
   }
 

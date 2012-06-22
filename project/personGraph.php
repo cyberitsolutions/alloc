@@ -45,16 +45,16 @@ if ($projectID) {
   $TPL["navigation_links"] = $project->get_navigation_links();
 
   if ($project->check_perm(PERM_PROJECT_VIEW_TASK_ALLOCS)) {
-    $person_query = sprintf("SELECT person.* ")
-      .sprintf("FROM person, projectPerson ")
-      .sprintf("WHERE person.personID = projectPerson.personID ")
-      .sprintf(" AND projectPerson.projectID='%d'", db_esc($project->get_id()));
+    $person_query = prepare("SELECT person.*
+                               FROM person, projectPerson
+                              WHERE person.personID = projectPerson.personID
+                                AND projectPerson.projectID=%d", $project->get_id());
   }
 
 } else if ($_GET["personID"]) {
-  $person_query = sprintf("SELECT * FROM person where personID = ".$_GET["personID"]." ORDER BY username");
+  $person_query = prepare("SELECT * FROM person WHERE personID = %d ORDER BY username",$_GET["personID"]);
 } else {
-  $person_query = sprintf("SELECT * FROM person ORDER BY username");
+  $person_query = prepare("SELECT * FROM person ORDER BY username");
 }
 
 $TPL["projectID"] = $projectID;

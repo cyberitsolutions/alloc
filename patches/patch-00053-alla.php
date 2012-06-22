@@ -13,13 +13,13 @@ $dir = ALLOC_MOD_DIR."patches/";
 $db = new db_alloc();
 $db2 = new db_alloc();
 
-$q = sprintf("SELECT patchName,patchLogID FROM patchLog");
+$q = prepare("SELECT patchName,patchLogID FROM patchLog");
 $db->query($q);
 
 while ($row = $db->row()) {
   $new = patchName_old_to_new($row["patchName"]);
   if ($new) {
-    $q = sprintf("UPDATE patchLog SET patchName = '%s' WHERE patchLogID = '%s'",$new,$row["patchLogID"]);
+    $q = prepare("UPDATE patchLog SET patchName = '%s' WHERE patchLogID = %d",$new,$row["patchLogID"]);
     $db2->query($q);
     #echo "<br>".$q;
   }

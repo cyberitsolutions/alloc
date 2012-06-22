@@ -29,13 +29,13 @@ if (!$current_user->have_role("admin")) {
 function load_transaction_total($info_field, $transaction_type) {
   global $tf_info;
 
-  $query = sprintf("SELECT tf.tfID, tf.tfName, sum(transaction.amount) AS total_amount
+  $query = prepare("SELECT tf.tfID, tf.tfName, sum(transaction.amount) AS total_amount
                       FROM tf 
                  LEFT JOIN transaction ON transaction.tfID = tf.tfID 
                                       AND transactionType='%s' 
                                       AND transactionDate LIKE '%02d-%02d-%%'
                                       AND transaction.status <> 'rejected'
-                      GROUP BY tfID", db_esc($transaction_type), $_GET["year"], $_GET["month"]);
+                      GROUP BY tfID", $transaction_type, $_GET["year"], $_GET["month"]);
   $db = new db_alloc;
   $db->query($query);
 
@@ -104,10 +104,10 @@ function show_transaction_list($transactionType) {
 
   $TPL["total_amount"] = 0;
 
-  $query = sprintf("SELECT transaction.*, tf.tfName  
+  $query = prepare("SELECT transaction.*, tf.tfName  
                       FROM transaction LEFT JOIN tf ON transaction.tfID = tf.tfID
                       WHERE transactionDate LIKE '%04d-%02d-%%' AND transactionType='%s'
-                      ORDER BY transactionDate", $_GET["year"], $_GET["month"], db_esc($transactionType));
+                      ORDER BY transactionDate", $_GET["year"], $_GET["month"], $transactionType);
   $db = new db_alloc;
   $db->query($query);
 

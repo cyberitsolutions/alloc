@@ -118,12 +118,12 @@ class db_entity {
     }
 
     $db = new db_alloc;
-    $query = sprintf("SELECT * 
+    $query = prepare("SELECT * 
                         FROM permission 
-                        WHERE (tableName = '".db_esc($this->data_table)."')
+                        WHERE (tableName = '%s')
                          AND (actions & %d = %d)
                     ORDER BY entityID DESC"
-                    ,$action,$action);
+                    ,$this->data_table,$action,$action);
     $db->query($query);
     
     while ($db->next_record()) {
@@ -536,7 +536,7 @@ class db_entity {
       $key_name = $this->key_field->get_name();
     }
     $foreign_objects = array();
-    $query = sprintf("SELECT * FROM %s WHERE %s = %d",db_esc($class_name),db_esc($key_name),$this->get_id());
+    $query = prepare("SELECT * FROM %s WHERE %s = %d",$class_name,$key_name,$this->get_id());
     $db = new db_alloc;
     $db->query($query);
     while ($db->next_record()) {

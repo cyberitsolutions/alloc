@@ -62,7 +62,7 @@ class task extends db_entity {
     $existing = $this->all_row_fields;
     if ($existing["taskStatus"] != $this->get_value("taskStatus")) {
       $db = new db_alloc();
-      $db->query(sprintf("call change_task_status(%d,'%s')",$this->get_id(),db_esc($this->get_value("taskStatus"))));
+      $db->query("call change_task_status(%d,'%s')",$this->get_id(),$this->get_value("taskStatus"));
       $row = $db->qr("SELECT taskStatus
                             ,dateActualCompletion
                             ,dateActualStart
@@ -113,7 +113,7 @@ class task extends db_entity {
 
   function add_pending_tasks($str) {
     $db = new db_alloc();
-    $db->query(sprintf("SELECT * FROM pendingTask WHERE taskID = %d",$this->get_id()));
+    $db->query("SELECT * FROM pendingTask WHERE taskID = %d",$this->get_id());
     $rows = array();
     while ($row = $db->row()) {
       $rows[] = $row["pendingTaskID"]; 
@@ -128,7 +128,7 @@ class task extends db_entity {
     $str2 = implode(",",(array)$bits);
 
     if ($str1 != $str2) {
-      $db->qr(sprintf("DELETE FROM pendingTask WHERE taskID = %d",$this->get_id()));
+      $db->qr("DELETE FROM pendingTask WHERE taskID = %d",$this->get_id());
       foreach ((array)$bits as $id) {
         if (is_numeric($id)) {
           $db->query("INSERT INTO pendingTask (taskID,pendingTaskID) VALUES (%d,%d)",$this->get_id(),$id);
@@ -139,7 +139,7 @@ class task extends db_entity {
 
   function get_pending_tasks($invert=false) {
     $db = new db_alloc();
-    $q = sprintf("SELECT * FROM pendingTask WHERE %s = %d",($invert ? "pendingTaskID" : "taskID"),$this->get_id());
+    $q = prepare("SELECT * FROM pendingTask WHERE %s = %d",($invert ? "pendingTaskID" : "taskID"),$this->get_id());
     $db->query($q);
     while ($row = $db->row()) {
       $rows[] = $row[($invert ? "taskID" : "pendingTaskID")];
@@ -233,7 +233,7 @@ class task extends db_entity {
   }
 
   function update_children($field,$value="") {
-    $q = sprintf("SELECT * FROM task WHERE parentTaskID = %d",$this->get_id());
+    $q = prepare("SELECT * FROM task WHERE parentTaskID = %d",$this->get_id());
     $db = new db_alloc();
     $db->query($q);
     while ($db->row()) {
@@ -262,7 +262,7 @@ class task extends db_entity {
     if ($projectID) {
       list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
       // Status may be closed_<something>
-      $query = sprintf("SELECT taskID AS value, taskName AS label
+      $query = prepare("SELECT taskID AS value, taskName AS label
                         FROM task 
                         WHERE projectID= '%d' 
                         AND taskTypeID = 'Parent'
@@ -365,7 +365,7 @@ class task extends db_entity {
     $db = new db_alloc;
 
     if ($_GET["timeSheetID"]) {
-      $ts_query = sprintf("SELECT * FROM timeSheet WHERE timeSheetID = %d",$_GET["timeSheetID"]);
+      $ts_query = prepare("SELECT * FROM timeSheet WHERE timeSheetID = %d",$_GET["timeSheetID"]);
       $db->query($ts_query);
       $db->next_record();
       $owner = $db->f("personID");
@@ -386,7 +386,7 @@ class task extends db_entity {
     $peoplenames = person::get_username_list($owner);
 
     if ($projectID) {
-      $q = sprintf("SELECT * 
+      $q = prepare("SELECT * 
                       FROM projectPerson 
                  LEFT JOIN person ON person.personID = projectPerson.personID 
                      WHERE person.personActive = 1 
@@ -411,7 +411,7 @@ class task extends db_entity {
     $projectID or $projectID = $_GET["projectID"];
     // Project Options - Select all projects 
     $db = new db_alloc;
-    $query = sprintf("SELECT projectID AS value, projectName AS label 
+    $query = prepare("SELECT projectID AS value, projectName AS label 
                         FROM project 
                        WHERE projectStatus IN ('Current', 'Potential') OR projectID = %d
                     ORDER BY projectName",$projectID);
@@ -449,7 +449,7 @@ class task extends db_entity {
     $TPL["parentTaskOptions"] = $this->get_parent_task_select();
     $TPL["interestedPartyOptions"] = $this->get_task_cc_list_select();
 
-    $db->query(sprintf("SELECT fullName,emailAddress
+    $db->query(prepare("SELECT fullName,emailAddress
                           FROM interestedParty
                          WHERE entity='task' 
                            AND entityID = %d
@@ -628,9 +628,9 @@ class task extends db_entity {
       foreach ($taskStatusArray as $status) {
         list($taskStatus,$taskSubStatus) = explode("_",$status);
         if($taskSubStatus) {
-          $subsql[] = sprintf("(task.taskStatus = '%s')",db_esc($status));
+          $subsql[] = prepare("(task.taskStatus = '%s')",$status);
         } else {
-          $subsql[] = sprintf("(SUBSTRING(task.taskStatus,1,%d) = '%s')",strlen($status),db_esc($status));
+          $subsql[] = prepare("(SUBSTRING(task.taskStatus,1,%d) = '%s')",strlen($status),$status);
         }
       }
       return '('.implode(" OR ",$subsql).')';
@@ -650,9 +650,9 @@ class task extends db_entity {
 
     // Filter on taskID
     if ($filter["taskID"] && is_array($filter["taskID"])) {
-      $sql[] = "(task.taskID in ('".esc_implode("','",$filter["taskID"])."'))";
+      $sql[] = prepare("(task.taskID in (%s))",$filter["taskID"]);
     } else if ($filter["taskID"]) {     
-      $sql[] = sprintf("(task.taskID = %d)", db_esc($filter["taskID"]));
+      $sql[] = prepare("(task.taskID = %d)", $filter["taskID"]);
     }
 
     // No point continuing if primary key specified, so return
@@ -670,7 +670,7 @@ class task extends db_entity {
     if ($filter["taskDate"] == "new") {
       $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 2, date("Y")))." 00:00:00";
       date("D") == "Mon" and $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")))." 00:00:00";
-      $sql[] = sprintf("(task.taskStatus NOT IN (".$ts_closed.") AND task.dateCreated >= '".$past."')");
+      $sql[] = prepare("(task.taskStatus NOT IN (".$ts_closed.") AND task.dateCreated >= '".$past."')");
 
     // Due Today
     } else if ($filter["taskDate"] == "due_today") {
@@ -684,33 +684,33 @@ class task extends db_entity {
   
     // Date Created
     } else if ($filter["taskDate"] == "d_created") {
-      $filter["dateOne"] and $sql[] = sprintf("(task.dateCreated >= '%s')",db_esc($filter["dateOne"]));
-      $filter["dateTwo"] and $sql[] = sprintf("(task.dateCreated <= '%s 23:59:59')",db_esc($filter["dateTwo"]));
+      $filter["dateOne"] and $sql[] = prepare("(task.dateCreated >= '%s')",$filter["dateOne"]);
+      $filter["dateTwo"] and $sql[] = prepare("(task.dateCreated <= '%s 23:59:59')",$filter["dateTwo"]);
 
     // Date Assigned
     } else if ($filter["taskDate"] == "d_assigned") {
-      $filter["dateOne"] and $sql[] = sprintf("(task.dateAssigned >= '%s')",db_esc($filter["dateOne"]));
-      $filter["dateTwo"] and $sql[] = sprintf("(task.dateAssigned <= '%s 23:59:59')",db_esc($filter["dateTwo"]));
+      $filter["dateOne"] and $sql[] = prepare("(task.dateAssigned >= '%s')",$filter["dateOne"]);
+      $filter["dateTwo"] and $sql[] = prepare("(task.dateAssigned <= '%s 23:59:59')",$filter["dateTwo"]);
 
     // Date Target Start
     } else if ($filter["taskDate"] == "d_targetStart") {
-      $filter["dateOne"] and $sql[] = sprintf("(task.dateTargetStart >= '%s')",db_esc($filter["dateOne"]));
-      $filter["dateTwo"] and $sql[] = sprintf("(task.dateTargetStart <= '%s')",db_esc($filter["dateTwo"]));
+      $filter["dateOne"] and $sql[] = prepare("(task.dateTargetStart >= '%s')",$filter["dateOne"]);
+      $filter["dateTwo"] and $sql[] = prepare("(task.dateTargetStart <= '%s')",$filter["dateTwo"]);
 
     // Date Target Completion
     } else if ($filter["taskDate"] == "d_targetCompletion") {
-      $filter["dateOne"] and $sql[] = sprintf("(task.dateTargetCompletion >= '%s')",db_esc($filter["dateOne"]));
-      $filter["dateTwo"] and $sql[] = sprintf("(task.dateTargetCompletion <= '%s')",db_esc($filter["dateTwo"]));
+      $filter["dateOne"] and $sql[] = prepare("(task.dateTargetCompletion >= '%s')",$filter["dateOne"]);
+      $filter["dateTwo"] and $sql[] = prepare("(task.dateTargetCompletion <= '%s')",$filter["dateTwo"]);
 
     // Date Actual Start
     } else if ($filter["taskDate"] == "d_actualStart") {
-      $filter["dateOne"] and $sql[] = sprintf("(task.dateActualStart >= '%s')",db_esc($filter["dateOne"]));
-      $filter["dateTwo"] and $sql[] = sprintf("(task.dateActualStart <= '%s')",db_esc($filter["dateTwo"]));
+      $filter["dateOne"] and $sql[] = prepare("(task.dateActualStart >= '%s')",$filter["dateOne"]);
+      $filter["dateTwo"] and $sql[] = prepare("(task.dateActualStart <= '%s')",$filter["dateTwo"]);
 
     // Date Actual Completion
     } else if ($filter["taskDate"] == "d_actualCompletion") {
-      $filter["dateOne"] and $sql[] = sprintf("(task.dateActualCompletion >= '%s')",db_esc($filter["dateOne"]));
-      $filter["dateTwo"] and $sql[] = sprintf("(task.dateActualCompletion <= '%s')",db_esc($filter["dateTwo"]));
+      $filter["dateOne"] and $sql[] = prepare("(task.dateActualCompletion >= '%s')",$filter["dateOne"]);
+      $filter["dateTwo"] and $sql[] = prepare("(task.dateActualCompletion <= '%s')",$filter["dateTwo"]);
     }
 
     // Task status filtering
@@ -727,52 +727,52 @@ class task extends db_entity {
     
     // Else if only one taskTypeID
     } else if ($filter["taskTypeID"]) {
-      $sql[] = sprintf("(task.taskTypeID = '%s')",db_esc($filter["taskTypeID"]));
+      $sql[] = prepare("(task.taskTypeID = '%s')",$filter["taskTypeID"]);
     }
 
     // Filter on %taskName%
     if ($filter["taskName"]) {     
-      $sql[] = sprintf("(task.taskName LIKE '%%%s%%')", db_esc($filter["taskName"]));
+      $sql[] = prepare("(task.taskName LIKE '%%%s%%')", $filter["taskName"]);
     }
 
     // If personID filter
     if ($filter["personID"] == "NULL") {
       $sql["personID"] = "(task.personID IS NULL)";
     } else if ($filter["personID"]) {
-      $sql["personID"] = sprintf("(task.personID = %d)",$filter["personID"]);
+      $sql["personID"] = prepare("(task.personID = %d)",$filter["personID"]);
     }
 
     // If creatorID filter
     if ($filter["creatorID"]) {
-      $sql["creatorID"] = sprintf("(task.creatorID = %d)",$filter["creatorID"]);
+      $sql["creatorID"] = prepare("(task.creatorID = %d)",$filter["creatorID"]);
     }
     // If managerID filter
     if ($filter["managerID"]) {
-      $sql["managerID"] = sprintf("(task.managerID = %d)",$filter["managerID"]);
+      $sql["managerID"] = prepare("(task.managerID = %d)",$filter["managerID"]);
     }
 
     // These filters are for the time sheet dropdown list
     if ($filter["taskTimeSheetStatus"] == "open") {
       unset($sql["personID"]);
-      $sql[] = sprintf("(task.taskStatus NOT IN (".$ts_closed."))");
+      $sql[] = prepare("(task.taskStatus NOT IN (".$ts_closed."))");
 
     } else if ($filter["taskTimeSheetStatus"] == "mine"){ 
       global $current_user;
       unset($sql["personID"]);
-      $sql[] = sprintf("((task.taskStatus NOT IN (".$ts_closed.")) AND task.personID = %d)",$current_user->get_id());
+      $sql[] = prepare("((task.taskStatus NOT IN (".$ts_closed.")) AND task.personID = %d)",$current_user->get_id());
 
     } else if ($filter["taskTimeSheetStatus"] == "not_assigned"){ 
       unset($sql["personID"]);
-      $sql[] = sprintf("((task.taskStatus NOT IN (".$ts_closed.")) AND task.personID != %d)",$filter["personID"]);
+      $sql[] = prepare("((task.taskStatus NOT IN (".$ts_closed.")) AND task.personID != %d)",$filter["personID"]);
 
     } else if ($filter["taskTimeSheetStatus"] == "recent_closed"){
       unset($sql["personID"]);
-      $sql[] = sprintf("(task.dateActualCompletion >= DATE_SUB(CURDATE(),INTERVAL 14 DAY))");
+      $sql[] = prepare("(task.dateActualCompletion >= DATE_SUB(CURDATE(),INTERVAL 14 DAY))");
 
     } else if ($filter["taskTimeSheetStatus"] == "all") {
     }
 
-    $filter["parentTaskID"] and $sql["parentTaskID"] = sprintf("(parentTaskID = %d)",$filter["parentTaskID"]);
+    $filter["parentTaskID"] and $sql["parentTaskID"] = prepare("(parentTaskID = %d)",$filter["parentTaskID"]);
     return $sql;
   }
 
@@ -833,7 +833,7 @@ class task extends db_entity {
 
     // Zero is a valid limit
     if ($_FORM["limit"] || $_FORM["limit"] === 0 || $_FORM["limit"] === "0") {
-      $limit = sprintf("limit %d",$_FORM["limit"]); 
+      $limit = prepare("limit %d",$_FORM["limit"]); 
     }
     $_FORM["return"] or $_FORM["return"] = "html";
 
@@ -851,7 +851,7 @@ class task extends db_entity {
     if (is_array($filter) && count($filter)) {
       $f = " WHERE ".implode(" AND ",$filter)." GROUP BY task.taskID ".$order_limit;
     }
-    $q = sprintf("SELECT task.*
+    $q = prepare("SELECT task.*
                         ,projectName
                         ,projectShortName
                         ,clientID
@@ -871,8 +871,8 @@ class task extends db_entity {
                LEFT JOIN project ON project.projectID = task.projectID
                LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
                LEFT JOIN pendingTask ON pendingTask.taskID = task.taskID
-                         %s
-                 ",$current_user->get_id(),$f);
+                         ".$f."
+                 ",$current_user->get_id());
       
     $debug and print "\n<br>QUERY: ".$q;
     $_FORM["debug"] and print "\n<br>QUERY: ".$q;
@@ -1526,7 +1526,7 @@ class task extends db_entity {
   function can_be_deleted() {
     if (is_object($this) && $this->get_id()) {
       $db = new db_alloc;
-      $q = sprintf("SELECT can_delete_task(%d) as rtn",$this->get_id());
+      $q = prepare("SELECT can_delete_task(%d) as rtn",$this->get_id());
       $db->query($q);
       $row = $db->row();
       return $row['rtn'];

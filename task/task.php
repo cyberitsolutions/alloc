@@ -28,7 +28,7 @@ define("PAGE_IS_PRINTABLE",1);
 
     // show all reminders for this project
     $db = new db_alloc;
-    $query = sprintf("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d AND reminderActive = 1", $taskID);
+    $query = prepare("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d AND reminderActive = 1", $taskID);
     $db->query($query);
     while ($db->next_record()) {
       $reminder = new reminder;
@@ -55,7 +55,7 @@ define("PAGE_IS_PRINTABLE",1);
   }
 
   function get_parent_taskIDs($taskID) {
-    $q = sprintf("SELECT taskID,taskName,parentTaskID 
+    $q = prepare("SELECT taskID,taskName,parentTaskID 
                     FROM task 
                    WHERE taskID = %d 
                      AND (taskID != parentTaskID OR parentTaskID IS NULL)"
@@ -280,7 +280,7 @@ $parent_task->set_values("parentTask_");
 
 $TPL["taskType_taskTypeID"] = $task->get_value("taskTypeID");
 
-$q = sprintf("SELECT clientID FROM project LEFT JOIN task ON task.projectID = project.projectID WHERE taskID = %d",$task->get_id());
+$q = prepare("SELECT clientID FROM project LEFT JOIN task ON task.projectID = project.projectID WHERE taskID = %d",$task->get_id());
 $db->query($q);
 $db->next_record();
 if ($db->f("clientID")) {
@@ -379,7 +379,7 @@ if ($taskID) {
   $TPL["main_alloc_title"] = "Task " . $task->get_id() . ": " . $task->get_name()." - ".APPLICATION_NAME;
   $TPL["task_exists"] = true;
 
-  $q = sprintf("SELECT GROUP_CONCAT(pendingTaskID) as pendingTaskIDs FROM pendingTask WHERE taskID = %d",$task->get_id());
+  $q = prepare("SELECT GROUP_CONCAT(pendingTaskID) as pendingTaskIDs FROM pendingTask WHERE taskID = %d",$task->get_id());
   $db->query($q);
   $row = $db->row();
   $TPL["task_pendingTaskIDs"] = $row["pendingTaskIDs"];

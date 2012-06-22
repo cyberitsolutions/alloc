@@ -27,8 +27,8 @@ while($db->next_record()) {
 $db->query("DELETE FROM `config` WHERE `name` IN ('timeSheetManagerEmail', 'timeSheetAdminEmail')");
 
 // insert the new options, with the data from the old options
-$db->query(sprintf("INSERT INTO `config` (`name`, `value`, `type`) VALUES ('defaultTimeSheetAdminList', '%s', 'array')", db_esc(serialize($tsa_list))));
-$db->query(sprintf("INSERT INTO `config` (`name`, `value`, `type`) VALUES ('defaultTimeSheetManagerList', '%s', 'array')", db_esc(serialize($tsm_list))));
+$db->query("INSERT INTO `config` (`name`, `value`, `type`) VALUES ('defaultTimeSheetAdminList', '%s', 'array')", serialize($tsa_list));
+$db->query("INSERT INTO `config` (`name`, `value`, `type`) VALUES ('defaultTimeSheetManagerList', '%s', 'array')", serialize($tsm_list));
 
 
 ?>

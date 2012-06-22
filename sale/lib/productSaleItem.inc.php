@@ -48,7 +48,7 @@ class productSaleItem extends db_entity {
 
   function get_amount_spent() {
     $db = new db_alloc;
-    $q = sprintf("SELECT fromTfID, tfID,
+    $q = prepare("SELECT fromTfID, tfID,
                          (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
                     FROM transaction 
                LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
@@ -69,7 +69,7 @@ class productSaleItem extends db_entity {
 
   function get_amount_earnt() {
     $db = new db_alloc;
-    $q = sprintf("SELECT fromTfID, tfID,
+    $q = prepare("SELECT fromTfID, tfID,
                          (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
                     FROM transaction 
                LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
@@ -91,7 +91,7 @@ class productSaleItem extends db_entity {
   function get_amount_other() {
     $db = new db_alloc;
     // Don't need to do numberToBasic conversion here
-    $q = sprintf("SELECT fromTfID, tfID,
+    $q = prepare("SELECT fromTfID, tfID,
                          (amount * exchangeRate) as amount
                     FROM transaction 
                LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
@@ -176,7 +176,7 @@ class productSaleItem extends db_entity {
                              ,$this->get_value("sellPriceCurrencyTypeID"));
 
     // Now loop through all the productCosts for the sale items product.
-    $query = sprintf("SELECT productCost.*, product.productName
+    $query = prepare("SELECT productCost.*, product.productName
                         FROM productCost 
                    LEFT JOIN product ON product.productID = productCost.productID
                        WHERE productCost.productID = %d 
@@ -198,7 +198,7 @@ class productSaleItem extends db_entity {
     $totalUnallocated = page::money(config::get_config_item("currency"),$this->get_amount_unallocated(),"%mo");
 
     // Now loop through all the productCosts % COMMISSIONS for the sale items product.
-    $query = sprintf("SELECT productCost.*, product.productName
+    $query = prepare("SELECT productCost.*, product.productName
                         FROM productCost 
                    LEFT JOIN product ON product.productID = productCost.productID
                        WHERE productCost.productID = %d 
@@ -239,7 +239,7 @@ class productSaleItem extends db_entity {
                              ,false, false, 'tax');
 
     // Now loop through all the productCosts for the sale items product.
-    $query = sprintf("SELECT productCost.*, product.productName
+    $query = prepare("SELECT productCost.*, product.productName
                         FROM productCost 
                    LEFT JOIN product ON product.productID = productCost.productID
                        WHERE productCost.productID = %d 
@@ -261,7 +261,7 @@ class productSaleItem extends db_entity {
   }
 
   function delete_transactions() {
-    $q = sprintf("SELECT * FROM transaction WHERE productSaleItemID = %d",$this->get_id());
+    $q = prepare("SELECT * FROM transaction WHERE productSaleItemID = %d",$this->get_id());
     $db = new db_alloc();
     $db->query($q);
     while ($db->row()) {

@@ -30,7 +30,7 @@ $db = new db_alloc();
 if ($_GET['current']) {
   $filter = " WHERE projectStatus = 'Current'"; 
 }
-$query = sprintf("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
+$query = prepare("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
 
 echo '<select name="projectID"><option value=""> </option>'.page::select_options($query, null,70).'</select>';
 

@@ -75,21 +75,21 @@ function show_new_invoiceItem($template) {
 
       // Time Sheet dropdown
       $db = new db_alloc();
-      $q = sprintf("SELECT projectID FROM project WHERE clientID = %d",$invoice->get_value("clientID"));
+      $q = prepare("SELECT projectID FROM project WHERE clientID = %d",$invoice->get_value("clientID"));
       $db->query($q);
       $projectIDs = array();
       while ($row = $db->row()) {
         $projectIDs[] = $row["projectID"];
       }
       if ($projectIDs) {
-        $q = sprintf("SELECT timeSheet.*, project.projectName 
+        $q = prepare("SELECT timeSheet.*, project.projectName 
                         FROM timeSheet
                    LEFT JOIN project ON project.projectID = timeSheet.projectID 
                        WHERE timeSheet.projectID IN (%s) 
                          AND timeSheet.status != 'finished'
                     GROUP BY timeSheet.timeSheetID
                     ORDER BY timeSheetID
-                     ",esc_implode(", ",$projectIDs));
+                     ",$projectIDs);
         $db->query($q);
     
         $timeSheetStatii = timeSheet::get_timeSheet_statii();
@@ -107,7 +107,7 @@ function show_new_invoiceItem($template) {
 
       // Expense Form dropdown
       $db = new db_alloc();
-      $q = sprintf("SELECT expenseFormID, expenseFormCreatedUser
+      $q = prepare("SELECT expenseFormID, expenseFormCreatedUser
                       FROM expenseForm 
                      WHERE expenseFormFinalised = 1 
                        AND seekClientReimbursement = 1
@@ -138,7 +138,7 @@ function show_invoiceItem_list() {
 
   $db = new db_alloc();
   $db2 = new db_alloc();
-  $q = sprintf("SELECT *
+  $q = prepare("SELECT *
                   FROM invoiceItem 
                  WHERE invoiceItem.invoiceID = %d 
               ORDER BY iiDate,invoiceItem.invoiceItemID"
@@ -169,7 +169,7 @@ function show_invoiceItem_list() {
       continue;
     }
     
-    $q = sprintf("SELECT *
+    $q = prepare("SELECT *
                        , transaction.amount * pow(10,-currencyType.numberToBasic) AS transaction_amount
                        , transaction.tfID AS transaction_tfID
                        , transaction.fromTfID AS transaction_fromTfID
@@ -424,8 +424,8 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     #$TPL["message"][] = "Please enter a unique Invoice Number.";
     $invoice->set_value("invoiceNum",invoice::get_next_invoiceNum());
   } else {
-    $invoiceID and $invoiceID_sql = sprintf(" AND invoiceID != %d",$invoiceID);
-    $q = sprintf("SELECT * FROM invoice WHERE invoiceNum = '%s' %s",db_esc($invoice->get_value("invoiceNum")),$invoiceID_sql);
+    $invoiceID and $invoiceID_sql = prepare(" AND invoiceID != %d",$invoiceID);
+    $q = prepare("SELECT * FROM invoice WHERE invoiceNum = '%s' ".$invoiceID_sql,$invoice->get_value("invoiceNum"));
     $db->query($q);
     if ($db->row()) {
       $TPL["message"][] = "Please enter a unique Invoice Number (that number is already taken).";
@@ -479,9 +479,9 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
   
   if ($invoiceItemIDs) {
     $db = new db_alloc();
-    $q = sprintf("DELETE FROM transaction WHERE invoiceItemID in (%s)",esc_implode(",",$invoiceItemIDs));
+    $q = prepare("DELETE FROM transaction WHERE invoiceItemID in (%s)",$invoiceItemIDs);
     $db->query($q);
-    $q = sprintf("DELETE FROM invoiceItem WHERE invoiceItemID in (%s)",esc_implode(",",$invoiceItemIDs));
+    $q = prepare("DELETE FROM invoiceItem WHERE invoiceItemID in (%s)",$invoiceItemIDs);
     $db->query($q);
   }
 
@@ -564,7 +564,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
 if ($invoiceID && $invoiceItemIDs) {
   $currency = $invoice->get_value("currencyTypeID");
-  $q = sprintf("SELECT sum(iiAmount * pow(10,-currencyType.numberToBasic)) as sum_iiAmount
+  $q = prepare("SELECT sum(iiAmount * pow(10,-currencyType.numberToBasic)) as sum_iiAmount
                   FROM invoiceItem 
              LEFT JOIN invoice on invoiceItem.invoiceID = invoice.invoiceID
              LEFT JOIN currencyType on invoice.currencyTypeID = currencyType.currencyTypeID
@@ -572,11 +572,11 @@ if ($invoiceID && $invoiceItemIDs) {
   $db->query($q);
   $db->next_record() and $TPL["invoiceTotal"] = page::money($currency,$db->f("sum_iiAmount"),"%S%m %c");
 
-  $q = sprintf("SELECT sum(amount * pow(10,-currencyType.numberToBasic)) as sum_transaction_amount
+  $q = prepare("SELECT sum(amount * pow(10,-currencyType.numberToBasic)) as sum_transaction_amount
                   FROM transaction 
              LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                  WHERE status = 'approved' 
-                   AND invoiceItemID in (%s)",esc_implode(",",$invoiceItemIDs));
+                   AND invoiceItemID in (%s)",$invoiceItemIDs);
   $db->query($q);
   $db->next_record() and $TPL["invoiceTotalPaid"] = page::money($currency,$db->f("sum_transaction_amount"),"%S%m %c");
 }

@@ -35,7 +35,7 @@ function show_days($template_name) {
 
 function show_timeSheetItems($template_name) {
   global $date_to_view, $current_user, $TPL;
-  $query = sprintf("SELECT * 
+  $query = prepare("SELECT * 
                       FROM timeSheetItem 
                            LEFT JOIN timeSheet ON timeSheetItem.timeSheetID = timeSheet.timeSheetID
                            LEFT JOIN project ON timeSheet.projectID = project.projectID

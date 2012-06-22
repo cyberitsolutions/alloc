@@ -571,7 +571,7 @@ function import_find_username($candidates) {
   global $db;
   //Our aim is just to find one record that matches the username
   foreach($candidates as $candidate) {
-    $query = sprintf("SELECT * FROM person WHERE username = '%s'", db_esc($candidate));
+    $query = prepare("SELECT * FROM person WHERE username = '%s'", $candidate);
     $db->query($query);
     if($db->next_record()) {
       $person = new person;

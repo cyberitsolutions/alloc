@@ -47,7 +47,7 @@ if ($sess->Started()) {
 
     $sess->Start($row);
 
-    $q = sprintf("UPDATE person SET lastLoginDate = '%s' WHERE personID = %d"
+    $q = prepare("UPDATE person SET lastLoginDate = '%s' WHERE personID = %d"
                  ,date("Y-m-d H:i:s"),$row["personID"]);
     $db = new db_alloc;
     $db->query($q);
@@ -68,8 +68,7 @@ if ($sess->Started()) {
 } else if ($_POST["new_pass"]) {
 
   $db = new db_alloc;
-  $db->query(sprintf("SELECT * FROM person WHERE emailAddress = '%s'"
-                    , db_esc($_POST["email"])));
+  $db->query("SELECT * FROM person WHERE emailAddress = '%s'", $_POST["email"]);
 
   if ($db->next_record()) {
     // generate new random password
@@ -80,8 +79,8 @@ if ($sess->Started()) {
       $password.= substr($pwSource, rand(0, strlen($pwSource)), 1);
     }
 
-    $q = sprintf("UPDATE person SET password = '%s' WHERE emailAddress = '%s'
-                 ",encrypt_password($password), db_esc($_POST["email"]));
+    $q = prepare("UPDATE person SET password = '%s' WHERE emailAddress = '%s'
+                 ",encrypt_password($password), $_POST["email"]);
     $db2 = new db_alloc();
     $db2->query($q);
 

@@ -106,7 +106,7 @@ class invoice extends db_entity {
   function get_invoiceItems($invoiceID="") {
     $invoiceItemIDs = array();
     $id = $invoiceID or $id = $this->get_id();
-    $q = sprintf("SELECT invoiceItemID FROM invoiceItem WHERE invoiceID = %d",$id);
+    $q = prepare("SELECT invoiceItemID FROM invoiceItem WHERE invoiceID = %d",$id);
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
@@ -118,7 +118,7 @@ class invoice extends db_entity {
   function get_transactions($invoiceID="") {
     $transactionIDs = array();
     $id = $invoiceID or $id = $this->get_id();
-    $q = sprintf("SELECT transactionID FROM transaction WHERE invoiceID = %d",$id);
+    $q = prepare("SELECT transactionID FROM transaction WHERE invoiceID = %d",$id);
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
@@ -138,8 +138,8 @@ class invoice extends db_entity {
   function get_invoiceItem_list_for_file($verbose=false) {
     $currency = $this->get_value("currencyTypeID");
 
-    $q = sprintf("SELECT * from invoiceItem WHERE invoiceID=%d ", $this->get_id());
-    $q.= sprintf("ORDER BY iiDate,invoiceItemID");
+    $q = prepare("SELECT * from invoiceItem WHERE invoiceID=%d ", $this->get_id());
+    $q.= prepare("ORDER BY iiDate,invoiceItemID");
     $db = new db_alloc;
     $db->query($q);
     $taxPercent = config::get_config_item("taxPercent");
@@ -178,7 +178,7 @@ class invoice extends db_entity {
 
       // Get task description
       if ($invoiceItem->get_value("timeSheetID") && $verbose) {
-        $q = sprintf("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$invoiceItem->get_value("timeSheetID"));
+        $q = prepare("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$invoiceItem->get_value("timeSheetID"));
         $db2 = new db_alloc();
         $db2->query($q); 
         unset($sep);
@@ -412,9 +412,9 @@ class invoice extends db_entity {
 
     // Filter oinvoiceID
     if ($filter["invoiceID"] && is_array($filter["invoiceID"])) {
-      $sql[] = "(invoice.invoiceID in ('".esc_implode("','",$filter["invoiceID"])."'))";
+      $sql[] = prepare("(invoice.invoiceID in (%s))",$filter["invoiceID"]);
     } else if ($filter["invoiceID"]) {     
-      $sql[] = sprintf("(invoice.invoiceID = %d)", db_esc($filter["invoiceID"]));
+      $sql[] = prepare("(invoice.invoiceID = %d)", $filter["invoiceID"]);
     }
 
     // No point continuing if primary key specified, so return
@@ -422,12 +422,12 @@ class invoice extends db_entity {
       return $sql;
     }
 
-    $filter["clientID"]      and $sql[] = sprintf("(invoice.clientID = %d)",$filter["clientID"]);
-    $filter["invoiceNum"]    and $sql[] = sprintf("(invoice.invoiceNum = %d)",$filter["invoiceNum"]);
-    $filter["dateOne"]       and $sql[] = sprintf("(invoice.invoiceDateFrom>='%s')",db_esc($filter["dateOne"]));
-    $filter["dateTwo"]       and $sql[] = sprintf("(invoice.invoiceDateTo<='%s')",db_esc($filter["dateTwo"]));
-    $filter["invoiceName"]   and $sql[] = sprintf("(invoice.invoiceName like '%%%s%%')",db_esc($filter["invoiceName"]));
-    $filter["invoiceStatus"] and $sql[] = sprintf("(invoice.invoiceStatus = '%s')",db_esc($filter["invoiceStatus"]));
+    $filter["clientID"]      and $sql[] = prepare("(invoice.clientID = %d)",$filter["clientID"]);
+    $filter["invoiceNum"]    and $sql[] = prepare("(invoice.invoiceNum = %d)",$filter["invoiceNum"]);
+    $filter["dateOne"]       and $sql[] = prepare("(invoice.invoiceDateFrom>='%s')",$filter["dateOne"]);
+    $filter["dateTwo"]       and $sql[] = prepare("(invoice.invoiceDateTo<='%s')",$filter["dateTwo"]);
+    $filter["invoiceName"]   and $sql[] = prepare("(invoice.invoiceName like '%%%s%%')",$filter["invoiceName"]);
+    $filter["invoiceStatus"] and $sql[] = prepare("(invoice.invoiceStatus = '%s')",$filter["invoiceStatus"]);
     return $sql;
   }
 
@@ -441,8 +441,8 @@ class invoice extends db_entity {
       } else {
         $filter["tfIDs"] = array(0);
       }
-      $sql[] = sprintf("(tfPerson.tfID in (".esc_implode(",",$filter["tfIDs"])."))");
-      $sql[] = sprintf("(tfPerson.personID = %d)",$filter["personID"]);
+      $sql[] = prepare("(tfPerson.tfID in (%s))",$filter["tfIDs"]);
+      $sql[] = prepare("(tfPerson.personID = %d)",$filter["personID"]);
     }
 
   
@@ -653,7 +653,7 @@ class invoice extends db_entity {
 
   function update_invoice_dates($invoiceID) {
     $db = new db_alloc();
-    $db->query(sprintf("SELECT max(iiDate) AS maxDate, min(iiDate) AS minDate
+    $db->query(prepare("SELECT max(iiDate) AS maxDate, min(iiDate) AS minDate
                           FROM invoiceItem
                          WHERE invoiceID=%d"
                       ,$invoiceID));
@@ -671,7 +671,7 @@ class invoice extends db_entity {
     $invoiceItemIDs = $this->get_invoiceItems();
     foreach ($invoiceItemIDs as $invoiceItemID) {
 
-      $q = sprintf("SELECT *
+      $q = prepare("SELECT *
                       FROM transaction
                      WHERE invoiceItemID = %d
                        AND status = 'pending'"
@@ -744,7 +744,7 @@ class invoice extends db_entity {
   }
   
   function has_pending_transactions() {
-    $q = sprintf("SELECT * 
+    $q = prepare("SELECT * 
                     FROM transaction
                LEFT JOIN invoiceItem on transaction.invoiceItemID = invoiceItem.invoiceItemID
                    WHERE invoiceItem.invoiceID = %d AND transaction.status = 'pending' 
@@ -756,7 +756,7 @@ class invoice extends db_entity {
 
   function add_timeSheet($timeSheetID=false) {
     if ($timeSheetID) {
-      $q = sprintf("SELECT * 
+      $q = prepare("SELECT * 
                       FROM invoiceItem 
                      WHERE invoiceID = %d 
                        AND timeSheetID = %d"

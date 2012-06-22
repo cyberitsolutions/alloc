@@ -6,7 +6,7 @@ $db2 = new db_alloc();
 
 $db->query("SELECT * FROM invoice");
 while ($db->next_record()) {
-  $db2->query(sprintf("UPDATE invoiceItem SET iiDate = '%s' WHERE invoiceID = %d",$db->f("invoiceDateFrom"),$db->f("invoiceID")));
+  $db2->query(prepare("UPDATE invoiceItem SET iiDate = '%s' WHERE invoiceID = %d",$db->f("invoiceDateFrom"),$db->f("invoiceID")));
 }
 
 ?>

@@ -99,7 +99,7 @@ class comment extends db_entity {
   function get_comments($commentMaster="",$commentMasterID="") {
     $rows = array();
     if ($commentMaster && $commentMasterID) {
-      $q = sprintf("SELECT commentID, 
+      $q = prepare("SELECT commentID, 
                            commentMaster, commentMasterID,
                            commentLinkID, commentType,
                            commentCreatedUser as personID, 
@@ -486,7 +486,7 @@ class comment extends db_entity {
       if ($selected_option == "interested") {
         $db = new db_alloc;
         if ($entity && $entityID) {
-          $q = sprintf("SELECT * FROM interestedParty WHERE entity = '%s' AND entityID = %d AND interestedPartyActive = 1",$entity,$entityID);
+          $q = prepare("SELECT * FROM interestedParty WHERE entity = '%s' AND entityID = %d AND interestedPartyActive = 1",$entity,$entityID);
         }
         $db->query($q);
         while($row = $db->next_record()) {
@@ -685,9 +685,9 @@ class comment extends db_entity {
 
     // Filter ocommentID
     if ($filter["commentID"] && is_array($filter["commentID"])) {
-      $sql[] = "(comment.commentID in ('".esc_implode("','",$filter["commentID"])."'))";
+      $sql[] = prepare("(comment.commentID in (%s))",$filter["commentID"]);
     } else if ($filter["commentID"]) {     
-      $sql[] = sprintf("(comment.commentID = %d)", db_esc($filter["commentID"]));
+      $sql[] = prepare("(comment.commentID = %d)", $filter["commentID"]);
     }
 
     // No point continuing if primary key specified, so return
@@ -814,16 +814,16 @@ class comment extends db_entity {
     $projectIDs = project::get_projectID_sql($filter,"task");
     $projectIDs and $sql1["projectIDs"] = $projectIDs;
     $projectIDs and $sql2["projectIDs"] = $projectIDs;
-    $filter['taskID'] and $sql1[] = sprintf("(task.taskID = %d)", db_esc($filter["taskID"]));
-    $filter['taskID'] and $sql2[] = sprintf("(task.taskID = %d)", db_esc($filter["taskID"]));
-    $filter["fromDate"] and $sql1[] = sprintf("(date(commentCreatedTime) >= '%s')", db_esc($filter["fromDate"]));
-    $filter["fromDate"] and $sql2[] = sprintf("(dateTimeSheetItem >= '%s')", db_esc($filter["fromDate"]));
-    $filter["toDate"] and $sql1[] = sprintf("(date(commentCreatedTime) < '%s')", db_esc($filter["toDate"]));
-    $filter["toDate"] and $sql2[] = sprintf("(dateTimeSheetItem < '%s')", db_esc($filter["toDate"]));
-    $filter["personID"] and $sql1["personID"] = "(comment.commentCreatedUser IN (".esc_implode(",",$filter["personID"])."))";
-    $filter["personID"] and $sql2[] = "(timeSheetItem.personID IN (".esc_implode(",",$filter["personID"])."))";
+    $filter['taskID'] and $sql1[] = prepare("(task.taskID = %d)", $filter["taskID"]);
+    $filter['taskID'] and $sql2[] = prepare("(task.taskID = %d)", $filter["taskID"]);
+    $filter["fromDate"] and $sql1[] = prepare("(date(commentCreatedTime) >= '%s')", $filter["fromDate"]);
+    $filter["fromDate"] and $sql2[] = prepare("(dateTimeSheetItem >= '%s')", $filter["fromDate"]);
+    $filter["toDate"] and $sql1[] = prepare("(date(commentCreatedTime) < '%s')", $filter["toDate"]);
+    $filter["toDate"] and $sql2[] = prepare("(dateTimeSheetItem < '%s')", $filter["toDate"]);
+    $filter["personID"] and $sql1["personID"] = prepare("(comment.commentCreatedUser IN (%s))",$filter["personID"]);
+    $filter["personID"] and $sql2[] = prepare("(timeSheetItem.personID IN (%s))",$filter["personID"]);
     $filter["clients"] or $sql1[] = "(commentCreatedUser IS NOT NULL)";
-    $filter["clients"] && $filter["personID"] and $sql1["personID"] = "(comment.commentCreatedUser IN (".esc_implode(",",$filter["personID"]).") OR comment.commentCreatedUser IS NULL)";
+    $filter["clients"] && $filter["personID"] and $sql1["personID"] = prepare("(comment.commentCreatedUser IN (%s) OR comment.commentCreatedUser IS NULL)",$filter["personID"]);
 
     $filter["taskStatus"] and $sql1[] = task::get_taskStatus_sql($filter["taskStatus"]);
     $filter["taskStatus"] and $sql2[] = task::get_taskStatus_sql($filter["taskStatus"]);
@@ -848,7 +848,7 @@ class comment extends db_entity {
       $client_fields = " , clientContact.clientContactName";
     }
 
-    $q = sprintf("SELECT commentID as id
+    $q = prepare("SELECT commentID as id
                        , commentCreatedUser as personID
                        , date(commentCreatedTime) as date
                        , commentCreatedTime as displayDate
@@ -887,7 +887,7 @@ class comment extends db_entity {
 
     // Note that timeSheetItemID is selected twice so that the perms checking can work
     // timeSheetID is also used by the perms checking.
-    $q2 = sprintf("SELECT timeSheetItemID as id
+    $q2 = prepare("SELECT timeSheetItemID as id
                          ,timeSheetItemID
                          ,timeSheetID
                          ,timeSheetItem.personID
@@ -1071,8 +1071,8 @@ class comment extends db_entity {
 
         // Add a new client contact
         if ($info["addContact"] && $info["clientID"]) {
-          $q = sprintf("SELECT * FROM clientContact WHERE clientID = %d AND clientContactEmail = '%s'"
-                      ,$info["clientID"],db_esc(trim($email)));
+          $q = prepare("SELECT * FROM clientContact WHERE clientID = %d AND clientContactEmail = '%s'"
+                      ,$info["clientID"],trim($email));
           $db = new db_alloc();
           if (!$db->qr($q)) {
             $cc = new clientContact;

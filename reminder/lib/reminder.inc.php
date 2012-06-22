@@ -52,7 +52,7 @@ class reminder extends db_entity {
     $db = new db_alloc;
     $type = $this->get_value('reminderType');
     if ($type == "project") {
-      $query = sprintf("SELECT * 
+      $query = prepare("SELECT * 
                           FROM projectPerson 
                      LEFT JOIN person ON projectPerson.personID=person.personID 
                          WHERE projectPerson.projectID = %d 
@@ -63,11 +63,11 @@ class reminder extends db_entity {
       $recipients = array("-3" => "Task Manager"
                          ,"-2" => "Task Assignee");
 
-      $db->query("SELECT projectID FROM task WHERE taskID = %s",$this->get_value('reminderLinkID'));
+      $db->query("SELECT projectID FROM task WHERE taskID = %d",$this->get_value('reminderLinkID'));
       $db->next_record();
 
       if ($db->f('projectID')) {
-        $query = sprintf("SELECT * 
+        $query = prepare("SELECT * 
                             FROM projectPerson 
                        LEFT JOIN person ON projectPerson.personID=person.personID 
                            WHERE projectPerson.projectID = %d 

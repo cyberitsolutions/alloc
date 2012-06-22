@@ -50,14 +50,14 @@ class client extends db_entity {
   function delete() {
     // delete all contacts and comments linked with this client as well
     $db = new db_alloc;
-    $query = sprintf("SELECT * FROM clientContact WHERE clientID=%d", $this->get_id());
+    $query = prepare("SELECT * FROM clientContact WHERE clientID=%d", $this->get_id());
     $db->query($query);
     while ($db->next_record()) {
       $clientContact = new clientContact;
       $clientContact->read_db_record($db);
       $clientContact->delete();
     }
-    $query = sprintf("SELECT * FROM comment WHERE commentType = 'client' and commentLinkID=%d", $this->get_id());
+    $query = prepare("SELECT * FROM comment WHERE commentType = 'client' and commentLinkID=%d", $this->get_id());
     $db->query($query);
     while ($db->next_record()) {
       $comment = new comment;
@@ -86,12 +86,12 @@ class client extends db_entity {
     global $TPL;
     $db = new db_alloc;
     if ($clientStatus) {
-      $q = sprintf("SELECT clientID as value, clientName as label 
+      $q = prepare("SELECT clientID as value, clientName as label 
                       FROM client 
                      WHERE clientStatus = '%s' 
                         OR clientID = %d 
                   ORDER BY clientName"
-                    ,db_esc($clientStatus),$clientID);
+                    ,$clientStatus,$clientID);
     }
     $options.= page::select_options($q,$clientID,100);
     $str = "<select id=\"clientID\" name=\"clientID\" style=\"width:100%;\">";
@@ -104,7 +104,7 @@ class client extends db_entity {
   function get_client_contact_select($clientID="",$clientContactID="") {
     $clientID or $clientID = $_GET["clientID"];
     $db = new db_alloc;
-    $q = sprintf("SELECT clientContactName as label, clientContactID as value FROM clientContact WHERE clientID = %d",$clientID);
+    $q = prepare("SELECT clientContactName as label, clientContactID as value FROM clientContact WHERE clientID = %d",$clientID);
     $options = page::select_options($q,$clientContactID,100);
     return "<select id=\"clientContactID\" name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
   }
@@ -135,9 +135,9 @@ class client extends db_entity {
 
     // Filter on taskID
     if ($filter["clientID"] && is_array($filter["clientID"])) {
-      $sql[] = "(client.clientID in ('".esc_implode("','",$filter["clientID"])."'))";
+      $sql[] = prepare("(client.clientID in (%s))",$filter["clientID"]);
     } else if ($filter["clientID"]) {     
-      $sql[] = sprintf("(client.clientID = %d)", db_esc($filter["clientID"]));
+      $sql[] = prepare("(client.clientID = %d)", $filter["clientID"]);
     }
 
     // No point continuing if primary key specified, so return
@@ -146,25 +146,25 @@ class client extends db_entity {
     }
 
     if ($filter["clientStatus"]) {
-      $sql[] = sprintf("(clientStatus = '%s')",db_esc($filter["clientStatus"]));
+      $sql[] = prepare("(clientStatus = '%s')",$filter["clientStatus"]);
     } 
 
     if ($filter["clientCategory"]) {
-      $sql[] = sprintf("(clientCategory = '%s')",db_esc($filter["clientCategory"]));
+      $sql[] = prepare("(clientCategory = '%s')",$filter["clientCategory"]);
     } 
 
     if ($filter["clientName"]) {
-      $sql[] = sprintf("(clientName LIKE '%%%s%%')",db_esc($filter["clientName"]));
+      $sql[] = prepare("(clientName LIKE '%%%s%%')",$filter["clientName"]);
     } 
 
     if ($filter["contactName"]) {
-      $sql[] = sprintf("(clientContactName LIKE '%%%s%%')",db_esc($filter["contactName"]));
+      $sql[] = prepare("(clientContactName LIKE '%%%s%%')",$filter["contactName"]);
     } 
 
     if ($filter["clientLetter"] && $filter["clientLetter"] == "A") {
       $sql[] = "(clientName like 'A%' or clientName REGEXP '^[^[:alpha:]]')";
     } else if ($filter["clientLetter"] && $filter["clientLetter"] != "ALL") {
-      $sql[] = sprintf("(clientName LIKE '%s%%')",db_esc($filter["clientLetter"]));
+      $sql[] = prepare("(clientName LIKE '%s%%')",$filter["clientLetter"]);
     }
 
     return $sql;
@@ -303,7 +303,7 @@ class client extends db_entity {
     static $clients;
     if (!$clients) {
       $db = new db_alloc();
-      $q = sprintf("SELECT * FROM client");
+      $q = prepare("SELECT * FROM client");
       $db->query($q);
       while ($db->next_record()) {
         $clients[$db->f("clientID")] = $db->f("clientName");
@@ -385,7 +385,7 @@ class client extends db_entity {
     $fx and $fx = " ".$fx;
     $name = $this->get_name().$ph.$fx;
 
-    $q = sprintf("SELECT * FROM clientContact WHERE clientID = %d",$this->get_id());
+    $q = prepare("SELECT * FROM clientContact WHERE clientID = %d",$this->get_id());
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
@@ -465,7 +465,7 @@ class client extends db_entity {
     if ($clientID) {
       // Get all client contacts 
       $db = new db_alloc();
-      $q = sprintf("SELECT clientContactName, clientContactEmail, clientContactID 
+      $q = prepare("SELECT clientContactName, clientContactEmail, clientContactID 
                       FROM clientContact 
                      WHERE clientID = %d
                        AND clientContactActive = 1

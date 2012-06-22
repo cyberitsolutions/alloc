@@ -34,7 +34,7 @@ class announcement extends db_entity {
   function has_announcements() {
     $db = new db_alloc;
     $today = date("Y-m-d");
-    $query = sprintf("select * from announcement where displayFromDate <= '%s' and displayToDate >= '%s'", $today, $today);
+    $query = prepare("select * from announcement where displayFromDate <= '%s' and displayToDate >= '%s'", $today, $today);
     $db->query($query);
     if ($db->next_record()) {
       return true;

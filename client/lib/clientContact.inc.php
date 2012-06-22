@@ -55,17 +55,16 @@ class clientContact extends db_entity {
     $people = array();
 
     if ($projectID) {
-      $extra = sprintf("LEFT JOIN project ON project.clientID = clientContact.clientID 
+      $extra = prepare("LEFT JOIN project ON project.clientID = clientContact.clientID 
                             WHERE project.projectID = %d
                        ",$projectID);
     } else {
-      $extra = sprintf("WHERE clientContactName = '%s'",db_esc($name));
+      $extra = prepare("WHERE clientContactName = '%s'",$name);
     }
 
-    $q = sprintf("SELECT clientContact.clientContactID, clientContact.clientContactName
-                    FROM clientContact
-                      %s
-                 ",$extra);
+    $q = prepare("SELECT clientContact.clientContactID, clientContact.clientContactName
+                    FROM clientContact ".$extra
+                );
                
     $db = new db_alloc();
     $db->query($q);
@@ -89,11 +88,11 @@ class clientContact extends db_entity {
   }
 
   function find_by_nick($name=false,$clientID=false) {
-    $q = sprintf("SELECT clientContactID
+    $q = prepare("SELECT clientContactID
                     FROM clientContact
                    WHERE SUBSTRING(clientContactEmail,1,LOCATE('@',clientContactEmail)-1) = '%s'
                      AND clientID = %d LIMIT 1
-                  ",db_esc($name),$clientID);
+                  ",$name,$clientID);
     $db = new db_alloc();
     $db->query($q);
     $row = $db->row();
@@ -103,10 +102,10 @@ class clientContact extends db_entity {
   function find_by_email($email=false) {
     $email = str_replace(array("<",">"),"",$email);
     if ($email) {
-      $q = sprintf("SELECT clientContactID
+      $q = prepare("SELECT clientContactID
                       FROM clientContact
                      WHERE replace(replace(clientContactEmail,'<',''),'>','') = '%s'
-                   ",db_esc($email));
+                   ",$email);
       $db = new db_alloc();
       $db->query($q);
       $row = $db->row();
@@ -118,11 +117,11 @@ class clientContact extends db_entity {
     // have to null out any records that point to this clientContact first to satisfy the referential integrity constraints
     if ($this->get_id()) {
       $db = new db_alloc();
-      $q = sprintf("UPDATE interestedParty SET clientContactID = NULL where clientContactID = %d",$this->get_id());
+      $q = prepare("UPDATE interestedParty SET clientContactID = NULL where clientContactID = %d",$this->get_id());
       $db->query($q);
-      $q = sprintf("UPDATE comment SET commentCreatedUserClientContactID = NULL where commentCreatedUserClientContactID = %d",$this->get_id());
+      $q = prepare("UPDATE comment SET commentCreatedUserClientContactID = NULL where commentCreatedUserClientContactID = %d",$this->get_id());
       $db->query($q);
-      $q = sprintf("UPDATE project SET clientContactID = NULL where clientContactID = %d",$this->get_id());
+      $q = prepare("UPDATE project SET clientContactID = NULL where clientContactID = %d",$this->get_id());
       $db->query($q);
     }
     return parent::delete();
@@ -204,9 +203,9 @@ class clientContact extends db_entity {
 
     // Filter on clientContactID
     if ($filter["clientContactID"] && is_array($filter["clientContactID"])) {
-      $sql[] = "(clientContact.clientContactID in ('".esc_implode("','",$filter["clientContactID"])."'))";
+      $sql[] = prepare("(clientContact.clientContactID in (%s))",$filter["clientContactID"]);
     } else if ($filter["clientContactID"]) {     
-      $sql[] = sprintf("(clientContact.clientContactID = %d)", db_esc($filter["clientContactID"]));
+      $sql[] = prepare("(clientContact.clientContactID = %d)", $filter["clientContactID"]);
     }
 
     // No point continuing if primary key specified, so return

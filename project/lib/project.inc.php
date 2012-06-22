@@ -67,7 +67,7 @@ class project extends db_entity {
     // If we're archiving the project, then archive the tasks.
     if ($old["projectStatus"] != "Archived" && $this->get_value("projectStatus") == "Archived") {
       $db = new db_alloc();
-      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND SUBSTRING(taskStatus,1,6) != 'closed'",$this->get_id());
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND SUBSTRING(taskStatus,1,6) != 'closed'",$this->get_id());
       $db->query($q);
       while ($row = $db->row()) {
         $task = new task;
@@ -84,10 +84,10 @@ class project extends db_entity {
     // If we're un-archiving the project, then un-archive the tasks.
     if ($old["projectStatus"] == "Archived" && $this->get_value("projectStatus") != "Archived") {
       $db = new db_alloc();
-      $q = sprintf("SELECT * FROM task WHERE projectID = %d AND taskStatus = 'closed_archived'",$this->get_id());
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskStatus = 'closed_archived'",$this->get_id());
       $id = $db->query($q);
       while ($row = $db->row($id)) {
-        $q = sprintf("SELECT * FROM auditItem
+        $q = prepare("SELECT * FROM auditItem
                        WHERE entityName = 'task'
                          AND entityID = %d
                          AND changeType = 'FieldChange'
@@ -113,7 +113,7 @@ class project extends db_entity {
   }
 
   function delete() { 
-    $q = sprintf("DELETE from projectPerson WHERE projectID = %d",$this->get_id()); 
+    $q = prepare("DELETE from projectPerson WHERE projectID = %d",$this->get_id()); 
     $db = new db_alloc();
     $db->query($q);
     return parent::delete();
@@ -176,11 +176,11 @@ class project extends db_entity {
     if (is_object($person)) {
       $permissions and $p = " AND ppr.roleHandle in ('".esc_implode("','",$permissions,"%s")."')";
 
-      $query = sprintf("SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
+      $query = prepare("SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
                           FROM projectPerson pp 
                      LEFT JOIN role ppr ON ppr.roleID = pp.roleID 
-                         WHERE projectID = '%d' and personID = '%d' %s"
-                      ,$this->get_id(), $person->get_id(), $p);
+                         WHERE projectID = '%d' and personID = '%d' ".$p
+                      ,$this->get_id(), $person->get_id());
       #echo "<br><br>".$query;
 
       $db = new db_alloc;
@@ -202,10 +202,10 @@ class project extends db_entity {
 
   function get_project_people_by_role($role="") {
     $rows = array();
-    $q = sprintf("SELECT projectPerson.personID as personID
+    $q = prepare("SELECT projectPerson.personID as personID
                     FROM projectPerson
                LEFT JOIN role ON projectPerson.roleID = role.roleID 
-                   WHERE projectPerson.projectID = %d AND role.roleHandle = '%s'",$this->get_id(),db_esc($role));
+                   WHERE projectPerson.projectID = %d AND role.roleHandle = '%s'",$this->get_id(),$role);
     $db = new db_alloc;
     $db->query($q);
     while ($db->next_record()) {
@@ -285,56 +285,56 @@ class project extends db_entity {
     global $current_user;
     $type or $type = "mine";
     $personID or $personID = $current_user->get_id();
-    $projectStatus and $projectStatus_sql = sprintf(" AND project.projectStatus = '%s' ",$projectStatus);
+    $projectStatus and $projectStatus_sql = prepare(" AND project.projectStatus = '%s' ",$projectStatus);
 
     if ($type == "mine") {
-      $q = sprintf("SELECT project.projectID, project.projectName
+      $q = prepare("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
                  LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' %s
+                     WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$personID, $projectStatus_sql);
+                  ,$personID);
 
     } else if ($type == "pm") {
-      $q = sprintf("SELECT project.projectID, project.projectName
+      $q = prepare("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
                  LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' %s
+                     WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
                        AND role.roleHandle = 'isManager' 
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$personID, $projectStatus_sql);
+                  ,$personID);
 
     } else if ($type == "tsm") {
-      $q = sprintf("SELECT project.projectID, project.projectName
+      $q = prepare("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
                  LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' %s
+                     WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
                        AND role.roleHandle = 'timeSheetRecipient' 
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$personID, $projectStatus_sql);
+                  ,$personID);
 
    } else if ($type == "pmORtsm") {
-      $q = sprintf("SELECT project.projectID, project.projectName
+      $q = prepare("SELECT project.projectID, project.projectName
                       FROM project
                  LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
                  LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' %s
+                     WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
                        AND (role.roleHandle = 'isManager' or role.roleHandle = 'timeSheetRecipient')
                   GROUP BY projectID 
                   ORDER BY project.projectName"
-                  ,$personID, $projectStatus_sql);
+                  ,$personID);
 
     } else if ($type == "all") {
-      $q = sprintf("SELECT projectID,projectName FROM project ORDER BY projectName");
+      $q = prepare("SELECT projectID,projectName FROM project ORDER BY projectName");
 
     } else if ($type) {
-      $q = sprintf("SELECT projectID,projectName FROM project WHERE project.projectStatus = '%s' ORDER BY projectName",db_esc($type));
+      $q = prepare("SELECT projectID,projectName FROM project WHERE project.projectStatus = '%s' ORDER BY projectName",$type);
     }
     return $q;
   }
@@ -398,9 +398,9 @@ class project extends db_entity {
 
     // Filter oprojectID
     if ($filter["projectID"] && is_array($filter["projectID"])) {
-      $sql[] = "(project.projectID in ('".esc_implode("','",$filter["projectID"])."'))";
+      $sql[] = prepare("(project.projectID in (%s))",$filter["projectID"]);
     } else if ($filter["projectID"]) {     
-      $sql[] = sprintf("(project.projectID = %d)", db_esc($filter["projectID"]));
+      $sql[] = prepare("(project.projectID = %d)", $filter["projectID"]);
     }
 
     // No point continuing if primary key specified, so return
@@ -409,19 +409,19 @@ class project extends db_entity {
     }
 
     if ($filter["clientID"]) {
-      $sql[] = sprintf("(project.clientID = %d)", $filter["clientID"]);
+      $sql[] = prepare("(project.clientID = %d)", $filter["clientID"]);
     }
     if ($filter["personID"]) {
-      $sql[] = sprintf("(projectPerson.personID = %d)", $filter["personID"]);
+      $sql[] = prepare("(projectPerson.personID = %d)", $filter["personID"]);
     }
     if ($filter["projectName"]) {
-      $sql[] = sprintf("(project.projectName LIKE '%%%s%%')", db_esc($filter["projectName"]));
+      $sql[] = prepare("(project.projectName LIKE '%%%s%%')", $filter["projectName"]);
     }
     if ($filter["projectStatus"]) {
-      $sql[] = sprintf("(project.projectStatus = '%s')", db_esc($filter["projectStatus"]));
+      $sql[] = prepare("(project.projectStatus = '%s')", $filter["projectStatus"]);
     }
     if ($filter["projectType"]) {
-      $sql[] = sprintf("(project.projectType = '%s')", db_esc($filter["projectType"]));
+      $sql[] = prepare("(project.projectType = '%s')", $filter["projectType"]);
     }
 
     return $sql;
@@ -459,7 +459,7 @@ class project extends db_entity {
 
     // Zero is a valid limit
     if ($_FORM["limit"] || $_FORM["limit"] === 0 || $_FORM["limit"] === "0") {
-      $q.= sprintf(" LIMIT %d",$_FORM["limit"]);
+      $q.= prepare(" LIMIT %d",$_FORM["limit"]);
     }
 
     $debug and print "Query: ".$q;
@@ -564,7 +564,7 @@ class project extends db_entity {
   function get_prepaid_invoice() {
     $db = new db_alloc();
 
-    $q = sprintf("SELECT *
+    $q = prepare("SELECT *
                     FROM invoice 
                    WHERE projectID = %d
                      AND invoiceStatus != 'finished' 
@@ -577,7 +577,7 @@ class project extends db_entity {
       $invoiceID = $row["invoiceID"];
 
     } else if ($this->get_value("clientID")) {
-      $q = sprintf("SELECT *
+      $q = prepare("SELECT *
                       FROM invoice 
                      WHERE clientID = %d 
                        AND (projectID IS NULL OR projectID = 0 OR projectID = '')
@@ -662,11 +662,11 @@ class project extends db_entity {
 
     // If passed array projectIDs then join them up with commars and put them in an sql subset
     if (is_array($filter["projectIDs"]) && count($filter["projectIDs"])) {
-      return sprintf("(%s.projectID IN (".esc_implode(",",$filter["projectIDs"])."))",$table);
+      return prepare("(%s.projectID IN (%s))",$table,$filter["projectIDs"]);
 
     // If there are no projects in $filter["projectIDs"][] and we're attempting the first option..
     } else if ($firstOption) {
-      return sprintf("(%s.projectID IN (0))",$table);
+      return prepare("(%s.projectID IN (0))",$table);
     }
   
   }
@@ -685,13 +685,13 @@ class project extends db_entity {
 
       // Get primary client contact from Project page
       $db = new db_alloc();
-      $q = sprintf("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
+      $q = prepare("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
       $db->query($q);
       $db->next_record();
       $interestedPartyOptions[$db->f("projectClientEMail")] = array("name"=>$db->f("projectClientName"),"external"=>"1");
   
       // Get all other client contacts from the Client pages for this Project
-      $q = sprintf("SELECT clientID FROM project WHERE projectID = %d",$projectID);
+      $q = prepare("SELECT clientID FROM project WHERE projectID = %d",$projectID);
       $db->query($q);
       $db->next_record();
       $clientID = $db->f("clientID");
@@ -700,7 +700,7 @@ class project extends db_entity {
       }
 
       // Get all the project people for this tasks project
-      $q = sprintf("SELECT emailAddress, firstName, surname, person.personID, username
+      $q = prepare("SELECT emailAddress, firstName, surname, person.personID, username
                      FROM projectPerson 
                 LEFT JOIN person on projectPerson.personID = person.personID 
                     WHERE projectPerson.projectID = %d AND person.personActive = 1 ",$projectID);

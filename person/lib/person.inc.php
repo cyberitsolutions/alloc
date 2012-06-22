@@ -177,7 +177,7 @@ class person extends db_entity {
   function get_skills($proficiency) {
     // Return a string of skills with a given proficiency
     $query = "SELECT * FROM proficiency LEFT JOIN skill on proficiency.skillID=skill.skillID";
-    $query.= sprintf(" WHERE personID=%d AND skillProficiency='%s' ORDER BY skillName", $this->get_id(), db_esc($proficiency));
+    $query.= prepare(" WHERE personID=%d AND skillProficiency='%s' ORDER BY skillName", $this->get_id(), $proficiency);
 
     $db = new db_alloc;
     $db->query($query);
@@ -197,7 +197,7 @@ class person extends db_entity {
 
     // Cache rows
     if(!$rows) {
-      $q = sprintf("SELECT personID, username, firstName, surname, personActive FROM person ORDER BY firstname,surname,username");
+      $q = prepare("SELECT personID, username, firstName, surname, personActive FROM person ORDER BY firstname,surname,username");
       $db = new db_alloc;
       $db->query($q);
       while($db->next_record()) {
@@ -260,8 +260,8 @@ class person extends db_entity {
 
   function get_valid_login_row($username, $password="") {
     $db = new db_alloc;
-    $q = sprintf("SELECT * FROM person WHERE username = '%s' AND personActive = 1"
-                 ,db_esc($username));
+    $q = prepare("SELECT * FROM person WHERE username = '%s' AND personActive = 1"
+                 ,$username);
 
     $db->query($q);
     $row = $db->row();
@@ -321,7 +321,7 @@ class person extends db_entity {
       
       list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
       $db = new db_alloc;
-      $query = sprintf("SELECT * 
+      $query = prepare("SELECT * 
                           FROM task 
                          WHERE taskTypeID = 'Message'
                            AND personID = %d
@@ -378,34 +378,34 @@ class person extends db_entity {
 
   function get_list_filter($filter=array()) {
     if ($filter["username"]) {
-      $sql[] = sprintf("(username = '%s')", db_esc($filter["username"]));
+      $sql[] = prepare("(username = '%s')", $filter["username"]);
     }
     if ($filter["personActive"]) {
-      $sql[] = sprintf("(personActive = '%d')", db_esc($filter["personActive"]));
+      $sql[] = prepare("(personActive = '%d')", $filter["personActive"]);
     }
     if ($filter["firstName"]) {
-      $sql[] = sprintf("(firstName = '%s')", db_esc($filter["firstName"]));
+      $sql[] = prepare("(firstName = '%s')", $filter["firstName"]);
     }
     if ($filter["surname"]) {
-      $sql[] = sprintf("(surname = '%s')", db_esc($filter["surname"]));
+      $sql[] = prepare("(surname = '%s')", $filter["surname"]);
     }
     if ($filter["personID"]) {
-      $sql[] = sprintf("(personID = '%d')", db_esc($filter["personID"]));
+      $sql[] = prepare("(personID = %d)", $filter["personID"]);
     }
     if ($filter["skill"]) {
-      $sql[] = sprintf("(skillID=%d)", $filter["skill"]);
+      $sql[] = prepare("(skillID=%d)", $filter["skill"]);
     } else if ($filter["skill_class"]) {
-      $q = sprintf("SELECT * FROM skill WHERE skillClass='%s'", db_esc($filter["skill_class"]));
+      $q = prepare("SELECT * FROM skill WHERE skillClass='%s'", $filter["skill_class"]);
       $db = new db_alloc();
       $db->query($q);
       while ($db->next_record()) {
         $skill = new skill;
         $skill->read_db_record($db);
-        $sql2[] = sprintf("(skillID=%d)", $skill->get_id());
+        $sql2[] = prepare("(skillID=%d)", $skill->get_id());
       } 
     }
     if ($filter["expertise"]) {
-      $sql[] = sprintf("(skillProficiency='%s')", db_esc($filter["expertise"]));
+      $sql[] = prepare("(skillProficiency='%s')", $filter["expertise"]);
     } 
 
     return array($sql,$sql2);

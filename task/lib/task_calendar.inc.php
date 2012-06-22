@@ -136,7 +136,7 @@ class calendar {
   function get_cal_reminders() {
 
     // Get persons reminders
-    $query = sprintf("SELECT * 
+    $query = prepare("SELECT * 
                         FROM reminder
                         JOIN reminderRecipient ON reminderRecipient.reminderID = reminder.reminderID
                        WHERE personID = %d
@@ -176,7 +176,7 @@ class calendar {
     
     list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
     // Select all tasks which are targetted to start
-    $query = sprintf("SELECT * 
+    $query = prepare("SELECT * 
                         FROM task 
                        WHERE personID = %d 
                          AND dateTargetStart >= '%s' 
@@ -198,7 +198,7 @@ class calendar {
 
     list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
     // Select all tasks which are targetted for completion
-    $query = sprintf("SELECT * 
+    $query = prepare("SELECT * 
                         FROM task 
                        WHERE personID = %d 
                          AND dateTargetCompletion >= '%s' 
@@ -217,7 +217,7 @@ class calendar {
   }
 
   function get_cal_absences() {
-    $query = sprintf("SELECT * 
+    $query = prepare("SELECT * 
                         FROM absence
                        WHERE personID = %d
                          AND (dateFrom >= '%s' OR dateTo <= '%s')"

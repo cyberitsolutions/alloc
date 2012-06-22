@@ -130,7 +130,7 @@ function get_pending_timesheet_db() {
 
     // First get the blacklist of projects that we don't want to include below
     $db = new db_alloc;
-    $query = sprintf("SELECT projectID 
+    $query = prepare("SELECT projectID 
                         FROM projectPerson 
                        WHERE personID != %d 
                          AND roleID = 3"
@@ -142,9 +142,9 @@ function get_pending_timesheet_db() {
       $bad_projectIDs[$row["projectID"]] = $row["projectID"];
     }
 
-    $bad_projectIDs and $bad_projectIDs_sql = " AND timeSheet.projectID not in (".esc_implode(",",$bad_projectIDs).")";
+    $bad_projectIDs and $bad_projectIDs_sql = prepare(" AND timeSheet.projectID not in (%s)",$bad_projectIDs);
 
-    $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
+    $query = prepare("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
                            , COALESCE(projectShortName, projectName) as projectName
                         FROM timeSheet
                              LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
@@ -158,7 +158,7 @@ function get_pending_timesheet_db() {
   // Get all the time sheets that are in status manager, where the currently logged in user is the manager
   } else {
  
-    $query = sprintf("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
+    $query = prepare("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
                            , COALESCE(projectShortName, projectName) as projectName
                         FROM timeSheet
                              LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID

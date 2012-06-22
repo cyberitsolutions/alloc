@@ -96,8 +96,8 @@ class auditItem extends db_entity {
 
 
   function get_list_filter($filter) {
-    $sql[] = sprintf("(entityName = '%s')", db_esc($filter["entityType"]));
-    $sql[] = sprintf("(entityID = %d)", $filter["entityID"]);
+    $sql[] = prepare("(entityName = '%s')", $filter["entityType"]);
+    $sql[] = prepare("(entityID = %d)", $filter["entityID"]);
     return $sql;
   }
 

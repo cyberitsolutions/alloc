@@ -32,7 +32,7 @@ function show_person_list($template) {
   $tfID = $tf->get_id();
 
   if ($tfID) {
-    $query = sprintf("SELECT * from tfPerson WHERE tfID=%d", $tfID);
+    $query = prepare("SELECT * from tfPerson WHERE tfID=%d", $tfID);
     $db->query($query);
     while ($db->next_record()) {
       $tfPerson = new tfPerson;
@@ -86,7 +86,7 @@ if ($_POST["save"]) {
 
     if (!$tf->get_id()) {
       $db = new db_alloc;
-      $q = sprintf("SELECT count(*) AS tally FROM tf WHERE tfName = '%s'",db_esc($tf->get_value("tfName")));
+      $q = prepare("SELECT count(*) AS tally FROM tf WHERE tfName = '%s'",$tf->get_value("tfName"));
       $db->query($q);
       $db->next_record();
       $tf_is_taken = $db->f("tally");

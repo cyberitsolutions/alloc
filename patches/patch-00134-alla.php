@@ -11,7 +11,7 @@ $db->query($q);
 
 while ($row = $db->row()) {
   if ($row["clientPrimaryContactID"]) {
-    $q = sprintf("update clientContact set primaryContact = true where clientContactID = %d",$row["clientPrimaryContactID"]);
+    $q = prepare("update clientContact set primaryContact = true where clientContactID = %d",$row["clientPrimaryContactID"]);
     $db2->query($q);
   }
 }

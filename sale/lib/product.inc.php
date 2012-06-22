@@ -62,7 +62,7 @@ class product extends db_entity {
 
     $taxName = config::get_config_item("taxName");
 
-    $query = sprintf("SELECT * FROM product ".$f);
+    $query = prepare("SELECT * FROM product ".$f);
     $db = new db_alloc;
     $db->query($query);
     while ($row = $db->next_record()) {
@@ -92,7 +92,7 @@ class product extends db_entity {
   function get_buy_cost($id=false) {
     $id or $id = $this->get_id();
     $db = new db_alloc();
-    $q = sprintf("SELECT amount, currencyTypeID, tax
+    $q = prepare("SELECT amount, currencyTypeID, tax
                     FROM productCost
                    WHERE isPercentage != 1
                      AND productID = %d

@@ -57,7 +57,7 @@ if ($search && $needle && $category == "Projects") {
   $TPL["search_title"] = "Project Search";
 
   if (!$noRedirect && is_numeric($needle)) {
-    $query = sprintf("SELECT projectID FROM project WHERE projectID = %d",$needle);
+    $query = prepare("SELECT projectID FROM project WHERE projectID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
       alloc_redirect($TPL["url_alloc_project"]."projectID=".$db->f("projectID"));
@@ -91,7 +91,7 @@ if ($search && $needle && $category == "Projects") {
   $TPL["search_title"] = "Client Search";
 
   if (!$noRedirect && is_numeric($needle)) {
-    $query = sprintf("SELECT clientID FROM client WHERE clientID = %d",$needle);
+    $query = prepare("SELECT clientID FROM client WHERE clientID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
       alloc_redirect($TPL["url_alloc_client"]."clientID=".$db->f("clientID"));
@@ -139,7 +139,7 @@ if ($search && $needle && $category == "Projects") {
   $TPL["search_title"] = "Task Search";
 
   if (!$noRedirect && is_numeric($needle)) {
-    $query = sprintf("SELECT taskID FROM task WHERE taskID = %d",$needle);
+    $query = prepare("SELECT taskID FROM task WHERE taskID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
       alloc_redirect($TPL["url_alloc_task"]."taskID=".$db->f("taskID"));
@@ -175,7 +175,7 @@ if ($search && $needle && $category == "Projects") {
   $today = date("Y")."-".date("m")."-".date("d");
 
   if (!$noRedirect && is_numeric($needle)) {
-    $query = sprintf("SELECT itemID FROM item WHERE itemID = %d",$needle);
+    $query = prepare("SELECT itemID FROM item WHERE itemID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
       alloc_redirect($TPL["url_alloc_item"]."itemID=".$db->f("itemID"));
@@ -207,7 +207,7 @@ if ($search && $needle && $category == "Projects") {
 
       // get availability of loan
       $db2 = new db_alloc;
-      $query = sprintf("SELECT * FROM loan WHERE itemID = %d AND dateReturned='0000-00-00'",$item->get_id());
+      $query = prepare("SELECT * FROM loan WHERE itemID = %d AND dateReturned='0000-00-00'",$item->get_id());
       $db2->query($query);
       if ($db2->next_record()) {
         $loan = new loan;
@@ -249,7 +249,7 @@ if ($search && $needle && $category == "Projects") {
   $TPL["search_title"] = "Time Sheet Search";
 
   if (!$noRedirect && is_numeric($needle)) {
-    $query = sprintf("SELECT timeSheetID FROM timeSheet WHERE timeSheetID = %d",$needle);
+    $query = prepare("SELECT timeSheetID FROM timeSheet WHERE timeSheetID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
       alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$db->f("timeSheetID"));
@@ -289,7 +289,7 @@ if ($search && $needle && $category == "Projects") {
   $TPL["search_title"] = "Comment Search";
 
   if (!$noRedirect && is_numeric($needle)) {
-    $query = sprintf("SELECT commentID FROM comment WHERE commentID = %d",$needle);
+    $query = prepare("SELECT commentID FROM comment WHERE commentID = %d",$needle);
     $db->query($query);
     if ($db->next_record()) {
       alloc_redirect($TPL["url_alloc_comment"]."commentID=".$db->f("commentID"));

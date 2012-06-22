@@ -157,7 +157,7 @@ class db {
     if ($query) {
 
       if (is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
-        $id = mysql_query(sprintf("SET @personID = %d",$current_user->get_id()),$this->link_id);
+        $id = mysql_query(prepare("SET @personID = %d",$current_user->get_id()),$this->link_id);
       } else {
         $id = mysql_query("SET @personID = NULL",$this->link_id);
       }
@@ -220,7 +220,7 @@ class db {
     $db or $db = $this->database;
     $prev_db = $this->database;
     $this->select_db($db);
-    $query = sprintf('SHOW TABLES LIKE "%s"',$table);
+    $query = prepare('SHOW TABLES LIKE "%s"',$table);
     $this->query($query);
     while ($row = $this->row($this->query_id,MYSQL_NUM)) {
       if ($row[0] == $table) $yep = true;
@@ -257,7 +257,7 @@ class db {
       return $keys[$table];
     }
     
-    $this->query(sprintf("SHOW KEYS FROM %s",$table));
+    $this->query("SHOW KEYS FROM %s",$table);
     while ($row = $this->row()) {
       if (!$row["Non_unique"]) {
         $keys[$table][] = $row["Column_name"]; 
@@ -343,24 +343,7 @@ class db {
   }
 
   function get_escaped_query_str($args) {
-
-    // If they've only passed a query then no substitution is required
-    if (count($args) == 1) {
-      return $args[0];
-    }
-
-    // First element of $args get assigned to zero index of $clean_args
-    // Array_shift removes the first value and returns it..
-    $clean_args[] = array_shift($args);
-
-    // The rest of $args are escaped and then assigned to $clean_args
-    foreach ($args as $arg) {
-      $clean_args[] = $this->esc($arg);
-    } 
-
-    // Have to use this coz we don't know how many args we're gonna pass to sprintf..
-    $query = call_user_func_array("sprintf",$clean_args); 
-    return $query;
+    return call_user_func_array("prepare",$args);
   }
 
   function seek($pos = 0) {

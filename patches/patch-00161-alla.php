@@ -4,7 +4,7 @@ ini_set('max_execution_time',180000);
 ini_set('memory_limit',"256M");
 $index = Zend_Search_Lucene::create(ATTACHMENTS_DIR.'search/project');
 $db = new db_alloc();
-$q = sprintf("SELECT * FROM project");
+$q = prepare("SELECT * FROM project");
 $db->query($q);
 while ($db->row()) {
   $project = new project;

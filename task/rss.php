@@ -40,7 +40,7 @@ $status_types = config::get_config_item('rssStatusFilter');
 // can't be filtered in the query because it would break the history playback
 
 // find the last max_events audit events that are status change or reassignment
-$query = sprintf("SELECT entityID, fieldName, changeType, dateChanged, oldValue, taskName, taskStatus, task.personID, projectID
+$query = prepare("SELECT entityID, fieldName, changeType, dateChanged, oldValue, taskName, taskStatus, task.personID, projectID
                     FROM auditItem LEFT JOIN task as task ON entityID = taskID
                    WHERE entityName = 'task' AND changeType = 'FieldChange' AND fieldName IN ('taskStatus', 'personID')
                 ORDER BY dateChanged DESC
@@ -96,7 +96,7 @@ while ($row = $db->next_record()) {
 // queried separately. This has to be done at the end, after the historical task 
 // status has been retrieved.
 
-$query = sprintf("SELECT taskID, dateCreated, taskName, personID, taskStatus, projectID
+$query = prepare("SELECT taskID, dateCreated, taskName, personID, taskStatus, projectID
                    FROM task
                ORDER BY dateCreated DESC
                   LIMIT %d", $max_events);
