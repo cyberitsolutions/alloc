@@ -372,7 +372,7 @@ VALUES
 ,('proficiency'              ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 
 ,('task'                     ,-1 ,'employee' ,NULL ,1+2+4+8+256,NULL)
-,('task'                     ,0  ,'employee' ,NULL ,1          ,'Allow read all task records for searches.')
+,('task'                     ,0  ,''         ,NULL ,1          ,'Allow read all task records for searches.')
 ,('task'                     ,0  ,'manage'   ,NULL ,1+2+4+8+256,NULL)
 ,('task'                     ,0  ,'admin'    ,NULL ,1+256      ,NULL)
 
