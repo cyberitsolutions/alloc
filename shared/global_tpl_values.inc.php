@@ -32,7 +32,7 @@ $alloc_urls = array(
             ,"url_alloc_exportDoc"                      => "shared/get_export.php"
             ,"url_alloc_patch"                          => "installation/patch.php"
             ,"url_alloc_menuSubmit"                     => "shared/menuSubmit.php"
-            ,"url_alloc_logo"                           => "logo.php"
+            ,"url_alloc_logo"                           => "shared/logo.php"
             ,"url_alloc_star"                           => "shared/star.php"
             ,"url_alloc_starList"                       => "shared/starList.php"
 
