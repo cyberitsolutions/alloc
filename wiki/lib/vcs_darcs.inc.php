@@ -24,7 +24,7 @@
 class vcs_darcs extends vcs {
 
   function __construct($repo) {
-    global $current_user;
+    $current_user = &singleton("person");
     $this->name = "darcs ";
     $this->repodir = $repo;
     $this->repoprefix = " --repodir=".$repo." ";

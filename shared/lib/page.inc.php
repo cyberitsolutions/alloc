@@ -27,7 +27,7 @@ class page {
   }
   function header() {
     global $TPL;
-    global $current_user;
+    $current_user = &singleton("person");
 
     if ($current_user->prefs["showFilters"] == "yes") {
       $TPL["onLoad"] []= "show_filter();";
@@ -38,7 +38,7 @@ class page {
     include_template(ALLOC_MOD_DIR."shared/templates/headerS.tpl");
   }
   function footer() {
-    global $current_user;
+    $current_user = &singleton("person");
 
     include_template(ALLOC_MOD_DIR."shared/templates/footerS.tpl");
     // close page
@@ -79,7 +79,7 @@ class page {
   }
   function toolbar() {
     global $TPL;
-    global $current_user;
+    $current_user = &singleton("person");
     global $modules;
     $db = new db_alloc; 
     $str[] = "<option value=\"\">Quick List</option>";
@@ -112,7 +112,7 @@ class page {
     include_template(ALLOC_MOD_DIR."shared/templates/toolbarS.tpl");
   }
   function extra_links() {
-    global $current_user;
+    $current_user = &singleton("person");
     global $TPL;
     global $sess;
     $str = "<a href=\"".$TPL["url_alloc_starList"]."\" class=\"icon-star\"></a>&nbsp;&nbsp;&nbsp;";
@@ -359,7 +359,7 @@ EOD;
     if ($_GET["media"] == "print") {
       return "print.css";
     } else {
-      global $current_user;
+      $current_user = &singleton("person");
       $themes = page::get_customizedTheme_array();
       if (!isset($current_user->prefs["customizedTheme2"])) {
         $current_user->prefs["customizedTheme2"] = 4;
@@ -369,7 +369,7 @@ EOD;
     }
   }
   function default_font_size() {
-    global $current_user;
+    $current_user = &singleton("person");
     $fonts  = page::get_customizedFont_array();
     $font = $fonts[sprintf("%d",$current_user->prefs["customizedFont"])];
     $font or $font = 4;
@@ -487,7 +487,7 @@ EOD;
     return $rtn;
   }
   function star($entity,$entityID) {
-    global $current_user;
+    $current_user = &singleton("person");
     global $TPL;
     if ($current_user->prefs["stars"][$entity][$entityID]) {
       $star_sort = 1;

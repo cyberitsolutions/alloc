@@ -91,7 +91,7 @@ class reminder extends db_entity {
   }
 
   function get_recipient_options() {
-    global $current_user;
+    $current_user = &singleton("person");
 
     $recipients = $this->get_recipients();
     $type = $this->get_value('reminderType');

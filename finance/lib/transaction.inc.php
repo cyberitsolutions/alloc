@@ -103,7 +103,7 @@ class transaction extends db_entity {
   }
 
   function validate() {
-    global $current_user;
+    $current_user = &singleton("person");
     
     $this->get_value("fromTfID") or $err[] = "Unable to save transaction without a Source TF.";
     $this->get_value("fromTfID") && $this->get_value("fromTfID") == $this->get_value("tfID") and $err[] = "Unable to save transaction with Source TF (".tf::get_name($this->get_value("fromTfID")).") being the same as the Destination TF (".tf::get_name($this->get_value("tfID")).") \"".$this->get_value("product")."\"";
@@ -122,7 +122,7 @@ class transaction extends db_entity {
   }
 
   function is_owner($person = "") {
-    global $current_user;
+    $current_user = &singleton("person");
     if ($person == "") {
       $person = $current_user;
     }
@@ -265,7 +265,7 @@ class transaction extends db_entity {
   }
 
   function get_list_filter($_FORM) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     if (is_array($_FORM["tfIDs"]) && count($_FORM["tfIDs"])) {
       $sql["tfIDs"] = prepare("(transaction.tfID in (%s) or transaction.fromTfID in (%s))",$_FORM["tfIDs"],$_FORM["tfIDs"]);
@@ -299,7 +299,7 @@ class transaction extends db_entity {
   }
 
   function get_list($_FORM) {
-    global $current_user;
+    $current_user = &singleton("person");
     global $TPL;
 
     /*
@@ -479,7 +479,7 @@ class transaction extends db_entity {
   }
 
   function load_form_data($defaults=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     $page_vars = array_keys(transaction::get_list_vars());
   

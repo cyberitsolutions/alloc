@@ -24,7 +24,7 @@ class report_module extends module {
 }
 
 function has_report_perm() {
-  global $current_user;
+  $current_user = &singleton("person");
   if (is_object($current_user)) {
     return $current_user->have_role("admin");
   }

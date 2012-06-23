@@ -84,7 +84,7 @@ class invoice extends db_entity {
   }
 
   function is_owner($person = "") {
-    global $current_user;
+    $current_user = &singleton("person");
 
     if ($person == "") {
       $person = $current_user;
@@ -399,7 +399,7 @@ class invoice extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
     $sql = array();
 
     // If they want starred, load up the invoiceID filter element
@@ -432,7 +432,7 @@ class invoice extends db_entity {
   }
 
   function get_list_filter2($filter=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
     // restrict non-admin users records
     if ($filter["personID"]) {
       $tfIDs = $current_user->get_tfIDs();
@@ -597,7 +597,7 @@ class invoice extends db_entity {
   }
 
   function load_form_data($defaults=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     $page_vars = array_keys(invoice::get_list_vars());
 

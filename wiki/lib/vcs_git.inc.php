@@ -24,7 +24,7 @@
 class vcs_git extends vcs {
 
   function __construct($repo) {
-    global $current_user;
+    $current_user = &singleton("person");
     //$this->debug = true;
     $this->name = "git ";
     $this->repodir = $repo;

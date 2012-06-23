@@ -30,7 +30,6 @@
 class alloc_services {
 
   public function __construct($sessID="") {
-    global $current_user; 
     $current_user = $this->get_current_user($sessID);
   }
 
@@ -71,7 +70,7 @@ class alloc_services {
   * @return array an array of comments
   */
   public function get_task_comments($taskID) {
-    //global $current_user; // Always need this :(
+    //$current_user = &singleton("person"); // Always need this :(
     //$current_user = $this->get_current_user($sessID);
     if ($taskID) {
       $task = new task;
@@ -246,7 +245,7 @@ class alloc_services {
   * @return string a success message
   */
   public function add_timeSheetItem($options) {
-    //global $current_user; // Always need this :(
+    //$current_user = &singleton("person"); // Always need this :(
     //$current_user = $this->get_current_user($sessID);
     $rtn = timeSheet::add_timeSheetItem($options);
     if ($rtn["status"] == "yay") {
@@ -287,7 +286,7 @@ class alloc_services {
   * @return array the list of entities
   */
   public function get_list($entity, $options=array()) {
-    global $current_user; // Always need this :(
+    $current_user = &singleton("person"); // Always need this :(
     //$current_user = $this->get_current_user($sessID);
     if (class_exists($entity)) {
       $options = obj2array($options);
@@ -335,7 +334,7 @@ class alloc_services {
   * @return string of mbox format emails
   */
   public function get_task_emails($taskID, $entity="task") {
-    global $current_user; // Always need this :(
+    $current_user = &singleton("person"); // Always need this :(
     $entity or $entity = "task";
     if ($taskID) {
       $folder = config::get_config_item("allocEmailFolder")."/".$entity.$taskID;
@@ -380,7 +379,7 @@ class alloc_services {
   }
 
   private function init_email_info() {
-    global $current_user; // Always need this :(
+    $current_user = &singleton("person"); // Always need this :(
     $info["host"] = config::get_config_item("allocEmailHost");
     $info["port"] = config::get_config_item("allocEmailPort");
     $info["username"] = config::get_config_item("allocEmailUsername");
@@ -398,7 +397,7 @@ class alloc_services {
   * @return string a single email in mbox format
   */
   public function get_email($emailUID) {
-    global $current_user; // Always need this :(
+    $current_user = &singleton("person"); // Always need this :(
     //$lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
     if ($emailUID) {
       $info = $this->init_email_info();
@@ -421,7 +420,7 @@ class alloc_services {
   */
   public function get_comment_email_uids_search($str) {
     if ($str) { 
-      global $current_user; // Always need this :(
+      $current_user = &singleton("person"); // Always need this :(
       //$lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
       $info = $this->init_email_info();
       $mail = new alloc_email_receive($info);
@@ -495,7 +494,7 @@ class alloc_services {
   */
   private function get_list_help() {
     # This function does not require authentication.
-    #global $current_user; // Always need this :(
+    #$current_user = &singleton("person"); // Always need this :(
     #$current_user = $this->get_current_user($sessID);
 
     global $modules;

@@ -68,7 +68,7 @@ class client extends db_entity {
   }
 
   function is_owner() {
-    global $current_user;
+    $current_user = &singleton("person");
     return $current_user->is_employee();
   }
 
@@ -123,7 +123,7 @@ class client extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     // If they want starred, load up the clientID filter element
     if ($filter["starred"]) {
@@ -234,7 +234,7 @@ class client extends db_entity {
   }
 
   function load_form_data($defaults=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     $page_vars = array_keys(client::get_list_vars());
 

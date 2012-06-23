@@ -484,7 +484,7 @@ function bad_filename($filename) {
   return preg_match("@[/\\\]@", $filename);
 }
 function has_backup_perm() {
-  global $current_user;
+  $current_user = &singleton("person");
   if (is_object($current_user)) {
     return $current_user->have_role("god");
   }

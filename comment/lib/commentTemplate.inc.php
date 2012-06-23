@@ -40,7 +40,7 @@ class commentTemplate extends db_entity {
 
   function populate_string($str, $entity, $entityID=false) {
     // Actually do the text substitution
-    global $current_user;
+    $current_user = &singleton("person");
     is_object($current_user) and $swap["cu"] = person::get_fullname($current_user->get_id());
 
     if ($entity == "timeSheet" && $entityID) {

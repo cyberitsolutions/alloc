@@ -26,7 +26,7 @@ function show_new_invoiceItem($template) {
   global $TPL;
   global $invoice;
   global $invoiceID;
-  global $current_user;
+  $current_user = &singleton("person");
 
   // Don't show entry form if no ID
   if (!$invoiceID) {
@@ -138,7 +138,7 @@ function show_invoiceItem_list() {
   global $invoiceID;
   global $TPL;
   global $invoice;
-  global $current_user;
+  $current_user = &singleton("person");
 
   $template = "templates/invoiceItemListR.tpl";
 

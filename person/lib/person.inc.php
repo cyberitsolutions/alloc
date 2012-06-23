@@ -156,7 +156,7 @@ class person extends db_entity {
 
   function is_employee() {
     // Function to check if the person is an employee
-    global $current_user;
+    $current_user = &singleton("person");
     return true;
     $permissions = explode(",", $current_user->get_value("perms"));
 
@@ -413,7 +413,7 @@ class person extends db_entity {
 
   function get_list($_FORM=array()) {
     global $TPL;
-    global $current_user;
+    $current_user = &singleton("person");
     list($filter,$filter2) = person::get_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
@@ -561,7 +561,7 @@ class person extends db_entity {
   }
 
   function load_form_data($defaults=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
     $page_vars = array_keys(person::get_list_vars());
     $_FORM = get_all_form_data($page_vars,$defaults);
 
@@ -583,7 +583,7 @@ class person extends db_entity {
 
   function load_person_filter($_FORM) {
     global $TPL;
-    global $current_user;
+    $current_user = &singleton("person");
 
     $db = new db_alloc;
     $_FORM["showSkills"]   and $rtn["show_skills_checked"] = " checked";

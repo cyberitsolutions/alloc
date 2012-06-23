@@ -27,12 +27,12 @@ class saleListHomeItemAdmin extends home_item {
   }
 
   function visible() {
-    global $current_user;
+    $current_user = &singleton("person");
     return isset($current_user) && $current_user->have_role("admin");
   }
 
   function render() {
-    global $current_user;
+    $current_user = &singleton("person");
     global $TPL;
     $ops["return"] = "array";
     $ops["status"] = array("admin");

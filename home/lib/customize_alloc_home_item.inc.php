@@ -27,13 +27,13 @@ class customize_alloc_home_item extends home_item {
   }
 
   function visible() {
-    global $current_user;
+    $current_user = &singleton("person");
     return is_object($current_user);
   }
 
   function render() {
     global $TPL;
-    global $current_user;
+    $current_user = &singleton("person");
 
     $customizedFont_array = page::get_customizedFont_array();
     $TPL["fontOptions"] = page::select_options($customizedFont_array, $current_user->prefs["customizedFont"]);

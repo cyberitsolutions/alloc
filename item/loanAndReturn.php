@@ -32,7 +32,7 @@ function show_items($template_name) {
   global $TPL;
   global $db;
   global $db2;
-  global $current_user;
+  $current_user = &singleton("person");
 
   $today = date("Y")."-".date("m")."-".date("d");
 

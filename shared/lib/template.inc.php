@@ -139,7 +139,7 @@ function get_template($filename) {
 // This is the publically callable function, used to include template files
 function include_template($filename, $getString=false) {
   global $TPL;
-  global $current_user;
+  $current_user = &singleton("person");
   $TPL["current_user"] = $current_user;
   $template = get_template($filename);
   #echo "<pre>".htmlspecialchars($template)."</pre>"; 

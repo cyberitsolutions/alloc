@@ -27,12 +27,12 @@ class project_list_home_item extends home_item {
   }
 
   function visible() {
-    global $current_user;
+    $current_user = &singleton("person");
     return (sprintf("%d",$current_user->prefs["projectListNum"]) > 0 || $current_user->prefs["projectListNum"] == "all");
   }
 
   function render() {
-    global $current_user;
+    $current_user = &singleton("person");
     global $TPL;
     if (isset($current_user->prefs["projectListNum"]) && $current_user->prefs["projectListNum"] != "all") {
       $options["limit"] = sprintf("%d",$current_user->prefs["projectListNum"]);

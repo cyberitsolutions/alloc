@@ -36,7 +36,7 @@ function show_days($template_name) {
 
 function show_timeSheetItems($template_name) {
   global $date_to_view;
-  global $current_user;
+  $current_user = &singleton("person");
   global $TPL;
   $query = prepare("SELECT * 
                       FROM timeSheetItem 

@@ -83,7 +83,7 @@ class command {
   }
 
   function run_commands($commands=array(), $email_receive=false) {
-    global $current_user;
+    $current_user = &singleton("person");
     $task_fields = $this->get_fields("task");
     $item_fields = $this->get_fields("item");
 

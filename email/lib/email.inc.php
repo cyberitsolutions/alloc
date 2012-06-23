@@ -194,7 +194,7 @@ class alloc_email {
     return !$dont_send;
   }
   function log() {
-    global $current_user;
+    $current_user = &singleton("person");
     $sentEmailLog = new sentEmailLog();
     $to = $this->to_address or $to = $this->get_header("Cc") or $to = $this->get_header("Bcc");
     $sentEmailLog->set_value("sentEmailTo",$to);

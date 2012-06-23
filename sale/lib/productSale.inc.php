@@ -57,7 +57,7 @@ class productSale extends db_entity {
   }
  
   function is_owner() {
-    global $current_user;
+    $current_user = &singleton("person");
     return !$this->get_id()
            || $this->get_value("productSaleCreatedUser") == $current_user->get_id()
            || $this->get_value("personID") == $current_user->get_id();
@@ -189,7 +189,7 @@ class productSale extends db_entity {
   }
  
   function move_forwards() {
-    global $current_user;
+    $current_user = &singleton("person");
     global $TPL;
     $status = $this->get_value("status");
     $db = new db_alloc();
@@ -432,7 +432,7 @@ class productSale extends db_entity {
   }
 
   function move_backwards() {
-    global $current_user;
+    $current_user = &singleton("person");
 
     if ($this->get_value("status") == "finished" && $current_user->have_role("admin")) {
       $this->set_value("status", "admin");
@@ -446,7 +446,7 @@ class productSale extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     // If they want starred, load up the productSaleID filter element
     if ($filter["starred"]) {
@@ -594,7 +594,7 @@ class productSale extends db_entity {
   }
 
   function load_form_data($defaults=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     $page_vars = array_keys(productSale::get_list_vars());
 
@@ -618,7 +618,7 @@ class productSale extends db_entity {
   }
 
   function load_productSale_filter($_FORM) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     // display the list of project name.
     $db = new db_alloc();

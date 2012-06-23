@@ -24,7 +24,7 @@ require_once("../alloc.php");
 
 function show_reminders($template) {
   global $TPL;
-  global $current_user;
+  $current_user = &singleton("person");
 
   // show all reminders for this project
   $db = new db_alloc;
@@ -69,7 +69,7 @@ function show_reminders($template) {
 }
 
 function show_reminder_filter($template) {
-  global $current_user;
+  $current_user = &singleton("person");
   global $TPL;
   if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
 
