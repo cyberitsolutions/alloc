@@ -22,11 +22,12 @@ SHELL = /bin/bash
 help:
 	@echo "Targets: "
 	@echo "  css       - rebuild css/* after a modification to css/src/*"
-	@echo "  test_db   - tests db_struc/patches against running db."
 	@echo "  doc_html  - makes html alloc help"
 	@echo "  doc_pdf   - makes pdf alloc help"
 	@echo "  doc_clean - makes pdf alloc help"
 	@echo "  dist      - makes doc_html, doc_clean, and makes an alloc tarball"
+	@echo "  cache     - copies/concatenates all the javascript and css files to a cache directory"
+	@echo "  test      - final tests that must pass before a tarball can be built"
 
 doc_html:
 	if [ -d ./help/images ]; then rm -rf ./help/images; fi;
@@ -65,56 +66,14 @@ dist: test
 	tar -czvf allocPSA-`cat util/alloc_version`.tgz allocPSA-`cat util/alloc_version`; 
 	rm -rf ./allocPSA-`cat util/alloc_version`;
 
-services:
-	cd services && php wsdl.php
-
 css: css/src/*
 	./util/make_stylesheets.py
 	$(MAKE) cache
 
 clean: ;
-
-test_db:
-	@DB_NAME="$$(cat alloc_config.php  | grep ALLOC_DB_NAME  | sed -e 's/define("ALLOC_DB_NAME","//' | sed -e 's/");$$//')"; \
-	DB_USER="$$(cat alloc_config.php  | grep ALLOC_DB_USER  | sed -e 's/define("ALLOC_DB_USER","//' | sed -e 's/");$$//')"; \
-	DB_PASS="$$(cat alloc_config.php  | grep ALLOC_DB_PASS  | sed -e 's/define("ALLOC_DB_PASS","//' | sed -e 's/");$$//')"; \
-	DB_HOST="$$(cat alloc_config.php  | grep ALLOC_DB_HOST  | sed -e 's/define("ALLOC_DB_HOST","//' | sed -e 's/");$$//')"; \
-	[ -n "$$DB_USER" ] && DB_USER="-u $${DB_USER}"; \
-	[ -n "$$DB_PASS" ] && DB_PASS="-p$${DB_PASS}"; \
-	[ -n "$$DB_HOST" ] && DB_HOST="-h $${DB_HOST}"; \
-	TEMP_DB="alloc_test_sql"; \
-	MYSQL_CONNECT="$$DB_USER $$DB_PASS $$DB_HOST"; \
-  echo "test_db: mysql connect string: $${MYSQL_CONNECT}"; \
-  echo "test_db: Checking syntax of installation/*.sql files."; \
-	echo "DROP DATABASE IF EXISTS $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	echo "CREATE DATABASE $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_structure.sql; \
-	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_data.sql; \
-	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_constraints.sql; \
-  echo "test_db: Checking that current structure matches db_structure.sql"; \
-	echo "DROP DATABASE IF EXISTS $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	echo "CREATE DATABASE $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_structure.sql; \
-	mysql $${MYSQL_CONNECT} $${TEMP_DB} < installation/db_constraints.sql; \
-	mysqldump -d $$MYSQL_CONNECT $$TEMP_DB > installation/db_imported_structure.sql; \
-	mysqldump -d $$MYSQL_CONNECT $$DB_NAME > installation/db_current_structure.sql; \
-	echo "DROP DATABASE IF EXISTS $${TEMP_DB}" | mysql $$MYSQL_CONNECT; \
-	DIFF="$$(diff -b -I 'Dump completed on' -I 'Host:' -I 'ENGINE=MyISAM' -I 'ENGINE=InnoDB' -I 'DROP TABLE IF EXISTS' -I 'AUTO_INCREMENT=[[:digit:]]+' installation/db_current_structure.sql installation/db_imported_structure.sql)"; \
-	if [ -n "$${DIFF}" ]; then \
-	echo -e "\nThere are differences between the current database $$DB_NAME, and the \ndatabase that would be created from the installation/db_structure.sql file. \n\nEither add some patches or modify installation/db_structure.sql \nbefore committing.\n"; \
-	echo "diff -b installation/db_current_structure.sql installation/db_imported_structure.sql"; \
-	echo "$${DIFF}"; \
-	exit 1; \
-	echo "test_db: failed";\
-	else \
-	rm -f installation/db_imported_structure.sql installation/db_current_structure.sql; \
-	echo "test_db: passed";\
-	fi;
-
 none: ;
 all: ;
 install: ;
-
 
 # Currently only tests Python.  Requires pyflakes and pylint.
 test:
