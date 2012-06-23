@@ -23,7 +23,8 @@
 require_once("../alloc.php");
 
 function show_days($template_name) {
-  global $date_to_view, $TPL;
+  global $date_to_view;
+  global $TPL;
 
   for ($day_offset = 0; $day_offset < 7; $day_offset++) {
     $TPL["timesheet_date"] = date("Y-m-d (D)", $date_to_view);
@@ -34,7 +35,9 @@ function show_days($template_name) {
 }
 
 function show_timeSheetItems($template_name) {
-  global $date_to_view, $current_user, $TPL;
+  global $date_to_view;
+  global $current_user;
+  global $TPL;
   $query = prepare("SELECT * 
                       FROM timeSheetItem 
                            LEFT JOIN timeSheet ON timeSheetItem.timeSheetID = timeSheet.timeSheetID

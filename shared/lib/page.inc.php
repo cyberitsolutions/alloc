@@ -26,7 +26,8 @@ class page {
   function page() {
   }
   function header() {
-    global $TPL, $current_user;
+    global $TPL;
+    global $current_user;
 
     if ($current_user->prefs["showFilters"] == "yes") {
       $TPL["onLoad"] []= "show_filter();";
@@ -77,7 +78,9 @@ class page {
     }
   }
   function toolbar() {
-    global $TPL, $current_user, $modules;
+    global $TPL;
+    global $current_user;
+    global $modules;
     $db = new db_alloc; 
     $str[] = "<option value=\"\">Quick List</option>";
     $str[] = "<option value=\"".$TPL["url_alloc_task"]."\">New Task</option>";
@@ -109,7 +112,9 @@ class page {
     include_template(ALLOC_MOD_DIR."shared/templates/toolbarS.tpl");
   }
   function extra_links() {
-    global $current_user, $TPL, $sess;
+    global $current_user;
+    global $TPL;
+    global $sess;
     $str = "<a href=\"".$TPL["url_alloc_starList"]."\" class=\"icon-star\"></a>&nbsp;&nbsp;&nbsp;";
     $str.= $current_user->get_link()."&nbsp;&nbsp;&nbsp;";
     if (defined("PAGE_IS_PRINTABLE") && PAGE_IS_PRINTABLE) {
@@ -482,7 +487,8 @@ EOD;
     return $rtn;
   }
   function star($entity,$entityID) {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
     if ($current_user->prefs["stars"][$entity][$entityID]) {
       $star_sort = 1;
       $star_hot = " hot";

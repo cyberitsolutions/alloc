@@ -156,7 +156,8 @@ class history extends db_entity {
   }
 
   function save_history() {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
 
     // Delete old items if they have too many.
     if (!is_object($current_user) || !$current_user->get_id()) {

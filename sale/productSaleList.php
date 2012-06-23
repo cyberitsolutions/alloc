@@ -23,7 +23,8 @@
 require_once("../alloc.php");
 
 function show_filter() {
-  global $TPL,$defaults;
+  global $TPL;
+  global $defaults;
   $_FORM = productSale::load_form_data($defaults);
   $arr = productSale::load_productSale_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);

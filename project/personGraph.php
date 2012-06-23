@@ -23,7 +23,9 @@
 require_once("../alloc.php");
 
 function show_people($template_name) {
-  global $person_query, $project, $TPL;
+  global $person_query;
+  global $project;
+  global $TPL;
 
   $db = new db_alloc;
   $db->query($person_query);

@@ -35,7 +35,8 @@ class announcements_home_item extends home_item {
   }
 
   function show_announcements($template_name) {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
 
     $query = "SELECT *
                 FROM announcement 

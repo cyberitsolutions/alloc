@@ -33,7 +33,9 @@ class top_ten_tasks_home_item extends home_item {
   }
 
   function render() {
-    global $current_user, $tasks_date, $TPL;
+    global $current_user;
+    global $tasks_date;
+    global $TPL;
     $options["taskStatus"] = $current_user->prefs["topTasksStatus"];
     $current_user->prefs["topTasksNum"] != "all" and $options["limit"] = $current_user->prefs["topTasksNum"];
     $options["taskView"] = "prioritised";

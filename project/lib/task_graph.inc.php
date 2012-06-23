@@ -88,7 +88,9 @@ class task_graph
   var $milestones = array();    // Milestones are stored and then drawn over the top of the tasks
 
   function init($tasks=array()) {
-    global $graph_start_date, $graph_completion_date, $graph_type;
+    global $graph_start_date;
+    global $graph_completion_date;
+    global $graph_type;
 
     if (count($tasks) == 0) {
       image_die("No Tasks Found for ".$this->title);
@@ -242,7 +244,8 @@ class task_graph
   }
 
   function draw_grid() {
-    global $graph_start_date, $graph_completion_date;
+    global $graph_start_date;
+    global $graph_completion_date;
 
     $start_stamp = format_date("U",$graph_start_date);
     $completion_stamp = format_date("U",$graph_completion_date);
@@ -345,7 +348,8 @@ class task_graph
 
   // Converts from a unix time stamp to an X coordinate
   function date_stamp_to_x($date) {
-    global $graph_start_date, $graph_completion_date;
+    global $graph_start_date;
+    global $graph_completion_date;
 
     $graph_time_width = format_date("U",$graph_completion_date) - format_date("U",$graph_start_date);
     $time_offset = $date - format_date("U",$graph_start_date);
@@ -370,7 +374,8 @@ class task_graph
 }
 
   function get_date_range($tasks=array()) {
-    global $graph_start_date, $graph_completion_date;
+    global $graph_start_date;
+    global $graph_completion_date;
 
     if (count($tasks) == 0) {
       return;

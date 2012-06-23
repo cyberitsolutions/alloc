@@ -299,7 +299,8 @@ class transaction extends db_entity {
   }
 
   function get_list($_FORM) {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
 
     /*
      * This is the definitive method of getting a list of transactions that need a sophisticated level of filtering

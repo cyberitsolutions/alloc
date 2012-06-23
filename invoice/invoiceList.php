@@ -38,7 +38,8 @@ $defaults = array("showHeader"=>true
 
 
 function show_filter() {
-  global $TPL,$defaults;
+  global $TPL;
+  global $defaults;
   $_FORM = invoice::load_form_data($defaults);
   $arr = invoice::load_invoice_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);

@@ -24,7 +24,8 @@ require_once("../alloc.php");
 
 $current_user->check_employee();
 
-global $db, $today;
+global $db;
+global $today;
 
 $itemID = $_POST["itemID"] or $itemID = $_GET["itemID"];
 $loanID = $_POST["loanID"] or $loanID = $_GET["loanID"];

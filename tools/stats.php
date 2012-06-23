@@ -44,7 +44,9 @@ include_template("templates/statsM.tpl");
 
 /* order array of userids from most actions to least actions */
 function compare($a, $b) {
-  global $projects, $tasks, $comments;
+  global $projects;
+  global $tasks;
+  global $comments;
 
   for ($i = 0, $a_value = 0, $b_value = 0; $a_value == $b_value && $i < 30; $i++) {
     $date = mktime(0, 0, 0, date("m"), date("d") - $i, date("Y"));
@@ -59,7 +61,8 @@ function compare($a, $b) {
 }
 
 function show_users_stats($template) {
-  global $TPL, $db;
+  global $TPL;
+  global $db;
   $stats = new stats;
   $projects = $stats->project_stats();
   $tasks = $stats->task_stats();

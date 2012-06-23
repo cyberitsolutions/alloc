@@ -31,7 +31,8 @@ require_once("../alloc.php");
   }
 
   function list_attachments($template_name) {
-    global $TPL, $projectID;
+    global $TPL;
+    global $projectID;
 
     if ($projectID) {
       $rows = get_attachments("project",$projectID);
@@ -43,7 +44,10 @@ require_once("../alloc.php");
   }
 
   function show_transaction($template) {
-    global $db, $TPL, $projectID, $current_user;
+    global $db;
+    global $TPL;
+    global $projectID;
+    global $current_user;
 
     $transaction = new transaction;
 
@@ -88,7 +92,9 @@ require_once("../alloc.php");
 
 
   function show_commission_list($template_name) {
-    global $TPL, $db, $projectID;
+    global $TPL;
+    global $db;
+    global $projectID;
 
     if ($projectID) {
       $query = prepare("SELECT * from projectCommissionPerson WHERE projectID= %d", $projectID);
@@ -105,7 +111,8 @@ require_once("../alloc.php");
   }
 
   function show_new_commission($template_name) {
-    global $TPL, $projectID;
+    global $TPL;
+    global $projectID;
 
     // Don't show entry form for new projects
     if (!$projectID) {
@@ -119,8 +126,12 @@ require_once("../alloc.php");
   }
 
   function show_person_list($template) {
-    global $db, $TPL, $projectID;
-    global $email_type_array, $rate_type_array, $project_person_role_array;
+    global $db;
+    global $TPL;
+    global $projectID;
+    global $email_type_array;
+    global $rate_type_array;
+    global $project_person_role_array;
 
     if ($projectID) {
       $query = prepare("SELECT projectPerson.*, roleSequence
@@ -144,7 +155,9 @@ require_once("../alloc.php");
   }
 
   function show_projectPerson_list() {
-    global $db, $TPL, $projectID;
+    global $db;
+    global $TPL;
+    global $projectID;
     $template = "templates/projectPersonSummaryViewR.tpl";
 
     if ($projectID) {
@@ -165,7 +178,11 @@ require_once("../alloc.php");
   }
 
   function show_new_person($template) {
-    global $TPL, $email_type_array, $rate_type_array, $projectID, $project_person_role_array;
+    global $TPL;
+    global $email_type_array;
+    global $rate_type_array;
+    global $projectID;
+    global $project_person_role_array;
 
     // Don't show entry form for new projects
     if (!$projectID) {
@@ -208,12 +225,15 @@ require_once("../alloc.php");
   }
 
   function show_tf_options($commission_tfID) {
-    global $tf_array, $TPL;
+    global $tf_array;
+    global $TPL;
     echo page::select_options($tf_array, $TPL[$commission_tfID]);
   }
 
   function show_comments() {
-    global $projectID, $TPL, $project;
+    global $projectID;
+    global $TPL;
+    global $project;
     $TPL["commentsR"] = comment::util_get_comments("project",$projectID);
     $TPL["commentsR"] and $TPL["class_new_comment"] = "hidden";
     $interestedPartyOptions = $project->get_all_parties();
@@ -238,7 +258,8 @@ require_once("../alloc.php");
   }
 
   function show_tasks() {
-    global $TPL, $project;
+    global $TPL;
+    global $project;
     $options["showHeader"] = true;
     $options["taskView"] = "byProject";
     $options["projectIDs"] = array($project->get_id());   
@@ -257,7 +278,10 @@ require_once("../alloc.php");
   }
 
   function show_reminders($template) {
-    global $TPL, $projectID, $reminderID, $current_user;
+    global $TPL;
+    global $projectID;
+    global $reminderID;
+    global $current_user;
 
     // show all reminders for this project
     $db = new db_alloc;

@@ -32,7 +32,8 @@ class timeSheetHomeItem extends home_item {
   }
 
   function render() {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
     return true;
   }
 }

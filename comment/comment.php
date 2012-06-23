@@ -22,7 +22,8 @@
 
 require_once("../alloc.php");
 
-global $TPL, $current_user;
+global $TPL;
+global $current_user;
 
 
 // add a comment

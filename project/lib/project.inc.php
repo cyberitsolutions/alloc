@@ -228,7 +228,9 @@ class project extends db_entity {
   }
 
   function get_navigation_links($ops=array()) {
-    global $taskID, $TPL, $current_user;
+    global $taskID;
+    global $TPL;
+    global $current_user;
 
     // Client 
     if ($this->get_value("clientID")) {  
@@ -525,7 +527,8 @@ class project extends db_entity {
 
   function load_project_filter($_FORM) {
 
-    global $TPL, $current_user;
+    global $TPL;
+    global $current_user;
 
     $personSelect= "<select name=\"personID\">";
     $personSelect.= "<option value=\"\"> ";

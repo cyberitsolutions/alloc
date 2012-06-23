@@ -22,7 +22,8 @@
 
 require_once("../alloc.php");
 
-global $sess, $TPL;
+global $sess;
+global $TPL;
 
 $historyID = $_POST["historyID"] or $historyID = $_GET["historyID"];
 

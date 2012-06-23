@@ -31,7 +31,8 @@ $defaults = array("showProjectType"=>true
                  );
 
 function show_filter() {
-  global $TPL,$defaults;
+  global $TPL;
+  global $defaults;
 
   $_FORM = project::load_form_data($defaults);
   $arr = project::load_project_filter($_FORM);

@@ -23,7 +23,10 @@
 require_once("../alloc.php");
 
 function show_new_invoiceItem($template) {
-  global $TPL, $invoice, $invoiceID, $current_user;
+  global $TPL;
+  global $invoice;
+  global $invoiceID;
+  global $current_user;
 
   // Don't show entry form if no ID
   if (!$invoiceID) {
@@ -132,7 +135,10 @@ function show_new_invoiceItem($template) {
 }
 
 function show_invoiceItem_list() {
-  global $invoiceID, $TPL, $invoice, $current_user;
+  global $invoiceID;
+  global $TPL;
+  global $invoice;
+  global $current_user;
 
   $template = "templates/invoiceItemListR.tpl";
 
@@ -352,7 +358,9 @@ function show_attachments($invoiceID) {
 }
 
 function show_comments() {
-  global $invoiceID, $TPL, $invoice;
+  global $invoiceID;
+  global $TPL;
+  global $invoice;
   if ($invoiceID) {
     $TPL["commentsR"] = comment::util_get_comments("invoice",$invoiceID);
     $TPL["class_new_comment"] = "hidden";

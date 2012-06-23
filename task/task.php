@@ -24,7 +24,9 @@ require_once("../alloc.php");
 define("PAGE_IS_PRINTABLE",1);
 
   function show_reminders($template) {
-    global $TPL, $taskID, $reminderID;
+    global $TPL;
+    global $taskID;
+    global $reminderID;
 
     // show all reminders for this project
     $db = new db_alloc;
@@ -48,7 +50,8 @@ define("PAGE_IS_PRINTABLE",1);
   }
 
   function show_task_children($template) {
-    global $TPL, $task;
+    global $TPL;
+    global $task;
     if ($task->get_value("taskTypeID") == "Parent") {
       include_template($template);
     }
@@ -79,7 +82,9 @@ define("PAGE_IS_PRINTABLE",1);
   }
 
   function show_comments() {
-    global $taskID, $TPL, $task;
+    global $taskID;
+    global $TPL;
+    global $task;
 
     if ($_REQUEST["commentSummary"]) {
       $_REQUEST["clients"] = true;
@@ -105,13 +110,15 @@ define("PAGE_IS_PRINTABLE",1);
   }
 
   function show_taskCommentsPrinter() {
-    global $taskID, $TPL;
+    global $taskID;
+    global $TPL;
     $TPL["commentsR"] = comment::util_get_comments("task",$taskID,$options);
     include_template("../comment/templates/commentP.tpl");
   }
 
   function show_taskHistory() {
-    global $task, $TPL;
+    global $task;
+    global $TPL;
     $TPL["changeHistory"] = $task->get_changes_list();
     include_template("templates/taskHistoryM.tpl");
   }

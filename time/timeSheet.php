@@ -28,7 +28,8 @@ if (!$current_user->is_employee()) {
 
 
   function show_transaction_list($template_name) {
-    global $timeSheet, $TPL;
+    global $timeSheet;
+    global $TPL;
 
     $db = new db_alloc;
 
@@ -87,7 +88,10 @@ if (!$current_user->is_employee()) {
 
   function show_transaction_listR($template_name) {
 
-    global $timeSheet, $TPL, $current_user, $percent_array;
+    global $timeSheet;
+    global $TPL;
+    global $current_user;
+    global $percent_array;
     $db = new db_alloc;
     $db->query("SELECT * FROM transaction WHERE timeSheetID = %d",$timeSheet->get_id());
 
@@ -160,7 +164,10 @@ if (!$current_user->is_employee()) {
   }
 
   function show_new_transaction($template) {
-    global $timeSheet, $TPL, $db, $percent_array;
+    global $timeSheet;
+    global $TPL;
+    global $db;
+    global $percent_array;
 
     if ($timeSheet->get_value("status") == "invoiced" && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
       $tf = new tf;
@@ -184,7 +191,8 @@ if (!$current_user->is_employee()) {
   }
 
   function show_main_list() {
-    global $timeSheet, $current_user;
+    global $timeSheet;
+    global $current_user;
     if (!$timeSheet->get_id()) return;
     
     $db = new db_alloc;
@@ -197,8 +205,12 @@ if (!$current_user->is_employee()) {
   }
 
   function show_timeSheet_list($template) {
-    global $TPL, $timeSheet, $db, $tskDesc;
-    global $timeSheetItem, $timeSheetID;
+    global $TPL;
+    global $timeSheet;
+    global $db;
+    global $tskDesc;
+    global $timeSheetItem;
+    global $timeSheetID;
 
     $db_task = new db_alloc;
 
@@ -296,7 +308,10 @@ if (!$current_user->is_employee()) {
   }
   
   function show_new_timeSheet($template) {
-    global $TPL, $timeSheet, $timeSheetID, $current_user;
+    global $TPL;
+    global $timeSheet;
+    global $timeSheetID;
+    global $current_user;
 
     // Don't show entry form for new timeSheet.
     if (!$timeSheetID) {
@@ -365,7 +380,9 @@ if (!$current_user->is_employee()) {
   }
 
   function show_comments() {
-    global $timeSheetID, $TPL, $timeSheet;
+    global $timeSheetID;
+    global $TPL;
+    global $timeSheet;
     if ($timeSheetID) {
       $TPL["commentsR"] = comment::util_get_comments("timeSheet",$timeSheetID);
       $TPL["class_new_comment"] = "hidden";
@@ -395,7 +412,12 @@ if (!$current_user->is_employee()) {
 
 // ============ END FUNCTIONS 
 
-global $timeSheet, $timeSheetItem, $timeSheetItemID, $db, $current_user, $TPL;
+global $timeSheet;
+global $timeSheetItem;
+global $timeSheetItemID;
+global $db;
+global $current_user;
+global $TPL;
 
 $timeSheetID = $_POST["timeSheetID"] or $timeSheetID = $_GET["timeSheetID"];
 

@@ -70,7 +70,8 @@ function has_whatsnew_files() {
 
 
 function show_misc_options($template) {
-  global $misc_options, $TPL;
+  global $misc_options;
+  global $TPL;
 
   $TPL["br"] = "<br>\n";
   reset($misc_options);
@@ -100,7 +101,8 @@ function show_misc_options($template) {
 }
 
 function show_finance_options($template) {
-  global $finance_options, $TPL;
+  global $finance_options;
+  global $TPL;
   foreach ($finance_options as $option) {
     if ($option["entity"] != "") {
       if (have_entity_perm($option["entity"], $option["action"], $current_user, true)) {

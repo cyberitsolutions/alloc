@@ -34,7 +34,9 @@ $defaults = array("showHeader"=>true
                  );
 
 function show_filter() {
-  global $TPL,$defaults,$_FORM;
+  global $TPL;
+  global $defaults;
+  global $_FORM;
 
   $arr = task::load_task_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);

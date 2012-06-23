@@ -23,7 +23,8 @@
 require_once("../alloc.php");
 
 function show_person_list($template) {
-  global $TPL, $tf;
+  global $TPL;
+  global $tf;
   $db = new db_alloc;
   $TPL["person_buttons"] = '
         <button type="submit" name="person_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>

@@ -37,7 +37,8 @@ class task_message_list_home_item extends home_item {
   } 
 
   function show_tasks() {
-    global $current_user, $tasks_date;
+    global $current_user;
+    global $tasks_date;
     
     list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
     $q = prepare("SELECT * 

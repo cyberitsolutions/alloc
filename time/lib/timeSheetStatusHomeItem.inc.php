@@ -32,7 +32,8 @@ class timeSheetStatusHomeItem extends home_item {
   }
 
   function render() {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
     // Get averages for hours worked over the past fortnight and year
     $t = new timeSheetItem;
     list($hours_sum,$dollars_sum) = $t->get_averages(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y"))),$current_user->get_id());

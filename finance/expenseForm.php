@@ -25,7 +25,10 @@ require_once("../alloc.php");
 
 function show_all_exp($template) {
 
-  global $TPL, $expenseForm, $db, $transaction_to_edit;
+  global $TPL;
+  global $expenseForm;
+  global $db;
+  global $transaction_to_edit;
 
   if ($expenseForm->get_id()) {
 
@@ -79,7 +82,8 @@ function show_all_exp($template) {
 }
 
 function check_optional_allow_edit() {
-  global $db, $expenseForm;
+  global $db;
+  global $expenseForm;
 
   if (is_object($expenseForm) && !$expenseForm->get_id()) { // New Expense Form
     $allow_edit = true;
