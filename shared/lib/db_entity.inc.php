@@ -153,6 +153,7 @@ class db_entity {
   }
 
   function check_perm($action = 0, $person = "", $assume_owner = false) {
+    global $current_user;
     if ($this->have_perm($action, $person, $assume_owner)) {
       return true;
 
@@ -161,8 +162,12 @@ class db_entity {
       if (!$description) {
         $description = $action;
       }
-
-      $this->err("You do not have permission '$description' for ".$this->data_table." #".$this->get_id());
+      if (is_object($person)) {
+        $extra = " (personID:".$person->get_id().")";
+      } else if (is_object($current_user)) {
+        $extra = " (personID*:".$current_user->get_id().")";
+      }
+      $this->err("You".$extra." do not have permission '".$description."' for ".$this->data_table." #".$this->get_id());
       return false;
     }
   }
