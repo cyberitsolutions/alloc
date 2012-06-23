@@ -56,7 +56,7 @@ class task extends db_entity {
   public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "read details");
 
   function save() {
-    global $current_user;
+    $current_user = &singleton("person");
     global $TPL;
     $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
 
@@ -150,7 +150,7 @@ class task extends db_entity {
 
   function create_task_reminder() {
     // Create a reminder for this task based on the priority.
-    global $current_user;
+    $current_user = &singleton("person");
 
     // Get the task type
     $taskTypeName = $this->get_value("taskTypeID");
@@ -361,7 +361,7 @@ class task extends db_entity {
   }
 
   function get_personList_dropdown($projectID,$field,$taskID=false) {
-    global $current_user;
+    $current_user = &singleton("person");
  
     $db = new db_alloc;
 
@@ -423,7 +423,7 @@ class task extends db_entity {
   function set_option_tpl_values() {
     // Set template values to provide options for edit selects
     global $TPL;
-    global $current_user;
+    $current_user = &singleton("person");
     global $isMessage;
     $db = new db_alloc;
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
@@ -641,7 +641,7 @@ class task extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     // If they want starred, load up the taskID filter element
     if ($filter["starred"]) {
@@ -760,7 +760,7 @@ class task extends db_entity {
       $sql[] = prepare("(task.taskStatus NOT IN (".$ts_closed."))");
 
     } else if ($filter["taskTimeSheetStatus"] == "mine"){ 
-      global $current_user;
+      $current_user = &singleton("person");
       unset($sql["personID"]);
       $sql[] = prepare("((task.taskStatus NOT IN (".$ts_closed.")) AND task.personID = %d)",$current_user->get_id());
 
@@ -819,7 +819,7 @@ class task extends db_entity {
   }
 
   function get_list($_FORM) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     /*
      * This is the definitive method of getting a list of tasks that need a sophisticated level of filtering
@@ -1220,7 +1220,7 @@ class task extends db_entity {
   }
 
   function load_form_data($defaults=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
   
     $page_vars = array_keys(task::get_list_vars());
 
@@ -1272,7 +1272,7 @@ class task extends db_entity {
   }
 
   function load_task_filter($_FORM) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     $db = new db_alloc;
 

@@ -37,7 +37,7 @@ class invoiceItem extends db_entity {
                              );
 
   function is_owner($person = "") {
-    global $current_user;
+    $current_user = &singleton("person");
 
     if ($person == "") {
       $person = $current_user;

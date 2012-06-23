@@ -48,7 +48,7 @@ class timeSheet extends db_entity {
                              ,PERM_TIME_INVOICE_TIMESHEETS => "invoice");
 
   function is_owner() {
-    global $current_user;
+    $current_user = &singleton("person");
 
     if (!$this->get_id()) {
       return true;
@@ -473,7 +473,7 @@ class timeSheet extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     // If they want starred, load up the timeSheetID filter element
     if ($filter["starred"]) {
@@ -549,7 +549,7 @@ class timeSheet extends db_entity {
      */
   
     global $TPL;
-    global $current_user;
+    $current_user = &singleton("person");
     $_FORM["showShortProjectLink"] and $_FORM["showProjectLink"] = true;
     $filter = timeSheet::get_list_filter($_FORM);
 
@@ -721,7 +721,7 @@ class timeSheet extends db_entity {
   }
 
   function load_form_data($defaults=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     $page_vars = array_keys(timeSheet::get_list_vars());
 
@@ -745,7 +745,7 @@ class timeSheet extends db_entity {
   }
 
   function load_timeSheet_filter($_FORM) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     // display the list of project name.
     $db = new db_alloc();
@@ -853,7 +853,7 @@ class timeSheet extends db_entity {
   function email_move_status_to_edit($direction,$info) { 
     // is possible to move backwards to "edit", from both "manager" and "admin"
     // requires manager or APPROVE_TIMESHEET permission
-    global $current_user;
+    $current_user = &singleton("person");
     $project = $this->get_foreign_object("project");
     $projectManagers = $project->get_timeSheetRecipients();
     if ($direction == "backwards") {
@@ -888,7 +888,7 @@ EOD;
   }
 
   function email_move_status_to_manager($direction,$info) { 
-    global $current_user;
+    $current_user = &singleton("person");
     $project = $this->get_foreign_object("project");
     $projectManagers = $project->get_timeSheetRecipients();
     // Can get forwards to "manager" only from "edit"
@@ -972,7 +972,7 @@ EOD;
   }
 
   function email_move_status_to_admin($direction,$info) { 
-    global $current_user;
+    $current_user = &singleton("person");
     $project = $this->get_foreign_object("project");
     $projectManagers = $project->get_timeSheetRecipients();
     // Can get forwards to "admin" from "edit" and "manager"
@@ -1031,7 +1031,7 @@ EOD;
   }
 
   function email_move_status_to_invoiced($direction,$info) { 
-    global $current_user;
+    $current_user = &singleton("person");
     // Can get forwards to "invoiced" from "admin" 
     // requires INVOICE_TIMESHEETS
     if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
@@ -1104,7 +1104,7 @@ EOD;
   }
 
   function get_email_vars() {
-    global $current_user;
+    $current_user = &singleton("person");
     static $rtn;
     if ($rtn) {
       return $rtn;
@@ -1130,7 +1130,7 @@ EOD;
   }
 
   function add_timeSheetItem($stuff) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     $taskID = $stuff["taskID"];
     $projectID = $stuff["projectID"];
@@ -1365,7 +1365,7 @@ EOD;
   }
 
   function can_edit_rate() {
-    global $current_user;
+    $current_user = &singleton("person");
     $db = new db_alloc();
     $row = $db->qr("SELECT can_edit_rate(%d,%d) as allow",$current_user->get_id(),$this->get_value("projectID"));
     return $row["allow"];

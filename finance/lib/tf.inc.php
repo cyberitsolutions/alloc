@@ -34,7 +34,7 @@ class tf extends db_entity {
                              );
 
   function get_balance($where = array(), $debug="") {
-    global $current_user;
+    $current_user = &singleton("person");
  
     // If no status is requested then default to approved.  
     $where["status"] or $where["status"] = "approved";
@@ -68,7 +68,7 @@ class tf extends db_entity {
   }
 
   function is_owner($person = "") {
-    global $current_user;
+    $current_user = &singleton("person");
     static $owners;
     if ($person == "") {
       $person = $current_user;
@@ -98,7 +98,7 @@ class tf extends db_entity {
 
   function get_nav_links() {
     global $TPL;
-    global $current_user;
+    $current_user = &singleton("person");
 
     $nav_links = array();
 
@@ -116,7 +116,7 @@ class tf extends db_entity {
   }
 
   function get_link() {
-    global $current_user;
+    $current_user = &singleton("person");
     global $TPL;
     if (have_entity_perm("transaction", PERM_READ, $current_user, $this->is_owner())) {
       return "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$this->get_id()."\">".$this->get_value("tfName",DST_HTML_DISPLAY)."</a>";
@@ -144,7 +144,7 @@ class tf extends db_entity {
   }
 
   function get_permitted_tfs($requested_tfs=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     // If admin, just use the requested tfs
     if ($current_user->have_role('admin')) {
@@ -168,7 +168,7 @@ class tf extends db_entity {
   }
 
   function get_list_filter($_FORM=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     if (!$_FORM["tfIDs"] && !$current_user->have_role('admin')) {
       $_FORM["owner"] = true;
@@ -186,7 +186,7 @@ class tf extends db_entity {
   }
 
   function get_list($_FORM=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     list($filter1,$filter2) = tf::get_list_filter($_FORM);
 

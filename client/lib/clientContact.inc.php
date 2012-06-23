@@ -191,7 +191,7 @@ class clientContact extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     // If they want starred, load up the clientContactID filter element
     if ($filter["starred"]) {

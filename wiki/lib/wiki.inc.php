@@ -24,7 +24,7 @@ class wiki {
 
   function get_list($_FORM) {
     global $TPL;
-    global $current_user;
+    $current_user = &singleton("person");
 
     $wiki_path = wiki_module::get_wiki_path();
     $files = search::get_recursive_dir_list($wiki_path);

@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 global $TPL;
-global $current_user;
+$current_user = &singleton("person");
 
 
 // add a comment

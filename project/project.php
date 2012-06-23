@@ -47,7 +47,7 @@ require_once("../alloc.php");
     global $db;
     global $TPL;
     global $projectID;
-    global $current_user;
+    $current_user = &singleton("person");
 
     $transaction = new transaction;
 
@@ -200,7 +200,7 @@ require_once("../alloc.php");
   }
 
   function show_time_sheets($template_name) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     if ($current_user->is_employee()) {
       include_template($template_name);
@@ -212,7 +212,7 @@ require_once("../alloc.php");
   }
 
   function show_transactions($template_name) {
-    global $current_user;
+    $current_user = &singleton("person");
 
     if ($current_user->is_employee()) {
       include_template($template_name);
@@ -281,7 +281,7 @@ require_once("../alloc.php");
     global $TPL;
     global $projectID;
     global $reminderID;
-    global $current_user;
+    $current_user = &singleton("person");
 
     // show all reminders for this project
     $db = new db_alloc;
@@ -324,7 +324,7 @@ require_once("../alloc.php");
 
 
 
-global $current_user;
+$current_user = &singleton("person");
 
 $projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
 

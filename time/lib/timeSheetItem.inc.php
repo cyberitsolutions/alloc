@@ -44,7 +44,7 @@ class timeSheetItem extends db_entity {
                              );
 
   function save() {
-    global $current_user;
+    $current_user = &singleton("person");
     $timeSheet = new timeSheet;
     $timeSheet->set_id($this->get_value("timeSheetID"));
     $timeSheet->select();
@@ -384,7 +384,7 @@ class timeSheetItem extends db_entity {
     if ($taskID) {
       $where = prepare("timeSheetItem.taskID = %d",$taskID);
     } else if ($starred) {
-      global $current_user;
+      $current_user = &singleton("person");
       $timeSheetItemIDs = array();
       foreach ((array)$current_user->prefs["stars"]["timeSheetItem"] as $k=>$v) {
         $timeSheetItemIDs[] = $k;

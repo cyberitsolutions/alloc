@@ -28,12 +28,12 @@ class top_ten_tasks_home_item extends home_item {
   }
 
   function visible() {
-    global $current_user;
+    $current_user = &singleton("person");
     return ((isset($current_user->prefs["topTasksNum"]) && (sprintf("%d",$current_user->prefs["topTasksNum"]) > 0 || $current_user->prefs["topTasksNum"] == "all")) && have_entity_perm("task", PERM_READ_WRITE, $current_user, true));
   }
 
   function render() {
-    global $current_user;
+    $current_user = &singleton("person");
     global $tasks_date;
     global $TPL;
     $options["taskStatus"] = $current_user->prefs["topTasksStatus"];

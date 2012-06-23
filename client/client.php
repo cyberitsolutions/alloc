@@ -194,7 +194,7 @@ require_once("../alloc.php");
     global $TPL;
     global $clientID;
     global $reminderID;
-    global $current_user;
+    $current_user = &singleton("person");
 
     // show all reminders for this project
     $db = new db_alloc;
@@ -246,7 +246,7 @@ require_once("../alloc.php");
   }
 
   function show_invoices() {
-    global $current_user;
+    $current_user = &singleton("person");
     global $clientID;
 
     $_FORM["showHeader"] = true;

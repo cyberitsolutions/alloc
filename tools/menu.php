@@ -40,7 +40,7 @@ $misc_options = array(array("url"=>"reminderList"            ,"text"=>"Reminders
   //,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
 
 function user_is_admin() {
-  global $current_user;
+  $current_user = &singleton("person");
   return $current_user->have_role("admin");
 }
 

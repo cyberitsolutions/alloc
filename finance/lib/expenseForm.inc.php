@@ -37,7 +37,7 @@ class expenseForm extends db_entity {
                              );
 
   function is_owner($person = "") {
-    global $current_user;
+    $current_user = &singleton("person");
 
     if ($person == "") {
       $person = $current_user;
@@ -82,7 +82,7 @@ class expenseForm extends db_entity {
     // This sets the status of the expense form. Actually, the expense form
     // doesn't have its own status - this sets the status of the transactions on the
     // expense form
-    global $current_user;
+    $current_user = &singleton("person");
     $transactions = $this->get_foreign_objects("transaction");
     while (list(, $transaction) = each($transactions)) {
       $transaction->set_value("status", $status);

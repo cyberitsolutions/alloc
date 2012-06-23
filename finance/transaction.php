@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 $current_user->check_employee();
 
-global $current_user;
+$current_user = &singleton("person");
 global $TPL;
 global $db;
 global $save;
