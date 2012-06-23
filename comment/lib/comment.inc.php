@@ -135,7 +135,8 @@ class comment extends db_entity {
   }
 
   function get_one_comment_array($v=array(),$all_parties=array()) {
-    global $TPL, $current_user;
+    global $TPL;
+    global $current_user;
     $new = $v;
     $token = new token;
     if ($token->select_token_by_entity_and_action("comment",$new["commentID"],"add_comment_from_email")) {
@@ -223,7 +224,8 @@ class comment extends db_entity {
   }
 
   function util_get_comments_array($entity, $id, $options=array()) {
-    global $TPL, $current_user;
+    global $TPL;
+    global $current_user;
     $rows = array();
     $new_rows = array();
     // Need to get timeSheet comments too for task comments
@@ -257,7 +259,8 @@ class comment extends db_entity {
   }
 
   function util_get_comments($entity, $id, $options=array()) {
-    global $TPL, $current_user;
+    global $TPL;
+    global $current_user;
     $rows = comment::util_get_comments_array($entity, $id, $options);
     foreach ((array)$rows as $row) {
       $rtn.= comment::get_comment_html_table($row);

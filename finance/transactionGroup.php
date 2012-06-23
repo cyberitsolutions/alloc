@@ -23,7 +23,9 @@
 require_once("../alloc.php");
 
 function show_transaction_list($template) {
-  global $TPL, $tflist, $transactionGroupID;
+  global $TPL;
+  global $tflist;
+  global $transactionGroupID;
 
   $q = prepare("SELECT *, amount * pow(10,-currencyType.numberToBasic) as amount
                   FROM transaction
@@ -53,7 +55,8 @@ function show_transaction_list($template) {
 }
 
 function show_transaction_new($template) {
-  global $TPL, $tflist;
+  global $TPL;
+  global $tflist;
   $transaction = new transaction;
   $transaction->set_values(); // wipe clean
   $TPL["display"] = "display:none";

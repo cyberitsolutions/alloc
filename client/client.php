@@ -28,14 +28,17 @@ require_once("../alloc.php");
   }
 
   function show_client_details_edit($template) {
-    global $TPL, $clientID;
+    global $TPL;
+    global $clientID;
     if (!isset($clientID) || $_POST["client_edit"] || $TPL["message"]) {
       include_template($template);
     }
   }
 
   function show_client_details($template) {
-    global $TPL, $client, $clientID;
+    global $TPL;
+    global $client;
+    global $clientID;
     if ($clientID && !$_POST["client_edit"] && !$TPL["message"]) {
       // setup formatted address output
       $TPL["client_clientPostalAddress"] = $client->format_address("postal");
@@ -45,7 +48,8 @@ require_once("../alloc.php");
   }
 
   function show_client_contacts() {
-    global $TPL, $clientID;
+    global $TPL;
+    global $clientID;
 
     $TPL["clientContact_clientID"] = $clientID;
 
@@ -187,7 +191,10 @@ require_once("../alloc.php");
   }
 
   function show_reminders($template) {
-    global $TPL, $clientID, $reminderID, $current_user;
+    global $TPL;
+    global $clientID;
+    global $reminderID;
+    global $current_user;
 
     // show all reminders for this project
     $db = new db_alloc;
@@ -219,7 +226,9 @@ require_once("../alloc.php");
   }
  
   function show_comments() {
-    global $clientID, $TPL, $client;
+    global $clientID;
+    global $TPL;
+    global $client;
     $TPL["commentsR"] = comment::util_get_comments("client",$clientID);
     $TPL["commentsR"] and $TPL["class_new_comment"] = "hidden";
     $interestedPartyOptions = $client->get_all_parties();
@@ -237,7 +246,8 @@ require_once("../alloc.php");
   }
 
   function show_invoices() {
-    global $current_user, $clientID;
+    global $current_user;
+    global $clientID;
 
     $_FORM["showHeader"] = true;
     $_FORM["showInvoiceNumber"] = true;

@@ -97,7 +97,8 @@ class tf extends db_entity {
   }
 
   function get_nav_links() {
-    global $TPL, $current_user;
+    global $TPL;
+    global $current_user;
 
     $nav_links = array();
 
@@ -115,7 +116,8 @@ class tf extends db_entity {
   }
 
   function get_link() {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
     if (have_entity_perm("transaction", PERM_READ, $current_user, $this->is_owner())) {
       return "<a href=\"".$TPL["url_alloc_transactionList"]."tfID=".$this->get_id()."\">".$this->get_value("tfName",DST_HTML_DISPLAY)."</a>";
     } else {

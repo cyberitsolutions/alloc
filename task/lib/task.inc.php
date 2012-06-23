@@ -56,7 +56,8 @@ class task extends db_entity {
   public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "read details");
 
   function save() {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
     $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
 
     $existing = $this->all_row_fields;
@@ -421,7 +422,9 @@ class task extends db_entity {
 
   function set_option_tpl_values() {
     // Set template values to provide options for edit selects
-    global $TPL, $current_user, $isMessage;
+    global $TPL;
+    global $current_user;
+    global $isMessage;
     $db = new db_alloc;
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
     $TPL["personOptions"] = "<select name=\"personID\"><option value=\"\">".task::get_personList_dropdown($projectID, "personID")."</select>";

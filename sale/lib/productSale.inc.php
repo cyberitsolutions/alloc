@@ -189,7 +189,8 @@ class productSale extends db_entity {
   }
  
   function move_forwards() {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
     $status = $this->get_value("status");
     $db = new db_alloc();
 

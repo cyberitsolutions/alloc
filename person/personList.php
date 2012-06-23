@@ -32,7 +32,8 @@ $defaults = array("return"       => "html"
                  );
 
 function show_filter() {
-  global $TPL, $defaults;
+  global $TPL;
+  global $defaults;
   $_FORM = person::load_form_data($defaults);
   $arr = person::load_person_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);

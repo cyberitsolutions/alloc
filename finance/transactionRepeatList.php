@@ -33,7 +33,10 @@ include_template("templates/transactionRepeatListM.tpl");
 
 function show_expenseFormList($template_name) {
 
-  global $db, $TPL, $transactionRepeat, $current_user;
+  global $db;
+  global $TPL;
+  global $transactionRepeat;
+  global $current_user;
 
   $db = new db_alloc;
   $transactionRepeat = new transactionRepeat;

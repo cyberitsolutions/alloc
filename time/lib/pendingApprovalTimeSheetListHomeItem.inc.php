@@ -67,7 +67,8 @@ class pendingApprovalTimeSheetListHomeItem extends home_item {
 }
 
 function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
-  global $current_user, $TPL;
+  global $current_user;
+  global $TPL;
 
   if ($doAdmin) {
     $db = get_pending_admin_timesheet_db();

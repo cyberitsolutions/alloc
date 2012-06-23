@@ -91,7 +91,8 @@ class db_entity {
   }
 
   function have_perm($action = 0, $person = "", $assume_owner = false) {
-    global $current_user, $permission_cache;
+    global $current_user;
+    global $permission_cache;
     if (defined("IS_GOD")) {
       return true;
     }

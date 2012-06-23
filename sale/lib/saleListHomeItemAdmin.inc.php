@@ -32,7 +32,8 @@ class saleListHomeItemAdmin extends home_item {
   }
 
   function render() {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
     $ops["return"] = "array";
     $ops["status"] = array("admin");
     $rows = productSale::get_list($ops);

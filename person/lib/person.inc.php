@@ -412,7 +412,8 @@ class person extends db_entity {
   }
 
   function get_list($_FORM=array()) {
-    global $TPL, $current_user;
+    global $TPL;
+    global $current_user;
     list($filter,$filter2) = person::get_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
@@ -581,7 +582,8 @@ class person extends db_entity {
   }
 
   function load_person_filter($_FORM) {
-    global $TPL, $current_user;
+    global $TPL;
+    global $current_user;
 
     $db = new db_alloc;
     $_FORM["showSkills"]   and $rtn["show_skills_checked"] = " checked";

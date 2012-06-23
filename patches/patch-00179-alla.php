@@ -18,7 +18,8 @@ function printorlog($str,$color="") {
 }
 
 function fix_this_comment($r,$num,$from,$messageid) {
-  global $db, $alloc_from_addresses2;
+  global $db;
+  global $alloc_from_addresses2;
  
   if ($r["commentEmailUIDORIG"] != $num) {
     unset($projectID);

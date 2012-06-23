@@ -23,7 +23,12 @@
 require_once("../alloc.php");
 $current_user->check_employee();
 
-global $current_user, $TPL, $db, $save, $saveAndNew, $saveGoTf;
+global $current_user;
+global $TPL;
+global $db;
+global $save;
+global $saveAndNew;
+global $saveGoTf;
 
 function add_tf($tfID, $options, $warningKey, $warningValue) {
   // add a tf to the array of options, if it's not already there

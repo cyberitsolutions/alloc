@@ -38,7 +38,8 @@ function transaction_status_list($status) {
 }
 
 function show_productSale_list($productSaleID, $template) {
-  global $TPL, $productSaleItemsDoExist;
+  global $TPL;
+  global $productSaleItemsDoExist;
 
   $productSale = new productSale;
   $productSale->set_id($productSaleID);
@@ -83,7 +84,9 @@ function show_productSale_list($productSaleID, $template) {
 }
 
 function show_productSale_new($template) {
-  global $TPL, $productSaleItemsDoExist, $productSaleID;
+  global $TPL;
+  global $productSaleItemsDoExist;
+  global $productSaleID;
   $taxName = config::get_config_item("taxName");
   $productSaleItem = new productSaleItem;
   $productSaleItem->set_values(); // wipe clean
@@ -100,7 +103,8 @@ function show_productSale_new($template) {
 }
 
 function show_transaction_list($transactions=array(), $template) {
-  global $TPL, $tflist;
+  global $TPL;
+  global $tflist;
   foreach ($transactions as $row) {
     $transaction = new transaction;
     $transaction->read_array($row);
@@ -130,7 +134,8 @@ function show_transaction_list($transactions=array(), $template) {
 }
 
 function show_transaction_new($template) {
-  global $TPL, $tflist;
+  global $TPL;
+  global $tflist;
   $transaction = new transaction;
   $transaction->set_values(); // wipe clean
   $TPL["display"] = "display:none";
@@ -152,7 +157,9 @@ function show_transaction_new($template) {
 }
 
   function show_comments() {
-    global $productSaleID, $TPL, $productSale;
+    global $productSaleID;
+    global $TPL;
+    global $productSale;
     if ($productSaleID) {
       $TPL["commentsR"] = comment::util_get_comments("productSale",$productSaleID);
       $TPL["class_new_comment"] = "hidden";

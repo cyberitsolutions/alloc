@@ -30,7 +30,9 @@ function show_filter($template) {
 }
 
 function show_skill_classes() {
-  global $TPL, $skill_class, $db;
+  global $TPL;
+  global $skill_class;
+  global $db;
   $skill_classes = array(""=>"Any class");
   $query = "SELECT skillClass FROM skill ORDER BY skillClass";
   $db->query($query);
@@ -45,7 +47,11 @@ function show_skill_classes() {
 }
 
 function show_skills() {
-  global $TPL, $talent, $skills, $skill_class, $db;
+  global $TPL;
+  global $talent;
+  global $skills;
+  global $skill_class;
+  global $db;
   $skills = array(""=>"Any skill");
   $query = "SELECT * FROM skill";
   if ($skill_class != "") {
@@ -65,7 +71,11 @@ function show_skills() {
 }
 
 function get_people_header() {
-  global $TPL, $people_ids, $people_header, $talent, $skill_class;
+  global $TPL;
+  global $people_ids;
+  global $people_header;
+  global $talent;
+  global $skill_class;
 
   $people_ids = array();
 
@@ -91,7 +101,11 @@ function get_people_header() {
 }
 
 function show_skill_expertise() {
-  global $TPL, $people_ids, $people_header, $talent, $skill_class;
+  global $TPL;
+  global $people_ids;
+  global $people_header;
+  global $talent;
+  global $skill_class;
 
   $currSkillClass = null;
 

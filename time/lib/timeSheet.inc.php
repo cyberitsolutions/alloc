@@ -548,7 +548,8 @@ class timeSheet extends db_entity {
      *
      */
   
-    global $TPL, $current_user;
+    global $TPL;
+    global $current_user;
     $_FORM["showShortProjectLink"] and $_FORM["showProjectLink"] = true;
     $filter = timeSheet::get_list_filter($_FORM);
 

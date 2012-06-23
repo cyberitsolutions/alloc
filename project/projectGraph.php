@@ -30,7 +30,8 @@ $defaults = array("showHeader"=>true
                  );
 
 function show_filter() {
-  global $TPL,$defaults;
+  global $TPL;
+  global $defaults;
 
   $_FORM = task::load_form_data($defaults);
   $arr = task::load_task_filter($_FORM);
@@ -39,7 +40,8 @@ function show_filter() {
 }
 
 function show_projects($template_name) {
-  global $TPL, $default;
+  global $TPL;
+  global $default;
   $_FORM = task::load_form_data($defaults);
   $arr = task::load_task_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);

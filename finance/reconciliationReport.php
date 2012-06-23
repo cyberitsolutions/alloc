@@ -65,7 +65,9 @@ function load_balances($info_field, $where) {
 }
 
 function load_tf_info() {
-  global $tf_info, $start_date, $end_date;
+  global $tf_info;
+  global $start_date;
+  global $end_date;
 
   $tf_info = array();
   load_transaction_total("expenses", "expense");
@@ -80,7 +82,8 @@ function load_tf_info() {
 }
 
 function show_tf_balances($template) {
-  global $TPL, $tf_info;
+  global $TPL;
+  global $tf_info;
 
   ksort($tf_info);
 

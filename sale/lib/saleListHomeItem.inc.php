@@ -32,7 +32,8 @@ class saleListHomeItem extends home_item {
   }
   
   function render() {
-    global $current_user, $TPL;
+    global $current_user;
+    global $TPL;
     $ops["return"] = "array";
     $ops["personID"] = $current_user->get_id();
     $ops["status"] = array("admin","allocate","edit");

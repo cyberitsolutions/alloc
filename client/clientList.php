@@ -29,7 +29,8 @@ $defaults = array("url_form_action"=>$TPL["url_alloc_clientList"]
 
 
 function show_filter() {
-  global $TPL,$defaults;
+  global $TPL;
+  global $defaults;
   $_FORM = client::load_form_data($defaults);
   $arr = client::load_client_filter($_FORM);
   is_array($arr) and $TPL = array_merge($TPL,$arr);

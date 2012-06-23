@@ -23,7 +23,8 @@
 require_once("../alloc.php");
 
 function show_reminders($template) {
-  global $TPL, $current_user;
+  global $TPL;
+  global $current_user;
 
   // show all reminders for this project
   $db = new db_alloc;
@@ -68,7 +69,8 @@ function show_reminders($template) {
 }
 
 function show_reminder_filter($template) {
-  global $current_user, $TPL;
+  global $current_user;
+  global $TPL;
   if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
 
     $TPL["reminderActiveOptions"] = page::select_options(array("1"=>"Active","0"=>"Inactive"),$_REQUEST["filter_reminderActive"]);

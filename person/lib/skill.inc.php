@@ -63,7 +63,8 @@ class skill extends db_entity {
   }
 
   function get_skills() {
-    global $TPL, $skill_class;
+    global $TPL;
+    global $skill_class;
     $skills = array(""=>"Any Skill");
     $query = "SELECT * FROM skill";
     if ($skill_class != "") {

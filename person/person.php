@@ -58,7 +58,8 @@ require_once("../alloc.php");
   }
 
   function show_action_buttons() {
-    global $person, $TPL;
+    global $person;
+    global $TPL;
     echo '<button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button> ';
     if ($person->have_perm(PERM_DELETE)) {
       echo '<button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button> ';
@@ -77,7 +78,11 @@ require_once("../alloc.php");
   }
 
   function show_person_areasOfExpertise($template) {
-    global $TPL, $personID, $skill_header, $skill_prof, $skills_got;
+    global $TPL;
+    global $personID;
+    global $skill_header;
+    global $skill_prof;
+    global $skills_got;
 
     $TPL["personExpertiseItem_buttons"] = '
        <button type="submit" name="personExpertiseItem_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
@@ -119,7 +124,9 @@ require_once("../alloc.php");
   }
 
   function show_skills_list() {
-    global $TPL, $personID, $skills;
+    global $TPL;
+    global $personID;
+    global $skills;
 
     $db = new db_alloc;
     $query = prepare("SELECT * FROM proficiency WHERE personID=%d", $personID);

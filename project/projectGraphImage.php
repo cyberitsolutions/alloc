@@ -23,7 +23,9 @@
 require_once("../alloc.php");
 include("lib/task_graph.inc.php");
 
-global $current_user, $show_weeks, $for_home_item;
+global $current_user;
+global $show_weeks;
+global $for_home_item;
 
 
 
