@@ -159,14 +159,14 @@ class email_receive {
     if ($uid) {
       $this->mail_headers = $this->parse_headers(imap_fetchheader($this->connection, $uid, FT_UID));
     } else if ($this->msg_text) {
-      $bits = preg_split("/\r\n\r\n|\n\n/", $this->msg_text);
+      $bits = preg_split("/\r?\n\r?\n/", $this->msg_text);
       $this->mail_headers = $this->parse_headers($bits[0]);
     }
     return $this->mail_headers;
   }
 
   function parse_headers($headers="") {
-    $lines = preg_split("/(\r?\n|\r)/", $headers);
+    $lines = preg_split("/\r?\n/", $headers);
     foreach ($lines as $line) {
       // start new header
       if (preg_match('/^[A-Za-z]/', $line)) {

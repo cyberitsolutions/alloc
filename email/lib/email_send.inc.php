@@ -31,13 +31,7 @@ class email_send {
   var $no_email_urls = array();
 
   // If alloc is running on any of these boxes then no emails will be sent!
-  var $no_email_hosts = array("garlic.office.cyber.com.au"
-                             ,"spectrum.lancewood.net"
-                             ,"peach.office.cyber.com.au"
-                             ,"peach"
-                             ,"leaf"
-                             #,"alloc_dev"
-                             );
+  var $no_email_hosts = array();
 
   // Set to true to skip host and url checking
   var $ignore_no_email_hosts = false; 
@@ -66,6 +60,8 @@ class email_send {
   }
   function set_body($body=false,$body_without_attachments="") {
     $body or $body = $this->body;
+    $body = str_replace("\r\n","\n",$body);
+    $body_without_attachments = str_replace("\r\n","\n",$body_without_attachments);
     $this->body = $body;
     $this->body_without_attachments = $body_without_attachments;
   }
@@ -135,6 +131,7 @@ class email_send {
 
       $this->headers = trim($this->headers)."\n".trim($this->default_headers);
       $this->headers = str_replace("\r\n","\n",$this->headers);
+      $this->headers = str_replace("\n",PHP_EOL,$this->headers); // according to php.net/mail
 
       # echo "<pre><br>HEADERS:\n".page::htmlentities($this->headers)."</pre>";
       # echo "<pre><br>TO:\n".page::htmlentities($this->to_address)."</pre>";
