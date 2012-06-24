@@ -31,7 +31,7 @@ class home_item {
   var $seq;
   var $print;
 
-  function home_item($name, $label, $module, $template, $width="standard",$seq=0, $print=true) {
+  function __construct($name, $label, $module, $template, $width="standard",$seq=0, $print=true) {
     $this->name = $name;
     $this->label = $label;
     $this->module = $module;

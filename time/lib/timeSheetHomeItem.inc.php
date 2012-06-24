@@ -22,8 +22,8 @@
 
 class timeSheetHomeItem extends home_item {
 
-  function timeSheetHomeItem() {
-    home_item::home_item("time_edit", "New Time Sheet Item", "time", "timeSheetH.tpl", "narrow", 24);
+  function __construct() {
+    parent::__construct("time_edit", "New Time Sheet Item", "time", "timeSheetH.tpl", "narrow", 24);
   }
 
   function visible() {

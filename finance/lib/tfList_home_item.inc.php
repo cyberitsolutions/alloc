@@ -21,8 +21,8 @@
 */
 
 class tfList_home_item extends home_item {
-  function tfList_home_item() {
-    home_item::home_item("", "Tagged Funds", "finance", "tfListH.tpl", "narrow",20);
+  function __construct() {
+    parent::__construct("", "Tagged Funds", "finance", "tfListH.tpl", "narrow",20);
   }
 
   function visible() {

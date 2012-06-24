@@ -50,7 +50,7 @@ if ($_REQUEST["commentID"]) {
   $entity = $c->get_value("commentMaster");
   $entityID = $c->get_value("commentMasterID");
 
-  $mail = new alloc_email_receive($info);
+  $mail = new email_receive($info);
   $mail->open_mailbox(config::get_config_item("allocEmailFolder")."/".$entity.$entityID);
 
   if ($_REQUEST["uid"]) {

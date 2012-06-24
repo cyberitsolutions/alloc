@@ -21,19 +21,14 @@
 */
 
 
-require_once(dirname(__FILE__)."/project.inc.php");
-require_once(dirname(__FILE__)."/projectPerson.inc.php");
-require_once(dirname(__FILE__)."/projectCommissionPerson.inc.php");
 require_once(dirname(__FILE__)."/import_export.inc.php");
-require_once(dirname(__FILE__)."/project_list_home_item.inc.php");
 
-class project_module extends module
-{
+class project_module extends module {
+  var $module = "project";
   var $db_entities = array("project"
                          , "projectPerson"
                          , "projectCommissionPerson"
                          );
   var $home_items = array("project_list_home_item");
 }
-
 ?>

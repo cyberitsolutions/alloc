@@ -25,7 +25,7 @@ class backups {
 
   var $folders = array();
 
-  function backups() {
+  function __construct() {
     global $external_storage_directories;
 
     ini_set('max_execution_time',900); // max time 15 minutes
@@ -70,7 +70,6 @@ class backups {
 
   function backup() {
     global $TPL; 
-    require_once("../shared/lib/pclzip.inc.php");
 
     if (!is_dir(ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0")) {
       mkdir(ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0", 0777);
@@ -109,8 +108,6 @@ class backups {
 
   function restore($archivename) {
     global $TPL;
-
-    require_once("../shared/lib/pclzip.inc.php");
 
     $file = ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $archivename;
 

@@ -21,15 +21,20 @@
 */
 
 class module {
+  var $module = '';
   var $db_entities = array();   // A list of db_entity class names implemented by this module
   var $home_items = array();    // A list of all the home page items implemented by this module
 
-  // Allow a module to load its libraries at the start of a request
-  function load_libararies() {
+  public function __construct() {
+    spl_autoload_register(array($this, 'autoloader'));
+  }
+
+  public function autoloader($class) {
+    $p = dirname(__FILE__).'/../../'.$this->module.'/lib/'.$class.'.inc.php';
+    if (file_exists($p)) {
+      require_once($p);
+    }
   }
 
 }
-
-
-
 ?>

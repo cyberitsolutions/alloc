@@ -27,7 +27,7 @@
 * @author Alex Lance
 * @version 1.0
 */
-class alloc_services {
+class services {
 
   public function __construct($sessID="") {
     $current_user = $this->get_current_user($sessID);
@@ -41,7 +41,7 @@ class alloc_services {
   */
   public function authenticate($username,$password) {
     $person = new person;
-    $sess = new Session;
+    $sess = new session;
     $row = $person->get_valid_login_row($username,$password); 
     if ($row) {
       $sess->Start($row,false);
@@ -54,7 +54,7 @@ class alloc_services {
   }  
 
   private function get_current_user($sessID) {
-    $sess = new Session($sessID);
+    $sess = new session($sessID);
     if ($sess->Started()) {
       $person = new person;
       $person->load_current_user($sess->Get("personID"));
@@ -339,13 +339,13 @@ class alloc_services {
     if ($taskID) {
       $folder = config::get_config_item("allocEmailFolder")."/".$entity.$taskID;
       $info = $this->init_email_info();
-      $mail = new alloc_email_receive($info);
+      $mail = new email_receive($info);
       $mail->open_mailbox($folder,OP_READONLY);
       $uids = $mail->get_all_email_msg_uids();
       foreach ((array)$uids as $uid) {
         list($header,$body) = $mail->get_raw_email_by_msg_uid($uid);
         if ($header && $body) {
-          $m = new alloc_email();
+          $m = new email_send();
           $m->set_headers($header);
           $timestamp = $m->get_header('Date');
           $str = "\r\nFrom allocPSA ".date('D M  j G:i:s Y',strtotime($timestamp))."\r\n".$header.$body;
@@ -401,11 +401,11 @@ class alloc_services {
     //$lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
     if ($emailUID) {
       $info = $this->init_email_info();
-      $mail = new alloc_email_receive($info);
+      $mail = new email_receive($info);
       $mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_READONLY);
       list($header,$body) = $mail->get_raw_email_by_msg_uid($emailUID);
       $mail->close();
-      $m = new alloc_email();
+      $m = new email_send();
       $m->set_headers($header);
       $timestamp = $m->get_header('Date');
       $str = "From allocPSA ".date('D M  j G:i:s Y',strtotime($timestamp))."\r\n".$header.$body;
@@ -423,7 +423,7 @@ class alloc_services {
       $current_user = &singleton("person"); // Always need this :(
       //$lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
       $info = $this->init_email_info();
-      $mail = new alloc_email_receive($info);
+      $mail = new email_receive($info);
       $mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_READONLY);
       $rtn = $mail->get_emails_UIDs_search($str);
       $mail->close();

@@ -24,7 +24,7 @@
 // 
 // Will log emails sent, and will not attempt to send email when the server is a dev boxes
 // 
-class alloc_email {
+class email_send {
   
   // If URL has any of these strings in it then the email won't be sent.
   #var $no_email_urls = array("alloc_dev");
@@ -51,7 +51,7 @@ class alloc_email {
   var $body = ""; 
   var $body_without_attachments = ""; 
 
-  function alloc_email($to_address="",$subject="",$body="",$message_type="") {
+  function __construct($to_address="",$subject="",$body="",$message_type="") {
     $this->default_headers = "X-Mailer: allocPSA ".get_alloc_version();
     $to_address   and $this->set_to_address($to_address);
     $subject      and $this->set_subject($subject);

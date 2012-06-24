@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 if ($_REQUEST["entity"] && $_REQUEST["entityID"]) {
-  $s = new alloc_services();
+  $s = new services();
   $emails = $s->get_task_emails($_REQUEST["entityID"],$_REQUEST["entity"]);
   $_REQUEST["entity"] == "task" and $emails .= "\n\n".$s->get_timeSheetItem_comments($_REQUEST["entityID"]);
   header('Content-Type: text/plain; charset=utf-8');

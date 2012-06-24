@@ -40,7 +40,7 @@ $info["username"] = config::get_config_item("allocEmailUsername");
 $info["password"] = config::get_config_item("allocEmailPassword");
 $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
-$mail = new alloc_email_receive($info);
+$mail = new email_receive($info);
 $mail->open_mailbox(config::get_config_item("allocEmailFolder"), CL_EXPUNGE);
 $mail->check_mail();
 

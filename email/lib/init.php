@@ -21,18 +21,8 @@
 */
 
 
-require_once(dirname(__FILE__)."/token.inc.php");
-require_once(dirname(__FILE__)."/tokenAction.inc.php");
-require_once(dirname(__FILE__)."/email.inc.php");
-require_once(dirname(__FILE__)."/email_receive.inc.php");
-require_once(dirname(__FILE__)."/sentEmailLog.inc.php");
-require_once(dirname(__FILE__)."/command.inc.php");
-require_once(dirname(__FILE__)."/mimeDecode.php");
-require_once(dirname(__FILE__)."/RFC822.php");
-
-
 class email_module extends module {
+  var $module = "email";
   var $db_entities = array("token");
 }
-
 ?>

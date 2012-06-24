@@ -22,8 +22,8 @@
 
 class customize_alloc_home_item extends home_item {
 
-  function customize_alloc_home_item() {
-    home_item::home_item("", "Preferences", "home", "customizeH.tpl", "narrow",60, false);
+  function __construct() {
+    parent::__construct("", "Preferences", "home", "customizeH.tpl", "narrow",60, false);
   }
 
   function visible() {

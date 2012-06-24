@@ -121,7 +121,7 @@ class project extends db_entity {
 
   function get_url() {
     global $sess;
-    $sess or $sess = new Session;
+    $sess or $sess = new session;
 
     $url = "project/project.php?projectID=".$this->get_id();
 

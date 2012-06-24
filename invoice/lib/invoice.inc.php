@@ -209,7 +209,6 @@ class invoice extends db_entity {
 
   function generate_invoice_file($verbose=false, $stream=false) {
     // Build PDF document
-    require_once("../shared/lib/ezpdf.inc.php");
     $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
     $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
   
@@ -373,7 +372,7 @@ class invoice extends db_entity {
 
   function get_url() {
     global $sess;
-    $sess or $sess = new Session;
+    $sess or $sess = new session;
 
     $url = "invoice/invoice.php?invoiceID=".$this->get_id();
 

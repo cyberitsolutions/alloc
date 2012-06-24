@@ -213,7 +213,7 @@ class reminder extends db_entity {
             $subject = $this->get_value('reminderSubject');
             $content = $this->get_value('reminderContent');
 
-            $e = new alloc_email($email, $subject, $content, "reminder");
+            $e = new email_send($email, $subject, $content, "reminder");
             $e->send();
           }
           // Update reminder
@@ -284,7 +284,7 @@ class reminder extends db_entity {
                           ,$person['firstName']
                           ,$person['surname']
                           ,$person['emailAddress']);
-            $e = new alloc_email($email, $subject, $content, "reminder_advnotice");
+            $e = new email_send($email, $subject, $content, "reminder_advnotice");
             $e->send();
           }
         }

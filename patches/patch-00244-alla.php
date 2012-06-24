@@ -31,7 +31,7 @@ while ($row = $db->row($qid)) {
   $entityID = $row["commentMasterID"];
 
   // Use the taskID to query the mbox.taskID for all its emails
-  $mail = new alloc_email_receive($info);
+  $mail = new email_receive($info);
 
   $mail->open_mailbox("INBOX");
   $created = $mail->create_mailbox("INBOX/".$entity.$entityID);

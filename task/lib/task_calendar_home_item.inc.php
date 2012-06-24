@@ -23,8 +23,8 @@
 class task_calendar_home_item extends home_item {
   var $date;
 
-  function task_calendar_home_item() {
-    home_item::home_item("task_calendar_home_item", "Calendar", "task", "taskCalendarS.tpl","standard",30);
+  function __construct() {
+    parent::__construct("task_calendar_home_item", "Calendar", "task", "taskCalendarS.tpl","standard",30);
   }
 
   function visible() {

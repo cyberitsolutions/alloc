@@ -20,17 +20,10 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/tf.inc.php");
-require_once(dirname(__FILE__)."/transaction.inc.php");
-require_once(dirname(__FILE__)."/expenseForm.inc.php");
-require_once(dirname(__FILE__)."/tfPerson.inc.php");
-require_once(dirname(__FILE__)."/transactionRepeat.inc.php");
-require_once(dirname(__FILE__)."/tfList_home_item.inc.php");
-require_once(dirname(__FILE__)."/exchangeRate.inc.php");
 
 class finance_module extends module {
+  var $module = "finance";
   var $db_entities = array("tf", "transaction", "expenseForm", "tfPerson", "transactionRepeat");
   var $home_items = array("tfList_home_item");
 }
-
 ?>

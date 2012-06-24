@@ -337,8 +337,6 @@ class timeSheetPrint {
       if ($format != "html") {
 
         // Build PDF document
-        require_once("../shared/lib/ezpdf.inc.php");
-
         $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
         $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
 

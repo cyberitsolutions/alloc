@@ -21,17 +21,9 @@
 */
 
 
-require_once(dirname(__FILE__)."/task.inc.php");
-require_once(dirname(__FILE__)."/task_calendar.inc.php");
-require_once(dirname(__FILE__)."/task_calendar_home_item.inc.php");
-require_once(dirname(__FILE__)."/top_ten_tasks_home_item.inc.php");
-require_once(dirname(__FILE__)."/task_message_list_home_item.inc.php");
-require_once(dirname(__FILE__)."/task_list_print.inc.php");
-
-class task_module extends module
-{
+class task_module extends module {
+  var $module = "task";
   var $db_entities = array("task");
   var $home_items = array("task_calendar_home_item","top_ten_tasks_home_item","task_message_list_home_item");
 }
-
 ?>

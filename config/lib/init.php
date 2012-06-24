@@ -20,13 +20,9 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/config.inc.php");
 
 class config_module extends module {
+  var $module = "config";
   var $db_entities = array("config");
 }
-
-
-
-
 ?>

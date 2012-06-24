@@ -22,8 +22,8 @@
 
 class saleListHomeItemAdmin extends home_item {
 
-  function saleListHomeItemAdmin() {
-    home_item::home_item("sale_list_admin", "Sales Pending Admin", "sale", "saleListHomeM.tpl", "narrow", 38);
+  function __construct() {
+    parent::__construct("sale_list_admin", "Sales Pending Admin", "sale", "saleListHomeM.tpl", "narrow", 38);
   }
 
   function visible() {

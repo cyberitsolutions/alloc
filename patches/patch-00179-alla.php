@@ -108,7 +108,7 @@ if (true) {
 } else {
 
   $fp = fopen(ATTACHMENTS_DIR."updatecommentpatch179.log","a+");
-  $mail = new alloc_email_receive($info,$lockfile);
+  $mail = new email_receive($info,$lockfile);
   $mail->open_mailbox(config::get_config_item("allocEmailFolder"),OP_HALFOPEN+OP_READONLY);
   $mail->check_mail();
 

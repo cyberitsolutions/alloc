@@ -15,7 +15,7 @@ Future requests should use this session ID, to affirm your identity to alloc.
 
 Now that we have a session ID, let's attempt to use one of the methods that is
 in the services class (alloc/services/lib/services.inc.php). As documented here:
-http://alloc/services/doc/alloc_services.html
+http://alloc/services/doc/services.html
 
 Eg: get_task_comments(taskID), returns an array of all the comments for a
 particular task. That functionality can be accessed like:

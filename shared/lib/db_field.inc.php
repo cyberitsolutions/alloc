@@ -32,7 +32,7 @@ class db_field {
   var $write_perm_name = 0;     // Name of a permission a user must have to write to this field, if any.  E.g. "admin"
   var $read_perm_name = 0;      // Name of the permission a user must have to read this field, if any.  E.g. "read details"
 
-  function db_field($name = "", $options = array()) {
+  function __construct($name = "", $options = array()) {
     $this->name = $name;
     $this->label = $name;
 

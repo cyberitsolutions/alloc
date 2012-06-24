@@ -25,7 +25,7 @@ class whatsnew {
 
   var $folders = array();
 
-  function whatsnew() {
+  function __construct() {
   }
 
   function set_id() { // dummy so can re-use the get_attachment.php script

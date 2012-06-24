@@ -21,16 +21,8 @@
 */
 
 
-require_once(dirname(__FILE__)."/auditItem.inc.php");
-
-class audit_module extends module
-{
-  var $db_entities = array("auditItem"
-                          );
-
+class audit_module extends module {
+  var $module = "audit";
+  var $db_entities = array("auditItem");
 }
-
-
-
-
 ?>

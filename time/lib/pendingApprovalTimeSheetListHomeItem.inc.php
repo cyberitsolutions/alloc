@@ -21,35 +21,10 @@
 */
 
 
-class pendingAdminApprovalTimeSheetListHomeItem extends home_item {
-
-  function pendingAdminApprovalTimeSheetListHomeItem() {
-    home_item::home_item("pending_admin_time_list", "Time Sheets Pending Admin Approval", "time", "pendingAdminApprovalTimeSheetHomeM.tpl", "narrow", 22);
-  }
-
-  function visible() {
-    $current_user = &singleton("person");
-    if (isset($current_user) && $current_user->is_employee()) {
-      $timeSheetAdminPersonIDs = config::get_config_item("defaultTimeSheetAdminList");
-      if (in_array($current_user->get_id(), $timeSheetAdminPersonIDs) && has_pending_admin_timesheet()) {
-        return true;
-      }
-    }
-  }
-
-  function render() {
-    return true;
-  }
-
-  function show_pending_time_sheets($template_name,$doAdmin=false) {
-    show_time_sheets_list_for_classes($template_name,$doAdmin);
-  }
-}
-
 class pendingApprovalTimeSheetListHomeItem extends home_item {
 
-  function pendingApprovalTimeSheetListHomeItem() {
-    home_item::home_item("pending_time_list", "Time Sheets Pending Manager", "time", "pendingApprovalTimeSheetHomeM.tpl", "narrow", 23);
+  function __construct() {
+    parent::__construct("pending_time_list", "Time Sheets Pending Manager", "time", "pendingApprovalTimeSheetHomeM.tpl", "narrow", 23);
   }
 
   function visible() {

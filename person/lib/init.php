@@ -20,13 +20,9 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/person.inc.php");
-require_once(dirname(__FILE__)."/absence.inc.php");
-require_once(dirname(__FILE__)."/skill.inc.php");
-require_once(dirname(__FILE__)."/proficiency.inc.php");
 
 class person_module extends module {
+  var $module = "person";
   var $db_entities = array("person", "absence", "skill", "proficiency");
 }
-
 ?>

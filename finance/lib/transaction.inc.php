@@ -171,7 +171,7 @@ class transaction extends db_entity {
 
   function get_url() {
     global $sess;
-    $sess or $sess = new Session;
+    $sess or $sess = new session;
 
     $url = "finance/transaction.php?transactionID=".$this->get_id();
 

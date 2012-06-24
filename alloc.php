@@ -123,7 +123,7 @@ foreach ($m as $module_name) {
   if (file_exists(ALLOC_MOD_DIR.$module_name.DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR."init.php")) {
     require_once(ALLOC_MOD_DIR.$module_name.DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR."init.php");
     $module_class = $module_name."_module";
-    $module = new $module_class;
+    $module = new $module_class();
     $modules[$module_name] = $module;
   }
 }
@@ -221,7 +221,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   if (!defined("NO_AUTH")) {
 
     $current_user = &singleton("person");
-    $sess = new Session();
+    $sess = new session();
 
     // If session hasn't been started re-direct to login page
     if (!$sess->Started()) {
