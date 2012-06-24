@@ -20,12 +20,10 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/announcement.inc.php");
-require_once(dirname(__FILE__)."/announcements_home_item.inc.php");
 
 class announcement_module extends module {
+  var $module = "announcement";
   var $db_entities = array("announcement");
   var $home_items = array("announcements_home_item");
 }
-
 ?>

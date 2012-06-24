@@ -21,15 +21,11 @@
 */
 
 
-require_once(dirname(__FILE__)."/wiki.inc.php");
 require_once(dirname(__FILE__)."/markdown.inc.php");
-require_once(dirname(__FILE__)."/vcs.inc.php");
-require_once(dirname(__FILE__)."/vcs_darcs.inc.php");
-require_once(dirname(__FILE__)."/vcs_mercurial.inc.php");
-require_once(dirname(__FILE__)."/vcs_git.inc.php");
 
 
 class wiki_module extends module {
+  var $module = "wiki";
 
   function get_wiki_path() {
     return realpath(ATTACHMENTS_DIR."wiki").DIRECTORY_SEPARATOR;

@@ -24,7 +24,7 @@
 define("NO_AUTH",1);
 require_once("../alloc.php");
 
-$sess = new Session();
+$sess = new session();
 if (isset($_POST["forwardUrl"]))
   $url = $_POST["forwardUrl"];
 else if (isset($_GET["forward"]))
@@ -84,7 +84,7 @@ if ($sess->Started()) {
     $db2 = new db_alloc();
     $db2->query($q);
 
-    $e = new alloc_email($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password");
+    $e = new email_send($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password");
     #echo "Your new temporary password: ".$password;
     if ($e->send()) {
       $TPL["message_good"][] = "New password sent to: ".$_POST["email"];

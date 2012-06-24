@@ -34,7 +34,7 @@ class db {
   var $verbose = 1;
   public static $started_transaction = false;
 
-  function db($username="",$password="",$hostname="",$database="") { // Constructor
+  function __construct($username="",$password="",$hostname="",$database="") { // Constructor
     $this->username = $username;
     $this->password = $password;
     $this->hostname = $hostname;

@@ -21,8 +21,8 @@
 */
 
 class announcements_home_item extends home_item {
-  function announcements_home_item() {
-    home_item::home_item("announcements", "Announcements", "announcement", "announcementsH.tpl", "standard", 10);
+  function __construct() {
+    parent::__construct("announcements", "Announcements", "announcement", "announcementsH.tpl", "standard", 10);
   }
 
   function visible() {

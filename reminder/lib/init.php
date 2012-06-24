@@ -20,14 +20,9 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/reminder.inc.php");
-require_once(dirname(__FILE__)."/reminderRecipient.inc.php");
 
 class reminder_module extends module {
+  var $module = "reminder";
   var $db_entities = array("reminder", "reminderRecipient");
 }
-
-
-
-
 ?>

@@ -22,8 +22,8 @@
 
 class saleListHomeItem extends home_item {
 
-  function saleListHomeItem() {
-    home_item::home_item("sale_list", "Sales", "sale", "saleListHomeM.tpl", "narrow", 39);
+  function __construct() {
+    parent::__construct("sale_list", "Sales", "sale", "saleListHomeM.tpl", "narrow", 39);
   }
 
   function visible() {

@@ -30,7 +30,7 @@ class alloc_cache {
 
   
   // Initializer
-  function alloc_cache() {
+  function __construct() {
   }
 
   // Singleton

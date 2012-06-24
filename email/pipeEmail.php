@@ -86,7 +86,7 @@ db_entity::skip_errors();
 $db = new db_alloc();
 $db->start_transaction();
 
-$email_receive = new alloc_email_receive($info);
+$email_receive = new email_receive($info);
 $email_receive->open_mailbox(config::get_config_item("allocEmailFolder"));
 $email_receive->set_msg_text($email);
 $email_receive->get_msg_header();

@@ -20,12 +20,10 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/home_item.inc.php");
-require_once(dirname(__FILE__)."/customize_alloc_home_item.inc.php");
 
 class home_module extends module {
+  var $module = "home";
   var $db_entities = array("history");
   var $home_items = array("customize_alloc_home_item");
 }
-
 ?>

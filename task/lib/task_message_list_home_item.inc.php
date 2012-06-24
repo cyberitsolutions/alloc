@@ -23,8 +23,8 @@
 class task_message_list_home_item extends home_item {
   var $date;
 
-  function task_message_list_home_item() {
-    home_item::home_item("task_message_list_home_item", "Messages For You", "task", "taskMessageListH.tpl", "narrow", 19);
+  function __construct() {
+    parent::__construct("task_message_list_home_item", "Messages For You", "task", "taskMessageListH.tpl", "narrow", 19);
   }
 
   function visible() {

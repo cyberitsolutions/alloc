@@ -20,15 +20,8 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/stats.inc.php");
-require_once(dirname(__FILE__)."/backups.inc.php");
-require_once(dirname(__FILE__)."/whatsnew.inc.php");
 
 class tools_module extends module {
+  var $module = "tools";
 }
-
-
-
-
-
 ?>

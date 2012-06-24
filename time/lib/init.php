@@ -20,19 +20,10 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/timeUnit.inc.php");
-require_once(dirname(__FILE__)."/timeSheet.inc.php");
-require_once(dirname(__FILE__)."/timeSheetItem.inc.php");
-require_once(dirname(__FILE__)."/pendingApprovalTimeSheetListHomeItem.inc.php");
-require_once(dirname(__FILE__)."/timeSheetHomeItem.inc.php");
-require_once(dirname(__FILE__)."/timeSheetListHomeItem.inc.php");
-require_once(dirname(__FILE__)."/timeSheetStatusHomeItem.inc.php");
-require_once(dirname(__FILE__)."/timeSheetPrint.inc.php");
 
-class time_module extends module
-{
+class time_module extends module {
+  var $module = "time";
   var $db_entities = array("timeSheet", "timeSheetItem","timeUnit");
   var $home_items = array("timeSheetHomeItem","timeSheetListHomeItem","pendingApprovalTimeSheetListHomeItem","timeSheetStatusHomeItem","pendingAdminApprovalTimeSheetListHomeItem");
 }
-
 ?>

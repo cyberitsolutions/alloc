@@ -21,6 +21,7 @@
 */
 
 class report_module extends module {
+  var $module = "report";
 }
 
 function has_report_perm() {
@@ -30,9 +31,4 @@ function has_report_perm() {
   }
   return false;
 }
-
-
-
-
-
 ?>

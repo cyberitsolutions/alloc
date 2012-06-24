@@ -88,7 +88,6 @@ class taskListPrint {
     if ($_FORM["format"] != "html" && $_FORM["format"] != "html_plus") {
 
       // Build PDF document
-      require_once("../shared/lib/ezpdf.inc.php");
       $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
       $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
 

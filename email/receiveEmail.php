@@ -39,7 +39,7 @@ if (!$info["host"]) {
   alloc_die("Email mailbox host not defined, assuming email receive function is inactive.");
 }
 
-$email_receive = new alloc_email_receive($info,$lockfile);
+$email_receive = new email_receive($info,$lockfile);
 $email_receive->open_mailbox(config::get_config_item("allocEmailFolder"));
 $email_receive->check_mail();
 $num_new_emails = $email_receive->get_num_new_emails();

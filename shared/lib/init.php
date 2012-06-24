@@ -21,27 +21,11 @@
 */
 
 
-require_once(dirname(__FILE__)."/page.inc.php");
-require_once(dirname(__FILE__)."/template.inc.php");
-require_once(dirname(__FILE__)."/db.inc.php");
-require_once(dirname(__FILE__)."/db_alloc.inc.php");
-require_once(dirname(__FILE__)."/session.inc.php");
-require_once(dirname(__FILE__)."/db_field.inc.php");
-require_once(dirname(__FILE__)."/db_entity.inc.php");
 require_once(dirname(__FILE__)."/module.inc.php");
-require_once(dirname(__FILE__)."/alloc_cache.inc.php");
-require_once(dirname(__FILE__)."/history.inc.php");
-require_once(dirname(__FILE__)."/PasswordHash.inc.php");
-require_once(dirname(__FILE__)."/interestedParty.inc.php");
-require_once(dirname(__FILE__)."/meta.inc.php");
-require_once(dirname(__FILE__)."/solar_json.inc.php");
-require_once(dirname(__FILE__)."/pdf_reader.inc.php");
+require_once(dirname(__FILE__)."/template.inc.php");
 
 class shared_module extends module {
+  var $module = "shared";
   var $db_entities = array("sentEmailLog","interestedParty");
 }
-
-
-
-
 ?>

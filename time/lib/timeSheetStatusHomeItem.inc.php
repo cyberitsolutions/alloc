@@ -22,8 +22,8 @@
 
 class timeSheetStatusHomeItem extends home_item {
 
-  function timeSheetStatusHomeItem() {
-    home_item::home_item("time_status_list", "Time Sheet Statistics", "time", "timeSheetStatusHomeM.tpl", "narrow", 29);
+  function __construct() {
+    parent::__construct("time_status_list", "Time Sheet Statistics", "time", "timeSheetStatusHomeM.tpl", "narrow", 29);
   }
 
   function visible() {

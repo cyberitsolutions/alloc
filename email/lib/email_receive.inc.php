@@ -20,7 +20,7 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class alloc_email_receive {
+class email_receive {
 
   var $host;
   var $port;
@@ -38,7 +38,7 @@ class alloc_email_receive {
   var $dir;
   var $mime_types = array("text", "multipart", "message", "application", "audio", "image", "video", "other");
   
-  function alloc_email_receive($info,$lockfile=false) {
+  function __construct($info,$lockfile=false) {
     $this->host     = $info["host"];
     $this->port     = $info["port"];
     $this->username = $info["username"];
@@ -345,7 +345,7 @@ class alloc_email_receive {
     fputs($fh, $header.$body);
     fclose($fh);
 
-    $email = new alloc_email();
+    $email = new email_send();
     $email->set_from(config::get_config_item("AllocFromEmailAddress"));
     $email->set_subject($subject.$s);    
     $email->set_to_address($address);
@@ -460,7 +460,7 @@ class alloc_email_receive {
     $header and $header_obj = $this->parse_headers($header);
     $subject = $header_obj["subject"];
     
-    $e = new alloc_email();
+    $e = new email_send();
     $e->set_headers($header);
   
 
@@ -646,7 +646,7 @@ if (basename($_SERVER["PHP_SELF"]) == "email_receive.inc.php") {
 
   $num = 30;
 
-  $e = new alloc_email_receive($info);
+  $e = new email_receive($info);
   $e->open_mailbox("INBOX");
 
   echo "\nNum emails: ".$e->get_num_emails();

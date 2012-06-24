@@ -419,7 +419,7 @@ class timeSheet extends db_entity {
     $dummy = $_POST["dont_send_email"];
     
     // New email object wrapper takes care of logging etc.
-    $email = new alloc_email($addr,$sub,$msg,$type);
+    $email = new email_send($addr,$sub,$msg,$type);
 
     // REMOVE ME!!
     #$email->ignore_no_email_urls = true;
@@ -675,7 +675,7 @@ class timeSheet extends db_entity {
 
   function get_url() {
     global $sess;
-    $sess or $sess = new Session;
+    $sess or $sess = new session;
 
     $url = "time/timeSheet.php?timeSheetID=".$this->get_id();
 

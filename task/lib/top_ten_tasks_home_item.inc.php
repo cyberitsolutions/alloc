@@ -23,8 +23,8 @@
 class top_ten_tasks_home_item extends home_item {
   var $date;
 
-  function top_ten_tasks_home_item() {
-    home_item::home_item("top_ten_tasks", "Tasks", "task", "topTenTasksH.tpl","standard",20);
+  function __construct() {
+    parent::__construct("top_ten_tasks", "Tasks", "task", "topTenTasksH.tpl","standard",20);
   }
 
   function visible() {

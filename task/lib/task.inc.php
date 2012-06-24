@@ -535,7 +535,7 @@ class task extends db_entity {
 
   function get_url($absolute=false) {
     global $sess;
-    $sess or $sess = new Session;
+    $sess or $sess = new session;
 
     $url = "task/task.php?taskID=".$this->get_id();
 

@@ -36,7 +36,7 @@ if ($_POST["test_email_gateway"]) {
   if (!$info["host"]) {
     $TPL["message"][] = "Email mailbox host not defined, assuming email receive function is inactive.";
   } else {
-    $mail = new alloc_email_receive($info,$lockfile);
+    $mail = new email_receive($info,$lockfile);
     $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
     $mail->check_mail();
     $TPL["message_good"][] = "Connection succeeded!";

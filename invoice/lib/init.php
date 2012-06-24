@@ -20,12 +20,9 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(dirname(__FILE__)."/invoice.inc.php");
-require_once(dirname(__FILE__)."/invoiceItem.inc.php");
 
 class invoice_module extends module {
+  var $module = "invoice";
   var $db_entities = array("invoice", "invoiceItem");
 }
-
-
 ?>

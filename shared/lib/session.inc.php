@@ -20,7 +20,7 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Session {
+class session {
   
   var $key;          # the unique key for the session 
   var $db;           # database object 
@@ -38,7 +38,7 @@ class Session {
 
 
   // Constructor
-  function Session($key="") {
+  function __construct($key="") {
     global $TPL;
     $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"] or $this->key = $_REQUEST["sessID"];
     $TPL["sessID"]       = $_GET["sess"];
