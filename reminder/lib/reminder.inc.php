@@ -366,7 +366,7 @@ class reminder extends db_entity {
     $db = new db_alloc;
     $query = "DELETE FROM reminderRecipient WHERE reminderID = %d";
     $db->query($query, $this->get_id());
-    foreach ($recipients as $r) {
+    foreach ((array)$recipients as $r) {
       $recipient = new reminderRecipient;
       $recipient->set_value('reminderID', $this->get_id());
       if ($r < 0) {
