@@ -52,4 +52,3 @@
       </table>
 
 
-{page::footer()}
