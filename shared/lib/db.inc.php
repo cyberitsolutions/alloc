@@ -147,7 +147,7 @@ class db {
 
   function query() {
     global $TPL;
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $start = microtime();
     $this->connect();
     $args = func_get_args();

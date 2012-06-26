@@ -75,7 +75,7 @@ class comment extends db_entity {
   }
 
   function is_owner() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $entity = $this->get_value("commentMaster");
     $e = new $entity;
     $e->set_id($this->get_value("commentMasterID"));
@@ -84,7 +84,7 @@ class comment extends db_entity {
   }
 
   function has_attachment_permission($person) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $entity = $this->get_value("commentMaster");
     $e = new $entity;
     $e->set_id($this->get_value("commentMasterID"));
@@ -136,7 +136,7 @@ class comment extends db_entity {
 
   function get_one_comment_array($v=array(),$all_parties=array()) {
     global $TPL;
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $new = $v;
     $token = new token;
     if ($token->select_token_by_entity_and_action("comment",$new["commentID"],"add_comment_from_email")) {
@@ -225,7 +225,7 @@ class comment extends db_entity {
 
   function util_get_comments_array($entity, $id, $options=array()) {
     global $TPL;
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $rows = array();
     $new_rows = array();
     // Need to get timeSheet comments too for task comments
@@ -260,7 +260,7 @@ class comment extends db_entity {
 
   function util_get_comments($entity, $id, $options=array()) {
     global $TPL;
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $rows = comment::util_get_comments_array($entity, $id, $options);
     foreach ((array)$rows as $row) {
       $rtn.= comment::get_comment_html_table($row);
@@ -420,7 +420,7 @@ class comment extends db_entity {
   }
 
   function make_token_add_comment_from_email() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     if (!is_object($current_user) || !$current_user->get_id()) {
       alloc_die("Cannot make token, current_user is not set.");
     }
@@ -438,7 +438,7 @@ class comment extends db_entity {
   }
 
   function add_comment_from_email($email_receive,$entity) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     $commentID = comment::add_comment($entity->classname,$entity->get_id(),$email_receive->get_converted_encoding());
 
@@ -509,7 +509,7 @@ class comment extends db_entity {
   }
 
   function get_email_recipient_headers($recipients, $from_address) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     $emailMethod = config::get_config_item("allocEmailAddressMethod");
 
@@ -567,7 +567,7 @@ class comment extends db_entity {
   }
 
   function send_emails($selected_option, $email_receive=false, $hash="", $is_a_reply_comment=false) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     $e = $this->get_parent_object();
     $type = $e->classname."_comments";
@@ -676,7 +676,7 @@ class comment extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     // If they want starred, load up the commentID filter element
     if ($filter["starred"]) {
@@ -994,7 +994,7 @@ class comment extends db_entity {
   }
 
   function get_person_and_client($from_address,$from_name,$projectID=null) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $person = new person;
     $personID = $person->find_by_email($from_address);
     $personID or $personID = $person->find_by_name($from_name);

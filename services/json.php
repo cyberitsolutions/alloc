@@ -27,7 +27,7 @@ if (g("authenticate") && g("username") && g("password")) {
 
 
 $services = new services($sessID);
-$current_user = &singleton("person");
+$current_user = &singleton("current_user");
 if (!$current_user || !is_object($current_user) || !$current_user->get_id()) {
   alloc_die(alloc_json_encode(array("reauthenticate"=>"true")));
 }

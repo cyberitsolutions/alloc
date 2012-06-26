@@ -41,7 +41,7 @@ class interestedParty extends db_entity {
   }
 
   function is_owner() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     return same_email_address($this->get_value("emailAddress"),$current_user->get_value("emailAddress"));
   }
 
@@ -148,7 +148,7 @@ class interestedParty extends db_entity {
   }
 
   function get_interested_parties_html($parties=array()) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     if (is_object($current_user) && $current_user->get_id()) {
       $current_user_email = $current_user->get_value("emailAddress");
     }
@@ -227,7 +227,7 @@ class interestedParty extends db_entity {
   }
 
   function adjust_by_email_subject($email_receive,$e) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     $entity = $e->classname;
     $entityID = $e->get_id();

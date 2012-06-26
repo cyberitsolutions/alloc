@@ -27,12 +27,12 @@ class timeSheetStatusHomeItem extends home_item {
   }
 
   function visible() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     return (isset($current_user) && $current_user->is_employee());
   }
 
   function render() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     global $TPL;
     // Get averages for hours worked over the past fortnight and year
     $t = new timeSheetItem;

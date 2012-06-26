@@ -86,7 +86,7 @@ if ($num_new_emails >0) {
 
     // If we've determined a personID from the $from_address
     if ($personID) {
-      $current_user = &singleton("person");
+      $current_user = &singleton("current_user");
       $current_user = new person;
       $current_user->load_current_user($personID);
     } 

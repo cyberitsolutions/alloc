@@ -37,7 +37,7 @@ class history extends db_entity {
 
 
   function get_history_query($order="") {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     if (is_object($current_user)) {
       $db = new db_alloc;
       $query = prepare("SELECT *, historyID AS value, the_label AS label 
@@ -156,7 +156,7 @@ class history extends db_entity {
   }
 
   function save_history() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     global $TPL;
 
     // Delete old items if they have too many.

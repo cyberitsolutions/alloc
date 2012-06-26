@@ -32,21 +32,6 @@ if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
   alloc_die();
 } 
 
-// Convenience function to use the singleton pattern
-function &singleton($class,$arg1=null) {
-  static $instances;
-
-  // try and use an existing instance
-  if (array_key_exists($class, (array)$instances)) {
-    return $instances[$class];
-
-  // instance does not exist, so create it
-  } else {
-    $instances[$class] = new $class($arg1);
-    return $instances[$class];
-  }
-}
-
 // Set the charset for Zend Lucene search indexer http://framework.zend.com/manual/en/zend.search.lucene.charset.html
 require_once("Zend".DIRECTORY_SEPARATOR."Search".DIRECTORY_SEPARATOR."Lucene.php");
 Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
@@ -220,7 +205,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   // $current_user and $sess.
   if (!defined("NO_AUTH")) {
 
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user",new person());
     $sess = new session();
 
     // If session hasn't been started re-direct to login page
@@ -248,7 +233,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   if (is_object($current_user) && $current_user->get_id()) {
     $history = new history;
     $history->save_history();
-    $TPL["current_user"] = $current_user;
+    $TPL["current_user"] = &$current_user;
   }
 }
 ?>

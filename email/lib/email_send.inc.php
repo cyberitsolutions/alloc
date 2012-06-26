@@ -191,7 +191,7 @@ class email_send {
     return !$dont_send;
   }
   function log() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $sentEmailLog = new sentEmailLog();
     $to = $this->to_address or $to = $this->get_header("Cc") or $to = $this->get_header("Bcc");
     $sentEmailLog->set_value("sentEmailTo",$to);
