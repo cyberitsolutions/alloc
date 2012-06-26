@@ -110,7 +110,7 @@ $personID or $personID = $person->find_by_name($from_name);
 
 // If we've determined a personID from the $from_address and $current_user->get_id() isn't set
 if ($personID) {
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
   $current_user = new person;
   $current_user->load_current_user($personID);
 } 

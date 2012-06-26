@@ -87,7 +87,7 @@ function add_ips($parties, $taskID, $projectID) {
 function import_csv($infile, $mapping, $header = true) {
   global $TPL;
   global $projectID;
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
 
   /* Make sure the user isn't messing around and inserting ../../ into the 
    * filename.
@@ -222,7 +222,7 @@ function import_csv($infile, $mapping, $header = true) {
 function import_gnome_planner($infile) {
   global $TPL;
   global $projectID;
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
   //Import a GNOME Planner XML file
   $filename = $_FILES[$infile]['tmp_name'];
   $result = array();
@@ -298,7 +298,7 @@ function import_gnome_planner($infile) {
 function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocation, $resource_people, $project_manager_ID) {
   //Recursively imports tasks from GNOME Planner, given the parentNode.
   global $projectID;
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
   $result = array();
   // our dodgy DOM_NodeList doesn't support foreach....
   for($i = 0; $i < $parentNode->childNodes->length; $i++) {

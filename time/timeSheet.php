@@ -90,7 +90,7 @@ if (!$current_user->is_employee()) {
 
     global $timeSheet;
     global $TPL;
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     global $percent_array;
     $db = new db_alloc;
     $db->query("SELECT * FROM transaction WHERE timeSheetID = %d",$timeSheet->get_id());
@@ -192,7 +192,7 @@ if (!$current_user->is_employee()) {
 
   function show_main_list() {
     global $timeSheet;
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     if (!$timeSheet->get_id()) return;
     
     $db = new db_alloc;
@@ -311,7 +311,7 @@ if (!$current_user->is_employee()) {
     global $TPL;
     global $timeSheet;
     global $timeSheetID;
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     // Don't show entry form for new timeSheet.
     if (!$timeSheetID) {
@@ -416,7 +416,7 @@ global $timeSheet;
 global $timeSheetItem;
 global $timeSheetItemID;
 global $db;
-$current_user = &singleton("person");
+$current_user = &singleton("current_user");
 global $TPL;
 
 $timeSheetID = $_POST["timeSheetID"] or $timeSheetID = $_GET["timeSheetID"];

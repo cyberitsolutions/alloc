@@ -48,7 +48,7 @@ function show_home_items($width,$home_items) {
 }
 
 global $modules;
-$current_user = &singleton("person");
+$current_user = &singleton("current_user");
 foreach ($modules as $module_name => $module) {
   if ($module->home_items) {
     $home_items = array_merge((array)$home_items,$module->home_items);

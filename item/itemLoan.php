@@ -34,7 +34,7 @@ function show_overdue($template_name) {
 
   global $db;
   global $TPL;
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
 
   $db = new db_alloc;
   $temp = mktime(0, 0, 0, date("m"), date("d"), date("Y"));

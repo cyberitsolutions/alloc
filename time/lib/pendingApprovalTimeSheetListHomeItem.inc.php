@@ -28,7 +28,7 @@ class pendingApprovalTimeSheetListHomeItem extends home_item {
   }
 
   function visible() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     return (isset($current_user) && $current_user->is_employee() && has_pending_timesheet());
   }
   
@@ -42,7 +42,7 @@ class pendingApprovalTimeSheetListHomeItem extends home_item {
 }
 
 function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
   global $TPL;
 
   if ($doAdmin) {
@@ -98,7 +98,7 @@ function get_pending_timesheet_db() {
    -----------------
   */
 
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
   $db = new db_alloc;
 
   // Get all the time sheets that are in status manager, and are the responsibility of only the default manager
@@ -154,7 +154,7 @@ function get_pending_timesheet_db() {
 }
 
 function get_pending_admin_timesheet_db() {
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
   $db = new db_alloc;
  
   $timeSheetAdminPersonIDs = config::get_config_item("defaultTimeSheetAdminList");

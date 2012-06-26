@@ -24,7 +24,7 @@
 class vcs_mercurial extends vcs {
 
   function __construct($repo) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $this->name = "hg ";
     $this->repodir = $repo;
     $this->repoprefix = " --cwd '".$repo."' ";

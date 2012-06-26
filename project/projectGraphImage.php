@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 include("lib/task_graph.inc.php");
 
-$current_user = &singleton("person");
+$current_user = &singleton("current_user");
 global $show_weeks;
 global $for_home_item;
 

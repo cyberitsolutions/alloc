@@ -91,7 +91,7 @@ class db_entity {
   }
 
   function have_perm($action = 0, $person = "", $assume_owner = false) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     global $permission_cache;
     if (defined("IS_GOD")) {
       return true;
@@ -154,7 +154,7 @@ class db_entity {
   }
 
   function check_perm($action = 0, $person = "", $assume_owner = false) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     if ($this->have_perm($action, $person, $assume_owner)) {
       return true;
 
@@ -217,7 +217,7 @@ class db_entity {
   }
 
   function insert() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     if (is_object($current_user) && $current_user->get_id()) {
       $current_user_id = $current_user->get_id();
     } else {
@@ -280,7 +280,7 @@ class db_entity {
       $old_this->select();
     }
 
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     if (is_object($current_user) && $current_user->get_id()) {
       $current_user_id = $current_user->get_id();
     } else {
@@ -588,7 +588,7 @@ class db_entity {
   }
 
   function is_owner($person = "") {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $person or $person = $current_user;
     if (is_object($person) && $person->classname == "person") {
       if (isset($this->data_fields["personID"])) {

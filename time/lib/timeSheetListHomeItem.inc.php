@@ -27,12 +27,12 @@ class timeSheetListHomeItem extends home_item {
   }
 
   function visible() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     return isset($current_user) && $current_user->is_employee();
   }
 
   function render() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     global $TPL;
     $ops["showShortProjectLink"] = "true";
     $ops["personID"] = $current_user->get_id();

@@ -28,7 +28,7 @@ class task_calendar_home_item extends home_item {
   }
 
   function visible() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     return (isset($current_user->prefs["tasksGraphPlotHome"]) && sprintf("%d",$current_user->prefs["tasksGraphPlotHome"]) > 0);
   }
 
@@ -37,7 +37,7 @@ class task_calendar_home_item extends home_item {
   }
 
   function show_task_calendar_recursive() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $tasksGraphPlotHomeStart = $current_user->prefs["tasksGraphPlotHomeStart"];
     $tasksGraphPlotHome = $current_user->prefs["tasksGraphPlotHome"];
     $calendar = new calendar($tasksGraphPlotHomeStart,$tasksGraphPlotHome);

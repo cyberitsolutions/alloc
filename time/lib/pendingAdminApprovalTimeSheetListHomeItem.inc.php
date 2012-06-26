@@ -28,7 +28,7 @@ class pendingAdminApprovalTimeSheetListHomeItem extends home_item {
   }
 
   function visible() {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     if (isset($current_user) && $current_user->is_employee()) {
       $timeSheetAdminPersonIDs = config::get_config_item("defaultTimeSheetAdminList");
       if (in_array($current_user->get_id(), $timeSheetAdminPersonIDs) && has_pending_admin_timesheet()) {

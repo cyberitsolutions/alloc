@@ -484,7 +484,7 @@ function bad_filename($filename) {
   return preg_match("@[/\\\]@", $filename);
 }
 function has_backup_perm() {
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
   if (is_object($current_user)) {
     return $current_user->have_role("god");
   }
@@ -837,5 +837,16 @@ function prepare() {
   // Have to use this coz we don't know how many args we're gonna pass to sprintf..
   $query = call_user_func_array("sprintf",$clean_args);
   return $query;
+}
+function &singleton($name,$thing=null) {
+  // Convenience function to use the singleton pattern
+  static $instances;
+
+  // try and use an existing instance
+  if (isset($instances[$name])) {
+    return $instances[$name];
+  }
+  $instances[$name] = &$thing;
+  return $thing;
 }
 ?>

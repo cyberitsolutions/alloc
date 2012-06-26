@@ -158,7 +158,7 @@ class project extends db_entity {
   }
 
   function is_owner($person = "") {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $person or $person = $current_user;
 
     // If brand new record then let it be created.
@@ -171,7 +171,7 @@ class project extends db_entity {
 
   function has_project_permission($person = "", $permissions = array()) {
     // Check that user has permission for this project
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $person or $person = $current_user;
     if (is_object($person)) {
       $permissions and $p = " AND ppr.roleHandle in ('".esc_implode("','",$permissions,"%s")."')";
@@ -230,7 +230,7 @@ class project extends db_entity {
   function get_navigation_links($ops=array()) {
     global $taskID;
     global $TPL;
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     // Client 
     if ($this->get_value("clientID")) {  
@@ -284,7 +284,7 @@ class project extends db_entity {
   }
 
   function get_project_type_query($type="mine",$personID=false,$projectStatus=false) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     $type or $type = "mine";
     $personID or $personID = $current_user->get_id();
     $projectStatus and $projectStatus_sql = prepare(" AND project.projectStatus = '%s' ",$projectStatus);
@@ -345,7 +345,7 @@ class project extends db_entity {
     $clientID and $options["clientID"] = $clientID;
     $options["projectStatus"] = "Current";
     $options["showProjectType"] = true;
-    #$current_user = &singleton("person");
+    #$current_user = &singleton("current_user");
     #$options["personID"] = $current_user->get_id();
     $ops = project::get_list($options);
     return array_kv($ops,"projectID","label");
@@ -388,7 +388,7 @@ class project extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     // If they want starred, load up the projectID filter element
     if ($filter["starred"]) {
@@ -502,7 +502,7 @@ class project extends db_entity {
   }
 
   function load_form_data($defaults=array()) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     $page_vars = array_keys(project::get_list_vars());
   
@@ -528,7 +528,7 @@ class project extends db_entity {
   function load_project_filter($_FORM) {
 
     global $TPL;
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
 
     $personSelect= "<select name=\"personID\">";
     $personSelect.= "<option value=\"\"> ";
@@ -675,7 +675,7 @@ class project extends db_entity {
   }
 
   function get_all_parties($projectID=false) {
-    $current_user = &singleton("person");
+    $current_user = &singleton("current_user");
     if (!$projectID && is_object($this)) {
       $projectID = $this->get_id();
     }

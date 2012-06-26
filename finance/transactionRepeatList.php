@@ -36,7 +36,7 @@ function show_expenseFormList($template_name) {
   global $db;
   global $TPL;
   global $transactionRepeat;
-  $current_user = &singleton("person");
+  $current_user = &singleton("current_user");
 
   $db = new db_alloc;
   $transactionRepeat = new transactionRepeat;
