@@ -404,6 +404,7 @@ if ($_POST["save"]) {
     $p2->read_row_record($p->row());
     $p2->set_id("");
     $p2->set_value("projectName",$_POST["copy_project_name"]);
+    $p2->set_value("projectShortName","");
     $p2->save();
     $TPL["message_good"][] = "Project details copied successfully.";
 
