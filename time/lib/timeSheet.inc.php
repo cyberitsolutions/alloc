@@ -526,9 +526,9 @@ class timeSheet extends db_entity {
     }
 
     if ($rejected) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR timeSheet.status in ('%s'))", esc_implode("','",$statuses,"%s"));
+      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR timeSheet.status in ('".esc_implode("','",$statuses,"%s")."'))");
     } else if ($statuses) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND timeSheet.status in ('%s'))", esc_implode("','",$statuses,"%s"));
+      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND timeSheet.status in ('".esc_implode("','",$statuses,"%s")."'))");
     }
 
     if ($filter["dateFrom"]) {
