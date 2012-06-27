@@ -344,7 +344,7 @@ class db_entity {
     }
 
     // Update the search index for this entity, if any
-    if ($this->classname && is_dir(ATTACHMENTS_DIR.'search/'.$this->classname)) {
+    if ($this->get_id() && $this->classname && is_dir(ATTACHMENTS_DIR.'search/'.$this->classname)) {
 
       // Update the index asynchronously (later from a job running search/updateIndex.php)
       if ($this->updateSearchIndexLater) {
