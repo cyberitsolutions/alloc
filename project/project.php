@@ -335,9 +335,13 @@ if ($projectID) {
   $project->set_id($projectID);
   $project->select();
   $new_project = false;
+  if (!$project->have_perm(PERM_UPDATE)) {
+    $TPL["message_help"][] = "Project is read-only for you.";
+  }
 } else {
   $new_project = true;
 }
+
 
 
 if ($_POST["save"]) {
