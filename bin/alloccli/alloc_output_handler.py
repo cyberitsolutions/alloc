@@ -174,7 +174,7 @@ class alloc_output_handler:
       rows = rows2
  
     if alloc.csv:
-      csv_table = csv.writer(sys.stdout)
+      csv_table = csv.writer(sys.stdout, lineterminator="\n")
       for row in rows:
         csv_table.writerow([unicode(s).encode('utf-8') for s in row])
 
