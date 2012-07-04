@@ -470,6 +470,7 @@ class comment extends db_entity {
         $tmp = $current_user;
         $current_user = new person();
         $current_user->load_current_user($e->get_value("managerID")); // fake identity
+        singleton("current_user",$current_user);
         $e->set_value("taskStatus","open_inprogress");
         $e->save();
         $current_user = $tmp;
