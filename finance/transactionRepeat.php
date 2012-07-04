@@ -118,7 +118,7 @@ if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
               ORDER BY tfName"
               ,$current_user->get_id(), $transactionRepeat->get_value("tfID"), $transactionRepeat->get_value("fromTfID"));
 } else {
-  alloc_die("No permissions to generate TF list");
+  alloc_error("No permissions to generate TF list");
 }
 
 //special case for disabled TF. Include it in the list, but also add a warning message.

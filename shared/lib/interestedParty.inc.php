@@ -448,13 +448,14 @@ class interestedParty extends db_entity {
       } else {
         list($personID,$name,$email) = interestedParty::expand_ip($party,$projectID);
         if (!$email || strpos($email,"@") === false) {
-          return array("status"=>"err","message"=>"Unable to add interested party: ".$party);
+          alloc_error("Unable to add interested party: ".$party);
+        } else {
+          interestedParty::add_interested_party(array("entity"      => $entity
+                                                     ,"entityID"    => $entityID
+                                                     ,"fullName"    => $name
+                                                     ,"emailAddress"=> $email
+                                                     ,"personID"    => $personID));
         }
-        interestedParty::add_interested_party(array("entity"      => $entity
-                                                   ,"entityID"    => $entityID
-                                                   ,"fullName"    => $name
-                                                   ,"emailAddress"=> $email
-                                                   ,"personID"    => $personID));
       }
     }
   }

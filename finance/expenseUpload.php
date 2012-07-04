@@ -30,7 +30,7 @@ $field_map = array("date"=>0, "account"=>1, "num"=>2, "description"=>3, "memo"=>
 
 if ($_POST["upload"]) {
   $db = new db_alloc;
-  is_uploaded_file($_FILES["expenses_file"]["tmp_name"]) || alloc_die("File referred to was not an uploaded file"); // Prevent attacks by setting $expenses_file in URL
+  is_uploaded_file($_FILES["expenses_file"]["tmp_name"]) || alloc_error("File referred to was not an uploaded file",true); // Prevent attacks by setting $expenses_file in URL
   $lines = file($_FILES["expenses_file"]["tmp_name"]);
 
   reset($lines);

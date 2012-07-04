@@ -23,14 +23,18 @@
 // The order of file processing usually goes: 
 // requested_script.php -> alloc.php -> alloc_config.php -> more includes -> back to requested_script.php
 
+function &singleton($name, $thing=null) {
+  static $instances;
+  isset($name) && isset($thing) and $instances[$name] = &$thing;
+  return $instances[$name];
+}
 
 ini_set("error_reporting", E_ALL & ~E_NOTICE);
 ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).DIRECTORY_SEPARATOR."zend");
-
-// Can't call this script directly..
-if (basename($_SERVER["SCRIPT_FILENAME"]) == "alloc.php") {
-  alloc_die();
-} 
+singleton("errors_fatal",false);
+singleton("errors_format","html");
+singleton("errors_logged",false);
+singleton("errors_thrown",false);
 
 // Set the charset for Zend Lucene search indexer http://framework.zend.com/manual/en/zend.search.lucene.charset.html
 require_once("Zend".DIRECTORY_SEPARATOR."Search".DIRECTORY_SEPARATOR."Lucene.php");

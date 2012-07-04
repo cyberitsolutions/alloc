@@ -247,7 +247,7 @@ class expenseForm extends db_entity {
     }
     foreach ((array)$rows as $expenseFormID => $row) {
       $expenseForm = new expenseForm();
-      if ($expenseForm->read_row_record($row, false)) {
+      if ($expenseForm->read_row_record($row)) {
         $i++;
         $expenseForm->set_values();
         //$TPL["formTotal"] =  -$db->f("formTotal");

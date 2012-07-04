@@ -94,7 +94,7 @@ class invoice extends db_entity {
     $db->query("SELECT * FROM invoiceItem WHERE invoiceID=%d",$this->get_id());
     while ($db->next_record()) {
       $invoice_item = new invoiceItem();
-      if ($invoice_item->read_db_record($db, false)) {
+      if ($invoice_item->read_db_record($db)) {
         if ($invoice_item->is_owner($person)) {
           return true;
         }
@@ -523,7 +523,7 @@ class invoice extends db_entity {
     while ($row = $db->next_record()) {
       $print = true;
       $i = new invoice;
-      $i->read_db_record($db,false);
+      $i->read_db_record($db);
       $row["amountPaidApproved"] = page::money($row["currencyTypeID"],$row["amountPaidApproved"],"%mo");
       $row["amountPaidPending"] = page::money($row["currencyTypeID"],$row["amountPaidPending"],"%mo");
       $row["amountPaidRejected"] = page::money($row["currencyTypeID"],$row["amountPaidRejected"],"%mo");

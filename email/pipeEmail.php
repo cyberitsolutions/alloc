@@ -29,30 +29,15 @@
  * which may only be readable by the webserver.
 */
 
-PHP_SAPI == 'cli' or die_bad("This script must be run from the command line.");
+PHP_SAPI == 'cli' or alloc_error("This script must be run from the command line.");
 define("NO_AUTH",1);
 require_once(dirname(__FILE__)."/../alloc.php");
+singleton("errors_fatal",true);
+singleton("errors_format","text");
+singleton("errors_logged",true);
+singleton("errors_thrown",true);
 unset($current_user);
 
-function die_bad($msg) {
-  echo $msg;
-  exit(1);
-}
-
-function die_good($msg) {
-  echo $msg;
-  exit(0);
-}
-
-function die_rollback($msg) {
-  $db = new db_alloc();
-  $db->query("ROLLBACK");
-  echo $msg;
-  global $email_receive;
-  if ($email_receive) {
-    $email_receive->archive("INBOX");
-  }
-}
 
 $info["host"] = config::get_config_item("allocEmailHost");
 $info["port"] = config::get_config_item("allocEmailPort");
@@ -60,7 +45,7 @@ $info["username"] = config::get_config_item("allocEmailUsername");
 $info["password"] = config::get_config_item("allocEmailPassword");
 $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
-$info["host"] or die_bad("Email mailbox host not defined, assuming email function is inactive.");
+$info["host"] or alloc_error("Email mailbox host not defined, assuming email function is inactive.");
 
 
 // Read an email from stdin
@@ -77,10 +62,7 @@ if (preg_match("/^From /i",$email[0])) {
 }
 
 $email = implode("", (array)$email);
-$email or die_bad("Empty email message, halting.");
-
-// Don't alloc_die() on errors. Static call to permeate all instances of db_entity objects.
-db_entity::skip_errors();
+$email or alloc_error("Empty email message, halting.");
 
 // wrap db queries in a transaction
 $db = new db_alloc();
@@ -96,12 +78,13 @@ $email_receive->get_msg_header();
 if (same_email_address($email_receive->mail_headers["from"], ALLOC_DEFAULT_FROM_ADDRESS)) {
   $email_receive->mark_seen();
   $email_receive->archive();
-  die_good("Email was sent from alloc. Archived email.");
+  echo("Email was sent from alloc. Archived email.");
+  exit(0);
 }
 
 list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
 if (!$email_receive->mail_headers["from"] || !$from_address) {
-  die_bad("No from address. Skipping email: ".$rtn["message"]);
+  alloc_error("No from address. Skipping email: ".$email_receive->mail_text);
 }
 
 $person = new person;
@@ -124,16 +107,18 @@ $email_receive->save_email_from_text($email,$dir.DIRECTORY_SEPARATOR);
 $command = new command();
 $fields = $command->get_fields();
 $commands = $email_receive->get_commands($fields);
-$rtn = $command->run_commands($commands,$email_receive);
-if ($rtn["status"] == "err") {
-  die_rollback("Email command failed: ".$rtn["message"]);
 
-// Commit the db, and move the email into its storage location eg: INBOX.task1234
-} else {
-  $db->commit();
-  $email_receive->archive();
+try {
+  $command->run_commands($commands,$email_receive);
+} catch (Exception $e) {
+  $db->query("ROLLBACK");
+  $email_receive->archive("INBOX");
+  alloc_error("Email command failed: ".$e->getMessage()."\n\n".$e->getTraceAsString());
 }
 
+// Commit the db, and move the email into its storage location eg: INBOX.task1234
+$db->commit();
+$email_receive->archive();
 $email_receive->expunge();
 $email_receive->close();
 

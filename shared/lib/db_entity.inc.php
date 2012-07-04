@@ -37,8 +37,6 @@ class db_entity {
   public $debug = false;
   public $display_field_name;        // Set this to the field to be used by the get_display_value function
   public $cache;                     // Cache associative array stored by primary key index
-  public static $errors_fatal = true;
-  
   private $fields_loaded = false;    // This internal flag just specifies whether a row from the db was loaded
 
 
@@ -74,19 +72,6 @@ class db_entity {
     if ($id) {
       $this->set_id($id);
       $this->select();
-    }
-  }
-
-  function skip_errors() {
-    self::$errors_fatal = false;
-  }
-
-  function err($str) {
-    error_log($str);
-    if (self::$errors_fatal) {
-      alloc_die($str);
-    } else {
-      echo $str;
     }
   }
 
@@ -153,40 +138,20 @@ class db_entity {
     return false;
   }
 
-  function check_perm($action = 0, $person = "", $assume_owner = false) {
-    $current_user = &singleton("current_user");
-    if ($this->have_perm($action, $person, $assume_owner)) {
-      return true;
-
-    } else {
-      $description = $this->permissions[$action];
-      if (!$description) {
-        $description = $action;
-      }
-      if (is_object($person)) {
-        $extra = " (personID:".$person->get_id().")";
-      } else if (is_object($current_user)) {
-        $extra = " (personID*:".$current_user->get_id().")";
-      }
-      $this->err("You".$extra." do not have permission '".$description."' for ".$this->data_table." #".$this->get_id());
-      return false;
-    }
-  }
-
-  function select($errors_fatal=true) {
+  function select() {
     if (!$this->has_key_values()) {
       return false;
     }
-    $query = "SELECT * FROM ".db_esc($this->data_table)." WHERE ".$this->get_name_equals_value(array($this->key_field), " AND ");
-    if ($this->debug)
-      echo "db_entity->select query: $query<br>\n";
-    $db = $this->get_db();
-    $db->query($query);
-    if ($db->next_record()) {
-      $this->read_db_record($db,$errors_fatal);
-      return true;
-    } else {
-      return false;
+    if ($this->data_table && $this->key_field) {
+      $query = "SELECT * FROM ".db_esc($this->data_table)." WHERE ".$this->get_name_equals_value(array($this->key_field), " AND ");
+      if ($this->debug)
+        echo "db_entity->select query: $query<br>\n";
+      $db = $this->get_db();
+      $db->query($query);
+      if ($db->next_record()) {
+        $this->read_db_record($db);
+        return true;
+      }
     }
   }
  
@@ -201,7 +166,10 @@ class db_entity {
   }
 
   function delete() {
-    if (!$this->check_perm(PERM_DELETE)) {
+    if (!$this->have_perm(PERM_DELETE)) {
+      $current_user = &singleton("current_user");
+      alloc_error(sprintf("Person %d does not have permission %s for %s #%d"
+                         ,$current_user->get_id(), $this->permissions[PERM_DELETE], $this->data_table, $this->get_id()));
       return false;
     }
     if (!$this->has_key_values()) {
@@ -223,7 +191,10 @@ class db_entity {
     } else {
       $current_user_id = "0";
     }
-    if (!$this->check_perm(PERM_CREATE)) {
+    if (!$this->have_perm(PERM_CREATE)) {
+      $current_user = &singleton("current_user");
+      alloc_error(sprintf("Person %d does not have permission %s for %s #%d"
+                         ,$current_user->get_id(), $this->permissions[PERM_CREATE], $this->data_table, $this->get_id()));
       return false;
     }
 
@@ -269,7 +240,10 @@ class db_entity {
 
   function update() {
 
-    if (!$this->check_perm(PERM_UPDATE)) {
+    if (!$this->have_perm(PERM_UPDATE)) {
+      $current_user = &singleton("current_user");
+      alloc_error(sprintf("Person %d does not have permission %s for %s #%d"
+                         ,$current_user->get_id(), $this->permissions[PERM_UPDATE], $this->data_table, $this->get_id()));
       return false;
     }
 
@@ -438,50 +412,32 @@ class db_entity {
     return $this->key_field->has_value();
   }
 
-  function read_db_record($db, $errors_fatal = true) {
+  function read_db_record($db) {
     $this->set_id($db->f($this->key_field->get_name()));
     $this->read_array($db->row, "", SRC_DATABASE);
     $this->all_row_fields = $db->row;
-    if ($errors_fatal) {
-      if (!$this->check_perm(PERM_READ)) {
-        $this->clear();
-        return false;
+    $have_perm = $this->have_perm(PERM_READ);
+    if (!$have_perm) {
+      $m = new meta();
+      $meta_tables = (array)$m->get_tables();
+      $meta_tables = array_keys($meta_tables);
+      if (in_array($this->data_table,(array)$meta_tables)) {
+        return true;
       }
-      return true;
-    } else {
-      $have_perm = $this->have_perm(PERM_READ);
-      if (!$have_perm) {
-        // we don't bother doing read permission checking for all the meta tables
-        $m = new meta();
-        $meta_tables = (array)$m->get_tables();
-        $meta_tables = array_keys($meta_tables);
-        if (in_array($this->data_table,(array)$meta_tables)) {
-          return true;
-        }
-
-        $this->clear();
-      }
-      return $have_perm;
+      $this->clear();
     }
+    return $have_perm;
   } 
 
-  function read_row_record($row, $errors_fatal = true) {
+  function read_row_record($row) {
     $this->set_id($row[$this->key_field->get_name()]);
     $this->read_array($row, "", SRC_DATABASE);
     $this->all_row_fields = $row;
-    if ($errors_fatal) {
-      if (!$this->check_perm(PERM_READ)) {
-        $this->clear();
-        return false;
-      }
-      return true;
-    } else {
-      $have_perm = $this->have_perm(PERM_READ);
-      if (!$have_perm) {
-        $this->clear();
-      }
-      return $have_perm;
+    $have_perm = $this->have_perm(PERM_READ);
+    if (!$have_perm) {
+      $this->clear();
     }
+    return $have_perm;
   } 
 
   function row() {
@@ -492,7 +448,7 @@ class db_entity {
     if (is_object($this->data_fields[$field_name])) {
       $this->set_field_value($this->data_fields[$field_name], $value, $source);
     } else {
-      $this->err("Cannot set field value - field not found: ".$field_name);
+      alloc_error("Cannot set field value - field not found: ".$field_name);
     }
   }
 
@@ -500,7 +456,7 @@ class db_entity {
     $field = $this->data_fields[$field_name];
     if (!is_object($field)) {
       $msg = "Field $field_name does not exist in ".$this->data_table;
-      $this->err($msg);
+      alloc_error($msg);
       return $msg;
     }
     if (!$this->can_read_field($field_name)) {
@@ -704,7 +660,7 @@ class db_entity {
     $db->query($q);
     $rows = array();
     while($row = $db->row()) {
-      if ($this->read_db_record($db,false)) {
+      if ($this->read_db_record($db)) {
         if ($value && $value != "*") {
           $v = $row[$value];
         } else {

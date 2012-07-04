@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 if (!$current_user->is_employee()) {
-  alloc_die("You do not have permission to access invoices");
+  alloc_error("You do not have permission to access invoices",true);
 }
 
 $invoiceID = $_POST["invoiceID"] or $invoiceID = $_GET["invoiceID"];

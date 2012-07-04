@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 if (!$current_user->is_employee()) {
-  alloc_die("You do not have permission to access time sheets");
+  alloc_error("You do not have permission to access time sheets",true);
 }
 
 
@@ -149,7 +149,7 @@ if (!$current_user->is_employee()) {
 
         while ($db->next_record()) {
           $transaction = new transaction;
-          $transaction->read_db_record($db,false);
+          $transaction->read_db_record($db);
           $transaction->set_tpl_values("transaction_");
           unset($TPL["transaction_amount_pos"]);
           unset($TPL["transaction_amount_neg"]);
@@ -245,7 +245,7 @@ if (!$current_user->is_employee()) {
     while ($db->next_record()) {
       $timeSheetItem = new timeSheetItem;
       $timeSheetItem->currency = $timeSheet->get_value("currencyTypeID");
-      $timeSheetItem->read_db_record($db,false);
+      $timeSheetItem->read_db_record($db);
       $timeSheetItem->set_tpl_values("timeSheetItem_");
       
 

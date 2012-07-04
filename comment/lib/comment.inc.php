@@ -422,7 +422,7 @@ class comment extends db_entity {
   function make_token_add_comment_from_email() {
     $current_user = &singleton("current_user");
     if (!is_object($current_user) || !$current_user->get_id()) {
-      alloc_die("Cannot make token, current_user is not set.");
+      alloc_error("Cannot make token, current_user is not set.",true);
     }
     $token = new token;
     $token->set_value("tokenEntity","comment");
@@ -910,7 +910,7 @@ class comment extends db_entity {
     $db->query($q2);
     while ($row = $db->row()) {
       $timeSheetItem = new timeSheetItem();
-      if (!$timeSheetItem->read_row_record($row,false))
+      if (!$timeSheetItem->read_row_record($row))
         continue;
       $row["id"] = "timeitem_".$row["id"];
       $row["person"] = $people[$row["personID"]]["name"];

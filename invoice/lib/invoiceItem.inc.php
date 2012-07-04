@@ -48,7 +48,7 @@ class invoiceItem extends db_entity {
     $db->query($q);
     while ($db->next_record()) {
       $transaction = new transaction();
-      $transaction->read_db_record($db, false);
+      $transaction->read_db_record($db);
       if ($transaction->is_owner($person)) {
         return true;
       }
@@ -59,7 +59,7 @@ class invoiceItem extends db_entity {
       $db->query($q);
       while ($db->next_record()) {
         $timeSheet = new timeSheet();
-        $timeSheet->read_db_record($db, false);
+        $timeSheet->read_db_record($db);
         if ($timeSheet->is_owner($person)) {
           return true;
         }
@@ -71,7 +71,7 @@ class invoiceItem extends db_entity {
       $db->query($q);
       while ($db->next_record()) {
         $expenseForm = new expenseForm();
-        $expenseForm->read_db_record($db, false);
+        $expenseForm->read_db_record($db);
         if ($expenseForm->is_owner($person)) {
           return true;
         }

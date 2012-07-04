@@ -154,7 +154,7 @@ function show_invoiceItem_list() {
     $invoiceItem = new invoiceItem;
     $invoiceItem->currency = $invoice->get_value("currencyTypeID");
   
-    if (!$invoiceItem->read_db_record($db,false)) {
+    if (!$invoiceItem->read_db_record($db)) {
       continue;
     }
     $invoiceItem->set_tpl_values("invoiceItem_");
@@ -188,7 +188,7 @@ function show_invoiceItem_list() {
     while ($db2->next_record()) {
 
       $transaction = new transaction();
-      if (!$transaction->read_db_record($db2,false)) {
+      if (!$transaction->read_db_record($db2)) {
         $other_peoples_transactions.= "<br>Tansaction access denied for transaction #".$db2->f("transactionID");
         continue;
       }

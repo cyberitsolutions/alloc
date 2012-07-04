@@ -22,6 +22,10 @@
 
 define("NO_AUTH",1);
 require_once("../alloc.php");
+singleton("errors_fatal",false);
+singleton("errors_format","text");
+singleton("errors_logged",false);
+singleton("errors_thrown",true);
 
 #$nl = "<br>";
 $nl = "\n";
@@ -36,7 +40,7 @@ $info["password"] = config::get_config_item("allocEmailPassword");
 $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
 if (!$info["host"]) {
-  alloc_die("Email mailbox host not defined, assuming email receive function is inactive.");
+  alloc_error("Email mailbox host not defined, assuming email receive function is inactive.",true);
 }
 
 $email_receive = new email_receive($info,$lockfile);
@@ -56,9 +60,6 @@ if ($num_new_emails >0) {
   foreach ($msg_nums as $num) {
     unset($current_user);
 
-    // Don't alloc_die() on errors. Static call to permeate all instances of db_entity objects.
-    db_entity::skip_errors();
-
     // wrap db queries in a transaction
     $db = new db_alloc();
     $db->start_transaction();
@@ -76,7 +77,9 @@ if ($num_new_emails >0) {
 
     list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
     if (!$email_receive->mail_headers["from"] || !$from_address) {
-      send_error($email_receive, "No from address. Skipping email.");
+      $db->query("ROLLBACK");
+      $email_receive->forward(config::get_config_item("allocEmailAdmin"), "No from address. Skipping email.");
+      alloc_error("No from address. Skipping email: ".$email_receive->mail_text);
       continue;
     }
 
@@ -99,32 +102,25 @@ if ($num_new_emails >0) {
     $command = new command();
     $fields = $command->get_fields();
     $commands = $email_receive->get_commands($fields);
-    $rtn = $command->run_commands($commands,$email_receive);
-    if ($rtn["status"]=="err") {
-      send_error($email_receive, "Email command failed: ".$rtn["message"]);
+
+    try {
+      $command->run_commands($commands,$email_receive);
+    } catch (Exception $e) {
+      $db->query("ROLLBACK");
+      $email_receive->forward(config::get_config_item("allocEmailAdmin")
+                             ,"Email command failed"
+                             ,"\n".$e->getMessage()."\n\n".$e->getTraceAsString());
+      $email_receive->archive();
+      continue;
+    }
 
     // Commit the db, and move the email into its storage location eg: INBOX.task1234
-    } else {
-      $db->commit();
-      $email_receive->archive();
-    }
+    $db->commit();
+    $email_receive->archive();
   }
 }
 
 $email_receive->expunge();
 $email_receive->close();
 
-function send_error($email_receive,$msg) {
-  $db = new db_alloc();
-  $db->query("ROLLBACK");
-
-  print "<br><br>Sending error.";
-  print "<br>Error: ".$msg;
-  print "<br>Email: <br>".$email_receive->mail_text;
-
-  // Forward to admin
-  if (config::get_config_item("allocEmailAdmin")) {
-    $email_receive->forward(config::get_config_item("allocEmailAdmin"), $msg);
-  }
-}
 ?>

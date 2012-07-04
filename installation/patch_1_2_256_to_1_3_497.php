@@ -68,8 +68,7 @@ if ($old_alloc_inc) {
 } else if (file_exists(ALLOC_CONFIG_PATH)) {
   $file = ALLOC_CONFIG_PATH;
 } else {
-  echo "No config file found! Find the alloc.inc file and put it in the php include_path.";
-  alloc_die();
+  alloc_error("No config file found! Find the alloc.inc file and put it in the php include_path.",true);
 }
   
 $patterns = array("ALLOC_DB_NAME","ALLOC_DB_USER","ALLOC_DB_PASS","ALLOC_DB_HOST","ATTACHMENTS_DIR");

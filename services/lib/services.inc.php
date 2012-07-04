@@ -49,7 +49,7 @@ class services {
       $sess->Save();
       return $sess->GetKey();
     } else {
-      alloc_die("Authentication Failed(1)."); 
+      die("Authentication Failed(1)."); 
     }
   }  
 
@@ -221,7 +221,7 @@ class services {
       }
 
       if ($bad_person) {
-        alloc_die("Unable to find person: ".$person);
+        die("Unable to find person: ".$person);
       }
     }
     foreach ((array)$rtn as $id => $p) {
@@ -251,7 +251,7 @@ class services {
     if ($rtn["status"] == "yay") {
       return $rtn["message"];
     } else {
-      alloc_die(print_r($rtn,1));
+      die(print_r($rtn,1));
     }
   }
 
@@ -305,10 +305,10 @@ class services {
           }
         }
       } else {
-        alloc_die("Entity method '".$entity."->get_list()' does not exist."); 
+        die("Entity method '".$entity."->get_list()' does not exist."); 
       }
     } else {
-      alloc_die("Entity '".$entity."' does not exist."); 
+      die("Entity '".$entity."' does not exist."); 
     }
   }
 
@@ -386,7 +386,7 @@ class services {
     $info["password"] = config::get_config_item("allocEmailPassword");
     $info["protocol"] = config::get_config_item("allocEmailProtocol");
     if (!$info["host"]) {
-      alloc_die("Email mailbox host not defined, assuming email fetch function is inactive.");
+      die("Email mailbox host not defined, assuming email fetch function is inactive.");
     }
     return $info;
   }
@@ -447,14 +447,14 @@ class services {
           $commar = ", ";
         }
       }
-      alloc_die("Help is available for the following methods: ".$available_topics);
+      die("Help is available for the following methods: ".$available_topics);
 
     } else {
       $m = $topic."_help";
       if (method_exists($this,$m)) {
         return $this->$m();
       } else {
-        alloc_die("No help exists for this method: ".$topic); 
+        die("No help exists for this method: ".$topic); 
       }
     }
   }
@@ -519,7 +519,7 @@ class services {
         }
       }
     }
-    alloc_die("Usage: get_list(entity, options). The following entities are available: ".$rtn);
+    die("Usage: get_list(entity, options). The following entities are available: ".$rtn);
   }
 
   /**

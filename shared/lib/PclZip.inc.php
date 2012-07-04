@@ -202,7 +202,7 @@
     if (!function_exists('gzopen'))
     {
       //--(MAGIC-PclTrace)--//PclTraceFctMessage(__FILE__, __LINE__, 1, "zlib extension seems to be missing");
-      alloc_die('Abort '.basename(__FILE__).' : Missing zlib extensions');
+      alloc_error('Abort '.basename(__FILE__).' : Missing zlib extensions');
     }
 
     // ----- Set the attributes

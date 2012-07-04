@@ -43,7 +43,7 @@ function apply_patch($f) {
   // We MUST ensure that the user has a currency set before applying this patch.
   if ($file == "patch-00188-alla.sql") {
     if (!config::get_config_item('currency')) {
-      alloc_die("No default currency is set! Login to alloc (ignore any errors, you may need to manually change the url to config/config.php after logging in) go to Setup -> Finance and select a Main Currency. And then click the 'Update Transactions That Have No Currency' button. Then return here and apply this patch (patch-188). IT IS REALLY IMPORTANT THAT YOU FOLLOW THESE INSTRUCTIONS as the storage format for monetary amounts has changed.");
+      alloc_error("No default currency is set! Login to alloc (ignore any errors, you may need to manually change the url to config/config.php after logging in) go to Setup -> Finance and select a Main Currency. And then click the 'Update Transactions That Have No Currency' button. Then return here and apply this patch (patch-188). IT IS REALLY IMPORTANT THAT YOU FOLLOW THESE INSTRUCTIONS as the storage format for monetary amounts has changed.",true);
     }
   }
 
@@ -56,7 +56,7 @@ function apply_patch($f) {
       if (!$db->query($query)) {
         #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br>".$db->get_error();
         $failed = true;
-        alloc_die("<b style=\"color:red\">Error:</b> ".$f."<br>".$db->get_error());
+        alloc_error("<b style=\"color:red\">Error:</b> ".$f."<br>".$db->get_error());
       }
     }
     if (!$failed) {
@@ -70,7 +70,7 @@ function apply_patch($f) {
       #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br>".$str;
       $failed = true;
       ob_end_clean();
-      alloc_die("<b style=\"color:red\">Error:</b> ".$f."<br>".$str);
+      alloc_error("<b style=\"color:red\">Error:</b> ".$f."<br>".$str);
     } else {
       $TPL["message_good"][] = "Successfully Applied: ".$f;
     }

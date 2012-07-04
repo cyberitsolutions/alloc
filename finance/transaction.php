@@ -53,9 +53,6 @@ if ($transactionID && !$_GET["new"]) {
   $transaction->select();
 }
 
-$tf = $transaction->get_foreign_object("tf");
-$tf->check_perm() or alloc_die();
-
 $invoice_item = $transaction->get_foreign_object("invoiceItem");
 $invoice_item->set_values();
 $invoice = $invoice_item->get_foreign_object("invoice");
@@ -104,10 +101,8 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
   #$transaction->get_value("companyDetails")  or $TPL["message"][] = "You must enter the company details";
 
   if (!count($TPL["message"]))  {
-    $transaction->check_perm(PERM_CREATE) or alloc_die();
     $transaction->set_value("amount",str_replace(array("$",","),"",$transaction->get_value("amount")));
-    $transaction->save();
-    if (!count($TPL["message"]))  { // need to check this again as transaction->save might have triggered an error
+    if ($transaction->save()) { // need to check this again as transaction->save might have triggered an error
       $TPL["message_good"][] = "Transaction Saved";
 
       if ($_POST["saveAndNew"]) {

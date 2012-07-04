@@ -95,7 +95,7 @@ function import_csv($infile, $mapping, $header = true) {
 
   $rp = realpath(ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR.$infile);
   if ($rp === FALSE || strpos($rp, ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR) !== 0)
-    alloc_die("Illegal file path."); //should occur through user dodginess
+    alloc_error("Illegal file path.",true); //should occur through user dodginess
 
   $db = new db_alloc(); //import_find_username needs it
   //Import a CSV file

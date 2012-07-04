@@ -138,7 +138,7 @@ if (true) {
     usleep(25000);
 
     $x++; 
-    #$x>20 and alloc_die(fclose($fp).$mail->close()."\n"."Stopped."."\n");
+    #$x>20 and alloc_error(fclose($fp).$mail->close()."\n"."Stopped."."\n");
 
     $mail->set_msg($num);
     $decoded = $mail->save_email($dir.DIRECTORY_SEPARATOR."email");

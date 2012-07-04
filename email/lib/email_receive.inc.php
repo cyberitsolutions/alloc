@@ -52,7 +52,7 @@ class email_receive {
     } 
 
     if ($this->lockfile && file_exists($this->lockfile)) {
-      alloc_die("Mailbox is locked. Remove ".$this->lockfile." to unlock.");
+      alloc_error("Mailbox is locked. Remove ".$this->lockfile." to unlock.");
     } else if ($this->lockfile) {
       $this->lock();
     }
@@ -65,14 +65,14 @@ class email_receive {
     $this->connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.config::get_config_item("allocEmailExtra").'}';
     $this->connection = imap_open($this->connect_string, $this->username, $this->password, $ops);
     if (!$this->connection && $fatal) {
-      alloc_die("Unable to access mail folder(1).");
+      alloc_error("Unable to access mail folder(1).");
     }
     $list = imap_list($this->connection, $this->connect_string, "*");
     if (!is_array($list) || !count($list)) { // || !in_array($connect_string.$folder,$list)) {
       $this->unlock();
       imap_close($this->connection); 
       if ($fatal) {
-        alloc_die("Unable to access mail folder(2).");
+        alloc_error("Unable to access mail folder(2).");
       }
     } else {
       $rtn = imap_reopen($this->connection, $this->connect_string.$folder);
@@ -85,12 +85,12 @@ class email_receive {
       if (!$rtn) {
         imap_close($this->connection); 
         if ($fatal) {
-          alloc_die("Unable to access mail folder(3).");
+          alloc_error("Unable to access mail folder(3).");
         }
       }
     }
     if (!$rtn && $fatal) {
-      alloc_die("<pre>IMAP errors: ".print_r(imap_errors(),1).print_r(imap_alerts(),1)."</pre>");
+      alloc_error("<pre>IMAP errors: ".print_r(imap_errors(),1).print_r(imap_alerts(),1)."</pre>");
     }
     return $rtn;
   }
@@ -333,13 +333,14 @@ class email_receive {
     imap_clearflag_full($this->connection, $this->msg_uid, "\\SEEN", ST_UID);
   }
 
-  function forward($address,$subject) {
+  function forward($address,$subject,$text='') {
     list($header,$body) = $this->get_raw_header_and_body();
     $header and $header_obj = $this->parse_headers($header);
     $orig_subject = $header_obj["subject"];
     $orig_subject and $s = " [".trim($orig_subject)."]";
 
     $dir = ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR;
+
     $filename = md5($header.$body);
     $fh = fopen($dir.$filename,"wb");
     fputs($fh, $header.$body);
@@ -347,7 +348,8 @@ class email_receive {
 
     $email = new email_send();
     $email->set_from(config::get_config_item("AllocFromEmailAddress"));
-    $email->set_subject($subject.$s);    
+    $email->set_subject($subject.$s);
+    $email->set_body($text);
     $email->set_to_address($address);
     $email->set_message_type("orphan");
     $email->add_attachment($dir.$filename);

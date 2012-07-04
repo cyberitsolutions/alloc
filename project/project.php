@@ -164,7 +164,8 @@ require_once("../alloc.php");
       $query = prepare("SELECT personID, roleName
                           FROM projectPerson
                      LEFT JOIN role ON role.roleID = projectPerson.roleID
-                         WHERE projectID = %d AND roleHandle IN ('isManager', 'timeSheetRecipient')
+                         WHERE projectID = %d 
+                      GROUP BY projectPerson.personID
                       ORDER BY roleSequence DESC, personID ASC", $projectID);
       $db->query($query);
       while ($db->next_record()) {
@@ -333,7 +334,6 @@ $project = new project;
 if ($projectID) {
   $project->set_id($projectID);
   $project->select();
-  $project->check_perm() or alloc_die();
   $new_project = false;
 } else {
   $new_project = true;
@@ -510,7 +510,7 @@ if ($projectID) {
   }
   // Displaying a record
   $project->set_id($projectID);
-  $project->select() || alloc_die("Could not load project $projectID");
+  $project->select() || alloc_error("Could not load project $projectID");
 } else {
   // Creating a new record
   $project->read_globals();
