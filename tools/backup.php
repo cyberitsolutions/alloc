@@ -27,7 +27,7 @@ $db = new db_alloc;
 # End of functions
 
 if (!$current_user->have_role("god")) {
-  alloc_die("Insufficient permissions. Backups may only be performed by super-users.");
+  alloc_error("Insufficient permissions. Backups may only be performed by super-users.",true);
 }
 
 $backup = new backups();
@@ -54,14 +54,14 @@ if ($_POST["delete_backup"]) {
   $file = $_POST["file"];
 
   if (bad_filename($file)) {
-    alloc_die("File delete error: Name contains slashes.");
+    alloc_error("File delete error: Name contains slashes.");
   }
   $path = ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR. $file;
   if (!is_file($path)) {
-    alloc_die("File delete error: Not a file.");
+    alloc_error("File delete error: Not a file.");
   }
   if (dirname(ATTACHMENTS_DIR . "backups" . DIRECTORY_SEPARATOR . "0" . DIRECTORY_SEPARATOR.".") != dirname($path)) {
-    alloc_die("File delete error: Bad path.");
+    alloc_error("File delete error: Bad path.");
   }
 
   unlink($path);

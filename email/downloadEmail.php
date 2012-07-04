@@ -39,7 +39,7 @@ $info["password"] = config::get_config_item("allocEmailPassword");
 $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
 if (!$info["host"]) {
-  alloc_die("Email mailbox host not defined, assuming email fetch function is inactive.");
+  alloc_error("Email mailbox host not defined, assuming email fetch function is inactive.",true);
 }
 
 if ($_REQUEST["commentID"]) {

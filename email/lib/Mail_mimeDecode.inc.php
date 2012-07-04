@@ -208,7 +208,7 @@ class Mail_mimeDecode
 
         // Called statically but no input
         } elseif ($isStatic) {
-            alloc_die('Called statically and no input given');
+            alloc_error('Mail_mimeDecode::decode() called statically and no input given');
 
         // Called via an object
         } else {
@@ -223,7 +223,7 @@ class Mail_mimeDecode
 
             $structure = $this->_decode($this->_header, $this->_body);
             if ($structure === false) {
-                alloc_die($this->_error);
+                alloc_error($this->_error);
             }
         }
 
@@ -327,7 +327,7 @@ class Mail_mimeDecode
                         list($part_header, $part_body) = $this->_splitBodyHeader($parts[$i]);
                         $part = $this->_decode($part_header, $part_body, $default_ctype);
                         if($part === false)
-                            alloc_die($this->_error);
+                            alloc_error($this->_error);
                         $return->parts[] = $part;
                     }
                     break;
@@ -417,7 +417,7 @@ class Mail_mimeDecode
         if (preg_match("/^(.*?)\r?\n\r?\n(.*)/s", $input, $match)) {
             return array($match[1], $match[2]);
         }
-        alloc_die('Could not split header and body');
+        alloc_error('Mail_mimeDecode::_splitBodyHeader() could not split header and body');
         return false;
     }
 
@@ -727,7 +727,7 @@ class Mail_mimeDecode
         $headerlist =$this->_parseHeaders($this->_header);
         $to = "";
         if (!$headerlist) {
-            alloc_die("Message did not contain headers");
+            alloc_error("Mail_mimeDecode::getSendArray() message did not contain headers");
         }
         foreach($headerlist as $item) {
             $header[$item['name']] = $item['value'];
@@ -741,7 +741,7 @@ class Mail_mimeDecode
             }
         }
         if ($to == "") {
-            alloc_die("Message did not contain any recipents");
+            alloc_error("Mail_mimeDecode::getSendArray() message did not contain any recipents");
         }
         $to = substr($to,1);
         return array($to,$header,$this->_body);

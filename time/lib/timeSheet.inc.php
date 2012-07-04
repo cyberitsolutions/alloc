@@ -83,10 +83,6 @@ class timeSheet extends db_entity {
     }
   }
 
-  function select() {
-    return parent::select(false);
-  }
-
   function get_timeSheet_statii() {
     return array("create"    => "Create"
                 ,"edit"      => "Add Time"
@@ -583,7 +579,7 @@ class timeSheet extends db_entity {
 
     while ($row = $db->next_record()) {
       $t = new timeSheet;
-      if (!$t->read_db_record($db,false))
+      if (!$t->read_db_record($db))
         continue;
 
       $t->load_pay_info();
@@ -820,7 +816,7 @@ class timeSheet extends db_entity {
     // an existing timesheet with a new one assigned to themself.
 
     if (!$this->get_value("personID")) {
-      alloc_die("You do not have access to this timesheet.");
+      alloc_error("You do not have access to this timesheet.");
     }
 
     $info = $this->get_email_vars();
@@ -860,7 +856,7 @@ class timeSheet extends db_entity {
       if (!in_array($current_user->get_id(), $projectManagers) &&
         !$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
           //error, go away
-          alloc_die("You do not have permission to change this timesheet.");
+          alloc_error("You do not have permission to change this timesheet.");
       }
       $email = array();
       $email["type"] = "timesheet_reject";
@@ -897,7 +893,7 @@ EOD;
       //user or TIME_INVOICE_TIMESHEETS
       //project managers may not do this
       if (!($this->get_value("personID") == $current_user->get_id() || $this->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
-        alloc_die("You do not have permission to change this timesheet.");
+        alloc_error("You do not have permission to change this timesheet.");
       }
       $this->set_value("dateSubmittedToManager", date("Y-m-d"));
       $this->set_value("dateRejected", "");
@@ -908,7 +904,7 @@ EOD;
       $db->query($task_id_query);
       while($db->next_record()) {
         $task = new task;
-        $task->read_db_record($db, false);
+        $task->read_db_record($db);
         $task->select();
         if($task->get_value('timeLimit') > 0) {
           $total_billed_time = ($task->get_time_billed(false)) / 3600;
@@ -946,7 +942,7 @@ EOD;
       //admin->manager requires APPROVE_TIMESHEETS
       if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
-        alloc_die("You do not have permission to change this timesheet.");
+        alloc_error("You do not have permission to change this timesheet.");
       }
       $email = array();
       $email["type"] = "timesheet_reject";
@@ -985,7 +981,7 @@ EOD;
         (empty($projectManagers) && $this->get_value("personID") == $current_user->get_id()) ||
         $this->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
           //error, go away
-        alloc_die("You do not have permission to change this timesheet.");
+        alloc_error("You do not have permission to change this timesheet.");
       }
 
         if ($this->get_value("status") == "manager") { 
@@ -1021,7 +1017,7 @@ EOD;
       //requires INVOICE_TIMESHEETS
       if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
-        alloc_die("You do not have permission to change this timesheet.");
+        alloc_error("You do not have permission to change this timesheet.");
       }
 
       $this->set_value("approvedByAdminPersonID", "");
@@ -1036,7 +1032,7 @@ EOD;
     // requires INVOICE_TIMESHEETS
     if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
-      alloc_die("You do not have permission to change this timesheet.");
+      alloc_error("You do not have permission to change this timesheet.");
     }
 
     if ($info["projectManagers"] 
@@ -1052,7 +1048,7 @@ EOD;
       //requires INVOICE_TIMESHEETS
       if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
         //no permission, go away
-        alloc_die("You do not have permission to change this timesheet.");
+        alloc_error("You do not have permission to change this timesheet.");
       }
 
       //transactions
@@ -1095,7 +1091,7 @@ EOD;
   function pending_transactions_to_approved() {
     if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
       //no permission, die
-      alloc_die("You do not have permission to approve transactions for this timesheet.");
+      alloc_error("You do not have permission to approve transactions for this timesheet.");
     }
 
     $db = new db_alloc();
@@ -1132,6 +1128,7 @@ EOD;
   function add_timeSheetItem($stuff) {
     $current_user = &singleton("current_user");
 
+    $errstr = "Failed to record new time sheet item. ";
     $taskID = $stuff["taskID"];
     $projectID = $stuff["projectID"];
     $duration = $stuff["duration"];
@@ -1150,7 +1147,7 @@ EOD;
       $extra = " for task ".$taskID;
     }
 
-    $projectID or $err[] = sprintf("No project found%s.",$extra);
+    $projectID or alloc_error(sprintf($errstr."No project found%s.",$extra));
 
     if ($projectID) {
       $q = prepare("SELECT * 
@@ -1187,7 +1184,7 @@ EOD;
         $timeSheetID = $row["timeSheetID"];
       }   
 
-      $timeSheetID or $err[] = "Couldn't find or create a Time Sheet.";
+      $timeSheetID or alloc_error($errstr."Couldn't locate an existing, or create a new Time Sheet.");
 
       // Add new time sheet item
       if ($timeSheetID) {
@@ -1196,7 +1193,7 @@ EOD;
         $timeSheet->select();
 
         $row_projectPerson = projectPerson::get_projectPerson_row($projectID, $current_user->get_id());
-        $row_projectPerson or $err[] = "The person has not been added to the project.";
+        $row_projectPerson or alloc_error($errstr."The person(".$current_user->get_id().") has not been added to the project(".$projectID.").");
 
         $tsi = new timeSheetItem();
         $tsi->currency = $timeSheet->get_value("currencyTypeID");
@@ -1226,12 +1223,10 @@ EOD;
       }
     }
 
-    if (!$err && $ID) {
+    if ($ID) {
       return array("status"=>"yay","message"=>$ID);
     } else {
-      $ID or $err[] = "Time not added.";
-      $e = implode(" ",(array)$err);
-      return array("status"=>"err","message"=>$e);
+      alloc_error($errstr."Time not added.");
     }
   }
 

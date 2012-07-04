@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 if (!has_report_perm()) {
-  alloc_die("you don't have permission to generate reports.");
+  alloc_error("you don't have permission to generate reports.",true);
 }
 
 
@@ -170,7 +170,7 @@ if ($_POST["do_step_2"]) {
         }
       }
     } else {
-      alloc_die("class ".$table." does not exist.. ");
+      alloc_error("class ".$table." does not exist.. ");
     }
   }
   $TPL["table_fields"].= "</tr>";
@@ -208,7 +208,7 @@ if ($_POST["do_step_2"]) {
 if ($_POST["do_step_3"]) {
 
   if (!is_array($table_fields)) {
-    alloc_die("Did not get table_fields array.");
+    alloc_error("Did not get table_fields array.");
     $table_fields = array();
   }
 

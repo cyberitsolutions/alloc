@@ -88,35 +88,33 @@ class command {
     $item_fields = $this->get_fields("item");
 
     // If there's Key in the email, then add a comment with the contents of the email.
-    if ($commands["key"]) {
-      $token = new token;
-      if ($token->set_hash($commands["key"])) {
+    $token = new token;
+    if ($commands["key"] && $token->set_hash($commands["key"])) {
 
-        $db = new db_alloc();
-        $comment = $token->get_value("tokenEntity");
-        $commentID = $token->get_value("tokenEntityID");
+      $db = new db_alloc();
+      $comment = $token->get_value("tokenEntity");
+      $commentID = $token->get_value("tokenEntityID");
 
-        list($entity,$method) = $token->execute();
-        if (is_object($entity) && $method == "add_comment_from_email") {
+      list($entity,$method) = $token->execute();
+      if (is_object($entity) && $method == "add_comment_from_email") {
 
-          $c = comment::add_comment_from_email($email_receive,$entity);
+        $c = comment::add_comment_from_email($email_receive,$entity);
 
-          if (is_object($c) && $c->get_id()) {
-            $quiet = interestedParty::adjust_by_email_subject($email_receive,$entity);
+        if (is_object($c) && $c->get_id()) {
+          $quiet = interestedParty::adjust_by_email_subject($email_receive,$entity);
 
-            if ($commands["ip"]) {
-              $rtn = interestedParty::add_remove_ips($commands["ip"],$entity->classname,$entity->get_id(),$entity->get_project_id());
-            }
+          if ($commands["ip"]) {
+            $rtn = interestedParty::add_remove_ips($commands["ip"],$entity->classname,$entity->get_id(),$entity->get_project_id());
+          }
 
-            if (!$quiet) {
-              comment::send_comment($c->get_id(),array("interested"),$email_receive);
-            }
+          if (!$quiet) {
+            comment::send_comment($c->get_id(),array("interested"),$email_receive);
           }
         }
       }
-    // No key, then error
+    // Bad or missing key, then error
     } else if ($email_receive) {
-      return array("status"=>"err","message"=>"No key found. Unable to process email.");
+      alloc_error("Bad or missing key. Unable to process email.");
     }
 
 
@@ -206,8 +204,7 @@ class command {
 
       // Problems
       } else if ($err && $commands["item"]) {
-        $status[] = "err";
-        $message[] = "Problem updating time sheet item: ".implode("\n",(array)$err);
+        alloc_error("Problem updating time sheet item: ".implode("\n",(array)$err));
       }
 
 
@@ -287,10 +284,7 @@ class command {
         $str and $message[] = $after_label.$str;
 
         if ($commands["taskip"]) {
-          $rtn = interestedParty::add_remove_ips($commands["taskip"],"task",$task->get_id(),$task->get_value("projectID"));
-          if ($rtn["status"] == "err") {
-            return $rtn;
-          }
+          interestedParty::add_remove_ips($commands["taskip"],"task",$task->get_id(),$task->get_value("projectID"));
         }
   
         if (strtolower($commands["task"]) == "new") {
@@ -303,8 +297,7 @@ class command {
 
       // Problems
       } else {
-        $status[] = "err";
-        $message[] = "Problem updating task: ".implode("\n",(array)$err);
+        alloc_error("Problem updating task: ".implode("\n",(array)$err));
       }
 
 

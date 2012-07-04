@@ -148,12 +148,6 @@ class person extends db_entity {
     return in_array($perm_name,$perms);
   }
 
-  function check_role($perm_name) {
-    if (!$this->have_role($perm_name)) {
-      alloc_die("Pemission denied");
-    }
-  }
-
   function is_employee() {
     // Function to check if the person is an employee
     $current_user = &singleton("current_user");
@@ -170,7 +164,7 @@ class person extends db_entity {
   function check_employee() {
     // Ensure the current user is an employee
     if (!$this->is_employee()) {
-      alloc_die("You must be an employee to access this function");
+      alloc_error("You must be an employee to access this function",true);
     }
   }
 
@@ -454,7 +448,7 @@ class person extends db_entity {
 
     while ($row = $db->next_record()) {
       $p = new person;
-      if (!$p->read_db_record($db,false)) {
+      if (!$p->read_db_record($db)) {
         continue;
       }
       $row = $p->perm_cleanup($row); // this is not the right way to do this - alla

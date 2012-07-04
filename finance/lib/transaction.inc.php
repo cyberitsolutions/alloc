@@ -372,7 +372,7 @@ class transaction extends db_entity {
       #echo "<pre>".print_r($row,1)."</pre>";
       $i++;
       $t = new transaction;
-      if (!$t->read_db_record($db,false))
+      if (!$t->read_db_record($db))
         continue;
 
       $print = true;
@@ -411,7 +411,7 @@ class transaction extends db_entity {
       if ($for_cyber && $row["productSaleID"]) {
         $ps = new productSale();
         $ps->set_id($row["productSaleID"]);
-        if ($ps->select(false)) {
+        if ($ps->select()) {
           $ps->get_value("extRef") and $row["product"].= " (Ext ref: ".$ps->get_value("extRef").")";
         }
       }

@@ -195,7 +195,7 @@ class Mail_RFC822 {
         while ($this->address = $this->_splitAddresses($this->address));
 
         if ($this->address === false || isset($this->error)) {
-            alloc_die(print_r($this->error,1));
+            alloc_error(print_r($this->error,1));
             //require_once 'PEAR.php';
             //return PEAR::raiseError($this->error);
         }
@@ -206,7 +206,7 @@ class Mail_RFC822 {
             $valid = $this->_validateAddress($address);
 
             if ($valid === false || isset($this->error)) {
-                alloc_die(print_r($this->error,1));
+                alloc_error(print_r($this->error,1));
                 //require_once 'PEAR.php';
                 //return PEAR::raiseError($this->error);
             }

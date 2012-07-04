@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 if (!have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
-  alloc_die("Permission denied.");
+  alloc_error("Permission denied.",true);
 }
 
 $table = $_POST["configName"] or $table = $_GET["configName"];

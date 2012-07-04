@@ -361,24 +361,24 @@ function move_attachment($entity, $id=false) {
 
         if (!preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)) {
           if (!move_uploaded_file($file["tmp_name"], $dir.DIRECTORY_SEPARATOR.$newname)) {
-            alloc_die("Could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
+            alloc_error("Could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
           } else {
             chmod($dir.DIRECTORY_SEPARATOR.$newname, 0777);
           }
         } else {
-          alloc_die("Error uploading file. Bad filename.");
+          alloc_error("Error uploading file. Bad filename.");
         }
   
       } else {
         switch($file['error']){
           case 0: 
-            alloc_die("There was a problem with your upload.");
+            alloc_error("There was a problem with your upload.");
             break;
           case 1: // upload_max_filesize in php.ini
-            alloc_die("The file you are trying to upload is too big(1).");
+            alloc_error("The file you are trying to upload is too big(1).");
             break;
           case 2: // MAX_FILE_SIZE
-            alloc_die("The file you are trying to upload is too big(2).");
+            alloc_error("The file you are trying to upload is too big(2).");
             break;
           case 3: 
             echo "The file you are trying upload was only partially uploaded.";
@@ -797,9 +797,44 @@ function tax($amount,$taxPercent=null) {
 function add_tax($amount=0) {
   return $amount * (config::get_config_item("taxPercent")/100 +1);
 }
-function alloc_die($str="") {
-  echo($str);
-  exit(1); // for CLI/email gateway where exit status is relevant
+function alloc_error($str="",$force=null) {
+  $errors_logged = &singleton("errors_logged");
+  $errors_thrown = &singleton("errors_thrown");
+  $errors_fatal = &singleton("errors_fatal");
+  isset($force) and $errors_fatal = $force; // permit override
+  $errors_format = &singleton("errors_format");
+  $errors_format or $errors_format = "html";
+
+  // Load up a nicely rendered html error
+  if ($errors_format == "html") {
+    global $TPL;
+    $TPL["message"][] = $str;
+  } 
+  
+  // Output a plain-text error suitable for logfiles and CLI
+  if ($errors_format == "text") {
+    echo(strip_tags($str));
+  }
+
+  // Log the error message
+  if ($errors_logged) {
+    error_log(strip_tags($str));
+  }
+
+  // Throw an exception, that can be caught and handled (eg receiveEmail.php)
+  if ($errors_thrown) {
+    throw new ErrorException(strip_tags($str));
+  }
+
+  // Print message to a blank webpage (eg tools/backup.php)
+  if ($force) {
+    echo $str;
+  }
+
+  // If it was a serious error, then halt
+  if ($errors_fatal) {
+    exit(1); // exit status matters to pipeEmail.php
+  }
 }
 function esc_implode($str,$arr,$fmt="%d") {
   foreach ((array)$arr as $v) {
@@ -838,15 +873,16 @@ function prepare() {
   $query = call_user_func_array("sprintf",$clean_args);
   return $query;
 }
-function &singleton($name,$thing=null) {
-  // Convenience function to use the singleton pattern
-  static $instances;
-
-  // try and use an existing instance
-  if (isset($instances[$name])) {
-    return $instances[$name];
-  }
-  $instances[$name] = &$thing;
-  return $thing;
+function refcount(&$var) {
+  ob_start();
+  debug_zval_dump(array(&$var));
+  $rtn = preg_replace("/^.+?refcount\((\d+)\).+$/ms", '$1', substr(ob_get_clean(), 24), 1) - 4;
+  echo "<br>refcount:".$rtn;
+  return $rtn;
+}
+function reference(&$a, &$b) {
+  $d = refcount($b);
+  $e = &$a;
+  return refcount($b) != $d;
 }
 ?>

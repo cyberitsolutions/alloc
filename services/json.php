@@ -2,6 +2,10 @@
 
 define("NO_AUTH",1); 
 require_once("../alloc.php");
+singleton("errors_fatal",true);
+singleton("errors_format","text");
+singleton("errors_logged",false);
+singleton("errors_thrown",false);
 
 
 function g($var) {
@@ -11,25 +15,25 @@ function g($var) {
 }
 
 if (g("get_server_version")) {
-  alloc_die(alloc_json_encode(array("version"=>get_alloc_version())));
+  die(alloc_json_encode(array("version"=>get_alloc_version())));
 }
 
 if (!version_compare(g("client_version"),get_alloc_version(),">=")) {
-  alloc_die("Your alloc client needs to be upgraded.");
+  die("Your alloc client needs to be upgraded.");
 }
 
 $sessID = g("sessID");
 
 if (g("authenticate") && g("username") && g("password")) {
   $sessID = services::authenticate(g("username"), g("password"));
-  alloc_die(alloc_json_encode(array("sessID"=>$sessID)));
+  die(alloc_json_encode(array("sessID"=>$sessID)));
 }
 
 
 $services = new services($sessID);
 $current_user = &singleton("current_user");
 if (!$current_user || !is_object($current_user) || !$current_user->get_id()) {
-  alloc_die(alloc_json_encode(array("reauthenticate"=>"true")));
+  die(alloc_json_encode(array("reauthenticate"=>"true")));
 }
 
 

@@ -45,7 +45,7 @@ function show_all_exp($template) {
     while ($db->next_record()) {
 
       $transaction = new transaction;
-      $transaction->read_db_record($db,false);
+      $transaction->read_db_record($db);
       $transaction->set_values();
 
       $transaction->get_value("quantity") and $TPL["amount"] = $transaction->get_value("amount") / $transaction->get_value("quantity");

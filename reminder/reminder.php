@@ -267,7 +267,7 @@ case 4:
   break;
 
 default:
-  alloc_die("Unrecognized state");
+  alloc_error("Unrecognized state");
 }
 
 

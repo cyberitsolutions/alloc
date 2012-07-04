@@ -316,7 +316,7 @@ class reminder extends db_entity {
         }
       } else {
         // we should never actually get here...
-        alloc_die("Unknown metaperson.");
+        alloc_error("Unknown metaperson.");
       }
     } else {
       return $recipient->get_value('personID');

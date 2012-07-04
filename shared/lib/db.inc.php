@@ -79,26 +79,27 @@ class db {
   }
 
   function error($msg=false,$errno=false) {
-    global $TPL;
-
     if ($errno == 1451 || $errno == 1217) { 
-      $TPL["message"][] = "Error: ".$errno." There are other records in the database that depend on the item you just tried to delete. 
-                           Remove those other records first and then try to delete this item again. 
-                           <br><br>".$msg;
+      $m = "Error: ".$errno." There are other records in the database that depend on the item you just tried to delete. 
+            Remove those other records first and then try to delete this item again. 
+            <br><br>".$msg;
 
     } else if ($errno == 1216) {
-      $TPL["message"][] = "Error: ".$errno." The parent record of the item you just tried to create does not exist in the database. 
-                           Create that other record first and then try to create this item again. 
-                           <br><br>".$msg;
+      $m = "Error: ".$errno." The parent record of the item you just tried to create does not exist in the database. 
+            Create that other record first and then try to create this item again. 
+            <br><br>".$msg;
 
     } else if ($errno == 1062 && preg_match("/(ALLOC ERROR:(.*)\n\n)/m",$msg,$matches)) {
-      $TPL["message"][] = "Error: ".$matches[2];
+      $m = "Error: ".$matches[2];
 
     } else if (strlen($msg)) {
-      $TPL["message"][] = "Error: ".$errno." ".$msg;
-      print $msg;
-      error_log("Query failed: $msg");
+      $m = "Error: ".$errno." ".$msg;
     }
+
+    if ($m) {
+      alloc_error($m);
+    }
+
     $this->error = $msg;
   }
 
@@ -137,8 +138,8 @@ class db {
 
   function qr() {
     // Quick Row run it like this:
-    // $row = $db->qr("SELECT * FROM hey WHERE heyID = %s",$heyID);
-    // sprintf is applied! sprintf arguments will be automatically escaped!
+    // $row = $db->qr("SELECT * FROM hey WHERE heyID = %d",$heyID);
+    // arguments will be automatically escaped
     $args = func_get_args();
     $query = $this->get_escaped_query_str($args);
     $id = $this->query($query);
@@ -158,9 +159,9 @@ class db {
     if ($query) {
 
       if (is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
-        $id = mysql_query(prepare("SET @personID = %d",$current_user->get_id()),$this->link_id);
+        mysql_query(prepare("SET @personID = %d",$current_user->get_id()),$this->link_id);
       } else {
-        $id = mysql_query("SET @personID = NULL",$this->link_id);
+        mysql_query("SET @personID = NULL",$this->link_id);
       }
 
       $id = @mysql_query($query,$this->link_id);
