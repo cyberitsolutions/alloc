@@ -1035,7 +1035,7 @@ class comment extends db_entity {
   // All you need to add a comment, add interested parties, attachments, and re-email it out
 
   function add_comment($commentType,$commentLinkID,$comment_text,$commentMaster=null,$commentMasterID=null) {
-    if ($commentType && $commentLinkID && $comment_text) {
+    if ($commentType && $commentLinkID) {
       $comment = new comment;
       $comment->updateSearchIndexLater = true;
       $commentMaster   and $comment->set_value('commentMaster', $commentMaster);

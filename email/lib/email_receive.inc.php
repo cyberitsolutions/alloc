@@ -260,6 +260,18 @@ class email_receive {
       }
     } 
 
+    // If there's no text/plain part, then search out a text/html one
+    if (!$this->mail_text) {
+      foreach ($this->mail_parts as $v) {
+        $s = $v["part_object"]; // structure
+        $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $v["part_number"],FT_UID | FT_PEEK);
+        $thing = $this->decode_part($s->encoding,$raw_data);
+        if (strtolower($this->mime_types[$s->type]."/".$s->subtype) == "text/html") {
+          $this->mail_text = $thing;
+        }
+      }
+    }
+
     rmdir_if_empty($dir);
   }
 
