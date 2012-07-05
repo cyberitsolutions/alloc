@@ -441,6 +441,7 @@ class comment extends db_entity {
     $current_user = &singleton("current_user");
 
     $commentID = comment::add_comment($entity->classname,$entity->get_id(),$email_receive->get_converted_encoding());
+    $commentID or alloc_error("Unable to create an alloc comment (".$entity->classname.":".$entity->get_id().") from email.");
 
     $comment = new comment;
     $comment->set_id($commentID);
