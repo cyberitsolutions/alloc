@@ -84,6 +84,7 @@ if (same_email_address($email_receive->mail_headers["from"], ALLOC_DEFAULT_FROM_
 
 list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
 if (!$email_receive->mail_headers["from"] || !$from_address) {
+  $db->query("ROLLBACK");
   alloc_error("No from address. Skipping email: ".$email_receive->mail_text);
 }
 
