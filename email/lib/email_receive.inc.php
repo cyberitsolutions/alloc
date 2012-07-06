@@ -122,18 +122,30 @@ class email_receive {
   }
 
   function create_mailbox($name) {
-    $name = $this->connect_string.$name;
-    if (!imap_status($this->connection,$name,SA_ALL)) {
-      return imap_createmailbox($this->connection, imap_utf7_encode($name));
+    if (!imap_status($this->connection,$this->connect_string.$name,SA_ALL)) {
+      $rtn = imap_createmailbox($this->connection, imap_utf7_encode($this->connect_string.$name));
     }
+    if (!$rtn) {
+      $name = str_replace("/",".",$name);
+      if (!imap_status($this->connection,$this->connect_string.$name,SA_ALL)) {
+        $rtn = imap_createmailbox($this->connection, imap_utf7_encode($this->connect_string.$name));
+      }
+    }
+    return $rtn;
   }
 
   function move_mail($uid,$mailbox) {
-    return imap_mail_move($this->connection, $uid, $mailbox ,CP_UID);
+    $moved = imap_mail_move($this->connection, $uid, $mailbox, CP_UID);
+    $moved or $moved = imap_mail_move($this->connection, $uid, str_replace("/",".",$mailbox), CP_UID);
+    return $moved;
   }
 
   function get_new_email_msg_uids() {
     return imap_search($this->connection,"UNSEEN",SE_UID);
+  }
+
+  function set_unread() {
+    return imap_clearflag_full($this->connection,$this->msg_uid,'\\Seen',ST_UID);
   }
 
   function get_all_email_msg_uids() {
@@ -225,6 +237,28 @@ class email_receive {
       return $cache[$msg_uid];
     } else if ($this->msg_text) {
       return Mail_mimeDecode::_splitBodyHeader($this->msg_text);
+    }
+  }
+
+  function fetch_mail_text() {
+    $this->load_structure();
+    $this->load_parts($this->mail_structure);
+    foreach ($this->mail_parts as $v) {
+      $s = $v["part_object"]; // structure
+      $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $v["part_number"],FT_UID | FT_PEEK);
+      $thing = $this->decode_part($s->encoding,$raw_data);
+      if (!$this->mail_text && strtolower($this->mime_types[$s->type]."/".$s->subtype) == "text/plain") {
+        $mail_text = $thing;
+      }
+      if (strtolower($this->mime_types[$s->type]."/".$s->subtype) == "text/html") {
+        $mail_html = $thing;
+      }
+    }
+  
+    if ($mail_text) {
+      return $mail_text;
+    } else if ($mail_html) {
+      return $mail_html;
     }
   }
 
@@ -415,22 +449,21 @@ class email_receive {
 
     // Some IMAP servers like dot-separated mail folders, some like slash-separated
     if ($mailbox) { 
-      $created = $this->create_mailbox($mailbox);
-      $created or $created = $this->create_mailbox(str_replace("/",".",$mailbox));
+      $this->create_mailbox($mailbox);
 
       if ($this->msg_uid) {
-        $moved = $this->move_mail($this->msg_uid,$mailbox);
-        $moved or $moved = $this->move_mail($this->msg_uid,str_replace("/",".",$mailbox));
+        $this->move_mail($this->msg_uid,$mailbox);
 
       } else if ($this->msg_text) {
-        $appended = $this->append($mailbox,$this->msg_text);
-        $appended or $appended = $this->append(str_replace("/",".",$mailbox),$this->msg_text);
+        $this->append($mailbox,$this->msg_text);
       }
     }
   }
 
   function append($mailbox,$text) {
-    return imap_append($this->connection,$this->connect_string.$mailbox,$text);
+    $appended = imap_append($this->connection,$this->connect_string.$mailbox,$text);
+    $appended or $appended = imap_append($this->connection,$this->connect_string.str_replace("/",".",$mailbox),$text);
+    return $appended;
   }
 
   function delete($x=0) {
@@ -648,6 +681,18 @@ class email_receive {
       $body = mb_convert_encoding($body, $db->get_encoding(), $enc);
     }
     return $body;
+  }
+
+  function get_printable_from_address() {
+    list($from_address,$from_name) = parse_email_address($this->mail_headers["from"]);
+    if ($from_address && $from_name) {
+      $f = $from_name." <".$from_address.">";
+    } else if ($from_name) {
+      $f = $from_name;
+    } else if ($from_address) {
+      $f = $from_address;
+    }
+    return $f;
   }
 }
 
