@@ -1,0 +1,44 @@
+<b>Manage Inbox</b>
+
+<br><br>
+Here you can see the current state of the alloc inbox.
+
+<br><br>
+
+Normally there should not be any messages in here, but if email is sent
+directly to the mailbox and it doesn't have a {Key:foobar} in the subject line,
+(or alloc doesn't know how to process the email for some other reason), then it
+will remain here in the inbox.
+
+<br><br>
+Here's what the buttons do:
+
+<br><br>
+<b>New Task</b><br>
+This will create a new task from the email. Using the subject line as the
+Task's Name, and the body of the email as the Task's Description.
+Any attachments in the email will be extracted and stored as task attachments.
+
+<br><br>
+<b>Process</b><br>
+Will behave as though alloc just received the email, and begins the processing. Eg
+the email is parsed for a {Key:} in the subject line, it figures out which task it belongs to,
+which comment thread, it creates a new comment on that thread, it re-emails itself out to 
+that thread's recipients. Etc. This function may be useful to see why particular emails
+are failing to get processed correctly.
+
+<br><br>
+<b>Download</b><br>
+Will fetch the complete email for download.
+
+<br><br>
+<b>Archive</b><br>
+Will simply move the email to an archive folder where it will be out of the way.
+
+<br><br>
+<b>Mark Read / Mark Unread</b><br>
+When alloc poll's the inbox automatically it checks for *new* emails that
+haven't been read.  You can toggle a mail's "seen" flag to temporarily take a
+mail out of the automated polling process - or more likely to re-insert it into
+the queue.
+

@@ -35,6 +35,7 @@ $misc_options = array(array("url"=>"reminderList"            ,"text"=>"Reminders
                      ,array("url"=>"backup"                  ,"text"=>"Database & File Backup","entity"=>""                   ,"function"=>"has_backup_perm")
                      ,array("url"=>"sourceCodeList"          ,"text"=>"allocPSA Source Code"  ,"entity"=>"")
                      ,array("url"=>"whatsnew"                ,"text"=>"Deployment Changelog"  ,"entity"=>""                   ,"function"=> "has_whatsnew_files")
+                     ,array("url"=>"inbox"                   ,"text"=>"Manage Inbox"          ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
                      );
 
   //,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
