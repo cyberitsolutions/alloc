@@ -224,6 +224,7 @@ class interestedParty extends db_entity {
       }
     }
     $ip->save();
+    return $ip->get_id();
   }
 
   function adjust_by_email_subject($email_receive,$e) {

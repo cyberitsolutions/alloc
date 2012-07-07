@@ -1,44 +1,45 @@
 <b>Manage Inbox</b>
 
 <br><br>
-Here you can see the current state of the alloc inbox.
+If email is sent directly to the alloc mailbox and it doesn't have a {Key:foobar} in
+the subject line, (or alloc doesn't know how to process the email for some
+other reason), then it will remain here in the inbox.
 
 <br><br>
 
-Normally there should not be any messages in here, but if email is sent
-directly to the mailbox and it doesn't have a {Key:foobar} in the subject line,
-(or alloc doesn't know how to process the email for some other reason), then it
-will remain here in the inbox.
+(Normally the inbox is cleared out by a periodic job which hits http://YOURALLOC/email/receiveEmail.php)
 
 <br><br>
 Here's what the buttons do:
 
 <br><br>
+<b>Archive</b><br>
+Move the email to an archive folder where it will be out of the way.
+
+<br><br>
 <b>New Task</b><br>
-This will create a new task from the email. Using the subject line as the
-Task's Name, and the body of the email as the Task's Description.
+Create a new task from the email. Subject line becomes the
+Task's Name, the body of the email becomes the Task's Description.
 Any attachments in the email will be extracted and stored as task attachments.
 
 <br><br>
+<b>Existing Task</b><br>
+Create a comment on an <b>existing</b> task. Enter the task ID of an existing task.
+Select to whom the comment should be emailed. Click the Go button.
+
+<br><br>
 <b>Process</b><br>
-Will behave as though alloc just received the email, and begins the processing. Eg
-the email is parsed for a {Key:} in the subject line, it figures out which task it belongs to,
-which comment thread, it creates a new comment on that thread, it re-emails itself out to 
-that thread's recipients. Etc. This function may be useful to see why particular emails
-are failing to get processed correctly.
+Push the email through the same process that it would undergo if it had been
+received by alloc under normal circumstances. Eg: create a task comment, send
+to recipients etc. Running this function may be useful to see why a particular
+email is erroring out.
 
 <br><br>
 <b>Download</b><br>
-Will fetch the complete email for download.
-
-<br><br>
-<b>Archive</b><br>
-Will simply move the email to an archive folder where it will be out of the way.
+Fetch the complete email for download.
 
 <br><br>
 <b>Mark Read / Mark Unread</b><br>
-When alloc poll's the inbox automatically it checks for *new* emails that
-haven't been read.  You can toggle a mail's "seen" flag to temporarily take a
-mail out of the automated polling process - or more likely to re-insert it into
-the queue.
+Toggle an email's "seen" flag. Only messages that aren't "seen" get processed by
+alloc's receiveEmail.php job.
 
