@@ -70,7 +70,7 @@
     <td>Price{page::mandatory($amount)}</td>
     <td>Currency{page::mandatory($currencyTypeID)}</td>
     <td>Source TF{page::mandatory($fromTfID)}</td>
-    <td>Date Incurred{page::mandatory($transactionDate)}</td>
+    <td>Date Incurred</td>
   </tr>
   <tr>
     <td><input type="text" size="25" name="product" value="{$product}"></td>
