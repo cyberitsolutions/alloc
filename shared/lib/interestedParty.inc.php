@@ -250,18 +250,6 @@ class interestedParty extends db_entity {
       $object->select();
     }
 
-    // Build up an array of task sub-statuses for email subject line changing
-    $m = new meta("taskStatus");
-    $rows = $m->get_assoc_array();
-    foreach ($rows as $taskStatusID => $arr) {
-      list($s,$ss) = explode("_",$taskStatusID);
-      $subStatuses[$ss] = $s;
-    }
-    $statuses["close"] = "close";
-    $statuses["closed"] = "close";
-    $statuses["open"] = "open";
-    $statuses["pending"] = "pending";
-
     // If we're doing subject line magic, then we're only going to do it with
     // subject lines that have a {Key:fdsFFeSD} in them.
     preg_match("/\{Key:[A-Za-z0-9]{8}\}(.*)\s*$/i",$subject,$m);
@@ -274,10 +262,9 @@ class interestedParty extends db_entity {
       // If "quiet" in the subject line, then the email/comment won't be re-emailed out again
       if ($command == "quiet") {
         $quiet = true;
-      }
 
       // To unsubscribe from this conversation
-      if ($command == "unsub" || $command == "unsubscribe") {
+      } else if ($command == "unsub" || $command == "unsubscribe") {
         if (interestedParty::active($entity, $entityID, $emailAddress)) {
           interestedParty::delete_interested_party($entity, $entityID, $emailAddress);
         }
@@ -303,46 +290,35 @@ class interestedParty extends db_entity {
           $interestedParty->set_value("interestedPartyActive",1);
           $interestedParty->save();
         }
-      }
-
-      // Can only perform any of the other actions if they are being performed by a recognized user
-      if (is_object($current_user) && $current_user->get_id()) {
 
 
-        if (isset($statuses[$command])) {
-          $method = $statuses[$command];
-          if (is_object($object) && $object->get_id()) {
-            $object->set_value("taskStatus",$method);
-            if (method_exists($object,"validate")) {
-              $object->validate();
-            }
-            $object->save();
-          }
-        } else if (isset($subStatuses[$command])) {
-          // method should be open(), close() or pending()
-          $method = $subStatuses[$command];
-          if (is_object($object) && $object->get_id()) {
-            $command2 and $object->set_value("duplicateTaskID",$command2);
-            $object->set_value("taskStatus",$method."_".$command);
-            $object->save();
-          }
-        }
-
-        // If there's a number/duration then add some time to a time sheet
-        if (preg_match("/([\.\d]+)/i",$command,$m)) { 
-          $duration = $m[1];
+      // If there's a number/duration then add some time to a time sheet
+      } else if (is_object($current_user) && $current_user->get_id() && preg_match("/([\.\d]+)/i",$command,$m)) { 
+        $duration = $m[1];
   
-          if (is_numeric($duration)) {
-            if (is_object($object) && $object->classname == "task" && $object->get_id() && $current_user->get_id()) {
-              $timeSheet = new timeSheet();
-              $tsi_row = $timeSheet->add_timeSheetItem(array("taskID"=>$object->get_id(), "duration"=>$duration, "comment"=>$body, "msg_uid"=>$msg_uid, "msg_id"=>$email_receive->mail_headers["message-id"], "multiplier"=>1));
-              $timeUnit = new timeUnit;
-              $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
-              $unitLabel = $units[$tsi_row["timeSheetItemDurationUnitID"]];
-            }
+        if (is_numeric($duration)) {
+          if (is_object($object) && $object->classname == "task" && $object->get_id() && $current_user->get_id()) {
+            $timeSheet = new timeSheet();
+            $tsi_row = $timeSheet->add_timeSheetItem(array("taskID"=>$object->get_id(), "duration"=>$duration, "comment"=>$body, "msg_uid"=>$msg_uid, "msg_id"=>$email_receive->mail_headers["message-id"], "multiplier"=>1));
+            $timeUnit = new timeUnit;
+            $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
+            $unitLabel = $units[$tsi_row["timeSheetItemDurationUnitID"]];
           }
         }
+
+      // Otherwise assume it's a status change
+      } else if (is_object($current_user) && $current_user->get_id() && $command) {
+        if (is_object($object) && $object->get_id()) {
+          $object->set_value("taskStatus",$command);
+          if ($command2 && preg_match("/dup/i",$command)) {
+            $object->set_value("duplicateTaskID",$command2);
+          } else if ($command2 && preg_match("/tasks/i",$command)) {
+            $object->add_pending_tasks($command2);
+          }
+          $object->save();
+        }
       }
+
     }
     return $quiet;
   }

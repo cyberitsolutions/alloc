@@ -225,7 +225,7 @@ class db_entity {
     $db = $this->get_db();
     $db->query($query);
 
-    $id = mysql_insert_id($db->link_id);
+    $id = $db->get_insert_id();
     if ($id === 0) {
       $this->debug and print "<br>db_entity->insert(): The previous query does not generate an AUTO_INCREMENT value`";
     } else if ($id === FALSE) {
@@ -304,10 +304,10 @@ class db_entity {
     $this->doMoney = true;
     $error = $this->validate();
     if (is_array($error) && count($error)) {
-      $TPL["message"] = $error;
+      alloc_error(implode(" ",$error));
       return false;
     } else if (strlen($error) && $error) {
-      $TPL["message"][] = $error;
+      alloc_error($error);
       return false;
     }
 

@@ -60,6 +60,9 @@ if ($num_new_emails >0) {
   foreach ($msg_nums as $num) {
     unset($current_user);
 
+    // Errors from previous iterations shouldn't affect processing of the next email
+    db_alloc::$stop_doing_queries = false;
+
     // wrap db queries in a transaction
     $db = new db_alloc();
     $db->start_transaction();
@@ -110,7 +113,6 @@ if ($num_new_emails >0) {
       $email_receive->forward(config::get_config_item("allocEmailAdmin")
                              ,"Email command failed"
                              ,"\n".$e->getMessage()."\n\n".$e->getTraceAsString());
-      $email_receive->archive();
       continue;
     }
 

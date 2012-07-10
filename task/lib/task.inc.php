@@ -58,30 +58,35 @@ class task extends db_entity {
   function save() {
     $current_user = &singleton("current_user");
     global $TPL;
-    $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
 
-    $existing = $this->all_row_fields;
-    if ($existing["taskStatus"] != $this->get_value("taskStatus")) {
-      $db = new db_alloc();
-      $db->query("call change_task_status(%d,'%s')",$this->get_id(),$this->get_value("taskStatus"));
-      $row = $db->qr("SELECT taskStatus
-                            ,dateActualCompletion
-                            ,dateActualStart
-                            ,dateClosed
-                            ,closerID
-                        FROM task
-                       WHERE taskID = %d",$this->get_id());
-      // Changing a task's status changes these fields.
-      // Unfortunately the call to save() below erroneously nukes these fields.
-      // So we manually set them to whatever change_task_status() has dictated.
-      $this->set_value("taskStatus",$row["taskStatus"]);
-      $this->set_value("dateActualCompletion",$row["dateActualCompletion"]);
-      $this->set_value("dateActualStart",$row["dateActualStart"]);
-      $this->set_value("dateClosed",$row["dateClosed"]);
-      $this->set_value("closerID",$row["closerID"]);
+    $errors = $this->validate();
+    if ($errors) {
+      alloc_error($errors);
+
+    } else {
+      $existing = $this->all_row_fields;
+      if ($existing["taskStatus"] != $this->get_value("taskStatus")) {
+        $db = new db_alloc();
+        $db->query("call change_task_status(%d,'%s')",$this->get_id(),$this->get_value("taskStatus"));
+        $row = $db->qr("SELECT taskStatus
+                              ,dateActualCompletion
+                              ,dateActualStart
+                              ,dateClosed
+                              ,closerID
+                          FROM task
+                         WHERE taskID = %d",$this->get_id());
+        // Changing a task's status changes these fields.
+        // Unfortunately the call to save() below erroneously nukes these fields.
+        // So we manually set them to whatever change_task_status() has dictated.
+        $this->set_value("taskStatus",$row["taskStatus"]);
+        $this->set_value("dateActualCompletion",$row["dateActualCompletion"]);
+        $this->set_value("dateActualStart",$row["dateActualStart"]);
+        $this->set_value("dateClosed",$row["dateClosed"]);
+        $this->set_value("closerID",$row["closerID"]);
+      }
+
+      return parent::save();
     }
-
-    return parent::save();
   }
 
   function delete() {
@@ -92,23 +97,39 @@ class task extends db_entity {
 
   function validate() {
     // Validate/coerce the fields
-    $this->get_value("taskStatus") == "inprogress" && $this->set_value("taskStatus","open_inprogress");
-    $this->get_value("taskStatus") == "notstarted" && $this->set_value("taskStatus","open_notstarted");
-    $this->get_value("taskStatus") == "info"       && $this->set_value("taskStatus","pending_info");
-    $this->get_value("taskStatus") == "client"     && $this->set_value("taskStatus","pending_client");
-    $this->get_value("taskStatus") == "manager"    && $this->set_value("taskStatus","pending_manager");
-    $this->get_value("taskStatus") == "invalid"    && $this->set_value("taskStatus","closed_invalid");
-    $this->get_value("taskStatus") == "duplicate"  && $this->set_value("taskStatus","closed_duplicate");
-    $this->get_value("taskStatus") == "incomplete" && $this->set_value("taskStatus","closed_incomplete");
-    $this->get_value("taskStatus") == "complete"   && $this->set_value("taskStatus","closed_complete");
-    $this->get_value("taskStatus") == "open"       && $this->set_value("taskStatus","open_inprogress");
-    $this->get_value("taskStatus") == "pending"    && $this->set_value("taskStatus","pending_info");
-    $this->get_value("taskStatus") == "close"      && $this->set_value("taskStatus","closed_complete");
-    $this->get_value("taskStatus") == "closed"     && $this->set_value("taskStatus","closed_complete");
+    $coerce = array("inprogress"=>"open_inprogress"
+                   ,"notstarted"=>"open_notstarted"
+                   ,"info"      =>"pending_info"
+                   ,"client"    =>"pending_client"
+                   ,"manager"   =>"pending_manager"
+                   ,"tasks"     =>"pending_tasks"
+                   ,"invalid"   =>"closed_invalid"
+                   ,"duplicate" =>"closed_duplicate"
+                   ,"incomplete"=>"closed_incomplete"
+                   ,"complete"  =>"closed_complete"
+                   ,"open"      =>"open_inprogress"
+                   ,"pending"   =>"pending_info"
+                   ,"close"     =>"closed_complete"
+                   ,"closed"    =>"closed_complete"
+                   );
+    if ($this->get_value("taskStatus") && !in_array($this->get_value("taskStatus"),$coerce)) {
+      $orig = $this->get_value("taskStatus");
+      $cleaned = str_replace("-","_",strtolower($orig));
+      if (in_array($cleaned,$coerce)) {
+        $this->set_value("taskStatus",$cleaned);
+      } else if ($coerce[$cleaned]) {
+        $this->set_value("taskStatus",$coerce[$cleaned]);
+      }
+
+      if (!in_array($this->get_value("taskStatus"),$coerce)) {
+        $err[] = "Unrecognised task status: ".$orig;
+      }
+    }
 
     in_array($this->get_value("priority"),array(1,2,3,4,5)) or $err[] = "Invalid priority.";
     in_array(ucwords($this->get_value("taskTypeID")),array("Task","Fault","Message","Milestone","Parent")) or $err[] = "Invalid Task Type.";
     $this->get_value("taskName") or $err[] = "Please enter a name for the Task.";
+    $this->get_value("taskDescription") and $this->set_value("taskDescription",rtrim($this->get_value("taskDescription")));
     return parent::validate($err);
   }
 
