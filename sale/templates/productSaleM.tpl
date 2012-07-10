@@ -141,15 +141,15 @@ $(document).ready(function() {
     <button type="submit" name="save" value="1" class="save_button">Create Sale<i class="icon-ok-sign"></i></button>
     {else if $status == "edit"}
     <button type="submit" name="delete_productSale" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
-    <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+    <button type="submit" name="save" value="1" class="save_button default">Save<i class="icon-ok-sign"></i></button>
     <button type="submit" name="move_forwards" value="1" class="save_button">Allocate<i class="icon-arrow-right"></i></button>
     {else if $status == "allocate"}
     <button type="submit" name="move_backwards" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Add Sale Items</button>
-    <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+    <button type="submit" name="save" value="1" class="save_button default">Save<i class="icon-ok-sign"></i></button>
     <button type="submit" name="move_forwards" value="1" class="save_button">Administrator<i class="icon-arrow-right"></i></button>
     {else if $status == "admin" && CAN_APPROVE_TRANSACTIONS}
     <button type="submit" name="move_backwards" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Allocate</button>
-    <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+    <button type="submit" name="save" value="1" class="save_button default">Save<i class="icon-ok-sign"></i></button>
     <button type="submit" name="move_forwards" value="1" class="save_button">Completed<i class="icon-arrow-right"></i></button>
     <select name='changeTransactionStatus'><option value="">Transaction Status<option value='approved'>Approve<option value="rejected">Reject</select>
     {else if $status == "finished" && CAN_APPROVE_TRANSACTIONS}
