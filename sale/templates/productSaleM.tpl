@@ -91,7 +91,13 @@ $(document).ready(function() {
 <input type="hidden" name="productSaleID" value="{$productSaleID}">
 <table class="box">
   <tr>
-    <th colspan="4">Sale</th>
+    <th colspan="4" class="header">Sale
+      <span>
+        <a href="{$url_alloc_productList}">Products</a>
+        <a href="{$url_alloc_product}">New Product</a>
+        <a href="{$url_alloc_productSale}">New Sale</a>
+      </span>
+    </th>
   </tr>
   <tr>
     <td width="20%" class="right">Sale ID:</td>
