@@ -33,6 +33,7 @@ class db {
   var $error;
   var $verbose = 1;
   public static $started_transaction = false;
+  public static $stop_doing_queries = false;
 
   function __construct($username="",$password="",$hostname="",$database="") { // Constructor
     $this->username = $username;
@@ -89,10 +90,10 @@ class db {
             Create that other record first and then try to create this item again. 
             <br><br>".$msg;
 
-    } else if ($errno == 1062 && preg_match("/(ALLOC ERROR:(.*)\n\n)/m",$msg,$matches)) {
+    } else if (preg_match("/(ALLOC ERROR:(.*)\n\n)/m",$msg,$matches)) {
       $m = "Error: ".$matches[2];
 
-    } else if (strlen($msg)) {
+    } else if ($msg || $errno) {
       $m = "Error: ".$errno." ".$msg;
     }
 
@@ -106,6 +107,12 @@ class db {
   function get_error() {
     return trim($this->error);
   }
+
+  function get_insert_id() {
+    if ($this->link_id) {
+      return @mysql_insert_id($this->link_id);
+    }
+  }
   
   function esc($str) {
     $esc_function = "mysql_escape_string";
@@ -116,7 +123,7 @@ class db {
     if (is_numeric($str)) {
       return $str;
     }
-    return $esc_function($str);
+    return @$esc_function($str);
   }
 
   function select_db($db="") { 
@@ -146,6 +153,13 @@ class db {
     return $this->row($id);
   }
 
+  private function internal_query($query) {
+    // wrapper for mysql_query
+    if (!self::$stop_doing_queries || $query == "ROLLBACK") {
+      return @mysql_query($query);
+    }
+  }
+
   function query() {
     global $TPL;
     $current_user = &singleton("current_user");
@@ -156,29 +170,32 @@ class db {
     #echo "<br><br>Query: ".$query;
     #echo "<br><pre>".print_r(debug_backtrace(),1)."</pre>";
 
-    if ($query) {
+    if ($query && !self::$stop_doing_queries) {
 
       if (is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
-        mysql_query(prepare("SET @personID = %d",$current_user->get_id()),$this->link_id);
+        $this->internal_query(prepare("SET @personID = %d",$current_user->get_id()),$this->link_id);
       } else {
-        mysql_query("SET @personID = NULL",$this->link_id);
+        $this->internal_query("SET @personID = NULL",$this->link_id);
       }
 
-      $id = @mysql_query($query,$this->link_id);
+      $id = $this->internal_query($query,$this->link_id);
 
-      if ($id) {
+      if ($str = mysql_error()) {
+        $rtn = false;
+        $this->error("Query failed: ".$str."\n".$query,mysql_errno());
+        if (self::$started_transaction) {
+          $this->internal_query("ROLLBACK");
+          self::$started_transaction = false;
+        }
+        self::$stop_doing_queries = true;
+        //mysql_close($this->link_id);
+        //unset($this->link_id);
+        alloc_error("Database queries halted.");
+
+      } else if ($id) {
         $this->query_id = $id;
         $rtn = $this->query_id;
         $this->error();
-      } else if ($str = mysql_error()) {
-        $rtn = false;
-        $this->error("Query failed: ".$str."<br><pre>".$query."</pre>",mysql_errno());
-        if (self::$started_transaction) {
-          mysql_query("ROLLBACK");
-          self::$started_transaction = false;
-        }
-        unset($this->link_id);
-        mysql_close();
       }
     }
 
