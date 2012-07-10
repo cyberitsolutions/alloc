@@ -338,6 +338,20 @@ $(document).ready(function() {
     return false;
   });
 
+
+  // This duplicates a button with class=default and puts it first,
+  // so that the web browser treats it as the default submission button.
+  $('form').each(function () {
+    var thisform = $(this);
+    thisform.prepend(thisform.find('button.default').clone().css({
+      position: 'absolute',
+      left: '-999px',
+      top: '-999px',
+      height: 0,
+      width: 0
+    }));
+  });
+
 });
 
 
