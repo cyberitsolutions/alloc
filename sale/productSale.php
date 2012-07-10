@@ -451,7 +451,8 @@ if ($productSale->get_value("projectID")) {
 
 $TPL["taxName"] = config::get_config_item("taxName");
 
-$TPL["main_alloc_title"] = "Sale";
+$TPL["main_alloc_title"] = "Sale - ".APPLICATION_NAME;
+$productSale->get_id() and $TPL["main_alloc_title"] = "Sale " . $productSale->get_id()." - ".APPLICATION_NAME;
 include_template("templates/productSaleM.tpl");
 
 ?>
