@@ -21,6 +21,7 @@
 */
 
 require_once("../alloc.php");
+singleton("errors_thrown",true);
 
 if (!$current_user->have_role("god")) {
   alloc_error("Only super-user has permission to use this page.",true);

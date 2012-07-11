@@ -66,29 +66,35 @@ class inbox {
   function process_email($req=array()) {
     global $TPL;
     $info = inbox::get_mail_info();
-    $current_user = &singleton("current_user");
-    $orig_current_user = &$current_user;
     $email_receive = new email_receive($info);
     $email_receive->open_mailbox($info["folder"]);
+    $email_receive->set_msg($req["id"]);
+    $email_receive->get_msg_header();
+    inbox::process_one_email($email_receive);
+    $email_receive->expunge();
+    $email_receive->close();
+  }
+
+  function process_one_email($email_receive) {
+    $current_user = &singleton("current_user");
+    $orig_current_user = &$current_user;
+
+    // Errors from previous iterations shouldn't affect processing of the next email
+    db_alloc::$stop_doing_queries = false;
 
     // wrap db queries in a transaction
     $db = new db_alloc();
     $db->start_transaction();
 
-    $email_receive->set_msg($req["id"]);
-    $email_receive->get_msg_header();
-
+    // Skip over emails that are from alloc. These emails are kept only for
+    // posterity and should not be parsed and downloaded and re-emailed etc.
     if (same_email_address($email_receive->mail_headers["from"], ALLOC_DEFAULT_FROM_ADDRESS)) {
+      $email_receive->mark_seen();
       $email_receive->archive();
-      alloc_error("Email was from ".ALLOC_DEFAULT_FROM_ADDRESS.", email archived.");
+      return false;
     }
-
+ 
     list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
-    if (!$email_receive->mail_headers["from"] || !$from_address) {
-      $db->query("ROLLBACK");
-      alloc_error("No from address. Skipping email: ".$email_receive->mail_text);
-    }
-
     $person = new person;
     $personID = $person->find_by_email($from_address);
     $personID or $personID = $person->find_by_name($from_name);
@@ -108,19 +114,28 @@ class inbox {
     $command = new command();
     $fields = $command->get_fields();
     $commands = $email_receive->get_commands($fields);
-    $command->run_commands($commands,$email_receive);
 
-    if ($TPL["message"]) {
+    try {
+      $command->run_commands($commands,$email_receive);
+    } catch (Exception $e) {
+      $current_user = &$orig_current_user;
+      singleton("current_user",$current_user);
       $db->query("ROLLBACK");
-    } else {
-      // Commit the db, and move the email into its storage location eg: INBOX.task1234
+      $email_receive->forward(config::get_config_item("allocEmailAdmin")
+                             ,"Email command failed"
+                             ,"\n".$e->getMessage()."\n\n".$e->getTraceAsString());
+      $failed = true;
+    }
+
+    // Commit the db, and move the email into its storage location eg: INBOX.task1234
+    if (!$failed && !$TPL["message"]) {
       $db->commit();
       $email_receive->archive();
     }
 
+    // Put current_user back to normal
     $current_user = &$orig_current_user;
     singleton("current_user",$current_user);
-    $email_receive->close();
   }
 
   function convert_email_to_new_task($req=array()) {
