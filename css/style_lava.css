@@ -201,7 +201,34 @@ input[readonly="true"], input[readonly="true"]:focus {
 button {
   text-shadow:#fff 0px 1px 0px;
   text-transform:none !important;
+  -moz-box-shadow:2px 2px 3px #ccc;
+  -webkit-box-shadow:2px 2px 3px #ccc;
+  box-shadow:2px 2px 3px #ccc;
+  outline: 0;
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  border: 1px solid #999;
+  background-color:#fff;
+  font-weight:bold;
+  color:#333;
 }
+
+button:hover {
+  color:#666;
+}
+
+button:active {
+  -moz-box-shadow:0px 0px 0px #bbbbbb;
+  -webkit-box-shadow:0px 0px 0px #bbbbbb;
+  box-shadow:0px 0px 0px #bbbbbb;
+  outline: 0;
+  background-color:#ccc;
+}
+button:hover {
+  color:#e
+}
+
 button.delete_button:hover {
   color:#dc0606;
 }
@@ -211,6 +238,28 @@ button.save_button:hover {
 button.filter_button:hover {
   color:#ef8849;
 }
+
+button.delete_button:active {
+  background-color:#ff9797 !important;
+}
+button.save_button:active {
+  background-color:#99e791 !important;
+}
+button.filter_button:active {
+  background-color:#ffd3a0 !important;
+}
+
+
+button.delete_button {
+  border: 1px solid #dc0606;
+}
+button.save_button {
+  border: 1px solid #10ae00;
+}
+button.filter_button {
+  border: 1px solid #ffac4b;
+}
+
 
 label.radio {
   background:white;
