@@ -240,6 +240,8 @@ class productSale extends db_entity {
         $task->set_value("priority",3);
         $task->set_value("taskTypeID","Task");
         $task->set_value("taskDescription",$taskDesc);
+        $task->set_value("dateTargetStart",date("Y-m-d"));
+        $task->set_value("dateTargetCompletion",date("Y-m-d",date("U")+(60*60*24*7)));
         $task->save();
         $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
 
@@ -291,6 +293,8 @@ class productSale extends db_entity {
         $task->set_value("priority",3);
         $task->set_value("taskTypeID","Task");
         $task->set_value("taskDescription",$taskDesc);
+        $task->set_value("dateTargetStart",date("Y-m-d"));
+        $task->set_value("dateTargetCompletion",date("Y-m-d",date("U")+(60*60*24*7)));
         $task->save();
 
         $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'"
@@ -336,6 +340,8 @@ class productSale extends db_entity {
         $task->set_value("priority",3);
         $task->set_value("taskTypeID","Task");
         $task->set_value("taskDescription",$taskDesc);
+        $task->set_value("dateTargetStart",date("Y-m-d"));
+        $task->set_value("dateTargetCompletion",date("Y-m-d",date("U")+(60*60*24*7)));
         $task->save();
         $task->add_pending_tasks($order_the_hardware_taskID);
         $pay_the_supplier_taskID = $task->get_id();
@@ -374,6 +380,8 @@ class productSale extends db_entity {
         $task->set_value("priority",3);
         $task->set_value("taskTypeID","Task");
         $task->set_value("taskDescription",$taskDesc);
+        $task->set_value("dateTargetStart",date("Y-m-d"));
+        $task->set_value("dateTargetCompletion",date("Y-m-d",date("U")+(60*60*24*7)));
         $task->save();
         $task->add_pending_tasks($pay_the_supplier_taskID);
         $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
