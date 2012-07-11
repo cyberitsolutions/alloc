@@ -263,6 +263,11 @@ class email_receive {
   }
 
   function save_email($dir) {
+
+    if ($this->msg_text) {
+      return $this->save_email_from_text($dir);
+    }
+
     if ($dir && !is_dir($dir)) {
       mkdir($dir, 0777);
     }
@@ -349,7 +354,7 @@ class email_receive {
     return array($plain, $attachments);
   }
 
-  function save_email_from_text($text, $dir) {
+  function save_email_from_text($dir) {
     if ($dir && !is_dir($dir)) {
       mkdir($dir, 0777);
     }
