@@ -80,7 +80,7 @@
     <td><select name="fromTfID"><option value="">{$fromTfOptions}</select></td>
     <td><nobr>{page::calendar("transactionDate",$transactionDate)}</nobr>
     <td class="right">
-      <button type="submit" name="add" value="1" class="save_button">Add Item<i class="icon-plus-sign"></i></button>
+      <button type="submit" name="add" value="1" class="save_button default">Add Item<i class="icon-plus-sign"></i></button>
       <input type="hidden" name="transactionID" value="{$transactionID}"></td>
   </tr>
 </table>
