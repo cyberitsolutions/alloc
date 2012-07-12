@@ -8,7 +8,7 @@
   </td>
   <td width="50%"><input type="text" size="5" name="commission_commissionPercent" value="{$commission_commissionPercent}">%<td>
   <td class="right">
-    <button type="submit" name="commission_save" value="1" class="save_button">Add Commission<i class="icon-plus-sign"></i></button>
+    <button type="submit" name="commission_save" value="1" class="save_button">{$save_label}<i class="icon-plus-sign"></i></button>
     {if !$commission_new}
       <button type="submit" name="commission_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
     {/}

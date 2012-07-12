@@ -83,7 +83,7 @@ class tf extends db_entity {
       return in_array($this->get_id(),$owners[$person->get_id()]);
     }
     $owners[$person->get_id()] = $this->get_tfs_for_person($person->get_id());
-    return in_array($this->get_id(),$owners[$person->get_id()]);
+    return in_array($this->get_id(),(array)$owners[$person->get_id()]);
   }
 
   function get_tfs_for_person($personID) {
