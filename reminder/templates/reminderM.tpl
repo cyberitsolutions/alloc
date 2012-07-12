@@ -147,6 +147,7 @@ $(document).ready(function() {
         <input type="hidden" name="returnToParent" value="{$returnToParent}">
         <input type="hidden" name="step" value="4">
         <input type="hidden" name="reminderTime" value="{$reminderTime}">
+        <input type="hidden" name="reminderHash" value="{$reminderHash}">
         <input type="hidden" name="personID" value="{$personID}">
       </div>
     </td>

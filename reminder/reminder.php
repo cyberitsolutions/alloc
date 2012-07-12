@@ -151,6 +151,7 @@ EOD2;
   // date/time
   $_GET["reminderTime"] && $reminder->set_value("reminderTime",$_GET["reminderTime"]);
   $TPL["reminderTime"] = $reminder->get_value("reminderTime");
+  $TPL["reminderHash"] = $reminder->get_value("reminderHash");
   $TPL["reminderAdvNoticeInterval"] = $reminder->get_value("reminderAdvNoticeInterval");
   $TPL["reminderRecuringInterval"] = $reminder->get_value("reminderRecuringInterval");
   $TPL["reminderID"] = $reminder->get_id();
@@ -215,6 +216,7 @@ case 4:
     $reminder->set_modified_time();
 
     $reminder->set_value('reminderTime',$_POST["reminder_date"]." ".$_POST["reminder_hour"].":".$_POST["reminder_minute"].":00");
+    $reminder->set_value('reminderHash',$_POST["reminderHash"]);
       
     if (isset($_POST["reminder_update"])) {
       $reminder->set_id($_POST["reminder_id"]);
