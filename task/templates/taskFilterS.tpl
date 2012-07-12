@@ -72,7 +72,7 @@ $(document).ready(function() {
       &nbsp;
     </td>
     <td valign="top" style="width:275px"><div id="projectListDropdown">{$projectOptions}</div></td>
-    <td valign="top"><select name="creatorID">{$creatorPersonOptions}</select></td>  
+    <td valign="top"><select name="creatorID[]" multiple="true">{$creatorPersonOptions}</select></td>  
   </tr>
   <tr>
     <td>Task Status</td>
@@ -80,7 +80,7 @@ $(document).ready(function() {
   </tr>
   <tr>
     <td valign="top"><select name="taskStatus[]" multiple="true">{$taskStatusOptions}</select></td>
-    <td><select name="managerID">{$managerPersonOptions}</select></td>
+    <td><select name="managerID[]" multiple="true">{$managerPersonOptions}</select></td>
   </tr>
   <tr>
     <td>Task Type</td>
@@ -88,7 +88,7 @@ $(document).ready(function() {
   </tr>
   <tr>
     <td valign="top"><select name="taskTypeID[]" size="6" multiple="true">{$taskTypeOptions}</select></td>
-    <td valign="top"><select id="personID" name="personID">{$personOptions}</select></td>
+    <td valign="top"><select id="personID" name="personID[]" multiple="true">{$personOptions}</select></td>
   </tr>
   <tr>
     <td colspan="2">Task Date</td>
