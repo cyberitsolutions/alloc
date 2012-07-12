@@ -749,6 +749,14 @@ BEGIN
 END
 $$
 
-
+DROP TRIGGER IF EXISTS before_delete_reminder $$
+CREATE TRIGGER before_delete_reminder BEFORE DELETE ON reminder
+FOR EACH ROW
+BEGIN
+  IF (has_perm(personID(),4,"reminder")) THEN
+    DELETE FROM reminderRecipient WHERE reminderID = OLD.reminderID;
+  END IF;
+END
+$$
 
 DELIMITER ;
