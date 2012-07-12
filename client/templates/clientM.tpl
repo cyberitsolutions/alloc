@@ -45,15 +45,7 @@
     </tr>
     <tr>
       <td>
-        <table class="sortable list">
-          <tr>
-            <th>Date / Time</th>
-            <th>Subject</th>
-            <th>Repeat</th>
-            <th>Active</th>
-          </tr>
-          {show_reminders("../reminder/templates/reminderListR.tpl")}
-        </table>
+      {reminder::get_list_html("client",$client_clientID)}
       </td>
     </tr>
   </table>

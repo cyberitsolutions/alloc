@@ -399,6 +399,47 @@ class reminder extends db_entity {
     return;
   }
 
+  function get_list_filter($filter=array()) {
+    $filter["type"] and $sql[] = prepare("reminderType='%s'",$filter["type"]);
+    $filter["id"]   and $sql[] = prepare("reminderLinkID=%d",$filter["id"]);
+    $filter["filter_recipient"] and $sql[] = prepare("personID = %d", $filter["filter_recipient"]);
+    imp($filter["filter_reminderActive"]) and $sql[] = prepare("reminderActive = %d",$filter["filter_reminderActive"]);
+    return $sql;
+  }
+
+  function get_list($_FORM) {
+    $filter = reminder::get_list_filter($_FORM);
+    if (is_array($filter) && count($filter)) {
+      $f = " WHERE ".implode(" AND ",$filter);
+    }
+    $db = new db_alloc;
+    $q = "SELECT reminder.*,reminderRecipient.*,token.*,tokenAction.*
+            FROM reminder
+       LEFT JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID
+       LEFT JOIN token ON reminder.reminderHash = token.tokenHash
+       LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID
+           ".$f."
+        GROUP BY reminder.reminderID
+        ORDER BY reminderTime,reminderType";
+    $db->query($q);
+    while ($row = $db->row()) {
+      $reminder = new reminder;
+      $reminder->read_db_record($db);
+      $rows[] = $row;
+    }
+    return $rows;
+  }
+
+  function get_list_html($type=null,$id=null) {
+    global $TPL;
+    $_REQUEST["type"] = $type;
+    $_REQUEST["id"] = $id;
+    $TPL["reminderRows"] = reminder::get_list($_REQUEST);
+    $type and $TPL["returnToParent"] = $type;
+    $type or  $TPL["returnToParent"] = "list";
+    include_template(dirname(__FILE__)."/../templates/reminderListS.tpl");
+  }
+
 }
 
 
