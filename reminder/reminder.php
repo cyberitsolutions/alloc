@@ -118,7 +118,6 @@ case 3:
 <input type="hidden" name="reminder_id" value="{$reminderID}">
 <button type="submit" name="reminder_update" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
 <button type="submit" name="reminder_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
-&nbsp;&nbsp;<a href="" onClick="toggle_view_edit();return false;">Cancel edit</a>
 EOD;
 
   } else {

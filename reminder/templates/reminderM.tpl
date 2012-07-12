@@ -79,7 +79,7 @@ $(document).ready(function() {
     <td align="center" class="padded">
       <div style="margin:20px">
         <button type="button" id="editReminder" value="1" onClick="toggle_view_edit();">Edit Reminder<i class="icon-edit"></i></button>
-        &nbsp;&nbsp;{$reminder_goto_parent}
+        <br><br>{$reminder_goto_parent}
       </div>
     </td>
   </tr>
@@ -141,7 +141,8 @@ $(document).ready(function() {
   <tr>
     <td align="center" class="padded">
       <div style="margin:20px">
-        {$reminder_buttons}&nbsp;&nbsp;{$reminder_goto_parent}
+        {$reminder_buttons}
+        <br><br>{$reminder_goto_parent}&nbsp;&nbsp;<a href="" onClick="toggle_view_edit();return false;">Cancel edit</a>
         <input type="hidden" name="parentType" value="{$parentType}">
         <input type="hidden" name="parentID" value="{$parentID}">
         <input type="hidden" name="returnToParent" value="{$returnToParent}">
