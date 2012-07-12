@@ -16,15 +16,7 @@
   </tr>  
   <tr>
     <td>
-      <table class="list sortable">
-        <tr>
-          <th>Date / Time</th>
-          <th>Subject</th>
-          <th>Repeat</th>
-          <th>Active</th>
-        </tr>
-        {show_reminders("../reminder/templates/reminderListR.tpl")}
-      </table>
+      {reminder::get_list_html()}
     </td>
   </tr>
 </table>

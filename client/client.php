@@ -190,36 +190,6 @@ require_once("../alloc.php");
     include_template("templates/clientContactM.tpl");
   }
 
-  function show_reminders($template) {
-    global $TPL;
-    global $clientID;
-    global $reminderID;
-    $current_user = &singleton("current_user");
-
-    // show all reminders for this project
-    $db = new db_alloc;
-    if ($current_user->have_role("manage")) {
-      $query = prepare("SELECT * FROM reminder WHERE reminderType='client' AND reminderLinkID=%d", $clientID);
-    } else {
-      $query = prepare("SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE reminderType='client' AND reminderLinkID=%d AND personID=%d GROUP BY reminder.reminderID", $clientID, $current_user->get_id());
-    }
-    $db->query($query);
-    while ($db->next_record()) {
-      $reminder = new reminder;
-      $reminder->read_db_record($db);
-      $reminder->set_tpl_values("reminder_");
-      if ($reminder->get_value('reminderRecuringInterval') == "No") {
-        $TPL["reminder_reminderRecurence"] = "&nbsp;";
-      } else {
-        $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
-          ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
-      }
-      $TPL["returnToParent"] = "client";
-
-      include_template($template);
-    }
-  }
-
   function show_attachments() {
     global $clientID;
     util_show_attachments("client",$clientID);

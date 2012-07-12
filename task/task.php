@@ -23,32 +23,6 @@
 require_once("../alloc.php");
 define("PAGE_IS_PRINTABLE",1);
 
-  function show_reminders($template) {
-    global $TPL;
-    global $taskID;
-    global $reminderID;
-
-    // show all reminders for this project
-    $db = new db_alloc;
-    $query = prepare("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d", $taskID);
-    $db->query($query);
-    while ($db->next_record()) {
-      $reminder = new reminder;
-      $reminder->read_db_record($db);
-      $reminder->set_tpl_values("reminder_");
-      if ($reminder->get_value('reminderRecuringInterval') == "No") {
-        $TPL["reminder_reminderRecurence"] = "&nbsp;";
-      } else {
-        $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
-          ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
-      }
-
-      $TPL["returnToParent"] = "task";
-
-      include_template($template);
-    }
-  }
-
   function show_task_children($template) {
     global $TPL;
     global $task;

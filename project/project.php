@@ -278,43 +278,6 @@ require_once("../alloc.php");
     include_template("templates/projectTaskS.tpl"); 
   }
 
-  function show_reminders($template) {
-    global $TPL;
-    global $projectID;
-    global $reminderID;
-    $current_user = &singleton("current_user");
-
-    // show all reminders for this project
-    $db = new db_alloc;
-    $permissions = explode(",", $current_user->get_value("perms"));
-
-    if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
-      $query = prepare("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d", $projectID);
-    } else {
-      // Apparently not used anywhere.
-      $query = prepare("SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE reminderType='project' AND reminderLinkID=%d AND personID=%d GROUP BY reminder.reminderID", $projectID, $current_user->get_id());
-    }
-
-    $db->query($query);
-
-    while ($db->next_record()) {
-      $reminder = new reminder;
-      $reminder->read_db_record($db);
-      $reminder->set_tpl_values("reminder_");
-
-      if ($reminder->get_value('reminderRecuringInterval') == "No") {
-        $TPL["reminder_reminderRecurence"] = "&nbsp;";
-      } else {
-        $TPL["reminder_reminderRecurence"] = "Every ".$reminder->get_value('reminderRecuringValue')
-          ." ".$reminder->get_value('reminderRecuringInterval')."(s)";
-      }
-
-      $TPL["returnToParent"] = "project";
-
-      include_template($template);
-    }
-  }
-
   function show_import_export($template) {
     include_template($template);
   }
