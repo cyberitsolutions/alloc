@@ -52,7 +52,7 @@
             <th>Repeat</th>
             <th>Active</th>
           </tr>
-          {show_reminders("../reminder/templates/reminderR.tpl")}
+          {show_reminders("../reminder/templates/reminderListR.tpl")}
         </table>
       </td>
     </tr>
