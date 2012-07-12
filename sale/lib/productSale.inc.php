@@ -307,25 +307,8 @@ class productSale extends db_entity {
         $order_the_hardware_taskID = $task->get_id();
         $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
 
-        $p1 = new person();
-        $p1->set_id($this->get_value("personID"));
-        $p1->select();
-        $p2 = new person();
-        $p2->set_id(67);
-        $p2->select();
-        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name(),"addIP"=>true,"internal"=>true);
-        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name(),"addIP"=>true,"internal"=>true);
-
-        $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
-        $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
-        $emailRecipients = comment::add_interested_parties($commentID, null, $recipients);
-
-        // Re-email the comment out, including any attachments
-        if (!comment::send_comment($commentID,$emailRecipients)) {
-          $TPL["message"][] = "Email failed to send.";
-        } else {
-          $TPL["message_good"][] = "Emailed task comment to ".$p1->get_value("emailAddress").", ".$p2->get_value("emailAddress").".";
-        }
+        $task->add_notification(3,1,"Task ".$task->get_id()." ".$name,"Task status moved from pending to open."
+                               ,array(array("field"=>"metaPersonID","who"=>-2)));
       }
 
       // 3. from salesperson to admin
@@ -347,25 +330,8 @@ class productSale extends db_entity {
         $pay_the_supplier_taskID = $task->get_id();
         $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
 
-        $p1 = new person();
-        $p1->set_id($this->get_value("personID"));
-        $p1->select();
-        $p2 = new person();
-        $p2->set_id(67);
-        $p2->select();
-        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name(),"addIP"=>true,"internal"=>true);
-        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name(),"addIP"=>true,"internal"=>true);
-
-        $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
-        $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
-        $emailRecipients = comment::add_interested_parties($commentID, null, $recipients);
-
-        // Re-email the comment out, including any attachments
-        if (!comment::send_comment($commentID,$emailRecipients)) {
-          $TPL["message"][] = "Email failed to send.";
-        } else {
-          $TPL["message_good"][] = "Emailed task comment to ".$p1->get_value("emailAddress").", ".$p2->get_value("emailAddress").".";
-        }
+        $task->add_notification(3,1,"Task ".$task->get_id()." ".$name,"Task status moved from pending to open."
+                               ,array(array("field"=>"metaPersonID","who"=>-2)));
       }
 
       // 4. from admin to salesperson
@@ -386,25 +352,8 @@ class productSale extends db_entity {
         $task->add_pending_tasks($pay_the_supplier_taskID);
         $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
 
-        $p1 = new person();
-        $p1->set_id($this->get_value("personID"));
-        $p1->select();
-        $p2 = new person();
-        $p2->set_id(67);
-        $p2->select();
-        $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name(),"addIP"=>true,"internal"=>true);
-        $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name(),"addIP"=>true,"internal"=>true);
-
-        $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
-        $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
-        $emailRecipients = comment::add_interested_parties($commentID, null, $recipients);
-
-        // Re-email the comment out, including any attachments
-        if (!comment::send_comment($commentID,$emailRecipients)) {
-          $TPL["message"][] = "Email failed to send.";
-        } else {
-          $TPL["message_good"][] = "Emailed task comment to ".$p1->get_value("emailAddress").", ".$p2->get_value("emailAddress").".";
-        }
+        $task->add_notification(3,1,"Task ".$task->get_id()." ".$name,"Task status moved from pending to open."
+                               ,array(array("field"=>"metaPersonID","who"=>-2)));
       }
     }
   }

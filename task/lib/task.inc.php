@@ -1576,6 +1576,39 @@ class task extends db_entity {
     }
   }
 
+  function add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients) {
+    $current_user = &singleton("current_user");
+    $token = new token;
+    $token->set_value("tokenEntity","task");
+    $token->set_value("tokenEntityID",$this->get_id());
+    $token->set_value("tokenActionID",$tokenActionID);
+    $token->set_value("tokenActive",1);
+    $token->set_value("tokenMaxUsed",$maxUsed);
+    $token->set_value("tokenCreatedBy",$current_user->get_id());
+    $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
+    $hash = $token->generate_hash();
+    $token->set_value("tokenHash",$hash);
+    $token->save();
+    if ($token->get_id()) {
+      $reminder = new reminder();
+      $reminder->set_value("reminderType","task");
+      $reminder->set_value("reminderLinkID",$this->get_id());
+      $reminder->set_value("reminderHash",$hash);
+      $reminder->set_value("reminderSubject",$name);
+      $reminder->set_value("reminderContent",$desc);
+      $reminder->save();
+      if ($reminder->get_id()) {
+        foreach ($recipients as $row) {
+          $reminderRecipient = new reminderRecipient();
+          $reminderRecipient->set_value("reminderID",$reminder->get_id());
+          $reminderRecipient->set_value($row["field"],$row["who"]);
+          $reminderRecipient->save();
+        }
+      }
+    }
+  }
+
+
 }
 
 
