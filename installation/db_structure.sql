@@ -302,6 +302,7 @@ CREATE TABLE reminder (
   reminderType varchar(255) default NULL,
   reminderLinkID integer NOT NULL,
   reminderTime datetime NOT NULL,
+  reminderHash varchar(255) DEFAULT NULL,
   reminderRecuringInterval varchar(255) NOT NULL default 'No',
   reminderRecuringValue integer NOT NULL default '0',
   reminderAdvNoticeSent boolean NOT NULL default false,

@@ -88,6 +88,12 @@ class token extends db_entity {
     $db->query($q);
   }
 
+  function decrement_tokenUsed() {
+    $q = prepare("UPDATE token SET tokenUsed = coalesce(tokenUsed,0) - 1 WHERE tokenID = %d",$this->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+  }
+
   function get_hash_str() {
     list($usec, $sec) = explode(' ', microtime());
     $seed = $sec + ($usec * 100000);
