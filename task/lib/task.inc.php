@@ -1557,6 +1557,25 @@ class task extends db_entity {
     }
   }
 
+  function moved_from_pending_to_open() {
+    if (is_object($this) && $this->get_id()) {
+      $this->select();
+      if (substr($this->get_value("taskStatus"),0,4) == 'open') {
+        $db = new db_alloc();
+        $q = prepare("SELECT *
+                        FROM auditItem
+                       WHERE entityName = 'task'
+                         AND entityID = %d
+                         AND changeType = 'FieldChange'
+                         AND fieldName = 'taskStatus'
+                    ORDER BY dateChanged DESC
+                       LIMIT 1",$this->get_id());
+        $row = $db->qr($q);
+        return substr($row["oldValue"],0,7) == "pending";
+      }
+    }
+  }
+
 }
 
 

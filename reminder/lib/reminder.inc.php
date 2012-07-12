@@ -31,6 +31,7 @@ class reminder extends db_entity {
   public $data_fields = array("reminderType"
                              ,"reminderLinkID"
                              ,"reminderTime"
+                             ,"reminderHash"
                              ,"reminderRecuringInterval"
                              ,"reminderRecuringValue"
                              ,"reminderAdvNoticeSent"
@@ -197,9 +198,27 @@ class reminder extends db_entity {
       $this->set_value("reminderActive",0);
       $this->save();
     } else {
+
+      // check for a reminder.reminderHash that links off to a token.tokenHash
+      // this lets us trigger reminders on complex actions, for example create
+      // a reminder that sends when a task status changes from pending to open
+      if ($this->get_value("reminderHash")) {
+        $token = new token;
+        if ($token->set_hash($this->get_value("reminderHash"))) {
+          list($entity,$method) = $token->execute();
+          if (is_object($entity) && $entity->get_id()) {
+            if ($entity->$method()) {
+              $force = true;
+            } else {
+              $token->decrement_tokenUsed(); // next time, gadget
+            }
+          }
+        }
+      }
+
       $date = strtotime($this->get_value('reminderTime'));
       // Only send reminder if it is time to send it
-      if (date("YmdHis", $date) <= date("YmdHis")) {
+      if (($date && date("YmdHis", $date) <= date("YmdHis")) || ($this->get_value("reminderHash") && $force)) {
 
         $recipients = $this->get_all_recipients();
         foreach ($recipients as $person) {
@@ -263,7 +282,7 @@ class reminder extends db_entity {
     $date = strtotime($this->get_value('reminderTime'));
     // if no advanced notice needs to be sent then dont bother
     if ($this->get_value('reminderAdvNoticeInterval') != "No" 
-    &&  $this->get_value('reminderAdvNoticeSent') == 0) {
+    &&  $this->get_value('reminderAdvNoticeSent') == 0 && !$this->get_value("reminderHash")) {
 
       $date = strtotime($this->get_value('reminderTime'));
       $interval = -$this->get_value('reminderAdvNoticeValue');
