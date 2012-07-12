@@ -193,6 +193,15 @@ EOD2;
   if (!is_object($reminder) || !$reminder->get_id()) {
     $TPL["reminderActive"] = true;
   }
+
+  if ($reminder->get_value("reminderHash")) {
+    $db = new db_alloc();
+    $r = $db->qr("SELECT tokenAction
+                    FROM token 
+               LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID
+                   WHERE token.tokenHash = '%s'",$reminder->get_value("reminderHash"));
+    $TPL["tokenName"] = $r["tokenAction"];
+  }
   include_template("templates/reminderM.tpl");
   break;
 
