@@ -30,7 +30,7 @@ define("PAGE_IS_PRINTABLE",1);
 
     // show all reminders for this project
     $db = new db_alloc;
-    $query = prepare("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d AND reminderActive = 1", $taskID);
+    $query = prepare("SELECT * FROM reminder WHERE reminderType='task' AND reminderLinkID=%d", $taskID);
     $db->query($query);
     while ($db->next_record()) {
       $reminder = new reminder;

@@ -289,10 +289,10 @@ require_once("../alloc.php");
     $permissions = explode(",", $current_user->get_value("perms"));
 
     if (in_array("admin", $permissions) || in_array("manage", $permissions)) {
-      $query = prepare("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d AND reminderActive = 1", $projectID);
+      $query = prepare("SELECT * FROM reminder WHERE reminderType='project' AND reminderLinkID=%d", $projectID);
     } else {
       // Apparently not used anywhere.
-      $query = prepare("SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE reminderType='project' AND reminderLinkID=%d AND personID='%s' AND reminderActive = 1 GROUP BY reminder.reminderID", $projectID, $current_user->get_id());
+      $query = prepare("SELECT * FROM reminder JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID WHERE reminderType='project' AND reminderLinkID=%d AND personID=%d GROUP BY reminder.reminderID", $projectID, $current_user->get_id());
     }
 
     $db->query($query);
