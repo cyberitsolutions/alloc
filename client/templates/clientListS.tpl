@@ -2,6 +2,7 @@
 <table class="list sortable">
   <tr>
     <th>Client</th>
+    <th>Phone</th>
     <th>Contact Name</th>
     <th>Contact Phone</th>
     <th>Contact Email</th>
@@ -12,6 +13,7 @@
   {foreach $clientListRows as $r}
   <tr>
     <td>{$r.clientLink}</td>
+    <td>{$r.clientPhoneOne}</td>
     <td>{=$r.clientContactName}</td>
     <td>{=$r.clientContactPhone}</td>
     <td>{$r.clientContactEmail}</td>
