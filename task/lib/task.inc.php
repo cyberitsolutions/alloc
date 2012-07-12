@@ -762,16 +762,22 @@ class task extends db_entity {
     // If personID filter
     if ($filter["personID"] == "NULL") {
       $sql["personID"] = "(task.personID IS NULL)";
+    } else if ($filter["personID"] && is_array($filter["personID"])) {
+      $sql["personID"] = prepare("(task.personID in (%s))",$filter["personID"]);
     } else if ($filter["personID"]) {
       $sql["personID"] = prepare("(task.personID = %d)",$filter["personID"]);
     }
 
     // If creatorID filter
-    if ($filter["creatorID"]) {
+    if ($filter["creatorID"] && is_array($filter["creatorID"])) {
+      $sql["creatorID"] = prepare("(task.creatorID in (%s))",$filter["creatorID"]);
+    } else if ($filter["creatorID"]) {
       $sql["creatorID"] = prepare("(task.creatorID = %d)",$filter["creatorID"]);
     }
     // If managerID filter
-    if ($filter["managerID"]) {
+    if ($filter["managerID"] && is_array($filter["managerID"])) {
+      $sql["managerID"] = prepare("(task.managerID in (%s))",$filter["managerID"]);
+    } else if ($filter["managerID"]) {
       $sql["managerID"] = prepare("(task.managerID = %d)",$filter["managerID"]);
     }
 
