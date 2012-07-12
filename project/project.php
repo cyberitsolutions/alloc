@@ -105,6 +105,7 @@ require_once("../alloc.php");
         $commission_item->read_db_record($db);
         $commission_item->set_values("commission_");
         $tf = $commission_item->get_foreign_object("tf");
+        $TPL["save_label"] = "Save";
         include_template($template_name);
       }
     }
@@ -122,6 +123,7 @@ require_once("../alloc.php");
     $commission_item = new projectCommissionPerson;
     $commission_item->set_values("commission_");
     $TPL["commission_projectID"] = $projectID;
+    $TPL["save_label"] = "Add Commission";
     include_template($template_name);
   }
 
@@ -456,7 +458,11 @@ if ($projectID) {
     $commission_item->read_globals("commission_");
 
     if ($_POST["commission_save"]) {
-      $commission_item->save();
+      if (!$_POST["commission_tfID"]) {
+        alloc_error("No TF selected.");
+      } else {
+        $commission_item->save();
+      }
     } else if ($_POST["commission_delete"]) {
       $commission_item->delete();
     }
