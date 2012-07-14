@@ -1,6 +1,7 @@
 <style>
   h6 { margin-top:10px; margin-bottom:3px; }
 </style>
+<a name="preferences"></a>
 <form action="{$url_alloc_home}" method="post">
 <table cellspacing="0" style="width:100%">
   <tr>
@@ -147,7 +148,7 @@
           {print $privateMode ? "Yes" : "No"}&nbsp;
         </div>
         <div style="float:right; width:50%;" class="right">
-          <button type="button" onClick="toggle_view_edit();">Edit<i class="icon-edit"></i></button>
+          <button type="button" onClick="toggle_view_edit();window.location.href='#preferences';">Edit<i class="icon-edit"></i></button>
         </div>
       </div>
 
