@@ -34,7 +34,6 @@
         </div>
         <div style="float:right; width:50%;" class="nobr">
           <select multiple="true" name="topTasksStatus[]">{$topTasksStatusOptions}</select>
-          {page::help("<b>Status</b><br><br>Control the status of the tasks that are displayed on the home page.")}
         </div>
       </div>
       <div class="view">
