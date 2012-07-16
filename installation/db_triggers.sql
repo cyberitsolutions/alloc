@@ -97,7 +97,7 @@ DROP FUNCTION IF EXISTS can_edit_rate $$
 CREATE FUNCTION can_edit_rate(pID INTEGER, projID INTEGER) RETURNS BOOLEAN READS SQL DATA
 BEGIN
   DECLARE r BIGINT(20);
-  SELECT rate INTO r FROM projectPerson WHERE projectID = projID AND personID = pID;
+  SELECT rate INTO r FROM projectPerson WHERE projectID = projID AND personID = pID AND rate IS NULL LIMIT 1;
   IF (r IS NULL) THEN
     RETURN 1;
   END IF;
