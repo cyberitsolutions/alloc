@@ -341,12 +341,12 @@ class project extends db_entity {
     return $q;
   }
 
-  function get_list_by_client($clientID=false) {
+  function get_list_by_client($clientID=false,$onlymine=false) {
+    $current_user = &singleton("current_user");
     $clientID and $options["clientID"] = $clientID;
     $options["projectStatus"] = "Current";
     $options["showProjectType"] = true;
-    #$current_user = &singleton("current_user");
-    #$options["personID"] = $current_user->get_id();
+    $options["personID"] = $current_user->get_id();
     $ops = project::get_list($options);
     return array_kv($ops,"projectID","label");
   }
@@ -367,13 +367,13 @@ class project extends db_entity {
     return page::select_options($ops, $projectIDs, $maxlength);
   }
 
-  function get_dropdown_by_client($clientID=false) {
+  function get_dropdown_by_client($clientID=false,$onlymine=false) {
     if ($clientID) {
       $ops = "<select size=\"1\" name=\"projectID\"><option></option>";
-      $ops.= page::select_options(project::get_list_by_client($clientID),$this->get_id())."</select>";
+      $ops.= page::select_options(project::get_list_by_client($clientID,$onlymine),$this->get_id())."</select>";
     } else {
       $ops = "<select size=\"1\" name=\"projectID\"><option></option>";
-      $ops.= page::select_options(project::get_list_by_client(),$this->get_id())."</select>";
+      $ops.= page::select_options(project::get_list_by_client(null,$onlymine),$this->get_id())."</select>";
       #$ops.= project::get_list_dropdown_options("curr",$this->get_id(),100)."</select>";
     }
     return $ops;

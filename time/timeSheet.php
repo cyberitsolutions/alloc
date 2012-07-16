@@ -490,7 +490,7 @@ if ($_POST["save"]
     }
   } else {
     $save_error=true;
-    $TPL["message_help"][] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
+    $TPL["message_help"][] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button. A manager must add you to the project before you can create time sheets for it.";
     $TPL["message"][] = "Please select a Project and then click the Create Time Sheet button.";
   }
 
@@ -562,7 +562,7 @@ if ($_POST["save"]
   $timeSheet->read_globals();
   $timeSheet->read_globals("timeSheet_");
   $timeSheet->set_value("status", "edit");
-  $TPL["message_help"] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button.";
+  $TPL["message_help"] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button. A manager must add you to the project before you can create time sheets for it.";
 }
 
 // THAT'S THE END OF THE BIG SAVE.  
@@ -666,6 +666,9 @@ if ($_GET["newTimeSheet_projectID"] && !$projectID) {
   }
 }
 
+if ($_GET["newTimeSheet_projectID"] && !$db->qr("SELECT * FROM projectPerson WHERE personID = %d AND projectID = %d",$current_user->get_id(),$_GET["newTimeSheet_projectID"])) {
+  $TPL["message"][] = "You are not a member of the project (id:".page::htmlentities($_GET["newTimeSheet_projectID"])."), please get a manager to add you to the project.";
+}
 
 $db->query($query);
 while ($db->row()) {
@@ -713,7 +716,7 @@ if ($projectID != 0) {
 }
 
 list($client_select, $client_link, $project_select, $project_link)
-  = client::get_client_and_project_dropdowns_and_links($clientID, $projectID);
+  = client::get_client_and_project_dropdowns_and_links($clientID, $projectID, true);
 
 
 $TPL["invoice_link"] = $timeSheet->get_invoice_link();
