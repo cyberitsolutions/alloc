@@ -322,7 +322,7 @@ class client extends db_entity {
     return array($probable_clientID,$client_percent);
   }
 
-  function get_client_and_project_dropdowns_and_links($clientID=false, $projectID=false) {
+  function get_client_and_project_dropdowns_and_links($clientID=false, $projectID=false, $onlymine=false) {
     // This function returns dropdown lists and links for both client and
     // project. The two dropdown lists are linked, in that if you change the
     // client, then the project dropdown dynamically updates 
@@ -348,7 +348,7 @@ class client extends db_entity {
     $client_link = $client->get_link();
 
 
-    $project_select = '<div id="projectDropdown" style="display:inline">'.$project->get_dropdown_by_client($clientID).'</div>';
+    $project_select = '<div id="projectDropdown" style="display:inline">'.$project->get_dropdown_by_client($clientID,$onlymine).'</div>';
     $project_link = $project->get_link();
   
     return array($client_select, $client_link, $project_select, $project_link);
