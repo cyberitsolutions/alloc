@@ -20,11 +20,11 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class top_ten_tasks_home_item extends home_item {
+class task_list_home_item extends home_item {
   var $date;
 
   function __construct() {
-    parent::__construct("top_ten_tasks", "Tasks", "task", "topTenTasksH.tpl","standard",20);
+    parent::__construct("top_ten_tasks", "Tasks", "task", "taskListH.tpl","standard",20);
   }
 
   function visible() {
