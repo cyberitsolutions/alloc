@@ -46,8 +46,13 @@
           <td>{show_perm_select()}</td>
           <td class="top">Default Rate</td>
           <td class="top">
+            {if $current_user->have_perm(PERM_PERSON_WRITE_MANAGEMENT)}
             <input size="10" type="text" name="defaultTimeSheetRate" value={page::money(config::get_config_item('currency'),$person_defaultTimeSheetRate,"%mo")}>
             <select name="defaultTimeSheetRateUnitID"><option value="">{$timeSheetRateUnit_select}</select>
+            {else}
+              {page::money(config::get_config_item('currency'),$person_defaultTimeSheetRate,"%mo")}
+              {$timeSheetRateUnit_label}
+            {/}
           </td>
         </tr>
         {include_employee_fields()}
