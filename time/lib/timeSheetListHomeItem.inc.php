@@ -23,6 +23,7 @@
 class timeSheetListHomeItem extends home_item {
 
   function __construct() {
+    $this->has_config = true;
     parent::__construct("time_list", "Current Time Sheets", "time", "timeSheetListH.tpl", "narrow", 30);
   }
 

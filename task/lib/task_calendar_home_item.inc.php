@@ -24,6 +24,7 @@ class task_calendar_home_item extends home_item {
   var $date;
 
   function __construct() {
+    $this->has_config = true;
     parent::__construct("task_calendar_home_item", "Calendar", "task", "taskCalendarS.tpl","standard",30);
   }
 

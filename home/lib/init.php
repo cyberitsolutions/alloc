@@ -24,6 +24,5 @@
 class home_module extends module {
   var $module = "home";
   var $db_entities = array("history");
-  var $home_items = array("customize_alloc_home_item");
 }
 ?>

@@ -58,25 +58,25 @@ $TPL["home_items"] = $home_items;
 
 
 if ($_POST["customize_save"]) {
-  $current_user->prefs["customizedFont"] = sprintf("%d",$_POST["font"]);
-  $current_user->prefs["customizedTheme2"] = $_POST["theme"];
+  isset($_POST["font"])  and $current_user->prefs["customizedFont"] = sprintf("%d",$_POST["font"]);
+  isset($_POST["theme"]) and $current_user->prefs["customizedTheme2"] = $_POST["theme"];
 
-  $current_user->prefs["tasksGraphPlotHome"] = $_POST["weeks"];
-  $current_user->prefs["tasksGraphPlotHomeStart"] = $_POST["weeksBack"];
+  isset($_POST["weeks"])     and $current_user->prefs["tasksGraphPlotHome"] = $_POST["weeks"];
+  isset($_POST["weeksBack"]) and $current_user->prefs["tasksGraphPlotHomeStart"] = $_POST["weeksBack"];
 
-  $current_user->prefs["topTasksNum"] = $_POST["topTasksNum"];
-  $current_user->prefs["topTasksStatus"] = $_POST["topTasksStatus"];
+  isset($_POST["topTasksNum"])    and $current_user->prefs["topTasksNum"] = $_POST["topTasksNum"];
+  isset($_POST["topTasksStatus"]) and $current_user->prefs["topTasksStatus"] = $_POST["topTasksStatus"];
 
-  $current_user->prefs["projectListNum"] = $_POST["projectListNum"];
+  isset($_POST["projectListNum"]) and $current_user->prefs["projectListNum"] = $_POST["projectListNum"];
 
-  $current_user->prefs["dailyTaskEmail"] = $_POST["dailyTaskEmail"];
-  $current_user->prefs["receiveOwnTaskComments"] = $_POST["receiveOwnTaskComments"];
+  isset($_POST["dailyTaskEmail"])         and $current_user->prefs["dailyTaskEmail"] = $_POST["dailyTaskEmail"];
+  isset($_POST["receiveOwnTaskComments"]) and $current_user->prefs["receiveOwnTaskComments"] = $_POST["receiveOwnTaskComments"];
 
-  $current_user->prefs["showFilters"] = $_POST["showFilters"];
-  $current_user->prefs["privateMode"] = $_POST["privateMode"];
+  isset($_POST["showFilters"]) and $current_user->prefs["showFilters"] = $_POST["showFilters"];
+  isset($_POST["privateMode"]) || $_POST["form_on_person_page"] and $current_user->prefs["privateMode"] = $_POST["privateMode"];
 
-  $current_user->prefs["timeSheetHoursWarn"] = $_POST["timeSheetHoursWarn"];
-  $current_user->prefs["timeSheetDaysWarn"] = $_POST["timeSheetDaysWarn"];
+  isset($_POST["timeSheetHoursWarn"]) and $current_user->prefs["timeSheetHoursWarn"] = $_POST["timeSheetHoursWarn"];
+  isset($_POST["timeSheetDaysWarn"])  and $current_user->prefs["timeSheetDaysWarn"] = $_POST["timeSheetDaysWarn"];
   $current_user->store_prefs();
   alloc_redirect($TPL["url_alloc_home"]);
 }
@@ -94,6 +94,7 @@ if (isset($_POST["time_item"])) {
   }
 }
 
+customize_alloc_home_item::render();
 
 $TPL["main_alloc_title"]="Home Page - ".APPLICATION_NAME;
 if ($_GET["media"] == "print") {

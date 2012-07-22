@@ -1,7 +1,9 @@
 ddclchanges = [];
 function redraw_multiple_selects(container, funct) {
-  if (container) {
-    var c = "#"+container
+  if (typeof container == "string") {
+    var c = "#"+container;
+  } else {
+    var c = container;
   }
   var blacklist = get_alloc_var("ddcl_blacklist");
   $("select[multiple]",c).each(function(){
@@ -357,6 +359,20 @@ $(document).ready(function() {
       height: 0,
       width: 0
     }));
+  });
+
+
+  $(".config-link").click(function(){
+
+    var elem = $("."+$(this).attr("id")).css({"position":"absolute"
+                                             ,"top":10
+                                             ,"right":0
+                                             ,"display":"inline"
+                                             }).addClass("corner").addClass("shadow");
+
+    $(this).parent().append(elem);
+    redraw_multiple_selects($(this).parent());
+    return false;
   });
 
 });

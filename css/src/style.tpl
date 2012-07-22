@@ -320,7 +320,7 @@ hr {
 
 #helper { 
   position:absolute; 
-  z-index:2;
+  z-index:1000;
   background-color:(HELP_BACKGROUND);
   border:1px solid (DECORATIVE_LINE_COLOR);
   color:(HELP_COLOR);
@@ -689,7 +689,28 @@ a.star:hover, a.hot {
   background:(PANEL_ZEPPO_BG_COLOR);
 }
 
-
+.hidden-links a.config-link {
+  color:transparent !important;
+  float:right;
+}
+.hidden-links:hover a.config-link {
+  color:#ccc !important;
+}
+.hidden-links a.config-link:hover {
+  color:#333 !important;
+}
+.config-pane {
+  background-color:#fff;
+  width:400px;
+  padding:20px;
+  border:1px solid #ddd;
+  z-index:100;
+  font-size:80%;
+}
+.config-pane h6 {
+  margin-top:10px;
+  margin-bottom:3px;
+}
 
 .faint {
   color:(COMMENT_HIDDEN_TEXT_COLOR);
