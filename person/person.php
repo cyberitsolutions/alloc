@@ -299,6 +299,8 @@ if ($personID) {
   $TPL["main_alloc_title"] = "New Person - ".APPLICATION_NAME;
 }
 
+customize_alloc_home_item::render();
+
 include_template("templates/personM.tpl");
 
 

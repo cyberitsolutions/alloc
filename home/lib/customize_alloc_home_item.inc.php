@@ -23,7 +23,7 @@
 class customize_alloc_home_item extends home_item {
 
   function __construct() {
-    parent::__construct("", "Preferences", "home", "customizeH.tpl", "narrow",60, false);
+    parent::__construct("", "", "home", "customizeH.tpl", "narrow",60, false);
   }
 
   function visible() {

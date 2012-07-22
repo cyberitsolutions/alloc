@@ -320,7 +320,7 @@ hr {
 
 #helper { 
   position:absolute; 
-  z-index:2;
+  z-index:1000;
   background-color:#fffdf2;
   border:1px solid #cccccc;
   color:#666666;
@@ -689,7 +689,28 @@ a.star:hover, a.hot {
   background:#ffffff;
 }
 
-
+.hidden-links a.config-link {
+  color:transparent !important;
+  float:right;
+}
+.hidden-links:hover a.config-link {
+  color:#ccc !important;
+}
+.hidden-links a.config-link:hover {
+  color:#333 !important;
+}
+.config-pane {
+  background-color:#fff;
+  width:400px;
+  padding:20px;
+  border:1px solid #ddd;
+  z-index:100;
+  font-size:80%;
+}
+.config-pane h6 {
+  margin-top:10px;
+  margin-bottom:3px;
+}
 
 .faint {
   color:#888888;
