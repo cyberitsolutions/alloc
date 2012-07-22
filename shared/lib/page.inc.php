@@ -82,32 +82,37 @@ class page {
     $current_user = &singleton("current_user");
     global $modules;
     $db = new db_alloc; 
-    $str[] = "<option value=\"\">Quick List</option>";
-    $str[] = "<option value=\"".$TPL["url_alloc_task"]."\">New Task</option>";
+    $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."\">New Task</option>";
     if (isset($modules["time"]) && $modules["time"]) {
-      $str[] = "<option value=\"".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
+      $str[] = "<option value=\"create_".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
     }
-    $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=Fault\">New Fault</option>";
-    $str[] = "<option value=\"".$TPL["url_alloc_task"]."tasktype=Message\">New Message</option>";
+    $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."tasktype=Fault\">New Fault</option>";
+    $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."tasktype=Message\">New Message</option>";
     if (have_entity_perm("project", PERM_CREATE, $current_user)) {
-      $str[] = "<option value=\"".$TPL["url_alloc_project"]."\">New Project</option>";
+      $str[] = "<option value=\"create_".$TPL["url_alloc_project"]."\">New Project</option>";
     } 
     if (isset($modules["client"]) && $modules["client"]) {
-      $str[] = "<option value=\"".$TPL["url_alloc_client"]."\">New Client</option>";
+      $str[] = "<option value=\"create_".$TPL["url_alloc_client"]."\">New Client</option>";
     } 
     if (isset($modules["finance"]) && $modules["finance"]) {
-      $str[] = "<option value=\"".$TPL["url_alloc_expenseForm"]."\">New Expense Form</option>";
+      $str[] = "<option value=\"create_".$TPL["url_alloc_expenseForm"]."\">New Expense Form</option>";
     }
-    $str[] = "<option value=\"".$TPL["url_alloc_reminder"]."parentType=general&step=2\">New Reminder</option>";
+    $str[] = "<option value=\"create_".$TPL["url_alloc_reminder"]."parentType=general&step=2\">New Reminder</option>";
     if (have_entity_perm("person", PERM_CREATE, $current_user)) {
-      $str[] = "<option value=\"".$TPL["url_alloc_person"]."\">New Person</option>";
+      $str[] = "<option value=\"create_".$TPL["url_alloc_person"]."\">New Person</option>";
     }
-    $str[] = "<option value=\"".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
+    $str[] = "<option value=\"create_".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
+    $str[] = "<option value=\"\" disabled=\"disabled\">--------------------";
     $history = new history;
-    $str[] = page::select_options($history->get_history_query("DESC"), $_GET["historyID"]);
+    $q = $history->get_history_query("DESC");
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $r["history_".$row["value"]] = $row["the_label"];
+    }
+    $str[] = page::select_options($r, $_POST["search_action"]);
     $TPL["history_options"] = implode("\n",$str);
-
-    $TPL["category_options"] = page::get_category_options($_GET["category"]);
+    $TPL["category_options"] = page::get_category_options($_POST["search_action"]);
     $TPL["needle"] = $_POST["needle"];
     include_template(ALLOC_MOD_DIR."shared/templates/toolbarS.tpl");
   }
@@ -174,7 +179,7 @@ class page {
     return $str;
   }
   function get_category_options($category="") {
-    $category_options = array("Tasks"=>"Tasks", "Projects"=>"Projects", "Time"=>"Time", "Items"=>"Items", "Clients"=>"Clients","Comment"=>"Comment","Wiki"=>"Wiki");
+    $category_options = array("search_tasks"=>"Search Tasks", "search_projects"=>"Search Projects", "search_time"=>"Search Time Sheets", "search_clients"=>"Search Clients","search_comment"=>"Search Comments","search_wiki"=>"Search Wiki", "search_items"=>"Search Items");
     return page::select_options($category_options, $category);
   } 
   function help($topic, $hovertext=false) {

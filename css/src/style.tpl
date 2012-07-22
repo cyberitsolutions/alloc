@@ -727,26 +727,13 @@ div.warn {
   width:100%; 
   position:relative; 
   top:0px;
-  margin-bottom:20px;
-}
-
-#menu table {
-  position:relative;
-  top:10px;
-  margin:0px;
-  padding:0px;
-  text-align:left;
-  font-size:12px; /* hardcoded */
+  margin-top:11px;
+  margin-bottom:10px;
   color:(TABLE_MENU_A_COLOR);
 }
 
-#menu table td {
+#menu td {
   color:(TABLE_MENU_TD_COLOR);
-}
-
-#menu select {
-  position:relative;
-  top:0px !important; top:-2px;
 }
 
 div#tabs {

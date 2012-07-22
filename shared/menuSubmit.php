@@ -23,12 +23,18 @@
 
 require_once("../alloc.php");
 
-if ($_POST["search"]) {
-  alloc_redirect($TPL["url_alloc_search"]."needle=".urlencode($_POST["needle"])."&category=".$_POST["category"]."&search=true");
+if ($_REQUEST["search_action"]) {
+  list($method,$thing) = explode("_",$_REQUEST["search_action"]);
 
-} else if ($_POST["historyID"]) {
-  alloc_redirect($TPL["url_alloc_history"]."historyID=".$_POST["historyID"]);
+  if ($method == "search") {
+    alloc_redirect($TPL["url_alloc_search"]."needle=".urlencode($_REQUEST["needle"])."&category=".ucwords($thing)."&search=true");
+
+  } else if ($method == "create") {
+    alloc_redirect($sess->url($thing));
+
+  } else if ($method == "history") {
+    alloc_redirect($TPL["url_alloc_history"]."historyID=".$thing);
+  }
 }
-
 
 ?>

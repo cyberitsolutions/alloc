@@ -1,28 +1,18 @@
 
     <table id="menu" cellpadding="0" cellspacing="0">
       <tr>
-        <td>
-          <table cellpadding="0" cellspacing="0" align="left" style="left:0px;">
-            <tr>
-              <td style="font-size:17px;">{echo config::get_config_logo()}</td>
-            </tr>
-          </table>
+        <td style="font-size:145%;">
+         {echo config::get_config_logo()}
         </td>
-        <td>
+        <td class="nobr bottom" style="width:1%;">
           <form action="{$url_alloc_menuSubmit}" method="post" id="form_search">
-          <table cellpadding="0" cellspacing="1" align="right" width="40%" style="right:0px !important; right:-32px;">
-            <tr>
-              <td width="1%"><select name="historyID" onChange="this.form.submit();">{$history_options}</select></td>
-              <td width="6px">&nbsp;&nbsp;or&nbsp;&nbsp;</td>
-              <td width="30px"><input size="35" type="text" name="needle" id="menu_form_needle" value="{$needle}"></td>
-              <td width="30px"><select size="1" name="category">{$category_options}</select></td>
-              <td width="30px">
-              <input type="submit" name="search" value="Search" class="filter_button">
-              </td>
-              <td width="18px">{page::help("quicklist_and_search")}</td>
-            </tr>
-          </table>
-          <input type="hidden" name="sessID" value="{$sessID}">
+            <select name="search_action" id="search_action" style="width:9em;">
+              {$category_options}
+              <option value="" disabled="disabled">--------------------
+              {$history_options}
+            </select>
+            <input size="40" type="text" name="needle" id="menu_form_needle" value="{$needle}">
+            <input type="hidden" name="sessID" value="{$sessID}">
           </form>
         </td>
       </tr>
