@@ -152,7 +152,15 @@ function include_template($filename, $getString=false) {
     ob_start();
   }
 
-  eval($template);
+  $rtn = eval($template);
+
+  if ($rtn === false && ($error = error_get_last())) {
+    $s = DIRECTORY_SEPARATOR;
+    $f = $filename;
+    echo "<b style='color:red'>Error line ".$error['line']." in template: ";
+    echo basename(dirname(dirname($f))).$s.basename(dirname($f)).$s.basename($f)."</b>";
+    exit;
+  }
 
   if ($getString) {
     // Grab everything that was captured in the output buffer and return
