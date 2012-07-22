@@ -238,8 +238,15 @@ $(document).ready(function() {
   });
 
   // This loads up certain textboxes with faint help text that vanishes upon focus
-  preload_field("#menu_form_needle", "Enter Search...");
+  preload_field("#menu_form_needle", "Enter search text or ID...");
   preload_field("input.datefield", "YYYY-MM-DD");
+
+  $("#search_action").change(function(){
+    var bits = $(this).val().split("_");
+    if (bits[0] == "create" || bits[0] == "history") {
+      $("#form_search").submit();
+    }
+  });
 
   // Add resize grippies to all textareas
   $('textarea:not(.processed)').TextAreaResizer();

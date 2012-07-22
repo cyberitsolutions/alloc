@@ -34,8 +34,6 @@ if ($historyID) {
     $db->query($query);
     $db->next_record();
     alloc_redirect($sess->url($TPL[$db->f("the_place")]."historyID=".$historyID).$db->f("the_args"));
-  } else {
-    alloc_redirect($sess->url($historyID));
   }
 }
 
