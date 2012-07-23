@@ -39,7 +39,6 @@ class invoice extends db_entity {
                               );
 
   function save() {
-    global $TPL;
     if (!$this->get_value("currencyTypeID")) {
       if ($this->get_value("projectID")) {
         $project = $this->get_foreign_object("project");
@@ -51,7 +50,7 @@ class invoice extends db_entity {
       if ($currencyTypeID) {
         $this->set_value("currencyTypeID", $currencyTypeID);
       } else {
-        $TPL["message"][] = "Unable to save invoice. No currency is able to be determined. Either attach this invoice to a project, or set a Main Currency on the Setup -> Finance screen.";
+        alloc_error("Unable to save invoice. No currency is able to be determined. Either attach this invoice to a project, or set a Main Currency on the Setup -> Finance screen.");
       } 
     }
     return parent::save();
@@ -731,11 +730,10 @@ class invoice extends db_entity {
   }
 
   function can_move($direction) {
-    global $TPL;
     $newstatus = $this->next_status($direction);
     if ($direction == "forwards" && $newstatus == "finished") {
       if ($this->has_pending_transactions()) {
-        $TPL["message"][] = "There are still Invoice Items pending. This Invoice cannot be marked completed.";
+        alloc_error("There are still Invoice Items pending. This Invoice cannot be marked completed.");
         return false;
       }
     }

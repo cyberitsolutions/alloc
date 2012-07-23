@@ -245,7 +245,7 @@ $clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];
 
 if ($_POST["save"]) {
   if (!$_POST["clientName"]) {
-    $TPL["message"][] = "Please enter a Client Name.";
+    alloc_error("Please enter a Client Name.");
   }
   $client->read_globals();
   $client->set_value("clientModifiedTime", date("Y-m-d"));

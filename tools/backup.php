@@ -44,7 +44,7 @@ if ($_POST["restore_backup"]) {
     $TPL["message_good"][] = "Backup restored successfully: " . $_POST["file"];
     $TPL["message_good"][] = "You will now need to manually import the installation/db_triggers.sql file into your database. THIS IS VERY IMPORTANT.";
   } else {
-    $TPL["message"][] = "Error restoring backup: " . $_POST["file"];
+    alloc_error("Error restoring backup: " . $_POST["file"]);
   }
 }
 

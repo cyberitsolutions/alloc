@@ -34,7 +34,7 @@ if ($_POST["test_email_gateway"]) {
   $info["protocol"] = config::get_config_item("allocEmailProtocol");
 
   if (!$info["host"]) {
-    $TPL["message"][] = "Email mailbox host not defined, assuming email receive function is inactive.";
+    alloc_error("Email mailbox host not defined, assuming email receive function is inactive.");
   } else {
     $mail = new email_receive($info,$lockfile);
     $mail->open_mailbox(config::get_config_item("allocEmailFolder"));
@@ -177,7 +177,7 @@ if ($_POST["save"]) {
       }
     }
     if (file_exists($logo)) {
-      $TPL["message"][] = "Unable to delete ".$logo;
+      alloc_error("Unable to delete ".$logo);
     }
   }
 }

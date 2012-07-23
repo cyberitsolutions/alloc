@@ -320,7 +320,7 @@ if ($_POST["save"]) {
   }
 
   if (!$project->get_value("projectName")) {  
-    $TPL["message"][] = "Please enter a name for the Project.";
+    alloc_error("Please enter a name for the Project.");
   }  
 
   // enforced at the database, but show a friendlier error here if possible
@@ -331,7 +331,7 @@ if ($_POST["save"]) {
   $db->query($query);
   $db->next_record();
   if ($db->f('count') > 0) {
-    $TPL["message"][] = "A project with that nickname already exists.";
+    alloc_error("A project with that nickname already exists.");
   }
 
   if (!$TPL["message"]) {
