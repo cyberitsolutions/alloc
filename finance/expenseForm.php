@@ -120,7 +120,7 @@ function check_optional_show_line_item_add() {
 }
 
 if (!config::get_config_item("mainTfID")) {
-  $TPL["message"][] = "This functionality will not work until you set a Finance TF on the Setup -> Finance screen.";
+  alloc_error("This functionality will not work until you set a Finance TF on the Setup -> Finance screen.");
 }
 
 $current_user->check_employee();
@@ -136,7 +136,7 @@ if ($expenseFormID) {
   $expenseForm->read_globals();
   $expenseForm->set_id($expenseFormID);
   if (!$expenseForm->select()) {
-    $TPL["message"][] = "Bad Expense Form ID";
+    alloc_error("Bad Expense Form ID");
     $expenseForm = new expenseForm;
   }
 } 
@@ -145,14 +145,14 @@ if ($expenseFormID) {
 
 if ($_POST["add"]) {
 
-  $_POST["product"]        or $TPL["message"][] = "You must enter a Product.";
-  $_POST["companyDetails"] or $TPL["message"][] = "You must enter the Company Details.";
-  $_POST["fromTfID"]       or $TPL["message"][] = "You must enter the Source TF.";
+  $_POST["product"]        or alloc_error("You must enter a Product.");
+  $_POST["companyDetails"] or alloc_error("You must enter the Company Details.");
+  $_POST["fromTfID"]       or alloc_error("You must enter the Source TF.");
   $_POST["quantity"]       or $_POST["quantity"] = 1;
-  config::get_config_item("mainTfID") or $TPL["message"][] = "You must configure the Finance Tagged Fund on the Setup -> Finance screen.";
+  config::get_config_item("mainTfID") or alloc_error("You must configure the Finance Tagged Fund on the Setup -> Finance screen.");
 
   if ($_POST["amount"] === "") {
-    $TPL["message"][] = "You must enter the Price.";
+    alloc_error("You must enter the Price.");
   }
   $_POST["amount"] = $_POST["amount"] * $_POST["quantity"];
 
@@ -163,7 +163,7 @@ if ($_POST["add"]) {
 
   // check we have permission to make the transaction
   if (!$transaction->have_perm(PERM_CREATE)) {
-    $TPL["message"][] = "You do not have permission to create transactions for that Source TF.";
+    alloc_error("You do not have permission to create transactions for that Source TF.");
   }
 
   if (!count($TPL["message"])) {
@@ -250,7 +250,7 @@ if ($_POST["cancel"]) {
 
     alloc_redirect($TPL["url_alloc_expenseFormList"]);
   } else {
-    $TPL["message"][] = "Unable to delete Expense Form";
+    alloc_error("Unable to delete Expense Form");
   }
 
 } else if ($_POST["changeTransactionStatus"] == "pending") {

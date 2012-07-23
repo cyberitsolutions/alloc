@@ -82,7 +82,7 @@ if ($_POST["save"]) {
   }
 
   if ($tf->get_value("tfName") == "") {
-    $TPL["message"][] = "You must enter a name.";
+    alloc_error("You must enter a name.");
   } else {
 
     if (!$tf->get_id()) {
@@ -94,7 +94,7 @@ if ($_POST["save"]) {
     }
 
     if ($tf_is_taken) {
-      $TPL["message"][] = "That TF name is taken, please choose another.";
+      alloc_error("That TF name is taken, please choose another.");
     } else {
       $tf->set_value("tfComments",rtrim($tf->get_value("tfComments")));
       $tf->save();
@@ -119,7 +119,7 @@ if ($_POST["person_save"] || $_POST["person_delete"]) {
   $tfPerson->read_globals();
   $tfPerson->read_globals("person_");
   if (!$_POST["person_personID"]) {
-    $TPL["message"][] = "Please select a person from the dropdown list." ;
+    alloc_error("Please select a person from the dropdown list.");
   } else if ($_POST["person_save"]) {
     $tfPerson->save();
     $TPL["message_good"][] = "Person added to TF.";

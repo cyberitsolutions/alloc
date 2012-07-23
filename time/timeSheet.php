@@ -446,7 +446,7 @@ if ($_REQUEST["updateCB"] && $timeSheet->get_id() && $timeSheet->can_edit_rate()
 if ($_REQUEST["updateRate"] && $timeSheet->get_id() && $timeSheet->can_edit_rate()) {
   $row_projectPerson = projectPerson::get_projectPerson_row($timeSheet->get_value("projectID"), $timeSheet->get_value("personID"));
   if (!$row_projectPerson) {
-    $TPL["message"][] = "The person has not been added to the project.";
+    alloc_error("The person has not been added to the project.");
   } else {
     $q = prepare("SELECT timeSheetItemID from timeSheetItem WHERE timeSheetID = %d",$timeSheet->get_id()); 
     $db = new db_alloc();
@@ -491,7 +491,7 @@ if ($_POST["save"]
   } else {
     $save_error=true;
     $TPL["message_help"][] = "Begin a Time Sheet by selecting a Project and clicking the Create Time Sheet button. A manager must add you to the project before you can create time sheets for it.";
-    $TPL["message"][] = "Please select a Project and then click the Create Time Sheet button.";
+    alloc_error("Please select a Project and then click the Create Time Sheet button.");
   }
 
   // If it's a Pre-paid project, join this time sheet onto an invoice
@@ -500,7 +500,7 @@ if ($_POST["save"]
 
     if (!$invoiceID) {
       $save_error = true;
-      $TPL["message"][] = "Unable to find a Pre-paid Invoice for this Project or Client.";
+      alloc_error("Unable to find a Pre-paid Invoice for this Project or Client.");
     } else if (!$timeSheet->get_id()) {
       $add_timeSheet_to_invoiceID = $invoiceID;
     }
@@ -667,7 +667,7 @@ if ($_GET["newTimeSheet_projectID"] && !$projectID) {
 }
 
 if ($_GET["newTimeSheet_projectID"] && !$db->qr("SELECT * FROM projectPerson WHERE personID = %d AND projectID = %d",$current_user->get_id(),$_GET["newTimeSheet_projectID"])) {
-  $TPL["message"][] = "You are not a member of the project (id:".page::htmlentities($_GET["newTimeSheet_projectID"])."), please get a manager to add you to the project.";
+  alloc_error("You are not a member of the project (id:".page::htmlentities($_GET["newTimeSheet_projectID"])."), please get a manager to add you to the project.");
 }
 
 $db->query($query);

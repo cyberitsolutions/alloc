@@ -421,7 +421,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
   }
 
   if (!$invoice->get_value("clientID")) {
-    $TPL["message"][] = "Please select a Client.";
+    alloc_error("Please select a Client.");
   }
 
   $currency or $currency = config::get_config_item("currency");
@@ -429,14 +429,14 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
 
   if (!$invoice->get_value("invoiceNum") || !is_numeric($invoice->get_value("invoiceNum"))) {
-    #$TPL["message"][] = "Please enter a unique Invoice Number.";
+    #alloc_error("Please enter a unique Invoice Number.");
     $invoice->set_value("invoiceNum",invoice::get_next_invoiceNum());
   } else {
     $invoiceID and $invoiceID_sql = prepare(" AND invoiceID != %d",$invoiceID);
     $q = prepare("SELECT * FROM invoice WHERE invoiceNum = '%s' ".$invoiceID_sql,$invoice->get_value("invoiceNum"));
     $db->query($q);
     if ($db->row()) {
-      $TPL["message"][] = "Please enter a unique Invoice Number (that number is already taken).";
+      alloc_error("Please enter a unique Invoice Number (that number is already taken).");
     }
   }
 

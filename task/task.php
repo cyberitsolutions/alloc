@@ -181,7 +181,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     $task->delete();
     alloc_redirect($TPL["url_alloc_taskList"]);
   } else {
-    $TPL["message"][] = "This task cannot be deleted. You either don't have permission, or this task has history items.";
+    alloc_error("This task cannot be deleted. You either don't have permission, or this task has history items.");
   }
 }
 

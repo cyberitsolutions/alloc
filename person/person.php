@@ -223,7 +223,7 @@ if ($_POST["save"]) {
     // nothing required here, just don't update the password field
 
   } else {
-    $TPL["message"][] = "Please re-type the passwords";
+    alloc_error("Please re-type the passwords");
   }
 
 
@@ -235,17 +235,17 @@ if ($_POST["save"]) {
     $row = $db->row();
 
     if (($num_rows > 0 && !$person->get_id()) || ($num_rows > 0 && $person->get_id() != $row["personID"])){
-      $TPL["message"][] = "That username is already taken. Please select another.";
+      alloc_error("That username is already taken. Please select another.");
     }
   } else {
-    $TPL["message"][] = "Please enter a username.";
+    alloc_error("Please enter a username.");
   }
 
   $person->set_value("personActive", $_POST["personActive"] ? 1 : "0");
 
   $max_alloc_users = get_max_alloc_users();
   if ($max_alloc_users && get_num_alloc_users() >= $max_alloc_users && $_POST["personActive"]) {
-    $TPL["message"][] = get_max_alloc_users_message();
+    alloc_error(get_max_alloc_users_message());
   }
 
   if (!$TPL["message"]) {

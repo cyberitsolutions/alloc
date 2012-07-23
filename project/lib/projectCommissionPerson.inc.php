@@ -37,7 +37,6 @@ class projectCommissionPerson extends db_entity {
   }
 
   function save() {
-    global $TPL;
     // Just ensure multiple 0 entries cannot be saved.
     if ($this->get_value("commissionPercent") == 0) {
       $q = prepare("SELECT * FROM projectCommissionPerson WHERE projectID = %d AND commissionPercent = 0 AND projectCommissionPersonID != %d",$this->get_value("projectID"), $this->get_id());
@@ -45,7 +44,7 @@ class projectCommissionPerson extends db_entity {
       $db->query($q);
       if ($db->next_record()) { 
         $fail = true;
-        $TPL["message"][] = "Only one Time Sheet Commission is allowed to be set to 0%";
+        alloc_error("Only one Time Sheet Commission is allowed to be set to 0%");
       }
     }
     if (!$fail) {

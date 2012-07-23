@@ -103,7 +103,7 @@ if ($sess->Started()) {
   }
 }
 
-$error and $TPL["message"][] = $error;
+$error and alloc_error($error);
 
 $account = $_POST["account"] or $account = $_GET["account"];
 $TPL["account"] = $account;

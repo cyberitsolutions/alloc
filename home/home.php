@@ -89,8 +89,8 @@ if (isset($_POST["time_item"])) {
     $timeSheet = new timeSheet();
     $tsi_row = $timeSheet->add_timeSheetItem($t);
   } else {
-    $TPL["message"][] = "Time not added. No duration set.";
-    $TPL["message"][] = print_r($t,1);
+    alloc_error("Time not added. No duration set.");
+    alloc_error(print_r($t,1));
   }
 }
 

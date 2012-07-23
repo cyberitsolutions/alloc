@@ -319,7 +319,7 @@ if ($_POST["do_step_3"]) {
     }
 
   } else {
-    $TPL["message"][] = "Please select some Fields using the checkboxes.";   
+    alloc_error("Please select some Fields using the checkboxes.");
   }
 
 }

@@ -92,7 +92,7 @@ class transaction extends db_entity {
 
       $er = exchangeRate::get_er($this->get_value("currencyTypeID"), $this->get_value("destCurrencyTypeID"), $date);
       if (!$er) {
-        $TPL["message"][] = "Unable to determine exchange rate for ".$this->get_value("currencyTypeID")." to ".$this->get_value("destCurrencyTypeID")." for date: ".$date;
+        alloc_error("Unable to determine exchange rate for ".$this->get_value("currencyTypeID")." to ".$this->get_value("destCurrencyTypeID")." for date: ".$date);
       } else {
         $this->set_value("exchangeRate",$er);
       }

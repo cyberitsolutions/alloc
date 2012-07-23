@@ -105,8 +105,8 @@ $TPL["taxRate"] = $taxRate;
 if ($_POST["save"]) {
   $product->read_globals();
   $product->set_value("productActive", isset($_POST["productActive"]) ? 1 : 0);
-  !$product->get_value("productName") and $TPL["message"][] = "Please enter a Product Name.";
-  !$product->get_value("sellPrice")   and $TPL["message"][] = "Please enter a Sell Price.";
+  !$product->get_value("productName") and alloc_error("Please enter a Product Name.");
+  !$product->get_value("sellPrice")   and alloc_error("Please enter a Sell Price.");
 
   if (!$TPL["message"]) {
     $product->save();

@@ -129,7 +129,7 @@ class backups {
       }
     }
 
-    is_array($errors) and $TPL["message"][] = implode("<br>",$errors);
+    is_array($errors) and alloc_error(implode("<br>",$errors));
     unlink(ATTACHMENTS_DIR . "database.sql");
     if (!count($errors)) {
       return true;

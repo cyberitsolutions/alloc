@@ -68,14 +68,14 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
     alloc_redirect($TPL["url_alloc_transactionRepeatList"]."tfID=".$_POST["tfID"]);
   }
 
-  $_POST["product"]  or $TPL["message"][].= "Please enter a Product";
-  $_POST["amount"]   or $TPL["message"][].= "Please enter an Amount";
-  $_POST["fromTfID"] or $TPL["message"][].= "Please select a Source TF";
-  $_POST["tfID"]     or $TPL["message"][].= "Please select a Destination TF";
-  $_POST["companyDetails"]  or $TPL["message"][].= "Please provide Company Details";
-  $_POST["transactionType"] or $TPL["message"][].= "Please select a Transaction Type";
-  $_POST["transactionStartDate"] or $TPL["message"][].= "You must enter the Start date in the format yyyy-mm-dd";
-  $_POST["transactionFinishDate"] or $TPL["message"][].= "You must enter the Finish date in the format yyyy-mm-dd";
+  $_POST["product"]  or alloc_error("Please enter a Product");
+  $_POST["amount"]   or alloc_error("Please enter an Amount");
+  $_POST["fromTfID"] or alloc_error("Please select a Source TF");
+  $_POST["tfID"]     or alloc_error("Please select a Destination TF");
+  $_POST["companyDetails"]  or alloc_error("Please provide Company Details");
+  $_POST["transactionType"] or alloc_error("Please select a Transaction Type");
+  $_POST["transactionStartDate"] or alloc_error("You must enter the Start date in the format yyyy-mm-dd");
+  $_POST["transactionFinishDate"] or alloc_error("You must enter the Finish date in the format yyyy-mm-dd");
 
   if (!$TPL["message"]) {
     !$transactionRepeat->get_value("status") && $transactionRepeat->set_value("status","pending"); 

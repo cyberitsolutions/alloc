@@ -80,8 +80,6 @@ class productSale extends db_entity {
   }
 
   function translate_meta_tfID($tfID="") {
-    global $TPL;
-    
     // The special -1 and -2 tfID's represent META TF, i.e. calculated at runtime
     // -1 == META: Project TF
     if ($tfID == -1) { 
@@ -92,7 +90,7 @@ class productSale extends db_entity {
         $tfID = $project->get_value("cost_centre_tfID");
       }
       if (!$tfID) {
-        $TPL["message_bad"][] = "Unable to use META: Project TF. Please ensure the project has a TF set, or adjust the transactions.";
+        alloc_error("Unable to use META: Project TF. Please ensure the project has a TF set, or adjust the transactions.");
       }
 
     // -2 == META: Salesperson TF
@@ -103,14 +101,14 @@ class productSale extends db_entity {
         $person->select();
         $tfID = $person->get_value("preferred_tfID");
         if (!$tfID) {
-          $TPL["message_bad"][] = "Unable to use META: Salesperson TF. Please ensure the Saleperson has a Preferred Payment TF.";
+          alloc_error("Unable to use META: Salesperson TF. Please ensure the Saleperson has a Preferred Payment TF.");
         }
       } else {
-        $TPL["message_bad"][] = "Unable to use META: Salesperson TF. No product salesperson set.";
+        alloc_error("Unable to use META: Salesperson TF. No product salesperson set.");
       }
     } else if ($tfID == -3) {
       $tfID = $this->get_value("tfID");
-      $tfID or $TPL["message_bad"][] = "Unable to use META: Sale TF not set.";
+      $tfID or alloc_error("Unable to use META: Sale TF not set.");
     }
     return $tfID;
   }
@@ -260,7 +258,7 @@ class productSale extends db_entity {
 
         // Re-email the comment out, including any attachments
         if (!comment::send_comment($commentID,$emailRecipients)) {
-          $TPL["message"][] = "Email failed to send.";
+          alloc_error("Email failed to send.");
         } else {
           $TPL["message_good"][] = "Emailed task comment to ".$p1->get_value("emailAddress").", ".$p2->get_value("emailAddress").".";
         }

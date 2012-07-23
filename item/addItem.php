@@ -50,7 +50,7 @@ if ($_POST["import_from_file"]) {
       $item->save();
     }
   } else {
-    $TPL["message"][] = "Uploaded document error.  Please try again.";
+    alloc_error("Uploaded document error.  Please try again.");
   }
 }
 
@@ -98,10 +98,10 @@ if ($_POST["edit_items"]) {
   $item->select();
 
   if (count($_POST["itemID"]) < 1) {
-    $TPL["message"][] = "You Must Select An Item";
+    alloc_error("You Must Select An Item");
   } else {
     if (count($_POST["itemID"]) > 1) {
-      $TPL["message"][] = "Can Only Edit 1 Item At A Time";
+      alloc_error("Can Only Edit 1 Item At A Time");
     } 
     $TPL["edit_options"] =
       "<table><tr>\n"

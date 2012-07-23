@@ -129,7 +129,7 @@ if ($_POST["save_transactions"]) {
           $saved.= $commar2.$transaction->get_id();
           $commar2 = ", ";
         } else {
-          $TPL["message"][] = implode("<br>",$v);
+          alloc_error(implode("<br>",$v));
         }
       }
     }

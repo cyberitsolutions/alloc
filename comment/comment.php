@@ -64,7 +64,7 @@ if ($_REQUEST["attach_tasks"]) {
 
 // Re-email the comment out, including any attachments
 if (!comment::send_comment($commentID,$emailRecipients)) {
-  $TPL["message"][] = "Email failed to send.";
+  alloc_error("Email failed to send.");
 }
 
 
