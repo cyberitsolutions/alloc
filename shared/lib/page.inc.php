@@ -232,22 +232,12 @@ class page {
   }
   function calendar($name, $default_value="") {
     global $TPL;
-    // setup the first day of the week
-    $days = array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
-    $days = array_flip($days);
-    $firstday = config::get_config_item("calendarFirstDay");
-    $firstday = sprintf("%d",$days[$firstday]);
-    $default_value and $default = ", date : ".$default_value;
     $images = $TPL["url_alloc_images"];
     $year = date("Y");
     $str = <<<EOD
       <span class="calendar_container nobr">
-      <input name="${name}" type="text" size="11" value="${default_value}" id="${name}" class="datefield"><img src="${images}cal${year}.png" id="button_${name}" title="Date Selector" alt="Date Selector">
-      <script type="text/javascript">
-      Calendar.setup( { inputField : "${name}", ifFormat : "%Y-%m-%d", button : "button_${name}", showOthers : 1, align : "Bl", firstDay : ${firstday}, step : 1, weekNumbers : 0 ${default} })
-      </script>
+      <input name="${name}" type="text" size="11" value="${default_value}" id="" class="datefield"><img src="${images}cal${year}.png" title="Date Selector" alt="Date Selector" id="">
       </span>
-
 EOD;
     return $str;
   }

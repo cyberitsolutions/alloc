@@ -13,12 +13,13 @@
     <!--[if IE 7]><link rel="stylesheet" href="{$url_alloc_cache}font-awesome-ie7.css"><![endif]-->
     <script type="text/javascript" src="{$url_alloc_cache}javascript.js"></script>
     <script type="text/javascript">
-      // return a value that is populated from PHP
+      // return a value to be used in javascript, that is set from PHP
       function get_alloc_var(key) {
       var values = {
                     "url"               : "{$script_path}"
                    ,"side_by_side_link" : "{$_REQUEST.sbs_link}"
                    ,"tax_percent"       : "{echo config::get_config_item('taxPercent')}"
+                   ,"cal_first_day"     : "{echo config::get_config_item('calendarFirstDay')}"
                    ,"show_filters"      : "{print is_object($current_user) ? $current_user->prefs["showFilters"] : ""}"
                    ,"ddcl_blacklist"    : new Array("{print is_object($current_user)?implode('","',(array)$current_user->prefs['ddcl_blacklist']):''}")
                    }

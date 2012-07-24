@@ -189,6 +189,29 @@ function save_recipients(selector) {
   });
 }
 
+calendar_counter = 0
+function refresh_calendars() {
+  $(".datefield").each(function(){
+    calendar_counter = calendar_counter +1;
+    var calendar_id = "calendar_"+calendar_counter;
+    var button_id = "calendar_button_"+calendar_counter;
+    $(this).attr("id",calendar_id);
+    $(this).next("img").attr("id",button_id);
+
+    var settings = {}
+    settings["inputField"] = calendar_id;
+    settings["ifFormat"] = "%Y-%m-%d";
+    settings["button"] = button_id;
+    settings["showOthers"] = 1;
+    settings["align"] = "Bl";
+    settings["firstDay"] = get_alloc_var("cal_first_day");
+    settings["step"] = 1;
+    settings["weekNumbers"] = 0;
+    settings["date"] = $(this).attr("value");
+    Calendar.setup(settings);
+  });
+}
+
 // Preload mouseover images
 if (document.images) {
   pic1= new Image(9,11);
@@ -303,6 +326,9 @@ $(document).ready(function() {
   // and then hide the .edit items.
   redraw_multiple_selects("");
   $(".edit").hide();
+
+  // Mark up the date fields with dynamic calendars
+  refresh_calendars();
 
   // Interested Parties recipients editor
   $(".recipient_editor_link").click(function(){
