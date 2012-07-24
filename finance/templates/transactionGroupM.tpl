@@ -27,7 +27,7 @@ $(document).ready(function() {
   <tr>
     <th class="header">Transaction Group {$transactionGroupID}
       <span>
-        <a href="#x" class="magic" onClick="$('#transactions_footer').before('<tr>'+$('#transactionRow').html()+'</tr>');">New</a>
+        <a href="#x" class="magic" onClick="$('#transactions_footer').before('<tr>'+$('#transactionRow').html()+'</tr>');refresh_calendars();">New</a>
       </span>
     </th>
   </tr>
