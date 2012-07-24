@@ -118,7 +118,9 @@ class vcs {
   function add($file) {
     $this->run("add ".escapeshellarg($file));
   }
-  function rm() {
+  function rm($src, $message) {
+    $this->run("rm ".escapeshellarg($src));
+    $this->run($this->commit." ".escapeshellarg($message)." ".escapeshellarg($src));
   }
   function mv($src, $dst, $message) {
     $this->run("mv ".escapeshellarg($src)." ".escapeshellarg($dst));

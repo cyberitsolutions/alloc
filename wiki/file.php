@@ -93,6 +93,32 @@ if ($_POST["save"]) {
     }
   }
 
+} else if ($_REQUEST["delete"]) {
+
+  path_under_path(wiki_module::get_wiki_path().dirname($editName), wiki_module::get_wiki_path()) or $errors[] = "Bad filename: ".$editName;
+  is_writeable(wiki_module::get_wiki_path().dirname($file)) or $errors[] = "Path is not writeable.";
+  strlen($file) or $errors[] = "Filename empty.";
+  $_POST["commit_msg"] and $_POST["commit_msg"].= " ";
+  $_POST["commit_msg"].= "File deleted: ".$file;
+
+  if (!$errors && !is_dir(wiki_module::get_wiki_path().$file)) {
+    // If we're using version control
+    if (is_object($vcs)) {
+      wiki_module::file_delete(wiki_module::get_wiki_path().$file);
+      $vcs->rm(wiki_module::get_wiki_path().$file, $_POST["commit_msg"]);
+      $TPL["message_good"][] = "File deleted: ".$file;
+      $TPL["file"] = $file;
+      $TPL["str"] = $text;
+      $TPL["commit_msg"] = $_POST["commit_msg"];
+      alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode(dirname($file)));
+
+    // Else non-vcs save
+    } else {
+      wiki_module::file_delete(wiki_module::get_wiki_path().$file);
+      $TPL["message_good"][] = "File deleted: ".$file;
+      alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode(dirname($file)));
+    }
+  }
 
 } else if ($_REQUEST["newFile"]) {
   if ($_REQUEST["file"]) {
