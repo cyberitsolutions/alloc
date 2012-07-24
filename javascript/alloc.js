@@ -244,7 +244,7 @@ $(document).ready(function() {
   // Give the tables alternating stripes
   $(".list tr:nth-child(even)").addClass("even");
   $(".list tr:nth-child(odd)").addClass("odd");
-  $(".delete_button").bind("click", function(e){
+  $(".delete_button").live("click", function(e){
     return confirm("Click OK to confirm deletion.");
   });
   $(".confirm_button").bind("click", function(e){

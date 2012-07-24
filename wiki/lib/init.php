@@ -50,6 +50,26 @@ class wiki_module extends module {
     }
   }
 
+  function file_delete($file) {
+    // remove the file, and remove the search index info for the file
+    if (is_dir(dirname($file)) && path_under_path(dirname($file), wiki_module::get_wiki_path())) {
+
+      // remove the file
+      if (file_exists($file)) {
+        unlink($file);
+      }
+
+      // Update the search index for this file, if any
+      $index = Zend_Search_Lucene::open(ATTACHMENTS_DIR.'search/wiki');
+      $f = str_replace(wiki_module::get_wiki_path(),"",$file);
+      $hits = $index->find('id:' . $f);
+      foreach ($hits as $hit) {
+        $index->delete($hit->id);
+      }
+      $index->commit();
+    }
+  }
+
   function nuke_trailing_spaces_from_all_lines($str) {
     // for some reason trailing slashes on a line appear to not get saved by
     // particular vcs's. So when we compare the two files (the one on disk and
