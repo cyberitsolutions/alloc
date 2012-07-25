@@ -427,6 +427,11 @@ table.box th.header b {
   font-size:90%;
 }
 
+table.box th.header span a.star b {
+  font-size:110%;
+  top:2px;
+}
+
 /* Calendar */
 table.alloc_calendar { 
   width:100%; 
@@ -593,9 +598,9 @@ table.list td.grand_total, .grand_total {
 }
 
 a.star {
-  font-size:130%;
-  text-decoration:none;
-  color:#ccc;
+  font-size:130% !important;
+  text-decoration:none !important;
+  color:#ccc !important;
 }
 a.star:hover, a.hot {
   color:#f1965f !important;

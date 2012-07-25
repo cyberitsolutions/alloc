@@ -96,6 +96,7 @@ $(document).ready(function() {
         <a href="{$url_alloc_productList}">Products</a>
         <a href="{$url_alloc_product}">New Product</a>
         <a href="{$url_alloc_productSale}">New Sale</a>
+        {page::star("productSale",$productSaleID)}
       </span>
     </th>
   </tr>
