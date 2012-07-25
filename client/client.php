@@ -27,26 +27,6 @@ require_once("../alloc.php");
     return $clientID;
   }
 
-  function show_client_details_edit($template) {
-    global $TPL;
-    global $clientID;
-    if (!isset($clientID) || $_POST["client_edit"] || $TPL["message"]) {
-      include_template($template);
-    }
-  }
-
-  function show_client_details($template) {
-    global $TPL;
-    global $client;
-    global $clientID;
-    if ($clientID && !$_POST["client_edit"] && !$TPL["message"]) {
-      // setup formatted address output
-      $TPL["client_clientPostalAddress"] = $client->format_address("postal");
-      $TPL["client_clientStreetAddress"] = $client->format_address("street");
-      include_template($template);
-    }
-  }
-
   function show_client_contacts() {
     global $TPL;
     global $clientID;
@@ -142,8 +122,8 @@ require_once("../alloc.php");
       }
 
       $buttons = '<nobr>
-      <button type="submit" name="clientContact_edit" value="1"">Edit<i class="icon-edit"></i></button>
       <button type="submit" name="clientContact_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+      <button type="submit" name="clientContact_edit" value="1"">Edit<i class="icon-edit"></i></button>
       </nobr>';
 
       $rtn[] =  '<form action="'.$TPL["url_alloc_client"].'" method="post">';
@@ -155,8 +135,8 @@ require_once("../alloc.php");
       $rtn[] =  '  <td width="25%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col1).'</span>&nbsp;</td>';
       $rtn[] =  '  <td width="20%" valign="top"><span class="nobr">'.implode('</span><br><span class="nobr">',$col2).'</span>&nbsp;</td>';
       $rtn[] =  '  <td width="50%" align="left" valign="top">'.nl2br($clientContact->get_value('clientContactOther',DST_HTML_DISPLAY)).'&nbsp;</td>';
-      $rtn[] =  '  <td align="right" class="right nobr" width="1%">'.page::star("clientContact",$clientContact->get_id()).'</td>';
       $rtn[] =  '  <td align="right" class="right nobr">'.$buttons.'</td>';
+      $rtn[] =  '  <td align="right" class="right nobr" width="1%">'.page::star("clientContact",$clientContact->get_id()).'</td>';
       $rtn[] =  '</tr>';
       $rtn[] =  '</table>';
       $rtn[] =  '</div>';
@@ -336,6 +316,8 @@ $projectListOps = array("showProjectType"=>true
 
 $TPL["projectListRows"] = project::get_list($projectListOps);
 
+$TPL["client_clientPostalAddress"] = $client->format_address("postal");
+$TPL["client_clientStreetAddress"] = $client->format_address("street");
 
 include_template("templates/clientM.tpl");
 
