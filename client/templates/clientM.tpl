@@ -43,7 +43,7 @@ $(document).ready(function() {
 <table class="box view">
   <tr>
     <th class="header">{$clientSelfLink}
-      <span>{$navigation_links}</span>
+      <span>{page::star("client",$client_clientID)}</span>
     </th>
   </tr>
   <tr>
@@ -86,7 +86,7 @@ $(document).ready(function() {
 <table class="box edit">
   <tr>
     <th class="header">{$clientSelfLink}
-      <span>{$navigation_links}</span>
+      <span></span>
     </th>
   </tr>
   <tr>

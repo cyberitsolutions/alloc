@@ -63,7 +63,10 @@ $(document).ready(function() {
 <table class="box view">
   <tr>
     <th class="header">{$taskSelfLink}
-      <span>{$navigation_links}</span>
+      <span>
+        {$navigation_links}
+        {page::star("task",$task_taskID)}
+      </span>
     </th>
   </tr>
   <tr>

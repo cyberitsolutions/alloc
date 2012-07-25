@@ -9,6 +9,7 @@
       {if $invoiceID}
         <a href="{$url_alloc_invoicePrint}invoiceID={$invoiceID}">PDF</a>
         <a href="{$url_alloc_invoicePrint}invoiceID={$invoiceID}&verbose=1">PDF+</a>
+        {page::star("invoice",$invoiceID)}
       {/}
       </span>
     </th>

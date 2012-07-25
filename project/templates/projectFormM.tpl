@@ -101,7 +101,10 @@ function clickClientStatus(e) {
   <tr>
     <th class="header" colspan="5">{$projectSelfLink}
       <span>
-        {if defined("PROJECT_EXISTS")}{$navigation_links}{/}
+        {if defined("PROJECT_EXISTS")}
+        {$navigation_links}
+        {page::star("project",$project_projectID)}
+        {/}
       </span>
     </th>
   </tr>

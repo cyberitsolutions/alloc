@@ -26,6 +26,7 @@
         {foreach $timeSheetPrint as $value}
           <a href="{$url_alloc_timeSheetPrint}timeSheetID={$timeSheet_timeSheetID}&{$value}">{$timeSheetPrintOptions.$value}</a>
         {/}
+        {page::star("timeSheet",$timeSheet_timeSheetID)}
       {/}
       </span>
     </th>
