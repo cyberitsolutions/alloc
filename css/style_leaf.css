@@ -222,11 +222,13 @@ button:active {
   -moz-box-shadow:0px 0px 0px #bbbbbb;
   -webkit-box-shadow:0px 0px 0px #bbbbbb;
   box-shadow:0px 0px 0px #bbbbbb;
-  outline: 0;
+  outline: none;
   background-color:#ccc;
 }
-button:hover {
-  color:#e
+
+button::-moz-focus-inner {
+  border: 0;
+  outline: none;
 }
 
 button.delete_button:hover {
