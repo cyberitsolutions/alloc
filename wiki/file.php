@@ -25,6 +25,7 @@ require_once("../alloc.php");
 $file = $_POST["file"] or $file = $_GET["file"];
 $TPL["file"] = $file;
 $editName = $_POST["editName"];
+$TPL["editName"] = $_POST["editName"];
 
 // Decode the wiki document ..
 $text = html_entity_decode($_POST["wikitext"]);
@@ -75,14 +76,14 @@ if ($_POST["save"]) {
         alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($editName));
 
       // Else just regular save
-      } else {
+      } else if ($editName == $file) {
         wiki_module::file_save(wiki_module::get_wiki_path().$file, $text);
         $vcs->commit(wiki_module::get_wiki_path().$file, $_POST["commit_msg"]);
         $TPL["message_good"][] = "File saved: ".$file;
         $TPL["file"] = $file;
         $TPL["str"] = $text;
         $TPL["commit_msg"] = $_POST["commit_msg"];
-        alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($editName));
+        alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($file));
       }
 
     // Else non-vcs save
@@ -121,8 +122,17 @@ if ($_POST["save"]) {
   }
 
 } else if ($_REQUEST["newFile"]) {
+
+  if ($_REQUEST["p"]) {
+    if (is_file(wiki_module::get_wiki_path().$_REQUEST["p"])) {
+      $_REQUEST["p"] = dirname($_REQUEST["p"]);
+      $_REQUEST["p"] && substr($_REQUEST["p"],-1,1) != DIRECTORY_SEPARATOR and $_REQUEST["p"].="/";
+      $_REQUEST["p"] == ".".DIRECTORY_SEPARATOR and $_REQUEST["p"] = "";
+    }
+    $TPL["editName"] = $_REQUEST["p"];
+  }
   if ($_REQUEST["file"]) {
-    $TPL['file'] = $_REQUEST["file"];
+    $TPL["editName"] = $_REQUEST["file"];
   }
   include_template("templates/newFileM.tpl");
 
@@ -135,6 +145,7 @@ if ($_POST["save"]) {
   } else {
     $TPL['current_path'] .= DIRECTORY_SEPARATOR;
   }
+  $TPL["editName"] = $file;
   wiki_module::get_file($file, $_GET["rev"]);
 
 } else if ($_REQUEST["loadErrorPage"]) {

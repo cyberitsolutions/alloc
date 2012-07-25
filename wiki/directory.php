@@ -22,8 +22,9 @@
 
 require_once("../alloc.php");
 
+
 $dirName = str_replace("..","",$_POST["dirName"]);
-$dirName = preg_replace("/^[\/\\\]*/","",$dirName);
+#$dirName = preg_replace("/^[\/\\\]*/","",$dirName);
 
 // Check if we're using a VCS
 $vcs = vcs::get();
@@ -82,6 +83,15 @@ if ($_POST["save"]) {
 
 
 } else if ($_REQUEST["newDirectory"]) {
+
+  if ($_REQUEST["p"]) {
+    if (is_file(wiki_module::get_wiki_path().$_REQUEST["p"])) {
+      $_REQUEST["p"] = dirname($_REQUEST["p"]);
+      $_REQUEST["p"] && substr($_REQUEST["p"],-1,1) != DIRECTORY_SEPARATOR and $_REQUEST["p"].="/";
+      $_REQUEST["p"] == ".".DIRECTORY_SEPARATOR and $_REQUEST["p"] = "";
+    }
+    $TPL["dirName"] = $_REQUEST["p"];
+  }
   include_template("templates/newDirectoryM.tpl");
 
 } else if ($_REQUEST["loadErrorPageDir"]) {

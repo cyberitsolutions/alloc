@@ -20,6 +20,8 @@ function refresh_wiki(target,revision) {
     if (isFile) {
       makeAjaxRequest('{$url_alloc_file}','jftFile', { file: path, rev: revision });
     }
+    $("#newFile").attr("data-p",path);
+    $("#newDirectory").attr("data-p",path);
     makeAjaxRequest('{$url_alloc_fileHistory}','fileHistory', { file: path, rev: revision });
   });
 }
@@ -53,12 +55,12 @@ $(document).ready(function() {
 
   // Menu links: New File, New Directory
   $("#newDirectory").click(function() {
-    makeAjaxRequest('{$url_alloc_directory}','jftFile', { newDirectory: true });
+    makeAjaxRequest('{$url_alloc_directory}','jftFile', { newDirectory: true, p: $(this).attr("data-p") });
     return false;
   });
 
   $("#newFile").click(function() {
-    makeAjaxRequest('{$url_alloc_file}','jftFile', { newFile: true });
+    makeAjaxRequest('{$url_alloc_file}','jftFile', { newFile: true, p: $(this).attr("data-p") });
     return false;
   });
 
