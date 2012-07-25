@@ -1,6 +1,6 @@
 <h6 style="margin-top:0px;">Document</h6>
 <form action="{$url_alloc_file}" method="post">
-  <input name="editName" type="text" id="editName" style="width:100%;" value="{$file}">
+  <input name="editName" type="text" id="editName" style="width:100%;" value="{$editName}">
   <br><br>
   {page::textarea('wikitext',$str,array("height"=>"large","width"=>"100%","class"=>"processed"))}
   {if config::get_config_item("wikiVCS")}
