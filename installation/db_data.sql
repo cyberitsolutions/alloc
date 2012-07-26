@@ -516,9 +516,9 @@ INSERT INTO timeUnit (timeUnitID, timeUnitName, timeUnitLabelA, timeUnitLabelB, 
 --
 
 
-INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (1,'Project Manager','isManager', 'project', 30);
-INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (2,'Engineer (edit tasks)','canEditTasks', 'project', 20);
-INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (3,'Project Manager + Time Sheet Recipient','timeSheetRecipient', 'project', 40);
+INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (1,'Manage project','isManager', 'project', 30);
+INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (2,'Edit tasks','canEditTasks', 'project', 20);
+INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (3,'Approve time sheets','timeSheetRecipient', 'project', 40);
 INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (4,'Super User','god', 'person', 10);
 INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (5,'Finance Admin','admin', 'person', 20);
 INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES (6,'Project Manager','manage', 'person', 30);
