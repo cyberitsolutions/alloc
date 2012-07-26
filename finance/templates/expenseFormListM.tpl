@@ -1,5 +1,5 @@
 {page::header()}
-  {page::toolbar()}
+{page::toolbar()}
 
 <table class="box">
   <tr>
@@ -15,12 +15,19 @@
           <th>Payment Method</th>
           <th class="right">Form Total</th>
         </tr>
-        {expenseForm::show_expense_form_list("templates/pendingExpenseFormListR.tpl")}
+        {foreach (array)$expenseFormRows as $r}
+        <tr>
+          <td><a href="{$url_alloc_expenseForm}expenseFormID={$r.expenseFormID}&edit=true">{$r.expenseFormID}</a></td>
+          <td>{$r.expenseFormCreatedTime}</td>
+          <td>{=$r.expenseFormCreatedUser}</td>
+          <td>{$r.rr_label}</td>
+          <td align="right">&nbsp;{$r.formTotal}</td>
+        </tr>
+        {/}
       </table>
     </td>
   </tr>
 </table>
-
 
 <table class="box">
   <tr>
@@ -36,7 +43,15 @@
           <th>Transaction Type</th>
           <th class="right">Form Total</th>
         </tr>
-        {expenseForm::show_pending_transaction_list("templates/pendingTransactionListR.tpl")}
+        {foreach (array)$transactionRows as $r}
+        <tr>
+          <td><a href="{$url_alloc_transaction}transactionID={$r.transactionID}">{$r.transactionID}</a></td>
+          <td>{$r.transactionCreatedTime}</td>
+          <td>{=$r.transactionCreatedUser}</td>
+          <td>{$r.transactionType}</td>
+          <td align="right">&nbsp;{page::money($r["currencyTypeID"],$r["formTotal"],"%s%mo")}</td>
+        </tr>
+        {/}
       </table>
     </td>
   </tr>

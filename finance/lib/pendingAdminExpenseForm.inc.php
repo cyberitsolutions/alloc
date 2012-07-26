@@ -21,9 +21,29 @@
 */
 
 
-class finance_module extends module {
-  var $module = "finance";
-  var $db_entities = array("tf", "transaction", "expenseForm", "tfPerson", "transactionRepeat");
-  var $home_items = array("tfList_home_item","pendingAdminExpenseForm");
+class pendingAdminExpenseForm extends home_item {
+
+  function __construct() {
+    parent::__construct("pending_admin_expense_form", "Expense Forms Pending Admin Approval", "finance", "pendingAdminExpenseFormM.tpl", "narrow", 42);
+  }
+
+  function visible() {
+    $current_user = &singleton("current_user");
+    if (isset($current_user) && $current_user->have_role("admin")) {
+      return true;
+    }
+  }
+
+  function render() {
+    global $TPL;
+    $ops["status"] = "pending";
+    $ops["finalised"] = 1;
+    $TPL["expenseFormRows"] = expenseForm::get_list($ops);
+    if (count($TPL["expenseFormRows"])) {
+      return true;
+    }
+  }
+
 }
+
 ?>
