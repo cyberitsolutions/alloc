@@ -1149,7 +1149,10 @@ EOD;
 
     $projectID or alloc_error(sprintf($errstr."No project found%s.",$extra));
 
-    if ($projectID) {
+    $row_projectPerson = projectPerson::get_projectPerson_row($projectID, $current_user->get_id());
+    $row_projectPerson or alloc_error($errstr."The person(".$current_user->get_id().") has not been added to the project(".$projectID.").");
+
+    if ($row_projectPerson && $projectID) {
       $q = prepare("SELECT * 
                       FROM timeSheet 
                      WHERE status = 'edit' 
@@ -1191,9 +1194,6 @@ EOD;
         $timeSheet = new timeSheet();
         $timeSheet->set_id($timeSheetID);
         $timeSheet->select();
-
-        $row_projectPerson = projectPerson::get_projectPerson_row($projectID, $current_user->get_id());
-        $row_projectPerson or alloc_error($errstr."The person(".$current_user->get_id().") has not been added to the project(".$projectID.").");
 
         $tsi = new timeSheetItem();
         $tsi->currency = $timeSheet->get_value("currencyTypeID");
