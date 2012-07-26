@@ -339,9 +339,10 @@ class timeSheetItem extends db_entity {
   #}
 
 
-  function get_averages($dateTimeSheetItem, $personID=false, $divisor="") {
+  function get_averages($dateTimeSheetItem, $personID=false, $divisor="", $endDate=null) {
 
     $personID and $personID_sql = prepare(" AND timeSheetItem.personID = %d", $personID);
+    $endDate and $endDate_sql = prepare(" AND timeSheetItem.dateTimeSheetItem <= '%s'",$endDate);
 
     $q = prepare("SELECT personID
                        , SUM(timeSheetItemDuration*timeUnitSeconds) ".$divisor." AS avg
@@ -349,6 +350,7 @@ class timeSheetItem extends db_entity {
                LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID 
                    WHERE dateTimeSheetItem > '%s'
                       ".$personID_sql."
+                      ".$endDate_sql."
                 GROUP BY personID
                  ", $dateTimeSheetItem);
 
@@ -366,7 +368,10 @@ class timeSheetItem extends db_entity {
                     FROM timeSheetItem 
                LEFT JOIN timeSheet on timeSheetItem.timeSheetID = timeSheet.timeSheetID
                LEFT JOIN currencyType ON timeSheet.currencyTypeID = currencyType.currencyTypeID
-                WHERE dateTimeSheetItem > '%s' ".$personID_sql, $dateTimeSheetItem);
+                WHERE dateTimeSheetItem > '%s'
+                      ".$personID_sql."
+                      ".$endDate_sql
+                , $dateTimeSheetItem);
     $db->query($q);
     $rows_dollars = array();
     while($row = $db->row()) {
