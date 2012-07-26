@@ -67,7 +67,7 @@ class tasks(alloc):
       projfilter = {}
       projfilter["personID"] = personID
       projfilter["projectStatus"] = "Current"
-      projfilter["projectName"] = o['project']
+      projfilter["projectNameMatches"] = o['project']
       projects = self.get_list("project", projfilter)
       if not projects or len(projects) == 0:
         projectIDs.append(0)
