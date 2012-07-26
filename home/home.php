@@ -88,6 +88,7 @@ if (isset($_POST["time_item"])) {
   if (is_numeric($t["duration"]) && $current_user->get_id()) {
     $timeSheet = new timeSheet();
     $tsi_row = $timeSheet->add_timeSheetItem($t);
+    alloc_redirect($TPL["url_alloc_home"]);
   } else {
     alloc_error("Time not added. No duration set.");
     alloc_error(print_r($t,1));
