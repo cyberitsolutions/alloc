@@ -279,7 +279,7 @@ BEGIN
 
   SET NEW.personID = personID();
   SELECT projectID INTO pID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
-  SELECT rate,rateUnitID INTO r,rUnitID FROM projectPerson WHERE projectID = pID AND personID = personID();
+  SELECT rate,rateUnitID INTO r,rUnitID FROM projectPerson WHERE projectID = pID AND personID = personID() LIMIT 1;
 
   -- if rate is neq project-person rate AND they're don't have perm halt with error about rate
   IF (neq(NEW.rate,r) AND NOT can_edit_rate(personID(),pID)) THEN
@@ -337,7 +337,7 @@ BEGIN
   SET NEW.timeSheetItemID = OLD.timeSheetItemID;
   SET NEW.personID = OLD.personID;
   SELECT projectID INTO pID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
-  SELECT rate,rateUnitID INTO r,rUnitID FROM projectPerson WHERE projectID = pID AND personID = OLD.personID;
+  SELECT rate,rateUnitID INTO r,rUnitID FROM projectPerson WHERE projectID = pID AND personID = OLD.personID LIMIT 1;
 
   -- if rate is neq project-person rate AND they're don't have perm halt with error about rate
   IF (neq(NEW.rate,r) AND NOT can_edit_rate(personID(),pID)) THEN
