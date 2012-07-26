@@ -36,12 +36,30 @@ class timeSheetStatusHomeItem extends home_item {
     global $TPL;
     // Get averages for hours worked over the past fortnight and year
     $t = new timeSheetItem;
-    list($hours_sum,$dollars_sum) = $t->get_averages(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y"))),$current_user->get_id());
-    list($hours_avg,$dollars_avg) = $t->get_fortnightly_average($current_user->get_id());
-    $TPL["hours_sum"] = sprintf("%d",$hours_sum[$current_user->get_id()]);
-    $TPL["hours_avg"] = sprintf("%d",$hours_avg[$current_user->get_id()]);
-    $TPL["dollars_sum"] = page::money_print($dollars_sum[$current_user->get_id()]);
-    $TPL["dollars_avg"] = page::money(config::get_config_item("currency"),$dollars_avg[$current_user->get_id()],"%s%m %c");
+    $day = 60*60*24;
+    //mktime(0,0,0,date("m"),date("d")-1, date("Y"))
+    $today = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-1, date("Y")));
+    $yestA = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-2, date("Y")));
+    $yestB = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-1, date("Y")));
+    $fortn = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y")));
+
+    list($hours_sum_today,$dollars_sum_today)         = $t->get_averages($today,$current_user->get_id());
+    list($hours_sum_yesterday,$dollars_sum_yesterday) = $t->get_averages($yestA,$current_user->get_id(),null,$yestB);
+    list($hours_sum_fortnight,$dollars_sum_fortnight) = $t->get_averages($fortn,$current_user->get_id());
+    list($hours_avg_fortnight,$dollars_avg_fortnight) = $t->get_fortnightly_average($current_user->get_id());
+
+    $TPL["hours_sum_today"] = sprintf("%0.2f",$hours_sum_today[$current_user->get_id()]);
+    $TPL["dollars_sum_today"] = page::money_print($dollars_sum_today[$current_user->get_id()]);
+
+    $TPL["hours_sum_yesterday"] = sprintf("%0.2f",$hours_sum_yesterday[$current_user->get_id()]);
+    $TPL["dollars_sum_yesterday"] = page::money_print($dollars_sum_yesterday[$current_user->get_id()]);
+
+    $TPL["hours_sum_fortnight"] = sprintf("%0.2f",$hours_sum_fortnight[$current_user->get_id()]);
+    $TPL["dollars_sum_fortnight"] = page::money_print($dollars_sum_fortnight[$current_user->get_id()]);
+
+    $TPL["hours_avg_fortnight"] = sprintf("%0.2f",$hours_avg_fortnight[$current_user->get_id()]);
+    $TPL["dollars_avg_fortnight"] = page::money(config::get_config_item("currency"),$dollars_avg_fortnight[$current_user->get_id()],"%s%m %c");
+
     return true;
   }
 }
