@@ -419,6 +419,13 @@ class project extends db_entity {
     if ($filter["projectName"]) {
       $sql[] = prepare("(project.projectName LIKE '%%%s%%')", $filter["projectName"]);
     }
+    if ($filter["projectShortName"]) {
+      $sql[] = prepare("(project.projectShortName LIKE '%%%s%%')", $filter["projectShortName"]);
+    }
+    if ($filter["projectNameMatches"]) {
+      $sql[] = prepare("(project.projectName LIKE '%%%s%%' OR project.projectShortName LIKE '%%%s%%')"
+                      ,$filter["projectNameMatches"],$filter["projectNameMatches"]);
+    }
     if ($filter["projectStatus"]) {
       $sql[] = prepare("(project.projectStatus = '%s')", $filter["projectStatus"]);
     }
