@@ -214,58 +214,63 @@ class expenseForm extends db_entity {
     return $row["amount"];
   } 
 
-  function show_expense_form_list($template_name,$status="pending",$projectID=null) {
+  function get_list_filter($filter=array()) {
+    $filter["projectID"] and $sql[] = prepare("transaction.projectID = %d",$filter["projectID"]);
+    $filter["status"]    and $sql[] = prepare("transaction.status = '%s'",$filter["status"]);
+    isset($filter["finalised"]) and $sql[] = prepare("expenseForm.expenseFormFinalised = %d",$filter["finalised"]);
+    return $sql;
+  }
 
+  function get_list($_FORM=array()) {
     global $TPL;
+    $filter = expenseForm::get_list_filter($_FORM);
+    if (is_array($filter) && count($filter)) {
+      $f = " AND ".implode(" AND ",$filter);
+    }
 
     $db = new db_alloc;
     $dbTwo = new db_alloc;
     $transDB = new db_alloc;
     $expenseForm = new expenseForm;
     $transaction = new transaction;
+    $rr_options = expenseForm::get_reimbursementRequired_array();
 
-    $projectID and $projectID_sql = prepare(" AND transaction.projectID = %d",$projectID);
-    $status    and $status_sql    = prepare(" AND transaction.status = '%s'",$status);
-
-    $q= prepare("SELECT expenseForm.*, SUM(transaction.amount * pow(10,-currencyType.numberToBasic)) as formTotal, transaction.currencyTypeID
-                   FROM expenseForm, transaction
-              LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                  WHERE expenseForm.expenseFormID = transaction.expenseFormID
-                        ".$projectID_sql."
-                        ".$status_sql."
-               GROUP BY expenseForm.expenseFormID, transaction.currencyTypeID
-               ORDER BY expenseFormID");
+    $q = prepare("SELECT expenseForm.*
+                        ,SUM(transaction.amount * pow(10,-currencyType.numberToBasic)) as formTotal
+                        ,transaction.currencyTypeID
+                    FROM expenseForm, transaction
+               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                   WHERE expenseForm.expenseFormID = transaction.expenseFormID
+                         ".$f."
+                GROUP BY expenseForm.expenseFormID, transaction.currencyTypeID
+                ORDER BY expenseFormID");
 
     $db->query($q);
-
-    $rr_options = expenseForm::get_reimbursementRequired_array();
 
     while ($row = $db->row()) {
       $amounts[$row["expenseFormID"]].= $sp[$row["expenseFormID"]].page::money($row["currencyTypeID"],$row["formTotal"],"%s%m");
       $sp[$row["expenseFormID"]] = " + ";
-      $rows[$row["expenseFormID"]] = $row;
+      $allrows[$row["expenseFormID"]] = $row;
     }
-    foreach ((array)$rows as $expenseFormID => $row) {
+    foreach ((array)$allrows as $expenseFormID => $row) {
       $expenseForm = new expenseForm();
       if ($expenseForm->read_row_record($row)) {
-        $i++;
         $expenseForm->set_values();
-        //$TPL["formTotal"] =  -$db->f("formTotal");
-        $TPL["formTotal"] = $amounts[$expenseFormID];
-        $TPL["expenseFormModifiedUser"] = person::get_fullname($expenseForm->get_value("expenseFormModifiedUser"));
-        $TPL["expenseFormModifiedTime"] = $expenseForm->get_value("expenseFormModifiedTime");
-        $TPL["expenseFormCreatedUser"] = person::get_fullname($expenseForm->get_value("expenseFormCreatedUser"));
-        $TPL["expenseFormCreatedTime"] = $expenseForm->get_value("expenseFormCreatedTime");
+        $row["formTotal"] = $amounts[$expenseFormID];
+        $row["expenseFormModifiedUser"] = person::get_fullname($expenseForm->get_value("expenseFormModifiedUser"));
+        $row["expenseFormModifiedTime"] = $expenseForm->get_value("expenseFormModifiedTime");
+        $row["expenseFormCreatedUser"] = person::get_fullname($expenseForm->get_value("expenseFormCreatedUser"));
+        $row["expenseFormCreatedTime"] = $expenseForm->get_value("expenseFormCreatedTime");
         unset($extra);
         $expenseForm->get_value("paymentMethod") and $extra = " (".$expenseForm->get_value("paymentMethod").")";
-        $TPL["rr_label"] = $rr_options[$expenseForm->get_value("reimbursementRequired")].$extra;
-        include_template($template_name);
+        $row["rr_label"] = $rr_options[$expenseForm->get_value("reimbursementRequired")].$extra;
+        $rows[] = $row;
       }
     }
-
+    return (array)$rows;
   }
 
-  function show_pending_transaction_list($template_name) {
+  function get_pending_repeat_transaction_list() {
     global $TPL;
     $transactionTypes = transaction::get_transactionTypes();
     $q = "SELECT * FROM transaction 
@@ -273,23 +278,22 @@ class expenseForm extends db_entity {
                   WHERE transaction.transactionRepeatID IS NOT NULL AND transaction.status = 'pending'";
     $db = new db_alloc;
     $db->query($q);
-    while ($db->next_record()) {
-      $i++;
+    while ($row = $db->row()) {
       $transaction = new transaction;
       $transaction->read_db_record($db);
       $transaction->set_values();
       $transactionRepeat = new transactionRepeat;
       $transactionRepeat->read_db_record($db);
       $transactionRepeat->set_values();
-      $TPL["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];
-      $TPL["formTotal"] =  -$db->f("amount");
-      $TPL["transactionModifiedTime"] = $transaction->get_value("transactionModifiedTime");
-      $TPL["transactionCreatedTime"] = $transaction->get_value("transactionCreatedTime");
-      $TPL["transactionCreatedUser"] = person::get_fullname($transaction->get_value("transactionCreatedUser"));
-      include_template($template_name);
+      $row["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];
+      $row["formTotal"] =  $db->f("amount");
+      $row["transactionModifiedTime"] = $transaction->get_value("transactionModifiedTime");
+      $row["transactionCreatedTime"] = $transaction->get_value("transactionCreatedTime");
+      $row["transactionCreatedUser"] = person::get_fullname($transaction->get_value("transactionCreatedUser"));
+      $rows[] = $row;
     }
+    return (array)$rows;
   }
-
 
 }
 

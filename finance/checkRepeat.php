@@ -100,7 +100,7 @@ while ($db->next_record()) {
     $transaction->set_value("fromTfID", $transactionRepeat->get_value("fromTfID"));
     $transaction->set_value("tfID", $transactionRepeat->get_value("tfID"));
     $transaction->set_value("companyDetails", $transactionRepeat->get_value("companyDetails"));
-    $transaction->set_value("amount", -$amount);
+    $transaction->set_value("amount", $amount);
     $transaction->set_value("currencyTypeID", $transactionRepeat->get_value("currencyTypeID"));
     $transaction->set_value("product", $transactionRepeat->get_value("product"));
     $transaction->set_value("transactionType", $transactionRepeat->get_value("transactionType"));
