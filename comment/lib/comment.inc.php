@@ -613,8 +613,10 @@ class comment extends db_entity {
       $email->del_header("Resent-To");
       
       $email->add_header("X-Alloc-CommentID", $this->get_id());
-      $email->add_header("X-Alloc-".ucwords($e->classname), $e->get_name());
-      $email->add_header("X-Alloc-".ucwords($e->key_field->get_name()), $e->get_id());
+      if (is_object($e) && method_exists($e,"get_name")) {
+        $email->add_header("X-Alloc-".ucwords($e->classname), $e->get_name());
+        $email->add_header("X-Alloc-".ucwords($e->key_field->get_name()), $e->get_id());
+      }
 
       // Add project header too, if possible
       if ($e->classname != "project" && isset($e->data_fields["projectID"])) {
