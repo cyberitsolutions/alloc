@@ -473,7 +473,6 @@ DROP TRIGGER IF EXISTS before_update_task $$
 CREATE TRIGGER before_update_task BEFORE UPDATE ON task
 FOR EACH ROW
 BEGIN
-  DECLARE num_pending_tasks INTEGER;
   call check_edit_task(OLD.projectID);
 
   IF (neq(@in_change_task_status,1) AND neq(OLD.taskStatus,NEW.taskStatus)) THEN
@@ -491,19 +490,6 @@ BEGIN
 
   IF (empty(NEW.taskStatus)) THEN
     SET NEW.taskStatus = 'open_notstarted';
-  END IF;
-
-  -- if this task is at pending_tasks, and you try and change it to a different status, but we're still
-  -- waiting on other tasks to complete, then bomb out with an error
-  IF (OLD.taskStatus = 'pending_tasks' AND neq(NEW.taskStatus, OLD.taskStatus)) THEN
-    SELECT count(pendingTask.taskID) INTO num_pending_tasks FROM pendingTask
- LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
-     WHERE pendingTask.taskID = NEW.taskID
-       AND SUBSTRING(task.taskStatus,1,6) != 'closed';
-
-    IF (num_pending_tasks > 0 AND neq(@in_change_task_status,1)) THEN
-      call alloc_error('Task has pending tasks.');
-    END IF;
   END IF;
 
   IF (NEW.taskStatus = 'open_inprogress' AND neq(NEW.taskStatus, OLD.taskStatus) AND empty(NEW.dateActualStart)) THEN
@@ -632,6 +618,7 @@ DROP PROCEDURE IF EXISTS change_task_status $$
 CREATE PROCEDURE change_task_status(tID INTEGER, new_status varchar(255))
 BEGIN
   DECLARE old_status VARCHAR(255);
+  DECLARE num_pending_tasks INTEGER;
   SET max_sp_recursion_depth = 10; 
   SET @in_change_task_status = 1;
 
@@ -649,7 +636,19 @@ BEGIN
       UPDATE task SET taskStatus = 'pending_tasks'
        WHERE taskStatus = 'open_notstarted'
          AND taskID IN (SELECT taskID FROM pendingTask WHERE pendingTaskID = tID);
+    END IF;
 
+    -- if this task is at pending_tasks, and you try and change it to a different status, but we're still
+    -- waiting on other tasks to complete, then bomb out with an error
+    IF (old_status = 'pending_tasks' AND neq(old_status,new_status)) THEN
+       SELECT count(pendingTask.taskID) INTO num_pending_tasks FROM pendingTask
+    LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
+        WHERE pendingTask.taskID = tID
+          AND SUBSTRING(task.taskStatus,1,6) != 'closed';
+   
+      IF (num_pending_tasks > 0) THEN
+        call alloc_error('Task has pending tasks.');
+      END IF;
     END IF;
 
     -- And finally, update the task
