@@ -153,7 +153,7 @@ class db {
     return $this->row($id);
   }
 
-  private function internal_query($query) {
+  private function _query($query) {
     // wrapper for mysql_query
     if (!self::$stop_doing_queries || $query == "ROLLBACK") {
       return @mysql_query($query);
@@ -173,24 +173,20 @@ class db {
     if ($query && !self::$stop_doing_queries) {
 
       if (is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
-        $this->internal_query(prepare("SET @personID = %d",$current_user->get_id()),$this->link_id);
+        $this->_query(prepare("SET @personID = %d",$current_user->get_id()),$this->link_id);
       } else {
-        $this->internal_query("SET @personID = NULL",$this->link_id);
+        $this->_query("SET @personID = NULL",$this->link_id);
       }
 
-      $id = $this->internal_query($query,$this->link_id);
+      $id = $this->_query($query,$this->link_id);
 
       if ($str = mysql_error()) {
         $rtn = false;
         $this->error("Query failed: ".$str."\n".$query,mysql_errno());
         if (self::$started_transaction) {
-          $this->internal_query("ROLLBACK");
+          $this->_query("ROLLBACK");
           self::$started_transaction = false;
         }
-        self::$stop_doing_queries = true;
-        //mysql_close($this->link_id);
-        //unset($this->link_id);
-        alloc_error("Database queries halted.");
 
       } else if ($id) {
         $this->query_id = $id;
