@@ -35,6 +35,7 @@ singleton("errors_fatal",false);
 singleton("errors_format","html");
 singleton("errors_logged",false);
 singleton("errors_thrown",false);
+singleton("errors_haltdb",false);
 
 // Set the charset for Zend Lucene search indexer http://framework.zend.com/manual/en/zend.search.lucene.charset.html
 require_once("Zend".DIRECTORY_SEPARATOR."Search".DIRECTORY_SEPARATOR."Lucene.php");

@@ -6,6 +6,7 @@ singleton("errors_fatal",true);
 singleton("errors_format","text");
 singleton("errors_logged",false);
 singleton("errors_thrown",false);
+singleton("errors_haltdb",true);
 
 
 function g($var) {

@@ -804,6 +804,7 @@ function alloc_error($str="",$force=null) {
   isset($force) and $errors_fatal = $force; // permit override
   $errors_format = &singleton("errors_format");
   $errors_format or $errors_format = "html";
+  $errors_haltdb = &singleton("errors_haltdb");
 
   // Load up a nicely rendered html error
   if ($errors_format == "html") {
@@ -819,6 +820,11 @@ function alloc_error($str="",$force=null) {
   // Log the error message
   if ($errors_logged) {
     error_log(strip_tags($str));
+  }
+
+  // Prevent further db queries
+  if ($errors_haltdb) {
+    db_alloc::$stop_doing_queries = true;
   }
 
   // Throw an exception, that can be caught and handled (eg receiveEmail.php)

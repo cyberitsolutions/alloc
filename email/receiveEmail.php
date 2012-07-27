@@ -26,6 +26,7 @@ singleton("errors_fatal",false);
 singleton("errors_format","text");
 singleton("errors_logged",false);
 singleton("errors_thrown",true);
+singleton("errors_haltdb",true);
 
 $info = inbox::get_mail_info();
 
