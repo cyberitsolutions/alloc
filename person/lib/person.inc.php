@@ -207,7 +207,7 @@ class person extends db_entity {
     }
 
     // If person is active or the person is the selected person (to enable drpodown list to have people who have since been made inactive)
-    foreach ($rows as $personID => $info) {
+    foreach ((array)$rows as $personID => $info) {
       if ($info["active"] || $personID == $push_personID) {
         $rtn[$personID] = $info["name"];
       }
