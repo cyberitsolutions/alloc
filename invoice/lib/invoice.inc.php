@@ -545,24 +545,10 @@ class invoice extends db_entity {
       $row["_FORM"] = $_FORM;
       $row = array_merge($TPL,(array)$row);
 
-      $summary_ops[$i->get_id()] = $i->get_value("invoiceNum");
       $rows[$row["invoiceID"]] = $row;
     }
 
     return $rows;
-    if ($print && $_FORM["return"] == "html") {
-      return "<table class=\"list sortable\">".$summary."</table>";
-
-    } else if ($print && $_FORM["return"] == "dropdown_options") {
-      return $summary_ops;
-
-    } else if ($print && $_FORM["return"] == "array") {
-      return $rows;
-
-    } else if (!$print && $_FORM["return"] == "html") {
-      return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No Invoices Found</b></td></tr></table>";
-    }
-
   }
 
   function get_list_vars() {
