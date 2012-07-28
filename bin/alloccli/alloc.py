@@ -150,6 +150,32 @@ class alloc(object):
     "project" : {
       "projectID"                :"ID"
      ,"projectName"              :"Proj Name"
+    },
+
+    "invoice" : {
+      "invoiceID"                :"ID"
+     ,"clientName"               :"Client"
+     ,"invoiceNum"               :"Num"
+     ,"invoiceDateFrom"          :"From"
+     ,"invoiceDateTo"            :"To"
+     ,"invoiceStatus"            :"Status"
+     ,"status_label"             :"Payment"
+     ,"amountPaidRejected"       :"Rejected"
+     ,"amountPaidPending"        :"Pending"
+     ,"amountPaidApproved"       :"Approved"
+     ,"iiAmountSum"              :"Total"
+    },
+
+    "invoiceItem" : {
+      "invoiceID"                :"ID"
+     ,"invoiceItemID"            :"Item ID"
+     ,"clientName"               :"Client"
+     ,"invoiceNum"               :"Num"
+     ,"iiDate"                   :"Date"
+     ,"iiAmount"                 :"Amount"
+     ,"iiQuantity"               :"Qty"
+     ,"iiUnitPrice"              :"Per unit"
+     ,"iiMemo"                   :"Comment"
     }
   }
 

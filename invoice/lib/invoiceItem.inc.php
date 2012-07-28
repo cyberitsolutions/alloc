@@ -350,6 +350,34 @@ class invoiceItem extends db_entity {
     $transaction->save();
   }
 
+  function get_list_filter($filter=array()) {
+    // Filter on invoiceID
+    if ($filter["invoiceID"] && is_array($filter["invoiceID"])) {
+      $sql[] = prepare("(invoice.invoiceID in (%s))",$filter["invoiceID"]);
+    } else if ($filter["invoiceID"]) {     
+      $sql[] = prepare("(invoice.invoiceID = %d)", $filter["invoiceID"]);
+    }
+    return $sql;
+  }
+
+  function get_list($_FORM) {
+    $filter = invoiceItem::get_list_filter($_FORM);
+    if (is_array($filter) && count($filter)) {
+      $f = " WHERE ".implode(" AND ",$filter);
+    }
+    $q = prepare("SELECT * FROM invoiceItem 
+               LEFT JOIN invoice ON invoice.invoiceID = invoiceItem.invoiceID
+               LEFT JOIN client ON client.clientID = invoice.clientID
+               ".$f);
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $row["iiAmount"] = page::money($row["currencyTypeID"],$row["iiAmount"],"%mo");
+      $row["iiUnitPrice"] = page::money($row["currencyTypeID"],$row["iiUnitPrice"],"%mo");
+      $rows[$row["invoiceItemID"]] = $row;
+    }
+    return (array)$rows;
+  }
 
 
 }
