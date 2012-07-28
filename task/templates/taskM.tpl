@@ -229,11 +229,11 @@ $(document).ready(function() {
             <select name="taskStatus" onChange="$('.hidden_field').hide(); $('#'+$(this).val()+'_div').css('display','inline');">
               {$task_taskStatusOptions}
             </select>
-            <div id="closed_duplicate_div" class="hidden_field {print $task_duplicateTaskID ? "inline" : "hidden"}">
+            <div id="closed_duplicate_div" class="hidden_field {print ($task_taskStatus == "closed_duplicate") ? "inline" : "hidden"}">
               <input type="text" name="duplicateTaskID" value="{$task_duplicateTaskID}" size="20">
               {page::help("task_duplicate")}
             </div>
-            <div id="pending_tasks_div" class="hidden_field {print $task_pendingTaskIDs ? "inline" : "hidden"}">
+            <div id="pending_tasks_div" class="hidden_field {print ($task_taskStatus == "pending_tasks") ? "inline" : "hidden"}">
               <input type="text" name="pendingTasksIDs" value="{$task_pendingTaskIDs}" size="20">
               {page::help("task_pending_tasks")}
             </div>
