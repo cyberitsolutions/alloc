@@ -236,7 +236,11 @@ class invoice extends db_entity {
     $footer = config::get_config_item("timeSheetPrintFooter");
     $taxName = config::get_config_item("taxName");
 
-    $period = format_date(DATE_FORMAT,$this->get_value("invoiceDateFrom"))." to ".format_date(DATE_FORMAT,$this->get_value("invoiceDateTo"));
+    if ($this->get_value("invoiceDateFrom") != $this->get_value("invoiceDateTo")) {
+      $period = format_date(DATE_FORMAT,$this->get_value("invoiceDateFrom"))." to ".format_date(DATE_FORMAT,$this->get_value("invoiceDateTo"));
+    } else {
+      $period = format_date(DATE_FORMAT,$this->get_value("invoiceDateFrom"));
+    }
 
     $default_header = "Tax Invoice";
     $default_id_label = "Invoice Number";
