@@ -276,7 +276,8 @@ $(document).ready(function() {
   </tr>
   <tr>
     <td>
-      {echo productSale::get_list(array("clientID"=>$client_clientID))}
+      {$productSaleRows = productSale::get_list(array("clientID"=>$client_clientID))}
+      {echo productSale::get_list_html($productSaleRows)}
     </td>
   </tr>
 </table>

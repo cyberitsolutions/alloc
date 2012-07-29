@@ -419,7 +419,7 @@ class productSale extends db_entity {
     }
 
     // No point continuing if primary key specified, so return
-    if ($filter["clientID"] || $filter["starred"]) {
+    if ($filter["productSaleID"] || $filter["starred"]) {
       return $sql;
     }
 
@@ -481,7 +481,7 @@ class productSale extends db_entity {
       $rows[] = $row;
     }
 
-    return $rows;
+    return (array)$rows;
   }
 
   function get_link($row=array()) {
