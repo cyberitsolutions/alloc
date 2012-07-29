@@ -47,7 +47,7 @@ function timeWarp($mostRecent, $basis) {
 
 $db = new db_alloc;
 $dbMaxDate = new db_alloc;
-$today = mktime(0, 0, 0, date(m), date(d), date(Y));
+$today = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 
 echo("<br>".date("Y-m-d")."<br>");
 
