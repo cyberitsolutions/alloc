@@ -147,7 +147,9 @@ class command {
       $timeSheetItem = new timeSheetItem;
       if ($commands["item"] && strtolower($commands["item"] != "new")) {
         $timeSheetItem->set_id($commands["item"]);
-        $timeSheetItem->select();
+        if(!$timeSheetItem->select()) {
+          alloc_error("Unable to select time sheet item with ID: ".$commands["item"]);
+        }
       }
       $timeSheet = $timeSheetItem->get_foreign_object("timeSheet");
       $timeSheetItem->currency = $timeSheet->get_value("currencyTypeID");
@@ -223,7 +225,9 @@ class command {
       $task = new task;
       if ($commands["task"] && strtolower($commands["task"]) != "new") {
         $task->set_id($commands["task"]);
-        $task->select();
+        if(!$task->select()) {
+          alloc_error("Unable to select task with ID: ".$commands["task"]);
+        }
       }
 
       foreach ($commands as $k => $v) {
