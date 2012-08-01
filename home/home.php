@@ -74,6 +74,8 @@ if ($_POST["customize_save"]) {
 
   isset($_POST["showFilters"]) and $current_user->prefs["showFilters"] = $_POST["showFilters"];
   isset($_POST["privateMode"]) || $_POST["form_on_person_page"] and $current_user->prefs["privateMode"] = $_POST["privateMode"];
+  isset($_POST["showTimeSheetStats"]) and $current_user->prefs["showTimeSheetStats"] = sprintf("%d",$_POST["showTimeSheetStats"]);
+  isset($_POST["showNewTimeSheetItem"]) and $current_user->prefs["showNewTimeSheetItem"] = sprintf("%d",$_POST["showNewTimeSheetItem"]);
 
   isset($_POST["timeSheetHoursWarn"]) and $current_user->prefs["timeSheetHoursWarn"] = $_POST["timeSheetHoursWarn"];
   isset($_POST["timeSheetDaysWarn"])  and $current_user->prefs["timeSheetDaysWarn"] = $_POST["timeSheetDaysWarn"];

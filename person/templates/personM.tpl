@@ -222,11 +222,35 @@
         </div>
       </div>
 
+
+      <div class="edit">
+        <h6>Time Sheet Stats<div>New Time Sheet Item</div></h6> 
+        <div style="float:left; width:30%;">
+          <select name="showTimeSheetStats">{page::select_options(array(0=>"No",1=>"Yes"),$showTimeSheetStats)}</select>
+          {page::help("<b>Show Time Sheet Stats</b><br><br>Show the time sheet stats box on the homepage.")}
+        </div>
+        <div style="float:right; width:50%;">
+          <select name="showNewTimeSheetItem">{page::select_options(array(0=>"No",1=>"Yes"),$showNewTimeSheetItem)}</select>
+          {page::help("<b>Show New Time Sheet Item</b><br><br>Show the new time sheet item input on the homepage.")}
+        </div>
+      </div>
+      <div class="view">
+        <h6>Time Sheet Stats<div>New Time Sheet Item</div></h6> 
+        <div style="float:left; width:30%;">
+          {print $showTimeSheetStats ? "Yes" : "No"}&nbsp;
+        </div>
+        <div style="float:right; width:50%;">
+          {print $showNewTimeSheetItem ? "Yes" : "No"}&nbsp;
+        </div>
+      </div>
+
+
+
       <div class="edit">
         <h6>Private Mode<div></div></h6> 
         <div style="float:left; width:30%;">
           <input type="hidden" name="form_on_person_page" value="1">
-          <input type="checkbox" name="privateMode" value="1" {$privateMode and print "checked"}>
+          <select name="privateMode">{page::select_options(array(0=>"No",1=>"Yes"),$privateMode)}</select>
           {page::help("<b>Private Mode</b><br><br>Prevent someone who is standing over your shoulder from seeing financial amounts on the homepage.")}
         </div>
         <div style="float:right; width:50%;" class="right">

@@ -23,12 +23,14 @@
 class timeSheetStatusHomeItem extends home_item {
 
   function __construct() {
+    $this->has_config = true;
     parent::__construct("time_status_list", "Time Sheet Statistics", "time", "timeSheetStatusHomeM.tpl", "narrow", 29);
   }
 
   function visible() {
     $current_user = &singleton("current_user");
-    return (isset($current_user) && $current_user->is_employee());
+    return (isset($current_user) && $current_user->is_employee()
+        && ($current_user->prefs["showTimeSheetStats"] || !isset($current_user->prefs["showTimeSheetStats"])));
   }
 
   function render() {
