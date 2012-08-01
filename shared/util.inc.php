@@ -876,7 +876,15 @@ function prepare() {
   }
 
   // Have to use this coz we don't know how many args we're gonna pass to sprintf..
-  $query = call_user_func_array("sprintf",$clean_args);
+  $query = @call_user_func_array("sprintf",$clean_args);
+
+  // Trackdown poorly formulated queries
+  $err = error_get_last();
+  if ($err["type"] == 2 && in_str("sprintf",$err["message"])) {
+    $e = new Exception();
+    alloc_error("Error in prepared query: \n".$e->getTraceAsString()."\n".print_r($err,1)."\n".print_r($clean_args,1));
+  }
+
   return $query;
 }
 function refcount(&$var) {
