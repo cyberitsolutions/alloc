@@ -85,8 +85,8 @@ require_once("../alloc.php");
     global $skills_got;
 
     $TPL["personExpertiseItem_buttons"] = '
-       <button type="submit" name="personExpertiseItem_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
        <button type="submit" name="personExpertiseItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+       <button type="submit" name="personExpertiseItem_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
          ';
     $proficiencys = array("Novice"=>"Novice", "Junior"=>"Junior", "Intermediate"=>"Intermediate", "Advanced"=>"Advanced", "Senior"=>"Senior");
 

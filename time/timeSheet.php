@@ -216,8 +216,8 @@ if (!$current_user->is_employee()) {
 
     if (is_object($timeSheet) && $timeSheet->get_value("status") == "edit") {
       $TPL["timeSheetItem_buttons"] = '
-        <button type="submit" name="timeSheetItem_edit" value="1">Edit<i class="icon-edit"></i></button>
-        <button type="submit" name="timeSheetItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>';
+        <button type="submit" name="timeSheetItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+        <button type="submit" name="timeSheetItem_edit" value="1">Edit<i class="icon-edit"></i></button>';
     }
 
     $TPL["currency"] = page::money($timeSheet->get_value("currencyTypeID"),'',"%S");
@@ -335,8 +335,9 @@ if (!$current_user->is_employee()) {
         $TPL["tsi_rate"] = $timeSheetItem->get_value("rate",DST_HTML_DISPLAY);
         $taskID = $timeSheetItem->get_value("taskID");
         $TPL["tsi_buttons"] = '
+         <button type="submit" name="timeSheetItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
          <button type="submit" name="timeSheetItem_save" value="1" class="save_button">Save Item<i class="icon-ok-sign"></i></button>
-         <button type="submit" name="timeSheetItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>';
+         ';
 
         $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
         $TPL["tsi_commentPrivate"] and $TPL["commentPrivateChecked"] = " checked";
