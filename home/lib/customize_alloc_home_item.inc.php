@@ -83,6 +83,8 @@ class customize_alloc_home_item extends home_item {
     $TPL["showFiltersLabel"] = $dailyTEO[$current_user->prefs["showFilters"]];
 
     $TPL["privateMode"] = $current_user->prefs["privateMode"];
+    $TPL["showTimeSheetStats"] = $current_user->prefs["showTimeSheetStats"];
+    $TPL["showNewTimeSheetItem"] = $current_user->prefs["showNewTimeSheetItem"];
 
     $TPL["timeSheetHoursWarn"] = $current_user->prefs["timeSheetHoursWarn"];
     $TPL["timeSheetDaysWarn"] = $current_user->prefs["timeSheetDaysWarn"];

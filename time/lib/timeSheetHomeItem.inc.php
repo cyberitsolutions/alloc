@@ -23,12 +23,14 @@
 class timeSheetHomeItem extends home_item {
 
   function __construct() {
+    $this->has_config = true;
     parent::__construct("time_edit", "New Time Sheet Item", "time", "timeSheetH.tpl", "narrow", 24);
   }
 
   function visible() {
     $current_user = &singleton("current_user");
-    return isset($current_user) && $current_user->is_employee();
+    return isset($current_user) && $current_user->is_employee() 
+        && ($current_user->prefs["showNewTimeSheetItem"] || !isset($current_user->prefs["showNewTimeSheetItem"]));
   }
 
   function render() {
