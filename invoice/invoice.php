@@ -49,8 +49,8 @@ function show_new_invoiceItem($template) {
       $invoiceItem->select();
       $invoiceItem->set_tpl_values("invoiceItem_");
       $TPL["invoiceItem_buttons"] = '
-        <button type="submit" name="invoiceItem_save['.$invoiceItemID.']" value="1">Save Item<i class="icon-edit"></i></button>
         <button type="submit" name="invoiceItem_delete['.$invoiceItemID.']" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+        <button type="submit" name="invoiceItem_save['.$invoiceItemID.']" value="1" class="save_button">Save Item<i class="icon-edit"></i></button>
       ';
       
       if ($invoiceItem->get_value("timeSheetID")) {
@@ -324,8 +324,8 @@ function show_invoiceItem_list() {
 
     } else if (is_object($invoice) && $invoice->get_value("invoiceStatus") == "edit") {
       $TPL["invoiceItem_buttons"] = '
-        <button type="submit" name="invoiceItem_edit['.$invoiceItem->get_id().']" value="1">Edit<i class="icon-edit"></i></button>
         <button type="submit" name="invoiceItem_delete['.$invoiceItem->get_id().']" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+        <button type="submit" name="invoiceItem_edit['.$invoiceItem->get_id().']" value="1">Edit<i class="icon-edit"></i></button>
       ';
     }
 
