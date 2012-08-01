@@ -480,7 +480,8 @@ function clickClientStatus(e) {
   </tr>
   <tr>
     <td>
-      {echo productSale::get_list(array("projectID"=>$project_projectID))}
+      {$productSaleRows = productSale::get_list(array("projectID"=>$project_projectID))}
+      {echo productSale::get_list_html($productSaleRows)}
     </td>
   </tr>
 </table>
