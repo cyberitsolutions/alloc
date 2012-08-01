@@ -367,6 +367,8 @@ hr {
   margin:15px auto 0px auto; 
   border:1px solid (DECORATIVE_LINE_COLOR);
   background-color:(HELP_BACKGROUND);
+  width:60%;
+  z-index:1000;
 }
 .bad { 
   color:(TRANSACTION_REJECTED); 
@@ -532,6 +534,11 @@ img.taskType {
   -moz-box-shadow:4px 4px 5px #bbbbbb;
   -webkit-box-shadow:4px 4px 5px #bbbbbb;
   box-shadow:4px 4px 5px #bbbbbb;
+}
+.shadow2 {
+  -moz-box-shadow:1px 1px 5px #bbbbbb;
+  -webkit-box-shadow:1px 1px 5px #bbbbbb;
+  box-shadow:1px 1px 5px #bbbbbb;
 }
 
 .overdue { 

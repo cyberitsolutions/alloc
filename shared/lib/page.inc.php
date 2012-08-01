@@ -170,7 +170,7 @@ class page {
         $type != "message_help_no_esc" and $info = page::htmlentities($info);
         $type != "message_help_no_esc" and $info = str_replace($search,$replace,$info);
 
-        $str.= "<tr><td width=\"1%\" style=\"vertical-align:top;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$class.".png\" alt=\"$class\" /><td/>";
+        $str.= "<tr><td width=\"1%\" style=\"vertical-align:top;padding:6px;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$class.".png\" alt=\"$class\" /><td/>";
         $str.= "<td class=\"".$class."\" align=\"left\" width=\"99%\">".$info."</td></tr>";
       }
       $str.= "</table>";
