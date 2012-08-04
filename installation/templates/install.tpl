@@ -99,8 +99,9 @@ of a database and database user.
 {if show_tab_2()}
 <br>
 
-3). <b>Run the following commands on your MySQL server</b>. Ensure you are logged in as a
-MySQL administrator user when you run them.
+3). <b>Run the following commands on your MySQL server</b>.
+    <br><b style="color:blue">Ensure you are logged in as a
+    MySQL administrator user when you import the final file, db_triggers.sql.</b>
 
 <br>
 <table class="nice" cellspacing="0" border="0">
