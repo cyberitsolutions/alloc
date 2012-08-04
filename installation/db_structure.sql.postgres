@@ -467,9 +467,9 @@ CREATE TABLE timeSheetItem (
   multiplier decimal(9,2) default 1.00 NOT NULL,
   emailUID varchar(255) DEFAULT NULL,
   emailMessageID varchar(255) DEFAULT NULL,
-  timeSheetItemCreatedTime datetime default NULL,
+  timeSheetItemCreatedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
   timeSheetItemCreatedUser integer default NULL,
-  timeSheetItemModifiedTime datetime DEFAULT NULL,
+  timeSheetItemModifiedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
   timeSheetItemModifiedUser integer DEFAULT NULL
 ) ;
 
