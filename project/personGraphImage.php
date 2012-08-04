@@ -37,7 +37,7 @@ if ($_GET["graph_type"] == "phases") {
   $options["taskTypeID"] = 'Parent';
 }
 
-$task_graph = new task_graph;
+$task_graph = new task_graph();
 $task_graph->set_title($_GET["graphTitle"]);
 $task_graph->set_width($_GET["graphWidth"]);
 $task_graph->bottom_margin = 20;

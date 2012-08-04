@@ -45,8 +45,8 @@ function timeWarp($mostRecent, $basis) {
 }
 
 
-$db = new db_alloc;
-$dbMaxDate = new db_alloc;
+$db = new db_alloc();
+$dbMaxDate = new db_alloc();
 $today = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 
 echo("<br>".date("Y-m-d")."<br>");
@@ -54,7 +54,7 @@ echo("<br>".date("Y-m-d")."<br>");
 $db->query("select * from transactionRepeat WHERE status = 'approved'");
 
 while ($db->next_record()) {
-  $transactionRepeat = new transactionRepeat;
+  $transactionRepeat = new transactionRepeat();
   $transactionRepeat->read_db_record($db);
 
   $startDate = format_date("U",$transactionRepeat->get_value("transactionStartDate"));
@@ -78,7 +78,7 @@ while ($db->next_record()) {
   //echo "<br>".$nextScheduled." <= ".$today." && ".$nextScheduled." >= ".$startDate." && ".$nextScheduled." <= ".$finishDate;
   while ($nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate) {
 
-    $tf = new tf;
+    $tf = new tf();
     $tf->set_id($transactionRepeat->get_value("tfID"));
     $tf->select();
     if (!$tf->get_value("tfActive")) {
@@ -86,7 +86,7 @@ while ($db->next_record()) {
       continue 2;
     }
 
-    $tf = new tf;
+    $tf = new tf();
     $tf->set_id($transactionRepeat->get_value("fromTfID"));
     $tf->select();
     if (!$tf->get_value("tfActive")) {
@@ -96,7 +96,7 @@ while ($db->next_record()) {
 
     $amount = page::money_out($transactionRepeat->get_value("currencyTypeID"), $transactionRepeat->get_value("amount"));
 
-    $transaction = new transaction;
+    $transaction = new transaction();
     $transaction->set_value("fromTfID", $transactionRepeat->get_value("fromTfID"));
     $transaction->set_value("tfID", $transactionRepeat->get_value("tfID"));
     $transaction->set_value("companyDetails", $transactionRepeat->get_value("companyDetails"));

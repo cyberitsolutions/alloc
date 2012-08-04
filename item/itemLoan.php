@@ -36,7 +36,7 @@ function show_overdue($template_name) {
   global $TPL;
   $current_user = &singleton("current_user");
 
-  $db = new db_alloc;
+  $db = new db_alloc();
   $temp = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
   $today = date("Y", $temp)."-".date("m", $temp)."-".date("d", $temp);
 
@@ -56,13 +56,13 @@ function show_overdue($template_name) {
   while ($db->next_record()) {
     $i++;
 
-    $item = new item;
-    $loan = new loan;
+    $item = new item();
+    $loan = new loan();
     $item->read_db_record($db);
     $loan->read_db_record($db);
     $item->set_values();
     $loan->set_values();
-    $person = new person;
+    $person = new person();
     $person->set_id($loan->get_value("personID"));
     $person->select();
     $TPL["person"] = $person->get_name();

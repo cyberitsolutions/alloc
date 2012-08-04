@@ -29,7 +29,7 @@ if (!config::get_config_item("mainTfID")) {
 $field_map = array("date"=>0, "account"=>1, "num"=>2, "description"=>3, "memo"=>4, "category"=>5, "clr"=>6, "amount"=>7);
 
 if ($_POST["upload"]) {
-  $db = new db_alloc;
+  $db = new db_alloc();
   is_uploaded_file($_FILES["expenses_file"]["tmp_name"]) || alloc_error("File referred to was not an uploaded file",true); // Prevent attacks by setting $expenses_file in URL
   $lines = file($_FILES["expenses_file"]["tmp_name"]);
 
@@ -95,7 +95,7 @@ if ($_POST["upload"]) {
       continue;
     }
     // Create a transaction object and then save it
-    $transaction = new transaction;
+    $transaction = new transaction();
     $transaction->set_value("companyDetails", $description);
     $transaction->set_value("product", $memo);
     $transaction->set_value("amount", $amount);

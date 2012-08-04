@@ -31,7 +31,7 @@ $TPL["returnToParent"] = $returnToParent;
 $urls["home"] = $TPL["url_alloc_home"];
 $urls["calendar"] = $TPL["url_alloc_taskCalendar"]."personID=".$personID;
 
-$absence = new absence;
+$absence = new absence();
 if ($absenceID) {
   $absence->set_id($absenceID);
   $absence->select();
@@ -39,14 +39,14 @@ if ($absenceID) {
   $personID = $absence->get_value("personID");
 }
 
-$person = new person;
+$person = new person();
 $personID = $personID or $personID = $_POST["personID"] or $personID = $_GET["personID"];
 if ($personID) {
   $person->set_id($personID);
   $person->select();
 }
 
-$db = new db_alloc;
+$db = new db_alloc();
 
 if ($_POST["save"]) {
   // Saving a record

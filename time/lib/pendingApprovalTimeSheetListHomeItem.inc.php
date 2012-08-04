@@ -54,7 +54,7 @@ function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
   $people = get_cached_table("person");
 
   while ($db->next_record()) {
-    $timeSheet = new timeSheet;
+    $timeSheet = new timeSheet();
     $timeSheet->read_db_record($db);
     $timeSheet->set_values();
 
@@ -99,13 +99,13 @@ function get_pending_timesheet_db() {
   */
 
   $current_user = &singleton("current_user");
-  $db = new db_alloc;
+  $db = new db_alloc();
 
   // Get all the time sheets that are in status manager, and are the responsibility of only the default manager
   if (in_array($current_user->get_id(), config::get_config_item("defaultTimeSheetManagerList"))) {
 
     // First get the blacklist of projects that we don't want to include below
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("SELECT projectID 
                         FROM projectPerson 
                        WHERE personID != %d 
@@ -155,7 +155,7 @@ function get_pending_timesheet_db() {
 
 function get_pending_admin_timesheet_db() {
   $current_user = &singleton("current_user");
-  $db = new db_alloc;
+  $db = new db_alloc();
  
   $timeSheetAdminPersonIDs = config::get_config_item("defaultTimeSheetAdminList");
 

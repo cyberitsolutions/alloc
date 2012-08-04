@@ -7,7 +7,7 @@ $db = new db_alloc();
 $q = prepare("SELECT * FROM project");
 $db->query($q);
 while ($db->row()) {
-  $project = new project;
+  $project = new project();
   $project->read_db_record($db);
   $project->update_search_index_doc($index);
 }

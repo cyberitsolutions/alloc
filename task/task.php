@@ -37,7 +37,7 @@ define("PAGE_IS_PRINTABLE",1);
                    WHERE taskID = %d 
                      AND (taskID != parentTaskID OR parentTaskID IS NULL)"
                 ,$taskID);
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     
     while($db->next_record()) {
@@ -100,8 +100,8 @@ define("PAGE_IS_PRINTABLE",1);
 
 global $timeSheetID;
 
-$db = new db_alloc;
-$task = new task;
+$db = new db_alloc();
+$task = new task();
 
 // If taskID
 
@@ -188,7 +188,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 // Start stuff here
 $task->set_values("task_");
 
-$person = new person;
+$person = new person();
 $person->set_id($task->get_value("creatorID"));
 $person->select();
 $TPL["task_createdBy"] = $person->get_name();
@@ -199,19 +199,19 @@ if ($task->get_value("closerID") && $task->get_value("dateClosed")) {
   $TPL["task_closed_when"] = $task->get_value("dateClosed");
 }
 
-$person = new person;
+$person = new person();
 $person->set_id($task->get_value("personID"));
 $person->select();
 $TPL["person_username"] = $person->get_name();
 $TPL["person_username_personID"] = $person->get_id();
 
-$manager = new person;
+$manager = new person();
 $manager->set_id($task->get_value("managerID"));
 $manager->select();
 $TPL["manager_username"] = $manager->get_name();
 $TPL["manager_username_personID"] = $manager->get_id();
 
-$estimator = new person;
+$estimator = new person();
 $estimator->set_id($task->get_value("estimatorID"));
 $estimator->select();
 $TPL["estimator_username"] = $estimator->get_name();
@@ -284,7 +284,7 @@ if (is_array($parentTaskIDs)) {
 
 $dupeID = $task->get_value("duplicateTaskID");
 if ($dupeID) {
-  $realtask = new task;
+  $realtask = new task();
   $realtask->set_id($dupeID);
   $realtask->select();
   $TPL["taskDuplicateLink"] = $realtask->get_task_link(array("prefixTaskID"=>1,"return"=>"html"));
@@ -295,7 +295,7 @@ if ($dupeID) {
 
 $rows = $task->get_pending_tasks();
 foreach ((array)$rows as $pendingTaskID) {
-  $realtask = new task;
+  $realtask = new task();
   $realtask->set_id($pendingTaskID);
   $realtask->select();
   unset($st1,$st2);
@@ -313,7 +313,7 @@ $pendingTaskLinks and $TPL["message_help_no_esc"][] = "This task ".$is." pending
 
 $rows = $task->get_pending_tasks(true);
 foreach ((array)$rows as $tID) {
-  $realtask = new task;
+  $realtask = new task();
   $realtask->set_id($tID);
   $realtask->select();
   unset($st1,$st2);
@@ -379,12 +379,12 @@ $TPL["task"] = $task;
 
 // Printer friendly view
 if ($_GET["media"] == "print") {
-  $client = new client;
+  $client = new client();
   $client->set_id($project->get_value("clientID"));
   $client->select();
   $client->set_values("client_");
   $project = $task->get_foreign_object("project");
-  $clientContact = new clientContact;
+  $clientContact = new clientContact();
   $clientContact->set_id($project->get_value("clientContactID"));
   $clientContact->select();
   $clientContact->set_values("clientContact_");

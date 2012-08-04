@@ -7,7 +7,7 @@ $db = new db_alloc();
 $q = prepare("SELECT * FROM timeSheet");
 $db->query($q);
 while ($db->row()) {
-  $timeSheet = new timeSheet;
+  $timeSheet = new timeSheet();
   $timeSheet->read_db_record($db);
   $timeSheet->update_search_index_doc($index);
 }

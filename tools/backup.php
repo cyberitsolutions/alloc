@@ -22,7 +22,7 @@
 
 require_once("../alloc.php");
 
-$db = new db_alloc;
+$db = new db_alloc();
 
 # End of functions
 

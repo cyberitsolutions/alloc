@@ -40,7 +40,7 @@ foreach ($tasks as $task) {
   $objects[$task["taskID"]] = $task["object"];
 }
 
-$task_graph = new task_graph;
+$task_graph = new task_graph();
 $task_graph->set_title($_GET["graphTitle"]);
 $task_graph->set_width($_GET["graphWidth"]);
 $task_graph->init($objects);

@@ -47,7 +47,7 @@ class productSaleItem extends db_entity {
   }
 
   function get_amount_spent() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = prepare("SELECT fromTfID, tfID,
                          (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
                     FROM transaction 
@@ -68,7 +68,7 @@ class productSaleItem extends db_entity {
   }
 
   function get_amount_earnt() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = prepare("SELECT fromTfID, tfID,
                          (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
                     FROM transaction 
@@ -89,7 +89,7 @@ class productSaleItem extends db_entity {
   }
 
   function get_amount_other() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     // Don't need to do numberToBasic conversion here
     $q = prepare("SELECT fromTfID, tfID,
                          (amount * exchangeRate) as amount
@@ -141,7 +141,7 @@ class productSaleItem extends db_entity {
     $date = $productSale->get_value("productSaleDate") or $date = date("Y-m-d");
     $tfID = $productSale->translate_meta_tfID($tfID);
     $fromTfID = $productSale->translate_meta_tfID($fromTfID);
-    $transaction = new transaction;
+    $transaction = new transaction();
     $transaction->set_value("productSaleID", $this->get_value("productSaleID"));
     $transaction->set_value("productSaleItemID", $this->get_id());
     $transaction->set_value("productCostID",$productCostID);
@@ -265,7 +265,7 @@ class productSaleItem extends db_entity {
     $db = new db_alloc();
     $db->query($q);
     while ($db->row()) {
-      $transaction = new transaction;
+      $transaction = new transaction();
       $transaction->read_db_record($db);
       $transaction->delete();
     }

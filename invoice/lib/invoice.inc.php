@@ -145,13 +145,13 @@ class invoice extends db_entity {
 
     $q = prepare("SELECT * from invoiceItem WHERE invoiceID=%d ", $this->get_id());
     $q.= prepare("ORDER BY iiDate,invoiceItemID");
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     $taxPercent = config::get_config_item("taxPercent");
     $taxPercentDivisor = ($taxPercent/100) + 1;
 
     while ($db->next_record()) {
-      $invoiceItem = new invoiceItem;
+      $invoiceItem = new invoiceItem();
       $invoiceItem->read_db_record($db);
 
       $num = page::money($currency,$invoiceItem->get_value("iiAmount"),"%mo");
@@ -217,7 +217,7 @@ class invoice extends db_entity {
     $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
     $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
   
-    $db = new db_alloc;
+    $db = new db_alloc();
 
     // Get client name
     $client = $this->get_foreign_object("client");
@@ -365,7 +365,7 @@ class invoice extends db_entity {
 
   function get_url() {
     global $sess;
-    $sess or $sess = new session;
+    $sess or $sess = new session();
 
     $url = "invoice/invoice.php?invoiceID=".$this->get_id();
 
@@ -489,7 +489,7 @@ class invoice extends db_entity {
         GROUP BY invoice.invoiceID
         ORDER BY invoiceDateFrom";
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     #$db->query("DROP TABLE IF EXISTS invoice_details");
     $db->query($q1);
 
@@ -515,7 +515,7 @@ class invoice extends db_entity {
 
     while ($row = $db->next_record()) {
       $print = true;
-      $i = new invoice;
+      $i = new invoice();
       $i->read_db_record($db);
       $row["amountPaidApproved"] = page::money($row["currencyTypeID"],$row["amountPaidApproved"],"%mo");
       $row["amountPaidPending"] = page::money($row["currencyTypeID"],$row["amountPaidPending"],"%mo");
@@ -636,7 +636,7 @@ class invoice extends db_entity {
                          WHERE invoiceID=%d"
                       ,$invoiceID));
     $db->next_record();
-    $invoice = new invoice;
+    $invoice = new invoice();
     $invoice->set_id($invoiceID);
     $invoice->select();
     $invoice->set_value("invoiceDateFrom", $db->f("minDate"));
@@ -656,7 +656,7 @@ class invoice extends db_entity {
                   ,$invoiceItemID);
       $db->query($q);
       if (!$db->next_record()) {
-        $invoiceItem = new invoiceItem;
+        $invoiceItem = new invoiceItem();
         $invoiceItem->set_id($invoiceItemID);
         $invoiceItem->select();
         $invoiceItem->close_related_entity();
@@ -744,14 +744,14 @@ class invoice extends db_entity {
       // Add this time sheet to the invoice if the timeSheet hasn't already
       // been added to this invoice
       if (!$db->row()) {
-        $invoiceItem = new invoiceItem;
+        $invoiceItem = new invoiceItem();
         $invoiceItem->add_timeSheet($this->get_id(),$timeSheetID);
       }
     }  
   }
 
   function get_all_parties($projectID="", $clientID="") {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $interestedPartyOptions = array();
 
     if (!$projectID && is_object($this)) {

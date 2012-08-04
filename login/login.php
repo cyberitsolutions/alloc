@@ -40,7 +40,7 @@ if ($sess->Started()) {
 // Else log the user in
 } else if ($_POST["login"]) {
 
-  $person = new person;
+  $person = new person();
   $row = $person->get_valid_login_row($_POST["username"],$_POST["password"]);
 
   if ($row) {
@@ -49,7 +49,7 @@ if ($sess->Started()) {
 
     $q = prepare("UPDATE person SET lastLoginDate = '%s' WHERE personID = %d"
                  ,date("Y-m-d H:i:s"),$row["personID"]);
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
                    
 
@@ -67,7 +67,7 @@ if ($sess->Started()) {
 
 } else if ($_POST["new_pass"]) {
 
-  $db = new db_alloc;
+  $db = new db_alloc();
   $db->query("SELECT * FROM person WHERE emailAddress = '%s'", $_POST["email"]);
 
   if ($db->next_record()) {

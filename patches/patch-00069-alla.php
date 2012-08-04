@@ -8,7 +8,7 @@ $email = str_replace(">","",$email);
 
 $configID = config::get_config_item_id("AllocFromEmailAddress");
 
-$c = new config;
+$c = new config();
 $c->set_id($configID);
 $c->select();
 $c->set_value("value",$email);

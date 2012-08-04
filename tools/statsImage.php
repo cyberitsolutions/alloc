@@ -23,7 +23,7 @@
 
 require_once("../alloc.php");
 
-$stats = new stats;
+$stats = new stats();
 $projects = $stats->project_stats();
 $tasks = $stats->task_stats();
 $comments = $stats->comment_stats();
@@ -35,7 +35,7 @@ $multiplier = $_GET["multiplier"];
 $labels = $_GET["labels"];
 
 
-$db = new db_alloc;
+$db = new db_alloc();
 $start_date = mktime(0, 0, 0, date("m") - 1, date("d"), date("Y"));
 
 $height = 0;

@@ -54,11 +54,11 @@ class stats {
     $date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $days, date("Y")));
 
     $query = "SELECT * FROM project";
-    $db = new db_alloc;
-    $db_sub = new db_alloc;
+    $db = new db_alloc();
+    $db_sub = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {
-      $project = new project;
+      $project = new project();
       $project->read_db_record($db);
       $this->projects["total"]["total"]++;
 
@@ -75,7 +75,7 @@ class stats {
       $query = prepare("SELECT * FROM projectPerson WHERE projectID=%d", $project->get_id());
       $db_sub->query($query);
       while ($db_sub->next_record()) {
-        $projectPerson = new projectPerson;
+        $projectPerson = new projectPerson();
         $projectPerson->read_db_record($db_sub);
         $this->projects["total"][$projectPerson->get_value("personID")]++;
         switch ($project->get_value("projectStatus")) {
@@ -110,7 +110,7 @@ class stats {
   }
 
   function task_stats() {
-    $db = new db_alloc;
+    $db = new db_alloc();
 
     list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
     // Get total amount of current tasks for every person
@@ -181,10 +181,10 @@ class stats {
     $date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $days, date("Y")));
 
     $query = "SELECT * FROM comment";
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {
-      $comment = new comment;
+      $comment = new comment();
       $comment->read_db_record($db);
       $this->comments["total"][$comment->get_value("commentModifiedUser")]++;
       $this->comments["total"]["total"]++;
@@ -227,10 +227,10 @@ class stats {
     $max_search_back = 90;      // maximum number of days to go back when sorting
 
     $query = "SELECT * FROM person ORDER BY username";
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {
-      $person = new person;
+      $person = new person();
       $person->read_db_record($db);
 
       for ($value = 0, $i = 0; $value == 0 && $i < $max_search_back; $i++) {
@@ -264,7 +264,7 @@ class stats {
 
     $num_users = 3;
     for ($i = 0; $i < $num_users && $i < count($this->persons); $i++) {
-      $person = new person;
+      $person = new person();
       $person->set_id($this->persons[$i]["id"]);
       $person->select();
 

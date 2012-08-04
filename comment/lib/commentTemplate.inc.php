@@ -44,7 +44,7 @@ class commentTemplate extends db_entity {
     is_object($current_user) and $swap["cu"] = person::get_fullname($current_user->get_id());
 
     if ($entity == "timeSheet" && $entityID) {
-      $timeSheet = new timeSheet;
+      $timeSheet = new timeSheet();
       $timeSheet->set_id($entityID);
       $timeSheet->select();
 
@@ -95,7 +95,7 @@ class commentTemplate extends db_entity {
     }
 
     if ($entity == "task" && $entityID) {
-      $task = new task;
+      $task = new task();
       $task->set_id($entityID);
       $task->select();
       $swap["ti"] = $task->get_id();
@@ -118,7 +118,7 @@ class commentTemplate extends db_entity {
     }
 
     if (($entity == "project" && $entityID) || $projectID) {
-      $project = new project;
+      $project = new project();
       if($projectID) {
         $project->set_id($projectID);
       } else {
@@ -131,7 +131,7 @@ class commentTemplate extends db_entity {
     }
 
     if (($entity == "client" && $entityID) || $clientID) {
-      $client = new client;
+      $client = new client();
       if($clientID) {
         $client->set_id($clientID);
       } else {

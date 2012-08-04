@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 $current_user = &singleton("current_user");
-$db = new db_alloc;
+$db = new db_alloc();
 $invoiceRepeat = new invoiceRepeat($_REQUEST["invoiceRepeatID"]);
 
 if ($_POST["save"]) {

@@ -26,7 +26,7 @@ class announcements_home_item extends home_item {
   }
 
   function visible() {
-    $announcement = new announcement;
+    $announcement = new announcement();
     return $announcement->has_announcements();
   }
 
@@ -42,10 +42,10 @@ class announcements_home_item extends home_item {
                 FROM announcement 
                WHERE displayFromDate <= CURDATE() AND displayToDate >= CURDATE()
             ORDER BY displayFromDate desc";
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {
-      $announcement = new announcement;
+      $announcement = new announcement();
       $announcement->read_db_record($db);
       $announcement->set_tpl_values();
       $person = $announcement->get_foreign_object("person");

@@ -36,9 +36,9 @@ function show_items($template_name) {
 
   $today = date("Y")."-".date("m")."-".date("d");
 
-  $dbUsername = new db_alloc;
-  $db = new db_alloc;
-  $db2 = new db_alloc;
+  $dbUsername = new db_alloc();
+  $db = new db_alloc();
+  $db2 = new db_alloc();
 
   $db->query("select * from item order by itemName");
 
@@ -47,12 +47,12 @@ function show_items($template_name) {
     $i++;
 
 
-    $item = new item;
+    $item = new item();
     $item->read_db_record($db);
 
     $db2->query("select * from loan where itemID=".$item->get_id()." and dateReturned='0000-00-00'");
     $db2->next_record();
-    $loan = new loan;
+    $loan = new loan();
     $loan->read_db_record($db2);
 
     $item->set_values();    // you need to have this repeated here for the a href bit below.

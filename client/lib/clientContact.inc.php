@@ -227,10 +227,10 @@ class clientContact extends db_entity {
                  ".$filter." 
         GROUP BY clientContact.clientContactID 
         ORDER BY clientContactName,clientContact.primaryContact asc";
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     while ($row = $db->next_record()) {
-      $c = new client;
+      $c = new client();
       $c->read_db_record($db);
       $row["clientLink"] = $c->get_client_link($_FORM);
       $row["clientContactEmail"] and $row["clientContactEmail"] = "<a href=\"mailto:".page::htmlentities($row["clientContactName"]." <".$row["clientContactEmail"].">")."\">".page::htmlentities($row["clientContactEmail"])."</a>";

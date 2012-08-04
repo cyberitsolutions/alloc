@@ -24,8 +24,8 @@ require_once("../alloc.php");
 
 $current_user->check_employee();
 
-$transactionRepeat = new transactionRepeat;
-$db = new db_alloc;
+$transactionRepeat = new transactionRepeat();
+$db = new db_alloc();
 
 global $TPL;
 global $transactionRepeatID;
@@ -122,12 +122,12 @@ if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
 }
 
 //special case for disabled TF. Include it in the list, but also add a warning message.
-$tf = new tf;
+$tf = new tf();
 $tf->set_id($transactionRepeat->get_value("tfID"));
 if ($tf->select() && !$tf->get_value("tfActive")) {
   $TPL["message_help"][] = "This expense is allocated to an inactive TF. It will not create transactions.";
 }
-$tf = new tf;
+$tf = new tf();
 $tf->set_id($transactionRepeat->get_value("fromTfID"));
 if ($tf->select() && !$tf->get_value("tfActive")) {
   $TPL["message_help"][] = "This expense is sourced from an inactive TF. It will not create transactions.";

@@ -103,7 +103,7 @@ class db_entity {
       return $permission_cache[$record_cache_key];
     }
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("SELECT * 
                         FROM permission 
                         WHERE (tableName = '%s')
@@ -499,7 +499,7 @@ class db_entity {
     }
     $foreign_objects = array();
     $query = prepare("SELECT * FROM %s WHERE %s = %d",$class_name,$key_name,$this->get_id());
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {
       $o = new $class_name;
@@ -656,7 +656,7 @@ class db_entity {
       $q.= " ORDER BY ".db_esc($value);
     }
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     $rows = array();
     while($row = $db->row()) {

@@ -33,7 +33,7 @@ $configType = $_POST["configType"] or $configType = $_GET["configType"] or $conf
 $TPL["configType"] = $configType;
 
 if ($configName) {
-  $config = new config;
+  $config = new config();
   $id = $config->get_config_item_id($configName);
   $config->set_id($id);  
   $config->select();  

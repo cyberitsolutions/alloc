@@ -41,7 +41,7 @@ class config extends db_entity {
   }
 
   function get_config_item_id($name='') {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query(prepare("SELECT configID FROM config WHERE name = '%s'",$name));
     $db->next_record();
     return $db->f('configID');

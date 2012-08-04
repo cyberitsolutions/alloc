@@ -25,7 +25,7 @@ require_once("../alloc.php");
 function show_person_list($template) {
   global $TPL;
   global $tf;
-  $db = new db_alloc;
+  $db = new db_alloc();
   $TPL["person_buttons"] = '
         <button type="submit" name="person_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         <button type="submit" name="person_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>';
@@ -36,7 +36,7 @@ function show_person_list($template) {
     $query = prepare("SELECT * from tfPerson WHERE tfID=%d", $tfID);
     $db->query($query);
     while ($db->next_record()) {
-      $tfPerson = new tfPerson;
+      $tfPerson = new tfPerson();
       $tfPerson->read_db_record($db);
       $tfPerson->set_values("person_");
       $person = $tfPerson->get_foreign_object("person");
@@ -51,7 +51,7 @@ function show_new_person($template) {
   $TPL["person_buttons"] = '
         <button type="submit" name="person_save" value="1" class="save_button">Add<i class="icon-plus-sign"></i></button>';
 
-  $tfPerson = new tfPerson;
+  $tfPerson = new tfPerson();
   $tfPerson->set_values("person_");
   include_template($template);
 }
@@ -61,8 +61,8 @@ function show_person_options() {
   echo page::select_options(person::get_username_list($TPL["person_personID"]), $TPL["person_personID"]);
 }
 
-$db = new db_alloc;
-$tf = new tf;
+$db = new db_alloc();
+$tf = new tf();
 
 $tfID = $_GET["tfID"] or $tfID = $_POST["tfID"];
 if ($tfID) {
@@ -86,7 +86,7 @@ if ($_POST["save"]) {
   } else {
 
     if (!$tf->get_id()) {
-      $db = new db_alloc;
+      $db = new db_alloc();
       $q = prepare("SELECT count(*) AS tally FROM tf WHERE tfName = '%s'",$tf->get_value("tfName"));
       $db->query($q);
       $db->next_record();
@@ -115,7 +115,7 @@ if ($_POST["save"]) {
 
 if ($_POST["person_save"] || $_POST["person_delete"]) {
 
-  $tfPerson = new tfPerson;
+  $tfPerson = new tfPerson();
   $tfPerson->read_globals();
   $tfPerson->read_globals("person_");
   if (!$_POST["person_personID"]) {

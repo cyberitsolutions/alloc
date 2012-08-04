@@ -24,7 +24,7 @@
 require_once("../alloc.php");
 
 // create an object to hold an announcement
-$announcement = new announcement;
+$announcement = new announcement();
 
 // load the announcement from the database
 $announcementID = $_POST["announcementID"] or $announcementID = $_GET["announcementID"];

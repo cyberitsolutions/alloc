@@ -236,7 +236,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // Add user's navigation to quick list dropdown
   if (is_object($current_user) && $current_user->get_id()) {
-    $history = new history;
+    $history = new history();
     $history->save_history();
     $TPL["current_user"] = &$current_user;
   }

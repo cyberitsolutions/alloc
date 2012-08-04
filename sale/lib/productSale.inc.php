@@ -64,14 +64,14 @@ class productSale extends db_entity {
   } 
 
   function delete() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("SELECT * 
                         FROM productSaleItem 
                        WHERE productSaleID = %d"
                     , $this->get_id());
     $db->query($query);
     while ($db->next_record()) {
-      $productSaleItem = new productSaleItem;
+      $productSaleItem = new productSaleItem();
       $productSaleItem->read_db_record($db);
       $productSaleItem->delete();
     }
@@ -131,7 +131,7 @@ class productSale extends db_entity {
     $rtn = array();
   
     foreach ($rows as $row) {
-      $productSaleItem = new productSaleItem;
+      $productSaleItem = new productSaleItem();
       $productSaleItem->read_row_record($row);
       //$rtn["total_spent"] += $productSaleItem->get_amount_spent();
       //$rtn["total_earnt"] += $productSaleItem->get_amount_earnt();
@@ -169,7 +169,7 @@ class productSale extends db_entity {
     $rows or $rows = array();
   
     foreach ($rows as $row) {
-      $productSaleItem = new productSaleItem;
+      $productSaleItem = new productSaleItem();
       $productSaleItem->read_row_record($row);
       $productSaleItem->create_transactions();
     }
@@ -180,7 +180,7 @@ class productSale extends db_entity {
     $rows or $rows = array();
   
     foreach ($rows as $row) {
-      $productSaleItem = new productSaleItem;
+      $productSaleItem = new productSaleItem();
       $productSaleItem->read_row_record($row);
       $productSaleItem->delete_transactions();
     }
@@ -498,7 +498,7 @@ class productSale extends db_entity {
   }
 
   function get_all_parties($projectID="") {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $interestedPartyOptions = array();
 
     if (!$projectID && is_object($this)) {
@@ -516,13 +516,13 @@ class productSale extends db_entity {
 
     if (is_object($this)) {
       if ($this->get_value("personID")) {
-        $p = new person;
+        $p = new person();
         $p->set_id($this->get_value("personID"));
         $p->select();
         $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "selected"=>true, "personID"=>$this->get_value("personID"));
       }
       if ($this->get_value("productSaleCreatedUser")) {
-        $p = new person;
+        $p = new person();
         $p->set_id($this->get_value("productSaleCreatedUser"));
         $p->select();
         $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "selected"=>true, "personID"=>$this->get_value("productSaleCreatedUser"));
@@ -588,7 +588,7 @@ class productSale extends db_entity {
       $rtn["show_userID_options"] = page::select_options(person::get_username_list(), $_FORM["personID"]);
       
     } else {
-      $person = new person;
+      $person = new person();
       $person->set_id($current_user->get_id());
       $person->select();
       $person_array = array($current_user->get_id()=>$person->get_name());

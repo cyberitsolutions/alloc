@@ -45,7 +45,7 @@ class timeSheetItem extends db_entity {
 
   function save() {
     $current_user = &singleton("current_user");
-    $timeSheet = new timeSheet;
+    $timeSheet = new timeSheet();
     $timeSheet->set_id($this->get_value("timeSheetID"));
     $timeSheet->select();
 
@@ -91,7 +91,7 @@ class timeSheetItem extends db_entity {
     $db->query($q);
     $row = $db->row();
     if ($row) {
-      $ii = new invoiceItem;
+      $ii = new invoiceItem();
       $ii->set_id($row["invoiceItemID"]);
       $ii->select();
       $ii->add_timeSheet($row["invoiceID"],$this->get_value("timeSheetID"));  // will update the existing invoice item
@@ -146,7 +146,7 @@ class timeSheetItem extends db_entity {
     $db->query($q);
     $row = $db->row();
     if ($row) {
-      $ii = new invoiceItem;
+      $ii = new invoiceItem();
       $ii->set_id($row["invoiceItemID"]);
       $ii->select();
       $ii->add_timeSheet($row["invoiceID"],$timeSheetID);  // will update the existing invoice item
@@ -175,7 +175,7 @@ class timeSheetItem extends db_entity {
                 GROUP BY dateTimeSheetItem,personID
                  ",$dateTimeSheetItem);
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     while ($db->next_record()) {
       
@@ -209,7 +209,7 @@ class timeSheetItem extends db_entity {
 
   function is_owner() {
     if ($this->get_value("timeSheetID")) {
-      $timeSheet = new timeSheet;
+      $timeSheet = new timeSheet();
       $timeSheet->set_id($this->get_value("timeSheetID"));
       $timeSheet->select();
       return $timeSheet->is_owner();
@@ -286,7 +286,7 @@ class timeSheetItem extends db_entity {
                  ".$filter."
         ORDER BY timeSheet.timeSheetID,dateTimeSheetItem asc";
     $debug and print "Query: ".$q;
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     while ($row = $db->next_record()) {
       $print = true;
@@ -354,7 +354,7 @@ class timeSheetItem extends db_entity {
                 GROUP BY personID
                  ", $dateTimeSheetItem);
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     $rows = array();
     while ($db->next_record()) {
@@ -415,7 +415,7 @@ class timeSheetItem extends db_entity {
                     ORDER BY dateTimeSheetItem,timeSheetItemID
                      ");
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($row = $db->row()) {
       $rows[] = $row;

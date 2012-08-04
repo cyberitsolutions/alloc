@@ -27,7 +27,7 @@ class taskListPrint {
   function get_printable_file($_FORM=array()) {
     global $TPL;
   
-    $db = new db_alloc;
+    $db = new db_alloc();
 
     $TPL["companyName"] = config::get_config_item("companyName");
     $TPL["companyNos1"] = config::get_config_item("companyACN");

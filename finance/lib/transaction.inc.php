@@ -141,11 +141,11 @@ class transaction extends db_entity {
       return $productSaleItem->is_owner();
     }
 
-    $toTf = new tf;
+    $toTf = new tf();
     $toTf->set_id($this->get_value('tfID'));
     $toTf->select();
 
-    $fromTf = new tf;
+    $fromTf = new tf();
     $fromTf->set_id($this->get_value('fromTfID'));
     $fromTf->select();
 
@@ -171,7 +171,7 @@ class transaction extends db_entity {
 
   function get_url() {
     global $sess;
-    $sess or $sess = new session;
+    $sess or $sess = new session();
 
     $url = "finance/transaction.php?transactionID=".$this->get_id();
 
@@ -227,12 +227,12 @@ class transaction extends db_entity {
     // Had to rewrite this so that people who had transactions on other peoples timesheets 
     // could see their own transactions, but not the other persons timesheet.
     } else if ($type == "timesheet" && $this->get_value("timeSheetID")) {
-      $timeSheet = new timeSheet;
+      $timeSheet = new timeSheet();
       $timeSheet->set_id($this->get_value("timeSheetID"));
       $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." ".$this->get_value("timeSheetID")."</a>";
 
     } else if (($type == "insurance" || $type == "commission" || $type == "tax") && $this->get_value("timeSheetID")) {
-      $timeSheet = new timeSheet;
+      $timeSheet = new timeSheet();
       $timeSheet->set_id($this->get_value("timeSheetID"));
       $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." (Time Sheet ".$this->get_value("timeSheetID").")</a>";
 
@@ -344,7 +344,7 @@ class transaction extends db_entity {
                  LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                     ".$filter2, $_FORM['tfIDs']);
       $debug and print "\n<br>QUERY: ".$q;
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->query($q);
       $db->row();
       $_FORM["opening_balance"] = $db->f("balance");
@@ -365,13 +365,13 @@ class transaction extends db_entity {
          ".$order_by;
 
     $debug and print "\n<br>QUERY2: ".$q;
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     $for_cyber = config::for_cyber();
     while ($row = $db->next_record()) {
       #echo "<pre>".print_r($row,1)."</pre>";
       $i++;
-      $t = new transaction;
+      $t = new transaction();
       if (!$t->read_db_record($db))
         continue;
 
@@ -568,7 +568,7 @@ class transaction extends db_entity {
       $rtn["checked_transactionDate"] = " checked";
     }
 
-    $tf = new tf;
+    $tf = new tf();
     $options = $tf->get_assoc_array("tfID","tfName");
     $rtn["tfOptions"] = page::select_options($options, $_FORM["tfID"]);
     $rtn["fromTfOptions"] = page::select_options($options, $_FORM["fromTfID"]);

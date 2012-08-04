@@ -23,12 +23,12 @@
 define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
-$db = new db_alloc;
+$db = new db_alloc();
 
 $product = $_GET["product"];
 $quantity = $_GET["quantity"];
 
-$p= new product;
+$p= new product();
 $p->set_id($product);
 $p->select();
 $p->set_tpl_values();

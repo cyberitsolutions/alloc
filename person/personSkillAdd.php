@@ -27,7 +27,7 @@ require_once("../alloc.php");
 // add new skill to database
 if ($_POST["add_skill"]) {
   $failed = FALSE;
-  $skill = new skill;
+  $skill = new skill();
   if ($_POST["new_skill_class"] != "") {
     $skill->set_value('skillClass', $_POST["new_skill_class"]);
   } else if ($_POST["other_new_skill_class"] != "") {
@@ -47,7 +47,7 @@ if ($_POST["add_skill"]) {
   } 
 } 
 if ($_POST["delete_skill"]) {
-  $skill = new skill;
+  $skill = new skill();
   if ($_POST["new_skill_name"] != "") {
     $skill->set_id($_POST["new_skill_name"]);
     $skill->delete();

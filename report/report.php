@@ -246,7 +246,7 @@ if ($_POST["do_step_3"]) {
   $final_query = $query["start"].$query["select"].$query["from"].$query["join"].$query["where"].$query["group"];
 
   if ($query["select"]) {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($final_query);
 
     $fields = explode(",", $query["select"]);
@@ -287,7 +287,7 @@ if ($_POST["do_step_3"]) {
       foreach($fields as $k=>$field) {
         $field = end(explode(".", $field));
         if (stripos("ModifiedUser", $field) !== FALSE || stripos("personID", $field) !== FALSE) {
-          $person = new person;
+          $person = new person();
           $person->set_id($db->f($field));
           $person->select();
           

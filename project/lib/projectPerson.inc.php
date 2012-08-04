@@ -46,7 +46,7 @@ class projectPerson extends db_entity {
     if (!$this->get_id()) {
       return true;
     } else {
-      $project = new project;
+      $project = new project();
       $project->set_id($this->get_value("projectID"));
       $project->select();
       return $project->is_owner($person);
@@ -57,7 +57,7 @@ class projectPerson extends db_entity {
   // This is a wrapper to simplify inserts into the projectPerson table using the new
   // Role methodology.. role handle is canEditTasks, or isManager atm
   function set_value_role($roleHandle) {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query(prepare("SELECT * FROM role WHERE roleHandle = '%s' AND roleLevel = 'project'",$roleHandle));
     $db->next_record();
     $this->set_value("roleID",$db->f("roleID"));
@@ -81,7 +81,7 @@ class projectPerson extends db_entity {
     // person.defaultTimeSheetRate
     // config.name == defaultTimeSheetRate
 
-    $project = new Project;
+    $project = new Project();
     $project->set_id($projectID);
     $project->select();
 

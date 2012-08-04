@@ -50,7 +50,7 @@ $id = $db->query($q);
 while ($row = $db->row($id)) {
 
   if ($row["currentUser"]) {
-    $current_user = new person;
+    $current_user = new person();
     $current_user->load_current_user($row["currentUser"]);
     singleton("current_user",$current_user);
   } 

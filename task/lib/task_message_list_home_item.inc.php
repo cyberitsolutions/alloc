@@ -48,11 +48,11 @@ class task_message_list_home_item extends home_item {
                   ORDER BY priority
                  ",$current_user->get_id());
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
 
     while ($db->next_record()) {
-      $task = new task;
+      $task = new task();
       $task->read_db_record($db);
       echo $br.$task->get_task_image().$task->get_task_link(array("return"=>"html"));
       $br = "<br>";

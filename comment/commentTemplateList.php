@@ -26,11 +26,11 @@ function show_commentTemplate($template_name) {
   global $TPL;
   
 // Run query and loop through the records
-  $db = new db_alloc;
+  $db = new db_alloc();
   $query = "SELECT * FROM commentTemplate ORDER BY commentTemplateType, commentTemplateName";
   $db->query($query);
   while ($db->next_record()) {
-    $commentTemplate = new commentTemplate;
+    $commentTemplate = new commentTemplate();
     $commentTemplate->read_db_record($db);
     $commentTemplate->set_values();
     $TPL["odd_even"] = $TPL["odd_even"] == "even" ? "odd" : "even";

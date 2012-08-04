@@ -46,10 +46,10 @@ require_once("../alloc.php");
   function show_absence_forms($template) {
     global $personID;
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("SELECT * FROM absence WHERE personID=%d", $personID);
     $db->query($query);
-    $absence = new absence;
+    $absence = new absence();
     while ($db->next_record()) {
       $absence->read_db_record($db);
       $absence->set_values("absence_");
@@ -91,7 +91,7 @@ require_once("../alloc.php");
     $proficiencys = array("Novice"=>"Novice", "Junior"=>"Junior", "Intermediate"=>"Intermediate", "Advanced"=>"Advanced", "Senior"=>"Senior");
 
     # step through the list of skills ordered by skillclass
-    $db = new db_alloc;
+    $db = new db_alloc();
     // $query = "SELECT * FROM skill ORDER BY skillClass,skillName";
     $query = "SELECT * FROM skill LEFT JOIN proficiency ON skill.skillID=proficiency.skillID";
     $query.= prepare(" WHERE proficiency.personID=%d", $personID);
@@ -99,11 +99,11 @@ require_once("../alloc.php");
     $db->query($query);
     $currSkillClass = null;
     while ($db->next_record()) {
-      $skill = new skill;
+      $skill = new skill();
       $skill->read_db_record($db);
       $skill->set_tpl_values();
 
-      $skillProficiencys = new proficiency;
+      $skillProficiencys = new proficiency();
       $skillProficiencys->read_db_record($db);
       $skillProficiencys->set_values();
 
@@ -128,19 +128,19 @@ require_once("../alloc.php");
     global $personID;
     global $skills;
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("SELECT * FROM proficiency WHERE personID=%d", $personID);
     $db->query($query);
     $skills_got = array();
     while ($db->next_record()) {
-      $skill = new skill;
+      $skill = new skill();
       $skill->read_db_record($db);
       array_push($skills_got, $skill->get_id());
     }
     $query = "SELECT * FROM skill ORDER BY skillClass";
     $db->query($query);
     while ($db->next_record()) {
-      $skill = new skill;
+      $skill = new skill();
       $skill->read_db_record($db);
       if (in_array($skill->get_id(), $skills_got)) {
         // dont show this item
@@ -166,7 +166,7 @@ require_once("../alloc.php");
   }
 
 $skill_header = false;
-$person = new person;
+$person = new person();
 
 $personID = $_POST["personID"] or $personID = $_GET["personID"];
 
@@ -177,7 +177,7 @@ if ($personID) {
     
 
 if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $_POST["personExpertiseItem_delete"]) {
-  $proficiency = new proficiency;
+  $proficiency = new proficiency();
   $proficiency->read_globals();
 
 
@@ -190,13 +190,13 @@ if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $
       // skillID is an array if when adding but not when saving or deleting
       $skillProficiency = $proficiency->get_value('skillProficiency');
       for ($i = 0; $i < count($_POST["skillID"]); $i++) {
-        $proficiency = new proficiency;
+        $proficiency = new proficiency();
 
         $proficiency->set_value('skillID', $_POST["skillID"][$i]);
         $proficiency->set_value('skillProficiency', $_POST["skillProficiency"]);
         $proficiency->set_value('personID', $personID);
 
-        $db = new db_alloc;
+        $db = new db_alloc();
         $query = prepare("SELECT * FROM proficiency WHERE personID = %d", $personID);
         $query.= prepare(" AND skillID = %d", $_POST["skillID"][$i]);
         $db->query($query);
@@ -266,7 +266,7 @@ if ($_POST["save"]) {
   alloc_redirect($TPL["url_alloc_personList"]);
 }
 
-#$person = new person;
+#$person = new person();
 #$person->set_id($personID);
 #$person->select();
 $person->set_values("person_");
@@ -280,7 +280,7 @@ if ($person->get_id()) {
                 ,$person->get_id(),$person->get_value("preferred_tfID"));
   $TPL["preferred_tfID_options"] = page::select_options($q, $person->get_value("preferred_tfID"));
 
-  $tf = new tf;
+  $tf = new tf();
   $tf->set_id($person->get_value("preferred_tfID"));
   $tf->select();
 }
@@ -288,7 +288,7 @@ if ($person->get_id()) {
 $TPL["absence_url"] = $TPL["url_alloc_absence"]."personID=".$personID;
 $TPL["personActive"] = (!$person->get_id() || $person->get_value("personActive")) ? " checked" : "";
 
-$timeUnit = new timeUnit;
+$timeUnit = new timeUnit();
 $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
 $TPL["timeSheetRateUnit_select"] = page::select_options($rate_type_array, $person->get_value("defaultTimeSheetRateUnitID"));
 $TPL["timeSheetRateUnit_label"] = $rate_type_array[$person->get_value("defaultTimeSheetRateUnitID")];

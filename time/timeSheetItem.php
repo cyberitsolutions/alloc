@@ -31,12 +31,12 @@ $timeSheetItemID = $_POST["timeSheetItem_timeSheetItemID"];
 
 if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["timeSheetItem_delete"]) && $timeSheetID) {
 
-  $timeSheet = new timeSheet;
+  $timeSheet = new timeSheet();
   $timeSheet->set_id($timeSheetID);
   $timeSheet->select();
   $timeSheet->load_pay_info();
 
-  $timeSheetItem = new timeSheetItem;
+  $timeSheetItem = new timeSheetItem();
   if ($timeSheetItemID) {
     $timeSheetItem->set_id($timeSheetItemID);
     $timeSheetItem->select();

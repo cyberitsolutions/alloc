@@ -433,7 +433,7 @@ class email_receive {
 
   function archive($mailbox=null) {
     $keys = $this->get_hashes();
-    $token = new token;
+    $token = new token();
     if ($keys && is_array($keys) && $token->set_hash($keys[0])) {
       if ($token->get_value("tokenEntity") == "comment") {
         $db = new db_alloc();
@@ -681,7 +681,7 @@ class email_receive {
     // if the email has a different encoding, change it to the DB connection encoding so mysql doesn't choke
     $enc = $this->get_charset();
     if ($enc) {
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->connect();
       $body = mb_convert_encoding($body, $db->get_encoding(), $enc);
     }

@@ -7,7 +7,7 @@ $db = new db_alloc();
 $q = prepare("SELECT * FROM comment");
 $db->query($q);
 while ($db->row()) {
-  $comment = new comment;
+  $comment = new comment();
   $comment->read_db_record($db);
   $comment->update_search_index_doc($index);
 }

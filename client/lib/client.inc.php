@@ -49,18 +49,18 @@ class client extends db_entity {
 
   function delete() {
     // delete all contacts and comments linked with this client as well
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("SELECT * FROM clientContact WHERE clientID=%d", $this->get_id());
     $db->query($query);
     while ($db->next_record()) {
-      $clientContact = new clientContact;
+      $clientContact = new clientContact();
       $clientContact->read_db_record($db);
       $clientContact->delete();
     }
     $query = prepare("SELECT * FROM comment WHERE commentType = 'client' and commentLinkID=%d", $this->get_id());
     $db->query($query);
     while ($db->next_record()) {
-      $comment = new comment;
+      $comment = new comment();
       $comment->read_db_record($db);
       $comment->delete();
     }
@@ -84,7 +84,7 @@ class client extends db_entity {
 
   function get_client_select($clientStatus="", $clientID="") {
     global $TPL;
-    $db = new db_alloc;
+    $db = new db_alloc();
     if ($clientStatus) {
       $q = prepare("SELECT clientID as value, clientName as label 
                       FROM client 
@@ -103,7 +103,7 @@ class client extends db_entity {
  
   function get_client_contact_select($clientID="",$clientContactID="") {
     $clientID or $clientID = $_GET["clientID"];
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = prepare("SELECT clientContactName as label, clientContactID as value FROM clientContact WHERE clientID = %d",$clientID);
     $options = page::select_options($q,$clientContactID,100);
     return "<select id=\"clientContactID\" name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
@@ -202,12 +202,12 @@ class client extends db_entity {
         GROUP BY client.clientID 
         ORDER BY clientName,clientContact.primaryContact asc";
     $debug and print "Query: ".$q;
-    $db = new db_alloc;
-    $db2 = new db_alloc;
+    $db = new db_alloc();
+    $db2 = new db_alloc();
     $db->query($q);
     while ($row = $db->next_record()) {
       $print = true;
-      $c = new client;
+      $c = new client();
       $c->read_db_record($db);
       $row["clientCategoryLabel"] = $clientCategories[$c->get_value("clientCategory")];
       $row["clientLink"] = $c->get_client_link($_FORM);
@@ -260,7 +260,7 @@ class client extends db_entity {
   function load_client_filter($_FORM) {
     global $TPL;
 
-    $db = new db_alloc;
+    $db = new db_alloc();
 
     // Load up the forms action url
     $rtn["url_form_action"] = $_FORM["url_form_action"];
@@ -328,14 +328,14 @@ class client extends db_entity {
     // client, then the project dropdown dynamically updates 
     global $TPL;
 
-    $project = new project;
+    $project = new project();
     $project->set_id($projectID);
     $project->select();
     if (!$clientID) {
       $clientID = $project->get_value("clientID");
     }
 
-    $client = new client;
+    $client = new client();
     $client->set_id($clientID);
     $client->select();
 
@@ -448,7 +448,7 @@ class client extends db_entity {
       // Create a map link, probably for google maps
       // a street address and postcode works reasonably well
       if ($map_link && !empty($f1) && !empty($f4)) {
-        $cfg = new config;
+        $cfg = new config();
         $map_base = $cfg->get_config_item('mapURL');
         $address = str_replace("%ad", urlencode($f1 . ", " . $f4), $map_base);
         $str .= '<br><br><a href="' . $address . '">View map</a>';

@@ -42,7 +42,7 @@ class page {
 
     include_template(ALLOC_MOD_DIR."shared/templates/footerS.tpl");
     // close page
-    $sess = new session;
+    $sess = new session();
     $sess->Save();
     if (is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
       $current_user->store_prefs();
@@ -81,7 +81,7 @@ class page {
     global $TPL;
     $current_user = &singleton("current_user");
     global $modules;
-    $db = new db_alloc; 
+    $db = new db_alloc(); 
     $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."\">New Task</option>";
     if (isset($modules["time"]) && $modules["time"]) {
       $str[] = "<option value=\"create_".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
@@ -103,7 +103,7 @@ class page {
     }
     $str[] = "<option value=\"create_".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
     $str[] = "<option value=\"\" disabled=\"disabled\">--------------------";
-    $history = new history;
+    $history = new history();
     $q = $history->get_history_query("DESC");
     $db = new db_alloc();
     $db->query($q);
@@ -123,7 +123,7 @@ class page {
     $str = "<a href=\"".$TPL["url_alloc_starList"]."\" class=\"icon-star\"></a>&nbsp;&nbsp;&nbsp;";
     $str.= $current_user->get_link()."&nbsp;&nbsp;&nbsp;";
     if (defined("PAGE_IS_PRINTABLE") && PAGE_IS_PRINTABLE) {
-      $sess or $sess = new session;
+      $sess or $sess = new session();
       $str.= "<a href=\"".$sess->url($_SERVER["REQUEST_URI"])."media=print\">Print</a>&nbsp;&nbsp;&nbsp;";
     }
     if (have_entity_perm("config", PERM_UPDATE, $current_user, true)) {
@@ -253,7 +253,7 @@ EOD;
 
     // Build options from an SQL query: "SELECT col_a as value, col_b as label FROM"
     if (is_string($options)) {
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->query($options);
       while ($row = $db->row()) {
         $rows[$row["value"]] = $row["label"];

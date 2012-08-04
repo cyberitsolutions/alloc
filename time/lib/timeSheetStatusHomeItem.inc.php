@@ -37,7 +37,7 @@ class timeSheetStatusHomeItem extends home_item {
     $current_user = &singleton("current_user");
     global $TPL;
     // Get averages for hours worked over the past fortnight and year
-    $t = new timeSheetItem;
+    $t = new timeSheetItem();
     $day = 60*60*24;
     //mktime(0,0,0,date("m"),date("d")-1, date("Y"))
     $today = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-1, date("Y")));

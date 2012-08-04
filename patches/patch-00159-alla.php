@@ -7,7 +7,7 @@ $db = new db_alloc();
 $q = prepare("SELECT * FROM item");
 $db->query($q);
 while ($db->row()) {
-  $item = new item;
+  $item = new item();
   $item->read_db_record($db);
   $item->update_search_index_doc($index);
 }

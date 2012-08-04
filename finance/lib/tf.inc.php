@@ -44,7 +44,7 @@ class tf extends db_entity {
     }
 
     // Get belance
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance 
                         FROM transaction 
                    LEFT JOIN currencyType ON transaction.currencyTypeID = currencyType.currencyTypeID
@@ -88,7 +88,7 @@ class tf extends db_entity {
 
   function get_tfs_for_person($personID) {
     $query = prepare("SELECT * FROM tfPerson WHERE personID=%d",$personID);
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($row = $db->row()) {
       $owners[] = $row["tfID"];
@@ -127,7 +127,7 @@ class tf extends db_entity {
 
   function get_name($tfID=false) {
     if ($tfID) {
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->query(prepare("SELECT tfName FROM tf WHERE tfID=%d",$tfID));
       $db->next_record();
       return $db->f("tfName");
@@ -136,7 +136,7 @@ class tf extends db_entity {
 
   function get_tfID($name="") {
     if ($name) {
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->query(prepare("SELECT tfID FROM tf WHERE tfName='%s'",$name));
       $db->next_record();
       return $db->f("tfID");
@@ -197,7 +197,7 @@ class tf extends db_entity {
       $f2 = " AND ".implode(" AND ",$filter2);
     }
   
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = prepare("SELECT transaction.tfID as id, tf.tfName, transactionID, transaction.status,
                          sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
                     FROM transaction
@@ -242,7 +242,7 @@ class tf extends db_entity {
 
     $db->query($q);
     while ($row = $db->row()) {
-      $tf = new tf;
+      $tf = new tf();
       $tf->read_db_record($db);
       $tf->set_values();
 

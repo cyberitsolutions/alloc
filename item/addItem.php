@@ -26,10 +26,10 @@ $current_user->check_employee();
 
 global $TPL;
 
-$item = new item;
+$item = new item();
 
 if ($_POST["save"]) {
-  $item = new item;
+  $item = new item();
   $item->read_globals();
   $item->save();
 }
@@ -38,7 +38,7 @@ if ($_POST["import_from_file"]) {
   if (is_uploaded_file($_FILES["import_file"]["tmp_name"])) {
     $new_items = file($_FILES["import_file"]["tmp_name"]);
     for ($i = 1; $i < count($new_items); $i++) {
-      $item = new item;
+      $item = new item();
       $item->read_globals();
       $line = str_replace("\"", "", $new_items[$i]);
       $entry = explode("\t", $line);
@@ -55,7 +55,7 @@ if ($_POST["import_from_file"]) {
 }
 
 if ($_POST["update_item"]) {
-  $item = new item;
+  $item = new item();
   $item->set_id($_POST["update_itemID"]);
   $item->select();
   $item->set_value("itemName", $_POST["update_itemName"]);
@@ -66,7 +66,7 @@ if ($_POST["update_item"]) {
 
 if ($_POST["remove_items"]) {
   for ($i = 0; $i < count($_POST["itemID"]); $i++) {
-    $item = new item;
+    $item = new item();
     $item->set_id($_POST["itemID"][$i]);
     $item->select();
     $item->delete();
@@ -82,10 +82,10 @@ $TPL["itemTypes"] = page::select_options($itemType->get_assoc_array("itemTypeID"
 
   // setup item list (for removals)
 $item_list = array();
-$db = new db_alloc;
+$db = new db_alloc();
 $db->query("SELECT * FROM item ORDER BY itemName");
 while ($db->next_record()) {
-  $item = new item;
+  $item = new item();
   $item->read_db_record($db);
   $item_list[$item->get_id()] = $item->get_value('itemName');
 }
@@ -93,7 +93,7 @@ while ($db->next_record()) {
 $TPL["item_list"] = page::select_options($item_list, "");
 
 if ($_POST["edit_items"]) {
-  $item = new item;
+  $item = new item();
   $item->set_id($_POST["itemID"][0]);
   $item->select();
 

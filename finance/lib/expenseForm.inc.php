@@ -51,7 +51,7 @@ class expenseForm extends db_entity {
       // Return true if any of the transactions on the expense form are accessible by the current user
       $current_user_tfIDs = $current_user->get_tfIDs();
       $query = prepare("SELECT * FROM transaction WHERE expenseFormID=%d",$this->get_id());
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->query($query);
       while ($db->next_record()) {
         if (is_array($current_user_tfIDs) && (in_array($db->f("tfID"),$current_user_tfIDs) || in_array($db->f("fromTfID"),$current_user_tfIDs))) {
@@ -110,7 +110,7 @@ class expenseForm extends db_entity {
 
     $transactionID and $extra_sql = prepare("AND transactionID = %d",$transactionID);
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     if ($this->is_owner()) {
       $db->query(prepare("DELETE FROM transaction WHERE expenseFormID = %d ".$extra_sql,$this->get_id()));
       $transactionID and $TPL["message_good"][] = "Expense Form Line Item deleted.";
@@ -135,13 +135,13 @@ class expenseForm extends db_entity {
     if ($this->get_value("clientID")) {
       $invoiceID and $extra = prepare(" AND invoiceID = %d",$invoiceID);
       $client = $this->get_foreign_object("client");
-      $db = new db_alloc;
+      $db = new db_alloc();
       $q = prepare("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit' ".$extra,$this->get_value("clientID"));
       $db->query($q);
 
       // Create invoice
       if (!$db->next_record()) {
-        $invoice = new invoice;
+        $invoice = new invoice();
         $invoice->set_value("clientID",$this->get_value("clientID"));
         $invoice->set_value("invoiceDateFrom",$this->get_min_date());
         $invoice->set_value("invoiceDateTo",$this->get_max_date());
@@ -157,7 +157,7 @@ class expenseForm extends db_entity {
       }
 
       // Add invoiceItem and add expense form transactions to invoiceItem
-      $invoiceItem = new invoiceItem;
+      $invoiceItem = new invoiceItem();
       if ($_POST["split_invoice"]) {
         $invoiceItem->add_expenseFormItems($invoiceID,$this->get_id());
       } else {
@@ -184,7 +184,7 @@ class expenseForm extends db_entity {
 
   function get_url() {
     global $sess;
-    $sess or $sess = new session;
+    $sess or $sess = new session();
 
     $url = "finance/expenseForm.php?expenseFormID=".$this->get_id();
 
@@ -228,11 +228,11 @@ class expenseForm extends db_entity {
       $f = " AND ".implode(" AND ",$filter);
     }
 
-    $db = new db_alloc;
-    $dbTwo = new db_alloc;
-    $transDB = new db_alloc;
-    $expenseForm = new expenseForm;
-    $transaction = new transaction;
+    $db = new db_alloc();
+    $dbTwo = new db_alloc();
+    $transDB = new db_alloc();
+    $expenseForm = new expenseForm();
+    $transaction = new transaction();
     $rr_options = expenseForm::get_reimbursementRequired_array();
 
     $q = prepare("SELECT expenseForm.*
@@ -276,13 +276,13 @@ class expenseForm extends db_entity {
     $q = "SELECT * FROM transaction 
               LEFT JOIN transactionRepeat on transactionRepeat.transactionRepeatID = transaction.transactionRepeatID 
                   WHERE transaction.transactionRepeatID IS NOT NULL AND transaction.status = 'pending'";
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
-      $transaction = new transaction;
+      $transaction = new transaction();
       $transaction->read_db_record($db);
       $transaction->set_values();
-      $transactionRepeat = new transactionRepeat;
+      $transactionRepeat = new transactionRepeat();
       $transactionRepeat->read_db_record($db);
       $transactionRepeat->set_values();
       $row["transactionType"] = $transactionTypes[$transaction->get_value("transactionType")];

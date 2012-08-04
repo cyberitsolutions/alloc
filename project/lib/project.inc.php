@@ -70,7 +70,7 @@ class project extends db_entity {
       $q = prepare("SELECT * FROM task WHERE projectID = %d AND SUBSTRING(taskStatus,1,6) != 'closed'",$this->get_id());
       $db->query($q);
       while ($row = $db->row()) {
-        $task = new task;
+        $task = new task();
         $task->read_row_record($row);
         $task->set_value("taskStatus","closed_archived");
         $task->updateSearchIndexLater = true;
@@ -97,7 +97,7 @@ class project extends db_entity {
                     ",$row["taskID"]);
         $id2 = $db->query($q);
         $r = $db->row($id2);
-        $task = new task;
+        $task = new task();
         $task->read_row_record($row);
         $task->set_value("taskStatus",$r["oldValue"]);
         $task->updateSearchIndexLater = true;
@@ -121,7 +121,7 @@ class project extends db_entity {
 
   function get_url() {
     global $sess;
-    $sess or $sess = new session;
+    $sess or $sess = new session();
 
     $url = "project/project.php?projectID=".$this->get_id();
 
@@ -183,7 +183,7 @@ class project extends db_entity {
                       ,$this->get_id(), $person->get_id());
       #echo "<br><br>".$query;
 
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->query($query);
       return $db->next_record();
     }
@@ -206,7 +206,7 @@ class project extends db_entity {
                     FROM projectPerson
                LEFT JOIN role ON projectPerson.roleID = role.roleID 
                    WHERE projectPerson.projectID = %d AND role.roleHandle = '%s'",$this->get_id(),$role);
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     while ($db->next_record()) {
       $rows[] = $db->f("personID");
@@ -357,7 +357,7 @@ class project extends db_entity {
   }
 
   function get_list_dropdown_options($type="mine",$projectIDs=array(), $maxlength=35) {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = project::get_project_type_query($type);
     // Project dropdown
     $db->query($q);
@@ -472,12 +472,12 @@ class project extends db_entity {
     }
 
     $debug and print "Query: ".$q;
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     
     while ($row = $db->next_record()) {
       $print = true;
-      $p = new project;
+      $p = new project();
       $p->read_db_record($db);
       $row["projectName"] = $p->get_name($_FORM);
       $row["projectLink"] = $p->get_project_link($_FORM);
@@ -651,7 +651,7 @@ class project extends db_entity {
   function get_projectID_sql($filter, $table="project") {
     
     if (!$filter["projectID"] && $filter["projectType"] && $filter["projectType"] != "all") {
-      $db = new db_alloc;
+      $db = new db_alloc();
       $q = project::get_project_type_query($filter["projectType"],$filter["current_user"],"current");
       $db->query($q);
       while ($db->next_record()) {

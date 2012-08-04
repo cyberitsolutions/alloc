@@ -33,7 +33,7 @@ function fix_this_comment($r,$num,$from,$messageid) {
     // Try figure out and populate the commentCreatedUser/commentCreatedUserClientContactID fields
     list($from_address,$from_name) = parse_email_address($from);
 
-    $person = new person;
+    $person = new person();
     $personID = $person->find_by_email($from_address);
     $personID or $personID = $person->find_by_name($from_name);
 

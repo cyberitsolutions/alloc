@@ -33,14 +33,14 @@ if (date("D") == "Sat" || date("D") == "Sun") {
 
 // Do announcements ONCE up here.
 $announcement = person::get_announcements_for_email();
-$db = new db_alloc;
+$db = new db_alloc();
 $db->query("SELECT personID,emailAddress,firstName,surname FROM person WHERE personActive = '1'");
 // AND username='alla'"); // or username=\"ashridah\"");
 
 
 while ($db->next_record()) {
 
-  $person = new person;
+  $person = new person();
   $person->read_db_record($db);
   $person->set_id($db->f("personID"));
   $person->load_prefs();

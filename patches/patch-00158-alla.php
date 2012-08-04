@@ -7,7 +7,7 @@ $db = new db_alloc();
 $q = prepare("SELECT * FROM task");
 $db->query($q);
 while ($db->row()) {
-  $task = new task;
+  $task = new task();
   $task->read_db_record($db);
   $task->update_search_index_doc($index);
 }

@@ -115,7 +115,7 @@ class comment extends db_entity {
                      WHERE commentMaster = '%s' AND commentMasterID = %d 
                   ORDER BY commentCreatedTime"
                   ,$commentMaster, $commentMasterID);
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->query($q);
       while ($row = $db->row()) {
         if ($row["commentType"] == "comment") {
@@ -138,7 +138,7 @@ class comment extends db_entity {
     global $TPL;
     $current_user = &singleton("current_user");
     $new = $v;
-    $token = new token;
+    $token = new token();
     if ($token->select_token_by_entity_and_action("comment",$new["commentID"],"add_comment_from_email")) {
       if ($token->get_value("tokenHash")) {
         $new["hash"] = $token->get_value("tokenHash");
@@ -383,7 +383,7 @@ class comment extends db_entity {
     if ($comment["commentCreatedUserText"]) {
       $author = page::htmlentities($comment["commentCreatedUserText"]);
     } else if ($comment["clientContactID"]) {
-      $cc = new clientContact;
+      $cc = new clientContact();
       $cc->set_id($comment["clientContactID"]);
       $cc->select();
       #$author = " <a href=\"".$TPL["url_alloc_client"]."clientID=".$cc->get_value("clientID")."\">".$cc->get_value("clientContactName")."</a>";
@@ -397,17 +397,17 @@ class comment extends db_entity {
   function get_comment_author_email($comment=array()) {
     if ($comment["commentCreatedUser"]) {
       $personID = $comment["commentCreatedUser"];
-      $p = new person;
+      $p = new person();
       $p->set_id($personID);
       $p->select();
       $email = $p->get_from();
     } else if ($comment["clientContactID"]) {
-      $cc = new clientContact;
+      $cc = new clientContact();
       $cc->set_id($comment["clientContactID"]);
       $cc->select();
       $email = $cc->get_value("clientContactEmail");
     } else {
-      $p= new person;
+      $p= new person();
       $p->set_id($comment["personID"]);
       $p->select();
       $email = $p->get_from();
@@ -424,7 +424,7 @@ class comment extends db_entity {
     if (!is_object($current_user) || !$current_user->get_id()) {
       alloc_error("Cannot make token, current_user is not set.",true);
     }
-    $token = new token;
+    $token = new token();
     $token->set_value("tokenEntity","comment");
     $token->set_value("tokenEntityID",$this->get_id());
     $token->set_value("tokenActionID",2);
@@ -443,7 +443,7 @@ class comment extends db_entity {
     $commentID = comment::add_comment($entity->classname,$entity->get_id(),$email_receive->get_converted_encoding());
     $commentID or alloc_error("Unable to create an alloc comment (".$entity->classname.":".$entity->get_id().") from email.");
 
-    $comment = new comment;
+    $comment = new comment();
     $comment->set_id($commentID);
     $comment->select();
     $comment->set_value("commentEmailUID",$email_receive->msg_uid);
@@ -489,7 +489,7 @@ class comment extends db_entity {
 
       // Determine recipients 
       if ($selected_option == "interested") {
-        $db = new db_alloc;
+        $db = new db_alloc();
         if ($entity && $entityID) {
           $q = prepare("SELECT * FROM interestedParty WHERE entity = '%s' AND entityID = %d AND interestedPartyActive = 1",$entity,$entityID);
         }
@@ -725,7 +725,7 @@ class comment extends db_entity {
          LEFT JOIN clientContact on comment.commentCreatedUserClientContactID = clientContact.clientContactID
                  ".$filter." 
           ORDER BY commentCreatedTime";
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->query($q);
       $people = get_cached_table("person");
       while ($row = $db->next_record()) {
@@ -884,7 +884,7 @@ class comment extends db_entity {
       $row["person"] or list($e,$row["person"]) = parse_email_address($row["commentCreatedUserText"]);
       $row["displayDate"] = format_date("Y-m-d g:ia",$row["displayDate"]);
       if (!$tasks[$row["taskID"]]) {
-        $t = new task;
+        $t = new task();
         $t->set_id($row["taskID"]);
         $t->set_value("taskName",$row["taskName"]);
         $tasks[$row["taskID"]] = $t->get_task_link(array("prefixTaskID"=>true));
@@ -919,7 +919,7 @@ class comment extends db_entity {
       $row["id"] = "timeitem_".$row["id"];
       $row["person"] = $people[$row["personID"]]["name"];
       if (!$tasks[$row["taskID"]]) {
-        $t = new task;
+        $t = new task();
         $t->set_id($row["taskID"]);
         $t->set_value("taskName",$row["taskName"]);
         $tasks[$row["taskID"]] = $t->get_task_link(array("prefixTaskID"=>true));
@@ -982,14 +982,14 @@ class comment extends db_entity {
   function get_project_id() {
     $this->select();
     if ($this->get_value("commentType") == "task" && $this->get_value("commentLinkID")) {
-      $t = new task;
+      $t = new task();
       $t->set_id($this->get_value("commentLinkID"));
       $t->select();
       $projectID = $t->get_value("projectID");
     } else if ($this->get_value("commentType") == "project" && $this->get_value("commentLinkID")) {
       $projectID = $this->get_value("commentLinkID");
     } else if ($this->get_value("commentType") == "timeSheet" && $this->get_value("commentLinkID")) {
-      $t = new timeSheet;
+      $t = new timeSheet();
       $t->set_id($this->get_value("commentLinkID"));
       $t->select();
       $projectID = $t->get_value("projectID");
@@ -999,7 +999,7 @@ class comment extends db_entity {
 
   function get_person_and_client($from_address,$from_name,$projectID=null) {
     $current_user = &singleton("current_user");
-    $person = new person;
+    $person = new person();
     $personID = $person->find_by_email($from_address);
     $personID or $personID = $person->find_by_name($from_name);
 
@@ -1014,7 +1014,7 @@ class comment extends db_entity {
       if ($personID) {
         $from_name = person::get_fullname($personID);
       } else if ($clientContactID) {
-        $cc = new clientContact;
+        $cc = new clientContact();
         $cc->set_id($clientContactID);
         $cc->select();
         $from_name = $cc->get_value("clientContactName");
@@ -1039,7 +1039,7 @@ class comment extends db_entity {
 
   function add_comment($commentType,$commentLinkID,$comment_text,$commentMaster=null,$commentMasterID=null) {
     if ($commentType && $commentLinkID) {
-      $comment = new comment;
+      $comment = new comment();
       $comment->updateSearchIndexLater = true;
       $commentMaster   and $comment->set_value('commentMaster', $commentMaster);
       $commentMasterID and $comment->set_value('commentMasterID', $commentMasterID);
@@ -1082,7 +1082,7 @@ class comment extends db_entity {
                       ,$info["clientID"],trim($email));
           $db = new db_alloc();
           if (!$db->qr($q)) {
-            $cc = new clientContact;
+            $cc = new clientContact();
             $cc->set_value("clientContactName",trim($info["name"]));
             $cc->set_value("clientContactEmail",trim($email));
             $cc->set_value("clientID",sprintf("%d",$info["clientID"]));
@@ -1091,7 +1091,7 @@ class comment extends db_entity {
         }
         // Add the person to the interested parties list
         if ($info["addIP"] && !interestedParty::exists("comment",$commentID,trim($email))) {
-          $interestedParty = new interestedParty;
+          $interestedParty = new interestedParty();
           $interestedParty->set_value("fullName",trim($info["name"]));
           $interestedParty->set_value("emailAddress",trim($email));
           $interestedParty->set_value("entityID",$commentID);
@@ -1114,10 +1114,10 @@ class comment extends db_entity {
     $comment->set_id($commentID);
     $comment->select();
 
-    $token = new token;
+    $token = new token();
 
     if ($comment->get_value("commentType") == "comment" && $comment->get_value("commentLinkID")) {
-      $c = new comment;
+      $c = new comment();
       $c->set_id($comment->get_value("commentLinkID"));
       $c->select();
       $is_a_reply_comment = true;

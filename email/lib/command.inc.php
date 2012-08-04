@@ -88,7 +88,7 @@ class command {
     $item_fields = $this->get_fields("item");
 
     // If there's Key in the email, then add a comment with the contents of the email.
-    $token = new token;
+    $token = new token();
     if ($commands["key"] && $token->set_hash($commands["key"])) {
 
       $db = new db_alloc();
@@ -144,7 +144,7 @@ class command {
     // Time Sheet Item commands
     if ($commands["item"]) {
 
-      $timeSheetItem = new timeSheetItem;
+      $timeSheetItem = new timeSheetItem();
       if ($commands["item"] && strtolower($commands["item"] != "new")) {
         $timeSheetItem->set_id($commands["item"]);
         if(!$timeSheetItem->select()) {
@@ -163,7 +163,7 @@ class command {
           in_array($v,array(1,2,3,4,5)) or $err[] = "Invalid unit. Try a number from 1-5.";
         } else if ($k == "task") {
           $changes[$k] = "taskID";
-          $t = new task;
+          $t = new task();
           $t->set_id($v);
           $t->select();
           is_object($timeSheet) && $timeSheet->get_id() && $t->get_value("projectID") != $timeSheet->get_value("projectID") and $err[] = "Invalid task. Task belongs to different project.";
@@ -222,7 +222,7 @@ class command {
       $people_by_username = person::get_people_by_username();
 
       // Else edit/create the task ...
-      $task = new task;
+      $task = new task();
       if ($commands["task"] && strtolower($commands["task"]) != "new") {
         $task->set_id($commands["task"]);
         if(!$task->select()) {

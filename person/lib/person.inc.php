@@ -133,7 +133,7 @@ class person extends db_entity {
   }
 
   function get_announcements_for_email() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query("SELECT * FROM announcement WHERE CURDATE() <= displayToDate AND CURDATE() >= displayFromDate");
 
     while ($db->next_record()) {
@@ -173,10 +173,10 @@ class person extends db_entity {
     $query = "SELECT * FROM proficiency LEFT JOIN skill on proficiency.skillID=skill.skillID";
     $query.= prepare(" WHERE personID=%d AND skillProficiency='%s' ORDER BY skillName", $this->get_id(), $proficiency);
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {
-      $skill = new skill;
+      $skill = new skill();
       $skill->read_db_record($db);
       if ($rtn) {
         $rtn.= ", ";
@@ -192,7 +192,7 @@ class person extends db_entity {
     // Cache rows
     if(!$rows) {
       $q = prepare("SELECT personID, username, firstName, surname, personActive FROM person ORDER BY firstname,surname,username");
-      $db = new db_alloc;
+      $db = new db_alloc();
       $db->query($q);
       while($db->next_record()) {
         if ($db->f("firstName") && $db->f("surname")){
@@ -244,7 +244,7 @@ class person extends db_entity {
   }
 
   function get_tfIDs() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query("SELECT tfID FROM tfPerson WHERE personID = %d",$this->get_id());
     while ($row = $db->row()) {
       $tfIDs[] = $row["tfID"];
@@ -253,7 +253,7 @@ class person extends db_entity {
   }
 
   function get_valid_login_row($username, $password="") {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = prepare("SELECT * FROM person WHERE username = '%s' AND personActive = 1"
                  ,$username);
 
@@ -284,7 +284,7 @@ class person extends db_entity {
   }
 
   function store_prefs() {
-    $p = new person;
+    $p = new person();
     $p->set_id($this->get_id());
     $p->select();
     $p->load_prefs();
@@ -314,7 +314,7 @@ class person extends db_entity {
     if (is_object($this)) {
       
       list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
-      $db = new db_alloc;
+      $db = new db_alloc();
       $query = prepare("SELECT * 
                           FROM task 
                          WHERE taskTypeID = 'Message'
@@ -393,7 +393,7 @@ class person extends db_entity {
       $db = new db_alloc();
       $db->query($q);
       while ($db->next_record()) {
-        $skill = new skill;
+        $skill = new skill();
         $skill->read_db_record($db);
         $sql2[] = prepare("(skillID=%d)", $skill->get_id());
       } 
@@ -418,7 +418,7 @@ class person extends db_entity {
 
     // Get averages for hours worked over the past fortnight and year
     if ($current_user->have_perm(PERM_PERSON_READ_MANAGEMENT) && $_FORM["showHours"]) {
-      $t = new timeSheetItem;
+      $t = new timeSheetItem();
       list($ts_hrs_col_1,$ts_dollars_col_1) = $t->get_averages(date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y"))));
       list($ts_hrs_col_2,$ts_dollars_col_2) = $t->get_fortnightly_average();
     } else {
@@ -443,11 +443,11 @@ class person extends db_entity {
         ORDER BY firstName,surname,username";
 
     $debug and print "Query: ".$q;
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
 
     while ($row = $db->next_record()) {
-      $p = new person;
+      $p = new person();
       if (!$p->read_db_record($db)) {
         continue;
       }
@@ -579,7 +579,7 @@ class person extends db_entity {
     global $TPL;
     $current_user = &singleton("current_user");
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $_FORM["showSkills"]   and $rtn["show_skills_checked"] = " checked";
     $_FORM["showHours"]    and $rtn["show_hours_checked"] = " checked";
     $_FORM["personActive"] and $rtn["show_all_users_checked"] = " checked";

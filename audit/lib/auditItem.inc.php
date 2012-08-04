@@ -60,12 +60,12 @@ class auditItem extends db_entity {
           $where_clause
         ORDER BY dateChanged";
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
 
     $items = array();
     while($row = $db->next_record()) {
-      $auditItem = new auditItem;
+      $auditItem = new auditItem();
       $auditItem->read_db_record($db);
       $items[] = $auditItem;
     }

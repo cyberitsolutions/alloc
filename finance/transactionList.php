@@ -65,7 +65,7 @@ if ($download) {
 }
 
 // Check perm of requested tf
-$tf = new tf;
+$tf = new tf();
 $tf->set_id($tfID);
 $tf->select();
 $TPL["tfID"] = $tfID;
