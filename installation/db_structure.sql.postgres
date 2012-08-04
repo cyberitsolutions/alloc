@@ -124,6 +124,8 @@ CREATE TABLE indexQueue (
 
 CREATE TABLE invoice (
   invoiceID serial PRIMARY KEY,
+  invoiceRepeatID integer DEFAULT NULL,
+  invoiceRepeatDate date DEFAULT NULL,
   clientID integer NOT NULL,
   projectID integer DEFAULT NULL,
   invoiceDateFrom date,
@@ -132,7 +134,11 @@ CREATE TABLE invoice (
   invoiceName varchar(255) NOT NULL default '',
   invoiceStatus varchar(255) NOT NULL DEFAULT 'edit',
   currencyTypeID varchar(3) NOT NULL,
-  maxAmount BIGINT DEFAULT 0
+  maxAmount BIGINT DEFAULT 0,
+  invoiceCreatedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
+  invoiceCreatedUser integer default NULL,
+  invoiceModifiedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
+  invoiceModifiedUser integer default NULL
 ) ;
 
 CREATE TABLE invoiceItem (
@@ -147,6 +153,20 @@ CREATE TABLE invoiceItem (
   iiUnitPrice BIGINT DEFAULT NULL,
   iiAmount BIGINT DEFAULT NULL,
   iiDate date DEFAULT NULL
+) ;
+
+CREATE TABLE invoiceRepeat (
+  invoiceRepeatID serial PRIMARY KEY,
+  invoiceID integer NOT NULL,
+  personID integer NOT NULL,
+  message TEXT DEFAULT NULL,
+  active BOOLEAN DEFAULT true
+) ;
+
+CREATE TABLE invoiceRepeatDate (
+  invoiceRepeatDateID serial PRIMARY KEY,
+  invoiceRepeatID integer NOT NULL,
+  invoiceDate date NOT NULL
 ) ;
 
 CREATE TABLE item (

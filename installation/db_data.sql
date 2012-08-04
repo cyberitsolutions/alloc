@@ -313,6 +313,9 @@ VALUES
 ,('invoiceItem'              ,-1 ,'employee' ,NULL ,1+2+4+8    ,NULL)
 ,('invoiceItem'              ,0  ,'admin'    ,NULL ,1+2+4+8+256,NULL)
 
+,('invoiceRepeat'            ,0  ,'admin'    ,NULL ,1+2+4+8    ,"Admin controls repeating invoices.")
+,('invoiceRepeatDate'        ,0  ,'admin'    ,NULL ,1+2+4+8    ,"Admin controls repeating invoices.")
+
 ,('item'                     ,-1 ,''         ,NULL ,1+2+4+8    ,NULL)
 ,('item'                     ,0  ,'employee' ,NULL ,11         ,'Read, update, create.')
 ,('item'                     ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)

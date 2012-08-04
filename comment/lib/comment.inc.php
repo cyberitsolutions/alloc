@@ -1179,24 +1179,11 @@ class comment extends db_entity {
   }
 
   function attach_invoice($commentID,$entityID,$verbose) {
-    // Begin buffering output to halt anything being sent to the web browser.
-    ob_start();
     $invoice = new invoice();
     $invoice->set_id($entityID);
     $invoice->select();
-    $invoice->generate_invoice_file($verbose,true);
-
-    // Capture the output into $str
-    $str = (string)ob_get_clean();
-
-    $suffix = ".pdf";
-
-    $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$commentID;
-    if (!is_dir($dir)) {
-      mkdir($dir, 0777);
-    }
-    $file = $dir.DIRECTORY_SEPARATOR."invoice_".$_REQUEST["entityID"].$suffix;
-    file_put_contents($file,$str);
+    $file = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$commentID.DIRECTORY_SEPARATOR."invoice_".$entityID.".pdf";
+    $invoice->generate_invoice_file($verbose,$file);
   }
 
   function attach_tasks($commentID, $entityID, $options) {

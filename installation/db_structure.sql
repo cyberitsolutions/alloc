@@ -140,6 +140,8 @@ CREATE TABLE indexQueue (
 DROP TABLE IF EXISTS invoice;
 CREATE TABLE invoice (
   invoiceID integer NOT NULL auto_increment PRIMARY KEY,
+  invoiceRepeatID integer DEFAULT NULL,
+  invoiceRepeatDate date DEFAULT NULL,
   clientID integer NOT NULL,
   projectID integer DEFAULT NULL,
   invoiceDateFrom date,
@@ -148,7 +150,11 @@ CREATE TABLE invoice (
   invoiceName varchar(255) NOT NULL default '',
   invoiceStatus varchar(255) NOT NULL DEFAULT 'edit',
   currencyTypeID varchar(3) NOT NULL,
-  maxAmount BIGINT DEFAULT 0
+  maxAmount BIGINT DEFAULT 0,
+  invoiceCreatedTime datetime default NULL,
+  invoiceCreatedUser integer default NULL,
+  invoiceModifiedTime datetime default NULL,
+  invoiceModifiedUser integer default NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS invoiceItem;
@@ -164,6 +170,22 @@ CREATE TABLE invoiceItem (
   iiUnitPrice BIGINT DEFAULT NULL,
   iiAmount BIGINT DEFAULT NULL,
   iiDate date DEFAULT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
+
+DROP TABLE IF EXISTS invoiceRepeat;
+CREATE TABLE invoiceRepeat (
+  invoiceRepeatID integer NOT NULL auto_increment PRIMARY KEY,
+  invoiceID integer NOT NULL,
+  personID integer NOT NULL,
+  message TEXT DEFAULT NULL,
+  active BOOLEAN DEFAULT true
+) ENGINE=InnoDB PACK_KEYS=0;
+
+DROP TABLE IF EXISTS invoiceRepeatDate;
+CREATE TABLE invoiceRepeatDate (
+  invoiceRepeatDateID integer NOT NULL auto_increment PRIMARY KEY,
+  invoiceRepeatID integer NOT NULL,
+  invoiceDate date NOT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS item;

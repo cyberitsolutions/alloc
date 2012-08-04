@@ -22,16 +22,19 @@
 
 require_once("../alloc.php");
 
-if (!$current_user->is_employee()) {
-  alloc_error("You do not have permission to access invoices",true);
+$current_user = &singleton("current_user");
+$db = new db_alloc;
+$invoiceRepeat = new invoiceRepeat($_REQUEST["invoiceRepeatID"]);
+
+if ($_POST["save"]) {
+  $invoiceRepeat->set_value("invoiceID",$_POST["invoiceID"]);
+  $invoiceRepeat->set_value("message",$_POST["message"]);
+  $invoiceRepeat->set_value("active",1);
+  $invoiceRepeat->set_value("personID",$current_user->get_id());
+  $invoiceRepeat->save($_POST["frequency"]);
+  interestedParty::make_interested_parties("invoiceRepeat",$invoiceRepeat->get_id(),$_POST["commentEmailRecipients"]);
 }
 
-$invoiceID = $_POST["invoiceID"] or $invoiceID = $_GET["invoiceID"];
-$verbose = $_GET["verbose"];
-
-$invoice = new invoice();
-$invoice->set_id($invoiceID);
-$invoice->select();
-$invoice->generate_invoice_file($verbose);
+alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$_POST["invoiceID"]);
 
 ?>

@@ -111,6 +111,7 @@ $alloc_urls = array(
             ,"url_alloc_expenseUploadResults"           => "finance/expenseUploadResults.php"
             ,"url_alloc_invoiceList"                    => "invoice/invoiceList.php"
             ,"url_alloc_invoice"                        => "invoice/invoice.php"
+            ,"url_alloc_invoiceRepeat"                  => "invoice/invoiceRepeat.php"
             ,"url_alloc_invoicePrint"                   => "invoice/invoicePrint.php"
             ,"url_alloc_config"                         => "config/config.php"
             ,"url_alloc_configEdit"                     => "config/configEdit.php"
