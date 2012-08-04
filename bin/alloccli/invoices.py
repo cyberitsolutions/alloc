@@ -55,7 +55,7 @@ class invoices(alloc):
       f["projectID"] = self.search_for_project(o['project'], personID)
 
     #f["personID"] = personID
-    f['return'] = "array";
+    f['return'] = "array"
 
     if o['num']:
       f['invoiceNum'] = o['num']
@@ -69,16 +69,19 @@ class invoices(alloc):
 
     if o['items']:
       invoiceIDs = []
-      invoices = self.get_list("invoice", f)
-      if invoices:
-        for i in invoices:
+      invoices_list = self.get_list("invoice", f)
+      if invoices_list:
+        for i in invoices_list:
           invoiceIDs.append(i)
 
-        fields = o["fields"] or "invoiceID,invoiceItemID,clientID,clientName,invoiceNum,iiDate,iiAmount,iiQuantity,iiUnitPrice,iiMemo"
-        self.print_table("invoiceItem", self.get_list("invoiceItem", {"invoiceID":invoiceIDs}), fields, sort="invoiceID")
+        fields = o["fields"] or "invoiceID,invoiceItemID,clientID,clientName,invoiceNum,\
+                                 iiDate,iiAmount,iiQuantity,iiUnitPrice,iiMemo"
+        self.print_table("invoiceItem", self.get_list("invoiceItem", {"invoiceID":invoiceIDs}),
+                         fields, sort="invoiceID")
     
     else:
-      fields = o["fields"] or "invoiceID,clientID,clientName,invoiceNum,invoiceDateFrom,invoiceDateTo,invoiceStatus,status_label,amountPaidRejected,amountPaidPending,amountPaidApproved,iiAmountSum"
+      fields = o["fields"] or "invoiceID,clientID,clientName,invoiceNum,invoiceDateFrom,invoiceDateTo,invoiceStatus,\
+                               status_label,amountPaidRejected,amountPaidPending,amountPaidApproved,iiAmountSum"
 
       self.print_table("invoice", self.get_list("invoice", f), fields, sort="clientName")
       
