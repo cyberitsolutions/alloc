@@ -5,7 +5,7 @@ $db = new db_alloc();
 $db->query($q);
 
 while ($r = $db->row()) {
-  $person = new person;
+  $person = new person();
   $person->set_id($r["personID"]);
   $person->select();
   $person->load_prefs();

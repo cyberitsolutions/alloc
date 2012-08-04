@@ -50,7 +50,7 @@ class reminder extends db_entity {
   }
 
   function get_recipients() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $type = $this->get_value('reminderType');
     if ($type == "project") {
       $query = prepare("SELECT * 
@@ -83,7 +83,7 @@ class reminder extends db_entity {
     }
     $db->query($query);
     while ($db->next_record()) {
-      $person = new person;
+      $person = new person();
       $person->read_db_record($db);
       $recipients[$person->get_id()] = $person->get_name();
     }
@@ -98,7 +98,7 @@ class reminder extends db_entity {
     $type = $this->get_value('reminderType');
 
     $recipient = array();
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = "SELECT * from reminderRecipient WHERE reminderID = %d";
     $db->query($query, $this->get_id());
     while ($db->next_record()) {
@@ -168,19 +168,19 @@ class reminder extends db_entity {
   function is_alive() {
     $type = $this->get_value('reminderType');
     if ($type == "project") {
-      $project = new project;
+      $project = new project();
       $project->set_id($this->get_value('reminderLinkID'));
       if ($project->select() == false || $project->get_value('projectStatus') == "Archived") {
         return false;
       }
     } else if ($type == "task") {
-      $task = new task;
+      $task = new task();
       $task->set_id($this->get_value('reminderLinkID'));
       if ($task->select() == false || substr($task->get_value("taskStatus"),0,6) == 'closed') {
         return false;
       }
     } else if ($type == "client") {
-      $client = new client;
+      $client = new client();
       $client->set_id($this->get_value('reminderLinkID'));
       if ($client->select() == false || $client->get_value('clientStatus') == "Archived") {
         return false;
@@ -203,7 +203,7 @@ class reminder extends db_entity {
       // this lets us trigger reminders on complex actions, for example create
       // a reminder that sends when a task status changes from pending to open
       if ($this->get_value("reminderHash")) {
-        $token = new token;
+        $token = new token();
         if ($token->set_hash($this->get_value("reminderHash"))) {
           list($entity,$method) = $token->execute();
           if (is_object($entity) && $entity->get_id()) {
@@ -321,7 +321,7 @@ class reminder extends db_entity {
       $metaperson = -$recipient->get_value('metaPersonID');
       $type = $this->get_value("reminderType");
       if($type == "task") {
-        $task = new task;
+        $task = new task();
         $task->set_id($this->get_value('reminderLinkID'));
         $task->select();
 
@@ -366,12 +366,12 @@ class reminder extends db_entity {
   }
 
   function get_all_recipients() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = "SELECT * FROM reminderRecipient WHERE reminderID = %d";
     $db->query($query, $this->get_id());
     $people = get_cached_table("person");
     $recipients = array();
-    $person = new reminderRecipient;
+    $person = new reminderRecipient();
     while ($db->next_record()) {
       $person->read_db_record($db);
       $id = $this->get_effective_person_id($person);
@@ -382,11 +382,11 @@ class reminder extends db_entity {
   }
 
   function update_recipients($recipients) {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = "DELETE FROM reminderRecipient WHERE reminderID = %d";
     $db->query($query, $this->get_id());
     foreach ((array)$recipients as $r) {
-      $recipient = new reminderRecipient;
+      $recipient = new reminderRecipient();
       $recipient->set_value('reminderID', $this->get_id());
       if ($r < 0) {
         $recipient->set_value('metaPersonID', $r);
@@ -412,7 +412,7 @@ class reminder extends db_entity {
     if (is_array($filter) && count($filter)) {
       $f = " WHERE ".implode(" AND ",$filter);
     }
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = "SELECT reminder.*,reminderRecipient.*,token.*,tokenAction.*
             FROM reminder
        LEFT JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID
@@ -423,7 +423,7 @@ class reminder extends db_entity {
         ORDER BY reminderTime,reminderType";
     $db->query($q);
     while ($row = $db->row()) {
-      $reminder = new reminder;
+      $reminder = new reminder();
       $reminder->read_db_record($db);
       $rows[] = $row;
     }

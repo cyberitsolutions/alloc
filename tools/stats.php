@@ -22,10 +22,10 @@
 
 require_once("../alloc.php");
 
-$db = new db_alloc;
-$db_sub = new db_alloc;
+$db = new db_alloc();
+$db_sub = new db_alloc();
 
-$stats = new stats;
+$stats = new stats();
 $projects = $stats->project_stats();
 $tasks = $stats->task_stats();
 $comments = $stats->comment_stats();
@@ -63,7 +63,7 @@ function compare($a, $b) {
 function show_users_stats($template) {
   global $TPL;
   global $db;
-  $stats = new stats;
+  $stats = new stats();
   $projects = $stats->project_stats();
   $tasks = $stats->task_stats();
   $comments = $stats->comment_stats();
@@ -73,7 +73,7 @@ function show_users_stats($template) {
   $query = "SELECT * FROM person ORDER BY username";
   $db->query($query);
   while ($db->next_record()) {
-    $person = new person;
+    $person = new person();
     $person->read_db_record($db);
     array_push($persons, $person->get_id());
   }
@@ -81,7 +81,7 @@ function show_users_stats($template) {
   usort($persons, "compare");
 
   for ($i = 0; $i < count($persons); $i++) {
-    $person = new person;
+    $person = new person();
     $person->set_id($persons[$i]);
     $person->select();
 

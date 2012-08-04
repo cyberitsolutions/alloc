@@ -63,10 +63,10 @@ class product extends db_entity {
     $taxName = config::get_config_item("taxName");
 
     $query = prepare("SELECT * FROM product ".$f);
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($row = $db->next_record()) {
-      $product = new product;
+      $product = new product();
       $product->read_db_record($db);
       $row["taxName"] = $taxName;
       $rows[] = $row;

@@ -49,7 +49,7 @@ require_once("../alloc.php");
     global $projectID;
     $current_user = &singleton("current_user");
 
-    $transaction = new transaction;
+    $transaction = new transaction();
 
     if (isset($projectID) && $projectID) {
       if (have_entity_perm("transaction", PERM_READ, $current_user, false)) {
@@ -67,7 +67,7 @@ require_once("../alloc.php");
       }
       $db->query($query);
       while ($db->next_record()) {
-        $transaction = new transaction;
+        $transaction = new transaction();
         $transaction->read_db_record($db);
         $transaction->set_values("transaction_");
 
@@ -101,7 +101,7 @@ require_once("../alloc.php");
       $db->query($query);
 
       while ($db->next_record()) {
-        $commission_item = new projectCommissionPerson;
+        $commission_item = new projectCommissionPerson();
         $commission_item->read_db_record($db);
         $commission_item->set_values("commission_");
         $tf = $commission_item->get_foreign_object("tf");
@@ -120,7 +120,7 @@ require_once("../alloc.php");
       return;
     }
     $TPL["commission_new"] = true;
-    $commission_item = new projectCommissionPerson;
+    $commission_item = new projectCommissionPerson();
     $commission_item->set_values("commission_");
     $TPL["commission_projectID"] = $projectID;
     $TPL["save_label"] = "Add Commission";
@@ -143,7 +143,7 @@ require_once("../alloc.php");
       $db->query($query);
 
       while ($db->next_record()) {
-        $projectPerson = new projectPerson;
+        $projectPerson = new projectPerson();
         $projectPerson->read_db_record($db);
         $projectPerson->set_values("person_");
         $person = $projectPerson->get_foreign_object("person");
@@ -171,7 +171,7 @@ require_once("../alloc.php");
                       ORDER BY roleSequence DESC, personID ASC", $projectID);
       $db->query($query);
       while ($db->next_record()) {
-        $projectPerson = new projectPerson;
+        $projectPerson = new projectPerson();
         $projectPerson->read_db_record($db);
         $TPL['person_roleName'] = $db->f("roleName");
         $TPL['person_name'] = person::get_fullname($projectPerson->get_value('personID'));
@@ -191,7 +191,7 @@ require_once("../alloc.php");
     if (!$projectID) {
       return;
     }
-    $project_person = new projectPerson;
+    $project_person = new projectPerson();
     $project_person->set_values("person_");
     $TPL["person_emailType_options"] = page::select_options($email_type_array, $TPL["person_emailType"]);
     $TPL["person_role_options"] = page::select_options($project_person_role_array,false);
@@ -294,7 +294,7 @@ $current_user = &singleton("current_user");
 
 $projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
 
-$project = new project;
+$project = new project();
 
 if ($projectID) {
   $project->set_id($projectID);
@@ -340,7 +340,7 @@ if ($_POST["save"]) {
     $project->save();
     $projectID = $project->get_id();
 
-    $client = new client;
+    $client = new client();
     $client->set_id($project->get_value("clientID"));
     $client->select();
     if ($client->get_value("clientStatus") == 'Potential') {
@@ -349,7 +349,7 @@ if ($_POST["save"]) {
     }
    
     if ($definitely_new_project) {
-      $projectPerson = new projectPerson;
+      $projectPerson = new projectPerson();
       $projectPerson->currency = $project->get_value("currencyTypeID");
       $projectPerson->set_value("projectID", $projectID);
       $projectPerson->set_value_role("isManager");
@@ -369,7 +369,7 @@ if ($_POST["save"]) {
   $p = new project();
   $p->set_id($_POST["copy_projectID"]);
   if ($p->select()) {
-    $p2 = new project;
+    $p2 = new project();
     $p2->read_row_record($p->row());
     $p2->set_id("");
     $p2->set_value("projectName",$_POST["copy_project_name"]);
@@ -382,7 +382,7 @@ if ($_POST["save"]) {
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
-      $projectPerson = new projectPerson;
+      $projectPerson = new projectPerson();
       $projectPerson->currency = $p->get_value("currencyTypeID");
       $projectPerson->read_row_record($row);
       $projectPerson->set_id("");
@@ -396,7 +396,7 @@ if ($_POST["save"]) {
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
-      $projectCommissionPerson = new projectCommissionPerson;
+      $projectCommissionPerson = new projectCommissionPerson();
       $projectCommissionPerson->read_row_record($row);
       $projectCommissionPerson->set_id("");
       $projectCommissionPerson->set_value("projectID",$p2->get_id());
@@ -420,7 +420,7 @@ if ($projectID) {
     $db = new db_alloc();
     $db->query($q);
     while ($db->next_record()) {
-      $pp = new projectPerson;
+      $pp = new projectPerson();
       $pp->read_db_record($db);
       $delete[] = $pp->get_id();
       #$pp->delete(); // need to delete them after, cause we'll accidently wipe out the current user
@@ -429,7 +429,7 @@ if ($projectID) {
     if (is_array($_POST["person_personID"])) {
       foreach ($_POST["person_personID"] as $k => $personID) {
         if ($personID) {
-          $pp = new projectPerson;
+          $pp = new projectPerson();
           $pp->currency = $project->get_value("currencyTypeID");
           $pp->set_value("projectID",$project->get_id());
           $pp->set_value("personID",$personID);
@@ -444,7 +444,7 @@ if ($projectID) {
 
     if (is_array($delete)) {
       foreach ($delete as $projectPersonID) {
-        $pp = new projectPerson;
+        $pp = new projectPerson();
         $pp->set_id($projectPersonID);
         $pp->delete();
       }
@@ -453,7 +453,7 @@ if ($projectID) {
   
 
   } else if ($_POST["commission_save"] || $_POST["commission_delete"]) {
-    $commission_item = new projectCommissionPerson;
+    $commission_item = new projectCommissionPerson();
     $commission_item->read_globals();
     $commission_item->read_globals("commission_");
 
@@ -509,10 +509,10 @@ $TPL["is_agency_options"] = page::select_options($ops,$project->get_value("is_ag
 $TPL["project_is_agency_label"] = $ops[$project->get_value("is_agency")];
 
 
-$db = new db_alloc;
+$db = new db_alloc();
 
 $clientID = $project->get_value("clientID") or $clientID = $_GET["clientID"];
-$client = new client;
+$client = new client();
 $client->set_id($clientID);
 $client->select();
 $client->set_tpl_values("client_");
@@ -569,13 +569,13 @@ $TPL["clientHidden"].= "<input type=\"hidden\" id=\"clientContactID\" name=\"cli
 
 // Gets $ per hour, even if user uses metric like $200 Daily
 function get_projectPerson_hourly_rate($personID,$projectID) {
-  $db = new db_alloc;
+  $db = new db_alloc();
   $q = prepare("SELECT rate,rateUnitID FROM projectPerson WHERE personID = %d AND projectID = %d",$personID,$projectID);
   $db->query($q);
   $db->next_record();
   $rate = $db->f("rate");
   $unitID = $db->f("rateUnitID");
-  $t = new timeUnit;
+  $t = new timeUnit();
   $timeUnits = $t->get_assoc_array("timeUnitID","timeUnitSeconds",$unitID);
   ($rate && $timeUnits[$unitID]) and $hourly_rate = $rate / ($timeUnits[$unitID]/60/60);
   return $hourly_rate;
@@ -646,7 +646,7 @@ $projectType_array = project::get_project_type_array();
 
 $m = new meta("projectStatus");
 $projectStatus_array = $m->get_assoc_array("projectStatusID","projectStatusID");
-$timeUnit = new timeUnit;
+$timeUnit = new timeUnit();
 $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
 $TPL["project_projectType"] = $projectType_array[$TPL["project_projectType"]];
 $TPL["projectType_options"] = page::select_options($projectType_array, $TPL["project_projectType"]);
@@ -674,7 +674,7 @@ if ($_GET["projectID"] || $_POST["projectID"] || $TPL["project_projectID"]) {
 if ($new_project && !(is_object($project) && $project->get_id())) {
   $TPL["main_alloc_title"] = "New Project - ".APPLICATION_NAME;
   $TPL["projectSelfLink"] = "New Project";
-  $p = new project;
+  $p = new project();
   $TPL["message_help_no_esc"][] = "Create a new Project by inputting the Project Name and any other details, and clicking the Save button.";
   $TPL["message_help_no_esc"][] = "";
   $TPL["message_help_no_esc"][] = "<a href=\"#x\" class=\"magic\" id=\"copy_project_link\">Or copy an existing project</a>";

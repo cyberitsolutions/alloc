@@ -30,7 +30,7 @@ class projectCommissionPerson extends db_entity {
                              );
 
   function is_owner($person = "") {
-    $project = new project;
+    $project = new project();
     $project->set_id($this->get_value("projectID"));
     $project->select();
     return $project->is_owner($person);

@@ -34,7 +34,7 @@ function add_tf($tfID, $options, $warningKey, $warningValue) {
   // add a tf to the array of options, if it's not already there
   global $TPL;
   if($tfID && !array_key_exists($tfID, $options)) {
-    $tf = new tf;
+    $tf = new tf();
     $tf->set_id($tfID);
     $tf->select();
     $options[$tfID] = $tf->get_value("tfName");
@@ -43,8 +43,8 @@ function add_tf($tfID, $options, $warningKey, $warningValue) {
   return $options;
 }
 
-$db = new db_alloc;
-$transaction = new transaction;
+$db = new db_alloc();
+$transaction = new transaction();
 $transaction->read_globals();
 $transactionID = $_POST["transactionID"] or $transactionID = $_GET["transactionID"];
 
@@ -134,9 +134,9 @@ $TPL["transactionTypeOptions"] = page::select_options($transactionTypes, $transa
 
 is_object($transaction) and $TPL["transactionTypeLink"] = $transaction->get_transaction_type_link();
 
-$db = new db_alloc;
+$db = new db_alloc();
 
-$tf = new tf;
+$tf = new tf();
 $options = $tf->get_assoc_array("tfID","tfName");
 // Special cases for the current tfID and fromTfID
 $options = add_tf($transaction->get_value("tfID"), $options, "tfIDWarning", " (warning: the TF <b>%s</b> is currently inactive)");

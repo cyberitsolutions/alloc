@@ -58,12 +58,12 @@ case 2:
   $personID = $current_user->get_id();
   $parent_names = array();
 
-  $db = new db_alloc;
+  $db = new db_alloc();
   if ($parentType == "client") {
     $query = "SELECT * FROM client WHERE clientStatus!='Archived' ORDER BY clientName";
     $db->query($query);
     while ($db->next_record()) {
-      $client = new client;
+      $client = new client();
       $client->read_db_record($db);
       $parent_names[$client->get_id()] = $client->get_value('clientName');
     }
@@ -80,7 +80,7 @@ case 2:
     }
     $db->query($query);
     while ($db->next_record()) {
-      $project = new project;
+      $project = new project();
       $project->read_db_record($db);
       $parent_names[$project->get_id()] = $project->get_value('projectName');
     }
@@ -93,7 +93,7 @@ case 2:
     }
     $db->query($query);
     while ($db->next_record()) {
-      $task = new task;
+      $task = new task();
       $task->read_db_record($db);
       if (substr($task->get_value("taskStatus"),0,6) != "closed") {
         $parent_names[$task->get_id()] = $task->get_value('taskName');
@@ -107,7 +107,7 @@ case 2:
 
 case 3:
   // reminder entry form
-  $reminder = new reminder;
+  $reminder = new reminder();
   if (isset($reminderID)) {
     $reminder->set_id($reminderID);
     $reminder->select();
@@ -217,7 +217,7 @@ case 4:
     if ($_POST["reminder_meridian"] == "pm") {
       $_POST["reminder_hour"] += 12;
     }
-    $reminder = new reminder;
+    $reminder = new reminder();
     $reminder->set_value('reminderType', $parentType);
     $reminder->set_value('reminderLinkID', $parentID);
     $reminder->set_value('reminderModifiedUser', $current_user->get_id());
@@ -257,7 +257,7 @@ case 4:
     $TPL["message_good"][] = "Reminder saved.";
 
   } else if ($_POST["reminder_delete"] && $_POST["reminder_id"]) {
-    $reminder = new reminder;
+    $reminder = new reminder();
     $reminder->set_id($_POST["reminder_id"]);
     $reminder->delete();
   }

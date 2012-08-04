@@ -34,14 +34,14 @@ class calendar {
 
 
   function __construct($week_start=1, $weeks_to_display=4) {
-    $this->db = new db_alloc;
+    $this->db = new db_alloc();
     $this->first_day_of_week = config::get_config_item("calendarFirstDay");
     $this->set_cal_date_range($week_start, $weeks_to_display);
     $this->days_of_week = $this->get_days_of_week_array($this->first_day_of_week);
   }
 
   function set_cal_person($personID) {
-    $this->person = new person;
+    $this->person = new person();
     $this->person->set_id($personID);
     $this->person->select();
   }
@@ -77,7 +77,7 @@ class calendar {
     $this->db->query($query);
     $reminders = array();
     while ($row = $this->db->row()) {
-      $reminder = new reminder;
+      $reminder = new reminder();
       $reminder->read_db_record($this->db);
 
       if ($reminder->is_alive()) {

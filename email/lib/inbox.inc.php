@@ -95,13 +95,13 @@ class inbox {
     }
  
     list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
-    $person = new person;
+    $person = new person();
     $personID = $person->find_by_email($from_address);
     $personID or $personID = $person->find_by_name($from_name);
 
     // If we've determined a personID from the $from_address
     if ($personID) {
-      $current_user = new person;
+      $current_user = new person();
       $current_user->load_current_user($personID);
       singleton("current_user",$current_user);
     } 
@@ -204,11 +204,11 @@ class inbox {
 
       // Possibly change the identity of current_user
       list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
-      $person = new person;
+      $person = new person();
       $personID = $person->find_by_email($from_address);
       $personID or $personID = $person->find_by_name($from_name);
       if ($personID) {
-        $current_user = new person;
+        $current_user = new person();
         $current_user->load_current_user($personID);
         singleton("current_user",$current_user);
       } 

@@ -8,7 +8,7 @@ $show_project = config::get_config_item('rssShowProject');
 // generate the RSS feed based on the audit table and some task creation data
 // output will be
 
-$db = new db_alloc;
+$db = new db_alloc();
 $events = array();
 
 //create an artifical sort key. Creation/audit date is not unique, and creation should 
@@ -65,7 +65,7 @@ while ($row = $db->next_record()) {
     $taskName = escape_xml($row['taskName']);
     $project = null;
     if ($show_project) {
-      $project = new project;
+      $project = new project();
       $project->set_id($row['projectID']);
       $project->select();
     }
@@ -111,7 +111,7 @@ while ($row = $db->next_record()) {
     $name = $people[$row['personID']]['username'];
   }
   if ($show_project) {
-    $project = new project;
+    $project = new project();
     $project->set_id($row['projectID']);
     $project->select();
   }

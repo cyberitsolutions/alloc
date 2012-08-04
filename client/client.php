@@ -34,12 +34,12 @@ require_once("../alloc.php");
     $TPL["clientContact_clientID"] = $clientID;
 
     if ($_POST["clientContact_delete"] && $_POST["clientContactID"]) {
-      $clientContact = new clientContact;
+      $clientContact = new clientContact();
       $clientContact->set_id($_POST["clientContactID"]);
       $clientContact->delete();
     }
 
-    $client = new client;
+    $client = new client();
     $client->set_id($clientID);
     $client->select();
 
@@ -49,10 +49,10 @@ require_once("../alloc.php");
                        WHERE clientID=%d    
                     ORDER BY clientContactActive DESC, primaryContact DESC, clientContactName", $clientID);
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {
-      $clientContact = new clientContact;
+      $clientContact = new clientContact();
       $clientContact->read_db_record($db);
 
       if ($_POST["clientContact_edit"] && $_POST["clientContactID"] == $clientContact->get_id()) {
@@ -149,7 +149,7 @@ require_once("../alloc.php");
       $TPL["clientContacts"] = implode("\n",$rtn);
     } 
     if ($_POST["clientContact_edit"] && $_POST["clientContactID"]) {
-      $clientContact = new clientContact;
+      $clientContact = new clientContact();
       $clientContact->set_id($_POST["clientContactID"]);
       $clientContact->select();
       $clientContact->set_values("clientContact_");
@@ -220,7 +220,7 @@ require_once("../alloc.php");
 
 
 
-$client = new client;
+$client = new client();
 $clientID = $_POST["clientID"] or $clientID = $_GET["clientID"];
 
 
@@ -250,7 +250,7 @@ if ($_POST["save"]) {
   alloc_redirect($TPL["url_alloc_client"]."clientID=".$clientID."&sbs_link=attachments");
 
 } else if ($_GET["get_vcard"]) {
-  $clientContact = new clientContact;
+  $clientContact = new clientContact();
   $clientContact->set_id($_GET["clientContactID"]);
   $clientContact->select();
   $clientContact->output_vcard();
@@ -284,7 +284,7 @@ $client->get_value("clientCategory") and $TPL["client_clientCategoryLabel"] = $c
 // client contacts
 if ($_POST["clientContact_save"] || $_POST["clientContact_delete"]) {
 
-  $clientContact = new clientContact;
+  $clientContact = new clientContact();
   $clientContact->read_globals();
 
   if ($_POST["clientContact_save"]) {

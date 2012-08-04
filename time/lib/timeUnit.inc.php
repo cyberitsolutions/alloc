@@ -36,7 +36,7 @@ class timeUnit extends db_entity {
 
   function seconds_to_display_time_unit($seconds) {
     $q = "SELECT * FROM timeUnit";
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     while ($db->next_record()) {
       //blag someother time

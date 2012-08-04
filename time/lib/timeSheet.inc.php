@@ -123,7 +123,7 @@ class timeSheet extends db_entity {
 
     static $rates;
     unset($this->pay_info);
-    $db = new db_alloc;
+    $db = new db_alloc();
 
     if (!$this->get_value("projectID") || !$this->get_value("personID")) {
       return false;
@@ -131,7 +131,7 @@ class timeSheet extends db_entity {
     $currency = $this->get_value("currencyTypeID");
     
     // The unit labels
-    $timeUnit = new timeUnit;
+    $timeUnit = new timeUnit();
     $units = array_reverse($timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA"),true);
 
     if ($rates[$this->get_value("projectID")][$this->get_value("personID")]) {
@@ -213,7 +213,7 @@ class timeSheet extends db_entity {
   }
 
   function destroyTransactions() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("DELETE FROM transaction where timeSheetID = %d", $this->get_id());
     $db->query($query);
     $db->next_record();
@@ -224,7 +224,7 @@ class timeSheet extends db_entity {
     // So this will only create transaction if:
     // - The timesheet status is admin
     // - There is a recipient_tfID - that is the money is going to a TF
-    $db = new db_alloc;
+    $db = new db_alloc();
     $project = $this->get_foreign_object("project");
     $projectName = $project->get_value("projectName");
     $personName = person::get_fullname($this->get_value("personID"));
@@ -299,7 +299,7 @@ class timeSheet extends db_entity {
         } else {
           foreach ($rows as $row) {
             if ($row["invoiceItemID"]) {
-              $ii = new invoiceItem;
+              $ii = new invoiceItem();
               $ii->set_id($row["invoiceItemID"]);
               $ii->select();
               $ii->create_transaction($this->pay_info["total_customerBilledDollars"],$cost_centre, $status);
@@ -372,7 +372,7 @@ class timeSheet extends db_entity {
 
   function get_positive_amount_so_far_minus_insurance() {
     // This is for getting the amount the manager gets. There is probably a better way to do this.
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query("SELECT * FROM transaction 
                 WHERE timeSheetID = ".$this->get_id()." AND amount > 0 AND transactionType != 'insurance' AND transactionType != 'tax'");
     while ($db->next_record()) {
@@ -391,7 +391,7 @@ class timeSheet extends db_entity {
     if ($tfID == 0 || !$tfID || !is_numeric($tfID) || !is_numeric($amount)) {
       return "Error -> \$tfID: ".$tfID."  and  \$amount: ".$amount;
     } else {
-      $transaction = new transaction;
+      $transaction = new transaction();
       $transaction->set_value("product", $product);
       $transaction->set_value("amount", $amount);
       $transaction->set_value("status", $status);
@@ -440,7 +440,7 @@ class timeSheet extends db_entity {
       $personID = $this->get_value('personID');
       $projectID = $this->get_value('projectID');
     } else if ($timeSheetID) {
-      $t = new timeSheet;
+      $t = new timeSheet();
       $t->set_id($timeSheetID);    
       $t->select();
       $personID = $t->get_value('personID');
@@ -458,7 +458,7 @@ class timeSheet extends db_entity {
     }
 
     if ($taskID) {
-      $t = new task;
+      $t = new task();
       $t->set_id($taskID);
       $t->select();
       $tasks[$taskID] = $t->get_id()." ".$t->get_name();
@@ -578,7 +578,7 @@ class timeSheet extends db_entity {
     $people_array = get_cached_table("person");
 
     while ($row = $db->next_record()) {
-      $t = new timeSheet;
+      $t = new timeSheet();
       if (!$t->read_db_record($db))
         continue;
 
@@ -671,7 +671,7 @@ class timeSheet extends db_entity {
 
   function get_url() {
     global $sess;
-    $sess or $sess = new session;
+    $sess or $sess = new session();
 
     $url = "time/timeSheet.php?timeSheetID=".$this->get_id();
 
@@ -756,7 +756,7 @@ class timeSheet extends db_entity {
       $rtn["show_userID_options"] = page::select_options(person::get_username_list(), $_FORM["personID"]);
       
     } else {
-      $person = new person;
+      $person = new person();
       $person->set_id($current_user->get_id());
       $person->select();
       $person_array = array($current_user->get_id()=>$person->get_name());
@@ -903,7 +903,7 @@ EOD;
       $task_id_query = prepare("SELECT DISTINCT taskID FROM timeSheetItem WHERE timeSheetID=%d ORDER BY dateTimeSheetItem, timeSheetItemID", $this->get_id());
       $db->query($task_id_query);
       while($db->next_record()) {
-        $task = new task;
+        $task = new task();
         $task->read_db_record($db);
         $task->select();
         if($task->get_value('timeLimit') > 0) {
@@ -1113,7 +1113,7 @@ EOD;
     $rtn["timeSheet_personID_email"] = $people_cache[$this->get_value("personID")]["emailAddress"];
     $rtn["timeSheet_personID_name"]  = $people_cache[$this->get_value("personID")]["name"];
 
-    $config = new config;
+    $config = new config();
     $rtn["url"] = $config->get_config_item("allocURL")."time/timeSheet.php?timeSheetID=".$this->get_id();
 
     $rtn["timeSheetAdministrators"] = $config->get_config_item('defaultTimeSheetAdminList');
@@ -1140,7 +1140,7 @@ EOD;
     $multiplier = $stuff["multiplier"];
 
     if ($taskID) {
-      $task = new task;
+      $task = new task();
       $task->set_id($taskID);
       $task->select();
       $projectID = $task->get_value("projectID");
@@ -1231,7 +1231,7 @@ EOD;
   }
 
   function get_all_parties($projectID="") {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $interestedPartyOptions = array();
 
     if (!$projectID && is_object($this)) {
@@ -1249,13 +1249,13 @@ EOD;
 
     if (is_object($this)) {
       if ($this->get_value("personID")) {
-        $p = new person;
+        $p = new person();
         $p->set_id($this->get_value("personID"));
         $p->select();
         $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"assignee", "selected"=>false, "personID"=>$this->get_value("personID"));
       }
       if ($this->get_value("approvedByManagerPersonID")) {
-        $p = new person;
+        $p = new person();
         $p->set_id($this->get_value("approvedByManagerPersonID"));
         $p->select();
         $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_value("firstName")." ".$p->get_value("surname"), "role"=>"manager", "selected"=>true, "personID"=>$this->get_value("approvedByManagerPersonID"));
@@ -1282,7 +1282,7 @@ EOD;
       $row = $db->row();
       $invoiceID = $row["invoiceID"];
       if ($invoiceID) {
-        $invoice = new invoice;
+        $invoice = new invoice();
         $invoice->set_id($invoiceID);
         $invoice->select();
         $maxAmount = page::money($invoice->get_value("currencyTypeID"),$invoice->get_value("maxAmount"),$fmt);
@@ -1333,7 +1333,7 @@ EOD;
                     FROM timeSheetItem 
                    WHERE timeSheetID = %d 
                 ORDER BY dateTimeSheetItem ASC",$this->get_id());
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     while ($r = $db->row()) {
       $desc.= $br.$r["dateTimeSheetItem"]." ".$r["taskID"]." ".$r["description"]."\n";

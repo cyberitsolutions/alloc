@@ -28,7 +28,7 @@ require_once("../alloc.php");
   usleep(500000);
   
   if ($_GET["taskID"]) {
-    $task = new task;
+    $task = new task();
     $task->set_id($_GET["taskID"]);
     $task->select();
     echo $task->get_task_cc_list_select($_GET["projectID"]);

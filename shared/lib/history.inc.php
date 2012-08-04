@@ -39,7 +39,7 @@ class history extends db_entity {
   function get_history_query($order="") {
     $current_user = &singleton("current_user");
     if (is_object($current_user)) {
-      $db = new db_alloc;
+      $db = new db_alloc();
       $query = prepare("SELECT *, historyID AS value, the_label AS label 
                          FROM history 
                         WHERE personID = %d 
@@ -86,7 +86,7 @@ class history extends db_entity {
     // Save the history record LABEL with the most descriptive label
     // possible, using the class variable->display_field_name
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $script_name_array = explode("/", $SCRIPT_NAME);
 
     $file = end($script_name_array);
@@ -163,7 +163,7 @@ class history extends db_entity {
     if (!is_object($current_user) || !$current_user->get_id()) {
       return;
     }
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("SELECT count(*) AS total FROM history WHERE personID = %d",$current_user->get_id());
     $db->query($query);
     $row = $db->row();

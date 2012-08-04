@@ -23,7 +23,7 @@
 require_once("../alloc.php");
 
 
-$permission = new permission;
+$permission = new permission();
 $permissionID = $_POST["permissionID"] or $permissionID = $_GET["permissionID"];
 
 if ($permissionID) {

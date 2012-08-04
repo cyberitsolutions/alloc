@@ -60,7 +60,7 @@ if ($_POST["mass_update"]) {
                                 ,"timeLimit","timeBest","timeWorst","timeExpected","priority","taskTypeID","taskStatus","personID");  
 
     foreach($_POST["select"] as $taskID => $selected) { 
-      $task = new task;
+      $task = new task();
       $task->set_id($taskID);
       $task->select();
 

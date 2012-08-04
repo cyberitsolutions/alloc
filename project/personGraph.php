@@ -27,7 +27,7 @@ function show_people($template_name) {
   global $project;
   global $TPL;
 
-  $db = new db_alloc;
+  $db = new db_alloc();
   $db->query($person_query);
   while ($db->next_record()) {
     $person = new person();
@@ -41,7 +41,7 @@ function show_people($template_name) {
 $projectID = $_POST["projectID"] or $projectID = $_GET["projectID"];
 
 if ($projectID) {
-  $project = new project;
+  $project = new project();
   $project->set_id($projectID);
   $project->select();
   $TPL["navigation_links"] = $project->get_navigation_links();

@@ -40,7 +40,7 @@ function show_productCost_list($productID, $template, $percent = false) {
                     ,$productID, $percent);
     $db->query($query);
     while ($db->next_record()) {
-      $productCost = new productCost;
+      $productCost = new productCost();
       $productCost->read_db_record($db);
       $productCost->set_tpl_values();
       $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
@@ -57,7 +57,7 @@ function show_productCost_new($template, $percent = false) {
   global $TPL;
   $t = new meta("currencyType");
   $currency_array = $t->get_assoc_array("currencyTypeID","currencyTypeID");
-  $productCost = new productCost;
+  $productCost = new productCost();
   $productCost->set_values(); // wipe clean
   $TPL["currencyOptions"] = page::select_options($currency_array,$productCost->get_value("currencyTypeID"));
   $TPL["taxOptions"] = page::select_options(array(""=>"Exempt",1=>"Included",0=>"Excluded"),"1");
@@ -76,7 +76,7 @@ function tf_list($selected="",$remove_these=array()) {
 }
 
 $productID = $_GET["productID"] or $productID = $_POST["productID"];
-$product = new product;
+$product = new product();
 
 if ($productID) {
   $product->set_id($productID);
@@ -134,7 +134,7 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
   foreach ((array)$_POST["productCostID"] as $k => $productCostID) {
     // Delete
     if (in_array($productCostID, (array)$_POST["deleteCost"])) {
-      $productCost = new productCost;
+      $productCost = new productCost();
       $productCost->set_id($productCostID);
       $productCost->select();
       $productCost->delete();
@@ -156,7 +156,7 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
       // Hardcode AUD for commissions because productCost table uses percent and dollars in same field
       $_POST["save_commissions"] and $a["currencyTypeID"] = "AUD";
 
-      $productCost = new productCost;
+      $productCost = new productCost();
       $productCost->read_array($a);
       //$errs = $productCost->validate();
       if (!$errs) {

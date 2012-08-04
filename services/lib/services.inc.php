@@ -41,8 +41,8 @@ class services {
   * @return string the session key
   */
   public function authenticate($username,$password) {
-    $person = new person;
-    $sess = new session;
+    $person = new person();
+    $sess = new session();
     $row = $person->get_valid_login_row($username,$password); 
     if ($row) {
       $sess->Start($row,false);
@@ -57,7 +57,7 @@ class services {
   private function get_current_user($sessID) {
     $sess = new session($sessID);
     if ($sess->Started()) {
-      $person = new person;
+      $person = new person();
       $person->load_current_user($sess->Get("personID"));
       // update session_started, which affects session lifetime
       $sess->Save();
@@ -72,7 +72,7 @@ class services {
   */
   public function get_task_comments($taskID) {
     if ($taskID) {
-      $task = new task;
+      $task = new task();
       $task->set_id($taskID);
       $task->select();
       return $task->get_task_comments_array();

@@ -24,7 +24,7 @@ require_once("../alloc.php");
 
 global $TPL;
 
-$db = new db_alloc;
+$db = new db_alloc();
 $TPL["tfID"] = $_GET["tfID"];
 
 
@@ -38,8 +38,8 @@ function show_expenseFormList($template_name) {
   global $transactionRepeat;
   $current_user = &singleton("current_user");
 
-  $db = new db_alloc;
-  $transactionRepeat = new transactionRepeat;
+  $db = new db_alloc();
+  $transactionRepeat = new transactionRepeat();
 
   if (!$_GET["tfID"] && !$current_user->have_role("admin")) {
     $tfIDs = $current_user->get_tfIDs();

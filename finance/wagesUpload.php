@@ -38,7 +38,7 @@ $field_map = array(""                =>0
                   );
 
 if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
-  $db = new db_alloc;
+  $db = new db_alloc();
 
   $lines = file($_FILES["wages_file"]["tmp_name"]);
 
@@ -122,7 +122,7 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     }
 
     // Create a transaction object and then save it
-    $transaction = new transaction;
+    $transaction = new transaction();
     $transaction->set_value("currencyTypeID",config::get_config_item("currency"));
     $transaction->set_value("fromTfID", $fromTfID);
     $transaction->set_value("tfID", config::get_config_item("outTfID"));

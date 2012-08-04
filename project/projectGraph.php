@@ -49,7 +49,7 @@ function show_projects($template_name) {
   if (is_array($_FORM["projectID"])) {
     $projectIDs = $_FORM["projectID"];
     foreach($projectIDs as $projectID) {
-      $project = new project;
+      $project = new project();
       $project->set_id($projectID);
       $project->select();
       $_FORM["projectID"] = array($projectID);

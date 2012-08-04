@@ -30,12 +30,12 @@ class timeSheetPrint {
     $timeSheet->set_id($timeSheetID);
     $timeSheet->select();
 
-    $timeUnit = new timeUnit;
+    $timeUnit = new timeUnit();
     $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
 
     $q = prepare("SELECT * from timeSheetItem WHERE timeSheetID=%d ", $timeSheetID);
     $q.= prepare("GROUP BY timeSheetItemID ORDER BY dateTimeSheetItem, timeSheetItemID");
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
 
     $customerBilledDollars = $timeSheet->get_value("customerBilledDollars");
@@ -52,7 +52,7 @@ class timeSheetPrint {
     $taxPercentDivisor = ($taxPercent/100) + 1;
 
     while ($db->next_record()) {
-      $timeSheetItem = new timeSheetItem;
+      $timeSheetItem = new timeSheetItem();
       $timeSheetItem->read_db_record($db);
 
       $taskID = sprintf("%d",$timeSheetItem->get_value("taskID"));
@@ -86,7 +86,7 @@ class timeSheetPrint {
 
       // Get task description
       if ($taskID && $TPL["printDesc"]) {
-        $t = new task;
+        $t = new task();
         $t->set_id($taskID);
         $t->select();
         $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription",DST_HTML_DISPLAY));
@@ -134,7 +134,7 @@ class timeSheetPrint {
     list($db,$customerBilledDollars,$timeSheet,$unit_array,$currency) = $this->get_timeSheetItem_vars($timeSheetID);
 
     while ($db->next_record()) {
-      $timeSheetItem = new timeSheetItem;
+      $timeSheetItem = new timeSheetItem();
       $timeSheetItem->read_db_record($db);
 
       $taskID = sprintf("%d",$timeSheetItem->get_value("taskID"));
@@ -153,7 +153,7 @@ class timeSheetPrint {
 
       // Get task description
       if ($taskID && $TPL["printDesc"]) {
-        $t = new task;
+        $t = new task();
         $t->set_id($taskID);
         $t->select();
         $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription",DST_HTML_DISPLAY));
@@ -204,7 +204,7 @@ class timeSheetPrint {
     $multipliers = $m->get_list();
 
     while ($db->next_record()) {
-      $timeSheetItem = new timeSheetItem;
+      $timeSheetItem = new timeSheetItem();
       $timeSheetItem->read_db_record($db);
 
       $row_num++;
@@ -222,7 +222,7 @@ class timeSheetPrint {
 
       // Get task description
       if ($taskID && $TPL["printDesc"]) {
-        $t = new task;
+        $t = new task();
         $t->set_id($taskID);
         $t->select();
         $d2 = str_replace("\r\n","\n",$t->get_value("taskDescription",DST_HTML_DISPLAY));
@@ -253,11 +253,11 @@ class timeSheetPrint {
     $TPL["printDesc"] = $printDesc;
     $TPL["format"] = $format;
 
-    $db = new db_alloc;
+    $db = new db_alloc();
 
     if ($timeSheetID) {
 
-      $timeSheet = new timeSheet;
+      $timeSheet = new timeSheet();
       $timeSheet->set_id($timeSheetID);
       $timeSheet->select();
       $timeSheet->set_tpl_values();
@@ -269,7 +269,7 @@ class timeSheetPrint {
 
 
       // Display the project name.
-      $project = new project;
+      $project = new project();
       $project->set_id($timeSheet->get_value("projectID"));
       $project->select();
       $TPL["timeSheet_projectName"] = $project->get_value("projectName",DST_HTML_DISPLAY);

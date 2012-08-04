@@ -110,7 +110,7 @@ class invoiceItem extends db_entity {
     $invoice = $this->get_foreign_object("invoice");
 
     if ($invoice->get_value("invoiceStatus") != "finished") {
-      $timeSheet = new timeSheet;
+      $timeSheet = new timeSheet();
       $timeSheet->set_id($timeSheetID);
       $timeSheet->select();
       $timeSheet->load_pay_info();
@@ -144,7 +144,7 @@ class invoiceItem extends db_entity {
   }
 
   function add_timeSheetItems($invoiceID,$timeSheetID) {
-    $timeSheet = new timeSheet;
+    $timeSheet = new timeSheet();
     $timeSheet->set_id($timeSheetID);
     $timeSheet->select();
     $currency = $timeSheet->get_value("currencyTypeID");
@@ -163,7 +163,7 @@ class invoiceItem extends db_entity {
       if ($row["comment"] && !$row["commentPrivate"]) {
         $str = $row["comment"];
       }
-      $ii = new invoiceItem;
+      $ii = new invoiceItem();
       $ii->currency = $currency;
       $ii->set_value("invoiceID",$invoiceID);
       $ii->set_value("timeSheetID",$timeSheet->get_id());
@@ -178,7 +178,7 @@ class invoiceItem extends db_entity {
   }
 
   function add_expenseForm($invoiceID,$expenseFormID) {
-    $expenseForm = new expenseForm;
+    $expenseForm = new expenseForm();
     $expenseForm->set_id($expenseFormID);
     $expenseForm->select();
     $db = new db_alloc();
@@ -198,14 +198,14 @@ class invoiceItem extends db_entity {
   }
 
   function add_expenseFormItems($invoiceID,$expenseFormID) {
-    $expenseForm = new expenseForm;
+    $expenseForm = new expenseForm();
     $expenseForm->set_id($expenseFormID);
     $expenseForm->select();
     $db = new db_alloc();
     $db->query("SELECT * FROM transaction WHERE expenseFormID = %d",$expenseFormID);
     while ($row = $db->row()) {
       $amount = abs($row["amount"]);
-      $ii = new invoiceItem;
+      $ii = new invoiceItem();
       $ii->set_value("invoiceID",$invoiceID);
       $ii->set_value("expenseFormID",$expenseForm->get_id());
       $ii->set_value("transactionID",$row["transactionID"]);
@@ -240,7 +240,7 @@ class invoiceItem extends db_entity {
     $expenseFormID = $this->get_value("expenseFormID");
 
     if ($timeSheetID) {
-      $timeSheet = new timeSheet;
+      $timeSheet = new timeSheet();
       $timeSheet->set_id($timeSheetID);
       $timeSheet->select();
       
@@ -289,7 +289,7 @@ class invoiceItem extends db_entity {
     
 
     } else if ($expenseFormID) {
-      $expenseForm = new expenseForm;
+      $expenseForm = new expenseForm();
       $expenseForm->set_id($expenseFormID);
       $expenseForm->select();
       $total_expenseForm = $expenseForm->get_abs_sum_transactions();
@@ -305,7 +305,7 @@ class invoiceItem extends db_entity {
   }
 
   function create_transaction($amount,$tfID,$status) {
-    $transaction = new transaction;
+    $transaction = new transaction();
     $invoice = $this->get_foreign_object("invoice");
     $this->currency = $invoice->get_value("currencyTypeID");
     $db = new db_alloc();

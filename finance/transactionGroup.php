@@ -37,7 +37,7 @@ function show_transaction_list($template) {
   $db->query($q);
 
   while ($row = $db->row()) {
-    $transaction = new transaction;
+    $transaction = new transaction();
     $transaction->read_array($row);
     $transaction->set_values();
 
@@ -57,7 +57,7 @@ function show_transaction_list($template) {
 function show_transaction_new($template) {
   global $TPL;
   global $tflist;
-  $transaction = new transaction;
+  $transaction = new transaction();
   $transaction->set_values(); // wipe clean
   $TPL["display"] = "display:none";
   $TPL["tfList_dropdown"] = page::select_options($tflist,NULL,500);
@@ -72,7 +72,7 @@ function add_inactive_tf($tfID, $options) {
   // add a tf to the array of options, if it's not already there
   global $TPL;
   if($tfID && !array_key_exists($tfID, $options)) {
-    $tf = new tf;
+    $tf = new tf();
     $tf->set_id($tfID);
     $tf->select();
     $options[$tfID] = $tf->get_value("tfName");
@@ -97,7 +97,7 @@ if ($_POST["save_transactions"]) {
     foreach ($_POST["transactionID"] as $k => $transactionID) {
       // Delete
       if (in_array($transactionID, $_POST["deleteTransaction"])) {
-        $transaction = new transaction;
+        $transaction = new transaction();
         $transaction->set_id($transactionID);
         $transaction->select();
         $transaction->delete();
@@ -117,7 +117,7 @@ if ($_POST["save_transactions"]) {
                   ,"transactionGroupID" => $transactionGroupID
                   ,"transactionID"      => $_POST["transactionID"][$k]);
 
-        $transaction = new transaction;
+        $transaction = new transaction();
         if ($_POST["transactionID"][$k]) {
           $transaction->set_id($_POST["transactionID"][$k]);
           $transaction->select();

@@ -44,7 +44,7 @@ function show_all_exp($template) {
 
     while ($db->next_record()) {
 
-      $transaction = new transaction;
+      $transaction = new transaction();
       $transaction->read_db_record($db);
       $transaction->set_values();
 
@@ -52,19 +52,19 @@ function show_all_exp($template) {
 
       $TPL["lineTotal"] = $TPL["amount"] * $transaction->get_value("quantity");
 
-      $tf = new tf;
+      $tf = new tf();
       $tf->set_id($transaction->get_value("fromTfID"));
       $tf->select();
       $TPL["fromTfIDLink"] = $tf->get_link();
 
-      $tf = new tf;
+      $tf = new tf();
       $tf->set_id($transaction->get_value("tfID"));
       $tf->select();
       $TPL["tfIDLink"] = $tf->get_link();
   
       $projectID = $transaction->get_value("projectID");
       if($projectID) {
-        $project = new project;
+        $project = new project();
         $project->set_id($transaction->get_value("projectID"));
         $project->select();
         $TPL["projectName"] = $project->get_value("projectName");
@@ -106,7 +106,7 @@ function check_optional_no_edit() {
 function check_optional_has_line_items() {
   global $expenseForm;
   if (is_object($expenseForm) && $expenseForm->get_id()) {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = prepare("SELECT COUNT(*) as tally FROM transaction WHERE expenseFormID = %d",$expenseForm->get_id());
     $db->query($q);
     $db->next_record();
@@ -125,10 +125,10 @@ if (!config::get_config_item("mainTfID")) {
 
 $current_user->check_employee();
 
-$expenseForm = new expenseForm;
-$transaction_to_edit = new transaction;
+$expenseForm = new expenseForm();
+$transaction_to_edit = new transaction();
 
-$db = new db_alloc;
+$db = new db_alloc();
 
 $expenseFormID = $_POST["expenseFormID"] or $expenseFormID = $_GET["expenseFormID"];
 
@@ -137,7 +137,7 @@ if ($expenseFormID) {
   $expenseForm->set_id($expenseFormID);
   if (!$expenseForm->select()) {
     alloc_error("Bad Expense Form ID");
-    $expenseForm = new expenseForm;
+    $expenseForm = new expenseForm();
   }
 } 
 
@@ -157,7 +157,7 @@ if ($_POST["add"]) {
   $_POST["amount"] = $_POST["amount"] * $_POST["quantity"];
 
 
-  $transaction = new transaction;
+  $transaction = new transaction();
   $transactionID && $transaction->set_id($_POST["transactionID"]);
   $transaction->read_globals();
 
@@ -211,7 +211,7 @@ if ($transaction_to_edit->get_value("fromTfID")) {
   $selectedProject = 0;
 }
 
-$tf = new tf;
+$tf = new tf();
 $options = $tf->get_assoc_array("tfID","tfName");
 $TPL["fromTfOptions"] = page::select_options($options, $selectedTfID);
 
@@ -237,7 +237,7 @@ if (is_object($expenseForm)) {
 }
 
 if (is_object($expenseForm) && $expenseForm->get_value("expenseFormCreatedUser")) {
-  $p = new person;
+  $p = new person();
   $p->set_id($expenseForm->get_value("expenseFormCreatedUser"));
   $p->select();
   $TPL["user"] = $p->get_name();
@@ -363,7 +363,7 @@ $seekClientReimbursementOption = "<input type=\"checkbox\" value=\"1\" name=\"se
 $scr_hidden = "<input type=\"hidden\" name=\"seekClientReimbursement\" value=\"".$expenseForm->get_value("seekClientReimbursement")."\">";
 $TPL["seekClientReimbursementOption"] = $scr_label.$scr_hidden;
 
-$c = new client;
+$c = new client();
 $c->set_id($expenseForm->get_value("clientID"));
 $c->select();
 $clientName = page::htmlentities($c->get_name());
@@ -412,7 +412,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
 }
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {
-  $db = new db_alloc;
+  $db = new db_alloc();
   $db->query(prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount, 
                              transaction.currencyTypeID as currency
                         FROM transaction

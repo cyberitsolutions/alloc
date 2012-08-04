@@ -99,7 +99,7 @@ function import_csv($infile, $mapping, $header = true) {
 
   $db = new db_alloc(); //import_find_username needs it
   //Import a CSV file
-  $project = new project;
+  $project = new project();
   $project->set_id($projectID);
   $project->select();
 
@@ -124,7 +124,7 @@ function import_csv($infile, $mapping, $header = true) {
 
       $task_result = array();
 
-      $task = new task;
+      $task = new task();
       $ips = array();
       for ($i = 0;$i < count($row);$i++) {
         switch($mapping[$i]) {
@@ -276,7 +276,7 @@ function import_gnome_planner($infile) {
 
     // OK, checks are done, now we attempt to actually do the import
     if($fileIsValid) {
-      $project = new project;
+      $project = new project();
       $project->set_id($projectID);
       $project->select();
       $projectManager = $project->get_project_manager();
@@ -304,7 +304,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
   for($i = 0; $i < $parentNode->childNodes->length; $i++) {
     $taskXML = $parentNode->childNodes->item($i);
     if($taskXML->nodeType == XML_ELEMENT_NODE && $taskXML->tagName == "task") {
-      $task = new task;
+      $task = new task();
       $task->set_value('taskName', trim($taskXML->getAttribute("name")));
       $task->set_value('projectID', $projectID);
       // We can find the task assignee's id in the $task_allocation array, and that person's Person record in the $resource_people array
@@ -342,7 +342,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
           // Save the task so we have a task ID
           $task->save();
           // Make a comment about this task
-          $comment = new comment;
+          $comment = new comment();
           $comment->set_value("commentType","task");
           $comment->set_value("commentLinkID", $task->get_id());
           $comment->set_value("commentCreatedTime", date("Y-m-d H:i:s"));
@@ -380,7 +380,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
 
 ////EXPORT FUNCTIONS
 function export_gnome_planner($projectID) {
-  $project = new project;
+  $project = new project();
   $project->set_id($projectID);
   $project->select();
 
@@ -479,7 +479,7 @@ function export_gnome_planner($projectID) {
     if(isset($resources[$resourceID])) {
       $person = $resources[$resourceID];
     } else {
-      $person = new person;
+      $person = new person();
       $person->set_id($resourceID);
       $person->select();
 
@@ -509,7 +509,7 @@ function export_gnome_planner($projectID) {
 }
 
 function export_csv($projectID) {
-  $project = new project;
+  $project = new project();
   $project->set_id($projectID);
   $project->select();
 
@@ -526,7 +526,7 @@ function export_csv($projectID) {
   }
   array_multisort($taskIDs, $tasks);
   foreach($tasks as $task) {
-    $assignee = new person;
+    $assignee = new person();
     $assignee->set_id($task['personID']);
     $assignee->select();
 
@@ -579,7 +579,7 @@ function import_find_username($candidates) {
     $query = prepare("SELECT * FROM person WHERE username = '%s'", $candidate);
     $db->query($query);
     if($db->next_record()) {
-      $person = new person;
+      $person = new person();
       $person->read_db_record($db);
       $person->select();
       return $person;
@@ -604,7 +604,7 @@ function get_xml_document() {
     echo "using php 4 compat";
     return new DOM_XML_Wrapper_Document();
   } else {
-    return new DOMDocument;
+    return new DOMDocument();
   }
 }
 

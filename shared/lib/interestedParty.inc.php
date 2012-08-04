@@ -188,7 +188,7 @@ class interestedParty extends db_entity {
     $data["emailAddress"] = str_replace(array("<",">"),"",$data["emailAddress"]);
     // Add new entry
 
-    $ip = new interestedParty;
+    $ip = new interestedParty();
     $existing = interestedParty::exists($data["entity"], $data["entityID"], $data["emailAddress"]);
     if ($existing) {
       $ip->set_id($existing["interestedPartyID"]);
@@ -284,7 +284,7 @@ class interestedParty extends db_entity {
 
         // Else reactivate existing IP
         } else if (!interestedParty::active($entity, $entityID, $emailAddress)) {
-          $interestedParty = new interestedParty;
+          $interestedParty = new interestedParty();
           $interestedParty->set_id($ip["interestedPartyID"]);
           $interestedParty->select();
           $interestedParty->set_value("interestedPartyActive",1);
@@ -300,7 +300,7 @@ class interestedParty extends db_entity {
           if (is_object($object) && $object->classname == "task" && $object->get_id() && $current_user->get_id()) {
             $timeSheet = new timeSheet();
             $tsi_row = $timeSheet->add_timeSheetItem(array("taskID"=>$object->get_id(), "duration"=>$duration, "comment"=>$body, "msg_uid"=>$msg_uid, "msg_id"=>$email_receive->mail_headers["message-id"], "multiplier"=>1));
-            $timeUnit = new timeUnit;
+            $timeUnit = new timeUnit();
             $units = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
             $unitLabel = $units[$tsi_row["timeSheetItemDurationUnitID"]];
           }
@@ -350,7 +350,7 @@ class interestedParty extends db_entity {
       $f = " WHERE ".implode(" AND ",$filter);
     }
     
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = "SELECT * FROM interestedParty ".$join.$f.$groupby;
 
     $db->query($q);

@@ -41,14 +41,14 @@ function show_productSale_list($productSaleID, $template) {
   global $TPL;
   global $productSaleItemsDoExist;
 
-  $productSale = new productSale;
+  $productSale = new productSale();
   $productSale->set_id($productSaleID);
   $productSale->select();
   $productSale->set_tpl_values();
 
   $taxName = config::get_config_item("taxName");
 
-  $product = new product;
+  $product = new product();
   $ops = $product->get_assoc_array("productID","productName");
   $query = prepare("SELECT *
                       FROM productSaleItem 
@@ -58,7 +58,7 @@ function show_productSale_list($productSaleID, $template) {
   $db->query($query);
   while ($db->next_record()) {
     $productSaleItemsDoExist = true;
-    $productSaleItem = new productSaleItem;
+    $productSaleItem = new productSaleItem();
     $productSaleItem->read_db_record($db);
     $productSaleItem->set_tpl_values();
 
@@ -88,9 +88,9 @@ function show_productSale_new($template) {
   global $productSaleItemsDoExist;
   global $productSaleID;
   $taxName = config::get_config_item("taxName");
-  $productSaleItem = new productSaleItem;
+  $productSaleItem = new productSaleItem();
   $productSaleItem->set_values(); // wipe clean
-  $product = new product;
+  $product = new product();
   $ops = $product->get_assoc_array("productID","productName");
   $TPL["productList_dropdown"] = page::select_options($ops, $productSaleItem->get_value("productID"));
   $productSaleItemsDoExist and $TPL["display"] = "display:none";
@@ -106,7 +106,7 @@ function show_transaction_list($transactions=array(), $template) {
   global $TPL;
   global $tflist;
   foreach ($transactions as $row) {
-    $transaction = new transaction;
+    $transaction = new transaction();
     $transaction->read_array($row);
     $transaction->set_values();
     $TPL["display"] = "";
@@ -136,7 +136,7 @@ function show_transaction_list($transactions=array(), $template) {
 function show_transaction_new($template) {
   global $TPL;
   global $tflist;
-  $transaction = new transaction;
+  $transaction = new transaction();
   $transaction->set_values(); // wipe clean
   $TPL["display"] = "display:none";
   $m = new meta("currencyType");
@@ -182,7 +182,7 @@ $projectID = $_GET["projectID"] or $projectID = $_POST["projectID"];
 $clientID = $_GET["clientID"] or $clientID = $_POST["clientID"];
 $TPL["projectID"] = $projectID;
 
-$productSale = new productSale;
+$productSale = new productSale();
 $productSale->read_globals();
 if ($productSaleID) {
   $productSale->set_id($productSaleID);
@@ -197,7 +197,7 @@ if ($productSaleID) {
 }
 
 
-$db = new db_alloc;
+$db = new db_alloc();
 $tf = new tf();
 $tflist = $tf->get_assoc_array("tfID","tfName");
 
@@ -230,7 +230,7 @@ if ($_POST["save"]) {
     foreach ($_POST["productSaleItemID"] as $k => $productSaleItemID) {
       // Delete
       if (in_array($productSaleItemID, $_POST["deleteProductSaleItem"])) {
-        $productSaleItem = new productSaleItem;
+        $productSaleItem = new productSaleItem();
         $productSaleItem->set_id($productSaleItemID);
         $productSaleItem->delete();
 
@@ -254,7 +254,7 @@ if ($_POST["save"]) {
         }
         $a["productSaleItemID"] = $productSaleItemID;
 
-        $productSaleItem = new productSaleItem;
+        $productSaleItem = new productSaleItem();
         $productSaleItem->read_array($a);
         if ($productSaleItem->validate() == "") {
           $productSaleItem->save();
@@ -274,7 +274,7 @@ if ($_POST["save"]) {
     foreach ($_POST["transactionID"] as $k => $transactionID) {
       // Delete
       if (in_array($transactionID, $_POST["deleteTransaction"])) {
-        $transaction = new transaction;
+        $transaction = new transaction();
         $transaction->set_id($transactionID);
         $transaction->select();
         $transaction->delete();
@@ -302,7 +302,7 @@ if ($_POST["save"]) {
           $a["status"] = $_POST["status"][$k];
         }
 
-        $transaction = new transaction;
+        $transaction = new transaction();
         $transaction->read_array($a);
         if ($transaction->validate() == "") {
           $transaction->save();

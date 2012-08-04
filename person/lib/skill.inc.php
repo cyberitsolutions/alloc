@@ -35,10 +35,10 @@ class skill extends db_entity {
     $query = "SELECT * FROM skill";
     $query.= prepare(" WHERE skillName='%s'", $this->get_value('skillName'));
     $query.= prepare(" AND skillClass='%s'", $this->get_value('skillClass'));
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     if ($db->next_record()) {
-      $skill = new skill;
+      $skill = new skill();
       $skill->read_db_record($db);
       $this->set_id($skill->get_id());
       $this->set_value('skillDescription', $skill->get_value('skillDescription'));
@@ -48,12 +48,12 @@ class skill extends db_entity {
   }
 
   function get_skill_classes() {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $skill_classes = array(""=>"Any Class");
     $query = "SELECT skillClass FROM skill ORDER BY skillClass";
     $db->query($query);
     while ($db->next_record()) {
-      $skill = new skill;
+      $skill = new skill();
       $skill->read_db_record($db);
       if (!in_array($skill->get_value('skillClass'), $skill_classes)) {
         $skill_classes[$skill->get_value('skillClass')] = $skill->get_value('skillClass');
@@ -71,10 +71,10 @@ class skill extends db_entity {
       $query.= prepare(" WHERE skillClass='%s'", $skill_class);
     }
     $query.= " ORDER BY skillClass,skillName";
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {
-      $skill = new skill;
+      $skill = new skill();
       $skill->read_db_record($db);
       $skills[$skill->get_id()] = sprintf("%s - %s", $skill->get_value('skillClass'), $skill->get_value('skillName'));
     }

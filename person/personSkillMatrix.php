@@ -37,7 +37,7 @@ function show_skill_classes() {
   $query = "SELECT skillClass FROM skill ORDER BY skillClass";
   $db->query($query);
   while ($db->next_record()) {
-    $skill = new skill;
+    $skill = new skill();
     $skill->read_db_record($db);
     if (!in_array($skill->get_value('skillClass'), $skill_classes)) {
       $skill_classes[$skill->get_value('skillClass')] = $skill->get_value('skillClass');
@@ -60,7 +60,7 @@ function show_skills() {
   $query.= " ORDER BY skillClass,skillName";
   $db->query($query);
   while ($db->next_record()) {
-    $skill = new skill;
+    $skill = new skill();
     $skill->read_db_record($db);
     $skills[$skill->get_id()] = sprintf("%s - %s", $skill->get_value('skillClass'), $skill->get_value('skillName'));
   }
@@ -80,7 +80,7 @@ function get_people_header() {
   $people_ids = array();
 
   $where = FALSE;
-  $db = new db_alloc;
+  $db = new db_alloc();
   $query = "SELECT * FROM person";
   $query.= " LEFT JOIN proficiency ON person.personID=proficiency.personID";
   $query.= " LEFT JOIN skill ON proficiency.skillID=skill.skillID WHERE personActive = 1 ";
@@ -93,7 +93,7 @@ function get_people_header() {
   $query.= " GROUP BY username ORDER BY username";
   $db->query($query);
   while ($db->next_record()) {
-    $person = new person;
+    $person = new person();
     $person->read_db_record($db);
     array_push($people_ids, $person->get_id());
     $people_header.= sprintf("<th style=\"text-align:center\">%s</th>\n", $person->get_value('username'));
@@ -109,7 +109,7 @@ function show_skill_expertise() {
 
   $currSkillClass = null;
 
-  $db = new db_alloc;
+  $db = new db_alloc();
   $query = "SELECT * FROM proficiency";
   $query.= " LEFT JOIN skill ON proficiency.skillID=skill.skillID";
   if ($talent != "" || $skill_class != "") {
@@ -122,7 +122,7 @@ function show_skill_expertise() {
   $query.= " GROUP BY skillName ORDER BY skillClass,skillName";
   $db->query($query);
   while ($db->next_record()) {
-    $skill = new skill;
+    $skill = new skill();
     $skill->read_db_record($db);
     $thisSkillClass = $skill->get_value('skillClass');
     if ($currSkillClass != $thisSkillClass) {
@@ -135,12 +135,12 @@ function show_skill_expertise() {
     }
     print sprintf("<tr>\n<th>%s</th>\n", $skill->get_value('skillName',DST_HTML_DISPLAY));
     for ($i = 0; $i < count($people_ids); $i++) {
-      $db2 = new db_alloc;
+      $db2 = new db_alloc();
       $query = "SELECT * FROM proficiency";
       $query.= prepare(" WHERE skillID=%d AND personID=%d", $skill->get_id(), $people_ids[$i]);
       $db2->query($query);
       if ($db2->next_record()) {
-        $proficiency = new proficiency;
+        $proficiency = new proficiency();
         $proficiency->read_db_record($db2);
         $p = sprintf("<td align=\"center\"><img src=\"../images/skill_%s.png\" alt=\"%s\"/></td>\n"
                               ,strtolower($proficiency->get_value('skillProficiency'))

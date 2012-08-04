@@ -61,7 +61,7 @@ class token extends db_entity {
   function execute() {
     if ($this->get_id()) {
       if ($this->get_value("tokenActionID")) {
-        $tokenAction = new tokenAction;
+        $tokenAction = new tokenAction();
         $tokenAction->set_id($this->get_value("tokenActionID"));    
         $tokenAction->select();
       }

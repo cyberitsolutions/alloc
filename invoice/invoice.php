@@ -43,7 +43,7 @@ function show_new_invoiceItem($template) {
     // If we are editing an existing invoiceItem
     if (is_array($_POST["invoiceItem_edit"])) {
       $invoiceItemID = key($_POST["invoiceItem_edit"]);
-      $invoiceItem = new invoiceItem;
+      $invoiceItem = new invoiceItem();
       $invoiceItem->currency = $invoice->get_value("currencyTypeID");
       $invoiceItem->set_id($invoiceItemID);
       $invoiceItem->select();
@@ -66,7 +66,7 @@ function show_new_invoiceItem($template) {
 
     // Else default values for creating a new invoiceItem
     } else {
-      $invoiceItem = new invoiceItem;
+      $invoiceItem = new invoiceItem();
       $invoiceItem->set_values("invoiceItem_");
       $TPL["invoiceItem_buttons"] = '
          <button type="submit" name="invoiceItem_save" value="1" class="save_button">Add Item<i class="icon-plus-sign"></i></button>
@@ -98,7 +98,7 @@ function show_new_invoiceItem($template) {
         $timeSheetStatii = timeSheet::get_timeSheet_statii();
 
         while ($row = $db->row()) {
-          $t = new timeSheet;
+          $t = new timeSheet();
           $t->read_db_record($db);
           $t->load_pay_info();
           $dollars = $t->pay_info["total_customerBilledDollars"] or $dollars = $t->pay_info["total_dollars"];
@@ -151,7 +151,7 @@ function show_invoiceItem_list() {
               ,$invoiceID);
   $db->query($q);
   while ($db->next_record()) {
-    $invoiceItem = new invoiceItem;
+    $invoiceItem = new invoiceItem();
     $invoiceItem->currency = $invoice->get_value("currencyTypeID");
   
     if (!$invoiceItem->read_db_record($db)) {
@@ -397,8 +397,8 @@ function show_comments() {
 
 $invoiceID = $_POST["invoiceID"] or $invoiceID = $_GET["invoiceID"];
 
-$db = new db_alloc;
-$invoice = new invoice;
+$db = new db_alloc();
+$invoice = new invoice();
 
 
 if ($invoiceID) {
@@ -441,7 +441,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
   }
 
   if (!$invoice->get_value("invoiceName") && $invoice->get_value("clientID")) {
-    $client = new client;
+    $client = new client();
     $client->set_id($invoice->get_value("clientID"));
     $client->select();
     $invoice->set_value("invoiceName", $client->get_value("clientName"));
@@ -464,7 +464,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
       if ($status || $_POST["changeTransactionStatus"]) {
         $_POST["changeTransactionStatus"] and $status = $_POST["changeTransactionStatus"];
         if ($status) {
-          $ii = new invoiceItem;
+          $ii = new invoiceItem();
           $ii->set_id($iiID);
           $ii->select();
           $ii->create_transaction($_POST["invoiceItemAmountPaid"][$iiID],$_POST["invoiceItemAmountPaidTfID"][$iiID],$status);
@@ -506,7 +506,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
   is_array($_POST["invoiceItem_edit"]) and $invoiceItemID = key($_POST["invoiceItem_edit"]);
   is_array($_POST["invoiceItem_delete"]) and $invoiceItemID = key($_POST["invoiceItem_delete"]);
 
-  $invoiceItem = new invoiceItem;
+  $invoiceItem = new invoiceItem();
   $invoiceItem->currency = $invoice->get_value("currencyTypeID");
   $invoiceItem->set_id($invoiceItemID);
   #echo $invoiceItem->get_id();

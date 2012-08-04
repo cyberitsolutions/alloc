@@ -42,7 +42,7 @@ class session {
     global $TPL;
     $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"] or $this->key = $_REQUEST["sessID"];
     $TPL["sessID"]       = $_GET["sess"];
-    $this->db            = new db_alloc;
+    $this->db            = new db_alloc();
     #$this->session_life  = (5); 
     $this->session_life  = (config::get_config_item("allocSessionMinutes")*60); 
     $this->session_life < 1 and $this->session_life = 10000; // just in case.

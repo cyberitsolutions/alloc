@@ -31,7 +31,7 @@ if (!$current_user->is_employee()) {
     global $timeSheet;
     global $TPL;
 
-    $db = new db_alloc;
+    $db = new db_alloc();
 
     $db->query(prepare("SELECT SUM(amount) as total_incoming FROM transaction WHERE timeSheetID = %d AND fromTfID = %d",$timeSheet->get_id(),config::get_config_item("inTfID")));
     $row = $db->row();
@@ -92,7 +92,7 @@ if (!$current_user->is_employee()) {
     global $TPL;
     $current_user = &singleton("current_user");
     global $percent_array;
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query("SELECT * FROM transaction WHERE timeSheetID = %d",$timeSheet->get_id());
 
     if ($db->next_record() || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
@@ -117,7 +117,7 @@ if (!$current_user->is_employee()) {
         $db->query("SELECT * FROM transaction WHERE timeSheetID = %d ORDER BY transactionID",$timeSheet->get_id());
 
         while ($db->next_record()) {
-          $transaction = new transaction;
+          $transaction = new transaction();
           $transaction->read_db_record($db);
           $transaction->set_tpl_values("transaction_");
 
@@ -148,7 +148,7 @@ if (!$current_user->is_employee()) {
         $db->query($query);
 
         while ($db->next_record()) {
-          $transaction = new transaction;
+          $transaction = new transaction();
           $transaction->read_db_record($db);
           $transaction->set_tpl_values("transaction_");
           unset($TPL["transaction_amount_pos"]);
@@ -170,7 +170,7 @@ if (!$current_user->is_employee()) {
     global $percent_array;
 
     if ($timeSheet->get_value("status") == "invoiced" && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-      $tf = new tf;
+      $tf = new tf();
       $options = $tf->get_assoc_array("tfID","tfName");
       $TPL["tf_options"] = page::select_options($options, $none);
 
@@ -195,7 +195,7 @@ if (!$current_user->is_employee()) {
     $current_user = &singleton("current_user");
     if (!$timeSheet->get_id()) return;
     
-    $db = new db_alloc;
+    $db = new db_alloc();
     $q = prepare("SELECT COUNT(*) AS tally FROM timeSheetItem WHERE timeSheetID = %d AND timeSheetItemID != %d",$timeSheet->get_id(),$_POST["timeSheetItem_timeSheetItemID"]);
     $db->query($q);
     $db->next_record();
@@ -212,7 +212,7 @@ if (!$current_user->is_employee()) {
     global $timeSheetItem;
     global $timeSheetID;
 
-    $db_task = new db_alloc;
+    $db_task = new db_alloc();
 
     if (is_object($timeSheet) && $timeSheet->get_value("status") == "edit") {
       $TPL["timeSheetItem_buttons"] = '
@@ -222,7 +222,7 @@ if (!$current_user->is_employee()) {
 
     $TPL["currency"] = page::money($timeSheet->get_value("currencyTypeID"),'',"%S");
 
-    $timeUnit = new timeUnit;
+    $timeUnit = new timeUnit();
     $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
     
     $item_query = prepare("SELECT * from timeSheetItem WHERE timeSheetID=%d", $timeSheetID);
@@ -243,7 +243,7 @@ if (!$current_user->is_employee()) {
     }
 
     while ($db->next_record()) {
-      $timeSheetItem = new timeSheetItem;
+      $timeSheetItem = new timeSheetItem();
       $timeSheetItem->currency = $timeSheet->get_value("currencyTypeID");
       $timeSheetItem->read_db_record($db);
       $timeSheetItem->set_tpl_values("timeSheetItem_");
@@ -275,7 +275,7 @@ if (!$current_user->is_employee()) {
       $TPL["timeSheetItem_status"] = "";
       $row_messages = array();
       if($timeSheetItem->get_value('taskID')) {
-        $task = new task;
+        $task = new task();
         $task->set_id($timeSheetItem->get_value('taskID'));
         $task->select();
         if($task->get_value('timeLimit') > 0) {
@@ -327,7 +327,7 @@ if (!$current_user->is_employee()) {
       $timeSheetItem_edit = $_POST["timeSheetItem_edit"] or $timeSheetItem_edit = $_GET["timeSheetItem_edit"];
       $timeSheetItemID = $_POST["timeSheetItemID"] or $timeSheetItemID = $_GET["timeSheetItemID"];
       if ($timeSheetItemID && $timeSheetItem_edit) {
-        $timeSheetItem = new timeSheetItem;
+        $timeSheetItem = new timeSheetItem();
         $timeSheetItem->currency = $timeSheet->get_value("currencyTypeID");
         $timeSheetItem->set_id($timeSheetItemID);
         $timeSheetItem->select();
@@ -363,7 +363,7 @@ if (!$current_user->is_employee()) {
       $TPL["taskListDropdown"] = $timeSheet->get_task_list_dropdown("mine",$timeSheet->get_id(),$taskID);
       $TPL["tsi_timeSheetID"] = $timeSheet->get_id();
 
-      $timeUnit = new timeUnit;
+      $timeUnit = new timeUnit();
       $unit_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA");
       $TPL["tsi_unit_options"] = page::select_options($unit_array, $timeSheetItemDurationUnitID);
       $timeSheetItemDurationUnitID and $TPL["tsi_unit_label"] = $unit_array[$timeSheetItemDurationUnitID];
@@ -423,11 +423,11 @@ global $TPL;
 $timeSheetID = $_POST["timeSheetID"] or $timeSheetID = $_GET["timeSheetID"];
 
 
-$db = new db_alloc;
-$timeSheet = new timeSheet;
+$db = new db_alloc();
+$timeSheet = new timeSheet();
 
 if ($timeSheetID) {
-  $timeSheet = new timeSheet;
+  $timeSheet = new timeSheet();
   $timeSheet->set_id($timeSheetID);
   $timeSheet->select();
   $timeSheet->set_values();
@@ -436,7 +436,7 @@ if ($timeSheetID) {
 
 // Manually update the Client Billing field
 if ($_REQUEST["updateCB"] && $timeSheet->get_id() && $timeSheet->can_edit_rate()) {
-  $project = new project;
+  $project = new project();
   $project->set_id($timeSheet->get_value("projectID"));
   $project->select();
   $timeSheet->set_value("customerBilledDollars",page::money($project->get_value("currencyTypeID"),$project->get_value("customerBilledDollars"),"%mo"));
@@ -479,7 +479,7 @@ if ($_POST["save"]
   $projectID = $timeSheet->get_value("projectID");
 
   if ($projectID != 0) {
-    $project = new project;
+    $project = new project();
     $project->set_id($projectID);
     $project->select();
 
@@ -526,7 +526,7 @@ if ($_POST["save"]
   } else if ($timeSheet->save()) {
 
     if ($add_timeSheet_to_invoiceID) {
-      $invoice = new invoice;
+      $invoice = new invoice();
       $invoice->set_id($add_timeSheet_to_invoiceID);
       $invoice->add_timeSheet($timeSheet->get_id());
     }
@@ -601,13 +601,13 @@ if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeShe
   }
 
   $query = prepare("UPDATE transaction SET status = '%s' WHERE timeSheetID = %d", $status, $timeSheet->get_id());
-  $db = new db_alloc;
+  $db = new db_alloc();
   $db->query($query);
   $db->next_record();
 
 // Take care of the transaction line items on an invoiced timesheet created by admin
 } else if (($_POST["transaction_save"] || $_POST["transaction_delete"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
-  $transaction = new transaction;
+  $transaction = new transaction();
   $transaction->read_globals();
   $transaction->read_globals("transaction_");
   if ($_POST["transaction_save"]) {
@@ -623,10 +623,10 @@ if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeShe
 
 
 // display the approved by admin and managers name and date
-$person = new person;
+$person = new person();
 
 if ($timeSheet->get_value("approvedByManagerPersonID")) {
-  $person_approvedByManager = new person;
+  $person_approvedByManager = new person();
   $person_approvedByManager->set_id($timeSheet->get_value("approvedByManagerPersonID"));
   $person_approvedByManager->select();
   $TPL["timeSheet_approvedByManagerPersonID_username"] = $person_approvedByManager->get_name();
@@ -634,7 +634,7 @@ if ($timeSheet->get_value("approvedByManagerPersonID")) {
 }
 
 if ($timeSheet->get_value("approvedByAdminPersonID")) {
-  $person_approvedByAdmin = new person;
+  $person_approvedByAdmin = new person();
   $person_approvedByAdmin->set_id($timeSheet->get_value("approvedByAdminPersonID"));
   $person_approvedByAdmin->select();
   $TPL["timeSheet_approvedByAdminPersonID_username"] = $person_approvedByAdmin->get_name();
@@ -659,7 +659,7 @@ if ($_GET["newTimeSheet_projectID"] && !$projectID) {
   $_GET["taskID"] and $tid = "&taskID=".$_GET["taskID"];
 
   $projectID = $_GET["newTimeSheet_projectID"];
-  $db = new db_alloc;
+  $db = new db_alloc();
   $q = prepare("SELECT * FROM timeSheet WHERE status = 'edit' AND personID = %d AND projectID = %d",$current_user->get_id(),$projectID);
   $db->query($q);
   if ($db->next_record()) {
@@ -684,7 +684,7 @@ $TPL["taskID"] = $_GET["taskID"];
 
 // Get the project record to determine which button for the edit status.
 if ($projectID != 0) {
-  $project = new project;
+  $project = new project();
   $project->set_id($projectID);
   $project->select();
 
@@ -907,7 +907,7 @@ case 'finished':
 
 if ($timeSheet->get_value("status") == "edit") {
 
-  $tf_db = new db_alloc;
+  $tf_db = new db_alloc();
   $tf_db->query("select preferred_tfID from person where personID = %d",$timeSheet->get_value("personID"));
   $tf_db->next_record();
 

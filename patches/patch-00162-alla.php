@@ -7,7 +7,7 @@ $db = new db_alloc();
 $q = prepare("SELECT * FROM client");
 $db->query($q);
 while ($db->row()) {
-  $client = new client;
+  $client = new client();
   $client->read_db_record($db);
   $client->update_search_index_doc($index);
 }

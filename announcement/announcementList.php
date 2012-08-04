@@ -32,7 +32,7 @@ function show_announcements($template_name) {
   $db = new db_alloc();
   $db->query($query);
   while ($db->next_record()) {
-    $announcement = new announcement;
+    $announcement = new announcement();
     $announcement->read_db_record($db);
     $announcement->set_values();
     $TPL["personName"] = $people[$announcement->get_value("personID")]["name"];

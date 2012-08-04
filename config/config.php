@@ -45,9 +45,9 @@ if ($_POST["test_email_gateway"]) {
 }
 
 
-$config = new config;
+$config = new config();
 
-$db = new db_alloc;
+$db = new db_alloc();
 $db->query("SELECT name,value,type FROM config");
 while ($db->next_record()) {
   $fields_to_save[] = $db->f("name");
@@ -100,7 +100,7 @@ if ($_POST["fetch_exchange_rates"]) {
 if ($_POST["save"]) {
 
   if ($_POST["hoursInDay"]) {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $day = $_POST["hoursInDay"]*60*60;
     $q = prepare("UPDATE timeUnit SET timeUnitSeconds = '%d' WHERE timeUnitName = 'day'",$day);
     $db->query($q);
@@ -134,7 +134,7 @@ if ($_POST["save"]) {
     if (in_array($name,$fields_to_save)) {
 
       $id = $config->get_config_item_id($name);
-      $c = new config;
+      $c = new config();
       $c->set_id($id);
       $c->select();
 
@@ -160,7 +160,7 @@ if ($_POST["save"]) {
   // should be rewritten.
   #echo var_dump($_POST);
   if ($_POST['sbs_link'] == "rss" && !$_POST['rssShowProject']) {
-    $c = new config;
+    $c = new config();
     $c->set_id($config->get_config_item_id('rssShowProject'));
     $c->select();
     $c->set_value("value", '0');
@@ -183,10 +183,10 @@ if ($_POST["save"]) {
 }
 
 
-$config = new config;
+$config = new config();
 get_cached_table("config",true); // flush cache
 
-$tf = new tf;
+$tf = new tf();
 $options = $tf->get_assoc_array("tfID","tfName");
 $TPL["mainTfOptions"] = page::select_options($options, $config->get_config_item("mainTfID"));
 $TPL["outTfOptions"] = page::select_options($options, $config->get_config_item("outTfID"));
@@ -198,11 +198,11 @@ $m = new meta("currencyType");
 $currencyOptions = $m->get_assoc_array("currencyTypeID","currencyTypeName");
 $TPL["currencyOptions"] = page::select_options($currencyOptions, $config->get_config_item("currency"));
 
-$db = new db_alloc;
+$db = new db_alloc();
 $display = array("", "username", ", ", "emailAddress");
 
 
-$person = new person;
+$person = new person();
 $people = get_cached_table("person");
 foreach ($people as $p) {
   $peeps[$p["personID"]] = $p["name"];
@@ -217,13 +217,13 @@ $TPL["calendarFirstDayOptions"] = page::select_options($days,$config->get_config
 
 $TPL["timeSheetPrintOptions"] = page::select_options($TPL["timeSheetPrintOptions"],$TPL["timeSheetPrint"]);
 
-$commentTemplate = new commentTemplate;
+$commentTemplate = new commentTemplate();
 $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName");
 
 $TPL["rssStatusFilterOptions"] = page::select_options(task::get_task_statii_array(true), $config->get_config_item("rssStatusFilter"));
 
 
-$timeUnit = new timeUnit;
+$timeUnit = new timeUnit();
 $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
 $TPL["timesheetRate_options"] = page::select_options($rate_type_array, $config->get_config_item("defaultTimeSheetUnit"));
 

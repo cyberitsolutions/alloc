@@ -189,7 +189,7 @@ class task extends db_entity {
 
     $label = $this->get_priority_label();
 
-    $reminder = new reminder;
+    $reminder = new reminder();
     $reminder->set_value('reminderType', "task");
     $reminder->set_value('reminderLinkID', $this->get_id());
     $reminder->set_value('reminderRecuringInterval', $reminderInterval);
@@ -224,7 +224,7 @@ class task extends db_entity {
       $p = $this->get_foreign_object("project");
     } else if ($_POST["projectID"]) {
       // Or maybe they are creating a new task
-      $p = new project;
+      $p = new project();
       $p->set_id($_POST["projectID"]);
     }
 
@@ -259,7 +259,7 @@ class task extends db_entity {
     $db = new db_alloc();
     $db->query($q);
     while ($db->row()) {
-      $t = new task;
+      $t = new task();
       $t->read_db_record($db);
       $t->set_value($field,$value);
       $t->save();
@@ -280,7 +280,7 @@ class task extends db_entity {
     $projectID or $projectID = $_GET["projectID"];
     $parentTaskID or $parentTaskID = $_GET["parentTaskID"];
 
-    $db = new db_alloc;
+    $db = new db_alloc();
     if ($projectID) {
       list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
       // Status may be closed_<something>
@@ -329,7 +329,7 @@ class task extends db_entity {
   }
 
   function get_all_parties($projectID="") {
-    $db = new db_alloc;
+    $db = new db_alloc();
     $interestedPartyOptions = array();
   
     if ($_GET["projectID"]) {
@@ -349,19 +349,19 @@ class task extends db_entity {
 
     if (is_object($this)) {
       if ($this->get_value("creatorID")) {
-        $p = new person;
+        $p = new person();
         $p->set_id($this->get_value("creatorID"));
         $p->select();
         $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "role"=>"creator", "personID"=>$this->get_value("creatorID"));
       }
       if ($this->get_value("personID")) {
-        $p = new person;
+        $p = new person();
         $p->set_id($this->get_value("personID"));
         $p->select();
         $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "role"=>"assignee", "selected"=>true, "forceSelected"=>true, "personID"=>$this->get_value("personID"));
       }
       if ($this->get_value("managerID")) {
-        $p = new person;
+        $p = new person();
         $p->set_id($this->get_value("managerID"));
         $p->select();
         $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "role"=>"manager", "selected"=>true, "forceSelected"=>true, "personID"=>$this->get_value("managerID"));
@@ -384,7 +384,7 @@ class task extends db_entity {
   function get_personList_dropdown($projectID,$field,$taskID=false) {
     $current_user = &singleton("current_user");
  
-    $db = new db_alloc;
+    $db = new db_alloc();
 
     if ($_GET["timeSheetID"]) {
       $ts_query = prepare("SELECT * FROM timeSheet WHERE timeSheetID = %d",$_GET["timeSheetID"]);
@@ -396,7 +396,7 @@ class task extends db_entity {
       $owner = $this->get_value($field);
 
     } else if ($taskID) {
-      $t = new task;
+      $t = new task();
       $t->set_id($taskID);
       $t->select();
       $owner = $t->get_value($field);
@@ -432,7 +432,7 @@ class task extends db_entity {
   function get_project_options($projectID="") {
     $projectID or $projectID = $_GET["projectID"];
     // Project Options - Select all projects 
-    $db = new db_alloc;
+    $db = new db_alloc();
     $query = prepare("SELECT projectID AS value, projectName AS label 
                         FROM project 
                        WHERE projectStatus IN ('Current', 'Potential') OR projectID = %d
@@ -446,7 +446,7 @@ class task extends db_entity {
     global $TPL;
     $current_user = &singleton("current_user");
     global $isMessage;
-    $db = new db_alloc;
+    $db = new db_alloc();
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
     $TPL["personOptions"] = "<select name=\"personID\"><option value=\"\">".task::get_personList_dropdown($projectID, "personID")."</select>";
     $TPL["managerPersonOptions"] = "<select name=\"managerID\"><option value=\"\">".task::get_personList_dropdown($projectID, "managerID")."</select>";
@@ -495,7 +495,7 @@ class task extends db_entity {
     // If we're viewing the printer friendly view
     if ($_GET["media"] == "print") {
       // Parent Task label
-      $t = new task;
+      $t = new task();
       $t->set_id($this->get_value("parentTaskID"));
       $t->select();
       $TPL["parentTask"] = $t->get_display_value();
@@ -507,13 +507,13 @@ class task extends db_entity {
       $TPL["priority"] = $this->get_value("priority");
 
       // Assignee label
-      $p = new person;
+      $p = new person();
       $p->set_id($this->get_value("personID"));
       $p->select();
       $TPL["person"] = $p->get_display_value();
   
       // Project label
-      $p = new project;
+      $p = new project();
       $p->set_id($this->get_value("projectID"));
       $p->select();
       $TPL["projectName"] = $p->get_display_value();
@@ -556,7 +556,7 @@ class task extends db_entity {
 
   function get_url($absolute=false) {
     global $sess;
-    $sess or $sess = new session;
+    $sess or $sess = new session();
 
     $url = "task/task.php?taskID=".$this->get_id();
 
@@ -906,10 +906,10 @@ class task extends db_entity {
       
     $debug and print "\n<br>QUERY: ".$q;
     $_FORM["debug"] and print "\n<br>QUERY: ".$q;
-    $db = new db_alloc;
+    $db = new db_alloc();
     $db->query($q);
     while ($row = $db->next_record()) {
-      $task = new task;
+      $task = new task();
       $task->read_db_record($db);
       $row["taskURL"] = $task->get_url();
       $row["taskName"] = $task->get_name($_FORM);
@@ -1008,7 +1008,7 @@ class task extends db_entity {
       return $results[$taskID];
     }
     if ($taskID) {
-      $db = new db_alloc;
+      $db = new db_alloc();
       // Get tally from timeSheetItem table
       $db->query("SELECT sum(timeSheetItemDuration*timeUnitSeconds) as sum_of_time
                     FROM timeSheetItem 
@@ -1301,7 +1301,7 @@ class task extends db_entity {
   function load_task_filter($_FORM) {
     $current_user = &singleton("current_user");
 
-    $db = new db_alloc;
+    $db = new db_alloc();
 
     // Load up the forms action url
     $rtn["url_form_action"] = $_FORM["url_form_action"];
@@ -1555,7 +1555,7 @@ class task extends db_entity {
 
   function can_be_deleted() {
     if (is_object($this) && $this->get_id()) {
-      $db = new db_alloc;
+      $db = new db_alloc();
       $q = prepare("SELECT can_delete_task(%d) as rtn",$this->get_id());
       $db->query($q);
       $row = $db->row();
@@ -1584,7 +1584,7 @@ class task extends db_entity {
 
   function add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients) {
     $current_user = &singleton("current_user");
-    $token = new token;
+    $token = new token();
     $token->set_value("tokenEntity","task");
     $token->set_value("tokenEntityID",$this->get_id());
     $token->set_value("tokenActionID",$tokenActionID);

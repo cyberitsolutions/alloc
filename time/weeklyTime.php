@@ -44,17 +44,17 @@ function show_timeSheetItems($template_name) {
                            LEFT JOIN project ON timeSheet.projectID = project.projectID
                       WHERE dateTimeSheetItem='%s'
                             AND timeSheet.personID=%d", date("Y-m-d", $date_to_view), $current_user->get_id());
-  $db = new db_alloc;
+  $db = new db_alloc();
   $db->query($query);
   while ($db->next_record()) {
-    $timeSheetItem = new timeSheetItem;
+    $timeSheetItem = new timeSheetItem();
     $timeSheetItem->read_db_record($db);
     $timeSheetItem->set_values();
     if ($timeSheetItem->get_value("unit") == "Hour") {
       $TPL["daily_hours_total"] += $timeSheetItem->get_value("timeSheetItemDuration");
     }
 
-    $project = new project;
+    $project = new project();
     $project->read_db_record($db);
     $project->set_values();
     if ($project->get_value("projectShortName")) {

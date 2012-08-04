@@ -48,7 +48,7 @@ class transactionRepeat extends db_entity {
 
 
   function is_owner() {
-    $tf = new tf;
+    $tf = new tf();
     $tf->set_id($this->get_value("tfID"));
     $tf->select();
     return $tf->is_owner();
