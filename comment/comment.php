@@ -53,7 +53,9 @@ if ($_REQUEST["attach_timeSheet"]) {
 
 // Attach any alloc generated invoice pdf
 if ($_REQUEST["attach_invoice"]) {
-  comment::attach_invoice($commentID,$_REQUEST["entityID"],$_REQUEST["generate_pdf_verbose"]);
+  $_REQUEST["attach_invoice"] == $_REQUEST["generate_pdf_verbose"] and $verbose = true; // select
+  $_REQUEST["generate_pdf_verbose"] and $verbose = true; // link
+  comment::attach_invoice($commentID,$_REQUEST["entityID"],$verbose);
 }
 
 // Attach any alloc generated tasks pdf

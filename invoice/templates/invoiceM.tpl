@@ -1,12 +1,96 @@
 {page::header()}
 {page::toolbar()}
 
+<form action="{$url_alloc_invoiceRepeat}" method="post">
+<style>
+  #repeating-invoice td {
+    vertical-align:top;
+  }
+</style>
+<table id="repeating-invoice" class="box hidden">
+  <tr>
+    <th class="header" colspan="2">Repeating Invoice
+      <span>
+        {page::help("
+      <b>Repeating Invoices Help</b>
+      <br><br>
+      Use the invoice below as a template for new invoices
+      that are automatically created on a particular schedule of dates. 
+      This can be used for re-occurring payment models.
+      <br><br>
+
+      Additionally you can nominate to make the new invoices get automatically
+      sent out to the client at the scheduled date.
+
+      ")}
+      </span>
+    </th>
+  </tr>
+  <tr>
+    <td style="padding-top:20px;width:55%">
+      Create a new invoice on each of the following dates:
+    </td>
+  </tr>
+  <tr>
+    <td>
+      {page::textarea("frequency",$invoiceRepeat_frequency)}
+    </td>
+    <td>
+        <span class="calendar_container nobr">
+        <img src="{$url_alloc_images}cal{echo date("Y")}.png" title="Date Selector" alt="Date Selector" id="frequency_button">
+        </span>
+
+        <script>
+          $("#frequency").each(function(){
+            var s = TPL_START_BRACETPL_END_BRACE
+            s["inputField"] = "frequency";
+            s["ifFormat"] = "%Y-%m-%d";
+            s["button"] = "frequency_button";
+            s["showOthers"] = 1;
+            s["align"] = "Bl";
+            s["firstDay"] = get_alloc_var("cal_first_day");
+            s["step"] = 1;
+            s["weekNumbers"] = 0;
+            s["onSelect"] = function(ev) {
+              $("#frequency").val($("#frequency").val()+"   "+ev.date.print(ev.dateFormat));
+            }
+            Calendar.setup(s);
+          });
+        </script>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top:20px;">
+      To automatically email the new invoices out on the scheduled dates, enter a message &amp; specify the recipients:
+    </td>
+  </tr>
+  <tr>
+    <td>
+      {page::textarea("message",$invoiceRepeat_message,array("height"=>"medium"))}
+    </td>
+    <td>
+        {$allParties = $invoiceRepeat->get_all_parties($invoiceID)}
+        {echo interestedParty::get_interested_parties_html($allParties)}
+        <input type="hidden" name="invoiceID" value="{$invoiceID}">
+        <input type="hidden" name="invoiceRepeatID" value="{$invoiceRepeat_invoiceRepeatID}">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="center">
+        <button type="submit" name="save" value="1" class="save_button">Repeat the Invoice<i class="icon-ok-sign"></i></button>
+    </td>
+  </tr>
+</table>
+</form>
+
+
 <form action="{$url_alloc_invoice}" method="post">
 <table class="box">
   <tr>
     <th class="header" colspan="4">Invoice
       <span>
       {if $invoiceID}
+        <a href="#x" onClick="$('#repeating-invoice').slideToggle(); return false;">Repeating Invoice</a>
         <a href="{$url_alloc_invoicePrint}invoiceID={$invoiceID}">PDF</a>
         <a href="{$url_alloc_invoicePrint}invoiceID={$invoiceID}&verbose=1">PDF+</a>
         {page::star("invoice",$invoiceID)}

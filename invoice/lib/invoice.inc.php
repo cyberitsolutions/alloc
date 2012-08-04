@@ -27,16 +27,22 @@ class invoice extends db_entity {
   public $display_field_name = "invoiceName";
   public $key_field = "invoiceID";
   public $data_fields = array("invoiceName"
-                              ,"clientID"
-                              ,"projectID"
-                              ,"invoiceDateFrom"
-                              ,"invoiceDateTo"
-                              ,"invoiceNum"
-                              ,"invoiceName"
-                              ,"invoiceStatus"
-                              ,"currencyTypeID"
-                              ,"maxAmount" => array("type"=>"money")
-                              );
+                             ,"clientID"
+                             ,"projectID"
+                             ,"invoiceDateFrom"
+                             ,"invoiceDateTo"
+                             ,"invoiceNum"
+                             ,"invoiceName"
+                             ,"invoiceStatus"
+                             ,"currencyTypeID"
+                             ,"maxAmount" => array("type"=>"money")
+                             ,"invoiceRepeatID"
+                             ,"invoiceRepeatDate"
+                             ,"invoiceCreatedTime"
+                             ,"invoiceCreatedUser"
+                             ,"invoiceModifiedTime"
+                             ,"invoiceModifiedUser"
+                             );
 
   function save() {
     if (!$this->get_value("currencyTypeID")) {
@@ -206,7 +212,7 @@ class invoice extends db_entity {
     return array($rows,$info);
   }
 
-  function generate_invoice_file($verbose=false, $stream=false) {
+  function generate_invoice_file($verbose=false, $savetofile=false) {
     // Build PDF document
     $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
     $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
@@ -236,10 +242,11 @@ class invoice extends db_entity {
     $footer = config::get_config_item("timeSheetPrintFooter");
     $taxName = config::get_config_item("taxName");
 
-    if ($this->get_value("invoiceDateFrom") != $this->get_value("invoiceDateTo")) {
+    if ($this->get_value("invoiceDateFrom") && $this->get_value("invoiceDateTo")
+    && $this->get_value("invoiceDateFrom") != $this->get_value("invoiceDateTo")) {
       $period = format_date(DATE_FORMAT,$this->get_value("invoiceDateFrom"))." to ".format_date(DATE_FORMAT,$this->get_value("invoiceDateTo"));
     } else {
-      $period = format_date(DATE_FORMAT,$this->get_value("invoiceDateFrom"));
+      $period = format_date(DATE_FORMAT,$this->get_value("invoiceDateTo"));
     }
 
     $default_header = "Tax Invoice";
@@ -335,33 +342,16 @@ class invoice extends db_entity {
     #$pdf->closeObject();
     #$pdf->addObject($all,'all');
 
-    if ($stream) {
-      $pdf->ezStream();
+    if ($savetofile) {
+      if (!is_dir(dirname($savetofile))) {
+        mkdir(dirname($savetofile));
+      }
+      $fh = fopen($savetofile,"w+");
+      fputs($fh, $pdf->ezOutput());
+      fclose($fh);
+
     } else {
-
-      $dir = ATTACHMENTS_DIR."invoice".DIRECTORY_SEPARATOR.$this->get_id();
-      if (!is_dir($dir)) {
-        mkdir($dir);
-      }
-
-      $rows = get_attachments("invoice",$this->get_id());
-      $rows or $rows = array();
-      foreach ($rows as $row) {
-        if (preg_match("/-[0-9]+\.pdf$/",$row["text"])) {
-          $file = preg_replace("/-([0-9]+)\.pdf$/e","sprintf('-%d.pdf',\\1 + 1)",$row["text"]);
-        }
-      }
-
-      if (!$file) {
-        $file = $this->get_value("invoiceNum")."-0.pdf";
-      }
-
-      //$debug = true;
-      if (!$debug) {
-        $fh = fopen($dir.DIRECTORY_SEPARATOR.$file,"w+");
-        fputs($fh, $pdf->ezOutput());
-        fclose($fh);
-      }
+      $pdf->ezStream();
     }
   }
 
@@ -760,7 +750,7 @@ class invoice extends db_entity {
     }  
   }
 
-  function get_all_parties($projectID="") {
+  function get_all_parties($projectID="", $clientID="") {
     $db = new db_alloc;
     $interestedPartyOptions = array();
 
@@ -770,6 +760,9 @@ class invoice extends db_entity {
 
     if ($projectID) {
       $interestedPartyOptions = project::get_all_parties($projectID);
+    }
+    if ($clientID) {
+      $interestedPartyOptions = array_merge((array)$interestedPartyOptions, (array)client::get_all_parties($clientID));
     }
   
     $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
