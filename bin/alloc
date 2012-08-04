@@ -4,36 +4,17 @@ import sys
 import os
 from alloccli import alloc
 
+# Try to import relevant module
+try:
+  m = sys.argv[1]
+  alloccli = __import__("alloccli."+m)
+  subcommand = getattr(getattr(alloccli,m), m)
 
-# If alloc is called without arguments, then run interactively
-if len(sys.argv) == 1:
-
-  def run_cmd_loop():
-    try:
-      # file alloc.py -> class allocCmd() -> method cmdloop()
-      alloc.allocCmd(os.environ.get("ALLOC_URL") or '').cmdloop()
-    except KeyboardInterrupt:
-      print ""
-      alloc.alloc().msg("To exit use ctrl-d or quit")
-      run_cmd_loop()
-
-  run_cmd_loop()
-
-# Else attempt to run the relevant module
-else:
-
-  # Try to import relevant module
-  try:
-    m = sys.argv[1]
-    alloccli = __import__("alloccli."+m)
-    subcommand = getattr(getattr(alloccli,m), m)
-
-  # Else bomb out with help message
-  except:
-    # file alloc.py -> class alloc(url) -> method get_cli_help()
-    alloc.alloc().get_cli_help()
+# Else bomb out with help message
+except:
+  alloc.alloc().get_cli_help()
 
 
-  # All clear, run the module
-  s = subcommand(os.environ.get("ALLOC_URL") or '')
-  s.run(sys.argv)
+# All clear, run the module
+s = subcommand(os.environ.get("ALLOC_URL") or '')
+s.run(sys.argv)

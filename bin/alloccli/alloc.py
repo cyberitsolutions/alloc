@@ -1,14 +1,12 @@
 """alloc library"""
 import os
 import sys
-import cmd
 import simplejson
 import re
 import urllib
 import urllib2
 import datetime
 import ConfigParser
-import shlex
 import subprocess
 from netrc import netrc
 from urlparse import urlparse
@@ -739,94 +737,5 @@ class alloc(object):
       return result[0]
     else:
       return ''
-
-
-# Interactive handler for alloccli
-class allocCmd(cmd.Cmd):
-  """This allows us to have an alloc shell of sorts."""
-
-  prompt = "alloc> "
-  alloc = None
-  url = ""
-  modules = {}
-  worklog = None
-
-  def __init__(self, url):
-    self.url = url
-    self.alloc = alloc(self.url)
-    self.alloc.authenticate()
-    alloc.sessID = self.alloc.sessID
-    #self.worklog = worklog()
-  
-    # Import all the alloc modules so they are available as eg self.tasks
-    for m in self.alloc.get_alloc_modules():
-      alloccli = __import__("alloccli."+m)
-      subcommand = getattr(getattr(alloccli, m), m)
-      setattr(self, m, subcommand(self.url))
-    cmd.Cmd.__init__(self)
-
-  def emptyline(self):
-    """Go to new empty prompt if an empty line is entered."""
-    pass
-
-  def default(self, line):
-    """Print an error if an unrecognized command is entered."""
-    self.alloc.err("Unrecognized command: '"+line+"', hit TAB and try 'help COMMAND'.")
-
-  def do_EOF(self, line):
-    """Exit if ctrl-d is pressed."""
-    del(line)
-    print "" # newline
-    sys.exit(0)
-
-  def do_quit(self, line):
-    """Exit if quit is entered."""
-    del(line)
-    sys.exit(0)
-
-  def do_exit(self, line):
-    """Exit if exit is entered."""
-    del(line)
-    sys.exit(0)
-
-  def do_help(self, line):
-    """Provide help information if 'help' or 'help COMMAND' are entered."""
-    bits = line.split()
-    if len(bits) == 1:
-      if (bits[0].lower() == "command"):
-        print "Try eg: help timesheets"
-      else:
-        try:
-          cmdbits = ["alloc", bits[0], "--help"]
-          subcommand = getattr(self, bits[0])
-          print subcommand.get_subcommand_help(cmdbits, subcommand.ops, subcommand.help_text)
-        except:
-          self.alloc.err("Unrecognized command: '"+bits[0]+"', hit TAB and try one of those.")
-    else:
-      self.alloc.get_cmd_help()
-
-def make_func(m):
-  """Create some class methods called do_MODULE eg do_tasks.
-
-  This will dynamically add methods to the allocCmd class. This will expose
-  all the alloc modules to the allocCmd interface without having to
-  duplicate the list of modules.
-  """
-
-  def func(obj, line):
-    """Run a subcommand/module's run() method."""
-    line = "alloc "+m+" "+line
-    bits = shlex.split(line)
-    subcommand = getattr(obj, m)
-    # Putting this in an exception block lets us continue when the subcommands call die().
-    try: 
-      subcommand.run(bits)
-    except BaseException:
-      pass
-  return func
-
-# Add the methods to allocCmd
-for module in alloc().get_alloc_modules():
-  setattr(allocCmd, "do_"+module, make_func(module))
 
 
