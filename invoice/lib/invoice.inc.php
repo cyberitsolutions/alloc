@@ -178,7 +178,7 @@ class invoice extends db_entity {
       }
 
       unset($str);
-      $d = $invoiceItem->get_value('iiMemo',DST_HTML_DISPLAY);
+      $d = $invoiceItem->get_value('iiMemo');
       $str[] = $d;
 
       // Get task description
@@ -221,7 +221,7 @@ class invoice extends db_entity {
 
     // Get client name
     $client = $this->get_foreign_object("client");
-    $clientName = $client->get_value("clientName",DST_HTML_DISPLAY);
+    $clientName = $client->get_value("clientName");
 
     // Get cyber info
     $companyName = config::get_config_item("companyName");
