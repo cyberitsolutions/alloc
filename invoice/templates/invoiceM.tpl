@@ -61,7 +61,7 @@
   </tr>
   <tr>
     <td style="padding-top:20px;">
-      To automatically email the new invoices out on the scheduled dates, enter a message &amp; specify the recipients:
+      To (optionally) email the new invoices out on the scheduled dates, enter a message &amp; specify the recipients:
     </td>
   </tr>
   <tr>

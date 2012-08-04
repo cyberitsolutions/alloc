@@ -733,7 +733,7 @@ if (is_object($invoice) && $invoice->get_id()) {
         }
       }
     }
-    $TPL["message_help_no_esc"][] = "This invoice is also a template for the scheduled creation of new invoices on the:
+    $TPL["message_help_no_esc"][] = "This invoice is also a template for the scheduled creation of new invoices on the following dates:
                               <br>".implode("&nbsp;&nbsp;",(array)$links)."
                               <br>Click the Repeating Invoice link for more information.";
   }
