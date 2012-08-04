@@ -248,10 +248,10 @@ $(document).ready(function() {
 
         <div class="enclose">
           <h6>Best / Likely / Worst<div>Estimator</div></h6>
-          <div style="float:left; width:40%">
+          <div style="float:left; width:40%" class="nobr">
             <input type="text" name="timeBest" value="{$task_timeBest}" size="4"> /
-            <input type="text" name="timeExpected" value="{$task_timeExpected}" size="5"> /
-            <input type="text" name="timeWorst" value="{$task_timeWorst}" size="5"> {page::help("task_estimates")}
+            <input type="text" name="timeExpected" value="{$task_timeExpected}" size="4"> /
+            <input type="text" name="timeWorst" value="{$task_timeWorst}" size="4"> {page::help("task_estimates")}
           </div>
           <div style="float:right;width:50%;" id="taskEstimatorPersonList">
             {$estimatorPersonOptions}

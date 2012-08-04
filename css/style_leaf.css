@@ -613,6 +613,7 @@ a.star {
 }
 a.star:hover, a.hot {
   color:#f1965f !important;
+  cursor: pointer;
 }
 
 /* .panel tables (Harpo) have a blue border and a light blue background in the default theme.
@@ -706,12 +707,15 @@ a.star:hover, a.hot {
 .hidden-links a.config-link {
   color:transparent !important;
   float:right;
+  visibility:hidden;
 }
 .hidden-links:hover a.config-link {
   color:#ccc !important;
+  visibility:visible;
 }
 .hidden-links a.config-link:hover {
   color:#333 !important;
+  visibility:visible;
 }
 .config-pane {
   background-color:#fff;
