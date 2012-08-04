@@ -311,7 +311,7 @@ $(document).ready(function() {
         {if $task_taskID}
         <button type="submit" name="close_task" value="1" class="save_button">Save &amp; Close<i class="icon-remove-sign"></i></button>
         {/}
-        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="save" value="1" class="save_button default">Save<i class="icon-ok-sign"></i></button>
 
         {if $task_taskID}
         <br><br>
