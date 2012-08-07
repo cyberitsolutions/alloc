@@ -293,6 +293,8 @@ VALUES
 
 ,('config'                   ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
 
+,('exchangeRate'             ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
+
 ,('expenseForm'              ,-1 ,'employee' ,NULL ,1+2+4+8    ,NULL)
 ,('expenseForm'              ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 
