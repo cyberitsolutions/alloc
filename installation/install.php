@@ -291,6 +291,9 @@ useful automated reminders functionality.
 # Check for allocPSA Repeating Expenses once a day at 4:40am
 40 4 * * * wget -q -O /dev/null {$_FORM["allocURL"]}finance/checkRepeat.php
 
+# Check for allocPSA Repeating Invoices once a day at 5:40am
+40 5 * * * wget -q -O /dev/null {$_FORM["allocURL"]}invoice/checkRepeat.php
+
 Please feel free to contact us at Cyber IT Solutions <info@cyber.com.au> or just use
 the forums at http://sourceforge.net/projects/allocpsa/ if you have any questions.
 
