@@ -250,13 +250,16 @@ of a database and database user.
 35 4 * * * wget -q -O /dev/null {$allocURL}person/sendEmail.php
 
 # Check for allocPSA Repeating Expenses once a day at 4:40am
-40 4 * * * wget -q -O /dev/null {$allocURL}finance/checkRepeat.php</pre>
+40 4 * * * wget -q -O /dev/null {$allocURL}finance/checkRepeat.php
+
+# Check for allocPSA Repeating Invoices once a day at 5:40am
+40 5 * * * wget -q -O /dev/null {$allocURL}invoice/checkRepeat.php</pre>
         </td>
       </tr>
     </table>
-    These cronjobs will enable the automatic Reminders, the Email Gateway,
-    the Daily Task Digests and the Repeating Expenses functionality to work.
-    They rely on you already having wget installed.
+    These cronjobs will enable the automatic Reminders, the Email Gateway, the
+    Daily Task Digests and the Repeating Expenses and Invoices functionality to
+    work. They rely on you already having wget installed.
     {/}
 
 {$hidden}
