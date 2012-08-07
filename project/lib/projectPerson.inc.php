@@ -81,7 +81,7 @@ class projectPerson extends db_entity {
     // person.defaultTimeSheetRate
     // config.name == defaultTimeSheetRate
 
-    $project = new Project();
+    $project = new project();
     $project->set_id($projectID);
     $project->select();
 
