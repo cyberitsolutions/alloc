@@ -16,7 +16,7 @@ from alloc_cli_arg_handler import alloc_cli_arg_handler
 class alloc(object):
   """Provide a parent class from which the alloc subcommands can extend"""
 
-  client_version = "1.8.5"
+  client_version = "1.8.6"
   url = ''
   username = ''
   quiet = ''
