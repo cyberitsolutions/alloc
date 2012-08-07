@@ -129,8 +129,8 @@ if (!$current_user->is_employee()) {
           $TPL["transactionType_options"] = page::select_options($transactionType_options, $transaction->get_value("transactionType"));
           $TPL["percent_dropdown"] = page::select_options($percent_array, $empty);
           $TPL["transaction_buttons"] = '
-            <button type="submit" name="transaction_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
             <button type="submit" name="transaction_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+            <button type="submit" name="transaction_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
           ';
           include_template($template_name);
         }

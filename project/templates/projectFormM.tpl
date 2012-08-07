@@ -318,7 +318,7 @@ function clickClientStatus(e) {
       </div>
       <div class="edit" style="margin-top:20px">
         <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
-        <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+        <button type="submit" name="save" value="1" class="save_button default">Save<i class="icon-ok-sign"></i></button>
         <br><br>
         <a href="" onClick="$('.edit').hide();$('.view').show();return false;">Cancel edit</a>
       </div>

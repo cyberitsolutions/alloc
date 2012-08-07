@@ -24,8 +24,8 @@
     <td class="top">Text</td>
     <td class="top center">{page::textarea("commentTemplateText",$commentTemplateText,array("height"=>"jumbo"))}
       <br>
-      <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
       <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+      <button type="submit" name="save" value="1" class="save_button default">Save<i class="icon-ok-sign"></i></button>
     </td>
     <td class="top">
       Placeholder variables may be inserted into the template text.

@@ -28,8 +28,8 @@
           <td><input type="text" name="value" size="20" value="{$value}"></td>
           {/}
           <td>
-            <input type="submit" name="save" value="Save">
-            <input type="submit" name="delete" value="Delete">
+            <input type="submit" name="delete" value="Delete" class="delete_button">
+            <input type="submit" name="save" value="Save" class="default">
             <input type="hidden" name="configName" value="{$configName}">
           </td>
         </tr>
