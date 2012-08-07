@@ -116,8 +116,8 @@ case 3:
     $TPL["reminder_title"] = "Edit Reminder";
     $TPL["reminder_buttons"] = <<<EOD
 <input type="hidden" name="reminder_id" value="{$reminderID}">
-<button type="submit" name="reminder_update" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
 <button type="submit" name="reminder_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
+<button type="submit" name="reminder_update" value="1" class="save_button default">Save<i class="icon-ok-sign"></i></button>
 EOD;
 
   } else {
