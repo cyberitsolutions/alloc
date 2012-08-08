@@ -1,7 +1,6 @@
 -- Add new repeating invoices functionality
 ALTER TABLE invoice ADD invoiceRepeatID INTEGER DEFAULT NULL AFTER invoiceID;
 ALTER TABLE invoice ADD invoiceRepeatDate DATE DEFAULT NULL AFTER invoiceRepeatID;
-ALTER TABLE invoice ADD CONSTRAINT invoice_invoiceRepeatID FOREIGN KEY (invoiceRepeatID) REFERENCES invoiceRepeat (invoiceRepeatID);
 
 DROP TABLE IF EXISTS invoiceRepeat;
 CREATE TABLE invoiceRepeat (
@@ -12,6 +11,7 @@ CREATE TABLE invoiceRepeat (
   active BOOLEAN DEFAULT true
 ) ENGINE=InnoDB PACK_KEYS=0;
 
+ALTER TABLE invoice ADD CONSTRAINT invoice_invoiceRepeatID FOREIGN KEY (invoiceRepeatID) REFERENCES invoiceRepeat (invoiceRepeatID);
 ALTER TABLE invoiceRepeat ADD CONSTRAINT invoiceRepeat_invoiceID FOREIGN KEY (invoiceID) REFERENCES invoice (invoiceID);
 ALTER TABLE invoiceRepeat ADD CONSTRAINT invoiceRepeat_personID FOREIGN KEY (personID) REFERENCES person (personID);
 
