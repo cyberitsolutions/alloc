@@ -123,7 +123,14 @@ class db {
     if (is_numeric($str)) {
       return $str;
     }
-    return @$esc_function($str);
+    $rtn = @$esc_function($str);
+    if ($rtn === false) {
+      $err = error_get_last();
+      $e = new Exception();
+      alloc_error("Error in db->esc(".$str."): \n".$e->getTraceAsString()."\n".print_r($err,1));
+    } else {
+      return $rtn;
+    }
   }
 
   function select_db($db="") { 
