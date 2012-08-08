@@ -22,6 +22,11 @@
 
 define("IN_INSTALL_RIGHT_NOW",1);
 require_once("../alloc.php");
+singleton("errors_fatal",true);
+singleton("errors_format","text");
+singleton("errors_logged",true);
+singleton("errors_thrown",false);
+singleton("errors_haltdb",true);
 
 // The user hasn't set their timezone, so pull up the default and suppress the warning
 $timeZone = @date_default_timezone_get();
@@ -104,6 +109,10 @@ if ($_POST["refresh_tab_1"]) {
 // Finish installation
 if ($_POST["submit_stage_4"]) {
 
+  // Insert config data
+  $link = $db->connect();
+  $db->select_db($_FORM["ALLOC_DB_NAME"]);
+
   // Create directories under attachment dir and chmod them
   $dirs = $external_storage_directories; // something like array("task","client","project","invoice","comment","backups");
   foreach ($dirs as $dir) {
@@ -133,6 +142,24 @@ if ($_POST["submit_stage_4"]) {
     $index->commit();
   }
 
+  $query = prepare("UPDATE config SET value = '%s' WHERE name = 'currency'",$_FORM["currency"]);
+  if (!$db->query($query)) {
+    $errors[] = "(1)Error! (".mysql_error().").";
+    $failed = 1;
+  }
+
+  $query = prepare("UPDATE currencyType SET currencyTypeActive = true, currencyTypeSeq = 1 WHERE currencyTypeID = '%s'",$_FORM["currency"]);
+  if (!$db->query($query)) {
+    $errors[] = "(2)Error! (".mysql_error().").";
+    $failed = 1;
+  }
+
+  $query = prepare("INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ('%s','%s','%s','%s',%d)",date("Y-m-d"),date("Y-m-d H:i:s"),$_FORM["currency"],$_FORM["currency"],1);
+  if (!$db->query($query)) {
+    $errors[] = "(2.5)Error! (".mysql_error().").";
+    $failed = 1;
+  }
+
   // Create alloc_config.php
   if (file_exists(ALLOC_CONFIG_PATH) && is_writeable(ALLOC_CONFIG_PATH) && filesize(ALLOC_CONFIG_PATH) <= 5) {
     $str[] = "<?php";
@@ -157,25 +184,6 @@ if ($_POST["submit_stage_4"]) {
 
   } else {
     $text_tab_4[] = "Unable to create(2): ".ALLOC_CONFIG_PATH;
-    $failed = 1;
-  }
-
-  // Insert config data
-  $query = prepare("UPDATE config SET value = '%s' WHERE name = 'currency'",$_FORM["currency"]);
-  if (!$db->query($query)) {
-    $errors[] = "(1)Error! (".mysql_error().").";
-    $failed = 1;
-  }
-
-  $query = prepare("UPDATE currencyType SET currencyTypeActive = true, currencyTypeSeq = 1 WHERE currencyTypeID = '%s'",$_FORM["currency"]);
-  if (!$db->query($query)) {
-    $errors[] = "(2)Error! (".mysql_error().").";
-    $failed = 1;
-  }
-
-  $query = prepare("INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ('%s','%s','%s','%s',%d)",date("Y-m-d"),date("Y-m-d H:i:s"),$_FORM["currency"],$_FORM["currency"],1);
-  if (!$db->query($query)) {
-    $errors[] = "(2.5)Error! (".mysql_error().").";
     $failed = 1;
   }
 
@@ -375,6 +383,7 @@ EOD;
 
 // Tab 2 Text
 if ($_FORM["ALLOC_DB_NAME"] && $_FORM["ALLOC_DB_USER"]) {
+  $text_tab_2a[] = "&nbsp;";
   $text_tab_2a[] = "DROP DATABASE IF EXISTS ".$_FORM["ALLOC_DB_NAME"].";";
   $text_tab_2a[] = "CREATE DATABASE ".$_FORM["ALLOC_DB_NAME"].";";
 
@@ -391,7 +400,7 @@ if ($_FORM["ALLOC_DB_NAME"] && $_FORM["ALLOC_DB_USER"]) {
   $text_tab_2a[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_data.sql;";
   $text_tab_2a[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_constraints.sql;";
   $text_tab_2a[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_triggers.sql;";
-  $text_tab_2a[] = "";
+  $text_tab_2a[] = "&nbsp;";
 }
 
 
