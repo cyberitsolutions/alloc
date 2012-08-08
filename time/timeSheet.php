@@ -456,7 +456,12 @@ if ($_REQUEST["updateRate"] && $timeSheet->get_id() && $timeSheet->can_edit_rate
       $tsi = new timeSheetItem();
       $tsi->set_id($row["timeSheetItemID"]);
       $tsi->select();
-      $tsi->set_value("timeSheetItemDurationUnitID", $row_projectPerson["rateUnitID"]);
+      if ($row_projectPerson["rateUnitID"]) {
+        $v = $row_projectPerson["rateUnitID"];
+      } else {
+        $v = "";
+      }
+      $tsi->set_value("timeSheetItemDurationUnitID", $v);
       $tsi->set_value("rate",page::money($timeSheet->get_value("currencyTypeID"),$row_projectPerson["rate"],"%mo"));
       $tsi->skip_tsi_status_check = true;
       $tsi->save();
