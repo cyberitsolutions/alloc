@@ -81,7 +81,7 @@ alloc edit -t 1234 --assignee null"""
             st += ' --'+key+' "'+val+'"'
       if st:
         st = " Perhaps try:"+st
-      self.die("Trailing arguments not supported."+st)
+      self.die("Trailing arguments not supported:" +remainder)
 
     # Got this far, then authenticate
     self.authenticate()
