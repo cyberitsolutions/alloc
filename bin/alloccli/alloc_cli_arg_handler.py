@@ -1,8 +1,8 @@
 """alloc library for handling command line arguments"""
 import os
 import sys
-import getopt
 import re
+import optparse
 from sys import stdout
 
 class alloc_cli_arg_handler:
@@ -17,9 +17,9 @@ class alloc_cli_arg_handler:
     help_str = ""
     for x in ops:
       # These are used to build up the help text for --help
-      c = " "
-      s = "    "
-      l = "                   "
+      c = (" " * 1)
+      s = (" " * 4)
+      l = (" " * 19)
       if x[0] and x[1]: c = ","
       if x[0]: s = "  -"+x[0].replace(":", "")
       if x[1].strip(): l = c+" --"+x[1]
@@ -28,15 +28,11 @@ class alloc_cli_arg_handler:
     return text % (os.path.basename(" ".join(command_list[0:2])), help_str.rstrip())
     
   def __parse_args(self, ops):
-    """Return four dictionaries that disambiguate the types of command line args. Don't use this, use alloc.get_args."""
-    short_ops = ""
-    long_ops = []
+    """Return three dictionaries that disambiguate the types of command line args. Don't use this, use alloc.get_args."""
     no_arg_ops = {}
     all_ops = {}
+    all_ops_list = []
     for x in ops:
-      # These args go straight to getops
-      short_ops += x[0]
-      long_ops.append(re.sub("=.*$", "=", x[1]).strip())
 
       # track which ops don't require an argument eg -q
       if x[0] and x[0][-1] != ':':
@@ -54,48 +50,73 @@ class alloc_cli_arg_handler:
 
       # And this is used below to build up a dictionary to return
       all_ops[key] = ["-"+x[0].replace(":", ""), "--"+key]
-    return short_ops, long_ops, no_arg_ops, all_ops
+
+      # This is a flat list, so eg [-q, --quiet] will be separate entries
+      if x[0].strip():
+        all_ops_list.append("-"+x[0].replace(":", "").strip())
+      if x[1].strip():
+        all_ops_list.append("--"+re.sub("=.*$", "", x[1]).strip())
+
+    return no_arg_ops, all_ops, all_ops_list
 
   def get_args(self, alloc, command_list, ops, s):
-    """This function allows us to handle the cli arguments elegantly."""
+    """This function allows us to handle the cli arguments efficiently."""
     options = []
     rtn = {}
     remainder = ""
-    
+
+    # For interrogation of a command's potential arguments
+    ops.append((''  , 'list-option    ', 'List all options in a single column.'))
+
     # The options parser cannot handle long args that have optional parameters
-    # If --csv is used, replace it with --csv=auto
+    # If --csv is used without an argument, replace it with --csv=always
     if '--csv' in command_list:
       idx = command_list.index('--csv')
       if len(command_list) > idx+1 and command_list[idx+1] in ['always', 'never', 'auto']:
-        command_list[idx] = '--csv='+ command_list[idx+1] 
+        command_list[idx] = '--csv='+ command_list[idx+1]
         del command_list[idx+1]
       else:
         command_list[idx] = '--csv=always'
 
-    short_ops, long_ops, no_arg_ops, all_ops = self.__parse_args(ops)
-
-    try:
-      options, remainder = getopt.getopt(command_list[2:], short_ops, long_ops)
-    except getopt.GetoptError, e:
-      alloc.die(str(e))
+    no_arg_ops, all_ops, all_ops_list = self.__parse_args(ops)
+    parser = optparse.OptionParser(prog=os.path.basename(" ".join(sys.argv[0:2])), add_help_option=False)
 
     for k, v in all_ops.items():
-      rtn[k] = ''
-      for opt, val in options:
-        if opt in v:
-          # eg -q
-          if opt in no_arg_ops and val == '':
-            rtn[k] = True
+      a1 = []
+      a2 = {}
+      a2['dest'] = k
+      a2['default'] = ''
 
-          # eg -x argument
-          else:
-            rtn[k] = val
+      if v[0] != '-':
+        a1.append(v[0])
+      if v[1] != '--':
+        a1.append(v[1])
 
+      if v[0] in no_arg_ops or v[1] in no_arg_ops:
+        a2['action'] = 'store_true'
+        a2['default'] = False
+
+      parser.add_option(*a1, **a2)
+
+    # Parse the options
+    options, remainder = parser.parse_args(sys.argv[2:])
+
+    # Turn the options into a dict
+    for opt, val in vars(options).items():
+      rtn[opt] = val
+
+    # If --help print help and die
     if rtn['help']:
       print self.get_subcommand_help(command_list, ops, s)
       sys.exit(0)
 
-    # Deal with --csv=[auto|always|never]
+    # If --list-option print options and die
+    if rtn['list-option']:
+      for opt in all_ops_list:
+        print opt
+      sys.exit(0);
+
+    # If --csv tell the alloc object about it
     if 'csv' in rtn and rtn['csv']:
       alloc.csv = True
       if rtn['csv'] == 'auto' and stdout.isatty():
