@@ -1,0 +1,21 @@
+# alloc command line completion
+# needs to have `alloc` in PATH
+#
+_alloc()
+{
+  local cur
+  cur=${COMP_WORDS[COMP_CWORD]}
+
+  COMPREPLY=()
+
+  if (($COMP_CWORD == 1)); then
+    COMPREPLY=( $( alloc --help 2>1 | grep -E "^ " | cut -d " " -f 3 | grep "^$cur" ) )
+    return 0
+  fi
+
+  local IFS=$'\n'
+  COMPREPLY=( $( alloc ${COMP_WORDS[1]} --list-option | grep "^${cur//./\\.}") )
+
+  return 0
+}
+complete -F _alloc -o default alloc
