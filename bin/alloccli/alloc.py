@@ -571,18 +571,18 @@ class alloc(object):
   def msg(self, s):
     """Print a message to the screen (stdout)."""
     if not self.quiet:
-      print "--- " + s
+      print "--- " + str(s)
       sys.stdout.flush()
 
   def yay(self, s):
     """Print a success message to the screen (stdout)."""
     if not self.quiet:
-      print ":-] " + s
+      print ":-] " + str(s)
       sys.stdout.flush()
 
   def err(self, s):
     """Print a failure message to the screen (stderr)."""
-    sys.stderr.write("!!! "+s+"\n")
+    sys.stderr.write("!!! "+str(s)+"\n")
 
   def die(self, s):
     """Print a failure message to the screen (stderr) and the halt."""
