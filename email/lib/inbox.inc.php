@@ -20,7 +20,7 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class inbox {
+class inbox extends db_entity {
 
   function verify_hash($id,$hash) {
     $info = inbox::get_mail_info();

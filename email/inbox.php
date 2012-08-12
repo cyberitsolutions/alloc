@@ -23,8 +23,8 @@
 require_once("../alloc.php");
 singleton("errors_thrown",true);
 
-if (!$current_user->have_role("god")) {
-  alloc_error("Only super-user has permission to use this page.",true);
+if (!have_entity_perm("inbox",PERM_READ,$current_user)) {
+  alloc_error("Permission denied.",true);
 }
 
 $info = inbox::get_mail_info();

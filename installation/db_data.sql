@@ -300,6 +300,10 @@ VALUES
 
 ,('history'                  ,0  ,''         ,NULL ,8          ,NULL)
 
+,('inbox'                    ,0  ,'manage'   ,NULL ,1+2+4+8    ,'Manager can change inbox emails.')
+,('inbox'                    ,0  ,'admin'    ,NULL ,1+2+4+8    ,'Admin can change inbox emails.')
+,('inbox'                    ,0  ,'god'      ,NULL ,1+2+4+8    ,'Super-user can change inbox emails.')
+
 ,('indexQueue'               ,0  ,''         ,NULL ,1+2+4+8    ,'Allow all to indexQueue.')
 
 ,('interestedParty'          ,0  ,''         ,NULL ,11         ,'Alloc all to read, update and create.')
