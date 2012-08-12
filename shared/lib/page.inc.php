@@ -66,7 +66,7 @@ class page {
     $x = -1;
     foreach ($menu_links as $name => $arr) {
       $TPL["x"] = $x;
-      $x+=80;
+      $x+=70;
       $TPL["url"] = $arr["url"];
       $TPL["name"] = $name;
       unset($TPL["active"]);

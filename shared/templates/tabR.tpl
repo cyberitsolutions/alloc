@@ -1,3 +1,1 @@
-<div class="tab{$active}" style="left:{$x}px;">
-  <a href="{$url}">{$name}</a>
-</div>
+<a href="{$url}" class="tab{$active}" style="left:{$x}px;">{$name}</a>
