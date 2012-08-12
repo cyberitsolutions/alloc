@@ -778,43 +778,50 @@ div.warn {
 div#tabs {
   margin:0px;
   padding:0px !important; padding:0px 16px;
-  border:1px;
   clear:both;
   text-align:left;
-  height:27px;
   position:relative;
-  top:1px;
   left:1px;
   z-index:1;
 }
 
 /* A single image based tab */
-div.tab {
+#tabs a.tab {
   float:left;
   position:absolute;
   display:inline;
-  width:80px;
-  height:27px;
+  width:68px;
   text-align:center;
-  font-size:12px; /* hardcoded */
-  background:url(../images/tab_unselected.gif) top no-repeat;
+          border-radius: 8px 8px 0px 0px;
+     -moz-border-radius: 8px 8px 0px 0px;
+  -webkit-border-radius: 8px 8px 0px 0px;
+  background-color: #eaf0f2; border:1px solid #999;
+  padding:6px 0px 6px 0px;
+}
+
+#tabs a.tab:hover {
+  background-color:#f9f9f9;
 }
 
 /* Active tabs use this class as well */
-div.active {
-  background:url(../images/tab_selected.gif) top no-repeat;
+#tabs a.active {
+  background-color:white;
+  border-bottom:0px !important;
+  border:1px solid #999;
+  padding:6px 0px 7px 0px;
 }
 
-div.tab a {
+#tabs a.active:hover {
+  background-color:#fff !important;
+}
+
+#tabs a.tab {
   text-decoration:none;
-  position:relative;
-  top:8px !important; top:7px;
-  padding: 5px 10px;
 }
 
-div.tab a:link    { color:#0674f1;  }
-div.tab a:visited { color:#0674f1;  }
-div.tab a:hover   { color:#f60101;}
+#tabs a.tab:link    { color:#0674f1;  }
+#tabs a.tab:visited { color:#0674f1;  }
+#tabs a.tab:hover   { color:#f60101;}
 
 p#extra_links a:link    { color:#ffffff;  }
 p#extra_links a:visited { color:#ffffff;  }
@@ -828,7 +835,7 @@ p#extra_links a:hover {
   padding: 5px 0px;
 }
 
-div.active a:link, div.active a:visited {
+#tabs a.tab:link, #tabs a.active:visited {
   color:#f60101;
 }
 
