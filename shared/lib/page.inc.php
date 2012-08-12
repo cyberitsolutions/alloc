@@ -50,18 +50,21 @@ class page {
   }
   function tabs() {
     global $TPL;
+    $current_user = &singleton("current_user");
 
-    $menu_links = array("Home"     =>array("url"=>$TPL["url_alloc_home"],"module"=>"home")
-        ,"Clients"  =>array("url"=>$TPL["url_alloc_clientList"],"module"=>"client")
-        ,"Projects" =>array("url"=>$TPL["url_alloc_projectList"],"module"=>"project")
-        ,"Tasks"    =>array("url"=>$TPL["url_alloc_taskList"],"module"=>"task")
-        ,"Time"     =>array("url"=>$TPL["url_alloc_timeSheetList"],"module"=>"time")
-        ,"Invoices" =>array("url"=>$TPL["url_alloc_invoiceList"],"module"=>"invoice")
-        ,"Sales"    =>array("url"=>$TPL["url_alloc_productSaleList"],"module"=>"sale")
-        ,"People"   =>array("url"=>$TPL["url_alloc_personList"],"module"=>"person")
-        ,"Wiki"     =>array("url"=>$TPL["url_alloc_wiki"],"module"=>"wiki")
-        ,"Tools"    =>array("url"=>$TPL["url_alloc_tools"],"module"=>"tools")
-        );
+    $menu_links["Home"]     = array("url"=>$TPL["url_alloc_home"],"module"=>"home");
+    $menu_links["Clients"]  = array("url"=>$TPL["url_alloc_clientList"],"module"=>"client");
+    $menu_links["Projects"] = array("url"=>$TPL["url_alloc_projectList"],"module"=>"project");
+    $menu_links["Tasks"]    = array("url"=>$TPL["url_alloc_taskList"],"module"=>"task");
+    $menu_links["Time"]     = array("url"=>$TPL["url_alloc_timeSheetList"],"module"=>"time");
+    $menu_links["Invoices"] = array("url"=>$TPL["url_alloc_invoiceList"],"module"=>"invoice");
+    $menu_links["Sales"]    = array("url"=>$TPL["url_alloc_productSaleList"],"module"=>"sale");
+    $menu_links["People"]   = array("url"=>$TPL["url_alloc_personList"],"module"=>"person");
+    $menu_links["Wiki"]     = array("url"=>$TPL["url_alloc_wiki"],"module"=>"wiki");
+    if (have_entity_perm("inbox",PERM_READ,$current_user) && config::get_config_item("allocEmailHost")) {
+      $menu_links["Inbox"]  = array("url"=>$TPL["url_alloc_inbox"],"module"=>"email");
+    }
+    $menu_links["Tools"]    = array("url"=>$TPL["url_alloc_tools"],"module"=>"tools");
 
     $x = -1;
     foreach ($menu_links as $name => $arr) {

@@ -59,7 +59,9 @@
           <th>Date</th>
           <th>From</th>
           <th>Subject</th>
+          {if have_entity_perm("inbox",PERM_UPDATE,$current_user)}
           <th>Actions</th>
+          {/}
         </tr>
       {foreach (array)$rows as $r}
         <tr class="{$r["new"] and print "bold"}">
@@ -67,6 +69,7 @@
           <td class="top">{$r.date}</td>
           <td class="top">{=$r.from}</td>
           <td class="top"><a href="" onClick="return grabbody({$r.id});">{=$r.subject}</a><div class="hidden" id="mail_text_{$r.id}"></div></td>
+          {if have_entity_perm("inbox",PERM_UPDATE,$current_user)}
           <td class="nobr top right" style="width:1%;">
             <form action="{$url_alloc_inbox}" method="post">
 
@@ -101,6 +104,7 @@
             <input type="hidden" name="hash" value="{echo md5($r["date"].$r["from"].$r["subject"])}">
             </form>
           </td>
+          {/}
         </tr>
       {/}
       </table>
