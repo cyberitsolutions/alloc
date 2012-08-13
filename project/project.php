@@ -87,6 +87,31 @@ require_once("../alloc.php");
     }
   }
 
+  function show_invoices() {
+    $current_user = &singleton("current_user");
+    global $project;
+    $clientID = $project->get_value("clientID");
+    $projectID = $project->get_id();
+
+    $_FORM["showHeader"] = true;
+    $_FORM["showInvoiceNumber"] = true;
+    $_FORM["showInvoiceClient"] = true;
+    $_FORM["showInvoiceName"] = true;
+    $_FORM["showInvoiceAmount"] = true;
+    $_FORM["showInvoiceAmountPaid"] = true;
+    $_FORM["showInvoiceDate"] = true;
+    $_FORM["showInvoiceStatus"] = true;
+    $_FORM["clientID"] = $clientID;
+    $_FORM["projectID"] = $projectID;
+
+    // Restrict non-admin users records  
+    if (!$current_user->have_role("admin")) {
+      $_FORM["personID"] = $current_user->get_id();  
+    }
+
+    $rows = invoice::get_list($_FORM);
+    echo invoice::get_list_html($rows,$_FORM);
+  }
   
   
 
@@ -604,6 +629,9 @@ if (is_object($project) && $project->get_id()) {
     $not_quoted = count($TPL["taskListRows"]) - $count_quoted_tasks;
     $not_quoted and $TPL["count_not_quoted_tasks"] = "(".sprintf("%d",$not_quoted)." tasks not included in estimate)";
   }
+
+
+  $TPL["invoice_links"].= "<a href=\"".$TPL["url_alloc_invoice"]."clientID=".$clientID."&projectID=".$project->get_id()."\">New Invoice</a>";
 }
 
 $TPL["navigation_links"] = $project->get_navigation_links();
