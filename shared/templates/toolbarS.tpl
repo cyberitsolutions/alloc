@@ -1,7 +1,7 @@
 
     <table id="menu" cellpadding="0" cellspacing="0">
       <tr>
-        <td style="font-size:145%;">
+        <td style="font-size:145%; text-shadow:#fff 1px 1px 1px;">
          {echo config::get_config_logo()}
         </td>
         <td class="nobr bottom" style="width:1%;">
