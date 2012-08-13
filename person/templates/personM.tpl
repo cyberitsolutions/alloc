@@ -276,6 +276,8 @@
 </form>
 <!-- end preferences -->
 
+{if $person_personID}
+
 <br style="clear:both">
 
 {include_employee_skill_fields()}
@@ -301,4 +303,7 @@
     </td>
   </tr>
 </table>
+
+{/}
+
 {page::footer()}
