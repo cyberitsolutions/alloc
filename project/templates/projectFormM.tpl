@@ -88,6 +88,7 @@ function clickClientStatus(e) {
                                ,"reminders"=>"Reminders"
                                ,"time"=>"Time Sheets"
                                ,"transactions"=>"Transactions"
+                               ,"invoices"=>"Invoices"
                                ,"sales"=>"Sales"
                                ,"importexport"=>"Import/Export"
                                ,"sbsAll"=>"All")
@@ -467,6 +468,23 @@ function clickClientStatus(e) {
 
 <div id="transactions">
 {show_transactions("templates/projectTransactionS.tpl")}
+</div>
+
+<div id="invoices">
+  <table class="box">
+    <tr>
+      <th class="header">Invoices
+        <span>
+          {$invoice_links}
+        </span>
+      </th>
+    </tr>
+    <tr>
+      <td>
+        {show_invoices()}
+      </td>
+    </tr>
+  </table>
 </div>
 
 <div id="sales">
