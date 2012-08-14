@@ -470,7 +470,8 @@ class comment extends db_entity {
       if ($e->classname == "task" && substr($e->get_value("taskStatus"),0,4) != "open") {
         $tmp = $current_user;
         $current_user = new person();
-        $current_user->load_current_user($e->get_value("managerID")); // fake identity
+        $personID = $e->get_value("managerID") or $personID = $e->get_value("personID") or $personID = $e->get_value("creatorID");
+        $current_user->load_current_user($personID); // fake identity
         singleton("current_user",$current_user);
         $e->set_value("taskStatus","open_inprogress");
         $e->save();
