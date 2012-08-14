@@ -107,6 +107,7 @@ class task extends db_entity {
                    ,"duplicate" =>"closed_duplicate"
                    ,"incomplete"=>"closed_incomplete"
                    ,"complete"  =>"closed_complete"
+                   ,"archived"  =>"closed_archived"
                    ,"open"      =>"open_inprogress"
                    ,"pending"   =>"pending_info"
                    ,"close"     =>"closed_complete"
