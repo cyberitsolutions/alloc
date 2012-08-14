@@ -489,7 +489,7 @@ class Mail_RFC822 {
         // Groupname:;
         // Then errors were appearing.
         if (!count($addresses)){
-            $this->error = 'Empty group.';
+            //$this->error = 'Empty group.';
             return false;
         }
 
