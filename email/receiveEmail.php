@@ -28,6 +28,7 @@ singleton("errors_logged",false);
 singleton("errors_thrown",true);
 singleton("errors_haltdb",true);
 
+$nl = "<br>\n";
 $info = inbox::get_mail_info();
 
 if (!$info["host"]) {
@@ -41,11 +42,39 @@ $num_new_emails = $email_receive->get_num_new_emails();
 
 if ($num_new_emails >0) {
   $msg_nums = $email_receive->get_new_email_msg_uids(); 
-  print $nl.date("Y-m-d H:i:s")." Found ".count($msg_nums)." new/unseen emails.";
+  print $nl.date("Y-m-d H:i:s")." Found ".count($msg_nums)." new/unseen emails.".$nl;
+  $new_task_email = config::get_config_item("NewTaskEmailAddress");
   foreach ($msg_nums as $num) {
+
+    // Errors from previous iterations shouldn't affect processing of the next email
+    db_alloc::$stop_doing_queries = false;
+
     $email_receive->set_msg($num);
     $email_receive->get_msg_header();
-    inbox::process_one_email($email_receive);
+
+    try {
+
+      if ($new_task_email && same_email_address($email_receive->mail_headers["to"], $new_task_email)) {
+        inbox::convert_email_to_new_task(array("id"=>$num),true);
+      } else {
+        inbox::process_one_email($email_receive);
+      }
+
+    } catch (Exception $e) {
+
+      // There may have been a database error, so let the database know it can run this next bit
+      db_alloc::$stop_doing_queries = false;
+
+      // Try forwarding the errant email
+      try {
+        $email_receive->forward(
+             config::get_config_item("allocEmailAdmin"),"Email command failed","\n".$e->getMessage()."\n\n".$e->getTraceAsString());
+
+      // If that fails, try last-ditch email send
+      } catch (Exception $e) {
+        mail(config::get_config_item("allocEmailAdmin"),"Email command failed(2)","\n".$e->getMessage()."\n\n".$e->getTraceAsString());
+      }
+    }
   }
 }
 $email_receive->expunge();

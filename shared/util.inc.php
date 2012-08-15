@@ -829,7 +829,7 @@ function alloc_error($str="",$force=null) {
 
   // Throw an exception, that can be caught and handled (eg receiveEmail.php)
   if ($errors_thrown) {
-    throw new ErrorException(strip_tags($str));
+    throw new Exception(strip_tags($str));
   }
 
   // Print message to a blank webpage (eg tools/backup.php)

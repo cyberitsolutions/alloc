@@ -82,13 +82,15 @@ class db_entity {
       return true;
     }
 
-    if ($person == "") {
-      $current_user and $person = $current_user;
+    if (!$person) {
+      if ($current_user && is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
+        $person = $current_user;
+      }
     }
 
     $entity_id = 0;
     
-    if (is_object($person)) {
+    if (is_object($person) && method_exists($person,"get_id") && $person->get_id()) {
       $person_id = $person->get_id();
       $person_type = $person->classname;
       $person_id and $person_flag = $person_type."_".$person_id;
@@ -186,15 +188,18 @@ class db_entity {
 
   function insert() {
     $current_user = &singleton("current_user");
-    if (is_object($current_user) && $current_user->get_id()) {
+    if (is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
       $current_user_id = $current_user->get_id();
     } else {
       $current_user_id = "0";
     }
     if (!$this->have_perm(PERM_CREATE)) {
       $current_user = &singleton("current_user");
+      if (is_object($this) && method_exists($this,"get_id")) {
+        $this_id = $this->get_id();
+      }
       alloc_error(sprintf("Person %d does not have permission %s for %s #%d"
-                         ,$current_user->get_id(), $this->permissions[PERM_CREATE], $this->data_table, $this->get_id()));
+                         ,$current_user_id, $this->permissions[PERM_CREATE], $this->data_table, $this_id));
       return false;
     }
 
