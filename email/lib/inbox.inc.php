@@ -22,6 +22,20 @@
 
 class inbox extends db_entity {
 
+  function change_current_user($from) {
+    list($from_address,$from_name) = parse_email_address($from);
+    $person = new person();
+    $personID = $person->find_by_email($from_address);
+    $personID or $personID = $person->find_by_name($from_name);
+
+    // If we've determined a personID from the $from_address
+    if ($personID) {
+      $current_user = new person();
+      $current_user->load_current_user($personID);
+      singleton("current_user",$current_user);
+    } 
+  }
+
   function verify_hash($id,$hash) {
     $info = inbox::get_mail_info();
     $email_receive = new email_receive($info);
@@ -79,9 +93,6 @@ class inbox extends db_entity {
     $current_user = &singleton("current_user");
     $orig_current_user = &$current_user;
 
-    // Errors from previous iterations shouldn't affect processing of the next email
-    db_alloc::$stop_doing_queries = false;
-
     // wrap db queries in a transaction
     $db = new db_alloc();
     $db->start_transaction();
@@ -94,17 +105,8 @@ class inbox extends db_entity {
       return false;
     }
  
-    list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
-    $person = new person();
-    $personID = $person->find_by_email($from_address);
-    $personID or $personID = $person->find_by_name($from_name);
-
-    // If we've determined a personID from the $from_address
-    if ($personID) {
-      $current_user = new person();
-      $current_user->load_current_user($personID);
-      singleton("current_user",$current_user);
-    } 
+    inbox::change_current_user($email_receive->mail_headers["from"]);
+    $current_user = &singleton("current_user");
 
     // Save the email's attachments into a directory, (which also loads up $email_receive->mail_text)
     $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR."tmp-".md5($email_receive->mail_headers["message-id"]);
@@ -121,10 +123,8 @@ class inbox extends db_entity {
       $current_user = &$orig_current_user;
       singleton("current_user",$current_user);
       $db->query("ROLLBACK");
-      $email_receive->forward(config::get_config_item("allocEmailAdmin")
-                             ,"Email command failed"
-                             ,"\n".$e->getMessage()."\n\n".$e->getTraceAsString());
       $failed = true;
+      throw new Exception($e);
     }
 
     // Commit the db, and move the email into its storage location eg: INBOX.task1234
@@ -138,46 +138,65 @@ class inbox extends db_entity {
     singleton("current_user",$current_user);
   }
 
-  function convert_email_to_new_task($req=array()) {
+  function convert_email_to_new_task($req=array(),$change_user=false) {
     global $TPL;
+    $current_user = &singleton("current_user");
+    $orig_current_user = &$current_user;
+
     $info = inbox::get_mail_info();
+    $email_receive = new email_receive($info);
+    $email_receive->open_mailbox($info["folder"]);
+    $email_receive->set_msg($req["id"]);
+    $email_receive->get_msg_header();
+
+    if ($change_user) {
+      inbox::change_current_user($email_receive->mail_headers["from"]);
+      $current_user = &singleton("current_user");
+    }
+
+    if (!is_object($current_user) || !$current_user->get_id()) {
+      $email_receive->mark_seen();
+      alloc_error("Could not create a task from this email. Email was not sent by an alloc-user.");
+      return false;
+    }
+
     // Need the task ID up front
     $task = new task();
     $task->set_value("taskName"," ");
     $task->set_value("priority","3");
     $task->set_value("taskTypeID","Task");
-    $task->save();
-    $taskID = $task->get_id();
+    if ($task->save()) {
+      $taskID = $task->get_id();
 
-    // Save the email's attachments to the task's attachments tab, save_email
-    // also loads up mail_text and then archive this email to the task's mbox.
-    if (!$TPL["message"]) {
-      $email_receive = new email_receive($info);
-      $email_receive->open_mailbox($info["folder"]);
-      $email_receive->set_msg($req["id"]);
-      $email_receive->get_msg_header();
-      $email_receive->save_email(ATTACHMENTS_DIR."task".DIRECTORY_SEPARATOR.$task->get_id());
-    }
+      // Save the email's attachments to the task's attachments tab, save_email
+      // also loads up mail_text and then archive this email to the task's mbox.
+      if (!$TPL["message"]) {
+        $email_receive->save_email(ATTACHMENTS_DIR."task".DIRECTORY_SEPARATOR.$task->get_id());
+      }
 
-    // Subject line is name, email body is body
-    if (!$TPL["message"] && $taskID) {
-      $task = new task();
-      $task->set_id($taskID);
-      $task->select();
-      $task->skip_modified_fields = true;
-      $task->set_value("taskName",$email_receive->mail_headers["subject"]);
-      $task->set_value("taskDescription",$email_receive->mail_text);
-      $task->save();
-      if ($task->get_id()) {
-        $TPL["message_good"][] = "Created task ".$task->get_id()." and moved the email to the task's mail folder.";
-        $mailbox = "INBOX/task".$task->get_id();
-        $email_receive->create_mailbox($mailbox) and $TPL["message_good"][] = "Created mailbox: ".$mailbox;
-        $email_receive->move_mail($req["id"],$mailbox) and $TPL["message_good"][] = "Moved email ".$req["id"]." to ".$mailbox;
+      // Subject line is name, email body is body
+      if (!$TPL["message"] && $taskID) {
+        $task = new task();
+        $task->set_id($taskID);
+        $task->select();
+        $task->skip_modified_fields = true;
+        $task->set_value("taskName",$email_receive->mail_headers["subject"]);
+        $task->set_value("taskDescription",$email_receive->mail_text);
+        $task->save();
+        if ($task->get_id()) {
+          $TPL["message_good"][] = "Created task ".$task->get_id()." and moved the email to the task's mail folder.";
+          $mailbox = "INBOX/task".$task->get_id();
+          $email_receive->create_mailbox($mailbox) and $TPL["message_good"][] = "Created mailbox: ".$mailbox;
+          $email_receive->move_mail($req["id"],$mailbox) and $TPL["message_good"][] = "Moved email ".$req["id"]." to ".$mailbox;
+        }
+      }
+      if (is_object($email_receive)) {
+        $email_receive->close(); 
       }
     }
-    if (is_object($email_receive)) {
-      $email_receive->close(); 
-    }
+    // Put current_user back to normal
+    $current_user = &$orig_current_user;
+    singleton("current_user",$current_user);
   }
 
   function attach_email_to_existing_task($req=array()) {

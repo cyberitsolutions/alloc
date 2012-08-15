@@ -200,6 +200,8 @@ class db {
         $rtn = $this->query_id;
         $this->error();
       }
+    } else if (self::$stop_doing_queries) {
+      //alloc_error("DB queries halted. Will not execute: ".$query);
     }
 
     $result = timetook($start,false);
@@ -221,14 +223,17 @@ class db {
   } 
 
   function row($query_id="",$method=MYSQL_ASSOC) { 
-    $id = $query_id or $id = $this->query_id;
-    if (is_resource($id)) {
-      unset($this->row);
-      $this->row = mysql_fetch_array($id,$method);
-      return $this->row;
+    if (!self::$stop_doing_queries) {
+      $id = $query_id or $id = $this->query_id;
+      if (is_resource($id)) {
+        unset($this->row);
+        $this->row = mysql_fetch_array($id,$method);
+        return $this->row;
+      }
     }
   } 
 
+  // DEPRACATED
   function next_record() {
     return $this->row();
   }

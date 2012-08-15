@@ -147,6 +147,11 @@
     <td width="1%">{page::help("config_AllocFromEmailAddress")}</td>
   </tr>
   <tr>
+    <td width="20%"><nobr>New Task Address</nobr></td>
+    <td><input type="text" size="70" value="{$NewTaskEmailAddress}" name="NewTaskEmailAddress"></td> 
+    <td width="1%">{page::help("config_NewTaskEmailAddress")}</td>
+  </tr>
+  <tr>
     <td width="20%"><nobr>Mail Server Hostname/IP</nobr></td>
     <td><input type="text" size="70" value="{$allocEmailHost}" name="allocEmailHost"></td> 
     <td width="1%">{page::help("config_allocEmailHost")}</td>
