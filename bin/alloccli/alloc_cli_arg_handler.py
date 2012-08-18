@@ -28,7 +28,7 @@ class alloc_cli_arg_handler:
     return text % (os.path.basename(" ".join(command_list[0:2])), help_str.rstrip())
     
   def __parse_args(self, ops):
-    """Return three dictionaries that disambiguate the types of command line args. Don't use this, use alloc.get_args."""
+    """Return three dictionaries that disambiguate the types of command line args. Use alloc.get_args."""
     no_arg_ops = {}
     all_ops = {}
     all_ops_list = []
@@ -114,7 +114,7 @@ class alloc_cli_arg_handler:
     if rtn['list-option']:
       for opt in all_ops_list:
         print opt
-      sys.exit(0);
+      sys.exit(0)
 
     # If --csv tell the alloc object about it
     if 'csv' in rtn and rtn['csv']:
