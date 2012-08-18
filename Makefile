@@ -85,9 +85,11 @@ test:
 	# R0904: Too many public methods
 	# E1103: Disable poor type inference
 	# R0801: Duplicate line checking
+	# W0142: Argument * or ** magic
 	PYTHONPATH=$$PYTHONPATH:./bin/alloccli                  \
 	find -iname '*.py' -exec                                \
 	  pylint --indent-string   '  '                         \
+	         --disable         W0142                        \
 	         --disable         C0321                        \
 	         --disable         W0702                        \
 	         --disable         R0201                        \
