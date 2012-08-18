@@ -29,13 +29,13 @@
  * which may only be readable by the webserver.
 */
 
-PHP_SAPI == 'cli' or alloc_error("This script must be run from the command line.");
 define("NO_AUTH",1);
-require_once(dirname(__FILE__)."/../alloc.php");
+//require_once(dirname(__FILE__)."/../alloc.php");
+require_once(dirname($_SERVER["SUDO_COMMAND"])."/../alloc.php");
 singleton("errors_fatal",true);
 singleton("errors_format","text");
 singleton("errors_logged",true);
-singleton("errors_thrown",true);
+singleton("errors_thrown",false);
 unset($current_user);
 
 
