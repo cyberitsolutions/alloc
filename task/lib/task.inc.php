@@ -686,7 +686,7 @@ class task extends db_entity {
     }
 
     // This takes care of projectID singular and plural
-    $projectIDs = project::get_projectID_sql($filter);
+    has("project") and $projectIDs = project::get_projectID_sql($filter);
     $projectIDs and $sql["projectIDs"] = $projectIDs;
 
     list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
@@ -917,7 +917,7 @@ class task extends db_entity {
       $row["taskLink"] = $task->get_task_link($_FORM);
       $row["project_name"] = $row["projectShortName"]  or  $row["project_name"] = $row["projectName"];
       $row["projectPriority"] = $db->f("projectPriority");
-      $row["projectPriorityLabel"] = project::get_priority_label($db->f("projectPriority"));
+      has("project") and $row["projectPriorityLabel"] = project::get_priority_label($db->f("projectPriority"));
       $row["taskTypeImage"] = $task->get_task_image();
       $row["taskStatusLabel"] = $task->get_task_status("label");
       $row["taskStatusColour"] = $task->get_task_status("colour");
@@ -1307,8 +1307,8 @@ class task extends db_entity {
     // Load up the forms action url
     $rtn["url_form_action"] = $_FORM["url_form_action"];
 
-    // Load up the filter bits
-    $rtn["projectOptions"] = project::get_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
+    //time Load up the filter bits
+    has("project") and $rtn["projectOptions"] = project::get_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
 
     $_FORM["projectType"] and $rtn["projectType_checked"][$_FORM["projectType"]] = " checked"; 
 

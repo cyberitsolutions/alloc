@@ -117,6 +117,7 @@ foreach ($m as $module_name) {
     $modules[$module_name] = $module;
   }
 }
+singleton("modules",$modules);
 
 // Get the web base url SCRIPT_PATH for the alloc site
 $path = dirname($_SERVER["SCRIPT_NAME"]);

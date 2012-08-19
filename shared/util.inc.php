@@ -899,4 +899,9 @@ function reference(&$a, &$b) {
   $e = &$a;
   return refcount($b) != $d;
 }
+function has($module) {
+  $modules = &singleton("modules");
+  return isset($modules[$module]) && $modules[$module];
+}
+
 ?>

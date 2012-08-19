@@ -248,12 +248,14 @@ $TPL["percentComplete"] = $task->get_percentComplete();
 
 
 // Generate navigation links
-$project = $task->get_foreign_object("project");
-$project->set_values("project_");
-if ($project->get_id()) {
-  $ops["taskID"] = $task->get_id();
-  $ops["showProject"] = true;
-  $TPL["navigation_links"] = $project->get_navigation_links($ops);
+if (has("project")) {
+  $project = $task->get_foreign_object("project");
+  $project->set_values("project_");
+  if ($project->get_id()) {
+    $ops["taskID"] = $task->get_id();
+    $ops["showProject"] = true;
+    $TPL["navigation_links"] = $project->get_navigation_links($ops);
+  }
 }
 
 $parent_task = $task->get_foreign_object("task", "parentTaskID");
