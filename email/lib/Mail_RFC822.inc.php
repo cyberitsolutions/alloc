@@ -206,7 +206,9 @@ class Mail_RFC822 {
             $valid = $this->_validateAddress($address);
 
             if ($valid === false || isset($this->error)) {
-                alloc_error(print_r($this->error,1));
+                if ($this->error) {
+                  alloc_error(print_r($this->error,1));
+                }
                 //require_once 'PEAR.php';
                 //return PEAR::raiseError($this->error);
             }
