@@ -882,7 +882,7 @@ class task extends db_entity {
 
     // Get a hierarchical list of tasks
     if (is_array($filter) && count($filter)) {
-      $f = " WHERE ".implode(" AND ",$filter)." GROUP BY task.taskID ".$order_limit;
+      $f = " WHERE ".implode(" AND ",$filter);
     }
     $q = prepare("SELECT task.*
                         ,projectName
@@ -905,6 +905,8 @@ class task extends db_entity {
                LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
                LEFT JOIN pendingTask ON pendingTask.taskID = task.taskID
                          ".$f."
+                GROUP BY task.taskID
+                         ".$order_limit."
                  ",$current_user->get_id());
       
     $debug and print "\n<br>QUERY: ".$q;
