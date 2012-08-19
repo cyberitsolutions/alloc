@@ -231,7 +231,7 @@ class comment extends db_entity {
     // Need to get timeSheet comments too for task comments
     if ($entity == "task") {
       $rows = comment::get_comments($entity,$id);
-      $rows2 = timeSheetItem::get_timeSheetItemComments($id);
+      has("time") and $rows2 = timeSheetItem::get_timeSheetItemComments($id);
       $rows or $rows = array();
       $rows2 or $rows2 = array();
       $rows = array_merge($rows,$rows2);
@@ -620,7 +620,7 @@ class comment extends db_entity {
       }
 
       // Add project header too, if possible
-      if ($e->classname != "project" && isset($e->data_fields["projectID"])) {
+      if (has("project") && $e->classname != "project" && isset($e->data_fields["projectID"])) {
         $p = $e->get_foreign_object("project");
         $email->add_header("X-Alloc-Project", $p->get_value("projectName"));
         $email->add_header("X-Alloc-ProjectID", $p->get_id());
@@ -738,7 +738,7 @@ class comment extends db_entity {
         $row["clientContactName"] and $row["person"] = $row["clientContactName"];
         $rows[] = $row;
       }
-      $tsi_rows = timeSheetItem::get_timeSheetItemComments(null,true);
+      has("timeSheetItem") and $tsi_rows = timeSheetItem::get_timeSheetItemComments(null,true);
       foreach ((array)$tsi_rows as $row) {
         $t = new task();
         $t->set_id($row["taskID"]);
@@ -819,7 +819,7 @@ class comment extends db_entity {
   function get_list_summary_filter($filter=array()) {
     
     // This takes care of projectID singular and plural
-    $projectIDs = project::get_projectID_sql($filter,"task");
+    has("project") and $projectIDs = project::get_projectID_sql($filter,"task");
     $projectIDs and $sql1["projectIDs"] = $projectIDs;
     $projectIDs and $sql2["projectIDs"] = $projectIDs;
     $filter['taskID'] and $sql1[] = prepare("(task.taskID = %d)", $filter["taskID"]);

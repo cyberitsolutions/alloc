@@ -288,8 +288,10 @@ if ($person->get_id()) {
 $TPL["absence_url"] = $TPL["url_alloc_absence"]."personID=".$personID;
 $TPL["personActive"] = (!$person->get_id() || $person->get_value("personActive")) ? " checked" : "";
 
-$timeUnit = new timeUnit();
-$rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
+if (has("time")) {
+  $timeUnit = new timeUnit();
+  $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
+}
 $TPL["timeSheetRateUnit_select"] = page::select_options($rate_type_array, $person->get_value("defaultTimeSheetRateUnitID"));
 $TPL["timeSheetRateUnit_label"] = $rate_type_array[$person->get_value("defaultTimeSheetRateUnitID")];
 

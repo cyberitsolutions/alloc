@@ -3,7 +3,8 @@
 
 
 {foreach $star_entities as $entity => $e}
-{$rows = $entity::get_list($e["form"])}
+{$rows = array()}
+{has($entity) and $rows = $entity::get_list($e["form"])}
 {if $rows}
 {$printed_something = true}
 <table class="box">

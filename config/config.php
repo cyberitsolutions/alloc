@@ -186,8 +186,10 @@ if ($_POST["save"]) {
 $config = new config();
 get_cached_table("config",true); // flush cache
 
-$tf = new tf();
-$options = $tf->get_assoc_array("tfID","tfName");
+if (has("finance")) {
+  $tf = new tf();
+  $options = $tf->get_assoc_array("tfID","tfName");
+}
 $TPL["mainTfOptions"] = page::select_options($options, $config->get_config_item("mainTfID"));
 $TPL["outTfOptions"] = page::select_options($options, $config->get_config_item("outTfID"));
 $TPL["inTfOptions"] = page::select_options($options, $config->get_config_item("inTfID"));
@@ -222,9 +224,10 @@ $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateNam
 
 $TPL["rssStatusFilterOptions"] = page::select_options(task::get_task_statii_array(true), $config->get_config_item("rssStatusFilter"));
 
-
-$timeUnit = new timeUnit();
-$rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
+if (has("timeUnit")) {
+  $timeUnit = new timeUnit();
+  $rate_type_array = $timeUnit->get_assoc_array("timeUnitID","timeUnitLabelB");
+}
 $TPL["timesheetRate_options"] = page::select_options($rate_type_array, $config->get_config_item("defaultTimeSheetUnit"));
 
 $TPL["main_alloc_title"] = "Setup - ".APPLICATION_NAME;

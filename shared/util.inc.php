@@ -901,7 +901,7 @@ function reference(&$a, &$b) {
 }
 function has($module) {
   $modules = &singleton("modules");
-  return isset($modules[$module]) && $modules[$module];
+  return (isset($modules[$module]) && $modules[$module]) || class_exists($module);
 }
 
 ?>

@@ -73,8 +73,10 @@ define("PAGE_IS_PRINTABLE",1);
     $TPL["allParties"] = $task->get_all_parties($task->get_value("projectID")) or $TPL["allParties"] = array();
     $TPL["entity"] = "task";
     $TPL["entityID"] = $task->get_id();
-    $project = $task->get_foreign_object("project");
-    $TPL["clientID"] = $project->get_value("clientID");
+    if (has("project")) {
+      $project = $task->get_foreign_object("project");
+      $TPL["clientID"] = $project->get_value("clientID");
+    }
 
     $commentTemplate = new commentTemplate();
     $ops = $commentTemplate->get_assoc_array("commentTemplateID","commentTemplateName","",array("commentTemplateType"=>"task"));
@@ -117,7 +119,7 @@ if (isset($taskID)) {
   $_POST["dateCreated"] = date("Y-m-d H:i:s");
   $task->read_globals();
   $taskID = $task->get_id();
-  if ($task->get_value("projectID")) {
+  if (has("project") && $task->get_value("projectID")) {
     $project = $task->get_foreign_object("project");
   }
 }
@@ -381,15 +383,19 @@ $TPL["task"] = $task;
 
 // Printer friendly view
 if ($_GET["media"] == "print") {
-  $client = new client();
-  $client->set_id($project->get_value("clientID"));
-  $client->select();
-  $client->set_values("client_");
-  $project = $task->get_foreign_object("project");
-  $clientContact = new clientContact();
-  $clientContact->set_id($project->get_value("clientContactID"));
-  $clientContact->select();
-  $clientContact->set_values("clientContact_");
+  if (has("client")) {
+    $client = new client();
+    $client->set_id($project->get_value("clientID"));
+    $client->select();
+    $client->set_values("client_");
+  }
+  if (has("project") && has("client")) {
+    $project = $task->get_foreign_object("project");
+    $clientContact = new clientContact();
+    $clientContact->set_id($project->get_value("clientContactID"));
+    $clientContact->select();
+    $clientContact->set_values("clientContact_");
+  }
   include_template("templates/taskPrinterM.tpl");
 } else {
   include_template("templates/taskM.tpl");

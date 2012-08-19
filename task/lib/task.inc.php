@@ -222,8 +222,8 @@ class task extends db_entity {
     // A user owns a task if they 'own' the project
     if ($this->get_id()) {
       // Check for existing task
-      $p = $this->get_foreign_object("project");
-    } else if ($_POST["projectID"]) {
+      has("project") and $p = $this->get_foreign_object("project");
+    } else if (has("project") && $_POST["projectID"]) {
       // Or maybe they are creating a new task
       $p = new project();
       $p->set_id($_POST["projectID"]);
@@ -514,10 +514,12 @@ class task extends db_entity {
       $TPL["person"] = $p->get_display_value();
   
       // Project label
-      $p = new project();
-      $p->set_id($this->get_value("projectID"));
-      $p->select();
-      $TPL["projectName"] = $p->get_display_value();
+      if (has("project")) {
+        $p = new project();
+        $p->set_id($this->get_value("projectID"));
+        $p->select();
+        $TPL["projectName"] = $p->get_display_value();
+      }
     }
 
   }
