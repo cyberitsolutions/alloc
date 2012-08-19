@@ -170,7 +170,7 @@ class comment extends db_entity {
   
       $new["recipient_editor"] = "<span class='nobr' style='width:100%;display:inline;' class='recipient_editor'>";
 
-      $new["recipient_editor"].= "<span class='hidden' id='recipient_dropdown_".$new["commentID"]."'>
+      $new["recipient_editor"].= "<span class='noprint hidden' id='recipient_dropdown_".$new["commentID"]."'>
                                     <form action='".$TPL["url_alloc_updateRecipients"]."' method='post'>
                                       <select name='comment_recipients[]' multiple='true'>
                                       ".page::select_options($recipient_ops,$recipient_selected)."
@@ -184,7 +184,7 @@ class comment extends db_entity {
 
       $new["recipient_editor"].= "</span>";
 
-      $new["reply"] = '<a href="" class="commentreply">reply</a>';
+      $new["reply"] = '<a href="" class="noprint commentreply">reply</a>';
     }
 
     if ($v["timeSheetID"]) {
