@@ -25,7 +25,7 @@ class task_calendar_home_item extends home_item {
 
   function __construct() {
     $this->has_config = true;
-    parent::__construct("task_calendar_home_item", "Calendar", "task", "taskCalendarS.tpl","standard",30);
+    parent::__construct("task_calendar_home_item", "Calendar", "calendar", "taskCalendarS.tpl","standard",30);
   }
 
   function visible() {
