@@ -24,6 +24,6 @@
 class task_module extends module {
   var $module = "task";
   var $db_entities = array("task");
-  var $home_items = array("task_calendar_home_item","task_list_home_item","task_message_list_home_item");
+  var $home_items = array("task_list_home_item","task_message_list_home_item");
 }
 ?>

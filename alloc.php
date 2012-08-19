@@ -101,6 +101,7 @@ $m = array("shared"
           ,"sale"
           ,"wiki"
           ,"audit"
+          ,"calendar"
           );
 
 // Sub-dirs under ATTACHMENTS_DIR where upload, email and backup data can be stored
