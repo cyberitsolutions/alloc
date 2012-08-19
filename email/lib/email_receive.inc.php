@@ -495,7 +495,7 @@ class email_receive {
 
     $str = $headers["in-reply-to"]." ".$headers["references"];
 
-    preg_match_all("/([A-Za-z0-9]{8})@/",$str,$m);
+    preg_match_all("/\.alloc\.key\.([A-Za-z0-9]{8})@/",$str,$m);
 
     if (is_array($m[1])) {
       $temp = array_flip($m[1]);// unique pls

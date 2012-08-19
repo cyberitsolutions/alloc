@@ -58,7 +58,6 @@ if (preg_match("/^From /i",$email[0])) {
   array_shift($email);
 }
 
-$new_task_email = config::get_config_item("NewTaskEmailAddress");
 $email = implode("", (array)$email);
 $email or alloc_error("Empty email message, halting.");
 
@@ -66,12 +65,31 @@ $email_receive = new email_receive($info);
 $email_receive->open_mailbox(config::get_config_item("allocEmailFolder"));
 $email_receive->set_msg_text($email);
 $email_receive->get_msg_header();
+$keys = $email_receive->get_hashes();
 
-if ($new_task_email && same_email_address($email_receive->mail_headers["to"], $new_task_email)) {
-  inbox::convert_email_to_new_task($email_receive,true);
-} else {
-  inbox::process_one_email($email_receive);
-}
+  try {
+
+    if (!$keys) {
+      inbox::convert_email_to_new_task($email_receive,true);
+    } else {
+      inbox::process_one_email($email_receive);
+    }
+
+  } catch (Exception $e) {
+
+    // There may have been a database error, so let the database know it can run this next bit
+    db_alloc::$stop_doing_queries = false;
+
+    // Try forwarding the errant email
+    try {
+      $email_receive->forward(
+           config::get_config_item("allocEmailAdmin"),"Email command failed","\n".$e->getMessage()."\n\n".$e->getTraceAsString());
+
+      // If that fails, try last-ditch email send
+    } catch (Exception $e) {
+      mail(config::get_config_item("allocEmailAdmin"),"Email command failed(2)","\n".$e->getMessage()."\n\n".$e->getTraceAsString());
+    }
+  }
 
 // Commit the db, and move the email into its storage location eg: INBOX.task1234
 $db->commit();

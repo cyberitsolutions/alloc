@@ -426,7 +426,6 @@ INSERT INTO tf (tfID,tfName,tfActive) VALUES (5,"Tax Funds",1);
 
 INSERT INTO config (name, value, type) VALUES ('currency', '', 'text');
 INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','','text');
-INSERT INTO config (name, value, type) VALUES ('NewTaskEmailAddress','','text');
 INSERT INTO config (name, value, type) VALUES ('mainTfID','1','text');
 INSERT INTO config (name, value, type) VALUES ('companyName','Your Business Here','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactPhone','','text');

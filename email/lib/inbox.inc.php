@@ -162,7 +162,8 @@ class inbox extends db_entity {
 
     if (!is_object($current_user) || !$current_user->get_id()) {
       $email_receive->mark_seen();
-      alloc_error("Could not create a task from this email. Email was not sent by an alloc-user.");
+      $email_receive->archive("INBOX");
+      alloc_error("Could not create a task from this email. Email was not sent by an alloc-user. Email resides in INBOX.");
       return false;
     }
 
