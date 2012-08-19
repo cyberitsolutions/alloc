@@ -18,6 +18,7 @@
       <span>
         <a class='magic toggleFilter' href=''>Show Filter</a>
         <a href="{$url_alloc_taskListPrint}{$get_str}">PDF</a>
+        <a href="{$url_alloc_taskListCSV}{$get_str}">CSV</a>
         <a href="{$url_alloc_task}">New Task</a>
       </span>
     </th>
