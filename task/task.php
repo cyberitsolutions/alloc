@@ -376,7 +376,7 @@ if ($taskID) {
 
 if (!$task->get_id()) {
   $TPL["message_help"][] = "Enter a Task Name and click the \"Save\" button to create a new Task.";
-  $TPL["task_dateTargetStart"] = date("Y-m-d");
+  $TPL["task_dateTargetStart"] or $TPL["task_dateTargetStart"] = date("Y-m-d");
 }
 
 $TPL["task"] = $task;
