@@ -55,7 +55,7 @@ if ($num_new_emails >0) {
     try {
 
       if ($new_task_email && same_email_address($email_receive->mail_headers["to"], $new_task_email)) {
-        inbox::convert_email_to_new_task(array("id"=>$num),true);
+        inbox::convert_email_to_new_task($email_receive,true);
       } else {
         inbox::process_one_email($email_receive);
       }

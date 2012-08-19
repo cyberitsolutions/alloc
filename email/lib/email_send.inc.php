@@ -46,7 +46,7 @@ class email_send {
   var $body_without_attachments = ""; 
 
   function __construct($to_address="",$subject="",$body="",$message_type="") {
-    $this->default_headers = "X-Mailer: allocPSA ".get_alloc_version();
+    $this->default_headers = "X-Mailer: ".APPLICATION_NAME." ".get_alloc_version();
     $to_address   and $this->set_to_address($to_address);
     $subject      and $this->set_subject($subject);
     $body         and $this->set_body($body);
@@ -71,7 +71,7 @@ class email_send {
   }
   function set_from($from=false) {
     $from or $from = $this->from;
-    $from or $from = "allocPSA ".ALLOC_DEFAULT_FROM_ADDRESS;
+    $from or $from = APPLICATION_NAME." ".ALLOC_DEFAULT_FROM_ADDRESS;
     $this->add_header("From",$from);
     $this->from = $from;
   }
