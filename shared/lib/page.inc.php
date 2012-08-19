@@ -52,19 +52,19 @@ class page {
     global $TPL;
     $current_user = &singleton("current_user");
 
-    $menu_links["Home"]     = array("url"=>$TPL["url_alloc_home"],"module"=>"home");
-    $menu_links["Clients"]  = array("url"=>$TPL["url_alloc_clientList"],"module"=>"client");
-    $menu_links["Projects"] = array("url"=>$TPL["url_alloc_projectList"],"module"=>"project");
-    $menu_links["Tasks"]    = array("url"=>$TPL["url_alloc_taskList"],"module"=>"task");
-    $menu_links["Time"]     = array("url"=>$TPL["url_alloc_timeSheetList"],"module"=>"time");
-    $menu_links["Invoices"] = array("url"=>$TPL["url_alloc_invoiceList"],"module"=>"invoice");
-    $menu_links["Sales"]    = array("url"=>$TPL["url_alloc_productSaleList"],"module"=>"sale");
-    $menu_links["People"]   = array("url"=>$TPL["url_alloc_personList"],"module"=>"person");
-    $menu_links["Wiki"]     = array("url"=>$TPL["url_alloc_wiki"],"module"=>"wiki");
-    if (have_entity_perm("inbox",PERM_READ,$current_user) && config::get_config_item("allocEmailHost")) {
+    has("home")    and $menu_links["Home"]     = array("url"=>$TPL["url_alloc_home"],"module"=>"home");
+    has("client")  and $menu_links["Clients"]  = array("url"=>$TPL["url_alloc_clientList"],"module"=>"client");
+    has("project") and $menu_links["Projects"] = array("url"=>$TPL["url_alloc_projectList"],"module"=>"project");
+    has("task")    and $menu_links["Tasks"]    = array("url"=>$TPL["url_alloc_taskList"],"module"=>"task");
+    has("time")    and $menu_links["Time"]     = array("url"=>$TPL["url_alloc_timeSheetList"],"module"=>"time");
+    has("invoice") and $menu_links["Invoices"] = array("url"=>$TPL["url_alloc_invoiceList"],"module"=>"invoice");
+    has("sale")    and $menu_links["Sales"]    = array("url"=>$TPL["url_alloc_productSaleList"],"module"=>"sale");
+    has("person")  and $menu_links["People"]   = array("url"=>$TPL["url_alloc_personList"],"module"=>"person");
+    has("wiki")    and $menu_links["Wiki"]     = array("url"=>$TPL["url_alloc_wiki"],"module"=>"wiki");
+    if (has("email") && have_entity_perm("inbox",PERM_READ,$current_user) && config::get_config_item("allocEmailHost")) {
       $menu_links["Inbox"]  = array("url"=>$TPL["url_alloc_inbox"],"module"=>"email");
     }
-    $menu_links["Tools"]    = array("url"=>$TPL["url_alloc_tools"],"module"=>"tools");
+    has("tools")   and $menu_links["Tools"]    = array("url"=>$TPL["url_alloc_tools"],"module"=>"tools");
 
     $x = -1;
     foreach ($menu_links as $name => $arr) {
@@ -83,28 +83,21 @@ class page {
   function toolbar() {
     global $TPL;
     $current_user = &singleton("current_user");
-    global $modules;
     $db = new db_alloc(); 
-    $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."\">New Task</option>";
-    if (isset($modules["time"]) && $modules["time"]) {
-      $str[] = "<option value=\"create_".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
-    }
-    $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."tasktype=Fault\">New Fault</option>";
-    $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."tasktype=Message\">New Message</option>";
-    if (have_entity_perm("project", PERM_CREATE, $current_user)) {
+    has("task") and $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."\">New Task</option>";
+    has("time") and $str[] = "<option value=\"create_".$TPL["url_alloc_timeSheet"]."\">New Time Sheet</option>";
+    has("task") and $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."tasktype=Fault\">New Fault</option>";
+    has("task") and $str[] = "<option value=\"create_".$TPL["url_alloc_task"]."tasktype=Message\">New Message</option>";
+    if (has("project") && have_entity_perm("project", PERM_CREATE, $current_user)) {
       $str[] = "<option value=\"create_".$TPL["url_alloc_project"]."\">New Project</option>";
     } 
-    if (isset($modules["client"]) && $modules["client"]) {
-      $str[] = "<option value=\"create_".$TPL["url_alloc_client"]."\">New Client</option>";
-    } 
-    if (isset($modules["finance"]) && $modules["finance"]) {
-      $str[] = "<option value=\"create_".$TPL["url_alloc_expenseForm"]."\">New Expense Form</option>";
-    }
-    $str[] = "<option value=\"create_".$TPL["url_alloc_reminder"]."parentType=general&step=2\">New Reminder</option>";
-    if (have_entity_perm("person", PERM_CREATE, $current_user)) {
+    has("client")   and $str[] = "<option value=\"create_".$TPL["url_alloc_client"]."\">New Client</option>";
+    has("finance")  and $str[] = "<option value=\"create_".$TPL["url_alloc_expenseForm"]."\">New Expense Form</option>";
+    has("reminder") and $str[] = "<option value=\"create_".$TPL["url_alloc_reminder"]."parentType=general&step=2\">New Reminder</option>";
+    if (has("person") && have_entity_perm("person", PERM_CREATE, $current_user)) {
       $str[] = "<option value=\"create_".$TPL["url_alloc_person"]."\">New Person</option>";
     }
-    $str[] = "<option value=\"create_".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
+    has("item") and $str[] = "<option value=\"create_".$TPL["url_alloc_loanAndReturn"]."\">New Item Loan</option>";
     $str[] = "<option value=\"\" disabled=\"disabled\">--------------------";
     $history = new history();
     $q = $history->get_history_query("DESC");
@@ -182,7 +175,13 @@ class page {
     return $str;
   }
   function get_category_options($category="") {
-    $category_options = array("search_tasks"=>"Search Tasks", "search_projects"=>"Search Projects", "search_time"=>"Search Time Sheets", "search_clients"=>"Search Clients","search_comment"=>"Search Comments","search_wiki"=>"Search Wiki", "search_items"=>"Search Items");
+    has("task")    and $category_options["search_tasks"] = "Search Tasks";
+    has("project") and $category_options["search_projects"] = "Search Projects";
+    has("time")    and $category_options["search_time"] = "Search Time Sheets";
+    has("client")  and $category_options["search_clients"] = "Search Clients";
+    has("comment") and $category_options["search_comment"] = "Search Comments";
+    has("wiki")    and $category_options["search_wiki"] = "Search Wiki";
+    has("item")    and $category_options["search_items"] = "Search Items";
     return page::select_options($category_options, $category);
   } 
   function help($topic, $hovertext=false) {
