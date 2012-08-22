@@ -32,6 +32,9 @@
               <a href="#x" class="magic" onClick="$('#file_attachment_dialog').append('<input type=\'file\' name=\'attachment[]\'><br>');">Attach File</a>
               {$attach_extra_files}
             </div>
+            {if have_entity_perm("commentTemplate",PERM_CREATE)}
+            <a title="Add new comment template" href="{$url_alloc_commentTemplate}" class="icon-cogs"></a>
+            {/}
             <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity={$entity}&entityID={$entityID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
           </td>
 
