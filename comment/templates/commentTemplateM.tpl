@@ -3,8 +3,11 @@
 <form action="{$url_alloc_commentTemplate}" method="post">
 <table class="box">
   <tr>
-    <th colspan="2">Task Comment Template</th>
-    <th class="right"><a href="{$url_alloc_commentTemplateList}">Comment Template List</a></th>
+    <th class="header" colspan="3">Task Comment Template
+      <span>
+        <a href="{$url_alloc_commentTemplateList}">Comment Template List</a>
+      </span>
+    </th>
   </tr>
   <tr>
     <td colspan="3">&nbsp;</td>
