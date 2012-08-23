@@ -3,8 +3,8 @@
   <tr>
     <th class="header">Comments
       <span>
-        {if $commentsR}
         <a href="{$url_alloc_downloadComments}entity={$entity}&entityID={$entityID}" class="noprint">Download</a>
+        {if $commentsR}
         {$extra_page_links}
         {/}
         <a class="growshrink nobr noprint commentnew" href="#x">New Comment</a>
