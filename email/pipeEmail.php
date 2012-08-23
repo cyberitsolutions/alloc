@@ -27,6 +27,15 @@
  *
  * This is because we need to read alloc_config.php
  * which may only be readable by the webserver.
+ *
+ * Say alloc is listening on the email address alloc@cyber.com.au.
+ * 
+ * If new email is sent to that address, WITHOUT A KEY in the subject line or headers:
+ *  - from staff: then create new task, archive email in INBOX/task1234 folder
+ *  - from other: archive email in INBOX
+ * Else if new email and it does have a key:
+ *  - from anyone: add it as a comment, archive it to the INBOX/task1234 folder
+ *
 */
 
 define("NO_AUTH",1);
@@ -49,7 +58,6 @@ if (!$info["host"]) {
 while (FALSE !== ($line = fgets(STDIN))) {
   $email[] = $line;
 }
-
 // Nuke any mbox header that sendmail/postfix may have prepended.
 if ($email[0] == "") {
   array_shift($email);
@@ -69,10 +77,28 @@ $keys = $email_receive->get_hashes();
 
   try {
 
+    // If no keys
     if (!$keys) {
-      inbox::convert_email_to_new_task($email_receive,true);
+      // If email sent from a known staff member
+      $from_staff = inbox::change_current_user($email_receive->mail_headers["from"]);
+      if ($from_staff) {
+        inbox::convert_email_to_new_task($email_receive,true);
+      } else {
+        //$email_receive->mark_seen(); in alouy we want the emails to still appear new (as opposed to alloc with receiveEmail.php)
+        $email_receive->archive();
+      }
+
+    // Else if we have a key, append to comment
     } else {
-      inbox::process_one_email($email_receive);
+
+      // Skip over emails that are from alloc. These emails are kept only for
+      // posterity and should not be parsed and downloaded and re-emailed etc.
+      if (same_email_address($email_receive->mail_headers["from"], ALLOC_DEFAULT_FROM_ADDRESS)) {
+        $email_receive->mark_seen();
+        $email_receive->archive();
+      } else {
+        inbox::process_one_email($email_receive);
+      }
     }
 
   } catch (Exception $e) {
