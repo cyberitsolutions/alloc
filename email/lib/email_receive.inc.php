@@ -493,7 +493,7 @@ class email_receive {
       $key and $keys[] = $key;
     }
 
-    $str = $headers["in-reply-to"]." ".$headers["references"];
+    $str = $headers["in-reply-to"]." ".$headers["references"]." ".$headers["message-id"];
 
     preg_match_all("/\.alloc\.key\.([A-Za-z0-9]{8})@/",$str,$m);
 
