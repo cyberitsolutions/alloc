@@ -54,17 +54,28 @@ if ($num_new_emails >0) {
 
     try {
 
+      // If no keys
       if (!$keys) {
         // If email sent from a known staff member
         $from_staff = inbox::change_current_user($email_receive->mail_headers["from"]);
         if ($from_staff) {
           inbox::convert_email_to_new_task($email_receive,true);
         } else {
-          $email_receive->archive();
+          $email_receive->mark_seen(); // mark it seen so we don't poll for it again
           alloc_error("Could not create a task from this email. Email was not sent by a staff member. Email resides in INBOX.");
         }
+
+      // Else if we have a key, append to comment
       } else {
-        inbox::process_one_email($email_receive);
+
+        // Skip over emails that are from alloc. These emails are kept only for
+        // posterity and should not be parsed and downloaded and re-emailed etc.
+        if (same_email_address($email_receive->mail_headers["from"], ALLOC_DEFAULT_FROM_ADDRESS)) {
+          $email_receive->mark_seen();
+          $email_receive->archive();
+        } else {
+          inbox::process_one_email($email_receive);
+        }
       }
 
     } catch (Exception $e) {
