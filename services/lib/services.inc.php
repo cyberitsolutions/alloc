@@ -361,7 +361,7 @@ class services {
   public function get_timeSheetItem_comments($taskID) {
     $people = get_cached_table("person");
     has("time") and $rows = timeSheetItem::get_timeSheetItemComments($taskID);
-    foreach ($rows as $row) {
+    foreach ((array)$rows as $row) {
       $d = $row["timeSheetItemCreatedTime"] or $d = $row["date"];
       $timestamp = format_date("U",$d);
       $name = $people[$row["personID"]]["name"];
