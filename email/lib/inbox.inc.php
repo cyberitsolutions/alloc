@@ -33,7 +33,9 @@ class inbox extends db_entity {
       $current_user = new person();
       $current_user->load_current_user($personID);
       singleton("current_user",$current_user);
-    } 
+      return true;
+    }
+    return false;
   }
 
   function verify_hash($id,$hash) {
@@ -109,14 +111,6 @@ class inbox extends db_entity {
     $db = new db_alloc();
     $db->start_transaction();
 
-    // Skip over emails that are from alloc. These emails are kept only for
-    // posterity and should not be parsed and downloaded and re-emailed etc.
-    if (same_email_address($email_receive->mail_headers["from"], ALLOC_DEFAULT_FROM_ADDRESS)) {
-      $email_receive->mark_seen();
-      $email_receive->archive();
-      return false;
-    }
- 
     inbox::change_current_user($email_receive->mail_headers["from"]);
     $current_user = &singleton("current_user");
 
@@ -161,13 +155,6 @@ class inbox extends db_entity {
       if (is_object($current_user) && method_exists("current_user") && $current_user->get_id()) {
         $personID = $current_user->get_id();
       }
-    }
-
-    if (!is_object($current_user) || !$current_user->get_id()) {
-      $email_receive->mark_seen();
-      $email_receive->archive("INBOX");
-      alloc_error("Could not create a task from this email. Email was not sent by an alloc-user. Email resides in INBOX.");
-      return false;
     }
 
     // Save the email's attachments into a directory, (which also loads up $email_receive->mail_text)

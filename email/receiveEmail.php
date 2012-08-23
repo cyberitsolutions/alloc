@@ -55,7 +55,14 @@ if ($num_new_emails >0) {
     try {
 
       if (!$keys) {
-        inbox::convert_email_to_new_task($email_receive,true);
+        // If email sent from a known staff member
+        $from_staff = inbox::change_current_user($email_receive->mail_headers["from"]);
+        if ($from_staff) {
+          inbox::convert_email_to_new_task($email_receive,true);
+        } else {
+          $email_receive->archive();
+          alloc_error("Could not create a task from this email. Email was not sent by a staff member. Email resides in INBOX.");
+        }
       } else {
         inbox::process_one_email($email_receive);
       }
