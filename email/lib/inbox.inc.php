@@ -158,6 +158,9 @@ class inbox extends db_entity {
     if ($change_user) {
       inbox::change_current_user($email_receive->mail_headers["from"]);
       $current_user = &singleton("current_user");
+      if (is_object($current_user) && method_exists("current_user") && $current_user->get_id()) {
+        $personID = $current_user->get_id();
+      }
     }
 
     if (!is_object($current_user) || !$current_user->get_id()) {
@@ -187,6 +190,15 @@ class inbox extends db_entity {
       $mailbox = "INBOX/task".$task->get_id();
       $email_receive->create_mailbox($mailbox) and $TPL["message_good"][] = "Created mailbox: ".$mailbox;
       $email_receive->archive($mailbox) and $TPL["message_good"][] = "Moved email to ".$mailbox;
+
+      list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
+      $ip["emailAddress"] = $from_address;
+      $ip["name"] = $from_name;
+      $ip["personID"] = $personID;
+      $ip["entity"] = "task";
+      $ip["entityID"] = $task->get_id();
+      interestedParty::add_interested_party($ip);
+
     }
     // Put current_user back to normal
     $current_user = &$orig_current_user;
