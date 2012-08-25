@@ -56,19 +56,21 @@
       <table class="list sortable">
         <tr>
           <th>ID</th>
+          <th>New</th>
           <th>Date</th>
-          <th>From</th>
-          <th>Subject</th>
+          <th>Email</th>
           {if have_entity_perm("inbox",PERM_UPDATE,$current_user)}
           <th>Actions</th>
           {/}
         </tr>
       {foreach (array)$rows as $r}
-        <tr class="{$r["new"] and print "bold"}">
+        <tr class="{$r["new"] and print "highlighted"}">
           <td class="top">{$r.id}</td>
+          <td class="top">{$r["new"] and print "New"}</td>
           <td class="top">{$r.date}</td>
-          <td class="top">{=$r.from}</td>
-          <td class="top"><a href="" onClick="return grabbody({$r.id});">{=$r.subject}</a><div class="hidden" id="mail_text_{$r.id}"></div></td>
+          <td class="top">{=$r.from}<br>
+          <a href="" onClick="return grabbody({$r.id});">{=$r.subject}</a><div class="hidden" id="mail_text_{$r.id}"></div>
+          </td>
           {if have_entity_perm("inbox",PERM_UPDATE,$current_user)}
           <td class="nobr top right" style="width:1%;">
             <form action="{$url_alloc_inbox}" method="post">
