@@ -530,9 +530,9 @@ img.taskType {
 }
 
 .corner {
-  -moz-border-radius: 12px;
   -webkit-border-radius: 12px;
-  border-radius: 12px;
+     -moz-border-radius: 12px;
+          border-radius: 12px;
   border-collapse:separate; /* to prevent border-collapse:collapse being inherited */
 }
 
@@ -983,8 +983,6 @@ body.obfus .obfuscate:hover {
 .ui-dropdownchecklist-indent {
   padding-left: 7px;
 }
-/* Font size of 0 on the -selector and an explicit medium on -text required to eliminate
-   descender problems within the containers and still have a valid size for the text */
 .ui-dropdownchecklist-selector-wrapper {
   vertical-align: middle;
 }
@@ -994,7 +992,6 @@ body.obfus .obfuscate:hover {
 }
 .ui-dropdownchecklist-text {
   font-size: 100%;
-  /* line-height: 20px; */
 }
 .ui-dropdownchecklist-group {
   padding: 1px 2px 2px 2px;
