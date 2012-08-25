@@ -570,7 +570,7 @@ img.taskType {
 .highlighted { 
   font-weight:normal; 
   font-style:normal; 
-  background-color:(HIGHLIGHTED_BACKGROUND_COLOR); 
+  background-color:(HIGHLIGHTED_BACKGROUND_COLOR) !important; 
   padding:0px 3px;
 }
 
