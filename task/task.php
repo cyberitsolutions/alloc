@@ -27,6 +27,21 @@ define("PAGE_IS_PRINTABLE",1);
     global $TPL;
     global $task;
     if ($task->get_value("taskTypeID") == "Parent") {
+      $options["parentTaskID"] = $task->get_id();
+      $options["taskView"] = "byProject";
+      $task->get_value("projectID") and $options["projectIDs"][] = $task->get_value("projectID");
+      $options["showDates"] = true;
+      #$options["showCreator"] = true;
+      $options["showAssigned"] = true;
+      $options["showPercent"] = true;
+      $options["showHeader"] = true;
+      $options["showTimes"] = true;
+
+      $_GET["media"] == "print" and $options["showDescription"] = true;
+      $_GET["media"] == "print" and $options["showComments"] = true;
+      $TPL["taskListRows"] = task::get_list($options);
+      $TPL["taskListOptions"] = $options;
+
       include_template($template);
     }
   }
@@ -337,21 +352,7 @@ $blockTaskLinks and $TPL["message_help_no_esc"][] = "This task ".$is." blocking 
 
 
 if ($task->get_id()) {
-  $options["parentTaskID"] = $task->get_id();
-  $options["taskView"] = "byProject";
-  $task->get_value("projectID") and $options["projectIDs"][] = $task->get_value("projectID");
-  $options["showDates"] = true;
-  #$options["showCreator"] = true;
-  $options["showAssigned"] = true;
-  $options["showPercent"] = true;
-  $options["showHeader"] = true;
-  $options["showTimes"] = true;
-
-  $_GET["media"] == "print" and $options["showDescription"] = true;
-  $_GET["media"] == "print" and $options["showComments"] = true;
-  $TPL["taskListRows"] = task::get_list($options);
-  $TPL["taskListOptions"] = $options;
-  $TPL["task_taskType"] = $task->get_value("taskTypeID");
+ $TPL["task_taskType"] = $task->get_value("taskTypeID");
 } else {
   $TPL["task_children_summary"] = "";
   $TPL["task_taskType"] = "Task";
