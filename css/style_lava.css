@@ -13,7 +13,7 @@ body {
   background:url(../images/wallpaper_lava.jpg) repeat-x #d18818; 
   font-family:arial,helvetica,sans-serif; 
   color:#666666; 
-  padding:0px 14px;
+  padding:10px 30px;
   width:auto !important; width:95%;
   margin:0px;
   min-height:100%;
@@ -43,6 +43,12 @@ div#main {
   clear:both;
   text-align:left;
   margin-bottom:4px;
+  -webkit-border-radius: 12px;
+     -moz-border-radius: 12px;
+          border-radius: 12px;
+  -webkit-box-shadow:3px 2px 4px #999;
+     -moz-box-shadow:3px 2px 4px #999;
+          box-shadow:3px 2px 4px #999;
 }
 
 /* Hack to ensure certain div encapsulate all the stuff inside them */
