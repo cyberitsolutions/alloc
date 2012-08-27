@@ -21,6 +21,6 @@
 */
 
 
-echo shell_exec('darcs changes --xml --last 10 | xsltproc rss.xslt -');
+#echo shell_exec('darcs changes --xml --last 10 | xsltproc rss.xslt -');
 
 ?>
