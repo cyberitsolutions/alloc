@@ -373,7 +373,6 @@ hr {
   margin:15px auto 0px auto; 
   border:1px solid (DECORATIVE_LINE_COLOR);
   background-color:(HELP_BACKGROUND);
-  width:60%;
   z-index:1000;
 }
 .bad { 

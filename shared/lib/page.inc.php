@@ -157,7 +157,7 @@ class page {
 
 
     if (is_array($arr) && count($arr)) {
-      $str = "<div style=\"text-align:center;\"><div class=\"message corner\">";
+      $str = "<div style=\"text-align:center;\"><div class=\"message corner\" style=\"width:60%;\">";
       $str.= "<table cellspacing=\"0\">";
       foreach ($arr as $class => $arr) {
         $info = $arr["msg"];
