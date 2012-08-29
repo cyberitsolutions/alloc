@@ -30,7 +30,8 @@ class module {
   }
 
   public function autoloader($class) {
-    $p = dirname(__FILE__).'/../../'.$this->module.'/lib/'.$class.'.inc.php';
+    $s = DIRECTORY_SEPARATOR;
+    $p = dirname(__FILE__).$s.'..'.$s.'..'.$s.$this->module.$s.'lib'.$s.$class.'.inc.php';
     if (file_exists($p)) {
       require_once($p);
     }
