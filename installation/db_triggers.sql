@@ -135,8 +135,8 @@ $$
 
 -- audit 
 
-DROP PROCEDURE IF EXISTS log $$
-CREATE PROCEDURE log(entityName VARCHAR(255), entityID INTEGER, fieldName VARCHAR(255), oldValue TEXT, newValue TEXT)
+DROP PROCEDURE IF EXISTS alloc_log $$
+CREATE PROCEDURE alloc_log(entityName VARCHAR(255), entityID INTEGER, fieldName VARCHAR(255), oldValue TEXT, newValue TEXT)
 BEGIN
   IF (neq(oldValue,newValue)) THEN
     INSERT INTO auditItem (entityName,entityID,personID,dateChanged,changeType,fieldName,oldValue) VALUES
@@ -553,25 +553,25 @@ DROP TRIGGER IF EXISTS after_update_task $$
 CREATE TRIGGER after_update_task AFTER UPDATE ON task
 FOR EACH ROW
 BEGIN
-  call log("task", OLD.taskID, "taskName",             OLD.taskName,             NEW.taskName);
-  call log("task", OLD.taskID, "taskDescription",      OLD.taskDescription,      NEW.taskDescription);
-  call log("task", OLD.taskID, "priority",             OLD.priority,             NEW.priority);
-  call log("task", OLD.taskID, "timeLimit",            OLD.timeLimit,            NEW.timeLimit);
-  call log("task", OLD.taskID, "timeBest",             OLD.timeBest,             NEW.timeBest);
-  call log("task", OLD.taskID, "timeWorst",            OLD.timeWorst,            NEW.timeWorst);
-  call log("task", OLD.taskID, "timeExpected",         OLD.timeExpected,         NEW.timeExpected);
-  call log("task", OLD.taskID, "dateTargetStart",      OLD.dateTargetStart,      NEW.dateTargetStart);
-  call log("task", OLD.taskID, "dateActualStart",      OLD.dateActualStart,      NEW.dateActualStart);
-  call log("task", OLD.taskID, "projectID",            OLD.projectID,            NEW.projectID);
-  call log("task", OLD.taskID, "parentTaskID",         OLD.parentTaskID,         NEW.parentTaskID);
-  call log("task", OLD.taskID, "taskTypeID",           OLD.taskTypeID,           NEW.taskTypeID);
-  call log("task", OLD.taskID, "personID",             OLD.personID,             NEW.personID);
-  call log("task", OLD.taskID, "managerID",            OLD.managerID,            NEW.managerID);
-  call log("task", OLD.taskID, "estimatorID",          OLD.estimatorID,          NEW.estimatorID);
-  call log("task", OLD.taskID, "duplicateTaskID",      OLD.duplicateTaskID,      NEW.duplicateTaskID);
-  call log("task", OLD.taskID, "dateTargetCompletion", OLD.dateTargetCompletion, NEW.dateTargetCompletion);
-  call log("task", OLD.taskID, "dateActualCompletion", OLD.dateActualCompletion, NEW.dateActualCompletion);
-  call log("task", OLD.taskID, "taskStatus",           OLD.taskStatus,           NEW.taskStatus);
+  call alloc_log("task", OLD.taskID, "taskName",             OLD.taskName,             NEW.taskName);
+  call alloc_log("task", OLD.taskID, "taskDescription",      OLD.taskDescription,      NEW.taskDescription);
+  call alloc_log("task", OLD.taskID, "priority",             OLD.priority,             NEW.priority);
+  call alloc_log("task", OLD.taskID, "timeLimit",            OLD.timeLimit,            NEW.timeLimit);
+  call alloc_log("task", OLD.taskID, "timeBest",             OLD.timeBest,             NEW.timeBest);
+  call alloc_log("task", OLD.taskID, "timeWorst",            OLD.timeWorst,            NEW.timeWorst);
+  call alloc_log("task", OLD.taskID, "timeExpected",         OLD.timeExpected,         NEW.timeExpected);
+  call alloc_log("task", OLD.taskID, "dateTargetStart",      OLD.dateTargetStart,      NEW.dateTargetStart);
+  call alloc_log("task", OLD.taskID, "dateActualStart",      OLD.dateActualStart,      NEW.dateActualStart);
+  call alloc_log("task", OLD.taskID, "projectID",            OLD.projectID,            NEW.projectID);
+  call alloc_log("task", OLD.taskID, "parentTaskID",         OLD.parentTaskID,         NEW.parentTaskID);
+  call alloc_log("task", OLD.taskID, "taskTypeID",           OLD.taskTypeID,           NEW.taskTypeID);
+  call alloc_log("task", OLD.taskID, "personID",             OLD.personID,             NEW.personID);
+  call alloc_log("task", OLD.taskID, "managerID",            OLD.managerID,            NEW.managerID);
+  call alloc_log("task", OLD.taskID, "estimatorID",          OLD.estimatorID,          NEW.estimatorID);
+  call alloc_log("task", OLD.taskID, "duplicateTaskID",      OLD.duplicateTaskID,      NEW.duplicateTaskID);
+  call alloc_log("task", OLD.taskID, "dateTargetCompletion", OLD.dateTargetCompletion, NEW.dateTargetCompletion);
+  call alloc_log("task", OLD.taskID, "dateActualCompletion", OLD.dateActualCompletion, NEW.dateActualCompletion);
+  call alloc_log("task", OLD.taskID, "taskStatus",           OLD.taskStatus,           NEW.taskStatus);
   call update_search_index("task",NEW.taskID);
 END
 $$
