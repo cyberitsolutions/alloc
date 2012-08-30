@@ -126,6 +126,10 @@ class alloc_cli_arg_handler:
     elif not stdout.isatty():
       alloc.csv = True
     
-    return rtn, " ".join(remainder)
+    remainder = " ".join(remainder)
+    if remainder:
+      alloc.die("Trailing arguments not supported: "+remainder)
+
+    return rtn, remainder
 
 
