@@ -95,26 +95,31 @@ In this example the recipients are going to be internal only, except for Clyde
       timeSheetID = o['timesheet']
 
     # Print out entity
-    if taskID:
-      entity = 'task'
-      entityID = taskID
-      k_, v = self.get_list(entity, { entity+'ID' : entityID, 'taskView' : 'prioritised' }).popitem()
-      self.msg(v['taskTypeID']+': '+v['taskID']+' '+v['taskName'])
-    elif projectID:
-      entity = 'project'
-      entityID = projectID
-      k_, v = self.get_list(entity, { entity+'ID' : entityID }).popitem()
-      self.msg(v['projectType']+': '+v['projectID']+' '+v['projectName'])
-    elif timeSheetID:
-      entity = 'timeSheet'
-      entityID = timeSheetID
-      k_, v = self.get_list(entity, { entity+'ID' : entityID }).popitem()
-      self.msg('Time Sheet: '+v['timeSheetID']+' '+v['projectName'] +' '+ v['amount'])
-    elif clientID:
-      entity = 'client'
-      entityID = clientID
-      k_, v = self.get_list(entity, { entity+'ID' : entityID }).popitem()
-      self.msg('Client: '+v['clientID']+' '+v['clientName'])
+    try:
+
+      if taskID:
+        entity = 'task'
+        entityID = taskID
+        k_, v = self.get_list(entity, { entity+'ID' : entityID, 'taskView' : 'prioritised' }).popitem()
+        self.msg(v['taskTypeID']+': '+v['taskID']+' '+v['taskName'])
+      elif projectID:
+        entity = 'project'
+        entityID = projectID
+        k_, v = self.get_list(entity, { entity+'ID' : entityID }).popitem()
+        self.msg(v['projectType']+': '+v['projectID']+' '+v['projectName'])
+      elif timeSheetID:
+        entity = 'timeSheet'
+        entityID = timeSheetID
+        k_, v = self.get_list(entity, { entity+'ID' : entityID }).popitem()
+        self.msg('Time Sheet: '+v['timeSheetID']+' '+v['projectName'] +' '+ v['amount'])
+      elif clientID:
+        entity = 'client'
+        entityID = clientID
+        k_, v = self.get_list(entity, { entity+'ID' : entityID }).popitem()
+        self.msg('Client: '+v['clientID']+' '+v['clientName'])
+
+    except:
+      self.die("No "+entity+" found with ID "+entityID)
 
 
     # Assume 'default' if there's no --to
