@@ -157,8 +157,13 @@ class invoiceItem extends db_entity {
     $db = new db_alloc();
     $db->query(prepare("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$timeSheetID));
     while ($row = $db->row()) {
-      $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
-      imp($timeSheet->pay_info["customerBilledDollars"]) or $iiUnitPrice = $row["rate"];
+
+      if (imp($timeSheet->pay_info["customerBilledDollars"])) {
+        $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
+      } else {
+        $iiUnitPrice = page::money($currency,$row["rate"],"%mo");
+      }
+
       unset($str);
       if ($row["comment"] && !$row["commentPrivate"]) {
         $str = $row["comment"];
@@ -169,9 +174,9 @@ class invoiceItem extends db_entity {
       $ii->set_value("timeSheetID",$timeSheet->get_id());
       $ii->set_value("timeSheetItemID",$row["timeSheetItemID"]);
       $ii->set_value("iiMemo","Time Sheet for ".person::get_fullname($timeSheet->get_value("personID")).", Project: ".$project->get_value("projectName").", ".$row["description"]."\n".$str);
-      $ii->set_value("iiQuantity",$row["timeSheetItemDuration"]);
+      $ii->set_value("iiQuantity",$row["timeSheetItemDuration"] * $row["multiplier"]);
       $ii->set_value("iiUnitPrice",$iiUnitPrice);
-      $ii->set_value("iiAmount",$iiUnitPrice*$row["timeSheetItemDuration"]);
+      $ii->set_value("iiAmount",$iiUnitPrice * $row["timeSheetItemDuration"] * $row["multiplier"]);
       $ii->set_value("iiDate",$row["dateTimeSheetItem"]);
       $ii->save();
     }
