@@ -657,7 +657,7 @@ CREATE TABLE productSaleItem (
   sellPrice BIGINT NOT NULL DEFAULT 0,
   sellPriceCurrencyTypeID varchar(3) NOT NULL,
   sellPriceIncTax boolean NOT NULL default false,
-  quantity integer NOT NULL DEFAULT 1,
+  quantity DECIMAL(19,2) NOT NULL DEFAULT 1,
   description varchar(255)
 ) ENGINE=InnoDB PACK_KEYS=0;
 
