@@ -88,27 +88,18 @@ class services {
   */
   public function get_people($people="", $entity="", $entityID="") {
     $person_table = get_cached_table("person");
-
     $people = explode(",",$people);
-    foreach ($people as $person) {
-      $person = trim($person);
 
-      if ($entity && $entityID) {
-        if (strtolower($person) == "default") { 
-          $e = new $entity;
-          $e->set_id($entityID);
-          $e->select();
-          $default_recipients = $e->get_all_parties();
-        } else if (strtolower($person) == "internal") {
-          $e = new $entity;
-          $e->set_id($entityID);
-          $e->select();
-          $internal_recipients = $e->get_all_parties();
-        } else {
-          $clean_people[] = $person;
-        }
-      }
+    if ($entity && $entityID) {
+      $e = new $entity;
+      $e->set_id($entityID);
+      $e->select();
+      in_array("default",$people)  and $default_recipients  = $e->get_all_parties();
+      in_array("internal",$people) and $internal_recipients = $e->get_all_parties();
     }
+
+    // remove default and internal from the array
+    $clean_people = array_diff($people, array("default", "internal"));
 
     if (is_object($e)) {
       $projectID = $e->get_project_id();
@@ -162,7 +153,7 @@ class services {
           continue;
         }
 
-        if ($ccID = clientContact::find_by_name($person)) {
+        if ($ccID = clientContact::find_by_name($person,$projectID)) {
           $cc = new clientContact();
           $cc->set_id($ccID);
           $cc->select();
@@ -204,14 +195,14 @@ class services {
           }
         }
 
-        if ($ccID = clientContact::find_by_name($person)) {
+        if ($ccID = clientContact::find_by_name($person,$projectID)) {
           $cc = new clientContact();
           $cc->set_id($ccID);
           $cc->select();
           $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
           $bad_person = false;
           continue;
-        } else {
+        } else if (in_str("@",$person)) {
           list($e, $n) = parse_email_address($person);
           $rtn[$e] = array("emailAddress"=>$e, "name"=>$n);
           $bad_person = false;

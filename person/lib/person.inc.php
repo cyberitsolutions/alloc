@@ -334,7 +334,7 @@ class person extends db_entity {
     $stack1 = array();
     $people = get_cached_table("person");
     foreach ($people as $personID => $row) {
-      similar_text($row["name"],$name,$percent1);
+      similar_text(strtolower($row["name"]),strtolower($name),$percent1);
       $stack1[$personID] = $percent1;
     }
 

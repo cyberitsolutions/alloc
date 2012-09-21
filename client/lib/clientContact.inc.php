@@ -53,27 +53,26 @@ class clientContact extends db_entity {
   function find_by_name($name=false,$projectID=false,$percent=90) {
     $stack1 = array();
     $people = array();
+    $db = new db_alloc();
 
     if ($projectID) {
-      $extra = prepare("LEFT JOIN project ON project.clientID = clientContact.clientID 
-                            WHERE project.projectID = %d
-                       ",$projectID);
+      $db->query("SELECT clientID FROM project WHERE projectID = %d",$projectID);
+      $row = $db->qr();
+      if ($row["clientID"]) {
+        $extra = prepare("AND clientID = %d",$row["clientID"]);
+      }
     } else {
-      $extra = prepare("WHERE clientContactName = '%s'",$name);
+      $extra = prepare("AND clientContactName = '%s'",$name);
     }
 
-    $q = prepare("SELECT clientContact.clientContactID, clientContact.clientContactName
-                    FROM clientContact ".$extra
-                );
-               
-    $db = new db_alloc();
+    $q = "SELECT clientContactID, clientContactName FROM clientContact WHERE 1=1 ".$extra;
     $db->query($q);
     while ($row = $db->row()) {
       $people[$db->f("clientContactID")] = $row;
     }
   
     foreach ($people as $personID => $row) {
-      similar_text($row["clientContactName"],$name,$percent1);
+      similar_text(strtolower($row["clientContactName"]),strtolower($name),$percent1);
       $stack1[$personID] = $percent1;
     }
 
