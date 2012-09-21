@@ -845,7 +845,6 @@ p#extra_links a:hover {
 }
 
 p#extra_links {
-  font-size:12px; /* hardcoded */
   font-weight:normal;
   z-index:-1; 
   position:relative; 
