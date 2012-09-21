@@ -312,7 +312,7 @@ class client extends db_entity {
 
     $stack = array();
     foreach ($clients as $clientID => $clientName) {
-      similar_text($name,$clientName,$percent);
+      similar_text(strtolower($name),strtolower($clientName),$percent);
       $stack[$clientID] = $percent;
     }
     asort($stack);
