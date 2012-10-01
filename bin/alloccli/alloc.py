@@ -356,12 +356,24 @@ class alloc(object):
       elif len(clients) == 1:
         return clients.keys()[0]
 
-  def print_task(self, taskID):
+  def print_task(self, taskID, prependEmailHeader=False):
     """Return a plaintext view of a task and its details."""
     rtn = self.get_list('task', {'taskID':taskID, 'taskView':'prioritised', 'showTimes':True})
 
     k, r = rtn.popitem()
     del(k)
+
+    h = ''
+    if prependEmailHeader:
+      d = datetime.datetime.strptime(r['dateCreated'], '%Y-%m-%d %H:%M:%S')
+      h = "From allocPSA "+d.strftime("%a %b  %d %H:%M:%S %Y")
+      h += "\nX-Alloc-Task: "+r['taskName']
+      h += "\nX-Alloc-TaskID: "+r['taskID']
+      h += "\nX-Alloc-Project: "+r['projectName']
+      h += "\nX-Alloc-ProjectID: "+r['projectID']
+      h += "\nSubject: "+r['taskID']+" "+r['taskName']+" ["+r['priorityLabel']+"] "
+      h += "\n"
+
     underline_length = len(r['taskTypeID']+': '+r['taskID']+' '+r['taskName'])
 
     s = '\n'+r['taskTypeID']+': '+r['taskID']+' '+r['taskName']
@@ -398,7 +410,7 @@ class alloc(object):
       s += '\n'+r['taskDescription']
 
     s += '\n'
-    return s
+    return h+s
 
   def get_args(self, command_list, ops, s):
     """Wrapper for handling command line arguments."""
