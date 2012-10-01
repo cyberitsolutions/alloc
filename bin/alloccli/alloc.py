@@ -311,7 +311,7 @@ class alloc(object):
       sessID = ""
     return sessID
 
-  def search_for_project(self, projectName, personID=None):
+  def search_for_project(self, projectName, personID=None, die=True):
     """Search for a project like *projectName*."""
     if projectName:
       ops = {}
@@ -322,9 +322,11 @@ class alloc(object):
       projects = self.get_list("project", ops)
       if len(projects) == 0:
         self.die("No project found matching: %s" % projectName)
-      elif len(projects) > 1:
+      elif len(projects) > 1 and die:
         self.print_table("project", projects, ["projectID", "ID", "projectName", "Project"])
         self.die("Found more than one project matching: %s" % projectName)
+      elif len(projects) > 1 and not die:
+        return projects.keys()
       elif len(projects) == 1:
         return projects.keys()[0]
         

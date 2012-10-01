@@ -37,7 +37,7 @@ class projects(alloc):
     if self.is_num(o['project']):
       f["projectID"] = o['project']
     elif o['project']:
-      f["projectID"] = self.search_for_project(o['project'], personID)
+      f["projectID"] = self.search_for_project(o['project'], personID, die=False)
 
     f["personID"] = personID
     f["projectStatus"] = "Current"

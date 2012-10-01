@@ -69,7 +69,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
     if self.is_num(o['project']):
       projectID = o['project']
     elif o['project']:
-      projectID = self.search_for_project(o['project'], personID)
+      projectID = self.search_for_project(o['project'], personID, die=False)
 
     if self.is_num(o['task']):
       taskID = o['task']

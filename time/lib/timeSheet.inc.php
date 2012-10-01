@@ -494,7 +494,9 @@ class timeSheet extends db_entity {
     if ($filter["tfID"]) {
       $sql[] = prepare("(timeSheet.recipient_tfID = %d)", $filter["tfID"]);
     }
-    if ($filter["projectID"]) {
+    if ($filter["projectID"] && is_array($filter["projectID"])) {
+      $sql[] = prepare("(timeSheet.projectID in (%s))",$filter["projectID"]);
+    } else if ($filter["projectID"]) {
       $sql[] = prepare("(timeSheet.projectID = %d)", $filter["projectID"]);
     }
     if ($filter["taskID"]) {
