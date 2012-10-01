@@ -334,8 +334,9 @@ VALUES
 
 ,('person'                   ,-1 ,''         ,NULL ,2+256      ,NULL)
 ,('person'                   ,0  ,''         ,NULL ,1          ,NULL)
-,('person'                   ,0  ,'admin'    ,NULL ,1+2+4+8+256+512+1024+2048+4096  ,NULL)
-,('person'                   ,0  ,'god'      ,NULL ,1+2+4+8+256+512+1024+2048+4096  ,NULL)
+,('person'                   ,0  ,'manage'   ,NULL ,1+2+4+8+256+512+1024       ,NULL)
+,('person'                   ,0  ,'admin'    ,NULL ,1+2+4+8+256+512+1024+2048  ,NULL)
+,('person'                   ,0  ,'god'      ,NULL ,1+2+4+8+256+512+1024+2048  ,NULL)
 
 ,('product'                  ,0  ,''         ,0    ,1          ,NULL)
 ,('product'                  ,0  ,'manage'   ,100  ,1+2+4+8    ,NULL)

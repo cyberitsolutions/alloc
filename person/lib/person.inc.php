@@ -24,7 +24,6 @@ define("PERM_PERSON_READ_DETAILS", 256);
 define("PERM_PERSON_READ_MANAGEMENT", 512);
 define("PERM_PERSON_WRITE_MANAGEMENT", 1024);
 define("PERM_PERSON_WRITE_ROLES", 2048);
-define("PERM_PERSON_SEND_EMAIL", 4096);
 
 class person extends db_entity {
   public $classname = "person";
@@ -58,8 +57,7 @@ class person extends db_entity {
   public $permissions = array(PERM_PERSON_READ_DETAILS => "read details"
                              ,PERM_PERSON_READ_MANAGEMENT => "read management fields"
                              ,PERM_PERSON_WRITE_MANAGEMENT => "write management fields"
-                             ,PERM_PERSON_WRITE_ROLES => "set roles"
-                             ,PERM_PERSON_SEND_EMAIL => "send mail-outs");
+                             ,PERM_PERSON_WRITE_ROLES => "set roles");
 
 
   function get_tasks_for_email() {
