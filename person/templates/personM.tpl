@@ -89,6 +89,7 @@
 </table>
 
   
+{if $current_user->get_id() == $person_personID}
 <!-- preferences -->
 <form action="{$url_alloc_home}" method="post">
 <table class="box" style="width:40% !important; margin-left:10px; border:1px solid #ccc !important;" align="left">
@@ -275,6 +276,7 @@
 <input type="hidden" name="sessID" value="{$sessID}">
 </form>
 <!-- end preferences -->
+{/}
 
 {if $person_personID}
 
