@@ -420,7 +420,7 @@ function parse_sql_file($file) {
   }
 
   $bits = array();
-  foreach ($queries as $query) {
+  foreach ((array)$queries as $query) {
     if(!empty($query)) {
       $query = trim($query);
       $bits[] = $query;
