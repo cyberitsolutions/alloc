@@ -336,9 +336,6 @@ if ($projectID) {
 
 if ($_POST["save"]) {
   $project->read_globals();
-  #$project->set_value("is_agency", $_POST["project_is_agency"] ? 1 : 0);
-  
-
 
   if (!$project->get_id()) {    // brand new project
     $definitely_new_project = true;
@@ -528,11 +525,6 @@ if ($_POST["save_attachment"]) {
 
 
 $project->set_values("project_");
-
-$ops = array(""=>"","0"=>"No","1"=>"Yes");
-$TPL["is_agency_options"] = page::select_options($ops,$project->get_value("is_agency"));
-$TPL["project_is_agency_label"] = $ops[$project->get_value("is_agency")];
-
 
 $db = new db_alloc();
 

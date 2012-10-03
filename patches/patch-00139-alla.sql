@@ -5,7 +5,6 @@ ALTER TABLE expenseForm CHANGE expenseFormFinalised expenseFormFinalised boolean
 ALTER TABLE expenseForm CHANGE seekClientReimbursement seekClientReimbursement boolean NOT NULL default false;
 ALTER TABLE permission CHANGE allow allow boolean default true;
 ALTER TABLE person CHANGE personActive personActive boolean default true;
-ALTER TABLE project CHANGE is_agency is_agency boolean default false;
 ALTER TABLE reminder CHANGE reminderAdvNoticeSent reminderAdvNoticeSent boolean NOT NULL default false;
 ALTER TABLE interestedParty CHANGE external external boolean DEFAULT NULL;
 ALTER TABLE taskType CHANGE taskTypeActive taskTypeActive boolean default true;

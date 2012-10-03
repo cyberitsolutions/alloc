@@ -2497,12 +2497,6 @@ The header information which can be specified, is listed below:
        specifically established for the purposes and life-cycle of this
        Project, or a more generic one, to be used by multiple Projects which
        are thematically linked, this cost-centre can be specified here.
-   - - Payroll Tax Exempt
-     - In Australia if work is done through an agency then the employee does
-       not need to pay a special tax called Payroll Tax (which is normally
-       deducted by the employing company).  If you tick this checkbox then
-       the percentage that the organization takes from Time Sheets is lessened
-       by the percentage specified here.
 
 After you have finished all the details:
 
