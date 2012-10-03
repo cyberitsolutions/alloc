@@ -114,11 +114,6 @@
     <td width="1%">{page::help("config_taxPercent")}</td>
   </tr>
   <tr>
-    <td>Payroll Tax Percent</td>
-    <td><input type="text" size="70" value="{$payrollTaxPercent}" name="payrollTaxPercent"></td> 
-    <td width="1%">{page::help("config_payrollTaxPercent")}</td>
-  </tr>
-  <tr>
     <td>Company Percent</td>
     <td><input type="text" size="70" value="{$companyPercent}" name="companyPercent"></td> 
     <td width="1%">{page::help("config_companyPercent")}</td>

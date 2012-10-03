@@ -279,7 +279,6 @@ CREATE TABLE project (
   projectShortName varchar(255) default NULL UNIQUE,
   projectStatus varchar(255) NOT NULL default 'Current',
   projectPriority integer default NULL,
-  is_agency boolean default false,
   cost_centre_tfID integer default NULL,
   customerBilledDollars BIGINT DEFAULT NULL,
   defaultTaskLimit DECIMAL(7,2) DEFAULT NULL,

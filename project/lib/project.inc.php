@@ -46,7 +46,6 @@ class project extends db_entity {
                              ,"currencyTypeID"
                              ,"projectPriority"
                              ,"projectStatus"
-                             ,"is_agency"
                              ,"cost_centre_tfID"
                              ,"customerBilledDollars" => array("type"=>"money")
                              ,"clientContactID"
@@ -634,7 +633,6 @@ class project extends db_entity {
     $doc->addField(Zend_Search_Lucene_Field::Text('status'   ,$this->get_value("projectStatus"),"utf-8"));
     $doc->addField(Zend_Search_Lucene_Field::Text('priority' ,$this->get_value("projectPriority"),"utf-8"));
     $doc->addField(Zend_Search_Lucene_Field::Text('tf'       ,$this->get_value("cost_centre_tfID"),"utf-8"));
-    $doc->addField(Zend_Search_Lucene_Field::Text('agency'   ,sprintf("%d",$this->get_value("is_agency")),"utf-8"));
     $doc->addField(Zend_Search_Lucene_Field::Text('billed'   ,$this->get_value("customerBilledDollars"),"utf-8"));
     $index->addDocument($doc);
   }

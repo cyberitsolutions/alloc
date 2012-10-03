@@ -247,7 +247,6 @@ class timeSheet extends db_entity {
       $taxPercent = config::get_config_item("taxPercent");
       $taxTfID = config::get_config_item("taxTfID");
       $taxPercentDivisor = ($taxPercent/100) + 1;
-      $payrollTaxPercent = config::get_config_item("payrollTaxPercent");
       $companyPercent = config::get_config_item("companyPercent");
       $paymentInsurancePercent = config::get_config_item("paymentInsurancePercent");
       $paymentInsurancePercent and $paymentInsurancePercentMult = ($paymentInsurancePercent/100);
@@ -283,7 +282,6 @@ class timeSheet extends db_entity {
 
             $121 after gst == $110
             cyber get 28.5% of $110 
-            payroll tax
             djk get $50
             commissions 
             payment insurance
@@ -312,12 +310,7 @@ class timeSheet extends db_entity {
         $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "tax", $status);
 
         // 2. Credit Cyber Percentage and do agency percentage if necessary
-        $agency_percentage = 0;
-        if ($project->get_value("is_agency") && $payrollTaxPercent > 0) {
-          $agency_percentage = $payrollTaxPercent;
-          $product = "Agency Percentage ".$agency_percentage."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet #".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($agency_percentage/100), $recipient_tfID, "timesheet", $status);
-        }
+        // REMOVED
 
         // 3. We only do the companies cut, if the project has a dedicated fund, otherwise we just omit the companies cut
         if ($project->get_value("cost_centre_tfID") && $project->get_value("cost_centre_tfID") != $company_tfID) {
