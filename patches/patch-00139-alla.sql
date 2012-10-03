@@ -9,7 +9,6 @@ ALTER TABLE reminder CHANGE reminderAdvNoticeSent reminderAdvNoticeSent boolean 
 ALTER TABLE interestedParty CHANGE external external boolean DEFAULT NULL;
 ALTER TABLE taskType CHANGE taskTypeActive taskTypeActive boolean default true;
 ALTER TABLE tf CHANGE tfActive tfActive boolean NOT NULL DEFAULT true;
-ALTER TABLE timeSheet CHANGE payment_insurance payment_insurance boolean default false;
 ALTER TABLE timeSheetItem CHANGE commentPrivate commentPrivate boolean default false;
 ALTER TABLE timeUnit CHANGE timeUnitActive timeUnitActive boolean default false;
 ALTER TABLE token CHANGE tokenActive tokenActive boolean DEFAULT false;

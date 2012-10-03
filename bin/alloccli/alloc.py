@@ -80,7 +80,6 @@ class alloc(object):
      ,"dateSubmittedToAdmin"     :"Submitted Admin"
      ,"invoiceDate"              :"Invoiced"
      ,"billingNote"              :"Notes"
-     ,"payment_insurance"        :"Insurance"
      ,"recipient_tfID"           :"TFID"
      ,"commentPrivate"           :"Comm Priv"
     },

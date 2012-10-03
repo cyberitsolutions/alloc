@@ -20,8 +20,8 @@ ALTER TABLE transaction CHANGE tfID tfID int(11) NOT NULL;
 ALTER TABLE transaction CHANGE fromTfID fromTfID int(11) NOT NULL;
 ALTER TABLE transaction add index idx_fromTfID (fromTfID);
 
-ALTER TABLE transaction CHANGE transactionType transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax','product') NOT NULL;
-ALTER TABLE transactionRepeat CHANGE transactionType transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax','product') NOT NULL;
+ALTER TABLE transaction CHANGE transactionType transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','tax','product') NOT NULL;
+ALTER TABLE transactionRepeat CHANGE transactionType transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','tax','product') NOT NULL;
 
 ALTER TABLE transactionRepeat CHANGE fromTfID fromTfID int(11) NOT NULL;
 ALTER TABLE transactionRepeat CHANGE tfID tfID int(11) NOT NULL;

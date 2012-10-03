@@ -486,7 +486,6 @@ CREATE TABLE timeSheet (
   dateRejected date default NULL,
   invoiceDate date default NULL,
   billingNote text,
-  payment_insurance boolean default false,
   recipient_tfID integer default NULL,
   customerBilledDollars BIGINT DEFAULT NULL,
   currencyTypeID VARCHAR(3) NOT NULL

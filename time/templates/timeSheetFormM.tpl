@@ -94,25 +94,11 @@
 	</tr>
 
 	<tr>
-    {if config::get_config_item("paymentInsurancePercent")}
-    <td>{page::help("payment_insurance")}</td>
-    <td align="right">Payment Insurance:</td>
-    <td>{$payment_insurance}</td>
-    {else}
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    {/}
-    <td align="right">Approved by Admin:</td> 
-    <td>{$timeSheet_approvedByAdminPersonID_username}</td>
-  </tr>
-
-	<tr>
     <td>{page::help("timesheet_add_invoice")}</td>
     <td align="right" valign="top">Attached to Invoice:</td>
-    <td class="nobr">{$attach_to_invoice_button}{$invoice_link}</td>
-    <td class="right">{$amount_allocated_label}</td>
-    <td><b>{$amount_used}{$amount_allocated}</b></td>
+    <td class="nobr">{$attach_to_invoice_button}{$invoice_link} {$amount_allocated_label} <b>{$amount_used}{$amount_allocated}</b></td>
+    <td align="right">Approved by Admin:</td> 
+    <td>{$timeSheet_approvedByAdminPersonID_username}</td>
   </tr>
 
   {if $timeSheet_billingNote}

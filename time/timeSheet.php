@@ -811,17 +811,6 @@ if (!$timeSheet->get_id()) {
 
 $radio_email = "<input type=\"checkbox\" id=\"dont_send_email\" name=\"dont_send_email\" value=\"1\"".$TPL["dont_send_email_checked"]."> <label for=\"dont_send_email\">Don't send email</label><br>";
 
-$payment_insurance_checked = $timeSheet->get_value("payment_insurance") ? " checked" : "";
-$payment_insurance = "<input type=\"checkbox\" name=\"timeSheet_payment_insurance\" value=\"1\"".$payment_insurance_checked.">";
-
-if ($timeSheet->get_value("payment_insurance") == 1) {
-  $payment_insurance_label = "Yes";
-} else {
-  $payment_insurance_label = "No";
-}
-$TPL["payment_insurance"] = $payment_insurance_label;
-
-
 $statii = timeSheet::get_timeSheet_statii();
 
 if (!$projectManagers) {
@@ -856,7 +845,6 @@ case 'edit':
         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         <button type="submit" name="save_and_MoveForward" value="1" class="save_button">Time Sheet to '.$destlabel.'<i class="icon-arrow-right"></i></button>';
 
-  $TPL["payment_insurance"] = $payment_insurance;
   }
   break;
 

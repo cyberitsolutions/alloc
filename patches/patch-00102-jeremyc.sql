@@ -53,7 +53,7 @@ CREATE TABLE productSaleTransaction (
 ) TYPE=MyISAM PACK_KEYS=0;
 
 ALTER TABLE transaction ADD productSaleItemID int(11) default NULL AFTER timeSheetID;
-ALTER TABLE transaction CHANGE transactionType transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax','product') NOT NULL;
+ALTER TABLE transaction CHANGE transactionType transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','tax','product') NOT NULL;
 
  
 INSERT INTO `permission` (`tableName`, `entityID`, `personID`, `roleName`, `allow`, `sortKey`, `comment`, `actions`)
