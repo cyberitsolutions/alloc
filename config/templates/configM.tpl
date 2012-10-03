@@ -279,11 +279,6 @@
     <td width="1%">{page::help("config_hoursInDay")}</td>
   </tr>
   <tr>
-    <td>Time Sheet Payment Insurance Percent</td>
-    <td><input type="text" size="70" value="{$paymentInsurancePercent}" name="paymentInsurancePercent"></td> 
-    <td width="1%">{page::help("config_paymentInsurancePercent")}</td>
-  </tr>
-  <tr>
     <td>Default timesheet rate</td>
     <td><input type="text" size="70" value="{page::money(0, $defaultTimeSheetRate, "%mo")}" name="defaultTimeSheetRate"></td>
     <td width="1%"></td>

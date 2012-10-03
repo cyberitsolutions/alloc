@@ -3061,39 +3061,35 @@ Adding New Time Sheet
 
 2. Choose the Project that this Time Sheet belongs to.
 
-3. Some sites offer their staff a direct payment for Time Sheets, rather than
-   waiting for Invoices to be paid. In allocPSA this is classified as 'Payment
-   Insurance'. Select this if your site offers this facility.
-
-4. Fill in 'Billing Note' if any. This could be something like 'Send the
+3. Fill in 'Billing Note' if any. This could be something like 'Send the
    Invoice relating to this Time Sheet to the Client before the end of the
    month or Internal billing only.
 
-5. Press the 'Save' button to continue or 'Delete Record' to remove any data
+4. Press the 'Save' button to continue or 'Delete Record' to remove any data
    added.
 
-6. Time Sheets are made up of individual line items, pertaining to specific
+5. Time Sheets are made up of individual line items, pertaining to specific
    Tasks. For instance, you may have worked for 3 hours on one problem (Task
    A), 2 hours on Task B and 1 hour on Task C, all for the one Client.
 
-7. For each Time Sheet line item, fill in Date, Duration, Task and Location.
+6. For each Time Sheet line item, fill in Date, Duration, Task and Location.
 
-8. HINT: If the Task you need to link a Time Sheet line item to doesn't exist
+7. HINT: If the Task you need to link a Time Sheet line item to doesn't exist
    yet, you can create it by clicking on the 'New Task' link.
 
-9. Press the 'Add' button to add each new item.
+8. Press the 'Add' button to add each new item.
 
-10. Repeat step 7 to add more line item entries if needed.
+9. Repeat step 7 to add more line item entries if needed.
 
-11. Press 'Save and Submit' button when done. An email will be sent off to the
+10. Press 'Save and Submit' button when done. An email will be sent off to the
     person designated as the next stop in the Time Sheet workflow process.
 
-12. HINT: You can save the Time Sheet as-is, then return to it later on.
+11. HINT: You can save the Time Sheet as-is, then return to it later on.
 
-13. HINT: You can track the progress of your Time Sheets from the 'Time Sheet'
+12. HINT: You can track the progress of your Time Sheets from the 'Time Sheet'
     section of your 'Homepage'.
 
-14. HINT: If you're a manager designated to receive requests to authorise
+13. HINT: If you're a manager designated to receive requests to authorise
     Time Sheets, you can view them from the 'Time Sheet' section of your
     'Homepage'.
 
@@ -4022,8 +4018,6 @@ Indexed keyword fields for Time Sheets
      - The time sheet's status i.e. edit, manager, admin, invoiced, finished.
    - - tf
      - The main recipient tf for this time sheet.
-   - - insurance
-     - Whether or not this time sheet uses the payment insurance functionality i.e. either 1 or 0.
    - - manager
      - The manager that approved the time sheet (if any).
    - - admin

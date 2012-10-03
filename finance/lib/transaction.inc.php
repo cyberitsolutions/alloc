@@ -160,7 +160,6 @@ class transaction extends db_entity {
                 ,'commission'=>'Commission'
                 ,'timesheet'=>'Time Sheet'
                 ,'adjustment'=>'Adjustment'
-                ,'insurance'=>'Insurance'
                 ,'sale'=>'Sale'
                 ,'tax'=>$taxName);
   }
@@ -231,7 +230,7 @@ class transaction extends db_entity {
       $timeSheet->set_id($this->get_value("timeSheetID"));
       $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." ".$this->get_value("timeSheetID")."</a>";
 
-    } else if (($type == "insurance" || $type == "commission" || $type == "tax") && $this->get_value("timeSheetID")) {
+    } else if (($type == "commission" || $type == "tax") && $this->get_value("timeSheetID")) {
       $timeSheet = new timeSheet();
       $timeSheet->set_id($this->get_value("timeSheetID"));
       $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." (Time Sheet ".$this->get_value("timeSheetID").")</a>";
@@ -465,7 +464,7 @@ class transaction extends db_entity {
                 ,"endDate"           => "Transactions with dates before this end date eg: 2007-07-07"
                 ,"monthDate"         => "Transactions for a particular month, by date, eg july: 2008-07-07"
                 ,"sortTransactions"  => "Sort transactions eg: transactionSortDate | transactionDate"
-                ,"transactionType"   => "Eg: invoice | expense | salary | commission | timesheet | adjustment | insurance | tax | sale"
+                ,"transactionType"   => "Eg: invoice | expense | salary | commission | timesheet | adjustment | tax | sale"
                 ,"applyFilter"       => "Saves this filter as the persons preference"
                 ,"url_form_action"   => "The submit action for the filter form"
                 ,"form_name"         => "The name of this form, i.e. a handle for referring to this saved form"

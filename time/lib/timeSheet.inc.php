@@ -39,7 +39,6 @@ class timeSheet extends db_entity {
                              ,"dateSubmittedToAdmin"
                              ,"dateRejected" => array("empty_to_null"=>true)
                              ,"billingNote"
-                             ,"payment_insurance"
                              ,"recipient_tfID"
                              ,"customerBilledDollars" => array("type"=>"money")
                              ,"currencyTypeID"
@@ -248,13 +247,9 @@ class timeSheet extends db_entity {
       $taxTfID = config::get_config_item("taxTfID");
       $taxPercentDivisor = ($taxPercent/100) + 1;
       $companyPercent = config::get_config_item("companyPercent");
-      $paymentInsurancePercent = config::get_config_item("paymentInsurancePercent");
-      $paymentInsurancePercent and $paymentInsurancePercentMult = ($paymentInsurancePercent/100);
 
       $recipient_tfID = $this->get_value("recipient_tfID");
       $timeSheetRecipients = $project->get_timeSheetRecipients();
-      $insur_trans_status = $status;
-      $this->get_value("payment_insurance") and $insur_trans_status = "approved";
       
       $rtn = array();
 
@@ -264,13 +259,10 @@ class timeSheet extends db_entity {
 
         // 1. Credit Employee TF
         $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
-        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $insur_trans_status);
+        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
 
         // 2. Payment Insurance
-        if ($this->get_value("payment_insurance") && $paymentInsurancePercent) {
-          $product = "Payment Insurance ".$paymentInsurancePercent."% for timesheet #".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * $paymentInsurancePercentMult, $company_tfID, "insurance", $insur_trans_status,$recipient_tfID);
-        }
+        // removed
         
 
       } else if ($_POST["create_transactions_default"]) {
@@ -284,7 +276,6 @@ class timeSheet extends db_entity {
             cyber get 28.5% of $110 
             djk get $50
             commissions 
-            payment insurance
             whatever is left of the $110 goes to the 0% commissions
         */
         
@@ -321,13 +312,10 @@ class timeSheet extends db_entity {
 
         // 4. Credit Employee TF
         $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
-        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $insur_trans_status);
+        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
 
         // 5. Payment Insurance
-        if ($this->get_value("payment_insurance") && $paymentInsurancePercent) {
-          $product = "Payment Insurance ".$paymentInsurancePercent."% for timesheet #".$this->get_id();
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"] * $paymentInsurancePercentMult, $company_tfID, "insurance", $insur_trans_status,$recipient_tfID);
-        }
+        // removed
 
         // 6. Credit Project Commissions
         $db->query("SELECT * FROM projectCommissionPerson where projectID = ".$this->get_value("projectID")." ORDER BY commissionPercent DESC");
@@ -341,7 +329,7 @@ class timeSheet extends db_entity {
 
           // Suck up the rest of funds if it is a special zero % commission
           } else if ($db->f("commissionPercent") == 0) { 
-            $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_positive_amount_so_far_minus_insurance();
+            $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_positive_amount_so_far();
             $amount < 0 and $amount = 0;
             config::for_cyber() and $amount = $amount/2; // If it's cyber do a 50/50 split with the commission tf and the company
             $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
@@ -363,11 +351,11 @@ class timeSheet extends db_entity {
     }
   }
 
-  function get_positive_amount_so_far_minus_insurance() {
+  function get_positive_amount_so_far() {
     // This is for getting the amount the manager gets. There is probably a better way to do this.
     $db = new db_alloc();
     $db->query("SELECT * FROM transaction 
-                WHERE timeSheetID = ".$this->get_id()." AND amount > 0 AND transactionType != 'insurance' AND transactionType != 'tax'");
+                WHERE timeSheetID = %d AND amount > 0 AND transactionType != 'tax'",$this->get_id());
     while ($db->next_record()) {
       $amount_so_far += $db->f("amount");
     }
@@ -1344,7 +1332,6 @@ EOD;
     $doc->addField(Zend_Search_Lucene_Field::Text('desc'    ,$desc,"utf-8"));
     $doc->addField(Zend_Search_Lucene_Field::Text('status'  ,$this->get_value("status"),"utf-8")); 
     $doc->addField(Zend_Search_Lucene_Field::Text('tf'      ,$tf_field,"utf-8")); 
-    $doc->addField(Zend_Search_Lucene_Field::Text('insurance',sprintf("%d",$this->get_value("payment_insurance")),"utf-8")); 
     $doc->addField(Zend_Search_Lucene_Field::Text('manager' ,$manager_field,"utf-8")); 
     $doc->addField(Zend_Search_Lucene_Field::Text('admin'   ,$admin_field,"utf-8")); 
     $doc->addField(Zend_Search_Lucene_Field::Text('dateManager',str_replace("-","",$this->get_value("dateSubmittedToManager")),"utf-8"));

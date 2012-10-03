@@ -222,7 +222,6 @@ BEGIN
     SET NEW.dateSubmittedToAdmin = OLD.dateSubmittedToAdmin;
     SET NEW.dateRejected = OLD.dateRejected;
     SET NEW.invoiceDate = OLD.invoiceDate;
-    SET NEW.payment_insurance = OLD.payment_insurance;
   END IF;
 END
 $$

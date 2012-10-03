@@ -2,7 +2,7 @@
 DROP TABLE productSaleTransaction;
 
 -- Change transaction.transactionType from product to sale
-ALTER TABLE transaction CHANGE transactionType transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','insurance','tax','sale') NOT NULL;
+ALTER TABLE transaction CHANGE transactionType transactionType enum('invoice','expense','salary','commission','timesheet','adjustment','tax','sale') NOT NULL;
 
 -- Update old transaction.transactionType records
 UPDATE transaction SET transactionType = 'sale' WHERE transactionType = 'product';
