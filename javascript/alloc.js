@@ -32,9 +32,12 @@ function deduct_gst(value) {
   return Math.round(value / (tax_percent/100 +1)*100)/100;
 }
 
-function toggle_view_edit() {
+function toggle_view_edit(reset) {
   $(".view").toggle();
   $(".edit").toggle();
+  if (reset) {
+    $(this).parents("form").reset();
+  }
   redraw_multiple_selects();
   return false;
 }

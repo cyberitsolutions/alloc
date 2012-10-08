@@ -112,7 +112,7 @@ $(document).ready(function() {
         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         {if $productID}
         <br><br>
-        <a href="" onClick="return toggle_view_edit();">Cancel edit</a>
+        <a href="" onClick="return toggle_view_edit(true);">Cancel edit</a>
         {/}
       </div>
     </td>

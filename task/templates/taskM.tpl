@@ -326,7 +326,7 @@ $(document).ready(function() {
         {if $task_taskID}
         <br><br>
         <input type='hidden' name='view' value='brief'>
-        <a href="" onClick="toggle_view_edit();return false;">Cancel edit</a>
+        <a href="" onClick="return toggle_view_edit(true);">Cancel edit</a>
         {/}
 
       </div>

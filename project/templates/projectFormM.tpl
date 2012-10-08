@@ -4,8 +4,7 @@
 
 $(document).ready(function() {
   {if !$project_projectID}
-    $('.view').hide();
-    $('.edit').show();
+    toggle_view_edit();
     $('#projectName').focus();
     // fake a click to the client status radio button
     clickClientStatus(); 
@@ -313,13 +312,13 @@ function clickClientStatus(e) {
   <tr>
     <td align="center" colspan="5">
       <div class="view" style="margin-top:20px">
-        <button type="button" id="editProject" value="1" onClick="$('.view').hide();$('.edit').show();clickClientStatus();">Edit Project<i class="icon-edit"></i></button>
+        <button type="button" id="editProject" value="1" onClick="toggle_view_edit();clickClientStatus();">Edit Project<i class="icon-edit"></i></button>
       </div>
       <div class="edit" style="margin-top:20px">
         <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
         <button type="submit" name="save" value="1" class="save_button default">Save<i class="icon-ok-sign"></i></button>
         <br><br>
-        <a href="" onClick="$('.edit').hide();$('.view').show();return false;">Cancel edit</a>
+        <a href="" onClick="return toggle_view_edit(true);">Cancel edit</a>
       </div>
     </td>
   </tr>

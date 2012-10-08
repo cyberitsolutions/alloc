@@ -255,7 +255,7 @@
           {page::help("<b>Private Mode</b><br><br>Prevent someone who is standing over your shoulder from seeing financial amounts on the homepage.")}
         </div>
         <div style="float:right; width:50%;" class="right">
-          <a href="" onClick="toggle_view_edit();return false;">Cancel edit</a>&nbsp;&nbsp;
+          <a href="" onClick="return toggle_view_edit(true);">Cancel edit</a>&nbsp;&nbsp;
           <button type="submit" name="customize_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         </div>
       </div>
