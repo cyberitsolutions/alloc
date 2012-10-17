@@ -382,7 +382,7 @@ class task extends db_entity {
     return unserialize(base64_decode($blob));
   }
 
-  function get_personList_dropdown($projectID,$field,$taskID=false) {
+  function get_personList_dropdown($projectID,$field,$taskID=false,$selected=-1) {
     $current_user = &singleton("current_user");
  
     $db = new db_alloc();
@@ -426,7 +426,7 @@ class task extends db_entity {
 
     $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
    
-    $str = page::select_options($ops, $owner);
+    $str = page::select_options($ops, $selected != -1 ? $selected : $owner);
     return $str;
   }
 
