@@ -4,13 +4,16 @@
 // Make the XML request thing, specify the callback function 
 function updateStuffWithAjax() {
   id = $("#projectID").attr("value")
-  makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+id, 'parentTaskDropdown')
-  makeAjaxRequest('{$url_alloc_updateInterestedParties}projectID='+id+'&taskID={$task_taskID}', 'interestedPartyDropdown','',1)
-  makeAjaxRequest('{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}', 'taskPersonList')
-  makeAjaxRequest('{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}', 'taskManagerPersonList')
-  makeAjaxRequest('{$url_alloc_updateEstimatorPersonList}projectID='+id+'&taskID={$task_taskID}', 'taskEstimatorPersonList')
+  var selectedPerson = $("#taskPersonList select").attr("value");
+  var selectedManager = $("#taskManagerPersonList select").attr("value");
+  var selectedEstimator = $("#taskManagerPersonList select").attr("value");
+  makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+id, 'parentTaskDropdown');
+  makeAjaxRequest('{$url_alloc_updateInterestedParties}projectID='+id+'&taskID={$task_taskID}','interestedPartyDropdown','',1);
+  makeAjaxRequest('{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}&selected='+selectedPerson,'taskPersonList');
+  makeAjaxRequest('{$url_alloc_updateManagerPersonList}projectID='+id+'&taskID={$task_taskID}&selected='+selectedManager,'taskManagerPersonList');
+  makeAjaxRequest('{$url_alloc_updateEstimatorPersonList}projectID='+id+'&taskID={$task_taskID}&selected='+selectedEstimator,'taskEstimatorPersonList');
   {if !$task_taskID}
-  makeAjaxRequest('{$url_alloc_updateTaskDupes}', 'taskDupes', { projectID: id, taskName: $("#taskName").attr("value") })
+  makeAjaxRequest('{$url_alloc_updateTaskDupes}', 'taskDupes', { projectID: id, taskName: $("#taskName").attr("value") });
   {/}
 }
 $(document).ready(function() {
