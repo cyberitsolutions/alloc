@@ -211,7 +211,6 @@ class client extends db_entity {
       $c->read_db_record($db);
       $row["clientCategoryLabel"] = $clientCategories[$c->get_value("clientCategory")];
       $row["clientLink"] = $c->get_client_link($_FORM);
-      $row["clientContactPhone"] or $row["clientContactPhone"] = $row["clientContactMobile"];
       $row["clientContactEmail"] and $row["clientContactEmail"] = "<a href=\"mailto:".page::htmlentities($row["clientName"]." <".$row["clientContactEmail"].">")."\">".page::htmlentities($row["clientContactEmail"])."</a>";
 
       $rows[$c->get_id()] = $row;
