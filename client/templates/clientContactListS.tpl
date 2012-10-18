@@ -11,7 +11,8 @@
   <tr>
     <td>{$r.clientLink}</td>
     <td>{=$r.clientContactName}</td>
-    <td>{=$r.clientContactPhone}</td>
+    <td>{if $r["clientContactPhone"]}Ph: {=$r.clientContactPhone}{/}&nbsp;&nbsp;
+        {if $r["clientContactMobile"]}Mob: {=$r.clientContactMobile}{/}</td>
     <td>{$r.clientContactEmail}</td>
     <td width="1%">
       {page::star("clientContact",$r["clientContactID"])}
