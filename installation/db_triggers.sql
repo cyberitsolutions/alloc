@@ -577,80 +577,81 @@ $$
 
 -- pendingTask
 
-DROP PROCEDURE IF EXISTS update_pending_task $$
-CREATE PROCEDURE update_pending_task(tID INTEGER, status varchar(255))
+DROP PROCEDURE IF EXISTS change_task_status $$
+CREATE PROCEDURE change_task_status(tID INTEGER, new_status varchar(255))
 BEGIN
   -- declare statements must be at the top
   DECLARE no_more_rows BOOLEAN;
   DECLARE num_records INTEGER;
   DECLARE task_that_is_pending INTEGER;
-  DECLARE pending_tasks_cursor CURSOR FOR SELECT taskID FROM pendingTask WHERE pendingTaskID = tID;
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET no_more_rows = TRUE;
-
-  OPEN pending_tasks_cursor;
-  the_loop: LOOP
-
-    FETCH pending_tasks_cursor INTO task_that_is_pending;
-
-    SELECT count(pendingTask.taskID) INTO num_records
-      FROM pendingTask
- LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
-     WHERE pendingTask.taskID = task_that_is_pending
-       AND pendingTask.pendingTaskID != tID
-       AND SUBSTRING(task.taskStatus,1,6) != 'closed';
-
-    IF (num_records = 0) THEN
-      call change_task_status(task_that_is_pending,status);
-      -- this needs to be set again
-      SET @in_change_task_status = 1; 
-    END IF;
-
-    IF no_more_rows THEN
-      CLOSE pending_tasks_cursor;
-      LEAVE the_loop;
-    END IF;
-  END LOOP the_loop;
-END
-$$
-
-DROP PROCEDURE IF EXISTS change_task_status $$
-CREATE PROCEDURE change_task_status(tID INTEGER, new_status varchar(255))
-BEGIN
   DECLARE old_status VARCHAR(255);
   DECLARE num_pending_tasks INTEGER;
+  DECLARE pending_tasks_cursor CURSOR FOR SELECT taskID FROM pendingTask WHERE pendingTaskID = tID;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET no_more_rows = TRUE;
   SET max_sp_recursion_depth = 10; 
   SET @in_change_task_status = 1;
 
   SELECT taskStatus INTO old_status FROM task WHERE taskID = tID;
-  IF (neq(old_status,new_status)) THEN
 
-    -- If just moved to closed
-    IF (neq(SUBSTRING(old_status,1,6),'closed') AND SUBSTRING(new_status,1,6) = 'closed') THEN
+  -- If just moved from anything to closed
+  IF (neq(SUBSTRING(old_status,1,6),'closed') AND SUBSTRING(new_status,1,6) = 'closed') THEN
 
-      call update_pending_task(tID, "open_notstarted");
-      SET @in_change_task_status = 1; 
+    -- Walk through a set of rows using a mysql cursor
+    OPEN pending_tasks_cursor;
+    the_loop: LOOP
+      
+      -- This loads the taskID results of the select query, defined above, into the loop variable
+      FETCH pending_tasks_cursor INTO task_that_is_pending;
 
-    -- Else if just re-opened
-    ELSEIF (SUBSTRING(old_status,1,6) = 'closed' AND neq(SUBSTRING(new_status,1,6),'closed')) THEN
-      UPDATE task SET taskStatus = 'pending_tasks'
-       WHERE taskStatus = 'open_notstarted'
-         AND taskID IN (SELECT taskID FROM pendingTask WHERE pendingTaskID = tID);
-    END IF;
+      -- We're looking for records that might prevent the cascading opening of pending tasks
+      SELECT count(pendingTask.taskID) INTO num_records
+        FROM pendingTask
+   LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
+       WHERE pendingTask.taskID = task_that_is_pending
+         AND pendingTask.pendingTaskID != tID
+         AND SUBSTRING(task.taskStatus,1,6) != 'closed';
 
-    -- if this task is at pending_tasks, and you try and change it to a different status, but we're still
-    -- waiting on other tasks to complete, then bomb out with an error
-    IF (old_status = 'pending_tasks' AND neq(old_status,new_status)) THEN
-       SELECT count(pendingTask.taskID) INTO num_pending_tasks FROM pendingTask
-    LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
-        WHERE pendingTask.taskID = tID
-          AND SUBSTRING(task.taskStatus,1,6) != 'closed';
-   
-      IF (num_pending_tasks > 0) THEN
-        call alloc_error('Task has pending tasks.');
+      -- If there aren't any other open tasks, then try and change the status
+      IF (num_records = 0) THEN
+        -- first close off the dependence
+        UPDATE task SET taskStatus = new_status WHERE taskID = tID AND taskStatus != new_status;
+        call change_task_status(task_that_is_pending,"open_notstarted");
+        -- this needs to be set again
+        SET @in_change_task_status = 1; 
       END IF;
+
+      IF no_more_rows THEN
+        CLOSE pending_tasks_cursor;
+        LEAVE the_loop;
+      END IF;
+    END LOOP the_loop;
+
+    SET @in_change_task_status = 1; 
+
+  -- Else if just moved from closed to open or pending
+  ELSEIF (SUBSTRING(old_status,1,6) = 'closed' AND neq(SUBSTRING(new_status,1,6),'closed')) THEN
+    -- Move all the tasks that were depending on the just opened task, to pending_tasks
+    UPDATE task SET taskStatus = 'pending_tasks'
+     WHERE taskStatus = 'open_notstarted'
+       AND taskID IN (SELECT taskID FROM pendingTask WHERE pendingTaskID = tID);
+  END IF;
+
+  
+  -- If just moved from pending_tasks to anything else ...
+  -- If we're still waiting on other tasks to complete, then bomb out with an error
+  IF (old_status = 'pending_tasks' AND neq(old_status,new_status)) THEN
+     SELECT count(pendingTask.taskID) INTO num_pending_tasks FROM pendingTask
+  LEFT JOIN task ON task.taskID = pendingTask.pendingTaskID
+      WHERE pendingTask.taskID = tID
+        AND SUBSTRING(task.taskStatus,1,6) != 'closed';
+ 
+    IF (num_pending_tasks > 0) THEN
+      call alloc_error('Task has pending tasks.');
     END IF;
+  END IF;
 
     -- And finally, update the task
+  IF (neq(old_status,new_status)) THEN
     UPDATE task SET taskStatus = new_status WHERE taskID = tID;
   END IF;
 

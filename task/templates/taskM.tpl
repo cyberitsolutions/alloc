@@ -31,7 +31,19 @@ $(document).ready(function() {
       evt.target.value = date.print("%Y-%m-%d");
       evt.preventDefault();
     }
-    });
+  });
+
+  var prev_taskStatus;
+  $('#taskStatus').focus(function() {
+    prev_taskStatus = $(this).val();
+  }).change(function(evt) {
+    $('.hidden_field').hide();
+    $('#'+$(this).val()+'_div').css('display','inline');
+    if (prev_taskStatus == "pending_tasks" && $(this).val() != "pending_tasks") {
+      $("#pendingTasksIDs").val('');
+    }
+  });
+
 });
 </script>
 
@@ -239,7 +251,7 @@ $(document).ready(function() {
             Assigned To <div id="taskPersonList" style="display:inline">{$personOptions}</div>
           </div>
           <div style="float:right; width:50%; text-align:left;">
-            <select name="taskStatus" onChange="$('.hidden_field').hide(); $('#'+$(this).val()+'_div').css('display','inline');">
+            <select name="taskStatus" id="taskStatus">
               {$task_taskStatusOptions}
             </select>
             <div id="closed_duplicate_div" class="hidden_field {print ($task_taskStatus == "closed_duplicate") ? "inline" : "hidden"}">
@@ -247,7 +259,7 @@ $(document).ready(function() {
               {page::help("task_duplicate")}
             </div>
             <div id="pending_tasks_div" class="hidden_field {print ($task_taskStatus == "pending_tasks") ? "inline" : "hidden"}">
-              <input type="text" name="pendingTasksIDs" value="{$task_pendingTaskIDs}" size="20">
+              <input type="text" name="pendingTasksIDs" id="pendingTasksIDs" value="{$task_pendingTaskIDs}" size="20">
               {page::help("task_pending_tasks")}
             </div>
           </div>

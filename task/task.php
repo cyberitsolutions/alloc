@@ -155,6 +155,11 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     $task->set_value("taskStatus","closed_complete");
   }
 
+  // If we're auto-nuking the pending tasks, we need to do that before the call to task->save()
+  if ($task->get_id() && !$_POST["pendingTasksIDs"]) {
+    $task->add_pending_tasks($_POST["pendingTasksIDs"]);
+  }
+
   // Moved all validation over into task.inc.php save()
   $success = $task->save();
 
