@@ -24,7 +24,7 @@
     </th>
   </tr>
   <tr>
-    <td class="noprint" >{show_filter()}</td>
+    <td class="noprint" >{include_template("templates/taskFilterS.tpl")}</td>
   </tr>
   <tr>
     <td>

@@ -22,6 +22,7 @@
 
 require_once("../alloc.php");
 
+$TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;
 
 $defaults = array("showHeader"=>true
                  ,"showTaskID"=>true
@@ -33,23 +34,15 @@ $defaults = array("showHeader"=>true
                  ,"form_name"=>"taskList_filter"
                  );
 
-function show_filter() {
-  global $TPL;
-  global $defaults;
-  global $_FORM;
-
-  $arr = task::load_task_filter($_FORM);
-  is_array($arr) and $TPL = array_merge($TPL,$arr);
-  include_template("templates/taskFilterS.tpl");
-}
-
-
-$TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;
-
-//Load form
+// Load task list
 $_FORM = task::load_form_data($defaults);
 $TPL["taskListRows"] = task::get_list($_FORM);
 $TPL["_FORM"] = $_FORM;
+
+// Load filter
+$arr = task::load_task_filter($_FORM);
+is_array($arr) and $TPL = array_merge($TPL,$arr);
+
 
 // Check for updates
 if ($_POST["mass_update"]) {

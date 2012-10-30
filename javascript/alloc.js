@@ -27,6 +27,12 @@ function redraw_multiple_selects(container, funct) {
   });
 }
 
+// Make the XML request thing, specify the callback function 
+function refreshProjectList(radiobutton) {
+  url = get_alloc_var('url')+'task/updateProjectList.php?projectType='+radiobutton.value;
+  makeAjaxRequest(url, 'projectListDropdown','',1)
+}
+
 function deduct_gst(value) {
   var tax_percent = get_alloc_var("tax_percent");
   return Math.round(value / (tax_percent/100 +1)*100)/100;
