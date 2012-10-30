@@ -20,39 +20,20 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class task_list_home_item extends home_item {
-  var $date;
+require_once("../alloc.php");
 
-  function __construct() {
-    $this->has_config = true;
-    parent::__construct("top_ten_tasks", "Tasks", "task", "taskListH.tpl","standard",20);
-  }
+$defaults = array("showHeader"=>true
+                 ,"showTaskID"=>true
+                 ,"taskView" => "prioritised"
+                 ,"showStatus" => "true"
+                 ,"url_form_action"=>$TPL["url_alloc_home"]
+                 ,"form_name"=>"taskListHome_filter"
+                 );
 
-  function visible() {
-    return true;
-  }
-
-  function render() {
-    global $TPL;
-
-    $defaults = array("showHeader"=>true
-                     ,"showTaskID"=>true
-                     ,"taskView" => "prioritised"
-                     ,"showStatus" => "true"
-                     ,"url_form_action"=>$TPL["url_alloc_home"]
-                     ,"form_name"=>"taskListHome_filter"
-                     );
-
-    $_FORM = task::load_form_data($defaults);
-    $TPL["taskListRows"] = task::get_list($_FORM);
-    $TPL["_FORM"] = $_FORM;
-
-      return true;
-    if (count($TPL["taskListRows"])) {
-    }
-  }
-}
-
-
+$_FORM = task::load_form_data($defaults);
+$arr = task::load_task_filter($_FORM);
+is_array($arr) and $TPL = array_merge($TPL,$arr);
+$TPL["showCancel"] = true;
+include_template("../task/templates/taskFilterS.tpl");
 
 ?>

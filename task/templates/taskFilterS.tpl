@@ -80,6 +80,9 @@
   <tr>
     <td colspan="2">Task Date</td>
     <td class="right" valign="bottom" rowspan="2">
+      {if $showCancel}
+        <a href="#x" onClick="$(this).parents('.config_top_ten_tasks').fadeOut();">Cancel</a>
+      {/}
       &nbsp;&nbsp;
       <button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button>
       {page::help("taskList_filter")}

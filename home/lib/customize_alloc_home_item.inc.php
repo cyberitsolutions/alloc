@@ -53,21 +53,6 @@ class customize_alloc_home_item extends home_item {
     $TPL["weeksBackOptions"] = page::select_options($week_ops, $current_user->prefs["tasksGraphPlotHomeStart"]);
     $TPL["weeksBackLabel"] = $week_ops[$current_user->prefs["tasksGraphPlotHomeStart"]];
 
-    $task_num_ops = array("0"=>0,1=>1,2=>2,3=>3,4=>4,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50,"all"=>"All");
-    $TPL["topTasksNumOptions"] = page::select_options($task_num_ops, $current_user->prefs["topTasksNum"]);
-    $TPL["topTasksNumLabel"] = $task_num_ops[$current_user->prefs["topTasksNum"]];
-
-    $task_status_array = task::get_task_statii_array();
-    $TPL["topTasksStatusOptions"] = page::select_options($task_status_array, $current_user->prefs["topTasksStatus"]);
-    if(count($current_user->prefs["topTasksStatus"]) > 1) {
-      foreach ((array)$current_user->prefs["topTasksStatus"] as $v) {
-        $TPL["topTasksStatusLabel"].= $sep.str_replace("&nbsp;"," ",$task_status_array[$v]);
-        $sep = ", ";
-      }
-    } else {
-      $TPL["topTasksStatusLabel"] = $task_status_array[$current_user->prefs["topTasksStatus"][0]];
-    }
-
     $project_list_ops = array("0"=>0,5=>5,10=>10,15=>15,20=>20,30=>30,40=>40,50=>50,"all"=>"All");
     $TPL["projectListNumOptions"] = page::select_options($project_list_ops, $current_user->prefs["projectListNum"]);
     $TPL["projectListNumLabel"] = $project_list_ops[$current_user->prefs["projectListNum"]];

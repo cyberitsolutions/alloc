@@ -64,9 +64,6 @@ if ($_POST["customize_save"]) {
   isset($_POST["weeks"])     and $current_user->prefs["tasksGraphPlotHome"] = $_POST["weeks"];
   isset($_POST["weeksBack"]) and $current_user->prefs["tasksGraphPlotHomeStart"] = $_POST["weeksBack"];
 
-  isset($_POST["topTasksNum"])    and $current_user->prefs["topTasksNum"] = $_POST["topTasksNum"];
-  isset($_POST["topTasksStatus"]) and $current_user->prefs["topTasksStatus"] = $_POST["topTasksStatus"];
-
   isset($_POST["projectListNum"]) and $current_user->prefs["projectListNum"] = $_POST["projectListNum"];
 
   isset($_POST["dailyTaskEmail"])         and $current_user->prefs["dailyTaskEmail"] = $_POST["dailyTaskEmail"];

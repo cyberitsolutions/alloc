@@ -424,7 +424,7 @@ table.box td {
   padding:3px;
 }
 
-table.box th.header span {
+table.box th.header > span {
   float:right;
 }
 table.box th.header span a {
@@ -495,7 +495,6 @@ table.filter {
   padding:4px; 
   margin-top:4px; 
   text-align:left;
-  display:none;
 }
 
 table.filter td {
@@ -724,7 +723,7 @@ a.star:hover, a.hot {
 }
 .config-pane {
   background-color:#fff;
-  width:400px;
+  min-width:400px;
   padding:20px;
   border:1px solid #ddd;
   z-index:100;

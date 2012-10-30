@@ -1,1 +1,1 @@
-{task::get_list_html($taskListRows,$taskListOptions)}
+{task::get_list_html($taskListRows,$_FORM)}
