@@ -449,7 +449,7 @@ class client extends db_entity {
       if ($map_link && !empty($f1) && !empty($f4)) {
         $cfg = new config();
         $map_base = $cfg->get_config_item('mapURL');
-        $address = str_replace("%ad", urlencode($f1 . ", " . $f4), $map_base);
+        $address = str_replace("%ad", urlencode(implode(", ",array($f1,$f2,$f3,$f4,$f5))), $map_base);
         $str .= '<br><br><a href="' . $address . '">View map</a>';
       }
     }
