@@ -302,8 +302,10 @@ $(document).ready(function() {
   });
 
   // Activate user preference for displaying filters
-  if (get_alloc_var("show_filters") != "no") {
+  if (get_alloc_var("show_filters") != "yes") {
     $(".toggleFilter").trigger("click");
+  } else {
+    redraw_multiple_selects();
   }
 
 
@@ -330,10 +332,6 @@ $(document).ready(function() {
   });
   sidebyside_activate();
 
-  // unfortunately the multi-select-checkbox functionality doesn't    s.
-  // render correctly in hidden container so first render the selects,s.
-  // and then hide the .edit items.
-  redraw_multiple_selects("");
   $(".edit").hide();
 
   // Mark up the date fields with dynamic calendars
@@ -404,6 +402,16 @@ $(document).ready(function() {
                                              ,"right":0
                                              ,"display":"inline"
                                              }).addClass("corner").addClass("shadow");
+
+    // config boxes that have class "lazy" are lazy-loading, i.e. dynamically populated via ajax
+    var i = $(this).attr("id");
+    if ($("."+i).hasClass("lazy")) {
+      $("."+i).html('<img class="ticker" src="../images/ticker2.gif" alt="Updating field..." title="Updating field...">');
+      $.get(get_alloc_var("url")+"home/"+i+".php", function(data) {
+        $("."+i).html(data);
+        redraw_multiple_selects();
+      });
+    }
 
     $(this).parent().append(elem);
     redraw_multiple_selects($(this).parent());

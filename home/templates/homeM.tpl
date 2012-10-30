@@ -9,27 +9,8 @@
 
 
   <!-- hidden preferences options. -->
-  <div class="config_top_ten_tasks hidden config-pane">
-  <form action="{$url_alloc_home}" method="post">
-  <div>
-    <h6>Number of Tasks<div>Status</div></h6> 
-    <div style="float:left; width:30%;">
-      <select name="topTasksNum">{$topTasksNumOptions}</select>
-      {page::help("<b>Top Tasks</b><br><br>Control the number of tasks displayed on the home page.")}
-    </div>
-    <div style="float:right; width:50%;" class="nobr">
-      <select multiple="true" name="topTasksStatus[]">{$topTasksStatusOptions}</select>
-    </div>
+  <div class="config_top_ten_tasks hidden config-pane lazy">
   </div>
-  <br><br>
-  <span style="float:right">
-    <a href="#x" onClick="$(this).parent().parent().parent().fadeOut();">Cancel</a>
-    <button type="submit" name="customize_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
-  </span>
-  <input type="hidden" name="sessID" value="{$sessID}">
-  </form>
-  </div>
-
 
 
   <div class="config_task_calendar_home_item hidden config-pane">
