@@ -1,16 +1,3 @@
-<script type="text/javascript" language="javascript">
-// Make the XML request thing, specify the callback function 
-function refreshProjectList(radiobutton) {
-  url = '{$url_alloc_updateProjectList}projectType='+radiobutton.value;
-  makeAjaxRequest(url, 'projectListDropdown','',1)
-}
-$(document).ready(function() {
-  if ('{$dateOne}' || '{$dateTwo}') {
-    $('.d_dates').show();
-  }
-});
-</script>
-
 <form action="{$url_form_action}" method="get">
 <table align="center" class="filter corner">
   <tr>
@@ -105,7 +92,10 @@ $(document).ready(function() {
           {$taskDateOptions}
         </select>
       </span>
-      <span style="float:right;" class="hidden d_created d_assigned d_targetStart d_targetCompletion d_actualStart d_actualCompletion d_dates">
+      {if !$dateOne && !$dateTwo}
+        {$visibility = "hidden"}
+      {/}
+      <span style="float:right;" class="{$visibility} d_created d_assigned d_targetStart d_targetCompletion d_actualStart d_actualCompletion d_dates">
         {page::calendar("dateOne",$dateOne);}<div style="display:inline; float:left;">&nbsp;&nbsp;to&nbsp;&nbsp;</div>
         {page::calendar("dateTwo",$dateTwo);}
       </span>
