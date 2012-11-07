@@ -345,7 +345,9 @@ class project extends db_entity {
     $clientID and $options["clientID"] = $clientID;
     $options["projectStatus"] = "Current";
     $options["showProjectType"] = true;
-    $options["personID"] = $current_user->get_id();
+    if ($onlymine) {
+      $options["personID"] = $current_user->get_id();
+    }
     $ops = project::get_list($options);
     return array_kv($ops,"projectID","label");
   }

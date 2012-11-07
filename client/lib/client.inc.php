@@ -341,7 +341,7 @@ class client extends db_entity {
     $options["clientStatus"] = "Current";
     $ops = client::get_list($options);
     $ops = array_kv($ops,"clientID","clientName");
-    $client_select = "<select size=\"1\" id=\"clientID\" name=\"clientID\" onChange=\"makeAjaxRequest('".$TPL["url_alloc_updateProjectListByClient"]."clientID='+$('#clientID').attr('value'),'projectDropdown')\"><option></option>";
+    $client_select = "<select size=\"1\" id=\"clientID\" name=\"clientID\" onChange=\"makeAjaxRequest('".$TPL["url_alloc_updateProjectListByClient"]."clientID='+$('#clientID').attr('value')+'&onlymine=".sprintf("%d",$onlymine)."','projectDropdown')\"><option></option>";
     $client_select.= page::select_options($ops,$clientID,100)."</select>";
 
     $client_link = $client->get_link();
