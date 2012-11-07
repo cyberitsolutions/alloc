@@ -29,6 +29,7 @@ class invoice extends db_entity {
   public $data_fields = array("invoiceName"
                              ,"clientID"
                              ,"projectID"
+                             ,"tfID"
                              ,"invoiceDateFrom"
                              ,"invoiceDateTo"
                              ,"invoiceNum"

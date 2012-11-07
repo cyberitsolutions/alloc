@@ -24,10 +24,16 @@
 define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
-
-usleep(400000);
-echo "<select id=\"projectID\" name=\"projectID\"><option></option>".page::select_options(project::get_list_by_client($_GET["clientID"],$_GET["onlymine"]))."</select>";
-
+if ($_GET["projectID"]) {
+  usleep(300000);
+  $project = new project();
+  $project->set_id($_GET["projectID"]);
+  $project->select();
+  $tf_sel = $project->get_value("cost_centre_tfID");
+  $tf = new tf();
+  $options = page::select_options($tf->get_assoc_array("tfID","tfName"),$tf_sel);
+  echo "<select id=\"tfID\" name=\"tfID\">".$options."</select>";
+}
 
 
 ?>

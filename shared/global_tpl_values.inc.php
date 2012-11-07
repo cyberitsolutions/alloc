@@ -102,6 +102,7 @@ $alloc_urls = array(
             ,"url_alloc_searchTransaction"              => "finance/searchTransaction.php"
             ,"url_alloc_transaction"                    => "finance/transaction.php"
             ,"url_alloc_transactionGroup"               => "finance/transactionGroup.php"
+            ,"url_alloc_updateTFList"                   => "finance/updateTFList.php"
             ,"url_alloc_loans"                          => "item/itemLoan.php"
             ,"url_alloc_loanAndReturn"                  => "item/loanAndReturn.php"
             ,"url_alloc_addItem"                        => "item/addItem.php"

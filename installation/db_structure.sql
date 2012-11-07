@@ -144,6 +144,7 @@ CREATE TABLE invoice (
   invoiceRepeatDate date DEFAULT NULL,
   clientID integer NOT NULL,
   projectID integer DEFAULT NULL,
+  tfID integer NOT NULL,
   invoiceDateFrom date,
   invoiceDateTo date,
   invoiceNum integer NOT NULL,
