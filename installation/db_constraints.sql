@@ -85,6 +85,7 @@ ALTER TABLE invoice ADD CONSTRAINT invoice_clientID FOREIGN KEY (clientID) REFER
 ALTER TABLE invoice ADD CONSTRAINT invoice_projectID FOREIGN KEY (projectID) REFERENCES project (projectID);
 ALTER TABLE invoice ADD CONSTRAINT invoice_currencyTypeID FOREIGN KEY (currencyTypeID) REFERENCES currencyType (currencyTypeID);
 ALTER TABLE invoice ADD CONSTRAINT invoice_invoiceRepeatID FOREIGN KEY (invoiceRepeatID) REFERENCES invoiceRepeat (invoiceRepeatID);
+ALTER TABLE invoice ADD CONSTRAINT invoice_tfID FOREIGN KEY (tfID) REFERENCES tf (tfID);
 ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_invoiceID FOREIGN KEY (invoiceID) REFERENCES invoice (invoiceID);
 ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_timeSheetID FOREIGN KEY (timeSheetID) REFERENCES timeSheet (timeSheetID);
 ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_timeSheetItemID FOREIGN KEY (timeSheetItemID) REFERENCES timeSheetItem (timeSheetItemID);

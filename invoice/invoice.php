@@ -467,7 +467,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
           $ii = new invoiceItem();
           $ii->set_id($iiID);
           $ii->select();
-          $ii->create_transaction($_POST["invoiceItemAmountPaid"][$iiID],$_POST["invoiceItemAmountPaidTfID"][$iiID],$status);
+          $ii->create_transaction($_POST["invoiceItemAmountPaid"][$iiID],$invoice->get_value("tfID"),$status);
         }
       }
     }
@@ -631,6 +631,16 @@ $projectID = $invoice->get_value("projectID") or $projectID = $_GET["projectID"]
 list($client_select, $client_link, $project_select, $project_link) 
   = client::get_client_and_project_dropdowns_and_links($clientID, $projectID);
 
+$tf = new tf();
+if ($invoice->get_value("tfID")) {
+  $tf->set_id($invoice->get_value("tfID"));
+  $tf->select();
+  $tf_link = $tf->get_link();
+  $tf_sel = $invoice->get_value("tfID");
+}
+$tf_sel or $tf_sel = config::get_config_item("mainTfID");
+$tf_select = "<select id='tfID' name='tfID'>".page::select_options($tf->get_assoc_array("tfID","tfName"),$tf_sel)."</select>";
+
 
 // Main invoice buttons
 if ($current_user->have_role('admin')) {
@@ -642,6 +652,7 @@ if ($current_user->have_role('admin')) {
     ';
     $TPL["field_clientID"] = $client_select;
     $TPL["field_projectID"] = $project_select;
+    $TPL["field_tfID"] = $tf_select;
 
   } else if ($invoice->get_value("invoiceStatus") == "edit") {
     $TPL["invoice_buttons"] = '
@@ -654,6 +665,7 @@ if ($current_user->have_role('admin')) {
     $ops = client::get_list($options);
     $TPL["field_clientID"] = $client_select;
     $TPL["field_projectID"] = $project_select;
+    $TPL["field_tfID"] = $tf_select;
 
   } else if ($invoice->get_value("invoiceStatus") == "reconcile") {
 
@@ -667,6 +679,7 @@ if ($current_user->have_role('admin')) {
     $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
+    $TPL["field_tfID"] = $tf_link;
     $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%s%mo %c");
     $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
     $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
@@ -679,6 +692,7 @@ if ($current_user->have_role('admin')) {
     $TPL["field_invoiceName"] = page::htmlentities($TPL["invoiceName"]);
     $TPL["field_clientID"] = $client_link;
     $TPL["field_projectID"] = $project_link;
+    $TPL["field_tfID"] = $tf_link;
     $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%s%mo %c");
     $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
     $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
@@ -688,6 +702,7 @@ if ($current_user->have_role('admin')) {
   $TPL["field_invoiceName"] = $TPL["invoiceName"];
   $TPL["field_clientID"] = $client_link;
   $TPL["field_projectID"] = $project_link;
+  $TPL["field_tfID"] = $tf_link;
   $TPL["field_maxAmount"] = page::money($currency,$TPL["maxAmount"],"%s%mo %c");
   $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
   $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
@@ -699,6 +714,7 @@ if (!$invoice->get_value("clientID")) {
   $ops = client::get_list($options);
   $TPL["field_clientID"] = $client_select;
   $TPL["field_projectID"] = $project_select;
+  $TPL["field_tfID"] = $tf_select;
 } 
 
 

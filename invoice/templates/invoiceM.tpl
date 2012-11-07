@@ -1,6 +1,14 @@
 {page::header()}
 {page::toolbar()}
 
+<script>
+$(document).ready(function() {
+  $("#projectID").live('change',function() {
+    makeAjaxRequest("{$url_alloc_updateTFList}projectID="+$(this).val(),"field_tfID");
+  });
+});
+</script>
+
 <form action="{$url_alloc_invoiceRepeat}" method="post">
 <style>
   #repeating-invoice td {
@@ -110,17 +118,23 @@
     <td align="right" class="nobr" width="10%">Total Incoming Funds:</td>
     <td>{$invoiceTotal}</td>
   </tr>
+
+  <tr>
+    <td align="right">TF:</td>
+    <td id="field_tfID">{$field_tfID}</td>
+    <td align="right">Total Amount Paid:</td>
+    <td>{$invoiceTotalPaid}</td>
+  </tr>
+
   <tr>
     <td align="right">Invoice Number: </td>
     <td>{$field_invoiceNum}</td>
-    <td align="right">Total Amount Paid:</td>
-    <td>{$invoiceTotalPaid}</td>
+    <td align="right">Period: </td>
+    <td>{$field_invoiceDateFrom}&nbsp;&nbsp;{$field_invoiceDateTo}</td>
   </tr>
   <tr>
     <td align="right">Invoice Name: </td>
     <td>{$field_invoiceName}</td>
-    <td align="right">Period: </td>
-    <td>{$field_invoiceDateFrom}&nbsp;&nbsp;{$field_invoiceDateTo}</td>
   </tr>
   <tr>
     <td colspan="4" align="center">
