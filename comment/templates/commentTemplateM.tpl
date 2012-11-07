@@ -3,7 +3,7 @@
 <form action="{$url_alloc_commentTemplate}" method="post">
 <table class="box">
   <tr>
-    <th class="header" colspan="3">Task Comment Template
+    <th class="header" colspan="3">Comment Template
       <span>
         <a href="{$url_alloc_commentTemplateList}">Comment Template List</a>
       </span>
@@ -17,7 +17,6 @@
     <td>
       <input type="text" name="commentTemplateName" size="60" value="{$commentTemplateName}">
       <span style="float:right">
-        Template Type&nbsp;&nbsp;
         <select name="commentTemplateType">{$commentTemplateTypeOptions}</select>
       </span>
     </td>
