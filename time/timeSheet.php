@@ -33,12 +33,11 @@ if (!$current_user->is_employee()) {
 
     $db = new db_alloc();
 
-    $db->query(prepare("SELECT SUM(amount) as total_incoming FROM transaction WHERE timeSheetID = %d AND fromTfID = %d",$timeSheet->get_id(),config::get_config_item("inTfID")));
-    $row = $db->row();
-    $total_incoming = $row["total_incoming"];
-    $TPL["total_incoming"] = page::money($timeSheet->get_value("currencyTypeID"),$total_incoming,"%s%mo %c");
+    $amount_so_far = $timeSheet->get_amount_so_far(true);
+    $total_incoming = $timeSheet->pay_info["total_customerBilledDollars"];
 
-    $db->query(prepare("SELECT * FROM transaction WHERE timeSheetID = %d AND fromTfID != %d",$timeSheet->get_id(),config::get_config_item("inTfID")));
+    $db->query("SELECT * FROM transaction WHERE timeSheetID = %d AND fromTfID != %d
+               ",$timeSheet->get_id(),config::get_config_item("inTfID"));
 
     while ($row = $db->row()) {
       $has_transactions = true;
@@ -47,7 +46,8 @@ if (!$current_user->is_employee()) {
     $total_allocated = transaction::get_actual_amount_used($rows);
     $TPL["total_allocated"] = page::money($timeSheet->get_value("currencyTypeID"),$total_allocated,"%s%mo %c");
     $TPL["total_dollars"] =   page::money($timeSheet->get_value("currencyTypeID"),$timeSheet->pay_info["total_dollars_not_null"],"%s%m %c");
-    $TPL["total_remaining"] = page::money($timeSheet->get_value("currencyTypeID"),$total_incoming - $total_allocated,"%mo"); // used in js preload_field()
+    // used in js preload_field()
+    $TPL["total_remaining"] = page::money($timeSheet->get_value("currencyTypeID"),$total_incoming - $amount_so_far,"%m"); 
 
     if ($has_transactions || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
 
@@ -57,12 +57,6 @@ if (!$current_user->is_employee()) {
         $r_button = "<input style=\"padding:1px 4px\" type=\"submit\" name=\"r_button\" value=\"R\" title=\"Mark transactions rejected\">&nbsp;";
         $session  = "<input type=\"hidden\" name=\"sessID\" value=\"".$TPL["sessID"]."\">";
         $TPL["p_a_r_buttons"] = "<form action=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\" method=\"post\">".$p_button.$a_button.$r_button.$session."</form>";
-
-        // If cyber is client
-        $project = $timeSheet->get_foreign_object("project");
-        if (config::for_cyber() && $project->get_value("clientID") == 13) {
-          #$cyber_is_client = " (Cyber is client so pick this button!)";
-        }
 
 
         $TPL["create_transaction_buttons"] = "<tr><td colspan=\"8\" align=\"center\" style=\"padding:10px;\">";
@@ -132,7 +126,15 @@ if (!$current_user->is_employee()) {
             <button type="submit" name="transaction_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
             <button type="submit" name="transaction_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
           ';
-          include_template($template_name);
+          if ($transaction->get_value("transactionType") == "invoice") {
+            $TPL["transaction_transactionType"] = $transaction->get_transaction_type_link();
+            $TPL["transaction_fromTfID"] = tf::get_name($transaction->get_value("fromTfID"));
+            $TPL["transaction_tfID"] = tf::get_name($transaction->get_value("tfID"));
+            $TPL["currency_amount"] = page::money($transaction->get_value("currencyTypeID"),$transaction->get_value("amount"),"%S%mo %c");
+            include_template("templates/timeSheetTransactionListViewR.tpl");
+          } else {
+            include_template($template_name);
+          }
         }
 
       } else {
@@ -605,7 +607,7 @@ if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeShe
     $status = "rejected";
   }
 
-  $query = prepare("UPDATE transaction SET status = '%s' WHERE timeSheetID = %d", $status, $timeSheet->get_id());
+  $query = prepare("UPDATE transaction SET status = '%s' WHERE timeSheetID = %d AND transactionType != 'invoice'", $status, $timeSheet->get_id());
   $db = new db_alloc();
   $db->query($query);
   $db->next_record();

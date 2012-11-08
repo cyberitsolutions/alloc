@@ -213,7 +213,7 @@ class timeSheet extends db_entity {
 
   function destroyTransactions() {
     $db = new db_alloc();
-    $query = prepare("DELETE FROM transaction where timeSheetID = %d", $this->get_id());
+    $query = prepare("DELETE FROM transaction WHERE timeSheetID = %d AND transactionType != 'invoice'", $this->get_id());
     $db->query($query);
     $db->next_record();
   }
@@ -281,48 +281,26 @@ class timeSheet extends db_entity {
           whatever is left of the $110 goes to the 0% commissions
       */
       
-      // 0. If this time sheet is not attached to an invoice, add an incoming transaction
-      $rows = $this->get_invoice_rows();
-      if (!$rows) {
-        $product = "Time Sheet #".$this->get_id()." for ".$personName.", Project: ".$projectName;
-        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars"], $cost_centre, "timesheet",$status,config::get_config_item("inTfID"));
-
-      } else {
-        foreach ($rows as $row) {
-          if ($row["invoiceItemID"]) {
-            $ii = new invoiceItem();
-            $ii->set_id($row["invoiceItemID"]);
-            $ii->select();
-            $ii->create_transaction($this->pay_info["total_customerBilledDollars"],$cost_centre, $status);
-          }
-        }
-      }
-
       // 1. Credit TAX/GST Cost Centre
       $product = $taxName." ".$taxPercent."% for timesheet #".$this->get_id();
       $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "tax", $status);
 
-      // 2. Credit Cyber Percentage and do agency percentage if necessary
-      // REMOVED
-
-      // 3. We only do the companies cut, if the project has a dedicated fund, otherwise we just omit the companies cut
+      // 2. We only do the companies cut, if the project has a dedicated fund, otherwise we just omit the companies cut
       if ($project->get_value("cost_centre_tfID") && $project->get_value("cost_centre_tfID") != $company_tfID) {
         $percent = $companyPercent - $agency_percentage;
         $product = "Company ".$percent."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet #".$this->get_id();
         $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet",$status,$project->get_value("cost_centre_tfID"));
       }
 
-      // 4. Credit Employee TF
+      // 3. Credit Employee TF
       $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
       $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
 
-      // 5. Payment Insurance
-      // removed
+      // 4. Credit Project Commissions
+      $db->query("SELECT * FROM projectCommissionPerson where projectID = %d ORDER BY commissionPercent DESC"
+                 ,$this->get_value("projectID"));
 
-      // 6. Credit Project Commissions
-      $db->query("SELECT * FROM projectCommissionPerson where projectID = ".$this->get_value("projectID")." ORDER BY commissionPercent DESC");
       while ($db->next_record()) {
-
         if ($db->f("commissionPercent") > 0) { 
           $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"];
           $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
@@ -331,7 +309,7 @@ class timeSheet extends db_entity {
 
         // Suck up the rest of funds if it is a special zero % commission
         } else if ($db->f("commissionPercent") == 0) { 
-          $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_positive_amount_so_far();
+          $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_amount_so_far();
           $amount < 0 and $amount = 0;
           config::for_cyber() and $amount = $amount/2; // If it's cyber do a 50/50 split with the commission tf and the company
           $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
@@ -340,6 +318,14 @@ class timeSheet extends db_entity {
         }
 
       }
+
+      # anything left over goes to the company's tf eg Cyber Finance / Main TF
+      $leftovers = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_amount_so_far();
+      if ($leftovers && $cost_centre != $company_tfID) {
+        $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
+        $rtn[$product] = $this->createTransaction($product, $leftovers, $company_tfID, "timesheet", $status);
+      }
+
     }
 
     foreach($rtn as $error=>$v) {
@@ -352,15 +338,16 @@ class timeSheet extends db_entity {
     return $rtnmsg;
   }
 
-  function get_positive_amount_so_far() {
-    // This is for getting the amount the manager gets. There is probably a better way to do this.
+  function get_amount_so_far($include_tax = false) {
+    $q = prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                    FROM transaction 
+               LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+                   WHERE timeSheetID = %d AND transactionType != 'invoice'
+                 ",$this->get_id());
+    $include_tax or $q.= "AND transactionType != 'tax'";
     $db = new db_alloc();
-    $db->query("SELECT * FROM transaction 
-                WHERE timeSheetID = %d AND amount > 0 AND transactionType != 'tax'",$this->get_id());
-    while ($db->next_record()) {
-      $amount_so_far += $db->f("amount");
-    }
-    return $amount_so_far;
+    $r = $db->qr($q);
+    return $r['balance'];
   }
 
   function createTransaction($product, $amount, $tfID, $transactionType, $status="", $fromTfID=false) {
