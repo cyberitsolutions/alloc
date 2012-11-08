@@ -43,6 +43,16 @@ class task_list_home_item extends home_item {
                      ,"form_name"=>"taskListHome_filter"
                      );
 
+    $current_user = &singleton("current_user");
+    if (!$current_user->prefs["taskListHome_filter"]) {
+      $defaults["taskStatus"] = "open";
+      $defaults["personID"] = $current_user->get_id();
+      $defaults["showStatus"] = true;
+      $defaults["showProject"] = true;
+      $defaults["limit"] = 10;
+      $defaults["applyFilter"] = true;
+    }
+
     $_FORM = task::load_form_data($defaults);
     $TPL["taskListRows"] = task::get_list($_FORM);
     $TPL["_FORM"] = $_FORM;
