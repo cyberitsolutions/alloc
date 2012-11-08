@@ -4,7 +4,6 @@
     <span>
       <div class="center">
         Amount required: {$total_dollars}&nbsp;&nbsp;&nbsp;
-        Amount incoming: {$total_incoming}&nbsp;&nbsp;&nbsp;
         Amount allocated: {$total_allocated}
       </div>
     </span>
@@ -24,8 +23,10 @@
         <th width="1%">&nbsp;</th>
       </tr>
       {show_transaction_listR("templates/timeSheetTransactionListR.tpl")}
+      <tfoot>
       {show_new_transaction("templates/timeSheetNewTransaction.tpl")}
       {$create_transaction_buttons}
+      </tfoot>
     </table>
   </td>
 </tr>
