@@ -233,122 +233,123 @@ class timeSheet extends db_entity {
     $this->load_pay_info();
 
     if ($this->get_value("status") != "invoiced") {
-      return "ERROR: Status of the timesheet must be 'invoiced' to Create Transactions.  The status is currently: ".$this->get_value("status");
+      return "ERROR: Status of the timesheet must be 'invoiced' to Create Transactions.
+              The status is currently: ".$this->get_value("status");
 
     } else if ($this->get_value("recipient_tfID") == "") {
-      return "ERROR: There is no recipient Tagged Fund to credit for this timesheet. Go to Tools -> New Tagged Fund, add a new TF and add the owner. Then go to People -> Select the user and set their Preferred Payment TF.";
+      return "ERROR: There is no recipient Tagged Fund to credit for this timesheet.
+              Go to Tools -> New Tagged Fund, add a new TF and add the owner. Then go
+              to People -> Select the user and set their Preferred Payment TF.";
 
     } else if (!$cost_centre || $cost_centre == 0) {
       return "ERROR: There is no cost centre associated with the project.";
-
-    } else {
-      $taxName = config::get_config_item("taxName");
-      $taxPercent = config::get_config_item("taxPercent");
-      $taxTfID = config::get_config_item("taxTfID");
-      $taxPercentDivisor = ($taxPercent/100) + 1;
-      $companyPercent = config::get_config_item("companyPercent");
-
-      $recipient_tfID = $this->get_value("recipient_tfID");
-      $timeSheetRecipients = $project->get_timeSheetRecipients();
-      
-      $rtn = array();
-
-      // This is just for internal transactions
-      if ($_POST["create_transactions_default"] && $this->pay_info["total_customerBilledDollars"] == 0) {
-        $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_dollars"];
-
-        // 1. Credit Employee TF
-        $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
-        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
-
-        // 2. Payment Insurance
-        // removed
-        
-
-      } else if ($_POST["create_transactions_default"]) {
-        /*  This was previously named "Simple" transactions. Ho ho.
-            On the Project page we care about these following variables:
-             - Client Billed At $amount eg: $121
-             - Through an agency bool     
-             - The projectPersons rate for this project eg: $50;
-
-            $121 after gst == $110
-            cyber get 28.5% of $110 
-            djk get $50
-            commissions 
-            whatever is left of the $110 goes to the 0% commissions
-        */
-        
-        // 0. If this time sheet is not attached to an invoice, add an incoming transaction
-        $rows = $this->get_invoice_rows();
-        if (!$rows) {
-          //$product = "Incoming funds for timesheet #".$this->get_id();
-          $product = "Time Sheet #".$this->get_id()." for ".$personName.", Project: ".$projectName;
-          $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars"], $cost_centre, "timesheet",$status,config::get_config_item("inTfID"));
-        } else {
-          foreach ($rows as $row) {
-            if ($row["invoiceItemID"]) {
-              $ii = new invoiceItem();
-              $ii->set_id($row["invoiceItemID"]);
-              $ii->select();
-              $ii->create_transaction($this->pay_info["total_customerBilledDollars"],$cost_centre, $status);
-            }
-          }
-        }
-
-        // 1. Credit TAX/GST Cost Centre
-        $product = $taxName." ".$taxPercent."% for timesheet #".$this->get_id();
-        $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "tax", $status);
-
-        // 2. Credit Cyber Percentage and do agency percentage if necessary
-        // REMOVED
-
-        // 3. We only do the companies cut, if the project has a dedicated fund, otherwise we just omit the companies cut
-        if ($project->get_value("cost_centre_tfID") && $project->get_value("cost_centre_tfID") != $company_tfID) {
-          $percent = $companyPercent - $agency_percentage;
-          $product = "Company ".$percent."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet #".$this->get_id();
-          $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet",$status,$project->get_value("cost_centre_tfID"));
-        }
-
-        // 4. Credit Employee TF
-        $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
-        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
-
-        // 5. Payment Insurance
-        // removed
-
-        // 6. Credit Project Commissions
-        $db->query("SELECT * FROM projectCommissionPerson where projectID = ".$this->get_value("projectID")." ORDER BY commissionPercent DESC");
-        while ($db->next_record()) {
-
-          if ($db->f("commissionPercent") > 0) { 
-            $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"];
-            $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
-            $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
-            $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission",$status);
-
-          // Suck up the rest of funds if it is a special zero % commission
-          } else if ($db->f("commissionPercent") == 0) { 
-            $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_positive_amount_so_far();
-            $amount < 0 and $amount = 0;
-            config::for_cyber() and $amount = $amount/2; // If it's cyber do a 50/50 split with the commission tf and the company
-            $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
-            $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
-            config::for_cyber() and $rtn[$product] = $this->createTransaction($product, $amount, $company_tfID, "commission",$status); // 50/50
-          }
-
-        }
-      }
-
-      foreach($rtn as $error=>$v) {
-        $v != 1 and $errmsg.= "<br>FAILED: ".$error;
-      }
-      if ($errmsg) {
-        $this->destroyTransactions();
-        $rtnmsg.= "<br>Failed to create transactions... ".$errmsg;
-      }
-      return $rtnmsg;
     }
+
+    $taxName = config::get_config_item("taxName");
+    $taxPercent = config::get_config_item("taxPercent");
+    $taxTfID = config::get_config_item("taxTfID");
+    $taxPercentDivisor = ($taxPercent/100) + 1;
+    $companyPercent = config::get_config_item("companyPercent");
+
+    $recipient_tfID = $this->get_value("recipient_tfID");
+    $timeSheetRecipients = $project->get_timeSheetRecipients();
+    
+    $rtn = array();
+
+    // This is just for internal transactions
+    if ($_POST["create_transactions_default"] && $this->pay_info["total_customerBilledDollars"] == 0) {
+      $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_dollars"];
+
+      // 1. Credit Employee TF
+      $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
+      $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
+
+      // 2. Payment Insurance
+      // removed
+      
+
+    } else if ($_POST["create_transactions_default"]) {
+      /*  This was previously named "Simple" transactions. Ho ho.
+          On the Project page we care about these following variables:
+           - Client Billed At $amount eg: $121
+           - The projectPersons rate for this project eg: $50;
+
+          $121 after gst == $110
+          cyber get 28.5% of $110 
+          djk get $50
+          commissions 
+          whatever is left of the $110 goes to the 0% commissions
+      */
+      
+      // 0. If this time sheet is not attached to an invoice, add an incoming transaction
+      $rows = $this->get_invoice_rows();
+      if (!$rows) {
+        $product = "Time Sheet #".$this->get_id()." for ".$personName.", Project: ".$projectName;
+        $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars"], $cost_centre, "timesheet",$status,config::get_config_item("inTfID"));
+
+      } else {
+        foreach ($rows as $row) {
+          if ($row["invoiceItemID"]) {
+            $ii = new invoiceItem();
+            $ii->set_id($row["invoiceItemID"]);
+            $ii->select();
+            $ii->create_transaction($this->pay_info["total_customerBilledDollars"],$cost_centre, $status);
+          }
+        }
+      }
+
+      // 1. Credit TAX/GST Cost Centre
+      $product = $taxName." ".$taxPercent."% for timesheet #".$this->get_id();
+      $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "tax", $status);
+
+      // 2. Credit Cyber Percentage and do agency percentage if necessary
+      // REMOVED
+
+      // 3. We only do the companies cut, if the project has a dedicated fund, otherwise we just omit the companies cut
+      if ($project->get_value("cost_centre_tfID") && $project->get_value("cost_centre_tfID") != $company_tfID) {
+        $percent = $companyPercent - $agency_percentage;
+        $product = "Company ".$percent."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet #".$this->get_id();
+        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet",$status,$project->get_value("cost_centre_tfID"));
+      }
+
+      // 4. Credit Employee TF
+      $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
+      $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
+
+      // 5. Payment Insurance
+      // removed
+
+      // 6. Credit Project Commissions
+      $db->query("SELECT * FROM projectCommissionPerson where projectID = ".$this->get_value("projectID")." ORDER BY commissionPercent DESC");
+      while ($db->next_record()) {
+
+        if ($db->f("commissionPercent") > 0) { 
+          $product = "Commission ".$db->f("commissionPercent")."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"];
+          $product.= " from timesheet #".$this->get_id().".  Project: ".$projectName;
+          $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
+          $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission",$status);
+
+        // Suck up the rest of funds if it is a special zero % commission
+        } else if ($db->f("commissionPercent") == 0) { 
+          $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_positive_amount_so_far();
+          $amount < 0 and $amount = 0;
+          config::for_cyber() and $amount = $amount/2; // If it's cyber do a 50/50 split with the commission tf and the company
+          $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
+          $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
+          config::for_cyber() and $rtn[$product] = $this->createTransaction($product, $amount, $company_tfID, "commission",$status); // 50/50
+        }
+
+      }
+    }
+
+    foreach($rtn as $error=>$v) {
+      $v != 1 and $errmsg.= "<br>FAILED: ".$error;
+    }
+    if ($errmsg) {
+      $this->destroyTransactions();
+      $rtnmsg.= "<br>Failed to create transactions... ".$errmsg;
+    }
+    return $rtnmsg;
   }
 
   function get_positive_amount_so_far() {
