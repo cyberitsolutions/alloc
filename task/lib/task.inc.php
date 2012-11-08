@@ -884,30 +884,32 @@ class task extends db_entity {
     if (is_array($filter) && count($filter)) {
       $f = " WHERE ".implode(" AND ",$filter);
     }
-    $q = prepare("SELECT task.*
-                        ,projectName
-                        ,projectShortName
-                        ,clientID
-                        ,projectPriority
-                        ,project.currencyTypeID as currency
-                        ,rate
-                        ,rateUnitID
-                        ,GROUP_CONCAT(pendingTask.pendingTaskID) as pendingTaskIDs
-                        ,priority * POWER(projectPriority, 2) * 
-                         IF(task.dateTargetCompletion IS NULL, 
-                           8,
-                           ATAN(
-                                (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
-                               ) / 3.14 * 8 + 4
-                           ) / 10 as priorityFactor
-                    FROM task
-               LEFT JOIN project ON project.projectID = task.projectID
-               LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '%d'
-               LEFT JOIN pendingTask ON pendingTask.taskID = task.taskID
-                         ".$f."
-                GROUP BY task.taskID
-                         ".$order_limit."
-                 ",$current_user->get_id());
+
+    $uid = sprintf("%d",$current_user->get_id());
+
+    $q = "SELECT task.*
+                ,projectName
+                ,projectShortName
+                ,clientID
+                ,projectPriority
+                ,project.currencyTypeID as currency
+                ,rate
+                ,rateUnitID
+                ,GROUP_CONCAT(pendingTask.pendingTaskID) as pendingTaskIDs
+                ,priority * POWER(projectPriority, 2) * 
+                 IF(task.dateTargetCompletion IS NULL, 
+                   8,
+                   ATAN(
+                        (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
+                       ) / 3.14 * 8 + 4
+                   ) / 10 as priorityFactor
+            FROM task
+       LEFT JOIN project ON project.projectID = task.projectID
+       LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '".$uid."'
+       LEFT JOIN pendingTask ON pendingTask.taskID = task.taskID
+                 ".$f."
+        GROUP BY task.taskID
+                 ".$order_limit;
       
     $debug and print "\n<br>QUERY: ".$q;
     $_FORM["debug"] and print "\n<br>QUERY: ".$q;
