@@ -39,6 +39,8 @@ class reminder extends db_entity {
                              ,"reminderAdvNoticeValue"
                              ,"reminderSubject"
                              ,"reminderContent"
+                             ,"reminderCreatedTime"
+                             ,"reminderCreatedUser"
                              ,"reminderModifiedTime"
                              ,"reminderModifiedUser"
                              ,"reminderActive" => array("empty_to_null"=>true)

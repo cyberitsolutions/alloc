@@ -113,6 +113,7 @@ ALTER TABLE projectPerson ADD CONSTRAINT projectPerson_projectID FOREIGN KEY (pr
 ALTER TABLE projectPerson ADD CONSTRAINT projectPerson_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE projectPerson ADD CONSTRAINT projectPerson_roleID FOREIGN KEY (roleID) REFERENCES role (roleID);
 ALTER TABLE projectPerson ADD CONSTRAINT projectPerson_projectPersonModifiedUser FOREIGN KEY (projectPersonModifiedUser) REFERENCES person (personID);
+ALTER TABLE reminder ADD CONSTRAINT reminder_reminderCreatedUser FOREIGN KEY (reminderCreatedUser) REFERENCES person (personID);
 ALTER TABLE reminder ADD CONSTRAINT reminder_reminderModifiedUser FOREIGN KEY (reminderModifiedUser) REFERENCES person (personID);
 ALTER TABLE reminder ADD CONSTRAINT reminder_reminderHash FOREIGN KEY (reminderHash) REFERENCES token (tokenHash);
 ALTER TABLE reminderRecipient ADD CONSTRAINT reminderRecipient_reminderID FOREIGN KEY (reminderID) REFERENCES reminder (reminderID);

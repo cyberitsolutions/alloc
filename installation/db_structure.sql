@@ -332,6 +332,8 @@ CREATE TABLE reminder (
   reminderAdvNoticeValue integer NOT NULL default '0',
   reminderSubject varchar(255) NOT NULL default '',
   reminderContent text,
+  reminderCreatedTime datetime DEFAULT NULL,
+  reminderCreatedUser integer DEFAULT NULL,
   reminderModifiedTime datetime DEFAULT NULL,
   reminderModifiedUser integer DEFAULT NULL,
   reminderActive BOOLEAN NOT NULL DEFAULT true
