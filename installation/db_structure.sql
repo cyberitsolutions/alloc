@@ -323,7 +323,7 @@ CREATE TABLE reminder (
   reminderID integer NOT NULL auto_increment PRIMARY KEY,
   reminderType varchar(255) default NULL,
   reminderLinkID integer NOT NULL,
-  reminderTime datetime NOT NULL,
+  reminderTime datetime DEFAULT NULL,
   reminderHash varchar(255) DEFAULT NULL,
   reminderRecuringInterval varchar(255) NOT NULL default 'No',
   reminderRecuringValue integer NOT NULL default '0',
