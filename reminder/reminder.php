@@ -228,6 +228,7 @@ case 4:
       
     if (isset($_POST["reminder_update"])) {
       $reminder->set_id($_POST["reminder_id"]);
+      $reminder->select();
     }
     if (!$_POST["reminder_recuring_value"]) {
       $reminder->set_value('reminderRecuringInterval', 'No');
