@@ -2,7 +2,7 @@
 from alloc import alloc
 
 class view(alloc):
-  """View a single alloc entity."""
+  """View an entity."""
 
   # Setup the options that this cli can accept
   ops = []

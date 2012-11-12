@@ -2,7 +2,7 @@
 from alloc import alloc
 
 class edit(alloc):
-  """Modify an alloc entity."""
+  """Modify an entity."""
 
      # Setup the options that this cli can accept
   ops = []

@@ -1,10 +1,10 @@
-"""alloccli subcommand for viewing the alloc-cli and server versions."""
+"""subcommand for viewing the cli and server versions."""
 from alloc import alloc
 import sys
 import os
 
 class version(alloc):
-  """View the version of the alloc-cli and alloc-server."""
+  """View the version of the cli and server."""
 
   # Setup the options that this cli can accept
   ops = []
