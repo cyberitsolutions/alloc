@@ -2,7 +2,7 @@
 from alloc import alloc
 
 class ktokens(alloc):
-  """Retrieve alloc token information."""
+  """Retrieve token information."""
 
   # Setup the options that this cli can accept
   ops = []

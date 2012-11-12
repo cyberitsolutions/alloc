@@ -17,13 +17,14 @@ class alloc(object):
   """Provide a parent class from which the alloc subcommands can extend"""
 
   client_version = "1.8.6"
+  client_name = os.path.basename(sys.argv[0])
   url = ''
   username = ''
   quiet = ''
   dryrun = ''
   sessID = ''
-  alloc_dir = os.environ.get('ALLOC_HOME') or os.path.join(os.environ['HOME'], '.alloc')
-  debug = os.environ.get('ALLOC_DEBUG')
+  alloc_dir = os.environ.get(client_name.upper()+'_HOME') or os.path.join(os.environ['HOME'], '.'+client_name)
+  debug = os.environ.get(client_name.upper()+'_DEBUG')
   config = {}
   user_transforms = {}
   url_opener = None
@@ -210,7 +211,7 @@ class alloc(object):
       if "url" in self.config and self.config["url"]:
         url = self.config["url"]
       if not url:
-        self.die("No alloc url specified!")
+        self.die("No "+self.client_name+" url specified!")
 
     # Grab session ~/.alloc/session
     if os.path.exists(self.alloc_dir+"session"):
@@ -237,19 +238,19 @@ class alloc(object):
     else:
       self.url_opener = urllib2.build_opener()
 
-    self.url_opener.addheaders = [('User-agent', 'alloc-cli %s' % self.username)]
+    self.url_opener.addheaders = [('User-agent', self.client_name+'-cli %s' % self.username)]
     urllib2.install_opener(self.url_opener)
 
   def create_config(self, f):
     """Create a default ~/.alloc/config file."""
     self.dbg("Creating and populating: "+f)
     default = "[main]"
-    default += "\nurl: http://alloc/services/json.php"
-    default += "\n#alloc_user: $ALLOC_USER"
-    default += "\n#alloc_pass: $ALLOC_PASS"
-    default += "\n#alloc_http_user: $ALLOC_HTTP_USER"
-    default += "\n#alloc_http_pass: $ALLOC_HTTP_PASS"
-    default += "\n#alloc_trunc: 1" 
+    default += "\nurl: http://"+self.client_name+"/services/json.php"
+    default += "\n#"+self.client_name+"_user: $ALLOC_USER"
+    default += "\n#"+self.client_name+"_pass: $ALLOC_PASS"
+    default += "\n#"+self.client_name+"_http_user: $ALLOC_HTTP_USER"
+    default += "\n#"+self.client_name+"_http_pass: $ALLOC_HTTP_PASS"
+    default += "\n#"+self.client_name+"_trunc: 1" 
     # Write it out to a file
     fd = open(f, 'w')
     fd.write(default)
@@ -259,11 +260,12 @@ class alloc(object):
     """Read the ~/.alloc/config file and load it into self.config[]."""
     config = ConfigParser.ConfigParser()
     config.read([f])
-    section = os.environ.get('ALLOC') or 'main'
+    section = os.environ.get(self.client_name.upper()) or 'main'
     options = config.options(section)
     for option in options:
       self.config[option.lower()] = config.get(section, option)
-    if 'ALLOC_TRUNC' in os.environ: self.config['alloc_trunc'] = os.environ.get('ALLOC_TRUNC')
+      self.dbg("CONF: "+option.lower()+ ": "+self.config[option.lower()])
+    if self.client_name.upper()+'_TRUNC' in os.environ: self.config[self.client_name+'_trunc'] = os.environ.get(self.client_name.upper()+'_TRUNC')
 
   def create_transforms(self, f):
     """Create a default ~/.alloc/transforms.py file for field manipulation."""
@@ -458,15 +460,15 @@ class alloc(object):
 
   def get_credentials(self):
     """Obtain user's alloc login and http auth credentials."""
-    env_u  = os.environ.get('ALLOC_USER')
-    env_p  = os.environ.get('ALLOC_PASS')
-    env_hu = os.environ.get('ALLOC_HTTP_USER')
-    env_hp = os.environ.get('ALLOC_HTTP_PASS')
+    env_u  = os.environ.get(self.client_name.upper()+'_USER')
+    env_p  = os.environ.get(self.client_name.upper()+'_PASS')
+    env_hu = os.environ.get(self.client_name.upper()+'_HTTP_USER')
+    env_hp = os.environ.get(self.client_name.upper()+'_HTTP_PASS')
 
-    con_u  = self.config.get('alloc_user')
-    con_p  = self.config.get('alloc_pass')
-    con_hu = self.config.get('alloc_http_user')
-    con_hp = self.config.get('alloc_http_pass')
+    con_u  = self.config.get(self.client_name.lower()+'_user')
+    con_p  = self.config.get(self.client_name.lower()+'_pass')
+    con_hu = self.config.get(self.client_name.lower()+'_http_user')
+    con_hp = self.config.get(self.client_name.lower()+'_http_pass')
 
     try:
       net = netrc().hosts[urlparse(self.url).hostname]
@@ -484,11 +486,13 @@ class alloc(object):
     hu = env_hu or con_hu or net_hu
     hp = env_hp or con_hp or net_hp
 
-    if u is None or p is None:
-      self.err("The settings ALLOC_USER and ALLOC_PASS are required.")
-      self.err("The settings ALLOC_HTTP_USER and ALLOC_HTTP_PASS are optional.")
+    self.dbg("USING CONF: user:"+u+" pass:"+p+" httpuser:"+hu+" httppass:"+hp)
+
+    if u is None or u == '' or p is None or p == '':
+      self.err("The settings "+self.client_name.upper()+"_USER and "+self.client_name.upper()+"_PASS are required.")
+      self.err("The settings "+self.client_name.upper()+"_HTTP_USER and "+self.client_name.upper()+"_HTTP_PASS are optional.")
       self.err("Set any of them either in the environment as shell variables,")
-      self.err("or in your ~/.netrc or your ~/.alloc/config.")
+      self.err("or in your ~/.netrc or your ~/."+self.client_name+"/config.")
     return u, p, hu, hp
 
   def get_list(self, entity, options):
@@ -533,8 +537,8 @@ class alloc(object):
     except urllib2.HTTPError, e:
       self.err(str(e))
       self.err("Possibly a bad username or password for HTTP AUTH")
-      self.err("The settings ALLOC_HTTP_USER and ALLOC_HTTP_PASS are required.")
-      self.die("Set them either in the shell environment or in your ~/.alloc/config")
+      self.err("The settings "+self.client_name.upper()+"_HTTP_USER and "+self.client_name.upper()+"_HTTP_PASS are required.")
+      self.die("Set them either in the shell environment or in your ~/."+self.client_name+"/config")
     except Exception, e:
       self.die(str(e))
 
@@ -598,14 +602,14 @@ class alloc(object):
     sys.stderr.write("!!! "+str(s)+"\n")
 
   def die(self, s):
-    """Print a failure message to the screen (stderr) and the halt."""
+    """Print a failure message to the screen (stderr) and then halt."""
     self.err(s)
     sys.exit(1)
 
   def dbg(self, s):
     """Print a message to the screen (stdout) for debugging only."""
     if self.debug:
-      print "DBG " + s
+      print "DBG " + str(s)
       sys.stdout.flush()
 
   def parse_email(self, email):
@@ -688,7 +692,7 @@ class alloc(object):
 
   def get_cli_help(self, halt_on_error=True):
     """Get the command line help."""
-    print "Usage: alloc command [OPTIONS]"
+    print "Usage: "+self.client_name+" command [OPTIONS]"
     print "Select one of the following commands:\n"
     for m in self.get_alloc_modules():
       if m == 'alloc':
@@ -701,7 +705,7 @@ class alloc(object):
       if len(m) <= 5: tabs = "\t\t "
       print "  "+m+tabs+str(subcommand.__doc__)
 
-    print "\nEg: alloc command --help"
+    print "\nEg: "+self.client_name+" command --help"
 
     if halt_on_error:
       if len(sys.argv) >1:
