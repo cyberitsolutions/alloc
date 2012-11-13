@@ -229,6 +229,13 @@ case 4:
     if (isset($_POST["reminder_update"])) {
       $reminder->set_id($_POST["reminder_id"]);
       $reminder->select();
+      if ($reminder->get_value("reminderHash")) {
+        $token = new token();
+        $token->set_hash($reminder->get_value("reminderHash"),false);
+        if ($token->get_value("tokenActionID") == 3) {
+          $reminder->set_value("reminderTime","");
+        }
+      }
     }
     if (!$_POST["reminder_recuring_value"]) {
       $reminder->set_value('reminderRecuringInterval', 'No');
