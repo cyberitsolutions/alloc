@@ -533,7 +533,7 @@ INSERT INTO role (roleID, roleName, roleHandle, roleLevel, roleSequence) VALUES 
 
 -- Has to be tokenActionID of 2 for reverse compatibility 
 INSERT INTO tokenAction (tokenActionID,tokenAction,tokenActionType,tokenActionMethod) VALUES (2,'Add Comments to Comment','comment','add_comment_from_email');
-INSERT INTO tokenAction (tokenActionID,tokenAction,tokenActionType,tokenActionMethod) VALUES (3, "Task status move pending to open","task","moved_from_pending_to_open");
-
+INSERT INTO tokenAction (tokenActionID,tokenAction,tokenActionType,tokenActionMethod) VALUES (3,'Task status move pending to open','task','moved_from_pending_to_open');
+INSERT INTO tokenAction (tokenActionID,tokenAction,tokenActionType,tokenActionMethod) VALUES (4,'Reopen pending task','task','reopen_pending_task');
 
 

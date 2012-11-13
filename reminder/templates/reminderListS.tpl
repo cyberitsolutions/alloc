@@ -9,13 +9,9 @@
   {foreach (array)$reminderRows as $r}
   <tr>
     <td>
-      {if $r["reminderHash"]}
-        {$r.tokenAction}
-      {else}
-        {$r.reminderTime}
-      {/}
+        {$r.reminderTime} {$r.tokenAction}
     </td>
-    <td><a href="{$url_alloc_reminder}step=3&reminderID={$r.reminderID}&returnToParent={$returnToParent}">{=$r.reminderSubject}</a></td>
+    <td><a href="{$url_alloc_reminder}step=3&reminderID={$r.rID}&returnToParent={$returnToParent}">{=$r.reminderSubject}</a></td>
     <td>
     {if $r["reminderRecuringValue"]}
       {$r["reminderRecuringValue"] > 1 and $plural = "s"}

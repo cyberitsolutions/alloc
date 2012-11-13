@@ -170,6 +170,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   if ($success) {
 
     $task->add_pending_tasks($_POST["pendingTasksIDs"]);
+    $task->add_reopen_reminder($_POST["reopen_task"]);
 
     // Create reminders if necessary
     if($_POST["createTaskReminder"] == true) {
@@ -353,6 +354,15 @@ $is = "was";
 $wasopen and $is = "is";
 $blockTaskLinks and $TPL["message_help_no_esc"][] = "This task ".$is." blocking the start of:<br>".implode("<br>",$blockTaskLinks);
 
+
+if (in_str("pending_",$task->get_value("taskStatus"))) {
+  $r = $task->get_reopen_reminder();
+  if ($r) {
+    $TPL["message_help_no_esc"][] = 'This task is set to
+                                    <a href="'.$TPL["url_alloc_reminder"].'step=3&reminderID='.$r["rID"].'&returnToParent=task">
+                                    automatically reopen at '.$r["reminderTime"].'</a>';
+  }
+}
 
 
 

@@ -58,8 +58,10 @@ $(document).ready(function() {
           <div style="float:right; width:50%; text-align:left;">
             {if $reminderTime && $reminderTime != "0000-00-00 00:00:00"}
               {$reminderTime}
-            {else if $reminderHash}
-              {$tokenName}
+              {$br = "<br>"}
+            {/}
+            {if $tokenName}
+              {$br}({$tokenName})
             {/}
           </div>
         </div>
@@ -122,13 +124,12 @@ $(document).ready(function() {
             {page::help("reminder_recipient")}
           </div>
           <div style="float:right; width:50%; text-align:left;">
-            {if $reminderHash}
-              {$tokenName}
-            {else}
             {page::calendar("reminder_date",$reminder_date)}&nbsp;&nbsp;
             <select name="reminder_hour">{$reminder_hours}</select>
             <select name="reminder_minute">{$reminder_minutes}</select>
             <select name="reminder_meridian">{$reminder_meridians}</select>
+            {if $tokenName}
+            <br>({$tokenName})
             {/}
           </div>
         </div>

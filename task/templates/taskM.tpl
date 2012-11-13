@@ -42,6 +42,9 @@ $(document).ready(function() {
     if (prev_taskStatus == "pending_tasks" && $(this).val() != "pending_tasks") {
       $("#pendingTasksIDs").val('');
     }
+    if ($(this).val() != "pending_tasks" && $(this).val().indexOf("pending_") != -1) {
+      $("#pending_reopen_div").css('display','inline');
+    }
   });
 
 });
@@ -261,6 +264,10 @@ $(document).ready(function() {
             <div id="pending_tasks_div" class="hidden_field {print ($task_taskStatus == "pending_tasks") ? "inline" : "hidden"}">
               <input type="text" name="pendingTasksIDs" id="pendingTasksIDs" value="{$task_pendingTaskIDs}" size="20">
               {page::help("task_pending_tasks")}
+            </div>
+            <div id="pending_reopen_div" class="hidden_field {print ($task_taskStatus != "pending_tasks" && in_str("pending_",$task_taskStatus)) ? "inline" : "hidden"}">
+              {page::calendar("reopen_task",$reopen_task)}
+              {page::help("task_reopen_task")}
             </div>
           </div>
         </div>

@@ -198,68 +198,61 @@ class reminder extends db_entity {
     return true;
   }
 
+  function deactivate() {
+    $this->set_value("reminderActive",0);
+    return $this->save();
+  }
+
   // mail out reminder and update to next date if repeating or remove if onceoff
   // checks to make sure that it is the right time to send reminder should be 
   // dome before calling this function
   function mail_reminder() {
-    // if no longer alive then dont send, just delete
-    if (!$this->is_alive()) {
-      $this->set_value("reminderActive",0);
-      $this->save();
-    } else {
 
-      // check for a reminder.reminderHash that links off to a token.tokenHash
-      // this lets us trigger reminders on complex actions, for example create
-      // a reminder that sends when a task status changes from pending to open
-      if ($this->get_value("reminderHash")) {
-        $token = new token();
-        if ($token->set_hash($this->get_value("reminderHash"))) {
-          list($entity,$method) = $token->execute();
-          if (is_object($entity) && $entity->get_id()) {
-            if ($entity->$method()) {
-              $force = true;
-            } else {
-              $token->decrement_tokenUsed(); // next time, gadget
-            }
+    // check for a reminder.reminderHash that links off to a token.tokenHash
+    // this lets us trigger reminders on complex actions, for example create
+    // a reminder that sends when a task status changes from pending to open
+
+    // Note this->reminderTime is going to always be null for the token that
+    // link to task->moved_from_pending_to_open().
+    // Whereas the task->reopen_pending_task() will have a reminderTime set.
+
+    $ok = true;
+    if ($this->get_value("reminderHash")) {
+      $token = new token();
+      if ($token->set_hash($this->get_value("reminderHash"))) {
+        list($entity,$method) = $token->execute();
+        if (is_object($entity) && $entity->get_id()) {
+          if (!$entity->$method()) {
+            $token->decrement_tokenUsed(); // next time, gadget
+            $ok = false;
           }
         }
       }
+    }
 
-      $date = strtotime($this->get_value('reminderTime'));
-      // Only send reminder if it is time to send it
-      if (($date && date("YmdHis", $date) <= date("YmdHis")) || ($this->get_value("reminderHash") && $force)) {
+    $recipients = $this->get_all_recipients();
+    foreach ((array)$recipients as $person) {
+      if ($person['emailAddress']) {
+        $email = sprintf("%s %s <%s>", $person['firstName'], $person['surname'], $person['emailAddress']);
+        $subject = $this->get_value('reminderSubject');
+        $content = $this->get_value('reminderContent');
+        $e = new email_send($email, $subject, $content, "reminder");
+        $e->send();
+      }
+    } 
 
-        $recipients = $this->get_all_recipients();
-        foreach ($recipients as $person) {
+    // Update reminder (reminderTime can be blank for task->moved_from_pending_to_open)
+    if ($ok) {
+      if ($this->get_value('reminderRecuringInterval') == "No") {
+        $this->deactivate();
 
-          if ($person['emailAddress']) {
-            $email = sprintf("%s %s <%s>"
-                          , $person['firstName']
-                          , $person['surname']
-                          , $person['emailAddress']);
-
-            $subject = $this->get_value('reminderSubject');
-            $content = $this->get_value('reminderContent');
-
-            $e = new email_send($email, $subject, $content, "reminder");
-            $e->send();
-          }
-          // Update reminder
-          if ($this->get_value('reminderRecuringInterval') == "No") {
-              $this->set_value("reminderActive",0);
-              $this->save();
-          } else if ($this->get_value('reminderRecuringValue') != 0) {
-
-            $interval = $this->get_value('reminderRecuringValue');
-            $intervalUnit = $this->get_value('reminderRecuringInterval');
-            $newtime = $this->get_next_reminder_time($date,$interval,$intervalUnit);
-
-            $this->set_value('reminderTime', date("Y-m-d H:i:s", $newtime));
-            // reset advanced notice
-            $this->set_value('reminderAdvNoticeSent', 0);
-            $this->save();
-          }
-        } 
+      } else if ($this->get_value('reminderRecuringValue') != 0) {
+        $interval = $this->get_value('reminderRecuringValue');
+        $intervalUnit = $this->get_value('reminderRecuringInterval');
+        $newtime = $this->get_next_reminder_time(strtotime($this->get_value('reminderTime')),$interval,$intervalUnit);
+        $this->set_value('reminderTime', date("Y-m-d H:i:s", $newtime));
+        $this->set_value('reminderAdvNoticeSent', 0);
+        $this->save();
       }
     }
   }
@@ -422,7 +415,7 @@ class reminder extends db_entity {
       $f = " WHERE ".implode(" AND ",$filter);
     }
     $db = new db_alloc();
-    $q = "SELECT reminder.*,reminderRecipient.*,token.*,tokenAction.*
+    $q = "SELECT reminder.*,reminderRecipient.*,token.*,tokenAction.*, reminder.reminderID as rID
             FROM reminder
        LEFT JOIN reminderRecipient ON reminder.reminderID = reminderRecipient.reminderID
        LEFT JOIN token ON reminder.reminderHash = token.tokenHash

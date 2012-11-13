@@ -21,19 +21,32 @@
 */
 
 define("NO_AUTH",true);
-define("IS_GOD",true);
 require_once("../alloc.php");
 
 $db = new db_alloc();
 
+$now = date("YmdHis");
+
   // do reminders
-$query = "SELECT * FROM reminder WHERE reminderActive = 1";
+$query = "SELECT *
+            FROM reminder
+           WHERE (reminderTime IS NULL OR reminderTime < NOW())
+             AND reminderActive = 1";
 $db->query($query);
 while ($db->next_record()) {
   $reminder = new reminder();
   $reminder->read_db_record($db);
-  $reminder->mail_reminder();
-  $reminder->mail_advnotice();
+  
+  $current_user = new person();
+  $current_user->load_current_user($db->f('reminderCreatedUser'));
+  singleton("current_user",$current_user);
+
+  if (!$reminder->is_alive()) {
+    $reminder->deactivate();
+  } else {
+    $reminder->mail_reminder();
+    $reminder->mail_advnotice();
+  }
 }
 
 
