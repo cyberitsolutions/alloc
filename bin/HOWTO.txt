@@ -1,0 +1,639 @@
+>>>
+<html>
+  <head>
+    <style>
+      pre {
+        clear:both;
+        display:block;
+        padding:20px;
+        margin-left:0px;
+        background-color:#f4f4f4;
+        border:1px solid #ccc;
+        white-space:pre-wrap;
+      }
+      body {
+        white-space:pre-wrap;
+        margin:0px auto 20px auto;
+        width:90%;
+        color:#333;
+      }
+      h1 {
+        margin:20px 0px 0px 0px;
+        text-decoration:underline;
+        font-size:180%;
+        font-weight:normal;
+      }
+      h2 {
+        font-size:120%;
+        background-color:#336699;
+        color:white;
+        padding:10px;
+        margin-bottom:0px;
+        -webkit-border-radius: 12px;
+           -moz-border-radius: 12px;
+                border-radius: 12px;
+      }
+      h3 {
+        background-color:#c1ddff;
+        padding:8px;
+        -webkit-border-radius: 12px;
+           -moz-border-radius: 12px;
+                border-radius: 12px;
+      }
+      h2 + h3 {
+        margin-top:0px;
+      }
+      p {
+        margin:0px;
+      }
+      ul.table-of-contents {
+        list-style-type:none;
+      }
+    </style>
+  </head>
+  <body>
+<<<
+
+alloc-cli: the alloc command line interface
+###########################################
+
+{TABLE-OF-CONTENTS}
+
+Time Sheets
+===========
+
+
+Recording time worked
+---------------------
+
+The most commonly used interface for allocPSA is the web interface, which is
+accessible from your web browser at http://alloc/. Additionally there is an
+email interface that can be used to perform certain functions in alloc -
+usually by planting specific keywords in the subject line.
+
+Finally, there is also a command line interface for alloc. Also called "alloc".
+It is this third interface that this document attempts to ... document.
+
+Let's run the command (bold text is the hand-entered input):
+
+  user@flora:~$ *alloc*
+   
+  Usage: alloc command [OPTIONS]
+  Select one of the following commands:
+  
+    work           Add time to a time sheet. Create the time sheet if necessary.
+    comment        Add a new comment to a task, project, time sheet or client.
+    edit           Modify an entity.
+    view           View an entity.
+    projects       Print a list of projects.
+    tasks          Print a list of tasks.
+    timesheets     Print a list of time sheets.
+    invoices       Print a list of invoices.
+    accounts       Print a list of your TF accounts.
+    browse         Provide web browser access to particular entities.
+    mbox           Download a task's emails to an mbox file.
+    submit         Submit time sheets forwards. Read time sheets from standard in.
+    subscriptions  Modify interested party subscriptions for an email address.
+    ktokens        Retrieve token information.
+    version        View the version of the cli and server.
+  
+  Eg: alloc command --help
+  !!! Select a command to run.
+
+As you can see it has errored out, because it wants you to specify a particular
+command. The *alloc work* command is used to record the time you have worked on
+a particular task. In alloc lexicon, you are adding a Time Sheet Item to a Time
+Sheet. If you don't have a pre-existing time sheet, a new one will be silently
+created.
+
+Now *alloc work* actually has a whole bunch of command line arguments that you
+can use, which we'll look at in a sec, but when you run the *alloc work*
+command without specifying any arguments the command runs in interactive mode.
+
+Below, I've entered the word "sample", to see if it can find a task with that
+word in its name.  Then I've hit enter and entered 3, to indicated three hours
+of time worked on that task.  Then I've just hit enter two more times to
+indicate that the standard multiplier of 1 and today's date are okay. Finally I
+am prompted to enter some comments about the work that was performed.
+
+  user@flora:~$ *alloc work*
+  Task ID or some text from a task's name, or hit ENTER for none: *sample*
+  The number of hours you are billing: *3*
+  The rate multiplier (0, 1, 1.5, 2, 3), or hit ENTER for 1: *<enter>*
+  The date that the work was performed, or hit ENTER for 2012-10-30: *<enter>*
+  Comments: *Work hard on task.*
+
+When I hit enter one final time the following output is printed to the screen,
+indicating that the task has had some new time recorded against it.
+
+  --- Attempting to add time for work done on this task: 218
+  +-----+-------------+-----------+
+  |  ID |     Task    |  Project  |
+  +-----+-------------+-----------+
+  | 218 | Sample task | REAL DEAL |
+  +-----+-------------+-----------+
+  +----+------------+------------+----------+--------+-----+--------+-----------+
+  | ID |    From    |     To     |  Status  | Owner  | Hrs | Amount |  Project  |
+  +----+------------+------------+----------+--------+-----+--------+-----------+
+  | 82 | 2012-07-10 | 2012-10-30 | Add Time | alloc2 | 5   | 250.00 | REAL DEAL |
+  +----+------------+------------+----------+--------+-----+--------+-----------+
+  +----+---------+------------+---------+-------+--------+-------+--------------------+
+  | ID | Item ID |    Date    | Task ID | Hours | Rate   | Total |     Comment        |
+  +----+---------+------------+---------+-------+--------+-------+--------------------+
+  | 82 | 379     | 2012-07-10 | 180     | 2.00  | 50.00  | 100   | Did some stuff.    |
+  | 82 | 386     | 2012-10-30 | 218     | 3.00  | 50.00  | 150   | Work hard on task. |
+  +----+---------+------------+---------+-------+--------+-------+--------------------+
+  :-] Time added to time sheet: 82
+
+The first block indicates that we found a task assigned to you with the word
+"sample" in its name (although we could have entered the task ID if it was
+known beforehand). The second block is the time sheet, the third block consists
+of the time sheet items that have been added to the time sheet.
+
+And that's how we record some time spent working on a task.
+
+If that all seems a bit too slow/interactive for you, there is another method
+to record time. First let's look at all the options for the *alloc work*
+command.
+
+  user@flora:~$ *alloc work --help*
+  
+  Usage: alloc work [OPTIONS]
+  Add time to a time sheet. Create the time sheet if necessary.
+  
+        --help              Show this help.
+        --csv=[WHEN]        Return the results in CSV format. WHEN can be "auto",
+                            "never" or "always". If WHEN is omitted, assume "always".
+    -q, --quiet             Run with no output except errors.
+    -n, --dryrun            Perform a dry run, no data gets updated.
+    -p, --project=ID|NAME   A project ID, or a fuzzy match for a project name.
+    -t, --task=ID|NAME      A task ID, or a fuzzy match for a task name.
+    -d, --date=YYYY-MM-DD   The date that the work was performed.
+    -h, --hours=NUM         The amount of time worked. Eg: 2.5 eg: 150m
+    -m, --multiplier=NUM    The rate multiplier for the time worked.
+                            (eg: 0=no-charge, 1=standard, 1.5=time-and-a-half,
+                            2=double-time, 3=triple-time). Default: 1
+    -c, --comment=COMMENT   The time sheet item comment.
+    -i, --interactive       Run a live work timer interactively.
+        --list-option       List all options in a single column.
+  
+  If run without arguments this program will prompt for information.
+  
+  Examples:
+  
+  Get information manually:
+  $ alloc work
+  
+  Specify information on command line:
+  $ alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'
+  
+  Run a live work timer interactively:
+  $ alloc work -i -t 1234
+  --- Timer started. Enter comment:
+  --- (ctrl-z/fg to pause, ctrl-c to cancel, ctrl-d to create time sheet item.
+  --- Task: 1234 Do some stuff...
+  * worked on stuff
+  * did something good
+  * did something bad
+  <ctrl-d>
+  $
+  (note that you can use ctrl-z and fg to pause and unpause the timer.
+  Unfortunately doing so appears to flush the input buffer!)
+  
+
+Which reveals a whole lot of options that can be used with this command. If you
+read it carefully you will see that recording time can be as effortless as typing:
+
+  user@flora:~$ *alloc work --task 1234 --hours 2.5 --comment 'Worked on foo.'*
+
+or using the short-ops:
+
+  user@flora:~$ *alloc work -t 1234 -h 2.5 -c 'Worked on foo.'*
+
+Also there is another interactive mode, activated using *alloc work --interactive*, this mode
+runs a live timer stopwatch, so you don't need to manually track the hours you've worked. You 
+just start the timer, and when you're done, stop the timer and the time sheet item will be 
+automatically created.
+
+  user@flora:~$ *alloc work --interactive --task 4*
+  --- Timer started at 2012-11-06 14:19:02
+  --- Enter comment (ctrl-z to pause, ctrl-c to cancel, ctrl-d to create)
+  --- Task: 4 This is the task
+  *Working working working. Finished blah.*
+  *Testing stuff. All good.*
+  *Called Jonny, let him know all good.*
+  --- Attempting to add time for work done on this task: 4
+
+As you can see, you can run control-z to pause the timer, and run the fg command to resume it.
+Control-c cancels the whole operation, and control-d will end the timer and create the time sheet
+item.
+
+
+Viewing Your Time Sheets
+------------------------
+
+Once you've recorded some time worked, you can view the time sheets using the
+*alloc timesheets* command. Eg:
+
+  user@flora:~$ *alloc timesheets*
+  
+  +----+------------+------------+----------+--------+------------------+------+--------+--------------------+
+  | ID |    From    |     To     |  Status  | Owner  |     Duration     | Hrs  | Amount |      Project       |
+  +----+------------+------------+----------+--------+------------------+------+--------+--------------------+
+  | 67 | 2012-06-23 | 2012-06-23 | Add Time | alloc2 | 2 Hours          | 2    | 50.00  | Hey there          |
+  | 82 | 2012-07-10 | 2012-10-30 | Add Time | alloc2 | 3 Days, 14 Hours | 29   | 238.00 | REAL DEAL          |
+  | 90 | 2012-07-24 | 2012-07-24 | Add Time | alloc2 | 6 Hours          | 6    | 42.00  | Project One        |
+  | 92 | 2012-08-02 | 2012-08-02 | Add Time | alloc2 |                  |      | 0.00   | Test for Daniel    |
+  | 93 | 2012-08-08 | 2012-08-08 | Add Time | alloc2 | 2 Hours          | 2    | 8.00   | Doing some testin  |
+  | 98 | 2012-10-01 | 2012-10-01 | Add Time | alloc2 | 2 Hours          | 2    | 46.00  | Lily is a pigs ear |
+  +----+------------+------------+----------+--------+------------------+------+--------+--------------------+
+
+Each entry displays a time sheet, its date and status etc. Only time sheets that are at status *Add Time* are
+editable by regular users. If you want more information about a particular time sheet, use the --items flag
+to see the breakdown of time sheet items on a particular time sheet. Use the -t to specify which time sheet 
+you are interested in (using the ID column from the above table).
+
+  user@flora:~$ *alloc timesheets --items --t 82*
+  
+  +----+---------+------------+---------+-------+-------+--------+-------+-------+----------------+-----------------+
+  | ID | Item ID |    Date    | Task ID | Hours |  Rate | Worth  | Total | Limit |    Warning     |     Comment     |
+  +----+---------+------------+---------+-------+-------+--------+-------+-------+----------------+-----------------+
+  | 82 | 379     | 2012-07-10 | 180     | 2.00  | 0.00  | 0.00   | 20.75 |       |                | Did some stuff. |
+  | 82 | 386     | 2012-07-22 | 199     | 2.00  | 0.00  | 0.00   | 2.00  |       |                | Did some stuff. |
+  | 82 | 390     | 2012-07-26 | 275     | 5.00  | 0.00  | 0.00   | 5.00  |       |                | did some stuff  |
+  | 82 | 404     | 2012-08-08 | 184     | 4.00  | 34.00 | 136.00 | 4.00  |       |                | sud sine styff  |
+  | 82 | 421     | 2012-10-30 | 218     | 3.00  | 34.00 | 102.00 | 3.00  | 2.00  | Exceeds Limit! | dsa             |
+  +----+---------+------------+---------+-------+-------+--------+-------+-------+----------------+-----------------+
+
+For more information on the various options see *alloc timesheets --help*. Of particular use is the *--status* flag
+which will let you see all your old time sheets, or time sheets that are rejected etc.
+
+
+Submitting a Time Sheet
+-----------------------
+
+Once you have done a specific amount of work, and recorded that work to a time
+sheet (generally the 7/7 rule is a good guideline, eg: submit your time sheet
+after 7 hours of work has been done, or after 7 days have elapsed, whichever
+comes first), it becomes time to submit your time sheet forward to your project
+manager.
+
+First you need to figure out which time sheet you want to submit. Eg:
+
+  user@flora:~$ *alloc timesheets*
+
+To see all your time sheets that are at status "Add Time", these are the only time sheets
+that are editable by regular users.
+
+Then if you wanted to submit *all* time sheets that were displayed, you would
+need to chain that command to the *alloc submit* command. *alloc submit* takes
+a *-n/--dryrun* flag which only simulates a time sheet submission. This is useful
+to run before actually submitting any time sheets, so that you can see which 
+time sheets would have been submitted.
+
+  user@flora:~$ *alloc timesheets | alloc submit -n*
+  
+  --- Dry-run, not attempting to submit time sheet: 94
+  --- Dry-run, not attempting to submit time sheet: 95
+  --- Dry-run, not attempting to submit time sheet: 50
+  --- Dry-run, not attempting to submit time sheet: 64
+  --- Dry-run, not attempting to submit time sheet: 67
+  --- Dry-run, not attempting to submit time sheet: 82
+  --- Dry-run, not attempting to submit time sheet: 85
+  --- Dry-run, not attempting to submit time sheet: 90
+  --- Dry-run, not attempting to submit time sheet: 88
+  --- Dry-run, not attempting to submit time sheet: 92
+  --- Dry-run, not attempting to submit time sheet: 93
+  --- Dry-run, not attempting to submit time sheet: 98
+
+As you can see, it would have tried to submit a whole bunch of time sheets. Instead let's just submit a couple.
+
+  user@flora:~$ *alloc timesheets -t 94 | alloc submit*
+  --- Attempting to submit time sheet: 94
+  
+  user@flora:~$ *alloc timesheets -t 88 | alloc submit*
+  --- Attempting to submit time sheet: 88
+
+Again you can run *alloc submit --help* to see other options you may be interested in.
+
+
+Editing Time Sheet Items
+------------------------
+
+To edit time sheet items you just need the *alloc edit* command. This command facilitates the editing of
+both time sheet *items*, and tasks. If you run *alloc edit --help* and look at the options underneath the
+-i option (for time sheet items - i.e. we're disregarding the edit options for tasks for the time being)
+you will see the following options:
+
+    user@flora:~$ *alloc edit --help*
+  
+    -i                      Edit a time sheet item. Specify an ID or the word "new" to create.
+        --tsid=ID           time sheet that this item belongs to
+        --date=YYYY-MM-DD   time sheet item date
+        --duration=HOURS    time sheet item duration
+        --unit=NUM          time sheet item unit of duration eg: 1=hours 2=days 3=week 4=month 5=fixed
+        --task=ID           ID of the time sheet item's task
+        --rate=NUM          $rate of the time sheet item
+        --private=1|0       privacy setting of the time sheet item's comment eg: 1=private 0=normal
+        --comment=TEXT      time sheet item comment
+        --multiplier=NUM    time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time
+                            3=triple-time 0=no-charge
+        --delete=1          set this to 1 to delete the time sheet item
+        --list-option       List all options in a single column.
+  
+  This program allows editing of the fields on an alloc entity, like a task.
+  
+
+So, first find the time sheet item that you are interested in editing.
+
+  user@flora:~$ *alloc timesheets -i -t 90*
+  +----+---------+------------+---------+-------+-------+-------+-------+-------+---------+---------+
+  | ID | Item ID |    Date    | Task ID | Hours |  Rate | Worth | Total | Limit | Warning | Comment |
+  +----+---------+------------+---------+-------+-------+-------+-------+-------+---------+---------+
+  | 90 | 387     | 2012-07-24 | 35      | 2.00  | 21.00 | 42.00 | 10.00 |       |         | hey     |
+  | 90 | 388     | 2012-07-24 | 35      | 4.00  | 0.00  | 0.00  | 10.00 |       |         | hey     |
+  +----+---------+------------+---------+-------+-------+-------+-------+-------+---------+---------+
+
+Those aren't very descriptive comments for time sheet items. Let's fix them up. Note that I am including the -v option
+so that the *alloc edit* command tells me what changed before and after.
+
+  user@flora:~$ *alloc edit -i 387 --comment "Did some work" -v*
+  !!! Error(1): Time sheet is not at status edit
+  !!! Args: {'options': {'comment': 'Did some work', 'i': '387', 'verbose': True}, 'sessID': '856079a7c32bf80e0bcef8b1c9033ede', 'id': '387', 'client_version': '1.8.6', 'entity': 'item', 'method': 'edit_entity'}
+
+Whoops. That time sheet item belongs to a time sheet that is not editable. Let's try a different timesheet.
+
+  user@flora:~$ *alloc timesheets -i -t 88*
+  +----+---------+------------+---------+-------+-------+--------+-------+-------+---------+-----------------+
+  | ID | Item ID |    Date    | Task ID | Hours |  Rate | Worth  | Total | Limit | Warning |     Comment     |
+  +----+---------+------------+---------+-------+-------+--------+-------+-------+---------+-----------------+
+  | 88 | 391     | 2012-07-25 | 291     | 2.00  | 23.00 | 46.00  | 28.50 |       |         | dsa             |
+  | 88 | 392     | 2012-07-26 | 291     | 2.50  | 23.00 | 57.50  | 28.50 |       |         | fds             |
+  | 88 | 393     | 2012-07-26 | 291     | 3.75  | 23.00 | 86.25  | 28.50 |       |         | Did some stuff. |
+  | 88 | 394     | 2012-07-26 | 291     | 3.75  | 23.00 | 86.25  | 28.50 |       |         | Did some stuff. |
+  | 88 | 395     | 2012-07-26 | 291     | 3.75  | 23.00 | 86.25  | 28.50 |       |         | Did some stuff. |
+  | 88 | 396     | 2012-07-26 | 291     | 3.75  | 23.00 | 86.25  | 28.50 |       |         | Did some stuff. |
+  | 88 | 397     | 2012-07-26 | 291     | 2.00  | 23.00 | 46.00  | 28.50 |       |         | hey             |
+  | 88 | 398     | 2012-07-29 | 291     | 5.00  | 23.00 | 115.00 | 28.50 |       |         | hey             |
+  +----+---------+------------+---------+-------+-------+--------+-------+-------+---------+-----------------+
+  
+  user@flora:~$ *alloc edit -i 393 --comment "Fixed the combobulator." -v*
+  --- Before: comment: Did some stuff.
+  --- After:  comment: Fixed the combobulator.
+  :-] Time sheet item 393 updated.
+
+Note that we use an *Item ID* (393) that we obtained from the previous listing.
+
+
+Tasks
+=====
+
+
+Viewing Your List of Tasks
+--------------------------
+
+Generally you'll have a list of tasks assigned to you by a manager. To view that list use *alloc tasks*.
+
+  user@flora:~$ *ALLOC_TRUNC=1 alloc tasks*
+  +-----+------+-------------------+----------+-----+-------+------+-------+-----------------+----------------------------+
+  |  ID | Type |       Status      | Priority | Est | Limit | Act  |  Rate |     Project     |            Task            |
+  +-----+------+-------------------+----------+-----+-------+------+-------+-----------------+----------------------------+
+  | 175 | Task | Open: In Progress | Normal   |     | 2.00  |      |       | Project One     | This is a really c         |
+  | 109 | Task | Open: Not Started | Normal   |     |       |      |       | Project One     | Sale 11: Please pa         |
+  | 35  | Task | Open: Not Started | Normal   |     |       | 10   |       | Project One     | hey whop can see t         |
+  | 293 | Task | Open: Not Started | Normal   |     |       |      |       | dgfgfd dog      | Do some stuff              |
+  | 218 | Task | Open: In Progress | Normal   |     | 2.00  | 3    | 34.00 | REAL DEAL       | Sample task                |
+  | 319 | Task | Open: Not Started | Normal   |     |       |      | 34.00 | REAL DEAL       | Sale 49: place an pplier   |
+  | 321 | Task | Open: Not Started | Normal   |     |       |      | 34.00 | REAL DEAL       | Sale 49: deliver ton the w |
+  | 315 | Task | Open: Not Started | Normal   |     |       |      | 34.00 | REAL DEAL       | Sale 48: place an pplier   |
+  | 287 | Task | Open: Not Started | Normal   |     |       |      | 34.00 | REAL DEAL       | Sale 47: place an pplier   |
+  | 68  | Task | Open: In Progress | Normal   |     |       |      | 25.00 | Hey there       | tester                     |
+  | 224 | Task | Open: In Progress | Normal   |     |       |      | 25.00 | Hey there       | This is a pest             |
+  | 223 | Task | Open: In Progress | Normal   |     |       | 2    | 25.00 | Hey there       | test maybe                 |
+  | 164 | Task | Open: Not Started | Normal   |     |       |      | 25.00 | Hey there       | TREE                       |
+  | 291 | Task | Open: In Progress | Normal   |     |       | 28.5 | 23.00 | Test for Daniel | Freddy                     |
+  +-----+------+-------------------+----------+-----+-------+------+-------+-----------------+----------------------------+
+
+These will be the tasks that are assigned to you. Note that I have set the ALLOC_TRUNC variable so that the results are
+horizontally truncated to fit on the screen. This variable can also be set in ~/.alloc/config.
+
+This list of tasks is very configurable. You can configure which fields appear, using the --fields setting:
+
+  user@flora:!$ *alloc tasks -f taskID,taskName*
+  +-----+----------------------------------------------+
+  |  ID |                     Task                     |
+  +-----+----------------------------------------------+
+  | 319 | Sale 49: place an order to the supplier      |
+  | 109 | Sale 11: Please pay the supplier             |
+  | 35  | hey whop can see this                        |
+  | 293 | Do some stuff                                |
+  | 164 | TREE                                         |
+  | 321 | Sale 49: deliver the goods / action the work |
+  | 315 | Sale 48: place an order to the supplier      |
+  | 68  | tester                                       |
+  | 218 | Sample task                                  |
+  | 224 | This is a pest                               |
+  | 223 | test maybe                                   |
+  | 175 | This is a really cool ticket                 |
+  | 287 | Sale 47: place an order to the supplier      |
+  | 291 | Freddy                                       |
+  +-----+----------------------------------------------+
+
+Use *alloc tasks --fields all* to get a list of all the different fields that can be used.
+
+You can also use *alloc tasks --order* to specify the ordering of the fields. Note when specifying each field that 
+you want to sort by, if you prefix the field name with an underscore, it means /reverse/ that sort (as seen with 
+the taskName field below).
+
+  user@flora:~$ *alloc tasks -f taskID,taskStatus,taskName -o taskStatus,_taskName*
+  +-----+-----------------+----------------------------------------------+
+  |  ID |       Stat      |                     Task                     |
+  +-----+-----------------+----------------------------------------------+
+  | 175 | open_inprogress | This is a really cool ticket                 |
+  | 224 | open_inprogress | This is a pest                               |
+  | 68  | open_inprogress | tester                                       |
+  | 223 | open_inprogress | test maybe                                   |
+  | 218 | open_inprogress | Sample task                                  |
+  | 291 | open_inprogress | Freddy                                       |
+  | 164 | open_notstarted | TREE                                         |
+  | 319 | open_notstarted | Sale 49: place an order to the supplier      |
+  | 321 | open_notstarted | Sale 49: deliver the goods / action the work |
+  | 315 | open_notstarted | Sale 48: place an order to the supplier      |
+  | 287 | open_notstarted | Sale 47: place an order to the supplier      |
+  | 109 | open_notstarted | Sale 11: Please pay the supplier             |
+  | 35  | open_notstarted | hey whop can see this                        |
+  | 293 | open_notstarted | Do some stuff                                |
+  +-----+-----------------+----------------------------------------------+
+
+As always you can use *alloc tasks --help* to see all the options.
+
+
+Creating A New Task
+-------------------
+
+The *alloc edit* command can edit existing tasks, and also create new ones.
+
+To create a new task, it is necessary to know which project you would like the task to belong to.
+
+  user@flora:~$ *alloc edit -t new --name "This is a new task" --project 4 -v*
+  --- Fields: project: 4, priority: 3, type: Task, name: This is a new task
+  :-] Task 324 created.
+
+Note the -t new. So instead of specifying a particular taskID, we pass the word "new" along, which 
+tells the edit command to create a new task, rather that operate on an existing one.
+
+
+Editing An Existing Task
+------------------------
+
+We can edit our newly created task using a similar command to the command that created it. Note
+that the -t new has been replace with -t 324. As we now need to specify which task we want to edit.
+
+  user@flora:~$ *alloc edit -t 324 --name "This is a new task, with a much better name." --project 4 -v*
+  --- Before: project: 4, name: This is a new task
+  --- After:  project: 4, name: This is a new task, with a much better name.
+  :-] Task 324 updated.
+
+
+Comments
+========
+
+
+Adding Comments to Tasks, Time Sheets etc
+-----------------------------------------
+
+Tasks, Time Sheets, Projects and Clients can all have comments added to them. Often the comments aren't just added 
+to the entity, but are also emailed to some nominated recipients as well.
+
+To create a new comment for task with the ID of 4, the format would look like:
+
+  alloc comment --task 4 --to alla,jon,jane,smithy
+
+Where alla, jon, jane and smithy are all alloc login usernames - which will be correlated back to their 
+respective email addresses and added as *Interested Parties* to the comment thread.
+
+Note that you can use a few different settings with the *--to* option. Eg you can use the special
+keyword *internal* to send to the default recipients that are internal to your organisation. Also the
+keyword *default* refers to that task's default list of interested party recipients - internal *and* external.
+
+You can of course also have full email addresses in there. So eg:
+
+
+  alloc comment --task 4 --to alla,jon,default,sam@example.com
+  alloc comment --task 4 --to internal
+  alloc comment --task 4 --to default
+  etc
+
+After you hit enter on the command, you will be prompted to enter the comment/email that you want to send.
+
+  user@flora:~$ *alloc comment --task 4 --to default*
+  --- Enter comment (ctrl-c to cancel, ctrl-d to send)
+  --- Task: 4 This is the new name
+  --- To: user1@example.com, user2@example.com
+  *This is the comment, I hope you all enjoy it!<ctrl-d>*
+  *<ctrl-d>*
+
+As noted in the first line of output, if you hit contrl-c, it will cancel the sending of the message. If you hit
+control-d it will send the message. Sometimes control-d needs to be hit twice, as it first sends an end-of-line
+character to the end of the current line, and then kills the reading of standard-input on the second time.
+This is a python bug :-(
+
+
+Viewing/reading Comments on Tasks, Time Sheets, etc
+---------------------------------------------------
+
+As comments in alloc usually represent a series of threaded email conversations
+the tool to fetch all the comments for eg a Task, is called *alloc mbox*. Mbox 
+is the format that email messages can be stored in, where one big file can hold
+many email messages.
+
+So fire up *alloc mbox* and tell it which Task's Comments you would like to read.
+
+  alloc mbox --task 4
+
+This will then fire up your default mail reader. You can specify your default mail
+reader by setting the MAILER shell environment variable.
+
+Alternatively if you'd like to capture the email messages to a file, or even just
+view them as text, you simply need to pipe the output somewhere. Eg:
+
+  alloc mbox --task 4 | less
+  alloc mbox --task 4 > somefile.txt
+
+
+Other Interesting Stuff
+=======================
+
+Here's a collection of other interesting features and odds and ends.
+
+Files in ~/.alloc/*
+-------------------
+
+The .alloc directory is automatically created when you first invoke alloc.
+It contains the following files:
+
+  user@flora:~$ *ls -la .alloc*
+  total 24
+  drwxr-xr-x  2 alla alla 4096 Oct 30 17:33 .
+  drwxr-xr-x 19 alla alla 4096 Nov  6 12:38 ..
+  -rw-r--r--  1 alla alla  180 Oct 30 17:21 config
+  -rw-r--r--  1 alla alla   32 Nov  6 14:19 session
+  -rw-r--r--  1 alla alla   99 Oct 30 17:21 transforms.py
+
+The config file can contain different setups for different instances of alloc.
+For example you might have the following:
+
+  [main]
+  url: http://alloc/services/json.php
+  alloc_user: alloc
+  alloc_pass: alloc
+  alloc_http_user: alloc
+  alloc_http_pass: alloc
+  alloc_trunc: 1
+  
+  [dev]
+  url: http://alloc_dev/services/json.php
+  alloc_user: alloc
+  alloc_pass: alloc
+
+This example has two different configurations for alloc. One for the main server, and one for a dev instance of alloc.
+As you can see this lets you store different configurations for different allocs all in the one file. You can hot swap
+between them by setting the *ALLOC* shell environment variable.
+
+  *export ALLOC=dev*
+  user@flora:~$ *alloc tasks*
+  
+  *export ALLOC=main* 
+  user@flora:~$ *alloc tasks* dsadsa
+
+
+Will _hotswap_ between *them*.
+
+/Note/ that in /the main/ setup, _the variables_ *alloc_http_user* *alloc_http_pass* are set. These credentials are useful if your instance
+of alloc is only accessible once you have been authenticated by _HTTP Auth._
+
+
+
+
+
+Shared functionality
+--------------------
+
+
+
+
+
+
+
+
+
+
+
+
+>>>
+</body>
+
+<text>
+
+</html>
+<<<
