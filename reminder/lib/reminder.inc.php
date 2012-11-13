@@ -51,6 +51,13 @@ class reminder extends db_entity {
     $this->set_value("reminderModifiedTime", date("Y-m-d H:i:s"));
   }
 
+  function delete() {
+    $q = prepare("DELETE FROM reminderRecipient WHERE reminderID = %d",$this->get_id());
+    $db = new db_alloc();
+    $db->query($q);
+    return parent::delete();
+  }
+
   function get_recipients() {
     $db = new db_alloc();
     $type = $this->get_value('reminderType');
