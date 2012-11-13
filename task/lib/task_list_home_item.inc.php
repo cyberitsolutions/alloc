@@ -45,8 +45,8 @@ class task_list_home_item extends home_item {
 
     $current_user = &singleton("current_user");
     if (!$current_user->prefs["taskListHome_filter"]) {
-      $defaults["taskStatus"] = "open";
-      $defaults["personID"] = $current_user->get_id();
+      $defaults["taskStatus"] = "open"; 
+      $defaults["personID"] = $current_user->get_id(); 
       $defaults["showStatus"] = true;
       $defaults["showProject"] = true;
       $defaults["limit"] = 10;

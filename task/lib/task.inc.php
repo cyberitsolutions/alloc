@@ -170,6 +170,33 @@ class task extends db_entity {
     return (array)$rows;
   }
 
+  function get_reopen_reminder() {
+    $q = prepare("SELECT reminder.*,token.*,tokenAction.*, reminder.reminderID as rID
+                    FROM reminder
+               LEFT JOIN token ON reminder.reminderHash = token.tokenHash
+               LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID
+                   WHERE token.tokenEntity = 'task'
+                     AND token.tokenEntityID = %d
+                     AND reminder.reminderActive = 1
+                     AND token.tokenActionID = 4
+                 ",$this->get_id());
+
+    $db = new db_alloc();
+    return $db->qr($q);
+  }
+
+  function add_reopen_reminder($date) {
+    if (!$this->get_reopen_reminder()) {
+      $tokenActionID = 4;
+      $maxUsed = 1;
+      $name = "Reopen pending task";
+      $desc = "This reminder will automatically reopen this task, if it is pending.";
+      $recipients = array();
+      $datetime = $date." 08:30:00";
+      $this->add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients,$datetime);
+    }
+  }
+
   function create_task_reminder() {
     // Create a reminder for this task based on the priority.
     $current_user = &singleton("current_user");
@@ -1586,7 +1613,18 @@ class task extends db_entity {
     }
   }
 
-  function add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients) {
+  function reopen_pending_task() {
+    if (is_object($this) && $this->get_id()) {
+      $this->select();
+      if (substr($this->get_value("taskStatus"),0,4) == 'pend') {
+        $db = new db_alloc();
+        $db->query("call change_task_status(%d,'%s')",$this->get_id(),"open_inprogress");
+        return true;
+      }
+    }
+  }
+
+  function add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients,$datetime=false) {
     $current_user = &singleton("current_user");
     $token = new token();
     $token->set_value("tokenEntity","task");
@@ -1606,6 +1644,9 @@ class task extends db_entity {
       $reminder->set_value("reminderHash",$hash);
       $reminder->set_value("reminderSubject",$name);
       $reminder->set_value("reminderContent",$desc);
+      if ($datetime) {
+        $reminder->set_value("reminderTime",$datetime);
+      } 
       $reminder->save();
       if ($reminder->get_id()) {
         foreach ($recipients as $row) {
