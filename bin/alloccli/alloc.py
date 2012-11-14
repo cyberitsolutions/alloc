@@ -643,6 +643,10 @@ class alloc(object):
       if re.match(r'^\d{4}-\d{1,2}-\d{1,2}$', text):
         return text
 
+      # YYYY-MM-DD HH:MM:SS
+      if re.match(r'^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$', text):
+        return text
+
       # The date string may be prefixed with a comparator eg >= or != etc.
       # [><=!]some date string
       m = re.match(r'([><=!]+)(.*)', text)
@@ -658,6 +662,7 @@ class alloc(object):
         return prefix+output
       else:
         self.die("Couldn't convert date: "+text+" (returned: "+output+" "+errors+")")
+    return text
 
   def person_to_personID(self, name):
     """Convert a person's name into their alloc personID."""

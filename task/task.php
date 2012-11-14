@@ -356,8 +356,8 @@ $blockTaskLinks and $TPL["message_help_no_esc"][] = "This task ".$is." blocking 
 
 
 if (in_str("pending_",$task->get_value("taskStatus"))) {
-  $r = $task->get_reopen_reminder();
-  if ($r) {
+  $rows = $task->get_reopen_reminders();
+  foreach ($rows as $r) {
     $TPL["message_help_no_esc"][] = 'This task is set to
                                     <a href="'.$TPL["url_alloc_reminder"].'step=3&reminderID='.$r["rID"].'&returnToParent=task">
                                     automatically reopen at '.$r["reminderTime"].'</a>';
