@@ -23,6 +23,7 @@ class edit(alloc):
   ops.append((''  , 'type=TYPE      ', 'Task, Fault, Message, Milestone or Parent'))
   ops.append((''  , 'dupe=ID        ', 'task ID of the related dupe'))
   ops.append((''  , 'pend=IDS       ', 'task ID(s), commar separated, that block this task.'))
+  ops.append((''  , 'reopen=DATE    ', 'Reopen the task on this date. To be used with --status=pending.'))
   ops.append((''  , 'status=STATUS  ', 'inprogress, notstarted, info, client, manager, invalid, duplicate,\n'
                                        'incomplete, complete; or: open, pending, closed\n'))
 
@@ -96,6 +97,9 @@ alloc edit -t 1234 --assignee null"""
         package[key] = val
       if type(val)==type("") and val.lower() == 'null':
         package[key] = ''
+
+    if 'reopen' in package:
+      package['reopen'] = self.parse_date(package['reopen'])
 
     args['options'] = package
     args['method'] = 'edit_entity'

@@ -170,7 +170,7 @@ class task extends db_entity {
     return (array)$rows;
   }
 
-  function get_reopen_reminder() {
+  function get_reopen_reminders() {
     $q = prepare("SELECT reminder.*,token.*,tokenAction.*, reminder.reminderID as rID
                     FROM reminder
                LEFT JOIN token ON reminder.reminderHash = token.tokenHash
@@ -179,21 +179,36 @@ class task extends db_entity {
                      AND token.tokenEntityID = %d
                      AND reminder.reminderActive = 1
                      AND token.tokenActionID = 4
+                GROUP BY reminder.reminderID
                  ",$this->get_id());
 
     $db = new db_alloc();
-    return $db->qr($q);
+    $db->query($q);
+    while ($row = $db->row()) {
+      $rows[] = $row;
+    }
+    return (array)$rows;
   }
 
   function add_reopen_reminder($date) {
-    if (!$this->get_reopen_reminder()) {
+    $rows = $this->get_reopen_reminders();
+    foreach ($rows as $r) {
+      $reminder = new reminder();
+      $reminder->set_id($r['rID']);
+      $reminder->select();
+      $reminder->deactivate();
+    }
+
+    if ($date && $date != 'null') {
       $tokenActionID = 4;
       $maxUsed = 1;
       $name = "Reopen pending task";
       $desc = "This reminder will automatically reopen this task, if it is pending.";
       $recipients = array();
-      $datetime = $date." 08:30:00";
-      $this->add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients,$datetime);
+      if (strlen($date) == "10") {
+        $date.= " 08:30:00";
+      }
+      $this->add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients,$date);
     }
   }
 

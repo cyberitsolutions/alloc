@@ -71,6 +71,7 @@ class command {
      ,"type"      => array("taskTypeID",      "Task, Fault, Message, Milestone or Parent")
      ,"dupe"      => array("duplicateTaskID", "If the task status is duplicate, then this should be set to the task ID of the related dupe")
      ,"pend"      => array("",                "The task ID(s), commar separated, that block this task")
+     ,"reopen"    => array("",                "Reopen the task on this date. To be used with --status=pending.")
      ,"task"      => array("",                "A task ID, or the word 'new' to create a new task.")
      ,"taskip"    => array("",                "Add some interested parties and send the desc to them.")
     );
@@ -258,6 +259,13 @@ class command {
         $changes["pend"] = implode(",",(array)$task->get_pending_tasks());
       }
 
+      if (isset($commands["reopen"])) {
+        $reopen_rows = $task->get_reopen_reminders();
+        unset($rr_bits);
+        foreach ($reopen_rows as $rr) { $rr_bits[] = $rr["reminderTime"]; }
+        $changes["reopen"] = implode(",",(array)$rr_bits);
+      }
+
       if (strtolower($commands["task"]) == "new") {
         if (!$commands["desc"] && is_object($email_receive)) {
           $task->set_value("taskDescription",$email_receive->get_converted_encoding());
@@ -281,6 +289,13 @@ class command {
         if (isset($commands["pend"])) {
           $task->add_pending_tasks($commands["pend"]);
           $changes["pend"] = implode(",",(array)$task->get_pending_tasks());
+        }
+        if (isset($commands["reopen"])) {
+          $task->add_reopen_reminder($commands["reopen"]);
+          $reopen_rows = $task->get_reopen_reminders();
+          unset($rr_bits);
+          foreach ($reopen_rows as $rr) { $rr_bits[] = $rr["reminderTime"]; }
+          $changes["reopen"] = implode(",",(array)$rr_bits);
         }
 
         $str = $this->condense_changes($changes,$task->row());
