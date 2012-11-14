@@ -7,8 +7,8 @@ from alloccli import alloc
 # Try to import relevant module
 try:
   m = sys.argv[1]
-  alloccli = __import__("alloccli."+m)
-  subcommand = getattr(getattr(alloccli,m), m)
+  acli = __import__("alloccli."+m)
+  subcommand = getattr(getattr(acli,m), m)
 
 # Else bomb out with help message
 except:
