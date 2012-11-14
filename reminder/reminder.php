@@ -218,14 +218,7 @@ case 4:
       $_POST["reminder_hour"] += 12;
     }
     $reminder = new reminder();
-    $reminder->set_value('reminderType', $parentType);
-    $reminder->set_value('reminderLinkID', $parentID);
-    $reminder->set_value('reminderModifiedUser', $current_user->get_id());
-    $reminder->set_modified_time();
 
-    $reminder->set_value('reminderTime',$_POST["reminder_date"]." ".$_POST["reminder_hour"].":".$_POST["reminder_minute"].":00");
-    $reminder->set_value('reminderHash',$_POST["reminderHash"]);
-      
     if (isset($_POST["reminder_update"])) {
       $reminder->set_id($_POST["reminder_id"]);
       $reminder->select();
@@ -234,9 +227,20 @@ case 4:
         $token->set_hash($reminder->get_value("reminderHash"),false);
         if ($token->get_value("tokenActionID") == 3) {
           $reminder->set_value("reminderTime","");
+          $no = true;
         }
       }
     }
+
+    $reminder->set_value('reminderType', $parentType);
+    $reminder->set_value('reminderLinkID', $parentID);
+    $reminder->set_value('reminderModifiedUser', $current_user->get_id());
+    $reminder->set_modified_time();
+    $no or $reminder->set_value('reminderTime',$_POST["reminder_date"]." ".$_POST["reminder_hour"].":".$_POST["reminder_minute"].":00");
+    $reminder->set_value('reminderHash',$_POST["reminderHash"]);
+      
+
+
     if (!$_POST["reminder_recuring_value"]) {
       $reminder->set_value('reminderRecuringInterval', 'No');
       $reminder->set_value('reminderRecuringValue', '0');
