@@ -96,6 +96,11 @@ a.sidebyside_active {
   font-size:100%; 
 }
 
+a.undecorated {
+  text-decoration:none;
+  color:(BODY_COLOR);
+}
+
 h1 { 
   font-weight:bold; 
   font-size:150%; 
@@ -520,6 +525,16 @@ tr.even {
 }
 tr.odd:hover, tr.even:hover {
   background-color:(TR_HOVER_BACKGROUND_COLOR); 
+}
+
+.hover:hover {
+  background-color:(HIGHLIGHTED_BACKGROUND_COLOR); 
+}
+
+table.nopad, table.nopad td, table.nopad th {
+  margin:0px !important;
+  padding:0px !important;
+  border-collapse:collapse !important;
 }
 
 img.taskType {
