@@ -516,18 +516,17 @@ class task extends db_entity {
     $TPL["parentTaskOptions"] = $this->get_parent_task_select();
     $TPL["interestedPartyOptions"] = $this->get_task_cc_list_select();
 
-    $db->query(prepare("SELECT fullName,emailAddress
+    $db->query(prepare("SELECT fullName, emailAddress, clientContactPhone, clientContactMobile
                           FROM interestedParty
+                     LEFT JOIN clientContact ON interestedParty.clientContactID = clientContact.clientContactID
                          WHERE entity='task' 
                            AND entityID = %d
                            AND interestedPartyActive = 1
                       ORDER BY fullName",$this->get_id()));
     while ($db->next_record()) {
-      $str = trim(page::htmlentities($db->f("fullName")." <".$db->f("emailAddress").">"));
       $value = interestedParty::get_encoded_interested_party_identifier($db->f("fullName"), $db->f("emailAddress"));
-      $TPL["interestedParty_hidden"].= $commar.$str."<input type=\"hidden\" name=\"interestedParty[]\" value=\"".$value."\">";
-      $TPL["interestedParty_text"].= $commar.$str;
-      $commar = "<br>";
+      $phone = array("p"=>$db->f('clientContactPhone'),"m"=>$db->f('clientContactMobile'));
+      $TPL["interestedParties"][] = array('key'=>$value, 'name'=>$db->f("fullName"), 'email'=>$db->f("emailAddress"), 'phone'=>$phone);
     }
 
     $TPL["task_taskStatusLabel"] = $this->get_task_status("label");
