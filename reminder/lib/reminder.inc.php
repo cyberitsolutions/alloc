@@ -230,19 +230,19 @@ class reminder extends db_entity {
       }
     }
 
-    $recipients = $this->get_all_recipients();
-    foreach ((array)$recipients as $person) {
-      if ($person['emailAddress']) {
-        $email = sprintf("%s %s <%s>", $person['firstName'], $person['surname'], $person['emailAddress']);
-        $subject = $this->get_value('reminderSubject');
-        $content = $this->get_value('reminderContent');
-        $e = new email_send($email, $subject, $content, "reminder");
-        $e->send();
-      }
-    } 
-
-    // Update reminder (reminderTime can be blank for task->moved_from_pending_to_open)
     if ($ok) {
+      $recipients = $this->get_all_recipients();
+      foreach ((array)$recipients as $person) {
+        if ($person['emailAddress']) {
+          $email = sprintf("%s %s <%s>", $person['firstName'], $person['surname'], $person['emailAddress']);
+          $subject = $this->get_value('reminderSubject');
+          $content = $this->get_value('reminderContent');
+          $e = new email_send($email, $subject, $content, "reminder");
+          $e->send();
+        }
+      } 
+
+      // Update reminder (reminderTime can be blank for task->moved_from_pending_to_open)
       if ($this->get_value('reminderRecuringInterval') == "No") {
         $this->deactivate();
 
