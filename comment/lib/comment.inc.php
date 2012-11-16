@@ -649,10 +649,10 @@ class comment extends db_entity {
       if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
         if (config::for_cyber()) {
           $email->set_reply_to('"All parties via allocPSA" '.ALLOC_DEFAULT_FROM_ADDRESS);
-          $email->set_from('"'.$from_name.' via allocPSA" '.ALLOC_DEFAULT_FROM_ADDRESS);
+          $email->set_from('"'.str_replace('"','',$from_name).' via allocPSA" '.ALLOC_DEFAULT_FROM_ADDRESS);
         } else {
           $email->set_reply_to('"All parties" '.ALLOC_DEFAULT_FROM_ADDRESS);
-          $email->set_from('"'.$from_name.'" '.ALLOC_DEFAULT_FROM_ADDRESS);
+          $email->set_from('"'.str_replace('"','',$from_name).'" '.ALLOC_DEFAULT_FROM_ADDRESS);
         }
       } else {
         if (is_object($current_user) && $current_user->get_from()) {
