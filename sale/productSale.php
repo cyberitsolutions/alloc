@@ -211,9 +211,8 @@ if ($_POST["move_forwards"]) {
   $_POST["save"] = true;
 }
 
-
 // Code to respond to form buttons 
-if ($_POST["save"]) {
+if (!$TPL["message"] && $_POST["save"]) {
   !$productSaleID && $productSale->set_value("status", "edit");
   $productSale->read_globals();
   $productSale->save(); 

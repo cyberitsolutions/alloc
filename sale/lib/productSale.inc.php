@@ -204,6 +204,11 @@ class productSale extends db_entity {
       $p = new product();
       $p->set_id($psi_row["productID"]);
       $taskDesc[] = "  * ".$p->get_name();
+      $hasItems = true;
+    }
+
+    if (!$hasItems) {
+      return alloc_error("No sale items have been added.");
     }
 
     $taskDesc[] = "";
