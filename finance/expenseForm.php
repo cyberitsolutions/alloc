@@ -286,6 +286,15 @@ if ($_POST["cancel"]) {
   exit();
 
 } else if ($_POST["finalise"]) {
+
+  $db = new db_alloc();
+  $hasItems = $db->qr("SELECT * FROM transaction WHERE expenseFormID = %d",$expenseForm->get_id());
+  if (!$hasItems) {
+    alloc_error("Unable to submit expense form, no items have been added.");
+    alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
+    exit();
+  }
+
   $expenseForm->read_globals();
   if ($expenseForm->get_value("reimbursementRequired") == 0 || $expenseForm->get_value("reimbursementRequired") == 1) {
     $expenseForm->set_value("paymentMethod", "");
