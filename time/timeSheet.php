@@ -522,7 +522,7 @@ if ($_POST["save"]
 
   $timeSheet->set_value("billingNote",rtrim($timeSheet->get_value("billingNote")));
 
-  if ($save_error) {
+  if ($TPL['message'] || $save_error) {
     // don't save or sql will complain
     $url = $TPL["url_alloc_timeSheet"];
 
@@ -530,7 +530,7 @@ if ($_POST["save"]
     //if TS ID is set but person ID is not, it's an existing timesheet this
     // user doesn't have access to (and will overwrite). Don't proceed.
     $url = $TPL["url_alloc_timeSheet"];
-  } else if ($timeSheet->save()) {
+  } else if (!$TPL['message'] && $timeSheet->save()) {
 
     if ($add_timeSheet_to_invoiceID) {
       $invoice = new invoice();

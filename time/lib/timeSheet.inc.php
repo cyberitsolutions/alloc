@@ -883,7 +883,13 @@ EOD;
             $overrun_tasks[] = sprintf(" * %d %s (limit: %.02f hours, billed so far: %.02f hours)", $task->get_id(), $task->get_value('taskName'), $task->get_value('timeLimit'), $total_billed_time);
           }
         }
+        $hasItems = true;
       }
+
+      if (!$hasItems) {
+        return alloc_error('Unable to submit time sheet, no items have been added.');
+      }
+
       if(count($overrun_tasks)) {
         $overrun_notice = "\n\nThe following tasks billed on this timesheet have exceeded their time estimates:\n";
         $overrun_notice .= implode("\n", $overrun_tasks);
@@ -953,6 +959,12 @@ EOD;
         $this->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
           //error, go away
         alloc_error("You do not have permission to change this timesheet.");
+      }
+
+      $db = new db_alloc();
+      $hasItems = $db->qr("SELECT * FROM timeSheetItem WHERE timeSheetID = %d",$this->get_id());
+      if (!$hasItems) {
+        return alloc_error('Unable to submit time sheet, no items have been added.');
       }
 
         if ($this->get_value("status") == "manager") { 
