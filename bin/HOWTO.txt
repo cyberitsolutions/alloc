@@ -604,13 +604,14 @@ between them by setting the *ALLOC* shell environment variable.
   user@flora:~$ *alloc tasks*
   
   *export ALLOC=main* 
-  user@flora:~$ *alloc tasks* dsadsa
+  user@flora:~$ *alloc tasks*
 
 
-Will _hotswap_ between *them*.
+Will hotswap between them.
 
-/Note/ that in /the main/ setup, _the variables_ *alloc_http_user* *alloc_http_pass* are set. These credentials are useful if your instance
-of alloc is only accessible once you have been authenticated by _HTTP Auth._
+Note that in the main setup, the variables *alloc_http_user* *alloc_http_pass*
+are set. These credentials are useful if your instance of alloc is only
+accessible once you have been authenticated by HTTP Auth.
 
 
 
@@ -619,11 +620,120 @@ of alloc is only accessible once you have been authenticated by _HTTP Auth._
 Shared functionality
 --------------------
 
+There is certain functionality that is shared across all or most of the alloc sub-commands.
+For example by default the output of most commands will be an ascii table, however if the
+output device is not a TTY, (i.e. you are capturing the output to a pipe or redirecting to
+a file etc) then the output will be automatically converted into CSV. Eg:
+
+  # ASCII table
+  user@flora:~$ *alloc timesheets*
+  
+  # CSV
+  user@flora:~$ *alloc timesheets | cat*
+  
+  # CSV
+  user@flora:~$ *alloc timesheets | alloc submit*
+
+This behaviour can be overridden using the --csv flag. Which can take the values of "auto",
+"never" or "always", to force a particular output.
+
+Another example of shared functionality is the formatting of the output display. Often you will
+want to see only some particular columns of output from a command. This can be controlled using
+the --fields switch. To see all the column names that can be used, you need to disable the auto
+CSV functionality and run --fields with "all". I've also stuck a regex in there to make the 
+resulting list easier to read:
+
+  # Note we're using sed to sort the headers into one long column, for easier display.
+  user@flora:~$ *alloc tasks --fields all --csv never | sed -e 's/\s*|\s*/\n/g' | less*
+  
+  Status
+  Colour
+  timeWorstLabel
+  closer_name
+  personID
+  projectID
+  Est
+  Manager
+  Assigned
+  Curr
+  Rate
+  Act Label
+  parentTaskID
+  Worst
+  duplicateTaskID
+  taskTypeImage
+  estimator_name
+  Targ Compl
+  Proj Pri
+  Proj Nick
+  Stat
+  Task Pri
+  Type
+  rateUnitID
+  Date Assigned
+  Task
+  Act
+  timeLimitLabel
+  closerID
+  Proj Name
+  rateUnit
+  Closed
+  Project
+  pendingTaskIDs
+  Pri Factor
+  Description
+  clientID
+  Created
+  padding
+  Limit
+  Targ Start
+  creatorID
+  newSubTask
+  taskLink
+  timeBestLabel
+  taskURL
+  Priority
+  Creator
+  Act Start
+  taskModifiedUser
+  Act Compl
+  timeExpectedLabel
+  managerID
+  Best
+  ID
+  estimatorID
+  projectPriorityLabel
+
+Any of those headers can then be chosen to be printed in the output.
+
+  # To print each task with the task creator alongside.
+  user@flora:~$ *alloc tasks --fields "Creator,Task"*
+  
+  +---------+------------------------------------------------+
+  | Creator |                      Task                      |
+  +---------+------------------------------------------------+
+  | alloc2  | Sale 51: place an order to the supplier        |
+  | alloc2  | Sale 11: Please place an order to the supplier |
+  | alloc2  | Sale 11: Please pay the supplier               |
+  | alloc2  | Do some stuff                                  |
+  +---------+------------------------------------------------+
 
 
+Additionally any of these field names can be used to order the results,
+using --order.
 
+  user@flora:~$ *alloc tasks --order Project,Task*
 
+To reverse the effect of ordering by a particular field, you just prefix
+the field name with an underscore:
 
+  user@flora:~$ *alloc tasks --order Project,_Task*
+
+And remember to add shell escaping or quotes if the argument contains spaces.
+
+The default sorting order for alloc tasks is this: *priorityLabel,taskTypeID,_rate,taskStatusLabel*
+This gives you a prioritised list of things to work on - taking the rate you are paid for a particular
+task into account. I.e. you probably want to be working on the things that pay you more, first.
 
 
 
@@ -632,8 +742,5 @@ Shared functionality
 
 >>>
 </body>
-
-<text>
-
 </html>
 <<<
