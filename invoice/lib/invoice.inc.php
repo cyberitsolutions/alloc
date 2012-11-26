@@ -718,6 +718,14 @@ class invoice extends db_entity {
         return false;
       }
     }
+    if ($direction == "forwards" && $newstatus == "reconcile") {
+      $db = new db_alloc();
+      $hasItems = $db->qr("SELECT * FROM invoiceItem WHERE invoiceID = %d",$this->get_id());
+      if (!$hasItems) {
+        alloc_error("Unable to submit invoice, no items have been added.");
+        return false;
+      }
+    }
     return true;
   }
   
