@@ -172,7 +172,7 @@ class comment extends db_entity {
 
       $new["recipient_editor"].= "<span class='noprint hidden' id='recipient_dropdown_".$new["commentID"]."'>
                                     <form action='".$TPL["url_alloc_updateRecipients"]."' method='post'>
-                                      <select name='comment_recipients[]' multiple='true'>
+                                      <select name='comment_recipients[]' multiple='true' data-callback='save_recipients'>
                                       ".page::select_options($recipient_ops,$recipient_selected)."
                                       </select>
                                       <input type='hidden' name='commentID' value='".$new["commentID"]."'>

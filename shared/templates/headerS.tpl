@@ -21,7 +21,6 @@
                    ,"tax_percent"       : "{echo config::get_config_item('taxPercent')}"
                    ,"cal_first_day"     : "{echo config::get_config_item('calendarFirstDay')}"
                    ,"show_filters"      : "{print is_object($current_user) ? $current_user->prefs["showFilters"] : ""}"
-                   ,"ddcl_blacklist"    : new Array("{print is_object($current_user)?implode('","',(array)$current_user->prefs['ddcl_blacklist']):''}")
                    }
       return values[key];
     }
