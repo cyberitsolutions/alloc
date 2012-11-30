@@ -1,30 +1,10 @@
-ddclchanges = [];
-function redraw_multiple_selects(container, funct) {
+function redraw_multiple_selects(container) {
+  var c = container;
   if (typeof container == "string") {
-    var c = "#"+container;
-  } else {
-    var c = container;
+    c = "#"+container;
   }
-  var blacklist = get_alloc_var("ddcl_blacklist");
-  $("select[multiple]",c).each(function(){
-    if ($.inArray(this.name,blacklist)==-1) {
-      $(this).dropdownchecklist("destroy");
-      $(this).dropdownchecklist( {
-        "maxDropHeight":450,
-        "onComplete": funct,
-        "onItemClick": function (checkbox,selector) {
-          var commentID = $(selector).parent().find("input[name=commentID]").val();
-          var v = checkbox.val();
-          if (!$.isArray(ddclchanges[commentID])) { ddclchanges[commentID] = []; }
-          if ($.inArray(v,ddclchanges[commentID]) != "-1") {
-            ddclchanges[commentID] = $.grep(ddclchanges[commentID], function(value,key){ return value != v; }); // delete item from array
-          } else {
-            ddclchanges[commentID][ddclchanges[commentID].length] = v;
-          }
-        }
-      });
-    }
-  });
+  $("select[multiple]",c).selectn("destroy",c);
+  $("select[multiple]",c).selectn();
 }
 
 // Make the XML request thing, specify the callback function 
@@ -113,9 +93,7 @@ function sidebyside_activate(id,redraw) {
   }
 
   // allows us to target particular pages for redraw_multiple_selects();
-  if (redraw) {
-    redraw_multiple_selects();
-  }
+  redraw_multiple_selects();
 }
 
 function help_text_on(id, str) {
@@ -166,26 +144,12 @@ function preload_field(element, text) {
   });
 }
 
-function save_recipients(selector) {
-  var p = $(selector).parent()
+function save_recipients(data) {
+  var p = data.select.parent();
   var commentID = p.find("input[name=commentID]").val();
+  var values = data.select.val();
 
-  if (!$.isArray(ddclchanges[commentID])) { ddclchanges[commentID] = []; }
-  // No changes, then don't save.
-  if (!ddclchanges[commentID].length) {
-    $("#recipient_dropdown_"+commentID).hide();
-    $("#r_e_"+commentID).show();
-    return;
-  }
-  ddclchanges[commentID] = [];
-
-  var values = [];
-  for( i=0; i < selector.options.length; i++ ) {
-    if (selector.options[i].selected && (selector.options[i].value != "")) {
-      values[values.length] = selector.options[i].value;
-    }
-  }
-  jQuery.post("../comment/updateRecipients.php",{ "commentID":commentID, "comment_recipients": values},function(data) {
+  jQuery.post("../comment/updateRecipients.php",{ "commentID":commentID, "comment_recipients":values},function(data) {
     p.parent().hide();
     if (data == 'external') {
       var label = '<em class="faint warn">[ External Conversation ]</em>'
@@ -304,10 +268,7 @@ $(document).ready(function() {
   // Activate user preference for displaying filters
   if (get_alloc_var("show_filters") != "yes") {
     $(".toggleFilter").trigger("click");
-  } else {
-    redraw_multiple_selects();
   }
-
 
   $(".calendar_links").hide();
   $(".calendar_day").bind('mouseover',function(){
@@ -342,14 +303,8 @@ $(document).ready(function() {
     var commentID = this.id.split("_")[2]
     $(this).toggle();
     $("#recipient_dropdown_"+commentID).slideToggle("fast");
-    redraw_multiple_selects("recipient_dropdown_"+commentID,save_recipients);
+    redraw_multiple_selects("recipient_dropdown_"+commentID);
     return false;
-  });
-
-  $("select[multiple]").live('dblclick',function(){
-    $.get(get_alloc_var("url")+"shared/save_ddcl_blacklist.php",{ "unset" : this.name });
-    $(this).dropdownchecklist("destroy");
-    $(this).dropdownchecklist( { "maxDropHeight":450 } );
   });
 
   $(".commentreply").click(function(e){
@@ -416,6 +371,14 @@ $(document).ready(function() {
     $(this).parent().append(elem);
     redraw_multiple_selects($(this).parent());
     return false;
+  });
+
+  // This is mainly used for the edit comment recipient logic on the comments screens
+  // The data-callback is most likely save_recipients(); Go there.
+  $("html").bind("selectn-closed",function(e,data){
+    if (data.select.attr("data-callback")) {
+      window[data.select.attr("data-callback")](data);
+    }
   });
 
 });

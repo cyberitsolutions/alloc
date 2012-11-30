@@ -39,7 +39,6 @@ div#main {
   padding:0px 0px 14px 0px !important; padding:0px 16px;
   background-color:white;
   border:1px solid #9c9c9c;
-  position:relative;
   clear:both;
   text-align:left;
   margin-bottom:4px;
@@ -959,53 +958,50 @@ body.obfus .obfuscate:hover {
   background-color:transparent !important;
 }
 
-
-/* CSS for multi-selects */
-.ui-dropdownchecklist {
-  font-size: 100%;
-  color: black;
+.selectn-label {
+  border:1px solid #ccc;
+  background-color:#fff;
+  height:1.2em;
+  display:inline-block;
+  position:relative;
+  white-space:nowrap;
+  font-size:1em;
+  overflow:hidden;
+  cursor:default;
+  color:#666666;
   text-align:left;
 }
-.ui-dropdownchecklist-selector {
-  color: black;
-  height: 12px;
-  border: 1px solid #cccccc;
-  background: url(../images/arrow_faded_ms.gif) center right no-repeat #fcfcfc;
+.selectn-label img {
+  position:absolute;
+  top:2px;
+  right:0px;
 }
-.ui-state-active {
-  border: 1px solid #666666;
-  background-color: #ffffff;
+.selectn-dropdown {
+  position:absolute;
+  z-index:1000;
+  border:1px solid #333;
+  background-color:#fff;
+  display:none;
+  text-align:left;
+  max-width:500px;
 }
-.ui-dropdownchecklist-dropcontainer {
-  background-color: #fff;
-  border: 1px solid #999;
+.selectn-dropdown label {
+  display:block;
+  white-space:nowrap;
+  padding-right:5px;
+  color:#666666;
 }
-.ui-dropdownchecklist-item:hover {
-  background-color:#fffeb7;
+.selectn-dropdown label:hover, .selectn-button:hover {
+  background-color:#f4f4f4;
 }
-.ui-state-hover {
+.selectn-button {
+  font-size:75%;
+  -webkit-box-shadow:0px 0px 0px #fff;
+     -moz-box-shadow:0px 0px 0px #fff;
+          box-shadow:0px 0px 0px #fff;
+} 
+.selectn-active {
+  border:1px solid #333;
 }
-.ui-state-disabled label {
-  color: #ccc;
-}
-.ui-dropdownchecklist-group {
-  font-weight: bold;
-  font-style: italic;
-}
-.ui-dropdownchecklist-indent {
-  padding-left: 7px;
-}
-.ui-dropdownchecklist-selector-wrapper {
-  vertical-align: middle;
-}
-.ui-dropdownchecklist-selector {
-  padding: 1px 2px 2px 2px;
-  padding-right:12px;
-}
-.ui-dropdownchecklist-text {
-  font-size: 100%;
-}
-.ui-dropdownchecklist-group {
-  padding: 1px 2px 2px 2px;
-}
+
 
