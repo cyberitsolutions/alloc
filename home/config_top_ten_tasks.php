@@ -20,6 +20,7 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+define("NO_REDIRECT",1);
 require_once("../alloc.php");
 
 $defaults = array("showHeader"=>true

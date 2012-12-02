@@ -217,7 +217,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
     // If session hasn't been started re-direct to login page
     if (!$sess->Started()) {
-      defined("NO_REDIRECT") && exit();
+      defined("NO_REDIRECT") && exit("Session expired. Please <a href='".$TPL["url_alloc_login"]."'>log in</a> again.");
       alloc_redirect($TPL["url_alloc_login"] . ($_SERVER['REQUEST_URI'] != '/' ? '?forward='.urlencode($_SERVER['REQUEST_URI']) : ''));
 
     // Else load up the current_user and continue
