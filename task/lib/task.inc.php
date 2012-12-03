@@ -424,52 +424,57 @@ class task extends db_entity {
     return unserialize(base64_decode($blob));
   }
 
-  function get_personList_dropdown($projectID,$field,$taskID=false,$selected=-1) {
+  function get_personList_dropdown($projectID,$field,$selected=null) {
     $current_user = &singleton("current_user");
  
     $db = new db_alloc();
 
-    if ($_GET["timeSheetID"]) {
-      $ts_query = prepare("SELECT * FROM timeSheet WHERE timeSheetID = %d",$_GET["timeSheetID"]);
-      $db->query($ts_query);
-      $db->next_record();
-      $owner = $db->f("personID");
-
-    } else if (is_object($this) && $this->get_value($field)) {
-      $owner = $this->get_value($field);
-
-    } else if ($taskID) {
-      $t = new task();
-      $t->set_id($taskID);
-      $t->select();
-      $owner = $t->get_value($field);
-
-    } else if (!is_object($this) || !$this->get_id()) {
-      $owner = $current_user->get_id();
+    if ($this->get_id()) {
+      $origval = $this->get_value($field);
+    } else {
+      $origval = $current_user->get_id();
     }
 
     $peoplenames = person::get_username_list($owner);
 
     if ($projectID) {
+      if ($field == "managerID") {
+        $manager_sql = " AND role.roleHandle in ('isManager','timeSheetRecipient')";
+        $managers_only = true;
+      }
+
       $q = prepare("SELECT * 
                       FROM projectPerson 
-                 LEFT JOIN person ON person.personID = projectPerson.personID 
-                     WHERE person.personActive = 1 
+                 LEFT JOIN person ON person.personID = projectPerson.personID
+                 LEFT JOIN role ON role.roleID = projectPerson.roleID
+                     WHERE person.personActive = 1 ".$manager_sql."
                        AND projectID = %d
                   ORDER BY firstName, username
                    ",$projectID);
       $db->query($q);
       while ($row = $db->row()) {
+        if ($managers_only && $current_user->get_id() == $row["personID"]) {
+          $current_user_is_manager = true;
+        }
         $ops[$row["personID"]] = $peoplenames[$row["personID"]];
       }
+
+    // Everyone
     } else {
       $ops = $peoplenames;
     }
 
-    $ops[$owner] or $ops[$owner] = $peoplenames[$owner];
-   
-    $str = page::select_options($ops, $selected != -1 ? $selected : $owner);
-    return $str;
+    $origval and $ops[$origval] = $peoplenames[$origval];
+
+    if ($managers_only && !$current_user_is_manager) {
+      unset($ops[$current_user->get_id()]);
+    }
+
+    if ($selected === null) {
+      $selected = $origval;
+    }
+
+    return page::select_options($ops, $selected);
   }
 
   function get_project_options($projectID="") {
@@ -491,9 +496,9 @@ class task extends db_entity {
     global $isMessage;
     $db = new db_alloc();
     $projectID = $_GET["projectID"] or $projectID = $this->get_value("projectID");
-    $TPL["personOptions"] = "<select name=\"personID\"><option value=\"\">".task::get_personList_dropdown($projectID, "personID")."</select>";
-    $TPL["managerPersonOptions"] = "<select name=\"managerID\"><option value=\"\">".task::get_personList_dropdown($projectID, "managerID")."</select>";
-    $TPL["estimatorPersonOptions"] = "<select name=\"estimatorID\"><option value=\"\">".task::get_personList_dropdown($projectID, "estimatorID")."</select>";
+    $TPL["personOptions"] = "<select name=\"personID\"><option value=\"\">".$this->get_personList_dropdown($projectID, "personID")."</select>";
+    $TPL["managerPersonOptions"] = "<select name=\"managerID\"><option value=\"\">".$this->get_personList_dropdown($projectID, "managerID")."</select>";
+    $TPL["estimatorPersonOptions"] = "<select name=\"estimatorID\"><option value=\"\">".$this->get_personList_dropdown($projectID, "estimatorID")."</select>";
 
     // TaskType Options
     $taskType = new meta("taskType");
