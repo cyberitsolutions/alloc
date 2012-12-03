@@ -223,21 +223,21 @@ $(document).ready(function() {
       <div class="task_pane">
         <h6>{$task_taskType}{page::mandatory($task_taskName)}</h6>
         <div style="width:100%" class="">
-          <table cellpadding="0" cellspacing="0">
+          <table class="nopad">
             <tr>
-              <td style="width:100%;padding:0px;padding-right:3px;">
-          <input type="text" id="taskName" name="taskName" value="{=$task_taskName}" maxlength="75" style="width:100%;">
+              <td style="width:100%;padding-right:3px !important;">
+                <input type="text" id="taskName" name="taskName" value="{=$task_taskName}" maxlength="75" style="width:100%;">
               </td>
-              <td class="nobr" style="padding:0px;padding-right:3px;">
-          <select name="priority">
-            {$priorityOptions}
-          </select>
-          <select name="taskTypeID">
-            {$taskTypeOptions}
-          </select>
+              <td class="nobr" style="padding-right:3px !important;">
+                <select name="priority">
+                  {$priorityOptions}
+                </select>
+                <select name="taskTypeID">
+                  {$taskTypeOptions}
+                </select>
               </td>
-              <td style="padding:0px;">
-          {page::help("taskType")}
+              <td>
+                {page::help("taskType")}
               </td>
             </tr>
           </table>
