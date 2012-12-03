@@ -324,6 +324,7 @@ $(document).ready(function() {
           </div>
         </div>
 
+        {if $task_dateActualStart || $task_dateActualCompletion}
         <div class="enclose">
           <h6>Actual Start<div>Actual Completion</div></h6>
           <div style="float:left; width:30%">
@@ -333,6 +334,7 @@ $(document).ready(function() {
             {$task_dateActualCompletion}
           </div>
         </div>
+        {/}
       </div>
     </td>
   </tr>
