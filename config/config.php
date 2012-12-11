@@ -196,6 +196,21 @@ $TPL["inTfOptions"] = page::select_options($options, $config->get_config_item("i
 $TPL["taxTfOptions"] = page::select_options($options, $config->get_config_item("taxTfID"));
 $TPL["expenseFormTfOptions"] = page::select_options($options, $config->get_config_item("expenseFormTfID"));
 
+$tabops = array("home"=>"Home"
+               ,"client"=>"Clients"
+               ,"project"=>"Projects"
+               ,"task"=>"Tasks"
+               ,"time"=>"Time"
+               ,"invoice"=>"Invoices"
+               ,"sale"=>"Sales"
+               ,"person"=>"People"
+               ,"wiki"=>"Wiki"
+               ,"inbox"=>"Inbox"
+               ,"tools"=>"Tools"
+                );
+$selected_tabops = $config->get_config_item("allocTabs") or $selected_tabops = array_keys($tabops);
+$TPL["allocTabsOptions"] = page::select_options($tabops, $selected_tabops);
+
 $m = new meta("currencyType");
 $currencyOptions = $m->get_assoc_array("currencyTypeID","currencyTypeName");
 $TPL["currencyOptions"] = page::select_options($currencyOptions, $config->get_config_item("currency"));
