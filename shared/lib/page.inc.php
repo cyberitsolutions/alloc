@@ -51,33 +51,38 @@ class page {
   function tabs() {
     global $TPL;
     $current_user = &singleton("current_user");
+    $c = new config();
+    $tabs = $c->get_config_item("allocTabs");
 
-    has("home")    and $menu_links["Home"]     = array("url"=>$TPL["url_alloc_home"],"module"=>"home");
-    has("client")  and $menu_links["Clients"]  = array("url"=>$TPL["url_alloc_clientList"],"module"=>"client");
-    has("project") and $menu_links["Projects"] = array("url"=>$TPL["url_alloc_projectList"],"module"=>"project");
-    has("task")    and $menu_links["Tasks"]    = array("url"=>$TPL["url_alloc_taskList"],"module"=>"task");
-    has("time")    and $menu_links["Time"]     = array("url"=>$TPL["url_alloc_timeSheetList"],"module"=>"time");
-    has("invoice") and $menu_links["Invoices"] = array("url"=>$TPL["url_alloc_invoiceList"],"module"=>"invoice");
-    has("sale")    and $menu_links["Sales"]    = array("url"=>$TPL["url_alloc_productSaleList"],"module"=>"sale");
-    has("person")  and $menu_links["People"]   = array("url"=>$TPL["url_alloc_personList"],"module"=>"person");
-    has("wiki")    and $menu_links["Wiki"]     = array("url"=>$TPL["url_alloc_wiki"],"module"=>"wiki");
-    if (has("email") && have_entity_perm("inbox",PERM_READ,$current_user) && config::get_config_item("allocEmailHost")) {
-      $menu_links["Inbox"]  = array("url"=>$TPL["url_alloc_inbox"],"module"=>"email");
+    $menu_links["home"]    = array("name"=>"Home",    "url"=>$TPL["url_alloc_home"],           "module"=>"home");
+    $menu_links["client"]  = array("name"=>"Clients", "url"=>$TPL["url_alloc_clientList"],     "module"=>"client");
+    $menu_links["project"] = array("name"=>"Projects","url"=>$TPL["url_alloc_projectList"],    "module"=>"project");
+    $menu_links["task"]    = array("name"=>"Tasks",   "url"=>$TPL["url_alloc_taskList"],       "module"=>"task");
+    $menu_links["time"]    = array("name"=>"Time",    "url"=>$TPL["url_alloc_timeSheetList"],  "module"=>"time");
+    $menu_links["invoice"] = array("name"=>"Invoices","url"=>$TPL["url_alloc_invoiceList"],    "module"=>"invoice");
+    $menu_links["sale"]    = array("name"=>"Sales",   "url"=>$TPL["url_alloc_productSaleList"],"module"=>"sale");
+    $menu_links["person"]  = array("name"=>"People",  "url"=>$TPL["url_alloc_personList"],     "module"=>"person");
+    $menu_links["wiki"]    = array("name"=>"Wiki",    "url"=>$TPL["url_alloc_wiki"],           "module"=>"wiki");
+    if (have_entity_perm("inbox",PERM_READ,$current_user) && config::get_config_item("allocEmailHost")) {
+      $menu_links["inbox"] = array("name"=>"Inbox",   "url"=>$TPL["url_alloc_inbox"],          "module"=>"email");
     }
-    has("tools")   and $menu_links["Tools"]    = array("url"=>$TPL["url_alloc_tools"],"module"=>"tools");
+    $menu_links["tools"]   = array("name"=>"Tools",   "url"=>$TPL["url_alloc_tools"],          "module"=>"tools");
 
     $x = -1;
-    foreach ($menu_links as $name => $arr) {
-      $TPL["x"] = $x;
-      $x+=70;
-      $TPL["url"] = $arr["url"];
-      $TPL["name"] = $name;
-      unset($TPL["active"]);
-      if (preg_match("/".str_replace("/", "\\/", $_SERVER["PHP_SELF"])."/", $url) || preg_match("/".$arr["module"]."/",$_SERVER["PHP_SELF"]) && !$done) {
-        $TPL["active"] = " active";
-        $done = true;
+    foreach ($menu_links as $key => $arr) {
+      if (in_array($key,$tabs) && has($key)) {
+        $name = $arr["name"];
+        $TPL["x"] = $x;
+        $x+=70;
+        $TPL["url"] = $arr["url"];
+        $TPL["name"] = $name;
+        unset($TPL["active"]);
+        if (preg_match("/".str_replace("/", "\\/", $_SERVER["PHP_SELF"])."/", $url) || preg_match("/".$arr["module"]."/",$_SERVER["PHP_SELF"]) && !$done) {
+          $TPL["active"] = " active";
+          $done = true;
+        }
+        include_template(ALLOC_MOD_DIR."shared/templates/tabR.tpl");
       }
-      include_template(ALLOC_MOD_DIR."shared/templates/tabR.tpl");
     }
   }
   function toolbar() {

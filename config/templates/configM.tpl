@@ -15,9 +15,17 @@
 <div id="basic">
 <form action="{$url_alloc_config}" method="post">
 <table class="box">
+
   <tr>
     <th colspan="3">Basic Setup</th>
   </tr>
+
+  <tr>
+    <td width="20%"><nobr>allocPSA Tabs</nobr></td>
+    <td><select name="allocTabs[]" multiple>{$allocTabsOptions}</select></td> 
+    <td width="1%">{page::help("config_allocTabs")}</td>
+  </tr>
+
   <tr>
     <td width="20%"><nobr>allocPSA Base URL</nobr></td>
     <td><input type="text" size="70" value="{$allocURL}" name="allocURL"></td> 
