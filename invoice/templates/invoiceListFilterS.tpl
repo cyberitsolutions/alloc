@@ -7,9 +7,9 @@
           <td>Invoice Status</td>
         </tr>
         <tr>
-          <td colspan="2"><select name="clientID"><option value="">All</option>{$clientOptions}</select></td>
+          <td colspan="2"><select name="clientID[]" multiple="true">{$clientOptions}</select></td>
           <td><input type="text" size="11" name="invoiceName" value="{$invoiceName}"></td>
-          <td><select name="invoiceStatus"><option value="">All</option>{$statusOptions}</select></td>
+          <td><select name="invoiceStatus[]" multiple="true">{$statusOptions}</select></td>
         </tr>
         <tr>
           <td>From</td>

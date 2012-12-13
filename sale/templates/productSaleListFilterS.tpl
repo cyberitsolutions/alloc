@@ -16,8 +16,7 @@ function refreshProjectList(show_all) {
         </tr>
         <tr>
            <td>
-            <select name="personID">
-              <option value="">
+            <select name="personID[]" multiple="true">
               {$show_userID_options}
             </select>
           </td>

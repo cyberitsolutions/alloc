@@ -133,25 +133,16 @@ class client extends db_entity {
       is_array($filter["clientID"]) or $filter["clientID"][] = -1;
     }
 
-    // Filter on taskID
-    if ($filter["clientID"] && is_array($filter["clientID"])) {
-      $sql[] = prepare("(client.clientID in (%s))",$filter["clientID"]);
-    } else if ($filter["clientID"]) {     
-      $sql[] = prepare("(client.clientID = %d)", $filter["clientID"]);
-    }
+    // Filter on clientID
+    $filter["clientID"] and $sql[] = db::sql_ids("client.clientID", $filter["clientID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["clientID"] || $filter["starred"]) {
       return $sql;
     }
 
-    if ($filter["clientStatus"]) {
-      $sql[] = prepare("(clientStatus = '%s')",$filter["clientStatus"]);
-    } 
-
-    if ($filter["clientCategory"]) {
-      $sql[] = prepare("(clientCategory = '%s')",$filter["clientCategory"]);
-    } 
+    $filter["clientStatus"] and $sql[] = db::sql_ids("client.clientStatus", $filter["clientStatus"], "%s");
+    $filter["clientCategory"] and $sql[] = db::sql_ids("client.clientCategory", $filter["clientCategory"], "%s");
 
     if ($filter["clientName"]) {
       $sql[] = prepare("(clientName LIKE '%%%s%%')",$filter["clientName"]);

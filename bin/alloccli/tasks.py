@@ -41,13 +41,13 @@ class tasks(alloc):
     if o['order']: order = o['order']
 
     # Get personID, either assignee or logged in user
-    personID = ''
+    personID = []
     if o['assignee'].lower() == 'null':
-      personID = 'NULL'
+      personID.append('')
     elif not o['assignee']:
-      personID = self.get_my_personID()
+      personID.append(self.get_my_personID())
     elif o['assignee'] != 'all':
-      personID = self.person_to_personID(o['assignee'])
+      personID.append(self.person_to_personID(o['assignee']))
 
     managerID = ''
     if o['manager']:
@@ -85,7 +85,7 @@ class tasks(alloc):
     ops["showTimes"] = True
     o["status"] = o["status"] or "open"
     ops['taskStatus'] = o['status'].split(',')
-    ops['taskTypeID'] = o['type'].split(',')
+    if o['type']: ops['taskTypeID'] = o['type'].split(',')
 
     # Get a taskID either passed via command line, or figured out from a task name
     if self.is_num(o['task']):

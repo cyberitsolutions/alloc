@@ -416,37 +416,20 @@ class productSale extends db_entity {
       is_array($filter["productSaleID"]) or $filter["productSaleID"][] = -1;
     }
 
-    // Filter oproductSaleID
-    if ($filter["productSaleID"] && is_array($filter["productSaleID"])) {
-      $sql[] = prepare("(productSale.productSaleID in (%s))",$filter["productSaleID"]);
-    } else if ($filter["productSaleID"]) {     
-      $sql[] = prepare("(productSale.productSaleID = %d)", $filter["productSaleID"]);
-    }
+    // Filter productSaleID
+    $filter["productSaleID"] and $sql[] = db::sql_ids("productSale.productSaleID", $filter["productSaleID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["productSaleID"] || $filter["starred"]) {
       return $sql;
     }
 
-    if ($filter["projectID"]) {
-      $sql[] = prepare("(productSale.projectID = %d)",$filter["projectID"]);
-    }
-    if ($filter["clientID"]) {
-      $sql[] = prepare("(productSale.clientID = %d)",$filter["clientID"]);
-    }
-    if ($filter["personID"]) {
-      $sql[] = prepare("(productSale.personID = %d)",$filter["personID"]);
+    $id_fields = array("clientID","projectID","personID","tfID","productSaleCreatedUser","productSaleModifiedUser");
+    foreach($id_fields as $f) {
+      $filter[$f] and $sql[] = db::sql_ids("productSale.".$f, $filter[$f]);
     }
 
-    if (is_array($filter['status'])) {
-      $statusArray = $filter['status'];
-    } else {
-      $statusArray[] = $filter['status'];
-    }
-    foreach ((array)$statusArray as $status) {
-      $status and $subsql[] = prepare("(productSale.status = '%s')",$status);
-    }
-    $subsql and $sql[] = '('.implode(" OR ",$subsql).')';
+    $filter["status"] and $sql[] = db::sql_ids("productSale.status", $filter["status"], "%s");
     
     return $sql;
   }
