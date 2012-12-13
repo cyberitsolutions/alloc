@@ -526,8 +526,9 @@ class productSale extends db_entity {
     return array("return"                         => "[MANDATORY] eg: array | html"
                 ,"productSaleID"                  => "Sale that has this ID"
                 ,"starred"                        => "Sale that have been starred"
+                ,"clientID"                       => "Sales that belong to this Client"
                 ,"projectID"                      => "Sales that belong to this Project"
-                ,"personID"                       => "Saless for this person"
+                ,"personID"                       => "Sales for this person"
                 ,"status"                         => "Sale status eg: edit | allocate | admin | finished"
                 ,"url_form_action"                => "The submit action for the filter form"
                 ,"form_name"                      => "The name of this form, i.e. a handle for referring to this saved form"
@@ -591,6 +592,13 @@ class productSale extends db_entity {
 
     // display the date from filter value
     $rtn["showAllProjects"] = $_FORM["showAllProjects"];
+
+ 
+    $options["clientStatus"] = array("Current","Potential");
+    $options["return"] = "dropdown_options";
+    $ops = client::get_list($options);
+    $ops = array_kv($ops,"clientID","clientName");
+    $rtn["clientOptions"] = page::select_options($ops,$_FORM["clientID"]);
 
     // Get
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
