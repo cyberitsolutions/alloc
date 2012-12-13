@@ -1239,6 +1239,7 @@ class task extends db_entity {
                 ,"applyFilter"          => "Saves this filter as the persons preference"
                 ,"padding"              => "Initial indentation level (useful for byProject lists)"
                 ,"url_form_action"      => "The submit action for the filter form"
+                ,"hide_field_options"   => "Hide the filter's field's panel."
                 ,"form_name"            => "The name of this form, i.e. a handle for referring to this saved form"
                 ,"dontSave"             => "Specify that the filter preferences should not be saved this time"
                 ,"skipObject"           => "Services coming over SOAP should set this true to minimize the amount of bandwidth"
@@ -1324,6 +1325,7 @@ class task extends db_entity {
 
     // Load up the forms action url
     $rtn["url_form_action"] = $_FORM["url_form_action"];
+    $rtn["hide_field_options"] = $_FORM["hide_field_options"];
 
     //time Load up the filter bits
     has("project") and $rtn["projectOptions"] = project::get_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
