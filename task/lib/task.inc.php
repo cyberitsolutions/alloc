@@ -1331,12 +1331,10 @@ class task extends db_entity {
     has("project") and $rtn["projectOptions"] = project::get_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
 
     $_FORM["projectType"] and $rtn["projectType_checked"][$_FORM["projectType"]] = " checked"; 
-
-    $rtn["personOptions"] = page::select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
-
+    $ops = array(""=>"Nobody");
+    $rtn["personOptions"] = page::select_options($ops+person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
+    $rtn["managerPersonOptions"] = page::select_options($ops+person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
     $rtn["creatorPersonOptions"] = page::select_options(person::get_username_list($_FORM["creatorID"]), $_FORM["creatorID"]);
-
-    $rtn["managerPersonOptions"] = page::select_options(person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
 
     $taskType = new meta("taskType");
     $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeID");
