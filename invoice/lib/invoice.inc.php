@@ -403,24 +403,20 @@ class invoice extends db_entity {
       is_array($filter["invoiceID"]) or $filter["invoiceID"][] = -1;
     }
 
-    // Filter oinvoiceID
-    if ($filter["invoiceID"] && is_array($filter["invoiceID"])) {
-      $sql[] = prepare("(invoice.invoiceID in (%s))",$filter["invoiceID"]);
-    } else if ($filter["invoiceID"]) {     
-      $sql[] = prepare("(invoice.invoiceID = %d)", $filter["invoiceID"]);
-    }
+    // Filter invoiceID
+    $filter["invoiceID"] and $sql[] = db::sql_ids("invoice.invoiceID",$filter["invoiceID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["invoiceID"] || $filter["starred"]) {
       return $sql;
     }
 
-    $filter["clientID"]      and $sql[] = prepare("(invoice.clientID = %d)",$filter["clientID"]);
     $filter["invoiceNum"]    and $sql[] = prepare("(invoice.invoiceNum = %d)",$filter["invoiceNum"]);
     $filter["dateOne"]       and $sql[] = prepare("(invoice.invoiceDateFrom>='%s')",$filter["dateOne"]);
     $filter["dateTwo"]       and $sql[] = prepare("(invoice.invoiceDateTo<='%s')",$filter["dateTwo"]);
     $filter["invoiceName"]   and $sql[] = prepare("(invoice.invoiceName like '%%%s%%')",$filter["invoiceName"]);
-    $filter["invoiceStatus"] and $sql[] = prepare("(invoice.invoiceStatus = '%s')",$filter["invoiceStatus"]);
+    $filter["invoiceStatus"] and $sql[] = db::sql_ids("invoice.invoiceStatus",$filter["invoiceStatus"]);
+    $filter["clientID"]      and $sql[] = db::sql_ids("invoice.clientID",$filter["clientID"]);
     return $sql;
   }
 

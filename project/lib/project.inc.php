@@ -173,7 +173,7 @@ class project extends db_entity {
     $current_user = &singleton("current_user");
     $person or $person = $current_user;
     if (is_object($person)) {
-      $permissions and $p = " AND ppr.roleHandle in ('".esc_implode("','",$permissions,"%s")."')";
+      $permissions and $p = " AND ppr.roleHandle in (".db::esc_implode($permissions,"%s").")";
 
       $query = prepare("SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
                           FROM projectPerson pp 
@@ -400,11 +400,7 @@ class project extends db_entity {
     }
 
     // Filter oprojectID
-    if ($filter["projectID"] && is_array($filter["projectID"])) {
-      $sql[] = prepare("(project.projectID in (%s))",$filter["projectID"]);
-    } else if ($filter["projectID"]) {     
-      $sql[] = prepare("(project.projectID = %d)", $filter["projectID"]);
-    }
+    $filter["projectID"] and $sql[] = db::sql_ids("project.projectID",$filter["projectID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["projectID"] || $filter["starred"]) {
@@ -414,9 +410,9 @@ class project extends db_entity {
     if ($filter["clientID"]) {
       $sql[] = prepare("(project.clientID = %d)", $filter["clientID"]);
     }
-    if ($filter["personID"]) {
-      $sql[] = prepare("(projectPerson.personID = %d)", $filter["personID"]);
-    }
+    $filter["personID"]      and $sql[] = db::sql_ids("projectPerson.personID",$filter["personID"]);
+    $filter["projectStatus"] and $sql[] = db::sql_ids("project.projectStatus",$filter["projectStatus"]);
+    $filter["projectType"]   and $sql[] = db::sql_ids("project.projectType",$filter["projectType"]);
     if ($filter["projectName"]) {
       $sql[] = prepare("(project.projectName LIKE '%%%s%%')", $filter["projectName"]);
     }
@@ -426,12 +422,6 @@ class project extends db_entity {
     if ($filter["projectNameMatches"]) {
       $sql[] = prepare("(project.projectName LIKE '%%%s%%' OR project.projectShortName LIKE '%%%s%%')"
                       ,$filter["projectNameMatches"],$filter["projectNameMatches"]);
-    }
-    if ($filter["projectStatus"]) {
-      $sql[] = prepare("(project.projectStatus = '%s')", $filter["projectStatus"]);
-    }
-    if ($filter["projectType"]) {
-      $sql[] = prepare("(project.projectType = '%s')", $filter["projectType"]);
     }
 
     return $sql;
@@ -538,8 +528,7 @@ class project extends db_entity {
     global $TPL;
     $current_user = &singleton("current_user");
 
-    $personSelect= "<select name=\"personID\">";
-    $personSelect.= "<option value=\"\"> ";
+    $personSelect= "<select name=\"personID[]\" multiple=\"true\">";
     $personSelect.= page::select_options(person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
     $personSelect.= "</select>";
 

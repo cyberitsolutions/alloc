@@ -9,8 +9,8 @@
     <!--      <td rowspan="2">{page::help("projectListFilter")}</td> -->
         </tr>
         <tr>
-          <td><select name="projectStatus"><option value=""> {$projectStatusOptions}</select></td>
-          <td><select name="projectType"><option value=""> {$projectTypeOptions}</select></td>
+          <td><select name="projectStatus[]" multiple="true">{$projectStatusOptions}</select></td>
+          <td><select name="projectType[]" multiple="true">{$projectTypeOptions}</select></td>
           <td>{$personSelect}</td>
           <td><input type="text" name="projectName" value="{$projectName}"></td>
           <td><button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button></td>

@@ -448,12 +448,8 @@ class timeSheet extends db_entity {
       is_array($filter["timeSheetID"]) or $filter["timeSheetID"][] = -1;
     }
 
-    // Filter otimeSheetID
-    if ($filter["timeSheetID"] && is_array($filter["timeSheetID"])) {
-      $sql[] = prepare("(timeSheet.timeSheetID in (%s))",$filter["timeSheetID"]);
-    } else if ($filter["timeSheetID"]) {     
-      $sql[] = prepare("(timeSheet.timeSheetID = %d)", $filter["timeSheetID"]);
-    }
+    // Filter timeSheetID
+    $filter["timeSheetID"] and $sql[] = db::sql_ids("timeSheet.timeSheetID",$filter["timeSheetID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["timeSheetID"] || $filter["starred"]) {
@@ -463,17 +459,11 @@ class timeSheet extends db_entity {
     if ($filter["tfID"]) {
       $sql[] = prepare("(timeSheet.recipient_tfID = %d)", $filter["tfID"]);
     }
-    if ($filter["projectID"] && is_array($filter["projectID"])) {
-      $sql[] = prepare("(timeSheet.projectID in (%s))",$filter["projectID"]);
-    } else if ($filter["projectID"]) {
-      $sql[] = prepare("(timeSheet.projectID = %d)", $filter["projectID"]);
-    }
+    $filter["projectID"] and $sql[] = db::sql_ids("timeSheet.projectID",$filter["projectID"]);
     if ($filter["taskID"]) {
       $sql[] = prepare("(timeSheetItem.taskID = %d)", $filter["taskID"]);
     }
-    if ($filter["personID"]) {
-      $sql[] = prepare("(timeSheet.personID = %d)", $filter["personID"]);
-    }
+    $filter["personID"] and $sql[] = db::sql_ids("timeSheet.personID",$filter["personID"]);
     if ($filter["status"]) { 
       if (is_array($filter["status"]) && count($filter["status"])) {
         foreach ($filter["status"] as $s) {
@@ -493,9 +483,9 @@ class timeSheet extends db_entity {
     }
 
     if ($rejected) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR timeSheet.status in ('".esc_implode("','",$statuses,"%s")."'))");
+      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR timeSheet.status in (".db::esc_implode($statuses,"%s")."))");
     } else if ($statuses) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND timeSheet.status in ('".esc_implode("','",$statuses,"%s")."'))");
+      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND timeSheet.status in (".db::esc_implode($statuses,"%s")."))");
     }
 
     if ($filter["dateFrom"]) {

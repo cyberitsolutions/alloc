@@ -722,11 +722,7 @@ class task extends db_entity {
     }
 
     // Filter on taskID
-    if ($filter["taskID"] && is_array($filter["taskID"])) {
-      $sql[] = prepare("(task.taskID in (%s))",$filter["taskID"]);
-    } else if ($filter["taskID"]) {     
-      $sql[] = prepare("(task.taskID = %d)", $filter["taskID"]);
-    }
+    $filter["taskID"] and $sql[] = db::sql_ids("task.taskID",$filter["taskID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["taskID"]) {
@@ -788,20 +784,7 @@ class task extends db_entity {
 
     // Task status filtering
     $filter["taskStatus"] and $sql[] = task::get_taskStatus_sql($filter["taskStatus"]);
-
-    // Unset if they've only selected the topmost empty task type
-    if (is_array($filter["taskTypeID"]) && count($filter["taskTypeID"])>=1 && !$filter["taskTypeID"][0]) {
-      unset($filter["taskTypeID"][0]);
-    }
-
-    // If many create an SQL taskTypeID in (set) 
-    if (is_array($filter["taskTypeID"]) && count($filter["taskTypeID"])) {
-      $sql[] = "(task.taskTypeID in ('".esc_implode("','",$filter["taskTypeID"],"%s")."'))";
-    
-    // Else if only one taskTypeID
-    } else if ($filter["taskTypeID"]) {
-      $sql[] = prepare("(task.taskTypeID = '%s')",$filter["taskTypeID"]);
-    }
+    $filter["taskTypeID"] and $sql[] = db::sql_ids("task.taskTypeID",$filter["taskTypeID"],"%s");
 
     // Filter on %taskName%
     if ($filter["taskName"]) {     
@@ -809,26 +792,9 @@ class task extends db_entity {
     }
 
     // If personID filter
-    if ($filter["personID"] == "NULL") {
-      $sql["personID"] = "(task.personID IS NULL)";
-    } else if ($filter["personID"] && is_array($filter["personID"])) {
-      $sql["personID"] = prepare("(task.personID in (%s))",$filter["personID"]);
-    } else if ($filter["personID"]) {
-      $sql["personID"] = prepare("(task.personID = %d)",$filter["personID"]);
-    }
-
-    // If creatorID filter
-    if ($filter["creatorID"] && is_array($filter["creatorID"])) {
-      $sql["creatorID"] = prepare("(task.creatorID in (%s))",$filter["creatorID"]);
-    } else if ($filter["creatorID"]) {
-      $sql["creatorID"] = prepare("(task.creatorID = %d)",$filter["creatorID"]);
-    }
-    // If managerID filter
-    if ($filter["managerID"] && is_array($filter["managerID"])) {
-      $sql["managerID"] = prepare("(task.managerID in (%s))",$filter["managerID"]);
-    } else if ($filter["managerID"]) {
-      $sql["managerID"] = prepare("(task.managerID = %d)",$filter["managerID"]);
-    }
+    $filter["personID"]  and $sql["personID"]  = db::sql_ids("task.personID", $filter["personID"]);
+    $filter["creatorID"] and $sql["creatorID"] = db::sql_ids("task.creatorID",$filter["creatorID"]);
+    $filter["managerID"] and $sql["managerID"] = db::sql_ids("task.managerID",$filter["managerID"]);
 
     // These filters are for the time sheet dropdown list
     if ($filter["taskTimeSheetStatus"] == "open") {

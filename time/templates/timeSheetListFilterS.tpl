@@ -2,7 +2,7 @@
 // Make the XML request thing, specify the callback function 
 function refreshProjectList(show_all) {
   url = '{$url_alloc_updateTimeSheetProjectList}'+(!show_all.checked?'current=true':'');
-  makeAjaxRequest(url,'projectDropdown');
+  makeAjaxRequest(url,'projectDropdown',{  },1);
 }
 </script>
 
@@ -17,8 +17,7 @@ function refreshProjectList(show_all) {
         </tr>
         <tr>
            <td>
-            <select name="personID">
-              <option value="">
+            <select name="personID[]" multiple="true">
               {$show_userID_options}
             </select>
           </td>
@@ -32,8 +31,7 @@ function refreshProjectList(show_all) {
         <tr>
           <td colspan="3">
             <span id="projectDropdown">
-            <select name="projectID">
-              <option value=""> </option>
+            <select name="projectID[]" multiple="true" style="width:100%">
               {$show_project_options}
             </select>
             </span>

@@ -842,19 +842,6 @@ function alloc_error($str="",$force=null) {
     exit(1); // exit status matters to pipeEmail.php
   }
 }
-function esc_implode($str,$arr,$fmt="%d") {
-  foreach ((array)$arr as $v) {
-    $out[] = db_esc(sprintf($fmt,$v));
-  }
-  $rtn = implode($str,(array)$out);
-  if ($rtn == '') {
-    // this stops problems like
-    // "WHERE field IN ()"   -> parse error
-    // "WHERE field IN ('')" -> ok
-    $rtn = "''"; 
-  }
-  return $rtn;
-}
 function prepare() {
   $args = func_get_args();
 
@@ -869,9 +856,9 @@ function prepare() {
   // The rest of $args are escaped and then assigned to $clean_args
   foreach ($args as $arg) {
     if (is_array($arg)) {
-      $clean_args[] = esc_implode(",",$arg);
+      $clean_args[] = db::esc_implode($arg);
     } else {
-      $clean_args[] = db_esc($arg);
+      $clean_args[] = db::esc($arg);
     }
   }
 
