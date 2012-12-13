@@ -5,7 +5,7 @@
     <td>{page::expand_link("project_superset","Projects")}</td>
     <td>Created By</td> 
     <td rowspan="6" valign="top" colspan="3" class="right">
-    
+      {if !$hide_field_options}
       <table align="right">
         <tr>
           <td align="right"><label for="showDescription" class="nobr">Desc &amp; Comments</label></td>
@@ -31,14 +31,14 @@
           <td align="right"><label for="showDateStatus" class="nobr">Date Status</label></td>
           <td><input type="checkbox" id="showDateStatus" name="showDateStatus"{$showDateStatus_checked}></td>
         </tr>
-	<tr>
+        <tr>
           <td align="right"><label for="showPriority" class="nobr">Priority Info</label></td>
           <td><input type="checkbox" id="showPriority" name="showPriority"{$showPriority_checked}></td>
           <td align="right"><label for="showProject" class="nobr">Project</label></td>
-	  <td><input type="checkbox" id="showProject" name="showProject"{$showProject_checked}></td>
+          <td><input type="checkbox" id="showProject" name="showProject"{$showProject_checked}></td>
         </tr>
       </table>
-    
+      {/}
     </td>
   </tr>
   <tr>
