@@ -205,15 +205,25 @@ class productSale extends db_entity {
 
     if ($this->get_value("clientID")) {
       $c = $this->get_foreign_object("client");
-      $taskDesc[] = "Client: ".$c->get_name();
+      $extra = " for ".$c->get_value("clientName");
       $taskDesc[] = "";
     }
+
+    $taskname1 = "Sale ".$this->get_id().": raise an invoice".$extra;
+    $taskname2 = "Sale ".$this->get_id().": place an order to the supplier";
+    $taskname3 = "Sale ".$this->get_id().": pay the supplier";
+    $taskname4 = "Sale ".$this->get_id().": deliver the goods / action the work";
+    $cyberadmin = 59;
+
+
     $taskDesc[] = "Sale items:";
     $taskDesc[] = "";
     foreach((array)$this->get_productSaleItems() as $psiID => $psi_row) {
       $p = new product();
       $p->set_id($psi_row["productID"]);
-      $taskDesc[] = "  * ".$p->get_name();
+      $taskDesc[] = "  * ".$psi_row["quantity"]." x "
+                    .page::money($psi_row["sellPriceCurrencyTypeID"],$psi_row["sellPrice"],"%S%mo")
+                    ." ".$p->get_name();
       $hasItems = true;
     }
 
@@ -221,8 +231,14 @@ class productSale extends db_entity {
       return alloc_error("No sale items have been added.");
     }
 
+    $amounts = $this->get_amounts();
     $taskDesc[] = "";
-    $taskDesc[] = "Refer to the sale in alloc for up-to-date information.";
+    $taskDesc[] = "Total: ".$amounts["total_sellPrice"];
+    $taskDesc[] = "Total inc ".config::get_config_item("taxName").": ".$amounts["total_sellPrice_plus_gst"];
+    $taskDesc[] = "";
+    $taskDesc[] = "Refer to the sale in alloc for up-to-date information:";
+    $taskDesc[] = config::get_config_item("allocURL")."sale/productSale.php?productSaleID=".$this->get_id();
+
     $taskDesc = implode("\n",$taskDesc);
 
     if ($status == "edit") {
@@ -242,12 +258,11 @@ class productSale extends db_entity {
       $this->set_value("status", "admin");
 
       // 1. from salesperson to admin
-      $name = "Sale ".$this->get_id().": raise an invoice";
-      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,$name);
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$cyberadmin,$taskname1);
       if (config::for_cyber() && !$db->qr($q)) {
         $task = new task();
-        $task->set_value("projectID",59); // Cyber Admin Project
-        $task->set_value("taskName",$name);
+        $task->set_value("projectID",$cyberadmin); // Cyber Admin Project
+        $task->set_value("taskName",$taskname1);
         $task->set_value("managerID",$this->get_value("personID")); // salesperson
         $task->set_value("personID",67); // Cyber Support people (jane)
         $task->set_value("priority",3);
@@ -267,7 +282,7 @@ class productSale extends db_entity {
         $recipients[$p1->get_value("emailAddress")] = array("name"=>$p1->get_name(),"addIP"=>true,"internal"=>true);
         $recipients[$p2->get_value("emailAddress")] = array("name"=>$p2->get_name(),"addIP"=>true,"internal"=>true);
 
-        $comment = $p2->get_name().",\n\n".$name."\n\n".$taskDesc;
+        $comment = $p2->get_name().",\n\n".$taskname1."\n\n".$taskDesc;
         $commentID = comment::add_comment("task", $task->get_id(), $comment, "task", $task->get_id());
         $emailRecipients = comment::add_interested_parties($commentID, null, $recipients);
 
@@ -295,12 +310,11 @@ class productSale extends db_entity {
       }
 
       // 2. from admin to salesperson
-      $name = "Sale ".$this->get_id().": place an order to the supplier";
-      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,$name);
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$cyberadmin,$taskname2);
       if (config::for_cyber() && !$db->qr($q)) {
         $task = new task();
-        $task->set_value("projectID",59); // Cyber Admin Project
-        $task->set_value("taskName",$name);
+        $task->set_value("projectID",$cyberadmin); // Cyber Admin Project
+        $task->set_value("taskName",$taskname2);
         $task->set_value("managerID",67); // Cyber Support people (jane)
         $task->set_value("personID",$this->get_value("personID")); // salesperson
         $task->set_value("priority",3);
@@ -311,7 +325,7 @@ class productSale extends db_entity {
         $task->save();
 
         $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'"
-                    ,59,"Sale ".$this->get_id().": raise an invoice");
+                    ,$cyberadmin,$taskname1);
         $rai_row = $db->qr($q);
         if ($rai_row) {
           $task->add_pending_tasks($rai_row["taskID"]);
@@ -320,17 +334,16 @@ class productSale extends db_entity {
         $order_the_hardware_taskID = $task->get_id();
         $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
 
-        $task->add_notification(3,1,"Task ".$task->get_id()." ".$name,"Task status moved from pending to open."
+        $task->add_notification(3,1,"Task ".$task->get_id()." ".$taskname2,"Task status moved from pending to open."
                                ,array(array("field"=>"metaPersonID","who"=>-2)));
       }
 
       // 3. from salesperson to admin
-      $name = "Sale ".$this->get_id().": pay the supplier";
-      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,$name);
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$cyberadmin,$taskname3);
       if (config::for_cyber() && !$db->qr($q)) {
         $task = new task();
-        $task->set_value("projectID",59); // Cyber Admin Project
-        $task->set_value("taskName",$name);
+        $task->set_value("projectID",$cyberadmin); // Cyber Admin Project
+        $task->set_value("taskName",$taskname3);
         $task->set_value("managerID",$this->get_value("personID")); // salesperson
         $task->set_value("personID",67); // Cyber Support people (jane)
         $task->set_value("priority",3);
@@ -343,17 +356,16 @@ class productSale extends db_entity {
         $pay_the_supplier_taskID = $task->get_id();
         $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
 
-        $task->add_notification(3,1,"Task ".$task->get_id()." ".$name,"Task status moved from pending to open."
+        $task->add_notification(3,1,"Task ".$task->get_id()." ".$taskname3,"Task status moved from pending to open."
                                ,array(array("field"=>"metaPersonID","who"=>-2)));
       }
 
       // 4. from admin to salesperson
-      $name = "Sale ".$this->get_id().": deliver the goods / action the work";
-      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",59,$name);
+      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'",$cyberadmin,$taskname4);
       if (config::for_cyber() && !$db->qr($q)) {
         $task = new task();
-        $task->set_value("projectID",59); // Cyber Admin Project
-        $task->set_value("taskName",$name);
+        $task->set_value("projectID",$cyberadmin); // Cyber Admin Project
+        $task->set_value("taskName",$taskname4);
         $task->set_value("managerID",67); // Cyber Support people
         $task->set_value("personID",$this->get_value("personID")); // salesperson
         $task->set_value("priority",3);
@@ -365,7 +377,7 @@ class productSale extends db_entity {
         $task->add_pending_tasks($pay_the_supplier_taskID);
         $TPL["message_good"][] = "Task created: ".$task->get_id()." ".$task->get_value("taskName");
 
-        $task->add_notification(3,1,"Task ".$task->get_id()." ".$name,"Task status moved from pending to open."
+        $task->add_notification(3,1,"Task ".$task->get_id()." ".$taskname4,"Task status moved from pending to open."
                                ,array(array("field"=>"metaPersonID","who"=>-2)));
       }
     }
