@@ -53,6 +53,16 @@ class productSale extends db_entity {
         $rtn[] = "Unable to save Product Sale, user does not have correct permissions.";
       }
     }
+
+    if ($this->get_value("extRef")) {
+      $q = prepare("SELECT productSaleID FROM productSale WHERE productSaleID != %d AND extRef = '%s'"
+                   ,$this->get_id(),$this->get_value("extRef"));
+      $db = new db_alloc();
+      if ($r = $db->qr($q)) {
+        $rtn[] = "Unable to save Product Sale, this external reference number is used in Sale ".$r["productSaleID"];
+      }
+    }
+
     return parent::validate($rtn);
   }
  
