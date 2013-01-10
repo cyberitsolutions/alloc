@@ -73,6 +73,7 @@ class calendar {
                         FROM reminder
                         JOIN reminderRecipient ON reminderRecipient.reminderID = reminder.reminderID
                        WHERE personID = %d
+                         AND (reminderRecuringInterval = 'No' OR (reminderRecuringInterval != 'No' AND reminderActive))
                        GROUP BY reminder.reminderID", $this->person->get_id());
     $this->db->query($query);
     $reminders = array();
