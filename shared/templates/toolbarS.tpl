@@ -5,7 +5,7 @@
          {echo config::get_config_logo()}
         </td>
         <td class="nobr bottom" style="width:1%;">
-          <form action="{$url_alloc_menuSubmit}" method="post" id="form_search">
+          <form action="{$url_alloc_menuSubmit}" method="get" id="form_search">
             <select name="search_action" id="search_action" style="width:9em;">
               {$category_options}
               <option value="" disabled="disabled">--------------------
