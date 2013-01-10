@@ -160,6 +160,9 @@ class page {
     $search  = array("&lt;br&gt;","&lt;br /&gt;","&lt;b&gt;","&lt;/b&gt;","&lt;u&gt;","&lt;/u&gt;",'\\');
     $replace = array("<br>"      ,"<br />"      ,"<b>"      ,"</b>"      ,"<u>"      ,"</u>"      ,'');
 
+    $class_to_icon["good"] = "icon-ok-sign";
+    $class_to_icon["bad"] = "icon-exclamation-sign";
+    $class_to_icon["help"] = "icon-info-sign";
 
     if (is_array($arr) && count($arr)) {
       $str = "<div style=\"text-align:center;\"><div class=\"message corner\" style=\"width:60%;\">";
@@ -171,8 +174,10 @@ class page {
         $type != "message_help_no_esc" and $info = page::htmlentities($info);
         $type != "message_help_no_esc" and $info = str_replace($search,$replace,$info);
 
-        $str.= "<tr><td width=\"1%\" style=\"vertical-align:top;padding:6px;\"><img src=\"".$TPL["url_alloc_images"]."icon_message_".$class.".png\" alt=\"$class\" /><td/>";
-        $str.= "<td class=\"".$class."\" align=\"left\" width=\"99%\">".$info."</td></tr>";
+        $str.= "<tr>";
+        $str.= "<td class='".$class."' width='1%' style='vertical-align:middle;padding:6px;font-size:150%;'>";
+        $str.= "<i class='".$class_to_icon[$class]."'></i><td/>";
+        $str.= "<td class='".$class."' width='99%' style='vertical-align:middle;text-align:left;font-weight:bold;'>".$info."</td></tr>";
       }
       $str.= "</table>";
       $str.= "</div></div>";
