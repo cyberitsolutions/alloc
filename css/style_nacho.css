@@ -380,7 +380,7 @@ hr {
   z-index:1000;
 }
 .bad { 
-  color:#c84e12; 
+  color:#e50d0d; 
   font-size:100%; 
 }
 .good { 
@@ -560,11 +560,11 @@ img.taskType {
 }
 
 .overdue { 
-  color: #c84e12; 
+  color: #e50d0d; 
 }
 .really_overdue { 
   font-weight:bold; 
-  color: #c84e12;
+  color: #e50d0d;
 }
 .behind-target { 
   color: #ccaa00; 
@@ -576,7 +576,7 @@ img.taskType {
   color: #666666; 
 }
 .transaction-rejected { 
-  color: #c84e12; 
+  color: #e50d0d; 
 }
 
 .highlighted { 
