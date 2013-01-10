@@ -107,32 +107,29 @@ $(document).ready(function() {
       </div>
       <div class="task_pane">
         <div class="enclose">
-          <h6>People<div>Status</div></h6>
+          <h6>Created By<div>Status</div></h6>
           <div style="float:left; width:47%;">
-            Created by <b>{=$task_createdBy}</b><br><span class="faint">{$task_dateCreated}</span>
-            {if $manager_username}
-            <br>
-            Managed by <b>{=$manager_username}</b>
-            {/}
-            {if $person_username}
-            <br>
-            Assigned to <b>{=$person_username}</b><br><span class="faint">{$task_dateAssigned}</span>
-            {/}
-            {if $task_closed_by}
-            <br>
-            Closed by <b>{=$task_closed_by}</b><br><span class="faint">{$task_closed_when}</span>
-            <br>
-            {/}
+            {=$task_createdBy}&nbsp;&nbsp; <span class="faint">{$task_dateCreated}</span>
           </div>
           <div style="float:right; width:50%;">
             {if $task_taskStatusLabel}
-              <span class="corner" style="display:block;width:10em;padding:5px;margin-top:8px;text-align:center;background-color:{$task_taskStatusColour};">
+              <span class="corner" style="display:block;width:10em;padding:5px;text-align:center;background-color:{$task_taskStatusColour};">
               {$task_taskStatusLabel}
               </span>
             {/}
           </div>
         </div>
-
+        {if $manager_username || $person_username}
+        <div class="enclose">
+          <h6>Managed By<div>Assigned To</div></h6>
+          <div style="float:left; width:47%;">
+            {=$manager_username}
+          </div>
+          <div style="float:right; width:50%;">
+            {=$person_username}&nbsp;&nbsp; <span class="faint">{$task_dateAssigned}</span>
+          </div>
+        </div>
+        {/}
         {if $interestedParties}
           <h6>Interested Parties</h6> 
           <table class="nopad" style="width:100%;">
@@ -261,11 +258,11 @@ $(document).ready(function() {
       </div>
       <div class="task_pane">
         <div class="enclose">
-          <h6>People<div>Status</div></h6>
+          <h6>Created By<div>Status</div></h6>
           <div style="float:left; width:47%;">
-            Managed By <div id="taskManagerPersonList" style="display:inline">{$managerPersonOptions}</div>
-            <br><br>
-            Assigned To <div id="taskPersonList" style="display:inline">{$personOptions}</div>
+            {if $task_createdBy}
+            {=$task_createdBy}&nbsp;&nbsp; <span class="faint">{$task_dateCreated}</span>
+            {/}
           </div>
           <div style="float:right; width:50%; text-align:left;">
             <select name="taskStatus" id="taskStatus">
@@ -283,6 +280,16 @@ $(document).ready(function() {
               {page::calendar("reopen_task",$reopen_task)}
               {page::help("task_reopen_task")}
             </div>
+          </div>
+        </div>
+
+        <div class="enclose">
+          <h6>Managed By<div>Assigned To</div></h6>
+          <div style="float:left; width:47%;">
+            <div id="taskManagerPersonList" style="display:inline">{$managerPersonOptions}</div>
+          </div>
+          <div style="float:right; width:50%; text-align:left;">
+            <div id="taskPersonList" style="display:inline">{$personOptions}</div>
           </div>
         </div>
 
