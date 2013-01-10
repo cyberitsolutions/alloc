@@ -344,29 +344,18 @@ function move_attachment($entity, $id=false) {
 
     foreach ($files as $file) {
 
-  #    print_r($file);
-  
       if (is_uploaded_file($file["tmp_name"])) {
 
         $dir = ATTACHMENTS_DIR.$entity.DIRECTORY_SEPARATOR.$id;
         if (!is_dir($dir)) {
           mkdir($dir, 0777);
         }
-        $newname = $file["name"];
-        $newname = str_replace("/","",$newname);
+        $newname = basename($file["name"]);
 
-        while (preg_match("/\.\./",$newname)) {
-          $newname = str_replace("..",".",$newname);
-        }
-
-        if (!preg_match("/\.\./",$entity) && !preg_match("/\//",$entity)) {
-          if (!move_uploaded_file($file["tmp_name"], $dir.DIRECTORY_SEPARATOR.$newname)) {
-            alloc_error("Could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
-          } else {
-            chmod($dir.DIRECTORY_SEPARATOR.$newname, 0777);
-          }
+        if (!move_uploaded_file($file["tmp_name"], $dir.DIRECTORY_SEPARATOR.$newname)) {
+          alloc_error("Could not move attachment to: ".$dir.DIRECTORY_SEPARATOR.$newname);
         } else {
-          alloc_error("Error uploading file. Bad filename.");
+          chmod($dir.DIRECTORY_SEPARATOR.$newname, 0777);
         }
   
       } else {
@@ -381,13 +370,13 @@ function move_attachment($entity, $id=false) {
             alloc_error("The file you are trying to upload is too big(2).");
             break;
           case 3: 
-            echo "The file you are trying upload was only partially uploaded.";
+            alloc_error("The file you are trying upload was only partially uploaded.");
             break;
           case 4: 
-            echo "You must select a file for upload.";
+            alloc_error("You must select a file for upload.");
             break;
           default: 
-            echo "There was a problem with your upload.";
+            alloc_error("There was a problem with your upload.");
             break;
         } 
       }
