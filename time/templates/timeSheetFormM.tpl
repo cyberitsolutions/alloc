@@ -89,7 +89,7 @@
 	  <td>&nbsp;</td>
     <td align="right">Period:</td>
     <td><nobr>{$period}</nobr></td>
-    <td align="right">Date Submitted to Admin:</td>
+    <td align="right">Date Submitted to Administrator:</td>
     <td>{$timeSheet_dateSubmittedToAdmin}</td>
 	</tr>
 
@@ -97,7 +97,7 @@
     <td>{page::help("timesheet_add_invoice")}</td>
     <td align="right" valign="top">Attached to Invoice:</td>
     <td class="nobr">{$attach_to_invoice_button}{$invoice_link} {$amount_allocated_label} <b>{$amount_used}{$amount_allocated}</b></td>
-    <td align="right">Approved by Admin:</td> 
+    <td align="right">Approved by Administrator:</td> 
     <td>{$timeSheet_approvedByAdminPersonID_username}</td>
   </tr>
 
@@ -122,7 +122,7 @@
         </tr>
         <tr>
           <td width="1%">{page::help("timesheet_buttons")}</td>
-          <td align="center">{$timeSheet_ChangeStatusButton}<br><br>{$timeSheet_status_text}</td>
+          <td align="center">{$timeSheet_ChangeStatusButton}<br><br>{if $timeSheet_timeSheetID}{$timeSheet_status_text}{/}</td>
           <td>&nbsp;</td>
         </tr>
       </table>
