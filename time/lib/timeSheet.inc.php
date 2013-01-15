@@ -83,9 +83,8 @@ class timeSheet extends db_entity {
   }
 
   function get_timeSheet_statii() {
-    return array("create"    => "Create"
-                ,"edit"      => "Add Time"
-                ,"manager"   => "Project Manager"
+    return array("edit"      => "Add Time"
+                ,"manager"   => "Manager"
                 ,"admin"     => "Administrator"
                 ,"invoiced"  => "Invoice"
                 ,"finished"  => "Completed"
