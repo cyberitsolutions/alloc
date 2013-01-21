@@ -474,6 +474,19 @@ CREATE TABLE timeSheetItem (
   timeSheetItemModifiedUser integer DEFAULT NULL
 ) ;
 
+CREATE TABLE tsiHint (
+  tsiHintID serial PRIMARY KEY,
+  date date default NULL,
+  duration decimal(9,2) default '0.00',
+  personID integer NOT NULL,
+  taskID integer default NULL,
+  comment text,
+  tsiHintCreatedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
+  tsiHintCreatedUser integer default NULL,
+  tsiHintModifiedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
+  tsiHintModifiedUser integer DEFAULT NULL
+) ;
+
 CREATE TABLE timeUnit (
   timeUnitID serial PRIMARY KEY,
   timeUnitName varchar(30) default NULL,

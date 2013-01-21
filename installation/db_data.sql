@@ -402,6 +402,8 @@ VALUES
 ,('timeSheetItem'            ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 ,('timeSheetItem'            ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 
+,('tsiHint'                  ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
+
 ,('token'                    ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 ,('tokenAction'              ,0  ,''         ,NULL ,1          ,NULL)
 

@@ -248,23 +248,27 @@
 
 
       <div class="edit">
-        <h6>Private Mode<div></div></h6> 
+        <h6>Private Mode<div>New Time Sheet Item Hint</div></h6> 
         <div style="float:left; width:30%;">
           <input type="hidden" name="form_on_person_page" value="1">
           <select name="privateMode">{page::select_options(array(0=>"No",1=>"Yes"),$privateMode)}</select>
           {page::help("<b>Private Mode</b><br><br>Prevent someone who is standing over your shoulder from seeing financial amounts on the homepage.")}
         </div>
-        <div style="float:right; width:50%;" class="right">
+        <div style="float:right; width:50%;">
+          <select name="showNewTsiHintItem">{page::select_options(array(0=>"No",1=>"Yes"),$showNewTsiHintItem)}</select>
+          {page::help("<b>Show New Time Sheet Item Hint</b><br><br>Show the new time sheet item hint input on the homepage.")}
+          &nbsp;&nbsp;&nbsp;
           <a href="" onClick="return toggle_view_edit(true);">Cancel edit</a>&nbsp;&nbsp;
           <button type="submit" name="customize_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         </div>
       </div>
       <div class="view">
-        <h6>Private Mode<div></div></h6> 
+        <h6>Private Mode<div>New Time Sheet Item Hint</div></h6> 
         <div style="float:left; width:30%;">
           {print $privateMode ? "Yes" : "No"}&nbsp;
         </div>
-        <div style="float:right; width:50%;" class="right">
+        <div style="float:right; width:50%;">
+          {print $showNewTsiHintItem ? "Yes" : "No"}&nbsp;&nbsp;&nbsp;
           <button type="button" onClick="toggle_view_edit();">Edit<i class="icon-edit"></i></button>
         </div>
       </div>

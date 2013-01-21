@@ -73,6 +73,7 @@ if ($_POST["customize_save"]) {
   isset($_POST["privateMode"]) || $_POST["form_on_person_page"] and $current_user->prefs["privateMode"] = $_POST["privateMode"];
   isset($_POST["showTimeSheetStats"]) and $current_user->prefs["showTimeSheetStats"] = sprintf("%d",$_POST["showTimeSheetStats"]);
   isset($_POST["showNewTimeSheetItem"]) and $current_user->prefs["showNewTimeSheetItem"] = sprintf("%d",$_POST["showNewTimeSheetItem"]);
+  isset($_POST["showNewTsiHintItem"]) and $current_user->prefs["showNewTsiHintItem"] = sprintf("%d",$_POST["showNewTsiHintItem"]);
 
   isset($_POST["timeSheetHoursWarn"]) and $current_user->prefs["timeSheetHoursWarn"] = $_POST["timeSheetHoursWarn"];
   isset($_POST["timeSheetDaysWarn"])  and $current_user->prefs["timeSheetDaysWarn"] = $_POST["timeSheetDaysWarn"];
@@ -81,9 +82,7 @@ if ($_POST["customize_save"]) {
 }
 
 if (isset($_POST["time_item"])) {
-
   $t = timeSheetItem::parse_time_string($_POST["time_item"]);
-
   if (is_numeric($t["duration"]) && $current_user->get_id()) {
     $timeSheet = new timeSheet();
     $tsi_row = $timeSheet->add_timeSheetItem($t);
@@ -93,6 +92,21 @@ if (isset($_POST["time_item"])) {
     alloc_error(print_r($t,1));
   }
 }
+
+if (isset($_POST["tsiHint_item"])) {
+  $t = tsiHint::parse_tsiHint_string($_POST["tsiHint_item"]);
+  if (is_numeric($t["duration"]) && $current_user->get_id()) {
+    $tsiHint = new tsiHint();
+    $tsi_row = $tsiHint->add_tsiHint($t);
+    alloc_redirect($TPL["url_alloc_home"]);
+  } else {
+    alloc_error("Time hint not added. No duration set.");
+    alloc_error(print_r($t,1));
+  }
+}
+
+
+
 
 customize_alloc_home_item::render();
 

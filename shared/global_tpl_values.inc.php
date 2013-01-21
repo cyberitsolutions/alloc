@@ -84,6 +84,7 @@ $alloc_urls = array(
             ,"url_alloc_timeSheetItem"                  => "time/timeSheetItem.php"
             ,"url_alloc_timeSheetPrint"                 => "time/timeSheetPrint.php"
             ,"url_alloc_timeSheetList"                  => "time/timeSheetList.php"
+            ,"url_alloc_updateTsiHintHome"              => "time/updateTsiHintHome.php"
             ,"url_alloc_updateTimeSheetHome"            => "time/updateTimeSheetHome.php"
             ,"url_alloc_updateTimeSheetTaskList"        => "time/updateTimeSheetTaskList.php"
             ,"url_alloc_updateTimeSheetProjectList"     => "time/updateProjectListByStatus.php"

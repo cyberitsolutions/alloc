@@ -20,10 +20,22 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
+class tsiHintHomeItem extends home_item {
 
-class time_module extends module {
-  var $module = "time";
-  var $db_entities = array("timeSheet", "timeSheetItem","timeUnit");
-  var $home_items = array("timeSheetHomeItem","tsiHintHomeItem","timeSheetListHomeItem","pendingApprovalTimeSheetListHomeItem","timeSheetStatusHomeItem","pendingAdminApprovalTimeSheetListHomeItem");
+  function __construct() {
+    $this->has_config = true;
+    parent::__construct("tsiHint_edit", "Time Sheet Item Hint", "time", "tsiHintH.tpl", "narrow", 25);
+  }
+
+  function visible() {
+    $current_user = &singleton("current_user");
+    return isset($current_user) && $current_user->have_role("manage")
+           && ($current_user->prefs["showNewTsiHintItem"] || !isset($current_user->prefs["showNewTsiHintItem"]));
+  }
+
+  function render() {
+    return true;
+  }
 }
+
 ?>
