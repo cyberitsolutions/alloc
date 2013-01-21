@@ -26,6 +26,8 @@ CREATE INDEX idx_tfPerson_tfID ON tfPerson (tfID);
 CREATE INDEX idx_timeSheetItem_timeSheetID ON timeSheetItem (timeSheetID);
 CREATE INDEX idx_taskID ON timeSheetItem (taskID);
 CREATE INDEX dateTimeSheetItem ON timeSheetItem (dateTimeSheetItem);
+CREATE INDEX idx_tsiHinttaskID ON tsiHint (taskID);
+CREATE INDEX idx_tsiHintDate ON tsiHint (date);
 CREATE INDEX idx_transaction_timeSheetID ON transaction (timeSheetID);
 CREATE INDEX idx_transaction_tfID ON transaction (tfID);
 CREATE INDEX idx_invoiceItemID ON transaction (invoiceItemID);
@@ -152,6 +154,8 @@ ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_personID FOREIGN KEY (per
 ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_taskID FOREIGN KEY (taskID) REFERENCES task (taskID);
 ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_timeSheetItemDurationUnitID FOREIGN KEY (timeSheetItemDurationUnitID) REFERENCES timeUnit (timeUnitID);
 ALTER TABLE timeSheetItem ADD CONSTRAINT timeSheetItem_multiplier FOREIGN KEY (multiplier) REFERENCES timeSheetItemMultiplier (timeSheetItemMultiplierID) ON UPDATE CASCADE;
+ALTER TABLE tsiHint ADD CONSTRAINT tsiHint_personID FOREIGN KEY (personID) REFERENCES person (personID);
+ALTER TABLE tsiHint ADD CONSTRAINT tsiHint_taskID FOREIGN KEY (taskID) REFERENCES task (taskID);
 ALTER TABLE token ADD CONSTRAINT token_tokenActionID FOREIGN KEY (tokenActionID) REFERENCES tokenAction (tokenActionID);
 ALTER TABLE token ADD CONSTRAINT token_tokenCreatedBy FOREIGN KEY (tokenCreatedBy) REFERENCES person (personID);
 ALTER TABLE transaction ADD CONSTRAINT transaction_expenseFormID FOREIGN KEY (expenseFormID) REFERENCES expenseForm (expenseFormID);

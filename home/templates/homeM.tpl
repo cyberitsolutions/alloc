@@ -114,8 +114,23 @@
   </form>
   </div>
 
-
-
+  <div class="config_tsiHint_edit hidden config-pane">
+  <form action="{$url_alloc_home}" method="post">
+    <div>
+      <h6>New Time Sheet Item Hint<div></div></h6> 
+      <div style="float:left; width:30%;">
+        <select name="showNewTsiHintItem">{page::select_options(array(0=>"No",1=>"Yes"),$showNewTsiHintItem)}</select>
+        {page::help("<b>Show New Time Sheet Item Hint</b><br><br>Show the new time sheet item hint input on the homepage.")}
+      </div>
+    </div>
+  <br><br>
+  <span style="float:right">
+    <a href="#x" onClick="$(this).parent().parent().parent().fadeOut();">Cancel</a>
+    <button type="submit" name="customize_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
+  </span>
+  <input type="hidden" name="sessID" value="{$sessID}">
+  </form>
+  </div>
 
 
 

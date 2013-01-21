@@ -824,19 +824,23 @@ class comment extends db_entity {
     $projectIDs and $sql2["projectIDs"] = $projectIDs;
     $filter['taskID'] and $sql1[] = prepare("(task.taskID = %d)", $filter["taskID"]);
     $filter['taskID'] and $sql2[] = prepare("(task.taskID = %d)", $filter["taskID"]);
+    $filter['taskID'] and $sql3[] = prepare("(tsiHint.taskID = %d)", $filter["taskID"]);
     $filter["fromDate"] and $sql1[] = prepare("(date(commentCreatedTime) >= '%s')", $filter["fromDate"]);
     $filter["fromDate"] and $sql2[] = prepare("(dateTimeSheetItem >= '%s')", $filter["fromDate"]);
+    $filter["fromDate"] and $sql3[] = prepare("(tsiHint.date >= '%s')", $filter["fromDate"]);
     $filter["toDate"] and $sql1[] = prepare("(date(commentCreatedTime) < '%s')", $filter["toDate"]);
     $filter["toDate"] and $sql2[] = prepare("(dateTimeSheetItem < '%s')", $filter["toDate"]);
+    $filter["toDate"] and $sql3[] = prepare("(tsiHint.date < '%s')", $filter["toDate"]);
     $filter["personID"] and $sql1["personID"] = prepare("(comment.commentCreatedUser IN (%s))",$filter["personID"]);
     $filter["personID"] and $sql2[] = prepare("(timeSheetItem.personID IN (%s))",$filter["personID"]);
+    $filter["personID"] and $sql3[] = prepare("(tsiHint.personID IN (%s))",$filter["personID"]);
     $filter["clients"] or $sql1[] = "(commentCreatedUser IS NOT NULL)";
     $filter["clients"] && $filter["personID"] and $sql1["personID"] = prepare("(comment.commentCreatedUser IN (%s) OR comment.commentCreatedUser IS NULL)",$filter["personID"]);
 
     $filter["taskStatus"] and $sql1[] = task::get_taskStatus_sql($filter["taskStatus"]);
     $filter["taskStatus"] and $sql2[] = task::get_taskStatus_sql($filter["taskStatus"]);
 
-    return array($sql1,$sql2);
+    return array($sql1,$sql2,$sql3);
   }
 
   function get_list_summary($_FORM=array()) {
@@ -846,10 +850,11 @@ class comment extends db_entity {
 
     $_FORM["maxCommentLength"] or $_FORM["maxCommentLength"] = 500;
 
-    list($filter1,$filter2) = comment::get_list_summary_filter($_FORM);
+    list($filter1,$filter2,$filter3) = comment::get_list_summary_filter($_FORM);
 
     is_array($filter1) && count($filter1) and $filter1 = " AND ".implode(" AND ",$filter1);
     is_array($filter2) && count($filter2) and $filter2 = " AND ".implode(" AND ",$filter2);
+    is_array($filter3) && count($filter3) and $filter3 = " AND ".implode(" AND ",$filter3);
 
     if ($_FORM["clients"]) {
       $client_join = " LEFT JOIN clientContact on comment.commentCreatedUserClientContactID = clientContact.clientContactID";
@@ -858,6 +863,7 @@ class comment extends db_entity {
 
     $q = prepare("SELECT commentID as id
                        , commentCreatedUser as personID
+                       , UNIX_TIMESTAMP(commentCreatedTime) as sortDate
                        , date(commentCreatedTime) as date
                        , commentCreatedTime as displayDate
                        , commentMasterID as taskID
@@ -879,6 +885,7 @@ class comment extends db_entity {
     $db = new db_alloc();
     $db->query($q);
     while ($row = $db->row()) {
+      $row["icon"] = 'icon-comments-alt';
       $row["id"] = "comment_".$row["id"];
       $row["personID"] and $row["person"] = $people[$row["personID"]]["name"];
       $row["clientContactName"] and $row["person"] = $row["clientContactName"];
@@ -890,7 +897,7 @@ class comment extends db_entity {
         $t->set_value("taskName",$row["taskName"]);
         $tasks[$row["taskID"]] = $t->get_task_link(array("prefixTaskID"=>true));
       }
-      $rows[$row["taskID"]][$row["date"]][] = $row;
+      $rows[$row["taskID"]][$row["sortDate"]][] = $row;
     }
 
     // Note that timeSheetItemID is selected twice so that the perms checking can work
@@ -900,6 +907,7 @@ class comment extends db_entity {
                          ,timeSheetID
                          ,timeSheetItem.personID
                          ,dateTimeSheetItem as date
+                         ,UNIX_TIMESTAMP(CONCAT(dateTimeSheetItem, ' 23:59:58')) as sortDate
                          ,dateTimeSheetItem as displayDate
                          ,timeSheetItem.taskID
                          ,task.taskName
@@ -917,6 +925,7 @@ class comment extends db_entity {
       $timeSheetItem = new timeSheetItem();
       if (!$timeSheetItem->read_row_record($row))
         continue;
+      $row["icon"] = 'icon-time';
       $row["id"] = "timeitem_".$row["id"];
       $row["person"] = $people[$row["personID"]]["name"];
       if (!$tasks[$row["taskID"]]) {
@@ -926,19 +935,58 @@ class comment extends db_entity {
         $tasks[$row["taskID"]] = $t->get_task_link(array("prefixTaskID"=>true));
       }
       $totals[$row["taskID"]] += $row["duration"];
-      $rows[$row["taskID"]][$row["date"]][] = $row;
+      $rows[$row["taskID"]][$row["sortDate"]][] = $row;
+    }
+
+
+    // get manager's guestimates about time worked from tsiHint table
+    $q3 = prepare("SELECT tsiHintID as id
+                         ,tsiHintID
+                         ,tsiHint.personID
+                         ,tsiHint.date
+                         ,UNIX_TIMESTAMP(CONCAT(tsiHint.date,' 23:59:59')) as sortDate
+                         ,tsiHint.date as displayDate
+                         ,tsiHint.taskID
+                         ,tsiHint.duration
+                         ,tsiHint.tsiHintCreatedUser
+                         ,SUBSTRING(tsiHint.comment,1,%d) AS comment_text
+                         ,task.taskName
+                     FROM tsiHint
+                LEFT JOIN task on tsiHint.taskID = task.taskID
+                    WHERE 1
+                          ".$filter3."
+                 ORDER BY tsiHint.date"
+                 ,$_FORM["maxCommentLength"]);
+
+    $db->query($q3);
+    while ($row = $db->row()) {
+      //$tsiHint = new tsiHint();
+      //if (!$tsiHint->read_row_record($row))
+      //  continue;
+      $row["icon"] = 'icon-bookmark-empty';
+      $row["id"] = "tsihint_".$row["id"];
+      $row["person"] = $people[$row["personID"]]["name"];
+      $row["comment_text"].= ' [by '.$people[$row["tsiHintCreatedUser"]]["name"].']';
+      if (!$tasks[$row["taskID"]]) {
+        $t = new task();
+        $t->set_id($row["taskID"]);
+        $t->set_value("taskName",$row["taskName"]);
+        $tasks[$row["taskID"]] = $t->get_task_link(array("prefixTaskID"=>true));
+      }
+      $totals_tsiHint[$row["taskID"]] += $row["duration"];
+      $rows[$row["taskID"]][$row["sortDate"]][] = $row;
     }
 
     // If there is a time sheet entry for 2010-10-10 but there is no comment entry
     // for that date, then the time sheet entry will appear out of sequence i.e. at
     // the very end of the whole list. So we need to manually sort them.
-    foreach ($rows as $tid => $arr) {
-      ksort($arr);
+    foreach ((array)$rows as $tid => $arr) {
+      ksort($arr,SORT_NUMERIC);
       $rows[$tid] = $arr;
     }
 
     foreach ((array)$rows as $taskID => $dates) {
-      $rtn.= comment::get_list_summary_header($tasks[$taskID],$totals[$taskID],$_FORM);
+      $rtn.= comment::get_list_summary_header($tasks[$taskID],$totals[$taskID],$totals_tsiHint[$taskID],$_FORM);
       foreach ($dates as $date => $more_rows) {
         foreach ($more_rows as $row) {
           $rtn.= comment::get_list_summary_body($row);
@@ -949,18 +997,19 @@ class comment extends db_entity {
     return $rtn;
   }
 
-  function get_list_summary_header($task,$totals,$_FORM=array()) {
+  function get_list_summary_header($task,$totals,$totals_tsiHint,$_FORM=array()) {
   
     if ($_FORM["showTaskHeader"]) {
       $rtn[] = "<table class='list' style='border-bottom:0;'>";
       $rtn[] = "<tr>";
       $rtn[] = "<td style='font-size:130%'>".$task."</td>";
-      $rtn[] = "<td class='right bold'>".sprintf("%0.2f",$totals)."</td>";
+      $rtn[] = "<td class='right bold'>".sprintf("%0.2f",$totals)." / <span style='color:#888;'>".sprintf("%0.2f",$totals_tsiHint)."</span></td>";
       $rtn[] = "</tr>";
       $rtn[] = "</table>";
     }
     $rtn[] = "<table class=\"list sortable\" style='margin-bottom:10px'>";
     $rtn[] = "<tr>";
+    $rtn[] = "<th>&nbsp;</th>";
     $rtn[] = "<th>Date</th>";
     $rtn[] = "<th>Person</th>";
     $rtn[] = "<th>Comment</th>";

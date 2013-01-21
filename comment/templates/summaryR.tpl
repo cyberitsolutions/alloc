@@ -1,5 +1,7 @@
-{if $row["duration"]}{$style='; font-weight:bold;'}{/}
+{if $row["duration"] && !$row["tsiHintID"]}{$style='; font-weight:bold;'}{/}
+{if $row["tsiHintID"]}{$style.='; color:#888;'}{/}
 <tr>
+  <td style='width:1%{$style}'><i class='{$row.icon}'></i></td>
   <td style='width:1%{$style}' class='nobr{$class}'>{$row.displayDate}</td>
   <td style='width:1%{$style}' class='nobr{$class}'>{=$row.person}</td>
   <td style='{$style}' class='{$class}' onClick='return set_grow_shrink("longText_{$row.id}","shortText_{$row.id}")'>

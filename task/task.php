@@ -76,6 +76,7 @@ define("PAGE_IS_PRINTABLE",1);
     global $task;
 
     if ($_REQUEST["commentSummary"]) {
+      $_REQUEST["showTaskHeader"] = true;
       $_REQUEST["clients"] = true;
       $TPL["commentsR"] = comment::get_list_summary($_REQUEST);
       $TPL["extra_page_links"] = '<a href="'.$TPL["url_alloc_task"].'taskID='.$TPL["task_taskID"].'&sbs_link=comments">Full</a>';

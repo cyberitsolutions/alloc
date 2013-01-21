@@ -517,6 +517,20 @@ CREATE TABLE timeSheetItem (
   timeSheetItemModifiedUser integer DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
+DROP TABLE IF EXISTS tsiHint;
+CREATE TABLE tsiHint (
+  tsiHintID integer NOT NULL auto_increment PRIMARY KEY,
+  date date default NULL,
+  duration decimal(9,2) default '0.00',
+  personID integer NOT NULL,
+  taskID integer default NULL,
+  comment text,
+  tsiHintCreatedTime datetime default NULL,
+  tsiHintCreatedUser integer default NULL,
+  tsiHintModifiedTime datetime DEFAULT NULL,
+  tsiHintModifiedUser integer DEFAULT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
+
 DROP TABLE IF EXISTS timeUnit;
 CREATE TABLE timeUnit (
   timeUnitID integer NOT NULL auto_increment PRIMARY KEY,
