@@ -175,9 +175,9 @@ class page {
         $type != "message_help_no_esc" and $info = str_replace($search,$replace,$info);
 
         $str.= "<tr>";
-        $str.= "<td class='".$class."' width='1%' style='vertical-align:middle;padding:6px;font-size:150%;'>";
+        $str.= "<td class='".$class."' width='1%' style='vertical-align:top;padding:6px;font-size:150%;'>";
         $str.= "<i class='".$class_to_icon[$class]."'></i><td/>";
-        $str.= "<td class='".$class."' width='99%' style='vertical-align:middle;text-align:left;font-weight:bold;'>".$info."</td></tr>";
+        $str.= "<td class='".$class."' width='99%' style='vertical-align:top;padding-top:10px;text-align:left;font-weight:bold;'>".$info."</td></tr>";
       }
       $str.= "</table>";
       $str.= "</div></div>";
