@@ -29,8 +29,7 @@ class tsiHintHomeItem extends home_item {
 
   function visible() {
     $current_user = &singleton("current_user");
-    return isset($current_user) && $current_user->have_role("manage")
-           && ($current_user->prefs["showNewTsiHintItem"] || !isset($current_user->prefs["showNewTsiHintItem"]));
+    return isset($current_user) && $current_user->have_role("manage") && $current_user->prefs["showNewTsiHintItem"];
   }
 
   function render() {
