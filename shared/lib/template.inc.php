@@ -159,6 +159,15 @@ function include_template($filename, $getString=false) {
     $f = $filename;
     echo "<b style='color:red'>Error line ".$error['line']." in template: ";
     echo basename(dirname(dirname($f))).$s.basename(dirname($f)).$s.basename($f)."</b>";
+
+
+    $bits = explode("\n",$template);
+    
+    foreach ($bits as $k =>$bit) {
+      echo "<br>".$k."&nbsp;&nbsp;&nbsp;&nbsp;".page::htmlentities($bit);
+    }
+
+
     exit;
   }
 
