@@ -38,11 +38,12 @@ class tsiHint extends db_entity {
 
   function add_tsiHint($stuff) {
     $current_user = &singleton("current_user");
-    $errstr = "Failed to record new time sheet item. ";
+    $errstr = "Failed to record new time sheet item hint. ";
     $username = $stuff["username"];
 
     $people = person::get_people_by_username();
     $personID = $people[$username]["personID"];
+    $personID or alloc_error("Person ".$username." not found.");
 
     $taskID = $stuff["taskID"];
     $projectID = $stuff["projectID"];
