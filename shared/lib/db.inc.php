@@ -428,6 +428,8 @@ class db {
       return prepare("(IFNULL(%s,0) = %d)", $name, $value);
     } else if ($value) {
       return prepare("(IFNULL(%s,'') = '".$fmt."')", $name, $value);
+    } else {
+      return 0;
     }
   }
 

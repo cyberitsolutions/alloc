@@ -173,7 +173,7 @@ class project extends db_entity {
     $current_user = &singleton("current_user");
     $person or $person = $current_user;
     if (is_object($person)) {
-      $permissions and $p = " AND ppr.roleHandle in (".db::esc_implode($permissions,"%s").")";
+      $permissions and $p = " AND ".db::sql_ids("ppr.roleHandle",$permissions,"%s");
 
       $query = prepare("SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
                           FROM projectPerson pp 

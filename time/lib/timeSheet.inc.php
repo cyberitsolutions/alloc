@@ -482,9 +482,9 @@ class timeSheet extends db_entity {
     }
 
     if ($rejected) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR timeSheet.status in (".db::esc_implode($statuses,"%s")."))");
+      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR ".db::sql_ids("timeSheet.status",$statuses,"%s").")");
     } else if ($statuses) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND timeSheet.status in (".db::esc_implode($statuses,"%s")."))");
+      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND ".db::sql_ids("timeSheet.status",$statuses,"%s").")");
     }
 
     if ($filter["dateFrom"]) {
