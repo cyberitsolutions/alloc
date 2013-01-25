@@ -134,10 +134,40 @@ class services {
           continue;
         }
 
-      // username
-      } else if (!in_str(" ",$person) && !in_str("@",$person)) {
+      // email addresses
+      } else if (in_str("@",$person)) {
         foreach ($person_table as $pid => $data) {
-          if (strtolower($person) == strtolower($data["username"]) && $data["personActive"]) {
+          if (same_email_address($person,$data["emailAddress"]) && $data["personActive"]) {
+            $rtn[$data["emailAddress"]] = $data;
+            $bad_person = false;
+            continue 2;
+          }
+        }
+        
+        if ($ccID = clientContact::find_by_email($person)) {
+          $cc = new clientContact();
+          $cc->set_id($ccID);
+          $cc->select();
+          $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
+          $bad_person = false;
+          continue;
+        }
+
+        // If we get here, then return the email address entered
+        list($e, $n) = parse_email_address($person);
+        $rtn[$e] = array("emailAddress"=>$e, "name"=>$n);
+        $bad_person = false;
+        continue;
+
+      // usernames, partial and full names
+      } else {
+
+        // Note the third check against partial: firstname." ".surname. Because $data["name"] will default back to username
+        foreach ($person_table as $pid => $data) {
+          if ((strtolower($person) == strtolower($data["username"])
+            || strtolower($person) == strtolower($data["name"])
+            || strtolower($person) == strtolower(substr(strtolower($data["firstName"]." ".$data["surname"]),0,strlen($person)))
+          ) && $data["personActive"]) {
             $rtn[$data["emailAddress"]] = $data;
             $bad_person = false;
             continue 2;
@@ -161,50 +191,11 @@ class services {
           $bad_person = false;
           continue;
         }
-       
-      // email
-      } else if (!in_str(" ",$person) && in_str("@",$person)) {
-        foreach ($person_table as $pid => $data) {
-          if (same_email_address($person,$data["emailAddress"]) && $data["personActive"]) {
-            $rtn[$data["emailAddress"]] = $data;
-            $bad_person = false;
-            continue 2;
-          }
-        }
-        
-        if ($ccID = clientContact::find_by_email($person)) {
+        if ($ccID = clientContact::find_by_partial_name($person,$projectID)) {
           $cc = new clientContact();
           $cc->set_id($ccID);
           $cc->select();
           $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
-          $bad_person = false;
-          continue;
-        } else {
-          $rtn[$person] = array("emailAddress"=>$person, "name"=>"");
-          $bad_person = false;
-          continue;
-        }
-  
-      // full name
-      } else {
-        foreach ($person_table as $pid => $data) {
-          if (strtolower($person) == strtolower($data["name"]) && $data["personActive"]) {
-            $rtn[$data["emailAddress"]] = $data;
-            $bad_person = false;
-            continue 2;
-          }
-        }
-
-        if ($ccID = clientContact::find_by_name($person,$projectID)) {
-          $cc = new clientContact();
-          $cc->set_id($ccID);
-          $cc->select();
-          $rtn[$cc->get_value("clientContactEmail")] = $cc->row();
-          $bad_person = false;
-          continue;
-        } else if (in_str("@",$person)) {
-          list($e, $n) = parse_email_address($person);
-          $rtn[$e] = array("emailAddress"=>$e, "name"=>$n);
           $bad_person = false;
           continue;
         }
@@ -214,6 +205,7 @@ class services {
         die("Unable to find person: ".$person);
       }
     }
+
     foreach ((array)$rtn as $id => $p) {
       $rtn[$id] = $this->reduce_person_info($p);
     }
