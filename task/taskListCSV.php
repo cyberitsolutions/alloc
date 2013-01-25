@@ -32,7 +32,6 @@ $_FORM["showProject"]     and $fields["projectName"]          = "Project";
 $_FORM["showPriority"]    and $fields["priorityFactor"]       = "Pri";
 $_FORM["showPriority"]    and $fields["taskPriority"]         = "Task Pri";
 $_FORM["showPriority"]    and $fields["projectPriority"]      = "Proj Pri";
-$_FORM["showDateStatus"]  and $fields["taskDateStatus"]       = "Date Status";
 $_FORM["showCreator"]     and $fields["creator_name"]         = "Creator";
 $_FORM["showManager"]     and $fields["manager_name"]         = "Manager";
 $_FORM["showAssigned"]    and $fields["assignee_name"]        = "Assigned To";
