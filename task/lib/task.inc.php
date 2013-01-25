@@ -945,7 +945,6 @@ class task extends db_entity {
       $row["closer_name"] = $_FORM["people_cache"][$row["closerID"]]["name"];
       $row["estimator_name"] = $_FORM["people_cache"][$row["estimatorID"]]["name"];
       $row["newSubTask"] = $task->get_new_subtask_link();
-      $_FORM["showDateStatus"] and $row["taskDateStatus"] = $task->get_dateStatus();
       $_FORM["showPercent"] and $row["percentComplete"] = $task->get_percentComplete();
       $_FORM["showTimes"] and $row["timeActual"] = $task->get_time_billed()/60/60;
       $row["rate"] = page::money($row["currency"],$row["rate"],"%mo");
@@ -1095,120 +1094,6 @@ class task extends db_entity {
     return $date_forecast_completion;
   }
 
-  function get_dateStatus($format = "html", $type = "standard") {
-    $today = date("Y-m-d");
-    define("UNKNOWN", 0);
-    define("NOT_STARTED", 1);
-    define("STARTED", 2);
-    define("COMPLETED", 3);
-
-    $date_target_start = $this->get_value("dateTargetStart");
-    $date_target_completion = $this->get_value("dateTargetCompletion");
-    $date_actual_start = $this->get_value("dateActualStart");
-    $date_actual_completion = $this->get_value("dateActualCompletion");
-
-    // First figure out where we should be with this task
-    if ($date_target_completion != "" && $date_target_completion <= $today) {
-      $target = COMPLETED;
-    } else if ($date_target_start != "" && $date_target_start <= $today) {
-      $target = STARTED;
-    } else if ($date_target_start) {
-      $target = NOT_STARTED;
-    } else {
-      $target = UNKNOWN;
-    }
-
-    // Now figure out where we are
-    if ($date_actual_completion) {
-      $actual = COMPLETED;
-    } else if ($date_actual_start) {
-      $actual = STARTED;
-    } else {
-      $actual = NOT_STARTED;
-    }
-
-    // Now compare the target and the actual and provide the results
-    if ($actual == COMPLETED) {
-      if ($type != "brief") {
-        $status = "Completed on ".$date_actual_completion;
-      } else {
-        $status = "Completed";
-      }
-    } else if ($actual == STARTED) {
-      $date_forecast_completion = $this->get_forecast_completion();
-
-      $status = "Started ".$date_actual_start.", ";
-
-      #if ($type != "brief") {
-      #  if ($percent_complete == "") {
-      #    $status.= "% complete not set, ";
-      #  } else {
-      #    $status.= "$percent_complete% complete, ";
-      #  }
-      #}
-
-      if ($date_target_completion != "") {
-        $status.= "Target completion $date_target_completion ";
-      } else {
-    
-      }
-
-      if ($type != "brief") {
-        if ($date_forecast_completion == 0) {
-          $status.= "forecast completion date not available";
-        } else {
-          $status.= "forecast completion date of	".date("Y-m-d", $date_forecast_completion);
-        }
-      }
-
-      if ($target == COMPLETED) {
-        if ($type == "brief") {
-          $status = "Overdue for completion on ".$date_target_completion;
-        } else {
-          $status = "Overdue for completion - $status";
-        }
-        if ($format == "html") {
-          $status = "<strong class=\"overdue\">$status</strong>";
-        }
-      } else if ($date_target_completion && date("Y-m-d", $date_forecast_completion) > $date_target_completion) {
-        $status = "Behind target - $status";
-        if ($format == "html") {
-          $status = "<strong class=\"behind-target\">$status</strong>";
-        }
-      }
-
-    // New one
-    } else if ($actual == NOT_STARTED && $target == UNKNOWN) {
-      if ($target_completion_date) {
-        $status = "Not started, due to be completed by $target_completion_date, no target start date";
-      } else {
-        $status = "Not started, no targets";
-      }
-    } else if ($actual == NOT_STARTED && $target == NOT_STARTED) {
-      $status = "Due to start on ".$date_target_start;
-      if ($date_target_completion) {
-        $status.= " and to be completed by ".$date_target_completion;
-      } else {
-        $status.= ", no target completion date";
-      }
-    } else if ($actual == NOT_STARTED && $target == STARTED) {
-      $status = "Overdue to start on ".$date_target_start;
-      if ($format == "html") {
-        $status = "<strong class=\"behind-target\">$status</strong>";
-      }
-    } else if ($actual == NOT_STARTED && $target == COMPLETED) {
-      $status = "Overdue to start and be completed by $date_target_completion";
-      if ($format == "html") {
-        $status = "<strong class=\"overdue\">$status</strong>";
-      }
-    } else {
-      $status = "Unexpected target/actual combination: $target/$actual";
-    }
-
-    // $status .= " ($target/$actual)";
-    return $status;
-  }
-
   function get_list_vars() {
     $taskStatii = task::get_task_statii_array(true);
     foreach($taskStatii as $k => $v) {
@@ -1252,7 +1137,6 @@ class task extends db_entity {
                 ,"showProject"          => "The tasks Project (has different layout when prioritised vs byProject)"
                 ,"showPriority"         => "The calculated overall priority, then the tasks, then the projects priority"
                 ,"showStatus"           => "A colour coded textual description of the status of the task"
-                ,"showDateStatus"       => "A colour coded textual description of the *dates* status of the task"
                 ,"showCreator"          => "The tasks creator"
                 ,"showAssigned"         => "The person assigned to the task"
                 ,"showTimes"            => "The original estimate and the time billed and percentage"
@@ -1352,7 +1236,6 @@ class task extends db_entity {
     $_FORM["showTimes"]       and $rtn["showTimes_checked"]       = " checked";
     $_FORM["showPercent"]     and $rtn["showPercent_checked"]     = " checked";
     $_FORM["showPriority"]    and $rtn["showPriority_checked"]    = " checked";
-    $_FORM["showDateStatus"]  and $rtn["showDateStatus_checked"]  = " checked";
     $_FORM["showTaskID"]      and $rtn["showTaskID_checked"]      = " checked";
     $_FORM["showManager"]     and $rtn["showManager_checked"]     = " checked";
     $_FORM["showProject"]     and $rtn["showProject_checked"]     = " checked";

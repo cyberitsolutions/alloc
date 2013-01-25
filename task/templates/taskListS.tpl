@@ -16,7 +16,6 @@
   {if $_FORM["showPriority"]}<th class="sorttable_numeric">Priority</th>{/}
   {if $_FORM["showPriority"]}<th>Task Pri</th>{/}
   {if $_FORM["showPriority"]}<th>Proj Pri</th>{/}
-  {if $_FORM["showDateStatus"]}<th>Date Status</th>{/}
   {if $_FORM["showCreator"]}<th>Task Creator</th>{/}
   {if $_FORM["showManager"]}<th>Task Manager</th>{/}
   {if $_FORM["showAssigned"]}<th>Assigned To</th>{/}
@@ -50,7 +49,6 @@
   {if $_FORM["showPriority"]}  <td>{$r.priorityFactor}</td>{/}
   {if $_FORM["showPriority"]}  <td style="color:{echo $taskPriorities[$r["priority"]]["colour"]}">{echo $taskPriorities[$r["priority"]]["label"]}</td>{/}
   {if $_FORM["showPriority"]}  <td style="color:{echo $projectPriorities[$r["projectPriority"]]["colour"]}">{echo $projectPriorities[$r["projectPriority"]]["label"]}</td>{/}
-  {if $_FORM["showDateStatus"]}<td>{$r.taskDateStatus}</td>{/}
   {if $_FORM["showCreator"]}   <td>{=$r.creator_name}</td>{/}
   {if $_FORM["showManager"]}   <td>{=$r.manager_name}</td>{/}
   {if $_FORM["showAssigned"]}  <td>{=$r.assignee_name}</td>{/}
