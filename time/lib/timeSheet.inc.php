@@ -1125,18 +1125,35 @@ EOD;
     $row_projectPerson or alloc_error($errstr."The person(".$current_user->get_id().") has not been added to the project(".$projectID.").");
 
     if ($row_projectPerson && $projectID) {
-      $q = prepare("SELECT * 
-                      FROM timeSheet 
-                     WHERE status = 'edit' 
-                       AND projectID = %d
-                       AND personID = %d
-                       AND dateRejected IS NULL
-                  ORDER BY dateFrom
-                     LIMIT 1
-                ",$projectID, $current_user->get_id());
-      $db = new db_alloc();
-      $db->query($q);
-      $row = $db->row();
+
+      if ($stuff["timeSheetID"]) {
+        $q = prepare("SELECT *
+                        FROM timeSheet
+                       WHERE status = 'edit'
+                         AND personID = %d
+                         AND timeSheetID = %d
+                    ORDER BY dateFrom
+                       LIMIT 1
+                  ",$current_user->get_id(),$stuff["timeSheetID"]);
+        $db = new db_alloc();
+        $db->query($q);
+        $row = $db->row();
+        $row or alloc_error("Couldn't find an editable time sheet with that ID.");
+
+      } else {
+        $q = prepare("SELECT *
+                        FROM timeSheet
+                       WHERE status = 'edit'
+                         AND projectID = %d
+                         AND personID = %d
+                         AND dateRejected IS NULL
+                    ORDER BY dateFrom
+                       LIMIT 1
+                  ",$projectID, $current_user->get_id());
+        $db = new db_alloc();
+        $db->query($q);
+        $row = $db->row();
+      }
 
       // If no timeSheets add a new one
       if (!$row) {

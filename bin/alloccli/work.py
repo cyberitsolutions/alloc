@@ -34,6 +34,7 @@ class work(alloc):
                                        '(eg: 0=no-charge, 1=standard, 1.5=time-and-a-half,\n'
                                        '2=double-time, 3=triple-time). Default: 1')) 
   ops.append(('c:', 'comment=COMMENT', 'The time sheet item comment.')) 
+  ops.append((''  , 'tsid=ID        ', 'Add time to a specific time sheet (optional).'))
   ops.append(('i' , 'interactive    ', 'Run a live work timer interactively.')) 
 
   # Specify some header and footer text for the help text
@@ -178,6 +179,7 @@ Unfortunately doing so appears to flush the input buffer!)
       stuff['multiplier'] = o['multiplier']
       stuff['date'] = o['date']
       stuff['comment'] = o['comment']
+      if o['tsid']: stuff['timeSheetID'] = o['tsid']
       timeSheetID = self.add_time(stuff)
 
     # Or of we're just adding time that's not related to a particular task ...
