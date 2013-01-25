@@ -176,7 +176,7 @@ $(document).ready(function() {
         {/}
         {if $task_dateTargetStart || $task_dateTargetCompletion}
           <div class="enclose">
-            <h6>Estimated Start<div>Estimated Completion</div></h6>
+            <h6>Target Start<div>Target Completion</div></h6>
             <div style="float:left; width:30%">
               {$task_dateTargetStart}
             </div>
@@ -322,7 +322,7 @@ $(document).ready(function() {
         </div>
 
         <div class="enclose">
-          <h6>Estimated Start<div>Estimated Completion</div></h6>
+          <h6>Target Start<div>Target Completion</div></h6>
           <div style="float:left; width:30%">
             {page::calendar("dateTargetStart",$task_dateTargetStart)}
           </div>
