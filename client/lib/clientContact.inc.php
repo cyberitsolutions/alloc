@@ -61,9 +61,8 @@ class clientContact extends db_entity {
       if ($row["clientID"]) {
         $extra = prepare("AND clientID = %d",$row["clientID"]);
       }
-    } else {
-      $extra = prepare("AND clientContactName = '%s'",$name);
     }
+    $extra or $extra = prepare("AND clientContactName = '%s'",$name);
 
     $q = "SELECT clientContactID, clientContactName FROM clientContact WHERE 1=1 ".$extra;
     $db->query($q);
@@ -82,6 +81,45 @@ class clientContact extends db_entity {
     $person_percent1 = current($stack1);
 
     if ($probable1_clientContactID && $person_percent1 >= $percent) {
+      return $probable1_clientContactID;
+    }
+  }
+
+  function find_by_partial_name($name=false,$projectID=false) {
+    $stack1 = array();
+    $people = array();
+    $db = new db_alloc();
+
+    if ($projectID) {
+      $db->query("SELECT clientID FROM project WHERE projectID = %d",$projectID);
+      $row = $db->qr();
+      if ($row["clientID"]) {
+        $extra = prepare("AND clientID = %d",$row["clientID"]);
+      }
+    }
+
+    $q = prepare("SELECT clientContactID, clientContactName
+                    FROM clientContact
+                   WHERE 1=1
+                     AND clientContactName like '%s%%'"
+                         .$extra
+                ,$name);
+    $db->query($q);
+    while ($row = $db->row()) {
+      $people[$db->f("clientContactID")] = $row;
+    }
+  
+    foreach ($people as $personID => $row) {
+      similar_text(strtolower($row["clientContactName"]),strtolower($name),$percent1);
+      $stack1[$personID] = $percent1;
+    }
+
+    asort($stack1);
+    end($stack1);
+    $probable1_clientContactID = key($stack1);
+    $person_percent1 = current($stack1);
+
+    if ($probable1_clientContactID) {
       return $probable1_clientContactID;
     }
   }
