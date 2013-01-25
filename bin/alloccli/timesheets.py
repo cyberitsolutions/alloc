@@ -17,7 +17,7 @@ class timesheets(alloc):
                                        '(eg: "edit,manager,admin,invoiced,finished,rejected" or "all". Default: edit)'))
   ops.append(('a:', 'account=TF     ', 'The time sheets\' TF name.'))
   ops.append(('c:', 'creator=NICK   ', 'The time sheets\' creator username.'))
-  ops.append(('t:', 'time=ID        ', 'A time sheet ID.'))
+  ops.append(('t:', 'tsid=ID        ', 'A time sheet ID.'))
   ops.append(('h:', 'hours=NUM      ', 'The time sheets must have this many hours recorded.\n'
                                        '(eg: "7" eg: ">7 AND <10 OR =4 AND !=8")'))
   ops.append(('d:', 'date=YYYY-MM-DD', 'If --items is specified, then match against the items\' date.\n'
@@ -76,8 +76,8 @@ alloc timesheets --date ">=2010-10-10" --items'''
     elif o['task']:
       taskID = self.search_for_task({ 'taskName': o['task'], 'taskView': 'prioritised' })
 
-    if self.is_num(o['time']):
-      timeSheetID = o['time']
+    if self.is_num(o['tsid']):
+      timeSheetID = o['tsid']
 
     if ',' in o['status']:
       status = o['status'].split(',')
