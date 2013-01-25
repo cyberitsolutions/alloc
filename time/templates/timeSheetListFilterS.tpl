@@ -16,7 +16,7 @@ function refreshProjectList(show_all) {
           <td>Status</td>
         </tr>
         <tr>
-           <td>
+          <td>
             <select name="personID[]" multiple="true">
               {$show_userID_options}
             </select>
@@ -29,16 +29,17 @@ function refreshProjectList(show_all) {
          <td colspan="3">Project</td>
         </tr>
         <tr>
-          <td colspan="3">
+          <td colspan="3" style='vertical-align:top'>
             <span id="projectDropdown">
-            <select name="projectID[]" multiple="true" style="width:100%">
+            <select name="projectID[]" multiple="true">
               {$show_project_options}
             </select>
             </span>
-              <input id="showAllProjects" type="checkbox" name="showAllProjects" onclick="refreshProjectList(this);" {print $showAllProjects ? " checked" : ""}>
-              <label for="showAllProjects">Show all projects</label>
           </td>
           <td class="right">
+              <label for="showAllProjects">Show all projects</label>
+              <input id="showAllProjects" type="checkbox" name="showAllProjects" onclick="refreshProjectList(this);" {print $showAllProjects ? " checked" : ""}>
+            <br>
             <label for="showFinances">Money</label>
             <input id="showFinances" type="checkbox" name="showFinances" value="1" {print $showFinances ? " checked" : ""}>
           </td>
