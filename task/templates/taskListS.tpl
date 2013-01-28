@@ -53,10 +53,16 @@
   {if $_FORM["showManager"]}   <td>{=$r.manager_name}</td>{/}
   {if $_FORM["showAssigned"]}  <td>{=$r.assignee_name}</td>{/}
   {$dts = $r["dateTargetStart"]; $dtc = $r["dateTargetCompletion"]; $das = $r["dateActualStart"]; $dac = $r["dateActualCompletion"];}
-  {if $_FORM["showDate1"]}     <td class="nobr">{print $dts==$n ? "<b>".$dts."</b>" : $dts}</td>{/}
-  {if $_FORM["showDate2"]}     <td class="nobr">{print $dtc==$n ? "<b>".$dtc."</b>" : $dtc}</td>{/}
-  {if $_FORM["showDate3"]}     <td class="nobr">{print $das==$n ? "<b>".$das."</b>" : $das}</td>{/}
-  {if $_FORM["showDate4"]}     <td class="nobr">{print $dac==$n ? "<b>".$dac."</b>" : $dac}</td>{/}
+  {unset($dts_style)}
+  {$dts == $n   and $dts_style = 'color:green'}
+  {$dts && $das > $dts and $dts_style = 'color:red'}
+  {unset($dtc_style)}
+  {$dtc == $n   and $dtc_style = 'color:green'}
+  {$dtc && $dac > $dtc and $dtc_style = 'color:red'}
+  {if $_FORM["showDate1"]}     <td class="nobr" style="{$dts_style}">{$dts}</td>{/}
+  {if $_FORM["showDate2"]}     <td class="nobr" style="{$dtc_style}">{$dtc}</td>{/}
+  {if $_FORM["showDate3"]}     <td class="nobr">{$das}</td>{/}
+  {if $_FORM["showDate4"]}     <td class="nobr">{$dac}</td>{/}
   {if $_FORM["showDate5"]}     <td class="nobr">{$r.dateCreated}</td>{/}
   {if $_FORM["showTimes"]}     <td class="nobr">{$r.timeBestLabel}</td>{/}
   {if $_FORM["showTimes"]}     <td class="nobr">{$r.timeExpectedLabel}</td>{/}
