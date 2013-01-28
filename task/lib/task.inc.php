@@ -1295,7 +1295,6 @@ class task extends db_entity {
             break;
           case 'priority':
             $priorities = config::get_config_item("taskPriorities");
-            $changeDescription = "Task priority changed from " . $priorities[$oldValue]["label"] . " to " . $priorities[$newValue]["label"] . ".";
             $changeDescription = sprintf('Task priority changed from <span style="color: %s;">%s</span> to <span style="color: %s;">%s</span>.', $priorities[$oldValue]["colour"], $priorities[$oldValue]["label"], $priorities[$newValue]["colour"], $priorities[$newValue]["label"]);
           break;
           case 'projectID':

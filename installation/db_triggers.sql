@@ -758,4 +758,31 @@ BEGIN
 END
 $$
 
+DROP TRIGGER IF EXISTS after_update_project $$
+CREATE TRIGGER after_update_project AFTER UPDATE ON project
+FOR EACH ROW
+BEGIN
+  call alloc_log("project", OLD.projectID, "projectName",             OLD.projectName,             NEW.projectName);
+  call alloc_log("project", OLD.projectID, "projectShortName",        OLD.projectShortName,        NEW.projectShortName);
+  call alloc_log("project", OLD.projectID, "projectComments",         OLD.projectComments,         NEW.projectComments);
+  call alloc_log("project", OLD.projectID, "clientID",                OLD.clientID,                NEW.clientID);
+  call alloc_log("project", OLD.projectID, "clientContactID",         OLD.clientContactID,         NEW.clientContactID);
+  call alloc_log("project", OLD.projectID, "projectType",             OLD.projectType,             NEW.projectType);
+  call alloc_log("project", OLD.projectID, "dateTargetStart",         OLD.dateTargetStart,         NEW.dateTargetStart);
+  call alloc_log("project", OLD.projectID, "dateTargetCompletion",    OLD.dateTargetCompletion,    NEW.dateTargetCompletion);
+  call alloc_log("project", OLD.projectID, "dateActualStart",         OLD.dateActualStart,         NEW.dateActualStart);
+  call alloc_log("project", OLD.projectID, "dateActualCompletion",    OLD.dateActualCompletion,    NEW.dateActualCompletion);
+  call alloc_log("project", OLD.projectID, "projectBudget",           OLD.projectBudget,           NEW.projectBudget);
+  call alloc_log("project", OLD.projectID, "currencyTypeID",          OLD.currencyTypeID,          NEW.currencyTypeID);
+  call alloc_log("project", OLD.projectID, "projectStatus",           OLD.projectStatus,           NEW.projectStatus);
+  call alloc_log("project", OLD.projectID, "projectPriority",         OLD.projectPriority,         NEW.projectPriority);
+  call alloc_log("project", OLD.projectID, "cost_centre_tfID",        OLD.cost_centre_tfID,        NEW.cost_centre_tfID);
+  call alloc_log("project", OLD.projectID, "customerBilledDollars",   OLD.customerBilledDollars,   NEW.customerBilledDollars);
+  call alloc_log("project", OLD.projectID, "defaultTaskLimit",        OLD.defaultTaskLimit,        NEW.defaultTaskLimit);
+  call alloc_log("project", OLD.projectID, "defaultTimeSheetRate",    OLD.defaultTimeSheetRate,    NEW.defaultTimeSheetRate);
+  call alloc_log("project", OLD.projectID, "defaultTimeSheetRateUnitID",OLD.defaultTimeSheetRateUnitID,NEW.defaultTimeSheetRateUnitID);
+  call update_search_index("project",NEW.projectID);
+END
+$$
+
 DELIMITER ;

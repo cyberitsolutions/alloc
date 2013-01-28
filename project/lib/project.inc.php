@@ -49,6 +49,9 @@ class project extends db_entity {
                              ,"cost_centre_tfID"
                              ,"customerBilledDollars" => array("type"=>"money")
                              ,"clientContactID"
+                             ,"projectCreatedTime"
+                             ,"projectCreatedUser"
+                             ,"projectModifiedTime"
                              ,"projectModifiedUser"
                              ,"defaultTaskLimit"
                              ,"defaultTimeSheetRate" => array("type"=>"money")
@@ -736,6 +739,139 @@ class project extends db_entity {
     $TPL["_FORM"] = $ops;
     include_template(dirname(__FILE__)."/../templates/projectListS.tpl");
   }
+
+  function get_changes_list() {
+    // This function returns HTML rows for the changes that have been made to this task
+    $rows = array();
+
+    $people_cache = get_cached_table("person");
+
+    $timeUnit = new timeUnit();
+    $timeUnits = array_reverse($timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA"),true);
+
+    $options = array("return"       => "array"
+                    ,"entityType"   => "project"
+                    ,"entityID"     => $this->get_id());
+    $changes = auditItem::get_list($options);
+
+    // Insert the creation event into the table to make the history complete.
+    if ($this->get_value("projectCreatedTime") && $this->get_value("projectCreatedUser")) {
+      $rows []= '<tr><td class="nobr">' . $this->get_value("projectCreatedTime") . '</td><td>The project was created.</td><td>' . page::htmlentities($people_cache[$this->get_value("projectCreatedUser")]["name"]) . "</td></tr>";
+    } else {
+      $rows []= '<tr><td class="nobr">' . $this->get_value("projectModifiedTime") . '</td><td>The project was last modified.</td><td>' . page::htmlentities($people_cache[$this->get_value("projectModifiedUser")]["name"]) . "</td></tr>";
+    }
+
+    // audit these fields:
+    // projectName,projectShortName,projectComments,clientID,clientContactID,projectType,dateTargetStart,dateTargetCompletion
+    // dateActualStart,dateActualCompletion,projectBudget,currencyTypeID,projectStatus,projectPriority,cost_centre_tfID
+    // customerBilledDollars,defaultTaskLimit,defaultTimeSheetRate,defaultTimeSheetRateUnitID 
+    foreach($changes as $auditItem) {
+      $changeDescription = "";
+      $oldValue = $auditItem->get_value('oldValue',DST_HTML_DISPLAY);
+      if($auditItem->get_value('changeType') == 'FieldChange') {
+        $newValue = page::htmlentities($auditItem->get_new_value());
+        switch($auditItem->get_value('fieldName')) {
+          case 'projectName':
+            $changeDescription = "Project name changed from '$oldValue' to '$newValue'.";
+            break;
+          case 'projectShortName':
+            $changeDescription = "Project nick name changed from '$oldValue' to '$newValue'.";
+            break;
+          case 'projectComments':
+            $changeDescription = "Project description changed. <a class=\"magic\" href=\"#x\" onclick=\"$('#auditItem" . $auditItem->get_id() . "').slideToggle('fast');\">Show</a> <div class=\"hidden\" id=\"auditItem" . $auditItem->get_id() . "\"><div><b>Old Description</b><br>" .$oldValue. "</div><div><b>New Description</b><br>" .$newValue. "</div></div>";
+            break;
+          case 'clientID':
+            $oldClient = new client($oldValue);
+            $newClient = new client($newValue);
+            is_object($oldClient) and $oldClientLink = $oldClient->get_link();
+            is_object($newClient) and $newClientLink = $newClient->get_link();
+            $oldClientLink or $oldClientLink = "&lt;empty&gt;";
+            $newClientLink or $newClientLink = "&lt;empty&gt;";
+            $changeDescription = "Client changed from ".$oldClientLink." to ".$newClientLink.".";
+          break;
+          case 'clientContactID':
+            $oldClientContact = new clientContact($oldValue);
+            $newClientContact = new clientContact($newValue);
+            is_object($oldClientContact) and $oldClientContactLink = $oldClientContact->get_link();
+            is_object($newClientContact) and $newClientContactLink = $newClientContact->get_link();
+            $oldClientContactLink or $oldClientContactLink = "&lt;empty&gt;";
+            $newClientContactLink or $newClientContactLink = "&lt;empty&gt;";
+            $changeDescription = "Client Contact changed from ".$oldClientContactLink." to ".$newClientContactLink.".";
+          break;
+          case 'projectType':
+            $changeDescription = "Project type was changed from " . $oldValue . " to " . $newValue . ".";
+          break;
+          case 'projectBudget':
+            $changeDescription = "Project budget was changed from " . page::money($this->get_value("currencyTypeID"),$oldValue)
+                               . " to " . page::money($this->get_value("currencyTypeID"),$newValue) . ".";
+          break;
+          case 'currencyTypeID':
+            $changeDescription = "Project currency was changed from " . $oldValue . " to " . $newValue . ".";
+          break;
+          case 'projectStatus':
+            $changeDescription = "Project status was changed from " . $oldValue . " to " . $newValue . ".";
+          break;
+          case 'cost_centre_tfID':
+            $oldCostCentre = new tf($oldValue);
+            $newCostCentre = new tf($newValue);
+            is_object($oldCostCentre) and $oldCostCentreLink = $oldCostCentre->get_link();
+            is_object($newCostCentre) and $newCostCentreLink = $newCostCentre->get_link();
+            $oldCostCentreLink or $oldCostCentreLink = "&lt;empty&gt;";
+            $newCostCentreLink or $newCostCentreLink = "&lt;empty&gt;";
+            $changeDescription = "Cost centre TF was changed from " . $oldCostCentreLink . " to " . $newCostCentreLink . ".";
+          break;
+          case 'customerBilledDollars':
+            $changeDescription = "Client billing was changed from " . page::money($this->get_value("currencyTypeID"),$oldValue)
+                               . " to " . page::money($this->get_value("currencyTypeID"),$newValue) . ".";
+          break;
+          case 'defaultTaskLimit':
+            $changeDescription = "Default task limit was changed from " . $oldValue . " to " . $newValue . ".";
+          break;
+          case 'defaultTimeSheetRate':
+            $changeDescription = "Default time sheet rate was changed from " . page::money($this->get_value("currencyTypeID"),$oldValue)
+                               . " to " . page::money($this->get_value("currencyTypeID"),$newValue) . ".";
+          break;
+          case 'defaultTimeSheetRateUnitID':
+            $changeDescription = "Default time sheet rate unit was changed from '" . $timeUnits[$oldValue] ."'"
+                               . " to '" . $timeUnits[$newValue] . "'.";
+          break;
+          case 'projectPriority':
+            $priorities = config::get_config_item("projectPriorities");
+            $changeDescription = sprintf('Project priority changed from <span style="color: %s;">%s</span>
+                                          to <span style="color: %s;">%s</span>.'
+                                          , $priorities[$oldValue]["colour"]
+                                          , $priorities[$oldValue]["label"]
+                                          , $priorities[$newValue]["colour"]
+                                          , $priorities[$newValue]["label"]);
+          break;
+          case 'dateActualCompletion':
+          case 'dateActualStart':
+          case 'dateTargetStart':
+          case 'dateTargetCompletion':
+            // these cases are more or less identical
+            switch($auditItem->get_value('fieldName')) {
+              case 'dateActualCompletion': $fieldDesc = "actual completion date"; break;
+              case 'dateActualStart': $fieldDesc = "actual start date"; break;
+              case 'dateTargetStart': $fieldDesc = "estimate/target start date"; break;
+              case 'dateTargetCompletion': $fieldDesc = "estimate/target completion date"; break;
+            }
+            if(!$oldValue) {
+              $changeDescription = "The $fieldDesc was set to $newValue.";
+            } elseif(!$newValue) {
+              $changeDescription = "The $fieldDesc, previously $oldValue, was removed.";
+            } else {
+              $changeDescription = "The $fieldDesc changed from $oldValue to $newValue.";
+            }
+          break;
+        }
+      }
+      $rows[] = "<tr><td class=\"nobr\">" . $auditItem->get_value("dateChanged") . "</td><td>$changeDescription</td><td>" . page::htmlentities($people_cache[$auditItem->get_value("personID")]["name"]) . "</td></tr>";
+    }
+
+    return implode("\n", $rows);
+  }
+
+
 }
 
 
