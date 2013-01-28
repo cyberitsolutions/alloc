@@ -90,6 +90,7 @@ function clickClientStatus(e) {
                                ,"invoices"=>"Invoices"
                                ,"sales"=>"Sales"
                                ,"importexport"=>"Import/Export"
+                               ,"history"=>"History"
                                ,"sbsAll"=>"All")
                           ,$url_alloc_project."projectID=".$project_projectID)}
 {/}
@@ -506,6 +507,9 @@ function clickClientStatus(e) {
 {show_import_export("templates/projectImportExportM.tpl")}
 </div>
 
+<div id="history">
+{show_projectHistory()}
+</div>
 {/}
 
 

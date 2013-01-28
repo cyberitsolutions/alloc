@@ -113,8 +113,12 @@ require_once("../alloc.php");
     echo invoice::get_list_html($rows,$_FORM);
   }
   
-  
-
+  function show_projectHistory() {
+    global $project;
+    global $TPL;
+    $TPL["changeHistory"] = $project->get_changes_list();
+    include_template("templates/projectHistoryM.tpl");
+  }
 
   function show_commission_list($template_name) {
     global $TPL;
