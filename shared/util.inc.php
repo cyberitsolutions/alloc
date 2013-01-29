@@ -231,6 +231,9 @@ function util_show_attachments($entity, $id, $options=array()) {
 }
 function get_filesize_label($file) {
   $size = filesize($file);
+  return get_size_label($size);
+}
+function get_size_label($size) {
   $size > 1023 and $rtn = sprintf("%dK",$size/1024);
   $size < 1024 and $rtn = sprintf("%d",$size);
   $size > (1024 * 1024) and $rtn = sprintf("%0.1fM",$size/(1024*1024));
@@ -761,6 +764,14 @@ function in_str($in,$str) {
 }
 function rmdir_if_empty($dir) {
   if (is_dir($dir)) {
+    // Nuke dir if empty
+    if (dir_is_empty($dir)) {
+      rmdir($dir);
+    }
+  }
+}
+function dir_is_empty($dir) {
+  if (is_dir($dir)) {
     $handle = opendir($dir);
     clearstatcache();
     while (false !== ($file = readdir($handle))) {
@@ -769,10 +780,7 @@ function rmdir_if_empty($dir) {
         clearstatcache();
       }
     }
-    // Nuke dir if empty
-    if (!$num_files) {
-      rmdir($dir);
-    }
+    return !$num_files;
   }
 }
 function tax($amount,$taxPercent=null) {
