@@ -279,6 +279,7 @@ VALUES
 
 ,('announcement'             ,0  ,''         ,NULL ,1          ,NULL)
 ,('announcement'             ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
+,('announcement'             ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 
 ,('auditItem'                ,0  ,''         ,NULL ,8+1        ,'Allow all to create and read audit items.')
 
