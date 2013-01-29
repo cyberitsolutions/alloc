@@ -1288,7 +1288,61 @@ class comment extends db_entity {
     move_attachment($entity, $entityID);
   }
 
+  function find_email($debug=false,$get_blobs=false) {
+    $info = inbox::get_mail_info();
+    $mailbox = $this->get_value("commentMaster").$this->get_value("commentMasterID");
+    $mail = new email_receive($info);
+    $mail->open_mailbox(config::get_config_item("allocEmailFolder")."/".$mailbox,OP_HALFOPEN+OP_READONLY);
+    $mail->check_mail();
+    $msg_nums = $mail->get_all_email_msg_uids(); 
+    $debug and print "<br>".date("Y-m-d H:i:s")." Found ".count($msg_nums)." emails for mailbox: ".$mailbox;
 
+    // fetch and parse email
+    foreach ($msg_nums as $num) {
+      unset($mimebits);
+      // this will stream output
+      $mail->set_msg($num);
+      $mail->get_msg_header();
+      $text = $mail->fetch_mail_text();
+
+      list($from1,$e1n) = parse_email_address($mail->mail_headers["from"]);
+      list($from2,$e2n) = parse_email_address($this->get_value("commentCreatedUserText"));
+      $text1 = str_replace(array("\s","\n","\r"),"",trim($text));
+      $text2 = str_replace(array("\s","\n","\r"),"",trim($this->get_value("comment")));
+      $date = substr($this->get_value("commentCreatedTime"),0,16);
+      $date1 = date("Y-m-d H:i",strtotime($mail->mail_headers["date"])-60);
+      $date2 = date("Y-m-d H:i",strtotime($mail->mail_headers["date"]));
+      $date3 = date("Y-m-d H:i",strtotime($mail->mail_headers["date"])+60);
+
+      if ($text1 == $text2 && ($from1 == $from2 || !$from2) && in_array($date,array($date1,$date2,$date3))) {
+        $debug and print "<br>Found you! Msg no: ".$num." in mailbox: ".$mailbox." for commentID: ".$this->get_id();
+
+        foreach ((array)$mail->mail_parts as $v) {
+          $s = $v["part_object"]; // structure
+          $raw_data = imap_fetchbody($mail->connection, $mail->msg_uid, $v["part_number"],FT_UID | FT_PEEK);
+          $thing = $mail->decode_part($s->encoding,$raw_data);
+          $filename = $mail->get_parameter_attribute_value($s->parameters,"name");
+          $filename or $filename = $mail->get_parameter_attribute_value($s->parameters,"filename");
+          $filename or $filename = $mail->get_parameter_attribute_value($s->dparameters,"name");
+          $filename or $filename = $mail->get_parameter_attribute_value($s->dparameters,"filename");
+          $bits = array();
+          $bits["part"] = $v["part_number"];
+          $bits["filename"] = $filename;
+          $bits["size"] = strlen($thing);
+          $get_blobs and $bits["file"] = $thing;
+          $filename and $mimebits[] = $bits;
+        }
+        $mail->close();
+        return array($mail,$text,$mimebits);
+      } else {
+        #$debug and print "<br>1. ".sprintf("%d",$text1 == $text2);
+        #$debug and print "<br>2. ".sprintf("%s",$from1." =/= ". $from2);
+        #$debug and print "<br>3. ".sprintf("%d",in_array($date,array($date1,$date2,$date3)));
+      }
+    }
+    $mail->close();
+    return array(false,false,false);
+  }
 }
 
 
