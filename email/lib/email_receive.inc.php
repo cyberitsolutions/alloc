@@ -247,7 +247,7 @@ class email_receive {
       $s = $v["part_object"]; // structure
       $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $v["part_number"],FT_UID | FT_PEEK);
       $thing = $this->decode_part($s->encoding,$raw_data);
-      if (!$this->mail_text && strtolower($this->mime_types[$s->type]."/".$s->subtype) == "text/plain") {
+      if (!$mail_text && strtolower($this->mime_types[$s->type]."/".$s->subtype) == "text/plain") {
         $mail_text = $thing;
       }
       if (strtolower($this->mime_types[$s->type]."/".$s->subtype) == "text/html") {
