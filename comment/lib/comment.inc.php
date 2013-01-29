@@ -111,7 +111,8 @@ class comment extends db_entity {
                            commentCreatedUserClientContactID as clientContactID,
                            commentCreatedUserText,
                            commentEmailRecipients,
-                           commentEmailUID
+                           commentEmailUID,
+                           commentMimeParts
                       FROM comment 
                      WHERE commentMaster = '%s' AND commentMasterID = %d 
                   ORDER BY commentCreatedTime"
@@ -212,10 +213,14 @@ class comment extends db_entity {
         $new["form"].= '</form>';
       }
   
-      $files = get_attachments("comment",$v["commentID"],array("sep"=>"<br>"));
+      $v["commentMimeParts"] and $files = unserialize($v["commentMimeParts"]);
       if (is_array($files)) {
-        foreach($files as $key => $file) {
-          $new["files"].= '<div align="center" style="float:left; display:inline; margin-right:14px;">'.$file["file"].'</div>';
+        foreach($files as $file) {
+          $new["files"].= '<div align="center" style="float:left; display:inline; margin-right:14px;">';
+          $new["files"].= "<a href=\"".$TPL["url_alloc_getMimePart"]."part=".$file["part"]."&entity=comment&id=".$v["commentID"]."\">";
+          $new["files"].= get_file_type_image($file["filename"])."<br>".page::htmlentities($file["filename"]);
+          $new["files"].= " (".get_size_label($file["size"]).")</a>";
+          $new["files"].= '</div>';
         }
       }
 

@@ -59,7 +59,7 @@ class email_receive {
   }
   
   function open_mailbox($folder="",$ops=OP_HALFOPEN, $fatal=true) {
-    if ($this->connection) {
+    if ($this->connection && is_resource($this->connection)) {
       imap_close($this->connection); 
     }
     $this->connect_string = '{'.$this->host.':'.$this->port.'/'.$this->protocol.config::get_config_item("allocEmailExtra").'}';
