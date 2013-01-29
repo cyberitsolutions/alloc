@@ -603,6 +603,7 @@ class comment extends db_entity {
         $subject = trim(preg_replace("/{Key:[^}]*}.*$/i","",$subject));
       } else {
         $email->set_body($body);
+        $email->set_content_type();
       }
 
       $bcc && $email->add_header("Bcc",$bcc);
