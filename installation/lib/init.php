@@ -43,7 +43,7 @@ function get_patch_file_list() {
     $dh = opendir($dir);
     if ($dh) {
       while (($file = readdir($dh)) !== false) {
-        if (filetype($dir.$file) == "file") {
+        if (filetype($dir.$file) == "file" && substr($file,0,1) != ".") {
           $files[] = $file;
         }
       }
