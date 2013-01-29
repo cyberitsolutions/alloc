@@ -37,6 +37,7 @@ class comment extends db_entity {
                              ,"commentEmailRecipients"
                              ,"commentEmailUID"
                              ,"commentEmailMessageID"
+                             ,"commentMimeParts"
                              ,"comment"
                              );
 
