@@ -76,7 +76,7 @@ class email_send {
     $this->from = $from;
   }
   function set_content_type($type=false) {
-    $type or $type = "text/plain; charset=utf-8";
+    $type or $type = "text/plain; charset=utf-8; format=flowed";
     $this->add_header("Content-Type",$type);
   }
   function set_subject($subject=false) {
