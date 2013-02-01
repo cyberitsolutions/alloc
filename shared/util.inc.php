@@ -313,35 +313,38 @@ function get_attachments($entity, $id, $ops=array()) {
   }
   return $rows;
 }
-function move_attachment($entity, $id=false) {
-  global $TPL;
-
-  $id = sprintf("%d",$id);
-
+function rejig_files_array($f) {
   // Re-jig the $_FILES array so that it can handle <input type="file" name="many_files[]">
-  if ($_FILES) {
-    foreach ($_FILES as $key => $f) {
-      if (is_array($_FILES[$key]["tmp_name"])) {
-        foreach ($_FILES[$key]["tmp_name"] as $k=>$v) {
-          if ($_FILES[$key]["tmp_name"][$k]) {
-            $files[] = array("name"     =>$_FILES[$key]["name"][$k]
-                            ,"tmp_name" =>$_FILES[$key]["tmp_name"][$k]
-                            ,"type"     =>$_FILES[$key]["type"][$k]
-                            ,"error"    =>$_FILES[$key]["error"][$k]
-                            ,"size"     =>$_FILES[$key]["size"][$k]
+  if ($f) {
+    foreach ($f as $key => $thing) {
+      if (is_array($f[$key]["tmp_name"])) {
+        foreach ($f[$key]["tmp_name"] as $k=>$v) {
+          if ($f[$key]["tmp_name"][$k]) {
+            $files[] = array("name"     =>$f[$key]["name"][$k]
+                            ,"tmp_name" =>$f[$key]["tmp_name"][$k]
+                            ,"type"     =>$f[$key]["type"][$k]
+                            ,"error"    =>$f[$key]["error"][$k]
+                            ,"size"     =>$f[$key]["size"][$k]
                             );
           }
         }
-      } else if ($_FILES[$key]["tmp_name"]) {
-          $files[] = array("name"     =>$_FILES[$key]["name"]
-                          ,"tmp_name" =>$_FILES[$key]["tmp_name"]
-                          ,"type"     =>$_FILES[$key]["type"]
-                          ,"error"    =>$_FILES[$key]["error"]
-                          ,"size"     =>$_FILES[$key]["size"]
+      } else if ($f[$key]["tmp_name"]) {
+          $files[] = array("name"     =>$f[$key]["name"]
+                          ,"tmp_name" =>$f[$key]["tmp_name"]
+                          ,"type"     =>$f[$key]["type"]
+                          ,"error"    =>$f[$key]["error"]
+                          ,"size"     =>$f[$key]["size"]
                           );
       }
     }
   } 
+  return (array)$files;
+}
+function move_attachment($entity, $id=false) {
+  global $TPL;
+
+  $id = sprintf("%d",$id);
+  $files = rejig_files_array($_FILES);
 
   if (is_array($files) && count($files)) {
 

@@ -223,7 +223,7 @@ class email_send {
   function get_bottom_mime_header() {
     return "\n\n--".$this->get_mime_boundary()."--";
   }
-  function add_attachment($file) {
+  function add_attachment($file,$name=false) {
     if (file_exists($file) && is_readable($file) && filesize($file)) {
       $mime_boundary = $this->get_mime_boundary();
       $this->add_header("MIME-Version","1.0");
@@ -238,11 +238,12 @@ class email_send {
   
       // Base64 encode the file data 
       $data = chunk_split(base64_encode($data));
-  
+      $name or $name = basename($file);
+
       $this->body = $this->get_top_mime_header().$this->body;
       $this->body.= "\n\n--".$mime_boundary;
-      $this->body.= "\nContent-Type: ".$mimetype."; name=\"".basename($file)."\"";
-      $this->body.= "\nContent-Disposition: attachment; filename=\"".basename($file)."\"";
+      $this->body.= "\nContent-Type: ".$mimetype."; name=\"".$name."\"";
+      $this->body.= "\nContent-Disposition: attachment; filename=\"".$name."\"";
       $this->body.= "\nContent-Transfer-Encoding: base64";
       $this->body.= "\n\n".$data;
     }

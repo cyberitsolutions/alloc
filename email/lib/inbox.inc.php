@@ -113,10 +113,7 @@ class inbox extends db_entity {
 
     inbox::change_current_user($email_receive->mail_headers["from"]);
     $current_user = &singleton("current_user");
-
-    // Save the email's attachments into a directory, (which also loads up $email_receive->mail_text)
-    $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR."tmp-".md5($email_receive->mail_headers["message-id"]);
-    $email_receive->save_email($dir.DIRECTORY_SEPARATOR);
+    $email_receive->save_email();
 
     // Run any commands that have been embedded in the email
     $command = new command();
@@ -157,9 +154,7 @@ class inbox extends db_entity {
       }
     }
 
-    // Save the email's attachments into a directory, (which also loads up $email_receive->mail_text)
-    $dir = ATTACHMENTS_DIR."task".DIRECTORY_SEPARATOR."tmp-".md5($email_receive->mail_headers["message-id"]);
-    $email_receive->save_email($dir.DIRECTORY_SEPARATOR);
+    $email_receive->save_email();
 
     // Subject line is name, email body is body
     $task = new task();
@@ -170,9 +165,17 @@ class inbox extends db_entity {
     $task->save();
 
     if (!$TPL["message"] && $task->get_id()) {
-      if (is_dir($dir)) {
-        rename($dir, dirname($dir).DIRECTORY_SEPARATOR.$task->get_id());
+      $dir = ATTACHMENTS_DIR.DIRECTORY_SEPARATOR."task".DIRECTORY_SEPARATOR.$task->get_id();
+      if (!is_dir($dir)) {
+        mkdir($dir);
+        foreach((array)$email_receive->mimebits as $file) {
+          $fh = fopen($dir.DIRECTORY_SEPARATOR.$file["name"],"wb");
+          fputs($fh, $file["blob"]);
+          fclose($fh);
+        }
       }
+      rmdir_if_empty(ATTACHMENTS_DIR.DIRECTORY_SEPARATOR."task".DIRECTORY_SEPARATOR.$task->get_id());
+
       $TPL["message_good"][] = "Created task ".$task->get_id()." and moved the email to the task's mail folder.";
       $mailbox = "INBOX/task".$task->get_id();
       $email_receive->create_mailbox($mailbox) and $TPL["message_good"][] = "Created mailbox: ".$mailbox;
@@ -206,9 +209,7 @@ class inbox extends db_entity {
       $email_receive->open_mailbox($info["folder"]);
       $email_receive->set_msg($req["id"]);
       $email_receive->get_msg_header();
-
-      $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR."tmp-".md5($email_receive->mail_headers["message-id"]);
-      $email_receive->save_email($dir);
+      $email_receive->save_email();
 
       $c = comment::add_comment_from_email($email_receive,$task);
       $commentID = $c->get_id();

@@ -218,7 +218,7 @@ class comment extends db_entity {
         foreach($files as $file) {
           $new["files"].= '<div align="center" style="float:left; display:inline; margin-right:14px;">';
           $new["files"].= "<a href=\"".$TPL["url_alloc_getMimePart"]."part=".$file["part"]."&entity=comment&id=".$v["commentID"]."\">";
-          $new["files"].= get_file_type_image($file["filename"])."<br>".page::htmlentities($file["filename"]);
+          $new["files"].= get_file_type_image($file["name"])."<br>".page::htmlentities($file["name"]);
           $new["files"].= " (".get_size_label($file["size"]).")</a>";
           $new["files"].= '</div>';
         }
@@ -299,6 +299,7 @@ class comment extends db_entity {
     if ($row["files"] || $row["reply"]) {
       $rtn[] = '<tr>';
       $row["files"] and $rtn[] = '  <td valign="bottom" align="left">'.$row["files"].'</td>';
+      $cs = 2;
       $row["files"] or $cs = 3;
       $row["reply"] and $rtn[] = '  <td valign="bottom" align="right" colspan="'.$cs.'">'.$row["reply"].'</td>';
       $rtn[] = '</tr>';
@@ -469,6 +470,9 @@ class comment extends db_entity {
     $comment->skip_modified_fields = true;
     $comment->save();
 
+    if ($email_receive->mimebits) {
+      comment::update_mime_parts($comment->get_id(),$email_receive->mimebits);
+    }
 
     // CYBER-ONLY: Re-open task, if comment has been made by an external party.
     if (config::for_cyber() && !$comment->get_value('commentCreatedUser')) {
@@ -575,7 +579,7 @@ class comment extends db_entity {
     return array(implode(", ",(array)$to_address), implode(", ",(array)$bcc), implode(", ",(array)$successful_recipients));
   }
 
-  function send_emails($selected_option, $email_receive=false, $hash="", $is_a_reply_comment=false) {
+  function send_emails($selected_option, $email_receive=false, $hash="", $is_a_reply_comment=false, $files=array()) {
     $current_user = &singleton("current_user");
 
     $e = $this->get_parent_object();
@@ -610,6 +614,12 @@ class comment extends db_entity {
       } else {
         $email->set_body($body);
         $email->set_content_type();
+        if ($files) {
+          // (if we're bouncing a complete email body the attachments are already included, else do this...)
+          foreach ((array)$files as $file) {
+            $email->add_attachment($file["tmp_name"],$file["name"]);
+          }
+        }
       }
 
       $bcc && $email->add_header("Bcc",$bcc);
@@ -669,16 +679,6 @@ class comment extends db_entity {
         }
         $email->set_reply_to($f);
         $email->set_from($f);
-      }
-
-      // if we're bouncing a complete email body the attachments are already included
-      if ($id && !$email_receive) {
-        $files = get_attachments("comment",$id);
-        if (is_array($files)) {
-          foreach ($files as $file) {
-            $email->add_attachment($file["path"]);
-          }
-        }
       }
 
       if ($email->send(false)) {
@@ -1165,7 +1165,7 @@ class comment extends db_entity {
     return $emailRecipients;
   }
 
-  function send_comment($commentID, $emailRecipients, $email_receive=false) {
+  function send_comment($commentID, $emailRecipients, $email_receive=false, $files=array()) {
 
     $comment = new comment();
     $comment->set_id($commentID);
@@ -1191,7 +1191,7 @@ class comment extends db_entity {
       }
     }
 
-    $rtn = $comment->send_emails($emailRecipients,$email_receive,$hash,$is_a_reply_comment);
+    $rtn = $comment->send_emails($emailRecipients,$email_receive,$hash,$is_a_reply_comment,$files);
     if (is_array($rtn)) {
       $email_sent = true;
       list($successful_recipients,$messageid) = $rtn;
@@ -1332,9 +1332,9 @@ class comment extends db_entity {
           $filename or $filename = $mail->get_parameter_attribute_value($s->dparameters,"filename");
           $bits = array();
           $bits["part"] = $v["part_number"];
-          $bits["filename"] = $filename;
+          $bits["name"] = $filename;
           $bits["size"] = strlen($thing);
-          $get_blobs and $bits["file"] = $thing;
+          $get_blobs and $bits["blob"] = $thing;
           $filename and $mimebits[] = $bits;
         }
         $mail->close();
@@ -1348,6 +1348,34 @@ class comment extends db_entity {
     $mail->close();
     return array(false,false,false);
   }
+
+  function update_mime_parts($commentID, $files) {
+    $x = 2;
+    foreach ((array)$files as $file) {
+      if (is_uploaded_file($file["tmp_name"])) {
+        $bits = array();
+        $bits["part"] = $x++;
+        $bits["name"] = $file["name"];
+        $bits["size"] = filesize($file["tmp_name"]);
+        $mimebits[] = $bits;
+      } else if ($file["blob"]) {
+        $bits = array();
+        $bits["part"] = $file["part"];
+        $bits["name"] = $file["name"];
+        $bits["size"] = $file["size"];
+        $mimebits[] = $bits;
+      }
+    }
+
+    if ($commentID && $mimebits) {
+      $comment = new comment($commentID);
+      $comment->set_value("commentMimeParts",serialize($mimebits));
+      $comment->skip_modified_fields = true;
+      $comment->updateSearchIndexLater = true;
+      $comment->save();
+    }
+  }
+
 }
 
 
