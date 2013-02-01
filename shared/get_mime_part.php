@@ -30,10 +30,10 @@ if (isset($_GET["id"]) && $_GET["part"]) {
   $comment->select() or die("Bad _GET[id]");
   list($mail,$text,$mimebits) = $comment->find_email(false,true);
   if ($comment->has_attachment_permission($current_user)) {
-    foreach($mimebits as $bit) {
+    foreach((array)$mimebits as $bit) {
       if ($bit["part"] == $_GET["part"]) {
-        $thing = $bit["file"];
-        $filename = $bit["filename"];
+        $thing = $bit["blob"];
+        $filename = $bit["name"];
         break;
       }   
     }

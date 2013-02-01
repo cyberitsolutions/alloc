@@ -195,9 +195,22 @@ class email_receive {
     return (array)$rtn;
   }
 
-  function download_email_part($num,$encoding) {
-    $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $num, FT_UID | FT_PEEK);
-    return $this->decode_part($encoding,$raw_data);
+  function download_email_part($part) {
+    $this->load_structure();
+    $this->load_parts($this->mail_structure);
+    foreach ((array)$this->mail_parts as $v) {
+      $s = $v["part_object"]; // structure
+      if ($part == $v["part_number"]) {
+        $raw_data = imap_fetchbody($this->connection, $this->msg_uid, $part, FT_UID | FT_PEEK);
+        $thing = $this->decode_part($s->encoding,$raw_data);
+        $filename = $this->get_parameter_attribute_value($s->parameters,"name");
+        $filename or $filename = $this->get_parameter_attribute_value($s->parameters,"filename");
+        $filename or $filename = $this->get_parameter_attribute_value($s->dparameters,"name");
+        $filename or $filename = $this->get_parameter_attribute_value($s->dparameters,"filename");
+        return array($filename,$thing);
+      }
+    }
+    return array(false,false);
   }
 
   function load_structure() {
@@ -262,17 +275,11 @@ class email_receive {
     }
   }
 
-  function save_email($dir) {
+  function save_email() {
 
     if ($this->msg_text) {
-      return $this->save_email_from_text($dir);
+      return $this->save_email_from_text();
     }
-
-    if ($dir && !is_dir($dir)) {
-      mkdir($dir, 0777);
-    }
-    $dir && $dir[strlen($dir)-1] != DIRECTORY_SEPARATOR and $dir.=DIRECTORY_SEPARATOR;
-    $this->dir = $dir;
 
     $this->load_structure();
     $this->load_parts($this->mail_structure);
@@ -290,11 +297,13 @@ class email_receive {
         $filename or $filename = $this->get_parameter_attribute_value($s->dparameters,"name");
         $filename or $filename = $this->get_parameter_attribute_value($s->dparameters,"filename");
 
-        //$filename or $filename = $v["part_number"]; // we're only storing attachments that have filenames.
         if ($filename) {
-          $fh = fopen($dir.$filename,"wb");
-          fputs($fh, $thing);
-          fclose($fh);
+          $bits = array();
+          $bits["part"] = $v["part_number"];
+          $bits["name"] = $filename;
+          $bits["size"] = strlen($thing);
+          $bits["blob"] = $thing;
+          $this->mimebits[] = $bits;
         }
       }
     } 
@@ -310,8 +319,6 @@ class email_receive {
         }
       }
     }
-
-    rmdir_if_empty($dir);
   }
 
   function parse_mime($structure) {
@@ -354,23 +361,20 @@ class email_receive {
     return array($plain, $attachments);
   }
 
-  function save_email_from_text($dir) {
-    if ($dir && !is_dir($dir)) {
-      mkdir($dir, 0777);
-    }
-    $dir && $dir[strlen($dir)-1] != DIRECTORY_SEPARATOR and $dir.=DIRECTORY_SEPARATOR;
-    $this->dir = $dir;
+  function save_email_from_text() {
     $this->load_structure();
     list($this->mail_text,$attachments) = $this->parse_mime($this->mail_structure);
 
-    foreach ((array)$attachments as $v) {
+    foreach ((array)$attachments as $k => $v) {
       if ($v["name"]) {
-        $fh = fopen($dir.$v["name"],"wb");
-        fputs($fh, $v["body"]);
-        fclose($fh);
+        $bits = array();
+        $bits["part"] = $k+1; // nope: $v["part_number"];
+        $bits["name"] = $v["name"];
+        $bits["size"] = strlen($v["body"]);
+        $bits["blob"] = $v["body"];
+        $this->mimebits[] = $bits;
       }
     }
-    rmdir_if_empty($dir);
   }
 
   function mark_seen() {
@@ -732,7 +736,7 @@ if (basename($_SERVER["PHP_SELF"]) == "email_receive.inc.php") {
   list($h,$b) = $e->get_raw_email_by_msg_uid($num);
   //echo "\nget_raw_email_by_msg_uid(): "."HEADER: ".$h."\nBODY: ".$b;
 
-  echo "\nsave_email(): ".$e->save_email("/tmp/email");
+  echo "\nsave_email(): ".$e->save_email();
   //echo "\nload_parts(): ".print_r($e->mail_parts,1);
   echo "\nmail_text (plaintext version): ".$e->mail_text;
   echo "\nget_commands(): ".print_r($e->get_commands(task::get_exposed_fields()),1);

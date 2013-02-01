@@ -141,7 +141,7 @@ if (true) {
     #$x>20 and alloc_error(fclose($fp).$mail->close()."\n"."Stopped."."\n");
 
     $mail->set_msg($num);
-    $decoded = $mail->save_email($dir.DIRECTORY_SEPARATOR."email");
+    $decoded = $mail->save_email();
     $body = trim(mime_parser::get_body_text($decoded));
     $from = $decoded[0]["Headers"]["from:"];
     $subject = $decoded[0]["Headers"]["subject:"];

@@ -41,9 +41,10 @@ if ($_REQUEST["eo_email"]) {
 // add all interested parties
 $emailRecipients = comment::add_interested_parties($commentID, $_REQUEST["commentEmailRecipients"], $other_parties);
 
-// If someone uploads an attachment
+// If someone uploads attachments
 if ($_FILES) {
-  comment::move_attachment("comment",$commentID);
+  $_FILES = rejig_files_array($_FILES);
+  comment::update_mime_parts($commentID, $_FILES);
 }
 
 // Attach any alloc generated timesheet pdf
@@ -65,7 +66,7 @@ if ($_REQUEST["attach_tasks"]) {
 
 
 // Re-email the comment out, including any attachments
-if (!comment::send_comment($commentID,$emailRecipients)) {
+if (!comment::send_comment($commentID,$emailRecipients,false,$_FILES)) {
   alloc_error("Email failed to send.");
 }
 
