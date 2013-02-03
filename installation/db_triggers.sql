@@ -20,6 +20,7 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task has pending tasks.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Must use: call change_task_status(taskID,status)\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task cannot be pending itself.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task belongs to wrong project.\n\n")$$
 
 
 -- if (NOT something) doesn't work for NULLs
@@ -196,6 +197,10 @@ DROP TRIGGER IF EXISTS before_update_timeSheet $$
 CREATE TRIGGER before_update_timeSheet BEFORE UPDATE ON timeSheet
 FOR EACH ROW
 BEGIN
+  DECLARE has_bastard_tasks INTEGER;
+  DECLARE cbd BIGINT(20);
+  DECLARE cur VARCHAR(3);
+
   IF (has_perm(personID(),512,"timeSheet")) THEN
     SELECT 1 INTO @null;
   ELSEIF (OLD.status = 'manager' AND NEW.status = 'edit' AND has_perm(personID(),256,"timeSheet")) THEN
@@ -222,6 +227,25 @@ BEGIN
     SET NEW.dateSubmittedToAdmin = OLD.dateSubmittedToAdmin;
     SET NEW.dateRejected = OLD.dateRejected;
     SET NEW.invoiceDate = OLD.invoiceDate;
+  END IF;
+
+  IF OLD.status = 'edit' AND NEW.status = 'edit' AND neq(OLD.projectID,NEW.projectID) THEN
+    SELECT count(*) INTO has_bastard_tasks FROM timeSheetItem
+ LEFT JOIN timeSheet ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+ LEFT JOIN task ON timeSheetItem.taskID = task.taskID
+     WHERE task.projectID != NEW.projectID
+       AND timeSheetItem.timeSheetID = OLD.timeSheetID;
+    IF has_bastard_tasks THEN
+      call alloc_error("Task belongs to wrong project.");
+    END IF;
+
+    SELECT customerBilledDollars,currencyTypeID INTO cbd,cur FROM project WHERE projectID = NEW.projectID;
+    SET NEW.customerBilledDollars = cbd;
+    SET NEW.currencyTypeID = cur;
+    UPDATE timeSheetItem
+       SET rate = (SELECT rate FROM projectPerson WHERE projectID = NEW.projectID AND personID = personID() LIMIT 1)
+     WHERE timeSheetID = OLD.timeSheetID;
+
   END IF;
 END
 $$
