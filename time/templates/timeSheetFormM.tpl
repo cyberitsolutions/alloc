@@ -1,5 +1,17 @@
 {page::header()}
 {page::toolbar()}
+<script type="text/javascript" language="javascript">
+  {if $timeSheet_timeSheetID}
+  $(document).ready(function() {
+    var orig_projectID = $("#projectID").val();
+    $("#projectID").live("change",function(){
+      if ($(this).val() != orig_projectID) {
+        window.alert("WARNING: Changing the project will update this time sheet with new rates.\n\nAlso, this change will not work unless all the tasks that are being billed for, belong to the project:\n\n"+$(this).val()+" "+$('#projectID option:selected').text());
+      }
+    });
+  });
+  {/}
+</script>
 <form action="{$url_alloc_timeSheet}" method="post" id="timeSheetForm">
 <input type="hidden" name="timeSheetID" value="{$timeSheet_timeSheetID}">
 <input type="hidden" name="timeSheet_personID" value="{$timeSheet_personID}">

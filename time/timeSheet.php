@@ -736,7 +736,7 @@ if ($amount_allocated) {
 }
 
 
-if (!$timeSheet->get_id()) {
+if (!$timeSheet->get_id() || $timeSheet->get_value("status") == "edit") {
   $TPL["show_project_options"] = $project_select;
   $TPL["show_client_options"] = $client_select;
 
