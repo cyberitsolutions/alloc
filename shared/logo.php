@@ -20,7 +20,7 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-include('../alloc.php');
+require_once('../alloc.php');
 $image = ALLOC_LOGO;
 $_GET["type"] == "small" and $image = ALLOC_LOGO_SMALL;
 header('Content-type: image/jpg');
