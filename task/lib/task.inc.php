@@ -1260,6 +1260,13 @@ class task extends db_entity {
     }
 
 
+    // unset vars that aren't necessary
+    foreach ((array)$_FORM as $k => $v) {
+      if (!$v) {
+        unset($_FORM[$k]);
+      }
+    }
+
     // Get
     $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
 
