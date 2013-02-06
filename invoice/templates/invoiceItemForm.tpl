@@ -1,4 +1,3 @@
-
 <table class="box">
   <tr>
     <th colspan="6">Create Invoice Item</th>
@@ -20,13 +19,20 @@
         <td style="width:1%">Qty</td>
         <td style="width:1%">&nbsp;</td>
         <td>Amount</td>
+        {if config::get_config_item("taxPercent")}
+        <td>Includes <br>{echo config::get_config_item("taxName")}</td>
+        {/}
         <td>Memo</td>
       </tr>
       <tr>
         <td class="nobr">{page::calendar("iiDate",$invoiceItem_iiDate)}</td>
-        <td><input type="text" size="4" name="iiQuantity" value="{$invoiceItem_iiQuantity}"></td>
+        <td><input type="text" size="4" name="iiQuantity" id="iiQuantity" value="{$invoiceItem_iiQuantity}"></td>
         <td>*</td>
-        <td><input type="text" size="7" name="iiUnitPrice" value="{$invoiceItem_iiUnitPrice}"></td>
+        <td><input type="text" size="7" name="iiUnitPrice" id="iiUnitPrice" value="{$invoiceItem_iiUnitPrice}"></td>
+        {if config::get_config_item("taxPercent")}
+        {$invoiceItem_invoiceItemID or $invoiceItem_iiTax = "checked"}
+        <td><input type="checkbox" name="iiTax" id="iiTax" value="{echo config::get_config_item("taxPercent")}" {$invoiceItem_iiTax>0 and print "checked"}></td>
+        {/}
         <td><input type="text" size="60" name="iiMemo" value="{$invoiceItem_iiMemo}"></td>
         <td class="right nobr">{$invoiceItem_buttons}</td>
       </tr>
@@ -54,7 +60,10 @@
         <td>Create Item from Expense Form</td>
       </tr>
       <tr>
-        <td><select name="expenseFormID"><option value=""></option>{$expenseFormOptions}</select></td>
+        <td>
+          <select name="expenseFormID"><option value=""></option>{$expenseFormOptions}</select>
+          <input type='checkbox' name='split_expenseForm' value='1'>Use Expense Form Items
+        </td>
         <td></td>
         <td align="right">{$invoiceItem_buttons}</td>
       </tr>

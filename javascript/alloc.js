@@ -13,6 +13,11 @@ function refreshProjectList(radiobutton) {
   makeAjaxRequest(url, 'projectListDropdown','',1)
 }
 
+function add_gst(value) {
+  var tax_percent = get_alloc_var("tax_percent");
+  return Math.round(value * (tax_percent/100 +1)*100)/100;
+}
+
 function deduct_gst(value) {
   var tax_percent = get_alloc_var("tax_percent");
   return Math.round(value / (tax_percent/100 +1)*100)/100;
