@@ -33,6 +33,7 @@ class invoiceItem extends db_entity {
                              ,"iiQuantity"
                              ,"iiUnitPrice" => array("type"=>"money")
                              ,"iiAmount" => array("type"=>"money")
+                             ,"iiTax"
                              ,"iiDate"
                              );
 
@@ -136,6 +137,7 @@ class invoiceItem extends db_entity {
       $this->set_value("iiUnitPrice",$iiUnitPrice);
       $this->set_value("iiAmount",$amount);
       $this->set_value("iiDate",$date);
+      $this->set_value("iiTax",config::get_config_item("taxPercent"));
       $this->currency = $timeSheet->get_value("currencyTypeID");
       $this->save();
     } else {
@@ -178,6 +180,7 @@ class invoiceItem extends db_entity {
       $ii->set_value("iiUnitPrice",$iiUnitPrice);
       $ii->set_value("iiAmount",$iiUnitPrice * $row["timeSheetItemDuration"] * $row["multiplier"]);
       $ii->set_value("iiDate",$row["dateTimeSheetItem"]);
+      $ii->set_value("iiTax",config::get_config_item("taxPercent"));
       $ii->save();
     }
   }
@@ -199,6 +202,7 @@ class invoiceItem extends db_entity {
     $this->set_value("iiUnitPrice",$amount);
     $this->set_value("iiAmount",$amount);
     $this->set_value("iiDate",$row["maxDate"]);
+    $this->set_value("iiTax",config::get_config_item("taxPercent"));
     $this->save();
   }
 
@@ -219,6 +223,7 @@ class invoiceItem extends db_entity {
       $ii->set_value("iiUnitPrice",$amount);
       $ii->set_value("iiAmount",$amount*$row["quantity"]);
       $ii->set_value("iiDate",$row["transactionDate"]);
+      $ii->set_value("iiTax",config::get_config_item("taxPercent"));
       $ii->save();
     }
   }

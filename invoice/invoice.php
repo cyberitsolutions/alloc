@@ -264,6 +264,9 @@ function show_invoiceItem_list() {
       
       if ($amounts[$invoiceItem->get_id()] === null) {
         $amount = $invoiceItem->get_value("iiAmount",DST_HTML_DISPLAY);
+        if (config::get_config_item("taxPercent") && !$invoiceItem->get_value("iiTax")) {
+          $amount = page::money($invoice->get_value("currencyTypeID"),$amount * (config::get_config_item("taxPercent") / 100 + 1),"%m");
+        }
       } else {
         $amount = page::money($invoice->get_value("currencyTypeID"),$amounts[$invoiceItem->get_id()],"%m");
       }
@@ -515,6 +518,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
   #echo "<pre>".print_r($_POST,1)."</pre>";
 
+  $_POST["iiTax"] or $_POST["iiTax"] = '';
 
   if ($_POST["invoiceItem_save"]) {
     $invoiceItem->read_globals();
@@ -567,10 +571,14 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
 if ($invoiceID && $invoiceItemIDs) {
   $currency = $invoice->get_value("currencyTypeID");
-  $q = prepare("SELECT sum(iiAmount * pow(10,-currencyType.numberToBasic)) as sum_iiAmount
+  $q = prepare("SELECT SUM(IF((iiTax IS NULL OR iiTax = 0) AND value,
+                          (value/100+1) * iiAmount * pow(10,-currencyType.numberToBasic),
+                          iiAmount * pow(10,-currencyType.numberToBasic)
+                      )) as sum_iiAmount
                   FROM invoiceItem 
              LEFT JOIN invoice on invoiceItem.invoiceID = invoice.invoiceID
              LEFT JOIN currencyType on invoice.currencyTypeID = currencyType.currencyTypeID
+             LEFT JOIN config ON config.name = 'taxPercent'
                  WHERE invoiceItem.invoiceID = %d",$invoiceID);
   $db->query($q);
   $db->next_record() and $TPL["invoiceTotal"] = page::money($currency,$db->f("sum_iiAmount"),"%S%m %c");

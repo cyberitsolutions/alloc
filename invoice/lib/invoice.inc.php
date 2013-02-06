@@ -148,16 +148,17 @@ class invoice extends db_entity {
     $q.= prepare("ORDER BY iiDate,invoiceItemID");
     $db = new db_alloc();
     $db->query($q);
-    $taxPercent = config::get_config_item("taxPercent");
-    $taxPercentDivisor = ($taxPercent/100) + 1;
 
     while ($db->next_record()) {
       $invoiceItem = new invoiceItem();
       $invoiceItem->read_db_record($db);
 
+      $taxPercent = $invoiceItem->get_value("iiTax");
+      $taxPercentDivisor = ($taxPercent/100) + 1;
+
       $num = page::money($currency,$invoiceItem->get_value("iiAmount"),"%mo");
 
-      if ($taxPercent !== '') {
+      if ($taxPercent) {
         $num_minus_gst = $num / $taxPercentDivisor;
         $gst = $num - $num_minus_gst;
 
@@ -167,14 +168,23 @@ class invoice extends db_entity {
 
         $rows[$invoiceItem->get_id()]["quantity"] = $invoiceItem->get_value("iiQuantity");
         $rows[$invoiceItem->get_id()]["unit"] = page::money($currency,$invoiceItem->get_value("iiUnitPrice"),"%mo");
-        $rows[$invoiceItem->get_id()]["money"] += page::money($currency,$num_minus_gst,"%m");
-        $rows[$invoiceItem->get_id()]["gst"] += page::money($currency,$gst,"%m");
+        $rows[$invoiceItem->get_id()]["money"] = page::money($currency,$num_minus_gst,"%m");
+        $rows[$invoiceItem->get_id()]["gst"] = page::money($currency,$gst,"%m");
         $info["total_gst"] += $gst;
         $info["total"] += $num_minus_gst;
       } else {
+
+        $taxPercent = config::get_config_item("taxPercent");
+        $taxPercentDivisor = ($taxPercent/100) + 1;
+
+        $num_plus_gst = $num * $taxPercentDivisor;
+        $gst = $num_plus_gst - $num;
+
         $rows[$invoiceItem->get_id()]["quantity"] = $invoiceItem->get_value("iiQuantity");
         $rows[$invoiceItem->get_id()]["unit"] = page::money($currency,$invoiceItem->get_value("iiUnitPrice"),"%mo");
-        $rows[$invoiceItem->get_id()]["money"] += page::money($currency,$num,"%m");
+        $rows[$invoiceItem->get_id()]["money"] = page::money($currency,$num,"%m");
+        $rows[$invoiceItem->get_id()]["gst"] = page::money($currency,$gst,"%m");
+        $info["total_gst"] += $gst;
         $info["total"] += $num;
       }
 
