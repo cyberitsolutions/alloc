@@ -18,32 +18,28 @@ class alloc_output_handler:
     rtn = []
     inverted_field_names = dict([[v, k] for k, v in alloc.field_names[entity].items()])
 
-    # Allow the display of custom fields
-    if type(only_these_fields) == type("string"):
-      # Print all fields
-      if only_these_fields.lower() == "all":
-        for k, v in rows.items():
-          for name, value in v.items():
-            del(value) # pylint
-            rtn.append(name)
-            if name in alloc.field_names[entity]:
-              rtn.append(alloc.field_names[entity][name])
-            else:
-              rtn.append(name)
-          break
-      # Print a selection of fields
-      else:
-        f = only_these_fields.split(",")
-        for name in f:
-          if name in inverted_field_names:
-            name = inverted_field_names[name]
+    # Print all fields
+    if 'all' in only_these_fields:
+      for k, v in rows.items():
+        for name, value in v.items():
+          del(value) # pylint
           rtn.append(name)
           if name in alloc.field_names[entity]:
             rtn.append(alloc.field_names[entity][name])
           else:
             rtn.append(name)
-      return rtn
-    return only_these_fields
+        break
+    # Print a selection of fields
+    else:
+      for name in only_these_fields:
+        if name in inverted_field_names:
+          name = inverted_field_names[name]
+        rtn.append(name)
+        if name in alloc.field_names[entity]:
+          rtn.append(alloc.field_names[entity][name])
+        else:
+          rtn.append(name)
+    return rtn
 
   def __get_sorted_rows(self, alloc, entity, rows, sortby):
     """Sort the rows of a list."""
@@ -53,7 +49,6 @@ class alloc_output_handler:
       return rows
     inverted_field_names = dict([[v, k] for k, v in alloc.field_names[entity].items()])
 
-    sortby = sortby.split(",")
     sortby.reverse()    
 
     # load up fields
@@ -160,6 +155,11 @@ class alloc_output_handler:
     """For printing out results in an ascii table or CSV format."""
     if alloc.quiet: return
     if not rows: return 
+
+    if not isinstance(sort, list):
+      sort = [sort]
+    if not isinstance(only_these_fields, list):
+      only_these_fields = [only_these_fields]
 
     only_these_fields = self.__get_only_these_fields(alloc, entity, rows, only_these_fields)
     field_names = only_these_fields[1::2]

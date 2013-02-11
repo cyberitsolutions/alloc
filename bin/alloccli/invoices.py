@@ -8,20 +8,15 @@ class invoices(alloc):
   ops = []
   ops.append((''  , 'help           ', 'Show this help.'))
   ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
-                                       '"never" or "always". If WHEN is omitted, assume "always".'))
-
   ops.append(('i' , 'items          ', 'Show the invoice\'s items.'))
-
   ops.append(('c:', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.'))
   ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
-
   ops.append(('n:', 'num=ID         ', 'An invoice\'s number.'))
   ops.append((''  , 'from=DATE      ', 'From this start date.'))
   ops.append((''  , 'to=DATE        ', 'To this end date.'))
-  ops.append(('s:', 'status=STATUS  ', 'The invoice\'s status eg: edit, finished, reconcile'))
-
-  ops.append(('f:', 'fields=LIST    ', 'The commar separated list of fields you would like printed.\n'
-                                       '(eg: "all" eg: "clientID,clientName")')) 
+  ops.append(('s:', 'status=STATUS  ', 'The invoice\'s status eg: edit finished reconcile'))
+  ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
+                                       '(eg: all eg: clientID clientName)')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -74,14 +69,14 @@ class invoices(alloc):
         for i in invoices_list:
           invoiceIDs.append(i)
 
-        fields = o["fields"] or "invoiceID,invoiceItemID,clientID,clientName,invoiceNum,\
-                                 iiDate,iiAmount,iiQuantity,iiUnitPrice,iiMemo"
+        fields = o["fields"] or ["invoiceID","invoiceItemID","clientID","clientName","invoiceNum",
+                                 "iiDate","iiAmount","iiQuantity","iiUnitPrice","iiMemo"]
         self.print_table("invoiceItem", self.get_list("invoiceItem", {"invoiceID":invoiceIDs}),
                          fields, sort="invoiceID")
     
     else:
-      fields = o["fields"] or "invoiceID,clientID,clientName,invoiceNum,invoiceDateFrom,invoiceDateTo,invoiceStatus,\
-                               status_label,amountPaidRejected,amountPaidPending,amountPaidApproved,iiAmountSum"
+      fields = o["fields"] or ["invoiceID","clientID","clientName","invoiceNum","invoiceDateFrom","invoiceDateTo","invoiceStatus",
+                               "status_label","amountPaidRejected","amountPaidPending","amountPaidApproved","iiAmountSum"]
 
       self.print_table("invoice", self.get_list("invoice", f), fields, sort="clientName")
       

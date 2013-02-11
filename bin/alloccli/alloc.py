@@ -178,9 +178,9 @@ class alloc(object):
   }
 
 
-  row_timeSheet = "timeSheetID,dateFrom,dateTo,status,person,duration,totalHours,amount,projectName"
-  row_timeSheetItem = "timeSheetID,timeSheetItemID,dateTimeSheetItem,taskID,timeSheetItemDuration,"
-  row_timeSheetItem += "rate,worth,hoursBilled,timeLimit,limitWarning,comment"
+  row_timeSheet = ["timeSheetID","dateFrom","dateTo","status","person","duration","totalHours","amount","projectName"]
+  row_timeSheetItem = ["timeSheetID","timeSheetItemID","dateTimeSheetItem","taskID","timeSheetItemDuration",
+                       "rate","worth","hoursBilled","timeLimit","limitWarning","comment"]
 
   def __init__(self, url=""):
 
@@ -435,14 +435,23 @@ class alloc(object):
       return i
 
   def is_num(self, obj):
-    """Return True is the obj is numeric looking."""
+    """Return True is the obj is numeric looking, or it obj is a list of numbers."""
     # There's got to be a better way to tell if something is a number 
     # isinstance of float or int didn't do the job (for some reason ...)
-    try:
-      if obj is not None and float(obj) >= 0:
-        return True
-    except:
-      pass
+
+    is_num = True
+    if isinstance(obj, list):
+      for v in obj:
+        if not self.is_num(v):
+          is_num = False
+      return is_num
+
+    else:
+      try:
+        if obj is not None and float(obj) >= 0:
+          return True
+      except:
+        pass
 
     return False
 

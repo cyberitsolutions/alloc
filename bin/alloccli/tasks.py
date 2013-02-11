@@ -11,17 +11,17 @@ class tasks(alloc):
                                        '"never" or "always". If WHEN is omitted, assume "always".'))
   ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
   ops.append(('t:', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
-  ops.append(('s:', 'status=NAME    ', 'A task\'s status. Can accept multiple values.\n'
-                                       '(eg: "open,pending eg: "open,pending_info". Default: "open")'))
-  ops.append((''  , 'type=NAME      ', 'A task\'s type, eg: "Task" eg: "Fault,Message"'))
+  ops.append(('s:', 'status=NAME    ', 'A task\'s status.\n'
+                                       '(eg: open pending eg: open pending_info. Default: open)'))
+  ops.append((''  , 'type=NAME      ', 'A task\'s type, eg: Task eg: Fault Message'))
   ops.append(('a:', 'assignee=NAME  ', 'A task\'s assignee, username or first and surname.\n'
                                        '(eg: "jon" eg: "all" eg: "NULL". Defaults to yourself.)'))
   ops.append(('m:', 'manager=NAME   ', 'A task\'s manager, username or first and surname".'))
   ops.append(('c:', 'creator=NAME   ', 'A task\'s creator, username or first and surname".'))
   ops.append(('o:', 'order=NAME     ', 'The order the Tasks are displayed in.\n'
-                                       'Default: "Priority,Type,_Rate,status" (underscore means reverse sort).')) 
-  ops.append(('f:', 'fields=LIST    ', 'The commar separated list of fields you would like printed.\n'
-                                       '(eg: "all" eg: "taskID,Status,taskStatus,Proj Pri")')) 
+                                       'Default: "Priority Type _Rate status" (underscore means reverse sort).')) 
+  ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
+                                       '(eg: all eg: taskID Status taskStatus Proj\\ Pri)')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -37,7 +37,7 @@ class tasks(alloc):
     # Got this far, then authenticate
     self.authenticate()
 
-    order = ''
+    order = []
     if o['order']: order = o['order']
 
     # Get personID, either assignee or logged in user
@@ -62,7 +62,7 @@ class tasks(alloc):
     projectIDs = []
 
     if self.is_num(o['project']):
-      projectIDs.append(o['project'])
+      projectIDs = o['project']
     elif o['project']:
       projfilter = {}
       projfilter["personID"] = personID
@@ -84,8 +84,8 @@ class tasks(alloc):
     ops["taskView"] = "prioritised"
     ops["showTimes"] = True
     o["status"] = o["status"] or "open"
-    ops['taskStatus'] = o['status'].split(',')
-    if o['type']: ops['taskTypeID'] = o['type'].split(',')
+    ops['taskStatus'] = o['status']
+    if o['type']: ops['taskTypeID'] = o['type']
 
     # Get a taskID either passed via command line, or figured out from a task name
     if self.is_num(o['task']):
@@ -100,9 +100,9 @@ class tasks(alloc):
     r = self.get_list("task", ops)
 
     if not o['fields']:
-      if not order: order = "priorityLabel,taskTypeID,_rate,taskStatusLabel"
-      fields = "taskID,taskTypeID,taskStatusLabel,priorityLabel,timeExpected,"
-      fields += "timeLimit,timeActual,rate,projectName,taskName"
+      if not order: order = ["priorityLabel","taskTypeID","_rate","taskStatusLabel"]
+      fields = ["taskID","taskTypeID","taskStatusLabel","priorityLabel","timeExpected",
+                "timeLimit","timeActual","rate","projectName","taskName"]
     else:
       fields = o["fields"]
 
