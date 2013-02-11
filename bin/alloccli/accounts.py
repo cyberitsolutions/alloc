@@ -18,8 +18,8 @@ class accounts(alloc):
   #ops.append(('d:', 'date=YYYY-MM-DD', 'The from date of the earliest transaction.'))
   #ops.append(('o:', 'order=NAME     ', 'The order the accounts or transactions are displayed in.\n'
                                         #'Default for accounts: "???" Default for transactions: "???"'))
-  ops.append(('f:', 'fields=LIST    ', 'The commar separated list of fields you would like printed.\n'
-                                       '(eg: "all" eg: "tfID,tfName,tfBalance")')) 
+  ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
+                                       '(eg: all eg: tfID tfName tfBalance)')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -47,7 +47,7 @@ class accounts(alloc):
       if o['fields']:
         fields = o['fields']
       else:
-        fields = "transactionID,fromTfName,tfName,amount,status,transactionDate"
+        fields = ["transactionID","fromTfName","tfName","amount","status","transactionDate"]
 
       transactions = self.get_list("transaction", ops)
       if transactions:
@@ -59,7 +59,7 @@ class accounts(alloc):
       if o['fields']:
         fields = o['fields']
       else:
-        fields = "tfID,tfName,tfBalancePending,tfBalance"
+        fields = ["tfID","tfName","tfBalancePending","tfBalance"]
 
       tfs = self.get_list("tf", ops)
       if tfs:

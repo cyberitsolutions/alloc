@@ -10,8 +10,8 @@ class projects(alloc):
   ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
                                        '"never" or "always". If WHEN is omitted, assume "always".'))
   ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
-  ops.append(('f:', 'fields=LIST    ', 'The commar separated list of fields you would like printed.\n'
-                                       '(eg: "all" eg: "projectID,projectName")')) 
+  ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
+                                       '(eg: all eg: projectID projectName)')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -42,7 +42,7 @@ class projects(alloc):
     f["personID"] = personID
     f["projectStatus"] = "Current"
 
-    fields = o["fields"] or "projectID,projectName"
+    fields = o["fields"] or ["projectID","projectName"]
 
     self.print_table("project", self.get_list("project", f), fields, sort="projectName")
       

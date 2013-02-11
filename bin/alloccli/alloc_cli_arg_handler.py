@@ -5,6 +5,7 @@ import re
 import optparse
 from sys import stdout
 
+
 class alloc_cli_arg_handler:
   """alloc library for handling command line arguments"""
   
@@ -86,6 +87,8 @@ class alloc_cli_arg_handler:
       a2 = {}
       a2['dest'] = k
       a2['default'] = ''
+      a2['action'] = 'callback'
+      a2['callback'] = self.vararg_callback
 
       if v[0] != '-':
         a1.append(v[0])
@@ -95,6 +98,7 @@ class alloc_cli_arg_handler:
       if v[0] in no_arg_ops or v[1] in no_arg_ops:
         a2['action'] = 'store_true'
         a2['default'] = False
+        del a2['callback']
 
       parser.add_option(*a1, **a2)
 
@@ -131,5 +135,28 @@ class alloc_cli_arg_handler:
       alloc.die("Trailing arguments not supported: "+remainder)
 
     return rtn, remainder
+
+  def vararg_callback(self, option, opt_str, value, parser):
+    assert value is None
+    value = []
+    def floatable(str):
+      try:
+        float(str)
+        return True
+      except ValueError:
+        return False
+
+    for arg in parser.rargs:
+      # stop on --foo like options
+      if arg[:2] == "--" and len(arg) > 2:
+        break
+      # stop on -a, but not on -3 or -3.0
+      if arg[:1] == "-" and len(arg) > 1 and not floatable(arg):
+        break
+      value.append(arg)
+    del parser.rargs[:len(value)]
+    if isinstance(value,list) and len(value)==1:
+      value = value[0]
+    setattr(parser.values, option.dest, value)
 
 
