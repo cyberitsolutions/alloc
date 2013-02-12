@@ -543,7 +543,8 @@ BEGIN
     SET NEW.dateClosed = NULL;
   END IF;
 
-  IF (neq(NEW.timeWorst, OLD.timeWorst) OR neq(NEW.timeBest, OLD.timeBest) OR neq(NEW.timeExpected, OLD.timeExpected)) THEN
+  IF ((neq(NEW.timeWorst, OLD.timeWorst) OR neq(NEW.timeBest, OLD.timeBest) OR neq(NEW.timeExpected, OLD.timeExpected))
+  AND empty(NEW.estimatorID)) THEN
     SET NEW.estimatorID = personID();
   END IF;
 
