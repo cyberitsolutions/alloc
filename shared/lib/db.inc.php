@@ -409,30 +409,6 @@ class db {
     system($command);
   }
 
-  function esc_implode($arr,$fmt="%s") {
-    foreach ((array)$arr as $v) {
-      if ($fmt == "%d") {
-        $str.= $comma.db::esc(sprintf($fmt,$v));
-      } else {
-        $str.= $comma."'".db::esc(sprintf($fmt,$v))."'";
-      }
-      $comma = ",";
-    }
-    return $str;
-  }
-
-  function sql_ids($name,$value,$fmt="%d") {
-    if ($value && is_array($value)) {
-      return prepare("(IFNULL(%s,'') in (%s))", $name, $value);
-    } else if ($value && $fmt == "%d") {
-      return prepare("(IFNULL(%s,0) = %d)", $name, $value);
-    } else if ($value) {
-      return prepare("(IFNULL(%s,'') = '".$fmt."')", $name, $value);
-    } else {
-      return 0;
-    }
-  }
-
 }
 
 

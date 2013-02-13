@@ -414,19 +414,19 @@ class invoice extends db_entity {
     }
 
     // Filter invoiceID
-    $filter["invoiceID"] and $sql[] = db::sql_ids("invoice.invoiceID",$filter["invoiceID"]);
+    $filter["invoiceID"] and $sql[] = sprintf_implode("invoice.invoiceID = %d",$filter["invoiceID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["invoiceID"] || $filter["starred"]) {
       return $sql;
     }
 
-    $filter["invoiceNum"]    and $sql[] = prepare("(invoice.invoiceNum = %d)",$filter["invoiceNum"]);
-    $filter["dateOne"]       and $sql[] = prepare("(invoice.invoiceDateFrom>='%s')",$filter["dateOne"]);
-    $filter["dateTwo"]       and $sql[] = prepare("(invoice.invoiceDateTo<='%s')",$filter["dateTwo"]);
-    $filter["invoiceName"]   and $sql[] = prepare("(invoice.invoiceName like '%%%s%%')",$filter["invoiceName"]);
-    $filter["invoiceStatus"] and $sql[] = db::sql_ids("invoice.invoiceStatus",$filter["invoiceStatus"]);
-    $filter["clientID"]      and $sql[] = db::sql_ids("invoice.clientID",$filter["clientID"]);
+    $filter["invoiceNum"]    and $sql[] = sprintf_implode("invoice.invoiceNum = %d",$filter["invoiceNum"]);
+    $filter["dateOne"]       and $sql[] = sprintf_implode("invoice.invoiceDateFrom>='%s'",$filter["dateOne"]);
+    $filter["dateTwo"]       and $sql[] = sprintf_implode("invoice.invoiceDateTo<='%s'",$filter["dateTwo"]);
+    $filter["invoiceName"]   and $sql[] = sprintf_implode("invoice.invoiceName like '%%%s%%'",$filter["invoiceName"]);
+    $filter["invoiceStatus"] and $sql[] = sprintf_implode("invoice.invoiceStatus = '%s'",$filter["invoiceStatus"]);
+    $filter["clientID"]      and $sql[] = sprintf_implode("invoice.clientID = %d",$filter["clientID"]);
     return $sql;
   }
 

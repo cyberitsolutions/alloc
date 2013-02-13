@@ -439,7 +439,7 @@ class productSale extends db_entity {
     }
 
     // Filter productSaleID
-    $filter["productSaleID"] and $sql[] = db::sql_ids("productSale.productSaleID", $filter["productSaleID"]);
+    $filter["productSaleID"] and $sql[] = sprintf_implode("productSale.productSaleID = %d", $filter["productSaleID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["productSaleID"] || $filter["starred"]) {
@@ -448,10 +448,10 @@ class productSale extends db_entity {
 
     $id_fields = array("clientID","projectID","personID","tfID","productSaleCreatedUser","productSaleModifiedUser");
     foreach($id_fields as $f) {
-      $filter[$f] and $sql[] = db::sql_ids("productSale.".$f, $filter[$f]);
+      $filter[$f] and $sql[] = sprintf_implode("productSale.".$f." = %d", $filter[$f]);
     }
 
-    $filter["status"] and $sql[] = db::sql_ids("productSale.status", $filter["status"], "%s");
+    $filter["status"] and $sql[] = sprintf_implode("productSale.status = '%s'", $filter["status"]);
     
     return $sql;
   }
