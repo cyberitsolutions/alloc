@@ -265,7 +265,7 @@ class client extends db_entity {
       if ($_FORM["clientLetter"] == $letter) {
         $rtn["alphabet_filter"].= "&nbsp;&nbsp;".$letter;
       } else {
-        $rtn["alphabet_filter"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_clientList"]."clientLetter=".$letter."&clientStatus=".$_FORM["clientStatus"]."&applyFilter=1\">".$letter."</a>";
+        $rtn["alphabet_filter"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_clientList"]."clientLetter=".$letter."&clientStatus=Current&applyFilter=1\">".$letter."</a>";
       }
     }
     
