@@ -842,6 +842,44 @@ function alloc_error($str="",$force=null) {
     exit(1); // exit status matters to pipeEmail.php
   }
 }
+
+function sprintf_implode() {
+  // Eg sprintf_implode("(id = %d AND name = '%s')",$numbers,$words);
+  // if the length of $numbers is 3 items long, eg 20,21,22 and $words is howdy,hello,goodbye
+  // then this function would return:
+  // ((id = 20 AND name = 'howdy') OR (id = 21 AND name = 'hello') OR (id = 22 AND name = 'goodbye'))
+  // I am crippling this function to make its purpose clearer. Max 6 arguments.
+  $args = func_get_args();
+  $str = array_shift($args);
+
+  $f["arg1"] = $args[0];
+  $f["arg2"] = $args[1];
+  $f["arg3"] = $args[2];
+  $f["arg4"] = $args[3];
+  $f["arg5"] = $args[4];
+  $f["arg6"] = $args[5];
+  $length = count($f["arg1"]);
+
+  foreach ($f as $k => $v) {
+    if ($v && count($v) != $length) {
+      alloc_error("One of the values passed to sprintf_implode was the wrong length: ".$str." ".print_r($args,1));
+    }
+    if ($v && !is_array($v)) {
+      $f[$k] = array($v);
+    }
+  }
+
+  $x = 0;
+  while ($x < $length) {
+    $rtn.= $comma.sprintf($str
+                         ,db::esc($f["arg1"][$x]),db::esc($f["arg2"][$x]),db::esc($f["arg3"][$x])
+                         ,db::esc($f["arg4"][$x]),db::esc($f["arg5"][$x]),db::esc($f["arg6"][$x]));
+    $comma = " OR ";
+    $x++;
+  }
+  return "(".$rtn.")";
+}
+
 function prepare() {
   $args = func_get_args();
 
@@ -855,8 +893,14 @@ function prepare() {
 
   // The rest of $args are escaped and then assigned to $clean_args
   foreach ($args as $arg) {
+
     if (is_array($arg)) {
-      $clean_args[] = db::esc_implode($arg);
+      foreach ((array)$arg as $v) {
+        $str.= $comma."'".db::esc($v)."'";
+        $comma = ",";
+      }
+      $clean_args[] = $str;
+
     } else {
       $clean_args[] = db::esc($arg);
     }

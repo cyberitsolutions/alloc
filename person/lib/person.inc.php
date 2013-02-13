@@ -369,24 +369,15 @@ class person extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    if ($filter["username"]) {
-      $sql[] = prepare("(username = '%s')", $filter["username"]);
-    }
-    if ($filter["personActive"]) {
-      $sql[] = prepare("(personActive = '%d')", $filter["personActive"]);
-    }
-    if ($filter["firstName"]) {
-      $sql[] = prepare("(firstName = '%s')", $filter["firstName"]);
-    }
-    if ($filter["surname"]) {
-      $sql[] = prepare("(surname = '%s')", $filter["surname"]);
-    }
-    if ($filter["personID"]) {
-      $sql[] = prepare("(personID = %d)", $filter["personID"]);
-    }
-    if ($filter["skill"]) {
-      $sql[] = prepare("(skillID=%d)", $filter["skill"]);
-    } else if ($filter["skill_class"]) {
+    $filter["username"]     and $sql[] = sprintf_implode("username = '%s'", $filter["username"]);
+    $filter["personActive"] and $sql[] = sprintf_implode("personActive = %d", $filter["personActive"]);
+    $filter["firstName"]    and $sql[] = sprintf_implode("firstName = '%s'", $filter["firstName"]);
+    $filter["surname"]      and $sql[] = sprintf_implode("surname = '%s'", $filter["surname"]);
+    $filter["personID"]     and $sql[] = sprintf_implode("personID = %d", $filter["personID"]);
+
+    $filter["skill"]        and $sql["skill"] = sprintf_implode("skillID=%d", $filter["skill"]);
+
+    if ($filter["skill_class"]) {
       $q = prepare("SELECT * FROM skill WHERE skillClass='%s'", $filter["skill_class"]);
       $db = new db_alloc();
       $db->query($q);
@@ -396,9 +387,8 @@ class person extends db_entity {
         $sql2[] = prepare("(skillID=%d)", $skill->get_id());
       } 
     }
-    if ($filter["expertise"]) {
-      $sql[] = prepare("(skillProficiency='%s')", $filter["expertise"]);
-    } 
+
+    $filter["expertise"]    and $sql[] = sprintf_implode("skillProficiency='%s'", $filter["expertise"]);
 
     return array($sql,$sql2);
   }
@@ -430,6 +420,7 @@ class person extends db_entity {
       $filter = " WHERE ".implode(" AND ",$filter);
     }
     if (is_array($filter2) && count($filter2)) {
+      unset($filter["skill"]);
       $filter.= " AND ".implode(" OR ",$filter2);
     }
 

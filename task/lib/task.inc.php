@@ -690,24 +690,14 @@ class task extends db_entity {
     return array($sql_open,$sql_pend,$sql_clos);
   }
 
-  function get_taskStatus_sql($s) {
-    if ($s) {
-      if (is_array($s)) {
-        $taskStatusArray = $s;
-      } else {
-        $taskStatusArray[] = $s;
-      }
-      $subsql = array();
-      foreach ($taskStatusArray as $status) {
-        list($taskStatus,$taskSubStatus) = explode("_",$status);
-        if($taskSubStatus) {
-          $subsql[] = prepare("(task.taskStatus = '%s')",$status);
-        } else {
-          $subsql[] = prepare("(SUBSTRING(task.taskStatus,1,%d) = '%s')",strlen($status),$status);
-        }
-      }
-      return '('.implode(" OR ",$subsql).')';
+  function get_taskStatus_sql($status) {
+    if (!is_array($status)) {
+      $status = array($status);
     }
+    foreach((array)$status as $s) {
+      $lengths[] = strlen($s);
+    }
+    return sprintf_implode("SUBSTRING(task.taskStatus,1,%d) = '%s'",$lengths,$status);
   }
 
   function get_list_filter($filter=array()) {
@@ -722,7 +712,7 @@ class task extends db_entity {
     }
 
     // Filter on taskID
-    $filter["taskID"] and $sql[] = db::sql_ids("task.taskID",$filter["taskID"]);
+    $filter["taskID"] and $sql[] = sprintf_implode("task.taskID = %d",$filter["taskID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["taskID"]) {
@@ -732,6 +722,14 @@ class task extends db_entity {
     // This takes care of projectID singular and plural
     has("project") and $projectIDs = project::get_projectID_sql($filter);
     $projectIDs and $sql["projectIDs"] = $projectIDs;
+
+    // project name or project nick name or project id
+    $filter["projectNameMatches"] and $sql[] = sprintf_implode("project.projectName LIKE '%%%s%%'
+                                                               OR project.projectShortName LIKE '%%%s%%'
+                                                               OR project.projectID = %d"
+                                                              ,$filter["projectNameMatches"]
+                                                              ,$filter["projectNameMatches"]
+                                                              ,$filter["projectNameMatches"]);
 
     list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
 
@@ -784,17 +782,15 @@ class task extends db_entity {
 
     // Task status filtering
     $filter["taskStatus"] and $sql[] = task::get_taskStatus_sql($filter["taskStatus"]);
-    $filter["taskTypeID"] and $sql[] = db::sql_ids("task.taskTypeID",$filter["taskTypeID"],"%s");
+    $filter["taskTypeID"] and $sql[] = sprintf_implode("task.taskTypeID = '%s'",$filter["taskTypeID"]);
 
     // Filter on %taskName%
-    if ($filter["taskName"]) {     
-      $sql[] = prepare("(task.taskName LIKE '%%%s%%')", $filter["taskName"]);
-    }
+    $filter["taskName"] and $sql[] = sprintf_implode("task.taskName LIKE '%%%s%%'", $filter["taskName"]);
 
     // If personID filter
-    $filter["personID"]  and $sql["personID"]  = db::sql_ids("task.personID", $filter["personID"]);
-    $filter["creatorID"] and $sql["creatorID"] = db::sql_ids("task.creatorID",$filter["creatorID"]);
-    $filter["managerID"] and $sql["managerID"] = db::sql_ids("task.managerID",$filter["managerID"]);
+    $filter["personID"]  and $sql["personID"]  = sprintf_implode("task.personID = %d", $filter["personID"]);
+    $filter["creatorID"] and $sql["creatorID"] = sprintf_implode("task.creatorID = %d",$filter["creatorID"]);
+    $filter["managerID"] and $sql["managerID"] = sprintf_implode("task.managerID = %d",$filter["managerID"]);
 
     // These filters are for the time sheet dropdown list
     if ($filter["taskTimeSheetStatus"] == "open") {
@@ -817,7 +813,7 @@ class task extends db_entity {
     } else if ($filter["taskTimeSheetStatus"] == "all") {
     }
 
-    $filter["parentTaskID"] and $sql["parentTaskID"] = prepare("(parentTaskID = %d)",$filter["parentTaskID"]);
+    $filter["parentTaskID"] and $sql["parentTaskID"] = sprintf_implode("IFNULL(task.parentTaskID,0) = %d",$filter["parentTaskID"]);
     return $sql;
   }
 

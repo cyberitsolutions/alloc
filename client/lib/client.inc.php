@@ -134,28 +134,22 @@ class client extends db_entity {
     }
 
     // Filter on clientID
-    $filter["clientID"] and $sql[] = db::sql_ids("client.clientID", $filter["clientID"]);
+    $filter["clientID"] and $sql[] = sprintf_implode("client.clientID = %d", $filter["clientID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["clientID"] || $filter["starred"]) {
       return $sql;
     }
 
-    $filter["clientStatus"] and $sql[] = db::sql_ids("client.clientStatus", $filter["clientStatus"], "%s");
-    $filter["clientCategory"] and $sql[] = db::sql_ids("client.clientCategory", $filter["clientCategory"], "%s");
-
-    if ($filter["clientName"]) {
-      $sql[] = prepare("(clientName LIKE '%%%s%%')",$filter["clientName"]);
-    } 
-
-    if ($filter["contactName"]) {
-      $sql[] = prepare("(clientContactName LIKE '%%%s%%')",$filter["contactName"]);
-    } 
+    $filter["clientStatus"]   and $sql[] = sprintf_implode("client.clientStatus = '%s'", $filter["clientStatus"]);
+    $filter["clientCategory"] and $sql[] = sprintf_implode("IFNULL(client.clientCategory,'') = '%s'", $filter["clientCategory"]);
+    $filter["clientName"]     and $sql[] = sprintf_implode("IFNULL(clientName,'') LIKE '%%%s%%'",$filter["clientName"]);
+    $filter["contactName"]    and $sql[] = sprintf_implode("IFNULL(clientContactName,'') LIKE '%%%s%%'",$filter["contactName"]);
 
     if ($filter["clientLetter"] && $filter["clientLetter"] == "A") {
       $sql[] = "(clientName like 'A%' or clientName REGEXP '^[^[:alpha:]]')";
     } else if ($filter["clientLetter"] && $filter["clientLetter"] != "ALL") {
-      $sql[] = prepare("(clientName LIKE '%s%%')",$filter["clientLetter"]);
+      $sql[] = sprintf_implode("clientName LIKE '%s%%'",$filter["clientLetter"]);
     }
 
     return $sql;

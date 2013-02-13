@@ -176,7 +176,7 @@ class project extends db_entity {
     $current_user = &singleton("current_user");
     $person or $person = $current_user;
     if (is_object($person)) {
-      $permissions and $p = " AND ".db::sql_ids("ppr.roleHandle",$permissions,"%s");
+      $permissions and $p = " AND ".sprintf_implode("ppr.roleHandle = '%s'",$permissions);
 
       $query = prepare("SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
                           FROM projectPerson pp 
@@ -402,31 +402,28 @@ class project extends db_entity {
       is_array($filter["projectID"]) or $filter["projectID"][] = -1;
     }
 
-    // Filter oprojectID
-    $filter["projectID"] and $sql[] = db::sql_ids("project.projectID",$filter["projectID"]);
+    // Filter on projectID
+    $filter["projectID"] and $sql[] = sprintf_implode("IFNULL(project.projectID,0) = %d",$filter["projectID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["projectID"] || $filter["starred"]) {
       return $sql;
     }
 
-    if ($filter["clientID"]) {
-      $sql[] = prepare("(project.clientID = %d)", $filter["clientID"]);
-    }
-    $filter["personID"]      and $sql[] = db::sql_ids("projectPerson.personID",$filter["personID"]);
-    $filter["projectStatus"] and $sql[] = db::sql_ids("project.projectStatus",$filter["projectStatus"]);
-    $filter["projectType"]   and $sql[] = db::sql_ids("project.projectType",$filter["projectType"]);
-    if ($filter["projectName"]) {
-      $sql[] = prepare("(project.projectName LIKE '%%%s%%')", $filter["projectName"]);
-    }
-    if ($filter["projectShortName"]) {
-      $sql[] = prepare("(project.projectShortName LIKE '%%%s%%')", $filter["projectShortName"]);
-    }
-    if ($filter["projectNameMatches"]) {
-      $sql[] = prepare("(project.projectName LIKE '%%%s%%' OR project.projectShortName LIKE '%%%s%%')"
-                      ,$filter["projectNameMatches"],$filter["projectNameMatches"]);
-    }
+    $filter["clientID"]         and $sql[] = sprintf_implode("IFNULL(project.clientID,0) = %d",$filter["clientID"]);
+    $filter["personID"]         and $sql[] = sprintf_implode("IFNULL(projectPerson.personID,0) = %d",$filter["personID"]);
+    $filter["projectStatus"]    and $sql[] = sprintf_implode("IFNULL(project.projectStatus,'') = '%s'",$filter["projectStatus"]);
+    $filter["projectType"]      and $sql[] = sprintf_implode("IFNULL(project.projectType,0) = %d",$filter["projectType"]);
+    $filter["projectName"]      and $sql[] = sprintf_implode("IFNULL(project.projectName,'') LIKE '%%%s%%'",$filter["projectName"]);
+    $filter["projectShortName"] and $sql[] = sprintf_implode("IFNULL(project.projectShortName,'') LIKE '%%%s%%'",$filter["projectShortName"]);
 
+    // project name or project nick name or project id
+    $filter["projectNameMatches"] and $sql[] = sprintf_implode("project.projectName LIKE '%%%s%%'
+                                                               OR project.projectShortName LIKE '%%%s%%'
+                                                               OR project.projectID = %d"
+                                                              ,$filter["projectNameMatches"]
+                                                              ,$filter["projectNameMatches"]
+                                                              ,$filter["projectNameMatches"]);
     return $sql;
   }
 
@@ -664,13 +661,12 @@ class project extends db_entity {
 
     // If passed array projectIDs then join them up with commars and put them in an sql subset
     if (is_array($filter["projectIDs"]) && count($filter["projectIDs"])) {
-      return prepare("(%s.projectID IN (%s))",$table,$filter["projectIDs"]);
+      return sprintf_implode("(".$table.".projectID = %d)",$filter["projectIDs"]);
 
     // If there are no projects in $filter["projectIDs"][] and we're attempting the first option..
     } else if ($firstOption) {
-      return prepare("(%s.projectID IN (0))",$table);
+      return "(".$table.".projectID = 0)";
     }
-  
   }
 
   function get_all_parties($projectID=false) {

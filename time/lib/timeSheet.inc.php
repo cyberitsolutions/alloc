@@ -448,21 +448,17 @@ class timeSheet extends db_entity {
     }
 
     // Filter timeSheetID
-    $filter["timeSheetID"] and $sql[] = db::sql_ids("timeSheet.timeSheetID",$filter["timeSheetID"]);
+    $filter["timeSheetID"] and $sql[] = sprintf_implode("timeSheet.timeSheetID = %d",$filter["timeSheetID"]);
 
     // No point continuing if primary key specified, so return
     if ($filter["timeSheetID"] || $filter["starred"]) {
       return $sql;
     }
 
-    if ($filter["tfID"]) {
-      $sql[] = prepare("(timeSheet.recipient_tfID = %d)", $filter["tfID"]);
-    }
-    $filter["projectID"] and $sql[] = db::sql_ids("timeSheet.projectID",$filter["projectID"]);
-    if ($filter["taskID"]) {
-      $sql[] = prepare("(timeSheetItem.taskID = %d)", $filter["taskID"]);
-    }
-    $filter["personID"] and $sql[] = db::sql_ids("timeSheet.personID",$filter["personID"]);
+    $filter["tfID"]      and $sql[] = sprintf_implode("timeSheet.recipient_tfID = %d", $filter["tfID"]);
+    $filter["projectID"] and $sql[] = sprintf_implode("timeSheet.projectID = %d",$filter["projectID"]);
+    $filter["taskID"]    and $sql[] = sprintf_implode("timeSheetItem.taskID = %d", $filter["taskID"]);
+    $filter["personID"]  and $sql[] = sprintf_implode("timeSheet.personID = %d",$filter["personID"]);
     if ($filter["status"]) { 
       if (is_array($filter["status"]) && count($filter["status"])) {
         foreach ($filter["status"] as $s) {
@@ -482,9 +478,9 @@ class timeSheet extends db_entity {
     }
 
     if ($rejected) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR ".db::sql_ids("timeSheet.status",$statuses,"%s").")");
+      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR ".sprintf_implode("timeSheet.status = '%s'",$statuses).")");
     } else if ($statuses) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND ".db::sql_ids("timeSheet.status",$statuses,"%s").")");
+      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND ".sprintf_implode("timeSheet.status = '%s'",$statuses).")");
     }
 
     if ($filter["dateFrom"]) {
