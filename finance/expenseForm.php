@@ -440,8 +440,8 @@ if (is_object($expenseForm) && $current_user->have_role("admin")
 
   $ops["invoiceStatus"] = "edit";
   $ops["clientID"] = $expenseForm->get_value("clientID");
-  $ops["return"] = "dropdown_options";
   $invoice_list = invoice::get_list($ops);
+  $invoice_list = array_kv($invoice_list,"invoiceID",array("invoiceNum","invoiceName"));
   $q = prepare("SELECT * FROM invoiceItem WHERE expenseFormID = %d",$expenseForm->get_id());
   $db = new db_alloc();
   $db->query($q);
