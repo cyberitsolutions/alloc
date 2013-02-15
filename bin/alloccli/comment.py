@@ -9,11 +9,11 @@ class comment(alloc):
   # Setup the options that this cli can accept
   ops = []
   ops.append((''  , 'help           ', 'Show this help.'))
-  ops.append(('t:', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.')) 
-  ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
-  ops.append(('c:', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.')) 
-  ops.append(('i:', 'timesheet=ID   ', 'A time sheet ID.')) 
-  ops.append((''  , 'to=RECIPIENTS  ', 'Can be usernames, fullnames and/or email, "default",\n'
+  ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.')) 
+  ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
+  ops.append(('c.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.')) 
+  ops.append(('i.', 'timesheet=ID   ', 'A time sheet ID.')) 
+  ops.append(('r:', 'to=RECIPIENTS  ', 'Can be usernames, fullnames and/or email, "default",\n'
                                        '"internal" or "nobody".')) 
 
   # Specify some header and footer text for the help text
@@ -39,17 +39,17 @@ the cursor is not on an empty line. The current user is always added unless
 Start a new conversation, recipients are matched against username, real name,
 email address and also client contact name.
 
-  $ alloc comment --task 1234 --to "conz,jeremyc,David Keegel,
-    alice@someclient.com,Bob Smith,Clickety Clack <cc@example.com>"
+  $ alloc comment --task 1234 --to conz --to jeremyc --to "David Keegel"
+    --to alice@someclient.com --to "Bob Smith" --to "Clickety Clack <cc@example.com>"
 
 The words 'default' and 'internal' can be used in place of an email address.
 
-  $ alloc comment --task 1234 --to default,conz
-  $ alloc comment --task 1234 --to internal,conz
+  $ alloc comment --task 1234 --to default --to conz
+  $ alloc comment --task 1234 --to internal --to conz
 
 In this example the recipients are going to be internal only, except for Clyde
 
-  $ alloc comment --task 1234 --to "internal,Clyde Client <cc@example.com>"
+  $ alloc comment --task 1234 --to internal --to "Clyde Client <cc@example.com>"
 """
 
   def run(self, command_list):
@@ -130,7 +130,7 @@ In this example the recipients are going to be internal only, except for Clyde
     nobody = False
     to = ""
     comma = ""
-    people = o['to'].split(",")
+    people = o['to']
     for p in people:
       if p.lower() != 'nobody':
         p = p.strip()

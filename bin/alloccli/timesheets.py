@@ -18,14 +18,14 @@ class timesheets(alloc):
   ops.append(('a:', 'account=TF     ', 'The time sheets\' TF name.'))
   ops.append(('c:', 'creator=NICK   ', 'The time sheets\' creator username.'))
   ops.append(('t:', 'tsid=ID        ', 'A time sheet ID.'))
-  ops.append(('h:', 'hours=NUM      ', 'The time sheets must have this many hours recorded.\n'
+  ops.append(('h.', 'hours=NUM      ', 'The time sheets must have this many hours recorded.\n'
                                        '(eg: "7" eg: ">7 AND <10 OR =4 AND !=8")'))
-  ops.append(('d:', 'date=YYYY-MM-DD', 'If --items is specified, then match against the items\' date.\n'
+  ops.append(('d.', 'date=YYYY-MM-DD', 'If --items is specified, then match against the items\' date.\n'
                                        'Else match against the date of the time sheet\'s earliest item.'))
   ops.append(('o:', 'order=NAME     ', 'The order the Time Sheets or Items are displayed in.\n'
-                                       'Default for time sheets: From ID, Default for items: Date Item\\ ID'))
+                                       'Default for time sheets: -o From -o ID, Default for items: -o Date -o Item\\ ID'))
   ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
-                                       '(eg: all eg: ID Item\\ ID Task\\ ID Comment)')) 
+                                       '(eg: -f all eg: -f ID -f Item\\ ID -o Task\\ ID -o Comment)')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -102,7 +102,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
       if 'account' in o and o['account']:
         tfargs = {}
         tfargs['method'] = 'get_tfID'
-        tfargs['name'] = o['account']
+        tfargs['options'] = o['account']
         ops['tfID'] = self.make_request(tfargs)
       elif o['creator']:
         ops['personID'] = self.get_my_personID(o['creator'])

@@ -427,6 +427,7 @@ class invoice extends db_entity {
     $filter["invoiceName"]   and $sql[] = sprintf_implode("invoice.invoiceName like '%%%s%%'",$filter["invoiceName"]);
     $filter["invoiceStatus"] and $sql[] = sprintf_implode("invoice.invoiceStatus = '%s'",$filter["invoiceStatus"]);
     $filter["clientID"]      and $sql[] = sprintf_implode("invoice.clientID = %d",$filter["clientID"]);
+    $filter["projectID"]     and $sql[] = sprintf_implode("invoice.projectID = %d",$filter["projectID"]);
     return $sql;
   }
 

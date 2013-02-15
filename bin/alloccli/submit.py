@@ -24,7 +24,7 @@ no longer be editable once you have submitted it.
 Examples:
 alloc timesheets | alloc submit --dryrun
 alloc timesheets | alloc submit
-alloc timesheets --status edit --hours ">=7" --date "$(date -d '1 week ago' +%%Y-%%m-%%d)" | alloc submit'''
+alloc timesheets --status edit --hours ">=7" --date "1 week ago" | alloc submit'''
 
   def run(self, command_list):
     """Execute subcommand."""

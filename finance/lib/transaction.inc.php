@@ -267,7 +267,7 @@ class transaction extends db_entity {
     $current_user = &singleton("current_user");
 
     if (is_array($_FORM["tfIDs"]) && count($_FORM["tfIDs"])) {
-      $sql["tfIDs"] = prepare("(transaction.tfID in (%s) or transaction.fromTfID in (%s))",$_FORM["tfIDs"],$_FORM["tfIDs"]);
+      $sql["tfIDs"] = sprintf_implode("transaction.tfID = %d or transaction.fromTfID = %d",$_FORM["tfIDs"],$_FORM["tfIDs"]);
     }
 
     if ($_FORM["monthDate"]) {

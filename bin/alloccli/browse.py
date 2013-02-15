@@ -10,10 +10,10 @@ class browse(alloc):
   ops = []
   ops.append((''  , 'help           ', 'Show this help.'))
   ops.append(('q' , 'quiet          ', 'Run with no output except errors.'))
-  ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
-  ops.append(('t:', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
-  ops.append(('c:', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client\'s name.'))
-  ops.append(('i:', 'time=ID        ', 'A time sheet ID.'))
+  ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
+  ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
+  ops.append(('c.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client\'s name.'))
+  ops.append(('i.', 'time=ID        ', 'A time sheet ID.'))
 
   # Specify some header and footer text for the help text
   help_text = 'Usage: %s [OPTIONS] ID|NAME\n'
@@ -40,7 +40,6 @@ alloc browse --time 213'''
 
     # Got this far, then authenticate
     self.authenticate()
-
 
     self.quiet = o['quiet']
     projectID = 0

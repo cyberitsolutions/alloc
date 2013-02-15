@@ -132,9 +132,9 @@ class token extends db_entity {
   }
 
   function get_list_filter($filter=array()) {
-    $filter["tokenEntity"]   and $sql[] = prepare("(token.tokenEntity = '%s')", $filter["tokenEntity"]);
-    $filter["tokenEntityID"] and $sql[] = prepare("(token.tokenEntityID = '%d')", $filter["tokenEntityID"]);
-    $filter["tokenHash"]     and $sql[] = prepare("(token.tokenHash = '%s')", $filter["tokenHash"]);
+    $filter["tokenEntity"]   and $sql[] = sprintf_implode("token.tokenEntity = '%s'", $filter["tokenEntity"]);
+    $filter["tokenEntityID"] and $sql[] = sprintf_implode("token.tokenEntityID = %d", $filter["tokenEntityID"]);
+    $filter["tokenHash"]     and $sql[] = sprintf_implode("token.tokenHash = '%s'", $filter["tokenHash"]);
     return $sql;
   }
   
