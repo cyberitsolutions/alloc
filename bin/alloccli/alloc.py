@@ -676,19 +676,23 @@ class alloc(object):
   def person_to_personID(self, name):
     """Convert a person's name into their alloc personID."""
     if type(name) == type('string'):
+      name = [name]
+
+    r = []
+    for n in name:
       ops = {}
       if ' ' in name:
         ops['firstName'], ops['surname'] = name.split(" ")
       else:
         ops["username"] = name
-
       rtn = self.get_list("person", ops)
       if rtn:
         for i in rtn:
-          return i
+          r.append(i)
+    return r
 
     # If they don't want all the records, then return an impossible personID
-    if name != '%' and name != '*' and name.lower() != 'all':
+    if name != '%' and name != '*' and type(name) == type("string") and name.lower() != 'all':
       return '1000000000000000000' # returning just zero doesn't work
 
   def parse_date_comparator(self, date):

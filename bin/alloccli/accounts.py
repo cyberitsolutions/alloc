@@ -18,8 +18,8 @@ class accounts(alloc):
   #ops.append(('d:', 'date=YYYY-MM-DD', 'The from date of the earliest transaction.'))
   #ops.append(('o:', 'order=NAME     ', 'The order the accounts or transactions are displayed in.\n'
                                         #'Default for accounts: "???" Default for transactions: "???"'))
-  ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
-                                       '(eg: all eg: tfID tfName tfBalance)')) 
+  ops.append(('f:', 'field=NAME     ', 'A field you would like printed.\n'
+                                       '(eg: -f all eg: -f tfID -f tfName -f tfBalance)')) 
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -40,12 +40,12 @@ class accounts(alloc):
     ops = {}
     
     if 'account' in o and o['account']:
-      ops['tfIDs'] = self.make_request({'method':'get_tfID', 'name':o['account']})
+      ops['tfIDs'] = self.make_request({'method':'get_tfID', 'options':o['account']})
 
     # Get transactions
     if 'items' in o and o['items']:
-      if o['fields']:
-        fields = o['fields']
+      if o['field']:
+        fields = o['field']
       else:
         fields = ["transactionID","fromTfName","tfName","amount","status","transactionDate"]
 
@@ -56,8 +56,8 @@ class accounts(alloc):
  
     # Get tf
     else:
-      if o['fields']:
-        fields = o['fields']
+      if o['field']:
+        fields = o['field']
       else:
         fields = ["tfID","tfName","tfBalancePending","tfBalance"]
 

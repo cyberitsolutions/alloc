@@ -12,9 +12,9 @@ class subscriptions(alloc):
                                        '"never" or "always". If WHEN is omitted, assume "always".'))
   ops.append(('q' , 'quiet          ', 'Run with no output except errors.'))
   ops.append(('n' , 'dryrun         ', 'Perform a dry run, no data gets updated.'))
-  ops.append(('k:', 'key=KEY        ', 'An 8 character email subject line key.'))
-  ops.append(('t:', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
-  ops.append(('e:', 'email=EMAIL    ', 'The email address. Any part of "Full Name \n'
+  ops.append(('k.', 'key=KEY        ', 'An 8 character email subject line key.'))
+  ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
+  ops.append(('e.', 'email=EMAIL    ', 'The email address. Any part of "Full Name \n'
                                        '<email@address.com>". Use % for wildcard.'))
   ops.append(('a' , 'add            ', 'Add the following subscriptions from stdin.'))
   ops.append(('d' , 'del            ', 'Delete the following subscriptions from stdin.'))

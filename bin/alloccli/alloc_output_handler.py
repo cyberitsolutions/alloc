@@ -57,7 +57,7 @@ class alloc_output_handler:
     # Check that any attempted sortby columns are actually in the table
     for k in sortby:
       # Strip leading underscore (used in reverse sorting eg: _Rate)
-      if re.sub("^_", "", k) not in fields and re.sub("^_", "", k) not in inverted_field_names:
+      if k and re.sub("^_", "", k) not in fields and re.sub("^_", "", k) not in inverted_field_names:
         alloc.err("Sort column not found: "+k)
 
     def sort_func(row):

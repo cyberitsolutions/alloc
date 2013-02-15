@@ -252,11 +252,11 @@ class services {
 
   /**
   * Convert a tf from its name to its tf ID
-  * @param string $name a tf name
+  * @param mixed $name a tf name
   * @return integer the tf's ID
   */
-  public function get_tfID($name) {
-    return tf::get_tfID($name);
+  public function get_tfID($options) {
+    return tf::get_tfID($options);
   } 
 
   /**

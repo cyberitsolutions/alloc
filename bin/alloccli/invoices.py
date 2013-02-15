@@ -8,6 +8,7 @@ class invoices(alloc):
   ops = []
   ops.append((''  , 'help           ', 'Show this help.'))
   ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
+                                       '"never" or "always". If WHEN is omitted, assume "always".'))
   ops.append(('i' , 'items          ', 'Show the invoice\'s items.'))
   ops.append(('c:', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.'))
   ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))

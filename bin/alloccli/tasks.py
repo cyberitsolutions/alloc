@@ -13,15 +13,15 @@ class tasks(alloc):
   ops.append(('t:', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
   ops.append(('s:', 'status=NAME    ', 'A task\'s status.\n'
                                        '(eg: open pending eg: open pending_info. Default: open)'))
-  ops.append((''  , 'type=NAME      ', 'A task\'s type, eg: Task eg: Fault Message'))
+  ops.append(('y:', 'type=NAME      ', 'A task\'s type, eg: Task eg: Fault Message'))
   ops.append(('a:', 'assignee=NAME  ', 'A task\'s assignee, username or first and surname.\n'
                                        '(eg: "jon" eg: "all" eg: "NULL". Defaults to yourself.)'))
   ops.append(('m:', 'manager=NAME   ', 'A task\'s manager, username or first and surname".'))
   ops.append(('c:', 'creator=NAME   ', 'A task\'s creator, username or first and surname".'))
   ops.append(('o:', 'order=NAME     ', 'The order the Tasks are displayed in.\n'
-                                       'Default: "Priority Type _Rate status" (underscore means reverse sort).')) 
+                                       'Default: "-o Priority -o Type -o _Rate -o status" (underscore means reverse sort).'))
   ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
-                                       '(eg: all eg: taskID Status taskStatus Proj\\ Pri)')) 
+                                       '(eg: -f all eg: -f taskID -f Status -f taskStatus -f Proj\\ Pri)'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -42,45 +42,30 @@ class tasks(alloc):
 
     # Get personID, either assignee or logged in user
     personID = []
-    if o['assignee'].lower() == 'null':
+    if not isinstance(o['assignee'], list) and o['assignee'].lower() == 'null':
       personID.append('')
     elif not o['assignee']:
       personID.append(self.get_my_personID())
     elif o['assignee'] != 'all':
-      personID.append(self.person_to_personID(o['assignee']))
+      personID = self.person_to_personID(o['assignee'])
 
-    managerID = ''
+    managerID = []
     if o['manager']:
       managerID = self.person_to_personID(o['manager'])
 
-    creatorID = ''
+    creatorID = []
     if o['creator']:
       creatorID = self.person_to_personID(o['creator'])
 
     # Get a projectID either passed via command line, or figured out from a project name
     projects = {}
-    projectIDs = []
 
-    if self.is_num(o['project']):
-      projectIDs = o['project']
-    elif o['project']:
-      projfilter = {}
-      projfilter["personID"] = personID
-      projfilter["projectStatus"] = "Current"
-      projfilter["projectNameMatches"] = o['project']
-      projects = self.get_list("project", projfilter)
-      if not projects or len(projects) == 0:
-        projectIDs.append(0)
-      if projects:
-        for pID, v_ in projects.items():
-          projectIDs.append(int(pID))
-      
     # Setup options for the task search
     ops = {}
     ops["personID"] = personID
     ops["managerID"] = managerID
     ops["creatorID"] = creatorID
-    ops["projectIDs"] = projectIDs
+    if o['project']: ops["projectNameMatches"] = o['project']
     ops["taskView"] = "prioritised"
     ops["showTimes"] = True
     o["status"] = o["status"] or "open"
@@ -96,15 +81,22 @@ class tasks(alloc):
     elif o['task']:
       ops["taskName"] = o["task"]
 
-    # Get list of tasks
-    r = self.get_list("task", ops)
-
     if not o['fields']:
       if not order: order = ["priorityLabel","taskTypeID","_rate","taskStatusLabel"]
       fields = ["taskID","taskTypeID","taskStatusLabel","priorityLabel","timeExpected",
                 "timeLimit","timeActual","rate","projectName","taskName"]
     else:
       fields = o["fields"]
+
+    if 'timeBest' not in o['fields'] \
+    and 'timeWorst' not in o['fields'] \
+    and 'timeExpected' not in o['fields'] \
+    and 'timeLimit' not in o['fields'] \
+    and 'timeActual' not in o['fields']:
+      del ops['showTimes']
+
+    # Get list of tasks
+    r = self.get_list("task", ops)
 
     if r:
       self.print_table("task", r, fields, order)

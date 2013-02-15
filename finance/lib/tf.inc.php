@@ -134,18 +134,20 @@ class tf extends db_entity {
     }
   }
 
-  function get_tfID($name="") {
+  function get_tfID($name) {
     if ($name) {
       $db = new db_alloc();
-      $db->query(prepare("SELECT tfID FROM tf WHERE tfName='%s'",$name));
-      $db->next_record();
-      return $db->f("tfID");
+      $q = "SELECT tfID FROM tf WHERE ".sprintf_implode("tfName = '%s'",$name);
+      $db->query($q);
+      while ($row = $db->row()) {
+        $rtn[] = $row["tfID"];
+      }
     }
+    return (array)$rtn;
   }
 
   function get_permitted_tfs($requested_tfs=array()) {
     $current_user = &singleton("current_user");
-
     // If admin, just use the requested tfs
     if ($current_user->have_role('admin')) {
       $rtn = $requested_tfs;
@@ -162,9 +164,9 @@ class tf extends db_entity {
     
     // db_esc everything
     foreach ((array)$rtn as $tf) {
-      $r[$tf] = db_esc($tf);
+      $r[] = db_esc($tf);
     }
-    return (array)$r;
+    return (array)array_unique((array)$r);
   }
 
   function get_list_filter($_FORM=array()) {
@@ -173,12 +175,11 @@ class tf extends db_entity {
     if (!$_FORM["tfIDs"] && !$current_user->have_role('admin')) {
       $_FORM["owner"] = true;
     }
-    $_FORM["owner"] and $filter1[] = prepare("(tfPerson.personID = %d)",$current_user->get_id());
+    $_FORM["owner"] and $filter1[] = sprintf_implode("tfPerson.personID = %d",$current_user->get_id());
 
     $tfIDs = tf::get_permitted_tfs($_FORM["tfIDs"]);
-    $tfIDs and $filter1[] = prepare("(tf.tfID IN (%s))",$tfIDs);
-    $tfIDs and $filter2[] = prepare("(tf.tfID IN (%s))",$tfIDs);
-
+    $tfIDs and $filter1[] = sprintf_implode("tf.tfID = %d",$tfIDs);
+    $tfIDs and $filter2[] = sprintf_implode("tf.tfID = %d",$tfIDs);
     $_FORM["showall"] or $filter1[] = "(tf.tfActive = 1)";
     $_FORM["showall"] or $filter2[] = "(tf.tfActive = 1)";
 
@@ -255,7 +256,10 @@ class tf extends db_entity {
         $row["total"] = $total;
         $row["pending_total"] = $pending_total;
       } else {
-        $row["tfBalance"] = "not available";
+        $row["tfBalance"] = "";
+        $row["tfBalancePending"] = "";
+        $row["total"] = "";
+        $row["pending_total"] = "";
       }
 
       $nav_links = $tf->get_nav_links();

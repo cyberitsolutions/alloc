@@ -26,14 +26,14 @@ class work(alloc):
                                        '"never" or "always". If WHEN is omitted, assume "always".'))
   ops.append(('q' , 'quiet          ', 'Run with no output except errors.'))
   ops.append(('n' , 'dryrun         ', 'Perform a dry run, no data gets updated.'))
-  ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
-  ops.append(('t:', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.')) 
-  ops.append(('d:', 'date=YYYY-MM-DD', 'The date that the work was performed.')) 
-  ops.append(('h:', 'hours=NUM      ', 'The amount of time worked. Eg: 2.5 eg: 150m')) 
-  ops.append(('m:', 'multiplier=NUM ', 'The rate multiplier for the time worked.\n'
+  ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
+  ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.')) 
+  ops.append(('d.', 'date=YYYY-MM-DD', 'The date that the work was performed.')) 
+  ops.append(('h.', 'hours=NUM      ', 'The amount of time worked. Eg: 2.5 eg: 150m')) 
+  ops.append(('m.', 'multiplier=NUM ', 'The rate multiplier for the time worked.\n'
                                        '(eg: 0=no-charge, 1=standard, 1.5=time-and-a-half,\n'
                                        '2=double-time, 3=triple-time). Default: 1')) 
-  ops.append(('c:', 'comment=COMMENT', 'The time sheet item comment.')) 
+  ops.append(('c.', 'comment=COMMENT', 'The time sheet item comment.')) 
   ops.append((''  , 'tsid=ID        ', 'Add time to a specific time sheet (optional).'))
   ops.append(('i' , 'interactive    ', 'Run a live work timer interactively.')) 
 

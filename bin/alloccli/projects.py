@@ -34,17 +34,9 @@ class projects(alloc):
 
     # Get a projectID either passed via command line, or figured out from a project name
     f = {}
-    if self.is_num(o['project']):
-      f["projectID"] = o['project']
-    elif o['project']:
-      f["projectID"] = self.search_for_project(o['project'], personID, die=False)
-
+    if o['project']: f['projectNameMatches'] = o['project']
     f["personID"] = personID
     f["projectStatus"] = "Current"
-
     fields = o["fields"] or ["projectID","projectName"]
-
     self.print_table("project", self.get_list("project", f), fields, sort="projectName")
-      
-
 

@@ -8,7 +8,7 @@ class edit(alloc):
   ops = []
   ops.append((''  , 'help           ', 'Show this help.'))
   ops.append(('v' , 'verbose        ', 'Run with more output.\n'))
-  ops.append(('t:', '               ', 'Edit a task. Specify an ID or the word "new" to create.'))
+  ops.append(('t.', '               ', 'Edit a task. Specify an ID or the word "new" to create.'))
 
   ops.append((''  , 'name=TEXT      ', 'task\'s title'))
   ops.append((''  , 'assign=USERNAME', 'username of the person that the task is assigned to'))
@@ -22,12 +22,12 @@ class edit(alloc):
   ops.append((''  , 'project=ID     ', 'task\'s project ID'))
   ops.append((''  , 'type=TYPE      ', 'Task, Fault, Message, Milestone or Parent'))
   ops.append((''  , 'dupe=ID        ', 'task ID of the related dupe'))
-  ops.append((''  , 'pend=IDS       ', 'task ID(s), commar separated, that block this task.'))
+  ops.append((''  , 'pend=IDS       ', 'task ID(s), comma separated, that block this task.'))
   ops.append((''  , 'reopen=DATE    ', 'Reopen the task on this date. To be used with --status=pending.'))
   ops.append((''  , 'status=STATUS  ', 'inprogress, notstarted, info, client, manager, invalid, duplicate,\n'
                                        'incomplete, complete; or: open, pending, closed\n'))
 
-  ops.append(('i:', '               ', 'Edit a time sheet item. Specify an ID or the word "new" to create.'))
+  ops.append(('i.', '               ', 'Edit a time sheet item. Specify an ID or the word "new" to create.'))
   ops.append((''  , 'tsid=ID        ', 'time sheet that this item belongs to'))
   ops.append((''  , 'date=YYYY-MM-DD', 'time sheet item date'))
   ops.append((''  , 'duration=HOURS ', 'time sheet item duration'))
