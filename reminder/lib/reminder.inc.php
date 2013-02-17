@@ -106,21 +106,24 @@ class reminder extends db_entity {
     $recipients = $this->get_recipients();
     $type = $this->get_value('reminderType');
 
-    $recipient = array();
+    $selected = array();
     $db = new db_alloc();
     $query = "SELECT * from reminderRecipient WHERE reminderID = %d";
     $db->query($query, $this->get_id());
     while ($db->next_record()) {
       if ($db->f('metaPersonID'))
-        $recipient []= $db->f('metaPersonID');
+        $selected[] = $db->f('metaPersonID');
       else
-        $recipient []= $db->f('personID');
+        $selected[] = $db->f('personID');
     }
 
-    if(!$recipient && $_GET["personID"]) {
-      $recipient[] = $_GET["personID"];
+    if(!$selected && $_GET["personID"]) {
+      $selected[] = $_GET["personID"];
     }
-    return array($recipients, $recipient);
+    if (!$this->get_id()) {
+      $selected[] = $current_user->get_id();
+    }
+    return array($recipients, $selected);
   }
 
   function get_hour_options() {
