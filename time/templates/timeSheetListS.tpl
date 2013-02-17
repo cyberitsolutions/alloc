@@ -20,8 +20,8 @@
   {foreach $timeSheetListRows as $r}
   <tr>
     <td style="width:1%" class="nobr">{$r.daysWarn}{$r.hoursWarn}</td>
-    <td>{$r.timeSheetID}</td>
-    <td>{$r.projectLink}</td>
+    <td><a href="{$url_alloc_timeSheet}timeSheetID={$r.timeSheetID}">{$r.timeSheetID}</a></td>
+    <td>{=$r.projectName}</td>
     <td>{=$r.person}</td>
     <td>{$r.dateFrom}</td>
     <td>{$r.dateTo}</td>
