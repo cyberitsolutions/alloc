@@ -30,7 +30,7 @@ function show_reminder_filter($template) {
     $TPL["reminderActiveOptions"] = page::select_options(array("1"=>"Active","0"=>"Inactive"),$_REQUEST["filter_reminderActive"]);
 
     $db = new db_alloc();
-    $db->query("SELECT username,personID FROM person ORDER BY username");
+    $db->query("SELECT username,personID FROM person WHERE personActive = 1 ORDER BY username");
     while ($db->next_record()) {
       $recipientOptions[$db->f("personID")] = $db->f("username");
     }
