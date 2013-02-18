@@ -28,10 +28,12 @@ $db = new db_alloc();
 $now = date("YmdHis");
 
   // do reminders
-$query = "SELECT *
+$query = prepare("SELECT *
             FROM reminder
-           WHERE (reminderTime IS NULL OR reminderTime < NOW())
-             AND reminderActive = 1";
+           WHERE (reminderTime IS NULL OR reminderTime < %s)
+             AND reminderActive = 1
+                 ",$now);
+
 $db->query($query);
 while ($db->next_record()) {
   $reminder = new reminder();
