@@ -191,24 +191,26 @@ class task extends db_entity {
   }
 
   function add_reopen_reminder($date) {
-    $rows = $this->get_reopen_reminders();
-    foreach ($rows as $r) {
-      $reminder = new reminder();
-      $reminder->set_id($r['rID']);
-      $reminder->select();
-      $reminder->deactivate();
-    }
-
-    if ($date && $date != 'null') {
-      $tokenActionID = 4;
-      $maxUsed = 1;
-      $name = "Reopen pending task";
-      $desc = "This reminder will automatically reopen this task, if it is pending.";
-      $recipients = array();
-      if (strlen($date) == "10") {
-        $date.= " 08:30:00";
+    if ($date) {
+      $rows = $this->get_reopen_reminders();
+      foreach ($rows as $r) {
+        $reminder = new reminder();
+        $reminder->set_id($r['rID']);
+        $reminder->select();
+        $reminder->deactivate();
       }
-      $this->add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients,$date);
+
+      if ($date != 'null') { // alloc-cli can pass 'null' to kill future reopening
+        $tokenActionID = 4;
+        //$maxUsed = 1; nope, so people can have recurring reminders
+        $name = "Reopen pending task";
+        $desc = "This reminder will automatically reopen this task, if it is pending.";
+        $recipients = array();
+        if (strlen($date) == "10") {
+          $date.= " 08:30:00";
+        }
+        $this->add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients,$date);
+      }
     }
   }
 
