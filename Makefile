@@ -61,6 +61,7 @@ dist: test
 	cd ./src && $(MAKE) doc_html; 
 	cd ./src && $(MAKE) doc_clean; 
 	cd ./src && $(MAKE) cache;
+	cd ./src && $(MAKE) patches;
 	if [ -d "./src/help/src" ]; then rm -rf ./src/help/src; fi;
 	mv ./src ./allocPSA-`cat util/alloc_version`
 	tar -czvf allocPSA-`cat util/alloc_version`.tgz allocPSA-`cat util/alloc_version`; 
@@ -123,5 +124,17 @@ cache:
 	  cat javascript/$$i >> cache_`cat util/alloc_version`/javascript.js;\
 	done
 
+patches:
+	rm -f ./installation/db_patches.sql
+	for i in ./patches/*; do \
+	echo "INSERT INTO patchLog (patchName, patchDesc, patchDate) VALUES ('`basename $$i`','','1970-01-01 10:00:00');" \
+	>> installation/db_patches.sql; done;
+	num_tables=$(grep -i "CREATE TABLE" installation/db_structure.sql | wc -l)
+	echo "INSERT INTO config (name, type, value) VALUES ('install_data','array',\
+	'a:1:{s:10:\"num_tables\";i:$$(grep -i "CREATE TABLE" installation/db_structure.sql | wc -l);}');" \
+	>> installation/db_patches.sql;
 
-.PHONY: css help doc services test cache
+
+
+
+.PHONY: css help doc services test cache patches
