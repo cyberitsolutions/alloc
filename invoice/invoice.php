@@ -36,6 +36,7 @@ function show_new_invoiceItem($template) {
   $TPL["div1"] = "";
   $TPL["div2"] = " class=\"hidden\"";
   $TPL["div3"] = " class=\"hidden\"";
+  $TPL["div4"] = " class=\"hidden\"";
 
 
   if (is_object($invoice) && $invoice->get_value("invoiceStatus") == 'edit' && $current_user->have_role('admin')) {
@@ -62,6 +63,11 @@ function show_new_invoiceItem($template) {
         unset($TPL["div3"]);
         $TPL["div1"] = " class=\"hidden\"";
         $TPL["sbs_link"] = "expenseForm_ii";
+
+      } else if ($invoiceItem->get_value("productSaleID")) {
+        unset($TPL["div4"]);
+        $TPL["div1"] = " class=\"hidden\"";
+        $TPL["sbs_link"] = "productSale_ii";
       }
 
     // Else default values for creating a new invoiceItem
@@ -125,6 +131,26 @@ function show_new_invoiceItem($template) {
         $id = $invoiceItem->get_value("expenseFormID");
       }
       $TPL["expenseFormOptions"] = page::select_options($expenseFormOptions,$id,90);
+
+
+      $q = prepare("SELECT *
+                      FROM productSale
+                     WHERE clientID = %d
+                       AND status = 'admin'
+                   ",$invoice->get_value("clientID"));
+      $invoice->get_value("projectID") and $q.= prepare(" AND projectID = %d",$invoice->get_value("projectID"));
+      $db->query($q);
+      while ($row = $db->row()) {
+        $productSale = new productSale();
+        $productSale->set_id($row["productSaleID"]);
+        $productSale->select();
+        $ps_row = $productSale->get_amounts();
+        $productSaleOptions[$row["productSaleID"]] = "Sale #".$row["productSaleID"]." ".$ps_row["total_sellPrice"]." ".person::get_fullname($row["personID"]);
+      }
+      if ($invoiceItem->get_value("productSaleID")) {
+        $id = $invoiceItem->get_value("productSaleID");
+      }
+      $TPL["productSaleOptions"] = page::select_options($productSaleOptions,$id,90);
     }
 
     $TPL["invoiceItem_iiQuantity"] or $TPL["invoiceItem_iiQuantity"] = 1;
@@ -264,7 +290,7 @@ function show_invoiceItem_list() {
       
       if ($amounts[$invoiceItem->get_id()] === null) {
         $amount = $invoiceItem->get_value("iiAmount",DST_HTML_DISPLAY);
-        if (config::get_config_item("taxPercent") && !$invoiceItem->get_value("iiTax")) {
+        if (config::get_config_item("taxPercent") && $invoiceItem->get_value("iiTax") == 0) {
           $amount = page::money($invoice->get_value("currencyTypeID"),$amount * (config::get_config_item("taxPercent") / 100 + 1),"%m");
         }
       } else {
@@ -535,7 +561,13 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
     } else if ($_POST["expenseFormID"]) {
       $invoiceItem->add_expenseForm($invoiceItem->get_value("invoiceID"),$_POST["expenseFormID"]);
-    
+
+    } else if ($_POST["productSaleID"] && $_POST["split_productSale"]) {
+      $invoiceItem->add_productSaleItems($invoiceItem->get_value("invoiceID"),$_POST["productSaleID"]);
+
+    } else if ($_POST["productSaleID"]) {
+      $invoiceItem->add_productSale($invoiceItem->get_value("invoiceID"),$_POST["productSaleID"]);
+
     } else {
       $invoiceItem->save();
     }

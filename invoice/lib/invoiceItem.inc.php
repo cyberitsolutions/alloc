@@ -29,6 +29,8 @@ class invoiceItem extends db_entity {
                              ,"timeSheetItemID"
                              ,"expenseFormID"
                              ,"transactionID"
+                             ,"productSaleID"
+                             ,"productSaleItemID"
                              ,"iiMemo"
                              ,"iiQuantity"
                              ,"iiUnitPrice" => array("type"=>"money")
@@ -224,6 +226,52 @@ class invoiceItem extends db_entity {
       $ii->set_value("iiAmount",$amount*$row["quantity"]);
       $ii->set_value("iiDate",$row["transactionDate"]);
       $ii->set_value("iiTax",config::get_config_item("taxPercent"));
+      $ii->save();
+    }
+  }
+
+  function add_productSale($invoiceID,$productSaleID) {
+    $productSale = new productSale();
+    $productSale->set_id($productSaleID);
+    $productSale->select();
+    $db = new db_alloc();
+    $db->query("SELECT max(transactionDate) as maxDate
+                  FROM transaction
+                 WHERE productSaleID = %d",$productSaleID);
+    $row = $db->row();
+    $amounts = $productSale->get_amounts();
+    $this->set_value("invoiceID",$invoiceID);
+    $this->set_value("productSaleID",$productSale->get_id());
+    $this->set_value("iiMemo","Sale #".$productSale->get_id()." for ".person::get_fullname($productSale->get_value("personID")));
+    $this->set_value("iiQuantity",1);
+    $this->set_value("iiUnitPrice",$amounts["total_sellPrice_value"]);
+    $this->set_value("iiAmount",$amounts["total_sellPrice_value"]);
+    $this->set_value("iiDate",$row["maxDate"]);
+    //$this->set_value("iiTax",config::get_config_item("taxPercent"));
+    $this->save();
+  }
+
+  function add_productSaleItems($invoiceID,$productSaleID) {
+    $productSale = new productSale();
+    $productSale->set_id($productSaleID);
+    $productSale->select();
+    $db = new db_alloc();
+    $q = prepare("SELECT * FROM productSaleItem WHERE productSaleID = %d",$productSale->get_id());
+    $db->query($q);
+    while ($row = $db->row()) {
+      $ii = new invoiceItem();
+      $ii->currency = $row["sellPriceCurrencyTypeID"];
+      $ii->set_value("invoiceID",$invoiceID);
+      $ii->set_value("productSaleID",$productSale->get_id());
+      $ii->set_value("productSaleItemID",$row["productSaleItemID"]);
+      $ii->set_value("iiMemo","Sale (".$productSale->get_id().") item for ".person::get_fullname($productSale->get_value("personID")).", ".$row["description"]);
+      $ii->set_value("iiQuantity",$row["quantity"]);
+      $row["sellPrice"] = page::money($ii->currency,$row["sellPrice"]/$row["quantity"],"%mo");
+      $ii->set_value("iiUnitPrice",$row["sellPrice"]);
+      $ii->set_value("iiAmount",$row["sellPrice"]*$row["quantity"]);
+      $d = $productSale->get_value("productSaleDate") or $d = $productSale->get_value("productSaleModifiedTime") or $d = $productSale->get_value("productSaleCreatedTime");
+      $ii->set_value("iiDate",$d);
+      //$ii->set_value("iiTax",config::get_config_item("taxPercent")); // product sale items are always excl GST
       $ii->save();
     }
   }

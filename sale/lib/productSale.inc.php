@@ -171,6 +171,7 @@ class productSale extends db_entity {
     $rtn["total_unallocated"] = page::money(config::get_config_item("currency"),$total_unallocated,"%s%mo %c");
     $rtn["total_unallocated_number"] = page::money(config::get_config_item("currency"),$total_unallocated,"%mo");
 
+    $rtn["total_sellPrice_value"] = page::money(config::get_config_item("currency"),$total_sellPrice,"%mo");
     return $rtn;
   }
 
