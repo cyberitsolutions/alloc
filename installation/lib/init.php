@@ -115,35 +115,6 @@ function perform_test($test) {
         $arr["remedy"] = "Your installation of PHP does not have the mail() function. allocPSA may not be able to send out emails.";
       }
     break;
-    case "db_connect":
-      $arr["value"] = "User:".$_FORM["ALLOC_DB_USER"]."<br>Password:".$_FORM["ALLOC_DB_PASS"]."<br>Host:".$_FORM["ALLOC_DB_HOST"];
-      $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
-      if (!$_FORM["ALLOC_DB_USER"] || !$link) {
-        $arr["remedy"] = "Unable to connect to the MySQL server. Check the credentials in the 'Input' step.";
-      }
-    break;
-
-    case "db_select":
-      $arr["value"] = $_FORM["ALLOC_DB_NAME"];
-      $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
-      if (!@mysql_select_db($_FORM["ALLOC_DB_NAME"], $link)) {
-        $arr["remedy"] = "The database '".$_FORM["ALLOC_DB_NAME"]."' cannot be selected. It may not exist. Please repeat the 'DB Setup' step.";
-      }
-    break;
-
-    case "db_tables":
-      $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
-      $qid = @mysql_query("SHOW TABLES",$link);
-      if (is_resource($qid)) {
-        while ($row = mysql_fetch_array($qid)) {
-          $count++;
-        }
-      }
-      $arr["value"] = sprintf("%d",$count);
-      if (!$count || $count < 2) {
-        $arr["remedy"] = "The database tables don't appear to have imported correctly. Please repeat the 'DB Install' step.";
-      }
-    break;
 
     case "attachments_dir":
       $arr["value"] = $_FORM["ATTACHMENTS_DIR"];
@@ -166,17 +137,6 @@ function perform_test($test) {
         }
       }
       $failed and $arr["remedy"] = "The currency code you entered is not valid.";
-    break;
-
-    case "alloc_config":
-      $arr["value"] = "alloc_config.php";
-      if (!file_exists(ALLOC_CONFIG_PATH) || !is_writeable(ALLOC_CONFIG_PATH)) {
-        $arr["remedy"] = "Please create an empty, webserver-writeable file: ";
-        $arr["remedy"].= "<br><nobr>touch ".ALLOC_CONFIG_PATH."</nobr>";
-        $arr["remedy"].= "<br><nobr>chmod 600 ".ALLOC_CONFIG_PATH."</nobr>";
-        $server_user = getenv("APACHE_RUN_USER") or $server_user = "apache";
-        $arr["remedy"].= "<br><nobr>chown ".$server_user." ".ALLOC_CONFIG_PATH."</nobr>";
-      }
     break;
   }
 

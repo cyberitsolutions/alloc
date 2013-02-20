@@ -426,6 +426,12 @@ INSERT INTO tf (tfID,tfName,tfActive) VALUES (2,"Incoming Funds",1);
 INSERT INTO tf (tfID,tfName,tfActive) VALUES (3,"Outgoing Funds",1);
 INSERT INTO tf (tfID,tfName,tfActive) VALUES (4,"Expense Funds",1);
 INSERT INTO tf (tfID,tfName,tfActive) VALUES (5,"Tax Funds",1);
+INSERT INTO tf (tfID,tfName,tfActive) VALUES (6,"My Funds",1);
+
+INSERT INTO person (personID,username,password,personActive,perms,preferred_tfID) VALUES
+                   (1,'alloc','',1,'god,admin,manage,employee',6);
+
+INSERT INTO tfPerson (tfID,personID) VALUES (6,1);
 
 INSERT INTO config (name, value, type) VALUES ('currency', '', 'text');
 INSERT INTO config (name, value, type) VALUES ('AllocFromEmailAddress','','text');
@@ -438,8 +444,6 @@ INSERT INTO config (name, value, type) VALUES ('companyContactHomePage','','text
 INSERT INTO config (name, value, type) VALUES ('companyContactAddress','','text');
 INSERT INTO config (name, value, type) VALUES ('companyACN','ACN 000 000 000','text');
 INSERT INTO config (name, value, type) VALUES ('hoursInDay','7.5','text');
--- This line has been moved into the install program. 
--- INSERT INTO config (name, value) VALUES ('allocURL','http://change_me_to_your_URL_for_allocPSA/')
 INSERT INTO config (name, value, type) VALUES ('companyABN','ABN 111 111 111','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactAddress2','','text');
 INSERT INTO config (name, value, type) VALUES ('companyContactAddress3','','text');
@@ -495,7 +499,8 @@ INSERT INTO config (name,value,type) VALUES ('rssStatusFilter', 'a:7:{i:0;s:12:"
 INSERT INTO config (name,value,type) VALUES ('rssEntries', '20', 'text');
 INSERT INTO config (name,value,type) VALUES ('rssShowProject', 'on', 'text');
 INSERT INTO config (name,value,type) VALUES ('allocTabs','a:11:{i:0;s:4:"home";i:1;s:6:"client";i:2;s:7:"project";i:3;s:4:"task";i:4;s:4:"time";i:5;s:7:"invoice";i:6;s:4:"sale";i:7;s:6:"person";i:8;s:4:"wiki";i:9;s:5:"inbox";i:10;s:5:"tools";}','array');
-
+INSERT INTO config (name,value,type) VALUES ('allocURL','','text');
+INSERT INTO config (name,value,type) VALUES ('allocTimezone','','text');
 
 
 --
@@ -538,4 +543,45 @@ INSERT INTO tokenAction (tokenActionID,tokenAction,tokenActionType,tokenActionMe
 INSERT INTO tokenAction (tokenActionID,tokenAction,tokenActionType,tokenActionMethod) VALUES (3,'Task status move pending to open','task','moved_from_pending_to_open');
 INSERT INTO tokenAction (tokenActionID,tokenAction,tokenActionType,tokenActionMethod) VALUES (4,'Reopen pending task','task','reopen_pending_task');
 
+
+
+INSERT INTO announcement (announcementID, heading, personID,displayFromDate,displayToDate, body) VALUES
+                         (1, "Getting Started in allocPSA",1,'2000-01-01','2030-01-01',"
+If you're new to allocPSA, just follow the tabs across left to right at the
+top of the page, ie: Clients have Projects > Projects have Tasks > Time
+Sheet are billed against Tasks > Invoices are raised against Time Sheets and so on.
+
+Here are the cron jobs from the installation in case you hadn't installed
+them yet. You will need to install at least the first one to enable the very
+useful automated reminders functionality.
+
+# Check every 10 minutes for any allocPSA Reminders to send
+*/10 * * * * wget -q -O /dev/null http://urlforyouralloc/reminder/sendReminders.php
+
+# Update the exchange rates - pick your own time to do it - once per day 
+X Y * * * wget -q -O /dev/null http://urlforyouralloc/finance/updateExchangeRates.php
+
+# Check every 5 minutes for updates to the search index
+*/5 * * * * wget -q -O /dev/null http://urlforyouralloc/search/updateIndex.php
+
+# Check every 5 minutes for any new emails to import into allocPSA
+*/5 * * * * wget -q -O /dev/null http://urlforyouralloc/email/receiveEmail.php
+
+# Send allocPSA Daily Digest emails once a day at 4:35am
+35 4 * * * wget -q -O /dev/null http://urlforyouralloc/person/sendEmail.php
+
+# Check for allocPSA Repeating Expenses once a day at 4:40am
+40 4 * * * wget -q -O /dev/null http://urlforyouralloc/finance/checkRepeat.php
+
+# Check for allocPSA Repeating Invoices once a day at 5:40am
+40 5 * * * wget -q -O /dev/null http://urlforyouralloc/invoice/checkRepeat.php
+
+Please feel free to contact us at Cyber IT Solutions <info@cyber.com.au> or just use
+the forums at http://sourceforge.net/projects/allocpsa/ if you have any questions.
+
+For commercial support contact Cyber IT Solutions or allocPSA.com.
+
+To remove this announcement click on the Tools tab and then click the
+Announcements link.
+                          ");
 
