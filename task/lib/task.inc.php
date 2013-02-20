@@ -206,7 +206,7 @@ class task extends db_entity {
         $name = "Reopen pending task";
         $desc = "This reminder will automatically reopen this task, if it is pending.";
         $recipients = array();
-        if (strlen($date) == "10") {
+        if (strlen($date) <= "10") {
           $date.= " 08:30:00";
         }
         $this->add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients,$date);
