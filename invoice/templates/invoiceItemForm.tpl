@@ -6,7 +6,8 @@
     <td colspan="6">
       {page::side_by_side_links(array("generic_ii"=>"Generic"
                                      ,"timeSheet_ii"=>"From Time Sheet"
-                                     ,"expenseForm_ii"=>"From Expense Form")
+                                     ,"expenseForm_ii"=>"From Expense Form"
+                                     ,"productSale_ii"=>"From Sale")
                                ,$url_alloc_invoice."invoiceID=".$invoiceID)}    
     </td>
   </tr>
@@ -63,6 +64,22 @@
         <td>
           <select name="expenseFormID"><option value=""></option>{$expenseFormOptions}</select>
           <input type='checkbox' name='split_expenseForm' value='1'>Use Expense Form Items
+        </td>
+        <td></td>
+        <td align="right">{$invoiceItem_buttons}</td>
+      </tr>
+      </table>
+      </div>
+
+      <div id="productSale_ii"{$div4}>
+      <table border="0" width="100%">
+      <tr>
+        <td>Create Item from Sale</td>
+      </tr>
+      <tr>
+        <td>
+          <select name="productSaleID"><option value=""></option>{$productSaleOptions}</select>
+          <input type='checkbox' name='split_productSale' value='1'>Use Sale Items
         </td>
         <td></td>
         <td align="right">{$invoiceItem_buttons}</td>

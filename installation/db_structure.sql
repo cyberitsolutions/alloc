@@ -167,6 +167,8 @@ CREATE TABLE invoiceItem (
   timeSheetItemID integer DEFAULT NULL,
   expenseFormID integer DEFAULT NULL,
   transactionID integer DEFAULT NULL,
+  productSaleID INTEGER DEFAULT NULL,
+  productSaleItemID INTEGER DEFAULT NULL,
   iiMemo text DEFAULT NULL,
   iiQuantity DECIMAL(19,2) DEFAULT NULL,
   iiUnitPrice BIGINT DEFAULT NULL,

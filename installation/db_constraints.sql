@@ -93,6 +93,8 @@ ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_timeSheetID FOREIGN KEY (time
 ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_timeSheetItemID FOREIGN KEY (timeSheetItemID) REFERENCES timeSheetItem (timeSheetItemID);
 ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_expenseFormID FOREIGN KEY (expenseFormID) REFERENCES expenseForm (expenseFormID);
 ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_transactionID FOREIGN KEY (transactionID) REFERENCES transaction (transactionID);
+ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_productSaleID FOREIGN KEY (productSaleID) REFERENCES productSale (productSaleID);
+ALTER TABLE invoiceItem ADD CONSTRAINT invoiceItem_productSaleItemID FOREIGN KEY (productSaleItemID) REFERENCES productSaleItem (productSaleItemID);
 ALTER TABLE invoiceRepeat ADD CONSTRAINT invoiceRepeat_invoiceID FOREIGN KEY (invoiceID) REFERENCES invoice (invoiceID);
 ALTER TABLE invoiceRepeat ADD CONSTRAINT invoiceRepeat_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE invoiceRepeatDate ADD CONSTRAINT invoiceRepeat_invoiceRepeatID FOREIGN KEY (invoiceRepeatID) REFERENCES invoiceRepeat (invoiceRepeatID);
