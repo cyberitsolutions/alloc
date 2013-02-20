@@ -57,8 +57,8 @@ class task_list_home_item extends home_item {
     $TPL["taskListRows"] = task::get_list($_FORM);
     $TPL["_FORM"] = $_FORM;
 
-      return true;
     if (count($TPL["taskListRows"])) {
+      return true;
     }
   }
 }
