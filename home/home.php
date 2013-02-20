@@ -81,17 +81,6 @@ if ($_POST["customize_save"]) {
   alloc_redirect($TPL["url_alloc_home"]);
 }
 
-if (isset($_POST["time_item"])) {
-  $t = timeSheetItem::parse_time_string($_POST["time_item"]);
-  if (is_numeric($t["duration"]) && $current_user->get_id()) {
-    $timeSheet = new timeSheet();
-    $tsi_row = $timeSheet->add_timeSheetItem($t);
-    alloc_redirect($TPL["url_alloc_home"]);
-  } else {
-    alloc_error("Time not added. No duration set.");
-    alloc_error(print_r($t,1));
-  }
-}
 
 if (isset($_POST["tsiHint_item"])) {
   $t = tsiHint::parse_tsiHint_string($_POST["tsiHint_item"]);
