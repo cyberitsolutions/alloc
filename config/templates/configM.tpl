@@ -477,9 +477,19 @@
     </tr>
   {/}
   <tr>
-  <td>Map URL</td>
-  <td><input type="text" size="70" value="{$mapURL}" name="mapURL"></td>
-  <td width="1%">{page::help("config_mapURL")}</td>
+    <td>Map URL</td>
+    <td><input type="text" size="70" value="{$mapURL}" name="mapURL"></td>
+    <td width="1%">{page::help("config_mapURL")}</td>
+  </tr>
+  <tr>
+    <td>Task Priority Spread</td>
+    <td><input type="text" size="70" value="{$taskPrioritySpread}" name="taskPrioritySpread"></td>
+    <td width="1%">{page::help("config_taskPrioritySpread")}</td>
+  </tr>
+  <tr>
+    <td>Task Priority Scale</td>
+    <td><input type="text" size="70" value="{$taskPriorityScale}" name="taskPriorityScale"></td>
+    <td width="1%">{page::help("config_taskPriorityScale")}</td>
   </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>

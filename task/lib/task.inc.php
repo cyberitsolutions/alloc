@@ -896,6 +896,9 @@ class task extends db_entity {
     }
 
     $uid = sprintf("%d",$current_user->get_id());
+    $spread = sprintf("%d",config::get_config_item("taskPrioritySpread"));
+    $scale = sprintf("%d",config::get_config_item("taskPriorityScale"));
+    $scale_halved = sprintf("%d",config::get_config_item("taskPriorityScale")/2);
 
     $q = "SELECT task.*
                 ,projectName
@@ -910,8 +913,8 @@ class task extends db_entity {
                  IF(task.dateTargetCompletion IS NULL, 
                    8,
                    ATAN(
-                        (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / 20
-                       ) / 3.14 * 8 + 4
+                        (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / ".$spread."
+                       ) / 3.14 * ".$scale." + ".$scale_halved."
                    ) / 10 as priorityFactor
             FROM task
        LEFT JOIN project ON project.projectID = task.projectID
