@@ -103,21 +103,17 @@ function sidebyside_activate(id,redraw) {
 
 function help_text_on(id, str) {
   $('#main').append("<div id='helper' class='corner' style='display:none'></div>");
-  $('#helper').hide().html(str);
-  
-  offset = $('#'+id).offset();
-  
-  x = offset.left -400;
+  $('#helper').html(str).hide();
+  var offset = $('#'+id).position();
+  var x = offset.left -420;
   if (x < 0) {
-    x = x + 380;
+    x = x + 400;
   } 
+  var y = offset.top + 20;
+  if ((y + $('#helper').height() + 40) > $(document).height()) {
+    y = y-$('#helper').height() - 40;
+  }
   $("#helper").css('left',x);
-  
-  y = offset.top - 50;
-  if (y > 350) {
-    y = y-$('#helper').height() -40;
-  } 
-  
   $("#helper").css('top',y);
   $("#helper").fadeIn("normal");
 } 
