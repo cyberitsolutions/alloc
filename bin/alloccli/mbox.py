@@ -53,7 +53,7 @@ alloc mbox -t 1234 > file.mbox'''
     if taskID:
 
       s = ''
-      str0 = self.print_task(taskID,prependEmailHeader=True)
+      str0 = self.print_task(taskID, prependEmailHeader=True)
       str1 = self.make_request({"method":"get_task_emails", "taskID":taskID})
       str2 = self.make_request({"method":"get_timeSheetItem_comments", "taskID":taskID})
 

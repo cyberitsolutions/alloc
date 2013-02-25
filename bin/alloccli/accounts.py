@@ -47,7 +47,7 @@ class accounts(alloc):
       if o['field']:
         fields = o['field']
       else:
-        fields = ["transactionID","fromTfName","tfName","amount","status","transactionDate"]
+        fields = ["transactionID", "fromTfName", "tfName", "amount", "status", "transactionDate"]
 
       transactions = self.get_list("transaction", ops)
       if transactions:
@@ -59,7 +59,7 @@ class accounts(alloc):
       if o['field']:
         fields = o['field']
       else:
-        fields = ["tfID","tfName","tfBalancePending","tfBalance"]
+        fields = ["tfID", "tfName", "tfBalancePending", "tfBalance"]
 
       tfs = self.get_list("tf", ops)
       if tfs:
