@@ -101,7 +101,7 @@ test:
 	         --max-locals      30                           \
 	         --max-args        8                            \
 	         --max-attributes  50                           \
-	         --max-line-length 120                          \
+	         --max-line-length 135                          \
 	         --max-branchs     50                           \
 	         --method-rgx      '[a-z_][a-zA-Z0-9_]{2,30}$$' \
 	         --variable-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \

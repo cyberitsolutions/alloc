@@ -19,7 +19,7 @@ class tasks(alloc):
   ops.append(('m:', 'manager=NAME   ', 'A task\'s manager, username or first and surname".'))
   ops.append(('c:', 'creator=NAME   ', 'A task\'s creator, username or first and surname".'))
   ops.append(('o:', 'order=NAME     ', 'The order the Tasks are displayed in.\n'
-                                       'Default: "-o Priority -o Type -o _Rate -o status" (underscore means reverse sort).'))
+                                       'Default: "-o Priority -o Type -o _Rate -o status" (underscore means reverse).'))
   ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
                                        '(eg: -f all eg: -f taskID -f Status -f taskStatus -f Proj\\ Pri)'))
 
@@ -57,9 +57,6 @@ class tasks(alloc):
     if o['creator']:
       creatorID = self.person_to_personID(o['creator'])
 
-    # Get a projectID either passed via command line, or figured out from a project name
-    projects = {}
-
     # Setup options for the task search
     ops = {}
     ops["personID"] = personID
@@ -82,9 +79,9 @@ class tasks(alloc):
       ops["taskName"] = o["task"]
 
     if not o['fields']:
-      if not order: order = ["priorityLabel","taskTypeID","_rate","taskStatusLabel"]
-      fields = ["taskID","taskTypeID","taskStatusLabel","priorityLabel","timeExpected",
-                "timeLimit","timeActual","rate","projectName","taskName"]
+      if not order: order = ["priorityLabel", "taskTypeID", "_rate", "taskStatusLabel"]
+      fields = ["taskID", "taskTypeID", "taskStatusLabel", "priorityLabel", "timeExpected",
+                "timeLimit", "timeActual", "rate", "projectName", "taskName"]
     else:
       fields = o["fields"]
 

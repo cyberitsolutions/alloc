@@ -178,9 +178,9 @@ class alloc(object):
   }
 
 
-  row_timeSheet = ["timeSheetID","dateFrom","dateTo","status","person","duration","totalHours","amount","projectName"]
-  row_timeSheetItem = ["timeSheetID","timeSheetItemID","dateTimeSheetItem","taskID","timeSheetItemDuration",
-                       "rate","worth","hoursBilled","timeLimit","limitWarning","comment"]
+  row_timeSheet = ["timeSheetID", "dateFrom", "dateTo", "status", "person", "duration", "totalHours", "amount", "projectName"]
+  row_timeSheetItem = ["timeSheetID", "timeSheetItemID", "dateTimeSheetItem", "taskID", "timeSheetItemDuration",
+                       "rate", "worth", "hoursBilled", "timeLimit", "limitWarning", "comment"]
 
   def __init__(self, url=""):
 
@@ -265,7 +265,8 @@ class alloc(object):
     for option in options:
       self.config[option.lower()] = config.get(section, option)
       self.dbg("CONF: "+option.lower()+ ": "+self.config[option.lower()])
-    if self.client_name.upper()+'_TRUNC' in os.environ: self.config[self.client_name+'_trunc'] = os.environ.get(self.client_name.upper()+'_TRUNC')
+    if self.client_name.upper()+'_TRUNC' in os.environ:
+      self.config[self.client_name+'_trunc'] = os.environ.get(self.client_name.upper()+'_TRUNC')
 
   def create_transforms(self, f):
     """Create a default ~/.alloc/transforms.py file for field manipulation."""
@@ -681,19 +682,20 @@ class alloc(object):
     r = []
     for n in name:
       ops = {}
-      if ' ' in name:
-        ops['firstName'], ops['surname'] = name.split(" ")
+      if ' ' in n:
+        ops['firstName'], ops['surname'] = n.split(" ")
       else:
-        ops["username"] = name
+        ops["username"] = n
       rtn = self.get_list("person", ops)
       if rtn:
         for i in rtn:
           r.append(i)
-    return r
 
-    # If they don't want all the records, then return an impossible personID
-    if name != '%' and name != '*' and type(name) == type("string") and name.lower() != 'all':
-      return '1000000000000000000' # returning just zero doesn't work
+      # else if they don't want all the records, then return an impossible personID
+      elif n and n != '%' and n != '*' and n.lower() != 'all':
+        r.append('1000000000000000000') # returning just zero doesn't work
+
+    return r
 
   def parse_date_comparator(self, date):
     """Split a comparator and a date eg: '>=2011-10-10' becomes ['>=','2011-10-10']."""

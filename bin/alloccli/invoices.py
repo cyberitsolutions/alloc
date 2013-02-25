@@ -70,14 +70,15 @@ class invoices(alloc):
         for i in invoices_list:
           invoiceIDs.append(i)
 
-        fields = o["fields"] or ["invoiceID","invoiceItemID","clientID","clientName","invoiceNum",
-                                 "iiDate","iiAmount","iiQuantity","iiUnitPrice","iiMemo"]
+        fields = o["fields"] or ["invoiceID", "invoiceItemID", "clientID", "clientName", "invoiceNum",
+                                 "iiDate", "iiAmount", "iiQuantity", "iiUnitPrice", "iiMemo"]
         self.print_table("invoiceItem", self.get_list("invoiceItem", {"invoiceID":invoiceIDs}),
                          fields, sort="invoiceID")
     
     else:
-      fields = o["fields"] or ["invoiceID","clientID","clientName","invoiceNum","invoiceDateFrom","invoiceDateTo","invoiceStatus",
-                               "status_label","amountPaidRejected","amountPaidPending","amountPaidApproved","iiAmountSum"]
+      fields = o["fields"] or ["invoiceID", "clientID", "clientName", "invoiceNum", "invoiceDateFrom",
+                               "invoiceDateTo", "invoiceStatus", "status_label", "amountPaidRejected",
+                               "amountPaidPending", "amountPaidApproved", "iiAmountSum"]
 
       self.print_table("invoice", self.get_list("invoice", f), fields, sort="clientName")
       

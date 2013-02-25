@@ -23,7 +23,7 @@ class timesheets(alloc):
   ops.append(('d.', 'date=YYYY-MM-DD', 'If --items is specified, then match against the items\' date.\n'
                                        'Else match against the date of the time sheet\'s earliest item.'))
   ops.append(('o:', 'order=NAME     ', 'The order the Time Sheets or Items are displayed in.\n'
-                                       'Default for time sheets: -o From -o ID, Default for items: -o Date -o Item\\ ID'))
+                                       'Time sheets default: -o From -o ID, Default for items: -o Date -o Item\\ ID'))
   ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
                                        '(eg: -f all eg: -f ID -f Item\\ ID -o Task\\ ID -o Comment)')) 
 
