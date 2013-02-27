@@ -26,7 +26,7 @@
 
   {if $loadErrorPage || (is_file(wiki_module::get_wiki_path().$file) && is_writable(wiki_module::get_wiki_path().$file))}
   <div class="{$default_two} noprint">
-    {include_template("templates/editFileS.tpl")}
+    {include_template("templates/fileEditS.tpl")}
   </div>
   {/}
 

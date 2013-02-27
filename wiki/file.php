@@ -134,7 +134,7 @@ if ($_POST["save"]) {
   if ($_REQUEST["file"]) {
     $TPL["editName"] = $_REQUEST["file"];
   }
-  include_template("templates/newFileM.tpl");
+  include_template("templates/fileM.tpl");
 
 } else if ($file && is_file(wiki_module::get_wiki_path().$file) && is_readable(wiki_module::get_wiki_path().$file)) {
 
