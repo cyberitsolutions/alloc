@@ -153,6 +153,7 @@ if ($_POST["save"]) {
   $TPL["str"] = $_REQUEST["str"];
   $TPL["commit_msg"] = $_REQUEST["commit_msg"];
   $TPL["file"] = $_REQUEST["file"];
+  $TPL["editName"] = $_REQUEST["file"];
   $TPL["msg"] = $_REQUEST["msg"];
   include_template("templates/fileGetM.tpl");
 }
