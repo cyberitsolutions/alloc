@@ -10,7 +10,7 @@
 
 function refresh_wiki(target,revision) {
   // Draw the dynamic file tree and specify a function to get called when a node is clicked
-  var ops = { script:'{$url_alloc_fileTree}'
+  var ops = { script:"{$url_alloc_fileTree}"
              , folderEvent:'click'
              , expandSpeed:1
              , collapseSpeed:1
@@ -18,49 +18,49 @@ function refresh_wiki(target,revision) {
 
   $('#jftTree').fileTree(ops, function(path, isFile) { 
     if (isFile) {
-      makeAjaxRequest('{$url_alloc_file}','jftFile', { file: path, rev: revision });
+      makeAjaxRequest("{$url_alloc_file}",'jftFile', { file: path, rev: revision });
     }
     $("#newFile").attr("data-p",path);
     $("#newDirectory").attr("data-p",path);
-    makeAjaxRequest('{$url_alloc_fileHistory}','fileHistory', { file: path, rev: revision });
+    makeAjaxRequest("{$url_alloc_fileHistory}",'fileHistory', { file: path, rev: revision });
   });
 }
 
 $(document).ready(function() {
 
   // If the page has loaded, then load the tree
-  refresh_wiki('{$target}','{$rev}');
+  refresh_wiki("{$target}","{$rev}");
 
   // If the user clicked a new page link...
-  if ('{$newFile}') {
-    makeAjaxRequest('{$url_alloc_file}','jftFile', { newFile: true, file: '{$target}' });
+  if ("{$newFile}") {
+    makeAjaxRequest("{$url_alloc_file}",'jftFile', { newFile: true, file: "{$target}" });
   }
 
   // If there was an error saving we need to manually load in the values that were submitted.
-  if ('{$loadErrorPage}') {
-    makeAjaxRequest('{$url_alloc_file}','jftFile', { loadErrorPage: '{$loadErrorPage}'
-                                                   , str: '{$str}' 
-                                                   , commit_msg: '{$commit_msg}' 
-                                                   , file: '{$file}' 
-                                                   , msg: '{$msg}' 
+  if ("{$loadErrorPage}") {
+    makeAjaxRequest("{$url_alloc_file}",'jftFile', { loadErrorPage: "{$loadErrorPage}"
+                                                   , str: "{$str}" 
+                                                   , commit_msg: "{$commit_msg}" 
+                                                   , file: "{$file}" 
+                                                   , msg: "{$msg}" 
                               
     });
   }
-  if ('{$loadErrorPageDir}') {
-    makeAjaxRequest('{$url_alloc_directory}','jftDir', { loadErrorPageDir: '{$loadErrorPageDir}'
-                                                        , dirName: '{$dirName}' 
-                                                        , msg: '{$msg}' 
+  if ("{$loadErrorPageDir}") {
+    makeAjaxRequest("{$url_alloc_directory}",'jftDir', { loadErrorPageDir: "{$loadErrorPageDir}"
+                                                        , dirName: "{$dirName}" 
+                                                        , msg: "{$msg}" 
     });
   }
 
   // Menu links: New File, New Directory
   $("#newDirectory").click(function() {
-    makeAjaxRequest('{$url_alloc_directory}','jftFile', { newDirectory: true, p: $(this).attr("data-p") });
+    makeAjaxRequest("{$url_alloc_directory}",'jftFile', { newDirectory: true, p: $(this).attr("data-p") });
     return false;
   });
 
   $("#newFile").click(function() {
-    makeAjaxRequest('{$url_alloc_file}','jftFile', { newFile: true, p: $(this).attr("data-p") });
+    makeAjaxRequest("{$url_alloc_file}",'jftFile', { newFile: true, p: $(this).attr("data-p") });
     return false;
   });
 

@@ -51,7 +51,7 @@ if ($_POST["save"]) {
     $TPL["str"] = urlencode($_POST["wikitext"]);
     $TPL["commit_msg"] = urlencode($_POST["commit_msg"]);
     $TPL["file"] = urlencode($editName);
-    $TPL["msg"] = urlencode($error);
+    $TPL["msg"] = $error;
     include_template("templates/wikiM.tpl");
 
   } else {
