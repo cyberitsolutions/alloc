@@ -151,7 +151,7 @@ $(document).ready(function() {
     <td align="center" class="padded">
       <div style="margin:20px">
         {$reminder_buttons}
-        <br><br>{$reminder_goto_parent}&nbsp;&nbsp;<a href="" onClick="return toggle_view_edit(true);">Cancel edit</a>
+        <br><br>{$reminder_goto_parent}&nbsp;&nbsp;{if $reminderID}<a href="" onClick="return toggle_view_edit(true);">Cancel edit</a>{/}
         <input type="hidden" name="parentType" value="{$parentType}">
         <input type="hidden" name="parentID" value="{$parentID}">
         <input type="hidden" name="returnToParent" value="{$returnToParent}">
