@@ -271,13 +271,11 @@ $(document).ready(function() {
     $(".toggleFilter").trigger("click");
   }
 
-  $(".calendar_links").hide();
-  $(".calendar_day").bind('mouseover',function(){
-    $(".calendar_links").hide();
-    $(this).find(".calendar_links").show();
-  });
-  $(".alloc_calendar").bind('mouseout',function() {
-    $(".calendar_links").hide();
+  $("td.calendar_day img").hide();
+  $(".alloc_calendar").on('click', 'td.calendar_day' ,function(e){
+    $("img",this).toggle();
+    $(this).toggleClass("selected");
+    return true;
   });
 
   $('input.toggler').click(function(){

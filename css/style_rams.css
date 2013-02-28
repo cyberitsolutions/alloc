@@ -491,6 +491,9 @@ table.alloc_calendar img {
 table.alloc_calendar td:hover { 
   background-color:#fffdde; 
 }
+table.alloc_calendar td.selected {
+  background-color:#f4f4f4;
+}
 
 /* Filters */
 table.filter { 
