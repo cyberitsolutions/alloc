@@ -26,7 +26,10 @@ require_once("../alloc.php");
 
 if ($_GET["project"] && $_GET["person"]) {
   $rate = projectPerson::get_rate($_GET["project"], $_GET["person"]);
-  $rate['rate'] = page::money('', $rate['rate'], '%mo');
+
+  $project = new project($_GET["project"]);
+  $currency = $project->get_value("currencyTypeID") or $currency = config::get_config_item("currency");
+  $rate['rate'] = page::money($currency, $rate['rate'], '%mo');
   echo alloc_json_encode($rate);
 }
 

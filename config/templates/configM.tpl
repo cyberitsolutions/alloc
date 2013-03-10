@@ -293,7 +293,7 @@
   </tr>
   <tr>
     <td>Default timesheet unit</td>
-    <td><select name="defaultTimeSheetUnit">{$timesheetRate_options}</select></td>
+    <td><select name="defaultTimeSheetUnit"><option value="">{$timesheetRate_options}</select></td>
     <td width="1%"></td>
   </tr>
   <tr>
