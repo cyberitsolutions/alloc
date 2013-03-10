@@ -81,20 +81,15 @@ class projectPerson extends db_entity {
     // person.defaultTimeSheetRate
     // config.name == defaultTimeSheetRate
 
-    $project = new project();
-    $project->set_id($projectID);
-    $project->select();
-
-    // Next priority: Project
+    // First check the project for a rate
+    $project = new project($projectID);
     $row = array('rate' => $project->get_value("defaultTimeSheetRate"),
                  'unit' => $project->get_value("defaultTimeSheetRateUnitID"));
-
     if (imp($row['rate']) && $row['unit']) {
       return $row;
     }
 
-    // Next priority: person
-    // person and global rate are in global currency rather than project currency - conversion required
+    // Next check person, which is in global currency rather than project currency - conversion required
     $db = new db_alloc();
     $q = prepare("SELECT defaultTimeSheetRate as rate, defaultTimeSheetRateUnitID as unit FROM person WHERE personID = %d", $personID);
     $db->query($q);
@@ -105,13 +100,15 @@ class projectPerson extends db_entity {
       }
       return $row;
     }
- 
+
     // Lowest priority: global
     $rate = config::get_config_item("defaultTimeSheetRate");
     $unit = config::get_config_item("defaultTimeSheetUnit");
     if (imp($rate) && $unit) {
-      $rate = exchangeRate::convert(config::get_config_item("currency"), $rate, $project->get_value("currencyTypeID"));
-      return array('rate' => $rate, 'unit' => $unit);
+      if (config::get_config_item("currency") && $project->get_value("currencyTypeID")) {
+        $rate = exchangeRate::convert(config::get_config_item("currency"), $rate, $project->get_value("currencyTypeID"));
+      }
+      return array('rate'=>$rate, 'unit'=>$unit);
     }
   }
 }
