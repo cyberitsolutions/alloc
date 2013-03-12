@@ -48,7 +48,8 @@ BEGIN
   IF (NOT using_views() AND @personID) THEN
     RETURN @personID;
   ELSE
-    SELECT personID INTO @personID FROM person WHERE username = SUBSTRING(USER(),1,LOCATE("@",USER())-1);
+    SELECT personID INTO @personID FROM person WHERE username = SUBSTRING(USER(),1,LOCATE("@",USER())-1)
+  ORDER BY personActive DESC LIMIT 1;
     RETURN @personID;
   END IF;
 END
