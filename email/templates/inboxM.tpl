@@ -14,7 +14,7 @@
     preload_field(".taskfield","Task ID");
 
 
-    $(".existingtask").live('click',function(e) {
+    $(".existingtask").on('click',function(e) {
       e.preventDefault();
       var taskID = $(this).prevAll('.taskfield').val();
       var f = $(this).parent().parent();

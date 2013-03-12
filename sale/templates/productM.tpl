@@ -15,7 +15,7 @@ $(document).ready(function() {
     $("#sellPrice").val(deduct_gst($("#sellPrice").val()));
   });
 
-  $(".cost_gstbutton").live('click',function(){
+  $(".cost_gstbutton").on('click',function(){
     var elem = $(this).parent().find(".amount");
     $(elem).val(deduct_gst($(elem).val()));
   });

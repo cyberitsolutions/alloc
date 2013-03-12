@@ -80,11 +80,11 @@ function get_timezone_array() {
 function format_date($format="Y/m/d", $date="") {
 
   // If looks like this: 2003-07-07 21:37:01
-  if (preg_match("/^[\d]{4}-[\d]{2}-[\d]{2} [\d]{2}:[\d]{2}:[\d]{2}$/",$date)) {
+  if (preg_match("/^[\d]{4}-[\d]{1,2}-[\d]{1,2} [\d]{2}:[\d]{2}:[\d]{2}$/",$date)) {
     list($d,$t) = explode(" ", $date);
 
   // If looks like this: 2003-07-07
-  } else if (preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/",$date)) {
+  } else if (preg_match("/^[\d]{4}-[\d]{1,2}-[\d]{1,2}$/",$date)) {
     $d = $date;
 
   // If looks like this: 12:01:01
@@ -149,8 +149,7 @@ function get_all_form_data($array=array(),$defaults=array()) {
   // Load up $_FORM with $_GET and $_POST
   $_FORM = array();
   foreach ($array as $name) {
-    $_FORM[$name] = $defaults[$name] or $_FORM[$name] = $_POST[$name] or 
-      $_FORM[$name] = (is_array($_GET[$name]) ? $_GET[$name] : $_GET[$name]);
+    $_FORM[$name] = $_POST[$name] or $_FORM[$name] = $_GET[$name] or $_FORM[$name] = $defaults[$name];
   } 
   return $_FORM;
 } 
