@@ -119,9 +119,8 @@ cache:
 	rm -rf cache_`cat util/alloc_version`
 	mkdir cache_`cat util/alloc_version`
 	cp css/*.css cache_`cat util/alloc_version`/
-	for i in jquery.js jquery.ui.js jquery.selectn.js jquery.textarearesizer.js \
-	jquery.livequery.js calendar.js calendar-en.js calendar-setup.js sorttable.js alloc.js; do\
-	  cat javascript/$$i >> cache_`cat util/alloc_version`/javascript.js;\
+	for i in javascript/*; do\
+	  cat $$i >> cache_`cat util/alloc_version`/javascript.js;\
 	done
 
 patches:

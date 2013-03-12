@@ -62,7 +62,7 @@ function get_item_margin(obj) {
 
 
 $(document).ready(function() {
-  $("input.amountField").live('keyup', function(event){
+  $("input.amountField").on('keyup', function(event){
     // Don't update for left/right arrow movements
     if (event.which == 37 || event.which == 39) {
       return true;

@@ -218,7 +218,7 @@ $(document).ready(function() {
   // Give the tables alternating stripes
   $(".list tr:nth-child(even)").addClass("even");
   $(".list tr:nth-child(odd)").addClass("odd");
-  $(".delete_button").live("click", function(e){
+  $(".delete_button").on("click", function(e){
     return confirm("Click OK to confirm deletion.");
   });
   $(".confirm_button").bind("click", function(e){
@@ -322,7 +322,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $("a.star").live('click',function(){
+  $("a.star").on('click',function(){
     if ($("b",$(this)).hasClass('icon-star-empty')) {
       $("b",$(this)).removeClass('icon-star-empty').addClass('icon-star');
       $(this).addClass("hot");
@@ -379,6 +379,7 @@ $(document).ready(function() {
       window[data.select.attr("data-callback")](data);
     }
   });
+
 
 });
 

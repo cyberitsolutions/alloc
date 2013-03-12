@@ -425,6 +425,79 @@ class timeSheetItem extends db_entity {
     return $rows;
   }
 
+
+  function get_total_hours_worked_per_day($personID,$start=null,$end=null) {
+    $current_user =& singleton("current_user");
+
+    $personID or $personID = $current_user->get_id();
+    $start    or $start    = date("Y-m-d",mktime()-(60*60*24*28));
+    $end      or $end      = date("Y-m-d");
+
+    $q = prepare("SELECT dateTimeSheetItem, sum(timeSheetItemDuration*timeUnitSeconds) / 3600 AS hours
+                    FROM timeSheetItem
+               LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
+                   WHERE personID = %d
+                     AND dateTimeSheetItem >= '%s'
+                     AND dateTimeSheetItem <= '%s'
+                GROUP BY dateTimeSheetItem"
+                ,$personID, $start, $end);
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $info[$row["dateTimeSheetItem"]] = $row;
+    }
+
+    $num_days_back = (format_date("U",$end) - format_date("U",$start)) /60/60/24;
+    $x = 1;
+    while ($x<=$num_days_back) {
+      $d = date("Y-m-d",format_date("U",$end) - (60*60*24*($num_days_back-$x)));
+      $points[] = array($d, sprintf("%d",$info[$d]["hours"]));
+      $x++;
+    }
+
+    return $points;
+  }
+
+  function get_total_hours_worked_per_month($personID,$start=null,$end=null) {
+    $current_user =& singleton("current_user");
+
+    $personID or $personID = $current_user->get_id();
+    $start    or $start    = date("Y-m-d",mktime()-(60*60*24*28));
+    $end      or $end      = date("Y-m-d");
+
+    $q = prepare("SELECT CONCAT(YEAR(dateTimeSheetItem),'-',MONTH(dateTimeSheetItem)) AS dateTimeSheetItem
+                       , sum(timeSheetItemDuration*timeUnitSeconds) / 3600 AS hours
+                    FROM timeSheetItem
+               LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
+                   WHERE personID = %d
+                     AND dateTimeSheetItem >= '%s'
+                     AND dateTimeSheetItem <= '%s'
+                GROUP BY YEAR(dateTimeSheetItem), MONTH(dateTimeSheetItem)"
+                ,$personID, $start, $end);
+    $db = new db_alloc();
+    $db->query($q);
+    while ($row = $db->row()) {
+      $f = explode("-",$row["dateTimeSheetItem"]);
+      $info[sprintf("%4d-%02d",$f[0],$f[1])] = $row; // the %02d is just to make sure the months are consistently zero padded
+    }
+
+    $s = format_date("U",$start);
+    $e = format_date("U",$end);
+    $s_months = (date("Y",$s) * 12) + date("m",$s);
+    $e_months = (date("Y",$e) * 12) + date("m",$e);
+
+    $num_months_back = $e_months - $s_months;
+    $x = 0;
+    while ($x<=$num_months_back) {
+      $time = mktime(0,0,0,date("m",$s)+$x,1,date("Y",$s));
+      $d = date("Y-m",$time);
+      $points[] = array($d, sprintf("%d",$info[$d]["hours"]));
+      $x++;
+    }
+    
+    return $points;
+  }
+
 }
 
 

@@ -4,7 +4,7 @@
   {if $timeSheet_timeSheetID}
   $(document).ready(function() {
     var orig_projectID = $("#projectID").val();
-    $("#projectID").live("change",function(){
+    $("#projectID").on("change",function(){
       if ($(this).val() != orig_projectID) {
         window.alert("WARNING: Changing the project will update this time sheet with new rates.\n\nAlso, this change will not work unless all the tasks that are being billed for, belong to the project:\n\n"+$(this).val()+" "+$('#projectID option:selected').text());
       }

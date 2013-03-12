@@ -469,7 +469,8 @@ class person extends db_entity {
         $row["navLinks"] = '<a href="'.$TPL["url_alloc_taskList"].'personID='.$row["personID"].'&taskView=byProject&applyFilter=1';
         $row["navLinks"].= '&dontSave=1&taskStatus=open&projectType=Current">Tasks</a>&nbsp;&nbsp;';
         has("project") and $row["navLinks"].= '<a href="'.$TPL["url_alloc_personGraph"].'personID='.$row["personID"].'">Graph</a>&nbsp;&nbsp;';
-        $row["navLinks"].= '<a href="'.$TPL["url_alloc_taskCalendar"].'personID='.$row["personID"].'">Calendar</a>';
+        $row["navLinks"].= '<a href="'.$TPL["url_alloc_taskCalendar"].'personID='.$row["personID"].'">Calendar</a>&nbsp;&nbsp;';
+        $row["navLinks"].= '<a href="'.$TPL["url_alloc_timeSheetGraph"].'personID='.$row["personID"].'&applyFilter=1&dontSave=1">Hours</a>';
       }
 
       $summary.= person::get_list_tr($row,$_FORM);
@@ -506,7 +507,7 @@ class person extends db_entity {
       }
       $_FORM["showHours"]   and $summary[] = "<th>Sum Prev Fort</th>";
       $_FORM["showHours"]   and $summary[] = "<th>Avg Per Fort</th>";
-      $_FORM["showLinks"]   and $summary[] = "<th class=\"noprint\">Actions</th>";
+      $_FORM["showLinks"]   and $summary[] = "<th></th>";
       $summary[] ="</tr>";
       $summary = "\n".implode("\n",$summary);
       return $summary;
