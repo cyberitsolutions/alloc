@@ -168,7 +168,7 @@ Unfortunately doing so appears to flush the input buffer!)
       tasks = self.get_list("task", {"taskID":taskID, "taskView":"prioritised"})
       if tasks:
         if not o['quiet']:
-          self.print_table("task", tasks, ["taskID", "ID", "taskName", "Task", "projectName", "Project"])
+          self.print_table("task", tasks, ["taskID", "taskName", "projectName"])
       else:
         self.die("Unable to find task with taskID: %s" % taskID)
 
@@ -187,7 +187,7 @@ Unfortunately doing so appears to flush the input buffer!)
       self.msg("Attempting to add time for work done on this project: %s" % projectID)
       projects = self.get_list("project", {"projectID":projectID})
       if projects:
-        self.print_table("project", projects, ["projectID", "ID", "projectName", "Project"])
+        self.print_table("project", projects, ["projectID", "projectName"])
       else:
         self.die("Unable to find project with projectID: %s" % projectID)
 

@@ -325,7 +325,7 @@ class alloc(object):
       if len(projects) == 0:
         self.die("No project found matching: %s" % projectName)
       elif len(projects) > 1 and die:
-        self.print_table("project", projects, ["projectID", "ID", "projectName", "Project"])
+        self.print_table("project", projects, ["projectID", "projectName"])
         self.die("Found more than one project matching: %s" % projectName)
       elif len(projects) > 1 and not die:
         return projects.keys()
@@ -340,7 +340,7 @@ class alloc(object):
       if not tasks:
         self.die("No task found matching: %s" % ops["taskName"])
       elif tasks and len(tasks) >1:
-        self.print_table("task", tasks, ["taskID", "ID", "taskName", "Task", "projectName", "Project"])
+        self.print_table("task", tasks, ["taskID", "taskName", "projectName"])
         self.die("Found more than one task matching: %s" % ops["taskName"])
       elif len(tasks) == 1:      
         return tasks.keys()[0]   
@@ -353,7 +353,7 @@ class alloc(object):
       if not clients:
         self.die("No client found matching: %s" % ops["clientName"])
       elif clients and len(clients) >1:
-        self.print_table("client", clients, ["clientID", "ID", "clientName", "Client"])
+        self.print_table("client", clients, ["clientID", "clientName"])
         self.die("Found more than one client matching: %s" % ops["clientName"])
       elif len(clients) == 1:
         return clients.keys()[0]
