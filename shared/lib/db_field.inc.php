@@ -57,7 +57,7 @@ class db_field {
   }
 
   function get_name() {
-    return db_esc($this->name);
+    return $this->name;
   }
 
   function is_audited() {
