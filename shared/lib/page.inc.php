@@ -412,7 +412,7 @@ EOD;
     return htmlentities($str,ENT_QUOTES | ENT_IGNORE,"UTF-8");
   }
   function money_fmt($c,$amount=null) {
-    $currencies = get_cached_table("currencyType");
+    $currencies =& get_cached_table("currencyType");
     $n = $currencies[$c]["numberToBasic"];
     $num = sprintf("%0.".$n."f",$amount);
     $num == sprintf("%0.".$n."f",-0) and $num = sprintf("%0.".$n."f",0); // *sigh* to prevent -0.00
@@ -423,7 +423,7 @@ EOD;
     // AUD,0|''|false -> 0.00
     if (imp($amount)) {
       $c or alloc_error("page::money(): no currency specified for amount $amount.");
-      $currencies = get_cached_table("currencyType");
+      $currencies =& get_cached_table("currencyType");
       $n = $currencies[$c]["numberToBasic"];
 
       // We can use foo * 10^-n to move the decimal point left
@@ -438,7 +438,7 @@ EOD;
     // AUD        ->
     if (imp($amount)) {
       $c or alloc_error("page::money_in(): no currency specified for amount $amount.");
-      $currencies = get_cached_table("currencyType");
+      $currencies =& get_cached_table("currencyType");
       $n = $currencies[$c]["numberToBasic"];
 
       // We can use foo * 10^n to move the decimal point right
@@ -450,7 +450,7 @@ EOD;
   function money($c, $amount=null, $fmt="%s%mo") {
     // Money print
     $c or $c = config::get_config_item('currency');
-    $currencies = get_cached_table("currencyType");
+    $currencies =& get_cached_table("currencyType");
     $fmt = str_replace("%mo",page::money_out($c,$amount),$fmt);                          //%mo = money_out        eg: 150.21
     $fmt = str_replace("%mi",page::money_in($c,$amount),$fmt);                           //%mi = money_in         eg: 15021
     $fmt = str_replace("%m", page::money_fmt($c,$amount),$fmt);                          // %m = format           eg: 150.2 => 150.20

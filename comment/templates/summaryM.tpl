@@ -20,7 +20,7 @@
           <tr>
             <td style='vertical-align:top'>{echo project::get_list_dropdown("current",$_REQUEST["projectID"])}</td>
             <td style='vertical-align:top'>
-            {$people = get_cached_table("person")}
+            {$people =& get_cached_table("person")}
             {foreach $people as $personID => $person}{if $person["personActive"]}{$ops[$personID] = $person["name"]}{/}{/}
               <select name="personID[]" multiple="true" size="9">
                 {page::select_options($ops,$_REQUEST["personID"])}

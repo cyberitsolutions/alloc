@@ -217,7 +217,7 @@ class person extends db_entity {
   // Static
   function get_fullname($personID) {
     // Get vars for the emails below
-    $people_cache = get_cached_table("person");
+    $people_cache =& get_cached_table("person");
     return $people_cache[$personID]["name"];
   } 
 
@@ -330,7 +330,7 @@ class person extends db_entity {
   function find_by_name($name=false,$certainty=90) {
 
     $stack1 = array();
-    $people = get_cached_table("person");
+    $people =& get_cached_table("person");
     foreach ($people as $personID => $row) {
       similar_text(strtolower($row["name"]),strtolower($name),$percent1);
       $stack1[$personID] = $percent1;
@@ -348,7 +348,7 @@ class person extends db_entity {
 
   function find_by_email($email=false) {
     $email = str_replace(array("<",">"),"",$email);
-    $people = get_cached_table("person");
+    $people =& get_cached_table("person");
     foreach ($people as $personID => $row) {
       if ($email == str_replace(array("<",">"),"",$row["emailAddress"])) {
         return $personID;
@@ -604,7 +604,7 @@ class person extends db_entity {
   }
 
   function get_people_by_username($field="username") {
-    $people = get_cached_table("person");
+    $people =& get_cached_table("person");
     foreach ($people as $personID => $person) {
       $people_by_username[$person[$field]] = $person;
     }

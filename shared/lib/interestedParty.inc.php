@@ -204,7 +204,7 @@ class interestedParty extends db_entity {
       $ip->set_value("fullName",person::get_fullname($data["personID"]));
 
     } else {
-      $people or $people = get_cached_table("person");
+      $people or $people =& get_cached_table("person");
       foreach ($people as $personID => $p) {
         if ($data["emailAddress"] && same_email_address($p["emailAddress"], $data["emailAddress"])) {
           $ip->set_value("personID",$personID);

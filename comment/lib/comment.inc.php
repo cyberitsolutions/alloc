@@ -494,7 +494,7 @@ class comment extends db_entity {
 
   function get_email_recipients($options=array(),$entity,$entityID) {
     $recipients = array();
-    $people = get_cached_table("person");
+    $people =& get_cached_table("person");
 
     foreach ($options as $selected_option) {
 
@@ -735,7 +735,7 @@ class comment extends db_entity {
           ORDER BY commentCreatedTime";
       $db = new db_alloc();
       $db->query($q);
-      $people = get_cached_table("person");
+      $people =& get_cached_table("person");
       while ($row = $db->next_record()) {
         $e = new $row["commentMaster"];
         $e->set_id($row["commentMasterID"]);
@@ -887,7 +887,7 @@ class comment extends db_entity {
                 ,$_FORM["maxCommentLength"]);
     $q.= " ";
               
-    $people = get_cached_table("person");
+    $people =& get_cached_table("person");
 
     $db = new db_alloc();
     $db->query($q);

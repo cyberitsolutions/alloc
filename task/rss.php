@@ -28,7 +28,7 @@ function escape_xml($string) {
 }
 
 
-$people = get_cached_table('person');
+$people =& get_cached_table('person');
 
 //the task history
 $trace = array();

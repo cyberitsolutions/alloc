@@ -595,7 +595,7 @@ class project extends db_entity {
   }
 
   function update_search_index_doc(&$index) {
-    $p = get_cached_table("person");
+    $p =& get_cached_table("person");
     $projectModifiedUser = $this->get_value("projectModifiedUser");
     $projectModifiedUser_field = $projectModifiedUser." ".$p[$projectModifiedUser]["username"]." ".$p[$projectModifiedUser]["name"];
     $projectName = $this->get_name();
@@ -740,7 +740,7 @@ class project extends db_entity {
     // This function returns HTML rows for the changes that have been made to this task
     $rows = array();
 
-    $people_cache = get_cached_table("person");
+    $people_cache =& get_cached_table("person");
 
     $timeUnit = new timeUnit();
     $timeUnits = array_reverse($timeUnit->get_assoc_array("timeUnitID","timeUnitLabelA"),true);

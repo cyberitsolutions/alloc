@@ -190,7 +190,7 @@ if ($search && $needle && $category == "Projects") {
     $TPL["index_count"] = $index->count();
     $TPL["hits_count"] = count($hits);
 
-    $p = get_cached_table("person");
+    $p =& get_cached_table("person");
 
     foreach ($hits as $hit) {
       $d = $hit->getDocument();

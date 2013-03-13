@@ -880,8 +880,8 @@ class task extends db_entity {
     }
     $_FORM["return"] or $_FORM["return"] = "html";
 
-    $_FORM["people_cache"] = get_cached_table("person");
-    $_FORM["timeUnit_cache"] = get_cached_table("timeUnit");
+    $_FORM["people_cache"] =& get_cached_table("person");
+    $_FORM["timeUnit_cache"] =& get_cached_table("timeUnit");
 
     if ($_FORM["taskView"] == "prioritised") {
       unset($filter["parentTaskID"]);
@@ -1278,7 +1278,7 @@ class task extends db_entity {
     // This function returns HTML rows for the changes that have been made to this task
     $rows = array();
 
-    $people_cache = get_cached_table("person");
+    $people_cache =& get_cached_table("person");
 
     $options = array("return"       => "array"
                     ,"entityType"   => "task"
@@ -1401,7 +1401,7 @@ class task extends db_entity {
   }
 
   function update_search_index_doc(&$index) {
-    $p = get_cached_table("person");
+    $p =& get_cached_table("person");
     $creatorID = $this->get_value("creatorID");
     $creator_field = $creatorID." ".$p[$creatorID]["username"]." ".$p[$creatorID]["name"];
     $closerID = $this->get_value("closerID");

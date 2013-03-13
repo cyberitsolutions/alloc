@@ -220,7 +220,7 @@ $display = array("", "username", ", ", "emailAddress");
 
 
 $person = new person();
-$people = get_cached_table("person");
+$people =& get_cached_table("person");
 foreach ($people as $p) {
   $peeps[$p["personID"]] = $p["name"];
 }
