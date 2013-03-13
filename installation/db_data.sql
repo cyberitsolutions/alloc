@@ -277,6 +277,8 @@ VALUES
 ,('absence'                  ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 ,('absence'                  ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 
+,('absenceType'              ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
+
 ,('announcement'             ,0  ,''         ,NULL ,1          ,NULL)
 ,('announcement'             ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 ,('announcement'             ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
