@@ -211,7 +211,7 @@ Unfortunately doing so appears to flush the input buffer!)
         self.print_table("timeSheet", self.get_list("timeSheet", {"timeSheetID": timeSheetID}),
                          self.row_timeSheet, sort="ID")
         self.print_table("timeSheetItem", self.get_list("timeSheetItem", {"timeSheetID": timeSheetID}),
-                         self.row_timeSheetItem, sort="dateTimeSheetItem,timeSheetItemID")
+                         self.row_timeSheetItem, sort=["dateTimeSheetItem","timeSheetItemID"])
         self.yay("Time added to time sheet: %s" % timeSheetID)
     elif not o['dryrun']:
       self.die("No time was added.")
