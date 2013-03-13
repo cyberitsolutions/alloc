@@ -581,7 +581,7 @@ class alloc(object):
   def get_people(self, people, entity="", entityID=""):
     """Get a list of people."""
     args = {}
-    args["people"] = people
+    args["options"] = people
     args["method"] = "get_people"
     args["entity"] = entity
     args["entityID"] = entityID

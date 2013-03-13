@@ -86,9 +86,9 @@ class services {
   * @param integer $entityID the id of the related entity
   * @return array an array of people, indexed by their email address
   */
-  public function get_people($people="", $entity="", $entityID="") {
+  public function get_people($options=array(), $entity="", $entityID="") {
     $person_table =& get_cached_table("person");
-    $people = explode(",",$people);
+    $people = $options;
 
     if ($entity && $entityID) {
       $e = new $entity;
