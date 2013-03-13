@@ -51,7 +51,7 @@ function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
     $db = get_pending_timesheet_db();
   }
 
-  $people = get_cached_table("person");
+  $people =& get_cached_table("person");
 
   while ($db->next_record()) {
     $timeSheet = new timeSheet();

@@ -339,7 +339,7 @@ class client extends db_entity {
   }
 
   function update_search_index_doc(&$index) {
-    $p = get_cached_table("person");
+    $p =& get_cached_table("person");
     $clientModifiedUser = $this->get_value("clientModifiedUser");
     $clientModifiedUser_field = $clientModifiedUser." ".$p[$clientModifiedUser]["username"]." ".$p[$clientModifiedUser]["name"];
 

@@ -25,7 +25,7 @@ require_once("../alloc.php");
 function show_announcements($template_name) {
   global $TPL;
 
-  $people = get_cached_table("person");
+  $people =& get_cached_table("person");
   $query = "SELECT announcement.* 
               FROM announcement 
               ORDER BY displayFromDate DESC";

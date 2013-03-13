@@ -59,7 +59,7 @@ class commentTemplate extends db_entity {
         $project = $timeSheet->get_foreign_object("project");
         $projectManagers = $project->get_timeSheetRecipients();
         if (is_array($projectManagers) && count($projectManagers)) {
-          $people = get_cached_table("person");
+          $people =& get_cached_table("person");
           foreach ($projectManagers as $pID) {
             $swap["tm"].= $commar.$people[$pID]["name"];
             $commar = ", ";
@@ -70,7 +70,7 @@ class commentTemplate extends db_entity {
       if ($timeSheet->get_value("approvedByAdminPersonID")) {
         $swap["tc"] = person::get_fullname($timeSheet->get_value("approvedByAdminPersonID"));
       } else {
-        $people = get_cached_table("person");
+        $people =& get_cached_table("person");
         $timeSheetAdministrators = config::get_config_item('defaultTimeSheetAdminList');
         if(count($timeSheetAdministrators)) {
           $swap["tc"] = ""; $comma = "";

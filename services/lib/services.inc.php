@@ -87,7 +87,7 @@ class services {
   * @return array an array of people, indexed by their email address
   */
   public function get_people($people="", $entity="", $entityID="") {
-    $person_table = get_cached_table("person");
+    $person_table =& get_cached_table("person");
     $people = explode(",",$people);
 
     if ($entity && $entityID) {
@@ -342,7 +342,7 @@ class services {
   * @return string of mbox format emails
   */
   public function get_timeSheetItem_comments($taskID) {
-    $people = get_cached_table("person");
+    $people =& get_cached_table("person");
     has("time") and $rows = timeSheetItem::get_timeSheetItemComments($taskID);
     foreach ((array)$rows as $row) {
       $d = $row["timeSheetItemCreatedTime"] or $d = $row["date"];

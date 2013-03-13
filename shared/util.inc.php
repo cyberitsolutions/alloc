@@ -172,13 +172,24 @@ function timetook($start, $friendly_output=true) {
 function sort_by_name($a, $b) {
   return strtolower($a["name"]) >= strtolower($b["name"]);
 }
-function get_cached_table($table,$anew=false) {
-  $cache = alloc_cache::get_cache();
-  $cache->load_cache($table,$anew);
+function rebuild_cache($table) {
+  $cache =& singleton("cache");
+  
+  if (meta::$tables[$table]) {
+    $m = new meta($table);
+    $cache[$table] = $m->get_list();
 
-  // Special processing for person table
+  } else {
+    $db = new db_alloc();
+    $db->query("SELECT * FROM ".$table);
+    while ($row = $db->row()) {
+      $cache[$table][$db->f($table."ID")] = $row;
+    }
+  }
+
+  // Special processing for person and config tables
   if ($table == "person") {
-    $people = $cache->get_cached_table("person") or $people = array();
+    $people = $cache["person"];
     foreach ($people as $id => $row) {
       if ($people[$id]["firstName"] && $people[$id]["surname"]) {
         $people[$id]["name"] = $people[$id]["firstName"]." ".$people[$id]["surname"];
@@ -187,19 +198,24 @@ function get_cached_table($table,$anew=false) {
       }
     }
     uasort($people,"sort_by_name");
-    $cache->set_cached_table("person",$people);
-  }
+    $cache["person"] = $people;
 
-  if ($table == "config") {
+  } else if ($table == "config") {
     // Special processing for config table
-    $config = $cache->get_cached_table("config") or $config = array();
+    $config = $cache["config"];
     foreach ($config as $id => $row) {
       $rows_config[$row["name"]] = $row;
     }
-    $cache->set_cached_table("config",$rows_config);
+    $cache["config"] = $rows_config;
   }
-
-  return $cache->get_cached_table($table);
+  singleton("cache",$cache);
+}
+function &get_cached_table($table,$anew=false) {
+  $cache =& singleton("cache");
+  if ($anew || !$cache[$table]) {
+    rebuild_cache($table);
+  }
+  return $cache[$table];
 } 
 function get_mimetype($filename="") {
   // We define our own mime_content_type() function (if the inbuilt one is

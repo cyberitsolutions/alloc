@@ -35,7 +35,7 @@ class item extends db_entity {
                              );
 
   function update_search_index_doc(&$index) {
-    $p = get_cached_table("person");
+    $p =& get_cached_table("person");
     $personID = $this->get_value("personID");
     $person_field = $personID." ".$p[$personID]["username"]." ".$p[$personID]["name"];
     $itemModifiedUser = $this->get_value("itemModifiedUser");

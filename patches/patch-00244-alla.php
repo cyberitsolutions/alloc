@@ -58,7 +58,7 @@ while ($row = $db->row($qid)) {
   // If not found, append the comment to the mailbox
   if (!$found) {
     e("Appending this comment: ".$row["comment"]);
-    $people_cache = get_cached_table("person");
+    $people_cache =& get_cached_table("person");
     $name = $people_cache[$row["commentCreatedUser"]]["name"];
     $email = add_brackets($people_cache[$row["commentCreatedUser"]]["emailAddress"]);
 

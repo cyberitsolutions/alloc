@@ -531,7 +531,7 @@ class timeSheet extends db_entity {
     $db = new db_alloc();
     $db->query($q);
     $status_array = timeSheet::get_timeSheet_statii();
-    $people_array = get_cached_table("person");
+    $people_array =& get_cached_table("person");
 
     while ($row = $db->next_record()) {
       $t = new timeSheet();
@@ -1074,7 +1074,7 @@ EOD;
       return $rtn;
     }
     // Get vars for the emails below
-    $rtn["people_cache"] = $people_cache = get_cached_table("person");
+    $rtn["people_cache"] = $people_cache =& get_cached_table("person");
     $project = $this->get_foreign_object("project");
     $rtn["projectManagers"] = $project->get_timeSheetRecipients();
     $rtn["projectName"] = $project->get_value("projectName");
@@ -1291,12 +1291,12 @@ EOD;
     $project = new project();
     $project->set_id($this->get_value("projectID"));
     $project->select();
-    $p = get_cached_table("person");
+    $p =& get_cached_table("person");
     return "Time Sheet for ".$project->get_name($_FORM)." by ".$p[$this->get_value("personID")]["name"];
   }
 
   function update_search_index_doc(&$index) {
-    $p = get_cached_table("person");
+    $p =& get_cached_table("person");
     $personID = $this->get_value("personID");
     $person_field = $personID." ".$p[$personID]["username"]." ".$p[$personID]["name"];
     $managerID = $this->get_value("approvedByManagerPersonID");

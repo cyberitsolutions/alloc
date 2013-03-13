@@ -479,7 +479,7 @@ class productSale extends db_entity {
                     ".$f);
     $db->query($query);
     $statii = productSale::get_statii();
-    $people = get_cached_table("person");
+    $people =& get_cached_table("person");
     $rows = array();
     while ($row = $db->next_record()) {
       $productSale = new productSale();

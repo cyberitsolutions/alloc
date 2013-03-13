@@ -704,7 +704,7 @@ if ($projectID != 0) {
     $TPL["timeSheet_approvedByManagerPersonID_username"] = "N/A";
   } else {
     count($projectManagers)>1 and $TPL["manager_plural"] = "s";
-    $people = get_cached_table("person");
+    $people =& get_cached_table("person");
     foreach ($projectManagers as $pID) {
       $TPL["managers"].= $commar.$people[$pID]["name"];
       $commar = ", ";
