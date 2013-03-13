@@ -124,28 +124,22 @@ In this example the recipients are going to be internal only, except for Clyde
 
     # Assume 'default' if there's no --to
     if not o['to']:
-      o['to'] = 'default'
+      o['to'] = ['default']
 
     # Sort out recipients
     nobody = False
-    to = ""
     comma = ""
-    people = o['to']
-    for p in people:
-      if p.lower() != 'nobody':
-        p = p.strip()
-        to += comma + p
-        comma = ','
-      else:
+    for p in o['to']:
+      if p.lower() == 'nobody':
         nobody = True
 
     # We only append current user if they haven't specified 'nobody'
     if not nobody:
-      to += comma + self.username
+      o['to'].append(self.username)
 
     # Magic
     if entity and entityID:
-      recipients = self.get_people(to, entity, entityID)
+      recipients = self.get_people(o['to'], entity, entityID)
 
     # Print recipients
     comma = ""
