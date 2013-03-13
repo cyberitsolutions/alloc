@@ -92,6 +92,12 @@ class tasks(alloc):
     and 'timeActual' not in o['fields']:
       del ops['showTimes']
 
+    if 'showTimes' not in ops:
+      if 'timeWorst'    in fields: fields.remove('timeWorst')
+      if 'timeExpected' in fields: fields.remove('timeExpected')
+      if 'timeLimit'    in fields: fields.remove('timeLimit')
+      if 'timeActual'   in fields: fields.remove('timeActual')
+
     # Get list of tasks
     r = self.get_list("task", ops)
 
