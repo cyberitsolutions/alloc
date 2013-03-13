@@ -438,23 +438,23 @@ class alloc(object):
   def is_num(self, obj):
     """Return True is the obj is numeric looking, or it obj is a list of numbers."""
     # There's got to be a better way to tell if something is a number 
-    # isinstance of float or int didn't do the job (for some reason ...)
+    # if not a list, force it to a list
+    if type(obj) != type([]):
+      obj = [obj]
 
-    is_num = True
-    if isinstance(obj, list):
-      for v in obj:
-        if not self.is_num(v):
-          is_num = False
-      return is_num
+    ok = True
+    if len(obj) == 0:
+      ok = False
 
-    else:
+    for v in obj:
       try:
-        if obj is not None and float(obj) >= 0:
-          return True
+        if float(v) >= 0:
+          pass
+        else:
+          ok = False
       except:
-        pass
-
-    return False
+        ok = False
+    return ok
 
   def to_num(self, obj):
     """Gently coerce obj into a number."""
