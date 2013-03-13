@@ -132,6 +132,7 @@ In this example the recipients are going to be internal only, except for Clyde
     for p in o['to']:
       if p.lower() == 'nobody':
         nobody = True
+        o['to'].remove('nobody')
 
     # We only append current user if they haven't specified 'nobody'
     if not nobody:
