@@ -496,7 +496,7 @@ class alloc(object):
     hu = env_hu or con_hu or net_hu
     hp = env_hp or con_hp or net_hp
 
-    self.dbg("USING CONF: user:"+u+" pass:"+p+" httpuser:"+hu+" httppass:"+hp)
+    self.dbg("USING CONF: user:"+str(u)+" pass:"+str(p)+" httpuser:"+str(hu)+" httppass:"+str(hp))
 
     if u is None or u == '' or p is None or p == '':
       self.err("The settings "+self.client_name.upper()+"_USER and "+self.client_name.upper()+"_PASS are required.")
