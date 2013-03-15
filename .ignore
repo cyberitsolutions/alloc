@@ -6,3 +6,4 @@
 ^alloc_config.php$
 ^bin/.*\.pyc$
 ^cache
+^WIP
