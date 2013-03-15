@@ -341,36 +341,20 @@ class task extends db_entity {
   }
 
   function get_task_cc_list_select($projectID="") {
-    $interestedParty = array();
-    $interestedPartyOptions = array();
-    
     if (is_object($this)) {
       $interestedPartyOptions = $this->get_all_parties($projectID);
     } else {
       $interestedPartyOptions = task::get_all_parties($projectID);
     }
-
-    #echo "<pre>".print_r($interestedPartyOptions,1)."</pre>";
-  
-    if (is_array($interestedPartyOptions)) {
-
-      foreach ($interestedPartyOptions as $email => $info) {
-        $name = $info["name"];
-        $identifier = $info["identifier"];
-
-        if ($info["role"] == "interested" && $info["selected"]) {
-          $interestedParty[] = $identifier;
-        }
-
-        if ($email) {
-          $name = trim($name);
-          $str = trim(page::htmlentities($name." <".$email.">"));
-          $options[$identifier] = $str;
-        }
+    foreach ((array)$interestedPartyOptions as $email => $info) {
+      if ($info["role"] == "interested" && $info["selected"]) {
+        $selected[] = $info["identifier"];
+      }
+      if ($email) {
+        $options[$info["identifier"]] = trim(page::htmlentities(trim($info["name"])." <".$email.">"));
       }
     }
-    $str = "<select name=\"interestedParty[]\" multiple=\"true\">".page::select_options($options,$interestedParty,100,false)."</select>";
-    return $str;
+    return "<select name=\"interestedParty[]\" multiple=\"true\">".page::select_options($options,$selected,100,false)."</select>";
   }
 
   function get_all_parties($projectID="") {
@@ -384,32 +368,45 @@ class task extends db_entity {
     }
 
     if ($projectID) {
-      $interestedPartyOptions = project::get_all_parties($projectID);
+      $interestedPartyOptions = project::get_all_parties($projectID,is_object($this) && $this->get_id());
     }
 
     $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
     foreach ($extra_interested_parties as $name => $email) {
       $interestedPartyOptions[$email] = array("name"=>$name);
     }
-
     if (is_object($this)) {
       if ($this->get_value("creatorID")) {
         $p = new person();
         $p->set_id($this->get_value("creatorID"));
         $p->select();
-        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "role"=>"creator", "personID"=>$this->get_value("creatorID"));
+        if ($p->get_value("emailAddress")) {
+          $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
+          $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "creator";
+          $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("creatorID");
+        }
       }
       if ($this->get_value("personID")) {
         $p = new person();
         $p->set_id($this->get_value("personID"));
         $p->select();
-        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "role"=>"assignee", "selected"=>true, "forceSelected"=>true, "personID"=>$this->get_value("personID"));
+        if ($p->get_value("emailAddress")) {
+          $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
+          $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "assignee";
+          $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("personID");
+          !$this->get_id() and $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
+        }
       }
       if ($this->get_value("managerID")) {
         $p = new person();
         $p->set_id($this->get_value("managerID"));
         $p->select();
-        $p->get_value("emailAddress") and $interestedPartyOptions[$p->get_value("emailAddress")] = array("name"=>$p->get_name(), "role"=>"manager", "selected"=>true, "forceSelected"=>true, "personID"=>$this->get_value("managerID"));
+        if ($p->get_value("emailAddress")) {
+          $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
+          $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "manager";
+          $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("managerID");
+          !$this->get_id() and $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
+        }
       }
       $this_id = $this->get_id();
     }
