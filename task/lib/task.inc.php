@@ -373,7 +373,7 @@ class task extends db_entity {
 
     $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
     foreach ($extra_interested_parties as $name => $email) {
-      $interestedPartyOptions[$email] = array("name"=>$name);
+      $interestedPartyOptions[$email]["name"] = $name;
     }
     if (is_object($this)) {
       if ($this->get_value("creatorID")) {
