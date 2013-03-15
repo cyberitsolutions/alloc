@@ -131,7 +131,7 @@ $(document).ready(function() {
         </div>
         {/}
         {if $interestedParties}
-          <h6>Interested Parties</h6> 
+          <h6>Default Interested Parties</h6> 
           <table class="nopad" style="width:100%;">
           {foreach $interestedParties as $ip}
             <tr class="hover">
@@ -294,7 +294,7 @@ $(document).ready(function() {
         </div>
 
         <div class="nobr">
-          <h6>Interested Parties</h6> 
+          <h6>Default Interested Parties</h6> 
           <div id="interestedPartyDropdown" style="display:inline">{$interestedPartyOptions}</div>
           {page::help("task_interested_parties")}
         </div>
