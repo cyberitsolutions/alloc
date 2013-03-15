@@ -134,7 +134,7 @@ var selectn_unique_select_id_counter = 1;
     set_label : function (label, select) {
       var label_str = '', comma = '';
       select.find("option").each(function(i, option){ 
-        if ($(option).attr("selected")) {
+        if ($(option).is(":selected")) {
           label_str += comma+$(option).text().trim(); 
           comma = ", ";
         }
