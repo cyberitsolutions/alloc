@@ -136,7 +136,6 @@ $(document).ready(function() {
           {foreach $interestedParties as $ip}
             <tr class="hover">
               <td style="width:50%;">
-                <input type='hidden' name='interestedParty[]' value='{=$ip.key}'>
                 <a class='undecorated' href='mailto:{=$ip.name} <{=$ip.email}>'>{=$ip.name}</a>
               </td>
               <td style="width:50%;">

@@ -415,14 +415,6 @@ class task extends db_entity {
     return $interestedPartyOptions;
   }
 
-  function get_encoded_interested_party_identifier($info=array()) {
-    return urlencode(base64_encode(serialize($info)));
-  }
-
-  function get_decoded_interested_party_identifier($blob) {
-    return unserialize(base64_decode($blob));
-  }
-
   function get_personList_dropdown($projectID,$field,$selected=null) {
     $current_user = &singleton("current_user");
  
