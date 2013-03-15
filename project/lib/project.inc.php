@@ -708,7 +708,7 @@ class project extends db_entity {
 
       $extra_interested_parties = config::get_config_item("defaultInterestedParties");
       foreach ((array)$extra_interested_parties as $name => $email) {
-        $interestedPartyOptions[$email] = array("name"=>$name);
+        $interestedPartyOptions[$email]["name"] = $name;
       }
 
       // Get primary client contact from Project page
@@ -716,7 +716,8 @@ class project extends db_entity {
       $q = prepare("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d",$projectID);
       $db->query($q);
       $db->next_record();
-      $interestedPartyOptions[$db->f("projectClientEMail")] = array("name"=>$db->f("projectClientName"),"external"=>"1");
+      $interestedPartyOptions[$db->f("projectClientEMail")]["name"] = $db->f("projectClientName");
+      $interestedPartyOptions[$db->f("projectClientEMail")]["external"] = "1";
   
       // Get all other client contacts from the Client pages for this Project
       $q = prepare("SELECT clientID FROM project WHERE projectID = %d",$projectID);
@@ -737,12 +738,14 @@ class project extends db_entity {
         unset($name);
         $db->f("firstName") && $db->f("surname") and $name = $db->f("firstName")." ".$db->f("surname");
         $name or $name = $db->f("username");
-        $interestedPartyOptions[$db->f("emailAddress")] = array("name"=>$name,"personID"=>$db->f("personID"));
+        $interestedPartyOptions[$db->f("emailAddress")]["name"] = $name;
+        $interestedPartyOptions[$db->f("emailAddress")]["personID"] = $db->f("personID");
       }
     }
 
     if (is_object($current_user) && $current_user->get_id()) {
-      $interestedPartyOptions[$current_user->get_value("emailAddress")] = array("name"=>$current_user->get_name(),"personID"=>$current_user->get_id());
+      $interestedPartyOptions[$current_user->get_value("emailAddress")]["name"] = $current_user->get_name();
+      $interestedPartyOptions[$current_user->get_value("emailAddress")]["personID"] = $current_user->get_id();
     }
 
     // return an aggregation of the current task/proj/client parties + the existing interested parties
