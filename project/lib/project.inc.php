@@ -669,7 +669,37 @@ class project extends db_entity {
     }
   }
 
-  function get_all_parties($projectID=false) {
+  function get_cc_list_select($projectID="") {
+    $interestedParty = array();
+    $interestedPartyOptions = array();
+    
+    if (is_object($this)) {
+      $interestedPartyOptions = $this->get_all_parties($projectID);
+    } else {
+      $interestedPartyOptions = project::get_all_parties($projectID);
+    }
+
+    if (is_array($interestedPartyOptions)) {
+      foreach ($interestedPartyOptions as $email => $info) {
+        $name = $info["name"];
+        $identifier = $info["identifier"];
+
+        if ($info["role"] == "interested" && $info["selected"]) {
+          $interestedParty[] = $identifier;
+        }
+
+        if ($email) {
+          $name = trim($name);
+          $str = trim(page::htmlentities($name." <".$email.">"));
+          $options[$identifier] = $str;
+        }
+      }
+    }
+    $str = "<select name=\"interestedParty[]\" multiple=\"true\">".page::select_options($options,$interestedParty,100,false)."</select>";
+    return $str;
+  }
+
+  function get_all_parties($projectID=false, $task_exists=false) {
     $current_user = &singleton("current_user");
     if (!$projectID && is_object($this)) {
       $projectID = $this->get_id();
@@ -716,7 +746,7 @@ class project extends db_entity {
     }
 
     // return an aggregation of the current task/proj/client parties + the existing interested parties
-    $interestedPartyOptions = interestedParty::get_interested_parties("project",$projectID,$interestedPartyOptions);
+    $interestedPartyOptions = interestedParty::get_interested_parties("project",$projectID,$interestedPartyOptions,$task_exists);
     return (array)$interestedPartyOptions;
   }
 

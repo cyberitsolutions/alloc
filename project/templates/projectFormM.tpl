@@ -240,6 +240,32 @@ function clickClientStatus(e) {
           </div>
         </div>
 
+        <div class="edit">
+          <h6>Default Interested Parties</h6> 
+          <div id="interestedPartyDropdown" style="display:inline">{$interestedPartyOptions}</div>
+          {page::help("project_interested_parties")}
+        </div>
+        {if $interestedParties}
+        <div class="view">
+          <h6>Default Interested Parties</h6> 
+          <table class="nopad" style="width:100%;">
+          {foreach $interestedParties as $ip}
+            <tr class="hover">
+              <td style="width:50%;">
+                <input type='hidden' name='interestedParty[]' value='{=$ip.key}'>
+                <a class='undecorated' href='mailto:{=$ip.name} <{=$ip.email}>'>{=$ip.name}</a>
+              </td>
+              <td style="width:50%;">
+                {if $ip["phone"]["p"]}Ph: {=$ip.phone.p}{/}
+                {if $ip["phone"]["p"] && $ip["phone"]["m"]} / {/}
+                {if $ip["phone"]["m"]}Mob: {=$ip.phone.m}{/}
+              </td>
+            </tr>
+          {/}
+          </table>
+        </div>
+        {/}
+
         {if $project_defaultTimeSheetRate || $defaultTimeSheetRateUnits}
         <div class="view">
           <h6>Default timesheet rate<div>Default timesheet unit</div></h6>

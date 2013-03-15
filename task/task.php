@@ -164,12 +164,10 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
   // Moved all validation over into task.inc.php save()
   $success = $task->save();
 
-  interestedParty::make_interested_parties("task",$task->get_id(),$_POST["interestedParty"]);
-
   count($msg) and $msg = "&message_good=".urlencode(implode("<br>",$msg));
 
   if ($success) {
-
+    interestedParty::make_interested_parties("task",$task->get_id(),$_POST["interestedParty"]);
     $task->add_pending_tasks($_POST["pendingTasksIDs"]);
     $task->add_reopen_reminder($_POST["reopen_task"]);
 
@@ -272,7 +270,7 @@ $TPL["percentComplete"] = $task->get_percentComplete();
 
 
 // Generate navigation links
-if (has("project")) {
+if (has("project") && $task->get_id()) {
   $project = $task->get_foreign_object("project");
   $project->set_values("project_");
   if ($project->get_id()) {

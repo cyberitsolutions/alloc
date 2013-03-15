@@ -102,7 +102,7 @@ class interestedParty extends db_entity {
     return strtolower($a["name"]) > strtolower($b["name"]);
   }
 
-  function get_interested_parties($entity,$entityID=false,$ops=array()) {
+  function get_interested_parties($entity,$entityID=false,$ops=array(),$dont_select=false) {
     $rtn = array();
 
     if ($entityID) {
@@ -116,8 +116,7 @@ class interestedParty extends db_entity {
       while ($db->row()) {
         $ops[$db->f("emailAddress")]["name"] = $db->f("fullName");
         $ops[$db->f("emailAddress")]["role"] = "interested";
-        $ops[$db->f("emailAddress")]["selected"] = $db->f("interestedPartyActive") ? true : false;
-        $ops[$db->f("emailAddress")]["forceSelected"] and $ops[$db->f("emailAddress")]["selected"] = true;
+        $ops[$db->f("emailAddress")]["selected"] = $db->f("interestedPartyActive") && !$dont_select ? true : false;
         $ops[$db->f("emailAddress")]["personID"] = $db->f("personID");
         $ops[$db->f("emailAddress")]["clientContactID"] = $db->f("clientContactID");
         $ops[$db->f("emailAddress")]["external"] = $db->f("external");
