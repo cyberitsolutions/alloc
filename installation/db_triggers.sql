@@ -692,7 +692,6 @@ BEGIN
        AND taskID IN (SELECT taskID FROM pendingTask WHERE pendingTaskID = tID);
   END IF;
 
-  
   -- If just moved from pending_tasks to anything else ...
   -- If we're still waiting on other tasks to complete, then bomb out with an error
   IF (old_status = 'pending_tasks' AND neq(old_status,new_status)) THEN
@@ -706,7 +705,7 @@ BEGIN
     END IF;
   END IF;
 
-    -- And finally, update the task
+  -- And finally, update the task
   IF (neq(old_status,new_status)) THEN
     UPDATE task SET taskStatus = new_status WHERE taskID = tID;
   END IF;
