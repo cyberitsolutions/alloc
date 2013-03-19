@@ -77,6 +77,7 @@ $alloc_urls = array(
             ,"url_alloc_downloadComments"               => "email/downloadComments.php"
             ,"url_alloc_client"                         => "client/client.php"
             ,"url_alloc_clientList"                     => "client/clientList.php"
+ 	          ,"url_alloc_updateClientDupes"              => "client/updateClientDupes.php"
             ,"url_alloc_personList"                     => "person/personList.php"
             ,"url_alloc_personSkillAdd"                 => "person/personSkillAdd.php"
             ,"url_alloc_person"                         => "person/person.php"
