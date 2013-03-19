@@ -26,14 +26,14 @@ if (!has_report_perm()) {
   alloc_error("you don't have permission to generate reports.",true);
 }
 
-
+$current_user = &singleton("current_user");
 
 $TPL["mod"] = $_POST["mod"];
 $TPL["do_step_2"] = $_POST["do_step_2"];
 $TPL["do_step_3"] = $_POST["do_step_3"];
 
 $modules = array();
-$modules["transaction"] = "Transactions";
+$current_user->have_role("admin") and $modules["transaction"] = "Transactions";
 $modules["invoice"] = "Invoices";
 $modules["project"] = "Projects";
 $modules["task"] = "Tasks";
@@ -82,7 +82,7 @@ if ($_POST["do_step_2"]) {
     $query["join"] = " LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID";
   }
 
-  if ($_POST["mod"] == "transaction") {
+  if ($_POST["mod"] == "transaction" && $current_user->have_role("admin")) {
     $db_tables[] = "tf";
     $db_tables[] = "transaction";
     $db_tables[] = "transactionRepeat";
