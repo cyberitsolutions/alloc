@@ -5,6 +5,9 @@ $(document).ready(function() {
   {if !$client_clientID}
     toggle_view_edit();
     $('#clientName').focus();
+    $("#clientName").on('keyup', function() {
+      makeAjaxRequest('{$url_alloc_updateClientDupes}', 'clientDupes', { clientName: $("#clientName").val() });
+    });
   {else}
     $('#editClient').focus();
   {/}
@@ -121,6 +124,13 @@ $(document).ready(function() {
             <td><input type="text" name="clientCountryOne" value="{$client_clientCountryOne}" size="25" tabindex="9"></td>
           </tr>
         </table>
+
+        {if !$client_clientID}
+        <h6>Possible Duplicates</h6>
+          <div class="message" style="padding:4px 2px; width:100%; height:70px; border:1px solid #cccccc; overflow:auto;">
+            <div id="clientDupes"></div>
+          </div>
+        {/}
       </div>
       <div class="task_pane">
         <div class="enclose">
