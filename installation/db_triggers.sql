@@ -610,9 +610,12 @@ BEGIN
   DECLARE no_more_rows BOOLEAN;
   DECLARE num_records INTEGER;
   DECLARE task_that_is_pending INTEGER;
+  DECLARE task_that_is_child INTEGER;
+  DECLARE child_type VARCHAR(255);
   DECLARE old_status VARCHAR(255);
   DECLARE num_pending_tasks INTEGER;
   DECLARE pending_tasks_cursor CURSOR FOR SELECT taskID FROM pendingTask WHERE pendingTaskID = tID;
+  DECLARE parent_tasks_cursor CURSOR FOR SELECT taskID,taskTypeID FROM task WHERE parentTaskID = tID;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET no_more_rows = TRUE;
   SET max_sp_recursion_depth = 10; 
   SET @in_change_task_status = 1;
@@ -648,6 +651,33 @@ BEGIN
 
       IF no_more_rows THEN
         CLOSE pending_tasks_cursor;
+        LEAVE the_loop;
+      END IF;
+    END LOOP the_loop;
+
+
+    -- Take care of closing the child tasks if the parent task is closed
+    SET no_more_rows = 0;
+
+    -- Walk through a set of rows using a mysql cursor
+    OPEN parent_tasks_cursor;
+    the_loop: LOOP
+      
+      -- This loads the taskID results of the select query, defined above, into the loop variables
+      FETCH parent_tasks_cursor INTO task_that_is_child, child_type;
+
+      IF child_type = 'Parent' THEN
+        call change_task_status(task_that_is_child,"closed_incomplete");
+      END IF;
+      UPDATE task SET taskStatus = "closed_incomplete"
+       WHERE SUBSTRING(task.taskStatus,1,6) != 'closed'
+         AND (parentTaskID = task_that_is_child OR taskID = task_that_is_child);
+
+      -- this needs to be set again
+      SET @in_change_task_status = 1; 
+
+      IF no_more_rows THEN
+        CLOSE parent_tasks_cursor;
         LEAVE the_loop;
       END IF;
     END LOOP the_loop;
