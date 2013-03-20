@@ -1,9 +1,0 @@
-^help/images/.*$
-^help/help.css
-^help/help.html
-^help/images
-.swp$
-^alloc_config.php$
-^bin/.*\.pyc$
-^cache
-^WIP
