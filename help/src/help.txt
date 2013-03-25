@@ -1469,7 +1469,6 @@ How do I Customise my Home Page?
      doing. This information can then be used at a latter date to improve the
      quality and completion of those team members' time-sheeting.
 
-<<<<<<< HEAD
 6. Once you've made the changes you need to make, click the Save button
    that relates to this Preferences section. If you've made changes you
    dont want to keep, click the Cancel Edit button.
@@ -1528,11 +1527,14 @@ needs to:
 6. Once you've made the changes you need to make, click the Save button
    that relates to this Preferences section. If you've made changes you
    dont want to keep, click the Canceli Edit button.
+<<<<<<< HEAD
 =======
 5. Once you've made the changes you need to make, click the Save button
    that relates to this Preferences section. If you've made changes you
    dont want to keep, click the Cancel button.
 >>>>>>> 4318f7e... v187 14480 Update alloc documentation (ongoing)
+=======
+>>>>>>> ffdf629... v187 14480 Update alloc documentation (ongoing)
 
 
 How do I Sort Tables of Data?
