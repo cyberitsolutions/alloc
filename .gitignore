@@ -2,7 +2,7 @@ help/images/.*
 help/help.css
 help/help.html
 help/images
-.swp
+*.swp
 alloc_config.php
 bin/.*\.pyc
 cache*
