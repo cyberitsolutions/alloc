@@ -1418,10 +1418,10 @@ How do I Customise my Home Page?
 3. Click on your name from the list of names presented. This will open
    up you Person Details personal settings page.
 
-3. On the right of the Person Details page, you will see the Preferences
+4. On the right of the Person Details page, you will see the Preferences
    section; Click the Edit button within this section.
 
-4. Change the settings for Font size, Theme, Top Tasks etc.
+5. Change the settings for Font size, Theme, Top Tasks etc.
 
    - Font size will alter the default font allocPSA uses
 
@@ -1469,9 +1469,64 @@ How do I Customise my Home Page?
      doing. This information can then be used at a latter date to improve the
      quality and completion of those team members' time-sheeting.
 
+6. Once you've made the changes you need to make, click the Save button
+   that relates to this Preferences section. If you've made changes you
+   dont want to keep, click the Cancel Edit button.
+
+
+How do I Customise my Home Page Information Blocks?
+---------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. If you're not already the, click on the Home page tab.
+
+3. Most of the information content blocks (for example Tasks, Project
+   List, New Time Sheet Item etc) have display configuration options. To
+   access this, you merely move your mouse around just above the
+   top-right corner of the content block widget, you will notice a small
+   spanner icon appear. If you click this, you will be presented with a
+   context-sentive configuration pop-up, in which, you'll be able to
+   modify that content block's display options. 
+
+4. For more information on what the various content block options are,
+   please refer to `How do I Customise my Home Page?`_ . 
+
 5. Once you've made the changes you need to make, click the Save button
    that relates to this Preferences section. If you've made changes you
    dont want to keep, click the Cancel button.
+
+
+How do I Hide any Sensitive Financial Data in my Home Page?
+-----------------------------------------------------------
+
+There are a number of pages in allocPSA which display financial data.
+Most of these relate to work arranged by managers or admin staff, and
+are accessed infrequently or under specific circumstances. There is also
+potentially sensitive financial data on each user's Home page. allocPSA
+therefore provides a method to obfuscate this sensitive data, if the
+user deems that necessary. To instantiate this obfuscation, the user
+needs to:
+
+1. Log in to allocPSA.
+
+2. Click on the People tab from the main menu.
+
+3. Click on your name from the list of names presented. This will open
+   up you Person Details personal settings page.
+
+4. On the right of the Person Details page, you will see the Preferences
+   section; Click the Edit button within this section.
+
+5. Switch on the private mode by selecting Yes in the Private Mode
+   drop-list. This  ensures that any sensitive (i.e, financial)
+   information which is normally visible on the user's Home page, is
+   now obfsucated, made visible obly by moving the mouse over those
+   fields.
+
+6. Once you've made the changes you need to make, click the Save button
+   that relates to this Preferences section. If you've made changes you
+   dont want to keep, click the Canceli Edit button.
 
 
 How do I Sort Tables of Data?
@@ -1497,6 +1552,51 @@ How do I Sort Tables of Data?
 5. Click on another table column heading text, for instance, TASK on the
    Tasks table, and allocPSA will sort the data in the table using this
    column as the sorting criterion.
+
+How do I Bookmark Clients, Tasks, Projects, etc?
+------------------------------------------------
+
+allocPSA gives you the ability to add specific records (such as Tasks,
+Clients, Projects, Timesheets, Sales and Invoices) to the Star list.
+These can then be accessed in a collective 'bookmarks' page, by clicking
+the 'star' icon tool, located in the top right section of the main menu,
+near the Help, Setup and Logout links.
+
+To add new Star list bookmaks:
+
+1. Log in to allocPSA.
+
+2. Go to the specific data item that is of interest, for example a Task,
+   or a Client record. Alternatively, click into the Clients, Tasks,
+   Projects, Time, Invoices or Sales tab, to display the corresponding
+   list for that type.
+  
+3. If on a specific record, for example a single Task, you will notice a
+   small 'star' icon, near the top right of that item's menu. Click on
+   that small 'star' icon. This will fill the icon with a solid colour.
+   This indicates that this record is now in your Star list of
+   bookmarks. If you click that filled-in 'star' icon once more, it will
+   toggle-off the bookmark. 
+
+4. If you're looking a list of Tasks for instance, you will see a list
+   of 'star' icons along the right edge of the table. Clicking on any of
+   these will toggle the 'stars' on (filled) or off (empty),
+   corresponding to that item being in or out of your Star bookmark list.    
+
+5. To view your Star list of bookmarks, click on the main 'filled in'
+   star icon, near the top right of your main screen's menu items.
+
+6. This will open the Star list, showing you all your various bookmarks
+   for the different types of items that you've bookmarked. 
+
+7. To remove an item from your Star bookmark list, click (that is,
+   uncheck) the 'filled in' star associated with that item (on the far
+   right of that item's entry in the table). This will toggle-off the
+   bookmark. If you refresh the page, or click on the Star list icon (near
+   the top right of your main screen's menu items) again, the item you
+   had unchecked should no longer be present. You're always welcome to
+   find that item again, and add it to your Star list of bookmarks.
+
 
 How do I Specify Annual Leave or Absence?
 -----------------------------------------
