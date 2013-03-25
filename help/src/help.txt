@@ -32,7 +32,7 @@ obligation to you as a result of having made this document available to
 you or based upon the information it contains.
 
 Cyber IT Solutions and allocPSA are registered trademarks of Cyber IT Solutions
-Pty. Ltd.  All other products and services are the registered trademarks of
+Pty. Ltd. All other products and services are the registered trademarks of
 their respective holders 
 
 This document was written by: Kei, Con Zymaris, Alex Lance, Jeremy Chin,
@@ -142,30 +142,6 @@ software, and any other competent web-development firm can also elect to offer
 commercial support for it, Cyber IT Solutions must also offer great value in its
 support services.
 
-
-
-Per Incident
-------------
-
-The first level of support is on a per-incident basis. Per-incident support is
-offered on a best-effort basis and is capped at two (2) hours actual
-expended effort. Contact Cyber IT for pricing.
-
-
-Service Level Agreement Pre-Purchase Block
-------------------------------------------
-
-The service level of support is a pre-paid incident support block. By
-purchasing a pre-paid support block (in multiples of 5 incidents), you can
-save through a price discount and you are also placed on a Service Level
-Agreement (SLA). The service level agreement guarantees that we will actively
-work towards resolving your support incident within two hours of initial
-notification. This is during AEST (UTC +10) standard business hours, Monday to
-Friday, 9:00am to 5:00pm, excluding public holidays.
-
-Contact Cyber IT Solutions to discuss your commercial support needs.
-
-
 Customisation
 -------------
 
@@ -213,16 +189,15 @@ Integration
 
 Cyber IT maintains a full integration, support and development team which is
 able to assist you in integrating allocPSA into your organisation's information
-system architecture. In fact, if you've purchased the allocPSA server
-appliance, the price for allocPSA includes a pre-purchased quanta of
-installation, customisation and support services.
+system architecture.
+
 
 Online Web Hosting
 ------------------
 
-Cyber IT Solutions in partnership with allocPSA Pty Ltd is now proud to offer
-online hosting of the allocPSA application. For more information see
-http://www.allocpsa.com/
+Cyber IT Solutions in partnership with  2007-2013 ALSG is now proud to
+offer online hosting of the allocPSA application. For more information
+see http://www.allocpsa.com/
 
 
 Introduction
@@ -285,7 +260,7 @@ allocPSA is supplied as in a number of 'formats':
 1. As a download from http://www.allocpsa.org/ which will need to be installed
    on a web application server.
 
-2. As a paid hosted service available from http://www.allocpsa.com.
+2. As a paid hosted service available from http://www.allocpsa.com/
 
 
 Installation and Configuration
@@ -417,6 +392,7 @@ Tasks
 
 13. Ability to set Time Budget figures, per-task, which are then used to
     highlight tasks which overrun that time budget.
+
 
 Time Sheets
 -----------
@@ -592,6 +568,13 @@ should see the Login screen. Enter your username and your password, then click
 on the Login button. allocPSA should then take you to the main allocPSA Home
 page.
 
+
+How do I Review Update/Changelog Information?
+---------------------------------------------
+
+If allocPSA has undergone a recent version update or had patches
+applied, information about those changes (the changelog) will appear on
+the login page.
 
 
 How do I Recover My Lost Password?
@@ -1430,12 +1413,15 @@ How do I Customise my Home Page?
 
 1. Log in to allocPSA.
 
-2. Go to the Home page.
+2. Click on the People tab from the main menu.
 
-3. On the lower-right of the Home page, you will see the Preferences
+3. Click on your name from the list of names presented. This will open
+   up you Person Details personal settings page.
+
+4. On the right of the Person Details page, you will see the Preferences
    section; Click the Edit button within this section.
 
-4. Change the settings for Font size, Theme, Top Tasks etc.
+5. Change the settings for Font size, Theme, Top Tasks etc.
 
    - Font size will alter the default font allocPSA uses
 
@@ -1453,15 +1439,94 @@ How do I Customise my Home Page?
    - Daily email is deprecated in use, but used-to send out a daily
      summary of tasks to the user.
 
-   - Receive my comments allows the user to specify of they are sent
-     their own comments, as part of a task comment  discussion thread.
+   - Receive my comments (Self Mail) allows the user to specify of they are sent
+     their own comments, as part of a task comment discussion thread.
 
    - Project list specifies how many projects that the user is assigned
      to, are to be shown on the Home page.
 
-5. Once you've made the changes you need to make, click the Save button.
-   If you've made changes you dont want to keep, click the Cancel
-   button.
+   - Show Filters allows the user to specify if the various list filters
+     are shown by default when the user goes to those lists. Examples
+     are the Client, Project, Time & Task filters.
+
+   - Time Sheet Stats will show the user an information block on their Home
+     page which presents details about the number of hours worked
+     yesterday and today, the last two weeks and the two-week average
+     over all time.
+
+   - New Time Sheet Item will make a text-entry box available on the
+     user's Home page, which will allow them to quickly add time-sheet
+     entries straight from the Home page, rather than having to do so from
+     the actual time-sheet.
+
+   - Enabling Private Mode ensures that any sensitive (i.e, financial)
+     information which is normally visible on the user's Home page, is
+     now obfsucated, made visible obly by moving the mouse over those fields.
+  
+   - New Time Sheet Item Hint will make a text-entry box available on
+     a manager-level user's Home page, which will allow them to quickly add
+     indications (or hints) of what work different teams members are
+     doing. This information can then be used at a latter date to improve the
+     quality and completion of those team members' time-sheeting.
+
+6. Once you've made the changes you need to make, click the Save button
+   that relates to this Preferences section. If you've made changes you
+   dont want to keep, click the Cancel Edit button.
+
+
+How do I Customise my Home Page Information Blocks?
+---------------------------------------------------
+
+1. Log in to allocPSA.
+
+2. If you're not already the, click on the Home page tab.
+
+3. Most of the information content blocks (for example Tasks, Project
+   List, New Time Sheet Item etc) have display configuration options. To
+   access this, you merely move your mouse around just above the
+   top-right corner of the content block widget, you will notice a small
+   spanner icon appear. If you click this, you will be presented with a
+   context-sentive configuration pop-up, in which, you'll be able to
+   modify that content block's display options. 
+
+4. For more information on what the various content block options are,
+   please refer to `How do I Customise my Home Page?`_ . 
+
+5. Once you've made the changes you need to make, click the Save button
+   that relates to this Preferences section. If you've made changes you
+   dont want to keep, click the Cancel button.
+
+
+How do I Hide any Sensitive Financial Data in my Home Page?
+-----------------------------------------------------------
+
+There are a number of pages in allocPSA which display financial data.
+Most of these relate to work arranged by managers or admin staff, and
+are accessed infrequently or under specific circumstances. There is also
+potentially sensitive financial data on each user's Home page. allocPSA
+therefore provides a method to obfuscate this sensitive data, if the
+user deems that necessary. To instantiate this obfuscation, the user
+needs to:
+
+1. Log in to allocPSA.
+
+2. Click on the People tab from the main menu.
+
+3. Click on your name from the list of names presented. This will open
+   up you Person Details personal settings page.
+
+4. On the right of the Person Details page, you will see the Preferences
+   section; Click the Edit button within this section.
+
+5. Switch on the private mode by selecting Yes in the Private Mode
+   drop-list. This  ensures that any sensitive (i.e, financial)
+   information which is normally visible on the user's Home page, is
+   now obfsucated, made visible obly by moving the mouse over those
+   fields.
+
+6. Once you've made the changes you need to make, click the Save button
+   that relates to this Preferences section. If you've made changes you
+   dont want to keep, click the Canceli Edit button.
 
 
 How do I Sort Tables of Data?
@@ -1487,6 +1552,51 @@ How do I Sort Tables of Data?
 5. Click on another table column heading text, for instance, TASK on the
    Tasks table, and allocPSA will sort the data in the table using this
    column as the sorting criterion.
+
+How do I Bookmark Clients, Tasks, Projects, etc?
+------------------------------------------------
+
+allocPSA gives you the ability to add specific records (such as Tasks,
+Clients, Projects, Timesheets, Sales and Invoices) to the Star list.
+These can then be accessed in a collective 'bookmarks' page, by clicking
+the 'star' icon tool, located in the top right section of the main menu,
+near the Help, Setup and Logout links.
+
+To add new Star list bookmaks:
+
+1. Log in to allocPSA.
+
+2. Go to the specific data item that is of interest, for example a Task,
+   or a Client record. Alternatively, click into the Clients, Tasks,
+   Projects, Time, Invoices or Sales tab, to display the corresponding
+   list for that type.
+  
+3. If on a specific record, for example a single Task, you will notice a
+   small 'star' icon, near the top right of that item's menu. Click on
+   that small 'star' icon. This will fill the icon with a solid colour.
+   This indicates that this record is now in your Star list of
+   bookmarks. If you click that filled-in 'star' icon once more, it will
+   toggle-off the bookmark. 
+
+4. If you're looking a list of Tasks for instance, you will see a list
+   of 'star' icons along the right edge of the table. Clicking on any of
+   these will toggle the 'stars' on (filled) or off (empty),
+   corresponding to that item being in or out of your Star bookmark list.    
+
+5. To view your Star list of bookmarks, click on the main 'filled in'
+   star icon, near the top right of your main screen's menu items.
+
+6. This will open the Star list, showing you all your various bookmarks
+   for the different types of items that you've bookmarked. 
+
+7. To remove an item from your Star bookmark list, click (that is,
+   uncheck) the 'filled in' star associated with that item (on the far
+   right of that item's entry in the table). This will toggle-off the
+   bookmark. If you refresh the page, or click on the Star list icon (near
+   the top right of your main screen's menu items) again, the item you
+   had unchecked should no longer be present. You're always welcome to
+   find that item again, and add it to your Star list of bookmarks.
+
 
 How do I Specify Annual Leave or Absence?
 -----------------------------------------
@@ -1707,6 +1817,7 @@ older than 7 days.
 18. Return to the previous tab, the one that listed the filtered time-sheets, (i.e, step 10. above) and work your way down the list.
 
 .. _How_do_I_Email_a_Time-Sheet_to_Customers:
+
 
 How do I Email a Time-Sheet to Customers?
 -----------------------------------------

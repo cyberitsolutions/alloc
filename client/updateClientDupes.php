@@ -20,15 +20,26 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class report_module extends module {
-  var $module = "report";
+
+define("NO_REDIRECT",1);
+require_once("../alloc.php");
+
+$index = new Zend_Search_Lucene(ATTACHMENTS_DIR.'search/client');
+$index->setResultSetLimit(10);
+$needle = 'name:'.$_GET["clientName"];
+$query = Zend_Search_Lucene_Search_QueryParser::parse($needle);
+$hits = $index->find($needle);
+
+foreach ($hits as $hit) {
+  $d = $hit->getDocument();
+  $str.= "<div style='padding-bottom:3px'>";
+  $str.= "<a href=\"".$TPL["url_alloc_client"]."clientID=".$d->getFieldValue('id')."\">".$d->getFieldValue('id')." ".$d->getFieldValue('name')."</a>";
+  $str.= "</div>";
 }
 
-function has_report_perm() {
-  $current_user = &singleton("current_user");
-  if (is_object($current_user)) {
-    return $current_user->have_role("admin") || $current_user->have_role("manage");
-  }
-  return false;
+if ($str) {
+  echo $str;
 }
+
+
 ?>
