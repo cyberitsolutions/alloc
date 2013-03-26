@@ -71,7 +71,6 @@ INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskSta
 INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("closed_incomplete","Closed: Incomplete","#e0e0e0", 80,true);
 INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("closed_archived"  ,"Closed: Archived"  ,"#e0e0e0", 85,true);
 INSERT INTO taskStatus (taskStatusID, taskStatusLabel, taskStatusColour, taskStatusSeq, taskStatusActive) VALUES ("closed_complete"  ,"Closed: Completed" ,"#e0e0e0", 90,true);
-INSERT INTO changeType (changeTypeID, changeTypeSeq, changeTypeActive) VALUES ('FieldChange',1,true);
 INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('edit',1,true);
 INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('manager',2,true);
 INSERT INTO timeSheetStatus (timeSheetStatusID, timeSheetStatusSeq, timeSheetStatusActive) VALUES ('admin',3,true);
@@ -283,7 +282,7 @@ VALUES
 ,('announcement'             ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 ,('announcement'             ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 
-,('auditItem'                ,0  ,''         ,NULL ,8+1        ,'Allow all to create and read audit items.')
+,('audit'                    ,0  ,''         ,NULL ,8+1        ,'Allow all to create and read audit items.')
 
 ,('client'                   ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 ,('clientContact'            ,0  ,''         ,NULL ,1+2+4+8    ,NULL)

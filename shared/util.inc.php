@@ -867,12 +867,30 @@ function alloc_error($str="",$force=null) {
 }
 
 function sprintf_implode() {
-  // Eg sprintf_implode("(id = %d AND name = '%s')",$numbers,$words);
-  // if the length of $numbers is 3 items long, eg 20,21,22 and $words is howdy,hello,goodbye
-  // then this function would return:
-  // ((id = 20 AND name = 'howdy') OR (id = 21 AND name = 'hello') OR (id = 22 AND name = 'goodbye'))
-  // I am crippling this function to make its purpose clearer. Max 6 arguments.
+  // I am crippling this function to make its purpose clearer, max 6 arguments.
+  //
+  // $numbers = array(20,21,22);
+  // $words = array("howdy","hello","goodbye");
+  //
+  // sprintf_implode("(name = '%s')", $words);
+  // Returns: ((name = 'howdy') OR (name = 'hello') OR (name = 'goodbye'))
+  //
+  // sprintf_implode("(id = %d AND name = '%s')", $numbers, $words);
+  // Returns: ((id = 20 AND name = 'howdy') OR (id = 21 AND name = 'hello') OR (id = 22 AND name = 'goodbye'))
+  //
+  // We default to joining by OR, but if the first argument passed doesn't contain
+  // a percentage (ie the sprintf marker), then we assume the first arg is the glue,
+  // and we bump all the args along one. This changes the usage of the function to:
+  //
+  // sprintf_implode(" AND ", "(name != '%s')", $words);
+  // Returns: ((name != 'howdy') AND (name != 'hello') AND (name != 'goodbye'))
+  //
   $args = func_get_args();
+  $glue = " OR ";
+  if (!in_str("%",$args[0])) {
+    $glue = array_shift($args);
+  }
+
   $str = array_shift($args);
 
   $f["arg1"] = $args[0];
@@ -897,7 +915,7 @@ function sprintf_implode() {
     $rtn.= $comma.sprintf($str
                          ,db::esc($f["arg1"][$x]),db::esc($f["arg2"][$x]),db::esc($f["arg3"][$x])
                          ,db::esc($f["arg4"][$x]),db::esc($f["arg5"][$x]),db::esc($f["arg6"][$x]));
-    $comma = " OR ";
+    $comma = $glue;
     $x++;
   }
   return "(".$rtn.")";

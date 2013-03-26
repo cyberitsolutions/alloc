@@ -426,16 +426,15 @@ CREATE TABLE pendingTask (
   PRIMARY KEY(taskID, pendingTaskID)
 ) ENGINE=InnoDB PACK_KEYS=0;
 
-DROP TABLE IF EXISTS auditItem;
-CREATE TABLE auditItem (
-  auditItemID integer NOT NULL auto_increment PRIMARY KEY,
-  entityName varchar(255) default NULL,
-  entityID integer NOT NULL,
+DROP TABLE IF EXISTS audit;
+CREATE TABLE audit (
+  auditID integer NOT NULL auto_increment PRIMARY KEY,
+  taskID integer DEFAULT NULL,
+  projectID integer DEFAULT NULL,
   personID integer NOT NULL,
   dateChanged datetime NOT NULL,
-  changeType varchar(255) NOT NULL default 'FieldChange',
-  fieldName varchar(255) default NULL,
-  oldValue text
+  field varchar(255) default NULL,
+  value text
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS interestedParty;
@@ -822,15 +821,6 @@ CREATE TABLE taskStatus (
   taskStatusSeq integer NOT NULL,
   taskStatusActive boolean default true
 ) ENGINE=InnoDB PACK_KEYS=0;
-
-
-
-DROP TABLE IF EXISTS changeType;
-CREATE TABLE changeType (
-  changeTypeID varchar(255) PRIMARY KEY,
-  changeTypeSeq integer NOT NULL,
-  changeTypeActive boolean DEFAULT true
-)ENGINE=InnoDB PACK_KEYS=0;
 
 
 

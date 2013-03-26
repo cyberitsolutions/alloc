@@ -390,15 +390,14 @@ CREATE TABLE pendingTask (
   PRIMARY KEY(taskID, pendingTaskID)
 ) ;
 
-CREATE TABLE auditItem (
-  auditItemID serial PRIMARY KEY,
-  entityName varchar(255) default NULL,
-  entityID integer NOT NULL,
+CREATE TABLE audit (
+  auditID serial PRIMARY KEY,
+  taskID integer DEFAULT NULL,
+  projectID integer DEFAULT NULL,
   personID integer NOT NULL,
   dateChanged TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-  changeType varchar(255) NOT NULL default 'FieldChange',
-  fieldName varchar(255) default NULL,
-  oldValue text
+  field varchar(255) default NULL,
+  value text
 ) ;
 
 CREATE TABLE interestedParty (
@@ -754,14 +753,6 @@ CREATE TABLE taskStatus (
   taskStatusSeq integer NOT NULL,
   taskStatusActive boolean default true
 ) ;
-
-
-
-CREATE TABLE changeType (
-  changeTypeID varchar(255) PRIMARY KEY,
-  changeTypeSeq integer NOT NULL,
-  changeTypeActive boolean DEFAULT true
-);
 
 
 

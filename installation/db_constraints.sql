@@ -20,8 +20,6 @@ CREATE INDEX parentTaskID ON task (parentTaskID);
 CREATE INDEX taskTypeID ON task (taskTypeID);
 CREATE INDEX taskStatus ON task (taskStatus);
 CREATE INDEX dateCreated ON task (dateCreated);
-CREATE INDEX idx_entityName ON auditItem (entityName);
-CREATE INDEX idx_entityID ON auditItem (entityID);
 CREATE INDEX idx_tfPerson_tfID ON tfPerson (tfID);
 CREATE INDEX idx_timeSheetItem_timeSheetID ON timeSheetItem (timeSheetID);
 CREATE INDEX idx_taskID ON timeSheetItem (taskID);
@@ -64,7 +62,6 @@ ALTER TABLE reminder ADD CONSTRAINT reminder_reminderRecuringInterval FOREIGN KE
 ALTER TABLE reminder ADD CONSTRAINT reminder_reminderAdvNoticeInterval FOREIGN KEY (reminderAdvNoticeInterval) REFERENCES reminderAdvNoticeInterval (reminderAdvNoticeIntervalID) ON UPDATE CASCADE;
 ALTER TABLE sentEmailLog ADD CONSTRAINT sentEmailLog_sentEmailType FOREIGN KEY (sentEmailType) REFERENCES sentEmailType (sentEmailTypeID) ON UPDATE CASCADE;
 ALTER TABLE proficiency ADD CONSTRAINT proficiency_skillProficiency FOREIGN KEY (skillProficiency) REFERENCES skillProficiency (skillProficiencyID) ON UPDATE CASCADE;
-ALTER TABLE auditItem ADD CONSTRAINT auditItem_changeType FOREIGN KEY (changeType) REFERENCES changeType (changeTypeID) ON UPDATE CASCADE;
 ALTER TABLE timeSheet ADD CONSTRAINT timeSheet_status FOREIGN KEY (status) REFERENCES timeSheetStatus (timeSheetStatusID) ON UPDATE CASCADE;
 ALTER TABLE transaction ADD CONSTRAINT transaction_status FOREIGN KEY (status) REFERENCES transactionStatus (transactionStatusID) ON UPDATE CASCADE;
 ALTER TABLE transaction ADD CONSTRAINT transaction_transactionType FOREIGN KEY (transactionType) REFERENCES transactionType (transactionTypeID) ON UPDATE CASCADE;
@@ -139,7 +136,9 @@ ALTER TABLE task ADD CONSTRAINT task_taskStatus FOREIGN KEY (taskStatus) REFEREN
 ALTER TABLE task ADD CONSTRAINT task_estimatorID FOREIGN KEY (estimatorID) REFERENCES person (personID);
 ALTER TABLE pendingTask ADD CONSTRAINT pendingTask_taskID FOREIGN KEY (taskID) REFERENCES task (taskID);
 ALTER TABLE pendingTask ADD CONSTRAINT pendingTask_pendingTaskID FOREIGN KEY (pendingTaskID) REFERENCES task (taskID);
-ALTER TABLE auditItem ADD CONSTRAINT auditItem_personID FOREIGN KEY (personID) REFERENCES person (personID);
+ALTER TABLE audit ADD CONSTRAINT audit_personID FOREIGN KEY (personID) REFERENCES person (personID);
+ALTER TABLE audit ADD CONSTRAINT audit_taskID FOREIGN KEY (taskID) REFERENCES task (taskID);
+ALTER TABLE audit ADD CONSTRAINT audit_projectID FOREIGN KEY (projectID) REFERENCES project (projectID);
 ALTER TABLE interestedParty ADD CONSTRAINT interestedParty_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE interestedParty ADD CONSTRAINT interestedParty_clientContactID FOREIGN KEY (clientContactID) REFERENCES clientContact (clientContactID);
 ALTER TABLE tf ADD CONSTRAINT tf_tfModifiedUser FOREIGN KEY (tfModifiedUser) REFERENCES person (personID);
