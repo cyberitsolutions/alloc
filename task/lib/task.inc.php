@@ -1269,112 +1269,96 @@ class task extends db_entity {
 
     $people_cache =& get_cached_table("person");
 
-    $options = array("return"       => "array"
-                    ,"entityType"   => "task"
-                    ,"entityID"     => $this->get_id());
-    $changes = auditItem::get_list($options);
+    $options = array("taskID" => $this->get_id());
+    $changes = audit::get_list($options);
 
-    // Insert the creation event into the table to make the history complete.
-    $rows []= '<tr><td class="nobr">' . $this->get_value("dateCreated") . '</td><td>The task was created.</td><td>' . page::htmlentities($people_cache[$this->get_value("creatorID")]["name"]) . "</td></tr>";
-
-    // we record changes to taskName, taskDescription, priority, timeLimit, projectID, dateActualCompletion, dateActualStart, dateTargetStart, dateTargetCompletion, personID, managerID, parentTaskID, taskTypeID, duplicateTaskID
-    foreach($changes as $auditItem) {
+    foreach($changes as $audit) {
       $changeDescription = "";
-      $oldValue = $auditItem->get_value('oldValue',DST_HTML_DISPLAY);
-      if($auditItem->get_value('changeType') == 'FieldChange') {
-        $newValue = page::htmlentities($auditItem->get_new_value());
-        switch($auditItem->get_value('fieldName')) {
-          case 'taskName':
-            $changeDescription = "Task name changed from '$oldValue' to '$newValue'.";
-            break;
-          case 'taskDescription':
-            $changeDescription = "Task description changed. <a class=\"magic\" href=\"#x\" onclick=\"$('#auditItem" . $auditItem->get_id() . "').slideToggle('fast');\">Show</a> <div class=\"hidden\" id=\"auditItem" . $auditItem->get_id() . "\"><div><b>Old Description</b><br>" .$oldValue. "</div><div><b>New Description</b><br>" .$newValue. "</div></div>";
-            break;
-          case 'priority':
-            $priorities = config::get_config_item("taskPriorities");
-            $changeDescription = sprintf('Task priority changed from <span style="color: %s;">%s</span> to <span style="color: %s;">%s</span>.', $priorities[$oldValue]["colour"], $priorities[$oldValue]["label"], $priorities[$newValue]["colour"], $priorities[$newValue]["label"]);
+      $newValue = $audit['value'];
+      switch($audit['field']) {
+        case 'created':
+          $changeDescription = $newValue;
           break;
-          case 'projectID':
-            task::load_entity("project", $oldValue, $oldProject);
-            task::load_entity("project", $newValue, $newProject);
-            is_object($oldProject) and $oldProjectLink = $oldProject->get_project_link();
-            is_object($newProject) and $newProjectLink = $newProject->get_project_link();
-            $oldProjectLink or $oldProjectLink = "&lt;empty&gt;";
-            $newProjectLink or $newProjectLink = "&lt;empty&gt;";
-            $changeDescription = "Project changed from ".$oldProjectLink." to ".$newProjectLink.".";
+        case 'dip':
+          $changeDescription = "Default parties set to ".interestedParty::abbreviate($newValue);
           break;
-          case 'parentTaskID':
-            task::load_entity("task", $oldValue, $oldTask);
-            task::load_entity("task", $newValue, $newTask);
-            if(!$oldValue && is_object($newTask)) {
-              $changeDescription = sprintf("Task was set to a child of %d %s.", $newTask->get_id(), $newTask->get_task_link());
-            } else if(!$newValue && is_object($oldTask)) {
-              $changeDescription = sprintf("Task ceased to be a child of %d %s", $oldTask->get_id(), $oldTask->get_task_link());
-            } else if (is_object($oldTask) && is_object($newTask)) {
-              $changeDescription = sprintf("Task ceased to be a child of %d %s and became a child of %d %s.", $oldTask->get_id(), $oldTask->get_task_link(), $newTask->get_id(), $newTask->get_task_link());
-            }
+        case 'taskName':
+          $changeDescription = "Task name set to '$newValue'.";
           break;
-          case 'duplicateTaskID':
-            task::load_entity("task", $oldValue, $oldTask);
-            task::load_entity("task", $newValue, $newTask);
-            if(!$oldValue) {
-              $changeDescription = "The task was marked a duplicate of " . $newTask->get_task_link() . ".";
-            } elseif(!$newValue) {
-              $changeDescription = "Task is no longer a duplicate of " . $oldTask->get_task_link() . ".";
-            } else {
-              $changeDescription = "Task is no longer a duplicate of " . $oldTask->get_task_link() . " and is now a duplicate of " . $newTask->get_task_link() . ".";
-            }
+        case 'taskDescription':
+          $changeDescription = "Task description set to <a class=\"magic\" href=\"#x\" onclick=\"$('#audit" . $audit["auditID"] . "').slideToggle('fast');\">Show</a> <div class=\"hidden\" id=\"audit" . $audit["auditID"] . "\"><div>" .$newValue. "</div></div>";
           break;
-          case 'personID':
-            $changeDescription = "Task was reassigned from " . $people_cache[$oldValue]["name"] . " to " . $people_cache[$newValue]["name"] . ".";
-          break;
-          case 'managerID':
-            $changeDescription = "Task manager changed from " . $people_cache[$oldValue]["name"] . " to " . $people_cache[$newValue]["name"] . ".";
-          break;
-          case 'estimatorID':
-            $changeDescription = "Task estimator changed from " . $people_cache[$oldValue]["name"] . " to " . $people_cache[$newValue]["name"] . ".";
-          break;
-          case 'taskTypeID':
-            $changeDescription = "Task type was changed from " . $oldValue . " to " . $newValue . ".";
-          break;
-          case 'taskStatus':
-            $changeDescription = sprintf('Task status changed from <span style="background-color:%s">%s</span> to <span style="background-color:%s">%s</span>.'
-                                        ,task::get_task_status_thing("colour",$oldValue)
-                                        ,task::get_task_status_thing("label",$oldValue)
-                                        ,task::get_task_status_thing("colour",$newValue)
-                                        ,task::get_task_status_thing("label",$newValue)
-                                        );
-          break;
-          case 'dateActualCompletion':
-          case 'dateActualStart':
-          case 'dateTargetStart':
-          case 'dateTargetCompletion':
-          case 'timeLimit':
-          case 'timeBest':
-          case 'timeWorst':
-          case 'timeExpected':
-            // these cases are more or less identical
-            switch($auditItem->get_value('fieldName')) {
-              case 'dateActualCompletion': $fieldDesc = "actual completion date"; break;
-              case 'dateActualStart': $fieldDesc = "actual start date"; break;
-              case 'dateTargetStart': $fieldDesc = "estimate/target start date"; break;
-              case 'dateTargetCompletion': $fieldDesc = "estimate/target completion date"; break;
-              case 'timeLimit': $fieldDesc = "hours worked limit"; break;
-              case 'timeBest': $fieldDesc = "best estimate"; break;
-              case 'timeWorst': $fieldDesc = "worst estimate"; break;
-              case 'timeExpected': $fieldDesc = "expected estimate";
-            }
-            if(!$oldValue) {
-              $changeDescription = "The $fieldDesc was set to $newValue.";
-            } elseif(!$newValue) {
-              $changeDescription = "The $fieldDesc, previously $oldValue, was removed.";
-            } else {
-              $changeDescription = "The $fieldDesc changed from $oldValue to $newValue.";
-            }
-          break;
-        }
+        case 'priority':
+          $priorities = config::get_config_item("taskPriorities");
+          $changeDescription = sprintf('Task priority set to <span style="color: %s;">%s</span>.', $priorities[$newValue]["colour"], $priorities[$newValue]["label"]);
+        break;
+        case 'projectID':
+          task::load_entity("project", $newValue, $newProject);
+          is_object($newProject) and $newProjectLink = $newProject->get_project_link();
+          $newProjectLink or $newProjectLink = "&lt;empty&gt;";
+          $changeDescription = "Project changed set to ".$newProjectLink.".";
+        break;
+        case 'parentTaskID':
+          task::load_entity("task", $newValue, $newTask);
+          if ($newValue) {
+            $changeDescription = sprintf("Task set to a child of %d %s.", $newTask->get_id(), $newTask->get_task_link());
+          } else {
+            $changeDescription = "Task no longer a child task.";
+          }
+        break;
+        case 'duplicateTaskID':
+          task::load_entity("task", $newValue, $newTask);
+          if($newValue) {
+            $changeDescription = "Task set to a duplicate of " . $newTask->get_task_link();
+          } else {
+            $changeDescription = "Task is no longer a duplicate.";
+          }
+        break;
+        case 'personID':
+          $changeDescription = "Task assigned to " . $people_cache[$newValue]["name"] . ".";
+        break;
+        case 'managerID':
+          $changeDescription = "Task manager set to " . $people_cache[$newValue]["name"] . ".";
+        break;
+        case 'estimatorID':
+          $changeDescription = "Task estimator set to " . $people_cache[$newValue]["name"] . ".";
+        break;
+        case 'taskTypeID':
+          $changeDescription = "Task type set to " . $newValue . ".";
+        break;
+        case 'taskStatus':
+          $changeDescription = sprintf('Task status set to <span style="background-color:%s">%s</span>.'
+                                      ,task::get_task_status_thing("colour",$newValue)
+                                      ,task::get_task_status_thing("label",$newValue)
+                                      );
+        break;
+        case 'dateActualCompletion':
+        case 'dateActualStart':
+        case 'dateTargetStart':
+        case 'dateTargetCompletion':
+        case 'timeLimit':
+        case 'timeBest':
+        case 'timeWorst':
+        case 'timeExpected':
+          // these cases are more or less identical
+          switch($audit['field']) {
+            case 'dateActualCompletion': $fieldDesc = "actual completion date"; break;
+            case 'dateActualStart': $fieldDesc = "actual start date"; break;
+            case 'dateTargetStart': $fieldDesc = "estimate/target start date"; break;
+            case 'dateTargetCompletion': $fieldDesc = "estimate/target completion date"; break;
+            case 'timeLimit': $fieldDesc = "hours worked limit"; break;
+            case 'timeBest': $fieldDesc = "best estimate"; break;
+            case 'timeWorst': $fieldDesc = "worst estimate"; break;
+            case 'timeExpected': $fieldDesc = "expected estimate";
+          }
+          if($newValue) {
+            $changeDescription = "The $fieldDesc was set to $newValue.";
+          } else {
+            $changeDescription = "The $fieldDesc was removed.";
+          }
+        break;
       }
-      $rows[] = "<tr><td class=\"nobr\">" . $auditItem->get_value("dateChanged") . "</td><td>$changeDescription</td><td>" . page::htmlentities($people_cache[$auditItem->get_value("personID")]["name"]) . "</td></tr>";
+      $rows[] = "<tr><td class=\"nobr\">" . $audit["dateChanged"] . "</td><td>$changeDescription</td><td>" . page::htmlentities($people_cache[$audit["personID"]]["name"]) . "</td></tr>";
     }
 
     return implode("\n", $rows);
@@ -1464,15 +1448,13 @@ class task extends db_entity {
       if (substr($this->get_value("taskStatus"),0,4) == 'open') {
         $db = new db_alloc();
         $q = prepare("SELECT *
-                        FROM auditItem
-                       WHERE entityName = 'task'
-                         AND entityID = %d
-                         AND changeType = 'FieldChange'
-                         AND fieldName = 'taskStatus'
+                        FROM audit
+                       WHERE taskID = %d
+                         AND field = 'taskStatus'
                     ORDER BY dateChanged DESC
-                       LIMIT 1",$this->get_id());
+                       LIMIT 2,1",$this->get_id());
         $row = $db->qr($q);
-        return substr($row["oldValue"],0,7) == "pending";
+        return substr($row["value"],0,7) == "pending";
       }
     }
   }
