@@ -23,6 +23,6 @@
 
 class audit_module extends module {
   var $module = "audit";
-  var $db_entities = array("auditItem");
+  var $db_entities = array("audit");
 }
 ?>
