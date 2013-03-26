@@ -20,7 +20,7 @@ USE alloc_${username};
 
 CREATE OR REPLACE VIEW alloc_${username}.absenceType      AS SELECT * FROM alloc.absenceType;
 CREATE OR REPLACE VIEW alloc_${username}.announcement     AS SELECT * FROM alloc.announcement;
-CREATE OR REPLACE VIEW alloc_${username}.auditItem        AS SELECT * FROM alloc.auditItem;
+CREATE OR REPLACE VIEW alloc_${username}.audit            AS SELECT * FROM alloc.audit;
 CREATE OR REPLACE VIEW alloc_${username}.changeType       AS SELECT * FROM alloc.changeType;
 CREATE OR REPLACE VIEW alloc_${username}.client           AS SELECT * FROM alloc.client;
 CREATE OR REPLACE VIEW alloc_${username}.clientContact    AS SELECT * FROM alloc.clientContact;

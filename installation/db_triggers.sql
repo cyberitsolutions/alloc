@@ -141,8 +141,13 @@ DROP PROCEDURE IF EXISTS alloc_log $$
 CREATE PROCEDURE alloc_log(entityName VARCHAR(255), entityID INTEGER, fieldName VARCHAR(255), oldValue TEXT, newValue TEXT)
 BEGIN
   IF (neq(oldValue,newValue)) THEN
-    INSERT INTO auditItem (entityName,entityID,personID,dateChanged,changeType,fieldName,oldValue) VALUES
-    (entityName,entityID,personID(),NOW(),"FieldChange",fieldName,oldValue);
+    IF entityName = "task" THEN
+      INSERT INTO audit (taskID,personID,dateChanged,field,value) VALUES
+      (entityID,personID(),NOW(),fieldName,newValue);
+    ELSEIF entityName = "project" THEN
+      INSERT INTO audit (projectID,personID,dateChanged,field,value) VALUES
+      (entityID,personID(),NOW(),fieldName,newValue);
+    END IF;
   END IF;
 END
 $$
@@ -441,7 +446,7 @@ DROP FUNCTION IF EXISTS can_delete_task $$
 CREATE FUNCTION can_delete_task(id INTEGER) RETURNS BOOLEAN READS SQL DATA
 BEGIN
   DECLARE num_audits INTEGER;
-  SELECT COUNT(*) INTO num_audits FROM auditItem WHERE entityName = 'task' AND entityID = id;
+  SELECT COUNT(*) INTO num_audits FROM audit WHERE taskID = id;
   -- perm delete = 4
   IF (NOT num_audits AND has_perm(personID(),4,"task")) THEN
     RETURN TRUE;
@@ -570,6 +575,26 @@ DROP TRIGGER IF EXISTS after_insert_task $$
 CREATE TRIGGER after_insert_task AFTER INSERT ON task
 FOR EACH ROW
 BEGIN
+  call alloc_log("task", NEW.taskID, "created",              NULL, "The task was created.");
+  call alloc_log("task", NEW.taskID, "taskName",             NULL, NEW.taskName);
+  call alloc_log("task", NEW.taskID, "taskDescription",      NULL, NEW.taskDescription);
+  call alloc_log("task", NEW.taskID, "priority",             NULL, NEW.priority);
+  call alloc_log("task", NEW.taskID, "timeLimit",            NULL, NEW.timeLimit);
+  call alloc_log("task", NEW.taskID, "timeBest",             NULL, NEW.timeBest);
+  call alloc_log("task", NEW.taskID, "timeWorst",            NULL, NEW.timeWorst);
+  call alloc_log("task", NEW.taskID, "timeExpected",         NULL, NEW.timeExpected);
+  call alloc_log("task", NEW.taskID, "dateTargetStart",      NULL, NEW.dateTargetStart);
+  call alloc_log("task", NEW.taskID, "dateActualStart",      NULL, NEW.dateActualStart);
+  call alloc_log("task", NEW.taskID, "projectID",            NULL, NEW.projectID);
+  call alloc_log("task", NEW.taskID, "parentTaskID",         NULL, NEW.parentTaskID);
+  call alloc_log("task", NEW.taskID, "taskTypeID",           NULL, NEW.taskTypeID);
+  call alloc_log("task", NEW.taskID, "personID",             NULL, NEW.personID);
+  call alloc_log("task", NEW.taskID, "managerID",            NULL, NEW.managerID);
+  call alloc_log("task", NEW.taskID, "estimatorID",          NULL, NEW.estimatorID);
+  call alloc_log("task", NEW.taskID, "duplicateTaskID",      NULL, NEW.duplicateTaskID);
+  call alloc_log("task", NEW.taskID, "dateTargetCompletion", NULL, NEW.dateTargetCompletion);
+  call alloc_log("task", NEW.taskID, "dateActualCompletion", NULL, NEW.dateActualCompletion);
+  call alloc_log("task", NEW.taskID, "taskStatus",           NULL, NEW.taskStatus);
   call update_search_index("task",NEW.taskID);
 END
 $$
@@ -600,6 +625,110 @@ BEGIN
   call update_search_index("task",NEW.taskID);
 END
 $$
+
+-- interestedParty
+
+DROP FUNCTION IF EXISTS get_interested_parties_string $$
+CREATE FUNCTION get_interested_parties_string(e VARCHAR(255), eID INTEGER) RETURNS TEXT READS SQL DATA
+BEGIN
+  DECLARE parties TEXT;
+  SELECT GROUP_CONCAT(CONCAT(TRIM(fullName)," <",TRIM(emailAddress),">") ORDER BY fullName SEPARATOR ", ") INTO parties
+    FROM interestedParty
+   WHERE entity = e
+     AND entityID = eID
+     AND interestedPartyActive = 1;
+  RETURN parties;
+END
+$$
+
+DROP PROCEDURE IF EXISTS audit_interested_parties $$
+CREATE PROCEDURE audit_interested_parties(e VARCHAR(255), eID INTEGER)
+BEGIN
+  DECLARE parties TEXT;
+  DECLARE oldParties TEXT;
+  DECLARE aID INTEGER;
+
+  SET parties = get_interested_parties_string(e,eID);
+
+  IF e = 'task' THEN
+    SELECT auditID INTO aID
+      FROM audit
+     WHERE taskID = eID
+       AND field = 'dip'
+       AND dateChanged BETWEEN (NOW() - INTERVAL 3 SECOND) AND (NOW() + INTERVAL 3 SECOND)
+       ORDER BY dateChanged DESC
+       LIMIT 1;
+
+    IF aID THEN
+      UPDATE audit SET value = parties WHERE auditID = aID;
+    ELSE
+      SELECT value INTO oldParties
+        FROM audit
+       WHERE taskID = eID
+         AND field = 'dip'
+    ORDER BY dateChanged DESC
+       LIMIT 1;
+
+      IF neq(oldParties,parties) THEN
+        INSERT INTO audit (taskID,personID,dateChanged,field,value) VALUES
+        (eID,personID(),NOW(),"dip",parties);
+      END IF;
+    END IF;
+  END IF;
+
+  IF e = 'project' THEN
+    SELECT auditID INTO aID
+      FROM audit
+     WHERE projectID = eID
+       AND field = 'dip'
+       AND dateChanged BETWEEN (NOW() - INTERVAL 3 SECOND) AND (NOW() + INTERVAL 3 SECOND)
+       ORDER BY dateChanged DESC
+       LIMIT 1;
+
+    IF aID THEN
+      UPDATE audit SET value = parties WHERE auditID = aID;
+    ELSE
+      SELECT value INTO oldParties
+        FROM audit
+       WHERE projectID = eID
+         AND field = 'dip'
+    ORDER BY dateChanged DESC
+       LIMIT 1;
+
+      IF neq(oldParties,parties) THEN
+        INSERT INTO audit (projectID,personID,dateChanged,field,value) VALUES
+        (eID,personID(),NOW(),"dip",parties);
+      END IF;
+    END IF;
+  END IF;
+
+END
+$$
+
+DROP TRIGGER IF EXISTS after_update_interestedParty $$
+CREATE TRIGGER after_update_interestedParty AFTER UPDATE ON interestedParty
+FOR EACH ROW
+BEGIN
+  call audit_interested_parties(NEW.entity,NEW.entityID);
+END
+$$
+
+DROP TRIGGER IF EXISTS after_insert_interestedParty $$
+CREATE TRIGGER after_insert_interestedParty AFTER INSERT ON interestedParty
+FOR EACH ROW
+BEGIN
+  call audit_interested_parties(NEW.entity,NEW.entityID);
+END
+$$
+
+DROP TRIGGER IF EXISTS after_delete_interestedParty $$
+CREATE TRIGGER after_delete_interestedParty AFTER DELETE ON interestedParty
+FOR EACH ROW
+BEGIN
+  call audit_interested_parties(OLD.entity,OLD.entityID);
+END
+$$
+
 
 -- pendingTask
 
@@ -810,6 +939,34 @@ BEGIN
   IF (has_perm(personID(),4,"reminder")) THEN
     DELETE FROM reminderRecipient WHERE reminderID = OLD.reminderID;
   END IF;
+END
+$$
+
+DROP TRIGGER IF EXISTS after_insert_project $$
+CREATE TRIGGER after_insert_project AFTER INSERT ON project
+FOR EACH ROW
+BEGIN
+  call alloc_log("project", NEW.projectID, "created",                   NULL, "The project was created.");
+  call alloc_log("project", NEW.projectID, "projectName",               NULL, NEW.projectName);
+  call alloc_log("project", NEW.projectID, "projectShortName",          NULL, NEW.projectShortName);
+  call alloc_log("project", NEW.projectID, "projectComments",           NULL, NEW.projectComments);
+  call alloc_log("project", NEW.projectID, "clientID",                  NULL, NEW.clientID);
+  call alloc_log("project", NEW.projectID, "clientContactID",           NULL, NEW.clientContactID);
+  call alloc_log("project", NEW.projectID, "projectType",               NULL, NEW.projectType);
+  call alloc_log("project", NEW.projectID, "dateTargetStart",           NULL, NEW.dateTargetStart);
+  call alloc_log("project", NEW.projectID, "dateTargetCompletion",      NULL, NEW.dateTargetCompletion);
+  call alloc_log("project", NEW.projectID, "dateActualStart",           NULL, NEW.dateActualStart);
+  call alloc_log("project", NEW.projectID, "dateActualCompletion",      NULL, NEW.dateActualCompletion);
+  call alloc_log("project", NEW.projectID, "projectBudget",             NULL, NEW.projectBudget);
+  call alloc_log("project", NEW.projectID, "currencyTypeID",            NULL, NEW.currencyTypeID);
+  call alloc_log("project", NEW.projectID, "projectStatus",             NULL, NEW.projectStatus);
+  call alloc_log("project", NEW.projectID, "projectPriority",           NULL, NEW.projectPriority);
+  call alloc_log("project", NEW.projectID, "cost_centre_tfID",          NULL, NEW.cost_centre_tfID);
+  call alloc_log("project", NEW.projectID, "customerBilledDollars",     NULL, NEW.customerBilledDollars);
+  call alloc_log("project", NEW.projectID, "defaultTaskLimit",          NULL, NEW.defaultTaskLimit);
+  call alloc_log("project", NEW.projectID, "defaultTimeSheetRate",      NULL, NEW.defaultTimeSheetRate);
+  call alloc_log("project", NEW.projectID, "defaultTimeSheetRateUnitID",NULL, NEW.defaultTimeSheetRateUnitID);
+  call update_search_index("project",NEW.projectID);
 END
 $$
 

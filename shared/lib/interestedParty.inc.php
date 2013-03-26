@@ -79,11 +79,6 @@ class interestedParty extends db_entity {
     // Nuke entries from interestedParty
     $db = new db_alloc();
     $db->start_transaction();
-    $q = prepare("UPDATE interestedParty
-                     SET interestedPartyActive = 0
-                   WHERE entity = '%s'
-                     AND entityID = %d",$entity,$entityID);
-    $db->query($q);
 
     // Add entries to interestedParty
     if (is_array($encoded_parties)) {
@@ -92,10 +87,39 @@ class interestedParty extends db_entity {
         $info["entity"] = $entity;
         $info["entityID"] = $entityID;
         $info["emailAddress"] or $info["emailAddress"] = $info["email"];
-        interestedParty::add_interested_party($info);
+        $ipIDs[] = interestedParty::add_interested_party($info);
       }
     }
+
+    $q = prepare("UPDATE interestedParty
+                     SET interestedPartyActive = 0
+                   WHERE entity = '%s'
+                     AND entityID = %d",$entity,$entityID);
+    $ipIDs and $q.= " AND ".sprintf_implode(" AND ","interestedPartyID != %d",$ipIDs);
+    $db->query($q);
+
     $db->commit();
+  }
+
+  function abbreviate($str) {
+    $rtn = array();
+    $bits = explode(",",$str);
+    foreach((array)$bits as $bit) {
+      if ($bit) {
+        list($name,$address) = explode("<",$bit);
+        $rtn[] = page::htmlentities(trim($name))."<span class='hidden'> ".page::htmlentities("<".$address)."</span>";
+      }
+    }
+    if ($rtn) {
+      return "<span>".implode(", ",$rtn)."&nbsp;&nbsp;<a href='' onClick='$(this).parent().find(\"span\").slideToggle(\"fast\"); return false;'>Show</a></span>";
+    }
+  }
+
+  function get_interested_parties_string($entity,$entityID) {
+    $q = prepare("SELECT get_interested_parties_string('%s',%d) as parties",$entity,$entityID);
+    $db = new db_alloc();
+    $row = $db->qr($q);
+    return $row["parties"];
   }
 
   function sort_interested_parties($a, $b) {
