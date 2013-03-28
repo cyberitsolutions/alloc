@@ -2470,8 +2470,6 @@ Task Graph, for a that Project.
 For more information, please refer to the 'Project' section.
 
 
-
-
 Cost Centres & TF (Tagged Fund)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3838,6 +3836,39 @@ allocPSA has been written such that any programmer can "drop-in" a new
 wiki syntax. At the moment, the code needs to be modified in order for
 this to happen. The allocPSA development team hopes to eventually make
 it easy to make this change via a config option.
+
+
+Inbox
+-----
+
+allocPSA provides a facility for accessing the current Inbox for the
+primary account used to sent mail to the gateway. 
+
+Normally, this Inbox contains all the mail incoming into allocPSA, which
+allocPSA then processes and remove from the Inbox. However, there are
+occasions when that email can't be properly processed by allocPSA, such
+as when there are no identifying mechanisms in the email header (e.g, a
+missing 'key'). Under these circumstances, email isn't processed, and
+accumulates in the Inbox. The allocPSA Inbox tool exists to allow an
+allocPSA super-user administrator to manage this accumulated mail,
+manually.
+
+
+Inbox Table
+~~~~~~~~~~~
+
+.. list-table::
+
+   - - ID
+     - The message ID as indicated by the mail server
+   - - New
+     - Indicates if this is new email, not having been opened yet.
+   - - Date
+     - Indicates the date the mail was sent.
+   - - Email
+     - Displayes who the mail is from, along with the Subject: line.
+
+
 
 
 Tools
