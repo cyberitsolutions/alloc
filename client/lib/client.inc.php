@@ -38,12 +38,12 @@ class client extends db_entity {
                              ,"clientFaxOne"
                              ,"clientCountryOne"
                              ,"clientCountryTwo"
-                             ,"clientComment"
                              ,"clientCreatedTime"
                              ,"clientModifiedTime"
                              ,"clientModifiedUser"
                              ,"clientStatus"
                              ,"clientCategory"
+                             ,"clientURL"
                              );
 
 
