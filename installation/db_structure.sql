@@ -36,12 +36,12 @@ CREATE TABLE client (
   clientFaxOne varchar(255) default NULL,
   clientCountryOne varchar(255) default NULL,
   clientCountryTwo varchar(255) default NULL,
-  clientComment text,
   clientModifiedTime datetime DEFAULT NULL,
   clientModifiedUser integer DEFAULT NULL,
   clientStatus varchar(255) NOT NULL default 'Current',
   clientCategory integer DEFAULT 1,
-  clientCreatedTime datetime default NULL
+  clientCreatedTime datetime default NULL,
+  clientURL TEXT DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
 DROP TABLE IF EXISTS clientContact;

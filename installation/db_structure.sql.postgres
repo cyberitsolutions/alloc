@@ -33,12 +33,12 @@ CREATE TABLE client (
   clientFaxOne varchar(255) default NULL,
   clientCountryOne varchar(255) default NULL,
   clientCountryTwo varchar(255) default NULL,
-  clientComment text,
   clientModifiedTime TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
   clientModifiedUser integer DEFAULT NULL,
   clientStatus varchar(255) NOT NULL default 'Current',
   clientCategory integer DEFAULT 1,
-  clientCreatedTime TIMESTAMP WITHOUT TIME ZONE default NULL
+  clientCreatedTime TIMESTAMP WITHOUT TIME ZONE default NULL,
+  clientURL TEXT DEFAULT NULL
 ) ;
 
 CREATE TABLE clientContact (
