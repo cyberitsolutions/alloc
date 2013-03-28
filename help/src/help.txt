@@ -3857,6 +3857,9 @@ manually.
 Inbox Table
 ~~~~~~~~~~~
 
+The allocPSA mail Inbox is presented as a table, with a number of data
+columns:
+
 .. list-table::
 
    - - ID
@@ -3868,6 +3871,31 @@ Inbox Table
    - - Email
      - Displayes who the mail is from, along with the Subject: line.
 
+
+Arching, Creating New Tasks and Attaching Emails to Existing Tasks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+There are also a number of Action buttons, which allow you to perform
+actions on each of the emails:
+
+.. list-table::
+
+   - - Archive
+     - Clicking on this will cause that mail item to be archived, into
+       a separate mail folder.x
+   - - New Taskx
+     - Clicking on this will extract information from that mail, to turn
+       it into a new ticket. The Task ID for the new ticket is provided
+       in the informational response, given at the top of the Inbox
+       page.x
+   - - Existing Task
+     - This will provide a mechanism for you to nominate an existing
+       Task ID that this email relates to, along with a choice of which
+       group of people should receive this new material by way of a new
+       comment email thread (default interested parties, internal
+       interested parties or no interested parties.) Once done, pressing
+       the Go button will route this message accordingly, attaching it
+       to the nominated task in the process.
 
 
 
