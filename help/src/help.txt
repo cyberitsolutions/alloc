@@ -850,6 +850,103 @@ section of your 'Homepage'.
 HINT: If you're a manager designated to receive requests to authorise Time
 Sheets, you can view them from the 'Time Sheet' section of your 'Homepage'.
 
+How do I Ensure Staff Effort on Tasks is Captured as Time Sheets?
+-----------------------------------------------------------------
+
+NOTE: allocPSA provides managers with the ability to add small comments
+(or hints) to specific tasks, to assist them in tracking the work levels
+on those tasks by staff. This can be useful in professional services
+organisations as a truer representation of work-levels being allocated
+to tasks, and thus in helping improve utilisation and this
+client-billing. It does obviously mean that managers need to keep
+regular tabs on staff activity, such that even if staff don't nominate
+work effort on a task (via a time sheet entry), then a manager can make
+a note to query the staff member about that effort.
+
+NOTE: In order to make use of this facility, you need to have Manager
+privileges and you also need to switch on the New Time Sheet Item Hint
+option for your Home page. The New Time Sheet Item Hint feature provides
+a text-entry box on the user's Home page. This will allow them to
+quickly add indications (or hints) of what work different team members
+are doing. To learn how to enable this feature, please refer to `How
+do I Customise my Home Page?`_ .
+
+#. Log in to allocPSA
+
+#. Click into the Home page.
+
+#. In the information block titled New Time Sheet Item Hint, enter the
+   following items within the textbox:
+
+   #. Username - of the person whome you're adding this time sheet hint
+      for.
+   #. Duration - in the standard time increments for that user (eg,
+      hours).
+   #. TaskID - the ID of the task that you want to add this hint for.
+   #. Comment - an optional note for your future reference.
+
+   NOTE: As you're typing these details into the textbox, allocPSA will
+   being rendering them into a time-sheet hint entry, in the lower part of
+   the information block, showing you the details in a fuller-form.
+ 
+#. Once you're satisfied that the information you've entered and had
+   presented back to you is correct, press the Enter key. This will cause
+   allocPSA to accept the material you've provided, and add it as a hint
+   in the corresponding task. 
+
+NOTE: This tool is useful in hinting at (and perhaps capturing) 'time
+effort' which is performed by staff, if the staff aren't transacting any
+activities through allocPSA for that task. If, however, the staff are
+taking actions on the task which allocPSA is capturing, then you can use
+another tool to capture any missing time-sheet entries, the Effort
+Exception Report. To learn how to enable this feature, please refer to
+`How do I Prepare an Un-billed Effort Exception Report?`_ .
+
+How do I Find My Currently Active Timesheets?
+---------------------------------------------
+
+#. Log in to allocPSA
+
+#. Click into the Home page.
+
+#. Look in the Current Time Sheets information block. Any time-sheets
+   which you can edit are marked as Add Time in Status. Any other
+   time-sheets are either with a Manager or with Admin.
+
+#. To open a time-sheet, click on its corresponding Project link.
+
+
+
+How do I Make My Time-sheet Editable Again?
+-------------------------------------------
+
+NOTE: Once a time-sheet has been submitted by a user, then that user can
+no longer edit it. To make it editable again, the user needs to ask the
+the appropriate person (time-sheet or project manager, Admin) to send
+the time-sheet back.
+
+#. Log in to allocPSA
+
+#. Click into the Home page.
+
+#. Look in the Current Time Sheets information block. Any time-sheets 
+   which you can edit are marked as Add Time in Status. Any other 
+   time-sheets are either with a Manager or with Admin.
+
+#. To open a time-sheet, click on its corresponding Project link. 
+   
+#. Once opened, you can use the Comments section of the time-sheet to
+   send the appropriate people (time-sheet or project manager, Admin) a
+   message, asking for the time-sheet to be sent back. This will then
+   re-open the time-sheet for editing by the user. 
+
+NOTE: Some time-sheets have both a Manager who approves the time-sheet,
+and Admin, who processes it as part of the workflow. If a time-sheet is
+vested with the Admin user(s), then they first need to send the
+time-sheet back to the authorising manager, who then sends the
+time-sheet back to the user/staff-member. To learn how to send
+time-sheets back along the workflow chain, please refer to `How do I
+Reject a Time Sheet?`_ .
 
 How do I Authorise a Time Sheet?
 --------------------------------
@@ -874,16 +971,44 @@ should be the default.
 How do I Reject a Time Sheet?
 -----------------------------
 
-1. Log in to allocPSA
+NOTE: If you've received a message that a specific time-sheet needs to
+be rejected (or perhaps even sent back to the previous person on the
+time-sheet workflow chain), you can simply find that time-sheet using
+allocPSA's standard Search tool. For more information on how to jump to
+a time-sheet quickly, please refer to `How do I Quickly Jump to a Time
+Sheet if I have the Time Sheet ID?`_ . Once you've found the time-sheet,
+you can continue with the appropriate steps in this routine, below.
 
-2. Click 'admin' or 'manager' on 'Time Sheets Pending Your Approval' table
-   which is located on the lower right side of the 'Home' page
+#. Log in to allocPSA
 
-3. If you perceive that there is a problem with the Time Sheet, then add a
-   comment in the note field specifying what the originator should do to fix
-   then re-submit the Time Sheet, then press the '<-Back' button on the
-   Time Sheet (not the web-browser's Back button). An email will be sent to the
-   previous person in the Time Sheet workflow.
+#. In the Time Sheets Pending Manager information block, you may see a
+   list of time-sheets which need your approval.
+
+   NOTE: If you are the Admin user, who processes time-sheets, this
+   broad process works also works for you, modulo using the time-sheets
+   indicated in the Time Sheets Pending Admin information block.
+
+#. To open each time-sheet in turn, click the Date link associated with
+   that time-sheet.
+
+#. If you perceive that there is a problem with the a time-sheet, then add a
+   New Comment specifying what the originator should do to fix
+   then re-submit the time-sheet, ensuring that you add the appropriate
+   user (and yourself) to that comment thread.
+
+#. Once the new comment has been entered, click the Save Comment button.
+
+#. To actually send the time-sheet back, then press the '<- Back' button on the
+   Time Sheet (not the web-browser's Back button). Note that this will
+   send the time-sheet back to the previous person in the time-sheet
+   worflow chain, which may be the time-sheet manager, if you're the
+   Admin user. If so, you should be able to click the '<- Back' button
+   again, to ensure that the time-sheet reaches the actual original user
+   who submitted the time-sheet.
+
+#. An email will be sent to the previous person in the Time Sheet
+   workflow, and they can then process the time-sheet accordingly.
+
 
 How do I Send a Copy of a Time Sheet to Others?
 -----------------------------------------------
@@ -983,6 +1108,57 @@ How do I Add Client Information?
     'Save Document' to upload and store it.
 
 
+How do I Find Map References for a Client Address?
+--------------------------------------------------
+
+#. Log in to allocPSA.
+
+#. Click into the Client tab and locate the client you want to add a map
+   reference for. Alternatively, use the Quick Search facility to locate
+   a specific client.
+
+#. In the Client page, click the 'View map' link, located in the main,
+   header portion of the page.
+
+How do I Archive Old Client Contacts?
+-------------------------------------
+
+#. Log in to allocPSA.
+
+#. Click into the Client tab and locate the client you're interested in.
+   Alternatively, use the Quick Search facility to locate a specific client.
+
+#. Within the Client page, locate the specific contact that you want to
+   archive from the Client Contacts section.
+
+#. Click the Edit buttn for that contact.
+
+#. Un-check the Enabled checkbox.
+
+#. Click the Save Client Contact button, to save your changes. 
+
+NOTE: This action will cause the specific contact details to be still
+available and visible, but it moves this information to the bottom of
+the Client page, and greys it out.
+
+
+How do I Check the Modification History for Tasks, Projects?
+------------------------------------------------------------
+
+#. Log in to allocPSA.
+
+#. Click into the Tasks or Projects tab and locate the record you're
+   interested in. Alternatively, use the Quick Search facility to locate
+   that task or project.
+
+#. Once that task or project page is opened, click into the History tab
+   of that page.
+
+#. This will display any information regarding changes to the 'header'
+   of this record, such as changes in key settings, when they were made,
+   and who made these changes.
+
+
 How do I Quickly Jump to a Task if I have the Task ID?
 ------------------------------------------------------
 
@@ -999,6 +1175,7 @@ How do I Quickly Jump to a Task if I have the Task ID?
    under the Quick Search facility; given a Project or Timesheet ID, you
    can quickly jump to those by selecting the appropriate entity from
    the droplist associated with Quick Search.
+
 
 How do I Quickly Jump to a Time Sheet if I have the Time Sheet ID?
 ------------------------------------------------------------------
@@ -1052,24 +1229,87 @@ How do I Add Task/Fault Comments?
    going through the alloc gateway and being logged to the relevant task or
    fault.
 
-How do I Create a Task Comment Conversation Thread?
----------------------------------------------------
+How do I Continue with a Task Comment Conversation Thread?
+----------------------------------------------------------
 
-1. Open your email client.
+NOTE: In order to continue with an existing task comment
+discussion/conversation thread, you will have needed to be on that
+thread in the first place.
 
-2. Find an email sent to you via allocPSA.
+#. Open your email client.
 
-3. You will notice that this has a particular structure in the Subject:
+#. You will notice that allocPSA emails have a particular structure in the Subject:
    line, perhaps something like:
 
    Task Comment: 16713 Investigate Anti-Virus options for Staff server [3. Normal] {Key:cijhkjuq}
 
-4. In order to continue with the discussion thread represented by this
-   email, you simply need to *reply* to this email. Note: group-reply is
-   *not-necessary* - allocPSA will already know who the Interested
-   Parties to the discussion thread are (based on the thread key
-   {Key:cijhkjuq}) and will ensure a copy of your reply reaches each of
-   them.
+#. Assuming you know the Task ID for the comment you want to respond to,
+   thus continuing the discussion thread, find an email which relates to
+   that task.
+
+#. Use your email client's standard Reply to reply to that task.
+   **NOTE:** you do not need to do a Reply-all or Group-reply, as
+   replying through the allocPSA email gateway will ensure that all the
+   people on that conversation thread will be automatically sent a copy of
+   your response. 
+
+#. If you want to reply to a specific conversation thread, as
+   represented by a Key, for example {Key:cijhkjuq} from above, use that
+   key as your search criterion in your email client, rather than just the
+   Task ID.
+
+How do I Establish a Default Interested Paries List for a Project's Tasks?
+--------------------------------------------------------------------------
+
+NOTE: allocPSA has a concept of Interested Parties; namely, people both
+within and external to your organisation who may be involved in work and
+responses on tasks. For each task you create, you can nominate who
+should be added to any conversation threads that originate on that task,
+by default. Obviously, this list can be hand-tweaked for not only each
+task, but also for each separate new discussion thread on that task. For
+more information on Interested Parties and discussion threads, please
+refer to `How do I Add Task/Fault Comments?`_ .
+
+#. Log in to allocPSA.
+
+#. If you're creating a new project and want to add a default Interested
+   Parties list for it, please refer to `How do I Create a New
+   Project?`_ first, then continue here. 
+
+#. If you already have an existing project, open it.
+
+#. Once you're on the project's main page, click the Edit Project
+   button. This will open the project's header for editing.
+
+#. The Default Interested Parties drop-list should show you the various
+   people, internal and external, associated with this project. If you
+   click the drop-list, it will reveal the list, from which you can
+   click-toggle the people you want as members of any tasks's default
+   Intersted Parties.
+
+#. Once you've established who should be on each new project task's
+   Interested Parties list, you can click the project header's Save button.
+
+How do I Establish Default Rates for People?
+--------------------------------------------
+
+NOTE: This function assume that your organisation sets default rates for
+some or all staff. 
+
+#. Log in to allocPSA.
+
+#. Click into the People tab.
+
+#. From the list present, open the page for the staff member you want to
+   set a default rate for.
+
+#. In the Default Rate field, enter the rate and then select the
+   duration (hourly, daily, weekly, etc) from the drop-list.   
+
+#. Click the Person Details header Save button.
+
+NOTE: When you next add this person to a project, their rate and
+duration will be entered automatically.
 
 
 How do I Bookmark Task List Filters for Future Use?
