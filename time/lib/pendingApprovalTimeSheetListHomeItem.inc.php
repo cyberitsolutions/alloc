@@ -105,31 +105,17 @@ function get_pending_timesheet_db() {
   if (in_array($current_user->get_id(), config::get_config_item("defaultTimeSheetManagerList"))) {
 
     // First get the blacklist of projects that we don't want to include below
-    $db = new db_alloc();
-    $query = prepare("SELECT projectID 
-                        FROM projectPerson 
-                       WHERE personID != %d 
-                         AND roleID = 3"
-                    ,$current_user->get_id());
-
-    $db->query($query);
-    $bad_projectIDs = array();
-    while ($row = $db->row()) {
-      $bad_projectIDs[$row["projectID"]] = $row["projectID"];
-    }
-
-    $bad_projectIDs and $bad_projectIDs_sql = prepare(" AND timeSheet.projectID not in (%s)",$bad_projectIDs);
-
     $query = prepare("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
                            , COALESCE(projectShortName, projectName) as projectName
                         FROM timeSheet
                              LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
                              LEFT JOIN project on project.projectID = timeSheet.projectID
                        WHERE timeSheet.status='manager'
-                      $bad_projectIDs_sql
+                         AND timeSheet.projectID NOT IN
+                               (SELECT projectID FROM projectPerson WHERE personID != %d AND roleID = 3)
                     GROUP BY timeSheet.timeSheetID 
-                    ORDER BY timeSheet.dateSubmittedToManager"
-                    );
+                    ORDER BY timeSheet.dateSubmittedToManager
+                     ",$current_user->get_id());
 
   // Get all the time sheets that are in status manager, where the currently logged in user is the manager
   } else {
