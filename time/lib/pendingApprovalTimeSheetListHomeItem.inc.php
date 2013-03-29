@@ -64,15 +64,11 @@ function show_time_sheets_list_for_classes($template_name,$doAdmin=false) {
     } else if ($timeSheet->get_value("status") == "admin") {
       $date = $timeSheet->get_value("dateSubmittedToAdmin");
     }
-    unset($TPL["class"]);
+    unset($TPL["warning"]);
 
-    // older than 10 days 
-    if ($date && strtotime($date) < (mktime()-864000)) {
-      $TPL["class"] = " class=\"really_overdue\"";
-
-    // older than 5 days
-    } else if ($date && strtotime($date) < (mktime()-432000)) {
-      $TPL["class"] = " class=\"overdue\"";
+    // older than $current_user->prefs["timeSheetDaysWarn"] days 
+    if ($date && imp($current_user->prefs["timeSheetDaysWarn"]) && (mktime()-format_date("U",$date))/60/60/24 > $current_user->prefs["timeSheetDaysWarn"]) {
+      $TPL["warning"] = page::help("This time sheet was submitted to you over ".$current_user->prefs["timeSheetDaysWarn"]." days ago.",page::warn());
     } 
     
     $TPL["date"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".$date."</a>";
