@@ -74,6 +74,10 @@ $(document).ready(function() {
           <h6>Street Address</h6>
           {$client_clientStreetAddress}
         {/}
+        {if $client_clientURL}
+        <h6>URL</h6>
+        <a href="{=$client_clientURL}">{=$client_clientURL}</a>
+        {/}
       </div>
     </td>
   </tr>
@@ -165,6 +169,8 @@ $(document).ready(function() {
             <td><input type="text" name="clientCountryTwo" value="{$client_clientCountryTwo}" size="25" tabindex="14"></td>
           </tr>
         </table>
+        <h6>URL</h6>
+        <input type="text" name="clientURL" value="{$client_clientURL}" style="width:100%;" tabindex="15">
       </div>
     </td>
   </tr>
