@@ -52,19 +52,11 @@ require_once("../alloc.php");
     $transaction = new transaction();
 
     if (isset($projectID) && $projectID) {
-      if (have_entity_perm("transaction", PERM_READ, $current_user, false)) {
-        $query = prepare("SELECT transaction.*
-                            FROM transaction
-                           WHERE transaction.projectID = %d
-                        ORDER BY transactionModifiedTime desc
-                         ", $projectID);
-      } else {
-        $query = prepare("SELECT transaction.* ")
-          .prepare("FROM transaction ")
-          .prepare("WHERE transaction.projectID = '%d' ", $projectID)
-          .prepare(" AND transaction.tfID = %d ", $current_user->get_id())
-          .prepare("ORDER BY transactionModifiedTime desc");
-      }
+      $query = prepare("SELECT transaction.*
+                          FROM transaction
+                          WHERE transaction.projectID = %d
+                      ORDER BY transactionModifiedTime desc
+                        ", $projectID);
       $db->query($query);
       while ($db->next_record()) {
         $transaction = new transaction();
