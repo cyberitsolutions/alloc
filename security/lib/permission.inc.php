@@ -37,11 +37,16 @@ class permission extends db_entity {
     $description = "";
 
     $entity_class = $this->get_value("tableName");
-    $entity = new $entity_class;
-    $permissions = $entity->permissions;
 
-    reset($permissions);
-    while (list($a, $d) = each($permissions)) {
+    if (meta::$tables[$entity_class]) {
+      $entity = new meta($entity_class);
+      $permissions = $entity->permissions;
+    } else {
+      $entity = new $entity_class();
+      $permissions = $entity->permissions;
+    }
+
+    foreach ((array)$permissions as $a=>$d) {
       if ((($actions & $a) == $a) && $d != "") {
         if ($description) {
           $description.= ",";
