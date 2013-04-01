@@ -165,8 +165,8 @@ class project extends db_entity {
     if (!$this->get_id())
       return true;
 
-    // Else check that user has isManager permission for this project
-    return is_object($person) && ($person->have_role("manage") || $this->has_project_permission($person, array("isManager")));
+    // Else check that user has isManager or timeSheetRecipient permission for this project
+    return is_object($person) && ($person->have_role("manage") || $this->has_project_permission($person, array("isManager","timeSheetRecipient")));
   }
 
   function has_project_permission($person = "", $permissions = array()) {
