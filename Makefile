@@ -48,6 +48,7 @@ doc_pdf:
 	find ./help/src/images/ -type f -exec mogrify -scale '450x>' {} \;
 	cd ./help/src && rst2latex --documentclass=report --graphicx-option=pdftex --stylesheet=help.tss help.txt help.tex
 	cd ./help/src && pdflatex help.tex help.pdf
+	cd ./help/src && pdflatex help.tex help.pdf; # needs two passes to generate table of contents
 	if [ -f "./help/src/help.pdf" ]; then mv ./help/src/help.pdf ./; fi;
 	$(MAKE) doc_clean
 
