@@ -53,7 +53,7 @@ doc_pdf:
 	$(MAKE) doc_clean
 
 doc_clean:
-	rm -rf ./help/src/help.aux ./help/src/help.log ./help/src/help.out ./help/src/help.tex ./help/src/images ./help/src/help.gif.txt
+	rm -rf ./help/src/help.aux ./help/src/help.log ./help/src/help.out ./help/src/help.tex ./help/src/images ./help/src/help.gif.txt ./help/src/help.toc ./help/src/missfont.log
 
 dist: test
 	if [ -d ./src ]; then rm -rf ./src; fi;
