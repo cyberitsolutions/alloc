@@ -2287,6 +2287,32 @@ How do I Export Project Tasks?
    editor.
 
 
+How do I Search for Task Contents?
+----------------------------------
+
+#. Log in to allocPSA.
+
+#. Enter the text that you are looking for in the Search text-box, near
+   the top-right of the main allocPSA screen. (This normally has a
+   greyed-out text string which says 'Enter search text or ID').
+
+#. If you are looking for contents which are likely to be in the
+   'header' part of the task, you can select Search Tasks from the
+   drop-list which is on the left of the Search text-box.
+
+#. If you are looking for contents which are likely to be in the
+   Comments section of the task, select Search Comments from the 
+   drop-list which is on the left of the Search text-box.
+
+#. Once you've supplied both the text to search for and specified where
+   to search, press the Enter key on your keyboard.
+
+#. The search results will be presented on-screen, for you to peruse.
+
+NOTE: allocPSA has a sophisticated search lexicon which you can use to
+hone your searches. For more information, read the `Search`_ of this
+document.
+
 Using allocPSA via the Command Line
 ===================================
 
