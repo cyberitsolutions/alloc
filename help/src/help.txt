@@ -2321,6 +2321,44 @@ NOTE: allocPSA has a sophisticated search lexicon which you can use to
 hone your searches. For more information, read the `Search`_ of this
 document.
 
+
+How do I Quickly Add Time Sheet Entries?
+----------------------------------------
+
+NOTE: In order to make use of this facility, you need to switch on the New Time Sheet Item
+option for your Home page. The New Time Sheet Item feature provides
+a text-entry box on the user's Home page. This will allow a user to
+quickly add time-sheet line items for either an existing time-sheet, or
+it will spawn a new time-sheet for in the project which corresponds
+with the task that the user will add time for. 
+
+NOTE: To learn how to enable this feature on your Home page, please
+refer to `How do I Customise my Home Page?`_ .
+
+#. Log in to allocPSA.
+
+#. Click into your Home page tab.
+
+#. In the New Time Sheet Item text-box, enter a value for the:
+
+   #. Duration - in the standard time increments for that user (eg,
+      hours).
+   #. TaskID - the ID of the task that you want to add this time-sheet
+      item for.
+   #. Comment - an optional note relating to the work being done for
+      this time-sheet item.
+
+
+   NOTE: As you're typing these details into the textbox, allocPSA will
+   being rendering them into a time-sheet hint entry, in the lower part
+   of the information block, showing you the details in a fuller-form.
+ 
+#. Once you're satisfied that the information you've entered and had
+   presented back to you is correct, press the Enter key. This will cause
+   allocPSA to accept the material you've provided, and add it as a
+   line-item for the corresponding time-sheet. 
+
+
 Using allocPSA via the Command Line
 ===================================
 
@@ -2529,6 +2567,35 @@ other words, they are in progress.
 Click the link of the Time Sheet status to enter into the current
 Time Sheet.
 
+
+Time Sheet Statistics
+~~~~~~~~~~~~~~~~~~~~~
+
+Provides each user with a quick overview of time-sheet metrics, offering
+data on how much work was captured in time-sheets for Today, Yesterday,
+the Last 2 weeks, and a rolling 2 week average.
+
+
+New Time Sheet Item
+~~~~~~~~~~~~~~~~~~~
+
+If you've switched on this option, allocPSA can provide you with a
+quick-and-easy mechanism for adding time-sheet data. For more on how to
+use this facility, see: `How do I Quickly Add Time Sheet Entries?`_ .
+
+
+New Time Sheet Item Hint
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you have manager privileges and if you've switched on this option,
+allocPSA can provide you with a quick-and-easy mechanism for noting when
+you believe specific staff are woring on specific tasks, which could
+then be used to ensure appropriate billing information is captured.  For
+more on how to use this facility, see: `How do I Ensure Staff Effort on
+Tasks is Captured as Time Sheets?`_ .
+
+
+
 Customize Interface
 ~~~~~~~~~~~~~~~~~~~
 
@@ -2560,10 +2627,22 @@ The list of items which can be configured on a per-user basis includes:
   - - Show Filters 
     - on pages which have filters, shows the 'filter' section of the form by default when you go to pages with a filter, e.g. the
       task list, etc.
+  - - New Time Sheet Item
+    - Enables the hiding/display of the quick-entry time-sheet tool.
+  - - Time Sheet Item Hint 
+    - Enables the hiding/display of the quick-entry time-sheet hinting
+      tool.
+  - - Time Sheet Statistics
+    - Enables the hiding/display of the stats display for past
+      time-sheeted work.
+  - - Current Time Sheets
+    - Enables the hiding/display of the stats display for past 
+      time-sheeted work.
 
-Settings can be changed by making a selection from the respective
-drop-lists. When satisfied, press the 'Save' button to confirm the changes.
 
+Settings can be changed in those sections of the Home page which are
+indeed configurable by following these instructions: `How do I Customise
+my Home Page?`_ .
 
 Clients
 -------
@@ -2875,6 +2954,19 @@ The header information which can be specified, is listed below:
        management. For example, if only half the Project has been completed,
        and 60%of the budget has been spent thus far, there are likely to be
        budget constraint or blow-out problems further down the track.
+   - - Default Task Limit
+     - The initial limit of time budget set for each task. 
+   - - Default Interested Parties
+     - The initial default group of people who should be on the
+       Interested Parties list of each new task.
+   - - Client Billed At
+     - The rate at which customers are billed.
+   - - Default timesheet rate
+     - The default rate that new resources on the project are allocated
+       per unit of work.
+   - - Default timesheet unit
+     - The default unit of time that new resources have their
+       time-sheeting set to (hour, day, etc.)
    - - Cost Centre TF
      - If this Project has an associated Project cost-centre, either
        specifically established for the purposes and life-cycle of this
