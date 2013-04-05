@@ -21,6 +21,7 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task has pending tasks.\n\
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Must use: call change_task_status(taskID,status)\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task cannot be pending itself.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task belongs to wrong project.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Absence must have a start and end date.\n\n")$$
 
 
 -- if (NOT something) doesn't work for NULLs
@@ -996,5 +997,26 @@ BEGIN
   call update_search_index("project",NEW.projectID);
 END
 $$
+
+DROP TRIGGER IF EXISTS before_insert_absence $$
+CREATE TRIGGER before_insert_absence BEFORE INSERT ON absence
+FOR EACH ROW
+BEGIN
+  IF empty(NEW.dateFrom) OR empty(NEW.dateTo) THEN
+    call alloc_error('Absence must have a start and end date.');
+  END IF;
+END
+$$
+
+DROP TRIGGER IF EXISTS before_update_absence $$
+CREATE TRIGGER before_update_absence BEFORE UPDATE ON absence
+FOR EACH ROW
+BEGIN
+  IF empty(NEW.dateFrom) OR empty(NEW.dateTo) THEN
+    call alloc_error('Absence must have a start and end date.');
+  END IF;
+END
+$$
+
 
 DELIMITER ;
