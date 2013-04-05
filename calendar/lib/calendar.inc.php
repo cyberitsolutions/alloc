@@ -153,20 +153,28 @@ class calendar {
   function get_cal_absences() {
     $query = prepare("SELECT * 
                         FROM absence
-                       WHERE personID = %d
-                         AND (dateFrom >= '%s' OR dateTo <= '%s')"
-                    ,$this->person->get_id(),$this->first_date,$this->last_date);
+                       WHERE (dateFrom >= '%s' OR dateTo <= '%s')"
+                    ,$this->first_date,$this->last_date);
     $this->db->query($query);
     $absences = array();
     while ($row = $this->db->row()) {
       $start_time = format_date("U",$row["dateFrom"]);
       $end_time = format_date("U",$row["dateTo"]);
-      while ($start_time <= $end_time) {
+      while ($start_time < $end_time) {
+    
+        if (date("Y-m-d",$start_time) == $prev_date) {
+          // Can't use timezone friendly date magic before 5.3.
+          // If the date didn't increment by a day, as is want to happen on DST days, then
+          // we manually roll it forward by one hour. Thus hopefully knocking it into the next day.
+          $start_time+=3600;
+        }
+
+        $row["dates"] = date("Y-m-d H:i:s",$start_time)." ---- ".date("Y-m-d H:i:s",$end_time);
         $absences[date("Y-m-d",$start_time)][] = $row;
+        $prev_date = date("Y-m-d",$start_time);
         $start_time += 86400;
       }
     }
-
     return $absences;
   }
 
@@ -266,7 +274,7 @@ class calendar {
         // Absences
         $absences[$date] or $absences[$date] = array();
         foreach ($absences[$date] as $a) {
-          $d->absences[] = '<a href="'.$TPL["url_alloc_absence"].'absenceID='.$a["absenceID"].'&returnToParent='.$this->rtp.'">'.page::htmlentities($a["absenceType"]).'</a>';
+          $d->absences[] = '<a href="'.$TPL["url_alloc_absence"].'absenceID='.$a["absenceID"].'&returnToParent='.$this->rtp.'">'.person::get_fullname($a["personID"]).': '.page::htmlentities($a["absenceType"]).'</a>';
         }
 
         $d->draw_day_html();
