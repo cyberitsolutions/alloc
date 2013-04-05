@@ -1,7 +1,6 @@
 {page::header()}
   {page::toolbar()}
     <form action="{$url_alloc_absence}" method=post>
-      {$myMessage}
       <input type="hidden" name="absenceID" value="{$absence_absenceID}">
       <input type="hidden" name="returnToParent" value="{$returnToParent}">
       <input type="hidden" name="personID" value="{$absence_personID}">
@@ -16,26 +15,28 @@
         <tr>
           <td>Date From</td>
           <td>
-            {page::calendar("absence_dateFrom",$absence_dateFrom)}
+            {page::calendar("dateFrom",$absence_dateFrom)}
+            {page::mandatory($absence_dateFrom)}
           </td>
 	      </tr>
         <tr>
           <td>Date To</td>
           <td>
-            {page::calendar("absence_dateTo",$absence_dateTo)}
+            {page::calendar("dateTo",$absence_dateTo)}
+            {page::mandatory($absence_dateTo)}
           </td>
         </tr>
         <tr>
           <td>Absence type</td>
           <td>
-            <select size = "1" name="absence_absenceType">
+            <select size = "1" name="absenceType">
               {$absenceType_options}
             </select>
           </td>
         </tr>
         <tr>
           <td>Emergency contact details<br> while on leave.</td>
-          <td>{page::textarea("absence_contactDetails",$absence_contactDetails)}</td>
+          <td>{page::textarea("contactDetails",$absence_contactDetails)}</td>
         </tr>
         <tr>
           <td colspan="2" align="center">
