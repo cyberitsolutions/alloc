@@ -155,6 +155,10 @@ class calendar {
                         FROM absence
                        WHERE (dateFrom >= '%s' OR dateTo <= '%s')"
                     ,$this->first_date,$this->last_date);
+
+    $current_user = &singleton("current_user");
+    $current_user->have_role("admin") || $current_user->have_role("manage") or $query.= prepare(" AND personID = %d",$current_user->get_id());
+
     $this->db->query($query);
     $absences = array();
     while ($row = $this->db->row()) {
