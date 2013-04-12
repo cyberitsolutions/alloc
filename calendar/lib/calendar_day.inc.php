@@ -57,7 +57,6 @@ class calendar_day {
     global $TPL;
     
     if ($this->absences) {
-      $this->class.= " absent";
       $rows[] = "<br>Absent:";
       $rows[] = implode("<br>",$this->absences);
     }

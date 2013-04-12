@@ -300,6 +300,7 @@
     <td>
       <table class="sortable list">
         <tr>
+          <th>ID</th>
           <th>Start Date</th>
           <th>End Date</th>
           <th>Absence Type</th>

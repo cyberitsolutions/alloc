@@ -3,10 +3,10 @@
 <script type="text/javascript" language="javascript">
 // Make the XML request thing, specify the callback function 
 function updateStuffWithAjax() {
-  id = $("#projectID").attr("value")
-  var selectedPerson = $("#taskPersonList select").attr("value");
-  var selectedManager = $("#taskManagerPersonList select").attr("value");
-  var selectedEstimator = $("#taskManagerPersonList select").attr("value");
+  id = $("#projectID").val();
+  var selectedPerson = $("#taskPersonList select").val();
+  var selectedManager = $("#taskManagerPersonList select").val();
+  var selectedEstimator = $("#taskManagerPersonList select").val();
   makeAjaxRequest('{$url_alloc_updateParentTasks}projectID='+id, 'parentTaskDropdown');
   makeAjaxRequest('{$url_alloc_updateInterestedParties}projectID='+id+'&taskID={$task_taskID}','interestedPartyDropdown','',1);
   makeAjaxRequest('{$url_alloc_updatePersonList}projectID='+id+'&taskID={$task_taskID}&selected='+selectedPerson,'taskPersonList');
