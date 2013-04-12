@@ -426,7 +426,7 @@ class task extends db_entity {
       $origval = $current_user->get_id();
     }
 
-    $peoplenames = person::get_username_list($owner);
+    $peoplenames = person::get_username_list($origval);
 
     if ($projectID) {
       if ($field == "managerID") {
