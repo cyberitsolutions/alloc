@@ -31,7 +31,7 @@ $(document).ready(function() {
 });
 </script>
 
-<a href="{$url_alloc_timeSheetGraph}personID={echo $current_user->get_id()}"><div id="chart1" style="height:150px; margin-bottom:5px;"></div></a>
+<a href="{$url_alloc_timeSheetGraph}personID={echo $current_user->get_id()}&applyFilter=true"><div id="chart1" style="height:150px; margin-bottom:5px;"></div></a>
 
 <table class='list'>
 <tr>
