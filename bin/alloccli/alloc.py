@@ -320,7 +320,7 @@ class alloc(object):
       if personID:
         ops["personID"] = personID
       ops["projectStatus"] = "Current"
-      ops["projectName"] = projectName
+      ops["projectNameMatches"] = projectName
       projects = self.get_list("project", ops)
       if len(projects) == 0:
         self.die("No project found matching: %s" % projectName)
