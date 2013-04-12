@@ -19,7 +19,7 @@ class edit(alloc):
   ops.append((''  , 'best=HOURS     ', 'shortest estimate of how many hours of effort this task will take'))
   ops.append((''  , 'likely=HOURS   ', 'most likely amount of hours of effort this task will take'))
   ops.append((''  , 'worst=HOURS    ', 'longest estimate of how many hours of effort this task will take'))
-  ops.append((''  , 'project=ID     ', 'task\'s project ID'))
+  ops.append((''  , 'project=ID|NAME', 'task\'s project ID, or a fuzzy match for a project name.'))
   ops.append((''  , 'type=TYPE      ', 'Task, Fault, Message, Milestone or Parent'))
   ops.append((''  , 'dupe=ID        ', 'task ID of the related dupe'))
   ops.append((''  , 'pend=IDS       ', 'task ID(s), comma separated, that block this task.'))
@@ -70,6 +70,7 @@ alloc edit -t 1234 --assignee null"""
 
     # Got this far, then authenticate
     self.authenticate()
+    personID = self.get_my_personID()
 
     args = {}
     if o['t']:
@@ -90,6 +91,10 @@ alloc edit -t 1234 --assignee null"""
   
     if o['date']:
       o['date'] = self.parse_date(o['date'])
+
+    # Get a projectID either passed via command line, or figured out from a project name
+    if o['project'] and not self.is_num(o['project']):
+      o['project'] = self.search_for_project(o['project'], personID)
 
     package = {}
     for key, val in o.items():
