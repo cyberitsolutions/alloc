@@ -60,8 +60,6 @@ class email_send {
   }
   function set_body($body=false,$body_without_attachments="") {
     $body or $body = $this->body;
-    $body = str_replace("\r\n","\n",$body);
-    $body_without_attachments = str_replace("\r\n","\n",$body_without_attachments);
     $this->body = $body;
     $this->body_without_attachments = $body_without_attachments;
   }
@@ -129,9 +127,7 @@ class email_send {
 
       $this->to_address or $this->to_address = null;
 
-      $this->headers = trim($this->headers)."\n".trim($this->default_headers);
-      $this->headers = str_replace("\r\n","\n",$this->headers);
-      $this->headers = str_replace("\n",PHP_EOL,$this->headers); // according to php.net/mail
+      $this->headers = trim($this->headers)."\r\n".trim($this->default_headers);
 
       # echo "<pre><br>HEADERS:\n".page::htmlentities($this->headers)."</pre>";
       # echo "<pre><br>TO:\n".page::htmlentities($this->to_address)."</pre>";
@@ -162,7 +158,7 @@ class email_send {
     if ($replace) {
       $this->del_header($header);
     }
-    $this->headers = trim($this->headers)."\n".$header.": ".$value;
+    $this->headers = trim($this->headers)."\r\n".$header.": ".$value;
   }
   function del_header($header) {
     $this->headers = preg_replace("/\r?\n".$header.":\s*.*/i","",$this->headers);
@@ -204,30 +200,31 @@ class email_send {
     // This function will generate a new mime boundary
     if (!$this->mime_boundary) {
       $rand = md5(time().microtime()); 
-      $this->mime_boundary = "==alloc_mime_boundary_".mktime()."_".$rand."==";
+      $this->mime_boundary = "alloc".mktime().$rand;
     }
     return $this->mime_boundary;
   }
   function get_top_mime_header() {
     if (!$this->done_top_mime_header) {
       $mime_boundary = $this->get_mime_boundary();
-      $header = "\r\n--".$mime_boundary;
-      $header.= "\nContent-Type: text/plain; charset=\"utf-8\"";
-      $header.= "\nContent-Disposition: inline";
-      $header.= "\n";
-      $header.= "\n";
+      $header = "--".$mime_boundary;
+      $header.= "\r\nContent-Type: text/plain; charset=utf-8; format=flowed";
+      $header.= "\r\nContent-Disposition: inline";
+      $header.= "\r\n";
+      $header.= "\r\n";
       $this->done_top_mime_header = true;
       return $header;
     }
   }
   function get_bottom_mime_header() {
-    return "\n\n--".$this->get_mime_boundary()."--";
+    return "\r\n--".$this->get_mime_boundary()."--";
   }
   function add_attachment($file,$name=false) {
     if (file_exists($file) && is_readable($file) && filesize($file)) {
       $mime_boundary = $this->get_mime_boundary();
       $this->add_header("MIME-Version","1.0");
       $this->add_header("Content-Type","multipart/mixed; boundary=\"".$mime_boundary."\"");
+      $this->add_header("Content-Disposition","inline");
   
       // Read the file to be attached ('rb' = read binary) 
       $fh = fopen($file,'rb'); 
@@ -241,11 +238,11 @@ class email_send {
       $name or $name = basename($file);
 
       $this->body = $this->get_top_mime_header().$this->body;
-      $this->body.= "\n\n--".$mime_boundary;
-      $this->body.= "\nContent-Type: ".$mimetype."; name=\"".$name."\"";
-      $this->body.= "\nContent-Disposition: attachment; filename=\"".$name."\"";
-      $this->body.= "\nContent-Transfer-Encoding: base64";
-      $this->body.= "\n\n".$data;
+      $this->body.= "\r\n\r\n--".$mime_boundary;
+      $this->body.= "\r\nContent-Type: ".$mimetype."; name=\"".$name."\"";
+      $this->body.= "\r\nContent-Disposition: attachment; filename=\"".$name."\"";
+      $this->body.= "\r\nContent-Transfer-Encoding: base64";
+      $this->body.= "\r\n\r\n".$data;
     }
   }
   function get_header_mime_boundary() {
