@@ -613,12 +613,13 @@ class comment extends db_entity {
         $subject = trim(preg_replace("/{Key:[^}]*}.*$/i","",$subject));
       } else {
         $email->set_body($body);
-        $email->set_content_type();
         if ($files) {
           // (if we're bouncing a complete email body the attachments are already included, else do this...)
           foreach ((array)$files as $file) {
             $email->add_attachment($file["tmp_name"],$file["name"]);
           }
+        } else {
+          $email->set_content_type();
         }
       }
 
@@ -1300,10 +1301,11 @@ class comment extends db_entity {
     $mail->open_mailbox(config::get_config_item("allocEmailFolder")."/".$mailbox,OP_HALFOPEN+OP_READONLY);
     $mail->check_mail();
     $msg_nums = $mail->get_all_email_msg_uids(); 
-    $debug and print "<br>".date("Y-m-d H:i:s")." Found ".count($msg_nums)." emails for mailbox: ".$mailbox;
+    $debug and print "<hr><br><b>find_email(): ".date("Y-m-d H:i:s")." found ".count($msg_nums)." emails for mailbox: ".$mailbox."</b>";
 
     // fetch and parse email
     foreach ($msg_nums as $num) {
+      $debug and print "<hr><br>Examining message number: ".$num;
       unset($mimebits);
       // this will stream output
       $mail->set_msg($num);
@@ -1312,15 +1314,27 @@ class comment extends db_entity {
 
       list($from1,$e1n) = parse_email_address($mail->mail_headers["from"]);
       list($from2,$e2n) = parse_email_address($this->get_value("commentCreatedUserText"));
+      if (!$from2 && $this->get_value("commentCreatedUser")) {
+        $p = new person();
+        $p->set_id($this->get_value("commentCreatedUser"));
+        $p->select();
+        $from2 = $p->get_value("emailAddress");
+      }
+      if (!$from2 && $this->get_value("commentCreatedUserClientContactID")) {
+        $p = new clientContact();
+        $p->set_id($this->get_value("commentCreatedUserClientContactID"));
+        $p->select();
+        $from2 = $p->get_value("clientContactEmail");
+      }
       $text1 = str_replace(array("\s","\n","\r"),"",trim($text));
       $text2 = str_replace(array("\s","\n","\r"),"",trim($this->get_value("comment")));
-      $date = substr($this->get_value("commentCreatedTime"),0,16);
-      $date1 = date("Y-m-d H:i",strtotime($mail->mail_headers["date"])-60);
-      $date2 = date("Y-m-d H:i",strtotime($mail->mail_headers["date"]));
-      $date3 = date("Y-m-d H:i",strtotime($mail->mail_headers["date"])+60);
+      $date = format_date("U", $this->get_value("commentCreatedTime"));
+      $date1 = strtotime($mail->mail_headers["date"])-300;
+      $date3 = strtotime($mail->mail_headers["date"])+300;
 
-      if ($text1 == $text2 && ($from1 == $from2 || !$from2) && in_array($date,array($date1,$date2,$date3))) {
-        $debug and print "<br>Found you! Msg no: ".$num." in mailbox: ".$mailbox." for commentID: ".$this->get_id();
+      similar_text($text1,$text2,$percent);
+      if ($percent >= 99 && ($from1 == $from2 || !$from2 || same_email_address($from1, config::get_config_item("AllocFromEmailAddress"))) && $date > $date1 && $date < $date3) {
+        $debug and print "<br><b style='color:green'>Found you! Msg no: ".$num." in mailbox: ".$mailbox." for commentID: ".$this->get_id()."</b>";
 
         foreach ((array)$mail->mail_parts as $v) {
           $s = $v["part_object"]; // structure
@@ -1340,9 +1354,15 @@ class comment extends db_entity {
         $mail->close();
         return array($mail,$text,$mimebits);
       } else {
-        #$debug and print "<br>1. ".sprintf("%d",$text1 == $text2);
-        #$debug and print "<br>2. ".sprintf("%s",$from1." =/= ". $from2);
-        #$debug and print "<br>3. ".sprintf("%d",in_array($date,array($date1,$date2,$date3)));
+        similar_text($text1,$text2,$percent);
+        $debug and print "<br>TEXT: ".sprintf("%d",$text1 == $text2)." (".sprintf("%d",$percent)."%)";
+        #$debug and print "<br>Text1:<br>".$text1."<br>* * *<br>";
+        #$debug and print "Text2:<br>".$text2."<br>+ + +</br>";
+        $debug and print "<br>FROM: ".sprintf("%d",($from1 == $from2 || !$from2 || same_email_address($from1, config::get_config_item("AllocFromEmailAddress"))));
+        $debug and print " From1: ".page::htmlentities($from1);
+        $debug and print " From2: ".page::htmlentities($from2);
+        $debug and print "<br>DATE: ".sprintf("%d",$date>$date1 && $date<$date3). " (".date("Y-m-d H:i:s",$date)." | ".date("Y-m-d H:i:s",$date1)." | ".date("Y-m-d H:i:s",$date3).")";
+        $debug and print "<br>";
       }
     }
     $mail->close();
