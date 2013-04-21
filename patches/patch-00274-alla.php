@@ -24,11 +24,16 @@ if (is_dir($dir)) {
     $comment = new comment();
     $comment->set_id($file);
     $comment->select();
+
+    echo "<br><br><hr>Examining comment ".$file;
+
     // Figure out what the mime parts are for the attachments and update comment.commentMimeParts
     list($email,$text,$mimebits) = $comment->find_email(true);
 
+
     if (!$email) {
-      echo "<br>Couldn't find email for commentID: ".$file;
+      echo "<br>Couldn't find email for commentID: ".$file."<br>";
+      rename($dir.$file, $dir."fail_".$file);
     }
 
     if ($mimebits) {
