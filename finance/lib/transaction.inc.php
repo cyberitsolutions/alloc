@@ -442,7 +442,7 @@ class transaction extends db_entity {
                        ,"amount_negative"
                        ,"running_balance");
     
-    foreach ($rows as $row) {
+    foreach ((array)$rows as $row) {
       $csv_data = array();
       foreach($csvHeaders as $header) {  
         $csv_data[] = $row[$header];
