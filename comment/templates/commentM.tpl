@@ -35,7 +35,7 @@
             {if have_entity_perm("commentTemplate",PERM_CREATE)}
             <a title="Add new comment template" href="{$url_alloc_commentTemplate}" class="icon-cogs"></a>
             {/}
-            <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity={$entity}&entityID={$entityID}&commentTemplateID='+$(this).attr('value'),'comment_textarea')">{$commentTemplateOptions}</select>
+            <select name="commentTemplateID" onChange="makeAjaxRequest('{$url_alloc_updateCommentTemplate}entity={$entity}&entityID={$entityID}&commentTemplateID='+$(this).val(),'comment_textarea')">{$commentTemplateOptions}</select>
           </td>
 
           <td colspan="2" valign="top" style="padding-left:10px;" id="interested_parties_selector">
