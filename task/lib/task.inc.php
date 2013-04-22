@@ -577,7 +577,7 @@ class task extends db_entity {
 
   function get_task_image() {
     global $TPL;
-    return "<img class=\"taskType\" alt=\"".$this->get_value("taskTypeID")."\" title=\"".$this->get_value("taskTypeID")."\" src=\"".$TPL["url_alloc_images"]."taskType_".$this->get_value("taskTypeID").".gif\">";
+    return "<img class=\"taskType\" alt=\"".$this->get_value("taskTypeID")."\" title=\"".$this->get_value("taskTypeID")."\" src=\"".$TPL["url_alloc_images"]."taskType_".strtolower($this->get_value("taskTypeID")).".gif\">";
   }
 
   function get_name($_FORM=array()) {
