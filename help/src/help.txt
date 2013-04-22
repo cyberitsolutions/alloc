@@ -1766,40 +1766,33 @@ needs to:
 
 6. Once you've made the changes you need to make, click the Save button
    that relates to this Preferences section. If you've made changes you
-   dont want to keep, click the Canceli Edit button.
-<<<<<<< HEAD
-=======
-5. Once you've made the changes you need to make, click the Save button
-   that relates to this Preferences section. If you've made changes you
-   dont want to keep, click the Cancel button.
->>>>>>> 4318f7e... v187 14480 Update alloc documentation (ongoing)
-=======
->>>>>>> ffdf629... v187 14480 Update alloc documentation (ongoing)
+   dont want to keep, click the Cancel Edit button.
 
 
 How do I Sort Tables of Data?
 -----------------------------
 
-1. Log in to allocPSA.
+#. Log in to allocPSA.
 
-2. Bring up and of the mainstream data entity tables, such as the list
+#. Bring up and of the mainstream data entity tables, such as the list
    of tasks in the Home page, the list of clients in the Clients tab
    page, the list of projects in the Projects tab page, Time, Invoices
    etc.
 
-3. You will notice that if you hover your mouse pointer over the table
+#. You will notice that if you hover your mouse pointer over the table
    column headings, for instance, the ID table column heading on the
    Tasks table, that a small up-down-arrow icon will appear. This is
    there to tell you that you can click this table column heading text,
    and allocPSA will sort the data in the table using this column as the
    sorting criterion.
 
-4. Click the same table column heading text again, and the sort order
+#. Click the same table column heading text again, and the sort order
    will be reversed.
 
-5. Click on another table column heading text, for instance, TASK on the
+#. Click on another table column heading text, for instance, TASK on the
    Tasks table, and allocPSA will sort the data in the table using this
    column as the sorting criterion.
+
 
 How do I Bookmark Clients, Tasks, Projects, etc?
 ------------------------------------------------
