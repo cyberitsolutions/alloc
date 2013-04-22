@@ -394,7 +394,7 @@ class task extends db_entity {
           $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
           $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "assignee";
           $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("personID");
-          !$this->get_id() and $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
+          $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
         }
       }
       if ($this->get_value("managerID")) {
@@ -405,7 +405,7 @@ class task extends db_entity {
           $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
           $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "manager";
           $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("managerID");
-          !$this->get_id() and $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
+          $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
         }
       }
       $this_id = $this->get_id();
