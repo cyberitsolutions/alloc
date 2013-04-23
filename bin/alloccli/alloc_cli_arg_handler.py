@@ -126,9 +126,9 @@ class alloc_cli_arg_handler:
     # If --csv tell the alloc object about it
     if 'csv' in rtn and rtn['csv']:
       alloc.csv = True
-      if rtn['csv'][0] == 'auto' and stdout.isatty():
+      if rtn['csv'] == 'auto' and stdout.isatty():
         alloc.csv = False
-      if rtn['csv'][0] == 'never':
+      if rtn['csv'] == 'never':
         alloc.csv = False
     elif not stdout.isatty():
       alloc.csv = True
