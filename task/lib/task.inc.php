@@ -499,14 +499,6 @@ class task extends db_entity {
     // Project dropdown
     $TPL["projectOptions"] = task::get_project_options($projectID);
     
-    $priority = $this->get_value("priority") or $priority = 3;
-    $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
-    foreach ($taskPriorities as $k => $v) {
-      $tp[$k] = $v["label"];
-    }
-    $TPL["priorityOptions"] = page::select_options($tp,$priority);
-    $priority and $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$taskPriorities[$priority]["colour"]."\">[".$this->get_priority_label()."]</div>";
-
     // We're building these two with the <select> tags because they will be
     // replaced by an AJAX created dropdown when the projectID changes.
     $TPL["parentTaskOptions"] = $this->get_parent_task_select();
@@ -530,6 +522,33 @@ class task extends db_entity {
     $TPL["task_taskStatusValue"] = $this->get_value("taskStatus");
     $TPL["task_taskStatusOptions"] = page::select_options($this->get_task_statii_array(true),$this->get_value("taskStatus"));
 
+    // Project label
+    if (has("project")) {
+      $p = new project();
+      $p->set_id($this->get_value("projectID"));
+      $p->select();
+      $TPL["projectName"] = $p->get_display_value();
+    }
+
+    $taskPriorities = config::get_config_item("taskPriorities") or $taskPriorities = array();
+    $projectPriorities = config::get_config_item("projectPriorities") or $projectPriorities = array();
+    $priority = $this->get_value("priority") or $priority = 3;
+    $TPL["priorityOptions"] = page::select_options(array_kv($taskPriorities,null,"label"),$priority);
+    $TPL["priorityLabel"] = " <div style=\"display:inline; color:".$taskPriorities[$priority]["colour"]."\">[";
+
+    if (is_object($p)) {
+      list($priorityFactor,$daysUntilDue) = $this->get_overall_priority($p->get_value("projectPriority"),$this->get_value("priority"),$this->get_value("dateTargetCompletion"));
+      $str = "Task priority: ".$taskPriorities[$this->get_value("priority")]["label"]."<br>";
+      $str.= "Project priority: ".$projectPriorities[$p->get_value("projectPriority")]["label"]."<br>";
+      $str.= "Days until due: ".$daysUntilDue."<br>";
+      $str.= "Calculated priority: ".$priorityFactor;
+      $TPL["priorityLabel"].= page::help($str,$this->get_priority_label());
+    } else {
+      $TPL["priorityLabel"].= $this->get_priority_label();
+    }
+    $TPL["priorityLabel"].= "]</div>";
+
+
     // If we're viewing the printer friendly view
     if ($_GET["media"] == "print") {
       // Parent Task label
@@ -549,16 +568,7 @@ class task extends db_entity {
       $p->set_id($this->get_value("personID"));
       $p->select();
       $TPL["person"] = $p->get_display_value();
-  
-      // Project label
-      if (has("project")) {
-        $p = new project();
-        $p->set_id($this->get_value("projectID"));
-        $p->select();
-        $TPL["projectName"] = $p->get_display_value();
-      }
     }
-
   }
 
   function get_task_comments_array() {
@@ -847,6 +857,21 @@ class task extends db_entity {
     return array($tasks,$done);
   }
 
+  function get_overall_priority($projectPriority=0,$taskPriority=0,$dateTargetCompletion) {
+    $spread = sprintf("%d",config::get_config_item("taskPrioritySpread"));
+    $scale = sprintf("%d",config::get_config_item("taskPriorityScale"));
+    $scale_halved = sprintf("%d",config::get_config_item("taskPriorityScale")/2);
+
+    if ($dateTargetCompletion) {
+      $daysUntilDue = (format_date("U",$dateTargetCompletion) - mktime()) / 60 / 60 / 24;
+      $mult = atan($daysUntilDue / $spread) / 3.14 * $scale + $scale_halved;
+    } else {
+      $mult = 8;
+    }
+    $daysUntilDue and $daysUntilDue = sprintf("%d",ceil($daysUntilDue));
+    return array(sprintf("%0.2f",($taskPriority * pow($projectPriority,2)) * $mult / 10), $daysUntilDue);
+  }
+
   function get_list($_FORM) {
     $current_user = &singleton("current_user");
 
@@ -874,7 +899,7 @@ class task extends db_entity {
 
     if ($_FORM["taskView"] == "prioritised") {
       unset($filter["parentTaskID"]);
-      $order_limit = " ORDER BY priorityFactor ".$limit;
+      $order_limit = " ".$limit;
     } else {
       $order_limit = " ORDER BY projectName,taskName ".$limit;
     }
@@ -898,13 +923,6 @@ class task extends db_entity {
                 ,rate
                 ,rateUnitID
                 ,GROUP_CONCAT(pendingTask.pendingTaskID) as pendingTaskIDs
-                ,priority * POWER(projectPriority, 2) * 
-                 IF(task.dateTargetCompletion IS NULL, 
-                   8,
-                   ATAN(
-                        (TO_DAYS(task.dateTargetCompletion) - TO_DAYS(NOW())) / ".$spread."
-                       ) / 3.14 * ".$scale." + ".$scale_halved."
-                   ) / 10 as priorityFactor
             FROM task
        LEFT JOIN project ON project.projectID = task.projectID
        LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '".$uid."'
@@ -926,6 +944,7 @@ class task extends db_entity {
       $row["project_name"] = $row["projectShortName"]  or  $row["project_name"] = $row["projectName"];
       $row["projectPriority"] = $db->f("projectPriority");
       has("project") and $row["projectPriorityLabel"] = project::get_priority_label($db->f("projectPriority"));
+      has("project") and list($row["priorityFactor"],$row["daysUntilDue"]) = $task->get_overall_priority($row["projectPriority"],$row["priority"],$row["dateTargetCompletion"]);
       $row["taskTypeImage"] = $task->get_task_image();
       $row["taskStatusLabel"] = $task->get_task_status("label");
       $row["taskStatusColour"] = $task->get_task_status("colour");
@@ -939,7 +958,6 @@ class task extends db_entity {
       $_FORM["showTimes"] and $row["timeActual"] = $task->get_time_billed()/60/60;
       $row["rate"] = page::money($row["currency"],$row["rate"],"%mo");
       $row["rateUnit"] = $_FORM["timeUnit_cache"][$row["rateUnitID"]]["timeUnitName"];
-      $row["priorityFactor"] = sprintf("%0.2f",$row["priorityFactor"]);
       $row["priorityLabel"] = $task->get_priority_label();
       if (!$_FORM["skipObject"]) {
         $_FORM["return"] == "array" and $row["object"] = $task;
@@ -960,6 +978,9 @@ class task extends db_entity {
         $rows[$task->get_id()] = array("parentTaskID"=>$row["parentTaskID"],"row"=>$row);
       } else if ($_FORM["taskView"] == "prioritised") {
         $rows[$row["taskID"]] = $row;
+        if (is_array($rows) && count($rows)) {
+          uasort($rows, array("task", "priority_compare"));
+        }
       }
     }
  
@@ -977,10 +998,14 @@ class task extends db_entity {
         }
       }
     } else if ($_FORM["taskView"] == "prioritised") {
-      $tasks = $rows;
+      $tasks = &$rows;
     }
 
     return (array)$tasks;
+  }
+
+  function priority_compare($a, $b) {
+    return $a["priorityFactor"] > $b["priorityFactor"];
   }
 
   function get_list_html($tasks=array(),$ops=array()) {
