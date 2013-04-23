@@ -179,13 +179,6 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // The timezone must be dealt with before anything else uses it or php will emit a warning
   $timezone = config::get_config_item("allocTimezone");
-
-  /*
-  if (empty($timezone)) {
-    $timezone = @date_default_timezone_get();
-  }
-  */
-
   date_default_timezone_set($timezone); 
 
   // Now the timezone is set, replace the missing stuff from the template
@@ -197,11 +190,6 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
   if (config::get_config_item("AllocFromEmailAddress")) {
     define("ALLOC_DEFAULT_FROM_ADDRESS", add_brackets(config::get_config_item("AllocFromEmailAddress")));
   }
-
-
-//  // The default To: email address -- this is no longer used anywhere. If you revive it, you'll need to add a new config option to get around the fact there may be multiple time sheet administrators
-//  $p = get_cached_table("person");
-//  define("ALLOC_DEFAULT_TO_ADDRESS", "allocPSA Administrator ".add_brackets($p[config::get_config_item("timeSheetAdminEmail")]["emailAddress"]));
 
   // The default email bounce address
   define("ALLOC_DEFAULT_RETURN_PATH_ADDRESS",config::get_config_item("allocEmailAdmin"));
@@ -228,13 +216,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // Setup all the urls
   require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."global_tpl_values.inc.php");
-  foreach ($alloc_urls as $k=>$v) {
-    if (is_object($sess)) {
-      $TPL[$k] = $sess->url(SCRIPT_PATH.$v);
-    } else {
-      $TPL[$k] = SCRIPT_PATH.$v;
-    }
-  }
+  $TPL = get_alloc_urls($TPL,$sess);
 
   // Add user's navigation to quick list dropdown
   if (is_object($current_user) && $current_user->get_id()) {
