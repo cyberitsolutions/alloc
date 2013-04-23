@@ -779,8 +779,10 @@ function array_kv($arr,$k,$v) {
         $rtn[$value[$k]].= $sep.$value[$i];
         $sep = " ";
       }
-    } else {
+    } else if ($k) {
       $rtn[$value[$k]] = $value[$v];
+    } else {
+      $rtn[$key] = $value[$v];
     }
   }
   return $rtn;
