@@ -23,6 +23,7 @@
 
 
 // This file basically provides static template values that are used throughout the application and is included by alloc.php
+function get_alloc_urls($TPL,$sess=false) {
 $alloc_urls = array(
              "url_alloc_logout"                         => "login/logout.php"
             ,"url_alloc_home"                           => "home/home.php"
@@ -158,5 +159,14 @@ $alloc_urls = array(
 
 );
 
+  foreach ($alloc_urls as $k=>$v) {
+    if (is_object($sess)) {
+      $TPL[$k] = $sess->url(SCRIPT_PATH.$v);
+    } else {
+      $TPL[$k] = SCRIPT_PATH.$v;
+    }
+  }
+  return $TPL;
+}
 
 ?>
