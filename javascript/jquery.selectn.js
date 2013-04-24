@@ -24,10 +24,10 @@ var selectn_unique_select_id_counter = 1;
         select.parent().append(label);
 
         // Three extra buttons for: all, none, and invert, and a search field
-        var op_all = $("<button/>",{"name":"all",   "type":"button","class":"selectn-button"}).text("all").get(0).outerHTML;
-        var op_non = $("<button/>",{"name":"none",  "type":"button","class":"selectn-button"}).text("none").get(0).outerHTML;
-        var op_inv = $("<button/>",{"name":"invert","type":"button","class":"selectn-button"}).text("toggle").get(0).outerHTML;
-        var op_sea = $("<input/>", {"name":"search","type":"text",  "class":"selectn-search"}).get(0).outerHTML;
+        var op_all = $("<button/>",{"name":"all",   "type":"button","class":"selectn-button"}).text("all").outerHTML();
+        var op_non = $("<button/>",{"name":"none",  "type":"button","class":"selectn-button"}).text("none").outerHTML();
+        var op_inv = $("<button/>",{"name":"invert","type":"button","class":"selectn-button"}).text("toggle").outerHTML();
+        var op_sea = $("<input/>", {"name":"search","type":"text",  "class":"selectn-search"}).outerHTML();
 
         // Gather up all the options from the <select> dropdown
         var dropdown_ops = [];
@@ -35,7 +35,7 @@ var selectn_unique_select_id_counter = 1;
         select.find("option").each(function(i, option){ 
           var cb_ops = {"type":"checkbox", "value":$(option).val(), "class":"selectn-cb", "checked":$(option).attr("selected")};
           dropdown_ops[dropdown_ops.length] = "<label class='"+($(option).attr("selected")?"selectn-cb-selected":"")+"'>"+
-                                              $("<input/>",cb_ops).get(0).outerHTML+" <span>"+$(option).html().trim()+"</span></label>";
+                                              $("<input/>",cb_ops).outerHTML()+" <span>"+$(option).html().trim()+"</span></label>";
         });
       
         // Create a dropdown box, that has selectable checkboxes in it
@@ -190,4 +190,10 @@ $("html").on('keydown', function(e) {
     $(document).selectn("close_all");
   }
 });
+
+jQuery.fn.outerHTML = function(s) {
+  return s
+    ? this.before(s).remove()
+    : jQuery("<p>").append(this.eq(0).clone()).html();
+};
 
