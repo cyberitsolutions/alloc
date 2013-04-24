@@ -17,10 +17,19 @@ _alloc()
       return 0
       ;;
     --status)
-      COMPREPLY=( $( compgen -W 'inprogress notstarted info client \
-        manager invalid duplicate incomplete complete open pending \
-        closed' -- $cur) )
-      return 0
+      case "${COMP_WORDS[1]}" in
+        tasks)
+          COMPREPLY=( $( compgen -W 'inprogress notstarted info client \
+            manager invalid duplicate incomplete complete open pending \
+            closed' -- $cur) )
+          return 0
+          ;;
+        timesheets)
+          COMPREPLY=( $( compgen -W 'edit manager admin invoiced \
+            finished rejected all' -- $cur) )
+          return 0
+          ;;
+      esac
       ;;
     --type)
       COMPREPLY=( $( compgen -W 'Task Fault Message Milestone Parent' \
