@@ -79,10 +79,8 @@ alloc timesheets --date ">=2010-10-10" --items'''
     if self.is_num(o['tsid']):
       timeSheetID = o['tsid']
 
-    if ',' in o['status']:
-      status = o['status'].split(',')
-    elif o['status'] == 'all':
-      status = 'edit,manager,admin,invoiced,finished,rejected'.split(',')
+    if 'all' in o['status']:
+      status = ['edit','manager','admin','invoiced','finished','rejected']
     elif o['status']:
       status = o['status']
 
