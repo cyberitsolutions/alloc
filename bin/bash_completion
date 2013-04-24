@@ -3,19 +3,39 @@
 #
 _alloc()
 {
-  local cur
+  local cur prev
   cur=${COMP_WORDS[COMP_CWORD]}
+  prev=${COMP_WORDS[COMP_CWORD-1]}
 
   COMPREPLY=()
 
   if (($COMP_CWORD == 1)); then
     COMPREPLY=( $( alloc --help 2>1 | grep -E "^ " | cut -d " " -f 3 | grep "^$cur" ) )
     return 0
+  elif (($COMP_CWORD == 2)); then
+    local IFS=$'\n'
+    COMPREPLY=( $( alloc ${COMP_WORDS[1]} --list-option | grep "^${cur//./\\.}") )
+    return 0
   fi
 
-  local IFS=$'\n'
-  COMPREPLY=( $( alloc ${COMP_WORDS[1]} --list-option | grep "^${cur//./\\.}") )
+  case "$prev" in
+    --priority)
+      COMPREPLY=( $( compgen -W 'Wishlist Minor Normal Important \
+      Critical' -- $cur) )
+      return 0
+      ;;
+    --status)
+      COMPREPLY=( $( compgen -W 'inprogress notstarted info client \
+        manager invalid duplicate incomplete complete open pending \
+        closed' -- $cur) )
+      return 0
+      ;;
+    --type)
+      COMPREPLY=( $( compgen -W 'Task Fault Message Milestone Parent' \
+        -- $cur) )
+      return 0
+      ;;
+  esac
 
-  return 0
 }
 complete -F _alloc -o default alloc
