@@ -1,3 +1,4 @@
+# vim: filetype=sh
 # alloc command line completion
 # needs to have `alloc` in PATH
 #
