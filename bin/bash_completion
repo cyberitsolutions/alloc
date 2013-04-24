@@ -10,7 +10,7 @@ _alloc()
   COMPREPLY=()
 
   if (($COMP_CWORD == 1)); then
-    COMPREPLY=( $( alloc --help 2>1 | grep -E "^ " | cut -d " " -f 3 | grep "^$cur" ) )
+    COMPREPLY=( $( alloc --help 2>&1 | grep -E "^ " | cut -d " " -f 3 | grep "^$cur" ) )
     return 0
   elif (($COMP_CWORD == 2)); then
     local IFS=$'\n'
