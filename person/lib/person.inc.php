@@ -332,8 +332,10 @@ class person extends db_entity {
     $stack1 = array();
     $people =& get_cached_table("person");
     foreach ($people as $personID => $row) {
-      similar_text(strtolower($row["name"]),strtolower($name),$percent1);
-      $stack1[$personID] = $percent1;
+      if ($row["personActive"]) {
+        similar_text(strtolower($row["name"]),strtolower($name),$percent1);
+        $stack1[$personID] = $percent1;
+      }
     }
 
     asort($stack1);
@@ -350,7 +352,7 @@ class person extends db_entity {
     $email = str_replace(array("<",">"),"",$email);
     $people =& get_cached_table("person");
     foreach ($people as $personID => $row) {
-      if ($email == str_replace(array("<",">"),"",$row["emailAddress"])) {
+      if ($row["personActive"] && $email == str_replace(array("<",">"),"",$row["emailAddress"])) {
         return $personID;
       }
     }
