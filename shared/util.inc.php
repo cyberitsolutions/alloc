@@ -633,7 +633,7 @@ if (!function_exists('mime_content_type')) {
       $mt = $mime_types[$ext];
 
     // Or if we have the PECL FileInfo stuff available, use that to determine mimetype
-    } else if (function_exists('finfo_open')) {
+    } else if (file_exists($filename) && function_exists('finfo_open')) {
       $finfo = finfo_open(FILEINFO_MIME);
       $mimetype = finfo_file($finfo, $filename);
       finfo_close($finfo);
@@ -641,7 +641,7 @@ if (!function_exists('mime_content_type')) {
       $mt = current(explode(" ",$mimetype));
 
     // Or if the file is an image, get mime type the old-fashioned way
-    } else if ($size = @getimagesize($filename)) {
+    } else if (file_exists($filename) && $size = @getimagesize($filename)) {
       $mt = $size['mime'];
 
     // Or if no suffix at all, return text/plain
