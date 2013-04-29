@@ -52,7 +52,7 @@ $needle     = trim($_POST["needle"]) or $needle     = trim($_GET["needle"]);
 $db = new db_alloc();
 
 // Project Search
-if ($search && $needle && $category == "Projects") {
+if ($search && $needle && $category == "search_projects") {
 
   $TPL["search_title"] = "Project Search";
 
@@ -86,7 +86,7 @@ if ($search && $needle && $category == "Projects") {
   }
 
 // Clients Search
-} else if ($search && $needle && $category == "Clients") {
+} else if ($search && $needle && $category == "search_clients") {
 
   $TPL["search_title"] = "Client Search";
 
@@ -134,7 +134,7 @@ if ($search && $needle && $category == "Projects") {
   }
 
 // Tasks Search
-} else if ($search && $needle && $category == "Tasks") {
+} else if ($search && $needle && $category == "search_tasks") {
 
   $TPL["search_title"] = "Task Search";
 
@@ -169,7 +169,7 @@ if ($search && $needle && $category == "Projects") {
 
 
 // Item Search
-} else if ($search && $needle && $category == "Items") {
+} else if ($search && $needle && $category == "search_items") {
 
   $TPL["search_title"] = "Item Search";
   $today = date("Y")."-".date("m")."-".date("d");
@@ -244,7 +244,7 @@ if ($search && $needle && $category == "Projects") {
  
 
 // Time Sheet Search
-} else if ($search && $needle && $category == "Time") {
+} else if ($search && $needle && $category == "search_time") {
 
   $TPL["search_title"] = "Time Sheet Search";
 
@@ -284,7 +284,7 @@ if ($search && $needle && $category == "Projects") {
   }
 
 // Comment Search
-} else if ($search && $needle && $category == "Comment") {
+} else if ($search && $needle && $category == "search_comment") {
 
   $TPL["search_title"] = "Comment Search";
 
@@ -318,7 +318,7 @@ if ($search && $needle && $category == "Projects") {
   }
 
 // Wiki Search
-} else if ($search && $needle && $category == "Wiki") {
+} else if ($search && $needle && $category == "search_wiki") {
 
   $TPL["search_title"] = "Wiki Search";
 
