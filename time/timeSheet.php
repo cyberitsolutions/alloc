@@ -338,7 +338,7 @@ if (!$current_user->is_employee()) {
         $taskID = $timeSheetItem->get_value("taskID");
         $TPL["tsi_buttons"] = '
          <button type="submit" name="timeSheetItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
-         <button type="submit" name="timeSheetItem_save" value="1" class="save_button">Save Item<i class="icon-ok-sign"></i></button>
+         <button type="submit" name="timeSheetItem_save" value="1" class="save_button default">Save Item<i class="icon-ok-sign"></i></button>
          ';
 
         $timeSheetItemDurationUnitID = $timeSheetItem->get_value("timeSheetItemDurationUnitID");
