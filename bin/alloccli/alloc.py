@@ -245,7 +245,7 @@ class alloc(object):
     """Create a default ~/.alloc/config file."""
     self.dbg("Creating and populating: "+f)
     default = "[main]"
-    default += "\nurl: http://"+self.client_name+"/services/json.php"
+    default += "\n#url: http://"+self.client_name+"/services/json.php"
     default += "\n#"+self.client_name+"_user: $ALLOC_USER"
     default += "\n#"+self.client_name+"_pass: $ALLOC_PASS"
     default += "\n#"+self.client_name+"_http_user: $ALLOC_HTTP_USER"
