@@ -126,8 +126,9 @@ class email_send {
       }
 
       $this->to_address or $this->to_address = null;
-
-      $this->headers = trim($this->headers)."\r\n".trim($this->default_headers);
+      $this->headers = trim($this->headers)."\n".trim($this->default_headers);
+      $this->headers = str_replace("\r\n","\n",$this->headers);
+      $this->headers = str_replace("\n",PHP_EOL,$this->headers); // according to php.net/mail
 
       # echo "<pre><br>HEADERS:\n".page::htmlentities($this->headers)."</pre>";
       # echo "<pre><br>TO:\n".page::htmlentities($this->to_address)."</pre>";
@@ -158,7 +159,7 @@ class email_send {
     if ($replace) {
       $this->del_header($header);
     }
-    $this->headers = trim($this->headers)."\r\n".$header.": ".$value;
+    $this->headers = trim($this->headers)."\n".$header.": ".$value;
   }
   function del_header($header) {
     $this->headers = preg_replace("/\r?\n".$header.":\s*.*/i","",$this->headers);
@@ -208,16 +209,16 @@ class email_send {
     if (!$this->done_top_mime_header) {
       $mime_boundary = $this->get_mime_boundary();
       $header = "--".$mime_boundary;
-      $header.= "\r\nContent-Type: text/plain; charset=utf-8; format=flowed";
-      $header.= "\r\nContent-Disposition: inline";
-      $header.= "\r\n";
-      $header.= "\r\n";
+      $header.= "\nContent-Type: text/plain; charset=utf-8; format=flowed";
+      $header.= "\nContent-Disposition: inline";
+      $header.= "\n";
+      $header.= "\n";
       $this->done_top_mime_header = true;
       return $header;
     }
   }
   function get_bottom_mime_header() {
-    return "\r\n--".$this->get_mime_boundary()."--";
+    return "\n\n--".$this->get_mime_boundary()."--";
   }
   function add_attachment($file,$name=false) {
     if (file_exists($file) && is_readable($file) && filesize($file)) {
@@ -238,11 +239,11 @@ class email_send {
       $name or $name = basename($file);
 
       $this->body = $this->get_top_mime_header().$this->body;
-      $this->body.= "\r\n\r\n--".$mime_boundary;
-      $this->body.= "\r\nContent-Type: ".$mimetype."; name=\"".$name."\"";
-      $this->body.= "\r\nContent-Disposition: attachment; filename=\"".$name."\"";
-      $this->body.= "\r\nContent-Transfer-Encoding: base64";
-      $this->body.= "\r\n\r\n".$data;
+      $this->body.= "\n\n--".$mime_boundary;
+      $this->body.= "\nContent-Type: ".$mimetype."; name=\"".$name."\"";
+      $this->body.= "\nContent-Disposition: attachment; filename=\"".$name."\"";
+      $this->body.= "\nContent-Transfer-Encoding: base64";
+      $this->body.= "\n\n".$data;
     }
   }
   function get_header_mime_boundary() {
