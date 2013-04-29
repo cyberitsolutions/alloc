@@ -616,7 +616,7 @@ class comment extends db_entity {
         if ($files) {
           // (if we're bouncing a complete email body the attachments are already included, else do this...)
           foreach ((array)$files as $file) {
-            $email->add_attachment($file["tmp_name"],$file["name"]);
+            $email->add_attachment($file["fullpath"]);
           }
         } else {
           $email->set_content_type();
@@ -1223,25 +1223,24 @@ class comment extends db_entity {
 
     // Capture the output into $str
     $str = (string)ob_get_clean();
-
     $suffix = ".html";
     $ops["format"] != "html" and $suffix = ".pdf";
 
-    $timeSheetPrintOptions = config::get_config_item("timeSheetPrintOptions");
-    $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$commentID;
-    if (!is_dir($dir)) {
-      mkdir($dir, 0777);
-    }
-    $file = $dir.DIRECTORY_SEPARATOR."timeSheet_".$entityID.$suffix;
-    file_put_contents($file,$str);
+    $rtn["name"] = "timeSheet_".$entityID.$suffix;
+    $rtn["blob"] = $str;
+    $rtn["size"] = strlen($str);
+    return $rtn;
   }
 
   function attach_invoice($commentID,$entityID,$verbose) {
     $invoice = new invoice();
     $invoice->set_id($entityID);
     $invoice->select();
-    $file = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$commentID.DIRECTORY_SEPARATOR."invoice_".$entityID.".pdf";
-    $invoice->generate_invoice_file($verbose,$file);
+    $str = $invoice->generate_invoice_file($verbose,true);
+    $rtn["name"] = "invoice_".$entityID.".pdf";
+    $rtn["blob"] = $str;
+    $rtn["size"] = strlen($str);
+    return $rtn;
   }
 
   function attach_tasks($commentID, $entityID, $options) {
@@ -1281,12 +1280,10 @@ class comment extends db_entity {
       $suffix = ".html";
       $options != "html" && $options != "html_plus" and $suffix = ".pdf";
 
-      $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$commentID;
-      if (!is_dir($dir)) {
-        mkdir($dir, 0777);
-      }
-      $file = $dir.DIRECTORY_SEPARATOR."taskList_".$entityID.$suffix;
-      file_put_contents($file,$str);
+      $rtn["name"] = "taskList_".$entityID.$suffix;
+      $rtn["blob"] = $str;
+      $rtn["size"] = strlen($str);
+      return $rtn;
     }
   }
 
@@ -1304,7 +1301,7 @@ class comment extends db_entity {
     $debug and print "<hr><br><b>find_email(): ".date("Y-m-d H:i:s")." found ".count($msg_nums)." emails for mailbox: ".$mailbox."</b>";
 
     // fetch and parse email
-    foreach ($msg_nums as $num) {
+    foreach ((array)$msg_nums as $num) {
       $debug and print "<hr><br>Examining message number: ".$num;
       unset($mimebits);
       // this will stream output
@@ -1370,21 +1367,13 @@ class comment extends db_entity {
   }
 
   function update_mime_parts($commentID, $files) {
-    $x = 2;
+    $x = 2; // mime part 1 will be the message text
     foreach ((array)$files as $file) {
-      if (is_uploaded_file($file["tmp_name"])) {
-        $bits = array();
-        $bits["part"] = $x++;
-        $bits["name"] = $file["name"];
-        $bits["size"] = filesize($file["tmp_name"]);
-        $mimebits[] = $bits;
-      } else if ($file["blob"]) {
-        $bits = array();
-        $bits["part"] = $file["part"];
-        $bits["name"] = $file["name"];
-        $bits["size"] = $file["size"];
-        $mimebits[] = $bits;
-      }
+      $bits = array();
+      $bits["part"] = $file["part"] or $bits["part"] = $x++;
+      $bits["name"] = $file["name"];
+      $bits["size"] = $file["size"];
+      $mimebits[] = $bits;
     }
 
     if ($commentID && $mimebits) {
