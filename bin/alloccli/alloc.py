@@ -502,7 +502,7 @@ class alloc(object):
       self.err("The settings "+self.client_name.upper()+"_USER and "+self.client_name.upper()+"_PASS are required.")
       self.err("The settings "+self.client_name.upper()+"_HTTP_USER and "+self.client_name.upper()+"_HTTP_PASS are optional.")
       self.err("Set any of them either in the environment as shell variables,")
-      self.err("or in your ~/.netrc or your ~/."+self.client_name+"/config.")
+      self.die("or in your ~/.netrc or your ~/."+self.client_name+"/config.")
     return u, p, hu, hp
 
   def get_list(self, entity, options):
