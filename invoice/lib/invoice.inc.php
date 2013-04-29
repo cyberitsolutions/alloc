@@ -223,7 +223,7 @@ class invoice extends db_entity {
     return array($rows,$info);
   }
 
-  function generate_invoice_file($verbose=false, $savetofile=false) {
+  function generate_invoice_file($verbose=false, $getfile=false) {
     // Build PDF document
     $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
     $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
@@ -353,14 +353,8 @@ class invoice extends db_entity {
     #$pdf->closeObject();
     #$pdf->addObject($all,'all');
 
-    if ($savetofile) {
-      if (!is_dir(dirname($savetofile))) {
-        mkdir(dirname($savetofile));
-      }
-      $fh = fopen($savetofile,"w+");
-      fputs($fh, $pdf->ezOutput());
-      fclose($fh);
-
+    if ($getfile) {
+      return $pdf->ezOutput();
     } else {
       $pdf->ezStream();
     }
