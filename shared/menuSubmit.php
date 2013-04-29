@@ -27,7 +27,7 @@ if ($_REQUEST["search_action"]) {
   list($method,$thing) = explode("_",$_REQUEST["search_action"]);
 
   if ($method == "search") {
-    alloc_redirect($TPL["url_alloc_search"]."needle=".urlencode($_REQUEST["needle"])."&category=".ucwords($thing)."&search=true");
+    alloc_redirect($TPL["url_alloc_search"]."needle=".urlencode($_REQUEST["needle"])."&category=".$_REQUEST["search_action"]."&search=true");
 
   } else if ($method == "create") {
     alloc_redirect($sess->url($thing));
