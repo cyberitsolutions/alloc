@@ -248,8 +248,6 @@ class timeSheet extends db_entity {
     $taxPercent = config::get_config_item("taxPercent");
     $taxTfID = config::get_config_item("taxTfID");
     $taxPercentDivisor = ($taxPercent/100) + 1;
-    $companyPercent = config::get_config_item("companyPercent");
-
     $recipient_tfID = $this->get_value("recipient_tfID");
     $timeSheetRecipients = $project->get_timeSheetRecipients();
     
@@ -284,13 +282,6 @@ class timeSheet extends db_entity {
       $product = $taxName." ".$taxPercent."% for timesheet #".$this->get_id();
       $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "tax", $status);
 
-      // 2. We only do the companies cut, if the project has a dedicated fund, otherwise we just omit the companies cut
-      if ($project->get_value("cost_centre_tfID") && $project->get_value("cost_centre_tfID") != $company_tfID) {
-        $percent = $companyPercent - $agency_percentage;
-        $product = "Company ".$percent."% of ".$this->pay_info["currency"].$this->pay_info["total_customerBilledDollars_minus_gst"]." for timesheet #".$this->get_id();
-        $percent and $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_customerBilledDollars_minus_gst"]*($percent/100), $company_tfID, "timesheet",$status,$project->get_value("cost_centre_tfID"));
-      }
-
       // 3. Credit Employee TF
       $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
       $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
@@ -310,21 +301,29 @@ class timeSheet extends db_entity {
         } else if ($db->f("commissionPercent") == 0) { 
           $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_amount_so_far();
           $amount < 0 and $amount = 0;
-          config::for_cyber() and $amount = $amount/2; // If it's cyber do a 50/50 split with the commission tf and the company
-          $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
-          $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
-          config::for_cyber() and $rtn[$product] = $this->createTransaction($product, $amount, $company_tfID, "commission",$status); // 50/50
+
+          // If the 0% commission is for the company tf, dump it in the company tf
+          if ($db->f("tfID") == $company_tfID) {
+            $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
+            $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
+          } else {
+
+            // If it's cyber do a 50/50 split with the commission tf and the company
+            if (config::for_cyber()) {
+              $amount = $amount/2;
+              $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
+              $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
+              $rtn[$product] = $this->createTransaction($product, $amount, $company_tfID, "commission",$status); // 50/50
+            } else {
+              $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
+              $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
+            }
+
+          }
+
         }
 
       }
-
-      # anything left over goes to the company's tf eg Cyber Finance / Main TF
-      $leftovers = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_amount_so_far();
-      if ($leftovers && $cost_centre != $company_tfID) {
-        $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
-        $rtn[$product] = $this->createTransaction($product, $leftovers, $company_tfID, "timesheet", $status);
-      }
-
     }
 
     foreach($rtn as $error=>$v) {
