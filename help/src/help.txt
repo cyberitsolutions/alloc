@@ -4453,7 +4453,7 @@ Indexed keyword fields for Tasks
    - - name
      - The task's name.
    - - project
-     - Which project the task belongs to.
+     - The name or the nickname (i.e, short name) of the project the task belongs to.
    - - pid 
      - The ID of the project that the task belongs to.
    - - creator
