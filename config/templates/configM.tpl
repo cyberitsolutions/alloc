@@ -121,11 +121,6 @@
     <td><input type="text" size="70" value="{$taxPercent}" name="taxPercent"></td> 
     <td width="1%">{page::help("config_taxPercent")}</td>
   </tr>
-  <tr>
-    <td>Company Percent</td>
-    <td><input type="text" size="70" value="{$companyPercent}" name="companyPercent"></td> 
-    <td width="1%">{page::help("config_companyPercent")}</td>
-  </tr>
   <tr>  
     <td colspan="3" align="center">
       <input type="submit" name="save" value="Save">
