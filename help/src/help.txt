@@ -4436,7 +4436,13 @@ Examples
      - A search for all the tasks that are managed by jsmith and are targetted for completion in 2010 and have a status of open.
    - - "to be completed asap" name:todo
      - A search for "to be completed asap" across ALL the keyword fields, OR the task's name must contain the word todo.
-
+   - - project:"Building Project" and manager:mjones 
+     - Will search all the tasks which are in a project titled
+       "Building Project" and managed by 'mjones'
+   - - pid:167 and manager:mjones
+     - If you know the Project ID rather than the project name, you can
+       use that instead, so that any tasks managed by 'mjones' in
+       project 167 will be searched.
 
 Indexed keyword fields for Tasks
 
