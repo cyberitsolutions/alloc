@@ -1010,7 +1010,7 @@ body.obfus .obfuscate:hover {
   border-bottom:1px solid #fff;
   vertical-align:center;
 }
-.selectn-dropdown label:hover, .selectn-button:hover {
+.selectn-dropdown label:hover, .selectn-button:hover, .selectn-dropdown label.hover {
   background-color:#f4f4f4;
 }
 .selectn-button {

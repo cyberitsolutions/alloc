@@ -16,7 +16,7 @@ var selectn_unique_select_id_counter = 1;
         }
 
         // First make a label for the closed dropdown list
-        var label = $("<span/>",{"class":"selectn-label", "data-select-id":select.attr("id")});
+        var label = $("<span/>",{"class":"selectn-label", "data-select-id":select.attr("id"), "tabindex":"0"});
         label.width(select.width());
 
         // Put the selected options into the label span and add the label's icon
@@ -47,17 +47,49 @@ var selectn_unique_select_id_counter = 1;
         select.parent().append(dropdown);
 
         // Open the dropdown when the label is clicked
-        label.click(function(){
-          var p = $(this).position();
-          dropdown.css({"position":"absolute", "left": p.left+"px", "top":p.top+$(this).height()+1+"px" });
-          if (dropdown.is(":visible")) {
-            methods.close_all();
-          } else {
-            methods.close_all();
-            $(this).addClass("selectn-active");
-            dropdown.addClass("selectn-active");
-            dropdown.show();
-            $(".selectn-search",dropdown).focus();
+        label.click(function(e) {
+          methods.toggle_open(this, dropdown);
+        });
+        // Open the dropdown when the element has focus and enter is pressed
+        label.keypress(function(e) {
+          if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            methods.toggle_open(this, dropdown);
+          }
+        });
+        // Move the item focus up and down the options when the arrows are used
+        $(".selectn-cb",dropdown).keydown(function(e){
+          // Enter pressed, hide the dropdown
+          if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            methods.toggle_open(label, dropdown);
+          // Down arrow, move focus down an item
+          } else if (e.which == 40) {
+            e.preventDefault();
+            e.stopPropagation();
+            var next_label = $(this).parent().nextAll("label:visible").first();
+            if (next_label.length) {
+              $("label",dropdown).removeClass("hover");
+              next_label.addClass("hover");
+              $(".selectn-cb",next_label).focus();
+            }
+          // Up arrow, move focus up an item
+          } else if (e.which == 38) {
+            e.preventDefault();
+            e.stopPropagation();
+            var prev_label = $(this).parent().prevAll("label:visible").first();
+            if (prev_label.length) {
+              $("label",dropdown).removeClass("hover");
+              prev_label.addClass("hover");
+              $(".selectn-cb",prev_label).focus();
+
+            // If we can't go any further up focus the search box
+            } else {
+              $("label",dropdown).removeClass("hover");
+              $(".selectn-search",dropdown).focus();
+            }
           }
         });
 
@@ -81,7 +113,26 @@ var selectn_unique_select_id_counter = 1;
           }
         });
 
-        // Listen for text typed into the search input
+        // Listen BEFORE text typed into the search input
+        $(".selectn-search",dropdown).keydown(function(e){
+          // If enter is pressed on the search input, close the dropdown, this makes
+          // the dropdown function the same as regular dropdown, which toggle on enter
+          if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            methods.toggle_open(label, dropdown);
+            return false;
+
+          // Down arrow, move to first checkbox
+          } else if (e.which == 40) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).blur();
+            $(".selectn-cb:visible:first",dropdown).focus().parent().addClass("hover");
+          }
+        });
+ 
+        // Listen AFTER text typed into the search input
         $(".selectn-search",dropdown).keyup(function(e){
           var needle = $(this).val();
           if (needle.substring(0,1) == "!") { // negate the pattern if leading !
@@ -142,6 +193,20 @@ var selectn_unique_select_id_counter = 1;
       // Put the selected options into the label span and add the label's icon
       label.text(label_str);
       label.append($("<img/>",{"src":"../images/selectn.gif"}));
+    },
+
+    toggle_open : function(label, dropdown){
+      var p = $(label).position();
+      dropdown.css({"position":"absolute", "left": p.left+"px", "top":p.top+$(label).height()+1+"px" });
+      if (dropdown.is(":visible")) {
+        methods.close_all();
+      } else {
+        methods.close_all();
+        $(label).addClass("selectn-active");
+        dropdown.addClass("selectn-active");
+        dropdown.show();
+        $(".selectn-search",dropdown).focus();
+      }
     },
 
     // Close all dropdowns
