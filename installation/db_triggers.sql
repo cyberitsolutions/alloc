@@ -10,6 +10,7 @@ DELIMITER $$
 DELETE FROM error$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to change time sheet status.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete time sheet unless status is edit.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Not permitted to delete time sheet that has items.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet is not editable(2).\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet's rate is not editable.\n\n")$$
@@ -261,8 +262,15 @@ DROP TRIGGER IF EXISTS before_delete_timeSheet $$
 CREATE TRIGGER before_delete_timeSheet BEFORE DELETE ON timeSheet
 FOR EACH ROW
 BEGIN
+  DECLARE num_timeSheetItems INTEGER;
+
   IF (neq(OLD.status, 'edit')) THEN
     call alloc_error('Not permitted to delete time sheet unless status is edit.');
+  END IF;
+
+  SELECT count(timeSheetID) INTO num_timeSheetItems FROM timeSheetItem WHERE timeSheetID = OLD.timeSheetID;
+  IF (num_timeSheetItems > 0) THEN
+    call alloc_error('Not permitted to delete time sheet that has items.');
   END IF;
 END
 $$
