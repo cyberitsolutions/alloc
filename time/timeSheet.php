@@ -558,7 +558,9 @@ if ($_POST["save"]
   $timeSheet->read_globals();
   $timeSheet->select();
   $timeSheet->delete();
-  alloc_redirect($TPL["url_alloc_timeSheetList"]);
+  if (!$TPL["message"]) {
+    alloc_redirect($TPL["url_alloc_timeSheetList"]);
+  }
 
 
 } else if ($timeSheetID) {

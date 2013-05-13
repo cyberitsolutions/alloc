@@ -88,7 +88,7 @@ class db {
             Create that other record first and then try to create this item again. 
             <br><br>".$msg;
 
-    } else if (preg_match("/(ALLOC ERROR:(.*)\n\n)/m",$msg,$matches)) {
+    } else if (preg_match("/(ALLOC ERROR:(.*)' for key 'PRIMARY'\n)/m",$msg,$matches)) {
       $m = "Error: ".$matches[2];
 
     } else if ($msg || $errno) {
