@@ -33,8 +33,8 @@ var selectn_unique_select_id_counter = 1;
         var dropdown_ops = [];
         dropdown_ops[dropdown_ops.length] = "<div class='selectn-buttons'>"+op_all+" "+op_non+" "+op_inv+" "+op_sea+"</div>";
         select.find("option").each(function(i, option){ 
-          var cb_ops = {"type":"checkbox", "value":$(option).val(), "class":"selectn-cb", "checked":$(option).attr("selected")};
-          dropdown_ops[dropdown_ops.length] = "<label class='"+($(option).attr("selected")?"selectn-cb-selected":"")+"'>"+
+          var cb_ops = {"type":"checkbox", "value":$(option).val(), "class":"selectn-cb", "checked":$(option).prop("selected")};
+          dropdown_ops[dropdown_ops.length] = "<label class='"+($(option).prop("selected")?"selectn-cb-selected":"")+"'>"+
                                               $("<input/>",cb_ops).outerHTML()+" <span>"+$(option).html().trim()+"</span></label>";
         });
       
