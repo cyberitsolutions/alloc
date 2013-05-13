@@ -617,7 +617,7 @@ class productSale extends db_entity {
     $rtn["showAllProjects"] = $_FORM["showAllProjects"];
 
  
-    $options["clientStatus"] = array("Current","Potential");
+    $options["clientStatus"] = array("Current");
     $options["return"] = "dropdown_options";
     $ops = client::get_list($options);
     $ops = array_kv($ops,"clientID","clientName");
