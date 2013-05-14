@@ -91,185 +91,83 @@
   
 {if $current_user->get_id() == $person_personID}
 <!-- preferences -->
-<form action="{$url_alloc_home}" method="post">
+<form action="{$url_alloc_settings}" method="post">
+<input type="hidden" name="personID" value="{$person_personID}">
 <table class="box" style="width:40% !important; margin-left:10px; border:1px solid #ccc !important;" align="left">
   <tr>
     <th>Preferences</th>
   </tr>
   <tr>
     <td>
-
-      <div class="edit">
+      <div class="enclose">
         <h6>Font Size<div>Theme</div></h6>
         <div style="float:left; width:30%;">
-          <select name="font">{$fontOptions}</select>
+          <select name="font">{page::select_options(page::get_customizedFont_array(), $current_user->prefs["customizedFont"])}</select>
         </div>
         <div style="float:right; width:50%;">
-          <select name="theme">{$themeOptions}</select>
-        </div>
-      </div>
-      <div class="view">
-        <h6>Font Size<div>Theme</div></h6>
-        <div style="float:left; width:30%;">
-          {$fontLabel}&nbsp;
-        </div>
-        <div style="float:right; width:50%;">
-          {$themeLabel}&nbsp;
+          <select name="theme">{page::select_options(page::get_customizedTheme_array(), $current_user->prefs["customizedTheme2"])}</select>
         </div>
       </div>
 
-      <div class="edit">
-        <h6>Top Tasks<div>Status</div></h6> 
-        <div style="float:left; width:30%;">
-          <select name="topTasksNum">{$topTasksNumOptions}</select>
-          {page::help("<b>Top Tasks</b><br><br>Control the number of tasks displayed on the home page.")}
-        </div>
-        <div style="float:right; width:50%;" class="nobr">
-          <select multiple="true" name="topTasksStatus[]">{$topTasksStatusOptions}</select>
-          {page::help("<b>Status</b><br><br>Control the status of the tasks that are displayed on the home page.")}
-        </div>
-      </div>
-      <div class="view">
-        <h6>Top Tasks<div>Status</div></h6> 
-        <div style="float:left; width:30%;">
-          {$topTasksNumLabel}&nbsp;
-        </div>
-        <div style="float:right; width:50%;">
-          {$topTasksStatusLabel}&nbsp;
-        </div>
-      </div>
-
-      <div class="edit">
-        <h6>Calendar Weeks<div>Weeks Back</div></h6> 
-        <div style="float:left; width:30%;">
-          <select name="weeks">{$weeksOptions}</select>
-          {page::help("<b>Calendar Weeks</b><br><br>Control the number of weeks that the home page calendar displays.")}
-        </div>
-        <div style="float:right; width:50%;">
-          <select name="weeksBack">{$weeksBackOptions}</select>
-          {page::help("<b>Weeks Back</b><br><br>Control how many weeks in arrears are displayed on the home page calendar.")}
-        </div>
-      </div>
-      <div class="view">
-        <h6>Calendar Weeks<div>Weeks Back</div></h6> 
-        <div style="float:left; width:30%;">
-          {$weeksLabel}&nbsp;
-        </div>
-        <div style="float:right; width:50%;">
-          {$weeksBackLabel}&nbsp;
-        </div>
-      </div>
-
-      <div class="edit">
+      <div class="enclose">
         <h6>Daily Email<div>Self Mail</div></h6> 
         <div style="float:left; width:30%;">
-          <select name="dailyTaskEmail">{$dailyTaskEmailOptions}</select>
+          <select name="dailyTaskEmail">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["dailyTaskEmail"])}</select>
           {page::help("<b>Daily Email</b><br><br>Control whether or not you receive a daily task email.")}
         </div>
         <div style="float:right; width:50%;">
-          <select name="receiveOwnTaskComments">{$receiveOwnTaskCommentsOptions}</select>
+          <select name="receiveOwnTaskComments">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["receiveOwnTaskComments"])}</select>
           {page::help("<b>Self Mail</b><br><br>Control whether or not you receive a copy of your own comments in email discussion threads.")}
         </div>
       </div>
-      <div class="view">
-        <h6>Daily Email<div>Self Mail</div></h6> 
-        <div style="float:left; width:30%;">
-          {$dailyTaskEmailLabel}&nbsp;
-        </div>
-        <div style="float:right; width:50%;">
-          {$receiveOwnTaskCommentsLabel}&nbsp;
-        </div>
-      </div>
 
-      <div class="edit">
-        <h6>Project List<div>Show Filters</div></h6> 
+      <div class="enclose">
+        <h6>Homepage Projects<div>Show Filters</div></h6> 
         <div style="float:left; width:30%;">
-          <select name="projectListNum">{$projectListNumOptions}</select>
-          {page::help("<b>Project List</b><br><br>Control the number of projects displayed on your home page.")}
+          <select name="showProjectHome">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["showProjectHome"])}</select>
+          {page::help("<b>Homepage Projects</b><br><br>Display the project list box on the home page.")}
         </div>
         <div style="float:right; width:50%;">
-          <select name="showFilters">{$showFiltersOptions}</select>
+          <select name="showFilters">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["showFilters"])}</select>
           {page::help("<b>Show Filters</b><br><br>Control whether or not the filters are displayed by default on the various tabs in alloc.")}
         </div>
       </div>
-      <div class="view">
-        <h6>Project List<div>Show Filters</div></h6> 
+
+      <div class="enclose">
+        <h6>Homepage Tasks<div>Homepage Calendar</div></h6> 
         <div style="float:left; width:30%;">
-          {$projectListNumLabel}&nbsp;
+          <select name="showTaskListHome">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["showTaskListHome"])}</select>
+          {page::help("<b>Homepage Tasks</b><br><br>Display the task list box on the home page.")}
         </div>
         <div style="float:right; width:50%;">
-          {$showFiltersLabel}&nbsp;
+          <select name="showCalendarHome">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["showCalendarHome"])}</select>
+          {page::help("<b>Homepage Calendar</b><br><br>Display the calendar box on the home page.")}
         </div>
       </div>
 
-      <div class="edit">
-        <h6>Time Sheet Hours<div>Time Sheet Days</div></h6> 
+      <div class="enclose">
+        <h6>Homepage Time Sheet Stats<div>Homepage New Time Sheet Item</div></h6> 
         <div style="float:left; width:30%;">
-          <input type="text" size="5" name="timeSheetHoursWarn" value="{$timeSheetHoursWarn}">
-          {page::help("<b>Time Sheet Hours</b><br><br>Time sheets that go over this number of hours and are still in edit status will be flagged for you.")}
+          <select name="showTimeSheetStatsHome">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["showTimeSheetStatsHome"])}</select>
+          {page::help("<b>Homepage Time Sheet Stats</b><br><br>Display the time sheet stats box on the home page.")}
         </div>
         <div style="float:right; width:50%;">
-          <input type="text" size="5" name="timeSheetDaysWarn" value="{$timeSheetDaysWarn}">
-          {page::help("<b>Time Sheet Days</b><br><br>Time sheets that are older than this many days and are still in edit status will be flagged for you.")}
-        </div>
-      </div>
-      <div class="view">
-        <h6>Time Sheet Hours<div>Time Sheet Days</div></h6> 
-        <div style="float:left; width:30%;">
-          {$timeSheetHoursWarn}&nbsp;
-        </div>
-        <div style="float:right; width:50%;">
-          {$timeSheetDaysWarn}&nbsp;
+          <select name="showTimeSheetItemHome">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["showTimeSheetItemHome"])}</select>
+          {page::help("<b>Homepage Time Sheet Item</b><br><br>Display the add new time sheet item box on the home page.")}
         </div>
       </div>
 
-
-      <div class="edit">
-        <h6>Time Sheet Stats<div>New Time Sheet Item</div></h6> 
+      <div class="enclose">
+        <h6>Homepage Private Mode<div>Homepage New Time Sheet Item Hint</div></h6> 
         <div style="float:left; width:30%;">
-          <select name="showTimeSheetStats">{page::select_options(array(0=>"No",1=>"Yes"),$showTimeSheetStats)}</select>
-          {page::help("<b>Show Time Sheet Stats</b><br><br>Show the time sheet stats box on the homepage.")}
+          <select name="privateMode">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["privateMode"])}</select>
+          {page::help("<b>Homepage Private Mode</b><br><br>Prevent someone who is standing over your shoulder from seeing financial amounts on the homepage.")}
         </div>
         <div style="float:right; width:50%;">
-          <select name="showNewTimeSheetItem">{page::select_options(array(0=>"No",1=>"Yes"),$showNewTimeSheetItem)}</select>
-          {page::help("<b>Show New Time Sheet Item</b><br><br>Show the new time sheet item input on the homepage.")}
-        </div>
-      </div>
-      <div class="view">
-        <h6>Time Sheet Stats<div>New Time Sheet Item</div></h6> 
-        <div style="float:left; width:30%;">
-          {print $showTimeSheetStats ? "Yes" : "No"}&nbsp;
-        </div>
-        <div style="float:right; width:50%;">
-          {print $showNewTimeSheetItem ? "Yes" : "No"}&nbsp;
-        </div>
-      </div>
-
-
-
-      <div class="edit">
-        <h6>Private Mode<div>New Time Sheet Item Hint</div></h6> 
-        <div style="float:left; width:30%;">
-          <input type="hidden" name="form_on_person_page" value="1">
-          <select name="privateMode">{page::select_options(array(0=>"No",1=>"Yes"),$privateMode)}</select>
-          {page::help("<b>Private Mode</b><br><br>Prevent someone who is standing over your shoulder from seeing financial amounts on the homepage.")}
-        </div>
-        <div style="float:right; width:50%;">
-          <select name="showNewTsiHintItem">{page::select_options(array(0=>"No",1=>"Yes"),$showNewTsiHintItem)}</select>
-          {page::help("<b>Show New Time Sheet Item Hint</b><br><br>Show the new time sheet item hint input on the homepage.")}
+          <select name="showTimeSheetItemHintHome">{page::select_options(array(0=>"No",1=>"Yes"),$current_user->prefs["showTimeSheetItemHintHome"])}</select>
+          {page::help("<b>Homepage Time Sheet Item Hint</b><br><br>Display the add new time sheet item hint box on the home page.")}
           &nbsp;&nbsp;&nbsp;
-          <a href="" onClick="return toggle_view_edit(true);">Cancel edit</a>&nbsp;&nbsp;
           <button type="submit" name="customize_save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
-        </div>
-      </div>
-      <div class="view">
-        <h6>Private Mode<div>New Time Sheet Item Hint</div></h6> 
-        <div style="float:left; width:30%;">
-          {print $privateMode ? "Yes" : "No"}&nbsp;
-        </div>
-        <div style="float:right; width:50%;">
-          {print $showNewTsiHintItem ? "Yes" : "No"}&nbsp;&nbsp;&nbsp;
-          <button type="button" onClick="toggle_view_edit();">Edit<i class="icon-edit"></i></button>
         </div>
       </div>
 

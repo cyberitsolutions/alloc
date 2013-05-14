@@ -27,7 +27,7 @@ $defaults = array("showHeader"=>true
                  ,"showTaskID"=>true
                  ,"taskView" => "prioritised"
                  ,"showStatus" => "true"
-                 ,"url_form_action"=>$TPL["url_alloc_home"]
+                 ,"url_form_action"=>$TPL["url_alloc_settings"]
                  ,"form_name"=>"taskListHome_filter"
                  );
 

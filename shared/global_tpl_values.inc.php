@@ -36,6 +36,7 @@ $alloc_urls = array(
             ,"url_alloc_logo"                           => "shared/logo.php"
             ,"url_alloc_star"                           => "shared/star.php"
             ,"url_alloc_starList"                       => "shared/starList.php"
+            ,"url_alloc_settings"                       => "shared/settings.php"
             ,"url_alloc_inbox"                          => "email/inbox.php"
             ,"url_alloc_fetchBody"                      => "email/fetchBody.php"
             ,"url_alloc_updateTaskName"                 => "task/updateTaskName.php"

@@ -30,7 +30,16 @@ class task_calendar_home_item extends home_item {
 
   function visible() {
     $current_user = &singleton("current_user");
-    return (isset($current_user->prefs["tasksGraphPlotHome"]) && sprintf("%d",$current_user->prefs["tasksGraphPlotHome"]) > 0);
+  
+    if (!isset($current_user->prefs["showCalendarHome"])) {
+      $current_user->prefs["showCalendarHome"] = 1;
+      $current_user->prefs["tasksGraphPlotHome"] = 4;
+      $current_user->prefs["tasksGraphPlotHomeStart"] = 1;
+    }
+
+    if ($current_user->prefs["showCalendarHome"]) {
+      return true;
+    }
   }
 
   function render() {
