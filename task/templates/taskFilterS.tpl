@@ -77,7 +77,13 @@
   </tr>
   <tr>
     <td colspan="2">Task Date</td>
-    <td class="right" valign="bottom" rowspan="2">
+    <td class="right" valign="bottom" rowspan="2" style="vertical-align:bottom;">
+      <span>
+        <select name="limit">
+        {$limitOptions}
+        </select>
+      </span>
+
       {if $showCancel}
         <a href="#x" onClick="$(this).parents('.config_top_ten_tasks').fadeOut();">Cancel</a>
       {/}

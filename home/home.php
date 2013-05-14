@@ -56,32 +56,6 @@ foreach ($modules as $module_name => $module) {
 }
 $TPL["home_items"] = $home_items;
 
-
-if ($_POST["customize_save"]) {
-  isset($_POST["font"])  and $current_user->prefs["customizedFont"] = sprintf("%d",$_POST["font"]);
-  isset($_POST["theme"]) and $current_user->prefs["customizedTheme2"] = $_POST["theme"];
-
-  isset($_POST["weeks"])     and $current_user->prefs["tasksGraphPlotHome"] = $_POST["weeks"];
-  isset($_POST["weeksBack"]) and $current_user->prefs["tasksGraphPlotHomeStart"] = $_POST["weeksBack"];
-
-  isset($_POST["projectListNum"]) and $current_user->prefs["projectListNum"] = $_POST["projectListNum"];
-
-  isset($_POST["dailyTaskEmail"])         and $current_user->prefs["dailyTaskEmail"] = $_POST["dailyTaskEmail"];
-  isset($_POST["receiveOwnTaskComments"]) and $current_user->prefs["receiveOwnTaskComments"] = $_POST["receiveOwnTaskComments"];
-
-  isset($_POST["showFilters"]) and $current_user->prefs["showFilters"] = $_POST["showFilters"];
-  isset($_POST["privateMode"]) || $_POST["form_on_person_page"] and $current_user->prefs["privateMode"] = $_POST["privateMode"];
-  isset($_POST["showTimeSheetStats"]) and $current_user->prefs["showTimeSheetStats"] = sprintf("%d",$_POST["showTimeSheetStats"]);
-  isset($_POST["showNewTimeSheetItem"]) and $current_user->prefs["showNewTimeSheetItem"] = sprintf("%d",$_POST["showNewTimeSheetItem"]);
-  isset($_POST["showNewTsiHintItem"]) and $current_user->prefs["showNewTsiHintItem"] = sprintf("%d",$_POST["showNewTsiHintItem"]);
-
-  isset($_POST["timeSheetHoursWarn"]) and $current_user->prefs["timeSheetHoursWarn"] = $_POST["timeSheetHoursWarn"];
-  isset($_POST["timeSheetDaysWarn"])  and $current_user->prefs["timeSheetDaysWarn"] = $_POST["timeSheetDaysWarn"];
-  $current_user->store_prefs();
-  alloc_redirect($TPL["url_alloc_home"]);
-}
-
-
 if (isset($_POST["tsiHint_item"])) {
   $t = tsiHint::parse_tsiHint_string($_POST["tsiHint_item"]);
   if (is_numeric($t["duration"]) && $current_user->get_id()) {
@@ -93,11 +67,6 @@ if (isset($_POST["tsiHint_item"])) {
     alloc_error(print_r($t,1));
   }
 }
-
-
-
-
-customize_alloc_home_item::render();
 
 $TPL["main_alloc_title"]="Home Page - ".APPLICATION_NAME;
 if ($_GET["media"] == "print") {

@@ -1275,6 +1275,33 @@ class task extends db_entity {
       $rtn["dateTwo"] = $_FORM["dateTwo"];
     }
 
+    $task_num_ops = array("" => "All results"
+                         ,1     => "1 result"
+                         ,2     => "2 results"
+                         ,3     => "3 results"
+                         ,4     => "4 results"
+                         ,5     => "5 results"
+                         ,10    => "10 results"
+                         ,15    => "15 results"
+                         ,20    => "20 results"
+                         ,30    => "30 results"
+                         ,40    => "40 results"
+                         ,50    => "50 results"
+                         ,100   => "100 results"
+                         ,150   => "150 results"
+                         ,200   => "200 results"
+                         ,300   => "300 results"
+                         ,400   => "400 results"
+                         ,500   => "500 results"
+                         ,1000  => "1000 results"
+                         ,2000  => "2000 results"
+                         ,3000  => "3000 results"
+                         ,4000  => "4000 results"
+                         ,5000  => "5000 results"
+                         ,10000 => "10000 results"
+                         );
+    $rtn["limitOptions"] = page::select_options($task_num_ops, $_FORM["limit"]);
+
 
     // unset vars that aren't necessary
     foreach ((array)$_FORM as $k => $v) {
