@@ -29,7 +29,15 @@ class project_list_home_item extends home_item {
 
   function visible() {
     $current_user = &singleton("current_user");
-    return (sprintf("%d",$current_user->prefs["projectListNum"]) > 0 || $current_user->prefs["projectListNum"] == "all");
+
+    if (!isset($current_user->prefs["showProjectHome"])) {
+      $current_user->prefs["showProjectHome"] = 1;
+      $current_user->prefs["projectListNum"] = "10";
+    }
+
+    if ($current_user->prefs["showProjectHome"]) {
+      return true;
+    }
   }
 
   function render() {
@@ -41,9 +49,7 @@ class project_list_home_item extends home_item {
     $options["projectStatus"] = "Current";
     $options["personID"] = $current_user->get_id();
     $TPL["projectListRows"] = project::get_list($options);
-    if ($TPL["projectListRows"]) {
-      return true;
-    }
+    return true;
   }
 }
 

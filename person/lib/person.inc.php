@@ -272,13 +272,27 @@ class person extends db_entity {
 
   function load_prefs() {
     $this->prefs = unserialize($this->get_value("sessData"));
-    isset($this->prefs["topTasksNum"]) or $this->prefs["topTasksNum"] = 5;
-    $this->prefs["topTasksStatus"] or $this->prefs["topTasksStatus"] = "open";
-    isset($this->prefs["projectListNum"]) or $this->prefs["projectListNum"] = "10";
-    isset($this->prefs["tasksGraphPlotHome"]) or $this->prefs["tasksGraphPlotHome"] = "4";
-    isset($this->prefs["tasksGraphPlotHomeStart"]) or $this->prefs["tasksGraphPlotHomeStart"] = "1";
-    isset($this->prefs["receiveOwnTaskComments"]) or $this->prefs["receiveOwnTaskComments"] = "no";
-    isset($this->prefs["showFilters"]) or $this->prefs["showFilters"] = "no";
+    !isset($this->prefs["customizedFont"]) and $this->prefs["customizedFont"] = 0;
+  }
+
+  function update_prefs($p=array()) {
+    isset($p["font"])                      and $this->prefs["customizedFont"]            = sprintf("%d",$p["font"]);
+    isset($p["theme"])                     and $this->prefs["customizedTheme2"]          = $p["theme"];
+    isset($p["weeks"])                     and $this->prefs["tasksGraphPlotHome"]        = $p["weeks"];
+    isset($p["weeksBack"])                 and $this->prefs["tasksGraphPlotHomeStart"]   = $p["weeksBack"];
+    isset($p["projectListNum"])            and $this->prefs["projectListNum"]            = $p["projectListNum"];
+    isset($p["dailyTaskEmail"])            and $this->prefs["dailyTaskEmail"]            = $p["dailyTaskEmail"];
+    isset($p["receiveOwnTaskComments"])    and $this->prefs["receiveOwnTaskComments"]    = $p["receiveOwnTaskComments"];
+    isset($p["showFilters"])               and $this->prefs["showFilters"]               = $p["showFilters"];
+    isset($p["privateMode"])               and $this->prefs["privateMode"]               = $p["privateMode"];
+    isset($p["timeSheetHoursWarn"])        and $this->prefs["timeSheetHoursWarn"]        = $p["timeSheetHoursWarn"];
+    isset($p["timeSheetDaysWarn"])         and $this->prefs["timeSheetDaysWarn"]         = $p["timeSheetDaysWarn"];
+    isset($p["showTaskListHome"])          and $this->prefs["showTaskListHome"]          = $p["showTaskListHome"];
+    isset($p["showCalendarHome"])          and $this->prefs["showCalendarHome"]          = $p["showCalendarHome"];
+    isset($p["showProjectHome"])           and $this->prefs["showProjectHome"]           = $p["showProjectHome"];
+    isset($p["showTimeSheetStatsHome"])    and $this->prefs["showTimeSheetStatsHome"]    = $p["showTimeSheetStatsHome"];
+    isset($p["showTimeSheetItemHome"])     and $this->prefs["showTimeSheetItemHome"]     = $p["showTimeSheetItemHome"];
+    isset($p["showTimeSheetItemHintHome"]) and $this->prefs["showTimeSheetItemHintHome"] = $p["showTimeSheetItemHintHome"];
   }
 
   function store_prefs() {

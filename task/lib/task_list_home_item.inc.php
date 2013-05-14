@@ -29,7 +29,15 @@ class task_list_home_item extends home_item {
   }
 
   function visible() {
-    return true;
+    $current_user = &singleton("current_user");
+
+    if (!isset($current_user->prefs["showTaskListHome"])) {
+      $current_user->prefs["showTaskListHome"] = 1;
+    }
+
+    if ($current_user->prefs["showTaskListHome"]) {
+      return true;
+    }
   }
 
   function render() {
@@ -57,9 +65,7 @@ class task_list_home_item extends home_item {
     $TPL["taskListRows"] = task::get_list($_FORM);
     $TPL["_FORM"] = $_FORM;
 
-    if (count($TPL["taskListRows"])) {
-      return true;
-    }
+    return true;
   }
 }
 

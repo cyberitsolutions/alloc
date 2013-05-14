@@ -44,7 +44,7 @@ while ($db->next_record()) {
   $person->read_db_record($db);
   $person->set_id($db->f("personID"));
   $person->load_prefs();
-  if ($person->prefs["dailyTaskEmail"] != 'yes') {
+  if (!$person->prefs["dailyTaskEmail"]) {
     continue;
   }
 

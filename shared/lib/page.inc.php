@@ -29,7 +29,7 @@ class page {
     global $TPL;
     $current_user = &singleton("current_user");
 
-    if ($current_user->prefs["showFilters"] == "yes") {
+    if ($current_user->prefs["showFilters"]) {
       $TPL["onLoad"] []= "show_filter();";
     }
 

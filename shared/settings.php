@@ -20,29 +20,14 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class timeSheetHomeItem extends home_item {
+require_once("../alloc.php");
 
-  function __construct() {
-    parent::__construct("time_edit", "New Time Sheet Item", "time", "timeSheetH.tpl", "narrow", 24);
-  }
-
-  function visible() {
-    $current_user = &singleton("current_user");
-
-    if (!isset($current_user->prefs["showTimeSheetItemHome"])) {
-      $current_user->prefs["showTimeSheetItemHome"] = 1;
-    }
-
-    if ($current_user->prefs["showTimeSheetItemHome"]) {
-      return true;
-    }
-  }
-
-  function render() {
-    $current_user = &singleton("current_user");
-    global $TPL;
-    return true;
-  }
+if ($_POST["customize_save"]) {
+  $current_user = &singleton("current_user");
+  $current_user->load_prefs();
+  $current_user->update_prefs($_POST);
+  $current_user->store_prefs();
+  alloc_redirect($TPL["url_alloc_home"]);
 }
 
 ?>
