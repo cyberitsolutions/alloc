@@ -13,6 +13,7 @@
             </select>
             <input size="40" type="text" name="needle" id="menu_form_needle" value="{$needle}">
             <input type="hidden" name="sessID" value="{$sessID}">
+            <input type="submit" value="search" style="display:none"> <!-- for w3m -->
           </form>
         </td>
       </tr>
