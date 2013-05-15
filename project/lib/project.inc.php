@@ -372,10 +372,14 @@ class project extends db_entity {
   function get_dropdown_by_client($clientID=false,$onlymine=false) {
     if ($clientID) {
       $ops = "<select id=\"projectID\" name=\"projectID\"><option></option>";
-      $ops.= page::select_options(project::get_list_by_client($clientID,$onlymine),$this->get_id())."</select>";
+      $o = project::get_list_by_client($clientID,$onlymine);
+      is_object($this) && $this->get_id() and $o[$this->get_id()] = $this->get_value("projectName");
+      $ops.= page::select_options($o,$this->get_id())."</select>";
     } else {
       $ops = "<select id=\"projectID\" name=\"projectID\"><option></option>";
-      $ops.= page::select_options(project::get_list_by_client(null,$onlymine),$this->get_id())."</select>";
+      $o = project::get_list_by_client(null,$onlymine);
+      is_object($this) and $this->get_id() and $o[$this->get_id()] = $this->get_value("projectName");
+      $ops.= page::select_options($o,$this->get_id())."</select>";
       #$ops.= project::get_list_dropdown_options("curr",$this->get_id(),100)."</select>";
     }
     return $ops;
