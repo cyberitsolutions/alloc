@@ -445,7 +445,7 @@ class timeSheetPrint {
 
         $pdf->ezSetY($y -20);
         $pdf->ezText(str_replace(array("<br>","<br/>","<br />"),"\n",$TPL["footer"]),10);
-        $pdf->ezStream(array("Content-Disposition"=>"timeSheet_".$timeSheetID));
+        $pdf->ezStream(array("Content-Disposition"=>"timeSheet_".$timeSheetID.".pdf"));
 
       // Else HTML format
       } else {
