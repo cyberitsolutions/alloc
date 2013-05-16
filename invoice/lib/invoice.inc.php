@@ -356,7 +356,7 @@ class invoice extends db_entity {
     if ($getfile) {
       return $pdf->ezOutput();
     } else {
-      $pdf->ezStream();
+      $pdf->ezStream(array("Content-Disposition"=>"invoice_".$this->get_id().".pdf"));
     }
   }
 
