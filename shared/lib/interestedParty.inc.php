@@ -162,7 +162,7 @@ class interestedParty extends db_entity {
         }
 
         $info["selected"] and $sel = " checked";
-        $info["external"] and $c.= " warn";
+        !$info["internal"] && $info["external"] and $c.= " warn";
         $str.= "<span width=\"150px\" class=\"nobr ".$c."\" id=\"td_ect_".$counter."\" style=\"float:left; width:150px; margin-bottom:5px;\">";
         $str.= "<input id=\"ect_".$counter."\" type=\"checkbox\" name=\"commentEmailRecipients[]\" value=\"".$info["identifier"]."\"".$sel."> ";
         $str.= "<label for=\"ect_".$counter."\" title=\"" . $info["name"] . " &lt;" . $info["email"] . "&gt;\">".page::htmlentities($info["name"])."</label></span>";

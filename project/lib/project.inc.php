@@ -744,6 +744,7 @@ class project extends db_entity {
         $name or $name = $db->f("username");
         $interestedPartyOptions[$db->f("emailAddress")]["name"] = $name;
         $interestedPartyOptions[$db->f("emailAddress")]["personID"] = $db->f("personID");
+        $interestedPartyOptions[$db->f("emailAddress")]["internal"] = true; 
       }
     }
 
