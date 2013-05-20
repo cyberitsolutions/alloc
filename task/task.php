@@ -306,6 +306,7 @@ if (is_array($parentTaskIDs)) {
   }
 }
 
+// Link off to the source task, if this task is just a duplicate
 $dupeID = $task->get_value("duplicateTaskID");
 if ($dupeID) {
   $realtask = new task();
@@ -316,6 +317,18 @@ if ($dupeID) {
   $TPL["message_help_no_esc"][] = $mesg;
   $TPL["editing_disabled"] = true;
 }
+
+// Link off to the duplicate tasks, if this task is the source task
+$q = prepare("SELECT taskID FROM task WHERE duplicateTaskID = %d",$task->get_id());
+$db->query($q);
+while ($row = $db->row()) {
+  $realtask = new task();
+  $realtask->set_id($row["taskID"]);
+  $realtask->select();
+  $duds.= "<br>".$realtask->get_task_link(array("prefixTaskID"=>1,"return"=>"html"));
+} 
+$duds and $TPL["message_help_no_esc"][] = "The following tasks have been marked as a duplicate of this task: ".$duds;
+
 
 $rows = $task->get_pending_tasks();
 foreach ((array)$rows as $pendingTaskID) {
