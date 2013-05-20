@@ -222,9 +222,6 @@ class alloc(object):
     self.quiet = ''
     self.csv = False
 
-    self.username, self.password, self.http_username, self.http_password = self.get_credentials()
-    self.initialize_http_connection()
-
   def initialize_http_connection(self):
     """This is for a https connection with basic http auth,
        it is not the actual alloc user login credentials"""
@@ -525,6 +522,8 @@ class alloc(object):
   def authenticate(self):
     """Perform an authentication against the alloc server."""
     self.dbg("calling authenticate()")
+    self.username, self.password, self.http_username, self.http_password = self.get_credentials()
+    self.initialize_http_connection()
     args =  { "authenticate":True, "username":self.username, "password":self.password }
     if not self.sessID:
       self.dbg("ATTEMPTING AUTHENTICATION.")
