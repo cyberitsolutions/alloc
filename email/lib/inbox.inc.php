@@ -232,8 +232,29 @@ class inbox extends db_entity {
       $current_user = &$orig_current_user;
       singleton("current_user",$current_user);
 
-      // add interested parties
-      $ips = interestedParty::get_interested_parties("task",$req["taskID"]);
+      // manually add task manager and assignee to ip list
+      $extraips = array();
+      if ($task->get_value("personID")) {
+        $p = new person($task->get_value("personID"));
+        if ($p->get_value("emailAddress")) {
+          $extraips[$p->get_value("emailAddress")]["name"] = $p->get_name();
+          $extraips[$p->get_value("emailAddress")]["role"] = "assignee";
+          $extraips[$p->get_value("emailAddress")]["personID"] = $task->get_value("personID");
+          $extraips[$p->get_value("emailAddress")]["selected"] = 1;
+        }
+      }
+      if ($task->get_value("managerID")) {
+        $p = new person($task->get_value("managerID"));
+        if ($p->get_value("emailAddress")) {
+          $extraips[$p->get_value("emailAddress")]["name"] = $p->get_name();
+          $extraips[$p->get_value("emailAddress")]["role"] = "manager";
+          $extraips[$p->get_value("emailAddress")]["personID"] = $task->get_value("managerID");
+          $extraips[$p->get_value("emailAddress")]["selected"] = 1;
+        }
+      }
+
+      // add all the other interested parties
+      $ips = interestedParty::get_interested_parties("task",$req["taskID"],$extraips);
       foreach((array)$ips as $k => $inf) {
         $inf["entity"] = "comment";
         $inf["entityID"] = $commentID;
