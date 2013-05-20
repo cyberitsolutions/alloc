@@ -149,7 +149,7 @@ class inbox extends db_entity {
     if ($change_user) {
       inbox::change_current_user($email_receive->mail_headers["from"]);
       $current_user = &singleton("current_user");
-      if (is_object($current_user) && method_exists("current_user") && $current_user->get_id()) {
+      if (is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
         $personID = $current_user->get_id();
       }
     }
