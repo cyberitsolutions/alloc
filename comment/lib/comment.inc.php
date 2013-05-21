@@ -645,7 +645,6 @@ class comment extends db_entity {
       }
       
       $email->set_to_address($to_address);
-      is_object($current_user) && !$from_name and $from_name = $current_user->get_name();
       $messageid = $email->set_message_id($hash);
       $subject_extra = "{Key:".$hash."}";
       $email->set_date();
@@ -663,6 +662,7 @@ class comment extends db_entity {
       // If from name is empty, then use the email address instead
       // eg: From: jon@jonny.com -> From: "jon@jonny.com via allocPSA" <alloc@cyber.com>
       $from_name or $from_name = $from_address;
+      is_object($current_user) && !$from_name and $from_name = $current_user->get_name();
 
       if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
         if (config::for_cyber()) {
