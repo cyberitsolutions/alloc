@@ -726,13 +726,10 @@ a.star:hover, a.hot {
 }
 
 .hidden-links a.config-link {
-  color:transparent !important;
-  float:right;
-  visibility:hidden;
-}
-.hidden-links:hover a.config-link {
   color:#ccc !important;
+  float:right;
   visibility:visible;
+  font-size:80% !important;
 }
 .hidden-links a.config-link:hover {
   color:#333 !important;
