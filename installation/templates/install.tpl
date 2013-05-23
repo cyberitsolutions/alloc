@@ -47,8 +47,9 @@
 <br><br>
 
 allocPSA is written in PHP, uses MySQL and runs best on a Linux server. If you
-want to install allocPSA on a Windows server, see <a
-href="http://www.allocpsa.org/installing_alloc_under_windows/">Installing allocPSA Under Windows</a>. 
+want to install allocPSA on a Windows server, see
+<a href="http://www.allocpsa.org/installing_alloc_under_windows/">Installing allocPSA Under Windows</a> or 
+<a href="https://sourceforge.net/apps/mediawiki/allocpsa/index.php?title=Installing_allocPSA_on_Windows">Installing allocPSA Under Windows</a>. 
 
 
 {$tests = array("php_version"  =>"PHP &gt;= 5.2.6"           
