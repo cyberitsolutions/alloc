@@ -57,8 +57,8 @@ doc_clean:
 
 dist: test
 	if [ -d ./src ]; then rm -rf ./src; fi;
-	darcs get . ./src/
-	rm -rf ./src/_darcs
+	git clone . ./src/
+	rm -rf ./src/.git
 	cd ./src && $(MAKE) doc_html; 
 	cd ./src && $(MAKE) doc_clean; 
 	cd ./src && $(MAKE) cache;
