@@ -80,7 +80,7 @@ alloc timesheets --date ">=2010-10-10" --items'''
       timeSheetID = o['tsid']
 
     if 'all' in o['status']:
-      status = ['edit','manager','admin','invoiced','finished','rejected']
+      status = ['edit', 'manager', 'admin', 'invoiced', 'finished', 'rejected']
     elif o['status']:
       status = o['status']
 
