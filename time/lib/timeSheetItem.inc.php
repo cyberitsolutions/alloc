@@ -447,11 +447,13 @@ class timeSheetItem extends db_entity {
       $info[$row["dateTimeSheetItem"]] = $row;
     }
 
-    $num_days_back = (format_date("U",$end) - format_date("U",$start)) /60/60/24;
-    $x = 1;
-    while ($x<=$num_days_back) {
-      $d = date("Y-m-d",format_date("U",$end) - (60*60*24*($num_days_back-$x)));
-      $points[] = array($d, sprintf("%d",$info[$d]["hours"]));
+    list($sy,$sm,$sd) = explode("-",$start);
+    list($ey,$em,$ed) = explode("-",$end);
+
+    $x = 0;
+    while (mktime(0,0,0,$sm,$sd+$x,$sy)<=mktime(0,0,0,$em,$ed,$ey)) {
+      $d = date("Y-m-d",mktime(0,0,0,$sm,$sd+$x,$sy));
+      $points[] = array($d." 12:00PM", sprintf("%d",$info[$d]["hours"]));
       $x++;
     }
 
