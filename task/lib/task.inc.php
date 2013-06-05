@@ -935,6 +935,11 @@ class task extends db_entity {
       $row["assignee_name"] = $_FORM["people_cache"][$row["personID"]]["name"];
       $row["closer_name"] = $_FORM["people_cache"][$row["closerID"]]["name"];
       $row["estimator_name"] = $_FORM["people_cache"][$row["estimatorID"]]["name"];
+      $row["creator_username"] = $_FORM["people_cache"][$row["creatorID"]]["username"];
+      $row["manager_username"] = $_FORM["people_cache"][$row["managerID"]]["username"];
+      $row["assignee_username"] = $_FORM["people_cache"][$row["personID"]]["username"];
+      $row["closer_username"] = $_FORM["people_cache"][$row["closerID"]]["username"];
+      $row["estimator_username"] = $_FORM["people_cache"][$row["estimatorID"]]["username"];
       $row["newSubTask"] = $task->get_new_subtask_link();
       $_FORM["showPercent"] and $row["percentComplete"] = $task->get_percentComplete();
       $_FORM["showTimes"] and $row["timeActual"] = $task->get_time_billed()/60/60;
