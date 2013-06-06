@@ -25,7 +25,7 @@
     <td>{=$r.person}</td>
     <td>{$r.dateFrom}</td>
     <td>{$r.dateTo}</td>
-    <td>{if $r["dateRejected"]}<span class="bad" title="This timesheet has been rejected.">{/}{$r.status}{if $r["dateRejected"]}</span>{/}</td>
+    <td>{if $r["status"]=="Rejected"}<span class="warn" title="This timesheet needs to be re-submitted.">{/}{$r.status}{if $r["status"]=="Rejected"}</span>{/}</td>
     <td>{$r.duration}</td>
     <td class="nobr right">{page::money($r["currencyTypeID"],$r["amount"],"%s%m %c")}</td>
     {if $timeSheetListExtra["showFinances"]}

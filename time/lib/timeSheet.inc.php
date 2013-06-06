@@ -88,6 +88,7 @@ class timeSheet extends db_entity {
                 ,"admin"     => "Administrator"
                 ,"invoiced"  => "Invoice"
                 ,"finished"  => "Completed"
+                ,"rejected"  => "Rejected"
                 );
   } 
 
@@ -458,29 +459,7 @@ class timeSheet extends db_entity {
     $filter["projectID"] and $sql[] = sprintf_implode("timeSheet.projectID = %d",$filter["projectID"]);
     $filter["taskID"]    and $sql[] = sprintf_implode("timeSheetItem.taskID = %d", $filter["taskID"]);
     $filter["personID"]  and $sql[] = sprintf_implode("timeSheet.personID = %d",$filter["personID"]);
-    if ($filter["status"]) { 
-      if (is_array($filter["status"]) && count($filter["status"])) {
-        foreach ($filter["status"] as $s) {
-          if ($s == "rejected") {
-            $rejected = true;
-          } else {
-            $statuses[] = $s;
-          }
-        }
-      } else {
-        if ($filter["status"] == "rejected") {
-          $rejected = true;
-        } else {
-          $statuses[] = $filter["status"];
-        }
-      }
-    }
-
-    if ($rejected) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NOT NULL OR ".sprintf_implode("timeSheet.status = '%s'",$statuses).")");
-    } else if ($statuses) {
-      $sql[] = prepare("(timeSheet.dateRejected IS NULL AND ".sprintf_implode("timeSheet.status = '%s'",$statuses).")");
-    }
+    $filter["status"]    and $sql[] = sprintf_implode("timeSheet.status = '%s'",$filter["status"]);
 
     if ($filter["dateFrom"]) {
       in_array($filter["dateFromComparator"],array("=","!=",">",">=","<","<=")) or $filter["dateFromComparator"] = '=';
@@ -721,7 +700,6 @@ class timeSheet extends db_entity {
     // display a list of status
     $status_array = timeSheet::get_timeSheet_statii();
     unset($status_array["create"]);
-    $status_array["rejected"] = 'Rejected';
 
     if (!$_FORM["status"]) {
       $_FORM["status"][] = 'edit';
@@ -777,9 +755,11 @@ class timeSheet extends db_entity {
     $info = $this->get_email_vars();
     if (is_array($info["projectManagers"]) && count($info["projectManagers"])) {
       $steps["forwards"]["edit"] = "manager";
+      $steps["forwards"]["rejected"] = "manager";
       $steps["backwards"]["admin"] = "manager";
     } else {
       $steps["forwards"]["edit"] = "admin";
+      $steps["forwards"]["rejected"] = "admin";
       $steps["backwards"]["admin"] = "edit";
     }
     $steps["forwards"][""] = "edit";
@@ -834,7 +814,7 @@ EOD;
       $this->set_value("approvedByManagerPersonID", "");   
       $this->set_value("dateRejected", date("Y-m-d"));
     }
-    $this->set_value("status", "edit");
+    $this->set_value("status", "rejected");
     return $msg;
   }
 
@@ -842,7 +822,7 @@ EOD;
     $current_user = &singleton("current_user");
     $project = $this->get_foreign_object("project");
     $projectManagers = $project->get_timeSheetRecipients();
-    // Can get forwards to "manager" only from "edit"
+    // Can get forwards to "manager" only from "edit" or "rejected"
     if ($direction == "forwards") {
       //forward to manager requires the timesheet to be owned by the current 
       //user or TIME_INVOICE_TIMESHEETS
@@ -1141,7 +1121,6 @@ EOD;
                        WHERE status = 'edit'
                          AND projectID = %d
                          AND personID = %d
-                         AND dateRejected IS NULL
                     ORDER BY dateFrom
                        LIMIT 1
                   ",$projectID, $current_user->get_id());

@@ -211,13 +211,13 @@ BEGIN
 
   IF (has_perm(personID(),512,"timeSheet")) THEN
     SELECT 1 INTO @null;
-  ELSEIF (OLD.status = 'manager' AND NEW.status = 'edit' AND has_perm(personID(),256,"timeSheet")) THEN
+  ELSEIF (OLD.status = 'manager' AND NEW.status = 'rejected' AND has_perm(personID(),256,"timeSheet")) THEN
     SELECT 1 INTO @null;
   ELSEIF (OLD.status = 'manager' AND NEW.status = 'admin' AND has_perm(personID(),256,"timeSheet")) THEN
     SELECT 1 INTO @null;
-  ELSEIF (neq(OLD.status, 'edit')) THEN
+  ELSEIF (neq(OLD.status, 'edit') AND neq(OLD.status, 'rejected')) THEN
     call alloc_error('Time sheet is not editable(2).');
-  ELSEIF (neq(NEW.status, 'edit') AND using_views()) THEN
+  ELSEIF (neq(NEW.status, 'edit') AND neq(OLD.status, 'rejected') AND using_views()) THEN
     call alloc_error('Not permitted to change time sheet status.');
   ELSEIF (using_views()) THEN
     -- People using views can't modify the following fields
@@ -237,7 +237,7 @@ BEGIN
     SET NEW.invoiceDate = OLD.invoiceDate;
   END IF;
 
-  IF OLD.status = 'edit' AND NEW.status = 'edit' AND neq(OLD.projectID,NEW.projectID) THEN
+  IF ((OLD.status = 'edit' AND NEW.status = 'edit') OR (OLD.status = 'rejected' AND NEW.status = 'rejected')) AND neq(OLD.projectID,NEW.projectID) THEN
     SELECT count(*) INTO has_bastard_tasks FROM timeSheetItem
  LEFT JOIN timeSheet ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
  LEFT JOIN task ON timeSheetItem.taskID = task.taskID
@@ -264,7 +264,7 @@ FOR EACH ROW
 BEGIN
   DECLARE num_timeSheetItems INTEGER;
 
-  IF (neq(OLD.status, 'edit')) THEN
+  IF (neq(OLD.status, 'edit') AND neq(OLD.status, 'rejected')) THEN
     call alloc_error('Not permitted to delete time sheet unless status is edit.');
   END IF;
 
@@ -290,7 +290,7 @@ CREATE PROCEDURE check_edit_timeSheet(IN id INTEGER)
 BEGIN
   DECLARE timeSheetStatus VARCHAR(255);
   SELECT status INTO timeSheetStatus FROM timeSheet WHERE timeSheetID = id;
-  if (neq(timeSheetStatus, "edit") AND NOT has_perm(personID(),512,"timeSheet")) THEN
+  if (neq(timeSheetStatus, "edit") AND neq(timeSheetStatus, "rejected") AND NOT has_perm(personID(),512,"timeSheet")) THEN
     call alloc_error('Time sheet is not editable.');
   END IF;
 END

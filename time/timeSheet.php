@@ -216,7 +216,7 @@ if (!$current_user->is_employee()) {
 
     $db_task = new db_alloc();
 
-    if (is_object($timeSheet) && $timeSheet->get_value("status") == "edit") {
+    if (is_object($timeSheet) && ($timeSheet->get_value("status") == "edit" || $timeSheet->get_value("status") == "rejected")) {
       $TPL["timeSheetItem_buttons"] = '
         <button type="submit" name="timeSheetItem_delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
         <button type="submit" name="timeSheetItem_edit" value="1">Edit<i class="icon-edit"></i></button>';
@@ -321,7 +321,7 @@ if (!$current_user->is_employee()) {
     } 
 
 
-    if (is_object($timeSheet) && $timeSheet->get_value("status") == 'edit' 
+    if (is_object($timeSheet) && ($timeSheet->get_value("status") == 'edit' || $timeSheet->get_value("status") == 'rejected')
     && ($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
 
       $TPL["currency"] = page::money($timeSheet->get_value("currencyTypeID"),'',"%S");
@@ -651,7 +651,7 @@ if ($timeSheet->get_value("approvedByAdminPersonID")) {
 }
 
 // display the project name.
-if ($timeSheet->get_value("status") == 'edit' && !$timeSheet->get_value("projectID")) {
+if (($timeSheet->get_value("status") == 'edit' || $timeSheet->get_value("status") == 'rejected') && !$timeSheet->get_value("projectID")) {
   $query = prepare("SELECT * FROM project WHERE projectStatus = 'Current' ORDER by projectName");
     #.prepare("  LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ")
     #.prepare("WHERE projectPerson.personID = '%d' ORDER BY projectName", $current_user->get_id());
@@ -738,7 +738,7 @@ if ($amount_allocated) {
 }
 
 
-if (!$timeSheet->get_id() || $timeSheet->get_value("status") == "edit") {
+if (!$timeSheet->get_id() || $timeSheet->get_value("status") == "edit" || $timeSheet->get_value("status") == "rejected") {
   $TPL["show_project_options"] = $project_select;
   $TPL["show_client_options"] = $client_select;
 
@@ -824,14 +824,19 @@ if (!$projectManagers) {
 foreach ($statii as $s => $label) {
   unset($pre,$suf);// prefix and suffix
   $status = $timeSheet->get_value("status");
+  unset($red);
+  $status == "rejected" and $red = true;
+  $status == "rejected" and $status = "edit";
   if (!$timeSheet->get_id()) {
     $status = "create";
   } 
   
   if ($s == $status) {
-    $pre = "<b>";
+    $red and $red = ' class="warn"';
+    $pre = "<b".$red.">";
     $suf = "</b>";
   }
+  if ($s == "rejected") continue;
   $TPL["timeSheet_status_text"].= $sep.$pre.$label.$suf;
   $sep = "&nbsp;&nbsp;|&nbsp;&nbsp;";
 }
@@ -840,6 +845,7 @@ foreach ($statii as $s => $label) {
 switch ($timeSheet->get_value("status")) {
 
 case 'edit':
+case 'rejected':
   if (($timeSheet->get_value("personID") == $current_user->get_id() || $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) && ($timeSheetID)) {
 
     $destlabel = "Admin";
