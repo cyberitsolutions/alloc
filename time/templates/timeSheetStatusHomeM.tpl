@@ -14,6 +14,8 @@ $(document).ready(function() {
         },
         axes:{
           xaxis:{
+            min:"{$dateFrom} 12:00PM",
+            max:"{$dateTo} 12:00PM",
             renderer:$.jqplot.DateAxisRenderer,
             tickOptions:{ formatString:'%b %#d' },
             tickInterval:'1 day'
@@ -31,7 +33,7 @@ $(document).ready(function() {
 });
 </script>
 
-<a href="{$url_alloc_timeSheetGraph}personID={echo $current_user->get_id()}&applyFilter=true"><div id="chart1" style="height:150px; margin-bottom:5px;"></div></a>
+<a href="{$url_alloc_timeSheetGraph}personID={echo $current_user->get_id()}&dateFrom={$dateFrom}&dateTo={$dateTo}&applyFilter=true"><div id="chart1" style="height:150px; margin-bottom:5px;"></div></a>
 
 <table class='list'>
 <tr>

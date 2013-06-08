@@ -47,8 +47,8 @@ if ($_FORM["groupBy"] == "day") {
   $TPL["chart1"] = timeSheetItem::get_total_hours_worked_per_month($_FORM["personID"],$_FORM["dateFrom"],$_FORM["dateTo"]);
 }
 
-$TPL["min"] = $_FORM["dateFrom"]." 12:00PM";
-$TPL["max"] = $_FORM["dateTo"]." 12:00PM";
+$TPL["dateFrom"] = $_FORM["dateFrom"];
+$TPL["dateTo"] = $_FORM["dateTo"];
 $TPL["groupBy"] = $_FORM["groupBy"];
 
 include_template("templates/timeSheetGraphM.tpl");
