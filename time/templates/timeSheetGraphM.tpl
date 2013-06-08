@@ -22,8 +22,8 @@ $(document).ready(function() {
     },
     axes:{
       xaxis:{
-        min:"{$min}",
-        max:"{$max}",
+        min:"{$dateFrom} 12:00PM",
+        max:"{$dateTo} 12:00PM",
         renderer:$.jqplot.DateAxisRenderer,
         tickOptions:{ formatString:'%b %#d' },
         tickInterval:'1 {$groupBy}',

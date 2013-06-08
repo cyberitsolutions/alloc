@@ -66,6 +66,9 @@ class timeSheetStatusHomeItem extends home_item {
     $TPL["hours_avg_fortnight"] = sprintf("%0.2f",$hours_avg_fortnight[$current_user->get_id()]);
     $TPL["dollars_avg_fortnight"] = page::money(config::get_config_item("currency"),$dollars_avg_fortnight[$current_user->get_id()],"%s%m %c");
 
+    $TPL["dateFrom"] = date("Y-m-d",mktime(0,0,0,date("m"), date("d")-28, date("Y")));
+    $TPL["dateTo"] = date("Y-m-d",mktime(0,0,0,date("m"), date("d")+1, date("Y")));
+
     return true;
   }
 }
