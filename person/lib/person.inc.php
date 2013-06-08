@@ -486,7 +486,9 @@ class person extends db_entity {
         $row["navLinks"].= '&dontSave=1&taskStatus=open&projectType=Current">Tasks</a>&nbsp;&nbsp;';
         has("project") and $row["navLinks"].= '<a href="'.$TPL["url_alloc_personGraph"].'personID='.$row["personID"].'">Graph</a>&nbsp;&nbsp;';
         $row["navLinks"].= '<a href="'.$TPL["url_alloc_taskCalendar"].'personID='.$row["personID"].'">Calendar</a>&nbsp;&nbsp;';
-        $row["navLinks"].= '<a href="'.$TPL["url_alloc_timeSheetGraph"].'personID='.$row["personID"].'&applyFilter=1&dontSave=1">Hours</a>';
+        $dateFrom = date("Y-m-d",mktime(0,0,0,date("m"), date("d")-28, date("Y")));
+        $dateTo = date("Y-m-d",mktime(0,0,0,date("m"), date("d")+1, date("Y")));
+        $row["navLinks"].= '<a href="'.$TPL["url_alloc_timeSheetGraph"].'personID='.$row["personID"].'&dateFrom='.$dateFrom.'&dateTo='.$dateTo.'&applyFilter=1&dontSave=1">Hours</a>';
       }
 
       $summary.= person::get_list_tr($row,$_FORM);
