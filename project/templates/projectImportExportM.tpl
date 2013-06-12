@@ -1,6 +1,5 @@
 
 <form enctype="multipart/form-data" action="{$entity_url}&sbs_link=importexport" method="post">
-<input type="hidden" name="MAX_FILE_SIZE" value="10000000">
 <input type="hidden" name="{$entity_key_name}" value="{$entity_key_value}">
 <table class="box">
   <tr>
