@@ -43,7 +43,6 @@
     </tr>
     <tr>
       <td>
-        <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
         <input size="40" type="file" name="import_file">
       </td>
       <td><select name="itemType" value="{$itemType}">{$itemTypes}</select></td>
